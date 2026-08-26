@@ -33,6 +33,10 @@ related_resources:
     url: /mcp/
   - text: Model Context Protocol specification
     url: https://modelcontextprotocol.io/
+  - text: Map a RESTful API to MCP tools
+    url: /ai-gateway/map-api-to-mcp-tools/
+  - text: Aggregate MCP tools from multiple AI MCP Server entities
+    url: /ai-gateway/aggregate-mcp-tools/
 faqs:
   - q: Which MCP protocol version does the runtime use?
     a: |

@@ -1,5 +1,5 @@
 ---
-title: Secure AI Agent traffic with OpenID Connect and {{site.identity}}
+title: Secure AI Agent traffic with an AI Auth Strategy and {{site.identity}}
 permalink: /ai-gateway/secure-ai-agent-with-oidc/
 content_type: how_to
 description: Reference an openid-connect AI Auth Strategy backed by {{site.identity}} on an AI Agent entity to require bearer tokens on A2A traffic

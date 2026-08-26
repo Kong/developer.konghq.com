@@ -33,6 +33,11 @@ related_resources:
     url: /ai-gateway/entities/ai-consumer-group/
   - text: A2A protocol specification
     url: https://a2aproject.github.io/A2A/
+  - text: Set up a {{site.identity}} auth server for AI Agent authentication
+    url: /ai-gateway/set-up-kong-identity-for-a2a/
+  - text: Route A2A agent traffic through {{site.ai_gateway}}
+    url: /ai-gateway/get-started-with-ai-agent/
+
 faqs:
   - q: What's the difference between an `a2a` AI Agent and an `http` AI Agent?
     a: |
@@ -158,7 +163,7 @@ rows:
 
 When an Agent has type `a2a`, proxied traffic is processed in four phases:
 
-1. **Access**. Detects whether the request is an A2A operation (JSON-RPC or REST binding). This starts an OpenTelemetry span, and records the request body for payload logging if that's enabled.
+1. **Access**. Detects whether the request is an A2A operation (JSON-RPC or REST binding). This starts an [OpenTelemetry span](/ai-gateway/llm-open-telemetry/#a2a-span-attributes), and records the request body for payload logging if that's enabled.
 1. **Header filter**. Detects streaming responses (`Content-Type: text/event-stream`) and records time to first byte. Buffers agent-card responses for URL rewriting.
 1. **Body filter**. Streams SSE chunks through to the client without buffering. Buffers non-streaming responses to extract task metadata. Rewrites agent-card URLs to the gateway address. Emits analytics at end of response.
 1. **Log**. Finalizes the OpenTelemetry span with task state, task ID, and any error information.
@@ -300,7 +305,7 @@ When an upstream agent returns an agent card, the runtime rewrites the [`url`](#
 
 ## Logging and observability
 
-For `a2a` type Agents, {{site.ai_gateway}} automatically emits structured A2A telemetry to track agent performance, debug issues, and monitor A2A traffic patterns. This telemetry flows to {{site.konnect_short_name}} analytics, logging plugins, and OpenTelemetry for full visibility into agent operations, with no separate toggle required.
+For `a2a` type AI Agents, {{site.ai_gateway}} automatically emits structured A2A telemetry to track agent performance, debug issues, and monitor A2A traffic patterns. This telemetry flows to {{site.konnect_short_name}} analytics, logging plugins, and OpenTelemetry for full visibility into agent operations, with no separate toggle required.
 
 The telemetry data is emitted into the `ai.a2a` namespace (consumed by {{site.konnect_short_name}} analytics and logging AI Policies) and creates a `kong.a2a` child span when you've configured [{{site.base_gateway}} tracing](/gateway/tracing/). For the canonical metric and attribute list, see [A2A metrics](/ai-gateway/ai-otel-metrics/#a2a-metrics).
 
@@ -374,7 +379,7 @@ For available policy types and configuration, see the [AI Policy entity](/ai-gat
 
 ## Set up an Agent
 
-Before creating an AI Agent with access restrictions, create an AI Consumer Group to reference in [`access.acls`](#schema-aigateway-agent-access). 
+Before creating an AI Agent with access restrictions, create an AI Consumer Group to reference in [`access.acls`](#schema-aigateway-agent-access).
 This example references a group named `internal-teams`. See [Set up an AI Consumer Group](/ai-gateway/entities/ai-consumer-group/#set-up-an-ai-consumer-group) to create it, or substitute the name of your own AI Consumer, AI Consumer Group, or Authenticated Group in `access.acls.allow`.
 
 The following example creates an `a2a` Agent that proxies traffic to an upstream A2A agent at `https://booking-agent.internal.kongair.com`, with access restricted to the `internal-teams` Consumer Group.

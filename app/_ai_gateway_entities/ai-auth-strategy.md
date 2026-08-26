@@ -35,6 +35,10 @@ related_resources:
     url: /ai-gateway/entities/ai-consumer/
   - text: AI Consumer Group entity
     url: /ai-gateway/entities/ai-consumer-group/
+  - text: Set up a {{site.identity}} auth server for AI Agent authentication
+    url: /ai-gateway/set-up-kong-identity-for-a2a/
+  - text: Enforce tiered AI budgets on AI Models with {{site.identity}}
+    url: /ai-gateway/enforce-tiered-ai-budgets-with-kong-identity/
 faqs:
   - q: What is the difference between an AI Auth Strategy and an AI Model Provider?
     a: |
