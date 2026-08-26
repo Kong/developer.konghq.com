@@ -5,17 +5,16 @@ works_on:
   - konnect
 products:
   - ai-gateway
-categories:
-  - ai
-tags:
-  - ai
-  - safety
-  - dlp
 content_type: plugin
-description: 'Check text completion requests against a list of allowed or denied expressions'
 related_resources:
   - text: AI Semantic Prompt Guard Policy
     url: /ai-gateway/policies/ai-semantic-prompt-guard/
+  - text: AI AWS Guardrails Policy
+    url: /ai-gateway/policies/ai-aws-guardrails/
+  - text: AI Azure Content Safety Policy
+    url: /ai-gateway/policies/ai-azure-content-safety/
+  - text: AI Custom Guardrail Policy
+    url: /ai-gateway/policies/ai-custom-guardrail/
 ---
 
 The AI Prompt Guard Policy lets you configure a series of [PCRE-compatible](https://www.pcre.org/) regular expressions as allow or deny lists, to guard against misuse of text completion requests.
