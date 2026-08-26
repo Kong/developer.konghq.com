@@ -115,7 +115,7 @@ kubectl annotate -n kong ingress echo konghq.com/https-redirect-status-code="301
 {{ the_code | indent: 4 }}
 
 {:.info}
-> **Note**: {{ site.kic_product_name }} _does not_ use a [HTTPRequestRedirectFilter](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.HTTPRequestRedirectFilter) to configure the redirect. Using the filter to redirect HTTP to HTTPS requires a separate `HTTPRoute` to handle redirected HTTPS traffic, which doesn't align well with {{site.base_gateway}}'s single Route redirect model.
+> **Note**: {{ site.kic_product_name }} _does not_ use a [HTTPRequestRedirectFilter](https://gateway-api.sigs.k8s.io/reference/api-types/gateway/#gateway.networking.k8s.io/v1.HTTPRequestRedirectFilter) to configure the redirect. Using the filter to redirect HTTP to HTTPS requires a separate `HTTPRoute` to handle redirected HTTPS traffic, which doesn't align well with {{site.base_gateway}}'s single Route redirect model.
 > 
 > Work to support the standard filter-based configuration is ongoing. Until then, the annotations allow you to configure HTTPS-only `HTTPRoutes`.
 
