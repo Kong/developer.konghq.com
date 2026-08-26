@@ -6,6 +6,12 @@ works_on:
 products:
   - ai-gateway
 content_type: policy
+description: 'Use a third-party guardrails service to validate requests and/or responses before forwarding them between clients and upstream LLMs'
+categories:
+   - ai
+tags:
+  - ai
+  - safety
 ---
 
 The AI Custom Guardrail Policy enforces introspection on both inbound requests and outbound responses handled by the [AI Model](/ai-gateway/entities/ai-model/) entity. It can integrate with any HTTP-based guardrail service. This ensures all data exchanged between clients and upstream LLMs adheres to the configured security standards.
@@ -20,10 +26,10 @@ The AI Custom Guardrail Policy can be applied to:
 Here's how it works if you apply it to both requests and responses:
 
 1. The AI Custom Guardrail Policy intercepts the request and sends the request body to the guardrail service.
-   1. The guardrail service analyzes the request against configured moderation categories and allows or blocks the request.
+   - The guardrail service analyzes the request against configured moderation categories and allows or blocks the request.
 1. If allowed, the request is forwarded upstream with the AI Model entity.
 1. On the way back, the Policy intercepts the response and sends the response body to the guardrail service.
-   1. The guardrail service analyzes the response against configured moderation categories and allows or blocks the response.
+   - The guardrail service analyzes the response against configured moderation categories and allows or blocks the response.
 1. If allowed, the response is forwarded to the client.
 
 {% comment %}
@@ -64,7 +70,7 @@ Additionally, the following built-in variables are available in Lua expressions.
 * `$(resp)`:  The response from the guardrail service. 
    
    {:.warning}
-   > This variable is a Lua table corresponding to the request body if the Policy is inspecting the request, but it's a string when inspecting the response. Make sure to configure your functions accordingly.
+   > This variable is a Lua table corresponding to the request body if the AI Custom Guardrail Policy is inspecting the request, but it's a string when inspecting the response. Make sure to configure your functions accordingly.
 
 ### Request
 
@@ -72,7 +78,9 @@ The [`config.request`](./reference/#schema--config-request) field is used to con
 
 ### Response
 
-The [`config.response`](./reference/#schema--config-response) field is used to define how to parse the response received by the guardrail service. You must define:
+The [`config.response`](./reference/#schema--config-response) field is used to define how to parse the response received by the guardrail service. 
+
+You must define:
 * [`config.response.block`](./reference/#schema--config-response-block)
 * [`config.response.block_message`](./reference/#schema--config-response-block-message)
 
@@ -80,7 +88,9 @@ These fields can be defined using functions defined in [`config.functions`](./re
 
 ### Metrics
 
-The [`config.metrics`](./reference/#schema--config-metrics) field allows you to define metrics to be logged by {{site.base_gateway}}. The following standard metrics are available:
+The [`config.metrics`](./reference/#schema--config-metrics) field allows you to define metrics to be logged by {{site.base_gateway}}. 
+
+The following standard metrics are available:
 * `block_reason`: The reason why the request or response was blocked.
 * `block_details`: Additional details about the blocked request or response.
 * `masked`: Whether content was masked in the request or response.
