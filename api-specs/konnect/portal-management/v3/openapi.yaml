@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.9.8
+  version: 3.9.13
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@744c89c15abe90c6c381541c206624022a65e4f9
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/744c89c15abe90c6c381541c206624022a65e4f9'
+  x-oas-source: kong/platform-api@e84de4431509db5cd9d2ece64d011468e932857b
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e84de4431509db5cd9d2ece64d011468e932857b'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -2010,7 +2010,7 @@ paths:
   '/portals/{portalId}/identity-providers/{id}/team-group-mappings':
     parameters:
       - $ref: '#/components/parameters/PortalId'
-      - $ref: '#/components/parameters/IdentityProviderId'
+      - $ref: '#/components/parameters/PortalIdentityProviderId'
     get:
       operationId: list-portal-idp-team-group-mappings
       summary: List Team Group Mappings
@@ -2070,7 +2070,7 @@ paths:
   '/portals/{portalId}/identity-providers/{id}/team-group-mappings/{mappingId}':
     parameters:
       - $ref: '#/components/parameters/PortalId'
-      - $ref: '#/components/parameters/IdentityProviderId'
+      - $ref: '#/components/parameters/PortalIdentityProviderId'
       - $ref: '#/components/parameters/TeamGroupMappingId'
     get:
       operationId: get-portal-idp-team-group-mapping
@@ -2844,6 +2844,15 @@ components:
       in: path
       required: true
       description: ID of the portal.
+    PortalIdentityProviderId:
+      name: id
+      in: path
+      required: true
+      description: ID of the identity provider.
+      schema:
+        type: string
+        format: uuid
+      example: d32d905a-ed33-46a3-a093-d8f536af9a8a
     RegistrationId:
       name: registrationId
       in: path
