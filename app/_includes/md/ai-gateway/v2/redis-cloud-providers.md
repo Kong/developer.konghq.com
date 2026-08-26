@@ -1,5 +1,5 @@
 {% comment %}
-Used in  'AI RAG Injector'  'AI Semantic Cache' 'AI Semantic Prompt Guard' 'AI Semantic Response Guard'
+Used in 'AI RAG Injector' 'AI Semantic Cache' 'AI Semantic Prompt Guard' 'AI Semantic Response Guard' 'AI Rate Limiting Advanced' 'Rate Limiting' 'Rate Limiting Advanced'
 {% endcomment %}
 
 {% navtabs "providers" %}
@@ -29,6 +29,24 @@ You need:
 
 To configure cloud authentication with Redis, add the following parameters to your Policy configuration:
 
+{% if include.name == 'AI RAG Injector' or include.name == 'AI Semantic Cache' or include.name == 'AI Semantic Prompt Guard' or include.name == 'AI Semantic Response Guard' %}
+```yaml
+config:
+  vectordb:
+    strategy: redis
+    redis:
+      host: $INSTANCE_ADDRESS
+      username: $INSTANCE_USERNAME
+      port: 6379
+      cloud_authentication:
+        auth_provider: aws
+        aws_cache_name: $AWS_CACHE_NAME
+        aws_is_serverless: false
+        aws_region: $AWS_REGION
+        aws_access_key_id: $AWS_ACCESS_KEY_ID
+        aws_secret_access_key: $AWS_ACCESS_SECRET_KEY
+```
+{% else %}
 ```yaml
 config:
   strategy: redis
@@ -44,6 +62,7 @@ config:
       aws_access_key_id: $AWS_ACCESS_KEY_ID
       aws_secret_access_key: $AWS_ACCESS_SECRET_KEY
 ```
+{% endif %}
 
 Replace the following with your actual values:
 * `$INSTANCE_ADDRESS`: The ElastiCache instance address.
@@ -79,6 +98,26 @@ You need:
 
 To configure cloud authentication with Redis, add the following parameters to your Policy configuration:
 
+{% if include.name == 'AI RAG Injector' or include.name == 'AI Semantic Cache' or include.name == 'AI Semantic Prompt Guard' or include.name == 'AI Semantic Response Guard' %}
+```yaml
+config:
+  vectordb:
+    strategy: redis
+    redis:
+      cluster_nodes:
+      - ip: $CLUSTER_ADDRESS
+        port: 6379
+      username: $CLUSTER_USERNAME
+      port: 6379
+      cloud_authentication:
+        auth_provider: aws
+        aws_cache_name: $AWS_CACHE_NAME
+        aws_is_serverless: false
+        aws_region: $AWS_REGION
+        aws_access_key_id: $AWS_ACCESS_KEY_ID
+        aws_secret_access_key: $AWS_ACCESS_SECRET_KEY
+```
+{% else %}
 ```yaml
 config:
   strategy: redis
@@ -96,6 +135,7 @@ config:
       aws_access_key_id: $AWS_ACCESS_KEY_ID
       aws_secret_access_key: $AWS_ACCESS_SECRET_KEY
 ```
+{% endif %}
 
 Replace the following with your actual values:
 * `$CLUSTER_ADDRESS`: The ElastiCache cluster address.
@@ -113,6 +153,22 @@ You need:
 
 To configure cloud authentication with Redis, add the following parameters to your Policy configuration:
 
+{% if include.name == 'AI RAG Injector' or include.name == 'AI Semantic Cache' or include.name == 'AI Semantic Prompt Guard' or include.name == 'AI Semantic Response Guard' %}
+```yaml
+config:
+  vectordb:
+    strategy: redis
+    redis:
+      host: $INSTANCE_ADDRESS
+      username: $INSTANCE_USERNAME
+      port: 10000
+      cloud_authentication:
+        auth_provider: azure
+        azure_client_id: $AZURE_CLIENT_ID
+        azure_client_secret: $AZURE_CLIENT_SECRET
+        azure_tenant_id: $AZURE_TENANT_ID
+```
+{% else %}
 ```yaml
 config:
   strategy: redis
@@ -126,6 +182,7 @@ config:
       azure_client_secret: $AZURE_CLIENT_SECRET
       azure_tenant_id: $AZURE_TENANT_ID
 ```
+{% endif %}
 
 Replace the following with your actual values:
 * `$INSTANCE_ADDRESS`: The Azure Managed Redis instance address.
@@ -143,6 +200,24 @@ You need:
 
 To configure cloud authentication with Redis, add the following parameters to your Policy configuration:
 
+{% if include.name == 'AI RAG Injector' or include.name == 'AI Semantic Cache' or include.name == 'AI Semantic Prompt Guard' or include.name == 'AI Semantic Response Guard' %}
+```yaml
+config:
+  vectordb:
+    strategy: redis
+    redis:
+      cluster_nodes:
+      - ip: $CLUSTER_ADDRESS
+        port: 10000
+      username: $CLUSTER_USERNAME
+      port: 10000
+      cloud_authentication:
+        auth_provider: azure
+        azure_client_id: $AZURE_CLIENT_ID
+        azure_client_secret: $AZURE_CLIENT_SECRET
+        azure_tenant_id: $AZURE_TENANT_ID
+```
+{% else %}
 ```yaml
 config:
   strategy: redis
@@ -158,6 +233,7 @@ config:
       azure_client_secret: $AZURE_CLIENT_SECRET
       azure_tenant_id: $AZURE_TENANT_ID
 ```
+{% endif %}
 
 Replace the following with your actual values:
 * `$CLUSTER_ADDRESS`: The Azure Managed Redis cluster address.
@@ -177,6 +253,19 @@ You need:
 
 To configure cloud authentication with Redis, add the following parameters to your Policy configuration:
 
+{% if include.name == 'AI RAG Injector' or include.name == 'AI Semantic Cache' or include.name == 'AI Semantic Prompt Guard' or include.name == 'AI Semantic Response Guard' %}
+```yaml
+config:
+  vectordb:
+    strategy: redis
+    redis:
+      host: $INSTANCE_ADDRESS
+      port: 6379
+      cloud_authentication:
+        auth_provider: gcp
+        gcp_service_account_json: $GCP_SERVICE_ACCOUNT
+```
+{% else %}
 ```yaml
 config:
   strategy: redis
@@ -187,6 +276,7 @@ config:
       auth_provider: gcp
       gcp_service_account_json: $GCP_SERVICE_ACCOUNT
 ```
+{% endif %}
 
 Replace the following with your actual values:
 * `$INSTANCE_ADDRESS`: The Memorystore instance address.
@@ -202,6 +292,21 @@ You need:
 
 To configure cloud authentication with Redis, add the following parameters to your Policy configuration:
 
+{% if include.name == 'AI RAG Injector' or include.name == 'AI Semantic Cache' or include.name == 'AI Semantic Prompt Guard' or include.name == 'AI Semantic Response Guard' %}
+```yaml
+config:
+  vectordb:
+    strategy: redis
+    redis:
+      cluster_nodes:
+      - ip: $CLUSTER_ADDRESS
+        port: 6379
+      port: 6379
+      cloud_authentication:
+        auth_provider: gcp
+        gcp_service_account_json: $GCP_SERVICE_ACCOUNT
+```
+{% else %}
 ```yaml
 config:
   strategy: redis
@@ -214,6 +319,7 @@ config:
       auth_provider: gcp
       gcp_service_account_json: $GCP_SERVICE_ACCOUNT
 ```
+{% endif %}
 
 Replace the following with your actual values:
 * `$CLUSTER_ADDRESS`: The Memorystore cluster address.
