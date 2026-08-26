@@ -7,8 +7,14 @@ products:
   - ai-gateway
 content_type: plugin
 related_resources:
+  - text: Rate Limiting Advanced Policy
+    url: /ai-gateway/policies/rate-limiting-advanced/
+  - text: AI Models
+    url: /ai-gateway/ai-models/
   - text: Model cost management
     url: /ai-gateway/model-cost-management/
+  - text: AI Semantic Cache Policy
+    url: /ai-gateway/policies/ai-semantic-cache/
 ---
 
 The AI Rate Limiting Advanced Policy provides rate limiting for all [AI Policies](/ai-gateway/policies/). The
@@ -39,7 +45,7 @@ You can also create a generic prompt rate limit using the [request prompt provid
 
 ## Policy-based rate limiting
 
-The [`config.policies`](./reference/#schema--config-policies) field allows you to define rate limiting at the AI Consumer, AI Consumer Group, IP address, header, path, model, and provider level. The match conditions under [`config.policies.match`](./reference/#schema--config-policies-match) use an `AND` logic, so you can combine these to set up multi-dimensional rate limiting. For example, you can set different rate limiting policies for a specific Consumer and model:
+The [`config.policies`](./reference/#schema--config-policies) field allows you to define rate limiting at the AI Consumer, AI Consumer Group, IP address, header, path, model, and provider level. The match conditions under [`config.policies.match`](./reference/#schema--config-policies-match) use an `AND` logic, so you can combine these to set up multi-dimensional rate limiting. For example, you can set different rate limiting policies for a specific AI Consumer and model:
 
 {% entity_example %}
 type: policy
