@@ -57,7 +57,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
         - name: Authorization
-          value: !env OPENAI_AUTH_HEADER
+          value: !secret {source: !env OPENAI_AUTH_HEADER}
 {% endentity_examples %}
 
 {:.info}
@@ -67,7 +67,7 @@ The AI Model Provider uses the following settings:
 
 * `type: openai`: Specifies that this provider connects to the OpenAI service using OpenAI's standard API format.
 * `name: generic-openai`: A unique identifier that AI Models will reference to route requests through this provider.
-* `config.auth`: Stores your OpenAI API key. `header_value: !env OPENAI_AUTH_HEADER` loads the value from your environment at apply time instead of embedding it in the YAML, and `kongctl` redacts it in plan and diff output. {{site.ai_gateway}} securely manages this credential and injects it into upstream requests automatically, eliminating the need for clients to pass API keys.
+* `config.auth`: Stores your OpenAI API key. `header_value: !secret {source: !env OPENAI_AUTH_HEADER}` loads the value from your environment at apply time instead of embedding it in the YAML, and `kongctl` redacts it in plan and diff output. {{site.ai_gateway}} securely manages this credential and injects it into upstream requests automatically, eliminating the need for clients to pass API keys.
 
 ## Create an AI Model entity
 

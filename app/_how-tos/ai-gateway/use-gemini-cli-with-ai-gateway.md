@@ -82,7 +82,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: x-goog-api-key
-            value: !env GEMINI_API_KEY
+            value: !secret {source: !env GEMINI_API_KEY}
 ai_gateway_models:
   - ref: my-gemini-model
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}

@@ -96,7 +96,7 @@ ai_gateway_mcp_servers:
         path: /weather
         query:
           key:
-            - !env WEATHERAPI_API_KEY
+            - !secret {source: !env WEATHERAPI_API_KEY}
         parameters:
           - name: q
             in: query

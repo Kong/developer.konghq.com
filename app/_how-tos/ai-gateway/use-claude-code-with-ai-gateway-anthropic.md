@@ -56,7 +56,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: x-api-key
-            value: !env ANTHROPIC_API_KEY
+            value: !secret {source: !env ANTHROPIC_API_KEY}
 {% endentity_examples %}
 
 {:.info}
@@ -66,7 +66,7 @@ The AI Model Provider uses the following settings:
 
 * `type: anthropic`: Specifies that this provider connects to the Anthropic service using Anthropic's standard API format.
 * `name: generic-anthropic`: A unique identifier that AI Models will reference to route requests through this provider.
-* `config.auth.headers[0].value: !env ANTHROPIC_API_KEY`: Loads the API key from your environment at apply time so it is not embedded in the config.
+* `config.auth.headers[0].value: !secret {source: !env ANTHROPIC_API_KEY}`: Loads the API key from your environment at apply time so it is not embedded in the config, and `kongctl` redacts it in plan and diff output.
 
 ## Create an AI Model entity
 

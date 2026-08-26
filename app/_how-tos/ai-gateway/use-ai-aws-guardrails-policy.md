@@ -94,7 +94,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: Authorization
-            value: !env OPENAI_AUTH_HEADER
+            value: !secret {source: !env OPENAI_AUTH_HEADER}
 ai_gateway_policies:
   - ref: my-ai-aws-guardrails-policy
     name: my-ai-aws-guardrails-policy
@@ -107,8 +107,8 @@ ai_gateway_policies:
       guardrails_id: !env GUARDRAILS_ID
       guardrails_version: !env GUARDRAILS_VERSION
       aws_region: !env AWS_REGION
-      aws_access_key_id: !env AWS_ACCESS_KEY_ID
-      aws_secret_access_key: !env AWS_SECRET_ACCESS_KEY
+      aws_access_key_id: !secret {source: !env AWS_ACCESS_KEY_ID}
+      aws_secret_access_key: !secret {source: !env AWS_SECRET_ACCESS_KEY}
 ai_gateway_models:
   - ref: my-gpt-4o
     display_name: my-gpt-4o

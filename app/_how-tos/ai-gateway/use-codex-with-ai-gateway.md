@@ -63,7 +63,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: Authorization
-            value: !env OPENAI_AUTH_HEADER
+            value: !secret {source: !env OPENAI_AUTH_HEADER}
 ai_gateway_models:
   - ref: codex-openai
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
@@ -92,7 +92,7 @@ ai_gateway_models:
 In this example, we're setting up the AI Model Provider with:
 
 * `type: openai`: Specifies that this provider connects using OpenAI's standard API format.
-* `config.auth.headers[0].value: !env OPENAI_AUTH_HEADER`: Loads the API key from your environment at apply time so it is not embedded in the config.
+* `config.auth.headers[0].value: !secret {source: !env OPENAI_AUTH_HEADER}`: Loads the API key from your environment at apply time so it is not embedded in the config, and `kongctl` redacts it in plan and diff output.
 
 In this example, we're setting up the AI Model with:
 

@@ -84,7 +84,7 @@ ai_gateway_model_providers:
     config:
       auth:
         type: vertex
-        service_account_json: !env GCP_SERVICE_ACCOUNT_JSON
+        service_account_json: !secret {source: !env GCP_SERVICE_ACCOUNT_JSON}
 ai_gateway_policies:
   - ref: claude-code-compat
     name: claude-code-compat
@@ -136,7 +136,7 @@ The AI Model Provider uses the following settings:
 
 * `type: vertex`: Specifies that this provider connects to Google Vertex AI.
 * `config.auth.type: gcp`: Uses Google Cloud service account authentication, rather than a bearer token or API key.
-* `config.auth.service_account_json: !env GCP_SERVICE_ACCOUNT_JSON`: Loads the service account JSON, required to access the account, from your environment at apply time.
+* `config.auth.service_account_json: !secret {source: !env GCP_SERVICE_ACCOUNT_JSON}`: Loads the service account JSON, required to access the account, from your environment at apply time, and `kongctl` redacts it in plan and diff output.
 
 The AI Policy uses the following settings:
 

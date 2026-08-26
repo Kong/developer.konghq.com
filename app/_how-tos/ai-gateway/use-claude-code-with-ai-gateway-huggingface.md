@@ -61,7 +61,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: Authorization
-            value: !env HUGGINGFACE_AUTH_HEADER
+            value: !secret {source: !env HUGGINGFACE_AUTH_HEADER}
 {% endentity_examples %}
 
 {:.info}
@@ -70,7 +70,7 @@ ai_gateway_model_providers:
 The AI Model Provider uses the following settings:
 
 * `type: huggingface`: Specifies that this provider speaks Hugging Face's Messages API format.
-* `config.auth.headers[0].value: !env HUGGINGFACE_AUTH_HEADER`: Loads the API key from your environment at apply time so it is not embedded in the config.
+* `config.auth.headers[0].value: !secret {source: !env HUGGINGFACE_AUTH_HEADER}`: Loads the API key from your environment at apply time so it is not embedded in the config, and `kongctl` redacts it in plan and diff output.
 
 ## Create an AI Policy entity
 
@@ -126,7 +126,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: Authorization
-            value: !env HUGGINGFACE_AUTH_HEADER
+            value: !secret {source: !env HUGGINGFACE_AUTH_HEADER}
 ai_gateway_policies:
   - ref: strip-claude-beta-info
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}

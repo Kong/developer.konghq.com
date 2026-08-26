@@ -68,7 +68,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: Authorization
-            value: !env OPENAI_AUTH_HEADER
+            value: !secret {source: !env OPENAI_AUTH_HEADER}
 ai_gateway_policies:
   - ref: my-ai-prompt-guard-policy
     name: my-ai-prompt-guard-policy
