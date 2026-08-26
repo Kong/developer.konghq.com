@@ -201,7 +201,7 @@ The module records a structured log entry, which is reported via the OpenTelemet
 
 ## Queuing
 
-{% include_cached /md/ai-gateway/v2/policies/queues.md name=page.name %}
+{% include_cached /md/ai-gateway/v2/policies/queues.md name=page.name slug=page.slug %}
 
 ## Trace IDs in serialized logs
 
