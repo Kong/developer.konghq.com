@@ -134,7 +134,7 @@ async function executeRequest(
   onResponse,
   expectedStatus,
 ) {
-  const maxRetries = 10;
+  const maxRetries = 3;
   const initialRetryDelay = 5000; // 5 seconds initial delay
 
   for (let attempt = 0; attempt < maxRetries; attempt++) {
