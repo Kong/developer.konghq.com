@@ -136,7 +136,10 @@ rows:
 
 1. Download and install a {{site.base_gateway}} FIPS 140-3 package on a [supported OS](/gateway/version-support-policy/#supported-versions).
 
-    Currently, the FIPS 140-3 package is only available on {{site.base_gateway}} 3.14 LTS.
+    The FIPS 140-3 package name and download URL use a `-fips-140-3` suffix. For links to the correct package for your distribution, see the [{{site.base_gateway}} install page](/gateway/install/), or see the FIPS 140-3 packages on [Docker Hub](https://hub.docker.com/r/kong/kong-gateway/tags?name=fips-140-3).
+
+    {:.info}
+    > **Note:** Currently, the FIPS 140-3 package is only available on {{site.base_gateway}} 3.14 LTS.
 
 2. Confirm `fips = on` in `kong.conf` or set `KONG_FIPS=on` as an environment variable.
 3. Restart {{site.base_gateway}}.
