@@ -5,11 +5,20 @@ works_on:
   - konnect
 products:
   - ai-gateway
-content_type: plugin
+content_type: policy
+description: 'Use AWS Guardrails to validate requests and/or responses before forwarding them between clients and upstream LLMs.'
+categories:
+  - ai
+tags:
+  - ai
+  - safety
+related_resources:
+  - text: Use the AI AWS Guardrails Policy
+    url: /ai-gateway/how-to/use-ai-aws-guardrails-policy/
 ---
 
 
-The AI AWS Guardrails Policy enforces introspection on both inbound requests and outbound responses handled by the [AI Model](/ai-gateway/entities/ai-model/) entity. It integrates with the [AWS Bedrock Guardrails](https://aws.amazon.com/bedrock/guardrails/) service to apply compliance and safety policies at the Gateway level. This ensures all data exchanged between clients and upstream LLMs adheres to the configured security standards.
+The AI AWS Guardrails Policy enforces introspection on both inbound requests and outbound responses handled by the [AI Model](/ai-gateway/entities/ai-model/) entity. It integrates with the [AWS Bedrock Guardrails](https://aws.amazon.com/bedrock/guardrails/) service to apply compliance and safety policies at the {{site.ai_gateway}} level. This ensures all data exchanged between clients and upstream LLMs adheres to the configured security standards.
 
 ## Prerequisites
 
