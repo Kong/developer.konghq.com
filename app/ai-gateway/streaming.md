@@ -13,9 +13,23 @@ breadcrumbs:
 tags:
   - ai
   - streaming
-  
+
 min_version:
   ai-gateway: '2.0'
+
+related_resources:
+  - text: "{{site.ai_gateway}}"
+    url: /ai-gateway/
+  - text: AI Model entity
+    url: /ai-gateway/entities/ai-model/
+  - text: AI Model Provider entity
+    url: /ai-gateway/entities/ai-model-provider/
+  - text: AI Policy entity
+    url: /ai-gateway/entities/ai-policy/
+  - text: AI Request Transformer Policy
+    url: /ai-gateway/policies/ai-request-transformer/
+  - text: AI Response Transformer Policy
+    url: /ai-gateway/policies/ai-response-transformer/
 
 description: This guide walks you through setting up AI Models with streaming.
 ---
@@ -24,7 +38,7 @@ description: This guide walks you through setting up AI Models with streaming.
 
 In an LLM (Large Language Model) inference request, {{site.ai_gateway}} uses the upstream AI Model Provider's REST API to generate the next chat message from the caller.
 
-Normally, this request is processed and completely buffered by the LLM before being sent back to {{site.ai_gateway}} and then to the caller in a single large JSON block. This process can be time-consuming, depending on the [`max_tokens`](/ai-gateway/entities/ai-model/#targets), other request parameters, and the complexity of the request sent to the LLM model. Request streaming in {{site.ai_gateway}} uses the [AI Model entity](/ai-gateway/entities/ai-model/). 
+Normally, this request is processed and completely buffered by the LLM before being sent back to {{site.ai_gateway}} and then to the caller in a single large JSON block. This process can be time-consuming, depending on the [`max_tokens`](/ai-gateway/entities/ai-model/#targets), other request parameters, and the complexity of the request sent to the LLM model. Request streaming in {{site.ai_gateway}} uses the [AI Model entity](/ai-gateway/entities/ai-model/).
 
 To avoid making the user wait for their chat response with a loading animation, most models can stream each word (or sets of words and tokens) back to the client. This allows the chat response to be rendered in real time.
 
