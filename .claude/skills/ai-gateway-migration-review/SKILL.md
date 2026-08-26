@@ -22,8 +22,11 @@ Before doing any work, ask (you can ask both in one message):
    - If specific files or directories, ask for the path.
    - If all files, you'll scan these directories:
      - `app/_how-tos/ai-gateway/`
-     - `app/_landing_pages/ai-gateway/`
+     - `app/_ai_gateway_entities/`
+     - `app/_ai_gateway_policies/`
+     - `app/_landing_pages/`
      - `app/ai-gateway/`
+     - `app/_includes/`
 
 2. **Mode**: Should you make changes directly, or produce a report of issues to fix?
 
@@ -70,7 +73,6 @@ Flag any deviation:
 
 Pages under `app/_ai_gateway_policies/` are auto-generated as stubs with the default `content_type: plugin`. When you author real overview content for one of these pages (i.e. the file has hand-written body prose, not just frontmatter), set `content_type: policy`.
 
-- If you are adding or editing overview prose on an `_ai_gateway_policies/` page, change `content_type: plugin` → `content_type: policy`.
 - Leave untouched stubs alone — do **not** flip `content_type` on pages that still have an empty body. The stub default stays `plugin` until the page gets real content.
 
 ### Plugin → AI Policy migration
