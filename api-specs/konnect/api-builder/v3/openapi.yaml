@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect API Catalog
-  version: 3.2.0
+  version: 3.4.4
   description: 'Konnect API Catalog is the API for creating and managing APIs in the Konnect Catalog and publishing APIs to Developer Portals. Use this API to create API entities, attach versioned specs, manage relationships with catalog services, and publish APIs to Developer Portals. This supersedes API Products v2 for new integrations.'
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@c66cd3204aef1dc6a13d78230f82190622a8c11c
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c66cd3204aef1dc6a13d78230f82190622a8c11c'
+  x-oas-source: kong/platform-api@b2eb9777854dfa07b4e0c5790e7f705d97927b80
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b2eb9777854dfa07b4e0c5790e7f705d97927b80'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -2362,8 +2362,8 @@ components:
         The visibility of the API in the portal.
         Public API publications do not require authentication to view and retrieve information about them.
         Private API publications require authentication to retrieve information about them.
+        If omitted, this defaults to the target portal's configured default API visibility.
       type: string
-      default: private
       enum:
         - public
         - private
