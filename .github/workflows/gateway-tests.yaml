@@ -5,6 +5,9 @@ on:
       gateway_image:
         description: 'Docker Image for Tests'
         required: true
+      gateway_version:
+        description: 'GATEWAY_VERSION to use (e.g. 3.14 or next)'
+        required: true
 
 concurrency:
   cancel-in-progress: true
@@ -52,6 +55,7 @@ jobs:
           INPUT_IMAGE="${{ inputs.gateway_image }}"
           echo "KONG_IMAGE_NAME=${INPUT_IMAGE%:*}" >> $GITHUB_ENV
           echo "KONG_IMAGE_TAG=${INPUT_IMAGE##*:}" >> $GITHUB_ENV
+          echo "GATEWAY_VERSION=${{ inputs.gateway_version }}" >> $GITHUB_ENV
 
       - name: Run tests
         working-directory: tools/automated-tests
@@ -59,7 +63,7 @@ jobs:
           KONG_LICENSE_DATA: ${{ steps.getLicense.outputs.license }}
           DEPLOYMENT_MODEL: on-prem
           PRODUCTS: gateway
-          GATEWAY_VERSION: next
+          GATEWAY_VERSION: ${{ env.GATEWAY_VERSION }}
           KONG_IMAGE_TAG: ${{ env.KONG_IMAGE_TAG }}
           KONG_IMAGE_NAME: ${{ env.KONG_IMAGE_NAME }}
         run: |
