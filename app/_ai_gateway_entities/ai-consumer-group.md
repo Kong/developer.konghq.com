@@ -31,6 +31,8 @@ related_resources:
     url: /ai-gateway/entities/ai-policy/
   - text: "{{site.base_gateway}} Consumer Group entity"
     url: /gateway/entities/consumer-group/
+  - text: Enforce tiered AI budgets on AI Models with {{site.identity}}
+    url: /ai-gateway/enforce-tiered-ai-budgets-with-kong-identity/
 faqs:
   - q: How is an AI Consumer Group different from a {{site.base_gateway}} Consumer Group?
     a: |
@@ -128,7 +130,7 @@ columns:
     key: description
 rows:
   - use_case: "Subscription tier management"
-    description: "Create AI Consumer Groups for different subscription tiers (for example, Bronze, Gold, Enterprise). Assign different rate limits, model access restrictions, and token quotas to each tier without configuring individual AI Consumers."
+    description: "Create AI Consumer Groups for different subscription [tiers](/ai-gateway/enforce-tiered-ai-budgets-with-kong-identity/) (for example, Bronze, Gold, Enterprise). Assign different rate limits, model access restrictions, and token quotas to each tier without configuring individual AI Consumers."
   - use_case: "Team-based access control"
     description: "Organize AI Consumers by team or department. Gate access to specific [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), or [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) at the group level, so teams only access the resources they need."
   - use_case: "AI safety and governance AI Policies"

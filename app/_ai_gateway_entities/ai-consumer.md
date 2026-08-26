@@ -31,6 +31,8 @@ related_resources:
     url: /ai-gateway/entities/ai-policy/
   - text: "{{site.base_gateway}} Consumer entity"
     url: /gateway/entities/consumer/
+  - text: Enforce tiered AI budgets on AI Models with {{site.identity}}
+    url: /ai-gateway/enforce-tiered-ai-budgets-with-kong-identity/
 faqs:
   - q: How is an AI Consumer different from a {{site.base_gateway}} Consumer?
     a: |

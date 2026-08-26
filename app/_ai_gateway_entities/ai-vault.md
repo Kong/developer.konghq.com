@@ -70,7 +70,7 @@ faqs:
 
 ## What is an AI Vault?
 
-You must store secrets like API keys and authentication tokens somewhere secure instead of embedding them directly in your configurations. An AI Vault entity lets you register an external secret backend (AWS Secrets Manager, HashiCorp Vault, environment variables, or others) so that [AI Model Providers](/ai-gateway/entities/ai-model-provider/), [AI Auth Strategies](/ai-gateway/entities/ai-auth-strategy/), [AI Models](/ai-gateway/entities/ai-model/), and [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) can reference secrets instead of storing them as literal values.
+You must store secrets like API keys and authentication tokens somewhere secure instead of embedding them directly in your configurations. An AI Vault entity lets you register an external secret backend (AWS Secrets Manager, HashiCorp Vault, environment variables, or others) so that [AI Model Providers](/ai-gateway/entities/ai-model-provider/), [AI Auth Strategies](/ai-gateway/entities/ai-auth-strategy/), [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), and [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) can reference secrets instead of storing them as literal values.
 
 An AI Vault entity stores the connection configuration and credentials needed to reach your secret backend. When other entities reference a secret, {{site.ai_gateway}}:
 1. Looks up the vault at request time
@@ -118,10 +118,10 @@ rows:
     fields: OIDC client secret for openid-connect type providers
   - entity: AI Model
     fields: Backend-specific authentication required by target model configurations
+  - entity: AI Agent
+    fields: AWS IAM (SigV4) credentials for authenticating to the upstream agent when `config.upstream.auth` is set
   - entity: AI MCP Server
-    fields: Encryption keys used by MCP Servers for client session management
-  - entity: AI Consumer
-    fields: API keys and tokens issued to downstream consumers
+    fields: Encryption keys used for client session management, and AWS IAM (SigV4) credentials for authenticating to the upstream server in `upstream-server` mode
 {% endtable %}
 
 {:.success}
@@ -205,7 +205,7 @@ Cache duration and grace periods are tunable per vault, allowing you to balance 
 
 ## {{site.konnect_short_name}} Config Store
 
-Unlike the other backends, the `konnect` type doesn't connect out to an external secret manager. 
+Unlike the other backends, the `konnect` type doesn't connect out to an external secret manager.
 It stores secrets directly in {{site.konnect_short_name}}, in a Config Store: a named container of key-value secrets that you create and populate through its own API, separate from the AI Vault entity itself.
 
 A `konnect`-type AI Vault doesn't hold any secret values. It only references a Config Store by ID through `config.config_store_id`. The Config Store holds the actual secrets.
@@ -220,7 +220,7 @@ Config Stores are managed through the {{site.ai_gateway}} API:
 * Config Store: [`/ai-gateways/{aiGatewayId}/config-stores`](/api/konnect/ai-gateway/#/operations/create-ai-gateway-config-store)
 * Config Store secrets: [`/ai-gateways/{aiGatewayId}/config-stores/{configStoreIdOrName}/secrets`](/api/konnect/ai-gateway/#/operations/create-ai-gateway-config-store-secret)
 
-Both support full create, list, get, update, and delete operations. 
+Both support full create, list, get, update, and delete operations.
 Deleting a Config Store that still has secrets fails unless you pass `?force=true`, which cascades the delete to all secrets in that Config Store.
 
 ### Create a Config Store and add a secret
@@ -264,7 +264,11 @@ data:
   description: Vault backed by the built-in Konnect Config Store.
   type: konnect
   config:
-    config_store_id: $CONFIG_STORE_ID
+    config_store_id: ${config_store_id}
+variables:
+  config_store_id:
+    value: $CONFIG_STORE_ID
+    secret: true
 {% endentity_example %}
 
 Reference the secret the same way as any other AI Vault:
