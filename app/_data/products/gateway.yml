@@ -1674,8 +1674,8 @@ releases:
           docker: true
           docker_support:
             arm: true
-            fips2: true
-            fips3: true
+            fips2: false
+            fips3: false
             graviton: true
           default: true
       - rhel8:
