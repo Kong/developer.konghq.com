@@ -5,14 +5,15 @@ works_on:
   - konnect
 products:
   - ai-gateway
-content_type: policy
-description: 'Audit and validate LLM prompts with Google Cloud Model Armor before forwarding them to an upstream LLM.'
-categories:
-  - ai
-tags:
-   - ai
-   - safety
-
+content_type: plugin
+related_resources:
+  - text: AI AWS Guardrails Policy
+    url: /ai-gateway/policies/ai-aws-guardrails/
+  - text: AI Azure Content Safety Policy
+    url: /ai-gateway/policies/ai-azure-content-safety/
+  - text: AI Custom Guardrail Policy
+    url: /ai-gateway/policies/ai-custom-guardrail/
+    
 faqs:
   - q: What do I do if I see the error `Blocked by Model Armor Floor Setting`?
     a: |
@@ -122,7 +123,7 @@ See the [FAQ entry for this error](#what-do-i-do-if-i-see-the-error-blocked-by-m
 
 ## Unrecognized filters
 
-The AI GCP Model Armor Policy blocks requests when GCP Model Armor returns a filter result with an unrecognized or new filter type. To avoid blocked requests, review your Model Armor template and ensure it only includes filter types the AI Policy supports.
+The AI GCP Model Armor Policy blocks requests when GCP Model Armor returns a filter result with an unrecognized or new filter type. To avoid blocked requests, review your Model Armor template and ensure it only includes filter types that the AI Policy supports.
 
 ## Logging
 
