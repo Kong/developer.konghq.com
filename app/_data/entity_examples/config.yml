@@ -48,8 +48,8 @@ event_gateway_variables: &event_gateway_variables
 
 ai_gateway_variables: &ai_gateway_variables
   ai_gateway:
-    placeholder: 'ai-gateway-name'
-    description: "The `name` of your AI Gateway."
+    placeholder: 'AI_GATEWAY_ID'
+    description: "The `id` of your AI Gateway."
 
 formats:
   deck:

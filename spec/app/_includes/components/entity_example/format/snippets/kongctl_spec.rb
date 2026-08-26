@@ -52,7 +52,7 @@ RSpec.describe 'components/entity_example/format/snippets/kongctl.md' do
         ```yaml
         ai_gateway_models:
           - ref: my-gpt-4o
-            ai_gateway: !lookup name:ai-gateway-name
+            ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
             display_name: my-gpt-4o
             name: my-gpt-4o
             type: model
@@ -110,7 +110,7 @@ RSpec.describe 'components/entity_example/format/snippets/kongctl.md' do
         ```yaml
         ai_gateway_model_providers:
           - ref: my-openai-account
-            ai_gateway: !lookup name:ai-gateway-name
+            ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
             display_name: OpenAI Production
             name: my-openai-account
             type: openai
@@ -155,7 +155,7 @@ RSpec.describe 'components/entity_example/format/snippets/kongctl.md' do
         ```yaml
         ai_gateway_model_providers:
           - ref: my-openai-account
-            ai_gateway: !lookup name:ai-gateway-name
+            ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
             display_name: OpenAI Production
             name: my-openai-account
             type: openai

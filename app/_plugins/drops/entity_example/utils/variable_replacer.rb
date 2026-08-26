@@ -123,7 +123,7 @@ module Jekyll
               yaml
                 .gsub(SECRET_SENTINEL_PATTERN, '!secret {source: !env \1}')
                 .gsub(SENTINEL_PATTERN, '!env \1')
-                .gsub(AI_GATEWAY_LOOKUP_SENTINEL, '!lookup name:ai-gateway-name')
+                .gsub(AI_GATEWAY_LOOKUP_SENTINEL, '!lookup {id: !env AI_GATEWAY_ID}')
             end
 
             def initialize(variables: {})

@@ -18,7 +18,6 @@ The following example creates a new `{{ include.presenter.data['type'] }}` polic
 {% endif %}
 {% if include.render_context or include.presenter.product == 'ai-gateway' %}
 {% if include.presenter.product == 'event-gateway' %}{% assign product = 'event_gateways' %}{% elsif include.presenter.product == 'ai-gateway'%}{% assign product = 'ai_gateways' %}{% endif %}
-Add this snippet to a kongctl declarative configuration file, and then [manage it with kongctl](/kongctl/declarative/#declarative-commands):
 {% endif %}
 
 {% include components/entity_example/format/snippets/kongctl.md presenter=include.presenter %}
