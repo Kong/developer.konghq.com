@@ -6,6 +6,18 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+description: 'Score prompt-response pairs with a dedicated LLM to evaluate the accuracy and quality of model responses.'
+categories:
+  - ai
+tags:
+  - ai
+related_resources:
+  - text: AI Models
+    url: /ai-gateway/entities/ai-model/
+  - text: Load balancing with {{site.ai_gateway_name}}
+    url: /ai-gateway/load-balancing/
+  - text: "{{site.ai_gateway}} audit log reference"
+    url: /ai-gateway/ai-audit-log-reference/#ai-llm-as-judge-logs
 ---
 
 The AI LLM as Judge Policy enables automated evaluation of prompt-response pairs using a dedicated LLM. The Policy assigns a numerical score to LLM responses from 1 to 100, where:
@@ -41,7 +53,7 @@ rows:
 ## How it works
 
 1. {{site.ai_gateway}} sends the user prompt and response to the configured LLM as a judge.
-2. The LLM evaluates the response and returns a numeric score between `1` (ideal) and `100` (wrong or irrelevant).
+2. The LLM evaluates the response and returns a numeric score between `1` (wrong or irrelevant) and `100` (ideal).
 3. This score can be used in downstream workflows, such as automated grading, feedback systems, or learning pipelines.
 
 The following sequence diagram illustrates this simplified flow:
