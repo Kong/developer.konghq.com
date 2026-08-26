@@ -23,7 +23,7 @@ related_resources:
     url: /catalog/
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: "MCP Registries (tech preview)"
+  - text: "MCP registries (tech preview)"
     url: /catalog/mcp-registry/
   - text: "AI Models"
     url: /catalog/ai-models/
@@ -45,8 +45,11 @@ You can create an MCP server in {{site.konnect_catalog}} in a few ways:
 * Import it from [{{site.ai_gateway}} 2.0](/ai-gateway/), by linking an existing {{site.ai_gateway}} MCP server as the source.
 * (Coming soon) Connect to a running MCP server, and have {{site.konnect_short_name}} fetch its definition directly.
 
-When an MCP server is linked to {{site.ai_gateway}}, the link is a snapshot, not a live sync.
-If you change the linked server's configuration in {{site.ai_gateway}}, the MCP server in {{site.konnect_catalog}} isn't automatically updated to match.
+When an MCP server is linked to {{site.ai_gateway}} 2.0, the link indicates that {{site.ai_gateway}} is protecting and proxying that server.
+An MCP server that isn't linked can still exist in {{site.konnect_catalog}} as part of your organization's inventory. 
+The absence of a link can also help you identify MCP servers that aren't yet protected by {{site.ai_gateway}} and could be candidates to govern with it.
+
+The link is a snapshot, not a live sync: if you change the linked server's configuration in {{site.ai_gateway}}, the MCP server in {{site.konnect_catalog}} isn't automatically updated to match.
 
 ## Create an MCP server
 
@@ -84,12 +87,28 @@ body:
         description: Multi-day forecast for a location.
         input_schema:
             type: object
-    resources: null
-    prompts: null
+    resources:
+      - name: forecast-docs
+        uri: file://forecast-docs.txt
+        description: Reference documentation describing forecast data fields and units.
+        mime_type: text/plain
+    prompts:
+      - name: summarize_forecast
+        description: Summarize the forecast for a location over a date range.
+        arguments:
+          - name: location
+            description: The location to summarize the forecast for.
+            required: true
     remotes:
       - type: streamable-http
         url: https://mcp.example.com/weather
-    packages: null
+    packages:
+      - registry:
+            type: npm
+        identifier: "@example/weather-mcp-server"
+        version: 1.0.0
+        transport:
+            type: stdio
 {% endkonnect_api_request %}
 <!--vale on-->
 

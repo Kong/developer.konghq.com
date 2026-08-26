@@ -1,5 +1,5 @@
 ---
-title: "MCP Registries in {{site.konnect_catalog}}"
+title: "MCP registries in {{site.konnect_catalog}} (tech preview)"
 content_type: reference
 layout: reference
 tech_preview: true
