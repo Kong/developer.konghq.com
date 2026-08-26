@@ -2793,7 +2793,7 @@ broker 92 to 9092, broker 93 to 9093, broker 94 to 9094, and broker 100 to
 9100.<br /><br />In most cases users should use a single range `["9090-9094"] ` and
 `bootstrap_port: at_start` and connect with
 `<host>:9090` as bootstrap server.
-Being able to use multiple ranges is only useful when when dealing with
+Being able to use multiple ranges is only useful when dealing with
 gaps in broker ids.<br /><br />It is strongly discouraged to use port mapping in production.
 
 
