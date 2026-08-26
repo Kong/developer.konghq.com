@@ -21,10 +21,10 @@ related_resources:
     url: /ai-gateway/
   - text: Status API
     url: /api/gateway/status/
-  - text: Admin API
-    url: /api/gateway/admin-ee/
-#  - text: Visualize AI metrics with Grafana
-#    url: /how-to/visualize-llm-metrics-with-grafana/
+  - text: Prometheus Policy
+    url: /ai-gateway/policies/prometheus/
+  - text: "{{ site.ai_gateway }} audit log reference"
+    url: /ai-gateway/ai-audit-log-reference/
 
 works_on:
   - konnect
@@ -34,12 +34,10 @@ works_on:
 
 In addition to LLM usage, {{site.ai_gateway}} can also log MCP server traffic. [MCP logging](/ai-gateway/entities/ai-mcp-server/#logging-and-audits) provides visibility into latency, response sizes, and error rates when AI Policies invoke external MCP tools and servers.
 
-Create a [Prometheus Policy](/ai-gateway/policies/prometheus/) to expose metrics in the [Prometheus](https://prometheus.io/docs/introduction/overview/) exposition format, which can be scraped by a Prometheus server.
+Create a [Prometheus Policy](/ai-gateway/policies/prometheus/) to expose metrics in a [Prometheus](https://prometheus.io/docs/introduction/overview/) exposition format, which can be scraped by a Prometheus server.
 
 The [Prometheus Policy](/ai-gateway/policies/prometheus/) records and exposes metrics at the node level. Your Prometheus server will need to discover all Kong nodes via a service discovery mechanism,
 and consume data from each node's Prometheus `/metrics` endpoint.
-
-AI metrics exported by the Prometheus Policy can be graphed in Grafana using [{{site.ai_gateway}} Dashboard](https://grafana.com/grafana/dashboards/21162-kong-cx-ai/).
 
 ## Available metrics
 
@@ -49,10 +47,7 @@ The following sections describe the AI metrics that are available.
 
 ## Overview
 
-AI metrics are disabled by default as it may create high number of metrics and may cause performance issues. To enable them:
-
-* Set `config.ai_metrics` to `true` in the [Prometheus Policy configuration](/ai-gateway/policies/prometheus/reference/).
-* Set `config.logging.log_statistics` to `true` in the [Model](/ai-gateway/entities/ai-model/).
+AI metrics are disabled by default, as generating them may create a high number of metrics and affect performance. To enable them, set `config.ai_metrics` to `true` in the [Prometheus Policy configuration](/ai-gateway/policies/prometheus/reference/). The [AI Model](/ai-gateway/entities/ai-model/) entity automatically collects the statistics that populate these metrics, so no separate AI Model-level configuration is required.
 
 ### LLM traffic metrics overview
 
@@ -116,15 +111,6 @@ kong_ai_mcp_error_total{service="svc1",route="route1",type="Invalid Request",met
 
 ## Accessing the metrics
 
-In most configurations, the Kong Admin API and Prometheus Policy will be behind a firewall or would
-need to be set up to require authentication. Here are a couple of options to
-allow access to the `/metrics` endpoint to Prometheus:
+{{site.ai_gateway}} data plane nodes don't expose an Admin API, so the Status API is the only way to reach the `/metrics` endpoint. Enable the Status API with the `status_listen` parameter in the [{{site.ai_gateway}} configuration](/ai-gateway/configuration/#status_listen), then point your Prometheus server at each node's `/metrics` endpoint.
 
-* If the Status API is enabled with the `status_listen` parameter in the [{{site.base_gateway}} configuration](/ai-gateway/configuration/#status-listen), then its `/metrics` endpoint can be used. This is the preferred method, and this is also the only method compatible with {{site.konnect_short_name}}, since Data Planes can't use the Admin API.
-
-* The `/metrics` endpoint is also available on the Admin API, which can be used
-if the Status API is not enabled. Note that this endpoint is unavailable
-when [RBAC](/api/gateway/admin-ee/#/operations/get-rbac-users) is enabled on the
-Admin API, as Prometheus doesn't support key authentication to pass the RBAC token.
-
-
+In most configurations, this endpoint should sit behind a firewall or require authentication, since it isn't exposed publicly by default.
