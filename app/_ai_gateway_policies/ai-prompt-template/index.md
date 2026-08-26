@@ -17,7 +17,7 @@ related_resources:
 
 The AI Prompt Template Policy lets you provide tuned AI prompts to users. Users only need to fill in the blanks with variable placeholders in the following format: `{% raw %}{{variable}}{% endraw %}`.
 
-This lets admins set up templates, which can then be used by anyone in the organization. It also allows admins to present an LLM as an API in its own right - for example, a bot that can provide software class examples and/or suggestions.
+This lets admins set up templates, which can then be used by anyone in the organization. It also allows admins to present an LLM as an API in its own right: for example, a bot that can provide software class examples and/or suggestions.
 
 This Policy also sanitizes string inputs to ensure that JSON control characters are escaped, preventing arbitrary prompt injection.
 
