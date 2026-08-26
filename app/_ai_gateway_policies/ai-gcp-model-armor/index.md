@@ -5,7 +5,13 @@ works_on:
   - konnect
 products:
   - ai-gateway
-content_type: plugin
+content_type: policy
+description: 'Audit and validate LLM prompts with Google Cloud Model Armor before forwarding them to an upstream LLM.'
+categories:
+  - ai
+tags:
+   - ai
+   - safety
 
 faqs:
   - q: What do I do if I see the error `Blocked by Model Armor Floor Setting`?
@@ -19,11 +25,11 @@ faqs:
         "error": true
       }
       ```
-      This means the AI GCP Model Armor Policy is conflicting with settings configured in GCP Vertex.
-      We recommend disabling the GCP Model Armor Floor in GCP, as this setting fails in some modes (for example, streaming response mode), and blocks all analytics.
+      This means the AI GCP Model Armor Policy is conflicting with settings configured in a Gemini AI Model Provider configured for GCP Vertex. We recommend disabling the GCP Model Armor Floor in GCP, as this setting fails in some modes (for example, streaming response mode), and blocks all analytics.
 ---
 
 The GCP Model Armor Policy integrates {{site.ai_gateway}} with [{{ site.google_cloud }}’s Model Armor](https://cloud.google.com/security-command-center/docs/model-armor-overview) service to enforce content safety guardrails on AI requests and responses.
+
 It leverages GCP SaaS APIs to inspect prompts and model outputs, preventing unsafe content from being processed or returned to users.
 
 ## Features
@@ -116,7 +122,7 @@ See the [FAQ entry for this error](#what-do-i-do-if-i-see-the-error-blocked-by-m
 
 ## Unrecognized filters
 
-The AI GCP Model Armor Policy now blocks requests when GCP Model Armor returns a filter result with an unrecognized or new filter type. Previously, unrecognized filter types were silently ignored. To avoid blocked requests, review your Model Armor template and ensure it only includes filter types the AI Policy supports.
+The AI GCP Model Armor Policy blocks requests when GCP Model Armor returns a filter result with an unrecognized or new filter type. To avoid blocked requests, review your Model Armor template and ensure it only includes filter types the AI Policy supports.
 
 ## Logging
 
