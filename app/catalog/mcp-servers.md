@@ -123,8 +123,8 @@ body:
 1. (Optional) Under **Capabilities**, click **New capability**, and select one of the following:
    * **Tool**: Outlines how your server takes actions. 
      1. In the **Name** field, enter a unique identifier for the tool. 
-     1. In the **inputSchema** field, enter the JSON schema defining the tool's expected parameters. 
-     1. (Optional) Fill in **Title**, **Description**, **outputSchema**, and **Annotations**.
+     1. In the **Input schema** field, enter the JSON schema defining the tool's expected parameters. 
+     1. (Optional) Fill in **Title**, **Description**, **Output schema**, and **Annotations**.
    * **Resource**: To share server context through documents, logs, and other data. 
      1. In the **URI** field, enter a unique identifier for the resource, for example `file://example.txt`. 
      1. In the **Name** field, enter a name for the resource. 
