@@ -620,10 +620,29 @@ This is separate from whether the authorization server accepts a request. For ex
 
 Origin enforcement only applies to requests that trigger a CORS preflight. A plain request using only standard headers doesn't trigger a preflight, and the trusted origins allowlist doesn't restrict access to the authorization server endpoints for such requests.
 
+{% navtabs "set trusted origins" %}
+{% navtab "{{site.konnect_short_name}} UI" %}
+1. In the {{site.konnect_short_name}} sidebar, click [**Identity**](https://cloud.konghq.com/identity/).
+1. Select **Authorization servers**.
+1. Select your authorization server.
+1. In **Actions**, select **Edit**.
+1. Under **Token settings**, open **Show advanced configuration**.
+1. In **Trusted origins**, enter up to 16 origin URIs, separated by a comma.
+
+For example:
+
+```
+http://localhost:8080, https://example.com
+```
+
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}} API" %}
 You can set trusted origins on either:
 
 - A new authorization server with a `POST`request on the [`createAuthServer` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServer).
 - An existing authorization server with a `PATCH` request on the [updateAuthServer endpoint](/api/konnect/kong-identity/v1/#/operations/updateAuthServer). On every `PATCH` request, make sure to include the entire trusted origins list, plus the URL you want to add to your authorization server. Otherwise, if you send a `PATCH` request with a single array, this single value replaces your entire allowlist.   
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Principals and directories
 
