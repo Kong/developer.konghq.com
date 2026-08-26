@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Konnect Mesh Control Plane manager
   description: Control Plane manager API
-  version: 0.0.2
+  version: 0.2.0
   x-ref-schema-name: DataplaneOverview
   contact:
     name: Kong
@@ -5573,6 +5573,79 @@ paths:
           $ref: '#/components/responses/MeshControlPlaneNotFoundError'
       tags:
         - Mesh
+  '/mesh/control-planes/{cpId}/readiness-reports':
+    parameters:
+      - $ref: '#/components/parameters/MeshControlPlaneId'
+    get:
+      x-unstable: true
+      x-internal: true
+      operationId: list-mesh-control-plane-readiness-reports
+      summary: List upgrade readiness reports
+      description: |
+        Returns the upgrade readiness reports stored for a control plane, newest first. A control plane with no completed scan returns an empty collection. The collection is bounded rather than unbounded: the service keeps a limited number of reports for one control plane and removes a report once it passes its retention window, so page numbers stay usable.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/MeshControlPlaneReadinessReportFilter'
+        - $ref: '#/components/parameters/MeshControlPlaneReadinessReportSort'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListMeshControlPlaneReadinessReportsResponse'
+        '401':
+          $ref: '#/components/responses/MeshControlPlaneUnauthorizedError'
+        '403':
+          $ref: '#/components/responses/MeshControlPlaneForbiddenError'
+        '404':
+          $ref: '#/components/responses/MeshControlPlaneNotFoundError'
+      tags:
+        - Mesh
+    post:
+      x-unstable: true
+      x-internal: true
+      operationId: scan-mesh-control-plane
+      summary: Scan a control plane for upgrade readiness
+      description: |
+        Starts an upgrade readiness scan of a control plane and returns at once, before the scan finishes. Read the report later to get the result. A scan runs with the credentials of the caller, so it reports only what the caller can already read. A control plane already running version 3 is refused, as is a second scan of a control plane whose scan is still running.
+      responses:
+        '202':
+          $ref: '#/components/responses/ScanMeshControlPlaneResponse'
+        '400':
+          $ref: '#/components/responses/ScanMeshControlPlaneValidationError'
+        '401':
+          $ref: '#/components/responses/MeshControlPlaneUnauthorizedError'
+        '403':
+          $ref: '#/components/responses/MeshControlPlaneForbiddenError'
+        '404':
+          $ref: '#/components/responses/MeshControlPlaneNotFoundError'
+        '409':
+          $ref: '#/components/responses/ScanMeshControlPlaneConflictError'
+        '501':
+          $ref: '#/components/responses/ScanMeshControlPlaneUnsupportedError'
+      tags:
+        - Mesh
+      x-rpc-endpoint: true
+  '/mesh/control-planes/{cpId}/readiness-reports/{reportId}':
+    parameters:
+      - $ref: '#/components/parameters/MeshControlPlaneId'
+      - $ref: '#/components/parameters/MeshControlPlaneReadinessReportId'
+    get:
+      x-unstable: true
+      x-internal: true
+      operationId: get-mesh-control-plane-readiness-report
+      summary: Get an upgrade readiness report
+      description: |
+        Returns one upgrade readiness report of a control plane, including the state of the scan that produced it and what the scan could not check.
+      responses:
+        '200':
+          $ref: '#/components/responses/RetrieveMeshControlPlaneReadinessReportResponse'
+        '401':
+          $ref: '#/components/responses/MeshControlPlaneUnauthorizedError'
+        '403':
+          $ref: '#/components/responses/MeshControlPlaneForbiddenError'
+        '404':
+          $ref: '#/components/responses/MeshControlPlaneNotFoundError'
+      tags:
+        - Mesh
 components:
   parameters:
     cpId:
@@ -5593,6 +5666,55 @@ components:
       schema:
         $ref: '#/components/schemas/MeshControlPlaneFilterParameters'
       style: deepObject
+    MeshControlPlaneId:
+      name: cpId
+      in: path
+      required: true
+      description: |
+        Id of the control plane that owns the resource. This names the parent rather than the resource being addressed, so it carries no entity match extension.
+      example: bf138ba2-c9b1-4229-b268-04d9d8a6410b
+      schema:
+        type: string
+        format: uuid
+    MeshControlPlaneReadinessReportFilter:
+      x-internal: true
+      x-unstable: true
+      name: filter
+      description: |
+        Filters a collection of upgrade readiness reports. Filtering on state is how a caller asks for the newest finished report rather than one still running.
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/MeshControlPlaneReadinessReportFilterParameters'
+      style: deepObject
+    MeshControlPlaneReadinessReportId:
+      name: reportId
+      in: path
+      required: true
+      description: Id of the upgrade readiness report
+      example: 9a4f2d3e-7c81-4a2b-9f0e-1d5c8b6a3f21
+      schema:
+        type: string
+        format: uuid
+    MeshControlPlaneReadinessReportSort:
+      x-internal: true
+      x-unstable: true
+      name: sort
+      description: |
+        Orders the collection by the time the scan was asked for, or by its state. An ascending or descending suffix is optional, and ascending is the default for an attribute named on its own. The collection is newest first when nothing is named.
+      required: false
+      in: query
+      schema:
+        type: string
+        default: requested_at desc
+        enum:
+          - requested_at
+          - requested_at asc
+          - requested_at desc
+          - state
+          - state asc
+          - state desc
+      example: requested_at desc
     PageNumber:
       name: 'page[number]'
       description: Determines which page of the entities to retrieve.
@@ -21585,6 +21707,298 @@ components:
           $ref: '#/components/schemas/MeshControlPlaneFeatureMeshCreation'
       required:
         - type
+    MeshControlPlaneReadinessReport:
+      description: |
+        The result of one upgrade readiness scan of a control plane.
+      type: object
+      properties:
+        id:
+          description: Identifier of this report.
+          type: string
+          format: uuid
+          example: 9a4f2d3e-7c81-4a2b-9f0e-1d5c8b6a3f21
+        control_plane_id:
+          description: Identifier of the control plane the scan read.
+          type: string
+          format: uuid
+          example: bf138ba2-c9b1-4229-b268-04d9d8a6410b
+        state:
+          $ref: '#/components/schemas/MeshControlPlaneReadinessReportState'
+        requested_at:
+          description: When the scan was asked for.
+          type: string
+          format: date-time
+          example: '2026-08-07T09:15:04.000Z'
+        finished_at:
+          description: 'When the scan stopped, and null until the scan finishes.'
+          type: string
+          format: date-time
+          example: '2026-08-07T09:15:41.000Z'
+          nullable: true
+        failure_reason:
+          description: |
+            Why the scan produced no result, and null unless the state is failed. It never carries the credentials of the caller or the contents of a finding.
+          type: string
+          example: The scan stopped at its deadline before it read the control plane.
+          nullable: true
+        result:
+          $ref: '#/components/schemas/MeshControlPlaneReadinessResult'
+      required:
+        - id
+        - control_plane_id
+        - state
+        - requested_at
+        - finished_at
+        - failure_reason
+        - result
+      x-internal: true
+      x-unstable: true
+    MeshControlPlaneReadinessScanAccepted:
+      description: |
+        Identifier of the upgrade readiness report this scan writes. Read the report at the Location above once the scan finishes.
+      type: object
+      properties:
+        id:
+          description: Identifier of the readiness report this scan writes.
+          type: string
+          format: uuid
+          example: 9a4f2d3e-7c81-4a2b-9f0e-1d5c8b6a3f21
+      required:
+        - id
+      x-internal: true
+      x-unstable: true
+    MeshControlPlaneReadinessReportState:
+      description: |
+        How far the scan got, which is separate from what the scan found. While it is running, result and failure_reason are both null. When it has finished, result holds what the scan found and failure_reason stays null. The result then says whether anything blocks the upgrade. When it has failed, the opposite holds: result is null and failure_reason says why, so a consumer must read state before reaching into result.
+      type: string
+      example: finished
+      enum:
+        - running
+        - finished
+        - failed
+      x-internal: true
+      x-unstable: true
+    MeshControlPlaneReadinessResult:
+      description: |
+        What the scan found, and null until the scan finishes. The checks belong to the Kong Mesh upgrade readiness tool, and this API restates its document in Konnect field names rather than passing it through. The address the scan connected to is deliberately left out, because it names shared infrastructure the reader does not own.
+      type: object
+      properties:
+        tool:
+          description: The tool that ran the checks.
+          type: string
+          example: kuma3-preflight
+        tool_schema:
+          description: |
+            Version of the tool's own document contract, so a reader can tell which shape the findings came from.
+          type: string
+          example: kuma3-preflight/v1
+        status:
+          $ref: '#/components/schemas/MeshControlPlaneReadinessStatus'
+        control_plane:
+          $ref: '#/components/schemas/MeshControlPlaneReadinessAuditedControlPlane'
+        meshes:
+          description: Names of the meshes the scan read.
+          type: array
+          items:
+            type: string
+          example:
+            - default
+        summary:
+          $ref: '#/components/schemas/MeshControlPlaneReadinessSummary'
+        findings:
+          description: 'What the scan found, grouped by severity, category and title.'
+          type: array
+          items:
+            $ref: '#/components/schemas/MeshControlPlaneReadinessFinding'
+        manual_checks:
+          description: 'Upgrade items the control plane API cannot answer, left for a person to check.'
+          type: array
+          items:
+            $ref: '#/components/schemas/MeshControlPlaneReadinessManualCheck'
+        generated_at:
+          description: When the tool wrote the document.
+          type: string
+          format: date-time
+          example: '2026-08-07T09:15:41.000Z'
+          nullable: true
+      nullable: true
+      required:
+        - tool
+        - tool_schema
+        - status
+        - control_plane
+        - meshes
+        - summary
+        - findings
+        - manual_checks
+        - generated_at
+      x-internal: true
+      x-unstable: true
+    MeshControlPlaneReadinessStatus:
+      description: |
+        Whether anything blocks the upgrade. A scan that could not finish reading the estate fails instead of reporting on part of it, so a status only ever describes a whole read.
+      type: string
+      example: blockers
+      enum:
+        - clean
+        - blockers
+        - failed
+      x-internal: true
+      x-unstable: true
+    MeshControlPlaneReadinessAuditedControlPlane:
+      description: 'The control plane the scan read, as the scan saw it.'
+      type: object
+      properties:
+        product:
+          type: string
+          example: Kong Mesh
+        version:
+          type: string
+          example: 2.11.3
+        mode:
+          $ref: '#/components/schemas/MeshControlPlaneReadinessMode'
+      required:
+        - product
+        - version
+        - mode
+      x-internal: true
+      x-unstable: true
+    MeshControlPlaneReadinessSummary:
+      description: Counts of what the scan found.
+      type: object
+      properties:
+        blockers:
+          description: Findings that stop the upgrade.
+          type: integer
+          example: 2
+          minimum: 0
+        info:
+          type: integer
+          example: 3
+          minimum: 0
+        parse_errors:
+          description: Resources whose contents the scan could not read.
+          type: integer
+          example: 0
+          minimum: 0
+        system_findings:
+          description: Findings about resources Kong owns rather than the reader.
+          type: integer
+          example: 0
+          minimum: 0
+      required:
+        - blockers
+        - info
+        - parse_errors
+        - system_findings
+      x-internal: true
+      x-unstable: true
+    MeshControlPlaneReadinessFinding:
+      description: 'One thing the scan found, with every occurrence of it counted together.'
+      type: object
+      properties:
+        severity:
+          $ref: '#/components/schemas/MeshControlPlaneReadinessSeverity'
+        group:
+          $ref: '#/components/schemas/MeshControlPlaneReadinessGroup'
+        category:
+          type: string
+          example: Removed policies
+        title:
+          type: string
+          example: TrafficPermission is removed in 3.0
+        detail:
+          description: What to do about it.
+          type: string
+          example: Replace each TrafficPermission with a MeshTrafficPermission before upgrading.
+        count:
+          description: How many resources this finding covers.
+          type: integer
+          example: 4
+          minimum: 1
+        example_resources:
+          description: 'Up to ten of the resources this finding covers, named so a reader can find them.'
+          type: array
+          items:
+            type: string
+          example:
+            - default/allow-all
+          maxItems: 10
+        doc_url:
+          description: |
+            The Kong Mesh page explaining the replacement, and null for a finding with nothing to point at.
+          type: string
+          format: uri
+          example: 'https://developer.konghq.com/mesh/policies/meshtrafficpermission/'
+          nullable: true
+      required:
+        - severity
+        - group
+        - category
+        - title
+        - detail
+        - count
+        - example_resources
+        - doc_url
+      x-internal: true
+      x-unstable: true
+    MeshControlPlaneReadinessSeverity:
+      description: |
+        How much a finding matters to the upgrade. A blocker stops it, and everything else is context the reader may act on or ignore.
+      type: string
+      example: blocker
+      enum:
+        - blocker
+        - info
+      x-internal: true
+      x-unstable: true
+    MeshControlPlaneReadinessGroup:
+      description: |
+        Which part of the estate a finding belongs to. These are identifiers rather than labels, so a reader that wants prettier wording supplies its own.
+      type: string
+      example: policies
+      enum:
+        - control_plane
+        - mesh_object
+        - policies
+        - removed_resources
+        - data_plane_and_workloads
+        - other
+      x-internal: true
+      x-unstable: true
+    MeshControlPlaneReadinessMode:
+      description: 'How the audited control plane runs, and null when the scan could not tell.'
+      type: string
+      example: global
+      enum:
+        - standalone
+        - zone
+        - global
+      nullable: true
+      x-internal: true
+      x-unstable: true
+    MeshControlPlaneReadinessManualCheck:
+      description: One upgrade item the control plane API cannot answer.
+      type: object
+      properties:
+        title:
+          type: string
+          example: Gateway API resources
+        detail:
+          type: string
+          example: Check each Gateway resource by hand; the control plane API does not list them.
+          nullable: true
+        command:
+          description: 'A command that answers the item, and null when there is none to give.'
+          type: string
+          example: kubectl get gateways -A
+          nullable: true
+      required:
+        - title
+        - detail
+        - command
+      x-internal: true
+      x-unstable: true
     MeshControlPlaneLabels:
       description: Labels to facilitate tagged search on control planes. Keys must be of length 1-63 characters.
       type: object
@@ -21717,6 +22131,15 @@ components:
       default: v2
       pattern: '^v[0-9]{1,9}$'
       x-internal: true
+    MeshControlPlaneReadinessReportFilterParameters:
+      type: object
+      properties:
+        state:
+          $ref: '#/components/schemas/StringFieldEqualsFilter'
+      additionalProperties: false
+      title: MeshControlPlaneReadinessReportFilterParameters
+      x-internal: true
+      x-unstable: true
     MeshControlPlaneFilterParameters:
       type: object
       properties:
@@ -22093,36 +22516,6 @@ components:
               - `filter[labels.env]=dev`
               - `filter[labels.env][ocontains]=dev,test`
         - $ref: '#/components/schemas/StringFieldFilter'
-    ForbiddenError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 403
-            title:
-              example: Forbidden
-            type:
-              example: 'https://httpstatuses.com/403'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Forbidden
-    UnauthorizedError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 401
-            title:
-              example: Unauthorized
-            type:
-              example: 'https://httpstatuses.com/401'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Invalid credentials
     PageMeta:
       description: Contains pagination query parameters and the total number of objects returned.
       type: object
@@ -22153,6 +22546,66 @@ components:
         - page
       title: PaginatedMeta
       x-speakeasy-terraform-ignore: true
+    ConflictError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 409
+            title:
+              example: Conflict
+            type:
+              example: 'https://httpstatuses.com/409'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Conflict
+    NotImplementedError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 501
+            title:
+              example: Not Implemented
+            type:
+              example: 'https://httpstatuses.com/501'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Not Implemented
+    ForbiddenError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 403
+            title:
+              example: Forbidden
+            type:
+              example: 'https://httpstatuses.com/403'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Forbidden
+    UnauthorizedError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 401
+            title:
+              example: Unauthorized
+            type:
+              example: 'https://httpstatuses.com/401'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Invalid credentials
   examples:
     GlobalInsightExample:
       value:
@@ -22247,6 +22700,88 @@ components:
             zones:
               - name: east
               - name: west
+    MeshControlPlaneScanAcceptedExample:
+      value:
+        id: 9a4f2d3e-7c81-4a2b-9f0e-1d5c8b6a3f21
+    MeshControlPlaneReadinessReportExample:
+      value:
+        id: 9a4f2d3e-7c81-4a2b-9f0e-1d5c8b6a3f21
+        control_plane_id: bf138ba2-c9b1-4229-b268-04d9d8a6410b
+        state: finished
+        requested_at: '2026-08-07T09:15:04.000Z'
+        finished_at: '2026-08-07T09:15:41.000Z'
+        failure_reason: null
+        result:
+          tool: kuma3-preflight
+          tool_schema: kuma3-preflight/v1
+          status: blockers
+          control_plane:
+            product: Kong Mesh
+            version: 2.11.3
+            mode: global
+          meshes:
+            - default
+          summary:
+            blockers: 1
+            info: 0
+            parse_errors: 0
+            system_findings: 0
+          findings:
+            - severity: blocker
+              group: policies
+              category: Removed policies
+              title: TrafficPermission is removed in 3.0
+              detail: Replace each TrafficPermission with a MeshTrafficPermission before upgrading.
+              count: 4
+              example_resources:
+                - default/allow-all
+              doc_url: 'https://developer.konghq.com/mesh/policies/meshtrafficpermission/'
+          manual_checks:
+            - title: Gateway API resources
+              detail: Check each Gateway resource by hand; the control plane API does not list them.
+              command: null
+          generated_at: '2026-08-07T09:15:41.000Z'
+    MeshControlPlaneReadinessReportCollectionExample:
+      value:
+        meta:
+          page:
+            size: 1
+            total: 1
+            number: 1
+        data:
+          - id: 9a4f2d3e-7c81-4a2b-9f0e-1d5c8b6a3f21
+            control_plane_id: bf138ba2-c9b1-4229-b268-04d9d8a6410b
+            state: finished
+            requested_at: '2026-08-07T09:15:04.000Z'
+            finished_at: '2026-08-07T09:15:41.000Z'
+            failure_reason: null
+            result:
+              tool: kuma3-preflight
+              tool_schema: kuma3-preflight/v1
+              status: clean
+              control_plane:
+                product: Kong Mesh
+                version: 2.11.3
+                mode: global
+              meshes:
+                - default
+              summary:
+                blockers: 0
+                info: 0
+                parse_errors: 0
+                system_findings: 0
+              findings: []
+              manual_checks: []
+              generated_at: '2026-08-07T09:15:41.000Z'
+    MeshControlPlaneReadinessReportFailedExample:
+      value:
+        id: 4c2b8e1a-5d93-4f77-8a21-6e0b9c4d7f38
+        control_plane_id: bf138ba2-c9b1-4229-b268-04d9d8a6410b
+        state: failed
+        requested_at: '2026-08-07T09:15:04.000Z'
+        finished_at: '2026-08-07T09:20:04.000Z'
+        failure_reason: The scan stopped at its deadline before it finished reading the control plane.
+        result: null
     ControlPlaneExample:
       value:
         id: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
@@ -23998,6 +24533,99 @@ components:
               total:
                 description: The total number of entities
                 type: number
+    ListMeshControlPlaneReadinessReportsResponse:
+      description: A paginated list response for a collection of upgrade readiness reports.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MeshControlPlaneReadinessReport'
+            title: ListMeshControlPlaneReadinessReportsResponse
+          examples:
+            Readiness Report Collection:
+              $ref: '#/components/examples/MeshControlPlaneReadinessReportCollectionExample'
+    RetrieveMeshControlPlaneReadinessReportResponse:
+      description: A response carrying one upgrade readiness report.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MeshControlPlaneReadinessReport'
+          examples:
+            Finished Report:
+              $ref: '#/components/examples/MeshControlPlaneReadinessReportExample'
+            Failed Report:
+              $ref: '#/components/examples/MeshControlPlaneReadinessReportFailedExample'
+    ScanMeshControlPlaneResponse:
+      description: |
+        The scan was accepted. The body carries only the id of the report it writes; read the report at the Location below.
+      headers:
+        Location:
+          description: |
+            Relative path of the report this scan writes, so a caller polls it without assembling the path itself.
+          required: true
+          schema:
+            type: string
+            example: /v1/mesh/control-planes/bf138ba2-c9b1-4229-b268-04d9d8a6410b/readiness-reports/9a4f2d3e-7c81-4a2b-9f0e-1d5c8b6a3f21
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MeshControlPlaneReadinessScanAccepted'
+          examples:
+            Scan Accepted:
+              $ref: '#/components/examples/MeshControlPlaneScanAcceptedExample'
+    ScanMeshControlPlaneValidationError:
+      description: Validation Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/BadRequestError'
+          examples:
+            Already On Version 3:
+              value:
+                status: 400
+                type: 'https://kongapi.info/konnect/bad-request'
+                title: Bad Request
+                instance: 'konnect:trace:6480643114111646299'
+                detail: 'Control plane [bf138ba2-c9b1-4229-b268-04d9d8a6410b] already runs version 3.'
+                invalid_parameters:
+                  - field: cpId
+                    rule: invalid
+                    reason: 'control plane already runs version 3, so it needs no readiness scan'
+                    source: path
+    ScanMeshControlPlaneConflictError:
+      description: A scan of this control plane is already running.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ConflictError'
+          examples:
+            Scan Already Running:
+              value:
+                status: 409
+                type: 'https://kongapi.info/konnect/conflict'
+                title: Conflict
+                instance: 'konnect:trace:2587793459331520595'
+                detail: a scan of this control plane is already running
+    ScanMeshControlPlaneUnsupportedError:
+      description: Readiness scanning is not supported in this environment.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/NotImplementedError'
+          examples:
+            Scanning Unsupported:
+              value:
+                status: 501
+                type: 'https://kongapi.info/konnect/not-implemented'
+                title: Not Implemented
+                instance: 'konnect:trace:2587793459331520595'
+                detail: readiness scanning is not supported in this environment
     RetrieveMeshControlPlaneResponse:
       description: A response to creating a control plane.
       content:

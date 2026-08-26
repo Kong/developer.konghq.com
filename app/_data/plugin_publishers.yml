@@ -51,3 +51,9 @@ noma:
 
 crowdstrike:
   name: CrowdStrike
+
+skyflow:
+  name: Skyflow
+
+veriknox:
+  name: VeriKnox

@@ -52,3 +52,5 @@ extra_services
 env_vars
 crowdstrike
 aidr
+standalone_gateway
+skip_cert_manager

@@ -19,7 +19,7 @@ tags:
 
 
 related_resources:
-  - text: "Upgrading {{site.base_gateway}}"
+  - text: "Upgrade and migrate {{site.base_gateway}}"
     url: /gateway/upgrade/
   - text: "Dual-cluster upgrade"
     url: /gateway/upgrade/dual-cluster/
@@ -89,8 +89,8 @@ The exact execution of these steps will vary depending on your environment.
 
 ### Prerequisites
 
-* Review either the [general upgrade guide](/gateway/upgrade/) or one of the LTS upgrade guides 
-([2.8 -> 3.4](/gateway/upgrade/lts-upgrade-28-34/), [3.4 -> 3.10](/gateway/upgrade/lts-upgrade-34-310/), [3.10 -> 3.14](/gateway/upgrade/lts-upgrade-310-314/)) 
+* Review either the [upgrade guide](/gateway/upgrade/reference/) or one of the LTS upgrade guides
+([2.8 -> 3.4](/gateway/upgrade/lts-upgrade-28-34/), [3.4 -> 3.10](/gateway/upgrade/lts-upgrade-34-310/), [3.10 -> 3.14](/gateway/upgrade/lts-upgrade-310-314/))
 to prepare for the upgrade and review your options.
 * You have a traditional deployment or you need to upgrade the control planes (CPs) in a hybrid mode deployment.
 * You can't perform [dual-cluster upgrades](/gateway/upgrade/dual-cluster/) due to resource limitations.

@@ -1,9 +1,10 @@
 name: Insomnia
 icon: /_assets/icons/products/insomnia.svg
+app_url: https://app.insomnia.rest
 
 tiers:
   hobby:
-    text: Hobby and above
+    text: Essentials and above
     url: /insomnia/
   pro:
     text: Pro and above
@@ -47,4 +48,6 @@ releases:
     version: "13.0.0"
   - release: "13.1"
     version: "13.1.0"
+  - release: "13.2"
+    version: "13.2.0"
     latest: true

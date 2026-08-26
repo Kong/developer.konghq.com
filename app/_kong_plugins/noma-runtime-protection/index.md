@@ -62,13 +62,7 @@ Noma assets:
 {{site.konnect_short_name}} requires the custom plugin’s `schema.lua` file to create a plugin entry in the plugin catalog for your control plane.
 Upload the `schema.lua` file from the downloaded zip file to create a configurable entity in {{site.konnect_short_name}}:
 
-1. In the {{site.konnect_short_name}} menu, click **API Gateway**.
-1. Click a control plane.
-1. From the control plane's menu, click **Plugins**.
-1. Click **New Plugin**.
-1. Click **Custom Plugin**.
-1. Upload the `schema.lua` file for your plugin.
-1. Check that your file displays correctly in the preview, then click **Save**.
+{% include_cached plugins/third-party-konnect-plugin.md %}
 1. After uploading a schema to {{site.konnect_short_name}}, upload the `schema.lua` and `handler.lua` files from the downloaded zip archive to each {{site.base_gateway}} data plane node. 
    If a data plane node doesn’t have these files, the plugin won’t be able to run on that node.
 1. Follow the Dockerfile installation instructions on this page (switch tabs) to get your plugin set up on each node. 

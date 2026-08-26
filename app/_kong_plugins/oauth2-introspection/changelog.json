@@ -1,8 +1,29 @@
 {
+  "3.15.0.5": [
+    {
+      "message": "Fixed an authentication bypass where a revoked or\nexpired token stayed authorized indefinitely instead of being rejected. An\nauthoritative `active:false` result is now also cached briefly (5 seconds).",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "The authenticated token is now stored in the request context via `kong.client.set_token`.\n",
       "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.14.0.14": [
+    {
+      "message": "Fixed an authentication bypass where a revoked or\nexpired token stayed authorized indefinitely instead of being rejected. An\nauthoritative `active:false` result is now also cached briefly (5 seconds).",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.13.0.10": [
+    {
+      "message": "Fixed an authentication bypass where a revoked or\nexpired token stayed authorized indefinitely instead of being rejected. An\nauthoritative `active:false` result is now also cached briefly (5 seconds).",
+      "type": "bugfix",
       "scope": "Plugin"
     }
   ],
@@ -14,6 +35,13 @@
     },
     {
       "message": "Fixed an issue where authentication failures did not log messages in the error logs.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.12.0.11": [
+    {
+      "message": "Fixed an authentication bypass where a revoked or\nexpired token stayed authorized indefinitely instead of being rejected. An\nauthoritative `active:false` result is now also cached briefly (5 seconds).",
       "type": "bugfix",
       "scope": "Plugin"
     }

@@ -20,7 +20,7 @@ search_aliases:
   - blue green upgrade
 
 related_resources:
-  - text: "Upgrading {{site.base_gateway}}"
+  - text: "Upgrade and migrate {{site.base_gateway}}"
     url: /gateway/upgrade/
   - text: "Backing up and restoring {{site.base_gateway}}"
     url: /gateway/upgrade/backup-and-restore/
@@ -108,7 +108,7 @@ The exact execution of these steps will vary depending on your environment.
 
 ### Prerequisites
 
-* Review the [general upgrade guide](/gateway/upgrade/) to prepare for the upgrade and review your options.
+* Review the [upgrade guide](/gateway/upgrade/reference/) to prepare for the upgrade and review your options.
 * You have a traditional deployment or you need to upgrade the Control Planes (CPs) in a hybrid mode deployment.
 * You have {{site.base_gateway}} 2.8.2.x or later.
 * You can't perform [dual-cluster upgrades](/gateway/upgrade/dual-cluster/) due to resource limitations.

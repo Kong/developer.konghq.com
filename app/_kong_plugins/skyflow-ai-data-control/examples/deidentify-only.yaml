@@ -1,0 +1,72 @@
+description: 'Enable the Skyflow De-identify plugin in de-identify-only mode.'
+
+extended_description: |
+  Enable the Skyflow De-identify plugin with re-identification disabled.
+
+  In this configuration, the plugin tokenizes outbound request bodies before
+  {{site.base_gateway}} proxies them upstream.
+  Re-identification is off, so the caller also receives tokens rather than restored values.
+  Use this configuration for a strict egress posture where no original values should leave your trust boundary.
+
+  The `sts` credential method requires no stored Skyflow secret.
+  {{site.base_gateway}} exchanges each caller's own identity provider (IdP) token for a short-lived Skyflow bearer
+  token using RFC 8693 token exchange.
+
+title: 'De-identify only'
+
+weight: 900
+
+requirements:
+  - "The Skyflow De-identify plugin is [installed](/plugins/skyflow-ai-data-control/#install-the-skyflow-de-identify-plugin)."
+  - "You have a [Skyflow account](https://docs.skyflow.com/docs/fundamentals/accounts-and-environments) with a Detect vault. From the vault's page in the Skyflow admin console, copy the **Vault ID**, **Vault URL**, and **Account ID**."
+  - "The credential's Skyflow role permits the **de-identify** operation."
+
+variables:
+  vault_id:
+    value: $SKYFLOW_VAULT_ID
+    description: The ID of your Skyflow Detect vault.
+  vault_url:
+    value: $SKYFLOW_VAULT_URL
+    description: "The full URL of your Skyflow vault. For example: `https://{cluster}.vault.skyflowapis.com`. Sandbox vaults use `.skyflowapis.tech`."
+  account_id:
+    value: $SKYFLOW_ACCOUNT_ID
+    description: Your Skyflow account ID.
+  service_account_id:
+    value: $SKYFLOW_SERVICE_ACCOUNT_ID
+    description: Your Skyflow service account ID, used for STS token exchange.
+  expected_issuer:
+    value: $SKYFLOW_EXPECTED_ISSUER
+    description: "The issuer URL of your IdP. For example: `https://login.microsoftonline.com/{tenant}/v2.0`."
+  expected_audience:
+    value: $SKYFLOW_EXPECTED_AUDIENCE
+    description: The expected audience value in the caller's IdP token. Typically the client ID of your IdP application.
+
+config:
+  skyflow:
+    vault_configuration:
+      vault_id: ${vault_id}
+      vault_url: ${vault_url}
+      account_id: ${account_id}
+    credentials:
+      method: sts
+      sts:
+        service_account_id: ${service_account_id}
+        expected_issuer: ${expected_issuer}
+        expected_audience: ${expected_audience}
+    deidentify:
+      entities:
+        - NAME
+        - EMAIL_ADDRESS
+        - PHONE_NUMBER
+        - SSN
+        - CREDIT_CARD
+      token_format: VAULT_TOKEN
+    reidentify:
+      enabled: false
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

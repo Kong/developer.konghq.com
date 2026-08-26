@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect Application Auth Strategies
-  version: 2.1.1
+  version: 2.1.2
   description: The API for Kong Konnect Portal Application Configuration
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@6a66b6c4a223f57df6e079d9f971cf1202e6a70f
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6a66b6c4a223f57df6e079d9f971cf1202e6a70f'
+  x-oas-source: kong/platform-api@e5a25c3a47d7bf7596396ad82a65fa9026c46746
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e5a25c3a47d7bf7596396ad82a65fa9026c46746'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -228,7 +228,7 @@ paths:
       requestBody:
         $ref: '#/components/requestBodies/CreateAppAuthStrategy'
       responses:
-        '201':
+        '200':
           $ref: '#/components/responses/CreateAppAuthStrategy'
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -236,6 +236,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
       tags:
         - App Auth Strategies
     patch:

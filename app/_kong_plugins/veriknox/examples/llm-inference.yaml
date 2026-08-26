@@ -1,0 +1,78 @@
+description: 'Enable the VeriKnox plugin for LLM inference traffic.'
+
+extended_description: |
+  Enable the VeriKnox plugin on a Route that proxies OpenAI-compatible LLM inference traffic.
+
+  The plugin intercepts requests to the upstream LLM provider, applies VeriKnox Hub policy,
+  and forwards a cryptographically signed receipt to VeriKnox Hub before the request is proxied.
+  A signed response receipt is sent after the upstream responds.
+
+  The `agent_passphrase` must be a Vault reference. Don't set it as a plain string.
+  The data plane must be enrolled with VeriKnox Hub before the plugin can sign receipts.
+  See the [installation instructions](/plugins/veriknox/#install-the-veriknox-plugin) for enrollment steps.
+
+  The `http_session_header` field is optional. When set, the plugin attaches the value
+  of that request header to receipts as a session ID, which is useful for grouping
+  multi-turn conversations in VeriKnox Hub audit logs.
+
+  {% mermaid %}
+  sequenceDiagram
+      autonumber
+      participant A as AI Agent / Client
+      participant K as {{site.ai_gateway}}<br/>(veriknox-plugin)
+      participant H as VeriKnox Hub
+      participant U as Upstream LLM<br/>(e.g. OpenAI, Anthropic,<br/>OpenRouter, Google Gemini)
+
+      A->>K: Send inference request
+      Note over K: Parse request body<br/>(prompt, model, messages)
+      K->>H: POST signed receipt — inference request<br/>(ED25519 + ML-DSA-65 signatures)
+      H-->>K: 200 OK (receipt accepted)
+      K->>U: Forward request upstream
+      U-->>K: Return inference response
+      Note over K: Parse response body<br/>(completion text, token usages)
+      K->>H: POST signed receipt — inference response<br/>(ED25519 + ML-DSA-65 signatures)
+      H-->>K: 200 OK (receipt accepted)
+      K-->>A: Return response to client
+  {% endmermaid %}
+
+title: 'LLM inference'
+
+weight: 900
+
+requirements:
+  - "The VeriKnox plugin is [installed](/plugins/veriknox/#install-the-veriknox-plugin) and the data plane is enrolled with VeriKnox Hub."
+  - "The identity passphrase is stored in a Kong Vault. Reference it as `{vault://veriknox/VERIKNOX_IDENTITY_PASSPHRASE}` or the equivalent path for your vault backend."
+  - "The upstream LLM provider Route exists in {{site.base_gateway}}."
+
+variables:
+  provider:
+    value: $VERIKNOX_PROVIDER_NAME
+    description: "A logical name for the upstream provider used in audit receipts. For example: `OpenAI` or `Anthropic`."
+  agent-passphrase:
+    value: "{vault://veriknox/VERIKNOX_IDENTITY_PASSPHRASE}"
+    description: "Vault reference to the identity passphrase. Replace `veriknox` with your vault prefix if different."
+  hub-base-url:
+    value: https://hub.veriknox.ai
+    description: "Base URL of your VeriKnox Hub instance. The default value is `https://hub.veriknox.ai`."
+  session-header:
+    value: $VERIKNOX_SESSION_HEADER
+    description: "Name of the HTTP header to extract a session ID from. For example: `X-Session-Id`. Omit this variable to leave the field unset."
+
+config:
+  endpoint:
+    specification: Inference:OpenAI/Chat_Completions
+    provider: ${provider}
+  agent_passphrase: "${agent-passphrase}"
+  veriknox_hub:
+    base_url: ${hub-base-url}
+  http_session_header: ${session-header}
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.14'

@@ -67,12 +67,12 @@ Once the domain is verified, you can configure its settings to control users wit
 
 ### Domain lock
 
-Use domain lock to remove access to your Insomnia Enterprise account for existing hobby users and uninvited new users.
+Use domain lock to remove access to your Insomnia Enterprise account for existing Essentials users and uninvited new users.
 
 To enable domain lock, navigate to [**Company** > **Domains**](https://app.insomnia.rest/app/enterprise/domains/list), specify the domain, and then click the **Lock** toggle.
 
 When you enable domain lock on a specific domain, all users from that domain will no longer be able to access your organization's Insomnia Enterprise account. For example:
-- **Existing users without an Enterprise invite:** Ariel is an existing hobby user and wasn’t invited to the Enterprise account. Now, when `Ariel@oldkong.com` attempts to sign in to Insomnia with that address, she won't have access to the Enterprise account.
+- **Existing users without an Enterprise invite:** Ariel is an existing Essentials user and wasn’t invited to the Enterprise account. Now, when `Ariel@oldkong.com` attempts to sign in to Insomnia with that address, she won't have access to the Enterprise account.
 - **Users without an account, but with a matching email domain:** George doesn't have an Insomnia account, but has an email address `george@DomainLockExample.com`. When George creates an Insomnia account, the domain lock blocks his sign-in, which means that he can't access the Insomnia Enterprise account or its features.
 
 {:.info}
@@ -92,13 +92,22 @@ You can set your preference for allowing invitations from the following domain t
 
 {% include insomnia/enterprise-storage.md %}
 
-## Add co-owners
+## Manage co-owners
 
 The owner of an Insomnia Enterprise account can invite other users to be co-owners of the account.
 
-To add a co-owner:
+### Add a co-awner
+
 1. [Invite](/insomnia/organizations/#invite-users-to-your-organization) the user to your an organization in your Enterprise account.
-1. Once they have accepted the invitation, go to [**Enterprise Controls** > **Co-owners**](https://app.insomnia.rest/app/enterprise/co-owners), search for the user's email address and select a role, then click **Invite**.
+1. Once they have accepted the invitation, go to [**Co-owners**](https://app.insomnia.rest/app/enterprise/co-owners), search for the user's email address and select a role, then click **Invite**.
 
 {:.decorative}
 > You must identify and add a co-owner to your account to ensure that the account is accessible and operational, even if an owner leaves.
+
+### Remove a co-owner
+
+When you remove a co-owner, you choose the level of access they keep as a
+regular user of the account:
+
+- **Keep as a member**: The user remains a member of every organization in the account.
+- **Remove from organizations**: The user loses access to all organizations. You can [invite them back](/insomnia/organizations/#invite-users-to-your-organization) later from **Organizations**.

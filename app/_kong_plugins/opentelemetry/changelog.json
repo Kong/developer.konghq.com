@@ -26,6 +26,30 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.4": [
+    {
+      "message": "Fixed `gen_ai.client.token.usage` never reporting token counts for non-text-generation\nAI categories (image, video, realtime, and audio transcription generation), because it only read the\nlegacy `prompt_tokens`/`prompt_tokens_details` analytics log fields instead of falling back to the\n`input_tokens`/`input_tokens_details` fields those categories are logged under.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.15.0.5": [
+    {
+      "message": "Fixed an issue where the `kong.dp.cluster_cert.expiry` metric reused the same datapoint timestamp across exports, causing monitoring systems to treat the series as stale.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Reduced per-request overhead of `resource_attributes` by skipping template rendering entirely for static (non-templated) fields.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Reduced memory usage of the access log queue by deferring OTLP payload conversion to export time.",
+      "type": "performance",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Fixed an issue where invalid `x-b3-flags` header values caused 500 responses.",
@@ -102,6 +126,35 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.13": [
+    {
+      "message": "Fixed `gen_ai.client.token.usage` never reporting token counts for non-text-generation\nAI categories (image, video, realtime, and audio transcription generation), because it only read the\nlegacy `prompt_tokens`/`prompt_tokens_details` analytics log fields instead of falling back to the\n`input_tokens`/`input_tokens_details` fields those categories are logged under.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.14.0.14": [
+    {
+      "message": "Fixed an issue where metrics were rarely (or never) exported on data planes whose configuration is rebuilt more frequently than the metrics `push_interval`. The periodic metrics push timer is no longer canceled and recreated on every configuration rebuild, so its `push_interval` countdown is preserved.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `kong.dp.cluster_cert.expiry` metric reused the same datapoint timestamp across exports, causing monitoring systems to treat the series as stale.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Reduced per-request overhead of `resource_attributes` by skipping template rendering entirely for static (non-templated) fields.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Reduced memory usage of the access log queue by deferring OTLP payload conversion to export time.",
+      "type": "performance",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added support for exporting OpenTelemetry metrics via OTLP/HTTP protocol to an observability backend (e.g. OpenTelemetry Collector). Please enable this feature by configuring the `metrics.endpoint` parameter in the OpenTelemetry plugin.",
@@ -151,6 +204,13 @@
     },
     {
       "message": "Fixed an issue where the plugin crashed when DNS or balancer failures occurred during upstream retries.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.13.0.10": [
+    {
+      "message": "Fixed an issue where the `kong.dp.cluster_cert.expiry` metric reused the same datapoint timestamp across exports, causing monitoring systems to treat the series as stale.",
       "type": "bugfix",
       "scope": "Plugin"
     }

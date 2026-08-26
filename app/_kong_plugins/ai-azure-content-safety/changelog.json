@@ -16,6 +16,23 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.4": [
+    {
+      "message": "Added `last_message` as a new optional value for `config.text_source`.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AI Gateway guardrail plugins' request extractors did not correctly honor the configured `text_source` option.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AI Gateway guardrail plugins failed to extract prompt text from OpenAI-native requests using the `input_text` content type.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "the `ssl_verify` option to verify the certificate\npresented by the Azure Content Safety service when using HTTPS is now enabled\nby default.\n",

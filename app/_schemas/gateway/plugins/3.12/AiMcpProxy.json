@@ -84,7 +84,12 @@
                 "type": "string"
               },
               "headers": {
-                "additionalProperties": true,
+                "additionalProperties": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
                 "description": "The headers of the exported API. By default, Kong will extract the headers from API configuration. If the configured headers are not exactly matched, this field is required.",
                 "type": "object"
               },
@@ -105,20 +110,34 @@
               },
               "parameters": {
                 "description": "The API parameters specification defined in OpenAPI. For example, '[{\"name\": \"city\", \"in\": \"query\", \"description\": \"Name of the city to get the weather for\", \"required\": true, \"schema\": {\"type\": \"string\"}}]'.See https://swagger.io/docs/specification/v3_0/describing-parameters/ for more details.",
-                "type": "string"
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "x-speakeasy-type-override": "any"
+                },
+                "nullable": true,
+                "type": "array"
               },
               "path": {
                 "description": "The path of the exported API. By default, Kong will extract the path from API configuration. If the configured path is not exactly matched, this field is required. Paths not starting with '/' are treated as relative paths.",
                 "type": "string"
               },
               "query": {
-                "additionalProperties": true,
+                "additionalProperties": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
                 "description": "The query arguments of the exported API. If the generated query arguments are not exactly matched, this field is required.",
                 "type": "object"
               },
               "request_body": {
+                "additionalProperties": true,
                 "description": "The API requestBody specification defined in OpenAPI. For example, '{\"content\":{\"application/x-www-form-urlencoded\":{\"schema\":{\"type\":\"object\",\"properties\":{\"color\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}}}}}}'.See https://swagger.io/docs/specification/v3_0/describing-request-body/describing-request-body/ for more details.",
-                "type": "string"
+                "nullable": true,
+                "type": "object",
+                "x-speakeasy-type-override": "any"
               },
               "scheme": {
                 "description": "The scheme of the exported API. By default, Kong will extract the scheme from API configuration. If the configured scheme is not expected, this field can be used to override it.",

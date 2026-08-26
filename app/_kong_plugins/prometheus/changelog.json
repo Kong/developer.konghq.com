@@ -6,6 +6,30 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.4": [
+    {
+      "message": "Fixed `kong_ai_llm_tokens_total` never reporting token counts for non-text-generation\nAI categories (image, video, realtime, and audio transcription generation), because it only read the\nlegacy `prompt_tokens`/`prompt_tokens_details` analytics log fields instead of falling back to the\n`input_tokens`/`input_tokens_details` fields those categories are logged under.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.15.0.5": [
+    {
+      "message": "A histogram's series (its buckets, `_count` and `_sum`) is now\nread as one atomic group during a scrape. Previously the exporter yielded and\nflushed output between individual samples, so an observation landing mid-scrape\ncould bump `_count`/`_sum` after the buckets were already read, producing an\ninternally inconsistent histogram in a single response.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where `kong_nginx_requests_total` and `kong_nginx_connections_total` duplicated the `http` values under the `stream` subsystem. They are now exported once under `http`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Histograms now expose every bucket (including those with a\nvalue of `0`) starting from the first observation of a given label set.\nPreviously only buckets greater than or equal to the observed value were\ncreated, so lower buckets appeared lazily on later scrapes.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.9": [
     {
       "message": "A histogram's series (its buckets, `_count` and `_sum`) is now\nread as one atomic group during a scrape. Previously, the exporter yielded and\nflushed output between individual samples, so an observation landing mid-scrape\ncould bump `_count`/`_sum` after the buckets were already read, producing an\ninternally inconsistent histogram in a single response.",
@@ -19,6 +43,20 @@
     },
     {
       "message": "Histograms now expose every bucket (including those with a\nvalue of `0`) starting from the first observation of a given label set.\nPreviously, only buckets greater than or equal to the observed value were\ncreated, so lower buckets appeared lazily on later scrapes.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.14.0.13": [
+    {
+      "message": "Fixed `kong_ai_llm_tokens_total` never reporting token counts for non-text-generation\nAI categories (image, video, realtime, and audio transcription generation), because it only read the\nlegacy `prompt_tokens`/`prompt_tokens_details` analytics log fields instead of falling back to the\n`input_tokens`/`input_tokens_details` fields those categories are logged under.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.14.0.14": [
+    {
+      "message": "Fixed an issue where `kong_nginx_requests_total` and `kong_nginx_connections_total` duplicated the `http` values under the `stream` subsystem. They are now exported once under `http`.",
       "type": "bugfix",
       "scope": "Plugin"
     }

@@ -4,7 +4,9 @@
       "description": "The configuration for MCP authorization in OAuth2. If this is enabled, make sure the configured metadata_endpoint is also covered by the same route so the authorization can be applied correctly.",
       "properties": {
         "args": {
-          "additionalProperties": true,
+          "additionalProperties": {
+            "type": "string"
+          },
           "description": "Additional arguments to send in the POST body.",
           "type": "object"
         },
@@ -92,7 +94,9 @@
           "x-referenceable": true
         },
         "headers": {
-          "additionalProperties": true,
+          "additionalProperties": {
+            "type": "string"
+          },
           "description": "Additional headers for the introspection request.",
           "type": "object"
         },

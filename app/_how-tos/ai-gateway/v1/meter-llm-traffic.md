@@ -12,6 +12,9 @@ products:
 works_on:
     - konnect
 
+min_version:
+    gateway: '3.14'
+
 tags:
     - get-started
 

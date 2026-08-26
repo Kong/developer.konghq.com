@@ -1,0 +1,190 @@
+metadata:
+  title: "Upgrade and migrate {{site.base_gateway}}"
+  content_type: landing_page
+  description: |
+    Upgrade {{site.base_gateway}} to a newer version, or migrate from OSS to Enterprise or from self-managed to {{site.konnect_short_name}}.
+  products:
+    - gateway
+  works_on:
+    - on-prem
+    - konnect
+
+rows:
+  - header:
+      type: h1
+      text: "Upgrade and migrate {{site.base_gateway}}"
+      sub_text: |
+        Upgrade {{site.base_gateway}} to a newer version, migrate from OSS to Enterprise, or move from self-managed infrastructure to {{site.konnect_short_name}}.
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Before you start"
+              blocks:
+                - type: unordered_list
+                  items:
+                    - "[Back up your data](/gateway/upgrade/backup-and-restore/): Back up your {{site.base_gateway}} configuration before upgrading so you can restore it if something goes wrong."
+                    - "[Review breaking changes](/gateway/breaking-changes/): Check for breaking changes between your current version and the target version."
+                    - "[Check version support](/gateway/version-support-policy/): Confirm your current and target versions are supported, and identify any required intermediate upgrade stops."
+                    - "[Review the changelog](/gateway/changelog/): Check the full changelog for every release between your current version and the target version."
+                    - "[Check performance benchmarks](/gateway/performance/benchmarks/): Review benchmark results for your target version to understand performance expectations."
+
+  - header:
+      type: h2
+      text: "Choose an upgrade strategy"
+      description: |
+        The right strategy depends on your deployment topology and available resources.
+    columns:
+      - blocks:
+          - type: table
+            config:
+              columns:
+                - title: Deployment type
+                  key: deployment
+                - title: Recommended strategy
+                  key: strategy
+              rows:
+                - deployment: Traditional mode
+                  strategy: "[Dual-cluster upgrade](/gateway/upgrade/dual-cluster/) if resources allow; [in-place upgrade](/gateway/upgrade/in-place/) if constrained"
+                - deployment: Hybrid mode control planes
+                  strategy: "[Dual-cluster upgrade](/gateway/upgrade/dual-cluster/) if resources allow; [in-place upgrade](/gateway/upgrade/in-place/) if constrained"
+                - deployment: Hybrid mode data planes
+                  strategy: "[Rolling upgrade](/gateway/upgrade/rolling/)"
+                - deployment: DB-less mode
+                  strategy: "[Rolling upgrade](/gateway/upgrade/rolling/)"
+                - deployment: "{{site.konnect_short_name}} data plane"
+                  strategy: "[Rolling upgrade](/gateway/upgrade/rolling/)"
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    We provide a detailed, in-depth upgrade guide that walks you through the upgrade process for each deployment type, and everything you need to know to prepare for a successful upgrade.
+                    Review this guide before you start your upgrade.
+
+          - type: button
+            config:
+              text: "Review the upgrade guide"
+              url: /gateway/upgrade/reference/
+      - blocks:
+          - type: mermaid
+            config:
+              diagram: |
+                flowchart TD
+                    A{Deployment type?} --> B(Traditional mode)
+                    A{Deployment type?} --> C(Hybrid mode)
+                    A{Deployment type?} --> D(DB-less mode)
+                    A{Deployment type?} --> E(Konnect DP)
+                    B ---> F{Enough hardware to
+                    run another cluster?}
+                    C --> G(Upgrade CP first) & H(Upgrade DP second)
+                    D ----> K([Rolling upgrade])
+                    E ----> K
+                    G --> F
+                    F ---Yes--->I([Dual-cluster upgrade])
+                    F ---No--->J([In-place upgrade])
+                    H ---> K
+                    click K "/gateway/upgrade/rolling/"
+                    click I "/gateway/upgrade/dual-cluster/"
+                    click J "/gateway/upgrade/in-place/"
+
+  - header:
+      type: h2
+      text: "Upgrade {{site.konnect_short_name}} data planes"
+      description: |
+        {{site.konnect_short_name}} data plane upgrades work differently from self-managed upgrades.
+        There are no database migrations. Instead, you provision new nodes and decommission old ones, or let Kong handle it automatically.
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Hybrid mode data planes
+            description: |
+              Provision new data plane nodes at the target version, verify they connect to the control plane, then decommission the old nodes.
+            icon: /assets/icons/deployment.svg
+            cta:
+              text: Upgrade hybrid mode data planes
+              url: /gateway/data-plane-reference/#upgrade-data-planes
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Dedicated Cloud Gateways
+            description: |
+              Patch releases upgrade automatically.
+              Major and minor version upgrades require you to initiate the upgrade through the Konnect API.
+            icon: /assets/icons/cloud.svg
+            cta:
+              text: Upgrade Dedicated Cloud Gateways
+              url: /dedicated-cloud-gateways/reference/#dedicated-cloud-gateway-upgrades
+              align: end
+
+  - header:
+      type: h2
+      text: "LTS version upgrades"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: "3.10 to 3.14 LTS upgrade"
+            description: |
+              Upgrade from {{site.base_gateway}} 3.10 LTS to 3.14 LTS.
+            icon: /assets/icons/cog.svg
+            ctas:
+              - text: Upgrade guide
+                url: /gateway/upgrade/lts-upgrade-310-314/
+              - text: Convert entity configuration
+                url: /gateway/upgrade/convert-lts-310-314/
+      - blocks:
+        - type: card
+          config:
+            title: "3.4 to 3.10 LTS upgrade"
+            description: |
+              Upgrade from {{site.base_gateway}} 3.4 LTS to 3.10 LTS.
+            icon: /assets/icons/cog.svg
+            ctas:
+              - text: Upgrade guide
+                url: /gateway/upgrade/lts-upgrade-34-310/
+              - text: Convert entity configuration
+                url: /gateway/upgrade/convert-lts-34-310/
+      - blocks:
+        - type: card
+          config:
+            title: "2.8 to 3.4 LTS upgrade"
+            description: |
+              Upgrade from {{site.base_gateway}} 2.8 LTS to 3.4 LTS.
+            icon: /assets/icons/cog.svg
+            ctas:
+              - text: Upgrade guide
+                url: /gateway/upgrade/lts-upgrade-28-34/
+              - text: Convert entity configuration
+                url: /gateway/upgrade/convert-lts-28-34/
+
+  - header:
+      type: h2
+      text: "Migrate {{site.base_gateway}}"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: "Migrate from self-managed to {{site.konnect_short_name}}"
+            description: |
+              Export your existing gateway configuration and move your data planes to a {{site.konnect_short_name}}-managed control plane.
+            icon: /assets/icons/cloud.svg
+            cta:
+              text: Migrate to {{site.konnect_short_name}}
+              url: /gateway/self-managed-migration/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: "Migrate from OSS to {{site.ee_product_name}}"
+            description: |
+              Use the kong migrations CLI to migrate an existing {{site.base_gateway}} open source deployment to {{site.ee_product_name}}.
+            icon: /assets/icons/cog.svg
+            cta:
+              text: Migrate to Enterprise
+              url: /gateway/upgrade/migrate-oss-to-ee/
+              align: end
