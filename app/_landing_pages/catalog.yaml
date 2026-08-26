@@ -37,8 +37,8 @@ rows:
                     An API might be well documented within its own team, but invisible to everyone else.
                     An LLM integration might work fine until someone in security asks which providers you're actually sending data to, and there's no fast way to answer.
 
-                    {{site.konnect_catalog}} is where these interfaces live instead: APIs, API packages, and AI Models today, with more interface types
-                    coming. Instead of digging through individual products to find what already exists, {{site.konnect_catalog}} gives you a
+                    {{site.konnect_catalog}} is where these interfaces live instead: APIs, AI Models, and more. Instead of digging through individual products
+                    to find what already exists, {{site.konnect_catalog}} gives you a
                     platform-level home for creating, describing, and governing them.
 
                     <!-- TODO: add screenshot of the {{site.konnect_catalog}} view -->
@@ -46,6 +46,7 @@ rows:
   - header:
         type: h2
         text: "Create your catalog"
+  - column_count: 3
     columns:
       - blocks:
         - type: card
@@ -92,6 +93,16 @@ rows:
               cta:
                 text: Learn about MCP Registries
                 url: /catalog/mcp-registry/
+      - blocks:
+          - type: card
+            config:
+              title: Agents (beta)
+              description: |
+                Register agents your organization builds or consumes as first-class interfaces in {{site.konnect_catalog}}. 
+              icon: /assets/icons/ai.svg
+              cta:
+                text: Learn about Agents
+                url: /catalog/agents/
   - header:
       type: h2
       text: "Use cases for {{site.konnect_catalog}}"
@@ -105,10 +116,10 @@ rows:
                   key: solution
               rows:
                 - usecase: |
-                    You need to know every API, AI Model, and MCP server your org has built, without checking each team's tools individually
+                    You need to know every API, AI Model, agent, and MCP server your org has built, without checking each team's tools individually
                   outcomes:
                     - solution: |
-                        {{site.konnect_catalog}} as one inventory across APIs, API packages, AI Models, and MCP Registries
+                        {{site.konnect_catalog}} as one inventory across APIs, API packages, AI Models, MCP Registries, and Agents
                 - usecase: |
                     Before building a new LLM integration, you want to check whether another team already has one you can reuse
                   outcomes:
@@ -124,6 +135,11 @@ rows:
                   outcomes:
                     - solution: |
                         [MCP Registries](/catalog/mcp-registry/), where you publish MCP servers with their packages and remote endpoints
+                - usecase: |
+                    Your teams are building agents across different frameworks, with no shared place to see what already exists and whether it's safe to reuse
+                  outcomes:
+                    - solution: |
+                        [Agents](/catalog/agents/), inventoried alongside APIs, AI Models, and MCP Registries, with an optional link to {{site.ai_gateway}} 2.0 AI Agent entities
                 - usecase: |
                     A partner or internal team needs access to a specific slice of your APIs, not everything, without creating separate infrastructure for it
                   outcomes:
@@ -143,7 +159,7 @@ rows:
           - type: faqs
             config:
               - q: "What's different between {{site.konnect_catalog}} and {{site.konnect_catalog}} Classic?"
-                a: "{{site.konnect_catalog}} is the unified, platform-level experience for APIs, API packages, AI Models, and MCP Registries (tech preview) today, with more interface types coming. {{site.konnect_catalog}} Classic remains available with Services. See [Migrate to the new Catalog](/catalog-classic/#migrate-to-the-new-catalog) for how to move to the new experience."
+                a: "{{site.konnect_catalog}} is the unified, platform-level experience for APIs, API packages, AI Models, MCP Registries (tech preview), and Agents (beta) today, with more interface types coming. {{site.konnect_catalog}} Classic remains available with Services. See [Migrate to the new Catalog](/catalog-classic/#migrate-to-the-new-catalog) for how to move to the new experience."
               - q: "What happens to Integrations and Scorecards?"
                 a: "Integrations and Scorecards are compatible with [{{site.konnect_catalog}} Classic](/catalog-classic/) today. Kong plans to bring them into the new {{site.konnect_catalog}} experience in the future, with a focus on APIs and AI interfaces rather than Services."
               - q: "Can I control access to specific {{site.konnect_catalog}} data?"
