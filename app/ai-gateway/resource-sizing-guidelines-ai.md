@@ -1,5 +1,5 @@
 ---
-title: "{{site.ai_gateway}} resource sizing guidelines"
+title: "{{site.ai_gateway_name}} resource sizing guidelines"
 content_type: reference
 layout: reference
 
@@ -23,12 +23,14 @@ breadcrumbs:
 description: "Review {{site.ai_gateway}} recommended resource allocation sizing guidelines for {{site.ai_gateway}} based on configuration and traffic patterns."
 
 related_resources:
-  - text: Performance benchmarks
-    url: /gateway/performance/benchmarks/
-  - text: Cluster reference
-    url: /gateway/traditional-mode/#about-kong-gateway-clusters
+  - text: "{{ site.ai_gateway }}"
+    url: /ai-gateway/
+  - text: "{{ site.ai_gateway}} architecture"
+    url: /ai-gateway/architecture/
+  - text: "{{ site.ai_gateway}} 2.x concepts"
+    url: /ai-gateway/ai-gateway-v2-concepts/
 ---
-The {{site.ai_gateway}} is designed to handle high‑volume inference workloads and forward requests to large language model (LLM) providers with predictable latency. This guide explains performance dimensions, capacity planning methodology, and baseline sizing guidance for AI inference traffic.
+{{site.ai_gateway_name}} is designed to handle high‑volume inference workloads and forward requests to large language model (LLM) providers with predictable latency. This guide explains performance dimensions, capacity planning methodology, and baseline sizing guidance for AI inference traffic.
 
 ## Scaling dimensions
 
