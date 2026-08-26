@@ -5,7 +5,7 @@ works_on:
   - konnect
 products:
   - ai-gateway
-content_type: policy
+content_type: plugin
 description: 'Inspect and enforce Lakera Guard safety policies on LLM requests and responses before they reach upstream models.'
 categories:
   - ai
