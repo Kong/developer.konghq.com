@@ -165,7 +165,11 @@ data:
       type: basic
       headers:
         - name: Authorization
-          value: Bearer <your-openai-key>
+          value: ${openai_auth_header}
+variables:
+  openai_auth_header:
+    value: $OPENAI_AUTH_HEADER
+    secret: true
 {% endentity_example %}
 
 ## Schema

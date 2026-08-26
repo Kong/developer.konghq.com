@@ -264,7 +264,11 @@ data:
   description: Vault backed by the built-in Konnect Config Store.
   type: konnect
   config:
-    config_store_id: $CONFIG_STORE_ID
+    config_store_id: ${config_store_id}
+variables:
+  config_store_id:
+    value: $CONFIG_STORE_ID
+    secret: true
 {% endentity_example %}
 
 Reference the secret the same way as any other AI Vault:
