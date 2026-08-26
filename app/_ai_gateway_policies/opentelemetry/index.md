@@ -130,13 +130,27 @@ The OpenTelemetry AI Policy is built on top of the {{site.ai_gateway}} tracing P
    span:finish()
    ```
 
-2. Apply the Lua code with the [Post-function Policy](/ai-gateway/policies/post-function/) using a cURL file upload:
+2. Load the file into an environment variable:
 
    ```bash
-   curl -i -X POST http://localhost:8001/plugins \
-     -F "name=post-function" \
-     -F "config.access[1]=@custom-span.lua"
+   export CUSTOM_SPAN_LUA=$(cat custom-span.lua)
    ```
+
+3. Apply the Lua code with the [Post-function Policy](/ai-gateway/policies/post-function/):
+
+   {% entity_example %}
+   type: policy
+   data:
+     display_name: Post Function - Custom Span
+     name: post-function
+     type: post-function
+     config:
+       access:
+       - $CUSTOM_SPAN_LUA
+   formats:
+     - konnect-api
+     - kongctl
+   {% endentity_example %}
 
 ## Logging
 
@@ -187,7 +201,7 @@ The module records a structured log entry, which is reported via the OpenTelemet
 
 ## Queuing
 
-{% include_cached /md/ai-gateway/v2/policies/queues.md name=page.name %}
+{% include_cached /md/ai-gateway/v2/policies/queues.md name=page.name slug=page.slug %}
 
 ## Trace IDs in serialized logs
 
@@ -204,12 +218,79 @@ The value of this field is an object that can contain different formats of the c
 
 ## Custom attributes by Lua
 
-{% include /md/ai-gateway/v2/policies/log-custom-fields-by-lua.md
-custom_fields_by_lua='config.access_logs.custom_attributes_by_lua'
-custom_fields_by_lua_slug='config-access-logs-custom-attributes-by-lua'
-custom_fields_by_lua_name='custom_attributes_by_lua'
-name=page.name
-slug=page.slug %}
+The [`config.access_logs.custom_attributes_by_lua`](./reference/#schema--config-access-logs-custom-attributes-by-lua) configuration lets you dynamically modify access log fields using Lua code. This field is only valid when [`config.access_logs.endpoint`](./reference/#schema--config-access-logs-endpoint) is also set. The following example configuration removes the `route` field from the access logs:
+
+{% entity_example %}
+type: policy
+data:
+  display_name: OpenTelemetry - Remove Field
+  name: opentelemetry
+  type: opentelemetry
+  config:
+    access_logs:
+      endpoint: http://my-access-log-endpoint:9999/
+      custom_attributes_by_lua:
+        route: "return nil"
+formats:
+  - konnect-api
+  - kongctl
+{% endentity_example %}
+
+New fields can be added the same way:
+
+{% entity_example %}
+type: policy
+data:
+  display_name: OpenTelemetry - Add Field
+  name: opentelemetry
+  type: opentelemetry
+  config:
+    access_logs:
+      endpoint: http://my-access-log-endpoint:9999/
+      custom_attributes_by_lua:
+        header: "return kong.request.get_header('h1')"
+formats:
+  - konnect-api
+  - kongctl
+{% endentity_example %}
+
+Dot characters (`.`) in the field key create nested fields. Use a backslash `\` to escape a dot if you want to keep it as part of a flat field name instead of nesting it. For example, `[my_entry.log\.field]` produces a `my_entry` object with a single `log.field` key, instead of nesting into `log` and `field`.
+
+### Targeting {{site.ai_gateway}} fields
+
+{{site.ai_gateway}} logs the outcome of an LLM request under a nested `ai` object, for example `ai.proxy.meta`, `ai.proxy.usage`, and, when payload logging is enabled, `ai.proxy.payload.request` and `ai.proxy.payload.response`. Because `custom_attributes_by_lua` keys are split into nested table accesses the same way, you can use the same unescaped, dotted-key syntax to remove or override those fields.
+
+For example, to stop logging LLM request and response payloads:
+
+{% entity_example %}
+type: policy
+data:
+  display_name: OpenTelemetry - Disable Payload Logging
+  name: opentelemetry
+  type: opentelemetry
+  config:
+    access_logs:
+      endpoint: http://my-access-log-endpoint:9999/
+      custom_attributes_by_lua:
+        "ai.proxy.payload.request": "return nil"
+formats:
+  - konnect-api
+  - kongctl
+{% endentity_example %}
+
+{:.info}
+> **Note:** Escaping the dots (for example, `ai\.proxy\.payload\.request`) targets a literal flat key instead of the nested `ai.proxy.payload.request` field, so it won't match. Use unescaped dots to target {{site.ai_gateway}} fields.
+
+Because the OpenTelemetry Policy applies `custom_attributes_by_lua` in its own log phase, which runs after {{site.ai_gateway}} sets the `ai.*` fields on the request, it can override or remove any `ai.*` field. The reverse isn't possible, since {{site.ai_gateway}} can't run after the Policy's log phase to override a field the Policy already set.
+
+{:.warning}
+> The OpenTelemetry Policy doesn't use the same table for logging as the other logging Policies. This is because it uses `config.access_logs.custom_attributes_by_lua` instead of `config.custom_fields_by_lua`.
+
+### Limitations
+
+Lua code runs in a restricted sandbox environment, whose behavior is governed by the `untrusted_lua` configuration.
+
+As this code runs in the log phase, only [PDK](/gateway/pdk/reference/) methods that can run in that phase can be used.
 
 ## Troubleshooting
 

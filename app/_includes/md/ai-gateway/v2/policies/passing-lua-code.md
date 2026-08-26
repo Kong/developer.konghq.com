@@ -3,6 +3,7 @@
 {% entity_example %}
 type: policy
 data:
+  display_name: "{{include.name}} - Inline Script"
   name: {{include.slug}}
   type: {{include.slug}}
   config:
@@ -10,7 +11,6 @@ data:
     - |
       kong.log.info("hello world")
 formats:
-  - konnect-api
   - kongctl
 {% endentity_example %}
 
@@ -25,12 +25,12 @@ Then reference the environment variable in your {{include.name}} Policy configur
 {% entity_example %}
 type: policy
 data:
+  display_name: "{{include.name}} - Script From File"
   name: {{include.slug}}
   type: {{include.slug}}
   config:
     access:
     - $FUNCTION_LUA
 formats:
-  - konnect-api
   - kongctl
 {% endentity_example %}

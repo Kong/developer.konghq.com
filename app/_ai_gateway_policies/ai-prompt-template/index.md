@@ -23,21 +23,24 @@ When activated, the template restricts LLM usage to the predefined templates. Th
 {% entity_example %}
 type: policy
 data:
+  display_name: AI Prompt Template - Sample Template
   name: ai-prompt-template
+  type: ai-prompt-template
   config:
     templates:
-       name: sample-template
-       template: |-
-          {
-            "messages": [
-              {
-                "role": "user",
-                "content": "Explain to me what {% raw %}{{thing}}{% endraw %} is."
-              }
-            ]
-          }
+    - name: sample-template
+      template: |-
+        {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Explain to me what {% raw %}{{thing}}{% endraw %} is."
+            }
+          ]
+        }
 formats:
   - konnect-api
+  - kongctl
 {% endentity_example %}
 
 

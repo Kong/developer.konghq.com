@@ -5,6 +5,7 @@ The [`config.custom_fields_by_lua`](/ai-gateway/policies/{{include.slug}}/refere
 {% entity_example %}
 type: policy
 data:
+  display_name: "{{include.name}} - Remove Field"
   name: {{include.slug}}
   type: {{include.slug}}
   config:
@@ -21,6 +22,7 @@ New fields can be added the same way:
 {% entity_example %}
 type: policy
 data:
+  display_name: "{{include.name}} - Add Field"
   name: {{include.slug}}
   type: {{include.slug}}
   config:
@@ -43,6 +45,7 @@ For example, to stop logging LLM request and response payloads:
 {% entity_example %}
 type: policy
 data:
+  display_name: "{{include.name}} - Disable Payload Logging"
   name: {{include.slug}}
   type: {{include.slug}}
   config:
