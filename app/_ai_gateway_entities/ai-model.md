@@ -87,13 +87,13 @@ faqs:
 
 ## What is an AI Model?
 
-The AI Model entity lets you expose LLM endpoints through {{site.ai_gateway}} for clients to call. Use AI Models to:
-* [Expose multiple LLM providers](#targets) under a single endpoint
+The AI Model entity gives clients a single endpoint for one or more upstream LLMs through {{site.ai_gateway}}. Callers don't need to know which AI Provider or model handles the request. Use AI Models to:
+* [Expose multiple LLM providers](#targets) behind one endpoint
 * [Load-balance traffic](#load-balancing) across them
 * [Add observability](#logging-and-observability) to model traffic
 * [Attach policies](#attach-ai-policies) for security and transformation
 
-An AI Model declares which capabilities it exposes (like `chat` or `embeddings`), which upstream LLM models it routes to via [AI Model Providers](/ai-gateway/entities/ai-model-provider/), and how requests are distributed and logged. Consumer authentication is configured through [AI Auth Strategies](/ai-gateway/entities/ai-auth-strategy/) on the model. {{site.ai_gateway}} handles routing and translation, so clients interact with a single unified endpoint.
+An AI Model declares which capabilities it exposes (like `generate` or `embeddings`), which upstream LLM models it routes to via [AI Model Providers](/ai-gateway/entities/ai-model-provider/), and how requests are distributed and logged. Consumer authentication is configured through [AI Auth Strategies](/ai-gateway/entities/ai-auth-strategy/) on the model.
 
 ## Manage AI Models
 
@@ -225,7 +225,7 @@ When a native format is set, only the corresponding provider is supported with i
 
 ## Targets
 
-An AI Model is a virtual model: it exposes one Route ([`config.route`](#schema-aigateway-model-config-route)) and one set of capabilities, and routes requests to one or more concrete upstream models declared in its [`targets`](#schema-aigateway-model-targets) array. Each entry represents a single upstream model instance with one URL.
+An AI Model is a virtual model: it exposes a single [`config.route`](#schema-aigateway-model-config-route) configuration and one set of capabilities, then distributes requests across one or more concrete upstream models declared in its [`targets`](#schema-aigateway-model-targets) array. Each entry represents a single upstream model instance with one URL.
 
 For each target, you provide the upstream model name (for example, `gpt-4o`) and reference the AI Model Provider to use by its `name`. Each target can also override settings such as [`temperature`](#schema-aigateway-target-config-temperature), [`max_tokens`](#schema-aigateway-target-config-max-tokens), [`input_cost`](#schema-aigateway-target-config-input-cost), and [`output_cost`](#schema-aigateway-target-config-output-cost). For providers with cache, context-window, or service-tier pricing, a target also accepts `cache_read_cost`, `cache_write_cost`, `cache_write_cost_list`, `context_window_factor`, and `service_tier_factor`. See [Model cost management](/ai-gateway/model-cost-management/) for how these fields combine to calculate a request's cost.
 
@@ -288,18 +288,18 @@ To improve reliability under sustained failures, the load balancer includes a ci
 
 To route requests based on semantic similarity and keep similar requests on the same model instance, you can use a vector store. This is useful for caching consistency, routing to specialized model variants, or matching requests against historical patterns.
 
-A vector store holds numerical representations (embeddings) of requests and responses so the runtime can match new requests against stored vectors. It powers the [`semantic`](#schema-aigateway-model-config-balancer-algorithm) algorithm and any similarity-matching workflow on the AI Model. Configure storage through [`config.balancer.vectordb`](#schema-aigateway-model-config-balancer-vectordb) by selecting a `strategy`:
+A vector store holds numerical representations (embeddings) of requests and responses so the runtime can match new requests against stored vectors. It powers the [`semantic`](#schema-aigateway-model-config-balancer-algorithm) algorithm and any similarity-matching workflow on the AI Model. Configure storage through [`config.balancer.vectordb`](#schema-aigateway-model-config-balancer-vectordb) by selecting a `type`:
 
 {% table %}
 columns:
-  - title: Strategy
-    key: strategy
+  - title: Type
+    key: type
   - title: Connection details
     key: details
 rows:
-  - strategy: "`redis`"
+  - type: "`redis`"
     details: "Connects to Redis with Vector Similarity Search (VSS), AWS MemoryDB for Redis, or Valkey. {{site.ai_gateway}} auto-detects Valkey from the server name field and uses the Valkey-specific driver."
-  - strategy: "`pgvector`"
+  - type: "`pgvector`"
     details: "Connects to PostgreSQL with the pgvector extension."
 {% endtable %}
 
@@ -372,7 +372,7 @@ For response streaming behavior, see [Streaming](/ai-gateway/streaming/).
 
 ## Set up an AI Model
 
-Before creating an AI Model, first create an AI Model Provider to store credentials for the upstream LLM service. 
+Before creating an AI Model, first create an AI Model Provider to store credentials for the upstream LLM service.
 
 The following example:
 * Creates an OpenAI Model that exposes the `generate` capability, routed through a single OpenAI Provider, with token usage logging enabled.
