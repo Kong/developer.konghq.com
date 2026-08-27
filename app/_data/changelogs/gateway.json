@@ -25971,11 +25971,6 @@
         "scope": "Core"
       },
       {
-        "message": "**openid-connect**: KONG_FIPS=on no longer generates default EdDSA JWKS keys. Use an RSA-PSS or NIST-curve ECDSA key instead.",
-        "type": "feature",
-        "scope": "Plugin"
-      },
-      {
         "message": "The FIPS-140-3 artifacts serve an explicit TLS 1.2 cipher list: four ECDHE\nsuites with AES-GCM. The FIPS-140-2 artifacts keep the OpenSSL FIPS alias,\nwhich also admits static RSA key transport and SSLv3-era suites. To serve a\ndifferent list, set `ssl_cipher_suite = custom` and `ssl_ciphers`.",
         "type": "feature",
         "scope": "Core"
@@ -26139,6 +26134,11 @@
         "message": "Reduced config update latency on hybrid data planes by notifying the stream subsystem before applying the update in the HTTP subsystem, so both rebuild in parallel.",
         "type": "performance",
         "scope": "Core"
+      },
+      {
+        "message": "**openid-connect**: KONG_FIPS=on no longer generates default EdDSA JWKS keys. Use an RSA-PSS or NIST-curve ECDSA key instead. \n\nIf you migrate from the FIPS package to the FIPS-140-3 package, this change breaks existing EdDSA-based configurations.",
+        "type": "feature",
+        "scope": "Plugin"
       }
     ],
     "kong-manager-ee": [
