@@ -770,6 +770,10 @@ rows:
     description: "Ingests events only (intended only for machines)."
     permissions: |
       * Ingest events.
+  - role: "`Entitlement Access`"
+    description: "Can query entitlement access information from the Metering system (intended only for machines)."
+    permissions: |
+      * Query entitlement access.
   - role: "`Admin`"
     description: "Can read and write every resource. Includes billing apps, billing profiles, and notifications."
     permissions: |
