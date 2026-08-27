@@ -140,7 +140,7 @@ ai_gateway_model_providers:
     config:
       auth:
         type: aws
-        access_key_id: !secret {source: !env AWS_ACCESS_KEY_ID}
+        access_key_id: !env AWS_ACCESS_KEY_ID
         secret_access_key: !secret {source: !env AWS_SECRET_ACCESS_KEY}
 ai_gateway_policies:
   - ref: strip-claude-beta-info
