@@ -301,7 +301,7 @@ rows:
             title: See all AI Policies
             description: Attach governance behavior for authentication, guardrails, transformations, and more.
             cta:
-              url: /ai-gateway/entities/ai-policy/
+              url: /ai-gateway/policies/
               align: end
       - blocks:
         - type: card
@@ -421,7 +421,7 @@ rows:
             description: Per-request OpenTelemetry span attributes for AI traffic.
             icon: /assets/icons/opentelemetry.svg
             cta:
-              url: /ai-gateway/llm-open-telemetry/
+              url: /ai-gateway/llm-open-telemetry/#a2a-span-attributes
               align: end
       - blocks:
         - type: card
@@ -492,6 +492,19 @@ rows:
             cta:
               url: /ai-gateway/model-cost-management/
               align: end
+      
+  - header:
+      type: h2
+      text: "{{site.ai_gateway}} guides"
+    column_count: 1
+    columns:
+      - blocks:
+        - type: how_to_list
+          config:
+            products:
+              - ai-gateway
+            quantity: 8
+
 
   - header:
       text: "Frequently Asked Questions"
