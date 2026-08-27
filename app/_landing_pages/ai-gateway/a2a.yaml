@@ -84,8 +84,8 @@ rows:
                   url: "/ai-gateway/secure-ai-agent-with-oidc/"
                 - text: Request Size Limiting policy
                   url: "/ai-gateway/policies/request-size-limiting/"
-                - text: Limit request size for A2A traffic
-                  url: "/ai-gateway/limit-request-size-for-a2a/"
+                - text: Limit request body size
+                  url: "/ai-gateway/limit-a2a-body-size/"
 
   - header:
       type: h2
