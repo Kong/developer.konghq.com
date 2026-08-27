@@ -10,7 +10,7 @@ columns:
     key: description
 rows:
   - log: "`service`"
-    description: Properties of the Gateway Service associated with the requested Route.
+    description: Properties of the internal {{site.ai_gateway}} Service associated with the requested Route.
   - log: "`route`"
     description: Properties of the specific Route requested.
   - log: "`request`"
@@ -53,10 +53,6 @@ rows:
     description: The latency of the balancer expressed in milliseconds.
   - log: "`client_ip`"
     description: The original client IP address.
-  - log: "`workspace`"
-    description: The UUID of the Workspace associated with this request.
-  - log: "`workspace_name`"
-    description: The name of the Workspace associated with this request.
   - log: "`upstream_uri`"
     description: The URI, including query parameters, for the configured upstream service.
   - log: "`authenticated_entity`"
