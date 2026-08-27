@@ -10,7 +10,7 @@ columns:
     key: description
 rows:
   - log: "`service`"
-    description: Properties of the Gateway Service associated with the requested Route.
+    description: Properties of the internal {{site.ai_gateway}} Service associated with the requested Route.
   - log: "`route`"
     description: Properties of the specific Route requested.
   - log: "`request`"
