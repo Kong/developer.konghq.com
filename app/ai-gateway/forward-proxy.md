@@ -217,6 +217,12 @@ Squid runs as its own Docker container, separate from the {{site.ai_gateway}} da
 
 #### Create a model and provider
 
+[Generate an {{site.anthropic}} API key](https://console.anthropic.com/settings/keys), then export it as an environment variable:
+
+```sh
+export ANTHROPIC_API_KEY='YOUR_ANTHROPIC_API_KEY'
+```
+
 Create an [AI Provider](/ai-gateway/entities/ai-model-provider/) entity to define your LLM service and store authentication credentials:
 
 {% entity_examples %}
