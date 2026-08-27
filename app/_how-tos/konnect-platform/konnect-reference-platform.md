@@ -67,7 +67,7 @@ with the exact namespace:
 
 ```sh
 kongctl apply -f konnect/foundations.yaml \
-  --require-namespace platform-foundations
+  --require-namespace platform
 ```
 
 ## Bootstrap repository identities
