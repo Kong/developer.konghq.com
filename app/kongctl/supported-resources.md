@@ -1044,7 +1044,7 @@ ai_gateway_models:
 [AI Auth Strategies](/ai-gateway/entities/ai-auth-strategy/) configure authentication for {{site.ai_gateway}} endpoints.
 
 ```yaml
-ai_gateway_identity_providers:
+ai_gateway_auth_strategies:
   - ref: string
     ai_gateway: string required # prefer: !ref <ai-gateway-ref>
     name: string required
