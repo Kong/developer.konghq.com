@@ -34,6 +34,7 @@ tags:
   - ai
   - openai
   - aws
+  - safety
 
 tldr:
   q: How can I use the AI AWS Guardrails Policy with {{site.ai_gateway}}?

@@ -6,8 +6,6 @@ metadata:
     - ai-gateway
   works_on:
     - konnect
-  min_version:
-    ai-gateway: '2.0'
   breadcrumbs:
     - /ai-gateway/
   tags:
@@ -158,12 +156,14 @@ rows:
 
   - header:
       type: h2
-      text: References
+      text: How to guides
+      description: "Learn how to use {{site.ai_gateway}} features to improve safety, security, and compliance."
+    column_count: 1
     columns:
       - blocks:
-        - type: reference_list
+        - type: how_to_list
           config:
-            pages:
-              - /how-to/use-ai-rag-injector-acls/
-              - /observability/debugger/
-              - /how-to/?tags=ai
+            tags:
+              - safety
+            quantity: 5
+          
