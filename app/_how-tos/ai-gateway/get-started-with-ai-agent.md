@@ -24,10 +24,11 @@ tldr:
   q: How do I route A2A agent traffic through {{site.ai_gateway}}?
   a: |
     When agents need to communicate with other agents, route the traffic through {{site.ai_gateway}} to apply authentication, rate limiting, observability, and content policies at the gateway layer.
-    Create an [AI Agent](/ai-gateway/entities/ai-agent/) entity that exposes your upstream agent at a gateway route and attach policies for logging, security, and traffic control.
+
+    To route A2A agent traffic, create an [AI Agent](/ai-gateway/entities/ai-agent/) entity that exposes your upstream agent at a gateway endpoint and attach policies for logging, security, and traffic control.
     The gateway proxies A2A JSON-RPC requests, discovers agent capabilities through Agent Cards, and exports metrics and payloads as observability spans.
 
-    This tutorial shows you how to set up an AI Agent entity in {{site.konnect_product_name}} using the {{site.konnect_product_name}} API and how to test A2A traffic flowing through the gateway.
+    This tutorial shows you how to set up an AI Agent entity in {{site.konnect_short_name}} using the {{site.konnect_short_name}} API and how to test A2A traffic flowing through the {{site.ai_gateway}}.
 
 tools:
   - kongctl
@@ -46,8 +47,6 @@ prereqs:
     - title: A2A agent
       include_content: md/ai-gateway/v2/prereqs/a2a-agent
 related_resources:
-  - text: "{{site.ai_gateway}}"
-    url: /ai-gateway/
   - text: AI Agent entity reference
     url: /ai-gateway/entities/ai-agent/
   - text: Secure AI Agent traffic with OpenID Connect and Okta
@@ -116,7 +115,7 @@ ai_gateway_agents:
 {% endentity_examples %}
 
 
-The `ai_gateway_agents` entry references your existing {{site.ai_gateway}} by its `name` (`ai-quickstart`, as set up by the [quickstart script](/ai-gateway/get-started/)), so `kongctl` manages the agent underneath it instead of creating a new gateway. Each nested agent still declares its own `ai_gateway` field, pointing at the gateway's ID, to link it to the parent.
+The `ai_gateway_agents` entry references your existing {{site.ai_gateway}} by its `name` (`ai-quickstart`, as set up by the [quickstart script](/ai-gateway/get-started/)), so `kongctl` adds the agent to that gateway instead of creating a new one. Each nested agent still declares its own `ai_gateway` field, pointing at the gateway's ID, to link it to the parent.
 
 The agent is now accessible at the `/a2a` route and proxies A2A JSON-RPC requests to the upstream agent running at `http://host.docker.internal:10000`.
 
@@ -165,7 +164,7 @@ The response shows the agent's capabilities, skills, and supported protocols:
 
 ## Send an A2A request
 
-Send a `message/send` JSON-RPC request to test the agent:
+Send a `message/send` JSON-RPC request to test the agent. The upstream agent uses the OpenAI API key from the [prerequisites](#prerequisites) to answer the query, so you don't need to pass the key in the request.
 
 <!-- vale off -->
 {% validation request-check %}
