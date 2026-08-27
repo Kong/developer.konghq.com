@@ -46,7 +46,7 @@ kongctl is the CLI for managing [{{site.ai_gateway}} resources](/ai-gateway/enti
 It supports two modes of operation: declarative configuration for managing resources as code, and imperative commands for one-off operations and inspection.
 
 {:.info}
-> **Note**: 
+> **Note**:
 > kongctl manages {{site.ai_gateway}} on {{site.konnect_product_name}}.
 > decK manages {{site.base_gateway}} entities (Services, Routes, Plugins, and so on) on self-managed deployments.
 > If you're coming from {{site.ai_gateway}} 1.x, which used decK and Gateway plugins, see the [v2 migration guide](/ai-gateway/v2-migration-guide/) for how to move to the kongctl-managed entity model.
@@ -69,7 +69,7 @@ Use the following workflow to manage {{site.ai_gateway}} resources declaratively
 * Write a configuration file describing the resources you want.
 * Run `kongctl plan -f example.yaml` to preview what will change (optional but recommended).
 * Run `kongctl apply -f example.yaml` to create or update resources.
-* Run `kongctl sync -f example.yaml` when you want kongctl to also create, update, or delete resources. 
+* Run `kongctl sync -f example.yaml` when you want kongctl to also create, update, or delete resources.
 See the [kongctl sync reference](/kongctl/sync/) for more detail on sync behavior.
 
 For example, this configuration file creates an {{site.ai_gateway}}:
@@ -169,7 +169,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: Authorization
-            value: !env OPENAI_API_KEY
+            value: !secret {source: !env OPENAI_API_KEY}
 ```
 
 `!lookup` is a concise inline tag that performs the same lookup directly in a field value:
@@ -185,7 +185,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: Authorization
-            value: !env OPENAI_API_KEY
+            value: !secret {source: !env OPENAI_API_KEY}
 ```
 
 In both situations, kongctl resolves the external resource's ID at plan time and uses it to scope the child resources.
