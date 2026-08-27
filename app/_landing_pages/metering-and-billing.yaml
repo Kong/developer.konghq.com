@@ -65,12 +65,12 @@ rows:
       - blocks:
           - type: card
             config:
-              title: "Monetize Kong AI Gateway LLM traffic"
+              title: "Kong AI Gateway Metering and Billing"
               description: |
                 Learn how to meter and bill AI Gateway LLM tokens.
               icon: /assets/icons/KogoBlue.svg
               cta:
-                url: /how-to/meter-llm-traffic/
+                url: /ai-gateway/policies/metering-and-billing/
 
   - header:
       type: h2
