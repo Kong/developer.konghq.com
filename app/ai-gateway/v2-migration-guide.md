@@ -162,7 +162,7 @@ auth_strategies:
     client_id:
     - your-client-id
     client_secret:
-    - your-client-secret
+    - !secret {source: !env OIDC_CLIENT_SECRET}
     scopes:
     - openid
     cache_tokens_salt: "a-random-string"
@@ -245,6 +245,7 @@ Open the `yaml` files in `./out` and confirm that the converter captured everyth
 - Each AI Agent points at the correct upstream URL and carries the logging settings you had configured.
 - The auth strategies you declared in `./config` were merged into `auth_strategies.yaml` and attached to the right AI Models, AI MCP Servers, and AI Agents via `access.auth_strategies`, and `vaults.yaml` and `gateway.yaml` reflect what you declared.
 - Non-auth supporting plugins were converted to AI Policies and attached to the right entities.
+- Any write-only credential field carried over as a plain string, such as an AI Model Provider's `config.auth.headers[].value`, is wrapped in a deferred `!secret` source rather than left as a literal. See [Validate AI Model converted configuration files](#converted-configuration-files).
 
 Pay particular attention to anything the converter can't infer from the config of {{site.ai_gateway}} running on {{site.base_gateway}}, such as an AI Model Provider `display_name` or an AI Model `display_name`. These are required in {{site.ai_gateway}} 2.x and may be generated from the source data, so rename them to something meaningful before you apply.
 
@@ -318,7 +319,7 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: Authorization
-        value: Bearer {vault://openai-vault/api-key}
+        value: !secret {source: !env OPENAI_API_KEY}
 
 # models.yaml (AI Gateway v2 entity model)
 ai_gateway_models:
@@ -364,6 +365,24 @@ ai_gateway_models:
 {:.collapsible}
 <!--vale on-->
 
+AI Model Provider credential fields, such as `config.auth.headers[].value` for basic auth, or the equivalents for other auth types (for example `secret_access_key`, `client_secret`), are write-only in {{site.ai_gateway}} 2.x. 
+The converter carries over whatever value was in the v1 target's `auth` block as a plain string, whether that was a hardcoded literal or `{vault://...}` syntax. 
+A plain string in a write-only field makes `kongctl apply`/`plan` fail:
+
+```
+Error: failed to load configuration: failed to process !secret tags in out/providers.yaml:
+resource ai_gateway_model_provider "openai-1" field /config/auth/headers/0/value
+is write-only and requires !secret with a deferred source
+```
+
+After the converter runs, find each plain string value in a write-only credential field in `providers.yaml` and wrap it in a deferred `!secret` source as shown above, then set the real value out of band:
+
+```sh
+export OPENAI_API_KEY="YOUR CREDENTIAL"
+```
+
+The environment variable name is your own choice. It doesn't need to match anything you declared in `config/auth_strategies.yaml` or any other file in `./config`.
+
 ##### Verify AI Models entity configuration
 
 To verify your AI Models entity migration, be sure to check the following:
@@ -374,7 +393,6 @@ To verify your AI Models entity migration, be sure to check the following:
 - Auth override: If you relied on `config.targets.auth.allow_override` when running {{site.ai_gateway}} on {{site.base_gateway}}, set `allow_auth_override: true` on the corresponding target in version 2.x.
 - Identity: AI Models have no route auth after conversion. Confirm the auth strategies you added previously are attached via `access.auth_strategies`.
 - Vector database and embeddings: `config.vectordb` and `config.embeddings` settings carry over onto the AI Model config under the `balancer` config, keeping the same Redis or pgvector strategy.
-
 
 #### Validate MCP Servers
 
@@ -630,6 +648,40 @@ To verify your AI Agent entity migration, be sure to check the following:
 - Logging field names: As with AI MCP Servers, `log_payloads` becomes `payloads` under `config.logging`, and `log_statistics` is dropped (no {{site.ai_gateway}} 2.x equivalent).
 - Identity: Like AI Models, an AI Agent has no route auth after conversion. If the agent needs authentication, confirm the auth strategy you declared is attached via `access.auth_strategies`.
 - Analytics: A2A metrics flow into {{site.konnect_short_name}} analytics. View them under Agentic usage analytics in {{site.konnect_short_name}} [Explorer](/observability/explorer/) and [Dashboards](/observability/#dashboard).
+
+{% comment %}
+_Leaving this out of the rendered guide since it may get fixed in a later extension release. Re-check before publishing a fix for this._
+#### Validate Auth Strategies
+
+**Known converter issue (kong/ai-gateway-converter v0.5.0):** 
+The `!secret`/`!env`
+tags on `client_secret` in `config/auth_strategies.yaml` don't survive the
+merge into `./out`. Instead of preserving `client_secret: - !secret {source:
+!env OIDC_CLIENT_SECRET}`, the converter emits a plain, untagged map in
+`out/auth_strategies.yaml`:
+
+```yaml
+client_secret:
+  - source: OIDC_CLIENT_SECRET
+```
+
+`kongctl apply`/`plan` then fails with an error like the following:
+
+```
+Error: failed to load configuration: failed to process !secret tags in out/auth_strategies.yaml:
+... incompatible plan change ... for CREATE ai_gateway_auth_strategy: failed to decode AI Gateway
+Auth Strategy create payload: the current SDK rejected the payload ...
+```
+
+**Workaround:**
+Manually fix `out/auth_strategies.yaml` after conversion so the
+array element is itself the tagged value, not an object with a `source:` key:
+
+```yaml
+client_secret:
+- !secret {source: !env OIDC_CLIENT_SECRET}
+```
+{% endcomment %}
 
 ### Step 6: Authenticate kongctl
 
