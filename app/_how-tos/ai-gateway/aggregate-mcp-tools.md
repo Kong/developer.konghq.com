@@ -32,7 +32,11 @@ tags:
 tldr:
   q: How do I aggregate MCP tools from multiple RESTful APIs into one MCP endpoint?
   a: |
-    Create one [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity per REST API in `conversion-only` mode. Then create a `listener` AI MCP Server and list the mcp servers as sources. It merges every matching source's tools into a single MCP endpoint and routes each tool call to the correct backend.
+    Aggregating MCP tools lets an MCP client call tools from several backend APIs without connecting to each one separately.
+
+    To aggregate MCP tools, create one [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity per REST API in `conversion-only` mode. 
+    Then, create a `listener` AI MCP Server and list the MCP servers as sources. 
+    The listener merges every matching source's tools into a single MCP endpoint and routes each tool call to the correct backend.
 
     This tutorial shows you how to aggregate tools from a mock Petstore API and the Deck of Cards API using kongctl, and validate the aggregated endpoint.
 
@@ -160,7 +164,7 @@ ai_gateway_mcp_servers:
 
 ## Aggregate the MCP tools
 
-Create a fourth AI MCP Server entity in `listener` mode. Its `sources` contains the list of the mcp servers we want to aggregate, so the listener discovers them, merges their tools into a single list, and exposes them through one MCP endpoint.
+Create a third AI MCP Server entity in `listener` mode. Its `sources` field lists the MCP servers to aggregate, so the listener discovers them, merges their tools into a single list, and exposes them through one MCP endpoint.
 
 {% entity_examples %}
 ai_gateway_mcp_servers:
@@ -211,7 +215,7 @@ shuffle-cards
 
 ## Validate the aggregated tools
 
-You can now test tools from each source through the single aggregated endpoint.
+You can now test tools from each source through the aggregated endpoint.
 
 {% navtabs "validate-aggregated-mcp-tools" %}
 {% navtab "Petstore tools" %}
