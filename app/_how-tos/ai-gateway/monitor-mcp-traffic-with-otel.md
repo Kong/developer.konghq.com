@@ -42,7 +42,7 @@ tags:
 tldr:
   q: How do I monitor MCP tool traffic in {{site.ai_gateway}}?
   a: |
-    Attach an [OpenTelemetry Policy](/ai-gateway/policies/opentelemetry/) to an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity, and {{site.ai_gateway}} automatically sends metrics like tool call counts, response sizes, and request durations to your observability backend, no code changes required.
+    To monitor MCP tool traffic, attach an [OpenTelemetry Policy](/ai-gateway/policies/opentelemetry/) to an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity. {{site.ai_gateway}} automatically sends metrics like tool call counts, response sizes, and request durations to your observability backend, with no code changes required.
 
     This tutorial shows you how to attach the Policy using kongctl, generate some MCP traffic, and see the resulting metrics in a local OpenTelemetry Collector.
 
@@ -150,7 +150,7 @@ ai_gateway_mcp_servers:
 
 ## Generate MCP traffic
 
-Now, we can check the details of `Dog 1` - `id:4` - by calling the `get-pet-by-id` tool:
+Now, we can check the details of `Dog 1` (`id:4`) by calling the `get-pet-by-id` tool:
 
 <!--vale off-->
 {% validation custom-command %}
@@ -173,7 +173,7 @@ You should see the following response:
 ```text
 {"id":4,"category":{"id":1,"name":"Dogs"},"name":"Dog 1","photoUrls":["url1","url2"],"tags":[{"id":1,"name":"tag1"},{"id":2,"name":"tag2"}],"status":"available"}
 ```
-{:.no-copy-code}
+{:.no-copy-code .wrap}
 
 ## Validate metrics
 
@@ -193,7 +193,7 @@ render_output: false
 
 You should see data like the following:
 
-```
+```sh
 Metric #8
 Descriptor:
      -> Name: kong.gen_ai.mcp.response.size
@@ -229,12 +229,11 @@ Data point attributes:
 Count: 1
 Sum: 0.037000
 ```
-{:.collapsible}
+{:.collapsible .no-copy-code}
 
 `kong.route.name` carries a `-route` suffix because {{site.ai_gateway}} auto-generates a Route for the MCP Server entity.
 
-{:.info}
-> See [MCP metrics](/ai-gateway/ai-otel-metrics/#mcp-metrics) for the full metric reference.
+See [MCP metrics](/ai-gateway/ai-otel-metrics/#mcp-metrics) for the full metric reference.
 
 {:.success}
 > **MCP Metrics in {{site.konnect_short_name}}**
