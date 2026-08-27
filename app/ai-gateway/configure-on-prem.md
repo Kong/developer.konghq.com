@@ -48,9 +48,9 @@ Both deployments run the same {{site.base_gateway}} Services, Routes, Plugins, a
 
 ## How entities translate to {{site.base_gateway}} configuration
 
-AI entities are a high-level abstraction. When you save one, a dedicated conversion step translates it into the same Routes, Services, plugins, and Consumers that self-hosted {{site.base_gateway}} uses, and that's what data plane nodes actually run.
+AI entities are a high-level abstraction. When you create one, a dedicated conversion step translates it into the same Routes, Services, plugins, and Consumers that self-hosted {{site.base_gateway}} uses, and that's what data plane nodes actually run.
 
-The mapping isn't always 1:1. Some entities carry over almost directly, others become more than one {{site.base_gateway}} object, and a few have no self-hosted equivalent at all.
+This mapping isn't always 1:1. Some entities carry over almost directly, others become more than one {{site.base_gateway}} object, and a few have no self-hosted equivalent at all.
 
 The following table shows how {{site.konnect_short_name}} {{site.ai_gateway}} entities map to on-prem {{site.base_gateway}} configuration.
 
@@ -70,7 +70,7 @@ rows:
   - entity: "[AI Agent](/ai-gateway/entities/ai-agent/)"
     primitives: "For `type: a2a`, a Service, a Route, and the AI A2A Proxy plugin. For `type: http`, a Service and a Route with no AI plugin, since the AI A2A Proxy plugin always applies A2A protocol handling."
   - entity: "[AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/)"
-    primitives: "None of its own. A `key-auth` type materializes into a Key Auth Policy, and an `openid-connect` type into an OpenID Connect Policy, on the Route of every AI Model or AI Agent that references it, plus a shared anonymous Consumer with a Request Termination Policy that returns 401 for unauthenticated requests."
+    primitives: "None of its own. A `key-auth` type materializes into a Key Auth plugin, and an `openid-connect` type into an OpenID Connect plugin, on the Route of every AI Model or AI Agent that references it, plus a shared anonymous Consumer with a Request Termination plugin that returns 401 for all unauthenticated requests."
   - entity: "[AI Policy](/ai-gateway/entities/ai-policy/)"
     primitives: "The {{site.base_gateway}} plugin named by the policy `type` (for example, AI Prompt Guard or AI Rate Limiting Advanced), applied globally or scoped to whatever the policy is attached to."
   - entity: "[AI Consumer](/ai-gateway/entities/ai-consumer/)"
@@ -137,7 +137,7 @@ This matches what you configure on-prem. An AI Agent with `type: http` generates
 
 Use the `key-auth` or `openid-connect` auth strategy, backed by the `key-auth` and `openid-connect` {{site.base_gateway}} plugins, to authenticate the clients calling your AI routes.
 
-- **On {{site.konnect_short_name}}:** An AI Auth Strategy generates a `key-auth` or `openid-connect` plugin on the Route of every AI Model or AI Agent that references it, plus a shared anonymous Consumer carrying a `request-termination` plugin that returns `401` for requests that don't authenticate.
+- **On {{site.konnect_short_name}}:** An AI Auth Strategy generates a `key-auth` or `openid-connect` plugin on the Route of every AI Model or AI Agent that references it, plus a shared anonymous [Consumer](/gateway/entities/consumer/) carrying a `request-termination` plugin that returns `401` for requests that don't authenticate.
 - **On-prem:** You attach the corresponding plugin to each Route yourself, and configure the anonymous Consumer and `request-termination` plugin to match.
 
 ## AI Policies
@@ -159,7 +159,7 @@ Access control and secret management on-prem use the same {{site.base_gateway}} 
 
 ## Convert {{site.ai_gateway}} 2.0 entities to self-hosted {{site.base_gateway}} config
 
-AI Model, AI MCP Server, AI Agent, and AI Policy entities need conversion, since each one generates {{site.base_gateway}} Services, Routes, or plugins. AI Consumers, AI Consumer Groups, and AI Vaults pass through conversion unchanged, since they're already shaped like their [native {{site.base_gateway}} equivalents](#consumers-consumer-groups-vaults-and-data-plane-certificates).
+AI Model, AI MCP Server, AI Agent, and AI Policy entities need conversion, since each one generates {{site.base_gateway}} Services, Routes, or plugins. AI Consumers, AI Consumer Groups, and AI Vaults convert with only field renames (for example, a Consumer's `name` becomes `username`), since they're already shaped like their [native {{site.base_gateway}} equivalents](#consumers-consumer-groups-vaults-and-data-plane-certificates).
 
 decK's `file ai2kong`, `ai sync`, and `ai dump` all translate the same {{site.ai_gateway}} 2.x configuration between its entity-model representation and its self-hosted plugin representation. They don't change versions, only where the config runs. `kongctl convert ai-gateway` does something different: it upgrades an older {{site.ai_gateway}} running on {{site.base_gateway}} plugin configuration to the 2.x entity model, for {{site.konnect_short_name}}.
 
@@ -180,7 +180,7 @@ rows:
     direction: "{{site.ai_gateway}} 2.x entity file → live self-hosted {{site.base_gateway}}"
     usecase: "Convert and apply in one step. Equivalent to running `deck file ai2kong` followed by `deck gateway sync`."
   - command: "[`deck ai dump`](/deck/ai/dump/)"
-    direction: "Live self-hosted {{site.base_gateway}} or {{site.konnect_short_name}} → {{site.ai_gateway}} 2.x entity file"
+    direction: "Live self-hosted {{site.base_gateway}} → {{site.ai_gateway}} 2.x entity file"
     usecase: "Export configuration previously created with `deck ai sync` (tagged `managed_by:deck-ai`) back into the entity model, for backup or review."
   - command: "[`kongctl convert ai-gateway`](/ai-gateway/v2-migration-guide/)"
     direction: "Pre-2.0 {{site.ai_gateway}} plugin config → {{site.ai_gateway}} 2.x entity file, for {{site.konnect_short_name}}"
@@ -304,7 +304,7 @@ services:
 The AI Model Provider generates no object of its own. Its `type` becomes the target's `model.provider`, and its `auth` is materialized into the same `ai-proxy-advanced` target.
 
 {:.info}
-> The converted output uses the `alias` and `model_alias` field names from the self-hosted `ai-model-selector` and `ai-proxy-advanced` plugin schemas. These are distinct from `config.route.model` on the {{site.ai_gateway}} entity shown in the input; `deck file ai2kong` handles the translation between the two.
+> The converted output uses the `model_alias` field name from the self-hosted `ai-proxy-advanced` plugin schema. This is distinct from `config.route.model` on the {{site.ai_gateway}} entity shown in the input; `deck file ai2kong` handles the translation between the two.
 
 ### Convert an AI MCP Server
 
