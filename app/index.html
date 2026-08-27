@@ -321,7 +321,7 @@ edit_and_issue_links: false
             {%- assign product_data = site.data.products[item.product] -%}
             {%- assign latest = product_data.releases | where: "latest", true | first -%}
             {%- assign _ver = latest["ee-version"] | default: latest.version | default: latest.release -%}
-            <a href="{{ item.changelog_url }}" class="flex items-center gap-6 py-4 border-b border-primary hover:bg-hover-component/100 hover:px-4 hover:-mx-4 transition-all no-icon hover:no-underline group">
+            <a href="{{ item.changelog_url }}" class="flex items-center gap-6 py-4 border-b border-primary hover:bg-hover-component/100 hover:px-4 hover:-mx-4 transition-all no-icon hover:no-underline group" {% if item.changelog_url contains 'https://' %} target="_blank" rel="noopener nofollow noreferrer"{% endif %}>
                 <span class="font-mono text-sm text-links w-20 shrink-0 text-right">v{{ _ver }}</span>
                 <span class="text-sm text-primary flex-1">{{ product_data.name }}</span>
                 <span class="text-terciary group-hover:text-brand transition-colors">&rarr;</span>
