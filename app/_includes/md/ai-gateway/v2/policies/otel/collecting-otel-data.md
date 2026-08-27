@@ -15,5 +15,5 @@ To set up an OpenTelemetry backend for {{site.ai_gateway}}, you need support for
 {% assign policy = include.policy | default: "default" %}
 {% unless policy == "OpenTelemetry" %}
 {:.info}
-> Check [OpenTelemetry Policy](/ai-gateway/policies/opentelemetry/) and [{{site.base_gateway}} tracing](/gateway/tracing/) documentation for more details about OpenTelemetry and tracing in {{site.ai_gateway}}.
+> See the [{{site.base_gateway}} tracing](/gateway/tracing/) documentation for more details about OpenTelemetry and tracing in {{site.ai_gateway}}.
 {% endunless %}

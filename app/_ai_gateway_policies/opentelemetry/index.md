@@ -6,6 +6,17 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+related_resources:
+  - text: OpenTelemetry metrics reference
+    url: /ai-gateway/ai-otel-metrics/
+  - text: Monitor AI Agent traffic with OpenTelemetry
+    url: /ai-gateway/monitor-ai-agent-with-opentelemetry/
+  - text: Monitor MCP traffic with OpenTelemetry
+    url: /ai-gateway/monitor-mcp-traffic-with-otel/
+  - text: "{{site.ai_gateway}} logs"
+    url: /ai-gateway/ai-logs/
+  - text: Logging Policies
+    url: /ai-gateway/policies/?category=logging
 ---
 
 The OpenTelemetry [AI Policy](/ai-gateway/entities/ai-policy/) provides metrics, traces, and logs in the OpenTelemetry format and can be used with any OpenTelemetry compatible backend.
@@ -99,7 +110,7 @@ If none of the `config.propagation.*` configuration options are set, the `header
 
 ### OTLP exporter
 
-The OpenTelemetry AI Policy implements the [OTLP/HTTP](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/protocol/otlp.md#otlphttp) exporter, which uses Protobuf payloads encoded in binary format and is sent via an HTTP/1.1.
+The OpenTelemetry AI Policy implements the [OTLP/HTTP](https://opentelemetry.io/docs/specs/otlp/) exporter, which uses Protobuf payloads encoded in binary format and is sent via an HTTP/1.1.
 
 [`config.connect_timeout`](/ai-gateway/policies/opentelemetry/reference/#schema--config-connect-timeout), [`config.read_timeout`](/ai-gateway/policies/opentelemetry/reference/#schema--config-read-timeout), and [`config.send_timeout`](/ai-gateway/policies/opentelemetry/reference/#schema--config-send-timeout) are used to set the timeouts for the HTTP request.
 
@@ -154,7 +165,7 @@ The OpenTelemetry AI Policy is built on top of the {{site.ai_gateway}} tracing P
 
 ## Logging
 
-This AI Policy supports [OpenTelemetry Logging](https://opentelemetry.io/docs/specs/otel/logs/), which can be configured as described in the [configuration reference](/ai-gateway/policies/opentelemetry/reference/#schema--config-traces_endpoint) to export logs in OpenTelemetry format to an OTLP-compatible backend.
+This AI Policy supports [OpenTelemetry Logging](https://opentelemetry.io/docs/specs/otel/logs/), which can be configured as described in the [configuration reference](/ai-gateway/policies/opentelemetry/reference/#schema--config-logs-endpoint) to export logs in OpenTelemetry format to an OTLP-compatible backend.
 
 ### Log scopes
 
@@ -194,10 +205,12 @@ In addition to the above, when **tracing** is enabled, request-scoped logs inclu
 - `SpanID`: Request span ID.
 - `TraceFlags`: W3C trace flag.
 
+{% comment %}
 ### Logging for custom Policies
 
 The custom [plugin PDK](/gateway/pdk/reference/kong.plugin/) `kong.telemetry.log` module lets you configure OTLP logging for a custom Policy.
 The module records a structured log entry, which is reported via the OpenTelemetry Policy.
+{% endcomment %}
 
 ## Queuing
 
@@ -258,7 +271,7 @@ Dot characters (`.`) in the field key create nested fields. Use a backslash `\` 
 
 ### Targeting {{site.ai_gateway}} fields
 
-{{site.ai_gateway}} logs the outcome of an LLM request under a nested `ai` object, for example `ai.proxy.meta`, `ai.proxy.usage`, and, when payload logging is enabled, `ai.proxy.payload.request` and `ai.proxy.payload.response`. Because `custom_attributes_by_lua` keys are split into nested table accesses the same way, you can use the same unescaped, dotted-key syntax to remove or override those fields.
+{{site.ai_gateway}} logs the outcome of an LLM request under a nested `ai` object, for example `ai.$POLICY_NAME.meta`, `ai.$POLICY_NAME.usage`, and, when payload logging is enabled, `ai.$POLICY_NAME.payload.request` and `ai.$POLICY_NAME.payload.response`. Because `custom_attributes_by_lua` keys are split into nested table accesses the same way, you can use the same unescaped, dotted-key syntax to remove or override those fields.
 
 For example, to stop logging LLM request and response payloads:
 
@@ -272,14 +285,14 @@ data:
     access_logs:
       endpoint: http://my-access-log-endpoint:9999/
       custom_attributes_by_lua:
-        "ai.proxy.payload.request": "return nil"
+        "ai.opentelemetry.payload.request": "return nil"
 formats:
   - konnect-api
   - kongctl
 {% endentity_example %}
 
 {:.info}
-> **Note:** Escaping the dots (for example, `ai\.proxy\.payload\.request`) targets a literal flat key instead of the nested `ai.proxy.payload.request` field, so it won't match. Use unescaped dots to target {{site.ai_gateway}} fields.
+> **Note:** Escaping the dots (for example, `ai\.opentelemetry\.payload\.request`) targets a literal flat key instead of the nested `ai.opentelemetry.payload.request` field, so it won't match. Use unescaped dots to target {{site.ai_gateway}} fields.
 
 Because the OpenTelemetry Policy applies `custom_attributes_by_lua` in its own log phase, which runs after {{site.ai_gateway}} sets the `ai.*` fields on the request, it can override or remove any `ai.*` field. The reverse isn't possible, since {{site.ai_gateway}} can't run after the Policy's log phase to override a field the Policy already set.
 
