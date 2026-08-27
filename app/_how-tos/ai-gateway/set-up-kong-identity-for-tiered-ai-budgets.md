@@ -34,8 +34,8 @@ tools:
 related_resources:
   - text: "{{site.identity}}"
     url: /identity/
-  - text: AI Identity Provider entity
-    url: /ai-gateway/entities/ai-identity-provider/
+  - text: AI Auth Strategy entity
+    url: /ai-gateway/entities/ai-auth-strategy/
   - text: AI Rate Limiting Advanced policy
     url: /ai-gateway/policies/ai-rate-limiting-advanced/
   - text: Enforce tiered AI budgets on an AI Model with {{site.identity}}

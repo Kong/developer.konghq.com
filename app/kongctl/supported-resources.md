@@ -1041,7 +1041,7 @@ ai_gateway_models:
 
 ### AI Identity Providers
 
-[AI Identity Providers](/ai-gateway/entities/ai-identity-provider/) configure authentication for {{site.ai_gateway}} endpoints.
+[AI Auth Strategies](/ai-gateway/entities/ai-auth-strategy/) configure authentication for {{site.ai_gateway}} endpoints.
 
 ```yaml
 ai_gateway_identity_providers:
