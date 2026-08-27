@@ -150,15 +150,16 @@ body:
      1. In the **Name** field, enter a unique identifier for the tool. 
      1. In the **Input schema** field, enter the JSON schema defining the tool's expected parameters. 
      1. (Optional) Fill in **Title**, **Description**, **Output schema**, and **Annotations**.
+     1. Click **Add**, then repeat to add more capabilities.
    * **Resource**: To share server context through documents, logs, and other data. 
      1. In the **URI** field, enter a unique identifier for the resource, for example `file://example.txt`. 
      1. In the **Name** field, enter a name for the resource. 
      1. (Optional) Fill in **Title**, **Description**, **mimeType**, and **Size (bytes)**.
+     1. Click **Add**, then repeat to add more capabilities.
    * **Prompt**: Define a reusable workflow with preset inputs. 
      1. In the **Name** field, enter a unique identifier for the prompt. 
      1. (Optional) Fill in **Title**, **Description**, and a comma-separated list of **Arguments**, for example `language, focus_area, severity_threshold`.
-
-   1. Click **Add**, then repeat to add more capabilities.
+     1. Click **Add**, then repeat to add more capabilities.
 1. (Optional) Under **Access methods**, click **New access method**, and select one of the following:
    * **Remote**: Describes a hosted MCP server endpoint. 
      1. In the **Remote URL** field, enter the server's endpoint, for example `https://example.com/mcp`. 
@@ -172,12 +173,12 @@ body:
           }
         ]
         ```
+     1. Click **Add**, then repeat to add more access methods.
    * **Package**, to describe a run-it-yourself distribution option. 
       1. In the **Package identifier** field, enter the package name or URL, for example `@modelcontextprotocol/mcp-server`. 
       1. From the **Transport type** and **Package type** dropdown menus, select the applicable types. 
       1. (Optional) Fill in **Registry base URL** and **Package version**. If you leave **Package version** blank, the package uses the server's version.
-
-   1. Click **Add**, then repeat to add more access methods.
+      1. Click **Add**, then repeat to add more access methods.
 1. Click **Save**.
 {% endnavtab %}
 {% endnavtabs %}
