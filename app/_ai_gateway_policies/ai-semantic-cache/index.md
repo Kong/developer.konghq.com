@@ -6,9 +6,23 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+description: 'Cache LLM responses based on semantic similarity between requests to reduce latency and cost.'
+categories:
+  - ai
+tags:
+  - ai
+  - caching
 related_resources:
-  - text: Embedding-based similarity matching in Kong AI gateway plugins
+  - text: AI Model
+    url: /ai-gateway/entities/ai-model/
+  - text: AI Semantic Prompt Guard
+    url: /ai-gateway/policies/ai-semantic-prompt-guard/
+  - text: AI Semantic Response Guard
+    url: /ai-gateway/policies/ai-semantic-response-guard/
+  - text: Embedding-based similarity matching in {{site.ai_gateway}} AI Policies
     url: /ai-gateway/semantic-similarity/
+  - text: "{{site.ai_gateway}} audit log reference"
+    url: /ai-gateway/ai-audit-log-reference/#ai-semantic-cache-logs
 ---
 
 The AI Semantic Cache Policy stores user requests to an LLM in a vector database based on semantic meaning. When a similar query is made, it uses these embeddings to retrieve relevant cached requests efficiently.
