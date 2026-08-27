@@ -86,7 +86,17 @@ rows:
       - blocks:
           - type: card
             config:
-              title: "MCP Registries (tech preview)"
+              title: "MCP servers"
+              description: |
+                Model individual MCP servers as first-class interfaces in {{site.konnect_catalog}}.
+              icon: /assets/icons/mcp.svg
+              cta:
+                text: Learn about MCP servers
+                url: /catalog/mcp-servers/
+      - blocks:
+          - type: card
+            config:
+              title: "MCP registries (tech preview)"
               description: |
                 Register and discover MCP servers as first-class interfaces in {{site.konnect_catalog}}.
               icon: /assets/icons/mcp.svg
@@ -119,7 +129,7 @@ rows:
                     You need to know every API, AI Model, agent, and MCP server your org has built, without checking each team's tools individually
                   outcomes:
                     - solution: |
-                        {{site.konnect_catalog}} as one inventory across APIs, API packages, AI Models, MCP Registries, and Agents
+                        {{site.konnect_catalog}} as one inventory across APIs, API packages, AI Models, MCP servers, and agents
                 - usecase: |
                     Before building a new LLM integration, you want to check whether another team already has one you can reuse
                   outcomes:
@@ -134,7 +144,7 @@ rows:
                     Your teams are building MCP servers for AI agents, but they're scattered across repos and local configs with no shared place to register them
                   outcomes:
                     - solution: |
-                        [MCP Registries](/catalog/mcp-registry/), where you publish MCP servers with their packages and remote endpoints
+                        [MCP servers](/catalog/mcp-servers/), where you publish MCP servers with their packages and remote endpoints
                 - usecase: |
                     Your teams are building agents across different frameworks, with no shared place to see what already exists and whether it's safe to reuse
                   outcomes:
@@ -159,7 +169,7 @@ rows:
           - type: faqs
             config:
               - q: "What's different between {{site.konnect_catalog}} and {{site.konnect_catalog}} Classic?"
-                a: "{{site.konnect_catalog}} is the unified, platform-level experience for APIs, API packages, AI Models, MCP Registries (tech preview), and Agents (beta) today, with more interface types coming. {{site.konnect_catalog}} Classic remains available with Services. See [Migrate to the new Catalog](/catalog-classic/#migrate-to-the-new-catalog) for how to move to the new experience."
+                a: "{{site.konnect_catalog}} is the unified, platform-level experience for APIs, API packages, AI Models, MCP servers, Agents (beta), and MCP registries (tech preview) today, with more interface types coming. {{site.konnect_catalog}} Classic remains available with Services. See [Migrate to the new Catalog](/catalog-classic/#migrate-to-the-new-catalog) for how to move to the new experience."
               - q: "What happens to Integrations and Scorecards?"
                 a: "Integrations and Scorecards are compatible with [{{site.konnect_catalog}} Classic](/catalog-classic/) today. Kong plans to bring them into the new {{site.konnect_catalog}} experience in the future, with a focus on APIs and AI interfaces rather than Services."
               - q: "Can I control access to specific {{site.konnect_catalog}} data?"

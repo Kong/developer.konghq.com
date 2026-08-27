@@ -15,8 +15,9 @@ groups:
       - title: AI Models
         items:
           - path: /catalog/ai-models/
-      - title: MCP Registry
+      - title: MCP
         items:
+          - path: /catalog/mcp-servers/
           - path: /catalog/mcp-registry/
       - title: Agents
         items:
