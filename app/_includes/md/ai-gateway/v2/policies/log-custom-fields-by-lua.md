@@ -38,7 +38,7 @@ Dot characters (`.`) in the field key create nested fields. Use a backslash `\` 
 
 ### Targeting {{site.ai_gateway}} fields
 
-{{site.ai_gateway}} logs the outcome of an LLM request under a nested `ai` object, for example `ai.proxy.meta`, `ai.proxy.usage`, and, when payload logging is enabled, `ai.proxy.payload.request` and `ai.proxy.payload.response`. Because `custom_fields_by_lua` keys are split into nested table accesses the same way, you can use the same unescaped, dotted-key syntax to remove or override those fields.
+{{site.ai_gateway}} logs the outcome of an LLM request under a nested `ai` object, for example `ai.$POLICY_NAME.meta`, `ai.$POLICY_NAME.usage`, and, when payload logging is enabled, `ai.$POLICY_NAME.payload.request` and `ai.$POLICY_NAME.payload.response`. Because `custom_fields_by_lua` keys are split into nested table accesses the same way, you can use the same unescaped, dotted-key syntax to remove or override those fields.
 
 For example, to stop logging LLM request and response payloads:
 
@@ -51,14 +51,14 @@ data:
   config:
     {{include.base_config}}
     custom_fields_by_lua:
-      "ai.proxy.payload.request": "return nil"
+      "ai.{{include.slug}}.payload.request": "return nil"
 formats:
   - konnect-api
   - kongctl
 {% endentity_example %}
 
 {:.info}
-> **Note:** Escaping the dots (for example, `ai\.proxy\.payload\.request`) targets a literal flat key instead of the nested `ai.proxy.payload.request` field, so it won't match. Use unescaped dots to target {{site.ai_gateway}} fields.
+> **Note:** Escaping the dots (for example, `ai\.{{include.slug}}\.payload\.request`) targets a literal flat key instead of the nested `ai.{{include.slug}}.payload.request` field, so it won't match. Use unescaped dots to target {{site.ai_gateway}} fields.
 
 Because {{include.name}} applies `custom_fields_by_lua` in its own log phase, which runs after {{site.ai_gateway}} sets the `ai.*` fields on the request, it can override or remove any `ai.*` field. The reverse isn't possible, since {{site.ai_gateway}} can't run after a logging Policy's log phase to override a field the Policy already set.
 

@@ -140,8 +140,6 @@ rows:
     description: A list of iterations made by the load balancer for this request, including each upstream target that was tried.
   - log: "`client_ip`"
     description: The original client IP address.
-  - log: "`workspace`"
-    description: The UUID of the workspace associated with this request.
   - log: "`upstream_uri`"
     description: The URI, including query parameters, for the configured upstream service.
   - log: "`consumer`"
