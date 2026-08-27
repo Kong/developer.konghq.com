@@ -6,6 +6,11 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+related_resources:
+  - text: Use the AI AWS Guardrails Policy
+    url: /ai-gateway/how-to/use-ai-aws-guardrails-policy/
+  - text: AI model entity
+    url: /ai-gateway/entities/ai-model/
 ---
 
 The AI Azure Content Safety Policy allows administrators to enforce 
