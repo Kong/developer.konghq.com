@@ -1039,9 +1039,9 @@ ai_gateway_models:
 ```
 {:.collapsible}
 
-### AI Identity Providers
+### AI Auth Strategy
 
-[AI Identity Providers](/ai-gateway/entities/ai-identity-provider/) configure authentication for {{site.ai_gateway}} endpoints.
+[AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) configure authentication for {{site.ai_gateway}} endpoints.
 
 ```yaml
 ai_gateway_identity_providers:

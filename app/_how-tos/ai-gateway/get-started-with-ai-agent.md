@@ -78,7 +78,7 @@ faqs:
     a: MCP (Model Context Protocol) standardizes how agents connect to tools, APIs, and data sources. A2A standardizes how agents communicate with other agents. They are complementary. Use MCP for agent-to-tool communication and A2A for agent-to-agent communication.
 
   - q: Can I add authentication to the A2A endpoint?
-    a: Yes. Reference an [AI Identity Provider](/ai-gateway/entities/ai-identity-provider/) using the `openid-connect` or `key-auth` auth strategy in the agent's `access.identity_providers` array. Authentication isn't attached through the agent's `policies` array. The AI Agent entity handles A2A protocol concerns independently of authentication.
+    a: Yes. Reference an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) using the `openid-connect` or `key-auth` auth strategy in the agent's `access.identity_providers` array. Authentication isn't attached through the agent's `policies` array. The AI Agent entity handles A2A protocol concerns independently of authentication.
 
   - q: How do I enable request/response logging?
     a: Set `config.logging.payloads` to `true` and `config.logging.statistics` to `true` in the agent config to log A2A request and response bodies along with metrics.

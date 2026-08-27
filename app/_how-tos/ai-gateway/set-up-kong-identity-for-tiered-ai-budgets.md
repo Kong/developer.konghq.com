@@ -34,8 +34,8 @@ tools:
 related_resources:
   - text: "{{site.identity}}"
     url: /identity/
-  - text: AI Identity Provider entity
-    url: /ai-gateway/entities/ai-identity-provider/
+  - text: AI Auth Strategy
+    url: /ai-gateway/entities/ai-auth-strategy/
   - text: AI Rate Limiting Advanced policy
     url: /ai-gateway/policies/ai-rate-limiting-advanced/
   - text: Enforce tiered AI budgets on an AI Model with {{site.identity}}
@@ -50,7 +50,7 @@ faqs:
       No, the secret is only shared once when the client is created. Store it securely.
   - q: Can I reuse this auth server for other AI Models, AI Agents, or AI MCP Servers?
     a: |
-      Yes. Create additional clients under the same auth server for new callers, or reference the same `issuer` from multiple `openid-connect` AI Identity Providers.
+      Yes. Create additional clients under the same auth server for new callers, or reference the same `issuer` from multiple `openid-connect` AI Auth Strategies.
   - q: Could an external IdP like Okta drive these same four claims instead?
     a: |
       Yes, and nothing downstream would change. Kong reads `budget_tier`, `budget_cap`, `budget_org`, and `kong_groups` as header values and never sees where they came from. Okta could compute the same four claims from real group membership (`isMemberOfGroupName`) or from user profile attributes; the per-client labels used here are effectively that same attribute-driven model already, just with no group membership concept at all.
