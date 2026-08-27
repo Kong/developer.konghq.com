@@ -6,6 +6,21 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+categories:
+  - ai
+tags:
+  - ai
+  - dlp
+  - security
+related_resources:
+  - text: AI Model
+    url: /ai-gateway/entities/ai-model/
+  - text: AI Policy
+    url: /ai-gateway/entities/ai-policy/
+  - text: AI Custom Guardrail Policy
+    url: /ai-gateway/policies/ai-custom-guardrail/
+  - text: "{{site.ai_gateway}} audit log reference"
+    url: /ai-gateway/ai-audit-log-reference/#ai-pii-sanitizer-logs
 ---
 
 The AI PII Sanitizer Policy for {{site.ai_gateway}} helps protect sensitive information in client request bodies before they reach upstream AI providers or tools.
@@ -143,9 +158,17 @@ Replace `TAG` with the appropriate version and language code, such as:
 docker pull kong/ai-pii-service:v0.2.2-en
 ```
 
+#### Run the AI PII service as a standalone container
+
+To run the image directly, without a `Dockerfile`:
+
+```bash
+docker run -d kong/ai-pii-service:v0.2.2-en
+```
+
 #### AI PII service Dockerfile usage
 
-To use an image in a `Dockerfile`, reference it as follows:
+Alternatively, to use an image in a `Dockerfile`, reference it as follows:
 
 ```dockerfile
 FROM kong/ai-pii-service:v0.2.2-en
