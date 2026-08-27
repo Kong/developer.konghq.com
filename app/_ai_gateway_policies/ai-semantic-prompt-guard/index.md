@@ -6,6 +6,13 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+description: 'Permit or block LLM prompts based on semantic similarity to predefined allow and deny rules.'
+categories:
+  - ai
+tags:
+  - ai
+  - safety
+  - dlp
 related_resources:
   - text: Get started with {{site.ai_gateway}}
     url: /ai-gateway/get-started/
@@ -20,7 +27,7 @@ related_resources:
 
 faqs:
   - q: Does the AI Semantic Prompt Guard Policy support multilingual input?
-    a: Yes, the AI Semantic Prompt Guard Policy supports multilingual input—depending on the capabilities of the configured [embedding model](/ai-gateway/policies/ai-semantic-prompt-guard/reference/#schema--config-embeddings-model-provider). The AI Policy sends raw UTF-8 text to the embedding provider supported by {{site.ai_gateway}} (such as Azure, Bedrock, Gemini, Hugging Face, Mistral, or OpenAI). As long as the model supports multiple languages, semantic comparisons and rule enforcement will work as expected without requiring additional policy configuration.
+    a: Yes, the AI Semantic Prompt Guard Policy supports multilingual input. Support depends on the capabilities of the configured [embedding model](/ai-gateway/policies/ai-semantic-prompt-guard/reference/#schema--config-embeddings-model-provider). The AI Policy sends raw UTF-8 text to the embedding provider supported by {{site.ai_gateway}} (such as Azure, Bedrock, Gemini, Hugging Face, Mistral, or OpenAI). As long as the model supports multiple languages, semantic comparisons and rule enforcement will work as expected without requiring additional policy configuration.
   - q: |
       How do I resolve the MemoryDB error `Number of indexes exceeds the limit`?
     a: |
@@ -39,6 +46,8 @@ The AI Semantic Prompt Guard Policy enforces prompt governance using semantic si
 You can use a combination of `allow` and `deny` rules to maintain integrity and compliance when serving an LLM service using {{site.ai_gateway}}.
 
 ## How it works
+
+By default, the Policy only evaluates the latest message from the `user` role. To also match earlier turns in a multi-turn conversation, set [`config.rules.match_all_conversation_history`](/ai-gateway/policies/ai-semantic-prompt-guard/reference/#schema--config-rules-match-all-conversation-history) to `true`. To also match messages from roles other than `user`, set [`config.rules.match_all_roles`](/ai-gateway/policies/ai-semantic-prompt-guard/reference/#schema--config-rules-match-all-roles) to `true`.
 
 The matching behavior is as follows:
 * If any `deny` prompts are set and the request matches a prompt in the `deny` list, the caller receives a 403 response.
