@@ -23,6 +23,7 @@ related_resources:
     url: /ai-gateway/semantic-similarity/
   - text: "{{site.ai_gateway}} audit log reference"
     url: /ai-gateway/ai-audit-log-reference/#ai-semantic-cache-logs
+
 ---
 
 The AI Semantic Cache Policy stores user requests to an LLM in a vector database based on semantic meaning. When a similar query is made, it uses these embeddings to retrieve relevant cached requests efficiently.
@@ -88,19 +89,19 @@ sequenceDiagram
 
 With the AI Semantic Cache Policy, you can configure a cache of your choice to store the responses from the LLM.
 
-The AI Semantic Cache Policy supports Redis as a cache.
+The AI Semantic Cache Policy supports Redis and PostgreSQL with pgvector as a vector database. See [Vector databases](#vector-databases) for configuration details.
 
 #### Caching mechanisms
 
 The AI Semantic Cache Policy improves how AI systems provide responses by using two kinds of caching mechanisms:
 
-* **Exact Caching:** This stores precise, unaltered responses for specific queries. If a user asks the same question multiple times, the system can quickly retrieve the pre-stored response rather than generating it again each time. This speeds up response times and reduces computational load.
-* **Semantic Caching:** This approach is more flexible and involves storing responses based on the meaning or intent behind the queries. Instead of relying on exact matches, the system can understand and reuse information that is conceptually similar. For instance, if a user asks about "Italian restaurants in New York City" and later about "New York City Italian cuisine," semantic caching can help provide relevant information based on their related meanings.
+* **Exact caching:** This stores precise, unaltered responses for specific queries. If a user asks the same question multiple times, the system can quickly retrieve the pre-stored response rather than generating it again each time. This speeds up response times and reduces computational load.
+* **Semantic caching:** This approach is more flexible and involves storing responses based on the meaning or intent behind the queries. Instead of relying on exact matches, the system can understand and reuse information that is conceptually similar. For instance, if a user asks about "Italian restaurants in New York City" and later about "New York City Italian cuisine," semantic caching can help provide relevant information based on their related meanings.
 
 Together, these caching methods enhance the efficiency and relevance of AI responses, making interactions faster and more contextually accurate.
 
 {:.info}
-> When Exact Caching is enabled, the AI Semantic Cache Policy may still return results for queries that are similar but not identical. This is expected behavior: the Policy performs similarity-based caching regardless of the Exact Caching setting.
+> When exact caching is enabled, the AI Semantic Cache Policy may still return results for queries that are similar but not identical. This is expected behavior: the Policy performs similarity-based caching regardless of the exact caching setting.
 
 ### Headers sent to the client
 
@@ -139,8 +140,8 @@ The Policy respects cache control headers to determine if requests and responses
 
 ### Using cloud authentication with Redis
 
-If your Policy uses a Redis datastore, you can authenticate to it with a cloud Redis provider. 
-This allows you to seamlessly rotate credentials without relying on static passwords. 
+If your Policy uses a Redis datastore, you can authenticate to it with a cloud Redis provider.
+This allows you to seamlessly rotate credentials without relying on static passwords.
 
 {% include_cached /md/ai-gateway/v2/redis-cloud-providers.md name=page.name heading_level=3 %}
 
