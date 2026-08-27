@@ -8,6 +8,8 @@ metadata:
     - ai-gateway
   works_on:
     - konnect
+  tags:
+    - ai
 
 rows:
   - header:
