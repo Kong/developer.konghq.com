@@ -38,8 +38,6 @@ related_resources:
 
 icon: ai-semantic-response-guard.png
 
-categories:
- - ai
 tags:
  - ai
  - safety
