@@ -6,6 +6,12 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+description: 'Use Azure AI Content Safety to check and audit messages before proxying them to an upstream LLM'
+categories:
+  - ai
+tags:
+  - ai
+  - safety
 ---
 
 The AI Azure Content Safety Policy allows administrators to enforce 
@@ -26,10 +32,10 @@ The AI Azure Content Safety Policy can be applied to:
 Here's how it works if you apply it to both requests and responses:
 
 1. The AI Azure Content Safety Policy intercepts the request and sends the request body to the Azure AI Content Safety service.
-   1. The Azure AI Content Safety service analyzes the request against configured moderation categories and allows or blocks the request.
+   - The Azure AI Content Safety service analyzes the request against configured moderation categories and allows or blocks the request.
 1. If allowed, the request is forwarded upstream with the AI Model entity.
 1. On the way back, the Policy intercepts the response and sends the response body to the Azure AI Content Safety service.
-   1. The Azure AI Content Safety service analyzes the response against configured moderation categories and allows or blocks the response.
+   - The Azure AI Content Safety service analyzes the response against configured moderation categories and allows or blocks the response.
 1. If allowed, the response is forwarded to the client.
 
 {% comment %}
