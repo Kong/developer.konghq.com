@@ -217,6 +217,12 @@ Squid runs as its own Docker container, separate from the {{site.ai_gateway}} da
 
 #### Create a model and provider
 
+[Generate an {{site.anthropic}} API key](https://console.anthropic.com/settings/keys), then export it as an environment variable:
+
+```sh
+export ANTHROPIC_API_KEY='YOUR_ANTHROPIC_API_KEY'
+```
+
 Create an [AI Provider](/ai-gateway/entities/ai-model-provider/) entity to define your LLM service and store authentication credentials:
 
 {% entity_examples %}
@@ -233,7 +239,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: x-api-key
-            value: !env ANTHROPIC_API_KEY
+            value: !secret {source: !env ANTHROPIC_API_KEY}
 {% endentity_examples %}
 
 Create an [AI Model](/ai-gateway/entities/ai-model/) entity and specify your forward proxy host:
@@ -253,6 +259,10 @@ ai_gateway_models:
       route:
         paths:
           - /
+        model:
+          body_param: model
+          values:
+            - my-claude
       proxy:
         http_proxy:
           host: host.docker.internal
@@ -261,8 +271,6 @@ ai_gateway_models:
           host: host.docker.internal
           port: 3128
         proxy_scheme: http
-      model:
-        alias: my-claude
     targets:
       - name: claude-opus-4-8
         provider: generic-anthropic
@@ -306,7 +314,16 @@ ai_gateway_models:
 
 ### AI MCP Server
 
-1. Create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity that exposes the [WeatherAPI](https://www.weatherapi.com/) through a single MCP tool:
+1. Run the [Swagger Petstore](https://github.com/swagger-api/swagger-petstore) sample API in its own Docker container:
+
+    ```sh
+    docker run -d \
+      --name swagger-petstore-forward-proxy \
+      -p 8080:8080 \
+      swaggerapi/petstore3:latest
+    ```
+
+1. Create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity that exposes the Petstore API through a single MCP tool:
 
    <!-- vale off -->
    {% capture mcp-server %}
@@ -318,66 +335,96 @@ ai_gateway_models:
      - 'Content-Type: application/json'
      - 'Accept: application/json, application/problem+json'
    body:
-     display_name: Weather API
-     name: weather-mcp
+     display_name: Petstore API (forward proxy)
+     name: petstore-forward-proxy-mcp
      type: conversion-listener
      enabled: true
      policies: []
-     acl_attribute_type: consumer
-     acls:
-       allow:
-         - __never_match__
-     default_tool_acls:
-       deny:
-         - __never_match__
+     access:
+       acl_attribute_type: consumer
+       acls:
+         allow: []
+       default_tool_acls:
+         deny: []
      config:
-       url: https://api.weatherapi.com/v1/current.json
+       url: http://host.docker.internal:8080/api/v3
        route:
          paths:
-           - /weather
+           - /petstore-forward-proxy
        logging:
          payloads: false
-         statistics: true
        server:
          timeout: 60000
      tools:
-       - name: get-current-weather
-         description: Get current weather for a location
+       - name: get-pet-by-id
+         description: Get a pet by ID
          method: GET
-         path: /weather
-         query:
-           key:
-             - $WEATHERAPI_API_KEY
+         path: /petstore-forward-proxy/pet/{petId}
          parameters:
-           - name: q
-             in: query
+           - name: petId
+             in: path
              required: true
              schema:
-               type: string
-             description: Location query. Accepts US Zipcode, UK Postcode, Canada Postalcode, IP address, latitude/longitude, or city name.
+               type: integer
+             description: ID of the pet to retrieve
    {% endkonnect_api_request %}
    {% endcapture %}
    {{ mcp-server | indent: 3 }}
    <!-- vale on -->
 
-1. This MCP Server does not route through your forward proxy, since `conversion-listener` doesn't support it. Calling `get-current-weather` reaches WeatherAPI directly:
+1. Use [MCP Inspector CLI](https://modelcontextprotocol.io/docs/tools/inspector#cli) to verify that the MCP server exposes `get-pet-by-id` as a tool:
 
-    ```sh
-    curl -i -X POST http://localhost:8000/weather \
-      -H 'Content-Type: application/json' \
-      -H 'Accept: application/json, text/event-stream' \
-      --data '{
-        "jsonrpc":"2.0",
-        "id":1,
-        "method":"tools/call",
-        "params":{
-          "name":"get-current-weather",
-          "arguments":{
-            "query_q":"London"
-          }
-        }
-      }'
+   <!-- vale off -->
+   {% capture tools-list-validation %}
+   {% validation custom-command %}
+   command: |
+     npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
+       http://localhost:8000/petstore-forward-proxy \
+       --transport http --method tools/list | jq -r '.tools[].name'
+   expected:
+     return_code: 0
+   render_output: false
+   message: |
+     get-pet-by-id
+   {% endvalidation %}
+   {% endcapture %}
+   {{ tools-list-validation | indent: 3 }}
+   <!-- vale on -->
+
+   You should see the following output:
+
+    ```text
+    get-pet-by-id
     ```
+    {:.no-copy-code}
+
+1. This MCP Server does not route through your forward proxy, since `conversion-listener` doesn't support it. Calling `get-pet-by-id` reaches Petstore directly:
+
+   <!-- vale off -->
+   {% capture tools-call-validation %}
+   {% validation custom-command %}
+   command: |
+     npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
+       http://localhost:8000/petstore-forward-proxy \
+       --transport http --method tools/call \
+       --tool-name get-pet-by-id \
+       --tool-arg path_petId=7 | jq -r '.content[0].text' | jq -c '.'
+   expected:
+     return_code: 0
+   message: |
+     {"id":7,"category":{"id":4,"name":"Lions"},"name":"Lion 1","photoUrls":["url1","url2"],"tags":[{"id":1,"name":"tag1"},{"id":2,"name":"tag2"}],"status":"available"}
+   render_output: false
+   {% endvalidation %}
+   {% endcapture %}
+   {{ tools-call-validation | indent: 3 }}
+   <!-- vale on -->
+
+   You should see the following response:
+
+    ```text
+    {"id":7,"category":{"id":4,"name":"Lions"},"name":"Lion 1","photoUrls":["url1","url2"],"tags":[{"id":1,"name":"tag1"},{"id":2,"name":"tag2"}],"status":"available"}
+    ```
+    {:.no-copy-code}
 
 ## Limitations
 
