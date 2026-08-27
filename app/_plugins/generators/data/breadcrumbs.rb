@@ -7,10 +7,11 @@ module Jekyll
     class Breadcrumbs
       attr_reader :site, :page
 
-      def initialize(site:, page:, build_filter: Jekyll::BuildFilter.current)
+      def initialize(site:, page:, build_filter: Jekyll::BuildFilter.current, url_index: nil)
         @site = site
         @page = page
         @build_filter = build_filter
+        @url_index = url_index
       end
 
       def process
@@ -79,6 +80,8 @@ module Jekyll
       end
 
       def find_page_by_url(url)
+        return @url_index[url] if @url_index
+
         site.pages.detect { |p| p.url == url } ||
           site.documents.detect { |d| d.url == url }
       end
