@@ -76,7 +76,7 @@ ai_gateway_model_providers:
     config:
       auth:
         type: aws
-        access_key_id: !secret {source: !env AWS_ACCESS_KEY_ID}
+        access_key_id: !env AWS_ACCESS_KEY_ID
         secret_access_key: !secret {source: !env AWS_SECRET_ACCESS_KEY}
 {% endentity_examples %}
 
@@ -90,7 +90,7 @@ The AI Model Provider uses the following settings:
 
 ## Create an AI Policy entity
 
-Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request transformer](/ai-gateway/policies/ai-request-transformer/) to remove extra fields that Bedrock's API does not support. 
+Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request transformer](/ai-gateway/policies/ai-request-transformer/) to remove extra fields that Bedrock's API does not support.
 
 {% entity_examples %}
 ai_gateway_policies:
