@@ -26,6 +26,7 @@ entities:
 
 tags:
   - ai
+  - safety
 
 tldr:
   q: How do I allow only general IT-related prompts and block hacking content?
