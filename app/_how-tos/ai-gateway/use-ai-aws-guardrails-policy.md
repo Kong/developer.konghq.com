@@ -108,7 +108,7 @@ ai_gateway_policies:
       guardrails_version: !env GUARDRAILS_VERSION
       aws_region: !env AWS_REGION
       aws_access_key_id: !env AWS_ACCESS_KEY_ID
-      aws_secret_access_key: !secret {source: !env AWS_SECRET_ACCESS_KEY}
+      aws_secret_access_key: !env AWS_SECRET_ACCESS_KEY
 ai_gateway_models:
   - ref: my-gpt-4o
     display_name: my-gpt-4o
