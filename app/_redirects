@@ -408,7 +408,7 @@
 /how-to/filter-knowledge-based-queries-with-rag-injector/  /ai-gateway/v1/how-to/filter-knowledge-based-queries-with-rag-injector/  301
 /how-to/forward-openai-sdk-model-to-ai-proxy-advanced/  /ai-gateway/v1/how-to/forward-openai-sdk-model-to-ai-proxy-advanced/  301
 /how-to/limit-a2a-request-size/  /ai-gateway/v1/how-to/limit-a2a-request-size/  301
-/how-to/meter-llm-traffic/  /ai-gateway/v1/how-to/meter-llm-traffic/  301
+# /how-to/meter-llm-traffic/  /ai-gateway/v1/how-to/meter-llm-traffic/  301
 /how-to/protect-sensitive-information-output-with-ai/  /ai-gateway/v1/how-to/protect-sensitive-information-output-with-ai/  301
 /how-to/protect-sensitive-information-with-ai/  /ai-gateway/v1/how-to/protect-sensitive-information-with-ai/  301
 /how-to/proxy-a2a-agents/  /ai-gateway/v1/how-to/proxy-a2a-agents/  301
