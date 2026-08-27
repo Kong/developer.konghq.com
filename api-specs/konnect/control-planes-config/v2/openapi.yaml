@@ -14,8 +14,8 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
   version: 3.15.0
-  x-oas-source: kong/platform-api@e96cfd8cf32039317c7dfbc31333a428c1a34e29
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e96cfd8cf32039317c7dfbc31333a428c1a34e29'
+  x-oas-source: kong/platform-api@99afe7596105f2ad5a676e7039ded9c44d0d2c94
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/99afe7596105f2ad5a676e7039ded9c44d0d2c94'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -9513,7 +9513,6 @@ components:
     ConfigStoreSecretExample:
       value:
         key: ConfigStoreSecretKey
-        value: ConfigStoreSecretValue
         created_at: '2024-01-01T00:00:00.000Z'
         updated_at: '2024-01-01T00:00:00.000Z'
     CreateConfigStoreRequestExample:
@@ -9966,7 +9965,6 @@ components:
               value:
                 data:
                   - key: ConfigStoreSecretKey
-                    value: ConfigStoreSecretValue
                     created_at: '2023-01-01T00:00:00.000Z'
                     updated_at: '2023-01-01T00:00:00.000Z'
                 meta:

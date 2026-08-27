@@ -35,7 +35,8 @@ releases:
       - amazonlinux2:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -45,7 +46,8 @@ releases:
       - amazonlinux2023:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -56,7 +58,8 @@ releases:
       - debian11:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -66,7 +69,8 @@ releases:
       - debian12:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -79,7 +83,8 @@ releases:
           package_support:
             arm: false
             graviton: false
-            fips: true
+            fips2: true
+            fips3: false
           docker: false
           eol: 2026-08-31
       - rhel9:
@@ -87,11 +92,13 @@ releases:
           package_support:
             graviton: false
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           eol: 2026-08-31
           default: true
       - ubuntu2204:
@@ -99,11 +106,13 @@ releases:
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           eol: 2026-08-31
           default: true
     third_party_support:
@@ -198,7 +207,8 @@ releases:
       - amazonlinux2:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -208,7 +218,8 @@ releases:
       - amazonlinux2023:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -220,13 +231,15 @@ releases:
           package: true
           package_support:
             arm: false
-            fips: false
+            fips2: false
+            fips3: false
             graviton: false
           eol: June 2024
       - debian11:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -236,7 +249,8 @@ releases:
       - debian12:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -248,7 +262,8 @@ releases:
           package: true
           package_support:
             arm: false
-            fips: false
+            fips2: false
+            fips3: false
             graviton: false
           eol: June 2024
       - rhel8:
@@ -256,7 +271,8 @@ releases:
           package_support:
             arm: false
             graviton: false
-            fips: true
+            fips2: true
+            fips3: false
           docker: false
           eol: May 2025
       - rhel9:
@@ -264,11 +280,13 @@ releases:
           package_support:
             graviton: false
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           eol: May 2025
           default: true
       - ubuntu2004:
@@ -276,7 +294,8 @@ releases:
           package_support:
             graviton: false
             arm: false
-            fips: true
+            fips2: true
+            fips3: false
           docker: false
           eol: May 2025
       - ubuntu2204:
@@ -284,11 +303,13 @@ releases:
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           eol: May 2025
           default: true
     third_party_support:
@@ -389,7 +410,8 @@ releases:
       - amazonlinux2:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -399,7 +421,8 @@ releases:
       - amazonlinux2023:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -410,7 +433,8 @@ releases:
       - debian11:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -420,7 +444,8 @@ releases:
       - debian12:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -433,7 +458,8 @@ releases:
           package_support:
             arm: false
             graviton: false
-            fips: true
+            fips2: true
+            fips3: false
           docker: false
           eol: Sept 2025
       - rhel9:
@@ -441,11 +467,13 @@ releases:
           package_support:
             graviton: false
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           eol: Sept 2025
           default: true
       - ubuntu2004:
@@ -454,18 +482,21 @@ releases:
             graviton: false
             arm: false
           docker: false
-          fips: true
+          fips2: true
+          fips3: false
           eol: April 2025
       - ubuntu2204:
           package: true
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           eol: Sept 2025
           default: true
     third_party_support:
@@ -568,7 +599,8 @@ releases:
       - amazonlinux2:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -578,7 +610,8 @@ releases:
       - amazonlinux2023:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -589,7 +622,8 @@ releases:
       - debian11:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -599,7 +633,8 @@ releases:
       - debian12:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -612,7 +647,8 @@ releases:
           package_support:
             arm: false
             graviton: false
-            fips: true
+            fips2: true
+            fips3: false
           docker: false
           eol: Dec 2025
       - rhel9:
@@ -620,11 +656,13 @@ releases:
           package_support:
             graviton: false
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           eol: Dec 2025
           default: true
       - ubuntu2004:
@@ -632,7 +670,8 @@ releases:
           package_support:
             graviton: false
             arm: false
-            fips: true
+            fips2: true
+            fips3: false
           docker: false
           eol: April 2025
       - ubuntu2204:
@@ -640,22 +679,26 @@ releases:
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           eol: Dec 2025
       - ubuntu2404:
           package: true
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           eol: Dec 2025
           default: true
     third_party_support:
@@ -763,7 +806,8 @@ releases:
       - amazonlinux2:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -773,7 +817,8 @@ releases:
       - amazonlinux2023:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -783,7 +828,8 @@ releases:
       - debian11:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -793,7 +839,8 @@ releases:
       - debian12:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -805,39 +852,46 @@ releases:
           package_support:
             arm: false
             graviton: false
-            fips: true
+            fips2: true
+            fips3: false
           docker: false
       - rhel9:
           package: true
           package_support:
             graviton: false
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           default: true
       - ubuntu2204:
           package: true
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
       - ubuntu2404:
           package: true
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           default: true
     third_party_support:
       ai_providers:
@@ -952,7 +1006,8 @@ releases:
       - amazonlinux2:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -962,7 +1017,8 @@ releases:
       - amazonlinux2023:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -972,7 +1028,8 @@ releases:
       - debian11:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -981,7 +1038,8 @@ releases:
       - debian12:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -993,39 +1051,46 @@ releases:
           package_support:
             arm: false
             graviton: false
-            fips: true
+            fips2: true
+            fips3: false
           docker: false
       - rhel9:
           package: true
           package_support:
             graviton: false
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           default: true
       - ubuntu2204:
           package: true
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
       - ubuntu2404:
           package: true
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           default: true
     third_party_support:
       ai_providers:
@@ -1142,7 +1207,8 @@ releases:
       - amazonlinux2:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1152,7 +1218,8 @@ releases:
       - amazonlinux2023:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1162,7 +1229,8 @@ releases:
       - debian11:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1172,7 +1240,8 @@ releases:
       - debian12:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1184,7 +1253,8 @@ releases:
           docker: true
           docker_support:
             arm: true
-            fips: false
+            fips2: false
+            fips3: false
             graviton: true
           default: true
       - rhel8:
@@ -1192,39 +1262,46 @@ releases:
           package_support:
             arm: false
             graviton: false
-            fips: true
+            fips2: true
+            fips3: false
           docker: false
       - rhel9:
           package: true
           package_support:
             graviton: false
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           default: true
       - ubuntu2204:
           package: true
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
       - ubuntu2404:
           package: true
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           default: true
     third_party_support:
       ai_providers:
@@ -1340,7 +1417,8 @@ releases:
       - amazonlinux2:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1350,7 +1428,8 @@ releases:
       - amazonlinux2023:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1360,7 +1439,8 @@ releases:
       - debian11:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1370,7 +1450,8 @@ releases:
       - debian12:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1382,7 +1463,8 @@ releases:
           docker: true
           docker_support:
             arm: true
-            fips: false
+            fips2: false
+            fips3: false
             graviton: true
           default: true
       - rhel8:
@@ -1390,17 +1472,20 @@ releases:
           package_support:
             arm: false
             graviton: false
-            fips: true
+            fips2: true
+            fips3: false
           docker: false
       - rhel9:
           package: true
           package_support:
             graviton: false
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
-            fips: true
+            fips2: true
+            fips3: false
             arm: true
           default: true
       - ubuntu2204:
@@ -1408,20 +1493,24 @@ releases:
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
-            fips: true
+            fips2: true
+            fips3: false
             arm: true
       - ubuntu2404:
           package: true
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
-            fips: true
+            fips2: true
+            fips3: false
             arm: true
           default: true
     third_party_support:
@@ -1539,7 +1628,8 @@ releases:
       - amazonlinux2:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1549,7 +1639,8 @@ releases:
       - amazonlinux2023:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1559,7 +1650,8 @@ releases:
       - debian11:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1569,7 +1661,8 @@ releases:
       - debian12:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1581,7 +1674,8 @@ releases:
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: false
+            fips3: false
             graviton: true
           default: true
       - rhel8:
@@ -1589,17 +1683,20 @@ releases:
           package_support:
             arm: false
             graviton: false
-            fips: true
+            fips2: true
+            fips3: true
           docker: false
       - rhel9:
           package: true
           package_support:
             graviton: false
             arm: true
-            fips: true
+            fips2: true
+            fips3: true
           docker: true
           docker_support:
-            fips: true
+            fips2: true
+            fips3: true
             arm: true
           default: true
       - ubuntu2204:
@@ -1607,20 +1704,24 @@ releases:
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: true
           docker: true
           docker_support:
-            fips: true
+            fips2: true
+            fips3: true
             arm: true
       - ubuntu2404:
           package: true
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: true
           docker: true
           docker_support:
-            fips: true
+            fips2: true
+            fips3: true
             arm: true
           default: true
     third_party_support:
@@ -1706,6 +1807,7 @@ releases:
       datastore:
         - postgres:
             versions:
+              - 18
               - 17
               - 16
               - 15
@@ -1738,7 +1840,8 @@ releases:
       - amazonlinux2023:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1748,7 +1851,8 @@ releases:
       - debian11:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1758,7 +1862,8 @@ releases:
       - debian12:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1770,7 +1875,8 @@ releases:
           docker: true
           docker_support:
             arm: true
-            fips: false
+            fips2: false
+            fips3: false
             graviton: true
           default: true
       - rhel8:
@@ -1778,17 +1884,20 @@ releases:
           package_support:
             arm: false
             graviton: false
-            fips: true
+            fips2: true
+            fips3: false
           docker: false
       - rhel9:
           package: true
           package_support:
             graviton: false
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
-            fips: true
+            fips2: true
+            fips3: false
             arm: true
           default: true
       - ubuntu2204:
@@ -1796,20 +1905,24 @@ releases:
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
-            fips: true
+            fips2: true
+            fips3: false
             arm: true
       - ubuntu2404:
           package: true
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
-            fips: true
+            fips2: true
+            fips3: false
             arm: true
           default: true
     third_party_support:
@@ -1895,6 +2008,7 @@ releases:
       datastore:
         - postgres:
             versions:
+              - 18
               - 17
               - 16
               - 15

@@ -198,10 +198,6 @@ function parseChangelog(md) {
     }
 
     if (!current) continue;
-    if (line === "") {
-      flush();
-      continue;
-    }
     if (isRefLine(line)) continue;
     current.lines.push(line);
   }
