@@ -14,6 +14,16 @@ tags:
 related_resources:
   - text: HTTP Log Policy
     url: /ai-gateway/policies/http-log/
+  - text: Kafka Log Policy
+    url: /ai-gateway/policies/kafka-log/
+  - text: Loggly Policy
+    url: /ai-gateway/policies/loggly/
+  - text: Syslog Policy
+    url: /ai-gateway/policies/syslog/
+  - text: TCP Log Policy
+    url: /ai-gateway/policies/tcp-log/
+  - text: UDP Log Policy
+    url: /ai-gateway/policies/udp-log/
 ---
 
 This AI Policy allows you to append request and response data in JSON format to a log file. You can also specify streams (for example, `/dev/stdout` and `/dev/stderr`), which is especially useful when running {{site.base_gateway}} in Kubernetes.
