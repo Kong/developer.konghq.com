@@ -395,6 +395,9 @@
 /ai-gateway/ai-providers/vertex/  /ai-gateway/ai-providers/gemini/  301
 /ai-gateway/use-claude-code-with-ai-gateway-vertex/  /ai-gateway/use-claude-code-with-ai-gateway-gemini/  301
 
+# ai-gateway metering and billing, temp moved so /metering-and-billing/ links go to something V2
+/how-to/meter-llm-traffic/ /ai-gateway/policies/metering-and-billing/ 302
+
 # ai-gateway previous-major how-to redirects — added by migration skill on 2026-06-15
 /how-to/authenticate-openai-sdk-clients-with-key-auth/  /ai-gateway/v1/how-to/authenticate-openai-sdk-clients-with-key-auth/  301
 /how-to/azure-batches/  /ai-gateway/v1/how-to/azure-batches/  301
@@ -405,7 +408,7 @@
 /how-to/filter-knowledge-based-queries-with-rag-injector/  /ai-gateway/v1/how-to/filter-knowledge-based-queries-with-rag-injector/  301
 /how-to/forward-openai-sdk-model-to-ai-proxy-advanced/  /ai-gateway/v1/how-to/forward-openai-sdk-model-to-ai-proxy-advanced/  301
 /how-to/limit-a2a-request-size/  /ai-gateway/v1/how-to/limit-a2a-request-size/  301
-/how-to/meter-llm-traffic/  /ai-gateway/v1/how-to/meter-llm-traffic/  301
+# /how-to/meter-llm-traffic/  /ai-gateway/v1/how-to/meter-llm-traffic/  301
 /how-to/protect-sensitive-information-output-with-ai/  /ai-gateway/v1/how-to/protect-sensitive-information-output-with-ai/  301
 /how-to/protect-sensitive-information-with-ai/  /ai-gateway/v1/how-to/protect-sensitive-information-with-ai/  301
 /how-to/proxy-a2a-agents/  /ai-gateway/v1/how-to/proxy-a2a-agents/  301
