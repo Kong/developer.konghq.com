@@ -2,6 +2,7 @@
 
 require 'yaml'
 require_relative '../monkey_patch'
+require_relative '../component_templates'
 
 module Jekyll
   class EntityExamples < Liquid::Block
@@ -89,19 +90,18 @@ module Jekyll
       @page['kong_plugins'].concat(kong_plugins) if kong_plugins.any?
 
       entity_examples_drop = Drops::EntityExamples.new(config:, format: 'deck')
-      render_drop(context, entity_examples_drop)
+      render_drop(context, entity_examples_drop, 'entity_examples')
     end
 
     def render_kongctl(context, contents)
       entity_examples_drop = Drops::EntityExamples.new(raw_body: contents, format: 'kongctl')
-      render_drop(context, entity_examples_drop)
+      render_drop(context, entity_examples_drop, 'entity_examples_kongctl')
     end
 
-    def render_drop(context, entity_examples_drop)
-      template = File.read(entity_examples_drop.template)
+    def render_drop(context, entity_examples_drop, name)
       context.stack do
         context['entity_examples'] = entity_examples_drop
-        Liquid::Template.parse(template, { line_numbers: true }).render(context)
+        ComponentTemplates.fetch(name, 'html').render(context)
       end
     end
   end
