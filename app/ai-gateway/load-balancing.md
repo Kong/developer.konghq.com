@@ -32,7 +32,7 @@ related_resources:
 
 {{site.ai_gateway}} provides load balancing capabilities to distribute requests across multiple LLM models. You can use these features to improve fault tolerance, optimize resource utilization, and balance traffic across your AI systems.
 
-In {{site.ai_gateway}}, load balancing is configured on the [AI Model entity](/ai-gateway/entities/ai-model/) through `config.balancer` and `target_models`.
+In {{site.ai_gateway}}, load balancing is configured on the [AI Model entity](/ai-gateway/entities/ai-model/) through `config.balancer` and `targets`.
 
 ### Load balancing algorithms
 
@@ -66,14 +66,14 @@ rows:
       * Useful for session persistence and cache-hit optimization.
   - algorithm: "Least-connections"
     description: |
-      Tracks the number of in-flight requests for each backend and routes new requests to the backend with the highest spare capacity. The [`weight`](/ai-gateway/entities/ai-model/#schema-aigateway-model-target-models-weight) parameter is used to calculate connection capacity.
+      Tracks the number of in-flight requests for each backend and routes new requests to the backend with the highest spare capacity. The [`weight`](/ai-gateway/entities/ai-model/#schema-aigateway-model-targets-weight) parameter is used to calculate connection capacity.
     considerations: |
       * Dynamically adapts to backend response times.
       * Routes away from slower backends as they accumulate open connections.
       * Does not account for cache-hit ratios.
   - algorithm: "Lowest-usage"
     description: |
-      Routes requests to models with the lowest measured resource usage. The [`tokens_count_strategy`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-tokens-count-strategy) parameter defines how usage is measured: prompt token counts, response token counts, or cost.
+      Routes requests to models with the lowest measured resource usage. The [`tokens_count_strategy`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-tokens-count-strategy) parameter defines how usage is measured: prompt tokens, completion tokens, total tokens (the default), cost, or an LLM-accuracy score.
     considerations: |
       * Balances load based on actual consumption metrics.
       * Useful for cost optimization and avoiding overloading individual models.
@@ -97,7 +97,7 @@ rows:
       * Best for routing prompts to domain-specialized models.
   - algorithm: "Priority"
     description: |
-      Routes requests to models based on assigned priority groups. The balancer always selects from the highest-priority group first. If all targets in that group are unavailable, it falls back to the next group. Within each group, the [`weight`](/ai-gateway/entities/ai-model/#schema-aigateway-model-target-models-weight) parameter controls traffic distribution.
+      Routes requests to models based on assigned priority groups. The balancer always selects from the highest-priority group first. If all targets in that group are unavailable, it falls back to the next group. Within each group, the [`weight`](/ai-gateway/entities/ai-model/#schema-aigateway-model-targets-weight) parameter controls traffic distribution.
     considerations: |
       * Higher-priority groups receive all traffic until they fail.
       * Lower-priority groups serve as fallback only.
@@ -115,7 +115,7 @@ An AI Model can have an optional [`config.route.model`](/ai-gateway/entities/ai-
 
 ### Retry and fallback
 
-The load balancer includes built-in support for **retries** and **fallbacks**. When a request fails, the balancer can automatically retry the same target or redirect the request to a different target model.
+The load balancer includes built-in support for retries and fallbacks. When a request fails, the balancer can automatically retry the same target or redirect the request to a different target model.
 
 #### How retry and fallback works
 
@@ -229,11 +229,11 @@ columns:
   - title: Use
     key: use
 rows:
-  - setting: "[`connect_timeout`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-aigateway-model-balancer-consistent-hashing-config-connect-timeout), [`read_timeout`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-aigateway-model-balancer-consistent-hashing-config-read-timeout), [`write_timeout`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-aigateway-model-balancer-consistent-hashing-config-write-timeout)"
+  - setting: "[`connect_timeout`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-connect-timeout), [`read_timeout`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-read-timeout), [`write_timeout`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-write-timeout)"
     use: "Reduce how long {{site.ai_gateway}} waits before treating a target model as unavailable."
-  - setting: "[`max_fails`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-aigateway-model-balancer-consistent-hashing-config-max-fails)"
+  - setting: "[`max_fails`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-max-fails)"
     use: "Set the number of failed attempts allowed before {{site.ai_gateway}} marks a target model unhealthy."
-  - setting: "[`fail_timeout`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-aigateway-model-balancer-consistent-hashing-config-fail-timeout)"
+  - setting: "[`fail_timeout`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-fail-timeout)"
     use: "Set how long {{site.ai_gateway}} keeps a target model in a failed state before trying it again."
 {% endtable %}
 <!--vale on-->
