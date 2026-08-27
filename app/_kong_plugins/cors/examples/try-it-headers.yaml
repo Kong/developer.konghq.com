@@ -1,4 +1,4 @@
-title: Enable 'Try it' in Dev Portal for requests with any header
+title: Enable "Try it" in Dev Portal for requests with any header
 description: |
   Configures the CORS plugin to support sending requests with any headers from the Dev Portal spec renderer.
 extended_description: |
