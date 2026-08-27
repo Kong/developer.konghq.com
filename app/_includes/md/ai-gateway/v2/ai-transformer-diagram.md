@@ -4,8 +4,8 @@ sequenceDiagram
     autonumber
     participant client as Client
     participant kong as {{site.ai_gateway}}
-    participant ai as AI LLM service
-    participant backend as Backend service
+    participant ai as AI service
+    participant backend as Upstream LLM
     activate client
     activate kong
     client->>kong: Sends a request
@@ -30,4 +30,4 @@ sequenceDiagram
 <!--vale on-->
 
 > _**Figure 1**: The diagram shows the journey of a consumer's request through {{site.ai_gateway}} to the 
-backend service, where it is transformed by both an AI LLM service and Kong's AI Request Transformer and AI Response Transformer Policies._
+upstream LLM provider, where it is transformed by Kong's AI Request Transformer and AI Response Transformer Policies using an AI service._
