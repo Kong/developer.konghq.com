@@ -24,7 +24,7 @@ Because prompt payloads are client-controlled and can be large, capping request 
 
 ## Example
 
-The following example creates a global Request Size Limiting Policy that rejects any request body larger than 256 kilobytes.
+The following example creates a global Request Size Limiting Policy that rejects any request body larger than 256 kilobytes:
 
 {% entity_example %}
 type: policy
@@ -39,4 +39,5 @@ data:
     size_unit: kilobytes
 formats:
   - kongctl
+  - konnect-api
 {% endentity_example %}
