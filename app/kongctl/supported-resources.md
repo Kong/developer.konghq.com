@@ -1039,7 +1039,7 @@ ai_gateway_models:
 ```
 {:.collapsible}
 
-### AI Identity Providers
+### AI Auth Strategies
 
 [AI Auth Strategies](/ai-gateway/entities/ai-auth-strategy/) configure authentication for {{site.ai_gateway}} endpoints.
 
