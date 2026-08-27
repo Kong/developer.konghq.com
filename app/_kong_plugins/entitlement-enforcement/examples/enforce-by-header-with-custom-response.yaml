@@ -1,0 +1,60 @@
+description: 'Identify the customer from a request header and customize the denial response.'
+
+extended_description: |
+  Use this configuration when your API clients pass a customer or tenant identifier in a request header, instead of authenticating as a {{site.base_gateway}} Consumer.
+  This is common for machine-to-machine or multi-tenant SaaS traffic where you don't create a Consumer per customer.
+
+  This example also overrides the default response for `USAGE_LIMIT_REACHED`, so you can return a status code and message that fit your API's error format instead of the plugin's defaults.
+
+title: 'Enforce entitlements by header, with a custom denial response'
+
+weight: 899
+
+requirements:
+  - 'Your API clients must pass the customer header on every request you want to enforce entitlements for.'
+
+config:
+  entitlement_access_endpoint: ${entitlement_access_endpoint}
+  api_token: ${api_token}
+  customer:
+    look_up_value_in: header
+    field: ${customer_header}
+  feature:
+    key: ${feature_key}
+  credit_balance_required: true
+  response_codes:
+    USAGE_LIMIT_REACHED:
+      http_status: 403
+      message: ${usage_limit_message}
+  redis:
+    host: ${redis_host}
+
+variables:
+  entitlement_access_endpoint:
+    value: $ENTITLEMENT_ACCESS_ENDPOINT
+    description: The URL of your entitlement access service endpoint.
+  api_token:
+    value: $ENTITLEMENT_ACCESS_API_TOKEN
+    description: The bearer token used to authenticate with the entitlement access endpoint.
+  customer_header:
+    value: $CUSTOMER_HEADER
+    description: The name of the request header that contains the customer identifier, for example `x-customer-id`.
+  feature_key:
+    value: $FEATURE_KEY
+    description: The key identifying the feature to enforce.
+  usage_limit_message:
+    value: $USAGE_LIMIT_MESSAGE
+    description: The message to return when a customer has reached their usage limit for the feature.
+  redis_host:
+    value: $REDIS_HOST
+    description: The hostname of your Redis instance used for caching enforcement state.
+
+min_version:
+  gateway: '3.16'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

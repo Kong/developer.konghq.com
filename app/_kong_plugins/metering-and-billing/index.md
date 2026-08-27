@@ -48,6 +48,8 @@ related_resources:
     url: /metering-and-billing/metering/
   - text: Meter API requests by Consumer with {{site.metering_and_billing}}
     url: /how-to/meter-api-requests-by-consumer/
+  - text: Entitlement Enforcement plugin
+    url: /plugins/entitlement-enforcement/
 ---
 
 
@@ -115,9 +117,11 @@ The plugin buffers events in a local queue before sending them to the ingest end
 
 ## Enforcing entitlements
 
-The Metering & Billing plugin only meters events, it doesn't enforce metered limits. You must use a [rate limiting plugin](/plugins/?terms=rate%2520limiting) alongside the Metering & Billing plugin to enforce limits.
+The Metering & Billing plugin only meters events, it doesn't enforce metered limits on its own.
 
-For example, if you're metering AI request tokens to 100 per month, you must use [AI Rate Limiting Advanced](/plugins/ai-rate-limiting-advanced/) to limit the tokens. 
+{% new_in 3.16 %} Use the [Entitlement Enforcement plugin](/plugins/entitlement-enforcement/) alongside Metering & Billing to block requests when a customer's credit balance, usage limit, or feature access is exhausted. See [Get started with Entitlement Enforcement](/metering-and-billing/entitlement-enforcement/get-started/) and [Enforce entitlements on LLM traffic](/how-to/enforce-entitlements-on-llm-traffic/) for step-by-step guides.
+
+In previous versions, {{site.base_gateway}} had no plugin to enforce M&B entitlements directly, so you had to pair Metering & Billing with a [rate limiting plugin](/plugins/?terms=rate%2520limiting) to cap traffic. Rate limiting still composes well with entitlement enforcement: for example, if you're metering AI request tokens to 100 per month, you can use [AI Rate Limiting Advanced](/plugins/ai-rate-limiting-advanced/) to protect the upstream from a burst of requests, in addition to the Entitlement Enforcement plugin blocking requests once the monthly allowance is spent.
 
 ## Usage-based billing
 

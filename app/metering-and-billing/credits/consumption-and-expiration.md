@@ -66,6 +66,9 @@ Customers can use prepaid credits, but usage is not blocked if credits run out.
 With `credit_only`, the charge is settled exclusively against credits.
 If the credit balance is insufficient, the charge is blocked and no invoice overage is generated.
 
+{:.info}
+> Blocking a charge here only stops the billing line from being generated; it doesn't stop the API request that produced it. To block API traffic when a customer's credit balance is depleted, use the [Entitlement Enforcement plugin](/plugins/entitlement-enforcement/).
+
 ```text
 charge amount:       100 USD
 credit balance:      100 USD
