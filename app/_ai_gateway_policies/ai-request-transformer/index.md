@@ -24,6 +24,7 @@ The AI Request Transformer Policy runs **before** all of the [AI prompt](/ai-gat
 >
 > The reason is that the AI Request Transformer Policy forwards raw model output, and if the LLM service model does not produce strict JSON, the proxy chain cannot function correctly. This is not a bug in {{site.ai_gateway}} but a limitation of LLM behavior.
 
+{% comment %}
 ## How it works
 
 {% include md/ai-gateway/v2/ai-transformer-diagram.md %}
@@ -39,4 +40,4 @@ instructions for the incoming client request body.
 1. The {{site.ai_gateway}} sends the transformed request to the upstream LLM provider.
 1. The the upstream LLM provider returns a response to {{site.ai_gateway}}.
 2. The {{site.ai_gateway}} sends the response to the [AI Response Transformer policy](/ai-gateway/policies/ai-response-transformer/) (as in figure 1), or directly to the client.
-
+{% endcomment %}
