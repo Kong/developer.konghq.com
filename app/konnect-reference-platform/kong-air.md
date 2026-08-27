@@ -43,10 +43,6 @@ Two service teams own four active repositories:
 | `flight-data` | [destinations](https://github.com/KongAirlines/destinations) | Anonymous | `flight-data-dev` |
 | `flight-data` | [flights](https://github.com/KongAirlines/flights) | Anonymous | `flight-data-dev` |
 
-The historical `routes` repository is not part of the active topology. The API
-is named Destinations to avoid confusing an application API with {{site.base_gateway}}
-Route entities.
-
 ## What a service repository owns
 
 Each active repository uses the same readable layout:
