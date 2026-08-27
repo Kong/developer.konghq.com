@@ -6,11 +6,18 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+tags:
+  - monetization
+  - billing
+  - metering
+  - rate-limiting
 related_resources:
   - text: "{{site.konnect_short_name}} {{site.metering_and_billing}}"
     url: /metering-and-billing/
   - text: AI Rate Limiting Advanced Policy
     url: /ai-gateway/policies/ai-rate-limiting-advanced/
+  - text: Set up a {{site.identity}} auth server for tiered AI budgets
+    url: /ai-gateway/set-up-kong-identity-for-tiered-ai-budgets/
 ---
 
 {:.warning}
