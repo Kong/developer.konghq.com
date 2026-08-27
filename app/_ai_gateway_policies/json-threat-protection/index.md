@@ -6,6 +6,16 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+tags:
+  - security
+
+related_resources:
+  - text: AI Prompt Guard
+    url: /ai-gateway/policies/ai-prompt-guard/
+  - text: AI Rate Limiting Advanced
+    url: /ai-gateway/policies/ai-rate-limiting-advanced/
+  - text: Security Policies
+    url: /ai-gateway/policies/?category=security
 ---
 
 The JSON Threat Protection Policy validates and protects against malicious or overly complex JSON payloads on {{site.ai_gateway}} traffic. This includes JSON-based injection attacks, oversized payload attacks, and malformed JSON leading to application crashes.
