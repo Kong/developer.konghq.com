@@ -76,7 +76,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: Authorization
-            value: !env DASHSCOPE_AUTH_HEADER
+            value: !secret {source: !env DASHSCOPE_AUTH_HEADER}
 ai_gateway_models:
   - ref: my-qwen-dashscope
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}

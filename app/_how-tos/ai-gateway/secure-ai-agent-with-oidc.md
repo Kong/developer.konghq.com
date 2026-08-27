@@ -108,7 +108,7 @@ ai_gateway_auth_strategies:
       client_id:
         - $CLIENT_ID
       client_secret:
-        - $CLIENT_SECRET
+        - !secret {source: !env CLIENT_SECRET}
       auth_methods:
         - bearer
       scopes:

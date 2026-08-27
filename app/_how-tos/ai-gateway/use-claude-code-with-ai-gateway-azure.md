@@ -53,7 +53,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
           - name: x-api-key
-            value: !env AZURE_AI_FOUNDRY_TOKEN
+            value: !secret {source: !env AZURE_AI_FOUNDRY_TOKEN}
 {% endentity_examples %}
 
 {:.info}
@@ -62,7 +62,7 @@ ai_gateway_model_providers:
 The AI Model Provider uses the following settings:
 
 * `type: anthropic`: Specifies that this provider speaks Anthropic's native Messages API format. Azure AI Foundry serves Claude models through this same native API, so don't use `type: azure`.
-* `config.auth.headers[0].value: !env AZURE_AI_FOUNDRY_TOKEN`: Loads the API key from your environment at apply time so it is not embedded in the config.
+* `config.auth.headers[0].value: !secret {source: !env AZURE_AI_FOUNDRY_TOKEN}`: Loads the API key from your environment at apply time so it is not embedded in the config, and `kongctl` redacts it in plan and diff output.
 
 ## Create AI Policy and AI Model entities
 

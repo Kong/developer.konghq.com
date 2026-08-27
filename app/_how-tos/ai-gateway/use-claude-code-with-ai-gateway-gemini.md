@@ -65,7 +65,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
         - name: x-goog-api-key
-          value: !env GEMINI_API_KEY
+          value: !secret {source: !env GEMINI_API_KEY}
 {% endentity_examples %}
 
 {:.info}
@@ -75,7 +75,7 @@ The AI Model Provider uses the following settings:
 
 * `type: gemini`: Specifies that this provider connects to the Gemini service using Gemini's standard API format.
 * `name: my-gemini-account`: A unique identifier that AI Models will reference to route requests through this provider.
-* `config.auth`: Stores your Gemini API key. `value: !env GEMINI_API_KEY` loads the value from your environment at apply time instead of embedding it in the YAML, and `kongctl` redacts it in plan and diff output. {{site.ai_gateway}} securely manages this credential and injects it into upstream requests automatically, eliminating the need for clients to pass API keys.
+* `config.auth`: Stores your Gemini API key. `value: !secret {source: !env GEMINI_API_KEY}` loads the value from your environment at apply time instead of embedding it in the YAML, and `kongctl` redacts it in plan and diff output. {{site.ai_gateway}} securely manages this credential and injects it into upstream requests automatically, eliminating the need for clients to pass API keys.
 
 ## Create an AI Policy entity
 
@@ -134,7 +134,7 @@ ai_gateway_model_providers:
         type: basic
         headers:
         - name: x-goog-api-key
-          value: !env GEMINI_API_KEY
+          value: !secret {source: !env GEMINI_API_KEY}
 ai_gateway_policies:
   - ref: strip-claude-beta-info
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
