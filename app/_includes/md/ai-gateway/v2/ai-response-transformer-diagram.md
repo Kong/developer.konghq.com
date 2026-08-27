@@ -4,8 +4,8 @@ sequenceDiagram
     autonumber
     participant client as Client
     participant kong as {{site.ai_gateway}}
-    participant backend as Backend service
-    participant ai as AI LLM service
+    participant backend as Upstream LLM
+    participant ai as AI service
     activate client
     activate kong
     client->>kong: Sends a prompt
@@ -25,5 +25,4 @@ sequenceDiagram
 {% endmermaid %}
 <!--vale on-->
 
-> _**Figure 1**: The diagram shows the journey of a consumer's prompt through {{site.ai_gateway}} to the 
-backend service, where the response is transformed by an AI LLM service using Kong's AI Response Transformer Policy._
+> _**Figure 1**: The diagram shows the journey of a consumer's prompt through {{site.ai_gateway}} to an Upstream LLM that sends a response, the response is transformed by the AI Response Transformer Policy using an AI service._
