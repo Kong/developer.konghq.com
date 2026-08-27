@@ -16,12 +16,6 @@ works_on:
 min_version:
     ai-gateway: '2.0'
 
-topologies:
-  konnect_deployments:
-    - hybrid
-    - cloud-gateways
-    - serverless
-
 related_resources:
   - text: Get started with {{site.ai_gateway}}
     url: /ai-gateway/get-started/
@@ -62,11 +56,11 @@ The AI Policy analyzes the semantic content of the full LLM response before it i
 To enforce these rules, the AI Semantic Response Guard Policy:
 
 1. Disables streaming (`stream=false`) to ensure the full response body is buffered before analysis.
-2. Intercepts the response body using the `guard-buffered-response` filter.
-3. Extracts response text, supporting JSON parsing of multiple LLM formats and gzipped content.
-4. Generates embeddings for the extracted text.
-5. Searches the vector database (Redis, Pgvector, or other) against configured `allow_responses` or `deny_responses`.
-6. Applies the decision rules described above.
+1. Intercepts the response body using the `guard-buffered-response` filter.
+1. Extracts response text, supporting JSON parsing of multiple LLM formats and gzipped content.
+1. Generates embeddings for the extracted text.
+1. Searches the vector database (Redis or pgvector) against configured `allow_responses` or `deny_responses`.
+1. Applies the decision rules described above.
 
 {:.info}
 > If a response is blocked or if a system error occurs during evaluation, the AI Policy returns a `403 Forbidden` to the client without exposing that the AI Semantic Response Guard blocked it.
