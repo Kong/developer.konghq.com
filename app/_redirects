@@ -388,6 +388,28 @@
 # MCP landing page
 /mcp/ /ai-gateway/mcp/
 
+# AI Gateway policies delisted (published: false) but still referenced by the
+# auto-generated changelog and other content — redirect to the plugin doc
+/ai-gateway/policies/ace/                  /plugins/ace/                  301
+/ai-gateway/policies/ai-mcp-oauth2/        /plugins/ai-mcp-oauth2/        301
+/ai-gateway/policies/basic-auth/           /plugins/basic-auth/           301
+/ai-gateway/policies/header-cert-auth/     /plugins/header-cert-auth/     301
+/ai-gateway/policies/hmac-auth/            /plugins/hmac-auth/            301
+/ai-gateway/policies/jwt/                  /plugins/jwt/                  301
+/ai-gateway/policies/jwt-signer/           /plugins/jwt-signer/           301
+/ai-gateway/policies/key-auth/             /plugins/key-auth/             301
+/ai-gateway/policies/key-auth-enc/         /plugins/key-auth-enc/         301
+/ai-gateway/policies/ldap-auth/            /plugins/ldap-auth/            301
+/ai-gateway/policies/ldap-auth-advanced/   /plugins/ldap-auth-advanced/   301
+/ai-gateway/policies/mtls-auth/            /plugins/mtls-auth/            301
+/ai-gateway/policies/oauth2/               /plugins/oauth2/               301
+/ai-gateway/policies/oauth2-introspection/ /plugins/oauth2-introspection/ 301
+/ai-gateway/policies/openid-connect/       /plugins/openid-connect/       301
+/ai-gateway/policies/saml/                 /plugins/saml/                 301
+/ai-gateway/policies/session/              /plugins/session/              301
+/ai-gateway/policies/upstream-oauth/       /plugins/upstream-oauth/       301
+/ai-gateway/policies/vault-auth/           /plugins/vault-auth/           301
+
 # AIGW policies overview -> reference for now
 /ai-gateway/policies/:slug/  /ai-gateway/policies/:slug/reference 301
 
@@ -507,3 +529,4 @@
 /mcp/use-access-controls-for-mcp-tools/  /ai-gateway/v1/mcp/use-access-controls-for-mcp-tools/  301
 
 # AI Auth Strategy rename
+/ai-gateway/entities/ai-identity-provider/ /ai-gateway/entities/ai-auth-strategy/ 301
