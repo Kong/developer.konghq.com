@@ -6,11 +6,6 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
-description: 'Append request and response data to a log file'
-categories:
-  - logging
-tags:
-  - logging
 related_resources:
   - text: HTTP Log Policy
     url: /ai-gateway/policies/http-log/
