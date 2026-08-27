@@ -4,14 +4,11 @@ metadata:
   description: Observe Agent-to-Agent (A2A) protocol traffic through {{site.ai_gateway}}.
   products:
     - ai-gateway
-  works_on:
-    - konnect
-  min_version:
-    ai-gateway: '2.0'
   tags:
     - ai
     - a2a
-
+works_on:
+  - konnect
 rows:
   - header:
       type: h1
@@ -42,7 +39,6 @@ rows:
           - type: structured_text
             config:
               header:
-                type: h2
                 text: "Proxy and observe A2A traffic"
               blocks:
                 - type: text
@@ -52,7 +48,6 @@ rows:
           - type: structured_text
             config:
               header:
-                type: h4
                 text: "Secure A2A endpoints"
               blocks:
                 - type: text
@@ -89,6 +84,8 @@ rows:
                   url: "/ai-gateway/secure-ai-agent-with-oidc/"
                 - text: Request Size Limiting policy
                   url: "/ai-gateway/policies/request-size-limiting/"
+                - text: Limit request size for A2A traffic
+                  url: "/ai-gateway/limit-request-size-for-a2a/"
 
   - header:
       type: h2
@@ -107,8 +104,7 @@ rows:
             icon: /assets/icons/monitor.svg
             description: Review AI A2A Proxy log output fields, task states, and payload capture.
             cta:
-              url: /ai-gateway/ai-audit-log-reference/#ai-a2a-proxy-logs
-              align: end
+              url: /ai-gateway/ai-audit-log-reference/#ai-a2a-proxy-logs              
       - blocks:
         - type: card
           config:
@@ -116,8 +112,7 @@ rows:
             description: Inspect A2A-specific span attributes in distributed traces.
             icon: /assets/icons/opentelemetry.svg
             cta:
-              url: /ai-gateway/llm-open-telemetry/#a2a-agent-traffic
-              align: end
+              url: /ai-gateway/llm-open-telemetry/#a2a-span-attributes
       - blocks:
         - type: card
           config:
@@ -126,7 +121,6 @@ rows:
             icon: /assets/icons/opentelemetry.svg
             cta:
               url: /ai-gateway/ai-otel-metrics/#a2a-metrics
-              align: end
       - blocks:
         - type: card
           config:
@@ -135,7 +129,6 @@ rows:
             icon: /assets/icons/KogoBlue.svg
             cta:
               url: /observability/explorer/?tab=agentic-usage#metrics
-              align: end
   - header:
       type: h2
       text: "Manage A2A traffic"
@@ -151,4 +144,3 @@ rows:
             description: Apply rate limits to A2A routes proxied through {{site.ai_gateway}}
             cta:
               url: /ai-gateway/rate-limit-a2a-traffic/
-              align: end
