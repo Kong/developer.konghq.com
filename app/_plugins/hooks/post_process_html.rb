@@ -14,7 +14,6 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
   MESH_FLATTEN_URLS = ['/mesh/changelog/', '/mesh/version-specific-upgrade-notes/'].freeze
   COMPOUND_ID_URLS = ['/gateway/changelog/', '/ai-gateway/changelog/',
                       '/operator/reference/custom-resources/'].freeze
-  HEADING_SELECTOR = 'h2, h3, h4, h5, h6'
   HEADING_XPATH = './/*[self::h2 or self::h3 or self::h4 or self::h5 or self::h6]'
 
   ANCHOR_CLASS = 'flex items-center gap-2 link-anchor group w-full hover:no-underline text-primary'
@@ -24,7 +23,7 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
   end
 
   def process
-    doc = Nokolexbor::DocumentFragment.parse(@page_or_doc.content)
+    doc = parse_fragment(@page_or_doc.content)
 
     ops = collect_heading_ops(doc)
 
@@ -40,7 +39,7 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
   end
 
   def process_output
-    doc = Nokolexbor::DocumentFragment.parse(@page_or_doc.output)
+    doc = parse_fragment(@page_or_doc.output)
 
     ops = collect_heading_ops(doc)
     return if ops.empty?
@@ -52,6 +51,14 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
   end
 
   private
+
+  # Nokolexbor's DocumentFragment#xpath silently returns no results when the
+  # fragment has multiple top-level sibling nodes (which any plain markdown
+  # body does). Wrapping in a synthetic root works around it and gives us
+  # correct document order, unlike css() which groups results by tag name.
+  def parse_fragment(html)
+    Nokolexbor::DocumentFragment.parse("<div>#{html}</div>")
+  end
 
   def page_url
     @page_url ||= @page_or_doc.url
