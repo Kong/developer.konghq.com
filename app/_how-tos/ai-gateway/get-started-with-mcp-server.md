@@ -44,8 +44,14 @@ prereqs:
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
+  - text: MCP Traffic Gateway
+    url: /ai-gateway/mcp/
   - text: AI MCP Server entity
     url: /ai-gateway/entities/ai-mcp-server/
+  - text: MAP API to MCP tools
+    url: /ai-gateway/map-api-to-mcp-tools/
+  - text: Monitor MCP traffic with OpenTelemetry
+    url: /ai-gateway/monitor-mcp-traffic-with-otel/
 
 cleanup:
   inline:
