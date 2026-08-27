@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'yaml'
+require_relative '../../../file_cache'
 
 module Jekyll
   module PluginPages
@@ -11,7 +12,7 @@ module Jekyll
         end
 
         def content
-          @content ||= File.read('app/_includes/plugins/example.md')
+          @content ||= FileCache.read('app/_includes/plugins/example.md')
         end
 
         def data # rubocop:disable Metrics/MethodLength

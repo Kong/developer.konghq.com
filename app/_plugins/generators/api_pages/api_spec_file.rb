@@ -5,6 +5,12 @@ require 'yaml'
 module Jekyll
   module APIPages
     class APISpecFile
+      @raw_spec_cache = {}
+
+      class << self
+        attr_reader :raw_spec_cache
+      end
+
       def initialize(site:, page_source_file:, version:)
         @site = site
         @page_source_file = page_source_file
@@ -30,7 +36,7 @@ module Jekyll
       def raw_api_spec
         return unless exist?
 
-        @raw_api_spec ||= YAML.load(File.read(path))
+        self.class.raw_spec_cache[path] ||= YAML.load(File.read(path))
       end
     end
   end

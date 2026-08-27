@@ -2,6 +2,7 @@
 
 require 'yaml'
 require_relative './base'
+require_relative '../../../file_cache'
 
 module Jekyll
   module PluginPages
@@ -20,7 +21,7 @@ module Jekyll
         end
 
         def markdown_content
-          @markdown_content ||= File.read('app/_includes/plugins/api_reference.md')
+          @markdown_content ||= FileCache.read('app/_includes/plugins/api_reference.md')
         end
 
         def data
