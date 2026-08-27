@@ -10,7 +10,7 @@ works_on:
   - konnect
 
 entities:
-  - ai-provider
+  - ai-model-provider
   - ai-model
 
 tags:
@@ -42,11 +42,21 @@ cleanup:
 min_version:
   ai-gateway: '2.0'
 
+related_resources:
+  - text: AI Model Provider entity reference
+    url: /ai-gateway/entities/ai-model-provider/
+  - text: AI Model entity reference
+    url: /ai-gateway/entities/ai-model/
+  - text: Route A2A agent traffic through {{site.ai_gateway}}
+    url: /ai-gateway/get-started-with-ai-agent/
+  - text: Map the WeatherAPI to an MCP Server
+    url: /ai-gateway/get-started-with-mcp-server/
+
 ---
 
-## Create an AI Provider entity
+## Create an AI Model Provider entity
 
-Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection to OpenAI and store your authentication credentials:
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection to OpenAI and store your authentication credentials.
 
 First, set the `OPENAI_AUTH_HEADER` environment variable to your OpenAI API key:
 
@@ -73,9 +83,9 @@ ai_gateway_model_providers:
 {% endentity_examples %}
 
 {:.info}
-> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the [prerequisites](#prerequisites), instead of creating a new one.
+> `!env AI_GATEWAY_ID` references the {{site.ai_gateway}} created by the quickstart script in the [prerequisites](#prerequisites), instead of creating a new one. 
 
-In this example, we're setting up the AI Provider with:
+In this example, we're setting up the AI Model Provider with:
 
 * `type: openai`: Specifies that this provider connects to the OpenAI service using OpenAI's standard API format.
 * `name: generic-openai`: A unique identifier that AI Models will reference to route requests through this provider.
@@ -83,7 +93,7 @@ In this example, we're setting up the AI Provider with:
 
 ## Create an AI Model entity
 
-Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Provider to use:
+Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use:
 
 {% entity_examples %}
 ai_gateway_models:
@@ -113,17 +123,17 @@ ai_gateway_models:
 {% endentity_examples %}
 
 {:.info}
-> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script, same as in the previous step.
+> `!env AI_GATEWAY_ID` references the {{site.ai_gateway}} created by the quickstart script, same as in the previous step.
 
 In this example, we're setting up the AI Model with:
 
 * `type: model`: Specifies this is a synchronous model for request/response workloads.
 * `name: my-gpt-4o`: A unique identifier for this model.
 * `formats: [type: openai]`: Declares that this model accepts requests in OpenAI-compatible format.
-* `config.route.paths: [/v1]`: Configures the custom base path where this model's Routes will be accessible. Clients will send requests to paths that combine this base path with capability-specific Routes.
+* `config.route.paths: [/v1]`: Configures the custom base path for this model's endpoints. Clients send requests to paths that combine this base path with capability-specific paths.
 * `capabilities: [generate]`: Enables the text generation capability. The `generate` capability creates a `/chat/completions` endpoint, so combined with your base path, clients send chat requests to `/v1/chat/completions`.
 * `config.route.model: { body_param: model, values: [my-gpt-4o] }`: Lets clients send `my-gpt-4o` in the request `model` field instead of the upstream model name.
-* `targets`: Specifies which upstream AI Provider model to route requests to. Here, `provider: generic-openai` references the AI Provider we created earlier, and `name: gpt-4o` specifies which OpenAI model to call upstream.
+* `targets`: Specifies which upstream AI Model Provider model to route requests to. Here, `provider: generic-openai` references the AI Model Provider we created earlier, and `name: gpt-4o` specifies which OpenAI model to call upstream.
 
 ## Validate
 
