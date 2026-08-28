@@ -33,6 +33,8 @@ related_resources:
     url: /ai-gateway/entities/ai-data-plane-certificate/
   - text: AI Consumers
     url: /ai-gateway/entities/ai-consumer/
+  - text: Load balancing with AI Proxy Advanced
+    url: /ai-gateway/load-balancing/
   - text: Cross namespace references
     url: /operator/konnect/cross-namespace-references/
 
@@ -43,7 +45,7 @@ related_resources:
 {{site.operator_product_name}} manages three distinct layers:
 
 - **Control plane**: `KonnectAIGateway` provisions and owns the {{ site.ai_gateway }} control plane in {{ site.konnect_short_name }}. All other resources reference it as their parent.
-- **Configuration resources**: `AIGatewayModelProvider`, `AIGatewayModel`, `AIGatewayPolicy`, `AIGatewayIdentityProvider`, `AIGatewayConsumer`, `AIGatewayConsumerCredential`, `AIGatewayConsumerGroup`, and `AIGatewayAgent` declare what the gateway does: which LLM providers to connect to, which model routes to expose, what Policies to enforce, which authentication schemes to accept, and which clients may access it.
+- **Configuration resources**: `AIGatewayModelProvider`, `AIGatewayModel`, `AIGatewayPolicy`, `AIGatewayAuthStrategy`, `AIGatewayConsumer`, `AIGatewayConsumerCredential`, `AIGatewayConsumerGroup`, and `AIGatewayAgent` declare what the gateway does: which LLM providers to connect to, which model routes to expose, what Policies to enforce, which authentication schemes to accept, and which clients may access it.
 - **Data plane**: `AIGatewayDataPlaneCertificate` and `AIGatewayDataPlane` run the traffic-handling binary inside your cluster. When you create an `AIGatewayDataPlane`, {{site.operator_product_name}} automatically provisions the mTLS certificate and registers it with the control plane.
 
 ## Resource model
@@ -63,31 +65,34 @@ rows:
     api_group: "`konnect.konghq.com/v1alpha1`"
     purpose: Creates the {{ site.ai_gateway }} control plane in {{ site.konnect_short_name }}
   - resource: "`AIGatewayModelProvider`"
-    api_group: "`konnect.konghq.com/v1alpha1`"
+    api_group: "`aiconfiguration.konghq.com/v1alpha1`"
     purpose: Configures an upstream LLM provider (OpenAI, Anthropic, Azure, Gemini, etc.)
   - resource: "`AIGatewayModel`"
-    api_group: "`konnect.konghq.com/v1alpha1`"
+    api_group: "`aiconfiguration.konghq.com/v1alpha1`"
     purpose: Defines an AI Model Route, its capabilities, and which AI Provider targets it
   - resource: "`AIGatewayPolicy`"
-    api_group: "`konnect.konghq.com/v1alpha1`"
+    api_group: "`aiconfiguration.konghq.com/v1alpha1`"
     purpose: "Applies an AI Policy to the gateway (for example: prompt guard, sanitizer, rate limiting)"
-  - resource: "`AIGatewayIdentityProvider`"
-    api_group: "`konnect.konghq.com/v1alpha1`"
+  - resource: "`AIGatewayAuthStrategy`"
+    api_group: "`aiconfiguration.konghq.com/v1alpha1`"
     purpose: Configures the gateway authentication scheme (`key-auth` or `openid-connect`)
   - resource: "`AIGatewayConsumer`"
-    api_group: "`konnect.konghq.com/v1alpha1`"
+    api_group: "`aiconfiguration.konghq.com/v1alpha1`"
     purpose: Registers a downstream client identity for authentication and access control
   - resource: "`AIGatewayConsumerCredential`"
-    api_group: "`konnect.konghq.com/v1alpha1`"
+    api_group: "`aiconfiguration.konghq.com/v1alpha1`"
     purpose: Attaches an API key credential to an `AIGatewayConsumer`
   - resource: "`AIGatewayConsumerGroup`"
-    api_group: "`konnect.konghq.com/v1alpha1`"
+    api_group: "`aiconfiguration.konghq.com/v1alpha1`"
     purpose: Groups AI Consumers together and applies shared AI Policies at the group level
   - resource: "`AIGatewayAgent`"
-    api_group: "`konnect.konghq.com/v1alpha1`"
+    api_group: "`aiconfiguration.konghq.com/v1alpha1`"
     purpose: Configures an agent endpoint for A2A or HTTP agent traffic
+  - resource: "`AIGatewayMCPServer`"
+    api_group: "`aiconfiguration.konghq.com/v1alpha1`"
+    purpose: Exposes a REST API or an upstream MCP server as MCP tools
   - resource: "`AIGatewayDataPlaneCertificate`"
-    api_group: "`configuration.konghq.com/v1alpha1`"
+    api_group: "`aiconfiguration.konghq.com/v1alpha1`"
     purpose: Registers a TLS certificate used by the data plane to authenticate with the control plane (auto-created by `AIGatewayDataPlane`)
   - resource: "`AIGatewayDataPlane`"
     api_group: "`aigateway.konghq.com/v1alpha1`"
@@ -103,13 +108,15 @@ All configuration resources anchor to the `KonnectAIGateway` as their root via `
 2. `AIGatewayModel.spec.aiGatewayRef` → `KonnectAIGateway`
 3. `AIGatewayModel.spec.apiSpec.model.targets[].provider` → `AIGatewayModelProvider` (by name)
 4. `AIGatewayPolicy.spec.aiGatewayRef` → `KonnectAIGateway`
-5. `AIGatewayIdentityProvider.spec.aiGatewayRef` → `KonnectAIGateway`
+5. `AIGatewayAuthStrategy.spec.aiGatewayRef` → `KonnectAIGateway`
 6. `AIGatewayConsumer.spec.aiGatewayRef` → `KonnectAIGateway`
 7. `AIGatewayConsumerCredential.spec.aiGatewayConsumerRef` → `AIGatewayConsumer`
 8. `AIGatewayConsumerGroup.spec.aiGatewayRef` → `KonnectAIGateway`
 9. `AIGatewayAgent.spec.aiGatewayRef` → `KonnectAIGateway`
-10. `AIGatewayDataPlaneCertificate.spec.aiGatewayRef` → `KonnectAIGateway`
-11. `AIGatewayDataPlane.spec.controlPlaneRef` → `KonnectAIGateway`
+10. `AIGatewayMCPServer.spec.aiGatewayRef` → `KonnectAIGateway`
+11. `AIGatewayMCPServer.spec.apiSpec.listener.sources[]` → other `AIGatewayMCPServer` resources (by name; `conversion-only` or `upstream-server` type only)
+12. `AIGatewayDataPlaneCertificate.spec.aiGatewayRef` → `KonnectAIGateway`
+13. `AIGatewayDataPlane.spec.controlPlaneRef` → `KonnectAIGateway`
 
 ## Supported providers
 
@@ -170,14 +177,21 @@ Each resource type is covered end-to-end in the getting started series:
 
 - **AI Providers and AI Models**: [Deploy {{ site.ai_gateway_name }}](/operator/get-started/ai-gateway/deploy/) covers `AIGatewayModelProvider`, `AIGatewayModel`, and `AIGatewayDataPlane`.
 - **AI Policies**: [Apply AI Policies](/operator/get-started/ai-gateway/policy/) covers `AIGatewayPolicy`, including global and model-scoped enforcement.
-- **AI Identity Providers and AI Consumers**: [Add AI Consumers](/operator/get-started/ai-gateway/consumers/) covers `AIGatewayIdentityProvider`, `AIGatewayConsumer`, `AIGatewayConsumerCredential`, and `AIGatewayConsumerGroup`.
+- **AI Auth Strategies and AI Consumers**: [Add AI Consumers](/operator/get-started/ai-gateway/consumers/) covers `AIGatewayAuthStrategy`, `AIGatewayConsumer`, `AIGatewayConsumerCredential`, and `AIGatewayConsumerGroup`.
 - **AI Agents**: `AIGatewayAgent` supports `a2a` and `http` agent types. Set `spec.apiSpec.type` to the agent protocol and `spec.apiSpec.config.url` to the upstream agent URL.
+- **Routing and load balancing**: [Route to a model using a selector](#route-to-a-model-using-a-selector) and [Load balancing across targets](#load-balancing-across-targets) cover `config.route.model` and `config.balancer` on `AIGatewayModel`.
+- **MCP tools**: [Exposing tools with AIGatewayMCPServer](#exposing-tools-with-aigatewaymcpserver) covers the five `AIGatewayMCPServer` types.
 
-## Route to a model using an alias
+## Route to a model using a selector
 
-By default, a client's request `model` field must match the upstream model name on one of the AI Model's targets. To accept a client-side alias instead, set `config.route.model` on the `AIGatewayModel`. The alias decouples the external model identifier that clients send from the internal provider model name.
+{{site.operator_product_name}} always places a model selector in front of an AI Model's targets, even when a single `AIGatewayModel` is the only one on its route. By default, the selector matches the request body's `model` field against the AI Model's own name (`spec.apiSpec.model.name`). **A request whose `model` value doesn't match never reaches any target** — it falls through instead of being proxied. This is why every request in the [deploy](/operator/get-started/ai-gateway/deploy/) and [policy](/operator/get-started/ai-gateway/policy/) guides includes `"model": "gpt-4o-mini"`: that value is what the selector uses to activate this AI Model, not just metadata for the upstream provider.
 
-Set `type` to `body` and list the accepted alias values under `body.body.model`. Clients then send an alias value in the request body `model` field, and {{ site.ai_gateway_name }} routes to this model:
+To accept a client-side alias instead of the AI Model's own name, set `config.route.model`:
+
+- `values`: the alias to match, as a single-item list. When omitted, the AI Model's own name is used.
+- `bodyParam`, `headerParam`, or `pathParam`: which part of the request to match the alias against — a JSON body property, a header, or a named regex capture group in `paths`, respectively. Set at most one of these; when none are set, the request body's `model` property is matched by default.
+
+The following configuration accepts a client-side alias in the request body's `model` field:
 
 ```yaml
 config:
@@ -185,24 +199,166 @@ config:
     paths:
       - /v1
     model:
-      type: body
-      body:
-        body:
-          model:
-            - my-gpt-4o
+      values:
+        - my-gpt-4o
 ```
 
-With this configuration, a client that sends `"model": "my-gpt-4o"` in the request body is routed to this AI Model, regardless of the upstream provider model name on its targets. `config.route.model` also supports matching on request `headers` (`type: headers`) or on the request path (`type: path`, using `path.pathAliases`).
+With this configuration, a client that sends `"model": "my-gpt-4o"` in the request body is routed to this AI Model, regardless of the upstream provider model name on its targets.
 
-## AIGatewayIdentityProvider
-
-`AIGatewayIdentityProvider` configures the authentication scheme the gateway uses to verify downstream clients. Two types are supported: `key-auth` (API key) and `openid-connect` (OIDC).
-
-The following is an example key auth AI Identity Provider configuration:
+To match on a header instead of the body, set `headerParam`:
 
 ```yaml
-apiVersion: konnect.konghq.com/v1alpha1
-kind: AIGatewayIdentityProvider
+config:
+  route:
+    paths:
+      - /v1
+    model:
+      headerParam: x-model-route
+      values:
+        - my-gpt-4o
+```
+
+A client that sends the header `x-model-route: my-gpt-4o` is routed to this AI Model.
+
+{:.warning}
+> **`config.route.model` is a different mechanism from `config.route.headers` and `config.route.paths`.** The latter are Kong's native route-matching criteria — they decide whether a request reaches this AI Model's route at all. `config.route.model` runs after the route matches, to select which AI Model's targets handle the request when multiple AI Models share a route. Setting `config.route.headers` to gate a route by header presence does not make that header usable as a model alias source, and combining the two produces a proxy error instead of the expected routing behavior.
+
+## Load balancing across targets
+
+An `AIGatewayModel` can define multiple `targets`, and `config.balancer` controls how requests are distributed across them once the AI Model is selected. Set `config.balancer.algorithm` to one of:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Algorithm
+    key: algorithm
+  - title: Purpose
+    key: purpose
+rows:
+  - algorithm: "`round-robin`"
+    purpose: Distributes requests across targets by weight.
+  - algorithm: "`consistent-hashing`"
+    purpose: Routes requests with the same header value to the same target (sticky sessions).
+  - algorithm: "`least-connections`"
+    purpose: Routes to the target with the fewest in-flight requests.
+  - algorithm: "`lowest-usage`"
+    purpose: Routes to the target with the lowest measured token or cost usage.
+  - algorithm: "`lowest-latency`"
+    purpose: Routes to the target with the lowest observed latency.
+  - algorithm: "`priority`"
+    purpose: Routes to the highest-priority group of targets, falling back to lower-priority groups when a group is unavailable.
+  - algorithm: "`semantic`"
+    purpose: Routes based on similarity between the prompt and each target's `semanticDescription`, using an embeddings model and a vector database.
+{% endtable %}
+<!--vale on-->
+
+See [Load balancing with AI Proxy Advanced](/ai-gateway/load-balancing/) for a full description of each algorithm's behavior and tradeoffs — the algorithms and their semantics are the same; only the configuration surface differs.
+
+## Exposing tools with AIGatewayMCPServer
+
+`AIGatewayMCPServer` exposes tools over the [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), either by converting a REST API's endpoints into MCP tools, or by proxying an existing MCP server. Set `spec.apiSpec.type` to one of five types:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Type
+    key: type
+  - title: Client-facing?
+    key: client_facing
+  - title: Purpose
+    key: purpose
+rows:
+  - type: "`conversion-only`"
+    client_facing: "No"
+    purpose: Converts a REST API's endpoints into a named set of MCP tools. Not reachable directly — exposed through a `listener`'s `sources`.
+  - type: "`upstream-server`"
+    client_facing: "No"
+    purpose: Registers an existing, third-party MCP server as a backend, with its own tool list. Not reachable directly — exposed through a `listener`'s `sources`.
+  - type: "`listener`"
+    client_facing: "Yes"
+    purpose: Aggregates tools from one or more `conversion-only`/`upstream-server` resources (named in `sources`) and exposes them together at one route.
+  - type: "`conversion-listener`"
+    client_facing: "Yes"
+    purpose: A `conversion-only` and a `listener` combined into a single resource, for a REST API that doesn't need to share tools across multiple listeners.
+  - type: "`passthrough-listener`"
+    client_facing: "Yes"
+    purpose: Proxies MCP protocol traffic straight through to an upstream MCP server, unconverted, with its own tool list and access control.
+{% endtable %}
+<!--vale on-->
+
+Every type shares `name`, `displayName`, `enabled`, `labels`, `policies`, and a `config.route.paths` list, alongside a type-specific `tools` list and `config.url` (the upstream to convert or proxy). `listener`, `conversion-listener`, and `passthrough-listener` also accept an `access` block, gating the endpoint by `AIGatewayConsumerGroup` ACLs or auth strategy, the same way `spec.apiSpec.model.access` does on `AIGatewayModel`.
+
+The following configuration converts two REST endpoints into MCP tools, then exposes them behind an ACL-gated listener:
+
+```yaml
+kind: AIGatewayMCPServer
+apiVersion: aiconfiguration.konghq.com/v1alpha1
+metadata:
+  name: flights-tools
+  namespace: kong
+spec:
+  aiGatewayRef:
+    type: namespacedRef
+    namespacedRef:
+      name: my-ai-gateway-cp
+  apiSpec:
+    type: conversion-only
+    conversion-only:
+      name: flights-tools
+      displayName: Flights API tools
+      enabled: Enabled
+      config:
+        url: https://flights-api.example.com/openapi.json
+        route:
+          paths:
+            - /mcp/flights
+      tools:
+        - name: search_flights
+          description: Search available flights by origin, destination, and date
+          method: GET
+          path: /flights
+        - name: get_flight_status
+          description: Get real-time status for a given flight number
+          method: GET
+          path: /flights/{flightNumber}/status
+---
+kind: AIGatewayMCPServer
+apiVersion: aiconfiguration.konghq.com/v1alpha1
+metadata:
+  name: flights-mcp-listener
+  namespace: kong
+spec:
+  aiGatewayRef:
+    type: namespacedRef
+    namespacedRef:
+      name: my-ai-gateway-cp
+  apiSpec:
+    type: listener
+    listener:
+      name: flights-mcp-listener
+      displayName: Flights MCP listener
+      enabled: Enabled
+      sources:
+        - flights-tools
+      access:
+        aclAttributeType: consumer
+      config:
+        route:
+          paths:
+            - /mcp/flights
+```
+
+A `passthrough-listener` or `upstream-server` follows the same shape, but its `config.url` points at a real MCP server instead of a REST API, and its `tools` entries don't need `method`/`path` (those are inherent to the upstream server's own tool definitions).
+
+## AIGatewayAuthStrategy
+
+`AIGatewayAuthStrategy` configures the authentication scheme the gateway uses to verify downstream clients. Two types are supported: `key-auth` (API key) and `openid-connect` (OIDC).
+
+The following is an example key auth AI Auth Strategy configuration:
+
+```yaml
+apiVersion: aiconfiguration.konghq.com/v1alpha1
+kind: AIGatewayAuthStrategy
 metadata:
   name: key-auth-provider
   namespace: kong
@@ -230,11 +386,11 @@ kubectl create secret generic oidc-client-secret \
 kubectl label secret oidc-client-secret konghq.com/secret=true -n kong
 ```
 
-The following is an example OpenID Connect AI Identity Provider configuration:
-The following is an example OpenID Connect AI Identity Provider configuration:
+The following is an example OpenID Connect AI Auth Strategy configuration:
+
 ```yaml
-apiVersion: konnect.konghq.com/v1alpha1
-kind: AIGatewayIdentityProvider
+apiVersion: aiconfiguration.konghq.com/v1alpha1
+kind: AIGatewayAuthStrategy
 metadata:
   name: oidc-provider
   namespace: kong
@@ -285,7 +441,7 @@ All {{ site.ai_gateway }} CRDs expose a `Programmed` status condition. Check the
 
 ```bash
 kubectl get \
-  konnectaigateway,aigatewaymodelprovider,aigatewaymodel,aigatewaypolicy,aigatewayidentityprovider,aigatewaydataplane \
+  konnectaigateway,aigatewaymodelprovider,aigatewaymodel,aigatewaypolicy,aigatewayauthstrategy,aigatewaydataplane \
   -n kong
 ```
 
@@ -306,7 +462,7 @@ The provider depends on the `KonnectAIGateway` being `Programmed=True` first. Ch
 Confirm the `AIGatewayDataPlane` pod is running and the `LoadBalancer` address is assigned:
 
 ```bash
-kubectl get pods,svc -n kong -l app.kubernetes.io/name=my-ai-gateway-dp
+kubectl get pods,svc -n kong -l gateway-operator.konghq.com/managed-by-name=my-ai-gateway-dp
 ```
 
 ### AI Policy not taking effect

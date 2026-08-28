@@ -3,7 +3,6 @@ title: Deploy {{ site.ai_gateway_name }} with {{site.operator_product_name}}
 description: Create an {{ site.ai_gateway }} control plane, configure an AI provider and model, and deploy the data plane in Kubernetes.
 content_type: how_to
 permalink: /operator/get-started/ai-gateway/deploy/
-tech_preview: true
 series:
   id: operator-get-started-ai-gateway
   position: 2
@@ -109,7 +108,7 @@ The `AIGatewayModelProvider` resource configures authentication and connection d
 
    ```bash
    echo '
-   apiVersion: konnect.konghq.com/v1alpha1
+   apiVersion: aiconfiguration.konghq.com/v1alpha1
    kind: AIGatewayModelProvider
    metadata:
      name: openai-provider
@@ -152,7 +151,7 @@ The `AIGatewayModel` resource defines a Route and maps it to one or more provide
 
    ```bash
    echo '
-   apiVersion: konnect.konghq.com/v1alpha1
+   apiVersion: aiconfiguration.konghq.com/v1alpha1
    kind: AIGatewayModel
    metadata:
      name: gpt-4o-mini
@@ -198,8 +197,6 @@ The `AIGatewayModel` resource defines a Route and maps it to one or more provide
 ## Deploy the `AIGatewayDataPlane`
 
 The `AIGatewayDataPlane` resource runs the {{ site.ai_gateway }} binary inside your Kubernetes cluster. It exposes a `LoadBalancer` Service on port `8000` for inference requests.
-
-{{site.operator_product_name}} automatically provisions the mTLS certificate and registers it with the control plane — there is no need to create an `AIGatewayDataPlaneCertificate` manually.
 
 1. Deploy the `AIGatewayDataPlane`:
 

@@ -3,7 +3,6 @@ title: Install {{site.operator_product_name}} for {{ site.ai_gateway_name }}
 description: Install {{site.operator_product_name}} with the {{ site.ai_gateway }} data plane controller enabled and prepare a Kubernetes cluster for {{ site.ai_gateway_name }}.
 content_type: how_to
 permalink: /operator/get-started/ai-gateway/install/
-tech_preview: true
 series:
   id: operator-get-started-ai-gateway
   position: 1
@@ -34,7 +33,7 @@ prereqs:
 
 tldr:
   q: How do I install {{site.operator_product_name}} for {{ site.ai_gateway_name }}?
-  a: Install {{site.operator_product_name}} from the `kong-operator-1.4.0-rc.2` chart release with `--set env.ENABLE_CONTROLLER_AIGATEWAYDATAPLANE=true` to enable the {{ site.ai_gateway }} data plane controller, then store your {{site.konnect_short_name}} credentials in a Kubernetes Secret.
+  a: Install {{site.operator_product_name}} using Kong's `kong-operator` chart with `--set env.ENABLE_CONTROLLER_AIGATEWAYDATAPLANE=true` to enable the {{ site.ai_gateway }} data plane controller, then store your {{site.konnect_short_name}} credentials in a Kubernetes Secret.
 
 next_steps:
   - text: Deploy {{ site.ai_gateway_name }}
@@ -75,7 +74,7 @@ kubectl create namespace kong
 
 ## Install {{site.operator_product_name}}
 
-{% include prereqs/products/operator.md raw=true v_maj=2 chart_version="1.4.0-rc.2" devel=true %}
+{% include prereqs/products/operator.md raw=true v_maj=2 %}
 
 ## Verify {{ site.ai_gateway }} CRDs
 
@@ -85,4 +84,4 @@ Confirm the {{ site.ai_gateway }} CRDs are registered in the cluster:
 kubectl get crd | grep -E "aigateway|aigatewaydataplane"
 ```
 
-You should see entries for `konnectaigateways`, `aigatewaymodelproviders`, `aigatewaymodels`, `aigatewaypolicies`, `aigatewayidentityproviders`, `aigatewayconsumers`, `aigatewayconsumercredentials`, `aigatewayconsumergroups`, `aigatewayagents`, `aigatewaydataplanecertificates`, and `aigatewaydataplanes`.
+You should see entries for `konnectaigateways`, `aigatewaymodelproviders`, `aigatewaymodels`, `aigatewaypolicies`, `aigatewayauthstrategies`, `aigatewayconsumers`, `aigatewayconsumercredentials`, `aigatewayconsumergroups`, `aigatewayagents`, `aigatewaydataplanecertificates`, and `aigatewaydataplanes`.

@@ -3,7 +3,6 @@ title: Apply AI Policies with {{site.operator_product_name}}
 description: Add AIGatewayPolicy resources to enforce prompt guardrails and content governance on your {{ site.ai_gateway }} deployment.
 content_type: how_to
 permalink: /operator/get-started/ai-gateway/policy/
-tech_preview: true
 series:
   id: operator-get-started-ai-gateway
   position: 3
@@ -32,9 +31,8 @@ prereqs:
 tldr:
   q: How do I apply AI policies with {{site.operator_product_name}}?
   a: |
-    Create an `AIGatewayPolicy` resource pointing to your `KonnectAIGateway` via `spec.aiGatewayRef`.
-    Set `spec.apiSpec.global` to `Enabled` to apply the AI Policy to every AI Model on the {{ site.ai_gateway }}, or `Disabled` to target a specific AI Model.
-    Set `spec.apiSpec.config.type` to `inline` and nest the AI Policy configuration under `spec.apiSpec.config.value`. Use a single AI Policy resource to combine `deny_patterns` (block injection attempts) and `allow_patterns` (restrict to a topic list). {{ site.ai_gateway }} evaluates deny patterns first, then checks that the request matches at least one allow pattern.
+    Create an `AIGatewayPolicy` resource pointing to your `KonnectAIGateway`.
+    Apply the AI Policy to every AI Model on the {{ site.ai_gateway }}.
 
 next_steps:
   - text: Add AI Consumers and credentials
@@ -72,7 +70,7 @@ The AI Prompt Guard Policy evaluates deny patterns first. If the prompt matches 
 
    ```bash
    echo '
-   apiVersion: konnect.konghq.com/v1alpha1
+   apiVersion: aiconfiguration.konghq.com/v1alpha1
    kind: AIGatewayPolicy
    metadata:
      name: content-guardrails
@@ -122,7 +120,7 @@ curl -s http://$AIGW_HOST:8000/v1/chat/completions \
   -d '{
     "model": "gpt-4o-mini",
     "messages": [{"role": "user", "content": "How do I configure a Kubernetes namespace?"}]
-  }' | jq .choices[0].message.content
+  }' | jq '.choices[0].message.content'
 ```
 
 Send an off-topic prompt. It should be rejected because it doesn't match the allow list:

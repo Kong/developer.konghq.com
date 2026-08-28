@@ -3,7 +3,6 @@ title: Add AI Consumers with {{site.operator_product_name}}
 description: Use AIGatewayConsumer, AIGatewayConsumerCredential, and AIGatewayConsumerGroup to authenticate downstream clients and enforce per-Consumer controls on your {{ site.ai_gateway }} deployment.
 content_type: how_to
 permalink: /operator/get-started/ai-gateway/consumers/
-tech_preview: true
 series:
   id: operator-get-started-ai-gateway
   position: 4
@@ -32,7 +31,7 @@ prereqs:
 tldr:
   q: How do I add AI consumers with {{site.operator_product_name}}?
   a: |
-    Create an `AIGatewayIdentityProvider` and attach it to your AI Model via `spec.apiSpec.model.access.identityProviders`. Then create an `AIGatewayConsumer` with `spec.apiSpec.type: api-key`, store the key in a Kubernetes Secret, and create an `AIGatewayConsumerCredential` referencing it. Use `AIGatewayConsumerGroup` to target shared AI Policies, model access controls, and analytics attribution at the group level.
+    Create an `AIGatewayAuthStrategy` and attach it to your AI Model via `spec.apiSpec.model.access.authStrategies`. 
 
 next_steps:
   - text: "{{ site.ai_gateway_name }} resource reference"
@@ -52,7 +51,7 @@ tags:
 
 ---
 
-This guide builds on the [AI Policy step](/operator/get-started/ai-gateway/policy/) and introduces consumer-level authentication to the running {{ site.ai_gateway }} deployment. Before creating AI Consumers, you configure an `AIGatewayIdentityProvider` that defines the authentication scheme, then attach it to an AI Model via `spec.apiSpec.model.access.identityProviders`. Authentication is enforced per-AI Model, not globally. An AI Model without an AI Identity Provider reference accepts unauthenticated traffic.
+This guide builds on the [AI Policy step](/operator/get-started/ai-gateway/policy/) and introduces consumer-level authentication to the running {{ site.ai_gateway }} deployment. Before creating AI Consumers, you configure an `AIGatewayAuthStrategy` that defines the authentication scheme, then attach it to an AI Model via `spec.apiSpec.model.access.authStrategies`. Authentication is enforced per-AI Model, not globally. An AI Model without an AI Auth Strategy reference accepts unauthenticated traffic.
 
 With AI Consumers in place you can:
 
@@ -61,16 +60,16 @@ With AI Consumers in place you can:
 - Group AI Consumers with `AIGatewayConsumerGroup` to target shared AI Policies, model access controls, and analytics attribution at the group level
 - Attribute usage and cost to a specific AI Consumer in the {{ site.konnect_short_name }} analytics dashboard
 
-## Create an `AIGatewayIdentityProvider`
+## Create an `AIGatewayAuthStrategy`
 
-The `AIGatewayIdentityProvider` resource configures the authentication scheme {{ site.ai_gateway_name }} uses to verify downstream clients. This example uses API key authentication.
+The `AIGatewayAuthStrategy` resource configures the authentication scheme {{ site.ai_gateway_name }} uses to verify downstream clients. This example uses API key authentication.
 
-1. Create a key-auth AI Identity Provider:
+1. Create a key-auth AI Auth Strategy:
 
    ```bash
    echo '
-   apiVersion: konnect.konghq.com/v1alpha1
-   kind: AIGatewayIdentityProvider
+   apiVersion: aiconfiguration.konghq.com/v1alpha1
+   kind: AIGatewayAuthStrategy
    metadata:
      name: key-auth-provider
      namespace: kong
@@ -91,22 +90,22 @@ The `AIGatewayIdentityProvider` resource configures the authentication scheme {{
    ' | kubectl apply -f -
    ```
 
-1. Wait for the AI Identity Provider to be ready:
+1. Wait for the AI Auth Strategy to be ready:
 
    ```bash
-   kubectl wait aigatewayidentityprovider/key-auth-provider -n kong \
+   kubectl wait aigatewayauthstrategy/key-auth-provider -n kong \
      --for=condition=Programmed=True \
      --timeout=5m
    ```
 
-## Attach the AI Identity Provider to the AI Model
+## Attach the AI Auth Strategy to the AI Model
 
-An `AIGatewayIdentityProvider` takes effect only when it is attached to an AI Model via `spec.apiSpec.model.access.identityProviders`. Patch the AI Model you created in the [deployment step](/operator/get-started/ai-gateway/deploy/) to enable authentication:
+An `AIGatewayAuthStrategy` takes effect only when it is attached to an AI Model via `spec.apiSpec.model.access.authStrategies`. Patch the AI Model you created in the [deployment step](/operator/get-started/ai-gateway/deploy/) to enable authentication:
 
 ```bash
 kubectl patch aigatewaymodel gpt-4o-mini -n kong \
   --type=merge \
-  -p '{"spec":{"apiSpec":{"model":{"access":{"identityProviders":["key-auth-provider"]}}}}}'
+  -p '{"spec":{"apiSpec":{"model":{"access":{"authStrategies":[{"name":"key-auth-provider"}]}}}}}'
 ```
 
 Wait for the AI Model to be reconciled with the updated configuration:
@@ -125,7 +124,7 @@ The `AIGatewayConsumer` resource registers a downstream client with the {{ site.
 
    ```bash
    echo '
-   apiVersion: konnect.konghq.com/v1alpha1
+   apiVersion: aiconfiguration.konghq.com/v1alpha1
    kind: AIGatewayConsumer
    metadata:
      name: team-platform
@@ -167,7 +166,7 @@ The `AIGatewayConsumerCredential` resource attaches an API key to an `AIGatewayC
 
    ```bash
    echo '
-   apiVersion: konnect.konghq.com/v1alpha1
+   apiVersion: aiconfiguration.konghq.com/v1alpha1
    kind: AIGatewayConsumerCredential
    metadata:
      name: team-platform-key-auth
@@ -238,7 +237,7 @@ AI Consumer membership is declared on the `AIGatewayConsumer`, not on the AI Con
 
    ```bash
    echo '
-   apiVersion: konnect.konghq.com/v1alpha1
+   apiVersion: aiconfiguration.konghq.com/v1alpha1
    kind: AIGatewayConsumerGroup
    metadata:
      name: platform-team-group
