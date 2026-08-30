@@ -1,0 +1,14 @@
+{
+    "name": "mb-event-dimensions",
+    "version": "1.0.0",
+    "description": "Extract the Metering & Billing plugin's emitted-event field catalog from the kong-ee LuaLS doc.json export, and detect drift against the docs.",
+    "type": "module",
+    "scripts": {
+        "extract": "node extract-catalog.js",
+        "check": "node check-drift.js"
+    },
+    "license": "Apache-2.0",
+    "dependencies": {
+        "js-yaml": "^4.1.0"
+    }
+}
