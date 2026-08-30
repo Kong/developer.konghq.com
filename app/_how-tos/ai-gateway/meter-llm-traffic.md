@@ -149,6 +149,8 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
+This example meters a few representative dimensions. For every field the plugin can emit, see [Captured event dimensions](/plugins/metering-and-billing/#captured-event-dimensions).
+
 ## Configure the Metering & Billing plugin
 
 Next, configure the [{{site.metering_and_billing}} plugin](/plugins/metering-and-billing/) to emit LLM token usage events from {{site.ai_gateway}} to {{site.metering_and_billing}}:
