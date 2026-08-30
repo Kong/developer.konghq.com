@@ -1,0 +1,19 @@
+title: "{{site.context_mesh}} Documentation"
+description: Index containing all documentation for {{site.context_mesh}}.
+sections:
+  - title: Overview
+    items:
+      - title: "{{site.context_mesh}} Overview"
+        description: Overview of {{site.context_mesh}} and how to expose REST APIs as Code Mode MCP servers
+        url: /context-mesh/
+      - title: Get started with {{site.context_mesh}}
+        description: Deploy a {{site.context_mesh}}-backed MCP server from the Konnect UI onto an Operator-managed data plane
+        url: /context-mesh/get-started-with-context-mesh/
+      - title: Connect MCP clients
+        description: Configure MCP clients to connect to {{site.context_mesh}} servers
+        url: /context-mesh/client-installation/
+  - title: How-tos
+    items:
+      - type: how-to
+        products:
+          - context-mesh
