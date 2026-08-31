@@ -66,9 +66,6 @@ ai_gateway_model_providers:
           value: !secret {source: !env OPENAI_AUTH_HEADER}
 {% endentity_examples %}
 
-{:.info}
-> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
-
 The AI Model Provider uses the following settings:
 
 * `type: openai`: Specifies that this provider connects to the OpenAI service using OpenAI's standard API format.
