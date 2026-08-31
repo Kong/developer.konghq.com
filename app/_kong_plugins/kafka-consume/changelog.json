@@ -158,5 +158,12 @@
       "type": "bugfix",
       "scope": "Plugin"
     }
+  ],
+  "3.10.0.18": [
+    {
+      "message": "Fixed a\npermanent failure that started when a broker answered an `ApiVersions` request with an error code,\nan empty API key set, or a malformed frame. The client cached that result and every later request\nfailed with `ProduceRequest API version not negotiated; broker may be unreachable` until the node\nrestarted, even after the broker recovered. The client now refuses an unusable `ApiVersions`\nresponse, keeps the previous negotiation, and retries the negotiation for a topic whose metadata is\nalready cached.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
   ]
 }

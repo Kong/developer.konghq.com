@@ -53,6 +53,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.18": [
+    {
+      "message": "Fixed an issue where the plugin failed to decode standard Base64\nsecrets that contained `+` or `/` when `config.secret_is_base64` was enabled.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "ensure `rsa_public_key` isn't base64-decoded.",
