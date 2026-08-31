@@ -83,6 +83,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.18": [
+    {
+      "message": "Fixed a memory leak where the plugin config cache did not use weak keys due to a misspelled `__mode` metatable field.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.1.2": [
     {
       "message": "Fixed an issue where an empty array set in the mocking plugin returned an object type instead of an array type in the response body.\n",
