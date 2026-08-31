@@ -128,7 +128,7 @@ filters:
 
 Alternatively, you can add the `URLRewrite` filter with `path.replacePrefixMatch` to your `HTTPRoute` rule to rewrite the path prefix.
 
-See the [URLRewrite filter documentation](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io%2fv1.HTTPPathModifier)
+See the [URLRewrite filter documentation](https://gateway-api.sigs.k8s.io/reference/api-types/gateway/#gateway.networking.k8s.io%2fv1.HTTPPathModifier)
 for more information.
 
 ```yaml
