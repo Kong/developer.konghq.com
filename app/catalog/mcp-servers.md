@@ -53,6 +53,60 @@ The link is a snapshot, not a live sync: if you change the linked server's confi
 
 ## Create an MCP server
 
+1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
+1. From the **New** dropdown menu, select **MCP server**.
+1. Under **Data source**, select one of the following:
+   1. To fill out the server's details yourself, select **Define manually**.
+   1. To populate details from an existing server's definition, select **Paste JSON**, then in the **Version, capabilities, and access methods** field, paste the definition. Only `version` is required.
+   1. To create the server from an MCP interface already configured in {{site.ai_gateway}} 2.0, select **Import from AI gateway**, then:
+      1. From the **AI gateway** dropdown menu, select your {{site.ai_gateway}} control plane.
+      1. From the **MCP server** dropdown menu, select the server you want to import.
+1. In the **Display name** field, enter a name for your MCP server, for example `My MCP server`.
+1. In the **Name** field, enter a unique identifier for the MCP server, for example `my-new-mcp-server`. This must contain only lowercase letters, numbers, hyphens, and periods.
+1. (Optional) In the **Description** field, describe the purpose of your MCP server.
+1. (Optional) Click **Add labels**, and do the following:
+   1. In the **Key** field, enter a label key.
+   1. In the **Value** field, enter a label value.
+   1. (Optional) Click **Add another label** to add more labels.
+1. Click **Next**.
+1. If you didn't select **Paste JSON**, in the **Version** field, enter a version number for your MCP server, for example `1.0.0`.
+1. (Optional) Under **Capabilities**, click **New capability**, and select one of the following:
+   * **Tool**: Outlines how your server takes actions. 
+     1. In the **Name** field, enter a unique identifier for the tool. 
+     1. In the **Input schema** field, enter the JSON schema defining the tool's expected parameters. 
+     1. (Optional) Fill in **Title**, **Description**, **Output schema**, and **Annotations**.
+     1. Click **Add**, then repeat to add more capabilities.
+   * **Resource**: To share server context through documents, logs, and other data. 
+     1. In the **URI** field, enter a unique identifier for the resource, for example `file://example.txt`. 
+     1. In the **Name** field, enter a name for the resource. 
+     1. (Optional) Fill in **Title**, **Description**, **mimeType**, and **Size (bytes)**.
+     1. Click **Add**, then repeat to add more capabilities.
+   * **Prompt**: Define a reusable workflow with preset inputs. 
+     1. In the **Name** field, enter a unique identifier for the prompt. 
+     1. (Optional) Fill in **Title**, **Description**, and a comma-separated list of **Arguments**, for example `language, focus_area, severity_threshold`.
+     1. Click **Add**, then repeat to add more capabilities.
+1. (Optional) Under **Access methods**, click **New access method**, and select one of the following:
+   * **Remote**: Describes a hosted MCP server endpoint. 
+     1. In the **Remote URL** field, enter the server's endpoint, for example `https://example.com/mcp`. 
+     1. From the **Transport type** dropdown menu, select a transport type. 
+     1. (Optional) In the **Headers** field, enter headers as a JSON array of objects, for example, to pass an authorization token:
+        ```json
+        [
+          {
+            "name": "Authorization",
+            "value": "Bearer ${token}"
+          }
+        ]
+        ```
+     1. Click **Add**, then repeat to add more access methods.
+   * **Package**, to describe a run-it-yourself distribution option. 
+      1. In the **Package identifier** field, enter the package name or URL, for example `@modelcontextprotocol/mcp-server`. 
+      1. From the **Transport type** and **Package type** dropdown menus, select the applicable types. 
+      1. (Optional) Fill in **Registry base URL** and **Package version**. If you leave **Package version** blank, the package uses the server's version.
+      1. Click **Add**, then repeat to add more access methods.
+1. Click **Save**.
+
+{% comment %}
 {% navtabs "create-mcp-server" %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a POST request to the `/mcp-servers` endpoint to create an empty MCP server:
@@ -182,6 +236,7 @@ body:
 1. Click **Save**.
 {% endnavtab %}
 {% endnavtabs %}
+{% endcomment %}
 
 {% comment %}
 ## MCP server analytics
