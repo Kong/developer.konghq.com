@@ -88,9 +88,8 @@ format that generates another desired-state format:
 
 The manifests intentionally exercise federated external lookup and
 control-plane API implementations. This provides a practical test bed for
-kongctl declarative support. Control-plane implementation support is tracked in
-[Kong/kongctl#1992](https://github.com/Kong/kongctl/pull/1992); use a kongctl
-release containing that change before applying the example.
+kongctl declarative support. Use kongctl 1.14.0 or later when applying the
+example.
 
 See [APIOps workflows](/konnect-reference-platform/apiops/) for the complete
 development and production sequence.
