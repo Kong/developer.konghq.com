@@ -6,6 +6,12 @@ content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
+  - text: Gemini provider
+    url: /ai-gateway/ai-providers/gemini/
+  - text: AI Model Provider
+    url: /ai-gateway/entities/ai-model-provider/
+  - text: AI Model
+    url: /ai-gateway/entities/ai-model/
 
 description: Configure {{site.ai_gateway}} to proxy Google Gemini CLI traffic to a Gemini model
 
