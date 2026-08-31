@@ -76,13 +76,15 @@ Create one Konnect system account per service repository. Issue a token for each
 account and store it as a protected repository secret. Account and token
 creation are manual boundaries; do not store tokens in declarative files.
 
-Use a second platform manifest to assign each existing account to its
-organization team and grant:
+Grant each service team:
 
 - Catalog create, administer, and publish access;
 - Gateway write access only to its team's development control plane; and
 - read access needed to resolve shared Portals, auth strategies, and the
   production control plane.
+
+Use a second platform manifest to assign each existing repository account to
+its service team so the account inherits that role set.
 
 Do not grant service identities production Gateway write access. KongAirlines
 starts with broad organization-level API roles for simplicity and a scoped
@@ -162,7 +164,7 @@ On a merge to `main`, run `kongctl apply` with the repository's Konnect token:
 
 ```sh
 kongctl apply -f konnect/dev.yaml --base-dir . \
-  --require-namespace <service>-dev
+  --require-namespace <service>
 ```
 
 This applies only that service's tagged Gateway state and service-owned Catalog
@@ -195,7 +197,7 @@ with a production GitHub Environment and run:
 
 ```sh
 kongctl apply -f konnect/prod.yaml --base-dir . \
-  --require-namespace <service>-prod
+  --require-namespace <service>
 ```
 
 This ordering ensures the governed runtime change exists before the service
