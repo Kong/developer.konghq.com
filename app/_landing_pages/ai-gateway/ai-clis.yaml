@@ -23,9 +23,9 @@ rows:
 
                       Supported AI CLI tools:
 
-                      - [**Claude Code**](#claude-code): Anthropic, OpenAI, Azure OpenAI, Google Gemini, AWS Bedrock, and Alibaba Cloud (Dashscope)
+                      - [**Claude Code**](#claude-code): Anthropic, OpenAI, Azure OpenAI, Google Gemini, AWS Bedrock, and Alibaba Cloud (DashScope)
                       - [**Codex CLI**](#codex-cli): OpenAI
-                      - [**Qwen Code CLI**](#qwen-code-cli): OpenAI and Alibaba Cloud (Dashscope)
+                      - [**Qwen Code CLI**](#qwen-code-cli): OpenAI and Alibaba Cloud (DashScope)
 
 
                       {:.info}
@@ -85,7 +85,7 @@ rows:
           config:
             title: Claude Code with Alibaba Cloud
             icon: /assets/icons/alibaba-cloud.svg
-            description: Use Claude Code with Alibaba Cloud (Dashscope) provider
+            description: Use Claude Code with Alibaba Cloud (DashScope) provider
             cta:
               url: /ai-gateway/use-claude-code-with-ai-gateway-dashscope/
       - blocks:
