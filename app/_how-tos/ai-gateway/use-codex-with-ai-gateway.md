@@ -6,6 +6,12 @@ content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
+  - text: OpenAI provider
+    url: /ai-gateway/ai-providers/openai/
+  - text: AI Model Provider
+    url: /ai-gateway/entities/ai-model-provider/
+  - text: AI Model
+    url: /ai-gateway/entities/ai-model/
 
 description: Configure {{site.ai_gateway}} to proxy OpenAI Codex CLI traffic through the OpenAI Responses API.
 
@@ -99,7 +105,7 @@ In this example, we're setting up the AI Model with:
 * `capabilities: [agentic]`: Routes requests to the OpenAI Responses API, which the Codex CLI uses.
 * `formats: [{ type: openai }]`: Accepts OpenAI-format requests.
 * `config.route.model: { body_param: model, values: [codex-openai] }`: The model name the Codex CLI sends in each request.
-* `route.paths: [/]`: The base path Codex points at; the Responses API is served at `/responses`.
+* `route.paths: [/]`: The base path Codex points at. The Responses API is served at `/responses`.
 
 ## Start and use Codex CLI
 
@@ -120,4 +126,4 @@ prompt: Tell me about the Madrid Skylitzes manuscript.
 When prompted for network access, select **Yes, proceed**. Codex routes the request through {{site.ai_gateway}} to the OpenAI Responses API and returns the model's response, giving you monitoring and control over all Codex LLM traffic.
 
 {:.info}
-> The Codex CLI requires `OPENAI_API_KEY` to be set even though the real key lives on the {{site.ai_gateway}}, so setting a placeholder is fine. You may be prompted to confirm this in the TUI interface.
+> The Codex CLI requires `OPENAI_API_KEY` to be set even though the real key lives on the {{site.ai_gateway}}, so setting a placeholder is fine. You may be prompted to confirm this in the UI.
