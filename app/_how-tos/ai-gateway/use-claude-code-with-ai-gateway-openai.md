@@ -8,6 +8,12 @@ related_resources:
     url: /ai-gateway/
   - text: Route Claude CLI traffic through {{site.ai_gateway}} and Anthropic
     url: /ai-gateway/use-claude-code-with-ai-gateway-anthropic/
+  - text: OpenAI provider
+    url: /ai-gateway/ai-providers/openai/
+  - text: AI Model Provider
+    url: /ai-gateway/entities/ai-model-provider/
+  - text: AI Model
+    url: /ai-gateway/entities/ai-model/
 
 description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic to an OpenAI model
 
@@ -59,9 +65,6 @@ ai_gateway_model_providers:
         - name: Authorization
           value: !secret {source: !env OPENAI_AUTH_HEADER}
 {% endentity_examples %}
-
-{:.info}
-> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
 
 The AI Model Provider uses the following settings:
 
