@@ -106,8 +106,9 @@ designed and demonstrated.
 ## How are credentials bootstrapped?
 
 Create one Konnect system account and token per service repository, assign its
-team and roles through the platform desired state, and store the token in a
-protected GitHub secret. Token creation and secret placement are human
+team membership through the platform desired state, and store the token in a
+protected GitHub secret. The service team owns the shared roles inherited by
+its repository accounts. Token creation and secret placement are human
 bootstrap steps. Production promotion uses a separate GitHub credential that
 can open a PR in the platform repository and is never exposed to fork jobs.
 
