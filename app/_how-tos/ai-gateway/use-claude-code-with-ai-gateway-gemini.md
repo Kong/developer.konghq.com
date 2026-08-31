@@ -10,6 +10,8 @@ related_resources:
     url: /ai-gateway/use-claude-code-with-ai-gateway-anthropic/
   - text: Route Claude CLI traffic through {{site.ai_gateway}} and OpenAI
     url: /ai-gateway/use-claude-code-with-ai-gateway-openai/
+  - text: AI Model Provider
+    url: /ai-gateway/entities/ai-model-provider/
 
 description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic to a Gemini model
 
@@ -79,7 +81,7 @@ The AI Model Provider uses the following settings:
 
 ## Create an AI Policy entity
 
-Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request transformer](/ai-gateway/policies/ai-request-transformer/) to remove extra fields that Gemini's API does not support.
+Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using the [AI Request Transformer Policy](/ai-gateway/policies/ai-request-transformer/) to remove extra fields that Gemini's API does not support.
 
 {% entity_examples %}
 ai_gateway_policies:
