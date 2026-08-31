@@ -23,7 +23,7 @@ works_on:
   - on-prem
   - konnect
 min_version:
-  gateway: '3.12'
+  gateway: '3.10'
 
 tldr:
   q: How do I run {{site.base_gateway}} using the distroless image?
