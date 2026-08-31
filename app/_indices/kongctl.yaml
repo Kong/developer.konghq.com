@@ -28,6 +28,7 @@ groups:
         items:
           - path: /kongctl/declarative/
           - path: /kongctl/supported-resources/
+          - path: /kongctl/manage-ai-gateway/
           - path: /kongctl/kongctl-and-deck/
       - title: Other References
         items:

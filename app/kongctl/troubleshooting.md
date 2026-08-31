@@ -110,10 +110,10 @@ kongctl apply -f publications.yaml
    kongctl login
    ```
 
-3. If using a PAT, verify it's set:
+3. If you're using a PAT or sPAT, verify that it is set without printing it:
    
    ```bash
-   echo $KONGCTL_DEFAULT_KONNECT_PAT | head -c 20
+   test -n "$KONGCTL_DEFAULT_KONNECT_PAT" && echo "Token is set"
    ```
 
 4. Check that the token hasn't expired in {{site.konnect_short_name}}.

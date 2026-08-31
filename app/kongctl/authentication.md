@@ -99,11 +99,84 @@ System Access Tokens (sPAT). PATs grant access to APIs as your personal user acc
 sPATs grant access based on the permissions of a system account, which may be more
 limited than a user account. 
 
-Use the {{site.konnect_short_name}} UI to create the token type of your choice, and 
-copy the secret value:
-- Create a PAT in the [personal access token page](https://cloud.konghq.com/global/account/tokens)
-- Create an sPAT in the [system accounts page](https://cloud.konghq.com/global/account/system-tokens)
-  or with the [System Accounts API](/api/konnect/identity/#/operations/post-system-accounts-id-access-tokens)
+You can manage PATs and sPATs directly with kongctl. You can also create them
+in the {{site.konnect_short_name}} UI:
+
+- Create a PAT on the
+  [personal access token page](https://cloud.konghq.com/global/account/tokens).
+- Create an sPAT on the
+  [system accounts page](https://cloud.konghq.com/global/account/system-tokens).
+
+## Manage personal access tokens
+
+Create a PAT for the authenticated user:
+
+```sh
+kongctl create pat --name ci --expires-in 30d --output token
+```
+
+You must provide exactly one expiration option:
+
+- `--expires-in` accepts a duration from 1 through 365 days.
+- `--expires-at` accepts an RFC3339 timestamp from 1 through 365 days in the
+  future.
+
+The token value is returned only by the create operation. Store it in a secret
+manager immediately. `get` and `list` output contain safe token metadata and
+never reveal the token value.
+
+Use the `env` output format to print an export command for the active profile:
+
+```sh
+kongctl create pat --name local --expires-in 7d --output env
+```
+
+List PAT metadata or retrieve one token record by ID or exact name:
+
+```sh
+kongctl get pat
+```
+
+```sh
+kongctl get pat <id-or-name>
+```
+
+Delete a PAT:
+
+```sh
+kongctl delete pat <id-or-name> --auto-approve
+```
+
+## Manage system account access tokens
+
+Create an sPAT by selecting its system account by name:
+
+```sh
+kongctl create spat \
+  --system-account-name ci-bot \
+  --name deployment \
+  --expires-in 30d \
+  --output env
+```
+
+You can use `--system-account-id` instead of `--system-account-name`. sPATs
+have the same expiration limits and one-time secret output behavior as PATs.
+
+List, retrieve, or delete sPAT metadata within a system account:
+
+```sh
+kongctl get spat --system-account-name ci-bot
+```
+
+```sh
+kongctl get spat deployment --system-account-name ci-bot
+```
+
+```sh
+kongctl delete spat deployment \
+  --system-account-name ci-bot \
+  --auto-approve
+```
 
 ### Configure authentication via flag
 

@@ -24,7 +24,7 @@ related_resources:
     url: /kongctl/declarative/
 next_steps:
   - text: Example declarative configurations
-    url: https://github.com/Kong/kongctl/tree/main/docs/examples/declarative
+    url: https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative
   - text: Learn about managing declarative configuration with kongctl
     url: /kongctl/declarative/
   - text: Learn about kongctl authorization options
@@ -69,6 +69,31 @@ _defaults:
     protected: false
 ```
 
+## Configuration templates
+
+Define reusable configuration blocks under the top-level `_templates` key and
+select one with `_extends`:
+
+```yaml
+_templates:
+  private-portal:
+    authentication_enabled: true
+    default_api_visibility: private
+
+portals:
+  - _extends: private-portal
+    ref: developer-portal
+    name: Developer Portal
+```
+
+Templates are shared across all sources loaded by one command. Consumer
+objects recursively override template objects. Scalars, arrays, explicit
+`null`, and values of a different type replace inherited values. Arrays don't
+append.
+
+See [Configuration templates](/kongctl/declarative/#configuration-templates)
+for discovery, inheritance, tag, and sync-scope behavior.
+
 ## YAML tags
 
 Use YAML tags in field values to load files or reference other resources.
@@ -79,10 +104,18 @@ Use YAML tags in field values to load files or reference other resources.
   Supports `VAR#extract.path` and `var`/`extract` map form.
 - `!ref`: Reference another declarative resource by `ref`.
   `resource-ref#field` is supported; the default field is `id`.
+- `!lookup`: Resolve an existing resource directly in a relationship field.
+- `!external`: An exact alias for `!lookup`.
+- `!secret`: Defer a write-only value until execution and keep the resolved
+  value out of saved plans.
 - `!ref` is intended for string fields.
 - `string (uuid)` and `array[string(uuid)]` annotations in this document describe API value types. 
   In declarative config, prefer `!ref` and avoid literal UUID values.
-- For unmanaged/external resources, prefer `_external.selector` and then reference that resource by `!ref` from other fields.
+- For reusable unmanaged resources or external parents with managed children,
+  use `_external.selector` and reference the resource with `!ref`.
+- For a one-off unmanaged relationship, use `!lookup`.
+- Sync never changes or deletes an external parent. Explicitly scoped child
+  collections are still fully reconciled.
 - Large text/spec fields are commonly loaded with `!file`.
 - `!file` paths are resolved relative to the config file and must remain within the configured base directory boundary.
 
@@ -101,6 +134,19 @@ apis:
         portal_id: !ref docs-portal
 ```
 
+Use mapping syntax to compose `!env` inside `!lookup` or `!external`, or
+inside `!secret`:
+
+```yaml
+portal_id: !lookup
+  name: !env PORTAL_NAME
+
+value: !secret
+  parts:
+    - "Bearer "
+    - !env AI_PROVIDER_TOKEN
+```
+
 ## Audit logs
 
 Audit log webhook destinations are organization-scoped {{site.konnect_short_name}} resources.
@@ -108,7 +154,7 @@ Declarative config supports them as external references so managed portal audit 
 
 * [Reference for listening to audit logs with kongctl](/kongctl/audit-logs/)
 * [API specification](/api/konnect/audit-logs/)
-* [Examples](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/audit-logs)
+* [Examples](https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative/audit-logs)
 
 ```yaml
 audit-logs:
@@ -128,12 +174,14 @@ Audit log webhook destinations **cannot** declare kongctl metadata and are not c
 ## APIs
 
 * [API specification](/api/konnect/api-builder/#/operations/create-api)
-* [Example](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/basic/api.yaml)
+* [Example](https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative/basic/api.yaml)
 
 ```yaml
 apis:
   - ref: string
     name: string required (1-255 chars)
+    _external: # alternative to managed API fields
+      id: string # API UUID, or use selector.matchFields.name
     description: string (nullable)
     version: string (1-255 chars, nullable)
     slug: string (pattern: ^[\w-]+$, nullable)
@@ -155,14 +203,18 @@ apis:
         visibility: One of (public | private)
     implementations: # /api/konnect/api-builder/v3/#/operations/create-api-implementation
       - ref: string
-        type: service
+        type: service # optional when service is present
         service:
           id: string required (uuid) # prefer: !ref <gateway-service-ref>
+          control_plane_id: string required (uuid) # prefer: !ref <control-plane-ref>
+      - ref: string
+        type: control_plane # optional when control_plane is present
+        control_plane:
           control_plane_id: string required (uuid) # prefer: !ref <control-plane-ref>
     documents: # /api/konnect/api-builder/v3/#/operations/create-api-document
       - ref: string
         content: string required (markdown) # prefer: !file ./docs/page.md
-        title: string
+        title: string required unless content has a YAML frontmatter title
         slug: string (pattern: ^[\w-]+$)
         status: One of (published | unpublished)
         parent_document_id: string (uuid, nullable) # prefer: !ref <document-ref>
@@ -179,10 +231,16 @@ API specifications must be declared on API versions with `versions[].spec` or
 root-level `api_versions[].spec`; `apis[].spec_content` is not supported in
 declarative configuration.
 
+An external API can own managed versions, publications, implementations, and
+documents. kongctl resolves the API and plans only the declared children; it
+never creates, updates, or deletes the API. Each implementation defines exactly
+one of `service` or `control_plane`. When `type` is present, it must match
+the selected payload.
+
 ## Application auth strategies
 
 * [API specification](/api/konnect/application-auth-strategies/#/operations/create-app-auth-strategy)
-* [Example](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/portal/auth-strategies.yaml)
+* [Example](https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative/portal/auth-strategies.yaml)
 
 ```yaml
 application_auth_strategies:
@@ -209,7 +267,7 @@ application_auth_strategies:
 ## DCR providers
 
 * [API specification](/api/konnect/application-auth-strategies/#/operations/create-dcr-provider)
-* [Examples](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/dcr-providers)
+* [Examples](https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative/dcr-providers)
 
 ```yaml
 dcr_providers:
@@ -226,7 +284,7 @@ dcr_providers:
 ## Catalog services
 
 * [API specification](/api/konnect/service-catalog/v1/#/operations/create-catalog-service)
-* [Examples](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/catalog/service.yaml)
+* [Examples](https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative/catalog/service.yaml)
 
 ```yaml
 catalog_services:
@@ -260,7 +318,7 @@ The field accepts that API-shaped object either inline or loaded from a JSON/YAM
 
 * [Custom dashboards](/custom-dashboards/)
 * [API specification](/api/konnect/analytics-dashboards/)
-* [Examples](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/analytics/dashboards/dashboard.yaml)
+* [Examples](https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative/analytics/dashboards/dashboard.yaml)
 
 ```yaml
 analytics:
@@ -290,7 +348,7 @@ analytics:
 For {{site.event_gateway_short}} control planes, see [{{site.event_gateway_short}}s](#event-gateways).
 
 * [API specification](/api/konnect/control-planes/#/operations/create-control-plane)
-* [Examples](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/control-plane/control-plane.yaml)
+* [Examples](https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative/control-plane/control-plane.yaml)
 
 ```yaml
 control_planes:
@@ -352,7 +410,7 @@ the authoritative schema for nested {{site.event_gateway_short}} resources and
 fields, and use `kongctl scaffold event_gateway` to generate starter YAML.
 
 * [API specification](/api/konnect/event-gateway/v1/#/operations/create-event-gateway)
-* [Examples](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/event-gateway)
+* [Examples](https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative/event-gateway)
 
 ```yaml
 event_gateways:
@@ -424,7 +482,12 @@ event_gateways:
              - type: One of (glob | exact_list) required
                glob: string # if type=glob
                exact_list: array[object] (min 1 item) # if type=exact_list
-                 - value: string required
+               - value: string required
+       topic_aliases:
+         - alias: string required
+           topic: string required
+           condition: string
+           conflict: One of (warn | ignore) (default: warn)
        acl_mode: One of (enforce_on_gateway | passthrough) required
        dns_label: string required (1-63 chars, RFC1035 label)
        labels: object [string]string
@@ -583,7 +646,7 @@ event_gateways:
 ## Organization
 
 * [API specification](/api/konnect/identity/v3/#/)
-* [Examples](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/organization/)
+* [Examples](https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative/organization/)
 
 ```yaml
 organization:
@@ -620,7 +683,7 @@ organization_team_roles:
 ## Portals
 
 * [API specification](/api/konnect/portal-management/v3/#/operations/create-portal)
-* [Examples](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/portal/portal.yaml)
+* [Examples](https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative/portal/portal.yaml)
 
 ```yaml
 portals:
@@ -635,6 +698,7 @@ portals:
    default_application_auth_strategy_id: string (uuid, nullable) # prefer: !ref <app-auth-strategy-ref>
    auto_approve_developers: boolean (default: false)
    auto_approve_applications: boolean (default: false)
+   sipr_enabled: boolean (default: false)
    labels: object [string]string
      key: value
    customization: # /api/konnect/portal-management/v3/#/operations/replace-portal-customization

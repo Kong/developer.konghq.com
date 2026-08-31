@@ -23,6 +23,10 @@ related_resources:
 
 Launch the {{site.konnect_short_name}} interactive viewer.
 
+Navigate to a resource and press `d` to export declarative configuration.
+Choose the output file, namespace, and whether to include child resources
+before confirming the dump.
+
 ## Command usage
 
 {% include_cached /kongctl/help/view/index.md %}

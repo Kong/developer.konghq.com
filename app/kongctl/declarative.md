@@ -27,10 +27,10 @@ related_resources:
   - text: Troubleshooting kongctl
     url: /kongctl/troubleshooting/
   - text: Examples directory
-    url: https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/
+    url: https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative/
 next_steps:
   - text: Example declarative configurations
-    url: https://github.com/Kong/kongctl/tree/main/docs/examples/declarative
+    url: https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative
   - text: Use kongctl with AI agent skills
     url: /kongctl/skills/
   - text: Learn about supported resources
@@ -286,11 +286,15 @@ of them support child resources underneath them.
 - `portal.email_config`
 - `portal.email_templates`
 - `ai_gateway.model_providers`
-- `ai_gateway.models`
+- `ai_gateway.auth_strategies`
 - `ai_gateway.policies`
-- `ai_gateway.consumers`
-- `ai_gateway.mcp_servers`
 - `ai_gateway.agents`
+- `ai_gateway.consumers`
+- `ai_gateway.consumer_groups`
+- `ai_gateway.models`
+- `ai_gateway.mcp_servers`
+- `ai_gateway.config_stores`
+- `ai_gateway.vaults`
 
 See the [kongctl declarative resource reference](/kongctl/supported-resources/) for more details on supported resources.
 
@@ -334,6 +338,30 @@ api_publications:
     api: users-api
     portal_id: !ref main-portal
 ```
+
+### Configuration sources
+
+Pass local files, directories, standard input, or HTTP and HTTPS URLs with
+`--filename` or `-f`. Repeat the flag to combine sources. Use
+`--recursive` to discover YAML files below a directory.
+
+```sh
+kongctl plan \
+  -f ./shared.yaml \
+  -f ./environments/production \
+  -f https://config.example.com/portals.yaml
+```
+
+Relative `!file` paths are resolved from the source that contains the tag.
+For remote sources, kongctl downloads referenced relative files into the
+remote-file save directory. Use `--remote-file-save-dir` to select that
+directory and `--force` to replace existing downloads.
+
+Remote authentication defaults to automatic behavior. kongctl sends the
+active {{site.konnect_short_name}} token only to HTTPS
+{{site.konnect_short_name}} API hosts. It doesn't send the token to arbitrary
+hosts. Use `--remote-auth none` when the source must be fetched without
+authentication.
 
 ## kongctl metadata
 
@@ -433,8 +461,11 @@ These flags help prevent accidentally operating on unexpected namespaces, especi
 
 ## External resources and namespaces
 
-External resources (`_external` pseudo-resource) are references to {{site.konnect_short_name}} objects that are managed elsewhere
-but are "selected" by the kongctl declarative engine so they can be referenced by other resources under management.
+External resources are {{site.konnect_short_name}} objects managed elsewhere
+but selected by kongctl for use by managed resources. Use `_external` when
+the object needs a reusable declarative `ref` or managed children. Use
+`!lookup` to resolve an existing object directly in a relationship field.
+`!external` is an exact alias for `!lookup`.
 
 ```yaml
 # External portal definition - this tells kongctl that this portal
@@ -447,14 +478,50 @@ portals:
           name: "Shared Developer Portal"
 ```
 
-Because kongctl doesn't own those resources:
-- External resources **cannot** declare kongctl metadata. Supplying `kongctl.namespace` or `kongctl.protected`
-  on an external resource results in a parsing error. File-level defaults are ignored for externals.
-- External references do **not** add their namespaces to sync planning. Only namespaces from managed parent
-  resources are considered when sync mode calculates deletes.
-- Child resources (portal pages, customizations, etc.) are still planned by resolving the external parent's {{site.konnect_short_name}} ID.
-  Ensure the owning team labels the parent (for example via `kongctl adopt`) so the ID can be resolved, but you do not
-  need to (and cannot) assign a namespace to the external definition itself.
+Catalog APIs and application Auth Strategies can also be external. An external
+API can own managed versions, publications, implementations, and documents:
+
+```yaml
+apis:
+  - ref: shared-api
+    _external:
+      selector:
+        matchFields:
+          name: Shared API
+    versions:
+      - ref: shared-api-v2
+        version: v2
+        spec: !file ./openapi.yaml
+```
+
+Because kongctl doesn't own external resources:
+
+- External resources can't declare `kongctl` metadata. File-level defaults
+  are ignored for them.
+- External references don't add namespaces to sync planning.
+- kongctl never changes or deletes the external parent.
+- Child collections explicitly included in sync scope are fully reconciled,
+  including stale child deletion. Omitted child collections remain untouched.
+
+Inline lookups use a `field:value` scalar or a mapping. The target resource is
+inferred from the relationship field:
+
+```yaml
+ai_gateway_model_providers:
+  - ref: shared-provider
+    ai_gateway: !lookup {name: shared-ai-gateway}
+    name: openai
+    type: openai
+    display_name: OpenAI
+    config: {}
+```
+
+A mapping can contain multiple selectors, all of which must match. An
+`id:<uuid>` selector binds a known ID directly and can't be combined with
+another selector. Other selectors must match exactly one resource.
+
+Lookups run during planning and are cached for that plan. Saved plans contain
+the resolved IDs instead of tag placeholders.
 
 ## Resources managed by decK
 
@@ -505,6 +572,129 @@ Important notes for decK integration:
 
 For more information, see [kongctl and decK](/kongctl/kongctl-and-deck/).
 
+## Manage {{site.ai_gateway}} declaratively
+
+kongctl manages {{site.ai_gateway}} resources in
+{{site.konnect_product_name}}. The supported declarative model includes:
+
+- {{site.ai_gateway}} instances and data-plane certificates
+- Model Providers and Models
+- Auth Strategies and Policies
+- Agents and MCP Servers
+- Consumers, Consumer Credentials, and Consumer Groups
+- Config Stores, Config Store Secrets, and Vaults
+
+{{site.ai_gateway}} nodes are imperative, read-only resources. Inspect them with
+`kongctl get ai-gateway nodes`; don't include them in declarative
+configuration.
+
+Declare children under their gateway when one file owns the complete hierarchy:
+
+```yaml
+ai_gateways:
+  - ref: shared-ai-gateway
+    name: shared-ai-gateway
+    display_name: Shared AI Gateway
+    deployment_type: hybrid
+    model_providers:
+      - ref: openai
+        name: openai
+        display_name: OpenAI
+        type: openai
+        config: {}
+    models:
+      - ref: gpt-4o
+        name: gpt-4o
+        display_name: GPT-4o
+        type: model
+        formats:
+          - type: openai
+        targets:
+          - name: gpt-4o
+            provider: openai
+            config:
+              type: openai
+```
+
+Root-level child declarations use a parent field such as `ai_gateway`,
+`ai_gateway_consumer`, or `ai_gateway_config_store`. The value can be a
+`ref`, `!ref`, or supported `!lookup`:
+
+```yaml
+ai_gateway_policies:
+  - ref: shared-rate-limit
+    ai_gateway: !lookup {name: shared-ai-gateway}
+    name: shared-rate-limit
+    display_name: Shared rate limit
+    type: rate-limiting-advanced
+    enabled: true
+    config: {}
+```
+
+Child collections follow the normal sync-scope rules. Omit a collection to
+leave it unmanaged, or provide an empty collection under an identified parent
+to delete its managed children. Root-level empty {{site.ai_gateway}} child
+collections are rejected because they don't identify a parent.
+
+Policy `display_name` values must be explicit. Model targets identify their
+Model Provider by API `name`. Agents, Models, and MCP Servers reference Auth
+Strategies through `access.auth_strategies` and can reference same-gateway
+Policies with `!ref`.
+
+Use `--include-child-resources` when dumping {{site.ai_gateway}}. Direct
+{{site.ai_gateway}}
+child selectors are not supported:
+
+```sh
+kongctl dump declarative \
+  --resources ai_gateways \
+  --include-child-resources
+```
+
+For the complete resource model, see
+[kongctl declarative resource reference](/kongctl/supported-resources/#ai-gateway).
+For the product workflow, see
+[Use kongctl to manage {{site.ai_gateway}}](/ai-gateway/kongctl/).
+
+## Configuration templates
+
+Define reusable configuration blocks under the top-level `_templates` key.
+Select one from a resource or nested configuration block with `_extends`:
+
+```yaml
+_templates:
+  private-portal:
+    authentication_enabled: true
+    default_api_visibility: private
+    labels:
+      managed-by: kongctl
+
+portals:
+  - _extends: private-portal
+    ref: developer-portal
+    name: Developer Portal
+    labels:
+      team: platform
+```
+
+All files supplied to one command share one template registry. Template names
+must be unique, and a template can extend another template. Each consuming
+block can extend exactly one template. Unknown names and inheritance cycles are
+errors.
+
+Consumer values take precedence:
+
+- Objects merge recursively.
+- Scalars, arrays, values of a different type, and explicit `null` replace
+  inherited values.
+- Arrays never append or merge by element.
+- Omitted keys retain the inherited value.
+
+Templates expand before schema validation and sync-scope capture. An inherited
+empty child collection has the same deletion behavior as one written directly.
+Tags in a template use the template definition file's context. `_templates`
+is shared across sources, while `_defaults` remains automatic and file-local.
+
 ## YAML tags
 
 YAML tags are like preprocessors for YAML file data. They allow you to
@@ -512,6 +702,33 @@ load content from external files, reference across resources, load values
 from environment variables, and extract specific values from structured
 data. Over time more tags may be added to support various functions and
 use cases.
+
+Relationship tags include:
+
+- `!ref`: Reference a resource declared in the same configuration.
+- `!lookup`: Resolve one existing remote resource during planning.
+- `!external`: An exact alias for `!lookup`.
+
+`kongctl explain <resource>.<field>` reports the supported tags, target
+resource type, selectors, and required scope for a field.
+
+### Compose YAML tags
+
+A lookup mapping can use `!env` directly as a selector value:
+
+```yaml
+portal_id: !lookup
+  name: !env PORTAL_NAME
+```
+
+`!secret` can use `!env` as its source or as an item in `parts`.
+Other nested combinations, including `!file` or `!ref` inside a lookup, are
+rejected. Use mapping syntax when nesting a tag; the scalar
+`field:value` lookup form can't contain another tag.
+
+kongctl resolves a nested lookup's environment value during planning. Saved
+plans retain only the resolved resource ID and don't repeat the lookup during
+execution.
 
 ### Loading file content to YAML fields
 
@@ -657,7 +874,7 @@ api_documents:
 reading the requested field path.
 
 A runnable example is available in
-[docs/examples/declarative/env/](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/env/).
+[docs/examples/declarative/env/](https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative/env/).
 
 #### !env behavior
 
@@ -685,30 +902,133 @@ A runnable example is available in
 
 ## Write-only secret fields
 
-Some {{site.konnect_short_name}} APIs accept secret values on create or update but do not return
-them from `get` or `list` responses. Common examples include:
+Some {{site.konnect_short_name}} APIs accept secret values but don't return them
+from `get` or `list`. Common examples include:
 
 - Portal identity provider `config.client_secret`
 - DCR provider secrets such as `dcr_token`, `api_key`, and
   `initial_client_secret`
+- {{site.ai_gateway}} Model Provider authentication values
+- {{site.ai_gateway}} Auth Strategy OpenID Connect `config.client_secret`
+- {{site.ai_gateway}} Vault authentication credentials
+- {{site.ai_gateway}} Consumer Credential `api_key`
 - Event Gateway schema registry authentication `password`
 
-For these fields, kongctl prefers idempotent planning over perpetual
-updates. When the API doesn't expose the current value, the planner skips
-that field during diff calculation instead of assuming drift on every run.
+Secret material in a write-only field must use `!secret`. Literal secret
+values and eager `!file` values are rejected because they could enter a saved
+plan:
 
-This means:
+```yaml
+client_secret: !secret
+  source: !env PORTAL_OIDC_CLIENT_SECRET
+```
 
-- The initial create or update still sends the configured secret value.
-- Re-applying the same declarative configuration will usually be a no-op
-  instead of planning an update forever.
-- Changing only a write-only secret may not be detectable from live state, so
-  `plan` may show no changes even though the configured secret value differs
-  from what is currently stored in {{site.konnect_short_name}}.
+Compose public text with deferred secret sources by using `parts`:
 
-When you need to rotate a write-only secret declaratively, make the change
-alongside another observable field, or recreate the resource if the API does
-not provide a safe observable signal for that update.
+```yaml
+value: !secret
+  parts:
+    - "Bearer "
+    - !env AI_PROVIDER_TOKEN
+```
+
+Don't place secret material in literal parts. Saved plans retain source
+metadata, such as environment variable names, but never resolved values.
+Planning doesn't require the secret environment variables. Execution validates
+every source before making the first API change.
+
+Declaring a secret source and authorizing a write are separate operations.
+Creates send each configured secret once. To rotate an existing write-only
+field, select it while generating the plan:
+
+```sh
+kongctl plan -f config.yaml \
+  --write-secret workforce-idp#config.client_secret \
+  --output-file rotation.json
+```
+
+Select every configured secret on one resource by omitting the field:
+
+```sh
+kongctl plan -f config.yaml \
+  --write-secret workforce-idp \
+  --output-file rotation.json
+```
+
+Select every eligible secret in the configuration:
+
+```sh
+kongctl plan -f config.yaml \
+  --write-secrets \
+  --output-file rotation.json
+```
+
+Exact `--write-secret` selectors fail if the requested field isn't writable.
+`--write-secrets` is best effort and reports ineligible fields as warnings.
+A saved plan already contains its write intents, so write-selection flags can't
+be combined with `--plan`. Delete mode doesn't accept secret selection.
+
+The planner can't compare a write-only field with its remote value. Without a
+write selector, it omits the field and remains idempotent. Human-readable plans
+report `write requested` without displaying the value.
+
+{{site.ai_gateway}} Config Store Secrets are managed children. New secrets require a
+`value: !secret`; an existing secret can omit `value` to retain its current
+value. Use `--write-secret` or `--write-secrets` to rotate it. Imperative
+`get` and `list` operations return safe metadata and never reveal values.
+
+{{site.ai_gateway}} Consumer Credential `api_key` is create-only. Omit it to let
+{{site.konnect_short_name}} generate a key, or provide it with `!secret`
+while creating the credential. Rotate it by creating a replacement credential
+and deliberately removing the old one.
+
+## Sync scope and deletion safety
+
+`sync` reconciles only collections whose YAML keys are present:
+
+- An omitted root or child collection is ignored.
+- A populated collection creates or updates the declared resources and removes
+  other managed resources in that collection and namespace.
+- An empty root list, such as `apis: []`, requests deletion of managed
+  resources in the selected namespace.
+- Parent and child collections are independent. Omitting `pages` leaves
+  Portal Pages untouched; `pages: []` requests that the identified Portal
+  have no managed Pages.
+- Map-shaped children use `{}` as the empty collection. For example,
+  `email_templates: {}` requests no customized email templates.
+- Optional, delete-capable singletons such as `custom_domain`,
+  `email_config`, and `audit_log_webhook` use `{}` to request deletion.
+  Omission ignores the singleton and `null` is invalid.
+- Update-only singletons such as `customization` can't be deleted with
+  `{}`.
+- Empty child collections must be nested under an identified parent. A
+  root-level `api_documents: []` is invalid.
+
+For federated ownership, declare the managed or `_external` parent and include
+only the child collection owned by that configuration:
+
+```yaml
+portals:
+  - ref: shared-docs-portal
+    _external:
+      selector:
+        matchFields:
+          name: Shared Docs Portal
+    pages: []
+```
+
+The external parent is never changed or deleted, but its explicitly scoped
+Pages are fully reconciled. Namespace defaults don't apply to the external
+parent; managed collections in the same input still use their namespaces.
+
+Preview every destructive sync before approving it:
+
+```sh
+kongctl sync -f config.yaml --dry-run
+```
+
+For more examples, see [Synchronize configurations with
+kongctl](/kongctl/sync/).
 
 ## Commands reference
 
@@ -716,6 +1036,36 @@ kongctl includes many commands for declarative configuration management.
 Start with the following commands for most use cases:
 
 {% include_cached /kongctl/commands-reference-table.md %}
+
+Use the execution command that matches a saved plan's mode:
+
+- `kongctl apply --plan` accepts apply-mode plans.
+- `kongctl sync --plan` accepts sync-mode plans.
+- `kongctl delete --plan` accepts delete-mode plans.
+- `kongctl diff --plan` can inspect a plan from any mode.
+
+Use `adopt --overwrite-namespace` only when you intend to transfer a resource
+that already has a kongctl namespace label:
+
+```sh
+kongctl adopt api billing-api \
+  --namespace platform \
+  --overwrite-namespace
+```
+
+Use `--skip-defaults` to omit literal API defaults from a declarative dump.
+Use `--include-child-resources` to include children of the selected parent
+types:
+
+```sh
+kongctl dump declarative \
+  --resources portal,api,ai_gateways \
+  --include-child-resources \
+  --skip-defaults > konnect.yaml
+```
+
+`--skip-defaults` preserves explicit `null` and non-default values. It
+doesn't change planning, apply, sync, or Terraform import output.
 
 See the CLI help at `kongctl --help` for all possible commands, or check out the [kongctl CLI reference](/index/kongctl/#cli-reference) documentation.
 
@@ -920,4 +1270,7 @@ Common field name errors:
 
 kongctl provides a global `--log-level` flag that you can pass with any command.
 
-See the [troubleshooting reference](/kongctl/troubleshooting/) for help resolving common issues, and see the [debugging reference](/kongctl/troubleshooting/#debugging) for more information on the debugging workflow.
+See the [troubleshooting reference](/kongctl/troubleshooting/) for help
+resolving common issues. See the [debugging
+reference](/kongctl/troubleshooting/#debugging) for more information on the
+debugging workflow.

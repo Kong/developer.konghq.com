@@ -17,6 +17,10 @@ breadcrumbs:
 related_resources:
   - text: kongctl list commands
     url: /kongctl/list/
+  - text: Manage an AI Gateway with kongctl
+    url: /kongctl/manage-ai-gateway/
+  - text: kongctl declarative resource reference
+    url: /kongctl/supported-resources/#ai-gateway
 ---
 
 Use the `list` verb with the `ai-gateway` command to list {{site.konnect_short_name}} {{site.ai_gateway}}s.
@@ -48,9 +52,6 @@ rows:
   - command: |
       [kongctl list ai-gateway data-plane-certificates](#kongctl-list-ai-gateway-data-plane-certificates)
     description: "Use the `data-plane-certificates` command to list or retrieve data plane certificates for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
-  - command: |
-      [kongctl list ai-gateway identity-providers](#kongctl-list-ai-gateway-identity-providers)
-    description: "Use the `identity-providers` command to list or retrieve identity providers for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
   - command: |
       [kongctl list ai-gateway mcp-servers](#kongctl-list-ai-gateway-mcp-servers)
     description: "Use the `mcp-servers` command to list or retrieve MCP Servers for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."

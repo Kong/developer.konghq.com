@@ -30,7 +30,7 @@ rows:
             The tool provides both declarative and imperative style resource management capabilities along with
             other developer friendly features. 
 
-            The declarative configuration feature allows you to define API Platform infrastructure as code using a YAML based syntax and a state free reconciliation system. The tool supports a growing list of {{site.konnect_short_name}} resource types including Dev Portals, control planes, APIs, and more.
+            The declarative configuration feature lets you define API platform infrastructure as code using YAML and a stateless reconciliation system. kongctl manages APIs, Dev Portals, control planes, {{site.ai_gateway}}, {{site.event_gateway_short}}, organization, and {{site.konnect_catalog}} resources.
 
             kongctl also ships installable AI agent skills that help coding agents generate, review, and operate kongctl configuration from a repository.
             
@@ -91,6 +91,8 @@ rows:
 
             **AI Agent Skills**: Install bundled skills that help coding agents discover resource schemas, generate
             declarative configuration, build extensions, and preview changes with kongctl workflows.
+
+            **Audit Logs**: Pull a finite audit-log history, follow new organization events, or receive Dev Portal events with a webhook listener.
 
             **Flexible Authorization**: kongctl communicates with {{site.konnect_short_name}} via its APIs and supports authentication
             through browser-based device flow or personal access tokens.
@@ -293,6 +295,7 @@ rows:
                 - /kongctl/authentication/
                 - /kongctl/audit-logs/
                 - /kongctl/declarative/
+                - /kongctl/manage-ai-gateway/
                 - /kongctl/skills/
                 - /kongctl/supported-resources/
                 - /kongctl/kongctl-and-deck/
@@ -326,18 +329,21 @@ rows:
                 Yes, but with caution. Since kongctl's declarative engine is stateless and calculates changes by querying live {{site.konnect_short_name}} resources, concurrent processes operating on the same resources could conflict. Use namespace isolation to separate resources managed by different processes or teams.
             - q: What resources can kongctl manage declaratively?
               a: |
-                The list of {{site.konnect_short_name}} resources supported is growing. The current list includes (but not limited to):
+                kongctl manages these {{site.konnect_short_name}} resource families:
                 * **APIs**: Including versions, publications, implementations, and documents
                 * **Dev Portals**: Including pages, teams, snippets, customizations, authentication strategies, and custom domains
                 * **Control planes**: For {{site.base_gateway}} control plane management _and_ decK integration
+                * **{{site.ai_gateway}}**: Including Model Providers, Auth Strategies, Policies, Agents, Consumers, Models, MCP Servers, Config Stores, secrets, Vaults, and data-plane certificates
+                * **{{site.event_gateway_short}}**: Including clusters, listeners, policies, certificates, schema registries, and keys
+                * **{{site.konnect_catalog}} and organization**: Including Catalog services, teams, roles, and custom dashboards
 
-                Support for additional resource types is planned for future releases.
+                Run `kongctl explain` for the version-specific resource list and see the [declarative resource reference](/kongctl/supported-resources/).
             - q: How does kongctl authentication work?
               a: |
                 kongctl supports two authentication methods:
 
                 * **Device Flow (Recommended)**: Run `kongctl login` to authenticate via your browser. Tokens are stored locally and refreshed automatically.
-                * **Personal Access Token**: Use the `--pat` flag or `KONGCTL_DEFAULT_KONNECT_PAT` environment variable for automation scenarios like CI/CD pipelines.
+                * **Personal or system account access token**: Create PATs and sPATs with kongctl, then use the `--pat` flag or `KONGCTL_DEFAULT_KONNECT_PAT` environment variable for automation.
 
                 Configuration and device flow authentication credentials are stored in `$XDG_CONFIG_HOME/kongctl/` (typically `~/.config/kongctl/`).
             - q: Can I use kongctl in CI/CD pipelines?
@@ -379,6 +385,8 @@ rows:
             - text: kongctl releases and changelog
               type: github
               url: https://github.com/kong/kongctl/releases
+            - text: Hands-on kongctl learning guide
+              url: https://kong.github.io/kongctl/
             - text: Announcement blog
               type: blog
               url: https://konghq.com/blog/product-releases/kongctl
