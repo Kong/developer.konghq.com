@@ -94,6 +94,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.18": [
+    {
+      "message": "Fixed an issue where the plugin failed to set the signed access token header on the upstream request, when `access_token_upstream_header` (or `original_access_token_upstream_header`) had the same name as `channel_token_request_header`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Supported `/jwt-signer/jwks` endpoint in dbless mode",
