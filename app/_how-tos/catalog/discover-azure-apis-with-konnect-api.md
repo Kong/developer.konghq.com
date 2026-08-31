@@ -1,8 +1,8 @@
 ---
-title: "Discover Azure API Management APIs in Catalog with the {{site.konnect_short_name}} API"
+title: "Discover Azure API Management APIs in {{site.konnect_catalog}} Classic with the {{site.konnect_short_name}} API"
 permalink: /how-to/discover-azure-apis-with-konnect-api/
 content_type: how_to
-description: Learn how to connect an Azure API Management API to your {{site.konnect_catalog}} service in {{site.konnect_short_name}} using the API.
+description: Learn how to connect an Azure API Management API to your {{site.konnect_catalog}} Classic service in {{site.konnect_short_name}} using the API.
 products:
   - catalog
 works_on:
@@ -15,18 +15,18 @@ tags:
 search_aliases:
   - service catalog
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: Integrations
     url: /catalog/integrations/
   - text: Azure API Management reference
     url: /catalog/integrations/azure-api-management/
-  - text: "Discover Azure API Management APIs with the {{site.konnect_short_name}} UI"
+  - text: "Discover Azure API Management APIs in {{site.konnect_catalog}} Classic with the {{site.konnect_short_name}} UI"
     url: /how-to/discover-azure-apis-with-konnect-ui/
 automated_tests: false
 tldr:
   q: How do I discover Azure API Management APIs in {{site.konnect_short_name}}?
-  a: Install the Azure API Management integration in {{site.konnect_short_name}} and authorize access with OAuth, then link an Azure API to your {{site.konnect_catalog}} service.
+  a: Install the Azure API Management integration in {{site.konnect_short_name}} and authorize access with OAuth, then link an Azure API to your {{site.konnect_catalog}} Classic service.
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
@@ -39,15 +39,17 @@ prereqs:
       icon_url: /assets/icons/azure.svg
 ---
 
+{% include_cached catalog/catalog-classic-banner.md %}
+
 ## Configure the Azure API Management integration
 
 {:.info}
 > **Note:** The Azure API Management integration uses OAuth for authentication and can only be configured through the {{site.konnect_short_name}} UI.
 
-Before you can discover APIs in {{site.konnect_catalog}}, you must configure the Azure API Management integration.
+Before you can discover APIs in {{site.konnect_catalog}} Classic, you must configure the Azure API Management integration.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
-1. In the Catalog sidebar, click **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. In the Catalog sidebar, click **Integrations**. 
 1. Click **Azure API Management**.
 1. Click **Add Azure API Management instance**.
 1. In the **Subscription ID** field, enter your Azure API subscription ID.
@@ -59,7 +61,7 @@ Before you can discover APIs in {{site.konnect_catalog}}, you must configure the
 1. In the **Instance name** field, enter `azure-api-management-test`.
 1. Click **Save**. 
 
-## Create a service in {{site.konnect_catalog}}
+## Create a service in {{site.konnect_catalog}} Classic
 
 Create a service that you'll map to your Azure API Management resources:
 
@@ -82,7 +84,7 @@ export AZURE_SERVICE_ID='YOUR-SERVICE-ID'
 
 ## List Azure API Management resources
 
-Before you can map your Azure API Management resources to a service in {{site.konnect_catalog}}, you first need to find the resources that are pulled in from Azure API Management:
+Before you can map your Azure API Management resources to a service in {{site.konnect_catalog}} Classic, you first need to find the resources that are pulled in from Azure API Management:
 
 <!--vale off-->
 {% konnect_api_request %}

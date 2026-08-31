@@ -15,13 +15,15 @@ breadcrumbs:
 search_aliases:
   - service catalog
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: Scorecards
     url: /catalog/scorecards/
   - text: "{{site.konnect_catalog}} integrations"
     url: /catalog/integrations/
 ---
+
+{% include_cached catalog/catalog-classic-banner.md %}
 
 APIs can be associated with {{site.konnect_catalog}} services, which replaces the legacy API spec linking. We recommend migrating API specs that are associated with a {{site.konnect_catalog}} service to APIs because this allows API consumers and service owners to see which APIs and services are associated with each other. 
 
