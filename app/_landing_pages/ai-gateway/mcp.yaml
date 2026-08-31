@@ -6,8 +6,6 @@ metadata:
     - ai-gateway
   works_on:
     - konnect
-  min_version:
-    ai-gateway: '2.0'
   breadcrumbs:
     - /ai-gateway/
   tags:
