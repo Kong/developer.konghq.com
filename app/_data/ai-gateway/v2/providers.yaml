@@ -433,7 +433,7 @@ providers:
       provider_specific: []
       statistics_logging: []
 
-  - name: Dashscope
+  - name: DashScope
     url_patterns:
       - 'https://dashscope.aliyuncs.com'
       - 'https://dashscope-intl.aliyuncs.com'

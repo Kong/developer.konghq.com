@@ -8,6 +8,12 @@ related_resources:
     url: /ai-gateway/
   - text: Route Qwen Code CLI traffic through {{site.ai_gateway}} and OpenAI
     url: /ai-gateway/use-qwen-code-with-ai-gateway-openai/
+  - text: DashScope provider
+    url: /ai-gateway/ai-providers/dashscope/
+  - text: AI Model Provider
+    url: /ai-gateway/entities/ai-model-provider/
+  - text: AI Model
+    url: /ai-gateway/entities/ai-model/
 
 description: Configure {{site.ai_gateway}} to proxy Qwen Code CLI traffic to an Alibaba Cloud DashScope model
 
@@ -103,7 +109,7 @@ This example uses the following settings:
 
 * `targets`: Sends requests to `qwen-plus` through the `dashscope` provider.
 * `targets[0].config.international: true`: Uses DashScope's international endpoint (`dashscope-intl.aliyuncs.com`); set it to `false` if your DashScope key belongs to a mainland China account.
-* `capabilities: [generate]`: Exposes the model at a `/qwen/chat/completions` endpoint.
+* `capabilities: [generate]`: Exposes the model at a `/qwen-dashscope/chat/completions` endpoint.
 
 ## Run Qwen Code CLI
 

@@ -1,8 +1,8 @@
 ---
-title: "Dashscope provider"
+title: "DashScope provider"
 layout: reference
 content_type: reference
-description: Reference for supported capabilities for Dashscope provider
+description: Reference for supported capabilities for DashScope provider
 breadcrumbs:
   - /ai-gateway/v1/
   - /ai-gateway/v1/ai-providers/
@@ -37,7 +37,7 @@ min_version:
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/v1/
-  - text: Dashscope tutorials
+  - text: DashScope tutorials
     url: /how-to/?tags=dashscope
   - text: "{{site.ai_gateway}} plugins"
     url: /plugins/?category=ai
@@ -57,7 +57,7 @@ major_version:
 ---
 
 
-{% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="Dashscope" %}
+{% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="DashScope" %}
 
 ## Configure {{ provider.name }} with AI Proxy
 

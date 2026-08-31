@@ -1,8 +1,8 @@
 ---
-title: "Dashscope provider"
+title: "DashScope provider"
 layout: reference
 content_type: reference
-description: Reference for supported capabilities for Dashscope provider
+description: Reference for supported capabilities for DashScope provider
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/ai-providers/
@@ -40,7 +40,7 @@ related_resources:
 ---
 
 
-{% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="Dashscope" %}
+{% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="DashScope" %}
 
 ## Configure {{ provider.name }}
 
@@ -51,7 +51,7 @@ Here's a minimal configuration for chat completions:
 {% entity_example %}
 type: model-provider
 data:
-  display_name: Dashscope Production
+  display_name: DashScope Production
   name: my-dashscope-account
   type: dashscope
   config:
@@ -64,5 +64,5 @@ variables:
   key:
     value: $DASHSCOPE_API_KEY
     secret: true
-    description: "The API key used to connect to Dashscope. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
+    description: "The API key used to connect to DashScope. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
 {% endentity_example %}
