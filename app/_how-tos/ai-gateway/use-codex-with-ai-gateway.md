@@ -126,4 +126,4 @@ prompt: Tell me about the Madrid Skylitzes manuscript.
 When prompted for network access, select **Yes, proceed**. Codex routes the request through {{site.ai_gateway}} to the OpenAI Responses API and returns the model's response, giving you monitoring and control over all Codex LLM traffic.
 
 {:.info}
-> The Codex CLI requires `OPENAI_API_KEY` to be set even though the real key lives on the {{site.ai_gateway}}, so setting a placeholder is fine. You may be prompted to confirm this in the TUI interface.
+> The Codex CLI requires `OPENAI_API_KEY` to be set even though the real key lives on the {{site.ai_gateway}}, so setting a placeholder is fine. You may be prompted to confirm this in the UI.
