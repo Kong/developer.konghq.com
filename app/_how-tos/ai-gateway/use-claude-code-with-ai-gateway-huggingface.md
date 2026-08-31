@@ -53,11 +53,11 @@ tldr:
 
 ## Create an AI Model Provider, and AI Model, and an AI Policy
 
-Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection and store your authentication credentials.
+Create an AI Model Provider, and AI Model, and an AI Policy with all of your configuration
 
-Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request transformer](/ai-gateway/policies/ai-request-transformer/) to remove extra fields that  Hugging Face's API does not support. 
-
-Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use:
+* The [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity defines your connection and stores your authentication credentials.
+* The [AI Request Transformer Policy](/ai-gateway/policies/ai-request-transformer/) removes extra fields that Hugging Face's API does not support. 
+* The [AI Model](/ai-gateway/entities/ai-model/) entity declares which upstream models are available, configures how client requests are routed, and specifies which AI Model Provider to use.
 
 {:.info}
 > `formats: [type: anthropic]` accepts requests in Anthropic format even though the upstream is Hugging Face.
