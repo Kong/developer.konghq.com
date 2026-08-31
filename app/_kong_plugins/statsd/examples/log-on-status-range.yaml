@@ -15,8 +15,6 @@ config:
   allow_status_codes:
   - 200-205
   - 400-499
-  flush_timeout: 2
-  retry_count: 10
 
 
 variables:

@@ -73,6 +73,13 @@ It also supports stream data (TCP, TLS, and UDP).
 
 {% include_cached /plugins/queues.md name=page.name %}
 
+{:.warning}
+> [`config.retry_count`](./reference/#schema--config-retry-count) is deprecated and has no effect in {{site.base_gateway}} 3.3 or later.
+> It will be removed in 4.0. Configure
+> [`config.queue.initial_retry_delay`](./reference/#schema--config-queue-initial-retry-delay),
+> [`config.queue.max_retry_delay`](./reference/#schema--config-queue-max-retry-delay), and
+> [`config.queue.max_retry_time`](./reference/#schema--config-queue-max-retry-time) instead.
+
 ### Shared queues in HTTP Log plugin instances
 
 In contrast to other plugins that use queues, all HTTP Log plugin instances that have the same values for the following parameters share one queue:
