@@ -1,0 +1,1643 @@
+openapi: 3.0.3
+info:
+  title: Konnect AI Catalog
+  version: 1.10.2
+  description: |
+    Konnect AI Catalog is the API for creating and managing AI interfaces in the Konnect Catalog.
+  contact:
+    name: Kong
+    url: 'https://cloud.konghq.com'
+servers:
+  - url: 'https://us.api.konghq.com/v1'
+    description: United-States Production region
+  - url: 'https://eu.api.konghq.com/v1'
+    description: Europe Production region
+  - url: 'https://au.api.konghq.com/v1'
+    description: Australia Production region
+  - url: 'https://me.api.konghq.com/v1'
+    description: Middle-East Production region
+  - url: 'https://in.api.konghq.com/v1'
+    description: India Production region
+  - url: 'https://sg.api.konghq.com/v1'
+    description: Singapore Production region
+paths:
+  /ai-models:
+    get:
+      operationId: list-ai-models
+      summary: List AI Models
+      description: |
+        Returns a paginated list of AI Models for the current organization. Each row includes a `managed_by` object derived from whether the model is linked to an AI Gateway model.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - name: filter
+          in: query
+          description: Filter AI Models returned in the response.
+          required: false
+          schema:
+            $ref: '#/components/schemas/AiModelFilterParameters'
+          style: deepObject
+        - $ref: '#/components/parameters/AiModelSort'
+      responses:
+        '200':
+          description: A paginated list of AI Models
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiModelList'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Catalog AI Models
+    post:
+      operationId: create-ai-model
+      summary: Create AI Model
+      description: |
+        Creates a bare AI Model. No `target_models` are accepted here — create the version separately with `POST /ai-models/{aiModelId}/versions`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiModelCreate'
+      responses:
+        '201':
+          description: The created AI Model
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiModel'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Catalog AI Models
+  '/ai-models/{aiModelId}':
+    parameters:
+      - $ref: '#/components/parameters/AiModelIdPath'
+    get:
+      operationId: get-ai-model
+      summary: Get AI Model
+      description: Returns a single AI Model.
+      responses:
+        '200':
+          description: AI Model details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiModel'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog AI Models
+    patch:
+      operationId: update-ai-model
+      summary: Update AI Model
+      description: |
+        Partially updates an AI Model.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiModelUpdate'
+      responses:
+        '200':
+          description: The updated AI Model
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiModel'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Catalog AI Models
+    put:
+      operationId: upsert-ai-model
+      summary: Replace AI Model
+      description: |
+        Replaces an AI Model.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiModelReplace'
+      responses:
+        '200':
+          description: The replaced AI Model
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiModel'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Catalog AI Models
+    delete:
+      operationId: delete-ai-model
+      summary: Delete AI Model
+      description: |
+        Deletes an AI Model.
+      responses:
+        '204':
+          description: Successfully deleted the AI Model
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog AI Models
+  '/ai-models/{aiModelId}/versions':
+    parameters:
+      - $ref: '#/components/parameters/AiModelIdPath'
+    get:
+      operationId: list-ai-model-versions
+      summary: List AI Model versions
+      description: |
+        Returns the AI Model's versions.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+      responses:
+        '200':
+          description: The AI Model's versions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiModelVersionList'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog AI Model Versions
+    post:
+      operationId: create-ai-model-version
+      summary: Create AI Model version
+      description: |
+        Creates the `latest` version with its `target_models`. Currently, a model only has a single version. Returns `409` if a version already exists.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiModelVersionCreate'
+      responses:
+        '201':
+          description: The created version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiModelVersion'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Catalog AI Model Versions
+  '/ai-models/{aiModelId}/versions/latest':
+    parameters:
+      - $ref: '#/components/parameters/AiModelIdPath'
+    get:
+      operationId: get-latest-ai-model-version
+      summary: Get latest AI Model version
+      description: |
+        Returns the AI Model's `latest` version, including its `target_models`.
+      responses:
+        '200':
+          description: The latest version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiModelVersion'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog AI Model Versions
+    patch:
+      operationId: update-latest-ai-model-version
+      summary: Update latest AI Model version
+      description: |
+        Partially updates the `latest` version. `target_models`, when supplied, is a full-array replacement.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiModelVersionUpdate'
+      responses:
+        '200':
+          description: The updated version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiModelVersion'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog AI Model Versions
+    put:
+      operationId: upsert-latest-ai-model-version
+      summary: Replace latest AI Model version
+      description: |
+        Replaces the `latest` version.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiModelVersionReplace'
+      responses:
+        '200':
+          description: The replaced version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiModelVersion'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog AI Model Versions
+    delete:
+      operationId: delete-latest-ai-model-version
+      summary: Delete latest AI Model version
+      description: |
+        Deletes the AI Model's `latest` version. Returns `404` if no version exists yet.
+      responses:
+        '204':
+          description: Successfully deleted the version
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog AI Model Versions
+  '/ai-models/{aiModelId}/versions/latest/spec':
+    parameters:
+      - $ref: '#/components/parameters/AiModelIdPath'
+    get:
+      operationId: get-ai-model-version-spec
+      summary: Get AI Model version spec
+      description: |
+        Returns the `latest` version's oas specification contents along with metadata.
+      responses:
+        '200':
+          description: The version's oas specification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiModelVersionSpec'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog AI Model Specs
+    put:
+      operationId: upsert-ai-model-version-spec
+      summary: Upsert AI Model version spec
+      description: |
+        Creates or replaces the `latest` version's oas specification (upsert).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiModelVersionSpecWrite'
+      responses:
+        '200':
+          description: The replaced spec
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiModelVersionSpec'
+        '201':
+          description: The created spec
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiModelVersionSpec'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog AI Model Specs
+    delete:
+      operationId: delete-ai-model-version-spec
+      summary: Delete AI Model version spec
+      description: |
+        Deletes the `latest` version's oas specification.
+      responses:
+        '204':
+          description: Successfully deleted the spec
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog AI Model Specs
+  '/ai-models/{aiModelId}/implementations':
+    parameters:
+      - $ref: '#/components/parameters/AiModelIdPath'
+    get:
+      operationId: list-ai-model-implementations
+      summary: List AI Model implementations
+      description: |
+        Returns a paginated list of the AI Model's implementation records.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+      responses:
+        '200':
+          description: The AI Model's implementations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiModelImplementationList'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog AI Model Implementations
+    post:
+      operationId: create-ai-model-implementation
+      summary: Create AI Model implementation
+      description: |
+        Creates an implementation record for the AI Model. Returns `409` if the model has an existing implementation.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiModelImplementationCreate'
+      responses:
+        '201':
+          description: The created implementation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiModelImplementation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Catalog AI Model Implementations
+  '/ai-models/{aiModelId}/implementations/{implementationId}':
+    parameters:
+      - $ref: '#/components/parameters/AiModelIdPath'
+      - $ref: '#/components/parameters/AiModelImplementationIdPath'
+    get:
+      operationId: get-ai-model-implementation
+      summary: Get AI Model implementation
+      description: Returns a single AI Model implementation record.
+      responses:
+        '200':
+          description: AI Model implementation details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiModelImplementation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog AI Model Implementations
+    delete:
+      operationId: delete-ai-model-implementation
+      summary: Delete AI Model implementation
+      description: Removes a single AI Model implementation (link) record by identifier.
+      responses:
+        '204':
+          description: Successfully deleted the AI Model implementation
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog AI Model Implementations
+  '/ai-models/{aiModelId}/spec':
+    parameters:
+      - $ref: '#/components/parameters/AiModelIdPath'
+    get:
+      operationId: get-ai-model-spec
+      summary: Get AI Model spec
+      description: |
+        Convenience shortcut to the `latest` version's oas specification. Returns `404`  if either the version or the specification is missing, distinguished by error code in the response body (`ai_model_version_not_found` / `ai_model_spec_not_found`).
+      responses:
+        '200':
+          description: The latest version's spec
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiModelVersionSpec'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog AI Model Specs
+components:
+  parameters:
+    AiModelIdPath:
+      name: aiModelId
+      in: path
+      required: true
+      description: The unique identifier of the AI Model.
+      schema:
+        type: string
+        format: uuid
+        example: 123e4567-e89b-12d3-a456-426614174000
+    AiModelImplementationIdPath:
+      name: implementationId
+      in: path
+      required: true
+      description: The unique identifier of the AI Model implementation.
+      schema:
+        type: string
+        format: uuid
+        example: d2e1f0a9-8b7c-6d5e-4f3a-2b1c0d9e8f7a
+    AiModelSort:
+      name: sort
+      description: |
+        Sort AI Models by specified fields. Supported sort attributes are:
+        - `display_name`
+        - `name`
+        - `created_at`
+        - `updated_at`
+
+        Default sort is `display_name` in ascending order.
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/SortQuery'
+    PageNumber:
+      name: 'page[number]'
+      description: Determines which page of the entities to retrieve.
+      required: false
+      in: query
+      allowEmptyValue: true
+      schema:
+        type: integer
+        example: 1
+    PageSize:
+      name: 'page[size]'
+      description: The maximum number of items to include per page. The last page of a collection may include fewer items.
+      required: false
+      in: query
+      allowEmptyValue: true
+      schema:
+        type: integer
+        example: 10
+  schemas:
+    TargetModel:
+      description: An upstream LLM target the AI Model proxies.
+      type: object
+      properties:
+        provider:
+          description: The upstream model provider.
+          type: string
+          example: openai
+        name:
+          description: The upstream model name for the given provider.
+          type: string
+          example: gpt-4o
+      required:
+        - provider
+        - name
+    AiModel:
+      description: An AI Model catalog resource.
+      type: object
+      properties:
+        id:
+          description: The unique identifier of the AI Model.
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        name:
+          description: |
+            The machine name of the AI Model that uniquely identifies it within the catalog.
+          type: string
+          example: my-ai-model
+          maxLength: 120
+          minLength: 1
+          pattern: '^[0-9a-z.-]+$'
+        display_name:
+          description: The display name of the AI Model.
+          type: string
+          example: My AI Model
+          maxLength: 120
+          minLength: 1
+        description:
+          description: A description of the AI Model.
+          type: string
+          example: Customer support triage model
+          maxLength: 2048
+          nullable: true
+        labels:
+          $ref: '#/components/schemas/Labels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      required:
+        - id
+        - name
+        - display_name
+        - description
+        - labels
+        - managed_by
+        - created_at
+        - updated_at
+    AiModelCreate:
+      description: Request body for creating or replacing an AI Model.
+      type: object
+      properties:
+        name:
+          description: |
+            The machine name of the AI Model that uniquely identifies it within the catalog.
+          type: string
+          example: my-ai-model
+          maxLength: 120
+          minLength: 1
+          pattern: '^[0-9a-z.-]+$'
+        display_name:
+          description: The display name of the AI Model.
+          type: string
+          example: My AI Model
+          maxLength: 120
+          minLength: 1
+        description:
+          description: Optionally provide a description of the AI Model.
+          type: string
+          example: Customer support triage model
+          maxLength: 2048
+          nullable: true
+        labels:
+          $ref: '#/components/schemas/Labels'
+      additionalProperties: false
+      required:
+        - name
+        - display_name
+    AiModelReplace:
+      description: Request body for creating or replacing an AI Model.
+      type: object
+      properties:
+        name:
+          description: |
+            The machine name of the AI Model that uniquely identifies it within the catalog.
+          type: string
+          example: my-ai-model
+          maxLength: 120
+          minLength: 1
+          pattern: '^[0-9a-z.-]+$'
+        display_name:
+          description: The display name of the AI Model.
+          type: string
+          example: My AI Model
+          maxLength: 120
+          minLength: 1
+        description:
+          description: Optionally provide a description of the AI Model.
+          type: string
+          example: Customer support triage model
+          maxLength: 2048
+          nullable: true
+        labels:
+          $ref: '#/components/schemas/Labels'
+      additionalProperties: false
+      required:
+        - name
+        - display_name
+    AiModelUpdate:
+      description: |
+        Request body for partially updating an AI Model (merge-patch). All fields are optional; omitted fields are left unchanged.
+      type: object
+      properties:
+        name:
+          description: |
+            The machine name of the AI Model that uniquely identifies it within the catalog.
+          type: string
+          example: my-ai-model
+          maxLength: 120
+          minLength: 1
+          pattern: '^[0-9a-z.-]+$'
+        display_name:
+          description: The display name of the AI Model.
+          type: string
+          example: My AI Model
+          maxLength: 120
+          minLength: 1
+        description:
+          description: Optionally provide a description of the AI Model.
+          type: string
+          example: Customer support triage model
+          maxLength: 2048
+          nullable: true
+        labels:
+          $ref: '#/components/schemas/LabelsUpdate'
+      additionalProperties: false
+    AiModelList:
+      description: A paginated page of AI Models.
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AiModel'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      required:
+        - data
+        - meta
+    AiModelVersion:
+      description: |
+        A version of an AI Model, holding its `target_models`. Currently only exactly one version (`latest`) per model exists.
+      type: object
+      properties:
+        id:
+          description: The unique identifier of the version.
+          type: string
+          format: uuid
+          example: 9c4a1b2c-3d4e-5f60-7182-93a4b5c6d7e8
+        ai_model_id:
+          description: The identifier of the parent AI Model.
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        version:
+          description: An optional user-supplied version label. `null` when unset.
+          type: string
+          example: 1.0.0
+          maxLength: 120
+          minLength: 1
+          nullable: true
+          pattern: .*\S.*
+        target_models:
+          description: The upstream LLM targets for this version.
+          type: array
+          items:
+            $ref: '#/components/schemas/TargetModel'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      required:
+        - id
+        - ai_model_id
+        - version
+        - target_models
+        - created_at
+        - updated_at
+    AiModelVersionCreate:
+      description: Request body for creating an AI Model Version.
+      type: object
+      properties:
+        version:
+          description: |
+            An optional user-supplied version label.
+          type: string
+          example: 1.0.0
+          maxLength: 120
+          minLength: 1
+          nullable: true
+          pattern: .*\S.*
+        target_models:
+          description: The upstream LLM targets (full set).
+          type: array
+          items:
+            $ref: '#/components/schemas/TargetModel'
+      additionalProperties: false
+      required:
+        - target_models
+    AiModelVersionUpdate:
+      description: |
+        Request body for partially updating an AI Model Version.
+      type: object
+      properties:
+        version:
+          description: |
+            An optional user-supplied version label. Omit it to leave the version unchanged, or send `null` to clear it.
+          type: string
+          example: 1.0.0
+          maxLength: 120
+          minLength: 1
+          nullable: true
+          pattern: .*\S.*
+        target_models:
+          description: The upstream LLM targets.
+          type: array
+          items:
+            $ref: '#/components/schemas/TargetModel'
+      additionalProperties: false
+    AiModelVersionReplace:
+      description: Request body for replacing an AI Model Version.
+      allOf:
+        - $ref: '#/components/schemas/AiModelVersionCreate'
+    AiModelVersionList:
+      description: A paginated page of an AI Model's versions.
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AiModelVersion'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      required:
+        - data
+        - meta
+    SpecProvider:
+      description: |
+        Client-supplied provenance for the oas specification. Omit it (or send `null`) for a user-uploaded spec. `{ "source": "ai_gateway" }` indicates the content came from the linked AI Gateway model, and is rejected with `400` (`invalid_parameters`) if the model is not linked. `{ "source": "provider" }` is reserved for provider/target-model generation.
+      type: object
+      properties:
+        source:
+          type: string
+          example: ai_gateway
+          enum:
+            - ai_gateway
+            - provider
+      required:
+        - source
+    AiModelVersionSpec:
+      description: The oas specification document for an AI Model version.
+      type: object
+      properties:
+        spec_content:
+          description: |
+            The raw content of the oas specification, in json or yaml format (for example, an
+            OpenAPI document).
+          type: string
+          example: '{"openapi":"3.1.0","info":{"title":"My AI Model","version":"1.0.0"},"paths":{}}'
+        spec_type:
+          description: |
+            The type of specification document. Currently always `oas` (OpenAPI Specification).
+          type: string
+          example: oas
+          enum:
+            - oas
+          readOnly: true
+        spec_provider:
+          description: |
+            Provenance of the specification. `null` (or absent) for a user-uploaded specification.
+          type: object
+          nullable: true
+          properties:
+            source:
+              type: string
+              example: ai_gateway
+              enum:
+                - ai_gateway
+                - provider
+          required:
+            - source
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      required:
+        - spec_content
+        - spec_type
+        - created_at
+        - updated_at
+    AiModelVersionSpecWrite:
+      description: |
+        Request body for creating or replacing a version's spec (upsert). The request body has a maximum size limit of 8MB.
+      type: object
+      properties:
+        spec_content:
+          description: |
+            The raw content of the oas specification, in json or yaml format (for example, an
+            OpenAPI document).
+          type: string
+          example: '{"openapi":"3.1.0","info":{"title":"My AI Model","version":"1.0.0"},"paths":{}}'
+        spec_provider:
+          description: |
+            Optional provenance. Omit (or `null`) for a user-uploaded specification.
+          allOf:
+            - $ref: '#/components/schemas/SpecProvider'
+          nullable: true
+      additionalProperties: false
+      required:
+        - spec_content
+    AiModelImplementation:
+      description: AI Model Implementation.
+      type: object
+      properties:
+        id:
+          description: The unique identifier of the implementation (link) record.
+          type: string
+          format: uuid
+          example: d2e1f0a9-8b7c-6d5e-4f3a-2b1c0d9e8f7a
+        ai_model_id:
+          description: The identifier of the parent AI Model.
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        gateway_control_plane_id:
+          description: The AI Gateway control plane uuid the linked model belongs to.
+          type: string
+          format: uuid
+          example: 223e4567-e89b-12d3-a456-426614174999
+        gateway_model_id:
+          description: The text or uuid identifier of the linked AI Gateway model.
+          type: string
+          example: gw-model-abc
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      required:
+        - id
+        - ai_model_id
+        - gateway_control_plane_id
+        - gateway_model_id
+        - created_at
+        - updated_at
+    AiModelImplementationCreate:
+      description: Request body for linking an AI Model to an AI Gateway model.
+      type: object
+      properties:
+        gateway_control_plane_id:
+          description: The AI Gateway control plane uuid the model belongs to.
+          type: string
+          format: uuid
+          example: 223e4567-e89b-12d3-a456-426614174999
+        gateway_model_id:
+          description: The text or uuid identifier of the AI Gateway model to link.
+          type: string
+          example: gw-model-abc
+      additionalProperties: false
+      required:
+        - gateway_control_plane_id
+        - gateway_model_id
+    AiModelImplementationList:
+      description: |
+        A paginated page of an AI Model's implementation records.
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AiModelImplementation'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      required:
+        - data
+        - meta
+    AiModelFilterParameters:
+      description: Filter parameters for the AI Model list endpoint.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UuidFieldFilter'
+        name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        display_name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        labels:
+          $ref: '#/components/schemas/LabelsFieldFilter'
+        created_at:
+          $ref: '#/components/schemas/DateTimeFieldFilter'
+        updated_at:
+          $ref: '#/components/schemas/DateTimeFieldFilter'
+      title: AiModelFilterParameters
+    UuidFieldFilter:
+      description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`'
+      type: object
+      properties:
+        eq:
+          description: The field exactly matches the provided value.
+          type: string
+          example: '?filter[field_name_here][eq]=foo'
+        oeq:
+          description: The field matches any of the provided values.
+          type: string
+          example: '?filter[field_name_here][oeq]=foo,bar'
+        neq:
+          description: The field does not match the provided value.
+          type: string
+          example: '?filter[field_name_here][neq]=bar'
+      additionalProperties: false
+      x-examples:
+        example-1:
+          oeq: 'some-value,some-other-value'
+          neq: not-this-value
+        example-2:
+          eq: some-value
+    StringFieldFilter:
+      oneOf:
+        - title: Filter by operator
+          description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`, `contains`, `ocontains`'
+          x-examples:
+            example-1:
+              contains: some-value
+              ocontains: 'this-value,or-that-value'
+              oeq: 'some-value,some-other-value'
+              neq: not-this-value
+            example-2:
+              eq: some-value
+          properties:
+            eq:
+              description: The field exactly matches the provided value.
+              type: string
+              example: '?filter[field_name_here][eq]=foo'
+            contains:
+              description: The field contains the provided value.
+              type: string
+              example: '?filter[field_name_here][contains]=foo'
+            ocontains:
+              description: The field contains any of the provided values.
+              type: string
+              example: '?filter[field_name_here][ocontains]=foo,bar'
+            oeq:
+              description: The field matches any of the provided values.
+              type: string
+              example: '?filter[field_name_here][oeq]=foo,bar'
+            neq:
+              description: The field does not match the provided value.
+              type: string
+              example: '?filter[field_name_here][neq]=bar'
+          type: object
+          additionalProperties: false
+        - title: Filter by exact string match
+          type: string
+          description: The field exactly matches the provided value.
+          example: '?filter[title]=foo'
+    LabelsFieldFilter:
+      allOf:
+        - title: LabelsFieldFilter
+          description: |
+            Filters on the resource's `labels` field. Filters must use dot-notation to identify
+            the label key that will be used to filter the results. For example:
+              - `filter[labels.owner]`
+              - `filter[labels.owner][neq]=kong`
+              - `filter[labels.env]=dev`
+              - `filter[labels.env][ocontains]=dev,test`
+        - $ref: '#/components/schemas/StringFieldFilter'
+    DateTimeFieldFilter:
+      description: Filters on the given datetime (RFC-3339) field value.
+      oneOf:
+        - type: string
+          title: DateTimeFieldImplicitEqualsFilter
+          format: date-time
+          description: Value strictly equals given RFC-3339 formatted timestamp in UTC
+          example: '2022-03-30T07:20:50Z'
+        - type: object
+          title: DateTimeFieldEqualsFilter
+          additionalProperties: false
+          properties:
+            eq:
+              description: Value strictly equals given RFC-3339 formatted timestamp in UTC
+              type: string
+              format: date-time
+              example: '2022-03-30T07:20:50Z'
+          required:
+            - eq
+        - type: object
+          title: DateTimeFieldLTFilter
+          additionalProperties: false
+          properties:
+            lt:
+              description: Value is less than the given RFC-3339 formatted timestamp in UTC
+              type: string
+              format: date-time
+              example: '2022-03-30T07:20:50Z'
+          required:
+            - lt
+        - type: object
+          title: DateTimeFieldLTEFilter
+          additionalProperties: false
+          properties:
+            lte:
+              description: Value is less than or equal to the given RFC-3339 formatted timestamp in UTC
+              type: string
+              format: date-time
+              example: '2022-03-30T07:20:50Z'
+          required:
+            - lte
+        - type: object
+          title: DateTimeFieldGTFilter
+          additionalProperties: false
+          properties:
+            gt:
+              description: Value is greater than the given RFC-3339 formatted timestamp in UTC
+              type: string
+              format: date-time
+              example: '2022-03-30T07:20:50Z'
+          required:
+            - gt
+        - type: object
+          title: DateTimeFieldGTEFilter
+          additionalProperties: false
+          properties:
+            gte:
+              description: Value is greater than or equal to the given RFC-3339 formatted timestamp in UTC
+              type: string
+              format: date-time
+              example: '2022-03-30T07:20:50Z'
+          required:
+            - gte
+      title: DateTimeFieldFilter
+      x-examples:
+        datetime_field_1: '2022-03-30T07:20:50Z'
+        datetime_field_2:
+          eq: '2022-03-30T07:20:50Z'
+        datetime_field_3:
+          lt: '2022-03-30T07:20:50Z'
+        datetime_field_4:
+          lte: '2022-03-30T07:20:50Z'
+        datetime_field_5:
+          gt: '2022-03-30T07:20:50Z'
+        datetime_field_6:
+          gte: '2022-03-30T07:20:50Z'
+    SortQuery:
+      description: |
+        The `asc` suffix is optional as the default sort order is ascending.
+        The `desc` suffix is used to specify a descending order.
+        Multiple sort attributes may be provided via a comma separated list.
+        JSONPath notation may be used to specify a sub-attribute (eg: 'foo.bar desc').
+      type: string
+      example: created_at desc
+      title: SortQuery
+    Labels:
+      description: |
+        Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
+
+        Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_".
+      type: object
+      example:
+        env: test
+      additionalProperties:
+        type: string
+        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+        minLength: 1
+        maxLength: 63
+      maxProperties: 50
+      title: Labels
+    ManagedBy:
+      description: |
+        Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).
+
+        Keys must be 1–63 characters long and start with an alphanumeric character.
+      type: object
+      example:
+        owner: terraform
+      additionalProperties:
+        type: string
+        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+        minLength: 1
+        maxLength: 63
+      maxProperties: 5
+      title: ManagedBy
+    CreatedAt:
+      description: An ISO-8601 timestamp representation of entity creation date.
+      type: string
+      format: date-time
+      example: '2022-11-04T20:10:06.927Z'
+      readOnly: true
+    UpdatedAt:
+      description: An ISO-8601 timestamp representation of entity update date.
+      type: string
+      format: date-time
+      example: '2022-11-04T20:10:06.927Z'
+      readOnly: true
+    PageMeta:
+      description: Contains pagination query parameters and the total number of objects returned.
+      type: object
+      properties:
+        number:
+          type: number
+          example: 1
+        size:
+          type: number
+          example: 10
+        total:
+          type: number
+          example: 100
+      required:
+        - number
+        - size
+        - total
+    PaginatedMeta:
+      description: returns the pagination information
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/PageMeta'
+      required:
+        - page
+      title: PaginatedMeta
+    BaseError:
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
+    InvalidRules:
+      description: invalid parameters rules
+      type: string
+      enum:
+        - required
+        - is_array
+        - is_base64
+        - is_boolean
+        - is_date_time
+        - is_integer
+        - is_null
+        - is_number
+        - is_object
+        - is_string
+        - is_uuid
+        - is_fqdn
+        - is_arn
+        - unknown_property
+        - missing_reference
+        - is_label
+        - matches_regex
+        - invalid
+        - is_supported_network_availability_zone_list
+        - is_supported_network_cidr_block
+        - is_supported_provider_region
+        - type
+      nullable: true
+      readOnly: true
+    InvalidParameterStandard:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          $ref: '#/components/schemas/InvalidRules'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: is a required field
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+    InvalidParameterMinimumLength:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - min_length
+            - min_digits
+            - min_lowercase
+            - min_uppercase
+            - min_symbols
+            - min_items
+            - min
+          nullable: false
+          readOnly: true
+        minimum:
+          type: integer
+          example: 8
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: must have at least 8 characters
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - minimum
+    InvalidParameterMaximumLength:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - max_length
+            - max_items
+            - max
+          nullable: false
+          readOnly: true
+        maximum:
+          type: integer
+          example: 8
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: must not have more than 8 characters
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - maximum
+    InvalidParameterChoiceItem:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - enum
+          nullable: false
+          readOnly: true
+        reason:
+          type: string
+          example: is a required field
+          readOnly: true
+        choices:
+          type: array
+          items: {}
+          minItems: 1
+          nullable: false
+          readOnly: true
+          uniqueItems: true
+        source:
+          type: string
+          example: body
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - choices
+    InvalidParameterDependentItem:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - dependent_fields
+          nullable: true
+          readOnly: true
+        reason:
+          type: string
+          example: is a required field
+          readOnly: true
+        dependents:
+          type: array
+          items: {}
+          nullable: true
+          readOnly: true
+          uniqueItems: true
+        source:
+          type: string
+          example: body
+      additionalProperties: false
+      required:
+        - field
+        - rule
+        - reason
+        - dependents
+    InvalidParameters:
+      description: invalid parameters
+      type: array
+      items:
+        oneOf:
+          - $ref: '#/components/schemas/InvalidParameterStandard'
+          - $ref: '#/components/schemas/InvalidParameterMinimumLength'
+          - $ref: '#/components/schemas/InvalidParameterMaximumLength'
+          - $ref: '#/components/schemas/InvalidParameterChoiceItem'
+          - $ref: '#/components/schemas/InvalidParameterDependentItem'
+      minItems: 1
+      nullable: false
+      uniqueItems: true
+    BadRequestError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          required:
+            - invalid_parameters
+          properties:
+            invalid_parameters:
+              $ref: '#/components/schemas/InvalidParameters'
+    UnauthorizedError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 401
+            title:
+              example: Unauthorized
+            type:
+              example: 'https://httpstatuses.com/401'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Invalid credentials
+    ForbiddenError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 403
+            title:
+              example: Forbidden
+            type:
+              example: 'https://httpstatuses.com/403'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Forbidden
+    ConflictError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 409
+            title:
+              example: Conflict
+            type:
+              example: 'https://httpstatuses.com/409'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Conflict
+    NotFoundError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 404
+            title:
+              example: Not Found
+            type:
+              example: 'https://httpstatuses.com/404'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Not found
+    LabelsUpdate:
+      description: |
+        Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
+
+        Labels are intended to store **INTERNAL** metadata.
+
+        Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_".
+      type: object
+      example:
+        env: test
+      additionalProperties:
+        type: string
+        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+        minLength: 1
+        maxLength: 63
+        nullable: true
+      maxProperties: 50
+      nullable: true
+      writeOnly: true
+  examples:
+    UnauthorizedExample:
+      value:
+        status: 401
+        title: Unauthorized
+        instance: 'kong:trace:8347343766220159418'
+        detail: Unauthorized
+    ForbiddenExample:
+      value:
+        status: 403
+        title: Forbidden
+        instance: 'kong:trace:2723154947768991354'
+        detail: You do not have permission to perform this action
+    NotFoundExample:
+      value:
+        status: 404
+        title: Not Found
+        instance: 'kong:trace:6816496025408232265'
+        detail: Not Found
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/BadRequestError'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/UnauthorizedExample'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ForbiddenError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/ForbiddenExample'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ConflictError'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/NotFoundError'
+          examples:
+            NotFoundExample:
+              $ref: '#/components/examples/NotFoundExample'
+  securitySchemes:
+    konnectAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        The Konnect access token is meant to be used by the Konnect dashboard and the decK CLI authenticate with.
+    personalAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
+      description: |
+        The personal access token is meant to be used as an alternative to basic-auth when accessing Konnect via APIs.
+        You can generate a Personal Access Token (PAT) from the [personal access token page](https://cloud.konghq.com/global/account/tokens/) in the Konnect dashboard.
+        The PAT token must be passed in the header of a request, for example:
+        `curl -X GET 'https://global.api.konghq.com/v2/users/' --header 'Authorization: Bearer kpat_xgfT...'`
+    systemAccountAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
+      description: |
+        The system account access token is meant for automations and integrations that are not directly associated with a human identity.
+        You can generate a system account Access Token by creating a system account and then obtaining a system account access token for that account.
+        The access token must be passed in the header of a request, for example:
+        `curl -X GET 'https://global.api.konghq.com/v2/users/' --header 'Authorization: Bearer spat_i2Ej...'`
+tags:
+  - name: Catalog AI Models
+    description: Manage AI Models - a catalogable proxy for AI Gateway models
+  - name: Catalog AI Model Versions
+    description: Manage an AI Model's version.
+  - name: Catalog AI Model Specs
+    description: Manage an AI Model version's oas specification.
+  - name: Catalog AI Model Implementations
+    description: Link an AI Model to an AI Gateway model.
+security:
+  - konnectAccessToken: []
+  - personalAccessToken: []
+  - systemAccountAccessToken: []
