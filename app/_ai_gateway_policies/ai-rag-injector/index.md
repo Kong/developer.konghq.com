@@ -73,9 +73,9 @@ faqs:
 
 ## What is Retrieval Augmented Generation (RAG)?
 
-Retrieval-Augmented Generation (RAG) is a technique that improves the accuracy and relevance of language model responses by enriching prompts with external data at runtime. Instead of relying solely on what the model was trained on, RAG retrieves contextually relevant information such as documents, support articles, or internal knowledge from connected data sources like vector databases.
+Retrieval-Augmented Generation (RAG) is a technique that improves the accuracy and relevance of language model responses by enriching prompts with external data at runtime. Instead of relying solely on what the model was trained on, RAG retrieves contextually relevant information such as documents, support articles, or internal knowledge from connected data sources. These sources are usually indexed in a vector database.  
 
-This retrieved context is then automatically injected into the prompt before the model generates a response. RAG is a critical safeguard in specialized or high-stakes applications, where factual accuracy matters. LLMs are prone to hallucinations, plausible-sounding but factually incorrect or fabricated responses. RAG helps mitigate this by grounding the model’s output in real, verifiable data.
+The RAG pipeline then automatically injects the retrieved context into the prompt before the model generates a response. RAG is a critical safeguard in specialized or high-stakes applications, where factual accuracy matters. LLMs are prone to hallucinations, plausible-sounding but factually incorrect or fabricated responses. RAG helps mitigate this by grounding the model’s output in real, verifiable data.
 
 The following table describes the different use cases for RAG based on industry:
 
@@ -116,7 +116,7 @@ When a user sends a prompt, the AI RAG Injector Policy queries a configured vect
 
 1. You attach the AI RAG Injector Policy to an [AI Model](/ai-gateway/entities/ai-model/) via the Konnect API, configuring vector database connection and embedding settings.
 1. When a request reaches the {{site.ai_gateway}}, the AI Policy generates embeddings for request prompts, then queries the vector database for the top-k most similar embeddings.
-1. The AI Policy injects the retrieved content from the vector search result into the request body, and forwards the request to the upstream service.
+1. The AI Policy injects the retrieved content from the vector search result into the request body, and forwards the request to the AI Model Provider.
 
 The following diagram is a simplified overview of how the AI Policy works.  See the [following section](#rag-generation-process) for a more detailed description.
 
@@ -126,13 +126,13 @@ sequenceDiagram
     participant User
     participant AIGateway as AI Gateway (AI RAG Injector Policy)
     participant VectorDB as Vector DB (Knowledge store)
-    participant Upstream as Upstream Service
+    participant LLM as Upstream LLM
 
     User->>AIGateway: Send request with prompt
     AIGateway->>VectorDB: Query for similar embeddings
     VectorDB-->>AIGateway: Return relevant context
-    AIGateway->>Upstream: Inject context and forward enriched request
-    Upstream-->>User: Return response
+    AIGateway->>LLM: Inject context and forward enriched request
+    LLM-->>User: Return response
 {% endmermaid %}
 <!-- vale on -->
 
@@ -165,7 +165,7 @@ This phase runs in real time, taking user input and producing a context-aware re
 1. The system builds a custom prompt by combining the retrieved chunks with the original query.
 1. The LLM generates a contextually accurate response using both the retrieved context and its own internal knowledge.
 
-The diagram below shows how data flows through both phases of the RAG pipeline, from ingestion and embedding to real-time query handling and response generation:
+The following diagram shows how data flows through both phases of the RAG pipeline, from ingestion and embedding to real-time query handling and response generation:
 
 <!-- vale off -->
 {% mermaid %}
@@ -287,13 +287,8 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-This configuration creates the following access rules:
-- `finance-reports`: Accessible only to AI Consumers in the `finance` or `admin` groups. Contractors are explicitly denied.
-- `public-docs`: Accessible to all AI Consumers (empty allow and deny lists).
-- Other collections: No access (empty global ACL means deny by default).
-
 {:.info}
-> This example assumes you have already created [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) (`finance`, `admin`, `contractor`) and configured the [Key Authentication Policy](/ai-gateway/policies/key-auth) for your AI Consumers.
+> This example assumes you have already created [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) (`finance`, `admin`, `contractor`) and configured the [Key Authentication Strategy](/ai-gateway/entities/ai-auth-strategy/#api-key-authentication) for your AI Consumers.
 
 ### Environment variables
 
@@ -347,7 +342,10 @@ formats:
   - konnect-api
 {% endentity_example %}
 
-In this configuration, collections with their own ACL in `collection_acl_config` ignore `global_acl_config` entirely. They must explicitly list all allowed subjects.
+This configuration creates the following access rules:
+- `finance-reports`: Accessible only to AI Consumers in the `finance` or `admin` groups. Contractors are explicitly denied.
+- `public-docs`: Accessible to all AI Consumers (empty allow and deny lists).
+- Other collections: No access (empty global ACL means deny by default).
 
 ### ACL evaluation
 
