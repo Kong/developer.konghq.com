@@ -6,6 +6,22 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+description: 'Compress prompts with LLMLingua 2 before they reach the upstream LLM to stay within context limits, cut token costs, and reduce latency.'
+categories:
+  - ai
+tags:
+  - ai
+  - performance
+
+related_resources:
+  - text: AI RAG Injector Policy
+    url: /ai-gateway/policies/ai-rag-injector/
+  - text: AI Policy entity
+    url: /ai-gateway/entities/ai-policy/
+  - text: Model cost management
+    url: /ai-gateway/model-cost-management/
+  - text: Forward proxy support
+    url: /ai-gateway/forward-proxy/
 ---
 
 The AI Prompt Compressor Policy compresses retrieved chunks before sending them to a Large Language Model (LLM), reducing text length while preserving meaning. It uses the [LLMLingua 2 library](https://github.com/microsoft/LLMLingua) for fast, high-quality compression. The AI Prompt Compressor Policy supports:
@@ -16,9 +32,9 @@ The AI Prompt Compressor Policy compresses retrieved chunks before sending them 
 
 ## Why use prompt compression
 
-Efficient prompt compression helps you manage token limits, cut costs, and speed up LLM requests — all while keeping sensitive data safe and your prompts focused.
+Efficient prompt compression helps you manage token limits, cut costs, and speed up LLM requests, all while keeping sensitive data safe and your prompts focused.
 
-The table below outlines common use cases for the AI Prompt Compressor Policy and the configuration options available to tailor its behavior.
+The following table outlines common use cases for the AI Prompt Compressor Policy and the configuration options available to tailor its behavior.
 
 <!-- vale off -->
 {% table %}
@@ -125,12 +141,12 @@ rows:
 1. The AI Prompt Compressor Policy checks the prompt for `<LLMLINGUA>`...`</LLMLINGUA>` tags.
     - If tags are found, only the tagged sections are sent to LLMLingua 2 for compression.
     - If no tags are found, the entire prompt is sent to LLMLingua 2 for compression.
-1. Compression is applied based on configured rules—by ratio, target token count, or conditional length-based rules.
+1. LLMLingua 2 applies the compression using the rule that matches the prompt's configuration you set with the policy: by ratio, target token count, or conditional length-based rules.
 1. The compressed prompt is returned to the AI Prompt Compressor Policy.
 1. The AI Prompt Compressor Policy sends the compressed prompt to the Large Language Model (LLM).
 1. The LLM processes the prompt and returns the response to the user.
 
-The diagram below illustrates how the AI Prompt Compressor Policy processes and compresses incoming prompts based on tagging and configured rules.
+The following diagram illustrates how the AI Prompt Compressor Policy processes and compresses incoming prompts based on tagging and configured rules.
 
 <!-- vale off -->
 {% mermaid %}
