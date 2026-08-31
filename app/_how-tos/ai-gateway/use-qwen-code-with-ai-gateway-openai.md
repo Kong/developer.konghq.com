@@ -6,6 +6,12 @@ content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
+  - text: OpenAI provider
+    url: /ai-gateway/ai-providers/openai/
+  - text: AI Model Provider
+    url: /ai-gateway/entities/ai-model-provider/
+  - text: AI Model
+    url: /ai-gateway/entities/ai-model/
 
 description: Configure {{site.ai_gateway}} to proxy Qwen Code CLI traffic to an OpenAI model
 
