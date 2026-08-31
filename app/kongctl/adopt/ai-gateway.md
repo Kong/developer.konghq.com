@@ -17,7 +17,7 @@ breadcrumbs:
 related_resources:
   - text: kongctl adopt commands
     url: /kongctl/adopt/
-  - text: Manage an AI Gateway with kongctl
+  - text: Manage {{site.ai_gateway}} with kongctl
     url: /kongctl/manage-ai-gateway/
   - text: Declarative configuration with kongctl
     url: /kongctl/declarative/

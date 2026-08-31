@@ -29,10 +29,11 @@ tags:
   - openai
 
 tldr:
-  q: How do I manage an AI Gateway with kongctl?
+  q: How do I manage {{site.ai_gateway}} with kongctl?
   a: |
-    Declare the AI Gateway, Model Provider, Model, and data-plane certificate
-    in YAML, apply the configuration with kongctl, and connect a data plane.
+    Declare {{site.ai_gateway}}, a Model Provider, a Model, and a data-plane
+    certificate in YAML, apply the configuration with kongctl, and connect a
+    data plane.
 
 automated_tests: false
 
@@ -52,16 +53,16 @@ prereqs:
       icon_url: /assets/icons/ai.svg
 
 related_resources:
-  - text: Use kongctl to manage {{site.ai_gateway}}
-    url: /ai-gateway/kongctl/
+  - text: Learn about {{site.ai_gateway}}
+    url: /ai-gateway/
   - text: Declarative configuration with kongctl
     url: /kongctl/declarative/
   - text: kongctl declarative resource reference
     url: /kongctl/supported-resources/#ai-gateway
 
 next_steps:
-  - text: Manage additional AI Gateway resources
-    url: /ai-gateway/kongctl/
+  - text: Explore {{site.ai_gateway}}
+    url: /ai-gateway/
   - text: Learn about kongctl sync
     url: /kongctl/sync/
 ---

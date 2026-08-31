@@ -654,7 +654,7 @@ kongctl dump declarative \
 For the complete resource model, see
 [kongctl declarative resource reference](/kongctl/supported-resources/#ai-gateway).
 For the product workflow, see
-[Use kongctl to manage {{site.ai_gateway}}](/ai-gateway/kongctl/).
+[Manage {{site.ai_gateway}} with kongctl](/kongctl/manage-ai-gateway/).
 
 ## Configuration templates
 

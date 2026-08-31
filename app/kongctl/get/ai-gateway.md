@@ -17,7 +17,7 @@ breadcrumbs:
 related_resources:
   - text: kongctl get commands
     url: /kongctl/get/
-  - text: Manage an AI Gateway with kongctl
+  - text: Manage {{site.ai_gateway}} with kongctl
     url: /kongctl/manage-ai-gateway/
   - text: kongctl declarative resource reference
     url: /kongctl/supported-resources/#ai-gateway
