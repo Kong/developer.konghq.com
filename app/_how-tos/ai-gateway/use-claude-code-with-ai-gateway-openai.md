@@ -8,6 +8,12 @@ related_resources:
     url: /ai-gateway/
   - text: Route Claude CLI traffic through {{site.ai_gateway}} and Anthropic
     url: /ai-gateway/use-claude-code-with-ai-gateway-anthropic/
+  - text: OpenAI provider
+    url: /ai-gateway/ai-providers/openai/
+  - text: AI Model Provider
+    url: /ai-gateway/entities/ai-model-provider/
+  - text: AI Model
+    url: /ai-gateway/entities/ai-model/
 
 description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic to an OpenAI model
 
