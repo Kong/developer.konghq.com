@@ -136,7 +136,7 @@ rows:
                     - solution: |
                         [AI Models](/catalog/ai-models/), browsable with their providers and target models visible
                 - usecase: |
-                    You need to see which AI Models are actually connected to a real {{site.ai_gateway}} 2.0 deployment, versus just defined on paper
+                    You need to see which AI Models are actually connected to a real [{{site.ai_gateway}} 2.0](/ai-gateway/) deployment, versus just defined on paper
                   outcomes:
                     - solution: |
                         Filter AI Models by whether they're linked to {{site.ai_gateway}} 2.0
@@ -149,7 +149,8 @@ rows:
                     Your teams are building agents across different frameworks, with no shared place to see what already exists and whether it's safe to reuse
                   outcomes:
                     - solution: |
-                        [Agents](/catalog/agents/), inventoried alongside APIs, AI Models, and MCP Registries, with an optional link to {{site.ai_gateway}} 2.0 AI Agent entities
+                        [Agents](/catalog/agents/), inventoried alongside APIs, AI Models, and MCP Registries 
+                        {% comment %} with an optional link to {{site.ai_gateway}} 2.0 AI Agent entities {% endcomment %}
                 - usecase: |
                     A partner or internal team needs access to a specific slice of your APIs, not everything, without creating separate infrastructure for it
                   outcomes:

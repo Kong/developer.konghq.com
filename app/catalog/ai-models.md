@@ -30,7 +30,7 @@ An AI Model is an interface in {{site.konnect_catalog}} that represents the prov
 
 You can create an AI Model in two ways:
 * Add it manually by defining its providers and target models yourself.
-* Import it from [{{site.ai_gateway}} 2.0](/ai-gateway/), by linking an existing {{site.ai_gateway}} 2.0 AI Model as the source. This allows teams to discover, understand, and use it securely.
+* Import it from [{{site.ai_gateway}} 2.0](/ai-gateway/), by linking an existing {{site.ai_gateway}} 2.0 [AI Model](/ai-gateway/entities/ai-model/) as the source. This allows teams to discover, understand, and use it securely.
 
 When an AI Model is linked to {{site.ai_gateway}} 2.0, traffic to that AI Model is protected by {{site.ai_gateway}}.
 The link is a snapshot, not a live sync.
