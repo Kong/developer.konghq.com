@@ -70,9 +70,6 @@ ai_gateway_model_providers:
           value: !secret {source: !env GEMINI_API_KEY}
 {% endentity_examples %}
 
-{:.info}
-> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
-
 The AI Model Provider uses the following settings:
 
 * `type: gemini`: Specifies that this provider connects to the Gemini service using Gemini's standard API format.
@@ -125,39 +122,6 @@ The AI Policy uses the following settings:
 Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use:
 
 {% entity_examples %}
-ai_gateway_model_providers:
-  - ref: my-gemini-account
-    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
-    name: my-gemini-account
-    display_name: "my-gemini-account"
-    type: gemini
-    config:
-      auth:
-        type: basic
-        headers:
-        - name: x-goog-api-key
-          value: !secret {source: !env GEMINI_API_KEY}
-ai_gateway_policies:
-  - ref: strip-claude-beta-info
-    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
-    name: strip-claude-beta-info
-    display_name: "strip-claude-beta-info"
-    type: request-transformer-advanced
-    config:
-      remove:
-        headers:
-          - anthropic-beta
-          - authorization
-          - x-api-key
-        querystring:
-          - beta
-        body:
-          - output_config
-          - context_management
-          - mcp_servers
-          - container
-          - service_tier
-          - reasoning_effort
 ai_gateway_models:
   - ref: my-claude-gemini
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
