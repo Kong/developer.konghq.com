@@ -51,9 +51,13 @@ tldr:
 
 ---
 
-## Create an AI Model Provider entity
+## Create an AI Model Provider, and AI Model, and an AI Policy
 
-Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection and store your authentication credentials:
+Create an AI Model Provider, and AI Model, and an AI Policy with all of your configuration
+
+* The [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity defines your connection and stores your authentication credentials.
+* The [AI Request Transformer Policy](/ai-gateway/policies/ai-request-transformer/) removes extra fields that Gemini's API does not support. 
+* The [AI Model](/ai-gateway/entities/ai-model/) entity declares which upstream models are available, configures how client requests are routed, and specifies which AI Model Provider to use.
 
 {% entity_examples %}
 ai_gateway_model_providers:
@@ -68,19 +72,6 @@ ai_gateway_model_providers:
         headers:
         - name: x-goog-api-key
           value: !secret {source: !env GEMINI_API_KEY}
-{% endentity_examples %}
-
-The AI Model Provider uses the following settings:
-
-* `type: gemini`: Specifies that this provider connects to the Gemini service using Gemini's standard API format.
-* `name: my-gemini-account`: A unique identifier that AI Models will reference to route requests through this provider.
-* `config.auth`: Stores your Gemini API key. `value: !secret {source: !env GEMINI_API_KEY}` loads the value from your environment at apply time instead of embedding it in the YAML, and `kongctl` redacts it in plan and diff output. {{site.ai_gateway}} securely manages this credential and injects it into upstream requests automatically, eliminating the need for clients to pass API keys.
-
-## Create an AI Policy entity
-
-Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using the [AI Request Transformer Policy](/ai-gateway/policies/ai-request-transformer/) to remove extra fields that Gemini's API does not support.
-
-{% entity_examples %}
 ai_gateway_policies:
   - ref: strip-claude-beta-info
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
@@ -102,26 +93,6 @@ ai_gateway_policies:
           - container
           - service_tier
           - reasoning_effort
-{% endentity_examples %}
-
-{:.info}
-> {{ site.claude_code }} beta features vary by version and may add other incompatible fields over time. If you still see an error mentioning an unexpected field after applying this Policy, add that field to the appropriate `remove` list and re-apply.
-
-The AI Policy uses the following settings:
-
-* `type: request-transformer-advanced`: Modifies requests before {{site.ai_gateway}} forwards them upstream.
-*  `config.remove.headers`: Removes the `anthropic-beta`, `authorization`, and `x-api-key` headers.
-*  `config.remove.querystring`: Removes the `beta` query string parameter.
-*  `config.remove.body`: Removes the `output_config`, `context_management`, `mcp_servers`, `container`, `service_tier`, and `reasoning_effort` body fields.
-
-{:.info}
-> Don't strip `model`: {{site.ai_gateway}} uses that field to select the target, and removing it breaks routing.
-
-## Create an AI Model entity
-
-Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use:
-
-{% entity_examples %}
 ai_gateway_models:
   - ref: my-claude-gemini
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
@@ -148,6 +119,23 @@ ai_gateway_models:
     capabilities:
       - generate
 {% endentity_examples %}
+
+The AI Model Provider uses the following settings:
+
+* `type: gemini`: Specifies that this provider connects to the Gemini service using Gemini's standard API format.
+* `name: my-gemini-account`: A unique identifier that AI Models will reference to route requests through this provider.
+* `config.auth`: Stores your Gemini API key. `value: !secret {source: !env GEMINI_API_KEY}` loads the value from your environment at apply time instead of embedding it in the YAML, and `kongctl` redacts it in plan and diff output. {{site.ai_gateway}} securely manages this credential and injects it into upstream requests automatically, eliminating the need for clients to pass API keys.
+
+The AI Policy uses the following settings:
+
+* `type: request-transformer-advanced`: Modifies requests before {{site.ai_gateway}} forwards them upstream.
+*  `config.remove.headers`: Removes the `anthropic-beta`, `authorization`, and `x-api-key` headers.
+*  `config.remove.querystring`: Removes the `beta` query string parameter.
+*  `config.remove.body`: Removes the `output_config`, `context_management`, `mcp_servers`, `container`, `service_tier`, and `reasoning_effort` body fields.
+
+{:.info}
+> * Don't strip `model`: {{site.ai_gateway}} uses that field to select the target, and removing it breaks routing.
+> * {{ site.claude_code }} beta features vary by version and may add other incompatible fields over time. If you still see an error mentioning an unexpected field after applying this Policy, add that field to the appropriate `remove` list and re-apply.
 
 The AI Model uses the following settings:
 
