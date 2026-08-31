@@ -66,7 +66,7 @@ After a service change reaches `main`, the repository runs:
 
 ```sh
 kongctl apply -f konnect/dev.yaml --base-dir . \
-  --require-namespace <service>-dev
+  --require-namespace <service>
 ```
 
 The manifest uses `_external` and `!lookup` to resolve the Platform Team-owned
