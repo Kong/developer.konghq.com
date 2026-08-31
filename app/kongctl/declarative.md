@@ -27,10 +27,10 @@ related_resources:
   - text: Troubleshooting kongctl
     url: /kongctl/troubleshooting/
   - text: Examples directory
-    url: https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative/
+    url: https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/
 next_steps:
   - text: Example declarative configurations
-    url: https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative
+    url: https://github.com/Kong/kongctl/tree/main/docs/examples/declarative
   - text: Use kongctl with AI agent skills
     url: /kongctl/skills/
   - text: Learn about supported resources
@@ -874,7 +874,7 @@ api_documents:
 reading the requested field path.
 
 A runnable example is available in
-[docs/examples/declarative/env/](https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative/env/).
+[docs/examples/declarative/env/](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/env/).
 
 #### !env behavior
 

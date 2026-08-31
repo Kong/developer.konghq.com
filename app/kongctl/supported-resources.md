@@ -24,7 +24,7 @@ related_resources:
     url: /kongctl/declarative/
 next_steps:
   - text: Example declarative configurations
-    url: https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative
+    url: https://github.com/Kong/kongctl/tree/main/docs/examples/declarative
   - text: Learn about managing declarative configuration with kongctl
     url: /kongctl/declarative/
   - text: Learn about kongctl authorization options
@@ -154,7 +154,7 @@ Declarative config supports them as external references so managed portal audit 
 
 * [Reference for listening to audit logs with kongctl](/kongctl/audit-logs/)
 * [API specification](/api/konnect/audit-logs/)
-* [Examples](https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative/audit-logs)
+* [Examples](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/audit-logs)
 
 ```yaml
 audit-logs:
@@ -174,7 +174,7 @@ Audit log webhook destinations **cannot** declare kongctl metadata and are not c
 ## APIs
 
 * [API specification](/api/konnect/api-builder/#/operations/create-api)
-* [Example](https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative/basic/api.yaml)
+* [Example](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/basic/api.yaml)
 
 ```yaml
 apis:
@@ -240,7 +240,7 @@ the selected payload.
 ## Application auth strategies
 
 * [API specification](/api/konnect/application-auth-strategies/#/operations/create-app-auth-strategy)
-* [Example](https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative/portal/auth-strategies.yaml)
+* [Example](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/portal/auth-strategies.yaml)
 
 ```yaml
 application_auth_strategies:
@@ -267,7 +267,7 @@ application_auth_strategies:
 ## DCR providers
 
 * [API specification](/api/konnect/application-auth-strategies/#/operations/create-dcr-provider)
-* [Examples](https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative/dcr-providers)
+* [Examples](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/dcr-providers)
 
 ```yaml
 dcr_providers:
@@ -284,7 +284,7 @@ dcr_providers:
 ## Catalog services
 
 * [API specification](/api/konnect/service-catalog/v1/#/operations/create-catalog-service)
-* [Examples](https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative/catalog/service.yaml)
+* [Examples](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/catalog/service.yaml)
 
 ```yaml
 catalog_services:
@@ -318,7 +318,7 @@ The field accepts that API-shaped object either inline or loaded from a JSON/YAM
 
 * [Custom dashboards](/custom-dashboards/)
 * [API specification](/api/konnect/analytics-dashboards/)
-* [Examples](https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative/analytics/dashboards/dashboard.yaml)
+* [Examples](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/analytics/dashboards/dashboard.yaml)
 
 ```yaml
 analytics:
@@ -348,7 +348,7 @@ analytics:
 For {{site.event_gateway_short}} control planes, see [{{site.event_gateway_short}}s](#event-gateways).
 
 * [API specification](/api/konnect/control-planes/#/operations/create-control-plane)
-* [Examples](https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative/control-plane/control-plane.yaml)
+* [Examples](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/control-plane/control-plane.yaml)
 
 ```yaml
 control_planes:
@@ -410,7 +410,7 @@ the authoritative schema for nested {{site.event_gateway_short}} resources and
 fields, and use `kongctl scaffold event_gateway` to generate starter YAML.
 
 * [API specification](/api/konnect/event-gateway/v1/#/operations/create-event-gateway)
-* [Examples](https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative/event-gateway)
+* [Examples](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/event-gateway)
 
 ```yaml
 event_gateways:
@@ -646,7 +646,7 @@ event_gateways:
 ## Organization
 
 * [API specification](/api/konnect/identity/v3/#/)
-* [Examples](https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative/organization/)
+* [Examples](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/organization/)
 
 ```yaml
 organization:
@@ -683,7 +683,7 @@ organization_team_roles:
 ## Portals
 
 * [API specification](/api/konnect/portal-management/v3/#/operations/create-portal)
-* [Examples](https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative/portal/portal.yaml)
+* [Examples](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/portal/portal.yaml)
 
 ```yaml
 portals:
@@ -933,7 +933,13 @@ audit-logs:
 ## {{site.ai_gateway}}
 
 This section covers the {{site.ai_gateway}} resources supported by kongctl.
-Use `kongctl explain ai_gateways --output yaml` as the authoritative schema for nested {{site.ai_gateway}} resources and fields, and use `kongctl scaffold ai_gateways` to generate starter YAML.
+Use `kongctl explain ai_gateway --output yaml` as the authoritative schema for
+nested {{site.ai_gateway}} resources and fields, and use
+`kongctl scaffold ai_gateway` to generate starter YAML.
+
+{{site.ai_gateway}} nodes are imperative, read-only resources. Inspect them
+with `kongctl get ai-gateway nodes`; don't include them in declarative
+configuration.
 
 * [{{site.ai_gateway}} entities reference](/ai-gateway/entities/)
 * [Using kongctl to manage {{site.ai_gateway}}](/ai-gateway/kongctl/)
@@ -949,6 +955,7 @@ ai_gateways:
     name: string required
     display_name: string required
     description: string (nullable)
+    deployment_type: One of (hybrid | managed | serverless) (default: hybrid)
     proxy_urls: array[object]
       - host: string required
         port: integer required
@@ -956,13 +963,14 @@ ai_gateways:
     labels: object [string]string
       key: value
     model_providers: # see AI Model Providers
-    identity_providers: # see AI Identity Providers
+    auth_strategies: # see AI Auth Strategies
     policies: # see AI Policies
     agents: # see AI Agents
     consumers: # see AI Consumers
     consumer_groups: # see AI Consumer Groups
     models: # see AI Models
     mcp_servers: # see AI MCP Servers
+    config_stores: # see AI Config Stores
     vaults: # see AI Vaults
     data_plane_certificates:
       - ref: string
@@ -1095,7 +1103,7 @@ ai_gateway_models:
         oneOf:
           allow: array[string] # consumer group names
           deny: array[string]
-      identity_providers: array[string] # identity provider names
+      auth_strategies: array[string] # Auth Strategy names; prefer: !ref values
     capabilities: array[string] # for example [generate]
     policies: array[string] # policy names; prefer: !ref values
     labels: object [string]string
@@ -1164,7 +1172,7 @@ ai_gateway_consumers:
     ai_gateway: string required # prefer: !ref <ai-gateway-ref>
     name: string required
     display_name: string required
-    type: One of (api-key) required
+    type: One of (api-key | oauth) required
     custom_id: string (nullable)
     policies: array[string] # policy names; prefer: !ref values
     credentials:
@@ -1173,6 +1181,7 @@ ai_gateway_consumers:
         name: string required
         display_name: string required
         type: One of (api-key) required
+        api_key: string # create-only; must use !secret when provided
         ttl: integer
         labels: object [string]string
           key: value
@@ -1273,6 +1282,7 @@ ai_gateway_mcp_servers:
         oneOf:
           allow: array[string]
           deny: array[string]
+      auth_strategies: array[string] # Auth Strategy names; prefer: !ref values
     policies: array[string] # policy names
     labels: object [string]string
       key: value
@@ -1316,11 +1326,42 @@ ai_gateway_agents:
         oneOf:
           allow: array[string] # consumer group names
           deny: array[string]
+      auth_strategies: array[string] # Auth Strategy names; prefer: !ref values
     policies: array[string] # policy names; prefer: !ref values
     labels: object [string]string
       key: value
 ```
 {:.collapsible}
+
+### AI Config Stores
+
+AI Config Stores contain secrets that can be referenced by other
+{{site.ai_gateway}} resources. Config Store names are immutable after creation.
+
+```yaml
+ai_gateway_config_stores:
+  - ref: string
+    ai_gateway: string required # prefer: !ref <ai-gateway-ref>
+    name: string required
+    display_name: string required
+    secrets:
+      - ref: string
+        key: string required
+        value: string # write-only; must use !secret
+```
+
+Config Store Secrets can also be declared at the root with an
+`ai_gateway_config_store` parent. Secret values are never returned. Creating a
+secret requires `value`; rotating one also requires `--write-secret` or
+`--write-secrets`.
+
+```yaml
+ai_gateway_config_store_secrets:
+  - ref: string
+    ai_gateway_config_store: string required # prefer: !ref <config-store-ref>
+    key: string required
+    value: string # write-only; must use !secret
+```
 
 ### AI Vaults
 
@@ -1356,3 +1397,15 @@ ai_gateway_vaults:
     # config: # provider-specific; run `kongctl explain ai_gateway_vaults` for full detail
 ```
 {:.collapsible}
+
+Omit a child collection to leave it outside sync scope. Use an empty collection
+under an identified gateway, consumer, or Config Store to delete that parent's
+managed children. A root-level empty child collection is invalid because it
+doesn't identify its parent.
+
+Use `--resources ai_gateways --include-child-resources` to dump
+{{site.ai_gateway}}s and their children. Direct child dump selectors aren't
+supported.
+
+For examples, see the
+[{{site.ai_gateway}} declarative configurations](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/ai-gateway).

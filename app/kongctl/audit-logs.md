@@ -26,7 +26,7 @@ related_resources:
     url: /kongctl/declarative/
 next_steps:
   - text: Example declarative configurations
-    url: https://github.com/Kong/kongctl/tree/v1.14.0/docs/examples/declarative
+    url: https://github.com/Kong/kongctl/tree/main/docs/examples/declarative
   - text: Learn about managing declarative configuration with kongctl
     url: /kongctl/declarative/
   - text: Learn about kongctl authorization options
@@ -46,9 +46,8 @@ webhooks with kongctl.
 
 kongctl can:
 
-- Pull organization audit logs on demand.
-- Retrieve every cursor page in a result set.
-- Follow new organization audit logs until interrupted.
+- Retrieve organization audit logs on demand.
+- Tail new organization audit logs until interrupted.
 - Create a {{site.konnect_short_name}} audit-log destination.
 - Configure the regional {{site.konnect_short_name}} audit-log webhook.
 - Start a local HTTP listener to receive webhook events.
@@ -75,7 +74,6 @@ Supported forms ({{site.konnect_short_name}}-first):
 - `kongctl ps`
 
 Use `get audit-logs` to retrieve a finite set of organization audit logs.
-kongctl follows cursor pagination automatically.
 
 Use `tail audit-logs` to retrieve a five-minute catch-up window and then poll
 for new organization audit logs until interrupted. This command is equivalent
@@ -191,19 +189,6 @@ and server errors preserve the checkpoint and use exponential backoff capped
 at one minute. Non-retryable authentication, authorization, and client errors
 stop the command with a nonzero status.
 
-## Migrate webhook tail commands
-
-`tail audit-logs` now follows the organization pull API. Add the `listener`
-child to use the previous webhook-based behavior:
-
-```sh
-kongctl tail audit-logs listener \
-  --endpoint https://example.com/audit-logs \
-  --authorization "Bearer <token>"
-```
-
-`kongctl listen` and `kongctl listen audit-logs` are unchanged.
-
 ## End-to-end flow
 
 When you run `kongctl listen`:
@@ -252,7 +237,7 @@ No additional kongctl event envelope is added.
 
 ## Tailing and jq
 
-Use the webhook listener child to stream records to STDOUT:
+Use the webhook listener sub-command to stream records to STDOUT:
 
 ```shell
 kongctl tail audit-logs listener \
@@ -412,6 +397,4 @@ tail -n 200 ~/.config/kongctl/logs/kongctl-listener-${pid}.log
 - Event file retention and rotation are not implemented yet.
 - Replay jobs are not implemented yet.
 - `kongctl ps` currently manages tracked detached processes only.
-- Pull and follow cover organization audit logs. Dev Portal audit logs remain
-  webhook-based.
 - Audit-log retention is controlled by the service.
