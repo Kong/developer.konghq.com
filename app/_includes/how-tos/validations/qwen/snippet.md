@@ -16,7 +16,7 @@ export OPENAI_BASE_URL={{include.config.base_url}}
 {{include.config.base_command}}
 ```
 
-And ask a question to confirm that requests reach {{site.ai_gateway}}.
+And ask a question to confirm that requests reach {{site.ai_gateway}}:
 
 ```text
 {{ include.config.prompt }}
