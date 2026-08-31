@@ -2,8 +2,9 @@ class Banner {
   constructor(elem) {
     this.banner = elem;
     this.closeButton = this.banner.querySelector(".close-banner");
-    this.bannerDataId = this.closeButton.dataset.storageId;
-
+    if (this.closeButton) {
+      this.bannerDataId = this.closeButton.dataset.storageId;
+    }
     this.init();
     this.addEventListeners();
   }
@@ -16,7 +17,9 @@ class Banner {
   }
 
   addEventListeners() {
-    this.closeButton.addEventListener("click", this.onClose.bind(this));
+    if (this.closeButton) {
+      this.closeButton.addEventListener("click", this.onClose.bind(this));
+    }
   }
 
   onClose() {

@@ -1,0 +1,5 @@
+releases:
+  - release: "2.0"
+    latest: true
+  - release: "1.9"
+  - release: "1.8"

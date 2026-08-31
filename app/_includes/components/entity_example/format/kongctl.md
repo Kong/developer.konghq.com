@@ -15,11 +15,13 @@ The following creates a new TLS trust bundle called **{{ include.presenter.data[
 {% when 'event_gateway_policy' %}
 The following example creates a new `{{ include.presenter.data['type'] }}` policy.
 {% endcase %}
-Add this snippet to an `event_gateways` resource in your declarative configuration file, and then [manage it with kongctl](/kongctl/declarative/#declarative-commands):
+{% endif %}
+{% if include.render_context or include.presenter.product == 'ai-gateway' %}
+{% if include.presenter.product == 'event-gateway' %}{% assign product = 'event_gateways' %}{% elsif include.presenter.product == 'ai-gateway'%}{% assign product = 'ai_gateways' %}{% endif %}
 {% endif %}
 
 {% include components/entity_example/format/snippets/kongctl.md presenter=include.presenter %}
 
-{% if include.render_context %}
+{% if include.render_context or include.presenter.product == 'ai-gateway' %}
 {% include components/entity_example/replace_variables.md missing_variables=include.presenter.missing_variables %}
 {% endif %}

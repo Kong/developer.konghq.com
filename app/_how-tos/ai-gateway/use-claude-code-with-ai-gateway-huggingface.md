@@ -1,251 +1,191 @@
 ---
-title: Route Claude CLI traffic through {{site.ai_gateway}} and HuggingFace
-permalink: /how-to/use-claude-code-with-ai-gateway-huggingface/
+title: Route Claude CLI traffic through {{site.ai_gateway}} and Hugging Face
 content_type: how_to
+permalink: /ai-gateway/use-claude-code-with-ai-gateway-huggingface/
 
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: AI Proxy
-    url: /plugins/ai-proxy/
-  - text: Pre-function
-    url: /plugins/pre-function/
-  - text: File Log
-    url: /plugins/file-log/
+  - text: Hugging Face provider
+    url: /ai-gateway/ai-providers/huggingface/
+  - text: AI Model Provider
+    url: /ai-gateway/entities/ai-model-provider/
+  - text: AI Model
+    url: /ai-gateway/entities/ai-model/
 
-description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic using HuggingFace Inference API models
+description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic to a Hugging Face model
 
 products:
-  - gateway
   - ai-gateway
 
 works_on:
-  - on-prem
   - konnect
 
+tools:
+  - kongctl
+
+prereqs:
+  inline:
+    - title: Hugging Face
+      content: |
+        1. Create a [Hugging Face access token](https://huggingface.co/settings/tokens) with inference permissions.
+        1. Export the token as a bearer header value:
+
+           ```bash
+           export HUGGINGFACE_AUTH_HEADER='Bearer YOUR_HUGGINGFACE_TOKEN'
+           ```
+    - title: Claude Code CLI
+      icon_url: /assets/icons/third-party/claude.svg
+      include_content: prereqs/claude-code
+
 min_version:
-  gateway: '3.13'
-
-plugins:
-  - pre-function
-  - ai-proxy
-  - file-log
-
-entities:
-  - service
-  - route
-  - plugin
+  ai-gateway: '2.0'
 
 tags:
   - ai
   - huggingface
 
 tldr:
-  q: How do I run Claude CLI through {{site.ai_gateway}} with HuggingFace?
-  a: Install Claude CLI, configure a pre-function plugin to remove the model field from requests, attach the AI Proxy plugin to forward requests to HuggingFace, enable file-log to inspect traffic, and point Claude CLI to the local proxy endpoint so all LLM requests pass through the {{site.ai_gateway}} for monitoring and control.
+  q: How do I run Claude CLI through {{site.ai_gateway}} against a Hugging Face model?
+  a: Create an AI Provider entity to store your Hugging Face token, create an AI Policy that strips fields Claude CLI sends that Hugging Face's API rejects, create an AI Model entity with an Anthropic-compatible format that routes to Hugging Face through that provider, then point Claude CLI's `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all LLM requests pass through the gateway for monitoring and control.
 
-tools:
-  - deck
-
-prereqs:
-  inline:
-    - title: HuggingFace
-      icon_url: /assets/icons/huggingface.svg
-      content: |
-        You need an active HuggingFace account with API access. Sign up at [HuggingFace](https://huggingface.co/) and obtain your API token from the [Access Tokens page](https://huggingface.co/settings/tokens). Ensure you have access to the HuggingFace Inference API, and export your token to your environment:
-        ```sh
-        export DECK_HUGGINGFACE_API_TOKEN='YOUR HUGGINGFACE API TOKEN'
-        ```
-
-    - title: Claude Code CLI
-      icon_url: /assets/icons/third-party/claude.svg
-      include_content: prereqs/claude-code
-  entities:
-    services:
-      - example-service
-    routes:
-      - example-route
-
-cleanup:
-  inline:
-    - title: Clean up Konnect environment
-      include_content: cleanup/platform/konnect
-      icon_url: /assets/icons/gateway.svg
-    - title: Destroy the {{site.base_gateway}} container
-      include_content: cleanup/products/gateway
-      icon_url: /assets/icons/gateway.svg
-
-automated_tests: false
 ---
 
-## Configure the Pre-function plugin
+## Create an AI Model Provider, and AI Model, and an AI Policy
 
-{{ site.claude }} CLI automatically includes a `model` field in its request payload. However, when the AI Proxy plugin is configured with HuggingFace provider and specific model in its settings, this creates a conflict. The pre-function plugin removes the `model` field from incoming requests before they reach the AI Proxy plugin, ensuring the gateway uses the model you configured rather than the one {{ site.claude }} CLI sends.
+Create an AI Model Provider, and AI Model, and an AI Policy with all of your configuration
 
-{% entity_examples %}
-entities:
-  plugins:
-    - name: pre-function
-      config:
-        access:
-          - |
-            local body = kong.request.get_body("application/json", nil, 10485760)
-            if not body or body == "" then
-              return
-            end
-            body.model = nil
-            kong.service.request.set_body(body, "application/json")
-{% endentity_examples %}
+* The [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity defines your connection and stores your authentication credentials.
+* The [AI Request Transformer Policy](/ai-gateway/policies/ai-request-transformer/) removes extra fields that Hugging Face's API does not support. 
+* The [AI Model](/ai-gateway/entities/ai-model/) entity declares which upstream models are available, configures how client requests are routed, and specifies which AI Model Provider to use.
 
-## Configure the AI Proxy plugin
-
-Configure the AI Proxy plugin for the [HuggingFace provider](/ai-gateway/ai-providers/#huggingface). This setup uses the default `llm/v1/chat` route. {{ site.claude_code }} sends its requests to this route.
-
-The `llm_format: anthropic` parameter tells {{site.ai_gateway}} to expect request and response payloads that match {{ site.claude }}'s native API format. Without this setting, the gateway would default to OpenAI's format, which would cause request failures when {{ site.claude_code }} communicates with the HuggingFace endpoint.
+{:.info}
+> `formats: [type: anthropic]` accepts requests in Anthropic format even though the upstream is Hugging Face.
 
 {% entity_examples %}
-entities:
-  plugins:
-    - name: ai-proxy
-      config:
-        llm_format: anthropic
-        route_type: llm/v1/chat
-        logging:
-          log_statistics: true
-          log_payloads: false
-        auth:
-          header_name: Authorization
-          header_value: Bearer ${key}
+ai_gateway_model_providers:
+  - ref: my-huggingface-account
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: my-huggingface-account
+    display_name: "Hugging Face"
+    type: huggingface
+    config:
+      auth:
+        type: basic
+        headers:
+          - name: Authorization
+            value: !secret {source: !env HUGGINGFACE_AUTH_HEADER}
+ai_gateway_policies:
+  - ref: strip-claude-beta-info
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: strip-claude-beta-info
+    display_name: "Strip Claude beta info"
+    type: request-transformer-advanced
+    config:
+      remove:
+        headers:
+          - anthropic-beta
+        querystring:
+          - beta
+        body:
+          - output_config
+          - context_management
+          - mcp_servers
+          - container
+          - service_tier
+          - reasoning_effort
+ai_gateway_models:
+  - ref: my-huggingface
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: my-huggingface
+    display_name: "my-huggingface"
+    type: model
+    formats:
+      - type: anthropic
+    config:
+      route:
+        paths:
+          - /
         model:
-          provider: huggingface
-          name: meta-llama/Llama-3.3-70B-Instruct
-variables:
-  key:
-    value: $HUGGINGFACE_API_TOKEN
-    description: The API token to use to connect to HuggingFace Inference API.
+          body_param: model
+          values:
+            - my-huggingface
+    targets:
+      - name: deepseek-ai/DeepSeek-V4-Pro-0813
+        provider: !ref my-huggingface-account#name
+        config:
+          type: huggingface
+    policies:
+      - !ref strip-claude-beta-info#name
+    capabilities:
+      - generate
 {% endentity_examples %}
 
-## Configure the File Log plugin
+The AI Model Provider uses the following settings:
 
-Enable the [File Log](/plugins/file-log/) plugin on the service to inspect the LLM traffic between {{ site.claude }} and the {{site.ai_gateway}}. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what {{ site.claude }} sends through the {{site.ai_gateway}}.
+* `type: huggingface`: Specifies that this provider speaks Hugging Face's Messages API format.
+* `config.auth.headers[0].value: !secret {source: !env HUGGINGFACE_AUTH_HEADER}`: Loads the API key from your environment at apply time so it is not embedded in the config, and `kongctl` redacts it in plan and diff output.
 
-{% entity_examples %}
-entities:
-  plugins:
-    - name: file-log
-      config:
-        path: "/tmp/claude.json"
-{% endentity_examples %}
+The AI Policy uses the following settings:
 
-## Verify traffic through Kong
+* `type: request-transformer-advanced`: Modifies requests before {{site.ai_gateway}} forwards them upstream.
+*  `config.remove.headers`: Removes the `anthropic-beta` header.
+*  `config.remove.querystring`: Removes the `beta` query string parameter.
+*  `config.remove.body`: Removes the `output_config`, `context_management`, `mcp_servers`, `container`, `service_tier`, and `reasoning_effort` body fields.
 
-Start a {{ site.claude_code }} session that points to the local {{site.ai_gateway}} endpoint:
+   {:.info}
+   > {{ site.claude_code }} beta features vary by version and may add other incompatible fields over time. If you still see a `400` error mentioning an unexpected field after applying this Policy, add that field to the appropriate `remove` list and re-apply.
 
-{:.warning}
-> The `ANTHROPIC_MODEL` value can be any string since the pre-function plugin removes it. The actual model used is `meta-llama/Llama-3.3-70B-Instruct` as configured in the AI Proxy plugin.
+The AI Model uses the following settings:
 
-```sh
-ANTHROPIC_BASE_URL=http://localhost:8000/anything \
-ANTHROPIC_MODEL=any-model-name \
-claude
-```
+* `name`/`display_name: my-huggingface`: The identifier you pass to `claude --model`. {{ site.claude_code }} uses this, not the upstream target name, to select the model.
+* `formats: [type: anthropic]`: Declares that this model accepts requests in Anthropic-compatible format, matching what {{ site.claude_code }} sends natively.
+* `config.route.paths: [/]`: Configures the base path where this model's Routes are accessible.
+* `capabilities: [generate]`: Enables text generation. For a model using the `anthropic` format, `generate` creates a `/messages` endpoint matching Anthropic's native Messages API, so combined with your base path, clients send requests to `/v1/messages`.
+* `policies`: Attaches the `strip-claude-beta-info` policy created in the previous step, so its header and body transformations apply to every request sent through this model.
 
-{{ site.claude_code }} asks for permission before it runs tools or interacts with files:
+## Run {{ site.claude_code }}
 
-```text
-I'll need permission to work with your files.
+{{ site.claude_code }}'s experimental beta features send fields that Hugging Face rejects even with the AI Policy in place. Disable them, then start a session pointed at your local {{site.ai_gateway}} endpoint:
 
-This means I can:
-- Read any file in this folder
-- Create, edit, or delete files
-- Run commands (like npm, git, tests, ls, rm)
-- Use tools defined in .mcp.json
+<!-- vale off -->
+{% validation claude-code %}
+prompt: Tell me about the Madrid Skylitzes manuscript.
+model: my-huggingface
+disable_experimental_betas: true
+base_url: http://localhost:8000/
+{% endvalidation %}
+<!-- vale on -->
 
-Learn more ( https://docs.claude.com/s/claude-code-security )
-
-❯ 1. Yes, continue
-2. No, exit
-```
-{:.no-copy-code}
-
-Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach {{site.ai_gateway}}.
+{{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
 
 ```text
-Try creating a logging.py that logs simple http logs.
-```
+The Madrid Skylitzes is a remarkable 12th-century illuminated Byzantine
+manuscript that represents one of the most important surviving examples
+of medieval historical documentation. Here are the key details:
 
-{{ site.claude_code }} might prompt you to approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
+What it is
 
-```text
-Create file
-╭───────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ logging.py                                                                                            │
-│                                                                                                       │
-│ import logging                                                                                        │
-│                                                                                                       │
-│ logging.basicConfig(filename='app.log', filemode='a', format='%(name)s - %(levelname)s -              │
-│ %(message)s')                                                                                         │
-│                                                                                                       │
-│ def log_info(message):                                                                                │
-│     logging.info(message)                                                                             │
-│                                                                                                       │
-│ def log_warning(message):                                                                             │
-│     logging.warning(message)                                                                          │
-│                                                                                                       │
-│ def log_error(message):                                                                               │
-│     logging.error(message)                                                                            │
-╰───────────────────────────────────────────────────────────────────────────────────────────────────────╯
- Do you want to create logging.py?
- ❯ 1. Yes
-```
-{:.no-copy-code}
+The Madrid Skylitzes is the only surviving illustrated manuscript of John
+Skylitzes' "Synopsis of Histories" (Σύνοψις Ἱστοριῶν), which chronicles
+Byzantine history from 811 to 1057 CE - covering the period from the death
+of Emperor Nicephorus I to the deposition of Michael VI.
 
-Next, inspect the {{site.ai_gateway}} logs to verify that the traffic was proxied through it:
+Artistic Significance
 
-```sh
-docker exec kong-quickstart-gateway cat /tmp/claude.json | jq
-```
+- 574 miniature paintings (with about 100 lost over time)
+- Lavishly decorated with gold leaf, vibrant pigments, and intricate
+detailing
+- Depicts everything from imperial coronations and battles to daily life
+in Byzantium
+- The only surviving Byzantine illuminated chronicle written in Greek
 
-You should find an entry that shows the upstream request made by {{ site.claude_code }}. A typical log record looks like this:
+Unique Collaboration
 
-```json
-{
-  ...
-  "upstream_uri": "/v1/chat/completions?beta=true",
-  "request": {
-    "method": "POST",
-    "headers": {
-      "user-agent": "claude-cli/2.0.58 (external, cli)",
-      "content-type": "application/json",
-      "anthropic-version": "2023-06-01"
-    }
-  },
-  ...
-  "ai": {
-    "proxy": {
-      "usage": {
-        "completion_tokens": 26,
-        "completion_tokens_details": {},
-        "total_tokens": 178,
-        "cost": 0,
-        "time_per_token": 52.538461538462,
-        "time_to_first_token": 1365,
-        "prompt_tokens": 152,
-        "prompt_tokens_details": {}
-      },
-      "meta": {
-        "llm_latency": 1366,
-        "request_mode": "oneshot",
-        "plugin_id": "0000b82c-5826-4abf-93b0-2fa230f5e030",
-        "provider_name": "huggingface",
-        "response_model": "meta-llama/Llama-3.3-70B-Instruct",
-        "request_model": "meta-llama/Llama-3.3-70B-Instruct"
-      }
-    }
-  }
-  ...
-}
+The manuscript is believed to be the work of 7 different artists from
+various backgrounds:
+- 4 Italian artists
+- 1 English or French artist
+- 2 Byzantine artists
 ```
 {:.no-copy-code}
-
-This output confirms that {{ site.claude_code }} routed the request through {{site.ai_gateway}} using HuggingFace with the `meta-llama/Llama-3.3-70B-Instruct` model.

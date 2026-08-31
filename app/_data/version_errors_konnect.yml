@@ -4515,7 +4515,7 @@ messages:
       Use `consumer_claims` instead of the deprecated `consumer_claim` shorthand
       field.
     DocumentationURL: |
-      [Konnect Application Auth plugin](/plugins/konnect-application-auth/)
+      N/A
   - ID: D572
     Severity: error
     Description: |
@@ -4759,7 +4759,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.15.0.0` or above.
     DocumentationURL: |
-      [Konnect Application Auth plugin](/plugins/konnect-application-auth/)
+      N/A
   - ID: D600
     Severity: warning
     Description: |
@@ -4843,7 +4843,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.15.0.0` or above.
     DocumentationURL: |
-      [ACE Auth plugin](/plugins/ace-auth/)
+      [ACE Auth plugin](/plugins/ace/)
   - ID: D608
     Severity: warning
     Description: |
@@ -4862,7 +4862,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.15.0.0` or above.
     DocumentationURL: |
-      [Cloned Plugins entity](/gateway/entities/cloned-plugins/)
+      [Cloned Plugins entity](/gateway/entities/plugin/#cloning-plugins)
   - ID: D610
     Severity: warning
     Description: |

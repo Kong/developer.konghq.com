@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../monkey_patch'
+require_relative '../lib/build_filter'
 
 module Jekyll
   class RenderReferenceListt < Liquid::Tag # rubocop:disable Style/Documentation
@@ -22,7 +23,7 @@ module Jekyll
 
       references = fetch_references(config)
 
-      if references.empty? && !config.fetch('allow_empty', false) && ENV['KONG_PRODUCTS'].nil? && ENV['PAGE_PATHS'].nil?
+      if references.empty? && !config.fetch('allow_empty', false) && !Jekyll::BuildFilter.current.filtered?
         raise "No references found for #{@context['page']['path']} - #{config}"
       end
 
@@ -47,7 +48,8 @@ module Jekyll
 
           match = (!config.key?('tags') || p.data.fetch('tags', []).intersect?(config['tags'])) &&
                   (!config.key?('products') || p.data.fetch('products', []).intersect?(config['products'])) &&
-                  (!config.key?('tools') || p.data.fetch('tools', []).intersect?(config['tools']))
+                  (!config.key?('tools') || p.data.fetch('tools', []).intersect?(config['tools'])) &&
+                  (p.data.fetch('major_version', {}) == @page.fetch('major_version', {}))
 
           result << p if match
           break result if result.size == quantity

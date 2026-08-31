@@ -1,247 +1,240 @@
 ---
 title: Route Claude CLI traffic through {{site.ai_gateway}} and Gemini
-permalink: /how-to/use-claude-code-with-ai-gateway-gemini/
 content_type: how_to
+permalink: /ai-gateway/use-claude-code-with-ai-gateway-gemini/
 
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: AI Proxy Advanced
-    url: /plugins/ai-proxy-advanced/
-  - text: File Log
-    url: /plugins/file-log/
+  - text: Route Claude CLI traffic through {{site.ai_gateway}} and Anthropic
+    url: /ai-gateway/use-claude-code-with-ai-gateway-anthropic/
+  - text: Route Claude CLI traffic through {{site.ai_gateway}} and OpenAI
+    url: /ai-gateway/use-claude-code-with-ai-gateway-openai/
 
-description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic using Gemini models
+description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic to a Gemini model
 
 products:
-  - gateway
   - ai-gateway
 
 works_on:
-  - on-prem
   - konnect
 
+tools:
+  - kongctl
+
+prereqs:
+  inline:
+    - title: Gemini API key
+      content: |
+        1. Create a Gemini API key in [Google AI Studio](https://aistudio.google.com/apikey).
+        1. Export the API key as a variable:
+
+           ```bash
+           export GEMINI_API_KEY='YOUR_GEMINI_API_KEY'
+           ```
+    - title: Claude Code CLI
+      icon_url: /assets/icons/third-party/claude.svg
+      include_content: prereqs/claude-code
+
 min_version:
-  gateway: '3.13'
-
-plugins:
-  - ai-proxy-advanced
-  - file-log
-
-entities:
-  - service
-  - route
-  - plugin
+  ai-gateway: '2.0'
 
 tags:
   - ai
   - gemini
 
 tldr:
-  q: How do I run Claude CLI through {{site.ai_gateway}}?
-  a: Install Claude CLI, configure its API key helper, create a Gateway Service and Route, attach the AI Proxy plugin to forward requests to Claude, enable the File Log plugin to inspect traffic, and point Claude CLI to the local proxy endpoint so all LLM requests pass through the {{site.ai_gateway}} for monitoring and control.
+  q: How do I run Claude CLI through {{site.ai_gateway}} against a Gemini model?
+  a: Create an AI Model Provider entity to store your Gemini API key, create an AI Model entity with an Anthropic-compatible format that routes to Gemini through that provider, then point Claude CLI's `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all LLM requests pass through the gateway for monitoring and control.
 
-tools:
-  - deck
-
-prereqs:
-  prereqs:
-  inline:
-    - title: Gemini
-      content: |
-        Before you begin, you must get the following credentials from Google Cloud:
-
-        - **Service Account Key**: A JSON key file for a service account with Vertex AI permissions
-        - **Project ID**: Your Google Cloud project identifier
-        - **Location ID**: The region where your Vertex AI endpoint is deployed (for example, `us-central1`)
-        - **API Endpoint**: The Vertex AI API endpoint URL (typically `https://{location}-aiplatform.googleapis.com`)
-
-        Export these values as environment variables:
-        ```sh
-        export GEMINI_API_KEY="<your_gemini_api_key>"
-        export GCP_PROJECT_ID="<your-gemini-project-id>"
-        export GEMINI_LOCATION_ID="<your-gemini-location_id>"
-        export GEMINI_API_ENDPOINT="<your_gemini_api_endpoint>"
-        ```
-      icon_url: /assets/icons/gcp.svg
-    - title: Claude Code CLI
-      icon_url: /assets/icons/third-party/claude.svg
-      include_content: prereqs/claude-code
-  entities:
-    services:
-      - example-service
-    routes:
-      - example-route
-
-cleanup:
-  inline:
-    - title: Clean up Konnect environment
-      include_content: cleanup/platform/konnect
-      icon_url: /assets/icons/gateway.svg
-    - title: Destroy the {{site.base_gateway}} container
-      include_content: cleanup/products/gateway
-      icon_url: /assets/icons/gateway.svg
-
-automated_tests: false
 ---
 
-## Configure the AI Proxy plugin
+## Create an AI Model Provider entity
 
-First, configure the AI Proxy plugin for the [{{ site.gemini }} provider](/ai-gateway/ai-providers/#gemini):
-* This setup uses the default `llm/v1/chat` route. {{ site.claude_code }} sends its requests to this route.
-* The configuration also raises the maximum request body size to 512 KB to support larger prompts.
-
-The `llm_format: anthropic` parameter tells {{site.ai_gateway}} to expect request and response payloads that match {{ site.claude }}'s native API format. Without this setting, the Gateway would default to OpenAI's format, which would cause request failures when {{ site.claude_code }} communicates with the {{ site.gemini }} endpoint.
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection and store your authentication credentials:
 
 {% entity_examples %}
-entities:
-  plugins:
-  - name: ai-proxy-advanced
+ai_gateway_model_providers:
+  - ref: my-gemini-account
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: my-gemini-account
+    display_name: "my-gemini-account"
+    type: gemini
     config:
-      llm_format: anthropic
-      targets:
-        - route_type: llm/v1/chat
-          logging:
-            log_statistics: true
-            log_payloads: false
-          auth:
-            allow_override: false
-            gcp_use_service_account: true
-            gcp_service_account_json: ${gcp_service_account_key}
-          model:
-              provider: gemini
-              name: gemini-2.0-flash
-              options:
-                gemini:
-                  api_endpoint: ${gcp_api_endpoint}
-                  project_id: ${gcp_project_id}
-                  location_id: ${gcp_location_id}
-              max_tokens: 8192
-variables:
-  gcp_service_account_key:
-    value: $GEMINI_API_KEY
-  gcp_api_endpoint:
-    value: $GEMINI_API_ENDPOINT
-  gcp_project_id:
-    value: $GCP_PROJECT_ID
-  gcp_location_id:
-    value: $GEMINI_LOCATION_ID
+      auth:
+        type: basic
+        headers:
+        - name: x-goog-api-key
+          value: !secret {source: !env GEMINI_API_KEY}
 {% endentity_examples %}
 
-## Configure the File Log plugin
+{:.info}
+> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
 
-Now, let's enable the [File Log](/plugins/file-log/) plugin on the Service, to inspect the LLM traffic between {{ site.claude }} and the {{site.ai_gateway}}. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what {{ site.claude }} sends through the {{site.ai_gateway}}.
+The AI Model Provider uses the following settings:
+
+* `type: gemini`: Specifies that this provider connects to the Gemini service using Gemini's standard API format.
+* `name: my-gemini-account`: A unique identifier that AI Models will reference to route requests through this provider.
+* `config.auth`: Stores your Gemini API key. `value: !secret {source: !env GEMINI_API_KEY}` loads the value from your environment at apply time instead of embedding it in the YAML, and `kongctl` redacts it in plan and diff output. {{site.ai_gateway}} securely manages this credential and injects it into upstream requests automatically, eliminating the need for clients to pass API keys.
+
+## Create an AI Policy entity
+
+Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request transformer](/ai-gateway/policies/ai-request-transformer/) to remove extra fields that Gemini's API does not support.
 
 {% entity_examples %}
-entities:
-  plugins:
-    - name: file-log
-      config:
-        path: "/tmp/claude.json"
+ai_gateway_policies:
+  - ref: strip-claude-beta-info
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: strip-claude-beta-info
+    display_name: "strip-claude-beta-info"
+    type: request-transformer-advanced
+    config:
+      remove:
+        headers:
+          - anthropic-beta
+          - authorization
+          - x-api-key
+        querystring:
+          - beta
+        body:
+          - output_config
+          - context_management
+          - mcp_servers
+          - container
+          - service_tier
+          - reasoning_effort
 {% endentity_examples %}
 
-## Verify traffic through {{site.ai_gateway}}
+{:.info}
+> {{ site.claude_code }} beta features vary by version and may add other incompatible fields over time. If you still see an error mentioning an unexpected field after applying this Policy, add that field to the appropriate `remove` list and re-apply.
 
-Now, we can start a {{ site.claude_code }} session that points it to the local {{site.ai_gateway}} endpoint:
+The AI Policy uses the following settings:
 
-{:.warning}
-> Ensure that `ANTHROPIC_MODEL` matches the model you deployed in Gemini.
+* `type: request-transformer-advanced`: Modifies requests before {{site.ai_gateway}} forwards them upstream.
+*  `config.remove.headers`: Removes the `anthropic-beta`, `authorization`, and `x-api-key` headers.
+*  `config.remove.querystring`: Removes the `beta` query string parameter.
+*  `config.remove.body`: Removes the `output_config`, `context_management`, `mcp_servers`, `container`, `service_tier`, and `reasoning_effort` body fields.
 
-```sh
-ANTHROPIC_BASE_URL=http://localhost:8000/anything \
-ANTHROPIC_MODEL=YOUR_GEMINI_MODEL \
-claude
-```
+{:.info}
+> Don't strip `model`: {{site.ai_gateway}} uses that field to select the target, and removing it breaks routing.
 
-{{ site.claude_code }} asks for permission before it runs tools or interacts with files:
+## Create an AI Model entity
 
-```text
-I'll need permission to work with your files.
+Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use:
 
-This means I can:
-- Read any file in this folder
-- Create, edit, or delete files
-- Run commands (like npm, git, tests, ls, rm)
-- Use tools defined in .mcp.json
+{% entity_examples %}
+ai_gateway_model_providers:
+  - ref: my-gemini-account
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: my-gemini-account
+    display_name: "my-gemini-account"
+    type: gemini
+    config:
+      auth:
+        type: basic
+        headers:
+        - name: x-goog-api-key
+          value: !secret {source: !env GEMINI_API_KEY}
+ai_gateway_policies:
+  - ref: strip-claude-beta-info
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: strip-claude-beta-info
+    display_name: "strip-claude-beta-info"
+    type: request-transformer-advanced
+    config:
+      remove:
+        headers:
+          - anthropic-beta
+          - authorization
+          - x-api-key
+        querystring:
+          - beta
+        body:
+          - output_config
+          - context_management
+          - mcp_servers
+          - container
+          - service_tier
+          - reasoning_effort
+ai_gateway_models:
+  - ref: my-claude-gemini
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: my-claude-gemini
+    display_name: "my-claude-gemini"
+    type: model
+    formats:
+      - type: anthropic
+    config:
+      route:
+        paths:
+          - /
+        model:
+          body_param: model
+          values:
+            - my-claude-gemini
+    targets:
+      - name: gemini-2.5-flash
+        provider: !ref my-gemini-account#name
+        config:
+          type: gemini
+    policies:
+      - !ref strip-claude-beta-info#name
+    capabilities:
+      - generate
+{% endentity_examples %}
 
-Learn more ( https://docs.claude.com/s/claude-code-security )
+The AI Model uses the following settings:
 
-❯ 1. Yes, continue
-2. No, exit
-```
-{:.no-copy-code}
+* `type: model`: Specifies this is a synchronous model for request/response workloads.
+* `name: my-claude-gemini`: A unique identifier for this model.
+* `formats: [type: anthropic]`: Declares that this model accepts requests in Anthropic-compatible format, matching what {{ site.claude_code }} sends natively, even though the upstream model is Gemini.
+* `config.route.paths: [/]`: Configures the custom base path where this model's routes will be accessible. Setting this to a unique value avoids clashes when you have multiple AI Models.
+* `capabilities: [generate]`: Enables the text generation capability. For a model using the `anthropic` format, the `generate` capability creates a `/messages` endpoint matching Anthropic's native Messages API, so combined with your base path, clients send requests to `/v1/messages`.
+* `targets`: Specifies which upstream AI Model Provider model to route requests to. Here, `provider: !ref my-gemini-account#name` references the AI Model Provider we created earlier, and `name: gemini-2.5-flash` specifies which Gemini model to call upstream.
+* `policies: [!ref strip-claude-beta-info#name]`: Attaches the AI Policy created earlier so it applies to every request to this AI Model.
 
-Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach {{site.ai_gateway}}.
+## Run {{ site.claude_code }}
 
-```text
-Tell me about Anna Komnene's Alexiad.
-```
+{{ site.claude_code }}'s experimental beta features send fields that Gemini rejects even with the AI Policy in place. Disable them, then start a session pointed at your local {{site.ai_gateway}} endpoint:
+
+<!-- vale off -->
+{% validation claude-code %}
+prompt: Tell me about the Madrid Skylitzes manuscript.
+model: my-claude-gemini
+disable_experimental_betas: true
+base_url: http://localhost:8000/
+{% endvalidation %}
+<!-- vale on -->
 
 {{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
 
 ```text
-Anna Komnene (1083-1153?) was a Byzantine princess, scholar, physician,
-hospital administrator, and historian. She is known for writing the
-Alexiad, a historical account of the reign of her father, Emperor Alexios
-I Komnenos (r. 1081-1118). The Alexiad is a valuable primary source for
-understanding Byzantine history and the First Crusade.
+The Madrid Skylitzes is a remarkable 12th-century illuminated Byzantine
+manuscript that represents one of the most important surviving examples
+of medieval historical documentation. Here are the key details:
+
+What it is
+
+The Madrid Skylitzes is the only surviving illustrated manuscript of John
+Skylitzes' "Synopsis of Histories" (Σύνοψις Ἱστοριῶν), which chronicles
+Byzantine history from 811 to 1057 CE - covering the period from the death
+of Emperor Nicephorus I to the deposition of Michael VI.
+
+Artistic Significance
+
+- 574 miniature paintings (with about 100 lost over time)
+- Lavishly decorated with gold leaf, vibrant pigments, and intricate
+detailing
+- Depicts everything from imperial coronations and battles to daily life
+in Byzantium
+- The only surviving Byzantine illuminated chronicle written in Greek
+
+Unique Collaboration
+
+The manuscript is believed to be the work of 7 different artists from
+various backgrounds:
+- 4 Italian artists
+- 1 English or French artist
+- 2 Byzantine artists
 ```
 {:.no-copy-code}
-
-Next, inspect the {{site.ai_gateway}} logs to verify that the traffic was proxied through it:
-
-```sh
-docker exec kong-quickstart-gateway cat /tmp/claude.json | jq
-```
-
-You should find an entry that shows the upstream request made by {{ site.claude_code }}. A typical log record looks like this:
-
-```json
-{
-  ...
-  "method": "POST",
-  "headers": {
-    "user-agent": "claude-cli/2.0.37 (external, cli)",
-    "content-type": "application/json"
-  },
-  ...
-  "ai": {
-    "proxy": {
-      "tried_targets": [
-        {
-          "provider": "gemini",
-          "model": "gemini-2.0-flash",
-          "port": 443,
-          "upstream_scheme": "https",
-          "host": "us-central1-aiplatform.googleapis.com",
-          "upstream_uri": "/v1/projects/example-project-id/locations/us-central1/publishers/google/models/gemini-2.0-flash:generateContent",
-          "route_type": "llm/v1/chat",
-          "ip": "xxx.xxx.xxx.xxx"
-        }
-      ],
-      "meta": {
-        "request_model": "gemini-2.0-flash",
-        "request_mode": "oneshot",
-        "response_model": "gemini-2.0-flash",
-        "provider_name": "gemini",
-        "llm_latency": 1694,
-        "plugin_id": "13f5c57a-77b2-4c1f-9492-9048566db7cf"
-      },
-      "usage": {
-        "completion_tokens": 19,
-        "completion_tokens_details": {},
-        "total_tokens": 11203,
-        "cost": 0,
-        "time_per_token": 89.157894736842,
-        "time_to_first_token": 1694,
-        "prompt_tokens": 11184,
-        "prompt_tokens_details": {}
-      }
-    }
-  }
-  ...
-}
-```
-{:.no-copy-code}
-
-This output confirms that {{ site.claude_code }} routed the request through {{site.ai_gateway}} using the `gemini-2.0-flash` model we selected while starting the {{ site.claude_code }} session.

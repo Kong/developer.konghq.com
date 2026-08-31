@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'uri'
+require_relative 'site_accessor'
+require_relative 'build_filter'
 
 module Jekyll
   class LinkIconAssigner # rubocop:disable Style/Documentation
@@ -24,8 +26,9 @@ module Jekyll
       'plugin_example' => 'plug'
     }
 
-    def initialize(resource)
+    def initialize(resource, build_filter: Jekyll::BuildFilter.current)
       @resource = resource
+      @build_filter = build_filter
     end
 
     def process
@@ -36,7 +39,7 @@ module Jekyll
     private
 
     def determine_icon
-      icon_for_type || icon_for_url || icon_for_content_type
+      icon_for_type || icon_for_url || icon_for_aigw_policy || icon_for_content_type
     end
 
     def icon_for_type
@@ -49,8 +52,14 @@ module Jekyll
       URL_ICON_MAP.find { |pattern, _| @resource['url'] =~ pattern }&.last || 'service-document'
     end
 
+    def icon_for_aigw_policy
+      # XXX: This is a temporary hack to assign the correct icon for the policies section of the AI Gateway product.
+      # This should be removed once the policies have their own overview page.
+      'plug' if @resource['url'].start_with?('/ai-gateway/policies/')
+    end
+
     def icon_for_content_type
-      return 'service-document' if Jekyll.env == 'development' && (ENV['KONG_PRODUCTS'] || ENV['PAGE_PATHS'])
+      return 'service-document' if @build_filter.filtered?
 
       url = URI.parse(@resource['url']).path
       final_url = resolve_final_path(url, site_redirects)

@@ -157,6 +157,10 @@ module Jekyll
             def template_file
               '/components/entity_example/format/terraform.md'
             end
+
+            def variable_names
+              variables.values.map { |v| v['value'].gsub('$', '').downcase }
+            end
           end
 
           class Plugin < Base
@@ -165,14 +169,6 @@ module Jekyll
                 data: @example_drop.data.except(*targets.keys),
                 variables: variables
               )
-            end
-
-            def variable_names
-              keys = []
-              variables.each do |k, v|
-                keys = v['value'].gsub('$', '').downcase
-              end
-              keys
             end
           end
 
@@ -198,14 +194,6 @@ module Jekyll
                 data: @example_drop.data,
                 variables: variables
               )
-            end
-
-            def variable_names
-              keys = []
-              variables.each do |k, v|
-                keys = v['value'].gsub('$', '').downcase
-              end
-              keys
             end
           end
         end

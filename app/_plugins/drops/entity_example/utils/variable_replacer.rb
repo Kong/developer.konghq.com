@@ -108,6 +108,64 @@ module Jekyll
               "var.#{env_variable}"
             end
           end
+
+          class KongctlData
+            SENTINEL_PATTERN = /__kongctl_env_([A-Z][A-Z0-9_]*)__/
+            SECRET_SENTINEL_PATTERN = /__kongctl_secret_env_([A-Z][A-Z0-9_]*)__/
+            AI_GATEWAY_LOOKUP_SENTINEL = '__kongctl_lookup_ai_gateway__'
+            ENV_VAR_PATTERN = /\A\$([A-Z][A-Z0-9_]*)\z/
+
+            def self.run(data:, variables: {})
+              new(variables:).process(data)
+            end
+
+            def self.apply_tags(yaml)
+              yaml
+                .gsub(SECRET_SENTINEL_PATTERN, '!secret {source: !env \1}')
+                .gsub(SENTINEL_PATTERN, '!env \1')
+                .gsub(AI_GATEWAY_LOOKUP_SENTINEL, '!lookup {id: !env AI_GATEWAY_ID}')
+            end
+
+            def initialize(variables: {})
+              @variables = variables
+            end
+
+            def process(data)
+              case data
+              when Hash  then data.transform_values { |v| process(v) }
+              when Array then data.map { |item| process(item) }
+              when String then transform_env_var(substitute_variables(data))
+              else data
+              end
+            end
+
+            private
+
+            def substitute_variables(str)
+              return str if @variables.empty?
+
+              keys_pattern = @variables.keys.map { |k| Regexp.escape(k.to_s) }.join('|')
+              str.gsub(/\$\{(#{keys_pattern})\}/) { replace_variable(Regexp.last_match(1)) || Regexp.last_match(0) }
+            end
+
+            def replace_variable(variable)
+              value = @variables.dig(variable, 'value')
+              return nil unless value
+
+              @variables.dig(variable, 'secret') ? secret_sentinel(value) : value
+            end
+
+            def secret_sentinel(value)
+              match = ENV_VAR_PATTERN.match(value)
+              return value unless match
+
+              "__kongctl_secret_env_#{match[1]}__"
+            end
+
+            def transform_env_var(str)
+              str.gsub(ENV_VAR_PATTERN, '__kongctl_env_\1__')
+            end
+          end
         end
       end
     end

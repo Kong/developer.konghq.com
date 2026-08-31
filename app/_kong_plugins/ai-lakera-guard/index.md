@@ -23,6 +23,8 @@ works_on:
 min_version:
     gateway: '3.13'
 
+ai_gateway_url: "/ai-gateway/policies/ai-lakera-guard/"
+
 topologies:
   on_prem:
     - hybrid
@@ -44,9 +46,9 @@ icon: ai-lakera.png
 
 related_resources:
   - text: Use the AI Lakera Guard plugin
-    url: /ai-gateway/ai-audit-log-reference/
+    url: /ai-gateway/v1/ai-audit-log-reference/
   - text: Use the AI GCP Model Armor plugin
-    url: /how-to/use-ai-gcp-model-armor-plugin/
+    url: /v1/how-to/use-ai-gcp-model-armor-plugin/
   - text: Use AI PII Sanitizer to protect sensitive data in requests
     url: /how-to/protect-sensitive-information-with-ai/
   - text: Use Azure Content Safety plugin
@@ -56,7 +58,7 @@ related_resources:
 
 next_steps:
   - text: Use the AI Lakera Guard plugin
-    url: /ai-gateway/ai-audit-log-reference/
+    url: /ai-gateway/v1/ai-audit-log-reference/
 
 ---
 The AI Lakera Guard plugin evaluates requests and responses that pass through Kong to Large Language Models (LLMs). It uses the Lakera Guard SaaS service to detect safety policy violations and block unsafe content before it reaches upstream LLMs or returns to clients. The plugin supports multiple inspection modes and guards both inbound prompts and outbound model outputs.

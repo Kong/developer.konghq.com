@@ -10,91 +10,66 @@ breadcrumbs:
 permalink: /ai-gateway/ai-providers/cohere/
 
 works_on:
- - on-prem
  - konnect
 
 products:
-  - gateway
   - ai-gateway
 
 tags:
   - ai
 
 tools:
-  - admin-api
   - konnect-api
-  - deck
-  - kic
-  - terraform
-
-plugins:
-  - ai-proxy-advanced
-  - ai-proxy
+  - kongctl
 
 min_version:
-  gateway: '3.6'
+  ai-gateway: '2.0'
 
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: Cohere tutorials
-    url: /how-to/?tags=cohere
-  - text: "{{site.ai_gateway}} plugins"
-    url: /plugins/?category=ai
+  - text: "{{site.ai_gateway}} Policies"
+    url: /ai-gateway/policies/
   - text: AI Providers
     url: /ai-gateway/ai-providers/
+  - text: AI Model Provider entity
+    url: /ai-gateway/entities/ai-model-provider/
+  - text: AI Model entity
+    url: /ai-gateway/entities/ai-model/
 
 faqs:
-  - q: How do I use Cohere's document-grounded chat for RAG pipelines?
+  - q: How do I use Cohere's Rerank API to improve RAG retrieval quality?
     a: |
-      {% include faqs/cohere-rerank.md %}
+      {% include md/ai-gateway/v2/faqs/cohere-rerank.md %}
 
-how_to_list:
-  config:
-    products:
-      - ai-gateway
-    tags:
-      - cohere
-    description: true
-    view_more: false
 ---
 
 
-{% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="Cohere" %}
+{% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="Cohere" %}
 
-{% include plugins/ai-proxy/providers/native-routes.md providers=site.data.plugins.ai-proxy provider_name="Cohere" %}
+{% include md/ai-gateway/v2/native-routes.md providers=site.data.ai-gateway.v2.providers provider_name="Cohere" %}
 
-## Configure {{ provider.name }} with AI Proxy
+## Configure {{ provider.name }}
 
-To use {{ provider.name }} with {{site.ai_gateway}}, configure the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/).
+To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [AI Model Provider](/ai-gateway/entities/ai-model-provider/). You can then access supported [AI Models](/ai-gateway/entities/ai-model/) from  {{ provider.name }}.
 
 Here's a minimal configuration for chat completions:
 
 {% entity_example %}
-type: plugin
+type: model-provider
 data:
-  name: ai-proxy
+  display_name: Cohere Production
+  name: my-cohere-account
+  type: cohere
   config:
-    route_type: llm/v1/chat
     auth:
-      header_name: Authorization
-      header_value: Bearer ${key}
-    model:
-      provider: cohere
-      name: command-a-03-2025
-      options:
-        max_tokens: 512
-        temperature: 1.0
-
+      type: basic
+      headers:
+        - name: Authorization
+          value: ${key}
 variables:
   key:
     value: $COHERE_API_KEY
-    description: The API key to use to connect to Cohere.
+    secret: true
+    description: "The API key used to connect to Cohere. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
 {% endentity_example %}
-
-{:.success}
-> For more configuration options and examples, see:
-> - [AI Proxy examples](/plugins/ai-proxy/examples/)
-> - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)
-
-{% include plugins/ai-proxy/providers/how-tos.md %}

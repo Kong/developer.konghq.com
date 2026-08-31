@@ -1,0 +1,18 @@
+<div class="flex flex-col gap-2  w-full">
+  <div class="flex items-center gap-1 text-primary font-medium">
+    <span>Previous Versions of this page</span>
+  </div>
+  <div class="flex gap-3 flex-col">
+    {% assign product = site.data.products[include.product] %}
+    {% for version_map in include.previous_major_urls %}
+      <div class="flex gap-2 items-center">
+        {% include mask_image.html image_url='/assets/icons/service-document.svg' css_classes="w-5 h-5 shrink-0 !bg-icon" %}
+        {% if version_map[1].size > 1 %}
+        <a class="text-terciary" href="/index/{{ include.product }}/{{ version_map[0] }}/">See {{product.name}} {{ version_map[0] }} docs</a>
+        {% else %}
+        <a class="text-terciary" href="{{ version_map[1][0] }}">See {{product.name}} {{ version_map[0] }} version</a>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</div>

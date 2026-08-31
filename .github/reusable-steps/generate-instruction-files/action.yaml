@@ -1,5 +1,10 @@
 name: Generate Instruction Files
 description: Generates the instruction files for the automated tests
+inputs:
+  product:
+    description: 'Restrict generation to a single product (passed as --product=<value>). Leave empty to scan all products.'
+    required: false
+    default: ''
 runs:
   using: composite
   steps:
@@ -9,4 +14,4 @@ runs:
       run: |
         npm ci
         npx playwright install --with-deps chromium
-        npm run generate-instruction-files
+        npm run generate-instruction-files -- ${{ inputs.product != '' && format('--product={0}', inputs.product) || '' }}

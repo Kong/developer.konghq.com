@@ -9,14 +9,19 @@ products:
   - ai-gateway
 
 related_resources:
-  - text: Aggregate MCP tools from multiple AI MCP Proxy plugins
-    url: /mcp/aggregate-mcp-tools/
+  - text: Aggregate MCP tools from multiple AI MCP Server entities
+    url: /ai-gateway/aggregate-mcp-tools/
   - text: MCP clients in Insomnia
     url: /insomnia/mcp/
+  - text: AI MCP Server entity
+    url: /ai-gateway/entities/ai-mcp-server/
+  - text: Map a RESTful API to MCP tools
+    url: /ai-gateway/map-api-to-mcp-tools/
+
 
 min_version:
   insomnia: "12.0"
-  gateway: "3.12"
+  ai-gateway: '2.0'
 
 tags:
   - ai
@@ -29,14 +34,15 @@ prereqs:
   inline:
     - title: Aggregated MCP server
       content: |
-        Before testing with Insomnia, complete the [Aggregate MCP tools from multiple AI MCP Proxy plugins](/mcp/aggregate-mcp-tools/) guide.  
+        Before testing with Insomnia, complete the [Aggregate MCP tools from multiple AI MCP Proxy plugins](/ai-gateway/aggregate-mcp-tools/) guide.  
         That guide produces:
 
         - Multiple conversion-only AI MCP Proxy plugin instances that each expose MCP tools  
         - One listener-mode AI MCP Proxy plugin aggregating those tools by tag  
         - A public listener endpoint:
-          ```
-          http://localhost:8000/mcp-listener
+          
+          ```sh
+          http://localhost:8000/mcp-aggregation 
           ```
       icon_url: /assets/icons/mcp.svg
 
@@ -45,8 +51,12 @@ prereqs:
         Ensure your local machine can reach the listener endpoint produced during aggregation.
 
         Test connectivity:
-        ```
-        curl http://localhost:8000/mcp-listener
+        
+        ```sh
+        curl -s -X POST http://localhost:8000/mcp-aggregation \
+        -H 'Content-Type: application/json' \
+        -H 'Accept: application/json, text/event-stream' \
+        -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"curl","version":"1.0"}}}'
         ```  
 tldr:
   q: How do I test aggregated MCP tools using Insomnia?
@@ -65,13 +75,20 @@ After completing the aggregation workflow described in **[Aggregate MCP tools fr
 ## Create an MCP client
 
 1. Open **Insomnia**.
-2. In the sidebar, click **MCP Clients**.
-3. Click **New MCP Client**.
-4. In the **Name** field, enter a name: **Aggregated MCP Tools**
-5. In the **MCP Server URL** field, enter your listener URL: `http://localhost:8000/mcp-listener`
+1. In the sidebar, click **MCP Clients**.
+1. Click **New MCP Client**.
+1. In the **Name** field, enter a name: **Aggregated MCP Tools**
+1. Click **Create**.
+1. In the **MCP Server URL** field, select the **HTTP** method, and enter your listener URL: `http://localhost:8000/mcp-aggregation`
 6. Click **Connect**.
 
-Insomnia connects to the MCP server and discovers all of the aggregated tools.
+Insomnia connects to the MCP server and discovers all of the aggregated tools:
+- `draw-cards`
+- `get-orders-for-user`
+- `get-users`
+- `shuffle-and-draw`
+- `shuffle-cards`
+- `weather-internet`
 
 ## Validate tools
 
@@ -80,17 +97,15 @@ Insomnia connects to the MCP server and discovers all of the aggregated tools.
 
 {:.info}
 > If any tools are missing:
-- Confirm that all conversion-only plugins use the same `tags[]` value.
-- Confirm that the listener-mode plugin’s `server.tag` matches that value.
-- Confirm that the listener Route is active and reachable.
+  Confirm that the listener Route is active and reachable.
 
 ## Test tools
 
 Use Insomnia’s testing panels to validate MCP tool behaviour:
 
-1. In **Tools**, click any tool.
+1. In **Tools**, click any tool, for example: `get-orders-for-user`.
 2. In the request pane, click the **Params** tab.
-3. Enter the required parameter value.
+3. Enter the required parameter value, for example `query_userid`: `ord002`
 4. Click **Call Tool**.
 5. In the response pane, click the **Console** tab. 
 
