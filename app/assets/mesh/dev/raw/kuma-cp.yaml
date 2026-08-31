@@ -941,12 +941,6 @@ kmesh:
       konnect:
         cpId: "" # KMESH_MULTIZONE_ZONE_KONNECT_CP_ID
   access:
-    static:
-      generateCpToken:
-        # List of users that are allowed to generate control plane token
-        users: ["mesh-system:admin"] # ENV: KMESH_RBAC_STATIC_GENERATE_CP_TOKEN_USERS
-        # List of groups that are allowed to generate control plane token
-        groups: ["mesh-system:admin"] # ENV: KMESH_RBAC_STATIC_GENERATE_CP_TOKEN_GROUPS
     rbac:
       # LogActions defines actions that will be logged when RBAC is resolved. Allowed values: "allowed", "denied"
       logActions: ["allowed", "denied"] # ENV: KMESH_ACCESS_RBAC_LOG_ACTIONS
