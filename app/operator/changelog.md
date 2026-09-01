@@ -14,9 +14,72 @@ breadcrumbs:
 
 Changelog for supported {{ site.operator_product_name }} versions.
 
+## 2.2.4
+
+> Release date: 2026-08-27
+
+### Fixes
+
+- Konnect entities whose cross-namespace `controlPlaneRef` was permitted by a
+  `KongReferenceGrant` no longer get stuck during deletion when that grant is
+  removed first. The grant is now enforced only while the entity is not being
+  deleted, allowing its Konnect counterpart and cleanup finalizer to be removed.
+  [#5229](https://github.com/Kong/kong-operator/pull/5229) [#5232](https://github.com/Kong/kong-operator/pull/5232)
+- DataPlaneMetricsExtension: the reconciler now returns an error (and gets
+  re-queued with backoff) when it fails to create, update or delete the
+  Prometheus `KongPlugin` for a Service, instead of logging and giving up.
+  Previously a single transient failure (e.g. a rejected admission webhook
+  call) left the Service without its `konghq.com/plugins` annotation
+  indefinitely, since nothing else would trigger another reconcile.
+  [#5210](https://github.com/Kong/kong-operator/pull/5210) [#5217](https://github.com/Kong/kong-operator/pull/5217)
+- Dataplane: Fixed the method to compare whether dataplane options are deep
+  equal to ensure that `HorizontalPodAutoscaler` is updated when it is changed
+  in `GatewayConfiguration`. Also fixed the calculation of the spec hash in the
+  `Deployment` to skip reconciliation of deployments if only `deployment.scaling`
+  is changed in dataplane options.
+  [#5003](https://github.com/Kong/kong-operator/pull/5003) [#5104](https://github.com/Kong/kong-operator/pull/5104)
+- Hybrid gateway: Propagate tags in the annotation `konghq.com/tags` in `KongPlugin`s
+  to the copies when attached to `HTTPRoute`s and `GRPCRoute`s to propagate the
+  tags in `KongPlugin`s' annotation to plugins in Konnect.
+  [#5280](https://github.com/Kong/kong-operator/pull/5280)
+  [#5284](https://github.com/Kong/kong-operator/pull/5284)
+  [#5334](https://github.com/Kong/kong-operator/pull/5334)
+- Konnect entities: Fix truncating of tags to cut at 128 unicode runes
+  (UTF8 code points).
+  [#5306](https://github.com/Kong/kong-operator/pull/5306) [#5370](https://github.com/Kong/kong-operator/pull/5370)
+
+## 2.2.3
+
+> Release date: 2026-07-14
+
+### Fixes
+
+- Hybridgateway: Wait for cleanup of all child resources before removing the
+  finalizers of the parent resource
+  [#4785](https://github.com/Kong/kong-operator/pull/4785) [#4892](https://github.com/Kong/kong-operator/pull/4892)
+- Preserve only one CA certificate from secrets if there are multiple ones with
+  the duplicate IDs.
+  [#4877](https://github.com/Kong/kong-operator/pull/4877)
+
+## 2.2.2
+
+**Release date**: 2026-07-06
+
+### Fixes
+
+- Gateway: stop overwriting the user-configured `KONG_STREAM_LISTEN` for TLS
+  listeners. The operator now enforces only the listen port and the `ssl` token,
+  preserving the bind address (e.g. `[::]` for IPv6) and any listen options
+  (`reuseport`, `backlog=...`) set on the `GatewayConfiguration` DataPlane pod
+  template. Multiple bind addresses (dual-stack, e.g.
+  `0.0.0.0:<port> ssl reuseport, [::]:<port> ssl reuseport`) are preserved for each
+  listener port. Defaults to `0.0.0.0` and `reuseport` when unset.
+  [#4755](https://github.com/Kong/kong-operator/pull/4755) [#4767](https://github.com/Kong/kong-operator/pull/4767)
+- Gateway:
+
 ## 2.2.1
 
-> Release date: 2026-07-01
+**Release date**: 2026-07-01
 
 ### Fixes
 
@@ -202,7 +265,7 @@ Changelog for supported {{ site.operator_product_name }} versions.
   to reference existing Konnect control planes by ID.
   [#3612](https://github.com/Kong/kong-operator/pull/3612)
 - Added `managed-by:kong-operator` tag to all Konnect entities to allow
-  filtering resources managed by {{site.operator_product_name}} in Konnect.
+  filtering resources managed by {{site.operator_product_name}} in {{site.konnect_short_name}}.
   [#3609](https://github.com/Kong/kong-operator/pull/3609)
 - Added MCP ControlPlane signalling controller: a new `MCPServerCPReconciler` watches
   `KonnectGatewayControlPlane` resources and, via a `SignalManager`, maintains per-control-plane
@@ -354,6 +417,18 @@ Changelog for supported {{ site.operator_product_name }} versions.
   Users are suggested to block network access to debug endpoints (which are disabled
   by default) if plugin configuration can contain sensitive information.
   [#4467](https://github.com/Kong/kong-operator/pull/4467)
+- Hybridgateway: fix `KongTarget` stuck in `Programmed=False` when multiple
+  backendRef Services in an HTTPRoute or TLSRoute rule resolve to the same pod
+  IP and port. The operator now creates one `KongTarget` per unique endpoint
+  address across all backendRefs in a rule, merging duplicate endpoints and
+  summing their weights, instead of attempting to create one per backendRef per
+  endpoint which violated Konnect's upstream/target uniqueness constraint.
+  **Note:** the `KongTarget` naming scheme has changed and the backendRef is no
+  longer part of the name hash. All existing `KongTarget` resources will be
+  orphaned and recreated on the first reconciliation after upgrading. During
+  the transition, both old and new entries may be present in Konnect
+  simultaneously as creation and orphan cleanup are not synchronized.
+  [#4509](https://github.com/Kong/kong-operator/pull/4509)
 
 ## 2.1.8
 
