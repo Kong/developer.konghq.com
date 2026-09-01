@@ -139,7 +139,7 @@ rows:
                 Using this data, Harness WAAP is able to create a security posture profile of APIs hosted on Kong. 
 
                 Based on its findings, the Harness WAAP plugin can also block traffic coming from malicious actors and IPs into {{site.base_gateway}}.
-    - blocks: 
+    - blocks:
       - type: plugin
         config:
           slug: harness-waap
@@ -149,7 +149,22 @@ rows:
         config:
           blocks:
             - type: text
-              text: | 
+              text: |
+                The Harness AI Security plugin extends Harness WAAP to protect AI request and response traffic flowing through {{site.base_gateway}}.
+
+                Based on the sensitive-data classification and data-protection rules you configure in the Traceable Platform, the plugin can detect, redact, or 
+                block matching content before it reaches your upstream application or your client.
+    - blocks:
+      - type: plugin
+        config:
+          slug: harness-ai-security
+  - columns:
+    - blocks:
+      - type: structured_text
+        config:
+          blocks:
+            - type: text
+              text: |
                 With [{{site.konnect_catalog}}](/catalog/), you gain visibility into all your Traceable services, including unrecognized or undiscovered APIs in your organization.
 
                 Using Traceable through the {{site.konnect_short_name}} {{site.konnect_catalog}}, you can 

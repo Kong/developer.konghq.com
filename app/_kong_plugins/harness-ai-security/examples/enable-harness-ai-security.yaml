@@ -1,0 +1,38 @@
+description: 'Enable the Harness AI Security plugin to redact or block sensitive data in AI request and response traffic.'
+
+extended_description: |
+  Enable the Harness AI Security plugin on a Route or Service that already has the Harness WAAP plugin attached, or enable it globally if Harness WAAP is global.
+  Set the base plugin's `mode` to `sync` if you need request evaluation, redaction, or blocking.
+
+  This configuration evaluates both the request and the response against the sensitive-data rules configured in the Traceable Platform, and fails open if the Edge Decision Service is unreachable or times out.
+  Set `allow_on_failure` to `false` on either block if you need evaluation failures to block traffic instead.
+
+  {:.info}
+  > **Note**: A successful passthrough without redaction doesn't necessarily indicate a problem. It can mean that no configured platform rule matched your test traffic.
+
+title: 'Enable Harness AI Security'
+
+weight: 900
+
+requirements:
+- "The Harness AI Security plugin is [installed](/plugins/harness-ai-security/#install-the-harness-ai-firewall-plugin)."
+- "The [Harness WAAP plugin](/plugins/harness-waap/) is enabled on the same Route or Service, with `mode` set to `sync` (required for request evaluation)."
+- "A sensitive-data classification or data-protection rule is configured in the Traceable Platform for the content you want to detect, redact, or block."
+
+config:
+  request_config:
+    timeout: 500
+    allow_on_failure: true
+  response_config:
+    timeout: 500
+    allow_on_failure: true
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+    gateway: '3.4'
