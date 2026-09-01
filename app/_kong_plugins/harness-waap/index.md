@@ -1,6 +1,7 @@
 ---
 title: 'Harness WAAP'
 name: 'Harness WAAP'
+schema_name: 'traceable'
 
 content_type: plugin
 tier: enterprise
@@ -33,8 +34,8 @@ tags:
   - tracing
 
 related_resources:
-  - text: Harness AI Firewall plugin
-    url: /plugins/harness-ai-firewall/
+  - text: Harness AI Security plugin
+    url: /plugins/harness-ai-security/
   - text: Premium partners
     url: /premium-partners/
 ---
@@ -44,8 +45,8 @@ The Harness Web Application & API Protection (WAAP) by Traceable plugin lets Har
 Using this data, {{page.name}} is able to create a security posture profile of APIs hosted on {{site.base_gateway}}.
 Based on its findings, the {{page.name}} plugin can also block traffic coming from malicious actors and IPs into {{site.base_gateway}}.
 
-If your deployment routes traffic to AI-powered services, you can also attach the [Harness AI Firewall](/plugins/harness-ai-firewall/) plugin to the same Route or Service.
-Harness AI Firewall shares this plugin's configuration to detect, redact, or block sensitive data in AI request and response traffic.
+If your deployment routes traffic to AI-powered services, you can also attach the [Harness AI Security](/plugins/harness-ai-security/) plugin to the same Route or Service.
+Harness AI Security shares this plugin's configuration to detect, redact, or block sensitive data in AI request and response traffic.
 
 ## Install the {{page.name}} plugin
 
@@ -124,4 +125,4 @@ These steps apply to the Kong Kubernetes Ingress Controller.
 {% endnavtab %}
 {% endnavtabs %}
 
-If you also plan to use the [Harness AI Firewall](/plugins/harness-ai-firewall/) plugin, see its [Helm installation steps](/plugins/harness-ai-firewall/#install-the-harness-ai-firewall-plugin) for both plugins' configmaps in a single pass.
+If you also plan to use the [Harness AI Security](/plugins/harness-ai-security/) plugin, see its [Helm installation steps](/plugins/harness-ai-security/#install-the-harness-ai-security-plugin) for both plugins' configmaps in a single pass.

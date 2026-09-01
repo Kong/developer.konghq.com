@@ -150,14 +150,14 @@ rows:
           blocks:
             - type: text
               text: |
-                The Harness AI Firewall plugin extends Harness WAAP to protect AI request and response traffic flowing through {{site.base_gateway}}.
+                The Harness AI Security plugin extends Harness WAAP to protect AI request and response traffic flowing through {{site.base_gateway}}.
 
                 Based on the sensitive-data classification and data-protection rules you configure in the Traceable Platform, the plugin can detect, redact, or 
                 block matching content before it reaches your upstream application or your client.
     - blocks:
       - type: plugin
         config:
-          slug: harness-ai-firewall
+          slug: harness-ai-security
   - columns:
     - blocks:
       - type: structured_text

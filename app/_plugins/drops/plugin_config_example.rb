@@ -8,7 +8,7 @@ module Jekyll
       include ConfigExample::Base
 
       def plugin_slug
-        @plugin_slug ||= @plugin.slug
+        @plugin_slug ||= @plugin.schema_name
       end
 
       def show_in_api?

@@ -1,6 +1,7 @@
 ---
-title: 'Harness AI Firewall'
-name: 'Harness AI Firewall'
+title: 'Harness AI Security'
+name: 'Harness AI Security'
+schema_name: 'traceable-ai-extension'
 
 content_type: plugin
 tier: enterprise
@@ -73,7 +74,7 @@ When you enable this plugin on a Route, it acts in two {{site.base_gateway}} req
 sequenceDiagram
     autonumber
     participant C as Client
-    participant K as {{site.base_gateway}}<br/>harness-ai-firewall
+    participant K as {{site.base_gateway}}<br/>Harness AI Security
     participant E as Edge Decision Service
     participant U as Upstream AI service
 
@@ -242,7 +243,7 @@ These steps apply to the Kong Kubernetes Ingress Controller.
 
 After installing the plugin, enable {{page.name}} on the same Route or Service as the [Harness WAAP](/plugins/harness-waap/) plugin.
 Set `mode: sync` on the base plugin if you need request evaluation, redaction, or blocking.
-See the [Enable Harness AI Firewall example](/plugins/harness-ai-firewall/examples/enable-harness-ai-firewall/).
+See the [Enable Harness AI Security example](/plugins/harness-ai-security/examples/enable-harness-ai-security/).
 
 ## Troubleshooting
 
