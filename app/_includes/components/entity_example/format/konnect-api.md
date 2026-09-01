@@ -20,7 +20,9 @@ To create an SNI, call the Konnect [control plane config API's `/snis` endpoint]
 {% when 'ca_certificate' %}
 To create a CA Certificate, call the Konnect [control plane config API's `/ca-certificates` endpoint](/api/konnect/control-planes-config/#/operations/create-ca_certificate). 
 {% when 'certificate' %}
-To create a Certificate, call the Konnect [control plane config API's `/certificates` endpoint](/api/konnect/control-planes-config/#/operations/create-certificate). 
+{% if include.presenter.product == 'ai-gateway' -%}
+To create an AI Certificate, call the Konnect [{{site.ai_gateway}} API's `/certificates` endpoint](/api/konnect/ai-gateway/#/operations/create-ai-gateway-certificate).{% else %}
+To create a Certificate, call the Konnect [control plane config API's `/certificates` endpoint](/api/konnect/control-planes-config/#/operations/create-certificate). {% endif %}
 {% when 'vault' %}
 {% if include.presenter.product == 'ai-gateway' -%}
 To create a Vault entity, call the Konnect [{{site.ai_gateway}} API's `/vaults` endpoint](/api/konnect/ai-gateway/#/operations/create-ai-gateway-vault). {% else %}
