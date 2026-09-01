@@ -2,9 +2,6 @@
 Usage:
   kongctl list ai-gateway consumers [consumer-id|consumer-name] [flags]
 
-Maturity:
-  beta
-
 Aliases:
   consumers, consumer
 
@@ -27,7 +24,8 @@ Flags:
                                 - Config path: [ color-theme ]
                                 - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
                                 - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
-      --columns stringArray     Select text columns as HEADER=.field (repeatable or comma-separated). Supports nested fields, quoted keys, array indexes, and string slices.
+      --columns stringArray     Select text columns as HEADER=.field (repeatable or comma-separated).
+                                Supports nested fields, quoted keys, array indexes, and string slices.
       --config-file string      Path to the configuration file to load.
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
       --consumer-id string      The ID of the AI Gateway Consumer to retrieve.

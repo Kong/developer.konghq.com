@@ -6,12 +6,8 @@ Usage:
 Aliases:
   konnect, k, K
 
-Examples:
-  # Retrieve the Konnect Kong Gateway control planes from the current organization
-  kongctl get konnect gateway control-planes
-
 Available Commands:
-  audit-logs  Create Konnect audit-log destination and listen for events locally
+  audit-logs  Follow Konnect organization audit logs
 
 
 Flags:
@@ -37,11 +33,10 @@ Flags:
   -o, --output string           Configures the format of data written to STDOUT.
                                 - Config path: [ output ]
                                 - Allowed    : [ json|yaml|text ] (default "text")
-      --pat string              Konnect Personal Access Token (PAT) used to authenticate the CLI. 
-                                Setting this value overrides tokens obtained from the login command.
+      --pat string              Konnect Personal Access Token (PAT) used to authenticate the CLI.
                                 - Config path: [ konnect.pat ]
   -p, --profile string          Specify the profile to use for this command. (default "default")
-      --region string           Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.
+      --region string           Konnect region identifier (for example "eu").
                                 - Config path: [ konnect.region ]
       --text-id-format string   Configure UUID rendering in static text-table ID columns.
                                 - Config path: [ text.id-format ]
