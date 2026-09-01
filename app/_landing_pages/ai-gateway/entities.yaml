@@ -108,3 +108,11 @@ rows:
               cta:
                 text: AI Data Plane Certificate entity
                 url: /ai-gateway/entities/ai-data-plane-certificate/
+      - blocks:
+          - type: card
+            config:
+              title: AI Certificate
+              description: Store certificates and private keys used to terminate and originate TLS connections.
+              cta:
+                text: AI Certificate entity
+                url: /ai-gateway/entities/ai-certificate/
