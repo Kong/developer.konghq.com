@@ -40,7 +40,7 @@ faqs:
 
   - q: What happens if I delete the AI Certificate an AI SNI points at?
     a: |
-      The AI SNI no longer resolves to a usable AI Certificate, and the data plane falls back to its default AI Certificate for connections matching that hostname. Point the AI SNI at a replacement AI Certificate before deleting the old one.
+      The AI SNI no longer resolves to a usable AI Certificate, and the data plane falls back to its default certificate for connections matching that hostname. Point the AI SNI at a replacement AI Certificate before deleting the old one.
 
   - q: How does this relate to the AI Data Plane Certificate entity?
     a: |
@@ -69,7 +69,7 @@ When several AI SNIs could match an incoming hostname, the data plane resolves t
 1. An AI SNI with an exact hostname match
 1. An AI SNI with a matching prefix wildcard
 1. An AI SNI with a matching suffix wildcard
-1. The data plane's default AI Certificate
+1. The data plane's default certificate
 
 ## AI Certificate association
 
