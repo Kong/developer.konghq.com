@@ -145,8 +145,7 @@ konnect:
     env:
       WEBHOOK_URL: http://httpbin.konghq.com/anything
       SLACK_WEBHOOK_URL: http://httpbin.konghq.com/anything
-      KONNECT_DOMAIN: konghq.tech
-      KONGCTL_DEFAULT_KONNECT_ENVIRONMENT: tech
+      OUTPUT_DIR: ./kong/quickstart
     setup:
       commands:
         - curl -Ls https://get.konghq.com/ai | bash -s -- -r "" -k $KONNECT_TOKEN -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -e KONG_NGINX_HTTP_CLIENT_BODY_BUFFER_SIZE=2m | grep '^export AI_GATEWAY_ID' >> /env-vars.sh
