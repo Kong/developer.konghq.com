@@ -116,3 +116,8 @@ rows:
               cta:
                 text: AI Certificate entity
                 url: /ai-gateway/entities/ai-certificate/
+              title: AI SNI
+              description: Map hostnames to an AI Certificate so data planes present the right TLS certificate to each client.
+              cta:
+                text: AI SNI entity
+                url: /ai-gateway/entities/ai-sni/
