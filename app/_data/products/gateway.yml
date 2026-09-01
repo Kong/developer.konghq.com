@@ -2044,7 +2044,7 @@ releases:
   - release: "3.16"
     latest: true
     ee-version: "3.16.0.0"
-    eol: 2027-XX-XX
+    eol: 2027-09-10
     distributions:
       - amazonlinux2023:
           package: true
@@ -2056,16 +2056,6 @@ releases:
           docker_support:
             arm: true
           default: true
-      - debian11:
-          package: true
-          package_support:
-            fips: false
-            arm: true
-            graviton: true
-          docker: true
-          docker_support:
-            arm: true
-          eol: 2026-08-31
       - debian12:
           package: true
           package_support:
@@ -2076,12 +2066,21 @@ releases:
           docker_support:
             arm: true
           default: true
+      - debian13:
+          package: true
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
+          docker: false
+          default: true
       - distroless:
           package: false
           docker: true
           docker_support:
             arm: true
-            fips: false
+            fips2: true
+            fips3: true
             graviton: true
           default: true
       - rhel8:
@@ -2101,6 +2100,14 @@ releases:
           docker_support:
             fips: true
             arm: true
+          default: true
+      - rhel10:
+          package: true
+          package_support:
+            graviton: false
+            arm: true
+            fips: true
+          docker: false
           default: true
       - ubuntu2204:
           package: true
@@ -2122,6 +2129,14 @@ releases:
           docker_support:
             fips: true
             arm: true
+          default: true
+      - ubuntu2604:
+          package: true
+          package_support:
+            arm: true
+            graviton: true
+            fips: true
+          docker: false
           default: true
     third_party_support:
       ai_providers:
@@ -2255,7 +2270,7 @@ release_dates:
   '3.15.0.5': 2026/08/24
   '3.13.0.10': 2026/08/20
   '3.15.0.4': 2026/08/20
-  '3.16.0.0': 2026/XX/XX
+  '3.16.0.0': 2026/09/10
   '3.14.0.13': 2026/08/19
   '3.12.0.11': 2026/08/18
   '3.15.0.3': 2026/08/10
