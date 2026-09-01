@@ -337,6 +337,8 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
+Either type also lets you adjust how the credential reaches the upstream. If your identity provider only issues tokens scoped for this exchange, set `scope` to request them. If the upstream expects the token somewhere other than the standard `Authorization` header, redirect it with `access_token_header`. And if the upstream also needs an ID token alongside the access token to establish who's calling, set `id_token_header` to forward it; leave it unset to omit it.
+
 ### Header forwarding
 
 When your upstream services need to enforce their own access controls or apply client-specific logic based on identity, enable [`config.server.forward_client_headers`](#schema-aigateway-mcpserver-config-server-forward-client-headers) on the `listener` or `upstream-server`. This setting passes the original client's headers (authentication tokens, context) so upstreams see the actual client, not just the listener.
@@ -351,9 +353,11 @@ Tools can also carry MCP-spec [`annotations`](#schema-aigateway-mcpserver-tools-
 
 [Per-tool ACLs](#schema-aigateway-mcpserver-tools-access) override the MCP Server's [default tool ACLs](#schema-aigateway-mcpserver-access-default-tool-acls). For more information, see [ACL tool control](#acl-tool-control).
 
+For `upstream-server` tools, override the upstream's advertised `inputSchema` or `outputSchema` per tool with `input_schema` or `output_schema` when it's incomplete, overly permissive, or otherwise doesn't match what AI Consumers should see. Use this to tighten validation on a third-party MCP server you don't control.
+
 ## Sessions
 
-Some MCP clients need to maintain state across multiple tool calls such as authentication tokens, conversation context, or request IDs. {{site.ai_gateway}} can manage session state for you in `listener` and `conversion-listener` modes, storing it either encrypted on the client or in Redis. Configure session storage through [`config.server.session`](#schema-aigateway-mcpserver-config-server-session). The `passthrough-listener` mode doesn't manage sessions because state lives entirely on the upstream MCP server.
+Some MCP clients need to maintain state across multiple tool calls such as authentication tokens, conversation context, or request IDs. {{site.ai_gateway}} can manage session state for you in `listener`, `conversion-listener`, and `upstream-server` modes, storing it either encrypted on the client or in Redis. Configure session storage through [`config.server.session`](#schema-aigateway-mcpserver-config-server-session). On an `upstream-server`, this manages the session {{site.ai_gateway}} keeps with that backend, separate from whatever session the aggregating `listener` maintains with the calling client. The `passthrough-listener` mode doesn't manage sessions because state lives entirely on the upstream MCP server.
 
 There are two session strategies:
 
@@ -412,6 +416,8 @@ rows:
     description: The OAuth scopes the resource accepts. Falls back to the AI Auth Strategy's configured scopes when omitted.
   - field: "`endpoint`"
     description: The path where {{site.ai_gateway}} serves the metadata document. Added to the AI MCP Server's route automatically.
+  - field: "`discovery_endpoint`"
+    description: Overrides where clients look up the authorization server's metadata (its `.well-known` endpoint), for cases where it isn't at the location {{site.ai_gateway}} would otherwise derive from the AI Auth Strategy's issuer.
 {% endtable %}
 
 Setting `access.metadata` causes {{site.ai_gateway}} to generate an [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/) configuration from it and the referenced AI Auth Strategy, and apply it to this AI MCP Server's route in place of a plain auth-strategy check. You don't create or attach an AI MCP OAuth2 Policy instance yourself for this. The generated configuration adds OAuth 2.1 resource-server behavior (protected resource metadata serving, token audience validation) that a plain `openid-connect` check alone doesn't provide.
