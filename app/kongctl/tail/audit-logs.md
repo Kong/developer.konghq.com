@@ -32,4 +32,4 @@ Tail audit logs.
 Run the original webhook-based tail flow: create a destination,
 configure the regional webhook, and stream records received by a local listener.
 
-{% include_cached /kongctl/help/tail/konnect/audit-logs/listener.md %}
+{% include_cached /kongctl/help/tail/audit-logs/listener.md %}
