@@ -30,6 +30,7 @@ releases:
     ee-version: "3.4.3.29"
     ce-version: "3.4.2"
     eol: 2026-08-31
+    sunset: true
     lts: true
     distributions:
       - amazonlinux2:
