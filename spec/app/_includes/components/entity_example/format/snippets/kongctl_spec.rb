@@ -77,7 +77,7 @@ RSpec.describe 'components/entity_example/format/snippets/kongctl.md' do
               logging:
                 payloads: false
         ```
-        {: data-file="model.yaml" }
+        {: data-file="model.yaml" data-tool="kongctl" }
       MD
     end
   end
@@ -121,7 +121,7 @@ RSpec.describe 'components/entity_example/format/snippets/kongctl.md' do
                 - name: Authorization
                   value: !env OPENAI_AUTH_HEADER
         ```
-        {: data-file="model-provider.yaml" }
+        {: data-file="model-provider.yaml" data-tool="kongctl" }
       MD
     end
   end
@@ -166,7 +166,7 @@ RSpec.describe 'components/entity_example/format/snippets/kongctl.md' do
                 - name: Authorization
                   value: !secret {source: !env OPENAI_AUTH_HEADER}
         ```
-        {: data-file="model-provider.yaml" }
+        {: data-file="model-provider.yaml" data-tool="kongctl" }
       MD
     end
   end
@@ -207,7 +207,7 @@ RSpec.describe 'components/entity_example/format/snippets/kongctl.md' do
               tls:
                 insecure_skip_verify: false
         ```
-        {: data-file="backend_cluster.yaml" }
+        {: data-file="backend_cluster.yaml" data-tool="kongctl" }
       MD
     end
   end
@@ -236,7 +236,7 @@ RSpec.describe 'components/entity_example/format/snippets/kongctl.md' do
               name: my-key
               value: !env MY_KEY
         ```
-        {: data-file="static_key.yaml" }
+        {: data-file="static_key.yaml" data-tool="kongctl" }
       MD
     end
   end
