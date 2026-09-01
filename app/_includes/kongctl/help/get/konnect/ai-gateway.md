@@ -3,9 +3,6 @@ Usage:
   kongctl get konnect ai-gateway [flags]
   kongctl get konnect ai-gateway [command]
 
-Maturity:
-  beta
-
 Aliases:
   ai-gateway, ai-gateways, aigw, AIGW
 
@@ -21,12 +18,12 @@ Examples:
 
 Available Commands:
   agents                  List or get Agents for a Konnect AI Gateway
+  auth-strategies         List or get auth strategies for a Konnect AI Gateway
   config-stores           List or get Config Stores for a Konnect AI Gateway
   consumer-groups         List or get Consumer Groups for a Konnect AI Gateway
   consumers               List or get Consumers for a Konnect AI Gateway
   credentials             List or get Consumer Credentials for a Konnect AI Gateway Consumer
   data-plane-certificates List or get data plane certificates for a Konnect AI Gateway
-  identity-providers      List or get identity providers for a Konnect AI Gateway
   mcp-servers             List or get MCP Servers for a Konnect AI Gateway
   model-providers         List or get model providers for a Konnect AI Gateway
   models                  List or get models for a Konnect AI Gateway
@@ -43,7 +40,8 @@ Flags:
                                 - Config path: [ color-theme ]
                                 - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
                                 - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
-      --columns stringArray     Select text columns as HEADER=.field (repeatable or comma-separated). Supports nested fields, quoted keys, array indexes, and string slices.
+      --columns stringArray     Select text columns as HEADER=.field (repeatable or comma-separated).
+                                Supports nested fields, quoted keys, array indexes, and string slices.
       --config-file string      Path to the configuration file to load.
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
   -h, --help                    help for ai-gateway

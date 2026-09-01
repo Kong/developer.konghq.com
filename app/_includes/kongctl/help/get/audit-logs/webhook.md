@@ -17,7 +17,8 @@ Flags:
                                 - Config path: [ color-theme ]
                                 - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
                                 - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
-      --columns stringArray     Select text columns as HEADER=.field (repeatable or comma-separated). Supports nested fields, quoted keys, array indexes, and string slices.
+      --columns stringArray     Select text columns as HEADER=.field (repeatable or comma-separated).
+                                Supports nested fields, quoted keys, array indexes, and string slices.
       --config-file string      Path to the configuration file to load.
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
   -h, --help                    help for webhook
@@ -43,8 +44,8 @@ Flags:
   -o, --output string           Configures the format of data written to STDOUT.
                                 - Config path: [ output ]
                                 - Allowed    : [ json|yaml|text ] (default "text")
-      --page-size int           Max number of results to include per response page for get and list operations.
-                                - Config path: [ konnect.page-size ] (default 10)
+      --page-size int           Maximum audit-log records requested per API page (1..1000).
+                                - Config path: [ konnect.page-size ] (default 100)
       --pat string              Konnect Personal Access Token (PAT) used to authenticate the CLI.
                                 Setting this value overrides tokens obtained from the login command.
                                 - Config path: [ konnect.pat ]

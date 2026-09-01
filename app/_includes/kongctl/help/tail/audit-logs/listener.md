@@ -1,19 +1,6 @@
 ```ansi
 Usage:
-  kongctl tail audit-logs [flags]
-
-Aliases:
-  audit-logs, audit-log, al, AL
-
-Examples:
-  # Build destination endpoint from public base URL and listener path
-  kongctl tail audit-logs --public-url https://example.ngrok.app --authorization "Bearer <token>"
-
-  # Provide an explicit destination endpoint
-  kongctl tail audit-logs --endpoint https://example.ngrok.app/audit-logs --authorization "Bearer <token>"
-
-  # Explicit product form
-  kongctl tail konnect audit-logs --public-url https://example.ngrok.app --authorization "Bearer <token>"
+  kongctl tail audit-logs listener [flags]
 
 
 Flags:
@@ -30,7 +17,7 @@ Flags:
       --configure-webhook       Automatically bind and enable the organization webhook with the created destination. (default true)
   -d, --detach                  Run listener in background as a detached kongctl process (not compatible with --tail).
       --endpoint string         Explicit destination endpoint URL used for Konnect destination creation.
-  -h, --help                    help for audit-logs
+  -h, --help                    help for listener
       --jq string               Filter streamed JSON records using a jq expression (only used with --tail).
       --listen-address string   HTTP listen address for incoming audit-log webhooks. (default "127.0.0.1:19090")
       --log-file string         Write execution logs to the specified file instead of STDERR.
@@ -49,15 +36,14 @@ Flags:
                                 - Config path: [ output ]
                                 - Allowed    : [ json|yaml|text ] (default "text")
       --pat string              Konnect Personal Access Token (PAT) used to authenticate the CLI.
-                                Setting this value overrides tokens obtained from the login command.
                                 - Config path: [ konnect.pat ]
       --path string             HTTP path that accepts webhook requests. (default "/audit-logs")
   -p, --profile string          Specify the profile to use for this command. (default "default")
       --public-url string       Externally reachable base URL for this listener; used to build destination endpoint when --endpoint is omitted.
-      --region string           Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.
+      --region string           Konnect region identifier (for example "eu").
                                 - Config path: [ konnect.region ]
       --skip-ssl-verification   Skip TLS certificate verification for destination delivery.
-      --tail                    Stream received audit-log records to stdout.
+      --tail                    Stream received audit-log records to stdout. (default true)
       --text-id-format string   Configure UUID rendering in static text-table ID columns.
                                 - Config path: [ text.id-format ]
                                 - Allowed    : [ compact|full ]

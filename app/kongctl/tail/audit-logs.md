@@ -25,4 +25,11 @@ Tail audit logs.
 
 ## Command usage
 
-{% include_cached /kongctl/help/tail/audit-logs.md %}
+{% include_cached /kongctl/help/tail/audit-logs/index.md %}
+
+### kongctl tail audit-logs listener
+
+Run the original webhook-based tail flow: create a destination,
+configure the regional webhook, and stream records received by a local listener.
+
+{% include_cached /kongctl/help/tail/audit-logs/listener.md %}

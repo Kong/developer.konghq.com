@@ -1,34 +1,23 @@
 ```ansi
 Usage:
-  kongctl get konnect audit-logs [flags]
-  kongctl get konnect audit-logs [command]
+  kongctl tail audit-logs [flags]
+  kongctl tail audit-logs [command]
 
 Aliases:
   audit-logs, audit-log
 
 Examples:
-  # Retrieve the 50 most recent events
-  kongctl get audit-logs
+  # Follow organization audit logs
+  kongctl tail audit-logs
 
-  # Export every event from the last 24 hours as JSON Lines
-  kongctl get audit-logs --since 24h --output jsonl
+  # Follow as JSON Lines
+  kongctl tail audit-logs --output jsonl
 
-  # Follow new authorization events until interrupted
-  kongctl get audit-logs --since 1h --type authorization --follow
-
-  # List all audit-log destinations
-  kongctl get audit-logs destinations
-
-  # Get a single destination by id or name
-  kongctl get audit-logs destination <id|name>
-
-  # Get regional webhook configuration
-  kongctl get audit-logs webhook
+  # Use the webhook listener flow
+  kongctl tail audit-logs listener --endpoint https://example.test/audit-logs --authorization "Bearer <token>"
 
 Available Commands:
-  destination  Get one Konnect audit-log destination
-  destinations List Konnect audit-log destinations
-  webhook      Get Konnect regional audit-log webhook configuration
+  listener    Create a webhook destination and stream received events
 
 
 Flags:
@@ -47,7 +36,7 @@ Flags:
                                  Accepts UTC (Z) or a numeric UTC offset.
                                  - UTC example   : [ 2026-08-24T14:00:00Z ]
                                  - Offset example: [ 2026-08-24T09:00:00-05:00 ]
-  -F, --follow                   Poll continuously for new events until interrupted.
+  -F, --follow                   Poll continuously for new events until interrupted. (default true)
   -h, --help                     help for audit-logs
       --jq string                Filter JSON responses using jq expressions (powered by gojq for full jq compatibility)
       --jq-color string          Controls colorized output for jq filter results.
@@ -77,12 +66,11 @@ Flags:
                                  - Allowed    : [ json|yaml|text|jsonl ] (default "text")
       --page-size int            Maximum audit-log records requested per API page (1..1000).
                                  - Config path: [ konnect.page-size ] (default 100)
-      --pat string               Konnect Personal Access Token (PAT) used to authenticate the CLI. 
-                                 Setting this value overrides tokens obtained from the login command.
+      --pat string               Konnect Personal Access Token (PAT) used to authenticate the CLI.
                                  - Config path: [ konnect.pat ]
       --poll-interval duration   Interval between successful polling cycles in follow mode. (default 10s)
   -p, --profile string           Specify the profile to use for this command. (default "default")
-      --region string            Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.
+      --region string            Konnect region identifier (for example "eu").
                                  - Config path: [ konnect.region ]
       --since duration           Retrieve events from the specified lookback period.
                                  - Examples: [ 30s, 15m, 2h, 24h, 168h, 1h30m ]
@@ -100,6 +88,6 @@ Flags:
                                  - Default    : [ compact ]
       --type string              Filter by event type: authentication, authorization, or gateway_access.
 
-Use "kongctl get konnect audit-logs [command] --help" for more information about a command.
+Use "kongctl tail audit-logs [command] --help" for more information about a command.
 
 ```
