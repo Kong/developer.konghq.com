@@ -52,6 +52,7 @@ sections:
       - path: /ai-gateway/forward-proxy/
       - path: /ai-gateway/semantic-similarity/
       - path: /ai-gateway/changelog/
+      - path: /ai-gateway/version-support-policy/
 
   - title: "{{site.ai_gateway}} entities"
     items:
