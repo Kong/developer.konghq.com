@@ -58,6 +58,9 @@ jobs:
           echo "KONG_IMAGE_NAME=${INPUT_IMAGE%:*}" >> $GITHUB_ENV
           echo "KONG_IMAGE_TAG=${INPUT_IMAGE##*:}" >> $GITHUB_ENV
 
+      - name: Pre-pull AI Gateway quickstart dependencies
+        run: docker pull ghcr.io/jqlang/jq:latest
+
       - name: Run tests
         working-directory: tools/automated-tests
         shell: bash
