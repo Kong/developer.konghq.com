@@ -19,6 +19,7 @@ module Kramdown
         snippet = CodeHighlighter.new.highlight(code, language, id)
         Liquid::Template.parse(template, { line_numbers: true }).render(
           {
+            'site' => site.site_payload['site'],
             'codeblock' => {
               'copy' => copy,
               'css_classes' => el.attr['class'],
@@ -28,17 +29,12 @@ module Kramdown
               'data' => data,
               'snippet' => snippet
             }
-          },
-          context
+          }
         )
       end
 
       def template
         @template ||= File.read(File.expand_path('app/_includes/syntax_highlighting.html'))
-      end
-
-      def context
-        @context = Liquid::Context.new(site, {}, {})
       end
 
       def site

@@ -36,7 +36,7 @@ RSpec.describe 'components/entity_example/format/snippets/deck.md' do
             paths:
             - "/mock"
         ```
-        {: data-file="kong.yaml" }
+        {: data-file="kong.yaml" data-tool="deck" }
       MD
     end
   end
@@ -72,7 +72,7 @@ RSpec.describe 'components/entity_example/format/snippets/deck.md' do
             config:
               config_store_id: ${{ env "DECK_CONFIG_STORE_ID" }}
         ```
-        {: data-file="kong.yaml" }
+        {: data-file="kong.yaml" data-tool="deck" }
       MD
     end
   end
@@ -123,7 +123,7 @@ RSpec.describe 'components/entity_example/format/snippets/deck.md' do
                   max_tokens: 512
                   temperature: 1.0
         ```
-        {: data-file="kong.yaml" }
+        {: data-file="kong.yaml" data-tool="deck" }
       MD
     end
   end
