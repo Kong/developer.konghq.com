@@ -492,7 +492,34 @@ rows:
             cta:
               url: /ai-gateway/model-cost-management/
               align: end
-      
+
+  - header:
+      type: h2
+      text: Key references
+    column_count: 2
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.ai_gateway}} version support policy"
+              description: |
+                The {{site.ai_gateway}} version support policy outlines the {{site.ai_gateway}}
+                versioning scheme and version lifecycle, from release to sunset support.
+              cta:
+                text: View the version support policy
+                url: /ai-gateway/version-support-policy/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Changelog
+              description: Changelog for released {{site.ai_gateway}} versions
+              icon: /assets/icons/service-document.svg
+              cta:
+                text: See changelog
+                url: /ai-gateway/changelog/
+                align: end
+
   - header:
       type: h2
       text: "{{site.ai_gateway}} guides"
