@@ -36,7 +36,7 @@ faqs:
       * **Hostname field**: On a {{site.base_gateway}} SNI, the hostname is the SNI's `name`. On an AI SNI, `name` is a separate immutable identifier, the hostname is set in `hostname`, and `display_name` is required.
       * **Metadata**: A {{site.base_gateway}} SNI uses `tags`. An AI SNI uses `labels`, following the {{site.ai_gateway}} entity convention.
       * **Tooling**: {{site.base_gateway}} SNIs are managed through the Admin API, {{site.konnect_short_name}} API, decK, KIC, and Terraform. AI SNIs are managed through the {{site.konnect_short_name}} {{site.ai_gateway}} API.
-      * **Scope**: A {{site.base_gateway}} SNI is scoped to a control plane, and to a Workspace on {{site.konnect_short_name}}. An AI SNI is scoped to a single {{site.ai_gateway}} instance, which doesn't participate in Workspaces.
+      * **Scope**: A {{site.base_gateway}} SNI is scoped to a control plane, and to a Workspace on {{site.konnect_short_name}}. An AI SNI is scoped to a single {{site.ai_gateway}}, which doesn't participate in Workspaces.
 
   - q: What happens if I delete the AI Certificate an AI SNI points at?
     a: |
@@ -44,16 +44,16 @@ faqs:
 
   - q: How does this relate to the AI Data Plane Certificate entity?
     a: |
-      They sit on opposite sides of the data plane. An [AI Data Plane Certificate](/ai-gateway/entities/ai-data-plane-certificate/) authenticates a data plane node to the {{site.ai_gateway}} control plane over mTLS. An AI SNI, paired with an AI Certificate, controls which AI Certificate that node presents to LLM, MCP, and A2A clients connecting to it.
+      They sit on opposite sides of the data plane. An [AI Data Plane Certificate](/ai-gateway/entities/ai-data-plane-certificate/) authenticates a data plane to the {{site.ai_gateway}} control plane over mTLS. An AI SNI, paired with an AI Certificate, controls which certificate that data plane presents to LLM, MCP, and A2A clients connecting to it.
 ---
 
 ## What is an AI SNI?
 
-An AI SNI (Server Name Indication) maps a hostname to an [AI Certificate](/ai-gateway/entities/ai-certificate/) registered on an {{site.ai_gateway}} instance. When a client opens a TLS connection to a data plane node, the node reads the hostname from the TLS `ClientHello` message and presents the AI Certificate that the matching AI SNI points at. This lets a single data plane serve several hostnames, each with its own AI Certificate, on the same listener.
+An AI SNI (Server Name Indication) maps a hostname to an [AI Certificate](/ai-gateway/entities/ai-certificate/) registered on an {{site.ai_gateway}}. When a client opens a TLS connection to a data plane, the data plane reads the hostname from the TLS `ClientHello` message and presents the AI Certificate that the matching AI SNI points at. This lets a single data plane serve several hostnames, each with its own AI Certificate, on the same listener.
 
-Each AI SNI belongs to exactly one {{site.ai_gateway}} instance, alongside the AI Certificate it references.
+Each AI SNI belongs to exactly one {{site.ai_gateway}}, alongside the AI Certificate it references.
 
-The mapping is many-to-one: one AI Certificate can be associated with many hostnames, so you create one AI SNI per hostname (or one wildcard AI SNI per subdomain) and point them all at the same AI Certificate.
+The mapping is many-to-one: one AI Certificate can be associated with many hostnames, so you create one AI SNI per hostname (or one wildcard AI SNI per subdomain) and point them all at the same AI Certificate. Use this to expose your LLM, MCP, and A2A traffic on separate hostnames, such as `llm.example.com`, `mcp.example.com`, and `agents.example.com`, while backing them all with a single certificate instead of managing one per hostname.
 
 ## Hostname matching
 
@@ -83,7 +83,9 @@ There are two ways to create an AI SNI:
 
 ## Set up an AI SNI
 
-The following example creates an AI SNI that maps every subdomain of `example.com` to an AI Certificate named `my-tls-cert`. Create the AI Certificate on the same {{site.ai_gateway}} first, through `/v1/ai-gateways/{aiGatewayId}/certificates`.
+The following example creates an AI SNI that maps every subdomain of `example.com` to an AI Certificate named `my-tls-cert`.
+
+The `certificate` field takes the name of an existing AI Certificate entity. For more information, see [AI Certificates](/ai-gateway/entities/ai-certificate/).
 
 {% entity_example %}
 type: sni
