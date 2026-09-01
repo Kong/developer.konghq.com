@@ -108,3 +108,11 @@ rows:
               cta:
                 text: AI Data Plane Certificate entity
                 url: /ai-gateway/entities/ai-data-plane-certificate/
+      - blocks:
+          - type: card
+            config:
+              title: AI SNI
+              description: Map hostnames to a certificate so data planes present the right TLS certificate to each client.
+              cta:
+                text: AI SNI entity
+                url: /ai-gateway/entities/ai-sni/
