@@ -65,9 +65,9 @@ faqs:
 
 ## What is an AI Certificate?
 
-An AI Certificate holds a PEM-encoded public certificate chain and its matching private key. An {{site.ai_gateway}} data plane uses it to terminate TLS connections from clients, and to originate TLS connections to upstreams.
+An AI Certificate holds a PEM-encoded public certificate chain and its matching private key. An {{site.ai_gateway}} data plane uses it to terminate TLS connections from clients, and to originate TLS connections to LLM providers.
 
-Each AI Certificate belongs to exactly one {{site.ai_gateway}} instance. An {{site.ai_gateway}} can hold many AI Certificates, so you can serve several hostnames from the same data plane, each with its own certificate.
+Each AI Certificate belongs to exactly one {{site.ai_gateway}} instance. An {{site.ai_gateway}} can hold many AI Certificates, so you can serve several hostnames from the same data plane, each with its own certificate. For example, by exposing your LLM, MCP, and A2A traffic on separate hostnames.
 
 ## Associate hostnames with an AI Certificate
 
@@ -80,9 +80,9 @@ You can create the AI SNIs:
 
 ## Alternative certificates
 
-Set [`cert_alt`](#schema-aigateway-certificate-cert-alt) and [`key_alt`](#schema-aigateway-certificate-key-alt) to serve a second certificate alongside the first. The alternative certificate must use a different key algorithm than `cert`, which lets one AI Certificate carry, for example, both an RSA and an ECDSA chain. The data plane then picks whichever one the connecting client supports.
+Set [`cert_alt`](#schema-aigateway-certificate-cert-alt) and [`key_alt`](#schema-aigateway-certificate-key-alt) to serve a second certificate alongside the first. The alternative certificate must use a different key algorithm than the main `cert`. This allows an AI Certificate to carry, for example, both an RSA and an ECDSA chain. The data plane then picks whichever one the connecting client supports.
 
-Both fields go together: `key_alt` requires `cert_alt` to be set.
+The alternative fields go together: `key_alt` requires `cert_alt` to be set.
 
 ## Store keys in an AI Vault
 
