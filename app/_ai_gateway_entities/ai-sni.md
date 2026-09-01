@@ -80,7 +80,6 @@ There are two ways to create an AI SNI:
 * **Standalone**: `POST` to `/v1/ai-gateways/{aiGatewayId}/snis` with an AI Certificate name in the request body. Use this when you're attaching hostnames to an AI Certificate that already exists.
 * **Nested under an AI Certificate**: `POST` to `/v1/ai-gateways/{aiGatewayId}/certificates/{certificateIdOrName}/snis`. The AI Certificate comes from the path, so the request body has no `certificate` field.
 
-Both create the same entity. Renaming an AI Certificate breaks any AI SNI still pointing at the old name, so update the referencing AI SNIs whenever you rename an AI Certificate.
 
 ## Set up an AI SNI
 
