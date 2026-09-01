@@ -150,6 +150,7 @@ formats:
       consumer:       '/consumers'
       consumer_group: '/consumer-groups'
       vault:          '/vaults'
+      certificate:    '/certificates'
       sni:            '/snis'
     plugin_endpoints:
       consumer:       '/consumers/{consumer}/plugins/'
