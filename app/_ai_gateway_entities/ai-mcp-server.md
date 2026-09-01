@@ -31,6 +31,8 @@ related_resources:
     url: /ai-gateway/entities/ai-consumer-group/
   - text: Kong MCP traffic gateway
     url: /mcp/
+  - text: MCP 2026-07-28 protocol support
+    url: /ai-gateway/mcp-protocol-2026-07-28/
   - text: Model Context Protocol specification
     url: https://modelcontextprotocol.io/
   - text: Map a RESTful API to MCP tools
@@ -40,8 +42,19 @@ related_resources:
 faqs:
   - q: Which MCP protocol version does the runtime use?
     a: |
-      The MCP runtime behind an AI MCP Server entity speaks MCP protocol version `2025-06-18`. Upstream
-      MCP servers may run `2025-06-18` or `2025-11-25`. Versions from 2024 are not supported.
+      The MCP runtime behind an AI MCP Server entity accepts client-facing protocol revisions
+      `2025-03-26`, `2025-06-18`, `2025-11-25`, and, from {{site.ai_gateway}} 2.1, `2026-07-28`.
+      Upstream MCP servers in `passthrough-listener` and `upstream-server` modes may additionally run
+      `2024-11-05`. Narrow which revisions a `listener` or `conversion-listener` server accepts with
+      [`config.server.allowed_versions`](#schema-aigateway-mcpserver-config-server-allowed-versions);
+      unset accepts every revision Kong implements. See [MCP protocol versions](#mcp-protocol-versions)
+      and [MCP 2026-07-28 protocol support](/ai-gateway/mcp-protocol-2026-07-28/).
+
+  - q: What happens if a client requests an unsupported protocol revision?
+    a: |
+      For `2026-07-28` clients, {{site.ai_gateway}} returns `HTTP 400` with the JSON-RPC error code
+      `-32022`, listing the revisions the server accepts. This check only applies to `2026-07-28`
+      requests; earlier revisions have no equivalent rejection.
 
   - q: What's the difference between the server types?
     a: |
@@ -106,6 +119,37 @@ Because MCP endpoints run directly on {{site.ai_gateway}}, you don't need to hos
 
 {:.warning}
 > **Note:** MCP traffic is API-level traffic, not LLM request/response flows. Authenticate MCP traffic through an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) referenced in [`access.auth_strategies`](#schema-aigateway-mcpserver-access), the same as AI Models and AI Agents. Standard API-level policies (rate limiting, logging) still apply to MCP traffic through the [`policies`](#schema-aigateway-mcpserver-policies) field. AI Policies that operate on LLM prompt/response flows (such as prompt guards or model routing) won't apply here.
+
+## MCP protocol versions
+
+{{site.ai_gateway}} accepts client-facing MCP protocol revisions `2025-03-26`, `2025-06-18`, `2025-11-25`, and, from {{site.ai_gateway}} 2.1, `2026-07-28`. Upstream MCP servers in `passthrough-listener` and `upstream-server` modes may also run `2024-11-05`. `2026-07-28` is a stateless revision: it removes the `initialize` handshake and `Mcp-Session-Id` entirely, so the client declares its revision on every request instead of once at connection time. For the full set of changes and how {{site.ai_gateway}} implements them, see [MCP 2026-07-28 protocol support](/ai-gateway/mcp-protocol-2026-07-28/).
+
+The following `config.server` fields, available starting in {{site.ai_gateway}} 2.1, control protocol-revision behavior:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Modes
+    key: modes
+  - title: Description
+    key: description
+rows:
+  - field: "[`allowed_versions`](#schema-aigateway-mcpserver-config-server-allowed-versions)"
+    modes: "`listener`, `conversion-listener`"
+    description: |
+      Narrows the protocol revisions this server accepts. Unset accepts every revision {{site.ai_gateway}} implements. When set, `server/discover` advertises exactly this list, and a `2026-07-28` client declaring a different revision is rejected with `HTTP 400` and JSON-RPC error `-32022`. Not available on `passthrough-listener`, which keeps the base server configuration.
+  - field: "[`cache.tools_list`](#schema-aigateway-mcpserver-config-server-cache-tools-list) and [`cache.discover`](#schema-aigateway-mcpserver-config-server-cache-discover)"
+    modes: "`listener`, `conversion-listener`"
+    description: |
+      Cache hints (`ttl_ms` and `cache_scope`) {{site.ai_gateway}} emits on the `tools/list` and `server/discover` responses it serves. `cache_scope: public` is rejected when [`access.default_tool_acls`](#schema-aigateway-mcpserver-access-default-tool-acls) or a tool's own [`access.acls`](#schema-aigateway-mcpserver-tools-access) filters the tool list per subject. Only clients on a revision that defines cache hints (`2026-07-28`) receive them.
+  - field: "[`upstream_protocol_version`](#schema-aigateway-mcpserver-config-server-upstream-protocol-version)"
+    modes: "`upstream-server`"
+    description: |
+      Pins the protocol revision {{site.ai_gateway}} speaks to the upstream MCP server. Unset negotiates a revision through an `initialize` handshake, which is the default. Set a fixed revision to reach an upstream that answers no handshake and mints no session.
+{% endtable %}
+<!-- vale on -->
 
 ## Manage AI MCP Servers
 
@@ -217,6 +261,9 @@ rows:
     mode: "`upstream-server`"
 {% endtable %}
 <!-- vale on -->
+
+{:.info}
+> `allowed_versions` and `cache` only apply to `listener` and `conversion-listener` modes. `passthrough-listener` keeps the base server configuration and doesn't accept either field; `upstream-server` instead accepts `upstream_protocol_version`. See [MCP protocol versions](#mcp-protocol-versions).
 
 ## How MCP traffic flows
 
@@ -367,15 +414,22 @@ Configure how long sessions persist using [`session_ttl`](#schema-aigateway-mcps
 {:.info}
 > Secrets used in session encryption can be referenced from an [AI Vault](/ai-gateway/entities/ai-vault/).
 
+<!-- FOT ENG REVIEW: confirm how config.server.session interacts with 2026-07-28 clients, which carry no Mcp-Session-Id on the wire, before expanding this note further. -->
+{:.warning}
+> `config.server.session` manages {{site.ai_gateway}}-level session state and is independent of the MCP protocol's own session mechanism, which `2026-07-28` removes entirely. A `2026-07-28` client carries no `Mcp-Session-Id` on the wire; see [MCP protocol versions](#mcp-protocol-versions).
+
 ## Connecting to the MCP endpoint
 
 An MCP client such as [Claude Desktop](https://claude.ai/download), Cursor, or [ChatWise](https://chatwise.app/) handles the following details automatically. They matter when testing an AI MCP Server directly, for example with `curl`, or when building a custom MCP client.
 
-**Streamable HTTP handshake**. {{site.ai_gateway}} implements the MCP [Streamable HTTP transport](https://modelcontextprotocol.io/specification/2025-06-18/basic/transports#streamable-http). A spec-compliant client performs this sequence before calling tools:
+**Streamable HTTP handshake**. {{site.ai_gateway}} implements the MCP [Streamable HTTP transport](https://modelcontextprotocol.io/specification/2025-06-18/basic/transports#streamable-http). A spec-compliant client on `2025-03-26`, `2025-06-18`, or `2025-11-25` performs this sequence before calling tools:
 
 1. Send an `initialize` request to the route configured on [`config.route.paths`](#schema-aigateway-mcpserver-config-route-paths). The response includes an `Mcp-Session-Id` header.
 1. Send a `notifications/initialized` notification to the same route.
 1. Carry the `Mcp-Session-Id` header on subsequent `tools/list` and `tools/call` requests.
+
+{:.info}
+> **`2026-07-28` clients skip the handshake.** There's no `initialize` exchange and no `Mcp-Session-Id`: the client declares its revision on every request through the `MCP-Protocol-Version` header, reconfirmed from `_meta`, and an inbound `Mcp-Session-Id` header is ignored. `server/discover` replaces `initialize` as the way a client fetches server capabilities. See [MCP protocol versions](#mcp-protocol-versions).
 
 {:.success}
 > **Tool argument naming**.
@@ -487,6 +541,8 @@ For modes that support server-level ACL configuration (`conversion-listener`, `l
 
 1. **`consumer`** (default). Evaluates against the resolved AI Consumer identity.
 1. **`oauth_access_token`**. Evaluates against a claim extracted from the OAuth access token. Set [`access.access_token_claim_field`](#schema-aigateway-mcpserver-access-access-token-claim-field) to a jq filter (for example, `.user.email` for a nested claim). The token is validated by the `openid-connect` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) referenced in [`access.auth_strategies`](#schema-aigateway-mcpserver-access) — on this server if it accepts MCP traffic directly (`conversion-listener`, `listener`, `passthrough-listener`), or on the `listener` that aggregates it if this is a `conversion-only` or `upstream-server` AI MCP Server. If [`access.metadata`](#schema-aigateway-mcpserver-access-metadata) is also set, validation happens through the generated AI MCP OAuth2 Policy configuration instead; see [Protected resource metadata](#protected-resource-metadata).
+
+   When evaluating a scope-based ACL rule against a `2026-07-28` client, {{site.ai_gateway}} matches on scope hierarchy: a broader scope granted to the token satisfies a rule naming a narrower one. Earlier protocol revisions keep exact-match comparison between the granted scope and the rule.
 
 `conversion-only` AI MCP Servers have no `access` field of their own, since they never accept incoming MCP traffic directly. They only support per-tool ACLs (via [`tools[].access.acls`](#schema-aigateway-mcpserver-tools-access)), which travel with the tool definition when a `listener` aggregates it.
 
