@@ -112,7 +112,7 @@ rows:
           - type: card
             config:
               title: AI SNI
-              description: Map hostnames to a certificate so data planes present the right TLS certificate to each client.
+              description: Map hostnames to an AI Certificate so data planes present the right TLS certificate to each client.
               cta:
                 text: AI SNI entity
                 url: /ai-gateway/entities/ai-sni/
