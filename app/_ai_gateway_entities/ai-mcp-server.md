@@ -37,6 +37,8 @@ related_resources:
     url: /ai-gateway/map-api-to-mcp-tools/
   - text: Aggregate MCP tools from multiple AI MCP Server entities
     url: /ai-gateway/aggregate-mcp-tools/
+  - text: Catalog MCP servers
+    url: /catalog/mcp-servers/
 faqs:
   - q: Which MCP protocol version does the runtime use?
     a: |
@@ -116,6 +118,10 @@ AI MCP Servers can be created and managed through the:
 * [kongctl](/kongctl/)
 
 For configuration examples and step-by-step setup instructions, see [Set up an AI MCP Server](#set-up-an-ai-mcp-server).
+
+After you've created an MCP server, you can [add it to {{site.catalog}}](/catalog/mcp-servers/).
+{{site.konnect_catalog}} gives you a single place to see every MCP server across your organization, so you don't have to track each one down in a separate tool to know what it does or how to connect to it.
+You can also use {{site.catalog}} to identify MCP servers that aren't yet protected by {{site.ai_gateway}}.
 
 ## AI MCP Server governance
 
