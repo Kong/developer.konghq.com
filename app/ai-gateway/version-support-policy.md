@@ -43,9 +43,9 @@ For the purposes of this support document:
 
 **Versioning**:
 
-* **Major Version** means a version identified by the number to the left of the leftmost decimal point (X.y.z). For example, 2.1.3 indicates Major Version 2 and 1.3.0 indicates Major Version 1.  
+* **Major Version** means a version identified by the number to the left of the leftmost decimal point (X.y.z). For example, `2.1.3` indicates Major Version `2` and `1.3.0` indicates Major Version `1`.  
     
-* **Minor Version** means a version identified by a change in the number in between the two leftmost decimal points (x.Y.z). For example, 2.1.3 indicates Minor Version 1 and 1.3.0 indicates Minor Version 3.  
+* **Minor Version** means a version identified by a change in the number in between the two leftmost decimal points (x.Y.z). For example, `2.1.3` indicates Minor Version `1` and `1.3.0` indicates Minor Version `3`.  
     
 * **Patch Version** means a version identified by a change in the number to the right of the rightmost decimal (x.y.Z). For example, `2.1.3` indicates patch version `3`.
 
@@ -66,7 +66,7 @@ Kong aims to release a new **minor version approximately every 4 weeks**.
 
 Minor versions contain features and bug fixes and are usually backwards compatible within their major version sequence.
 
-We will be supporting the **two most recent minor versions** of {{site.ai_gateway_name}}.
+We support the **two most recent minor versions** of {{site.ai_gateway_name}}.
 
 ### Patch release
 
@@ -97,7 +97,7 @@ Kong follows a structured process for addressing bugs:
 
 From time to time, as part of the evolution of our products, we deprecate (in other words, remove or discontinue) product features or functionality.
 
-We aim to provide customers with at least 6 months' notice of the removal or phasing out of a significant feature or functionality. 
+We aim to provide customers with at least 6 months notice of the removal or phasing out of a significant feature or functionality. 
 We may provide less or no notice if the change is necessary for security or legal reasons, though such situations should be rare. 
 We may provide notice in our documentation, product update emails, or in-product notifications if applicable.
 
