@@ -240,7 +240,7 @@ The `--out` flag sets the output directory for the converted files, which the co
 Open the `yaml` files in `./out` and confirm that the converter captured everything you expect. At minimum, check that:
 
 - Every AI Proxy plugin-based model has a corresponding AI Model entry in `models.yaml`, with the right `capabilities`, `formats`, and `targets`.
-  - Optionally, you can set [cost management parameters](/ai-gateway/model-cost-management/#model-cost-configuration) per target.
+-  Existing `input_cost` and `output_cost` parameters are inherited from the `ai-proxy-advanced` plugin. Optionally, you can set additional [cost management parameters](/ai-gateway/model-cost-management/#model-cost-configuration) per target.
 - Provider credentials were extracted correctly, and each `targets[].provider` reference resolves to a declared AI Model Provider in `providers.yaml`.
 - Every AI MCP Server in `mcp_servers.yaml` has the correct `type` for its original plugin mode, and that each `listener` names its tool sets in `sources`.
 - Each AI Agent points at the correct upstream URL and carries the logging settings you had configured.
