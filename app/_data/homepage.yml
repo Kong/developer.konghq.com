@@ -20,7 +20,7 @@ agents_section:
     - tool: kongctl
       icon: /assets/icons/terminal.svg
       description: "Control Konnect resources from the terminal, declaratively or imperatively."
-      install: "brew install --cask kong/kongctl/kongctl"
+      install: "brew install --formula kong/kongctl/kongctl"
       command: "kongctl get control-planes"
       docs_url: /kongctl/
     - tool: inso
@@ -284,4 +284,3 @@ specs_section:
 
 whats_new:
   all_url: /changelogs/
-
