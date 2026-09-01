@@ -445,7 +445,7 @@ This feature is currently in beta and is subject to change.<br /><br />Configura
 
 | Field | Description |
 | --- | --- |
-| `config` _[AIGatewayAuthStrategyKeyAuthConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategykeyauthconfig)_ | Configuration for the key-auth auth strategy. For advanced use cases, additional config properties can be sent in the request body. See: https://developer.konghq.com/plugins/key-auth/reference/ for the list of properties |
+| `config` _[AIGatewayAuthStrategyKeyAuthConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategykeyauthconfig)_ | Configuration for the key-auth auth strategy. For advanced use cases, additional config properties can be sent in the request body. See: /ai-gateway/entities/ai-auth-strategy/#api-key-authentication for the list of properties |
 | `displayName` _string_ | The display name for this auth strategy instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
@@ -462,7 +462,7 @@ AIGatewayAuthStrategyKeyAuthConfig Configuration for the key-auth auth
 strategy.
 For advanced use cases, additional config properties can be sent in the
 request body.
-See: https://developer.konghq.com/plugins/key-auth/reference/ for the list of
+See: /ai-gateway/entities/ai-auth-strategy/#api-key-authentication for the list of
 properties
 
 
@@ -509,7 +509,7 @@ This feature is currently in beta and is subject to change.<br /><br />Configura
 
 | Field | Description |
 | --- | --- |
-| `config` _[AIGatewayAuthStrategyOpenIDConnectConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategyopenidconnectconfig)_ | Configuration for the OpenID Connect auth strategy. For advanced use cases, additional config properties can be sent in the request body. See: https://developer.konghq.com/plugins/openid-connect/reference/ for the list of properties |
+| `config` _[AIGatewayAuthStrategyOpenIDConnectConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayauthstrategyopenidconnectconfig)_ | Configuration for the OpenID Connect auth strategy. For advanced use cases, additional config properties can be sent in the request body. See: /ai-gateway/entities/ai-auth-strategy/#oidc-token-authentication for the list of properties |
 | `displayName` _string_ | The display name for this auth strategy instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
@@ -526,7 +526,7 @@ AIGatewayAuthStrategyOpenIDConnectConfig Configuration for the OpenID Connect
 auth strategy.
 For advanced use cases, additional config properties can be sent in the
 request body.
-See: https://developer.konghq.com/plugins/openid-connect/reference/ for the
+See: /ai-gateway/entities/ai-auth-strategy/#oidc-token-authentication for the
 list of properties
 
 
@@ -1924,11 +1924,11 @@ This feature is currently in beta and is subject to change.
 | Field | Description |
 | --- | --- |
 | `accessTokenHeader` _string_ | Header name used to send the fetched access token to the upstream MCP server. The value should include the header name and the token prefix if needed. |
-| `clientID` _string_ | The client ID for the OAuth 2.0 client-credentials. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
-| `clientSecret` _string_ | The client secret for the OAuth 2.0 client-credentials. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `clientID` _string_ | The client ID for the OAuth 2.0 client-credentials. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
+| `clientSecret` _string_ | The client secret for the OAuth 2.0 client-credentials. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 | `idTokenHeader` _string_ | Header name used to send the fetched ID token to the upstream MCP server. The value should include the header name and the token prefix if needed. Leave empty to omit the ID token when fetching the tools list. |
-| `scope` _string_ | The scopes for the OAuth 2.0 client-credentials. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
-| `tokenEndpoint` _string_ | The token endpoint URL for fetching the OAuth 2.0 access token using client-credentials. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `scope` _string_ | The scopes for the OAuth 2.0 client-credentials. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
+| `tokenEndpoint` _string_ | The token endpoint URL for fetching the OAuth 2.0 access token using client-credentials. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 
 _Appears in:_
 
@@ -1947,7 +1947,7 @@ This feature is currently in beta and is subject to change.
 | --- | --- |
 | `accessTokenHeader` _string_ | Header name used to send the fetched access token to the upstream MCP server. The value should include the header name and the token prefix if needed. |
 | `idTokenHeader` _string_ | Header name used to send the fetched ID token to the upstream MCP server. The value should include the header name and the token prefix if needed. Leave empty to omit the ID token when fetching the tools list. |
-| `scope` _string_ | The scopes for the OAuth 2.0 client-credentials. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `scope` _string_ | The scopes for the OAuth 2.0 client-credentials. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 
 _Appears in:_
 
@@ -3224,12 +3224,12 @@ This feature is currently in beta and is subject to change.<br /><br />Configura
 
 | Field | Description |
 | --- | --- |
-| `accessKeyID` _string_ | The access key id for authenticating with static IAM User credentials. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
-| `assumeRoleArn` _string_ | The ARN of the IAM role to assume for generating authentication tokens. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `accessKeyID` _string_ | The access key id for authenticating with static IAM User credentials. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
+| `assumeRoleArn` _string_ | The ARN of the IAM role to assume for generating authentication tokens. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 | `batchRoleArn` _string_ | AWS role arn to use when calling the batch API. |
-| `roleSessionName` _string_ | The session name for the temporary credentials when assuming the IAM role. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
-| `secretAccessKey` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | The secret access key for authenticating with static IAM User credentials. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
-| `sessionToken` _string_ | The session token for authenticating with temporary IAM credentials (issued by AWS STS, Vault, or SSO/SAML). It is sent to AWS as the `X-Amz-Security-Token` header. Because temporary credentials are short-lived, reference this from a secrets backend so it is refreshed before it expires. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `roleSessionName` _string_ | The session name for the temporary credentials when assuming the IAM role. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
+| `secretAccessKey` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | The secret access key for authenticating with static IAM User credentials. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
+| `sessionToken` _string_ | The session token for authenticating with temporary IAM credentials (issued by AWS STS, Vault, or SSO/SAML). It is sent to AWS as the `X-Amz-Security-Token` header. Because temporary credentials are short-lived, reference this from a secrets backend so it is refreshed before it expires. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 | `stsEndpointURL` _string_ | The STS endpoint URL to use for generating authentication tokens. If not specified, the default AWS STS endpoint will be used. |
 
 _Appears in:_
@@ -3246,9 +3246,9 @@ This feature is currently in beta and is subject to change.<br /><br />Configura
 
 | Field | Description |
 | --- | --- |
-| `clientID` _string_ | If azure_use_managed_identity is set to true, and you need to use a different user-assigned identity for this LLM instance, set the client ID. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
-| `clientSecret` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | If azure_use_managed_identity is set to true, and you need to use a different user-assigned identity for this LLM instance, set the client secret. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
-| `tenantID` _string_ | If azure_use_managed_identity is set to true, and you need to use a different user-assigned identity for this LLM instance, set the tenant ID. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `clientID` _string_ | If azure_use_managed_identity is set to true, and you need to use a different user-assigned identity for this LLM instance, set the client ID. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
+| `clientSecret` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | If azure_use_managed_identity is set to true, and you need to use a different user-assigned identity for this LLM instance, set the client secret. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
+| `tenantID` _string_ | If azure_use_managed_identity is set to true, and you need to use a different user-assigned identity for this LLM instance, set the tenant ID. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 | `useManagedIdentity` _string_ | Set true to use the Azure Cloud Managed Identity (or user-assigned identity) to authenticate with Azure-provider models. |
 
 _Appears in:_
@@ -3299,8 +3299,8 @@ AIGatewayModelProviderConfigAuthBasicHeaders is a type alias.
 
 | Field | Description |
 | --- | --- |
-| `name` _string_ | The name of the header used for authentication. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
-| `value` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | The auth header value for ‘header_name’, for example ‘Bearer key...’. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `name` _string_ | The name of the header used for authentication. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
+| `value` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | The auth header value for ‘header_name’, for example ‘Bearer key...’. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 
 _Appears in:_
 
@@ -3316,8 +3316,8 @@ AIGatewayModelProviderConfigAuthBasicParams is a type alias.
 | Field | Description |
 | --- | --- |
 | `location` _string_ | Specify whether the param name and value options go in a query string, or the POST form/JSON body. |
-| `name` _string_ | This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
-| `value` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `name` _string_ | This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
+| `value` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 
 _Appears in:_
 
@@ -3333,9 +3333,9 @@ This feature is currently in beta and is subject to change.<br /><br />Configura
 
 | Field | Description |
 | --- | --- |
-| `metadataURL` _string_ | Custom metadata URL for GCP authentication. Useful for restricted network environments or custom GCP endpoints. If not set, Kong will use the default Google metadata endpoint. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
-| `oauthTokenURL` _string_ | Custom OAuth token URL for GCP authentication. Useful for restricted network environments or custom GCP endpoints. If not set, Kong will use the default Google OAuth token endpoint. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
-| `serviceAccountJSON` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | Full JSON string of the GCP service account to authenticate. If not set (and gcp_use_service_account is true), the service account JSON will be from the environment variable GCP_SERVICE_ACCOUNT. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `metadataURL` _string_ | Custom metadata URL for GCP authentication. Useful for restricted network environments or custom GCP endpoints. If not set, Kong will use the default Google metadata endpoint. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
+| `oauthTokenURL` _string_ | Custom OAuth token URL for GCP authentication. Useful for restricted network environments or custom GCP endpoints. If not set, Kong will use the default Google OAuth token endpoint. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
+| `serviceAccountJSON` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | Full JSON string of the GCP service account to authenticate. If not set (and gcp_use_service_account is true), the service account JSON will be from the environment variable GCP_SERVICE_ACCOUNT. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 | `useGcpServiceAccount` _string_ | Use service account auth for GCP-based providers and models. |
 
 _Appears in:_
@@ -4145,12 +4145,12 @@ This feature is currently in beta and is subject to change.
 | `dimensions` _int_ | the desired dimensionality for the vectors |
 | `distanceMetric` _string_ | the distance metric to use for vector searches |
 | `host` _string_ | the host of the pgvector database |
-| `password` _string_ | the password of the pgvector database This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `password` _string_ | the password of the pgvector database This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 | `port` _int_ | the port of the pgvector database |
 | `ssl` _[AIGatewayModelVectorDBConfigPgVectorSSL](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelvectordbconfigpgvectorssl)_ |  |
 | `threshold` _float64_ | the default similarity threshold for accepting semantic search results (float). Higher threshold means more results are considered similar. |
 | `timeout` _float64_ | the timeout of the pgvector database |
-| `user` _string_ | the user of the pgvector database This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `user` _string_ | the user of the pgvector database This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 
 _Appears in:_
 
@@ -4194,18 +4194,18 @@ This feature is currently in beta and is subject to change.<br /><br />Config fo
 | `database` _int_ | Database to use for the Redis connection when using the `redis` strategy |
 | `dimensions` _int_ | the desired dimensionality for the vectors |
 | `distanceMetric` _string_ | the distance metric to use for vector searches |
-| `host` _string_ | A string representing a host name, such as example.com. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `host` _string_ | A string representing a host name, such as example.com. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 | `keepalive` _[AIGatewayModelVectorDBConfigRedisKeepalive](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelvectordbconfigrediskeepalive)_ | Keepalive configuration for the Redis connection. |
-| `password` _string_ | Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
-| `port` _[AIGatewayModelVectorDBConfigRedisPort](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelvectordbconfigredisport)_ | An integer representing a port number between 0 and 65535, inclusive. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `password` _string_ | Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
+| `port` _[AIGatewayModelVectorDBConfigRedisPort](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelvectordbconfigredisport)_ | An integer representing a port number between 0 and 65535, inclusive. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 | `readTimeout` _int_ | An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2. |
 | `sendTimeout` _int_ | An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2. |
 | `sentinel` _[AIGatewayModelVectorDBConfigRedisSentinel](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelvectordbconfigredissentinel)_ | Configuration for Redis Sentinel. |
-| `serverName` _string_ | A string representing an SNI (server name indication) value for TLS. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `serverName` _string_ | A string representing an SNI (server name indication) value for TLS. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 | `ssl` _string_ | If set to true, uses SSL to connect to Redis. |
 | `sslVerify` _string_ | If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly. |
 | `threshold` _float64_ | the default similarity threshold for accepting semantic search results (float). Higher threshold means more results are considered similar. |
-| `username` _string_ | Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `username` _string_ | Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 
 _Appears in:_
 
@@ -4380,9 +4380,9 @@ AIGatewayModelVectorDBConfigRedisSentinel Configuration for Redis Sentinel.
 | --- | --- |
 | `master` _string_ | Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel. |
 | `nodes` _[][AIGatewayModelVectorDBConfigRedisSentinelNodes](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelvectordbconfigredissentinelnodes)_ | Sentinel node addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Sentinel. The minimum length of the array is 1 element. |
-| `password` _string_ | Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `password` _string_ | Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 | `role` _string_ | Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel. |
-| `username` _string_ | Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `username` _string_ | Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 
 _Appears in:_
 
@@ -4470,14 +4470,14 @@ AIGatewayPolicyAPISpec defines the API spec fields for AIGatewayPolicy.
 
 | Field | Description |
 | --- | --- |
-| `config` _[AIGatewayPolicyConfigDataSource](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaypolicyconfigdatasource)_ | Configuration for the policy. This is equivalent to the Kong 3 plugin configuration. Note: Plugins have been renamed to Policies in Kong AI Gateway. Policy types and configuration documentation can be found in the [Developer Docs](https://developer.konghq.com/plugins/). |
+| `config` _[AIGatewayPolicyConfigDataSource](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaypolicyconfigdatasource)_ | Configuration for the policy. This is equivalent to the Kong 3 plugin configuration. Note: Plugins have been renamed to Policies in Kong AI Gateway. Policy types and configuration documentation can be found in the [Developer Docs](/ai-gateway/policies/). |
 | `displayName` _string_ | The display name for this policy instance. |
 | `enabled` _string_ | Whether the policy is enabled. |
 | `global` _string_ | Whether the policy is globally applied to all resources. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
 | `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | **Pre-release Feature** This feature is currently in beta and is subject to change.<br /><br />A user-defined unique identifier for this policy instance, used as a stable human-readable reference. This value is immutable after creation. |
-| `type` _string_ | The type of the Policy. This is equivalent to the Kong 3 plugin name. Some examples are: 'ai-sanitizer', 'ai-prompt-guard', and 'rate-limiting'. Note: Plugins have been renamed to Policies in Kong AI Gateway. Policy types and configuration documentation can be found in the [Developer Docs](https://developer.konghq.com/plugins/). |
+| `type` _string_ | The type of the Policy. This is equivalent to the Kong 3 plugin name. Some examples are: 'ai-sanitizer', 'ai-prompt-guard', and 'rate-limiting'. Note: Plugins have been renamed to Policies in Kong AI Gateway. Policy types and configuration documentation can be found in the [Developer Docs](/ai-gateway/policies/). |
 
 _Appears in:_
 
@@ -4596,8 +4596,8 @@ server.
 
 | Field | Description |
 | --- | --- |
-| `password` _string_ | The password to use for proxy authentication. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
-| `username` _string_ | The username to use for proxy authentication. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `password` _string_ | The password to use for proxy authentication. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
+| `username` _string_ | The username to use for proxy authentication. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 
 _Appears in:_
 
@@ -4647,13 +4647,13 @@ This feature is currently in beta and is subject to change.<br /><br />AWS speci
 
 | Field | Description |
 | --- | --- |
-| `accessKeyID` _string_ | AWS Access Key ID to be used for authentication. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
-| `assumeRoleArn` _string_ | The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
-| `cacheName` _string_ | The name of the AWS Elasticache cluster. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `accessKeyID` _string_ | AWS Access Key ID to be used for authentication. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
+| `assumeRoleArn` _string_ | The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
+| `cacheName` _string_ | The name of the AWS Elasticache cluster. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 | `isServerless` _string_ | This flag specifies whether the cluster is serverless. |
-| `region` _string_ | The region of the AWS ElastiCache cluster. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
-| `roleSessionName` _string_ | The session name for the temporary credentials when assuming the IAM role. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
-| `secretAccessKey` _string_ | AWS Secret Access Key. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `region` _string_ | The region of the AWS ElastiCache cluster. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
+| `roleSessionName` _string_ | The session name for the temporary credentials when assuming the IAM role. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
+| `secretAccessKey` _string_ | AWS Secret Access Key. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 
 _Appears in:_
 
@@ -4670,9 +4670,9 @@ This feature is currently in beta and is subject to change.<br /><br />Azure spe
 
 | Field | Description |
 | --- | --- |
-| `clientID` _string_ | Azure Client ID. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
-| `clientSecret` _string_ | Azure Client Secret. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
-| `tenantID` _string_ | Azure Tenant ID. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `clientID` _string_ | Azure Client ID. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
+| `clientSecret` _string_ | Azure Client Secret. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
+| `tenantID` _string_ | Azure Tenant ID. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 
 _Appears in:_
 
@@ -4694,17 +4694,17 @@ This feature is currently in beta and is subject to change.<br /><br />Config fo
 | `connectTimeout` _int_ | An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2. |
 | `connectionIsProxied` _string_ | If the connection to Redis is proxied (e.g. Envoy), set it `true`. Set the `host` and `port` to point to the proxy address. |
 | `database` _int_ | Database to use for the Redis connection when using the `redis` strategy |
-| `host` _string_ | A string representing a host name, such as example.com. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `host` _string_ | A string representing a host name, such as example.com. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 | `keepalive` _[AIGatewayRedisCloudConfigurationKeepalive](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayrediscloudconfigurationkeepalive)_ | Keepalive configuration for the Redis connection. |
-| `password` _string_ | Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
-| `port` _[AIGatewayRedisCloudConfigurationPort](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayrediscloudconfigurationport)_ | An integer representing a port number between 0 and 65535, inclusive. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `password` _string_ | Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
+| `port` _[AIGatewayRedisCloudConfigurationPort](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayrediscloudconfigurationport)_ | An integer representing a port number between 0 and 65535, inclusive. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 | `readTimeout` _int_ | An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2. |
 | `sendTimeout` _int_ | An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2. |
 | `sentinel` _[AIGatewayRedisCloudConfigurationSentinel](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayrediscloudconfigurationsentinel)_ | Configuration for Redis Sentinel. |
-| `serverName` _string_ | A string representing an SNI (server name indication) value for TLS. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `serverName` _string_ | A string representing an SNI (server name indication) value for TLS. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 | `ssl` _string_ | If set to true, uses SSL to connect to Redis. |
 | `sslVerify` _string_ | If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly. |
-| `username` _string_ | Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `username` _string_ | Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 
 _Appears in:_
 
@@ -4879,9 +4879,9 @@ AIGatewayRedisCloudConfigurationSentinel Configuration for Redis Sentinel.
 | --- | --- |
 | `master` _string_ | Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel. |
 | `nodes` _[][AIGatewayRedisCloudConfigurationSentinelNodes](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayrediscloudconfigurationsentinelnodes)_ | Sentinel node addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Sentinel. The minimum length of the array is 1 element. |
-| `password` _string_ | Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `password` _string_ | Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 | `role` _string_ | Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel. |
-| `username` _string_ | Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `username` _string_ | Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 
 _Appears in:_
 
@@ -4916,7 +4916,7 @@ This feature is currently in beta and is subject to change.<br /><br />GCP speci
 
 | Field | Description |
 | --- | --- |
-| `serviceAccountJSON` _string_ | GCP Service Account JSON. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `serviceAccountJSON` _string_ | GCP Service Account JSON. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 
 _Appears in:_
 
@@ -5678,12 +5678,12 @@ This feature is currently in beta and is subject to change.<br /><br />AWS IAM (
 
 | Field | Description |
 | --- | --- |
-| `accessKeyID` _string_ | The access key id for authenticating with static IAM User credentials. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
-| `assumeRoleArn` _string_ | The ARN of the IAM role to assume for generating authentication tokens. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `accessKeyID` _string_ | The access key id for authenticating with static IAM User credentials. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
+| `assumeRoleArn` _string_ | The ARN of the IAM role to assume for generating authentication tokens. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 | `region` _string_ | The AWS region of the upstream service. Overrides the region inferred from the environment. |
-| `roleSessionName` _string_ | The session name for the temporary credentials when assuming the IAM role. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
-| `secretAccessKey` _string_ | The secret access key for authenticating with static IAM User credentials. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
-| `sessionToken` _string_ | The session token for authenticating with temporary IAM credentials. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `roleSessionName` _string_ | The session name for the temporary credentials when assuming the IAM role. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
+| `secretAccessKey` _string_ | The secret access key for authenticating with static IAM User credentials. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
+| `sessionToken` _string_ | The session token for authenticating with temporary IAM credentials. This field is [referenceable](/ai-gateway/entities/ai-vault/#how-do-i-reference-secrets). |
 | `stsEndpointURL` _string_ | The STS endpoint URL to use for generating authentication tokens. If not specified, the default AWS STS endpoint will be used. |
 
 _Appears in:_
@@ -12180,7 +12180,7 @@ KegDataPlaneSpec defines the desired state of KegDataPlane.
 | `controlPlaneRef` _[ControlPlaneRef](#eventgateway-konghq-com-v1alpha1-types-controlplaneref)_ | ControlPlaneRef references the control plane this KegDataPlane connects to. The type field identifies which kind of control plane is being referenced. Currently only konnectNamespacedRef is supported, which references a KonnectEventGateway resource in the same namespace. |
 | `deployment` _[DeploymentOptions](#eventgateway-konghq-com-v1alpha1-types-deploymentoptions)_ | Deployment configures the keg Deployment: image, replicas, resources, extra env vars, volume mounts, etc. |
 | `network` _[NetworkOptions](#eventgateway-konghq-com-v1alpha1-types-networkoptions)_ | Network configures how the keg pod is exposed to Kafka clients. |
-| `config` _[KegDataPlaneConfiguration](#eventgateway-konghq-com-v1alpha1-types-kegdataplaneconfiguration)_ | Config provides optional overrides for keg runtime settings. When omitted, the keg built-in defaults are used. https://developer.konghq.com/event-gateway/configuration/#applying-configuration |
+| `config` _[KegDataPlaneConfiguration](#eventgateway-konghq-com-v1alpha1-types-kegdataplaneconfiguration)_ | Config provides optional overrides for keg runtime settings. When omitted, the keg built-in defaults are used. /event-gateway/configuration/#applying-configuration |
 
 _Appears in:_
 
