@@ -1678,6 +1678,7 @@ releases:
           docker_support:
             arm: true
           default: true
+          eol: 2028-06-30
       - distroless:
           package: false
           docker: true
@@ -1720,6 +1721,7 @@ releases:
             fips2: true
             fips3: true
             arm: true
+          eol: 2027-05-31
       - ubuntu2404:
           package: true
           package_support:
@@ -1920,6 +1922,7 @@ releases:
             fips2: true
             fips3: false
             arm: true
+          eol: 2027-05-31
       - ubuntu2404:
           package: true
           package_support:
@@ -2119,6 +2122,7 @@ releases:
           docker_support:
             fips: true
             arm: true
+          eol: 2027-05-31
       - ubuntu2404:
           package: true
           package_support:
