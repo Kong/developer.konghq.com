@@ -120,10 +120,11 @@ The available commands are:
                                         default: 120
 
   log_level set --level <log_level>     Set the logging level.
-                                        It cannot work while not using a
-                                        database because it needs to be
-                                        protected by RBAC and RBAC is not
-                                        available in DB-less.
+                                        On DB-less nodes this is only available
+                                        through the debug server (that is, this
+                                        command), because the Admin API
+                                        equivalent needs to be protected by RBAC
+                                        and RBAC is not available in DB-less.
 
     --level (optional string)           It can be one of the following: debug,
                                         info, notice, warn, error, crit, alert,
@@ -177,6 +178,37 @@ EXIT CODES
        - kong debug profiling memory start
        - kong debug profiling gc-snapshot
 
+
+```
+
+---
+
+
+### kong docker_start
+
+```
+Usage: kong COMMAND [OPTIONS]
+
+The available commands are:
+ check
+ config
+ debug
+ docker-start
+ drain
+ health
+ hybrid
+ migrations
+ prepare
+ quit
+ reload
+ restart
+ roar
+ runner
+ start
+ stop
+ vault
+ version
+ workspace
 
 ```
 
@@ -502,6 +534,42 @@ the version of all underlying dependencies.
 
 Options:
  -a,--all         get version of all dependencies
+
+```
+
+---
+
+
+### kong workspace
+
+```
+Usage: kong workspace COMMAND [OPTIONS]
+
+Workspace utilities for Kong.
+
+Example usage:
+ kong workspace rename old-name new-name
+ kong workspace detect-admin-endpoint-conflicts
+
+The available commands are:
+  rename OLD_NAME NEW_NAME          Rename workspace OLD_NAME to NEW_NAME.
+                                    Errors out if OLD_NAME does not exist,
+                                    if NEW_NAME already exists, or if NEW_NAME
+                                    is not a valid workspace name. RBAC
+                                    role-endpoint permissions that reference the
+                                    workspace are updated to the new name too.
+
+  detect-admin-endpoint-conflicts   List workspaces whose names collide with
+                                    active admin API URL prefixes. Exits non-zero
+                                    when any conflict is found.
+
+Options:
+ -c,--conf        (optional string)  Configuration file.
+
+ -p,--prefix      (optional string)  Override prefix directory.
+
+ --db-timeout     (optional number)  Timeout, in seconds, for all database
+                                     operations.
 
 ```
 
