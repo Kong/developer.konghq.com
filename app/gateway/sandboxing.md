@@ -305,7 +305,7 @@ kong.tracing.set_should_sample
 kong.tracing.start_span
 ```
 
-#### Kong Metrics PDK
+#### Kong Metrics PDK {% new_in 3.16 %}
 
 ```
 kong.metrics.counter
