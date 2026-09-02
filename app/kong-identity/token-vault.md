@@ -133,7 +133,7 @@ Key facts:
   * The token's signature is valid.
   * The token was issued by an IdP the {{site.ai_gateway_name}}  set as trusted for that directory.
 
-## Token vault components
+## Token Vault components
 
 <!--
 Lead with a table summarizing component / scope / purpose, then a subsection each.
@@ -141,7 +141,41 @@ Lead with a table summarizing component / scope / purpose, then a subsection eac
 
 ### Directory
 
-<!-- Existing {{site.identity}} directory; gains a vault_enabled flag. Link to /identity/principals/. -->
+The [{{site.identity}} directory](/identity/principals/) is the tenant boundary that scopes everything else in the Token Vault. To use the Token Vault, you activate it in your directory with the `vault_enabled` flag.
+
+{% navtabs "enable token vault" %}
+{% navtab "Activate the Token Vault" %}
+Send a `PATCH` request to the `/v2/directories/{directoryId}` endpoint with `vault_enabled` set to `true`:
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID
+status_code: 200
+method: PATCH
+body:
+  vault_enabled: true
+{% endkonnect_api_request %}
+<!--vale on-->
+
+
+`PATCH` is a partial update, so any field you omit keeps its current value. You only need to send `vault_enabled`.
+{% endnavtab %}
+{% navtab "Check if the Token Vault is enbaled" %}
+
+To confirm the vault is enabled, send a `GET` request to the same endpoint. The response includes `vault_enabled`:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID
+status_code: 200
+method: GET
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endnavtab %}
+
+{% endnavtabs %}
+
+
+The directory is also the vault's encryption boundary. After enabling the vault in your directory, {{site.identity}} generates an encryption key to protect the credentials you store under it. Your {{site.identity}} directory is the equivalent of your "organisation account", and enabling the Token Vault gives that account a locked workspace, with everything in it (trusted IdPs, connected third-party services, whose tokens it stores) scoped to that organisation.
 
 ### Trusted IdP
 
@@ -310,7 +344,57 @@ Use konnect_api_request blocks for each step.
 
 ### Enable the vault on a directory
 
-<!-- PATCH the directory with vault_enabled: true. Note the field also appears on GET. -->
+The Token Vault is enabled per [directory](/identity/principals/). 
+The request accepts the following body parameters:
+
+{% table %}
+columns:
+  - title: Parameter
+    key: param
+  - title: Type
+    key: type
+  - title: Description
+    key: description
+rows:
+  - param: "`vault_enabled`"
+    type: boolean
+    description: |
+      Enables the {{site.identity}} Token Vault on the directory. Set to `true` to allow {{site.ai_gateway_name}} to exchange tokens for credentials stored against this directory's principals.
+  - param: "`name`"
+    type: string
+    description: |
+      Human-readable name of the directory, unique within the organization. Must match `^[a-z0-9-_]+$`, 1-255 characters.
+  - param: "`allowed_control_planes`"
+    type: array of strings
+    description: |
+      Control plane IDs authorized to make authentication requests to this directory. Maximum of 32.
+  - param: "`allow_all_control_planes`"
+    type: boolean
+    description: |
+      When `true`, every control plane in the organization can make authentication requests to this directory, overriding `allowed_control_planes`.
+  - param: "`ttl_secs`"
+    type: integer
+    description: |
+      How long, in seconds, a successfully authenticated principal from this directory is cached in memory on a running {{site.base_gateway}}. Defaults to `600`, minimum `300`, maximum `86400`.
+  - param: "`negative_ttl_secs`"
+    type: integer
+    description: |
+      How long, in seconds, {{site.base_gateway}} waits before retrying a lookup for a principal it could not authenticate in this directory, either because the principal doesn't exist or the credentials were invalid. Defaults to `600`, minimum `300`, maximum `86400`.
+  - param: "`labels`"
+    type: object
+    description: |
+      Key-value labels to attach to the directory.
+{% endtable %}
+
+To confirm the vault is enabled, send a `GET` request to the same endpoint. The response includes `vault_enabled`:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID
+status_code: 200
+method: GET
+{% endkonnect_api_request %}
+<!--vale on-->
 
 ### Configure a trusted IdP
 
