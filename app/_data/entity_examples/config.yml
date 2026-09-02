@@ -151,6 +151,7 @@ formats:
       consumer_group: '/consumer-groups'
       vault:          '/vaults'
       certificate:    '/certificates'
+      ca_certificate: '/ca-certificates'
       sni:            '/snis'
     plugin_endpoints:
       consumer:       '/consumers/{consumer}/plugins/'
