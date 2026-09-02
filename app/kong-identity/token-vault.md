@@ -139,7 +139,7 @@ Key facts:
 Lead with a table summarizing component / scope / purpose, then a subsection each.
 -->
 
-### Directory
+### Scoping: Directory
 
 The [{{site.identity}} directory](/identity/principals/) is the tenant boundary that scopes everything else in the Token Vault. To use the Token Vault, you activate it in your directory with the `vault_enabled` flag.
 
@@ -161,11 +161,77 @@ body:
 {% endnavtab %}
 {% navtab "Check if the Token Vault is enbaled" %}
 
-To confirm the vault is enabled, send a `GET` request to the same endpoint. The response includes `vault_enabled`:
+To confirm the vault is enabled, send a `GET` request to the same endpoint and read the `vault_enabled` field from the response:
 
 <!--vale off-->
 {% konnect_api_request %}
 url: /v2/directories/$DIRECTORY_ID
+status_code: 200
+method: GET
+capture:
+  - variable: VAULT_ENABLED
+    jq: ".vault_enabled"
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Print the captured value. It returns `true` when the Token Vault is active on the directory:
+
+```sh
+echo $VAULT_ENABLED
+```
+{% endnavtab %}
+
+{% endnavtabs %}
+
+
+The directory is also the vault's encryption boundary. After enabling the vault in your directory, {{site.identity}} generates an encryption key to protect the credentials you store under it. Your {{site.identity}} directory is the equivalent of your "organisation account", and enabling the Token Vault gives that account a locked workspace, with everything in it (trusted IdPs, connected third-party services, whose tokens it stores) scoped to that organisation.
+
+### Verifying: Trusted IdP
+
+The trusted IdP is what tells the Token Vault whose tokens to trust. A {{site.identity}} admin configures a trusted IdP (succh as Okta) on the Token Vault using the `issuer_url`, and optionally a `jwks_uri`({{site.identity}} can automatically discover the `jwks_uri` from the IdP).
+
+{% navtabs "configure trusted idp" %}
+{% navtab "Add a trusted IdP" %}
+Send a `POST` request to the `/v2/directories/{directoryId}/vault/trusted-idps` endpoint:
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/vault/trusted-idps
+status_code: 201
+method: POST
+body:
+  issuer_url: https://acme.okta.com/oauth2/default
+  jwks_uri: https://acme.okta.com/oauth2/default/v1/keys
+{% endkonnect_api_request %}
+<!--vale on-->
+
+The request accepts the following body parameters:
+
+{% table %}
+columns:
+  - title: Parameter
+    key: param
+  - title: Required
+    key: required
+  - title: Description
+    key: description
+rows:
+  - param: "`issuer_url`"
+    required: Yes
+    description: |
+      The IdP's issuer URL. The Token Vault only trusts subject tokens whose `iss` claim matches this value.
+  - param: "`jwks_uri`"
+    required: No
+    description: |
+      Where the Token Vault fetches the IdP's public keys to verify token signatures. If you omit it, {{site.identity}} discovers it from the issuer's `/.well-known/openid-configuration` document.
+{% endtable %}
+{% endnavtab %}
+{% navtab "Check configured trusted IdPs" %}
+
+To see which IdPs the Token Vault trusts for this directory, send a `GET` request to the same endpoint:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/vault/trusted-idps
 status_code: 200
 method: GET
 {% endkonnect_api_request %}
@@ -174,30 +240,66 @@ method: GET
 
 {% endnavtabs %}
 
+The trusted IdP configuration is completely independent of {{site.identity}} login system: the Token Vault doesn't need any identity to be already resolved as a [{{site.identity}} principal](/identity/principals/) to work. The Token Vault acts as a verifier, not a caller. It never asks the IdP anything directly. Instead, when it receives a token, it:
 
-The directory is also the vault's encryption boundary. After enabling the vault in your directory, {{site.identity}} generates an encryption key to protect the credentials you store under it. Your {{site.identity}} directory is the equivalent of your "organisation account", and enabling the Token Vault gives that account a locked workspace, with everything in it (trusted IdPs, connected third-party services, whose tokens it stores) scoped to that organisation.
+1. Checks that the token's signature matches the trusted IdP's published public keys, confirming the IdP actually issued it.
+1. Reads the issuer (`iss`) and subject (`sub`) already embedded in the token, to determine who it was issued to.
 
-### Trusted IdP
+### Providers
 
-<!--
-Per directory. The issuer URL (and optional JWKS URI) whose tokens the vault will trust when
-verifying a caller's subject token. Independent of any {{site.identity}} authorization server,
-though an {{site.identity}} authorization server can itself be the trusted IdP.
-Validated IdPs: {{site.identity}}, Okta, Entra, AWS Cognito, PingFederate, Keycloak, Auth0.
--->
+You connect third-party services by adding a provider to the {{site.identity}} Token Vault. This allows organization to centralize identities and shared connections. 
 
-<!-- TODO: confirm the IdP list is a supported matrix and not just a validation target. -->
+{% navtabs "register provider" %}
+{% navtab "Add a provider" %}
+Send a `POST` request to the `/v2/directories/{directoryId}/vault/providers` endpoint:
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/vault/providers
+status_code: 201
+method: POST
+body:
+  template_name: github
+  name: github-prod
+{% endkonnect_api_request %}
+<!--vale on-->
 
-### Provider template
+The request accepts the following body parameters:
 
-<!--
-Global, owned by Kong, not managed through the public API. Defines the upstream's OAuth
-endpoints, secret type, available scopes, credential placement, and default base URL.
-Explain why it matters to the reader: a provider's scopes must be a subset of the template's
-available scopes, and credential injection settings come from the template.
--->
+{% table %}
+columns:
+  - title: Parameter
+    key: param
+  - title: Required
+    key: required
+  - title: Description
+    key: description
+rows:
+  - param: "`template_name`"
+    required: Yes
+    description: |
+      The provider template to bind. The template supplies the third-party service's OAuth endpoints, secret type, available scopes, and credential placement.
+  - param: "`name`"
+    required: Yes
+    description: |
+      Your name for this provider. Use it to tell apart several providers built from the same template.
+{% endtable %}
 
-### Provider
+The response returns the provider's ID, captured above as `$PROVIDER_ID`. You need it to [enable credential injection on a route](#enable-credential-injection-on-a-route).
+{% endnavtab %}
+{% navtab "Check configured providers" %}
+
+To list the providers registered for this directory, send a `GET` request to the same endpoint:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/vault/providers
+status_code: 200
+method: GET
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endnavtab %}
+
+{% endnavtabs %}
 
 <!--
 Per directory. A tenant binding of a template: client ID, client secret, scopes, credential type.
@@ -333,89 +435,6 @@ is released.
 <!-- Consider surfacing the storage and auditing questions as a faqs: block in the frontmatter,
      the way /identity/principals/ handles data residency. -->
 
-## Enable the token vault
-
-<!--
-Keep the configuration on this page — per the site's "every page is page one" tenet, and
-matching /identity/principals/, which carries its own "Create a directory" and "Configure a
-principal" sections.
-Use konnect_api_request blocks for each step.
--->
-
-### Enable the vault on a directory
-
-The Token Vault is enabled per [directory](/identity/principals/). 
-The request accepts the following body parameters:
-
-{% table %}
-columns:
-  - title: Parameter
-    key: param
-  - title: Type
-    key: type
-  - title: Description
-    key: description
-rows:
-  - param: "`vault_enabled`"
-    type: boolean
-    description: |
-      Enables the {{site.identity}} Token Vault on the directory. Set to `true` to allow {{site.ai_gateway_name}} to exchange tokens for credentials stored against this directory's principals.
-  - param: "`name`"
-    type: string
-    description: |
-      Human-readable name of the directory, unique within the organization. Must match `^[a-z0-9-_]+$`, 1-255 characters.
-  - param: "`allowed_control_planes`"
-    type: array of strings
-    description: |
-      Control plane IDs authorized to make authentication requests to this directory. Maximum of 32.
-  - param: "`allow_all_control_planes`"
-    type: boolean
-    description: |
-      When `true`, every control plane in the organization can make authentication requests to this directory, overriding `allowed_control_planes`.
-  - param: "`ttl_secs`"
-    type: integer
-    description: |
-      How long, in seconds, a successfully authenticated principal from this directory is cached in memory on a running {{site.base_gateway}}. Defaults to `600`, minimum `300`, maximum `86400`.
-  - param: "`negative_ttl_secs`"
-    type: integer
-    description: |
-      How long, in seconds, {{site.base_gateway}} waits before retrying a lookup for a principal it could not authenticate in this directory, either because the principal doesn't exist or the credentials were invalid. Defaults to `600`, minimum `300`, maximum `86400`.
-  - param: "`labels`"
-    type: object
-    description: |
-      Key-value labels to attach to the directory.
-{% endtable %}
-
-To confirm the vault is enabled, send a `GET` request to the same endpoint. The response includes `vault_enabled`:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v2/directories/$DIRECTORY_ID
-status_code: 200
-method: GET
-{% endkonnect_api_request %}
-<!--vale on-->
-
-### Configure a trusted IdP
-
-<!--
-POST the issuer URL, optionally a JWKS URI. If the JWKS URI is omitted, the vault discovers it
-from the issuer's /.well-known/openid-configuration.
--->
-
-### Register a provider
-
-<!--
-POST a provider built from a template: client ID, client secret, scopes, credential type.
-Supporting content:
-* A table  of required fields by secret type (API key; client credentials; authorization code).
-* The scope subset rule and the error returned when it is violated.
-* The callback URL the admin must register in the provider's own console — a required setup
-  step, so show the URL explicitly.
--->
-
-<!-- TODO: source shows both /vault/providers and /vault-/providers, and both template_name
-     and template_id in the body. Confirm against the shipped spec. -->
 
 ### Enable credential injection on a route
 
