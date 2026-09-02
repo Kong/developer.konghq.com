@@ -99,6 +99,93 @@ rows:
 {% endtable %}
 <!--vale on-->
 
+### Available MCP tools
+
+The {{site.dev_portal}} MCP server exposes the following tools to a connected agent. 
+Which tools an agent can call depends on whether {{site.dev_portal}} authentication is required and whether write operations are enabled.
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Tool
+    key: tool
+  - title: Auth required
+    key: auth
+  - title: Read/write
+    key: type
+rows:
+  - tool: "`list_apis`"
+    auth: "No"
+    type: Read
+  - tool: "`get_api_actions`"
+    auth: "No"
+    type: Read
+  - tool: "`list_api_documents`"
+    auth: "No"
+    type: Read
+  - tool: "`fetch_api_document`"
+    auth: "No"
+    type: Read
+  - tool: "`list_api_specs`"
+    auth: "No"
+    type: Read
+  - tool: "`fetch_api_spec`"
+    auth: "No"
+    type: Read
+  - tool: "`fetch_api_spec_raw`"
+    auth: "No"
+    type: Read
+  - tool: "`list_api_version_specs`"
+    auth: "No"
+    type: Read
+  - tool: "`fetch_api_version_spec`"
+    auth: "No"
+    type: Read
+  - tool: "`fetch_api_version_spec_raw`"
+    auth: "No"
+    type: Read
+  - tool: "`list_portal_pages`"
+    auth: "No"
+    type: Read
+  - tool: "`portal_api_render_page`"
+    auth: "No"
+    type: Read
+  - tool: "`get_portal_form`"
+    auth: "No"
+    type: Read
+  - tool: "`list_applications`"
+    auth: "Yes"
+    type: Read
+  - tool: "`get_application`"
+    auth: "Yes"
+    type: Read
+  - tool: "`create_application`"
+    auth: "Yes"
+    type: Write
+  - tool: "`update_application`"
+    auth: "Yes"
+    type: Write
+  - tool: "`delete_application`"
+    auth: "Yes"
+    type: Write
+  - tool: "`list_application_auth_strategies`"
+    auth: "No"
+    type: Read
+  - tool: "`list_application_registrations`"
+    auth: "Yes"
+    type: Read
+  - tool: "`get_application_registration`"
+    auth: "Yes"
+    type: Read
+  - tool: "`create_application_registration`"
+    auth: "Yes"
+    type: Write
+  - tool: "`delete_application_registration`"
+    auth: "Yes"
+    type: Write
+{% endtable %}
+<!--vale on-->
+
 ## Generate an MCP server from {{site.dev_portal}}
 
 There are two settings you can use to manage AI settings on your {{site.dev_portal}}:
