@@ -193,7 +193,7 @@ set the `KONGCTL_DEFAULT_KONNECT_PAT` environment variable:
 
 {:.info}
 > See the [environment variable configuration reference](/kongctl/config#environment-variables) 
-> for full details on environment variables and the kongctl configuration system 
+> for full details on environment variables and the kongctl configuration system.
 
 ```bash
 export KONGCTL_DEFAULT_KONNECT_PAT="YOUR PAT HERE"

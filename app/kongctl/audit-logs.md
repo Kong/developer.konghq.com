@@ -193,14 +193,14 @@ stop the command with a nonzero status.
 
 When you run `kongctl listen`:
 
-1. Determines endpoint from `--endpoint` or `--public-url` + `--path`.
-1. Checks that a webhook does not already exist for the region (due to one
-   webhook per region limitation).
-1. Creates audit-log destination in {{site.konnect_short_name}}.
-1. Configures and enables regional webhook to use that destination.
-1. Starts local listener on `--listen-address` and `--path`.
+1. Determines the endpoint from `--endpoint` or `--public-url` + `--path`.
+1. Checks that a webhook doesn't already exist for the region, because
+   {{site.konnect_short_name}} allows only one webhook per region.
+1. Creates an audit-log destination in {{site.konnect_short_name}}.
+1. Configures and enables the regional webhook to use that destination.
+1. Starts a local listener on `--listen-address` and `--path`.
 1. Persists events to local storage.
-1. On shutdown, attempts webhook/destination cleanup.
+1. On shutdown, attempts to clean up the webhook and destination.
 
 ### Startup guard
 
@@ -214,7 +214,7 @@ If webhook state is already configured, startup fails fast.
 
 ## Event storage and format
 
-Default config profile-scoped storage directory:
+The default storage directory is scoped to the config profile:
 
 - `~/.config/kongctl/audit-logs/<sanitized-profile>/`
 - `<sanitized-profile>` is the profile name with unsupported path
@@ -276,7 +276,7 @@ About TLS:
 
 - The local listener is plain HTTP by default.
 - HTTPS is usually terminated by your tunnel or reverse proxy.
-- `--skip-ssl-verification` affects {{site.konnect_short_name}} delivery to destination endpoint.
+- `--skip-ssl-verification` affects {{site.konnect_short_name}} delivery to the destination endpoint.
 
 ## Tailscale example
 
@@ -304,13 +304,13 @@ Equivalent pattern:
 
 ## Detached listener mode
 
-Run listener in the background:
+Run the listener in the background:
 
 ```shell
 kongctl listen --endpoint https://example.tld/audit-logs --detach
 ```
 
-Parent process prints:
+The parent process prints:
 
 - child `pid`
 - child log file path

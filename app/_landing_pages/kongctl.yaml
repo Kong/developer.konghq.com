@@ -295,7 +295,6 @@ rows:
                 - /kongctl/authentication/
                 - /kongctl/audit-logs/
                 - /kongctl/declarative/
-                - /kongctl/manage-ai-gateway/
                 - /kongctl/skills/
                 - /kongctl/supported-resources/
                 - /kongctl/kongctl-and-deck/

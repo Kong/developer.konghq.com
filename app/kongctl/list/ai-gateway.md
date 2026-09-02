@@ -17,8 +17,6 @@ breadcrumbs:
 related_resources:
   - text: kongctl list commands
     url: /kongctl/list/
-  - text: Manage {{site.ai_gateway}} with kongctl
-    url: /kongctl/manage-ai-gateway/
   - text: kongctl declarative resource reference
     url: /kongctl/supported-resources/#ai-gateway
 ---
@@ -37,6 +35,9 @@ rows:
   - command: |
       [kongctl list ai-gateway agents](#kongctl-list-ai-gateway-agents)
     description: "Use the `agents` command to list or retrieve Agents for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
+  - command: |
+      [kongctl list ai-gateway auth-strategies](#kongctl-list-ai-gateway-auth-strategies)
+    description: "Use the `auth-strategies` command to list or retrieve Auth Strategies for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
   - command: |
       [kongctl list ai-gateway config-stores](#kongctl-list-ai-gateway-config-stores)
     description: "Use the `config-stores` command to list or retrieve Config Stores for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
@@ -90,7 +91,7 @@ Use the `auth-strategies` command to list or retrieve Auth Strategies for a spec
 
 ### kongctl list ai-gateway config-stores
 
-Use the `config-stores` command to list or retrieve Config Stores for a {{site.konnect_short_name}} {{site.ai_gateway}}.
+Use the `config-stores` command to list or retrieve Config Stores for a specific {{site.konnect_short_name}} {{site.ai_gateway}}.
 
 {% include_cached /kongctl/help/list/ai-gateway/config-stores.md %}
 

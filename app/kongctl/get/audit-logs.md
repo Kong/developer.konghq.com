@@ -4,7 +4,6 @@ description: "Pull organization audit logs and inspect audit-log configuration."
 content_type: reference
 layout: reference
 
-
 works_on:
   - konnect
 

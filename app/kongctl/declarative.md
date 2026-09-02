@@ -61,7 +61,7 @@ YAML declaration files and a state-free CLI tool.
 
 1. **Configuration manifests**: Configuration is expressed as simple YAML files that describe the desired state of your {{site.konnect_short_name}} resources.
    Configuration files can be split into multiple files and directories for modularity and reuse.
-1. **Plan-based**: Plans are objects that represent required changes to move a set of resources from one state to another, desired, state.
+1. **Plan-based**: Plans are objects that represent required changes to move a set of resources from their current state to a desired state.
    In kongctl, plan artifacts are first-class concepts that can be created, stored, reviewed, and applied. Plans are represented as JSON objects
    and can be generated and stored as files for later application. When running declarative commands, if plans are not provided
    they are generated implicitly and executed immediately.
@@ -446,7 +446,7 @@ are specified or omitted. The following tables summarize the behavior.
 | true         | false          | false        | Resource overrides |
 | false        | true           | true         | Resource overrides |
 
-Child resources automatically inherit the metadata of their parent resource:
+Child resources automatically inherit the metadata of their parent resource.
 
 ### Namespace enforcement flags
 
@@ -653,8 +653,6 @@ kongctl dump declarative \
 
 For the complete resource model, see
 [kongctl declarative resource reference](/kongctl/supported-resources/#ai-gateway).
-For the product workflow, see
-[Manage {{site.ai_gateway}} with kongctl](/kongctl/manage-ai-gateway/).
 
 ## Configuration templates
 
@@ -1067,7 +1065,7 @@ kongctl dump declarative \
 `--skip-defaults` preserves explicit `null` and non-default values. It
 doesn't change planning, apply, sync, or Terraform import output.
 
-See the CLI help at `kongctl --help` for all possible commands, or check out the [kongctl CLI reference](/index/kongctl/#cli-reference) documentation.
+See the CLI help at `kongctl --help` for all possible commands, or check out the [kongctl CLI reference](/index/kongctl/#cli-references) documentation.
 
 ## CI/CD integration
 

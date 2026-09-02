@@ -28,6 +28,8 @@ tags:
   - declarative-config
   - openai
 
+published: false
+
 tldr:
   q: How do I manage {{site.ai_gateway}} with kongctl?
   a: |

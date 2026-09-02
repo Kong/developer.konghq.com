@@ -30,13 +30,13 @@ related_resources:
     url: /kongctl/kongctl-and-deck/
 ---
 
-kongctl provides a flexible system for configuring the CLI behavior which allows
-you to customize behavior for different machines, {{site.konnect_short_name}} organizations, 
+kongctl provides a flexible system for configuring CLI behavior, so you can
+customize settings for different machines, {{site.konnect_short_name}} organizations, 
 environments, and automation pipelines.
 
 {:.info}
-> **Note:** The term _configuration_ in this document describes altering of the behavior of the CLI itself, 
-> not to be confused with _declarative configuration_ used to manage the state of 
+> **Note:** The term _configuration_ in this document refers to changing the behavior of the CLI itself, 
+> not to be confused with _declarative configuration_, which is used to manage the state of 
 > {{site.konnect_short_name}} resources. 
 > For declarative configuration, see the [declarative configuration guide](/kongctl/declarative/).
 
@@ -176,7 +176,7 @@ When values are loaded via environment variables, the variable names
 must start with the `KONGCTL_` prefix, then the desired profile,
 and finally the config path in uppercase with underscores instead of dots.
 
-For example, to set the same region value for the default profiles,
+For example, to set the same region value for the default profile,
 set the following environment variable:
 
 ```text
