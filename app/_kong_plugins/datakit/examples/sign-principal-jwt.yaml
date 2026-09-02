@@ -10,8 +10,6 @@ extended_description: |
   1. The node `SIGN_JWT` signs a new JWT using an HMAC secret stored in Vault.
   1. The node `BUILD_HEADER` injects the signed token into an `X-Consumer-JWT` request header sent to the upstream service.
 
-  {:.info}
-  > **Note**: Datakit has a priority of 810, which means it runs after rate limiting plugins (priority 900 and above). If you use Consumer-based rate limits, Datakit must run first so the Consumer is set before rate limiting executes. You can adjust this with [dynamic plugin ordering](/gateway/entities/plugin/#dynamic-plugin-ordering).
 title: Sign JWT with Principal ID
 weight: 800
 
