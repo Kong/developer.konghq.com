@@ -1,36 +1,12 @@
 ```ansi
 Usage:
-  kongctl get ai-gateway [flags]
-  kongctl get ai-gateway [command]
+  kongctl get ai-gateway snis [sni-id|name] [flags]
 
 Aliases:
-  ai-gateway, ai-gateways, aigw, AIGW
+  snis, sni
 
 Examples:
-  # List all AI Gateways
-  kongctl get ai-gateways
-  # Get a specific AI Gateway by ID or display name
-  kongctl get ai-gateway <id|display-name>
-  # List AI Gateways using aliases
-  kongctl get aigw
-
-Available Commands:
-  agents                  List or get Agents for a Konnect AI Gateway
-  auth-strategies         List or get auth strategies for a Konnect AI Gateway
-  ca-certificates         List or get CA certificates for a Konnect AI Gateway
-  certificates            List or get runtime TLS certificates for a Konnect AI Gateway
-  config-stores           List or get Config Stores for a Konnect AI Gateway
-  consumer-groups         List or get Consumer Groups for a Konnect AI Gateway
-  consumers               List or get Consumers for a Konnect AI Gateway
-  credentials             List or get Consumer Credentials for a Konnect AI Gateway Consumer
-  data-plane-certificates List or get data plane certificates for a Konnect AI Gateway
-  mcp-servers             List or get MCP Servers for a Konnect AI Gateway
-  model-providers         List or get model providers for a Konnect AI Gateway
-  models                  List or get models for a Konnect AI Gateway
-  nodes                   List or get data plane Nodes for a Konnect AI Gateway
-  policies                List or get Policies for a Konnect AI Gateway
-  snis                    List or get SNIs for a Konnect AI Gateway
-  vaults                  List or get Vaults for a Konnect AI Gateway
+kongctl get ai-gateway snis --gateway-id <gateway-id>
 
 
 Flags:
@@ -45,7 +21,11 @@ Flags:
                                 Supports nested fields, quoted keys, array indexes, and string slices.
       --config-file string      Path to the configuration file to load.
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
-  -h, --help                    help for ai-gateway
+      --gateway-id string       The ID of the AI Gateway that owns the resource.
+                                - Config path: [ konnect.ai-gateway.id ]
+      --gateway-name string     The name or display_name of the AI Gateway that owns the resource.
+                                - Config path: [ konnect.ai-gateway.name ]
+  -h, --help                    help for snis
       --jq string               Filter JSON responses using jq expressions (powered by gojq for full jq compatibility)
       --jq-color string         Controls colorized output for jq filter results.
                                 - Config path: [ jq.color.enabled ]
@@ -76,6 +56,10 @@ Flags:
   -p, --profile string          Specify the profile to use for this command. (default "default")
       --region string           Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.
                                 - Config path: [ konnect.region ]
+      --sni-id string           The ID of the AI Gateway SNI to retrieve.
+                                - Config path: [ konnect.ai-gateway.sni.id ]
+      --sni-name string         The name of the AI Gateway SNI to retrieve.
+                                - Config path: [ konnect.ai-gateway.sni.name ]
       --text-id-format string   Configure UUID rendering in static text-table ID columns.
                                 - Config path: [ text.id-format ]
                                 - Allowed    : [ compact|full ]
@@ -84,7 +68,5 @@ Flags:
                                 - Config path: [ text.layout ]
                                 - Allowed    : [ compact|auto|wide ]
                                 - Default    : [ compact ]
-
-Use "kongctl get ai-gateway [command] --help" for more information about a command.
 
 ```

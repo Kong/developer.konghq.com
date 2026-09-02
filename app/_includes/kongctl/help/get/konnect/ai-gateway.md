@@ -19,6 +19,8 @@ Examples:
 Available Commands:
   agents                  List or get Agents for a Konnect AI Gateway
   auth-strategies         List or get auth strategies for a Konnect AI Gateway
+  ca-certificates         List or get CA certificates for a Konnect AI Gateway
+  certificates            List or get runtime TLS certificates for a Konnect AI Gateway
   config-stores           List or get Config Stores for a Konnect AI Gateway
   consumer-groups         List or get Consumer Groups for a Konnect AI Gateway
   consumers               List or get Consumers for a Konnect AI Gateway
@@ -29,6 +31,7 @@ Available Commands:
   models                  List or get models for a Konnect AI Gateway
   nodes                   List or get data plane Nodes for a Konnect AI Gateway
   policies                List or get Policies for a Konnect AI Gateway
+  snis                    List or get SNIs for a Konnect AI Gateway
   vaults                  List or get Vaults for a Konnect AI Gateway
 
 
