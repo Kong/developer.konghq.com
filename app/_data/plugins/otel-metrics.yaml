@@ -20,7 +20,7 @@ metrics:
       - kong.route.name
       - kong.workspace.name
   - name: kong.latency.internal
-    description: &latency_internal "Kong’s internal processing time in seconds, from when the Gateway receives the request from the client to when it sends the request to the upstream service."
+    description: &latency_internal "Kong's internal processing time in seconds, from when the Gateway receives the request from the client to when it sends the request to the upstream service."
     unit: "s"
     type: Histogram
     attributes:
@@ -53,6 +53,44 @@ metrics:
       - kong.route.name
       - kong.auth.consumer.name
       - kong.workspace.name
+  - name: stream.server.session.count
+    min_version: "3.16"
+    description: Shows the total number of incoming stream session requests.
+    unit: "{session}"
+    type: Sum
+    attributes:
+      - kong.service.name
+      - kong.route.name
+      - kong.session.status_code
+      - kong.session.source
+      - kong.workspace.name
+  - name: stream.server.session.sent.size
+    min_version: "3.16"
+    description: Measures the size of each incoming stream session request in bytes.
+    unit: "By"
+    type: Histogram
+    attributes:
+      - kong.service.name
+      - kong.route.name
+      - kong.workspace.name
+  - name: stream.server.session.received.size
+    min_version: "3.16"
+    description: Measures the total size of the stream session response sent back to the client in bytes.
+    unit: "By"
+    type: Histogram
+    attributes:
+      - kong.service.name
+      - kong.route.name
+      - kong.workspace.name
+  - name: stream.server.session.duration
+    min_version: "3.16"
+    description: Measures the complete end-to-end duration of a request in seconds.
+    unit: "s"
+    type: Histogram
+    attributes:
+      - kong.service.name
+      - kong.route.name
+      - kong.workspace.name
   - name: kong.shared_dict.usage
     description: Current memory usage of a shared dict in bytes.
     unit: "By"
@@ -68,7 +106,7 @@ metrics:
       - kong.shared_dict.name
       - kong.subsystem
   - name: kong.memory.workers.lua_vm
-    description: "Memory used by the worker’s Lua VM in bytes."
+    description: "Memory used by the worker's Lua VM in bytes."
     unit: "By"
     type: Gauge
     attributes:
@@ -96,7 +134,7 @@ metrics:
     unit: "1"
     type: Gauge
   - name: kong.upstream.target.status
-    description: "Upstream target’s health. The actual status is in the state attribute, with the metric value set to 1 when a state is populated."
+    description: "Upstream target's health. The actual status is in the state attribute, with the metric value set to 1 when a state is populated."
     unit: "1"
     type: Gauge
     attributes:
@@ -106,11 +144,39 @@ metrics:
       - kong.upstream.state
       - kong.subsystem
   - name: kong.dp.cluster_cert.expiry
-    description: "Timestamp when the data plane’s cluster certificate will expire."
+    description: "Timestamp when the data plane's cluster certificate will expire."
     unit: "s"
     type: Gauge
+  - name: kong.dp.connection.last_seen
+    min_version: "3.16"
+    description: Shows the timestamp when the Control Plane last saw a successful data plane connection. This metric appears only on Control Plane and is reported per Data Plane.
+    unit: "s"
+    type: Gauge
+    attributes:
+      - kong.dp.node.id
+      - kong.dp.host.name
+      - kong.dp.host.ip
+  - name: kong.dp.config_hash
+    min_version: "3.16"
+    description: Shows the timestamp when the control plane last saw a data plane connect. This metric appears only on control-plane nodes and is reported per data plane.
+    unit: "1"
+    type: Gauge
+    attributes:
+      - kong.dp.node.id
+      - kong.dp.host.name
+      - kong.dp.host.ip
+  - name: kong.dp.version.compatible
+    min_version: "3.16"
+    description: "Shows whether a data plane is compatible with the control plane's version. This metric appears only on control-plane nodes and is reported per data plane. A value of 1 means compatible and 0 means not."
+    unit: "1"
+    type: Gauge
+    attributes:
+      - kong.dp.node.id
+      - kong.dp.host.name
+      - kong.dp.host.ip
+      - kong.dp.node.version
   - name: kong.db.entity.count
-    description: "Number of entities stored in Kong’s database."
+    description: "Number of entities stored in Kong's database."
     unit: "{entity}"
     type: Gauge
   - name: kong.db.entity.error.count
@@ -358,6 +424,55 @@ metrics:
       - kong.gen_ai.aws.guardrails.region
       - kong.workspace.name
       - kong.auth.consumer.name
+  - name: kong.gen_ai.azure_content_safety.latency
+    min_version: "3.15"
+    description: Time for Azure Content Safety to process a request.
+    unit: "s"
+    type: Histogram
+    attributes:
+      - kong.gen_ai.azure_content_safety.tenant_id
+      - kong.gen_ai.azure_content_safety.client_id
+      - kong.gen_ai.azure_content_safety.mode
+      - kong.workspace.name
+      - kong.auth.consumer.name
+  - name: kong.gen_ai.gcp_model_armor.latency
+    min_version: "3.15"
+    description: Time for GCP Model Armor to process a request.
+    unit: "s"
+    type: Histogram
+    attributes:
+      - kong.gen_ai.gcp_model_armor.template_id
+      - kong.gen_ai.gcp_model_armor.mode
+      - kong.workspace.name
+      - kong.auth.consumer.name
+  - name: kong.gen_ai.lakera_guard.latency
+    min_version: "3.15"
+    description: Time for Lakera Guard to process a request.
+    unit: "s"
+    type: Histogram
+    attributes:
+      - kong.gen_ai.lakera_guard.project_id
+      - kong.gen_ai.lakera_guard.mode
+      - kong.workspace.name
+      - kong.auth.consumer.name
+  - name: kong.gen_ai.custom_guardrail.latency
+    min_version: "3.15"
+    description: Time for the AI Custom Guardrail plugin to process a request.
+    unit: "s"
+    type: Histogram
+    attributes:
+      - kong.gen_ai.custom_guardrail.mode
+      - kong.workspace.name
+      - kong.auth.consumer.name
+  - name: kong.gen_ai.sanitizer.latency
+    min_version: "3.15"
+    description: Time for the AI Sanitizer plugin to process a request.
+    unit: "s"
+    type: Histogram
+    attributes:
+      - kong.gen_ai.sanitizer.mode
+      - kong.workspace.name
+      - kong.auth.consumer.name
   - name: kong.gen_ai.mcp.response.size
     min_version: "3.14"
     description: Size of the MCP response body in bytes.
@@ -580,6 +695,11 @@ attributes:
     Nginx subsystem that produced the metric. Possible values:
       - `http`
       - `stream`
+  kong.session.status_code: Status code of the stream session.
+  kong.session.source: |
+    Origin of the current stream session response. Possible values:
+      - `upstream` if the response originated by successfully contacting the upstream service
+      - `kong` otherwise
   kong.connection.state: |
     State of the client connection. Possible values:
       - `accepted`
@@ -686,6 +806,15 @@ attributes:
   kong.gen_ai.aws.guardrails.version: Version of the AWS Guardrails configuration.
   kong.gen_ai.aws.guardrails.mode: Mode of the AWS Guardrails evaluation.
   kong.gen_ai.aws.guardrails.region: AWS region of the Guardrails service.
+  kong.gen_ai.azure_content_safety.tenant_id: Azure tenant ID configured for Azure Content Safety.
+  kong.gen_ai.azure_content_safety.client_id: Azure client ID configured for Azure Content Safety.
+  kong.gen_ai.azure_content_safety.mode: Mode of the Azure Content Safety evaluation.
+  kong.gen_ai.gcp_model_armor.template_id: ID of the GCP Model Armor template.
+  kong.gen_ai.gcp_model_armor.mode: Mode of the GCP Model Armor evaluation.
+  kong.gen_ai.lakera_guard.project_id: ID of the Lakera Guard project.
+  kong.gen_ai.lakera_guard.mode: Mode of the Lakera Guard evaluation.
+  kong.gen_ai.custom_guardrail.mode: Mode of the AI Custom Guardrail evaluation.
+  kong.gen_ai.sanitizer.mode: Mode of the AI Sanitizer evaluation.
   mcp.method.name: "MCP method name, such as `tools/call`."
   gen_ai.tool.name: Name of the MCP tool invoked.
   kong.gen_ai.mcp.primitive: "MCP primitive type, such as `tool`."
