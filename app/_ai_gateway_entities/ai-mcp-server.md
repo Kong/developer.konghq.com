@@ -119,9 +119,9 @@ AI MCP Servers can be created and managed through the:
 
 For configuration examples and step-by-step setup instructions, see [Set up an AI MCP Server](#set-up-an-ai-mcp-server).
 
-After you've created an MCP server, you can [add it to {{site.catalog}}](/catalog/mcp-servers/).
+After you've created an MCP server, you can [add it to {{site.konnect_catalog}}](/catalog/mcp-servers/).
 {{site.konnect_catalog}} gives you a single place to see every MCP server across your organization, so you don't have to track each one down in a separate tool to know what it does or how to connect to it.
-You can also use {{site.catalog}} to identify MCP servers that aren't yet protected by {{site.ai_gateway}}.
+You can also use {{site.konnect_catalog}} to identify MCP servers that aren't yet protected by {{site.ai_gateway}}.
 
 ## AI MCP Server governance
 
