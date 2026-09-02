@@ -30,13 +30,13 @@ related_resources:
     url: /kongctl/kongctl-and-deck/
 ---
 
-kongctl provides a flexible system for configuring the CLI behavior which allows
-you to customize behavior for different machines, {{site.konnect_short_name}} organizations, 
+kongctl provides a flexible system for configuring CLI behavior, so you can
+customize settings for different machines, {{site.konnect_short_name}} organizations, 
 environments, and automation pipelines.
 
 {:.info}
-> **Note:** The term _configuration_ in this document describes altering of the behavior of the CLI itself, 
-> not to be confused with _declarative configuration_ used to manage the state of 
+> **Note:** The term _configuration_ in this document refers to changing the behavior of the CLI itself, 
+> not to be confused with _declarative configuration_, which is used to manage the state of 
 > {{site.konnect_short_name}} resources. 
 > For declarative configuration, see the [declarative configuration guide](/kongctl/declarative/).
 
@@ -107,13 +107,76 @@ default:
     region: eu
 ```
 
+## Configure command output
+
+Most resource commands support `text`, `json`, and `yaml` output. Text
+output is optimized for reading in a terminal and can omit fields or truncate
+long values. Use JSON or YAML when automation needs the complete response.
+
+Configure the default output format for a profile:
+
+```yaml
+default:
+  output: json
+```
+
+Text output has two profile settings:
+
+{% table %}
+columns:
+  - title: Configuration path
+    key: path
+  - title: Flag
+    key: flag
+  - title: Values
+    key: values
+  - title: Behavior
+    key: behavior
+rows:
+  - path: "`text.layout`"
+    flag: "`--text-layout`"
+    values: "`compact`, `auto`, `wide`"
+    behavior: Controls how many safe fields static text tables display.
+  - path: "`text.id-format`"
+    flag: "`--text-id-format`"
+    values: "`compact`, `full`"
+    behavior: Controls whether UUID columns are shortened or shown in full.
+{% endtable %}
+
+For example:
+
+```yaml
+default:
+  output: text
+  text:
+    layout: auto
+    id-format: full
+```
+
+`compact` is the default layout. `auto` adds fields when the output is a
+wide enough terminal and otherwise uses the compact layout. `wide` selects
+every safe text field. The default ID format is `compact`.
+
+On commands that support it, repeat `--columns HEADER=.field` to replace the
+built-in text columns:
+
+```sh
+kongctl get apis \
+  --columns NAME=.name \
+  --columns UPDATED=.updated_at
+```
+
+`--columns` works only with text output and can't be combined with `--jq`.
+Use `--jq` with JSON or YAML output when you need to transform structured
+output.
+
 ## Environment variables
 
 When values are loaded via environment variables, the variable names
 must start with the `KONGCTL_` prefix, then the desired profile,
 and finally the config path in uppercase with underscores instead of dots.
 
-For example, to set the same region value for the default profiles,
+For example, to set the same region value for the default profile,
 set the following environment variable:
 
 ```text
@@ -121,8 +184,9 @@ KONGCTL_DEFAULT_KONNECT_REGION=eu
 ```
 
 {:.info}
-> **Note**: The `KONGCTL_` prefix is for configuring the kongctl CLI itself.
-> To inject environment variable values into declarative resource configuration files, use the [`!env` YAML tag](/kongctl/declarative/#loading-values-from-environment-variables) instead.
+> **Note:** The `KONGCTL_` prefix configures the kongctl CLI. To inject an
+> environment variable into a declarative resource, use the
+> [`!env` YAML tag](/kongctl/declarative/#loading-values-from-environment-variables).
 
 
 ## Configuration file

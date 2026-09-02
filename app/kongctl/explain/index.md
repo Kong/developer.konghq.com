@@ -21,9 +21,16 @@ related_resources:
     url: /kongctl/get-started/
 ---
 
-Explain shows the declarative schema for a supported resource type or field path.
+Explain shows the declarative schema for a supported resource type or field
+path.
 
-Use text output for human-readable field summaries. Use json or yaml output to retrieve the same machine-readable schema document in different serializations.
+Run `kongctl explain` without a path to list every available declarative
+resource path. Use text output for human-readable field summaries. Use JSON or
+YAML to retrieve the same machine-readable schema.
+
+Lower-maturity resources and operations include a maturity label. Unlabeled
+resources are GA. JSON and YAML schema output exposes maturity through
+`x-kongctl-maturity`.
 
 ## Command usage
 

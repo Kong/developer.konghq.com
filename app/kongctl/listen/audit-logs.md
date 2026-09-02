@@ -5,7 +5,6 @@ content_type: reference
 layout: reference
 
 works_on:
-  - on-prem
   - konnect
 
 tools:
@@ -18,6 +17,8 @@ breadcrumbs:
 related_resources:
   - text: kongctl listen commands
     url: /kongctl/listen/
+  - text: Manage audit logs with kongctl
+    url: /kongctl/audit-logs/
 ---
 
 Listen to the audit log stream.

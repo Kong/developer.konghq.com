@@ -1,11 +1,10 @@
 ---
 title: kongctl tail audit-logs
-description: Tail audit logs.
+description: Follow organization audit logs.
 content_type: reference
 layout: reference
 
 works_on:
-  - on-prem
   - konnect
 
 tools:
@@ -18,9 +17,12 @@ breadcrumbs:
 related_resources:
   - text: kongctl tail commands
     url: /kongctl/tail/
+  - text: Manage audit logs with kongctl
+    url: /kongctl/audit-logs/
 ---
 
-Tail audit logs.
+Follow organization audit logs. To stream events from a webhook listener, use
+`kongctl tail audit-logs listener`.
 
 
 ## Command usage

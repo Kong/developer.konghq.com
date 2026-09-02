@@ -17,6 +17,8 @@ breadcrumbs:
 related_resources:
   - text: kongctl list commands
     url: /kongctl/list/
+  - text: kongctl declarative resource reference
+    url: /kongctl/supported-resources/#ai-gateway
 ---
 
 Use the `list` verb with the `ai-gateway` command to list {{site.konnect_short_name}} {{site.ai_gateway}}s.
@@ -34,6 +36,9 @@ rows:
       [kongctl list ai-gateway agents](#kongctl-list-ai-gateway-agents)
     description: "Use the `agents` command to list or retrieve Agents for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
   - command: |
+      [kongctl list ai-gateway auth-strategies](#kongctl-list-ai-gateway-auth-strategies)
+    description: "Use the `auth-strategies` command to list or retrieve Auth Strategies for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
+  - command: |
       [kongctl list ai-gateway config-stores](#kongctl-list-ai-gateway-config-stores)
     description: "Use the `config-stores` command to list or retrieve Config Stores for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
   - command: |
@@ -48,9 +53,6 @@ rows:
   - command: |
       [kongctl list ai-gateway data-plane-certificates](#kongctl-list-ai-gateway-data-plane-certificates)
     description: "Use the `data-plane-certificates` command to list or retrieve data plane certificates for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
-  - command: |
-      [kongctl list ai-gateway identity-providers](#kongctl-list-ai-gateway-identity-providers)
-    description: "Use the `identity-providers` command to list or retrieve identity providers for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
   - command: |
       [kongctl list ai-gateway mcp-servers](#kongctl-list-ai-gateway-mcp-servers)
     description: "Use the `mcp-servers` command to list or retrieve MCP Servers for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
@@ -89,7 +91,7 @@ Use the `auth-strategies` command to list or retrieve Auth Strategies for a spec
 
 ### kongctl list ai-gateway config-stores
 
-Use the `config-stores` command to list or retrieve Config Stores for a {{site.konnect_short_name}} {{site.ai_gateway}}.
+Use the `config-stores` command to list or retrieve Config Stores for a specific {{site.konnect_short_name}} {{site.ai_gateway}}.
 
 {% include_cached /kongctl/help/list/ai-gateway/config-stores.md %}
 

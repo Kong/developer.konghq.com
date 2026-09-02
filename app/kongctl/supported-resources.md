@@ -69,6 +69,31 @@ _defaults:
     protected: false
 ```
 
+## Configuration templates
+
+Define reusable configuration blocks under the top-level `_templates` key and
+select one with `_extends`:
+
+```yaml
+_templates:
+  private-portal:
+    authentication_enabled: true
+    default_api_visibility: private
+
+portals:
+  - _extends: private-portal
+    ref: developer-portal
+    name: Developer Portal
+```
+
+Templates are shared across all sources loaded by one command. Consumer
+objects recursively override template objects. Scalars, arrays, explicit
+`null`, and values of a different type replace inherited values. Arrays don't
+append.
+
+See [Configuration templates](/kongctl/declarative/#configuration-templates)
+for discovery, inheritance, tag, and sync-scope behavior.
+
 ## YAML tags
 
 Use YAML tags in field values to load files or reference other resources.
@@ -79,10 +104,18 @@ Use YAML tags in field values to load files or reference other resources.
   Supports `VAR#extract.path` and `var`/`extract` map form.
 - `!ref`: Reference another declarative resource by `ref`.
   `resource-ref#field` is supported; the default field is `id`.
+- `!lookup`: Resolve an existing resource directly in a relationship field.
+- `!external`: An exact alias for `!lookup`.
+- `!secret`: Defer a write-only value until execution and keep the resolved
+  value out of saved plans.
 - `!ref` is intended for string fields.
 - `string (uuid)` and `array[string(uuid)]` annotations in this document describe API value types. 
   In declarative config, prefer `!ref` and avoid literal UUID values.
-- For unmanaged/external resources, prefer `_external.selector` and then reference that resource by `!ref` from other fields.
+- For reusable unmanaged resources or external parents with managed children,
+  use `_external.selector` and reference the resource with `!ref`.
+- For a one-off unmanaged relationship, use `!lookup`.
+- Sync never changes or deletes an external parent. Explicitly scoped child
+  collections are still fully reconciled.
 - Large text/spec fields are commonly loaded with `!file`.
 - `!file` paths are resolved relative to the config file and must remain within the configured base directory boundary.
 
@@ -99,6 +132,19 @@ apis:
     publications:
       - ref: billing-publication
         portal_id: !ref docs-portal
+```
+
+Use mapping syntax to compose `!env` inside `!lookup` or `!external`, or
+inside `!secret`:
+
+```yaml
+portal_id: !lookup
+  name: !env PORTAL_NAME
+
+value: !secret
+  parts:
+    - "Bearer "
+    - !env AI_PROVIDER_TOKEN
 ```
 
 ## Audit logs
@@ -134,6 +180,8 @@ Audit log webhook destinations **cannot** declare kongctl metadata and are not c
 apis:
   - ref: string
     name: string required (1-255 chars)
+    _external: # alternative to managed API fields
+      id: string # API UUID, or use selector.matchFields.name
     description: string (nullable)
     version: string (1-255 chars, nullable)
     slug: string (pattern: ^[\w-]+$, nullable)
@@ -155,14 +203,18 @@ apis:
         visibility: One of (public | private)
     implementations: # /api/konnect/api-builder/v3/#/operations/create-api-implementation
       - ref: string
-        type: service
+        type: service # optional when service is present
         service:
           id: string required (uuid) # prefer: !ref <gateway-service-ref>
+          control_plane_id: string required (uuid) # prefer: !ref <control-plane-ref>
+      - ref: string
+        type: control_plane # optional when control_plane is present
+        control_plane:
           control_plane_id: string required (uuid) # prefer: !ref <control-plane-ref>
     documents: # /api/konnect/api-builder/v3/#/operations/create-api-document
       - ref: string
         content: string required (markdown) # prefer: !file ./docs/page.md
-        title: string
+        title: string required unless content has a YAML frontmatter title
         slug: string (pattern: ^[\w-]+$)
         status: One of (published | unpublished)
         parent_document_id: string (uuid, nullable) # prefer: !ref <document-ref>
@@ -178,6 +230,12 @@ apis:
 API specifications must be declared on API versions with `versions[].spec` or
 root-level `api_versions[].spec`; `apis[].spec_content` is not supported in
 declarative configuration.
+
+An external API can own managed versions, publications, implementations, and
+documents. kongctl resolves the API and plans only the declared children; it
+never creates, updates, or deletes the API. Each implementation defines exactly
+one of `service` or `control_plane`. When `type` is present, it must match
+the selected payload.
 
 ## Application auth strategies
 
@@ -424,7 +482,12 @@ event_gateways:
              - type: One of (glob | exact_list) required
                glob: string # if type=glob
                exact_list: array[object] (min 1 item) # if type=exact_list
-                 - value: string required
+               - value: string required
+       topic_aliases:
+         - alias: string required
+           topic: string required
+           condition: string
+           conflict: One of (warn | ignore) (default: warn)
        acl_mode: One of (enforce_on_gateway | passthrough) required
        dns_label: string required (1-63 chars, RFC1035 label)
        labels: object [string]string
@@ -635,6 +698,7 @@ portals:
    default_application_auth_strategy_id: string (uuid, nullable) # prefer: !ref <app-auth-strategy-ref>
    auto_approve_developers: boolean (default: false)
    auto_approve_applications: boolean (default: false)
+   sipr_enabled: boolean (default: false)
    labels: object [string]string
      key: value
    customization: # /api/konnect/portal-management/v3/#/operations/replace-portal-customization
@@ -869,7 +933,13 @@ audit-logs:
 ## {{site.ai_gateway}}
 
 This section covers the {{site.ai_gateway}} resources supported by kongctl.
-Use `kongctl explain ai_gateways --output yaml` as the authoritative schema for nested {{site.ai_gateway}} resources and fields, and use `kongctl scaffold ai_gateways` to generate starter YAML.
+Use `kongctl explain ai_gateway --output yaml` as the authoritative schema for
+nested {{site.ai_gateway}} resources and fields, and use
+`kongctl scaffold ai_gateway` to generate starter YAML.
+
+{{site.ai_gateway}} nodes are imperative, read-only resources. Inspect them
+with `kongctl get ai-gateway nodes`; don't include them in declarative
+configuration.
 
 * [{{site.ai_gateway}} entities reference](/ai-gateway/entities/)
 * [Using kongctl to manage {{site.ai_gateway}}](/ai-gateway/kongctl/)
@@ -885,6 +955,7 @@ ai_gateways:
     name: string required
     display_name: string required
     description: string (nullable)
+    deployment_type: One of (hybrid | managed | serverless) (default: hybrid)
     proxy_urls: array[object]
       - host: string required
         port: integer required
@@ -892,13 +963,14 @@ ai_gateways:
     labels: object [string]string
       key: value
     model_providers: # see AI Model Providers
-    identity_providers: # see AI Identity Providers
+    auth_strategies: # see AI Auth Strategies
     policies: # see AI Policies
     agents: # see AI Agents
     consumers: # see AI Consumers
     consumer_groups: # see AI Consumer Groups
     models: # see AI Models
     mcp_servers: # see AI MCP Servers
+    config_stores: # see AI Config Stores
     vaults: # see AI Vaults
     data_plane_certificates:
       - ref: string
@@ -1031,7 +1103,7 @@ ai_gateway_models:
         oneOf:
           allow: array[string] # consumer group names
           deny: array[string]
-      identity_providers: array[string] # identity provider names
+      auth_strategies: array[string] # Auth Strategy names; prefer: !ref values
     capabilities: array[string] # for example [generate]
     policies: array[string] # policy names; prefer: !ref values
     labels: object [string]string
@@ -1100,7 +1172,7 @@ ai_gateway_consumers:
     ai_gateway: string required # prefer: !ref <ai-gateway-ref>
     name: string required
     display_name: string required
-    type: One of (api-key) required
+    type: One of (api-key | oauth) required
     custom_id: string (nullable)
     policies: array[string] # policy names; prefer: !ref values
     credentials:
@@ -1109,6 +1181,7 @@ ai_gateway_consumers:
         name: string required
         display_name: string required
         type: One of (api-key) required
+        api_key: string # create-only; must use !secret when provided
         ttl: integer
         labels: object [string]string
           key: value
@@ -1209,6 +1282,7 @@ ai_gateway_mcp_servers:
         oneOf:
           allow: array[string]
           deny: array[string]
+      auth_strategies: array[string] # Auth Strategy names; prefer: !ref values
     policies: array[string] # policy names
     labels: object [string]string
       key: value
@@ -1252,11 +1326,42 @@ ai_gateway_agents:
         oneOf:
           allow: array[string] # consumer group names
           deny: array[string]
+      auth_strategies: array[string] # Auth Strategy names; prefer: !ref values
     policies: array[string] # policy names; prefer: !ref values
     labels: object [string]string
       key: value
 ```
 {:.collapsible}
+
+### AI Config Stores
+
+AI Config Stores contain secrets that can be referenced by other
+{{site.ai_gateway}} resources. Config Store names are immutable after creation.
+
+```yaml
+ai_gateway_config_stores:
+  - ref: string
+    ai_gateway: string required # prefer: !ref <ai-gateway-ref>
+    name: string required
+    display_name: string required
+    secrets:
+      - ref: string
+        key: string required
+        value: string # write-only; must use !secret
+```
+
+Config Store Secrets can also be declared at the root with an
+`ai_gateway_config_store` parent. Secret values are never returned. Creating a
+secret requires `value`; rotating one also requires `--write-secret` or
+`--write-secrets`.
+
+```yaml
+ai_gateway_config_store_secrets:
+  - ref: string
+    ai_gateway_config_store: string required # prefer: !ref <config-store-ref>
+    key: string required
+    value: string # write-only; must use !secret
+```
 
 ### AI Vaults
 
@@ -1292,3 +1397,15 @@ ai_gateway_vaults:
     # config: # provider-specific; run `kongctl explain ai_gateway_vaults` for full detail
 ```
 {:.collapsible}
+
+Omit a child collection to leave it outside sync scope. Use an empty collection
+under an identified gateway, consumer, or Config Store to delete that parent's
+managed children. A root-level empty child collection is invalid because it
+doesn't identify its parent.
+
+Use `--resources ai_gateways --include-child-resources` to dump
+{{site.ai_gateway}}s and their children. Direct child dump selectors aren't
+supported.
+
+For examples, see the
+[{{site.ai_gateway}} declarative configurations](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/ai-gateway).

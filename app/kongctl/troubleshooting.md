@@ -24,7 +24,7 @@ related_resources:
      url: /kongctl/declarative/
    - text: kongctl configuration reference guide
      url: /kongctl/config/
-   - text: Using kongctl and deck for full API platform management
+   - text: Using kongctl and decK for full API platform management
      url: /kongctl/kongctl-and-deck/
 ---
 
@@ -110,10 +110,10 @@ kongctl apply -f publications.yaml
    kongctl login
    ```
 
-3. If using a PAT, verify it's set:
+3. If you're using a PAT or sPAT, verify that it is set without printing it:
    
    ```bash
-   echo $KONGCTL_DEFAULT_KONNECT_PAT | head -c 20
+   test -n "$KONGCTL_DEFAULT_KONNECT_PAT" && echo "Token is set"
    ```
 
 4. Check that the token hasn't expired in {{site.konnect_short_name}}.
@@ -130,9 +130,9 @@ kongctl apply -f publications.yaml
 	
 2. If timeout occurs, start over:
 
-	```bash
-	kongctl login
-  ```
+   ```bash
+   kongctl login
+   ```
 
 3. Verify that your browser isn't blocking the redirect.
 
@@ -532,7 +532,7 @@ kongctl apply -f config.yaml --log-level trace
 You can also set these via environment variables:
 
 ```bash
-export KONGCTL_LOG_LEVEL=debug
+export KONGCTL_DEFAULT_LOG_LEVEL=debug
 kongctl plan -f config/
 ```
 
@@ -603,7 +603,7 @@ Ensure you're running the [latest version](https://github.com/kong/kongctl/relea
 kongctl version --full
 ```
 
-Update kongctl if needed [following the install instructions for your platform](/kongctl).
+Update kongctl if needed [following the install instructions for your platform](/kongctl/).
 
 ## Quick reference
 
@@ -649,8 +649,8 @@ rows:
 ### Useful environment variables
 
 ```bash
-# Set log level globally
-export KONGCTL_LOG_LEVEL=debug
+# Set log level for the default profile
+export KONGCTL_DEFAULT_LOG_LEVEL=debug
 
 # Use a specific profile
 export KONGCTL_PROFILE=production

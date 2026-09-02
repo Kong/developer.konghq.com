@@ -1,12 +1,10 @@
 ---
 title: kongctl get audit-logs
-description: "Get audit logs."
+description: "Pull organization audit logs and inspect audit-log configuration."
 content_type: reference
 layout: reference
 
-
 works_on:
-  - on-prem
   - konnect
 
 tools:
@@ -19,9 +17,11 @@ breadcrumbs:
 related_resources:
   - text: kongctl get commands
     url: /kongctl/get/
+  - text: Manage audit logs with kongctl
+    url: /kongctl/audit-logs/
 ---
 
-Get audit logs.
+Pull organization audit logs or inspect webhook destinations and configuration.
 
 ## Command usage
 
