@@ -21753,6 +21753,51 @@ components:
         - result
       x-internal: true
       x-unstable: true
+    MeshControlPlaneReadinessReportListItem:
+      description: |
+        Summary fields for one upgrade readiness scan of a control plane.
+      type: object
+      properties:
+        id:
+          description: Identifier of this report.
+          type: string
+          format: uuid
+          example: 9a4f2d3e-7c81-4a2b-9f0e-1d5c8b6a3f21
+        control_plane_id:
+          description: Identifier of the control plane the scan read.
+          type: string
+          format: uuid
+          example: bf138ba2-c9b1-4229-b268-04d9d8a6410b
+        state:
+          $ref: '#/components/schemas/MeshControlPlaneReadinessReportState'
+        requested_at:
+          description: When the scan was asked for.
+          type: string
+          format: date-time
+          example: '2026-08-07T09:15:04.000Z'
+        finished_at:
+          description: 'When the scan stopped, and null until the scan finishes.'
+          type: string
+          format: date-time
+          example: '2026-08-07T09:15:41.000Z'
+          nullable: true
+        failure_reason:
+          description: |
+            Why the scan produced no result, and null unless the state is failed. It never carries the credentials of the caller or the contents of a finding.
+          type: string
+          example: The scan stopped at its deadline before it read the control plane.
+          nullable: true
+        status:
+          $ref: '#/components/schemas/MeshControlPlaneReadinessStatus'
+        summary:
+          $ref: '#/components/schemas/MeshControlPlaneReadinessSummary'
+      required:
+        - id
+        - control_plane_id
+        - state
+        - requested_at
+        - finished_at
+        - failure_reason
     MeshControlPlaneReadinessScanAccepted:
       description: |
         Identifier of the upgrade readiness report this scan writes. Read the report at the Location above once the scan finishes.
@@ -21769,7 +21814,7 @@ components:
       x-unstable: true
     MeshControlPlaneReadinessReportState:
       description: |
-        How far the scan got, which is separate from what the scan found. While it is running, result and failure_reason are both null. When it has finished, result holds what the scan found and failure_reason stays null. The result then says whether anything blocks the upgrade. When it has failed, the opposite holds: result is null and failure_reason says why, so a consumer must read state before reaching into result.
+        How far the scan got, which is separate from what the scan found. While it is running, the scan has nothing to report yet and failure_reason is null. When it has finished, what the scan found is present and failure_reason stays null, and it says whether anything blocks the upgrade. When it has failed, the opposite holds: there is nothing to report and failure_reason says why, so a consumer must read state before reaching into what the scan found. A single report carries that in result and a list item carries it in status and summary. They are set only when state is finished: on a running or a failed report, result is null and status and summary are absent.
       type: string
       example: finished
       enum:
@@ -22755,24 +22800,12 @@ components:
             requested_at: '2026-08-07T09:15:04.000Z'
             finished_at: '2026-08-07T09:15:41.000Z'
             failure_reason: null
-            result:
-              tool: kuma3-preflight
-              tool_schema: kuma3-preflight/v1
-              status: clean
-              control_plane:
-                product: Kong Mesh
-                version: 2.11.3
-                mode: global
-              meshes:
-                - default
-              summary:
-                blockers: 0
-                info: 0
-                parse_errors: 0
-                system_findings: 0
-              findings: []
-              manual_checks: []
-              generated_at: '2026-08-07T09:15:41.000Z'
+            status: clean
+            summary:
+              blockers: 0
+              info: 0
+              parse_errors: 0
+              system_findings: 0
     MeshControlPlaneReadinessReportFailedExample:
       value:
         id: 4c2b8e1a-5d93-4f77-8a21-6e0b9c4d7f38
@@ -24545,7 +24578,7 @@ components:
               data:
                 type: array
                 items:
-                  $ref: '#/components/schemas/MeshControlPlaneReadinessReport'
+                  $ref: '#/components/schemas/MeshControlPlaneReadinessReportListItem'
             title: ListMeshControlPlaneReadinessReportsResponse
           examples:
             Readiness Report Collection:
