@@ -5586,7 +5586,6 @@ paths:
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageNumber'
-        - $ref: '#/components/parameters/MeshControlPlaneReadinessReportFilter'
         - $ref: '#/components/parameters/MeshControlPlaneReadinessReportSort'
       responses:
         '200':
@@ -5605,12 +5604,10 @@ paths:
       operationId: scan-mesh-control-plane
       summary: Scan a control plane for upgrade readiness
       description: |
-        Starts an upgrade readiness scan of a control plane and returns at once, before the scan finishes. Read the report later to get the result. A scan runs with the credentials of the caller, so it reports only what the caller can already read. A control plane already running version 3 is refused, as is a second scan of a control plane whose scan is still running.
+        Scans a control plane for upgrade readiness and returns the id of the report for that scan. Read the report at the Location for what the scan found. A scan runs with the credentials of the caller, so it reports only what the caller can already read. A control plane already running version 3 is refused.
       responses:
         '202':
           $ref: '#/components/responses/ScanMeshControlPlaneResponse'
-        '400':
-          $ref: '#/components/responses/ScanMeshControlPlaneValidationError'
         '401':
           $ref: '#/components/responses/MeshControlPlaneUnauthorizedError'
         '403':
@@ -5634,7 +5631,7 @@ paths:
       operationId: get-mesh-control-plane-readiness-report
       summary: Get an upgrade readiness report
       description: |
-        Returns one upgrade readiness report of a control plane, including the state of the scan that produced it and what the scan could not check.
+        Returns one upgrade readiness report of a control plane. A report that has a result carries what the scan found; one that has a failure_reason instead explains why there is nothing to report.
       responses:
         '200':
           $ref: '#/components/responses/RetrieveMeshControlPlaneReadinessReportResponse'
@@ -5676,17 +5673,6 @@ components:
       schema:
         type: string
         format: uuid
-    MeshControlPlaneReadinessReportFilter:
-      x-internal: true
-      x-unstable: true
-      name: filter
-      description: |
-        Filters a collection of upgrade readiness reports. Filtering on state is how a caller asks for the newest finished report rather than one still running.
-      required: false
-      in: query
-      schema:
-        $ref: '#/components/schemas/MeshControlPlaneReadinessReportFilterParameters'
-      style: deepObject
     MeshControlPlaneReadinessReportId:
       name: reportId
       in: path
@@ -5701,7 +5687,7 @@ components:
       x-unstable: true
       name: sort
       description: |
-        Orders the collection by the time the scan was asked for, or by its state. An ascending or descending suffix is optional, and ascending is the default for an attribute named on its own. The collection is newest first when nothing is named.
+        Orders the collection by the time the scan was asked for. An ascending or descending suffix is optional, and ascending is the default for an attribute named on its own. The collection is newest first when nothing is named.
       required: false
       in: query
       schema:
@@ -5711,9 +5697,6 @@ components:
           - requested_at
           - requested_at asc
           - requested_at desc
-          - state
-          - state asc
-          - state desc
       example: requested_at desc
     PageNumber:
       name: 'page[number]'
@@ -21709,7 +21692,7 @@ components:
         - type
     MeshControlPlaneReadinessReport:
       description: |
-        The result of one upgrade readiness scan of a control plane.
+        The result of one upgrade readiness scan of a control plane. Exactly one of result and failure_reason is set, so a reader branches on which one is present.
       type: object
       properties:
         id:
@@ -21722,22 +21705,19 @@ components:
           type: string
           format: uuid
           example: bf138ba2-c9b1-4229-b268-04d9d8a6410b
-        state:
-          $ref: '#/components/schemas/MeshControlPlaneReadinessReportState'
         requested_at:
           description: When the scan was asked for.
           type: string
           format: date-time
           example: '2026-08-07T09:15:04.000Z'
         finished_at:
-          description: 'When the scan stopped, and null until the scan finishes.'
+          description: When the scan stopped.
           type: string
           format: date-time
           example: '2026-08-07T09:15:41.000Z'
-          nullable: true
         failure_reason:
           description: |
-            Why the scan produced no result, and null unless the state is failed. It never carries the credentials of the caller or the contents of a finding.
+            Why the scan produced no result, and null when it produced one. It never carries the credentials of the caller or the contents of a finding.
           type: string
           example: The scan stopped at its deadline before it read the control plane.
           nullable: true
@@ -21746,7 +21726,6 @@ components:
       required:
         - id
         - control_plane_id
-        - state
         - requested_at
         - finished_at
         - failure_reason
@@ -21755,7 +21734,7 @@ components:
       x-unstable: true
     MeshControlPlaneReadinessReportListItem:
       description: |
-        Summary fields for one upgrade readiness scan of a control plane.
+        Summary fields for one upgrade readiness scan of a control plane. A report that produced a result carries a summary; one that did not carries a failure_reason.
       type: object
       properties:
         id:
@@ -21768,39 +21747,33 @@ components:
           type: string
           format: uuid
           example: bf138ba2-c9b1-4229-b268-04d9d8a6410b
-        state:
-          $ref: '#/components/schemas/MeshControlPlaneReadinessReportState'
         requested_at:
           description: When the scan was asked for.
           type: string
           format: date-time
           example: '2026-08-07T09:15:04.000Z'
         finished_at:
-          description: 'When the scan stopped, and null until the scan finishes.'
+          description: When the scan stopped.
           type: string
           format: date-time
           example: '2026-08-07T09:15:41.000Z'
-          nullable: true
         failure_reason:
           description: |
-            Why the scan produced no result, and null unless the state is failed. It never carries the credentials of the caller or the contents of a finding.
+            Why the scan produced no result, and null when it produced one. It never carries the credentials of the caller or the contents of a finding.
           type: string
           example: The scan stopped at its deadline before it read the control plane.
           nullable: true
-        status:
-          $ref: '#/components/schemas/MeshControlPlaneReadinessStatus'
         summary:
           $ref: '#/components/schemas/MeshControlPlaneReadinessSummary'
       required:
         - id
         - control_plane_id
-        - state
         - requested_at
         - finished_at
         - failure_reason
     MeshControlPlaneReadinessScanAccepted:
       description: |
-        Identifier of the upgrade readiness report this scan writes. Read the report at the Location above once the scan finishes.
+        Identifier of the upgrade readiness report for this scan. Read the report at the Location above for what the scan found.
       type: object
       properties:
         id:
@@ -21812,20 +21785,9 @@ components:
         - id
       x-internal: true
       x-unstable: true
-    MeshControlPlaneReadinessReportState:
-      description: |
-        How far the scan got, which is separate from what the scan found. While it is running, the scan has nothing to report yet and failure_reason is null. When it has finished, what the scan found is present and failure_reason stays null, and it says whether anything blocks the upgrade. When it has failed, the opposite holds: there is nothing to report and failure_reason says why, so a consumer must read state before reaching into what the scan found. A single report carries that in result and a list item carries it in status and summary. They are set only when state is finished: on a running or a failed report, result is null and status and summary are absent.
-      type: string
-      example: finished
-      enum:
-        - running
-        - finished
-        - failed
-      x-internal: true
-      x-unstable: true
     MeshControlPlaneReadinessResult:
       description: |
-        What the scan found, and null until the scan finishes. The checks belong to the Kong Mesh upgrade readiness tool, and this API restates its document in Konnect field names rather than passing it through. The address the scan connected to is deliberately left out, because it names shared infrastructure the reader does not own.
+        What the scan found, and null when the scan produced nothing to report. A scan that could not read the whole estate produces no result rather than a partial one. The checks belong to the Kong Mesh upgrade readiness tool, and this API restates its document in Konnect field names rather than passing it through. The address the scan connected to is deliberately left out, because it names shared infrastructure the reader does not own.
       type: object
       properties:
         tool:
@@ -21837,8 +21799,6 @@ components:
             Version of the tool's own document contract, so a reader can tell which shape the findings came from.
           type: string
           example: kuma3-preflight/v1
-        status:
-          $ref: '#/components/schemas/MeshControlPlaneReadinessStatus'
         control_plane:
           $ref: '#/components/schemas/MeshControlPlaneReadinessAuditedControlPlane'
         meshes:
@@ -21870,24 +21830,12 @@ components:
       required:
         - tool
         - tool_schema
-        - status
         - control_plane
         - meshes
         - summary
         - findings
         - manual_checks
         - generated_at
-      x-internal: true
-      x-unstable: true
-    MeshControlPlaneReadinessStatus:
-      description: |
-        Whether anything blocks the upgrade. A scan that could not finish reading the estate fails instead of reporting on part of it, so a status only ever describes a whole read.
-      type: string
-      example: blockers
-      enum:
-        - clean
-        - blockers
-        - failed
       x-internal: true
       x-unstable: true
     MeshControlPlaneReadinessAuditedControlPlane:
@@ -21918,13 +21866,9 @@ components:
           example: 2
           minimum: 0
         info:
+          description: Findings that do not block the upgrade.
           type: integer
           example: 3
-          minimum: 0
-        parse_errors:
-          description: Resources whose contents the scan could not read.
-          type: integer
-          example: 0
           minimum: 0
         system_findings:
           description: Findings about resources Kong owns rather than the reader.
@@ -21934,7 +21878,6 @@ components:
       required:
         - blockers
         - info
-        - parse_errors
         - system_findings
       x-internal: true
       x-unstable: true
@@ -22176,15 +22119,6 @@ components:
       default: v2
       pattern: '^v[0-9]{1,9}$'
       x-internal: true
-    MeshControlPlaneReadinessReportFilterParameters:
-      type: object
-      properties:
-        state:
-          $ref: '#/components/schemas/StringFieldEqualsFilter'
-      additionalProperties: false
-      title: MeshControlPlaneReadinessReportFilterParameters
-      x-internal: true
-      x-unstable: true
     MeshControlPlaneFilterParameters:
       type: object
       properties:
@@ -22752,14 +22686,12 @@ components:
       value:
         id: 9a4f2d3e-7c81-4a2b-9f0e-1d5c8b6a3f21
         control_plane_id: bf138ba2-c9b1-4229-b268-04d9d8a6410b
-        state: finished
         requested_at: '2026-08-07T09:15:04.000Z'
         finished_at: '2026-08-07T09:15:41.000Z'
         failure_reason: null
         result:
           tool: kuma3-preflight
           tool_schema: kuma3-preflight/v1
-          status: blockers
           control_plane:
             product: Kong Mesh
             version: 2.11.3
@@ -22769,7 +22701,6 @@ components:
           summary:
             blockers: 1
             info: 0
-            parse_errors: 0
             system_findings: 0
           findings:
             - severity: blocker
@@ -22796,21 +22727,17 @@ components:
         data:
           - id: 9a4f2d3e-7c81-4a2b-9f0e-1d5c8b6a3f21
             control_plane_id: bf138ba2-c9b1-4229-b268-04d9d8a6410b
-            state: finished
             requested_at: '2026-08-07T09:15:04.000Z'
             finished_at: '2026-08-07T09:15:41.000Z'
             failure_reason: null
-            status: clean
             summary:
               blockers: 0
               info: 0
-              parse_errors: 0
               system_findings: 0
     MeshControlPlaneReadinessReportFailedExample:
       value:
         id: 4c2b8e1a-5d93-4f77-8a21-6e0b9c4d7f38
         control_plane_id: bf138ba2-c9b1-4229-b268-04d9d8a6410b
-        state: failed
         requested_at: '2026-08-07T09:15:04.000Z'
         finished_at: '2026-08-07T09:20:04.000Z'
         failure_reason: The scan stopped at its deadline before it finished reading the control plane.
@@ -24612,39 +24539,20 @@ components:
           examples:
             Scan Accepted:
               $ref: '#/components/examples/MeshControlPlaneScanAcceptedExample'
-    ScanMeshControlPlaneValidationError:
-      description: Validation Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/BadRequestError'
-          examples:
-            Already On Version 3:
-              value:
-                status: 400
-                type: 'https://kongapi.info/konnect/bad-request'
-                title: Bad Request
-                instance: 'konnect:trace:6480643114111646299'
-                detail: 'Control plane [bf138ba2-c9b1-4229-b268-04d9d8a6410b] already runs version 3.'
-                invalid_parameters:
-                  - field: cpId
-                    rule: invalid
-                    reason: 'control plane already runs version 3, so it needs no readiness scan'
-                    source: path
     ScanMeshControlPlaneConflictError:
-      description: A scan of this control plane is already running.
+      description: This control plane needs no readiness scan.
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/ConflictError'
           examples:
-            Scan Already Running:
+            Already On Version 3:
               value:
                 status: 409
                 type: 'https://kongapi.info/konnect/conflict'
                 title: Conflict
                 instance: 'konnect:trace:2587793459331520595'
-                detail: a scan of this control plane is already running
+                detail: This control plane already runs v3 and does not need a readiness scan.
     ScanMeshControlPlaneUnsupportedError:
       description: Readiness scanning is not supported in this environment.
       content:

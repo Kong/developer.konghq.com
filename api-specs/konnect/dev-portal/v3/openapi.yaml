@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@4d2919e1013d787673e01f5eb15acafd97aeecbb
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/4d2919e1013d787673e01f5eb15acafd97aeecbb'
+  x-oas-source: kong/platform-api@7cc938196f9d5b451076f7d6f33d13517281e097
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/7cc938196f9d5b451076f7d6f33d13517281e097'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -968,6 +968,42 @@ paths:
           $ref: '#/components/responses/Gone'
       tags:
         - Developer
+  '/api/v3/forms/{name}':
+    get:
+      operationId: get-portal-form
+      summary: Get Form Schema
+      description: |-
+        Retrieves the active form schema for client-side rendering on the developer portal. Unauthenticated.
+        Resolution rules:
+          - If a published form with the supplied `name` exists, its active
+            `fields` array is returned.
+          - If no form exists or the form is unpublished, and `name` is the
+            reserved slug `developer-registration`, the default
+            developer-registration schema is returned.
+          - Otherwise, returns 404. There is no default-schema fallback for
+            type `api_registration`.
+      parameters:
+        - name: name
+          in: path
+          description: 'Kebab-case form slug. Use the reserved slug `developer-registration` to fetch the developer signup form, or the slug of the `api_registration` form linked to the API the developer is about to register against (typically read from `Api.form_name`).'
+          required: true
+          schema:
+            type: string
+            example: developer-registration
+            maxLength: 128
+            pattern: '^[a-z0-9-]+$'
+      responses:
+        '200':
+          description: The active form schema.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomFormResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security: []
+      tags:
+        - Portal Forms
   /api/v3/integrations:
     get:
       operationId: get-portal-integrations
@@ -2157,6 +2193,19 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AuthStrategy'
+        form_name:
+          description: |
+            Kebab-case slug of the published `api_registration` form linked to this API.
+
+            When non-null, clients should fetch the form via
+            `GET /api/v3/forms/{form_name}` and prompt the developer to
+            complete it before submitting `additional_data`on registration when a published form is linked.
+          type: string
+          example: dev-onboarding
+          maxLength: 128
+          nullable: true
+          pattern: '^[a-z0-9-]+$'
+          readOnly: true
         specifications:
           description: |
             Returns a list of specifications for an API.
@@ -3811,6 +3860,18 @@ components:
           example: Jane Doe
           maxLength: 256
           minLength: 1
+        additional_data:
+          description: |
+            Developer-supplied answers to the portal's `developer_registration`
+            form, supplied as a flat map keyed by field `name` (the field's slug).
+
+            Values match the field's input type. Built-in
+            fields (`full_name`, `email`) come in via the top-level body
+            properties — not here.
+
+            Required fields and permitted values are determined by the active form on the portal.
+          allOf:
+            - $ref: '#/components/schemas/FormResponseInput'
       additionalProperties: false
       required:
         - full_name
@@ -3895,6 +3956,524 @@ components:
         - data
         - meta
       title: ListDeveloperTeamDevelopersResponse
+    FormResponseInput:
+      description: |
+        The developer's answers to a custom form, as a map from each field's `name` to its value. Built-in fields like `full_name` and `email` go in their own top-level properties, not here.
+      type: object
+      example:
+        department: engineering
+        age: 35
+        accepted_terms: true
+        topics:
+          - api
+          - portal
+      additionalProperties:
+        oneOf:
+          - type: string
+          - type: number
+          - type: boolean
+          - type: array
+            items:
+              type: string
+    CustomFormName:
+      description: |
+        A unique, URL-friendly identifier for the form (lowercase letters, digits, and hyphens). For `developer_registration` forms, this is always `developer-registration`. For `api_registration` forms, you choose the name when creating the form and can change it later.
+      type: string
+      example: flights-api-registration
+      maxLength: 128
+      pattern: '^[a-z0-9-]+$'
+    CustomFormType:
+      description: The kind of form. Determines which fields are required and where developers see the form on the portal.
+      type: string
+      example: developer_registration
+      enum:
+        - developer_registration
+        - api_registration
+    CustomFormStatus:
+      description: |
+        Whether the form is visible to developers on the portal. `unpublished` forms aren't shown to developers; for the `developer_registration` form, a default form is shown instead.
+      type: string
+      example: unpublished
+      default: unpublished
+      enum:
+        - published
+        - unpublished
+    CustomFormFieldName:
+      description: |
+        A stable, URL-safe slug identifying the field (letters, digits,
+        underscores, or hyphens). When omitted, `label` is slugified instead.
+
+        Used to match up stored responses across edits.
+      type: string
+      example: full-name
+      maxLength: 128
+      pattern: '^[\w-]+$'
+    CustomFormFieldBuiltIn:
+      description: |
+        Marks a field that comes with the form by default.
+
+        Built-in fields can't be removed, retyped, or relabeled, but their
+        `placeholder`, `description`, and `required` settings can still be changed.
+
+        This flag is read-only — it's returned by the API but can't be set when
+        creating or updating a form.
+      type: boolean
+      example: true
+      readOnly: true
+    CustomFormContentField:
+      description: 'A block of Markdown content, displayed between or above the form''s input fields.'
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/CustomFormFieldName'
+        type:
+          type: string
+          example: content
+          enum:
+            - content
+        value:
+          description: The Markdown content to display.
+          type: string
+          example: '## Tell us about your project'
+          maxLength: 4096
+          minLength: 1
+        built_in:
+          $ref: '#/components/schemas/CustomFormFieldBuiltIn'
+      additionalProperties: false
+      required:
+        - type
+        - value
+        - name
+        - built_in
+    CustomFormTextField:
+      description: A single-line text field.
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/CustomFormFieldName'
+        type:
+          type: string
+          example: text
+          enum:
+            - text
+        label:
+          type: string
+          example: Full Name
+          maxLength: 256
+          minLength: 1
+        placeholder:
+          type: string
+          example: Enter your full name
+        description:
+          description: Help text displayed with the field. Supports Markdown formatting.
+          type: string
+          example: As it appears on your account.
+          maxLength: 2048
+        required:
+          type: boolean
+          example: true
+          default: false
+        built_in:
+          $ref: '#/components/schemas/CustomFormFieldBuiltIn'
+      additionalProperties: false
+      required:
+        - type
+        - label
+        - name
+        - built_in
+    CustomFormEmailField:
+      description: An email address field. Rejects values that aren't a valid email format.
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/CustomFormFieldName'
+        type:
+          type: string
+          example: email
+          enum:
+            - email
+        label:
+          type: string
+          example: Email Address
+          maxLength: 256
+          minLength: 1
+        placeholder:
+          type: string
+          example: you@example.com
+        description:
+          type: string
+          example: We will use this email to respond to your inquiry. Supports MDC markdown.
+          maxLength: 2048
+        required:
+          type: boolean
+          example: true
+          default: false
+        built_in:
+          $ref: '#/components/schemas/CustomFormFieldBuiltIn'
+      additionalProperties: false
+      required:
+        - type
+        - label
+        - name
+        - built_in
+    CustomFormNumberField:
+      description: A numeric field.
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/CustomFormFieldName'
+        type:
+          type: string
+          example: number
+          enum:
+            - number
+        label:
+          type: string
+          example: Age
+          maxLength: 256
+          minLength: 1
+        placeholder:
+          type: string
+          example: Enter your age
+        description:
+          type: string
+          example: Must be a positive number. Supports MDC markdown.
+          maxLength: 2048
+        required:
+          type: boolean
+          example: false
+          default: false
+        built_in:
+          $ref: '#/components/schemas/CustomFormFieldBuiltIn'
+      additionalProperties: false
+      required:
+        - type
+        - label
+        - name
+        - built_in
+    CustomFormTextareaField:
+      description: A multi-line text field.
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/CustomFormFieldName'
+        type:
+          type: string
+          example: textarea
+          enum:
+            - textarea
+        label:
+          type: string
+          example: Message
+          maxLength: 256
+          minLength: 1
+        placeholder:
+          type: string
+          example: Tell us what you need...
+        description:
+          type: string
+          example: Please provide as much detail as possible. Supports MDC markdown.
+          maxLength: 2048
+        required:
+          type: boolean
+          example: true
+          default: false
+        built_in:
+          $ref: '#/components/schemas/CustomFormFieldBuiltIn'
+      additionalProperties: false
+      required:
+        - type
+        - label
+        - name
+        - built_in
+    CustomFormSelectOption:
+      description: One selectable option in a dropdown field.
+      type: object
+      properties:
+        value:
+          description: The value submitted when this option is chosen.
+          type: string
+          example: sales
+          maxLength: 256
+          minLength: 1
+        label:
+          description: The text shown to the developer for this option.
+          type: string
+          example: Sales
+          maxLength: 256
+          minLength: 1
+        selected:
+          description: |
+            When `true`, this option is pre-selected when the form is displayed.
+
+            For a single-select field, at most one option may have `selected: true`.
+
+            Marking more than one option as selected is rejected as invalid.
+          type: boolean
+          example: false
+          default: false
+      additionalProperties: false
+      required:
+        - value
+        - label
+    CustomFormSingleSelectField:
+      description: |
+        A dropdown field where the developer chooses exactly one option. Requires at least 1 option.
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/CustomFormFieldName'
+        type:
+          type: string
+          example: select
+          enum:
+            - select
+        mode:
+          description: Single selection — the developer chooses exactly one option.
+          type: string
+          example: single_select
+          enum:
+            - single_select
+        label:
+          type: string
+          example: Department
+          maxLength: 256
+          minLength: 1
+        placeholder:
+          type: string
+          example: Select a department
+        description:
+          type: string
+          example: Choose the department best suited to your inquiry. Supports MDC markdown.
+          maxLength: 2048
+        required:
+          type: boolean
+          example: true
+          default: false
+        built_in:
+          $ref: '#/components/schemas/CustomFormFieldBuiltIn'
+        options:
+          description: Available choices presented to the developer.
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomFormSelectOption'
+          example:
+            - value: sales
+              label: Sales
+            - value: support
+              label: Support
+            - value: engineering
+              label: Engineering
+          maxItems: 20
+          minItems: 1
+      additionalProperties: false
+      required:
+        - type
+        - mode
+        - label
+        - options
+        - name
+        - built_in
+    CustomFormMultiSelectField:
+      description: |
+        A dropdown field where the developer can choose multiple options. Requires at least 2 options.
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/CustomFormFieldName'
+        type:
+          type: string
+          example: select
+          enum:
+            - select
+        mode:
+          description: Multiple selection — the developer can choose more than one option.
+          type: string
+          example: multi_select
+          enum:
+            - multi_select
+        label:
+          type: string
+          example: Departments
+          maxLength: 256
+          minLength: 1
+        placeholder:
+          type: string
+          example: Select departments
+        description:
+          type: string
+          example: Choose the departments best suited to your inquiry. Supports MDC markdown.
+          maxLength: 2048
+        required:
+          type: boolean
+          example: true
+          default: false
+        built_in:
+          $ref: '#/components/schemas/CustomFormFieldBuiltIn'
+        options:
+          description: Available choices presented to the developer.
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomFormSelectOption'
+          example:
+            - value: sales
+              label: Sales
+            - value: support
+              label: Support
+            - value: engineering
+              label: Engineering
+          maxItems: 20
+          minItems: 2
+      additionalProperties: false
+      required:
+        - type
+        - mode
+        - label
+        - options
+        - name
+        - built_in
+    CustomFormSelectField:
+      description: |
+        A dropdown field. Set `mode` to one of:
+
+        * `single_select` — the developer chooses one option (at least 1 option required)
+        * `multi_select` — the developer can choose multiple options (at least 2 options required)
+      type: object
+      properties:
+        type:
+          type: string
+          example: select
+          enum:
+            - select
+      discriminator:
+        propertyName: mode
+        mapping:
+          single_select: '#/components/schemas/CustomFormSingleSelectField'
+          multi_select: '#/components/schemas/CustomFormMultiSelectField'
+      oneOf:
+        - $ref: '#/components/schemas/CustomFormSingleSelectField'
+        - $ref: '#/components/schemas/CustomFormMultiSelectField'
+      required:
+        - type
+    CustomFormCheckboxField:
+      description: A single checkbox.
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/CustomFormFieldName'
+        type:
+          type: string
+          example: checkbox
+          enum:
+            - checkbox
+        label:
+          type: string
+          example: I agree to the terms and conditions
+          maxLength: 256
+          minLength: 1
+        description:
+          description: Supports Markdown formatting — useful for linking to terms and conditions.
+          type: string
+          example: 'Click to view the [terms](https://example.com).'
+          maxLength: 2048
+        required:
+          type: boolean
+          example: true
+          default: false
+        built_in:
+          $ref: '#/components/schemas/CustomFormFieldBuiltIn'
+      additionalProperties: false
+      required:
+        - type
+        - label
+        - name
+        - built_in
+    CustomFormSubmitField:
+      description: |
+        The form's submit button. Every form must include exactly one. Its `name` is always `submit`.
+      type: object
+      properties:
+        name:
+          type: string
+          example: submit
+          enum:
+            - submit
+        type:
+          type: string
+          example: submit
+          enum:
+            - submit
+        value:
+          description: The text displayed on the button.
+          type: string
+          example: Create account
+          maxLength: 64
+          minLength: 1
+        built_in:
+          $ref: '#/components/schemas/CustomFormFieldBuiltIn'
+      additionalProperties: false
+      required:
+        - name
+        - type
+        - value
+        - built_in
+    CustomFormField:
+      description: |
+        A field on a form, as returned by the API. The `type` property determines what kind of field it is. Fields that came with the form by default carry a `built_in` flag.
+      type: object
+      discriminator:
+        propertyName: type
+        mapping:
+          content: '#/components/schemas/CustomFormContentField'
+          text: '#/components/schemas/CustomFormTextField'
+          email: '#/components/schemas/CustomFormEmailField'
+          number: '#/components/schemas/CustomFormNumberField'
+          textarea: '#/components/schemas/CustomFormTextareaField'
+          select: '#/components/schemas/CustomFormSelectField'
+          checkbox: '#/components/schemas/CustomFormCheckboxField'
+          submit: '#/components/schemas/CustomFormSubmitField'
+      oneOf:
+        - $ref: '#/components/schemas/CustomFormContentField'
+        - $ref: '#/components/schemas/CustomFormTextField'
+        - $ref: '#/components/schemas/CustomFormEmailField'
+        - $ref: '#/components/schemas/CustomFormNumberField'
+        - $ref: '#/components/schemas/CustomFormTextareaField'
+        - $ref: '#/components/schemas/CustomFormSelectField'
+        - $ref: '#/components/schemas/CustomFormCheckboxField'
+        - $ref: '#/components/schemas/CustomFormSubmitField'
+    CustomFormResponse:
+      description: 'A custom form configured for a developer portal, including its fields.'
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        name:
+          $ref: '#/components/schemas/CustomFormName'
+        type:
+          $ref: '#/components/schemas/CustomFormType'
+        status:
+          $ref: '#/components/schemas/CustomFormStatus'
+        fields:
+          description: |
+            The form's fields, in the order they're displayed. Must include exactly one `submit` field. `developer_registration` forms must also include the built-in `full_name` and `email` fields.
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomFormField'
+          maxItems: 20
+          minItems: 1
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - type
+        - status
+        - fields
+        - created_at
+        - updated_at
     CursorMetaPage:
       type: object
       properties:
@@ -4517,6 +5096,15 @@ components:
           description: The API id required for registration.
           type: string
           format: uuid
+        additional_data:
+          description: |
+            Developer-supplied answers to the `api_registration` form linked
+            to this API, supplied as a flat map keyed by field `name`.
+
+            Values match each field's input type. Required when the API publication
+            has a linked form; silently ignored when no form is linked.
+          allOf:
+            - $ref: '#/components/schemas/FormResponseInput'
       additionalProperties: false
       required:
         - api_id
@@ -4570,6 +5158,12 @@ components:
           description: Contains a unique identifier used by the Portal API for this resource.
           type: string
           format: uuid
+        additional_data:
+          description: 'Developer-supplied responses to the `api_registration` form linked to the API publication, captured at registration time. Keyed by field `name` (lowercase slug; letters, digits, underscores, or hyphens).'
+          allOf:
+            - $ref: '#/components/schemas/FormResponseData'
+          nullable: true
+          readOnly: true
       additionalProperties: false
       required:
         - id
@@ -4580,6 +5174,81 @@ components:
         - api_slug
         - created_at
         - updated_at
+    FormResponseEntry:
+      description: |
+        One field's submitted answer, along with a snapshot of that field's details as they appeared when submitted.
+      type: object
+      properties:
+        name:
+          description: The field's `name`. Matches the parent object's key.
+          allOf:
+            - $ref: '#/components/schemas/CustomFormFieldName'
+        label:
+          description: The field's label at the time it was submitted.
+          type: string
+          example: Full Name
+        type:
+          description: The field's type at the time it was submitted.
+          type: string
+          example: text
+          enum:
+            - text
+            - email
+            - number
+            - textarea
+            - select
+            - checkbox
+        value:
+          description: |
+            The submitted value. Its type matches the field's type:
+
+            * `text`, `email`, `textarea` — string
+            * `number` — number
+            * `checkbox` — boolean
+            * `select` — string for single-select fields, or an array of strings for multi-select fields
+          oneOf:
+            - type: string
+              example: Ada Lovelace
+            - type: number
+              example: 42
+            - type: boolean
+              example: true
+            - type: array
+              items:
+                type: string
+              example:
+                - api
+                - portal
+      additionalProperties: false
+      required:
+        - name
+        - label
+        - type
+        - value
+    FormResponseData:
+      description: |
+        A developer's submitted answers to a form, as a map from each field's `name` to a record of that answer. Each record captures the field's `label`, `type`, and `value` exactly as they appeared when the developer submitted the form. Encrypted at rest.
+      type: object
+      example:
+        full_name:
+          name: full_name
+          label: Full Name
+          type: text
+          value: Ada Lovelace
+        email:
+          name: email
+          label: Email Address
+          type: email
+          value: ada@example.com
+        topics:
+          name: topics
+          label: Topics of Interest
+          type: select
+          value:
+            - api
+            - portal
+      additionalProperties:
+        $ref: '#/components/schemas/FormResponseEntry'
     PortalSearchResults:
       type: object
       properties:
@@ -5906,6 +6575,11 @@ tags:
     description: API for managing a Konnect Portal Developer.
   - name: Developer Teams
     description: API for managing developer teams.
+  - name: Portal Forms
+    description: |
+      Endpoints for retrieving custom-form schemas to render in the developer
+      portal. Forms are configured by portal administrators via the Konnect
+      Admin API.
   - name: Portal
     description: The API for retrieving details about a single Konnect Portal.
   - name: Content
