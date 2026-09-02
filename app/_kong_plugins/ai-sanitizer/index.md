@@ -134,13 +134,13 @@ Kong provides several AI PII Anonymizer service Docker images in a private repos
 To pull an image:
 
 ```bash
-docker pull kong/ai-pii-service:tagname
+docker pull kong/ai-pii-service:TAG
 ```
 
-Replace `IMAGE-NAME` and `TAG` with the appropriate image and version, such as:
+Replace `TAG` with the appropriate version and language code, such as:
 
 ```bash
-docker pull kong/ai-pii/service:v0.2.2-en
+docker pull kong/ai-pii-service:v0.2.2-en
 ```
 
 #### AI PII service Dockerfile usage
@@ -148,7 +148,7 @@ docker pull kong/ai-pii/service:v0.2.2-en
 To use an image in a `Dockerfile`, reference it as follows:
 
 ```dockerfile
-FROM kong/ai-pii/ai-pii-service:v0.2.2-en
+FROM kong/ai-pii-service:v0.2.2-en
 ```
 
 ### Available language tags
