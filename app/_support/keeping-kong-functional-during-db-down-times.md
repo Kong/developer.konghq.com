@@ -11,7 +11,7 @@ related_resources:
   - text: the related pull request
     url: https://github.com/Kong/kong/pull/4565
 tldr:
-  q: How can Kong Gateway stay functional when the database is down?
+  q: How can {{site.base_gateway}} stay functional when the database is down?
   a: |
     Configure `db_cache_ttl`, `db_resurrect_ttl`, `db_update_frequency`, and `db_cache_warmup_entities` to keep the cache resilient and minimize database dependency during downtime. Increase `mem_cache_size` if warming additional entities triggers cache-size warnings in the logs.
 ---

@@ -9,7 +9,7 @@ works_on:
   - konnect
 related_resources: []
 tldr:
-  q: How do I set up Kong Gateway to autostart with systemd as a non-root user?
+  q: How do I set up {{site.base_gateway}} to autostart with systemd as a non-root user?
   a: |
     Copy Kong's `kong-enterprise-edition.service` unit file to `/home/kong/.config/systemd/user/`, remove the hardcoded `User=` and `Group=` lines, and change `WantedBy=multi-user.target` to `WantedBy=default.target`. Enable lingering for the `kong` user with `loginctl enable-linger $USER` and set `XDG_RUNTIME_DIR` so `systemctl --user` commands can start and enable the service at boot.
 ---
@@ -24,7 +24,7 @@ In RHEL and CentOS 8 you can configure systemd to control the {{site.base_gatewa
 
 1. Log into the VM where you want to configure the Gateway to start as the "kong" user.
 2. Create a folder called `/home/kong/.config/systemd/user/`.
-3. Copy `/lib/systemd/system/kong-enterprise-edition.service` (this is the file's actual shipped location in the current Kong Enterprise package/image - it is not found under `/etc/kong/`) to `/home/kong/.config/systemd/user/`.
+3. Copy `/lib/systemd/system/kong-enterprise-edition.service` (this is the file's actual shipped location in the current {{site.ee_product_name}} package/image - it is not found under `/etc/kong/`) to `/home/kong/.config/systemd/user/`.
 4. Edit `/home/kong/.config/systemd/user/kong-enterprise-edition.service` and remove the `User=` and `Group=` lines - Kong's shipped unit file hardcodes `User=root`, and a copied user-level unit will fail to start unless those lines are stripped out.
 5. In the same file, replace:
 

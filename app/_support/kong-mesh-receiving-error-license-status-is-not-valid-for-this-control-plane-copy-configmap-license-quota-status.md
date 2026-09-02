@@ -1,5 +1,5 @@
 ---
-title: "Kong Mesh: Receiving error \"license status is not valid for this control plane. Copy ConfigMap license-quota-status\""
+title: "{{site.mesh_product_name}}: Receiving error \"license status is not valid for this control plane. Copy ConfigMap license-quota-status\""
 content_type: support
 description: A {{site.mesh_product_name}} Zone Control Plane can lose license validity when the `license-quota-status` ConfigMap is out of sync with the Global CP; deleting the ConfigMap and letting it rebuild resolves the error.
 products:
@@ -11,7 +11,7 @@ related_resources:
   - text: Reference
     url: /mesh/control-plane-configuration/#memory
 tldr:
-  q: "Why does deploying a Data Plane fail with \"license status is not valid for this control plane\" in a multi-zone Kong Mesh setup?"
+  q: "Why does deploying a Data Plane fail with \"license status is not valid for this control plane\" in a multi-zone {{site.mesh_product_name}} setup?"
   a: |
     This happens when the `license-quota-status` ConfigMap on the Zone Control Plane is out of sync with the Global CP. Delete the ConfigMap on the Zone CP and redeploy (for example, via `helm upgrade`) so it rebuilds and picks up a valid license. On Universal mode, back the Zone CP with a database instead of Memory storage, since Memory storage doesn't persist the license state.
 ---

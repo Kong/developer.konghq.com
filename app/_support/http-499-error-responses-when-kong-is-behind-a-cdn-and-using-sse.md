@@ -10,7 +10,7 @@ works_on:
 tldr:
   q: Why does Kong return HTTP 499 error responses when it's behind a CDN and using SSE?
   a: |
-    Kong Gateway responds with HTTP 200, but the CDN's response to the client is HTTP 499, because the request sent through Kong needs to be shorter than the proxy read timeout or Kong terminates the upstream connection. Disable buffering on the route with `request_buffering = false` and `response_buffering = false`, or use the `X-Accel-Buffering: no` header for SSE connections to disable buffering explicitly.
+    {{site.base_gateway}} responds with HTTP 200, but the CDN's response to the client is HTTP 499, because the request sent through Kong needs to be shorter than the proxy read timeout or Kong terminates the upstream connection. Disable buffering on the route with `request_buffering = false` and `response_buffering = false`, or use the `X-Accel-Buffering: no` header for SSE connections to disable buffering explicitly.
 related_resources:
   - text: "X-Accel-Buffering: no header"
     url: https://github.com/nginxinc/nginx-wiki/blob/master/source/start/topics/examples/x-accel.rst

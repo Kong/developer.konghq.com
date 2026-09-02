@@ -9,7 +9,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: What library does Kong use in its onprem Developer Portal to render API specs?
+  q: What library does Kong use in its on-prem Developer Portal to render API specs?
   a: |
     Kong renders API specs in the on-prem Developer Portal using a fork of `swagger-ui`.
 related_resources:

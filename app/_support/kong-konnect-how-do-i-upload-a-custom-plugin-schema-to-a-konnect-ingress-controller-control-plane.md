@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: "Kong Konnect: How do I upload a custom plugin schema to a Konnect Ingress Controller Control Plane?"
+  q: "{{site.konnect_product_name}}: How do I upload a custom plugin schema to a Konnect Ingress Controller Control Plane?"
   a: |
     The Konnect Ingress Controller Control Plane GUI is read-only, so upload a custom plugin schema through the Konnect Admin API's plugin-schemas endpoint instead. If the plugin is written in a language other than Lua, convert its schema to Lua first, since that's the only format Konnect accepts.
 related_resources:

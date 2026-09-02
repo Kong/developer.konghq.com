@@ -11,7 +11,7 @@ related_resources: []
 tldr:
   q: How do I find the id token and access token used for Kong Manager or Dev Portal OpenID Connect login?
   a: |
-    Add `downstream_id_token_header` and `downstream_access_token_header` to your `admin_gui_auth_conf`/`KONG_ADMIN_GUI_AUTH_CONF` (Kong Manager) or `portal_auth_conf`/`KONG_PORTAL_AUTH_CONF` (classic Dev Portal), restart Kong, then log in and inspect the `id-token` and `access-token` response headers in your browser's network tab. Note: the classic Dev Portal is hard-deprecated and license-gated on current Kong Gateway Enterprise, so the Dev Portal steps are likely non-functional for most current customers.
+    Add `downstream_id_token_header` and `downstream_access_token_header` to your `admin_gui_auth_conf`/`KONG_ADMIN_GUI_AUTH_CONF` (Kong Manager) or `portal_auth_conf`/`KONG_PORTAL_AUTH_CONF` (classic Dev Portal), restart Kong, then log in and inspect the `id-token` and `access-token` response headers in your browser's network tab. Note: the classic Dev Portal is hard-deprecated and license-gated on current {{site.ee_product_name}}, so the Dev Portal steps are likely non-functional for most current customers.
 ---
 
 ## Overview

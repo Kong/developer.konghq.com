@@ -2,7 +2,7 @@
 title: "{{site.base_gateway}}: How to remove portion of path leaving and sending remainder to backend"
 content_type: support
 published: false
-description: "To accomplish this we can utilize capture groups and then the request transformer advanced plugin to trip the \"/test/api\"."
+description: "To accomplish this we can use capture groups and then the request transformer advanced plugin to trip the \"/test/api\"."
 products:
   - gateway
 works_on:
@@ -10,7 +10,7 @@ works_on:
   - konnect
 related_resources: []
 tldr:
-  q: How do I remove a portion of the request path in Kong Gateway and send only the remainder to the backend?
+  q: How do I remove a portion of the request path in {{site.base_gateway}} and send only the remainder to the backend?
   a: |
     Use a capture group in the route's path regex to capture the segment you want to keep, for example `~/test/api/(?<validtest>v2/validtest2)`. Then set `config.replace.uri` on the Request Transformer Advanced plugin to `/$(uri_captures['validtest'])` so only the captured portion of the path is sent upstream.
 ---

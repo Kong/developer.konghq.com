@@ -13,7 +13,7 @@ related_resources:
 tldr:
   q: How do you get the Correlation ID inside the Access phase when using the Correlation ID plugin?
   a: |
-    Whether the Correlation ID is available in the Access phase of another plugin depends on plugin execution priority. If your custom or pre-function plugin runs before the `correlation-id` plugin (priority `100001`), the ID won't exist yet. In Kong Gateway Enterprise, use a `post-function` plugin instead — its priority (`-1000`) is lower, so it always runs after `correlation-id` and can read the generated ID via `kong.request.get_header("kong-request-id")`.
+    Whether the Correlation ID is available in the Access phase of another plugin depends on plugin execution priority. If your custom or pre-function plugin runs before the `correlation-id` plugin (priority `100001`), the ID won't exist yet. In {{site.ee_product_name}}, use a `post-function` plugin instead — its priority (`-1000`) is lower, so it always runs after `correlation-id` and can read the generated ID via `kong.request.get_header("kong-request-id")`.
 ---
 
 ## Problem

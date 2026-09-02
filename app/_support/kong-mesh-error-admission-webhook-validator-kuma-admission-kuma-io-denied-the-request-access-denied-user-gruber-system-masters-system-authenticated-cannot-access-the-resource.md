@@ -1,5 +1,5 @@
 ---
-title: "Kong Mesh: 'admission webhook \"validator.kuma-admission.kuma.io\" denied the request: access denied' error when the default AccessRole or AccessRoleBinding is missing or too restrictive"
+title: "{{site.mesh_product_name}}: 'admission webhook \"validator.kuma-admission.kuma.io\" denied the request: access denied' error when the default AccessRole or AccessRoleBinding is missing or too restrictive"
 content_type: support
 description: "{{site.mesh_product_name}} denies valid users from creating resources when the default `AccessRole` and `AccessRoleBinding` are missing or too restrictive; recreating them and the validating webhook resolves the access-denied error."
 products:
@@ -9,7 +9,7 @@ works_on:
   - konnect
 related_resources: []
 tldr:
-  q: "Why does creating a Kong Mesh resource fail with an 'admission webhook ... denied the request: access denied' error even though my user has access?"
+  q: "Why does creating a {{site.mesh_product_name}} resource fail with an 'admission webhook ... denied the request: access denied' error even though my user has access?"
   a: |
     This happens when the default `AccessRole` and `AccessRoleBinding` have been modified too restrictively or don't exist, so the `kuma-admission` webhook rejects the request even for users with sufficient Kubernetes RBAC access. Back up and delete the `kong-mesh-validating-webhook-configuration` webhook, re-create the default `AccessRole`/`AccessRoleBinding`, then re-apply the webhook to restore access.
 ---

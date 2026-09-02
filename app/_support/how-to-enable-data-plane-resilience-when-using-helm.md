@@ -14,7 +14,7 @@ tldr:
 related_resources:
   - text: Data Plane Resilience documentation
     url: /gateway/cp-outage/
-  - text: Example minimal Kong Enterprise hybrid data plane Helm values
+  - text: Example minimal {{site.ee_product_name}} hybrid data plane Helm values
     url: https://github.com/Kong/charts/blob/main/charts/kong/example-values/minimal-kong-enterprise-hybrid-data.yaml
 ---
 

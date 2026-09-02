@@ -12,7 +12,7 @@ tldr:
   a: |
     Yes. Kong's http2 support follows nginx's, and the default `proxy_listen` for the HTTPS proxy port already includes the `http2` suffix, so http2 client connections work out of the box over TLS. Plain (non-TLS) http2 connections only work when the client uses HTTP/2 prior knowledge, since nginx doesn't negotiate a protocol upgrade on non-TLS ports.
 related_resources:
-  - text: Kong Gateway `proxy_listen` configuration reference
+  - text: "{{site.base_gateway}} `proxy_listen` configuration reference"
     url: /gateway/configuration/#proxy-listen
   - text: RFC 7540 section 3.4 (starting HTTP/2 with prior knowledge)
     url: https://datatracker.ietf.org/doc/html/rfc7540#section-3.4

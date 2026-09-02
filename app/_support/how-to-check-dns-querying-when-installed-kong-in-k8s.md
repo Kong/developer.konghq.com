@@ -10,7 +10,7 @@ works_on:
 tldr:
   q: How do I check the DNS queries Kong makes when it's installed in Kubernetes?
   a: |
-    Kong resolves DNS through the cluster's CoreDNS service, which doesn't log query details by default. Add the `log` and `whoami` plugins to CoreDNS's Corefile (in the `coredns` ConfigMap in the `kube-system` namespace), apply the updated ConfigMap, and restart the CoreDNS deployment. Then tail the CoreDNS pod logs to see each DNS query and its result, for example `NOERROR` for a successful lookup or `NXDOMAIN` when the name doesn't resolve.
+    Kong resolves DNS through the cluster's CoreDNS service, which doesn't log query details by default. Add the `log` and `whoami` plugins to CoreDNS's `Corefile` (in the `coredns` ConfigMap in the `kube-system` namespace), apply the updated ConfigMap, and restart the CoreDNS deployment. Then tail the CoreDNS pod logs to see each DNS query and its result, for example `NOERROR` for a successful lookup or `NXDOMAIN` when the name doesn't resolve.
 related_resources:
   - text: CoreDNS log plugin documentation
     url: https://coredns.io/plugins/log/#examples

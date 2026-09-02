@@ -11,7 +11,7 @@ related_resources:
   - text: Configuring ingress cluster traffic - Using HTTP/2 (Red Hat OpenShift documentation)
     url: https://access.redhat.com/documentation/zh-cn/openshift_container_platform/4.5/html/networking/nw-http2-haproxy_configuring-ingress
 tldr:
-  q: Why does Kong Manager login fail with OIDC when running Kong Gateway in OpenShift?
+  q: Why does Kong Manager login fail with OIDC when running {{site.base_gateway}} in OpenShift?
   a: |
     In OpenShift, using HTTP/2 on passthrough Routes that share the same SSL certificate for the Kong Manager and Admin API causes HAProxy to coalesce the connections, crisscrossing requests between them. This breaks Manager login, content-type handling, cookies, CORS, and `DELETE` requests. Fix it by giving each Route its own SSL certificate, or by disabling HTTP/2 on passthrough Routes that share a certificate.
 ---

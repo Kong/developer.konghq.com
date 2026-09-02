@@ -13,7 +13,7 @@ related_resources:
 tldr:
   q: Why does the OpenTelemetry plugin name all transactions statically as "kong"?
   a: |
-    A change in Kong Gateway made the OpenTelemetry plugin use a static "kong" trace name instead of the protocol/method/host/port/path format. Work around it with a global pre-function (Serverless Functions) plugin that sets `root_span.name` from the request method and path in the `header_filter` phase.
+    A change in {{site.base_gateway}} made the OpenTelemetry plugin use a static "kong" trace name instead of the protocol/method/host/port/path format. Work around it with a global pre-function (Serverless Functions) plugin that sets `root_span.name` from the request method and path in the `header_filter` phase.
 ---
 
 ## Problem

@@ -12,7 +12,7 @@ related_resources: []
 tldr:
   q: Why does sending the refresh token alongside the authentication token fail to refresh it?
   a: |
-    The Kong Gateway OIDC plugin ignores the refresh token when it is sent together with the authentication token, and refuses authentication based on the expired token.
+    The {{site.base_gateway}} OIDC plugin ignores the refresh token when it is sent together with the authentication token, and refuses authentication based on the expired token.
     Send the refresh token on its own, only when the client detects the authentication token has expired.
 ---
 

@@ -9,9 +9,9 @@ works_on:
   - konnect
 related_resources: []
 tldr:
-  q: Why do I get an "unsafe legacy renegotiation disabled" error after upgrading to Kong Gateway 3.4.0.0+?
+  q: Why do I get an "unsafe legacy renegotiation disabled" error after upgrading to {{site.base_gateway}} 3.4.0.0+?
   a: |
-    Kong Gateway 3.4.0.0+ bumped OpenSSL to 3.1.1+, which rejects TLS renegotiation with upstreams running outdated SSL libraries.
+    {{site.base_gateway}} 3.4.0.0+ bumped OpenSSL to 3.1.1+, which rejects TLS renegotiation with upstreams running outdated SSL libraries.
     Fix it by updating the upstream's SSL libraries, or as a last resort re-enable legacy renegotiation with `nginx_proxy_proxy_ssl_conf_command = Options +UnsafeLegacyRenegotiation` (this weakens security).
 ---
 

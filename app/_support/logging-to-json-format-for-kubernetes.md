@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: How do I configure the Kong Ingress Controller to log in JSON format?
+  q: How do I configure the {{site.kic_product_name}} to log in JSON format?
   a: |
     Set the Ingress Controller's `--log-format` flag to `json` (the default is `text`). With the Helm chart, pass it via `--set ingressController.args[0]='--log-format=json'`, or add it under `ingressController.args` in your `values.yaml`.
 related_resources:

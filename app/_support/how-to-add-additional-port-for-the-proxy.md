@@ -12,7 +12,7 @@ tldr:
   a: |
     Add another entry to `proxy_listen` in `kong.conf` (or the `KONG_PROXY_LISTEN` environment variable) with the desired host and port, then restart Kong. For example, adding `0.0.0.0:9000 reuseport backlog=16384` alongside the existing listeners makes Kong also listen on port 9000.
 related_resources:
-  - text: Kong Gateway configuration reference (`proxy_listen`)
+  - text: "{{site.base_gateway}} configuration reference (`proxy_listen`)"
     url: /gateway/configuration/#proxy-listen
 ---
 

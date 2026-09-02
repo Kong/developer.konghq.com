@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: How do I debug the Control Plane/Data Plane WebSocket communication in a hybrid Kong Gateway deployment?
+  q: How do I debug the Control Plane/Data Plane WebSocket communication in a hybrid {{site.base_gateway}} deployment?
   a: |
     Use `stunnel` to terminate TLS on the CP/DP `cluster_listen` WebSocket connection as a man-in-the-middle proxy, and `tcpdump` to capture the resulting plaintext traffic. Inspect the captured packets (e.g. in Wireshark) to extract the gzipped declarative configuration JSON that the CP sends to each DP.
 related_resources: []

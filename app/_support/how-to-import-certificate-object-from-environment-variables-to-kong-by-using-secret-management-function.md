@@ -14,7 +14,7 @@ tldr:
 related_resources:
   - text: Kong deck sensitive data reference
     url: /deck/gateway/sensitive-data/#main
-  - text: Kong Gateway secrets management documentation
+  - text: "{{site.base_gateway}} secrets management documentation"
     url: /gateway/secrets-management/
 ---
 

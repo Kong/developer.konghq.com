@@ -8,12 +8,12 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: Why do enterprise-only plugins like `openid-connect` fail to apply when deploying Kong Ingress Controller?
+  q: Why do enterprise-only plugins like `openid-connect` fail to apply when deploying {{site.kic_product_name}}?
   a: |
     Enterprise-only plugins are rejected because no Enterprise license is loaded on the Gateway/data plane — this is different from an expired license, which does not block plugin creation.
     Redeploy the Enterprise license secret and restart the affected pods to resolve it.
 related_resources:
-  - text: Kong Enterprise license secret deployment steps
+  - text: "{{site.ee_product_name}} license secret deployment steps"
     url: /kubernetes-ingress-controller/license/#applying-a-static-license
 ---
 

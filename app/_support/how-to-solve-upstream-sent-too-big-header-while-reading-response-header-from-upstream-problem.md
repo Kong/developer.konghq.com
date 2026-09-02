@@ -1,5 +1,5 @@
 ---
-title: "\"upstream sent too big header while reading response header from upstream\" error when response headers exceed the Nginx proxy buffer size in Kong Gateway"
+title: "\"upstream sent too big header while reading response header from upstream\" error when response headers exceed the Nginx proxy buffer size in {{site.base_gateway}}"
 content_type: support
 description: These logs will be written when the headers sent by the upstream are too large for the Nginx proxy buffer size set in the Nginx layer in {{site.base_gateway}}.
 products:
@@ -9,7 +9,7 @@ works_on:
   - konnect
 related_resources: []
 tldr:
-  q: Why does Kong Gateway log "upstream sent too big header while reading response header from upstream"?
+  q: Why does {{site.base_gateway}} log "upstream sent too big header while reading response header from upstream"?
   a: |
     This error means the upstream's response headers are larger than Kong's Nginx proxy buffer size, so the response is rejected and the request fails. Increase the buffer size by setting both `KONG_NGINX_PROXY_PROXY_BUFFER_SIZE` and `KONG_NGINX_PROXY_PROXY_BUFFERS` (both must be set together) to values larger than what your environment needs, for example `16k` and `4 16k` instead of the defaults `4k` and `8 4k`.
 ---

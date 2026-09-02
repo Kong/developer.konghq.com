@@ -10,7 +10,7 @@ works_on:
   - konnect
 related_resources: []
 tldr:
-  q: Why does Kong Gateway log "no Route found with those values while prereading client data" for a TCP connection?
+  q: Why does {{site.base_gateway}} log "no Route found with those values while prereading client data" for a TCP connection?
   a: |
     This is the TCP equivalent of "no Route matched with those values" — the connection was accepted, but its source, destination, or SNI didn't match any configured route. For TLS SNI-based `TCPIngress` routing, confirm the route's expected host header (for example `example.com`) and that the `TCPIngress` resource was created successfully and is associated with the correct `IngressClass`.
 ---

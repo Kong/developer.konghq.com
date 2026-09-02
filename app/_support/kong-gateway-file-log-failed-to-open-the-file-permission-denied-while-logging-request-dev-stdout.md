@@ -13,7 +13,7 @@ related_resources:
 tldr:
   q: Why does the file-log plugin return a "Permission denied" error when logging to /dev/stdout?
   a: |
-    `/dev/stdout` is owned by the `kong` user with `700` permissions, so a Kong Gateway process running as root can't write to it. This typically happens when a Dockerfile switches to `USER root` for setup steps and never switches back. Add `USER kong` back to the Dockerfile before Kong starts, rebuild the image, and redeploy.
+    `/dev/stdout` is owned by the `kong` user with `700` permissions, so a {{site.base_gateway}} process running as root can't write to it. This typically happens when a Dockerfile switches to `USER root` for setup steps and never switches back. Add `USER kong` back to the Dockerfile before Kong starts, rebuild the image, and redeploy.
 ---
 
 ## Problem

@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: OIDC plugin is returning error \"invalid iat claim\" on login"
+title: "{{site.base_gateway}}: OIDC plugin is returning error \"invalid iat claim\" on login"
 content_type: support
 description: This error occurs because the time of the host machine and the IDP are out of sync.
 products:

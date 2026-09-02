@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: \"could not find cached values\" error with the environment variables vault backend"
+title: "{{site.base_gateway}}: \"could not find cached values\" error with the environment variables vault backend"
 content_type: support
 description: "The \"could not find cached values\" error appears when a vault reference for the environment variables (`env`) vault backend can't resolve, often due to a mismatched `KONG_VAULT_ENV_PREFIX` or a lowercase environment variable name."
 products:
@@ -17,7 +17,7 @@ related_resources:
 tldr:
   q: How do I fix the "could not find cached values" error when using the environment variables vault backend?
   a: |
-    The `env` vault backend requires the referenced environment variable name to be uppercase, and if `KONG_VAULT_ENV_PREFIX` is set, the vault's `config.prefix` must match it exactly. A lowercase variable name or a mismatched prefix causes Kong Gateway to log a `could not find cached values` error instead of resolving the secret. Use `kong vault get <vault name>/<variable>` from inside the Kong container to verify the reference resolves.
+    The `env` vault backend requires the referenced environment variable name to be uppercase, and if `KONG_VAULT_ENV_PREFIX` is set, the vault's `config.prefix` must match it exactly. A lowercase variable name or a mismatched prefix causes {{site.base_gateway}} to log a `could not find cached values` error instead of resolving the secret. Use `kong vault get <vault name>/<variable>` from inside the Kong container to verify the reference resolves.
 ---
 
 ## Problem

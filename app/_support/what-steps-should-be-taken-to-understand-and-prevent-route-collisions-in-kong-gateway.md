@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: What steps should be taken to understand and prevent route collisions in Kong Gateway?
+  q: What steps should be taken to understand and prevent route collisions in {{site.base_gateway}}?
   a: |
     Route collisions happen because Kong only checks for conflicts at route creation or update time, controlled by `KONG_ROUTE_VALIDATION_STRATEGY`, so pre-existing conflicts never get caught retroactively. Prevent them with a decK lint ruleset before deployment and read-only Kong Manager access for non-automation accounts, and catch any that slip through with Event Hooks that monitor route creation.
 related_resources: []

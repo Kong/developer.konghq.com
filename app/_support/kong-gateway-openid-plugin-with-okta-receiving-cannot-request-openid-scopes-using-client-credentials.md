@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: OpenID plugin with Okta receiving \"Cannot request 'openid' scopes using client credentials.\""
+title: "{{site.base_gateway}}: OpenID plugin with Okta receiving \"Cannot request 'openid' scopes using client credentials.\""
 content_type: support
 description: "Some IDPs, such as Okta, don't allow the `openid` scope with the `client_credentials` grant type, causing the OpenID Connect plugin to return an `invalid_scope` error. Fix it by creating a custom scope in the IDP and updating the plugin's scopes to use it instead of `openid`."
 products:

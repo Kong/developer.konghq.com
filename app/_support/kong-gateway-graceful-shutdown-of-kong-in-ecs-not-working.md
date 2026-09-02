@@ -11,7 +11,7 @@ related_resources:
   - text: dumb-init
     url: https://github.com/Yelp/dumb-init
 tldr:
-  q: Why doesn't Kong Gateway shut down gracefully when ECS scales down a task?
+  q: Why doesn't {{site.base_gateway}} shut down gracefully when ECS scales down a task?
   a: |
     In ECS, Kong's master process runs as `PID 1`, so ECS sends `SIGTERM` directly to it instead of honoring the container's `STOPSIGNAL`, causing in-flight requests to fail. Running Kong under an init process such as `dumb-init` moves the master process off `PID 1` and lets you translate the incoming `SIGTERM` into a `SIGQUIT` for a graceful shutdown.
 ---

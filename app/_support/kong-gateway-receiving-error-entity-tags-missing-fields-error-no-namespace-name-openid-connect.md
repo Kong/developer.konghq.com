@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: Receiving error \"entity tags missing fields\" error=\"no namespace\" name=openid-connect"
+title: "{{site.base_gateway}}: Receiving error \"entity tags missing fields\" error=\"no namespace\" name=openid-connect"
 content_type: support
 description: This error occurs typically due to not recognizing the license that has been created.
 products:
@@ -9,12 +9,12 @@ works_on:
   - on-prem
   - konnect
 related_resources:
-  - text: Kong Ingress Controller Enterprise license deployment steps
+  - text: "{{site.kic_product_name}} Enterprise license deployment steps"
     url: /kubernetes-ingress-controller/license/#applying-a-static-license
 tldr:
-  q: Why does the Kong Ingress Controller fail to apply the `openid-connect` plugin with an "enterprise only plugin" error?
+  q: Why does the {{site.kic_product_name}} fail to apply the `openid-connect` plugin with an "enterprise only plugin" error?
   a: |
-    The `openid-connect` plugin requires a valid Kong Enterprise license, and this error means no valid license is currently loaded on the Gateway/data plane. Check the proxy pod's startup logs for licensing messages, then redeploy the Enterprise license to resolve it.
+    The `openid-connect` plugin requires a valid {{site.ee_product_name}} license, and this error means no valid license is currently loaded on the Gateway/data plane. Check the proxy pod's startup logs for licensing messages, then redeploy the Enterprise license to resolve it.
 ---
 
 ## Problem

@@ -68,7 +68,7 @@ rows:
   - parameter: "`no-color`"
     description: "disable colorized output"
   - parameter: "`skip-workspace-crud`"
-    description: "Skip API calls related to Workspaces (Kong Enterprise only)"
+    description: "Skip API calls related to Workspaces ({{site.ee_product_name}} only)"
   - parameter: "`konnect-email`"
     description: "Email address associated with your Konnect account"
   - parameter: "`konnect-password`"

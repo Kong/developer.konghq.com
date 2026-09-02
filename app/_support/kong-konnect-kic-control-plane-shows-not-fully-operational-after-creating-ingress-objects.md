@@ -1,5 +1,5 @@
 ---
-title: "Kong Konnect: KIC Control Plane shows not \"Fully Operational\" after creating Ingress objects"
+title: "{{site.konnect_product_name}}: KIC Control Plane shows not \"Fully Operational\" after creating Ingress objects"
 content_type: support
 description: KIC's "Failed pushing configuration to Konnect" validation error is a blanket message that, in this case, is caused by route/service names generated from Ingress objects exceeding Konnect's character limit.
 products:
@@ -11,7 +11,7 @@ tldr:
   q: Why does the KIC Control Plane show not "Fully Operational" after creating Ingress objects?
   a: |
     The "validation error" is a blanket message covering any failure applying KIC-generated configuration to the Gateway — commonly a route or service name exceeding Konnect's character limit (originally 128, since raised to 512).
-    This limitation doesn't apply to on-premises Kong Gateway.
+    This limitation doesn't apply to on-premises {{site.base_gateway}}.
 related_resources: []
 ---
 

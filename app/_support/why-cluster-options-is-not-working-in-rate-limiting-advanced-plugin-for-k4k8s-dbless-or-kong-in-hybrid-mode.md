@@ -8,9 +8,9 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: "Why `cluster` options are not working in rate limiting advanced plugin for k4k8s dbless or Kong in hybrid mode?"
+  q: "Why `cluster` options are not working in rate limiting advanced plugin for k4k8s DB-less or Kong in hybrid mode?"
   a: |
-    Kong rejects `strategy: cluster` for the rate limiting advanced plugin on k4k8s DB-less deployments or Kong Gateway in hybrid mode — the strategy remains a valid schema value, but a dedicated check blocks it whenever the node's role isn't `traditional` or its database is `off`. Use the `redis` strategy instead so rate limiting counters sync correctly across nodes.
+    Kong rejects `strategy: cluster` for the rate limiting advanced plugin on k4k8s DB-less deployments or {{site.base_gateway}} in hybrid mode — the strategy remains a valid schema value, but a dedicated check blocks it whenever the node's role isn't `traditional` or its database is `off`. Use the `redis` strategy instead so rate limiting counters sync correctly across nodes.
 related_resources: []
 ---
 

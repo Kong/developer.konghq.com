@@ -9,11 +9,11 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: "Kong Gateway: Is it possible to use a custom log format without using a custom nginx template?"
+  q: "{{site.base_gateway}}: Is it possible to use a custom log format without using a custom nginx template?"
   a: |
     Yes. Set the `nginx_http_log_format` parameter in `kong.conf` (or `KONG_NGINX_HTTP_LOG_FORMAT` in Docker) to define the custom format directly, then point `proxy_access_log` (or `KONG_PROXY_ACCESS_LOG` in Docker) at it. No custom nginx template is required.
 related_resources:
-  - text: Kong Gateway nginx directives
+  - text: "{{site.base_gateway}} nginx directives"
     url: /gateway/nginx-directives/
 ---
 

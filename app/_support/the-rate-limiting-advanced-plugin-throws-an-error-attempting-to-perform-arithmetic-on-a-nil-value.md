@@ -11,7 +11,7 @@ related_resources: []
 tldr:
   q: Why does the Rate Limiting Advanced plugin throw an "attempt to perform arithmetic on a nil value" error under heavy load?
   a: |
-    Historically, an undersized `lua_shared_dict` (the `kong_rate_limiting_counters` shared dictionary) could evict rate-limiting counters, returning `nil` and crashing the plugin's Lua arithmetic. This is fixed as of Kong Gateway 3.14.0.0 — an undersized dictionary now logs a WARN-level counter reset instead of crashing — but sizing `kong_rate_limiting_counters` appropriately (via a custom nginx template) is still good practice.
+    Historically, an undersized `lua_shared_dict` (the `kong_rate_limiting_counters` shared dictionary) could evict rate-limiting counters, returning `nil` and crashing the plugin's Lua arithmetic. This is fixed as of {{site.base_gateway}} 3.14.0.0 — an undersized dictionary now logs a WARN-level counter reset instead of crashing — but sizing `kong_rate_limiting_counters` appropriately (via a custom nginx template) is still good practice.
 ---
 
 ## Problem

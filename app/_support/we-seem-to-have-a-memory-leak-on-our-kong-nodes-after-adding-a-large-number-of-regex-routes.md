@@ -10,7 +10,7 @@ works_on:
 tldr:
   q: Why does memory usage increase on Kong nodes after adding a large number of regex routes?
   a: |
-    Kong's Lua regex cache thrashes once you have more regex routes than the default `nginx_http_lua_regex_cache_max_entries` (8192) — each non-matching request forces the entire cache to rebuild, and Lua's garbage collector under-accounts for the large compiled regex memory behind each small cdata handle.
+    Kong's Lua regex cache thrashes once you have more regex routes than the default `nginx_http_lua_regex_cache_max_entries` (8192) — each non-matching request forces the entire cache to rebuild, and Lua's garbage collector under-accounts for the large compiled regex memory behind each small `cdata` handle.
 
     Set `KONG_NGINX_HTTP_LUA_REGEX_CACHE_MAX_ENTRIES` to at least the number of regex routes you have configured (or higher, to leave headroom) to stop the thrashing.
 related_resources: []

@@ -13,7 +13,7 @@ related_resources:
 tldr:
   q: Why does the aws-lambda plugin fail to invoke a Lambda function in another AWS account?
   a: |
-    Cross-account Lambda invocation with the `aws-lambda` plugin requires an IAM role in the target account that trusts the calling account, with the calling account's IAM user or role allowed to assume it. In Kong Gateway, set the ARN of that role in the plugin's `aws_assume_role_arn` field — omitting it, or granting permissions directly to the IAM user instead of using role assumption, produces `not authorized to perform: lambda:InvokeFunction` or `Cross-account log access is not allowed` errors.
+    Cross-account Lambda invocation with the `aws-lambda` plugin requires an IAM role in the target account that trusts the calling account, with the calling account's IAM user or role allowed to assume it. In {{site.base_gateway}}, set the ARN of that role in the plugin's `aws_assume_role_arn` field — omitting it, or granting permissions directly to the IAM user instead of using role assumption, produces `not authorized to perform: lambda:InvokeFunction` or `Cross-account log access is not allowed` errors.
 ---
 
 ## Problem

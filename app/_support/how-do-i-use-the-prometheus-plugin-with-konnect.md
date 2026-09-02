@@ -13,7 +13,7 @@ tldr:
   a: |
     Enable the `status_listener` on the data plane. This exposes a metrics endpoint that Prometheus (or other analytics tools) can scrape.
 related_resources:
-  - text: Kong Gateway configuration reference (`status_listen`)
+  - text: "{{site.base_gateway}} configuration reference (`status_listen`)"
     url: /gateway/configuration/#status-listen
   - text: Updating `kong.conf` to turn on the status listener (video)
     url: https://youtu.be/6rU_uht_HLo?t=264

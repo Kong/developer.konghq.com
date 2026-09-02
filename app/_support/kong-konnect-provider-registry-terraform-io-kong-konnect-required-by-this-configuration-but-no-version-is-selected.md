@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: Why does Terraform show "no version is selected" for the Kong Konnect provider?
+  q: Why does Terraform show "no version is selected" for the {{site.konnect_product_name}} provider?
   a: |
     This happens when the Konnect Terraform provider hasn't been initialized yet. Add the provider block to your configuration file and run `terraform init` to download the required plugin version.
 related_resources: []

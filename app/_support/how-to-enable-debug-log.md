@@ -8,11 +8,11 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: How do I enable debug logging in Kong Gateway?
+  q: How do I enable debug logging in {{site.base_gateway}}?
   a: |
-    Set `log_level = debug` in `kong.conf`, or set the `KONG_LOG_LEVEL=debug` environment variable (for Docker, Kubernetes, or Helm deployments), then reload or restart Kong. Kong Gateway also supports Dynamic Log Levels, which let you raise or lower the log level without restarting Kong, except in DB-less mode where the Admin API isn't available.
+    Set `log_level = debug` in `kong.conf`, or set the `KONG_LOG_LEVEL=debug` environment variable (for Docker, Kubernetes, or Helm deployments), then reload or restart Kong. {{site.base_gateway}} also supports Dynamic Log Levels, which let you raise or lower the log level without restarting Kong, except in DB-less mode where the Admin API isn't available.
 related_resources:
-  - text: Kong Gateway log level configuration documentation
+  - text: "{{site.base_gateway}} log level configuration documentation"
     url: /gateway/logs/#configure-log-levels
 ---
 

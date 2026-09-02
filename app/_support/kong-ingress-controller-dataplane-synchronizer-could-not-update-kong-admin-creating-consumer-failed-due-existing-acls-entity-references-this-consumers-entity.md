@@ -1,5 +1,5 @@
 ---
-title: "\"dataplane-synchronizer Could not update kong admin - creating consumer failed due existing 'acls' entity references this 'consumers' entity\" error when deploying the same consumer across multiple workspaces with Kong Ingress Controller"
+title: "\"dataplane-synchronizer Could not update kong admin - creating consumer failed due existing 'acls' entity references this 'consumers' entity\" error when deploying the same consumer across multiple workspaces with {{site.kic_product_name}}"
 content_type: support
 description: "Explains why deploying the same consumer with ACL groups across multiple {{site.kic_product_name}} workspaces fails with a `creating consumer failed due existing 'acls' entity references this 'consumers' entity` error, caused by the `FillIDs` feature gate, and how to disable it."
 products:
@@ -8,12 +8,12 @@ works_on:
   - on-prem
   - konnect
 related_resources:
-  - text: Kong Ingress Controller Feature Gates
+  - text: "{{site.kic_product_name}} Feature Gates"
     url: /kubernetes-ingress-controller/reference/feature-gates/
   - text: Kubernetes Ingress Controller CHANGELOG
     url: https://github.com/Kong/kubernetes-ingress-controller/blob/main/CHANGELOG.md#300
 tldr:
-  q: Why does creating a consumer with ACL groups in a second Kong Ingress Controller workspace fail with `creating consumer failed due existing 'acls' entity references this 'consumers' entity`?
+  q: Why does creating a consumer with ACL groups in a second {{site.kic_product_name}} workspace fail with `creating consumer failed due existing 'acls' entity references this 'consumers' entity`?
   a: |
     KIC's `FillIDs` feature gate (enabled by default since KIC 3.0.0) generates UUIDs for entities from their attribute values, so identical consumers in different workspaces get the same UUID and collide when added to ACL groups. Disable both `FillIDs` and `KongCustomEntity` together via the `feature_gates` / `CONTROLLER_FEATURE_GATES` environment variable — `KongCustomEntity` depends on `FillIDs`, so disabling only one causes KIC to crash-loop.
 ---

@@ -59,7 +59,7 @@ faqs:
       kubectl create secret generic <secret-name> --from-file=</path/to/file> -n <kong-namespace>
       ```
 
-      step 2: add extraSecrets section in helm chart like below
+      step 2: add `extraSecrets` section in helm chart like below
 
       ```yaml
       extraSecrets:
@@ -78,7 +78,7 @@ faqs:
       kubectl create secret generic <secret-name> --from-file=</path/to/file> -n <kong-namespace>
       ```
 
-      step 2: add extraSecrets section in helm chart like below
+      step 2: add `extraSecrets` section in helm chart like below
 
       ```yaml
       extraSecrets:
@@ -102,7 +102,7 @@ faqs:
         subPath: </file/name/to/mount/in/pod> (e.g b.txt)
       ```
 
-      you could write multiple extraSecrets in helm chart like below
+      you could write multiple `extraSecrets` in helm chart like below
 
       ```yaml
       extraSecrets:

@@ -46,7 +46,7 @@ faqs:
     a: |
       `next` will be `null` and there is no `offset` in the response.
 tldr:
-  q: How do I paginate through the Kong Gateway Audit Log API using offset and next?
+  q: How do I paginate through the {{site.base_gateway}} Audit Log API using offset and next?
   a: |
     The Audit Log API returns up to 100 items per page. Use the `offset` value from the response's `next` field to fetch subsequent pages; when there are no more records, `next` is `null` and `offset` is absent.
 ---

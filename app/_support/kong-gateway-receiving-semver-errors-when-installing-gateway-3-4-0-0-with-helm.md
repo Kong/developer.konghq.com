@@ -1,5 +1,5 @@
 ---
-title: "\"Invalid Semantic Version\" SemVer error when installing or upgrading Kong Gateway with Helm using an invalid `image.tag` value"
+title: "\"Invalid Semantic Version\" SemVer error when installing or upgrading {{site.base_gateway}} with Helm using an invalid `image.tag` value"
 content_type: support
 description: "Explains the Helm SemVer validation error (`Invalid Semantic Version`) that occurs when the chart's `image.tag` value doesn't match the required version format for Enterprise or open source {{site.base_gateway}} images."
 products:
@@ -9,7 +9,7 @@ works_on:
   - konnect
 related_resources: []
 tldr:
-  q: Why do I get a SemVer validation error (`Invalid Semantic Version`) when installing or upgrading Kong Gateway with Helm?
+  q: Why do I get a SemVer validation error (`Invalid Semantic Version`) when installing or upgrading {{site.base_gateway}} with Helm?
   a: |
     The Helm chart validates the `image.tag` value in your values file against Kong's version format — `X.X.X.X` for Enterprise, `X.X.X` for open source. Any `image.tag` outside that format triggers the SemVer error; this isn't specific to any one Gateway version. Set `image.tag` to a correctly formatted version to resolve it.
 ---

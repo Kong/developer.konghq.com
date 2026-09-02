@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: Why are metrics from the Prometheus plugin missing or incomplete in Kong Gateway?
+  q: Why are metrics from the Prometheus plugin missing or incomplete in {{site.base_gateway}}?
   a: |
     Two things commonly cause this: `status_code_metrics` and `latency_metrics` are off by default in the Prometheus plugin config and must be explicitly enabled, and the `prometheus_metrics` shared dictionary can fill up under load, causing Kong to evict older metrics. Enable the two metric fields, and if the dictionary is full (check via the status endpoint's `lua_shared_dicts.prometheus_metrics`), increase its size with the `nginx_http_lua_shared_dict` config parameter.
 related_resources: []

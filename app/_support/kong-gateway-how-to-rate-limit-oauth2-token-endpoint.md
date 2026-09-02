@@ -9,7 +9,7 @@ works_on:
   - konnect
 related_resources: []
 tldr:
-  q: How do I rate limit the OAuth2 token endpoint in Kong Gateway?
+  q: How do I rate limit the OAuth2 token endpoint in {{site.base_gateway}}?
   a: |
     The OAuth2 plugin has no built-in option to limit token creation. As a workaround, create a second service whose path points at the `/oauth2/token` endpoint, expose it through a new route, and apply the Rate Limiting Advanced plugin to that service so token generation through the proxy is rate limited.
     Direct access to the original token endpoint is still possible and must be blocked by external means if required.

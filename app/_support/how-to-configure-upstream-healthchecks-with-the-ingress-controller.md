@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: How do I configure upstream circuit breakers and active healthchecks with the Kong Ingress Controller?
+  q: How do I configure upstream circuit breakers and active healthchecks with the {{site.kic_product_name}}?
   a: |
     For KIC 2.5 LTS/2.12 LTS, define a `KongIngress` resource with `upstream.healthchecks` (passive and active) and reference it from the Kubernetes Service using the `konghq.com/override` annotation. For KIC 3.1 and onwards, `KongIngress` is removed in favor of annotations and the `KongUpstreamPolicy` custom resource, which cover the same healthcheck configuration.
 related_resources:

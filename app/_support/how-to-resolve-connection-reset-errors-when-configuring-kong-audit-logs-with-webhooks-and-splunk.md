@@ -1,7 +1,7 @@
 ---
 title: Resolving Connection Reset Errors When Configuring Kong Audit Logs with Webhooks and Splunk
 content_type: support
-description: "Webhook requests to Splunk can fail with a `\"connection reset by peer\"` error; allowlisting Kong Konnect's egress IP addresses on the Splunk side typically resolves it."
+description: "Webhook requests to Splunk can fail with a `\"connection reset by peer\"` error; allowlisting {{site.konnect_product_name}}'s egress IP addresses on the Splunk side typically resolves it."
 products:
   - gateway
 works_on:
@@ -10,7 +10,7 @@ works_on:
 tldr:
   q: How to Resolve Connection Reset Errors When Configuring Kong Audit Logs with Webhooks and Splunk?
   a: |
-    Kong Konnect's egress IP addresses that send audit log webhook traffic may not be allowlisted on the Splunk side, causing Splunk to reset the connection. Retrieve the current egress IPs from `https://ip-addresses.origin.konghq.com/ip-addresses.json`, then allowlist the IPs for your Konnect region plus the US region (Authentication audit logs always originate from the US region) on the Splunk side.
+    {{site.konnect_product_name}}'s egress IP addresses that send audit log webhook traffic may not be allowlisted on the Splunk side, causing Splunk to reset the connection. Retrieve the current egress IPs from `https://ip-addresses.origin.konghq.com/ip-addresses.json`, then allowlist the IPs for your Konnect region plus the US region (Authentication audit logs always originate from the US region) on the Splunk side.
 related_resources: []
 ---
 

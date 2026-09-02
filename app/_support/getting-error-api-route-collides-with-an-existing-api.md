@@ -13,7 +13,7 @@ related_resources:
 tldr:
   q: Why does Kong show an "API route collides with an existing API" error when creating a new route?
   a: |
-    Kong Enterprise's route collision check assumes different workspaces are managed by different teams, so it warns when a new route in one workspace could unintentionally take traffic from an existing route in another workspace. To resolve it, give the more generic route a distinct `host` value, disable the check with `route_validation_strategy`, or create routes in other workspaces before creating the generic catch-all route.
+    {{site.ee_product_name}}'s route collision check assumes different workspaces are managed by different teams, so it warns when a new route in one workspace could unintentionally take traffic from an existing route in another workspace. To resolve it, give the more generic route a distinct `host` value, disable the check with `route_validation_strategy`, or create routes in other workspaces before creating the generic catch-all route.
 ---
 
 ## Problem

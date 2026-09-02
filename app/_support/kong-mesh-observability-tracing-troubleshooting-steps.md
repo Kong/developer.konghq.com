@@ -8,9 +8,9 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: What are common pitfalls when troubleshooting Kong Mesh Observability/tracing, and how do I diagnose them?
+  q: What are common pitfalls when troubleshooting {{site.mesh_product_name}} Observability/tracing, and how do I diagnose them?
   a: |
-    If tracing isn't collecting the expected data, gather the Envoy config dump, Kong Mesh debug logs, the Mesh resource, and the TrafficTrace (or MeshTrace) policy, then verify the tracing backend and policy are configured correctly and check the logs for errors.
+    If tracing isn't collecting the expected data, gather the Envoy config dump, {{site.mesh_product_name}} debug logs, the Mesh resource, and the TrafficTrace (or MeshTrace) policy, then verify the tracing backend and policy are configured correctly and check the logs for errors.
     In the config dump, confirm the expected listeners are present — if the protocol isn't explicitly configured per service (HTTP, HTTP2, or gRPC), jaeger will only show up under `config.bootstrap.cluster.name` and not as a listener.
 related_resources:
   - text: kuma-demo app deployment manifest

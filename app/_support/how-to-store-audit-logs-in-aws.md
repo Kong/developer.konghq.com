@@ -8,13 +8,13 @@ works_on:
   - on-prem
   - konnect
 related_resources:
-  - text: Maintain Your Kong Gateway Audit Log Trail in AWS CloudTrail Lake
+  - text: Maintain Your {{site.base_gateway}} Audit Log Trail in AWS CloudTrail Lake
     url: https://konghq.com/blog/aws-cloudtrail-lake-isv-launch-partner
 published: false
 tldr:
-  q: How can I store and query Kong Enterprise Audit Logs in AWS?
+  q: How can I store and query {{site.ee_product_name}} Audit Logs in AWS?
   a: |
-    Publish Kong Enterprise Audit Logs to AWS CloudTrail Lake, which acts as a single, immutable
+    Publish {{site.ee_product_name}} Audit Logs to AWS CloudTrail Lake, which acts as a single, immutable
     store for querying audit logs alongside other AWS and non-AWS activity events. See the linked
     AWS CloudTrail Lake blog post for setup details.
 ---

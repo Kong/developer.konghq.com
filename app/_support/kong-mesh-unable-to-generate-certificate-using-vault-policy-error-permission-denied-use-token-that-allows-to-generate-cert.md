@@ -1,5 +1,5 @@
 ---
-title: "Kong Mesh: Unable to generate certificate using Vault policy, error: \"permission denied - use token that allows to generate cert\""
+title: "{{site.mesh_product_name}}: Unable to generate certificate using Vault policy, error: \"permission denied - use token that allows to generate cert\""
 content_type: support
 description: "{{site.mesh_product_name}} can fail to generate certificates through Vault Policy when a Hashicorp Vault child token's parent token has a shorter TTL, causing `permission denied` errors; extending the parent TTL or switching to an orphan token resolves it."
 products:
@@ -11,9 +11,9 @@ related_resources:
   - text: Hashicorp Vault documentation on token hierarchies and orphan tokens
     url: https://developer.hashicorp.com/vault/docs/concepts/tokens#token-hierarchies-and-orphan-tokens
 tldr:
-  q: "Why does Kong Mesh fail to generate a certificate through Vault Policy with a \"permission denied - use token that allows to generate cert\" error?"
+  q: "Why does {{site.mesh_product_name}} fail to generate a certificate through Vault Policy with a \"permission denied - use token that allows to generate cert\" error?"
   a: |
-    This typically happens when the Hashicorp Vault token Kong Mesh uses is a `child token` whose `parent token` has a shorter TTL — Vault's token hierarchy lets the parent's expiry override the child's, so the child stops working sooner than expected. Fix it by giving the parent token a longer TTL and making the child token `renewable`, or by switching to an `orphan token`, which has no max TTL and lives indefinitely as long as it's renewed.
+    This typically happens when the Hashicorp Vault token {{site.mesh_product_name}} uses is a `child token` whose `parent token` has a shorter TTL — Vault's token hierarchy lets the parent's expiry override the child's, so the child stops working sooner than expected. Fix it by giving the parent token a longer TTL and making the child token `renewable`, or by switching to an `orphan token`, which has no max TTL and lives indefinitely as long as it's renewed.
 ---
 
 ## Problem

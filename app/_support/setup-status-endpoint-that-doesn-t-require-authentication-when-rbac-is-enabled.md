@@ -11,7 +11,7 @@ related_resources: []
 tldr:
   q: Is there a status endpoint that can be used for healthchecks without requiring authentication when RBAC is enabled?
   a: |
-    Yes — Kong Gateway's native `status_listen` endpoint (port 8100 by default) is always unauthenticated and unaffected by RBAC, so use `http://<node>:8100/status` directly for healthchecks. If you need the status information exposed through the Kong Proxy itself instead, add a loopback route to the Admin API's `/status` endpoint with a `request-transformer-advanced` plugin that injects an RBAC `kong-admin-token`.
+    Yes — {{site.base_gateway}}'s native `status_listen` endpoint (port 8100 by default) is always unauthenticated and unaffected by RBAC, so use `http://<node>:8100/status` directly for healthchecks. If you need the status information exposed through the Kong Proxy itself instead, add a loopback route to the Admin API's `/status` endpoint with a `request-transformer-advanced` plugin that injects an RBAC `kong-admin-token`.
 ---
 
 ## Problem

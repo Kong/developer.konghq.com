@@ -1,5 +1,5 @@
 ---
-title: "Kong AI Gateway: \"ERROR: expected 512 dimensions, not 1024\" when using `ai-semantic-cache`"
+title: "{{site.ai_gateway_name}}: \"ERROR: expected 512 dimensions, not 1024\" when using `ai-semantic-cache`"
 content_type: support
 description: Switching embedding models to a different dimension size after the `ai-semantic-cache` plugin's vector table was created causes a Postgres dimension-mismatch error in the background cache-store logs.
 products:
@@ -9,7 +9,7 @@ works_on:
   - konnect
 related_resources: []
 tldr:
-  q: "Why does Kong AI Gateway log \"ERROR: expected 512 dimensions, not 1024\" when using `ai-semantic-cache`?"
+  q: "Why does {{site.ai_gateway_name}} log \"ERROR: expected 512 dimensions, not 1024\" when using `ai-semantic-cache`?"
   a: |
     The `ai-semantic-cache` plugin's vector table locks in the embedding dimension size the first time it's used; switching to a model with a different dimension count doesn't update the table, so `config.vectordb.dimensions` no longer matches. Delete and re-create the plugin to regenerate the table with the new dimensions.
 ---

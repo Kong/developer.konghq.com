@@ -14,7 +14,7 @@ tldr:
 related_resources:
   - text: Kong Helm chart Prometheus Operator integration documentation
     url: https://github.com/Kong/charts/blob/main/charts/kong/README.md#prometheus-operator-integration
-  - text: Kong Gateway Kubernetes install guide (Konnect)
+  - text: "{{site.base_gateway}} Kubernetes install guide (Konnect)"
     url: /gateway/install/kubernetes/konnect/
   - text: Kong Helm chart `ServiceMonitor` parameters
     url: https://github.com/Kong/charts/blob/kong-2.41.0/charts/kong/README.md#general-parameters

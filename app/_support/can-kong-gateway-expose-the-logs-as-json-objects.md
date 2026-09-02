@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: Can Kong Gateway expose the logs as JSON objects?
+  q: Can {{site.base_gateway}} expose the logs as JSON objects?
   a: |
     Kong doesn't have a setting to change the Nginx `error_log` format, but you can get JSON access logs using the `tcp-log` or `http-log` plugins, or by defining a custom Nginx `log_format` (e.g. `json_logs`) in a custom Nginx template and setting `proxy_access_log` to use it.
 related_resources:
@@ -16,7 +16,7 @@ related_resources:
     url: https://docs.nginx.com/nginx/admin-guide/monitoring/logging/
   - text: Kong Logging plugins (tcp-log, http-log)
     url: /plugins/?category=logging
-  - text: Customize what Kong Gateway logs
+  - text: Customize what {{site.base_gateway}} logs
     url: /gateway/logs/#customize-what-kong-gateway-logs
 ---
 

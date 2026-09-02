@@ -10,7 +10,7 @@ works_on:
 tldr:
   q: "Why do we get \"failed to fetch KongPlugin: no KongPlugin or KongClusterPlugin was found\" errors in the KIC logs?"
   a: |
-    This means an Ingress rule or `KongConsumer` references a `konghq.com/plugins` annotation naming a plugin that doesn't exist — often because the plugin was created in a different namespace. Current Kong Ingress Controller versions surface this only as a Kubernetes Warning Event on the affected resource (not in the controller logs), so check `kubectl get events` or `kubectl describe` on the Ingress/KongConsumer, then correct or remove the plugin reference.
+    This means an Ingress rule or `KongConsumer` references a `konghq.com/plugins` annotation naming a plugin that doesn't exist — often because the plugin was created in a different namespace. Current {{site.kic_product_name}} versions surface this only as a Kubernetes Warning Event on the affected resource (not in the controller logs), so check `kubectl get events` or `kubectl describe` on the Ingress/KongConsumer, then correct or remove the plugin reference.
 related_resources: []
 ---
 

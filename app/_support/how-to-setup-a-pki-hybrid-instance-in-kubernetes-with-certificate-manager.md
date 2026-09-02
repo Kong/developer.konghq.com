@@ -12,7 +12,7 @@ related_resources:
   - text: "cert-manager Kubernetes installation documentation"
     url: "https://cert-manager.io/docs/installation/kubectl/"
 tldr:
-  q: How do I configure Kong Gateway Hybrid mode to use PKI certificates issued by a private CA with cert-manager in Kubernetes?
+  q: How do I configure {{site.base_gateway}} Hybrid mode to use PKI certificates issued by a private CA with cert-manager in Kubernetes?
   a: |
     Use `cert-manager` to build a certificate chain from a private root CA through two intermediate CAs, then issue separate control plane (`server auth`) and data plane (`client auth`) certificates from the final intermediate issuer. Mount the resulting secrets into the Kong Helm chart values (`cluster_ca_cert`, `cluster_cert`, `cluster_cert_key`), set `cluster_mtls: pki` on both nodes, and set `lua_ssl_verify_depth` high enough to cover the full chain.
 ---

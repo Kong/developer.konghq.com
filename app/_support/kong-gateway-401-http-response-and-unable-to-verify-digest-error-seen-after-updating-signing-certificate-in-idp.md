@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: 401 HTTP response and \"unable to verify digest\" error seen after updating signing certificate in IdP"
+title: "{{site.base_gateway}}: 401 HTTP response and \"unable to verify digest\" error seen after updating signing certificate in IdP"
 content_type: support
 description: "When the Kong OIDC plugin throws a 401 error following an update to the IDP signer certificate, it is typically due to the plugin's cache not being updated with the new certificate information."
 products:

@@ -11,7 +11,7 @@ related_resources: []
 tldr:
   q: Why does a Route with a Host value of example.com return a 404 for requests with a different-case Host header, like Example.com?
   a: |
-    Kong Gateway's Route matching is case-sensitive for header values (though header names themselves are case-insensitive) per RFC, so `Example.com` won't match a Route configured with `example.com`, producing an HTTP 404. Work around it by normalizing the Host header at the client or load balancer, listing all expected case variations on the Route, or using a global pre-function plugin to lowercase the header before routing.
+    {{site.base_gateway}}'s Route matching is case-sensitive for header values (though header names themselves are case-insensitive) per RFC, so `Example.com` won't match a Route configured with `example.com`, producing an HTTP 404. Work around it by normalizing the Host header at the client or load balancer, listing all expected case variations on the Route, or using a global pre-function plugin to lowercase the header before routing.
 ---
 
 ## Problem

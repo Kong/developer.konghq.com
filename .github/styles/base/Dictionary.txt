@@ -1030,3 +1030,15 @@ stunnel
 supercookie
 systemctl
 tmp
+iat
+kong_rate_limiting_counters
+log_disconnections
+lokey
+mem_cache_size
+nginx_worker_processes
+podAnnotations
+prereading
+server_version_num
+unredact
+userinfo
+xyz

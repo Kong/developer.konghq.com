@@ -1,5 +1,5 @@
 ---
-title: "Kong Ingress Controller reports \"failed to connect to reporting server\""
+title: "{{site.kic_product_name}} reports \"failed to connect to reporting server\""
 content_type: support
 description: "{{site.kic_product_name}}, by default, sends anonymous usage data to help improve Kong."
 products:
@@ -9,9 +9,9 @@ works_on:
   - konnect
 related_resources: []
 tldr:
-  q: Why does Kong Ingress Controller log "failed to connect to reporting server"?
+  q: Why does {{site.kic_product_name}} log "failed to connect to reporting server"?
   a: |
-    Kong Ingress Controller sends anonymous usage data to `kong-hf.konghq.com` by default, and a firewall blocking that outbound connection produces this error. Set `CONTROLLER_ANONYMOUS_REPORTS` to `false` in the controller configuration to disable the reports and stop the error.
+    {{site.kic_product_name}} sends anonymous usage data to `kong-hf.konghq.com` by default, and a firewall blocking that outbound connection produces this error. Set `CONTROLLER_ANONYMOUS_REPORTS` to `false` in the controller configuration to disable the reports and stop the error.
 ---
 
 ## Problem

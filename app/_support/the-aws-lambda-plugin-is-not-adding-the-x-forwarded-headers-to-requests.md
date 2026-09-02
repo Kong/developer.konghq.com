@@ -11,7 +11,7 @@ related_resources: []
 tldr:
   q: Why doesn't the AWS Lambda plugin add `X-Forwarded-*` headers to requests?
   a: |
-    Nginx's proxy module normally adds `X-Forwarded-*` headers as traffic passes through Kong Gateway. The AWS Lambda plugin doesn't use that path — it calls the Lambda function directly using `lua-resty-http` as an HTTP client, so `X-Forwarded-*` headers are never added to the outbound request.
+    Nginx's proxy module normally adds `X-Forwarded-*` headers as traffic passes through {{site.base_gateway}}. The AWS Lambda plugin doesn't use that path — it calls the Lambda function directly using `lua-resty-http` as an HTTP client, so `X-Forwarded-*` headers are never added to the outbound request.
 ---
 
 ## Problem
