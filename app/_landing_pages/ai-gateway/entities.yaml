@@ -119,6 +119,14 @@ rows:
       - blocks:
           - type: card
             config:
+              title: AI CA Certificate
+              description: Store public certificates from trusted Certificate Authorities to verify the validity of AI Certificates.
+              cta:
+                text: AI Certificate entity
+                url: /ai-gateway/entities/ai-certificate/
+      - blocks:
+          - type: card
+            config:
               title: AI SNI
               description: Map hostnames to an AI Certificate so data planes present the right TLS certificate to each client.
               cta:

@@ -11,7 +11,7 @@ permalink: /ai-gateway/entities/ai-ca-certificate/
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/entities/
-description: An AI CA certificate represents a trusted Certificate Authority
+description: Store public certificates from trusted Certificate Authorities to verify the validity of AI Certificates.
 schema:
   api: konnect/ai-gateway
   path: /schemas/AIGatewayCACertificate
@@ -24,9 +24,11 @@ tools:
 
 ## What is an AI CA Certificate
 
-An AI CA certificate contains the PEM-encoded public certificate of a trusted Certificate Authority. These objects are used to verify the validity of an [AI Certificate](/ai-gateway/entities/ai-certificate/).
+An AI CA certificate contains the PEM-encoded public certificate of a trusted Certificate Authority. This entity is used as the root CA to verify the validity of [AI Certificates](/ai-gateway/entities/ai-certificate/).
 
 ##  Set up an AI CA Certificate
+
+The following example registers a certificate:
 
 ```
 curl --request POST \
