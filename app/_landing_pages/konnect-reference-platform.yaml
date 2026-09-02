@@ -121,7 +121,10 @@ rows:
                     Routes. Protected services add ACE with
                     `deck file add-plugins`. Committed artifacts carry
                     environment, team, owner, and service-stage tags; CI
-                    regenerates them and rejects drift.
+                    regenerates them and rejects drift. The root OpenAPI
+                    document is the next beta; a release workflow opens a PR
+                    that retains a stable contract, selects it for production,
+                    and advances development to the next beta.
 
                     Merges to a service repository apply that service's
                     development Catalog and Gateway state. Production Gateway
@@ -137,7 +140,7 @@ rows:
             config:
               diagram: |
                 flowchart TD
-                  PR[Service pull request] --> Validate[Generate and validate]
+                  PR[Service or release pull request] --> Validate[Generate and validate]
                   Validate --> Main[Merge to main]
                   Main --> DevApply[Service-owned development apply]
                   Main --> Promote[Open platform promotion PR]

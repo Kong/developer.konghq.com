@@ -55,15 +55,25 @@ konnect/prod.yaml
 gateway/dev/kong.yaml
 gateway/prod/kong.yaml
 scripts/generate-gateway.sh
+scripts/prepare-release.sh
+scripts/validate-api-releases.sh
 .github/workflows/
 ```
 
-The root OpenAPI document is mutable development state. Versioned files are
-retained release inputs for production. `konnect/dev.yaml` declares a private
-development Catalog API, resolves the platform-owned Portal and control plane,
-and attaches the repository's decK file through `_deck`. `konnect/prod.yaml`
-declares a distinct public production Catalog API and a control-plane
-implementation, but cannot apply production Gateway state.
+The root OpenAPI document is the mutable next-beta contract. Versioned files
+are immutable stable releases. The API-level `version` in `konnect/prod.yaml`
+selects the current production release, so generation does not contain a
+hard-coded release path. `konnect/dev.yaml` declares a private development
+Catalog API, resolves the platform-owned Portal and control plane, and attaches
+the repository's decK file through `_deck`. `konnect/prod.yaml` declares a
+distinct public production Catalog API and a control-plane implementation, but
+cannot apply production Gateway state.
+
+The manually dispatched release workflow takes a stable release version and
+the next development version. It opens a service PR that snapshots the current
+beta, advances the root contract to the next `-beta.1`, updates the production
+selector, and regenerates both Gateway artifacts. CI also prevents released
+specifications from being changed or removed.
 
 Bookings and Customer Information use `deck file add-plugins` to add the `ace`
 plugin to their generated Gateway Service with `match_policy: required`. Their
