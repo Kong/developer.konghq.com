@@ -757,9 +757,6 @@ With the converter output and these skills in place, you can build extensions th
 
 This lets you treat {{site.ai_gateway}} migration as a versioned, reviewable, and automated pipeline rather than a one-time manual conversion.
 
-### Update model pricing
-
-{{site.ai_gateway}} now prices requests on a per target basis starting from a base two-rate calculation, then layering in additional dimensions to match how LLM providers actually bill. This differs from V1 where simple two-rate calculations are made for each `ai-proxy-advanced` instance. When migrating you will need to specify the additional dimensions in your configuration.
 
 ### Set up a fresh install with the {{site.konnect_short_name}} MCP Server
 
