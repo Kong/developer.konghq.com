@@ -1247,6 +1247,10 @@ columns:
   - title: Data type
     key: type
 rows:
+  - property: "`kong.client.principal`"
+    desc: "`kong.client.get_principal()`"
+    type: "`object`"
+    
   - property: "`kong.client.consumer`"
     desc: "`kong.client.get_consumer()`"
     type: "`object`"
