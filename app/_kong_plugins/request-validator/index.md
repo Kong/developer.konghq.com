@@ -47,7 +47,29 @@ min_version:
 
 The Request Validator plugin allows you to validate requests before they reach the upstream server. This plugin supports validating the schema of the body and the parameters of the request using either Kong's own schema validator (body only) or a JSON Schema Draft 4 compliant validator.
 
-If a validation fails, a `400 Bad Request` response is returned.
+By default, if a validation fails, a `400 Bad Request` response is returned. You can also run the plugin in log-only mode, which logs validation failures instead of blocking the request. For more information, see [Log request validation failures](#log-request-validation-failures).
+
+## Use cases for the Request Validator plugin
+
+The following are examples of common configurations for the Request Validator plugin:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Use case
+    key: usecase
+  - title: Description
+    key: description
+rows:
+  - usecase: "[Validate a request body](/plugins/request-validator/examples/validate-request-body/)"
+    description: Configure the plugin to check that the request body contains a `name` field with a string value.
+  - usecase: "[Validate a request path](/plugins/request-validator/examples/validate-path-parameter/)"
+    description: Configure the plugin to check that the request path contains a `status_code` parameter with a number value.
+  - usecase: |
+      [Log invalid requests without blocking](/plugins/request-validator/examples/tap-mode/) {% new_in 3.16 %}
+    description: Run the plugin in tap mode, which logs non-conforming requests while still letting them pass through the proxy.
+{% endtable %}
+<!--vale on-->
 
 ## Content-Type validation
 
@@ -320,3 +342,9 @@ Use [`config.array_length_compat`](./reference/3.4/#schema--config-array-length-
 When enabled (default), `minLength` and `maxLength` apply to arrays using item count (the number of elements), as well as to strings.
 
 Set `config.array_length_compat` to `false` to use strict JSON Schema semantics, where `minLength` and `maxLength` apply only to strings.
+
+## Log request validation failures {% new_in 3.16 %}
+
+{% include_cached /plugins/logging/log-only-mode.md name=page.name %}
+
+For an example configuration, see [Log invalid requests without blocking](/plugins/request-validator/examples/tap-mode/).
