@@ -1,0 +1,27 @@
+description: 'Cache responses to GET requests using the authenticated Principal to compose the cache key.'
+
+title: 'Cache by Principal'
+
+weight: 900
+
+config:
+  response_code:
+  - 200
+  request_method:
+  - GET
+  content_type:
+  - text/plain
+  - application/json
+  cache_ttl: 300
+  cache_by_principal: true
+  strategy: memory
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.16'
