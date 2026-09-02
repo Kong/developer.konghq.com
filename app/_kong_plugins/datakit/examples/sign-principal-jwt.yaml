@@ -12,7 +12,7 @@ extended_description: |
 
   {:.info}
   > **Note**: Datakit has a priority of 810, which means it runs after rate limiting plugins (priority 900 and above). If you use Consumer-based rate limits, Datakit must run first so the Consumer is set before rate limiting executes. You can adjust this with [dynamic plugin ordering](/gateway/entities/plugin/#dynamic-plugin-ordering).
-title: Sign JWT with Principal ID {% new_in 3.16 %}
+title: Sign JWT with Principal ID
 weight: 800
 
 requirements:
@@ -64,6 +64,6 @@ tools:
   - terraform
 
 min_version:
-  gateway: '3.14'
+  gateway: '3.16'
 
 group: authentication
