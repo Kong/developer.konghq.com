@@ -24,13 +24,11 @@ tools:
 
 ## What is an AI CA Certificate
 
-An AI CA certificate contains the PEM-encoded public certificate of a trusted Certificate Authority. This entity is used as the root CA to verify the validity of [AI Certificates](/ai-gateway/entities/ai-certificate/).
+An AI CA certificate contains the PEM-encoded public certificate of a trusted Certificate Authority. This is used as the root CA to verify the validity of [AI Certificates](/ai-gateway/entities/ai-certificate/) and [AI Data Plane Certificates](/ai-gateway/entities/ai-data-plane-certificate/).
 
 ##  Set up an AI CA Certificate
 
-The following example registers a certificate:
-
-ALTERNATE
+The following example registers a CA certificate and creates an AI CA Certificate entity:
 
 {% entity_example %}
 type: ca_certificate
