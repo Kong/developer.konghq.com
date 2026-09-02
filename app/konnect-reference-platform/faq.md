@@ -66,6 +66,15 @@ Do not base a current architecture on unreleased environment-aware Catalog or
 Workspace behavior. Re-evaluate the duplication after those capabilities are
 generally available and supported declaratively.
 
+## How does an OpenAPI document become a production release?
+
+The root `openapi.yaml` represents the next beta. A manually dispatched release
+workflow opens a service PR that creates an immutable stable file under
+`openapi/versions/`, selects it as the production API's current version in
+`konnect/prod.yaml`, advances the root to the next beta, and regenerates Gateway
+state. Generation reads the production selector, so releasing never requires a
+script edit.
+
 ## Who owns development Gateway configuration?
 
 The Platform Team provisions one development control plane per service team and

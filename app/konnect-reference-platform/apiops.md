@@ -32,6 +32,11 @@ There are no environment branches and no separate service registry.
 - decK manifests describe {{site.base_gateway}} runtime entities.
 - `main` contains separate development and production resources and files.
 
+In a service repository, the root `openapi.yaml` is always a beta development
+contract. `openapi/versions/` retains immutable stable contracts, and the
+API-level `version` in `konnect/prod.yaml` selects the current production
+contract. The generator derives its production input from that selector.
+
 Service repositories own their development and production Catalog APIs,
 versions, specifications, publications, and control-plane implementations.
 They also own development Gateway configuration. The platform repository owns
@@ -57,8 +62,25 @@ apply to a shared team control plane. Production files select the common
 uses `kongctl apply`; it does not prune omitted resources.
 
 Pull-request validation regenerates both files without Konnect credentials and
-fails on a Git diff. Contributor code in an untrusted fork never receives a
-Konnect token or platform-promotion credential.
+fails on a Git diff. It also verifies the development beta, production
+selector, retained version declarations, spec filenames, and release
+immutability. Contributor code in an untrusted fork never receives a Konnect
+token or platform-promotion credential.
+
+## Prepare a release
+
+A manually dispatched service workflow accepts two stable versions: the
+version to release and the next version to develop. If `openapi.yaml` is
+`0.2.0-beta.N`, inputs `0.2.0` and `0.3.0` open a service PR that:
+
+1. creates the immutable `openapi/versions/0.2.0.yaml` snapshot;
+2. retains all prior versions and sets the production API's current version to
+   `0.2.0` in `konnect/prod.yaml`;
+3. advances the root document to `0.3.0-beta.1`; and
+4. regenerates both Gateway files from their newly selected inputs.
+
+The workflow refuses to overwrite an existing release. Humans review and merge
+its PR; automation does not write release state directly to `main`.
 
 ## Development delivery
 
@@ -84,9 +106,10 @@ deleting each other's omitted state.
 
 Production uses an explicit ownership boundary:
 
-1. A service PR retains the release OpenAPI document and regenerates the
-   production decK candidate.
-2. After merge, a trusted workflow copies the exact candidate into
+1. The release workflow opens a service PR containing the stable contract,
+   next development beta, updated production selector, and generated decK
+   candidate.
+2. After that PR merges, a trusted workflow copies the exact candidate into
    `KongAirlines/platform` and opens a PR.
 3. The platform PR records the source repository, commit, SHA-256 checksum,
    decK version, and kongctl version.
@@ -104,7 +127,7 @@ sequenceDiagram
   participant P as Platform repository
   participant G as Production Gateway
   participant C as Konnect Catalog
-  S->>S: Generate and validate candidate
+  S->>S: Review release PR and retain stable contract
   S->>P: Open promotion PR with provenance
   P->>P: Platform review
   P->>G: Aggregate kongctl apply with _deck

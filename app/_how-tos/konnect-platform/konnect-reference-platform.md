@@ -108,11 +108,16 @@ gateway/dev/kong.yaml
 gateway/prod/kong.yaml
 gateway/plugins/ace.yaml
 scripts/generate-gateway.sh
+scripts/prepare-release.sh
+scripts/validate-api-releases.sh
+.github/workflows/release-api.yaml
 ```
 
-Only protected APIs need the ACE input. A deliberate production release copies
-the OpenAPI document to `openapi/versions/<info.version>.yaml`; do not silently
-replace older release inputs.
+Only protected APIs need the ACE input. Keep `openapi.yaml` on the next beta
+version and keep stable contracts in `openapi/versions/`. Set the production
+API's top-level `version` in `konnect/prod.yaml` to the stable release that
+production generation and Catalog apply must use. Never replace an older
+release input.
 
 ## Generate tagged Gateway state
 
@@ -136,7 +141,28 @@ add-plugins:
 
 Run `deck file add-plugins`, then tag the plugin and validate the final state.
 Commit the generated files. Pull-request CI must regenerate them without
-credentials and fail if `git diff` reports drift.
+credentials and fail if `git diff` reports drift. It should also require a beta
+root version, validate every stable file against its filename and production
+manifest declaration, and reject modification or deletion of releases already
+present on the target branch.
+
+## Automate release preparation
+
+Add a manually dispatched workflow that accepts a stable release version and
+the next development version. It should run a repository script that:
+
+1. verifies that the root beta corresponds to the requested stable release;
+2. refuses to overwrite an existing versioned file;
+3. creates the stable snapshot and adds it to the production manifest;
+4. updates the production API's top-level current version;
+5. advances the root contract to the next `-beta.1` version; and
+6. regenerates and validates development and production Gateway files.
+
+Have the workflow open a service PR rather than commit to `main`. This keeps
+the release, next development contract, Catalog selector, and generated
+artifacts in one review. Use a trusted GitHub credential that can push the
+release branch and open the service PR so the resulting event triggers normal
+pull-request validation; the default GitHub Actions token does not do so.
 
 ## Declare service-owned Catalog state
 
