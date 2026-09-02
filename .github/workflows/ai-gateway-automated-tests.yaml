@@ -89,7 +89,7 @@ jobs:
           TESTS_GCP_SERVICE_ACCOUNT_JSON_BASE64: ${{ secrets.GCP_SERVICE_ACCOUNT_JSON_BASE64 }}
           TESTS_VERTEX_UPSTREAM_URL: ${{ secrets.VERTEX_UPSTREAM_URL }}
         run: |
-          npm run run-tests
+          DEBUG=tests:* npm run run-tests
 
       - name: Publish Test Report
         uses: './.github/reusable-steps/publish-test-report'
