@@ -19,8 +19,6 @@ module Jekyll
       end
 
       def run
-        return if skip_locally?
-
         Dir.glob(File.join(site.source, "#{PLUGINS_FOLDER}/*/")).each do |folder|
           slug = folder.gsub("#{site.source}/#{PLUGINS_FOLDER}/", '').chomp('/')
 
@@ -30,6 +28,9 @@ module Jekyll
 
       def generate_pages(plugin)
         generate_overview_page(plugin)
+
+        return if skip_locally?
+
         generate_changelog_page(plugin)
 
         return if site.config.dig('skip', 'plugins')
@@ -46,7 +47,7 @@ module Jekyll
                    .to_jekyll_page
 
         site.data['kong_plugins'][plugin.slug] = overview
-        site.pages << overview
+        site.pages << overview unless skip_locally?
       end
 
       def generate_reference_page(plugin)
