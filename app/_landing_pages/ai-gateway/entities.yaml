@@ -122,8 +122,8 @@ rows:
               title: AI CA Certificate
               description: Store public certificates from trusted Certificate Authorities to verify the validity of AI Certificates.
               cta:
-                text: AI Certificate entity
-                url: /ai-gateway/entities/ai-certificate/
+                text: AI CA Certificate entity
+                url: /ai-gateway/entities/ai-ca-certificate/
       - blocks:
           - type: card
             config:
