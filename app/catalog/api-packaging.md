@@ -35,6 +35,8 @@ related_resources:
     url: /how-to/automate-api-catalog-with-terraform/
   - text: Application authentication strategies
     url: /dev-portal/auth-strategies/
+  - text: "{{site.dev_portal}} MCP servers"
+    url: /dev-portal/mcp-servers/
 faqs:
   - q: |
       {% include faqs/api-app-reg-override.md section='question' %}
@@ -197,3 +199,11 @@ The image must be a PNG, JPG, or SVG image under 500 KB that’s no larger than 
 1. Click **Publish API**.
 
 Your API package will now be published to your Dev Portal. Published API packages appear the same as published APIs in the Dev Portal, and both allow developers to register applications with them.
+
+### Generate an MCP server from your published API packages
+
+Because published API packages appear the same as published APIs in {{site.dev_portal}}, you can also expose them to AI agents through an MCP server that is generated directly from that {{site.dev_portal}}. Developers can connect their own agent or IDE to browse the operations included in an API package, and, depending on configuration, register applications and use API credentials on their behalf.
+
+Agent access respects the same authentication and RBAC settings that apply to the developer connecting the agent, so an agent never sees more of a package than its developer already can.
+
+For details on enabling this and how {{site.dev_portal}} settings affect what an agent can do, see [{{site.dev_portal}} MCP servers](/dev-portal/mcp-servers/).
