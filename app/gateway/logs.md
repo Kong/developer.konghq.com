@@ -94,14 +94,14 @@ rows:
   - usecase: "View current log level"
     config: |
       [`GET /debug/node/log-level`](/api/gateway/admin-ee/#/operations/get-debug-node-log-level)
-  - usecase: "Modify the log level for an individual {{site.base_gateway}} node"
+  - usecase: "Modify the log level for an individual {{site.base_gateway}} node."
     config: "[`POST /debug/node/log-level/{logLevel}`](/api/gateway/admin-ee/#/operations/get-debug-node-log-level-log_level)"
-  - usecase: "Change the log level of the {{site.base_gateway}} cluster"
+  - usecase: "Change the log level of the {{site.base_gateway}} cluster."
     config: "[`/POST debug/cluster/log-level/{loglevel}`](/api/gateway/admin-ee/#/operations/update-debug-cluster-log-level)"
-  - usecase: "Keep the log level of new nodes added to the cluster in sync with other nodes in the cluster"
+  - usecase: "Keep the log level of new nodes added to the cluster in sync with other nodes in the cluster."
     config: |
       Change the [`log_level`](/gateway/configuration/#log-level) entry in `kong.conf` to `KONG_LOG_LEVEL`, and start every new node with the `KONG_LOG_LEVEL` env variable set.
-  - usecase: "Change the log level of all control plane {{site.base_gateway}} nodes"
+  - usecase: "Change the log level of all control plane {{site.base_gateway}} nodes."
     config: "[`POST /debug/cluster/control-planes-nodes/log-level/{loglevel}`](/api/gateway/admin-ee/#/operations/create-debug-cluster-control-planes-nodes-log-level)"
 {% endtable %}
 <!--vale on-->
@@ -119,9 +119,10 @@ columns:
   - title: Setting or endpoint
     key: config
 rows:
-  - usecase: "View current log level {% new_in 3.16 %}"
+  - usecase: |
+      View current log level {% new_in 3.16 %}
     config: |
-      `GET /control-planes/{controlPlaneId}/nodes`: View the `log_level` field in the response
+      `GET /control-planes/{controlPlaneId}/nodes`: View the `log_level` field in the response.
 {% endtable %}
 <!--vale on-->
 
@@ -147,15 +148,15 @@ columns:
   - title: Setting or endpoint
     key: config
 rows:
-  - usecase: "Modify the log level for one or more data plane nodes"
+  - usecase: "Modify the log level for one or more data plane nodes."
     config: "`POST /debug/cluster/data-planes/log-level-operations`"
-  - usecase: "List dynamic log level operations"
+  - usecase: "List dynamic log level operations."
     config: "`GET /debug/cluster/data-planes/log-level-operations`"
-  - usecase: "Get the status of a dynamic log level operation"
+  - usecase: "Get the status of a dynamic log level operation."
     config: "`GET /debug/cluster/data-planes/log-level-operations/{id}`"
-  - usecase: "List the per-node results of a dynamic log level operation"
+  - usecase: "List the per-node results of a dynamic log level operation."
     config: "`GET /debug/cluster/data-planes/log-level-operations/{id}/results`"
-  - usecase: "Get the result for one data plane node in an operation"
+  - usecase: "Get the result for one data plane node in an operation."
     config: "`GET /debug/cluster/data-planes/log-level-operations/{id}/results/{node_id}`"
 {% endtable %}
 <!--vale on-->
@@ -171,15 +172,15 @@ columns:
   - title: Setting or endpoint
     key: config
 rows:
-  - usecase: "Modify the log level for one or more data plane nodes"
+  - usecase: "Modify the log level for one or more data plane nodes."
     config: "`POST /control-planes/{controlPlaneId}/nodes/log-level-operations`"
-  - usecase: "List dynamic log level operations"
+  - usecase: "List dynamic log level operations."
     config: "`GET /control-planes/{controlPlaneId}/nodes/log-level-operations`"
-  - usecase: "Get the status of a dynamic log level operation"
+  - usecase: "Get the status of a dynamic log level operation."
     config: "`GET /control-planes/{controlPlaneId}/nodes/log-level-operations/{operationId}`"
-  - usecase: "List the per-node results of a dynamic log level operation"
+  - usecase: "List the per-node results of a dynamic log level operation."
     config: "`GET /control-planes/{controlPlaneId}/nodes/log-level-operations/{operationId}/results`"
-  - usecase: "Get the result for one data plane node in an operation"
+  - usecase: "Get the result for one data plane node in an operation."
     config: "`GET /control-planes/{controlPlaneId}/nodes/log-level-operations/{operationId}/results/{nodeId}`"
 {% endtable %}
 <!--vale on-->
