@@ -133,6 +133,12 @@ In {{site.base_gateway}}, metrics are natively supported by the OpenTelemetry pl
 * For AI metrics and required setup prerequisites, see the [Gen AI OpenTelemetry metrics reference](/ai-gateway/ai-otel-metrics/).
 * For a step-by-step setup using an OpenTelemetry Collector, see [Collect metrics, logs, and traces with the OpenTelemetry plugin](/how-to/collect-metrics-logs-and-traces-with-opentelemetry/).
 
+### Custom metrics {% new_in 3.16 %}
+
+Custom plugins can register and record their own counter, gauge, and histogram metrics using the [Metrics PDK](/custom-plugins/metrics-pdk/) (`kong.metrics`). When the OpenTelemetry plugin is configured with metrics enabled, it exports these custom metrics through the same OTLP path as {{site.base_gateway}}'s built-in metrics.
+
+Custom metrics currently export only through the OpenTelemetry plugin. The Prometheus and StatsD plugins don't export them.
+
 ### Metrics with {{site.base_gateway}} 3.12 or earlier
 
 If you're using {{site.base_gateway}} 3.12 or earlier, metrics are enabled using the `contrib` version of the [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/installation/).
