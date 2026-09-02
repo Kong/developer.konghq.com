@@ -28,6 +28,16 @@ faqs:
       All telemetry is encrypted using mTLS.
 
       If you use [Debugger](/observability/debugger/), {{site.konnect_short_name}} will collect request and response data. {{site.konnect_short_name}} only collects this data if you've opted in to Debugger, it doesn't collect this data by default.
+  - q: Can I disable analytics and telemetry data collection?
+    a: |
+      Yes, you can disable analytics and telemetry using either of the following {{site.base_gateway}} data plane configuration options:
+
+      * [`analytics_enabled=off`](/gateway/configuration/#analytics-enabled) {% new_in 3.16 %}: Stops the data plane from collecting and sending analytics and telemetry data to {{site.konnect_short_name}}.
+        All other {{site.konnect_short_name}} control plane functionality continues to operate normally, including Consumer sync, license management, config sync, and config error reporting.
+        We recommend using this option if you want to disable analytics without affecting any other control plane functionality.
+      * [`konnect_mode=off`](/gateway/configuration/#konnect-mode): Disables all connectivity to {{site.konnect_short_name}}, which also stops analytics and telemetry data from being collected or sent.
+        This also disables all other control plane functionality, including Consumer sync, license management, config sync, and config error reporting.
+        The data plane keeps processing traffic using its last received configuration before `konnect_mode` was switched to `off`.
   - q: How frequently do data planes send telemetry data to the control plane?
     a: |
       Telemetry data is sent at different intervals depending on the data plane version:
