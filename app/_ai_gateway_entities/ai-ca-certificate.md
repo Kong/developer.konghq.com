@@ -30,17 +30,17 @@ An AI CA certificate contains the PEM-encoded public certificate of a trusted Ce
 
 The following example registers a certificate:
 
-```
-curl --request POST \
-  --url https://us.api.konghq.com/v1/ai-gateways/bf138ba2-c9b1-4229-b268-04d9d8a6410b/ca-certificates \
-  --header 'Accept: application/json, application/problem+json' \
-  --header 'Authorization: ••••••' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "name": "my-root-ca",
-  "cert": "-----BEGIN CERTIFICATE-----\n...\n-----END CERTIFICATE-----\n"
-}'
-```
+ALTERNATE
+
+{% entity_example %}
+type: ca_certificate
+data:
+  name: my-root-ca
+  cert: |
+      -----BEGIN CERTIFICATE-----
+      ...
+      -----END CERTIFICATE-----
+{% endentity_example %}
 
 ## Schema
 

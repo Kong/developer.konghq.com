@@ -20,7 +20,10 @@ To create an Upstream, call the Konnect [control plane config API's `/upstreams`
 To create an AI SNI, call the Konnect [{{site.ai_gateway}} API's `/snis` endpoint](/api/konnect/ai-gateway/#/operations/create-ai-gateway-sni).{% else %}
 To create an SNI, call the Konnect [control plane config API's `/snis` endpoint](/api/konnect/control-planes-config/#/operations/create-sni). {% endif %}
 {% when 'ca_certificate' %}
-To create a CA Certificate, call the Konnect [control plane config API's `/ca-certificates` endpoint](/api/konnect/control-planes-config/#/operations/create-ca_certificate). 
+{% if include.presenter.product == 'ai-gateway' -%}
+To create an AI Certificate, call the Konnect [{{site.ai_gateway}} API's `/ca-certificates` endpoint](/api/konnect/ai-gateway/#/operations/create-ai-gateway-ca-certificate).
+{% else %}
+To create a CA Certificate, call the Konnect [control plane config API's `/ca-certificates` endpoint](/api/konnect/control-planes-config/#/operations/create-ca_certificate). {% endif %}
 {% when 'certificate' %}
 {% if include.presenter.product == 'ai-gateway' -%}
 To create an AI Certificate, call the Konnect [{{site.ai_gateway}} API's `/certificates` endpoint](/api/konnect/ai-gateway/#/operations/create-ai-gateway-certificate).{% else %}
