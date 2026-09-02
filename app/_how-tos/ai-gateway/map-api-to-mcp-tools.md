@@ -53,6 +53,8 @@ Before creating an [MCP Server](/ai-gateway/entities/ai-mcp-server/) entity, you
 ```sh
 docker run -d \
   --name swagger-petstore \
+  --network kong-ai-quickstart-net \
+  --network-alias host.docker.internal \
   -p 8080:8080 \
   swaggerapi/petstore3:latest
 ```
