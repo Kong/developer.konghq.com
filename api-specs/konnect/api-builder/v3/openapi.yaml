@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect API Catalog
-  version: 3.4.4
+  version: 3.5.0
   description: 'Konnect API Catalog is the API for creating and managing APIs in the Konnect Catalog and publishing APIs to Developer Portals. Use this API to create API entities, attach versioned specs, manage relationships with catalog services, and publish APIs to Developer Portals. This supersedes API Products v2 for new integrations.'
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@b2eb9777854dfa07b4e0c5790e7f705d97927b80
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b2eb9777854dfa07b4e0c5790e7f705d97927b80'
+  x-oas-source: kong/platform-api@7cc938196f9d5b451076f7d6f33d13517281e097
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/7cc938196f9d5b451076f7d6f33d13517281e097'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -2406,6 +2406,12 @@ components:
           $ref: '#/components/schemas/ApiPublicationVisibility'
         auth_strategy_ids:
           $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
+        form_id:
+          description: |
+            UUID of custom form associated with API publication, must be linked to given portal and have type of 'api_registration'
+          type: string
+          format: uuid
+          nullable: true
         warnings:
           description: Informational warnings (e.g. incompatible fields stripped for ACE). Empty if none.
           type: array
@@ -2426,6 +2432,7 @@ components:
         - auth_strategy_ids
         - auto_approve_registrations
         - entity_type
+        - form_id
       title: API Publication List Item
     PublicationListItem:
       description: An API or API Package publication in a portal
@@ -2454,6 +2461,12 @@ components:
           $ref: '#/components/schemas/ApiPublicationVisibility'
         auth_strategy_ids:
           $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
+        form_id:
+          description: |
+            UUID of portal form associated with API publication, must be linked to given portal and have type of 'api_registration'
+          type: string
+          format: uuid
+          nullable: true
         warnings:
           description: Informational warnings (e.g. incompatible fields stripped for ACE). Empty if none.
           type: array
@@ -2474,6 +2487,7 @@ components:
         - auth_strategy_ids
         - auto_approve_registrations
         - entity_type
+        - form_id
       title: Publication List Item
     AutoApproveRegistrations:
       description: 'Whether the application registration auto approval on this portal for the api is enabled. If set to false, fallbacks on portal''s auto_approve_applications value.'
@@ -2489,6 +2503,12 @@ components:
           $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
         visibility:
           $ref: '#/components/schemas/ApiPublicationVisibility'
+        form_id:
+          description: |
+            UUID of portal form associated with API publication, must be linked to given portal and have type of 'api_registration'
+          type: string
+          format: uuid
+          nullable: true
         warnings:
           description: Informational warnings (e.g. incompatible fields stripped for ACE). Empty if none.
           type: array
@@ -2511,6 +2531,12 @@ components:
           $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
         visibility:
           $ref: '#/components/schemas/ApiPublicationVisibility'
+        form_id:
+          description: |
+            UUID of custom form associated with API publication, must be linked to given portal and have type of 'api_registration'
+          type: string
+          format: uuid
+          nullable: true
         warnings:
           description: Informational warnings (e.g. incompatible fields stripped for ACE). Empty if none.
           type: array
@@ -3464,6 +3490,12 @@ components:
         maxLength: 63
       maxProperties: 50
       title: Labels
+    UUID:
+      description: Contains a unique identifier used for this resource.
+      type: string
+      format: uuid
+      example: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+      readOnly: true
     BaseError:
       description: standard error
       type: object
@@ -3837,12 +3869,6 @@ components:
         - api
         - api_package
       title: Entity Type
-    UUID:
-      description: Contains a unique identifier used for this resource.
-      type: string
-      format: uuid
-      example: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
-      readOnly: true
     ApplicationOwnerType:
       description: The type of the owner of the application. Can be `developer` (individual developer) or `team`.
       type: string
@@ -5563,6 +5589,12 @@ components:
                 $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
               visibility:
                 $ref: '#/components/schemas/ApiPublicationVisibility'
+              form_id:
+                description: |
+                  UUID of portal form associated with API publication, must be linked to given portal and have type of 'api_registration'
+                type: string
+                format: uuid
+                nullable: true
               warnings:
                 description: Informational warnings (e.g. incompatible fields stripped for ACE). Empty if none.
                 type: array
@@ -5579,6 +5611,7 @@ components:
               - created_at
               - updated_at
               - auth_strategy_ids
+              - form_id
             title: API Publication
     ListApiPublicationResponse:
       description: Paginated list of API publications
@@ -5630,6 +5663,12 @@ components:
                 $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
               visibility:
                 $ref: '#/components/schemas/ApiPublicationVisibility'
+              form_id:
+                description: |
+                  UUID of custom form associated with API publication, must be linked to given portal and have type of 'api_registration'
+                type: string
+                format: uuid
+                nullable: true
               warnings:
                 description: Informational warnings (e.g. incompatible fields stripped for ACE). Empty if none.
                 type: array
@@ -5646,6 +5685,7 @@ components:
               - created_at
               - updated_at
               - auth_strategy_ids
+              - form_id
             title: API Package Publication
     ApiImplementationResponse:
       description: An API implementation
