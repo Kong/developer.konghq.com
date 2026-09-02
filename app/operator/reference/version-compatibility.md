@@ -51,7 +51,6 @@ Users should expect all the combinations marked with true to work and to be supp
 {% version_compatibility_table %}
 product: "Kubernetes"
 versions:
-  - "1.27"
   - "1.28"
   - "1.29"
   - "1.30"
@@ -61,11 +60,13 @@ versions:
   - "1.34"
   - "1.35"
   - "1.36"
+  - "1.37"
 compatible_product: "{{site.operator_product_name}}"
 compatible_versions:
   "2.0.x": ["1.28", "1.29", "1.30", "1.31", "1.32", "1.33"]
   "2.1.x": ["1.30", "1.31", "1.32", "1.33", "1.34", "1.35"]
   "2.2.x": ["1.30", "1.31", "1.32", "1.33", "1.34", "1.35", "1.36"]
+  "2.3.x": ["1.31", "1.32", "1.33", "1.34", "1.35", "1.36", "1.37"]
 {% endversion_compatibility_table %}
 
 ### Gateway API
@@ -85,8 +86,10 @@ versions:
   - "1.4.0"
 compatible_product: "{{site.operator_product_name}}"
 compatible_versions:
-  "2.0.x": ["1.0.0", "1.1.0", "1.2.0", "1.3.0"]
-  "2.1.x": ["1.0.0", "1.1.0", "1.2.0", "1.3.0", "1.4.0"]
+  "2.0.x": ["1.0", "1.1", "1.2", "1.3"]
+  "2.1.x": ["1.0", "1.1", "1.2", "1.3", "1.4"]
+  "2.2.x": ["1.0", "1.1", "1.2", "1.3", "1.4", "1.5"]
+  "2.3.x": ["1.0", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6"]
 {% endversion_compatibility_table %}
 
 [gateway-api]: https://github.com/kubernetes-sigs/gateway-api
