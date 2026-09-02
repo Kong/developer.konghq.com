@@ -15,11 +15,15 @@ module Jekyll
 
       attr_reader :site
 
-      def initialize(site)
+      def initialize(site, build_filter: Jekyll::BuildFilter.current)
         @site = site
+        @build_filter = build_filter
       end
 
+
       def run
+        return if skip_locally?
+
         Dir.glob(File.join(site.source, "#{self.class.policies_folder}/*/")).each do |folder|
           slug = folder.gsub("#{site.source}/#{self.class.policies_folder}/", '').chomp('/')
 
