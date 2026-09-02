@@ -47,7 +47,7 @@ rows:
     description: "Get authentication strategy details."
   - command: |
       [kongctl get catalog](/kongctl/get/catalog/)
-    description: "Get {{site.catalog}} details."
+    description: "Get {{site.konnect_catalog}} details."
   - command: |
       [kongctl get dcr-provider](/kongctl/get/dcr-provider/)
     description: "List or get DCR providers."
