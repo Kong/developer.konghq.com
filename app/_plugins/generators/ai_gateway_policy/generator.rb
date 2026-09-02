@@ -40,6 +40,10 @@ module Jekyll
 
         site.pages << api_reference
       end
+
+      def skip_locally?
+        @build_filter.excludes_prefix?('/ai-gateway/')
+      end
     end
   end
 end
