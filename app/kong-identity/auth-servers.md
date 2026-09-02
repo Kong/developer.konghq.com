@@ -612,6 +612,68 @@ rows:
 {% endtable %}
 <!--vale on -->
 
+## Trusted origins
+
+{{site.identity}} authorization servers can contain an allowlist of web origins. Trusted origins control whether browser-based JavaScript can read a cross-origin response from your authorization server (also known as Cross-Origin Resource Sharing, or CORS). Use trusted origins to allow browser code to read a response from the authorization server.
+
+This is separate from whether the authorization server accepts a request. For example, any client with valid credentials can always call the token endpoint directly (via curl, a backend, or similar), regardless of origin.
+
+Origin enforcement only applies to requests that trigger a CORS preflight. A plain request using only standard headers doesn't trigger a preflight, and the trusted origins allowlist doesn't restrict access to the authorization server endpoints for such requests.
+
+To enable trusted origins, do the following:
+
+{% navtabs "set trusted origins" %}
+{% navtab "{{site.konnect_short_name}} UI" %}
+1. In the {{site.konnect_short_name}} sidebar, click **Identity** > [**Authorization servers**](https://cloud.konghq.com/identity/auth-servers).
+1. Select your authorization server.
+1. From the **Actions** dropdown menu, select **Edit**.
+1. Under **Token settings**, open **Show advanced configuration**.
+1. In **Trusted origins**, enter up to 16 origin URIs, separated by a comma.
+   For example:
+   
+1. Click **Save**.
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}} API" %}
+You can set trusted origins on either:
+
+- A new authorization server with a `POST` request on the [`createAuthServer` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServer):
+<!--vale off-->
+{% capture create-auth-server-trusted-origins %}
+{% konnect_api_request %}
+url: /v1/auth-servers
+status_code: 200
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  name: "Appointments Dev"
+  audience: "http://myhttpbin.dev"
+  trusted_origins:
+    - "https://example.com"
+{% endkonnect_api_request %}
+{% endcapture %}
+{{ create-auth-server-trusted-origins | indent: 3 }}
+<!--vale on-->
+- An existing authorization server with a `PATCH` request on the [updateAuthServer endpoint](/api/konnect/kong-identity/v1/#/operations/updateAuthServer). On every `PATCH` request, make sure to include the entire trusted origins list, plus the URL you want to add to your authorization server. Otherwise, if you send a `PATCH` request with a single array, this single value replaces your entire allowlist:
+<!--vale off-->
+{% capture update-auth-server-trusted-origins %}
+{% konnect_api_request %}
+url: /v1/auth-servers/{authServerId}
+status_code: 200
+method: PATCH
+headers:
+  - 'Content-Type: application/json'
+body:
+  trusted_origins:
+    - "https://example.com"
+    - "https://app.example.com"
+{% endkonnect_api_request %}
+{% endcapture %}
+{{ update-auth-server-trusted-origins | indent: 3 }}
+<!--vale on-->  
+{% endnavtab %}
+{% endnavtabs %}
+
 ## Principals and directories
 
 {% include sections/principals-and-directories.md %}
