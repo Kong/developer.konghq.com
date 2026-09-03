@@ -90,6 +90,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.12.0.12": [
+    {
+      "message": "Fixed an issue where `kong_nginx_requests_total` and `kong_nginx_connections_total` duplicated the `http` values under the `stream` subsystem. They are now exported once under `http`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Histogram series are now emitted grouped by label set (all\nbuckets in ascending `le` order, then `_count`, then `_sum`) so the output\nfollows the OpenMetrics interleaving rule. Previously samples were grouped by\nsuffix, which caused strict consumers such as Google Managed Prometheus to\ndrop points.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "added `consumer` label for ai metrics and added metrics for ai-rag-injector plugin.",
