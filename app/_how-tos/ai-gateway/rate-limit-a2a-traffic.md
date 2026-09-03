@@ -102,7 +102,7 @@ ai_gateway_agents:
     policies:
       - !ref rate-limit-bookings-agent#name
     config:
-      url: http://host.docker.internal:10000
+      url: http://a2a-kongair-agent:10000
       route:
         paths:
           - /a2a

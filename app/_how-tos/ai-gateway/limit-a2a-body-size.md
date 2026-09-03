@@ -107,7 +107,7 @@ ai_gateway_agents:
     enabled: true
     policies: [ !ref a2a-size-limit#name ]
     config:
-      url: http://host.docker.internal:10000
+      url: http://a2a-kongair-agent:10000
       route:
         paths:
           - /a2a
