@@ -24,11 +24,18 @@ related_resources:
     url: /ai-gateway/forward-proxy/
 ---
 
-The AI Prompt Compressor Policy compresses retrieved chunks before sending them to a Large Language Model (LLM), reducing text length while preserving meaning. It uses the [LLMLingua 2 library](https://github.com/microsoft/LLMLingua) for fast, high-quality compression. The AI Prompt Compressor Policy supports:
+The AI Prompt Compressor Policy compresses retrieved chunks before sending them to a Large Language Model (LLM), reducing text length while preserving meaning. It supports multiple cache-aware compression backends that provide fast, high-quality, deterministic compression.
+
+The AI Prompt Compressor Policy supports:
 
 * **Ratio-based or target token compression**: for example, reduce a message to 80% of the original length or compress to 150 tokens.
 * **Configurable compression ranges**: for example, compress prompts under 100 tokens with a 0.8 ratio or compress them to exactly 100 tokens.
 * **Selective compression**: use `<LLMLINGUA>...</LLMLINGUA>` tags to target specific sections of the prompt. These tags work **only in the `inject_template` field of the [AI RAG Injector Policy](/ai-gateway/policies/ai-rag-injector/)** and must be used **in combination with the AI Prompt Compressor Policy**.
+
+The following backends are available:
+
+* [LLMLingua 2 library](https://github.com/microsoft/LLMLingua): use this to compress prose in user messages.
+* [Headroom](https://github.com/headroomlabs-ai/headroom): use this to compress agent traffic such as tool results, large JSON payloads, search output, and logs returned by tools.
 
 ## Why use prompt compression
 
@@ -62,7 +69,11 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-## AI Prompt Compression Service
+### Deterministic compression  
+
+Prompt caching lets a provider reuse a token prefix it has already seen and bills that warm read at at much lower cost. For agentic and RAG workloads, where a large system prompt, tool definitions, and history repeat every turn, caching is the single biggest lever to reduce costs. Compression is the second best lever, it shrinks the tokens the provider still has to read. Deterministic compression is required since it ensures the same input results in the same output at a byte-for-byte level which then hits the cache. This allows both methods of cost reduction to coexist.
+
+## LLMLingua Compression Service
 
 Kong provides a Docker image for the AI Prompt Compressor service, which compresses LLM prompts before sending them upstream. It uses [LLMLingua 2](https://github.com/microsoft/LLMLingua) to reduce prompt size, which helps you manage token limits and maintain context fidelity. The service supports both HTTP and JSON-RPC APIs and is designed to work with the AI Prompt Compressor Policy in {{site.ai_gateway}}.
 
@@ -108,34 +119,7 @@ The AI Prompt Compressor Service exposes both REST and JSON-RPC endpoints. You c
 
 * **POST `/`**: JSON-RPC endpoint that supports the `llm.v1.compressPrompt` method. Use this to invoke compression programmatically over JSON-RPC.
 
-## Prompt compression options
-
-The AI Prompt Compressor Policy offers flexible compression controls to fit different use cases. You can choose between full-prompt compression, conditional strategies, or selectively compressing only parts of the prompt:
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Configuration Option
-    key: option
-  - title: Description
-    key: description
-rows:
-  - option: Compression by ratio
-    description: |
-      Compress the prompt to a percentage of its original length (for example, reduce to 80%). This allows for consistent shrinkage regardless of the initial size.
-  - option: Compression by token count
-    description: |
-      Compress the prompt to a specific token target (for example, 150 tokens). Useful when working close to LLM context window limits.
-  - option: Conditional rules
-    description: |
-      Apply different compression strategies based on prompt length. For example, compress prompts under 100 tokens using a 0.8 ratio, and compress longer prompts to a fixed token count.
-  - option: Selective compression with tags
-    description: |
-      Wrap sections of the prompt in `<LLMLINGUA>...</LLMLINGUA>` to target only specific parts for compression, preserving untagged content as-is.
-{% endtable %}
-<!-- vale on -->
-
-## How it works
+### LLMLINGUA prompt flow
 
 1. The user sends the final prompt to the AI Prompt Compressor Policy.
 1. The AI Prompt Compressor Policy checks the prompt for `<LLMLINGUA>`...`</LLMLINGUA>` tags.
@@ -181,6 +165,42 @@ sequenceDiagram
 <!-- vale on -->
 
 The AI Prompt Compressor Policy applies structured compression to preserve essential context of prompts sent by users, rather than trimming prompts arbitrarily or risking token overflows. This ensures the LLM receives a well-formed, focused prompt keeping token usage under control.
+
+## Headroom Compression Service
+
+placeholder
+
+```
+docker pull ghcr.io/headroomlabs-ai/headroom:latest
+docker run -p 8787:8787 ghcr.io/headroomlabs-ai/headroom:latest
+```
+
+## Prompt compression options
+
+The AI Prompt Compressor Policy offers flexible compression controls to fit different use cases. You can choose between full-prompt compression, conditional strategies, or selectively compressing only parts of the prompt:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Configuration Option
+    key: option
+  - title: Description
+    key: description
+rows:
+  - option: Compression by ratio
+    description: |
+      Compress the prompt to a percentage of its original length (for example, reduce to 80%). This allows for consistent shrinkage regardless of the initial size.
+  - option: Compression by token count
+    description: |
+      Compress the prompt to a specific token target (for example, 150 tokens). Useful when working close to LLM context window limits.
+  - option: Conditional rules
+    description: |
+      Apply different compression strategies based on prompt length. For example, compress prompts under 100 tokens using a 0.8 ratio, and compress longer prompts to a fixed token count.
+  - option: Selective compression with tags
+    description: |
+      Wrap sections of the prompt in `<LLMLINGUA>...</LLMLINGUA>` to target only specific parts for compression, preserving untagged content as-is.
+{% endtable %}
+<!-- vale on -->
 
 ## Forward proxy support
 
