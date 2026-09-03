@@ -142,7 +142,7 @@ ai_gateway_agents:
     enabled: true
     policies: [ !ref otel-a2a#name ]
     config:
-      url: http://host.docker.internal:10000
+      url: http://a2a-kongair-agent:10000
       route:
         paths:
           - /a2a
