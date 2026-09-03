@@ -517,7 +517,9 @@ async function customCommand(validationName, config, runtimeConfig, container) {
       log(
         `Retry attempt ${
           attempt + 1
-        } - command "${config.command}" did not meet expectations, retrying in ${backoffDelay}ms...`,
+        } - command "${config.command}" did not meet expectations (exit code: ${
+          result.exitCode
+        }, output: ${result.output || "(empty)"}), retrying in ${backoffDelay}ms...`,
       );
       await sleep(backoffDelay);
     }
@@ -526,6 +528,8 @@ async function customCommand(validationName, config, runtimeConfig, container) {
   if (returnCode !== result.exitCode) {
     logAndError(validationName, "Failed to execute command", [
       `Expected: command to have return code ${returnCode}, got: ${result.exitCode}`,
+      `Command: ${config.command}`,
+      `Output: ${result.output || "(empty)"}`,
     ]);
   } else if (
     config.expected.message &&
@@ -592,7 +596,11 @@ async function vaultSecret(validationName, config, runtimeConfig, container) {
     logAndError(
       validationName,
       "Failed to retrieve the secret from the vault",
-      [`Expected: command to have return code 0, got: ${result.exitCode}`],
+      [
+        `Expected: command to have return code 0, got: ${result.exitCode}`,
+        `Command: ${command}`,
+        `Output: ${result.output || "(empty)"}`,
+      ],
     );
   } else if (
     expectedValue &&
