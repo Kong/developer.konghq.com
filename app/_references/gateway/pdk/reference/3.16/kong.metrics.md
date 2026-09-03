@@ -9,59 +9,55 @@ title: kong.metrics
 source_url: https://github.com/Kong/kong/tree/master/kong/pdk
 ---
 
-Metrics module
+Allows plugins to define and record custom counter, gauge, and histogram
+metrics, in addition to Kong's built-in metrics.  (Cannot be used in Pre/Post-Function plugins.)
 
- Allows plugins to define and record custom counter, gauge, and histogram
- metrics, in addition to Kong's built-in metrics.  (Cannot be used in Pre/Post-Function plugins.)
+Kong exports custom metrics automatically, together with its built-in metrics,
+through the OpenTelemetry plugin when a metric exporter is configured.
 
- Kong exports custom metrics automatically, together with its built-in metrics,
- through the OpenTelemetry plugin when a metric exporter is configured.
+## Getting started
 
- ## Getting started
+Register each metric once (e.g. as a plugin-module-level local variable,
+or in your plugin's `init_worker` handler), and keep the returned handle around to
+record values against it later, typically from `log` or `access`:
 
- Register each metric once (e.g. as a plugin-module-level local variable,
- or in your plugin's `init_worker` handler), and keep the returned handle around to
- record values against it later, typically from `log` or `access`:
+```lua
+-- once, e.g. at the top of your handler module
+local custom_requests = kong.metrics.counter("my_plugin.request.count", {
+  description = "Number of requests processed by my_plugin",
+  unit = "{request}",
+})
 
- ```lua
- -- once, e.g. at the top of your handler module
- local custom_requests = kong.metrics.counter("my_plugin.request.count", {
-   description = "Number of requests processed by my_plugin",
-   unit = "{request}",
- })
+-- later, on every request
+function MyPluginHandler:log(conf)
+  custom_requests:add(1, {
+    ["my_plugin.service"] = conf.service,
+    status = "success",
+  })
+end
+```
 
- -- later, on every request
- function MyPluginHandler:log(conf)
-   custom_requests:add(1, {
-     ["my_plugin.service"] = conf.service,
-     status = "success",
-   })
- end
- ```
+Use lowercase letters and a dot (`.`) to separate words in the metric name.
+Follow the OpenTelemetry naming conventions:
+https://opentelemetry.io/docs/specs/semconv/general/naming/
 
- Use lowercase letters and a dot (`.`) to separate words in the metric name.
- Follow the OpenTelemetry naming conventions:
- https://opentelemetry.io/docs/specs/semconv/general/naming/
+You must not register a new metric with a name that is already registered.
 
- You must not register a new metric with a name that is already registered.
+## Attributes
 
- ## Attributes
+Each record call takes its own attributes as its second argument: a table of
+attribute name-value pairs. Two call sites of the same metric can therefore
+report different attributes:
 
- Each record call takes its own attributes as its second argument: a table of
- attribute name-value pairs. Two call sites of the same metric can therefore
- report different attributes:
+```lua
+custom_requests:add(1, { status = "success" })
+custom_requests:add(1, { consumer = consumer.id })
+```
 
- ```lua
- custom_requests:add(1, { status = "success" })
- custom_requests:add(1, { consumer = consumer.id })
- ```
-
- An attribute name must be a string that matches `^[a-z_][a-z0-9_.]*$`.
- An attribute value must be a string or a number. A string must not contain
- `,`, `{`, or `}`. A number must not be NaN.
- Kong rejects an invalid call: it logs an error and skips the call.
-
-
+An attribute name must be a string that matches `^[a-z_][a-z0-9_.]*$`.
+An attribute value must be a string or a number. A string must not contain
+`,`, `{`, or `}`. A number must not be NaN.
+Kong rejects an invalid call: it logs an error and skips the call.
 
 
 ## kong.metrics.counter(name, opts)
