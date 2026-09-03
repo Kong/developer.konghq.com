@@ -68,35 +68,136 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-## Configure log levels
+## Configure log levels dynamically
 
-You can change log levels dynamically, without restarting {{site.base_gateway}}, using the Admin API. Alternatively, you can configure log levels using the `log_level` parameter in the [`kong.conf` file](/gateway/configuration/), but this requires you to [restart {{site.base_gateway}}](/how-to/restart-kong-gateway-container/).
+You can change log levels dynamically, without restarting {{site.base_gateway}}, using the Admin API or the {{site.konnect_short_name}} API.
+A dynamic log level change is never persisted to `kong.conf`.
+If a node restarts while an override is active, it reverts to the log level set in `kong.conf`, and the `ttl` doesn't carry over.
+
+Alternatively, you can configure log levels using the `log_level` parameter in the [`kong.conf` file](/gateway/configuration/), which will persist. However, this requires you to [restart {{site.base_gateway}}](/how-to/restart-kong-gateway-container/).
+
+### Dynamic log levels for control planes and traditional clusters
+
+Use the following settings and endpoints for log levels in traditional mode and hybrid mode control planes:
+
+{% navtabs "control plane log level" %}
+{% navtab "Self-managed" %}
 
 <!--vale off-->
 {% table %}
 columns:
   - title: Use case
     key: usecase
-  - title: How to configure
+  - title: Setting or endpoint
     key: config
 rows:
-  - usecase: "View current log level<sup>1</sup>"
-    config: "[`/debug/node/log-level`](/api/gateway/admin-ee/#/operations/get-debug-node-log-level)"
-  - usecase: "Modify the log level for an individual {{site.base_gateway}} node"
-    config: "[`/debug/node/log-level/{logLevel}`](/api/gateway/admin-ee/#/operations/get-debug-node-log-level-log_level)"
-  - usecase: "Change the log level of the {{site.base_gateway}} cluster"
-    config: "[`/debug/cluster/log-level/{loglevel}`](/api/gateway/admin-ee/#/operations/update-debug-cluster-log-level)"
-  - usecase: "Keep the log level of new nodes added to the cluster in sync with other nodes in the cluster"
+  - usecase: "View current log level"
+    config: |
+      [`GET /debug/node/log-level`](/api/gateway/admin-ee/#/operations/get-debug-node-log-level)
+  - usecase: "Modify the log level for an individual {{site.base_gateway}} node."
+    config: "[`POST /debug/node/log-level/{logLevel}`](/api/gateway/admin-ee/#/operations/get-debug-node-log-level-log_level)"
+  - usecase: "Change the log level of the {{site.base_gateway}} cluster."
+    config: "[`/POST debug/cluster/log-level/{loglevel}`](/api/gateway/admin-ee/#/operations/update-debug-cluster-log-level)"
+  - usecase: "Keep the log level of new nodes added to the cluster in sync with other nodes in the cluster."
     config: |
       Change the [`log_level`](/gateway/configuration/#log-level) entry in `kong.conf` to `KONG_LOG_LEVEL`, and start every new node with the `KONG_LOG_LEVEL` env variable set.
-  - usecase: "Change the log level of all Control Plane {{site.base_gateway}} nodes"
-    config: "[`/debug/cluster/control-planes-nodes/log-level/{loglevel}`](/api/gateway/admin-ee/#/operations/create-debug-cluster-control-planes-nodes-log-level)"
+  - usecase: "Change the log level of all control plane {{site.base_gateway}} nodes."
+    config: "[`POST /debug/cluster/control-planes-nodes/log-level/{loglevel}`](/api/gateway/admin-ee/#/operations/create-debug-cluster-control-planes-nodes-log-level)"
 {% endtable %}
 <!--vale on-->
 
-{:.info}
-> <sup>1</sup>: You can't change the log level of the Data Plane or DB-less nodes.
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}}" %}
 
+In {{site.konnect_short_name}}, you can only view the control plane log level. You can't adjust it dynamically.
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Use case
+    key: usecase
+  - title: Setting or endpoint
+    key: config
+rows:
+  - usecase: |
+      View current log level {% new_in 3.16 %}
+    config: |
+      `GET /control-planes/{controlPlaneId}/nodes`: View the `log_level` field in the response.
+{% endtable %}
+<!--vale on-->
+
+{% endnavtab %}
+{% endnavtabs %}
+
+### Dynamic log levels for data plane nodes {% new_in 3.16 %} 
+
+In hybrid mode, you can temporarily change the log level of data plane nodes from the control plane.
+This is a runtime-only, on-demand override for debugging. It doesn't persist, and it isn't a substitute for permanent configuration in `kong.conf`.
+
+{:.info}
+> **Note**: Dynamic log levels are supported for data plane nodes running in hybrid mode. DB-less deployments are not supported.
+
+{% navtabs "dynamic log level endpoints" %}
+{% navtab "Self-managed" %}
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Use case
+    key: usecase
+  - title: Setting or endpoint
+    key: config
+rows:
+  - usecase: "Modify the log level for one or more data plane nodes."
+    config: "`POST /debug/cluster/data-planes/log-level-operations`"
+  - usecase: "List dynamic log level operations."
+    config: "`GET /debug/cluster/data-planes/log-level-operations`"
+  - usecase: "Get the status of a dynamic log level operation."
+    config: "`GET /debug/cluster/data-planes/log-level-operations/{id}`"
+  - usecase: "List the per-node results of a dynamic log level operation."
+    config: "`GET /debug/cluster/data-planes/log-level-operations/{id}/results`"
+  - usecase: "Get the result for one data plane node in an operation."
+    config: "`GET /debug/cluster/data-planes/log-level-operations/{id}/results/{node_id}`"
+{% endtable %}
+<!--vale on-->
+
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}}" %}
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Use case
+    key: usecase
+  - title: Setting or endpoint
+    key: config
+rows:
+  - usecase: "Modify the log level for one or more data plane nodes."
+    config: "`POST /control-planes/{controlPlaneId}/nodes/log-level-operations`"
+  - usecase: "List dynamic log level operations."
+    config: "`GET /control-planes/{controlPlaneId}/nodes/log-level-operations`"
+  - usecase: "Get the status of a dynamic log level operation."
+    config: "`GET /control-planes/{controlPlaneId}/nodes/log-level-operations/{operationId}`"
+  - usecase: "List the per-node results of a dynamic log level operation."
+    config: "`GET /control-planes/{controlPlaneId}/nodes/log-level-operations/{operationId}/results`"
+  - usecase: "Get the result for one data plane node in an operation."
+    config: "`GET /control-planes/{controlPlaneId}/nodes/log-level-operations/{operationId}/results/{nodeId}`"
+{% endtable %}
+<!--vale on-->
+
+{% endnavtab %}
+{% endnavtabs %}
+
+When you create an operation, you specify a `log_level`, a target (`all` data plane nodes, or a list of `node_ids`), and an optional `ttl` in seconds. 
+The data plane applies the new log level and automatically reverts to the previous level when the `ttl` expires.
+
+{:.info}
+> **Note**: The `ttl` must be an integer between 10 and 3600 seconds. If you don't set one, it defaults to 600 seconds (10 minutes). The 10 second minimum exists because data planes poll the control plane for updates every 5 seconds, so the `ttl` needs to cover at least two poll intervals for the node to reliably apply the change before it expires.
+
+Data plane nodes on older {{site.base_gateway}} versions that don't support dynamic log levels report a status of `unsupported` instead of `applied`, both in `GET` and `POST` responses.
+
+Reading the current log level is available to any Control Plane Viewer. You can also use the [Debugger](/observability/debugger/#reading-traces-and-logs) to do this directly from the {{site.konnect_short_name}} UI.
+Creating or changing a dynamic log level operation is a privileged action and requires Control Plane Admin permissions or higher.
 
 ## Find specific client requests in logs
 
