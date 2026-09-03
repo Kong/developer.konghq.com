@@ -39,9 +39,9 @@ Reads `<kong-ee>/changelog/3.10.0.2/3.10.0.2.md`, writes YAML files to `./tmp/ga
 ### 2. Generate temp files for specific versions
 
 ```bash
-node run.js --path='./tmp/gateway' --version='3.10.0.2'
+node run.js --version='3.10.0.2'
 # or explicitly:
-node run.js --path='./tmp/gateway' --version='3.10.0.2' --product=gateway
+node run.js --version='3.10.0.2' --product=gateway
 ```
 
 Creates `./tmp/gateway/3.10.0.2.json`. Omit `--version` to process all versions found under `./tmp/gateway/changelog/`.
@@ -72,7 +72,7 @@ Reads `./tmp/gateway/*`, `./missing_changelogs/*`, and `./missing_entries/`, wri
 
 1. Make sure your local `kong-ee` is up to date and on the right branch.
 1. `node md-to-yml.js --path='../../../kong-ee' --version='<version>'`
-1. `node run.js --path='./tmp/gateway' --version='<version>'`
+1. `node run.js --version='<version>'`
 1. Update `app/_data/products/gateway.yml` with the new version and release date.
 1. `node changelog.js`
 
@@ -90,7 +90,7 @@ Reads `<ai-gateway>/changelog/aigw-1.2.3/aigw-1.2.3.md`, writes YAML files to `.
 ### 2. Generate temp files for specific versions
 
 ```bash
-node run.js --path='./tmp/ai-gateway' --version='1.2.3' --product=ai-gateway
+node run.js --version='1.2.3' --product=ai-gateway
 ```
 
 Creates `./tmp/ai-gateway/1.2.3.json`. Omit `--version` to process all versions found under `./tmp/ai-gateway/changelog/`.
@@ -116,6 +116,6 @@ Reads `./tmp/ai-gateway/*`, writes to `app/_changelogs/ai-gateway.json`.
 
 1. Make sure your local `ai-gateway` repo is up to date and on the right branch.
 1. `node md-to-yml.js --path='../../../ai-gateway' --version='<version>' --product=ai-gateway`
-1. `node run.js --path='./tmp/ai-gateway' --version='<version>' --product=ai-gateway`
+1. `node run.js --version='<version>' --product=ai-gateway`
 1. Update `app/_data/products/ai-gateway.yml` with the new version and release date.
 1. `node changelog.js --product=ai-gateway`
