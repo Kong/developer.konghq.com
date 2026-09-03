@@ -218,6 +218,42 @@ If Headroom returns a failure response (such as a `400` invalid request, `503` s
 
 The following diagram illustrates how the AI Prompt Compressor Policy processes and compresses incoming prompts using Headroom:
 
+<!-- vale off -->
+{% mermaid %}
+sequenceDiagram
+    actor User
+    participant AIGateway as {{site.ai_gateway}}
+    participant KongAICompressor as AI Prompt Compressor Policy
+    participant Headroom
+    participant LLM as Large Language Model
+
+    User->>AIGateway: Sends user or agent request
+    AIGateway->>KongAICompressor: Forwards request
+    activate KongAICompressor
+    KongAICompressor->>KongAICompressor: Build OpenAI-format messages array per block
+
+    KongAICompressor->>Headroom: POST /v1/compress
+    activate Headroom
+
+    alt Compression succeeds
+        Headroom-->>KongAICompressor: Return 200 with compressed messages and metadata
+        KongAICompressor->>KongAICompressor: Record ccr_hashes for later retrieval
+    else Compression fails (400, 503, compression_timeout, compression_error)
+        Headroom-->>KongAICompressor: Return failure response
+        KongAICompressor->>KongAICompressor: Fail open, use original uncompressed message
+    end
+    deactivate Headroom
+
+    KongAICompressor->>LLM: Send message to upstream provider
+    deactivate KongAICompressor
+    activate LLM
+    LLM-->>User: Return response
+    deactivate LLM
+{% endmermaid %}
+<!-- vale on -->
+
+The AI Prompt Compressor Policy fails open when Headroom is unavailable or returns an error, so a compression backend outage doesn't block requests to the upstream provider.
+
 ## Prompt compression options
 
 The AI Prompt Compressor Policy offers flexible compression controls to fit different use cases. You can choose between full-prompt compression, conditional strategies, or selectively compressing only parts of the prompt:
