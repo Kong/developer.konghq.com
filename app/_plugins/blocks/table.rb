@@ -2,6 +2,7 @@
 
 require 'yaml'
 require_relative '../monkey_patch'
+require_relative '../component_templates'
 
 module Jekyll
   class Table < Liquid::Block # rubocop:disable Style/Documentation
@@ -27,7 +28,7 @@ module Jekyll
         context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
         context['include'] =
           { 'columns' => config['columns'], 'rows' => config['rows'], 'vertical_align' => config['vertical_align'] }
-        Liquid::Template.parse(template, { line_numbers: true }).render(context)
+        ComponentTemplates.fetch('table', @page['output_format']).render(context)
       end
     rescue Psych::SyntaxError => e
       message = <<~STRING
@@ -36,16 +37,6 @@ module Jekyll
         #{e.message}
       STRING
       raise ArgumentError, message
-    end
-
-    private
-
-    def template
-      if @page['output_format'] == 'markdown'
-        File.read(File.expand_path('app/_includes/components/table.md'))
-      else
-        File.read(File.expand_path('app/_includes/components/table.html'))
-      end
     end
   end
 end

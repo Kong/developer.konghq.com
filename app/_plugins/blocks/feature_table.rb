@@ -2,6 +2,7 @@
 
 require 'yaml'
 require_relative '../monkey_patch'
+require_relative '../component_templates'
 
 module Jekyll
   class FeatureTable < Liquid::Block
@@ -18,7 +19,7 @@ module Jekyll
         context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
         context['include'] =
           { 'columns' => config['columns'], 'rows' => config['features'], 'item_title' => config['item_title'] }
-        Liquid::Template.parse(template, { line_numbers: true }).render(context)
+        ComponentTemplates.fetch('feature_table', @page['output_format']).render(context)
       end
     rescue Psych::SyntaxError => e
       message = <<~STRING
@@ -27,16 +28,6 @@ module Jekyll
         #{e.message}
       STRING
       raise ArgumentError, message
-    end
-
-    private
-
-    def template
-      if @page['output_format'] == 'markdown'
-        File.read(File.expand_path('app/_includes/components/feature_table.md'))
-      else
-        File.read(File.expand_path('app/_includes/components/feature_table.html'))
-      end
     end
   end
 end

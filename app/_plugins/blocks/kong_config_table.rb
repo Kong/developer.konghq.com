@@ -2,6 +2,7 @@
 
 require 'yaml'
 require_relative '../monkey_patch'
+require_relative '../component_templates'
 
 module Jekyll
   class KongConfigTable < Liquid::Block # rubocop:disable Style/Documentation
@@ -22,7 +23,7 @@ module Jekyll
       context.stack do
         context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
         context['config'] = drop
-        Liquid::Template.parse(template, { line_numbers: true }).render(context)
+        ComponentTemplates.fetch('kong_config_table', @page['output_format']).render(context)
       end
     rescue Psych::SyntaxError => e
       message = <<~STRING
@@ -58,14 +59,6 @@ module Jekyll
 
     def releases(site)
       @releases ||= site.data.dig('products', product, 'releases')
-    end
-
-    def template
-      if @page['output_format'] == 'markdown'
-        File.read(File.expand_path('app/_includes/components/kong_config_table.md'))
-      else
-        File.read(File.expand_path('app/_includes/components/kong_config_table.html'))
-      end
     end
   end
 end

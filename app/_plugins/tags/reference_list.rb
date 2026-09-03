@@ -2,6 +2,7 @@
 
 require_relative '../monkey_patch'
 require_relative '../lib/build_filter'
+require_relative '../component_templates'
 
 module Jekyll
   class RenderReferenceListt < Liquid::Tag # rubocop:disable Style/Documentation
@@ -32,7 +33,7 @@ module Jekyll
         context['references'] = references
         context['view_more_url'] = view_more_url(config)
         context['config'] = config
-        Liquid::Template.parse(template, { line_numbers: true }).render(context)
+        ComponentTemplates.fetch('reference_list', @page['output_format']).render(context)
       end
     end
 
@@ -54,14 +55,6 @@ module Jekyll
           result << p if match
           break result if result.size == quantity
         end
-      end
-    end
-
-    def template
-      if @page['output_format'] == 'markdown'
-        File.read(File.expand_path('app/_includes/components/reference_list.md'))
-      else
-        File.read(File.expand_path('app/_includes/components/reference_list.html'))
       end
     end
 

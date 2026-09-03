@@ -122,7 +122,7 @@
                       </div>
                       <div class="flex border-t border-primary w-full"></div>
                       <div>
-                        <a href="https://konghq.com/company/why-kong" class="flex w-full text-primary text-base items-center lg:text-sm">
+                        <a href="https://konghq.com/company/why-kong" class="flex w-full text-primary text-base items-center lg:text-sm" target="_blank" rel="noopener nofollow noreferrer">
                           <span class="h-5 w-5">{% include_svg '/assets/icons/document.svg' height="100%" width="100%" %}</span>
                           <span class="pl-3">Why Kong?</span>
                         </a>
@@ -267,7 +267,7 @@
               <ul class="navbar-item__menu gap-6" role="menu">
                 {% for item in site.data.top_navigation.support %}
                   <li class="flex">
-                    <a class="flex gap-2 text-primary text-base lg:text-sm w-full no-icon items-center" href="{{item.url}}">
+                    <a class="flex gap-2 text-primary text-base lg:text-sm w-full no-icon items-center" href="{{item.url}}"{% if item.url contains 'https://' %} target="_blank" rel="noopener nofollow noreferrer"{% endif %}>
                       <span class="navbar-item__icon">{% include_svg item.icon width="20" height="20"  %}</span>
                       {{item.text}}
                     </a>
@@ -292,8 +292,8 @@
           </div>
 
           <div id="header-cta-buttons" class="flex flex-col lg:flex-row p-6 lg:p-0 gap-3 items-center w-full lg:w-fit border-t border-primary lg:border-0 xl:max-2xl:group-[.ai-assistant-open]/body-tag:hidden">
-            <a class="button button--primary no-icon w-full lg:w-fit justify-center !px-3 !py-[9px] !text-xs" href="https://konghq.com/contact-sales?ktm_medium=referral&ktm_source=docs&ktm_content=top-nav">Get a Demo</a>
-            <a class="button button--secondary no-icon w-full lg:w-fit justify-center !px-3 !py-[9px] !text-xs" href="https://konghq.com/products/kong-konnect/register?ktm_medium=referral&ktm_source=docs&ktm_content=top-nav">Start Free Trial</a>
+            <a class="button button--primary no-icon w-full lg:w-fit justify-center !px-3 !py-[9px] !text-xs" href="https://konghq.com/contact-sales?ktm_medium=referral&ktm_source=docs&ktm_content=top-nav" target="_blank" rel="noopener nofollow noreferrer">Get a Demo</a>
+            <a class="button button--secondary no-icon w-full lg:w-fit justify-center !px-3 !py-[9px] !text-xs" href="https://konghq.com/products/kong-konnect/register?ktm_medium=referral&ktm_source=docs&ktm_content=top-nav" target="_blank" rel="noopener nofollow noreferrer">Start Free Trial</a>
           </div>
         </div>
 
