@@ -186,6 +186,7 @@ data:
   name: my-ai-prompt-compressor
   type: ai-prompt-compressor
   config:
+    lossy_backend: external
     headroom_endpoint: http://headroom-service:8787
     headroom_auth_token: !env HEADROOM_API_KEY
     headroom_target_ratio: 0.5
