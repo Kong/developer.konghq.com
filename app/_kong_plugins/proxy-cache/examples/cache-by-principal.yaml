@@ -1,5 +1,5 @@
 description: 'Cache responses to GET requests using the authenticated Principal to compose the cache key.'
-
+extended_description: 'Cache responses to GET requests using the authenticated [Principal](/identity/principals/) to compose the cache key.'
 title: 'Cache by Principal'
 
 weight: 900
