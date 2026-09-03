@@ -233,6 +233,34 @@ end
 
 
 
+## kong.client.get_principal()
+
+Returns the Kong Identity principal of the currently authenticated
+ request.  If not set yet, it returns `nil`.
+
+**Phases**
+
+* access, header_filter, response, body_filter, log
+
+**Returns**
+
+* `table`:  The authenticated principal.
+
+
+**Usage**
+
+``` lua
+local principal = kong.client.get_principal()
+if principal then
+  principal_id = principal.id
+else
+  -- request not authenticated yet, or authenticated
+  -- without a Kong Identity principal
+end
+```
+
+
+
 ## kong.client.authenticate(consumer, credential)
 
 Sets the authenticated consumer and/or credential as well
