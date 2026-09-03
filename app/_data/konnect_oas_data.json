@@ -357,7 +357,7 @@
     "id": "be747e64-83cd-4b4c-b0bf-8ddb0a89528e",
     "title": "Konnect AI Catalog",
     "latestVersion": {
-      "name": "1.10.2",
+      "name": "v1",
       "id": "f79cb260-fb92-456a-b927-c8b6d8eee834"
     },
     "description": "Konnect AI Catalog is the API for creating and managing AI interfaces in the Konnect Catalog.",
@@ -367,8 +367,8 @@
       {
         "id": "f79cb260-fb92-456a-b927-c8b6d8eee834",
         "created_at": "2026-08-31T20:50:42.170Z",
-        "updated_at": "2026-08-31T20:52:50.044Z",
-        "name": "1.10.2",
+        "updated_at": "2026-09-03T19:59:47.432Z",
+        "name": "v1",
         "deprecated": false,
         "registration_configs": []
       }
