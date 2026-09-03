@@ -1,12 +1,14 @@
 openapi: 3.0.3
 info:
   title: Konnect AI Catalog
-  version: 1.10.2
+  version: 1.10.3
   description: |
     Konnect AI Catalog is the API for creating and managing AI interfaces in the Konnect Catalog.
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
+  x-oas-source: kong/platform-api@c8fcb8807718d490f019a58c92a4ca208e56c3e7
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c8fcb8807718d490f019a58c92a4ca208e56c3e7'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -524,6 +526,333 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
         - Catalog AI Model Specs
+  /mcp-servers:
+    get:
+      operationId: list-mcps
+      summary: List MCPs
+      description: |
+        Returns a paginated list of MCPs for the current organization. Each row includes a `managed_by` object derived from whether the MCP is linked to an AI Gateway MCP.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - name: filter
+          in: query
+          description: Filter MCPs returned in the response.
+          required: false
+          schema:
+            $ref: '#/components/schemas/CatalogMCPFilterParameters'
+          style: deepObject
+        - $ref: '#/components/parameters/CatalogMCPSort'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListCatalogMCPResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Catalog MCPs
+    post:
+      operationId: create-mcp
+      summary: Create MCP
+      description: |
+        Creates a bare MCP.
+      requestBody:
+        $ref: '#/components/requestBodies/CreateCatalogMCPRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/CatalogMCPResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Catalog MCPs
+  '/mcp-servers/{mcpId}':
+    parameters:
+      - $ref: '#/components/parameters/CatalogMCPIdPath'
+    get:
+      operationId: get-mcp
+      summary: Get MCP
+      description: Returns a single MCP.
+      responses:
+        '200':
+          $ref: '#/components/responses/CatalogMCPResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog MCPs
+    patch:
+      operationId: update-mcp
+      summary: Update MCP
+      description: |
+        Partially updates an MCP.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateCatalogMCPRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/CatalogMCPResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Catalog MCPs
+    put:
+      operationId: upsert-mcp
+      summary: Replace MCP
+      description: |
+        Replaces an MCP.
+      requestBody:
+        $ref: '#/components/requestBodies/ReplaceCatalogMCPRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/CatalogMCPResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Catalog MCPs
+    delete:
+      operationId: delete-mcp
+      summary: Delete MCP
+      description: |
+        Deletes an MCP.
+      responses:
+        '204':
+          description: Successfully deleted the MCP
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog MCPs
+  '/mcp-servers/{mcpId}/versions':
+    parameters:
+      - $ref: '#/components/parameters/CatalogMCPIdPath'
+    get:
+      operationId: list-mcp-versions
+      summary: List MCP versions
+      description: |
+        Returns the MCP's versions.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListCatalogMCPVersionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog MCP Versions
+    post:
+      operationId: create-mcp-version
+      summary: Create MCP version
+      description: |
+        Creates the `latest` version. Currently, a MCP only has a single version. Returns `409` if a version already exists.
+      requestBody:
+        $ref: '#/components/requestBodies/CreateCatalogMCPVersionRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/CatalogMCPVersionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Catalog MCP Versions
+  '/mcp-servers/{mcpId}/versions/latest':
+    parameters:
+      - $ref: '#/components/parameters/CatalogMCPIdPath'
+    get:
+      operationId: get-latest-mcp-version
+      summary: Get latest MCP version
+      description: |
+        Returns the MCP's `latest` version.
+      responses:
+        '200':
+          $ref: '#/components/responses/CatalogMCPVersionResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog MCP Versions
+    patch:
+      operationId: update-latest-mcp-version
+      summary: Update latest MCP version
+      description: |
+        Partially updates the `latest` version.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateCatalogMCPVersionRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/CatalogMCPVersionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog MCP Versions
+    put:
+      operationId: upsert-latest-mcp-version
+      summary: Replace latest MCP version
+      description: |
+        Replaces the `latest` version.
+      requestBody:
+        $ref: '#/components/requestBodies/ReplaceCatalogMCPVersionRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/CatalogMCPVersionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog MCP Versions
+    delete:
+      operationId: delete-latest-mcp-version
+      summary: Delete latest MCP version
+      description: |
+        Deletes the MCP's `latest` version. Returns `404` if no version exists yet.
+      responses:
+        '204':
+          description: Successfully deleted the version
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog MCP Versions
+  '/mcp-servers/{mcpId}/implementations':
+    parameters:
+      - $ref: '#/components/parameters/CatalogMCPIdPath'
+    get:
+      operationId: list-mcp-implementations
+      summary: List MCP implementations
+      description: |
+        Returns a paginated list of the MCP's implementation records.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListCatalogMCPImplementationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog MCP Implementations
+    post:
+      operationId: create-mcp-implementation
+      summary: Create MCP implementation
+      description: |
+        Creates an implementation record for the MCP. Returns `409` if the MCP has an existing implementation.
+      requestBody:
+        $ref: '#/components/requestBodies/CreateCatalogMCPImplementationRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/CatalogMCPImplementationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Catalog MCP Implementations
+  '/mcp-servers/{mcpId}/implementations/{implementationId}':
+    parameters:
+      - $ref: '#/components/parameters/CatalogMCPIdPath'
+      - $ref: '#/components/parameters/CatalogMCPImplementationIdPath'
+    get:
+      operationId: get-mcp-implementation
+      summary: Get MCP implementation
+      description: Returns a single MCP implementation record.
+      responses:
+        '200':
+          $ref: '#/components/responses/CatalogMCPImplementationResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog MCP Implementations
+    delete:
+      operationId: delete-mcp-implementation
+      summary: Delete MCP implementation
+      description: Removes a single MCP implementation (link) record by identifier.
+      responses:
+        '204':
+          description: Successfully deleted the MCP implementation
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog MCP Implementations
 components:
   parameters:
     AiModelIdPath:
@@ -548,6 +877,38 @@ components:
       name: sort
       description: |
         Sort AI Models by specified fields. Supported sort attributes are:
+        - `display_name`
+        - `name`
+        - `created_at`
+        - `updated_at`
+
+        Default sort is `display_name` in ascending order.
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/SortQuery'
+    CatalogMCPIdPath:
+      name: mcpId
+      in: path
+      required: true
+      description: The unique identifier of the MCP.
+      schema:
+        type: string
+        format: uuid
+        example: a0119846-f179-4d9f-a168-d701facce7fb
+    CatalogMCPImplementationIdPath:
+      name: implementationId
+      in: path
+      required: true
+      description: The unique identifier of the MCP implementation.
+      schema:
+        type: string
+        format: uuid
+        example: 7703e2f2-f9c0-47e3-9146-5fa50486b871
+    CatalogMCPSort:
+      name: sort
+      description: |
+        Sort MCPs by specified fields. Supported sort attributes are:
         - `display_name`
         - `name`
         - `created_at`
@@ -992,6 +1353,482 @@ components:
         updated_at:
           $ref: '#/components/schemas/DateTimeFieldFilter'
       title: AiModelFilterParameters
+    CreateCatalogMCP:
+      description: Request body for creating an MCP.
+      type: object
+      properties:
+        name:
+          description: The machine name of the MCP that uniquely identifies it within the catalog.
+          type: string
+          example: my-mcp
+          maxLength: 120
+          minLength: 1
+          pattern: '^[0-9a-z.-]+$'
+        display_name:
+          description: The display name of the MCP.
+          type: string
+          example: My MCP
+          maxLength: 120
+          minLength: 1
+        description:
+          description: Optionally provide a description of the MCP.
+          type: string
+          example: Customer support triage model
+          maxLength: 2048
+          nullable: true
+        labels:
+          $ref: '#/components/schemas/Labels'
+      additionalProperties: false
+      required:
+        - name
+        - display_name
+    UpdateCatalogMCP:
+      description: Request body for partially updating an MCP (merge-patch).
+      type: object
+      properties:
+        name:
+          description: The machine name of the MCP that uniquely identifies it within the catalog.
+          type: string
+          example: my-mcp
+          maxLength: 120
+          minLength: 1
+          pattern: '^[0-9a-z.-]+$'
+        display_name:
+          description: The display name of the MCP.
+          type: string
+          example: My MCP
+          maxLength: 120
+          minLength: 1
+        description:
+          description: Optionally provide a description of the MCP.
+          type: string
+          example: Description of MCP.
+          maxLength: 2048
+          nullable: true
+        labels:
+          $ref: '#/components/schemas/LabelsUpdate'
+      additionalProperties: false
+    ReplaceCatalogMCP:
+      allOf:
+        - $ref: '#/components/schemas/CreateCatalogMCP'
+    CatalogMCP:
+      description: An MCP catalog resource.
+      type: object
+      properties:
+        id:
+          description: The unique identifier of the MCP.
+          type: string
+          format: uuid
+          example: 7703e2f2-f9c0-47e3-9146-5fa50486b871
+        name:
+          description: The machine name of the MCP that uniquely identifies it within the catalog.
+          type: string
+          example: my-mcp
+          maxLength: 120
+          minLength: 1
+          pattern: '^[0-9a-z.-]+$'
+        display_name:
+          description: The display name of the MCP.
+          type: string
+          example: My MCP
+          maxLength: 120
+          minLength: 1
+        description:
+          description: A description of the MCP.
+          type: string
+          example: Description of MCP.
+          maxLength: 2048
+          nullable: true
+        labels:
+          $ref: '#/components/schemas/Labels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - display_name
+        - description
+        - labels
+        - managed_by
+        - created_at
+        - updated_at
+    CatalogMCPToolInputSchema:
+      description: Input schema for an MCP tool.
+      type: object
+      additionalProperties: true
+    CatalogMCPToolOutputSchema:
+      description: Output schema for an MCP tool.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/CatalogMCPToolInputSchema'
+        - description: Output schema for an MCP tool.
+    CatalogMCPToolAnnotations:
+      type: object
+      properties:
+        title:
+          description: Human-readable name of the tool.
+          type: string
+        destructive_hint:
+          description: Indicates if the tool performs destructive actions.
+          type: boolean
+        idempotent_hint:
+          description: Indicates if the tool is idempotent.
+          type: boolean
+        open_world_hint:
+          description: Indicates if the tool interacts with external entities.
+          type: boolean
+        read_only_hint:
+          description: Indicates if the tool is read-only.
+          type: boolean
+      additionalProperties: false
+    CatalogMCPAnnotations:
+      type: object
+      properties:
+        audience:
+          description: Describes the intended customer of the annotated object/data.
+          type: array
+          items:
+            type: string
+            enum:
+              - user
+              - assistant
+        priority:
+          description: |
+            Describes how important the data is for operating the MCP.
+
+            A value of 1 means "most important," and indicates the data is effectively required, while 0 means
+            "least important," and indicates the data is entirely optional.
+          type: number
+        last_modified:
+          description: 'The moment the resource was last modified, in ISO-8601 format.'
+          type: string
+          format: date-time
+      additionalProperties: false
+    CatalogMCPPromptArgument:
+      type: object
+      properties:
+        name:
+          description: Machine/programmatic name of the prompt argument.
+          type: string
+        title:
+          description: Human-readable name of the prompt argument.
+          type: string
+        description:
+          description: Detailed description of the prompt argument.
+          type: string
+        required:
+          description: Indicates if the prompt argument is required.
+          type: boolean
+      additionalProperties: false
+      required:
+        - name
+    CatalogMCPTool:
+      description: MCP tool definition.
+      type: object
+      properties:
+        name:
+          description: Machine/programmatic name of the tool.
+          type: string
+          example: my-tool
+        title:
+          description: Human-readable name of the tool.
+          type: string
+        description:
+          description: Detailed description of the tool's functionality.
+          type: string
+        input_schema:
+          $ref: '#/components/schemas/CatalogMCPToolInputSchema'
+        output_schema:
+          $ref: '#/components/schemas/CatalogMCPToolOutputSchema'
+        annotations:
+          $ref: '#/components/schemas/CatalogMCPToolAnnotations'
+      additionalProperties: false
+      required:
+        - name
+        - input_schema
+    CatalogMCPResource:
+      description: MCP Resource definition.
+      type: object
+      properties:
+        name:
+          description: Machine/programmatic name of the resource.
+          type: string
+          example: my-resource
+        title:
+          description: Human-readable name of the resource.
+          type: string
+        uri:
+          description: The URI of the resource.
+          type: string
+        description:
+          description: Detailed description of what the resource represents.
+          type: string
+        mime_type:
+          description: 'The MIME type of the resource, if known.'
+          type: string
+        annotations:
+          $ref: '#/components/schemas/CatalogMCPAnnotations'
+        size:
+          description: 'The size of the raw resource content, in bytes, if known.'
+          type: number
+      additionalProperties: false
+      required:
+        - name
+        - uri
+    CatalogMCPPrompt:
+      description: MCP Prompt definition.
+      type: object
+      properties:
+        name:
+          description: Machine/programmatic name of the prompt.
+          type: string
+        title:
+          description: Human-readable name of the prompt.
+          type: string
+        description:
+          description: Detailed description of the prompt's purpose and usage.
+          type: string
+        arguments:
+          description: List of arguments to use for templating the prompt.
+          type: array
+          items:
+            $ref: '#/components/schemas/CatalogMCPPromptArgument'
+      additionalProperties: false
+      required:
+        - name
+    CatalogMCPVersionVersion:
+      description: User-supplied version label.
+      type: string
+      example: 1.0.0
+      maxLength: 120
+      minLength: 1
+      pattern: .*\S.*
+    CatalogMCPVersion:
+      description: An MCP version resource.
+      type: object
+      properties:
+        id:
+          description: The unique identifier of the version.
+          type: string
+          format: uuid
+          example: 9c4a1b2c-3d4e-5f60-7182-93a4b5c6d7e8
+        version:
+          $ref: '#/components/schemas/CatalogMCPVersionVersion'
+        tools:
+          type: array
+          items:
+            $ref: '#/components/schemas/CatalogMCPTool'
+          nullable: true
+        resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/CatalogMCPResource'
+          nullable: true
+        prompts:
+          type: array
+          items:
+            $ref: '#/components/schemas/CatalogMCPPrompt'
+          nullable: true
+        remotes:
+          type: array
+          items:
+            $ref: '#/components/schemas/MCPRemoteTransport'
+          nullable: true
+        packages:
+          type: array
+          items:
+            $ref: '#/components/schemas/MCPPackage'
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      required:
+        - id
+        - version
+        - tools
+        - resources
+        - prompts
+        - remotes
+        - packages
+        - created_at
+        - updated_at
+    CreateCatalogMCPVersion:
+      description: Schema to create an MCP version.
+      type: object
+      properties:
+        version:
+          $ref: '#/components/schemas/CatalogMCPVersionVersion'
+        tools:
+          type: array
+          items:
+            $ref: '#/components/schemas/CatalogMCPTool'
+          nullable: true
+        resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/CatalogMCPResource'
+          nullable: true
+        prompts:
+          type: array
+          items:
+            $ref: '#/components/schemas/CatalogMCPPrompt'
+          nullable: true
+        remotes:
+          type: array
+          items:
+            $ref: '#/components/schemas/MCPRemoteTransport'
+          nullable: true
+        packages:
+          type: array
+          items:
+            $ref: '#/components/schemas/MCPPackage'
+          nullable: true
+      required:
+        - version
+        - tools
+        - resources
+        - prompts
+        - remotes
+        - packages
+    ReplaceCatalogMCPVersion:
+      allOf:
+        - $ref: '#/components/schemas/CreateCatalogMCPVersion'
+    UpdateCatalogMCPVersion:
+      description: Schema to partially update an MCP version (merge-patch).
+      type: object
+      properties:
+        version:
+          $ref: '#/components/schemas/CatalogMCPVersionVersion'
+        tools:
+          type: array
+          items:
+            $ref: '#/components/schemas/CatalogMCPTool'
+          nullable: true
+        resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/CatalogMCPResource'
+          nullable: true
+        prompts:
+          type: array
+          items:
+            $ref: '#/components/schemas/CatalogMCPPrompt'
+          nullable: true
+        remotes:
+          type: array
+          items:
+            $ref: '#/components/schemas/MCPRemoteTransport'
+          nullable: true
+        packages:
+          type: array
+          items:
+            $ref: '#/components/schemas/MCPPackage'
+          nullable: true
+    BaseCatalogMCPImplementation:
+      description: Base schema for MCP implementations.
+      type: object
+      properties:
+        id:
+          description: The unique identifier of the implementation (link) record.
+          type: string
+          format: uuid
+          example: d2e1f0a9-8b7c-6d5e-4f3a-2b1c0d9e8f7a
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      additionalProperties: false
+      required:
+        - id
+        - created_at
+        - updated_at
+    CatalogMCPGatewayImplementationConfig:
+      description: Configuration for an MCP implementation linked to an AI Gateway MCP Server.
+      type: object
+      properties:
+        gateway_control_plane_id:
+          description: The AI Gateway control plane the linked model belongs to.
+          type: string
+          format: uuid
+          example: 223e4567-e89b-12d3-a456-426614174999
+        gateway_mcp_server_id:
+          description: The identifier of the linked AI Gateway MCP server.
+          type: string
+          example: 79087145-0159-4811-9042-6a9365f234bc
+      additionalProperties: false
+      required:
+        - gateway_control_plane_id
+        - gateway_mcp_server_id
+    CatalogMCPGatewayImplementationBlock:
+      description: |
+        Schema to describe the type and configuration typing for an MCP implementation linked to an AI Gateway MCP
+        Server.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - ai-gateway
+        config:
+          $ref: '#/components/schemas/CatalogMCPGatewayImplementationConfig'
+      additionalProperties: false
+      required:
+        - type
+        - config
+    CatalogMCPImplementation:
+      description: An MCP implementation resource.
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/CatalogMCPGatewayImplementation'
+    CatalogMCPGatewayImplementation:
+      description: An MCP implementation resource linked to an AI Gateway MCP Server.
+      type: object
+      additionalProperties: false
+      allOf:
+        - $ref: '#/components/schemas/BaseCatalogMCPImplementation'
+        - type: object
+          required:
+            - implementation
+          properties:
+            implementation:
+              $ref: '#/components/schemas/CatalogMCPGatewayImplementationBlock'
+    CreateCatalogMCPImplementation:
+      description: Request body for creating an MCP implementation.
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/CreateCatalogMCPGatewayImplementation'
+    CreateCatalogMCPGatewayImplementation:
+      description: Request body for creating an MCP implementation linked to an AI Gateway MCP Server.
+      type: object
+      properties:
+        implementation:
+          $ref: '#/components/schemas/CatalogMCPGatewayImplementationBlock'
+      additionalProperties: false
+      required:
+        - implementation
+    CatalogMCPFilterParameters:
+      description: Filter parameters for the MCP list endpoint.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UuidFieldFilter'
+        name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        display_name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        labels:
+          $ref: '#/components/schemas/LabelsFieldFilter'
+        created_at:
+          $ref: '#/components/schemas/DateTimeFieldFilter'
+        updated_at:
+          $ref: '#/components/schemas/DateTimeFieldFilter'
+      title: CatalogMCPFilterParameters
     UuidFieldFilter:
       description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`'
       type: object
@@ -1544,6 +2381,284 @@ components:
       maxProperties: 50
       nullable: true
       writeOnly: true
+    MCPInput:
+      type: object
+      properties:
+        description:
+          description: A description of the input.
+          type: string
+        is_required:
+          type: boolean
+          default: false
+        format:
+          description: Specifies the input format.
+          type: string
+          default: string
+          enum:
+            - string
+            - number
+            - boolean
+            - filepath
+        value:
+          description: The value for the input.
+          type: string
+        is_secret:
+          description: Indicates whether the input is a secret value.
+          type: boolean
+          default: false
+        default:
+          description: The default value for the input.
+          type: string
+        placeholder:
+          description: A placeholder for the input to be displayed during configuration.
+          type: string
+        choices:
+          description: A list of possible values for the input.
+          type: array
+          items:
+            type: string
+          example: []
+      title: MCPInput
+    MCPInputWithVariables:
+      allOf:
+        - $ref: '#/components/schemas/MCPInput'
+        - type: object
+          properties:
+            variables:
+              description: A map of variable names to their values.
+              type: object
+              additionalProperties:
+                $ref: '#/components/schemas/MCPInput'
+      title: MCPInputWithVariables
+    MCPKeyValueInput:
+      allOf:
+        - $ref: '#/components/schemas/MCPInputWithVariables'
+        - type: object
+          required:
+            - name
+          properties:
+            name:
+              description: Name of the header or environment variable.
+              type: string
+              example: SOME_VARIABLE
+      title: MCPKeyValueInput
+    MCPStreamableHttpTransport:
+      type: object
+      properties:
+        type:
+          description: Transport type
+          type: string
+          example: streamable-http
+          enum:
+            - streamable-http
+        url:
+          description: URL template for the streamable-http transport.
+          type: string
+          example: 'https://api.example.com/mcp'
+          pattern: '^https?://[^\s]+$'
+        headers:
+          description: HTTP headers to include
+          type: array
+          items:
+            $ref: '#/components/schemas/MCPKeyValueInput'
+      example:
+        type: streamable-http
+        url: 'https://api.example.com/mcp'
+      required:
+        - type
+        - url
+      title: MCPStreamableHttpTransport
+    MCPSseTransport:
+      type: object
+      properties:
+        type:
+          description: Transport type
+          type: string
+          example: sse
+          enum:
+            - sse
+        url:
+          description: Server-Sent Events endpoint URL template.
+          type: string
+          example: 'https://mcp-fs.example.com/sse'
+          pattern: '^https?://[^\s]+$'
+        headers:
+          description: HTTP headers to include
+          type: array
+          items:
+            $ref: '#/components/schemas/MCPKeyValueInput'
+      example:
+        type: sse
+        url: 'https://mcp-fs.example.com/sse'
+      required:
+        - type
+        - url
+      title: MCPSseTransport
+    MCPRemoteTransport:
+      description: Transport protocol configuration for remote context
+      allOf:
+        - anyOf:
+            - $ref: '#/components/schemas/MCPStreamableHttpTransport'
+            - $ref: '#/components/schemas/MCPSseTransport'
+        - type: object
+          properties:
+            variables:
+              description: 'Configuration variables that can be referenced in URL template {curly_braces}.'
+              type: object
+              additionalProperties:
+                $ref: '#/components/schemas/MCPInput'
+      title: MCPRemoteTransport
+    MCPStdioTransport:
+      type: object
+      properties:
+        type:
+          description: Transport type
+          type: string
+          example: stdio
+          enum:
+            - stdio
+      example:
+        type: stdio
+      required:
+        - type
+      title: MCPStdioTransport
+    MCPTransport:
+      description: Transport protocol configuration for local/package context
+      anyOf:
+        - $ref: '#/components/schemas/MCPStdioTransport'
+        - $ref: '#/components/schemas/MCPStreamableHttpTransport'
+        - $ref: '#/components/schemas/MCPSseTransport'
+      title: MCPTransport
+    MCPPositionalArgument:
+      description: A positional input is a value inserted verbatim into the command line.
+      example:
+        type: positional
+        value_hint: file_path
+      allOf:
+        - $ref: '#/components/schemas/MCPInputWithVariables'
+        - type: object
+          required:
+            - type
+          properties:
+            type:
+              type: string
+              example: positional
+              enum:
+                - positional
+            value_hint:
+              description: An identifier for the positional argument.
+              type: string
+              example: file_path
+            is_repeated:
+              description: Whether the argument can be repeated multiple times.
+              type: boolean
+              default: false
+        - anyOf:
+            - type: object
+              required:
+                - value_hint
+            - type: object
+              required:
+                - value
+      title: MCPPositionalArgument
+    MCPNamedArgument:
+      description: 'A command-line `--flag={value}`.'
+      example:
+        type: named
+        name: '--port'
+      allOf:
+        - $ref: '#/components/schemas/MCPInputWithVariables'
+        - type: object
+          required:
+            - type
+            - name
+          properties:
+            type:
+              type: string
+              example: named
+              enum:
+                - named
+            name:
+              description: 'The flag name, including any leading dashes.'
+              type: string
+              example: '--port'
+            is_repeated:
+              description: Whether the argument can be repeated multiple times.
+              type: boolean
+              default: false
+      title: MCPNamedArgument
+    MCPArgument:
+      anyOf:
+        - $ref: '#/components/schemas/MCPPositionalArgument'
+        - $ref: '#/components/schemas/MCPNamedArgument'
+      title: MCPArgument
+    MCPPackage:
+      type: object
+      properties:
+        registry:
+          description: Package registry details
+          type: object
+          properties:
+            type:
+              description: 'Registry type indicating how to download packages (e.g., ''npm'', ''pypi'', ''oci'', ''nuget'', ''mcpb'')'
+              type: string
+              example: npm
+            base_url:
+              description: Base URL of the package registry
+              type: string
+              format: uri
+              example: 'https://registry.npmjs.org'
+          required:
+            - type
+        identifier:
+          description: Package identifier — either a package name or URL
+          type: string
+          example: '@modelcontextprotocol/server-brave-search'
+        version:
+          description: Package version. Must be a specific version.
+          type: string
+          example: 1.0.2
+          minLength: 1
+          not:
+            enum:
+              - latest
+        file_sha256:
+          description: SHA-256 hash of the package file for integrity verification.
+          type: string
+          example: fe333e598595000ae021bd27117db32ec69af6987f507ba7a63c90638ff633ce
+          pattern: '^[a-f0-9]{64}$'
+        transport:
+          allOf:
+            - $ref: '#/components/schemas/MCPTransport'
+            - description: Transport protocol configuration for the package
+        runtime:
+          description: Runtime configuration for executing the package
+          type: object
+          properties:
+            hint:
+              description: A hint to help clients determine the appropriate runtime for the package.
+              type: string
+              example: npx
+            arguments:
+              description: A list of arguments to be passed to the package's runtime command.
+              type: array
+              items:
+                $ref: '#/components/schemas/MCPArgument'
+        package_arguments:
+          description: A list of arguments to be passed to the package's binary.
+          type: array
+          items:
+            $ref: '#/components/schemas/MCPArgument'
+        environment_variables:
+          description: Environment variables to be set when running the package.
+          type: array
+          items:
+            $ref: '#/components/schemas/MCPKeyValueInput'
+      required:
+        - registry
+        - identifier
+        - transport
+      title: MCPPackage
   examples:
     UnauthorizedExample:
       value:
@@ -1563,7 +2678,122 @@ components:
         title: Not Found
         instance: 'kong:trace:6816496025408232265'
         detail: Not Found
+  requestBodies:
+    CreateCatalogMCPRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateCatalogMCP'
+    UpdateCatalogMCPRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateCatalogMCP'
+    ReplaceCatalogMCPRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ReplaceCatalogMCP'
+    CreateCatalogMCPVersionRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateCatalogMCPVersion'
+    UpdateCatalogMCPVersionRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateCatalogMCPVersion'
+    ReplaceCatalogMCPVersionRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ReplaceCatalogMCPVersion'
+    CreateCatalogMCPImplementationRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateCatalogMCPImplementation'
   responses:
+    CatalogMCPResponse:
+      description: Response schema for MCPs.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CatalogMCP'
+    ListCatalogMCPResponse:
+      description: Response schema for a paginated list of MCPs.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CatalogMCP'
+            additionalProperties: false
+            required:
+              - data
+              - meta
+            title: ListCatalogMCPResponse
+    CatalogMCPVersionResponse:
+      description: Response schema for MCP versions.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CatalogMCPVersion'
+    ListCatalogMCPVersionResponse:
+      description: Response schema for a paginated list of MCP versions.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CatalogMCPVersion'
+            additionalProperties: false
+            required:
+              - data
+              - meta
+            title: ListCatalogMCPVersionResponse
+    CatalogMCPImplementationResponse:
+      description: Response schema for MCP implementations.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CatalogMCPImplementation'
+    ListCatalogMCPImplementationResponse:
+      description: Response schema for a paginated list of MCP implementations.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CatalogMCPImplementation'
+            additionalProperties: false
+            required:
+              - data
+              - meta
+            title: ListCatalogMCPImplementationResponse
     BadRequest:
       description: Bad Request
       content:
@@ -1637,6 +2867,12 @@ tags:
     description: Manage an AI Model version's oas specification.
   - name: Catalog AI Model Implementations
     description: Link an AI Model to an AI Gateway model.
+  - name: Catalog MCPs
+    description: Manage MCPs - a catalogable proxy for AI Gateway MCPs
+  - name: Catalog MCP Versions
+    description: Manage an MCP's version.
+  - name: Catalog MCP Implementations
+    description: Link an MCP to an AI Gateway MCP.
 security:
   - konnectAccessToken: []
   - personalAccessToken: []
