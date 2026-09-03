@@ -299,6 +299,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.12.0.12": [
+    {
+      "message": "Fixed streaming token count metrics that reported inflated totals for third-party models hosted on Vertex AI (claude-, mistral-, jamba-*), caused by incremental counts being treated as cumulative.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Fixed an issue where large request payload was not logged.\n",

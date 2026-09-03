@@ -26304,5 +26304,46 @@
         "scope": "Default"
       }
     ]
+  },
+  "3.12.0.12": {
+    "kong-aigw": [
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where converted HTTPS MCP tool calls lost the original forwarded port on the internal TLS Unix socket.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed a bug where a response from Anthropic could fail to decode when the client's request advertised Brotli support, since Anthropic's edge may then return a Brotli-encoded body that Kong's response decompression, which only understands gzip, can't inflate. Kong now normalizes the outgoing `Accept-Encoding` request header before proxying to any LLM provider: `gzip, identity` when the client accepts gzip, and `identity` otherwise, so a client that cannot inflate gzip is never handed a compressed body on paths where the upstream response passes through unmodified.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed streaming token count metrics that reported inflated totals for third-party models hosted on Vertex AI (claude-, mistral-, jamba-*), caused by incremental counts being treated as cumulative.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "**jwt**: Fixed an issue where the plugin failed to decode standard Base64\nsecrets that contained `+` or `/` when `config.secret_is_base64` was enabled.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka-upstream**, **kafka-log**, **confluent**, **kafka-consume**, **confluent-consume**: Fixed a\npermanent failure that started when a broker answered an `ApiVersions` request with an error code,\nan empty API key set, or a malformed frame. The client cached that result and every later request\nfailed with `ProduceRequest API version not negotiated; broker may be unreachable` until the node\nrestarted, even after the broker recovered. The client now refuses an unusable `ApiVersions`\nresponse, keeps the previous negotiation, and retries the negotiation for a topic whose metadata is\nalready cached.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**prometheus**: Fixed an issue where `kong_nginx_requests_total` and `kong_nginx_connections_total` duplicated the `http` values under the `stream` subsystem. They are now exported once under `http`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**prometheus**: Histogram series are now emitted grouped by label set (all\nbuckets in ascending `le` order, then `_count`, then `_sum`) so the output\nfollows the OpenMetrics interleaving rule. Previously samples were grouped by\nsuffix, which caused strict consumers such as Google Managed Prometheus to\ndrop points.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ]
   }
 }

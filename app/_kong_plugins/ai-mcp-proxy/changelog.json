@@ -351,5 +351,12 @@
       "scope": "Plugin",
       "type": "bugfix"
     }
+  ],
+  "3.12.0.12": [
+    {
+      "message": "Fixed an issue where converted HTTPS MCP tool calls lost the original forwarded port on the internal TLS Unix socket.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
   ]
 }
