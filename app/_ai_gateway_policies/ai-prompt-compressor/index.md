@@ -73,15 +73,15 @@ rows:
 
 Prompt caching lets a provider reuse a token prefix it has already seen and bills that warm read at at much lower cost. For agentic and RAG workloads, where a large system prompt, tool definitions, and history repeat every turn, caching is the single biggest lever to reduce costs. Compression is the second best lever, it shrinks the tokens the provider still has to read. Deterministic compression is required since it ensures the same input results in the same output at a byte-for-byte level which then hits the cache. This allows both methods of cost reduction to coexist.
 
-## LLMLingua Compression Service
+## LLMLingua based compression service
 
-Kong provides a Docker image for the AI Prompt Compressor service, which compresses LLM prompts before sending them upstream. It uses [LLMLingua 2](https://github.com/microsoft/LLMLingua) to reduce prompt size, which helps you manage token limits and maintain context fidelity. The service supports both HTTP and JSON-RPC APIs and is designed to work with the AI Prompt Compressor Policy in {{site.ai_gateway}}.
+Kong provides a Docker image for a compressor service, which compresses LLM prompts before sending them upstream. It uses [LLMLingua 2](https://github.com/microsoft/LLMLingua) to reduce prompt size, which helps you manage token limits and maintain context fidelity. The compressor service supports both HTTP and JSON-RPC APIs and is designed to work with the AI Prompt Compressor Policy in {{site.ai_gateway}}.
 
 {% include prereqs/cloudsmith.md %}
 
 ### Image configuration options
 
-You can configure the Kong AI Prompt Compressor Service using environment variables. These affect model selection, hardware usage, logging, and worker behavior.
+You can configure the compressor service image using environment variables. These affect model selection, hardware usage, logging, and worker behavior.
 
 <!-- vale off -->
 {% table %}
@@ -109,9 +109,9 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-### Compression endpoints
+### Compressor Service endpoints
 
-The AI Prompt Compressor Service exposes both REST and JSON-RPC endpoints. You can use these interfaces to compress prompts, check the current status, or integrate the service with the AI Prompt Compressor Policy and other upstream services.
+The compressor service exposes both REST and JSON-RPC endpoints. You can use these interfaces to compress prompts, check the current status, or integrate the service with the AI Prompt Compressor Policy and other upstream services.
 
 * **POST `/llm/v1/compressPrompt`**: Compresses a prompt using either a compression ratio or a target token count. Supports selective compression via `<LLMLINGUA>` tags.
 
@@ -168,12 +168,37 @@ The AI Prompt Compressor Policy applies structured compression to preserve essen
 
 ## Headroom Compression Service
 
-placeholder
+Before using Headroom with AI Prompt Compressor Policy you must have a Headroom instance accessible to your {{site.ai_gateway}}.
 
-```
-docker pull ghcr.io/headroomlabs-ai/headroom:latest
-docker run -p 8787:8787 ghcr.io/headroomlabs-ai/headroom:latest
-```
+You can do this with one of the following:
+
+* [Local Headroom installation](https://docs.headroomlabs.ai/docs/installation)
+* [Headroom Enterprise](https://www.headroomlabs.ai/)
+
+### Configure Headroom connection
+
+To configure an AI Prompt Compressor Policy with headroom as the compressor service:
+
+{% entity_examples %}
+type: policy
+data:
+  display_name: AI Prompt Compressor with Headroom
+  name: my-ai-prompt-compressor
+  type: ai-prompt-compressor
+  config:
+    headroom_endpoint: http://headroom-service:8787
+    headroom_auth_token: !env HEADROOM_API_KEY
+    headroom_target_ratio: 0.5
+    headroom_protect_recent: 4
+    headroom_timeout_ms: 5000
+    keepalive_timeout: 60000
+    log_text_data: false
+    stop_on_error: true
+    timeout: 10000
+formats:
+  - konnect-api
+  - kongctl
+{% endentity_examples %}
 
 ## Prompt compression options
 
