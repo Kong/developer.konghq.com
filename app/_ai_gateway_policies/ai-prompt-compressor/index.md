@@ -209,7 +209,12 @@ The compressor service exposes a [`/v1/compress`](https://docs.headroomlabs.ai/d
 
 ### Headroom prompt flow
 
+1. {{site.ai_gateway}} sends the user or agent's request to the AI Prompt Compressor.
+2. The AI Prompt Compressor builds an OpenAI-format messages array from the eligible content. This operates on a per block basis, not the whole request, to ensure cache compatibility.
+3. The AI Prompt Compressor sends a `POST` request to Headroom's `/v1/compress` endpoint with the content to compress and any configuration specified in the policy.
+4. Headroom returns `200` with the compressed replacement messages and metadata. AI Prompt Compressor records `ccr_hashes` alongside the compressed block so a later retrieval request can be resolved.
 
+If Headroom returns a failure response (such as a `400` invalid request, `503` service unavailable, `compression_timeout`, or `compression_error`) then the AI Prompt Compressor fails open. The original uncompressed message is sent to the upstream provider.
 
 The following diagram illustrates how the AI Prompt Compressor Policy processes and compresses incoming prompts using Headroom:
 
