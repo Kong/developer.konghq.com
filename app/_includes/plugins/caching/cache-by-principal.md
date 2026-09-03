@@ -1,0 +1,3 @@
+When [`config.cache_by_principal`](./reference/#schema--config-cache-by-principal) is enabled, the {{include.name}} plugin uses the authenticated [Principal's](/identity/principals/) UUID, instead of the Consumer's UUID, to compose the cache key.
+
+If no Principal is present in the request context, or `config.cache_by_principal` is disabled, the plugin falls back to the authenticated Consumer's UUID.
