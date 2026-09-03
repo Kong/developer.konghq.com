@@ -31,8 +31,8 @@ related_resources:
     url: /ai-gateway/entities/ai-consumer-group/
   - text: Kong MCP traffic gateway
     url: /mcp/
-  - text: MCP 2026-07-28 protocol support
-    url: /ai-gateway/mcp-protocol-2026-07-28/
+  - text: MCP version support
+    url: /ai-gateway/mcp-version-support/
   - text: Model Context Protocol specification
     url: https://modelcontextprotocol.io/
   - text: Map a RESTful API to MCP tools
@@ -40,16 +40,6 @@ related_resources:
   - text: Aggregate MCP tools from multiple AI MCP Server entities
     url: /ai-gateway/aggregate-mcp-tools/
 faqs:
-  - q: Which MCP protocol version does the runtime use?
-    a: |
-      The MCP runtime behind an AI MCP Server entity accepts client-facing protocol revisions
-      `2025-03-26`, `2025-06-18`, `2025-11-25`, and, from {{site.ai_gateway}} 2.1, `2026-07-28`.
-      Upstream MCP servers in `passthrough-listener` and `upstream-server` modes may additionally run
-      `2024-11-05`. Narrow which revisions a `listener` or `conversion-listener` server accepts with
-      [`config.server.allowed_versions`](#schema-aigateway-mcpserver-config-server-allowed-versions);
-      unset accepts every revision Kong implements. See [MCP protocol versions](#mcp-protocol-versions)
-      and [MCP 2026-07-28 protocol support](/ai-gateway/mcp-protocol-2026-07-28/).
-
   - q: What happens if a client requests an unsupported protocol revision?
     a: |
       For `2026-07-28` clients, {{site.ai_gateway}} returns `HTTP 400` with the JSON-RPC error code
@@ -120,11 +110,15 @@ Because MCP endpoints run directly on {{site.ai_gateway}}, you don't need to hos
 {:.warning}
 > **Note:** MCP traffic is API-level traffic, not LLM request/response flows. Authenticate MCP traffic through an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) referenced in [`access.auth_strategies`](#schema-aigateway-mcpserver-access), the same as AI Models and AI Agents. Standard API-level policies (rate limiting, logging) still apply to MCP traffic through the [`policies`](#schema-aigateway-mcpserver-policies) field. AI Policies that operate on LLM prompt/response flows (such as prompt guards or model routing) won't apply here.
 
-## MCP protocol versions
+## MCP versions
 
-{{site.ai_gateway}} accepts client-facing MCP protocol revisions `2025-03-26`, `2025-06-18`, `2025-11-25`, and, from {{site.ai_gateway}} 2.1, `2026-07-28`. Upstream MCP servers in `passthrough-listener` and `upstream-server` modes may also run `2024-11-05`. `2026-07-28` is a stateless revision: it removes the `initialize` handshake and `Mcp-Session-Id` entirely, so the client declares its revision on every request instead of once at connection time. For the full set of changes and how {{site.ai_gateway}} implements them, see [MCP 2026-07-28 protocol support](/ai-gateway/mcp-protocol-2026-07-28/).
+{% include md/ai-gateway/v2/mcp-versions.md %}
 
-The following `config.server` fields, available starting in {{site.ai_gateway}} 2.1, control protocol-revision behavior:
+For more information, see [MCP version support](/ai-gateway/mcp-version-support/).
+
+### Configure protocol-revision behavior {% new_in 2.1 %}
+
+The following `config.server` fields control protocol-revision behavior:
 
 <!-- vale off -->
 {% table %}
@@ -139,15 +133,24 @@ rows:
   - field: "[`allowed_versions`](#schema-aigateway-mcpserver-config-server-allowed-versions)"
     modes: "`listener`, `conversion-listener`"
     description: |
-      Narrows the protocol revisions this server accepts. Unset accepts every revision {{site.ai_gateway}} implements. When set, `server/discover` advertises exactly this list, and a `2026-07-28` client declaring a different revision is rejected with `HTTP 400` and JSON-RPC error `-32022`. Not available on `passthrough-listener`, which keeps the base server configuration.
+      Narrows the protocol revisions this server accepts.
+      * When unset, the server accepts every revision {{site.ai_gateway}} implements. 
+      * When set, `server/discover` advertises exactly this list, and a `2026-07-28` client declaring a different revision is rejected with `HTTP 400` and JSON-RPC error `-32022`. 
+      
+      This is not available on `passthrough-listener`, which keeps the base server configuration.
   - field: "[`cache.tools_list`](#schema-aigateway-mcpserver-config-server-cache-tools-list) and [`cache.discover`](#schema-aigateway-mcpserver-config-server-cache-discover)"
     modes: "`listener`, `conversion-listener`"
     description: |
-      Cache hints (`ttl_ms` and `cache_scope`) {{site.ai_gateway}} emits on the `tools/list` and `server/discover` responses it serves. `cache_scope: public` is rejected when [`access.default_tool_acls`](#schema-aigateway-mcpserver-access-default-tool-acls) or a tool's own [`access.acls`](#schema-aigateway-mcpserver-tools-access) filters the tool list per subject. Only clients on a revision that defines cache hints (`2026-07-28`) receive them.
+      Caches hints (`ttl_ms` and `cache_scope`) that {{site.ai_gateway}} emits on the `tools/list` and `server/discover` responses it serves. 
+      
+      `cache_scope: public` is rejected when [`access.default_tool_acls`](#schema-aigateway-mcpserver-access-default-tool-acls) or a tool's own [`access.acls`](#schema-aigateway-mcpserver-tools-access) filters the tool list per subject. Only clients on a revision that defines cache hints (`2026-07-28`) receive them.
   - field: "[`upstream_protocol_version`](#schema-aigateway-mcpserver-config-server-upstream-protocol-version)"
     modes: "`upstream-server`"
     description: |
-      Pins the protocol revision {{site.ai_gateway}} speaks to the upstream MCP server. Unset negotiates a revision through an `initialize` handshake, which is the default. Set a fixed revision to reach an upstream that answers no handshake and mints no session.
+      Pins the protocol revision {{site.ai_gateway}} speaks to the upstream MCP server. 
+      
+      * When unset, {{site.ai_gateway}} negotiates a revision through an `initialize` handshake, which is the default. 
+      * When set to a fixed revision, {{site.ai_gateway}} reaches an upstream that answers no handshake and mints no session.
 {% endtable %}
 <!-- vale on -->
 
@@ -263,13 +266,13 @@ rows:
 <!-- vale on -->
 
 {:.info}
-> `allowed_versions` and `cache` only apply to `listener` and `conversion-listener` modes. `passthrough-listener` keeps the base server configuration and doesn't accept either field; `upstream-server` instead accepts `upstream_protocol_version`. See [MCP protocol versions](#mcp-protocol-versions).
+> `allowed_versions` and `cache` only apply to `listener` and `conversion-listener` modes. `passthrough-listener` keeps the base server configuration and doesn't accept either field; `upstream-server` instead accepts `upstream_protocol_version`. See [MCP versions](#mcp-versions).
 
 ## How MCP traffic flows
 
 For `conversion-listener`, `conversion-only`, and `listener` modes, the runtime converts MCP requests into HTTP calls and wraps the responses back in MCP format:
 
-1. Accepts an MCP protocol request from a client.
+1. Accepts an MCP request from a client.
 1. Parses the MCP tool call and matches it to a tool definition.
 1. Converts the call into a standard HTTP request.
 1. Sends the request to the upstream service.
@@ -416,7 +419,7 @@ Configure how long sessions persist using [`session_ttl`](#schema-aigateway-mcps
 
 <!-- FOT ENG REVIEW: confirm how config.server.session interacts with 2026-07-28 clients, which carry no Mcp-Session-Id on the wire, before expanding this note further. -->
 {:.warning}
-> `config.server.session` manages {{site.ai_gateway}}-level session state and is independent of the MCP protocol's own session mechanism, which `2026-07-28` removes entirely. A `2026-07-28` client carries no `Mcp-Session-Id` on the wire; see [MCP protocol versions](#mcp-protocol-versions).
+> `config.server.session` manages {{site.ai_gateway}}-level session state and is independent of the MCP's own session mechanism, which `2026-07-28` removes entirely. A `2026-07-28` client carries no `Mcp-Session-Id` on the wire; see [MCP versions](#mcp-versions).
 
 ## Connecting to the MCP endpoint
 
@@ -429,7 +432,7 @@ An MCP client such as [Claude Desktop](https://claude.ai/download), Cursor, or [
 1. Carry the `Mcp-Session-Id` header on subsequent `tools/list` and `tools/call` requests.
 
 {:.info}
-> **`2026-07-28` clients skip the handshake.** There's no `initialize` exchange and no `Mcp-Session-Id`: the client declares its revision on every request through the `MCP-Protocol-Version` header, reconfirmed from `_meta`, and an inbound `Mcp-Session-Id` header is ignored. `server/discover` replaces `initialize` as the way a client fetches server capabilities. See [MCP protocol versions](#mcp-protocol-versions).
+> **`2026-07-28` clients skip the handshake.** There's no `initialize` exchange and no `Mcp-Session-Id`: the client declares its revision on every request through the `MCP-Protocol-Version` header, reconfirmed from `_meta`, and an inbound `Mcp-Session-Id` header is ignored. `server/discover` replaces `initialize` as the way a client fetches server capabilities. See [MCP versions](#mcp-versions).
 
 {:.success}
 > **Tool argument naming**.
