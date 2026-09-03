@@ -318,7 +318,7 @@ rows:
 
   - header:
       type: h2
-      text: References & tools
+      text: References
     columns:
       - blocks:
           - type: reference_list
