@@ -78,17 +78,14 @@ function fetchVersions(path) {
       process.exit(1);
     }
 
-    if (!args.path) {
-      console.error("Missing argument --path, relative path to the tmp changelog folder.");
-      process.exit(1);
-    }
+    const folderPath = `./tmp/${product}`;
 
     if (args.version) {
-      generateChangelogsByVersion(args.path, args.version, product);
+      generateChangelogsByVersion(folderPath, args.version, product);
     } else {
-      const versions = fetchVersions(args.path);
+      const versions = fetchVersions(folderPath);
       versions.forEach((version) => {
-        generateChangelogsByVersion(args.path, version, product);
+        generateChangelogsByVersion(folderPath, version, product);
       });
     }
   } catch (error) {
