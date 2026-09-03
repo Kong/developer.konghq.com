@@ -149,7 +149,7 @@ metrics:
     type: Gauge
   - name: kong.dp.connection.last_seen
     min_version: "3.16"
-    description: Shows the timestamp when the Control Plane last saw a successful data plane connection. This metric appears only on Control Plane and is reported per Data Plane.
+    description: Shows the timestamp when the control plane last saw a successful data plane connection. This metric appears only on control plane and is reported per data plane.
     unit: "s"
     type: Gauge
     attributes:
@@ -158,7 +158,7 @@ metrics:
       - kong.dp.host.ip
   - name: kong.dp.config_hash
     min_version: "3.16"
-    description: Shows the timestamp when the control plane last saw a data plane connect. This metric appears only on control-plane nodes and is reported per data plane.
+    description: Shows the timestamp when the control plane last saw a data plane connect. This metric appears only on control planes and is reported per data plane node.
     unit: "1"
     type: Gauge
     attributes:
@@ -167,7 +167,7 @@ metrics:
       - kong.dp.host.ip
   - name: kong.dp.version.compatible
     min_version: "3.16"
-    description: "Shows whether a data plane is compatible with the control plane's version. This metric appears only on control-plane nodes and is reported per data plane. A value of 1 means compatible and 0 means not."
+    description: "Shows whether a data plane is compatible with the control plane's version. This metric appears only on control-plane nodes and is reported per data plane. A value of 1 means compatible and 0 means incompatible."
     unit: "1"
     type: Gauge
     attributes:
