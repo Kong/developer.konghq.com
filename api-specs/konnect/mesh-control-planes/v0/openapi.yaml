@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Konnect Mesh Control Plane manager
   description: Control Plane manager API
-  version: 0.2.0
+  version: 0.3.0
   x-ref-schema-name: DataplaneOverview
   contact:
     name: Kong
@@ -22084,7 +22084,7 @@ components:
         labels:
           $ref: '#/components/schemas/MeshControlPlaneLabels'
         version:
-          $ref: '#/components/schemas/MeshControlPlaneVersion'
+          $ref: '#/components/schemas/UpdateMeshControlPlaneVersion'
       title: UpdateMeshControlPlaneRequest
     PutMeshControlPlaneRequest:
       description: a payload to update the whole control plane
@@ -22113,10 +22113,16 @@ components:
       example: A control plane to handle traffic on development environment.
       maxLength: 250
     MeshControlPlaneVersion:
-      description: 'The version of the control plane. Setting it propagates the change to the global control plane, and is the only way to move a control plane between versions.'
+      description: 'The version of the control plane. Setting it propagates the change to the global control plane, and is the only way to move a control plane between versions. A version only moves forward - once a control plane runs a newer version, setting an older one is rejected. Omitting the field falls back to the default, so a create lands on the default version and a whole-record update of a control plane that already runs a newer version is rejected.'
       type: string
       example: v3
       default: v2
+      pattern: '^v[0-9]{1,9}$'
+      x-internal: true
+    UpdateMeshControlPlaneVersion:
+      description: 'The version to move the control plane to. A version only moves forward - once a control plane runs a newer version, setting an older one is rejected. It carries no default: a partial update that omits it leaves the control plane on the version it already runs.'
+      type: string
+      example: v3
       pattern: '^v[0-9]{1,9}$'
       x-internal: true
     MeshControlPlaneFilterParameters:
