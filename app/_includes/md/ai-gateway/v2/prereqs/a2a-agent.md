@@ -15,6 +15,12 @@ services:
       - PUBLIC_AGENT_URL=http://localhost:10000
     ports:
       - "10000:10000"
+    networks:
+      - default
+networks:
+  default:
+    name: kong-ai-quickstart-net
+    external: true
 EOF
 ```
 {: data-test-prereq="block"}
@@ -26,4 +32,4 @@ docker compose up -d --wait
 ```
 {: data-test-prereq="block"}
 
-The agent listens on port 10000 and uses the A2A JSON-RPC protocol to handle flight route queries. In this guide, the gateway service points to `host.docker.internal:10000` instead of the container name because {{site.base_gateway}} runs in its own container with a separate DNS resolver.
+The agent listens on port 10000 and uses the A2A JSON-RPC protocol to handle flight route queries. The compose file joins `kong-ai-quickstart-net`, the same network the AI Gateway quickstart script creates for {{site.base_gateway}}, so the gateway service can reach the agent by its container name, `a2a-kongair-agent`.
