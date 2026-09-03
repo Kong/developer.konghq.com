@@ -20,9 +20,7 @@ const log = debug("tests:runner");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const testsConfig = yaml.load(
-  fs.readFileSync("./config/tests.yaml", "utf-8"),
-);
+const testsConfig = yaml.load(fs.readFileSync("./config/tests.yaml", "utf-8"));
 const skipEnvVariables = new Set(
   testsConfig.validations?.skip_env_variables ?? [],
 );
@@ -493,7 +491,7 @@ async function controlPlaneRequest(
 
 async function customCommand(validationName, config, runtimeConfig, container) {
   const returnCode = config.expected.return_code;
-  const retryDelays = [10000, 15000, 20000, 25000]; // delay before retry attempts 2-5
+  const retryDelays = [10000, 15000, 20000, 25000, 30000, 35000]; // delay before retry attempts
   const maxRetries = retryDelays.length + 1;
 
   let result;

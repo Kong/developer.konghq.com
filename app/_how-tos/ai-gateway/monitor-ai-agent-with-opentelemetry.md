@@ -126,9 +126,9 @@ ai_gateway_policies:
     enabled: true
     global: false
     config:
-      traces_endpoint: http://host.docker.internal:4318/v1/traces
+      traces_endpoint: http://otel-collector:4318/v1/traces
       metrics:
-        endpoint: http://host.docker.internal:4318/v1/metrics
+        endpoint: http://otel-collector:4318/v1/metrics
         enable_ai_metrics: true
       resource_attributes:
         service.name: kong-a2a
