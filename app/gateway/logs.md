@@ -74,11 +74,11 @@ You can change log levels dynamically, without restarting {{site.base_gateway}},
 A dynamic log level change is never persisted to `kong.conf`.
 If a node restarts while an override is active, it reverts to the log level set in `kong.conf`, and the `ttl` doesn't carry over.
 
-Alternatively, you can configure log levels using the `log_level` parameter in the [`kong.conf` file](/gateway/configuration/), but this requires you to [restart {{site.base_gateway}}](/how-to/restart-kong-gateway-container/).
+Alternatively, you can configure log levels using the `log_level` parameter in the [`kong.conf` file](/gateway/configuration/), which will persist. However, this requires you to [restart {{site.base_gateway}}](/how-to/restart-kong-gateway-container/).
 
 ### Dynamic log levels for control planes and traditional clusters
 
-You can view and manage log levels dynamically in traditional mode and for control planes in hybrid mode using the following settings and endpoints:
+Use the following settings and endpoints for log levels in traditional mode and hybrid mode control planes:
 
 {% navtabs "control plane log level" %}
 {% navtab "Self-managed" %}
@@ -196,7 +196,7 @@ The data plane applies the new log level and automatically reverts to the previo
 
 Data plane nodes on older {{site.base_gateway}} versions that don't support dynamic log levels report a status of `unsupported` instead of `applied`, both in `GET` and `POST` responses.
 
-Reading the current log level is available to any Control Plane Viewer.
+Reading the current log level is available to any Control Plane Viewer. You can also use the [Debugger](/observability/debugger/#reading-traces-and-logs) to do this directly from the {{site.konnect_short_name}} UI.
 Creating or changing a dynamic log level operation is a privileged action and requires Control Plane Admin permissions or higher.
 
 ## Find specific client requests in logs
