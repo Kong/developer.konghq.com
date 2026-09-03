@@ -32,4 +32,4 @@ docker compose up -d --wait
 ```
 {: data-test-prereq="block"}
 
-The agent listens on port 10000 and uses the A2A JSON-RPC protocol to handle flight route queries. The compose file joins `kong-ai-quickstart-net`, the same network the AI Gateway quickstart script creates for {{site.base_gateway}}, so the gateway service can reach the agent by its container name, `a2a-kongair-agent`.
+The agent listens on port 10000 and uses the A2A JSON-RPC protocol to handle flight route queries. The compose file joins `kong-ai-quickstart-net`, the same network the {{site.ai_gateway}} quickstart script creates for {{site.base_gateway}}, so the gateway service can reach the agent by its container name, `a2a-kongair-agent`.
