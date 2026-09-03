@@ -79,11 +79,13 @@ of Gateway API features might be limited to those.
 {% version_compatibility_table %}
 product: "Gateway API"
 versions:
-  - "1.0.0"
-  - "1.1.0"
-  - "1.2.0"
-  - "1.3.0"
-  - "1.4.0"
+  - "1.0"
+  - "1.1"
+  - "1.2"
+  - "1.3"
+  - "1.4"
+  - "1.5"
+  - "1.6"
 compatible_product: "{{site.operator_product_name}}"
 compatible_versions:
   "2.0.x": ["1.0", "1.1", "1.2", "1.3"]
