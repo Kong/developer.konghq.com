@@ -201,6 +201,18 @@ formats:
   - kongctl
 {% endentity_examples %}
 
+For more details, see the [configuration reference](/ai-gateway/policies/ai-prompt-compressor/reference/#configuration).
+
+### Compressor Service endpoint
+
+The compressor service exposes a [`/v1/compress`](https://docs.headroomlabs.ai/docs/proxy#post-v1compress) endpoint that compresses messages and returns them. This endpoint accepts openai and anthropic's message formats. For an enterprise deployment you must specify an API key, for a local deployment no PAI key is required. You can use this interface to compress prompts, check the current status, or integrate the service with the AI Prompt Compressor Policy.
+
+### Headroom prompt flow
+
+
+
+The following diagram illustrates how the AI Prompt Compressor Policy processes and compresses incoming prompts using Headroom:
+
 ## Prompt compression options
 
 The AI Prompt Compressor Policy offers flexible compression controls to fit different use cases. You can choose between full-prompt compression, conditional strategies, or selectively compressing only parts of the prompt:
