@@ -1,0 +1,24 @@
+description: Run the Request Validator plugin in tap mode.
+
+extended_description: |
+  Run the Request Validator plugin in tap mode.
+
+  In tap mode, validation runs as normal, but failed requests aren't blocked. Instead, {{site.base_gateway}} logs a warning with the validation details and proxies the request to the upstream service unchanged.
+
+  Configure the plugin to use the `kong` validator to check that the request body contains a `name` field with a string value, and set `config.enforcement_mode` to `log_only` so that requests failing validation are logged instead of blocked.
+
+title: 'Log invalid requests without blocking'
+
+weight: 901
+
+config:
+  version: kong
+  body_schema: '[{"name":{"type":"string","required":true}}]'
+  enforcement_mode: log_only
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
