@@ -1,5 +1,5 @@
 ---
-title: 'Error: require "resty.http" not allowed within sandbox'
+title: "Error: require 'resty.http' not allowed within sandbox"
 content_type: support
 description: Plugins that execute arbitrary Lua code run in a sandbox that blocks require of certain modules; allow the module or disable the sandbox to resolve it.
 products:
@@ -8,7 +8,8 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: "Why do I get \"require 'resty.http' not allowed within sandbox\" when using a plugin that runs Lua code?"
+  q: |
+    Why do I get the error `require 'resty.http' not allowed within sandbox` when using a plugin that runs Lua code?
   a: |
     The plugin runs in a sandbox that blocks `require` of certain modules.
     Add the module to `untrusted_lua_sandbox_requires` (preferred), or set `untrusted_lua` to `on` to disable the sandbox entirely (use with caution).
