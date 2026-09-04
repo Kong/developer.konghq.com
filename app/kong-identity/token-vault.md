@@ -133,15 +133,81 @@ Key facts:
   * The token's signature is valid.
   * The token was issued by an IdP the {{site.ai_gateway_name}}  set as trusted for that directory.
 
+### The {{site.ai_gateway}} role
+
+{{site.ai_gateway}} acts as bridge between the user and the requests as the sole runtime that calls the {{site.identity}} Token Vault. Agents and MCP clients never call the Token Vault directly. No matter which agent a user is running, the Token Vault only interacts with {{site.ai_gateway}}, not from the agent or the MCP itself.
+
+Policies applies to the {{site.ai_gateway}}, which allow to scope and enforce call behaviors. The Token Vault doesn't hold any policy, it only verifies whose token this is and hands back the matching credential if one exists. For example, in a workflow configured with Okta as the IdP, the {{site.ai_gateway}}:
+
+1. Receives a caller's Okta-issued token.
+1. Presents it to the Token Vault to request a credential for a specific provider.
+1. Once it gets one back, injects the credential into the actual outbond request to the third-party service (for example, as a header, for providers that support it).
+
 ## Token Vault components
 
 <!--
 Lead with a table summarizing component / scope / purpose, then a subsection each.
 -->
 
-### Scoping: Directory
+### Directory
 
 The [{{site.identity}} directory](/identity/principals/) is the tenant boundary that scopes everything else in the Token Vault. To use the Token Vault, you activate it in your directory with the `vault_enabled` flag.
+
+The directory is also the vault's encryption boundary. After enabling the vault in your directory, {{site.identity}} generates an encryption key to protect the credentials you store under it. Your {{site.identity}} directory is the equivalent of your "organisation account", and enabling the Token Vault gives that account a locked workspace, with everything in it (trusted IdPs, connected third-party services, whose tokens it stores) scoped to that organisation.
+
+### Trusted IdP
+
+The trusted IdP is what tells the Token Vault whose tokens to trust. A {{site.identity}} admin configures a trusted IdP (succh as Okta) on the Token Vault using the `issuer_url`, and optionally a `jwks_uri`({{site.identity}} can automatically discover the `jwks_uri` from the IdP).
+
+The trusted IdP configuration is completely independent of {{site.identity}} login system: the Token Vault doesn't need any identity to be already resolved as a [{{site.identity}} principal](/identity/principals/) to work. The Token Vault acts as a verifier, not a caller. It never asks the IdP anything directly. Instead, when it receives a token, it:
+
+1. Checks that the token's signature matches the trusted IdP's published public keys, confirming the IdP actually issued it.
+1. Reads the issuer (`iss`) and subject (`sub`) already embedded in the token, to determine who it was issued to.
+
+### Providers
+
+You connect third-party services by adding a provider to the {{site.identity}} Token Vault. This allows organization to centralize identities and shared connections. 
+
+### Credentials
+
+The {{site.identity}} Token Vault protects the credential, the actual secret (a token or a key) for connecting to a provider. The credential is encrypted at rest in the Token Vault. The encryption scope is the {{site.identity}} directory for which you enable the Token Vault. Each directory has its own Token Vault key, that it uses to encrypt secrets.
+
+The credentials can be personal or shared across the organization. You define this with the flag `credential_type`:
+
+* `user` (default value) sets a personal token.
+* `shared` sets a shared secret (required for `static_secret` providers).
+
+<!--
+Can the user set a shared secret for other providers, like GitHub or Slack?
+-->
+
+#### OAuth-based credentials lifecycle
+
+A credential knows different stages depending on the action that a user executes:
+
+1. **Enrollment**: When no credentials exist yet, the first-time flow returns an enrollment URL instead of a token.
+1. **Creation**: At creation the credential is stored in the Token Vault. Two flows exist to create credentials: for `static_secret`, a separate provider creates it and you store it manually in the Token Vault; for all other providers, the OAuth consent flow creates the secret and stores it automatically.
+1. **Refresh**: For OAuth-based providers, the Token Vault can refresh credentials automatically, with locking, to prevent concurrent requests from consuming a refresh token.
+1. **Deletion/Revocation**: You can revoke credentials independently of the provider itself. Deleting a credential doesn't delete a provider, but creates a new re-enrollment from the user side.
+
+The Token Vault never exposes back the credentials to the API that created them: it releases them to the {{site.ai_gateway}} for outbond calls without making the credentials accessible from any read endpoint.
+
+
+## Credential enrollment
+
+<!--
+The most visible behavior on this feature — give it its own section.
+Sequence: first tool call for an unconnected provider -> vault returns 401 with an enrollment
+URL -> gateway surfaces it to the client via MCP elicitation -> user completes the provider's
+consent flow -> vault stores the credential -> user retries and the call succeeds.
+Then: the vault refreshes stored credentials in the background, so users are only re-prompted
+when the provider genuinely requires it.
+Note the enrollment link is short-lived (10 minutes).
+-->
+
+## Set up the Token Vault
+
+### Enable the vault on a directory
 
 {% navtabs "enable token vault" %}
 {% navtab "Activate the Token Vault" %}
@@ -183,12 +249,7 @@ echo $VAULT_ENABLED
 
 {% endnavtabs %}
 
-
-The directory is also the vault's encryption boundary. After enabling the vault in your directory, {{site.identity}} generates an encryption key to protect the credentials you store under it. Your {{site.identity}} directory is the equivalent of your "organisation account", and enabling the Token Vault gives that account a locked workspace, with everything in it (trusted IdPs, connected third-party services, whose tokens it stores) scoped to that organisation.
-
-### Verifying: Trusted IdP
-
-The trusted IdP is what tells the Token Vault whose tokens to trust. A {{site.identity}} admin configures a trusted IdP (succh as Okta) on the Token Vault using the `issuer_url`, and optionally a `jwks_uri`({{site.identity}} can automatically discover the `jwks_uri` from the IdP).
+### Add a trusted IdP
 
 {% navtabs "configure trusted idp" %}
 {% navtab "Add a trusted IdP" %}
@@ -240,14 +301,7 @@ method: GET
 
 {% endnavtabs %}
 
-The trusted IdP configuration is completely independent of {{site.identity}} login system: the Token Vault doesn't need any identity to be already resolved as a [{{site.identity}} principal](/identity/principals/) to work. The Token Vault acts as a verifier, not a caller. It never asks the IdP anything directly. Instead, when it receives a token, it:
-
-1. Checks that the token's signature matches the trusted IdP's published public keys, confirming the IdP actually issued it.
-1. Reads the issuer (`iss`) and subject (`sub`) already embedded in the token, to determine who it was issued to.
-
-### Providers
-
-You connect third-party services by adding a provider to the {{site.identity}} Token Vault. This allows organization to centralize identities and shared connections. 
+### Add a provider
 
 {% navtabs "register provider" %}
 {% navtab "Add a provider" %}
@@ -303,65 +357,13 @@ method: GET
 
 {% endnavtabs %}
 
-### Credentials
+### Enable credential injection on a route
 
-The {{site.identity}} Token Vault protects the credential, the actual secret (a token or a key) for connecting to a provider. The credential is encrypted at rest in the Token Vault. The encryption scope is the {{site.identity}} directory for which you enable the Token Vault. Each directory has its own Token Vault key, that it uses to encrypt secrets.
+<!-- Configure AI MCP Proxy to exchange the caller's token for the stored credential and inject it. -->
 
-The credentials can be personal or shared across the organization. You define this with the flag `credential_type`:
+### Store a static secret
 
-* `user` (default value) sets a personal token.
-* `shared` sets a shared secret (required for `static_secret` providers).
-
-<!--
-Can the user set a shared secret for other providers, like GitHub or Slack?
--->
-
-#### OAuth-based credentials lifecycle
-
-A credential knows different stages depending on the action that a user executes:
-
-1. **Enrollment**: When no credentials exist yet, the first-time flow returns an enrollment URL instead of a token.
-1. **Creation**: At creation the credential is stored in the Token Vault. Two flows exist to create credentials: for `static_secret`, a separate provider creates it and you store it manually in the Token Vault; for all other providers, the OAuth consent flow creates the secret and stores it automatically.
-1. **Refresh**: For OAuth-based providers, the Token Vault can refresh credentials automatically, with locking, to prevent concurrent requests from consuming a refresh token.
-1. **Deletion/Revocation**: You can revoke credentials independently of the provider itself. Deleting a credential doesn't delete a provider, but creates a new re-enrollment from the user side.
-
-The Token Vault never exposes back the credentials to the API that created them: it releases them to the {{site.ai_gateway}} for outbond calls without making the credentials accessible from any read endpoint.
-
-### The {{site.ai_gateway}} role
-
-{{site.ai_gateway}} acts as bridge between the user and the requests as the sole runtime that calls the {{site.identity}} Token Vault. Agents and MCP clients never call the Token Vault directly. No matter which agent a user is running, the Token Vault only interacts with {{site.ai_gateway}}, not from the agent or the MCP itself.
-
-Policies applies to the {{site.ai_gateway}}, which allow to scope and enforce call behaviors. The Token Vault doesn't hold any policy, it only verifies whose token this is and hands back the matching credential if one exists. For example, in a workflow configured with Okta as the IdP, the {{site.ai_gateway}}:
-
-1. Receives a caller's Okta-issued token.
-1. Presents it to the Token Vault to request a credential for a specific provider.
-1. Once it gets one back, injects the credential into the actual outbond request to the third-party service (for example, as a header, for providers that support it).
-
-
-<!--
-Two plugins cooperate on the route fronting the upstream MCP server:
-* AI MCP OAuth2 — publishes RFC 9728 protected-resource metadata, issues the 401 challenge,
-  verifies the caller's token against the corp IdP. Must be configured to pass the caller's
-  bearer token through unmodified, or the vault never receives a subject token.
-* AI MCP Proxy — performs the token exchange against the vault and injects the returned
-  credential into the upstream call.
-Link to /plugins/ai-mcp-oauth2/ and /plugins/ai-mcp-proxy/.
--->
-
-<!-- TODO: token_vault config does not exist in the AI MCP Proxy schema yet. Confirm the
-     field names and whether a provider is targeted by name or UUID before documenting. -->
-
-## Credential enrollment
-
-<!--
-The most visible behavior on this feature — give it its own section.
-Sequence: first tool call for an unconnected provider -> vault returns 401 with an enrollment
-URL -> gateway surfaces it to the client via MCP elicitation -> user completes the provider's
-consent flow -> vault stores the credential -> user retries and the call succeeds.
-Then: the vault refreshes stored credentials in the background, so users are only re-prompted
-when the provider genuinely requires it.
-Note the enrollment link is short-lived (10 minutes).
--->
+## Manage connected credentials
 
 ## ID-JAG and Enterprise Managed Authorization
 
@@ -376,7 +378,7 @@ Then a table keyed on three axes, because which approach applies depends on all 
 corporate IdP | MCP client | upstream authorization server | approach
 -->
 
-### {{site.identity}} authorization server as an ID-JAG consumer
+### Kong Identity authorization server as an ID-JAG consumer
 
 <!--
 When the corp IdP and MCP client speak ID-JAG but the upstream MCP server does not.
@@ -386,7 +388,7 @@ and calls the gateway with that. The directory's trusted IdP is the {{site.ident
 authorization server itself; from there the flow continues as described above.
 -->
 
-### Token vault as an ID-JAG provider
+### Token Vault as an ID-JAG provider
 
 <!--
 When the corp IdP does not issue ID-JAGs but the upstream's authorization server accepts them.
@@ -408,26 +410,6 @@ bypassing the token vault entirely. Include the standards-gap warning below.
 
 <!-- TODO: plugin name is inconsistent in the source (id-jag-relay vs id-jag-impersonate) and
      no plugin page exists yet. Confirm the shipping name and link it. -->
-
-## Limitations
-
-<!--
-Scope each limitation to what it actually affects.
-
-The ID-JAG relay path is standards-compliant end to end, but running it through a proxy hits
-two gaps in the specs it depends on:
-* RFC 9728 requires the protected resource metadata's resource value to match the identifier
-  the client used verbatim, which a proxy fronting a real upstream cannot satisfy.
-* There is no sanctioned way for a trusted intermediary to negotiate an ID-JAG on a client's
-  behalf.
-Frame as a current standards gap. Do not publish the proposed IETF exemption or link the
-working group issue.
-
-Also list:
-* The vault is not a policy enforcement point.
-* Customer-managed encryption keys (BYOK) are not available.
-* Konnect only.
--->
 
 ## Security and compliance
 
@@ -453,9 +435,25 @@ is released.
      the way /identity/principals/ handles data residency. -->
 
 
-### Enable credential injection on a route
+## Limitations
 
-<!-- Configure AI MCP Proxy to exchange the caller's token for the stored credential and inject it. -->
+<!--
+Scope each limitation to what it actually affects.
+
+The ID-JAG relay path is standards-compliant end to end, but running it through a proxy hits
+two gaps in the specs it depends on:
+* RFC 9728 requires the protected resource metadata's resource value to match the identifier
+  the client used verbatim, which a proxy fronting a real upstream cannot satisfy.
+* There is no sanctioned way for a trusted intermediary to negotiate an ID-JAG on a client's
+  behalf.
+Frame as a current standards gap. Do not publish the proposed IETF exemption or link the
+working group issue.
+
+Also list:
+* The vault is not a policy enforcement point.
+* Customer-managed encryption keys (BYOK) are not available.
+* Konnect only.
+-->
 
 ## Manage connected credentials
 
@@ -471,9 +469,11 @@ is released.
 <!-- TODO: the self-service UI is "details TBD" in the source and the AI GW UI section is
      explicitly marked "not canon". Do not write UI steps until both are confirmed. -->
 
+<!--
 ## Flow
 
 1. Generate a secret (like a PAT from a third-party service).
 1. Store it in the vault.
 1. Retrieve the provider's ID.
 1. Add it to your gateway configuration and decK apply it.
+-->
