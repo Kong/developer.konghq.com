@@ -243,6 +243,30 @@ The AI Rate Limiting Advanced Policy supports several identifiers that allow you
 
 You can configure the type of identifier with the [`config.identifier`](./reference/#schema--config-identifier) field and scope to it using [config.policies.match](./reference/#schema--config-policies-match).
 
+{% table %}
+columns:
+  - title: Type
+    key: type
+  - title: Description
+    key: description
+rows:
+  - type: "`consumer`"
+    description: (Default)
+  - type: "`ip`"
+    description: 
+  - type: "`credential`"
+    description: 
+  - type: "`service`"
+    description: 
+  - type: "`header`"
+    description: 
+  - type: "`path`"
+    description: 
+  - type: "`consumer-group`"
+    description: Requires the policy is attached to an [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) entity.
+      
+{% endtable %}
+
 The following example modifies the [policy-based rate limiting](/ai-gateway/policies/ai-rate-limiting-advanced/#policy-based-rate-limiting) example to use consumer credentials as an identifier.
 
 {% entity_example %}
