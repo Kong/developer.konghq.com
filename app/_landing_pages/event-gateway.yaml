@@ -282,6 +282,12 @@ rows:
                         [Encrypt and decrypt Kafka messages](/event-gateway/encrypt-kafka-messages-with-event-gateway/),
                          [encrypt and decrypt Kafka message fields](/event-gateway/encrypt-kafka-message-fields-with-event-gateway/)
                         or [encrypt and decrypt Kafka message fields dynamically](/event-gateway/encrypt-kafka-message-fields-dynamic/)
+                    - outcome: |
+                        Let consumers work with real production topics while personal data stays hidden from them
+                      feature: |
+                        Mask Fields policy
+                      guide: |
+                        [Mask sensitive fields in Kafka messages](/event-gateway/mask-kafka-message-fields/)
                 - usecase: |
                     **Simplify your Kafka deployment** because it's too complicated and expensive
                   outcomes:
