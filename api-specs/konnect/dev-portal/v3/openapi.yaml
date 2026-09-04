@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@7cc938196f9d5b451076f7d6f33d13517281e097
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/7cc938196f9d5b451076f7d6f33d13517281e097'
+  x-oas-source: kong/platform-api@50e82517a7d3f00f35d62877b852b50a92486651
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/50e82517a7d3f00f35d62877b852b50a92486651'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -4880,6 +4880,7 @@ components:
               items:
                 $ref: '#/components/schemas/PortalMenuItem'
         spec_renderer:
+          description: The spec renderer settings of this portal
           type: object
           additionalProperties: false
           properties:
@@ -4911,6 +4912,22 @@ components:
               description: Let users define a custom server URL for endpoints. This will be used to generate code snippets and to test the API. The URL is client-side only and is not saved.
               type: boolean
               default: true
+            try_it_ui_audience:
+              description: |
+                The audience for the Try It UI feature.
+
+                `all` means that the Try It UI will be available to all users, including unauthenticated users.
+
+                `authenticated` means that the Try It UI will only be available to authenticated users.
+
+                `registered` means that the Try It UI will only be available to users who have registered for the API.
+              type: string
+              default: all
+              enum:
+                - all
+                - authenticated
+                - registered
+          title: PortalCustomizationSpecRenderer
         robots:
           type: string
           nullable: true
