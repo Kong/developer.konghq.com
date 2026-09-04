@@ -9,6 +9,11 @@ topologies:
   - universal
   - kubernetes
 releases:
+  - version: 3.0.0
+    release: "3.0"
+    releaseDate: "2026-09-31"
+    eol: "2026-09-31"
+    branch: release-3.0
   - version: 2.2.9
     release: "2.2"
     releaseDate: "2023-04-14"
