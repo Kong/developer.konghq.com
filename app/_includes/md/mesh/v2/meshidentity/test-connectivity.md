@@ -22,4 +22,4 @@
    ```
    {:.no-copy-code}
 
-{% include mesh/meshidentity/mtls-explanation.md %}
+{% include md/mesh/v2/meshidentity/mtls-explanation.md %}

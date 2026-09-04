@@ -66,7 +66,7 @@ kuma-dp run \
   --dataplane-token-file=/tmp/kuma-dp-redis-1-token
 ```
 
-{% include /mesh/skip-verify.md %}
+{% include /md/mesh/v2/skip-verify.md %}
 
 In the example above, any external client who wants to consume Redis through the sidecar will have to use `23.234.0.1:9000`, which will redirect to the Redis service listening on address `127.0.0.1:6379`. If your service doesn't listen on `127.0.0.1` and you can't change the address it listens on, you can set the `serviceAddress`:
 

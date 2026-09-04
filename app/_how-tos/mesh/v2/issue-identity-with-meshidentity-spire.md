@@ -21,9 +21,9 @@ prereqs:
     - title: Helm
       include_content: prereqs/helm
     - title: A running Kubernetes cluster
-      include_content: prereqs/kubernetes/mesh-cluster
+      include_content: md/mesh/v2/prereqs/kubernetes-cluster
     - title: Install {{site.mesh_product_name}} with demo configuration
-      include_content: prereqs/kubernetes/mesh-quickstart
+      include_content: md/mesh/v2/prereqs/kubernetes-quickstart
     - title: Install Spire
       content: |
         1. Install the Spire CRDs:
@@ -68,7 +68,7 @@ major_version:
 
 The [`MeshIdentity`](/mesh/policies/meshidentity/) policy issues identities for selected data planes. This approach is [SPIFFE](https://spiffe.io/docs/latest/spiffe-about/overview/)-compliant. In this guide, you'll issue identities using [Spire](https://spiffe.io/docs/latest/spire-about/spire-concepts/) as the identity provider, where Spire issues identities and manages the trust externally.
 
-{% include mesh/meshidentity/concepts.md %}
+{% include md/mesh/v2/meshidentity/concepts.md %}
 
 ## Enable Spire injection on the control plane
 
@@ -152,12 +152,12 @@ kubectl rollout restart -n kong-mesh-demo deployment/demo-app deployment/kv
 
 ## Test connectivity
 
-{% include mesh/meshidentity/test-connectivity.md %}
+{% include md/mesh/v2/meshidentity/test-connectivity.md %}
 
 ## Allow traffic
 
-{% include mesh/meshidentity/allow-traffic.md %}
+{% include md/mesh/v2/meshidentity/allow-traffic.md %}
 
 ## Validate
 
-{% include mesh/meshidentity/validate.md %}
+{% include md/mesh/v2/meshidentity/validate.md %}

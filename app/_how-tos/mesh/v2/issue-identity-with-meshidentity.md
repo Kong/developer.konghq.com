@@ -21,9 +21,9 @@ prereqs:
     - title: Helm
       include_content: prereqs/helm
     - title: A running Kubernetes cluster
-      include_content: prereqs/kubernetes/mesh-cluster
+      include_content: md/mesh/v2/prereqs/kubernetes-cluster
     - title: Install {{site.mesh_product_name}} with demo configuration
-      include_content: prereqs/kubernetes/mesh-quickstart
+      include_content: md/mesh/v2/prereqs/kubernetes-quickstart
 cleanup:
   inline:
     - title: Clean up {{site.mesh_product_name}}
@@ -50,7 +50,7 @@ major_version:
 
 The [`MeshIdentity`](/mesh/policies/meshidentity/) policy issues identities for selected data planes. This approach is [SPIFFE](https://spiffe.io/docs/latest/spiffe-about/overview/)-compliant and works with [Spire](/mesh/v2/issue-identity-with-meshidentity-spire/). In this guide, you'll issue identities using the bundled provider.
 
-{% include mesh/meshidentity/concepts.md %}
+{% include md/mesh/v2/meshidentity/concepts.md %}
 
 ## Issue identities
 
@@ -150,12 +150,12 @@ In the displayed `MeshTrust`:
 
 ## Test connectivity
 
-{% include mesh/meshidentity/test-connectivity.md %}
+{% include md/mesh/v2/meshidentity/test-connectivity.md %}
 
 ## Allow traffic
 
-{% include mesh/meshidentity/allow-traffic.md %}
+{% include md/mesh/v2/meshidentity/allow-traffic.md %}
 
 ## Validate
 
-{% include mesh/meshidentity/validate.md %}
+{% include md/mesh/v2/meshidentity/validate.md %}

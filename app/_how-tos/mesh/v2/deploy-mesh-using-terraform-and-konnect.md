@@ -36,7 +36,7 @@ cleanup:
         terraform destroy
         ```
     - title: Remove the working directory
-      include_content: cleanup/mesh/remove-working-directory
+      include_content: md/mesh/v2/cleanup/remove-working-directory
 related_resources:
   - text: "{{site.mesh_product_name}} in {{site.konnect_short_name}}"
     url: /mesh/v2/konnect/

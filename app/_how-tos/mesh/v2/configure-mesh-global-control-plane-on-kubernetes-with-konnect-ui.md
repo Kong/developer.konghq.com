@@ -21,7 +21,7 @@ prereqs:
     - title: "{{site.konnect_product_name}}"
       include_content: prereqs/products/konnect-account-only
     - title: A running Kubernetes cluster
-      include_content: prereqs/kubernetes/mesh-cluster-lb
+      include_content: md/mesh/v2/prereqs/kubernetes-cluster-lb
     - title: kubectl
       content: |
         Install and configure [`kubectl`](https://kubernetes.io/docs/tasks/tools/) to connect to your cluster.
@@ -42,18 +42,18 @@ next_steps:
 cleanup:
   inline:
     - title: Remove the demo application
-      include_content: cleanup/mesh/remove-demo-app
+      include_content: md/mesh/v2/cleanup/remove-demo-app
     - title: Uninstall the zone control plane
-      include_content: cleanup/mesh/uninstall-zone-cp
+      include_content: md/mesh/v2/cleanup/uninstall-zone-cp
     - title: Delete the control plane in {{site.konnect_short_name}}
-      include_content: cleanup/mesh/delete-konnect-control-plane-ui
+      include_content: md/mesh/v2/cleanup/delete-konnect-control-plane-ui
 faqs:
   - q: How does a zone authenticate to the global control plane?
     a: |
-      {% include faqs/mesh-zone-authentication.md %}
+      {% include md/mesh/v2/faqs/zone-authentication.md %}
   - q: How do I configure kumactl to connect to the global control plane?
     a: |
-      {% include faqs/mesh-configure-kumactl.md %}
+      {% include md/mesh/v2/faqs/configure-kumactl.md %}
 major_version:
   mesh: 2
 
@@ -65,11 +65,11 @@ To run your zone control plane on a VM or bare metal instead, see [Configure a {
 
 ## Create a global control plane in {{site.konnect_short_name}}
 
-{% include how-tos/mesh/create-global-control-plane-ui.md %}
+{% include md/mesh/v2/how-tos/create-global-control-plane-ui.md %}
 
 ## Create a zone in the global control plane
 
-{% include how-tos/mesh/create-zone-ui.md config_type="Kubernetes" deploy_instruction="Follow the Helm and token setup instructions shown in the UI to deploy the zone control plane on your Kubernetes cluster." %}
+{% include md/mesh/v2/how-tos/create-zone-ui.md config_type="Kubernetes" deploy_instruction="Follow the Helm and token setup instructions shown in the UI to deploy the zone control plane on your Kubernetes cluster." %}
 
 ## Create a mesh
 
@@ -83,8 +83,8 @@ Workloads can only join the mesh once a mesh exists on the global control plane.
 
 ## Deploy the demo application
 
-{% include how-tos/mesh/deploy-demo-app.md %}
+{% include md/mesh/v2/how-tos/deploy-demo-app.md %}
 
 ## Validate
 
-{% include how-tos/mesh/validate-mesh-zone.md %}
+{% include md/mesh/v2/how-tos/validate-mesh-zone.md %}

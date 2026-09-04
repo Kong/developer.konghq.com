@@ -90,16 +90,16 @@ You can also pass the token as a `KUMA_DATAPLANE_RUNTIME_TOKEN` environment vari
 
 ## Revoke a token
 
-{% include /mesh/token-revocation.md type="zone" %}
+{% include /md/mesh/v2/token-revocation.md type="zone" %}
 
 ## Rotate a signing key
 
-{% include /mesh/signing-key-rotation.md type="zone" %}
+{% include /md/mesh/v2/signing-key-rotation.md type="zone" %}
 
 
 ## Offline token issuing
 
-{% include /mesh/offline-token.md type="zone" %}
+{% include /md/mesh/v2/offline-token.md type="zone" %}
 
 
 ## Multi-zone

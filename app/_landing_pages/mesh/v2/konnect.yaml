@@ -132,5 +132,5 @@ rows:
                   Once the zone control plane starts with these values, it connects to {{site.konnect_short_name}}, appears as a zone in the [Service Mesh](https://cloud.konghq.com/mesh-manager) area, and begins receiving configuration.
               - q: How does a zone authenticate to the global control plane?
                 a: |
-                  {% include faqs/mesh-zone-authentication.md %}
+                  {% include md/mesh/v2/faqs/zone-authentication.md %}
 

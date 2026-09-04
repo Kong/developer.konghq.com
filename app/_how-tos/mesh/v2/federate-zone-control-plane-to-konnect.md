@@ -17,9 +17,9 @@ tldr:
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} global control plane"
-      include_content: how-tos/mesh/create-global-control-plane-api
+      include_content: md/mesh/v2/how-tos/create-global-control-plane-api
     - title: Install kumactl
-      include_content: prereqs/tools/kumactl
+      include_content: md/mesh/v2/prereqs/kumactl
     - title: Zone control plane
       content: |
         Deploy a standalone {{site.mesh_product_name}} control plane on Kubernetes. This is the single-zone control plane that you'll federate to {{site.konnect_short_name}}; it isn't connected to any global control plane yet.
@@ -57,9 +57,9 @@ cleanup:
         pkill -f "kubectl port-forward.*5681"
         ```
     - title: Uninstall the zone control plane
-      include_content: cleanup/mesh/uninstall-zone-cp
+      include_content: md/mesh/v2/cleanup/uninstall-zone-cp
     - title: Delete the {{site.konnect_short_name}} control plane
-      include_content: cleanup/mesh/delete-konnect-control-plane-api
+      include_content: md/mesh/v2/cleanup/delete-konnect-control-plane-api
     - title: Remove the kumactl control plane configurations
       content: |
         Remove the control plane configurations added to `kumactl` during this guide:
@@ -69,11 +69,11 @@ cleanup:
         kumactl config control-planes remove --name konnect
         ```
     - title: Remove the working directory
-      include_content: cleanup/mesh/remove-working-directory
+      include_content: md/mesh/v2/cleanup/remove-working-directory
 faqs:
   - q: How does a zone authenticate to the global control plane?
     a: |
-      {% include faqs/mesh-zone-authentication.md %}
+      {% include md/mesh/v2/faqs/zone-authentication.md %}
 major_version:
   mesh: 2
 
@@ -118,15 +118,15 @@ Federating a zone control plane moves {{site.mesh_product_name}} from a single-z
    kumactl export --profile=federation --format=universal > resources.yaml
    ```
 
-{% include how-tos/mesh/apply-resources-to-konnect.md %}
+{% include md/mesh/v2/how-tos/apply-resources-to-konnect.md %}
 
 ## Connect the zone control plane to {{site.konnect_short_name}}
 
 Generate a zone token from the {{site.konnect_short_name}}-managed global control plane, then reconfigure your existing zone control plane to connect to {{site.konnect_short_name}}.
 
-{% include how-tos/mesh/generate-zone-token-api.md %}
+{% include md/mesh/v2/how-tos/generate-zone-token-api.md %}
 
-{% include how-tos/mesh/reconnect-zone-to-konnect.md %}
+{% include md/mesh/v2/how-tos/reconnect-zone-to-konnect.md %}
 
 ## Validate
 

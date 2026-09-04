@@ -54,11 +54,11 @@ prereqs:
     - title: Helm
       include_content: prereqs/helm
     - title: A running Kubernetes cluster
-      include_content: prereqs/kubernetes/mesh-cluster
+      include_content: md/mesh/v2/prereqs/kubernetes-cluster
     - title: Install {{site.mesh_product_name}} with demo configuration
-      include_content: prereqs/kubernetes/mesh-quickstart
+      include_content: md/mesh/v2/prereqs/kubernetes-quickstart
     - title: Deploy a second demo Service
-      include_content: prereqs/mesh-migration-service
+      include_content: md/mesh/v2/prereqs/migration-service
    
 major_version:
   mesh: 2

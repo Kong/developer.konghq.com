@@ -42,13 +42,13 @@ cleanup:
         pkill -f kuma-cp
         ```
     - title: Delete the {{site.konnect_short_name}} control plane
-      include_content: cleanup/mesh/delete-konnect-control-plane-api
+      include_content: md/mesh/v2/cleanup/delete-konnect-control-plane-api
     - title: Remove the working directory
-      include_content: cleanup/mesh/remove-working-directory
+      include_content: md/mesh/v2/cleanup/remove-working-directory
 faqs:
   - q: How does a zone authenticate to the global control plane?
     a: |
-      {% include faqs/mesh-zone-authentication.md %}
+      {% include md/mesh/v2/faqs/zone-authentication.md %}
 major_version:
   mesh: 2
 
@@ -60,18 +60,18 @@ To deploy services and test traffic across the mesh, see [Configure a {{site.mes
 
 ## Create a global control plane in {{site.konnect_short_name}}
 
-{% include how-tos/mesh/create-global-control-plane-api.md %}
+{% include md/mesh/v2/how-tos/create-global-control-plane-api.md %}
 
 ## Generate a zone token
 
-{% include how-tos/mesh/generate-zone-token-api.md %}
+{% include md/mesh/v2/how-tos/generate-zone-token-api.md %}
 
 ## Create a zone in the global control plane
 
 With the token created, deploy the zone control plane on your machine:
 
-{% include how-tos/mesh/deploy-zone-cp-universal.md zone_name="zone-1" show_exports=true %}
+{% include md/mesh/v2/how-tos/deploy-zone-cp-universal.md zone_name="zone-1" show_exports=true %}
 
 ## Validate
 
-{% include how-tos/mesh/validate-zone-online.md %}
+{% include md/mesh/v2/how-tos/validate-zone-online.md %}
