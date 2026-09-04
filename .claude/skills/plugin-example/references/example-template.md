@@ -76,7 +76,12 @@ tools:
   - kic
   - terraform
 ```
+# Optional: Use this to group plugin examples by a category. See app/_kong_plugins/openid-connect/examples/override-jwks-endpoint.yaml for an example. The categories are then outlined in the frontmatter of the plugin's _index.md file like the following: 
+# examples_groups:
+#  - slug: identity
+#    text: Using Kong Identity
 
+# group: <name of group>
 ---
 
 ## Naming conventions
