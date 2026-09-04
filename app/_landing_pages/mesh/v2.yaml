@@ -1,0 +1,354 @@
+metadata:
+  title: "Kong Mesh"
+  content_type: landing_page
+  description: Learn how Kong Mesh works and how to configure it.
+  products:
+    - mesh
+  tags:
+    - control-plane
+    - data-plane
+  major_version:
+    mesh: 2
+rows:
+  - header:
+      type: h1
+      text: "Kong Mesh"
+      sub_text: Modernized service mesh for API developers and Platform Operators
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    With Kong Mesh, you can run and manage a distributed service mesh across Kubernetes and VMs in any environment.
+
+                    **Benefits of Kong Mesh:**
+                    - Built-in mTLS, service discovery, and traffic management.
+                    - Support for [multi-zone](/mesh/v2/mesh-multizone-service-deployment/) and multi-tenant topologies.
+                    - Runs on both Kubernetes and Universal (VM / Bare metal) environments.
+                    - [Enterprise features](/mesh/v2/enterprise/) like access control and advanced observability.
+
+                    You can manage your mesh environments using the [Konnect Mesh GUI](https://cloud.konghq.com/us/mesh-manager/).
+      - blocks:
+        - type: image
+          config:
+            url: /assets/images/mesh/gw_mesh.png
+            alt_text: "Kong Mesh Architecture Diagram"
+
+  - header:
+      type: h2
+      text: "Learn"
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: "Why use a service mesh?"
+              description: |
+                Overview of service mesh concepts and how Kong Mesh simplifies secure and reliable service-to-service communication using sidecar proxies and a Control Plane.
+              cta:
+                text: Learn more 
+                url: /mesh/v2/service-mesh/
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} concepts"
+              description: |
+                Understand the core concepts of Kong Mesh, including the Control Plane, Data Plane proxies, inbounds and outbounds, and resources like policies.
+              cta:
+                text: Learn more 
+                url: /mesh/v2/concepts/
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} architecture"
+              description: |
+                Understand the architecture of a Kong Mesh mesh, including Control and Data Plane components, Kubernetes and Universal modes, and how Services integrate into the mesh.
+              cta:
+                text: Learn more 
+                url: /mesh/v2/architecture/
+  - header:
+      type: h2
+      text: "Get started"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/logos/Konnect-logo.svg
+            title: Managed global control plane
+            description: |
+              Use Konnect to host and manage your {{site.mesh_product_name}} global control plane. Your data plane can be deployed on Kubernetes, virtual machines, or bare metal.
+            featured: true
+            cta:
+                text: See the quickstart
+                url: /mesh/v2/configure-mesh-global-control-plane-on-universal-with-konnect-api/
+      - blocks:
+          - type: card
+            config:
+              title: Self hosted control plane
+              description: |
+                Deploy and manage the control plane and data plane on your Kubernetes, Virtual Machines or Bare Metal infrastructure.
+              icon: /assets/icons/plug.svg
+              cta:
+                text: See the quickstart 
+                url: /mesh/v2/deploy-mesh-self-managed/
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "{{site.mesh_product_name}} in {{site.konnect_short_name}}"
+              blocks:
+                - type: text
+                  text: |
+                    {{site.konnect_short_name}} allows you to create, manage, and view your {{site.mesh_product_name}} service meshes
+                    using the {{site.konnect_short_name}} platform.
+
+                    **Key benefits include:**
+                    - **Kong-managed global control plane**: Kong handles the management of your global control plane.
+                    - **Centralized view**: See all your Services, control planes, and data plane proxies in one place.
+                    - **Multi-zone support**: Deploy across Kubernetes, Universal environments, and multiple clouds. 
+
+                    See [{{site.mesh_product_name}} in {{site.konnect_short_name}}](/mesh/v2/konnect/) for more details.
+
+          - type: button
+            config:
+              text: "Create a service mesh in {{site.konnect_short_name}} &rarr; "
+              url: https://cloud.konghq.com/mesh-manager/create-control-plane
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/mesh-manager/konnect-mesh-control-plane-dashboard.png
+              alt_text: "Service Mesh Dashboard"
+      
+  - header:
+      type: h2
+      text: "Next steps"
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Deployment types
+              icon: /assets/icons/mesh.svg
+              description: |
+                You can deploy {{site.mesh_product_name}} in a single zone or across multiple zones, such as data centers, Kubernetes clusters, or cloud regions - giving you unified control over all your services.
+              ctas:
+                - text: Single Zone 
+                  url: /mesh/v2/single-zone/
+                - text: Multi Zone
+                  url: /mesh/v2/mesh-multizone-service-deployment/
+      - blocks:
+          - type: card
+            config:
+              title: Control service traffic
+              icon: /assets/icons/linked-services.svg
+              description: |
+                Enforce service-to-service communication with fine-grained policies for access control, mutual TLS, traffic permissions, and L4/L7 routing. Ensuring secure and compliant traffic flows across your mesh.
+              ctas:
+                - text: Mesh Traffic Permission 
+                  url: /mesh/policies/meshtrafficpermission/
+                - text: Mesh HTTP Route 
+                  url: /mesh/policies/meshhttproute/
+                - text: Mesh TCP Route 
+                  url: /mesh/policies/meshtcproute/
+      - blocks:
+          - type: card
+            config:
+              title: Service reliability
+              icon: /assets/icons/refresh.svg
+              description: |
+                Improve service reliability with built-in policies for health checks, circuit breakers, timeouts, and outlier detection. Automatically prevent unhealthy or overloaded services from impacting the rest of your mesh.
+              ctas:
+                - text: Mesh Health Check 
+                  url: /mesh/policies/meshhealthcheck/
+                - text: Mesh Retry 
+                  url: /mesh/policies/meshretry/
+                - text: Mesh Circuit Breaker 
+                  url: /mesh/policies/meshcircuitbreaker/
+      - blocks:
+          - type: card
+            config:
+              title: Observability
+              icon: /assets/icons/monitor.svg
+              description: |
+                Monitor service to service communication using Prometheus and/or OpenTelemetry.
+              ctas:
+                - text: Introduction 
+                  url: /mesh/v2/observability/
+                - text: Deploy an OpenTelemetry collector
+                  url: /mesh/v2/deploy-an-opentelemetry-collector/
+      - blocks:
+          - type: card
+            config:
+              title: Multi tenant Mesh
+              icon: /assets/icons/organization.svg
+
+              description: |
+                Creating multiple isolated service meshes within the same {{site.mesh_product_name}} cluster.
+              cta:
+                text: Learn more 
+                url: /mesh/v2/mesh-multi-tenancy/
+      - blocks:
+          - type: card
+            config:
+              title: Configure ingress traffic
+              icon: /assets/icons/load-balance.svg
+              description: |
+                Configure ingress (north / south traffic into your Mesh) using built-in or Kong gateway.
+              cta:
+                text: Learn more 
+                url: /mesh/v2/ingress/
+  - header:
+      type: h2
+      text: Security and access
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: "Configure Mutual TLS"
+              description: |
+                Enables automatic encrypted mTLS traffic for all the services in a Mesh, as well as assigning an identity to every data plane proxy.
+              cta:
+                text: View the reference
+                url: /mesh/v2/policies/mutual-tls/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: "Issue identity with MeshIdentity"
+              description: |
+                Issue SPIFFE-compliant workload identities with the MeshIdentity bundled provider and allow traffic with MeshTrafficPermission SPIFFE ID matching.
+              cta:
+                text: View the guide
+                url: /mesh/v2/issue-identity-with-meshidentity/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: "Issue identity with MeshIdentity and Spire"
+              description: |
+                Issue SPIFFE-compliant workload identities with the MeshIdentity Spire provider, where Spire manages the trust externally.
+              cta:
+                text: View the guide
+                url: /mesh/v2/issue-identity-with-meshidentity-spire/
+                align: end
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} audit logs"
+              description: |
+                Track all user and system actions in {{site.mesh_product_name}} using the AccessAudit resource and configurable backends.
+              cta:
+                text: View the reference 
+                url: /mesh/v2/access-audit/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} RBAC"
+              description: |
+                Use AccessRole and AccessRoleBinding resources in {{site.mesh_product_name}} to implement fine-grained, role-based access to policies and actions.
+              cta:
+                text: View the reference 
+                url: /mesh/v2/rbac/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: "Secure access between Mesh components"
+              description: |
+                Learn how secure access is provided across a Kong Mesh deployment.
+              cta:
+                text: View the reference 
+                url: /mesh/v2/secure-access/
+                align: end
+
+  - header:
+      type: h2
+      text: Key references
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Policy Hub
+              description: |
+                {{site.mesh_product_name}} policies are bundled features for your service traffic and network configuration.
+              ctas:
+                - text: Learn about policies 
+                  url: /mesh/v2/policies-introduction/
+                - text: See all policies 
+                  url: /mesh/policies/
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} requirements and performance"
+              description: |
+                See the different requirements to deploy {{site.mesh_product_name}} as well as managing performance and resource requirements
+              ctas:
+                - text: View the requirements 
+                  url: /mesh/requirements/
+                - text: Kubernetes sidecar resources
+                  url: /mesh/v2/data-plane-kubernetes/#custom-container-configuration
+                - text: Performance tuning
+                  url: /mesh/v2/performance-tuning/
+      - blocks:
+          - type: card
+            config:
+              title: "Use {{site.mesh_product_name}} CLI and API"
+              description: |
+                Access Kong Mesh via GUI, HTTP API, kubectl, or kumactl in Kubernetes or Universal environments. Understand available permissions and Control Plane ports.
+              ctas:
+                - text: Learn more 
+                  url: /mesh/v2/interact-with-control-plane/
+                - text: Kuma Control Plane CLI options
+                  url: /mesh/v2/reference/kuma-cp/
+  - header:
+      type: h2
+      text: Support policies
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} version support policy"
+              description: |
+                The {{site.mesh_product_name}} version support policy outlines the {{site.mesh_product_name}} 
+                versioning scheme and version lifecycle, from release to sunset support.
+              ctas:
+                - text: View the version support policy 
+                  url: /mesh/support-policy/
+                - text: View Kuma Mesh changelog 
+                  url: /mesh/v2/changelog/
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} vulnerability patching process"
+              description: |
+                Understand how Kong addresses and patches vulnerabilities in {{site.mesh_product_name}} binaries, third-party dependencies, and Docker images.
+              cta:
+                text: View the vulnerability support policy 
+                url: /mesh/vulnerability-patching-process
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} software bill of materials"
+              description: |
+                See the SBOM for {{site.mesh_product_name}} releases.
+              cta:
+                text: View the SBOM
+                url: /mesh/v2/sbom/
+  - header:
+      type: h2
+      text: Frequently asked questions
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: I'm getting connection errors when connecting to {{site.konnect_short_name}}. What should I check?
+              a: |
+                {% include_cached faqs/konnect-connection-errors.md %}
+                align: end

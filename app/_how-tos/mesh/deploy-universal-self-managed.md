@@ -3,8 +3,6 @@ title: Deploy a self-managed control plane on a VM or Bare metal
 description: "Learn how to install Mesh on Virtual Machines or Bare metal, and deploy the {{site.mesh_product_name}} demo application."
 content_type: how_to
 permalink: /mesh/deploy-universal-self-managed/
-bread-crumbs: 
-  - /mesh/
 related_resources:
   - text: "{{site.mesh_product_name}}"
     url: /mesh/overview/

@@ -527,3 +527,7 @@
 
 # AI Auth Strategy rename
 /ai-gateway/entities/ai-identity-provider/ /ai-gateway/entities/ai-auth-strategy/ 301
+
+# mesh previous-major how-to redirects — added by migration skill on 2026-09-04
+/how-to/set-up-a-built-in-kubernetes-gateway/  /mesh/v2/how-to/set-up-a-built-in-kubernetes-gateway/  301
+/how-to/set-up-a-built-in-mesh-gateway/  /mesh/v2/how-to/set-up-a-built-in-mesh-gateway/  301

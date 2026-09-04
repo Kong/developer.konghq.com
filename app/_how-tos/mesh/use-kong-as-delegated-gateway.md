@@ -7,8 +7,6 @@ content_type: how_to
 
 permalink: /mesh/use-kong-as-delegated-gateway/
 
-bread-crumbs: 
-  - /mesh/
 
 related_resources:
   - text: Set up a built-in gateway with {{site.mesh_product_name}}

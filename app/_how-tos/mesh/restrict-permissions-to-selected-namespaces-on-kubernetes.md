@@ -3,8 +3,6 @@ title: Restrict {{site.mesh_product_name}} permissions to selected namespaces on
 description: "This guide explains how to limit {{site.mesh_product_name}} to specific namespaces, giving you greater control over security and resource management."
 content_type: how_to
 permalink: /mesh/restrict-permissions-to-selected-namespaces-on-kubernetes/
-bread-crumbs: 
-  - /mesh/
 related_resources: 
   - text: Manage control plane permissions on Kubernetes
     url: /mesh/manage-control-plane-permissions-on-kubernetes/

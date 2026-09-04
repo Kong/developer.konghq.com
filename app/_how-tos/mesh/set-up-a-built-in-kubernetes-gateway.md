@@ -4,8 +4,6 @@ permalink: /how-to/set-up-a-built-in-kubernetes-gateway/
 description: This guide walks through setting up a built-in Kubernetes gateway, defining Routes, securing traffic with TLS, and configuring permissions.
     
 content_type: how_to
-bread-crumbs: 
-  - /mesh/
 related_resources:
   - text: Set up a built-in gateway with {{site.mesh_product_name}}
     url: '/how-to/set-up-a-built-in-mesh-gateway/'

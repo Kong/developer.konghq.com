@@ -5,8 +5,6 @@ description: Progressively roll in mutual TLS with the MeshTLS policy in {{site.
 content_type: how_to
 permalink: /mesh/progressively-rolling-in-strict-mtls/
 
-bread-crumbs: 
-  - /mesh/
 
 related_resources:
   - text: MeshTLS policy

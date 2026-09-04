@@ -1,5 +1,6 @@
 name: Kong Mesh
 icon: /_assets/icons/products/mesh.svg
+previous_major_url_segment: v2
 tiers:
   enterprise:
     text: Enterprise
