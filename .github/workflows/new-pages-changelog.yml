@@ -1,0 +1,60 @@
+name: New pages changelog
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  new-pages-changelog:
+    name: Update new pages changelog
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        with:
+          egress-policy: audit
+
+      - name: Create GitHub App Token
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859
+        id: app-token
+        with:
+          app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
+          private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
+          owner: Kong
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: tools/new-pages-changelog/package-lock.json
+
+      - name: Generate changelog
+        run: |
+          cd tools/new-pages-changelog
+          npm ci
+          node index.js
+
+      - name: Check for changes
+        id: changes
+        run: |
+          git diff --quiet -- docs/new-pages-changelog.md && echo "changed=false" >> "$GITHUB_OUTPUT" || echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Create pull request
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8
+        with:
+          title: Update new pages changelog
+          commit-message: Update new pages changelog
+          branch: automated/new-pages-changelog
+          labels: skip-changelog,review:general
+          token: ${{ steps.app-token.outputs.token }}
+          add-paths: |
+            docs/new-pages-changelog.md

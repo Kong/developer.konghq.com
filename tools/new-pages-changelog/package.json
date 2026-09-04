@@ -1,0 +1,15 @@
+{
+  "name": "new-pages-changelog",
+  "version": "1.0.0",
+  "description": "Generates an internal, week-grouped changelog of newly published content pages",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "generate": "node index.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "gray-matter": "^4.0.3",
+    "yaml": "^2.6.0"
+  }
+}
