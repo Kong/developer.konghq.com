@@ -114,7 +114,7 @@ First, create and configure the custom plugin:
       local aws = AWS({ region = AWS_global_config.region })
 
       local plugin = {
-        PRIORITY = 1000,
+        PRIORITY = 980,
         VERSION  = "1.0.0",
       }
 
