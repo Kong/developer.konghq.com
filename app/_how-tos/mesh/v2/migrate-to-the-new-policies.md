@@ -370,7 +370,7 @@ Before we start migrating, we need to set up kumactl, which we'll use to inspect
    1. Add the {{site.mesh_product_name}} binaries directory to your path:
 
       ```sh
-      export PATH=$PATH:$(pwd)/{{site.mesh_product_name_path}}-{{site.data.mesh_latest.version}}/bin
+      export PATH=$PATH:$(pwd)/{{site.mesh_product_name_path}}-{{page.latest_release.version}}/bin
       ```
 
 1. Export your admin token and add your control plane:

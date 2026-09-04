@@ -76,13 +76,13 @@ browser --> edge-gateway
 1. Run the following command to install the {{site.mesh_product_name}} binaries:
 
    ```sh
-   curl -L https://developer.konghq.com/mesh/v2/installer.sh | VERSION={{site.data.mesh_latest.version}} sh -
+   curl -L https://developer.konghq.com/mesh/v2/installer.sh | VERSION={{page.latest_release.version}} sh -
    ```
 
 1. Add the binaries to your system's path:
 
    ```sh
-   export PATH="$(pwd)/kong-mesh-{{site.data.mesh_latest.version}}/bin:$PATH"
+   export PATH="$(pwd)/kong-mesh-{{page.latest_release.version}}/bin:$PATH"
    ```
 
 1. Run the following command to confirm that {{site.mesh_product_name}} is installed correctly:
@@ -94,7 +94,7 @@ browser --> edge-gateway
    You should see the following output:
 
    ```
-   Client: {{site.mesh_product_name}} {{site.data.mesh_latest.version}}
+   Client: {{site.mesh_product_name}} {{page.latest_release.version}}
    ```
    {:.no-copy-code}
 

@@ -36,6 +36,10 @@ module Jekyll
         @number ||= @release_hash['release']
       end
 
+      def version
+        @version ||= @release_hash['version']
+      end
+
       def ee_version
         @ee_version ||= @release_hash['ee-version']
       end

@@ -61,14 +61,14 @@ The {{site.mesh_product_name}} image signature can be verified using `cosign`:
 2. Parse the image manifest using `regctl`
 
    ```sh
-   IMAGE_DIGEST=$(regctl manifest digest kong/kuma-cp:{{site.data.mesh_latest.version}})
+   IMAGE_DIGEST=$(regctl manifest digest kong/kuma-cp:{{page.release.version}})
    ```
 
 3. Run the `cosign verify` command:
 
    ```sh
    cosign verify \
-      kong/kuma-cp:{{site.data.mesh_latest.version}}@$IMAGE_DIGEST \
+      kong/kuma-cp:{{page.release.version}}@$IMAGE_DIGEST \
       --certificate-oidc-issuer='https://token.actions.githubusercontent.com' \
       --certificate-identity-regexp='https://github.com/Kong/kong-mesh/.github/workflows/kuma-_build_publish.yaml' \
       -a repo='Kong/kong-mesh' \

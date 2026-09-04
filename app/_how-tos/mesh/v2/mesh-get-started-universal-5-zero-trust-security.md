@@ -143,7 +143,7 @@ docker run \
   --ip 172.18.78.4 \
   --publish 28080:8080 \
   --volume "$KONG_MESH_DEMO_TMP:/demo" \
-  kong/kuma-dp:{{site.data.mesh_latest.version}} run \
+  kong/kuma-dp:{{page.latest_release.version}} run \
     --cp-address https://control-plane:5678 \
     --dataplane-token-file /demo/token-edge-gateway \
     --dataplane-file /demo/dataplane-edge-gateway.yaml \

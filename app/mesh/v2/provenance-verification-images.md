@@ -64,14 +64,14 @@ Because Kong uses GitHub Actions to build and release, Kong also uses GitHub's O
 2. Parse the image manifest using `regctl`:
 
    ```sh
-   export IMAGE_DIGEST=$(regctl manifest digest kong/kuma-cp:{{site.data.mesh_latest.version}})
+   export IMAGE_DIGEST=$(regctl manifest digest kong/kuma-cp:{{page.release.version}})
    ```
 
 3. Run the `cosign verify-attestation ...` command:
 
    ```sh
    cosign verify-attestation \
-      kong/kuma-cp:{{site.data.mesh_latest.version}}@$IMAGE_DIGEST \
+      kong/kuma-cp:{{page.release.version}}@$IMAGE_DIGEST \
       --type='slsaprovenance' \
       --certificate-oidc-issuer='https://token.actions.githubusercontent.com' \
       --certificate-identity-regexp='^https://github.com/slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@refs/tags/v[0-9]+.[0-9]+.[0-9]+$' \
@@ -87,18 +87,18 @@ Because Kong uses GitHub Actions to build and release, Kong also uses GitHub's O
 1. Parse the image manifest using `regctl`
 
    ```sh
-   export IMAGE_DIGEST=$(regctl manifest digest kong/kuma-cp:{{site.data.mesh_latest.version}})
+   export IMAGE_DIGEST=$(regctl manifest digest kong/kuma-cp:{{page.release.version}})
    ```
 
 2. Run the `slsa-verifier verify-image ...` command:
 
    ```sh
    slsa-verifier verify-image \
-      kong/kuma-cp:{{site.data.mesh_latest.version}}@$IMAGE_DIGEST \
+      kong/kuma-cp:{{page.release.version}}@$IMAGE_DIGEST \
       --print-provenance \
       --provenance-repository 'kong/notary' \
       --source-uri 'github.com/Kong/kong-mesh' \
-      --source-tag '{{site.data.mesh_latest.version}}'
+      --source-tag '{{page.release.version}}'
    ```
 
 {% endnavtab %}
