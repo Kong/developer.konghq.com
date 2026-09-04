@@ -129,7 +129,7 @@ An AI Model is a managed entity. {{site.ai_gateway}} owns its runtime configurat
 When you expose an AI Model, you choose which AI capabilities it provides through the [`capabilities`](#schema-aigateway-model-capabilities) field. The [`type`](#schema-aigateway-model-type) you select determines which capabilities are available:
 
 * **`model` type**: for synchronous request/response workloads. Available capabilities: `generate`, `agentic`, `embeddings`, `audio/speech`, `audio/transcription`, `audio/translation`, `image`, `video`, `realtime`, `rerank`.
-* **`api` type**: for asynchronous batch processing. Available capabilities: `batches`, `files`.
+* **`api` type**: for asynchronous batch processing. Available capabilities: `batches`, `files`, `skills`.
 
 Not every LLM service supports every capability. The set of capabilities you can declare on an AI Model depends on what the AI Model Provider in [`targets`](#schema-aigateway-model-targets) exposes. See [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for per-provider details.
 
@@ -179,6 +179,9 @@ rows:
   - capability: "`files`"
     path: "`/files`"
     description: File uploads for long documents and structured input.
+  - capability: "`skills`"
+    path: "`/skills`"
+    description: Create, manage, and download reusable skill bundles hosted with the provider.
 {% endtable %}
 <!-- vale on -->
 
@@ -205,7 +208,7 @@ rows:
     capabilities: Translates between OpenAI request and response shapes and the upstream provider format.
   - format: "`anthropic`"
     provider: "[Anthropic](/ai-gateway/ai-providers/anthropic/#supported-native-llm-formats-for-anthropic)"
-    capabilities: Messages, batch processing.
+    capabilities: Messages, batch processing, skills management.
   - format: "`bedrock`"
     provider: "[Amazon Bedrock](/ai-gateway/ai-providers/bedrock/#supported-native-llm-formats-for-amazon-bedrock)"
     capabilities: Converse, RAG (RetrieveAndGenerate), reranking, async invocation.
@@ -412,6 +415,58 @@ data:
 {:.info}
 > Because [`config.route.model`](#schema-aigateway-model-config-route-model) is set here with `body_param: model`, requests through this AI Model must send `"model": "my-gpt-4o"` (the alias) in the request body instead of the upstream target name (`gpt-4o`). Sending the upstream target name instead of the alias fails.
 
+### Set up a Skills API model
+
+`skills` is an `api`-type capability (like `batches` and `files`), so it's declared on its own dedicated AI Model, separate from any `model`-type AI Model handling synchronous capabilities like `generate`.
+
+The Skills API only supports native format passthrough: an OpenAI target must use `formats: [{type: openai}]`, and an Anthropic target must use `formats: [{type: anthropic}]`. Mixing providers within a single Skills AI Model, or pairing a provider with the other's native format, is not supported.
+
+{:.info}
+> `targets[].name` is still required by the schema, but Skills requests don't select a model, so any placeholder value works.
+
+{% entity_example %}
+type: model
+data:
+  display_name: my-openai-skills
+  name: my-openai-skills
+  type: api
+  capabilities:
+    - skills
+  formats:
+    - type: openai
+  policies: []
+  targets:
+    - name: openai-skills
+      provider: my-openai-account
+      config:
+        type: openai
+  config:
+    route:
+      paths:
+        - /v1
+{% endentity_example %}
+
+{% entity_example %}
+type: model
+data:
+  display_name: my-anthropic-skills
+  name: my-anthropic-skills
+  type: api
+  capabilities:
+    - skills
+  formats:
+    - type: anthropic
+  policies: []
+  targets:
+    - name: anthropic-skills
+      provider: my-anthropic-account
+      config:
+        type: anthropic
+  config:
+    route:
+      paths:
+        - /v1
+{% endentity_example %}
 
 ## Schema
 
