@@ -262,5 +262,5 @@ rows:
                 See the SBOM for {{site.mesh_product_name}} releases.
               cta:
                 text: View the SBOM 
-                url: /mesh/v2/sbom/
+                url: /mesh/sbom/
                 align: end
