@@ -5,4 +5,4 @@ Because the mesh is deployed on Kubernetes, `kumactl` is read-only. You manage r
 1. Click **Connect**.
 1. Follow the steps shown in the UI to configure `kumactl`.
 
-See the [`kumactl` command reference](/mesh/cli/#kumactl) for more information.
+See the [`kumactl` command reference](/mesh/v2/cli/#kumactl) for more information.

@@ -173,7 +173,7 @@ Here's how to use offline issuing:
 
 2. Configure the control plane with the public key.
 
-   [Configure a control plane](/mesh/control-plane-configuration/) with the following settings:
+   [Configure a control plane](/mesh/v2/control-plane-configuration/) with the following settings:
 {{conf | indent: 3}}
 
 3. Use the private key to issue tokens offline:
