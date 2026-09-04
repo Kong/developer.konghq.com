@@ -1,6 +1,6 @@
 ---
-title: Flush a Dedicated Cloud Gateway managed cache using Terraform
-description: 'Use Terraform to deploy a custom plugin that flushes a Dedicated Cloud Gateway AWS managed cache on demand.'
+title: Flush a public Dedicated Cloud Gateway managed cache using Terraform
+description: 'Use Terraform to deploy a custom plugin that flushes a public Dedicated Cloud Gateway AWS managed cache on demand.'
 content_type: how_to
 permalink: /dedicated-cloud-gateways/flush-managed-cache/
 breadcrumbs:
@@ -21,7 +21,7 @@ tags:
   - custom-plugins
 automated_tests: false
 tldr:
-  q: How do I flush a Dedicated Cloud Gateway AWS managed cache using Terraform?
+  q: How do I flush a public Dedicated Cloud Gateway AWS managed cache using Terraform?
   a: |
     Deploy a `konnect_gateway_custom_plugin_streaming` custom plugin that authenticates to the managed cache via AWS STS and runs `FLUSHDB`, exposed through a `konnect_gateway_service` and `konnect_gateway_route`, then trigger a flush by calling the Terraform output URL.
 related_resources:
@@ -41,13 +41,26 @@ prereqs:
 next_steps:
   - text: Dedicated Cloud Gateways production readiness checklist
     url: /dedicated-cloud-gateways/production-readiness/
+cleanup:
+  inline:
+    - title: Remove the flush endpoint
+      content: |
+        To remove the flush endpoint and all associated resources:
+
+        ```bash
+        terraform destroy
+        ```
 ---
 
-An AWS [managed cache](/dedicated-cloud-gateways/managed-cache/) doesn't expose a built-in way to clear its contents on demand.
+{:.warning}
+> This how-to is for Dedicated Cloud Gateways with a [**public** network](/dedicated-cloud-gateways/public-network/) since it uses the control plane endpoint to flush the cache.
+
+## Upload the custom plugin
+
 This how-to deploys a custom Kong plugin that exposes a flush endpoint on your gateway.
 Calling the endpoint authenticates to the managed cache with AWS STS-derived credentials and runs `FLUSHDB`, so you (or your CI/CD pipeline) can flush the cache without engineering involvement.
 
-## Upload the custom plugin
+First, create and configure the custom plugin:
 
 1. Create a `schema.lua` file that defines the plugin's configuration fields.
 
@@ -156,7 +169,7 @@ Calling the endpoint authenticates to the managed cache with AWS STS-derived cre
               return get_aws_auth_token(conf, cloud_auth)
           end
 
-          return nil, "cloud provider '" .. tostring(provider) .. "' not implemented"
+          return nil, "cloud provider " .. tostring(provider) .. " not implemented"
       end
 
       function plugin:access(conf)
@@ -242,34 +255,43 @@ Calling the endpoint authenticates to the managed cache with AWS STS-derived cre
     }
     ' > variables.tf
     ```
+    {:.collapsible.wrap}
     <!--vale on-->
+
+    If you created your control plane as part of the prereqs, get its ID directly from Terraform state:
+
+    ```bash
+    export TF_VAR_control_plane_id=$(terraform output -raw control_plane_id)
+    ```
+
+    Otherwise, export the ID of your existing control plane:
 
     ```bash
     export TF_VAR_control_plane_id="your-control-plane-id"
     ```
 
 1. Look up the {{site.konnect_short_name}} proxy hostname for your control plane, and export it as a Terraform variable:
-    
-    THIS IS WRONG BUT I'M ASKING HOW TO PROPERLY FIND THIS PROXY URL
-    <!--vale off-->
-    {% konnect_api_request %}
-    url: /v2/cloud-gateways/configurations?filter%5Bcontrol_plane_id%5D%5Beq%5D=$TF_VAR_control_plane_id
-    method: GET
-    region: global
-    status_code: 200
-    extract_body:
-        - name: 'dataplane_groups[0].hostnames[0]'
-          variable: PROXY_HOSTNAME
-    capture:
-      - variable: PROXY_HOSTNAME
-        jq: ".data[0].dataplane_groups[0].hostnames[0]"
-    {% endkonnect_api_request %}
-    <!--vale on-->
 
+{% capture control_plane_details %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/control-planes/$TF_VAR_control_plane_id
+method: GET
+region: us
+status_code: 200
+capture:
+  - variable: CONTROL_PLANE_DETAILS
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{ control_plane_details | indent: 3 }}
 
-    ```bash
-    export TF_VAR_proxy_hostname="$PROXY_HOSTNAME"
-    ```
+1. Export the proxy hostname: 
+
+   ```bash
+   PROXY_HOSTNAME=$(echo $CONTROL_PLANE_DETAILS | jq -r '.config.control_plane_endpoint | sub("https://";"") | split(".")[0]')
+   export TF_VAR_proxy_hostname="${PROXY_HOSTNAME}.gateways.konggateway.com"
+   ```
 
 1. Define the custom plugin, the Gateway Service and Route that expose the flush endpoint, and the plugin instance:
 
@@ -327,6 +349,7 @@ Calling the endpoint authenticates to the managed cache with AWS STS-derived cre
     }
     ' >> main.tf
     ```
+    {:.collapsible.wrap}
     <!--vale on-->
 
     The `{vault://env/ADDON_MANAGED_CACHE_*}` references are populated automatically by {{site.konnect_short_name}} once your managed cache add-on reaches a Ready state, so you don't need to configure any AWS IAM credentials yourself.
@@ -349,66 +372,99 @@ Calling the endpoint authenticates to the managed cache with AWS STS-derived cre
     terraform apply -auto-approve
     ```
 
+    You'll get a response like the following:
     ```text
     Apply complete! Resources: 4 added, 0 changed, 0 destroyed.
     ```
     {:.no-copy-code}
 
-### Optional: restrict access and auto-flush on apply
+### Optional: Restrict access and auto-flush on apply
 
-If you want to limit which IPs can trigger a flush, set `ip_allowlist` to a list of IPs or CIDRs, and add an `ip-restriction` plugin scoped to the flush route:
+Use the following sections to further configure the managed cache flush behavior.
 
-<!--vale off-->
-```hcl
-echo '
-resource "konnect_gateway_plugin_ip_restriction" "ip-restriction-plugin" {
-  count = length(var.ip_allowlist) > 0 ? 1 : 0
+#### Limit IPs that can trigger a flush
 
-  config = {
-    allow = var.ip_allowlist
+If you want to limit which IPs can trigger a flush, set `ip_allowlist` to a list of IPs or CIDRs, and add an [`ip-restriction` plugin](/plugins/ip-restriction/) scoped to the flush route.
 
-    message = "NOT ALLOWED"
-    status  = 405
-  }
+1. Configure the IP Restriction plugin:
 
-  control_plane_id = var.control_plane_id
-  enabled          = true
-  service = {
-    id = konnect_gateway_service.cache_flusher_service.id
-  }
-  route = {
-    id = konnect_gateway_route.cache_flusher_route.id
-  }
-}
-' >> main.tf
-```
-<!--vale on-->
+   <!--vale off-->
+   ```hcl
+   echo '
+   resource "konnect_gateway_plugin_ip_restriction" "ip-restriction-plugin" {
+     count = length(var.ip_allowlist) > 0 ? 1 : 0
+
+     config = {
+       allow = var.ip_allowlist
+
+       message = "NOT ALLOWED"
+       status  = 405
+     }
+
+     control_plane_id = var.control_plane_id
+     enabled          = true
+     service = {
+       id = konnect_gateway_service.cache_flusher_service.id
+     }
+     route = {
+       id = konnect_gateway_route.cache_flusher_route.id
+     }
+   }
+   ' >> main.tf
+   ```
+   {:.collapsible.wrap}
+   <!--vale on-->
+
+1. Export the IPs you want to allow list:
+
+   ```bash
+   export TF_VAR_ip_allowlist='["203.0.113.0/24"]'
+   ```
+
+1. Apply the Terraform configuration:
+   ```bash
+   terraform apply -auto-approve
+   ```
 
 Requests from IPs outside the allowlist receive a `405` response.
 
-If you want the cache to flush automatically every time you run `terraform apply`, set `auto_flush` to `true`:
+#### Automatically flush on `terraform apply`
 
-<!--vale off-->
-```hcl
-echo '
-resource "terraform_data" "flush_cache" {
-  count = var.auto_flush ? 1 : 0
+1. If you want the cache to flush automatically every time you run `terraform apply`, set `auto_flush` to `true`:
 
-  triggers_replace = [timestamp()]
+   <!--vale off-->
+   ```hcl
+   echo '
+   resource "terraform_data" "flush_cache" {
+     count = var.auto_flush ? 1 : 0
 
-  provisioner "local-exec" {
-    command = "sleep 10 && curl -sf https://${var.proxy_hostname}${var.flush_path}"
-  }
+     triggers_replace = [timestamp()]
 
-  depends_on = [
-    konnect_gateway_route.cache_flusher_route,
-    konnect_gateway_custom_plugin.cache_flusher_instance,
-    konnect_gateway_plugin_ip_restriction.ip-restriction-plugin,
-  ]
-}
-' >> main.tf
-```
-<!--vale on-->
+     provisioner "local-exec" {
+       command = "sleep 10 && curl -sf https://${var.proxy_hostname}${var.flush_path}"
+     }
+
+     depends_on = [
+       konnect_gateway_route.cache_flusher_route,
+       konnect_gateway_custom_plugin.cache_flusher_instance,
+       konnect_gateway_plugin_ip_restriction.ip-restriction-plugin,
+     ]
+   }
+   ' >> main.tf
+   ```
+   {:.collapsible.wrap}
+   <!--vale on-->
+
+1. Export the auto flush behavior:
+
+   ```bash
+   export TF_VAR_auto_flush=true
+   ```
+
+1. Apply the Terraform configuration:
+   ```bash
+   terraform apply -auto-approve
+   ```
 
 {:.warning}
 > When `auto_flush` is `true`, every `terraform apply` triggers a cache flush, not just the first one.
@@ -429,11 +485,3 @@ A successful flush returns:
 {"message": "[cache-flusher] cache flushed"}
 ```
 {:.no-copy-code}
-
-## Teardown
-
-To remove the flush endpoint and all associated resources:
-
-```bash
-terraform destroy
-```
