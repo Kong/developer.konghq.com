@@ -195,6 +195,23 @@ The Token Vault never exposes back the credentials to the API that created them:
 
 ## Credential enrollment
 
+Credential enrollment is a one-time process where a user grants {{site.identity}} permission to act on their behalf with a third-party service. This is when the Token Vault creates the credential for the first time.
+
+When you configure a provider (for example, GitHub), the Token Vault regitsters it as a service it knows how to talk to. It doesn't mean any user has actually authorized anything yet, since there are still no credentials to hand back for the Token Vault. The enrollment process follows these steps:
+
+1. When a request happens from the agent, the Token Vault returns a 10 minutes valid enrollment URL to walk the user through the third-party service OAuth consent screen. The screen lists exactly the scopes the provider requested (for example, `repo` on GitHub).
+1. When the user approves, the third-party service redirects back to the Token Vault's `callback` endpoint, handing over an authorization code.
+1. The Token Vault exchanges the authorization code for the third-party service's access token and refresh token. This exchange happens only between the Token Vault and the third-party service, not through the agent.
+1. The Token Vault writes a new credential row for the access token, encrypted with the directory's vault key, and keyed to that user's combination. This is the credential that the Token Vault releases to the {{site.ai_gateway}} on every future request.
+
+Enrollment happens once per user and per provider, not per organization. If a second user wants to use GitHub with an agent, they need to go throught enrollment, and get their own credentials stored in the Token Vault. What is shared across the organization is the provider configuration (Client ID, scopes, endpoints).
+
+
+
+
+
+
+
 <!--
 The most visible behavior on this feature — give it its own section.
 Sequence: first tool call for an unconnected provider -> vault returns 401 with an enrollment
