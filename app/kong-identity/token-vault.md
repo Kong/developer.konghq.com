@@ -329,6 +329,15 @@ The Token Vault never exposes back the credentials to the API that created them:
 
 ### The {{site.ai_gateway}} role
 
+{{site.ai_gateway}} acts as bridge between the user and the requests as the sole runtime that calls the {{site.identity}} Token Vault. Agents and MCP clients never call the Token Vault directly. No matter which agent a user is running, the Token Vault only interacts with {{site.ai_gateway}}, not from the agent or the MCP itself.
+
+Policies applies to the {{site.ai_gateway}}, which allow to scope and enforce call behaviors. The Token Vault doesn't hold any policy, it only verifies whose token this is and hands back the matching credential if one exists. For example, in a workflow configured with Okta as the IdP, the {{site.ai_gateway}}:
+
+1. Receives a caller's Okta-issued token.
+1. Presents it to the Token Vault to request a credential for a specific provider.
+1. Once it gets one back, injects the credential into the actual outbond request to the third-party service (for example, as a header, for providers that support it).
+
+
 <!--
 Two plugins cooperate on the route fronting the upstream MCP server:
 * AI MCP OAuth2 — publishes RFC 9728 protected-resource metadata, issues the 401 challenge,
