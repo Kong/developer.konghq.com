@@ -277,14 +277,16 @@ rows:
   - param: "`template_name`"
     required: Yes
     description: |
-      The provider template to bind. The template supplies the third-party service's OAuth endpoints, secret type, available scopes, and credential placement.
+      The provider template to bind. The template supplies the third-party service's OAuth endpoints, secret type, available scopes, and credential placement. Allowed values are:
+      * `github` to add the GitHub provider.
+      * `slack` to add the Slack provider.
+      * `static_secret` to add a custom provider that authenticates via an API key/token in a header. Requires `secret_type` to be set as `shared`. 
   - param: "`name`"
     required: Yes
     description: |
       Your name for this provider. Use it to tell apart several providers built from the same template.
 {% endtable %}
 
-The response returns the provider's ID, captured above as `$PROVIDER_ID`. You need it to [enable credential injection on a route](#enable-credential-injection-on-a-route).
 {% endnavtab %}
 {% navtab "Check configured providers" %}
 
@@ -301,23 +303,29 @@ method: GET
 
 {% endnavtabs %}
 
-<!--
-Per directory. A tenant binding of a template: client ID, client secret, scopes, credential type.
-Cover credential_type here:
-* user (default) — each user enrolls their own account; credential keyed per subject.
-* shared — an admin enrolls once; the credential is released to any authorized gateway caller.
-Catalog at launch: GitHub, Atlassian, Atlassian Rovo, Snowflake, Google, Slack, Figma, Databricks,
-plus custom providers defined by supplying OAuth endpoints directly. Atlassian Rovo supports DCR.
--->
-
-<!-- TODO: confirm the provider catalog is a supported list and not just a validation target. -->
-
 ### Credentials
 
+The {{site.identity}} Token Vault protects the credential, the actual secret (a token or a key) for connecting to a provider. The credential is encrypted at rest in the Token Vault. The encryption scope is the {{site.identity}} directory for which you enable the Token Vault. Each directory has its own Token Vault key, that it uses to encrypt secrets.
+
+The credentials can be personal or shared across the organization. You define this with the flag `credential_type`:
+
+* `user` (default value) sets a personal token.
+* `shared` sets a shared secret (required for `static_secret` providers).
+
 <!--
-The stored upstream token, keyed by (provider, issuer, subject). Encrypted at rest.
-Never returned in an API response. Point forward to the security section.
+Can the user set a shared secret for other providers, like GitHub or Slack?
 -->
+
+#### OAuth-based credentials lifecycle
+
+A credential knows different stages depending on the action that a user executes:
+
+1. **Enrollment**: When no credentials exist yet, the first-time flow returns an enrollment URL instead of a token.
+1. **Creation**: At creation the credential is stored in the Token Vault. Two flows exist to create credentials: for `static_secret`, a separate provider creates it and you store it manually in the Token Vault; for all other providers, the OAuth consent flow creates the secret and stores it automatically.
+1. **Refresh**: For OAuth-based providers, the Token Vault can refresh credentials automatically, with locking, to prevent concurrent requests from consuming a refresh token.
+1. **Deletion/Revocation**: You can revoke credentials independently of the provider itself. Deleting a credential doesn't delete a provider, but creates a new re-enrollment from the user side.
+
+The Token Vault never exposes back the credentials to the API that created them: it releases them to the {{site.ai_gateway}} for outbond calls without making the credentials accessible from any read endpoint.
 
 ### The {{site.ai_gateway}} role
 
