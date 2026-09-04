@@ -10,7 +10,7 @@ on:
       kong_ee_branch:
         description: 'Branch to use from kong-ee repository'
         required: true
-        default: 'main'
+        default: 'aigw-master'
         type: string
       dev_site_base_branch:
         description: 'Dev site base branch, e.g. main'
