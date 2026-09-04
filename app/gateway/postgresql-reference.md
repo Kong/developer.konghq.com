@@ -12,6 +12,9 @@ works_on:
 tags:
   - database
   - tls
+related_resources:
+  - text: PostgreSQL privileges reference
+    url: /gateway/postgresql-privileges-reference/
 faqs:
   - q: "What should I do if I see `could not accept SSL connection: wrong version number`?"
     a: |

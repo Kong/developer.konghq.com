@@ -55,6 +55,8 @@ min_version:
     gateway: '3.4'
 
 next_steps:
+  - text: Harden the datastore with minimal PostgreSQL privileges
+    url: /gateway/postgresql-privileges-reference/
   - text: Learn about {{site.base_gateway}} entities
     url: /gateway/entities/
   - text: Learn about {{site.base_gateway}} plugins
