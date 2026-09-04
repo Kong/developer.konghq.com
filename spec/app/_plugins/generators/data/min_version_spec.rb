@@ -4,20 +4,22 @@ require_relative '../../../../spec_helper'
 
 RSpec.describe Jekyll::Data::MinVersion do
   let(:site) { JekyllSite.instance }
-  let(:page) { FakePage.new(data) }
-
-  subject { described_class.new(site:, page:) }
 
   # MinVersion mutates page.data and, for unreleased pages, the page URL.
-  class FakePage
-    attr_reader :data
-    attr_accessor :url
+  let(:page_class) do
+    Class.new do
+      attr_reader :data
+      attr_accessor :url
 
-    def initialize(data)
-      @data = data
-      @url  = '/ai-gateway/some-page/'
+      def initialize(data)
+        @data = data
+        @url  = '/ai-gateway/some-page/'
+      end
     end
   end
+  let(:page) { page_class.new(data) }
+
+  subject { described_class.new(site:, page:) }
 
   describe '#process' do
     context 'when the page has a min_version' do
