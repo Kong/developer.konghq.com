@@ -90,7 +90,7 @@ docker exec --tty --interactive --privileged kong-mesh-demo-kv bash
 
 1. Download and install {{site.mesh_product_name}}:
    ```sh
-   curl --location https://developer.konghq.com/mesh/installer.sh | sh -
+   curl --location https://developer.konghq.com/mesh/v2/installer.sh | sh -
    ```
 
 1. Move {{site.mesh_product_name}} binaries to `/usr/local/bin/` for global availability:

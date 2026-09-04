@@ -72,7 +72,7 @@ This guide walks you through running a multi-zone {{site.mesh_product_name}} dep
 1. Run the following command to install the {{site.mesh_product_name}} binaries:
 
    ```sh
-   curl -L https://developer.konghq.com/mesh/installer.sh | VERSION={{site.data.mesh_latest.version}} sh -
+   curl -L https://developer.konghq.com/mesh/v2/installer.sh | VERSION={{site.data.mesh_latest.version}} sh -
    ```
 
 1. Add the binaries to your system's path:
