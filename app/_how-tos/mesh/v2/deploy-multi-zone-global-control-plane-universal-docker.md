@@ -72,13 +72,13 @@ This guide walks you through running a multi-zone {{site.mesh_product_name}} dep
 1. Run the following command to install the {{site.mesh_product_name}} binaries:
 
    ```sh
-   curl -L https://developer.konghq.com/mesh/v2/installer.sh | VERSION={{site.data.mesh_latest.version}} sh -
+   curl -L https://developer.konghq.com/mesh/v2/installer.sh | VERSION={{page.latest_release.version}} sh -
    ```
 
 1. Add the binaries to your system's path:
 
    ```sh
-   export PATH="$(pwd)/kong-mesh-{{site.data.mesh_latest.version}}/bin:$PATH"
+   export PATH="$(pwd)/kong-mesh-{{page.latest_release.version}}/bin:$PATH"
    ```
 
 1. Run the following command to confirm that {{site.mesh_product_name}} is installed correctly:
@@ -90,7 +90,7 @@ This guide walks you through running a multi-zone {{site.mesh_product_name}} dep
    You should see the following output:
 
    ```
-   Client: {{site.mesh_product_name}} {{site.data.mesh_latest.version}}
+   Client: {{site.mesh_product_name}} {{page.latest_release.version}}
    ```
    {:.no-copy-code}
 
@@ -167,7 +167,7 @@ The global control plane accepts connections from zone control planes, distribut
      --env KUMA_STORE_POSTGRES_USER=kong \
      --env KUMA_STORE_POSTGRES_PASSWORD=pass123 \
      --env KUMA_STORE_POSTGRES_DB_NAME=global \
-     kong/kuma-cp:{{site.data.mesh_latest.version}} migrate up
+     kong/kuma-cp:{{page.latest_release.version}} migrate up
    ```
 
 1. Run the global control plane:
@@ -189,7 +189,7 @@ The global control plane accepts connections from zone control planes, distribut
      --env KUMA_STORE_POSTGRES_USER=kong \
      --env KUMA_STORE_POSTGRES_PASSWORD=pass123 \
      --env KUMA_STORE_POSTGRES_DB_NAME=global \
-     kong/kuma-cp:{{site.data.mesh_latest.version}} run
+     kong/kuma-cp:{{page.latest_release.version}} run
    ```
 
    The global control plane exposes:
@@ -263,7 +263,7 @@ Each zone runs its own control plane. The zone control plane connects to the glo
      --env KUMA_STORE_POSTGRES_USER=kong \
      --env KUMA_STORE_POSTGRES_PASSWORD=pass123 \
      --env KUMA_STORE_POSTGRES_DB_NAME=zone1 \
-     kong/kuma-cp:{{site.data.mesh_latest.version}} migrate up
+     kong/kuma-cp:{{page.latest_release.version}} migrate up
    ```
 
 1. Run the zone control plane:
@@ -288,7 +288,7 @@ Each zone runs its own control plane. The zone control plane connects to the glo
      --env KUMA_STORE_POSTGRES_DB_NAME=zone1 \
      --env KUMA_MULTIZONE_ZONE_GLOBAL_ADDRESS=grpcs://global-control-plane:5685 \
      --env KUMA_MULTIZONE_ZONE_KDS_TLS_SKIP_VERIFY=true \
-     kong/kuma-cp:{{site.data.mesh_latest.version}} run
+     kong/kuma-cp:{{page.latest_release.version}} run
    ```
 
    The zone control plane exposes:
@@ -348,7 +348,7 @@ A zone ingress is the entry point for cross-zone traffic. Without it, other zone
      --ip 172.18.78.3 \
      --publish 10000:10000 \
      --volume "$KONG_MESH_MULTI_ZONE_TMP:/demo" \
-     kong/kuma-dp:{{site.data.mesh_latest.version}} run \
+     kong/kuma-dp:{{page.latest_release.version}} run \
        --proxy-type=ingress \
        --cp-address=https://zone1-control-plane:5678 \
        --dataplane-token-file=/demo/token-zone1 \

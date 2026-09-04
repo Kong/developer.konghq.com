@@ -41,7 +41,7 @@ Because Kong uses GitHub Actions to build and release, Kong also uses GitHub's O
 
 * [`slsa-verifier`](https://github.com/slsa-framework/slsa-verifier?tab=readme-ov-file#installation) is installed.
 
-* [Download security assets](https://packages.konghq.com/public/kong-mesh-binaries-release/raw/names/security-assets/versions/{{site.data.mesh_latest.version}}/security-assets.tar.gz) for the required version of {{site.mesh_product_name}} binaries
+* [Download security assets](https://packages.konghq.com/public/kong-mesh-binaries-release/raw/names/security-assets/versions/{{page.release.version}}/security-assets.tar.gz) for the required version of {{site.mesh_product_name}} binaries
 
 * Extract the downloaded `security-assets.tar.gz` to access the provenance file `kong-mesh.intoto.jsonl`
 
@@ -49,7 +49,7 @@ Because Kong uses GitHub Actions to build and release, Kong also uses GitHub's O
    tar -xvzf security-assets.tar.gz
    ```
 
-* [Download compressed binaries](https://cloudsmith.io/~kong/repos/kong-mesh-binaries-release/packages/?q=name%3Akong-mesh-*+version%3A{{site.data.mesh_latest.version}}) for the required version of {{site.mesh_product_name}}
+* [Download compressed binaries](https://cloudsmith.io/~kong/repos/kong-mesh-binaries-release/packages/?q=name%3Akong-mesh-*+version%3A{{page.release.version}}) for the required version of {{site.mesh_product_name}}
 
 * The GitHub owner is case-sensitive (`Kong/kong-mesh` vs `kong/kong-mesh`).
 
@@ -65,7 +65,7 @@ Because Kong uses GitHub Actions to build and release, Kong also uses GitHub's O
       --print-provenance \
       --provenance-path 'kong-mesh.intoto.jsonl' \
       --source-uri 'github.com/Kong/kong-mesh' \
-      --source-tag '{{site.data.mesh_latest.version}}' \
-      kong-mesh-{{site.data.mesh_latest.version}}-*-*.tar.gz
+      --source-tag '{{page.release.version}}' \
+      kong-mesh-{{page.release.version}}-*-*.tar.gz
    ```
 

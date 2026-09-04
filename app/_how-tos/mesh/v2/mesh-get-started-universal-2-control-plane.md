@@ -39,7 +39,7 @@ docker run \
   --ip 172.18.78.1 \
   --publish 25681:5681 \
   --volume "$KONG_MESH_DEMO_TMP:/demo" \
-  kong/kuma-cp:{{site.data.mesh_latest.version}} run
+  kong/kuma-cp:{{page.latest_release.version}} run
 ```
 
 You can now access the {{site.mesh_product_name}} user interface at <http://127.0.0.1:25681/gui>.
