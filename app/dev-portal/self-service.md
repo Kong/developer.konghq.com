@@ -51,7 +51,7 @@ To enable developer self-service, do the following:
 
    For private {{site.dev_portal}}s, user authentication is enabled by default, and the default application auth strategy is key authentication.
 1. Configure an [application authentication strategy](/dev-portal/auth-strategies/) by navigating to **Settings > Security**.
-1. Optional: Enable [application sharing](#share-applications-with-a-team) for developer teams by navigating to your {{site.dev_portal}} in {{site.konnect_short_name}} and going to **Access and approvals > Teams**. Click the team, go to **Settings** and enable **Allow team to own applications**.
+1. Optional: Enable [application sharing](#share-applications-with-a-team) for developer teams by navigating to your {{site.dev_portal}} in {{site.konnect_short_name}} and clicking the **Developers > Teams** tabs. Click the team, go to **Settings** and enable **Allow team to own applications**.
 1. Link an [API to a Gateway Service](/catalog/apis/#gateway-service-link).
 
    This is required to enforce auth strategies.
@@ -106,7 +106,7 @@ To automatically create and manage {{site.dev_portal}} applications using Dynami
 
 You can choose to auto approve developers and applications or require admin approval for developers and applications by navigating to **Settings** and the **Security** tab in your {{site.dev_portal}} settings.
 
-If your settings require developer or application approval, you can manage approvals by navigating to **Access and approvals** in the sidebar. You need the [API Registration Approver and Portal Viewer role](/konnect-platform/teams-and-roles/#dev-portal) assigned to the Teams that control the APIs to approve these.
+If your settings require developer or application approval, you can manage approvals by navigating to the **Developers** or **Applications** tab in your {{site.dev_portal}} overview in {{site.konnect_short_name}}. You need the [API Registration Approver and Portal Viewer role](/konnect-platform/teams-and-roles/#dev-portal) assigned to the Teams that control the APIs to approve these.
 Additionally, you can add developers to teams by clicking on the settings menu next to the name of the developer.
 
 Once approved, developers can create applications and view APIs, and the application can generate credentials to use the APIs.
@@ -231,7 +231,7 @@ Important considerations:
   Similarly, you can only register APIs to team-owned applications if everyone in the team has access to the API.
   This is true even if an individual team member has broader access through other teams.
 
-To enable team application sharing, navigate to your {{site.dev_portal}} in {{site.konnect_short_name}} and click **Access and approvals > Teams**. Click the relevant team, go to **Settings**, and enable **Allow team to own applications**.
+To enable team application sharing, navigate to your {{site.dev_portal}} in {{site.konnect_short_name}} and click the **Developers > Teams** tabs. Click the relevant team, go to **Settings**, and enable **Allow team to own applications**.
 To transfer ownership of an application to either a developer or team, navigate to the app and from the **Actions** dropdown menu, select "Transfer ownership".
 
 For more information about how to configure {{site.dev_portal}} developer teams, see [{{site.dev_portal}} RBAC](/dev-portal/developer-rbac/).
@@ -425,8 +425,8 @@ To link the form to an API:
 #### View collected form data
 
 Submitted form answers appear alongside the developer or application registration they belong to:
-* Developer registration answers are available on the developer's detail page under **Access and approvals > Developers** in {{site.konnect_short_name}}, and through the `additional_data` property on the [`/portals/{portalId}/developers`](/api/konnect/portal-management/v3/#/operations/list-portal-developers) and [`/portals/{portalId}/developers/{developerId}`](/api/konnect/portal-management/v3/#/operations/get-developer) endpoints.
-* API registration answers are available on the registration's detail page under **Access and approvals > App Registrations**, and through the `additional_data` property on the [`/portals/{portalId}/application-registrations`](/api/konnect/portal-management/v3/#/operations/list-registrations) endpoint.
+* Developer registration answers are available on the developer's detail page under the **Developers** tab in {{site.konnect_short_name}}, and through the `additional_data` property on the [`/portals/{portalId}/developers`](/api/konnect/portal-management/v3/#/operations/list-portal-developers) and [`/portals/{portalId}/developers/{developerId}`](/api/konnect/portal-management/v3/#/operations/get-developer) endpoints.
+* API registration answers are available on the registration's detail page under **Applications > API Registrations** tabs, and through the `additional_data` property on the [`/portals/{portalId}/application-registrations`](/api/konnect/portal-management/v3/#/operations/list-registrations) endpoint.
 
 {{site.dev_portal}} doesn't have a webhook for new registrations or form submissions, so if you want to react to new submissions automatically, poll these endpoints on an interval instead. 
 For example, you could filter on `status=pending` and track the last submission you've already processed.
@@ -569,8 +569,8 @@ body:
 {% navtab "UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click **Dev Portal > Portals**.
 1. Click your {{site.dev_portal}}.
-1. Click the **Access and approvals** tab.
-1. Click the **App Registrations** tab.
+1. Click the **Applications** tab.
+1. Click the **API registrations** tab.
 1. Click the application you want to link a Consumer to.
 1. In the **App Registrations** section, click the action menu icon for the registration.
 1. Click **Link Consumer**.

@@ -67,7 +67,7 @@ resource "konnect_portal_team" "my_portalteam" {
 
 ## Manage developer RBAC
 
-You can manage developers, application registrations, and teams from the **Access and approvals** tab in your Dev Portal.
+You can manage developers, application registrations, and teams from the **Developers** and **Applications** tabs in your Dev Portal.
 
 To assign roles to developers, you need to create a team and add them to it:
 {% navtabs "assign-roles" %}
@@ -75,7 +75,7 @@ To assign roles to developers, you need to create a team and add them to it:
 1. In the {{site.konnect_short_name}} sidebar, expand **Dev Portal**.
 1. Click **Portals**.
 1. Click your Dev Portal.
-1. Click the **Access and approvals** tab.
+1. Click the **Developers** tab.
 1. Click the **Teams** tab.
 1. Click **New Team**.
 1. Enter a team name in the **Team** field.
@@ -101,8 +101,8 @@ To assign roles to developers, you need to create a team and add them to it:
       They can also transfer ownership of existing applications to their teams. 
       For more information on the developer experience, see [Dev Portal developer sign-up](/dev-portal/developer-signup/).
 1. To transfer application ownership to either a developer or team, do the following:
-   1. Click **Access and approvals** in the sidebar.
-   1. Click the **App registrations** tab.
+   1. Click the **Applications** tab.
+   1. Click the **API registrations** tab.
    1. Click the application you want to transfer ownership of.
    1. From the **Actions** dropdown menu, select "Transfer ownership".
 
