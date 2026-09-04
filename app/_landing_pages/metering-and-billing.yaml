@@ -177,6 +177,16 @@ rows:
               cta:
                 text: Learn more
                 url: /metering-and-billing/entitlements/
+      - blocks:
+          - type: card
+            config:
+              title: Entitlement Enforcement
+              description: |
+                Block API requests at the gateway when a customer's credit balance, usage limit, or feature access runs out.
+              icon: /assets/icons/lock.svg
+              cta:
+                text: Learn more
+                url: /plugins/entitlement-enforcement/
 
   - header:
       type: h2
@@ -229,7 +239,7 @@ rows:
             config:
               title: Notifications
               description: |
-                Configure webhook alerts for usage thresholds and billing events. Use notifications to enforce entitlement limits in your infrastructure.
+                Configure webhook alerts for usage thresholds and billing events, such as warning a customer before they reach their entitlement limit.
               icon: /assets/icons/event.svg
               cta:
                 text: Learn more

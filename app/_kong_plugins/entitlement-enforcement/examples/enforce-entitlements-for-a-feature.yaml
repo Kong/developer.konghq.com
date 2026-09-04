@@ -1,0 +1,40 @@
+description: 'Set up the Entitlement Enforcement plugin to enforce feature access and credit balance checks for consumers, using Redis for caching.'
+
+title: 'Enforce entitlements for a feature'
+
+weight: 900
+
+config:
+  entitlement_access_endpoint: ${entitlement_access_endpoint}
+  api_token: ${api_token}
+  customer:
+    look_up_value_in: consumer
+  feature:
+    key: ${feature_key}
+  credit_balance_required: true
+  redis:
+    host: ${redis_host}
+
+variables:
+  entitlement_access_endpoint:
+    value: $ENTITLEMENT_ACCESS_ENDPOINT
+    description: The URL of your entitlement access service endpoint.
+  api_token:
+    value: $ENTITLEMENT_ACCESS_API_TOKEN
+    description: The bearer token used to authenticate with the entitlement access endpoint.
+  feature_key:
+    value: $FEATURE_KEY
+    description: The key identifying the feature to enforce.
+  redis_host:
+    value: $REDIS_HOST
+    description: The hostname of your Redis instance used for caching enforcement state.
+
+min_version:
+  gateway: '3.16'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

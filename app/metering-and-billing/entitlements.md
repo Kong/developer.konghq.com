@@ -25,6 +25,8 @@ related_resources:
     url: /metering-and-billing/credits/
   - text: "Credit grants"
     url: /metering-and-billing/credits/grants/
+  - text: Entitlement Enforcement plugin
+    url: /plugins/entitlement-enforcement/
 
 ---
 
@@ -144,7 +146,10 @@ method: GET
 
 ## Entitlement enforcement
 
-{{site.metering_and_billing}} tracks entitlement balances in real time, but does not automatically enforce limits at the {{site.base_gateway}} or {{site.ai_gateway}} level.
+{{site.metering_and_billing}} tracks entitlement balances in real time.
+To block API requests at {{site.base_gateway}} or {{site.ai_gateway}} when a customer's entitlement is exhausted, use the [Entitlement Enforcement plugin](/plugins/entitlement-enforcement/).
+The plugin checks a customer's feature access, usage limit, and credit balance against {{site.metering_and_billing}} and blocks the request when the customer is over their limit.
 
-{:.info}
-> **{{site.base_gateway}} and {{site.ai_gateway}} automatic enforcement is not available yet.** Automatic entitlement enforcement via a {{site.base_gateway}} plugin is planned for a future release. Until then, use [{{site.metering_and_billing}} Notifications](/metering-and-billing/notifications/) to receive a webhook when a customer reaches their entitlement threshold, and enforce access restrictions manually in your own infrastructure (for example, by removing a Consumer from a Consumer Group or returning a `403` response from your application).
+See [Get started with Entitlement Enforcement](/metering-and-billing/entitlement-enforcement/get-started/) to enforce an entitlement on {{site.base_gateway}} traffic, or [Enforce entitlements on LLM traffic](/how-to/enforce-entitlements-on-llm-traffic/) to cap LLM token usage on {{site.ai_gateway}}.
+
+You can also use [{{site.metering_and_billing}} Notifications](/metering-and-billing/notifications/) alongside the plugin to alert customers or your team as they approach a threshold, independently of whether traffic is blocked.

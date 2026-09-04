@@ -495,6 +495,15 @@ metrics:
       - kong.route.name
       - kong.workspace.name
       - kong.gen_ai.a2a.task.state
+  - name: kong.entitlement_enforcement.total
+    min_version: "3.16"
+    description: Total number of entitlement enforcement decisions.
+    unit: "{decision}"
+    type: Sum
+    attributes:
+      - kong.entitlement_enforcement.decision
+      - kong.entitlement_enforcement.reason
+      - kong.entitlement_enforcement.feature_key
 
 access_logs:
   - client.address
@@ -694,3 +703,6 @@ attributes:
   kong.gen_ai.a2a.binding: A2A binding type.
   kong.gen_ai.a2a.error.type: Type of the A2A error.
   kong.gen_ai.a2a.task.state: "Task state, such as `completed`, `failed`, or `in_progress`."
+  kong.entitlement_enforcement.decision: "Enforcement decision: `allowed` or `blocked`."
+  kong.entitlement_enforcement.reason: "Denial reason code, such as `USAGE_LIMIT_REACHED`, when the decision is `blocked`."
+  kong.entitlement_enforcement.feature_key: The configured feature key being enforced.
