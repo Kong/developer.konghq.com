@@ -4,8 +4,6 @@ description: 'Learn how to federate a {{site.base_product}} zone control plane i
     
 content_type: how_to
 permalink: /mesh/federate/
-bread-crumbs: 
-  - /mesh/
 related_resources:
   - text: Set up a built-in gateway with {{site.mesh_product_name}}
     url: '/how-to/set-up-a-built-in-mesh-gateway/'

@@ -1,0 +1,333 @@
+app/_how-tos/mesh/v2/apply-policies-to-mesh-scoped-zone-proxies.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/configure-inbound-traffic-rules-api.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/configure-mesh-global-control-plane-on-kubernetes-with-konnect-api.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/configure-mesh-global-control-plane-on-universal-with-konnect-api.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/configure-mesh-global-control-plane-on-universal-with-konnect-ui.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/deploy-an-opentelemetry-collector.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/deploy-mesh-on-kubernetes.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/deploy-mesh-scoped-zone-proxies.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/deploy-mesh-self-managed.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/deploy-mesh-using-terraform-and-konnect.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/deploy-multi-zone-global-control-plane-universal-docker.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/deploy-universal-self-managed.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/federate-zone-control-plane-to-konnect.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/federate-zone-control-plane.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/issue-identity-with-meshidentity-spire.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/issue-identity-with-meshidentity.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/kubernetes.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/mesh-get-started-universal-1-install.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/mesh-get-started-universal-2-control-plane.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/mesh-get-started-universal-3-kv.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/mesh-get-started-universal-4-demo-app.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/mesh-get-started-universal-5-zero-trust-security.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/migrate-self-managed-zone-to-konnect.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/migrate-to-the-new-policies.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/progressively-roll-in-strict-mtls.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/progressively-roll-out-unified-resource-naming.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/restrict-permissions-to-selected-namespaces-on-kubernetes.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/set-up-a-built-in-kubernetes-gateway.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/set-up-a-built-in-mesh-gateway.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/use-cert-manager-for-control-plane-certificates.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/use-kong-as-delegated-gateway.md:
+  status: pending
+  canonical_url:
+app/_how-tos/mesh/v2/use-namespace-scoped-policies.md:
+  status: pending
+  canonical_url:
+app/_landing_pages/mesh/v2.yaml:
+  status: pending
+  canonical_url:
+app/_landing_pages/mesh/v2/guides.yaml:
+  status: pending
+  canonical_url:
+app/_landing_pages/mesh/v2/konnect.yaml:
+  status: pending
+  canonical_url:
+app/mesh/v2/access-audit.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/acm-private-ca-policy.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/annotations.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/architecture.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/authentication-with-the-api-server.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/built-in-gateway.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/ca-rotation.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/cert-manager.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/changelog.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/cli.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/cni.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/concepts.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/configure-data-plane-proxy-membership.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/control-plane-configuration.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/data-collection.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/data-plane-kubernetes.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/data-plane-proxy-authentication.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/data-plane-proxy.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/data-plane-universal.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/dataplane-health.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/dataplane.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/delegated-gateways.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/disaster-recovery.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/dns.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/ecs.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/enterprise.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/gateway-routes.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/hostnamegenerator.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/import-existing-konnect-kong-mesh-deployment-to-terraform.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/ingress.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/interact-with-control-plane.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/ipv6-support.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/kubernetes-gateway-api.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/kuma-cp-reference.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/license.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/manage-control-plane-permissions-on-kubernetes.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/manage-secrets.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/mesh-multi-tenancy.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/mesh-multizone-service-deployment.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/mesh.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/meshexternalservice.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/meshgateway.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/meshgatewayinstance.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/meshmultizoneservice.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/meshopentelemetrybackend.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/meshservice.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/multi-zone-authentication.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/mutual-tls.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/observability.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/openshift-quickstart.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/performance-tuning.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/policies-introduction.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/production-usage-values.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/provenance-verification-binaries.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/provenance-verification-images.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/rbac.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/resource-sizing-guidelines.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/sbom.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/secure-access.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/service-discovery.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/service-mesh.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/signed-images.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/single-zone.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/systemd.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/targeting-meshhttproutes-in-supported-policies.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/transparent-proxying.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/ubi-images.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/upgrade.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/validated-versions.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/vault.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/version-specific-upgrade-notes.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/workload.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/zone-egress.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/zone-ingress.md:
+  status: pending
+  canonical_url:
+app/mesh/v2/zone-proxy-auth.md:
+  status: pending
+  canonical_url:

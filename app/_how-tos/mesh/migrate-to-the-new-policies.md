@@ -4,8 +4,6 @@ description: 'Migrate from old to new policies in {{site.mesh_product_name}} to 
 
 content_type: how_to
 permalink: /mesh/migration-to-the-new-policies/
-bread-crumbs: 
-  - /mesh/
 related_resources:
     - text: Mesh policies
       url: '/mesh/policies-introduction/'

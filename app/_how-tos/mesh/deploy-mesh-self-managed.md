@@ -3,8 +3,6 @@ title: Deploy Self Managed Control Plane on Kubernetes
 description: "Learn how to install Mesh Control plane on an existing Kubernetes cluster, and deploy the {{site.mesh_product_name}} demo application."
 content_type: how_to
 permalink: /mesh/deploy-mesh-self-managed/
-bread-crumbs: 
-  - /mesh/
 related_resources:
   - text: "{{site.mesh_product_name}}"
     url: /mesh/overview/

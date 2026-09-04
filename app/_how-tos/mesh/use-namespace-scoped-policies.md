@@ -3,8 +3,6 @@ title: Use namespace-scoped {{site.mesh_product_name}} policies
 description: "Learn how to define namespace-scoped producer and consumer policies in {{site.mesh_product_name}} using a demo application."
 content_type: how_to
 permalink: /mesh/consumer-producer-policies/
-bread-crumbs: 
-  - /mesh/
 related_resources:
   - text: "{{site.mesh_product_name}} policies"
     url: /mesh/policies-introduction/
