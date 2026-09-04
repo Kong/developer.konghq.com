@@ -28,6 +28,6 @@ major_version:
 ---
 
 {:.info}
-> Make sure to also check the general [upgrade notes](/mesh/v2/upgrade/).
+> Make sure to also check the general [upgrade notes](/mesh/upgrade/).
 
 {% embed UPGRADE.md %}

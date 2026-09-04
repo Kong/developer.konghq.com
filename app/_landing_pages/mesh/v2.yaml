@@ -340,7 +340,7 @@ rows:
                 See the SBOM for {{site.mesh_product_name}} releases.
               cta:
                 text: View the SBOM
-                url: /mesh/v2/sbom/
+                url: /mesh/sbom/
   - header:
       type: h2
       text: Frequently asked questions

@@ -25,7 +25,7 @@ related_resources:
   - text: "Verify build provenance for signed {{site.mesh_product_name}} images"
     url: /mesh/v2/provenance-verification-images/
   - text: "Software Bill of Materials"
-    url: /mesh/v2/sbom/
+    url: /mesh/sbom/
 major_version:
   mesh: 2
 
