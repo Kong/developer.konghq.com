@@ -277,9 +277,6 @@ app/mesh/v2/rbac.md:
 app/mesh/v2/resource-sizing-guidelines.md:
   status: pending
   canonical_url:
-app/mesh/v2/sbom.md:
-  status: pending
-  canonical_url:
 app/mesh/v2/secure-access.md:
   status: pending
   canonical_url:
@@ -305,12 +302,6 @@ app/mesh/v2/transparent-proxying.md:
   status: pending
   canonical_url:
 app/mesh/v2/ubi-images.md:
-  status: pending
-  canonical_url:
-app/mesh/v2/upgrade.md:
-  status: pending
-  canonical_url:
-app/mesh/v2/validated-versions.md:
   status: pending
   canonical_url:
 app/mesh/v2/vault.md:
