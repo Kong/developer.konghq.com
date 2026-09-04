@@ -32,7 +32,7 @@ module Jekyll
       end
 
       def unreleased?
-        @release_info.unreleased?
+        release_info.unreleased?
       end
     end
   end
