@@ -138,7 +138,7 @@ You should see the following output:
    ```
 
    {% capture warning %}
-   {% include /mesh/skip-verify.md %}
+   {% include /md/mesh/v2/skip-verify.md %}
    {% endcapture %}
    {{warning | indent}}
 

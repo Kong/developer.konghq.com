@@ -77,7 +77,7 @@ kumactl generate dataplane-token --tag kuma.io/service=app --valid-for=720h > ku
 
 ## Create a data plane proxy for each service
 
-{% include /mesh/skip-verify.md %}
+{% include /md/mesh/v2/skip-verify.md %}
 
 For Redis:
 

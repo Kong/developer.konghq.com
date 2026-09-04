@@ -174,11 +174,11 @@ The control plane verifies the connecting data plane proxy resource against the 
 
 ### Token revocation
 
-{% include /mesh/token-revocation.md type="dataplane" %}
+{% include /md/mesh/v2/token-revocation.md type="dataplane" %}
 
 ### Signing key rotation
 
-{% include /mesh/signing-key-rotation.md type="dataplane" %}
+{% include /md/mesh/v2/signing-key-rotation.md type="dataplane" %}
 
 ### Token rotation
 
@@ -191,7 +191,7 @@ Set the `kuma-cp` configuration property `dpServer.auth.enableReloadableTokens` 
 
 ### Offline token issuing
 
-{% include /mesh/offline-token.md type="dataplane" %}
+{% include /md/mesh/v2/offline-token.md type="dataplane" %}
 
 
 ### Multi-zone

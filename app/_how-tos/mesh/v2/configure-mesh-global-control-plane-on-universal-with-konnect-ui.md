@@ -44,7 +44,7 @@ cleanup:
         pkill -f kuma-cp
         ```
     - title: Delete the control plane in {{site.konnect_short_name}}
-      include_content: cleanup/mesh/delete-konnect-control-plane-ui
+      include_content: md/mesh/v2/cleanup/delete-konnect-control-plane-ui
     - title: Remove local files
       content: |
         Remove the files and binaries created during setup:
@@ -55,7 +55,7 @@ cleanup:
 faqs:
   - q: How does a zone authenticate to the global control plane?
     a: |
-      {% include faqs/mesh-zone-authentication.md %}
+      {% include md/mesh/v2/faqs/zone-authentication.md %}
 major_version:
   mesh: 2
 
@@ -67,12 +67,12 @@ To deploy services and test traffic across the mesh, see [Configure a {{site.mes
 
 ## Create a global control plane in {{site.konnect_short_name}}
 
-{% include how-tos/mesh/create-global-control-plane-ui.md %}
+{% include md/mesh/v2/how-tos/create-global-control-plane-ui.md %}
 
 ## Create a zone in the global control plane
 
-{% include how-tos/mesh/create-zone-ui.md config_type="Universal" deploy_instruction="Follow the steps shown in the UI to deploy the zone control plane on your machine." %}
+{% include md/mesh/v2/how-tos/create-zone-ui.md config_type="Universal" deploy_instruction="Follow the steps shown in the UI to deploy the zone control plane on your machine." %}
 
 ## Validate
 
-{% include how-tos/mesh/validate-zone-online.md %}
+{% include md/mesh/v2/how-tos/validate-zone-online.md %}

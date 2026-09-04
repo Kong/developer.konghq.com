@@ -128,11 +128,11 @@ faqs:
 prereqs:
   inline:
     - title: A running Kubernetes cluster
-      include_content: prereqs/kubernetes/mesh-cluster
+      include_content: md/mesh/v2/prereqs/kubernetes-cluster
     - title: Helm
       include_content: prereqs/helm
     - title: Install {{site.mesh_product_name}} with demo configuration
-      include_content: prereqs/kubernetes/mesh-quickstart
+      include_content: md/mesh/v2/prereqs/kubernetes-quickstart
     - title: Tempo
       content: |
         Install [Grafana Tempo](https://grafana.com/docs/tempo/latest/setup/helm-chart/) as the trace backend. The collector config in this guide pushes traces to `tempo.observability:4317`:

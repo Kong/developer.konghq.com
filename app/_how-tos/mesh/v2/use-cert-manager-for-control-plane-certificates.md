@@ -21,7 +21,7 @@ prereqs:
     - title: Helm
       include_content: prereqs/helm
     - title: A running Kubernetes cluster
-      include_content: prereqs/kubernetes/mesh-cluster
+      include_content: md/mesh/v2/prereqs/kubernetes-cluster
     - title: Install cert-manager
       include_content: prereqs/cert-manager
 cleanup:

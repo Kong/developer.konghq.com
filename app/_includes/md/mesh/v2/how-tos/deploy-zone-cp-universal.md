@@ -41,7 +41,7 @@
 1. Download and install {{site.mesh_product_name}}:
 
    ```sh
-   curl -L http://developer.konghq.com/mesh/installer.sh | sh -
+   curl -L https://developer.konghq.com/mesh/v2/installer.sh | sh -
    ```
 
 1. Start the zone control plane in the background, so you can keep using the same terminal (and its exported variables) for the following steps:

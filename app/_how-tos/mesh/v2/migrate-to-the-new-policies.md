@@ -29,9 +29,9 @@ prereqs:
     - title: Helm
       include_content: prereqs/helm
     - title: Install kumactl
-      include_content: prereqs/tools/kumactl
+      include_content: md/mesh/v2/prereqs/kumactl
     - title: A running Kubernetes cluster
-      include_content: prereqs/kubernetes/mesh-cluster
+      include_content: md/mesh/v2/prereqs/kubernetes-cluster
 
 cleanup:
   inline:
