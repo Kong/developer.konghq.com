@@ -617,7 +617,6 @@
 /mesh/reference/kuma-cp/                                                   /mesh/v2/reference/kuma-cp/  301
 /mesh/resource-sizing-guidelines/                                          /mesh/v2/resource-sizing-guidelines/  301
 /mesh/restrict-permissions-to-selected-namespaces-on-kubernetes/           /mesh/v2/restrict-permissions-to-selected-namespaces-on-kubernetes/  301
-/mesh/sbom/                                                                /mesh/v2/sbom/  301
 /mesh/secure-access/                                                       /mesh/v2/secure-access/  301
 /mesh/service-discovery/                                                   /mesh/v2/service-discovery/  301
 /mesh/service-mesh/                                                        /mesh/v2/service-mesh/  301
@@ -627,7 +626,6 @@
 /mesh/targeting-meshhttproutes-in-supported-policies/                      /mesh/v2/targeting-meshhttproutes-in-supported-policies/  301
 /mesh/transparent-proxying/                                                /mesh/v2/transparent-proxying/  301
 /mesh/ubi-images/                                                          /mesh/v2/ubi-images/  301
-/mesh/upgrade/                                                             /mesh/v2/upgrade/  301
 /mesh/use-cert-manager-for-control-plane-certificates/                     /mesh/v2/use-cert-manager-for-control-plane-certificates/  301
 /mesh/use-kong-as-delegated-gateway/                                       /mesh/v2/use-kong-as-delegated-gateway/  301
 /mesh/vault/                                                               /mesh/v2/vault/  301
