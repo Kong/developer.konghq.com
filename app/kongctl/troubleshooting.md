@@ -30,6 +30,22 @@ related_resources:
 
 This reference covers common issues and their solutions when using kongctl.
 
+## Homebrew installation
+
+### Switch from the cask to the formula
+
+If you previously installed kongctl using the Homebrew cask, uninstall it before
+installing the formula:
+
+```bash
+brew uninstall --cask kong/kongctl/kongctl
+brew install --formula kong/kongctl/kongctl
+kongctl version --full
+```
+
+Uninstalling the cask does not remove your kongctl configuration or stored
+credentials.
+
 ## Common issues
 
 ### "No changes detected" when changes exist
