@@ -1,6 +1,6 @@
 name: Kong Mesh
 icon: /_assets/icons/products/mesh.svg
-previous_major_url_segment: v2
+previous_major_url_segment: v<major>
 tiers:
   enterprise:
     text: Enterprise
@@ -14,6 +14,7 @@ releases:
     releaseDate: "2026-09-31"
     eol: "2026-09-31"
     branch: release-3.0
+    label: dev
     latest: true
   - version: 2.2.9
     release: "2.2"

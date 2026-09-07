@@ -8,7 +8,7 @@ breadcrumbs:
   - /mesh/
 description: Bundled features for your service traffic and network configuration.
 ---
-{%- assign policies = site.data.mesh_policies | where_exp: "policy", "policy.published != false" | sort: "title" -%}
+{%- assign policies = site.data.mesh_policies.latest | where_exp: "policy", "policy.published != false" | sort: "title" -%}
 {% if page.output_format == 'markdown' %}
 {% for policy in policies %}
 ## {{ policy.title }}
