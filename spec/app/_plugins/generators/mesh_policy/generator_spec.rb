@@ -73,6 +73,18 @@ RSpec.describe Jekyll::MeshPolicyPages::Generator do
     end
   end
 
+  describe 'page data' do
+    it 'carries no major_version for the current-major overview' do
+      overview = site.data['mesh_policies'][3]['meshretry']
+      expect(overview.data['major_version']).to be_nil
+    end
+
+    it 'carries the folder-derived major_version for the v2 overview' do
+      overview = site.data['mesh_policies'][2]['meshretry']
+      expect(overview.data['major_version']).to eq('mesh' => 2)
+    end
+  end
+
   describe 'release resolution' do
     it 'resolves the current-major policy release inside major 3' do
       overview = site.data['mesh_policies'][3]['meshretry']

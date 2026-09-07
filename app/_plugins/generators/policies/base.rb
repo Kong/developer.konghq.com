@@ -11,14 +11,17 @@ module Jekyll
       def_delegators :@release_info, :releases, :latest_available_release,
                      :latest_release_in_range, :unreleased?, :major_version_number
 
-      attr_reader :folder, :slug, :explicit_major
+      attr_reader :folder, :slug
 
-      def initialize(folder:, slug:, policy_major: nil)
+      def initialize(folder:, slug:)
         @folder = folder
         @slug   = slug
-        @explicit_major = policy_major
 
         @release_info = release_info
+      end
+
+      def explicit_major
+        @explicit_major ||= metadata.dig('major_version', product)
       end
 
       def policy_major
