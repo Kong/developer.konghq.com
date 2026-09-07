@@ -2,6 +2,7 @@
 
 require_relative '../policies/generator'
 require_relative '../policies/generator_base'
+require_relative '../release_info/major_resolver'
 
 module Jekyll
   module MeshPolicyPages
@@ -29,6 +30,8 @@ module Jekyll
 
       def run
         return if skip_locally?
+
+        seed_current_major_alias
 
         top_level_folder.each do |entry, slug|
           if VERSION_SEGMENT.match?(slug)
@@ -61,6 +64,17 @@ module Jekyll
 
       private
 
+      def seed_current_major_alias # rubocop:disable Metrics/AbcSize
+        site.data[key][current_major] ||= {}
+        site.data[key]['latest'] ||= site.data[key][current_major]
+      end
+
+      def current_major
+        @current_major ||= ReleaseInfo::MajorResolver.new(
+          site:, product: 'mesh', page_major_version: nil, min_version: nil, max_version: nil
+        ).resolve
+      end
+
       def top_level_folder
         Dir.glob(File.join(site.source, "#{self.class.policies_folder}/*/")).map do |entry|
           slug = entry.gsub("#{site.source}/#{self.class.policies_folder}/", '').chomp('/')
@@ -68,10 +82,9 @@ module Jekyll
         end
       end
 
-      def store_overview(policy, overview) # rubocop:disable Metrics/AbcSize
+      def store_overview(policy, overview)
         site.data[key][policy.policy_major] ||= {}
         site.data[key][policy.policy_major][policy.slug] = overview
-        site.data[key]['latest'] = site.data[key][policy.policy_major] unless policy.explicit_major
       end
     end
   end

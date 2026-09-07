@@ -97,6 +97,12 @@ function fileToUrl(file) {
   } else if (file.startsWith("app/_kong_plugins")) {
     return file.replace("app/_kong_plugins/", "/plugins/").replace(ext, "/");
   } else if (file.startsWith("app/_mesh_policies")) {
+    const relative = file.replace("app/_mesh_policies/", "");
+    const versionMatch = relative.match(/^(v\d+)\/(.+)$/);
+    if (versionMatch) {
+      const [, version, rest] = versionMatch;
+      return `/mesh/${version}/policies/${rest}`.replace(ext, "/");
+    }
     return file
       .replace("app/_mesh_policies/", "/mesh/policies/")
       .replace(ext, "/");

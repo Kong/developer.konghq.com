@@ -607,6 +607,7 @@
 /mesh/openshift-quickstart/                                                /mesh/v2/openshift-quickstart/  301
 /mesh/performance-tuning/                                                  /mesh/v2/performance-tuning/  301
 /mesh/policies-introduction/                                               /mesh/v2/policies-introduction/  301
+/mesh/policies/external-services/                                          /mesh/v2/policies/external-services/  301
 /mesh/policies/mutual-tls/                                                 /mesh/v2/policies/mutual-tls/  301
 /mesh/production-usage-values/                                             /mesh/v2/production-usage-values/  301
 /mesh/progressively-roll-out-unified-resource-naming/                      /mesh/v2/progressively-roll-out-unified-resource-naming/  301
