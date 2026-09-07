@@ -23,7 +23,7 @@ tags:
 tldr:
   q: How do I use the Entitlement Enforcement plugin to enforce {{site.metering_and_billing}} entitlements on {{site.base_gateway}} traffic?
   a: |
-    The Entitlement Enforcement plugin enforces per-customer, per-feature access by polling the {{site.metering_and_billing}} Entitlement Access API and blocking requests when a customer has no access or has exhausted a usage limit.
+    The [Entitlement Enforcement plugin](/plugins/entitlement-enforcement/) enforces per-customer, per-feature access by polling the {{site.metering_and_billing}} Entitlement Access API and blocking requests when a customer has no access or has exhausted a usage limit.
 
     In this tutorial you'll set up the full {{site.metering_and_billing}} product catalog needed for enforcement — a meter, a metered feature, a plan with an entitlement, a customer, and a subscription — and then enable the Entitlement Enforcement plugin on a {{site.base_gateway}} Route to enforce that entitlement.
 
@@ -58,6 +58,8 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 
 related_resources:
+  - text: Entitlement Enforcement plugin
+    url: /plugins/entitlement-enforcement/
   - text: "{{site.metering_and_billing}} plugin"
     url: /plugins/metering-and-billing/
   - text: Product Catalog reference
@@ -80,7 +82,7 @@ next_steps:
 automated_tests: false
 ---
 
-This guide shows how to enforce {{site.metering_and_billing}} entitlements on {{site.base_gateway}} API traffic with the Entitlement Enforcement plugin. Unlike the {{site.metering_and_billing}} plugin, which only meters usage, the Entitlement Enforcement plugin actively **blocks** requests: it polls the {{site.metering_and_billing}} Entitlement Access API for each customer and returns an error when the customer has no access to a feature or has exhausted a usage limit.
+This guide shows how to enforce {{site.metering_and_billing}} entitlements on {{site.base_gateway}} API traffic with the [Entitlement Enforcement plugin](/plugins/entitlement-enforcement/). Unlike the {{site.metering_and_billing}} plugin, which only meters usage, the Entitlement Enforcement plugin actively **blocks** requests: it polls the {{site.metering_and_billing}} Entitlement Access API for each customer and returns an error when the customer has no access to a feature or has exhausted a usage limit.
 
 In this guide, you'll:
 * Create a {{site.base_gateway}} Consumer that you'll map to a customer
@@ -341,13 +343,13 @@ variables:
 {% endentity_examples %}
 <!--vale on-->
 
-This configuration relies on the plugin's defaults for the rest of its behavior:
+This configuration relies on the plugin's defaults for the rest of its behavior. For every available setting, see the [Entitlement Enforcement plugin reference](/plugins/entitlement-enforcement/reference/):
 
 * `deny_unknown_customers` defaults to `true`, so a request whose customer can't be resolved is blocked.
 * `fail_policy` defaults to `allow`, so if the enforcement state can't be retrieved, requests are allowed through.
 * `response_codes` defaults return `429` when a usage limit is reached, `402` when there's no credit available, and `403` for feature or customer errors.
 
-Each plugin instance enforces exactly one `feature.key`. Boolean entitlements are evaluated the same way as metered ones: if the customer doesn't have the feature, the request is denied with `403` and a `reason.code` of `feature_unavailable`. To enforce more than one feature, enable a plugin instance per feature on the Routes that serve it.
+Each plugin instance enforces exactly one `feature.key`. Boolean entitlements are evaluated the same way as metered ones: if the customer doesn't have the feature, the request is denied with `403`. To enforce more than one feature, enable a plugin instance per feature on the Routes that serve it. For the full list of denial reasons and their default responses, see [Enforcement decisions and response codes](/plugins/entitlement-enforcement/#enforcement-decisions-and-response-codes).
 
 {:.info}
 > `refresh_interval` is set to `3` seconds here so the tutorial responds quickly. In production, use a higher interval to reduce load on the Entitlement Access API.

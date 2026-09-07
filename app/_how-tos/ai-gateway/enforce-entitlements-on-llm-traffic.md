@@ -25,7 +25,7 @@ tldr:
   a: |
     Meter LLM token usage with the {{site.metering_and_billing}} plugin, grant the customer a token allowance as a metered entitlement, and enable the Entitlement Enforcement plugin on the Route.
 
-    The plugin polls the {{site.metering_and_billing}} Entitlement Access API for the customer's remaining allowance and blocks requests once the token limit is reached, so enforcement happens at the gateway instead of in your own infrastructure.
+    The [Entitlement Enforcement plugin](/plugins/entitlement-enforcement/) polls the {{site.metering_and_billing}} Entitlement Access API for the customer's remaining allowance and blocks requests once the token limit is reached, so enforcement happens at the gateway instead of in your own infrastructure.
 
 tools:
     - deck
@@ -61,6 +61,8 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 
 related_resources:
+  - text: Entitlement Enforcement plugin
+    url: /plugins/entitlement-enforcement/
   - text: Monetize LLM traffic in {{site.konnect_short_name}}
     url: /how-to/meter-llm-traffic/
   - text: Get started with Entitlement Enforcement
@@ -83,7 +85,7 @@ next_steps:
 automated_tests: false
 ---
 
-This guide shows how to enforce an LLM token allowance on {{site.ai_gateway}} traffic. [Metering LLM traffic](/how-to/meter-llm-traffic/) tells you what a customer consumed, but it doesn't stop them consuming more. The Entitlement Enforcement plugin closes that gap: it polls the {{site.metering_and_billing}} Entitlement Access API for the customer's remaining token allowance and blocks requests once the allowance is spent.
+This guide shows how to enforce an LLM token allowance on {{site.ai_gateway}} traffic. [Metering LLM traffic](/how-to/meter-llm-traffic/) tells you what a customer consumed, but it doesn't stop them consuming more. The [Entitlement Enforcement plugin](/plugins/entitlement-enforcement/) closes that gap: it polls the {{site.metering_and_billing}} Entitlement Access API for the customer's remaining token allowance and blocks requests once the allowance is spent.
 
 In this guide, you'll:
 * Create a {{site.base_gateway}} Consumer that you'll map to a customer
@@ -384,7 +386,7 @@ variables:
 {% endentity_examples %}
 <!--vale on-->
 
-This configuration relies on the plugin's defaults for the rest of its behavior:
+This configuration relies on the plugin's defaults for the rest of its behavior. For every available setting, see the [Entitlement Enforcement plugin reference](/plugins/entitlement-enforcement/reference/):
 
 * `deny_unknown_customers` defaults to `true`, so a request whose customer can't be resolved is blocked.
 * `fail_policy` defaults to `allow`, so if the enforcement state can't be retrieved, requests are allowed through.
