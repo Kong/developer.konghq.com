@@ -10,9 +10,9 @@ icon: meshtrace.png
 
 related_resources:
   - text: Deploy an OpenTelemetry collector
-    url: /mesh/deploy-an-opentelemetry-collector/
+    url: /mesh/v2/deploy-an-opentelemetry-collector/
   - text: MeshOpenTelemetryBackend
-    url: /mesh/meshopentelemetrybackend/
+    url: /mesh/v2/meshopentelemetrybackend/
 ---
 
 {:.warning}

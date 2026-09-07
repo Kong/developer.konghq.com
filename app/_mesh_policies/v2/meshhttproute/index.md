@@ -113,7 +113,7 @@ Otherwise, we recommend migrating to new policies and then removing `TrafficRout
 
 When several `MeshHTTPRoute` policies target the same data plane proxy they're merged.
 Similar to the new policies the merging order is determined by
-[the top level targetRef](/mesh/policies-introduction/).
+[the top level targetRef](/mesh/v2/policies-introduction/).
 The difference is in `spec.to[].rules`.
 {{site.mesh_product_name}} treats `rules` as a key-value map
 where `matches` is a key and `default` is a value. For example MeshHTTPRoute policies:

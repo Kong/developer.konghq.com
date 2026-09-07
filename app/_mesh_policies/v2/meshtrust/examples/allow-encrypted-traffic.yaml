@@ -3,7 +3,7 @@ description: 'Allow encrypted mTLS traffic from a different trust domain to the 
 tools:
   - kubernetes
 requirements:
-  - "A [MeshService](/mesh/meshservice/) resource must be configured in your mesh."
+  - "A [MeshService](/mesh/v2/meshservice/) resource must be configured in your mesh."
 weight: 900
 namespace: kuma-system
 config:

@@ -15,20 +15,20 @@ min_version:
   mesh: '2.12'
 related_resources:
   - text: Issue identity with the MeshIdentity bundled provider
-    url: /mesh/issue-identity-with-meshidentity/
+    url: /mesh/v2/issue-identity-with-meshidentity/
   - text: Issue identity with MeshIdentity Spire provider
-    url: /mesh/issue-identity-with-meshidentity-spire/
+    url: /mesh/v2/issue-identity-with-meshidentity-spire/
   - text: MeshIdentity policy
-    url: /mesh/policies/meshidentity/
+    url: /mesh/v2/policies/meshidentity/
   - text: MeshTrust policy
-    url: /mesh/policies/meshtrust/
+    url: /mesh/v2/policies/meshtrust/
   - text: MeshTLS policy
-    url: /mesh/policies/meshtls/
+    url: /mesh/v2/policies/meshtls/
 ---
 
 {:.warning}
 > This resource is experimental.
-> Enable [MeshIdentity](/mesh/policies/meshidentity/) before you apply `MeshTrafficPermission`.
+> Enable [MeshIdentity](/mesh/v2/policies/meshidentity/) before you apply `MeshTrafficPermission`.
 
 `MeshTrafficPermission` defines which clients can access services inside a mesh based on their SPIFFE identities.
 If no `MeshTrafficPermission` applies, the default behavior is to deny all requests.
@@ -71,7 +71,7 @@ spec:
 
 With this policy in place, workloads labeled `app: my-app` reject connections from identities in the `legacy-ns` namespace
 and from the specific `test/client` identity, while continuing to accept other identities in the `my-mesh.us-east-2.mesh.local`
-[trust domain](/mesh/policies/meshtrust/).
+[trust domain](/mesh/v2/policies/meshtrust/).
 
 ## Configuration
 

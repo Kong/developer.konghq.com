@@ -13,9 +13,9 @@ icon: meshmetric.png
 
 related_resources:
   - text: Deploy an OpenTelemetry collector
-    url: /mesh/deploy-an-opentelemetry-collector/
+    url: /mesh/v2/deploy-an-opentelemetry-collector/
   - text: MeshOpenTelemetryBackend
-    url: /mesh/meshopentelemetrybackend/
+    url: /mesh/v2/meshopentelemetrybackend/
 ---
 {{site.mesh_product_name}} facilitates consistent traffic metrics across all data plane proxies in your mesh.
 
@@ -35,7 +35,7 @@ To collect metrics from {{site.mesh_product_name}}, you need to expose metrics f
 
 {:.info}
 > In the rest of this page we assume you have already configured your observability tools to work with {{site.mesh_product_name}}.
-> If you haven't already read the [observability docs](/mesh/observability/).
+> If you haven't already read the [observability docs](/mesh/v2/observability/).
 
 ## TargetRef support matrix
 
@@ -280,7 +280,7 @@ When the certificate and key are available within the container, `kuma-sidecar` 
 * `KUMA_DATAPLANE_RUNTIME_METRICS_CERT_PATH`
 * `KUMA_DATAPLANE_RUNTIME_METRICS_KEY_PATH`
 
-It's possible to use a [`ContainerPatch`](/mesh/data-plane-kubernetes/#custom-container-configuration) to add variables to `kuma-sidecar`:
+It's possible to use a [`ContainerPatch`](/mesh/v2/data-plane-kubernetes/#custom-container-configuration) to add variables to `kuma-sidecar`:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1

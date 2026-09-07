@@ -69,12 +69,12 @@ rows:
 {% endnavtab %}
 {% endnavtabs %}
 
-For more information, see the [matching docs](/mesh/policies-introduction/).
+For more information, see the [matching docs](/mesh/v2/policies-introduction/).
 
 ## Configuration
 
 Unlike other outbound policies, `MeshTCPRoute` doesn't contain `default`
-directly in the `to` array. The `default` section is nested inside `rules`. For more information review the [MeshTCPRoute policy documentation](/mesh/policies/meshtcproute/reference/).
+directly in the `to` array. The `default` section is nested inside `rules`. For more information review the [MeshTCPRoute policy documentation](/mesh/v2/policies/meshtcproute/reference/).
 
 ```yaml
 spec:

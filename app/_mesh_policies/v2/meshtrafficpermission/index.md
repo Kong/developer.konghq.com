@@ -13,7 +13,7 @@ icon: meshtrafficpermission.png
 > Do **not** combine with the deprecated TrafficPermission policy.
 
 {:.info}
-> [Mutual TLS](/mesh/policies/mutual-tls/) has to be enabled to make MeshTrafficPermission work.
+> [Mutual TLS](/mesh/v2/policies/mutual-tls/) has to be enabled to make MeshTrafficPermission work.
 
 The `MeshTrafficPermission` policy provides access control within the Mesh.
 It allows you to define granular rules about which services can communicate with each other.
@@ -83,7 +83,7 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-For a complete walkthrough, see [Apply policies to mesh-scoped zone proxies](/mesh/zone-proxy-policies/).
+For a complete walkthrough, see [Apply policies to mesh-scoped zone proxies](/mesh/v2/zone-proxy-policies/).
 
 ### Action
 

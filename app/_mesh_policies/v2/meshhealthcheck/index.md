@@ -24,7 +24,7 @@ When an unhealthy proxy returns to a healthy state,
 
 This policy provides **active** checks.
 If you want to configure **passive** checks,
-please use the [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/) policy.
+please use the [MeshCircuitBreaker](/mesh/v2/policies/meshcircuitbreaker/) policy.
 Data plane proxies with **active** checks will explicitly send requests to other data plane proxies to determine if target proxies are healthy or not.
 This mode generates extra traffic to other proxies and services as described in the policy configuration.
 
@@ -112,7 +112,7 @@ See [protocol fallback example](#protocol-fallback).
   the default is 50%. To disable panic mode, set to 0%. 
   
   {:.warning}
-  > This is deprecated from version 2.10.x and has been moved to [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/).
+  > This is deprecated from version 2.10.x and has been moved to [MeshCircuitBreaker](/mesh/v2/policies/meshcircuitbreaker/).
 
 - **`failTrafficOnPanic`** - (optional) if set to true, Envoy will not consider any hosts when the cluster is in
   'panic mode'. Instead, the cluster will fail all requests as if all hosts are unhealthy.

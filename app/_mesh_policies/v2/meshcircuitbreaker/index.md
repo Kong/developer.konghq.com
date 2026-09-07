@@ -13,7 +13,7 @@ This policy looks for errors in the live traffic being exchanged between our dat
 proxy as unhealthy if certain conditions are met. The policy ensures that no additional traffic can reach an
 unhealthy data plane proxy until it is healthy again.
 
-Circuit breakers - unlike active [MeshHealthChecks](/mesh/policies/meshhealthcheck/) - do not send
+Circuit breakers - unlike active [MeshHealthChecks](/mesh/v2/policies/meshhealthcheck/) - do not send
 additional traffic to our data plane proxies but they rather inspect the existing service traffic. They are also
 commonly used to prevent cascading failures.
 
@@ -31,7 +31,7 @@ proxy extends the [baseEjectionTime](#outlier-detection) multiplied by the numbe
 the fourth ejection lasts for a period of `4 * baseEjectionTime`.
 
 This policy provides **passive** checks.
-If you want to configure **active** checks, please use the [MeshHealthCheck](/mesh/policies/meshhealthcheck/)
+If you want to configure **active** checks, please use the [MeshHealthCheck](/mesh/v2/policies/meshhealthcheck/)
 policy.
 Data plane proxies with **passive** checks won't explicitly send requests to other data plane proxies to determine if
 target proxies are healthy or not.
