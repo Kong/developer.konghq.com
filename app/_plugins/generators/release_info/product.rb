@@ -33,6 +33,18 @@ module Jekyll
         @product == 'event-gateway'
       end
 
+      def major_version_number
+        return @major if @major
+
+        MajorResolver.new(
+          site: @site,
+          product: @product,
+          page_major_version: nil,
+          min_version: @min_version[@product],
+          max_version: @max_version[@product]
+        ).resolve
+      end
+
       private
 
       def key
@@ -45,18 +57,6 @@ module Jekyll
 
       def major_of(version_string)
         version_string.to_s.split('.').first.to_i
-      end
-
-      def major_version_number
-        return @major if @major
-
-        MajorResolver.new(
-          site: @site,
-          product: @product,
-          page_major_version: nil,
-          min_version: @min_version[@product],
-          max_version: @max_version[@product]
-        ).resolve
       end
     end
   end

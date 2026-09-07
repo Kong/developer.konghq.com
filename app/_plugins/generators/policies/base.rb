@@ -9,15 +9,20 @@ module Jekyll
       include Jekyll::SiteAccessor
 
       def_delegators :@release_info, :releases, :latest_available_release,
-                     :latest_release_in_range, :unreleased?
+                     :latest_release_in_range, :unreleased?, :major_version_number
 
-      attr_reader :folder, :slug
+      attr_reader :folder, :slug, :explicit_major
 
-      def initialize(folder:, slug:)
+      def initialize(folder:, slug:, policy_major: nil)
         @folder = folder
         @slug   = slug
+        @explicit_major = policy_major
 
         @release_info = release_info
+      end
+
+      def policy_major
+        @policy_major ||= explicit_major || major_version_number
       end
 
       def metadata
@@ -53,7 +58,8 @@ module Jekyll
           site:,
           product:,
           min_version:,
-          max_version:
+          max_version:,
+          major: explicit_major
         )
       end
 
