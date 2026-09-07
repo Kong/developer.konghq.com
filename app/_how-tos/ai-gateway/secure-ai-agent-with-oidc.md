@@ -124,7 +124,7 @@ ai_gateway_agents:
       auth_strategies:
         - !ref identity-oidc#name
     config:
-      url: http://host.docker.internal:10000
+      url: http://a2a-kongair-agent:10000
       route:
         paths:
           - /a2a

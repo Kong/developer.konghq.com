@@ -20,9 +20,7 @@ const log = debug("tests:runner");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const testsConfig = yaml.load(
-  fs.readFileSync("./config/tests.yaml", "utf-8"),
-);
+const testsConfig = yaml.load(fs.readFileSync("./config/tests.yaml", "utf-8"));
 const skipEnvVariables = new Set(
   testsConfig.validations?.skip_env_variables ?? [],
 );
@@ -134,7 +132,7 @@ async function executeRequest(
   onResponse,
   expectedStatus,
 ) {
-  const maxRetries = 3;
+  const maxRetries = 7;
   const initialRetryDelay = 5000; // 5 seconds initial delay
 
   for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -493,7 +491,7 @@ async function controlPlaneRequest(
 
 async function customCommand(validationName, config, runtimeConfig, container) {
   const returnCode = config.expected.return_code;
-  const retryDelays = [10000, 15000, 20000, 25000]; // delay before retry attempts 2-5
+  const retryDelays = [10000, 15000, 20000, 25000, 30000, 35000]; // delay before retry attempts
   const maxRetries = retryDelays.length + 1;
 
   let result;
@@ -519,7 +517,9 @@ async function customCommand(validationName, config, runtimeConfig, container) {
       log(
         `Retry attempt ${
           attempt + 1
-        } - command "${config.command}" did not meet expectations, retrying in ${backoffDelay}ms...`,
+        } - command "${config.command}" did not meet expectations (exit code: ${
+          result.exitCode
+        }, output: ${result.output || "(empty)"}), retrying in ${backoffDelay}ms...`,
       );
       await sleep(backoffDelay);
     }
@@ -528,6 +528,8 @@ async function customCommand(validationName, config, runtimeConfig, container) {
   if (returnCode !== result.exitCode) {
     logAndError(validationName, "Failed to execute command", [
       `Expected: command to have return code ${returnCode}, got: ${result.exitCode}`,
+      `Command: ${config.command}`,
+      `Output: ${result.output || "(empty)"}`,
     ]);
   } else if (
     config.expected.message &&
@@ -594,7 +596,11 @@ async function vaultSecret(validationName, config, runtimeConfig, container) {
     logAndError(
       validationName,
       "Failed to retrieve the secret from the vault",
-      [`Expected: command to have return code 0, got: ${result.exitCode}`],
+      [
+        `Expected: command to have return code 0, got: ${result.exitCode}`,
+        `Command: ${command}`,
+        `Output: ${result.output || "(empty)"}`,
+      ],
     );
   } else if (
     expectedValue &&
