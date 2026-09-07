@@ -115,7 +115,7 @@ MeshGateway in `spec.targetRef` and set `spec.to[].targetRef.kind: Mesh`.
 
 ### Interactions with `TrafficRoute`
 
-`MeshTCPRoute` takes priority over [`TrafficRoute`](../traffic-route) when a proxy is targeted by both policies.
+`MeshTCPRoute` takes priority over [`TrafficRoute`](/mesh/v2/policies/meshhttproute/) when a proxy is targeted by both policies.
 
 All legacy policies like `Retry`, `TrafficLog`, `Timeout` and so on only match on routes defined by `TrafficRoute`.
 All new recommended policies like `MeshRetry`, `MeshAccessLog`, `MeshTimeout` and so on match on routes defined by `MeshTCPRoute` and `TrafficRoute`.
