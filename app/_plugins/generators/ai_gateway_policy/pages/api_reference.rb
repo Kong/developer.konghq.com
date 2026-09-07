@@ -9,9 +9,9 @@ module Jekyll
       class ApiReference < Base # rubocop:disable Style/Documentation
         def self.url(policy)
           if policy.unreleased?
-            "#{base_url}#{policy.slug}/api/#{policy.min_release}/"
+            "#{base_url(policy)}#{policy.slug}/api/#{policy.min_release}/"
           else
-            "#{base_url}#{policy.slug}/api/"
+            "#{base_url(policy)}#{policy.slug}/api/"
           end
         end
 
