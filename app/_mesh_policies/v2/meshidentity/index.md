@@ -17,20 +17,20 @@ min_version:
 
 related_resources:
   - text: Issue identity with MeshIdentity bundled provider
-    url: /mesh/issue-identity-with-meshidentity/
+    url: /mesh/v2/issue-identity-with-meshidentity/
   - text: Issue identity with MeshIdentity Spire provider
-    url: /mesh/issue-identity-with-meshidentity-spire/
+    url: /mesh/v2/issue-identity-with-meshidentity-spire/
   - text: MeshService
-    url: /mesh/meshservice/
+    url: /mesh/v2/meshservice/
   - text: MeshTLS
-    url: /mesh/policies/meshtls/
+    url: /mesh/v2/policies/meshtls/
   - text: MeshTrafficPermission with SPIFFE ID matchers
-    url: /mesh/policies/meshtrafficpermission_experimental/
+    url: /mesh/v2/policies/meshtrafficpermission_experimental/
 ---
 
 {:.warning}
 > This resource is experimental.
-> It requires [MeshService](/mesh/meshservice/) to be enabled.
+> It requires [MeshService](/mesh/v2/meshservice/) to be enabled.
 > It works on Kubernetes since version 2.12, and on Universal since version 2.13.
 
 `MeshIdentity` is a resource that defines how workloads in a mesh obtain their cryptographic identity.
@@ -225,7 +225,7 @@ spec:
 
 When using {% raw %}`{{ label "kuma.io/workload" }}`{% endraw %} or {% raw %}`{{ .Workload }}`{% endraw %} in the `path` template, data plane proxies selected by this `MeshIdentity` must have the `kuma.io/workload` label. This label can be provided either:
 
-* Via a [data plane proxy token](/mesh/data-plane-proxy-authentication/#workload-label-in-tokens) generated with the `--workload` parameter
+* Via a [data plane proxy token](/mesh/v2/data-plane-proxy-authentication/#workload-label-in-tokens) generated with the `--workload` parameter
 * Directly on the data plane proxy resource
 
 Connections from data plane proxies lacking the required label will be rejected.

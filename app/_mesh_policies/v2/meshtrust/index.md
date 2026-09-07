@@ -15,17 +15,17 @@ tags:
   - certificates
 related_resources:
   - text: Mesh Identity
-    url: /mesh/policies/meshidentity/
+    url: /mesh/v2/policies/meshidentity/
   - text: Mesh TLS
-    url: /mesh/policies/meshtls/
+    url: /mesh/v2/policies/meshtls/
   - text: MeshTrafficPermission with SPIFFE ID matchers
-    url: /mesh/policies/meshtrafficpermission_experimental/
+    url: /mesh/v2/policies/meshtrafficpermission_experimental/
 ---
 
 {:.warning}
-> `MeshTrust` is experimental. It works only on Kubernetes and requires [`MeshService`](/mesh/meshservice/) to be enabled.
+> `MeshTrust` is experimental. It works only on Kubernetes and requires [`MeshService`](/mesh/v2/meshservice/) to be enabled.
 
-The `MeshTrust` resource lets mesh applications accept encrypted traffic from different [trust](/mesh/concepts#trust) domains. You can configure `MeshTrust` with a certificate that {{site.mesh_product_name}} uses to validate incoming traffic.
+The `MeshTrust` resource lets mesh applications accept encrypted traffic from different [trust](/mesh/v2/concepts#trust) domains. You can configure `MeshTrust` with a certificate that {{site.mesh_product_name}} uses to validate incoming traffic.
 
 Use cases:
 * Deploying a gateway without a sidecar

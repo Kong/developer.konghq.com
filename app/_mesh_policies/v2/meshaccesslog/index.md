@@ -10,14 +10,14 @@ icon: meshaccesslog.png
 
 related_resources:
   - text: Deploy an OpenTelemetry collector
-    url: /mesh/deploy-an-opentelemetry-collector/
+    url: /mesh/v2/deploy-an-opentelemetry-collector/
   - text: MeshOpenTelemetryBackend
-    url: /mesh/meshopentelemetrybackend/
+    url: /mesh/v2/meshopentelemetrybackend/
 ---
 
 {:.info}
 > This guide assumes you have already configured your observability tools to work with {{site.mesh_product_name}}.
-> If you haven't, see the [observability docs](/mesh/observability/).
+> If you haven't, see the [observability docs](/mesh/v2/observability/).
 
 ## `targetRef` support matrix
 
