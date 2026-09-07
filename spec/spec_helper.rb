@@ -11,8 +11,6 @@ require 'liquid'
 require 'capybara'
 
 Dir[File.join(PROJECT_ROOT, 'app/_plugins/**/*.rb')].sort.each do |f|
-  next if f.end_with?('app/_plugins/blocks/kuma-specific/kuma.rb')
-
   require f
 end
 
