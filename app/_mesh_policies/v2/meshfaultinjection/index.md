@@ -7,6 +7,8 @@ description: 'Test services for resiliency by introducing errors.'
 content_type: plugin
 type: policy
 icon: meshfaultinjection.png
+major_version:
+  mesh: 2
 ---
 
 {:.warning}

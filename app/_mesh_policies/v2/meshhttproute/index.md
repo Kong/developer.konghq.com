@@ -7,6 +7,8 @@ description: "Alter and redirect HTTP requests depending on where the request is
 content_type: plugin
 type: policy
 icon: meshhttproute.png
+major_version:
+  mesh: 2
 ---
 
 The `MeshHTTPRoute` policy allows altering and redirecting HTTP requests

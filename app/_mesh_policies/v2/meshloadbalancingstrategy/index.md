@@ -7,6 +7,8 @@ description: 'Configure the load balancing strategy for traffic between services
 content_type: plugin
 type: policy
 icon: policy.svg
+major_version:
+  mesh: 2
 ---
 
 This policy enables {{site.mesh_product_name}} to configure the load balancing strategy for traffic between services in the mesh.

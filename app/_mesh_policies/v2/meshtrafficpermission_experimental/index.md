@@ -24,6 +24,8 @@ related_resources:
     url: /mesh/v2/policies/meshtrust/
   - text: MeshTLS policy
     url: /mesh/v2/policies/meshtls/
+major_version:
+  mesh: 2
 ---
 
 {:.warning}

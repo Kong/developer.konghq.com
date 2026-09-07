@@ -7,6 +7,8 @@ description: 'Look for errors in the live traffic between data plane proxies and
 content_type: plugin
 type: policy
 icon: meshcircuitbreaker.png
+major_version:
+  mesh: 2
 ---
 
 This policy looks for errors in the live traffic being exchanged between our data plane proxies. It marks a data plane

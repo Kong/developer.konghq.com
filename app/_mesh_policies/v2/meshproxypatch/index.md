@@ -7,6 +7,8 @@ description: "Configuration low-level options for Envoy resources that {{site.me
 content_type: plugin
 type: policy
 icon: meshproxypatch.png
+major_version:
+  mesh: 2
 ---
 
 A `MeshProxyPatch` policy can modify:

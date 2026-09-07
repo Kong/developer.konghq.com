@@ -10,6 +10,8 @@ min_version:
   mesh: '2.6'
 
 icon: meshretry.png
+major_version:
+  mesh: 2
 ---
 
 This policy enables {{site.mesh_product_name}} to know how to behave if there are failed requests which could be retried.

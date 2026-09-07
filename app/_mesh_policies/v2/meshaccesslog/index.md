@@ -13,6 +13,8 @@ related_resources:
     url: /mesh/v2/deploy-an-opentelemetry-collector/
   - text: MeshOpenTelemetryBackend
     url: /mesh/v2/meshopentelemetrybackend/
+major_version:
+  mesh: 2
 ---
 
 {:.info}
