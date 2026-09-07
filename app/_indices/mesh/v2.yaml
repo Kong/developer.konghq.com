@@ -154,3 +154,4 @@ sections:
     items:
       - path: /mesh/v2/policies/*/examples/**/*
       - path: /mesh/v2/policies/*/reference/
+      - path: /mesh/v2/policies/*/reference/*/
