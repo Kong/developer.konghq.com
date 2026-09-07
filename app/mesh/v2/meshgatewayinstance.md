@@ -27,7 +27,7 @@ major_version:
 
 `MeshGatewayInstance` is a Kubernetes-only resource for deploying [{{site.mesh_product_name}}'s built-in gateway](/mesh/v2/built-in-gateway/).
 
-[`MeshGateway`](/mesh/gateway-listeners/) and [`MeshHTTPRoute`](/mesh/policies/meshhttproute/)/[`MeshTCPRoute`](/mesh/policies/meshtcproute/) configure built-in gateway listeners and routes, but don't manage the `kuma-dp` instances that serve traffic.
+[`MeshGateway`](/mesh/gateway-listeners/) and [`MeshHTTPRoute`](/mesh/v2/policies/meshhttproute/)/[`MeshTCPRoute`](/mesh/v2/policies/meshtcproute/) configure built-in gateway listeners and routes, but don't manage the `kuma-dp` instances that serve traffic.
 
 {{site.mesh_product_name}} offers `MeshGatewayInstance` to manage a Kubernetes Deployment and Service
 that together provide service capacity for the `MeshGateway`.

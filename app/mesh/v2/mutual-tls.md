@@ -21,7 +21,7 @@ major_version:
 ---
 
 {:.info}
-> If you want to configure version, ciphers or per-service permissive/strict mode, see [`MeshTLS`](/mesh/policies/meshtls).
+> If you want to configure version, ciphers or per-service permissive/strict mode, see [`MeshTLS`](/mesh/v2/policies/meshtls).
 
 The Mutual TLS (mTLS) policy enables automatic encrypted mTLS traffic for all the services in a mesh, and allows you to assign an identity to every [data plane proxy](/mesh/v2/data-plane-proxy/). {{site.mesh_product_name}} supports different types of CA backends as well as automatic certificate rotation.
 
@@ -33,12 +33,12 @@ The Mutual TLS (mTLS) policy enables automatic encrypted mTLS traffic for all th
 Once you've specified a CA backend, {{site.mesh_product_name}} automatically generates a certificate for every data plane proxy in the mesh. The certificates that {{site.mesh_product_name}} generates are SPIFFE compatible and are used for AuthN/Z use cases in order to identify every workload in the system.
 
 
-The certificates that {{site.mesh_product_name}} generates have a SAN set to `spiffe://<mesh name>/<service name>`. When {{site.mesh_product_name}} enforces policies that require an identity, like [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission), it will extract the SAN from the client certificate and use it to match the service identity.
+The certificates that {{site.mesh_product_name}} generates have a SAN set to `spiffe://<mesh name>/<service name>`. When {{site.mesh_product_name}} enforces policies that require an identity, like [`MeshTrafficPermission`](/mesh/v2/policies/meshtrafficpermission), it will extract the SAN from the client certificate and use it to match the service identity.
 
 {:.warning}
-> By default mTLS **is not** enabled. You need to activate it explicitly as described below. When you enable mTLS, all traffic is denied **unless** a [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission) you configure a policy to explicitly allow traffic across proxies.
+> By default mTLS **is not** enabled. You need to activate it explicitly as described below. When you enable mTLS, all traffic is denied **unless** a [`MeshTrafficPermission`](/mesh/v2/policies/meshtrafficpermission) you configure a policy to explicitly allow traffic across proxies.
 > 
-> Always make sure to include  [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission) in your configuration before enabling mTLS in a mesh to avoid unexpected traffic interruptions caused by a lack of authorization between proxies.
+> Always make sure to include  [`MeshTrafficPermission`](/mesh/v2/policies/meshtrafficpermission) in your configuration before enabling mTLS in a mesh to avoid unexpected traffic interruptions caused by a lack of authorization between proxies.
 
 To enable mTLS, configure the `mtls` property in a `Mesh` resource. You can have as many `backends` as you want, but only one at a time can be enabled via the `enabledBackend` property.
 
@@ -55,7 +55,7 @@ You can specify more than one `builtin` backend with different names, and each o
 To enable a `builtin` mTLS for the entire mesh, apply the following configuration:
 
 {:.warning}
-> To prevent disruption of your traffic, we highly recommend adding a [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission#allow-all) policy before enabling mTLS. This policy will allow communication between your applications.
+> To prevent disruption of your traffic, we highly recommend adding a [`MeshTrafficPermission`](/mesh/v2/policies/meshtrafficpermission#allow-all) policy before enabling mTLS. This policy will allow communication between your applications.
 
 {% navtabs "environment" %}
 {% navtab "Kubernetes" %}

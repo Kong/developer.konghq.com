@@ -16,9 +16,9 @@ tags:
 
 related_resources:
   - text: MeshTimeout policy
-    url: /mesh/policies/meshtimeout/
+    url: /mesh/v2/policies/meshtimeout/
   - text: MeshTrafficPermission policy
-    url: /mesh/policies/meshtrafficpermission/
+    url: /mesh/v2/policies/meshtrafficpermission/
 
 tldr:
   q: How do I configure inbound traffic with the rules API?
@@ -90,7 +90,7 @@ major_version:
 
 ## Allow all traffic in the mesh
 
-Configure [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) to allow all traffic so the examples in this guide work:
+Configure [`MeshTrafficPermission`](/mesh/v2/policies/meshtrafficpermission/) to allow all traffic so the examples in this guide work:
 
 ```sh
 echo "apiVersion: kuma.io/v1alpha1
@@ -141,7 +141,7 @@ spec:
 
 ## Apply a MeshTimeout policy
 
-Create an inbound [`MeshTimeout`](/mesh/policies/meshtimeout/) policy in the `kong-mesh-demo` namespace with the `Dataplane` targetRef kind:
+Create an inbound [`MeshTimeout`](/mesh/v2/policies/meshtimeout/) policy in the `kong-mesh-demo` namespace with the `Dataplane` targetRef kind:
 
 ```sh
 echo "apiVersion: kuma.io/v1alpha1

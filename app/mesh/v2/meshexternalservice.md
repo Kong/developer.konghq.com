@@ -11,7 +11,7 @@ breadcrumbs:
 
 related_resources:
   - text: Policy Hub
-    url: /mesh/policies/
+    url: /mesh/v2/policies/
   - text: Mesh DNS
     url: /mesh/v2/dns/
   - text: Resource sizing guidelines
@@ -30,10 +30,10 @@ major_version:
 ---
 
 The `MeshExternalService` resource allows services running inside the mesh to consume services that are not part of the mesh.
-You can declare external resources instead of relying on a [`MeshPassthrough`](/mesh/policies/meshpassthrough/) policy or passthrough mode in the mesh configuration. 
+You can declare external resources instead of relying on a [`MeshPassthrough`](/mesh/v2/policies/meshpassthrough/) policy or passthrough mode in the mesh configuration. 
 
 {:.warning}
-> Currently you can't configure granular [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) policies for `MeshExternalService` resources.
+> Currently you can't configure granular [`MeshTrafficPermission`](/mesh/v2/policies/meshtrafficpermission/) policies for `MeshExternalService` resources.
 > You can only enable or disable the whole traffic to `MeshExternalService` from a mesh.
 > For more information, see [Controlling MeshExternalService access from Mesh](#controlling-meshexternalservice-access-from-mesh).
 
@@ -75,7 +75,7 @@ endpoints:
 ### TLS
 
 The `tls` parameters describe the TLS and verification behavior.
-TLS origination happens on the [sidecar](/mesh/v2/data-plane-proxy/), so if your application is already using TLS you might want to use [MeshPassthrough](/mesh/policies/meshpassthrough).
+TLS origination happens on the [sidecar](/mesh/v2/data-plane-proxy/), so if your application is already using TLS you might want to use [MeshPassthrough](/mesh/v2/policies/meshpassthrough).
 You can define TLS version requirements, allow renegotiation, verification of the SNI, the SAN, the custom CA and the client certificate and key for server verification.
 To disable parts of the verification you can set a `mode`: `SkipSAN`, `SkipCA`, `SkipAll`, or `Secured` (default).
 
@@ -115,9 +115,9 @@ Once it's created:
 
 {:.danger}
 > Do **not** hijack original addresses.
-> If you need to transparently pass traffic through the Mesh without modifying it, use [`MeshPassthrough`](/mesh/policies/meshpassthrough/).
+> If you need to transparently pass traffic through the Mesh without modifying it, use [`MeshPassthrough`](/mesh/v2/policies/meshpassthrough/).
 
-For more information about accessing entire subdomains, see [Wildcard DNS matching in `MeshPassthrough`](/mesh/policies/meshpassthrough/#wildcard-dns-matching).
+For more information about accessing entire subdomains, see [Wildcard DNS matching in `MeshPassthrough`](/mesh/v2/policies/meshpassthrough/#wildcard-dns-matching).
 
 ### Universal mode without transparent proxy
 
@@ -134,7 +134,7 @@ networking:
 
 ### Controlling MeshExternalService access from Mesh 
 
-Currently, you can't configure a [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission) policy for a `MeshExternalService` resource. However, you can configure access to all external services on the mesh level. For example, you can disable 
+Currently, you can't configure a [`MeshTrafficPermission`](/mesh/v2/policies/meshtrafficpermission) policy for a `MeshExternalService` resource. However, you can configure access to all external services on the mesh level. For example, you can disable 
 outgoing traffic to all `MeshExternalService` resources:
 
 {% navtabs "Environments" %}

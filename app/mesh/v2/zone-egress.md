@@ -19,7 +19,7 @@ major_version:
 
 ---
 
-The `ZoneEgress` proxy is used to isolate outgoing traffic to Services in other zones or [external Services](/mesh/policies/external-services/) in the local zone.
+The `ZoneEgress` proxy is used to isolate outgoing traffic to Services in other zones or [external Services](/mesh/v2/policies/external-services/) in the local zone.
 
 {:.info}
 > Since the `ZoneEgress` proxy uses [Server Name Indication (SNI)](https://en.wikipedia.org/wiki/Server_Name_Indication) to route traffic, [mTLS](/mesh/v2/policies/mutual-tls/) is required.

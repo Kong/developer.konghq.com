@@ -143,7 +143,7 @@ When a token includes a workload value, the data plane proxy must have a matchin
 
 If a data plane proxy connects with a workload token, it must have the `kuma.io/workload` label with a value matching the token. Connection attempts without the matching label are rejected.
 
-If a [MeshIdentity](/mesh/policies/meshidentity/) resource references the `kuma.io/workload` label in its SPIFFE ID path template (for example, `/workload/{% raw %}{{ label "kuma.io/workload" }}{% endraw %}`), then:
+If a [MeshIdentity](/mesh/v2/policies/meshidentity/) resource references the `kuma.io/workload` label in its SPIFFE ID path template (for example, `/workload/{% raw %}{{ label "kuma.io/workload" }}{% endraw %}`), then:
 
 * The data plane proxy must have the `kuma.io/workload` label
 * The label can be provided either via the token or on the data plane proxy resource
@@ -212,7 +212,7 @@ When using workload labels in tokens or MeshIdentity resources, you may encounte
 missing required label 'kuma.io/workload' - dataplane is selected by MeshIdentity 'backend-identity' with path template '/workload/{% raw %}{{ label "kuma.io/workload" }}{% endraw %}'
 ```
 
-Cause: A [MeshIdentity](/mesh/policies/meshidentity/) resource uses `{% raw %}{{ label "kuma.io/workload" }}{% endraw %}` in its SPIFFE ID path template, but the connecting data plane proxy lacks the `kuma.io/workload` label.
+Cause: A [MeshIdentity](/mesh/v2/policies/meshidentity/) resource uses `{% raw %}{{ label "kuma.io/workload" }}{% endraw %}` in its SPIFFE ID path template, but the connecting data plane proxy lacks the `kuma.io/workload` label.
 
 Solution: Add the `kuma.io/workload` label to your data plane proxy. You can do this by:
 

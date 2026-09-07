@@ -110,7 +110,7 @@ mtls:
 EOF
 ```
 
-After enabling mTLS, service communication will be denied by default. To restore connectivity, apply a fully permissive [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) policy:
+After enabling mTLS, service communication will be denied by default. To restore connectivity, apply a fully permissive [MeshTrafficPermission](/mesh/v2/policies/meshtrafficpermission/) policy:
 
 ```sh
 cat <<EOF | kumactl apply -f -

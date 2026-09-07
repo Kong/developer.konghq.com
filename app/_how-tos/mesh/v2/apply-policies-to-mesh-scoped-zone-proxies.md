@@ -7,11 +7,11 @@ breadcrumbs:
   - /mesh/v2/
 related_resources:
   - text: 'Mesh Traffic Permission'
-    url: '/mesh/policies/meshtrafficpermission/'
+    url: '/mesh/v2/policies/meshtrafficpermission/'
   - text: 'Mesh Metric'
-    url: '/mesh/policies/meshmetric/'
+    url: '/mesh/v2/policies/meshmetric/'
   - text: 'Mesh Access Log'
-    url: '/mesh/policies/meshaccesslog/'
+    url: '/mesh/v2/policies/meshaccesslog/'
 
 min_version:
   mesh: '2.14'

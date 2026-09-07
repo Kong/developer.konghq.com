@@ -142,7 +142,7 @@ ports:
 
 The main difference between `kuma.io/service` and `MeshService` at the data plane level is that traffic to a `MeshService` always goes to a specific zone. It may be the local zone or a remote zone.
 
-With `kuma.io/service`, this behavior depends on the [locality awareness](/mesh/policies/meshloadbalancingstrategy/#localityawareness) setting. If it's not enabled, traffic is load-balanced equally between zones. If it is enabled, destinations in the local zone are prioritized.
+With `kuma.io/service`, this behavior depends on the [locality awareness](/mesh/v2/policies/meshloadbalancingstrategy/#localityawareness) setting. If it's not enabled, traffic is load-balanced equally between zones. If it is enabled, destinations in the local zone are prioritized.
 
 When migrating from `kuma.io/service`, you must choose between:
 

@@ -11,11 +11,11 @@ breadcrumbs:
 
 related_resources:
   - text: MeshMetric
-    url: /mesh/policies/meshmetric/
+    url: /mesh/v2/policies/meshmetric/
   - text: MeshTrace
-    url: /mesh/policies/meshtrace/
+    url: /mesh/v2/policies/meshtrace/
   - text: MeshAccessLog
-    url: /mesh/policies/meshaccesslog/
+    url: /mesh/v2/policies/meshaccesslog/
   - text: Multi-zone deployment
     url: /mesh/v2/mesh-multizone-service-deployment/
   - text: Deploy an OpenTelemetry collector
@@ -35,7 +35,7 @@ major_version:
 
 ---
 
-`MeshOpenTelemetryBackend` defines an OpenTelemetry collector endpoint that observability policies reference through a `backendRef`. Without it, every [`MeshMetric`](/mesh/policies/meshmetric/), [`MeshTrace`](/mesh/policies/meshtrace/), and [`MeshAccessLog`](/mesh/policies/meshaccesslog/) policies carry their own copy of the collector address. With it, the address lives in one place and the policies point at it by name.
+`MeshOpenTelemetryBackend` defines an OpenTelemetry collector endpoint that observability policies reference through a `backendRef`. Without it, every [`MeshMetric`](/mesh/v2/policies/meshmetric/), [`MeshTrace`](/mesh/v2/policies/meshtrace/), and [`MeshAccessLog`](/mesh/v2/policies/meshaccesslog/) policies carry their own copy of the collector address. With it, the address lives in one place and the policies point at it by name.
 
 {:.warning}
 > Inline `endpoint` fields on those three policies still work in 2.14 but are deprecated and will be removed in 3.0. New deployments should use `backendRef`.

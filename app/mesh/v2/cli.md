@@ -18,7 +18,7 @@ related_resources:
   - text: Mesh observability
     url: '/mesh/v2/observability/'
   - text: "{{site.mesh_product_name}} Policy Hub"
-    url: /mesh/policies/
+    url: /mesh/v2/policies/
 major_version:
   mesh: 2
 

@@ -33,7 +33,7 @@ prereqs:
       include_content: prereqs/products/konnect-account-only
 next_steps:
   - text: Explore {{site.mesh_product_name}} policies
-    url: /mesh/policies/
+    url: /mesh/v2/policies/
 cleanup:
   inline:
     - title: Stop the zone control plane

@@ -50,14 +50,14 @@ related_resources:
   - text: Issue identity with MeshIdentity bundled provider
     url: /mesh/v2/issue-identity-with-meshidentity/
   - text: MeshIdentity policy
-    url: /mesh/policies/meshidentity/
+    url: /mesh/v2/policies/meshidentity/
   - text: MeshTrust policy
-    url: /mesh/policies/meshtrust/
+    url: /mesh/v2/policies/meshtrust/
 next_steps:
   - text: Issue identity with the bundled provider
     url: /mesh/v2/issue-identity-with-meshidentity/
   - text: MeshTrafficPermission with SPIFFE ID matchers
-    url: /mesh/policies/meshtrafficpermission_experimental/
+    url: /mesh/v2/policies/meshtrafficpermission_experimental/
 major_version:
   mesh: 2
 
@@ -66,7 +66,7 @@ major_version:
 {:.warning}
 > This guide covers an experimental feature.
 
-The [`MeshIdentity`](/mesh/policies/meshidentity/) policy issues identities for selected data planes. This approach is [SPIFFE](https://spiffe.io/docs/latest/spiffe-about/overview/)-compliant. In this guide, you'll issue identities using [Spire](https://spiffe.io/docs/latest/spire-about/spire-concepts/) as the identity provider, where Spire issues identities and manages the trust externally.
+The [`MeshIdentity`](/mesh/v2/policies/meshidentity/) policy issues identities for selected data planes. This approach is [SPIFFE](https://spiffe.io/docs/latest/spiffe-about/overview/)-compliant. In this guide, you'll issue identities using [Spire](https://spiffe.io/docs/latest/spire-about/spire-concepts/) as the identity provider, where Spire issues identities and manages the trust externally.
 
 {% include md/mesh/v2/meshidentity/concepts.md %}
 

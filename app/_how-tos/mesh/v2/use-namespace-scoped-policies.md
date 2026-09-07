@@ -40,7 +40,7 @@ major_version:
 
 ## Add MeshTrafficPermission
 
-Add a [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) policy to allow access to the mesh we created in the [prerequisites](#install-kong-mesh-with-demo-configuration):
+Add a [MeshTrafficPermission](/mesh/v2/policies/meshtrafficpermission/) policy to allow access to the mesh we created in the [prerequisites](#install-kong-mesh-with-demo-configuration):
 
 ```sh
 echo "apiVersion: kuma.io/v1alpha1
@@ -117,7 +117,7 @@ In this example, we'll create two different consumer namespaces, and apply diffe
 
 ## Add a MeshTimeout producer policy
 
-1. Add a [MeshTimeout](/mesh/policies/meshtimeout/) producer policy with a one second timeout:
+1. Add a [MeshTimeout](/mesh/v2/policies/meshtimeout/) producer policy with a one second timeout:
 
    ```sh
    echo "apiVersion: kuma.io/v1alpha1

@@ -199,7 +199,7 @@ mtls:
 EOF
 ```
 
-Once Mutual TLS has been enabled, {{site.mesh_product_name}} will **not allow** traffic to flow freely across our services unless we explicitly have a [TrafficPermission](/mesh/policies/meshtrafficpermission/) policy that describes what services can be consumed by other services.
+Once Mutual TLS has been enabled, {{site.mesh_product_name}} will **not allow** traffic to flow freely across our services unless we explicitly have a [TrafficPermission](/mesh/v2/policies/meshtrafficpermission/) policy that describes what services can be consumed by other services.
 
 You can try to make requests to the demo application at [`127.0.0.1:5000/`](http://127.0.0.1:5000/) and you will notice that they will **not** work.
 
@@ -225,7 +225,7 @@ By doing so every request we now make on our demo application at [`127.0.0.1:500
 
 ## Explore Traffic Metrics
 
-One of the most important [policies](/mesh/policies/) that {{site.mesh_product_name}} provides out of the box is [Mesh Metrics](/mesh/policies/meshmetric/).
+One of the most important [policies](/mesh/v2/policies/) that {{site.mesh_product_name}} provides out of the box is [Mesh Metrics](/mesh/v2/policies/meshmetric/).
 
 With Traffic Metrics we can leverage Prometheus and Grafana to provide powerful dashboards that visualize the overall traffic activity of our application and the status of the service mesh.
 

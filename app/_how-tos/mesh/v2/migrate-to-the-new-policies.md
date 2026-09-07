@@ -8,7 +8,7 @@ related_resources:
     - text: Mesh policies
       url: '/mesh/v2/policies-introduction/'
     - text: Policy Hub
-      url: /mesh/policies/
+      url: /mesh/v2/policies/
 
 min_version:
   mesh: '2.7'
@@ -330,9 +330,9 @@ spec:
 
 Now that we have old policies deployed, we can migrate them to the corresponding new policies. We'll migrate:
 
-* `TrafficPermissions` to [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/)
-* `Timeout` to [`MeshTimeout`](/mesh/policies/meshtimeout/)
-* `CircuitBreaker` to [`MeshCircuitBreaker`](/mesh/policies/meshcircuitbreaker/)
+* `TrafficPermissions` to [`MeshTrafficPermission`](/mesh/v2/policies/meshtrafficpermission/)
+* `Timeout` to [`MeshTimeout`](/mesh/v2/policies/meshtimeout/)
+* `CircuitBreaker` to [`MeshCircuitBreaker`](/mesh/v2/policies/meshcircuitbreaker/)
 
 You can migrate all policies at once, but we recommend migrating them separately, since it makes them easier to revert.
 

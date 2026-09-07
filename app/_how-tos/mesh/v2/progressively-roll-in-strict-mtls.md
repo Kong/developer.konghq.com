@@ -8,7 +8,7 @@ permalink: /mesh/v2/progressively-rolling-in-strict-mtls/
 
 related_resources:
   - text: MeshTLS policy
-    url: /mesh/policies/meshtls/
+    url: /mesh/v2/policies/meshtls/
   - text: Resource sizing guidelines
     url: /mesh/v2/resource-sizing-guidelines/
   - text: Validated versions
@@ -106,7 +106,7 @@ To interact with the two `demo-app` Pods we created in the prerequisites, we nee
 
 ## Enable MeshTLS in permissive mode
 
-In a new terminal window, run the following command to enable the [`MeshTLS`](/mesh/policies/meshtls/) policy in permissive mode for the `kv` app in the `kong-mesh-demo-migration` namespace:
+In a new terminal window, run the following command to enable the [`MeshTLS`](/mesh/v2/policies/meshtls/) policy in permissive mode for the `kv` app in the `kong-mesh-demo-migration` namespace:
 
 ```sh
 echo "apiVersion: kuma.io/v1alpha1

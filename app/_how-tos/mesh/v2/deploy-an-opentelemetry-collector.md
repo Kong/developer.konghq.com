@@ -23,20 +23,20 @@ tags:
 
 related_resources:
   - text: MeshMetric policy
-    url: /mesh/policies/meshmetric/
+    url: /mesh/v2/policies/meshmetric/
   - text: MeshTrace policy
-    url: /mesh/policies/meshtrace/
+    url: /mesh/v2/policies/meshtrace/
   - text: MeshAccessLog policy
-    url: /mesh/policies/meshaccesslog/
+    url: /mesh/v2/policies/meshaccesslog/
   - text: Observability
     url: /mesh/v2/observability/
 next_steps:
   - text: MeshMetric policy
-    url: /mesh/policies/meshmetric/
+    url: /mesh/v2/policies/meshmetric/
   - text: MeshTrace policy
-    url: /mesh/policies/meshtrace/
+    url: /mesh/v2/policies/meshtrace/
   - text: MeshAccessLog policy
-    url: /mesh/policies/meshaccesslog/
+    url: /mesh/v2/policies/meshaccesslog/
   - text: OpenTelemetry collector deployment patterns
     url: https://opentelemetry.io/docs/collector/deploy/
   - text: OpenTelemetry collector processors
@@ -253,7 +253,7 @@ major_version:
 
 ---
 
-This guide deploys an OpenTelemetry collector as a per-node Kubernetes `DaemonSet` that receives all three telemetry signals from {{site.mesh_product_name}}: metrics from [MeshMetric](/mesh/policies/meshmetric/), traces from [MeshTrace](/mesh/policies/meshtrace/), and access logs from [MeshAccessLog](/mesh/policies/meshaccesslog/). Sidecars push to it over OTLP gRPC on port 4317. It also covers what to change when mesh passthrough is off.
+This guide deploys an OpenTelemetry collector as a per-node Kubernetes `DaemonSet` that receives all three telemetry signals from {{site.mesh_product_name}}: metrics from [MeshMetric](/mesh/v2/policies/meshmetric/), traces from [MeshTrace](/mesh/v2/policies/meshtrace/), and access logs from [MeshAccessLog](/mesh/v2/policies/meshaccesslog/). Sidecars push to it over OTLP gRPC on port 4317. It also covers what to change when mesh passthrough is off.
 
 For background on the push model and topology trade-offs, see [OpenTelemetry collector](/mesh/v2/observability/#opentelemetry-collector) in the observability reference docs.
 
@@ -476,7 +476,7 @@ spec:
 
 ## Reach the collector when passthrough is off
 
-By default, sidecars reach the collector through [passthrough mode](/mesh/policies/meshpassthrough/). If you've disabled passthrough on the `Mesh`, declare the collector with a [MeshExternalService](/mesh/v2/meshexternalservice/) so sidecars can still reach it:
+By default, sidecars reach the collector through [passthrough mode](/mesh/v2/policies/meshpassthrough/). If you've disabled passthrough on the `Mesh`, declare the collector with a [MeshExternalService](/mesh/v2/meshexternalservice/) so sidecars can still reach it:
 
 {:.info}
 > `MeshExternalService` requires [ZoneEgress](/mesh/v2/zone-egress/) and [mutual TLS](/mesh/v2/policies/mutual-tls/) on the mesh. If you already disabled passthrough, you likely already have mTLS enabled.
