@@ -115,9 +115,6 @@ app/_mesh_policies/v2/external-services/examples/zone-egress.yml:
 app/_mesh_policies/v2/external-services/index.md:
   status: pending
   canonical_url:
-app/_mesh_policies/v2/external-services/reference.md:
-  status: pending
-  canonical_url:
 app/_mesh_policies/v2/meshaccesslog/examples/log-incoming-traffic.yaml:
   status: pending
   canonical_url:
