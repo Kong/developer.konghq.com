@@ -9,4 +9,6 @@ type: policy
 min_version:
   mesh: '2.1'
 icon: meshretry.png
+major_version:
+  mesh: 2
 ---
