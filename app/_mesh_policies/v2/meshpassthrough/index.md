@@ -10,6 +10,8 @@ min_version:
   mesh: '2.8'
 
 icon: policy.svg
+major_version:
+  mesh: 2
 ---
 This policy enables {{site.mesh_product_name}} to configure traffic to external destinations that is allowed to pass outside the mesh.
 When using this policy, the passthrough mode flag is ignored.

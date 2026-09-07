@@ -106,6 +106,72 @@ app/_landing_pages/mesh/v2/guides.yaml:
 app/_landing_pages/mesh/v2/konnect.yaml:
   status: pending
   canonical_url:
+app/_mesh_policies/v2/external-services/index.md:
+  status: pending
+  canonical_url:
+app/_mesh_policies/v2/meshaccesslog/index.md:
+  status: pending
+  canonical_url:
+app/_mesh_policies/v2/meshcircuitbreaker/index.md:
+  status: pending
+  canonical_url:
+app/_mesh_policies/v2/meshfaultinjection/index.md:
+  status: pending
+  canonical_url:
+app/_mesh_policies/v2/meshglobalratelimit/index.md:
+  status: pending
+  canonical_url:
+app/_mesh_policies/v2/meshhealthcheck/index.md:
+  status: pending
+  canonical_url:
+app/_mesh_policies/v2/meshhttproute/index.md:
+  status: pending
+  canonical_url:
+app/_mesh_policies/v2/meshidentity/index.md:
+  status: pending
+  canonical_url:
+app/_mesh_policies/v2/meshloadbalancingstrategy/index.md:
+  status: pending
+  canonical_url:
+app/_mesh_policies/v2/meshmetric/index.md:
+  status: pending
+  canonical_url:
+app/_mesh_policies/v2/meshopa/index.md:
+  status: pending
+  canonical_url:
+app/_mesh_policies/v2/meshpassthrough/index.md:
+  status: pending
+  canonical_url:
+app/_mesh_policies/v2/meshproxypatch/index.md:
+  status: pending
+  canonical_url:
+app/_mesh_policies/v2/meshratelimit/index.md:
+  status: pending
+  canonical_url:
+app/_mesh_policies/v2/meshretry/index.md:
+  status: pending
+  canonical_url:
+app/_mesh_policies/v2/meshtcproute/index.md:
+  status: pending
+  canonical_url:
+app/_mesh_policies/v2/meshtimeout/index.md:
+  status: pending
+  canonical_url:
+app/_mesh_policies/v2/meshtls/index.md:
+  status: pending
+  canonical_url:
+app/_mesh_policies/v2/meshtrace/index.md:
+  status: pending
+  canonical_url:
+app/_mesh_policies/v2/meshtrafficpermission/index.md:
+  status: pending
+  canonical_url:
+app/_mesh_policies/v2/meshtrafficpermission_experimental/index.md:
+  status: pending
+  canonical_url:
+app/_mesh_policies/v2/meshtrust/index.md:
+  status: pending
+  canonical_url:
 app/mesh/v2/access-audit.md:
   status: pending
   canonical_url:

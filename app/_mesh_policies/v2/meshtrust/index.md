@@ -20,6 +20,8 @@ related_resources:
     url: /mesh/v2/policies/meshtls/
   - text: MeshTrafficPermission with SPIFFE ID matchers
     url: /mesh/v2/policies/meshtrafficpermission_experimental/
+major_version:
+  mesh: 2
 ---
 
 {:.warning}

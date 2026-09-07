@@ -7,6 +7,8 @@ description: 'Run health checks between Services and mark Dataplanes as unhealth
 content_type: plugin
 type: policy
 icon: meshhealthcheck.png
+major_version:
+  mesh: 2
 ---
 
 {:.warning}

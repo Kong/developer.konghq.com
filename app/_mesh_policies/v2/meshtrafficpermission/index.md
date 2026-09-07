@@ -7,6 +7,8 @@ description: "Define what services can talk to other services."
 content_type: plugin
 type: policy
 icon: meshtrafficpermission.png
+major_version:
+  mesh: 2
 ---
 {:.warning}
 > This policy uses new policy matching algorithm.

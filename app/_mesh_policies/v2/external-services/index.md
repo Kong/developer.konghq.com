@@ -9,6 +9,8 @@ content_type: plugin
 type: proto
 
 icon: policy.svg
+major_version:
+  mesh: 2
 ---
 
 {:.warning}

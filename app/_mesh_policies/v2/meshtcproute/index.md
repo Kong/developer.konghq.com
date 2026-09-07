@@ -9,6 +9,8 @@ type: policy
 min_version:
   mesh: '2.3'
 icon: meshtcproute.png
+major_version:
+  mesh: 2
 ---
 
 The `MeshTCPRoute` policy allows you to alter and redirect TCP requests

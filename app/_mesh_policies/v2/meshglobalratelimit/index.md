@@ -9,6 +9,8 @@ description: 'Control the number of requests received by a service in a specific
 content_type: plugin
 type: policy
 icon: meshratelimit.png
+major_version:
+  mesh: 2
 ---
 
 This policy adds global rate limit support for {{site.mesh_product_name}}.

@@ -9,6 +9,8 @@ type: policy
 min_version:
   mesh: '2.9'
 icon: meshtls.png
+major_version:
+  mesh: 2
 ---
 
 ## TargetRef support matrix

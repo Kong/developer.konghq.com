@@ -16,6 +16,8 @@ related_resources:
     url: /mesh/v2/deploy-an-opentelemetry-collector/
   - text: MeshOpenTelemetryBackend
     url: /mesh/v2/meshopentelemetrybackend/
+major_version:
+  mesh: 2
 ---
 {{site.mesh_product_name}} facilitates consistent traffic metrics across all data plane proxies in your mesh.
 

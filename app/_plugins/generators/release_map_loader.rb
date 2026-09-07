@@ -4,7 +4,7 @@ require_relative '../services/release_map'
 
 module Jekyll
   class ReleaseMapLoader < Generator
-    priority :high
+    priority :normal
 
     def generate(site)
       return if site.config.dig('skip', 'release_map_loader')

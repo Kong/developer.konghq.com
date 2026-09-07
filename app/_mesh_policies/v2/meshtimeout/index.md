@@ -7,6 +7,8 @@ description: 'Specify the amount of time Dataplane will wait for a connection to
 content_type: plugin
 type: policy
 icon: meshtimeout.png
+major_version:
+  mesh: 2
 ---
 
 {:.warning}
