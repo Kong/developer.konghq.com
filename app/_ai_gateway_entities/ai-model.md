@@ -415,11 +415,11 @@ data:
 {:.info}
 > Because [`config.route.model`](#schema-aigateway-model-config-route-model) is set here with `body_param: model`, requests through this AI Model must send `"model": "my-gpt-4o"` (the alias) in the request body instead of the upstream target name (`gpt-4o`). Sending the upstream target name instead of the alias fails.
 
-### Set up a Skills API model
+### Set up an AI Model with API capabilities
 
-`skills` is an `api`-type capability (like `batches` and `files`), so it's declared on its own dedicated AI Model, separate from any `model`-type AI Model handling synchronous capabilities like `generate`.
+You can also configure an AI Model entity with `api` type capabilities: `skills`, `batches`, and `files`. API capabilities are set on a dedicated AI Model, separate from any `model`-type AI Model handling synchronous capabilities like `generate`.
 
-The Skills API only supports native format passthrough: an OpenAI target must use `formats: [{type: openai}]`, and an Anthropic target must use `formats: [{type: anthropic}]`. Mixing providers within a single Skills AI Model, or pairing a provider with the other's native format, is not supported.
+The following example set's up an AI Model to provide the `skills` capability. The Skills API only supports native format passthrough: an OpenAI target must use `formats: [{type: openai}]`, and an Anthropic target must use `formats: [{type: anthropic}]`. Mixing providers within a single Skills AI Model, or pairing a provider with another's native format, is not supported.
 
 {:.info}
 > `targets[].name` is still required by the schema, but Skills requests don't select a model, so any placeholder value works.
@@ -440,28 +440,6 @@ data:
       provider: my-openai-account
       config:
         type: openai
-  config:
-    route:
-      paths:
-        - /v1
-{% endentity_example %}
-
-{% entity_example %}
-type: model
-data:
-  display_name: my-anthropic-skills
-  name: my-anthropic-skills
-  type: api
-  capabilities:
-    - skills
-  formats:
-    - type: anthropic
-  policies: []
-  targets:
-    - name: anthropic-skills
-      provider: my-anthropic-account
-      config:
-        type: anthropic
   config:
     route:
       paths:
