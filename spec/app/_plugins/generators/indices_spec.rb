@@ -1003,5 +1003,18 @@ RSpec.describe Jekyll::IndexGenerator do
         generator.generate(site)
       end
     end
+
+    context 'with an index that has no sections or groups' do
+      let(:index) { { 'title' => 'Bare', 'description' => 'No sections here.' } }
+
+      it 'defaults groups to an empty array so downstream steps do not raise' do
+        index['groups'] = [{ 'sections' => index.delete('sections') }] if index['sections'] && !index['groups']
+        index['groups'] ||= []
+
+        expect { generator.normalize_paths(index) }.not_to raise_error
+        expect { generator.process_auto_exclude(index) }.not_to raise_error
+        expect(generator.config_to_grouped_pages(instance_double(Jekyll::Site), index)).to eq([])
+      end
+    end
   end
 end

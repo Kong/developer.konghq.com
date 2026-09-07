@@ -14,6 +14,7 @@ module Jekyll
         index = YAML.load_file(file)
 
         index['groups'] = [{ 'sections' => index.delete('sections') }] if index['sections'] && !index['groups']
+        index['groups'] ||= []
 
         index = normalize_paths(index)
         index = process_auto_exclude(index)
