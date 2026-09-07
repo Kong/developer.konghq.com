@@ -38,7 +38,7 @@ related_resources:
     url: /mesh/v2/deploy-mesh-using-terraform-and-konnect/
 next_steps:
   - text: Enable traffic permissions with the MeshTrafficPermission policy
-    url: /mesh/policies/meshtrafficpermission/
+    url: /mesh/v2/policies/meshtrafficpermission/
 cleanup:
   inline:
     - title: Remove the demo application

@@ -91,8 +91,8 @@ kubectl port-forward svc/demo-app -n kuma-demo 5000:5000
 
 
 The traffic is now **encrypted and secure**. {{site.mesh_product_name}} does not define default traffic permissions, which
-means that no traffic will flow with mTLS enabled until we define a proper [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/)
-[policy](/mesh/policies/meshtls/).
+means that no traffic will flow with mTLS enabled until we define a proper [MeshTrafficPermission](/mesh/v2/policies/meshtrafficpermission/)
+[policy](/mesh/v2/policies/meshtls/).
 
 For now, the demo application won't work.
 You can verify this by clicking the increment button again and seeing the error message in the browser.

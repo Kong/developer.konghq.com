@@ -14,7 +14,7 @@ tags:
 
 related_resources:
   - text: Policy hub
-    url: '/mesh/policies/'
+    url: '/mesh/v2/policies/'
   - text: Service meshes
     url: /mesh/v2/service-mesh/
 min_version:

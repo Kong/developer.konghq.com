@@ -35,7 +35,7 @@ You can create a mesh per line of business, per team, per application, or per en
 `Mesh` is the parent resource of every other resource in {{site.mesh_product_name}}, including:
 
 * [Data plane proxies](/mesh/v2/data-plane-proxy/)
-* [Policies](/mesh/policies/)
+* [Policies](/mesh/v2/policies/)
 
 To use {{site.mesh_product_name}}, at least one mesh must exist. There is no limit to the number of meshes that can be created.
 
@@ -48,7 +48,7 @@ In addition to creating virtual service meshes, the `Mesh` resource is also used
 
 * [Mutual TLS](/mesh/v2/policies/mutual-tls/), to secure and encrypt service traffic and assign an identity to the data plane proxies within the mesh.
 * [Zone egress](/mesh/v2/zone-egress/), to define whether `ZoneEgress` should be used for cross-zone and external service communication.
-* [Non-mesh traffic](/mesh/policies/meshpassthrough/), to define whether `passthrough` mode should be used for the non-mesh traffic.
+* [Non-mesh traffic](/mesh/v2/policies/meshpassthrough/), to define whether `passthrough` mode should be used for the non-mesh traffic.
 
 If you need cross-mesh communication, you must use an intermediary API Gateway. For more information, see [Built-in gateways in {{site.mesh_product_name}}](/mesh/v2/built-in-gateway/).
 

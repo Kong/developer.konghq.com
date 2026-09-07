@@ -43,9 +43,9 @@ For more information, see [Transparent proxying](/mesh/v2/transparent-proxying/)
 ## Configuration trimming with MeshTrafficPermission
 
 {:.warning}
-> This feature only works with [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/). If you're using TrafficPermission, migrate to MeshTrafficPermission before enabling this feature, otherwise all traffic flow may stop.
+> This feature only works with [MeshTrafficPermission](/mesh/v2/policies/meshtrafficpermission/). If you're using TrafficPermission, migrate to MeshTrafficPermission before enabling this feature, otherwise all traffic flow may stop.
 
-The problem described in [Reachable services](#reachable-services) can also be mitigated by defining [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) policies and [configuring](/mesh/v2/control-plane-configuration/) a zone control plane with `KUMA_EXPERIMENTAL_AUTO_REACHABLE_SERVICES=true`.
+The problem described in [Reachable services](#reachable-services) can also be mitigated by defining [MeshTrafficPermission](/mesh/v2/policies/meshtrafficpermission/) policies and [configuring](/mesh/v2/control-plane-configuration/) a zone control plane with `KUMA_EXPERIMENTAL_AUTO_REACHABLE_SERVICES=true`.
 
 Enabling this flag causes {{site.mesh_product_name}} to compute a dependency graph between services and generate XDS configuration that allows communication only between services permitted to reach each other (those whose [effective](/mesh/v2/policies-introduction/) action is not `deny`).
 
@@ -291,7 +291,7 @@ The main task of the control plane is to provide configuration to data planes. W
 
 This process can be CPU-intensive with a large number of data planes. Increasing the interval reduces control plane load at the cost of higher config propagation latency. For example, setting it to five seconds means that when you apply a policy or a service instance changes state, the control plane will generate and distribute the new configuration within five seconds.
 
-For high-traffic systems, stale endpoint data for that long may not be acceptable. In that case, use passive or active [health checks](/mesh/policies/health-check/).
+For high-traffic systems, stale endpoint data for that long may not be acceptable. In that case, use passive or active [health checks](/mesh/v2/policies/meshhealthcheck/).
 
 To reduce storage load, a cache shares fetch results across concurrent reconciliation Goroutines for multiple data planes. The default expiration time for cache entries is five seconds, but you can customize it using the `KUMA_STORE_CACHE_EXPIRATION_TIME` parameter.
 

@@ -140,7 +140,7 @@ See [Data plane proxy authentication](/mesh/v2/data-plane-proxy-authentication/)
 
 ## Prometheus to control plane communication
 
-You can enable TLS on the [Monitoring Assignment Discovery Service](/mesh/policies/meshmetric/).
+You can enable TLS on the [Monitoring Assignment Discovery Service](/mesh/v2/policies/meshmetric/).
 By default, it uses the same certificate as CP-to-DP communication, configured with the `--tls-general` options.
 You can enable it by using the `KUMA_MONITORING_ASSIGNMENT_SERVER_TLS_ENABLED=true` environment variable.
 

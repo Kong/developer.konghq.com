@@ -322,6 +322,6 @@ EOF
 
 ## Next steps
 
-* Learn more about [MeshHTTPRoute](/mesh/policies/meshhttproute/)
+* Learn more about [MeshHTTPRoute](/mesh/v2/policies/meshhttproute/)
 * Combine policies like `MeshFaultInjection`, `MeshRetry`, and `MeshTimeout`
 * Explore `MeshCircuitBreaker` and `MeshRateLimit` with `MeshHTTPRoute` targeting

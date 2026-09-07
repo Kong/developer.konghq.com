@@ -44,7 +44,7 @@ rows:
   - component: Zone control plane
     responsibilities: |
       * Accepts connections from data plane proxies.
-      * Accepts creation and changes to [policies](/mesh/policies/) that apply to data plane proxies.
+      * Accepts creation and changes to [policies](/mesh/v2/policies/) that apply to data plane proxies.
       * Keeps an inventory of all running data plane proxies.
       * Computes and sends configurations using xDS to the data plane proxies.
   - component: Data plane proxies

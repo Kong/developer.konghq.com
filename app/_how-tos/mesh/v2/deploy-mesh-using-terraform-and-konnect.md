@@ -45,7 +45,7 @@ related_resources:
   - text: "Terraform provider (Beta)"
     url: https://registry.terraform.io/providers/kong/konnect-beta/latest
   - text: "MeshTrafficPermission"
-    url: /mesh/policies/meshtrafficpermission/
+    url: /mesh/v2/policies/meshtrafficpermission/
 faqs:
   - q: What happens if I rename a Terraform resource?
     a: |
@@ -252,7 +252,7 @@ For the full schema of the mesh resource, see the [konnect-beta provider documen
 
 ## Add a traffic permission policy
 
-Each {{site.mesh_product_name}} policy example includes a Terraform tab showing a Terraform representation of the policy. This step uses the [allow-all example](/mesh/policies/meshtrafficpermission/#allow-all) from the `MeshTrafficPermission` page.
+Each {{site.mesh_product_name}} policy example includes a Terraform tab showing a Terraform representation of the policy. This step uses the [allow-all example](/mesh/v2/policies/meshtrafficpermission/#allow-all) from the `MeshTrafficPermission` page.
 
 {:.info}
 > {{site.mesh_product_name}} manages reserved `kuma.io/*` labels, such as `kuma.io/mesh` and `kuma.io/origin`, automatically. Don't set them in your Terraform configuration: the `mesh` attribute already associates the policy with its mesh, and setting a reserved label causes a provider plan error.

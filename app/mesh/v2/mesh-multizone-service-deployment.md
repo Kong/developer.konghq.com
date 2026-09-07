@@ -101,7 +101,7 @@ plane to the `zone-a` zone control plane, the following happens:
 * Requests sent to `zone-b` are routed to the zone ingress proxy of `zone-b`.
 
 For load balancing, zone ingress endpoints are weighted by the number of instances running behind them, so a zone with two instances receives twice as much traffic as a zone with one instance.
-You can also favor local service instances with [locality-aware load balancing](/mesh/policies/meshloadbalancingstrategy/#localityawareness).
+You can also favor local service instances with [locality-aware load balancing](/mesh/v2/policies/meshloadbalancingstrategy/#localityawareness).
 
 When a [zone egress](/mesh/v2/zone-egress/) is present, traffic routes through the local zone egress before reaching the remote zone ingress.
 
@@ -124,7 +124,7 @@ rows:
   - component: Global control plane
     responsibilities: |
       * Accepts connections only from zone control planes.
-      * Accepts creation and changes to [policies](/mesh/policies/) that will be applied to the data plane proxies.
+      * Accepts creation and changes to [policies](/mesh/v2/policies/) that will be applied to the data plane proxies.
       * Sends policies down to zone control planes.
       * Sends zone ingresses down to zone control planes.
       * Keeps an inventory of all data plane proxies running in all zones (this is only done for observability but is not required for operations).
@@ -206,7 +206,7 @@ rows:
         
       <br>In this situation, all cross-zone communication fails.
       {:.info}
-      > With the right resiliency setup ([MeshRetries](/mesh/policies/meshretry), [MeshHealthCheck](/mesh/policies/meshhealthcheck), [MeshLoadBalancingStrategy](/mesh/policies/meshloadbalancingstrategy), [MeshCircuitBreakers](/mesh/policies/meshcircuitbreaker)), the failing zone can be quickly severed and traffic re-routed to another zone.
+      > With the right resiliency setup ([MeshRetries](/mesh/v2/policies/meshretry), [MeshHealthCheck](/mesh/v2/policies/meshhealthcheck), [MeshLoadBalancingStrategy](/mesh/v2/policies/meshloadbalancingstrategy), [MeshCircuitBreakers](/mesh/v2/policies/meshcircuitbreaker)), the failing zone can be quickly severed and traffic re-routed to another zone.
     still_works: |
       * Communication and operations within each zone.
 {% endtable %}

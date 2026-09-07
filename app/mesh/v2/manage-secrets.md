@@ -14,9 +14,9 @@ tags:
 
 related_resources:
   - text: Mesh TLS policy
-    url: /mesh/policies/meshtls/
+    url: /mesh/v2/policies/meshtls/
   - text: Mesh policies
-    url: /mesh/policies/
+    url: /mesh/v2/policies/
 
 faqs:
   - q: Can I reference secrets from a third-party application?
@@ -104,7 +104,7 @@ echo "value" | base64
 ### Mesh-scoped secrets
 
 Mesh-scoped secrets are bound to a given mesh.
-This is the only type of secret that can be used in mesh policies like the [Provided CA](/mesh/v2/policies/mutual-tls/#using-a-provided-ca) or TLS setting in [External Service](/mesh/policies/external-services/).
+This is the only type of secret that can be used in mesh policies like the [Provided CA](/mesh/v2/policies/mutual-tls/#using-a-provided-ca) or TLS setting in [External Service](/mesh/v2/policies/external-services/).
 
 {% navtabs "Environments" %}
 {% navtab "Kubernetes" %}

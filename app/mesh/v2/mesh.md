@@ -20,7 +20,7 @@ related_resources:
   - text: Data plane proxy membership
     url: /mesh/v2/configure-data-plane-proxy-membership/
   - text: Non-mesh traffic
-    url: /mesh/policies/meshpassthrough/
+    url: /mesh/v2/policies/meshpassthrough/
   - text: Zone Egress
     url: /mesh/v2/zone-egress/
   - text: MeshService
@@ -30,7 +30,7 @@ major_version:
 
 ---
 
-The `Mesh` resource defines a service mesh instance and is the parent resource of all other {{site.mesh_product_name}} resources, including [data plane proxies](/mesh/v2/data-plane-proxy/) and [policies](/mesh/policies/).
+The `Mesh` resource defines a service mesh instance and is the parent resource of all other {{site.mesh_product_name}} resources, including [data plane proxies](/mesh/v2/data-plane-proxy/) and [policies](/mesh/v2/policies/).
 
 Create multiple meshes to isolate services by team, environment, or security requirements. Each data plane proxy belongs to exactly one mesh.
 
@@ -53,11 +53,11 @@ rows:
   - field: "`mtls`"
     description: "Configures mTLS with CA backends. See [Mutual TLS](/mesh/v2/policies/mutual-tls/)."
   - field: "`networking.outbound.passthrough`"
-    description: "Allows traffic to unknown destinations. Default: `true`. See [Non-mesh traffic](/mesh/policies/meshpassthrough/)."
+    description: "Allows traffic to unknown destinations. Default: `true`. See [Non-mesh traffic](/mesh/v2/policies/meshpassthrough/)."
   - field: "`routing.zoneEgress`"
     description: "Routes cross-zone and external traffic through ZoneEgress. See [Zone Egress](/mesh/v2/zone-egress/)."
   - field: "`routing.localityAwareLoadBalancing`"
-    description: "Prefers endpoints in the same zone. See [MeshLoadBalancingStrategy](/mesh/policies/meshloadbalancingstrategy/)."
+    description: "Prefers endpoints in the same zone. See [MeshLoadBalancingStrategy](/mesh/v2/policies/meshloadbalancingstrategy/)."
   - field: "`routing.defaultForbidMeshExternalServiceAccess`"
     description: "Blocks MeshExternalService traffic by default."
   - field: "`constraints.dataplaneProxy`"
@@ -69,7 +69,7 @@ rows:
 {% endtable %}
 
 {:.warning}
-> When you enable mTLS, {{site.mesh_product_name}} denies all traffic unless a [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) policy allows it.
+> When you enable mTLS, {{site.mesh_product_name}} denies all traffic unless a [`MeshTrafficPermission`](/mesh/v2/policies/meshtrafficpermission/) policy allows it.
 
 ## Examples
 

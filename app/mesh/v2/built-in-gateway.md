@@ -35,7 +35,7 @@ In {{site.mesh_product_name}}, gateways allow you to manage [ingress traffic](/m
 > 
 > This page focuses on the built-in {{site.mesh_product_name}} gateway. For more information about the Kubernetes built-in gateway, see [Kubernetes built-in gateways with {{site.mesh_product_name}}](/mesh/v2/kubernetes-gateway-api/).
 
-You can set up a built-in gateway using a combination of the [`MeshGateway`](/mesh/v2/meshgateway/), [`MeshHTTPRoute`](/mesh/policies/meshhttproute/) and [`MeshTCPRoute`](/mesh/policies/meshtcproute/) resources. Each gateway uses Envoy instances represented by `Dataplane` resources configured as built-in. You can then use {{ site.mesh_product_name }} policies to configure your gateway.
+You can set up a built-in gateway using a combination of the [`MeshGateway`](/mesh/v2/meshgateway/), [`MeshHTTPRoute`](/mesh/v2/policies/meshhttproute/) and [`MeshTCPRoute`](/mesh/v2/policies/meshtcproute/) resources. Each gateway uses Envoy instances represented by `Dataplane` resources configured as built-in. You can then use {{ site.mesh_product_name }} policies to configure your gateway.
 
 To learn how to create a built-in gateway in a Kubernetes environment, see [Set up a built-in gateway](/mesh/v2/how-to/set-up-a-built-in-mesh-gateway/).
 
@@ -286,7 +286,7 @@ spec:
 
 ## Multi-zone
 
-In a multi-zone deployment, the {{site.mesh_product_name}} gateway resource types `MeshGateway`, [`MeshHTTPRoute`](/mesh/policies/meshhttproute/) and [`MeshTCPRoute`](/mesh/policies/meshtcproute/) are synced across zones by the {{site.mesh_product_name}} control plane.
+In a multi-zone deployment, the {{site.mesh_product_name}} gateway resource types `MeshGateway`, [`MeshHTTPRoute`](/mesh/v2/policies/meshhttproute/) and [`MeshTCPRoute`](/mesh/v2/policies/meshtcproute/) are synced across zones by the {{site.mesh_product_name}} control plane.
 Follow existing {{site.mesh_product_name}} practice and create any {{site.mesh_product_name}} gateway resources in the global control plane.
 Once these resources exist, you can provision serving capacity in the zones where it's needed by deploying built-in gateway `Dataplane` resources (in Universal zones) or `MeshGatewayInstances` (in Kubernetes zones).
 

@@ -18,7 +18,7 @@ min_version:
 
 related_resources:
   - text: MeshIdentity
-    url: /mesh/policies/meshidentity/
+    url: /mesh/v2/policies/meshidentity/
   - text: Data plane proxy configuration
     url: /mesh/v2/data-plane-proxy/
   - text: Data plane proxy authentication
@@ -34,7 +34,7 @@ Use `Workload` resources to:
 
 * Monitor connected and healthy data plane proxies per workload.
 * Group data plane proxies by workload identifier for observability.
-* Integrate with [`MeshIdentity`](/mesh/policies/meshidentity/) to assign identity based on the workload.
+* Integrate with [`MeshIdentity`](/mesh/v2/policies/meshidentity/) to assign identity based on the workload.
 
 {:.warning}
 > * {{site.mesh_product_name}} manages `Workload` resources automatically. Do not create them manually. The control plane creates a `Workload` resource when a data plane proxy with a `kuma.io/workload` label is deployed, and deletes it when no data plane proxies reference it.

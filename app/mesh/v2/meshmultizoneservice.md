@@ -11,7 +11,7 @@ breadcrumbs:
 
 related_resources:
   - text: Policy Hub
-    url: /mesh/policies/
+    url: /mesh/v2/policies/
   - text: DNS
     url: /mesh/v2/dns/
   - text: Resource sizing guidelines
@@ -90,7 +90,7 @@ ports:
 ## Load balancing
 
 If available, the local zone is always preferred when a client sends a request.
-Otherwise, the request is load balanced equally for each zone. You can customize this behavior with the [MeshLoadBalancingStrategy](/mesh/policies/meshloadbalancingstrategy/) policy, by targeting MeshMultiZoneService in the [`to` section](/mesh/policies/meshloadbalancingstrategy/reference/#schema--to).
+Otherwise, the request is load balanced equally for each zone. You can customize this behavior with the [MeshLoadBalancingStrategy](/mesh/v2/policies/meshloadbalancingstrategy/) policy, by targeting MeshMultiZoneService in the [`to` section](/mesh/v2/policies/meshloadbalancingstrategy/reference/#schema--to).
 
 ## MeshMultiZoneService configuration
 

@@ -23,7 +23,7 @@ related_resources:
   - text: "Terraform provider (Beta)"
     url: https://registry.terraform.io/providers/kong/konnect-beta/latest
   - text: "Mesh Policy Catalog"
-    url: /mesh/policies/
+    url: /mesh/v2/policies/
 major_version:
   mesh: 2
 
@@ -253,4 +253,4 @@ curl -H "Authorization: Bearer $KONNECT_TOKEN" -s https://us.api.konghq.com/v1/m
 
 ## Next steps
 
-Explore all policies that are available in the [{{site.mesh_product_name}} Policy Catalog](/mesh/policies/).
+Explore all policies that are available in the [{{site.mesh_product_name}} Policy Catalog](/mesh/v2/policies/).

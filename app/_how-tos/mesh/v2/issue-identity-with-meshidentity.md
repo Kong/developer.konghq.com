@@ -32,14 +32,14 @@ related_resources:
   - text: Issue identity with MeshIdentity Spire provider
     url: /mesh/v2/issue-identity-with-meshidentity-spire/
   - text: MeshIdentity policy
-    url: /mesh/policies/meshidentity/
+    url: /mesh/v2/policies/meshidentity/
   - text: MeshTrust policy
-    url: /mesh/policies/meshtrust/
+    url: /mesh/v2/policies/meshtrust/
 next_steps:
   - text: Issue identity with the Spire provider
     url: /mesh/v2/issue-identity-with-meshidentity-spire/
   - text: MeshTrafficPermission with SPIFFE ID matchers
-    url: /mesh/policies/meshtrafficpermission_experimental/
+    url: /mesh/v2/policies/meshtrafficpermission_experimental/
 major_version:
   mesh: 2
 
@@ -48,7 +48,7 @@ major_version:
 {:.warning}
 > This guide covers an experimental feature.
 
-The [`MeshIdentity`](/mesh/policies/meshidentity/) policy issues identities for selected data planes. This approach is [SPIFFE](https://spiffe.io/docs/latest/spiffe-about/overview/)-compliant and works with [Spire](/mesh/v2/issue-identity-with-meshidentity-spire/). In this guide, you'll issue identities using the bundled provider.
+The [`MeshIdentity`](/mesh/v2/policies/meshidentity/) policy issues identities for selected data planes. This approach is [SPIFFE](https://spiffe.io/docs/latest/spiffe-about/overview/)-compliant and works with [Spire](/mesh/v2/issue-identity-with-meshidentity-spire/). In this guide, you'll issue identities using the bundled provider.
 
 {% include md/mesh/v2/meshidentity/concepts.md %}
 
@@ -89,7 +89,7 @@ spec:
 
 `spiffeID` defines templates for workload SPIFFE IDs. In this example, the trust domain template combines the mesh name, zone name, and `.mesh.local`. The path template combines the namespace and service account.
 
-The `provider` field contains identity provider-specific configuration. This guide uses the `Bundled` provider. This configuration enables [`MeshTrust`](/mesh/policies/meshtrust/) generation, allows self-signed certificates, and sets the certificate expiry time to 24h.
+The `provider` field contains identity provider-specific configuration. This guide uses the `Bundled` provider. This configuration enables [`MeshTrust`](/mesh/v2/policies/meshtrust/) generation, allows self-signed certificates, and sets the certificate expiry time to 24h.
 
 ## Inspect trust configuration
 

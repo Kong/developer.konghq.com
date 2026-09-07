@@ -41,7 +41,7 @@ You can configure {{site.mesh_product_name}} to communicate with a Vault.
 
 ## Vault CA Backend
 
-The default [mTLS policy in {{site.mesh_product_name}}](/mesh/policies/meshtls/)
+The default [mTLS policy in {{site.mesh_product_name}}](/mesh/v2/policies/meshtls/)
 supports the following backends:
 
 * `builtin`: {{site.mesh_product_name}} automatically generates the Certificate

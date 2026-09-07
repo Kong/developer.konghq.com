@@ -21,20 +21,20 @@ related_resources:
   - text: Configuring built-in listeners
     url: /mesh/gateway-listeners/
   - text: MeshHTTPRoute policy
-    url: /mesh/policies/meshhttproute/
+    url: /mesh/v2/policies/meshhttproute/
   - text: MeshTCPRoute policy
-    url: /mesh/policies/meshtcproute/
+    url: /mesh/v2/policies/meshtcproute/
 major_version:
   mesh: 2
 
 ---
 
-To configure how traffic is forwarded from a listener to your mesh services, use [`MeshHTTPRoute`](/mesh/policies/meshhttproute/) and [`MeshTCPRoute`](/mesh/policies/meshtcproute/).
+To configure how traffic is forwarded from a listener to your mesh services, use [`MeshHTTPRoute`](/mesh/v2/policies/meshhttproute/) and [`MeshTCPRoute`](/mesh/v2/policies/meshtcproute/).
 
 You must use [`spec.targetRef`](/mesh/v2/policies-introduction/) to target gateway data plane proxies when you use these route resources with a gateway.
 
 {:.info}
-> When using [`MeshHTTPRoute`](/mesh/policies/meshhttproute/) and [`MeshTCPRoute`](/mesh/policies/meshtcproute/) with built-in gateways, `spec.to[].targetRef` is restricted to `kind: Mesh`.
+> When using [`MeshHTTPRoute`](/mesh/v2/policies/meshhttproute/) and [`MeshTCPRoute`](/mesh/v2/policies/meshtcproute/) with built-in gateways, `spec.to[].targetRef` is restricted to `kind: Mesh`.
 
 ## MeshHTTPRoute
 
@@ -95,7 +95,7 @@ conf:
       hostname: wild
 ```
 
-Along with the following [`MeshHTTPRoute`](/mesh/policies/meshhttproute/) rule:
+Along with the following [`MeshHTTPRoute`](/mesh/v2/policies/meshhttproute/) rule:
 
 {% policy_yaml use_meshservice=true %}
 ```yaml
@@ -131,7 +131,7 @@ This means that requests to `foo.example.com`, which match the first listener be
 
 ### Route hostnames
 
-[`MeshHTTPRoute`](/mesh/policies/meshhttproute/) rules can specify an additional list of hostnames to further limit the traffic handled by those rules. For example:
+[`MeshHTTPRoute`](/mesh/v2/policies/meshhttproute/) rules can specify an additional list of hostnames to further limit the traffic handled by those rules. For example:
 
 {% policy_yaml use_meshservice=true %}
 ```yaml
@@ -178,7 +178,7 @@ This route would send all traffic to `dev.example.com` to the `v2` backend, but 
 
 ## `MeshTCPRoute`
 
-If your traffic isn't HTTP, you can use [`MeshTCPRoute`](/mesh/policies/meshtcproute/) to balance traffic between services:
+If your traffic isn't HTTP, you can use [`MeshTCPRoute`](/mesh/v2/policies/meshtcproute/) to balance traffic between services:
 
 {% policy_yaml use_meshservice=true %}
 ```yaml
