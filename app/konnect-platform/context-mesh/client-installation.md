@@ -4,6 +4,7 @@ description: "Configure MCP clients including Claude Code CLI, VS Code, Cursor, 
 content_type: reference
 layout: reference
 products:
+  - context-mesh
   - konnect
   - ai-gateway
 tags:
@@ -22,7 +23,7 @@ related_resources:
     url: /context-mesh/
 ---
 
-Once you've created a {{site.context_mesh}} MCP server, configure your MCP client by adding the server endpoint and any required authentication headers. Replace the placeholders below with your server's actual URL and credentials.
+Once you've created a {{site.context_mesh}} MCP server, configure your MCP client by adding the server endpoint and any required authentication headers. Replace the following placeholders with your server's actual URL and credentials.
 
 ## Generic MCP client config
 

@@ -4,7 +4,7 @@ permalink: /context-mesh/get-started/
 content_type: how_to
 description: "Deploy the OpenWeather {{site.context_mesh}} MCP server from the Konnect UI"
 breadcrumbs:
-  - /mcp/
+  - /context-mesh/
 
 products:
   - context-mesh

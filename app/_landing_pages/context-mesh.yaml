@@ -95,7 +95,7 @@ rows:
               Step-by-step setup from OpenAPI spec to a working agent call.
             cta:
               text: "Get started"
-              url: "/context-mesh/get-started-with-context-mesh/"
+              url: "/context-mesh/get-started/"
 
   # - header:
   #     text: "Connect an MCP client"
@@ -153,14 +153,24 @@ rows:
   #             Configure the MCP server for IntelliJ IDEA, PyCharm, WebStorm, and other JetBrains IDEs.
   #           ctas:
   #             - text: Installation guide
-  #               url: "/context-mesh/client-installation/#github-copilot-for-jetbrains"
+  #               url: "/context-mesh/client-installation/
+  #     - blocks:
+  #       - type: card
+  #         config:
+  #           icon: /assets/icons/github-copilot.svg
+  #           title: GitHub Copilot - Windsurf
+  #           description: |
+  #             Configure the MCP server for Windsurf.
+  #           ctas:
+  #             - text: Installation guide
+  #               url: "/context-mesh/client-installation/#windsurf"
   #     - blocks:
   #       - type: card
   #         config:
   #           icon: /assets/icons/cog.svg
   #           title: Other IDEs
   #           description: |
-  #             Manual setup instructions for Windsurf, Eclipse, and other IDEs.
+  #             Manual setup instructions for Eclipse, Xcode and other IDEs.
   #           ctas:
   #             - text: Installation guide
   #               url: "/context-mesh/client-installation/#other-ides"
