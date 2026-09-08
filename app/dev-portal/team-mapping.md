@@ -1,5 +1,5 @@
 ---
-title: Dev Portal team mapping
+title: "{{site.dev_portal}} team mapping"
 content_type: reference
 layout: reference
 
@@ -14,10 +14,10 @@ works_on:
 search_aliases:
   - Portal
 
-description: "Map existing developer teams from a third-party identity provider (IdP) and their permissions to elements in a {{site.konnect_short_name}} Dev Portal."
+description: "Map existing developer teams from a third-party identity provider (IdP) and their permissions to elements in a {{site.konnect_short_name}} {{site.dev_portal}}."
 
 related_resources:
-  - text: About Dev Portal customizations
+  - text: About {{site.dev_portal}} customizations
     url: /dev-portal/customizations/dev-portal-customizations/
   - text: Pages and content
     url: /dev-portal/pages-and-content/
@@ -26,6 +26,9 @@ related_resources:
 ---
 
 With teams mapped from an IdP, the developers and permissions are mapped automatically in {{site.konnect_short_name}} so you don't have to manually copy over each team of developers.
+
+Mapping teams from an IdP doesn't have to be all-or-nothing. You can exclude specific teams from IdP synchronization so their membership can be managed manually in {{site.konnect_short_name}}, even while mapping is enabled for the rest of your teams.
+This can be useful when you are migrating from one IdP to another or if {{site.dev_portal}} Admins don't have access to the IdP settings and they want to create some teams manually.
 
 This guide explains how to map the permissions, including scopes and claims, from your group of developers in your IdP to your organization's team in {{site.konnect_short_name}}. Although this guide uses Okta, Azure Active Directory (AD), and Auth0 as examples, you can use any IdP that conforms to OIDC standards. 
 
@@ -64,7 +67,7 @@ This guide explains how to map the permissions, including scopes and claims, fro
 
 ## Map IdP developer teams in {{site.konnect_short_name}}
 
-1. In [**Dev Portal**](https://cloud.konghq.com/portal), click **Settings**.
+1. In [**{{site.dev_portal}}**](https://cloud.konghq.com/portal), click **Settings**.
 
 1. In the **General** setting tab, enable **Portal RBAC**.
     
@@ -74,7 +77,7 @@ This guide explains how to map the permissions, including scopes and claims, fro
 
 2. From the IdP team you just created, click the **APIs** tab and click **Add Roles**. This allows you to assign APIs and the role for the APIs to members of your IdP team.
 
-3. From **Settings** in the Dev Portal side bar, click the **Identity** tab and then click **Configure OIDC provider**.
+3. From **Settings** in the {{site.dev_portal}} side bar, click the **Identity** tab and then click **Configure OIDC provider**.
 
 4. Configure the IdP settings using the following mappings:
     * **Provider URL:** The value stored in the `issuer` variable from your application in your IdP.
@@ -89,8 +92,30 @@ This guide explains how to map the permissions, including scopes and claims, fro
 
 6. Enter the exact name of your team from your IdP next to the name of the {{site.konnect_short_name}} team you want to map it to.
 
+7. Optional: In the team's settings, disable **Sync with external identity provider (IdP)** for any team you don't want IdP logins to overwrite.
+
+    This setting is enabled by default for every new and existing team, even before IdP mapping is configured for the {{site.dev_portal}}. 
+    When enabled, developers are added to or removed from the team automatically at login, based on their `groups` claim. When disabled, the team can be managed manually in {{site.konnect_short_name}}.
+
+    Disable this setting when a {{site.dev_portal}} admin needs to create or manage a team manually without IdP access, or to keep an old IdP's teams and a new IdP's teams side by side temporarily during a [migration](#migrate-developer-teams-to-a-new-idp).
+
+    A team with this setting disabled can't be selected in **Team Mappings**.
+
+    {:.warning}
+    > If IdP mapping is enabled and this setting stays enabled for a team with no name entered in **Team Mappings**, {{site.konnect_short_name}} treats the team as an empty IdP group. Developers are removed from the team at their next login, even if they were added manually.
+
 ## Test developer team mappings
 
-Now that you've configured the IdP team mappings in {{site.konnect_short_name}} for the Dev Portal, you can test the team mappings.
+Now that you've configured the IdP team mappings in {{site.konnect_short_name}} for the {{site.dev_portal}}, you can test the team mappings.
 
-Find your Dev Portal URL in the Dev Portal settings in the **Portal Domain**, navigate to that URL, and log in as a test developer that is assigned to the team in your IdP.
+Find your {{site.dev_portal}} URL in the {{site.dev_portal}} settings in the **Portal Domain**, navigate to that URL, and log in as a test developer that is assigned to the team in your IdP.
+
+## Migrate developer teams to a new IdP
+
+If you're moving from one IdP to another, you can freeze your existing teams so they aren't affected while you set up and test the new IdP.
+
+1. For each team currently mapped to your old IdP, disable **Sync with external identity provider (IdP)** in the team's settings. This excludes the team from synchronization so its membership stays as-is.
+
+1. Configure and test the new IdP by following [Set up developer teams and group claims in your IdP](#set-up-developer-teams-and-group-claims-in-your-idp) and [Map IdP developer teams in {{site.konnect_short_name}}](#map-idp-developer-teams-in-konnect).
+
+1. After the new IdP's teams are mapped and verified, delete the old, frozen teams.
