@@ -381,7 +381,9 @@ function parseWeekBlocks(body) {
 
 function extractExistingPermalinks(body) {
   const permalinks = new Set();
-  const regex = new RegExp(`\\]\\(${SITE_BASE_URL.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}([^)]*)\\)`, "g");
+  // Literal (not built from SITE_BASE_URL) so the dots are unambiguously
+  // escaped in the source rather than via runtime string escaping.
+  const regex = /\]\(https:\/\/developer\.konghq\.com([^)]*)\)/g;
   let match;
   while ((match = regex.exec(body))) permalinks.add(match[1]);
   return permalinks;
