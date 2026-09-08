@@ -139,35 +139,39 @@ The following diagram shows how those pieces relate:
 
 {% mermaid %}
 flowchart TB
+  client(["Client (API key)"])
   subgraph gateway["<b>Kong Gateway</b>"]
-    direction LR
-        service["example-service"]
         route["example-route"]
-        consumer1["Consumer-Kong Air"]
-        metering["Metering & Billing plugin"]
+        service["example-service"]
+        consumer1["Consumer (Kong Air)"]
         enforcement["Entitlement Enforcement plugin"]
+        metering["Metering & Billing plugin"]
   end
+  redis[("Redis<br>enforcement cache")]
   subgraph mb["<b>Konnect {{site.metering_and_billing}}</b>"]
-    direction LR
+        events["Events API"]
+        access["Entitlement Access API"]
         meter["Meter"]
     subgraph plan["Premium Plan"]
-      direction LR
           feature2["Metered feature + entitlement (limit)"]
     end
     subgraph subscription["Premium Subscription"]
-      direction LR
           customer1["Customer (Kong Air)"]
     end
-    access["Entitlement Access API"]
   end
-    service -.- metering
-    route -.- enforcement
-    meter --> feature2
+    client -->|request| route
+    route -.->|enforced by| enforcement
+    route -->|allowed| service
+    service -.->|metered by| metering
+    client -.->|authenticates as| consumer1
     consumer1 -->|subject key| customer1
-    subscription --> plan
-    metering -->|usage events, Ingest token| meter
-    enforcement -->|polls access, Entitlement Access token| access
-    access --> customer1
+    metering -->|usage events, Ingest token| events
+    events -->|aggregated by| meter
+    meter -->|referenced by| feature2
+    subscription -->|activates| plan
+    enforcement -->|queries, Entitlement Access token| access
+    access -->|reads entitlement| customer1
+    enforcement <-->|cached state| redis
     feature2 -.->|feature.key| enforcement
 
 {% endmermaid %}
