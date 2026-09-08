@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect Organizations
-  version: 3.0.2
+  version: 3.0.3
   description: Konnect Organizations API.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@e5df6b8d97c62980613512ec65292c8d1094c998
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e5df6b8d97c62980613512ec65292c8d1094c998'
+  x-oas-source: kong/platform-api@dee7bfad29df7361d2a81aa4af67ab071b0da87a
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/dee7bfad29df7361d2a81aa4af67ab071b0da87a'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -31,20 +31,13 @@ paths:
             type: object
             properties:
               state:
-                description: State of the personal access token.
-                type: string
-                enum:
-                  - ACTIVE
-                  - REVOKED
-                  - EXPIRED
-                $ref: '#/components/schemas/StringFieldEqualsFilter'
+                oneOf:
+                  - $ref: '#/components/schemas/StateFilter'
+                  - $ref: '#/components/schemas/StateFilterNested'
               user_id:
-                description: User id to filter by.
-                type: string
-                format: uuid
-                example: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
-                $ref: '#/components/schemas/StringFieldEqualsFilter'
-                readOnly: true
+                oneOf:
+                  - $ref: '#/components/schemas/UserIdFilter'
+                  - $ref: '#/components/schemas/UserIdFilterNested'
             additionalProperties: false
           style: deepObject
       responses:
@@ -198,6 +191,34 @@ components:
         type: integer
         example: 10
   schemas:
+    StateFilter:
+      description: State of the personal access token.
+      type: string
+      enum:
+        - ACTIVE
+        - REVOKED
+        - EXPIRED
+    StateFilterNested:
+      type: object
+      properties:
+        eq:
+          $ref: '#/components/schemas/StateFilter'
+      additionalProperties: false
+      required:
+        - eq
+    UserIdFilter:
+      description: User id to filter by.
+      type: string
+      format: uuid
+      example: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+    UserIdFilterNested:
+      type: object
+      properties:
+        eq:
+          $ref: '#/components/schemas/UserIdFilter'
+      additionalProperties: false
+      required:
+        - eq
     MaxPATExpirationPeriodDays:
       type: integer
       maximum: 365
@@ -214,16 +235,6 @@ components:
       format: uuid
       example: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
       readOnly: true
-    StringFieldEqualsFilter:
-      description: Filters on the given string field value by exact match.
-      properties:
-        eq:
-          type: string
-      title: StringFieldEqualsFilter
-      x-examples:
-        example-1: equals-some-value
-        example-2:
-          eq: some-value
     UserId:
       description: Contains a unique identifier used for a user.
       type: string
