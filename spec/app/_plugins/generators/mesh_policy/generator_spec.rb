@@ -33,6 +33,13 @@ RSpec.describe Jekyll::MeshPolicyPages::Generator do
     end
   end
 
+  describe 'major resolution' do
+    it 'reads the major from frontmatter for a v2-folder policy that declares one' do
+      overview = site.data['mesh_policies'][2]['meshretry']
+      expect(overview.data['major_version']).to eq('mesh' => 2)
+    end
+  end
+
   describe 'the current-major alias' do
     it 'points `latest` at the current policy major table' do
       expect(site.data['mesh_policies']['latest']).to equal(site.data['mesh_policies'][3])
@@ -79,7 +86,7 @@ RSpec.describe Jekyll::MeshPolicyPages::Generator do
       expect(overview.data['major_version']).to be_nil
     end
 
-    it 'carries the folder-derived major_version for the v2 overview' do
+    it 'carries the frontmatter-declared major_version for the v2 overview' do
       overview = site.data['mesh_policies'][2]['meshretry']
       expect(overview.data['major_version']).to eq('mesh' => 2)
     end

@@ -35,14 +35,14 @@ module Jekyll
 
         top_level_folder.each do |entry, slug|
           if VERSION_SEGMENT.match?(slug)
-            generate_version_major(entry)
+            generate_pages_in_version_folder(entry)
           else
             generate_pages(policy_class.new(folder: entry, slug:))
           end
         end
       end
 
-      def generate_version_major(version_folder)
+      def generate_pages_in_version_folder(version_folder)
         Dir.glob(File.join(version_folder, '*/')).each do |folder|
           slug = folder.chomp('/').split('/').last
 
