@@ -3,12 +3,13 @@ title: Enforce entitlements on LLM traffic
 description: Learn how to cap per-customer LLM token usage with the Entitlement Enforcement plugin and {{site.metering_and_billing}} in {{site.konnect_short_name}}.
 content_type: how_to
 
-permalink: /how-to/enforce-entitlements-on-llm-traffic/
+permalink: /ai-gateway/v1/how-to/enforce-entitlements-on-llm-traffic/
 breadcrumbs:
   - /metering-and-billing/
 
 products:
     - gateway
+    - ai-gateway
     - metering-and-billing
 
 works_on:
