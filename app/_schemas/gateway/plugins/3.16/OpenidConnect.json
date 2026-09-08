@@ -2342,6 +2342,9 @@
           "description": "Details on how to accept tokens from other identity providers.",
           "properties": {
             "cache": {
+              "default": {
+                "enabled": true
+              },
               "description": "Cache support for token exchange",
               "properties": {
                 "enabled": {
@@ -2487,27 +2490,31 @@
               "items": {
                 "properties": {
                   "conditions": {
-                    "description": "A token will only be exchanged when it matches all these criteria. To exchange tokens issued by a different issuer, `conditions` must not be defined. In contrast, to exchange tokens issued by the target issuer itself, `conditions` must be defined.",
+                    "description": "A token will only be exchanged when it matches all these criteria. To exchange tokens issued by a different issuer, `conditions` must not be defined -- every token from that issuer is exchanged unconditionally, since a foreign-issued token that isn't exchanged can never pass normal verification against the target issuer anyway. In contrast, to exchange tokens issued by the target issuer itself, `conditions` must be defined.",
                     "properties": {
                       "has_audience": {
+                        "description": "Audience values that must all be present in the token, matched against `audience_claim`.",
                         "items": {
                           "type": "string"
                         },
                         "type": "array"
                       },
                       "has_scopes": {
+                        "description": "Scope values that must all be present in the token, matched against `scopes_claim`.",
                         "items": {
                           "type": "string"
                         },
                         "type": "array"
                       },
                       "missing_audience": {
+                        "description": "Audience values that must all be absent from the token, matched against `audience_claim`.",
                         "items": {
                           "type": "string"
                         },
                         "type": "array"
                       },
                       "missing_scopes": {
+                        "description": "Scope values that must all be absent from the token, matched against `scopes_claim`.",
                         "items": {
                           "type": "string"
                         },
@@ -2526,7 +2533,7 @@
                   },
                   "verify_signature": {
                     "default": false,
-                    "description": "When true, Kong cryptographically verifies the signature of the incoming subject token before exchanging it. This field should be left empty or set to `false` when this issuer is the same as the target issuer. Defaults to `false` for backward compatibility.",
+                    "description": "When true, Kong cryptographically verifies the signature of the incoming subject token before exchanging it. Defaults to `false` for backward compatibility, which skips this local check; the token exchange request to the issuer still validates the subject token itself, so this is defense in depth, not the only safeguard. This field should be left empty or set to `false` when this issuer is the same as the target issuer.",
                     "type": "boolean"
                   }
                 },
@@ -2797,13 +2804,17 @@
         },
         "verify_signature": {
           "default": true,
-          "description": "Verify signature of tokens.",
+          "description": "Verify the cryptographic signature of tokens. Disabling this skips verification for every token source, including tokens presented directly by clients (bearer); this is insecure for that path. To trust only tokens fetched from the identity provider for specific grants, use `ignore_signature` instead, which never affects bearer tokens.",
           "type": "boolean"
         }
       },
       "required": [
         "issuer"
       ],
+      "type": "object"
+    },
+    "expressions": {
+      "additionalProperties": true,
       "type": "object"
     },
     "protocols": {

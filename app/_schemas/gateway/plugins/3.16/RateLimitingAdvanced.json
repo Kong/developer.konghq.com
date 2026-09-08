@@ -12,6 +12,7 @@
               "header",
               "ip",
               "path",
+              "principal",
               "route",
               "service"
             ],
@@ -33,6 +34,11 @@
             "consumer.id",
             "consumer.username"
           ],
+          "type": "string"
+        },
+        "custom_key": {
+          "description": "Overrides the computed rate-limiting key with a literal value for this request, regardless of `identifier` or `compound_identifier`.",
+          "minLength": 1,
           "type": "string"
         },
         "dictionary_name": {
@@ -79,6 +85,7 @@
             "header",
             "ip",
             "path",
+            "principal",
             "route",
             "service"
           ],
@@ -545,6 +552,22 @@
       "properties": {
         "id": {
           "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "expressions": {
+      "properties": {
+        "custom_key": {
+          "maxLength": 1024,
+          "type": "string"
+        },
+        "limit": {
+          "items": {
+            "maxLength": 1024,
+            "type": "string"
+          },
+          "type": "array"
         }
       },
       "type": "object"
