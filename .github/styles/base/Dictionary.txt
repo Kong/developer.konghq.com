@@ -119,6 +119,7 @@ chatwise
 cidr
 cidr_block
 cidrs
+claude
 cleartext
 cli
 clis
