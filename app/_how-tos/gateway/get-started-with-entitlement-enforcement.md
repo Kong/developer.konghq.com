@@ -93,7 +93,49 @@ In this guide, you'll:
 * Enable the {{site.metering_and_billing}} plugin to report usage, and the Entitlement Enforcement plugin to enforce the entitlements
 * Verify that traffic is allowed within the limit and blocked once the limit is reached
 
-The following diagram shows how {{site.base_gateway}} entities and {{site.metering_and_billing}} entities are associated:
+Enforcement needs configuration on both sides, and the pieces reference each other. The following table lists what you'll create, why each piece is needed, and what it connects to:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: What you configure
+    key: what
+  - title: Where
+    key: where
+  - title: Why it's needed
+    key: why
+rows:
+  - what: "Consumer with a pinned `id`"
+    where: "{{site.base_gateway}}"
+    why: "Identifies the client. The pinned `id` fixes the `consumer:<id>` subject key that both plugins use, so the customer you create later can be matched to it."
+  - what: "[Key Auth](/plugins/key-auth/) plugin"
+    where: "Globally"
+    why: "Authenticates the request so {{site.base_gateway}} can resolve a Consumer. Without an authenticated Consumer, there's no customer to enforce against."
+  - what: "Meter"
+    where: "{{site.metering_and_billing}}"
+    why: "Counts raw API requests. This is the usage the entitlement limit is measured against."
+  - what: "Metered feature"
+    where: "{{site.metering_and_billing}}"
+    why: "Makes the meter's usage enforceable. Its key is what you set as the plugin's `feature.key`."
+  - what: "Plan with a metered entitlement, published"
+    where: "{{site.metering_and_billing}}"
+    why: "Defines the allowance, for example 5 requests per month, on a rate card that references the feature."
+  - what: "Customer with a matching subject key"
+    where: "{{site.metering_and_billing}}"
+    why: "The entity whose access is enforced. Its `usage_attribution.subject_keys` must contain the Consumer's subject key, or usage and enforcement won't resolve to this customer."
+  - what: "Subscription to the plan"
+    where: "{{site.metering_and_billing}}"
+    why: "Materializes the entitlement onto the customer. Until the subscription starts, the customer has no entitlement to enforce."
+  - what: "{{site.metering_and_billing}} plugin, with the Ingest token"
+    where: "`example-service`"
+    why: "Reports usage events. Nothing counts against the limit unless usage is reported."
+  - what: "Entitlement Enforcement plugin, with the Entitlement Access token and Redis"
+    where: "`example-route`"
+    why: "Reads the customer's entitlement for the configured feature and blocks the request when they're over the limit."
+{% endtable %}
+<!--vale on-->
+
+The following diagram shows how those pieces relate:
 
 {% mermaid %}
 flowchart TB
@@ -118,13 +160,15 @@ flowchart TB
     end
     access["Entitlement Access API"]
   end
-    service --> meter
+    service -.- metering
+    route -.- enforcement
     meter --> feature2
-    consumer1 --> customer1
+    consumer1 -->|subject key| customer1
     subscription --> plan
-    metering -->|usage events| meter
-    enforcement -->|polls access| access
+    metering -->|usage events, Ingest token| meter
+    enforcement -->|polls access, Entitlement Access token| access
     access --> customer1
+    feature2 -.->|feature.key| enforcement
 
 {% endmermaid %}
 
