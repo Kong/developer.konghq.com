@@ -31,9 +31,10 @@ template, tag syntax, and placeholder conventions.
    `{% entity_examples %}`/`{% entity_example %}` for entity config, a plain kongctl/deck
    fenced command otherwise. Wrap any tag block Vale will flag in `<!--vale off-->` /
    `<!--vale on-->`.
-6. End with `## Validate`, using `{% validation request-check %}` (or the matching id from
-   the reference doc) filled with real values where the source material has them,
-   `<!-- TODO -->` otherwise. Confirm the page's `products` satisfy the validation tag's
-   gate; if not, flag it instead of guessing a workaround.
+6. Always end with `## Validate` — never skip it. Pick the `{% validation %}` id that
+   actually fits what the how-to did (see the id table in the reference doc; `request-check`
+   is common but not the default), filled with real values where the source material has
+   them, `<!-- TODO -->` otherwise. Confirm the page's `products` satisfy the validation
+   tag's gate; if not, flag it instead of guessing a workaround.
 7. Tell the writer what's filled in, what's still `<!-- TODO -->`, and that they own the
    prose and manual testing from here.
