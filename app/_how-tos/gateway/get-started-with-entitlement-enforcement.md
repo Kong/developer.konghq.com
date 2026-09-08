@@ -105,6 +105,15 @@ columns:
   - title: Why it's needed
     key: why
 rows:
+  - what: "`example-service` and `example-route`"
+    where: "Prerequisite"
+    why: "The entities the plugins attach to. The Entitlement Enforcement plugin is enabled on the Route, so it runs for traffic matching that Route only."
+  - what: "Two {{site.konnect_short_name}} system account tokens"
+    where: "Prerequisite"
+    why: "One with the Ingest role for reporting usage, one with the Entitlement Access role for reading entitlements. The roles are separate, so a single token can't do both unless it has the Admin role."
+  - what: "Redis"
+    where: "Prerequisite"
+    why: "Where the plugin caches enforcement state: a background timer writes the state it fetches from {{site.metering_and_billing}}, and each worker syncs its local cache from Redis. The plugin can't enforce without a reachable Redis."
   - what: "Consumer with a pinned `id`"
     where: "{{site.base_gateway}}"
     why: "Identifies the client. The pinned `id` fixes the `consumer:<id>` subject key that both plugins use, so the customer you create later can be matched to it."
@@ -129,7 +138,7 @@ rows:
   - what: "{{site.metering_and_billing}} plugin, with the Ingest token"
     where: "`example-service`"
     why: "Reports usage events. Nothing counts against the limit unless usage is reported."
-  - what: "Entitlement Enforcement plugin, with the Entitlement Access token and Redis"
+  - what: "Entitlement Enforcement plugin, with the Entitlement Access token"
     where: "`example-route`"
     why: "Reads the customer's entitlement for the configured feature and blocks the request when they're over the limit."
 {% endtable %}
