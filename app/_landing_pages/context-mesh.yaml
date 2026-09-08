@@ -153,6 +153,3 @@ rows:
             - q: Does {{site.context_mesh}} require {% site.ai_gateway %}?
               a: |
                 Yes. {{site.context_mesh}} runs on top of {% site.ai_gateway %}, so it requires an {% site.ai_gateway %} control plane to deploy  and function.
-            - q: Can I see traffic between my agents and the MCP servers?
-              a: |
-                [NEEDS INPUT: Confirm observability story. Likely uses standard {{site.konnect_short_name}} analytics on the host control plane, but specifics need verification before publishing.]
