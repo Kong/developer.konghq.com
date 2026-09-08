@@ -1,5 +1,5 @@
 ---
-title: "Add custom linting rules in Insomnia"
+title: "Add custom linting rules in {{ site.insomnia }}"
 permalink: /how-to/add-custom-linting-rules/
 
 content_type: how_to
