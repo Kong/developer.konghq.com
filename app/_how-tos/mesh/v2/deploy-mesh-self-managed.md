@@ -5,7 +5,7 @@ content_type: how_to
 permalink: /mesh/v2/deploy-mesh-self-managed/
 related_resources:
   - text: "{{site.mesh_product_name}}"
-    url: /mesh/overview/
+    url: /mesh/v2/
   - text: Use cert-manager for control plane certificates
     url: /mesh/v2/use-cert-manager-for-control-plane-certificates/
 products:

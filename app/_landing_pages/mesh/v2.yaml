@@ -148,11 +148,11 @@ rows:
                 Enforce service-to-service communication with fine-grained policies for access control, mutual TLS, traffic permissions, and L4/L7 routing. Ensuring secure and compliant traffic flows across your mesh.
               ctas:
                 - text: Mesh Traffic Permission 
-                  url: /mesh/policies/meshtrafficpermission/
+                  url: /mesh/v2/policies/meshtrafficpermission/
                 - text: Mesh HTTP Route 
-                  url: /mesh/policies/meshhttproute/
+                  url: /mesh/v2/policies/meshhttproute/
                 - text: Mesh TCP Route 
-                  url: /mesh/policies/meshtcproute/
+                  url: /mesh/v2/policies/meshtcproute/
       - blocks:
           - type: card
             config:
@@ -162,11 +162,11 @@ rows:
                 Improve service reliability with built-in policies for health checks, circuit breakers, timeouts, and outlier detection. Automatically prevent unhealthy or overloaded services from impacting the rest of your mesh.
               ctas:
                 - text: Mesh Health Check 
-                  url: /mesh/policies/meshhealthcheck/
+                  url: /mesh/v2/policies/meshhealthcheck/
                 - text: Mesh Retry 
-                  url: /mesh/policies/meshretry/
+                  url: /mesh/v2/policies/meshretry/
                 - text: Mesh Circuit Breaker 
-                  url: /mesh/policies/meshcircuitbreaker/
+                  url: /mesh/v2/policies/meshcircuitbreaker/
       - blocks:
           - type: card
             config:
@@ -281,7 +281,7 @@ rows:
                 - text: Learn about policies 
                   url: /mesh/v2/policies-introduction/
                 - text: See all policies 
-                  url: /mesh/policies/
+                  url: /mesh/v2/policies/
       - blocks:
           - type: card
             config:
@@ -290,7 +290,7 @@ rows:
                 See the different requirements to deploy {{site.mesh_product_name}} as well as managing performance and resource requirements
               ctas:
                 - text: View the requirements 
-                  url: /mesh/requirements/
+                  url: /mesh/validated-versions/
                 - text: Kubernetes sidecar resources
                   url: /mesh/v2/data-plane-kubernetes/#custom-container-configuration
                 - text: Performance tuning

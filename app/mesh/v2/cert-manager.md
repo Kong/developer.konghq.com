@@ -22,7 +22,7 @@ works_on:
 
 related_resources:
   - text: "mTLS Policy"
-    url: /mesh/overview/
+    url: /mesh/v2/policies/meshtls/
   - text: "HashiCorp Vault CA"
     url: /mesh/v2/vault/
   - text: "ACM Private CA Policy"

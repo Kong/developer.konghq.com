@@ -253,7 +253,7 @@ Having both enabled results in about twice as many resources, which means potent
 #### ReachableBackends
 
 This enables automatic generation of the `MeshService` resources, but does not include the corresponding resources for every data plane proxy.
-The intention is for users to explicitly and gradually introduce relevant `MeshService` resources via [`reachableBackends`](/mesh/configure-transparent-proxying/#reachable-backends).
+The intention is for users to explicitly and gradually introduce relevant `MeshService` resources via [`reachableBackends`](/mesh/v2/transparent-proxying/#reachable-backends).
 
 #### Exclusive
 

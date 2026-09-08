@@ -7,7 +7,7 @@ breadcrumbs:
   - /mesh/v2/
 related_resources:
   - text: "Multi-zone deployment"
-    url: /mesh/multi-zone/
+    url: /mesh/v2/mesh-multizone-service-deployment/
   - text: "{{site.mesh_product_name}} data plane on Universal"
     url: /mesh/v2/data-plane-universal/
   - text: "Zone ingress"

@@ -465,7 +465,7 @@ spec:
 ### `kuma.io/transparent-proxying-reachable-services`
 
 A comma-separated list of `kuma.io/service`values to indicate which Services this resource communicates with.
-For more information, see the [Reachable Services](/mesh/configure-transparent-proxying/#reachable-services).
+For more information, see the [Reachable Services](/mesh/v2/configure-transparent-proxying/#reachable-services).
 
 ```yaml
 apiVersion: apps/v1
@@ -489,7 +489,7 @@ spec:
 
 When transparent proxy is installed with eBPF mode, you can disable it for particular workloads if necessary.
 
-For more information, see [Transparent proxy with eBPF](/mesh/configure-transparent-proxying/#transparent-proxy-with-ebpf-experimental).
+For more information, see [Transparent proxy with eBPF](/mesh/v2/configure-transparent-proxying/#transparent-proxy-with-ebpf-experimental).
 
 
 ```yaml
@@ -514,7 +514,7 @@ spec:
 
 Path to the BPF FS if it's different from the default `/sys/fs/bpf` path.
 
-For more information, see [Transparent proxy with eBPF](/mesh/configure-transparent-proxying/#transparent-proxy-with-ebpf-experimental).
+For more information, see [Transparent proxy with eBPF](/mesh/v2/configure-transparent-proxying/#transparent-proxy-with-ebpf-experimental).
 
 ```yaml
 apiVersion: apps/v1
@@ -538,7 +538,7 @@ spec:
 
 `cgroup2` path if it's different from the default `/sys/fs/cgroup` path.
 
-For more information, see [Transparent proxy with eBPF](/mesh/configure-transparent-proxying/#transparent-proxy-with-ebpf-experimental).
+For more information, see [Transparent proxy with eBPF](/mesh/v2/onfigure-transparent-proxying/#transparent-proxy-with-ebpf-experimental).
 
 ```yaml
 apiVersion: apps/v1
@@ -562,7 +562,7 @@ spec:
 
 Custom path for eBPF programs to be loaded when installing transparent proxy.
 
-For more information, see [Transparent proxy with eBPF](/mesh/configure-transparent-proxying/#transparent-proxy-with-ebpf-experimental).
+For more information, see [Transparent proxy with eBPF](/mesh/v2/configure-transparent-proxying/#transparent-proxy-with-ebpf-experimental).
 
 ```yaml
 apiVersion: apps/v1
@@ -587,7 +587,7 @@ spec:
 Name of the network interface that should be used to attach TC-related eBPF programs. 
 By default, {{site.mesh_product_name}} uses the first non-loopback interface it finds.
 
-For more information, see [Transparent proxy with eBPF](/mesh/configure-transparent-proxying/#transparent-proxy-with-ebpf-experimental).
+For more information, see [Transparent proxy with eBPF](/mesh/v2/configure-transparent-proxying/#transparent-proxy-with-ebpf-experimental).
 
 ```yaml
 apiVersion: apps/v1

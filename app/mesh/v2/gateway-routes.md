@@ -19,7 +19,7 @@ related_resources:
   - text: Built-in gateways
     url: /mesh/v2/built-in-gateway/
   - text: Configuring built-in listeners
-    url: /mesh/gateway-listeners/
+    url: /mesh/v2/meshgateway/
   - text: MeshHTTPRoute policy
     url: /mesh/v2/policies/meshhttproute/
   - text: MeshTCPRoute policy

@@ -194,7 +194,7 @@ The `kuma-demo` app consists of two Services:
 
 ## Test {{site.mesh_product_name}} capabilities
 
-Now that you've deployed {{site.mesh_product_name}} along with the demo application on your ROSA cluster, you can test {{site.mesh_product_name}}. You can follow the instructions in [Enable Mutual TLS and Traffic Permissions](/mesh/quickstart/kubernetes/#enable-mutual-tls-and-traffic-permissions) to learn how to use policies in {{site.mesh_product_name}}.
+Now that you've deployed {{site.mesh_product_name}} along with the demo application on your ROSA cluster, you can test {{site.mesh_product_name}}. You can follow the instructions in [Enable Mutual TLS and Traffic Permissions](/mesh/v2/kubernetes/#enable-mutual-tls-and-traffic-permissions) to learn how to use policies in {{site.mesh_product_name}}.
 
 ## Clean up 
 
