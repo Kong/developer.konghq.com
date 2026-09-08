@@ -96,7 +96,52 @@ In this guide, you'll:
 * Enable the {{site.metering_and_billing}} plugin to report token usage, and the Entitlement Enforcement plugin to enforce the allowance
 * Verify that LLM requests are allowed until the token allowance runs out, then blocked
 
-The following diagram shows how {{site.base_gateway}} entities and {{site.metering_and_billing}} entities are associated:
+Enforcement needs configuration on both sides, and the pieces reference each other. The following table lists what you'll create, why each piece is needed, and what it connects to:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: What you configure
+    key: what
+  - title: Where
+    key: where
+  - title: Why it's needed
+    key: why
+rows:
+  - what: "Consumer with a pinned `id`"
+    where: "{{site.base_gateway}}"
+    why: "Identifies the client. The pinned `id` fixes the `consumer:<id>` subject key that both plugins use, so the customer you create later can be matched to it."
+  - what: "[Key Auth](/plugins/key-auth/) plugin"
+    where: "Globally"
+    why: "Authenticates the request so {{site.base_gateway}} can resolve a Consumer. Without an authenticated Consumer, there's no customer to enforce against."
+  - what: "[AI Proxy](/plugins/ai-proxy/) plugin, with statistics enabled"
+    where: "`example-service`"
+    why: "Proxies chat requests to the model and reports the token counts. Token metering depends on `log_statistics`."
+  - what: "Meter that sums tokens"
+    where: "{{site.metering_and_billing}}"
+    why: "Counts the tokens reported for each LLM request. This is the usage the allowance is measured against."
+  - what: "Metered feature, filtered to prompt tokens"
+    where: "{{site.metering_and_billing}}"
+    why: "Makes token usage enforceable, and restricts what counts to OpenAI prompt tokens. Its key is what you set as the plugin's `feature.key`."
+  - what: "Plan with a token entitlement, published"
+    where: "{{site.metering_and_billing}}"
+    why: "Defines the allowance in tokens, on a rate card that references the feature."
+  - what: "Customer with a matching subject key"
+    where: "{{site.metering_and_billing}}"
+    why: "The entity whose access is enforced. Its `usage_attribution.subject_keys` must contain the Consumer's subject key, or usage and enforcement won't resolve to this customer."
+  - what: "Subscription to the plan"
+    where: "{{site.metering_and_billing}}"
+    why: "Materializes the entitlement onto the customer. Until the subscription starts, the customer has no entitlement to enforce."
+  - what: "{{site.metering_and_billing}} plugin, with the Ingest token"
+    where: "`example-service`"
+    why: "Reports token usage events. Nothing counts against the allowance unless usage is reported."
+  - what: "Entitlement Enforcement plugin, with the Entitlement Access token and Redis"
+    where: "`example-route`"
+    why: "Reads the customer's remaining token allowance and blocks the request once it's spent."
+{% endtable %}
+<!--vale on-->
+
+The following diagram shows how those pieces relate:
 
 {% mermaid %}
 flowchart TB
@@ -122,14 +167,15 @@ flowchart TB
     end
     access["Entitlement Access API"]
   end
-    proxy --> service
-    service --> meter
+    proxy -.- service
+    route -.- enforcement
     meter --> feature2
-    consumer1 --> customer1
+    consumer1 -->|subject key| customer1
     subscription --> plan
-    metering -->|token usage events| meter
-    enforcement -->|polls access| access
+    metering -->|token usage events, Ingest token| meter
+    enforcement -->|polls access, Entitlement Access token| access
     access --> customer1
+    feature2 -.->|feature.key| enforcement
 
 {% endmermaid %}
 
