@@ -1,0 +1,40 @@
+description: |
+  Read the authenticated principal and forward one of its metadata values to the upstream service as a request header.
+
+extended_description: |
+  Read the authenticated principal and forward its metadata value into the Datakit pipeline to:
+  
+  * Use it in the next nodes.
+  * Send it to an external service.
+
+title: Read metadata from the authenticated principal
+weight: 893
+
+requirements:
+  - "You have a {{site.identity}} directory containing a [principal](/identity/principals/) with a `rate_tier` metadata value."
+  - "You have configured an authentication plugin with principals enabled on the same Gateway Service or Route, for example [Key Auth](/plugins/key-auth/) with `principals.enabled: true`."
+
+config:
+  nodes:
+    - name: GET_PRINCIPAL
+      type: property
+      property: kong.client.principal
+
+    - name: SET_TIER_HEADER
+      type: jq
+      input: GET_PRINCIPAL
+      output: service_request.headers
+      jq: |
+        {
+          "X-Rate-Tier": ( .metadata.rate_tier // "standard" ),
+        }
+
+tools:
+  - deck
+  - konnect-api
+  - terraform
+
+min_version:
+  gateway: '3.16'
+
+group: authentication
