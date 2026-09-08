@@ -1,14 +1,11 @@
 # frozen_string_literal: true
 
+require_relative '../lib/ordered_generator'
 require_relative '../component_templates'
 
 module Jekyll
-  class IndexGenerator < Jekyll::Generator
-    priority :low
-
+  class IndexGenerator < OrderedGenerator
     def generate(site)
-      return if site.config.dig('skip', 'indices')
-
       site.data['indices'] = {}
       Dir.glob(File.join(site.source, '_indices/**/*.yaml')).each do |file|
         index = YAML.load_file(file)

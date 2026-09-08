@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
+require_relative '../lib/ordered_generator'
+
 require 'active_support'
 require 'active_support/core_ext/object/deep_dup'
 require 'fileutils'
 
 module Jekyll
-  class MarkdownPagesGenerator < Generator
-    priority :lowest
-
+  class MarkdownPagesGenerator < OrderedGenerator
     def generate(site)
       @site = site
       site.config['markdown_pages_to_render'] ||= []

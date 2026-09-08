@@ -1,14 +1,13 @@
 # frozen_string_literal: true
 
+require_relative '../lib/ordered_generator'
 require_relative '../component_templates'
 
 NO_MATCH = 'NO DATA'
 module Jekyll
-  class TagExplorer < Jekyll::Generator
-    priority :lowest
+  class TagExplorer < OrderedGenerator
     def generate(site)
       return if Jekyll.env == 'production'
-      return if site.config.dig('skip', 'explorer')
 
       jobs = [
         {

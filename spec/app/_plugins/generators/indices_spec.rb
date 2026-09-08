@@ -995,15 +995,6 @@ RSpec.describe Jekyll::IndexGenerator do
                       data: {})
     end
 
-    context 'when skip.indices is configured' do
-      let(:site) { instance_double(Jekyll::Site, config: { 'skip' => { 'indices' => true } }) }
-
-      it 'returns early without scanning for index files' do
-        expect(Dir).not_to receive(:glob)
-        generator.generate(site)
-      end
-    end
-
     context 'with an index that has no sections or groups' do
       let(:index) { { 'title' => 'Bare', 'description' => 'No sections here.' } }
 
