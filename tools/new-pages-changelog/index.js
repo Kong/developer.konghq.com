@@ -55,6 +55,21 @@ function getRepoRoot() {
   return run(["rev-parse", "--show-toplevel"], process.cwd());
 }
 
+// A squash-merge (this repo's default) discards the original branch commits,
+// so a marker sha recorded before a squash may no longer exist as an
+// ancestor of HEAD once that PR lands — `git log <sha>..HEAD` would then
+// fail with "Invalid revision range". Check first so a stale marker falls
+// back to the seed window instead of crashing the whole run.
+function isValidMarker(repoRoot, sha) {
+  if (!sha) return false;
+  try {
+    execFileSync("git", ["merge-base", "--is-ancestor", sha, "HEAD"], { cwd: repoRoot, stdio: "ignore" });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function parseArgs(argv) {
   const args = { dryRun: false, sinceSha: null, seedSince: DEFAULT_SEED_SINCE, backfillTypes: null, pruneBefore: null };
   for (const arg of argv) {
@@ -309,42 +324,6 @@ function buildEntries(repoRoot, addedFiles, siteVars) {
   return entries;
 }
 
-function renderSection(entries, repoRoot) {
-  const byWeek = new Map();
-  for (const entry of entries) {
-    if (!byWeek.has(entry.weekSortKey)) byWeek.set(entry.weekSortKey, { label: entry.weekLabel, pages: [] });
-    byWeek.get(entry.weekSortKey).pages.push(entry);
-  }
-
-  const weekKeys = [...byWeek.keys()].sort().reverse();
-  const sections = [];
-
-  for (const weekKey of weekKeys) {
-    const { label, pages } = byWeek.get(weekKey);
-    const byProduct = new Map();
-    for (const page of pages) {
-      // Group under the page's first listed product.
-      const productSlug = page.products[0];
-      const productName = productSlug === "other" ? "Other" : productDisplayName(repoRoot, productSlug);
-      if (!byProduct.has(productName)) byProduct.set(productName, []);
-      byProduct.get(productName).push(page);
-    }
-
-    const productNames = [...byProduct.keys()].sort();
-    const lines = [`## ${label}`, ""];
-    for (const productName of productNames) {
-      lines.push(`### ${productName}`, "");
-      for (const page of byProduct.get(productName)) {
-        lines.push(`- [${page.title}](${SITE_BASE_URL}${page.permalink})`);
-      }
-      lines.push("");
-    }
-    sections.push(lines.join("\n").trimEnd());
-  }
-
-  return sections.join("\n\n");
-}
-
 // Parses an existing output body's "## Week of X" / "### Product" / "- [..]"
 // structure into weekSortKey -> { label, products: Map<productName, string[]> }
 // so a backfill can merge new entries into it without disturbing anything
@@ -496,7 +475,15 @@ function main() {
   }
 
   const existing = readExisting(outputPath);
-  const fromSha = args.sinceSha || existing.sha;
+  let fromSha = args.sinceSha || existing.sha;
+  let markerNeedsHealing = false;
+  if (fromSha && !isValidMarker(repoRoot, fromSha)) {
+    console.warn(
+      `Marker ${fromSha} is not an ancestor of HEAD (likely squashed away by a merge) — falling back to --seed-since="${args.seedSince}".`,
+    );
+    fromSha = null;
+    markerNeedsHealing = true;
+  }
 
   const addedFiles = getAddedFiles(repoRoot, fromSha, args.seedSince);
   const siteVars = loadSiteVars(repoRoot);
@@ -504,14 +491,21 @@ function main() {
 
   const headSha = run(["rev-parse", "HEAD"], repoRoot);
 
-  if (entries.length === 0) {
+  // Deduped by permalink against what's already recorded, not just assumed-new
+  // from the sha range — a stale marker falling back to a window (or any
+  // other overlap) must never produce duplicate entries.
+  const existingPermalinks = extractExistingPermalinks(existing.body);
+  const newEntries = entries.filter((entry) => !existingPermalinks.has(entry.permalink));
+
+  if (newEntries.length === 0 && !markerNeedsHealing) {
     console.log("No qualifying new pages found; nothing to do.");
     return;
   }
 
-  const newSection = renderSection(entries, repoRoot);
+  const weeks = parseWeekBlocks(existing.body);
+  mergeEntriesIntoWeeks(weeks, newEntries, repoRoot);
+  const body = `${serializeWeeks(weeks)}\n`;
   const marker = `<!-- last-processed-sha: ${headSha} -->`;
-  const body = existing.body ? `${newSection}\n\n${existing.body.trimEnd()}\n` : `${newSection}\n`;
   const output = `${existing.header}\n${marker}\n\n${body}`;
 
   if (args.dryRun) {
@@ -521,7 +515,11 @@ function main() {
 
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
   fs.writeFileSync(outputPath, output);
-  console.log(`Wrote ${entries.length} new page(s) to ${OUTPUT_RELATIVE_PATH}`);
+  if (newEntries.length > 0) {
+    console.log(`Wrote ${newEntries.length} new page(s) to ${OUTPUT_RELATIVE_PATH}`);
+  } else {
+    console.log(`Healed stale marker in ${OUTPUT_RELATIVE_PATH} (no new pages to add).`);
+  }
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
