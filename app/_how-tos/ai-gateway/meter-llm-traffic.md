@@ -1,0 +1,321 @@
+---
+title: Monetize {{site.ai_gateway}} traffic
+permalink: /ai-gateway/meter-llm-traffic/
+description: Learn how to meter LLM traffic from {{site.ai_gateway}} using {{site.konnect_short_name}} {{site.metering_and_billing}}.
+content_type: how_to
+
+products:
+  - ai-gateway
+
+works_on:
+  - konnect
+
+min_version:
+  ai-gateway: '2.0'
+
+entities:
+  - ai-consumer
+  - ai-auth-strategy
+  - ai-model-provider
+  - ai-model
+  - ai-policy
+
+tags:
+  - ai
+  - monetization
+  - billing
+  - metering
+
+tools:
+  - kongctl
+
+prereqs:
+  inline:
+    - title: OpenAI
+      include_content: md/ai-gateway/v2/prereqs/openai-kongctl
+      icon_url: /assets/icons/ai.svg
+    - title: "{{site.konnect_short_name}} system account token"
+      include_content: prereqs/metering-and-billing-spat
+      icon_url: /assets/icons/kogo-white.svg
+
+cleanup:
+  inline:
+    - title: Clean up {{site.ai_gateway}} resources
+      include_content: cleanup/products/ai-gateway
+
+tldr:
+  q: How can I meter {{site.ai_gateway}} traffic in {{site.konnect_short_name}}, and what does the {{site.metering_and_billing}} provide?
+  a: |
+    Attach the Metering & Billing Policy to an AI Model to emit usage events for LLM token consumption, then use {{site.metering_and_billing}} to turn those events into billable usage. This guide walks you through creating an AI Consumer, an AI Model Provider and AI Model, attaching the Metering & Billing Policy, creating a meter for LLM tokens, defining a feature, creating a Plan with Rate Cards, and starting a subscription for billing.
+
+related_resources:
+  - text: "{{site.ai_gateway}}"
+    url: /ai-gateway/
+  - text: Metering & Billing Policy
+    url: /ai-gateway/policies/metering-and-billing/
+  - text: AI Consumer entity
+    url: /ai-gateway/entities/ai-consumer/
+  - text: Product Catalog reference
+    url: /metering-and-billing/product-catalog/
+  - text: Metering reference
+    url: /metering-and-billing/metering/
+  - text: Customers and usage attribution
+    url: /metering-and-billing/customer/
+  - text: Billing and invoicing
+    url: /metering-and-billing/billing-invoicing/
+  - text: Get started with {{site.metering_and_billing}} generic meters
+    url: /how-to/get-started-with-metering-and-billing-generic-meters/
+
+faqs:
+  - q: I previously enabled metering using the **Enable Related API Gateways** button in the {{site.konnect_short_name}} UI. Do I need to do anything?
+    a: |
+      {% include faqs/metering-and-billing-legacy-ingestion.md %}
+
+automated_tests: false
+---
+
+<!-- TODO(writer): `prereqs/metering-and-billing-spat` exports `$DECK_AUTH_TOKEN` (a deck-format-specific name — see the `DECK_` auto-prefix note in the repo's entity_examples convention). This how-to's `entity_examples` block is in `kongctl` format, which doesn't auto-prefix variable names, so the Policy config below references `$DECK_AUTH_TOKEN` literally to match what the prereq actually exports today. Consider adding a kongctl-flavored variant of this prereq (parallel to how `md/ai-gateway/v2/prereqs/openai` has an `openai-kongctl` sibling) so the exported variable name reads naturally for a kongctl-only guide. -->
+
+This guide shows how to meter LLM traffic from {{site.ai_gateway}} and convert that usage into billable revenue with {{site.metering_and_billing}} in {{site.konnect_short_name}}.
+
+## Create an AI Consumer and API key credential
+
+Before you configure {{site.metering_and_billing}}, set up an [AI Consumer](/ai-gateway/entities/ai-consumer/), Kong Air. AI Consumers identify the client that's interacting with {{site.ai_gateway}}. Later in this guide, you'll map this AI Consumer to a customer in {{site.metering_and_billing}} and assign them to a Premium plan, so existing AI Consumers that are already consuming your APIs become billable.
+
+To authenticate the AI Consumer, create a `key-auth` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) that accepts an API key in the `apikey` header:
+
+{% entity_examples %}
+ai_gateway_auth_strategies:
+  - ref: kong-air-key-auth
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    display_name: "Kong Air key auth"
+    name: kong-air-key-auth
+    type: key-auth
+    config:
+      key_names: [apikey]
+      key_in_header: true
+      key_in_query: false
+      hide_credentials: true
+ai_gateway_consumers:
+  - ref: kong-air
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    display_name: "Kong Air"
+    name: kong-air
+    type: api-key
+    policies: []
+{% endentity_examples %}
+
+Create an API key credential for Kong Air:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/consumers/$CONSUMER_ID/credentials
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'Accept: application/json, application/problem+json'
+body:
+  display_name: Kong Air key
+  name: kong-air-key
+  type: api-key
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{:.info}
+> `$CONSUMER_ID` is the `id` of the `kong-air` AI Consumer created above. The response to this request includes the generated `api_key` value, which can't be retrieved later. Export it for use later in this guide:
+>
+> ```sh
+> export CONSUMER_API_KEY='<the api_key value from the response>'
+> ```
+
+## Create an AI Model Provider, AI Model, and Metering & Billing Policy
+
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) to connect to OpenAI, a Metering & Billing Policy to meter LLM token usage by AI Consumer, and an [AI Model](/ai-gateway/entities/ai-model/) that authenticates with the `kong-air-key-auth` AI Auth Strategy and has the Policy attached:
+
+{% entity_examples %}
+ai_gateway_model_providers:
+  - ref: generic-openai
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: generic-openai
+    display_name: "generic-openai"
+    type: openai
+    config:
+      auth:
+        type: basic
+        headers:
+          - name: Authorization
+            value: !secret {source: !env OPENAI_AUTH_HEADER}
+ai_gateway_policies:
+  - ref: meter-llm-tokens
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: meter-llm-tokens
+    display_name: "Meter LLM tokens"
+    type: metering-and-billing
+    global: false
+    config:
+      ingest_endpoint: https://us.api.konghq.com/v3/openmeter/events
+      api_token: !secret {source: !env DECK_AUTH_TOKEN}
+      meter_api_requests: false
+      meter_ai_token_usage: true
+      subject:
+        look_up_value_in: consumer
+ai_gateway_models:
+  - ref: kong-air-chat
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    display_name: "Kong Air chat"
+    name: kong-air-chat
+    type: model
+    enabled: true
+    formats:
+      - type: openai
+    capabilities:
+      - generate
+    access:
+      auth_strategies:
+        - !ref kong-air-key-auth#name
+    policies:
+      - !ref meter-llm-tokens#name
+    config:
+      route:
+        paths: [/v1]
+        model:
+          body_param: model
+          values: [kong-air-chat]
+    targets:
+      - name: gpt-4o
+        provider: generic-openai
+        config:
+          type: openai
+{% endentity_examples %}
+
+The Metering & Billing Policy's `subject.look_up_value_in: consumer` resolves the billable customer from the authenticated AI Consumer on each request, and `meter_ai_token_usage: true` emits an event per request with input and output token counts.
+
+## Create a meter
+
+In {{site.metering_and_billing}}, meters track and record the consumption of a resource or service over time.
+In this case, you want to track the number of AI tokens consumed:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/meters
+status_code: 201
+method: POST
+body:
+    name: LLM Tokens
+    key: llm_tokens_total
+    description: Number of input and output tokens across models
+    event_type: kong.llm_request
+    aggregation: sum
+    value_property: $.tokens
+    dimensions:
+        model: $.model
+        provider: $.provider
+        type: $.type
+{% endkonnect_api_request %}
+<!--vale on-->
+
+## Create a feature
+
+Meters collect raw usage data, but features make that data billable. Without a feature, usage is tracked but not invoiced. Now that you're metering LLM token usage, label that as something you want to price or govern.
+
+In this guide, you'll create a feature for the `kong-air-chat` AI Model you created earlier.
+
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
+1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
+1. Click **Create Feature**.
+1. In the **Name** field, enter `ai-token`.
+1. From the **Meter** dropdown menu, select "LLM Tokens".
+1. Click **Add group by filter**.
+   The group by filter ensures you only bill for LLM tokens from a specific provider.
+1. From the **Group by** dropdown menu, select "Provider".
+1. From the **Operator** dropdown menu, select "Equals".
+1. In the **Value** dropdown menu, enter `openai`.
+1. Click **Add group by filter**.
+1. From the **Group by** dropdown menu, select "type".
+1. From the **Operator** dropdown menu, select "Equals".
+1. In the **Value** dropdown menu, enter `request`.
+1. Click **Save**.
+
+## Create a Plan and Rate Card
+
+Plans are the core building blocks of your product catalog. They are a collection of rate cards that define the price and access of a feature.
+
+A rate card describes price and usage limits or access control for a feature or item. Rate cards are made up of the associated feature, price, and optional usage limits or access control for the feature, called entitlements.
+
+In this section, you'll create a Premium plan that charges customers based on the AI token usage at a rate of $0.00002 per use.
+
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
+1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
+1. Click the **Plans** tab.
+1. Click **Create Plan**.
+1. In the **Name** field, enter `Token`.
+1. In the **Billing cadence** dropdown menu, select "1 month".
+1. Click **Save**.
+1. Click **Add Rate Card**.
+1. From the **Feature** dropdown menu, select "ai-token".
+1. Click **Next Step**.
+1. From the **Pricing model** dropdown menu, select "Usage Based".
+1. In the **Price per unit** field, enter `1`.
+
+   {:.info}
+   > We're using $1 here to make it easy to see the cost changes in the customer invoice. Be sure to change this price in a production instance to match your own pricing model.
+1. Click **Next Step**.
+1. Select **Boolean**.
+1. Click **Save Rate Card**.
+1. Click **Publish Plan**.
+1. Click **Publish**.
+
+## Start a subscription
+
+Customers are the entities who pay for the consumption. In many cases, it's equal to your AI Consumer. Here you are going to create a customer and map your AI Consumer to it.
+
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
+1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
+1. Click **Create Customer**.
+1. In the **Name** field, enter `Kong Air`.
+1. In the **Key** field, enter `kong-air`.
+1. In the **Include usage from** dropdown, select "kong-air".
+1. Click **Save**.
+1. Click the **Subscriptions** tab.
+1. Click **Create a Subscription**.
+1. From the **Subscribed Plan** dropdown, select "Token".
+1. Click **Next Step**.
+1. Click **Start Subscription**.
+
+## Validate
+
+You can run the following command to test that the Kong Air AI Consumer is invoiced correctly:
+
+<!--vale off-->
+{% validation request-check %}
+url: /v1/chat/completions
+status_code: 200
+method: POST
+headers:
+    - 'Accept: application/json'
+    - 'Content-Type: application/json'
+    - 'apikey: $CONSUMER_API_KEY'
+body:
+    model: kong-air-chat
+    messages:
+        - role: "system"
+          content: "You are a mathematician"
+        - role: "user"
+          content: "What is 1+1?"
+{% endvalidation %}
+<!--vale on-->
+
+This will generate AI LLM token usage that will be captured by {{site.metering_and_billing}}.
+
+{:.info}
+> **Entitlement enforcement:** {{site.ai_gateway}} does not automatically block traffic when a customer's entitlement is exhausted. To enforce limits, set up a webhook notification rule and cut off access in your own infrastructure, or attach an [AI Rate Limiting Advanced Policy](/ai-gateway/policies/ai-rate-limiting-advanced/) to the AI Model. See [Enforcing entitlements](/metering-and-billing/entitlements/#entitlement-enforcement) for details.
+
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
+1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
+1. Click the **Invoices** tab.
+1. Click **Kong Air**.
+1. Click the **Invoicing** tab.
+1. Click **Preview Invoice**.
+
+You'll see in Lines that `ai-token` is listed and was used once. In this guide, you're using the sandbox for invoices. To deploy your subscription in production, configure a payments integration in **{{site.metering_and_billing}}** > **Settings**.
