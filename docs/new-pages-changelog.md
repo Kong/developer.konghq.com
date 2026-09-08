@@ -8,7 +8,6 @@ Internal, auto-generated changelog of newly published content pages on developer
 
 ### AI Gateway
 
-- [Manage AI Gateway with kongctl](https://developer.konghq.com/kongctl/manage-ai-gateway/)
 - [AI Gateway version support policy](https://developer.konghq.com/ai-gateway/version-support-policy/)
 - [Access Control Enforcement Policy](https://developer.konghq.com/ai-gateway/policies/ace/)
 - [ACL Policy](https://developer.konghq.com/ai-gateway/policies/acl/)
