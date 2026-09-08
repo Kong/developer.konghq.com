@@ -7,11 +7,16 @@ import YAML from "yaml";
 
 const SITE_BASE_URL = "https://developer.konghq.com";
 const DEFAULT_SEED_SINCE = "7 days ago";
+// A backfill sweeps full history by default, but this digest only needs to
+// start from 2026 — older content isn't worth surfacing retroactively.
+const BACKFILL_DEFAULT_SEED_SINCE = "2026-01-01";
 const OUTPUT_RELATIVE_PATH = "docs/new-pages-changelog.md";
 
-// Only these content types are surfaced. Auto-generated collections
-// (_references, _changelogs, _api, kongctl/deck help) either fall outside
-// the .md/_landing_pages glob below or never carry one of these values.
+// Only these content types are surfaced. `support` is deliberately excluded
+// per user feedback. Auto-generated collections (_references, _changelogs,
+// _api, kongctl/deck help) either fall outside the .md/_landing_pages glob
+// below or never carry a content_type in their own frontmatter (it's
+// injected by Jekyll's `defaults:` at build time, not authored in the file).
 const CURATED_CONTENT_TYPES = new Set([
   "how_to",
   "landing_page",
@@ -19,13 +24,19 @@ const CURATED_CONTENT_TYPES = new Set([
   "plugin",
   "policy",
   "cookbook",
+  "reference",
 ]);
 
 const EXCLUDED_PATH_PREFIXES = [
   "app/_layouts/",
   "app/_includes/",
   "app/_api/",
+  // Auto-generated (CLI/PDK/OAS reference pages) — no content_type in their
+  // own frontmatter anyway, but kept explicit for clarity.
   "app/_references/",
+  // Deliberately excluded per user feedback: some support pages (e.g. FAQs)
+  // carry content_type: reference, but support content stays out of scope.
+  "app/_support/",
   "app/_changelogs/",
   "app/assets/",
   "app/.repos/",
@@ -45,11 +56,25 @@ function getRepoRoot() {
 }
 
 function parseArgs(argv) {
-  const args = { dryRun: false, sinceSha: null, seedSince: DEFAULT_SEED_SINCE };
+  const args = { dryRun: false, sinceSha: null, seedSince: DEFAULT_SEED_SINCE, backfillTypes: null, pruneBefore: null };
   for (const arg of argv) {
     if (arg === "--dry-run") args.dryRun = true;
     else if (arg.startsWith("--since-sha=")) args.sinceSha = arg.slice("--since-sha=".length);
     else if (arg.startsWith("--seed-since=")) args.seedSince = arg.slice("--seed-since=".length);
+    else if (arg.startsWith("--backfill=")) {
+      args.backfillTypes = arg
+        .slice("--backfill=".length)
+        .split(",")
+        .map((type) => type.trim())
+        .filter(Boolean);
+      // Defaults to BACKFILL_DEFAULT_SEED_SINCE unless --seed-since/--since-sha
+      // was also given — a content type just became curated, so its history
+      // predates the marker or a "N days ago" window, but this digest still
+      // doesn't need to reach back further than that floor.
+      if (args.seedSince === DEFAULT_SEED_SINCE) args.seedSince = BACKFILL_DEFAULT_SEED_SINCE;
+    } else if (arg.startsWith("--prune-before=")) {
+      args.pruneBefore = arg.slice("--prune-before=".length);
+    }
   }
   return args;
 }
@@ -93,9 +118,10 @@ function getAddedFiles(repoRoot, fromSha, seedSince) {
   const gitArgs = ["log", "--no-merges", "--diff-filter=A", "--name-only", `--pretty=format:${format}`, "--date=short"];
   if (fromSha) {
     gitArgs.splice(1, 0, `${fromSha}..HEAD`);
-  } else {
+  } else if (seedSince) {
     gitArgs.splice(1, 0, `--since=${seedSince}`);
   }
+  // else: neither a from-sha nor a seed window — full unbounded history.
   gitArgs.push("--", "app");
 
   const output = run(gitArgs, repoRoot);
@@ -115,8 +141,14 @@ function getAddedFiles(repoRoot, fromSha, seedSince) {
   return entries;
 }
 
+// Content fragments merged into a parent page, not standalone pages of
+// their own — no title, no permalink. Mirrors the ignore glob already used
+// in tools/frontmatter-validator/index.js.
+const EXCLUDED_PATH_PATTERNS = [/^app\/_kong_plugins\/[^/]+\/reference\.md$/];
+
 function isExcluded(file) {
-  return EXCLUDED_PATH_PREFIXES.some((prefix) => file.startsWith(prefix));
+  if (EXCLUDED_PATH_PREFIXES.some((prefix) => file.startsWith(prefix))) return true;
+  return EXCLUDED_PATH_PATTERNS.some((pattern) => pattern.test(file));
 }
 
 function isCuratedPath(file) {
@@ -249,7 +281,8 @@ function buildEntries(repoRoot, addedFiles, siteVars) {
 
     if (!data.content_type || !CURATED_CONTENT_TYPES.has(data.content_type)) continue;
 
-    const permalink = data.permalink || derivePermalink(file);
+    // Cookbooks use a `url` frontmatter key instead of `permalink`.
+    const permalink = data.permalink || data.url || derivePermalink(file);
     if (!permalink) {
       console.warn(`Skipping ${file}: could not resolve a permalink`);
       continue;
@@ -262,7 +295,15 @@ function buildEntries(repoRoot, addedFiles, siteVars) {
     const products = Array.isArray(data.products) && data.products.length ? data.products : ["other"];
     const { label, sortKey } = weekLabel(date);
 
-    entries.push({ file, title, permalink, products, weekLabel: label, weekSortKey: sortKey });
+    entries.push({
+      file,
+      title,
+      permalink,
+      products,
+      weekLabel: label,
+      weekSortKey: sortKey,
+      contentType: data.content_type,
+    });
   }
 
   return entries;
@@ -304,10 +345,155 @@ function renderSection(entries, repoRoot) {
   return sections.join("\n\n");
 }
 
+// Parses an existing output body's "## Week of X" / "### Product" / "- [..]"
+// structure into weekSortKey -> { label, products: Map<productName, string[]> }
+// so a backfill can merge new entries into it without disturbing anything
+// already there.
+function parseWeekBlocks(body) {
+  const weeks = new Map();
+  let currentWeek = null;
+  let currentProduct = null;
+
+  for (const line of body.split("\n")) {
+    const weekMatch = line.match(/^## Week of (\d{4}-\d{2}-\d{2})$/);
+    if (weekMatch) {
+      const sortKey = weekMatch[1];
+      if (!weeks.has(sortKey)) weeks.set(sortKey, { label: line.slice(3), products: new Map() });
+      currentWeek = weeks.get(sortKey);
+      currentProduct = null;
+      continue;
+    }
+    const productMatch = line.match(/^### (.+)$/);
+    if (productMatch && currentWeek) {
+      if (!currentWeek.products.has(productMatch[1])) currentWeek.products.set(productMatch[1], []);
+      currentProduct = currentWeek.products.get(productMatch[1]);
+      continue;
+    }
+    if (line.startsWith("- [") && currentProduct) {
+      currentProduct.push(line);
+    }
+    // Any other line (blank lines, stray text outside a recognized block) is
+    // dropped — the body is fully regenerated from the parsed structure.
+  }
+
+  return weeks;
+}
+
+function extractExistingPermalinks(body) {
+  const permalinks = new Set();
+  // Literal (not built from SITE_BASE_URL) so the dots are unambiguously
+  // escaped in the source rather than via runtime string escaping.
+  const regex = /\]\(https:\/\/developer\.konghq\.com([^)]*)\)/g;
+  let match;
+  while ((match = regex.exec(body))) permalinks.add(match[1]);
+  return permalinks;
+}
+
+function mergeEntriesIntoWeeks(weeks, entries, repoRoot) {
+  for (const entry of entries) {
+    if (!weeks.has(entry.weekSortKey)) weeks.set(entry.weekSortKey, { label: entry.weekLabel, products: new Map() });
+    const week = weeks.get(entry.weekSortKey);
+
+    const productSlug = entry.products[0];
+    const productName = productSlug === "other" ? "Other" : productDisplayName(repoRoot, productSlug);
+    if (!week.products.has(productName)) week.products.set(productName, []);
+    week.products.get(productName).push(`- [${entry.title}](${SITE_BASE_URL}${entry.permalink})`);
+  }
+}
+
+function serializeWeeks(weeks) {
+  const weekKeys = [...weeks.keys()].sort().reverse();
+  const sections = [];
+
+  for (const weekKey of weekKeys) {
+    const { label, products } = weeks.get(weekKey);
+    const productNames = [...products.keys()].sort();
+    const lines = [`## ${label}`, ""];
+    for (const productName of productNames) {
+      lines.push(`### ${productName}`, "", ...products.get(productName), "");
+    }
+    sections.push(lines.join("\n").trimEnd());
+  }
+
+  return sections.join("\n\n");
+}
+
+function runBackfill(args, repoRoot, outputPath) {
+  const existing = readExisting(outputPath);
+  const addedFiles = getAddedFiles(repoRoot, args.sinceSha, args.seedSince);
+  const siteVars = loadSiteVars(repoRoot);
+  const entries = buildEntries(repoRoot, addedFiles, siteVars).filter((entry) =>
+    args.backfillTypes.includes(entry.contentType),
+  );
+
+  const existingPermalinks = extractExistingPermalinks(existing.body);
+  const newEntries = entries.filter((entry) => !existingPermalinks.has(entry.permalink));
+
+  if (newEntries.length === 0) {
+    console.log(`No new pages to backfill for content type(s): ${args.backfillTypes.join(", ")}`);
+    return;
+  }
+
+  const weeks = parseWeekBlocks(existing.body);
+  mergeEntriesIntoWeeks(weeks, newEntries, repoRoot);
+  const newBody = `${serializeWeeks(weeks)}\n`;
+
+  // Marker is left untouched — a backfill fills gaps behind it, it doesn't
+  // move the incremental cursor forward.
+  const marker = `<!-- last-processed-sha: ${existing.sha ?? ""} -->`;
+  const output = `${existing.header}\n${marker}\n\n${newBody}`;
+
+  if (args.dryRun) {
+    console.log(output);
+    return;
+  }
+
+  fs.writeFileSync(outputPath, output);
+  console.log(`Backfilled ${newEntries.length} page(s) into ${OUTPUT_RELATIVE_PATH}`);
+}
+
+function runPrune(args, outputPath) {
+  const existing = readExisting(outputPath);
+  const weeks = parseWeekBlocks(existing.body);
+
+  const before = weeks.size;
+  for (const sortKey of weeks.keys()) {
+    if (sortKey < args.pruneBefore) weeks.delete(sortKey);
+  }
+  const removed = before - weeks.size;
+
+  if (removed === 0) {
+    console.log(`No weeks before ${args.pruneBefore} found; nothing to prune.`);
+    return;
+  }
+
+  const newBody = `${serializeWeeks(weeks)}\n`;
+  const marker = `<!-- last-processed-sha: ${existing.sha ?? ""} -->`;
+  const output = `${existing.header}\n${marker}\n\n${newBody}`;
+
+  if (args.dryRun) {
+    console.log(output);
+    return;
+  }
+
+  fs.writeFileSync(outputPath, output);
+  console.log(`Pruned ${removed} week(s) before ${args.pruneBefore} from ${OUTPUT_RELATIVE_PATH}`);
+}
+
 function main() {
   const args = parseArgs(process.argv.slice(2));
   const repoRoot = getRepoRoot();
   const outputPath = path.join(repoRoot, OUTPUT_RELATIVE_PATH);
+
+  if (args.pruneBefore) {
+    runPrune(args, outputPath);
+    return;
+  }
+
+  if (args.backfillTypes) {
+    runBackfill(args, repoRoot, outputPath);
+    return;
+  }
 
   const existing = readExisting(outputPath);
   const fromSha = args.sinceSha || existing.sha;

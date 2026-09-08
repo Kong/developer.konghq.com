@@ -140,10 +140,43 @@ Internal, auto-generated changelog of newly published content pages on developer
 - [AI Gateway providers](https://developer.konghq.com/ai-gateway/v1/ai-providers/)
 - [MCP Traffic Gateway](https://developer.konghq.com/ai-gateway/v1/mcp/)
 - [AI Gateway software bill of materials](https://developer.konghq.com/ai-gateway/sbom/)
+- [AI CA Certificates](https://developer.konghq.com/ai-gateway/entities/ai-ca-certificate/)
+- [AI Certificates](https://developer.konghq.com/ai-gateway/entities/ai-certificate/)
+- [AI SNIs](https://developer.konghq.com/ai-gateway/entities/ai-sni/)
+- [AI Agents](https://developer.konghq.com/ai-gateway/entities/ai-agent/)
+- [AI Auth Strategies](https://developer.konghq.com/ai-gateway/entities/ai-auth-strategy/)
+- [AI Consumer Groups](https://developer.konghq.com/ai-gateway/entities/ai-consumer-group/)
+- [AI Consumers](https://developer.konghq.com/ai-gateway/entities/ai-consumer/)
+- [AI Data Plane Certificates](https://developer.konghq.com/ai-gateway/entities/ai-data-plane-certificate/)
+- [AI MCP Servers](https://developer.konghq.com/ai-gateway/entities/ai-mcp-server/)
+- [AI Models](https://developer.konghq.com/ai-gateway/entities/ai-model/)
+- [AI Policies](https://developer.konghq.com/ai-gateway/entities/ai-policy/)
+- [AI Model Providers](https://developer.konghq.com/ai-gateway/entities/ai-model-provider/)
+- [AI Vaults](https://developer.konghq.com/ai-gateway/entities/ai-vault/)
+- [AI Gateway 2.x concepts](https://developer.konghq.com/ai-gateway/ai-gateway-v2-concepts/)
+- [AI Gateway logs](https://developer.konghq.com/ai-gateway/ai-logs/)
+- [Kimi provider](https://developer.konghq.com/ai-gateway/ai-providers/kimi/)
+- [Amazon SageMaker provider](https://developer.konghq.com/ai-gateway/ai-providers/sagemaker/)
+- [Vercel provider](https://developer.konghq.com/ai-gateway/ai-providers/vercel/)
+- [AI Gateway architecture](https://developer.konghq.com/ai-gateway/architecture/)
+- [Kong AI Gateway changelog](https://developer.konghq.com/ai-gateway/changelog/)
+- [Kong AI Gateway configuration reference](https://developer.konghq.com/ai-gateway/configuration/)
+- [Configure Kong AI Gateway on-prem](https://developer.konghq.com/ai-gateway/configure-on-prem/)
+- [Forward proxy support](https://developer.konghq.com/ai-gateway/forward-proxy/)
+- [Using kongctl to manage AI Gateway](https://developer.konghq.com/ai-gateway/kongctl/)
+- [Model cost management in Kong AI Gateway](https://developer.konghq.com/ai-gateway/model-cost-management/)
+- [AI Gateway audit log reference](https://developer.konghq.com/ai-gateway/v1/ai-audit-log-reference/)
+- [Gen AI OpenTelemetry metrics reference](https://developer.konghq.com/ai-gateway/v1/ai-otel-metrics/)
+- [Gen AI OpenTelemetry spans attributes reference](https://developer.konghq.com/ai-gateway/v1/llm-open-telemetry/)
+- [Monitor AI LLM metrics](https://developer.konghq.com/ai-gateway/v1/monitor-ai-llm-metrics/)
+- [Migrate to AI Gateway 2.x](https://developer.konghq.com/ai-gateway/v2-migration-guide/)
 
 ### Catalog
 
 - [Konnect Catalog Classic](https://developer.konghq.com/catalog-classic/)
+- [Agents in Catalog](https://developer.konghq.com/catalog/agents/)
+- [AI Models in Catalog](https://developer.konghq.com/catalog/ai-models/)
+- [MCP servers in Catalog](https://developer.konghq.com/catalog/mcp-servers/)
 
 ### Dev Portal
 
@@ -165,6 +198,26 @@ Internal, auto-generated changelog of newly published content pages on developer
 - [Route Claude CLI traffic through AI Gateway and Vertex AI](https://developer.konghq.com/ai-gateway/v1/how-to/use-claude-code-with-ai-gateway-vertex/)
 - [Route OpenAI Codex CLI traffic through AI Gateway](https://developer.konghq.com/ai-gateway/v1/how-to/use-codex-with-ai-gateway/)
 - [Route Google Gemini CLI traffic through AI Gateway](https://developer.konghq.com/ai-gateway/v1/how-to/use-gemini-cli-with-ai-gateway/)
+- [Anthropic provider](https://developer.konghq.com/ai-gateway/v1/ai-providers/anthropic/)
+- [Azure OpenAI provider](https://developer.konghq.com/ai-gateway/v1/ai-providers/azure/)
+- [Amazon Bedrock provider](https://developer.konghq.com/ai-gateway/v1/ai-providers/bedrock/)
+- [Cerebras provider](https://developer.konghq.com/ai-gateway/v1/ai-providers/cerebras/)
+- [Cohere provider](https://developer.konghq.com/ai-gateway/v1/ai-providers/cohere/)
+- [DashScope provider](https://developer.konghq.com/ai-gateway/v1/ai-providers/dashscope/)
+- [Databricks provider](https://developer.konghq.com/ai-gateway/v1/ai-providers/databricks/)
+- [DeepSeek provider](https://developer.konghq.com/ai-gateway/v1/ai-providers/deepseek/)
+- [Gemini provider](https://developer.konghq.com/ai-gateway/v1/ai-providers/gemini/)
+- [Hugging Face provider](https://developer.konghq.com/ai-gateway/v1/ai-providers/huggingface/)
+- [Llama provider](https://developer.konghq.com/ai-gateway/v1/ai-providers/llama/)
+- [Mistral provider](https://developer.konghq.com/ai-gateway/v1/ai-providers/mistral/)
+- [Ollama provider](https://developer.konghq.com/ai-gateway/v1/ai-providers/ollama/)
+- [OpenAI provider](https://developer.konghq.com/ai-gateway/v1/ai-providers/openai/)
+- [vLLM provider](https://developer.konghq.com/ai-gateway/v1/ai-providers/vllm/)
+- [xAI provider](https://developer.konghq.com/ai-gateway/v1/ai-providers/xai/)
+- [Load balancing with AI Proxy Advanced](https://developer.konghq.com/ai-gateway/v1/load-balancing/)
+- [AI Gateway resource sizing guidelines](https://developer.konghq.com/ai-gateway/v1/resource-sizing-guidelines-ai/)
+- [Embedding-based similarity matching in Kong AI gateway plugins](https://developer.konghq.com/ai-gateway/v1/semantic-similarity/)
+- [Streaming with AI Gateway](https://developer.konghq.com/ai-gateway/v1/streaming/)
 
 ### Kong Identity
 
@@ -182,3 +235,512 @@ Internal, auto-generated changelog of newly published content pages on developer
 - [Apply AI Policies with Kong Operator](https://developer.konghq.com/operator/get-started/ai-gateway/policy/)
 - [Add AI Consumers with Kong Operator](https://developer.konghq.com/operator/get-started/ai-gateway/consumers/)
 - [Store TLS certificate private keys in a Konnect Config Store](https://developer.konghq.com/operator/konnect/how-to/config-store-certificate-keys/)
+- [Kong AI Gateway with Kong Operator](https://developer.konghq.com/operator/konnect/ai-gateway/)
+- [Config Store-backed Vaults](https://developer.konghq.com/operator/konnect/config-store/)
+
+## Week of 2026-08-03
+
+### Kong Operator
+
+- [Multi-tenancy](https://developer.konghq.com/operator/reference/multi-tenancy/)
+
+### Other
+
+- [Migrate from Kong Gateway DB-less format to decK state file format](https://developer.konghq.com/deck/dbless-vs-deck/)
+
+## Week of 2026-07-27
+
+### Kong Gateway
+
+- [AWS Secrets Manager vault](https://developer.konghq.com/gateway/entities/vault/aws/)
+- [Azure Key Vault (Certificates)](https://developer.konghq.com/gateway/entities/vault/azure-certs/)
+- [Azure Key Vault](https://developer.konghq.com/gateway/entities/vault/azure/)
+- [CyberArk Secrets Manager vault](https://developer.konghq.com/gateway/entities/vault/cyberark/)
+- [Environment variable vault](https://developer.konghq.com/gateway/entities/vault/environment-variable/)
+- [File system vault](https://developer.konghq.com/gateway/entities/vault/file-system/)
+- [Google Cloud Secret Manager vault](https://developer.konghq.com/gateway/entities/vault/google/)
+- [HashiCorp Vault](https://developer.konghq.com/gateway/entities/vault/hashicorp/)
+- [Konnect Config Store vault](https://developer.konghq.com/gateway/entities/vault/konnect-config-store/)
+
+### Other
+
+- [deck ai dump](https://developer.konghq.com/deck/ai/dump/)
+- [Interacting with AI Gateway entities](https://developer.konghq.com/deck/ai/index/)
+- [deck ai sync](https://developer.konghq.com/deck/ai/sync/)
+- [deck file ai2kong](https://developer.konghq.com/deck/file/ai2kong/)
+
+## Week of 2026-07-20
+
+### Kong Operator
+
+- [Kong Operator architecture](https://developer.konghq.com/operator/reference/architecture/)
+
+## Week of 2026-07-13
+
+### Dev Portal
+
+- [Developer self-service and application registration](https://developer.konghq.com/dev-portal/self-service/)
+
+### Other
+
+- [kongctl adopt ai-gateway](https://developer.konghq.com/kongctl/adopt/ai-gateway/)
+- [kongctl get ai-gateway](https://developer.konghq.com/kongctl/get/ai-gateway/)
+- [kongctl list ai-gateway](https://developer.konghq.com/kongctl/list/ai-gateway/)
+
+## Week of 2026-07-06
+
+### Kong Identity
+
+- [Principals and directories](https://developer.konghq.com/identity/principals/)
+
+### Metering & Billing
+
+- [Feature filters](https://developer.konghq.com/metering-and-billing/credits/feature-filters/)
+
+## Week of 2026-06-29
+
+### Kong Gateway
+
+- [Streaming custom plugins](https://developer.konghq.com/custom-plugins/streaming-plugins/)
+- [Conditional expressions for plugins in Kong Gateway 3.14](https://developer.konghq.com/gateway/plugins/expressions-314/)
+
+### Metering & Billing
+
+- [Tax codes](https://developer.konghq.com/metering-and-billing/tax-codes/)
+- [Credit balance model](https://developer.konghq.com/metering-and-billing/credits/balance-model/)
+- [Credit consumption and expiration](https://developer.konghq.com/metering-and-billing/credits/consumption-and-expiration/)
+- [Correctness guarantees](https://developer.konghq.com/metering-and-billing/credits/correctness-guarantee/)
+- [Credit grants](https://developer.konghq.com/metering-and-billing/credits/grants/)
+- [Prepaid credits](https://developer.konghq.com/metering-and-billing/credits/index/)
+- [Prepaid credit operational flows](https://developer.konghq.com/metering-and-billing/credits/operational-flows/)
+- [Credit transaction history](https://developer.konghq.com/metering-and-billing/credits/transaction-history/)
+
+### Observability
+
+- [Using Debugger for Datakit](https://developer.konghq.com/observability/datakit-debugger/)
+
+### Other
+
+- [kongctl roar](https://developer.konghq.com/kongctl/roar/index/)
+
+## Week of 2026-06-15
+
+### Insomnia
+
+- [Konnect Gateway Service integration in {{ site.data.products.insomnia.name }}](https://developer.konghq.com/insomnia/konnect-integration/)
+
+### Other
+
+- [deck file format](https://developer.konghq.com/deck/file/format/)
+
+## Week of 2026-06-08
+
+### Kong Gateway
+
+- [Multi-IdP token validation with OpenID Connect](https://developer.konghq.com/plugins/openid-connect/multi-idp/)
+
+### Kong Operator
+
+- [Service annotations](https://developer.konghq.com/operator/dataplanes/reference/service-annotations/)
+
+### Other
+
+- [kongctl adopt konnect](https://developer.konghq.com/kongctl/adopt/konnect/)
+- [kongctl create konnect](https://developer.konghq.com/kongctl/create/konnect/)
+- [kongctl delete konnect](https://developer.konghq.com/kongctl/delete/konnect/)
+- [kongctl get api](https://developer.konghq.com/kongctl/get/api/)
+- [kongctl get audit-logs](https://developer.konghq.com/kongctl/get/audit-logs/)
+- [kongctl get gateway](https://developer.konghq.com/kongctl/get/gateway/)
+- [kongctl get konnect](https://developer.konghq.com/kongctl/get/konnect/)
+- [kongctl get organization](https://developer.konghq.com/kongctl/get/organization/)
+- [kongctl get portal](https://developer.konghq.com/kongctl/get/portal/)
+- [kongctl list api](https://developer.konghq.com/kongctl/list/api/)
+- [kongctl list konnect](https://developer.konghq.com/kongctl/list/konnect/)
+- [kongctl list organization](https://developer.konghq.com/kongctl/list/organization/)
+- [kongctl list portal](https://developer.konghq.com/kongctl/list/portal/)
+
+## Week of 2026-06-01
+
+### Insomnia
+
+- [Insomnia release and versioning policy](https://developer.konghq.com/insomnia/release-policy/)
+
+### Kong Operator
+
+- [Kong Event Gateway with Kong Operator](https://developer.konghq.com/operator/konnect/event-gateway/)
+
+## Week of 2026-05-25
+
+### Other
+
+- [kongctl create](https://developer.konghq.com/kongctl/create/index/)
+- [kongctl create pat](https://developer.konghq.com/kongctl/create/pat/)
+- [kongctl create spat](https://developer.konghq.com/kongctl/create/spat/)
+- [kongctl delete pat](https://developer.konghq.com/kongctl/delete/pat/)
+- [kongctl delete spat](https://developer.konghq.com/kongctl/delete/spat/)
+- [kongctl get pat](https://developer.konghq.com/kongctl/get/pat/)
+- [kongctl get spat](https://developer.konghq.com/kongctl/get/spat/)
+
+## Week of 2026-05-18
+
+### Kong Mesh
+
+- [MeshOpenTelemetryBackend](https://developer.konghq.com/mesh/meshopentelemetrybackend/)
+- [DNS](https://developer.konghq.com/mesh/dns/)
+
+### Other
+
+- [kongctl list profile](https://developer.konghq.com/kongctl/list/profile/)
+- [Manage Konnect audit logs with kongctl](https://developer.konghq.com/kongctl/audit-logs/)
+- [Use kongctl with AI agent skills](https://developer.konghq.com/kongctl/skills/)
+- [kongctl declarative resource reference](https://developer.konghq.com/kongctl/supported-resources/)
+
+## Week of 2026-05-11
+
+### Insomnia
+
+- [Faker Variables](https://developer.konghq.com/insomnia/faker-variables/)
+- [Git Sync projects migration for {{site.data.products.insomnia.name}} 12.6](https://developer.konghq.com/insomnia/upgrade/git-sync-12.6/)
+
+### Kong Mesh
+
+- [Concepts](https://developer.konghq.com/mesh/concepts/)
+- [Observability](https://developer.konghq.com/mesh/observability/)
+- [Ingress traffic with Kong Mesh](https://developer.konghq.com/mesh/ingress/)
+- [Configuring systemd for Kong Mesh](https://developer.konghq.com/mesh/systemd/)
+- [Single-zone deployment](https://developer.konghq.com/mesh/single-zone/)
+- [Multi-zone deployment](https://developer.konghq.com/mesh/mesh-multizone-service-deployment/)
+
+## Week of 2026-05-04
+
+### Kong Mesh
+
+- [Workload](https://developer.konghq.com/mesh/workload/)
+- [Mesh resource](https://developer.konghq.com/mesh/mesh/)
+- [Dataplane](https://developer.konghq.com/mesh/dataplane/)
+- [Performance fine-tuning](https://developer.konghq.com/mesh/performance-tuning/)
+
+### Kong Operator
+
+- [HTTP proxy configuration](https://developer.konghq.com/operator/reference/http-proxy/)
+
+### Other
+
+- [kongctl install extension](https://developer.konghq.com/kongctl/install/extension/)
+- [kongctl link extension](https://developer.konghq.com/kongctl/link/extension/)
+- [kongctl link](https://developer.konghq.com/kongctl/link/index/)
+- [kongctl uninstall extension](https://developer.konghq.com/kongctl/uninstall/extension/)
+- [kongctl uninstall](https://developer.konghq.com/kongctl/uninstall/index/)
+- [kongctl upgrade extension](https://developer.konghq.com/kongctl/upgrade/extension/)
+- [kongctl upgrade](https://developer.konghq.com/kongctl/upgrade/index/)
+
+## Week of 2026-04-27
+
+### Kong Gateway
+
+- [Managed cache for Redis](https://developer.konghq.com/dedicated-cloud-gateways/managed-cache/)
+- [Style guide](https://developer.konghq.com/contributing/style-guide/)
+- [Kong Gateway 3.10 to 3.14 LTS upgrade](https://developer.konghq.com/gateway/upgrade/lts-upgrade-310-314/)
+- [Migrating a V0 Serverless Gateway to V1](https://developer.konghq.com/serverless-gateways/migration/)
+
+### Kong Mesh
+
+- [Configuring built-in routes with MeshHTTPRoute and MeshTCPRoute](https://developer.konghq.com/mesh/gateway-routes/)
+- [Delegated gateways](https://developer.konghq.com/mesh/delegated-gateways/)
+- [Configuring built-in listeners with MeshGateway](https://developer.konghq.com/mesh/meshgateway/)
+- [Configuring your mesh and multi-tenancy](https://developer.konghq.com/mesh/mesh-multi-tenancy/)
+- [Running built-in gateway pods on Kubernetes with MeshGatewayInstance](https://developer.konghq.com/mesh/meshgatewayinstance/)
+- [Authentication with the data plane proxy](https://developer.konghq.com/mesh/data-plane-proxy-authentication/)
+- [Configure the Kong Mesh CNI](https://developer.konghq.com/mesh/cni/)
+- [Secure access across services](https://developer.konghq.com/mesh/secure-access/)
+- [Configuring Mutual TLS](https://developer.konghq.com/mesh/policies/mutual-tls/)
+- [Policies](https://developer.konghq.com/mesh/policies-introduction/)
+
+## Week of 2026-04-20
+
+### Kong Gateway
+
+- [Multi-cloud Dedicated Cloud Gateway network architecture](https://developer.konghq.com/dedicated-cloud-gateways/multi-cloud/)
+- [Dedicated Cloud Gateways network architecture](https://developer.konghq.com/dedicated-cloud-gateways/network-architecture/)
+- [Dedicated Cloud Gateways private network architecture and security](https://developer.konghq.com/dedicated-cloud-gateways/private-network/)
+- [Dedicated Cloud Gateways public network architecture and security](https://developer.konghq.com/dedicated-cloud-gateways/public-network/)
+
+### Metering & Billing
+
+- [Collect payments with a custom invoicing integration](https://developer.konghq.com/metering-and-billing/custom-invoicing/)
+- [Notifications](https://developer.konghq.com/metering-and-billing/notifications/)
+- [Subscriptions](https://developer.konghq.com/metering-and-billing/subscriptions/)
+- [Pricing models](https://developer.konghq.com/metering-and-billing/pricing-models/)
+- [Add-ons](https://developer.konghq.com/metering-and-billing/add-ons/)
+
+### Other
+
+- [kongctl adopt dcr-provider](https://developer.konghq.com/kongctl/adopt/dcr-provider/)
+- [kongctl adopt event-gateway](https://developer.konghq.com/kongctl/adopt/event-gateway/)
+- [kongctl explain](https://developer.konghq.com/kongctl/explain/index/)
+- [kongctl get dcr-provider](https://developer.konghq.com/kongctl/get/dcr-provider/)
+- [kongctl list dcr-provider](https://developer.konghq.com/kongctl/list/dcr-provider/)
+- [kongctl scaffold](https://developer.konghq.com/kongctl/scaffold/index/)
+
+## Week of 2026-04-13
+
+### AI Gateway
+
+- [Kong Gateway OpenTelemetry metrics reference](https://developer.konghq.com/gateway/otel-metrics/)
+
+### Metering & Billing
+
+- [Entitlements](https://developer.konghq.com/metering-and-billing/entitlements/)
+- [Events](https://developer.konghq.com/metering-and-billing/events/)
+
+## Week of 2026-04-06
+
+### AI Gateway
+
+- [Gen AI OpenTelemetry metrics reference](https://developer.konghq.com/ai-gateway/ai-otel-metrics/)
+
+## Week of 2026-03-30
+
+### AI Gateway
+
+- [vLLM provider](https://developer.konghq.com/ai-gateway/ai-providers/vllm/)
+
+### Insomnia
+
+- [Run in Insomnia](https://developer.konghq.com/insomnia/run-in-insomnia/)
+
+### Kong Gateway
+
+- [Kong Gateway PostgreSQL OAuth2 authentication](https://developer.konghq.com/gateway/postgresql-oauth/)
+- [Lua sandboxing](https://developer.konghq.com/gateway/sandboxing/)
+- [Conditional expressions for plugins](https://developer.konghq.com/gateway/plugins/expressions/)
+
+### Other
+
+- [deck file openapi2mcp](https://developer.konghq.com/deck/file/openapi2mcp/)
+
+## Week of 2026-03-23
+
+### AI Gateway
+
+- [DeepSeek provider](https://developer.konghq.com/ai-gateway/ai-providers/deepseek/)
+- [Databricks provider](https://developer.konghq.com/ai-gateway/ai-providers/databricks/)
+
+### Event Gateway
+
+- [Kong Event Gateway changelog](https://developer.konghq.com/event-gateway/changelog/)
+- [Event Gateway breaking changes and known issues](https://developer.konghq.com/event-gateway/breaking-changes/)
+- [TLS trust bundles](https://developer.konghq.com/event-gateway/entities/tls-trust-bundle/)
+- [Upgrading Event Gateway](https://developer.konghq.com/event-gateway/upgrade/)
+
+### Kong Gateway
+
+- [Testing regional failover](https://developer.konghq.com/gateway/cross-regional-failover-testing/)
+
+### Metering & Billing
+
+- [Cost Analytics](https://developer.konghq.com/metering-and-billing/cost-analytics/)
+
+## Week of 2026-03-16
+
+### Kong Gateway
+
+- [Cloud provider integration support for Kong Gateway Enterprise](https://developer.konghq.com/gateway/cloud-provider-support-matrix/)
+- [Tune Kong Gateway for large payloads](https://developer.konghq.com/gateway/performance/large-payloads/)
+
+### Metering & Billing
+
+- [How can Metering & Billing help?](https://developer.konghq.com/metering-and-billing/overview/)
+
+## Week of 2026-03-09
+
+### AI Gateway
+
+- [Ollama provider](https://developer.konghq.com/ai-gateway/ai-providers/ollama/)
+
+## Week of 2026-03-02
+
+### Catalog
+
+- [Migrate API specs in Catalog to APIs](https://developer.konghq.com/catalog/migrate-api-specs-to-apis/)
+
+### Insomnia
+
+- [Convert project storage types in Insomnia](https://developer.konghq.com/insomnia/convert-project-storage/)
+
+### Kong Mesh
+
+- [Transparent proxying with Kong Mesh](https://developer.konghq.com/mesh/transparent-proxying/)
+- [Upgrade Kong Mesh](https://developer.konghq.com/mesh/upgrade/)
+- [Version-specific upgrade notes for Kong Mesh](https://developer.konghq.com/mesh/version-specific-upgrade-notes/)
+
+### Other
+
+- [kongctl install](https://developer.konghq.com/kongctl/install/index/)
+- [kongctl install skills](https://developer.konghq.com/kongctl/install/skills/)
+
+## Week of 2026-02-23
+
+### Metering & Billing
+
+- [Collect payments with Stripe](https://developer.konghq.com/metering-and-billing/stripe-integration/)
+
+### Other
+
+- [kongctl adopt api](https://developer.konghq.com/kongctl/adopt/api/)
+- [kongctl adopt auth-strategy](https://developer.konghq.com/kongctl/adopt/auth-strategy/)
+- [kongctl adopt control-plane](https://developer.konghq.com/kongctl/adopt/control-plane/)
+- [kongctl adopt](https://developer.konghq.com/kongctl/adopt/index/)
+- [kongctl adopt portal](https://developer.konghq.com/kongctl/adopt/portal/)
+- [kongctl api delete](https://developer.konghq.com/kongctl/api/delete/)
+- [kongctl api get](https://developer.konghq.com/kongctl/api/get/)
+- [kongctl api](https://developer.konghq.com/kongctl/api/index/)
+- [kongctl api patch](https://developer.konghq.com/kongctl/api/patch/)
+- [kongctl api post](https://developer.konghq.com/kongctl/api/post/)
+- [kongctl api put](https://developer.konghq.com/kongctl/api/put/)
+- [kongctl apply](https://developer.konghq.com/kongctl/apply/index/)
+- [kongctl apply konnect](https://developer.konghq.com/kongctl/apply/konnect/)
+- [kongctl delete](https://developer.konghq.com/kongctl/delete/index/)
+- [kongctl diff](https://developer.konghq.com/kongctl/diff/index/)
+- [kongctl diff konnect](https://developer.konghq.com/kongctl/diff/konnect/)
+- [kongctl dump declarative](https://developer.konghq.com/kongctl/dump/declarative/)
+- [kongctl dump](https://developer.konghq.com/kongctl/dump/index/)
+- [kongctl dump tf-import](https://developer.konghq.com/kongctl/dump/tf-import/)
+- [kongctl get auth-strategy](https://developer.konghq.com/kongctl/get/auth-strategy/)
+- [kongctl get](https://developer.konghq.com/kongctl/get/index/)
+- [kongctl get me](https://developer.konghq.com/kongctl/get/me/)
+- [kongctl get profile](https://developer.konghq.com/kongctl/get/profile/)
+- [kongctl get regions](https://developer.konghq.com/kongctl/get/regions/)
+- [kongctl lint](https://developer.konghq.com/kongctl/lint/index/)
+- [kongctl list auth-strategy](https://developer.konghq.com/kongctl/list/auth-strategy/)
+- [kongctl list](https://developer.konghq.com/kongctl/list/index/)
+- [kongctl list themes](https://developer.konghq.com/kongctl/list/themes/)
+- [kongctl listen audit-logs](https://developer.konghq.com/kongctl/listen/audit-logs/)
+- [kongctl listen](https://developer.konghq.com/kongctl/listen/index/)
+- [kongctl login](https://developer.konghq.com/kongctl/login/index/)
+- [kongctl login konnect](https://developer.konghq.com/kongctl/login/konnect/)
+- [kongctl logout](https://developer.konghq.com/kongctl/logout/index/)
+- [kongctl logout konnect](https://developer.konghq.com/kongctl/logout/konnect/)
+- [kongctl patch file](https://developer.konghq.com/kongctl/patch/file/)
+- [kongctl patch](https://developer.konghq.com/kongctl/patch/index/)
+- [kongctl plan](https://developer.konghq.com/kongctl/plan/index/)
+- [kongctl plan konnect](https://developer.konghq.com/kongctl/plan/konnect/)
+- [kongctl ps](https://developer.konghq.com/kongctl/ps/index/)
+- [kongctl ps stop](https://developer.konghq.com/kongctl/ps/stop/)
+- [kongctl sync](https://developer.konghq.com/kongctl/sync/index/)
+- [kongctl sync konnect](https://developer.konghq.com/kongctl/sync/konnect/)
+- [kongctl tail audit-logs](https://developer.konghq.com/kongctl/tail/audit-logs/)
+- [kongctl tail](https://developer.konghq.com/kongctl/tail/index/)
+- [kongctl view](https://developer.konghq.com/kongctl/view/index/)
+
+## Week of 2026-02-16
+
+### Catalog
+
+- [MCP registries in Catalog (tech preview)](https://developer.konghq.com/catalog/mcp-registry/)
+
+### Kong Mesh
+
+- [kuma-cp configuration reference](https://developer.konghq.com/mesh/reference/kuma-cp/)
+- [Kubernetes annotations and labels for Kong Mesh](https://developer.konghq.com/mesh/annotations/)
+- [MeshService](https://developer.konghq.com/mesh/meshservice/)
+- [Managing secrets in Kong Mesh](https://developer.konghq.com/mesh/manage-secrets/)
+- [MeshMultiZoneService](https://developer.konghq.com/mesh/meshmultizoneservice/)
+
+## Week of 2026-02-09
+
+### Kong Gateway
+
+- [Dedicated Cloud Gateways production readiness guide](https://developer.konghq.com/dedicated-cloud-gateways/production-readiness/)
+
+### Kong Mesh
+
+- [MeshExternalService](https://developer.konghq.com/mesh/meshexternalservice/)
+- [HostnameGenerator](https://developer.konghq.com/mesh/hostnamegenerator/)
+- [Authentication with the Kong Mesh API server](https://developer.konghq.com/mesh/authentication-with-the-api-server/)
+
+### Kong Operator
+
+- [Cross namespace references](https://developer.konghq.com/operator/konnect/cross-namespace-references/)
+- [Kubernetes Secrets with Kong Operator](https://developer.konghq.com/operator/reference/secrets/)
+
+### Other
+
+- [Authentication with kongctl](https://developer.konghq.com/kongctl/authentication/)
+- [Configuration of kongctl](https://developer.konghq.com/kongctl/config/)
+- [Declarative configuration with kongctl](https://developer.konghq.com/kongctl/declarative/)
+- [kongctl and decK](https://developer.konghq.com/kongctl/kongctl-and-deck/)
+- [Troubleshooting kongctl](https://developer.konghq.com/kongctl/troubleshooting/)
+
+## Week of 2026-02-02
+
+### AI Gateway
+
+- [Anthropic provider](https://developer.konghq.com/ai-gateway/ai-providers/anthropic/)
+- [Azure OpenAI provider](https://developer.konghq.com/ai-gateway/ai-providers/azure/)
+- [Amazon Bedrock provider](https://developer.konghq.com/ai-gateway/ai-providers/bedrock/)
+- [Cerebras provider](https://developer.konghq.com/ai-gateway/ai-providers/cerebras/)
+- [Cohere provider](https://developer.konghq.com/ai-gateway/ai-providers/cohere/)
+- [DashScope provider](https://developer.konghq.com/ai-gateway/ai-providers/dashscope/)
+- [Gemini provider](https://developer.konghq.com/ai-gateway/ai-providers/gemini/)
+- [Hugging Face provider](https://developer.konghq.com/ai-gateway/ai-providers/huggingface/)
+- [Llama provider](https://developer.konghq.com/ai-gateway/ai-providers/llama/)
+- [Mistral provider](https://developer.konghq.com/ai-gateway/ai-providers/mistral/)
+- [OpenAI provider](https://developer.konghq.com/ai-gateway/ai-providers/openai/)
+- [xAI provider](https://developer.konghq.com/ai-gateway/ai-providers/xai/)
+
+### Metering & Billing
+
+- [Collectors](https://developer.konghq.com/metering-and-billing/collectors/)
+- [Kubernetes Collector](https://developer.konghq.com/metering-and-billing/collectors/kubernetes/)
+- [OpenTelemetry Collector](https://developer.konghq.com/metering-and-billing/collectors/opentelemetry/)
+- [Prometheus Collector](https://developer.konghq.com/metering-and-billing/collectors/prometheus/)
+- [Run:ai Collector](https://developer.konghq.com/metering-and-billing/collectors/run-ai/)
+- [S3 Collector](https://developer.konghq.com/metering-and-billing/collectors/s3/)
+
+## Week of 2026-01-26
+
+### Catalog
+
+- [Azure API management](https://developer.konghq.com/catalog/integrations/azure-api-management/)
+
+### Kong Mesh
+
+- [Configure data plane proxy membership](https://developer.konghq.com/mesh/configure-data-plane-proxy-membership/)
+- [Interacting with the Kong Mesh control plane](https://developer.konghq.com/mesh/interact-with-control-plane/)
+- [Zone proxy authentication](https://developer.konghq.com/mesh/zone-proxy-auth/)
+- [Kong Mesh data collection](https://developer.konghq.com/mesh/data-collection/)
+
+## Week of 2026-01-19
+
+### Catalog
+
+- [Package APIs](https://developer.konghq.com/catalog/api-packaging/)
+
+### Kong Mesh
+
+- [Kong Mesh data plane health](https://developer.konghq.com/mesh/dataplane-health/)
+- [IPv6 support](https://developer.konghq.com/mesh/ipv6-support/)
+- [Service discovery](https://developer.konghq.com/mesh/service-discovery/)
+- [Built-in gateways in Kong Mesh](https://developer.konghq.com/mesh/built-in-gateway/)
+
+## Week of 2026-01-12
+
+### Kong Mesh
+
+- [Kubernetes built-in gateways with Kong Mesh](https://developer.konghq.com/mesh/kubernetes-gateway-api/)
+- [Kong Mesh zone ingress](https://developer.konghq.com/mesh/zone-ingress/)
+- [Zone egress](https://developer.konghq.com/mesh/zone-egress/)
+- [Kong Mesh architecture](https://developer.konghq.com/mesh/architecture/)
+- [Kong Mesh data plane proxy](https://developer.konghq.com/mesh/data-plane-proxy/)
+- [Kong Mesh data plane on Universal](https://developer.konghq.com/mesh/data-plane-universal/)
+- [Service meshes](https://developer.konghq.com/mesh/service-mesh/)
+- [Kong Mesh data plane on Kubernetes](https://developer.konghq.com/mesh/data-plane-kubernetes/)
+
+## Week of 2026-01-05
+
+### Kong Mesh
+
+- [Kong Mesh control plane configuration](https://developer.konghq.com/mesh/control-plane-configuration/)
+- [Kong Mesh resource sizing guidelines](https://developer.konghq.com/mesh/resource-sizing-guidelines/)
+- [Kong Mesh CLI tools](https://developer.konghq.com/mesh/cli/)
