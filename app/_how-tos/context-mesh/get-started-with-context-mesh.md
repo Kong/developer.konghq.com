@@ -1,10 +1,10 @@
 ---
 title: "Deploy an MCP server with {{site.context_mesh}} and {{site.operator_product_name}}"
-permalink: /context-mesh/get-started-with-context-mesh/
+permalink: /context-mesh/get-started/
 content_type: how_to
 description: "Deploy the OpenWeather {{site.context_mesh}} MCP server from the Konnect UI"
 breadcrumbs:
-  - /mcp/
+  - /context-mesh/
 
 products:
   - context-mesh

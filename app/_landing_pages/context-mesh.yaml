@@ -97,7 +97,85 @@ rows:
               Step-by-step setup from OpenAPI spec to a working agent call.
             cta:
               text: "Get started"
-              url: "/context-mesh/get-started-with-context-mesh/"
+              url: "/context-mesh/get-started/"
+
+  # - header:
+  #     text: "Connect an MCP client"
+  #     type: h2
+  #     description: |
+  #       Once you've created a {{site.context_mesh}} MCP server, add its endpoint to your MCP client. Select your client below for setup instructions.
+  #   column_count: 3
+  #   columns:
+  #     - blocks:
+  #       - type: card
+  #         config:
+  #           icon: /assets/icons/third-party/claude.svg
+  #           title: Claude Code CLI
+  #           description: |
+  #             Configure the MCP server using the `claude mcp add` command or by editing `~/.claude.json`.
+  #           ctas:
+  #             - text: Installation guide
+  #               url: "/context-mesh/client-installation/#claude-code-cli"
+  #     - blocks:
+  #       - type: card
+  #         config:
+  #           icon: /assets/icons/vscode.svg
+  #           title: Visual Studio Code
+  #           description: |
+  #             Add MCP server configuration through VS Code's Command Palette and MCP settings.
+  #           ctas:
+  #             - text: Installation guide
+  #               url: "/context-mesh/client-installation/#visual-studio-code"
+  #     - blocks:
+  #       - type: card
+  #         config:
+  #           icon: /assets/icons/cursor.svg
+  #           title: Cursor
+  #           description: |
+  #             Configure the MCP server in Cursor Settings under Tools & MCP.
+  #           ctas:
+  #             - text: Installation guide
+  #               url: "/context-mesh/client-installation/#cursor"
+  #     - blocks:
+  #       - type: card
+  #         config:
+  #           icon: /assets/icons/github-copilot.svg
+  #           title: GitHub Copilot - VS Code
+  #           description: |
+  #             Set up the MCP server for the GitHub Copilot extension in Visual Studio Code.
+  #           ctas:
+  #             - text: Installation guide
+  #               url: "/context-mesh/client-installation/#github-copilot-for-vs-code"
+  #     - blocks:
+  #       - type: card
+  #         config:
+  #           icon: /assets/icons/github-copilot.svg
+  #           title: GitHub Copilot - JetBrains
+  #           description: |
+  #             Configure the MCP server for IntelliJ IDEA, PyCharm, WebStorm, and other JetBrains IDEs.
+  #           ctas:
+  #             - text: Installation guide
+  #               url: "/context-mesh/client-installation/
+  #     - blocks:
+  #       - type: card
+  #         config:
+  #           icon: /assets/icons/github-copilot.svg
+  #           title: GitHub Copilot - Windsurf
+  #           description: |
+  #             Configure the MCP server for Windsurf.
+  #           ctas:
+  #             - text: Installation guide
+  #               url: "/context-mesh/client-installation/#windsurf"
+  #     - blocks:
+  #       - type: card
+  #         config:
+  #           icon: /assets/icons/cog.svg
+  #           title: Other IDEs
+  #           description: |
+  #             Manual setup instructions for Eclipse, Xcode and other IDEs.
+  #           ctas:
+  #             - text: Installation guide
+  #               url: "/context-mesh/client-installation/#other-ides"
 
   - header:
       text: "Common usage patterns"
