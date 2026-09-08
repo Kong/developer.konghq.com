@@ -271,19 +271,19 @@ columns:
     key: permissions
 rows:
   - role: "`Admin`"
-    description: "Owner of an existing AI Gateway. The owner has all write access related to an AI Gateway and its configuration."
+    description: "Owner of an existing {{site.ai_gateway}}. The owner has all write access related to an {{site.ai_gateway}} and its configuration."
     permissions: |
-      * Read, edit, delete, and list AI Gateways.
-      * Create, read, edit, delete, and list AI Gateway configurations, including DataPlane and CA certificates.
+      * Read, edit, delete, and list {{site.ai_gateway}}s.
+      * Create, read, edit, delete, and list {{site.ai_gateway}} configurations, including data plane and CA certificates.
   - role: "`Creator`"
-    description: "Access to create a new AI Gateway. The creator becomes the owner of the AI Gateway they create, gaining admin access to the new AI Gateway. This role does not grant access to existing AI Gateways or their configurations."
+    description: "Access to create a new {{site.ai_gateway}}. The creator becomes the owner of the {{site.ai_gateway}} they create, gaining admin access to the new {{site.ai_gateway}}. This role does not grant access to existing {{site.ai_gateway}}s or their configurations."
     permissions: |
-      * Create and list AI Gateways.
-      * When creating an AI Gateway, grants the Admin role on newly created AI Gateways.
+      * Create and list {{site.ai_gateway}}s.
+      * When creating an {{site.ai_gateway}}, grants the Admin role on the newly created {{site.ai_gateway}}.
   - role: "`Viewer`"
-    description: "Read-only access to all the configurations of an AI Gateway."
+    description: "Read-only access to all the configurations of an {{site.ai_gateway}}."
     permissions: |
-      * Read and list AI Gateways and all of their configurations.
+      * Read and list {{site.ai_gateway}}s and all of their configurations.
 {% endtable %}
 <!--vale on-->
 
@@ -302,7 +302,7 @@ columns:
     key: permissions
 rows:
   - role: "`Admin`"
-    description: "Admin of an existing AI Model, providing the ability to read and edit configuration and delete the AI Model."
+    description: "Admin of an existing AI Model, which allows you to read and edit configuration and delete the AI Model."
     permissions: |
       * Read, edit, delete, and list AI Models.
       * Create, read, edit, delete, and list AI Model versions.
@@ -310,6 +310,7 @@ rows:
     description: "Access to create new AI Models. The creator becomes an admin of the AI Model they create."
     permissions: |
       * Create and list AI Models.
+      * List, edit, and delete AI Models they've created.
   - role: "`Maintainer`"
     description: "Access to read and edit configuration of an AI Model."
     permissions: |
