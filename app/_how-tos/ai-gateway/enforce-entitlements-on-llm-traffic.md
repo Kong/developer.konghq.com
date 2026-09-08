@@ -145,36 +145,43 @@ The following diagram shows how those pieces relate:
 
 {% mermaid %}
 flowchart TB
+  client(["Client (API key)"])
   subgraph gateway["<b>Kong Gateway</b>"]
-    direction LR
-        service["example-service"]
         route["example-route"]
-        consumer1["Consumer-Kong Air"]
+        service["example-service"]
+        consumer1["Consumer (Kong Air)"]
+        enforcement["Entitlement Enforcement plugin"]
         proxy["AI Proxy plugin"]
         metering["Metering & Billing plugin"]
-        enforcement["Entitlement Enforcement plugin"]
   end
+  redis[("Redis<br>enforcement cache")]
+  openai(["OpenAI (gpt-4o)"])
   subgraph mb["<b>Konnect {{site.metering_and_billing}}</b>"]
-    direction LR
+        events["Events API"]
+        access["Entitlement Access API"]
         meter["Meter (LLM tokens)"]
     subgraph plan["Token Plan"]
-      direction LR
           feature2["Metered feature + entitlement (token limit)"]
     end
     subgraph subscription["Token Subscription"]
-      direction LR
           customer1["Customer (Kong Air)"]
     end
-    access["Entitlement Access API"]
   end
-    proxy -.- service
-    route -.- enforcement
-    meter --> feature2
+    client -->|chat request| route
+    route -.->|enforced by| enforcement
+    route -->|allowed| service
+    service -.->|proxied by| proxy
+    proxy -->|prompt| openai
+    service -.->|metered by| metering
+    client -.->|authenticates as| consumer1
     consumer1 -->|subject key| customer1
-    subscription --> plan
-    metering -->|token usage events, Ingest token| meter
-    enforcement -->|polls access, Entitlement Access token| access
-    access --> customer1
+    metering -->|token usage events, Ingest token| events
+    events -->|aggregated by| meter
+    meter -->|referenced by| feature2
+    subscription -->|activates| plan
+    enforcement -->|queries, Entitlement Access token| access
+    access -->|reads entitlement| customer1
+    enforcement <-->|cached state| redis
     feature2 -.->|feature.key| enforcement
 
 {% endmermaid %}
