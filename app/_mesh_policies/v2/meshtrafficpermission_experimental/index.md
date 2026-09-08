@@ -89,6 +89,6 @@ The policy evaluates requests in this order:
 1. If a request matches no `deny` matcher and at least one `allow` or `allowWithShadowDeny` matcher, the result is `ALLOW`.
 1. If no matcher applies, the result is `DENY`.
 
-See the [Examples](./examples/) tab for ready-to-apply policies that deny namespace-wide traffic,
+See the [Examples](/mesh/v2/policies/meshtrafficpermission_experimental/examples/) tab for ready-to-apply policies that deny namespace-wide traffic,
 allow namespace-wide traffic, and override a mesh-wide allow rule on a specific service port.
-See the [Configuration reference](./reference/) tab for the complete schema.
+See the [Configuration reference](/mesh/v2/policies/meshtrafficpermission_experimental/reference/) tab for the complete schema.
