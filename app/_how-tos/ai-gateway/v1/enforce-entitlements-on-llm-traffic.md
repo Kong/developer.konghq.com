@@ -65,7 +65,7 @@ related_resources:
   - text: Entitlement Enforcement plugin
     url: /plugins/entitlement-enforcement/
   - text: Monetize LLM traffic in {{site.konnect_short_name}}
-    url: /how-to/meter-llm-traffic/
+    url: /ai-gateway/v1/how-to/meter-llm-traffic/
   - text: Get started with Entitlement Enforcement
     url: /metering-and-billing/entitlement-enforcement/get-started/
   - text: Entitlements
@@ -86,7 +86,7 @@ next_steps:
 automated_tests: false
 ---
 
-This guide shows how to enforce an LLM token allowance on {{site.ai_gateway}} traffic. [Metering LLM traffic](/how-to/meter-llm-traffic/) tells you what a customer consumed, but it doesn't stop them consuming more. The [Entitlement Enforcement plugin](/plugins/entitlement-enforcement/) closes that gap: it polls the {{site.metering_and_billing}} Entitlement Access API for the customer's remaining token allowance and blocks requests once the allowance is spent.
+This guide shows how to enforce an LLM token allowance on {{site.ai_gateway}} traffic. [Metering LLM traffic](/ai-gateway/v1/how-to/meter-llm-traffic/) tells you what a customer consumed, but it doesn't stop them consuming more. The [Entitlement Enforcement plugin](/plugins/entitlement-enforcement/) closes that gap: it polls the {{site.metering_and_billing}} Entitlement Access API for the customer's remaining token allowance and blocks requests once the allowance is spent.
 
 In this guide, you'll:
 * Create a {{site.base_gateway}} Consumer that you'll map to a customer
