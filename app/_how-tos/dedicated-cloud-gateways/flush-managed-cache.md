@@ -50,6 +50,12 @@ cleanup:
         ```bash
         terraform destroy
         ```
+faqs:
+  - q: How do I flush a managed cache for a private Dedicated Cloud Gateway?
+    a: |
+      This how-to is scoped to Dedicated Cloud Gateways with a public network, because the flush endpoint is reached through the control plane endpoint. A private network Dedicated Cloud Gateway doesn't have a control plane endpoint to route through.
+
+      Instead, reach the flush endpoint through the FQDN assigned to the private IP address of your Dedicated Cloud Gateway, for example through a CDN or nodes placed in front of the data planes, or over your internal/private network. As long as a client can reach that FQDN, the rest of this how-to (the custom plugin, Terraform resources, and flush call) applies the same way.
 ---
 
 {:.warning}
@@ -378,7 +384,7 @@ capture:
     ```
     {:.no-copy-code}
 
-### Optional: Restrict access and auto-flush on apply
+### Strongly recommended: Restrict access and auto-flush on apply
 
 Use the following sections to further configure the managed cache flush behavior.
 
