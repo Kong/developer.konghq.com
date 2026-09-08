@@ -193,7 +193,7 @@ Secret environment variables allow you to store sensitive data locally in encryp
 To store secrets in {{ site.data.products.insomnia.name }}, generate a vault key. This key encrypts secret variables in private sub-environments. When you log in on a new device, {{ site.data.products.insomnia.name }} asks for the vault key to unlock any sub-environment that contains secrets. Scripts that read secrets don't require the vault key directly, but you must generate one before you can mark a variable as `Secret`:
 
 1. Generate a vault key in {{ site.data.products.insomnia.name }}:
-   1. Navigate to the **Preferences** settings page at the bottom left in the {{ site.data.products.insomnia.name }} sidebar.
+   1. Navigate to the **Preferences** settings at the bottom left in the {{ site.data.products.insomnia.name }} sidebar.
    1. On the General tab, scroll to the Security section and click **Generate Vault Key**.
 1. Create a new private sub-environment within any global environment.
 1. Add your secret variable in the private sub-private environment and set its type to `Secret`.
