@@ -5,6 +5,7 @@ metadata:
   products:
     - ai-gateway
     - gateway
+    - dev-portal
   works_on:
     - on-prem
     - konnect
@@ -15,8 +16,18 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "A trust and control layer for proxying traffic to MCP servers"
-      sub_text: Gain control and visibility over AI agent infrastructure with {{site.ai_gateway}}-driven MCP capabilities
+      text: "MCP servers for your APIs"
+      sub_text: Turn your APIs into MCP servers so AI agents can find and use them, with governance from {{site.ai_gateway}}
+
+  - columns:
+      - blocks:
+          - type: text
+            config: |
+              AI agents are rapidly becoming core components of modern software, driving the need for structured, reliable interfaces to access tools and data. The Model Context Protocol (MCP) addresses this by enabling agents to reason, plan, and act across services.
+
+              Kong offers two ways to expose APIs as MCP servers, depending on where the API lives and who's consuming it:
+              - **{{site.ai_gateway}}**: Convert any Gateway API into an MCP server, then apply security, governance, and observability controls with {{site.base_gateway}} plugins. Best for production MCP traffic that needs enterprise-grade control.
+              - **{{site.dev_portal}}**: Generate an MCP server directly from the APIs already published to a Dev Portal, so developers can connect their own agents to browse and use them. See [Dev Portal MCP servers](/dev-portal/mcp-servers/).
 
   - header:
       type: h2
@@ -25,8 +36,6 @@ rows:
       - blocks:
           - type: text
             config: |
-              AI agents are rapidly becoming core components of modern software, driving the need for structured, reliable interfaces to access tools and data. The Model Context Protocol (MCP) addresses this by enabling agents to reason, plan, and act across services. However, scaling MCP in remote, distributed environments introduces new operational challenges.
-
               {{site.ai_gateway}} enables teams to manage remote MCP traffic with enterprise-grade security, performance, authentication, context propagation, load balancing, and observability.
 
               Learn how to:
@@ -46,24 +55,23 @@ rows:
           config:
             header:
               type: h2
-              text: "Create MCP servers using {{site.ai_gateway}}"
+              text: "Create MCP servers from your APIs"
             blocks:
               - type: text
                 text: |
-                  {{site.ai_gateway}} lets you create and manage MCP servers without writing custom code. Transform any API into an MCP server, apply security and governance controls, and integrate them with AI assistants.
+                  Choose the approach that matches where your API lives: use {{site.ai_gateway}} to convert any Gateway API into an MCP server without writing custom code, or use {{site.dev_portal}} to generate an MCP server directly from APIs you've already published, without any {{site.ai_gateway}} configuration.
 
-  - header:
-    columns:
+  - columns:
       - blocks:
         - type: structured_text
           config:
             header:
-              type: h2
+              type: h3
               text: "Map APIs to MCP servers using AI MCP Proxy"
             blocks:
               - type: text
                 text: |
-                  Turn any API into an MCP server using the AI MCP Proxy plugin. This approach does **not require an LLM** and provides full control over production workloads.
+                  With {{site.ai_gateway}}, turn any API into an MCP server using the AI MCP Proxy plugin. This approach does **not require an LLM** and provides full control over production workloads.
 
                   The AI MCP Proxy plugin:
                   - **Converts API schemas** into MCP-compatible tool definitions.
@@ -71,27 +79,12 @@ rows:
                   - **Supports serverless deployments** for dynamic tool generation.
                   - **Integrates with AI assistants** like Claude Desktop and other MCP clients.
       - blocks:
-        - type: structured_text
-          config:
-            header:
-              type: h4
-              text: "Apply security, governance, and observability controls to MCP servers"
-            blocks:
-              - type: text
-                text: |
-                  Use available {{site.base_gateway}} [plugins](/plugins/) to:
-                  - **Secure access** with the [AI MCP OAuth2 plugin](/plugins/ai-mcp-oauth2/) or other authentication methods.
-                  - **Monitor MCP traffic** using [AI metrics](/ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics) and [AI audit logs](/ai-gateway/ai-audit-log-reference/#ai-mcp-logs).
-                  - **Enforce access controls** for [MCP tool usage](/mcp/use-access-controls-for-mcp-tools/).
-                  - **Govern usage** with rate limiting and traffic control plugins.
-  - columns:
-      - blocks:
         - type: card
           config:
             icon: /assets/icons/mcp.svg
             title: Create MCP tools from any API using AI MCP plugins
             description: |
-              Explore guides to create MCP servers and tools without custom code.
+              Explore guides to create MCP servers and tools without custom code, using {{site.ai_gateway}}.
             ctas:
               - text: Proxy MCP Traffic with the AI MCP Proxy plugin
                 url: "/plugins/ai-mcp-proxy/"
@@ -101,12 +94,54 @@ rows:
                 url: "/mcp/map-weather-api-to-mcp-tools/"
               - text: "Aggregate MCP tools from multiple AI MCP Proxy plugins"
                 url: /mcp/aggregate-mcp-tools/
+
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              type: h4
+              text: "Generate MCP servers from {{site.dev_portal}} APIs"
+            blocks:
+              - type: text
+                text: |
+                  With {{site.dev_portal}}, generate an MCP server directly from the APIs already published to it. Developers connect their own agent or IDE to browse and use what they already have access to, respecting the same authentication and access control that applies to them.
+
+                  See [Dev Portal MCP servers](/dev-portal/mcp-servers/) for details.
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/dev-portal.svg
+            title: Generate an MCP server from {{site.dev_portal}} APIs
+            description: |
+              Learn what a {{site.dev_portal}} MCP server exposes and how to enable one.
+            ctas:
+              - text: "{{site.dev_portal}} MCP servers reference"
+                url: "/dev-portal/mcp-servers/"
+              - text: "Generate an MCP server from your {{site.dev_portal}}"
+                url: "/dev-portal/mcp-servers/#generate-an-mcp-server-from-dev-portal"
+
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              type: h4
+              text: "Apply security, governance, and observability controls to MCP servers"
+            blocks:
+              - type: text
+                text: |
+                  With {{site.ai_gateway}}, use available {{site.base_gateway}} [plugins](/plugins/) to:
+                  - **Secure access** with the [AI MCP OAuth2 plugin](/plugins/ai-mcp-oauth2/) or other authentication methods.
+                  - **Monitor MCP traffic** using [AI metrics](/ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics) and [AI audit logs](/ai-gateway/ai-audit-log-reference/#ai-mcp-logs).
+                  - **Enforce access controls** for [MCP tool usage](/mcp/use-access-controls-for-mcp-tools/).
+                  - **Govern usage** with rate limiting and traffic control plugins.
       - blocks:
         - type: card
           config:
             icon: /assets/icons/lock.svg
             title: Secure and govern your MCP traffic
-            description: Apply security, governance, and observability to MCP servers that route LLM requests through AI Proxy plugins.
+            description: Apply security, governance, and observability to MCP servers that route LLM requests through AI Proxy plugins, using {{site.ai_gateway}}.
             ctas:
               - text: Secure MCP servers with the AI MCP OAuth2 plugin and Okta
                 url: "/mcp/secure-mcp-tools-with-oauth2-and-okta/"

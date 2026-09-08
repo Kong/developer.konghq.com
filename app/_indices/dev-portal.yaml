@@ -30,6 +30,9 @@ sections:
       - path: /how-to/curity-dcr/
       - path: /how-to/azure-ad-dcr/
       - path: /how-to/auth0-dcr/
+  - title: AI agent access
+    items:
+      - path: /dev-portal/mcp-servers/
   - title: Customize
     items:
       - path: /dev-portal/customizations/dev-portal-customizations/
