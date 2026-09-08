@@ -4,6 +4,7 @@ import { execFileSync } from "child_process";
 import { fileURLToPath } from "url";
 import matter from "gray-matter";
 import YAML from "yaml";
+import { glob } from "tinyglobby";
 
 const SITE_BASE_URL = "https://developer.konghq.com";
 const DEFAULT_SEED_SINCE = "7 days ago";
@@ -71,9 +72,17 @@ function isValidMarker(repoRoot, sha) {
 }
 
 function parseArgs(argv) {
-  const args = { dryRun: false, sinceSha: null, seedSince: DEFAULT_SEED_SINCE, backfillTypes: null, pruneBefore: null };
+  const args = {
+    dryRun: false,
+    sinceSha: null,
+    seedSince: DEFAULT_SEED_SINCE,
+    backfillTypes: null,
+    pruneBefore: null,
+    clean: false,
+  };
   for (const arg of argv) {
     if (arg === "--dry-run") args.dryRun = true;
+    else if (arg === "--clean") args.clean = true;
     else if (arg.startsWith("--since-sha=")) args.sinceSha = arg.slice("--since-sha=".length);
     else if (arg.startsWith("--seed-since=")) args.seedSince = arg.slice("--seed-since=".length);
     else if (arg.startsWith("--backfill=")) {
@@ -296,6 +305,11 @@ function buildEntries(repoRoot, addedFiles, siteVars) {
 
     if (!data.content_type || !CURATED_CONTENT_TYPES.has(data.content_type)) continue;
 
+    // Jekyll's skip_unpublished_pages.rb hook drops these from the build
+    // entirely (site.pages.reject! { |page| page.data['published'] == false }),
+    // so a page with this flag has no live URL — linking it 404s.
+    if (data.published === false) continue;
+
     // Cookbooks use a `url` frontmatter key instead of `permalink`.
     const permalink = data.permalink || data.url || derivePermalink(file);
     if (!permalink) {
@@ -459,13 +473,88 @@ function runPrune(args, outputPath) {
   console.log(`Pruned ${removed} week(s) before ${args.pruneBefore} from ${OUTPUT_RELATIVE_PATH}`);
 }
 
-function main() {
+// Full-repo permalink -> { file, published } index, used by --clean to check
+// entries already recorded in the changelog against *current* frontmatter —
+// a page can ship with published: false later fixed, or ship published and
+// get unpublished afterward. Same glob/ignore pattern as
+// tools/frontmatter-validator/index.js for consistency.
+async function buildPermalinkIndex(repoRoot) {
+  const files = await glob(["app/**/*.md", "app/_landing_pages/**/*.{yaml,yml}"], {
+    cwd: repoRoot,
+    ignore: ["app/_layouts/**", "app/_includes/**", "app/_api/**", "app/_references/**", "app/assets/**", "app/.repos/**"],
+  });
+
+  const index = new Map();
+  for (const file of files) {
+    let data;
+    try {
+      data = loadFrontmatter(repoRoot, file);
+    } catch {
+      continue;
+    }
+    const permalink = data.permalink || data.url || derivePermalink(file);
+    if (!permalink) continue;
+    index.set(permalink, { file, published: data.published });
+  }
+  return index;
+}
+
+async function runClean(args, repoRoot, outputPath) {
+  const existing = readExisting(outputPath);
+  const weeks = parseWeekBlocks(existing.body);
+  const index = await buildPermalinkIndex(repoRoot);
+
+  let removed = 0;
+  const permalinkRegex = /\]\(https:\/\/developer\.konghq\.com([^)]*)\)/;
+
+  for (const [weekKey, week] of weeks) {
+    for (const [productName, lines] of week.products) {
+      const kept = lines.filter((line) => {
+        const match = line.match(permalinkRegex);
+        const permalink = match && match[1];
+        const entry = permalink && index.get(permalink);
+        // No index entry (renamed/moved/derivation miss) — leave it alone
+        // rather than guess it's gone. Only remove a confirmed unpublish.
+        const isUnpublished = entry && entry.published === false;
+        if (isUnpublished) removed++;
+        return !isUnpublished;
+      });
+      if (kept.length === 0) week.products.delete(productName);
+      else week.products.set(productName, kept);
+    }
+    if (week.products.size === 0) weeks.delete(weekKey);
+  }
+
+  if (removed === 0) {
+    console.log("No unpublished pages found in the changelog; nothing to clean.");
+    return;
+  }
+
+  const newBody = `${serializeWeeks(weeks)}\n`;
+  const marker = `<!-- last-processed-sha: ${existing.sha ?? ""} -->`;
+  const output = `${existing.header}\n${marker}\n\n${newBody}`;
+
+  if (args.dryRun) {
+    console.log(output);
+    return;
+  }
+
+  fs.writeFileSync(outputPath, output);
+  console.log(`Removed ${removed} unpublished page(s) from ${OUTPUT_RELATIVE_PATH}`);
+}
+
+async function main() {
   const args = parseArgs(process.argv.slice(2));
   const repoRoot = getRepoRoot();
   const outputPath = path.join(repoRoot, OUTPUT_RELATIVE_PATH);
 
   if (args.pruneBefore) {
     runPrune(args, outputPath);
+    return;
+  }
+
+  if (args.clean) {
+    await runClean(args, repoRoot, outputPath);
     return;
   }
 
@@ -523,5 +612,8 @@ function main() {
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  main();
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
 }
