@@ -21,7 +21,7 @@ sections:
         url: /how-to/meter-llm-traffic/
       - title: LLM token enforcement
         description: Cap per-customer LLM token usage by enforcing entitlements on {{site.ai_gateway}} traffic.
-        url: /how-to/enforce-entitlements-on-llm-traffic/
+        url: /ai-gateway/v1/how-to/enforce-entitlements-on-llm-traffic/
       - title: Generic metering
         description: Meter any billable usage, like compute, storage, or application layer. Learn how to ingest usage events.
         url: /how-to/get-started-with-metering-and-billing-generic-meters/
@@ -89,4 +89,4 @@ sections:
       - path: /how-to/configure-metering-and-billing-tax-codes/
       - path: /how-to/get-started-with-prepaid-credits/
       - path: /metering-and-billing/entitlement-enforcement/get-started/
-      - path: /how-to/enforce-entitlements-on-llm-traffic/
+      - path: /ai-gateway/v1/how-to/enforce-entitlements-on-llm-traffic/
