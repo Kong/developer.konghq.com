@@ -42,7 +42,7 @@ The Metrics PDK is a `kong.metrics` namespace that lets a custom plugin define a
 You register a metric once and record values against it on every request.
 Custom metrics flow through {{site.base_gateway}}'s existing [OpenTelemetry plugin](/plugins/opentelemetry/) export path, alongside the built-in metrics.
 
-This reference covers the concepts you need to use the module, which includes how metrics are stored and exported, what the PDK validates, and where its limits are.
+This reference covers the concepts you need to use the module, which includes how metrics are stored and exported, what the PDK validates, and its limitations.
 For more information, also see:
 * [`kong.metrics` PDK reference](/gateway/pdk/reference/kong.metrics/): Full PDK function reference, including parameters and return values.
 * [Add metrics to a custom plugin](/custom-plugins/get-started/add-metrics/): How-to guide on setting up a custom plugin with the metrics PDK.
@@ -249,7 +249,7 @@ See the [`kong.metrics` PDK reference](/gateway/pdk/reference/kong.metrics/) for
 ## Best practices
 
 * **Namespace your metric names**, following OpenTelemetry semantic naming conventions: dot-separated, lowercase, with no unit suffix (units belong in `opts.unit`). For example, use `customer_name.request.count` rather than `customer_name_request_count_total`, to avoid colliding with {{site.base_gateway}}'s built-in metrics and other plugins.
-* **Keep attribute cardinality low**: Each distinct combination of `attributes` creates a separate stored series and OTLP data point. Avoid high-cardinality values like user IDs, request IDs, or raw tokens. Prefer bounded dimensions like service name, route name, or status class.
+* **Keep attribute cardinality low**: Each distinct combination of `attributes` creates a separate stored series and OTLP data point. Avoid high-cardinality values like user IDs, request IDs, or raw tokens. Prefer bounded dimensions like Service name, Route name, or status class.
 * **Keep attribute keys consistent across calls to the same metric**: The Metrics PDK doesn't enforce a fixed key set, so each `:add()` or `:record()` call can pass any `attributes` table. Recording the same metric with different attribute keys can cause unintended behavior, such as Prometheus treating it as an entirely new series, which can break existing dashboards and queries.
 * **Provide stable attribute values**: Fall back to a constant like `"unknown"` when an entity or field might be absent, rather than passing `nil`, which is an invalid attribute value.
 

@@ -81,7 +81,7 @@ Only the record calls, like `:add()` and `:record()`, belong in `access`, `respo
 
 ## Record values
 
-Add an `access` function that increments the gauge as a request comes in, and a `log` function that increments the counter and decrements the gauge once the request finishes:
+In the `handler.lua` file, add an `access` function that increments the gauge as a request comes in, and a `log` function that increments the counter and decrements the gauge once the request finishes:
 
 ```lua
 function MyPluginHandler:access(conf)
@@ -171,7 +171,7 @@ return MyPluginHandler
 ## Set up the export pipeline
 
 Custom metrics leave {{site.base_gateway}} only through the [OpenTelemetry plugin](/plugins/opentelemetry/). 
-Set up a small local pipeline with Docker Compose so you can query the metrics you just added: {{site.base_gateway}}, an OpenTelemetry Collector, and Prometheus, 
+Set up a small local pipeline (using {{site.base_gateway}}, an OpenTelemetry Collector, and Prometheus) with Docker Compose so you can query the metrics you just added.
 
 1. In your plugin project's root directory, create the OpenTelemetry Collector configuration. It receives OTLP data from {{site.base_gateway}} and forwards it to Prometheus:
 

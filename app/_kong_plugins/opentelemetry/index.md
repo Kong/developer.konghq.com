@@ -174,7 +174,7 @@ If the request has no authenticated Consumer or Principal, the corresponding att
 
 Custom plugins can register and record their own counter, gauge, and histogram metrics using the [Metrics PDK](/custom-plugins/metrics-pdk/) (`kong.metrics`). When the OpenTelemetry plugin is configured with metrics enabled, it exports these custom metrics through the same OTLP path as {{site.base_gateway}}'s built-in metrics.
 
-Custom metrics currently export only through the OpenTelemetry plugin. The Prometheus and StatsD plugins don't export them.
+Custom metrics currently export through the OpenTelemetry plugin only. The Prometheus and StatsD plugins don't export them.
 
 ### Metrics with {{site.base_gateway}} 3.12 or earlier
 
