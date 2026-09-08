@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
+require_relative '../lib/ordered_generator'
 require_relative '../services/release_map'
 require_relative '../lib/build_filter'
 
 module Jekyll
-  class ReleaseMapLoader < Generator
-    priority :normal
-
+  class ReleaseMapLoader < OrderedGenerator
     # No file sits at this path; the generator builds the page.
     GENERATED_POLICY_REFERENCE = %r{\Aapp/_mesh_policies/.+/reference\.md\z}
 
@@ -16,8 +15,6 @@ module Jekyll
     end
 
     def generate(site)
-      return if site.config.dig('skip', 'release_map_loader')
-
       ReleaseMap.load_all(site).each do |source_path, config|
         next if generated_page_missing?(source_path, site)
 

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-module Jekyll
-  class RefirectsGenerator < Jekyll::Generator
-    priority :lowest
+require_relative '../lib/ordered_generator'
 
+module Jekyll
+  class RefirectsGenerator < OrderedGenerator
     def generate(site)
       redirects = api_specs_redirects(site)
       redirects << plugin_examples_redirects(site)
