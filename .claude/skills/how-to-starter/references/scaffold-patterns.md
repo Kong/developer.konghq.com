@@ -88,6 +88,10 @@ Each `## H2` in a how-to body becomes a rendered, collapsible step. Order:
 
 ## `entity_examples` vs `entity_example`
 
+Default to `{% entity_examples %}` (plural) in how-tos. It automatically renders the correct deck or kongctl command block for you from the page's `tools` — never hand-write a separate `kongctl apply`/`deck gateway apply` fenced command for an entity config step, the tag already produces that.
+
+Only reach for `{% entity_example %}` (singular) when `entity_examples` genuinely can't cover the step: an entity type or format it doesn't support (only `deck`/`kongctl` are valid `entity_examples` formats — e.g. Admin-API-only entities like `event_hook` need the singular tag instead), or a deliberate multi-tool-tab reference. It is not a how-to default — it's the exception.
+
 **`{% entity_examples %}`** (plural): multi-entity Gateway config in one block, rendered in a single format resolved from the page's `tools` (or an explicit `formats:`). Only `deck` and `kongctl` are supported formats.
 
 ```

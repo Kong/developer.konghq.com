@@ -27,10 +27,14 @@ template, tag syntax, and placeholder conventions.
 4. Write the file. Fill every frontmatter field you know; drop an inline
    `<!-- TODO: ... -->` for anything unknown — never guess a value.
 5. Draft body H2s as one terse placeholder sentence each (for example, "Configure the
-   plugin to route requests to the upstream.") plus the right tag skeleton:
-   `{% entity_examples %}`/`{% entity_example %}` for entity config, a plain kongctl/deck
-   fenced command otherwise. Wrap any tag block Vale will flag in `<!--vale off-->` /
-   `<!--vale on-->`.
+   plugin to route requests to the upstream."). For entity/plugin config steps, use
+   `{% entity_examples %}` — it renders the correct deck or kongctl block itself from the
+   page's `tools`, so don't hand-write a separate fenced command for it. Reserve
+   `{% entity_example %}` (singular) for what `entity_examples` can't cover — an
+   entity/format it doesn't support, or a deliberate multi-tool-tab reference — not as the
+   how-to default. For non-entity steps (applying a whole file, `kongctl diff`, etc.), use
+   the terse kongctl/deck snippet style from the reference doc. Wrap any tag block Vale
+   will flag in `<!--vale off-->` / `<!--vale on-->`.
 6. Always end with `## Validate` — never skip it. Pick the `{% validation %}` id that
    actually fits what the how-to did (see the id table in the reference doc; `request-check`
    is common but not the default), filled with real values where the source material has
