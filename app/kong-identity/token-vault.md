@@ -206,22 +206,6 @@ When you configure a provider (for example, GitHub), the Token Vault regitsters 
 
 Enrollment happens once per user and per provider, not per organization. If a second user wants to use GitHub with an agent, they need to go throught enrollment, and get their own credentials stored in the Token Vault. What is shared across the organization is the provider configuration (Client ID, scopes, endpoints).
 
-
-
-
-
-
-
-<!--
-The most visible behavior on this feature — give it its own section.
-Sequence: first tool call for an unconnected provider -> vault returns 401 with an enrollment
-URL -> gateway surfaces it to the client via MCP elicitation -> user completes the provider's
-consent flow -> vault stores the credential -> user retries and the call succeeds.
-Then: the vault refreshes stored credentials in the background, so users are only re-prompted
-when the provider genuinely requires it.
-Note the enrollment link is short-lived (10 minutes).
--->
-
 ## Set up the Token Vault
 
 ### Enable the vault on a directory
@@ -379,6 +363,119 @@ method: GET
 <!-- Configure AI MCP Proxy to exchange the caller's token for the stored credential and inject it. -->
 
 ### Store a static secret
+
+A provider built on the `static_secret` template doesn't run an OAuth flow. You generate the credential yourself in the third-party service, for example an API key or a personal access token, then store it on the provider. The credential belongs to the directory instead of to an individual principal, so a `static_secret` provider requires `credential_type` set to `shared`.
+
+Start by creating the provider. For `static_secret`, send only `name`, `credential_type`, and optionally `base_url`. {{site.identity}} rejects `client_id` and `client_secret` with a `400` for this template:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/vault/providers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  template_name: static_secret
+  name: internal-api
+  credential_type: shared
+capture:
+  - variable: PROVIDER_ID
+    jq: ".id"
+{% endkonnect_api_request %}
+<!--vale on-->
+
+The request accepts the following body parameters:
+
+{% table %}
+columns:
+  - title: Parameter
+    key: param
+  - title: Required
+    key: required
+  - title: Description
+    key: description
+rows:
+  - param: "`template_name`"
+    required: Yes
+    description: |
+      Set to `static_secret` for a provider that authenticates with a pre-issued credential.
+  - param: "`name`"
+    required: Yes
+    description: |
+      Your name for this provider. Use it to tell apart several providers built from the same template.
+  - param: "`credential_type`"
+    required: Yes
+    description: |
+      Must be `shared` for `static_secret` providers. A shared credential is released to any authorized caller instead of being enrolled per principal.
+  - param: "`base_url`"
+    required: No
+    description: |
+      Overrides the base URL that the template supplies.
+{% endtable %}
+
+Then store the credential on that provider by sending a `POST` request to the `/v2/directories/{directoryId}/vault/providers/{providerId}/credentials` endpoint. {{site.identity}} encrypts the value at rest and never returns it from any read endpoint:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/vault/providers/$PROVIDER_ID/credentials
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  secret: $STATIC_SECRET
+capture:
+  - variable: CREDENTIAL_ID
+    jq: ".id"
+{% endkonnect_api_request %}
+<!--vale on-->
+
+A shared provider holds at most one credential, so a second `POST` to this endpoint returns a `409`. To rotate the secret, update the existing credential instead of creating another one.
+
+{% navtabs "manage static secret" %}
+{% navtab "Check stored credentials" %}
+
+To list the credential metadata for a provider, send a `GET` request to the same endpoint. The response contains the credential ID and its timestamps, never the value:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/vault/providers/$PROVIDER_ID/credentials
+status_code: 200
+method: GET
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endnavtab %}
+{% navtab "Rotate the secret" %}
+
+To replace the stored value, send a `PUT` request to the `/v2/directories/{directoryId}/vault/providers/{providerId}/credentials/{credentialId}` endpoint. This operation only updates an existing credential, and returns a `404` when the credential doesn't exist for this provider:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/vault/providers/$PROVIDER_ID/credentials/$CREDENTIAL_ID
+status_code: 204
+method: PUT
+headers:
+  - 'Content-Type: application/json'
+body:
+  secret: $NEW_STATIC_SECRET
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endnavtab %}
+{% navtab "Delete the secret" %}
+
+To remove the stored credential, send a `DELETE` request to the same endpoint:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/vault/providers/$PROVIDER_ID/credentials/$CREDENTIAL_ID
+status_code: 204
+method: DELETE
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endnavtab %}
+
+{% endnavtabs %}
 
 ## Manage connected credentials
 
