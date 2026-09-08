@@ -102,7 +102,7 @@ This guide explains how to map the permissions, including scopes and claims, fro
     A team with this setting disabled can't be selected in **Team Mappings**.
 
     {:.warning}
-    > If IdP mapping is enabled and this setting stays enabled for a team with no name entered in **Team Mappings**, {{site.konnect_short_name}} treats the team as an empty IdP group. Developers are removed from the team at their next login, even if they were added manually.
+    > If IdP mapping is enabled and this setting is enabled for a {{site.konnect_short_name}}-managed team, {{site.konnect_short_name}} treats the team as an empty IdP group. Developers are removed from the team at their next login, even if they were added manually.
 
 ## Test developer team mappings
 
