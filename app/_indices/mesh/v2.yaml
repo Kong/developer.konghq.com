@@ -19,7 +19,7 @@ sections:
 
   - title: Install & Configure
     items:
-      - path: /mesh/v2/validated-versions/
+      - path: /mesh/validated-versions/
       - path: /mesh/v2/get-started/universal/install/
       - path: /mesh/v2/kubernetes/
       - path: /mesh/v2/ecs/
