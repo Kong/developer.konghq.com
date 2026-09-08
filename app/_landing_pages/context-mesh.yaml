@@ -1,7 +1,7 @@
 metadata:
   title: "{{site.context_mesh}}"
   content_type: landing_page
-  description: "Turn enterprise APIs into Code Mode MCP servers that AI agents can call directly."
+  description: "Turn enterprise APIs into Code Mode MCP servers that AI agents can call directly, and combine them with existing MCP servers to customize the overall enterprise context under a single source of truth."
   products:
     - context-mesh
     - ai-gateway
@@ -19,7 +19,7 @@ rows:
   - header:
       type: h1
       text: "Kong {{site.context_mesh}}"
-      sub_text: "Turn enterprise APIs into agent-ready MCP servers that AI agents can discover, call, and reason about."
+      sub_text: "Turn enterprise APIs into Code Mode MCP servers that AI agents can call directly, and combine them with existing MCP servers to customize the overall enterprise context under a single source of truth."
 
   - columns:
       - blocks:
@@ -28,19 +28,21 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    AI agents are only as good as the context they can reach. {{site.context_mesh}} exposes REST APIs to AI agents as Code Mode MCP servers. It is the mediation layer between agents and your APIs. Agent traffic to those APIs passes through the same path as the rest of your API traffic, so the policies and observability you already apply continue to apply.
+                    AI agents are only as good as the context they can reach. {{site.context_mesh}} exposes REST APIs and existing MCP servers to AI agents as a single Code Mode MCP server. It is the mediation layer between agents and your APIs. Agent traffic to those APIs passes through the same path as the rest of your API traffic, so the policies and observability you already apply continue to apply.
 
                     Agents cannot call most APIs directly. Each one requires either a custom SDK or prior training on that specific API, and neither approach scales when an organization runs dozens of internal APIs that change over time. {{site.context_mesh}} closes that gap. Given an OpenAPI specification, it produces an MCP server that agents call without per-agent integration code.
 
-                    {{site.context_mesh}} complements [AI Gateway](/ai-gateway/) by covering the other half of an agent's traffic. AI Gateway is the control layer between agents and LLMs. {{site.context_mesh}} is the mediation layer between agents and APIs.
+                    Adding existing MCP servers as sources allows AI agents to access a broader range of enterprise context without requiring direct integration with each individual server. You can then centralize and customize the management and exposure of these sources through {{site.context_mesh}}.
+
+                    {{site.context_mesh}} complements [{% site.ai_gateway %}](/ai-gateway/) by covering the other half of an agent's traffic. {% site.ai_gateway %} is the control layer between agents and LLMs. {{site.context_mesh}} is the mediation layer between agents and APIs.
 
                     {:.success}
-                    > {{site.context_mesh}} is in active development. The current release supports APIs as a source type. Additional source types are planned for future releases.
+                    > {{site.context_mesh}} is in active development. The current release supports APIs and MCP servers as source types. Additional source types are planned for future releases.
       - blocks:
           - type: image
             config:
               url: /assets/images/context-mesh/context-mesh.svg
-              alt_text: "{{site.context_mesh}} architecture diagram. AI agents connect through AI Gateway as the control layer for LLMs, and through {{site.context_mesh}} as the mediation layer for enterprise sources including APIs, data, docs, and code."
+              alt_text: "{{site.context_mesh}} architecture diagram. AI agents connect through {% site.ai_gateway %} as the control layer for LLMs, and through {{site.context_mesh}} as the mediation layer for enterprise sources including APIs, data, docs, and code."
 
   - columns:
       - blocks:
@@ -51,7 +53,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  {{site.context_mesh}} is designed to make enterprise APIs usable by AI agents without adding integration complexity to your teams.
+                  {{site.context_mesh}} is designed to make enterprise APIs and MCP servers usable by AI agents without adding integration complexity to your teams.
 
                   * **No per-agent integration code**: Generate the MCP server from an existing OpenAPI spec. The agent uses your API without anyone writing an SDK or per-agent glue.
                   * **One place to manage agent context**: Every MCP server you create is registered in {{site.konnect_product_name}} alongside the rest of your API infrastructure, not scattered across developer laptops.
@@ -97,140 +99,43 @@ rows:
               text: "Get started"
               url: "/context-mesh/get-started-with-context-mesh/"
 
-  # - header:
-  #     text: "Connect an MCP client"
-  #     type: h2
-  #     description: |
-  #       Once you've created a {{site.context_mesh}} MCP server, add its endpoint to your MCP client. Select your client below for setup instructions.
-  #   column_count: 3
-  #   columns:
-  #     - blocks:
-  #       - type: card
-  #         config:
-  #           icon: /assets/icons/third-party/claude.svg
-  #           title: Claude Code CLI
-  #           description: |
-  #             Configure the MCP server using the `claude mcp add` command or by editing `~/.claude.json`.
-  #           ctas:
-  #             - text: Installation guide
-  #               url: "/context-mesh/client-installation/#claude-code-cli"
-  #     - blocks:
-  #       - type: card
-  #         config:
-  #           icon: /assets/icons/vscode.svg
-  #           title: Visual Studio Code
-  #           description: |
-  #             Add MCP server configuration through VS Code's Command Palette and MCP settings.
-  #           ctas:
-  #             - text: Installation guide
-  #               url: "/context-mesh/client-installation/#visual-studio-code"
-  #     - blocks:
-  #       - type: card
-  #         config:
-  #           icon: /assets/icons/cursor.svg
-  #           title: Cursor
-  #           description: |
-  #             Configure the MCP server in Cursor Settings under Tools & MCP.
-  #           ctas:
-  #             - text: Installation guide
-  #               url: "/context-mesh/client-installation/#cursor"
-  #     - blocks:
-  #       - type: card
-  #         config:
-  #           icon: /assets/icons/github-copilot.svg
-  #           title: GitHub Copilot - VS Code
-  #           description: |
-  #             Set up the MCP server for the GitHub Copilot extension in Visual Studio Code.
-  #           ctas:
-  #             - text: Installation guide
-  #               url: "/context-mesh/client-installation/#github-copilot-for-vs-code"
-  #     - blocks:
-  #       - type: card
-  #         config:
-  #           icon: /assets/icons/github-copilot.svg
-  #           title: GitHub Copilot - JetBrains
-  #           description: |
-  #             Configure the MCP server for IntelliJ IDEA, PyCharm, WebStorm, and other JetBrains IDEs.
-  #           ctas:
-  #             - text: Installation guide
-  #               url: "/context-mesh/client-installation/#github-copilot-for-jetbrains"
-  #     - blocks:
-  #       - type: card
-  #         config:
-  #           icon: /assets/icons/cog.svg
-  #           title: Other IDEs
-  #           description: |
-  #             Manual setup instructions for Windsurf, Eclipse, and other IDEs.
-  #           ctas:
-  #             - text: Installation guide
-  #               url: "/context-mesh/client-installation/#other-ides"
-
   - header:
       text: "Common usage patterns"
       type: h2
-      sub_text: |
-        End-to-end flows that combine a {{site.context_mesh}} server with one or more MCP clients.
+      description: |
+        What an agent can do depends on the sources you add to {{site.context_mesh}}. Every pattern uses the same setup flow, covered in [Get started with {{site.context_mesh}}](/context-mesh/get-started-with-context-mesh/).
     columns:
       - blocks:
-        - type: structured_text
+        - type: table
           config:
-            header:
-              text: "Pattern 1: Expose a single internal API"
-            blocks:
-              - type: text
-                text: |
-                  Make one internal REST API callable by an AI agent.
-        - type: text
-          config: |
-            ```text
-            1. Add the API's OpenAPI specification to the Konnect API catalog
-               → Or have the specification file ready for upload
-
-            2. In Konnect, open {{site.context_mesh}} > MCP Servers > New MCP Server
-               → Choose the source (catalog entry or uploaded spec)
-               → Name the server
-               → Select the target control plane
-
-            3. Wait for the server status to reach Healthy
-               → Copy the server's endpoint URL
-
-            4. Add the endpoint to your MCP client configuration
-               → Restart the client if required
-
-            5. Prompt the agent with a task that requires the API
-               → The agent discovers operations through Code Mode
-               → The agent calls the API directly
-            ```
-      - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "Pattern 2: Compose multiple APIs in one workflow"
-            blocks:
-              - type: text
-                text: |
-                  Let an agent combine data from several backend APIs in a single prompt.
-        - type: text
-          config: |
-            ```text
-            1. For each API the agent will use:
-               a. Add or upload the OpenAPI specification
-               b. Create a Code Mode MCP server in {{site.context_mesh}}
-               c. Wait for Healthy status
-               d. Copy the endpoint URL
-
-            2. In your MCP client, add all server endpoints
-               → Each {{site.context_mesh}} server is a separate entry
-
-            3. Prompt the agent with a task that spans the APIs
-               → Example: "Find a destination with the best weather right
-                          now and book me a window seat flight"
-               → The agent selects which servers to call and in what
-                 order, based on the tools available
-
-            4. Review the agent's responses against the underlying
-               API responses to validate behavior
-            ```
+            columns:
+              - title: Use case
+                key: use_case
+              - title: Sources you add
+                key: sources
+              - title: How you configure the MCP server
+                key: configuration
+              - title: What the agent can do
+                key: outcome
+            rows:
+              - use_case: "**Expose a single internal API**"
+                sources: |
+                  One OpenAPI specification that you either:
+                  - Import from the {{site.konnect_short_name}} API catalog.
+                  - Upload directly as an OpenAPI Specification (OAS) v3.0 file.
+                outcome: "Call any operation in that API through a single Code Mode MCP server, with no per-agent integration code."
+                configuration: "Add the source to the MCP server."
+              - use_case: "**Compose multiple APIs**"
+                sources: |
+                  Several OpenAPI specifications that you either:
+                  - Import from the {{site.konnect_short_name}} API catalog as a single source.
+                  - Upload directly as anOpenAPI Specification (OAS) v3.0 file, each one as its own source.
+                configuration: "Add a single source containing multiple API specifications as a single source, or add multiple sources to the MCP server."
+                outcome: "Complete a task that spans the APIs, choosing which operations to call and in what order."
+              - use_case: "**Combine APIs with existing MCP servers**"
+                sources: "OpenAPI specifications alongside existing MCP servers."
+                configuration: "Add the OpenAPI specifications and existing MCP servers as sources to the MCP server."
+                outcome: "Reach your APIs and your existing MCP tooling through one endpoint, governed and observed in the same place."
 
   - header:
       text: "Frequently asked questions"
@@ -242,12 +147,12 @@ rows:
             - q: How is {{site.context_mesh}} different from the Kong Konnect MCP Server?
               a: |
                 The [{{site.konnect_product_name}} MCP Server](/konnect-platform/konnect-mcp/) exposes {{site.konnect_product_name}} itself, so you can manage Kong infrastructure from an AI assistant or IDE. {{site.context_mesh}} exposes your own backend APIs to AI agents as Code Mode MCP servers that run on Kong.
-            - q: Can I use {{site.context_mesh}} with non-API sources?
+            - q: What type of source can I use with {{site.context_mesh}}?
               a: |
-                Not in the current release. The current release supports APIs through OpenAPI specifications. Additional source types are planned for future releases.
-            - q: Does {{site.context_mesh}} require AI Gateway?
+                {{site.context_mesh}} supports two source types: REST APIs, added as OpenAPI specifications, and existing MCP servers. You can mix both in the same {{site.context_mesh}} MCP server.
+            - q: Does {{site.context_mesh}} require {% site.ai_gateway %}?
               a: |
-                No. {{site.context_mesh}} and AI Gateway are separate products. They cover complementary paths in an agent's connectivity, but neither depends on the other.
+                Yes. {{site.context_mesh}} runs on top of {% site.ai_gateway %}, so it requires an {% site.ai_gateway %} control plane to deploy  and function.
             - q: Can I see traffic between my agents and the MCP servers?
               a: |
                 [NEEDS INPUT: Confirm observability story. Likely uses standard {{site.konnect_short_name}} analytics on the host control plane, but specifics need verification before publishing.]
