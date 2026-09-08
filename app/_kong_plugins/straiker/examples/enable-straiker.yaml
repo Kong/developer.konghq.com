@@ -1,0 +1,37 @@
+description: 'Enable the Straiker plugin on a chat completion route.'
+
+extended_description: |
+  Enable the Straiker plugin on a Route or Service that already has AI Proxy or AI Proxy Advanced configured.
+
+  This configuration enforces blocking decisions and fails open if the Straiker Defend pre-call webhook is unreachable, so chat traffic keeps flowing during a Straiker outage.
+  Post-call (response) evaluation always fails open, regardless of `fail_open`, so a real model answer is never withheld because the webhook was down.
+  Set `block` to `false` to evaluate and log traffic without blocking it.
+
+title: 'Enable Straiker'
+
+weight: 900
+
+requirements:
+  - "The Straiker plugin is [installed](/plugins/straiker/#install-the-straiker-plugin)."
+  - "[AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) is configured on the same Service or Route."
+  - "A Straiker Defend API key. Contact your Straiker team for enterprise API keys and sandbox access."
+
+variables:
+  api-key:
+    value: $STRAIKER_API_KEY
+    description: Your Straiker Defend API key.
+
+config:
+  api_key: ${api-key}
+  block: true
+  fail_open: true
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.14'
