@@ -17,7 +17,7 @@ related_resources:
   - text: Resource sizing guidelines
     url: /mesh/v2/resource-sizing-guidelines/
   - text: Validated versions
-    url: /mesh/v2/validated-versions/
+    url: /mesh/validated-versions/
 min_version:
     mesh: '2.9'
 major_version:

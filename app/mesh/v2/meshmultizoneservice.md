@@ -17,7 +17,7 @@ related_resources:
   - text: Resource sizing guidelines
     url: /mesh/v2/resource-sizing-guidelines/
   - text: Validated versions
-    url: /mesh/v2/validated-versions/
+    url: /mesh/validated-versions/
   - text: Zone ingress
     url: /mesh/v2/zone-ingress/
   - text: Zone egress

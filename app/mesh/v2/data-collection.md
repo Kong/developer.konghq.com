@@ -13,7 +13,7 @@ related_resources:
   - text: '{{site.mesh_product_name}} resource sizing guidelines'
     url: '/mesh/v2/resource-sizing-guidelines/'
   - text: '{{site.mesh_product_name}} validated versions'
-    url: '/mesh/v2/validated-versions/'
+    url: '/mesh/validated-versions/'
   - text: Audit logs
     url: /mesh/v2/access-audit/
 tags:
