@@ -19,7 +19,7 @@ related_resources:
   - text: '{{site.mesh_product_name}} resource sizing guidelines'
     url: '/mesh/v2/resource-sizing-guidelines/'
   - text: '{{site.mesh_product_name}} version compatibility'
-    url: '/mesh/version-compatibility/'
+    url: '/mesh/validated-versions/'
   - text: Policy Hub
     url: /mesh/v2/policies/
   - text: Mesh CLI

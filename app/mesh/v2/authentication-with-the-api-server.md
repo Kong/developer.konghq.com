@@ -13,7 +13,7 @@ related_resources:
   - text: Manage secrets
     url: /mesh/v2/manage-secrets/
   - text: Mesh ports
-    url: /mesh/use-kuma/#control-plane-ports
+    url: /mesh/v2/interact-with-control-plane/#control-plane-ports
   - text: Zone Ingress
     url: /mesh/v2/zone-ingress/
 major_version:

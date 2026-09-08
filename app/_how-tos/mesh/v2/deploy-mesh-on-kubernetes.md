@@ -5,7 +5,7 @@ content_type: how_to
 permalink: /mesh/v2/deploy-mesh-on-kubernetes/
 related_resources:
   - text: "{{site.mesh_product_name}}"
-    url: /mesh/overview/
+    url: /mesh/v2/
 
 products:
   - mesh

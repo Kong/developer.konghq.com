@@ -89,7 +89,7 @@ See the [UBI documentation](/mesh/v2/ubi-images/) for more information.
 
 ## Docker container image signing {% new_in 2.7 %}
 
-Starting with {{site.mesh_product_name}} 2.7.4, Docker container images are signed, and can be verified using `cosign` with signatures published to a Docker Hub repository. Read the [Verify signatures for signed {{site.mesh_product_name}} images](/mesh/features/signed-images/) documentation to learn more.
+Starting with {{site.mesh_product_name}} 2.7.4, Docker container images are signed, and can be verified using `cosign` with signatures published to a Docker Hub repository. Read the [Verify signatures for signed {{site.mesh_product_name}} images](/mesh/v2/signed-images/) documentation to learn more.
 
 
 ## Build provenance {% new_in 2.8 %}

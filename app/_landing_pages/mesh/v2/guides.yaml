@@ -122,7 +122,7 @@ rows:
                 Use policies to control your service to service and network traffic
               cta:
                 text: Learn more 
-                url: /mesh/policies/
+                url: /mesh/v2/policies/
       - blocks:
           - type: card
             config:
@@ -155,7 +155,7 @@ rows:
                 {{site.mesh_product_name}} policies are bundled features for your service traffic and network configuration.
               cta:
                 text: See policies 
-                url: /mesh/policies/
+                url: /mesh/v2/policies/
       - blocks:
           - type: card
             config:
@@ -183,7 +183,7 @@ rows:
                 See the different requirements to deploy {{site.mesh_product_name}}
               cta:
                 text: View the requirements 
-                url: /mesh/requirements/
+                url: /mesh/validated-versions/
                 align: end 
       - blocks:
           - type: card
