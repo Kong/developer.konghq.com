@@ -99,7 +99,7 @@ MeshGateway in `spec.targetRef` and set `spec.to[].targetRef.kind: Mesh`.
 
 ### Interactions with `MeshTCPRoute`
 
-`MeshHTTPRoute` takes priority over [`MeshTCPRoute`](../meshtcproute) when a proxy is targeted by both and the matching `MeshTCPRoute` is ignored.
+`MeshHTTPRoute` takes priority over [`MeshTCPRoute`](/mesh/v2/policies/meshhttproute/meshtcproute) when a proxy is targeted by both and the matching `MeshTCPRoute` is ignored.
 
 ### Interactions with `TrafficRoute`
 
