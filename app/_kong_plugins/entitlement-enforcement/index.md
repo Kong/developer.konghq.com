@@ -5,7 +5,7 @@ name: 'Entitlement Enforcement'
 content_type: plugin
 
 publisher: kong-inc
-description: 'Allow or deny API requests based on customer entitlements. Checks feature access, usage limits, and credit balance against Metering & Billing before routing traffic.'
+description: 'Allow or deny API requests based on customer entitlements. Checks feature access and usage limits against Metering & Billing before routing traffic.'
 
 tier: enterprise
 
@@ -14,17 +14,12 @@ products:
     - metering-and-billing
 
 works_on:
-    - on-prem
     - konnect
 
 min_version:
     gateway: '3.16'
 
 topologies:
-  on_prem:
-    - hybrid
-    - db-less
-    - traditional
   konnect_deployments:
     - hybrid
     - cloud-gateways
@@ -62,7 +57,6 @@ The Entitlement Enforcement plugin blocks API requests based on the customer ent
 It works alongside the [Metering & Billing plugin](/plugins/metering-and-billing/): Metering & Billing reports usage, and Entitlement Enforcement checks that usage against a customer's plan and blocks the request when the customer is over their limit.
 
 The plugin blocks a request when a customer:
-* Has no available credit balance for a prepaid feature.
 * Has reached the usage limit for a metered feature.
 * Doesn't have access to a boolean feature, for example because a subscription expired or a feature isn't included in their plan.
 
@@ -77,8 +71,8 @@ For each request, the plugin:
 1. Resolves the customer's subject key from the configured source: a Consumer, a Dev Portal application, or a request header or query parameter.
    This is the same subject the Metering & Billing plugin uses to attribute usage, so both plugins agree on who's being billed.
 2. Looks up the cached enforcement state for that subject in a local, per-worker cache.
-3. If the feature is available and the customer's usage or credit balance is within their entitlement, allows the request.
-4. If the feature is unavailable, the usage limit is reached, or credit is depleted, blocks the request with the configured HTTP status and message.
+3. If the feature is available and the customer's usage is within their entitlement, allows the request.
+4. If the feature is unavailable or the usage limit is reached, blocks the request with the configured HTTP status and message.
 
 The plugin never calls the {{site.metering_and_billing}} Entitlement Access API directly from the request path. Instead, a background timer polls the endpoint on [`config.refresh_interval`](/plugins/entitlement-enforcement/reference/#schema--config-refresh-interval) and writes the result to Redis, and a second timer syncs Redis into each worker's local cache on [`config.sync_rate`](/plugins/entitlement-enforcement/reference/#schema--config-sync-rate). This two-tier cache keeps the request path fast and avoids calling the Entitlement Access API on every request.
 
@@ -101,10 +95,6 @@ columns:
   - title: When it happens
     key: when
 rows:
-  - code: "`NO_CREDIT_AVAILABLE`"
-    status: "`402`"
-    message: "Customer has no credit available."
-    when: The customer's prepaid credit balance for the feature is depleted.
   - code: "`USAGE_LIMIT_REACHED`"
     status: "`429`"
     message: "Customer has reached usage limit for feature."
@@ -122,6 +112,14 @@ rows:
     message: "Customer is not found by subject."
     when: The plugin can't resolve a customer for the request's subject key. This also covers unknown subjects when `deny_unknown_customers` is `true`.
 {% endtable %}
+
+<!-- 
+ADD THIS ROW WHEN FEATURE IS ADDED
+- code: "`NO_CREDIT_AVAILABLE`"
+status: "`402`"
+message: "Customer has no credit available."
+when: The customer's prepaid credit balance for the feature is depleted. [This is in the schema but not actually available yet] -->
+
 <!--vale on-->
 
 The response body for a blocked request contains the message and reason code, for example:
@@ -171,6 +169,6 @@ Set [`config.fail_policy`](/plugins/entitlement-enforcement/reference/#schema--c
 
 Entitlement Enforcement doesn't replace rate limiting.
 [Rate limiting plugins](/plugins/?terms=rate%2520limiting) like [Rate Limiting Advanced](/plugins/rate-limiting-advanced/) protect infrastructure and reset on a fixed schedule, such as requests per second or tokens per minute.
-Entitlement Enforcement protects business logic, such as credit balances and plan limits, and resets on billing events.
+Entitlement Enforcement protects business logic, such as plan limits and feature access, and resets on billing events.
 
 You can use both together: for example, a customer might have a monthly token allowance enforced by this plugin, and a per-minute rate limit to prevent a single burst of traffic from consuming that allowance too quickly.

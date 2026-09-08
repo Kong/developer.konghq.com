@@ -1,4 +1,4 @@
-description: 'Set up the Entitlement Enforcement plugin to enforce feature access and credit balance checks for consumers, using Redis for caching.'
+description: 'Set up the Entitlement Enforcement plugin to enforce feature access and usage limits for consumers, using Redis for caching.'
 
 title: 'Enforce entitlements for a feature'
 
@@ -11,7 +11,6 @@ config:
     look_up_value_in: consumer
   feature:
     key: ${feature_key}
-  credit_balance_required: true
   redis:
     host: ${redis_host}
 

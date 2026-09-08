@@ -189,7 +189,7 @@ rows:
 The customer's credit balance, the charge's settlement mode, and the grant's expiration and priority rules together determine how much credit is consumed.
 
 {:.info}
-> Blocking a charge under `credit_only` only stops the billing line from being generated; it doesn't stop the API request that produced it. To block API traffic when a customer's credit balance is depleted, use the [Entitlement Enforcement plugin](/plugins/entitlement-enforcement/).
+> Blocking a charge under `credit_only` only stops the billing line from being generated; it doesn't stop the API request that produced it.
 
 For details on draw-down order and expiration behavior, see [credit consumption and expiration](/metering-and-billing/credits/consumption-and-expiration/).
 

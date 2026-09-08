@@ -182,11 +182,11 @@ rows:
             config:
               title: Entitlement Enforcement
               description: |
-                Block API requests at the gateway when a customer's credit balance, usage limit, or feature access runs out.
+                Block API requests at the gateway when a customer's usage limit is reached or feature access runs out.
               icon: /assets/icons/lock.svg
               cta:
                 text: Learn more
-                url: /plugins/entitlement-enforcement/
+                url: /metering-and-billing/entitlement-enforcement/get-started/
 
   - header:
       type: h2

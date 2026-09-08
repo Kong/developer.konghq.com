@@ -21,7 +21,6 @@ config:
     field: ${customer_header}
   feature:
     key: ${feature_key}
-  credit_balance_required: true
   response_codes:
     USAGE_LIMIT_REACHED:
       http_status: 403
