@@ -1,15 +1,26 @@
 # frozen_string_literal: true
 
 require_relative '../services/release_map'
+require_relative '../lib/build_filter'
 
 module Jekyll
   class ReleaseMapLoader < Generator
     priority :normal
 
+    # No file sits at this path; the generator builds the page.
+    GENERATED_POLICY_REFERENCE = %r{\Aapp/_mesh_policies/.+/reference\.md\z}
+
+    def initialize(config = {}, build_filter: Jekyll::BuildFilter.current)
+      super(config)
+      @build_filter = build_filter
+    end
+
     def generate(site)
       return if site.config.dig('skip', 'release_map_loader')
 
       ReleaseMap.load_all(site).each do |source_path, config|
+        next if generated_page_missing?(source_path, site)
+
         validate_status!(source_path, config)
         process_page(source_path, config, site)
       end
@@ -17,9 +28,14 @@ module Jekyll
 
     private
 
+    def generated_page_missing?(source_path, site)
+      GENERATED_POLICY_REFERENCE.match?(source_path) && site.config.dig('skip', 'mesh_policy')
+    end
+
     def process_page(source_path, config, site)
       relative_path = source_path.sub(%r{^app/}, '')
-      page = find_page_by_path!(relative_path, site)
+      page = find_page_by_path(relative_path, site)
+      return unless page
 
       page.data['canonical_url'] = config['canonical_url'] if config['canonical_url']
 
@@ -53,12 +69,14 @@ module Jekyll
       canonical_page.data['previous_major_urls'][product.major_version] << page.url
     end
 
-    def find_page_by_path!(relative_path, site)
+    def find_page_by_path(relative_path, site)
       page = find_page(relative_path, site) || find_document(relative_path, site)
+      return page if page
 
-      raise ArgumentError, "No page found for #{relative_path}" if page.nil?
+      raise ArgumentError, "No page found for #{relative_path}" unless @build_filter.filtered?
 
-      page
+      Jekyll.logger.warn 'ReleaseMapLoader:', "No page found for #{relative_path} in a filtered build."
+      nil
     end
 
     def product_data(site, major_version)

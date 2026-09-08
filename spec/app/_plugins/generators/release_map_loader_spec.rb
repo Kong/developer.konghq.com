@@ -36,6 +36,21 @@ RSpec.describe Jekyll::ReleaseMapLoader do
 
   let(:release_map) { {} }
 
+  let(:generated_reference_page) do
+    instance_double(Jekyll::Page,
+                    data: { 'major_version' => { 'ai-gateway' => 1 } },
+                    url: '/mesh/v2/policies/meshaccesslog/reference/',
+                    relative_path: '_mesh_policies/v2/meshaccesslog/reference.md')
+  end
+
+  let(:generated_reference_entry) do
+    {
+      'app/_mesh_policies/v2/meshaccesslog/reference.md' => {
+        'canonical_url' => '/mesh/policies/meshaccesslog/reference/'
+      }
+    }
+  end
+
   shared_examples 'sets the banner info for a page' do
     it 'attaches cross_major_banner_info to the page' do
       generator.generate(site)
@@ -114,6 +129,57 @@ RSpec.describe Jekyll::ReleaseMapLoader do
         expect do
           generator.generate(site)
         end.to raise_error(/blank canonical_url for non-pending entry/)
+      end
+    end
+
+    context 'with an entry for a generated page' do
+      let(:pages) { [generated_reference_page] }
+      let(:release_map) { generated_reference_entry }
+
+      it 'matches the page by its synthetic source path' do
+        generator.generate(site)
+        expect(generated_reference_page.data['canonical_url'])
+          .to eq('/mesh/policies/meshaccesslog/reference/')
+      end
+    end
+
+    context 'with an entry for a generated page and the mesh policy generator skipped' do
+      let(:site) do
+        instance_double(Jekyll::Site, pages:, documents:, data:, config: { 'skip' => { 'mesh_policy' => true } })
+      end
+      let(:pages) { [] }
+      let(:release_map) { generated_reference_entry }
+
+      it 'ignores the entry' do
+        expect { generator.generate(site) }.not_to raise_error
+      end
+    end
+
+    context 'with an entry whose page is missing' do
+      let(:pages) { [] }
+      let(:release_map) do
+        { 'app/_how-tos/ai-gateway/v1/valid-page.md' => { 'canonical_url' => '/ai-gateway/valid-page/' } }
+      end
+
+      it 'raises in an unfiltered build' do
+        generator = described_class.new({}, build_filter: instance_double(Jekyll::BuildFilter, filtered?: false))
+
+        expect do
+          generator.generate(site)
+        end.to raise_error(%r{No page found for _how-tos/ai-gateway/v1/valid-page.md})
+      end
+
+      context 'in a filtered build' do
+        subject(:generator) { described_class.new({}, build_filter:) }
+
+        let(:build_filter) { instance_double(Jekyll::BuildFilter, filtered?: true) }
+
+        it 'warns and skips the entry' do
+          expect(Jekyll.logger).to receive(:warn)
+            .with('ReleaseMapLoader:', %r{No page found for _how-tos/ai-gateway/v1/valid-page.md})
+
+          expect { generator.generate(site) }.not_to raise_error
+        end
       end
     end
 
