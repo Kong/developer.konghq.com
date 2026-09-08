@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "gray-matter": "^4.0.3",
+    "tinyglobby": "^0.2.12",
     "yaml": "^2.6.0"
   }
 }
