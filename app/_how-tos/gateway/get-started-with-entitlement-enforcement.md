@@ -278,6 +278,7 @@ entities:
       config:
         ingest_endpoint: https://us.api.konghq.com/v3/openmeter/events
         api_token: ${AUTH_TOKEN}
+        ssl_verify: true
         meter_api_requests: true
         meter_ai_token_usage: false
         subject:
@@ -382,6 +383,7 @@ entities:
       config:
         entitlement_access_endpoint: https://us.api.konghq.com/v3/openmeter/entitlement-access/query
         api_token: ${ENTITLEMENT_ACCESS_TOKEN}
+        ssl_verify: true
         feature:
           key: premium_api_access
         customer:
@@ -390,6 +392,7 @@ entities:
         redis:
           host: ${REDIS_HOST}
           port: 6379
+          ssl_verify: true
 variables:
   ENTITLEMENT_ACCESS_TOKEN:
     value: $ENTITLEMENT_ACCESS_TOKEN
