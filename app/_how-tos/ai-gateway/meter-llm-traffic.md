@@ -98,6 +98,7 @@ Before you configure {{site.metering_and_billing}}, set up an [AI Consumer](/ai-
      --output json --jq '.id' --jq-raw-output \
      --pat "$KONNECT_TOKEN")"
    ```
+   {: data-test-step="block"}
 
 1. Create an API key credential for Kong Air:
 
