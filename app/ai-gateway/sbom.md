@@ -35,6 +35,9 @@ columns:
   - title: Direct Download link
     key: download
 rows:
+  - version: 2.0.3
+    download: |
+      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block" alt=""> Download 2.0.3 SBOM](https://packages.konghq.com/public/ai-gateway-20/raw/names/security-assets/versions/2.0.3/kong-aigw-2.0.3-security-assets.tar.gz)
   - version: 2.0.2
     download: |
       [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block" alt=""> Download 2.0.2 SBOM](https://packages.konghq.com/public/ai-gateway-20/raw/names/security-assets/versions/2.0.2/kong-aigw-2.0.2-security-assets.tar.gz)
