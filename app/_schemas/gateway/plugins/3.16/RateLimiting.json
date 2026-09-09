@@ -2,6 +2,11 @@
   "properties": {
     "config": {
       "properties": {
+        "custom_key": {
+          "description": "Overrides the computed rate-limiting key with a literal value for this request, regardless of `limit_by`.",
+          "minLength": 1,
+          "type": "string"
+        },
         "day": {
           "description": "The number of HTTP requests that can be made per day.",
           "type": "number"
@@ -44,6 +49,7 @@
             "header",
             "ip",
             "path",
+            "principal",
             "service"
           ],
           "type": "string"
@@ -339,6 +345,39 @@
       "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated. (Note that some plugins can not be restricted to consumers groups this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer Groups",
       "properties": {
         "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "expressions": {
+      "properties": {
+        "custom_key": {
+          "maxLength": 1024,
+          "type": "string"
+        },
+        "day": {
+          "maxLength": 1024,
+          "type": "string"
+        },
+        "hour": {
+          "maxLength": 1024,
+          "type": "string"
+        },
+        "minute": {
+          "maxLength": 1024,
+          "type": "string"
+        },
+        "month": {
+          "maxLength": 1024,
+          "type": "string"
+        },
+        "second": {
+          "maxLength": 1024,
+          "type": "string"
+        },
+        "year": {
+          "maxLength": 1024,
           "type": "string"
         }
       },
