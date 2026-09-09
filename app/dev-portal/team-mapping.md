@@ -67,6 +67,10 @@ This guide explains how to map the permissions, including scopes and claims, fro
 
 ## Map IdP developer teams in {{site.konnect_short_name}}
 
+You can configure more than one IdP for a {{site.dev_portal}}, but only one IdP can be enabled at a time. Switching the enabled IdP, including switching between OIDC and SAML, is a non-trivial operation.
+
+{% navtabs "map-idp-teams" %}
+{% navtab "UI" %}
 1. In [**{{site.dev_portal}}**](https://cloud.konghq.com/portal), click **Settings**.
 
 1. In the **General** setting tab, enable **Portal RBAC**.
@@ -103,6 +107,69 @@ This guide explains how to map the permissions, including scopes and claims, fro
 
     {:.warning}
     > If IdP mapping is enabled and this setting is enabled for a {{site.konnect_short_name}}-managed team, {{site.konnect_short_name}} treats the team as an empty IdP group. Developers are removed from the team at their next login, even if they were added manually.
+{% endnavtab %}
+{% navtab "API" %}
+1. The team you're mapping to must already exist before you create the mapping. Create it by sending a `POST` request to the [`/portals/{portalId}/teams` endpoint](/api/konnect/portal-management/v3/#/operations/create-portal-team):
+{% capture create-team %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/portals/$PORTAL_ID/teams
+status_code: 201
+method: POST
+body:
+    name: IDM - Developers
+    description: The Identity Management (IDM) team
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{ create-team | indent: 3 }}
+
+    The team object includes a `konnect_managed` field. `konnect_managed: true` means the team is managed manually in {{site.konnect_short_name}}. `konnect_managed: false` means the team is synced from the IdP.
+    You can change this by sending a `PATCH` request to the [`/portals/{portalId}/teams/{teamId}` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-team). If the team is currently mapped to an IdP group, remove the mapping first by sending a `DELETE` request to the [`/portals/{portalId}/identity-providers/{id}/team-group-mappings/{mappingId}` endpoint](/api/konnect/portal-management/v3/#/operations/delete-portal-idp-team-group-mapping).
+
+1. Configure the IdP by sending a `POST` request to the [`/portals/{portalId}/identity-providers` endpoint](/api/konnect/portal-management/v3/#/operations/create-portal-identity-provider):
+{% capture create-idp %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/portals/$PORTAL_ID/identity-providers
+status_code: 201
+method: POST
+body:
+    type: oidc
+    enabled: true
+    config:
+        issuer_url: https://konghq.okta.com/oauth2/default
+        client_id: YOUR_CLIENT_ID
+        client_secret: YOUR_CLIENT_SECRET
+        scopes:
+            - openid
+            - email
+            - profile
+        claim_mappings:
+            name: name
+            email: email
+            groups: groups
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{ create-idp | indent: 3 }}
+
+1. Map an IdP group to the team by sending a `POST` request to the [`/portals/{portalId}/identity-providers/{id}/team-group-mappings` endpoint](/api/konnect/portal-management/v3/#/operations/create-portal-idp-team-group-mapping):
+{% capture create-mapping %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/portals/$PORTAL_ID/identity-providers/$IDP_ID/team-group-mappings
+status_code: 201
+method: POST
+body:
+    team_id: $TEAM_ID
+    group: IDM - Developers
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{ create-mapping | indent: 3 }}
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Test developer team mappings
 
