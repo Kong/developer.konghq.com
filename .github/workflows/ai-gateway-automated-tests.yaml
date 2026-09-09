@@ -67,6 +67,7 @@ jobs:
         env:
           DEPLOYMENT_MODEL: konnect
           PRODUCTS: ai-gateway
+          MAX_RETRIES: 7
           KONG_IMAGE_TAG: ${{ env.KONG_IMAGE_TAG }}
           KONG_IMAGE_NAME: ${{ env.KONG_IMAGE_NAME }}
           TESTS_KONNECT_TOKEN: ${{ secrets.KONNECT_TOKEN }}
