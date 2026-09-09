@@ -15,6 +15,16 @@ works_on:
 min_version:
   gateway: '3.16'
 
+faqs:
+  - q: Are all CEL variables equally safe to use in an expressible field?
+    a: |
+      No. A CEL expression can reference request data like `http.headers.*` and `http.queries.*`.
+      That data is controlled by the client, so a client can set it to any value, including one chosen to collide with, spoof, or evade another client's.
+
+      This matters most for a field that keys, identifies, or scopes something for a specific client, such as a counter key, a quota bucket, or an identity binding. 
+      For a sensitive field like this, we recommend authenticated identity-derived values, such as `principal.id` or `principal.metadata.*`. 
+      A client can't forge those values without first compromising the authentication step itself.
+
 breadcrumbs:
   - /gateway/
   - /gateway/entities/
