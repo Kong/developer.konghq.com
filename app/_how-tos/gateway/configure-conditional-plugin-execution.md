@@ -44,7 +44,7 @@ min_version:
     gateway: '3.15'
 
 related_resources:
-  - text: Plugin expressions reference
+  - text: Plugin conditional execution reference
     url: /gateway/plugins/conditions/
 
 faqs:

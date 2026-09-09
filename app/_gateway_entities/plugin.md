@@ -249,7 +249,7 @@ condition: 'http.headers.x_block == "true"'
 ```
 
 For more information, see:
-* [Plugin expressions reference](/gateway/plugins/conditions/)
+* [Plugin conditional execution reference](/gateway/plugins/conditions/)
 * [CEL reference](/gateway/plugins/expressions/)
 * [How to: Configure conditional plugin execution in {{site.base_gateway}}](/gateway/configure-conditional-plugin-execution/)
 

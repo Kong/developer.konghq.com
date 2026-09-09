@@ -18,7 +18,7 @@ related_resources:
     url: /gateway/routing/traditional/
   - text: Traffic control and routing
     url: /gateway/traffic-control-and-routing/
-  - text: Conditional plugin expressions
+  - text: Plugin conditional execution reference
     url: /gateway/plugins/conditions/
 
 min_version:

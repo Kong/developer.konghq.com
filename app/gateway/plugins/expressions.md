@@ -21,7 +21,7 @@ works_on:
   - konnect
 
 related_resources:
-  - text: Executing plugins based on conditions
+  - text: Plugin conditional execution reference
     url: /gateway/plugins/conditions/
   - text: Dynamic plugin config with CEL
     url: /gateway/plugins/expressible-fields/
