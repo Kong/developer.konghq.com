@@ -29,6 +29,9 @@ sections:
       - path: /gateway/entities/plugin/
       - path: /gateway/plugins/plugin-ordering-legacy/
       - path: /gateway/plugins/plugin-ordering-priority-preserving/
+      - path: /gateway/plugins/conditions/
+      - path: /gateway/plugins/expressions/
+      - path: /gateway/plugins/expressible-fields/
       - path: /gateway/entities/upstream/
       - path: /gateway/entities/target/
       - path: /gateway/rate-limiting/

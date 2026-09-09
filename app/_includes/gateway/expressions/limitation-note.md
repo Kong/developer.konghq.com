@@ -1,2 +1,2 @@
 {:.info}
-> **Note**: This plugin **does not** support [conditional expressions](/gateway/plugins/expressions/).
+> **Note**: This plugin **does not** support [conditional expressions](/gateway/plugins/conditions/).

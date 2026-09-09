@@ -1,0 +1,22 @@
+description: "Allow requests using a CEL expression that reads the authenticated Principal's metadata, instead of a static allow list."
+
+title: 'Allow by Principal metadata'
+
+weight: 800
+
+requirements:
+  - "[Authentication](/gateway/authentication/) configured with Kong Identity Principal support"
+
+config:
+  allow_when:
+    - "has(principal.metadata.tier) && principal.metadata.tier == \"partner\""
+
+min_version:
+  gateway: '3.16'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

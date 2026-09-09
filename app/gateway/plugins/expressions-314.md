@@ -39,7 +39,7 @@ related_resources:
   - text: Expressions router
     url: /gateway/routing/expressions/
   - text: Conditional expressions for plugins in 3.15 and later
-    url: /gateway/plugins/expressions/
+    url: /gateway/plugins/conditions/
   - text: Configure conditional plugin execution
     url: /gateway/configure-conditional-plugin-execution/
   - text: Plugin entity
@@ -56,7 +56,7 @@ related_resources:
 {:.warning}
 > **This page documents the beta version of plugin conditions available in {{site.base_gateway}} 3.14, which used ATC expression syntax.**
 > In 3.15, plugin expressions are generally available, but the expression language changed significantly from 3.14 to 3.15.
-> If you are using {{site.base_gateway}} 3.15 or later, see the [plugin conditions reference](/gateway/plugins/expressions/) for the current CEL-based syntax.
+> If you are using {{site.base_gateway}} 3.15 or later, see the [plugin conditions reference](/gateway/plugins/conditions/) for the current CEL-based syntax.
 
 Plugin conditions allow you to attach an optional `condition` expression to any plugin.
 When a request comes in, {{site.base_gateway}} evaluates the expression immediately before the plugin's `access` phase.

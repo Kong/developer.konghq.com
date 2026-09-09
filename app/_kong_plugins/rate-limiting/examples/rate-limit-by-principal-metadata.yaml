@@ -1,0 +1,23 @@
+description: "Rate limit by Principal, with the limit and rate limiting key both driven by CEL expressions reading the Principal's metadata."
+title: 'Rate limit by Principal metadata'
+
+weight: 800
+
+requirements:
+  - "[Authentication](/gateway/authentication/) configured with Kong Identity Principal support"
+
+config:
+  limit_by: principal
+  custom_key: unknown-partner
+  second: 10
+expressions:
+  custom_key: principal.metadata.partner_id
+  second: principal.metadata.rate_limit
+
+min_version:
+  gateway: '3.16'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api

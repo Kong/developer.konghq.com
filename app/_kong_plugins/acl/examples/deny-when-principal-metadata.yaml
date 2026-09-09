@@ -1,0 +1,22 @@
+description: "Deny requests using a CEL expression that reads the authenticated Principal's metadata, instead of a static deny list."
+
+title: 'Deny by Principal metadata'
+
+weight: 700
+
+requirements:
+  - "[Authentication](/gateway/authentication/) configured with Kong Identity Principal support"
+
+config:
+  deny_when:
+    - "has(principal.metadata.status) && principal.metadata.status == \"suspended\""
+
+min_version:
+  gateway: '3.16'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
