@@ -49,6 +49,7 @@ Make sure you have [access to the  AI PII service](#ai-pii-anonymizer-service-ac
 ```sh
 docker run --rm -p 8080:8080 docker.cloudsmith.io/kong/ai-pii/service:v0.1.2-en
 ```
+{: data-test-step="block" }
 
 ## Create the AI Model Provider, AI Model, and AI PII Sanitizer Policy
 
