@@ -56,7 +56,7 @@ prereqs:
 
         {% capture ollama %}
         {% validation custom-command %}
-        command: docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+        command: docker run -d -v ollama:/root/.ollama --network=kong-quickstart-net -p 11434:11434 --name ollam  ollama/ollama
         expected:
           return_code: 0
         render_output: false
@@ -70,7 +70,7 @@ prereqs:
         2. After installation, open a new terminal window and run the following command to pull the orca-mini model we will be using in this tutorial:
 
            ```sh
-           curl http://host.docker.internal:11434/api/generate -d '{ "model": "orca-mini" }' > orca.log 2>&1 &
+           docker exec -d ollama ollama pull orca-mini
            ```
            {: data-test-prereq="block" }
 
@@ -79,7 +79,7 @@ prereqs:
            In this example, we're running {{site.base_gateway}} locally in a Docker container, so the host is `host.docker.internal`:
 
            {% env_variables %}
-           DECK_OLLAMA_UPSTREAM_URL: 'http://host.docker.internal:11434/api/chat'
+           DECK_OLLAMA_UPSTREAM_URL: 'http://ollama:11434/api/chat'
            indent: 3
            section: prereqs
            {% endenv_variables %}
