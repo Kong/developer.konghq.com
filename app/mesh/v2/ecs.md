@@ -67,7 +67,7 @@ other mesh services it contacts
 ## Deploy {{ site.amazon }} ECS on {{site.mesh_product_name}}
 
 This section covers ECS-specific parts of running {{site.mesh_product_name}}, using the
-[example Cloudformation](https://github.com/Kong/kong-mesh-ecs) as a guide.
+[example CloudFormation](https://github.com/Kong/kong-mesh-ecs) as a guide.
 
 ### Control Plane in Universal on ECS 
 
@@ -75,7 +75,7 @@ This section covers ECS-specific parts of running {{site.mesh_product_name}}, us
 database as a PostgreSQL backend. It also uses ECS service discovery to enable ECS
 tasks to communicate with the {{site.mesh_product_name}} Control Plane.
 
-The example Cloudformation includes two Cloudformation stacks for
+The example CloudFormation includes two CloudFormation stacks for
 [creating a cluster](https://github.com/Kong/kong-mesh-ecs/blob/main/deploy/vpc.yaml) and
 [deploying {{site.mesh_product_name}}](https://github.com/Kong/kong-mesh-ecs/blob/main/deploy/controlplane.yaml)
 
@@ -97,7 +97,7 @@ must be restricted accordingly for your AWS account
 (which must be explicitly given to the CP, see below).
 
 The Control Plane must have the following options enabled. The example
-Cloudformation [sets them via environment variables](https://github.com/Kong/kong-mesh-ecs/blob/main/deploy/controlplane.yaml#L334-L337):
+CloudFormation [sets them via environment variables](https://github.com/Kong/kong-mesh-ecs/blob/main/deploy/controlplane.yaml#L334-L337):
 
 
 ```yaml
@@ -128,7 +128,7 @@ service must enumerate all other mesh services this service contacts and include
 {% new_in 2.11 %} we have introduced a new feature that leverages `Route53` to simplify migration to the Mesh. Please see the [Dynamic Outbounds](#dynamic-outbounds) section for more details.
 
 
-See the example repository to learn [how to handle the `Dataplane` template with Cloudformation](https://github.com/Kong/kong-mesh-ecs/blob/main/deploy/counter-demo/demo-app.yaml#L31-L42).
+See the example repository to learn [how to handle the `Dataplane` template with CloudFormation](https://github.com/Kong/kong-mesh-ecs/blob/main/deploy/counter-demo/demo-app.yaml#L31-L42).
 
 {:.warning}
 > AWS enforces a [limit of 5 requests per second to the Route53 API per AWS profile](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/DNSLimitations.html#:~:text=For%20the%20Amazon%20Route%2053,a%20value%20of%20Rate%20exceeded%20.). {{site.mesh_product_name}} performs initial requests for each Hosted Zone on startup, and thereafter makes additional requests only if changes are needed, at intervals of 10 seconds by default (this can be adjusted using the `KMESH_RUNTIME_AWS_ROUTE53_REFRESH_INTERVAL` setting)
@@ -170,7 +170,7 @@ In addition, configure the private Hosted Zone details:
 * `KMESH_RUNTIME_AWS_ROUTE53_ENABLED=true` 
 * `KMESH_RUNTIME_AWS_ROUTE53_HOSTED_ZONE_ID=<hosted-zone-id>`
 
-The example Cloudformation [sets them via environment variables](https://github.com/Kong/kong-mesh-ecs/blob/main/deploy/controlplane.yaml#L364-L382):
+The example CloudFormation [sets them via environment variables](https://github.com/Kong/kong-mesh-ecs/blob/main/deploy/controlplane.yaml#L364-L382):
 
 **MeshService Integration**
 If you are using [MeshService](/mesh/v2/meshservice/), you must provide the Hosted Zone ID when creating a [HostnameGenerator](/mesh/v2/hostnamegenerator/):
