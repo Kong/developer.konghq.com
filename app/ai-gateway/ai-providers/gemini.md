@@ -151,3 +151,59 @@ The authentication chain follows the same order of precedence as the `gcloud` to
 1. VM Instance defined IAM Role.
 
 For restricted networks, override the default endpoints with `auth.metadata_url` or `auth.oauth_token_url`.
+
+## Authenticate with GCP Workload Identity Federation
+
+Instead of a static service account key, you can configure the GCP Provider to obtain temporary GCP credentials through Workload Identity Federation, exchanging credentials from an external identity provider for short-lived GCP tokens. This applies to both Gemini Standard and Gemini Enterprise, since both authenticate through the same GCP Provider auth.
+
+To use Workload Identity Federation, set `auth.type` to `gcp` and add a `workload_identity_federation` object:
+
+* **`source`** (required): The identity provider used to obtain temporary GCP credentials. Currently, only `aws_iam` is supported.
+* **`auth_json`** (optional): JSON configuration for the Workload Identity Federation token exchange, Google's `external_account` credential config (audience, token URL, credential source, and optional service account impersonation URL). If not set, Kong falls back to the file path in the `GOOGLE_APPLICATION_CREDENTIALS` environment variable.
+
+When `source` is `aws_iam`, provide AWS IAM credentials under `aws` to identify the AWS principal used in the token exchange, or omit them to fall back to the default AWS credentials provider chain (EC2 instance profiles, environment variables, and so on):
+
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Description
+    key: description
+rows:
+  - field: "`aws.access_key_id`"
+    description: "AWS access key ID for static IAM user credentials."
+  - field: "`aws.secret_access_key`"
+    description: "AWS secret access key paired with `access_key_id`."
+  - field: "`aws.session_token`"
+    description: "AWS session token for temporary IAM credentials."
+  - field: "`aws.region`"
+    description: "The AWS region to use. Overrides the region inferred from the environment."
+  - field: "`aws.assume_role_arn`"
+    description: "IAM role ARN to assume for generating authentication tokens."
+  - field: "`aws.role_session_name`"
+    description: "Session name for the temporary credentials when assuming the IAM role. Required if `aws.assume_role_arn` is set."
+  - field: "`aws.sts_endpoint_url`"
+    description: "Custom STS endpoint for role assumption. Defaults to `https://sts.amazonaws.com`."
+{% endtable %}
+
+Here's a configuration that authenticates with GCP by assuming an AWS IAM role:
+
+{% entity_example %}
+type: model-provider
+data:
+  display_name: Gemini Production
+  name: my-gemini-account
+  type: gemini
+  config:
+    auth:
+      type: gcp
+      workload_identity_federation:
+        source: aws_iam
+        aws:
+          assume_role_arn: ${role_arn}
+          role_session_name: kong-gemini-wif
+variables:
+  role_arn:
+    value: $AWS_ASSUME_ROLE_ARN
+    description: The ARN of the AWS IAM role to assume for the Workload Identity Federation token exchange.
+{% endentity_example %}
