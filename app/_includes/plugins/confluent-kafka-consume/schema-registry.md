@@ -91,6 +91,47 @@ For sample configuration values, see:
 * [Schema registry with OAuth2 configuration example](./examples/schema-registry-oauth2/) {% new_in 3.12 %}
 {% endif %}
 
+{% if include.workflow == 'producer' %}
+### Accept plain JSON for Avro schemas {% new_in 3.16 %}
+
+By default, an Avro schema requires every union-typed value to be wrapped in a single-key object that names the union branch. 
+For example, a field declared as `["null", "string"]` must be sent as `{"string": "hello"}` or `{"null": null}`.
+This forces HTTP clients to understand Avro's wire encoding to call your API.
+
+Set `payload_encoding: simple_json` on the [`value_schema`](./reference/#schema--config-schema-registry-confluent-value-schema-payload-encoding) or the [`key_schema`](./reference/#schema--config-schema-registry-confluent-key-schema-payload-encoding) to let the {{include.name}} plugin accept plain JSON instead, and resolve union branches against the schema itself:
+
+{% table %}
+columns:
+  - title: Value
+    key: value
+  - title: Resolution
+    key: resolution
+rows:
+  - value: "`null`, or a nullable field is omitted"
+    resolution: "Encoded as the union's `null` branch."
+  - value: "A value matching exactly one non-null branch"
+    resolution: "Encoded as that branch."
+  - value: |
+      A value matching more than one non-null branch (for example a JSON number against `["int", "long"]` or `["float", "double"]`)
+    resolution: |
+      Encoded using the first matching branch, in the order the branches are declared in the schema. 
+      An integer that doesn't fit in a 32-bit signed range is always encoded as `long`, even if `int` is declared first.
+  - value: "A value that doesn't match any branch of the union"
+    resolution: "The request is rejected with an error that includes the JSON path and the branches that were considered."
+{% endtable %}
+
+This resolution applies at every level of the payload, including fields inside nested records, arrays, and maps. 
+Logical types (for example timestamps, decimals, or UUIDs) are passed through unchanged once their union is resolved.
+
+If a record field is omitted from the request body, the plugin falls back to the field's schema `default`, if one exists.
+Otherwise, the field must be nullable, or the plugin rejects the request as missing a required field.
+
+Because an Avro-tagged value like `{"string": "hello"}` already matches a single branch by name, `simple_json` accepts it as-is. 
+This lets you migrate clients from `avro_json` to `simple_json` one at a time, instead of all at once.
+
+For a sample configuration, see [Simple JSON encoding for Avro schemas](./examples/schema-registry-simple-json/).
+{% endif %}
+
 
 
 
