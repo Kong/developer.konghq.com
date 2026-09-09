@@ -237,6 +237,66 @@ To configure it, specify the function in [`config.request_prompt_count_function`
 
 When using the request prompt provider, it will call the function to get the token count at the request level and implement a limit.
 
+## Identification strategies
+
+The AI Rate Limiting Advanced Policy supports several identifiers that allow you to define an identity based scope for rate limiting.
+
+You can configure the type of identifier with the [`config.identifier`](./reference/#schema--config-identifier) field and scope to it using [config.policies.match](./reference/#schema--config-policies-match).
+
+{% table %}
+columns:
+  - title: Type
+    key: type
+  - title: Description
+    key: description
+rows:
+  - type: "`consumer`"
+    description: (Default)
+  - type: "`ip`"
+    description: 
+  - type: "`credential`"
+    description: 
+  - type: "`service`"
+    description: 
+  - type: "`header`"
+    description: 
+  - type: "`path`"
+    description: 
+  - type: "`consumer-group`"
+    description: Requires the policy is attached to an [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) entity.
+      
+{% endtable %}
+
+The following example modifies the [policy-based rate limiting](/ai-gateway/policies/ai-rate-limiting-advanced/#policy-based-rate-limiting) example to use consumer credentials as an identifier.
+
+{% entity_example %}
+type: policy
+data:
+  display_name: AI Rate Limiting Advanced - Consumer and Model
+  type: ai-rate-limiting-advanced
+  name: ai-rate-limiting-advanced
+  config:
+    identifier: credential
+    policies:
+    - match:
+      - type: credential
+        key: id
+        values:
+          - $CONSUMER_ID
+      - type: model
+        partition_by: true
+        values:
+        - gpt-4o
+      limits:
+        - limit: 100
+          window_size: 60
+        - limit: 1000
+          window_size: 3600
+formats:
+  - kongctl
+  - konnect-api
+{% endentity_example %}
+
 ## Known limitations of AI Rate Limiting Advanced
 
 The cost is only reflected during the next request.
