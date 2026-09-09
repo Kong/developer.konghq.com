@@ -16,6 +16,18 @@ rows:
 
   - columns:
       - blocks:
+          - type: card
+            config:
+              title: "Zero to hero learning path"
+              description: |
+                Follow our curriculum-style guide to mastering Kong Mesh, from basic concepts to advanced multi-zone operations.
+              featured: true
+              cta:
+                text: "Start the journey"
+                url: /mesh/scenarios/
+
+  - columns:
+      - blocks:
           - type: structured_text
             config:
               blocks:
@@ -25,7 +37,7 @@ rows:
 
                     **Benefits of Kong Mesh:**
                     - Built-in mTLS, service discovery, and traffic management.
-                    - Support for [multi-zone](/mesh/mesh-multizone-service-deployment/) and multi-tenant topologies.
+                    - Support for [multi-zone](/mesh/multi-zone-architecture/) and multi-tenant topologies.
                     - Runs on both Kubernetes and Universal (VM / Bare metal) environments.
                     - [Enterprise features](/mesh/enterprise/) like access control and advanced observability.
 
@@ -43,30 +55,30 @@ rows:
       - blocks:
           - type: card
             config:
-              title: "Why use a service mesh?"
+              title: "Introduction"
               description: |
-                Overview of service mesh concepts and how Kong Mesh simplifies secure and reliable service-to-service communication using sidecar proxies and a Control Plane.
+                Why teams run a service mesh, and how Kong Mesh secures and controls service-to-service communication using sidecar proxies and a Control Plane.
               cta:
-                text: Learn more 
-                url: /mesh/service-mesh/
+                text: Learn more
+                url: /mesh/introduction/
       - blocks:
           - type: card
             config:
-              title: "{{site.mesh_product_name}} concepts"
+              title: "Architecture overview"
               description: |
-                Understand the core concepts of Kong Mesh, including the Control Plane, Data Plane proxies, inbounds and outbounds, and resources like policies.
+                Understand the core components of Kong Mesh, including global and zone Control Planes, the Envoy-based Data Plane, and how Services join the mesh.
               cta:
-                text: Learn more 
-                url: /mesh/concepts/
+                text: Learn more
+                url: /mesh/architecture-overview/
       - blocks:
           - type: card
             config:
-              title: "{{site.mesh_product_name}} architecture"
+              title: "Policy targeting and precedence"
               description: |
-                Understand the architecture of a Kong Mesh mesh, including Control and Data Plane components, Kubernetes and Universal modes, and how Services integrate into the mesh.
+                Understand how policies attach to proxies with `targetRef`, how `to` and `rules` shape traffic, and how Kong Mesh resolves precedence between policies.
               cta:
-                text: Learn more 
-                url: /mesh/architecture/
+                text: Learn more
+                url: /mesh/policy-targeting-and-precedence/
 
   - header:
       type: h2
@@ -136,10 +148,10 @@ rows:
               description: |
                 You can deploy {{site.mesh_product_name}} in a single zone or across multiple zones, such as data centers, Kubernetes clusters, or cloud regions - giving you unified control over all your services.
               ctas:
-                - text: Single Zone 
-                  url: /mesh/single-zone/
-                - text: Multi Zone
-                  url: /mesh/mesh-multizone-service-deployment/
+                - text: Multi-zone architecture
+                  url: /mesh/multi-zone-architecture/
+                - text: Mesh-scoped zone proxies
+                  url: /mesh/zone-proxies/
 
       - blocks:
           - type: card
@@ -167,8 +179,10 @@ rows:
                   url: /mesh/policies/meshhealthcheck/
                 - text: Mesh Retry 
                   url: /mesh/policies/meshretry/
-                - text: Mesh Circuit Breaker 
+                - text: Mesh Circuit Breaker
                   url: /mesh/policies/meshcircuitbreaker/
+                - text: Chaos engineering
+                  url: /mesh/validate-resilience-with-fault-injection/
       - blocks:
           - type: card
             config:
@@ -176,11 +190,9 @@ rows:
               icon: /assets/icons/monitor.svg
               description: |
                 Monitor service to service communication using Prometheus and/or OpenTelemetry.
-              ctas:
-                - text: Introduction 
-                  url: /mesh/observability/
-                - text: Deploy an OpenTelemetry collector
-                  url: /mesh/deploy-an-opentelemetry-collector/
+              cta:
+                text: Observe mesh traffic in practice
+                url: /mesh/observe-mesh-traffic-in-practice/
       - blocks:
           - type: card
             config:
@@ -188,10 +200,10 @@ rows:
               icon: /assets/icons/organization.svg
 
               description: |
-                Creating multiple isolated service meshes within the same {{site.mesh_product_name}} cluster.
+                Creating multiple isolated service meshes within the same {{site.mesh_product_name}} cluster, each with its own zone proxies and identity.
               cta:
-                text: Learn more 
-                url: /mesh/mesh-multi-tenancy/
+                text: Learn more
+                url: /mesh/configure-mesh-scoped-zone-proxies/
       - blocks:
           - type: card
             config:
@@ -210,32 +222,32 @@ rows:
       - blocks:
           - type: card
             config:
-              title: "Configure Mutual TLS"
+              title: "Get started with your first policy"
               description: |
-                Enables automatic encrypted mTLS traffic for all the services in a Mesh, as well as assigning an identity to every data plane proxy.
+                Enable strict mTLS, give every workload a SPIFFE identity with MeshIdentity, and apply your first default-deny MeshTrafficPermission.
               cta:
-                text: View the reference
-                url: /mesh/policies/mutual-tls/
+                text: View the guide
+                url: /mesh/get-started-with-your-first-policy/
                 align: end
       - blocks:
           - type: card
             config:
-              title: "Issue identity with MeshIdentity"
+              title: "Manage workload identity and mTLS"
               description: |
-                Issue SPIFFE-compliant workload identities with the MeshIdentity bundled provider and allow traffic with MeshTrafficPermission SPIFFE ID matching.
+                Move beyond mesh-wide mTLS to a granular identity system with MeshIdentity and MeshTrust, including SPIRE and custom SPIFFE IDs.
               cta:
                 text: View the guide
-                url: /mesh/issue-identity-with-meshidentity/
+                url: /mesh/manage-workload-identity-and-mtls/
                 align: end
       - blocks:
           - type: card
             config:
-              title: "Issue identity with MeshIdentity and Spire"
+              title: "Integrate an external CA"
               description: |
-                Issue SPIFFE-compliant workload identities with the MeshIdentity Spire provider, where Spire manages the trust externally.
+                Root the mesh trust chain in HashiCorp Vault, cert-manager, or ACM Private CA instead of the built-in CA.
               cta:
                 text: View the guide
-                url: /mesh/issue-identity-with-meshidentity-spire/
+                url: /mesh/integrate-an-external-ca/
                 align: end
   - columns:
       - blocks:
@@ -261,13 +273,14 @@ rows:
       - blocks:
           - type: card
             config:
-              title: "Secure access between Mesh components"
+              title: "Secure the perimeter"
               description: |
-                Learn how secure access is provided across a Kong Mesh deployment.
-              cta:
-                text: View the reference 
-                url: /mesh/secure-access/
-                align: end
+                Move outbound traffic to a default-deny posture with MeshPassthrough, and manage external dependencies with MeshExternalService.
+              ctas:
+                - text: Secure the perimeter with MeshPassthrough
+                  url: /mesh/secure-the-perimeter-with-meshpassthrough/
+                - text: Manage external services
+                  url: /mesh/manage-external-services-with-meshexternalservice/
 
   - header:
       type: h2
@@ -281,9 +294,11 @@ rows:
               description: |
                 {{site.mesh_product_name}} policies are bundled features for your service traffic and network configuration.
               ctas:
-                - text: Learn about policies 
-                  url: /mesh/policies-introduction/
-                - text: See all policies 
+                - text: Learn about policies
+                  url: /mesh/policy-targeting-and-precedence/
+                - text: Target workloads and services
+                  url: /mesh/target-workloads-and-services/
+                - text: See all policies
                   url: /mesh/policies/
       - blocks:
           - type: card
