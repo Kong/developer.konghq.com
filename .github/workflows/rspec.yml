@@ -22,24 +22,8 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
-        with:
-          ruby-version: .ruby-version
-
-      - name: Ruby gem cache
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
-        with:
-          path: ${{ github.workspace }}/vendor/bundle
-          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gems-
-
-      - name: Bundle Setup
-        run: bundle config path ${{ github.workspace }}/vendor/bundle
-
-      - name: Bundle Install
-        run: bundle install --jobs 4 --retry 3
+      - name: Install deps
+        uses: './.github/reusable-steps/install-deps'
 
       - name: Run RSpec
         run: bundle exec rspec
