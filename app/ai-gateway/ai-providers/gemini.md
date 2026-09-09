@@ -86,9 +86,9 @@ variables:
 
 ### Gemini Enterprise
 
-Gemini Enterprise requires GCP credentials instead of an API key. The Provider only handles authentication; `auth.type: gcp` by itself doesn't select Gemini Enterprise, since Gemini Standard can use the same GCP auth. What actually routes to Gemini Enterprise is `config.gcp_environment` on the AI Model's target that attaches to this Provider (see [Gemini base URL](#gemini-base-url)).
+Gemini Enterprise requires GCP credentials instead of an API key. The provider only handles authentication; `auth.type: gcp` by itself doesn't select Gemini Enterprise, since Gemini Standard can use the same GCP auth. What actually routes to Gemini Enterprise is `config.gcp_environment` on the AI Model's target that attaches to this provider.
 
-Create the Provider to store your GCP credentials:
+Create the provider to store your GCP credentials:
 
 {% entity_examples %}
 formats:
@@ -138,23 +138,23 @@ ai_gateway_models:
 {% endentity_examples %}
 
 {:.info}
-> `targets[].config.gcp_environment` requires `api_endpoint`, `location_id`, and `project_id` together. Without it, this same Provider would route to Gemini Standard instead.
+> `targets[].config.gcp_environment` requires `api_endpoint`, `location_id`, and `project_id` together. Without it, this same provider would route to Gemini Standard instead.
 
 ## Authentication with GCP IAM
 
 Gemini Enterprise requires credentials from Google Cloud Platform (GCP). Gemini Standard can also use GCP credentials instead of an API key by setting `auth` to `gcp`.
 
 The authentication chain follows the same order of precedence as the `gcloud` tool:
-1. Service account JSON defined directly in the Provider: `auth.service_account_json`.
+1. Service account JSON defined directly in the provider: `auth.service_account_json`.
 1. Service account JSON defined in environment variable `GCP_SERVICE_ACCOUNT`.
-1. Workload IAM Role (for example, a GKE or Deployment Service Account).
-1. VM Instance defined IAM Role.
+1. Workload IAM role (for example, a GKE or deployment service account).
+1. IAM role attached to the VM instance.
 
 For restricted networks, override the default endpoints with `auth.metadata_url` or `auth.oauth_token_url`.
 
-## Authenticate with GCP Workload Identity Federation
+## Authentication with GCP Workload Identity Federation
 
-Instead of a static service account key, you can configure the GCP Provider to obtain temporary GCP credentials through Workload Identity Federation, exchanging credentials from an external identity provider for short-lived GCP tokens. This applies to both Gemini Standard and Gemini Enterprise, since both authenticate through the same GCP Provider auth.
+Instead of a static service account key, you can configure the GCP provider to obtain temporary GCP credentials through Workload Identity Federation, exchanging credentials from an external identity provider for short-lived GCP tokens. This applies to both Gemini Standard and Gemini Enterprise, since both authenticate through the same GCP Provider auth.
 
 To use Workload Identity Federation, set `auth.type` to `gcp` and add a `workload_identity_federation` object:
 
@@ -170,6 +170,8 @@ columns:
   - title: Description
     key: description
 rows:
+  - field: "`aws.type`"
+    description: "Required if `aws` is set. Must be `aws`."
   - field: "`aws.access_key_id`"
     description: "AWS access key ID for static IAM user credentials."
   - field: "`aws.secret_access_key`"
@@ -200,6 +202,7 @@ data:
       workload_identity_federation:
         source: aws_iam
         aws:
+          type: aws
           assume_role_arn: ${role_arn}
           role_session_name: kong-gemini-wif
 variables:
