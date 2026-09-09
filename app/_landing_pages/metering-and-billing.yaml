@@ -70,7 +70,7 @@ rows:
                 Learn how to meter and bill {{site.ai_gateway}} LLM tokens.
               icon: /assets/icons/KogoBlue.svg
               cta:
-                url: /ai-gateway/meter-llm-traffic/
+                url: /how-to/meter-llm-traffic/
 
   - header:
       type: h2
