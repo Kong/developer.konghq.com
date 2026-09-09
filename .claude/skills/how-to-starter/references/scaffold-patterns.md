@@ -2,11 +2,13 @@
 
 1. [Frontmatter template](#frontmatter-template)
 2. [Body skeleton](#body-skeleton)
-3. [`entity_examples` vs `entity_example`](#entity_examples-vs-entity_example)
-4. [`{% validation %}` cheat sheet](#validation-cheat-sheet)
-5. [kongctl / deck snippet style](#kongctl--deck-snippet-style)
-6. [Vale](#vale)
-7. [Placeholder conventions](#placeholder-conventions)
+3. [Chained API calls vs `entity_examples`](#chained-api-calls-vs-entity_examples)
+4. [`entity_examples` vs `entity_example`](#entity_examples-vs-entity_example)
+5. [kongctl `!ref` and `!lookup` scoping](#kongctl-ref-and-lookup-scoping)
+6. [`{% validation %}` cheat sheet](#validation-cheat-sheet)
+7. [kongctl / deck snippet style](#kongctl--deck-snippet-style)
+8. [Vale](#vale)
+9. [Placeholder conventions](#placeholder-conventions)
 
 ## Frontmatter template
 
@@ -86,9 +88,17 @@ Each `## H2` in a how-to body becomes a rendered, collapsible step. Order:
 ## Validate          <- always last, always present
 ```
 
+## Chained API calls vs `entity_examples`
+
+Favor a chain of `{% konnect_api_request %}` (or `{% validation request-check %}`) calls, one per H2 step, over a kongctl/deck `entity_examples` block whenever the product has a real per-entity creation API and a later step needs an ID an earlier step generated. Each call `capture`s its own ID and the next call interpolates it as `$VARIABLE`. This is the default, not a fallback — it reads as one clean step per H2, and it has no `!ref`-scoping trap because every step is its own independent API call.
+
+`app/_how-tos/event-gateway/kong-identity-oauth.md` is the reference model: it creates an auth server, a scope, a client, a backend cluster, a virtual cluster, a listener, and a listener policy as seven separate `{% konnect_api_request %}` steps, each one `capture`-ing the ID the next step needs (`$AUTH_SERVER_ID`, `$SCOPE_ID`, `$CLIENT_ID`, `$BACKEND_CLUSTER_ID`, `$VIRTUAL_CLUSTER_ID`...). Reread it before drafting any multi-step entity setup.
+
+Reach for `{% entity_examples %}` instead when the product's config is kongctl/deck-declarative rather than a chain of standalone REST creates (Gateway plugins, AI Gateway v2 entities) — see the next two sections for how to use it correctly.
+
 ## `entity_examples` vs `entity_example`
 
-Default to `{% entity_examples %}` (plural) in how-tos. It automatically renders the correct deck or kongctl command block for you from the page's `tools` — never hand-write a separate `kongctl apply`/`deck gateway apply` fenced command for an entity config step, the tag already produces that.
+Default to `{% entity_examples %}` (plural) for kongctl/deck-declarative entity/plugin config. It automatically renders the correct deck or kongctl command block for you from the page's `tools` — never hand-write a separate `kongctl apply`/`deck gateway apply` fenced command for an entity config step, the tag already produces that.
 
 Only reach for `{% entity_example %}` (singular) when `entity_examples` genuinely can't cover the step: an entity type or format it doesn't support (only `deck`/`kongctl` are valid `entity_examples` formats — e.g. Admin-API-only entities like `event_hook` need the singular tag instead), or a deliberate multi-tool-tab reference. It is not a how-to default — it's the exception.
 
@@ -119,6 +129,47 @@ formats:
 {% endentity_example %}
 ```
 
+## kongctl `!ref` and `!lookup` scoping
+
+Two real bugs caught in testing, encode both:
+
+**`!ref name#field` only resolves inside the same block.** kongctl applies one `entity_examples`/`entity_example` block as one unit — a `!ref` can only point at an entity declared earlier in that *same* block. Splitting a referenced entity into its own step (its own block) breaks the reference at apply time, even though it looks fine on the page. If a Model needs `!ref kong-air-key-auth#name`, the `kong-air-key-auth` auth strategy must be declared in that same `entity_examples` block, not a prior one.
+
+```
+# Wrong — two separate blocks, the !ref in the second one fails at apply time
+{% entity_examples %}
+ai_gateway_auth_strategies:
+  - ref: kong-air-key-auth
+    ...
+{% endentity_examples %}
+
+{% entity_examples %}
+ai_gateway_models:
+  - ref: kong-air-chat
+    access:
+      auth_strategies:
+        - !ref kong-air-key-auth#name   # fails: not in this block
+{% endentity_examples %}
+```
+
+```
+# Right — one block, ref resolves
+{% entity_examples %}
+ai_gateway_auth_strategies:
+  - ref: kong-air-key-auth
+    ...
+ai_gateway_models:
+  - ref: kong-air-chat
+    access:
+      auth_strategies:
+        - !ref kong-air-key-auth#name   # resolves: same block
+{% endentity_examples %}
+```
+
+Use `!lookup {id: !env SOME_ID}` only for an entity that already exists from a prior, separate apply (a prereq quickstart script, an earlier how-to) — never as a workaround for a same-doc `!ref` that won't resolve.
+
+**An entity created via `entity_examples`/`entity_example` has no captured response.** kongctl/deck apply doesn't hand back a response body the way a raw API call does, so there's nothing to `capture:` from that step. If a later `{% konnect_api_request %}` step needs that entity's ID (for example, `/consumers/$CONSUMER_ID/credentials`), add an explicit GET step with `capture:` to look the ID up first — never reference a `$VARIABLE` that nothing in the doc actually exported. See [Extracting a generated value](#extracting-a-generated-value-capture--extract_body) for the `capture:` syntax.
+
 ## `{% validation %}` cheat sheet
 
 Block tag, YAML body, only allowed when the page's `products` includes at least one of: `gateway`, `kic`, `ai-gateway`, `operator`, `event-gateway`, `metering-and-billing`. If the how-to's products don't qualify, flag it in the report back to the writer instead of inventing a workaround.
@@ -146,6 +197,38 @@ headers:
   - '<!-- TODO: auth header if needed -->'
 {% endvalidation %}
 ```
+
+### Extracting a generated value (`capture` / `extract_body`)
+
+`{% konnect_api_request %}` and `{% validation request-check %}` both support `capture:` and
+`extract_body:` on any mid-document step, not just the final Validate block. `capture:`
+renders a real, copy-pasteable shell command that exports the value for the reader **and**
+feeds the automated test harness — never write a manual "copy this value from the response"
+instruction when this is available. Pair it with `extract_body:` when the source material
+names the response field:
+
+```
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/some-resource
+status_code: 201
+method: POST
+body:
+  name: example
+extract_body:
+  - name: id
+    variable: RESOURCE_ID
+capture:
+  - variable: RESOURCE_ID
+    jq: ".id"
+{% endkonnect_api_request %}
+<!--vale on-->
+```
+
+This renders `RESOURCE_ID=$(curl ... | jq -r ".id")` for the reader, ready to reference as
+`$RESOURCE_ID` in later steps. Use `command:` instead of `jq:` for a non-jq extraction
+command. With more than one `capture` entry on the same block, it renders a shared
+`_response=$(curl ...)` capture followed by one `export VAR=...` line per variable.
 
 ## kongctl / deck snippet style
 
