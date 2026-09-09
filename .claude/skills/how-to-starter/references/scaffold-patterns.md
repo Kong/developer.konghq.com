@@ -94,7 +94,11 @@ Favor a chain of `{% konnect_api_request %}` (or `{% validation request-check %}
 
 `app/_how-tos/event-gateway/kong-identity-oauth.md` is the reference model: it creates an auth server, a scope, a client, a backend cluster, a virtual cluster, a listener, and a listener policy as seven separate `{% konnect_api_request %}` steps, each one `capture`-ing the ID the next step needs (`$AUTH_SERVER_ID`, `$SCOPE_ID`, `$CLIENT_ID`, `$BACKEND_CLUSTER_ID`, `$VIRTUAL_CLUSTER_ID`...). Reread it before drafting any multi-step entity setup.
 
+`{% konnect_api_request %}` only works on pages where `works_on` includes `konnect`/`konnect-platform` — it raises a build error otherwise. If the page also (or only) supports on-prem, chain `{% control_plane_request %}` calls instead; it renders both a Konnect and an on-prem URL variant from the same block and supports the same `capture`/`extract_body` fields.
+
 Reach for `{% entity_examples %}` instead when the product's config is kongctl/deck-declarative rather than a chain of standalone REST creates (Gateway plugins, AI Gateway v2 entities) — see the next two sections for how to use it correctly.
+
+Neither of these fits Terraform/HCL-managed infrastructure (DCGW, self-managed Gateway via the `kong/kong-gateway` provider, Konnect resources in Terraform). Don't force HCL source material into `entity_examples`/`konnect_api_request` — follow `dcgw-terraform-how-to`'s reference patterns (`echo`-built `.tf` files, `terraform init`/`apply`, `TF_VAR_*` inputs, `terraform show -json` + `jq` for the Validate step) instead. This skill scaffolds the surrounding how-to structure; hand off to `dcgw-terraform-how-to` for the Terraform body content itself.
 
 ## `entity_examples` vs `entity_example`
 
