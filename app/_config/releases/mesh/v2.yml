@@ -419,9 +419,6 @@ app/mesh/v2/ca-rotation.md:
 app/mesh/v2/cert-manager.md:
   status: pending
   canonical_url:
-app/mesh/v2/changelog.md:
-  status: pending
-  canonical_url:
 app/mesh/v2/cli.md:
   status: pending
   canonical_url:
