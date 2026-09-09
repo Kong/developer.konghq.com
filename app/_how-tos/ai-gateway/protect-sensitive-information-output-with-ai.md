@@ -3,7 +3,7 @@ title: Use AI PII Sanitizer plugin to protect sensitive data in responses
 permalink: /ai-gateway/protect-sensitive-information-output-with-ai/
 content_type: how_to
 
-description: Use the AI PII Sanitizer plugin to protect sensitive information in responses from a Mistral LLM model.
+description: Use the AI PII Sanitizer plugin to protect sensitive information in responses.
 
 products:
     - ai-gateway
@@ -70,7 +70,7 @@ ai_gateway_model_providers:
 ai_gateway_policies:
   - ref: my-ai-sanitizer-policy
     name: my-ai-sanitizer-policy
-    display_name: "my ai sanitizer policy"
+    display_name: "My AI sanitizer policy"
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: ai-sanitizer
     enabled: true

@@ -57,34 +57,25 @@ Create both an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) and 
 
 You'll also configure the [AI PII Sanitizer Policy](/ai-gateway/policies/ai-sanitizer/) to filter LLM traffic based on an existing AWS Guardrail.
 
-```sh
-kongctl apply -f - --auto-approve --pat "$KONNECT_TOKEN" <<EOF
-_defaults:
-  kongctl: { namespace: ai-gateway-get-started }
-
-ai_gateways:
-  - ref: ai-quickstart
-    _external:
-      selector:
-        matchFields:
-          name: ai-quickstart
-
+{% entity_examples %}
 ai_gateway_model_providers:
   - ref: generic-openai
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     name: generic-openai
-    ai_gateway: ai-quickstart
+    display_name: "generic-openai"
     type: openai
     config:
       auth:
         type: basic
         headers:
-          - name: Authorization
-            value: !env OPENAI_AUTH_HEADER
+        - name: Authorization
+          value: !secret {source: !env OPENAI_AUTH_HEADER}
 
 ai_gateway_policies:
   - ref: my-ai-sanitizer-policy
     name: my-ai-sanitizer-policy
-    ai_gateway: ai-quickstart
+    display_name: "My AI sanitizer policy"
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: ai-sanitizer
     enabled: true
     global: false
@@ -98,12 +89,11 @@ ai_gateway_policies:
         stop_on_error: true
         recover_redacted: false
 
-
 ai_gateway_models:
   - ref: my-gpt-4o
     display_name: my-gpt-4o
     name: my-gpt-4o
-    ai_gateway: ai-quickstart
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     type: model
     enabled: true
     formats: [{ type: openai }]
@@ -122,26 +112,28 @@ ai_gateway_models:
         provider: generic-openai
         config:
           type: openai
-EOF
-```
+{% endentity_examples %}
 
 ## Validate
 
 To validate, send a request that contains PII, for example:
 
 {% validation request-check %}
-url: /anything
+url: /chat/completions
 status_code: 200
 method: POST
+retry: true
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
+    - 'Authorization: Bearer $OPENAI_API_KEY'
 body:
     messages:
         - role: "system"
           content: "You are a helpful assistant. Please repeat the following information back to me."
         - role: "user"
           content: "My name is John Doe, my phone number is 123-456-7890."
+    model: my-gpt-4o
 {% endvalidation %}
 
 If the plugin was configured correctly, you will received a response with all PII information scrubbed, for example:
