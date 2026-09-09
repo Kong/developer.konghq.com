@@ -46,6 +46,7 @@ categories:
 # related_resources:
 #   - text: How-to guide for the plugin
 #     url: /how-to/guide/
+published: false
 ---
 
 TO DO

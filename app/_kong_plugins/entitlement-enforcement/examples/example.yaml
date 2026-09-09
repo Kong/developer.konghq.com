@@ -14,8 +14,8 @@ weight: 900
 #     description: ''
 #     value: us
 
-config:
-  placeholder: "TO-DO"
+# config:
+#   placeholder: "TO-DO"
 
 min_version:
   gateway: '3.16'
