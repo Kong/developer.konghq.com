@@ -111,7 +111,7 @@ Holding the response adds latency to the first token, typically around 1.2 times
 Use the [streaming](/plugins/straiker-coding-agent-streaming/) plugin instead for interactive developers who need immediate tool execution.
 
 {:.warning}
-> **Caution**: Don't attach {{page.name}} to a Route that also uses [AI Proxy](/plugins/ai-proxy/).
+> **Caution**: Don't attach {{page.name}} to a Route that also uses [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/).
 > AI Proxy clears {{site.base_gateway}}'s response buffering (`ctx.buffered_proxying`) whenever the client streams, and coding agents always stream.
 > {{page.name}} then silently stops enforcing while still returning an HTTP 200 with `x-straiker-verdict: allow`.
 > Inject the upstream credential with [Request Transformer](/plugins/request-transformer/) instead.

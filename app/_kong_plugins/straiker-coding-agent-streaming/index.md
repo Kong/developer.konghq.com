@@ -95,16 +95,16 @@ sequenceDiagram
 sequenceDiagram
     autonumber
     participant Agent as Claude Code
-    participant Plugin as {{site.base_gateway}}<br/>streaming plugin
+    participant Plugin as Straiker Coding Agent<br/>Streaming plugin
     participant Defend as Straiker Defend
     participant LLM as Anthropic
 
     Agent->>Plugin: POST /v1/messages
     Plugin->>Defend: request phase
     Defend-->>Plugin: verdict
-    alt Prompt or poisoned tool_result denied
+    alt If prompt or poisoned tool_result denied
         Plugin-->>Agent: HTTP 200 end_turn (policy text)
-    else Allowed
+    else If allowed
         Plugin->>LLM: Forward
         LLM-->>Agent: Stream (untouched)
         Plugin-->>Defend: async response relay
@@ -115,7 +115,7 @@ Because {{page.name}} can't hold the response, it can't stop a `tool_use` before
 
 ### Plugin priority
 
-{{page.name}} runs at priority 1000, so it reads the client body before [AI Proxy](/plugins/ai-proxy/) (priority 770) would translate it. For more information, see [plugin priority](/gateway/entities/plugin/#plugin-priority).
+{{page.name}} runs at priority 1000, so it reads the client body before [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) (both priority 770) would translate it. For more information, see [plugin priority](/gateway/entities/plugin/#plugin-priority).
 
 [AI Proxy](/plugins/ai-proxy/) can front {{page.name}}. It still inspects prompts and tool results normally.
 

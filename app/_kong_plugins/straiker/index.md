@@ -50,7 +50,7 @@ Use the {{page.name}} plugin (`straiker`) to scan chat completion prompts before
 The plugin sends pre-call and post-call events to the Straiker Defend webhook, which evaluates the interaction against the policies configured in the Straiker Console and returns a verdict.
 {{site.base_gateway}} forwards or blocks traffic based on that verdict.
 
-{{page.name}} ships in the same LuaRock as the [Straiker Coding Agent Streaming](/plugins/straiker-coding-agent-streaming/) and [Straiker Coding Agent Buffered](/plugins/straiker-coding-agent-buffered/) plugins, but only {{page.name}} is meant for chat applications.
+{{page.name}} ships in the same LuaRock as the [Straiker Coding Agent Streaming](/plugins/straiker-coding-agent-streaming/) and [Straiker Coding Agent Buffered](/plugins/straiker-coding-agent-buffered/) plugins, but only the {{page.name}} plugin is meant for chat applications.
 Attach exactly one Straiker plugin per Route.
 
 {:.warning}
@@ -81,7 +81,7 @@ Benefits of using the {{page.name}} plugin:
 sequenceDiagram
     autonumber
     participant Client
-    participant Plugin as {{site.base_gateway}}<br/>straiker
+    participant Plugin as {{site.base_gateway}}<br/>Straiker
     participant Defend as Straiker Defend<br/>webhook
     participant Proxy as AI Proxy
     participant LLM as Upstream model
@@ -90,18 +90,18 @@ sequenceDiagram
     Plugin->>Defend: pre_call
     Defend-->>Plugin: verdict
 
-    alt Prompt blocked
+    alt If prompt blocked
         Plugin-->>Client: Blocked response
-    else Prompt allowed
+    else If prompt allowed
         Plugin->>Proxy: Forward
         Proxy->>LLM: Provider request
         LLM-->>Proxy: Model response
         Proxy-->>Plugin: Buffered response
         Plugin->>Defend: post_call
         Defend-->>Plugin: verdict
-        alt Response blocked
+        alt If response blocked
             Plugin-->>Client: Blocked response
-        else Response allowed
+        else If response allowed
             Plugin-->>Client: Model response
         end
     end
@@ -111,7 +111,8 @@ sequenceDiagram
 
 {{page.name}} runs at priority 1000, after [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/), which is what chat completion traffic needs. For more information, see [plugin priority](/gateway/entities/plugin/#plugin-priority).
 
-Never attach {{page.name}} to a Route that carries Anthropic Messages traffic for a coding agent. It uses a different Detect contract than the coding agent plugins.
+{:.warning}
+> **Caution**: Never attach {{page.name}} to a Route that carries Anthropic Messages traffic for a coding agent. It uses a different Detect contract than the coding agent plugins.
 
 ## Install the {{page.name}} plugin
 
