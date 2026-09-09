@@ -345,6 +345,15 @@ rows:
             cta:
               url: /cookbooks/secure-external-mcp-gateway/
               align: end
+      - blocks:
+        - type: card
+          config:
+            title: Monetize AI Gateway traffic
+            description: Meter LLM token usage and turn it into billable revenue with Metering & Billing.
+            icon: /assets/icons/money.svg
+            cta:
+              url: /ai-gateway/meter-llm-traffic/
+              align: end
   - header:
       type: h2
       text: Proxy AI CLI tools
