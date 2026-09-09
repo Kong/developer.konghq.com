@@ -170,6 +170,7 @@ metering_and_billing: Metering & Billing
 observability: Observability
 dev_portal: Dev Portal
 identity: Kong Identity
+insomnia: Insomnia
 # Company names
 openai: OpenAI
 anthropic: Anthropic
