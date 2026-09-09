@@ -78,7 +78,7 @@ app/_how-tos/ai-gateway/v1/mcp/use-access-controls-for-mcp-tools.md:
   status: pending
   canonical_url: /ai-gateway/mcp/
 app/_how-tos/ai-gateway/v1/meter-llm-traffic.md:
-  canonical_url: /how-to/meter-llm-traffic/
+  canonical_url: /ai-gateway/meter-llm-traffic/
 app/_how-tos/ai-gateway/v1/protect-sensitive-information-output-with-ai.md:
   status: pending
   canonical_url: /ai-gateway/policies/ai-sanitizer/

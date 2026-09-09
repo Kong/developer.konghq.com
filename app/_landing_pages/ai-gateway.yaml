@@ -352,7 +352,7 @@ rows:
             description: Meter LLM token usage and turn it into billable revenue with Metering & Billing.
             icon: /assets/icons/money.svg
             cta:
-              url: /how-to/meter-llm-traffic/
+              url: /ai-gateway/meter-llm-traffic/
               align: end
   - header:
       type: h2
