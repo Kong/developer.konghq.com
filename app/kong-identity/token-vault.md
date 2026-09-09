@@ -39,6 +39,7 @@ services on a user's behalf, without the agent ever holding the credential itsel
 
 Set up the {{site.identity}} Token Vault in the following cases:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Use case
@@ -70,6 +71,7 @@ rows:
       * Disable a provider for enterprise kill-switch
       * Audit credential releases without logging the credential itself
 {% endtable %}
+<!--vale on-->
 
 
 ## How the token vault works
@@ -93,6 +95,7 @@ In this scenario:
 
 The following table shows what using the Token Vault brings to your authentication setup and flows:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: "Setup"
@@ -125,6 +128,7 @@ rows:
     with: |
       Uniform audit trail and revocation regardless of which agent triggered the original consent.
 {% endtable %}
+<!--vale on-->
 
 Key facts:
 * Only the {{site.ai_gateway_name}} can call the Token Vault, and that connection is locked down over mutual TLS (mTLS): both sides prove their identity with certificates.
@@ -192,6 +196,7 @@ A credential's value never comes back through APIs. While read endpoints return 
 
 Every credential lookup gets logged and emits a structured record covering successful outcomes (like credential releases or required enrollments). The audit trail captures the full pattern of who's asking for what. The following table lists what's logged and what isn't:
 
+<!--vale off-->
 {% feature_table %}
 item_title: Audit record field
 columns:
@@ -237,6 +242,7 @@ features:
     description: Authorization codes exchanged during enrollment.
     logged: false
 {% endfeature_table %}
+<!--vale on-->
 
 ### OAuth-based credential lifecycle
 
@@ -369,6 +375,7 @@ body:
 
 The request accepts the following body parameters:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Parameter
@@ -387,6 +394,7 @@ rows:
     description: |
       Where the Token Vault fetches the IdP's public keys to verify token signatures. If you omit it, {{site.identity}} discovers it from the issuer's `/.well-known/openid-configuration` document.
 {% endtable %}
+<!--vale on-->
 {% endnavtab %}
 {% navtab "Check configured trusted IdPs" %}
 
@@ -421,6 +429,7 @@ body:
 
 The request accepts the following body parameters:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Parameter
@@ -442,6 +451,7 @@ rows:
     description: |
       Your name for this provider. Use it to tell apart several providers built from the same template.
 {% endtable %}
+<!--vale on-->
 
 {% endnavtab %}
 {% navtab "Check configured providers" %}
@@ -489,6 +499,7 @@ capture:
 
 The request accepts the following body parameters:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Parameter
@@ -515,6 +526,7 @@ rows:
     description: |
       Overrides the base URL that the template supplies.
 {% endtable %}
+<!--vale on-->
 
 Then store the credential on that provider by sending a `POST` request to the `/v2/directories/{directoryId}/vault/providers/{providerId}/credentials` endpoint. {{site.identity}} encrypts the value at rest and never returns it from any read endpoint:
 
