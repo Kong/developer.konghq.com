@@ -21,7 +21,7 @@ tags:
 
 tldr:
   q: How can I anonymize PII in requests using AI?
-  a: Start an AI PII Anonymizer service, and enable the AI Sanitizer policy to use this service to anonymize the specified information.
+  a: Start an AI PII Anonymizer service, and enable the AI Sanitizer policy in INPUT mode to anonymize sensitive data in requests.
 
 prereqs:
   inline:

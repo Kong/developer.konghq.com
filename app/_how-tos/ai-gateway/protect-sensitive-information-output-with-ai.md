@@ -32,7 +32,7 @@ prereqs:
       icon_url: /assets/icons/cloudsmith.svg
 
 related_resources:
-  - text: Use AI PII Sanitizer plugin to protect sensitive information in responses
+  - text: Use AI PII Sanitizer plugin to protect sensitive information in requests
     url: /ai-gateway/protect-sensitive-information-with-ai/
   - text: AI PII Sanitizer
     url: /ai-gateway/policies/ai-sanitizer/
