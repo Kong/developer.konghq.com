@@ -459,10 +459,7 @@ This configuration relies on the plugin's defaults for the rest of its behavior.
 
 * `deny_unknown_customers` defaults to `true`, so a request whose customer can't be resolved is blocked.
 * `fail_policy` defaults to `allow`, so if the enforcement state can't be retrieved, requests are allowed through.
-* `response_codes` defaults return `429` when a usage limit is reached, `402` when there's no credit available, and `403` for feature or customer errors.
-
-{:.info}
-> Credit-backed entitlements aren't supported by {{site.metering_and_billing}} yet, so the `NO_CREDIT_AVAILABLE` reason and its `402` default don't occur in practice today. The other reasons are enforced as described.
+* `response_codes` defaults return `429` when a usage limit is reached, and `403` for feature or customer errors.
 
 {:.info}
 > `refresh_interval` is set to `3` seconds here so the tutorial responds quickly. In production, use a higher interval to reduce load on the Entitlement Access API.
