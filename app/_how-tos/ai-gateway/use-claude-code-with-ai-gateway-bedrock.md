@@ -10,6 +10,8 @@ related_resources:
     url: /ai-gateway/use-claude-code-with-ai-gateway-anthropic/
   - text: Route Claude CLI traffic through {{site.ai_gateway}} and OpenAI
     url: /ai-gateway/use-claude-code-with-ai-gateway-openai/
+  - text: Identify AI Consumers on AI Model traffic with {{site.identity}}
+    url: /ai-gateway/identify-ai-consumers-with-kong-identity/
 
 description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic to an AWS Bedrock model
 
