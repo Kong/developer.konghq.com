@@ -1,5 +1,5 @@
 ---
-title: "Token vault"
+title: "Token Vault"
 content_type: reference
 layout: reference
 permalink: /identity/token-vault/
@@ -24,7 +24,7 @@ related_resources:
     url: /identity/principals/
 
 faqs:
-  - q: "Why use he {{site.identity}} Token Vault instead of connectors in LLM services?"
+  - q: "Why use the {{site.identity}} Token Vault instead of connectors in LLM services?"
     a: |
       Connectors are client-owned: each time a user needs to connect an LLM to a service, they need to set up a connector inside each service. The Token Vault makes the Gateway sit in front of any client. You can use different agents with a single credential store, with a way to revoke access locally. Using the Token Vault prevents agents from accessing authorization tokens and provides a way of federating identities around corp IdP like Okta.  
 ---
@@ -54,14 +54,14 @@ rows:
     examples: |
       * Per-user: each principal keeps their own GitHub identity, enrolled and refreshed independently
       * Shared: an admin enrolls one Slack bot token once, released to any authorized caller
-  - case: "Store and reuse different secrets types"
+  - case: "Store and reuse different secret types"
     examples: |
       * Static API keys
       * Client-credentials
       * Authorization code
   - case: "Federate identity"
     examples: |
-      Use the Token Vault as single broker for different trust chains:
+      Use the Token Vault as a single broker for different trust chains:
 
       * Standard OAuth2 with corp IdP (like Okta)
       * Token exchange (ID-JAG)
@@ -74,24 +74,24 @@ rows:
 
 ## How the token vault works
 
-The following diagram shows how the  {{site.identity}} Token Vault works on top of the following setup:
+The following diagram shows how the {{site.identity}} Token Vault works on top of the following setup:
 * Okta as corp IdP
 * Claude Code as the agent, configured with an {{site.ai_gateway}} MCP server
 * GitHub as the third-party service
 * {{site.identity}} Token Vault as credentials broker
-* AI Gateway as the token handler between Okta and the Token Vault
+* {{site.ai_gateway}} as the token handler between Okta and the Token Vault
 
 In this scenario:
 1. A user authenticates to Okta, which generates a token.
-1. The {{site.ai_gateway}} captures the token and hands it to Token Vault.
-1. The first time the {{site.ai_gateway}} detects the user on GitHub, it requires them to connect their GitHub account before continuining.
+1. The {{site.ai_gateway}} captures the token and hands it to the Token Vault.
+1. The first time the {{site.ai_gateway}} detects the user on GitHub, it requires them to connect their GitHub account before continuing.
 1. The Token Vault stores the credentials it extracts from the verified Okta token.
 1. Claude Code can use the `tools/list` from the GitHub MCP: the user can now interact with GitHub from Claude Code.
 
 {% include diagrams/token-vault.md %}
 
 
-The following tables show what using the Token Vault brings to your authentication setup and flows:
+The following table shows what using the Token Vault brings to your authentication setup and flows:
 
 {% table %}
 columns:
@@ -118,7 +118,7 @@ rows:
     without: |
       Not reusable. Claude's Slack connector token can't be used by Cursor or a custom agent. Each re-does its own OAuth consent.
     with: |
-      One enrollment, reusable by any agent that calls through {{site.ai_gateway_name}}
+      One enrollment, reusable by any agent that calls through {{site.ai_gateway_name}}.
   - aspect: "**Revocation/audit**"
     without: |
       Depends entirely on that connector vendor's own tooling. May or may not be centrally visible.
@@ -128,47 +128,41 @@ rows:
 
 Key facts:
 * Only the {{site.ai_gateway_name}} can call the Token Vault, and that connection is locked down over mutual TLS (mTLS): both sides prove their identity with certificates.
-* Agents and MCP clients never call the Token Vault directly: if an agent needs a credential, it has to go throught the {{site.ai_gateway_name}}.
+* Agents and MCP clients never call the Token Vault directly: if an agent needs a credential, it has to go through the {{site.ai_gateway_name}}.
 * The Token Vault never calls the corp IdP; it uses the IdP's public keys (JWKS) to verify that:
   * The token's signature is valid.
-  * The token was issued by an IdP the {{site.ai_gateway_name}}  set as trusted for that directory.
+  * The token was issued by an IdP the {{site.ai_gateway_name}} set as trusted for that directory.
 
 ### The {{site.ai_gateway}} role
 
-{{site.ai_gateway}} acts as bridge between the user and the requests as the sole runtime that calls the {{site.identity}} Token Vault. Agents and MCP clients never call the Token Vault directly. No matter which agent a user is running, the Token Vault only interacts with {{site.ai_gateway}}, not from the agent or the MCP itself.
+{{site.ai_gateway}} acts as a bridge between the user and the third-party service, as the sole runtime that calls the {{site.identity}} Token Vault. Agents and MCP clients never call the Token Vault directly. No matter which agent a user is running, the Token Vault only ever interacts with {{site.ai_gateway}}, never with the agent or the MCP server itself.
 
-Policies applies to the {{site.ai_gateway}}, which allow to scope and enforce call behaviors. The Token Vault doesn't hold any policy, it only verifies whose token this is and hands back the matching credential if one exists. For example, in a workflow configured with Okta as the IdP, the {{site.ai_gateway}}:
+You attach policies to the {{site.ai_gateway}}, which is where you scope and enforce call behaviors. The Token Vault doesn't hold any policy, it only verifies whose token this is and hands back the matching credential if one exists. For example, in a workflow configured with Okta as the IdP, the {{site.ai_gateway}}:
 
 1. Receives a caller's Okta-issued token.
 1. Presents it to the Token Vault to request a credential for a specific provider.
-1. Once it gets one back, injects the credential into the actual outbond request to the third-party service (for example, as a header, for providers that support it).
+1. Once it gets one back, injects the credential into the actual outbound request to the third-party service (for example, as a header, for providers that support it).
 
-## Token Vault components
-
-<!--
-Lead with a table summarizing component / scope / purpose, then a subsection each.
--->
-
-### Directory
+## Directory
 
 The [{{site.identity}} directory](/identity/principals/) is the tenant boundary that scopes everything else in the Token Vault. To use the Token Vault, you activate it in your directory with the `vault_enabled` flag.
 
-The directory is also the vault's encryption boundary. After enabling the vault in your directory, {{site.identity}} generates an encryption key to protect the credentials you store under it. Your {{site.identity}} directory is the equivalent of your "organisation account", and enabling the Token Vault gives that account a locked workspace, with everything in it (trusted IdPs, connected third-party services, whose tokens it stores) scoped to that organisation.
+The directory is also the vault's encryption boundary. After enabling the vault in your directory, {{site.identity}} generates an encryption key to protect the credentials you store under it. Your {{site.identity}} directory is the equivalent of your "organization account", and enabling the Token Vault gives that account a locked workspace, with everything in it (trusted IdPs, connected third-party services, whose tokens it stores) scoped to that organization.
 
-### Trusted IdP
+## Trusted IdP
 
-The trusted IdP is what tells the Token Vault whose tokens to trust. A {{site.identity}} admin configures a trusted IdP (succh as Okta) on the Token Vault using the `issuer_url`, and optionally a `jwks_uri`({{site.identity}} can automatically discover the `jwks_uri` from the IdP).
+The trusted IdP is what tells the Token Vault whose tokens to trust. A {{site.identity}} admin configures a trusted IdP (such as Okta) on the Token Vault using the `issuer_url`, and optionally a `jwks_uri` ({{site.identity}} can automatically discover the `jwks_uri` from the IdP).
 
-The trusted IdP configuration is completely independent of {{site.identity}} login system: the Token Vault doesn't need any identity to be already resolved as a [{{site.identity}} principal](/identity/principals/) to work. The Token Vault acts as a verifier, not a caller. It never asks the IdP anything directly. Instead, when it receives a token, it:
+The trusted IdP configuration is completely independent of the {{site.identity}} login system: the Token Vault doesn't need any identity to be already resolved as a [{{site.identity}} principal](/identity/principals/) to work. The Token Vault acts as a verifier, not a caller. It never asks the IdP anything directly. Instead, when it receives a token, it:
 
 1. Checks that the token's signature matches the trusted IdP's published public keys, confirming the IdP actually issued it.
 1. Reads the issuer (`iss`) and subject (`sub`) already embedded in the token, to determine who it was issued to.
 
-### Providers
+## Providers
 
-You connect third-party services by adding a provider to the {{site.identity}} Token Vault. This allows organization to centralize identities and shared connections. 
+You connect third-party services by adding a provider to the {{site.identity}} Token Vault. This lets an organization centralize identities and shared connections in one place, instead of configuring each service separately in every agent or client.
 
-### Credentials
+## Credentials
 
 The {{site.identity}} Token Vault protects the credential, the actual secret (a token or a key) for connecting to a provider. The credential is encrypted at rest in the Token Vault. The encryption scope is the {{site.identity}} directory for which you enable the Token Vault. Each directory has its own Token Vault key, that it uses to encrypt secrets.
 
@@ -181,32 +175,139 @@ The credentials can be personal or shared across the organization. You define th
 Can the user set a shared secret for other providers, like GitHub or Slack?
 -->
 
-#### OAuth-based credentials lifecycle
+### Credential storage and encryption
 
-A credential knows different stages depending on the action that a user executes:
+The Token Vault stores credentials using envelope encryption, with two layers:
+
+* **Vault key:** One per directory, generated when you enable the vault, acts as a master key for the organization's Token Vault. Kong stores and manages that master key, not the Token Vault user. 
+* **Data key:** One per credential, encrypts the credential's value.
+
+With envelope encryption, the vault key also encrypts each data key, providing a double layer of protection. If one secret gets leaked, the leak only impacts that specific secret, while the whole vault remains safe.
+
+The Token Vault stores each credential in its own row, and binds the encrypted credential to the row it belongs to. This ensures no credential can move between rows, and prevents row-based tampering, where someone could copy an encrypted credential from one row into another and have it decrypt in a row it doesn't belong to.
+
+A credential's value never comes back through APIs. While read endpoints return metadata (IDs, timestamps, status), they never return the actual token or key value.
+
+### Auditing
+
+Every credential lookup gets logged and emits a structured record covering successful outcomes (like credential releases or required enrollments). The audit trail captures the full pattern of who's asking for what. The following table lists what's logged and what isn't:
+
+{% feature_table %}
+item_title: Audit record field
+columns:
+  - title: Description
+    key: description
+  - title: Included in audit record
+    key: logged
+features:
+  - title: "`directory`"
+    description: Which organization's directory the credential request belongs to.
+    logged: true
+  - title: "`provider`"
+    description: Which third-party service the credential was requested for (for example, GitHub or Slack).
+    logged: true
+  - title: "secret type"
+    description: The kind of secret involved (for example, OAuth token or static secret).
+    logged: true
+  - title: "credential type"
+    description: Whether the credential is user-scoped or shared.
+    logged: true
+  - title: "calling gateway"
+    description: Which {{site.ai_gateway_name}} instance made the request.
+    logged: true
+  - title: "subject"
+    description: The identity the request was made on behalf of.
+    logged: true
+  - title: "decision"
+    description: The outcome of the request — credential released, or enrollment required.
+    logged: true
+  - title: "secret values"
+    description: The actual contents of any stored credential.
+    logged: false
+  - title: "released tokens"
+    description: The token handed to {{site.ai_gateway_name}} for the outbound call.
+    logged: false
+  - title: "client secrets"
+    description: OAuth client secrets configured on a provider.
+    logged: false
+  - title: "refresh tokens"
+    description: Tokens used to renew an expired access token.
+    logged: false
+  - title: "OAuth codes"
+    description: Authorization codes exchanged during enrollment.
+    logged: false
+{% endfeature_table %}
+
+### OAuth-based credential lifecycle
+
+A credential moves through the following stages, depending on the action a user performs:
 
 1. **Enrollment**: When no credentials exist yet, the first-time flow returns an enrollment URL instead of a token.
 1. **Creation**: At creation the credential is stored in the Token Vault. Two flows exist to create credentials: for `static_secret`, a separate provider creates it and you store it manually in the Token Vault; for all other providers, the OAuth consent flow creates the secret and stores it automatically.
 1. **Refresh**: For OAuth-based providers, the Token Vault can refresh credentials automatically, with locking, to prevent concurrent requests from consuming a refresh token.
-1. **Deletion/Revocation**: You can revoke credentials independently of the provider itself. Deleting a credential doesn't delete a provider, but creates a new re-enrollment from the user side.
+1. **Deletion/Revocation**: You can revoke credentials independently of the provider itself. Deleting a credential doesn't delete the provider, but the user must re-enroll before an agent can call that provider on their behalf again.
 
-The Token Vault never exposes back the credentials to the API that created them: it releases them to the {{site.ai_gateway}} for outbond calls without making the credentials accessible from any read endpoint.
+The Token Vault never exposes back the credentials to the API that created them: it releases them to the {{site.ai_gateway}} for outbound calls without making the credentials accessible from any read endpoint.
 
 
 ## Credential enrollment
 
 Credential enrollment is a one-time process where a user grants {{site.identity}} permission to act on their behalf with a third-party service. This is when the Token Vault creates the credential for the first time.
 
-When you configure a provider (for example, GitHub), the Token Vault regitsters it as a service it knows how to talk to. It doesn't mean any user has actually authorized anything yet, since there are still no credentials to hand back for the Token Vault. The enrollment process follows these steps:
+When you configure a provider (for example, GitHub), the Token Vault registers it as a service it knows how to talk to. It doesn't mean any user has actually authorized anything yet, since there are still no credentials to hand back for the Token Vault. The enrollment process follows these steps:
 
-1. When a request happens from the agent, the Token Vault returns a 10 minutes valid enrollment URL to walk the user through the third-party service OAuth consent screen. The screen lists exactly the scopes the provider requested (for example, `repo` on GitHub).
+1. When a request comes in from the agent, the Token Vault returns an enrollment URL, valid for 10 minutes, to walk the user through the third-party service OAuth consent screen. The screen lists exactly the scopes the provider requested (for example, `repo` on GitHub).
 1. When the user approves, the third-party service redirects back to the Token Vault's `callback` endpoint, handing over an authorization code.
 1. The Token Vault exchanges the authorization code for the third-party service's access token and refresh token. This exchange happens only between the Token Vault and the third-party service, not through the agent.
-1. The Token Vault writes a new credential row for the access token, encrypted with the directory's vault key, and keyed to that user's combination. This is the credential that the Token Vault releases to the {{site.ai_gateway}} on every future request.
+1. The Token Vault writes a new credential row for the access token, encrypted with the directory's vault key and keyed to that combination of directory, provider, and user. This is the credential that the Token Vault releases to the {{site.ai_gateway}} on every future request.
 
-Enrollment happens once per user and per provider, not per organization. If a second user wants to use GitHub with an agent, they need to go throught enrollment, and get their own credentials stored in the Token Vault. What is shared across the organization is the provider configuration (Client ID, scopes, endpoints).
+Enrollment happens once per user and per provider, not per organization. If a second user wants to use GitHub with an agent, they need to go through enrollment, and get their own credentials stored in the Token Vault. What is shared across the organization is the provider configuration (Client ID, scopes, endpoints).
+
+## ID-JAG and Enterprise Managed Authorization
+
+When an agent needs access to a third-party service (like GitHub), a human clicks through an OAuth consent screen once, and the Token Vault handles everything from there. However, there is a more automated way for corporate IdPs (like Okta) to directly vouch for an agent's access, skipping the manual consent step. The workflows you can implement depend on two factors:
+
+* **Enterprise Managed Authorization (EMA):** Decides not only who the user is, but what they're allowed to access. Also called **Cross-App Access (XASS)** in Okta. 
+* **Identity Assertion JWT Authorization Grant (ID-JAG):** A short-lived token, minted by whichever component in the chain supports ID-JAG, that grants a specific user access to specific resources.
+
+How the Token Vault gets involved depends on which component of the authorization workflow (the IdP, the agent, the provider's authorization server) accepts ID-JAG. The following table presents possible combinations: 
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Corporate IdP
+    key: idp
+  - title: MCP client/Agent
+    key: client
+  - title: Provider's authorization server
+    key: provider
+  - title: Setup
+    key: setup
+  - title: Token Vault involved?
+    key: vault
+rows:
+  - idp: "Supports ID-JAG"
+    client: "Supports ID-JAG"
+    provider: "Doesn't support ID-JAG"
+    setup: |
+      * **{{site.identity}}'s authorization server:** ID-JAG consumer.
+      * **Client**:
+        1. Exchanges its IdP token for an ID-JAG scoped to {{site.identity}}.
+        1. Redeems it for a normal access token.
+    vault: "No (bypassed)"
+  - idp: "Doesn't support ID-JAG"
+    client: "Not required"
+    provider: "Supports ID-JAG"
+    setup: |
+      **Token Vault:** ID-JAG provider (mints and signs the ID-JAG itself on the upstream's behalf).
+    vault: "Yes, this is the vault's role."
+{% endtable %}
+<!--vale on-->
+
 
 ## Set up the Token Vault
+
+The following section shows API calls to set up and start using the Token Vault.
 
 ### Enable the vault on a directory
 
@@ -226,7 +327,7 @@ body:
 
 `PATCH` is a partial update, so any field you omit keeps its current value. You only need to send `vault_enabled`.
 {% endnavtab %}
-{% navtab "Check if the Token Vault is enbaled" %}
+{% navtab "Check if the Token Vault is enabled" %}
 
 To confirm the vault is enabled, send a `GET` request to the same endpoint and read the `vault_enabled` field from the response:
 
@@ -360,6 +461,7 @@ method: GET
 
 ### Enable credential injection on a route
 
+TBD?
 <!-- Configure AI MCP Proxy to exchange the caller's token for the stored credential and inject it. -->
 
 ### Store a static secret
@@ -461,6 +563,7 @@ body:
   secret: $NEW_STATIC_SECRET
 {% endkonnect_api_request %}
 <!--vale on-->
+
 {% endnavtab %}
 {% navtab "Delete the secret" %}
 
@@ -473,121 +576,15 @@ status_code: 204
 method: DELETE
 {% endkonnect_api_request %}
 <!--vale on-->
+
 {% endnavtab %}
 
 {% endnavtabs %}
 
-## Manage connected credentials
-
-## ID-JAG and Enterprise Managed Authorization
-
-<!--
-Define the terms once, before the table:
-* EMA (Enterprise Managed Authorization) — MCP extension where the corporate IdP both
-  authenticates and authorizes an agent's access to an MCP resource.
-* ID-JAG (Identity Assertion JWT Authorization Grant) — the short-lived assertion it mints.
-* XAA (Cross-App Access) — Okta's implementation of EMA.
-
-Then a table keyed on three axes, because which approach applies depends on all three:
-corporate IdP | MCP client | upstream authorization server | approach
--->
-
-### Kong Identity authorization server as an ID-JAG consumer
-
-<!--
-When the corp IdP and MCP client speak ID-JAG but the upstream MCP server does not.
-Client logs in to its IdP, exchanges the id_token for an ID-JAG scoped to
-{{site.identity}} (RFC 8693), redeems it at {{site.identity}} (RFC 7523) for an access token,
-and calls the gateway with that. The directory's trusted IdP is the {{site.identity}}
-authorization server itself; from there the flow continues as described above.
--->
-
-### Token Vault as an ID-JAG provider
-
-<!--
-When the corp IdP does not issue ID-JAGs but the upstream's authorization server accepts them.
-Applies to the vault-to-upstream leg only — the caller-to-vault leg is unchanged.
-An admin selects an {{site.identity}} authorization server as the issuing identity, so its
-issuer URL becomes the ID-JAG's iss and the upstream fetches its JWKS to verify the signature.
-Stress: the vault mints and signs the assertion itself; it does not request one from that
-authorization server's token endpoint. It redeems using the provider's own client ID, because
-RFC 7523 requires the assertion's client ID to match the client authenticating the redemption.
--->
-
-### Full ID-JAG chain with the ID-JAG Relay plugin
-
-<!--
-When the corp IdP, the MCP client, and the upstream MCP server all support ID-JAG.
-The plugin runs the RFC 8693 exchange and the RFC 7523 redemption on the route directly,
-bypassing the token vault entirely. Include the standards-gap warning below.
--->
-
-<!-- TODO: plugin name is inconsistent in the source (id-jag-relay vs id-jag-impersonate) and
-     no plugin page exists yet. Confirm the shipping name and link it. -->
-
-## Security and compliance
-
-### Credential storage
-
-<!--
-Envelope encryption: a per-directory vault key wraps a per-row data key; row identity is bound
-into the ciphertext so a credential cannot be moved between rows. Secret values are never
-returned in API responses. Root keys are Kong-managed; customer-managed keys are not available.
--->
-
-### Auditing
-
-<!--
-Every credential lookup emits a structured record covering successful outcomes — credential
-released, or enrollment required — with the directory, provider, secret type, credential type,
-calling gateway, subject, and decision. Secret values, released tokens, client secrets, refresh
-tokens, and OAuth codes never appear in a record. The record is written before the credential
-is released.
--->
-
-<!-- Consider surfacing the storage and auditing questions as a faqs: block in the frontmatter,
-     the way /identity/principals/ handles data residency. -->
-
-
 ## Limitations
 
-<!--
-Scope each limitation to what it actually affects.
+The Token Vault presents the following limitations:
 
-The ID-JAG relay path is standards-compliant end to end, but running it through a proxy hits
-two gaps in the specs it depends on:
-* RFC 9728 requires the protected resource metadata's resource value to match the identifier
-  the client used verbatim, which a proxy fronting a real upstream cannot satisfy.
-* There is no sanctioned way for a trusted intermediary to negotiate an ID-JAG on a client's
-  behalf.
-Frame as a current standards gap. Do not publish the proposed IETF exemption or link the
-working group issue.
-
-Also list:
-* The vault is not a policy enforcement point.
-* Customer-managed encryption keys (BYOK) are not available.
-* Konnect only.
--->
-
-## Manage connected credentials
-
-<!--
-* End users: a self-service page listing every upstream account they have connected, with the
-  ability to disconnect one, after which tools using that provider prompt them to authorize again.
-* Admins: see which users have enrolled a credential for a provider, and revoke an individual
-  user's credential so an offboarded user immediately losestable upstream access.
-* Deleting a provider cascades to its credentials; purging the vault removes providers,
-  secrets, and credentials.
--->
-
-<!-- TODO: the self-service UI is "details TBD" in the source and the AI GW UI section is
-     explicitly marked "not canon". Do not write UI steps until both are confirmed. -->
-
-<!--
-## Flow
-
-1. Generate a secret (like a PAT from a third-party service).
-1. Store it in the vault.
-1. Retrieve the provider's ID.
-1. Add it to your gateway configuration and decK apply it.
--->
+* **Policy enforcement:** The Token Vault isn't a policy enforcement point, only {{site.ai_gateway_name}} can enforce policies. The Token Vault doesn't handle authorization logic.
+* **Customer-managed encryption key (BYOK):** Kong manages the encryption keys that protect stored credentials. You can't bring or control your own.
+* **{{site.konnect_short_name}} only:** The Token Vault isn't available for self-hosted/on-prem deployments. 
