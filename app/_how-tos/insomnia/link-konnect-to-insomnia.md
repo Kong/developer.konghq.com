@@ -53,13 +53,13 @@ tldr:
 1. In the **Personal Access Token**, paste the PAT
 1. Click **Connect & Sync**
 
-In your workspace, {{ site.insomnia }} now displays the {{ site.konnect_short_name }} tab. Open the tab and click **Sync**. After syncing, {{ site.insomnia }} displays your {{site.base_gateway}} Services under the {{ site.konnect_short_name }}
+In your workspace, {{ site.insomnia }} now displays the {{ site.konnect_short_name }} tab. Open the tab and click **Sync**. After syncing, {{ site.insomnia }} displays your {{site.base_gateway}} Services under the {{ site.konnect_short_name }}.
 
 ## Set the Proxy URLs
 
 On first Sync, set the proxy URL for each Gateway Service:
 
-1. From your {{ site.insomnia }} workspace, go to the {{ site.konnect_short_name }} tab
+1. From your {{ site.insomnia }} workspace, go to the {{ site.konnect_short_name }} tab.
 1. Select a Gateway Service: `example-service` in this guide.
 1. Open the **Base Environment** file
 1. Input the proxy URLs for the selected Gateway Service. For `example-service`, set `proxy_host` to `localhost:8000` 

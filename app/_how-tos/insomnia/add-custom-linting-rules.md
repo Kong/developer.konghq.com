@@ -20,8 +20,8 @@ related_resources:
     url: /insomnia/design/
 
 tldr:
-  q: How do I customize linting in {{ site.insomnia }} ?
-  a: In your {{ site.insomnia }}document, click the upload icon for the **Default OAS Ruleset** and add a Spectral ruleset YAML file with your custom ruleset.
+  q: How do I customize linting in {{ site.insomnia }}?
+  a: In your {{ site.insomnia }} document, click the upload icon for the **Default OAS Ruleset** and add a Spectral ruleset YAML file with your custom ruleset.
 
 prereqs:
   inline:
@@ -43,7 +43,7 @@ faqs:
 The custom ruleset overrides the default one. To create a new ruleset, add your rules in the file using the [Spectral](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) syntax. If you want to extend an existing ruleset, specify the ruleset with the `extends` property.
 
 {:.info}
-> Available Spectral top level properties in {{ site.insomnia }} are `rules` and `extends`. Custom functions are not permitted. However, {{ site.insomnia }}provides support for [Spectral built-in core functions](https://docs.stoplight.io/docs/spectral/cb95cf0d26b83-core-functions).
+> Available Spectral top level properties in {{ site.insomnia }} are `rules` and `extends`. Custom functions are not permitted. However, {{ site.insomnia }} provides support for [Spectral built-in core functions](https://docs.stoplight.io/docs/spectral/cb95cf0d26b83-core-functions).
 
 For example, to extend the default [Spectral OpenAPI](https://docs.stoplight.io/docs/spectral/4dec24461f3af-open-api-rules) ruleset to add a warning when tags don't have a description, add the following content to your ruleset file:
 
@@ -64,7 +64,7 @@ rules:
 1. In the {{ site.insomnia }} app, navigate to a document with the OAS file you want to lint.
 2. Click the upload icon for **Default OAS Ruleset** at the bottom of the pane.
 
-This places the ruleset file in the local working directory. {{ site.insomnia }}renames this custom ruleset as `.spectral.yaml`.
+This places the ruleset file in the local working directory. {{ site.insomnia }} renames this custom ruleset as `.spectral.yaml`.
 
 You can view the content of the file by clicking `Custom Ruleset` in {{ site.insomnia }}. If you want to make changes to the file, edit it locally.
 
@@ -103,7 +103,7 @@ If the `--ruleset` flag isn't specified, {{ site.insomnia }}uses one of the foll
 {% endnavtab %}
 {% navtab "Use `extends` in `.spectral.yaml`" %}
 
-Make {{ site.insomnia }}point at another ruleset in `.spectral.yaml` by using the `extends` property. For example:
+Make {{ site.insomnia }} point at another ruleset in `.spectral.yaml` by using the `extends` property. For example:
 
 ```yaml
 extends:
