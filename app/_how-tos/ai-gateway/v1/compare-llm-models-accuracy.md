@@ -56,7 +56,7 @@ prereqs:
 
         {% capture ollama %}
         {% validation custom-command %}
-        command: docker run -d -v ollama:/root/.ollama --network=kong-quickstart-net -p 11434:11434 --name ollam  ollama/ollama
+        command: docker run -d -v ollama:/root/.ollama --network=kong-quickstart-net -p 11434:11434 --name ollama  ollama/ollama
         expected:
           return_code: 0
         render_output: false
