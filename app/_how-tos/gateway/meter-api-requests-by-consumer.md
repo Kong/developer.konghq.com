@@ -132,6 +132,7 @@ entities:
       config:
         ingest_endpoint: https://us.api.konghq.com/v3/openmeter/events
         api_token: ${AUTH_TOKEN}
+        ssl_verify: true
         meter_api_requests: true
         meter_ai_token_usage: false
         subject:
