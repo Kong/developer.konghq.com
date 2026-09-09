@@ -86,6 +86,10 @@ rows:
   - use_case: "[Enable the OTEL plugin for metrics](./examples/metrics/)"
     description: Configure the OpenTelemetry plugin to send metrics.
 
+  - use_case: |
+      [Add Principal attributes to metrics](./examples/metrics-principal-attributes/) {% new_in 3.16 %}
+    description: Attach the authenticated Principal's ID and display name to request count and bandwidth metrics.
+
   - use_case: "[Enable the OTEL plugin for API transactional logs](./examples/transactional-logs/)"
     description: Configure the OpenTelemetry plugin to send API transactional logs.
 
@@ -132,6 +136,39 @@ In {{site.base_gateway}}, metrics are natively supported by the OpenTelemetry pl
 * For all available metrics, see the [OpenTelemetry metrics reference](/gateway/otel-metrics/).
 * For AI metrics and required setup prerequisites, see the [Gen AI OpenTelemetry metrics reference](/ai-gateway/ai-otel-metrics/).
 * For a step-by-step setup using an OpenTelemetry Collector, see [Collect metrics, logs, and traces with the OpenTelemetry plugin](/how-to/collect-metrics-logs-and-traces-with-opentelemetry/).
+
+### Identifying requests in metrics
+
+You can attach the client's identity as attributes to the `http.server.request.count`, `http.server.request.size`, and `http.server.response.size` metrics. 
+These attributes can capture the [Consumer](/gateway/entities/consumer/) and the [Principal](/identity/principals/). You can enable both at the same time.
+
+Enable these identity attributes alongside `enable_request_metrics` or `enable_bandwidth_metrics`, which produce the metrics themselves.
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Metric attribute
+    key: attribute
+  - title: Config
+    key: config
+  - title: Description
+    key: description
+rows:
+  - attribute: "`kong.auth.consumer.name`"
+    config: "[`enable_consumer_attribute`](./reference/#schema--config-metrics-enable-consumer-attribute)"
+    description: Name of the authenticated Consumer.
+  - attribute: "`kong.auth.principal.id`"
+    config: |
+      [`enable_principal_attribute`](./reference/#schema--config-metrics-enable-principal-attribute) {% new_in 3.16 %}
+    description: ID of the authenticated Principal managed by {{site.identity}}.
+  - attribute: "`kong.auth.principal.display_name`"
+    config: |
+      [`enable_principal_attribute`](./reference/#schema--config-metrics-enable-principal-attribute) {% new_in 3.16 %}
+    description: Display name of the authenticated Principal managed by {{site.identity}}.
+{% endtable %}
+<!--vale on-->
+
+If the request has no authenticated Consumer or Principal, the corresponding attribute is left empty on the exported metrics.
 
 ### Metrics with {{site.base_gateway}} 3.12 or earlier
 
