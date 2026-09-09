@@ -1395,9 +1395,10 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-For examples that read `kong.client.credential` and route different callers to different backends, see:
-* [Dynamically set upstream based on the authenticated caller](/how-to/configure-oidc-datakit-upstream-routing/) (using named Upstream entities)
-* [Dynamically set host based on the authenticated caller](/how-to/configure-oidc-datakit-host-routing/) (using direct `host:port` targets)
+For examples that route different callers to different backends, see:
+* [Dynamically set upstream based on the authenticated caller](/how-to/configure-oidc-datakit-upstream-routing/) (reads `kong.client.credential`, routes to named Upstream entities)
+* [Dynamically set host based on the authenticated caller](/how-to/configure-oidc-datakit-host-routing/) (reads `kong.client.credential`, routes to direct `host:port` targets)
+* [Dynamically set host based on the authenticated Principal](/how-to/configure-oidc-datakit-host-routing-with-principals-metadata/) (reads `kong.client.principal`, routes to a `host:port` target stored in {{site.identity}} Principal metadata)
 
 The following properties support `get` and `set` operations:
 
