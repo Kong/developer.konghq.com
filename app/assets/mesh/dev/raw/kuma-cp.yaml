@@ -953,7 +953,7 @@ kmesh:
     # Configuration for recording all the actions in the system.
     audit:
       # Types that are skipped by default when `types` list in AccessAudit resource is empty
-      skipDefaultTypes: ["DataplaneInsight", "ZoneInsight", "ServiceInsight", "MeshInsight"]
+      skipDefaultTypes: ["DataplaneInsight", "ZoneInsight", "MeshInsight"]
       # List of backends for auditing. If empty, no audit is recorded.
       backends: []
       #      - # type of logging backend. Available values: "file"
