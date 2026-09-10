@@ -43,7 +43,7 @@ related_resources:
 Make sure you have [access to the  AI PII service](#ai-pii-anonymizer-service-access), then run the following command to start it locally with Docker:
 
 ```sh
-docker run --rm -p 8080:8080 docker.cloudsmith.io/kong/ai-pii/service:v0.1.2-en
+docker run --rm -p 8080:8080 kong/ai-pii-service:v0.2.2-en
 ```
 {: data-test-step="block" }
 
