@@ -1,0 +1,25 @@
+title: 'Allow one client a longer request timeout'
+
+description: 'Match a rule on the calling SPIFFE ID to raise the request timeout for one group of clients. Only requestTimeout and streamIdleTimeout can be conditioned on identity.'
+
+weight: 700
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshTimeout
+  name: backend-from-frontend
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    rules:
+      - matches:
+          - spiffeID:
+              type: Prefix
+              value: spiffe://default.default.mesh.local/ns/kong-mesh-demo
+        default:
+          http:
+            requestTimeout: 45s
