@@ -75,11 +75,11 @@ rows:
     default: "`kong`"
     description: Database name.
   - parameter: "[`pg_schema`](/gateway/configuration/#pg-schema)"
-    default: (none)
-    description: Schema name. Defaults to `public` when not set.
+    default: `public`
+    description: Schema name.
   - parameter: "[`pg_ro_host`](/gateway/configuration/#pg-ro-host)"
     default: (none)
-    description: Set this to activate the read-only user.
+    description: Host of the read-only Postgres server. Setting this activates Kong's read-only database connection feature."
   - parameter: "[`pg_ro_user`](/gateway/configuration/#pg-ro-user)"
     default: Falls back to `pg_user`
     description: PostgreSQL role name for the read-only user.
@@ -135,7 +135,7 @@ Both the write user and the read-only user need `CONNECT` privilege on `pg_datab
 
 Before migration, the write user needs `CREATE` privilege on `pg_database` to create the {{site.base_gateway}} schema.
 
-`kong migrations reset/bootstrap/up/finish` runs the following DDL automatically. The following script makes the write user the schema owner (replace `$PG_SCHEMA` with the actual name of `pg_schema`:
+`kong migrations reset/bootstrap/up/finish` runs the following Data Definition Language (DDL) statements automatically. The following script makes the write user the schema owner (replace `$PG_SCHEMA` with the actual name of `pg_schema`:
 
 ```sql
 -- kong migrations reset
