@@ -80,26 +80,44 @@ rows:
     caps: "Connection pools held per cluster at once. Relevant only where a cluster creates many pools."
 {% endtable %}
 
-## Where a policy can attach
+## Where a policy applies
+
+A policy carries up to three selectors, and they answer different questions.
 
 {% table %}
 columns:
-  - title: Field
-    key: field
-  - title: Accepted kinds
-    key: kinds
+  - title: Selector
+    key: selector
+  - title: Answers
+    key: answers
+  - title: Accepts
+    key: accepts
 rows:
-  - field: "`spec.targetRef`"
-    kinds: "`Mesh`, `Dataplane`"
-  - field: "`spec.to[].targetRef`"
-    kinds: "`Mesh`, `MeshService`, `MeshExternalService`, `MeshMultiZoneService`"
+  - selector: "`spec.targetRef`"
+    answers: "Which proxies the policy is installed on."
+    accepts: "`Mesh`, `Dataplane`"
+  - selector: "`spec.to[].targetRef`"
+    answers: "Which destination the limits apply to, for traffic the proxy sends."
+    accepts: "`Mesh`, `MeshService`, `MeshExternalService`, `MeshMultiZoneService`"
+  - selector: "`spec.rules[]`"
+    answers: "The proxy's own inbound side. All inbound traffic, with no matching available."
+    accepts: "No selector"
 {% endtable %}
+Outbound and inbound name their subject differently, and for a reason. A destination is
+something the proxy chooses to call, so it is named directly: `MeshService` and its siblings.
+A client is remote and asserts its own identity, so a name or label would be the caller's own
+claim about itself. A client is therefore matched on the SPIFFE ID that
+[MeshIdentity](/mesh/policies/meshidentity/) issued and mTLS proves.
 
-Unlike [MeshRetry](/mesh/policies/meshretry/), `to[].targetRef` does not accept
-`MeshHTTPRoute`: circuit breaking applies to a whole destination, not to one route.
+A policy needs at least one of `to` or `rules`, and both may be set together. Each `default`
+needs at least one of `connectionLimits` or `outlierDetection`.
 
-A policy needs at least one of `to` or `rules`. Each `default` needs at least one of
-`connectionLimits` or `outlierDetection`.
+`to[].targetRef` does not accept `MeshHTTPRoute`, which [MeshRetry](/mesh/policies/meshretry/)
+does: circuit breaking applies to a whole destination, not to one route.
+
+Unlike other policies with `rules`, this one cannot match on the client. L7 matching for
+inbound circuit breaking is not implemented, so a single catch-all entry is the only shape
+available.
 
 ## Eject failing endpoints
 

@@ -230,6 +230,35 @@ spec:
 
 For a walkthrough, see [Apply policies to mesh-scoped zone proxies](/mesh/zone-proxy-policies/).
 
+## Where a policy applies
+
+A policy carries up to three selectors, and they answer different questions.
+
+{% table %}
+columns:
+  - title: Selector
+    key: selector
+  - title: Answers
+    key: answers
+  - title: Accepts
+    key: accepts
+rows:
+  - selector: "`spec.targetRef`"
+    answers: "Which proxies the policy is installed on."
+    accepts: "`Mesh`, `Dataplane`"
+  - selector: "`spec.rules[]`"
+    answers: "Which clients those proxies accept, through `allow`, `deny` and `allowWithShadowDeny`."
+    accepts: "`spiffeID` matchers, or `sni` on zone egress"
+{% endtable %}
+Outbound and inbound name their subject differently, and for a reason. A destination is
+something the proxy chooses to call, so it is named directly: `MeshService` and its siblings.
+A client is remote and asserts its own identity, so a name or label would be the caller's own
+claim about itself. A client is therefore matched on the SPIFFE ID that
+[MeshIdentity](/mesh/policies/meshidentity/) issued and mTLS proves.
+
+This policy has no `to` array. Access control is an inbound question only, so there is
+nothing to select on the outbound side.
+
 ## Upgrading from {{site.mesh_product_name}} 2.x
 
 {:.warning}
