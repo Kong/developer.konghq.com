@@ -1,0 +1,26 @@
+title: 'Probe a destination that only speaks TCP'
+
+description: 'Use a TCP health check with no receive blocks, so the probe succeeds as soon as a connection is established.'
+
+weight: 800
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshHealthCheck
+  name: web-to-redis-tcp
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: web
+    to:
+      - targetRef:
+          kind: MeshService
+          labels:
+            kuma.io/display-name: redis
+        default:
+          interval: 10s
+          timeout: 2s
+          tcp: {}
