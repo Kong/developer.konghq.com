@@ -64,38 +64,19 @@ What each field does:
 * `default` carries the configuration, under `http`, `grpc`, or `tcp`. At least one of the
   three is required.
 
-## Where a policy applies
+## Where this policy applies
 
-A policy carries up to three selectors, and they answer different questions.
+`spec.targetRef` selects which proxies retry, and these are the callers: `Mesh`, or
+`Dataplane` with `labels`. `spec.to[].targetRef` selects the destination the retries apply
+to, and accepts `Mesh`, `MeshService`, `MeshExternalService`, `MeshMultiZoneService` or
+`MeshHTTPRoute`.
 
-{% table %}
-columns:
-  - title: Selector
-    key: selector
-  - title: Answers
-    key: answers
-  - title: Accepts
-    key: accepts
-rows:
-  - selector: "`spec.targetRef`"
-    answers: "Which proxies the policy is installed on."
-    accepts: "`Mesh`, `Dataplane`"
-  - selector: "`spec.to[].targetRef`"
-    answers: "Which destination the retries apply to, for requests the proxy sends."
-    accepts: "`Mesh`, `MeshService`, `MeshExternalService`, `MeshMultiZoneService`, `MeshHTTPRoute`"
-{% endtable %}
-Outbound and inbound name their subject differently, and for a reason. A destination is
-something the proxy chooses to call, so it is named directly: `MeshService` and its siblings.
-A client is remote and asserts its own identity, so a name or label would be the caller's own
-claim about itself. A client is therefore matched on the SPIFFE ID that
-[MeshIdentity](/mesh/policies/meshidentity/) issued and mTLS proves.
+There is no `rules` array. A retry is a decision the caller makes, so it is configured
+outbound only.
 
-This policy has no `rules` array. A retry is a decision the caller makes, so it is
-configured outbound only.
-
-Targeting a `MeshHTTPRoute` retries only the requests that route matches, which is how a
-retry is scoped to one path rather than to a whole service. Only `MeshAccessLog`,
-`MeshLoadBalancingStrategy`, `MeshRetry` and `MeshTimeout` accept that kind.
+Targeting a `MeshHTTPRoute` retries only the requests that route matches, which scopes a
+retry to one path rather than a whole service. For the selectors a policy can carry, see
+[How policies select traffic](/mesh/policy-targeting/).
 
 ## Choose what to retry on
 

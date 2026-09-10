@@ -345,34 +345,15 @@ spec:
 `MeshExternalService`, `MeshMultiZoneService`, and `MeshHTTPRoute` to name one. See the
 [configuration reference](/mesh/policies/meshaccesslog/reference/) for the full field list.
 
-## Where a policy applies
+## Where this policy applies
 
-A policy carries up to three selectors, and they answer different questions.
+`spec.targetRef` selects which proxies log: `Mesh`, or `Dataplane` with `labels`.
+`spec.to[].targetRef` selects a destination to log requests to, and accepts `Mesh`,
+`MeshService`, `MeshExternalService`, `MeshMultiZoneService` or `MeshHTTPRoute`.
+`spec.rules[].matches` selects which clients to log requests from.
 
-{% table %}
-columns:
-  - title: Selector
-    key: selector
-  - title: Answers
-    key: answers
-  - title: Accepts
-    key: accepts
-rows:
-  - selector: "`spec.targetRef`"
-    answers: "Which proxies the policy is installed on."
-    accepts: "`Mesh`, `Dataplane`"
-  - selector: "`spec.to[].targetRef`"
-    answers: "Which destination to log, for requests the proxy sends."
-    accepts: "`Mesh`, `MeshService`, `MeshExternalService`, `MeshMultiZoneService`, `MeshHTTPRoute`"
-  - selector: "`spec.rules[].matches`"
-    answers: "Which clients to log, for requests the proxy receives."
-    accepts: "`spiffeID` matchers, or `sni`"
-{% endtable %}
-Outbound and inbound name their subject differently, and for a reason. A destination is
-something the proxy chooses to call, so it is named directly: `MeshService` and its siblings.
-A client is remote and asserts its own identity, so a name or label would be the caller's own
-claim about itself. A client is therefore matched on the SPIFFE ID that
-[MeshIdentity](/mesh/policies/meshidentity/) issued and mTLS proves.
+For the selectors a policy can carry and why inbound matches an identity rather than a name,
+see [How policies select traffic](/mesh/policy-targeting/).
 
 ## Upgrading from {{site.mesh_product_name}} 2.x
 
