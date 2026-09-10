@@ -102,8 +102,14 @@ In this setup, you need to designate one backup node.
 The backup node must have read and write access to the S3 bucket, and the Data Plane nodes that are provisioned must have read access to the same S3 bucket.
 The backup node is responsible for communicating the state of the {{site.base_gateway}} `kong.conf` configuration file from the Control Plane to the S3 bucket.
 
-Nodes are initialized with fallback configs via environment variables, including `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_DEFAULT_REGION`. 
-If you're associating this with an IAM role and if the backup node doesn't reside on the AWS platform, you may also need to use the `AWS_SESSION_TOKEN` environment variable. 
+Nodes are initialized with fallback configs via environment variables, including `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_DEFAULT_REGION`.
+Instead of static credentials, a node deployed on AWS compute can use temporary credentials from an assumed IAM role. 
+The role is fetched automatically based on where the node runs: 
+* On EC2, from an [instance profile](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html).
+* On ECS, from a [container credential provider](https://docs.aws.amazon.com/sdkref/latest/guide/feature-container-credentials.html).
+* On EKS, from [IAM roles for service accounts](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html).
+
+When using temporary credentials from an assumed role, also set the `AWS_SESSION_TOKEN` environment variable alongside `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. This is also required if you're associating this with an IAM role and the backup node doesn't reside on the AWS platform.
 
 
 {:.warning}
