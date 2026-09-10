@@ -4,7 +4,7 @@ title: 'Rate limit by Principal metadata'
 weight: 800
 
 requirements:
-  - "[Authentication](/gateway/authentication/) configured with Kong Identity Principal support"
+  - "[Authentication](/gateway/authentication/) configured with {{site.identity}} [Principal](/identity/principals/) support"
 
 config:
   limit_by: principal

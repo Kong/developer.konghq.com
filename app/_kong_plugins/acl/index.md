@@ -59,9 +59,9 @@ If `hide_groups_header` is set to `false` and a Consumer is validated, the plugi
 
 ## Dynamic allow and deny rules {% new_in 3.16 %}
 
-Instead of an allow or deny list of group names, you can use [`allow_when`](/plugins/acl/reference/#schema--config-allow-when) or [`deny_when`](/plugins/acl/reference/#schema--config-deny-when) to allow or deny requests based on a list of [CEL](https://cel.dev/) boolean expressions, evaluated against the same fields available to [plugin conditions](/gateway/plugins/expressions/) (for example, the authenticated Consumer, Principal, or HTTP request attributes).
+Instead of an allow or deny list of group names, you can use [`allow_when`](/plugins/acl/reference/#schema--config-allow-when) or [`deny_when`](/plugins/acl/reference/#schema--config-deny-when) to allow or deny requests based on a list of [CEL](https://cel.dev/) boolean expressions, evaluated against the same fields available to [plugin conditions](/gateway/plugins/conditions/) (for example, the authenticated Consumer, Principal, or HTTP request attributes).
 
-`allow`, `deny`, `allow_when`, and `deny_when` are mutually exclusive. Configure exactly one of them on a given ACL plugin instance.
+`allow`, `deny`, `allow_when`, and `deny_when` are mutually exclusive. Configure exactly one of them on a given ACL plugin instance:
 
 ```yaml
 config:

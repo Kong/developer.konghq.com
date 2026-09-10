@@ -5,7 +5,7 @@ title: 'Deny by Principal metadata'
 weight: 700
 
 requirements:
-  - "[Authentication](/gateway/authentication/) configured with Kong Identity Principal support"
+  - "[Authentication](/gateway/authentication/) configured with {{site.identity}} [Principal](/identity/principals/) support"
 
 config:
   deny_when:

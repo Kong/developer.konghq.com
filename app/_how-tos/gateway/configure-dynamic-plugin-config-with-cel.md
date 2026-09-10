@@ -79,7 +79,8 @@ automated_tests: false
 ---
 
 ## Create a Principal
-
+A plugin’s config can be computed per request from a [CEL expression](/gateway/plugins/expressions/), for example, reading an attribute of the authenticated Consumer or Principal, instead of always using a fixed value.
+In this guide, you'll create a [Principal](/identity/principals/) so that a custom limit can be applied to authenticated Principals.
 {% include /how-tos/steps/principal.md %}
 
 Set `rate_limit` and `partner_id` metadata on the Principal so the plugin's expressions have something to read:

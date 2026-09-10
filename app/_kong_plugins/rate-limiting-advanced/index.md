@@ -224,7 +224,7 @@ For an example plugin configuration, see [Rate limit by consumer username](/plug
 
 ## Rate limit by Principal {% new_in 3.16 %}
 
-Set [`identifier`](/plugins/rate-limiting-advanced/reference/#schema--config-identifier) to `principal` to rate limit based on the authenticated [Kong Identity Principal](/identity/principals/) instead of the Consumer, credential, IP address, or other supported identifiers. `principal` is also a valid segment in [`compound_identifier`](/plugins/rate-limiting-advanced/reference/#schema--config-compound-identifier).
+Set [`identifier`](/plugins/rate-limiting-advanced/reference/#schema--config-identifier) to `principal` to rate limit based on the authenticated [{{site.identity}} Principal](/identity/principals/) instead of the Consumer, credential, IP address, or other supported identifiers. `principal` is also a valid segment in [`compound_identifier`](/plugins/rate-limiting-advanced/reference/#schema--config-compound-identifier).
 
 ```yaml
 config:

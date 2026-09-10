@@ -97,7 +97,7 @@ See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose 
 
 ## Rate limit by Principal {% new_in 3.16 %}
 
-Set [`limit_by`](/plugins/rate-limiting/reference/#schema--config-limit-by) to `principal` to rate limit based on the authenticated [Kong Identity Principal](/identity/principals/) instead of the Consumer, credential, IP address, or other supported identifiers.
+Set [`limit_by`](/plugins/rate-limiting/reference/#schema--config-limit-by) to `principal` to rate limit based on the authenticated [{{site.identity}} Principal](/identity/principals/) instead of the Consumer, credential, IP address, or other supported identifiers.
 
 ```yaml
 config:
@@ -105,7 +105,7 @@ config:
   second: 10
 ```
 
-`principal` requires an auth plugin that populates the Principal, such as Key Auth configured for Kong Identity Principal authentication.
+`principal` requires an auth plugin that populates the Principal, such as Key Auth configured for {{site.identity}} Principal authentication.
 
 [`custom_key`](/plugins/rate-limiting/reference/#schema--config-custom-key) overrides the computed rate limiting key with a literal string, regardless of `limit_by`. This is most useful in combination with [expressible config fields](#dynamic-configuration-with-cel), where `custom_key`'s value comes from a CEL expression instead of a fixed string.
 
