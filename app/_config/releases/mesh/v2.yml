@@ -123,16 +123,12 @@ app/_mesh_policies/v2/external-services/reference.md:
   status: pending
   canonical_url: /mesh/meshexternalservice/
 app/_mesh_policies/v2/meshaccesslog/examples/log-incoming-traffic.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshaccesslog/examples/log-incoming-traffic/
 app/_mesh_policies/v2/meshaccesslog/examples/log-outgoing-traffic.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshaccesslog/examples/log-outgoing-traffic/
 app/_mesh_policies/v2/meshaccesslog/examples/logging-to-multiple-backends.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshaccesslog/examples/logging-to-multiple-backends/
 app/_mesh_policies/v2/meshaccesslog/index.md:
-  status: pending
   canonical_url: /mesh/policies/meshaccesslog/
 app/_mesh_policies/v2/meshaccesslog/reference.md:
   canonical_url: /mesh/policies/meshaccesslog/reference/
