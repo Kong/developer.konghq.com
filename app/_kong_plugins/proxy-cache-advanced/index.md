@@ -104,4 +104,4 @@ This plugin extends the [Proxy Cache plugin](/plugins/proxy-cache/) with Redis, 
 
 {% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
 
-{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=2 %}
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=2 redis_group="strategy" %}
