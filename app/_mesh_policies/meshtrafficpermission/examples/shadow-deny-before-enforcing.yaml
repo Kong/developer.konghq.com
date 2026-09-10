@@ -1,0 +1,23 @@
+title: 'Test a deny rule before enforcing it'
+
+description: 'Use allowWithShadowDeny to log traffic as denied while still allowing it, so a restrictive rule can be validated before it blocks requests.'
+
+weight: 600
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshTrafficPermission
+  name: shadow-deny-legacy
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    rules:
+      - default:
+          allowWithShadowDeny:
+            - spiffeID:
+                type: Prefix
+                value: spiffe://default.default.mesh.local/ns/legacy
