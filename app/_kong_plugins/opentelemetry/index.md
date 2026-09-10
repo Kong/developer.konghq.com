@@ -334,12 +334,75 @@ for each different header format, as in the following example:
 
 ## Custom attributes by Lua {% new_in 3.14 %}
 
-{% include /plugins/logging/log-custom-fields-by-lua.md
-custom_fields_by_lua='config.access_logs.custom_attributes_by_lua'
-custom_fields_by_lua_slug='config-access-logs-custom-attributes-by-lua'
-custom_fields_by_lua_name='custom_attributes_by_lua'
-name=page.name
-slug=page.slug %}
+The [`custom_attributes_by_lua`](./reference/#schema--config-access-logs-custom-attributes-by-lua) configuration allows for the dynamic modification of
+log fields using Lua code. Below is a snippet of an example configuration that
+removes the `route` field from the logs:
+
+```sh
+curl -i -X POST http://localhost:8001/plugins \
+  --data config.name=opentelemetry \
+  --data config.access_logs.custom_attributes_by_lua.route="return nil"
+```
+
+Similarly, new fields can be added:
+
+```sh
+curl -i -X POST http://localhost:8001/plugins \
+  --data config.name=opentelemetry \
+  --data config.access_logs.custom_attributes_by_lua.header="return kong.request.get_header('h1')"
+```
+
+### Array indices {% new_in 3.15 %}
+
+Array indices should be enclosed within square brackets. For example:
+
+```sh
+curl -i -X POST http://localhost:8001/plugins \
+  --header 'Accept: application/json' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "name": "opentelemetry",
+  "config": {
+    "custom_attributes_by_lua": {
+      "foo[1].bar[2].woo": "return 456"
+    }
+  }
+}'
+```
+
+Array indices only support positive integers.
+
+### Special characters {% new_in 3.10 %}
+
+Dot characters (`.`) in the field key create nested fields. You can use a backslash `\` to escape a dot if you want to keep it in the field name.
+
+For example, if you configure a field with both a regular dot and an escaped dot:
+
+```sh
+curl -i -X POST http://localhost:8001/plugins/ \
+...
+  --data config.name=OpenTelemetry \
+  --data config.access_logs.custom_attributes_by_lua.[my_entry.log\.field]="return foo"
+```
+The field will look like this in the log:
+```sh
+"my_entry": {
+  "log.field": "foo"
+}
+```
+
+{:.warning}
+> The OpenTelemetry plugin doesn't use the same table for logging as the other logging plugins. This is because it uses `config.access_logs.custom_attributes_by_lua` instead of `config.custom_fields_by_lua`.
+
+### Limitations
+
+Lua code runs in a restricted sandbox environment, whose behavior is governed
+by the `untrusted_lua` [configuration properties](/gateway/configuration/).
+
+{% include /plugins/sandbox.md %}
+
+Further, as code runs in the context of the log phase, only [PDK](/gateway/pdk/reference/) methods
+that can run in said phase can be used.
 
 ## Troubleshooting
 
