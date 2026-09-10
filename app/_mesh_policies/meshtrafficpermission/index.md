@@ -193,7 +193,17 @@ spec:
 
 `MeshTrafficPermission` applies to a mesh-scoped zone proxy like any other `Dataplane`.
 Select the proxy role and zone with `targetRef.labels`, and the listener with
-`targetRef.sectionName` — `10001` for zone ingress, `10002` for zone egress.
+`targetRef.sectionName`.
+
+`sectionName` matches the listener's `name` in
+`Dataplane.networking.listeners[]`. A listener with no `name` set takes its port number as
+its name, so on a Helm install with default ports that means `10001` for zone ingress and
+`10002` for zone egress. Read the listener names from the `Dataplane` rather than assuming
+the defaults:
+
+```sh
+kubectl get dataplane <zone-proxy> -n kong-mesh-system -o jsonpath='{.spec.networking.listeners}'
+```
 
 On zone egress, the destination is matched by SNI:
 
