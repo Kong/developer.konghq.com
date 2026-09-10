@@ -1,0 +1,32 @@
+description: 'Compress producer batches before sending them to Confluent Cloud.'
+
+extended_description: |
+  Compress producer batches before sending them to Confluent Cloud. This example uses `lz4` compression.
+  See [`config.compression_type`](/plugins/confluent/reference/#schema--config-compression-type) for all supported codecs.
+
+title: 'Compress messages before sending to Kafka'
+
+weight: 910
+
+requirements:
+ - "A Confluent Cloud cluster"
+ - "[Create a Kafka topic](https://docs.confluent.io/cloud/current/get-started/index.html)"
+
+variables:
+  topic:
+    description: 'The name of your Kafka topic.'
+    value: $KAFKA_TOPIC
+
+config:
+  topic: ${topic}
+  compression_type: lz4
+
+min_version:
+  gateway: '3.16'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
