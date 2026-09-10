@@ -1,0 +1,23 @@
+title: 'Delay responses to test caller timeouts'
+
+description: 'Hold back 50.5% of responses by five seconds, so a caller MeshTimeout can be checked against a slow destination.'
+
+weight: 800
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshFaultInjection
+  name: backend-delay
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    rules:
+      - default:
+          http:
+            - delay:
+                value: 5s
+                percentage: "50.5"
