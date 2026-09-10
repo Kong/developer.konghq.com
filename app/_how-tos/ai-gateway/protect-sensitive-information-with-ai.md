@@ -47,7 +47,7 @@ related_resources:
 Make sure you have [access to the  AI PII service](#ai-pii-anonymizer-service-access), then run the following command to start it locally with Docker:
 
 ```sh
-docker run --rm -p 8080:8080 kong/ai-pii-service:v0.2.2-en
+docker run --rm -d -p 8080:8080 kong/ai-pii-service:v0.2.2-en
 ```
 {: data-test-step="block" }
 
@@ -55,7 +55,7 @@ docker run --rm -p 8080:8080 kong/ai-pii-service:v0.2.2-en
 
 Create both an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) and an [AI Model](/ai-gateway/entities/ai-model/) with a single `kongctl` apply command.
 
-You'll also configure the [AI PII Sanitizer Policy](/ai-gateway/policies/ai-sanitizer/) to filter LLM traffic based on an existing AWS Guardrail.
+You'll also configure the [AI PII Sanitizer Policy](/ai-gateway/policies/ai-sanitizer/) to anonymize personal information.
 
 {% entity_examples %}
 ai_gateway_model_providers:
