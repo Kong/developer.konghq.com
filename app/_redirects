@@ -670,9 +670,9 @@
 /mesh/policies/meshproxypatch/examples/time-out-adjustment/  /mesh/v2/policies/meshproxypatch/examples/time-out-adjustment/  301
 /mesh/policies/meshratelimit/examples/configure-on-services/  /mesh/v2/policies/meshratelimit/examples/configure-on-services/  301
 /mesh/policies/meshratelimit/examples/tcp-rate-limit/  /mesh/v2/policies/meshratelimit/examples/tcp-rate-limit/  301
-/mesh/policies/meshretry/examples/deadlineexceeded/  /mesh/v2/policies/meshretry/examples/deadlineexceeded/  301
-/mesh/policies/meshretry/examples/http-frontend-to-backend/  /mesh/v2/policies/meshretry/examples/http-frontend-to-backend/  301
-/mesh/policies/meshretry/examples/tcp-frontend-to-backend/  /mesh/v2/policies/meshretry/examples/tcp-frontend-to-backend/  301
+/mesh/policies/meshretry/examples/deadlineexceeded/  /mesh/policies/meshretry/examples/retry-grpc-deadline-exceeded/  301
+/mesh/policies/meshretry/examples/http-frontend-to-backend/  /mesh/policies/meshretry/examples/retry-http-5xx/  301
+/mesh/policies/meshretry/examples/tcp-frontend-to-backend/  /mesh/policies/meshretry/examples/retry-tcp-connect/  301
 /mesh/policies/meshtcproute/examples/traffic-redirection/  /mesh/v2/policies/meshtcproute/examples/traffic-redirection/  301
 /mesh/policies/meshtcproute/examples/traffic-split/  /mesh/v2/policies/meshtcproute/examples/traffic-split/  301
 /mesh/policies/meshtimeout/examples/backend-inbound/  /mesh/v2/policies/meshtimeout/examples/backend-inbound/  301

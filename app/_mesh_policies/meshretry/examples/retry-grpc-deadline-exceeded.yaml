@@ -1,0 +1,29 @@
+title: 'Retry gRPC calls on DeadlineExceeded'
+
+description: 'Use MeshRetry to retry gRPC calls from frontend to backend when the destination returns DeadlineExceeded.'
+
+weight: 800
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshRetry
+  name: frontend-to-backend-grpc
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: frontend
+    to:
+      - targetRef:
+          kind: MeshService
+          name: backend
+        default:
+          grpc:
+            numRetries: 5
+            backOff:
+              baseInterval: 5s
+              maxInterval: 1m
+            retryOn:
+              - DeadlineExceeded
