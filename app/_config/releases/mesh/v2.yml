@@ -133,13 +133,10 @@ app/_mesh_policies/v2/meshaccesslog/index.md:
 app/_mesh_policies/v2/meshaccesslog/reference.md:
   canonical_url: /mesh/policies/meshaccesslog/reference/
 app/_mesh_policies/v2/meshcircuitbreaker/examples/basic-circuit-breaker.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshcircuitbreaker/examples/limit-connections-to-a-destination/
 app/_mesh_policies/v2/meshcircuitbreaker/examples/inbound-traffic-backend-service.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshcircuitbreaker/examples/limit-incoming-connections/
 app/_mesh_policies/v2/meshcircuitbreaker/index.md:
-  status: pending
   canonical_url: /mesh/policies/meshcircuitbreaker/
 app/_mesh_policies/v2/meshcircuitbreaker/reference.md:
   canonical_url: /mesh/policies/meshcircuitbreaker/reference/

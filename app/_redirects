@@ -641,8 +641,8 @@
 /mesh/policies/external-services/examples/accessible-from-specific-zone-through-zoneegress/  /mesh/v2/policies/external-services/examples/accessible-from-specific-zone-through-zoneegress/  301
 /mesh/policies/external-services/examples/zone-egress/  /mesh/v2/policies/external-services/examples/zone-egress/  301
 /mesh/policies/external-services/index/  /mesh/v2/policies/external-services/index/  301
-/mesh/policies/meshcircuitbreaker/examples/basic-circuit-breaker/  /mesh/v2/policies/meshcircuitbreaker/examples/basic-circuit-breaker/  301
-/mesh/policies/meshcircuitbreaker/examples/inbound-traffic-backend-service/  /mesh/v2/policies/meshcircuitbreaker/examples/inbound-traffic-backend-service/  301
+/mesh/policies/meshcircuitbreaker/examples/basic-circuit-breaker/  /mesh/policies/meshcircuitbreaker/examples/limit-connections-to-a-destination/  301
+/mesh/policies/meshcircuitbreaker/examples/inbound-traffic-backend-service/  /mesh/policies/meshcircuitbreaker/examples/limit-incoming-connections/  301
 /mesh/policies/meshfaultinjection/examples/list-faults-applied-from-frontend/  /mesh/v2/policies/meshfaultinjection/examples/list-faults-applied-from-frontend/  301
 /mesh/policies/meshfaultinjection/examples/return-requests-delayed/  /mesh/v2/policies/meshfaultinjection/examples/return-requests-delayed/  301
 /mesh/policies/meshfaultinjection/examples/return-requests-from-frontend/  /mesh/v2/policies/meshfaultinjection/examples/return-requests-from-frontend/  301
