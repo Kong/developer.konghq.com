@@ -12,10 +12,12 @@ module Jekyll
 
       def process # rubocop:disable Metrics/AbcSize
         return unless %w[how_to landing_page].include?(@page.data['content_type'])
-        return unless @page.data['min_version']
 
+        # Newest release in the page's major. Set even without `min_version`,
+        # because the major alone resolves it.
         @page.data['latest_release'] = release_info.latest_available_release
 
+        return unless @page.data['min_version']
         return unless unreleased?
 
         @page.instance_variable_set(:@url, "#{@page.url}#{release_info.min_release}/")
@@ -30,7 +32,7 @@ module Jekyll
       end
 
       def unreleased?
-        @release_info.unreleased?
+        release_info.unreleased?
       end
     end
   end

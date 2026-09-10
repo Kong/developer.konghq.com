@@ -10,6 +10,11 @@ ifndef RUBY_MATCH
 	$(error ruby $(RUBY_VERSION_REQUIRED) is required. Found $(RUBY_VERSION). $(newline)Run 'mise activate' or prefix you make command with 'mise x --' see README.md for more information)$(newline)
 endif
 
+seed-redirects:
+	@mkdir -p dist
+	@[ -s dist/_redirects ] || cp app/_redirects dist/_redirects
+	@[ -s dist/_headers ] || cp app/_headers dist/_headers
+
 # Installs yarn packages and gems.
 install:
 	mise install
@@ -24,10 +29,10 @@ validate-frontmatters:
 	npm --prefix tools/frontmatter-validator run validate
 
 # Using local dependencies, starts a doc site instance on http://localhost:4000.
-run: ruby-version-check validate-frontmatters
+run: ruby-version-check validate-frontmatters seed-redirects
 	NODE_OPTIONS="--max_old_space_size=8192" yarn netlify dev --offline --skip-wait-port --internal-disable-edge-functions
 
-run-debug: ruby-version-check
+run-debug: ruby-version-check seed-redirects
 	NODE_OPTIONS="--max_old_space_size=8192" JEKYLL_LOG_LEVEL='debug' yarn netlify dev --skip-wait-port --internal-disable-edge-functions
 
 build: ruby-version-check

@@ -1,0 +1,362 @@
+---
+title: Mesh Access Log
+name: MeshAccessLogs
+products:
+    - mesh
+
+description: 'Set up access logs on every data plane proxy in a mesh.'
+content_type: plugin
+icon: meshaccesslog.png
+
+related_resources:
+  - text: Deploy an OpenTelemetry collector
+    url: /mesh/v2/deploy-an-opentelemetry-collector/
+  - text: MeshOpenTelemetryBackend
+    url: /mesh/v2/meshopentelemetrybackend/
+major_version:
+  mesh: 2
+---
+
+{:.info}
+> This guide assumes you have already configured your observability tools to work with {{site.mesh_product_name}}.
+> If you haven't, see the [observability docs](/mesh/v2/observability/).
+
+## `targetRef` support matrix
+
+{% navtabs "support-matrix" %}
+{% navtab "Sidecar" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`, `MeshExternalService`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
+
+{% navtab "Built-in Gateway" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshGateway`, `MeshGateway` with `tags`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`"
+  - targetref: "`from[].targetRef.kind`"
+    allowed_kinds: "`Mesh`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
+
+{% navtab "Delegated Gateway" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshSubset`"
+  - targetref: "`to[].targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshService`, `MeshExternalService`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
+
+{% endnavtabs %}
+
+
+
+## Configuration
+
+### Format
+
+{{site.mesh_product_name}} gives you full control over the format of the access logs.
+
+The shape of a single log record is defined by a template string that uses [command operators](https://www.envoyproxy.io/docs/envoy/v1.22.0/configuration/observability/access_log/usage#command-operators) to extract and format data about a `TCP` connection or an `HTTP` request.
+
+For example:
+
+```
+%START_TIME% %KUMA_SOURCE_SERVICE% => %KUMA_DESTINATION_SERVICE% %DURATION%
+```
+
+`%START_TIME%` and `%KUMA_SOURCE_SERVICE%` are examples of available _command operators_.
+
+All _command operators_ [defined by Envoy](https://www.envoyproxy.io/docs/envoy/v1.22.0/configuration/observability/access_log/usage#command-operators) are supported, along with additional _command operators_ defined by {{site.mesh_product_name}}:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Command Operator
+    key: command_operator
+  - title: Description
+    key: description
+rows:
+  - command_operator: "`%KUMA_MESH%`"
+    description: Name of the mesh in which traffic is flowing.
+  - command_operator: "`%KUMA_SOURCE_SERVICE%`"
+    description: "Name of a `service` that is the `source` of traffic."
+  - command_operator: "`%KUMA_DESTINATION_SERVICE%`"
+    description: "Name of a `service` that is the `destination` of traffic."
+  - command_operator: "`%KUMA_SOURCE_ADDRESS_WITHOUT_PORT%`"
+    description: "Address of a `Dataplane` that is the `source` of traffic."
+  - command_operator: "`%KUMA_TRAFFIC_DIRECTION%`"
+    description: "Direction of the traffic, `INBOUND`, `OUTBOUND`, or `UNSPECIFIED`."
+{% endtable %}
+<!-- vale on -->
+
+All additional access log _command operators_ are valid to use with both `TCP` and `HTTP` traffic.
+
+Internally, {{site.mesh_product_name}} determines traffic protocol based on the value of `kuma.io/protocol` tag on the `inbound` interface of a `destination` `Dataplane`.
+
+There are two types of `format`, `plain` and `json`.
+
+Plain accepts a string with _command operators_ and produces a string output.
+
+JSON accepts a list of key-value pairs that produces a valid JSON object.
+
+The user decides which format type to use.
+Some system will automatically parse JSON logs and allow you to filter and query based on available keys.
+
+If a _command operator_ is specific to `HTTP` traffic, such as `%REQ(X?Y):Z%` or `%RESP(X?Y):Z%`, in the case of TCP traffic it will be replaced by a symbol "`-`" for `plain` and a `null` value for `json`.
+You can set the `format.omitEmptyValues` boolean option to change this to `""` for `plain` and
+omit them entirely for `json`.
+
+#### Plain
+
+The default format string for `TCP` traffic is:
+
+```
+[%START_TIME%] %RESPONSE_FLAGS% %KUMA_MESH% %KUMA_SOURCE_ADDRESS_WITHOUT_PORT%(%KUMA_SOURCE_SERVICE%)->%UPSTREAM_HOST%(%KUMA_DESTINATION_SERVICE%) took %DURATION%ms, sent %BYTES_SENT% bytes, received: %BYTES_RECEIVED% bytes
+```
+
+The default format string for `HTTP` traffic is:
+
+```
+[%START_TIME%] %KUMA_MESH% "%REQ(:METHOD)% %REQ(X-ENVOY-ORIGINAL-PATH?:PATH)% %PROTOCOL%" %RESPONSE_CODE% %RESPONSE_FLAGS% %BYTES_RECEIVED% %BYTES_SENT% %DURATION% %RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)% "%REQ(X-FORWARDED-FOR)%" "%REQ(USER-AGENT)%" "%REQ(X-REQUEST-ID)%" "%REQ(:AUTHORITY)%" "%KUMA_SOURCE_SERVICE%" "%KUMA_DESTINATION_SERVICE%" "%KUMA_SOURCE_ADDRESS_WITHOUT_PORT%" "%UPSTREAM_HOST%"
+```
+
+Example configuration:
+
+```yaml
+format:
+  type: Plain
+  plain: '[%START_TIME%] %BYTES_RECEIVED%'
+```
+
+Example output:
+
+```text
+[2016-04-15T20:17:00.310Z] 154
+```
+
+#### JSON
+
+Example configuration:
+
+```yaml
+format:
+  type: Json
+  json:
+    - key: "start_time"
+      value: "%START_TIME%"
+    - key: "bytes_received"
+      value: "%BYTES_RECEIVED%"
+```
+
+Example output:
+
+```json
+{
+  "start_time": "2016-04-15T20:17:00.310Z",
+  "bytes_received": "154"
+}
+```
+
+{% details %}
+summary: "TCP configuration with default fields:"
+content: |
+  ```yaml
+  format:
+    type: Json
+    json:
+      - key: "start_time"
+        value: "%START_TIME%"
+      - key: "response_flags"
+        value: "%RESPONSE_FLAGS%"
+      - key: "kuma_mesh"
+        value: "%KUMA_MESH%"
+      - key: "kuma_source_address_without_port"
+        value: "%KUMA_SOURCE_ADDRESS_WITHOUT_PORT%"
+      - key: "kuma_source_service"
+        value: "%KUMA_SOURCE_SERVICE%"
+      - key: "upstream_host"
+        value: "%UPSTREAM_HOST%"
+      - key: "kuma_destination_service"
+        value: "%KUMA_DESTINATION_SERVICE%"
+      - key: "duration_ms"
+        value: "%DURATION%"
+      - key: "bytes_sent"
+        value: "%BYTES_SENT%"
+      - key: "bytes_received"
+        value: "%BYTES_RECEIVED%"
+  ```
+{% enddetails %}
+
+{% details %}
+summary: "HTTP configuration with default fields:"
+content: |
+  ```yaml
+  format:
+    type: Json
+    json:
+      - key: "start_time"
+        value: "%START_TIME%"
+      - key: "kuma_mesh"
+        value: "%KUMA_MESH%"
+      - key: 'method'
+        value: '"%REQ(:METHOD)%'
+      - key: "path"
+        value: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+      - key: 'protocol'
+        value: '%PROTOCOL%'
+      - key: "response_code"
+        value: "%RESPONSE_CODE%"
+      - key: "response_flags"
+        value: "%RESPONSE_FLAGS%"
+      - key: "bytes_received"
+        value: "%BYTES_RECEIVED%"
+      - key: "bytes_sent"
+        value: "%BYTES_SENT%"
+      - key: "duration_ms"
+        value: "%DURATION%"
+      - key: "upstream_service_time"
+        value: "%RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)%"
+      - key: 'x_forwarded_for'
+        value: '"%REQ(X-FORWARDED-FOR)%"'
+      - key: 'user_agent'
+        value: '"%REQ(USER-AGENT)%"'
+      - key: 'request_id'
+        value: '"%REQ(X-REQUEST-ID)%"'
+      - key: 'authority'
+        value: '"%REQ(:AUTHORITY)%"'
+      - key: "kuma_source_service"
+        value: "%KUMA_SOURCE_SERVICE%"
+      - key: "kuma_destination_service"
+        value: "%KUMA_DESTINATION_SERVICE%"
+      - key: "kuma_source_address_without_port"
+        value: "%KUMA_SOURCE_ADDRESS_WITHOUT_PORT%"
+      - key: "upstream_host"
+        value: "%UPSTREAM_HOST%"
+  ```
+{% enddetails %}
+
+### Backends
+
+A backend determines where the logs end up.
+
+#### TCP
+
+A TCP backend streams logs to a server via TCP protocol.
+You can configure a TCP backend with an address:
+
+```yaml
+backends:
+  - type: Tcp
+    tcp:
+      address: 127.0.0.1:5000
+```
+
+#### File
+
+A file backend streams logs to a text file.
+You can configure a file backend with a path:
+
+```yaml
+backends:
+  - type: File
+    file:
+      path: /dev/stdout
+```
+
+#### OpenTelemetry
+
+An OpenTelemetry (OTEL) backend sends data to an OpenTelemetry server.
+You can configure an OpenTelemetry backend with an endpoint, [attributes](https://opentelemetry.io/docs/specs/otel/logs/data-model/#field-attributes) (which contain additional information about the log) and [body](https://opentelemetry.io/docs/specs/otel/logs/data-model/#field-body) (can be a string message, including multi-line, or it can be a structured data).
+Attributes and endpoints can use placeholders described in the [format section](#format).
+
+```yaml
+backends:
+  - type: OpenTelemetry
+    openTelemetry:
+      endpoint: otel-collector:4317
+      body:
+        kvlistValue:
+          values:
+            - key: "mesh"
+              value:
+                stringValue: "%KUMA_MESH%"
+      attributes:
+        - key: "start_time"
+          value: "%START_TIME%"
+```
+
+### Body
+Body is of type [any](https://opentelemetry.io/docs/specs/otel/logs/data-model/#type-any) (defined [here](https://github.com/open-telemetry/opentelemetry-proto/blob/342e1d4c3a1fe43312823ffb53bd38327f263059/opentelemetry/proto/common/v1/common.proto#L28-L40))
+and can be one of the following forms:
+
+```yaml
+body:
+  stringValue: "%KUMA_MESH%"
+```
+
+```yaml
+body:
+  boolValue: true
+```
+
+```yaml
+body:
+  intValue: 123
+```
+
+```yaml
+body:
+  doubleValue: 1.2
+```
+
+```yaml
+body:
+  bytesValue: aGVsbG8=
+```
+
+```yaml
+body:
+  arrayValue:
+    values:
+      - stringValue: "%KUMA_MESH%"
+```
+
+```yaml
+body:
+  kvlistValue:
+    values:
+      - key: "mesh"
+        value:
+          stringValue: "%KUMA_MESH%"
+```

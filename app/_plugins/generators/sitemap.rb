@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-module Jekyll
-  class SitemapGenerator < Jekyll::Generator # rubocop:disable Style/Documentation
-    priority :lowest
+require_relative '../lib/ordered_generator'
 
+module Jekyll
+  class SitemapGenerator < OrderedGenerator # rubocop:disable Style/Documentation
     def generate(site)
       return if ENV['JEKYLL_ENV'] == 'development'
 

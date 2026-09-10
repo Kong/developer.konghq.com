@@ -2,9 +2,9 @@ title: 'Log all outgoing traffic'
 
 description: 'Log all outgoing traffic with MeshAccessLog.'
 
-weight: 900
+weight: 890
 
-namespace: kuma-demo
+namespace: kong-mesh-demo
 
 config:
   type: MeshAccessLog

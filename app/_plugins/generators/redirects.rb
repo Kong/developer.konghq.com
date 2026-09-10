@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-module Jekyll
-  class RefirectsGenerator < Jekyll::Generator
-    priority :lowest
+require_relative '../lib/ordered_generator'
 
+module Jekyll
+  class RefirectsGenerator < OrderedGenerator
     def generate(site)
       redirects = api_specs_redirects(site)
       redirects << plugin_examples_redirects(site)
@@ -34,8 +34,14 @@ module Jekyll
     end
 
     def mesh_examples_redirects(site)
-      site.data.fetch('mesh_policies', {}).map do |_slug, policy|
-        ["#{policy.url}examples/", policy.data.fetch('get_started_url')].join("\t")
+      site.data.fetch('mesh_policies', {}).each_with_object([]) do |(major, policies), lines|
+        next unless major.is_a?(Integer)
+
+        policies.each_value do |policy|
+          next unless policy.data['get_started_url']
+
+          lines << ["#{policy.url}examples/", policy.data.fetch('get_started_url')].join("\t")
+        end
       end
     end
 

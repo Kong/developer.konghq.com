@@ -1,0 +1,420 @@
+---
+title: Mesh Metric
+name: MeshMetrics
+products:
+    - mesh
+description: "Gather traffic metrics across all data plane proxies in the mesh."
+content_type: plugin
+type: policy
+min_version:
+  mesh: '2.6'
+
+icon: meshmetric.png
+
+related_resources:
+  - text: Deploy an OpenTelemetry collector
+    url: /mesh/v2/deploy-an-opentelemetry-collector/
+  - text: MeshOpenTelemetryBackend
+    url: /mesh/v2/meshopentelemetrybackend/
+major_version:
+  mesh: 2
+---
+{{site.mesh_product_name}} facilitates consistent traffic metrics across all data plane proxies in your mesh.
+
+You can define metrics configuration for a whole Mesh, and optionally tweak certain parts for individual data plane proxies.
+For example, you might need to override the default metrics port if it's already in use on the specified machine.
+
+{{site.mesh_product_name}} provides full integration with Prometheus:
+
+* Each proxy can expose its metrics in [Prometheus format](https://prometheus.io/docs/instrumenting/exposition_formats/#text-based-format).
+* {{site.mesh_product_name}} exposes an API called the monitoring assignment service (MADS) which exposes proxies configured by `MeshMetric`.
+
+Moreover, {{site.mesh_product_name}} provides integration with OpenTelemetry:
+
+* Each proxy can publish its metrics to [OpenTelemetry collector](https://opentelemetry.io/docs/collector/). 
+
+To collect metrics from {{site.mesh_product_name}}, you need to expose metrics from proxies and applications.
+
+{:.info}
+> In the rest of this page we assume you have already configured your observability tools to work with {{site.mesh_product_name}}.
+> If you haven't already read the [observability docs](/mesh/v2/observability/).
+
+## TargetRef support matrix
+
+{% navtabs "support-matrix" %}
+{% navtab "Sidecar" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `Dataplane`, `MeshSubset(deprecated)`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
+
+{% navtab "Built-in Gateway" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshGateway`, `MeshGateway` with listener `tags`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
+
+{% navtab "Delegated Gateway" %}
+<!-- vale off -->
+{% table %}
+columns:
+  - title: "`targetRef`"
+    key: targetref
+  - title: Allowed kinds
+    key: allowed_kinds
+rows:
+  - targetref: "`targetRef.kind`"
+    allowed_kinds: "`Mesh`, `MeshSubset`"
+{% endtable %}
+<!-- vale on -->
+{% endnavtab %}
+
+{% endnavtabs %}
+
+
+
+## Configuration
+
+There are three main sections of the configuration: `sidecar`, `applications`, `backends`.
+The first two define how to scrape parts of the mesh (sidecar and underlying applications), the third one defines what to do with the data (in case of Prometheus instructs to scrape specific address, in case of OpenTelemetry defines where to push data).
+
+{:.info}
+> In contrast to Traffic Metrics, all configuration is dynamic and no restarts of the data plane proxies are needed.
+> You can define configuration refresh interval by using `KUMA_DATAPLANE_RUNTIME_DYNAMIC_CONFIGURATION_REFRESH_INTERVAL` env var or `{{site.set_flag_values_prefix}}dataplaneRuntime.dynamicConfiguration.refreshInterval` Helm value.
+
+### Sidecar
+
+{% if site.mesh_product_name != "Kuma" %}
+{% endif %}
+
+This part of the configuration applies to the data plane proxy scraping.
+In case you don't want to retrieve all Envoy's metrics, it's possible to filter them.
+
+Below are different methods of filtering.
+The order of the operations is as follows:
+1. Unused metrics
+2. Profiles
+3. Exclude
+4. Include
+
+#### Unused metrics
+
+By default, metrics that were not updated won't be published.
+You can set the `includeUnused` flag that returns all metrics from Envoy.
+
+#### Profiles
+
+Profiles are predefined sets of metrics with manual `include` and `exclude` functionality.
+There are 3 sections:
+- `appendProfiles` - allows to combine multiple predefined profiles of metrics.
+Right now you can only define one profile but this might change it the future
+(for example there might be feature related profiles like "Fault injection profile" and "Circuit Breaker profile" so you can mix and match the ones that you need based on your features usage).
+Today only 3 profiles are available: `All`, `Basic` and `None`.
+`All` profile contains all metrics produced by Envoy.
+`Basic` profile contains all metrics needed by {{site.mesh_product_name}} dashboards and [golden 4 signals](https://sre.google/sre-book/monitoring-distributed-systems/) metrics.
+`None` profile removes all metrics
+- `exclude` - after profiles are applied you can manually exclude metrics on top of profile filtering.
+- `include` - after exclude is applied you can manually include metrics.
+
+#### Examples
+
+##### Include unused metrics of only Basic profile with manual exclude and include
+
+{% policy_yaml namespace=kong-mesh-demo %}
+```yaml
+type: MeshMetric
+mesh: default
+name: metrics-default
+spec:
+  default:
+    sidecar:
+      includeUnused: true
+      profiles:
+        appendProfiles:
+          - name: Basic
+        exclude:
+          - type: Regex
+            match: "envoy_cluster_external_upstream_rq_.*"
+        include:
+          - type: Exact
+            match: "envoy_cluster_default_total_match_count"
+    backends:
+      - type: Prometheus
+        prometheus:
+          port: 5670
+          path: /metrics
+```
+{% endpolicy_yaml %}
+
+##### Include only manually defined metrics
+
+{% policy_yaml namespace=kong-mesh-demo %}
+```yaml
+type: MeshMetric
+mesh: default
+name: metrics-default
+spec:
+  default:
+    sidecar:
+      profiles:
+        appendProfiles:
+          - name: None
+        include:
+          - type: Regex
+            match: "envoy_cluster_external_upstream_rq_.*"
+    backends:
+      - type: Prometheus
+        prometheus:
+          port: 5670
+          path: /metrics
+```
+{% endpolicy_yaml %}
+
+##### Exclude all metrics apart from one manually added
+
+{% policy_yaml namespace=kong-mesh-demo %}
+```yaml
+type: MeshMetric
+mesh: default
+name: metrics-default
+spec:
+  default:
+    sidecar:
+      profiles:
+        appendProfiles:
+          - name: None
+        include:
+          - type: Regex
+            match: "envoy_cluster_external_upstream_rq_.*"
+    backends:
+      - type: Prometheus
+        prometheus:
+          port: 5670
+          path: /metrics
+```
+{% endpolicy_yaml %}
+
+### Applications
+
+{:.warning}
+> Metrics exposed by the application need to be in Prometheus format for the Dataplane Proxy to be able to parse and expose them to either Prometheus or OpenTelemetry backend.
+
+In addition to exposing metrics from the data plane proxies, you might want to expose metrics from applications running next to the proxies.
+{{site.mesh_product_name}} allows scraping Prometheus metrics from the applications endpoint running in the same `Pod` or `VM`.
+Later those metrics are aggregated and exposed at the same `port/path` as data plane proxy metrics.
+It is possible to configure it at the `Mesh` level, for all the applications in the `Mesh`, or just for specific applications.
+
+Here are reasons where you'd want to use this feature:
+- Application metrics are labelled with your mesh parameters (tags, mesh, data plane name...), this means that in mixed Universal and Kubernetes mode metrics are reported with the same types of labels.
+- Both application and sidecar metrics are scraped at the same time. This makes sure they are coherent (with 2 different scrapers they can end up scraping at different intervals and make metrics harder to correlate).
+ This is the only way to retrieve these metrics in case the app is completely hidden behind the sidecar when these conditions are met:
+ - You disable passthrough
+ - Your mesh uses mTLS
+ - Prometheus is outside the mesh
+
+Example section of the configuration:
+
+```yaml
+applications:
+  - name: "backend" # application name used for logging and to scope OpenTelemetry metrics (optional)
+    path: "/metrics/prometheus" # application metrics endpoint path
+    address: # optional custom address if the underlying application listens on a different address than the Data Plane Proxy
+    port: 8888 # port on which application is listening
+```
+
+### Backends
+
+#### Prometheus
+
+```yaml
+backends:
+  - type: Prometheus
+    prometheus: 
+      port: 5670
+      path: /metrics
+```
+
+This tells {{site.mesh_product_name}} to expose an HTTP endpoint with Prometheus metrics on port `5670` and uri path `/metrics`.
+
+The metrics endpoint is forwarded to the standard Envoy [Prometheus metrics endpoint](https://www.envoyproxy.io/docs/envoy/latest/operations/admin#get--stats?format=prometheus) and supports the same query parameters.
+You can pass the `filter` query parameter to limit the results to metrics whose names match a given regular expression.
+By default, all available metrics are returned.
+
+##### Secure metrics with TLS
+
+{{site.mesh_product_name}} lets you configure metrics endpoint with TLS.
+
+```yaml
+backends:
+  - type: Prometheus
+    prometheus: 
+      port: 5670
+      path: /metrics
+      tls:
+        mode: ProvidedTLS
+```
+
+In addition to the `MeshMetric` configuration, `kuma-sidecar` requires a provided certificate and key for its operation.
+
+{% navtabs "environment" %}
+{% navtab "Kubernetes" %}
+
+When the certificate and key are available within the container, `kuma-sidecar` needs the paths to provided files as the following environment variables:
+
+* `KUMA_DATAPLANE_RUNTIME_METRICS_CERT_PATH`
+* `KUMA_DATAPLANE_RUNTIME_METRICS_KEY_PATH`
+
+It's possible to use a [`ContainerPatch`](/mesh/v2/data-plane-kubernetes/#custom-container-configuration) to add variables to `kuma-sidecar`:
+
+```yaml
+apiVersion: kuma.io/v1alpha1
+kind: ContainerPatch
+metadata:
+  name: container-patch-1
+  namespace: kong-mesh-system
+spec:
+  sidecarPatch:
+    - op: add
+      path: /env/-
+      value: '{
+          "name": "KUMA_DATAPLANE_RUNTIME_METRICS_CERT_PATH",
+          "value": "/kuma/server.crt"
+        }'
+    - op: add
+      path: /env/-
+      value: '{
+          "name": "KUMA_DATAPLANE_RUNTIME_METRICS_KEY_PATH",
+          "value": "/kuma/server.key"
+        }'
+```
+
+{% endnavtab %}
+{% navtab "Universal" %}
+
+Please upload the certificate and the key to the machine, and then define the following environment variables with the correct paths:
+
+	* `KUMA_DATAPLANE_RUNTIME_METRICS_CERT_PATH`
+	* `KUMA_DATAPLANE_RUNTIME_METRICS_KEY_PATH`
+
+{% endnavtab %}
+{% endnavtabs %}
+
+##### `activeMTLSBackend`
+
+We no longer support `activeMTLSBackend`, if you need to encrypt and authorize the metrics use [Secure metrics with TLS](#secure-metrics-with-tls) with a combination of [one of the authorization methods](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config).
+
+##### Running multiple Prometheus deployments
+
+If you need to run multiple instances of Prometheus and want to target different set of data plane proxies you can do this by using Client ID setting on both `MeshMetric` (`clientId`) and [Prometheus configuration](https://github.com/prometheus/prometheus/pull/13278/files#diff-17f1012e0c2fbd9bcd8dff3c23b18ff4b6676eef3beca6f8a3e72e6a36633334R2233) (`client_id`).
+
+{:.warning}
+> Support for `clientId` was added in Prometheus version `2.50.0`.
+
+###### Example Prometheus configuration
+
+Let's assume we have two prometheus deployments `main` and `secondary`. We would like to use each of them to monitor different sets
+of data plane proxies, with different tags. 
+
+We can start with configuring each Prometheus deployments to use [Kuma SD](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#kuma_sd_config).
+Prometheus's deployments will be differentiated by `client_id` parameter.
+
+Main Prometheus config:
+```yaml
+scrape_configs:
+  - job_name: 'kuma-dataplanes'
+    # ...
+    kuma_sd_configs:
+    - server: http://{{site.mesh_cp_name}}.{{site.mesh_namespace}}:5676
+      refresh_interval: 60s # different from prometheus-secondary
+      client_id: "prometheus-main" # Kuma will use this to pick proper data plane proxies
+```
+
+Secondary Prometheus config:
+```yaml
+scrape_configs:
+  - job_name: 'kuma-dataplanes'
+    # ...
+    kuma_sd_configs:
+      - server: http://{{site.mesh_cp_name}}.{{site.mesh_namespace}}:5676
+        refresh_interval: 20s # different from prometheus-main
+        client_id: "prometheus-secondary"
+```
+
+Now we can configure first `MeshMetric` policy to pick data plane proxies with tag `prometheus: main` for main Prometheus discovery.
+`clientId` in policy should be the same as `client_id` in Prometheus configuration.
+
+{% policy_yaml %}
+```yaml
+type: MeshMetric
+name: prometheus-one
+mesh: default
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      prometheus: "main"
+  default:
+    backends:
+      - type: Prometheus
+        prometheus: 
+          clientId: "prometheus-main"  
+          port: 5670
+          path: /metrics
+```
+{% endpolicy_yaml %}
+
+And policy for secondary Prometheus deployment that will pick data plane proxies with tag `prometheus: secondary`.
+
+{% policy_yaml %}
+```yaml
+type: MeshMetric
+name: prometheus-two
+mesh: default
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      prometheus: "secondary"
+  default:
+    backends:
+      - type: Prometheus
+        prometheus: 
+          clientId: "prometheus-secondary" # this clientId should be the same as client_id in Prometheus
+          port: 5670
+          path: /metrics
+```
+{% endpolicy_yaml %}
+
+#### OpenTelemetry
+
+```yaml
+backends:
+  - type: OpenTelemetry
+    openTelemetry: 
+      endpoint: otel-collector.observability.svc:4317
+      refreshInterval: 60s
+```
+
+This configuration tells {{site.mesh_product_name}} Dataplane Proxy to push metrics to [OpenTelemetry collector](https://opentelemetry.io/docs/collector/).
+Dataplane Proxy will scrape metrics from Envoy and other applications in a Pod/VM
+and push them to configured OpenTelemetry collector, by default every **60 seconds** (use `refreshInterval` to change it).
+
+When you configure application scraping make sure to specify `application.name` to use [OpenTelemetry scoping](https://opentelemetry.io/docs/concepts/instrumentation-scope/).

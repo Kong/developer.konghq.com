@@ -138,4 +138,21 @@ RSpec.describe Jekyll::BuildFilter do
       expect(described_class.current).to equal(described_class.current)
     end
   end
+
+  describe 'stability across one build' do
+    before { allow(Jekyll).to receive(:env).and_return('development') }
+
+    let(:env) { { 'KONG_PRODUCTS' => 'mesh', 'PAGE_PATHS' => '/mesh/' } }
+
+    it 'keeps the answers it had when it was built' do
+      expect(filter.filtered?).to be(true)
+      expect(filter.excludes_prefix?('/plugins/')).to be(true)
+
+      # jekyll-vite sets JEKYLL_ENV to production from inside a generator.
+      allow(Jekyll).to receive(:env).and_return('production')
+
+      expect(filter.filtered?).to be(true)
+      expect(filter.excludes_prefix?('/plugins/')).to be(true)
+    end
+  end
 end

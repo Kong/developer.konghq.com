@@ -1,0 +1,23 @@
+title: 'Log incoming traffic from specific clients'
+
+description: 'Match inbound traffic by SPIFFE ID so that only requests from a chosen namespace are logged.'
+
+weight: 880
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshAccessLog
+  name: incoming-traffic-from-kong-mesh-demo
+  mesh: default
+  spec:
+    rules:
+      - matches:
+          - spiffeID:
+              type: Prefix
+              value: spiffe://default.zone-1.mesh.local/ns/kong-mesh-demo/
+        default:
+          backends:
+            - type: File
+              file:
+                path: /dev/stdout

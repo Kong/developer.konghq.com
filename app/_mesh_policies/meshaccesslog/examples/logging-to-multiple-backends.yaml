@@ -2,9 +2,9 @@ title: 'Logging to multiple backends'
 
 description: 'This configuration logs to three backends: TCP, file and OpenTelemetry.'
 
-weight: 900
+weight: 870
 
-namespace: kuma-demo
+namespace: kong-mesh-demo
 
 config:
   type: MeshAccessLog
@@ -30,13 +30,16 @@ config:
                   plain: '[%START_TIME%]'
             - type: OpenTelemetry
               openTelemetry:
-                endpoint: otel-collector:4317
+                backendRef:
+                  kind: MeshOpenTelemetryBackend
+                  labels:
+                    kuma.io/display-name: otel-collector
                 body:
                   kvlistValue:
-                  values:
-                    - key: "mesh"
-                      value:
-                        stringValue: "%KUMA_MESH%"
+                    values:
+                      - key: "mesh"
+                        value:
+                          stringValue: "%KUMA_MESH%"
                 attributes:
                   - key: "start_time"
                     value: "%START_TIME%"

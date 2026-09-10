@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
+require_relative '../lib/ordered_generator'
+
 require 'json'
 
 module Jekyll
-  class BrokenLinks < Generator
-    priority :lowest
-
+  class BrokenLinks < OrderedGenerator
     class Page < Jekyll::Page
       def initialize(site, sources)
         @site = site
