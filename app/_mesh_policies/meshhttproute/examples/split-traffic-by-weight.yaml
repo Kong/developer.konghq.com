@@ -1,0 +1,39 @@
+title: 'Split traffic between two destinations'
+
+description: 'Weight two backendRefs 90 to 10 so a tenth of requests reach a canary destination.'
+
+weight: 800
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshHTTPRoute
+  name: backend-canary
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: frontend
+    to:
+      - targetRef:
+          kind: MeshService
+          labels:
+            kuma.io/display-name: backend
+        rules:
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /
+            default:
+              backendRefs:
+                - kind: MeshService
+                  labels:
+                    kuma.io/display-name: backend
+                  port: 8080
+                  weight: 90
+                - kind: MeshService
+                  labels:
+                    kuma.io/display-name: backend-canary
+                  port: 8080
+                  weight: 10

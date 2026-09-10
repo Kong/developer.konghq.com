@@ -169,16 +169,12 @@ app/_mesh_policies/v2/meshhealthcheck/index.md:
 app/_mesh_policies/v2/meshhealthcheck/reference.md:
   canonical_url: /mesh/policies/meshhealthcheck/reference/
 app/_mesh_policies/v2/meshhttproute/examples/traffic-mirror.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshhttproute/examples/mirror-requests/
 app/_mesh_policies/v2/meshhttproute/examples/traffic-modification.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshhttproute/examples/modify-request-headers/
 app/_mesh_policies/v2/meshhttproute/examples/traffic-split.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshhttproute/examples/split-traffic-by-weight/
 app/_mesh_policies/v2/meshhttproute/index.md:
-  status: pending
   canonical_url: /mesh/policies/meshhttproute/
 app/_mesh_policies/v2/meshhttproute/reference.md:
   canonical_url: /mesh/policies/meshhttproute/reference/
