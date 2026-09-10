@@ -22,6 +22,8 @@ module Jekyll
           return if @page.data['canonical?']
 
           v = @page.data['release']
+          return if v.nil?
+
           Gem::Version.correct?(v) ? "v#{v}" : v
         end
 

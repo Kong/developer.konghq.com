@@ -2,7 +2,7 @@
 title: "Gemini provider"
 layout: reference
 content_type: reference
-description: Reference for supported capabilities for Azure OpenAI provider
+description: Reference for supported capabilities for the Gemini provider, covering both Gemini Standard and Gemini Enterprise
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/ai-providers/
@@ -10,97 +10,203 @@ breadcrumbs:
 permalink: /ai-gateway/ai-providers/gemini/
 
 works_on:
- - on-prem
  - konnect
 
 products:
-  - gateway
   - ai-gateway
 
 tools:
-  - admin-api
   - konnect-api
-  - deck
-  - kic
-  - terraform
+  - kongctl
 
 tags:
   - ai
 
-plugins:
-  - ai-proxy-advanced
-  - ai-proxy
-
 min_version:
-  gateway: '3.8'
+  ai-gateway: '2.0'
 
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: Gemini tutorials
-    url: /how-to/?tags=gemini
-  - text: "{{site.ai_gateway}} plugins"
-    url: /plugins/?category=ai
+  - text: "{{site.ai_gateway}} Policies"
+    url: /ai-gateway/policies/
   - text: AI Providers
     url: /ai-gateway/ai-providers/
+  - text: AI Model Provider entity
+    url: /ai-gateway/entities/ai-model-provider/
+  - text: AI Model entity
+    url: /ai-gateway/entities/ai-model/
 
 faqs:
   - q: How can I set model generation parameters when calling Gemini?
     a: |
-      {% include faqs/gemini-model-params.md %}
+      {% include md/ai-gateway/v2/faqs/gemini-model-params.md %}
   - q: How do I use Gemini's `googleSearch` tool for real-time web searches?
     a: |
-      {% include faqs/gemini-search.md %}
+      {% include md/ai-gateway/v2/faqs/gemini-search.md %}
   - q: How do I control aspect ratio and resolution for Gemini image generation?
     a: |
-      {% include faqs/gemini-image.md %}
+      {% include md/ai-gateway/v2/faqs/gemini-image.md %}
   - q: How do I get reasoning traces from Gemini models?
     a: |
-      {% include faqs/gemini-thinking.md %}
+      {% include md/ai-gateway/v2/faqs/gemini-thinking.md %}
 
-how_to_list:
-  config:
-    products:
-      - ai-gateway
-    tags:
-      - gemini
-    description: true
-    view_more: false
 ---
 
-{% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="Gemini" %}
+{% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="Gemini" compare_provider_name="Gemini Enterprise" variant_label="Gemini Standard" compare_variant_label="Gemini Enterprise" %}
 
-{% include plugins/ai-proxy/providers/native-routes.md providers=site.data.plugins.ai-proxy provider_name="Gemini" %}
+{% include md/ai-gateway/v2/native-routes.md providers=site.data.ai-gateway.v2.providers provider_name="Gemini" compare_provider_name="Gemini Enterprise" variant_label="Gemini Standard" compare_variant_label="Gemini Enterprise" %}
 
-## Configure {{ provider.name }} with AI Proxy
+## Configure Gemini
 
-To use {{ provider.name }} with {{site.ai_gateway}}, configure the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/).
+To use Gemini with {{site.ai_gateway}}, configure a new [AI Model Provider](/ai-gateway/entities/ai-model-provider/). You can then access supported [AI Models](/ai-gateway/entities/ai-model/) from Gemini.
 
-Here's a minimal configuration for chat completions:
+### Gemini Standard
+
+Here's a minimal configuration for chat completions, authenticating with an API key:
 
 {% entity_example %}
-type: plugin
+type: model-provider
 data:
-  name: ai-proxy
+  display_name: Gemini Production
+  name: my-gemini-account
+  type: gemini
   config:
-    route_type: llm/v1/chat
     auth:
-      param_name: key
-      param_value: ${key}
-      param_location: query
-    model:
-      provider: gemini
-      name: gemini-2.5-flash
-
+      type: basic
+      headers:
+        - name: x-goog-api-key
+          value: ${key}
 variables:
   key:
     value: $GEMINI_API_KEY
-    description: The API key to use to connect to Gemini.
+    secret: true
+    description: The API key used to connect to Gemini.
 {% endentity_example %}
 
-{:.success}
-> For more configuration options and examples, see:
-> - [AI Proxy examples](/plugins/ai-proxy/examples/)
-> - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)
+### Gemini Enterprise
 
-{% include plugins/ai-proxy/providers/how-tos.md %}
+Gemini Enterprise requires GCP credentials instead of an API key. The provider only handles authentication; `auth.type: gcp` by itself doesn't select Gemini Enterprise, since Gemini Standard can use the same GCP auth. What actually routes to Gemini Enterprise is `config.gcp_environment` on the AI Model's target that attaches to this provider.
+
+Create the provider to store your GCP credentials:
+
+{% entity_examples %}
+formats:
+  - kongctl
+ai_gateway_model_providers:
+  - ref: my-gemini-enterprise-account
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: my-gemini-enterprise-account
+    display_name: "Gemini Enterprise Production"
+    type: gemini
+    config:
+      auth:
+        type: gcp
+        use_gcp_service_account: true
+        service_account_json: !env GCP_ACCOUNT_JSON
+{% endentity_examples %}
+
+Then attach an AI Model to it, setting `config.gcp_environment` on the target to route to Gemini Enterprise:
+
+{% entity_examples %}
+formats:
+  - kongctl
+ai_gateway_models:
+  - ref: my-gemini-enterprise-model
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: my-gemini-enterprise-model
+    display_name: "my-gemini-enterprise-model"
+    type: model
+    capabilities:
+      - generate
+    formats:
+      - type: openai
+    config:
+      route:
+        paths:
+          - /v1
+    targets:
+      - name: gemini-2.5-flash
+        provider: my-gemini-enterprise-account
+        config:
+          type: gemini
+          gcp_environment:
+            api_endpoint: us-east5-aiplatform.googleapis.com
+            location_id: us-east5
+            project_id: my-gcp-project-id
+    policies: []
+{% endentity_examples %}
+
+{:.info}
+> `targets[].config.gcp_environment` requires `api_endpoint`, `location_id`, and `project_id` together. Without it, this same provider would route to Gemini Standard instead.
+
+## Authentication with GCP IAM
+
+Gemini Enterprise requires credentials from Google Cloud Platform (GCP). Gemini Standard can also use GCP credentials instead of an API key by setting `auth` to `gcp`.
+
+The authentication chain follows the same order of precedence as the `gcloud` tool:
+1. Service account JSON defined directly in the provider: `auth.service_account_json`.
+1. Service account JSON defined in environment variable `GCP_SERVICE_ACCOUNT`.
+1. Workload IAM role (for example, a GKE or deployment service account).
+1. IAM role attached to the VM instance.
+
+For restricted networks, override the default endpoints with `auth.metadata_url` or `auth.oauth_token_url`.
+
+## Authentication with GCP Workload Identity Federation
+
+Instead of a static service account key, you can configure the GCP provider to obtain temporary GCP credentials through Workload Identity Federation, exchanging credentials from an external identity provider for short-lived GCP tokens. This applies to both Gemini Standard and Gemini Enterprise, since both authenticate through the same GCP Provider auth.
+
+To use Workload Identity Federation, set `auth.type` to `gcp` and add a `workload_identity_federation` object:
+
+* **`source`** (required): The identity provider used to obtain temporary GCP credentials. Currently, only `aws_iam` is supported.
+* **`auth_json`** (optional): JSON configuration for the Workload Identity Federation token exchange, Google's `external_account` credential config (audience, token URL, credential source, and optional service account impersonation URL). If not set, Kong falls back to the file path in the `GOOGLE_APPLICATION_CREDENTIALS` environment variable.
+
+When `source` is `aws_iam`, provide AWS IAM credentials under `aws` to identify the AWS principal used in the token exchange, or omit them to fall back to the default AWS credentials provider chain (EC2 instance profiles, environment variables, and so on):
+
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Description
+    key: description
+rows:
+  - field: "`aws.type`"
+    description: "Required if `aws` is set. Must be `aws`."
+  - field: "`aws.access_key_id`"
+    description: "AWS access key ID for static IAM user credentials."
+  - field: "`aws.secret_access_key`"
+    description: "AWS secret access key paired with `access_key_id`."
+  - field: "`aws.session_token`"
+    description: "AWS session token for temporary IAM credentials."
+  - field: "`aws.region`"
+    description: "The AWS region to use. Overrides the region inferred from the environment."
+  - field: "`aws.assume_role_arn`"
+    description: "IAM role ARN to assume for generating authentication tokens."
+  - field: "`aws.role_session_name`"
+    description: "Session name for the temporary credentials when assuming the IAM role. Required if `aws.assume_role_arn` is set."
+  - field: "`aws.sts_endpoint_url`"
+    description: "Custom STS endpoint for role assumption. Defaults to `https://sts.amazonaws.com`."
+{% endtable %}
+
+Here's a configuration that authenticates with GCP by assuming an AWS IAM role:
+
+{% entity_example %}
+type: model-provider
+data:
+  display_name: Gemini Production
+  name: my-gemini-account
+  type: gemini
+  config:
+    auth:
+      type: gcp
+      workload_identity_federation:
+        source: aws_iam
+        aws:
+          type: aws
+          assume_role_arn: ${role_arn}
+          role_session_name: kong-gemini-wif
+variables:
+  role_arn:
+    value: $AWS_ASSUME_ROLE_ARN
+    description: The ARN of the AWS IAM role to assume for the Workload Identity Federation token exchange.
+{% endentity_example %}

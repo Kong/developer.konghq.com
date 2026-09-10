@@ -76,7 +76,7 @@ prereqs:
         1. Click **Create account**.
         1. If you haven't set developers to auto approval in Dev Portal, in the {{site.konnect_short_name}} sidebar, expand **Dev Portal** and click **Portals**.
         1. Click **Test {{site.identity}} DCR**.
-        1. Select the **Access and approvals** tab.
+        1. Select the **Developers** tab.
         1. Click your test developer.
         1. From the **Actions** dropdown menu, select "Approve". 
       icon_url: /assets/icons/dev-portal.svg

@@ -3,6 +3,7 @@
 require 'erb'
 require 'securerandom'
 require_relative '../monkey_patch'
+require_relative '../component_templates'
 
 module Jekyll
   module NavTabs
@@ -47,17 +48,7 @@ module Jekyll
           context['navtabs_id'] = navtabs_id
           context['heading_level'] = parse_heading_level(context)
 
-          Liquid::Template
-            .parse(template, { line_numbers: true })
-            .render(context)
-        end
-      end
-
-      def template
-        if @page['output_format'] == 'markdown'
-          File.read(File.join(@site.source, '_includes/components/tabs.md'))
-        else
-          File.read(File.join(@site.source, '_includes/components/tabs.html'))
+          ComponentTemplates.fetch('tabs', @page['output_format']).render(context)
         end
       end
 

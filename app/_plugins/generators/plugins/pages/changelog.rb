@@ -2,6 +2,7 @@
 
 require 'yaml'
 require 'json'
+require_relative '../../../file_cache'
 
 module Jekyll
   module PluginPages
@@ -16,11 +17,11 @@ module Jekyll
         end
 
         def content
-          @content ||= File.read('app/_includes/plugins/changelog.html')
+          @content ||= FileCache.read('app/_includes/plugins/changelog.html')
         end
 
         def markdown_content
-          @markdown_content ||= File.read('app/_includes/plugins/changelog.md')
+          @markdown_content ||= FileCache.read('app/_includes/plugins/changelog.md')
         end
 
         def data

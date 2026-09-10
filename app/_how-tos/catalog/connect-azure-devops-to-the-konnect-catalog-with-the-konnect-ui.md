@@ -1,8 +1,8 @@
 ---
-title: Connect Azure DevOps repositories to Catalog with the {{site.konnect_short_name}} UI
+title: Connect Azure DevOps repositories to {{site.konnect_catalog}} Classic with the {{site.konnect_short_name}} UI
 permalink: /how-to/connect-azure-devops-to-the-konnect-catalog-with-the-konnect-ui/
 content_type: how_to
-description: Learn how to connect Azure DevOps repositories to your {{site.konnect_catalog}} services in {{site.konnect_short_name}} using the UI.
+description: Learn how to connect Azure DevOps repositories to your {{site.konnect_catalog}} Classic services in {{site.konnect_short_name}} using the UI.
 products:
   - catalog
 works_on:
@@ -14,8 +14,8 @@ search_aliases:
   - azure repos
   - service catalog
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: Integrations
     url: /catalog/integrations/
   - text: Azure DevOps reference
@@ -26,7 +26,7 @@ related_resources:
 automated_tests: false
 tldr:
   q: How do I connect an Azure DevOps repository to a service in {{site.konnect_short_name}}?
-  a: Configure the Azure DevOps integration with your organization name and PAT, create a {{site.konnect_catalog}} service, then map the discovered Azure DevOps repository resource to that {{site.konnect_catalog}} service.
+  a: Configure the Azure DevOps integration with your organization name and PAT, create a {{site.konnect_catalog}} Classic service, then map the discovered Azure DevOps repository resource to that {{site.konnect_catalog}} Classic service.
 prereqs:
   skip_product: true
   inline:
@@ -43,9 +43,11 @@ prereqs:
         > Your PAT can be created with an expiration period of your choice, up to a maximum of one year. Make sure to renew the PAT before it expires to avoid interruptions.
 ---
 
+{% include_cached catalog/catalog-classic-banner.md %}
+
 ## Configure the Azure DevOps integration
 
-Before you can discover Azure DevOps repositories in {{site.konnect_catalog}}, you must configure the integration:
+Before you can discover Azure DevOps repositories in {{site.konnect_catalog}} Classic, you must configure the integration:
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. In the {{site.konnect_catalog}} sidebar, click **Integrations**.
@@ -60,9 +62,9 @@ Before you can discover Azure DevOps repositories in {{site.konnect_catalog}}, y
 
 If you don't immediately see resources, try manually syncing your Azure DevOps integration. From the {{site.konnect_short_name}} UI, navigate to the Azure DevOps integration that you just installed. Then, from the  **Actions** dropdown menu, select **Sync Now**.
 
-## Create a {{site.konnect_catalog}} service and map the Azure DevOps resources
+## Create a {{site.konnect_catalog}} Classic service and map the Azure DevOps resources
 
-After you configure the Azure DevOps integration, create a service in {{site.konnect_catalog}} and map an Azure DevOps repository resource to it.
+After you configure the Azure DevOps integration, create a service in {{site.konnect_catalog}} Classic and map an Azure DevOps repository resource to it.
 
 {:.info}
 > In this tutorial, we’ll refer to your Azure DevOps repository as `azure-devops-repository`.

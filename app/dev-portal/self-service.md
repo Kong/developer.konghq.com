@@ -51,7 +51,7 @@ To enable developer self-service, do the following:
 
    For private {{site.dev_portal}}s, user authentication is enabled by default, and the default application auth strategy is key authentication.
 1. Configure an [application authentication strategy](/dev-portal/auth-strategies/) by navigating to **Settings > Security**.
-1. Optional: Enable [application sharing](#share-applications-with-a-team) for developer teams by navigating to your {{site.dev_portal}} in {{site.konnect_short_name}} and going to **Access and approvals > Teams**. Click the team, go to **Settings** and enable **Allow team to own applications**.
+1. Optional: Enable [application sharing](#share-applications-with-a-team) for developer teams by navigating to your {{site.dev_portal}} in {{site.konnect_short_name}} and clicking the **Developers > Teams** tabs. Click the team, go to **Settings** and enable **Allow team to own applications**.
 1. Link an [API to a Gateway Service](/catalog/apis/#gateway-service-link).
 
    This is required to enforce auth strategies.
@@ -106,7 +106,7 @@ To automatically create and manage {{site.dev_portal}} applications using Dynami
 
 You can choose to auto approve developers and applications or require admin approval for developers and applications by navigating to **Settings** and the **Security** tab in your {{site.dev_portal}} settings.
 
-If your settings require developer or application approval, you can manage approvals by navigating to **Access and approvals** in the sidebar. You need the [API Registration Approver and Portal Viewer role](/konnect-platform/teams-and-roles/#dev-portal) assigned to the Teams that control the APIs to approve these.
+If your settings require developer or application approval, you can manage approvals by navigating to the **Developers** or **Applications** tab in your {{site.dev_portal}} overview in {{site.konnect_short_name}}. You need the [API Registration Approver and Portal Viewer role](/konnect-platform/teams-and-roles/#dev-portal) assigned to the Teams that control the APIs to approve these.
 Additionally, you can add developers to teams by clicking on the settings menu next to the name of the developer.
 
 Once approved, developers can create applications and view APIs, and the application can generate credentials to use the APIs.
@@ -177,7 +177,7 @@ method: POST
 status_code: 201
 body:
   name: "KongAir Application"
-  description: "A portal application provisioned for a developer by a Portal Admin."
+  description: "A Dev Portal application provisioned for a developer by a Portal Admin."
   auth_strategy_id: "$AUTH_STRATEGY_ID"
   owner:
     id: "$DEVELOPER_ID"
@@ -231,11 +231,208 @@ Important considerations:
   Similarly, you can only register APIs to team-owned applications if everyone in the team has access to the API.
   This is true even if an individual team member has broader access through other teams.
 
-To enable team application sharing, navigate to your {{site.dev_portal}} in {{site.konnect_short_name}} and click **Access and approvals > Teams**. Click the relevant team, go to **Settings**, and enable **Allow team to own applications**.
+To enable team application sharing, navigate to your {{site.dev_portal}} in {{site.konnect_short_name}} and click the **Developers > Teams** tabs. Click the relevant team, go to **Settings**, and enable **Allow team to own applications**.
 To transfer ownership of an application to either a developer or team, navigate to the app and from the **Actions** dropdown menu, select "Transfer ownership".
 
 For more information about how to configure {{site.dev_portal}} developer teams, see [{{site.dev_portal}} RBAC](/dev-portal/developer-rbac/).
 For more information about the developer experience, see [{{site.dev_portal}} developer sign-up](/dev-portal/developer-signup/#2-create-an-application).
+
+### Developer, API, and application registration forms
+
+{% include_cached sections/custom-form-tutorials.md %}
+
+By default, {{site.dev_portal}} collects the following information during registration:
+* **Developer registration**: Full name and email address.
+* **Application registration**: The application and API being registered. 
+
+If you need to capture more than this, for example a developer's team, company, job title, or their reason for wanting access to an API, you can create a custom form. 
+Custom forms let you create a new form with configurable fields for developer registration or per-API application registration.
+
+Use cases for custom forms include:
+{% include_cached sections/custom-form-use-cases.md %}
+
+The following field types are available when creating a custom form:
+{% include_cached sections/custom-form-field-types.md %}
+
+{% include_cached sections/custom-form-constraints.md %}
+
+#### Create a developer registration custom form
+
+You can only create one developer registration form per {{site.dev_portal}}. 
+Once it's published, the custom form replaces the default sign-up form.
+
+{% navtabs "create-developer-form" %}
+{% navtab "API" %}
+Create a form by sending a `POST` request to the [`/portals/{portalId}/forms` endpoint](/api/konnect/portal-management/v3/#/operations/create-portal-form). 
+The following example includes the required `full_name`, `email`, and `submit` fields, plus a department dropdown and a terms and conditions acceptance checkbox:
+{% capture create-developer-form %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/portals/$DEV_PORTAL_ID/forms
+method: POST
+status_code: 201
+body:
+  type: developer_registration
+  status: published
+  fields:
+    - type: content
+      value: "## Tell us about yourself\n\nThis information helps us route your request to the right team."
+    - type: text
+      name: full_name
+      label: Full name
+      placeholder: Enter your full name
+      required: true
+    - type: email
+      name: email
+      label: Email address
+      placeholder: you@example.com
+      required: true
+    - type: select
+      mode: single_select
+      name: department
+      label: Department
+      required: true
+      options:
+        - value: sales
+          label: Sales
+        - value: engineering
+          label: Engineering
+        - value: finance
+          label: Finance
+    - type: checkbox
+      name: agree_terms
+      label: I agree to the terms and conditions
+      description: "View the [terms](https://example.com/terms)."
+      required: true
+    - type: submit
+      name: submit
+      value: Create account
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{ create-developer-form | indent: 3}}
+
+To update the form later, send a `PUT` request to `/v3/portals/{portalId}/forms/{formId}`. 
+This replaces the default form, so any field omitted from the `fields` array is removed.
+{% endnavtab %}
+{% navtab "UI" %}
+1. In the {{site.konnect_short_name}} sidebar, click **Dev Portal > Portals**.
+1. Click your {{site.dev_portal}}.
+1. Click the **Portal Editor** tab.
+1. In the Portal Editor sidebar, click the forms icon.
+1. Click **New form**.
+1. Select **Portal developer registration**.
+1. Click **Create**.
+1. On the form's Fields page, click **Add** to add additional fields, or click a field to edit it.
+1. Click **Save and return to form**.
+1. Click **Save**.
+1. When you want to publish the custom form, click **Publish**.
+
+The **Full name** and **Email address** fields are added automatically and are required. You can edit these fields, but you can't delete them. Any other fields you add can be edited or deleted.
+{% endnavtab %}
+{% endnavtabs %}
+
+#### Create an API application registration custom form
+
+You can create multiple API registration forms, and assign a different one to each API.
+
+{% navtabs "create-api-form" %}
+{% navtab "API" %}
+1. Create a form by sending a `POST` request to the [`/portals/{portalId}/forms` endpoint](/api/konnect/portal-management/v3/#/operations/create-portal-form). Set `type` to `api_registration`, supply a unique `name` for the form, and include a `text` field named `api_id`:
+{% capture create-api-form %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/portals/$DEV_PORTAL_ID/forms
+method: POST
+status_code: 201
+body:
+  type: api_registration
+  name: payments-api-registration
+  status: published
+  fields:
+    - type: text
+      name: api_id
+      label: API
+      required: true
+    - type: text
+      name: company_name
+      label: Company name
+      required: true
+    - type: select
+      mode: single_select
+      name: use_case
+      label: Use case
+      required: true
+      options:
+        - value: analytics
+          label: Analytics
+        - value: monitoring
+          label: Monitoring
+    - type: submit
+      name: submit
+      value: Request access
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{ create-api-form | indent: 3}}
+   The `api_id` and `submit` fields are required for every API registration form.
+1. Copy and export the form ID from the response:
+   ```sh
+   export FORM_ID='YOUR FORM ID'
+   ```
+1. Link the form to an API by sending a `PUT` request to the [`/apis/{apiId}/publications/{portalId}` endpoint](/api/konnect/api-builder/v3/#/operations/publish-api-to-portal), setting `form_id` to the form's ID:
+{% capture link-api-form %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/apis/$API_ID/publications/$DEV_PORTAL_ID
+method: PUT
+status_code: 200
+body:
+  form_id: $FORM_ID
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{ link-api-form | indent: 3}}
+   For the rest of the settings required to publish an API, see [Publish your API to {{site.dev_portal}}](/catalog/apis/#publish-your-api-to-dev-portal).
+{% endnavtab %}
+{% navtab "UI" %}
+1. In the {{site.konnect_short_name}} sidebar, click **Dev Portal > Portals**.
+1. Click your {{site.dev_portal}}.
+1. Click the **Portal Editor** tab.
+1. In the Portal Editor sidebar, click the forms icon.
+1. Click **New form**.
+1. Select **API registration**.
+1. In the **Form name** field, enter a name for the form.
+1. Click **Create**.
+1. On the form's Fields page, click **Add** to add additional fields, or click a field to edit it.
+1. Click **Save and return to form**.
+1. Click **Save**.
+1. When you want to publish the custom form, click **Publish**.
+
+A submit field is added automatically and is required. You don't need to add or configure an `api_id` field yourself in the UI.
+
+To link the form to an API:
+1. In the {{site.konnect_short_name}} sidebar, click **Dev Portal > Portals**.
+1. Click your {{site.dev_portal}}.
+1. Click the **Published APIs** tab.
+1. Find the API, click its action menu, and click **Edit publication**.
+1. Click the **Require API registration form** checkbox.
+1. From the **Form** dropdown menu, select your custom form.
+1. Click **Save**.
+{% endnavtab %}
+{% endnavtabs %}
+
+#### View collected form data
+
+Submitted form answers appear alongside the developer or application registration they belong to:
+* Developer registration answers are available on the developer's detail page under the **Developers** tab in {{site.konnect_short_name}}, and through the `additional_data` property on the [`/portals/{portalId}/developers`](/api/konnect/portal-management/v3/#/operations/list-portal-developers) and [`/portals/{portalId}/developers/{developerId}`](/api/konnect/portal-management/v3/#/operations/get-developer) endpoints.
+* API registration answers are available on the registration's detail page under **Applications > API Registrations** tabs, and through the `additional_data` property on the [`/portals/{portalId}/application-registrations`](/api/konnect/portal-management/v3/#/operations/list-registrations) endpoint.
+
+{{site.dev_portal}} doesn't have a webhook for new registrations or form submissions, so if you want to react to new submissions automatically, poll these endpoints on an interval instead. 
+For example, you could filter on `status=pending` and track the last submission you've already processed.
+
+If you later edit or delete a field or form, previously collected answers aren't affected. 
+Each submitted answer is stored with a snapshot of its field label and type from the moment it was submitted, so it stays visible on the response detail view even after the field or form it came from no longer exists.
 
 ### Limitations
 
@@ -309,7 +506,7 @@ The plugin runs whenever a request authenticates as that application, using a [c
 
 In this example, we'll use the [Rate Limiting Advanced](/plugins/rate-limiting-advanced/) plugin, but you can apply any plugin to an application's principal with `principal.id`.
 
-1. List the applications in your portal, filtering by the application's name, and capture its ID as the `PRINCIPAL_ID` variable. Replace `$PORTAL_ID` with your portal ID and `$APPLICATION_NAME` with the name of your application:
+1. List the applications in your {{site.dev_portal}}, filtering by the application's name, and capture its ID as the `PRINCIPAL_ID` variable. Replace `$PORTAL_ID` with your {{site.dev_portal}} ID and `$APPLICATION_NAME` with the name of your application:
 {% capture copy-app-id %}
 <!--vale off-->
 {% konnect_api_request %}
@@ -371,9 +568,9 @@ body:
 {% endnavtab %}
 {% navtab "UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click **Dev Portal > Portals**.
-1. Click your portal.
-1. Click the **Access and approvals** tab.
-1. Click the **App Registrations** tab.
+1. Click your {{site.dev_portal}}.
+1. Click the **Applications** tab.
+1. Click the **API registrations** tab.
 1. Click the application you want to link a Consumer to.
 1. In the **App Registrations** section, click the action menu icon for the registration.
 1. Click **Link Consumer**.

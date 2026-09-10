@@ -84,7 +84,7 @@ From this tab, you can also remove users from your Enterprise account. These use
 ## User activity reports
 
 You can generate a CSV report about active and inactive users by clicking the download button next to **Last Active** in the [Licenses](https://app.insomnia.rest/app/enterprise/licenses) page.
-This report contains the date at which each user last opened Insomnia. 
+Each report includes the date each user last used Insomnia in the last 7, 30, or 90 days. Tracked activity includes creating and sending requests and creating documents.
 
 This data is maintained for 90 days. After 90 days without any activity, the date no longer appears in the report but the user will always be listed. If a user was last active more than 100 days before the report was generated, the **Last Active** value for that user will be `N/A` in the report. This allows you to quickly find inactive users.
 

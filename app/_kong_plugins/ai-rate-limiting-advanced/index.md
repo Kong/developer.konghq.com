@@ -13,6 +13,8 @@ works_on:
     - on-prem
     - konnect
 
+ai_gateway_url: "/ai-gateway/policies/ai-rate-limiting-advanced/"
+
 topologies:
   on_prem:
     - hybrid
@@ -80,7 +82,7 @@ See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose 
 
 ### Fallback from Redis
 
-{% include /ai-gateway/redis-fallback.md %}
+{% include md/ai-gateway/v1/redis-fallback.md %}
 
 ## Policy-based rate limiting {% new_in 3.14 %}
 
@@ -95,7 +97,7 @@ data:
   name: ai-rate-limiting-advanced
   config:
     policies:
-    - match: 
+    - match:
       - type: consumer
         key: id
         values:

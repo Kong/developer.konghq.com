@@ -1,8 +1,8 @@
 ---
-title: Install and map Datadog resources in Catalog
+title: Install and map Datadog resources in {{site.konnect_catalog}} Classic
 permalink: /how-to/install-and-map-datadog-resources/
 content_type: how_to
-description: Learn how to connect Datadog monitors and dashboards to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
+description: Learn how to connect Datadog monitors and dashboards to your {{site.konnect_catalog}} Classic service in {{site.konnect_short_name}}.
 products:
   - catalog
 works_on:
@@ -13,15 +13,15 @@ automated_tests: false
 search_aliases:
   - service catalog
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: Integrations
     url: /catalog/integrations/
   - text: Datadog reference
     url: /catalog/integrations/datadog/
 tldr:
-  q: How do I view Datadog monitors and dashboards in {{site.konnect_catalog}}?
-  a: Install the Datadog integration in {{site.konnect_short_name}} and authorize it using your API and app keys. Create a {{site.konnect_catalog}} service and associate it with your Datadog resources to display metadata and enable event tracking.
+  q: How do I view Datadog monitors and dashboards in {{site.konnect_catalog}} Classic?
+  a: Install the Datadog integration in {{site.konnect_short_name}} and authorize it using your API and app keys. Create a {{site.konnect_catalog}} Classic service and associate it with your Datadog resources to display metadata and enable event tracking.
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
@@ -49,6 +49,8 @@ prereqs:
         ```
       icon_url: /assets/icons/datadog.svg
 ---
+
+{% include_cached catalog/catalog-classic-banner.md %}
 
 ## Install and authorize the Datadog integration
 
@@ -99,7 +101,7 @@ body:
 
 Once authorized, monitor and dashboard resources from your Datadog account will be discoverable in the UI.
 
-## Create a service in {{site.konnect_catalog}}
+## Create a service in {{site.konnect_catalog}} Classic
 
 Create a service that you'll map to your Datadog resources:
 
@@ -123,7 +125,7 @@ export DATADOG_SERVICE_ID='YOUR-SERVICE-ID'
 
 ## List Datadog resources
 
-Before you can map your Datadog resources to a service in {{site.konnect_catalog}}, you first need to find the resources that are pulled in from Datadog:
+Before you can map your Datadog resources to a service in {{site.konnect_catalog}} Classic, you first need to find the resources that are pulled in from Datadog:
 
 <!--vale off-->
 {% konnect_api_request %}

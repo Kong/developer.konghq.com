@@ -1,222 +1,190 @@
 ---
 title: Route Claude CLI traffic through {{site.ai_gateway}} and Azure
-permalink: /how-to/use-claude-code-with-ai-gateway-azure/
+permalink: /ai-gateway/use-claude-code-with-ai-gateway-azure/
 content_type: how_to
 
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: AI Proxy
-    url: /plugins/ai-proxy/
-  - text: File Log
-    url: /plugins/file-log/
 
-description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic using Azure OpenAI models
+description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic to a Claude model hosted on Azure AI Foundry
 
 products:
-  - gateway
   - ai-gateway
 
 works_on:
-  - on-prem
   - konnect
 
-min_version:
-  gateway: '3.13'
-
-plugins:
-  - ai-proxy-advanced
-  - file-log
-
-entities:
-  - service
-  - route
-  - plugin
-
-tags:
-  - ai
-  - openai
-
-tldr:
-  q: How do I run Claude CLI through {{site.ai_gateway}} for Azure OpenAI models?
-  a: Install Claude CLI, configure its API key helper, create a Gateway Service and Route, attach the AI Proxy plugin to forward requests to Claude, enable the File Log plugin to inspect traffic, and point Claude CLI to the local proxy endpoint so all LLM requests pass through the {{site.ai_gateway}} for monitoring and control.
-
 tools:
-  - deck
+  - kongctl
 
 prereqs:
+  konnect:
+    - name: KONG_NGINX_HTTP_CLIENT_BODY_BUFFER_SIZE
+      value: 2m
   inline:
-    - title: Azure
-      include_content: prereqs/azure-ai
-      icon_url: /assets/icons/azure.svg
+    - title: Azure AI Foundry
+      include_content: md/ai-gateway/v2/prereqs/azure-ai-claude
     - title: Claude Code CLI
       icon_url: /assets/icons/third-party/claude.svg
       include_content: prereqs/claude-code
-  entities:
-    services:
-      - example-service
-    routes:
-      - example-route
 
-cleanup:
-  inline:
-    - title: Clean up Konnect environment
-      include_content: cleanup/platform/konnect
-      icon_url: /assets/icons/gateway.svg
-    - title: Destroy the {{site.base_gateway}} container
-      include_content: cleanup/products/gateway
-      icon_url: /assets/icons/gateway.svg
+min_version:
+  ai-gateway: '2.0'
+
+tldr:
+  q: How do I run Claude CLI through {{site.ai_gateway}} for a Claude model hosted on Azure AI Foundry?
+  a: Install {{ site.claude_code }}, create an AI Model Provider for your Azure AI Foundry Claude deployment, add a policy to strip Anthropic-only request fields Azure doesn't support, create an AI Model that targets it, then point {{ site.claude_code }}'s `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all LLM requests pass through the gateway for monitoring and control.
+
 ---
-## Configure the AI Proxy plugin
 
-First, configure the AI Proxy plugin for the [Azure AI provider](/ai-gateway/ai-providers/#azure-ai):
-* This setup uses the default `llm/v1/chat` route. {{ site.claude_code }} sends its requests to this route.
-* The configuration also raises the maximum request body size to 512 KB to support larger prompts.
+## Create an AI Model Provider entity
 
-The `llm_format: anthropic` parameter tells {{site.ai_gateway}} to expect request and response payloads that match {{ site.claude }}'s native API format. Without this setting, the Gateway would default to OpenAI's format, which would cause request failures when {{ site.claude_code }} communicates with the Azure endpoint.
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection and store your authentication credentials:
 
 {% entity_examples %}
-entities:
-  plugins:
-    - name: ai-proxy
-      config:
-        logging:
-          log_statistics: true
-          log_payloads: true
-        route_type: llm/v1/chat
-        llm_format: anthropic
-        auth:
-          header_name: Authorization
-          header_value: Bearer ${azure_key}
+ai_gateway_model_providers:
+  - ref: azure-claude
+    name: azure-claude
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    type: anthropic
+    config:
+      auth:
+        type: basic
+        headers:
+          - name: x-api-key
+            value: !secret {source: !env AZURE_AI_FOUNDRY_TOKEN}
+{% endentity_examples %}
+
+{:.info}
+> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
+
+The AI Model Provider uses the following settings:
+
+* `type: anthropic`: Specifies that this provider speaks Anthropic's native Messages API format. Azure AI Foundry serves Claude models through this same native API, so don't use `type: azure`.
+* `config.auth.headers[0].value: !secret {source: !env AZURE_AI_FOUNDRY_TOKEN}`: Loads the API key from your environment at apply time so it is not embedded in the config, and `kongctl` redacts it in plan and diff output.
+
+## Create AI Policy and AI Model entities
+
+Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use.
+
+Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request transformer](/ai-gateway/policies/ai-request-transformer/) to remove extra fields that Azure AI Foundry's Claude API does not support. 
+
+{% entity_examples %}
+ai_gateway_policies:
+  - ref: claude-code-compat
+    name: claude-code-compat
+    display_name: claude-code-compat
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    type: request-transformer-advanced
+    enabled: true
+    global: false
+    config:
+      add:
+        headers:
+          - "anthropic-version:2023-06-01"
+      remove:
+        headers:
+          - anthropic-beta
+        querystring:
+          - beta
+        body:
+          - output_config
+          - context_management
+          - mcp_servers
+          - container
+          - service_tier
+ai_gateway_models:
+  - ref: claude-code-azure-sonnet
+    display_name: claude-code-azure-sonnet
+    name: claude-code-azure-sonnet
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    type: model
+    enabled: true
+    formats:
+      - type: anthropic
+    config:
+      route:
+        paths:
+          - /
         model:
-          provider: azure
-          options:
-            azure_api_version: "2025-01-01-preview"
-            azure_instance: ${azure_instance}
-            azure_deployment_id: ${azure_deployment}
-variables:
-  azure_key:
-    value: "$AZURE_OPENAI_API_KEY"
-  azure_instance:
-    value: "$AZURE_INSTANCE_NAME"
-  azure_deployment:
-    value: "$AZURE_DEPLOYMENT_ID"
+          body_param: model
+          values:
+            - claude-code-azure-sonnet
+    capabilities:
+       - generate
+    policies:
+      - !ref claude-code-compat#name
+    targets:
+      - name: claude-sonnet-4-6
+        provider: azure-claude
+        config:
+          type: anthropic
+          upstream_url: !env AZURE_AI_FOUNDRY_UPSTREAM_URL
 {% endentity_examples %}
 
-## Configure the File Log plugin
+The AI Policy uses the following settings:
 
-Now, let's enable the [File Log](/plugins/file-log/) plugin on the Service, to inspect the LLM traffic between {{ site.claude }} and the {{site.ai_gateway}}. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what {{ site.claude }} sends through the {{site.ai_gateway}}.
+* `type: request-transformer-advanced`: Modifies requests before {{site.ai_gateway}} forwards them upstream.
+* `config.add.headers`: Adds the `anthropic-version` header Azure AI Foundry's native Anthropic endpoint requires. {{ site.claude_code }} doesn't send this header itself, and Foundry rejects requests without it with a `400`.
+* `config.remove.headers` / `config.remove.querystring` / `config.remove.body`: Strips Anthropic-beta-only fields — the `anthropic-beta` header, `beta` query string, and body fields like `mcp_servers` and `container` — that {{ site.claude_code }} sends but that Azure AI Foundry's Claude deployment doesn't support.
+* `name: claude-code-compat`: The identifier you use to attach the policy.
+* `targets.name:`: The name of your own Claude deployment in Azure AI Foundry
 
-{% entity_examples %}
-entities:
-  plugins:
-    - name: file-log
-      config:
-        path: "/tmp/claude.json"
-{% endentity_examples %}
+{:.info}
+> {{ site.claude_code }} beta features vary by version and may add other incompatible fields over time. If you still see a `400` error mentioning an unexpected field after applying this Policy, add that field to the appropriate `remove` list and re-apply.
 
-## Verify traffic through {{site.ai_gateway}}
+The AI Model uses the following settings:
+
+* `name`/`display_name: claude-code-azure-sonnet`: The identifier you pass to `claude --model`. {{ site.claude_code }} uses this, not the upstream target name, to select the model.
+* `formats: [type: anthropic]`: Declares that this model accepts requests in Anthropic-compatible format, matching what {{ site.claude_code }} sends natively.
+* `config.route.paths: [/]`: Configures the base path where this model's routes are accessible.
+* `capabilities: [generate]`: Enables text generation. For a model using the `anthropic` format, `generate` creates a `/messages` endpoint matching Anthropic's native Messages API, so combined with your base path, clients send requests to `/v1/messages`.
+* `policies`: Attaches the `claude-code-compat` policy created in the previous step, so its header and body transformations apply to every request sent through this model.
+* `targets`: Specifies which upstream model to route requests to. `provider: azure-claude` references the AI Provider created earlier, and `name: claude-sonnet-4-6` must match the name of your Claude deployment in Azure AI Foundry.
+* `targets[0].config.upstream_url`: The base Azure AI Foundry endpoint from the prerequisites, ending at `/anthropic`. {{site.ai_gateway}} appends the rest of the Anthropic Messages API path automatically.
+
+## Run {{ site.claude_code }}
 
 Now, we can start a {{ site.claude_code }} session that points it to the local {{site.ai_gateway}} endpoint:
 
-{:.warning}
-> Ensure that `ANTHROPIC_MODEL` matches the model you deployed in Azure.
-
-```sh
-ANTHROPIC_BASE_URL=http://localhost:8000/anything \
-ANTHROPIC_MODEL=YOUR_AZURE_MODEL \
-claude
-```
-
-{{ site.claude_code }} asks for permission before it runs tools or interacts with files:
-
-```text
-I'll need permission to work with your files.
-
-This means I can:
-- Read any file in this folder
-- Create, edit, or delete files
-- Run commands (like npm, git, tests, ls, rm)
-- Use tools defined in .mcp.json
-
-Learn more ( https://docs.claude.com/s/claude-code-security )
-
-❯ 1. Yes, continue
-2. No, exit
-```
-{:.no-copy-code}
-
-Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach {{site.ai_gateway}}.
-
-```text
-Tell me about Vienna Oribasius manuscript.
-```
+<!-- vale off -->
+{% validation claude-code %}
+prompt: Tell me about the Madrid Skylitzes manuscript.
+model: claude-code-azure-sonnet
+base_url: http://localhost:8000/
+{% endvalidation %}
+<!-- vale on -->
 
 {{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
 
 ```text
-The "Vienna Oribasius manuscript" refers to a famous illustrated medical
-codex that preserves the works of Oribasius of Pergamon, a noted Greek
-physician who lived in the 4th century CE. Oribasius was a compiler of
-earlier medical knowledge, and his writings form an important link in the
-transmission of Greco-Roman medical science to the Byzantine, Islamic, and
-later European worlds.
+The Madrid Skylitzes is a remarkable 12th-century illuminated Byzantine
+manuscript that represents one of the most important surviving examples
+of medieval historical documentation. Here are the key details:
+
+What it is
+
+The Madrid Skylitzes is the only surviving illustrated manuscript of John
+Skylitzes' "Synopsis of Histories" (Σύνοψις Ἱστοριῶν), which chronicles
+Byzantine history from 811 to 1057 CE - covering the period from the death
+of Emperor Nicephorus I to the deposition of Michael VI.
+
+Artistic Significance
+
+- 574 miniature paintings (with about 100 lost over time)
+- Lavishly decorated with gold leaf, vibrant pigments, and intricate
+detailing
+- Depicts everything from imperial coronations and battles to daily life
+in Byzantium
+- The only surviving Byzantine illuminated chronicle written in Greek
+
+Unique Collaboration
+
+The manuscript is believed to be the work of 7 different artists from
+various backgrounds:
+- 4 Italian artists
+- 1 English or French artist
+- 2 Byzantine artists
 ```
 {:.no-copy-code}
-
-Next, inspect the {{site.ai_gateway}} logs to verify that the traffic was proxied through it:
-
-```sh
-docker exec kong-quickstart-gateway cat /tmp/claude.json | jq
-```
-
-You should find an entry that shows the upstream request made by {{ site.claude_code }}. A typical log record looks like this:
-
-```json
-{
-  "...": "...",
-  "headers": {
-    ...
-    "user-agent": "claude-cli/2.0.37 (external, cli)",
-    "content-type": "application/json",
-    ...
-  },
-  "method": "POST",
-  ...
-   "ai": {
-    "meta": {
-        "request_mode": "oneshot",
-        "response_model": "gpt-4.1-2025-04-14",
-        "request_model": "gpt-4.1",
-        "llm_latency": 4606,
-        "provider_name": "azure",
-        "azure_deployment_id": "gpt-4.1",
-        "plugin_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-        "azure_api_version": "2024-12-01-preview",
-        "azure_instance_id": "example-azure-openai"
-      },
-      "usage": {
-        "completion_tokens": 414,
-        "completion_tokens_details": {
-          "accepted_prediction_tokens": 0,
-          "audio_tokens": 0,
-          "rejected_prediction_tokens": 0,
-          "reasoning_tokens": 0
-        },
-        "total_tokens": 11559,
-        "cost": 0,
-        "time_per_token": 11.125603864734,
-        "time_to_first_token": 4605,
-        "prompt_tokens": 11145,
-        "prompt_tokens_details": {
-          "audio_tokens": 0,
-          "cached_tokens": 11008,
-          "cached_tokens_details": {}
-        }
-      }
-    }
-  },
-```
-{:.no-copy-code}
-
-This output confirms that {{ site.claude_code }} routed the request through {{site.ai_gateway}} using the `gpt-4.1` Azure AI model we selected while starting the {{ site.claude_code }} session.

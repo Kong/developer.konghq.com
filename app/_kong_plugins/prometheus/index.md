@@ -89,7 +89,7 @@ license signature. Those metrics are only exported on self-managed {{site.base_g
     measures the current number of database entities.
 - **Number of Nginx timers** : A gauge metric that measures the total number of Nginx
     timers in a Running or Pending state.
-- **[AI LLM metrics](#llm-traffic-metrics)** {% new_in 3.8 %}: AI LLM metrics are available per provider, model, cache, database name (if cached), embeddings provider (if cached), embeddings model (if cached), and Workspace.
+- **[AI LLM metrics for {{site.ai_gateway}} running on {{site.base_gateway}}](#llm-traffic-metrics)** {% new_in 3.8 %}: AI LLM metrics are available per provider, model, cache, database name (if cached), embeddings provider (if cached), embeddings model (if cached), and Workspace.
 
 ### Optional metrics
 The following metrics are disabled by default as it may create high cardinality of metrics and may
@@ -125,7 +125,7 @@ When [`config.upstream_health_metrics`](/plugins/prometheus/reference/#schema--c
 stream and HTTP listeners are enabled, targets' health will appear twice. Health metrics
 have a `subsystem` label to indicate which subsystem the metric refers to.
 
-{% include /ai-gateway/llm-metrics.md %}
+{% include md/ai-gateway/v1/llm-metrics.md %}
 
 ## Accessing the metrics
 

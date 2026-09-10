@@ -5,8 +5,10 @@ columns:
     key: target
   - title: ARM Support
     key: arm
-  - title: FIPS Compliant
-    key: fips
+  - title: FIPS 140-2
+    key: fips2
+  - title: FIPS 140-3
+    key: fips3
   - title: AWS Graviton Support
     key: graviton
   - title: EOL
@@ -21,7 +23,8 @@ rows:
 {%- assign cloudsmith_version = include.release.release | remove: "." %}
   - target: "[{{ package.os }} {{ package.version }} (package)](https://cloudsmith.io/~kong/repos/gateway-{{ cloudsmith_version }}/packages/)"
     arm: "{% if distro.package_support.arm %}Yes{% else %}No{% endif %}"
-    fips: "{% if distro.package_support.fips %}Yes{% else %}No{% endif %}"
+    fips2: "{% if distro.package_support.fips2 %}Yes{% else %}No{% endif %}"
+    fips3: "{% if distro.package_support.fips3 %}Yes{% else %}No{% endif %}"
     graviton: "{% if distro.package_support.graviton %}Yes{% else %}No{% endif %}"
     eol: "{{ distro_eol }}"
 {%- endif -%}
@@ -32,7 +35,8 @@ rows:
   - target: "{{ package.os }} {{ package.version }} (docker)"
 {%- endif %}
     arm: "{% if distro.docker_support.arm %}Yes{% else %}No{% endif %}"
-    fips: "{% if distro.docker_support.fips %}Yes{% else %}No{% endif %}"
+    fips2: "{% if distro.docker_support.fips2 %}Yes{% else %}No{% endif %}"
+    fips3: "{% if distro.docker_support.fips3 %}Yes{% else %}No{% endif %}"
     graviton: "{% if distro.docker_support.graviton %}Yes{% else %}No{% endif %}"
     eol: "{{ distro_eol }}"
 {%- endif -%}
@@ -47,7 +51,8 @@ rows:
                 <th class="text-center"><span class="font-semibold text-primary">version</span></th>
                 <th class="text-center"><span class="font-semibold text-primary">artifacts</span></th>
                 <th class="text-center"><span class="font-semibold text-primary">arm support</span></th>
-                <th class="text-center"><span class="font-semibold text-primary">fips compliant</span></th>
+                <th class="text-center"><span class="font-semibold text-primary">fips 140-2</span></th>
+                <th class="text-center"><span class="font-semibold text-primary">fips 140-3</span></th>
                 <th class="text-center"><span class="font-semibold text-primary">aws graviton support</span></th>
                 <th class="text-center"><span class="font-semibold text-primary">eol</span></th>
             </tr>
@@ -65,14 +70,14 @@ rows:
                         {% if distro.package %}
                         {% assign cloudsmith_version = include.release.release | remove: "." %}
                         <div class="flex w-full items-center justify-center">
-                            <a href="https://cloudsmith.io/~kong/repos/gateway-{{ cloudsmith_version }}/packages/" class="badge" target="_blank" rel="noopener noreferrer">package</a>
+                            <a href="https://cloudsmith.io/~kong/repos/gateway-{{ cloudsmith_version }}/packages/" class="badge" target="_blank" rel="noopener nofollow noreferrer">package</a>
                         </div>
                         {% endif %}
                         {% if distro.docker %}
                         <div class="flex w-full items-center justify-center">
                             {% if package.docker_tag %}
                             {% assign docker_url = "https://hub.docker.com/r/kong/kong-gateway/tags?name=" | append: include.release.release | append: "-" | append: package.docker_tag %}
-                            <a href="{{ docker_url }}" class="badge" target="_blank" rel="noopener noreferrer">docker</a>
+                            <a href="{{ docker_url }}" class="badge" target="_blank" rel="noopener nofollow noreferrer">docker</a>
                             {% else %}
                             <span class="badge">docker</span>
                             {% endif %}
@@ -88,8 +93,14 @@ rows:
                 </td>
                 <td class="text-center px-0">
                     <div class="flex flex-col divide-y divide-primary/5 *:py-4 first:*:pt-0 last:*:pb-0">
-                        {% if distro.package %}<span class="flex justify-center">{{ distro.package_support.fips | to_check }}</span>{% endif %}
-                        {% if distro.docker %}<span class="flex justify-center">{{ distro.docker_support.fips | to_check }}</span>{% endif %}
+                        {% if distro.package %}<span class="flex justify-center">{{ distro.package_support.fips2 | to_check }}</span>{% endif %}
+                        {% if distro.docker %}<span class="flex justify-center">{{ distro.docker_support.fips2 | to_check }}</span>{% endif %}
+                    </div>
+                </td>
+                <td class="text-center px-0">
+                    <div class="flex flex-col divide-y divide-primary/5 *:py-4 first:*:pt-0 last:*:pb-0">
+                        {% if distro.package %}<span class="flex justify-center">{{ distro.package_support.fips3 | to_check }}</span>{% endif %}
+                        {% if distro.docker %}<span class="flex justify-center">{{ distro.docker_support.fips3 | to_check }}</span>{% endif %}
                     </div>
                 </td>
                 <td class="text-center px-0">

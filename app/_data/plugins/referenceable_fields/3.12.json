@@ -203,6 +203,10 @@
     "config.schema_registry.confluent.authentication.oauth2.client_id",
     "config.schema_registry.confluent.authentication.oauth2.client_secret",
     "config.schema_registry.confluent.authentication.oauth2.password",
+    "config.schema_registry.confluent.authentication.oauth2.token_headers",
+    "config.schema_registry.confluent.authentication.oauth2.token_headers.additionalProperties",
+    "config.schema_registry.confluent.authentication.oauth2.token_post_args",
+    "config.schema_registry.confluent.authentication.oauth2.token_post_args.additionalProperties",
     "config.schema_registry.confluent.authentication.oauth2.username"
   ],
   "confluent-consume": [
@@ -215,12 +219,20 @@
     "config.schema_registry.confluent.authentication.oauth2.client_id",
     "config.schema_registry.confluent.authentication.oauth2.client_secret",
     "config.schema_registry.confluent.authentication.oauth2.password",
+    "config.schema_registry.confluent.authentication.oauth2.token_headers",
+    "config.schema_registry.confluent.authentication.oauth2.token_headers.additionalProperties",
+    "config.schema_registry.confluent.authentication.oauth2.token_post_args",
+    "config.schema_registry.confluent.authentication.oauth2.token_post_args.additionalProperties",
     "config.schema_registry.confluent.authentication.oauth2.username",
     "config.topics.schema_registry.confluent.authentication.basic.password",
     "config.topics.schema_registry.confluent.authentication.basic.username",
     "config.topics.schema_registry.confluent.authentication.oauth2.client_id",
     "config.topics.schema_registry.confluent.authentication.oauth2.client_secret",
     "config.topics.schema_registry.confluent.authentication.oauth2.password",
+    "config.topics.schema_registry.confluent.authentication.oauth2.token_headers",
+    "config.topics.schema_registry.confluent.authentication.oauth2.token_headers.additionalProperties",
+    "config.topics.schema_registry.confluent.authentication.oauth2.token_post_args",
+    "config.topics.schema_registry.confluent.authentication.oauth2.token_post_args.additionalProperties",
     "config.topics.schema_registry.confluent.authentication.oauth2.username"
   ],
   "datadog": [
@@ -230,7 +242,9 @@
     "config.resources.cache.redis.password",
     "config.resources.cache.redis.sentinel_password",
     "config.resources.cache.redis.sentinel_username",
-    "config.resources.cache.redis.username"
+    "config.resources.cache.redis.username",
+    "config.resources.vault",
+    "config.resources.vault.additionalProperties"
   ],
   "forward-proxy": [
     "config.auth_password",
@@ -269,12 +283,20 @@
     "config.schema_registry.confluent.authentication.oauth2.client_id",
     "config.schema_registry.confluent.authentication.oauth2.client_secret",
     "config.schema_registry.confluent.authentication.oauth2.password",
+    "config.schema_registry.confluent.authentication.oauth2.token_headers",
+    "config.schema_registry.confluent.authentication.oauth2.token_headers.additionalProperties",
+    "config.schema_registry.confluent.authentication.oauth2.token_post_args",
+    "config.schema_registry.confluent.authentication.oauth2.token_post_args.additionalProperties",
     "config.schema_registry.confluent.authentication.oauth2.username",
     "config.topics.schema_registry.confluent.authentication.basic.password",
     "config.topics.schema_registry.confluent.authentication.basic.username",
     "config.topics.schema_registry.confluent.authentication.oauth2.client_id",
     "config.topics.schema_registry.confluent.authentication.oauth2.client_secret",
     "config.topics.schema_registry.confluent.authentication.oauth2.password",
+    "config.topics.schema_registry.confluent.authentication.oauth2.token_headers",
+    "config.topics.schema_registry.confluent.authentication.oauth2.token_headers.additionalProperties",
+    "config.topics.schema_registry.confluent.authentication.oauth2.token_post_args",
+    "config.topics.schema_registry.confluent.authentication.oauth2.token_post_args.additionalProperties",
     "config.topics.schema_registry.confluent.authentication.oauth2.username"
   ],
   "kafka-log": [
@@ -285,6 +307,10 @@
     "config.schema_registry.confluent.authentication.oauth2.client_id",
     "config.schema_registry.confluent.authentication.oauth2.client_secret",
     "config.schema_registry.confluent.authentication.oauth2.password",
+    "config.schema_registry.confluent.authentication.oauth2.token_headers",
+    "config.schema_registry.confluent.authentication.oauth2.token_headers.additionalProperties",
+    "config.schema_registry.confluent.authentication.oauth2.token_post_args",
+    "config.schema_registry.confluent.authentication.oauth2.token_post_args.additionalProperties",
     "config.schema_registry.confluent.authentication.oauth2.username"
   ],
   "kafka-upstream": [
@@ -295,6 +321,10 @@
     "config.schema_registry.confluent.authentication.oauth2.client_id",
     "config.schema_registry.confluent.authentication.oauth2.client_secret",
     "config.schema_registry.confluent.authentication.oauth2.password",
+    "config.schema_registry.confluent.authentication.oauth2.token_headers",
+    "config.schema_registry.confluent.authentication.oauth2.token_headers.additionalProperties",
+    "config.schema_registry.confluent.authentication.oauth2.token_post_args",
+    "config.schema_registry.confluent.authentication.oauth2.token_post_args.additionalProperties",
     "config.schema_registry.confluent.authentication.oauth2.username"
   ],
   "konnect-application-auth": [
@@ -390,9 +420,21 @@
     "config.cache.redis.sentinel_password",
     "config.cache.redis.sentinel_username",
     "config.cache.redis.username",
+    "config.callouts.request.body.custom",
+    "config.callouts.request.body.custom.additionalProperties",
+    "config.callouts.request.headers.custom",
+    "config.callouts.request.headers.custom.additionalProperties",
     "config.callouts.request.http_opts.proxy.auth_password",
     "config.callouts.request.http_opts.proxy.auth_username",
-    "config.callouts.request.url"
+    "config.callouts.request.query.custom",
+    "config.callouts.request.query.custom.additionalProperties",
+    "config.callouts.request.url",
+    "config.upstream.body.custom",
+    "config.upstream.body.custom.additionalProperties",
+    "config.upstream.headers.custom",
+    "config.upstream.headers.custom.additionalProperties",
+    "config.upstream.query.custom",
+    "config.upstream.query.custom.additionalProperties"
   ],
   "request-transformer-advanced": [
     "config.add.body",
@@ -433,25 +475,33 @@
     "config.secret"
   ],
   "solace-consume": [
+    "config.flow.properties",
+    "config.flow.properties.additionalProperties",
     "config.session.authentication.access_token",
     "config.session.authentication.id_token",
     "config.session.authentication.password",
     "config.session.authentication.username",
-    "config.session.host"
+    "config.session.host",
+    "config.session.properties",
+    "config.session.properties.additionalProperties"
   ],
   "solace-log": [
     "config.session.authentication.access_token",
     "config.session.authentication.id_token",
     "config.session.authentication.password",
     "config.session.authentication.username",
-    "config.session.host"
+    "config.session.host",
+    "config.session.properties",
+    "config.session.properties.additionalProperties"
   ],
   "solace-upstream": [
     "config.session.authentication.access_token",
     "config.session.authentication.id_token",
     "config.session.authentication.password",
     "config.session.authentication.username",
-    "config.session.host"
+    "config.session.host",
+    "config.session.properties",
+    "config.session.properties.additionalProperties"
   ],
   "standard-webhooks": [
     "config.secret_v1"
@@ -464,6 +514,10 @@
     "config.oauth.client_id",
     "config.oauth.client_secret",
     "config.oauth.password",
+    "config.oauth.token_headers",
+    "config.oauth.token_headers.additionalProperties",
+    "config.oauth.token_post_args",
+    "config.oauth.token_post_args.additionalProperties",
     "config.oauth.username"
   ]
 }

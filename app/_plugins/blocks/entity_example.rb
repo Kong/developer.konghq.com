@@ -2,6 +2,7 @@
 
 require 'yaml'
 require_relative '../monkey_patch'
+require_relative '../component_templates'
 
 module Jekyll
   class EntityExample < Liquid::Block
@@ -23,12 +24,10 @@ module Jekyll
       entity_example = EntityExampleBlock::Base.make_for(example: example, product: product(@page))
       entity_example_drop = entity_example.to_drop
 
-      template = File.read(entity_example_drop.template)
-
       output = context.stack do
         context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
         context['entity_example'] = entity_example_drop
-        Liquid::Template.parse(template, { line_numbers: true }).render(context)
+        ComponentTemplates.fetch('entity_example', 'markdown').render(context)
       end
 
       if example['indent']

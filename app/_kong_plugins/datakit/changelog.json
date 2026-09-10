@@ -30,6 +30,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.5": [
+    {
+      "message": "Fixed an issue where the `response` node set `Content-Type: application/octet-stream` for `json_to_xml` output. It now defaults to `application/xml` when no explicit `Content-Type` is provided.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Added more implicit node outputs:\n    * `request.path`\n    * `request.raw_path`\n    * `request.port`\n    * `request.method`\n    * `request.scheme`\n    * `request.version`\n    * `service_response.status`\n    * service_response.raw_body\n    * call.raw_body\n",
@@ -88,6 +95,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.14": [
+    {
+      "message": "Fixed an issue where the `response` node set `Content-Type: application/octet-stream` for `json_to_xml` output. It now defaults to `application/xml` when no explicit `Content-Type` is provided.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added json_to_xml node to support converting JSON or lua table to XML data.",
@@ -140,6 +154,13 @@
   "3.13.0.7": [
     {
       "message": "Added Lua control plane compatibility checks to prevent unsupported Datakit configurations from being pushed to older data planes in hybrid mode.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.13.0.10": [
+    {
+      "message": "Fixed an issue where the `response` node set `Content-Type: application/octet-stream` for `json_to_xml` output. It now defaults to `application/xml` when no explicit `Content-Type` is provided.",
       "type": "bugfix",
       "scope": "Plugin"
     }

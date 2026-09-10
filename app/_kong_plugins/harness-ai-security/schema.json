@@ -1,0 +1,81 @@
+{
+  "properties": {
+    "config": {
+      "additionalProperties": false,
+      "properties": {
+        "request_config": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Settings for evaluating the request before it's proxied upstream.",
+          "properties": {
+            "timeout": {
+              "type": "number",
+              "description": "Max timeout in milliseconds for the request evaluation call to the Traceable Module Extension.",
+              "default": 500
+            },
+            "allow_on_failure": {
+              "type": "boolean",
+              "description": "If true, allows the request through unevaluated when the request evaluation call fails or times out. If false, blocks the request on failure.",
+              "default": true
+            }
+          },
+          "required": ["allow_on_failure"]
+        },
+        "response_config": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Settings for evaluating the upstream response before it's returned to the client.",
+          "properties": {
+            "timeout": {
+              "type": "number",
+              "description": "Max timeout in milliseconds for the response evaluation call to the Traceable Module Extension.",
+              "default": 500
+            },
+            "allow_on_failure": {
+              "type": "boolean",
+              "description": "If true, allows the response through unevaluated when the response evaluation call fails or times out. If false, blocks the response on failure.",
+              "default": true
+            }
+          },
+          "required": ["allow_on_failure"]
+        }
+      },
+      "required": [],
+      "type": "object"
+    },
+    "consumer_group": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated. (Note that some plugins can not be restricted to consumers groups this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer Groups",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [],
+      "type": "object"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [],
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [],
+      "type": "object"
+    }
+  },
+  "required": []
+}

@@ -4,7 +4,9 @@
 
 <div class="flex flex-col gap-4 heading-section entity-example" id="{{ plugin_config_example.id }}">
   <div class="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
-    <h2 id="set-up-the-plugin">Set up the {{include.entity}}</h2>
+    {% capture _setup_text %}Set up the {{ include.entity }}{% endcapture %}
+    {% assign _setup_id = _setup_text | slugify %}
+    {% include anchor_heading.html tag="h2" id=_setup_id text=_setup_text %}
     <div class="flex w-full sm:w-fit sm:justify-end">
       <div class="flex gap-2 text-xs">
         {% if targets.size > 1 %}

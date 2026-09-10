@@ -1,37 +1,34 @@
 ---
 title: Route Claude CLI traffic through {{site.ai_gateway}} and Anthropic
-permalink: /how-to/use-claude-code-with-ai-gateway-anthropic/
 content_type: how_to
+permalink: /ai-gateway/use-claude-code-with-ai-gateway-anthropic/
 
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: AI Proxy Advanced
-    url: /plugins/ai-proxy-advanced/
-  - text: File Log
-    url: /plugins/file-log/
 
 description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic
 
 products:
-  - gateway
   - ai-gateway
 
 works_on:
-  - on-prem
   - konnect
 
+tools:
+  - kongctl
+
+prereqs:
+  inline:
+    - title: Anthropic
+      icon_url: /assets/icons/anthropic.svg
+      include_content: md/ai-gateway/v2/prereqs/anthropic
+    - title: Claude Code CLI
+      icon_url: /assets/icons/third-party/claude.svg
+      include_content: prereqs/claude-code
+
 min_version:
-  gateway: '3.13'
-
-plugins:
-  - ai-proxy-advanced
-  - file-log
-
-entities:
-  - service
-  - route
-  - plugin
+  ai-gateway: '2.0'
 
 tags:
   - ai
@@ -39,115 +36,89 @@ tags:
 
 tldr:
   q: How do I run Claude CLI through {{site.ai_gateway}}?
-  a: Install Claude CLI, configure its API key helper, create a Gateway Service and Route, attach the AI Proxy plugin to forward requests to Claude, enable file-log to inspect traffic, and point Claude CLI to the local proxy endpoint so all LLM requests pass through the {{site.ai_gateway}} for monitoring and control.
+  a: Install {{ site.claude_code }}, create an AI Model Provider for Anthropic and an AI Model that targets it, then point {{ site.claude_code }}'s `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all LLM requests pass through the gateway for monitoring and control.
 
-tools:
-  - deck
-
-prereqs:
-  inline:
-    - title: Anthropic
-      icon_url: /assets/icons/anthropic.svg
-      include_content: prereqs/anthropic
-    - title: Claude Code CLI
-      icon_url: /assets/icons/third-party/claude.svg
-      include_content: prereqs/claude-code
-  entities:
-    services:
-      - example-service
-    routes:
-      - example-route
-
-cleanup:
-  inline:
-    - title: Clean up Konnect environment
-      include_content: cleanup/platform/konnect
-      icon_url: /assets/icons/gateway.svg
-    - title: Destroy the {{site.base_gateway}} container
-      include_content: cleanup/products/gateway
-      icon_url: /assets/icons/gateway.svg
 ---
 
-## Configure the AI Proxy plugin
+## Create an AI Model Provider entity
 
-First, configure the AI Proxy plugin for the [{{ site.anthropic }} provider](/ai-gateway/ai-providers/#anthropic).
-* This setup uses the default `llm/v1/chat` route. {{ site.claude_code }} sends its requests to this route.
-* The configuration also raises the maximum request body size to 512 KB to support larger prompts.
-
-Set `llm_format: anthropic` to tell {{site.ai_gateway}} that requests and responses use {{ site.claude }}'s native API format. This parameter controls schema validation and prevents format mismatches between {{ site.claude_code }} and the gateway.
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection and store your authentication credentials:
 
 {% entity_examples %}
-entities:
-  plugins:
-    - name: ai-proxy
-      config:
-        logging:
-          log_statistics: true
-          log_payloads: false
-        auth:
-          header_name: x-api-key
-          header_value: ${key}
+ai_gateway_model_providers:
+  - ref: generic-anthropic
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: generic-anthropic
+    display_name: "generic-anthropic"
+    type: anthropic
+    config:
+      auth:
+        type: basic
+        headers:
+          - name: x-api-key
+            value: !secret {source: !env ANTHROPIC_API_KEY}
+{% endentity_examples %}
+
+{:.info}
+> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
+
+The AI Model Provider uses the following settings:
+
+* `type: anthropic`: Specifies that this provider connects to the Anthropic service using Anthropic's standard API format.
+* `name: generic-anthropic`: A unique identifier that AI Models will reference to route requests through this provider.
+* `config.auth.headers[0].value: !secret {source: !env ANTHROPIC_API_KEY}`: Loads the API key from your environment at apply time so it is not embedded in the config, and `kongctl` redacts it in plan and diff output.
+
+## Create an AI Model entity
+
+Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use:
+
+{% entity_examples %}
+ai_gateway_models:
+  - ref: my-claude
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: my-claude
+    display_name: "my-claude"
+    type: model
+    formats:
+      - type: anthropic
+    config:
+      route:
+        paths:
+          - /
         model:
-          name: claude-sonnet-4-5-20250929
-          provider: anthropic
-          options:
-            anthropic_version: '2023-06-01'
-        llm_format: anthropic
-        logging:
-          log_statistics: true
-        max_request_body_size: 524288
-        route_type: llm/v1/chat
-variables:
-  key:
-    value: $ANTHROPIC_API_KEY
-    description: The API key to use to connect to Anthropic.
+          body_param: model
+          values:
+            - my-claude
+    targets:
+      - name: claude-opus-4-8
+        provider: generic-anthropic
+        config:
+          type: anthropic
+    policies: []
+    capabilities:
+      - generate
 {% endentity_examples %}
 
-## Configure the File Log plugin
+The AI Model uses the following settings:
 
-Now, let's enable the [File Log](/plugins/file-log/) plugin on the Service, to inspect the LLM traffic between {{ site.claude }} and the {{site.ai_gateway}}. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what {{ site.claude }} sends through the {{site.ai_gateway}}.
+* `type: model`: Specifies this is a synchronous model for request/response workloads.
+* `name: my-claude`: A unique identifier for this model.
+* `formats: [type: anthropic]`: Declares that this model accepts requests in Anthropic-compatible format.
+* `config.route.paths: [/]`: Configures the custom base path where this model's routes will be accessible. Setting this to a unique value avoids clashes when you have multiple AI Models.
+* `capabilities: [generate]`: Enables the text generation capability. For a model using the `anthropic` format, the `generate` capability creates a `/messages` endpoint matching Anthropic's native Messages API, so combined with your base path, clients send requests to `/messages`.
+* `targets`: Specifies which upstream AI Model Provider model to route requests to. Here, `provider: generic-anthropic` references the AI Model Provider we created earlier, and `name: claude-opus-4-8` specifies which Anthropic model to call upstream.
 
-{% entity_examples %}
-entities:
-  plugins:
-    - name: file-log
-      config:
-        path: "/tmp/claude.json"
-{% endentity_examples %}
-
-## Verify traffic through Kong
+## Run {{ site.claude_code }}
 
 Now, we can start a {{ site.claude_code }} session that points it to the local {{site.ai_gateway}} endpoint:
 
-```sh
-ANTHROPIC_BASE_URL=http://localhost:8000/anything \
-ANTHROPIC_MODEL=claude-sonnet-4-5-20250929 \
-claude
-```
-
-{{ site.claude_code }} asks for permission before it runs tools or interacts with files:
-
-```text
-I'll need permission to work with your files.
-
-This means I can:
-- Read any file in this folder
-- Create, edit, or delete files
-- Run commands (like npm, git, tests, ls, rm)
-- Use tools defined in .mcp.json
-
-Learn more ( https://docs.claude.com/s/claude-code-security )
-
-❯ 1. Yes, continue
-2. No, exit
-```
-{:.no-copy-code}
-
-Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach {{site.ai_gateway}}.
-
-```text
-Tell me about Madrid Skylitzes manuscript.
-```
+<!-- vale off -->
+{% validation claude-code %}
+prompt: Tell me about the Madrid Skylitzes manuscript.
+model: my-claude
+base_url: http://localhost:8000/
+{% endvalidation %}
+<!-- vale on -->
 
 {{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
 
@@ -181,51 +152,3 @@ various backgrounds:
 - 2 Byzantine artists
 ```
 {:.no-copy-code}
-
-Next, inspect the {{site.ai_gateway}} logs to verify that the traffic was proxied through it:
-
-```sh
-docker exec kong-quickstart-gateway cat /tmp/claude.json | jq
-```
-
-You should find an entry that shows the upstream request made by {{ site.claude_code }}. A typical log record looks like this:
-
-```json
-{
-  "...": "...",
-  "headers": {
-    ...
-    "user-agent": "claude-cli/2.0.37 (external, cli)",
-    "content-type": "application/json",
-    ...
-  },
-  "method": "POST",
-  ...
-   "ai": {
-    "proxy": {
-      "usage": {
-        "prompt_tokens": 1,
-        "completion_tokens_details": {},
-        "completion_tokens": 85,
-        "total_tokens": 86,
-        "cost": 0,
-        "time_per_token": 38.941176470588,
-        "time_to_first_token": 2583,
-        "prompt_tokens_details": {}
-      },
-      "meta": {
-        "request_model": "claude-sonnet-4-20250514",
-        "response_model": "claude-sonnet-4-20250514",
-        "llm_latency": 3310,
-        "plugin_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-        "request_mode": "stream",
-        "provider_name": "anthropic"
-      }
-    }
-  },
-  ...
-}
-```
-{:.no-copy-code}
-
-This output confirms that {{ site.claude_code }} routed the request through {{site.ai_gateway}} using the `claude-sonnet-4-5-20250929` model we selected while starting the {{ site.claude_code }} session.

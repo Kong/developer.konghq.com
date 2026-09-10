@@ -2,7 +2,11 @@
     "$id": "schema:plugin",
     "allOf": [{ "$ref": "schema:base" }],
     "properties": {
-        "min_version": { "$ref": "schema:base#/definitions/min_version" }
+        "min_version": { "$ref": "schema:base#/definitions/min_version" },
+        "schema_name": {
+            "type": "string",
+            "description": "The plugin's name as registered in its schema.lua/schema.json, if it differs from the page's slug (for example when a marketing slug is used for the docs page). Defaults to the slug when omitted."
+        }
     },
     "required": ["content_type", "title", "description", "products"]
   }

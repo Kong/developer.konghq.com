@@ -2,9 +2,6 @@
 Usage:
   kongctl adopt ai-gateway <ai-gateway-id|ai-gateway-display-name> [flags]
 
-Maturity:
-  beta
-
 Aliases:
   ai-gateway, ai-gateways, aigw
 

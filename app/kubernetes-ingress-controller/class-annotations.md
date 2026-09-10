@@ -40,7 +40,7 @@ If the `IngressClass` used by {{site.kic_product_name}} (specified in flag `--in
 
 ## GatewayClass
 
-{{ site.kic_product_name }} reconciles any resources attached to a [`GatewayClass`](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.GatewayClass) that has a `spec.controllerName` of `konghq.com/kic-gateway-controller`. 
+{{ site.kic_product_name }} reconciles any resources attached to a [`GatewayClass`](https://gateway-api.sigs.k8s.io/reference/api-types/gateway/#gateway.networking.k8s.io/v1.GatewayClass) that has a `spec.controllerName` of `konghq.com/kic-gateway-controller`. 
 
 Gateway API resources are attached to a `Gateway` object using the `spec.parentRefs` field, and the `Gateway` references a `GatewayClass` using the `spec.gatewayClassName` field.
 

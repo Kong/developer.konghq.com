@@ -395,7 +395,10 @@ runtime:
         # Redirect port for DNS
         port: 15053 # ENV: KUMA_RUNTIME_KUBERNETES_INJECTOR_BUILTIN_DNS_PORT
       # IgnoredServiceSelectorLabels defines a list ignored labels in Service selector.
-      # If Pod matches a Service with ignored labels, but does not match it fully, it gets Ignored inbound.
+      # A Pod that matches a Service on every other label gets that Service's inbounds in a ready
+      # state, so it is already an eligible endpoint when the selector moves onto it. Which Pods
+      # actually receive traffic is decided by the MeshService selector, which still matches the
+      # full set of labels.
       # It is useful when you change Service selector and expect traffic to be sent immediately.
       # An example of this is ArgoCD's BlueGreen deployment and "rollouts-pod-template-hash" selector.
       ignoredServiceSelectorLabels: [] # ENV: KUMA_RUNTIME_KUBERNETES_INJECTOR_IGNORED_SERVICE_SELECTOR_LABELS
@@ -544,7 +547,7 @@ general:
 dnsServer:
   # The domain that the server will resolve the services for
   domain: "mesh" # ENV: KUMA_DNS_SERVER_DOMAIN
-  # The port to use along with the `<kuma.io/service>.mesh` dns entry
+  # The port to use along with the `<kuma.io/display-name>.mesh` dns entry
   serviceVipPort: 80 # ENV: KUMA_DNS_SERVICE_SERVICE_VIP_PORT
 # Multizone mode
 multizone:
@@ -941,25 +944,19 @@ kmesh:
       konnect:
         cpId: "" # KMESH_MULTIZONE_ZONE_KONNECT_CP_ID
   access:
-    static:
-      generateCpToken:
-        # List of users that are allowed to generate control plane token
-        users: ["mesh-system:admin"] # ENV: KMESH_RBAC_STATIC_GENERATE_CP_TOKEN_USERS
-        # List of groups that are allowed to generate control plane token
-        groups: ["mesh-system:admin"] # ENV: KMESH_RBAC_STATIC_GENERATE_CP_TOKEN_GROUPS
     rbac:
       # LogActions defines actions that will be logged when RBAC is resolved. Allowed values: "allowed", "denied"
       logActions: ["allowed", "denied"] # ENV: KMESH_ACCESS_RBAC_LOG_ACTIONS
       # DefaultAdminRoleGroups defines a list of groups to be added to the default admin role
-      defaultAdminRoleGroups: ["mesh-system:authenticated", "mesh-system:unauthenticated"] # ENV: KMESH_ACCESS_RBAC_DEFAULT_ADMIN_ROLE_GROUPS
+      defaultAdminRoleGroups: ["mesh-system:authenticated"] # ENV: KMESH_ACCESS_RBAC_DEFAULT_ADMIN_ROLE_GROUPS
       # DefaultAdminRoleUsers defines a list of users to be added to the default list of admins.
       defaultAdminRoleUsers: [] # ENV: KMESH_ACCESS_RBAC_DEFAULT_ADMIN_ROLE_USERS
-      # SkipAdminRoleCreation set whether skip creating the default admin role
-      skipAdminRoleCreation: false # ENV: KMESH_ACCESS_RBAC_SKIP_ADMIN_ROLE_CREATION
+      # SkipDefaultAdminRoleCreation sets whether to skip creating the default admin role
+      skipDefaultAdminRoleCreation: false # ENV: KMESH_ACCESS_RBAC_SKIP_DEFAULT_ADMIN_ROLE_CREATION
     # Configuration for recording all the actions in the system.
     audit:
       # Types that are skipped by default when `types` list in AccessAudit resource is empty
-      skipDefaultTypes: ["DataplaneInsight", "ZoneInsight", "ServiceInsight", "MeshInsight"]
+      skipDefaultTypes: ["DataplaneInsight", "ZoneInsight", "MeshInsight"]
       # List of backends for auditing. If empty, no audit is recorded.
       backends: []
       #      - # type of logging backend. Available values: "file"

@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect Audit Log Settings
-  version: 3.0.5
+  version: 3.0.7
   description: The API for configuring Kong Konnect Audit Logs.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@34c678e4f1f12187bc350bc929fb68ea7d916904
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/34c678e4f1f12187bc350bc929fb68ea7d916904'
+  x-oas-source: kong/platform-api@414e9e2748be4ca7eb282b1308f42e365dcd7683
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/414e9e2748be4ca7eb282b1308f42e365dcd7683'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -218,6 +218,65 @@ paths:
           $ref: '#/components/responses/Forbidden'
       tags:
         - Audit Logs
+  /audit-logs:
+    get:
+      operationId: get-audit-logs
+      summary: Get Audit Logs
+      description: Returns a list of audit logs for an organization.
+      parameters:
+        - name: 'page[size]'
+          in: query
+          description: The maximum number of items to include per page. The last page of a collection may include fewer items.
+          required: false
+          schema:
+            type: integer
+            example: 20
+            default: 20
+            maximum: 1000
+          allowEmptyValue: true
+        - $ref: '#/components/parameters/PageBefore'
+        - $ref: '#/components/parameters/PageAfter'
+        - name: filter
+          in: query
+          description: Filter audit logs returned in the response.
+          required: false
+          schema:
+            type: object
+            properties:
+              ts:
+                type: object
+                properties:
+                  gte:
+                    description: |
+                      RFC3339 lower bound (inclusive) on the audit log timestamp field.
+                      Defaults to seven days before `filter[ts][lte]` when omitted.
+                    type: string
+                    format: date-time
+                  lte:
+                    description: |
+                      RFC3339 upper bound (inclusive) on the audit log timestamp field.
+                      Defaults to the current time when omitted.
+                    type: string
+                    format: date-time
+              type:
+                description: Filters audit logs by type. Omit this parameter to return all audit log types.
+                type: string
+                enum:
+                  - authorization
+                  - authentication
+                  - gateway_access
+          style: deepObject
+      responses:
+        '200':
+          $ref: '#/components/responses/GetAuditLogs'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Audit Logs
 components:
   parameters:
     AuditLogDestinationId:
@@ -256,6 +315,272 @@ components:
         type: integer
         example: 10
   schemas:
+    AuthorizationLog:
+      description: An authorization audit log entry that captures authorization decisions for actions performed on Konnect resources.
+      type: object
+      properties:
+        type:
+          description: The type of audit log entry.
+          type: string
+          enum:
+            - authorization
+        signature:
+          description: Base64 URL encoded signature of this entity.
+          type: string
+        service:
+          description: 'The name of the API service performing the operation (for example, servicehub).'
+          type: string
+        resource:
+          description: KRN of the resource.
+          type: string
+        action:
+          description: Action performed on the resource.
+          type: string
+        granted:
+          description: Indicates whether the action was granted.
+          type: boolean
+        org_id:
+          description: Organization ID.
+          type: string
+        ts:
+          description: Timestamp when the authorization event occurred.
+          type: string
+          format: date-time
+        principal_id:
+          description: Principal that performed the action.
+          type: string
+        actor_id:
+          description: 'If using an actor JWT, the ID of the person doing the acting.'
+          type: string
+        client_ip:
+          description: IP address of the client.
+          type: string
+        uri:
+          description: URI the request was made on.
+          type: string
+        user_agent:
+          description: User agent making the request.
+          type: string
+        trace_id:
+          description: Trace ID of the request.
+          type: string
+        portal_id:
+          description: Optional Dev Portal ID.
+          type: string
+      example:
+        type: authorization
+        signature: MEUCIQDfXoXr3s8qLh9w1n0ZtHjvXl7y3iYp2n5iQO4eVhL1gIgH0YcT2uKkJzjE9mNqz8G6pXlL5sZzjvN8YBqk7c0
+        service: servicehub
+        resource: 'krn:kong:gateway:us-west-2:a123456789012:12345678-90ab-cdef-1234-567890abcdef'
+        action: kong.gateway.request
+        granted: true
+        org_id: 6945c4c4-3e06-4c5c-87e0-726d0cda4e05
+        ts: '2023-03-21T09:29:14.52Z'
+        principal_id: user_1234567890abcdef
+        actor_id: user_abcdef1234567890
+        client_ip: 127.0.0.1
+        uri: /v2/api/endpoint
+        user_agent: Mozilla/5.0
+        trace_id: '12345678'
+        portal_id: 6945c4c4-3e06-4c5c-87e0-726d0cda4e05
+      required:
+        - type
+        - signature
+        - service
+        - resource
+        - action
+        - granted
+        - org_id
+        - ts
+        - principal_id
+      title: Authorization Audit Log
+    GatewayAccessLog:
+      description: A gateway access log entry that captures HTTP requests made to the Kong Gateway.
+      type: object
+      properties:
+        type:
+          description: The type of audit log entry.
+          type: string
+          enum:
+            - gateway_access
+        ts:
+          description: Timestamp when the request occurred.
+          type: string
+          format: date-time
+        org_id:
+          description: Organization ID.
+          type: string
+        principal_id:
+          description: Principal ID.
+          type: string
+        actor_id:
+          description: Actor ID.
+          type: string
+        client_ip:
+          description: IP address of the client.
+          type: string
+        trace_id:
+          description: Trace ID of the request.
+          type: string
+        user_agent:
+          description: User agent making the request.
+          type: string
+        method:
+          description: HTTP request method.
+          type: string
+        uri:
+          description: Request URI.
+          type: string
+        query:
+          description: Request query string.
+          type: string
+        status_code:
+          description: HTTP response status code.
+          type: integer
+          format: int32
+        signature:
+          description: Base64 URL encoded signature of this entity.
+          type: string
+        portal_id:
+          description: Optional Dev Portal ID.
+          type: string
+      example:
+        type: gateway_access
+        ts: '2023-03-21T09:30:22.15Z'
+        org_id: 6945c4c4-3e06-4c5c-87e0-726d0cda4e05
+        principal_id: user_1234567890abcdef
+        actor_id: user_abcdef1234567890
+        client_ip: 127.0.0.1
+        trace_id: '87654321'
+        user_agent: Mozilla/5.0
+        method: POST
+        uri: /v2/gateway/services
+        query: filter=active
+        status_code: 201
+        signature: MEYCIQCxY8zN2p4tQRs5kJhE6fL9wO3mVbN8cU7dP2qK1sT4vAIhALmN9pR6sX3wE5fT2yU8vK1cO4zP7qS9bR1aM5nF6gL
+        portal_id: 6945c4c4-3e06-4c5c-87e0-726d0cda4e05
+      required:
+        - type
+        - ts
+        - org_id
+        - principal_id
+        - actor_id
+        - client_ip
+        - trace_id
+        - user_agent
+        - method
+        - uri
+        - query
+        - status_code
+        - signature
+      title: Gateway Access Log
+    AuthenticationLog:
+      description: An authentication audit log entry that captures authentication attempts and their outcomes.
+      type: object
+      properties:
+        type:
+          description: The type of audit log entry.
+          type: string
+          enum:
+            - authentication
+        successful:
+          description: Indicates whether authentication was successful.
+          type: boolean
+        principal_id:
+          description: 'If successful, the principal ID.'
+          type: string
+        signature:
+          description: Base64 URL encoded signature of this entity.
+          type: string
+        org_id:
+          description: 'If it can be determined, the organization ID.'
+          type: string
+        outcome:
+          $ref: '#/components/schemas/AuthenticationOutcome'
+        authentication_type:
+          $ref: '#/components/schemas/AuthenticationType'
+        ts:
+          description: Timestamp when the authentication event occurred.
+          type: string
+          format: date-time
+        client_ip:
+          description: IP address of the client.
+          type: string
+        uri:
+          description: URI the request was made on.
+          type: string
+        user_agent:
+          description: User agent making the request.
+          type: string
+        trace_id:
+          description: Trace ID of the request.
+          type: string
+        portal_id:
+          description: Optional Dev Portal ID.
+          type: string
+      example:
+        type: authentication
+        successful: true
+        principal_id: user_1234567890abcdef
+        signature: MEQCIFpL3mN8sR2vT5wO1kJ7fE9xY4cU6bV3dP8qM2nK9sA1AiB5cR7eT3pW9sN1fK4mO2vL8xY6qU5bP3zR1aM4nF7gJ
+        org_id: 6945c4c4-3e06-4c5c-87e0-726d0cda4e05
+        outcome: success
+        authentication_type: sso
+        ts: '2023-03-21T09:28:45.78Z'
+        client_ip: 127.0.0.1
+        uri: /v2/auth/login
+        user_agent: Mozilla/5.0
+        trace_id: '11223344'
+      required:
+        - successful
+        - signature
+        - outcome
+        - authentication_type
+        - ts
+        - client_ip
+        - uri
+        - user_agent
+        - trace_id
+      title: Authentication Audit Log
+    AuthenticationOutcome:
+      description: The outcome of an authentication attempt.
+      type: string
+      enum:
+        - invalid
+        - success
+        - not_found
+        - invalid_password
+        - locked
+        - disabled
+        - token_expired
+      title: Authentication Outcome
+    AuthenticationType:
+      description: The type of authentication used.
+      type: string
+      enum:
+        - invalid
+        - basic
+        - sso
+        - pat
+        - spat
+        - google
+        - github
+        - windowslive
+        - federated
+      title: Authentication Type
+    AuditLog:
+      description: An individual audit log entry.
+      discriminator:
+        propertyName: type
+        mapping:
+          authorization: '#/components/schemas/AuthorizationLog'
+          gateway_access: '#/components/schemas/GatewayAccessLog'
+          authentication: '#/components/schemas/AuthenticationLog'
+      oneOf:
+        - $ref: '#/components/schemas/AuthorizationLog'
+        - $ref: '#/components/schemas/GatewayAccessLog'
+        - $ref: '#/components/schemas/AuthenticationLog'
+      title: Audit Log
     BaseError:
       description: standard error
       type: object
@@ -663,6 +988,14 @@ components:
       required:
         - data
         - meta
+    CursorMeta:
+      description: Pagination metadata.
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/CursorMetaPage'
+      required:
+        - page
   examples:
     Get-Audit-Logs-Webhook:
       value:
@@ -712,6 +1045,55 @@ components:
       value:
         audit_log_destination_id: 6945c4c4-3e06-4c5c-87e0-726d0cda4e05
         enabled: true
+    GetAuditLogs:
+      value:
+        data:
+          - type: authorization
+            signature: MEUCIQDfXoXr3s8qLh9w1n0ZtHjvXl7y3iYp2n5iQO4eVhL1gIgH0YcT2uKkJzjE9mNqz8G6pXlL5sZzjvN8YBqk7c0
+            service: servicehub
+            resource: 'krn:kong:gateway:us-west-2:a123456789012:12345678-90ab-cdef-1234-567890abcdef'
+            action: kong.gateway.request
+            granted: true
+            org_id: 6945c4c4-3e06-4c5c-87e0-726d0cda4e05
+            ts: '2023-03-21T09:29:14.52Z'
+            principal_id: user_1234567890abcdef
+            actor_id: user_abcdef1234567890
+            client_ip: 127.0.0.1
+            uri: /v2/api/endpoint
+            user_agent: Mozilla/5.0
+            trace_id: '12345678'
+            portal_id: 6945c4c4-3e06-4c5c-87e0-726d0cda4e05
+          - type: gateway_access
+            ts: '2023-03-21T09:30:22.15Z'
+            org_id: 6945c4c4-3e06-4c5c-87e0-726d0cda4e05
+            principal_id: user_1234567890abcdef
+            actor_id: user_abcdef1234567890
+            client_ip: 127.0.0.1
+            trace_id: '87654321'
+            user_agent: Mozilla/5.0
+            method: POST
+            uri: /v2/gateway/services
+            query: filter=active
+            status_code: 201
+            signature: MEYCIQCxY8zN2p4tQRs5kJhE6fL9wO3mVbN8cU7dP2qK1sT4vAIhALmN9pR6sX3wE5fT2yU8vK1cO4zP7qS9bR1aM5nF6gL
+            portal_id: 6945c4c4-3e06-4c5c-87e0-726d0cda4e05
+          - type: authentication
+            successful: true
+            principal_id: user_1234567890abcdef
+            signature: MEQCIFpL3mN8sR2vT5wO1kJ7fE9xY4cU6bV3dP8qM2nK9sA1AiB5cR7eT3pW9sN1fK4mO2vL8xY6qU5bP3zR1aM4nF7gJ
+            org_id: 6945c4c4-3e06-4c5c-87e0-726d0cda4e05
+            outcome: success
+            authentication_type: sso
+            ts: '2023-03-21T09:28:45.78Z'
+            client_ip: 127.0.0.1
+            uri: /v2/auth/login
+            user_agent: Mozilla/5.0
+            trace_id: '11223344'
+        meta:
+          page:
+            next: '/audit-logs?page[after]=ewogICJpZCI6ICJoZWysbyB3b3JsZCIKgZ'
+            previous: '/audit-logs?page[before]=efogICJpZCI6ICJoZWysbyB3b3JsZCIKgR'
+            size: 10
     UnauthorizedExample:
       value:
         status: 401
@@ -985,6 +1367,26 @@ components:
           examples:
             Get Audit Log Webhook Status:
               $ref: '#/components/examples/Get-Audit-Logs-Webhook-Status'
+    GetAuditLogs:
+      description: Get response for audit logs
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuditLog'
+              meta:
+                $ref: '#/components/schemas/CursorMeta'
+            additionalProperties: false
+            required:
+              - data
+              - meta
+          examples:
+            AuditLogs:
+              $ref: '#/components/examples/GetAuditLogs'
     Unauthorized:
       description: Unauthorized
       content:
@@ -1098,6 +1500,12 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/ConflictError'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/BadRequestError'
   securitySchemes:
     personalAccessToken:
       type: http

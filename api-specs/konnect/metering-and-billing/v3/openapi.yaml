@@ -1,13 +1,13 @@
 openapi: 3.0.0
 info:
   title: Konnect Metering & Billing
-  version: 1.1.0
+  version: 1.0.0
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
   description: Konnect Metering & Billing API.
-  x-oas-source: kong/platform-api@e9463953dc0786a69f4b0f8b663eb37ee622067f
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e9463953dc0786a69f4b0f8b663eb37ee622067f'
+  x-oas-source: kong/platform-api@3f4c68325794fa72ec8414e1ad9c6bba470ce6b5
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/3f4c68325794fa72ec8414e1ad9c6bba470ce6b5'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -655,118 +655,6 @@ paths:
           $ref: '#/components/responses/Gone'
       tags:
         - OpenMeter Customers
-  '/openmeter/customers/{customerId}/charges':
-    get:
-      operationId: list-customer-charges
-      summary: List customer charges
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        List customer charges.
-
-        Returns the customer's charges that are represented as either flat fee or
-        usage-based charges.
-      parameters:
-        - $ref: '#/components/parameters/PagePaginationQuery'
-        - name: customerId
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/ULID'
-        - name: sort
-          in: query
-          description: |-
-            Sort charges returned in the response.
-
-            Supported sort attributes are:
-
-            - `id`
-            - `created_at`
-            - `service_period.from`
-            - `billing_period.from`
-          required: false
-          schema:
-            $ref: '#/components/schemas/SortQuery'
-          explode: false
-          style: form
-        - name: filter
-          in: query
-          description: |-
-            Filter charges.
-
-            To filter charges by status add the following query param:
-            `filter[status][oeq]=created,active`
-          required: false
-          schema:
-            $ref: '#/components/schemas/ListChargesParamsFilter'
-          style: deepObject
-        - name: expand
-          in: query
-          description: |-
-            Expand full objects for referenced entities.
-
-            Supported values are:
-
-            - `real_time_usage`: Expand the charge's real-time usage.
-          required: false
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/BillingChargesExpand'
-          style: form
-      responses:
-        '200':
-          description: Page paginated response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ChargePagePaginatedResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-      tags:
-        - OpenMeter Customers
-    post:
-      operationId: create-customer-charges
-      summary: Create customer charge
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Create customer charge.
-      parameters:
-        - name: customerId
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/ULID'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateChargeRequest'
-      responses:
-        '201':
-          description: Charge created response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BillingCharge'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-      tags:
-        - OpenMeter Customers
   '/openmeter/customers/{customerId}/credits/adjustments':
     post:
       operationId: create-credit-adjustment
@@ -830,7 +718,8 @@ paths:
           description: |-
             Return the credit balance as of this timestamp.
 
-            Defaults to the current time.
+            Defaults to the current time. Historical responses return `live` as zero because
+            live charge impacts are only available for current balances.
           required: false
           schema:
             $ref: '#/components/schemas/DateTime'
@@ -1150,11 +1039,7 @@ paths:
     get:
       operationId: list-metering-events
       summary: List metering events
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        List ingested events.
+      description: List ingested events.
       parameters:
         - $ref: '#/components/parameters/CursorPaginationQuery'
         - name: filter
@@ -1237,11 +1122,7 @@ paths:
     get:
       operationId: list-features
       summary: List features
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        List all features.
+      description: List all features.
       parameters:
         - $ref: '#/components/parameters/PagePaginationQuery'
         - name: sort
@@ -1290,11 +1171,7 @@ paths:
     post:
       operationId: create-feature
       summary: Create feature
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Create a feature.
+      description: Create a feature.
       requestBody:
         required: true
         content:
@@ -1320,11 +1197,7 @@ paths:
     get:
       operationId: get-feature
       summary: Get feature
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Get a feature by id.
+      description: Get a feature by id.
       parameters:
         - name: featureId
           in: path
@@ -1353,11 +1226,7 @@ paths:
     patch:
       operationId: update-feature
       summary: Update feature
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Update a feature by id. Currently only the unit_cost field can be updated.
+      description: Update a feature by id. Currently only the unit_cost field can be updated.
       parameters:
         - name: featureId
           in: path
@@ -1390,11 +1259,7 @@ paths:
     delete:
       operationId: delete-feature
       summary: Delete feature
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Delete a feature by id.
+      description: Delete a feature by id.
       parameters:
         - name: featureId
           in: path
@@ -1731,11 +1596,7 @@ paths:
     put:
       operationId: update-meter
       summary: Update meter
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Update a meter.
+      description: Update a meter.
       parameters:
         - name: meterId
           in: path
@@ -1793,9 +1654,6 @@ paths:
       operationId: query-meter
       summary: Query meter
       description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
         Query a meter for usage.
 
         Set `Accept: application/json` (the default) to get a structured JSON response.
@@ -2032,38 +1890,6 @@ paths:
       tags:
         - OpenMeter Product Catalog
   '/openmeter/plans/{planId}/addons':
-    get:
-      operationId: list-plan-addons
-      summary: List add-ons for plan
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        List add-ons associated with a plan.
-      parameters:
-        - name: planId
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/ULID'
-        - $ref: '#/components/parameters/PagePaginationQuery'
-      responses:
-        '200':
-          description: Page paginated response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PlanAddonPagePaginatedResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-      tags:
-        - OpenMeter Product Catalog
     post:
       operationId: create-plan-addon
       summary: Add add-on to plan
@@ -2684,6 +2510,46 @@ paths:
           $ref: '#/components/responses/Conflict'
       tags:
         - OpenMeter Subscriptions
+  '/openmeter/subscriptions/{subscriptionId}/edit':
+    post:
+      operationId: edit-subscription
+      summary: Edit subscription
+      description: |-
+        Edits a running subscription by applying an ordered batch of customizations
+        (adding or removing items, adding, removing, or stretching phases, or
+        unscheduling a pending edit). The changes may take effect immediately or at the
+        next billing cycle. Subscriptions that have add-ons cannot be edited.
+      parameters:
+        - name: subscriptionId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillingSubscriptionEdit'
+      responses:
+        '200':
+          description: Subscription updated response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingSubscription'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - OpenMeter Subscriptions
   '/openmeter/subscriptions/{subscriptionId}/unschedule-cancelation':
     post:
       operationId: unschedule-cancelation
@@ -2968,12 +2834,11 @@ components:
             - multiple
           title: The InstanceType of the add-ons. Can be "single" or "multiple".
         currency:
-          description: Fiat or custom currency code.
-          type: string
-          example: USD
-          maxLength: 3
-          minLength: 3
-          pattern: '^[A-Z]{3}$'
+          description: The currency code of the add-on.
+          oneOf:
+            - $ref: '#/components/schemas/CurrencyCode'
+            - $ref: '#/components/schemas/BillingCurrencyCodeCustom'
+          title: Currency
         effective_from:
           description: |-
             The date and time when the add-on becomes effective. When not specified, the
@@ -3073,14 +2938,57 @@ components:
         - $ref: '#/components/schemas/BillingAppStripe'
         - $ref: '#/components/schemas/BillingAppSandbox'
         - $ref: '#/components/schemas/BillingAppExternalInvoicing'
+    BillingAppCapability:
+      description: App capability describes a function that an App can perform.
+      type: object
+      properties:
+        type:
+          description: Type of the capability.
+          type: string
+          enum:
+            - report_usage
+            - report_events
+            - calculate_tax
+            - invoice_customers
+            - collect_payments
+        key:
+          description: Key of the capability.
+          type: string
+          example: resource_key
+          maxLength: 64
+          minLength: 1
+          pattern: '^[a-z0-9]+(?:_[a-z0-9]+)*$'
+          title: Resource Key
+        name:
+          description: Name of the capability.
+          type: string
+        description:
+          description: Description of the capability.
+          type: string
+      example:
+        type: collect_payments
+        key: stripe_collect_payment
+        name: Collect Payments
+        description: Stripe payments collects outstanding revenue with Stripe customer's default payment method.
+      additionalProperties: false
+      required:
+        - type
+        - key
+        - name
+        - description
     BillingAppCustomerData:
       description: App customer data.
       type: object
       properties:
         stripe:
-          description: Used if the customer has a linked Stripe app.
+          description: |-
+            Used if the customer has a linked Stripe app.
+
+            Set to `null` to remove the Stripe data of the customer; omit to leave it
+            unchanged.
           type: object
           additionalProperties: false
+          nullable: true
           properties:
             customer_id:
               description: The Stripe customer ID used.
@@ -3106,9 +3014,14 @@ components:
               title: Labels
           title: Stripe
         external_invoicing:
-          description: Used if the customer has a linked external invoicing app.
+          description: |-
+            Used if the customer has a linked external invoicing app.
+
+            Set to `null` to remove the external invoicing data of the customer; omit to
+            leave it unchanged.
           type: object
           additionalProperties: false
+          nullable: true
           properties:
             labels:
               description: Labels for this external invoicing integration on the customer.
@@ -3195,7 +3108,6 @@ components:
           type: string
           enum:
             - external_invoicing
-          readOnly: true
         definition:
           description: The app catalog definition that this installed app is based on.
           type: object
@@ -3203,6 +3115,22 @@ components:
             type: stripe
             name: Stripe
             description: Stripe integration allows you to collect payments with Stripe.
+            capabilities:
+              - type: calculate_tax
+                key: stripe_calculate_tax
+                name: Calculate Tax
+                description: Stripe Tax calculates tax portion of the invoices.
+              - type: invoice_customers
+                key: stripe_invoice_customers
+                name: Invoice Customers
+                description: Stripe invoices customers with due amount.
+              - type: collect_payments
+                key: stripe_collect_payments
+                name: Collect Payments
+                description: Stripe payments collects outstanding revenue with Stripe customer's default payment method.
+            install_methods:
+              - with_oauth2
+              - with_api_key
           additionalProperties: false
           properties:
             type:
@@ -3221,11 +3149,25 @@ components:
               description: Description of the app.
               type: string
               readOnly: true
+            capabilities:
+              description: Capabilities of the app.
+              type: array
+              items:
+                $ref: '#/components/schemas/BillingAppCapability'
+              readOnly: true
+            install_methods:
+              description: Available install methods of the app.
+              type: array
+              items:
+                $ref: '#/components/schemas/BillingAppInstallMethods'
+              readOnly: true
           readOnly: true
           required:
             - type
             - name
             - description
+            - capabilities
+            - install_methods
         status:
           description: Status of the app connection.
           type: string
@@ -3268,6 +3210,13 @@ components:
         - status
         - enable_draft_sync_hook
         - enable_issuing_sync_hook
+    BillingAppInstallMethods:
+      description: Supported installation methods for an app.
+      type: string
+      enum:
+        - with_oauth2
+        - with_api_key
+        - no_credentials_required
     BillingAppSandbox:
       description: Sandbox app can be used for testing billing features.
       type: object
@@ -3322,7 +3271,6 @@ components:
           type: string
           enum:
             - sandbox
-          readOnly: true
         definition:
           description: The app catalog definition that this installed app is based on.
           type: object
@@ -3330,6 +3278,22 @@ components:
             type: stripe
             name: Stripe
             description: Stripe integration allows you to collect payments with Stripe.
+            capabilities:
+              - type: calculate_tax
+                key: stripe_calculate_tax
+                name: Calculate Tax
+                description: Stripe Tax calculates tax portion of the invoices.
+              - type: invoice_customers
+                key: stripe_invoice_customers
+                name: Invoice Customers
+                description: Stripe invoices customers with due amount.
+              - type: collect_payments
+                key: stripe_collect_payments
+                name: Collect Payments
+                description: Stripe payments collects outstanding revenue with Stripe customer's default payment method.
+            install_methods:
+              - with_oauth2
+              - with_api_key
           additionalProperties: false
           properties:
             type:
@@ -3348,11 +3312,25 @@ components:
               description: Description of the app.
               type: string
               readOnly: true
+            capabilities:
+              description: Capabilities of the app.
+              type: array
+              items:
+                $ref: '#/components/schemas/BillingAppCapability'
+              readOnly: true
+            install_methods:
+              description: Available install methods of the app.
+              type: array
+              items:
+                $ref: '#/components/schemas/BillingAppInstallMethods'
+              readOnly: true
           readOnly: true
           required:
             - type
             - name
             - description
+            - capabilities
+            - install_methods
         status:
           description: Status of the app connection.
           type: string
@@ -3423,7 +3401,6 @@ components:
           type: string
           enum:
             - stripe
-          readOnly: true
         definition:
           description: The app catalog definition that this installed app is based on.
           type: object
@@ -3431,6 +3408,22 @@ components:
             type: stripe
             name: Stripe
             description: Stripe integration allows you to collect payments with Stripe.
+            capabilities:
+              - type: calculate_tax
+                key: stripe_calculate_tax
+                name: Calculate Tax
+                description: Stripe Tax calculates tax portion of the invoices.
+              - type: invoice_customers
+                key: stripe_invoice_customers
+                name: Invoice Customers
+                description: Stripe invoices customers with due amount.
+              - type: collect_payments
+                key: stripe_collect_payments
+                name: Collect Payments
+                description: Stripe payments collects outstanding revenue with Stripe customer's default payment method.
+            install_methods:
+              - with_oauth2
+              - with_api_key
           additionalProperties: false
           properties:
             type:
@@ -3449,11 +3442,25 @@ components:
               description: Description of the app.
               type: string
               readOnly: true
+            capabilities:
+              description: Capabilities of the app.
+              type: array
+              items:
+                $ref: '#/components/schemas/BillingAppCapability'
+              readOnly: true
+            install_methods:
+              description: Available install methods of the app.
+              type: array
+              items:
+                $ref: '#/components/schemas/BillingAppInstallMethods'
+              readOnly: true
           readOnly: true
           required:
             - type
             - name
             - description
+            - capabilities
+            - install_methods
         status:
           description: Status of the app connection.
           type: string
@@ -3655,974 +3662,6 @@ components:
         - return_url
         - locale
         - url
-    BillingCharge:
-      description: Customer charge.
-      type: object
-      discriminator:
-        propertyName: type
-        mapping:
-          flat_fee: '#/components/schemas/BillingChargeFlatFee'
-          usage_based: '#/components/schemas/BillingChargeUsageBased'
-      oneOf:
-        - $ref: '#/components/schemas/BillingChargeFlatFee'
-        - $ref: '#/components/schemas/BillingChargeUsageBased'
-      title: Customer charge
-    BillingChargeFlatFee:
-      description: A flat fee charge for a customer.
-      type: object
-      properties:
-        id:
-          description: ULID (Universally Unique Lexicographically Sortable Identifier).
-          type: string
-          example: 01G65Z755AFWAKHE12NY0CQ9FH
-          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
-          readOnly: true
-          title: ULID
-        name:
-          description: |-
-            Display name of the resource.
-
-            Between 1 and 256 characters.
-          type: string
-          maxLength: 256
-          minLength: 1
-        description:
-          description: |-
-            Optional description of the resource.
-
-            Maximum 1024 characters.
-          type: string
-          maxLength: 1024
-        labels:
-          $ref: '#/components/schemas/Labels'
-        created_at:
-          description: An ISO-8601 timestamp representation of entity creation date.
-          type: string
-          format: date-time
-          example: '2023-01-01T01:01:01.001Z'
-          readOnly: true
-          title: RFC3339 Date-Time
-        updated_at:
-          description: An ISO-8601 timestamp representation of entity last update date.
-          type: string
-          format: date-time
-          example: '2023-01-01T01:01:01.001Z'
-          readOnly: true
-          title: RFC3339 Date-Time
-        deleted_at:
-          description: An ISO-8601 timestamp representation of entity deletion date.
-          type: string
-          format: date-time
-          example: '2023-01-01T01:01:01.001Z'
-          readOnly: true
-          title: RFC3339 Date-Time
-        type:
-          description: The type of the charge.
-          type: string
-          enum:
-            - flat_fee
-          title: Type
-        customer:
-          description: The customer owning the charge.
-          type: object
-          additionalProperties: false
-          properties:
-            id:
-              description: The ID of the customer.
-              type: string
-              example: 01G65Z755AFWAKHE12NY0CQ9FH
-              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
-              title: ULID
-          readOnly: true
-          required:
-            - id
-          title: Customer
-        lifecycle_controller:
-          description: |-
-            Indicates whether the charge lifecycle is controlled by OpenMeter or manually
-            overridden by the API user.
-          type: string
-          enum:
-            - system
-            - manual
-          readOnly: true
-          title: Lifecycle controller
-        subscription:
-          description: |-
-            The subscription that originated the charge, when the charge was created from a
-            subscription item.
-          type: object
-          additionalProperties: false
-          properties:
-            id:
-              description: The ID of the subscription.
-              type: string
-              example: 01G65Z755AFWAKHE12NY0CQ9FH
-              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
-              readOnly: true
-              title: Subscription ID
-            phase:
-              description: The phase of the subscription.
-              type: object
-              additionalProperties: false
-              properties:
-                id:
-                  description: The ID of the phase.
-                  type: string
-                  example: 01G65Z755AFWAKHE12NY0CQ9FH
-                  pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
-                  readOnly: true
-                  title: Phase ID
-                item:
-                  description: The item of the phase.
-                  type: object
-                  additionalProperties: false
-                  properties:
-                    id:
-                      description: The ID of the item.
-                      type: string
-                      example: 01G65Z755AFWAKHE12NY0CQ9FH
-                      pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
-                      readOnly: true
-                      title: Item ID
-                  readOnly: true
-                  required:
-                    - id
-                  title: Item ID
-              readOnly: true
-              required:
-                - id
-                - item
-              title: Phase ID
-          readOnly: true
-          required:
-            - id
-            - phase
-          title: Subscription
-        currency:
-          description: The currency of the charge.
-          type: string
-          example: USD
-          maxLength: 3
-          minLength: 3
-          pattern: '^[A-Z]{3}$'
-          title: Currency
-        status:
-          description: The lifecycle status of the charge.
-          type: string
-          enum:
-            - created
-            - active
-            - final
-            - deleted
-          readOnly: true
-          title: Status
-        invoice_at:
-          description: The timestamp when the charge is intended to be invoiced.
-          type: string
-          format: date-time
-          example: '2023-01-01T01:01:01.001Z'
-          title: Invoice at
-        service_period:
-          description: The effective service period covered by the charge.
-          type: object
-          additionalProperties: false
-          properties:
-            from:
-              description: |-
-                The start of the period.
-
-                The period is inclusive at the start.
-              type: string
-              format: date-time
-              example: '2023-01-01T01:01:01.001Z'
-              title: Start
-            to:
-              description: |-
-                The end of the period.
-
-                The period is exclusive at the end.
-              type: string
-              format: date-time
-              example: '2023-01-01T01:01:01.001Z'
-              title: End
-          required:
-            - from
-            - to
-          title: Service period
-        full_service_period:
-          description: 'The full, unprorated service period of the charge.'
-          type: object
-          additionalProperties: false
-          properties:
-            from:
-              description: |-
-                The start of the period.
-
-                The period is inclusive at the start.
-              type: string
-              format: date-time
-              example: '2023-01-01T01:01:01.001Z'
-              title: Start
-            to:
-              description: |-
-                The end of the period.
-
-                The period is exclusive at the end.
-              type: string
-              format: date-time
-              example: '2023-01-01T01:01:01.001Z'
-              title: End
-          readOnly: true
-          required:
-            - from
-            - to
-          title: Full service period
-        billing_period:
-          description: The billing period the charge belongs to.
-          type: object
-          additionalProperties: false
-          properties:
-            from:
-              description: |-
-                The start of the period.
-
-                The period is inclusive at the start.
-              type: string
-              format: date-time
-              example: '2023-01-01T01:01:01.001Z'
-              title: Start
-            to:
-              description: |-
-                The end of the period.
-
-                The period is exclusive at the end.
-              type: string
-              format: date-time
-              example: '2023-01-01T01:01:01.001Z'
-              title: End
-          readOnly: true
-          required:
-            - from
-            - to
-          title: Billing period
-        advance_after:
-          description: |-
-            The earliest time when the charge should be advanced again by background
-            processing.
-          type: string
-          format: date-time
-          example: '2023-01-01T01:01:01.001Z'
-          readOnly: true
-          title: Advance after
-        unique_reference_id:
-          description: Unique reference ID of the charge.
-          type: string
-          title: Unique reference ID
-        settlement_mode:
-          description: Settlement mode of the charge.
-          type: string
-          enum:
-            - credit_then_invoice
-            - credit_only
-          title: Settlement mode
-        tax_config:
-          description: Tax configuration of the charge.
-          type: object
-          additionalProperties: false
-          properties:
-            behavior:
-              description: |-
-                Tax behavior.
-
-                If not specified the billing profile is used to determine the tax behavior. If
-                not specified in the billing profile, the provider's default behavior is used.
-              type: string
-              enum:
-                - inclusive
-                - exclusive
-              title: Tax behavior
-            stripe:
-              description: Stripe tax config.
-              type: object
-              additionalProperties: false
-              deprecated: true
-              properties:
-                code:
-                  description: 'Product [tax code](https://docs.stripe.com/tax/tax-codes).'
-                  type: string
-                  example: txcd_10000000
-                  pattern: '^txcd_\d{8}$'
-                  title: Tax code
-              required:
-                - code
-              title: Stripe tax config
-            external_invoicing:
-              description: External invoicing tax config.
-              type: object
-              additionalProperties: false
-              deprecated: true
-              properties:
-                code:
-                  description: The tax code should be interpreted by the external invoicing provider.
-                  type: string
-                  maxLength: 64
-                  title: Tax code
-              required:
-                - code
-              title: External invoicing tax config
-            tax_code_id:
-              description: Tax code ID.
-              type: string
-              example: 01G65Z755AFWAKHE12NY0CQ9FH
-              deprecated: true
-              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
-              title: Tax code ID
-            tax_code:
-              description: |-
-                Tax code reference.
-
-                When both `tax_code` and `tax_code_id` are provided, `tax_code` takes
-                precedence. When `stripe.code` is also provided, `tax_code` still wins and
-                `stripe.code` is ignored.
-              type: object
-              additionalProperties: false
-              properties:
-                id:
-                  $ref: '#/components/schemas/ULID'
-              required:
-                - id
-              title: Tax code
-          title: Tax configuration
-        payment_term:
-          description: Payment term of the flat fee charge.
-          type: string
-          enum:
-            - in_advance
-            - in_arrears
-          title: Payment term
-        discounts:
-          description: The discounts applied to the charge.
-          type: object
-          additionalProperties: false
-          properties:
-            percentage:
-              description: Percentage discount applied to the price (0–100).
-              type: number
-              maximum: 100
-              minimum: 0
-          title: Discounts
-        feature_key:
-          description: 'The feature associated with the charge, when applicable.'
-          type: string
-          title: Feature key
-        proration_configuration:
-          description: The proration configuration of the charge.
-          type: object
-          additionalProperties: false
-          properties:
-            mode:
-              description: The proration mode of the rate card.
-              type: string
-              enum:
-                - no_proration
-                - prorate_prices
-              title: Proration mode
-          required:
-            - mode
-          title: Proration configuration
-        amount_after_proration:
-          description: The amount after proration of the charge.
-          type: object
-          additionalProperties: false
-          properties:
-            amount:
-              $ref: '#/components/schemas/Numeric'
-            currency:
-              $ref: '#/components/schemas/CurrencyCode'
-          readOnly: true
-          required:
-            - amount
-            - currency
-          title: Amount after proration
-        price:
-          description: The price of the charge.
-          type: object
-          discriminator:
-            propertyName: type
-            mapping:
-              free: '#/components/schemas/BillingPriceFree'
-              flat: '#/components/schemas/BillingPriceFlat'
-              unit: '#/components/schemas/BillingPriceUnit'
-              graduated: '#/components/schemas/BillingPriceGraduated'
-              volume: '#/components/schemas/BillingPriceVolume'
-          oneOf:
-            - $ref: '#/components/schemas/BillingPriceFree'
-            - $ref: '#/components/schemas/BillingPriceFlat'
-            - $ref: '#/components/schemas/BillingPriceUnit'
-            - $ref: '#/components/schemas/BillingPriceGraduated'
-            - $ref: '#/components/schemas/BillingPriceVolume'
-          readOnly: true
-          title: Price
-      additionalProperties: false
-      required:
-        - id
-        - name
-        - created_at
-        - updated_at
-        - type
-        - customer
-        - lifecycle_controller
-        - currency
-        - status
-        - invoice_at
-        - service_period
-        - full_service_period
-        - billing_period
-        - settlement_mode
-        - payment_term
-        - proration_configuration
-        - amount_after_proration
-        - price
-      title: Flat fee charge
-    BillingChargeUsageBased:
-      description: A usage-based charge for a customer.
-      type: object
-      properties:
-        id:
-          description: ULID (Universally Unique Lexicographically Sortable Identifier).
-          type: string
-          example: 01G65Z755AFWAKHE12NY0CQ9FH
-          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
-          readOnly: true
-          title: ULID
-        name:
-          description: |-
-            Display name of the resource.
-
-            Between 1 and 256 characters.
-          type: string
-          maxLength: 256
-          minLength: 1
-        description:
-          description: |-
-            Optional description of the resource.
-
-            Maximum 1024 characters.
-          type: string
-          maxLength: 1024
-        labels:
-          $ref: '#/components/schemas/Labels'
-        created_at:
-          description: An ISO-8601 timestamp representation of entity creation date.
-          type: string
-          format: date-time
-          example: '2023-01-01T01:01:01.001Z'
-          readOnly: true
-          title: RFC3339 Date-Time
-        updated_at:
-          description: An ISO-8601 timestamp representation of entity last update date.
-          type: string
-          format: date-time
-          example: '2023-01-01T01:01:01.001Z'
-          readOnly: true
-          title: RFC3339 Date-Time
-        deleted_at:
-          description: An ISO-8601 timestamp representation of entity deletion date.
-          type: string
-          format: date-time
-          example: '2023-01-01T01:01:01.001Z'
-          readOnly: true
-          title: RFC3339 Date-Time
-        type:
-          description: The type of the charge.
-          type: string
-          enum:
-            - usage_based
-          title: Type
-        customer:
-          description: The customer owning the charge.
-          type: object
-          additionalProperties: false
-          properties:
-            id:
-              description: The ID of the customer.
-              type: string
-              example: 01G65Z755AFWAKHE12NY0CQ9FH
-              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
-              title: ULID
-          readOnly: true
-          required:
-            - id
-          title: Customer
-        lifecycle_controller:
-          description: |-
-            Indicates whether the charge lifecycle is controlled by OpenMeter or manually
-            overridden by the API user.
-          type: string
-          enum:
-            - system
-            - manual
-          readOnly: true
-          title: Lifecycle controller
-        subscription:
-          description: |-
-            The subscription that originated the charge, when the charge was created from a
-            subscription item.
-          type: object
-          additionalProperties: false
-          properties:
-            id:
-              description: The ID of the subscription.
-              type: string
-              example: 01G65Z755AFWAKHE12NY0CQ9FH
-              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
-              readOnly: true
-              title: Subscription ID
-            phase:
-              description: The phase of the subscription.
-              type: object
-              additionalProperties: false
-              properties:
-                id:
-                  description: The ID of the phase.
-                  type: string
-                  example: 01G65Z755AFWAKHE12NY0CQ9FH
-                  pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
-                  readOnly: true
-                  title: Phase ID
-                item:
-                  description: The item of the phase.
-                  type: object
-                  additionalProperties: false
-                  properties:
-                    id:
-                      description: The ID of the item.
-                      type: string
-                      example: 01G65Z755AFWAKHE12NY0CQ9FH
-                      pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
-                      readOnly: true
-                      title: Item ID
-                  readOnly: true
-                  required:
-                    - id
-                  title: Item ID
-              readOnly: true
-              required:
-                - id
-                - item
-              title: Phase ID
-          readOnly: true
-          required:
-            - id
-            - phase
-          title: Subscription
-        currency:
-          description: The currency of the charge.
-          type: string
-          example: USD
-          maxLength: 3
-          minLength: 3
-          pattern: '^[A-Z]{3}$'
-          title: Currency
-        status:
-          description: The lifecycle status of the charge.
-          type: string
-          enum:
-            - created
-            - active
-            - final
-            - deleted
-          readOnly: true
-          title: Status
-        invoice_at:
-          description: The timestamp when the charge is intended to be invoiced.
-          type: string
-          format: date-time
-          example: '2023-01-01T01:01:01.001Z'
-          title: Invoice at
-        service_period:
-          description: The effective service period covered by the charge.
-          type: object
-          additionalProperties: false
-          properties:
-            from:
-              description: |-
-                The start of the period.
-
-                The period is inclusive at the start.
-              type: string
-              format: date-time
-              example: '2023-01-01T01:01:01.001Z'
-              title: Start
-            to:
-              description: |-
-                The end of the period.
-
-                The period is exclusive at the end.
-              type: string
-              format: date-time
-              example: '2023-01-01T01:01:01.001Z'
-              title: End
-          required:
-            - from
-            - to
-          title: Service period
-        full_service_period:
-          description: 'The full, unprorated service period of the charge.'
-          type: object
-          additionalProperties: false
-          properties:
-            from:
-              description: |-
-                The start of the period.
-
-                The period is inclusive at the start.
-              type: string
-              format: date-time
-              example: '2023-01-01T01:01:01.001Z'
-              title: Start
-            to:
-              description: |-
-                The end of the period.
-
-                The period is exclusive at the end.
-              type: string
-              format: date-time
-              example: '2023-01-01T01:01:01.001Z'
-              title: End
-          readOnly: true
-          required:
-            - from
-            - to
-          title: Full service period
-        billing_period:
-          description: The billing period the charge belongs to.
-          type: object
-          additionalProperties: false
-          properties:
-            from:
-              description: |-
-                The start of the period.
-
-                The period is inclusive at the start.
-              type: string
-              format: date-time
-              example: '2023-01-01T01:01:01.001Z'
-              title: Start
-            to:
-              description: |-
-                The end of the period.
-
-                The period is exclusive at the end.
-              type: string
-              format: date-time
-              example: '2023-01-01T01:01:01.001Z'
-              title: End
-          readOnly: true
-          required:
-            - from
-            - to
-          title: Billing period
-        advance_after:
-          description: |-
-            The earliest time when the charge should be advanced again by background
-            processing.
-          type: string
-          format: date-time
-          example: '2023-01-01T01:01:01.001Z'
-          readOnly: true
-          title: Advance after
-        unique_reference_id:
-          description: Unique reference ID of the charge.
-          type: string
-          title: Unique reference ID
-        settlement_mode:
-          description: Settlement mode of the charge.
-          type: string
-          enum:
-            - credit_then_invoice
-            - credit_only
-          title: Settlement mode
-        tax_config:
-          description: Tax configuration of the charge.
-          type: object
-          additionalProperties: false
-          properties:
-            behavior:
-              description: |-
-                Tax behavior.
-
-                If not specified the billing profile is used to determine the tax behavior. If
-                not specified in the billing profile, the provider's default behavior is used.
-              type: string
-              enum:
-                - inclusive
-                - exclusive
-              title: Tax behavior
-            stripe:
-              description: Stripe tax config.
-              type: object
-              additionalProperties: false
-              deprecated: true
-              properties:
-                code:
-                  description: 'Product [tax code](https://docs.stripe.com/tax/tax-codes).'
-                  type: string
-                  example: txcd_10000000
-                  pattern: '^txcd_\d{8}$'
-                  title: Tax code
-              required:
-                - code
-              title: Stripe tax config
-            external_invoicing:
-              description: External invoicing tax config.
-              type: object
-              additionalProperties: false
-              deprecated: true
-              properties:
-                code:
-                  description: The tax code should be interpreted by the external invoicing provider.
-                  type: string
-                  maxLength: 64
-                  title: Tax code
-              required:
-                - code
-              title: External invoicing tax config
-            tax_code_id:
-              description: Tax code ID.
-              type: string
-              example: 01G65Z755AFWAKHE12NY0CQ9FH
-              deprecated: true
-              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
-              title: Tax code ID
-            tax_code:
-              description: |-
-                Tax code reference.
-
-                When both `tax_code` and `tax_code_id` are provided, `tax_code` takes
-                precedence. When `stripe.code` is also provided, `tax_code` still wins and
-                `stripe.code` is ignored.
-              type: object
-              additionalProperties: false
-              properties:
-                id:
-                  $ref: '#/components/schemas/ULID'
-              required:
-                - id
-              title: Tax code
-          title: Tax configuration
-        discounts:
-          description: Discounts applied to the usage-based charge.
-          type: object
-          additionalProperties: false
-          properties:
-            percentage:
-              description: Percentage discount applied to the price (0–100).
-              type: number
-              maximum: 100
-              minimum: 0
-            usage:
-              description: |-
-                Number of usage units granted free before billing starts. Only applies to
-                usage-based lines (not flat fees). Usage is treated as zero until this amount is
-                exhausted.
-              type: string
-              pattern: '^\-?[0-9]+(\.[0-9]+)?$'
-          title: Discounts
-        feature_key:
-          description: The feature associated with the charge.
-          type: string
-          title: Feature key
-        totals:
-          description: Aggregated booked and realtime totals for the charge.
-          type: object
-          additionalProperties: false
-          properties:
-            booked:
-              description: The amount of the charge already booked to the internal accounting system.
-              type: object
-              additionalProperties: false
-              properties:
-                amount:
-                  description: 'The total value of the resource before taxes, discounts and commitments.'
-                  type: string
-                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
-                  readOnly: true
-                  title: Amount
-                taxes_total:
-                  description: The total tax amount applied to the resource.
-                  type: string
-                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
-                  readOnly: true
-                  title: Taxes total
-                taxes_inclusive_total:
-                  description: The total tax amount already included in the resource amount.
-                  type: string
-                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
-                  readOnly: true
-                  title: Inclusive taxes total
-                taxes_exclusive_total:
-                  description: The total tax amount added on top of the resource amount.
-                  type: string
-                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
-                  readOnly: true
-                  title: Exclusive taxes total
-                charges_total:
-                  description: The total amount contributed by additional charges.
-                  type: string
-                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
-                  readOnly: true
-                  title: Charges total
-                discounts_total:
-                  description: The total amount deducted through discounts.
-                  type: string
-                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
-                  readOnly: true
-                  title: Discounts total
-                credits_total:
-                  description: The total amount deducted through credits before taxes are applied.
-                  type: string
-                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
-                  readOnly: true
-                  title: Credits total
-                total:
-                  description: 'The final total value of the resource after taxes, discounts and commitments.'
-                  type: string
-                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
-                  readOnly: true
-                  title: Total
-              readOnly: true
-              required:
-                - amount
-                - taxes_total
-                - taxes_inclusive_total
-                - taxes_exclusive_total
-                - charges_total
-                - discounts_total
-                - credits_total
-                - total
-              title: Booked
-            realtime:
-              description: |-
-                The realtime amount of the charge.
-
-                Requires the `realtime_usage` expand.
-              type: object
-              additionalProperties: false
-              properties:
-                amount:
-                  description: 'The total value of the resource before taxes, discounts and commitments.'
-                  type: string
-                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
-                  readOnly: true
-                  title: Amount
-                taxes_total:
-                  description: The total tax amount applied to the resource.
-                  type: string
-                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
-                  readOnly: true
-                  title: Taxes total
-                taxes_inclusive_total:
-                  description: The total tax amount already included in the resource amount.
-                  type: string
-                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
-                  readOnly: true
-                  title: Inclusive taxes total
-                taxes_exclusive_total:
-                  description: The total tax amount added on top of the resource amount.
-                  type: string
-                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
-                  readOnly: true
-                  title: Exclusive taxes total
-                charges_total:
-                  description: The total amount contributed by additional charges.
-                  type: string
-                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
-                  readOnly: true
-                  title: Charges total
-                discounts_total:
-                  description: The total amount deducted through discounts.
-                  type: string
-                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
-                  readOnly: true
-                  title: Discounts total
-                credits_total:
-                  description: The total amount deducted through credits before taxes are applied.
-                  type: string
-                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
-                  readOnly: true
-                  title: Credits total
-                total:
-                  description: 'The final total value of the resource after taxes, discounts and commitments.'
-                  type: string
-                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
-                  readOnly: true
-                  title: Total
-              readOnly: true
-              required:
-                - amount
-                - taxes_total
-                - taxes_inclusive_total
-                - taxes_exclusive_total
-                - charges_total
-                - discounts_total
-                - credits_total
-                - total
-              title: Realtime totals
-          readOnly: true
-          required:
-            - booked
-          title: Totals for the charge
-        price:
-          description: The price of the charge.
-          type: object
-          discriminator:
-            propertyName: type
-            mapping:
-              free: '#/components/schemas/BillingPriceFree'
-              flat: '#/components/schemas/BillingPriceFlat'
-              unit: '#/components/schemas/BillingPriceUnit'
-              graduated: '#/components/schemas/BillingPriceGraduated'
-              volume: '#/components/schemas/BillingPriceVolume'
-          oneOf:
-            - $ref: '#/components/schemas/BillingPriceFree'
-            - $ref: '#/components/schemas/BillingPriceFlat'
-            - $ref: '#/components/schemas/BillingPriceUnit'
-            - $ref: '#/components/schemas/BillingPriceGraduated'
-            - $ref: '#/components/schemas/BillingPriceVolume'
-          title: Price
-      additionalProperties: false
-      required:
-        - id
-        - name
-        - created_at
-        - updated_at
-        - type
-        - customer
-        - lifecycle_controller
-        - currency
-        - status
-        - invoice_at
-        - service_period
-        - full_service_period
-        - billing_period
-        - settlement_mode
-        - feature_key
-        - totals
-        - price
-      title: Usage-based charge
-    BillingChargesExpand:
-      description: |-
-        Expands for customer charges.
-
-        Values:
-
-        - `real_time_usage`: The charge's real-time usage.
-      type: string
-      enum:
-        - real_time_usage
-      title: Customer charge expands
     BillingCreditAdjustment:
       description: |-
         A credit adjustment can be used to make manual adjustments to a customer's
@@ -4738,12 +3777,14 @@ components:
             - external
           title: Credit funding method
         currency:
-          description: Fiat or custom currency code.
-          type: string
-          example: USD
-          maxLength: 3
-          minLength: 3
-          pattern: '^[A-Z]{3}$'
+          description: |-
+            The fiat or custom currency of the granted credits.
+
+            Funded custom-currency grants must define `purchase.cost_basis` to settle in a
+            fiat currency.
+          oneOf:
+            - $ref: '#/components/schemas/CurrencyCode'
+            - $ref: '#/components/schemas/BillingCurrencyCodeCustom'
         amount:
           description: Granted credit amount.
           type: string
@@ -4754,7 +3795,11 @@ components:
           additionalProperties: false
           properties:
             currency:
-              description: Currency of the purchase amount.
+              description: |-
+                Fiat currency the purchase is settled in.
+
+                Must equal the grant `currency` for fiat grants and `cost_basis.fiat_currency`
+                for custom-currency grants.
               type: string
               example: USD
               maxLength: 3
@@ -4762,18 +3807,64 @@ components:
               pattern: '^[A-Z]{3}$'
             per_unit_cost_basis:
               description: |-
-                Cost basis per credit unit used to calculate the purchase amount.
+                Fiat cost basis per credit unit of a fiat-currency grant.
 
-                If `per_unit_cost_basis` is 0.50 and credit amount is $100.00, the total charge
-                is $50.00. The value must be greater than 0. If the cost basis is 0, use
-                `funding_method=none` instead.
+                If `per_unit_cost_basis` is 0.50 and credit amount is
+                $100.00, the total
+                charge is $50.00. The value must be greater than 0. If the
+                cost basis is 0, use `funding_method=none` instead.
 
-                Defaults to 1.0.
+                Only applies to fiat grants and cannot be combined with `cost_basis`. Defaults
+                to 1.0 when neither is provided.
               type: string
-              default: '1.0'
+              deprecated: true
               pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+            resolved_cost_basis:
+              description: |-
+                The rate the purchase is settled at in the purchase `currency`. Present once the
+                cost basis is resolved.
+              type: object
+              additionalProperties: false
+              properties:
+                fiat_currency:
+                  description: The fiat currency the charge amount is converted into for invoicing.
+                  type: string
+                  example: USD
+                  maxLength: 3
+                  minLength: 3
+                  pattern: '^[A-Z]{3}$'
+                  readOnly: true
+                rate:
+                  description: Fiat amount per one unit of the custom currency.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  readOnly: true
+                cost_basis_id:
+                  description: |-
+                    ID of the custom currency's cost basis resource the rate was taken from. Absent
+                    for manual cost bases.
+                  type: string
+                  example: 01G65Z755AFWAKHE12NY0CQ9FH
+                  pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+                  readOnly: true
+                  title: ULID
+                resolved_at:
+                  description: When the rate was resolved.
+                  type: string
+                  format: date-time
+                  example: '2023-01-01T01:01:01.001Z'
+                  readOnly: true
+                  title: RFC3339 Date-Time
+              readOnly: true
+              required:
+                - fiat_currency
+                - rate
+                - resolved_at
+              title: Resolved cost basis
             amount:
-              description: The purchase amount. Calculated from `per_unit_cost_basis` and credit `amount`.
+              description: |-
+                The purchase amount, calculated from the resolved cost basis and credit
+                `amount`. Present once the cost basis is resolved.
               type: string
               pattern: '^\-?[0-9]+(\.[0-9]+)?$'
               readOnly: true
@@ -4798,7 +3889,6 @@ components:
               title: Credit purchase payment settlement status
           required:
             - currency
-            - amount
         tax_config:
           description: |-
             Tax configuration for the grant.
@@ -4871,8 +3961,9 @@ components:
           description: |-
             Idempotency key for the credit grant creation request.
 
-            When provided, reusing the same key returns an HTTP 409 Conflict instead of
-            creating a duplicate grant, which makes create requests safe to retry.
+            Unique per customer: reusing the same key for the same customer returns an HTTP
+            409 Conflict instead of creating a duplicate grant, which makes create requests
+            safe to retry. The same key may be reused across different customers.
           type: string
           example: 019ae40f-4258-7f15-9491-842f42a7d6ac
           maxLength: 256
@@ -4984,14 +4075,14 @@ components:
             - funded
             - consumed
             - expired
+            - voided
           readOnly: true
         currency:
-          description: Fiat or custom currency code.
-          type: string
-          example: USD
-          maxLength: 3
-          minLength: 3
-          pattern: '^[A-Z]{3}$'
+          description: Currency of the balance affected by the transaction.
+          oneOf:
+            - $ref: '#/components/schemas/CurrencyCode'
+            - $ref: '#/components/schemas/BillingCurrencyCodeCustom'
+          readOnly: true
         amount:
           description: |-
             Signed amount of the credit movement. Positive values add balance, negative
@@ -5023,6 +4114,13 @@ components:
         - amount
         - available_balance
       title: Credit transaction
+    BillingCurrencyCodeCustom:
+      description: |-
+        Custom currency code. It should be a unique code but not conflicting with any
+        existing fiat currency codes.
+      type: string
+      maxLength: 24
+      minLength: 4
     BillingCustomer:
       description: |-
         Customers can be individuals or organizations that can subscribe to plans and
@@ -5179,9 +4277,14 @@ components:
           additionalProperties: false
           properties:
             stripe:
-              description: Used if the customer has a linked Stripe app.
+              description: |-
+                Used if the customer has a linked Stripe app.
+
+                Set to `null` to remove the Stripe data of the customer; omit to leave it
+                unchanged.
               type: object
               additionalProperties: false
+              nullable: true
               properties:
                 customer_id:
                   description: The Stripe customer ID used.
@@ -5207,9 +4310,14 @@ components:
                   title: Labels
               title: Stripe
             external_invoicing:
-              description: Used if the customer has a linked external invoicing app.
+              description: |-
+                Used if the customer has a linked external invoicing app.
+
+                Set to `null` to remove the external invoicing data of the customer; omit to
+                leave it unchanged.
               type: object
               additionalProperties: false
+              nullable: true
               properties:
                 labels:
                   description: Labels for this external invoicing integration on the customer.
@@ -5743,11 +4851,9 @@ components:
           title: Version
         currency:
           description: The currency code of the plan.
-          type: string
-          example: USD
-          maxLength: 3
-          minLength: 3
-          pattern: '^[A-Z]{3}$'
+          oneOf:
+            - $ref: '#/components/schemas/CurrencyCode'
+            - $ref: '#/components/schemas/BillingCurrencyCodeCustom'
           title: Currency
         billing_cadence:
           description: The billing cadence for subscriptions using this plan.
@@ -5926,8 +5032,8 @@ components:
         Each tier's rate applies only to the usage within that tier. Pricing can change
         as cumulative usage crosses tier boundaries.
 
-        When UnitConfig is present on the rate card, tier boundaries (up_to_amount) are
-        expressed in converted billing units.
+        When UnitConfig is present on the containing resource, tier boundaries
+        (up_to_amount) are expressed in converted billing units.
       type: object
       properties:
         type:
@@ -5952,8 +5058,8 @@ components:
         A price tier used in graduated and volume pricing.
 
         At least one price component (flat_price or unit_price) must be set. When
-        UnitConfig is present on the rate card, up_to_amount is expressed in converted
-        billing units.
+        UnitConfig is present on the containing resource, up_to_amount is expressed in
+        converted billing units.
       type: object
       properties:
         up_to_amount:
@@ -6008,8 +5114,8 @@ components:
       description: |-
         Unit price.
 
-        Charges a fixed rate per billing unit. When UnitConfig is present on the rate
-        card, billing units are the converted quantities (e.g. GB instead of bytes).
+        Charges a fixed rate per billing unit. When UnitConfig is present on the object,
+        billing units are the converted quantities (e.g. GB instead of bytes).
       type: object
       properties:
         type:
@@ -6034,8 +5140,8 @@ components:
         The maximum quantity within a period determines the per-unit price for all units
         in that period.
 
-        When UnitConfig is present on the rate card, tier boundaries (up_to_amount) are
-        expressed in converted billing units.
+        When UnitConfig is present on the containing resource, tier boundaries
+        (up_to_amount) are expressed in converted billing units.
       type: object
       properties:
         type:
@@ -6459,6 +5565,14 @@ components:
           required:
             - id
           title: Feature reference
+        currency:
+          description: |-
+            Overrides the containing plan or add-on currency for this rate card. When
+            omitted, the containing resource currency applies.
+          oneOf:
+            - $ref: '#/components/schemas/CurrencyCode'
+            - $ref: '#/components/schemas/BillingCurrencyCodeCustom'
+          title: Currency override
         billing_cadence:
           description: |-
             The billing cadence of the rate card. When null, the charge is one-time
@@ -6737,6 +5851,39 @@ components:
           example: '2023-01-01T01:01:01.001Z'
           readOnly: true
           title: RFC3339 Date-Time
+        name:
+          description: |-
+            Display name of the subscription. Defaults to the plan name when the
+            subscription is created from a plan.
+          type: string
+          maxLength: 256
+          minLength: 1
+          readOnly: true
+          title: Name
+        description:
+          description: Optional description of the subscription.
+          type: string
+          maxLength: 1024
+          readOnly: true
+          title: Description
+        active_from:
+          description: |-
+            An ISO-8601 timestamp representation of when the subscription became (or will
+            become) active.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: Active from
+        active_to:
+          description: |-
+            An ISO-8601 timestamp representation of when the subscription stops being
+            active. Open-ended when not set.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: Active to
         customer_id:
           description: The customer ID of the subscription.
           type: string
@@ -6748,9 +5895,106 @@ components:
           description: The plan ID of the subscription. Set if subscription is created from a plan.
           type: string
           example: 01G65Z755AFWAKHE12NY0CQ9FH
+          deprecated: true
           pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
           readOnly: true
           title: Plan ID
+        plan:
+          description: |-
+            The plan the subscription was created from, if any. Includes the plan key and
+            version so clients can resolve the exact plan revision.
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              description: The plan ID (exact revision).
+              type: string
+              example: 01G65Z755AFWAKHE12NY0CQ9FH
+              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+              readOnly: true
+              title: Plan ID
+            key:
+              description: The plan key. References the plan across versions.
+              type: string
+              example: resource_key
+              maxLength: 64
+              minLength: 1
+              pattern: '^[a-z0-9]+(?:_[a-z0-9]+)*$'
+              readOnly: true
+              title: Plan key
+            version:
+              description: The plan version.
+              type: integer
+              minimum: 1
+              readOnly: true
+              title: Plan version
+          readOnly: true
+          required:
+            - id
+            - key
+            - version
+          title: Plan
+        invoice_currency:
+          description: The fiat currency in which the subscription is invoiced.
+          type: string
+          example: USD
+          maxLength: 3
+          minLength: 3
+          pattern: '^[A-Z]{3}$'
+          readOnly: true
+          title: Invoice currency
+        cost_basis_mode:
+          description: |-
+            Controls whether custom-currency cost bases are resolved dynamically or pinned
+            when their currency pair is introduced to the subscription.
+          type: string
+          default: dynamic
+          enum:
+            - dynamic
+            - pinned
+          readOnly: true
+          title: Cost basis mode
+        cost_basis_pins:
+          description: Cost bases pinned to custom-currency pairs for this subscription.
+          type: array
+          items:
+            $ref: '#/components/schemas/BillingSubscriptionCostBasisPin'
+          readOnly: true
+          title: Pinned cost bases
+        billing_cadence:
+          description: |-
+            The billing cadence of the subscription in ISO-8601 duration format. Defines how
+            often the customer is billed. Examples: `P1M` (monthly), `P3M` (quarterly),
+            `P1Y` (annually).
+          type: string
+          format: ISO8601
+          example: P1Y
+          pattern: '^P(?:\d+(?:\.\d+)?Y)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?W)?(?:\d+(?:\.\d+)?D)?(?:T(?:\d+(?:\.\d+)?H)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?S)?)?$'
+          readOnly: true
+          title: Billing cadence
+        pro_rating_config:
+          description: The pro-rating configuration of the subscription.
+          type: object
+          additionalProperties: false
+          properties:
+            enabled:
+              description: Whether pro-rating is enabled.
+              type: boolean
+              readOnly: true
+              title: Enabled
+            mode:
+              description: How pro-rating is calculated when enabled.
+              type: string
+              enum:
+                - no_proration
+                - prorate_prices
+              readOnly: true
+              title: Mode
+          readOnly: true
+          required:
+            - enabled
+            - mode
+          title: Pro-rating configuration
         billing_anchor:
           description: |-
             A billing anchor is the fixed point in time that determines the subscription's
@@ -6789,14 +6033,60 @@ components:
             - credit_then_invoice
             - credit_only
           title: Settlement Mode
+        current_period:
+          description: |-
+            The current aligned billing period. Present only when the subscription is active
+            and aligned.
+          type: object
+          additionalProperties: false
+          properties:
+            from:
+              description: |-
+                The start of the period.
+
+                The period is inclusive at the start.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: Start
+            to:
+              description: |-
+                The end of the period.
+
+                The period is exclusive at the end.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: End
+          readOnly: true
+          required:
+            - from
+            - to
+          title: Current billing period
+        phases:
+          description: |-
+            The phases of the subscription in chronological order. A phase groups the rate
+            cards that are in effect for a segment of the subscription's lifetime.
+          type: array
+          items:
+            $ref: '#/components/schemas/BillingSubscriptionPhase'
+          readOnly: true
+          title: Phases
       additionalProperties: false
       required:
         - id
         - created_at
         - updated_at
+        - name
+        - active_from
         - customer_id
+        - invoice_currency
+        - cost_basis_mode
+        - cost_basis_pins
+        - billing_cadence
         - billing_anchor
         - status
+        - phases
     BillingSubscriptionCancel:
       description: Request for canceling a subscription.
       type: object
@@ -6856,7 +6146,12 @@ components:
               minLength: 1
               title: Customer Key
         plan:
-          description: The plan reference of the subscription.
+          description: |-
+            A reference to a published plan the subscription is created from.
+
+            Exactly one of `plan` or `custom_plan` must be provided. Use `plan` to base the
+            subscription on an existing published plan; use `custom_plan` to define the plan
+            inline.
           type: object
           additionalProperties: false
           properties:
@@ -6889,6 +6184,66 @@ components:
                 version of the plan will be used.
               type: integer
               title: Plan Version
+        custom_plan:
+          description: |-
+            An inline plan definition to create the subscription from, without referencing a
+            published plan.
+
+            Exactly one of `plan` or `custom_plan` must be provided. The subscription is not
+            linked to a persisted plan, so the response omits the `plan` reference.
+          type: object
+          additionalProperties: false
+          properties:
+            name:
+              description: |-
+                Display name of the resource.
+
+                Between 1 and 256 characters.
+              type: string
+              maxLength: 256
+              minLength: 1
+            description:
+              description: |-
+                Optional description of the resource.
+
+                Maximum 1024 characters.
+              type: string
+              maxLength: 1024
+            labels:
+              $ref: '#/components/schemas/Labels'
+            currency:
+              description: The currency code of the plan.
+              oneOf:
+                - $ref: '#/components/schemas/CurrencyCode'
+                - $ref: '#/components/schemas/BillingCurrencyCodeCustom'
+              title: Currency
+            billing_cadence:
+              description: The billing cadence for subscriptions using this plan.
+              type: string
+              format: ISO8601
+              example: P1Y
+              pattern: '^P(?:\d+(?:\.\d+)?Y)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?W)?(?:\d+(?:\.\d+)?D)?(?:T(?:\d+(?:\.\d+)?H)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?S)?)?$'
+              title: Billing cadence
+            pro_rating_enabled:
+              description: Whether pro-rating is enabled for this plan.
+              type: boolean
+              default: true
+              title: Pro-rating enabled
+            phases:
+              description: |-
+                The plan phases define the pricing ramp for a subscription. A phase switch
+                occurs only at the end of a billing period. At least one phase is required.
+              type: array
+              items:
+                $ref: '#/components/schemas/BillingPlanPhase'
+              minItems: 1
+              title: Plan phases
+          required:
+            - name
+            - currency
+            - billing_cadence
+            - phases
+          title: Custom plan
         billing_anchor:
           description: |-
             A billing anchor is the fixed point in time that determines the subscription's
@@ -6905,6 +6260,14 @@ components:
           format: date-time
           example: '2023-01-01T01:01:01.001Z'
           title: Billing anchor
+        cost_basis_mode:
+          description: Controls how custom-currency cost bases are selected for the subscription.
+          type: string
+          default: dynamic
+          enum:
+            - dynamic
+            - pinned
+          title: Cost basis mode
         timing:
           description: |-
             Timing configuration for the change, when the change should take effect. For
@@ -6917,7 +6280,6 @@ components:
       additionalProperties: false
       required:
         - customer
-        - plan
         - timing
     BillingSubscriptionChangeResponse:
       description: Response for changing a subscription.
@@ -6958,6 +6320,39 @@ components:
               example: '2023-01-01T01:01:01.001Z'
               readOnly: true
               title: RFC3339 Date-Time
+            name:
+              description: |-
+                Display name of the subscription. Defaults to the plan name when the
+                subscription is created from a plan.
+              type: string
+              maxLength: 256
+              minLength: 1
+              readOnly: true
+              title: Name
+            description:
+              description: Optional description of the subscription.
+              type: string
+              maxLength: 1024
+              readOnly: true
+              title: Description
+            active_from:
+              description: |-
+                An ISO-8601 timestamp representation of when the subscription became (or will
+                become) active.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              readOnly: true
+              title: Active from
+            active_to:
+              description: |-
+                An ISO-8601 timestamp representation of when the subscription stops being
+                active. Open-ended when not set.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              readOnly: true
+              title: Active to
             customer_id:
               description: The customer ID of the subscription.
               type: string
@@ -6969,9 +6364,106 @@ components:
               description: The plan ID of the subscription. Set if subscription is created from a plan.
               type: string
               example: 01G65Z755AFWAKHE12NY0CQ9FH
+              deprecated: true
               pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
               readOnly: true
               title: Plan ID
+            plan:
+              description: |-
+                The plan the subscription was created from, if any. Includes the plan key and
+                version so clients can resolve the exact plan revision.
+              type: object
+              additionalProperties: false
+              properties:
+                id:
+                  description: The plan ID (exact revision).
+                  type: string
+                  example: 01G65Z755AFWAKHE12NY0CQ9FH
+                  pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+                  readOnly: true
+                  title: Plan ID
+                key:
+                  description: The plan key. References the plan across versions.
+                  type: string
+                  example: resource_key
+                  maxLength: 64
+                  minLength: 1
+                  pattern: '^[a-z0-9]+(?:_[a-z0-9]+)*$'
+                  readOnly: true
+                  title: Plan key
+                version:
+                  description: The plan version.
+                  type: integer
+                  minimum: 1
+                  readOnly: true
+                  title: Plan version
+              readOnly: true
+              required:
+                - id
+                - key
+                - version
+              title: Plan
+            invoice_currency:
+              description: The fiat currency in which the subscription is invoiced.
+              type: string
+              example: USD
+              maxLength: 3
+              minLength: 3
+              pattern: '^[A-Z]{3}$'
+              readOnly: true
+              title: Invoice currency
+            cost_basis_mode:
+              description: |-
+                Controls whether custom-currency cost bases are resolved dynamically or pinned
+                when their currency pair is introduced to the subscription.
+              type: string
+              default: dynamic
+              enum:
+                - dynamic
+                - pinned
+              readOnly: true
+              title: Cost basis mode
+            cost_basis_pins:
+              description: Cost bases pinned to custom-currency pairs for this subscription.
+              type: array
+              items:
+                $ref: '#/components/schemas/BillingSubscriptionCostBasisPin'
+              readOnly: true
+              title: Pinned cost bases
+            billing_cadence:
+              description: |-
+                The billing cadence of the subscription in ISO-8601 duration format. Defines how
+                often the customer is billed. Examples: `P1M` (monthly), `P3M` (quarterly),
+                `P1Y` (annually).
+              type: string
+              format: ISO8601
+              example: P1Y
+              pattern: '^P(?:\d+(?:\.\d+)?Y)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?W)?(?:\d+(?:\.\d+)?D)?(?:T(?:\d+(?:\.\d+)?H)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?S)?)?$'
+              readOnly: true
+              title: Billing cadence
+            pro_rating_config:
+              description: The pro-rating configuration of the subscription.
+              type: object
+              additionalProperties: false
+              properties:
+                enabled:
+                  description: Whether pro-rating is enabled.
+                  type: boolean
+                  readOnly: true
+                  title: Enabled
+                mode:
+                  description: How pro-rating is calculated when enabled.
+                  type: string
+                  enum:
+                    - no_proration
+                    - prorate_prices
+                  readOnly: true
+                  title: Mode
+              readOnly: true
+              required:
+                - enabled
+                - mode
+              title: Pro-rating configuration
             billing_anchor:
               description: |-
                 A billing anchor is the fixed point in time that determines the subscription's
@@ -7010,13 +6502,59 @@ components:
                 - credit_then_invoice
                 - credit_only
               title: Settlement Mode
+            current_period:
+              description: |-
+                The current aligned billing period. Present only when the subscription is active
+                and aligned.
+              type: object
+              additionalProperties: false
+              properties:
+                from:
+                  description: |-
+                    The start of the period.
+
+                    The period is inclusive at the start.
+                  type: string
+                  format: date-time
+                  example: '2023-01-01T01:01:01.001Z'
+                  title: Start
+                to:
+                  description: |-
+                    The end of the period.
+
+                    The period is exclusive at the end.
+                  type: string
+                  format: date-time
+                  example: '2023-01-01T01:01:01.001Z'
+                  title: End
+              readOnly: true
+              required:
+                - from
+                - to
+              title: Current billing period
+            phases:
+              description: |-
+                The phases of the subscription in chronological order. A phase groups the rate
+                cards that are in effect for a segment of the subscription's lifetime.
+              type: array
+              items:
+                $ref: '#/components/schemas/BillingSubscriptionPhase'
+              readOnly: true
+              title: Phases
           required:
             - id
             - created_at
             - updated_at
+            - name
+            - active_from
             - customer_id
+            - invoice_currency
+            - cost_basis_mode
+            - cost_basis_pins
+            - billing_cadence
             - billing_anchor
             - status
+            - phases
         next:
           description: The new state of the subscription after the change.
           type: object
@@ -7052,6 +6590,39 @@ components:
               example: '2023-01-01T01:01:01.001Z'
               readOnly: true
               title: RFC3339 Date-Time
+            name:
+              description: |-
+                Display name of the subscription. Defaults to the plan name when the
+                subscription is created from a plan.
+              type: string
+              maxLength: 256
+              minLength: 1
+              readOnly: true
+              title: Name
+            description:
+              description: Optional description of the subscription.
+              type: string
+              maxLength: 1024
+              readOnly: true
+              title: Description
+            active_from:
+              description: |-
+                An ISO-8601 timestamp representation of when the subscription became (or will
+                become) active.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              readOnly: true
+              title: Active from
+            active_to:
+              description: |-
+                An ISO-8601 timestamp representation of when the subscription stops being
+                active. Open-ended when not set.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              readOnly: true
+              title: Active to
             customer_id:
               description: The customer ID of the subscription.
               type: string
@@ -7063,9 +6634,106 @@ components:
               description: The plan ID of the subscription. Set if subscription is created from a plan.
               type: string
               example: 01G65Z755AFWAKHE12NY0CQ9FH
+              deprecated: true
               pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
               readOnly: true
               title: Plan ID
+            plan:
+              description: |-
+                The plan the subscription was created from, if any. Includes the plan key and
+                version so clients can resolve the exact plan revision.
+              type: object
+              additionalProperties: false
+              properties:
+                id:
+                  description: The plan ID (exact revision).
+                  type: string
+                  example: 01G65Z755AFWAKHE12NY0CQ9FH
+                  pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+                  readOnly: true
+                  title: Plan ID
+                key:
+                  description: The plan key. References the plan across versions.
+                  type: string
+                  example: resource_key
+                  maxLength: 64
+                  minLength: 1
+                  pattern: '^[a-z0-9]+(?:_[a-z0-9]+)*$'
+                  readOnly: true
+                  title: Plan key
+                version:
+                  description: The plan version.
+                  type: integer
+                  minimum: 1
+                  readOnly: true
+                  title: Plan version
+              readOnly: true
+              required:
+                - id
+                - key
+                - version
+              title: Plan
+            invoice_currency:
+              description: The fiat currency in which the subscription is invoiced.
+              type: string
+              example: USD
+              maxLength: 3
+              minLength: 3
+              pattern: '^[A-Z]{3}$'
+              readOnly: true
+              title: Invoice currency
+            cost_basis_mode:
+              description: |-
+                Controls whether custom-currency cost bases are resolved dynamically or pinned
+                when their currency pair is introduced to the subscription.
+              type: string
+              default: dynamic
+              enum:
+                - dynamic
+                - pinned
+              readOnly: true
+              title: Cost basis mode
+            cost_basis_pins:
+              description: Cost bases pinned to custom-currency pairs for this subscription.
+              type: array
+              items:
+                $ref: '#/components/schemas/BillingSubscriptionCostBasisPin'
+              readOnly: true
+              title: Pinned cost bases
+            billing_cadence:
+              description: |-
+                The billing cadence of the subscription in ISO-8601 duration format. Defines how
+                often the customer is billed. Examples: `P1M` (monthly), `P3M` (quarterly),
+                `P1Y` (annually).
+              type: string
+              format: ISO8601
+              example: P1Y
+              pattern: '^P(?:\d+(?:\.\d+)?Y)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?W)?(?:\d+(?:\.\d+)?D)?(?:T(?:\d+(?:\.\d+)?H)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?S)?)?$'
+              readOnly: true
+              title: Billing cadence
+            pro_rating_config:
+              description: The pro-rating configuration of the subscription.
+              type: object
+              additionalProperties: false
+              properties:
+                enabled:
+                  description: Whether pro-rating is enabled.
+                  type: boolean
+                  readOnly: true
+                  title: Enabled
+                mode:
+                  description: How pro-rating is calculated when enabled.
+                  type: string
+                  enum:
+                    - no_proration
+                    - prorate_prices
+                  readOnly: true
+                  title: Mode
+              readOnly: true
+              required:
+                - enabled
+                - mode
+              title: Pro-rating configuration
             billing_anchor:
               description: |-
                 A billing anchor is the fixed point in time that determines the subscription's
@@ -7104,19 +6772,95 @@ components:
                 - credit_then_invoice
                 - credit_only
               title: Settlement Mode
+            current_period:
+              description: |-
+                The current aligned billing period. Present only when the subscription is active
+                and aligned.
+              type: object
+              additionalProperties: false
+              properties:
+                from:
+                  description: |-
+                    The start of the period.
+
+                    The period is inclusive at the start.
+                  type: string
+                  format: date-time
+                  example: '2023-01-01T01:01:01.001Z'
+                  title: Start
+                to:
+                  description: |-
+                    The end of the period.
+
+                    The period is exclusive at the end.
+                  type: string
+                  format: date-time
+                  example: '2023-01-01T01:01:01.001Z'
+                  title: End
+              readOnly: true
+              required:
+                - from
+                - to
+              title: Current billing period
+            phases:
+              description: |-
+                The phases of the subscription in chronological order. A phase groups the rate
+                cards that are in effect for a segment of the subscription's lifetime.
+              type: array
+              items:
+                $ref: '#/components/schemas/BillingSubscriptionPhase'
+              readOnly: true
+              title: Phases
           required:
             - id
             - created_at
             - updated_at
+            - name
+            - active_from
             - customer_id
+            - invoice_currency
+            - cost_basis_mode
+            - cost_basis_pins
+            - billing_cadence
             - billing_anchor
             - status
+            - phases
       additionalProperties: false
       required:
         - current
         - next
+    BillingSubscriptionCostBasisPin:
+      description: A cost basis pinned to a custom-currency pair for the subscription.
+      type: object
+      properties:
+        custom_currency_id:
+          description: The managed custom currency ID.
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          readOnly: true
+          title: ULID
+        invoice_currency:
+          description: The fiat currency in which the subscription is invoiced.
+          type: string
+          example: USD
+          maxLength: 3
+          minLength: 3
+          pattern: '^[A-Z]{3}$'
+          readOnly: true
+        cost_basis_id:
+          description: The pinned cost basis resource ID.
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          readOnly: true
+          title: ULID
+      additionalProperties: false
+      required:
+        - custom_currency_id
+        - invoice_currency
+        - cost_basis_id
     BillingSubscriptionCreate:
-      description: Subscription create request.
       type: object
       properties:
         labels:
@@ -7162,7 +6906,12 @@ components:
               minLength: 1
               title: Customer Key
         plan:
-          description: The plan reference of the subscription.
+          description: |-
+            A reference to a published plan the subscription is created from.
+
+            Exactly one of `plan` or `custom_plan` must be provided. Use `plan` to base the
+            subscription on an existing published plan; use `custom_plan` to define the plan
+            inline.
           type: object
           additionalProperties: false
           properties:
@@ -7195,6 +6944,66 @@ components:
                 version of the plan will be used.
               type: integer
               title: Plan Version
+        custom_plan:
+          description: |-
+            An inline plan definition to create the subscription from, without referencing a
+            published plan.
+
+            Exactly one of `plan` or `custom_plan` must be provided. The subscription is not
+            linked to a persisted plan, so the response omits the `plan` reference.
+          type: object
+          additionalProperties: false
+          properties:
+            name:
+              description: |-
+                Display name of the resource.
+
+                Between 1 and 256 characters.
+              type: string
+              maxLength: 256
+              minLength: 1
+            description:
+              description: |-
+                Optional description of the resource.
+
+                Maximum 1024 characters.
+              type: string
+              maxLength: 1024
+            labels:
+              $ref: '#/components/schemas/Labels'
+            currency:
+              description: The currency code of the plan.
+              oneOf:
+                - $ref: '#/components/schemas/CurrencyCode'
+                - $ref: '#/components/schemas/BillingCurrencyCodeCustom'
+              title: Currency
+            billing_cadence:
+              description: The billing cadence for subscriptions using this plan.
+              type: string
+              format: ISO8601
+              example: P1Y
+              pattern: '^P(?:\d+(?:\.\d+)?Y)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?W)?(?:\d+(?:\.\d+)?D)?(?:T(?:\d+(?:\.\d+)?H)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?S)?)?$'
+              title: Billing cadence
+            pro_rating_enabled:
+              description: Whether pro-rating is enabled for this plan.
+              type: boolean
+              default: true
+              title: Pro-rating enabled
+            phases:
+              description: |-
+                The plan phases define the pricing ramp for a subscription. A phase switch
+                occurs only at the end of a billing period. At least one phase is required.
+              type: array
+              items:
+                $ref: '#/components/schemas/BillingPlanPhase'
+              minItems: 1
+              title: Plan phases
+          required:
+            - name
+            - currency
+            - billing_cadence
+            - phases
+          title: Custom plan
         billing_anchor:
           description: |-
             A billing anchor is the fixed point in time that determines the subscription's
@@ -7211,10 +7020,434 @@ components:
           format: date-time
           example: '2023-01-01T01:01:01.001Z'
           title: Billing anchor
+        cost_basis_mode:
+          description: Controls how custom-currency cost bases are selected for the subscription.
+          type: string
+          default: dynamic
+          enum:
+            - dynamic
+            - pinned
+          title: Cost basis mode
       additionalProperties: false
       required:
         - customer
-        - plan
+    BillingSubscriptionEdit:
+      description: |-
+        Request for editing a running subscription. Applies an ordered batch of
+        customizations to the subscription's phases and items. A later customization
+        observes the state produced by earlier ones.
+      type: object
+      properties:
+        customizations:
+          description: The ordered batch of customizations to apply to the running subscription.
+          type: array
+          items:
+            $ref: '#/components/schemas/BillingSubscriptionEditOperation'
+          maxItems: 100
+          title: Customizations
+        timing:
+          description: When the requested changes should take effect. Defaults to immediate.
+          example: immediate
+          default: immediate
+          oneOf:
+            - $ref: '#/components/schemas/BillingSubscriptionEditTimingEnum'
+            - $ref: '#/components/schemas/DateTime'
+          title: Timing
+      additionalProperties: false
+      required:
+        - customizations
+    BillingSubscriptionEditAddItem:
+      description: |-
+        Add a new rate card to a phase. Adding an item to the current phase closes the
+        active version of the same item key and appends a new version.
+      type: object
+      properties:
+        type:
+          description: Discriminator for the add-item operation.
+          type: string
+          enum:
+            - add_item
+          title: Type
+        phase_key:
+          description: The key of the phase to add the item to.
+          type: string
+          title: Phase key
+        rate_card:
+          description: The rate card describing what the customer gets and pays for the new item.
+          type: object
+          additionalProperties: false
+          properties:
+            name:
+              description: |-
+                Display name of the resource.
+
+                Between 1 and 256 characters.
+              type: string
+              maxLength: 256
+              minLength: 1
+            description:
+              description: |-
+                Optional description of the resource.
+
+                Maximum 1024 characters.
+              type: string
+              maxLength: 1024
+            labels:
+              $ref: '#/components/schemas/Labels'
+            key:
+              $ref: '#/components/schemas/ResourceKey'
+            feature:
+              description: The feature associated with the rate card.
+              type: object
+              additionalProperties: false
+              properties:
+                id:
+                  $ref: '#/components/schemas/ULID'
+              required:
+                - id
+              title: Feature reference
+            currency:
+              description: |-
+                Overrides the containing plan or add-on currency for this rate card. When
+                omitted, the containing resource currency applies.
+              oneOf:
+                - $ref: '#/components/schemas/CurrencyCode'
+                - $ref: '#/components/schemas/BillingCurrencyCodeCustom'
+              title: Currency override
+            billing_cadence:
+              description: |-
+                The billing cadence of the rate card. When null, the charge is one-time
+                (non-recurring). Only valid for flat prices.
+              type: string
+              format: ISO8601
+              example: P1Y
+              pattern: '^P(?:\d+(?:\.\d+)?Y)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?W)?(?:\d+(?:\.\d+)?D)?(?:T(?:\d+(?:\.\d+)?H)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?S)?)?$'
+              title: Billing cadence
+            price:
+              description: The price of the rate card.
+              type: object
+              discriminator:
+                propertyName: type
+                mapping:
+                  free: '#/components/schemas/BillingPriceFree'
+                  flat: '#/components/schemas/BillingPriceFlat'
+                  unit: '#/components/schemas/BillingPriceUnit'
+                  graduated: '#/components/schemas/BillingPriceGraduated'
+                  volume: '#/components/schemas/BillingPriceVolume'
+              oneOf:
+                - $ref: '#/components/schemas/BillingPriceFree'
+                - $ref: '#/components/schemas/BillingPriceFlat'
+                - $ref: '#/components/schemas/BillingPriceUnit'
+                - $ref: '#/components/schemas/BillingPriceGraduated'
+                - $ref: '#/components/schemas/BillingPriceVolume'
+              title: Price
+            unit_config:
+              description: |-
+                Unit conversion configuration for the rate card.
+
+                Synthesized on read for plans authored with v1 dynamic or package prices:
+                dynamic prices map to a unit price with a multiply unit config, and package
+                prices map to a unit price with a divide unit config.
+
+                Accepted on create and update only when the UnitConfig feature is enabled on the
+                deployment; otherwise rejected.
+              type: object
+              additionalProperties: false
+              properties:
+                operation:
+                  description: The arithmetic operation to apply to the raw metered quantity.
+                  type: string
+                  enum:
+                    - divide
+                    - multiply
+                  title: Conversion operation
+                conversion_factor:
+                  description: |-
+                    The factor used in the conversion operation.
+
+                    - For `divide`: `converted = raw / conversionFactor`.
+                    - For `multiply`: `converted = raw × conversionFactor`.
+
+                    Must be a positive non-zero value.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  title: Conversion factor
+                rounding:
+                  description: |-
+                    The rounding mode applied to the converted quantity for invoicing.
+
+                    Defaults to none (no rounding). Entitlement checks always use the precise
+                    (unrounded) value.
+                  type: string
+                  default: none
+                  enum:
+                    - ceiling
+                    - floor
+                    - half_up
+                    - none
+                  title: Rounding mode
+                precision:
+                  description: |-
+                    The number of decimal places to retain after rounding.
+
+                    Only meaningful when rounding is not "none". Defaults to 0 (round to whole
+                    numbers).
+                  type: integer
+                  default: 0
+                  title: Rounding precision (decimal places)
+                display_unit:
+                  description: |-
+                    A human-readable label for the converted unit shown on invoices and in the
+                    customer portal (e.g., "GB", "hours", "M tokens").
+
+                    Optional. When omitted, no unit label is rendered.
+                  type: string
+                  title: Display unit label
+              required:
+                - operation
+                - conversion_factor
+              title: Unit config
+            payment_term:
+              description: |-
+                The payment term of the rate card. In advance payment term can only be used for
+                flat prices.
+              type: string
+              default: in_arrears
+              enum:
+                - in_advance
+                - in_arrears
+              title: Payment term
+            commitments:
+              description: |-
+                Spend commitments for this rate card. Only applicable to usage-based prices
+                (unit, graduated, volume).
+              type: object
+              additionalProperties: false
+              properties:
+                minimum_amount:
+                  description: The customer is committed to spend at least the amount.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  title: Minimum amount
+                maximum_amount:
+                  description: The customer is limited to spend at most the amount.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  title: Maximum amount
+              title: Commitments
+            discounts:
+              description: The discounts of the rate card.
+              type: object
+              additionalProperties: false
+              properties:
+                percentage:
+                  description: Percentage discount applied to the price (0–100).
+                  type: number
+                  maximum: 100
+                  minimum: 0
+                usage:
+                  description: |-
+                    Number of usage units granted free before billing starts. Only applies to
+                    usage-based lines (not flat fees). Usage is treated as zero until this amount is
+                    exhausted.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+              title: Discounts
+            tax_config:
+              description: The tax config of the rate card.
+              type: object
+              additionalProperties: false
+              properties:
+                behavior:
+                  $ref: '#/components/schemas/BillingTaxBehavior'
+                code:
+                  $ref: '#/components/schemas/TaxCodeReference'
+              required:
+                - code
+              title: Tax config
+            entitlement:
+              description: |-
+                The entitlement template granted to subscribers of a plan or addon containing
+                this rate card. Requires `feature` to be set.
+              type: object
+              discriminator:
+                propertyName: type
+                mapping:
+                  metered: '#/components/schemas/BillingRateCardMeteredEntitlement'
+                  static: '#/components/schemas/BillingRateCardStaticEntitlement'
+                  boolean: '#/components/schemas/BillingRateCardBooleanEntitlement'
+              oneOf:
+                - $ref: '#/components/schemas/BillingRateCardMeteredEntitlement'
+                - $ref: '#/components/schemas/BillingRateCardStaticEntitlement'
+                - $ref: '#/components/schemas/BillingRateCardBooleanEntitlement'
+              title: Entitlement template
+          required:
+            - name
+            - key
+            - price
+          title: Rate card
+      additionalProperties: false
+      required:
+        - type
+        - phase_key
+        - rate_card
+    BillingSubscriptionEditAddPhase:
+      description: |-
+        Add a new phase to the subscription. The phase is created without items; use
+        add-item operations to populate it.
+      type: object
+      properties:
+        type:
+          description: Discriminator for the add-phase operation.
+          type: string
+          enum:
+            - add_phase
+          title: Type
+        phase:
+          description: The phase to add.
+          type: object
+          additionalProperties: false
+          properties:
+            key:
+              description: A locally unique identifier for the phase.
+              type: string
+              example: resource_key
+              maxLength: 64
+              minLength: 1
+              pattern: '^[a-z0-9]+(?:_[a-z0-9]+)*$'
+              title: Key
+            name:
+              description: The name of the phase.
+              type: string
+              title: Name
+            description:
+              description: An optional description of the phase.
+              type: string
+              title: Description
+            start_after:
+              description: |-
+                The ISO-8601 interval after the subscription start at which the phase begins.
+                When null, the phase starts immediately after the subscription starts.
+              type: string
+              format: ISO8601
+              example: P1Y
+              nullable: true
+              pattern: '^P(?:\d+(?:\.\d+)?Y)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?W)?(?:\d+(?:\.\d+)?D)?(?:T(?:\d+(?:\.\d+)?H)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?S)?)?$'
+              title: Start after
+            duration:
+              description: |-
+                The intended ISO-8601 duration of the phase. Required unless the phase will be
+                the last phase of the subscription.
+              type: string
+              format: ISO8601
+              example: P1Y
+              pattern: '^P(?:\d+(?:\.\d+)?Y)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?W)?(?:\d+(?:\.\d+)?D)?(?:T(?:\d+(?:\.\d+)?H)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?S)?)?$'
+              title: Duration
+          required:
+            - key
+            - name
+            - start_after
+          title: Phase
+      additionalProperties: false
+      required:
+        - type
+        - phase
+    BillingSubscriptionEditOperation:
+      description: |-
+        A single customization to apply to a running subscription. The `type` field
+        discriminates which operation is performed.
+      type: object
+      discriminator:
+        propertyName: type
+        mapping:
+          add_item: '#/components/schemas/BillingSubscriptionEditAddItem'
+          remove_item: '#/components/schemas/BillingSubscriptionEditRemoveItem'
+          add_phase: '#/components/schemas/BillingSubscriptionEditAddPhase'
+          remove_phase: '#/components/schemas/BillingSubscriptionEditRemovePhase'
+          stretch_phase: '#/components/schemas/BillingSubscriptionEditStretchPhase'
+          unschedule_edit: '#/components/schemas/BillingSubscriptionEditUnscheduleEdit'
+      oneOf:
+        - $ref: '#/components/schemas/BillingSubscriptionEditAddItem'
+        - $ref: '#/components/schemas/BillingSubscriptionEditRemoveItem'
+        - $ref: '#/components/schemas/BillingSubscriptionEditAddPhase'
+        - $ref: '#/components/schemas/BillingSubscriptionEditRemovePhase'
+        - $ref: '#/components/schemas/BillingSubscriptionEditStretchPhase'
+        - $ref: '#/components/schemas/BillingSubscriptionEditUnscheduleEdit'
+    BillingSubscriptionEditRemoveItem:
+      description: Remove a rate card from a phase.
+      type: object
+      properties:
+        type:
+          description: Discriminator for the remove-item operation.
+          type: string
+          enum:
+            - remove_item
+          title: Type
+        phase_key:
+          description: The key of the phase to remove the item from.
+          type: string
+          title: Phase key
+        item_key:
+          description: The key of the item to remove.
+          type: string
+          title: Item key
+      additionalProperties: false
+      required:
+        - type
+        - phase_key
+        - item_key
+    BillingSubscriptionEditRemovePhase:
+      description: Remove a phase from the subscription.
+      type: object
+      properties:
+        type:
+          description: Discriminator for the remove-phase operation.
+          type: string
+          enum:
+            - remove_phase
+          title: Type
+        phase_key:
+          description: The key of the phase to remove.
+          type: string
+          title: Phase key
+        shift:
+          description: The direction to shift surrounding phases to fill the removed phase's span.
+          type: string
+          enum:
+            - next
+            - prev
+          title: Shift
+      additionalProperties: false
+      required:
+        - type
+        - phase_key
+        - shift
+    BillingSubscriptionEditStretchPhase:
+      description: 'Extend the duration of a phase, shifting later phases by the same amount.'
+      type: object
+      properties:
+        type:
+          description: Discriminator for the stretch-phase operation.
+          type: string
+          enum:
+            - stretch_phase
+          title: Type
+        phase_key:
+          description: The key of the phase to stretch.
+          type: string
+          title: Phase key
+        extend_by:
+          description: The ISO-8601 duration to extend the phase by.
+          type: string
+          format: ISO8601
+          example: P1Y
+          pattern: '^P(?:\d+(?:\.\d+)?Y)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?W)?(?:\d+(?:\.\d+)?D)?(?:T(?:\d+(?:\.\d+)?H)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?S)?)?$'
+          title: Extend by
+      additionalProperties: false
+      required:
+        - type
+        - phase_key
+        - extend_by
     BillingSubscriptionEditTimingEnum:
       description: |-
         Subscription edit timing. When immediate, the requested changes take effect
@@ -7224,6 +7457,356 @@ components:
       enum:
         - immediate
         - next_billing_cycle
+    BillingSubscriptionEditUnscheduleEdit:
+      description: |-
+        Discard any scheduled edits on the current phase, reverting it to its previously
+        persisted state.
+      type: object
+      properties:
+        type:
+          description: Discriminator for the unschedule-edit operation.
+          type: string
+          enum:
+            - unschedule_edit
+          title: Type
+      additionalProperties: false
+      required:
+        - type
+    BillingSubscriptionItem:
+      description: A subscription item pins a rate card to a cadence within a subscription phase.
+      type: object
+      properties:
+        id:
+          description: The unique identifier of the subscription item instance.
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          readOnly: true
+          title: ID
+        active_from:
+          description: An ISO-8601 timestamp representation of when this item version becomes active.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: Active from
+        active_to:
+          description: |-
+            An ISO-8601 timestamp representation of when this item version stops being
+            active.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: Active to
+        rate_card:
+          description: The rate card describing what the customer gets and pays for this item.
+          type: object
+          additionalProperties: false
+          properties:
+            name:
+              description: |-
+                Display name of the resource.
+
+                Between 1 and 256 characters.
+              type: string
+              maxLength: 256
+              minLength: 1
+            description:
+              description: |-
+                Optional description of the resource.
+
+                Maximum 1024 characters.
+              type: string
+              maxLength: 1024
+            labels:
+              $ref: '#/components/schemas/Labels'
+            key:
+              $ref: '#/components/schemas/ResourceKey'
+            feature:
+              description: The feature associated with the rate card.
+              type: object
+              additionalProperties: false
+              properties:
+                id:
+                  $ref: '#/components/schemas/ULID'
+              required:
+                - id
+              title: Feature reference
+            currency:
+              description: |-
+                Overrides the containing plan or add-on currency for this rate card. When
+                omitted, the containing resource currency applies.
+              oneOf:
+                - $ref: '#/components/schemas/CurrencyCode'
+                - $ref: '#/components/schemas/BillingCurrencyCodeCustom'
+              title: Currency override
+            billing_cadence:
+              description: |-
+                The billing cadence of the rate card. When null, the charge is one-time
+                (non-recurring). Only valid for flat prices.
+              type: string
+              format: ISO8601
+              example: P1Y
+              pattern: '^P(?:\d+(?:\.\d+)?Y)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?W)?(?:\d+(?:\.\d+)?D)?(?:T(?:\d+(?:\.\d+)?H)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?S)?)?$'
+              title: Billing cadence
+            price:
+              description: The price of the rate card.
+              type: object
+              discriminator:
+                propertyName: type
+                mapping:
+                  free: '#/components/schemas/BillingPriceFree'
+                  flat: '#/components/schemas/BillingPriceFlat'
+                  unit: '#/components/schemas/BillingPriceUnit'
+                  graduated: '#/components/schemas/BillingPriceGraduated'
+                  volume: '#/components/schemas/BillingPriceVolume'
+              oneOf:
+                - $ref: '#/components/schemas/BillingPriceFree'
+                - $ref: '#/components/schemas/BillingPriceFlat'
+                - $ref: '#/components/schemas/BillingPriceUnit'
+                - $ref: '#/components/schemas/BillingPriceGraduated'
+                - $ref: '#/components/schemas/BillingPriceVolume'
+              title: Price
+            unit_config:
+              description: |-
+                Unit conversion configuration for the rate card.
+
+                Synthesized on read for plans authored with v1 dynamic or package prices:
+                dynamic prices map to a unit price with a multiply unit config, and package
+                prices map to a unit price with a divide unit config.
+
+                Accepted on create and update only when the UnitConfig feature is enabled on the
+                deployment; otherwise rejected.
+              type: object
+              additionalProperties: false
+              properties:
+                operation:
+                  description: The arithmetic operation to apply to the raw metered quantity.
+                  type: string
+                  enum:
+                    - divide
+                    - multiply
+                  title: Conversion operation
+                conversion_factor:
+                  description: |-
+                    The factor used in the conversion operation.
+
+                    - For `divide`: `converted = raw / conversionFactor`.
+                    - For `multiply`: `converted = raw × conversionFactor`.
+
+                    Must be a positive non-zero value.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  title: Conversion factor
+                rounding:
+                  description: |-
+                    The rounding mode applied to the converted quantity for invoicing.
+
+                    Defaults to none (no rounding). Entitlement checks always use the precise
+                    (unrounded) value.
+                  type: string
+                  default: none
+                  enum:
+                    - ceiling
+                    - floor
+                    - half_up
+                    - none
+                  title: Rounding mode
+                precision:
+                  description: |-
+                    The number of decimal places to retain after rounding.
+
+                    Only meaningful when rounding is not "none". Defaults to 0 (round to whole
+                    numbers).
+                  type: integer
+                  default: 0
+                  title: Rounding precision (decimal places)
+                display_unit:
+                  description: |-
+                    A human-readable label for the converted unit shown on invoices and in the
+                    customer portal (e.g., "GB", "hours", "M tokens").
+
+                    Optional. When omitted, no unit label is rendered.
+                  type: string
+                  title: Display unit label
+              required:
+                - operation
+                - conversion_factor
+              title: Unit config
+            payment_term:
+              description: |-
+                The payment term of the rate card. In advance payment term can only be used for
+                flat prices.
+              type: string
+              default: in_arrears
+              enum:
+                - in_advance
+                - in_arrears
+              title: Payment term
+            commitments:
+              description: |-
+                Spend commitments for this rate card. Only applicable to usage-based prices
+                (unit, graduated, volume).
+              type: object
+              additionalProperties: false
+              properties:
+                minimum_amount:
+                  description: The customer is committed to spend at least the amount.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  title: Minimum amount
+                maximum_amount:
+                  description: The customer is limited to spend at most the amount.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+                  title: Maximum amount
+              title: Commitments
+            discounts:
+              description: The discounts of the rate card.
+              type: object
+              additionalProperties: false
+              properties:
+                percentage:
+                  description: Percentage discount applied to the price (0–100).
+                  type: number
+                  maximum: 100
+                  minimum: 0
+                usage:
+                  description: |-
+                    Number of usage units granted free before billing starts. Only applies to
+                    usage-based lines (not flat fees). Usage is treated as zero until this amount is
+                    exhausted.
+                  type: string
+                  pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+              title: Discounts
+            tax_config:
+              description: The tax config of the rate card.
+              type: object
+              additionalProperties: false
+              properties:
+                behavior:
+                  $ref: '#/components/schemas/BillingTaxBehavior'
+                code:
+                  $ref: '#/components/schemas/TaxCodeReference'
+              required:
+                - code
+              title: Tax config
+            entitlement:
+              description: |-
+                The entitlement template granted to subscribers of a plan or addon containing
+                this rate card. Requires `feature` to be set.
+              type: object
+              discriminator:
+                propertyName: type
+                mapping:
+                  metered: '#/components/schemas/BillingRateCardMeteredEntitlement'
+                  static: '#/components/schemas/BillingRateCardStaticEntitlement'
+                  boolean: '#/components/schemas/BillingRateCardBooleanEntitlement'
+              oneOf:
+                - $ref: '#/components/schemas/BillingRateCardMeteredEntitlement'
+                - $ref: '#/components/schemas/BillingRateCardStaticEntitlement'
+                - $ref: '#/components/schemas/BillingRateCardBooleanEntitlement'
+              title: Entitlement template
+          readOnly: true
+          required:
+            - name
+            - key
+            - price
+          title: Rate card
+      additionalProperties: false
+      required:
+        - id
+        - active_from
+        - rate_card
+    BillingSubscriptionPhase:
+      description: |-
+        A subscription phase groups the rate cards in effect for a segment of the
+        subscription's lifetime. Analogous to plan phases.
+      type: object
+      properties:
+        id:
+          description: ULID (Universally Unique Lexicographically Sortable Identifier).
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          readOnly: true
+          title: ULID
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          description: An ISO-8601 timestamp representation of entity creation date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        updated_at:
+          description: An ISO-8601 timestamp representation of entity last update date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        deleted_at:
+          description: An ISO-8601 timestamp representation of entity deletion date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        key:
+          $ref: '#/components/schemas/ResourceKey'
+        active_from:
+          description: An ISO-8601 timestamp representation of when the phase becomes active.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: Active from
+        active_to:
+          description: |-
+            An ISO-8601 timestamp representation of when the phase stops being active.
+            Open-ended for the last phase.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: Active to
+        items:
+          description: |-
+            The rate cards in effect for this phase, resolved to the version active at the
+            queried time (the currently active version for the current phase, the first
+            version for future phases, and the last version for past phases).
+          type: array
+          items:
+            $ref: '#/components/schemas/BillingSubscriptionItem'
+          readOnly: true
+          title: Items
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - created_at
+        - updated_at
+        - key
+        - active_from
+        - items
     BillingTaxBehavior:
       description: |-
         Tax behavior.
@@ -7405,20 +7988,6 @@ components:
       additionalProperties: false
       required:
         - collection_method
-    ChargePagePaginatedResponse:
-      description: Page paginated response.
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/BillingCharge'
-        meta:
-          $ref: '#/components/schemas/PaginatedMeta'
-      additionalProperties: false
-      required:
-        - data
-        - meta
     CreateAddonRequest:
       description: Addon create request.
       type: object
@@ -7460,11 +8029,9 @@ components:
           title: The InstanceType of the add-ons. Can be "single" or "multiple".
         currency:
           description: The currency code of the add-on.
-          type: string
-          example: USD
-          maxLength: 3
-          minLength: 3
-          pattern: '^[A-Z]{3}$'
+          oneOf:
+            - $ref: '#/components/schemas/CurrencyCode'
+            - $ref: '#/components/schemas/BillingCurrencyCodeCustom'
           title: Currency
         rate_cards:
           description: The rate cards of the add-on.
@@ -7803,531 +8370,77 @@ components:
         - workflow
         - apps
         - default
-    CreateChargeFlatFeeRequest:
-      description: Flat fee charge create request.
+    CreateChargeCostBasisDynamic:
+      description: Cost basis resolved at the charge's full service period start.
       type: object
       properties:
-        name:
-          description: |-
-            Display name of the resource.
-
-            Between 1 and 256 characters.
-          type: string
-          maxLength: 256
-          minLength: 1
-        description:
-          description: |-
-            Optional description of the resource.
-
-            Maximum 1024 characters.
-          type: string
-          maxLength: 1024
-        labels:
-          $ref: '#/components/schemas/Labels'
         type:
-          description: The type of the charge.
+          description: Discriminator selecting the cost basis mode.
           type: string
           enum:
-            - flat_fee
-          title: Type
-        currency:
-          description: The currency of the charge.
+            - dynamic
+        fiat_currency:
+          description: The fiat currency the charge amount is converted into for invoicing.
           type: string
           example: USD
           maxLength: 3
           minLength: 3
           pattern: '^[A-Z]{3}$'
-          title: Currency
-        invoice_at:
-          description: The timestamp when the charge is intended to be invoiced.
-          type: string
-          format: date-time
-          example: '2023-01-01T01:01:01.001Z'
-          title: Invoice at
-        service_period:
-          description: The effective service period covered by the charge.
-          type: object
-          additionalProperties: false
-          properties:
-            from:
-              description: |-
-                The start of the period.
-
-                The period is inclusive at the start.
-              type: string
-              format: date-time
-              example: '2023-01-01T01:01:01.001Z'
-              title: Start
-            to:
-              description: |-
-                The end of the period.
-
-                The period is exclusive at the end.
-              type: string
-              format: date-time
-              example: '2023-01-01T01:01:01.001Z'
-              title: End
-          required:
-            - from
-            - to
-          title: Service period
-        unique_reference_id:
-          description: Unique reference ID of the charge.
-          type: string
-          title: Unique reference ID
-        settlement_mode:
-          description: Settlement mode of the charge.
-          type: string
-          enum:
-            - credit_then_invoice
-            - credit_only
-          title: Settlement mode
-        tax_config:
-          description: Tax configuration of the charge.
-          type: object
-          additionalProperties: false
-          properties:
-            behavior:
-              description: |-
-                Tax behavior.
-
-                If not specified the billing profile is used to determine the tax behavior. If
-                not specified in the billing profile, the provider's default behavior is used.
-              type: string
-              enum:
-                - inclusive
-                - exclusive
-              title: Tax behavior
-            stripe:
-              description: Stripe tax config.
-              type: object
-              additionalProperties: false
-              deprecated: true
-              properties:
-                code:
-                  description: 'Product [tax code](https://docs.stripe.com/tax/tax-codes).'
-                  type: string
-                  example: txcd_10000000
-                  pattern: '^txcd_\d{8}$'
-                  title: Tax code
-              required:
-                - code
-              title: Stripe tax config
-            external_invoicing:
-              description: External invoicing tax config.
-              type: object
-              additionalProperties: false
-              deprecated: true
-              properties:
-                code:
-                  description: The tax code should be interpreted by the external invoicing provider.
-                  type: string
-                  maxLength: 64
-                  title: Tax code
-              required:
-                - code
-              title: External invoicing tax config
-            tax_code_id:
-              description: Tax code ID.
-              type: string
-              example: 01G65Z755AFWAKHE12NY0CQ9FH
-              deprecated: true
-              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
-              title: Tax code ID
-            tax_code:
-              description: |-
-                Tax code reference.
-
-                When both `tax_code` and `tax_code_id` are provided, `tax_code` takes
-                precedence. When `stripe.code` is also provided, `tax_code` still wins and
-                `stripe.code` is ignored.
-              type: object
-              additionalProperties: false
-              properties:
-                id:
-                  $ref: '#/components/schemas/ULID'
-              required:
-                - id
-              title: Tax code
-          title: Tax configuration
-        payment_term:
-          description: Payment term of the flat fee charge.
-          type: string
-          enum:
-            - in_advance
-            - in_arrears
-          title: Payment term
-        discounts:
-          description: The discounts applied to the charge.
-          type: object
-          additionalProperties: false
-          properties:
-            percentage:
-              description: Percentage discount applied to the price (0–100).
-              type: number
-              maximum: 100
-              minimum: 0
-          title: Discounts
-        feature_key:
-          description: 'The feature associated with the charge, when applicable.'
-          type: string
-          title: Feature key
-        proration_configuration:
-          description: The proration configuration of the charge.
-          type: object
-          additionalProperties: false
-          properties:
-            mode:
-              description: The proration mode of the rate card.
-              type: string
-              enum:
-                - no_proration
-                - prorate_prices
-              title: Proration mode
-          required:
-            - mode
-          title: Proration configuration
-        amount_before_proration:
-          description: The amount before proration of the charge.
-          type: object
-          additionalProperties: false
-          properties:
-            amount:
-              $ref: '#/components/schemas/Numeric'
-            currency:
-              $ref: '#/components/schemas/CurrencyCode'
-          required:
-            - amount
-            - currency
-          title: Amount before proration
-        full_service_period:
-          description: 'The full, unprorated service period of the charge.'
-          type: object
-          additionalProperties: false
-          properties:
-            from:
-              description: |-
-                The start of the period.
-
-                The period is inclusive at the start.
-              type: string
-              format: date-time
-              example: '2023-01-01T01:01:01.001Z'
-              title: Start
-            to:
-              description: |-
-                The end of the period.
-
-                The period is exclusive at the end.
-              type: string
-              format: date-time
-              example: '2023-01-01T01:01:01.001Z'
-              title: End
-          required:
-            - from
-            - to
-          title: Full service period
-        billing_period:
-          description: The billing period the charge belongs to.
-          type: object
-          additionalProperties: false
-          properties:
-            from:
-              description: |-
-                The start of the period.
-
-                The period is inclusive at the start.
-              type: string
-              format: date-time
-              example: '2023-01-01T01:01:01.001Z'
-              title: Start
-            to:
-              description: |-
-                The end of the period.
-
-                The period is exclusive at the end.
-              type: string
-              format: date-time
-              example: '2023-01-01T01:01:01.001Z'
-              title: End
-          required:
-            - from
-            - to
-          title: Billing period
       additionalProperties: false
       required:
-        - name
         - type
-        - currency
-        - invoice_at
-        - service_period
-        - settlement_mode
-        - payment_term
-        - proration_configuration
-        - amount_before_proration
-    CreateChargeRequest:
-      description: Customer charge.
-      type: object
-      discriminator:
-        propertyName: type
-        mapping:
-          flat_fee: '#/components/schemas/CreateChargeFlatFeeRequest'
-          usage_based: '#/components/schemas/CreateChargeUsageBasedRequest'
-      oneOf:
-        - $ref: '#/components/schemas/CreateChargeFlatFeeRequest'
-        - $ref: '#/components/schemas/CreateChargeUsageBasedRequest'
-      title: Customer charge create request.
-    CreateChargeUsageBasedRequest:
-      description: Usage-based charge create request.
+        - fiat_currency
+    CreateChargeCostBasisManual:
+      description: Cost basis with an explicit conversion rate supplied with the charge.
       type: object
       properties:
-        name:
-          description: |-
-            Display name of the resource.
-
-            Between 1 and 256 characters.
-          type: string
-          maxLength: 256
-          minLength: 1
-        description:
-          description: |-
-            Optional description of the resource.
-
-            Maximum 1024 characters.
-          type: string
-          maxLength: 1024
-        labels:
-          $ref: '#/components/schemas/Labels'
         type:
-          description: The type of the charge.
+          description: Discriminator selecting the cost basis mode.
           type: string
           enum:
-            - usage_based
-          title: Type
-        currency:
-          description: The currency of the charge.
+            - manual
+        fiat_currency:
+          description: The fiat currency the charge amount is converted into for invoicing.
           type: string
           example: USD
           maxLength: 3
           minLength: 3
           pattern: '^[A-Z]{3}$'
-          title: Currency
-        invoice_at:
-          description: The timestamp when the charge is intended to be invoiced.
+        rate:
+          description: Fiat amount per one unit of the custom currency.
           type: string
-          format: date-time
-          example: '2023-01-01T01:01:01.001Z'
-          title: Invoice at
-        service_period:
-          description: The effective service period covered by the charge.
-          type: object
-          additionalProperties: false
-          properties:
-            from:
-              description: |-
-                The start of the period.
-
-                The period is inclusive at the start.
-              type: string
-              format: date-time
-              example: '2023-01-01T01:01:01.001Z'
-              title: Start
-            to:
-              description: |-
-                The end of the period.
-
-                The period is exclusive at the end.
-              type: string
-              format: date-time
-              example: '2023-01-01T01:01:01.001Z'
-              title: End
-          required:
-            - from
-            - to
-          title: Service period
-        unique_reference_id:
-          description: Unique reference ID of the charge.
-          type: string
-          title: Unique reference ID
-        settlement_mode:
-          description: Settlement mode of the charge.
-          type: string
-          enum:
-            - credit_then_invoice
-            - credit_only
-          title: Settlement mode
-        tax_config:
-          description: Tax configuration of the charge.
-          type: object
-          additionalProperties: false
-          properties:
-            behavior:
-              description: |-
-                Tax behavior.
-
-                If not specified the billing profile is used to determine the tax behavior. If
-                not specified in the billing profile, the provider's default behavior is used.
-              type: string
-              enum:
-                - inclusive
-                - exclusive
-              title: Tax behavior
-            stripe:
-              description: Stripe tax config.
-              type: object
-              additionalProperties: false
-              deprecated: true
-              properties:
-                code:
-                  description: 'Product [tax code](https://docs.stripe.com/tax/tax-codes).'
-                  type: string
-                  example: txcd_10000000
-                  pattern: '^txcd_\d{8}$'
-                  title: Tax code
-              required:
-                - code
-              title: Stripe tax config
-            external_invoicing:
-              description: External invoicing tax config.
-              type: object
-              additionalProperties: false
-              deprecated: true
-              properties:
-                code:
-                  description: The tax code should be interpreted by the external invoicing provider.
-                  type: string
-                  maxLength: 64
-                  title: Tax code
-              required:
-                - code
-              title: External invoicing tax config
-            tax_code_id:
-              description: Tax code ID.
-              type: string
-              example: 01G65Z755AFWAKHE12NY0CQ9FH
-              deprecated: true
-              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
-              title: Tax code ID
-            tax_code:
-              description: |-
-                Tax code reference.
-
-                When both `tax_code` and `tax_code_id` are provided, `tax_code` takes
-                precedence. When `stripe.code` is also provided, `tax_code` still wins and
-                `stripe.code` is ignored.
-              type: object
-              additionalProperties: false
-              properties:
-                id:
-                  $ref: '#/components/schemas/ULID'
-              required:
-                - id
-              title: Tax code
-          title: Tax configuration
-        discounts:
-          description: Discounts applied to the usage-based charge.
-          type: object
-          additionalProperties: false
-          properties:
-            percentage:
-              description: Percentage discount applied to the price (0–100).
-              type: number
-              maximum: 100
-              minimum: 0
-            usage:
-              description: |-
-                Number of usage units granted free before billing starts. Only applies to
-                usage-based lines (not flat fees). Usage is treated as zero until this amount is
-                exhausted.
-              type: string
-              pattern: '^\-?[0-9]+(\.[0-9]+)?$'
-          title: Discounts
-        feature_key:
-          description: The feature associated with the charge.
-          type: string
-          title: Feature key
-        price:
-          description: The price of the charge.
-          type: object
-          discriminator:
-            propertyName: type
-            mapping:
-              free: '#/components/schemas/BillingPriceFree'
-              flat: '#/components/schemas/BillingPriceFlat'
-              unit: '#/components/schemas/BillingPriceUnit'
-              graduated: '#/components/schemas/BillingPriceGraduated'
-              volume: '#/components/schemas/BillingPriceVolume'
-          oneOf:
-            - $ref: '#/components/schemas/BillingPriceFree'
-            - $ref: '#/components/schemas/BillingPriceFlat'
-            - $ref: '#/components/schemas/BillingPriceUnit'
-            - $ref: '#/components/schemas/BillingPriceGraduated'
-            - $ref: '#/components/schemas/BillingPriceVolume'
-          title: Price
-        full_service_period:
-          description: 'The full, unprorated service period of the charge.'
-          type: object
-          additionalProperties: false
-          properties:
-            from:
-              description: |-
-                The start of the period.
-
-                The period is inclusive at the start.
-              type: string
-              format: date-time
-              example: '2023-01-01T01:01:01.001Z'
-              title: Start
-            to:
-              description: |-
-                The end of the period.
-
-                The period is exclusive at the end.
-              type: string
-              format: date-time
-              example: '2023-01-01T01:01:01.001Z'
-              title: End
-          required:
-            - from
-            - to
-          title: Full service period
-        billing_period:
-          description: The billing period the charge belongs to.
-          type: object
-          additionalProperties: false
-          properties:
-            from:
-              description: |-
-                The start of the period.
-
-                The period is inclusive at the start.
-              type: string
-              format: date-time
-              example: '2023-01-01T01:01:01.001Z'
-              title: Start
-            to:
-              description: |-
-                The end of the period.
-
-                The period is exclusive at the end.
-              type: string
-              format: date-time
-              example: '2023-01-01T01:01:01.001Z'
-              title: End
-          required:
-            - from
-            - to
-          title: Billing period
+          pattern: '^\-?[0-9]+(\.[0-9]+)?$'
       additionalProperties: false
       required:
-        - name
         - type
-        - currency
-        - invoice_at
-        - service_period
-        - settlement_mode
-        - feature_key
-        - price
+        - rate
+    CreateChargeCostBasisPinned:
+      description: Cost basis pinned to a specific cost basis resource of the custom currency.
+      type: object
+      properties:
+        type:
+          description: Discriminator selecting the cost basis mode.
+          type: string
+          enum:
+            - pinned
+        fiat_currency:
+          description: The fiat currency the charge amount is converted into for invoicing.
+          type: string
+          example: USD
+          maxLength: 3
+          minLength: 3
+          pattern: '^[A-Z]{3}$'
+        cost_basis_id:
+          description: ID of the custom currency's cost basis resource to pin.
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          title: ULID
+      additionalProperties: false
+      required:
+        - type
+        - fiat_currency
+        - cost_basis_id
     CreateCreditAdjustmentRequest:
       description: CreditAdjustment create request.
       type: object
@@ -8351,11 +8464,9 @@ components:
           $ref: '#/components/schemas/Labels'
         currency:
           description: The currency of the granted credits.
-          type: string
-          example: USD
-          maxLength: 3
-          minLength: 3
-          pattern: '^[A-Z]{3}$'
+          oneOf:
+            - $ref: '#/components/schemas/CurrencyCode'
+            - $ref: '#/components/schemas/BillingCurrencyCodeCustom'
         amount:
           description: Granted credit amount.
           type: string
@@ -8410,12 +8521,14 @@ components:
             - external
           title: Credit funding method
         currency:
-          description: Fiat or custom currency code.
-          type: string
-          example: USD
-          maxLength: 3
-          minLength: 3
-          pattern: '^[A-Z]{3}$'
+          description: |-
+            The fiat or custom currency of the granted credits.
+
+            Funded custom-currency grants must define `purchase.cost_basis` to settle in a
+            fiat currency.
+          oneOf:
+            - $ref: '#/components/schemas/CurrencyCode'
+            - $ref: '#/components/schemas/BillingCurrencyCodeCustom'
         amount:
           description: Granted credit amount.
           type: string
@@ -8426,7 +8539,11 @@ components:
           additionalProperties: false
           properties:
             currency:
-              description: Currency of the purchase amount.
+              description: |-
+                Fiat currency the purchase is settled in.
+
+                Must equal the grant `currency` for fiat grants and `cost_basis.fiat_currency`
+                for custom-currency grants.
               type: string
               example: USD
               maxLength: 3
@@ -8434,16 +8551,41 @@ components:
               pattern: '^[A-Z]{3}$'
             per_unit_cost_basis:
               description: |-
-                Cost basis per credit unit used to calculate the purchase amount.
+                Fiat cost basis per credit unit of a fiat-currency grant.
 
-                If `per_unit_cost_basis` is 0.50 and credit amount is $100.00, the total charge
-                is $50.00. The value must be greater than 0. If the cost basis is 0, use
-                `funding_method=none` instead.
+                If `per_unit_cost_basis` is 0.50 and credit amount is
+                $100.00, the total
+                charge is $50.00. The value must be greater than 0. If the
+                cost basis is 0, use `funding_method=none` instead.
 
-                Defaults to 1.0.
+                Only applies to fiat grants and cannot be combined with `cost_basis`. Defaults
+                to 1.0 when neither is provided.
               type: string
-              default: '1.0'
+              deprecated: true
               pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+            cost_basis:
+              description: |-
+                Defines how custom-currency credits are priced in the purchase `currency`; the
+                resolved rate is exposed through `resolved_cost_basis`.
+
+                Fiat grants accept only a `manual` cost basis without `fiat_currency`, where
+                `rate` is the fiat cost per credit unit. Custom-currency grants require a cost
+                basis of any type with `fiat_currency` set and equal to the purchase `currency`.
+                A `dynamic` cost basis is resolved at the grant's effective time, so the
+                currency cost basis must be effective by then. Cannot be combined with
+                `per_unit_cost_basis`.
+              type: object
+              discriminator:
+                propertyName: type
+                mapping:
+                  dynamic: '#/components/schemas/CreateChargeCostBasisDynamic'
+                  pinned: '#/components/schemas/CreateChargeCostBasisPinned'
+                  manual: '#/components/schemas/CreateChargeCostBasisManual'
+              oneOf:
+                - $ref: '#/components/schemas/CreateChargeCostBasisDynamic'
+                - $ref: '#/components/schemas/CreateChargeCostBasisPinned'
+                - $ref: '#/components/schemas/CreateChargeCostBasisManual'
+              title: Cost basis
             availability_policy:
               description: |-
                 Controls when credits become available for consumption.
@@ -8515,8 +8657,9 @@ components:
           description: |-
             Idempotency key for the credit grant creation request.
 
-            When provided, reusing the same key returns an HTTP 409 Conflict instead of
-            creating a duplicate grant, which makes create requests safe to retry.
+            Unique per customer: reusing the same key for the same customer returns an HTTP
+            409 Conflict instead of creating a duplicate grant, which makes create requests
+            safe to retry. The same key may be reused across different customers.
           type: string
           example: 019ae40f-4258-7f15-9491-842f42a7d6ac
           maxLength: 256
@@ -8851,11 +8994,9 @@ components:
           title: Key
         currency:
           description: The currency code of the plan.
-          type: string
-          example: USD
-          maxLength: 3
-          minLength: 3
-          pattern: '^[A-Z]{3}$'
+          oneOf:
+            - $ref: '#/components/schemas/CurrencyCode'
+            - $ref: '#/components/schemas/BillingCurrencyCodeCustom'
           title: Currency
         billing_cadence:
           description: The billing cadence for subscriptions using this plan.
@@ -8925,14 +9066,16 @@ components:
       properties:
         currency:
           description: Fiat or custom currency code.
-          type: string
-          example: USD
-          maxLength: 3
-          minLength: 3
-          pattern: '^[A-Z]{3}$'
+          oneOf:
+            - $ref: '#/components/schemas/CurrencyCode'
+            - $ref: '#/components/schemas/BillingCurrencyCodeCustom'
           readOnly: true
         live:
-          description: Credits available after applying currently live charge impacts.
+          description: |-
+            Credits available after applying currently live charge impacts.
+
+            Always zero for historical balance queries using the `timestamp` parameter
+            because live charge impacts cannot be reconstructed historically.
           type: string
           example: '200.00'
           pattern: '^\-?[0-9]+(\.[0-9]+)?$'
@@ -9515,34 +9658,6 @@ components:
         currency:
           $ref: '#/components/schemas/StringFieldFilterExact'
       additionalProperties: false
-    ListChargesParamsFilter:
-      description: Filter options for listing charges.
-      type: object
-      properties:
-        status:
-          description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`'
-          type: object
-          additionalProperties: false
-          properties:
-            eq:
-              description: The field exactly matches the provided value.
-              type: string
-              example: '?filter[field_name_here][eq]=foo'
-            oeq:
-              description: The field matches any of the provided values.
-              type: string
-              example: '?filter[field_name_here][oeq]=foo,bar'
-            neq:
-              description: The field does not match the provided value.
-              type: string
-              example: '?filter[field_name_here][neq]=bar'
-          x-examples:
-            example-1:
-              oeq: 'some-value,some-other-value'
-              neq: not-this-value
-            example-2:
-              eq: some-value
-      additionalProperties: false
     ListCreditGrantsParamsFilter:
       description: Filter options for listing credit grants.
       type: object
@@ -9608,13 +9723,12 @@ components:
             - funded
             - consumed
             - expired
+            - voided
         currency:
           description: Filter credit transactions by currency.
-          type: string
-          example: USD
-          maxLength: 3
-          minLength: 3
-          pattern: '^[A-Z]{3}$'
+          oneOf:
+            - $ref: '#/components/schemas/CurrencyCode'
+            - $ref: '#/components/schemas/BillingCurrencyCodeCustom'
         feature_key:
           description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`, `contains`, `ocontains`'
           type: object
@@ -9832,9 +9946,6 @@ components:
                     Returns entities that exact match any of the comma-delimited ULIDs in the filter
                     string.
                   type: string
-                  items:
-                    $ref: '#/components/schemas/ULID'
-                  format: ArrayEncoding.commaDelimited
                 neq:
                   description: Value does not equal the given ULID value.
                   type: string
@@ -9843,9 +9954,6 @@ components:
                   title: ULID
               additionalProperties: false
           title: ULID Field Filter
-          x-go-type: filters.FilterULID
-          x-go-type-import:
-            path: github.com/openmeterio/openmeter/api/v3/filters
         time:
           description: Filter events by event time.
           oneOf:
@@ -11006,20 +11114,6 @@ components:
         - updated_at
         - addon
         - from_plan_phase
-    PlanAddonPagePaginatedResponse:
-      description: Page paginated response.
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/PlanAddon'
-        meta:
-          $ref: '#/components/schemas/PaginatedMeta'
-      additionalProperties: false
-      required:
-        - data
-        - meta
     PlanPagePaginatedResponse:
       description: Page paginated response.
       type: object
@@ -11424,6 +11518,14 @@ components:
               required:
                 - id
               title: Feature reference
+            currency:
+              description: |-
+                Overrides the containing plan or add-on currency for this rate card. When
+                omitted, the containing resource currency applies.
+              oneOf:
+                - $ref: '#/components/schemas/CurrencyCode'
+                - $ref: '#/components/schemas/BillingCurrencyCodeCustom'
+              title: Currency override
             billing_cadence:
               description: |-
                 The billing cadence of the rate card. When null, the charge is one-time
@@ -11698,9 +11800,6 @@ components:
                 Returns entities that exact match any of the comma-delimited ULIDs in the filter
                 string.
               type: string
-              items:
-                $ref: '#/components/schemas/ULID'
-              format: ArrayEncoding.commaDelimited
             neq:
               description: Value does not equal the given ULID value.
               type: string
@@ -11709,9 +11808,6 @@ components:
               title: ULID
           additionalProperties: false
       title: ULID Field Filter
-      x-go-type: filters.FilterULID
-      x-go-type-import:
-        path: github.com/openmeterio/openmeter/api/v3/filters
     UpdateCreditGrantExternalSettlementRequest:
       description: |-
         Request body for updating the external payment settlement status of a credit
@@ -11854,9 +11950,14 @@ components:
       type: object
       properties:
         stripe:
-          description: Used if the customer has a linked Stripe app.
+          description: |-
+            Used if the customer has a linked Stripe app.
+
+            Set to `null` to remove the Stripe data of the customer; omit to leave it
+            unchanged.
           type: object
           additionalProperties: false
+          nullable: true
           properties:
             customer_id:
               description: The Stripe customer ID used.
@@ -11882,9 +11983,14 @@ components:
               title: Labels
           title: Stripe
         external_invoicing:
-          description: Used if the customer has a linked external invoicing app.
+          description: |-
+            Used if the customer has a linked external invoicing app.
+
+            Set to `null` to remove the external invoicing data of the customer; omit to
+            leave it unchanged.
           type: object
           additionalProperties: false
+          nullable: true
           properties:
             labels:
               description: Labels for this external invoicing integration on the customer.
@@ -12202,9 +12308,14 @@ components:
           additionalProperties: false
           properties:
             stripe:
-              description: Used if the customer has a linked Stripe app.
+              description: |-
+                Used if the customer has a linked Stripe app.
+
+                Set to `null` to remove the Stripe data of the customer; omit to leave it
+                unchanged.
               type: object
               additionalProperties: false
+              nullable: true
               properties:
                 customer_id:
                   description: The Stripe customer ID used.
@@ -12230,9 +12341,14 @@ components:
                   title: Labels
               title: Stripe
             external_invoicing:
-              description: Used if the customer has a linked external invoicing app.
+              description: |-
+                Used if the customer has a linked external invoicing app.
+
+                Set to `null` to remove the external invoicing data of the customer; omit to
+                leave it unchanged.
               type: object
               additionalProperties: false
+              nullable: true
               properties:
                 labels:
                   description: Labels for this external invoicing integration on the customer.

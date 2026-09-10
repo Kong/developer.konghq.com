@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../monkey_patch'
+require_relative '../component_templates'
 
 module Jekyll
   class RenderPrereqs < Liquid::Tag
@@ -18,19 +19,9 @@ module Jekyll
       context.stack do
         context['prereqs'] = @page['prerequisites']
         environment['prereqs'] = @page['prerequisites']
-        result = Liquid::Template.parse(template, { line_numbers: true }).render(context)
+        result = ComponentTemplates.fetch('prereqs', @page['output_format']).render(context)
         environment['prereqs'] = nil
         result
-      end
-    end
-
-    private
-
-    def template
-      if @page['output_format'] == 'markdown'
-        File.read(File.expand_path('app/_includes/components/prereqs.md'))
-      else
-        File.read(File.expand_path('app/_includes/components/prereqs.html'))
       end
     end
   end

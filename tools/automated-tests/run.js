@@ -104,6 +104,7 @@ async function runFile(instructionFile, runtimeConfig, container, { reset }) {
   const testsConfig = await loadConfig();
   const start = Date.now();
   const products = process.env.PRODUCTS.split(",");
+  const includeGlobalSkips = !args.files;
   try {
     if (args.files) {
       files = Array.isArray(args.files) ? args.files : [args.files];
@@ -117,7 +118,7 @@ async function runFile(instructionFile, runtimeConfig, container, { reset }) {
       await groupInstructionFilesByDeploymentModelAndProduct(files);
 
     for (const [deploymentModel, instructionFilesByProduct] of Object.entries(
-      filesByDeploymentModelAndProduct
+      filesByDeploymentModelAndProduct,
     )) {
       if (
         process.env.DEPLOYMENT_MODEL &&
@@ -127,7 +128,7 @@ async function runFile(instructionFile, runtimeConfig, container, { reset }) {
       }
 
       for (const [product, instructionFiles] of Object.entries(
-        instructionFilesByProduct
+        instructionFilesByProduct,
       )) {
         if (!products.includes(product)) {
           continue;
@@ -136,9 +137,7 @@ async function runFile(instructionFile, runtimeConfig, container, { reset }) {
         productTestConfig = testsConfig.products[product] || {};
 
         const runtimeConfig = await getRuntimeConfig(deploymentModel, product);
-        console.log(
-          `Running ${product} tests on ${deploymentModel}...`
-        );
+        console.log(`Running ${product} tests on ${deploymentModel}...`);
 
         container = await setupRuntime(runtimeConfig, docker);
 
@@ -148,9 +147,14 @@ async function runFile(instructionFile, runtimeConfig, container, { reset }) {
           await partitionByStandaloneGateway(instructionFiles);
 
         for (const instructionFile of standalone) {
-          const result = await runFile(instructionFile, runtimeConfig, container, {
-            reset: false,
-          });
+          const result = await runFile(
+            instructionFile,
+            runtimeConfig,
+            container,
+            {
+              reset: false,
+            },
+          );
           logResult(result);
           results.push(result);
         }
@@ -158,9 +162,14 @@ async function runFile(instructionFile, runtimeConfig, container, { reset }) {
         if (standard.length > 0) {
           await startBaseline(runtimeConfig, container);
           for (const instructionFile of standard) {
-            const result = await runFile(instructionFile, runtimeConfig, container, {
-              reset: true,
-            });
+            const result = await runFile(
+              instructionFile,
+              runtimeConfig,
+              container,
+              {
+                reset: true,
+              },
+            );
             logResult(result);
             results.push(result);
           }
@@ -179,14 +188,17 @@ async function runFile(instructionFile, runtimeConfig, container, { reset }) {
     await afterAll(productTestConfig, container);
     await stopContainer(container);
     await removeContainer(container);
-
-    await logResults(results, start, Date.now(), products);
+    await logResults(results, start, Date.now(), products, {
+      includeGlobalSkips,
+    });
     process.exit(1);
   }
-  await logResults(results, start, Date.now(), products);
+  await logResults(results, start, Date.now(), products, {
+    includeGlobalSkips,
+  });
 
   const failedTests = results.filter(
-    (r) => r.status === "failed" && !isFailureExpected(r)
+    (r) => r.status === "failed" && !isFailureExpected(r),
   );
   if (failedTests.length > 0) {
     process.exit(1);

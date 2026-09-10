@@ -50,6 +50,7 @@ exact:
   - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.7778.218 Safari/537.36"
   - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.7778.217 Safari/537.36"
   - "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+  - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.7922.108 Safari/537.36"
   
 
   
@@ -74,6 +75,10 @@ substrings:
   - brightedge
   - "hubspot crawler"
   - abevalbot
+  - bytespider
+  - meta-external
+  - sogou
+  - baiduspider
   - hanaleibot
   - "newsai/"
   - amazon-kendra

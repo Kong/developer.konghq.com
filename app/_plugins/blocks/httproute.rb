@@ -2,6 +2,7 @@
 
 require 'yaml'
 require_relative '../monkey_patch'
+require_relative '../component_templates'
 
 DEFAULTS = {
   'gwapi_version' => 'v1',
@@ -57,7 +58,7 @@ module Jekyll
         context['indentation'] = config['indent'].to_i
         context['gateway_api'] = gateway_api if gateway_api
         context['ingress'] = ingress if ingress
-        Liquid::Template.parse(template, { line_numbers: true }).render(context)
+        ComponentTemplates.fetch('httproute', 'html').render(context)
       end
     rescue Psych::SyntaxError => e
       message = <<~STRING
@@ -66,10 +67,6 @@ module Jekyll
         #{e.message}
       STRING
       raise ArgumentError, message
-    end
-
-    def template
-      @template ||= File.read(File.expand_path('app/_includes/components/httproute.html'))
     end
 
     def format_yaml(yaml)

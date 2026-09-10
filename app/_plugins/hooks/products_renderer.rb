@@ -1,38 +1,32 @@
 # frozen_string_literal: true
 
-class ProductsRenderer
-  def products
-    @products ||= ENV.fetch('KONG_PRODUCTS', '')
-                     .split(',')
-  end
+require_relative '../lib/build_filter'
 
-  def page_paths
-    @page_paths ||= ENV['PAGE_PATHS']&.split(',')&.map(&:strip)&.reject(&:empty?)
+class ProductsRenderer
+  def initialize(build_filter: Jekyll::BuildFilter.current)
+    @build_filter = build_filter
   end
 
   def read?(page)
     return false if page.relative_path.start_with?('assets')
-    return page_paths.any? { |path| page.url.start_with?(path) } if page_paths
+    return true if @build_filter.content_type.include?(page.data['content_type'])
+    return @build_filter.path_included?(page.url) if @build_filter.page_paths.any?
 
-    products.any? do |product|
-      return true if page.respond_to?(:dir) && page.dir == '/'
-      return true if page.url == '/how-to/'
-      return true if page.url == '/plugins/'
-
-      case product
-      when '*'
-        true
-      else
-        page.data['products']&.include?(product)
-      end
-    end
+    matches_product?(page)
   end
 
   def render?(page)
     return false if page.relative_path.start_with?('assets')
-    return page_paths.any? { |path| page.url.start_with?(path) } if page_paths
+    return true if @build_filter.content_type.include?(page.data['content_type'])
+    return @build_filter.path_included?(page.url) if @build_filter.page_paths.any?
 
-    products.any? do |product|
+    matches_product?(page)
+  end
+
+  private
+
+  def matches_product?(page)
+    @build_filter.products.any? do |product|
       return true if page.respond_to?(:dir) && page.dir == '/'
       return true if page.url == '/how-to/'
       return true if page.url == '/plugins/'
@@ -47,14 +41,15 @@ class ProductsRenderer
   end
 end
 
-renderer = ProductsRenderer.new
+build_filter = Jekyll::BuildFilter.current
+renderer = ProductsRenderer.new(build_filter: build_filter)
 
 Jekyll::Hooks.register :site, :post_read do |site|
-  if ENV['KONG_PRODUCTS'] || ENV['PAGE_PATHS']
-    if ENV['KONG_PRODUCTS']
-      Jekyll.logger.info "Rendering the following products: #{ENV['KONG_PRODUCTS']}, skipping everything else..."
+  if build_filter.filtered?
+    if build_filter.products.any?
+      Jekyll.logger.info "Rendering the following products: #{build_filter.products.join(', ')}, skipping everything else..."
     else
-      Jekyll.logger.info "Rendering the following urls: #{ENV['PAGE_PATHS']}, skipping everything else..."
+      Jekyll.logger.info "Rendering the following urls: #{build_filter.page_paths.join(', ')}, skipping everything else..."
     end
 
     # Filter pages
@@ -72,7 +67,7 @@ Jekyll::Hooks.register :site, :post_read do |site|
 end
 
 Jekyll::Hooks.register :site, :pre_render do |site|
-  if ENV['KONG_PRODUCTS'] || ENV['PAGE_PATHS']
+  if build_filter.filtered?
     site.pages = site.pages.select do |page|
       renderer.render?(page)
     end

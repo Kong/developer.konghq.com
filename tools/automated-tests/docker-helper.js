@@ -37,7 +37,20 @@ export async function fetchImage(docker, imageName, log) {
 
           docker.modem.followProgress(
             stream,
-            (err, res) => (err ? reject(err) : resolve(res)),
+            (err, res) => {
+              if (err) return reject(err);
+
+              const errorEvent = res.find((event) => event.error);
+              if (errorEvent) {
+                return reject(
+                  new Error(
+                    `Docker build failed for image '${imageName}': ${errorEvent.error}`,
+                  ),
+                );
+              }
+
+              resolve(res);
+            },
             (event) =>
               event.status
                 ? debugLog(event.status.trim())
@@ -136,9 +149,7 @@ export async function removeContainer(container) {
 
 export async function setEnvVariable(container, name, value) {
   if (value === undefined) {
-    console.log(
-      `Value for ${name} is undefined, skipping setting this variable.`,
-    );
+    debugCmd(`Value for ${name} is undefined, skipping setting this variable.`);
     return;
   }
 
@@ -239,17 +250,25 @@ export async function getLiveEnv(container) {
   });
 
   const env = {};
+  const base64Vars = [];
   for (const envVar of output.split("\n")) {
     const [name, ...rest] = envVar.split("=");
     let value = rest.join("=");
 
-    // Decode base64-encoded values and store with original name
     if (name.endsWith("_BASE64")) {
-      const originalName = name.slice(0, -7); // Remove _BASE64 suffix
-      env[originalName] = Buffer.from(value, "base64").toString("utf-8");
+      base64Vars.push([name.slice(0, -7), value]); // Remove _BASE64 suffix
     } else {
       env[name] = value;
     }
   }
+
+  // Apply decoded base64 values last so they always take priority over any
+  // stale plain-named value with the same key. `env`'s line order reflects
+  // bash's internal variable hash table, not insertion order, so a plain
+  // placeholder can appear after its _BASE64 counterpart and must not win.
+  for (const [originalName, value] of base64Vars) {
+    env[originalName] = Buffer.from(value, "base64").toString("utf-8");
+  }
+
   return env;
 }

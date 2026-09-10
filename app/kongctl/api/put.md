@@ -5,7 +5,6 @@ content_type: reference
 layout: reference
 
 works_on:
-  - on-prem
   - konnect
 
 tools:

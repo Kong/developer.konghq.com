@@ -19,6 +19,8 @@ works_on:
 min_version:
     gateway: '3.6'
 
+ai_gateway_url: "/ai-gateway/policies/ai-prompt-template/"
+
 topologies:
   on_prem:
     - hybrid

@@ -22,3 +22,25 @@ validations:
     namespace: kong
     type: Programmed
     status: "True"
+
+  - id: claude-code
+    command: |-
+      CLAUDE_CODE_DISABLE_UNKNOWN_MODEL_WINDOW_ENFORCEMENT=1 \
+        claude --allowedTools "WebSearch,Read"
+    expected:
+      return_code: 0
+
+  - id: codex
+    command: codex
+    expected:
+      return_code: 0
+
+  - id: qwen
+    command: qwen
+    expected:
+      return_code: 0
+
+  - id: gemini
+    command: gemini
+    expected:
+      return_code: 0

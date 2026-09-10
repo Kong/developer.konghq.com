@@ -1,16 +1,14 @@
 {% if include.config.header.text %}
-<h2 class="flex items-center" id="{{ include.config.header.text | slugify }}">
-{%- if include.config.header.icon %}
-<img class="mr-1.5 w-5 h-5" src="{{ include.config.header.icon }}" />
-{% endif -%}
-{{ include.config.header.text | liquify | markdown }}
-</h2>
+{% assign _header_id = include.config.header.text | liquify | slugify %}
+{% capture _header_text %}{{ include.config.header.text | liquify }}{% endcapture %}
+{% capture _header_content %}{% if include.config.header.icon %}<img class="mr-1.5 w-5 h-5" src="{{ include.config.header.icon }}" />{% endif %}{{ include.config.header.text | liquify | markdown }}{% endcapture %}
+{% include anchor_heading.html tag="h2" id=_header_id text=_header_text content=_header_content class="flex items-center" %}
 {% endif %}
 
 {% for item in include.config.blocks %}
 {% if item.type == "text" %}
 
-<p>{{ item.text | liquify | markdown }}</p>
+{{ item.text | liquify | markdownify }}
 {% endif %}
 
 {% if item.type == "ordered_list" %}

@@ -15,11 +15,15 @@ module Jekyll
 
       attr_reader :site
 
-      def initialize(site)
+      def initialize(site, build_filter: Jekyll::BuildFilter.current)
         @site = site
+        @build_filter = build_filter
       end
 
-      def run # rubocop:disable Metrics/AbcSize
+
+      def run
+        return if skip_locally?
+
         Dir.glob(File.join(site.source, "#{self.class.policies_folder}/*/")).each do |folder|
           slug = folder.gsub("#{site.source}/#{self.class.policies_folder}/", '').chomp('/')
 
@@ -34,7 +38,10 @@ module Jekyll
 
         generate_reference_page(policy)
         generate_example_pages(policy)
+        generate_api_reference_page(policy)
       end
+
+      def generate_api_reference_page(_policy); end
 
       def generate_overview_page(policy)
         overview = overview_page_class
@@ -51,6 +58,7 @@ module Jekyll
                     .to_jekyll_page
 
         site.pages << reference
+        reference
       end
 
       def generate_example_pages(policy)

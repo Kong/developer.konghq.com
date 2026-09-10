@@ -1,9 +1,6 @@
 ```ansi
 Usage:
-  kongctl get ai-gateway config-stores [config-store-id|config-store-name] [flags]
-
-Maturity:
-  beta
+  kongctl get ai-gateway config-stores [config-store-id|config-store-name] [secrets [key]] [flags]
 
 Aliases:
   config-stores, config-store
@@ -13,6 +10,11 @@ Examples:
   kongctl get ai-gateway config-stores --gateway-name "Customer Support Gateway"
   # Get a Config Store by name
   kongctl get ai-gateway config-stores --gateway-id <gateway-id> support-store
+  # List safe secret metadata for a Config Store
+  kongctl get ai-gateway config-stores support-store secrets --gateway-id <gateway-id>
+  kongctl list ai-gateway config-stores support-store secrets --gateway-id <gateway-id>
+  # Get one Config Store secret by key (the value is never returned)
+  kongctl get ai-gateway config-stores support-store secrets openai-auth-header --gateway-id <gateway-id>
 
 
 Flags:
@@ -23,7 +25,8 @@ Flags:
                                    - Config path: [ color-theme ]
                                    - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
                                    - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
-      --columns stringArray        Select text columns as HEADER=.field (repeatable or comma-separated). Supports nested fields, quoted keys, array indexes, and string slices.
+      --columns stringArray        Select text columns as HEADER=.field (repeatable or comma-separated).
+                                   Supports nested fields, quoted keys, array indexes, and string slices.
       --config-file string         Path to the configuration file to load.
                                    - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
       --config-store-id string     The ID of the AI Gateway Config Store to retrieve.

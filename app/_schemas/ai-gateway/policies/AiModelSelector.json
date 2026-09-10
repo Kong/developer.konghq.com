@@ -1,0 +1,122 @@
+{
+  "properties": {
+    "model": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "description": "Custom type for representing a foreign key with a null value allowed.",
+      "x-foreign": true
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "source": {
+                "type": "string",
+                "enum": [
+                  "body",
+                  "header",
+                  "path"
+                ],
+                "description": "Where the policy reads the request model from.",
+                "default": "body"
+              },
+              "header_name": {
+                "type": "string",
+                "description": "Header to read when source is 'header'."
+              },
+              "body_path": {
+                "type": "string",
+                "description": "The name of the field where the model is extracted from the request body when source is 'body'. Only supports extract from the top-level. Supports JSON and multipart/form-data request bodies. When set to a value other than `model`, that field is removed from the request body after extraction, since it is not a field the upstream LLM provider recognizes; the resolved model is reinserted under the standard `model` field before the request is proxied."
+              },
+              "path_pattern": {
+                "type": "string",
+                "description": "Lua pattern matched against the request path when source is 'path'. The first capture is used as the extracted model identifier. Mutually exclusive with `pcre_pattern`."
+              },
+              "pcre_pattern": {
+                "type": "string",
+                "description": "PCRE pattern matched against the request path when source is 'path'. Requires `pcre_capture_name` to select which named capture group holds the model identifier. Mutually exclusive with `path_pattern`."
+              },
+              "pcre_capture_name": {
+                "type": "string",
+                "description": "Named capture group in `pcre_pattern` to use as the model name. Required when `pcre_pattern` is set."
+              }
+            }
+          },
+          "description": "A list of sources the policy reads the request model from. The model from the first source that yields a value is used."
+        },
+        "max_request_body_size": {
+          "type": "integer",
+          "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
+          "default": 8388608
+        }
+      }
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
+    "route": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
+    },
+    "consumer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
+    },
+    "consumer_group": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will activate only for requests where the specified consumer group has been authenticated. (Note that some policies can not be restricted to consumers groups this way.). Leave unset for the policy to activate regardless of the authenticated Consumer Groups"
+    }
+  }
+}

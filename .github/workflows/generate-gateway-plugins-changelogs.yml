@@ -89,7 +89,7 @@ jobs:
         if: ${{ inputs.version != '' }}
         run: |
           cd tools/changelog-generator
-          node run.js --path='./tmp' --version='${{ inputs.version }}'
+          node run.js --version='${{ inputs.version }}'
 
       - name: Update release date in gateway.yml
         run: |

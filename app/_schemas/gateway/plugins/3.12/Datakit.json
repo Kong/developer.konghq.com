@@ -347,7 +347,11 @@
                     "type": "string"
                   },
                   "inputs": {
-                    "additionalProperties": true,
+                    "additionalProperties": {
+                      "maxLength": 255,
+                      "minLength": 1,
+                      "type": "string"
+                    },
                     "description": "filter input(s)",
                     "type": "object"
                   },
@@ -452,7 +456,11 @@
                     "type": "string"
                   },
                   "outputs": {
-                    "additionalProperties": true,
+                    "additionalProperties": {
+                      "maxLength": 255,
+                      "minLength": 1,
+                      "type": "string"
+                    },
                     "description": "Individual items from `.values`, referenced by key",
                     "type": "object"
                   },
@@ -464,8 +472,10 @@
                     "x-terraform-transform-const": true
                   },
                   "values": {
+                    "additionalProperties": true,
                     "description": "An object with string keys and freeform values",
-                    "type": "string"
+                    "type": "object",
+                    "x-speakeasy-type-override": "any"
                   }
                 },
                 "required": [
@@ -665,7 +675,15 @@
               "type": "object"
             },
             "vault": {
-              "additionalProperties": true,
+              "additionalProperties": {
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                "maxLength": 4095,
+                "minLength": 1,
+                "type": "string",
+                "x-lua-required": true,
+                "x-referenceable": true
+              },
+              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
               "maxLength": 64,
               "minLength": 1,
               "type": "object"
@@ -741,5 +759,13 @@
   },
   "required": [
     "config"
+  ],
+  "x-supported-partials": [
+    {
+      "name": "redis-ee",
+      "paths": [
+        "config.resources.cache.redis"
+      ]
+    }
   ]
 }

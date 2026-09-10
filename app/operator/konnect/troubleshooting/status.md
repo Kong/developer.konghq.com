@@ -70,3 +70,42 @@ id: 7dcf6756-b2e7-4067-a19b-111111111111
 organizationID: 5ca26716-02f7-4430-9117-111111111111
 serverURL: https://us.api.konghq.com
 ```
+
+## Status conditions
+
+Resources also report `status.conditions`, where each condition carries a `reason` that explains the current state.
+
+### `ConfigStoreRefValid` on `KongVault` {% new_in 2.3 %}
+
+The `KongVault` reports the outcome of the reference in the `ConfigStoreRefValid` condition:
+
+```sh
+kubectl get kongvault <vault_prefix> -o jsonpath-as-json="{.status.conditions[?(@.type=='ConfigStoreRefValid')]}"
+```
+
+{% table %}
+columns:
+  - title: Reason
+    key: reason
+  - title: Meaning
+    key: meaning
+rows:
+  - reason: "`Valid`"
+    meaning: |
+      The referenced `KonnectConfigStore` is programmed and its ID was used as the `config_store_id`.
+  - reason: "`NotProgrammed`"
+    meaning: |
+      The `KonnectConfigStore` exists but hasn't been created in {{site.konnect_short_name}} yet, so its ID is unknown. This resolves on its own once the Config Store is programmed.
+  - reason: "`RefNotPermitted`"
+    meaning: |
+      No `KongReferenceGrant` in the Config Store's namespace allows the reference. Check that the grant's `from`
+      entry names the `KongVault` kind with an empty namespace.
+  - reason: "`Invalid`"
+    meaning: |
+      The reference can't be used at all, for example because the `KonnectConfigStore` doesn't exist, the vault
+      backend isn't `konnect`, or `spec.config` also sets `config_store_id`. The condition message names the cause,
+      and fixing it requires a spec change.
+{% endtable %}
+
+While the reference is unresolved, {{site.operator_product_name}} doesn't push the `KongVault` to
+{{site.konnect_short_name}}, so that a Vault is never created with a missing or wrong Config Store ID.

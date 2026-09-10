@@ -20,6 +20,8 @@ works_on:
 min_version:
     gateway: '3.10'
 
+ai_gateway_url: "/ai-gateway/policies/ai-rag-injector/"
+
 topologies:
   on_prem:
     - hybrid

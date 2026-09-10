@@ -1,0 +1,86 @@
+You can integrate the {{ include.name }} Policy with Confluent Schema Registry for AVRO and JSON schemas.
+
+Schema registries provide a centralized repository for managing and validating schemas for data formats like AVRO and JSON.
+Integrating with a schema registry allows the Policy to validate and serialize/deserialize messages in a standardized format.
+
+Using a schema registry with {{site.ai_gateway}} provides several benefits:
+
+* **Data validation**: Ensures messages conform to a predefined schema before being processed.
+* **Schema evolution**: Manages schema changes and versioning.
+* **Interoperability**: Enables seamless communication between different services using standardized data formats.
+* **Reduced overhead**: Minimizes the need for custom validation logic in your applications.
+
+To learn more about Kong's supported schema registry, see:
+
+* [Confluent Schema Registry Documentation](https://docs.confluent.io/platform/current/schema-registry/index.html)
+* [AVRO Specification](https://avro.apache.org/docs/++version++/specification/)
+
+### How schema registry validation works
+
+{% if include.workflow == 'producer' %}
+
+When a producer Policy is configured with a schema registry, the following workflow occurs:
+
+<!--vale off-->
+{% mermaid %}
+sequenceDiagram
+autonumber
+    participant Client
+    participant Kong as {{ include.name }} Policy
+    participant Registry as Schema Registry
+    participant Kafka
+
+    activate Client
+    activate Kong
+    Client->>Kong: Send request
+    deactivate Client
+    activate Registry
+    Kong->>Registry: Fetch schema from registry
+    Registry-->>Kong: Return schema
+    deactivate Registry
+    Kong->>Kong: Validate message against schema
+    Kong->>Kong: Serialize using schema
+    activate Kafka
+    Kong->>Kafka: Forward to Kafka
+    deactivate Kong
+    deactivate Kafka
+{% endmermaid %}
+<!--vale on-->
+
+If validation fails, the request is rejected with an error message.
+
+{% elsif include.workflow == 'consumer' %}
+
+When a consume policy is configured with a schema registry, the following workflow occurs:
+
+<!--vale off-->
+{% mermaid %}
+sequenceDiagram
+autonumber
+    participant Kafka
+    participant Kong as {{ include.name }} Policy
+    participant Registry as Schema Registry
+    participant Client
+
+    activate Kafka
+    activate Kong
+    Kafka->>Kong: Send message
+    deactivate Kafka
+    Kong->>Kong: Extract schema ID
+    activate Registry
+    Kong->>Registry: Fetch schema from registry
+    Registry-->>Kong: Return schema
+    deactivate Registry
+    Kong->>Kong: Deserialize using schema
+    activate Client
+    Kong->>Client: Return response to client
+    deactivate Kong
+    deactivate Client
+{% endmermaid %}
+<!--vale on-->
+
+{% endif %}
+
+### Configure schema registry
+
+To configure Schema Registry with the {{ include.name }} Policy, use the [`config.schema_registry`](./reference/#schema--config-schema-registry) parameter for a Policy-wide registry, or [`config.topics[].schema_registry`](./reference/#schema--config-topics) to override it for an individual topic.

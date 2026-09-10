@@ -7,16 +7,18 @@ module Jekyll
     class Product
       include Releasable
 
-      def initialize(site:, product:, min_version:, max_version:)
+      def initialize(site:, product:, min_version:, max_version:, major: nil)
         @site = site
         @product = product
+        @major = major
         @min_version = min_version
         @max_version = max_version
       end
 
       def available_releases
-        @available_releases ||= (@site.data.dig('products', @product, 'releases') || [])
-                                  .map { |r| Drops::Release.new(r) }
+        @available_releases ||= raw_releases
+                                .select { |r| major_of(r['release']) == major_version_number }
+                                .map { |r| Drops::Release.new(r) }
       end
 
       def deduplicated_releases
@@ -35,6 +37,26 @@ module Jekyll
 
       def key
         @key ||= @product
+      end
+
+      def raw_releases
+        @site.data.dig('products', @product, 'releases') || []
+      end
+
+      def major_of(version_string)
+        version_string.to_s.split('.').first.to_i
+      end
+
+      def major_version_number
+        return @major if @major
+
+        MajorResolver.new(
+          site: @site,
+          product: @product,
+          page_major_version: nil,
+          min_version: @min_version[@product],
+          max_version: @max_version[@product]
+        ).resolve
       end
     end
   end

@@ -132,6 +132,8 @@ EOF
 
 This Docker Compose file will create a read-only {{site.base_gateway}} instance without a datastore.
 
+{% include gateway/hardened-container-note.md %}
+
 ## Start {{site.base_gateway}}
 
 Start {{site.base_gateway}} with the Docker Compose file: 

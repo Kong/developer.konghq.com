@@ -1,9 +1,18 @@
 name: kongctl
 
 releases:
+  - release: "1.15"
+    version: "1.15.1"
+    latest: true
+    released: 2026-09-06
+  - release: "1.14"
+    version: "1.14.0"
+    released: 2026-08-31
+  - release: "1.13"
+    version: "1.13.0"
+    released: 2026-08-21
   - release: "1.12"
     version: "1.12.0"
-    latest: true
     released: 2026-08-12
   - release: "1.11"
     version: "1.11.0"
@@ -20,9 +29,3 @@ releases:
   - release: "1.7"
     version: "1.7.0"
     released: 2026-07-21
-  - release: "1.6"
-    version: "1.6.0"
-    released: 2026-07-17
-  - release: "1.5"
-    version: "1.5.0"
-    released: 2026-07-16

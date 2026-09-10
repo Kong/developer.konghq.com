@@ -117,6 +117,7 @@ rows:
     * UK South (`uksouth`)
     * Ireland (`northeurope`)
     * France (`francecentral`)
+    * North Europe (`northeurope`)
 * Asia Pacific:
     * Australia East (`australiaeast`) 
     * Japan East (`japaneast`)

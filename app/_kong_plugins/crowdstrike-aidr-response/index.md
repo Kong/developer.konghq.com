@@ -94,7 +94,8 @@ _**Figure 1**: Response flow showing how the {{page.name}} plugin evaluates LLM 
 
 After installing the plugin, [enable the CrowdStrike Falcon AIDR Response plugin](/plugins/crowdstrike-aidr-response/examples/enable-crowdstrike-aidr-response/).
 
-If you're routing LLM traffic through {{site.ai_gateway}}, [set up {{site.ai_gateway}}](/ai-gateway/get-started/) first by creating a Service, a Route, and enabling the AI Proxy plugin. Then set `upstream_llm.provider` to `kong` and `upstream_llm.api_uri` to the AI Proxy route path.
+If you're routing LLM traffic through {{site.ai_gateway}} running on {{site.base_gateway}}, [set up {{site.ai_gateway}}](/ai-gateway/v1/get-started/) first by creating a Service, a Route, and enabling the AI Proxy plugin. 
+Then set `upstream_llm.provider` to `kong` and `upstream_llm.api_uri` to the AI Proxy route path.
 
 ## Test the plugin
 

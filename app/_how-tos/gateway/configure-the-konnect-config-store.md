@@ -10,6 +10,8 @@ related_resources:
     url: /gateway/entities/vault/
   - text: Store a Mistral API key as a secret in Konnect Config Store
     url: /how-to/store-a-mistral-api-key-as-a-secret-in-konnect-config-store/
+  - text: Store TLS certificate private keys in a Konnect Config Store with {{site.operator_product_name}}
+    url: /operator/konnect/how-to/config-store-certificate-keys/
 
 products:
     - gateway

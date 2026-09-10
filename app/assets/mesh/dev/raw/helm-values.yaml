@@ -31,11 +31,18 @@ kuma:
       # -- Control Plane Id of the control-plane in Mesh Konnect
       cpId: ""
     defaults:
+      # -- Groups bound to the admin role. The two Kubernetes groups cover a
+      # cluster administrator on either kubeadm generation and grant nothing
+      # when `controlPlane.environment` is `universal`, where they can be
+      # dropped. Distributions that put administrators in neither, such as GKE
+      # and AKS with Entra ID, have to be named here
       adminRoleGroups:
       - mesh-system:authenticated
-      - mesh-system:unauthenticated
-      - system:authenticated
-      - system:unauthenticated
+      - system:masters
+      - kubeadm:cluster-admins
+      # -- Identities bound to the admin role by name, for ServiceAccounts and
+      # other subjects that no group usefully describes
+      adminRoleUsers: []
   plugins:
     policies:
       meshopas: true

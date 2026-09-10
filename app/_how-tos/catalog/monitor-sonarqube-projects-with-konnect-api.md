@@ -1,8 +1,8 @@
 ---
-title: Monitor SonarQube projects in Catalog with the Konnect API
+title: Monitor SonarQube projects in {{site.konnect_catalog}} Classic with the Konnect API
 permalink: /how-to/monitor-sonarqube-projects-with-konnect-api/
 content_type: how_to
-description: Learn how to connect a SonarQube project to your {{site.konnect_catalog}} service in {{site.konnect_short_name}} using the API.
+description: Learn how to connect a SonarQube project to your {{site.konnect_catalog}} Classic service in {{site.konnect_short_name}} using the API.
 products:
   - catalog
 works_on:
@@ -16,18 +16,18 @@ search_aliases:
   - projects
   - service catalog
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: Integrations
     url: /catalog/integrations/
   - text: SonarQube reference
     url: /catalog/integrations/sonarqube/
-  - text: "Monitor SonarQube projects {{site.konnect_catalog}} with the {{site.konnect_short_name}} UI"
+  - text: "Monitor SonarQube projects in {{site.konnect_catalog}} Classic with the {{site.konnect_short_name}} UI"
     url: /how-to/monitor-sonarqube-projects-with-konnect-ui/
 automated_tests: false
 tldr:
   q: How do I monitor SonarQube projects in {{site.konnect_short_name}}?
-  a: Install the SonarQube integration in {{site.konnect_short_name}} and authorize access with your SonarQube personal access token, then link a project to your {{site.konnect_catalog}} service.
+  a: Install the SonarQube integration in {{site.konnect_short_name}} and authorize access with your SonarQube personal access token, then link a project to your {{site.konnect_catalog}} Classic service.
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
@@ -48,9 +48,11 @@ prereqs:
       icon_url: /assets/icons/third-party/sonarqube.svg
 ---
 
+{% include_cached catalog/catalog-classic-banner.md %}
+
 ## Configure the SonarQube integration
 
-Before you can discover [SonarQube projects](https://docs.sonarsource.com/sonarqube-cloud/managing-your-projects) in {{site.konnect_catalog}}, you must configure the SonarQube integration.
+Before you can discover [SonarQube projects](https://docs.sonarsource.com/sonarqube-cloud/managing-your-projects) in {{site.konnect_catalog}} Classic, you must configure the SonarQube integration.
 
 First, install the SonarQube integration:
 
@@ -93,7 +95,7 @@ body:
 
 Once authorized, resources from your SonarQube account will be discoverable in the UI.
 
-## Create a service in {{site.konnect_catalog}}
+## Create a service in {{site.konnect_catalog}} Classic
 
 Create a service that you'll map to your SonarQube resources:
 
@@ -117,7 +119,7 @@ export SONARQUBE_SERVICE_ID='YOUR-SERVICE-ID'
 
 ## List SonarQube resources
 
-Before you can map your SonarQube resources to a service in {{site.konnect_catalog}}, you first need to find the resources that are pulled in from SonarQube:
+Before you can map your SonarQube resources to a service in {{site.konnect_catalog}} Classic, you first need to find the resources that are pulled in from SonarQube:
 
 <!--vale off-->
 {% konnect_api_request %}

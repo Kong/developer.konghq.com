@@ -122,7 +122,11 @@ rows:
     default: '`true`'
   - flag: '`--enable-controller-aigateway`'
     type: '`bool`'
-    description: "Enable the AIGateway controller. (Experimental)."
+    description: "Enable the AIGateway (v1) controller. (Deprecated: Use Konnect AI Gateway instead: Set enable-controller-konnect and enable-controller-aigatewaydataplane to true)."
+    default: '`false`'
+  - flag: '`--enable-controller-aigatewaydataplane`'
+    type: '`bool`'
+    description: "Enable the AI Gateway DataPlane controller."
     default: '`false`'
   - flag: '`--enable-controller-controlplane`'
     type: '`bool`'

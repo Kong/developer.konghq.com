@@ -2,6 +2,7 @@
 
 require 'yaml'
 require_relative '../monkey_patch'
+require_relative '../component_templates'
 
 module Jekyll
   class KonnectCrd < Liquid::Block # rubocop:disable Style/Documentation
@@ -33,7 +34,7 @@ module Jekyll
       context.stack do
         context['config'] = config
         context['should_create_namespace'] = should_create_namespace
-        Liquid::Template.parse(File.read(template_file), { line_numbers: true }).render(context)
+        ComponentTemplates.fetch('konnect_crd', @page['output_format'], base: 'app/_includes').render(context)
       end
     rescue Psych::SyntaxError => e
       message = <<~STRING
@@ -58,14 +59,6 @@ module Jekyll
       defaults.delete('spec') if config['kind'] == 'KongPlugin'
 
       defaults.deep_merge(config)
-    end
-
-    def template_file
-      if @page['output_format'] == 'markdown'
-        'app/_includes/konnect_crd.md'
-      else
-        'app/_includes/konnect_crd.html'
-      end
     end
   end
 end

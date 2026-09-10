@@ -96,12 +96,12 @@
             },
             "tracing": {
               "default": false,
-              "description": "Enable or disable the tracing. This is primarily used for distributed tracing and message correlation, especially in debugging or tracking message flows across multiple systems.",
+              "description": "Enable or disable the tracing propagation. This is primarily used for distributed tracing and message correlation, especially in debugging or tracking message flows across multiple systems.",
               "type": "boolean"
             },
             "tracing_sampled": {
               "default": false,
-              "description": "Indicates whether the message should be included in distributed tracing (i.e., if it should be \"sampled\" for the tracing)",
+              "description": "Forcibly turn on the tracing on all the messages for distributed tracing (tracing needs to be enabled as well).",
               "type": "boolean"
             },
             "ttl": {
@@ -204,8 +204,13 @@
               "x-referenceable": true
             },
             "properties": {
-              "additionalProperties": true,
-              "description": "Additional Solace session properties (each setting needs to have `SESSION_` prefix).",
+              "additionalProperties": {
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                "type": "string",
+                "x-lua-required": true,
+                "x-referenceable": true
+              },
+              "description": "Additional Solace session properties (each setting needs to have `SESSION_` prefix). \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
               "type": "object"
             },
             "ssl_validate_certificate": {

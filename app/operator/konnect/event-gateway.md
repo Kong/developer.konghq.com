@@ -21,6 +21,8 @@ related_resources:
     url: /operator/get-started/event-gateway/port-mapping/
   - text: Deploy {{ site.event_gateway }} with TLSRoute and SNI
     url: /operator/get-started/event-gateway/tlsroute-sni/
+  - text: Validate Kafka message schemas with EventGatewaySchemaRegistry
+    url: /operator/dataplanes/how-to/event-gateway-schema-registry/
   - text: "{{ site.event_gateway }} architecture"
     url: /event-gateway/architecture/
   - text: Backend clusters
@@ -83,6 +85,9 @@ rows:
   - resource: "`EventGatewayVirtualClusterProducePolicy`"
     api_group: "`configuration.konghq.com/v1alpha1`"
     purpose: Applies produce-side policy to a virtual cluster
+  - resource: "`EventGatewaySchemaRegistry`"
+    api_group: "`configuration.konghq.com/v1alpha1`"
+    purpose: Connects to a schema registry for consume and produce schema validation policies
   - resource: "`KegDataPlane`"
     api_group: "`eventgateway.konghq.com/v1alpha1`"
     purpose: Deploys the {{ site.event_gateway_short }} data plane in Kubernetes
@@ -96,7 +101,8 @@ Resources reference each other in this order:
 3. `EventGatewayListener.spec.gatewayRef` points to the same `KonnectEventGateway`
 4. `EventGatewayListenerPolicy.spec.eventGatewayListenerRef` points to an `EventGatewayListener`
 5. Consume and produce policies point to an `EventGatewayVirtualCluster`
-6. `KegDataPlane.spec.controlPlaneRef` points to the `KonnectEventGateway`
+6. `EventGatewaySchemaRegistry.spec.gatewayRef` points to the same `KonnectEventGateway`, and consume or produce policies reference it by name via `schemaValidation.config.{json,confluentSchemaRegistry}.schemaRegistry`
+7. `KegDataPlane.spec.controlPlaneRef` points to the `KonnectEventGateway`
 
 ## Deployment patterns
 

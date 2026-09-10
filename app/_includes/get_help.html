@@ -5,10 +5,10 @@
             <div class="flex gap-1 flex-col lg:flex-row">
                 <span>Something wrong?</span>
                 <div class="flex gap-2">
-                    <a class="no-icon" href="{{ site.repos.developer }}/issues/">Report an Issue</a>
+                    <a class="no-icon" href="{{ site.repos.developer }}/issues/" target="_blank" rel="noopener nofollow noreferrer">Report an Issue</a>
                     {% if include.edit_link %}
                         <span class="text-secondary">|</span>
-                        <a class="no-icon" href="{{ include.edit_link }}">Edit this Page</a>
+                        <a class="no-icon" href="{{ include.edit_link }}" target="_blank" rel="noopener nofollow noreferrer">Edit this Page</a>
                     {% endif %}
                 </div>
             </div>
@@ -24,17 +24,17 @@
             </div>
             <div class="flex">
                 <a class="button button--secondary no-icon"
-                    href="{{ site.repos.developer }}">Contribute</a>
+                    href="{{ site.repos.developer }}" target="_blank" rel="noopener nofollow noreferrer">Contribute</a>
             </div>
         </div>
         <div class="flex flex-col gap-4">
             <h3>Still need help?</h3>
             <div class="flex flex-col gap-2">
-                <a class="flex gap-2 no-icon text-icon" href="https://konghq.com/community/slack-invite">
+                <a class="flex gap-2 no-icon text-icon" href="https://konghq.com/community/slack-invite" target="_blank" rel="noopener nofollow noreferrer">
                     <div class="flex w-5 h-5">{% include_svg '/assets/icons/slack.svg' %}</div>
                     Ask in our Slack Community
                 </a>
-                <a class="flex gap-2 no-icon text-icon" href="https://support.konghq.com/support/s/">
+                <a class="flex gap-2 no-icon text-icon" href="https://support.konghq.com/support/s/" target="_blank" rel="noopener nofollow noreferrer">
                     <div class="flex w-5 h-5">{% include_svg '/assets/icons/support.svg' %}</div>
                     Contact Support
                 </a>

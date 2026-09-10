@@ -185,7 +185,10 @@
           "type": "integer"
         },
         "resource_attributes": {
-          "additionalProperties": true,
+          "additionalProperties": {
+            "type": "string",
+            "x-lua-required": true
+          },
           "type": "object"
         },
         "sampling_rate": {

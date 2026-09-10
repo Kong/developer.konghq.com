@@ -2,6 +2,11 @@
   "properties": {
     "config": {
       "properties": {
+        "decrease_by_fractions_in_redis": {
+          "default": false,
+          "description": "By default, Kong decreates the AI rate limiting counters by whole number in Redis. This setting allows to decrease the counters by float number.",
+          "type": "boolean"
+        },
         "dictionary_name": {
           "default": "kong_rate_limiting_counters",
           "description": "The shared dictionary where counters are stored. When the plugin is configured to synchronize counter data externally (that is `config.strategy` is `cluster` or `redis` and `config.sync_rate` isn't `-1`), this dictionary serves as a buffer to populate counters in the data store on each synchronization cycle.",
@@ -384,5 +389,13 @@
   },
   "required": [
     "config"
+  ],
+  "x-supported-partials": [
+    {
+      "name": "redis-ee",
+      "paths": [
+        "config.redis"
+      ]
+    }
   ]
 }

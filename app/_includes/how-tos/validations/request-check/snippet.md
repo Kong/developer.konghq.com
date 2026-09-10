@@ -13,18 +13,20 @@
      -u {{include.user}}{%- endif %}{% if include.cookie_jar %} \
      --cookie-jar {{include.cookie_jar}}{%- endif %}{% if include.cookie %} \
      --cookie {{include.cookie}}{%- endif %}{% if include.form_data %} \{% for data in include.form_data %}
-     -F {{data[0]}}="{{data[1]}}" {% unless forloop.last -%} \{% endunless %}{%- endfor %}{% endif %}{% if include.body %} \
+     -F {{data[0]}}="{{data[1]}}" {% unless forloop.last -%} \{% endunless %}{%- endfor %}{% endif %}{% if include.form_url_encoded_data %} \{% for data in include.form_url_encoded_data %}
+     -d "{{data[0]}}={{data[1]}}" {% unless forloop.last -%} \{% endunless %}{%- endfor %}{% endif %}{% if include.body_file %} \
+     -F file="{{ include.body_file }}"{% endif %}{% if include.body %} \
      --json '{{ include.body | json_prettify: 1 | escape_env_variables | indent: 4 | strip }}'{% elsif include.body_cmd %} \
      --json "{{ include.body_cmd }}"{% endif %}{% endcapture -%}
 ```bash
 {% if capture_size == 1 -%}
-{{ include.capture[0].variable }}=$({{ curl_cmd }}{% if include.capture[0].jq %} | jq -r "{{ include.capture[0].jq | strip }}"{% endif %}{% if include.inline_sleep %}
+{{ include.capture[0].variable }}=$({{ curl_cmd }}{% if include.capture[0].jq %} | jq -r "{{ include.capture[0].jq | strip }}"{% elsif include.capture[0].command %} | {{ include.capture[0].command | strip }}{% endif %}{% if include.inline_sleep %}
  sleep {{include.inline_sleep}}{%- endif %}
 )
 {%- elsif capture_size > 1 -%}
 _response=$({{ curl_cmd }})
 {%- else -%}
-{{ curl_cmd }}{% if count > 1 %}
+{{ curl_cmd }}{% if count > 1 %} \
 ; done{% endif -%}
 {%- endif %}
 ```
@@ -35,7 +37,7 @@ Export the env variables:
 
 ```bash
 {% for cap in include.capture -%}
-export {{ cap.variable }}=$(echo "$_response" | jq -r "{{ cap.jq | strip }}")
+export {{ cap.variable }}=$(echo "$_response" | {% if cap.jq %}jq -r "{{ cap.jq | strip }}"{% elsif cap.command %}{{ cap.command | strip }}{% endif %})
 {% endfor -%}
 ```
 {% endif %}

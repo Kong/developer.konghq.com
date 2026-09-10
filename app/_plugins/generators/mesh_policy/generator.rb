@@ -20,6 +20,10 @@ module Jekyll
       def skip?
         site.config.dig('skip', 'mesh_policy')
       end
+
+      def skip_locally?
+        @build_filter.excludes_prefix?('/mesh/')
+      end
     end
   end
 end

@@ -27,3 +27,8 @@ end
 group :jekyll_plugins do
   gem 'jekyll-contentblocks'
 end
+
+group :test do
+  gem 'rspec'
+  gem 'capybara'
+end

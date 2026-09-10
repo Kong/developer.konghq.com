@@ -321,5 +321,13 @@
   },
   "required": [
     "config"
+  ],
+  "x-supported-partials": [
+    {
+      "name": "redis-ce",
+      "paths": [
+        "config.storage_config.redis"
+      ]
+    }
   ]
 }

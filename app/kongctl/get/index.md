@@ -23,6 +23,10 @@ related_resources:
 
 kongctl provides the following tools for retrieving resources and resource details:
 
+Text output is optimized for terminals and can omit fields. Use
+`--output json` or `--output yaml` for complete structured output. Use
+repeated `--columns HEADER=.field` flags to select custom text columns.
+
 {% table %}
 columns:
   - title: Command
@@ -47,7 +51,7 @@ rows:
     description: "Get authentication strategy details."
   - command: |
       [kongctl get catalog](/kongctl/get/catalog/)
-    description: "Get {{site.catalog}} details."
+    description: "Get {{site.konnect_catalog}} details."
   - command: |
       [kongctl get dcr-provider](/kongctl/get/dcr-provider/)
     description: "List or get DCR providers."

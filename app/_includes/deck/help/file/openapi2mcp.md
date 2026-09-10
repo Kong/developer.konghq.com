@@ -7,7 +7,7 @@ Flags:
   -h, --help                     help for openapi2mcp
       --ignore-security-errors   Ignore errors for unsupported security schemes or missing x-kong-mcp-acl extensions.
       --include-direct-route     Also generate non-MCP routes for direct API access.
-  -m, --mode string              ai-mcp-proxy mode: 'conversion' (client mode) or 'conversion-listener' (server mode). (default "conversion-listener")
+  -m, --mode string              ai-mcp-proxy mode: 'passthrough-listener', 'conversion-listener', 'conversion-only', or 'listener'. (default "conversion-listener")
       --no-id                    Do not generate UUIDs for entities.
   -o, --output-file string       Output file to write. Use - to write to stdout. (default "-")
   -p, --path-prefix string       Custom path prefix for the MCP route (default: /{service-name}-mcp).

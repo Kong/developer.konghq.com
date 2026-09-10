@@ -1,9 +1,9 @@
 openapi: 3.0.3
 info:
   title: Konnect Sliver
-  version: 1.0.2
-  x-oas-source: kong/platform-api@abe599a511a14705103c41ca4112d9164ed56ddc
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/abe599a511a14705103c41ca4112d9164ed56ddc'
+  version: 1.5.3
+  x-oas-source: kong/platform-api@63be650f859ba5013134edfa85692c891d2001c5
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/63be650f859ba5013134edfa85692c891d2001c5'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -772,6 +772,7 @@ components:
       enum:
         - implicit
         - client_credentials
+        - 'urn:ietf:params:oauth:grant-type:jwt-bearer'
     GrantTypes:
       description: List of OAuth 2.0 grant types
       type: array
@@ -865,6 +866,7 @@ components:
       type: string
       default: client_secret_post
       enum:
+        - private_key_jwt
         - client_secret_post
         - none
     TrustedOrigins:
@@ -1527,24 +1529,6 @@ components:
         example-1: equals-some-value
         example-2:
           eq: some-value
-    LegacyStringFieldFilter:
-      description: 'Filter using **one** of the following operators: `eq`, `contains`'
-      type: object
-      properties:
-        eq:
-          description: The field exactly matches the provided value.
-          type: string
-          example: '?filter[field_name_here][eq]=foo'
-        contains:
-          description: The field contains the provided value.
-          type: string
-          example: '?filter[field_name_here][contains]=foo'
-      additionalProperties: false
-      x-examples:
-        example-1:
-          contains: some-value
-        example-2:
-          eq: some-value
     PageMeta:
       description: Contains pagination query parameters and the total number of objects returned.
       type: object
@@ -1571,6 +1555,24 @@ components:
       required:
         - page
       title: PaginatedMeta
+    LegacyStringFieldFilter:
+      description: 'Filter using **one** of the following operators: `eq`, `contains`'
+      type: object
+      properties:
+        eq:
+          description: The field exactly matches the provided value.
+          type: string
+          example: '?filter[field_name_here][eq]=foo'
+        contains:
+          description: The field contains the provided value.
+          type: string
+          example: '?filter[field_name_here][contains]=foo'
+      additionalProperties: false
+      x-examples:
+        example-1:
+          contains: some-value
+        example-2:
+          eq: some-value
     LabelsUpdate:
       description: |
         Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 

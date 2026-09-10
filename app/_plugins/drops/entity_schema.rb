@@ -57,18 +57,10 @@ module Jekyll
         @api_file ||= [
           File.expand_path('../', @site.source),
           'api-specs',
-          *product_path,
+          @schema.fetch('api'),
           release_path,
           'openapi.yaml'
         ].join('/')
-      end
-
-      def product_path
-        if @release.ee_version
-          %w[gateway admin-ee]
-        else
-          %w[konnect event-gateway]
-        end
       end
 
       def release_path

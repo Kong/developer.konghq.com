@@ -168,7 +168,7 @@ async function kongPlugins() {
 }
 
 async function pluginEntries(version) {
-  const filePath = "../../app/_data/changelogs/gateway.json";
+  const filePath = "../../app/_changelogs/gateway.json";
   const raw = await fs.readFile(filePath, "utf-8");
   const changelog = JSON.parse(raw);
 

@@ -20,7 +20,7 @@ Examples:
   kongctl adopt konnect api my-api --namespace team-alpha
 
 Available Commands:
-  ai-gateway    Adopt an existing Konnect AI Gateway into namespace management [beta]
+  ai-gateway    Adopt an existing Konnect AI Gateway into namespace management
   analytics     Adopt Konnect Analytics resources into namespace management
   api           Adopt an existing Konnect API into namespace management
   auth-strategy Adopt an existing Konnect auth strategy into namespace management

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'build_filter'
+
 module Jekyll
   module SiteAccessor
     def site
@@ -7,7 +9,7 @@ module Jekyll
     end
 
     def site_redirects
-      @site_redirects ||= if Jekyll.env == 'development' && ENV['PAGE_PATHS']
+      @site_redirects ||= if Jekyll::BuildFilter.current.filtered?
                             {}
                           else
                             site.pages.detect do |p|
@@ -28,6 +30,19 @@ module Jekyll
                               hash[source] = destination
                             end
                           end
+    end
+
+    def redirect_exists?(path)
+      site_redirects.keys.any? { |pattern| redirect_pattern_match?(pattern, path) }
+    end
+
+    private
+
+    def redirect_pattern_match?(pattern, path)
+      regex_str = Regexp.escape(pattern)
+                        .gsub('\*', '.*')
+                        .gsub(/:\w+/, '[^/]+')
+      Regexp.new("\\A#{regex_str}\\z").match?(path)
     end
   end
 end

@@ -30,7 +30,7 @@ module Jekyll
         @errors ||= begin
           return [] unless api_spec_file.exist?
 
-          oas = YAML.load_file(api_spec_file.path)
+          oas = api_spec_file.raw_api_spec
           raise ArgumentError, "Could not load #{api_spec_file.path}" unless oas
 
           oas.fetch('x-errors', [])

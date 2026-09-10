@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'tabbed_tables'
+require_relative '../../component_templates'
 
 module Jekyll
   module RenderPlugins
@@ -16,7 +17,7 @@ module Jekyll
           context['columns'] = columns(site)
           context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
 
-          Liquid::Template.parse(template, { line_numbers: true }).render(context)
+          ComponentTemplates.fetch('deployment_topologies', 'html', base: 'app/_includes/plugins').render(context)
         end
       end
 
@@ -30,10 +31,6 @@ module Jekyll
 
       def columns(site)
         @columns ||= site.data.dig('plugins', 'tables', table, 'columns')
-      end
-
-      def template
-        @template ||= File.read(File.expand_path('app/_includes/plugins/deployment_topologies.html'))
       end
 
       def release(site)

@@ -3,7 +3,7 @@ Usage:
   kongctl listen audit-logs [flags]
 
 Aliases:
-  audit-logs, audit-log, al, AL
+  audit-logs, audit-log
 
 Examples:
   # Build destination endpoint from public base URL and listener path

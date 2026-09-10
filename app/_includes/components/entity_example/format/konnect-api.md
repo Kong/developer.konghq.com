@@ -1,8 +1,12 @@
 {% case include.presenter.entity_type %}
 {% when 'consumer' %}
-To create a Consumer, call the Konnect [control plane config API's `/consumers` endpoint](/api/konnect/control-planes-config/#/operations/create-consumer). 
+{% if include.presenter.product == 'ai-gateway' -%}
+To create a Consumer, call the Konnect [{{site.ai_gateway}} API's `/consumers` endpoint](/api/konnect/ai-gateway/#/operations/create-ai-gateway-consumer).{% else %}
+To create a Consumer, call the Konnect [control plane config API's `/consumers` endpoint](/api/konnect/control-planes-config/#/operations/create-consumer).{% endif %}
 {% when 'consumer_group' %}
-To create a Consumer Group, call the Konnect [control plane config API's `/consumer_groups` endpoint](/api/konnect/control-planes-config/#/operations/create-consumer_group).
+{% if include.presenter.product == 'ai-gateway' -%}
+To create a Consumer Group, call the Konnect [{{site.ai_gateway}} API's `/consumer-groups` endpoint](/api/konnect/ai-gateway/#/operations/create-ai-consumer-group).{% else %}
+To create a Consumer Group, call the Konnect [control plane config API's `/consumer_groups` endpoint](/api/konnect/control-planes-config/#/operations/create-consumer_group).{% endif %}
 {% when 'route' %}
 To create a Route, call the Konnect [control plane config API's `/routes` endpoint](/api/konnect/control-planes-config/#/operations/create-route).
 {% when 'service' %}
@@ -12,13 +16,22 @@ To create a Target, call the Konnect [control plane config API's `/targets` endp
 {% when 'upstream' %}
 To create an Upstream, call the Konnect [control plane config API's `/upstreams` endpoint](/api/konnect/control-planes-config/#/operations/create-upstream). 
 {% when 'sni' %}
-To create an SNI, call the Konnect [control plane config API's `/snis` endpoint](/api/konnect/control-planes-config/#/operations/create-sni). 
+{% if include.presenter.product == 'ai-gateway' -%}
+To create an AI SNI, call the Konnect [{{site.ai_gateway}} API's `/snis` endpoint](/api/konnect/ai-gateway/#/operations/create-ai-gateway-sni).{% else %}
+To create an SNI, call the Konnect [control plane config API's `/snis` endpoint](/api/konnect/control-planes-config/#/operations/create-sni). {% endif %}
 {% when 'ca_certificate' %}
-To create a CA Certificate, call the Konnect [control plane config API's `/ca-certificates` endpoint](/api/konnect/control-planes-config/#/operations/create-ca_certificate). 
+{% if include.presenter.product == 'ai-gateway' -%}
+To create an AI CA Certificate, call the Konnect [{{site.ai_gateway}} API's `/ca-certificates` endpoint](/api/konnect/ai-gateway/#/operations/create-ai-gateway-ca-certificate).
+{% else %}
+To create a CA Certificate, call the Konnect [control plane config API's `/ca-certificates` endpoint](/api/konnect/control-planes-config/#/operations/create-ca_certificate). {% endif %}
 {% when 'certificate' %}
-To create a Certificate, call the Konnect [control plane config API's `/certificates` endpoint](/api/konnect/control-planes-config/#/operations/create-certificate). 
+{% if include.presenter.product == 'ai-gateway' -%}
+To create an AI Certificate, call the Konnect [{{site.ai_gateway}} API's `/certificates` endpoint](/api/konnect/ai-gateway/#/operations/create-ai-gateway-certificate).{% else %}
+To create a Certificate, call the Konnect [control plane config API's `/certificates` endpoint](/api/konnect/control-planes-config/#/operations/create-certificate). {% endif %}
 {% when 'vault' %}
-To create a Vault entity, call the Konnect [control plane config API's `/vaults` endpoint](/api/konnect/control-planes-config/#/operations/create-vault). 
+{% if include.presenter.product == 'ai-gateway' -%}
+To create a Vault entity, call the Konnect [{{site.ai_gateway}} API's `/vaults` endpoint](/api/konnect/ai-gateway/#/operations/create-ai-gateway-vault). {% else %}
+To create a Vault entity, call the Konnect [control plane config API's `/vaults` endpoint](/api/konnect/control-planes-config/#/operations/create-vault). {% endif %}
 {% when 'key' %}
 To create a Key, call the Konnect [control plane config API's `/keys` endpoint](/api/konnect/control-planes-config/#/operations/create-key). 
 {% when 'key-set' %}
@@ -48,7 +61,9 @@ To create a TLS trust bundle, call the Event Gateway API's [`/tls-trust-bundles`
 {% include components/entity_example/replace_variables.md missing_variables=include.presenter.missing_variables %}
 {% if include.presenter.product == 'event-gateway' %}
 See the [Konnect Event Gateway API reference](/api/konnect/event-gateway/) to learn about region-specific URLs and personal access tokens.
+{% elsif include.presenter.product == 'ai-gateway' %}
+See the [Konnect {{site.ai_gateway}} API reference](/api/konnect/ai-gateway/) to learn about region-specific URLs and personal access tokens.
 {% else %}
-See the [Konnect API reference](/api/konnect/control-planes-config/) to learn about region-specific URLs and personal access tokens.
+See the [Konnect Control Planes Config API reference](/api/konnect/control-planes-config/) to learn about region-specific URLs and personal access tokens.
 {% endif %}
 {% endif %}

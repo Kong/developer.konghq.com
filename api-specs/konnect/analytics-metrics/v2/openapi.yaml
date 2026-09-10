@@ -16,12 +16,12 @@ info:
     - For queries that use the time dimension, the granularity of the result may be coarser than requested. The finest allowed granularity depends on the query's time range: data farther in the past may have coarser granularity. The exact result granularity will be reported in the response `meta.granularity_ms` field.
     - Queries must complete within 10 seconds. If a query takes longer than 10 seconds, a 408 will be returned. In this case, it is suggested to add more filters, and/or reduce the time range.
     - This endpoint is rate limited to 10 requests per minute per user.
-  version: 4.2.3
+  version: 4.3.0
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@4ef7dacb3ac0f3f2d20d3892aa57d0f047b34d7c
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/4ef7dacb3ac0f3f2d20d3892aa57d0f047b34d7c'
+  x-oas-source: kong/platform-api@e9225277ad20f1068555baeabe5c9aa67444a940
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e9225277ad20f1068555baeabe5c9aa67444a940'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -152,6 +152,7 @@ components:
               - data_plane_node
               - data_plane_node_version
               - gateway_service
+              - oidc_credential
               - portal
               - principal
               - realm
@@ -235,6 +236,7 @@ components:
               - gateway_service
               - consumer
               - application
+              - oidc_credential
               - route
               - ai_provider
               - ai_response_model
@@ -358,6 +360,7 @@ components:
               - mcp_method
               - mcp_session_id
               - mcp_tool_name
+              - oidc_credential
               - portal
               - principal
               - realm
@@ -1317,6 +1320,42 @@ components:
             - operator
             - field
       title: Filter by gateway_service
+    MetricsOidcCredentialFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - oidc_credential
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - oidc_credential
+          required:
+            - operator
+            - field
+      title: Filter by oidc_credential
     MetricsPortalFilterByField:
       oneOf:
         - title: Multiselect filters
@@ -1667,6 +1706,7 @@ components:
             data_plane_node: '#/components/schemas/MetricsDataPlaneNodeFilterByField'
             data_plane_node_version: '#/components/schemas/MetricsDataPlaneNodeVersionFilterByField'
             gateway_service: '#/components/schemas/MetricsGatewayServiceFilterByField'
+            oidc_credential: '#/components/schemas/MetricsOidcCredentialFilterByField'
             portal: '#/components/schemas/MetricsPortalFilterByField'
             principal: '#/components/schemas/MetricsPrincipalFilterByField'
             realm: '#/components/schemas/MetricsRealmFilterByField'
@@ -1690,6 +1730,7 @@ components:
           - $ref: '#/components/schemas/MetricsDataPlaneNodeFilterByField'
           - $ref: '#/components/schemas/MetricsDataPlaneNodeVersionFilterByField'
           - $ref: '#/components/schemas/MetricsGatewayServiceFilterByField'
+          - $ref: '#/components/schemas/MetricsOidcCredentialFilterByField'
           - $ref: '#/components/schemas/MetricsPortalFilterByField'
           - $ref: '#/components/schemas/MetricsPrincipalFilterByField'
           - $ref: '#/components/schemas/MetricsRealmFilterByField'
@@ -2068,6 +2109,7 @@ components:
             llm_cache_status: '#/components/schemas/MetricsLlmCacheStatusFilterByField'
             llm_embeddings_model: '#/components/schemas/MetricsLlmEmbeddingsModelFilterByField'
             llm_embeddings_provider: '#/components/schemas/MetricsLlmEmbeddingsProviderFilterByField'
+            oidc_credential: '#/components/schemas/MetricsOidcCredentialFilterByField'
             principal: '#/components/schemas/MetricsPrincipalFilterByField'
             realm: '#/components/schemas/MetricsRealmFilterByField'
             route: '#/components/schemas/MetricsRouteFilterByField'
@@ -2086,6 +2128,7 @@ components:
           - $ref: '#/components/schemas/MetricsLlmCacheStatusFilterByField'
           - $ref: '#/components/schemas/MetricsLlmEmbeddingsModelFilterByField'
           - $ref: '#/components/schemas/MetricsLlmEmbeddingsProviderFilterByField'
+          - $ref: '#/components/schemas/MetricsOidcCredentialFilterByField'
           - $ref: '#/components/schemas/MetricsPrincipalFilterByField'
           - $ref: '#/components/schemas/MetricsRealmFilterByField'
           - $ref: '#/components/schemas/MetricsRouteFilterByField'
@@ -2407,6 +2450,7 @@ components:
             mcp_method: '#/components/schemas/MetricsMcpMethodFilterByField'
             mcp_session_id: '#/components/schemas/MetricsMcpSessionIdFilterByField'
             mcp_tool_name: '#/components/schemas/MetricsMcpToolNameFilterByField'
+            oidc_credential: '#/components/schemas/MetricsOidcCredentialFilterByField'
             portal: '#/components/schemas/MetricsPortalFilterByField'
             principal: '#/components/schemas/MetricsPrincipalFilterByField'
             realm: '#/components/schemas/MetricsRealmFilterByField'
@@ -2438,6 +2482,7 @@ components:
           - $ref: '#/components/schemas/MetricsMcpMethodFilterByField'
           - $ref: '#/components/schemas/MetricsMcpSessionIdFilterByField'
           - $ref: '#/components/schemas/MetricsMcpToolNameFilterByField'
+          - $ref: '#/components/schemas/MetricsOidcCredentialFilterByField'
           - $ref: '#/components/schemas/MetricsPortalFilterByField'
           - $ref: '#/components/schemas/MetricsPrincipalFilterByField'
           - $ref: '#/components/schemas/MetricsRealmFilterByField'

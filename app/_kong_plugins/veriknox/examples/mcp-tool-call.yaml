@@ -1,0 +1,71 @@
+description: 'Enable the VeriKnox plugin for MCP tool-call traffic.'
+
+extended_description: |
+  Enable the VeriKnox plugin on a Route that proxies Model Context Protocol (MCP) tool-call requests.
+
+  The plugin parses the MCP JSON-RPC body, applies VeriKnox Hub policy, and forwards a
+  signed receipt before proxying the request to the MCP server.
+  Use the same pattern for A2A (Agent-to-Agent) JSON-RPC traffic by changing
+  `specification` to `A2A`.
+
+  The `agent_passphrase` must be a vault reference. Don't set it as a plain string.
+  The data plane must be enrolled with VeriKnox Hub before the plugin can sign receipts.
+  See the [installation instructions](/plugins/veriknox/#install-the-veriknox-plugin) for enrollment steps.
+
+  {% mermaid %}
+  sequenceDiagram
+      autonumber
+      participant A as AI Agent / Client
+      participant K as {{site.ai_gateway}}<br/>(veriknox-plugin)
+      participant H as VeriKnox Hub
+      participant M as MCP Server
+
+      A->>K: JSON-RPC v2 tool-call request
+      Note over K: Detect tool-call method<br/>(tools/call)
+      K->>H: POST signed receipt — tool-call request<br/>(tool name, arguments, ED25519 + ML-DSA-65)
+      H-->>K: 200 OK (receipt accepted)
+      K->>M: Forward tool-call to MCP server
+      M-->>K: Return tool result
+      Note over K: Parse tool-call response
+      K->>H: POST signed receipt — tool-call response<br/>(result content, ED25519 + ML-DSA-65)
+      H-->>K: 200 OK (receipt accepted)
+      K-->>A: Return tool result to agent
+  {% endmermaid %}
+
+title: 'MCP tool call'
+
+weight: 901
+
+requirements:
+  - "The VeriKnox plugin is [installed](/plugins/veriknox/#install-the-veriknox-plugin) and the data plane is enrolled with VeriKnox Hub."
+  - "The identity passphrase is stored in a Kong Vault. Reference it as `{vault://veriknox/VERIKNOX_IDENTITY_PASSPHRASE}` or the equivalent path for your vault backend."
+  - "The MCP server Route exists in {{site.base_gateway}}."
+
+variables:
+  provider:
+    value: $VERIKNOX_PROVIDER_NAME
+    description: "A logical name for the MCP server used in audit receipts. For example: `Math-MCP-Server`."
+  agent-passphrase:
+    value: "{vault://veriknox/VERIKNOX_IDENTITY_PASSPHRASE}"
+    description: "Vault reference to the identity passphrase. Replace `veriknox` with your vault prefix if different."
+  hub-base-url:
+    value: https://hub.veriknox.ai
+    description: "Base URL of your VeriKnox Hub instance. The default value is `https://hub.veriknox.ai`."
+
+config:
+  endpoint:
+    specification: MCP
+    provider: ${provider}
+  agent_passphrase: "${agent-passphrase}"
+  veriknox_hub:
+    base_url: ${hub-base-url}
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.14'

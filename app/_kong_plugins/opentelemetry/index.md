@@ -49,9 +49,9 @@ related_resources:
   - text: "{{site.base_gateway}} monitoring and metrics"
     url: /gateway/monitoring/
   - text: "Gen AI OpenTelemetry metrics reference"
-    url: /ai-gateway/ai-otel-metrics/
+    url: /ai-gateway/v1/ai-otel-metrics/
   - text: "Gen AI OpenTelemetry span attributes"
-    url: /ai-gateway/llm-open-telemetry/
+    url: /ai-gateway/v1/llm-open-telemetry/
   - text: "OpenTelemetry tutorials"
     url: /how-to/?products=gateway&products=ai-gateway&kong_plugins=opentelemetry
 

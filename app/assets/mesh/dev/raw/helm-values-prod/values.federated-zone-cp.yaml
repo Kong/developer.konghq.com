@@ -30,6 +30,7 @@ kuma:
       adminRoleGroups:
         - mesh-system:admin
         - system:masters
+        - kubeadm:cluster-admins
 
     # (action): please specify the address of the global CP
     # e.g. grpcs://my-global-cp.my-hostname.com:5685

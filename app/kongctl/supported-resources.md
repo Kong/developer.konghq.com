@@ -69,6 +69,31 @@ _defaults:
     protected: false
 ```
 
+## Configuration templates
+
+Define reusable configuration blocks under the top-level `_templates` key and
+select one with `_extends`:
+
+```yaml
+_templates:
+  private-portal:
+    authentication_enabled: true
+    default_api_visibility: private
+
+portals:
+  - _extends: private-portal
+    ref: developer-portal
+    name: Developer Portal
+```
+
+Templates are shared across all sources loaded by one command. Consumer
+objects recursively override template objects. Scalars, arrays, explicit
+`null`, and values of a different type replace inherited values. Arrays don't
+append.
+
+See [Configuration templates](/kongctl/declarative/#configuration-templates)
+for discovery, inheritance, tag, and sync-scope behavior.
+
 ## YAML tags
 
 Use YAML tags in field values to load files or reference other resources.
@@ -79,10 +104,18 @@ Use YAML tags in field values to load files or reference other resources.
   Supports `VAR#extract.path` and `var`/`extract` map form.
 - `!ref`: Reference another declarative resource by `ref`.
   `resource-ref#field` is supported; the default field is `id`.
+- `!lookup`: Resolve an existing resource directly in a relationship field.
+- `!external`: An exact alias for `!lookup`.
+- `!secret`: Defer a write-only value until execution and keep the resolved
+  value out of saved plans.
 - `!ref` is intended for string fields.
 - `string (uuid)` and `array[string(uuid)]` annotations in this document describe API value types. 
   In declarative config, prefer `!ref` and avoid literal UUID values.
-- For unmanaged/external resources, prefer `_external.selector` and then reference that resource by `!ref` from other fields.
+- For reusable unmanaged resources or external parents with managed children,
+  use `_external.selector` and reference the resource with `!ref`.
+- For a one-off unmanaged relationship, use `!lookup`.
+- Sync never changes or deletes an external parent. Explicitly scoped child
+  collections are still fully reconciled.
 - Large text/spec fields are commonly loaded with `!file`.
 - `!file` paths are resolved relative to the config file and must remain within the configured base directory boundary.
 
@@ -99,6 +132,19 @@ apis:
     publications:
       - ref: billing-publication
         portal_id: !ref docs-portal
+```
+
+Use mapping syntax to compose `!env` inside `!lookup` or `!external`, or
+inside `!secret`:
+
+```yaml
+portal_id: !lookup
+  name: !env PORTAL_NAME
+
+value: !secret
+  parts:
+    - "Bearer "
+    - !env AI_PROVIDER_TOKEN
 ```
 
 ## Audit logs
@@ -134,6 +180,8 @@ Audit log webhook destinations **cannot** declare kongctl metadata and are not c
 apis:
   - ref: string
     name: string required (1-255 chars)
+    _external: # alternative to managed API fields
+      id: string # API UUID, or use selector.matchFields.name
     description: string (nullable)
     version: string (1-255 chars, nullable)
     slug: string (pattern: ^[\w-]+$, nullable)
@@ -155,14 +203,18 @@ apis:
         visibility: One of (public | private)
     implementations: # /api/konnect/api-builder/v3/#/operations/create-api-implementation
       - ref: string
-        type: service
+        type: service # optional when service is present
         service:
           id: string required (uuid) # prefer: !ref <gateway-service-ref>
+          control_plane_id: string required (uuid) # prefer: !ref <control-plane-ref>
+      - ref: string
+        type: control_plane # optional when control_plane is present
+        control_plane:
           control_plane_id: string required (uuid) # prefer: !ref <control-plane-ref>
     documents: # /api/konnect/api-builder/v3/#/operations/create-api-document
       - ref: string
         content: string required (markdown) # prefer: !file ./docs/page.md
-        title: string
+        title: string required unless content has a YAML frontmatter title
         slug: string (pattern: ^[\w-]+$)
         status: One of (published | unpublished)
         parent_document_id: string (uuid, nullable) # prefer: !ref <document-ref>
@@ -178,6 +230,12 @@ apis:
 API specifications must be declared on API versions with `versions[].spec` or
 root-level `api_versions[].spec`; `apis[].spec_content` is not supported in
 declarative configuration.
+
+An external API can own managed versions, publications, implementations, and
+documents. kongctl resolves the API and plans only the declared children; it
+never creates, updates, or deletes the API. Each implementation defines exactly
+one of `service` or `control_plane`. When `type` is present, it must match
+the selected payload.
 
 ## Application auth strategies
 
@@ -424,7 +482,12 @@ event_gateways:
              - type: One of (glob | exact_list) required
                glob: string # if type=glob
                exact_list: array[object] (min 1 item) # if type=exact_list
-                 - value: string required
+               - value: string required
+       topic_aliases:
+         - alias: string required
+           topic: string required
+           condition: string
+           conflict: One of (warn | ignore) (default: warn)
        acl_mode: One of (enforce_on_gateway | passthrough) required
        dns_label: string required (1-63 chars, RFC1035 label)
        labels: object [string]string
@@ -635,6 +698,7 @@ portals:
    default_application_auth_strategy_id: string (uuid, nullable) # prefer: !ref <app-auth-strategy-ref>
    auto_approve_developers: boolean (default: false)
    auto_approve_applications: boolean (default: false)
+   sipr_enabled: boolean (default: false)
    labels: object [string]string
      key: value
    customization: # /api/konnect/portal-management/v3/#/operations/replace-portal-customization
@@ -865,3 +929,483 @@ audit-logs:
           matchFields:
             name: foo
 ```
+
+## {{site.ai_gateway}}
+
+This section covers the {{site.ai_gateway}} resources supported by kongctl.
+Use `kongctl explain ai_gateway --output yaml` as the authoritative schema for
+nested {{site.ai_gateway}} resources and fields, and use
+`kongctl scaffold ai_gateway` to generate starter YAML.
+
+{{site.ai_gateway}} nodes are imperative, read-only resources. Inspect them
+with `kongctl get ai-gateway nodes`; don't include them in declarative
+configuration.
+
+* [{{site.ai_gateway}} entities reference](/ai-gateway/entities/)
+* [Using kongctl to manage {{site.ai_gateway}}](/ai-gateway/kongctl/)
+* [Get started with {{site.ai_gateway}}](/ai-gateway/get-started/)
+
+### {{site.ai_gateway}}s
+
+[{{site.ai_gateway}}s](/ai-gateway/) are the top-level resource that contains other {{site.ai_gateway}} resources.
+
+```yaml
+ai_gateways:
+  - ref: string
+    name: string required
+    display_name: string required
+    description: string (nullable)
+    deployment_type: One of (hybrid | managed | serverless) (default: hybrid)
+    proxy_urls: array[object]
+      - host: string required
+        port: integer required
+        protocol: string required
+    labels: object [string]string
+      key: value
+    model_providers: # see AI Model Providers
+    auth_strategies: # see AI Auth Strategies
+    policies: # see AI Policies
+    agents: # see AI Agents
+    consumers: # see AI Consumers
+    consumer_groups: # see AI Consumer Groups
+    models: # see AI Models
+    mcp_servers: # see AI MCP Servers
+    config_stores: # see AI Config Stores
+    vaults: # see AI Vaults
+    data_plane_certificates:
+      - ref: string
+        title: string required
+        description: string (nullable)
+        cert: string required # PEM-encoded certificate; prefer: !file ./certs/data-plane.pem
+```
+
+### AI Model Providers
+
+[AI Model Providers](/ai-gateway/entities/ai-model-provider/) define connections to upstream LLM services and store authentication credentials.
+The `type` field determines the provider and the shape of `config.auth`.
+
+Most providers use `type: basic` auth with a `headers` array.
+AWS Bedrock supports `type: aws` for IAM credentials.
+Azure supports `type: azure` for service principal or managed identity auth.
+Gemini supports `type: gcp` for service account auth.
+
+```yaml
+ai_gateway_model_providers:
+  - ref: string
+    ai_gateway: string required # prefer: !ref <ai-gateway-ref>
+    name: string required
+    display_name: string required
+    labels: object [string]string
+      key: value
+    # Basic auth (used by openai, anthropic, cerebras, cohere, dashscope,
+    # databricks, deepseek, huggingface, kimi, llama2, mistral, ollama,
+    # vercel, vllm, xai, and as an option for bedrock, azure, gemini)
+    type: One of (openai | anthropic | cerebras | cohere | dashscope | databricks | deepseek | huggingface | kimi | llama2 | mistral | ollama | vercel | vllm | xai | bedrock | azure | gemini) required
+    config:
+      auth:
+        type: basic required
+        headers: # at least one of headers or params
+          - name: string required
+            value: string
+        params:
+          - name: string required
+            value: string
+            location: One of (body | query)
+    # AWS Bedrock with IAM credentials (type=bedrock, auth type=aws)
+    # type: bedrock
+    # config:
+    #   auth:
+    #     type: aws
+    #     access_key_id: string # prefer: !env AWS_ACCESS_KEY_ID
+    #     secret_access_key: string # prefer: !env AWS_SECRET_ACCESS_KEY
+    #     assume_role_arn: string (nullable)
+    #     role_session_name: string (nullable)
+    #     sts_endpoint_url: string (nullable)
+    #     batch_role_arn: string (nullable)
+    # Azure with service principal (type=azure, auth type=azure)
+    # type: azure
+    # config:
+    #   auth:
+    #     type: azure
+    #     client_id: string # prefer: !env AZURE_CLIENT_ID
+    #     client_secret: string # prefer: !env AZURE_CLIENT_SECRET
+    #     tenant_id: string # prefer: !env AZURE_TENANT_ID
+    #     use_managed_identity: boolean
+    #   instance: string # Azure instance name
+    # GCP-based providers (type=gemini, auth type=gcp)
+    # type: gemini
+    # config:
+    #   auth:
+    #     type: gcp
+    #     service_account_json: string # prefer: !env GCP_SERVICE_ACCOUNT_JSON
+    #     metadata_url: string (nullable)
+    #     oauth_token_url: string (nullable)
+    #     use_gcp_service_account: boolean
+```
+{:.collapsible}
+
+### AI Models
+
+[AI Models](/ai-gateway/entities/ai-model/) declare which upstream models are available, configure routing, and specify which AI Model Provider to use.
+
+```yaml
+ai_gateway_models:
+  - ref: string
+    ai_gateway: string required # prefer: !ref <ai-gateway-ref>
+    name: string required
+    display_name: string required
+    enabled: boolean
+    type: One of (model | api) required
+    formats: array[object] required
+      - type: string required (for example openai)
+    config:
+      route: object required
+        paths: array[string]
+        hosts: array[string]
+        methods: array[string]
+        protocols: array[string]
+        headers: object
+        strip_path: boolean
+        preserve_host: boolean
+        regex_priority: integer
+        https_redirect_status_code: integer
+        request_buffering: boolean
+        response_buffering: boolean
+        tags: array[string]
+      model: object
+        alias: string
+      logging: object
+        payloads: boolean
+        statistics: boolean
+      response_streaming: One of (allow | deny | always)
+      max_request_body_size: integer
+      balancer: object
+      proxy: object
+    targets: array[object] required
+      - name: string required # upstream model name (for example gpt-4o)
+        provider: string required # AI Model Provider name
+        weight: integer
+        semantic_description: string
+        allow_auth_override: boolean
+        config:
+          type: One of (openai | anthropic | azure | bedrock | cerebras | cohere | dashscope | databricks | deepseek | gemini | huggingface | kimi | llama2 | mistral | ollama | vercel | vllm | xai) required
+          upstream_url: string (nullable)
+          # anthropic
+          version: string
+          # azure
+          deployment_id: string
+          api_version: string
+          # bedrock
+          region: string
+          # and more provider-specific fields; run `kongctl explain ai_gateway_models` for full detail
+    access: object
+      acls:
+        oneOf:
+          allow: array[string] # consumer group names
+          deny: array[string]
+      auth_strategies: array[string] # Auth Strategy names; prefer: !ref values
+    capabilities: array[string] # for example [generate]
+    policies: array[string] # policy names; prefer: !ref values
+    labels: object [string]string
+      key: value
+```
+{:.collapsible}
+
+### AI Auth Strategies
+
+[AI Auth Strategies](/ai-gateway/entities/ai-auth-strategy/) configure authentication for {{site.ai_gateway}} endpoints.
+
+```yaml
+ai_gateway_auth_strategies:
+  - ref: string
+    ai_gateway: string required # prefer: !ref <ai-gateway-ref>
+    name: string required
+    display_name: string required
+    labels: object [string]string
+      key: value
+    type: One of (key-auth | openid-connect) required
+    # Key auth
+    config: # if type=key-auth
+      hide_credentials: boolean
+      key_in_body: boolean
+      key_in_header: boolean
+      key_in_query: boolean
+      key_names: array[string] required
+    # OIDC
+    # config: # if type=openid-connect
+    #   issuer: string required
+    #   client_id: array[string]
+    #   client_secret: array[string] # write-only; prefer: !env
+    #   scopes: array[string]
+    #   auth_methods: array[string]
+    #   consumer_claims: array[string]
+    #   consumer_optional: boolean
+    #   cache_tokens_salt: string
+    #   ssl_verify: boolean
+```
+
+### AI Policies
+
+[AI Policies](/ai-gateway/entities/ai-policy/) apply rules to requests and responses passing through {{site.ai_gateway}}.
+
+```yaml
+ai_gateway_policies:
+  - ref: string
+    ai_gateway: string required # prefer: !ref <ai-gateway-ref>
+    name: string required
+    display_name: string required
+    type: string required # for example ai-sanitizer
+    enabled: boolean
+    global: boolean
+    config: object # policy-specific configuration
+    labels: object [string]string
+      key: value
+```
+
+### AI Consumers
+
+[AI Consumers](/ai-gateway/entities/ai-consumer/) represent clients that access {{site.ai_gateway}} endpoints.
+
+```yaml
+ai_gateway_consumers:
+  - ref: string
+    ai_gateway: string required # prefer: !ref <ai-gateway-ref>
+    name: string required
+    display_name: string required
+    type: One of (api-key | oauth) required
+    custom_id: string (nullable)
+    policies: array[string] # policy names; prefer: !ref values
+    credentials:
+      - ref: string
+        ai_gateway_consumer: string required # prefer: !ref <consumer-ref>
+        name: string required
+        display_name: string required
+        type: One of (api-key) required
+        api_key: string # create-only; must use !secret when provided
+        ttl: integer
+        labels: object [string]string
+          key: value
+    labels: object [string]string
+      key: value
+```
+
+### AI Consumer Groups
+
+[AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) collect consumers so that policies can be applied to them as a set.
+
+```yaml
+ai_gateway_consumer_groups:
+  - ref: string
+    ai_gateway: string required # prefer: !ref <ai-gateway-ref>
+    name: string required
+    display_name: string required
+    consumers: array[string] # consumer names; prefer: !ref <consumer-ref>#name
+    policies: array[string] # policy names; prefer: !ref values
+    labels: object [string]string
+      key: value
+```
+
+### AI MCP Servers
+
+[AI MCP Servers](/ai-gateway/entities/ai-mcp-server/) expose Model Context Protocol tool endpoints through {{site.ai_gateway}}.
+The `type` controls how the server is exposed: `conversion-only` converts MCP to REST without a listener, `listener` creates a dedicated MCP listener, `passthrough-listener` forwards MCP traffic as-is, and `upstream-server` proxies to an upstream MCP server.
+
+```yaml
+ai_gateway_mcp_servers:
+  - ref: string
+    ai_gateway: string required # prefer: !ref <ai-gateway-ref>
+    name: string required
+    display_name: string required
+    enabled: boolean
+    type: One of (conversion-only | conversion-listener | listener | passthrough-listener | upstream-server) required
+    config:
+      url: string required # upstream MCP server URL
+      route: object
+        paths: array[string]
+        hosts: array[string]
+        methods: array[string]
+        protocols: array[string]
+        headers: object
+        strip_path: boolean
+        preserve_host: boolean
+        regex_priority: integer
+        https_redirect_status_code: integer
+        request_buffering: boolean
+        response_buffering: boolean
+        tags: array[string]
+      logging: object
+        payloads: boolean
+        statistics: boolean
+        audits: boolean
+      max_request_body_size: integer
+      server: object
+      proxy: object
+      tools_cache_ttl_seconds: integer
+    tools: array[object]
+      - name: string required
+        description: string
+        method: string required # for example GET
+        path: string required # for example /customers/{customer_id}
+        scheme: string
+        host: string
+        headers: object
+        query: object
+        request_body: object
+        responses: object
+        parameters: array[object]
+          - name: string required
+            in: One of (path | query | header) required
+            description: string
+            required: boolean
+            schema: object
+        annotations: object
+          title: string
+          read_only_hint: boolean
+          destructive_hint: boolean
+          idempotent_hint: boolean
+          open_world_hint: boolean
+        input_schema: object
+        output_schema: object
+        access: object
+          acls:
+            oneOf:
+              allow: array[string]
+              deny: array[string]
+    access: object # for listener, passthrough-listener, conversion-listener, upstream-server types
+      acl_attribute_type: One of (consumer)
+      access_token_claim_field: string
+      acls:
+        oneOf:
+          allow: array[string]
+          deny: array[string]
+      default_tool_acls:
+        oneOf:
+          allow: array[string]
+          deny: array[string]
+      auth_strategies: array[string] # Auth Strategy names; prefer: !ref values
+    policies: array[string] # policy names
+    labels: object [string]string
+      key: value
+```
+{:.collapsible}
+
+### AI Agents
+
+[AI Agents](/ai-gateway/entities/ai-agent/) expose agent-to-agent (A2A) endpoints through {{site.ai_gateway}}.
+
+```yaml
+ai_gateway_agents:
+  - ref: string
+    ai_gateway: string required # prefer: !ref <ai-gateway-ref>
+    name: string required
+    display_name: string required
+    type: One of (a2a) required
+    enabled: boolean
+    config:
+      url: string required # upstream agent URL
+      route: object
+        paths: array[string]
+        hosts: array[string]
+        methods: array[string]
+        protocols: array[string]
+        headers: object
+        strip_path: boolean
+        preserve_host: boolean
+        regex_priority: integer
+        https_redirect_status_code: integer
+        request_buffering: boolean
+        response_buffering: boolean
+        tags: array[string]
+      max_request_body_size: integer
+      logging: object
+        payloads: boolean
+        statistics: boolean
+        max_payload_size: integer
+    access: object
+      acls:
+        oneOf:
+          allow: array[string] # consumer group names
+          deny: array[string]
+      auth_strategies: array[string] # Auth Strategy names; prefer: !ref values
+    policies: array[string] # policy names; prefer: !ref values
+    labels: object [string]string
+      key: value
+```
+{:.collapsible}
+
+### AI Config Stores
+
+AI Config Stores contain secrets that can be referenced by other
+{{site.ai_gateway}} resources. Config Store names are immutable after creation.
+
+```yaml
+ai_gateway_config_stores:
+  - ref: string
+    ai_gateway: string required # prefer: !ref <ai-gateway-ref>
+    name: string required
+    display_name: string required
+    secrets:
+      - ref: string
+        key: string required
+        value: string # write-only; must use !secret
+```
+
+Config Store Secrets can also be declared at the root with an
+`ai_gateway_config_store` parent. Secret values are never returned. Creating a
+secret requires `value`; rotating one also requires `--write-secret` or
+`--write-secrets`.
+
+```yaml
+ai_gateway_config_store_secrets:
+  - ref: string
+    ai_gateway_config_store: string required # prefer: !ref <config-store-ref>
+    key: string required
+    value: string # write-only; must use !secret
+```
+
+### AI Vaults
+
+[AI Vaults](/ai-gateway/entities/ai-vault/) store secrets and credentials for use by {{site.ai_gateway}} resources.
+The `type` field determines the backend and the shape of `config`.
+
+```yaml
+ai_gateway_vaults:
+  - ref: string
+    ai_gateway: string required # prefer: !ref <ai-gateway-ref>
+    name: string required
+    description: string (nullable)
+    type: One of (env | konnect | aws | gcp | azure | conjur | hcv) required
+    labels: object [string]string
+      key: value
+    # Environment variables (type=env)
+    config: # if type=env
+      prefix: string required
+      base64_decode: boolean
+    # Konnect Config Store (type=konnect)
+    # config: # if type=konnect
+    #   config_store_id: string required
+    # AWS Secrets Manager (type=aws)
+    # config: # if type=aws
+    #   region: string required
+    # GCP Secret Manager (type=gcp)
+    # config: # if type=gcp
+    #   project_id: string required
+    # Azure Key Vault (type=azure)
+    # config: # if type=azure
+    #   vault_uri: string required
+    # HashiCorp Vault (type=hcv) and Conjur (type=conjur)
+    # config: # provider-specific; run `kongctl explain ai_gateway_vaults` for full detail
+```
+{:.collapsible}
+
+Omit a child collection to leave it outside sync scope. Use an empty collection
+under an identified gateway, consumer, or Config Store to delete that parent's
+managed children. A root-level empty child collection is invalid because it
+doesn't identify its parent.
+
+Use `--resources ai_gateways --include-child-resources` to dump
+{{site.ai_gateway}}s and their children. Direct child dump selectors aren't
+supported.
+
+For examples, see the
+[{{site.ai_gateway}} declarative configurations](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/ai-gateway).

@@ -11,6 +11,28 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.5": [
+    {
+      "message": "Fixed a\npermanent failure that started when a broker answered an `ApiVersions` request with an error code,\nan empty API key set, or a malformed frame. The client cached that result and every later request\nfailed with `ProduceRequest API version not negotiated; broker may be unreachable` until the node\nrestarted, even after the broker recovered. The client now refuses an unusable `ApiVersions`\nresponse, keeps the previous negotiation, and retries the negotiation for a topic whose metadata is\nalready cached.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed the\nconfluent schema registry client caching fetched schemas and subjects under keys\nthat did not account for the registry URL or authentication. Instances configured\nwith different credentials could be served each other's cached lookups, letting an\nunauthorized instance bypass schema-registry authentication once any authorized\ninstance had warmed the cache. Cache entries are now scoped to the registry\nidentity, and the configured `schema_registry.confluent.ttl` is now applied to\nthese cache entries.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a crash\nthat occurred when a plugin set `schema_registry.confluent.authentication.mode`\nto `oauth2` but omitted the `oauth2_client` record. Previously this returned a\n500 from the Admin API during validation, and once saved it also crashed at\nruntime while fetching the schema registry OAuth2 token. The absent\n`oauth2_client` is now handled and falls back to the default authentication\nmethod, so a configuration without `oauth2_client` works end-to-end.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where OAuth2 authentication against Confluent Cloud Schema Registry failed because the client did not send the required `target-sr-cluster` header.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "The option `security.ssl_verify`, which controls the verification\nof the certificate presented by the server, is now enabled by default.\n",
@@ -30,6 +52,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.14": [
+    {
+      "message": "Fixed a\npermanent failure that started when a broker answered an `ApiVersions` request with an error code,\nan empty API key set, or a malformed frame. The client cached that result and every later request\nfailed with `ProduceRequest API version not negotiated; broker may be unreachable` until the node\nrestarted, even after the broker recovered. The client now refuses an unusable `ApiVersions`\nresponse, keeps the previous negotiation, and retries the negotiation for a topic whose metadata is\nalready cached.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where OAuth2 authentication against Confluent Cloud Schema Registry failed because the client did not send the required `target-sr-cluster` header.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added new config option `ssl_verify` to support verifying server certificates.\nAdded support for the `tls_certificate_verify` global option. When this option is enabled, the\nplugin's `ssl_verify` setting cannot be disabled.",
@@ -43,6 +77,18 @@
     },
     {
       "message": "Fixed an issue where the kafka-upstream plugin fails to connect certain Kafka clusters using SCRAM-SHA-256 or SCRAM-SHA-512\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.13.0.10": [
+    {
+      "message": "Fixed a crash\nthat occurred when a plugin set `schema_registry.confluent.authentication.mode`\nto `oauth2` but omitted the `oauth2_client` record. Previously this returned a\n500 from the Admin API during validation, and once saved it also crashed at\nruntime while fetching the schema registry OAuth2 token. The absent\n`oauth2_client` is now handled and falls back to the default authentication\nmethod, so a configuration without `oauth2_client` works end-to-end.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where OAuth2 authentication against Confluent Cloud Schema Registry failed because the client did not send the required `target-sr-cluster` header.",
       "type": "bugfix",
       "scope": "Plugin"
     }
@@ -73,6 +119,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.12.0.12": [
+    {
+      "message": "Fixed a\npermanent failure that started when a broker answered an `ApiVersions` request with an error code,\nan empty API key set, or a malformed frame. The client cached that result and every later request\nfailed with `ProduceRequest API version not negotiated; broker may be unreachable` until the node\nrestarted, even after the broker recovered. The client now refuses an unusable `ApiVersions`\nresponse, keeps the previous negotiation, and retries the negotiation for a topic whose metadata is\nalready cached.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Added support for sending messages with dynamic keys to determine partitions.",
@@ -96,6 +149,13 @@
     {
       "message": "Added support for message manipulation with the new configuration field `message_by_lua_functions`.\n",
       "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.18": [
+    {
+      "message": "Fixed a\npermanent failure that started when a broker answered an `ApiVersions` request with an error code,\nan empty API key set, or a malformed frame. The client cached that result and every later request\nfailed with `ProduceRequest API version not negotiated; broker may be unreachable` until the node\nrestarted, even after the broker recovered. The client now refuses an unusable `ApiVersions`\nresponse, keeps the previous negotiation, and retries the negotiation for a topic whose metadata is\nalready cached.",
+      "type": "bugfix",
       "scope": "Plugin"
     }
   ],

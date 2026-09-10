@@ -166,9 +166,11 @@ To package APIs with Dev Portal, you need:
 
 ### Create an API package
 
-1. In {{site.konnect_short_name}}, click **Catalog**.
-1. Click the **API packages** tab.
-1. Click **Create API package**.
+1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
+1. From the **New** dropdown menu, select "API package".
+   
+   {:.info}
+   > If you're using [{{site.konnect_catalog}} Classic](/catalog-classic/), click **API packages** in the sidebar instead.
 1. In the **API package name** field, enter a name for your package.
 1. Enable the Package rate limit and configure your rate limit.
 1. Click **Add operations from APIs** in the API operations settings.
@@ -184,6 +186,9 @@ The image must be a PNG, JPG, or SVG image under 500 KB that’s no larger than 
 
 1. In {{site.konnect_short_name}}, click **Catalog**.
 1. Click the **API packages** tab.
+   
+   {:.info}
+   > If you're using [{{site.konnect_catalog}} Classic](/catalog-classic/), click **API packages** in the sidebar instead.
 1. Click your API package.
 1. Click **Publish API**.
 1. From the **Portal** dropdown menu, select your Dev Portal.

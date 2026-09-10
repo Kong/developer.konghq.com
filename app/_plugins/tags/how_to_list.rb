@@ -2,6 +2,8 @@
 
 require 'uri'
 require_relative '../monkey_patch'
+require_relative '../lib/build_filter'
+require_relative '../component_templates'
 
 module Jekyll
   class RenderHowToList < Liquid::Tag # rubocop:disable Style/Documentation
@@ -28,13 +30,14 @@ module Jekyll
                 (!config.key?('products') || t.data.fetch('products', []).intersect?(config['products'])) &&
                 (!config.key?('works_on') || t.data.fetch('works_on', []).intersect?(config['works_on'])) &&
                 (!config.key?('tools') || t.data.fetch('tools', []).intersect?(config['tools'])) &&
-                (!config.key?('plugins') || t.data.fetch('plugins', []).intersect?(config['plugins']))
+                (!config.key?('plugins') || t.data.fetch('plugins', []).intersect?(config['plugins'])) &&
+                (t.data.fetch('major_version', {}) == @page.fetch('major_version', {}))
 
         result << t if match
         break result if result.size == quantity
       end
 
-      if how_tos.empty? && !config.fetch('allow_empty', false) && ENV['KONG_PRODUCTS'].nil? && ENV['PAGE_PATHS'].nil?
+      if how_tos.empty? && !config.fetch('allow_empty', false) && !Jekyll::BuildFilter.current.filtered?
         raise "No how-tos found for #{@context['page']['path']} - #{config}"
       end
 
@@ -43,19 +46,11 @@ module Jekyll
         context['how_tos'] = how_tos
         context['view_more_url'] = view_more_url(config)
         context['config'] = config
-        Liquid::Template.parse(template, { line_numbers: true }).render(context)
+        ComponentTemplates.fetch('how_to_list', @page['output_format']).render(context)
       end
     end
 
     private
-
-    def template
-      if @page['output_format'] == 'markdown'
-        File.read(File.expand_path('app/_includes/components/how_to_list.md'))
-      else
-        File.read(File.expand_path('app/_includes/components/how_to_list.html'))
-      end
-    end
 
     def view_more_url(config)
       query_string = URI.encode_www_form(config.slice('products', 'tags', 'tools', 'works_on'))

@@ -274,7 +274,7 @@ DB-less configurations in the Helm chart now use the `expressions` [`router_flav
 Use of the new routing engine should not change route matching outside of cases where route precedence did not match the [Gateway API specification][gateway-api-precedence]. The new engine does have different performance characteristics than the old engine, but should improve matching and configuration update speed for most configurations.
 
 [expression-kong-conf]: https://github.com/Kong/kong/blob/3.4.2/kong.conf.default#L1589-L1621
-[gateway-api-precedence]: https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io%2fv1.HTTPRouteRule
+[gateway-api-precedence]: https://gateway-api.sigs.k8s.io/reference/api-types/gateway/#gateway.networking.k8s.io%2fv1.HTTPRouteRule
 
 #### Logging changes
 

@@ -11,7 +11,6 @@ module Jekyll
 
         def initialize(doc)
           @doc = doc
-          @release_info = release_info
         end
 
         def dir
@@ -25,9 +24,10 @@ module Jekyll
         def data
           @data ||= @doc
                     .data
+                    .deep_dup
                     .merge!(
                       'base_url' => base_url,
-                      'latest?' => page_release == @release_info.latest_available_release,
+                      'latest?' => page_release == latest_available_release,
                       'release' => page_release,
                       'seo_noindex' => true,
                       'versioned' => true
@@ -53,7 +53,9 @@ module Jekyll
         end
 
         def releases
-          @releases ||= @release_info.releases.reject(&:label?)
+          @releases ||= (site.data.dig('products', product, 'releases') || []).map do |r|
+            Drops::Release.new(r)
+          end.reject(&:label?)
         end
 
         def base_url
@@ -61,26 +63,25 @@ module Jekyll
         end
 
         def page_release
-          @page_release ||= @release_info.releases.detect do |r|
+          @page_release ||= releases.detect do |r|
             r['release'] == release_from_url
           end
+        end
+
+        def latest_available_release
+          @latest_available_release ||= releases.detect(&:latest?)
         end
 
         def release_from_url
           @release_from_url ||= @doc.url[/\d+\.\d+/]
         end
 
-        def key
-          @key ||= @doc.url.split('/').reject(&:empty?).take_while { |s| s != 'reference' && !s.match?(/\d+\.\d+/) }
+        def product
+          @product ||= metadata['products'].first
         end
 
-        def release_info
-          @release_info ||= ReleaseInfo::Product.new(
-            site:,
-            product: metadata['products'].first,
-            min_version: {},
-            max_version: {}
-          )
+        def key
+          @key ||= @doc.url.split('/').reject(&:empty?).take_while { |s| s != 'reference' && !s.match?(/\d+\.\d+/) }
         end
       end
     end

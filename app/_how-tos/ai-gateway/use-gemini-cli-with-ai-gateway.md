@@ -1,202 +1,130 @@
 ---
 title: Route Google Gemini CLI traffic through {{site.ai_gateway}}
-permalink: /how-to/use-gemini-cli-with-ai-gateway/
+permalink: /ai-gateway/use-gemini-cli-with-ai-gateway/
 content_type: how_to
+
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: AI Proxy
-    url: /plugins/ai-proxy/
-  - text: File Log
-    url: /plugins/file-log/
+  - text: Gemini provider
+    url: /ai-gateway/ai-providers/gemini/
+  - text: AI Model Provider
+    url: /ai-gateway/entities/ai-model-provider/
+  - text: AI Model
+    url: /ai-gateway/entities/ai-model/
 
-description: Configure {{site.ai_gateway}} to proxy Google Gemini CLI traffic using AI Proxy
+description: Configure {{site.ai_gateway}} to proxy Google Gemini CLI traffic to a Gemini model
 
 products:
-  - gateway
   - ai-gateway
 
 works_on:
-  - on-prem
   - konnect
 
-min_version:
-  gateway: '3.10'
+tools:
+  - kongctl
 
-plugins:
-  - ai-proxy
-  - file-log
+min_version:
+  ai-gateway: '2.0'
 
 entities:
-  - service
-  - route
-  - plugin
+  - ai-model-provider
+  - ai-model
 
 tags:
   - ai
+  - gemini
 
 tldr:
   q: How do I run Google Gemini CLI through {{site.ai_gateway}}?
-  a: Configure the AI Proxy plugin to forward requests to Google Gemini, then enable the File Log plugin to inspect traffic, and point Gemini CLI to the local proxy endpoint so all LLM requests go through the Gateway for monitoring and control.
-
-tools:
-  - deck
+  a: Create an AI Model Provider entity to store your Gemini API key and an AI Model entity that routes to it, then point Gemini CLI's `GOOGLE_GEMINI_BASE_URL` at your local {{site.ai_gateway}} endpoint so all requests pass through the gateway for monitoring and control.
 
 prereqs:
   inline:
-    - title: Google Gemini API
-      include_content: prereqs/gemini
-      icon_url: /assets/icons/gcp.svg
-    - title: Gemini CLI
-      icon_url: /assets/icons/gcp.svg
+    - title: Gemini API key
       content: |
-        This tutorial uses the Google Gemini CLI. Install Node.js 18+ if needed (verify with `node --version`), then install and launch the Gemini CLI.
+        1. Create a Gemini API key in [Google AI Studio](https://aistudio.google.com/apikey).
+        1. Export the API key as a variable:
+           ```bash
+           export GEMINI_API_KEY='YOUR_GEMINI_API_KEY'
+           ```
+    - title: Gemini CLI
+      icon_url: /assets/icons/ai-tools/gemini-cli.svg
+      content: |
+        This tutorial uses the Google Gemini CLI. Install Node.js 18+ if needed (verify with `node --version`), then install the Gemini CLI:
 
-        1. Run the following command in your terminal to install the Gemini CLI:
+        ```sh
+        npm install -g @google/gemini-cli
+        ```
 
-            ```sh
-            npm install -g @google/gemini-cli
-            ```
+        Verify the installation:
 
-        2. Once the installation process is complete, verify the installation:
-
-            ```sh
-            gemini --version
-            ```
-
-        3. The CLI will display the installed version number.
-
-  entities:
-    services:
-      - example-service
-    routes:
-      - example-route
+        ```sh
+        gemini --version
+        ```
 
 cleanup:
   inline:
-    - title: Clean up Konnect environment
-      include_content: cleanup/platform/konnect
-      icon_url: /assets/icons/gateway.svg
-    - title: Destroy the {{site.base_gateway}} container
-      include_content: cleanup/products/gateway
-      icon_url: /assets/icons/gateway.svg
+    - title: Clean up {{site.ai_gateway}} resources
+      include_content: cleanup/products/ai-gateway
 
-automated_tests: false
 ---
-## Configure the AI Proxy plugin
 
-First, let's configure the [AI Proxy](/plugins/ai-proxy/) plugin. The {{ site.gemini }} CLI expects to communicate with {{ site.google}}'s {{ site.gemini }} API using the chat endpoint. The plugin handles authentication using a query parameter and forwards requests to the specified model. CLI tools installed across multiple developer machines typically require distributing API keys to each installation, which exposes credentials and makes rotation difficult.
+## Create an AI Model Provider and AI Model
 
-Routing CLI tools through {{site.ai_gateway}} removes this requirement. Developers authenticate against the gateway instead of directly to AI providers. You can centralize authentication, enforce [rate limits](/plugins/ai-rate-limiting-advanced/), [track usage costs](/plugins/ai-rate-limiting-advanced/#token-count-strategies), [enforce guardrails](/ai-gateway/#guardrails-and-content-safety), and [cache repeated requests](/plugins/ai-semantic-cache/).
+Gemini CLI expects to talk to {{ site.google }}'s {{ site.gemini }} API directly, authenticating with an API key. Distributing that key to every developer machine running the CLI exposes credentials and makes rotation difficult. Routing Gemini CLI through {{site.ai_gateway}} instead removes this requirement: developers authenticate against the gateway, and {{site.ai_gateway}} injects the real credential upstream.
+
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) that stores your Gemini API key as the `x-goog-api-key` header, so {{site.ai_gateway}} injects it into every upstream request and Gemini CLI never handles the real key. Then create an [AI Model](/ai-gateway/entities/ai-model/) using Gemini's native format, exposed at `/gemini` and routed to `gemini-3.5-flash` through that provider: the `generate` capability serves Gemini's `generateContent` and `streamGenerateContent` endpoints, and `config.route.model` lets Gemini CLI request the model by the alias `my-gemini-model` instead of the real upstream name. Create both entities in a single `kongctl` apply command so the model can reference the provider:
 
 {% entity_examples %}
-entities:
-  plugins:
-    - name: ai-proxy
-      config:
-        max_request_body_size: 4194304
-        logging:
-          log_statistics: true
-          log_payloads: true
-        route_type: llm/v1/chat
-        llm_format: gemini
-        auth:
-          param_name: key
-          param_value: ${gemini_api_key}
-          param_location: query
+ai_gateway_model_providers:
+  - ref: my-gemini-account
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: my-gemini-account
+    display_name: "my-gemini-account"
+    type: gemini
+    config:
+      auth:
+        type: basic
+        headers:
+          - name: x-goog-api-key
+            value: !secret {source: !env GEMINI_API_KEY}
+ai_gateway_models:
+  - ref: my-gemini-model
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: my-gemini-model
+    display_name: "my-gemini-model"
+    type: model
+    enabled: true
+    formats: [{ type: gemini }]
+    config:
+      route:
+        paths: [/gemini]
         model:
-          provider: gemini
-          name: gemini-2.5-flash
-variables:
-  gemini_api_key:
-    value: $GEMINI_API_KEY
+          path_param: model_name
+          values: [my-gemini-model]
+      max_request_body_size: 4194304
+    capabilities: [generate]
+    targets:
+      - name: gemini-3.5-flash
+        provider: !ref my-gemini-account#name
+        config:
+          type: gemini
 {% endentity_examples %}
 
-## Configure the File Log plugin
+## Run Gemini CLI
 
-Now, let's configure the [File Log](/plugins/file-log/) plugin to inspect the traffic between {{ site.gemini }} CLI and {{site.ai_gateway}} by attaching a File Log plugin to the Service. This creates a local log file for examining requests and responses as {{ site.gemini }} CLI runs through {{site.base_gateway}}.
+{:.warning}
+> Make sure you authenticate using a [Gemini API key](https://geminicli.com/docs/get-started/authentication/#gemini-api)
 
-{% entity_examples %}
-entities:
-  plugins:
-    - name: file-log
-      config:
-        path: "/tmp/gemini.json"
-{% endentity_examples %}
+Point `GOOGLE_GEMINI_BASE_URL` at the local proxy endpoint where LLM traffic from Gemini CLI routes and start a Gemini CLI session:
 
-## Export environment variables
+<!-- vale off -->
+{% validation gemini %}
+model: my-gemini-model
+base_url: http://localhost:8000/gemini
+prompt: Tell me about the prisoner's dilemma.
+{% endvalidation %}
+<!-- vale on -->
 
-Open a new terminal window and export the variables that the {{ site.gemini }} CLI will use. Point `GOOGLE_GEMINI_BASE_URL` to the local proxy endpoint where LLM traffic from {{ site.gemini }} CLI will route:
-
-{% on_prem %}
-content: |
-  ```sh
-  export GOOGLE_GEMINI_BASE_URL="http://localhost:8000/anything"
-  export GEMINI_API_KEY="YOUR-GEMINI-API-KEY"
-  ```
-{% endon_prem %}
-
-{% konnect %}
-content: |
-  ```sh
-  export GOOGLE_GEMINI_BASE_URL="http://localhost:8000/anything"
-  export GEMINI_API_KEY="YOUR-GEMINI-API-KEY"
-  ```
-
-  If you're using a different {{site.konnect_short_name}} proxy URL, be sure to replace `http://localhost:8000` with your proxy URL.
-{% endkonnect %}
-
-
-## Validate the configuration
-
-Now you can test the {{ site.gemini }} CLI setup.
-
-1. In the terminal where you exported your {{ site.gemini }} environment variables, run:
-
-   ```sh
-   gemini --model gemini-2.5-flash
-   ```
-
-   You should see the {{ site.gemini }} CLI interface start up.
-
-2. Run a command to test the connection:
-
-   ```text
-   Tell me about prisoner's dilemma.
-   ```
-
-   Expected output will show the model's response to your prompt.
-
-3. In your other terminal window, check that LLM traffic went through {{site.ai_gateway}}:
-
-    ```sh
-   docker exec kong-quickstart-gateway cat /tmp/gemini.json | jq
-    ```
-
-   Look for entries similar to:
-
-   ```json
-   {
-     ...
-     "ai": {
-       "proxy": {
-         "usage": {
-           "prompt_tokens": 7795,
-           "completion_tokens": 483,
-           "total_tokens": 8278,
-           "time_per_token": 10.513457556936,
-           "time_to_first_token": 845
-         },
-         "meta": {
-           "provider_name": "gemini",
-           "request_model": "gemini-2.5-flash",
-           "response_model": "gemini-2.5-flash",
-           "llm_latency": 5078,
-           "request_mode": "stream"
-         }
-       }
-     }
-     ...
-   }
-   ```
-{:.no-copy-code}
+Expected output shows the model's response to your prompt, proxied through {{site.ai_gateway}} to the Gemini model configured in the AI Model entity's `targets`.

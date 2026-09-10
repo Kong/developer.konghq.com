@@ -98,5 +98,7 @@ Flags:
                                           - Config path: [ text.layout ]
                                           - Allowed    : [ compact|auto|wide ]
                                           - Default    : [ compact ]
+      --write-secret stringArray          Write configured secrets selected by [resource-type:]resource-ref[#field] (repeatable)
+      --write-secrets                     Write all eligible configured write-only secrets, warning when fields are skipped
 
 ```

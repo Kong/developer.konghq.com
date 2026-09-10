@@ -4,7 +4,7 @@ content_type: reference
 entities:
   - consumer-group
 
-description: Consumer Groups let you apply common configurations to groups of Consumers, such as rate limiting policies or request and response transformation. 
+description: Consumer Groups let you apply common configurations to groups of Consumers, such as rate limiting policies or request and response transformation.
 
 tools:
     - admin-api
@@ -34,12 +34,12 @@ faqs:
   - q: Why aren't Consumer Group overrides working anymore?
     a: |
       Consumer Groups became a core Gateway entity in 3.4, which opened up a wide range of use cases for grouping Consumers.
-      
+
       Before 3.4, Consumer Groups were limited to rate limiting plugins, where they were configured through overrides. This is no longer necessary. Instead, you can enable any rate limiting plugin directly on a consumer group without worrying about extra configuration.
   - q: How do I enable a plugin on a Consumer Group?
     a: |
-      First, [find out](/gateway/entities/plugin/#supported-scopes-by-plugin) if the plugin you want supports Consumer Groups. 
-      
+      First, [find out](/gateway/entities/plugin/#supported-scopes-by-plugin) if the plugin you want supports Consumer Groups.
+
       If it does, head over to the plugin's documentation, open the "Get Started" tab, and choose "Consumer Groups" from the dropdown for any available example.
 
   - q: When a Consumer is part of multiple Consumer Groups, how is precedence determined?
@@ -72,9 +72,9 @@ flowchart LR
 
     B(<b>Consumer Group Gold</b>
 
-    fa:fa-user Consumer 1, fa:fa-user Consumer 2, 
+    fa:fa-user Consumer 1, fa:fa-user Consumer 2,
     fa:fa-user Consumer 5 )
-    
+
     C(<b>Consumer Group Silver</b>
 
     fa:fa-user Consumer 3, fa:fa-user Consumer 4)
@@ -85,7 +85,7 @@ flowchart LR
     2 requests/second)
     F(<b>Gateway Service</b>
     QR Code Generation)
-    H(QR Code Generation 
+    H(QR Code Generation
     service)
 
     A--> B & C
@@ -99,10 +99,10 @@ flowchart LR
 {% endmermaid %}
 <!--vale on -->
 
-Without Consumer Groups, you would have to use five Rate Limiting Advanced plugins, once for each consumer. 
+Without Consumer Groups, you would have to use five Rate Limiting Advanced plugins, once for each consumer.
 Any time you change the rate limit, you would need to update every consumer individually.
 
-Consumer Groups allow you to manage your plugin configuration centrally, and reduce the size of your {{ site.base_gateway }} configuration at the same time. 
+Consumer Groups allow you to manage your plugin configuration centrally, and reduce the size of your {{ site.base_gateway }} configuration at the same time.
 In this example, it's the difference between using two plugins or five plugins. In your production environment, it could be the difference between two plugins and five _million_ plugins.
 
 ## Use cases

@@ -1,0 +1,1173 @@
+{
+  "2.0.0": {
+    "kong-aigw": [
+      {
+        "message": "**ais**: Dropped deprecated schema fields slated for removal in 4.0:\n`http_proxy_host`/`http_proxy_port`/`https_proxy_host`/`https_proxy_port` shorthands\nin `ai-llm-as-judge`, `ai-request-transformer`, `ai-response-transformer` (use\n`proxy_config` instead); `llm_format`, `max_request_body_size`, and\n`rules.max_request_body_size` in `ai-semantic-prompt-guard`; `llm_providers` and\n`llm_format` in `ai-rate-limiting-advanced` (`policies` is now required);\n`model.options.upstream_path` and the `preserve` route_type in the shared LLM\nschema (use `model.options.upstream_url` and a concrete `route_type` instead).",
+        "type": "Breaking Change",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Removed the `ai-proxy` plugin from the bundled plugins list. Use `ai-proxy-advanced` instead.",
+        "type": "Breaking Change",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Bumped OpenSSL from 3.5.6 to 3.5.7.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Added data plane support for the new AI Gateway control plane. Data planes now\nuse JSON-RPC config sync (sync v2) only and send a validated `deployment_type` value in\nthe RPC hello payload.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-a2a-proxy**: Added A2A v1.0 wire-format support alongside v0.3.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-a2a-proxy**: now rewrites the URL for all `supportedInterfaces` in the agent card.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Gateway**: Added a `tags` field to the `ai_models` entity, enabling tag-based filtering on the Admin API and the `/tags` endpoint.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-guardrail**: Add `guardrail_triggered` field to protobuf analytics payload.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-llm-as-judge**: Added the opt-in response header to expose the computed judge score to clients. The header name defaults to `X-Kong-LLM-Accuracy-Score` and is configurable via `score_header_name`.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Added upstream MCP server aggregator support, allowing the plugin to aggregate tools from multiple upstream MCP servers.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**, **ai-mcp-oauth2**: Introduced forward-proxy support for outbound traffic configuration.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Updated the default MCP protocol version to `2025-11-25` and added explicit negotiation for older clients.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ais**: Added `proxy_config` support to route plugin HTTP requests through a\nforward proxy for ai-aws-guardrails, ai-azure-content-safety, ai-custom-guardrail,\nai-gcp-model-armor, ai-lakera-guard, ai-sanitizer, ai-prompt-compressor,\nai-rag-injector, ai-semantic-cache, ai-semantic-prompt-guard,\nai-semantic-response-guard, ai-request-transformer, ai-response-transformer,\nand ai-llm-as-judge. For ai-request-transformer, ai-response-transformer, and\nai-llm-as-judge, the existing top-level `http_proxy_host`/`http_proxy_port`/\n`https_proxy_host`/`https_proxy_port` fields are now deprecated in favor of\n`proxy_config` and will be removed in 4.0.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Added OTel span attributes gen_ai.input.messages for audio speech routes and gen_ai.output.messages for audio transcription routes when log_payloads is enabled.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Added support for Kimi AI (Moonshot) - a new AI Provider.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Added support for Vercel - a new AI Provider.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added clarification for handling \"Request body too large\" errors.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added embeddings support for databricks provider.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added Gemini OpenAI-compatible `logprobs` mapping on chat completions.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added new ACL matcher type `authenticated_groups`, which allows propagating claims and\nroles from other authentication plugins into the AI Proxy Advanced per-model ACLs.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added `proxy_config` support for forward proxies, including HTTP proxying, Basic authentication, and CONNECT tunneling for HTTPS upstream streaming.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added reasoning fields mapping between Anthropic Messages and the OpenAI internal format.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added support for image analysis request to anthropic/bedrock providers.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added support for anthropic format chat on DeepSeek provider.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Improved Cohere driver with streaming fixes, tool calling support, and usage tracking.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-rate-limiting-advanced**: Added calendar window type. Fixed fetch drift in rate limiting windows.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kimi**: Added support for anthropic passthrough on Kimi (Moonshot) provider.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**llm**: Increase max request body size from 1MB to 8MB.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**vercel**: Added support for Anthropic passthrough on Vercel provider.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-a2a-proxy**: Reassembled SSE `data:` events that span multiple `body_filter`\nchunks and dropped oversized events safely, preventing `sse_last_event` type\nerrors that crashed the request on large agent responses.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-advanced-proxy**: Fixed an issue where we never stored response model in streaming path. It always fallback to the request model",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-aws-guardrails**: Allowed streaming of responses when `guarding_mode` was set to `INPUT` with `allow_masking` enabled.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-azure-content-safety**: Fixed a crash (HTTP 500) when `azure_use_managed_identity` is enabled.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-azure-content-safety**: Fixed a bug where the plugin returned HTTP 500 when the LLM response content was empty. Empty content now skips the content-safety check and passes through.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-azure-content-safety**: Fixed response guard sending the entire JSON response body to Azure Content Safety instead of just the assistant message content, which caused false positives when response metadata fields matched blocklist entries.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai**: Fixed an issue where non-200 responses from Bedrock embeddings API were not properly handled, leading to incorrect feedback to the client.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-guardrail**: Fixed an issue where latency metrics were missing in the Prometheus output.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-guardrails**: Fixed an issue where multiple guardrail plugins can not function together.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed an issue where token introspection crashed when `client_auth` was set to `private_key_jwt` and `client_jwk` was provided as a JSON string.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed an issue where downstream scope-based ACL evaluation used claims from the inbound token instead of the exchanged token when token exchange was enabled.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed an issue where token-related 401 responses omitted the protected resource metadata URL when token was given.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed an issue where token exchange actor tokens were not sourced correctly from `token_exchange.request`, ensuring correct forwarding of actor tokens configured in headers or plugin config.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed an issue where `token_exchange.cache.enabled = false` was ignored and exchanged tokens were still cached because the cache toggle incorrectly read `token_exchange.cache.ttl` instead of `token_exchange.cache.enabled`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where empty JSON arrays in MCP server\nresponses were rewritten to empty objects when the plugin re-encoded the\nbody for ACL list filtering.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where raw non-200 upstream responses triggered misleading MCP body parse warnings.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where WWW-Authenticate: Bearer error=\"insufficient_scope\" header was not emitted.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where internal unix-socket subrequests lost the original client IP address, causing IP-aware plugins like ip-restriction to reject legitimate requests.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where we didn't propagate errors on secret_to_jwk calls.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where, since 3.14, call tools converted from API could fail when Kong used a self-signed certificate.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where converted HTTPS MCP tool calls lost the original forwarded port on the internal TLS Unix socket.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where tool id might be repeated.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where we didn't allow arbitrary tool path in conversion-listener mode.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-prompt-decorator**: Fixed an issue where the plugin corrupted native-format\nrequests (gemini, anthropic, bedrock, cohere, huggingface) by forwarding an\nOpenAI-shaped body upstream instead of the original native body shape.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where native-format requests using a model alias were incorrectly proxying to upstream model.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where full-sync reconfigure reset balancer state even when plugin configs were unchanged.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where concurrent worker processes could race to initialize the semantic routing vectorDB index, causing \"Index already exists\" errors on startup or config reload.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where driver transformers returned errors or stream metadata in the wrong return position.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Vercel Anthropic-format requests did not include the configured model in the upstream body.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where DeepSeek, Vercel, and Kimi Anthropic count-token requests were proxied to chat endpoints.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where OpenAI-compatible Anthropic chat requests only preserved the last system message.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Anthropic streaming finish reasons are not mapped in OpenAI to Anthropic conversion.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where the Anthropic driver dropped the `top_p`, `top_k`, and `stop` parameters when translating OpenAI-format requests. The driver now also omits `temperature`, `top_p`, and `top_k` for models that reject them (Claude Opus 4.7, Opus 4.8, and Fable), preventing upstream 400 errors.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where `output_config` was rejected by Vertex AI in Anthropic-native requests.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where `cache_creation_input_tokens` and `cache_read_input_tokens` were excluded from prompt token counts, causing undercounting when Anthropic prompt caching was active.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where configured model name may never be used for Azure provider.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where we didn't support Azure GA version of Realtime API.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where OpenAI-format chat reasoning requests were not mapped consistently across Anthropic, Gemini, Bedrock and more providers.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where system prompt of Claude Code was truncated when doing non-passthrough proxy.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where we didn't support anthropic format for databricks provider.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where we didn't use the huggingface's token usage if available.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where unsafe model names could construct upstream AI provider paths.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where we didn't collect the model name in OpenAI streaming response from Azure.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where unsafe batch id could cause upstream AI provider path traversal.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where unsafe model name in native format adaptors could cause upstream AI provider path traversal.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where dashscope replied 500 to inference request.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where the xAI driver nested `reasoning_effort` under `reasoning.effort` and did not normalize `reasoning_content` in responses.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where `stream_options` was forwarded to Databricks upstreams, causing a 400 error since Databricks does not support this field.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where GenAI spans were not finished sometimes.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where observability errors occurred when `gpt-image-1.5` returned image token usage details.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Azure OpenAI authentication failed during load balancer failover due to token refresh attempts in `balancer_by_lua`. Tokens are now pre-fetched in the `access` phase.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where cache_control in Bedrock Anthropic format requests using ARN model IDs was lost.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Bedrock native ConverseStream requests using ARN model IDs could fail while handling streamed responses.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where some Claude Code MCP tools did not correctly handle empty 'requires' array.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed Azure OpenAI responses support in deployment style.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where responses with unsupported content types could be returned with an incorrect gzip header.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where log_payloads logged binary data for audio routes, the plugin now logs only the request for speech and only the response for transcription/translation routes.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed Azure AI Foundry v1 API support to not require deployment-specific fields when `upstream_url` is configured.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed Gemini driver dropping Gemini-native fields (e.g. `cachedContent`, `safetySettings`) and Vertex AI-only fields (e.g. `labels`) during OpenAI-to-Gemini request transformation.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed role matching in message extraction and formatting to be case-insensitive, and added a nil-safety check for messages.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where `options.upstream_url` was not respected in native mode.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-rate-limiting-advanced**: Emitted the documented `X-AI-RateLimit-*` headers on `429` responses from policies that partition by `provider` or `model`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-rate-limiting-advanced**: Fixed an issue where `model` or `provider` matchers without `partition_by` were skipped, causing rate limits to be missed.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-rate-limiting-advanced**: Fixed policy integration with `ai-proxy`\nfor single-target and multi-target AI proxy routes.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-request-transformer**: Fixed an issue where runtime template placeholders (e.g. `$(uri_captures.*)`) in `config.llm.model.*` fields were not interpolated.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-request-transformer**: Fixed an issue where unsafe model name could cause upstream AI provider path traversal.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-response-transformer**: Fixed an issue where runtime template placeholders (e.g. `$(uri_captures.*)`) in `config.llm.model.*` fields were not interpolated.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-sanitizer**: Fixed an issue where the AI sanitizer plugin could not parse the request body correctly.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-sanitizer**: Fixed an issue where the input field for the llm/v1/responses route was not recognized.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-semantic-prompt-guard**, **ai-semantic-response-guard**: Fixed an issue where full-sync reconfigure rebuilt semantic vectorDB indexes even when the plugin configuration was unchanged.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-semantic-prompt-guard**: Fixed an issue where max_request_body_size and llm_format were not marked as deprecated.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-semantic-response-guard**: Fixed an issue where the plugin failed to populate Redis with rule documents due to using worker ID gating instead of worker mutex for vectordb operations.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-40701, CVE-2026-40460, CVE-2026-42934, CVE-2026-42946, and CVE-2026-42945.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for limiting the number of maximum headers (CVE-2026-49975).",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**debugger**: Fixed an issue where response body content capture consumed streaming response chunks.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed AI Proxy Advanced Gemini failover handling when a target sets `upstream_url` to `ngx.null`, avoiding an empty trailing query string in the computed upstream URI.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where AI proxy plugins rejected `output_cost: 0` in schema validation, preventing users from configuring models that have no output token cost.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where anonymous reports omitted model usage when one provider used multiple models.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where cluster mutex did not timeout immediately with `no_wait = true` when node level mutex is being held by another worker.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where when Postgres strategy is used for session storage, concurrent authentication requests could result in race condition and session creation collisions.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Increased the default `proxy_ssl_verify_depth` and `lua_ssl_verify_depth` from `1` to `5`.",
+        "type": "bugfix",
+        "scope": "Configuration"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where the `redirect_uri` parameter was sent to the token endpoint for all grant types. It is now included only for the `authorization_code` grant, as required by RFC 6749.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**tcp-log**: Fix the race condition where the balancer `tries` array gets cleared before the asynchronous timer thread can safely encode it.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai**: Removed unused redis connection when setting up Redis vectordb.",
+        "type": "performance",
+        "scope": "Plugin"
+      }
+    ]
+  },
+  "2.0.1": {
+    "kong-aigw": [
+      {
+        "message": "Bumped jq from 1.8.1 to 1.8.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-custom-guardrail**: Added the `log_blocked_content` field to allow logging prompts and responses blocked by the guardrail, and updated the `continue_on_detection` description to mention that block data is visible via Kong logs.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-guardrails**: Added a `rejection_mode` configuration field (`none`, `stealth`, `verbose`) to control how blocked requests and responses are communicated to the client.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-guardrails**: Added a shared `continue_on_detection` field to all guardrails to allow for non-blocking guardrail triggers.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Added `expected_audience` to configure the expected token audience independently from `resource`.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Added JSON Schema draft 2020-12 support for input schema validation.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-model-selector**: Added support for extracting model aliases from request paths.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-nvidia-nemo-guardrail**: Added new plugin to check LLM request/response content against NVIDIA NeMo Guardrails.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Added support for AWS SageMaker as a new AI provider.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added a configurable pricing catalog that computes LLM `usage.cost` from per-(provider, model) token rates, including cache read/write rates.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added OpenAI-format chat reasoning request and response mappings across supported AI providers.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added support for reporting prompt cache token metrics in OpenAI-compatible format.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy/ai-proxy-advanced**: allowed ai-proxy/ai-proxy-advanced plugins to be scoped with the ai-model entity.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-semantic-response-guard**: added the `response_buffer_size` option to support guarding streaming responses.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ACL**: Fixed an issue where the ACL plugin returned 403 for authenticated\ncredentials with no consumer and no groups (e.g. ACE / Dev Portal application\ncredentials) when configured with a deny list. A group-less identity cannot\nmatch a deny list and should be allowed through.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**acl**: Fixed an issue where the ACL plugin ignored a consumer's ACL groups when `include_consumer_groups` was enabled and the consumer belonged to an enterprise consumer group, causing incorrect `403` denials (with `allow`) or incorrect access (with `deny`) for authenticated and anonymous consumers. The plugin now falls back to the consumer's ACL groups when no third-party authenticated groups are present.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed a JWT security vulnerability.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where the ACL decision cache has collision.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where the MCP `initialize` response reported the wrong version.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where non-managed MCP listeners advertised unsupported SSE streams.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-model-selector**: Fixed model alias extraction from the request body to support `multipart/form-data` requests in addition to JSON.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai**: Fixed the Redis vector database index being dropped and recreated on every request when metadata fields were enabled.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-prompt-compressor**: Fixed an issue where native Anthropic requests were forwarded in OpenAI format after prompt compression.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed a Lua crash in declarative schema validation when a Bedrock target had no `auth` block (e.g. IRSA / role-only configs), which made the entire declarative config unloadable.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where the configured auth header (e.g. `api-key`, `x-api-key`) leaked the provider credential into access logs instead of being redacted.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where the OpenAI `developer` role was not treated as a system prompt when transforming requests to Bedrock and Gemini providers.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where we didn't handle SSE event headers correctly.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where balancer retries could continue reusing the last selected target after all priority peers were exhausted.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Gemini chat requests rejected OpenAI `input_audio` and `video_url` content parts.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where native Bedrock request parsing dropped string message content in kong internal format, causing invalid data used by other plugins.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where OpenAI content array was sent as bedrock/gemini system message which only support string.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where OpenAI, Azure, and Gemini realtime upstream URLs using `wss` were downgraded to `ws`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where requests to a Gemini or Anthropic provider could fail with 401 when using the OpenAI format with a custom auth header (e.g. `x-goog-api-key`, `x-api-key`) or query-parameter auth. The original `Authorization` header sent by the OpenAI SDK is now cleared so it does not conflict with the configured credential.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where semantic routing failed with \"found target with ID <hash> but it's not mapped to a target\" when multiple workers or nodes raced to create the vectorDB index: \"Index already exists\" errors from concurrent index creation are now treated as success in the Redis, Valkey, and MemoryDB strategies, so every worker completes initialization and builds its local target mapping.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where the `context-management-2025-06-27` Anthropic beta flag was dropped when routing to a Bedrock target, causing Bedrock to reject requests carrying `context_management` with a `400` error on failover from an Anthropic target.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where a malformed RSA private key in a Gemini provider's `service_account_json` caused crash with SIGSEGV",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed Gemini service-account auth probing `metadata.google.internal` when a service account JSON was configured.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed reuse of an expired Azure managed-identity token causing intermittent upstream 401s.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed a confusing error message when a Bedrock native-format request uses an invalid ARN model path.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where Bedrock driver could not handle OpenAI content_parts format in system messages, user/assistant messages, and array-typed tool results.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed OpenAI-compatible completions requests with string array prompts.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-rag-injector**: Fixed percent sequences in injected prompt text.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-rate-limiting-advanced**: Fixed token counters being decremented on ai-semantic-cache hits.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-request-transformer**: Fixed an issue where requests transformed before `ai-proxy-advanced` skipped AI response normalization.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-semantic-cache**: Fixed cache hits ignoring `llm_format`, which returned OpenAI-shaped responses to native-format (e.g. Anthropic) clients. Cached responses are now converted to the client's `llm_format` for both streaming and non-streaming requests.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Clustering**: The `/status/sync` endpoint now returns an empty stat object instead of null before the first sync has run, keeping the response shape consistent.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**datakit**: Fixed CVE-2026-14916 by binding the JWT algorithm to the\nverification key's type in the `jwt_verify` node, so a symmetric algorithm can\nno longer be verified against an asymmetric key, preventing an authentication\nbypass where an attacker forges tokens by using the public key as an HMAC\nshared secret, under configurations where the node uses a PEM key string and\n`allowed_algorithms` is unset (any algorithm accepted).",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue on HTTP/2 connections where the request method and query were reported incorrectly, or could raise an error, when a request hit the error handler such as a 502 from an upstream connection reset.",
+        "type": "bugfix",
+        "scope": "PDK"
+      },
+      {
+        "message": "Fixed an issue where dynamic plugin ordering (`ordering`) leaked into the\ndownstream phases (`header_filter`, `body_filter`, `response`, `log`). Dynamic\nordering now again applies only to the `access` phase; downstream phases execute\nin static plugin-priority order.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where resetting the password of an admin or developer failed with \"Old password is invalid\" when the credential was created before the basic-auth hashing algorithm was upgraded from SHA1 to SHA256 (e.g. a `kong_admin` user created in an older version and carried over through an upgrade). The old password is now verified with the backward-compatible verification logic that supports both SHA1 and SHA256 hashed passwords.",
+        "type": "bugfix",
+        "scope": "Admin API"
+      },
+      {
+        "message": "**ip-restriction**: Fixed an issue where warn log messages did not\ninclude the plugin name, making it difficult to identify the source of\nblocked requests.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**jwt-signer**: Fixed an issue where the plugin failed to load configuration and errored when `null` or `nil` values were passed to `access_token_keyset` or `channel_token_keyset`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka-upstream**, **kafka-log**, **confluent**, **kafka-consume**, **confluent-consume**: Fixed a crash\nthat occurred when a plugin set `schema_registry.confluent.authentication.mode`\nto `oauth2` but omitted the `oauth2_client` record. Previously this returned a\n500 from the Admin API during validation, and once saved it also crashed at\nruntime while fetching the schema registry OAuth2 token. The absent\n`oauth2_client` is now handled and falls back to the default authentication\nmethod, so a configuration without `oauth2_client` works end-to-end.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Konnect Only**. **Debugger**: Fixed an error that could occur under sustained HTTPS traffic.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Konnect Only**. **Debugger**: Fixed an issue where the default key name `apikey` of the `key-auth` and `key-auth-enc` plugins was not redacted when captured by the Debugger. This has been resolved by adding `apikey` to the list of default redacted headers.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Konnect Only**. **Debugger**: Fixed an issue where the response body of the external HTTP call `httpc:request()` were not captured.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Konnect Only**. **Debugger**: Fixed an issue where instrumenting third-party HTTP client calls produced two indistinguishable `kong.io.http.request` spans for `httpc:request_uri()`.\nIt is now traced under a dedicated `kong.io.http.request_uri` span, and the `connect`, DNS, and internal `request` spans it triggers are nested beneath it.\nThe `kong.io.http.request` span now also reports the `http.url` attribute.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where switching clients within a single request (via `client_arg`) failed to use the matching client's JWK.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where consumer groups could not be resolved\nwhen the groups claim was only available from the user info endpoint, which\nresulted in a `500` error.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Fixed an issue where OpenTelemetry metrics only supported integer values by adding support for floating-point values in the OTLP exporter.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**PostgreSQL OAuth auth**: Refined the token cache key to be derived only from the fields that identify an OAuth configuration.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Prometheus**: A histogram's series (its buckets, `_count` and `_sum`) is now\nread as one atomic group during a scrape. Previously the exporter yielded and\nflushed output between individual samples, so an observation landing mid-scrape\ncould bump `_count`/`_sum` after the buckets were already read, producing an\ninternally inconsistent histogram in a single response.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Prometheus**: Histogram series are now emitted grouped by label set (all\nbuckets in ascending `le` order, then `_count`, then `_sum`) so the output\nfollows the OpenMetrics interleaving rule. Previously samples were grouped by\nsuffix, which caused strict consumers such as Google Managed Prometheus to\ndrop points.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**router**: Fixed an issue where WebSocket routes (`ws`/`wss`) returned HTTP 404 when using `router_flavor=expressions` due to incorrect protocol matching expressions being generated.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**SAML**: Fixed an unreachable code path that prevented the plugin from falling\nback to validating the `samlp:Response`-level signature when the `saml:Assertion`\nwas not individually signed. With `validate_assertion_signature` enabled, an\nunsigned assertion inside a signed Response is now accepted (and a Response with\nno valid signature on either the assertion or the root is rejected), so IdPs that\nsign the Response envelope rather than the assertion no longer require signature\nvalidation to be turned off. Relates to the Response-level fallback described in\nCVE-2026-14917.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ]
+  },
+  "2.0.2": {
+    "kong-aigw": [
+      {
+        "message": "**ace** Added Kong Identity principal fetch after authentication, enabling consumer and consumer group mapping from the Konnect identity service.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-aws-guardrails**, **ai-azure-content-safety**: Added `last_message` as new optional value for `config.text_source`.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-model-selector**: Replaced the single `source` config field with an ordered `sources` array so the plugin can try multiple sources and use the model from the first one that yields a value.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added filtering for empty Anthropic thinking blocks in request history.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: usage cost now supports per-cache-TTL cache-write\npricing, context-window pricing factors, and service-tier pricing factors via\n`model.options` (`cache_write_cost_list`, `context_window_factor`,\n`service_tier_factor`). Anthropic (cache TTL + service tier), OpenAI, and Gemini\nservice tiers are collected from upstream responses.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**basic-auth**: Added support for authentication via the Kong Identity service with caching, consumer compatibility and basic analytics.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**key-auth**: Added support for authentication via the Kong Identity service with caching, consumer compatibility and basic analytics.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Added support for Kong Identity principal lookup after token verification, enabling consumer and consumer group mapping from Kong Identity with caching and miss-behavior control.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**request-transformer-advanced**: Added a `max_request_body_size` configuration option that lets the plugin apply body transformations to request bodies that Nginx buffers to a temporary file (bodies larger than `client_body_buffer_size`). Previously such bodies were never read, so the configured body transformations were silently skipped and the original body was proxied upstream. The option defaults to `-1`, which preserves that behavior; set it to a positive byte limit to opt in (or `0` for unlimited, still bounded by Nginx's `client_max_body_size`).",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-aws-guardrails**: Fixed an issue where the plugin ignored the configured `text_source` option when `allow_masking` was enabled, masking the entire raw request body instead.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai guardrail plugins**: Fixed issues where ai-sanitizer plugin and ai-aws-guardrail plugin can not work properly with claude code.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-prompt-guard**: Fixed an issue where the plugin failed to inspect requests sent in a provider's native format instead of the OpenAI-compatible format.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed a bug where a response from Anthropic could fail to decode when the client's request advertised Brotli support, since Anthropic's edge may then return a Brotli-encoded body that Kong's response decompression -- which only understands gzip -- can't inflate. Kong now normalizes the outgoing `Accept-Encoding` request header before proxying to any LLM provider: `gzip, identity` when the client accepts gzip, and `identity` otherwise, so a client that cannot inflate gzip is never handed a compressed body on the paths that pass the upstream response through untouched.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Gemini's tool-use token usage (billed when server-side tools such as grounding, code execution, or URL context are used) was not counted in the reported token usage or cost.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where signed Anthropic thinking blocks with omitted text were removed from request history.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where token usage for Anthropic requests using the compaction beta was undercounted. Kong now sums `usage.iterations` when present instead of relying solely on the top-level `input_tokens` / `output_tokens`, which only reflect non-compaction iterations.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Anthropic-format requests could report zero usage when it targets Bedrock's own model via conversion.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed custom Azure upstream URLs to preserve query parameters and apply the configured `api-version` when needed.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed Gemini image generation token accounting to include reasoning tokens (`thoughtsTokenCount`) in `output_tokens` and report them as `output_tokens_details.reasoning_tokens`. Previously the reasoning tokens were dropped, which under-reported output tokens, analytics, and calculated cost for thinking-enabled image models.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed Gemini realtime (Live API) token accounting to include reasoning tokens (`thoughtsTokenCount`) in the reported output tokens, and to report them as `output_tokens_reasoning_tokens_count`. Previously the reasoning tokens were dropped, which under-reported the output and total token counts of thinking-enabled realtime sessions.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed token usage statistics being silently dropped for `audio/v1/audio/transcriptions`\nrequests. Token-billed OpenAI/Azure transcription models (e.g. `gpt-4o-transcribe`) now report\n`input_tokens`/`output_tokens`/`total_tokens` and the `text_tokens`/`audio_tokens` breakdown in the analytics\nlog when `logging.log_statistics` is enabled.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**, **ai-proxy-advanced**: Fixed an issue where Gemini streaming analytics could over-report token usage. Gemini repeats its usage metadata on every stream chunk as a running request-level total, but the counts were summed across chunks instead of replaced, multiplying the reported usage by the number of chunks. Reasoning tokens were affected the most, because Gemini reports them in full on the first chunk and does not change them afterwards. A chunk that carried no usage metadata also reset the recorded output token count to zero.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-sanitizer**: Fixed an issue in OpenAI chat response extraction where tool-call-only choices (without string `message.content`) could be treated as extractable text.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where AI Gateway guardrail plugins' request extractors did not correctly honor the configured `text_source` option.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where AI Gateway guardrail plugins failed to extract prompt text from OpenAI-native requests using the `input_text` content type.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**jwt-signer**: Fixed an issue where the plugin failed to set the signed access token header on the upstream request, when `access_token_upstream_header` (or `original_access_token_upstream_header`) had the same name as `channel_token_request_header`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Fixed `gen_ai.client.token.usage` never reporting token counts for non-text-generation\nAI categories (image, video, realtime, and audio transcription generation), because it only read the\nlegacy `prompt_tokens`/`prompt_tokens_details` analytics log fields instead of falling back to the\n`input_tokens`/`input_tokens_details` fields those categories are logged under.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**prometheus**: Fixed `kong_ai_llm_tokens_total` never reporting token counts for non-text-generation\nAI categories (image, video, realtime, and audio transcription generation), because it only read the\nlegacy `prompt_tokens`/`prompt_tokens_details` analytics log fields instead of falling back to the\n`input_tokens`/`input_tokens_details` fields those categories are logged under.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Core**: Reduced config update latency on hybrid data planes by notifying the stream subsystem before applying the update in the HTTP subsystem, so both rebuild in parallel.",
+        "type": "performance",
+        "scope": "Core"
+      }
+    ]
+  },
+  "2.0.3": {
+    "kong-aigw": [
+      {
+        "message": "**ai-mcp-oauth2**: Add 401 JSON body like Kong key-auth plugin.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Proxy**: Added support for GCP Workload Identity Federation using AWS IAM to authenticate with GCP Vertex models, enabling Kong to access Google Cloud Vertex models using AWS credentials,  and without managing long-lived credentials.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Konnect Only**. **Analytics**: Added the OpenID Connect plugin's `credential_claim` identity to Analytics events, so requests are attributed under the auth dimension in Konnect without a Kong Consumer.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-aws-guardrails**: Fixed a issue where the request to aws guardrail service could return 500 error duo to a failure in request signature.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai guardrail plugins**: Fixed an issue where a JSON `null` field in a response from the third-party service made the plugin return `500`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where gzip-compressed and malformed MCP request bodies were incorrectly rejected with HTTP 413.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-model-selector**: Fixed an issue where a model extracted from a `body_path` other than `model` left an unrecognized field in the request body and no standard `model` field, causing the upstream LLM provider to reject the request.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Gemini non-streaming responses that reached `max_tokens` reported a `stop` finish reason instead of `length`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where modern OpenAI output token limits were discarded or overridden during request normalization.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Gemini and Anthropic token usage metadata was lost in streaming responses.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy** and **ai-proxy-advanced**: Fixed a 500 crash on Bedrock Converser requests when a `cachePoint` content block immediately followed a `toolResult` block in the same message.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-rag-injector**: Fixed an issue where a chunk lookup against an Amazon MemoryDB vector store failed with `unexpected search response: no value found in result set`. The MemoryDB driver now reads the `FT.SEARCH` fields by name instead of by position, treats the vector distance as optional, and requests as many rows as `fetch_chunks_count` asks for.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where an in-flight request that completed after its\nupstream target became unavailable could restore the target to the\nlatency balancer and route subsequent requests to it.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where hybrid data planes retried unrecoverable CP connection failures and ignored Retry-After delays on 429/503 responses, preventing avoidable reconnect storms.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where immediate cosocket SSL handshake errors could be reported as subsequent socket write failures.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**jwt**: Fixed an issue where the plugin failed to decode standard Base64\nsecrets that contained `+` or `/` when `config.secret_is_base64` was enabled.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka-upstream**, **kafka-log**, **confluent**, **kafka-consume**, **confluent-consume**: Fixed a\npermanent failure that started when a broker answered an `ApiVersions` request with an error code,\nan empty API key set, or a malformed frame. The client cached that result and every later request\nfailed with `ProduceRequest API version not negotiated; broker may be unreachable` until the node\nrestarted, even after the broker recovered. The client now refuses an unusable `ApiVersions`\nresponse, keeps the previous negotiation, and retries the negotiation for a topic whose metadata is\nalready cached.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Konnect Only**. **Debugger**: Fixed an issue where deep copy of the worker logs stack overflowed by replacing `deep_copy` with `cycle_aware_deep_copy`.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where a request that authenticated but failed an authorization check (such as `scopes_required`) was not attributed to its consumer, consumer groups, or Kong Identity principal in logs and analytics.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Reduced per-request overhead of `resource_attributes` by skipping template rendering entirely for static (non-templated) fields.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Clustering**: Improved data plane stability when applying a large configuration\nsync from the control plane, reducing the chance of a worker restart while the\nupdate is being processed.",
+        "type": "performance",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Improved the performance of listing workspaces with `?counter=true`. Entity counts for the whole page are now retrieved with one grouped query per entity type instead of a separate count query per entity type per workspace, while keeping the counts exact.",
+        "type": "performance",
+        "scope": "Admin API"
+      },
+      {
+        "message": "**opentelemetry**: Reduced memory usage of the access log queue by deferring OTLP payload conversion to export time.",
+        "type": "performance",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Optimized performance of clustering payload handling for version compatibility. This reduces CPU usage and\ntransient memory pressure.",
+        "type": "performance",
+        "scope": "Clustering"
+      }
+    ]
+  }
+}

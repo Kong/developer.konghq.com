@@ -1,12 +1,19 @@
 {% capture header %}
-{% capture heading %}<{{ include.config.type }} id="{{ include.config.text | liquify | slugify }}" class="{% if include.config.align %}self-{{ include.config.align }}{% endif %}">{{ include.config.text | liquify }}</{{ include.config.type }}>{% endcapture%}
 {% if include.config.type == 'h1' %}
+{% capture heading %}<h1 id="{{ include.config.text | liquify | slugify }}" class="{% if include.config.align %}self-{{ include.config.align }}{% endif %}">{{ include.config.text | liquify }}</h1>{% endcapture %}
 <div class="flex items-center">
 {{heading}}
 {% unless page.llm == false %}{% include components/llm_dropdown.html url=page.url css_classes="ml-auto" %}{% endunless %}
 </div>
 {% else %}
-{{heading}}
+{% assign _heading_id = include.config.text | liquify | slugify %}
+{% capture _heading_text %}{{ include.config.text | liquify }}{% endcapture %}
+{% if include.config.align %}
+{% capture _heading_class %}self-{{ include.config.align }}{% endcapture %}
+{% include anchor_heading.html tag=include.config.type id=_heading_id text=_heading_text class=_heading_class %}
+{% else %}
+{% include anchor_heading.html tag=include.config.type id=_heading_id text=_heading_text %}
+{% endif %}
 {% endif %}
     {% if include.config.type == 'h1' %}
         <div class="flex gap-2 items-center">

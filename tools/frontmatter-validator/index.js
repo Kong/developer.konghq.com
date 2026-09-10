@@ -27,6 +27,7 @@ async function validateFrontmatters() {
         "app/_layouts/**",
         "app/_includes/**",
         "app/_kong_plugins/**/changelog.md",
+        "app/_ai_gateway_policies/*/index.md",
         "app/_kong_plugins/**/reference.md",
         "app/_api/**/*.md",
         "app/_references/**/*.md",

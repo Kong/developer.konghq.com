@@ -1,4 +1,16 @@
 {
+  "3.15.0.4": [
+    {
+      "message": "Fixed an issue where AI Gateway guardrail plugins' request extractors did not correctly honor the configured `text_source` option.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AI Gateway guardrail plugins failed to extract prompt text from OpenAI-native requests using the `input_text` content type.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "By default now blocks unrecognized/new filters added to GCP Model Armor.\n",

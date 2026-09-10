@@ -2,6 +2,7 @@
 
 # Extracted from: https://github.com/kumahq/kuma-website/blob/master/jekyll-kuma-plugins/lib/jekyll/kuma-plugins/liquid/tags/policyyaml.rb
 require_relative '../monkey_patch'
+require_relative '../component_templates'
 
 module Jekyll
   class RenderPolicyYaml < Liquid::Block
@@ -342,13 +343,10 @@ module Jekyll
         context['uni_legacy'] = contents[:uni_legacy]
         context['uni'] = contents[:uni]
         context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
-        ::Liquid::Template.parse(template, { line_numbers: true }).render(context)
+        ComponentTemplates.fetch('policy_yaml', 'markdown').render(context)
       end
     end
 
-    def template
-      File.read(File.join(@site.source, '_includes/components/policy_yaml.md'))
-    end
   end
 end
 

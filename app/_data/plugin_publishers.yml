@@ -54,3 +54,6 @@ crowdstrike:
 
 skyflow:
   name: Skyflow
+
+veriknox:
+  name: VeriKnox

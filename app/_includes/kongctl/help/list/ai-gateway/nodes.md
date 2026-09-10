@@ -2,9 +2,6 @@
 Usage:
   kongctl list ai-gateway nodes [node-id] [flags]
 
-Maturity:
-  beta
-
 Aliases:
   nodes, node, data-plane-nodes, data-plane-node
 
@@ -27,7 +24,8 @@ Flags:
                                 - Config path: [ color-theme ]
                                 - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
                                 - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
-      --columns stringArray     Select text columns as HEADER=.field (repeatable or comma-separated). Supports nested fields, quoted keys, array indexes, and string slices.
+      --columns stringArray     Select text columns as HEADER=.field (repeatable or comma-separated).
+                                Supports nested fields, quoted keys, array indexes, and string slices.
       --config-file string      Path to the configuration file to load.
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
       --gateway-id string       The ID of the AI Gateway that owns the resource.

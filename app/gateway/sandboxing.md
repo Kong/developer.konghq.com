@@ -12,6 +12,7 @@ products:
   - gateway
 works_on:
   - on-prem
+  - konnect
 
 related_resources:
   - text: "Pre-function plugin"

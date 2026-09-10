@@ -1,316 +1,243 @@
 ---
 title: Route Claude CLI traffic through {{site.ai_gateway}} and AWS Bedrock
-permalink: /how-to/use-claude-code-with-ai-gateway-bedrock/
 content_type: how_to
+permalink: /ai-gateway/use-claude-code-with-ai-gateway-bedrock/
 
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: AI Proxy
-    url: /plugins/ai-proxy/
-  - text: File Log
-    url: /plugins/file-log/
+  - text: Route Claude CLI traffic through {{site.ai_gateway}} and Anthropic
+    url: /ai-gateway/use-claude-code-with-ai-gateway-anthropic/
+  - text: Route Claude CLI traffic through {{site.ai_gateway}} and OpenAI
+    url: /ai-gateway/use-claude-code-with-ai-gateway-openai/
 
-description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic using AWS Bedrock models
+description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic to an AWS Bedrock model
 
 products:
-  - gateway
   - ai-gateway
 
 works_on:
-  - on-prem
   - konnect
 
+tools:
+  - kongctl
+
+prereqs:
+  konnect:
+     - name: KONG_NGINX_HTTP_CLIENT_BODY_BUFFER_SIZE
+       value: 2m
+  inline:
+    - title: AWS Bedrock
+      content: |
+        1. Enable model access in AWS Bedrock:
+           1. Sign in to the AWS Management Console.
+           1. Navigate to Amazon Bedrock.
+           1. Select **Model access** in the left navigation.
+           1. Request access to Claude models (for example, `us.anthropic.claude-haiku-4-5-20251001-v1:0`).
+        1. Create an IAM user with Bedrock permissions:
+           1. Navigate to IAM in the AWS Console.
+           1. Create a new user or select an existing user.
+           1. Attach the `AmazonBedrockFullAccess` policy, or create a custom policy with `bedrock:InvokeModel` permissions.
+           1. Create access keys for the user.
+        1. Export your AWS credentials and region:
+           ```bash
+           export AWS_ACCESS_KEY_ID='YOUR_AWS_ACCESS_KEY_ID'
+           export AWS_SECRET_ACCESS_KEY='YOUR_AWS_SECRET_ACCESS_KEY'
+           export AWS_REGION='YOUR_AWS_REGION'
+           ```
+    - title: Claude Code CLI
+      icon_url: /assets/icons/third-party/claude.svg
+      include_content: prereqs/claude-code
+
 min_version:
-  gateway: '3.13'
-
-plugins:
-  - ai-proxy
-  - file-log
-
-entities:
-  - service
-  - route
-  - plugin
+  ai-gateway: '2.0'
 
 tags:
   - ai
   - bedrock
 
 tldr:
-  q: How do I run Claude CLI through {{site.ai_gateway}} with AWS Bedrock?
-  a: Install Claude CLI, configure its API key helper, create a Gateway Service and Route, attach the AI Proxy plugin to forward requests to AWS Bedrock, enable file-log to inspect traffic, and point Claude CLI to the local proxy endpoint so all LLM requests pass through the {{site.ai_gateway}} for monitoring and control.
+  q: How do I run Claude CLI through {{site.ai_gateway}} against an AWS Bedrock model?
+  a: Create an AI Provider entity to store your AWS credentials, create an AI Policy that strips fields Claude CLI sends that Bedrock rejects, create an AI Model entity with an Anthropic-compatible format that routes to Bedrock through that provider, then point Claude CLI's `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all LLM requests pass through the gateway for monitoring and control.
 
-tools:
-  - deck
-
-prereqs:
-  prereqs:
-  inline:
-    - title: AWS Bedrock
-      icon_url: /assets/icons/bedrock.svg
-      content: |
-        1. Enable model access in AWS Bedrock:
-           - Sign in to the AWS Management Console
-           - Navigate to Amazon Bedrock
-           - Select **Model access** in the left navigation
-           - Request access to Claude models (for example, `us.anthropic.claude-haiku-4-5-20251001-v1:0`)
-           - Wait for access approval (typically immediate for most models)
-
-        2. Create an IAM user with Bedrock permissions:
-           - Navigate to IAM in the AWS Console
-           - Create a new user or select an existing user
-           - Attach the `AmazonBedrockFullAccess` policy or create a custom policy with `bedrock:InvokeModel` permissions
-           - Create access keys for the user
-
-        3. Export the Access Key ID, Secret Access Key and AWS region to your environment:
-           ```sh
-           export DECK_AWS_ACCESS_KEY_ID='YOUR AWS ACCESS KEY ID'
-           export DECK_AWS_SECRET_ACCESS_KEY='YOUR AWS SECRET ACCESS KEY'
-           export DECK_AWS_REGION='YOUR AWS REGION'
-           ```
-    - title: Claude Code CLI
-      icon_url: /assets/icons/third-party/claude.svg
-      include_content: prereqs/claude-code
-  entities:
-    services:
-      - example-service
-    routes:
-      - example-route
-
-cleanup:
-  inline:
-    - title: Clean up Konnect environment
-      include_content: cleanup/platform/konnect
-      icon_url: /assets/icons/gateway.svg
-    - title: Destroy the {{site.base_gateway}} container
-      include_content: cleanup/products/gateway
-      icon_url: /assets/icons/gateway.svg
 ---
 
-## Configure the AI Proxy plugin
+## Create an AI Model Provider entity
 
-Configure the AI Proxy plugin for the [AWS Bedrock provider](/ai-gateway/ai-providers/#bedrock).
-
-* This setup uses the default `llm/v1/chat` route. {{ site.claude_code }} sends its requests to this route.
-* The configuration also raises the maximum token count to 8192 KB to support larger prompts.
-
-The `llm_format: anthropic` parameter tells {{site.ai_gateway}} to expect request and response payloads that match {{ site.claude }}'s native API format. Without this setting, the gateway would default to OpenAI's format, which would cause request failures when {{ site.claude_code }} communicates with the Bedrock endpoint.
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection and store your authentication credentials:
 
 {% entity_examples %}
-entities:
-  plugins:
-    - name: ai-proxy
-      config:
-        llm_format: anthropic
-        route_type: llm/v1/chat
-        max_request_body_size: 1048576
-        logging:
-          log_statistics: true
-          log_payloads: false
-        auth:
-          allow_override: false
-          aws_access_key_id: ${aws_access_key_id}
-          aws_secret_access_key: ${aws_secret_access_key}
+ai_gateway_model_providers:
+  - ref: my-aws-account
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: my-aws-account
+    display_name: "AWS Production"
+    type: bedrock
+    config:
+      auth:
+        type: aws
+        access_key_id: !env AWS_ACCESS_KEY_ID
+        secret_access_key: !secret {source: !env AWS_SECRET_ACCESS_KEY}
+{% endentity_examples %}
+
+{:.info}
+> `ai-quickstart` references the {{site.ai_gateway}} created by the quickstart script in the prerequisites above, instead of creating a new one.
+
+The AI Model Provider uses the following settings:
+
+* `type: bedrock`: Specifies that this provider speaks Bedrock's Messages API format.
+* `config.auth.type: aws`: Uses AWS credentials format.
+
+## Create an AI Policy entity
+
+Create an [AI Policy](/ai-gateway/entities/ai-policy/) entity using [request transformer](/ai-gateway/policies/ai-request-transformer/) to remove extra fields that Bedrock's API does not support.
+
+{% entity_examples %}
+ai_gateway_policies:
+  - ref: strip-claude-beta-info
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: strip-claude-beta-info
+    display_name: "Strip Claude beta info"
+    type: request-transformer
+    config:
+      remove:
+        headers:
+          - anthropic-beta
+        querystring:
+          - beta
+        body:
+          - output_config
+          - context_management
+          - mcp_servers
+          - container
+          - service_tier
+{% endentity_examples %}
+
+{:.info}
+> {{ site.claude_code }} beta features vary by version and may add other incompatible fields over time. If you still see a `400` error mentioning an unexpected field after applying this Policy, add that field to the appropriate `remove` list and re-apply.
+
+The AI Policy uses the following settings:
+
+* `type: request-transformer-advanced`: Modifies requests before {{site.ai_gateway}} forwards them upstream.
+*  `config.remove.headers`: Removes the `anthropic-beta` header.
+*  `config.remove.querystring`: Removes the `beta` query string parameter.
+*  `config.remove.body`: Removes the `output_config`, `context_management`, `mcp_servers`, `container`, and `service_tier`body fields.
+
+{:.info}
+> Don't strip `model`: {{site.ai_gateway}} uses that field to select the target, and removing it breaks routing.
+
+## Create an AI Model entity
+
+Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use:
+
+{% entity_examples %}
+ai_gateway_model_providers:
+  - ref: my-aws-account
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: my-aws-account
+    display_name: "AWS Production"
+    type: bedrock
+    config:
+      auth:
+        type: aws
+        access_key_id: !env AWS_ACCESS_KEY_ID
+        secret_access_key: !secret {source: !env AWS_SECRET_ACCESS_KEY}
+ai_gateway_policies:
+  - ref: strip-claude-beta-info
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: strip-claude-beta-info
+    display_name: "Strip Claude beta info"
+    type: request-transformer
+    config:
+      remove:
+        headers:
+          - anthropic-beta
+        querystring:
+          - beta
+        body:
+          - output_config
+          - context_management
+          - mcp_servers
+          - container
+          - service_tier
+ai_gateway_models:
+  - ref: my-claude-bedrock
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: my-claude-bedrock
+    display_name: "my-claude-bedrock"
+    type: model
+    formats:
+      - type: anthropic
+    config:
+      route:
+        paths:
+          - /
         model:
-          provider: bedrock
-          name: us.anthropic.claude-haiku-4-5-20251001-v1:0
-          options:
-            anthropic_version: bedrock-2023-05-31
-            bedrock:
-              aws_region: ${aws_region}
-            max_tokens: 8192
-variables:
-  aws_access_key_id:
-    value: $AWS_ACCESS_KEY_ID
-  aws_secret_access_key:
-    value: $AWS_SECRET_ACCESS_KEY
-  aws_region:
-    value: $AWS_REGION
+          body_param: model
+          values:
+            - my-claude-bedrock
+    targets:
+      - name: us.anthropic.claude-haiku-4-5-20251001-v1:0
+        provider: my-aws-account
+        config:
+          type: bedrock
+          region: !env AWS_REGION
+    policies:
+      - !ref strip-claude-beta-info#name
+    capabilities:
+      - generate
 {% endentity_examples %}
 
-## Configure the File Log plugin
+The AI Model uses the following settings:
 
-Enable the [File Log](/plugins/file-log/) plugin on the service to inspect the LLM traffic between {{ site.claude }} and the {{site.ai_gateway}}. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what {{ site.claude }} sends through the {{site.ai_gateway}}.
+* `name`/`display_name: my-claude-bedrock`: The identifier you pass to `claude --model`. {{ site.claude_code }} uses this, not the upstream target name, to select the model.
+* `formats: [type: anthropic]`: Declares that this model accepts requests in Anthropic-compatible format, matching what {{ site.claude_code }} sends natively.
+* `config.route.paths: [/]`: Configures the base path where this model's routes are accessible.
+* `capabilities: [generate]`: Enables text generation. For a model using the `anthropic` format, `generate` creates a `/messages` endpoint matching Anthropic's native Messages API, so combined with your base path, clients send requests to `/v1/messages`.
+* `policies`: Attaches the `strip-claude-beta-info` policy created in the previous step, so its header and body transformations apply to every request sent through this model.
 
-{% entity_examples %}
-entities:
-  plugins:
-    - name: file-log
-      config:
-        path: "/tmp/claude.json"
-{% endentity_examples %}
+## Run {{ site.claude_code }}
 
-## Verify traffic through Kong
+{{ site.claude_code }}'s experimental beta features send fields that Bedrock rejects even with the AI Policy in place. Disable them, then start a session pointed at your local {{site.ai_gateway}} endpoint:
 
-Start a {{ site.claude_code }} session that points to the local {{site.ai_gateway}} endpoint:
+<!-- vale off -->
+{% validation claude-code %}
+prompt: Tell me about the Madrid Skylitzes manuscript.
+model: my-claude-bedrock
+base_url: http://localhost:8000/
+disable_experimental_betas: true
+{% endvalidation %}
+<!-- vale on -->
 
-{:.warning}
-> Ensure that `ANTHROPIC_MODEL` matches the model you configured in the AI Proxy plugin (for example, `us.anthropic.claude-haiku-4-5-20251001-v1:0`).
-
-```sh
-ANTHROPIC_BASE_URL=http://localhost:8000/anything \
-ANTHROPIC_MODEL=us.anthropic.claude-haiku-4-5-20251001-v1:0 \
-claude
-```
-
-{{ site.claude_code }} asks for permission before it runs tools or interacts with files:
+{{ site.claude_code }} might prompt you approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
 
 ```text
-I'll need permission to work with your files.
+The Madrid Skylitzes is a remarkable 12th-century illuminated Byzantine
+manuscript that represents one of the most important surviving examples
+of medieval historical documentation. Here are the key details:
 
-This means I can:
-- Read any file in this folder
-- Create, edit, or delete files
-- Run commands (like npm, git, tests, ls, rm)
-- Use tools defined in .mcp.json
+What it is
 
-Learn more ( https://docs.claude.com/s/claude-code-security )
+The Madrid Skylitzes is the only surviving illustrated manuscript of John
+Skylitzes' "Synopsis of Histories" (Σύνοψις Ἱστοριῶν), which chronicles
+Byzantine history from 811 to 1057 CE - covering the period from the death
+of Emperor Nicephorus I to the deposition of Michael VI.
 
-❯ 1. Yes, continue
-2. No, exit
+Artistic Significance
+
+- 574 miniature paintings (with about 100 lost over time)
+- Lavishly decorated with gold leaf, vibrant pigments, and intricate
+detailing
+- Depicts everything from imperial coronations and battles to daily life
+in Byzantium
+- The only surviving Byzantine illuminated chronicle written in Greek
+
+Unique Collaboration
+
+The manuscript is believed to be the work of 7 different artists from
+various backgrounds:
+- 4 Italian artists
+- 1 English or French artist
+- 2 Byzantine artists
 ```
 {:.no-copy-code}
-
-Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach {{site.ai_gateway}}.
-
-```text
-Tell me about Anna Komnene's Alexiad.
-```
-
-{{ site.claude_code }} might prompt you to approve its web search for answering the question. When you select **Yes**, {{ site.claude }} will produce a full-length response to your request:
-
-```text
-Anna Komnene (1083-1153?) was a Byzantine princess, scholar, physician,
-hospital administrator, and historian. She is known for writing the
-Alexiad, a historical account of the reign of her father, Emperor Alexios
-I Komnenos (r. 1081-1118). The Alexiad is a valuable primary source for
-understanding Byzantine history and the First Crusade.
-```
-{:.no-copy-code}
-
-Next, inspect the {{site.ai_gateway}} logs to verify that the traffic was proxied through it:
-
-```sh
-docker exec kong-quickstart-gateway cat /tmp/claude.json | jq
-```
-
-You should find an entry that shows the upstream request made by {{ site.claude_code }}. A typical log record looks like this:
-
-```json
-{
-  ...
-  "method": "POST",
-  "headers": {
-    "user-agent": "claude-cli/2.0.37 (external, cli)",
-    "content-type": "application/json"
-  },
-  ...
-  "ai": {
-    "proxy": {
-      "tried_targets": [
-        {
-          "provider": "bedrock",
-          "model": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
-          "port": 443,
-          "upstream_scheme": "https",
-          "host": "bedrock-runtime.us-west-2.amazonaws.com",
-          "upstream_uri": "/model/us.anthropic.claude-haiku-4-5-20251001-v1:0/invoke",
-          "route_type": "llm/v1/chat",
-          "ip": "xxx.xxx.xxx.xxx"
-        }
-      ],
-      "meta": {
-        "request_model": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
-        "request_mode": "oneshot",
-        "response_model": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
-        "provider_name": "bedrock",
-        "llm_latency": 1542,
-        "plugin_id": "13f5c57a-77b2-4c1f-9492-9048566db7cf"
-      },
-      "usage": {
-        "completion_tokens": 124,
-        "completion_tokens_details": {},
-        "total_tokens": 11308,
-        "cost": 0,
-        "time_per_token": 12.435483870968,
-        "time_to_first_token": 1542,
-        "prompt_tokens": 11184,
-        "prompt_tokens_details": {}
-      }
-    }
-  }
-  ...
-}
-```
-{:.no-copy-code}
-
-This output confirms that {{ site.claude_code }} routed the request through {{site.ai_gateway}} using AWS Bedrock with the `us.anthropic.claude-haiku-4-5-20251001-v1:0` model.
-
-## Troubleshooting
-
-When using {{ site.claude_code }} with AWS Bedrock models, you may encounter connection errors.
-See the following sections for common error workarounds.
-
-### API Error 400: `context_management`: Extra inputs are not permitted
-
-Some beta features aren't compatible with AWS Bedrock.
-This error displays because {{ site.claude }} beta features are enabled.
-
-To resolve this issue, do the following:
-
-1. Disable betas and experiments:
-```sh
-export CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1
-```
-2. Configure the [Request Transformer Advanced](/plugins/request-transformer-advanced/) plugin to remove beta information and the `model` field:
-{% capture fix_claude_beta %}
-{% entity_examples %}
-entities:
-  plugins:
-    - name: ai-proxy
-      config:
-        llm_format: anthropic
-        route_type: llm/v1/chat
-        max_request_body_size: 1048576
-        logging:
-          log_statistics: true
-          log_payloads: false
-        auth:
-          allow_override: false
-          aws_access_key_id: ${aws_access_key_id}
-          aws_secret_access_key: ${aws_secret_access_key}
-        model:
-          provider: bedrock
-          name: us.anthropic.claude-haiku-4-5-20251001-v1:0
-          options:
-            anthropic_version: bedrock-2023-05-31
-            bedrock:
-              aws_region: ${aws_region}
-            max_tokens: 8192
-    - name: request-transformer-advanced
-      config:
-        remove:
-          headers:
-            - anthropic-beta
-          querystring:
-            - beta
-          body:
-            - model
-variables:
-  aws_access_key_id:
-    value: $AWS_ACCESS_KEY_ID
-  aws_secret_access_key:
-    value: $AWS_SECRET_ACCESS_KEY
-  aws_region:
-    value: $AWS_REGION
-{% endentity_examples %}
-{% endcapture %}
-{{ fix_claude_beta | indent: 3 }}
-
-### API Error 400: `max_tokens` must be greater than `thinking.budget_tokens`
-
-If your `max_tokens` limit is too small, you may encounter this error.
-You can resolve this by setting `max_tokens` to a value greater than `budget_tokens`. The maximum value is `200000`.
-
-For more information about the default `budget_tokens` value, see [Building with extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking#max-tokens-and-context-window-size) in {{ site.claude }}'s API docs.

@@ -19,7 +19,7 @@ module Jekyll
         if product.nil?
           ReleaseInfo::Tool.new(site:, tool:, min_version:, max_version:)
         else
-          ReleaseInfo::Product.new(site:, product:, min_version:, max_version:)
+          ReleaseInfo::Product.new(site:, product:, major:, min_version:, max_version:)
         end
       end
 
@@ -39,6 +39,16 @@ module Jekyll
 
       def max_version
         @max_version ||= @page.data.fetch('max_version', {})
+      end
+
+      def major
+        @major ||= MajorResolver.new(
+          site:,
+          product:,
+          page_major_version: @page.data['major_version'],
+          min_version: min_version[product],
+          max_version: max_version[product]
+        ).resolve
       end
     end
   end

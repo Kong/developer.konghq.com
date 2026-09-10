@@ -277,6 +277,8 @@ forwards the credentials passed by the client to the identity server's token end
 Set up client credentials grant auth:
 * [Plugin configuration example](/plugins/openid-connect/examples/client-credentials/)
 * [Client credentials grant tutorial with Keycloak](/how-to/configure-oidc-with-client-credentials/)
+* [Dynamically set upstream based on the authenticated caller with Datakit](/how-to/configure-oidc-datakit-upstream-routing/)
+* [Dynamically set host based on the authenticated caller with Datakit](/how-to/configure-oidc-datakit-host-routing/)
 
 #### Authorization code flow
 

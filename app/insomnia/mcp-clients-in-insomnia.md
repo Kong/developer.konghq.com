@@ -38,9 +38,6 @@ faqs:
   - q: Can I use a Personal Access Token (PAT) instead of OAuth?
     a: |
       Yes. Select **Auth > Bearer Token** and enter your PAT in the **Token** field.
-  - q: Why doesn’t my browser open during OAuth sign-in?
-    a: |
-      The MCP Auth Flow uses your system’s default browser. Ensure that Insomnia can open URLs using your system browser. The MCP Auth Flow only supports browser-based OAuth.
   - q: Why is MCP Auth Flow not listed under OAuth 2.0?
     a: |
       The MCP Server’s metadata may not include a valid authorization endpoint. Use a **Personal Access Token (PAT)** or **Basic Auth** instead.
@@ -198,7 +195,7 @@ For more information about sampling, go to the MCP [Sampling](https://modelconte
 ## Set a token limit per request
 
 By default, a request can consume as many tokens as the model allows. To cap
-token usage on each request and control cost, {{ site.data.products.insomnia.name }}
+token usage on each request and control cost, {{ site.insomnia }}
 lets you set a maximum number of tokens per request:
 
 1. Navigate to **Preferences** > **AI Settings** > **Activate an LLM**.

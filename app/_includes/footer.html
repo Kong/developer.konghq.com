@@ -12,8 +12,8 @@
         <div class="flex flex-col gap-4 md:items-end text-normal justify-center w-full md:w-1/2 p-6 md:p-0 rounded-md bg-secondary md:bg-transparent shadow-primary md:shadow-none">
             <div class="font-semibold text-primary text-base">Ready to get started with Kong?</div>
             <div class="flex gap-3">
-                <a class="button button--primary no-icon" href="https://konghq.com/products/kong-konnect/register?ktm_medium=referral&ktm_source=docs&ktm_content=footer">Start free trial</a>
-                <a class="button button--secondary no-icon" href="https://konghq.com/contact-sales?ktm_medium=referral&ktm_source=docs&ktm_content=footer">Get a Demo</a>
+                <a class="button button--primary no-icon" href="https://konghq.com/products/kong-konnect/register?ktm_medium=referral&ktm_source=docs&ktm_content=footer" target="_blank" rel="noopener nofollow noreferrer">Start free trial</a>
+                <a class="button button--secondary no-icon" href="https://konghq.com/contact-sales?ktm_medium=referral&ktm_source=docs&ktm_content=footer" target="_blank" rel="noopener nofollow noreferrer">Get a Demo</a>
             </div>
         </div>
     </div>
@@ -28,7 +28,7 @@
                 <div class="font-semibold text-primary">{{section[1].title}}</div>
 
                 {% for link in section[1].links %}
-                    <a href="{{link[1].url}}" class="no-icon {% if link[1].cssClass %} {{link[1].cssClass}} {% else %} text-secondary {% endif %}">{{link[1].text}}</a>
+                    <a href="{{link[1].url}}" class="no-icon {% if link[1].cssClass %} {{link[1].cssClass}} {% else %} text-secondary {% endif %}" {% if link[1].url contains "https://" %}target="_blank" rel="noopener nofollow noreferrer"{% endif %}>{{link[1].text}}</a>
                 {% endfor %}
             </div>
         {% endfor %}
@@ -38,28 +38,28 @@
     <div
         class="flex gap-5 justify-between flex-start md:items-center font-normal flex-col md:flex-row w-full max-w-screen-2xl 2xl:mx-auto py-4 px-5 md:px-8 ai-assistant-aware-px">
         <div class="flex gap-6">
-            <a href="https://github.com/kong/kong" rel="noreferrer noopener" target="_blank" class="no-icon" aria-label="GitHub">
+            <a href="https://github.com/kong/kong" rel="noopener nofollow noreferrer" target="_blank" class="no-icon" aria-label="GitHub">
                 <div class="flex w-5 h-5 text-terciary">{% include_svg '/assets/icons/social/github.svg' %}</div>
             </a>
-            <a href="https://www.meetup.com/topics/kong/all" rel="noreferrer noopener" target="_blank" class="no-icon" aria-label="Meetup">
+            <a href="https://www.meetup.com/topics/kong/all" rel="noopener nofollow noreferrer" target="_blank" class="no-icon" aria-label="Meetup">
                 <div class="flex w-5 h-5 text-terciary">{% include_svg '/assets/icons/social/meetup.svg' %}</div>
             </a>
-            <a href="https://www.linkedin.com/company/konghq" rel="noreferrer noopener" target="_blank" class="no-icon" aria-label="Linkedin">
+            <a href="https://www.linkedin.com/company/konghq" rel="noopener nofollow noreferrer" target="_blank" class="no-icon" aria-label="Linkedin">
                 <div class="flex w-5 h-5 text-terciary">{% include_svg '/assets/icons/social/linkedin.svg' %}</div>
             </a>
-            <a href="https://x.com/kong" rel="noreferrer noopener" target="_blank" class="no-icon" aria-label="X">
+            <a href="https://x.com/kong" rel="noopener nofollow noreferrer" target="_blank" class="no-icon" aria-label="X">
                 <div class="flex w-5 h-5 text-terciary">{% include_svg '/assets/icons/social/x.svg' %}</div>
             </a>
-            <a href="https://www.youtube.com/@KongInc" rel="noreferrer noopener" target="_blank" class="no-icon" aria-label="Youtube">
+            <a href="https://www.youtube.com/@KongInc" rel="noopener nofollow noreferrer" target="_blank" class="no-icon" aria-label="Youtube">
                 <div class="flex w-5 h-5 text-terciary">{% include_svg '/assets/icons/social/youtube.svg' %}</div>
             </a>
         </div>
         <div class="flex gap-2 list-none">
-            <a class="text-terciary no-icon" href="https://konghq.com/legal/terms-of-use">Terms</a>
+            <a class="text-terciary no-icon" href="https://konghq.com/legal/terms-of-use" target="_blank" rel="noopener nofollow noreferrer">Terms</a>
             <span class="text-terciary">|</span>
-            <a class="text-terciary no-icon" href="https://konghq.com/legal/privacy-policy">Privacy</a>
+            <a class="text-terciary no-icon" href="https://konghq.com/legal/privacy-policy" target="_blank" rel="noopener nofollow noreferrer">Privacy</a>
             <span class="text-terciary">|</span>
-            <a class="text-terciary no-icon" href="https://konghq.com/compliance">Trust and Compliance</a>
+            <a class="text-terciary no-icon" href="https://konghq.com/compliance" target="_blank" rel="noopener nofollow noreferrer">Trust and Compliance</a>
         </div>
         <div>
             <span class="text-terciary">&copy; Kong Inc. {{ site.time | date: '%Y' }} &nbsp;</span>

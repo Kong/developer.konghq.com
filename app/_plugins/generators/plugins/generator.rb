@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../../lib/build_filter'
+
 module Jekyll
   module PluginPages
     class Generator
@@ -11,13 +13,12 @@ module Jekyll
 
       attr_reader :site
 
-      def initialize(site)
+      def initialize(site, build_filter: Jekyll::BuildFilter.current)
         @site = site
+        @build_filter = build_filter
       end
 
       def run
-        return if skip_locally?
-
         Dir.glob(File.join(site.source, "#{PLUGINS_FOLDER}/*/")).each do |folder|
           slug = folder.gsub("#{site.source}/#{PLUGINS_FOLDER}/", '').chomp('/')
 
@@ -27,6 +28,9 @@ module Jekyll
 
       def generate_pages(plugin)
         generate_overview_page(plugin)
+
+        return if skip_locally?
+
         generate_changelog_page(plugin)
 
         return if site.config.dig('skip', 'plugins')
@@ -43,7 +47,7 @@ module Jekyll
                    .to_jekyll_page
 
         site.data['kong_plugins'][plugin.slug] = overview
-        site.pages << overview
+        site.pages << overview unless skip_locally?
       end
 
       def generate_reference_page(plugin)
@@ -92,10 +96,7 @@ module Jekyll
       end
 
       def skip_locally?
-        page_paths = ENV['PAGE_PATHS']&.split(',')&.map(&:strip)&.reject(&:empty?)
-        Jekyll.env == 'development' && page_paths&.none? do |p|
-          p.start_with?('/plugins/')
-        end
+        @build_filter.excludes_prefix?('/plugins/')
       end
     end
   end

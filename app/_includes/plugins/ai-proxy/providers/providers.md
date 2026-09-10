@@ -6,6 +6,7 @@ You can proxy requests to {{ provider.name }} AI models through {{site.ai_gatewa
 
 {{site.ai_gateway}} automatically routes requests to the appropriate {{ provider.name }} API endpoints. The following table shows the upstream paths used for each capability.
 
+<!-- vale off -->
 {% table %}
 vertical_align: middle
 columns:
@@ -75,6 +76,7 @@ rows:
     upstream_path: "{{ provider.realtime.upstream_path }}"
 {% endif %}
 {% endtable %}
+<!-- vale on -->
 
 {%- assign note_counter = 0 -%}
 {%- assign chat_note_num = 0 %}{% if provider.chat.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign chat_note_num = note_counter %}{% endif -%}
@@ -120,6 +122,7 @@ The following tables show the AI capabilities supported by {{ provider.name }} p
 
 Support for {{ provider.name }} basic text generation capabilities including chat, completions, and embeddings:
 
+<!-- vale off -->
 {% table %}
 vertical_align: middle
 columns:
@@ -156,6 +159,7 @@ rows:
     min_version: "{{ provider.embeddings.min_version }}"
 {% endif %}
 {% endtable %}
+<!-- vale on -->
 {% if provider.chat.note.content %}<sup>{{ chat_note_num }}</sup> {{ provider.chat.note.content }}{% endif %}
 {% if provider.completions.note.content %}<sup>{{ completions_note_num }}</sup> {{ provider.completions.note.content }}{% endif %}
 {% if provider.embeddings.note.content %}<sup>{{ embeddings_note_num }}</sup> {{ provider.embeddings.note.content }}{% endif %}
@@ -166,6 +170,7 @@ rows:
 
 Support for {{ provider.name }} function calling to allow {{ provider.name }} models to use external tools and APIs:
 
+<!-- vale off -->
 {% table %}
 vertical_align: middle
 columns:
@@ -185,6 +190,7 @@ rows:
     min_version: "{{ provider.function_calling.min_version }}"
 {% endif %}
 {% endtable %}
+<!-- vale on -->
 {% if provider.function_calling.note.content %}<sup>{{ function_calling_note_num }}</sup> {{ provider.function_calling.note.content }}{% endif %}
 {%- endif -%}
 {% if has_processing %}
@@ -193,6 +199,7 @@ rows:
 
 Support for {{ provider.name }} file operations, batch operations, assistants, and response handling:
 
+<!-- vale off -->
 {% table %}
 vertical_align: middle
 columns:
@@ -230,6 +237,7 @@ rows:
     min_version: "{{ provider.responses.min_version }}"
 {% endif %}
 {% endtable %}
+<!-- vale on -->
 {% if provider.files.note.content %}
 <sup>{{ files_note_num }}</sup> {{ provider.files.note.content }}{% endif %}
 {% if provider.batches.note.content %}
@@ -245,6 +253,7 @@ rows:
 
 Support for {{ provider.name }} text-to-speech, transcription, and translation capabilities:
 
+<!-- vale off -->
 {% table %}
 vertical_align: middle
 columns:
@@ -276,6 +285,7 @@ rows:
     min_version: "{{ provider.audio.translations.min_version }}"
 {% endif %}
 {% endtable %}
+<!-- vale on -->
 
 {:.info}
 > For requests with large payloads, consider increasing `config.max_request_body_size` to three times the raw binary size.
@@ -292,6 +302,7 @@ rows:
 
 Support for {{ provider.name }} image generation and editing capabilities:
 
+<!-- vale off -->
 {% table %}
 vertical_align: middle
 columns:
@@ -317,6 +328,7 @@ rows:
     min_version: "{{ provider.image.edits.min_version }}"
 {% endif %}
 {% endtable %}
+<!-- vale on -->
 
 {:.info}
 > For requests with large payloads, consider increasing `config.max_request_body_size` to three times the raw binary size.
@@ -332,6 +344,7 @@ rows:
 
 Support for {{ provider.name }} video generation capabilities:
 
+<!-- vale off -->
 {% table %}
 vertical_align: middle
 columns:
@@ -351,6 +364,7 @@ rows:
     min_version: "{{ provider.video.generations.min_version }}"
 {% endif %}
 {% endtable %}
+<!-- vale on -->
 
 {:.info}
 > For requests with large payloads (video generation), consider increasing `config.max_request_body_size` to three times the raw binary size.
@@ -368,6 +382,7 @@ Support for {{ provider.name }}'s bidirectional streaming for realtime applicati
 >
 > To use the realtime route, you must configure the protocols `ws` and/or `wss` on both the Service and on the Route where the plugin is associated.
 
+<!-- vale off -->
 {% table %}
 vertical_align: middle
 columns:
@@ -387,6 +402,7 @@ rows:
     min_version: "{{ provider.realtime.min_version }}"
 {% endif %}
 {% endtable %}
+<!-- vale on -->
 {% if provider.realtime.note.content %}<sup>{{ realtime_note_num }}</sup> {{ provider.realtime.note.content }}{% endif %}
 {%- endif -%}
 

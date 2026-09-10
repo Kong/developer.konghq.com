@@ -1,4 +1,11 @@
 {
+  "3.15.0.5": [
+    {
+      "message": "Fixed an issue where the plugin mapped the gRPC `UNIMPLEMENTED` status to HTTP 500 instead of 501. The new option `use_standard_grpc_status_codes` (default `off`) enables the fix.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Fixed a bug where the `TE` (transfer-encoding) header would not be sent to the upstream gRPC servers when `grpc-web` or `grpc-gateweay` are in use.",

@@ -77,8 +77,7 @@ agent:
 
 - Discover supported resource fields with `kongctl explain`.
 - Generate starter YAML with `kongctl scaffold`.
-- Create manifests for APIs, Dev Portals, control planes, and other supported
-  resources.
+- Create manifests for APIs, Dev Portals, control planes, {{site.ai_gateway}} resources, and other supported resources.
 - Integrate decK Gateway state through `_deck`.
 - Generate API configuration from OpenAPI documents.
 - Work through plan, diff, apply, sync, delete, and adopt workflows.

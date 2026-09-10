@@ -4,9 +4,6 @@ metadata:
   description: Configure {{site.ai_gateway}} to proxy requests from AI command-line tools to LLM providers for logging, cost tracking, and rate limiting.
   products:
     - ai-gateway
-  works_on:
-    - on-prem
-    - konnect
   breadcrumbs:
     - /ai-gateway/
   tags:
@@ -26,10 +23,9 @@ rows:
 
                       Supported AI CLI tools:
 
-                      - [**Claude Code**](#claude-code): Anthropic, OpenAI, Azure OpenAI, Google Gemini, Google Vertex, AWS Bedrock, and Alibaba Cloud (Dashscope)
+                      - [**Claude Code**](#claude-code): Anthropic, OpenAI, Azure OpenAI, Google Gemini, AWS Bedrock, and Alibaba Cloud (DashScope)
                       - [**Codex CLI**](#codex-cli): OpenAI
-                      - [**Qwen Code CLI**](#qwen-code-cli): OpenAI
-                      - [**Gemini CLI**](#gemini-cli): Google Gemini
+                      - [**Qwen Code CLI**](#qwen-code-cli): OpenAI and Alibaba Cloud (DashScope)
 
 
                       {:.info}
@@ -38,7 +34,7 @@ rows:
                       > * Streaming is not supported when using non-Claude models with the following providers: Azure OpenAI, Google Gemini, and AWS Bedrock. Token usage might be reported as 0, but otherwise functionality is not affected.
 
   - header:
-      type: h3
+      type: h2
       text: "Claude Code"
       description: "Claude Code is Anthropic's command-line tool that delegates coding tasks to Claude AI. Route Claude Code requests through {{site.ai_gateway}} to monitor usage, control costs, and enforce rate limits across your development team."
     column_count: 4
@@ -50,8 +46,7 @@ rows:
             description: Use Claude Code with Anthropic provider
             icon: /assets/icons/anthropic.svg
             cta:
-              url: /how-to/use-claude-code-with-ai-gateway-anthropic/
-              align: end
+              url:  /ai-gateway/use-claude-code-with-ai-gateway-anthropic/
       - blocks:
         - type: card
           config:
@@ -59,8 +54,7 @@ rows:
             icon: /assets/icons/openai.svg
             description: Use Claude Code with OpenAI provider
             cta:
-              url: /how-to/use-claude-code-with-ai-gateway-openai/
-              align: end
+              url: /ai-gateway/use-claude-code-with-ai-gateway-openai/
       - blocks:
         - type: card
           config:
@@ -68,8 +62,7 @@ rows:
             icon: /assets/icons/azure.svg
             description: Use Claude Code with Azure AI provider
             cta:
-              url: /how-to/use-claude-code-with-ai-gateway-azure/
-              align: end
+              url: /ai-gateway/use-claude-code-with-ai-gateway-azure/
       - blocks:
         - type: card
           config:
@@ -77,17 +70,7 @@ rows:
             icon: /assets/icons/gcp.svg
             description: Use Claude Code with Gemini provider
             cta:
-              url: /how-to/use-claude-code-with-ai-gateway-gemini/
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: Claude Code with Vertex AI
-            icon: /assets/icons/vertex.svg
-            description: Use Claude Code with Vertex AI provider
-            cta:
-              url: /how-to/use-claude-code-with-ai-gateway-vertex/
-              align: end
+              url: /ai-gateway/use-claude-code-with-ai-gateway-gemini/
       - blocks:
         - type: card
           config:
@@ -95,17 +78,16 @@ rows:
             icon: /assets/icons/bedrock.svg
             description: Use Claude Code with Bedrock provider
             cta:
-              url: /how-to/use-claude-code-with-ai-gateway-bedrock/
-              align: end
+              url: /ai-gateway/use-claude-code-with-ai-gateway-bedrock/
+
       - blocks:
         - type: card
           config:
             title: Claude Code with Alibaba Cloud
             icon: /assets/icons/alibaba-cloud.svg
-            description: Use Claude Code with Alibaba Cloud (Dashscope) provider
+            description: Use Claude Code with Alibaba Cloud (DashScope) provider
             cta:
-              url: /how-to/use-claude-code-with-ai-gateway-dashscope/
-              align: end
+              url: /ai-gateway/use-claude-code-with-ai-gateway-dashscope/
       - blocks:
         - type: card
           config:
@@ -113,10 +95,9 @@ rows:
             icon: /assets/icons/huggingface.svg
             description: Use Claude Code with HuggingFace provider
             cta:
-              url: /how-to/use-claude-code-with-ai-gateway-bedrock/
-              align: end
+              url: /ai-gateway/use-claude-code-with-ai-gateway-huggingface/
   - header:
-      type: h3
+      type: h2
       text: "Codex CLI"
       description: "Codex CLI is OpenAI's command-line tool for code generation and assistance. Proxy Codex CLI requests through {{site.ai_gateway}} to gain visibility into API usage, implement rate limiting, and centralize credential management."
     column_count: 4
@@ -128,35 +109,42 @@ rows:
               description: Use Codex CLI with OpenAI models
               icon: /assets/icons/openai.svg
               cta:
-                url: /how-to/use-codex-with-ai-gateway/
-                align: end
+                url: /ai-gateway/use-codex-with-ai-gateway/
   - header:
-      type: h3
+      type: h2
       text: "Qwen Code CLI"
       description: "Qwen Code CLI is an AI-powered coding assistant that uses OpenAI-compatible endpoints. Proxy Qwen Code CLI requests through Kong AI Gateway to gain visibility into API usage, implement rate limiting, and centralize credential management."
-    column_count: 4
-    columns:
-        - blocks:
-            - type: card
-              config:
-                title: Qwen Code CLI with OpenAI
-                description: Use Qwen Code CLI with OpenAI models
-                icon: /assets/icons/qwen.svg
-                cta:
-                  url: /how-to/use-qwen-code-with-ai-gateway/
-                  align: end
-  - header:
-      type: h3
-      text: "Gemini CLI"
-      description: "Gemini CLI is Google's command-line tool for interacting with Gemini models. Route Gemini CLI requests through Kong AI Gateway to monitor usage, control costs, and enforce rate limits across your development team."
     column_count: 4
     columns:
       - blocks:
           - type: card
             config:
-              title: Gemini CLI with Gemini
-              description: Use Gemini CLI with Gemini models
-              icon: /assets/icons/gcp.svg
+              title: Qwen Code CLI with OpenAI
+              description: Use Qwen Code CLI with OpenAI models
+              icon: /assets/icons/openai.svg
               cta:
-                url: /how-to/use-gemini-cli-with-ai-gateway/
-                align: end
+                url: /ai-gateway/use-qwen-code-with-ai-gateway-openai/
+
+      - blocks:
+          - type: card
+            config:
+              title: Qwen Code CLI with DashScope
+              description: Use Qwen Code CLI with DashScope models
+              icon: /assets/icons/dashscope.svg
+              cta:
+                url: /ai-gateway/use-qwen-code-with-ai-gateway-qwen/
+  # - header:
+  #     type: h3
+  #     text: "Gemini CLI"
+  #     description: "Gemini CLI is Google's command-line tool for interacting with Gemini models. Route Gemini CLI requests through Kong AI Gateway to monitor usage, control costs, and enforce rate limits across your development team."
+  #   column_count: 4
+  #   columns:
+  #     - blocks:
+  #         - type: card
+  #           config:
+  #             title: Gemini CLI with Gemini
+  #             description: Use Gemini CLI with Gemini models
+  #             icon: /assets/icons/gcp.svg
+  #             cta:
+  #               url: /how-to/use-gemini-cli-with-ai-gateway/
+  #               align: end

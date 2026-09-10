@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative './base'
+require_relative '../../file_cache'
 
 module Jekyll
   module APIPages
@@ -30,7 +31,7 @@ module Jekyll
       end
 
       def content
-        @content ||= File.read('app/_includes/api_spec/errors.md')
+        @content ||= FileCache.read('app/_includes/api_spec/errors.md')
       end
 
       def url_generator

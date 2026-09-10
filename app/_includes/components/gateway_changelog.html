@@ -1,12 +1,12 @@
 {% for version in changelog.versions %}
-<h2 id="{{version.number | slugify }}">{{version.number}}</h2>
+{% assign _version_slug = version.number | slugify %}{% include anchor_heading.html tag="h2" id=_version_slug text=version.number %}
 <p class="text-sm"><strong>Release date</strong> {{version.release_date}}</p>
 
 {% for type in version.entries_by_type %}
-<h3 id="{{ type[0] | slugify }}-{{ version.number | slugify }}">{{type[0] | capitalize | titleize}}</h3>
+{% assign _type_slug = type[0] | slugify %}{% assign _h3_id = _version_slug | append: "-" | append: _type_slug %}{% capture _type_text %}{{ type[0] | capitalize | titleize }}{% endcapture %}{% include anchor_heading.html tag="h3" id=_h3_id text=_type_text %}
 
 {% for entries_by_scope in type[1].by_scope %}
-<h4 id="{{entries_by_scope[0] | downcase }}-{{forloop.parentloop.index}}"> {{entries_by_scope[0]}}</h4>
+{% assign _scope_name = entries_by_scope[0] %}{% assign _scope_slug = _scope_name | slugify %}{% if _scope_slug == _type_slug %}{% assign _h4_id = _version_slug | append: "-" | append: _type_slug %}{% else %}{% assign _h4_id = _version_slug | append: "-" | append: _type_slug | append: "-" | append: _scope_slug %}{% endif %}{% include anchor_heading.html tag="h4" id=_h4_id text=_scope_name %}
 
 {% if entries_by_scope[0] == 'Plugin' %}
 
