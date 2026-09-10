@@ -641,9 +641,6 @@
 /mesh/policies/external-services/examples/accessible-from-specific-zone-through-zoneegress/  /mesh/v2/policies/external-services/examples/accessible-from-specific-zone-through-zoneegress/  301
 /mesh/policies/external-services/examples/zone-egress/  /mesh/v2/policies/external-services/examples/zone-egress/  301
 /mesh/policies/external-services/index/  /mesh/v2/policies/external-services/index/  301
-/mesh/policies/meshaccesslog/examples/log-incoming-traffic/  /mesh/v2/policies/meshaccesslog/examples/log-incoming-traffic/  301
-/mesh/policies/meshaccesslog/examples/log-outgoing-traffic/  /mesh/v2/policies/meshaccesslog/examples/log-outgoing-traffic/  301
-/mesh/policies/meshaccesslog/examples/logging-to-multiple-backends/  /mesh/v2/policies/meshaccesslog/examples/logging-to-multiple-backends/  301
 /mesh/policies/meshcircuitbreaker/examples/basic-circuit-breaker/  /mesh/v2/policies/meshcircuitbreaker/examples/basic-circuit-breaker/  301
 /mesh/policies/meshcircuitbreaker/examples/inbound-traffic-backend-service/  /mesh/v2/policies/meshcircuitbreaker/examples/inbound-traffic-backend-service/  301
 /mesh/policies/meshfaultinjection/examples/list-faults-applied-from-frontend/  /mesh/v2/policies/meshfaultinjection/examples/list-faults-applied-from-frontend/  301
