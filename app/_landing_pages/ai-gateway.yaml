@@ -348,8 +348,8 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Monetize AI Gateway traffic
-            description: Meter LLM token usage and turn it into billable revenue with Metering & Billing.
+            title: Monetize {{site.ai_gateway}} traffic
+            description: Meter LLM token usage and turn it into billable revenue with {{site.metering_and_billing}}.
             icon: /assets/icons/money.svg
             cta:
               url: /ai-gateway/meter-llm-traffic/

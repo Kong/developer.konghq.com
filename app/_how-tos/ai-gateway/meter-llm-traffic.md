@@ -46,7 +46,7 @@ cleanup:
 tldr:
   q: How can I meter {{site.ai_gateway}} traffic in {{site.konnect_short_name}}, and what does the {{site.metering_and_billing}} provide?
   a: |
-    Attach the Metering & Billing Policy to an AI Model to emit usage events for LLM token consumption, then use {{site.metering_and_billing}} to turn those events into billable usage. This guide walks you through creating an AI Consumer, an AI Model Provider and AI Model, attaching the Metering & Billing Policy, creating a meter for LLM tokens, defining a feature, creating a plan with rate cards, and starting a subscription for billing.
+    Create an AI Consumer, an AI Model Provider, and an AI Model. Attach the Metering & Billing Policy to the AI Model to emit usage events for LLM token consumption. Then, use {{site.metering_and_billing}} to turn those events into billable usage by creating a meter for LLM tokens, defining a feature, creating a plan with rate cards, and starting a subscription for billing.
 
 related_resources:
   - text: "{{site.ai_gateway}}"
@@ -69,7 +69,7 @@ related_resources:
 automated_tests: false
 ---
 
-This guide shows how to meter LLM traffic from {{site.ai_gateway}} and convert that usage into billable revenue with {{site.metering_and_billing}} in {{site.konnect_short_name}}.
+This guide shows how to meter LLM traffic from {{site.ai_gateway}} and convert that usage into billable revenue with [{{site.metering_and_billing}}](/metering-and-billing/) in {{site.konnect_short_name}}.
 
 ## Create an AI Consumer and API key credential
 
@@ -134,7 +134,7 @@ Before you configure {{site.metering_and_billing}}, set up an [AI Consumer](/ai-
 Create the following entities:
 * A `key-auth` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) that accepts an API key in the `apikey` header
 * An [AI Model Provider](/ai-gateway/entities/ai-model-provider/) to connect to OpenAI
-* A [Metering & Billing Policy](/ai-gateway/policies/metering-and-billing/) to meter LLM token usage by AI Consumer
+* A [Metering & Billing Policy](/ai-gateway/policies/metering-and-billing/) to meter LLM token usage by AI Consumers
 * An [AI Model](/ai-gateway/entities/ai-model/) that authenticates with the AI Auth Strategy and has the Policy attached
 
 {% entity_examples %}
