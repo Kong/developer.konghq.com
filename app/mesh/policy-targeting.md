@@ -42,8 +42,6 @@ Not every policy has all three. A policy states its own shape on its own page.
 
 ## Why outbound names a destination and inbound matches an identity
 
-This is the part that looks inconsistent and is not.
-
 A **destination** is something the proxy chooses to call. Your proxy decides to send a
 request to `backend`, so naming that service is both sufficient and natural:
 `kind: MeshService`.
@@ -54,9 +52,9 @@ can assert any tag. So inbound matches on the SPIFFE ID that
 [MeshIdentity](/mesh/policies/meshidentity/) issued and mTLS proves, which the caller cannot
 forge.
 
-That is why {{site.mesh_product_name}} 3 removed the `from` array and `MeshServiceSubset`
-from [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/): access control decided
-on a self-asserted tag was not access control.
+{{site.mesh_product_name}} 3 removed the `from` array and `MeshServiceSubset` from
+[MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) for this reason: those
+selectors matched an inbound client on tags the client set itself.
 
 ## What each field accepts
 
