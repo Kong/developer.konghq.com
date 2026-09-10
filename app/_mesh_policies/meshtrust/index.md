@@ -18,5 +18,5 @@ related_resources:
 - text: Mesh TLS
   url: "/mesh/policies/meshtls/"
 - text: MeshTrafficPermission with SPIFFE ID matchers
-  url: "/mesh/policies/meshtrafficpermission_experimental/"
+  url: "/mesh/policies/meshtrafficpermission/"
 ---

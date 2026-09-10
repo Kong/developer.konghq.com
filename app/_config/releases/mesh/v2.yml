@@ -362,27 +362,21 @@ app/_mesh_policies/v2/meshtrace/index.md:
 app/_mesh_policies/v2/meshtrace/reference.md:
   canonical_url: /mesh/policies/meshtrace/reference/
 app/_mesh_policies/v2/meshtrafficpermission/examples/service-allow-requests.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshtrafficpermission/examples/allow-namespace/
 app/_mesh_policies/v2/meshtrafficpermission/index.md:
-  status: pending
   canonical_url: /mesh/policies/meshtrafficpermission/
 app/_mesh_policies/v2/meshtrafficpermission/reference.md:
   canonical_url: /mesh/policies/meshtrafficpermission/reference/
 app/_mesh_policies/v2/meshtrafficpermission_experimental/examples/allow-observability-namespace.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshtrafficpermission/examples/allow-namespace/
 app/_mesh_policies/v2/meshtrafficpermission_experimental/examples/deny-malicious-namespace.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshtrafficpermission/examples/deny-namespace/
 app/_mesh_policies/v2/meshtrafficpermission_experimental/examples/deny-observability-on-backend-admin-api.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshtrafficpermission/examples/override-allow-on-service-port/
 app/_mesh_policies/v2/meshtrafficpermission_experimental/index.md:
-  status: pending
-  canonical_url: /mesh/policies/meshtrafficpermission_experimental/
+  canonical_url: /mesh/policies/meshtrafficpermission/
 app/_mesh_policies/v2/meshtrafficpermission_experimental/reference.md:
-  canonical_url: /mesh/policies/meshtrafficpermission_experimental/reference/
+  canonical_url: /mesh/policies/meshtrafficpermission/reference/
 app/_mesh_policies/v2/meshtrust/examples/allow-encrypted-traffic.yaml:
   status: pending
   canonical_url:

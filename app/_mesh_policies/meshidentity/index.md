@@ -22,5 +22,5 @@ related_resources:
 - text: MeshTLS
   url: "/mesh/policies/meshtls/"
 - text: MeshTrafficPermission with SPIFFE ID matchers
-  url: "/mesh/policies/meshtrafficpermission_experimental/"
+  url: "/mesh/policies/meshtrafficpermission/"
 ---

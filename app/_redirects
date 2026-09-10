@@ -690,7 +690,12 @@
 /mesh/policies/meshtrace/examples/target-west/  /mesh/v2/policies/meshtrace/examples/target-west/  301
 /mesh/policies/meshtrace/examples/zipkin/  /mesh/v2/policies/meshtrace/examples/zipkin/  301
 /mesh/policies/meshtrafficpermission/examples/service-allow-requests/  /mesh/v2/policies/meshtrafficpermission/examples/service-allow-requests/  301
-/mesh/policies/meshtrafficpermission_experimental/examples/allow-observability-namespace/  /mesh/v2/policies/meshtrafficpermission_experimental/examples/allow-observability-namespace/  301
-/mesh/policies/meshtrafficpermission_experimental/examples/deny-malicious-namespace/  /mesh/v2/policies/meshtrafficpermission_experimental/examples/deny-malicious-namespace/  301
-/mesh/policies/meshtrafficpermission_experimental/examples/deny-observability-on-backend-admin-api/  /mesh/v2/policies/meshtrafficpermission_experimental/examples/deny-observability-on-backend-admin-api/  301
+/mesh/policies/meshtrafficpermission_experimental/examples/allow-observability-namespace/  /mesh/policies/meshtrafficpermission/examples/allow-namespace/  301
+/mesh/policies/meshtrafficpermission_experimental/examples/deny-malicious-namespace/  /mesh/policies/meshtrafficpermission/examples/deny-namespace/  301
+/mesh/policies/meshtrafficpermission_experimental/examples/deny-observability-on-backend-admin-api/  /mesh/policies/meshtrafficpermission/examples/override-allow-on-service-port/  301
 /mesh/policies/meshtrust/examples/allow-encrypted-traffic/  /mesh/v2/policies/meshtrust/examples/allow-encrypted-traffic/  301
+
+# MeshTrafficPermission is documented as one policy. The SPIFFE ID matcher form,
+# previously a separate "experimental" page, is the only form Kong Mesh 3 accepts.
+/mesh/policies/meshtrafficpermission_experimental/  /mesh/policies/meshtrafficpermission/  301
+/mesh/policies/meshtrafficpermission_experimental/reference/  /mesh/policies/meshtrafficpermission/reference/  301
