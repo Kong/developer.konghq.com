@@ -39,7 +39,7 @@ faqs:
     a: |
       Yes. This is the simplest setup. When the same role runs `kong migrations` and the gateway process, that role owns the schema and every object in it. Ownership already grants the runtime session every privilege it needs. As a result, no `GRANT` statement is necessary.
 
-  - q: Why does `kong workspace` need `TRUNCATE`, when the runtime session never uses it?
+  - q: Why does `kong workspace rename` need `TRUNCATE`, when the runtime session never uses it?
     a: |
       `kong workspace rename` and `kong config db_import` call `truncate_clustering_sync_version()` to reset the clustering sync state. This call runs in a separate, non-pooled admin CLI connection, not in a runtime session. Grant `TRUNCATE` only to the role that runs these commands.
 
