@@ -69,6 +69,64 @@ The following table lists all Gateway versions that have been tested using Kong'
 
 {% navtabs "gateway-version" %}
 
+{% navtab "3.16" %}
+
+{% table %}
+columns:
+  - title: Test case
+    key: test
+  - title: Number of Routes and Consumers
+    key: entities
+  - title: Requests per second (RPS)
+    key: rps
+  - title: P99 (ms)
+    key: p99
+  - title: P95 (ms)
+    key: p95
+rows:
+  - test: Kong proxy with no plugins
+    entities: 1 Route, 0 Consumers
+    rps: 144273.5
+    p99: 4.50
+    p95: 2.89
+  - test: Kong proxy with no plugins
+    entities: 100 Routes, 0 Consumers
+    rps: 139640.9
+    p99: 4.59
+    p95: 3.04
+  - test: Rate limit and no auth
+    entities: 1 Route, 0 Consumers
+    rps: 120012.0
+    p99: 6.54
+    p95: 3.55
+  - test: Rate limit and no auth
+    entities: 100 Routes, 0 Consumers
+    rps: 116350.0
+    p99: 6.63
+    p95: 3.72
+  - test: Rate limit and key auth
+    entities: 1 Route, 1 Consumer
+    rps: 102088.8
+    p99: 8.45
+    p95: 4.41
+  - test: Rate limit and key auth
+    entities: 100 Routes, 100 Consumers
+    rps: 97290.2
+    p99: 8.65
+    p95: 4.69
+  - test: Rate limit and basic auth
+    entities: 1 Route, 1 Consumer
+    rps: 99229.0
+    p99: 8.62
+    p95: 4.51
+  - test: Rate limit and basic auth
+    entities: 100 Routes, 100 Consumers
+    rps: 94543.1
+    p99: 9.26
+    p95: 4.82
+{% endtable %}
+{% endnavtab %}
+
 {% navtab "3.15" %}
 
 {% table %}
@@ -88,7 +146,7 @@ rows:
     entities: 1 Route, 0 Consumers
     rps: 135319.9
     p99: 5.70
-    p95: 3.55
+    p95: 3.08
   - test: Kong proxy with no plugins
     entities: 100 Routes, 0 Consumers
     rps: 133140.2
@@ -146,7 +204,7 @@ rows:
     entities: 1 Route, 0 Consumers
     rps: 140382
     p99: 5.24
-    p95: 3.55
+    p95: 2.95
   - test: Kong proxy with no plugins
     entities: 100 Routes, 0 Consumers
     rps: 137545.8
@@ -204,7 +262,7 @@ rows:
     entities: 1 Route, 0 Consumers
     rps: 130014.2
     p99: 6.01
-    p95: 3.55
+    p95: 3.44
   - test: Kong proxy with no plugins
     entities: 100 Routes, 0 Consumers
     rps: 125803.9
@@ -262,7 +320,7 @@ rows:
     entities: 1 Route, 0 Consumers
     rps: 129920.5
     p99: 6.35
-    p95: 3.55
+    p95: 3.63
   - test: Kong proxy with no plugins
     entities: 100 Routes, 0 Consumers
     rps: 124692.9
