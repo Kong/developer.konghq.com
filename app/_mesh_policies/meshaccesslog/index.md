@@ -12,8 +12,8 @@ icon: meshaccesslog.png
 handle, and ships those records somewhere you can read them: the proxy's own output, a TCP
 server, or an OpenTelemetry collector.
 
-Reach for it when you need to trace a failing request across services, audit which client
-called which service, or feed traffic data into an existing log pipeline.
+Use it to trace a failing request across services, audit which client called which service,
+or feed traffic data into an existing log pipeline.
 
 With the default format, one HTTP request produces one line like this:
 
