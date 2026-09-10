@@ -12,6 +12,8 @@ tags:
 - authorization
 - security
 related_resources:
+- text: How policies select traffic
+  url: "/mesh/policy-targeting/"
 - text: Issue identity with the MeshIdentity bundled provider
   url: "/mesh/issue-identity-with-meshidentity/"
 - text: Issue identity with MeshIdentity Spire provider

@@ -6,6 +6,9 @@ products:
 description: Set up access logs on every data plane proxy in a mesh.
 content_type: plugin
 icon: meshaccesslog.png
+related_resources:
+- text: How policies select traffic
+  url: "/mesh/policy-targeting/"
 ---
 
 `MeshAccessLog` makes data plane proxies write a record for every request or connection they
