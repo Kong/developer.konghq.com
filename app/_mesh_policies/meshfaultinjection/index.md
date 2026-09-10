@@ -143,17 +143,78 @@ spec:
 
 ## Upgrading from {{site.mesh_product_name}} 2.x
 
-{:.warning}
-> The `from` array is removed. Rewrite `from` entries as `rules`, which match on the client's
-> SPIFFE ID instead of on a `targetRef`. A `from` entry targeting `kind: Mesh`, meaning all
-> clients, becomes a single catch-all rule.
+The client selector changes shape: `from` matched callers by the tags they carried, and `rules`
+match them by the identity they present. On Universal there is also a protocol change that can
+disable this policy without reporting anything.
+
+### Rewrite `from` as `rules`
+
+`spec.from` is removed. Faults for inbound traffic are configured through `spec.rules`, whose
+`matches` name the caller by `spiffeID` or `sni`.
+
+```yaml
+# 2.x
+spec:
+  from:
+    - targetRef:
+        kind: MeshSubset
+        tags:
+          kuma.io/service: frontend
+      default:
+        http:
+          - abort:
+              httpStatus: 500
+              percentage: 50
+
+# 3.x
+spec:
+  rules:
+    - matches:
+        - spiffeID:
+            type: Prefix
+            value: spiffe://default.default.mesh.local/ns/kong-mesh-demo/sa/frontend
+      default:
+        http:
+          - abort:
+              httpStatus: 500
+              percentage: 50
+```
+
+A `from` entry targeting `kind: Mesh`, meaning every caller, becomes a single rule with no
+`matches`. A caller is now named by the identity it presents rather than by a tag it sets, so
+faults can no longer be aimed at a subset of a service's proxies by tag.
+
+### Set the protocol on Universal inbounds
+
+An inbound's protocol is now read only from `networking.inbound[].protocol`. The
+`kuma.io/protocol` tag stays a regular tag that policies can match on, but it is no longer used
+as a fallback when the field is unset. Kubernetes is unaffected, since the field is derived
+from the `Service` port.
 
 {:.warning}
-> `targetRef.kind` no longer accepts `MeshSubset`, `MeshServiceSubset` or `MeshGateway`. Use
-> `Mesh`, or `Dataplane` with `labels`.
+> An inbound with no `protocol` is treated as an unknown protocol and served as plain TCP,
+> which loses the L7 filters that depend on the protocol. `MeshFaultInjection` is one of them,
+> so the policy stops injecting anything on that inbound. Nothing rejects the `Dataplane`, so
+> the change is silent.
+
+Set `networking.inbound[].protocol` explicitly on every Universal `Dataplane` that declared its
+protocol only through the tag.
+
+### Rewrite the top-level targetRef
+
+`spec.targetRef.kind` accepts `Mesh` and `Dataplane`. `MeshSubset`, `MeshServiceSubset` and
+`MeshGateway` are rejected with `in body should be one of [Mesh Dataplane]`. A subset selector
+becomes `kind: Dataplane` with the equivalent labels, and a `MeshGateway` selector becomes
+`kind: Dataplane` too, since a delegated gateway is an ordinary `Dataplane`.
 
 {:.warning}
-> On Universal, a `Dataplane` inbound that declares its protocol only through the
-> `kuma.io/protocol` tag is served as plain TCP after upgrading, and loses this policy along
-> with the other L7 filters. Set `networking.inbound[].protocol` explicitly. Nothing rejects
-> the resource, so the change is silent.
+> `kind: Dataplane` selects proxies by `labels` only, and a reference carrying `name` or
+> `namespace` instead is **accepted**. Those fields are not in the schema, so they are dropped,
+> and what remains is a bare `kind: Dataplane` — every proxy in the mesh. Nothing reports it, so
+> read the policy back after rewriting one: a stored `targetRef` with a `kind` and no `labels`
+> covers the whole mesh.
+
+That rewrite interacts with `to`, which this policy accepts only when `targetRef.kind` is
+`Mesh`. A `MeshGateway`-targeted 2.x policy that used `to` therefore has nowhere to go as a
+`Dataplane`: keep `kind: Mesh` and narrow the destination in `to[].targetRef`, or drop `to` and
+configure the faults inbound. See [Where this policy applies](#where-this-policy-applies).
