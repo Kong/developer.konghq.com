@@ -135,16 +135,16 @@ Both the write user and the read-only user need `CONNECT` privilege on `pg_datab
 
 Before migration, the write user needs `CREATE` privilege on `pg_database` to create the {{site.base_gateway}} schema.
 
-`kong migrations reset/bootstrap/up/finish` runs the following DDL automatically. This makes the write user the schema owner:
+`kong migrations reset/bootstrap/up/finish` runs the following DDL automatically. The following script makes the write user the schema owner (replace `$PG_SCHEMA` with the actual name of `pg_schema`:
 
 ```sql
 -- kong migrations reset
-DROP SCHEMA IF EXISTS <pg_schema> CASCADE;
+DROP SCHEMA IF EXISTS $PG_SCHEMA CASCADE;
 
 -- kong migrations bootstrap/up/finish
-CREATE SCHEMA IF NOT EXISTS <pg_schema> AUTHORIZATION CURRENT_USER;
-GRANT ALL ON SCHEMA <pg_schema> TO CURRENT_USER;
-SET SCHEMA <pg_schema>;
+CREATE SCHEMA IF NOT EXISTS $PG_SCHEMA AUTHORIZATION CURRENT_USER;
+GRANT ALL ON SCHEMA $PG_SCHEMA TO CURRENT_USER;
+SET SCHEMA $PG_SCHEMA ;
 ```
 
 After migration, the write user owns the schema and every object the migration session creates in it. Ownership already grants the write user every privilege it needs. As a result, no further `GRANT` is necessary.
@@ -244,25 +244,30 @@ Only the migration-time write user owns the schema and its tables. As a result, 
 
 ```sql
 -- [DCL] Allow connection to the database (default on)
-GRANT CONNECT ON DATABASE <pg_database> TO <pg_ro_user>;
+GRANT CONNECT ON DATABASE $PG_DATABASE TO $PG_RO_USER;
 
 -- [DCL] Allow access to the schema
-GRANT USAGE ON SCHEMA <pg_schema> TO <pg_ro_user>;
+GRANT USAGE ON SCHEMA $PG_SCHEMA  TO $PG_RO_USER;
 
 -- [DCL] Allow SELECT on existing tables created by the migration-time write user
-GRANT SELECT ON ALL TABLES IN SCHEMA <pg_schema> TO <pg_ro_user>;
+GRANT SELECT ON ALL TABLES IN SCHEMA $PG_SCHEMA  TO $PG_RO_USER;
 
 -- [DCL] Auto-grant SELECT on future tables created by the migration-time write user
-ALTER DEFAULT PRIVILEGES FOR ROLE <pg_user> IN SCHEMA <pg_schema> GRANT SELECT ON TABLES TO <pg_ro_user>;
+ALTER DEFAULT PRIVILEGES FOR ROLE $PG_USER IN SCHEMA $PG_SCHEMA GRANT SELECT ON TABLES TO $PG_RO_USER;
 ```
 
+Replace the following variables with the actual values:
+
+* `$PG_SCHEMA` with the name of the schema (for example, `public`).
+* `$PG_RO_USER` with the value of `pg_ro_user`.
+* `$PG_USER` with name of your user (for example, `kong`).
 ## Minimal setup example
 
 Connect as a PostgreSQL superuser. Create the write user and database before you run migrations:
 
 ```sql
 -- Create the write user
-CREATE ROLE kong WITH LOGIN PASSWORD '<password>';
+CREATE ROLE kong WITH LOGIN PASSWORD '$PASSWORD';
 
 -- Create the database, owned by the write user
 -- The kong role owns the kong database, so no further GRANT is necessary
