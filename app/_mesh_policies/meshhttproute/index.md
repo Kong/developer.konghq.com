@@ -256,30 +256,156 @@ Where a proxy is matched by both a `MeshHTTPRoute` and a
 
 ## Upgrading from {{site.mesh_product_name}} 2.x
 
-{:.warning}
-> A request matching no rule now gets a `404` rather than reaching the destination. Add a
-> catch-all rule to any route that should keep passing unmatched traffic through.
+The changes fall into two groups. The selector rewrites are rejected when the route is
+applied, so they announce themselves. The routing changes do not: a route that still
+validates can now answer a request that its destination used to answer.
 
-{:.warning}
-> Real resources are selected by `labels` only. `name` and `namespace` on a `targetRef` or a
-> `backendRef` no longer select anything. `sectionName` is still supported for `MeshService`
-> port selection.
+Do the migration before upgrading. A route already stored in the control plane is not
+re-validated, so one carrying a removed selector keeps being served in the zone it was
+applied to, and then fails to sync into any zone that is upgraded after it.
 
-{:.warning}
-> `backendRefs[]` and the `RequestMirror` filter's `backendRef` no longer accept
-> `MeshServiceSubset`, and the `tags` field is gone from the `backendRef` schema. A stored
-> route still carrying such a reference keeps being served, but the reference no longer
-> resolves, so its traffic loses its destination. Point these at real resources instead; selecting a
-> subset of endpoints by tag has no equivalent.
+### Add a catch-all rule to every route
 
-{:.warning}
-> `targetRef.kind` no longer accepts `MeshSubset` or `MeshGateway`. Use `Mesh`, or `Dataplane`
-> with `labels`. A delegated gateway is an ordinary `Dataplane`.
+A request matching none of a route's rules used to reach the destination as if the route did
+not exist. It now gets a `404`, described in full under
+[An unmatched request gets a 404](#an-unmatched-request-gets-a-404).
 
-{:.warning}
-> A rule whose `backendRefs` all fail to resolve now answers `500` instead of falling back to
-> the destination service, and a `backendRef` naming a port the destination lacks now counts as
-> unresolved rather than falling through to another port.
+The routes to change are those whose `rules` contain no `PathPrefix: /` match. A route written
+to anchor another policy is the common case: it matches one path because that was the traffic a
+`MeshTimeout` or `MeshRetry` needed to cover, and every other path of that destination now
+returns `404`.
 
-{:.warning}
-> `TrafficRoute` is removed, along with the legacy policies that matched on its routes.
+Add a rule matching all paths, pointing at the destination the unmatched traffic used to reach:
+
+```yaml
+rules:
+  - matches:
+      - path:
+          type: PathPrefix
+          value: /orders
+    default:
+      backendRefs:
+        - kind: MeshService
+          labels:
+            kuma.io/display-name: orders
+          port: 8080
+  # added for the upgrade
+  - matches:
+      - path:
+          type: PathPrefix
+          value: /
+    default:
+      backendRefs:
+        - kind: MeshService
+          labels:
+            kuma.io/display-name: backend
+          port: 8080
+```
+
+On the route itself, the catch-all also inherits the policies attached to that route. Where
+that is wrong — a 1s `MeshTimeout` that suits `/orders` but not a file download on another
+path — put the catch-all in a second `MeshHTTPRoute` instead.
+
+### Check that every backendRef resolves
+
+A rule that declares `backendRefs` and resolves none of them used to fall back to the
+destination named in its `to` entry. It now answers `500`. A `backendRef` naming a port the
+destination does not have counts as unresolved as well, where it previously fell through to
+another port of the same destination.
+
+Both were misconfigurations that traffic survived, which is why they are worth an explicit
+pass: after the upgrade they become visible traffic loss. The references to check are the ones
+that were never exercised — a `MeshService` in another zone that KDS may not have synced, a
+destination in another namespace, and any `backendRef` with an explicit `port` or
+`sectionName`.
+
+### Replace MeshServiceSubset references
+
+`backendRefs[]` and the `RequestMirror` filter's `backendRef` no longer accept
+`kind: MeshServiceSubset`, and `tags` is gone from the `backendRef` schema. A stored route
+carrying one keeps being served, but the control plane no longer resolves that kind, so the
+reference counts as unresolved and the rule loses its destination under the rule above.
+
+```yaml
+# 2.x
+backendRefs:
+  - kind: MeshServiceSubset
+    tags:
+      kuma.io/service: payments
+      version: v1
+
+# 3.x
+backendRefs:
+  - kind: MeshService
+    labels:
+      kuma.io/display-name: payments
+    port: 8080
+```
+
+Selecting a subset of a destination's endpoints by tag has no replacement. Where a route split
+traffic between tagged subsets of one service, that service has to become separate
+`MeshService` resources for the route to address.
+
+### Select real resources by labels
+
+`Dataplane`, `MeshService`, `MeshExternalService`, `MeshMultiZoneService` and `MeshHTTPRoute`
+are selected by `labels` only, in `spec.targetRef`, `spec.to[].targetRef` and `backendRefs[]`
+alike. `name` and `namespace` select nothing, and a reference carrying them instead of `labels`
+is rejected with `labels (): must be set when kind is MeshService`. `sectionName` is unchanged
+and still names a `MeshService` port.
+
+```yaml
+# 2.x
+to:
+  - targetRef:
+      kind: MeshService
+      name: backend
+      namespace: kong-mesh-demo
+      sectionName: http
+
+# 3.x
+to:
+  - targetRef:
+      kind: MeshService
+      labels:
+        kuma.io/display-name: backend
+        k8s.kuma.io/namespace: kong-mesh-demo
+      sectionName: http
+```
+
+### Rewrite the top-level targetRef
+
+`spec.targetRef.kind` accepts `Mesh` and `Dataplane`. `MeshSubset`, `MeshService`,
+`MeshServiceSubset` and `MeshGateway` are rejected with
+`in body should be one of [Mesh Dataplane]`.
+
+A `MeshSubset` or `MeshServiceSubset` selector becomes `kind: Dataplane` with the equivalent
+labels. A `MeshGateway` selector becomes `kind: Dataplane` too: the built-in gateway is
+removed, and a delegated gateway is an ordinary `Dataplane` as far as the control plane is
+concerned.
+
+```yaml
+# 2.x
+targetRef:
+  kind: MeshSubset
+  tags:
+    kuma.io/service: frontend
+
+# 3.x
+targetRef:
+  kind: Dataplane
+  labels:
+    app: frontend
+```
+
+`spec.to[].targetRef` narrows in the same release, to `MeshService`,
+`MeshExternalService` and `MeshMultiZoneService`. A `MeshHTTPRoute` under a gateway used to
+set `to[].targetRef.kind: Mesh`; that is now rejected, so the route names the destination
+directly.
+
+### Delete leftover TrafficRoute resources
+
+`TrafficRoute` is removed, along with the legacy `Retry`, `Timeout` and `TrafficLog` policies
+that matched on the routes it defined. Where a `MeshHTTPRoute` and a `TrafficRoute` both
+applied to a proxy, the `MeshHTTPRoute` already won, so a mesh that had finished migrating to
+the new policies loses nothing by deleting them.
