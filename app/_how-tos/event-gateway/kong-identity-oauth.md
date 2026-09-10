@@ -45,8 +45,10 @@ cleanup:
     - title: Clean up {{site.event_gateway}} resources
       include_content: cleanup/products/event-gateway
       icon_url: /assets/icons/gateway.svg
+    - title: Clean up Kong Identity resources
+      include_content: md/identity/delete_auth_server
 
-automated_tests: false
+
 related_resources:
   - text: Event Gateway
     url: /event-gateway/
@@ -58,7 +60,7 @@ related_resources:
     url: /event-gateway/policies/acl/
 
 min_version:
-  event-gateway: '1.1.0'
+  event-gateway: '1.1'
 ---
 
 ## Create an auth server in {{site.identity}}
