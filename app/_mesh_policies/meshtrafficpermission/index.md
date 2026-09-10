@@ -87,8 +87,17 @@ For each request, the proxy walks the matchers in a fixed order:
 1. Otherwise, a request matching any `allow` or `allowWithShadowDeny` matcher is **allowed**.
 1. A request matching nothing is **denied**.
 
-This is why `deny` cannot be overridden by a later `allow`: a service owner cannot grant
+Every `deny` across every policy that applies to the proxy is evaluated before any `allow`,
+so a `deny` cannot be overridden by a later or narrower `allow`. A service owner cannot grant
 access that a mesh-wide `deny` has withdrawn.
+
+{:.warning}
+> **Do not write a mesh-wide deny-all and then allow services back in.** That pattern comes
+> from {{site.mesh_product_name}} 2.x, where the last matching rule won, and it does not
+> work here: a blanket `deny` matches every client and no later `allow` can re-open it.
+>
+> A mesh is already closed. With no `MeshTrafficPermission` in place, nothing is allowed, so
+> write only the `allow` rules for the traffic you want.
 
 ## Match on identity or SNI
 
@@ -226,6 +235,11 @@ For a walkthrough, see [Apply policies to mesh-scoped zone proxies](/mesh/zone-p
 >
 > Access control now depends on workload identity, so a mesh needs a
 > [MeshIdentity](/mesh/policies/meshidentity/). `Mesh.mtls` no longer produces mTLS.
+>
+> Rule precedence is inverted. In 2.x the last matching rule won, so a deny-all rule followed
+> by narrower allow rules opened specific paths. Now every `deny` is evaluated before every
+> `allow`, so a deny-all can never be re-opened. Delete the deny-all and keep the allow rules:
+> traffic matching nothing is denied anyway.
 
 A 2.x policy allowing one service to reach another:
 
