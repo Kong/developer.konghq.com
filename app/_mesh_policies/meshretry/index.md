@@ -7,6 +7,8 @@ description: Retry failed requests to a destination, for HTTP, gRPC, and TCP tra
 content_type: plugin
 icon: meshretry.png
 related_resources:
+- text: How policies select traffic
+  url: "/mesh/policy-targeting/"
 - text: MeshTimeout policy
   url: "/mesh/policies/meshtimeout/"
 - text: MeshCircuitBreaker policy

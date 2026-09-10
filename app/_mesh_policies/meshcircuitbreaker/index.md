@@ -7,6 +7,8 @@ description: Cap the connections a proxy will open to a destination, and eject f
 content_type: plugin
 icon: meshcircuitbreaker.png
 related_resources:
+- text: How policies select traffic
+  url: "/mesh/policy-targeting/"
 - text: MeshRetry policy
   url: "/mesh/policies/meshretry/"
 - text: MeshHealthCheck policy

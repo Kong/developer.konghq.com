@@ -8,8 +8,9 @@ products:
 breadcrumbs:
   - /mesh/
 tags:
-  - policies
-  - targetref
+  - policy
+  - service-mesh
+  - traffic-control
 related_resources:
   - text: MeshTrafficPermission policy
     url: /mesh/policies/meshtrafficpermission/
