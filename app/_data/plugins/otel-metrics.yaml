@@ -7,6 +7,8 @@ metrics:
       - kong.service.name
       - kong.route.name
       - kong.auth.consumer.name
+      - kong.auth.principal.id
+      - kong.auth.principal.display_name
       - kong.response.source
       - kong.workspace.name
       - http.request.method
@@ -43,6 +45,8 @@ metrics:
       - kong.service.name
       - kong.route.name
       - kong.auth.consumer.name
+      - kong.auth.principal.id
+      - kong.auth.principal.display_name
       - kong.workspace.name
   - name: http.server.response.size
     description: Total size of the HTTP response sent back to the client in bytes.
@@ -52,6 +56,8 @@ metrics:
       - kong.service.name
       - kong.route.name
       - kong.auth.consumer.name
+      - kong.auth.principal.id
+      - kong.auth.principal.display_name
       - kong.workspace.name
   - name: stream.server.session.count
     min_version: "3.16"
@@ -684,6 +690,8 @@ attributes:
   kong.service.name: Name of the Gateway Service.
   kong.route.name: Name of the Route.
   kong.auth.consumer.name: Name of the authenticated Consumer.
+  kong.auth.principal.id: "ID of the authenticated [Principal](/identity/principals/). Only set when {{site.identity}} has authenticated a Principal for the request."
+  kong.auth.principal.display_name: "Display name of the authenticated [Principal](/identity/principals/). Only set when a display name has been defined for the Principal."
   kong.response.source: |
     Origin of the current response. Possible values:
       - `upstream` if the response originated by successfully contacting the upstream service
