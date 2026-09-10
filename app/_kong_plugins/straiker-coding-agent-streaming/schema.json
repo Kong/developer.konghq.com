@@ -1,0 +1,102 @@
+{
+  "properties": {
+    "config": {
+      "additionalProperties": false,
+      "properties": {
+        "detect_url": {
+          "type": "string",
+          "description": "Straiker Defend Detect endpoint (`POST /api/v1/detect`).",
+          "default": "https://api.prod.straiker.ai/api/v1/detect"
+        },
+        "api_key": {
+          "type": "string",
+          "description": "Straiker Defend API key.\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).\nThis field is [encrypted](/gateway/keyring/).",
+          "required": true
+        },
+        "timeout_ms": {
+          "type": "integer",
+          "description": "Timeout for a synchronous scoring call, in milliseconds.",
+          "default": 5000,
+          "minimum": 100,
+          "maximum": 60000
+        },
+        "fail_open": {
+          "type": "boolean",
+          "description": "If Straiker Defend is unreachable or errors, allow traffic when true, or reject with a 503 when false. Applies to the request and the response phase.",
+          "default": true
+        },
+        "max_response_bytes": {
+          "type": "integer",
+          "description": "Skip response scoring above this size, in bytes.",
+          "default": 8388608,
+          "minimum": 1024,
+          "maximum": 67108864
+        },
+        "relay_response": {
+          "type": "boolean",
+          "description": "Relay the model's streamed response to Straiker Defend after it has shipped.",
+          "default": true
+        },
+        "relay_timeout_ms": {
+          "type": "integer",
+          "description": "Timeout for the asynchronous response relay, in milliseconds.",
+          "default": 15000,
+          "minimum": 100,
+          "maximum": 120000
+        }
+      },
+      "required": ["api_key"],
+      "type": "object"
+    },
+    "consumer": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified consumer has been authenticated.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "consumer_group": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "protocols": {
+      "description": "A list of the request protocols that will trigger this plugin.",
+      "items": {
+        "enum": ["grpc", "grpcs", "http", "https"],
+        "type": "string"
+      },
+      "type": "array",
+      "default": ["grpc", "grpcs", "http", "https"]
+    }
+  },
+  "required": []
+}

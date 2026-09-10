@@ -214,13 +214,19 @@ These rules apply to everything written using this skill.
 - Wrap cell values containing special characters or backticks in double quotes.
 
 **Code blocks**
-- One command per block. No `$` prompt marker.
-- Always set a language identifier (`bash`, `yaml`, `docker`, etc.).
+- One command per block, except a sequence of `export` commands meant to be run together, which belong in the same block.
+- Every code block needs a preamble sentence, even a short one ("For example:" is enough).
+- No `$` prompt marker. Always set a language identifier (`bash`, `yaml`, `docker`, etc.).
 - Use `{:.no-copy-code}` under output blocks.
 
 **Callouts**
 - `{:.warning}` yellow, `{:.info}` blue, `{:.success}` green, `{:.danger}` red, `{:.neutral}` grey.
 - Always include a bold label inside: `> **Note**:` or `> **Warning**:`.
+- Ask the user if the plugin supports AI Gateway 2.0. If not, add this callout:
+  ```markdown
+  {:.warning}
+  > **Note**: This plugin is built for {{site.ai_gateway}} running on {{site.base_gateway}}. It has not been validated against {{site.ai_gateway}} 2.0.
+  ```
 
 ---
 

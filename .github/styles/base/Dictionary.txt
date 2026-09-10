@@ -119,6 +119,7 @@ chatwise
 cidr
 cidr_block
 cidrs
+claude
 cleartext
 cli
 clis
@@ -762,6 +763,7 @@ sso
 Stakater
 Stap
 stapxx
+straiker
 start_cmd
 statsd
 status_code
