@@ -7,11 +7,22 @@ products:
   - ai-gateway
 content_type: plugin
 description: Integrate {{site.ai_gateway}} with the AppDynamics APM Platform
+tags:
+- analytics
+- monitoring
+categories:
+  - analytics-monitoring
+search_aliases:
+  - app dynamics
+  - app-dynamics
+related_resources:
+  - text: "OpenTelemetry Policy"
+    url: /ai-gateway/policies/opentelemetry/
 ---
 
-This policy integrates {{site.ai_gateway}} with the [AppDynamics APM platform](https://www.splunk.com/en_us/products/splunk-appdynamics.html) so that requests handled by {{site.base_gateway}} can be identified and analyzed in AppDynamics.
+This policy integrates {{site.ai_gateway}} with the [AppDynamics APM platform](https://www.splunk.com/en_us/products/splunk-appdynamics.html) so that requests handled by {{site.ai_gateway}} can be identified and analyzed in AppDynamics.
 
-The AppDynamics policy reports request and response timestamps and error information to the AppDynamics platform to be analyzed in the AppDynamics flow map and correlated with other systems participating in handling application API requests.
+The AppDynamics policy reports request and response timestamps and error information to the AppDynamics platform to be analyzed in the AppDynamics flow map and correlated with other systems.
 
 {:.warning}
 > **Important:** Unlike other {{site.ai_gateway}} policies, you must configure the AppDynamics policy via environment variables. You must also install AppDynamics before using the policy, and you must enable the policy in your environment.
@@ -29,14 +40,17 @@ We recommended installing the `libappdynamics.so` in the `/usr/local/kong/lib` d
 When using the quickstart container perform the following steps:
 
 1. Extract the SDK.
+
    ```sh
    tar -xzf appdynamics-sdk-native-64bit-linux-VERSION.tgz
    ```
 2. Locate the library file.
+
    ```sh
    cd appdynamics-cpp-sdk/lib
    ```
 3. Copy the file into the container running the {{site.ai_gateway}} dataplane.
+
    ```sh
    docker cp libappdynamics.so <container_id>:/usr/local/kong/lib
    ```
