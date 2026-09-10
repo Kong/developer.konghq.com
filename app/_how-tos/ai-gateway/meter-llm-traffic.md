@@ -340,7 +340,8 @@ Customers are the entities who pay for the consumption. In many cases, it's equa
        name: Kong Air
        key: kong-air
        usage_attribution:
-           subject_keys: [kong-air]
+           subject_keys:
+            - 'consumer:$CONSUMER_ID'
    {% endkonnect_api_request %}
    <!--vale on-->
    {% endcapture %}
