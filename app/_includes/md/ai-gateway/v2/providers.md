@@ -40,6 +40,7 @@ You can proxy requests to {{ provider.name }} AI models through {{site.ai_gatewa
 {%- capture rerank_label -%}{% if page.output_format == 'markdown' %}Rerank{% else %}[Rerank](#rerank){% endif %}{%- endcapture -%}
 {%- capture batches_label -%}{% if page.output_format == 'markdown' %}Batches{% else %}[Batches](#batches){% endif %}{%- endcapture -%}
 {%- capture files_label -%}{% if page.output_format == 'markdown' %}Files{% else %}[Files](#files){% endif %}{%- endcapture -%}
+{%- capture skills_label -%}{% if page.output_format == 'markdown' %}Skills{% else %}[Skills](#skills){% endif %}{%- endcapture -%}
 
 ## Upstream paths
 
@@ -61,7 +62,7 @@ columns:
   - title: Upstream path or API
     key: upstream_path
 rows:
-{%- assign all_capability_keys = "generate,agentic,realtime,embeddings,image,audio_speech,audio_transcription,audio_translation,video,rerank,batches,files" | split: "," -%}
+{%- assign all_capability_keys = "generate,agentic,realtime,embeddings,image,audio_speech,audio_transcription,audio_translation,video,rerank,batches,files,skills" | split: "," -%}
 {% for cap in all_capability_keys %}
 {% assign cap_supported = false %}
 {% if provider.capabilities[cap].supported %}{% assign cap_supported = true %}{% endif %}
@@ -81,6 +82,7 @@ rows:
 {% when 'rerank' %}{% assign cap_label = rerank_label %}{% assign cap_path_template = "`/rerank`" %}{% assign cap_description = "Semantic reranking of documents" %}
 {% when 'batches' %}{% assign cap_label = batches_label %}{% assign cap_path_template = "`/batches`" %}{% assign cap_description = "Batch processing of requests" %}
 {% when 'files' %}{% assign cap_label = files_label %}{% assign cap_path_template = "`/files`" %}{% assign cap_description = "File management and storage" %}
+{% when 'skills' %}{% assign cap_label = skills_label %}{% assign cap_path_template = "`/skills`" %}{% assign cap_description = "Manage reusable skill bundles hosted with the provider" %}
 {% endcase %}
 {% if compare_provider %}
 {% if cap_supported and cap_supported_compare %}
@@ -137,6 +139,7 @@ rows:
 {%- assign realtime_note_num = 0 %}{% if provider.capabilities.realtime.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign realtime_note_num = note_counter %}{% endif -%}
 {%- assign batches_note_num = 0 %}{% if provider.capabilities.batches.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign batches_note_num = note_counter %}{% endif -%}
 {%- assign files_note_num = 0 %}{% if provider.capabilities.files.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign files_note_num = note_counter %}{% endif -%}
+{%- assign skills_note_num = 0 %}{% if provider.capabilities.skills.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign skills_note_num = note_counter %}{% endif -%}
 {%- assign rerank_note_num = 0 %}{% if provider.capabilities.rerank.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign rerank_note_num = note_counter %}{% endif -%}
 {%- assign compare_generate_note_num = 0 %}{% if compare_provider.capabilities.generate.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign compare_generate_note_num = note_counter %}{% endif -%}
 {%- assign compare_embeddings_note_num = 0 %}{% if compare_provider.capabilities.embeddings.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign compare_embeddings_note_num = note_counter %}{% endif -%}
@@ -149,6 +152,7 @@ rows:
 {%- assign compare_realtime_note_num = 0 %}{% if compare_provider.capabilities.realtime.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign compare_realtime_note_num = note_counter %}{% endif -%}
 {%- assign compare_batches_note_num = 0 %}{% if compare_provider.capabilities.batches.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign compare_batches_note_num = note_counter %}{% endif -%}
 {%- assign compare_files_note_num = 0 %}{% if compare_provider.capabilities.files.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign compare_files_note_num = note_counter %}{% endif -%}
+{%- assign compare_skills_note_num = 0 %}{% if compare_provider.capabilities.skills.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign compare_skills_note_num = note_counter %}{% endif -%}
 {%- assign compare_rerank_note_num = 0 %}{% if compare_provider.capabilities.rerank.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign compare_rerank_note_num = note_counter %}{% endif -%}
 {%- assign has_text = false -%}
 {%- assign has_embeddings = false -%}
@@ -159,6 +163,7 @@ rows:
 {%- assign has_realtime = false -%}
 {%- assign has_batches = false -%}
 {%- assign has_files = false -%}
+{%- assign has_skills = false -%}
 {%- assign has_rerank = false -%}
 {%- if provider.capabilities.generate.supported or compare_provider.capabilities.generate.supported %}{% assign has_text = true %}{% endif -%}
 {%- if provider.capabilities.embeddings.supported or compare_provider.capabilities.embeddings.supported %}{% assign has_embeddings = true %}{% endif -%}
@@ -169,6 +174,7 @@ rows:
 {%- if provider.capabilities.realtime.supported or compare_provider.capabilities.realtime.supported %}{% assign has_realtime = true %}{% endif -%}
 {%- if provider.capabilities.batches.supported or compare_provider.capabilities.batches.supported %}{% assign has_batches = true %}{% endif -%}
 {%- if provider.capabilities.files.supported or compare_provider.capabilities.files.supported %}{% assign has_files = true %}{% endif -%}
+{%- if provider.capabilities.skills.supported or compare_provider.capabilities.skills.supported %}{% assign has_skills = true %}{% endif -%}
 {%- if provider.capabilities.rerank.supported or compare_provider.capabilities.rerank.supported %}{% assign has_rerank = true %}{% endif -%}
 
 ## Supported capabilities
@@ -728,6 +734,63 @@ rows:
 {:.warning}
 > Batches are configured on a separate AI Model with [`type: "api"`](/ai-gateway/entities/ai-model/#schema-aigateway-model-type), distinct from regular models that handle synchronous capabilities like generate and embeddings.
 > Create a dedicated AI Model exclusively for batches and files, as each model must be either a regular model or an API model, not both.
+{%- endif -%}
+
+{% if has_skills %}
+
+### Skills
+
+Support for {{ provider.name }} skills management capabilities:
+
+{% table %}
+vertical_align: middle
+columns:
+  - title: Capability
+    key: capability
+{% if compare_provider %}
+  - title: Variant
+    key: variant
+{% endif %}
+  - title: Model example
+    key: model_example
+  - title: Path template
+    key: path_template
+  - title: Min version
+    key: min_version
+rows:
+{% if compare_provider %}
+{% if provider.capabilities.skills.supported and compare_provider.capabilities.skills.supported %}
+  - capability: "skills{% if skills_note_num != 0 %}<sup>{{ skills_note_num }}</sup>{% endif %}"
+    variant: "{{ include.variant_label }} & {{ include.compare_variant_label }}"
+    model_example: "{{ provider.capabilities.skills.model_example }}"
+    path_template: "`/skills`"
+    min_version: "{{ provider.capabilities.skills.min_version }}"
+{% elsif provider.capabilities.skills.supported %}
+  - capability: "skills{% if skills_note_num != 0 %}<sup>{{ skills_note_num }}</sup>{% endif %}"
+    variant: "{{ include.variant_label }} only"
+    model_example: "{{ provider.capabilities.skills.model_example }}"
+    path_template: "`/skills`"
+    min_version: "{{ provider.capabilities.skills.min_version }}"
+{% else %}
+  - capability: "skills{% if compare_skills_note_num != 0 %}<sup>{{ compare_skills_note_num }}</sup>{% endif %}"
+    variant: "{{ include.compare_variant_label }} only"
+    model_example: "{{ compare_provider.capabilities.skills.model_example }}"
+    path_template: "`/skills`"
+    min_version: "{{ compare_provider.capabilities.skills.min_version }}"
+{% endif %}
+{% elsif provider.capabilities.skills %}
+  - capability: "skills{% if skills_note_num != 0 %}<sup>{{ skills_note_num }}</sup>{% endif %}"
+    model_example: "{{ provider.capabilities.skills.model_example }}"
+    path_template: "`/skills`"
+    min_version: "{{ provider.capabilities.skills.min_version }}"
+{% endif %}
+{% endtable %}
+{% if provider.capabilities.skills.note.content %}<sup>{{ skills_note_num }}</sup> {% if compare_provider %}**{{ include.variant_label }}:** {% endif %}{{ provider.capabilities.skills.note.content }}{% endif %}
+{% if compare_provider.capabilities.skills.note.content %}<sup>{{ compare_skills_note_num }}</sup> **{{ include.compare_variant_label }}:** {{ compare_provider.capabilities.skills.note.content }}{% endif %}
+
+{:.warning}
+> Skills are configured on a separate AI Model with [`type: "api"`](/ai-gateway/entities/ai-model/#schema-aigateway-model-type), distinct from regular models that handle synchronous capabilities like generate and embeddings.
+> Create a dedicated AI Model exclusively for batches, files, and skills, as each model must be either a regular model or an API model, not both.
 {%- endif -%}
 
 {% if has_rerank %}
