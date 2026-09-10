@@ -12,6 +12,11 @@ products:
 works_on:
   - on-prem
 
+tier: enterprise
+
+min_version:
+  gateway: '3.16'
+
 tags:
   - database
 
