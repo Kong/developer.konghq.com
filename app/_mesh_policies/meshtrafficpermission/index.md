@@ -100,14 +100,19 @@ columns:
     key: field
   - title: Matches on
     key: matches
+  - title: "`type`"
+    key: type
 rows:
   - field: "`spiffeID`"
     matches: "The SPIFFE ID of the calling workload, issued by `MeshIdentity`."
+    type: "`Exact` or `Prefix`"
   - field: "`sni`"
-    matches: "The SNI value on the TLS connection. Used on zone egress, where the destination is identified by SNI."
+    matches: "The SNI carried on the TLS connection. Used on zone egress, where the destination is identified by SNI rather than by client identity."
+    type: "`Exact` only"
 {% endtable %}
 
-Both take a `type` of `Exact` or `Prefix`, and a `value`.
+`spiffeID` is the matcher for service-to-service access, since it names the client.
+`sni` accepts only `Exact`, and its value has to be a DNS subdomain.
 
 `Prefix` is how you address a group. A SPIFFE ID is structured as
 `spiffe://<trust-domain>/ns/<namespace>/sa/<service-account>`, so a prefix ending at the
