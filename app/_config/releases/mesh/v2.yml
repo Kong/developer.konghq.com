@@ -163,16 +163,12 @@ app/_mesh_policies/v2/meshglobalratelimit/index.md:
 app/_mesh_policies/v2/meshglobalratelimit/reference.md:
   canonical_url: /mesh/policies/meshglobalratelimit/reference/
 app/_mesh_policies/v2/meshhealthcheck/examples/grpcs-health-check-from-cart.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshhealthcheck/examples/grpc-health-check/
 app/_mesh_policies/v2/meshhealthcheck/examples/health-check-backend.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshhealthcheck/examples/http-health-check/
 app/_mesh_policies/v2/meshhealthcheck/examples/protocol-fallback.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshhealthcheck/examples/tcp-connect-only-check/
 app/_mesh_policies/v2/meshhealthcheck/index.md:
-  status: pending
   canonical_url: /mesh/policies/meshhealthcheck/
 app/_mesh_policies/v2/meshhealthcheck/reference.md:
   canonical_url: /mesh/policies/meshhealthcheck/reference/
