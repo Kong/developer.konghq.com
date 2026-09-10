@@ -1,0 +1,32 @@
+description: 'Enable the CrowdStrike Falcon AIDR MCP plugin to inspect MCP tool listings, tool call inputs, and tool outputs against AIDR policies.'
+
+title: 'Enable CrowdStrike Falcon AIDR MCP'
+
+weight: 900
+
+requirements:
+  - "The CrowdStrike Falcon AIDR MCP plugin is [installed](/plugins/crowdstrike-aidr-mcp/#install-the-crowdstrike-aidr-mcp-plugin)."
+  - "You have [registered a Kong Collector](/plugins/crowdstrike-aidr-mcp/#register-a-kong-collector-in-aidr) in the AIDR console and have your API key and base URL."
+  - "The Route this plugin is applied to accepts only `POST` requests, since MCP JSON-RPC 2.0 uses `POST` exclusively."
+
+variables:
+  api-key:
+    value: $CROWDSTRIKE_AIDR_API_KEY
+    description: "Your CrowdStrike Falcon AIDR API key, obtained from the collector's Config tab in the AIDR console."
+  api-base-url:
+    value: https://api.crowdstrike.com/aidr/aiguard
+    description: "The AIDR base URL, obtained from the collector's Config tab in the AIDR console."
+
+config:
+  ai_guard_api_key: ${api-key}
+  ai_guard_api_base_url: ${api-base-url}
+
+min_version:
+  gateway: '3.8'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
