@@ -22,6 +22,7 @@ groups:
           - title: Install kongctl with Mise
             description: Use mise package manager
             url: /kongctl/?tab=mise#install-kongctl
+          - path: /kongctl/docker/
           - path: /kongctl/config/
           - path: /kongctl/authentication/
       - title: Declarative Configuration

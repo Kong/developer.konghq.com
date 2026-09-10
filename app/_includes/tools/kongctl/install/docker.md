@@ -9,5 +9,8 @@ docker pull kong/kongctl:latest
 Verify the installation:
 
 ```bash
-docker run kong/kongctl version
+docker run --rm kong/kongctl:latest version
 ```
+
+For authentication and local configuration examples, see
+[Run kongctl in Docker](/kongctl/docker/).
