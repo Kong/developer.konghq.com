@@ -46,6 +46,8 @@ min_version:
   event-gateway: '1.3'
 
 related_resources:
+  - text: Mask Fields Consume policy
+    url: /event-gateway/policies/mask-fields-consume/
   - text: Schema Validation policy
     url: /event-gateway/policies/schema-validation-consume/
   - text: Virtual clusters

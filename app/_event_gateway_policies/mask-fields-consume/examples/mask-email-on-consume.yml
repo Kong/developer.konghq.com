@@ -1,0 +1,49 @@
+title: Mask a field for consumers only
+
+description: Redact an email field on consume, and keep the stored record unchanged.
+
+extended_description: |
+  Redact an email field for the client that reads it. The record in the backend cluster does not change,
+  so systems that are permitted to see the original value keep their access to it.
+
+  The `email` strategy applies a separate strategy to each part of the address.
+  This example keeps the first character of the local part and the whole domain, which is enough to recognize an account
+  without exposure of the full address.
+
+weight: 900
+
+requirements:
+ - "A [Schema Validation Consume policy](/event-gateway/policies/schema-validation-consume/) that parses the record value."
+
+variables:
+  policy_id:
+    description: The UUID of the parent Schema Validation policy.
+    value: $PARENT_POLICY_ID
+
+type: mask_fields
+name: mask-email-consume
+parent_policy_id: ${policy_id}
+config:
+  failure_mode: skip
+  mask_fields:
+    - paths:
+        - match: "user.email"
+      strategy:
+        type: email
+        email:
+          local_part:
+            type: keep_chars
+            keep_chars:
+              first: 1
+              last: 0
+              phrase: "***"
+          domain:
+            type: keep_all
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
+
+min_version:
+  event-gateway: '1.3'
