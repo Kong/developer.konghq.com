@@ -278,7 +278,7 @@ Optionally, create a read-only user before you start the gateway:
 
 ```sql
 -- Create the read-only user
-CREATE ROLE kong_ro WITH LOGIN PASSWORD '<password>';
+CREATE ROLE kong_ro WITH LOGIN PASSWORD '$PASSWORD';
 
 -- Grant minimal privileges to the read-only user
 GRANT CONNECT ON DATABASE kong TO kong_ro;
