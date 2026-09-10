@@ -819,6 +819,7 @@ TCPRoutes
 teardown
 templated
 Templatized
+temporality
 Terraform
 Terraform's
 text_splitters
