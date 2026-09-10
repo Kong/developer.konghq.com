@@ -21,7 +21,7 @@ tags:
 
 tldr:
   q: How can I anonymize sensitive information in API responses using AI?
-  a: Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) and [AI Model](/ai-gateway/entities/ai-model/) and add an [AI PII Sanitizer](/ai-gateway/policies/ai-sanitizer/) policy in `OUTPUT` mode to automatically redact or replace sensitive data in the responses from your service.
+  a: Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) and [AI Model](/ai-gateway/entities/ai-model/) and add an [AI PII Sanitizer](/ai-gateway/policies/ai-sanitizer/) policy in `OUTPUT` mode to automatically redact or replace sensitive data in the responses from the upstream LLM provider.
 
 prereqs:
   inline:
