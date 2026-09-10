@@ -298,28 +298,20 @@ app/_mesh_policies/v2/meshtcproute/index.md:
 app/_mesh_policies/v2/meshtcproute/reference.md:
   canonical_url: /mesh/policies/meshtcproute/reference/
 app/_mesh_policies/v2/meshtimeout/examples/backend-inbound.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshtimeout/examples/inbound-timeouts/
 app/_mesh_policies/v2/meshtimeout/examples/default-all-gateways.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshtimeout/examples/outbound-timeouts/
 app/_mesh_policies/v2/meshtimeout/examples/http-config.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshtimeout/examples/outbound-timeouts/
 app/_mesh_policies/v2/meshtimeout/examples/target-mesh-httproute.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshtimeout/examples/outbound-timeouts/
 app/_mesh_policies/v2/meshtimeout/examples/tcp-config.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshtimeout/examples/outbound-timeouts/
 app/_mesh_policies/v2/meshtimeout/examples/tcp-port.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshtimeout/examples/outbound-timeouts/
 app/_mesh_policies/v2/meshtimeout/examples/timeout-all-services.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshtimeout/examples/outbound-timeouts/
 app/_mesh_policies/v2/meshtimeout/index.md:
-  status: pending
   canonical_url: /mesh/policies/meshtimeout/
 app/_mesh_policies/v2/meshtimeout/reference.md:
   canonical_url: /mesh/policies/meshtimeout/reference/
