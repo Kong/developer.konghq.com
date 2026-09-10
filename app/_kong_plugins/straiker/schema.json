@@ -1,0 +1,85 @@
+{
+  "properties": {
+    "config": {
+      "additionalProperties": false,
+      "properties": {
+        "api_key": {
+          "type": "string",
+          "description": "Straiker Defend API key.\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).\nThis field is [encrypted](/gateway/keyring/).",
+          "required": true
+        },
+        "detect_url": {
+          "type": "string",
+          "description": "Straiker Defend webhook endpoint.",
+          "default": "https://api.prod.straiker.ai/api/v1/detect/webhook"
+        },
+        "block": {
+          "type": "boolean",
+          "description": "When true, Straiker detections can block both the incoming request and the final model response. When false, detections are evaluated and logged but traffic is never blocked.",
+          "default": true
+        },
+        "fail_open": {
+          "type": "boolean",
+          "description": "Behavior when the Straiker webhook is unreachable or errors on the pre-call (request) check. true allows the request through. false blocks the request when the webhook can't be reached. Post-call (response) evaluation always fails open, so a model answer is never withheld because the webhook was down.",
+          "default": true
+        },
+        "debug": {
+          "type": "boolean",
+          "description": "Enables verbose request, response, and webhook logging for local validation. Keep disabled in production.",
+          "default": false
+        }
+      },
+      "required": ["api_key"],
+      "type": "object"
+    },
+    "consumer": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified consumer has been authenticated.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "consumer_group": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "protocols": {
+      "description": "A list of the request protocols that will trigger this plugin.",
+      "items": {
+        "enum": ["grpc", "grpcs", "http", "https", "tcp", "tls", "tls_passthrough", "udp", "ws", "wss"],
+        "type": "string"
+      },
+      "type": "array"
+    }
+  },
+  "required": []
+}
