@@ -141,16 +141,12 @@ app/_mesh_policies/v2/meshcircuitbreaker/index.md:
 app/_mesh_policies/v2/meshcircuitbreaker/reference.md:
   canonical_url: /mesh/policies/meshcircuitbreaker/reference/
 app/_mesh_policies/v2/meshfaultinjection/examples/list-faults-applied-from-frontend.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshfaultinjection/examples/fault-one-client-only/
 app/_mesh_policies/v2/meshfaultinjection/examples/return-requests-delayed.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshfaultinjection/examples/delay-responses/
 app/_mesh_policies/v2/meshfaultinjection/examples/return-requests-from-frontend.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshfaultinjection/examples/abort-a-proportion-of-requests/
 app/_mesh_policies/v2/meshfaultinjection/index.md:
-  status: pending
   canonical_url: /mesh/policies/meshfaultinjection/
 app/_mesh_policies/v2/meshfaultinjection/reference.md:
   canonical_url: /mesh/policies/meshfaultinjection/reference/

@@ -1,0 +1,30 @@
+title: 'Inject faults for a single client'
+
+description: 'Match on the caller SPIFFE ID so a list of faults applies only to requests from frontend, leaving other callers of the same destination unaffected.'
+
+weight: 700
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshFaultInjection
+  name: backend-faults-from-frontend
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    rules:
+      - matches:
+          - spiffeID:
+              type: Prefix
+              value: spiffe://default.default.mesh.local/ns/kong-mesh-demo/sa/frontend
+        default:
+          http:
+            - abort:
+                httpStatus: 500
+                percentage: "2.5"
+            - delay:
+                value: 5s
+                percentage: 5
