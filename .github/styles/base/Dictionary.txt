@@ -134,6 +134,7 @@ cncf
 cncf's
 CNAMEs
 CNIs
+codec
 cohere
 cognito
 collectd
