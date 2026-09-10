@@ -42,7 +42,7 @@ GEM
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0)
     eventmachine (1.2.7)
-    ffi (1.16.3)
+    ffi (1.17.4)
     foreman (0.90.0)
       thor (~> 1.4)
     forwardable-extended (2.6.0)
