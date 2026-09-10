@@ -67,7 +67,7 @@ This guide explains how to map the permissions, including scopes and claims, fro
 
 ## Map IdP developer teams in {{site.konnect_short_name}}
 
-You can configure more than one IdP for a {{site.dev_portal}}, but only one IdP can be enabled at a time. Switching the enabled IdP, including switching between OIDC and SAML, is a non-trivial operation.
+You can configure more than one IdP for a {{site.dev_portal}}, but only one IdP can be enabled at a time.
 
 {% navtabs "map-idp-teams" %}
 {% navtab "UI" %}
