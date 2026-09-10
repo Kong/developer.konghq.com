@@ -43,7 +43,7 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-Two pieces do the work:
+What each field does:
 
 * `targetRef` selects **which proxies** log. `kind: Mesh` means all of them.
 * `rules` describes **what to do with inbound traffic** at those proxies. One entry with no
