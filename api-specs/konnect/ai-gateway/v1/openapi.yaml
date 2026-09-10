@@ -1,13 +1,25 @@
 openapi: 3.0.0
 info:
   title: Konnect AI Gateway
-  version: 2.0.0
+  version: 2.0.3
   description: The API for configuring AI Gateways in Konnect.
+  x-extensions-note: |
+    Entities and properties may be annotated with `x-min-runtime-version`, the
+    earliest AI Gateway runtime version (major and minor) that supports them. A
+    request that sets such a property is rejected unless the AI Gateway's
+    `min_runtime_version` is at or above the annotated value. Versions are
+    compared by major first, then minor.
+
+
+    A feature whose `x-min-runtime-version` is greater than
+    `info.x-latest-public-runtime-version` is not generally available yet and
+    will be excluded from publicly available deliverables, exactly as if it were
+    marked `x-internal` and `x-unstable`.
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@bc2dd1324ad944d6e539aee09e977cb914e421bf
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/bc2dd1324ad944d6e539aee09e977cb914e421bf'
+  x-oas-source: kong/platform-api@7c733d29da74642189f1d552a7a0c2d9883c3366
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/7c733d29da74642189f1d552a7a0c2d9883c3366'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -12501,9 +12513,11 @@ components:
             secret_access_key:
               description: static IAM user credential; overrides AWS_SECRET_ACCESS_KEY env var
               type: string
+              writeOnly: true
             session_token:
               description: static IAM user credential; overrides AWS_SESSION_TOKEN env var
               type: string
+              writeOnly: true
       additionalProperties: false
       required:
         - type
