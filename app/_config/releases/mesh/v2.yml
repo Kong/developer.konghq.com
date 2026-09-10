@@ -280,16 +280,12 @@ app/_mesh_policies/v2/meshratelimit/index.md:
 app/_mesh_policies/v2/meshratelimit/reference.md:
   canonical_url: /mesh/policies/meshratelimit/reference/
 app/_mesh_policies/v2/meshretry/examples/deadlineexceeded.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshretry/examples/retry-grpc-deadline-exceeded/
 app/_mesh_policies/v2/meshretry/examples/http-frontend-to-backend.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshretry/examples/retry-http-5xx/
 app/_mesh_policies/v2/meshretry/examples/tcp-frontend-to-backend.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshretry/examples/retry-tcp-connect/
 app/_mesh_policies/v2/meshretry/index.md:
-  status: pending
   canonical_url: /mesh/policies/meshretry/
 app/_mesh_policies/v2/meshretry/reference.md:
   canonical_url: /mesh/policies/meshretry/reference/

@@ -1,0 +1,28 @@
+title: 'Retry HTTP requests that fail with 5xx'
+
+description: 'Use MeshRetry to retry requests from frontend to backend when the destination returns a 5xx or does not respond.'
+
+weight: 900
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshRetry
+  name: frontend-to-backend-http
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: frontend
+    to:
+      - targetRef:
+          kind: MeshService
+          name: backend
+        default:
+          http:
+            numRetries: 3
+            perTryTimeout: 2s
+            retryOn:
+              - 5xx
+              - Reset

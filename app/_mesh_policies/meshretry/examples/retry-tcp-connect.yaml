@@ -1,0 +1,24 @@
+title: 'Retry failed TCP connections'
+
+description: 'Use MeshRetry to make more than one TCP connection attempt to a destination before giving up.'
+
+weight: 700
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshRetry
+  name: frontend-to-backend-tcp
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: frontend
+    to:
+      - targetRef:
+          kind: MeshService
+          name: backend
+        default:
+          tcp:
+            maxConnectAttempt: 5

@@ -1,0 +1,33 @@
+title: 'Back off by what a rate limited destination asks for'
+
+description: 'Use MeshRetry with rateLimitedBackOff to wait for the interval named in a Retry-After or X-RateLimit-Reset header instead of the exponential schedule.'
+
+weight: 600
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshRetry
+  name: respect-retry-after
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: frontend
+    to:
+      - targetRef:
+          kind: MeshService
+          name: backend
+        default:
+          http:
+            numRetries: 3
+            retryOn:
+              - EnvoyRatelimited
+            rateLimitedBackOff:
+              maxInterval: 30s
+              resetHeaders:
+                - name: Retry-After
+                  format: Seconds
+                - name: X-RateLimit-Reset
+                  format: UnixTimestamp
