@@ -209,24 +209,99 @@ matching, so a single catch-all entry is the only shape available.
 
 ## Upgrading from {{site.mesh_product_name}} 2.x
 
-{:.warning}
-> **`spec.from` is removed, and is dropped silently.** A policy that still uses `from`
-> alongside `to` or `rules` is accepted, and the `from` configuration has no effect on
-> inbound traffic. A policy where `from` was the only field set is rejected, because the
-> resulting spec has neither `to` nor `rules`.
->
-> Rewrite `from` as `rules`. A `from` entry targeting `kind: Mesh`, meaning all clients,
-> becomes a single catch-all rule.
+Two fields move and both move quietly: `from` is dropped rather than rejected, and
+`healthyPanicThreshold` arrives here from `MeshHealthCheck` only if it is migrated by hand.
+Neither produces an error, so do both before upgrading.
+
+### Rewrite `from` as `rules`
+
+`spec.from` is removed. Circuit breaking for inbound traffic is configured through
+`spec.rules`.
+
+`from` is dropped rather than rejected. A policy that also sets `to` or `rules` is accepted and
+loses its inbound configuration silently; one where `from` was the only field is rejected with
+`spec (): at least one of 'to' or 'rules' has to be defined`.
+
+```yaml
+# 2.x
+spec:
+  from:
+    - targetRef:
+        kind: Mesh
+      default:
+        connectionLimits:
+          maxConnections: 1024
+
+# 3.x
+spec:
+  rules:
+    - default:
+        connectionLimits:
+          maxConnections: 1024
+```
+
+A `from` entry targeting `kind: Mesh`, meaning every client, becomes a single catch-all rule.
+
+### Bring healthyPanicThreshold over from MeshHealthCheck
+
+The field was removed from `MeshHealthCheck.to[].default` and now lives at
+`MeshCircuitBreaker.to[].default.outlierDetection.healthyPanicThreshold`. Both policies
+describe the health of the same endpoints, so the setting belongs with the one that ejects
+them.
 
 {:.warning}
-> **`healthyPanicThreshold` moved off `MeshHealthCheck`, and un-migrated settings are
-> dropped silently.** The field was removed from `MeshHealthCheck.to[].default`; it now lives
-> at `MeshCircuitBreaker.to[].default.outlierDetection.healthyPanicThreshold`.
->
-> On Kubernetes the old field is pruned by CRD validation, and on Universal it is discarded
-> during deserialization. Either way nothing reports it, and the affected cluster reverts to
-> Envoy's 50% default. Migrate these before upgrading.
+> An un-migrated `healthyPanicThreshold` is dropped, not rejected. The field is no longer in
+> the schema, so CRD validation prunes it on Kubernetes and deserialization discards it on
+> Universal. A `MeshHealthCheck` carrying one still applies successfully, and the affected
+> cluster falls back to Envoy's default panic threshold of 50%.
+
+```yaml
+# 2.x, on MeshHealthCheck
+to:
+  - targetRef:
+      kind: Mesh
+    default:
+      interval: 10s
+      timeout: 2s
+      healthyPanicThreshold: 30
+      http:
+        path: /health
+
+# 3.x, on MeshCircuitBreaker
+to:
+  - targetRef:
+      kind: Mesh
+    default:
+      outlierDetection:
+        healthyPanicThreshold: 30
+```
+
+### Rewrite the selectors
+
+`spec.targetRef.kind` accepts `Mesh` and `Dataplane`. `MeshSubset`, `MeshServiceSubset` and
+`MeshGateway` are rejected with `in body should be one of [Mesh Dataplane]`. A subset selector
+becomes `kind: Dataplane` with the equivalent labels, and a `MeshGateway` selector becomes
+`kind: Dataplane` too, since a delegated gateway is an ordinary `Dataplane`.
+
+In `spec.to[]`, real resources are selected by `labels` only, and a `MeshService` named by
+`name` is rejected with `labels (): must be set when kind is MeshService`. `MeshCircuitBreaker`
+does not accept `kind: MeshHTTPRoute` there — circuit breaking applies to a whole destination,
+not to individual routes.
 
 {:.warning}
-> `targetRef.kind` no longer accepts `MeshSubset`, `MeshServiceSubset` or `MeshGateway`, in
-> either `targetRef` or `to[].targetRef`. Use `Mesh`, or `Dataplane` with `labels`.
+> `kind: Dataplane` selects proxies by `labels` only, and a reference carrying `name` or
+> `namespace` instead is **accepted**. Those fields are not in the schema, so they are dropped,
+> and what remains is a bare `kind: Dataplane` — every proxy in the mesh. Nothing reports it, so
+> read the policy back after rewriting one: a stored `targetRef` with a `kind` and no `labels`
+> covers the whole mesh.
+
+### Review MeshProxyPatch circuit breaker patches
+
+A `MeshProxyPatch` patching `circuitBreakers` used to append a second threshold for a priority
+the cluster already had, and Envoy honours only the first, so the patch was dead
+configuration while `/config_dump` showed the requested values. The patch now merges into the
+existing threshold instead.
+
+Where a cluster is covered by both, `MeshProxyPatch` runs last and now wins the fields it
+sets, and the policy keeps the rest. Remove patches written before this change that you no
+longer rely on, along with any workaround added because the patch appeared to do nothing.

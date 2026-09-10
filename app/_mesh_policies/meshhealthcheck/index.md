@@ -193,16 +193,57 @@ to.
 
 ## Upgrading from {{site.mesh_product_name}} 2.x
 
-{:.warning}
-> **`healthyPanicThreshold` is removed from this policy, and un-migrated settings are dropped
-> silently.** It now lives at
-> `to[].default.outlierDetection.healthyPanicThreshold` on
-> [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/).
->
-> On Kubernetes the old field is pruned by CRD validation, and on Universal it is discarded
-> during deserialization. Neither reports it, and the affected cluster reverts to Envoy's 50%
-> default. Migrate these before upgrading.
+One field leaves this policy, and it leaves quietly.
+
+### Move healthyPanicThreshold to MeshCircuitBreaker
+
+`to[].default.healthyPanicThreshold` is removed. It now lives at
+`to[].default.outlierDetection.healthyPanicThreshold` on
+[MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/), the policy that ejects the endpoints
+the threshold is about.
 
 {:.warning}
-> `targetRef.kind` no longer accepts `MeshSubset`, `MeshServiceSubset` or `MeshGateway`, in
-> either `targetRef` or `to[].targetRef`. Use `Mesh`, or `Dataplane` with `labels`.
+> An un-migrated `healthyPanicThreshold` is dropped, not rejected. The field is no longer in
+> the schema, so CRD validation prunes it on Kubernetes and deserialization discards it on
+> Universal. The `MeshHealthCheck` carrying one still applies successfully, and the affected
+> cluster falls back to Envoy's default panic threshold of 50%.
+
+```yaml
+# 2.x, on MeshHealthCheck
+to:
+  - targetRef:
+      kind: Mesh
+    default:
+      interval: 10s
+      timeout: 2s
+      healthyPanicThreshold: 30
+      http:
+        path: /health
+
+# 3.x, on MeshCircuitBreaker
+to:
+  - targetRef:
+      kind: Mesh
+    default:
+      outlierDetection:
+        healthyPanicThreshold: 30
+```
+
+Keep the rest of the `MeshHealthCheck` as it is. Only the threshold moves.
+
+### Rewrite the selectors
+
+`spec.targetRef.kind` accepts `Mesh` and `Dataplane`. `MeshSubset`, `MeshServiceSubset` and
+`MeshGateway` are rejected with `in body should be one of [Mesh Dataplane]`. A subset selector
+becomes `kind: Dataplane` with the equivalent labels, and a `MeshGateway` selector becomes
+`kind: Dataplane` too, since a delegated gateway is an ordinary `Dataplane`.
+
+In `spec.to[]`, real resources are selected by `labels` only, and a `MeshService` named by
+`name` is rejected with `labels (): must be set when kind is MeshService`.
+
+{:.warning}
+> `kind: Dataplane` selects proxies by `labels` only, and a reference carrying `name` or
+> `namespace` instead is **accepted**. Those fields are not in the schema, so they are dropped,
+> and what remains is a bare `kind: Dataplane` — every proxy in the mesh. Nothing reports it, so
+> read the policy back after rewriting one: a stored `targetRef` with a `kind` and no `labels`
+> covers the whole mesh.
