@@ -95,7 +95,7 @@ rows:
 
 * **Migration session** — The `kong migrations` CLI connects to `pg_database` as `pg_user`. If the schema does not exist, it creates `pg_schema`, switches to it, and runs DDL. The gateway process is not running yet.
 * **Runtime session** — The gateway process opens pooled connections to `pg_database` as `pg_user`. Each connection switches to `pg_schema`.
-* **Admin CLI session** — A CLI command other than `kong migrations` can also open a database session. Examples are `kong workspace`, `kong config db_import`, and `kong config db_export`. This session is a one-off, unpooled connection, not part of the gateway's connection pool. The command connects to `pg_database` as `pg_user` and switches to `pg_schema`, the same as a runtime session. The command can run whether the gateway process is active or stopped. It can also run statements that the runtime session never runs, such as `TRUNCATE`.
+* **Admin CLI session** — A CLI command other than `kong migrations` can also open a database session. Examples are `kong workspace`, `kong config db_import`, and `kong config db_export`. This session is a one-off, non-pooled connection, not part of the gateway's connection pool. The command connects to `pg_database` as `pg_user` and switches to `pg_schema`, the same as a runtime session. The command can run whether the gateway process is active or stopped. It can also run statements that the runtime session never runs, such as `TRUNCATE`.
 
 {{site.base_gateway}} connects with a write user (`pg_user`) and, optionally, a read-only user (`pg_ro_user`). {{site.base_gateway}} uses the read-only user only in runtime sessions.
 
