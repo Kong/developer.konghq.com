@@ -60,7 +60,7 @@ related_resources:
     url: /event-gateway/policies/acl/
 
 min_version:
-  event-gateway: '1.1'
+  event-gateway: '1.1.0'
 ---
 
 ## Create an auth server in {{site.identity}}
