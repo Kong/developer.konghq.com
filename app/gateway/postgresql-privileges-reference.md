@@ -36,7 +36,7 @@ faqs:
 
   - q: Why does `kong workspace` need `TRUNCATE`, when the runtime session never uses it?
     a: |
-      `kong workspace` and `kong config db_import` call `truncate_clustering_sync_version()` to reset the clustering sync state. This call runs in a separate, non-pooled admin CLI connection, not in a runtime session. Grant `TRUNCATE` only to the role that runs these commands.
+      `kong workspace rename` and `kong config db_import` call `truncate_clustering_sync_version()` to reset the clustering sync state. This call runs in a separate, non-pooled admin CLI connection, not in a runtime session. Grant `TRUNCATE` only to the role that runs these commands.
 
   - q: Does a Hybrid mode data plane need any PostgreSQL privileges?
     a: |
