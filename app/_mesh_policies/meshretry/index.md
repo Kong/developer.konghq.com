@@ -45,7 +45,8 @@ spec:
   to:
     - targetRef:
         kind: MeshService
-        name: backend
+        labels:
+          kuma.io/display-name: backend
       default:
         http:
           numRetries: 3
@@ -145,7 +146,8 @@ spec:
   to:
     - targetRef:
         kind: MeshService
-        name: backend
+        labels:
+          kuma.io/display-name: backend
       default:
         tcp:
           maxConnectAttempt: 5
@@ -185,7 +187,8 @@ spec:
   to:
     - targetRef:
         kind: MeshService
-        name: backend
+        labels:
+          kuma.io/display-name: backend
       default:
         http:
           numRetries: 3
@@ -194,9 +197,9 @@ spec:
           rateLimitedBackOff:
             maxInterval: 30s
             resetHeaders:
-              - name: Retry-After
+              - name: retry-after
                 format: Seconds
-              - name: X-RateLimit-Reset
+              - name: x-ratelimit-reset
                 format: UnixTimestamp
 ```
 {% endpolicy_yaml %}
