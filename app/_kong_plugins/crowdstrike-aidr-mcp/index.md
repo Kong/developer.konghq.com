@@ -111,6 +111,7 @@ The {{page.name}} plugin runs at priority 950, before AI MCP Proxy's priority 82
 
 AI MCP Proxy operates in four modes, and the mode determines which AIDR inspection events fire:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Mode
@@ -145,6 +146,7 @@ rows:
     tool_output: "N/A"
     notes: "Defines tools for use by a `listener` plugin. Doesn't handle incoming MCP requests directly."
 {% endtable %}
+<!--vale on-->
 
 `passthrough-listener` and `conversion-listener` modes are fully supported.
 `listener` mode provides `tool_input` coverage only.
