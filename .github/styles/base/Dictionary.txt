@@ -564,6 +564,7 @@ no_version
 node_quantifier
 Node.js
 nodeport
+nullable
 Nullsoft
 nunjucks
 Noname
