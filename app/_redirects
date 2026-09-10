@@ -650,9 +650,9 @@
 /mesh/policies/meshhealthcheck/examples/grpcs-health-check-from-cart/  /mesh/policies/meshhealthcheck/examples/grpc-health-check/  301
 /mesh/policies/meshhealthcheck/examples/health-check-backend/  /mesh/policies/meshhealthcheck/examples/http-health-check/  301
 /mesh/policies/meshhealthcheck/examples/protocol-fallback/  /mesh/policies/meshhealthcheck/examples/tcp-connect-only-check/  301
-/mesh/policies/meshhttproute/examples/traffic-mirror/  /mesh/v2/policies/meshhttproute/examples/traffic-mirror/  301
-/mesh/policies/meshhttproute/examples/traffic-modification/  /mesh/v2/policies/meshhttproute/examples/traffic-modification/  301
-/mesh/policies/meshhttproute/examples/traffic-split/  /mesh/v2/policies/meshhttproute/examples/traffic-split/  301
+/mesh/policies/meshhttproute/examples/traffic-mirror/  /mesh/policies/meshhttproute/examples/mirror-requests/  301
+/mesh/policies/meshhttproute/examples/traffic-modification/  /mesh/policies/meshhttproute/examples/modify-request-headers/  301
+/mesh/policies/meshhttproute/examples/traffic-split/  /mesh/policies/meshhttproute/examples/split-traffic-by-weight/  301
 /mesh/policies/meshidentity/examples/bundled-minimal/  /mesh/v2/policies/meshidentity/examples/bundled-minimal/  301
 /mesh/policies/meshidentity/examples/bundled-with-user-ca/  /mesh/v2/policies/meshidentity/examples/bundled-with-user-ca/  301
 /mesh/policies/meshidentity/examples/spire-provider/  /mesh/v2/policies/meshidentity/examples/spire-provider/  301
