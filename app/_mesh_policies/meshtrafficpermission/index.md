@@ -70,7 +70,7 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-Two pieces do the work:
+What each field does:
 
 * `targetRef` selects **which proxies enforce the policy**. `kind: Dataplane` with `labels`
   narrows it to one workload; `kind: Mesh` applies it everywhere.

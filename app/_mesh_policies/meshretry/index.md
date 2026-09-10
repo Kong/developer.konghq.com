@@ -57,7 +57,7 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-Three pieces do the work:
+What each field does:
 
 * `targetRef` selects **which proxies retry**. These are clients, not the destination.
 * `to[].targetRef` selects **which destination** the retries apply to.
