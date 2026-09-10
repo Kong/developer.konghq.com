@@ -92,7 +92,7 @@ configures the proxy's own inbound side.
 A policy needs at least one of `to` or `rules`, and both may be set together. Each `default`
 needs at least one of `connectionLimits` or `outlierDetection`.
 
-Two differences from other policies are worth knowing. `to[].targetRef` does not accept
+This policy differs from others in two ways. `to[].targetRef` does not accept
 `MeshHTTPRoute`, which [MeshRetry](/mesh/policies/meshretry/) does, because circuit breaking
 applies to a whole destination rather than to one route. And `rules` cannot match on the
 client at all: L7 matching for inbound circuit breaking is not implemented, so a single
@@ -178,9 +178,9 @@ otherwise both look identical to the detectors.
 ### Panic threshold
 
 If outlier detection ejects so much of a pool that too few endpoints remain, Envoy enters
-panic mode and sends traffic to all endpoints regardless of health, on the grounds that a
-degraded endpoint beats no endpoint. `healthyPanicThreshold` sets where that happens, as a
-percentage, and defaults to 50%. Set it to `0` to disable panic mode entirely.
+panic mode and resumes sending traffic to all endpoints, ejected ones included, rather than
+failing the requests. `healthyPanicThreshold` is the percentage of healthy endpoints below
+which that happens, and defaults to 50%. Set it to `0` to disable panic mode entirely.
 
 ## Circuit breaking for incoming traffic
 
