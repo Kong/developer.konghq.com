@@ -93,7 +93,8 @@ Metrics are stored in the `kong_metrics` shared dictionary and exported as OTLP 
 
 * **Shared dictionary**: Metrics are stored in the `lua_shared_dict kong_metrics` shared dictionary (`stream_kong_metrics` for the stream subsystem). 
 The dictionary is sized by the [`metrics_mem_size`](/gateway/configuration/#metrics-mem-size) configuration parameter, which defaults to `10m`. 
-High attribute cardinality multiplies the number of keys stored. Increase `metrics_mem_size` if you use many distinct attribute-value combinations.
+Registering many custom metrics, or using many distinct attribute-value combinations, multiplies the number of keys stored. Increase `metrics_mem_size` if either applies to your plugin.
+
 * **OpenTelemetry plugin**: Custom metrics leave {{site.base_gateway}} only through the [OpenTelemetry plugin](/plugins/opentelemetry/), which merges your metrics into its OTLP export batch. 
 Without the OpenTelemetry plugin configured with metrics enabled and an OTLP endpoint set, values still accumulate in the shared dictionary but are never exported. 
 
@@ -150,7 +151,7 @@ The Metrics PDK is designed to never disrupt the request path:
 
 * If the `kong_metrics` shared dictionary isn't available, or the metrics subsystem fails to initialize, `kong.metrics` returns no-op handles. In this situation, `:add()` and `:record()` do nothing.
 * Invalid registration input, like a bad name, a reserved name, malformed options, or a conflicting duplicate, logs an error and returns a no-op handle. The calling code continues to work.
-* Invalid record-time input, like the wrong attribute count, a non-finite value, a negative value where it isn't allowed, or the wrong method for the metric kind, logs an error and drops that single observation.
+* Invalid record-time input, like the wrong attribute count (exceeding the maximum of 15), a non-finite value, a negative value where it isn't allowed, or the wrong method for the metric kind, logs an error and drops that single observation.
 
 Because failures degrade to no-ops, check [{{site.base_gateway}}'s error log](/gateway/configuration/#proxy-error-log) when a custom metric doesn't appear as expected.
 
