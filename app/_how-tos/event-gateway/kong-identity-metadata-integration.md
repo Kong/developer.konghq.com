@@ -45,6 +45,9 @@ cleanup:
     - title: Clean up {{site.event_gateway}} resources
       include_content: cleanup/products/event-gateway
       icon_url: /assets/icons/gateway.svg
+    - title: Clean up Kong Identity directory
+      include_content: md/identity/delete_directory
+      icon_url: /assets/icons/identity.svg
 
 related_resources:
   - text: Authenticate {{site.event_gateway}} connections to Kafka using SASL/PLAIN
@@ -58,8 +61,6 @@ related_resources:
 
 min_version:
   event-gateway: '1.2.0'
-
-automated_tests: false
 ---
 
 In this guide, you'll authenticate a Kafka client to a SASL-secured broker through {{site.event_gateway_short}}, look up the connecting principal in a Kong Identity directory by its SASL username, and use the principal's metadata to drive a [Modify Headers policy](/event-gateway/policies/modify-headers/).
@@ -96,6 +97,7 @@ KafkaServer {
 };
 EOF
 ```
+{:data-test-step="block"}
 
 The broker accepts two SASL/PLAIN users: `eventgateway` (used by {{site.event_gateway_short}} itself for broker discovery) and `john` (used by the Kafka client and matched against Kong Identity).
 
@@ -106,6 +108,7 @@ cat <<'EOF' > docker-compose.yaml
 {% include_cached _files/event-gateway/docker-compose-sasl.yaml %}
 EOF
 ```
+{:data-test-step="block"}
 
 The broker exposes a `SASL_PLAINTEXT` listener on port `9082` in the Docker network for {{site.event_gateway_short}} connections, and a `PLAINTEXT` listener on ports `9094`/`9095`/`9096` for direct local access.
 
@@ -114,6 +117,7 @@ Start the cluster:
 ```bash
 docker compose up -d
 ```
+{:data-test-step="block"}
 
 ## Create an {{site.event_gateway_short}} control plane and data plane
 

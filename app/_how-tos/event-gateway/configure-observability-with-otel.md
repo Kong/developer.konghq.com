@@ -48,6 +48,17 @@ prereqs:
       position: before
       include_content: knep/docker-compose-start
 
+cleanup:
+  inline:
+    - title: Stop the OpenTelemetry Collector
+      content: |
+        ```sh
+        docker rm -f lgtm
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/opentelemetry.svg
+
+
 related_resources:
   - text: "{{site.event_gateway_short}} Control Plane API"
     url: /api/konnect/event-gateway/
@@ -165,6 +176,7 @@ docker run -d --name lgtm \
   -p 4318:4318 \
   grafana/otel-lgtm:latest
 ```
+{:data-test-step="block"}
 
 ## Add Kafka configuration
 
