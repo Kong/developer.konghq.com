@@ -283,13 +283,10 @@ app/_mesh_policies/v2/meshtimeout/index.md:
 app/_mesh_policies/v2/meshtimeout/reference.md:
   canonical_url: /mesh/policies/meshtimeout/reference/
 app/_mesh_policies/v2/meshtls/examples/set-specific-tls-version.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshtls/examples/set-tls-version-and-ciphers/
 app/_mesh_policies/v2/meshtls/examples/strict-mode.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshtls/examples/require-mtls-on-one-service/
 app/_mesh_policies/v2/meshtls/index.md:
-  status: pending
   canonical_url: /mesh/policies/meshtls/
 app/_mesh_policies/v2/meshtls/reference.md:
   canonical_url: /mesh/policies/meshtls/reference/
