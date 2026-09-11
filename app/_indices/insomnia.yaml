@@ -52,6 +52,9 @@ sections:
       - path: /insomnia/plugins/plugin-reference/
       - path: /insomnia/plugins/context-object-reference/
       - path: /insomnia/plugins/hooks-and-actions/
+      - path: /insomnia/plugins/sandbox-and-trust/
+      - path: /insomnia/plugins/permissions/
+      - path: /insomnia/plugins/troubleshooting/
 
   - title: Authentication and authorization
     items: 
