@@ -99,6 +99,37 @@ custom_fields_by_lua_name='custom_fields_by_lua'
 name=page.name 
 slug=page.slug %}
 
+### Array indices {% new_in 3.15 %}
+
+{% include /plugins/logging/lua-custom-array-indices.md 
+custom_fields_by_lua='config.custom_fields_by_lua' 
+custom_fields_by_lua_slug='config-custom-fields-by-lua' 
+custom_fields_by_lua_name='custom_fields_by_lua' 
+name=page.name 
+slug=page.slug %}
+
+### Special characters {% new_in 3.10 %}
+
+{% include /plugins/logging/custom-lua-special-characters.md 
+custom_fields_by_lua='config.custom_fields_by_lua' 
+custom_fields_by_lua_slug='config-custom-fields-by-lua' 
+custom_fields_by_lua_name='custom_fields_by_lua' 
+name=page.name 
+slug=page.slug %}
+
+### Plugin precedence and managing fields
+
+{% include /plugins/logging/custom-lua-plugin-precedence.md 
+custom_fields_by_lua='config.custom_fields_by_lua' 
+custom_fields_by_lua_slug='config-custom-fields-by-lua' 
+custom_fields_by_lua_name='custom_fields_by_lua' 
+name=page.name 
+slug=page.slug %}
+
+### Limitations
+
+{% include /plugins/logging/custom-lua-limitations.md %}
+
 ## mTLS support {% new_in 3.15 %}
 
 The HTTP Log plugin supports mutual TLS (mTLS) when connecting to a log server.
