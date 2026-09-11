@@ -53,7 +53,7 @@ related_resources:
 {:.ai}
 > {{site.metering_and_billing}} requires a separate purchase. [Contact Sales](https://konghq.com/contact-sales) for pricing and availability.
 
-The Entitlement Enforcement plugin blocks API requests based on the customer entitlements defined in {{site.metering_and_billing}}.
+The Entitlement Enforcement plugin blocks API requests based on the customer entitlements defined in [{{site.metering_and_billing}}](/metering-and-billing/).
 It works alongside the [Metering & Billing plugin](/plugins/metering-and-billing/): Metering & Billing reports usage, and Entitlement Enforcement checks that usage against a customer's plan and blocks the request when the customer is over their limit.
 
 The plugin blocks a request when a customer:
