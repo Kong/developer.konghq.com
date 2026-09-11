@@ -81,6 +81,7 @@ AI Consumers with consumer credentials allow you to:
 * Attribute usage per-consumer
 * Apply per-caller policies
 * Revoke access for one caller without revoking the shared placeholder for everyone
+
 Additionally, in most production environments, consumers should not have access to API keys themselves for security reasons.
 
 This how-to uses an [AI Consumer](/ai-gateway/entities/ai-consumer/) backed by a real credential (here, an OIDC bearer token) to give every request an identity that usage, rate limiting, and audit logs can use.
