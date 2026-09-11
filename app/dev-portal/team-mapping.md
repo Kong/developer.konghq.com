@@ -27,7 +27,7 @@ related_resources:
 
 With teams mapped from an IdP, the developers and permissions are mapped automatically in {{site.konnect_short_name}} so you don't have to manually copy over each team of developers.
 
-You can exclude specific teams from IdP synchronization so their membership can be managed manually in {{site.konnect_short_name}}, even while mapping is enabled for the rest of your teams.
+You can exclude specific teams from IdP synchronization to manage their membership manually in {{site.konnect_short_name}}, even while mapping is enabled for the rest of your teams.
 This can be useful when you are migrating from one IdP to another or if {{site.dev_portal}} Admins don't have access to the IdP settings and they want to create some teams manually.
 
 This guide explains how to map the permissions, including scopes and claims, from your group of developers in your IdP to your organization's team in {{site.konnect_short_name}}. Although this guide uses Okta, Azure Active Directory (AD), and Auth0 as examples, you can use any IdP that conforms to OIDC standards. 
@@ -99,7 +99,7 @@ You can configure more than one IdP for a {{site.dev_portal}}, but only one IdP 
 7. Optional: In the team's settings, disable **Sync with external identity provider (IdP)** for any team you don't want IdP logins to overwrite.
 
     This setting is enabled by default for every new and existing team, even before IdP mapping is configured for the {{site.dev_portal}}. 
-    When enabled, developers are added to or removed from the team automatically at login, based on their `groups` claim. When disabled, the team can be managed manually in {{site.konnect_short_name}}.
+    When enabled, developers are added to or removed from the team automatically at login, based on their `groups` claim. When disabled, the admin can manage the team manually in {{site.konnect_short_name}}.
 
     Disable this setting when a {{site.dev_portal}} admin needs to create or manage a team manually without IdP access, or to keep an old IdP's teams and a new IdP's teams side by side temporarily during a [migration](#migrate-developer-teams-to-a-new-idp).
 
