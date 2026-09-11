@@ -231,13 +231,10 @@ app/_mesh_policies/v2/meshpassthrough/index.md:
 app/_mesh_policies/v2/meshpassthrough/reference.md:
   canonical_url: /mesh/policies/meshpassthrough/reference/
 app/_mesh_policies/v2/meshproxypatch/examples/lua-filter.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshproxypatch/examples/add-a-lua-filter/
 app/_mesh_policies/v2/meshproxypatch/examples/time-out-adjustment.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshproxypatch/examples/adjust-a-timeout/
 app/_mesh_policies/v2/meshproxypatch/index.md:
-  status: pending
   canonical_url: /mesh/policies/meshproxypatch/
 app/_mesh_policies/v2/meshproxypatch/reference.md:
   canonical_url: /mesh/policies/meshproxypatch/reference/
