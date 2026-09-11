@@ -9,6 +9,8 @@ icon: meshtimeout.png
 related_resources:
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
+- text: Migrate policies to {{site.mesh_product_name}} 3
+  url: "/mesh/migrate-policies-to-3/"
 - text: MeshRetry policy
   url: "/mesh/policies/meshretry/"
 - text: MeshCircuitBreaker policy
@@ -198,79 +200,3 @@ the correct way to remove a timeout rather than a very large value:
 http:
   requestTimeout: 0s
 ```
-
-## Upgrading from {{site.mesh_product_name}} 2.x
-
-Every change here is silent. `from` is dropped rather than rejected, and on Universal an
-inbound that declares its protocol only through a tag loses its HTTP timeouts altogether.
-Both are worth handling before the upgrade, because neither produces an error afterwards.
-
-### Rewrite `from` as `rules`
-
-`spec.from` is removed. Timeouts for inbound traffic are configured through `spec.rules`.
-
-`from` is dropped rather than rejected. A policy that also sets `to` or `rules` is accepted and
-loses its inbound timeouts silently; one where `from` was the only field is rejected with
-`spec (): at least one of 'to' or 'rules' has to be defined`.
-
-```yaml
-# 2.x
-spec:
-  from:
-    - targetRef:
-        kind: Mesh
-      default:
-        idleTimeout: 1h
-
-# 3.x
-spec:
-  rules:
-    - default:
-        idleTimeout: 1h
-```
-
-A `from` entry targeting `kind: Mesh`, meaning every client, becomes a single catch-all rule.
-To keep different timeouts per client, match on their SPIFFE ID in `rules[].matches`.
-
-### Set the protocol on Universal inbounds
-
-An inbound's protocol is now read only from `networking.inbound[].protocol`. The
-`kuma.io/protocol` tag stays a regular tag that policies can match on, but it is no longer used
-as a fallback when the field is unset. Kubernetes is unaffected, since the field is derived
-from the `Service` port.
-
-{:.warning}
-> An inbound with no `protocol` is treated as an unknown protocol and served as plain TCP. It
-> loses the L7 filters that depend on the protocol, including the `http` timeouts in this
-> policy — `requestTimeout`, `streamIdleTimeout`, `maxStreamDuration`,
-> `maxConnectionDuration` and `requestHeadersTimeout`. `connectionTimeout` and `idleTimeout`
-> sit outside `http` and still apply.
-> Nothing rejects the `Dataplane`, so the change is silent.
-
-Set `networking.inbound[].protocol` explicitly on every Universal `Dataplane` that declared its
-protocol only through the tag.
-
-### Rewrite the selectors
-
-`spec.targetRef.kind` accepts `Mesh` and `Dataplane`. `MeshSubset`, `MeshServiceSubset` and
-`MeshGateway` are rejected with `in body should be one of [Mesh Dataplane]`. A subset selector
-becomes `kind: Dataplane` with the equivalent labels, and a `MeshGateway` selector becomes
-`kind: Dataplane` too, since a delegated gateway is an ordinary `Dataplane`.
-
-In `spec.to[]`, real resources are selected by `labels` only, and a `MeshService` named by
-`name` is rejected with `labels (): must be set when kind is MeshService`.
-
-{:.warning}
-> `kind: Dataplane` selects proxies by `labels` only, and a reference carrying `name` or
-> `namespace` instead is **accepted**. Those fields are not in the schema, so they are dropped,
-> and what remains is a bare `kind: Dataplane` — every proxy in the mesh. Nothing reports it, so
-> read the policy back after rewriting one: a stored `targetRef` with a `kind` and no `labels`
-> covers the whole mesh.
-
-### Check routes this policy targets
-
-`to[].targetRef.kind: MeshHTTPRoute` still applies timeouts to the requests one route matches.
-What changed is the route: a request matching none of a `MeshHTTPRoute`'s rules now gets a
-`404` instead of reaching the destination, so a route that exists only to anchor a
-`MeshTimeout` will answer `404` on every path it does not match. See
-[the MeshHTTPRoute upgrade guide](/mesh/policies/meshhttproute/#add-a-catch-all-rule-to-every-route).

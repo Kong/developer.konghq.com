@@ -9,6 +9,8 @@ icon: meshloadbalancingstrategy.png
 related_resources:
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
+- text: Migrate policies to {{site.mesh_product_name}} 3
+  url: "/mesh/migrate-policies-to-3/"
 - text: MeshCircuitBreaker policy
   url: "/mesh/policies/meshcircuitbreaker/"
 - text: MeshHealthCheck policy
@@ -216,85 +218,3 @@ Deciding which endpoints are live is the job of
 [MeshHealthCheck](/mesh/policies/meshhealthcheck/) or
 [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/). Without one of them there is nothing
 to count, and failover does not start.
-
-## Upgrading from {{site.mesh_product_name}} 2.x
-
-Two fields move. The `crossZone` restriction is rejected on apply, and the `hashPolicies` move
-is not, which makes the second one the more expensive to skip.
-
-### Move hash policies out of the load balancer
-
-`loadBalancer.ringHash.hashPolicies` and `loadBalancer.maglev.hashPolicies` are removed.
-`to[].default.hashPolicies` is the only place for them.
-
-{:.warning}
-> The nested field is dropped, not rejected. A policy still setting it is accepted, and reading
-> it back shows an empty `ringHash: {}`. The algorithm stays as configured but has nothing left
-> to hash, so requests that were pinned to an endpoint stop being pinned and spread across the
-> destination instead.
-
-```yaml
-# 2.x
-default:
-  loadBalancer:
-    type: RingHash
-    ringHash:
-      hashPolicies:
-        - type: Header
-          header:
-            name: x-user
-
-# 3.x
-default:
-  loadBalancer:
-    type: RingHash
-  hashPolicies:
-    - type: Header
-      header:
-        name: x-user
-```
-
-### Move cross-zone failover onto a MeshMultiZoneService
-
-`localityAwareness.crossZone` is now accepted only on a `to` entry targeting a
-`MeshMultiZoneService`. On `Mesh`, `MeshService` or `MeshExternalService` it is rejected with
-`crossZone is only supported when targetRef.kind is MeshMultiZoneService`.
-
-A `MeshMultiZoneService` is the resource that represents one service across zones, which is
-what a cross-zone failover order is about. Split a policy that configured both: keep
-`localZone` and `loadBalancer` on the entry targeting the `MeshService`, and move `crossZone`
-to an entry targeting the `MeshMultiZoneService`.
-
-### Select real resources by labels
-
-`MeshService`, `MeshExternalService`, `MeshMultiZoneService` and `MeshHTTPRoute` are selected by
-`labels` only. A `to[].targetRef` carrying `name` and `namespace` is rejected with
-`labels (): must be set when kind is MeshService`. `sectionName` is unchanged and still names a
-port.
-
-### Rewrite the top-level targetRef
-
-`spec.targetRef.kind` accepts `Mesh` and `Dataplane`. `MeshSubset`, `MeshServiceSubset` and
-`MeshGateway` are rejected with `in body should be one of [Mesh Dataplane]`. A subset selector
-becomes `kind: Dataplane` with the equivalent labels, and a `MeshGateway` selector becomes
-`kind: Dataplane` too, since a delegated gateway is an ordinary `Dataplane`.
-
-{:.warning}
-> `kind: Dataplane` selects proxies by `labels` only, and a reference carrying `name` or
-> `namespace` instead is **accepted**. Those fields are not in the schema, so they are dropped,
-> and what remains is a bare `kind: Dataplane` — every proxy in the mesh. Nothing reports it, so
-> read the policy back after rewriting one: a stored `targetRef` with a `kind` and no `labels`
-> covers the whole mesh.
-
-### Move Mesh.spec.routing.localityAwareLoadBalancing into a policy
-
-That field is removed from the `Mesh` schema. A `Mesh` still setting it applies successfully and
-the field is ignored. Locality awareness is on by default in this policy, so a `Mesh` that had
-it enabled needs nothing; one that relied on its absence to spread traffic across zones needs
-`localityAwareness.disabled: true` on the destinations concerned.
-
-### Drop the Zone Egress caveats
-
-The 2.x guidance about `MeshLoadBalancingStrategy` behind a Zone Egress no longer applies.
-`ZoneEgress` and `ZoneIngress` are removed, so there is no shared L4 proxy holding long-lived
-connections between zones, and no restriction on the top-level `targetRef` because of one.

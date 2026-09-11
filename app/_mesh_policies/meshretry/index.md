@@ -9,6 +9,8 @@ icon: meshretry.png
 related_resources:
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
+- text: Migrate policies to {{site.mesh_product_name}} 3
+  url: "/mesh/migrate-policies-to-3/"
 - text: MeshTimeout policy
   url: "/mesh/policies/meshtimeout/"
 - text: MeshCircuitBreaker policy
@@ -233,56 +235,3 @@ gives up and uses the last host it selected. It defaults to one reattempt.
 `retriableRequestHeaders` requires a header to be present on the request before any retry is
 attempted, which is how a client opts a request in. `retriableResponseHeaders` retries when
 the response carries a matching header, alongside whatever `retryOn` matched.
-
-## Upgrading from {{site.mesh_product_name}} 2.x
-
-`MeshRetry` keeps its shape across the upgrade — it has no `from` array to migrate, since
-retries have always been a property of the client. What changes is how its selectors name
-things, and what the routes it targets do with an unmatched request.
-
-### Rewrite the selectors
-
-`spec.targetRef.kind` accepts `Mesh` and `Dataplane`. `MeshSubset` and `MeshServiceSubset` are
-rejected with `in body should be one of [Mesh Dataplane]`, and `tags` is not a selector
-anywhere. A subset selector becomes `kind: Dataplane` with the equivalent labels.
-
-In `spec.to[]`, real resources are selected by `labels` only. A `targetRef` naming a
-`MeshService` by `name` is rejected with `labels (): must be set when kind is MeshService`:
-
-```yaml
-# 2.x
-to:
-  - targetRef:
-      kind: MeshService
-      name: backend
-
-# 3.x
-to:
-  - targetRef:
-      kind: MeshService
-      labels:
-        kuma.io/display-name: backend
-```
-
-{:.warning}
-> `kind: Dataplane` selects proxies by `labels` only, and a reference carrying `name` or
-> `namespace` instead is **accepted**. Those fields are not in the schema, so they are dropped,
-> and what remains is a bare `kind: Dataplane` — every proxy in the mesh. Nothing reports it, so
-> read the policy back after rewriting one: a stored `targetRef` with a `kind` and no `labels`
-> covers the whole mesh.
-
-### Lower-case every header name
-
-Header names carry a lower-case-only pattern. A 2.x policy naming `Retry-After` in
-`rateLimitedBackOff.resetHeaders` is rejected with
-`name (): in body should match '^[a-z0-9!#$%&'*+\-.^_\x60|~]+$'`. Write `retry-after`. HTTP
-header names are case insensitive on the wire, so the matching is unaffected.
-
-### Check routes this policy targets
-
-`to[].targetRef.kind: MeshHTTPRoute` still applies retries to the requests one route matches.
-What changed is the route: a request matching none of a `MeshHTTPRoute`'s rules now gets a
-`404` instead of reaching the destination, so a route that exists only to anchor a `MeshRetry`
-will answer `404` on every path it does not match, and the retries configured here do not
-apply to a response the proxy produced itself. See
-[the MeshHTTPRoute upgrade guide](/mesh/policies/meshhttproute/#add-a-catch-all-rule-to-every-route).
