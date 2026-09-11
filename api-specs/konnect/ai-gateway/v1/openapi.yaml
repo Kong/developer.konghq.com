@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect AI Gateway
-  version: 2.0.3
+  version: 2.0.5
   description: The API for configuring AI Gateways in Konnect.
   x-extensions-note: |
     Entities and properties may be annotated with `x-min-runtime-version`, the
@@ -18,8 +18,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@7c733d29da74642189f1d552a7a0c2d9883c3366
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/7c733d29da74642189f1d552a7a0c2d9883c3366'
+  x-oas-source: kong/platform-api@77e990db7b9619bacdc1556080e5b1244d78efd1
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/77e990db7b9619bacdc1556080e5b1244d78efd1'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -2693,7 +2693,7 @@ components:
       example: my-entity-name
       maxLength: 256
       minLength: 1
-      pattern: '^[A-Za-z0-9._:-]{1,256}$'
+      pattern: '^[A-Za-z0-9._:@-]{1,256}$'
     AIGatewayVaultName:
       description: An immutable user-defined identifier for this resource.
       type: string
