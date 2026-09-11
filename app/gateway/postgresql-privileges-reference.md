@@ -168,7 +168,9 @@ After migration, the write user owns the schema and every object the migration s
 > * Traditional mode with `database = postgres`.
 > * Hybrid mode control plane nodes (`role = control_plane`).
 >
-> Traditional DB-less mode loads configuration from a declarative file instead of a database. A hybrid mode data plane node keeps all state in memory. Neither one opens a database connection.
+> **Does not apply to:** Modes that don't open a database connection.
+> * Traditional DB-less mode loads configuration from a declarative file instead of a database. 
+> * A hybrid mode data plane node keeps all state in memory. 
 
 If the same role runs migrations and runtime, skip this section. Ownership already covers it. If you configure a different write user for runtime, grant it the following privileges:
 
@@ -235,11 +237,11 @@ The runtime session never runs `TRUNCATE`. Grant `TRUNCATE` only to the role tha
 
 {:.info}
 > **Applies to:**
-> * Traditional mode with `database = postgres`
-> * Hybrid mode control plane nodes (`role = control_plane`)
+> * Traditional mode with `database = postgres`.
+> * Hybrid mode control plane nodes (`role = control_plane`).
 >
 > **Does not apply to the following commands:** 
-> *`kong config db_import` and `kong config db_export` fail immediately when `database = off` (Traditional DB-less mode and hybrid mode data planes).
+> * `kong config db_import` and `kong config db_export` fail immediately when `database = off` (traditional DB-less mode and hybrid mode data planes).
 > * `kong workspace` manages workspace rows that exist only in a database-backed deployment. 
 
 If the same role runs the admin CLI and migrations, skip this section. Ownership already covers it. If you configure a different write user for admin CLI commands, grant it the [runtime privileges](#runtime-privileges), plus the following privileges:
