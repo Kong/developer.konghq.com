@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Jekyll::Drops::Quickstart do
+RSpec.describe Jekyll::Drops::EventGatewayQuickstart do
   it 'is not a member of the validations drop family' do
     expect(described_class.ancestors).not_to include(Jekyll::Drops::Validations::Base)
   end
@@ -11,8 +11,8 @@ RSpec.describe Jekyll::Drops::Quickstart do
   end
 end
 
-RSpec.describe Jekyll::Quickstart do
-  let(:page) { { 'output_format' => 'html', 'path' => 'test.md', 'products' => ['event-gateway'] } }
+RSpec.describe Jekyll::EventGatewayQuickstart do
+  let(:page) { { 'output_format' => 'html', 'path' => 'test.md' } }
 
   subject(:rendered) { render_liquid(template, page: page) }
 
@@ -22,8 +22,8 @@ RSpec.describe Jekyll::Quickstart do
     context 'with no env map' do
       let(:template) do
         <<~LIQUID
-          {% quickstart %}
-          {% endquickstart %}
+          {% event_gateway_quickstart %}
+          {% endevent_gateway_quickstart %}
         LIQUID
       end
 
@@ -37,11 +37,11 @@ RSpec.describe Jekyll::Quickstart do
     context 'with one or more env entries' do
       let(:template) do
         <<~LIQUID
-          {% quickstart %}
+          {% event_gateway_quickstart %}
           env:
             FOO: bar
             BAZ: qux
-          {% endquickstart %}
+          {% endevent_gateway_quickstart %}
         LIQUID
       end
 
@@ -59,10 +59,10 @@ RSpec.describe Jekyll::Quickstart do
     context 'with an env value containing a comma, a space, and an equals sign' do
       let(:template) do
         <<~LIQUID
-          {% quickstart %}
+          {% event_gateway_quickstart %}
           env:
             MY_VAR: "a=b, c d"
-          {% endquickstart %}
+          {% endevent_gateway_quickstart %}
         LIQUID
       end
 
@@ -76,10 +76,10 @@ RSpec.describe Jekyll::Quickstart do
     context 'by default' do
       let(:template) do
         <<~LIQUID
-          {% quickstart %}
+          {% event_gateway_quickstart %}
           env:
             FOO: bar
-          {% endquickstart %}
+          {% endevent_gateway_quickstart %}
         LIQUID
       end
 
@@ -95,9 +95,9 @@ RSpec.describe Jekyll::Quickstart do
     context 'section: none' do
       let(:template) do
         <<~LIQUID
-          {% quickstart %}
+          {% event_gateway_quickstart %}
           section: none
-          {% endquickstart %}
+          {% endevent_gateway_quickstart %}
         LIQUID
       end
 
@@ -110,26 +110,26 @@ RSpec.describe Jekyll::Quickstart do
   describe 'malformed yaml' do
     let(:template) do
       <<~LIQUID
-        {% quickstart %}
+        {% event_gateway_quickstart %}
         env:
           FOO: 'unterminated
-        {% endquickstart %}
+        {% endevent_gateway_quickstart %}
       LIQUID
     end
 
     it 'raises an error naming the page and showing the offending lines' do
       expect { rendered }.to raise_error(
-        ArgumentError, /On `test\.md`, the following \{% quickstart %\} block contains a malformed yaml/
+        ArgumentError, /On `test\.md`, the following \{% event_gateway_quickstart %\} block contains a malformed yaml/
       )
     end
   end
 
   describe 'markdown output_format' do
-    let(:page) { { 'output_format' => 'markdown', 'path' => 'test.md', 'products' => ['event-gateway'] } }
+    let(:page) { { 'output_format' => 'markdown', 'path' => 'test.md' } }
     let(:template) do
       <<~LIQUID
-        {% quickstart %}
-        {% endquickstart %}
+        {% event_gateway_quickstart %}
+        {% endevent_gateway_quickstart %}
       LIQUID
     end
 
