@@ -1,0 +1,22 @@
+title: 'Export traces to Zipkin'
+
+description: 'Send spans from every proxy in the mesh to a Zipkin-compatible collector, such as Jaeger.'
+
+weight: 900
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshTrace
+  name: default
+  mesh: default
+  spec:
+    targetRef:
+      kind: Mesh
+    default:
+      backends:
+        - type: Zipkin
+          zipkin:
+            url: http://jaeger-collector.observability:9411/api/v2/spans
+            apiVersion: httpJson
+            traceId128bit: true

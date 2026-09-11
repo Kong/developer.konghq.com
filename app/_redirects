@@ -686,11 +686,11 @@
 /mesh/policies/meshtimeout/examples/timeout-all-services/  /mesh/policies/meshtimeout/examples/outbound-timeouts/  301
 /mesh/policies/meshtls/examples/set-specific-tls-version/  /mesh/policies/meshtls/examples/set-tls-version-and-ciphers/  301
 /mesh/policies/meshtls/examples/strict-mode/  /mesh/policies/meshtls/examples/require-mtls-on-one-service/  301
-/mesh/policies/meshtrace/examples/datadog/  /mesh/v2/policies/meshtrace/examples/datadog/  301
-/mesh/policies/meshtrace/examples/opentelemetry/  /mesh/v2/policies/meshtrace/examples/opentelemetry/  301
-/mesh/policies/meshtrace/examples/target-east/  /mesh/v2/policies/meshtrace/examples/target-east/  301
-/mesh/policies/meshtrace/examples/target-west/  /mesh/v2/policies/meshtrace/examples/target-west/  301
-/mesh/policies/meshtrace/examples/zipkin/  /mesh/v2/policies/meshtrace/examples/zipkin/  301
+/mesh/policies/meshtrace/examples/datadog/  /mesh/policies/meshtrace/examples/trace-to-datadog/  301
+/mesh/policies/meshtrace/examples/opentelemetry/  /mesh/policies/meshtrace/examples/trace-to-opentelemetry/  301
+/mesh/policies/meshtrace/examples/target-east/  /mesh/policies/meshtrace/  301
+/mesh/policies/meshtrace/examples/target-west/  /mesh/policies/meshtrace/  301
+/mesh/policies/meshtrace/examples/zipkin/  /mesh/policies/meshtrace/examples/trace-to-zipkin/  301
 /mesh/policies/meshtrafficpermission/examples/service-allow-requests/  /mesh/v2/policies/meshtrafficpermission/examples/service-allow-requests/  301
 /mesh/policies/meshtrafficpermission_experimental/examples/allow-observability-namespace/  /mesh/policies/meshtrafficpermission/examples/allow-namespace/  301
 /mesh/policies/meshtrafficpermission_experimental/examples/deny-malicious-namespace/  /mesh/policies/meshtrafficpermission/examples/deny-namespace/  301
