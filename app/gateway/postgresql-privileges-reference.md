@@ -100,7 +100,7 @@ rows:
 
 * **Migration session** — The `kong migrations` CLI connects to `pg_database` as `pg_user`. If the schema does not exist, it creates `pg_schema`, switches to it, and runs DDL. The gateway process is not running yet.
 * **Runtime session** — The gateway process opens pooled connections to `pg_database` as `pg_user`. Each connection switches to `pg_schema`.
-* **Admin CLI session** — A CLI command other than `kong migrations` can also open a database session. Examples are `kong workspace rename`, `kong config db_import`, and `kong config db_export`. This session is a one-off, non-pooled connection, not part of the gateway's connection pool. The command connects to `pg_database` as `pg_user` and switches to `pg_schema`, the same as a runtime session. The command can run whether the gateway process is active or stopped. It can also run statements that the runtime session never runs, including `TRUNCATE` on specific tables and privileges on sequences..
+* **Admin CLI session** — A CLI command other than `kong migrations` can also open a database session. Examples are `kong workspace rename`, `kong config db_import`, and `kong config db_export`. This session is a one-off, non-pooled connection, not part of the gateway's connection pool. The command connects to `pg_database` as `pg_user` and switches to `pg_schema`, the same as a runtime session. The command can run whether the gateway process is active or stopped. It can also run statements that the runtime session never runs, including `TRUNCATE` on specific tables and privileges on sequences.
 
 {{site.base_gateway}} connects with a write user (`pg_user`) and, optionally, a read-only user (`pg_ro_user`). {{site.base_gateway}} uses the read-only user only in runtime sessions.
 
@@ -140,7 +140,7 @@ Both the write user and the read-only user need `CONNECT` privilege on `pg_datab
 
 Before migration, the write user needs `CREATE` privilege on `pg_database` to create the {{site.base_gateway}} schema.
 
-`kong migrations reset/bootstrap/up/finish` runs the following Data Definition Language (DDL) statements automatically. The following script makes the write user the schema owner (replace `$PG_SCHEMA` with the actual name of `pg_schema`:
+`kong migrations reset/bootstrap/up/finish` runs the following Data Definition Language (DDL) statements automatically. The following script makes the write user the schema owner (replace `$PG_SCHEMA` with the actual name of `pg_schema`):
 
 ```sql
 -- kong migrations reset
@@ -149,7 +149,7 @@ DROP SCHEMA IF EXISTS $PG_SCHEMA CASCADE;
 -- kong migrations bootstrap/up/finish
 CREATE SCHEMA IF NOT EXISTS $PG_SCHEMA AUTHORIZATION CURRENT_USER;
 GRANT ALL ON SCHEMA $PG_SCHEMA TO CURRENT_USER;
-SET SCHEMA $PG_SCHEMA ;
+SET SCHEMA $PG_SCHEMA;
 ```
 
 After migration, the write user owns the schema and every object the migration session creates in it. Ownership already grants the write user every privilege it needs. As a result, no further `GRANT` is necessary.
@@ -252,10 +252,10 @@ Only the migration-time write user owns the schema and its tables. As a result, 
 GRANT CONNECT ON DATABASE $PG_DATABASE TO $PG_RO_USER;
 
 -- [DCL] Allow access to the schema
-GRANT USAGE ON SCHEMA $PG_SCHEMA  TO $PG_RO_USER;
+GRANT USAGE ON SCHEMA $PG_SCHEMA TO $PG_RO_USER;
 
 -- [DCL] Allow SELECT on existing tables created by the migration-time write user
-GRANT SELECT ON ALL TABLES IN SCHEMA $PG_SCHEMA  TO $PG_RO_USER;
+GRANT SELECT ON ALL TABLES IN SCHEMA $PG_SCHEMA TO $PG_RO_USER;
 
 -- [DCL] Auto-grant SELECT on future tables created by the migration-time write user
 ALTER DEFAULT PRIVILEGES FOR ROLE $PG_USER IN SCHEMA $PG_SCHEMA GRANT SELECT ON TABLES TO $PG_RO_USER;
@@ -266,6 +266,7 @@ Replace the following variables with the actual values:
 * `$PG_SCHEMA` with the name of the schema (for example, `public`).
 * `$PG_RO_USER` with the value of `pg_ro_user`.
 * `$PG_USER` with name of your user (for example, `kong`).
+
 ## Minimal setup example
 
 Connect as a PostgreSQL superuser. Create the write user and database before you run migrations:
