@@ -1,0 +1,20 @@
+title: 'Issue identities for every workload'
+
+description: 'Match every proxy in the mesh and issue from a CA the control plane generates itself. Suitable for a first deployment, not for production.'
+
+weight: 900
+
+config:
+  type: MeshIdentity
+  name: default-identity
+  mesh: default
+  spec:
+    selector:
+      dataplane: {}
+    provider:
+      type: Bundled
+      bundled:
+        autogenerate:
+          enabled: true
+        insecureAllowSelfSigned: true
+        meshTrustCreation: Enabled

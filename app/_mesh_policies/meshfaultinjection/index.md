@@ -15,8 +15,6 @@ related_resources:
   url: "/mesh/policies/meshretry/"
 - text: MeshTimeout policy
   url: "/mesh/policies/meshtimeout/"
-- text: MeshCircuitBreaker policy
-  url: "/mesh/policies/meshcircuitbreaker/"
 ---
 
 `MeshFaultInjection` makes a proxy fail, delay or throttle a proportion of the requests it

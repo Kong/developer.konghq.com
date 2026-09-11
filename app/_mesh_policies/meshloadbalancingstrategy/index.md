@@ -15,8 +15,6 @@ related_resources:
   url: "/mesh/policies/meshcircuitbreaker/"
 - text: MeshHealthCheck policy
   url: "/mesh/policies/meshhealthcheck/"
-- text: MeshHTTPRoute policy
-  url: "/mesh/policies/meshhttproute/"
 ---
 
 `MeshLoadBalancingStrategy` decides which of a destination's endpoints a client's request goes

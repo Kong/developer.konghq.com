@@ -15,8 +15,6 @@ related_resources:
   url: "/mesh/policies/meshtcproute/"
 - text: MeshRetry policy
   url: "/mesh/policies/meshretry/"
-- text: MeshTimeout policy
-  url: "/mesh/policies/meshtimeout/"
 ---
 
 `MeshHTTPRoute` matches HTTP requests leaving a proxy and decides what happens to them: which

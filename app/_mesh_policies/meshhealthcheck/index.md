@@ -15,8 +15,6 @@ related_resources:
   url: "/mesh/policies/meshcircuitbreaker/"
 - text: MeshRetry policy
   url: "/mesh/policies/meshretry/"
-- text: MeshTimeout policy
-  url: "/mesh/policies/meshtimeout/"
 ---
 
 `MeshHealthCheck` makes a client proxy send probes to a destination's endpoints, and stop

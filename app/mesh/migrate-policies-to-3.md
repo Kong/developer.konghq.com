@@ -527,6 +527,57 @@ split rather than answered with an error, and the rule loses that share of its c
 Where every entry in a rule is unresolvable, the client gets no outbound listener for that
 destination at all, and its connections fail at connect time.
 
+## MeshIdentity
+
+`MeshIdentity` and [MeshTrust](#meshtrust) are how a mesh issues and verifies workload
+identities in v3. They are not policies and have no `targetRef`, so the shared changes above do
+not apply to them. What does apply is that they are now required.
+
+{:.warning}
+> `Mesh.mtls` is removed from the API, and the transport socket builders no longer read it. A
+> proxy gets an mTLS transport socket only when a `MeshIdentity` matches it, with the
+> certificate from the identity and the trust bundle from a `MeshTrust`. A mesh whose only
+> identity source was `mtls` therefore serves and accepts **plaintext** after upgrading, and
+> `MeshTLS` and `MeshTrafficPermission` no longer apply to its proxies at all.
+
+Create a `MeshIdentity` for every mesh that had mTLS through `Mesh.mtls`, before upgrading. See
+[MeshIdentity](/mesh/policies/meshidentity/) for the provider options, and
+[MeshTrafficPermission](#meshtrafficpermission) for the access control that depends on it.
+
+### The trust domain is immutable after the first write
+
+`spiffeID.trustDomain` and `spiffeID.path` are rejected on update, on Kubernetes by the
+admission webhook and on Universal by the API server:
+`is immutable, cannot be changed from "..." to "..."`.
+
+The control plane also renders the trust domain once, when it first initializes the identity,
+and records it in `status.trustDomain`. A template such as
+`{% raw %}{{ .Zone }}{% endraw %}` no longer re-renders when the zone is renamed, which used to
+move issuance into a trust domain no `MeshTrust` published yet.
+
+To change either field, create a second `MeshIdentity` under a **different name** and delete the
+old one once every workload has been issued from it. Both publish their own `MeshTrust`, and
+`MeshService.spec.identities` lists every matching identity's SPIFFE ID, so peers accept
+certificates from both for the whole transition.
+
+Recreating under the same name is accepted and does converge, but it is not a migration: the
+`MeshTrust` and the CA are keyed by the identity's name, so there is a window with one trust
+domain in flight where certificates issued under the old one no longer verify.
+
+## MeshTrust
+
+A `MeshIdentity` with a `Bundled` provider creates the `MeshTrust` for its CA, so a mesh issuing
+its own identities needs no `MeshTrust` written by hand. Write one to trust a CA the mesh does
+not own, or to keep a second trust domain verifiable during a migration.
+
+{:.warning}
+> Deleting a `MeshIdentity` does not delete the `MeshTrust` it generated. The generated resource
+> is owned by the zone that created it, so it outlives the identity and has to be removed from
+> that zone.
+
+`MeshService.spec.identities` also accepts SPIFFE IDs only now, where it previously took
+dataplane tags.
+
 ## MeshLoadBalancingStrategy
 
 Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#real-resources-are-selected-by-labels) and [the `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404).

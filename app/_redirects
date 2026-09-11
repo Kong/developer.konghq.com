@@ -655,9 +655,9 @@
 /mesh/policies/meshhttproute/examples/traffic-mirror/  /mesh/policies/meshhttproute/examples/mirror-requests/  301
 /mesh/policies/meshhttproute/examples/traffic-modification/  /mesh/policies/meshhttproute/examples/modify-request-headers/  301
 /mesh/policies/meshhttproute/examples/traffic-split/  /mesh/policies/meshhttproute/examples/split-traffic-by-weight/  301
-/mesh/policies/meshidentity/examples/bundled-minimal/  /mesh/v2/policies/meshidentity/examples/bundled-minimal/  301
-/mesh/policies/meshidentity/examples/bundled-with-user-ca/  /mesh/v2/policies/meshidentity/examples/bundled-with-user-ca/  301
-/mesh/policies/meshidentity/examples/spire-provider/  /mesh/v2/policies/meshidentity/examples/spire-provider/  301
+/mesh/policies/meshidentity/examples/bundled-minimal/  /mesh/policies/meshidentity/examples/issue-for-every-workload/  301
+/mesh/policies/meshidentity/examples/bundled-with-user-ca/  /mesh/policies/meshidentity/examples/issue-from-your-own-ca/  301
+/mesh/policies/meshidentity/examples/spire-provider/  /mesh/policies/meshidentity/examples/issue-through-spire/  301
 /mesh/policies/meshloadbalancingstrategy/examples/disable-cross-zone-traffic/  /mesh/policies/meshloadbalancingstrategy/examples/prefer-nearby-endpoints/  301
 /mesh/policies/meshloadbalancingstrategy/examples/disable-locality-aware/  /mesh/policies/meshloadbalancingstrategy/examples/spread-requests-across-zones/  301
 /mesh/policies/meshloadbalancingstrategy/examples/load-balancing-http-traffic/  /mesh/policies/meshloadbalancingstrategy/examples/hash-on-a-header/  301
@@ -695,7 +695,7 @@
 /mesh/policies/meshtrafficpermission_experimental/examples/allow-observability-namespace/  /mesh/policies/meshtrafficpermission/examples/allow-namespace/  301
 /mesh/policies/meshtrafficpermission_experimental/examples/deny-malicious-namespace/  /mesh/policies/meshtrafficpermission/examples/deny-namespace/  301
 /mesh/policies/meshtrafficpermission_experimental/examples/deny-observability-on-backend-admin-api/  /mesh/policies/meshtrafficpermission/examples/override-allow-on-service-port/  301
-/mesh/policies/meshtrust/examples/allow-encrypted-traffic/  /mesh/v2/policies/meshtrust/examples/allow-encrypted-traffic/  301
+/mesh/policies/meshtrust/examples/allow-encrypted-traffic/  /mesh/policies/meshtrust/examples/trust-an-external-ca/  301
 
 # MeshTrafficPermission is documented as one policy. The SPIFFE ID matcher form,
 # previously a separate "experimental" page, is the only form Kong Mesh 3 accepts.

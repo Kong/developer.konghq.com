@@ -16,16 +16,10 @@ related_resources:
   url: "/mesh/policy-targeting/"
 - text: Migrate policies to {{site.mesh_product_name}} 3
   url: "/mesh/migrate-policies-to-3/#meshtrafficpermission"
-- text: Issue identity with the MeshIdentity bundled provider
-  url: "/mesh/issue-identity-with-meshidentity/"
-- text: Issue identity with MeshIdentity Spire provider
-  url: "/mesh/issue-identity-with-meshidentity-spire/"
 - text: MeshIdentity policy
   url: "/mesh/policies/meshidentity/"
-- text: MeshTrust policy
-  url: "/mesh/policies/meshtrust/"
-- text: MeshTLS policy
-  url: "/mesh/policies/meshtls/"
+- text: Issue identity with the MeshIdentity bundled provider
+  url: "/mesh/issue-identity-with-meshidentity/"
 ---
 
 `MeshTrafficPermission` decides which clients can reach a service, and matches them on the

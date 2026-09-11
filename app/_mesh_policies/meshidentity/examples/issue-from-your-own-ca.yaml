@@ -1,0 +1,29 @@
+title: 'Issue from a CA you supply'
+
+description: 'Point the bundled provider at a certificate and key held as secrets, and cap the lifetime of issued leaf certificates.'
+
+weight: 800
+
+config:
+  type: MeshIdentity
+  name: corporate-ca
+  mesh: default
+  spec:
+    selector:
+      dataplane: {}
+    provider:
+      type: Bundled
+      bundled:
+        ca:
+          certificate:
+            type: Secret
+            secretRef:
+              kind: Secret
+              name: mesh-ca-cert
+          privateKey:
+            type: Secret
+            secretRef:
+              kind: Secret
+              name: mesh-ca-key
+        certificateParameters:
+          expiry: 24h

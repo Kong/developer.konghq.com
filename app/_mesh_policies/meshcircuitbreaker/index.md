@@ -15,8 +15,6 @@ related_resources:
   url: "/mesh/policies/meshretry/"
 - text: MeshHealthCheck policy
   url: "/mesh/policies/meshhealthcheck/"
-- text: MeshTimeout policy
-  url: "/mesh/policies/meshtimeout/"
 ---
 
 `MeshCircuitBreaker` does two separate jobs, and a policy can configure either or both.
