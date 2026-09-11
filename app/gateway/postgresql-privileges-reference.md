@@ -80,11 +80,11 @@ rows:
     default: "`kong`"
     description: Database name.
   - parameter: "[`pg_schema`](/gateway/configuration/#pg-schema)"
-    default: `public`
+    default: "`public`"
     description: Schema name.
   - parameter: "[`pg_ro_host`](/gateway/configuration/#pg-ro-host)"
     default: (none)
-    description: Host of the read-only Postgres server. Setting this activates Kong's read-only database connection feature."
+    description: Host of the read-only Postgres server. Setting this activates Kong's read-only database connection feature.
   - parameter: "[`pg_ro_user`](/gateway/configuration/#pg-ro-user)"
     default: Falls back to `pg_user`
     description: PostgreSQL role name for the read-only user.
