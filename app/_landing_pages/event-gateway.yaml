@@ -285,7 +285,8 @@ rows:
                     - outcome: |
                         Let consumers work with real production topics while personal data stays hidden from them
                       feature: |
-                        Mask Fields policy
+                        [Mask Fields Produce policy](/event-gateway/policies/mask-fields-produce/),
+                        [Mask Fields Consume policy](/event-gateway/policies/mask-fields-consume/)
                       guide: |
                         [Mask sensitive fields in Kafka messages](/event-gateway/mask-kafka-message-fields/)
                         or [mask fields selected by schema registry tags](/event-gateway/mask-kafka-message-fields-from-schema/)

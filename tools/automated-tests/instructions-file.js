@@ -8,6 +8,10 @@ function fileToUrl(file) {
   return file.replace("../../app/_how-tos/", "").replace(".md", "/");
 }
 
+function logSkip(file, message) {
+  console.log(`Skipping file: ${file.replace("../../", "")}. ${message}`);
+}
+
 function deriveSkipProducts(products) {
   // Mirrors extractor.js's deriveProduct special case: ai-gateway v1 how-tos are
   // tagged with both "gateway" and "ai-gateway" but only ever run as "gateway".
@@ -67,7 +71,6 @@ export async function testeableUrlsFromFiles(config, files, { explicit = false }
       }
 
       if (skipHowTo) {
-        const relativeFilePath = file.replace("../../", "");
         let message;
         if (isNonFirstSeriesPage) {
           const firstPageTitle =
@@ -75,10 +78,12 @@ export async function testeableUrlsFromFiles(config, files, { explicit = false }
           message = `Part of series "${frontmatter.series.id}", tested via "${firstPageTitle}"`;
         } else if (frontmatter.automated_tests === false) {
           message = "Tagged with automated_tests=false";
+        } else if (frontmatter.published === false) {
+          message = "Tagged with published=false";
         } else {
           message = "Tagged with @todo.";
         }
-        console.log(`Skipping file: ${relativeFilePath}. ${message}`);
+        logSkip(file, message);
 
         const name = `[${frontmatter.title}](${config.productionUrl}${howToUrl})`;
         skipped.push({
@@ -92,6 +97,16 @@ export async function testeableUrlsFromFiles(config, files, { explicit = false }
       } else {
         howTosUrls.push(`${config.baseUrl}${howToUrl}`);
       }
+    } else {
+      // Say so out loud: a silent drop looks the same as a deliberate
+      // exclusion, so a missing or misspelled product tag goes unnoticed.
+      const products = frontmatter.products || [];
+      logSkip(
+        file,
+        products.length
+          ? `Products (${products.join(", ")}) include no testable product`
+          : "No products in frontmatter, so nothing to test",
+      );
     }
   }
   await fs.writeFile(".automated-tests", yaml.dump(skipped), "utf-8");
