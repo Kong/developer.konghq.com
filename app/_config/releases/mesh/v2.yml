@@ -275,13 +275,10 @@ app/_mesh_policies/v2/meshretry/index.md:
 app/_mesh_policies/v2/meshretry/reference.md:
   canonical_url: /mesh/policies/meshretry/reference/
 app/_mesh_policies/v2/meshtcproute/examples/traffic-redirection.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshtcproute/examples/redirect-to-another-destination/
 app/_mesh_policies/v2/meshtcproute/examples/traffic-split.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshtcproute/examples/split-connections-by-weight/
 app/_mesh_policies/v2/meshtcproute/index.md:
-  status: pending
   canonical_url: /mesh/policies/meshtcproute/
 app/_mesh_policies/v2/meshtcproute/reference.md:
   canonical_url: /mesh/policies/meshtcproute/reference/
