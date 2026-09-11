@@ -5,7 +5,7 @@ products:
 - mesh
 description: Choose the load balancing algorithm for a destination, pin requests to a host, and set how far traffic may travel to reach it.
 content_type: plugin
-icon: meshloadbalancingstrategy.png
+icon: policy.svg
 related_resources:
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"

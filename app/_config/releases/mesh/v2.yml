@@ -211,10 +211,8 @@ app/_mesh_policies/v2/meshmetric/index.md:
 app/_mesh_policies/v2/meshmetric/reference.md:
   canonical_url: /mesh/policies/meshmetric/reference/
 app/_mesh_policies/v2/meshopa/examples/support-for-external-api.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshopa/examples/configure-the-opa-agent/
 app/_mesh_policies/v2/meshopa/index.md:
-  status: pending
   canonical_url: /mesh/policies/meshopa/
 app/_mesh_policies/v2/meshopa/reference.md:
   canonical_url: /mesh/policies/meshopa/reference/

@@ -696,6 +696,100 @@ supported in universal mode, including universal-on-Kubernetes.
 Kubernetes deployments that discovered proxies through MADS need Prometheus Kubernetes service
 discovery against the endpoints this policy exposes instead.
 
+## MeshOPA
+
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed).
+
+This is an enterprise policy, so its changes are in the
+{{site.mesh_product_name}} upgrade notes rather than the Kuma ones.
+
+### Rewrite the agent config and rego as secure data sources
+
+`agentConfig` and every `appendPolicies[].rego` move from the old flat `DataSource` type, which
+has been removed from the API, to `SecureDataSource`. The old type had no discriminator and
+carried `inline`, `inlineString` or `secret` directly; the new one requires a `type` and nests
+the value under a field of the same name.
+
+{% table %}
+columns:
+  - title: Old field
+    key: old
+  - title: New field
+    key: new
+rows:
+  - old: "`inlineString: <text>`"
+    new: "`type: InsecureInline` with `insecureInline.value: <text>`"
+  - old: "`inline: <base64>`"
+    new: "`type: InsecureInline` with `insecureInline.value: <plain text>`"
+  - old: "`secret: <name>`"
+    new: "`type: Secret` with `secretRef: {kind: Secret, name: <name>}`"
+{% endtable %}
+
+{:.warning}
+> `inline` was base64-encoded and `insecureInline.value` is plain text. Decode the old value
+> when rewriting it, or the agent is handed base64 where it expects rego.
+
+```yaml
+# 2.x
+rego:
+  inlineString: |
+    package envoy.authz
+    default allow = false
+
+# 3.x
+rego:
+  type: InsecureInline
+  insecureInline:
+    value: |
+      package envoy.authz
+      default allow = false
+```
+
+A policy in the old shape is rejected after upgrading, because the missing `type` discriminator
+is a validation violation: `rego.type (): in body is required`.
+
+An inline rego policy is compiled when the resource is applied, so the rewrite is checked at
+write time. One supplied through a `Secret` is not, since the control plane does not read it.
+
+### Replace a MeshService or named targetRef
+
+`spec.targetRef.kind` accepts `Mesh` and `Dataplane` only. `MeshService` is rejected with
+`in body should be one of [Mesh Dataplane]`, in the CRD enum as well as in the control plane, so
+a policy keeping it fails to sync from a Global control plane into an upgraded Zone.
+
+{:.warning}
+> `spec.targetRef.name`, `namespace` and `mesh` are removed, and are **pruned rather than
+> rejected** — by the API server on the next write on Kubernetes, and on load on Universal. A
+> `MeshOPA` that used `name` to scope itself to one service therefore widens to every proxy
+> matching `kind`, and its rego starts evaluating requests it never saw before. Nothing reports
+> it.
+
+```yaml
+# 2.x
+spec:
+  targetRef:
+    kind: MeshService
+    name: backend
+
+# 3.x
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      app: backend
+```
+
+Check the effective scope of every `MeshOPA` after rewriting it, and before rolling proxies.
+
+### Migrate off the legacy OPA policy resource
+
+The legacy `OPAPolicy` resource (`config.kong-mesh.io/v1alpha1`) and its CRD are removed, and a
+leftover object is rejected by the control plane after upgrading. Move to `MeshOPA` and delete
+the old resources before upgrading.
+
+The OPA integration has also used the same dynamic configuration mechanism as DNS and
+`MeshMetric` since 2.13, which only ever worked with `MeshOPA`.
+
 ## MeshPassthrough
 
 Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed).
