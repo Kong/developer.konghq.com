@@ -28,8 +28,7 @@ The source file may be provided in either YAML or JSON; the format is auto-detec
 
 ## Convert an {{site.ai_gateway}} 2.0 file to a {{site.base_gateway}} state file
 
-Converting an OpenAPI file to a Kong declarative configuration can be done in a single command:
-
+Export an {{site.ai_gateway}} 2.0 state file from an on-prem {{site.ai_gateway}} 2.0 instance. Then convert it to a {{site.base_gateway}} state file:
 ```bash
 deck file ai2kong --source ai-gateway-2.yaml --output-file kong.yaml
 ```
