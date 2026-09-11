@@ -31,7 +31,7 @@ The AppDynamics policy reports request and response timestamps and error informa
 
 Before using the policy, download the [AppDynamics C/C++ SDK](https://help.splunk.com/en/appdynamics-saas/application-performance-monitoring/26.8.0/install-app-server-agents/cc-sdk) on the machine or within the container running the {{site.base_gateway}} data plane. To use the AppDynamics policy, the `libappdynamics.so` shared library must be available on all data plane nodes running {{site.ai_gateway}}. You can install the AppDynamics C/C++ SDK or extract the `libappdynamics.so` shared library, which is the only required file.
 
-For information about installation and configuration, see the [AppDynamics Saas](https://help.splunk.com/en/appdynamics-saas) and [AppDynamics On-Premises](https://help.splunk.com/en/appdynamics-on-premises) documentation.
+For information about installation and configuration, see the [AppDynamics SaaS](https://help.splunk.com/en/appdynamics-saas) and [AppDynamics On-Premises](https://help.splunk.com/en/appdynamics-on-premises) documentation.
 
 ### Recommended installation
 
