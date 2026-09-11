@@ -111,15 +111,11 @@ rows:
     status: "`403`"
     message: "Customer is not found by subject."
     when: The plugin can't resolve a customer for the request's subject key. This also covers unknown subjects when `deny_unknown_customers` is `true`.
+  - code: "`NO_CREDIT_AVAILABLE`"
+    status: "`402`"
+    message: "Customer has no credit available."
+    when: "**Reserved, not yet functional.** This reason code exists in the schema for credit balance enforcement, a capability that isn't implemented yet. See [Limitations](#limitations)."
 {% endtable %}
-
-<!-- 
-ADD THIS ROW WHEN FEATURE IS ADDED
-- code: "`NO_CREDIT_AVAILABLE`"
-status: "`402`"
-message: "Customer has no credit available."
-when: The customer's prepaid credit balance for the feature is depleted. [This is in the schema but not actually available yet] -->
-
 <!--vale on-->
 
 The response body for a blocked request contains the message and reason code, for example:
@@ -172,3 +168,13 @@ Entitlement Enforcement doesn't replace rate limiting.
 Entitlement Enforcement protects business logic, such as plan limits and feature access, and resets on billing events.
 
 You can use both together: for example, a customer might have a monthly token allowance enforced by this plugin, and a per-minute rate limit to prevent a single burst of traffic from consuming that allowance too quickly.
+
+## Limitations
+
+Credit balance enforcement isn't implemented yet.
+The following config fields exist in the plugin's schema but currently have no effect:
+
+* [`config.credit_balance_required`](/plugins/entitlement-enforcement/reference/#schema--config-credit-balance-required)
+* The `NO_CREDIT_AVAILABLE` reason code under [`config.response_codes`](/plugins/entitlement-enforcement/reference/#schema--config-response-codes)
+
+The plugin currently enforces usage limits and feature access only. See the [known issues](/gateway/breaking-changes/#known-issues-in-3-16-0-0) for details.

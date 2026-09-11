@@ -33,6 +33,38 @@ affect your current installation.
 You may need to adopt different [upgrade paths](/gateway/upgrade/) depending on your
 deployment methods, set of features in use, or custom plugins, for example.
 
+## 3.16.x breaking changes
+
+Review the [changelog](/gateway/changelog/#3-16-0-0) for all the changes in this release.
+
+### 3.16.0.0
+
+#### Known issues in 3.16.0.0
+
+The following is a list of known issues in 3.16.0.0 that may be fixed in a future release.
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Known issue
+    key: issue
+  - title: Description
+    key: description
+  - title: Status
+    key: status
+rows:
+  - issue: |
+      Entitlement Enforcement plugin doesn't support credit balance enforcement
+    description: |
+      The [Entitlement Enforcement plugin](/plugins/entitlement-enforcement/) ships with a `config.credit_balance_required` field and a `NO_CREDIT_AVAILABLE` reason code under `config.response_codes`, but credit balance enforcement isn't implemented yet.
+      <br><br>
+      These fields are accepted by the plugin's schema but currently have no effect. The plugin enforces usage limits and feature access only.
+      <br><br>
+      **Workaround:** None. Don't use `config.credit_balance_required` and the `NO_CREDIT_AVAILABLE` reason code, as they will have no effect.
+    status: Not fixed.
+{% endtable %}
+<!--vale on-->
+
 ## 3.15.x breaking changes
 
 Review the [changelog](/gateway/changelog/#3-15-0-0) for all the changes in this release.
