@@ -1,0 +1,29 @@
+title: 'Configure the OPA agent'
+
+description: 'Pass bootstrap configuration to the agent, here turning on decision logging to the console.'
+
+weight: 500
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshOPA
+  name: opa-decision-logs
+  mesh: default
+  spec:
+    targetRef:
+      kind: Mesh
+    default:
+      agentConfig:
+        type: InsecureInline
+        insecureInline:
+          value: |
+            decision_logs:
+              console: true
+      appendPolicies:
+        - rego:
+            type: InsecureInline
+            insecureInline:
+              value: |
+                package envoy.authz
+                default allow = true

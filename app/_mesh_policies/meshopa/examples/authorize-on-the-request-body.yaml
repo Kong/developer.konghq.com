@@ -1,0 +1,31 @@
+title: 'Authorize on the request body'
+
+description: 'Send up to 8 KiB of the body to the agent so a policy can inspect it, and fail closed when the agent is unreachable.'
+
+weight: 600
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshOPA
+  name: authorize-with-body
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    default:
+      authConfig:
+        onAgentFailure: Deny
+        statusOnError: 503
+        timeout: 1s
+        requestBody:
+          maxSize: 8192
+          sendRawBody: false
+      appendPolicies:
+        - rego:
+            type: Secret
+            secretRef:
+              kind: Secret
+              name: backend-authz-policy

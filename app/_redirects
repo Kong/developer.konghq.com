@@ -664,7 +664,7 @@
 /mesh/policies/meshloadbalancingstrategy/examples/prioritize-traffic-to-data-planes/  /mesh/policies/meshloadbalancingstrategy/examples/fail-over-between-regions/  301
 /mesh/policies/meshloadbalancingstrategy/examples/route-equally/  /mesh/policies/meshloadbalancingstrategy/examples/prefer-nearby-endpoints/  301
 /mesh/policies/meshmetric/examples/default/  /mesh/policies/meshmetric/examples/publish-metrics-for-prometheus/  301
-/mesh/policies/meshopa/examples/support-for-external-api/  /mesh/v2/policies/meshopa/examples/support-for-external-api/  301
+/mesh/policies/meshopa/examples/support-for-external-api/  /mesh/policies/meshopa/examples/configure-the-opa-agent/  301
 /mesh/policies/meshpassthrough/examples/disable-passthrough/  /mesh/policies/meshpassthrough/examples/block-all-external-traffic/  301
 /mesh/policies/meshpassthrough/examples/enable-passthrough/  /mesh/policies/meshpassthrough/examples/allow-all-external-traffic/  301
 /mesh/policies/meshpassthrough/examples/passthrough-specific-endpoints/  /mesh/policies/meshpassthrough/examples/allow-specific-destinations/  301

@@ -1,0 +1,33 @@
+title: 'Test a policy without enforcing it'
+
+description: 'Set ignoreDecision so a new rule is loaded on the agent and exercised against real traffic while its verdict is left out of the decision.'
+
+weight: 700
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshOPA
+  name: candidate-rule
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    default:
+      appendPolicies:
+        - ignoreDecision: true
+          rego:
+            type: InsecureInline
+            insecureInline:
+              value: |
+                package envoy.authz
+
+                import input.attributes.request.http as http_request
+
+                default allow = false
+
+                allow {
+                  http_request.method == "GET"
+                }
