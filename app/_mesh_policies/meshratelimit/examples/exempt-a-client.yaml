@@ -1,0 +1,26 @@
+title: 'Exempt a client from a limit'
+
+description: 'Disable HTTP rate limiting for requests from one namespace, leaving the limit in place for everything else.'
+
+weight: 600
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshRateLimit
+  name: backend-exempt-monitoring
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    rules:
+      - matches:
+          - spiffeID:
+              type: Prefix
+              value: spiffe://default.default.mesh.local/ns/observability
+        default:
+          local:
+            http:
+              disabled: true

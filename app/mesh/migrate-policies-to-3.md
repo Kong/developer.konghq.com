@@ -126,7 +126,7 @@ rows:
   - policy: "`MeshTrafficPermission`"
     stored: "Rejected."
     only: "Rejected with `spec (): policy must define rules`."
-  - policy: "`MeshAccessLog`, `MeshCircuitBreaker`, `MeshTimeout`, `MeshFaultInjection`"
+  - policy: "`MeshAccessLog`, `MeshCircuitBreaker`, `MeshTimeout`, `MeshFaultInjection`, `MeshRateLimit`"
     stored: "Accepted and dropped. The policy applies and its inbound configuration is gone."
     only: "Rejected with `spec (): at least one of 'to' or 'rules' has to be defined`."
 {% endtable %}
@@ -557,6 +557,39 @@ Header names carry a lower-case-only pattern. A 2.x policy naming `Retry-After` 
 `rateLimitedBackOff.resetHeaders` is rejected with
 `name (): in body should match '^[a-z0-9!#$%&'*+\-.^_\x60|~]+$'`. Write `retry-after`. HTTP
 header names are case insensitive on the wire, so the matching is unaffected.
+
+## MeshRateLimit
+
+### Split a policy that limited both inbound and gateway traffic
+
+`to` and `rules` are now mutually exclusive, and which one a policy may use is decided by its
+top-level `targetRef`:
+
+- `kind: Dataplane` accepts `rules` only. Defining `to` is rejected with
+  `spec.to (): must not be defined`.
+- `kind: Mesh` accepts `to` only, whose `targetRef` takes `kind: Mesh` and nothing else.
+  Defining `rules` is rejected with `spec.rules (): must not be defined`.
+
+Setting both is rejected with `field 'to' must be empty when 'rules' is defined`.
+
+A 2.x policy that carried both therefore becomes two policies. A mesh-wide inbound limit is
+written as `kind: Dataplane` with no `labels`, which selects every proxy in the mesh;
+`kind: Mesh` with `rules` is rejected.
+
+### Move TCP limits off rules that match a client
+
+A rule whose `matches` contain a `spiffeID` cannot carry `local.tcp`. It is rejected with
+`can't be specified when matches contain spiffeID because this field cannot be conditioned on
+source identity`.
+
+A client's identity comes out of the TLS handshake, which a connection-level limit counts rather
+than inspects. Split such a rule: limit connections in a rule with no `spiffeID` match, and
+limit that client's requests with `local.http`.
+
+### Check every interval is above 50ms
+
+`requestRate.interval` and `connectionRate.interval` must be greater than 50ms, and `num`
+greater than 0. A shorter interval is rejected with `must be greater than: 50ms`.
 
 ## MeshHealthCheck
 
