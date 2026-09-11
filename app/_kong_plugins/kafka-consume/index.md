@@ -81,7 +81,7 @@ The plugin supports the following modes of operation:
 
 {% include_cached /plugins/confluent-kafka-consume/schema-registry.md name=page.name slug=page.slug workflow='consumer' %}
 
-## Message compression {% new_in 3.16 %}
+## Message decompression {% new_in 3.16 %}
 
 {% include_cached /plugins/confluent-kafka-consume/decompression.md name=page.name %}
 

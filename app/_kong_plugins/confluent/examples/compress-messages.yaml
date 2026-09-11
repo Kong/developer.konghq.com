@@ -16,10 +16,18 @@ variables:
   topic:
     description: 'The name of your Kafka topic.'
     value: $KAFKA_TOPIC
+  cluster_api_key:
+    value: $CONFLUENT_CLUSTER_API_KEY
+    description: Your Confluent cluster API key.
+  cluster_api_secret:
+    value: $CONFLUENT_CLUSTER_API_SECRET
+    description: Your Confluent cluster API key.
 
 config:
   topic: ${topic}
   compression_type: lz4
+  cluster_api_key: ${cluster_api_key}
+  cluster_api_secret: ${cluster_api_secret}
 
 min_version:
   gateway: '3.16'
