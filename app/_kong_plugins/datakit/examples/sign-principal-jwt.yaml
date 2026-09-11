@@ -2,8 +2,8 @@ description: |
   Sign an outgoing JWT in a request header using the authenticated Principal's ID as the subject.
 
 extended_description: |
-  Sign an outgoing JWT in a request header using the authenticated Principal's ID as the subject.
-  This example assumes a Consumer has already been authenticated before Datakit runs.
+  Sign an outgoing JWT in a request header using the authenticated [Principal's](/identity/principals/) ID as the subject.
+  This example assumes a Consumer is already authenticated before Datakit runs.
   This example contains the following nodes:
   1. The node `GET_PRINCIPAL` retrieves the currently authenticated Principal object.
   1. The node `BUILD_CLAIMS` uses jq to extract the Principal's `id` and build a `sub` claim.

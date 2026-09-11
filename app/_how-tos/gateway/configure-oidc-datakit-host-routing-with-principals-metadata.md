@@ -113,8 +113,8 @@ Use it when each backend is a fixed address and you don't need a pool.
 
 ## Create an authorization server in {{site.identity}}
 
-An authorization server in {{site.identity}} issues the OAuth tokens that callers present to authenticate to your service.
-It's recommended that you create different authorization servers for different environments. The authorization server name is unique per each organization and each {{site.konnect_short_name}} region.
+An [authorization server](/identity/auth-servers/) in {{site.identity}} issues the OAuth tokens that callers present to authenticate to your service.
+We recommend that you create different authorization servers for different environments. The authorization server name is unique per each organization and each {{site.konnect_short_name}} region.
 
 Create an authorization server using the [`/v1/auth-servers` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServer):
 
@@ -140,7 +140,7 @@ capture:
 ## Create the clients
 
 Create one client per caller. Each client is the machine-to-machine credential that a caller uses to fetch a token.
-{{site.konnect_short_name}} autogenerates the client ID and secret.
+In this example, {{site.konnect_short_name}} autogenerates the client ID and secret, but you can also specify them yourself instead.
 
 Create the `orders-caller` client using the [`/v1/auth-servers/$AUTH_SERVER_ID/clients` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerClient):
 
@@ -444,7 +444,7 @@ formats:
 {% endentity_examples %}
 
 In this configuration:
-* `GET_PRINCIPAL`: Reads the `kong.client.principal` object that the OpenID Connect plugin populates. No input is connected because this is a read-only (get) operation.
+* `GET_PRINCIPAL`: Reads the `kong.client.principal` object that the OpenID Connect plugin populates. No input is connected because this is a read-only operation.
 * `PICK_TARGET`: Reads `backend_target` and `backend_scheme` out of the Principal's metadata and returns both in one object. Returning both values from one node avoids reading the Principal twice. The `//` operator supplies a default backend for Principals that carry no routing metadata.
 * `EXTRACT_TARGET`: Extracts the `.target` field from the `PICK_TARGET` output.
 * `SET_TARGET`: Writes the `host:port` string to `kong.service.target`, overriding the backend for this request. This bypasses load balancing, health checks, and retries.
