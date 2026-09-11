@@ -378,6 +378,7 @@ entities:
           - bearer
         audience:
           - http://myhttpbin.dev
+        ssl_verify: true
         principals:
           enabled: true
           directory: ${directory_name}
