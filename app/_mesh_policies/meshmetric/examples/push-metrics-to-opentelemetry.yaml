@@ -1,0 +1,26 @@
+title: 'Push metrics to an OpenTelemetry collector'
+
+description: 'Reference a MeshOpenTelemetryBackend by labels and set how often metrics are pushed. Metrics leave through kuma-dp.'
+
+weight: 700
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshMetric
+  name: backend-otel-metrics
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    default:
+      backends:
+        - type: OpenTelemetry
+          openTelemetry:
+            backendRef:
+              kind: MeshOpenTelemetryBackend
+              labels:
+                kuma.io/display-name: otel-collector
+            refreshInterval: 30s
