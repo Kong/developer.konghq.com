@@ -24,7 +24,7 @@ close to it.
 
 ## Pin requests to an endpoint by header
 
-This policy applies to proxies labelled `app: frontend` and sends every request carrying the
+This policy applies to proxies labeled `app: frontend` and sends every request carrying the
 same `x-user` header to the same `backend` endpoint:
 
 {% policy_yaml namespace=kong-mesh-demo %}
@@ -51,6 +51,10 @@ spec:
               name: x-user
 ```
 {% endpolicy_yaml %}
+
+`targetRef` selects the `frontend` proxies making the requests, and `to[].targetRef` selects the
+`backend` destination. `RingHash` chooses an endpoint by hashing `x-user`, so requests carrying
+the same header value stay on the same healthy endpoint while the endpoint set is stable.
 
 ## Where this policy applies
 
@@ -217,3 +221,15 @@ Deciding which endpoints are live is the job of
 [MeshHealthCheck](/mesh/policies/meshhealthcheck/) or
 [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/). Without one of them there is nothing
 to count, and failover does not start.
+
+## Validate endpoint selection
+
+1. Send repeated requests with the same hash input and confirm that they reach the same healthy
+   endpoint.
+1. Change the header, cookie, query parameter, or source IP used by the hash policy and confirm
+   that the request can select a different endpoint.
+1. Remove one endpoint and confirm that `RingHash` or `Maglev` remaps only the keys that can no
+   longer reach it.
+1. For locality awareness, identify the zone serving the response, make the local endpoint set
+   unhealthy, and confirm that traffic follows the configured failover priority.
+1. Confirm that a zone omitted from every `crossZone.failover` rule receives no traffic.

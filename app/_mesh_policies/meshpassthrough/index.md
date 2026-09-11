@@ -19,6 +19,9 @@ related_resources:
 mesh knows nothing about — a third-party API, a managed database, a service never added to the
 mesh — either passes through the sidecar or is rejected by it, and this policy sets which.
 
+With no `MeshPassthrough` applying to a proxy, passthrough is enabled for every external
+destination. Use `Matched` to create an allowlist or `None` to block all unknown destinations.
+
 The policy needs transparent proxying. On a proxy running without it, or one binding its
 outbounds directly, the policy is skipped and the proxy is given the warning
 `policy doesn't support proxy running without transparent-proxy`. Without interception the
@@ -51,9 +54,16 @@ spec:
 ```
 {% endpolicy_yaml %}
 
+Read the policy from the proxy to the external destination:
+
+- `targetRef.kind: Mesh` applies the policy to every proxy in the mesh.
+- `passthroughMode: Matched` rejects destinations not listed in `appendMatch`.
+- The `Domain` entry permits TLS traffic to `api.example.com:443`.
+- The `CIDR` entry permits TCP traffic to port `5432` anywhere in `10.42.0.0/16`.
+
 ## Choose a mode
 
-`default.passthroughMode` sets the behaviour, and defaults to `Matched` when it is not
+`default.passthroughMode` sets the behavior, and defaults to `Matched` when it is not
 specified.
 
 {% table %}
@@ -173,3 +183,15 @@ An already-applied policy carrying a conflict is not re-validated. The control p
 first match of the colliding pair in `appendMatch` order, drops the later one, and names it in a
 debug log of the `MeshPassthrough` component. The next edit of that policy is rejected until the
 conflict is resolved.
+
+## Validate external access
+
+1. Confirm that the selected proxy uses transparent proxying. A policy warning on the proxy
+   means the sidecar skipped the policy.
+1. Connect to every destination and port named in `appendMatch` and confirm that each connection
+   succeeds with the configured protocol.
+1. Connect to a destination not in `appendMatch` and confirm that `Matched` rejects it.
+1. For an exact `Domain`, confirm that DNS resolution works from the sidecar and that traffic
+   reaches the resolved address rather than an address chosen by the application.
+1. For a wildcard domain, verify that allowing any address carrying a matching SNI or `Host`
+   value is an acceptable security boundary.

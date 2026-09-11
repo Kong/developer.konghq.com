@@ -1,6 +1,6 @@
 ---
 title: MeshOpenTelemetryBackend
-description: A shared OpenTelemetry collector endpoint that MeshMetric, MeshTrace and MeshAccessLog reference instead of each carrying its own copy.
+description: Define a shared OpenTelemetry collector connection for MeshMetric, MeshTrace, and MeshAccessLog policies.
 content_type: reference
 layout: reference
 products:
@@ -22,15 +22,21 @@ related_resources:
     url: /mesh/migrate-policies-to-3/
 ---
 
-`MeshOpenTelemetryBackend` holds an OpenTelemetry collector endpoint that observability policies
-point at through a `backendRef`. Without it, every
-[MeshMetric](/mesh/policies/meshmetric/), [MeshTrace](/mesh/policies/meshtrace/) and
-[MeshAccessLog](/mesh/policies/meshaccesslog/) carries its own copy of the collector address.
-With it the address lives in one place.
+`MeshOpenTelemetryBackend` defines how data plane proxies connect to an OpenTelemetry collector.
+[MeshMetric](/mesh/policies/meshmetric/), [MeshTrace](/mesh/policies/meshtrace/), and
+[MeshAccessLog](/mesh/policies/meshaccesslog/) policies reference it through a `backendRef`, so
+the collector address, protocol, and environment-variable behavior live in one place.
+
+Use it to send several telemetry signals to the same collector, update a collector connection
+without editing every observability policy, or let each data plane resolve a node-local
+collector from its environment.
 
 It is not a policy. There is no `targetRef`: the resource describes a collector, and the
 policies referencing it decide which proxies send to it. On Kubernetes it is accepted only in
 the system namespace.
+
+Creating a backend does not enable telemetry by itself. At least one observability policy must
+reference it, and the policy's `targetRef` determines which proxies export the signal.
 
 ## Define a collector and reference it
 
@@ -47,6 +53,17 @@ spec:
     port: 4317
 ```
 {% endpolicy_yaml %}
+
+What each field does:
+
+* `mesh` scopes the backend to the `default` mesh. Policies in another mesh cannot reference it.
+* `labels` gives policies a stable way to select this backend. In this example, the
+  `kuma.io/display-name` label is `otel-collector`.
+* `endpoint` tells selected data plane proxies to connect to
+  `otel-collector.observability:4317`.
+
+The backend uses gRPC because `protocol` is omitted. The resource does not select any data plane
+proxies and does not send anything until a policy references it.
 
 A policy then references it by labels:
 
@@ -69,11 +86,20 @@ spec:
 ```
 {% endpolicy_yaml %}
 
+In the policy, `targetRef` selects **which proxies export traces**, while `backendRef` selects
+**which collector connection they use**. Updating the backend's endpoint changes the collector
+connection for every policy that references it; the policies do not need to change.
+
 A `backendRef` carries `kind` and `labels`, and nothing else. `labels` is required, and an
 empty set is rejected. Where several backends match the labels, **the oldest by creation time
 wins**, so labels that match more than one backend make the choice depend on creation order.
 
-## Fields
+{:.warning}
+> Use labels that identify one backend. If the labels match several backends, creating a newer
+> backend does not switch traffic to it because the oldest match continues to win. Give the new
+> backend a distinct label and update the referring policies when you want to move traffic.
+
+## Configure the collector connection
 
 Every field is optional. An empty spec is valid, and describes the node-local default: the
 control plane defaults the port to 4317 and leaves the address unset, and `kuma-dp` resolves it
@@ -103,7 +129,7 @@ protocol is `grpc` (`must not be set when protocol is grpc`), it must begin with
 (`must start with /`), and it must carry no query or fragment
 (`must not contain query or fragment`).
 
-## Environment variables
+## Combine backend fields with environment variables
 
 `kuma-dp` reads `OTEL_EXPORTER_OTLP_*` variables at startup and merges them with this
 resource's fields. Values that carry secrets — headers, client keys, certificates — stay local
@@ -115,7 +141,8 @@ The shared variables are `OTEL_EXPORTER_OTLP_ENDPOINT`, `_PROTOCOL`, `_HEADERS`,
 has a per-signal form — `OTEL_EXPORTER_OTLP_TRACES_*`, `_METRICS_*` and `_LOGS_*` — which
 overrides the shared value for that signal.
 
-For each field, the first available source wins. By default that order is:
+For each field, the first available source wins. By default, the proxy resolves configuration
+in this order:
 
 1. The per-signal environment variable, when `allowSignalOverrides` is true
 2. The shared environment variable
@@ -163,7 +190,19 @@ matching zone with labels.
 Where every zone can use the same collector service name, one backend is enough and DNS resolves
 to the local collector in each zone.
 
-## Checking that a signal is exporting
+## Check that the backend is referenced
+
+On Kubernetes, inspect the backend in the system namespace:
+
+```sh
+kubectl get meshopentelemetrybackend otel-collector -n kong-mesh-system -o yaml
+```
+
+`status.conditions` contains `type: ReferencedByPolicies`. A reason of `Referenced` confirms
+that at least one observability policy selects the backend. `NotReferenced` is not a runtime
+error, but it means the backend is not currently used.
+
+## Check that a signal is exporting
 
 The control plane writes per-backend, per-signal status to each proxy's `DataplaneInsight` under
 `status.openTelemetry`:
@@ -207,8 +246,6 @@ A `state: missing` means a policy asked for the signal and the merge produced no
 `backendRef` whose labels match no backend is the common cause, followed by an empty spec on a
 proxy where `HOST_IP` resolves to no collector.
 
-## Status on the backend itself
+## Schema
 
-`status.conditions` carries `ReferencedByPolicies`, with a reason of `Referenced` or
-`NotReferenced`. A backend nothing references is not an error, but on a mesh where exporting is
-expected it usually means a `backendRef`'s labels do not match this resource's labels.
+{% json_schema MeshOpenTelemetryBackends %}

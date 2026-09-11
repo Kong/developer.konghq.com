@@ -1,6 +1,6 @@
 title: 'Test a deny rule before enforcing it'
 
-description: 'Use allowWithShadowDeny to log traffic as denied while still allowing it, so a restrictive rule can be validated before it blocks requests.'
+description: 'Observe how denying one namespace would behave while a broader trust-domain allow continues to admit traffic.'
 
 weight: 600
 
@@ -20,4 +20,8 @@ config:
           allowWithShadowDeny:
             - spiffeID:
                 type: Prefix
-                value: spiffe://default.default.mesh.local/ns/legacy
+                value: spiffe://default.default.mesh.local/ns/legacy/
+          allow:
+            - spiffeID:
+                type: Prefix
+                value: spiffe://default.default.mesh.local/

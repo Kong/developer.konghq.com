@@ -19,7 +19,7 @@ config:
       - matches:
           - spiffeID:
               type: Prefix
-              value: spiffe://default.default.mesh.local/ns/kong-mesh-demo
+              value: spiffe://default.default.mesh.local/ns/kong-mesh-demo/
         default:
           http:
             requestTimeout: 45s

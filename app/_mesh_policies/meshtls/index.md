@@ -37,7 +37,7 @@ the listener does with it.
 
 ## Accept plaintext while migrating a service
 
-This policy lets proxies labelled `app: legacy` serve both mTLS and plaintext on their
+This policy lets proxies labeled `app: legacy` serve both mTLS and plaintext on their
 inbounds, which keeps clients outside the mesh working while they are moved into the mesh:
 
 {% policy_yaml namespace=kong-mesh-demo %}
@@ -55,6 +55,10 @@ spec:
         mode: Permissive
 ```
 {% endpolicy_yaml %}
+
+`targetRef` selects the `legacy` proxies whose inbound listeners change. `mode: Permissive`
+keeps the normal mTLS filter chain and adds a plaintext path. It does not turn outbound mTLS off,
+and it does not give plaintext clients an identity.
 
 ## Where this policy applies
 
@@ -161,3 +165,15 @@ the choice to Envoy.
 The list applies to TLS 1.2 and below. TLS 1.3 has its own cipher suites, which Envoy does not
 allow to be configured, so restricting `tlsCiphers` while permitting TLS 1.3 constrains only the
 older versions.
+
+## Validate the TLS boundary
+
+1. Confirm that every selected proxy has a `MeshIdentity`. Without one, this policy is skipped.
+1. For `Strict`, connect with mTLS and confirm success, then connect without TLS and confirm
+   rejection.
+1. For `Permissive`, confirm that both connections succeed and that only the mTLS connection
+   carries a workload identity.
+1. When setting `tlsVersion`, test one permitted version and one version outside the configured
+   range.
+1. When setting `tlsCiphers`, inspect the negotiated cipher and confirm that both peers share at
+   least one permitted suite.

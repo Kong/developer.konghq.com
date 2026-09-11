@@ -18,66 +18,66 @@ related_resources:
   url: "/mesh/migrate-policies-to-3/#meshtrafficpermission"
 - text: MeshIdentity policy
   url: "/mesh/policies/meshidentity/"
+- text: Migrate mesh mTLS to MeshIdentity
+  url: "/mesh/migrate-mtls-to-meshidentity/"
 - text: Issue identity with the MeshIdentity bundled provider
   url: "/mesh/issue-identity-with-meshidentity/"
 ---
 
-`MeshTrafficPermission` decides which clients can reach a service, and matches them on the
-SPIFFE ID of the calling workload rather than on its address or tags.
+`MeshTrafficPermission` is inbound authorization for the mesh. It answers two questions:
 
-Use it to deny a namespace outright, allow a group of clients by default, or shadow-deny
-traffic to see what a rule would block before it blocks anything.
+1. Which destination workload enforces the policy?
+1. Which authenticated client identities may connect to it?
+
+`spec.targetRef` selects the destination. `spec.rules` evaluates the SPIFFE ID presented by the
+calling workload. Client addresses and data plane tags are not part of the authorization
+decision.
 
 {:.warning}
-> A workload has no identity until [MeshIdentity](/mesh/policies/meshidentity/) issues one.
-> Apply a `MeshIdentity` before any `MeshTrafficPermission`, or every request is denied.
+> `MeshTrafficPermission` is enforced only on mTLS listeners for workloads selected by
+> [MeshIdentity](/mesh/policies/meshidentity/). A workload with no identity has no mTLS listener
+> for this policy to protect. Define the required permissions before, or at the same time as,
+> activating `MeshIdentity`. A plaintext connection accepted by a permissive `MeshTLS` listener
+> presents no workload identity and is not authorized by `MeshTrafficPermission`.
 
-**Traffic with no matching rule is denied.** A mesh with `MeshIdentity` in place and no
-`MeshTrafficPermission` refuses all service-to-service traffic, so the first policy you write
-has to allow something.
+Once a workload has an identity, authorization is default-deny. A client must match an `allow`
+or `allowWithShadowDeny` entry in a policy that applies to the destination. Otherwise, the
+connection is denied.
 
-## Allow a namespace, deny one client inside it
+## Allow a namespace to reach one workload
 
-This policy applies to proxies labelled `app: my-app`. It accepts any identity in the
-`my-mesh.us-east-2.mesh.local` trust domain, except the `legacy-ns` namespace and one named
-client:
+This policy allows every identity in the `storefront` namespace to connect to workloads labeled
+`app: orders`:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
 type: MeshTrafficPermission
-name: my-app-permissions
+name: allow-storefront-to-orders
 mesh: default
 spec:
   targetRef:
     kind: Dataplane
     labels:
-      app: my-app
+      app: orders
   rules:
     - default:
-        deny:
-          - spiffeID:
-              type: Prefix
-              value: "spiffe://my-mesh.us-east-2.mesh.local/ns/legacy-ns"
-          - spiffeID:
-              type: Exact
-              value: "spiffe://my-mesh.us-east-2.mesh.local/ns/test/sa/client"
         allow:
           - spiffeID:
               type: Prefix
-              value: "spiffe://my-mesh.us-east-2.mesh.local"
+              value: spiffe://default.default.mesh.local/ns/storefront/
 ```
 {% endpolicy_yaml %}
 
-What each field does:
+Read the policy from the destination back to the caller:
 
-* `targetRef` selects **which proxies enforce the policy**. `kind: Dataplane` with `labels`
-  narrows it to one workload; `kind: Mesh` applies it everywhere.
-* `rules` describes **which clients those proxies accept**. Each entry carries `allow`,
-  `deny`, or `allowWithShadowDeny` lists of matchers.
+- `targetRef` selects the `orders` data plane proxies that enforce the policy.
+- `rules[].default.allow` contains the client identities those proxies accept.
+- `Prefix` groups all service accounts under the `storefront` namespace.
+- Every other client is denied unless another applicable policy allows it.
 
-`deny` wins over `allow`, so the order of entries in the lists does not matter.
+There is no `to` array. Access control is enforced inbound at the destination.
 
-## How a request is evaluated
+## How authorization is evaluated
 
 For each request, the proxy walks the matchers in a fixed order:
 
@@ -96,6 +96,41 @@ access that a mesh-wide `deny` has withdrawn.
 >
 > A mesh is already closed. With no `MeshTrafficPermission` in place, nothing is allowed, so
 > write only the `allow` rules for the traffic you want.
+
+## Exclude clients from a broader allow
+
+A `deny` is useful as an exception to an `allow`. In this example, the destination accepts
+clients from the trust domain except for the `legacy` namespace and one service account:
+
+{% policy_yaml namespace=kong-mesh-demo %}
+```yaml
+type: MeshTrafficPermission
+name: trust-domain-with-exceptions
+mesh: default
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      app: orders
+  rules:
+    - default:
+        deny:
+          - spiffeID:
+              type: Prefix
+              value: spiffe://default.default.mesh.local/ns/legacy/
+          - spiffeID:
+              type: Exact
+              value: spiffe://default.default.mesh.local/ns/storefront/sa/retired-client
+        allow:
+          - spiffeID:
+              type: Prefix
+              value: spiffe://default.default.mesh.local/
+```
+{% endpolicy_yaml %}
+
+The two `deny` entries are evaluated first. The broader `allow` then admits every other client
+from the trust domain. A policy containing only the `deny` entries would not open access for
+anyone; unmatched traffic is already denied.
 
 ## Match on identity or SNI
 
@@ -121,23 +156,39 @@ rows:
 `spiffeID` is the matcher for service-to-service access, since it names the client.
 `sni` accepts only `Exact`, and its value has to be a DNS subdomain.
 
-`Prefix` is how you address a group. A SPIFFE ID is structured as
-`spiffe://<trust-domain>/ns/<namespace>/sa/<service-account>`, so a prefix ending at the
+`Prefix` is how you address a group. A Kubernetes SPIFFE ID is structured as
+`spiffe://<trust-domain>/ns/<namespace>/sa/<service-account>`, so a prefix ending after the
 namespace selects every workload in it:
 
 ```yaml
 - spiffeID:
     type: Prefix
-    value: spiffe://default.default.mesh.local/ns/observability
+    value: spiffe://default.default.mesh.local/ns/observability/
 ```
 
-The trust domain comes from the `MeshIdentity` that issued the identity. Read it from
-[MeshTrust](/mesh/policies/meshtrust/) rather than assuming it.
+Prefix matching compares the literal string; it does not understand SPIFFE ID path segments.
+Keep the trailing `/` when matching a namespace. Without it, a prefix ending in
+`/ns/observability` also matches a namespace such as `observability-test`.
 
-## Test a rule before enforcing it
+In a SPIFFE ID, the trust domain is the text after `spiffe://` and before the next `/`. In the
+example above, it is `default.default.mesh.local`.
 
-`allowWithShadowDeny` allows the traffic and logs it as though it had been denied. The
-request succeeds, and the log records what a `deny` would have done:
+Replace that example value with the domain used by your client identities. The exact value is
+in `MeshIdentity.status.trustDomain`, and the corresponding
+[`MeshTrust`](/mesh/policies/meshtrust/) repeats it in `spec.trustDomain`. For example, if
+`spec.trustDomain` is `payments.eu.mesh.local`, a namespace matcher starts with:
+
+```yaml
+value: spiffe://payments.eu.mesh.local/ns/observability/
+```
+
+Do not copy `default.default.mesh.local` unless that is the value shown in your resources.
+
+## Observe a deny before enforcing it
+
+`allowWithShadowDeny` allows a matching client but also records a shadow-deny decision. Combine
+it with the allow rule the destination already uses to observe the effect of moving one group
+into `deny`:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -154,14 +205,32 @@ spec:
         allowWithShadowDeny:
           - spiffeID:
               type: Prefix
-              value: spiffe://default.default.mesh.local/ns/legacy
+              value: spiffe://default.default.mesh.local/ns/legacy/
+        allow:
+          - spiffeID:
+              type: Prefix
+              value: spiffe://default.default.mesh.local/
 ```
 {% endpolicy_yaml %}
 
-Roll a restrictive policy out this way, read the logs to find what it would break, then
-change `allowWithShadowDeny` to `deny`.
+Requests from `legacy` still succeed because `allowWithShadowDeny` is also an allow. Review the
+Envoy RBAC shadow decisions in your configured access logs and metrics. When the observed
+traffic is safe to block, move the matcher from `allowWithShadowDeny` to `deny` and leave the
+broader `allow` in place.
 
-## Narrow a policy to one port
+## Scope authorization to destinations
+
+`targetRef` controls where the authorization rules are enforced:
+
+| Target | Effect |
+| --- | --- |
+| `kind: Mesh` | Enforce the rules on every identified workload in the mesh. |
+| `kind: Dataplane` with `labels` | Enforce the rules only on matching destination proxies. |
+| `kind: Dataplane` with `labels` and `sectionName` | Enforce the rules only on one named inbound of those proxies. |
+
+Omitting `targetRef` has the same effect as `kind: Mesh`.
+
+### Narrow authorization to one port
 
 `targetRef.sectionName` applies the rules to a single named inbound of the selected proxy,
 leaving its other ports alone. This is how a mesh-wide allow rule gets overridden on one
@@ -183,11 +252,11 @@ spec:
         deny:
           - spiffeID:
               type: Prefix
-              value: spiffe://default.default.mesh.local/ns/observability
+              value: spiffe://default.default.mesh.local/ns/observability/
 ```
 {% endpolicy_yaml %}
 
-## Zone proxies
+### Authorize zone proxy traffic
 
 `MeshTrafficPermission` applies to a mesh-scoped zone proxy like any other `Dataplane`.
 Select the proxy role and zone with `targetRef.labels`, and the listener with
@@ -226,15 +295,26 @@ spec:
 ```
 {% endpolicy_yaml %}
 
+This `deny` is an exception to any applicable `allow` entries. It does not allow other
+destinations by itself; unmatched traffic remains denied.
+
 For a walkthrough, see [Apply policies to mesh-scoped zone proxies](/mesh/zone-proxy-policies/).
 
-## Where this policy applies
+## Validate the authorization outcome
 
-`spec.targetRef` selects which proxies enforce the policy: `Mesh`, or `Dataplane` with
-`labels`. `spec.rules[]` selects which clients those proxies accept.
+Validate the outcome from both sides of the boundary:
 
-There is no `to` array. Access control is an inbound question only, so there is nothing to
-select on the outbound side.
+1. Confirm that `targetRef` selects the intended destination proxy and, when set, the intended
+   `sectionName`.
+1. Read the client's issued SPIFFE ID and compare the complete value with the `Exact` or
+   `Prefix` matcher. Do not infer it from workload labels.
+1. Send a request from a client that should be allowed and confirm that it reaches the
+   destination.
+1. Send the same request from a client that should not match and confirm that it is denied.
+1. Where `allowWithShadowDeny` is present, confirm that traffic succeeds and that the shadow
+   decision appears in the configured RBAC telemetry.
+1. Confirm that every protected destination has a `MeshIdentity`. A successful plaintext
+   request does not prove that `MeshTrafficPermission` allowed it.
 
-For the selectors a policy can carry and why inbound matches an identity rather than a name,
-see [How policies select traffic](/mesh/policy-targeting/).
+For more detail about destination selectors and inbound policy matching, see
+[How policies select traffic](/mesh/policy-targeting/).

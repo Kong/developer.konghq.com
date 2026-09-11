@@ -28,7 +28,7 @@ one route matches rather than to everything sent to a destination.
 
 ## Route two paths to different destinations
 
-This policy applies to proxies labelled `app: frontend` and splits requests to `backend` by
+This policy applies to proxies labeled `app: frontend` and splits requests to `backend` by
 path prefix:
 
 {% policy_yaml namespace=kong-mesh-demo %}
@@ -69,6 +69,10 @@ spec:
                 port: 8080
 ```
 {% endpolicy_yaml %}
+
+The first rule sends `/orders` and every path below it to the `orders` service. The second is
+the catch-all: it sends every other path to `backend`. Both destinations use port 8080. The
+order in the YAML does not decide which rule wins; `/orders` is more specific than `/`.
 
 ## Where this policy applies
 
@@ -253,3 +257,14 @@ described in [How policies select traffic](/mesh/policy-targeting/).
 Where a proxy is matched by both a `MeshHTTPRoute` and a
 [`MeshTCPRoute`](/mesh/policies/meshtcproute/) for the same destination, the
 `MeshHTTPRoute` takes effect and the `MeshTCPRoute` is ignored.
+
+## Validate HTTP routing
+
+Send one request whose path matches each rule, and one that should be unmatched if your route
+does not include a catch-all. Confirm that each matched request reaches the expected backend,
+and that an unmatched request returns `404` rather than reaching the destination.
+
+When a route splits traffic by weight, send enough requests to observe the distribution. A
+small sample does not prove the configured ratio. If a request returns `500` or `503`, inspect
+the `backendRefs` first: the destination may not resolve, the named port may not exist, or all
+weights may be zero.

@@ -30,7 +30,7 @@ from real traffic rather than from probes, which is what distinguishes it from
 
 ## Cap connections to a destination
 
-This policy applies to proxies labelled `app: web`, and governs the connections they open to
+This policy applies to proxies labeled `app: web`, and governs the connections they open to
 `backend`:
 
 {% policy_yaml namespace=kong-mesh-demo %}
@@ -206,3 +206,15 @@ spec:
 
 `rules` currently applies to all inbound traffic at the selected proxies. There is no L7
 matching, so a single catch-all entry is the only shape available.
+
+## Validate the circuit breaker
+
+1. Drive more concurrent work than the configured `connectionLimits` allow and confirm that the
+   excess fails at the client proxy without reaching the destination.
+1. If retries are enabled, confirm that concurrent retries stop at `maxRetries`.
+1. Make one endpoint produce the failures configured under `detectors` and keep enough traffic
+   flowing for the detector to evaluate it.
+1. Confirm that traffic stops reaching the ejected endpoint and returns after the effective
+   `baseEjectionTime`.
+1. Test the `healthyPanicThreshold` behavior with enough unhealthy endpoints to cross the
+   configured percentage.

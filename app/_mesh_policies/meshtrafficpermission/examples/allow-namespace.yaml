@@ -1,6 +1,6 @@
 title: 'Allow traffic from a namespace'
 
-description: 'Use MeshTrafficPermission to allow requests from every workload in a namespace by matching a SPIFFE ID prefix.'
+description: 'Allow every workload in one namespace to reach all identified destinations in the mesh by matching a SPIFFE ID prefix.'
 
 weight: 900
 
@@ -11,9 +11,11 @@ config:
   name: allow-observability-ns
   mesh: default
   spec:
+    targetRef:
+      kind: Mesh
     rules:
       - default:
           allow:
             - spiffeID:
                 type: Prefix
-                value: spiffe://default.default.mesh.local/ns/observability
+                value: spiffe://default.default.mesh.local/ns/observability/

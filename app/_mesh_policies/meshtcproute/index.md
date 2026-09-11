@@ -26,7 +26,7 @@ holds one rule, and that rule applies to every connection the client opens to th
 
 ## Split connections between two destinations
 
-This policy applies to proxies labelled `app: frontend` and sends a tenth of their connections
+This policy applies to proxies labeled `app: frontend` and sends a tenth of their connections
 to `backend` to a second destination:
 
 {% policy_yaml namespace=kong-mesh-demo %}
@@ -59,6 +59,15 @@ spec:
                 weight: 10
 ```
 {% endpolicy_yaml %}
+
+Read the policy from the client to the backends:
+
+- `targetRef` selects the `frontend` proxies that make the connections.
+- `to[].targetRef` selects connections whose original destination is `backend`.
+- `backendRefs` replaces that destination with a 90/10 weighted split between `backend` and
+  `backend-next`.
+- The weights apply to TCP connections, not to individual requests sent over a reused
+  connection.
 
 ## Where this policy applies
 
@@ -112,3 +121,13 @@ Where a destination's protocol is HTTP based, `MeshHTTPRoute` owns its routing a
 HTTP-based destination that no `MeshHTTPRoute` targets. The protocol comes from
 `networking.inbound[].protocol` on the destination's `Dataplane`, which on Kubernetes is
 derived from the `Service` port.
+
+## Validate TCP routing
+
+1. Open new connections from a proxy selected by `targetRef` to the destination selected by
+   `to[].targetRef`.
+1. Confirm that each connection reaches one of the resolved `backendRefs`.
+1. Use enough independent connections to observe the configured weight distribution. Sending
+   many requests over one persistent connection does not test the split.
+1. Repeat the test with one backend unavailable and confirm that its share is removed.
+1. If all backends are unavailable, confirm that the client fails at connection time.

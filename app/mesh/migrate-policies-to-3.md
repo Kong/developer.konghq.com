@@ -1,6 +1,6 @@
 ---
 title: "Migrate policies to {{site.mesh_product_name}} 3"
-description: "What changed in each policy between 2.x and 3, which changes are rejected on apply and which are accepted and silently do nothing, and the rewrite each one needs."
+description: "Prepare and migrate policies from {{site.mesh_product_name}} 2.x to 3, including shared API changes, policy-specific rewrites, and validation checks."
 content_type: reference
 layout: reference
 products:
@@ -20,23 +20,87 @@ related_resources:
     url: /mesh/version-specific-upgrade-notes/
 ---
 
-This page covers the policy changes in {{site.mesh_product_name}} 3. For the control plane and
-data plane changes around them, see the
-[version-specific upgrade notes](/mesh/version-specific-upgrade-notes/).
+This guide helps teams migrate policy configuration from {{site.mesh_product_name}} 2.x to 3.
+It separates changes shared by several policies from policy-specific rewrites, and identifies
+the changes that can alter traffic without producing a validation error.
 
-Do the work before upgrading. A policy already stored in the control plane is not re-validated,
-so one carrying a removed field keeps being served in the zone it was applied to, and then fails
-to sync into any zone that is upgraded after it.
+Use it alongside the [{{site.mesh_product_name}} upgrade guide](/mesh/upgrade/) and the
+[version-specific upgrade notes](/mesh/version-specific-upgrade-notes/), which cover control
+plane, data plane, and deployment changes outside the policy APIs.
 
-Two kinds of change are described below, and the difference decides how much attention each
-needs:
+{:.warning}
+> Complete these policy changes before upgrading a zone. A policy already stored in the control
+> plane is not validated again. A resource carrying a removed field can keep working in its current
+> zone, then fail to sync into a zone after that zone is upgraded.
+
+The guide calls out four kinds of change:
 
 - **Rejected on apply.** The control plane returns a validation error, so the policy cannot be
   written until it is fixed. These announce themselves.
-- **Accepted and ignored.** The field is no longer in the schema, so it is pruned by CRD
-  validation on Kubernetes and discarded during deserialization on Universal. The policy applies
-  successfully and the setting does nothing. Nothing reports it, which is why these are listed
-  first in each section.
+- **Accepted and ignored.** A removed field is pruned by CRD validation on Kubernetes or
+  discarded during deserialization on Universal. The resource applies, but the setting does
+  nothing.
+- **Accepted with different behavior.** The same configuration remains valid, but routing,
+  precedence, defaults, or generated proxy configuration changes.
+- **Resource removed or inert.** The old object may remain stored, but the control plane no
+  longer uses it to generate proxy configuration.
+
+The last three are the highest-risk changes because a successful apply does not prove that the
+old behavior was preserved.
+
+## Migration workflow
+
+Follow this order so later policy rewrites build on identities and resources that already exist:
+
+1. **Inventory and export the current state.** Save every `Mesh`, policy, legacy policy, and
+   observability backend from the Global and Zone control planes. Include resources that are
+   normally generated or managed through GitOps, not only resources applied by hand.
+1. **Create workload identity and trust first.** Replace `Mesh.mtls` with
+   [MeshIdentity](/mesh/migrate-mtls-to-meshidentity/) and confirm its
+   [MeshTrust](#meshtrust) before changing `MeshTrafficPermission` or `MeshTLS`.
+1. **Rewrite the shared policy shape.** Replace legacy top-level target kinds, switch real
+   resource references to labels, and move inbound configuration from `from` to `rules`. Apply
+   the changes under [Changes that affect every policy](#changes-that-affect-every-policy) to
+   every policy type before working through policy-specific fields.
+1. **Fix routing before policies that attach to routes.** Migrate `MeshHTTPRoute` and
+   `MeshTCPRoute` backend references, then decide how unmatched HTTP requests should behave.
+   Retry, timeout, access-log, and load-balancing policies can all depend on those routes.
+1. **Apply the policy-specific rewrites.** Use the [policy migration index](#policy-migration-index)
+   to open only the sections relevant to resources in your deployment.
+1. **Read every changed resource back.** Confirm that Kubernetes CRD pruning or Universal
+   deserialization did not remove a field that carried the intended behavior. Pay particular
+   attention to a `Dataplane` `targetRef` that comes back without `labels`.
+1. **Validate a representative traffic path.** Check identity, authorization, routing,
+   resilience, and telemetry on a non-production zone before upgrading the remaining zones. Use
+   [Validate the migrated policies](#validate-the-migrated-policies) as the final gate.
+
+## Policy migration index
+
+The detailed policy sections are a reference rather than a second sequence of steps. Start with
+the policies present in your exported configuration.
+
+| Policy or resource | Main migration work | Risk if missed |
+| --- | --- | --- |
+| [MeshIdentity](#meshidentity) | Replace `Mesh.mtls`; plan immutable trust domains. | Proxies can lose mTLS and serve plaintext. |
+| [MeshTrust](#meshtrust) | Preserve external and transitional trust; remove generated trusts deliberately. | Peers can stop verifying workload certificates. |
+| [MeshTrafficPermission](#meshtrafficpermission) | Create identity first, rewrite `from` as `rules`, and remove deny-all rules. | Traffic is denied, or intended grants match no identity. |
+| [MeshTLS](#meshtls) | Preserve permissive mode explicitly and rewrite `from` as `rules`. | Plaintext is unexpectedly allowed or rejected. |
+| [MeshPassthrough](#meshpassthrough) | Replace `Mesh` settings, add domain ports, and resolve filter-chain collisions. | External traffic becomes broader or stops working. |
+| [MeshHTTPRoute](#meshhttproute) | Rewrite selectors and backend refs; add intentional catch-all behavior. | Requests return `404`, `500`, or `503`. |
+| [MeshTCPRoute](#meshtcproute) | Add required backend refs and resolve every destination. | Connections lose traffic shares or fail to connect. |
+| [MeshLoadBalancingStrategy](#meshloadbalancingstrategy) | Move hash policies and cross-zone failover configuration. | Session affinity or locality behavior changes silently. |
+| [MeshCircuitBreaker](#meshcircuitbreaker) | Move `healthyPanicThreshold` and review proxy patches. | Endpoint ejection uses an unintended threshold. |
+| [MeshHealthCheck](#meshhealthcheck) | Move `healthyPanicThreshold` to `MeshCircuitBreaker`. | The removed field is silently ignored. |
+| [MeshRetry](#meshretry) | Apply shared selector changes and lowercase header names. | The policy is rejected on apply. |
+| [MeshTimeout](#meshtimeout) | Apply the shared selector, inbound-rule, route, and protocol changes. | Timeouts disappear from some traffic paths. |
+| [MeshFaultInjection](#meshfaultinjection) | Rewrite inbound rules and separate gateway `to` behavior. | Faults are rejected or run on the wrong side of traffic. |
+| [MeshRateLimit](#meshratelimit) | Split `to` and `rules`, separate TCP and identity matches, and check intervals. | Limits are rejected or no longer cover intended traffic. |
+| [MeshAccessLog](#meshaccesslog) | Move mesh logging into a policy and use a shared OpenTelemetry backend. | Access logs stop without an error. |
+| [MeshMetric](#meshmetric) | Move OpenTelemetry endpoints, replace removed TLS behavior, and migrate Kubernetes discovery from MADS. | Metrics stop or are exposed without TLS. |
+| [MeshTrace](#meshtrace) | Move OpenTelemetry endpoints into `MeshOpenTelemetryBackend`. | Trace export is skipped. |
+| [MeshOPA](#meshopa) | Rewrite secure data sources and targeting; remove legacy `OPAPolicy`. | Authorization evaluates a wider scope or stops applying. |
+| [MeshProxyPatch](#meshproxypatch) | Replace gateway-origin matches and review circuit-breaker patches. | Patches stop matching or begin overriding policy fields. |
+| [MeshGlobalRateLimit](#meshglobalratelimit) | Remove the policy, service, configuration, and optional leftover CRD. | Fleet-wide limits disappear because there is no 3.x replacement. |
 
 ## Changes that affect every policy
 
@@ -110,7 +174,7 @@ to:
 
 ### Two schema defaults are no longer stored
 
-A linter fix removed two declared defaults from the API. Neither changes behaviour, and neither
+A linter fix removed two declared defaults from the API. Neither changes behavior, and neither
 needs action:
 
 - Header matches on `MeshHTTPRoute` and `MeshRetry` no longer declare a default of `Exact` for
@@ -257,7 +321,7 @@ RBAC filter.
 The control plane also no longer creates the default allow-all `TrafficPermission` and
 route-all `TrafficRoute` when a `Mesh` is created.
 
-## Changes that affect both route policies
+## Changes that affect MeshHTTPRoute and MeshTCPRoute
 
 ### MeshServiceSubset is no longer a backendRef kind
 
@@ -313,6 +377,10 @@ identity comes from a [MeshIdentity](/mesh/policies/meshidentity/).
 
 Until every proxy a policy covers has an identity, a rewritten policy matches nothing, and
 traffic that matches no rule is denied.
+
+Follow [Migrate mesh mTLS to MeshIdentity](/mesh/migrate-mtls-to-meshidentity/) to stage the
+future SPIFFE IDs, canary certificate issuance, preserve permissive TLS where required, and
+verify every proxy before upgrading.
 
 ### Rewrite from as rules, and action as a list
 
@@ -467,7 +535,7 @@ Keep the rest of the `MeshHealthCheck` as it is. Only the threshold moves.
 ### Review MeshProxyPatch circuit breaker patches
 
 A `MeshProxyPatch` patching `circuitBreakers` used to append a second threshold for a priority
-the cluster already had, and Envoy honours only the first, so the patch was dead configuration
+the cluster already had, and Envoy honors only the first, so the patch was dead configuration
 while `/config_dump` showed the requested values. The patch now merges into the existing
 threshold instead.
 
@@ -503,16 +571,17 @@ destination in another namespace, and any `backendRef` with an explicit `port` o
 A rule whose `backendRefs` all have weight `0` answers `503`, and a rule carrying a
 `RequestRedirect` filter still redirects, since it answers without an upstream.
 
-### Fields that are accepted and unimplemented
+### Remove fields that are present in the schema but unimplemented
 
-`to[].hostnames` and `urlRewrite.hostToBackendHostname` are present in the schema but not
-implemented, and setting either is rejected with `must not be defined`.
+`to[].hostnames` and `urlRewrite.hostToBackendHostname` remain present in the schema but are not
+implemented. Remove either field before migrating; setting one is rejected with
+`must not be defined`.
 
 ## MeshTCPRoute
 
 Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#real-resources-are-selected-by-labels), [the two dropped schema defaults](#two-schema-defaults-are-no-longer-stored), [MeshServiceSubset backend refs](#meshservicesubset-is-no-longer-a-backendref-kind), [naming a destination rather than the mesh](#a-route-names-a-destination-not-the-mesh) and [the legacy policies going inert](#legacy-policies-no-longer-generate-configuration).
 
-### backendRefs is now required
+### `backendRefs` is now required
 
 A rule must declare `backendRefs`. An empty or missing list is rejected with
 `backendRefs (): must be defined`. This differs from `MeshHTTPRoute`, where omitting the list
@@ -541,6 +610,7 @@ not apply to them. What does apply is that they are now required.
 > `MeshTLS` and `MeshTrafficPermission` no longer apply to its proxies at all.
 
 Create a `MeshIdentity` for every mesh that had mTLS through `Mesh.mtls`, before upgrading. See
+[Migrate mesh mTLS to MeshIdentity](/mesh/migrate-mtls-to-meshidentity/) for the rollout order,
 [MeshIdentity](/mesh/policies/meshidentity/) for the provider options, and
 [MeshTrafficPermission](#meshtrafficpermission) for the access control that depends on it.
 
@@ -903,7 +973,7 @@ Duplicate the entry to allow one domain on several ports, and check that the sid
 those names: a domain it cannot resolve has no endpoint, so its traffic fails rather than
 following the original destination.
 
-A wildcard `Domain` keeps the old behaviour, because there is no single address to resolve. Its
+A wildcard `Domain` keeps the old behavior, because there is no single address to resolve. Its
 traffic goes to the address the client dialed and the match only restricts the SNI or `Host`, so
 a workload covered by a wildcard entry can still dial any address and present a matching name to
 reach it. Prefer exact domains, IPs or CIDR ranges where the set of destinations is known.
@@ -981,7 +1051,7 @@ on ordinary proxies.
 ### Check patches that set circuit breaker thresholds
 
 A patch on `circuitBreakers` used to append a second threshold for a priority the cluster
-already had, and Envoy honours only the first, so the patch was dead configuration while
+already had, and Envoy honors only the first, so the patch was dead configuration while
 `/config_dump` showed the requested values. Thresholds are now keyed by priority and the patch
 merges into the existing one.
 
@@ -1097,7 +1167,13 @@ applies here too.
 
 ## MeshTimeout
 
-MeshTimeout has no changes of its own. What it is subject to: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#real-resources-are-selected-by-labels), [the `from` to `rules` move](#the-from-array-is-replaced-by-rules), [the `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404), [the Universal inbound protocol change](#universal-inbounds-must-declare-their-protocol) and [the legacy policies going inert](#legacy-policies-no-longer-generate-configuration).
+`MeshTimeout` has no policy-specific field changes. It is still affected by
+[the `targetRef` rewrite](#legacy-targetref-kinds-are-removed),
+[labels-only selection](#real-resources-are-selected-by-labels),
+[the `from` to `rules` move](#the-from-array-is-replaced-by-rules),
+[the `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404),
+[the Universal inbound protocol change](#universal-inbounds-must-declare-their-protocol), and
+[legacy policies becoming inert](#legacy-policies-no-longer-generate-configuration).
 
 ## MeshHealthCheck
 
@@ -1126,3 +1202,30 @@ covers.
 A `MeshGateway`-targeted 2.x policy that used `to` therefore has nowhere to go as a
 `Dataplane`: keep `kind: Mesh` and narrow the destination in `to[].targetRef`, or drop `to` and
 configure the faults inbound.
+
+## Validate the migrated policies
+
+A policy being accepted by the API only proves that its schema is valid. Complete the migration
+by checking the behavior each policy is intended to produce.
+
+1. Read the migrated resources back from the API. Confirm that no fields were silently removed
+   and that every `Dataplane` reference includes the labels needed to select the intended proxy.
+2. Confirm that every mesh has the required `MeshIdentity`, `MeshTrust`, and `MeshTLS`
+   configuration. Test one connection that should be allowed and one that should be denied.
+3. Exercise every route path that matters: a matching HTTP request, an unmatched HTTP request,
+   every `backendRef`, and at least one cross-zone destination where applicable. Test TCP routes
+   at connection time.
+4. Trigger the behavior of resilience and traffic policies instead of checking only that the
+   resources exist. Verify retries, timeouts, rate limits, circuit breakers, health checks, and
+   fault injection against their expected outcomes.
+5. Confirm that access logs, metrics, and traces reach their configured backends. For
+   OpenTelemetry, check that each `MeshOpenTelemetryBackend` reports the expected policy
+   references and that the relevant data planes report an OpenTelemetry status.
+6. Review control plane and data plane status for unresolved references, rejected configuration,
+   synchronization failures, and policies that no longer generate configuration.
+7. Upgrade a non-production zone first, repeat these checks, and then proceed with the remaining
+   zones.
+
+The migration is complete when the stored resources match the intended 3.x configuration, the
+proxies receive valid configuration, and both the expected success and failure paths behave as
+designed.

@@ -31,7 +31,7 @@ or a rate limit that clears in a second or two.
 
 ## Retry HTTP requests to a destination
 
-This policy applies to proxies labelled `app: frontend`, and governs the requests they make
+This policy applies to proxies labeled `app: frontend`, and governs the requests they make
 to the `backend` service:
 
 {% policy_yaml namespace=kong-mesh-demo %}
@@ -233,3 +233,13 @@ gives up and uses the last host it selected. It defaults to one reattempt.
 `retriableRequestHeaders` requires a header to be present on the request before any retry is
 attempted, which is how a client opts a request in. `retriableResponseHeaders` retries when
 the response carries a matching header, alongside whatever `retryOn` matched.
+
+## Validate retry behavior
+
+Test with a destination that can fail in a controlled way, and observe both the client response
+and the number of attempts received by the destination. For the first example, one original
+request can produce up to four attempts: the first attempt plus `numRetries: 3`.
+
+Check a slow failure separately. `perTryTimeout: 2s` limits each attempt, but the route's
+overall request timeout can end the operation before every retry runs. If attempts exceed the
+expected count, check for retries in the application or another proxy as well as in this policy.

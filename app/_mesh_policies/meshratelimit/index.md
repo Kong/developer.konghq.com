@@ -29,7 +29,7 @@ instance.
 
 ## Limit requests to a destination
 
-This policy applies to proxies labelled `app: backend` and caps what each of them accepts at
+This policy applies to proxies labeled `app: backend` and caps what each of them accepts at
 five requests per ten seconds:
 
 {% policy_yaml namespace=kong-mesh-demo %}
@@ -51,6 +51,10 @@ spec:
               interval: 10s
 ```
 {% endpolicy_yaml %}
+
+`targetRef` selects the `backend` proxies that count and reject requests. Each proxy gets its
+own bucket of five requests, refilled every ten seconds. The sixth request within that interval
+receives `429 Too Many Requests` by default and does not reach the application.
 
 ## Where this policy applies
 
@@ -152,7 +156,7 @@ spec:
   rules:
     - matches:
         - spiffeID:
-            type: Prefix
+            type: Exact
             value: spiffe://default.default.mesh.local/ns/kong-mesh-demo/sa/batch
       default:
         local:
@@ -171,6 +175,12 @@ spec:
 
 Each `matches` entry needs at least one of `spiffeID` or `sni`, and a `spiffeID` must set
 `type`.
+
+For a `spiffeID` match, read the client's domain from `MeshIdentity.status.trustDomain` and
+place it after `spiffe://` in `rules[].matches[].spiffeID.value`. For example, a status value
+of `payments.eu.mesh.local` and the default Kubernetes path produce the exact client ID
+`spiffe://payments.eu.mesh.local/ns/kong-mesh-demo/sa/batch`. Do not copy
+`default.default.mesh.local` unless that is the value in the matching client's identity.
 
 A rule that matches on `spiffeID` cannot carry `local.tcp`, and doing so is rejected with
 `can't be specified when matches contain spiffeID because this field cannot be conditioned on
@@ -195,9 +205,9 @@ spec:
       app: backend
   rules:
     - matches:
-        - spiffeID:
-            type: Prefix
-            value: spiffe://default.default.mesh.local/ns/observability
+            - spiffeID:
+                type: Prefix
+                value: spiffe://default.default.mesh.local/ns/observability/
       default:
         local:
           http:
@@ -207,3 +217,14 @@ spec:
 
 `local.http` needs at least one of `disabled`, `requestRate` or `onRateLimit`, and `local.tcp`
 at least one of `disabled` or `connectionRate`.
+
+## Validate the rate limit
+
+1. Send requests below the configured rate and confirm that they reach the application.
+1. Exceed the bucket within one interval and confirm that the proxy returns the configured
+   status and headers without sending the rejected requests upstream.
+1. Wait for the interval to refill and confirm that requests succeed again.
+1. Repeat the test against each destination replica. The limit is local to each proxy, not
+   shared across the deployment.
+1. For a client-specific HTTP rule, send the same traffic from a non-matching SPIFFE ID and
+   confirm that it uses the fallback rule.

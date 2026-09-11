@@ -27,7 +27,7 @@ is built, and nothing reports it beyond the patch no longer taking effect.
 
 ## Add a Lua filter to outbound requests
 
-This policy applies to proxies labelled `app: backend` and inserts a Lua filter before the
+This policy applies to proxies labeled `app: backend` and inserts a Lua filter before the
 router filter on their outbound HTTP traffic:
 
 {% policy_yaml namespace=kong-mesh-demo %}
@@ -57,6 +57,11 @@ spec:
                 end
 ```
 {% endpolicy_yaml %}
+
+`targetRef` limits the patch to `backend` proxies. `match.name` identifies the existing Envoy
+router filter, and `origin: outbound` limits the match to outbound HTTP filter chains.
+`AddBefore` inserts the Lua filter immediately before that router, so every matching outbound
+HTTP request receives the `x-header: test` header before it is forwarded.
 
 ## Where this policy applies
 
@@ -208,11 +213,22 @@ three kinds of field differently:
   list of filters adds to it.
 - A duration is **replaced**, so patching `connectTimeout` sets it rather than combining it.
 - Circuit breaker thresholds are keyed by routing priority instead of appended. Every generated
-  cluster already carries a `DEFAULT`-priority threshold, and Envoy honours only the first
+  cluster already carries a `DEFAULT`-priority threshold, and Envoy honors only the first
   threshold for a priority, so appending a second would leave the patch as dead configuration.
   A patch merges into the threshold of the same priority, and a `value` listing one priority
   twice keeps the first entry. `per_host_thresholds` behaves the same way.
 
-That last behaviour means a `MeshProxyPatch` and a
+That last behavior means a `MeshProxyPatch` and a
 [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/) on one cluster combine rather than
 conflict: the patch wins the fields it names, and the policy keeps the rest.
+
+## Validate the generated configuration
+
+Read the selected proxy's Envoy `/config_dump` and confirm that the intended resource was
+changed. For the first example, find `envoy.filters.http.lua` immediately before
+`envoy.filters.http.router` on an outbound filter chain. Then send a request through that proxy
+and confirm that the destination receives `x-header: test`.
+
+Repeat the configuration check after upgrading {{site.mesh_product_name}}. A
+`MeshProxyPatch` can remain valid and stored while matching no generated resource, so successful
+resource validation alone does not prove that the patch still applies.

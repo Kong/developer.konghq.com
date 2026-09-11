@@ -28,7 +28,7 @@ active checks, since there may not be enough requests to judge it by.
 
 ## Probe a destination over HTTP
 
-This policy applies to proxies labelled `app: web`, and probes the endpoints of `backend`:
+This policy applies to proxies labeled `app: web`, and probes the endpoints of `backend`:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -56,6 +56,10 @@ spec:
             - 200
 ```
 {% endpolicy_yaml %}
+
+`targetRef` selects the `web` proxies that send probes, while `to[].targetRef` selects the
+`backend` endpoints they probe. An endpoint is removed after three consecutive probes fail or
+time out, and one successful probe returns it to the healthy pool.
 
 ## Where this policy applies
 
@@ -114,7 +118,7 @@ which staggers proxies that start together. `intervalJitter` adds a fixed amount
 wait, and `intervalJitterPercent` adds a proportion of `intervalJitter`. Setting both applies
 both.
 
-### Behaviour in panic mode
+### Behavior in panic mode
 
 `failTrafficOnPanic` changes what happens when a cluster enters Envoy's panic mode, where too
 few endpoints remain healthy. Left unset, panic mode sends traffic to all endpoints including
@@ -190,3 +194,16 @@ spec:
 `serviceName` is passed to the destination's gRPC health service. `authority` sets the
 `:authority` header on the probe, and defaults to the name of the cluster the check belongs
 to.
+
+## Validate endpoint health
+
+1. Make one destination endpoint fail the configured health check while leaving another
+   endpoint healthy.
+1. Wait for `unhealthyThreshold` consecutive probes and confirm that new traffic stops reaching
+   the failing endpoint.
+1. Restore the endpoint, wait for `healthyThreshold` successful probes, and confirm that it
+   receives traffic again.
+1. Confirm that a probe timeout is shorter than the interval and that the probe volume is safe
+   for the number of client proxies.
+1. If `failTrafficOnPanic` is enabled, make enough endpoints unhealthy to enter panic mode and
+   confirm that requests fail instead of returning to unhealthy endpoints.
