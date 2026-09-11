@@ -1,5 +1,5 @@
 {% capture wrapper %}
-<div markdown="1"{% if config.data_validate %} data-test-step="{{ config.data_validate | escape }}"{% endif %}>
+<div class="content" markdown="1"{% if config.data_validate %} data-test-step="{{ config.data_validate | escape }}"{% endif %}>
 
 {% include how-tos/event-gateway-quickstart/snippet.md config=config no_copy_code=true %}
 
