@@ -17,10 +17,8 @@ search_aliases:
 related_resources:
   - text: Enforce tiered AI budgets on AI Models with {{site.identity}}
     url: /ai-gateway/enforce-tiered-ai-budgets-with-kong-identity/
-related_resources:
   - text: AI Consumer
     url: /ai-gateway/entities/ai-consumer/
-related_resources:
   - text: AI Consumer Group
     url: /ai-gateway/entities/ai-consumer-group/
 ---
