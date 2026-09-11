@@ -735,7 +735,7 @@ curl -X GET "http://localhost:8000?client_id=2"
 
 {% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
 
-{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=2 %}
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=2 redis_group="oidc" %}
 
 ## Debugging the OIDC plugin
 

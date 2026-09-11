@@ -107,4 +107,4 @@ The matching behavior is as follows:
 
 {% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
 
-{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 %}
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 redis_group="vectordb" %}
