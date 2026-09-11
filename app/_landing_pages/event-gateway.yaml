@@ -288,6 +288,7 @@ rows:
                         Mask Fields policy
                       guide: |
                         [Mask sensitive fields in Kafka messages](/event-gateway/mask-kafka-message-fields/)
+                        or [mask fields selected by schema registry tags](/event-gateway/mask-kafka-message-fields-from-schema/)
                 - usecase: |
                     **Simplify your Kafka deployment** because it's too complicated and expensive
                   outcomes:
