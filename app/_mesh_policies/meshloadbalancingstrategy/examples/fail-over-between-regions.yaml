@@ -1,0 +1,37 @@
+title: 'Fail over within a region before leaving it'
+
+description: 'Order cross-zone failover so a client tries the other zones in its own region first, and only then a zone in another region.'
+
+weight: 600
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshLoadBalancingStrategy
+  name: backend-regional-failover
+  mesh: default
+  spec:
+    to:
+      - targetRef:
+          kind: MeshMultiZoneService
+          labels:
+            kuma.io/display-name: backend
+        default:
+          localityAwareness:
+            crossZone:
+              failover:
+                - from:
+                    zones: ["us-1", "us-2", "us-3"]
+                  to:
+                    type: Only
+                    zones: ["us-1", "us-2", "us-3"]
+                - from:
+                    zones: ["eu-1", "eu-2", "eu-3"]
+                  to:
+                    type: Only
+                    zones: ["eu-1", "eu-2", "eu-3"]
+                - to:
+                    type: Only
+                    zones: ["us-4"]
+              failoverThreshold:
+                percentage: 70

@@ -193,22 +193,16 @@ app/_mesh_policies/v2/meshidentity/index.md:
 app/_mesh_policies/v2/meshidentity/reference.md:
   canonical_url: /mesh/policies/meshidentity/reference/
 app/_mesh_policies/v2/meshloadbalancingstrategy/examples/disable-cross-zone-traffic.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshloadbalancingstrategy/examples/prefer-nearby-endpoints/
 app/_mesh_policies/v2/meshloadbalancingstrategy/examples/disable-locality-aware.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshloadbalancingstrategy/examples/spread-requests-across-zones/
 app/_mesh_policies/v2/meshloadbalancingstrategy/examples/load-balancing-http-traffic.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshloadbalancingstrategy/examples/hash-on-a-header/
 app/_mesh_policies/v2/meshloadbalancingstrategy/examples/prioritize-traffic-to-data-planes.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshloadbalancingstrategy/examples/fail-over-between-regions/
 app/_mesh_policies/v2/meshloadbalancingstrategy/examples/route-equally.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshloadbalancingstrategy/examples/prefer-nearby-endpoints/
 app/_mesh_policies/v2/meshloadbalancingstrategy/index.md:
-  status: pending
   canonical_url: /mesh/policies/meshloadbalancingstrategy/
 app/_mesh_policies/v2/meshloadbalancingstrategy/reference.md:
   canonical_url: /mesh/policies/meshloadbalancingstrategy/reference/
