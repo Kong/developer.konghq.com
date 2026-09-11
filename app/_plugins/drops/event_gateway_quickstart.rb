@@ -17,9 +17,11 @@ module Jekyll
         @yaml.fetch('section', 'step')
       end
 
-      def data_validate
-        return nil if section == 'prereq'
+      def test_attribute
+        section == 'prereq' ? 'data-test-prereq' : 'data-test-step'
+      end
 
+      def data_validate
         JSON.dump({ name: 'quickstart', config: { env: env } })
       end
     end

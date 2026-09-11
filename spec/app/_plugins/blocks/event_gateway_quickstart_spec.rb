@@ -43,12 +43,19 @@ RSpec.describe Jekyll::EventGatewayQuickstart do
         <<~LIQUID
           {% event_gateway_quickstart %}
           section: prereq
+          env:
+            FOO: bar
           {% endevent_gateway_quickstart %}
         LIQUID
       end
 
-      it 'emits no test declaration' do
+      it 'declares itself as a prereq instead of a step' do
         expect(html).not_to have_css('div[data-test-step]')
+
+        payload = JSON.parse(html.find('div[data-test-prereq]')['data-test-prereq'])
+
+        expect(payload['name']).to eq('quickstart')
+        expect(payload['config']['env']).to eq({ 'FOO' => 'bar' })
       end
     end
   end
