@@ -668,8 +668,8 @@
 /mesh/policies/meshpassthrough/examples/passthrough-specific-endpoints/  /mesh/v2/policies/meshpassthrough/examples/passthrough-specific-endpoints/  301
 /mesh/policies/meshproxypatch/examples/lua-filter/  /mesh/v2/policies/meshproxypatch/examples/lua-filter/  301
 /mesh/policies/meshproxypatch/examples/time-out-adjustment/  /mesh/v2/policies/meshproxypatch/examples/time-out-adjustment/  301
-/mesh/policies/meshratelimit/examples/configure-on-services/  /mesh/v2/policies/meshratelimit/examples/configure-on-services/  301
-/mesh/policies/meshratelimit/examples/tcp-rate-limit/  /mesh/v2/policies/meshratelimit/examples/tcp-rate-limit/  301
+/mesh/policies/meshratelimit/examples/configure-on-services/  /mesh/policies/meshratelimit/examples/limit-requests-per-interval/  301
+/mesh/policies/meshratelimit/examples/tcp-rate-limit/  /mesh/policies/meshratelimit/examples/limit-tcp-connections/  301
 /mesh/policies/meshretry/examples/deadlineexceeded/  /mesh/policies/meshretry/examples/retry-grpc-deadline-exceeded/  301
 /mesh/policies/meshretry/examples/http-frontend-to-backend/  /mesh/policies/meshretry/examples/retry-http-5xx/  301
 /mesh/policies/meshretry/examples/tcp-frontend-to-backend/  /mesh/policies/meshretry/examples/retry-tcp-connect/  301

@@ -1,0 +1,30 @@
+title: 'Limit requests and customise the rejection'
+
+description: 'Cap a destination at five requests per ten seconds, and answer rejected requests with a chosen status and header.'
+
+weight: 900
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshRateLimit
+  name: backend-rate-limit
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    rules:
+      - default:
+          local:
+            http:
+              requestRate:
+                num: 5
+                interval: 10s
+              onRateLimit:
+                status: 503
+                headers:
+                  set:
+                    - name: x-kuma-rate-limited
+                      value: "true"

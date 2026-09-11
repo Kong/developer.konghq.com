@@ -248,13 +248,10 @@ app/_mesh_policies/v2/meshproxypatch/index.md:
 app/_mesh_policies/v2/meshproxypatch/reference.md:
   canonical_url: /mesh/policies/meshproxypatch/reference/
 app/_mesh_policies/v2/meshratelimit/examples/configure-on-services.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshratelimit/examples/limit-requests-per-interval/
 app/_mesh_policies/v2/meshratelimit/examples/tcp-rate-limit.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshratelimit/examples/limit-tcp-connections/
 app/_mesh_policies/v2/meshratelimit/index.md:
-  status: pending
   canonical_url: /mesh/policies/meshratelimit/
 app/_mesh_policies/v2/meshratelimit/reference.md:
   canonical_url: /mesh/policies/meshratelimit/reference/

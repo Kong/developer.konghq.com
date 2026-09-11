@@ -1,0 +1,24 @@
+title: 'Limit traffic through gateways'
+
+description: 'Use the Mesh form of the policy, with a to entry, to rate limit what gateways accept. A gateway has no inbound side of its own to configure.'
+
+weight: 500
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshRateLimit
+  name: gateway-rate-limit
+  mesh: default
+  spec:
+    targetRef:
+      kind: Mesh
+    to:
+      - targetRef:
+          kind: Mesh
+        default:
+          local:
+            http:
+              requestRate:
+                num: 1000
+                interval: 1s
