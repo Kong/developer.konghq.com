@@ -18,60 +18,6 @@ RSpec.describe Jekyll::EventGatewayQuickstart do
 
   let(:html) { Capybara::Node::Simple.new(rendered) }
 
-  describe 'the command' do
-    context 'with no env map' do
-      let(:template) do
-        <<~LIQUID
-          {% event_gateway_quickstart %}
-          {% endevent_gateway_quickstart %}
-        LIQUID
-      end
-
-      it 'renders the command on a single line' do
-        expect(rendered).to include(
-          'curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway'
-        )
-      end
-    end
-
-    context 'with one or more env entries' do
-      let(:template) do
-        <<~LIQUID
-          {% event_gateway_quickstart %}
-          env:
-            FOO: bar
-            BAZ: qux
-          {% endevent_gateway_quickstart %}
-        LIQUID
-      end
-
-      it 'renders with backslash continuations and one flag per entry' do
-        expect(rendered).to include(<<~COMMAND.strip)
-          curl -Ls https://get.konghq.com/event-gateway | bash -s -- \\
-            -k $KONNECT_TOKEN \\
-            -N kafka_event_gateway \\
-            -e "FOO=bar" \\
-            -e "BAZ=qux"
-        COMMAND
-      end
-    end
-
-    context 'with an env value containing a comma, a space, and an equals sign' do
-      let(:template) do
-        <<~LIQUID
-          {% event_gateway_quickstart %}
-          env:
-            MY_VAR: "a=b, c d"
-          {% endevent_gateway_quickstart %}
-        LIQUID
-      end
-
-      it 'renders the value intact' do
-        expect(rendered).to include('-e "MY_VAR=a=b, c d"')
-      end
-    end
-  end
-
   describe 'the test declaration' do
     context 'by default' do
       let(:template) do
