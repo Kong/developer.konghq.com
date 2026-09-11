@@ -1,6 +1,6 @@
-title: 'Deny traffic from a namespace'
+title: 'Exclude a namespace from a broader allow'
 
-description: 'Use MeshTrafficPermission to deny requests from every workload in a namespace by matching a SPIFFE ID prefix.'
+description: 'Allow clients in the trust domain except for workloads in one namespace. Deny is evaluated before the broader allow.'
 
 weight: 800
 
@@ -11,9 +11,15 @@ config:
   name: deny-malicious-ns
   mesh: default
   spec:
+    targetRef:
+      kind: Mesh
     rules:
       - default:
           deny:
             - spiffeID:
                 type: Prefix
-                value: spiffe://default.default.mesh.local/ns/malicious
+                value: spiffe://default.default.mesh.local/ns/malicious/
+          allow:
+            - spiffeID:
+                type: Prefix
+                value: spiffe://default.default.mesh.local/

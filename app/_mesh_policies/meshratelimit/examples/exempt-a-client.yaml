@@ -19,7 +19,7 @@ config:
       - matches:
           - spiffeID:
               type: Prefix
-              value: spiffe://default.default.mesh.local/ns/observability
+              value: spiffe://default.default.mesh.local/ns/observability/
         default:
           local:
             http:

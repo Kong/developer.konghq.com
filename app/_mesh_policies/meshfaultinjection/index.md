@@ -19,7 +19,7 @@ related_resources:
 
 `MeshFaultInjection` makes a proxy fail, delay or throttle a proportion of the requests it
 receives. The failures are produced by the proxy rather than the application, so a caller's
-behaviour can be tested without changing the destination.
+behavior can be tested without changing the destination.
 
 Use it to check that a caller's [MeshRetry](/mesh/policies/meshretry/) rules fire on the
 statuses you expect, that its [MeshTimeout](/mesh/policies/meshtimeout/) values are shorter
@@ -28,7 +28,7 @@ than the delay a destination can introduce, and that a
 
 ## Fail a proportion of requests
 
-This policy applies to proxies labelled `app: backend`, and returns 503 to a tenth of the
+This policy applies to proxies labeled `app: backend`, and returns 503 to a tenth of the
 requests they receive:
 
 {% policy_yaml namespace=kong-mesh-demo %}
@@ -49,6 +49,11 @@ spec:
               percentage: 10
 ```
 {% endpolicy_yaml %}
+
+`targetRef` selects the `backend` proxies that manufacture the fault. The rule has no client
+matcher, so it considers every request those proxies receive. `percentage: 10` selects roughly
+one request in ten, and `httpStatus: 503` is returned without sending that request to the
+application.
 
 ## Where this policy applies
 
@@ -131,7 +136,7 @@ spec:
   rules:
     - matches:
         - spiffeID:
-            type: Prefix
+            type: Exact
             value: spiffe://default.default.mesh.local/ns/kong-mesh-demo/sa/frontend
       default:
         http:
@@ -140,3 +145,22 @@ spec:
               percentage: 50
 ```
 {% endpolicy_yaml %}
+
+Replace `default.default.mesh.local` with the exact value from
+`MeshIdentity.status.trustDomain` for the `frontend` workload. The complete value belongs in
+`rules[].matches[].spiffeID.value`. For example, a status value of
+`payments.eu.mesh.local` produces
+`spiffe://payments.eu.mesh.local/ns/kong-mesh-demo/sa/frontend`.
+
+## Validate the injected failure
+
+1. Send enough requests to observe the configured percentage; a small sample does not prove the
+   distribution.
+1. For `abort`, confirm that the client receives the configured status and that the application
+   did not receive those requests.
+1. For `delay`, measure client-observed latency and compare it with `delay.value` and any
+   applicable `MeshTimeout`.
+1. For `responseBandwidth`, measure the response transfer rate with a response large enough for
+   the limit to be visible.
+1. When a rule matches `spiffeID`, repeat the request from a client that does not match and
+   confirm that the fault is not injected.

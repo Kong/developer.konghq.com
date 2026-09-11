@@ -51,7 +51,15 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-## Fields
+The two fields describe one trust relationship:
+
+- `spec.trustDomain` names the domain in the workload SPIFFE IDs this resource verifies.
+- `spec.caBundles` contains the CA certificates allowed to sign identities in that domain.
+
+This resource does not issue a workload certificate. It only gives proxies the CA material
+needed to verify certificates issued elsewhere.
+
+## Configure the trust domain and CA bundles
 
 {% table %}
 columns:
@@ -101,3 +109,16 @@ transition.
 
 To publish trust bundles some other way, set `meshTrustCreation: Disabled` on the
 `MeshIdentity`'s `Bundled` provider and write the `MeshTrust` resources yourself.
+
+## Validate certificate trust
+
+1. Compare `MeshIdentity.status.trustDomain` with `MeshTrust.spec.trustDomain`. The strings must
+   be identical.
+1. Confirm that `caBundles` contains the CA that signed the client certificate, not the client
+   certificate or its private key.
+1. Connect from a workload issued in that trust domain and confirm that the mTLS handshake
+   succeeds.
+1. Connect with a certificate from a domain or CA that is not trusted and confirm that the
+   handshake fails.
+1. In a multi-zone deployment, repeat the successful handshake across zones to prove that the
+   trust resource has propagated.

@@ -284,9 +284,12 @@ SPIFFE ID (with `Exact` or `Prefix`) or on the SNI of the TLS connection (with `
 
 By default, {{site.mesh_product_name}} issues SPIFFE IDs shaped like
 `spiffe://{mesh}.{zone}.mesh.local/ns/{namespace}/sa/{service-account}` on Kubernetes, and
-`spiffe://{mesh}.{zone}.mesh.local/workload/{workload}` on Universal. Both the trust domain and
-the path are templates on the `MeshIdentity` resource, so check what your mesh actually issues
-before writing a match.
+`spiffe://{mesh}.{zone}.mesh.local/workload/{workload}` on Universal. Read the domain actually
+used by the issuer from `MeshIdentity.status.trustDomain`, and use it after `spiffe://` in the
+`rules[].matches[].spiffeID.value`. Read the path template from
+`MeshIdentity.spec.spiffeID.path`. For example, a status value of
+`payments.eu.mesh.local` and the default Kubernetes path produce a namespace prefix of
+`spiffe://payments.eu.mesh.local/ns/kong-mesh-demo/`.
 
 This policy logs only the requests that reach `orders` from workloads in the `kong-mesh-demo`
 namespace of zone `zone-1`:

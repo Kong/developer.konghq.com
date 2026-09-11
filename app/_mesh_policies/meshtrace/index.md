@@ -27,6 +27,8 @@ pass them on. Either instrument the application with a tracing library, or forwa
 `x-request-id`, `x-b3-traceid`, `x-b3-parentspanid`, `x-b3-spanid`, `x-b3-sampled` and
 `x-b3-flags` by hand.
 
+With no `MeshTrace` applying to a proxy, the proxy does not emit tracing spans.
+
 ## Send traces to Zipkin
 
 This policy applies to every proxy in the mesh and exports to a Zipkin-compatible collector:
@@ -46,6 +48,10 @@ spec:
           url: http://jaeger-collector.observability:9411/api/v2/spans
 ```
 {% endpolicy_yaml %}
+
+`targetRef.kind: Mesh` selects every proxy in the mesh. `backends` chooses the tracing provider,
+and `zipkin.url` is where each proxy sends its spans. Because the example omits `sampling`, every
+eligible request is sampled by default.
 
 ## Where this policy applies
 
@@ -193,3 +199,15 @@ spec:
 
 `sampling` and `tags` alongside an empty `backends` are inert, since the proxy writes no tracing
 configuration for those listeners to carry them.
+
+## Validate trace export
+
+1. Send a request through at least two meshed services and record a request or trace ID.
+1. Find the trace in the configured backend and confirm that it contains a span for each proxy
+   hop.
+1. If the trace stops at one service, confirm that the application forwards the configured
+   trace headers to its outbound request.
+1. For sampling below 100%, send enough requests to observe the rate rather than relying on one
+   request.
+1. For OpenTelemetry, confirm that the referenced `MeshOpenTelemetryBackend` is resolved and
+   that `kuma-dp` reports a successful exporter connection.

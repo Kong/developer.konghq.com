@@ -7,6 +7,8 @@ description: Give workloads a SPIFFE identity and the certificates that prove it
 content_type: plugin
 icon: policy.svg
 related_resources:
+- text: Migrate mesh mTLS to MeshIdentity
+  url: "/mesh/migrate-mtls-to-meshidentity/"
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
 - text: Migrate policies to {{site.mesh_product_name}} 3
@@ -50,6 +52,11 @@ spec:
       meshTrustCreation: Enabled
 ```
 {% endpolicy_yaml %}
+
+`selector.dataplane: {}` selects every proxy in the mesh. `type: Bundled` keeps the CA in the
+control plane, `autogenerate.enabled: true` creates that CA, and
+`meshTrustCreation: Enabled` publishes its certificate in a `MeshTrust` so peers can verify
+the identities it issues.
 
 `insecureAllowSelfSigned` is required to accept a self-signed CA, and the name says what it
 costs: nothing outside the mesh verifies that CA. It suits a demo or a first deployment, not a

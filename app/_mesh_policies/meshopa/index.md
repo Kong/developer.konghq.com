@@ -26,7 +26,7 @@ workload may talk to another, from the identity in the TLS handshake. `MeshOPA` 
 request, with the method, path, headers and optionally the body available to the policy, so it
 covers rules that depend on what is being asked rather than only on who is asking.
 
-## Allow requests carrying a valid token
+## Allow requests carrying a bearer token
 
 This policy applies to every proxy in the mesh and rejects any request without a bearer token:
 
@@ -55,6 +55,12 @@ spec:
               }
 ```
 {% endpolicy_yaml %}
+
+`targetRef.kind: Mesh` installs the check on every proxy. The inline rego sets the default
+decision to deny, then allows a request when its `authorization` header starts with `Bearer `.
+This example checks only the header shape; it does not validate a signature, expiry, audience,
+or any other token claim. A production policy must implement the token checks your application
+requires.
 
 ## Where this policy applies
 
@@ -187,3 +193,14 @@ spec:
               default allow = true
 ```
 {% endpolicy_yaml %}
+
+## Validate the authorization decision
+
+For the first example, send the same request without an `Authorization` header and with
+`Authorization: Bearer test`. The request without the header should be rejected; the request
+with it should pass this example's OPA check. Whether the allowed request succeeds afterward
+still depends on the destination and any other authorization policy.
+
+Then stop or disconnect the OPA agent and repeat the request. With the default
+`onAgentFailure: Deny`, the request must be rejected. If you set `onAgentFailure: Allow`,
+document that fail-open decision and test it deliberately.

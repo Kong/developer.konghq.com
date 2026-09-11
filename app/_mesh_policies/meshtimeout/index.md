@@ -26,7 +26,7 @@ where there were none.
 
 ## Timeouts for requests a proxy sends
 
-This policy applies to proxies labelled `app: web`, and governs the requests they make to
+This policy applies to proxies labeled `app: web`, and governs the requests they make to
 `backend`:
 
 {% policy_yaml namespace=kong-mesh-demo %}
@@ -52,6 +52,10 @@ spec:
           streamIdleTimeout: 30m
 ```
 {% endpolicy_yaml %}
+
+In this example, the `web` proxy gives a connection to `backend` five seconds to establish and
+an HTTP request 15 seconds to complete. An established connection may remain idle for one hour,
+while an HTTP stream with no activity is closed after 30 minutes.
 
 ## Where this policy applies
 
@@ -182,12 +186,19 @@ spec:
     - matches:
         - spiffeID:
             type: Prefix
-            value: spiffe://default.default.mesh.local/ns/kong-mesh-demo
+            value: spiffe://default.default.mesh.local/ns/kong-mesh-demo/
       default:
         http:
           requestTimeout: 45s
 ```
 {% endpolicy_yaml %}
+
+Replace `default.default.mesh.local` with the exact value from
+`MeshIdentity.status.trustDomain` for the clients you want to match. That value goes after
+`spiffe://` in `rules[].matches[].spiffeID.value`. For example, a status value of
+`payments.eu.mesh.local` produces the namespace prefix
+`spiffe://payments.eu.mesh.local/ns/kong-mesh-demo/`. Keep the trailing slash so the prefix
+does not also match a namespace whose name merely starts with `kong-mesh-demo`.
 
 ## Disable a timeout
 
@@ -198,3 +209,14 @@ the correct way to remove a timeout rather than a very large value:
 http:
   requestTimeout: 0s
 ```
+
+## Validate timeout behavior
+
+Use an endpoint that can delay its response by a known amount. From a selected client, send one
+request that finishes just inside the configured limit and another that finishes after it. The
+first should succeed; the second should be ended by the proxy at the configured timeout.
+
+Test from a proxy that the policy does not select as well. Its behavior should remain unchanged.
+For inbound policies with a `spiffeID` match, repeat the request from one matching and one
+non-matching identity so you can distinguish a timeout rule that did not match from a timeout
+value that did not take effect.
