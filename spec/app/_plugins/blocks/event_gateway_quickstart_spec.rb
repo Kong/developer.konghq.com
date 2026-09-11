@@ -38,11 +38,11 @@ RSpec.describe Jekyll::EventGatewayQuickstart do
       end
     end
 
-    context 'section: none' do
+    context 'section: prereq' do
       let(:template) do
         <<~LIQUID
           {% event_gateway_quickstart %}
-          section: none
+          section: prereq
           {% endevent_gateway_quickstart %}
         LIQUID
       end
