@@ -575,6 +575,7 @@ npm
 nrec
 Nvidia
 OAuth
+oauth
 observability
 oc
 odks

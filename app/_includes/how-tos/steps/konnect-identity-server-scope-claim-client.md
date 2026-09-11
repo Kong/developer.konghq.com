@@ -1,6 +1,6 @@
 ## Create an auth server in {{site.identity}}
 
-Before you can configure the authentication plugin, you must first create an auth server in {{site.identity}}. We recommend creating different auth servers for different environments or subsidiaries. The auth server name is unique per each organization and each {{site.konnect_short_name}} region.
+Before you can configure authentication, you must first create an auth server in {{site.identity}}. We recommend creating different auth servers for different environments or subsidiaries. The auth server name is unique per each organization and each {{site.konnect_short_name}} region.
 
 Create an auth server using the [`/v1/auth-servers` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServer):
 
@@ -103,16 +103,10 @@ body:
   response_types:
     - id_token
     - token
-extract_body:
-  - name: 'client_secret'
-    variable: CLIENT_SECRET
-  - name: 'id'
-    variable: CLIENT_ID
+capture:
+  - variable: CLIENT_SECRET
+    jq: ".client_secret"
+  - variable: CLIENT_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
-
-Export your client secret and client ID:
-```sh
-export CLIENT_SECRET='YOUR-CLIENT-SECRET'
-export CLIENT_ID='YOUR-CLIENT-ID'
-```

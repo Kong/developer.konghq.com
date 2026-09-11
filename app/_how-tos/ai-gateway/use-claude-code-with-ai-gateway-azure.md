@@ -6,6 +6,8 @@ content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
+  - text: Identify AI Consumers on AI Model traffic with {{site.identity}}
+    url: /ai-gateway/identify-ai-consumers-with-kong-identity/
 
 description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic to a Claude model hosted on Azure AI Foundry
 
