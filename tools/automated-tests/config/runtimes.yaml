@@ -169,19 +169,29 @@ konnect:
     cleanup:
       commands:
         - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -n automated-tests-event-gateway-quickstart -d
-        - docker compose -f /files/event-gateway/docker-compose.yaml down
+        - docker compose -f /files/event-gateway/docker-compose.yaml down --remove-orphans
         - |
           AUTH_SERVER_ID=$(curl -s -X GET "https://us.api.konghq.com/v1/auth-servers?filter%5Bname%5D%5Beq%5D=Appointments%20Dev" -H "Authorization: Bearer $KONNECT_TOKEN" | jq -r '.data[0].id') &&
             curl -s -X DELETE "https://us.api.konghq.com/v1/auth-servers/$AUTH_SERVER_ID?force=true" -H "Authorization: Bearer $KONNECT_TOKEN"
 
+    # Teardown only. Every event-gateway how-to starts its own Kafka cluster and runs the
+    # quickstart itself, so the harness must not leave a cluster or a gateway of its own
+    # running underneath the file about to start: how-tos that bring up a different compose
+    # file (SASL, mTLS) reuse the `kafka_cluster` project name, so a leftover container from
+    # the shared stack (schema-registry) would attach to their brokers and create topics.
     reset:
       commands:
         - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -n automated-tests-event-gateway-quickstart -d
-        - docker compose -f /files/event-gateway/docker-compose.yaml down
+        - docker compose -f /files/event-gateway/docker-compose.yaml down --remove-orphans
         # Wipe files a previous test file generated (kafkactl configs, certs, credential
         # scripts) so a stale one can't influence the file about to run.
         - find . -mindepth 1 -delete
-        - docker compose -f /files/event-gateway/docker-compose.yaml up -d
-        - sleep 5
-        - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway -n automated-tests-event-gateway-quickstart | tail -1 >> /env-vars.sh
-        - sleep 5
+
+      # Fallback for files that don't provision themselves, i.e. whose steps and prereqs
+      # contain no `quickstart` validation. Skipped for every other file.
+      provision:
+        commands:
+          - docker compose -f /files/event-gateway/docker-compose.yaml up -d
+          - sleep 5
+          - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway -n automated-tests-event-gateway-quickstart | tail -1 >> /env-vars.sh
+          - sleep 5
