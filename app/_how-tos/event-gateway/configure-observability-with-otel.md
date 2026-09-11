@@ -54,8 +54,6 @@ related_resources:
   - text: Event Gateway metrics reference
     url: /event-gateway/metrics/
 
-automated_tests: false
-
 min_version:
   event-gateway: '1.1.0'
 ---
@@ -114,19 +112,15 @@ In this setup:
 
 ## Create an {{site.event_gateway_short}} control plane and data plane
 
-Run the quickstart script to automatically provision a demo {{site.event_gateway_short}} control plane and data plane, and configure your environment for exporting observability data:
+{% event_gateway_quickstart %}
+env:
+  OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+  OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4317
+  OTEL_EXPORTER_OTLP_TIMEOUT: 10s
+  OTEL_SERVICE_NAME: eventgw
+{% endevent_gateway_quickstart %}
 
-```sh
-curl -Ls https://get.konghq.com/event-gateway | bash -s -- \
-  -k $KONNECT_TOKEN \
-  -N kafka_event_gateway \
-  -e "OTEL_EXPORTER_OTLP_PROTOCOL=grpc" \
-  -e "OTEL_EXPORTER_OTLP_ENDPOINT=http://lgtm:4317" \
-  -e "OTEL_EXPORTER_OTLP_TIMEOUT=10s" \
-  -e "OTEL_SERVICE_NAME=eventgw"
-```
-
-Where you configure the following custom telemetry settings:
+The quickstart script configures the following custom telemetry settings:
 
 {% table %}
 columns:
@@ -156,16 +150,6 @@ rows:
     new: "`eventgw`"
     desc: Name of the OTEL service identified in the observability tools. For example, in Grafana/Tempo, the service will appear as `eventgw`.
 {% endtable %}
-
-This sets up an {{site.event_gateway_short}} control plane named `event-gateway-quickstart`, provisions a local data plane, and prints out the following environment variable export:
-
-```
-export EVENT_GATEWAY_ID=your-gateway-id
-```
-
-Copy and paste this into your terminal to configure your session.
-
-{% include_cached /knep/quickstart-note.md %}
 
 ## Launch the Grafana LGTM stack
 
