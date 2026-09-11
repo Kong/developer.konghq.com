@@ -1,0 +1,22 @@
+title: 'Pin the TLS version and ciphers'
+
+description: 'Restrict the whole mesh to TLS 1.3 and one cipher suite. Both fields are accepted only on a mesh-wide policy, so the two ends of a connection stay consistent.'
+
+weight: 700
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshTLS
+  name: set-version-and-ciphers
+  mesh: default
+  spec:
+    targetRef:
+      kind: Mesh
+    rules:
+      - default:
+          tlsVersion:
+            min: TLS13
+            max: TLS13
+          tlsCiphers:
+            - ECDHE-ECDSA-AES256-GCM-SHA384

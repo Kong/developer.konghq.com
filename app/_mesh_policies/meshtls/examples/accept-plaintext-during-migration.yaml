@@ -1,0 +1,20 @@
+title: 'Accept plaintext on one service while migrating it'
+
+description: 'Set Permissive on a subset of proxies so clients outside the mesh keep working, without relaxing the rest of the mesh.'
+
+weight: 900
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshTLS
+  name: legacy-permissive
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: legacy
+    rules:
+      - default:
+          mode: Permissive

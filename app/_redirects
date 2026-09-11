@@ -684,8 +684,8 @@
 /mesh/policies/meshtimeout/examples/tcp-config/  /mesh/policies/meshtimeout/examples/outbound-timeouts/  301
 /mesh/policies/meshtimeout/examples/tcp-port/  /mesh/policies/meshtimeout/examples/outbound-timeouts/  301
 /mesh/policies/meshtimeout/examples/timeout-all-services/  /mesh/policies/meshtimeout/examples/outbound-timeouts/  301
-/mesh/policies/meshtls/examples/set-specific-tls-version/  /mesh/v2/policies/meshtls/examples/set-specific-tls-version/  301
-/mesh/policies/meshtls/examples/strict-mode/  /mesh/v2/policies/meshtls/examples/strict-mode/  301
+/mesh/policies/meshtls/examples/set-specific-tls-version/  /mesh/policies/meshtls/examples/set-tls-version-and-ciphers/  301
+/mesh/policies/meshtls/examples/strict-mode/  /mesh/policies/meshtls/examples/require-mtls-on-one-service/  301
 /mesh/policies/meshtrace/examples/datadog/  /mesh/v2/policies/meshtrace/examples/datadog/  301
 /mesh/policies/meshtrace/examples/opentelemetry/  /mesh/v2/policies/meshtrace/examples/opentelemetry/  301
 /mesh/policies/meshtrace/examples/target-east/  /mesh/v2/policies/meshtrace/examples/target-east/  301

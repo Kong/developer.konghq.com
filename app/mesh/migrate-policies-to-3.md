@@ -783,6 +783,76 @@ on, along with any workaround added because the patch appeared to do nothing. Th
 change described under
 [Review MeshProxyPatch circuit breaker patches](#review-meshproxypatch-circuit-breaker-patches).
 
+## MeshTLS
+
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed).
+
+Both changes below are silent, and both can leave an inbound stricter or looser than intended.
+
+### Author a policy for every mesh that relied on a permissive CA backend
+
+`MeshTLS` is now the only thing that decides whether an inbound accepts plaintext. The mode is
+resolved from the policy alone, and the `mode` of the enabled `Mesh` CA backend is no longer
+consulted.
+
+{:.warning}
+> A mesh that set `mtls.backends[].mode: PERMISSIVE` and has no `MeshTLS` policy gets `Strict`
+> inbounds after the upgrade, and plaintext traffic to them is rejected. `Mesh.mtls` is removed
+> from the API, so there is nothing left to express the old intent.
+
+Add a policy before upgrading for every mesh that relied on it:
+
+```yaml
+type: MeshTLS
+mesh: default
+name: permissive
+spec:
+  rules:
+    - default:
+        mode: Permissive
+```
+
+Meshes on `mtls.backends[].mode: STRICT`, meshes with mTLS disabled, and meshes that already
+have a `MeshTLS` policy are unaffected. A mesh using `MeshIdentity` already resolved to `Strict`
+without a policy.
+
+### Rewrite from as rules
+
+`spec.from` is removed, and `spec.rules` is the only place for inbound TLS configuration.
+
+{:.warning}
+> `MeshTLS` has no check that the remaining spec configures anything, so a policy whose only
+> field was `from` is **accepted**, not rejected — unlike the other policies that lost `from`.
+> It applies with an empty spec, and reading it back shows nothing but the `targetRef`. Since an
+> inbound with no policy is `Strict`, a `from` that was there to allow plaintext silently stops
+> allowing it.
+
+```yaml
+# 2.x
+spec:
+  targetRef:
+    kind: Mesh
+  from:
+    - targetRef:
+        kind: Mesh
+      default:
+        mode: Permissive
+
+# 3.x
+spec:
+  targetRef:
+    kind: Mesh
+  rules:
+    - default:
+        mode: Permissive
+```
+
+Find the affected resources before upgrading:
+
+```sh
+kubectl get meshtls -A -o yaml | grep -B5 'from:'
+```
+
 ## MeshTimeout
 
 MeshTimeout has no changes of its own. What it is subject to: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#real-resources-are-selected-by-labels), [the `from` to `rules` move](#the-from-array-is-replaced-by-rules), [the `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404), [the Universal inbound protocol change](#universal-inbounds-must-declare-their-protocol) and [the legacy policies going inert](#legacy-policies-no-longer-generate-configuration).
