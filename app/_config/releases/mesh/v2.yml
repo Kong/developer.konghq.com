@@ -151,13 +151,11 @@ app/_mesh_policies/v2/meshfaultinjection/index.md:
 app/_mesh_policies/v2/meshfaultinjection/reference.md:
   canonical_url: /mesh/policies/meshfaultinjection/reference/
 app/_mesh_policies/v2/meshglobalratelimit/examples/global.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/migrate-policies-to-3/
 app/_mesh_policies/v2/meshglobalratelimit/index.md:
-  status: pending
-  canonical_url: /mesh/policies/meshglobalratelimit/
+  canonical_url: /mesh/migrate-policies-to-3/
 app/_mesh_policies/v2/meshglobalratelimit/reference.md:
-  canonical_url: /mesh/policies/meshglobalratelimit/reference/
+  canonical_url: /mesh/migrate-policies-to-3/
 app/_mesh_policies/v2/meshhealthcheck/examples/grpcs-health-check-from-cart.yaml:
   canonical_url: /mesh/policies/meshhealthcheck/examples/grpc-health-check/
 app/_mesh_policies/v2/meshhealthcheck/examples/health-check-backend.yaml:

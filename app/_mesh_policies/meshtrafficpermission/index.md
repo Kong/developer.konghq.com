@@ -15,7 +15,7 @@ related_resources:
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
 - text: Migrate policies to {{site.mesh_product_name}} 3
-  url: "/mesh/migrate-policies-to-3/"
+  url: "/mesh/migrate-policies-to-3/#meshtrafficpermission"
 - text: Issue identity with the MeshIdentity bundled provider
   url: "/mesh/issue-identity-with-meshidentity/"
 - text: Issue identity with MeshIdentity Spire provider

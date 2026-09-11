@@ -10,7 +10,7 @@ related_resources:
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
 - text: Migrate policies to {{site.mesh_product_name}} 3
-  url: "/mesh/migrate-policies-to-3/"
+  url: "/mesh/migrate-policies-to-3/#meshhttproute"
 - text: MeshTCPRoute policy
   url: "/mesh/policies/meshtcproute/"
 - text: MeshRetry policy

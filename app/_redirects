@@ -647,6 +647,8 @@
 /mesh/policies/meshfaultinjection/examples/return-requests-delayed/  /mesh/policies/meshfaultinjection/examples/delay-responses/  301
 /mesh/policies/meshfaultinjection/examples/return-requests-from-frontend/  /mesh/policies/meshfaultinjection/examples/abort-a-proportion-of-requests/  301
 /mesh/policies/meshglobalratelimit/examples/global/  /mesh/v2/policies/meshglobalratelimit/examples/global/  301
+/mesh/policies/meshglobalratelimit/reference/  /mesh/migrate-policies-to-3/#meshglobalratelimit  301
+/mesh/policies/meshglobalratelimit/  /mesh/migrate-policies-to-3/#meshglobalratelimit  301
 /mesh/policies/meshhealthcheck/examples/grpcs-health-check-from-cart/  /mesh/policies/meshhealthcheck/examples/grpc-health-check/  301
 /mesh/policies/meshhealthcheck/examples/health-check-backend/  /mesh/policies/meshhealthcheck/examples/http-health-check/  301
 /mesh/policies/meshhealthcheck/examples/protocol-fallback/  /mesh/policies/meshhealthcheck/examples/tcp-connect-only-check/  301
