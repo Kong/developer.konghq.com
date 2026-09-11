@@ -43,7 +43,7 @@ min_version:
   gateway: '1.3'
 ---
 
-Publish request and response logs to an [Apache Kafka](https://kafka.apache.org/) topic. This plugin does not support message compression.
+Publish request and response logs to an [Apache Kafka](https://kafka.apache.org/) topic.
 For more information, see [Kafka topics](https://kafka.apache.org/documentation/#intro_concepts_and_terms).
 
 Kong also provides a Kafka plugin for request transformations. See [Kafka Upstream](/plugins/kafka-upstream/).
@@ -82,6 +82,12 @@ slug=page.slug %}
 ## Schema registry support {% new_in 3.11 %}
 
 {% include_cached /plugins/confluent-kafka-consume/schema-registry.md name=page.name slug=page.slug workflow='producer' %}
+
+## Message compression {% new_in 3.16 %}
+
+{% include_cached /plugins/confluent-kafka-consume/compression.md name=page.name %}
+
+For an example, see [Compress log messages before sending to Kafka](/plugins/kafka-log/examples/compress-messages/).
 
 ## Authentication
 

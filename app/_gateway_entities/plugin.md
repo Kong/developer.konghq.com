@@ -158,6 +158,13 @@ This determines plugin ordering during the [`access` phase](#plugin-contexts), a
 
 You can choose to run a particular plugin `before` or `after` a specified plugin or list of plugins.
 
+{:.info}
+> For how the reordering is decided — the principle behind it, how to predict the exact result of an
+> `ordering` configuration, and the difference between the `priority_preserving` and `legacy`
+> algorithms — see [How priority_preserving dynamic plugin ordering
+> works](/gateway/plugins/plugin-ordering-priority-preserving/) (or [How legacy dynamic plugin
+> ordering works](/gateway/plugins/plugin-ordering-legacy/) for the default algorithm on its own).
+
 The configuration looks like this:
 
 ```yaml
@@ -221,6 +228,8 @@ In some cases, this might be compensated for when you run rate limiting before a
 * **Validation**: Validating dynamic plugin ordering is a non-trivial task and would require insight into the user's business logic. 
 {{site.base_gateway}} tries to catch basic mistakes, but it can't detect all potentially dangerous configurations.
 
+* **Algorithm selection**: The [`plugin_ordering_algorithm`](/gateway/configuration/) parameter selects how plugins are reordered. It defaults to `legacy` (the original behavior; see [How legacy dynamic plugin ordering works](/gateway/plugins/plugin-ordering-legacy/)); set it to `priority_preserving` to only move the plugin you configure — every other plugin's order relative to the other unconfigured plugins stays the same (see [How priority_preserving dynamic plugin ordering works](/gateway/plugins/plugin-ordering-priority-preserving/)).
+
 {:.info}
 > **Note**: In {{site.base_gateway}} 3.13 and earlier, Consumer and Consumer Group scoping was not compatible with dynamic plugin ordering. If you had [Consumer or Consumer Group-scoped plugins](#scoping-plugins) anywhere in your Workspace or control plane, dynamic plugin ordering would cause those plugins **not to trigger**. This limitation was resolved in {{site.base_gateway}} 3.14.
 
@@ -240,8 +249,25 @@ condition: 'http.headers.x_block == "true"'
 ```
 
 For more information, see:
-* [Plugin expressions reference](/gateway/plugins/expressions/)
+* [Plugin conditional execution reference](/gateway/plugins/conditions/)
+* [CEL reference](/gateway/plugins/expressions/)
 * [How to: Configure conditional plugin execution in {{site.base_gateway}}](/gateway/configure-conditional-plugin-execution/)
+
+## Dynamic configuration {% new_in 3.16 %}
+
+Some plugin config fields can be computed per request from a CEL expression. For example, you could read an attribute of the authenticated Consumer or Principal instead of always using a fixed value.
+
+Unlike a `condition`, which decides whether the whole plugin runs, this only changes the value of one specific field.
+
+Only specific fields on the following plugins support dynamic plugin config:
+* [ACL](/plugins/acl/#dynamic-allow-and-deny-rules)
+* [Rate Limiting](/plugins/rate-limiting/#dynamic-configuration-with-cel)
+* [Rate Limiting Advanced](/plugins/rate-limiting-advanced/#dynamic-configuration-with-cel)
+
+For more information, see:
+* [Dynamic plugin config with CEL](/gateway/plugins/expressible-fields/)
+* [CEL reference](/gateway/plugins/expressions/)
+* [How-to: Configure dynamic plugin config with CEL](/gateway/configure-dynamic-plugin-config-with-cel/)
 
 ## Cloning plugins {% new_in 3.15 %}
 
@@ -257,7 +283,7 @@ Cloned plugins are useful in many situations. For example:
 * Allowing different teams who want to use the same plugin logic to apply different business rules. 
 For example, a platform team may want to add a global IP deny list to a Gateway to enforce a global security policy, while an engineering team may also want to block IPs from a particular problematic customer on a single Route.
 * Running multiple instances of the [Datakit](/plugins/datakit/) plugin where different teams want to independently manage their own distinct flows on the same Gateway.
-* In conjunction with [conditional plugins](/gateway/plugins/expressions/), running different configurations of the plugin based on different environmental conditions.
+* In conjunction with [conditional plugins](/gateway/plugins/conditions/), running different configurations of the plugin based on different environmental conditions.
 
 ### Permissions required
 

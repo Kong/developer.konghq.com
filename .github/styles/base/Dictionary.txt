@@ -135,6 +135,7 @@ cncf
 cncf's
 CNAMEs
 CNIs
+codec
 cohere
 cognito
 collectd
@@ -565,6 +566,7 @@ no_version
 node_quantifier
 Node.js
 nodeport
+nullable
 Nullsoft
 nunjucks
 Noname
@@ -635,6 +637,7 @@ prepends
 prepopulated
 preprocessors
 preread
+priority_preserving
 printf
 prisma
 private_key
@@ -820,6 +823,7 @@ TCPRoutes
 teardown
 templated
 Templatized
+temporality
 Terraform
 Terraform's
 text_splitters

@@ -40,6 +40,11 @@ debian12:
   version: 12
   codename: bookworm
   docker_tag: debian
+debian13:
+  os: Debian
+  version: 13
+  codename: trixie
+  docker_tag: debian
 debian-stable:
   os: Debian
   version: stable
@@ -61,6 +66,11 @@ rhel9:
   version: 9.x
   codename: 9
   docker_tag: rhel
+rhel10:
+  os: RHEL
+  version: 10.x
+  codename: 10
+  docker_tag: rhel
 ubuntu1604:
   os: Ubuntu
   version: 16.04
@@ -80,4 +90,9 @@ ubuntu2404:
   os: Ubuntu
   version: 24.04
   codename: noble
+  docker_tag: ubuntu
+ubuntu2604:
+  os: Ubuntu
+  version: 26.04
+  codename: resolute
   docker_tag: ubuntu

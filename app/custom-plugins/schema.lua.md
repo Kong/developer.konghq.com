@@ -280,6 +280,60 @@ rows:
     description: A custom validation function written in Lua.
 {% endtable %}
 
+## Making a field expressible {% new_in 3.16 %}
+
+A `string`, `number`, `integer`, or `boolean` field, or an `array`/`map` whose elements or values are one of those scalar types, can be marked `expressible = true`:
+
+```lua
+{
+  limit = {
+    type = "number",
+    gt = 0,
+    expressible = true,
+  },
+},
+```
+
+This lets an operator pair the field with a [CEL expression](/gateway/plugins/expressible-fields/), evaluated per request, alongside the field's ordinary static `config` value. 
+{{site.base_gateway}} derives the paired `expressions.FIELD` entry from this attribute automatically. 
+You don't define it yourself, and you don't need any additional code in `handler.lua` to support it.
+
+`record` fields can't be marked expressible, and neither can an `array` or `map` of them. Kong rejects this when your plugin's schema loads.
+
+For the full mechanism, including how the static value acts as a fallback and how array fields work, see [Dynamic plugin config with CEL](/gateway/plugins/expressible-fields/).
+
+### Security guidance for expressible fields
+
+Marking a field expressible has security implications the framework doesn't check for you. Before adding `expressible = true` to a field, review the following considerations.
+
+#### Is the field's static value already safe as a fallback?
+
+{{site.base_gateway}} falls back to a field's static `config` value automatically whenever its expression fails to evaluate on a CEL error, a `null` result, or a type or constraint mismatch. 
+This fallback is unconditional. A plugin can't opt out of it.
+
+A client can trigger this fallback deliberately by sending a request shaped to make the expression error or produce the wrong type. 
+That means a field's static value is also its worst-case runtime value once the field is expressible.
+If a permissive static value would be unsafe, marking the field expressible makes that value reachable from ordinary request traffic, not just from an Admin API misconfiguration.
+
+Here are examples of a safe vs an unsafe approach:
+* **Safe approach**: [Rate Limiting Advanced](/plugins/rate-limiting-advanced/)'s `limit` field requires `gt = 0`, so a forced fallback always lands on the operator's own configured limit, never zero, negative, or unbounded.
+* **Unsafe approach**: A boolean gating field, for example `bypass_check` or `skip_verification`, where `false` is the safe default and `true` disables an enforcement step. If a forced fallback could land on `true`, a client could force that fallback and skip the check the field is meant to gate. Before marking a field like this expressible, make sure every failure path lands on the restrictive value, or don't mark it expressible at all.
+
+Before shipping, ask: if every expression on this field failed on every request, would you be comfortable with the resulting behavior as the field's permanent default? If not, fix the field's static semantics first.
+
+#### Are the exposed CEL variables safe to drive this field?
+
+An expressible field's expression can reference any of the available CEL variables, including request data such as `http.headers.*` and `http.queries.*`. 
+That data is controlled by the client by definition. A client can set it to anything, including a value chosen specifically to collide with, spoof, or evade another client's.
+
+This matters most for a field that keys, identifies, or scopes something for a specific client, such as a counter key, a quota bucket, or an identity binding. 
+If your field falls into that category, document which CEL variables are safe to reference and which aren't:
+
+* **Safe example**: Authenticated, identity-derived values, such as `principal.id` or `principal.metadata.*`. A client can't forge them without first compromising the authentication step itself.
+* **Unsafe example**: Raw request data, such as `http.headers.*` or `http.queries.*`, used as the sole input to anything identity-related. Any client can set it to any value, including another client's.
+
+This isn't a risk expressible fields introduce on their own. 
+Making a field expressible just lets an operator express an unsafe choice as a formula instead of a fixed value. Document the risk the same way you would for a static field, rather than assume the operator will guess right.
 
 ## Examples
 
