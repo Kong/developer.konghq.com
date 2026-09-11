@@ -107,7 +107,7 @@ When applied to a Route, restrict the Route to so it accepts `POST` methods only
 ### Using {{page.name}} with the AI MCP Proxy plugin
 
 The [AI MCP Proxy](/plugins/ai-mcp-proxy/) plugin and the {{page.name}} plugin can be used together on the same Service.
-The {{page.name}} plugin runs at priority 950, before AI MCP Proxy's priority 820, so `tool_input` inspection always fires first.
+The {{page.name}} plugin runs at priority 950, before AI MCP Proxy's priority 820, so `tool_input` inspection always runs first.
 
 AI MCP Proxy operates in four modes, and the mode determines which AIDR inspection events fire:
 
@@ -139,7 +139,7 @@ rows:
     tool_input: "Yes"
     tool_listing: "No"
     tool_output: "No"
-    notes: "Aggregates tools from `conversion-only` plugins entirely within its own access phase and returns the response using `kong.response.exit()`. The response phase doesn't fire, so `tool_listing` and `tool_output` can't be inspected."
+    notes: "Aggregates tools from `conversion-only` plugins entirely within its own access phase and returns the response using `kong.response.exit()`. The response phase doesn't run, so `tool_listing` and `tool_output` can't be inspected."
   - mode: "`conversion-only`"
     tool_input: "N/A"
     tool_listing: "N/A"
