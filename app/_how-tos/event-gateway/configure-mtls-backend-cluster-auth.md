@@ -49,10 +49,6 @@ related_resources:
 
 min_version:
   event-gateway: '1.1.0'
-
-# Excluded from the automated run until the Kafka cluster setup, certificate generation, and
-# backend cluster auth steps in this guide are executable by the harness. Not abandoned.
-automated_tests: false
 ---
 
 In this guide you'll configure {{site.event_gateway_short}} to connect to a secured Kafka cluster by presenting a mutual TLS client certificate.
