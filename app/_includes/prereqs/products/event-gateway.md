@@ -1,7 +1,7 @@
 {% assign summary='{{site.event_gateway}} running' %}
 {% capture details_content %}
 {% event_gateway_quickstart %}
-section: none
+section: prereq
 {% endevent_gateway_quickstart %}
 {% endcapture %}
 

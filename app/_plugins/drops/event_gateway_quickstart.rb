@@ -14,11 +14,11 @@ module Jekyll
       end
 
       def section
-        @yaml['section'] || 'step'
+        @yaml.fetch('section', 'step')
       end
 
       def data_validate
-        return nil if section == 'none'
+        return nil if section == 'prereq'
 
         JSON.dump({ name: 'quickstart', config: { env: env } })
       end

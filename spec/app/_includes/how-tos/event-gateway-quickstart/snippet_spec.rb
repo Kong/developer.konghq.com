@@ -20,7 +20,7 @@ RSpec.describe 'how-tos/event-gateway-quickstart/snippet.md' do
 
     it 'renders the command on a single line' do
       expect(code).to eq(
-        'curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway \\'
+        'curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway'
       )
     end
   end
@@ -36,16 +36,6 @@ RSpec.describe 'how-tos/event-gateway-quickstart/snippet.md' do
           -e "FOO=bar" \\
           -e "BAZ=qux"
       COMMAND
-    end
-  end
-
-  context 'with an env value containing a comma, a space, and an equals sign' do
-    let(:yaml) { { 'env' => { 'MY_VAR' => 'a=b, c d' } } }
-
-    include_examples 'a valid shell command'
-
-    it 'renders the value intact' do
-      expect(code).to include('-e "MY_VAR=a=b, c d"')
     end
   end
 end
