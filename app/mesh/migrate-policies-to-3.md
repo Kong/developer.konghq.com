@@ -752,6 +752,37 @@ it is removed by hand:
 kubectl delete crd meshglobalratelimits.kuma.io
 ```
 
+## MeshProxyPatch
+
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed).
+
+### Stop matching on the gateway origin
+
+The built-in gateway is removed, so no resource carries `origin: gateway` any more. A
+modification matching on it matches nothing, and nothing reports that: the policy applies, and
+the patch silently stops taking effect.
+
+A delegated gateway is an ordinary `Dataplane`, and its listeners and clusters carry `inbound`
+and `outbound` like any other proxy's. Select the gateway with the top-level `targetRef` and
+match on those origins instead.
+
+The `ingress` and `egress` origins are unaffected. Standalone `ZoneIngress` and `ZoneEgress`
+proxies are gone, but cross-zone listeners and clusters are still generated with those origins
+on ordinary proxies.
+
+### Check patches that set circuit breaker thresholds
+
+A patch on `circuitBreakers` used to append a second threshold for a priority the cluster
+already had, and Envoy honours only the first, so the patch was dead configuration while
+`/config_dump` showed the requested values. Thresholds are now keyed by priority and the patch
+merges into the existing one.
+
+Where a cluster is also covered by a `MeshCircuitBreaker`, the patch now wins the fields it sets
+and the policy keeps the rest. Remove patches written before this change that you no longer rely
+on, along with any workaround added because the patch appeared to do nothing. This is the same
+change described under
+[Review MeshProxyPatch circuit breaker patches](#review-meshproxypatch-circuit-breaker-patches).
+
 ## MeshTimeout
 
 MeshTimeout has no changes of its own. What it is subject to: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#real-resources-are-selected-by-labels), [the `from` to `rules` move](#the-from-array-is-replaced-by-rules), [the `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404), [the Universal inbound protocol change](#universal-inbounds-must-declare-their-protocol) and [the legacy policies going inert](#legacy-policies-no-longer-generate-configuration).
