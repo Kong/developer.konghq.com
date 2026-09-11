@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require 'yaml'
-require_relative '../drops/quickstart'
+require_relative '../drops/event_gateway_quickstart'
 require_relative '../component_templates'
 
 module Jekyll
-  class Quickstart < Liquid::Block # rubocop:disable Style/Documentation
+  class EventGatewayQuickstart < Liquid::Block # rubocop:disable Style/Documentation
     # An empty (or env-less) block body is whitespace-only, which Liquid treats as a "blank"
     # block and silently discards the rendered output for. This block always has output.
     def blank?
@@ -19,15 +19,17 @@ module Jekyll
 
       contents = super
       config = YAML.load(contents) || {}
-      drop = Drops::Quickstart.new(yaml: config, product: @page['products']&.first)
+      drop = Drops::EventGatewayQuickstart.new(yaml: config)
 
       context.stack do
         context['config'] = drop
-        ComponentTemplates.fetch('how-tos/quickstart/index', @format, base: 'app/_includes').render(context)
+        ComponentTemplates.fetch(
+          'how-tos/event-gateway-quickstart/index', @format, base: 'app/_includes'
+        ).render(context)
       end
     rescue Psych::SyntaxError => e
       message = <<~STRING
-        On `#{@page['path']}`, the following {% quickstart %} block contains a malformed yaml:
+        On `#{@page['path']}`, the following {% event_gateway_quickstart %} block contains a malformed yaml:
         #{contents.strip.split("\n").each_with_index.map { |l, i| "#{i}: #{l}" }.join("\n")}
         #{e.message}
       STRING
@@ -36,4 +38,4 @@ module Jekyll
   end
 end
 
-Liquid::Template.register_tag('quickstart', Jekyll::Quickstart)
+Liquid::Template.register_tag('event_gateway_quickstart', Jekyll::EventGatewayQuickstart)
