@@ -633,6 +633,69 @@ limit that client's requests with `local.http`.
 `requestRate.interval` and `connectionRate.interval` must be greater than 50ms, and `num`
 greater than 0. A shorter interval is rejected with `must be greater than: 50ms`.
 
+## MeshMetric
+
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed).
+
+### Point OpenTelemetry backends at a MeshOpenTelemetryBackend
+
+`openTelemetry.endpoint` is removed, and `backendRef` is the only way to name a collector. A
+policy still setting `endpoint` is rejected with `openTelemetry.backendRef (): must be defined`.
+
+```yaml
+# 2.x
+backends:
+  - type: OpenTelemetry
+    openTelemetry:
+      endpoint: otel-collector:4317
+
+# 3.x
+backends:
+  - type: OpenTelemetry
+    openTelemetry:
+      backendRef:
+        kind: MeshOpenTelemetryBackend
+        labels:
+          kuma.io/display-name: otel-collector
+```
+
+The export path change under
+[OpenTelemetry backends now always export through kuma-dp](#opentelemetry-backends-now-always-export-through-kuma-dp)
+applies here too.
+
+### Replace a Prometheus TLS mode of ActiveMTLSBackend
+
+{:.warning}
+> `prometheus.tls.mode: ActiveMTLSBackend` is still accepted by the schema and no longer does
+> anything. The sidecar applies TLS to its metrics endpoint only when the mode is `ProvidedTLS`
+> and the certificate paths are set, so a policy carrying `ActiveMTLSBackend` applies
+> successfully and serves metrics in plaintext. Nothing reports it.
+
+The mode took its certificates from the mesh CA backend, which v3 removes. Supply a certificate
+and key to the sidecar and switch to `ProvidedTLS`:
+
+```yaml
+backends:
+  - type: Prometheus
+    prometheus:
+      port: 5670
+      tls:
+        mode: ProvidedTLS
+```
+
+The paths go to the sidecar as `KUMA_DATAPLANE_RUNTIME_METRICS_CERT_PATH` and
+`KUMA_DATAPLANE_RUNTIME_METRICS_KEY_PATH`.
+
+### Move off MADS on Kubernetes
+
+The Monitoring Assignment Discovery Service server no longer starts on Kubernetes control
+planes, whatever `KUMA_MONITORING_ASSIGNMENT_SERVER_ENABLED` or `controlPlane.madsServer.enabled`
+are set to, and the Helm chart stops rendering the `mads-server` port 5676 there. It stays
+supported in universal mode, including universal-on-Kubernetes.
+
+Kubernetes deployments that discovered proxies through MADS need Prometheus Kubernetes service
+discovery against the endpoints this policy exposes instead.
+
 ## MeshPassthrough
 
 Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed).

@@ -1,0 +1,26 @@
+title: 'Publish sidecar and application metrics for Prometheus'
+
+description: 'Scrape the application own metrics endpoint and expose everything on the sidecar Prometheus port.'
+
+weight: 900
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshMetric
+  name: backend-metrics
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    default:
+      applications:
+        - path: /metrics/prometheus
+          port: 8888
+      backends:
+        - type: Prometheus
+          prometheus:
+            port: 5670
+            path: /metrics

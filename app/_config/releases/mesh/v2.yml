@@ -205,10 +205,8 @@ app/_mesh_policies/v2/meshloadbalancingstrategy/index.md:
 app/_mesh_policies/v2/meshloadbalancingstrategy/reference.md:
   canonical_url: /mesh/policies/meshloadbalancingstrategy/reference/
 app/_mesh_policies/v2/meshmetric/examples/default.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshmetric/examples/publish-metrics-for-prometheus/
 app/_mesh_policies/v2/meshmetric/index.md:
-  status: pending
   canonical_url: /mesh/policies/meshmetric/
 app/_mesh_policies/v2/meshmetric/reference.md:
   canonical_url: /mesh/policies/meshmetric/reference/
