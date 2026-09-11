@@ -20,13 +20,20 @@ related_resources:
 `MeshTLS` controls two things about a proxy's inbound listeners: whether they accept plaintext
 as well as mTLS, and which TLS versions and ciphers are permitted.
 
-An inbound is `Strict` unless a `MeshTLS` policy says otherwise, so plaintext is rejected by
-default. A policy is only needed to relax that, or to narrow the versions and ciphers below
-what Envoy would otherwise negotiate.
+It sits on top of [MeshIdentity](/mesh/policies/meshidentity/), which is what gives a proxy a
+certificate in the first place. A proxy that no `MeshIdentity` matches gets no mTLS transport
+socket at all, and this policy is skipped for it, logging `skip applying MeshTLS, the proxy has
+no workload identity`. Neither the mode nor the TLS settings below mean anything until a mesh
+has an identity.
 
-The policy needs a workload identity to act on. A proxy without one is skipped, with
-`skip applying MeshTLS, the proxy has no workload identity` in the control plane log, so a mesh
-needs a [MeshIdentity](/mesh/policies/meshidentity/) before this policy does anything.
+Given an identity, an inbound is `Strict` unless a `MeshTLS` policy says otherwise, so plaintext
+is rejected by default. A policy is only needed to relax that, or to narrow the versions and
+ciphers below what Envoy would otherwise negotiate. A mesh that wants mTLS everywhere, with
+Envoy's defaults for version and cipher, needs no `MeshTLS` at all.
+
+`MeshIdentity` carries no TLS version, cipher or mode settings of its own, so the two do not
+overlap: one decides whether a workload has an identity and where it comes from, the other what
+the listener does with it.
 
 ## Accept plaintext while migrating a service
 
