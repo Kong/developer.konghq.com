@@ -663,9 +663,9 @@
 /mesh/policies/meshloadbalancingstrategy/examples/route-equally/  /mesh/policies/meshloadbalancingstrategy/examples/prefer-nearby-endpoints/  301
 /mesh/policies/meshmetric/examples/default/  /mesh/v2/policies/meshmetric/examples/default/  301
 /mesh/policies/meshopa/examples/support-for-external-api/  /mesh/v2/policies/meshopa/examples/support-for-external-api/  301
-/mesh/policies/meshpassthrough/examples/disable-passthrough/  /mesh/v2/policies/meshpassthrough/examples/disable-passthrough/  301
-/mesh/policies/meshpassthrough/examples/enable-passthrough/  /mesh/v2/policies/meshpassthrough/examples/enable-passthrough/  301
-/mesh/policies/meshpassthrough/examples/passthrough-specific-endpoints/  /mesh/v2/policies/meshpassthrough/examples/passthrough-specific-endpoints/  301
+/mesh/policies/meshpassthrough/examples/disable-passthrough/  /mesh/policies/meshpassthrough/examples/block-all-external-traffic/  301
+/mesh/policies/meshpassthrough/examples/enable-passthrough/  /mesh/policies/meshpassthrough/examples/allow-all-external-traffic/  301
+/mesh/policies/meshpassthrough/examples/passthrough-specific-endpoints/  /mesh/policies/meshpassthrough/examples/allow-specific-destinations/  301
 /mesh/policies/meshproxypatch/examples/lua-filter/  /mesh/v2/policies/meshproxypatch/examples/lua-filter/  301
 /mesh/policies/meshproxypatch/examples/time-out-adjustment/  /mesh/v2/policies/meshproxypatch/examples/time-out-adjustment/  301
 /mesh/policies/meshratelimit/examples/configure-on-services/  /mesh/policies/meshratelimit/examples/limit-requests-per-interval/  301

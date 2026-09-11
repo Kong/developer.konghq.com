@@ -1,0 +1,23 @@
+title: 'Allow one domain on two ports'
+
+description: 'A Domain match is resolved by the sidecar and pinned to its port, so allowing the same domain on a second port takes a second entry.'
+
+weight: 600
+
+config:
+  type: MeshPassthrough
+  name: allow-api-both-ports
+  mesh: default
+  spec:
+    targetRef:
+      kind: Mesh
+    default:
+      appendMatch:
+        - type: Domain
+          value: api.example.com
+          protocol: tls
+          port: 443
+        - type: Domain
+          value: api.example.com
+          protocol: http
+          port: 80
