@@ -299,6 +299,8 @@ either route policy. Name the destination directly.
 
 ## MeshTrafficPermission
 
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [the `from` to `rules` move](#the-from-array-is-replaced-by-rules) and [the legacy policies going inert](#legacy-policies-no-longer-generate-configuration).
+
 This migration can take traffic away. `from` matched clients by the tags they carried, and
 `rules` match them by the identity they present, so a mesh whose proxies have no workload
 identity has nothing for a rule to match, and everything it used to allow is denied.
@@ -379,6 +381,8 @@ rows:
 
 ## MeshAccessLog
 
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#real-resources-are-selected-by-labels), [the `from` to `rules` move](#the-from-array-is-replaced-by-rules), [the `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404), [the Universal inbound protocol change](#universal-inbounds-must-declare-their-protocol) and [the legacy policies going inert](#legacy-policies-no-longer-generate-configuration).
+
 ### Point OpenTelemetry backends at a MeshOpenTelemetryBackend
 
 `openTelemetry.endpoint` is removed, and `openTelemetry.backendRef` is the only way to name a
@@ -423,6 +427,8 @@ it applies successfully and the field is ignored, so mesh-wide access logging st
 error. Express the same backends as a `MeshAccessLog` targeting `kind: Mesh`.
 
 ## MeshCircuitBreaker
+
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#real-resources-are-selected-by-labels) and [the `from` to `rules` move](#the-from-array-is-replaced-by-rules).
 
 ### Bring healthyPanicThreshold over from MeshHealthCheck
 
@@ -477,6 +483,8 @@ Circuit breaking applies to a whole destination rather than to individual routes
 
 ## MeshHTTPRoute
 
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#real-resources-are-selected-by-labels), [the two dropped schema defaults](#two-schema-defaults-are-no-longer-stored), [the `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404), [MeshServiceSubset backend refs](#meshservicesubset-is-no-longer-a-backendref-kind) and [naming a destination rather than the mesh](#a-route-names-a-destination-not-the-mesh).
+
 The `404` for an unmatched request is the change to plan for, and it is covered under
 [A request matching no MeshHTTPRoute rule gets a 404](#a-request-matching-no-meshhttproute-rule-gets-a-404).
 
@@ -502,6 +510,8 @@ implemented, and setting either is rejected with `must not be defined`.
 
 ## MeshTCPRoute
 
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#real-resources-are-selected-by-labels), [the two dropped schema defaults](#two-schema-defaults-are-no-longer-stored), [MeshServiceSubset backend refs](#meshservicesubset-is-no-longer-a-backendref-kind), [naming a destination rather than the mesh](#a-route-names-a-destination-not-the-mesh) and [the legacy policies going inert](#legacy-policies-no-longer-generate-configuration).
+
 ### backendRefs is now required
 
 A rule must declare `backendRefs`. An empty or missing list is rejected with
@@ -518,6 +528,8 @@ Where every entry in a rule is unresolvable, the client gets no outbound listene
 destination at all, and its connections fail at connect time.
 
 ## MeshLoadBalancingStrategy
+
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#real-resources-are-selected-by-labels) and [the `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404).
 
 ### Move hash policies out of the load balancer
 
@@ -577,6 +589,8 @@ connections between zones, and no restriction on the top-level `targetRef` becau
 
 ## MeshRetry
 
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#real-resources-are-selected-by-labels), [the two dropped schema defaults](#two-schema-defaults-are-no-longer-stored), [the `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404) and [the legacy policies going inert](#legacy-policies-no-longer-generate-configuration).
+
 ### Lower-case every header name
 
 Header names carry a lower-case-only pattern. A 2.x policy naming `Retry-After` in
@@ -585,6 +599,8 @@ Header names carry a lower-case-only pattern. A 2.x policy naming `Retry-After` 
 header names are case insensitive on the wire, so the matching is unaffected.
 
 ## MeshRateLimit
+
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [the `from` to `rules` move](#the-from-array-is-replaced-by-rules) and [the Universal inbound protocol change](#universal-inbounds-must-declare-their-protocol).
 
 ### Split a policy that limited both inbound and gateway traffic
 
@@ -618,6 +634,8 @@ limit that client's requests with `local.http`.
 greater than 0. A shorter interval is rejected with `must be greater than: 50ms`.
 
 ## MeshPassthrough
+
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed).
 
 ### Replace a Mesh that disabled passthrough
 
@@ -698,7 +716,49 @@ match of the pair in `appendMatch` order, drops the later one, and names it in a
 the `MeshPassthrough` component, so proxies previously stuck with a rejected listener recover on
 their own. The next edit of that policy is rejected until the conflict is resolved.
 
+## MeshGlobalRateLimit
+
+The policy is removed, along with all of its control plane support and the rate-limit service
+the Helm chart deployed. There is no replacement that limits requests across a fleet:
+[MeshRateLimit](/mesh/policies/meshratelimit/) is a local limit, enforced by each proxy against
+its own traffic.
+
+Before upgrading, delete every `MeshGlobalRateLimit` resource and remove the rate-limit service
+configuration:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Where
+    key: where
+rows:
+  - setting: "`ratelimit.*` and `global.ratelimit.*`"
+    where: "Helm values."
+  - setting: "`KMESH_GLOBAL_RATE_LIMIT_*`"
+    where: "Control plane environment."
+  - setting: "`kmesh.globalRateLimit`"
+    where: "Control plane configuration."
+{% endtable %}
+
+After upgrading, the control plane no longer registers, reconciles or serves the policy, so a
+leftover resource becomes inert rather than rejected: it produces no Envoy or rate-limit
+configuration, and nothing reports it.
+
+Helm does not delete CRDs, so `meshglobalratelimits.kuma.io` stays on an existing cluster until
+it is removed by hand:
+
+```sh
+kubectl delete crd meshglobalratelimits.kuma.io
+```
+
+## MeshTimeout
+
+MeshTimeout has no changes of its own. What it is subject to: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#real-resources-are-selected-by-labels), [the `from` to `rules` move](#the-from-array-is-replaced-by-rules), [the `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404), [the Universal inbound protocol change](#universal-inbounds-must-declare-their-protocol) and [the legacy policies going inert](#legacy-policies-no-longer-generate-configuration).
+
 ## MeshHealthCheck
+
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed) and [labels-only selection](#real-resources-are-selected-by-labels).
 
 ### Move healthyPanicThreshold to MeshCircuitBreaker
 
@@ -707,6 +767,8 @@ their own. The next edit of that policy is rejected until the conflict is resolv
 for where it goes and what happens if it is left behind.
 
 ## MeshFaultInjection
+
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [the `from` to `rules` move](#the-from-array-is-replaced-by-rules), [the Universal inbound protocol change](#universal-inbounds-must-declare-their-protocol) and [the legacy policies going inert](#legacy-policies-no-longer-generate-configuration).
 
 ### to is accepted only with a Mesh targetRef
 
