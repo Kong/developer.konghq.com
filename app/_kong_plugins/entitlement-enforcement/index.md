@@ -64,7 +64,7 @@ Requests from customers that are within their entitlements are allowed through.
 
 ## How it works
 
-Each Entitlement Enforcement plugin instance attaches to a single feature, set with [`config.feature.key`](/plugins/entitlement-enforcement/reference/#schema--config-feature-key).
+Each Entitlement Enforcement plugin instance attaches to a single feature, set with [`config.feature.key`](/plugins/entitlement-enforcement/reference/#schema--config-feature-key). To enforce more than one feature, add a plugin instance per feature on the Routes that serve it.
 
 For each request, the plugin:
 
@@ -178,3 +178,7 @@ The following config fields exist in the plugin's schema but currently have no e
 * The `NO_CREDIT_AVAILABLE` reason code under [`config.response_codes`](/plugins/entitlement-enforcement/reference/#schema--config-response-codes)
 
 The plugin currently enforces usage limits and feature access only. See the [known issues](/gateway/breaking-changes/#known-issues-in-3-16-0-0) for details.
+
+The Metering & Billing plugin meters every request that reaches its Route, including requests that Entitlement Enforcement blocks.
+The two plugins act independently, so a blocked request still counts against the customer's usage limit.
+If you're close to a limit, this can cause usage to exceed the entitlement's grant even though the requests never reached your upstream.
