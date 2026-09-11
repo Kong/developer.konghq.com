@@ -15,7 +15,7 @@ related_resources:
   url: "/mesh/policies/meshtrafficpermission/"
 ---
 
-`MeshPassthrough` decides what a proxy may reach outside the mesh. Traffic to a destination the
+`MeshPassthrough` decides what a proxy may reach outside the mesh. For the destinations that warrant a name, policies and a VIP, see [MeshExternalService](/mesh/meshexternalservice/). Traffic to a destination the
 mesh knows nothing about — a third-party API, a managed database, a service never added to the
 mesh — either passes through the sidecar or is rejected by it, and this policy sets which.
 
