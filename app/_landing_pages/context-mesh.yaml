@@ -121,15 +121,15 @@ rows:
               - use_case: "**Expose a single internal API**"
                 sources: |
                   One OpenAPI specification that you either:
-                  - Import from the {{site.konnect_short_name}} API catalog.
-                  - Upload directly as an OpenAPI Specification (OAS) v3.0 file.
+                  * Import from the {{site.konnect_short_name}} API catalog.
+                  * Upload directly as an OpenAPI Specification (OAS) v3.0 file.
                 outcome: "Call any operation in that API through a single Code Mode MCP server, with no per-agent integration code."
                 configuration: "Add the source to the MCP server."
               - use_case: "**Compose multiple APIs**"
                 sources: |
                   Several OpenAPI specifications that you either:
-                  - Import from the {{site.konnect_short_name}} API catalog as a single source.
-                  - Upload directly as anOpenAPI Specification (OAS) v3.0 file, each one as its own source.
+                  * Import from the {{site.konnect_short_name}} API catalog as a single source.
+                  * Upload directly as anOpenAPI Specification (OAS) v3.0 file, each one as its own source.
                 configuration: "Add a single source containing multiple API specifications as a single source, or add multiple sources to the MCP server."
                 outcome: "Complete a task that spans the APIs, choosing which operations to call and in what order."
               - use_case: "**Combine APIs with existing MCP servers**"
