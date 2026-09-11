@@ -223,16 +223,12 @@ app/_mesh_policies/v2/meshopa/index.md:
 app/_mesh_policies/v2/meshopa/reference.md:
   canonical_url: /mesh/policies/meshopa/reference/
 app/_mesh_policies/v2/meshpassthrough/examples/disable-passthrough.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshpassthrough/examples/block-all-external-traffic/
 app/_mesh_policies/v2/meshpassthrough/examples/enable-passthrough.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshpassthrough/examples/allow-all-external-traffic/
 app/_mesh_policies/v2/meshpassthrough/examples/passthrough-specific-endpoints.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshpassthrough/examples/allow-specific-destinations/
 app/_mesh_policies/v2/meshpassthrough/index.md:
-  status: pending
   canonical_url: /mesh/policies/meshpassthrough/
 app/_mesh_policies/v2/meshpassthrough/reference.md:
   canonical_url: /mesh/policies/meshpassthrough/reference/

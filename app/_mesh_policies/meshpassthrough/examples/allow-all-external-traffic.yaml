@@ -1,0 +1,17 @@
+title: 'Allow all traffic out of the mesh'
+
+description: 'Set passthroughMode to All for a selected group of proxies, so they reach external destinations without each one being listed.'
+
+weight: 700
+
+config:
+  type: MeshPassthrough
+  name: enable-passthrough
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: demo-app
+    default:
+      passthroughMode: All

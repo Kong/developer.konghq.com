@@ -108,6 +108,20 @@ to:
 
 `sectionName` is unchanged and still names a `MeshService` port or a `Dataplane` inbound.
 
+### Two schema defaults are no longer stored
+
+A linter fix removed two declared defaults from the API. Neither changes behaviour, and neither
+needs action:
+
+- Header matches on `MeshHTTPRoute` and `MeshRetry` no longer declare a default of `Exact` for
+  `type`. An omitted `type` is still matched as `Exact`.
+- Backend refs on `MeshHTTPRoute` and `MeshTCPRoute` no longer declare a default of `1` for
+  `weight`. An omitted `weight` still counts as `1` when the route is resolved.
+
+The only visible difference is that a resource omitting either field no longer comes back from
+the API with the value filled in, which matters to anything comparing a stored resource against
+what it applied.
+
 ### The `from` array is replaced by `rules`
 
 Inbound configuration moves from `spec.from`, which matched clients by a `targetRef`, to
@@ -390,6 +404,18 @@ backends:
           kuma.io/display-name: otel-collector
 ```
 
+### OpenTelemetry backends now always export through kuma-dp
+
+A `backendRef` pointing at a `MeshOpenTelemetryBackend` sends data through `kuma-dp`: Envoy
+exports to a Unix socket and `kuma-dp` forwards it to the collector. Two settings used to make
+Envoy export to the collector directly and are now removed:
+`runtime.kubernetes.injector.otelPipeEnabled` (`KUMA_RUNTIME_KUBERNETES_INJECTOR_OTEL_PIPE_ENABLED`)
+on the control plane, and `KUMA_DATAPLANE_RUNTIME_OTEL_PIPE_ENABLED` on the sidecar.
+
+Nothing to do unless either was set to `false`. Both are ignored now, so remove them from the
+control plane configuration and the sidecar environment. The same applies to `MeshTrace` and
+`MeshMetric`.
+
 ### Move Mesh.spec.logging into a policy
 
 `Mesh.spec.logging`, with its `LoggingBackend` definitions, is removed. A `Mesh` still setting
@@ -590,6 +616,87 @@ limit that client's requests with `local.http`.
 
 `requestRate.interval` and `connectionRate.interval` must be greater than 50ms, and `num`
 greater than 0. A shorter interval is rejected with `must be greater than: 50ms`.
+
+## MeshPassthrough
+
+### Replace a Mesh that disabled passthrough
+
+`Mesh.spec.networking.outbound.passthrough` is removed. A `Mesh` still setting it applies
+successfully and the field is ignored.
+
+{:.warning}
+> After the upgrade the control plane behaves as if `passthrough` was `true`, its previous
+> default. A `Mesh` that set it to `false` therefore stops blocking traffic out of the mesh, and
+> nothing reports the change.
+
+Replace it before upgrading with a policy that says the same thing:
+
+```yaml
+type: MeshPassthrough
+mesh: default
+name: no-passthrough
+spec:
+  targetRef:
+    kind: Mesh
+  default:
+    passthroughMode: None
+```
+
+### Add a port to every non-wildcard Domain match
+
+A `Domain` match used to build an `ORIGINAL_DST` cluster: the sidecar matched the SNI or the
+`Host` header and then sent the request to the address the client dialed. A workload covered by
+the policy could dial any address, present an allowed domain, and reach that address through the
+policy — the opposite of what an allowlist is for.
+
+The sidecar now resolves the domain itself and connects to the resolved address, so the
+destination no longer depends on the address the client dialed. Resolving needs a port, so a
+`Domain` that is not a wildcard requires one. A policy without it is rejected with
+`port must be defined for a domain, the sidecar resolves the domain to pin the destination`.
+
+```yaml
+# 2.x
+appendMatch:
+  - type: Domain
+    value: api.example.com
+    protocol: tls
+
+# 3.x
+appendMatch:
+  - type: Domain
+    value: api.example.com
+    port: 443
+    protocol: tls
+```
+
+In a policy stored before the upgrade, such a match stops applying. Where it was the only match,
+nothing is left to allow and the sidecar rejects all passthrough traffic for the proxies that
+policy covers until the port is added.
+
+Duplicate the entry to allow one domain on several ports, and check that the sidecar can resolve
+those names: a domain it cannot resolve has no endpoint, so its traffic fails rather than
+following the original destination.
+
+A wildcard `Domain` keeps the old behaviour, because there is no single address to resolve. Its
+traffic goes to the address the client dialed and the match only restricts the SNI or `Host`, so
+a workload covered by a wildcard entry can still dial any address and present a matching name to
+reach it. Prefer exact domains, IPs or CIDR ranges where the set of destinations is known.
+
+### Resolve matches that describe the same filter chain
+
+Two matches resolving to the same filter chain of the generated passthrough listener are now
+rejected on apply. Such a policy used to be accepted, and Envoy then rejected the whole
+listener, breaking passthrough traffic for every proxy the policy matched.
+
+Matches collide when they configure the same port, or both configure no port, with two of
+`grpc`, `http` and `http2`; with the same address written differently, including a CIDR with
+host bits set or another textual form of an IPv6 address; or with `tcp` and `mysql` on one
+address.
+
+An already-applied policy with a conflict is not re-validated. The control plane keeps the first
+match of the pair in `appendMatch` order, drops the later one, and names it in a debug log of
+the `MeshPassthrough` component, so proxies previously stuck with a rejected listener recover on
+their own. The next edit of that policy is rejected until the conflict is resolved.
 
 ## MeshHealthCheck
 
