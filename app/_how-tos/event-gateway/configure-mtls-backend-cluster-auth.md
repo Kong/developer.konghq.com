@@ -50,6 +50,8 @@ related_resources:
 min_version:
   event-gateway: '1.1.0'
 
+# Excluded from the automated run until the Kafka cluster setup, certificate generation, and
+# backend cluster auth steps in this guide are executable by the harness. Not abandoned.
 automated_tests: false
 ---
 
@@ -145,19 +147,8 @@ docker compose up -d
 
 ## Create an {{site.event_gateway_short}} control plane and data plane
 
-Run the [quickstart script](https://get.konghq.com/event-gateway) to provision a local data plane and configure your environment:
-
-```bash
-curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway
-```
-
-Copy the exported variable into your terminal:
-
-```bash
-export EVENT_GATEWAY_ID=your-gateway-id
-```
-
-{% include_cached /knep/quickstart-note.md %}
+{% event_gateway_quickstart %}
+{% endevent_gateway_quickstart %}
 
 ## Configure kafkactl
 
