@@ -7,6 +7,13 @@ products:
   - ai-gateway
 content_type: plugin
 description: Control which AI Consumers and AI Consumer Groups can access entities
+tags:
+  - traffic-control
+  - authorization
+categories:
+  - traffic-control
+search_aliases:
+  - access control list
 related_resources:
   - text: Enforce tiered AI budgets on AI Models with {{site.identity}}
     url: /ai-gateway/enforce-tiered-ai-budgets-with-kong-identity/
