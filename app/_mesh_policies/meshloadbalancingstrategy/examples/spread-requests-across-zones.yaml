@@ -1,0 +1,21 @@
+title: 'Spread requests evenly across zones'
+
+description: 'Turn locality awareness off so requests to a multi-zone destination are distributed across every zone it runs in, rather than preferring the local one.'
+
+weight: 700
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshLoadBalancingStrategy
+  name: backend-no-locality
+  mesh: default
+  spec:
+    to:
+      - targetRef:
+          kind: MeshMultiZoneService
+          labels:
+            kuma.io/display-name: backend
+        default:
+          localityAwareness:
+            disabled: true

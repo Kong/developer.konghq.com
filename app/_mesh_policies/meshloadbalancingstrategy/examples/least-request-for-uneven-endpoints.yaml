@@ -1,0 +1,24 @@
+title: 'Send requests to the least busy endpoint'
+
+description: 'Compare four endpoints instead of the default two and pick the one with the fewest requests in flight, for a destination whose requests vary in cost.'
+
+weight: 500
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshLoadBalancingStrategy
+  name: backend-least-request
+  mesh: default
+  spec:
+    to:
+      - targetRef:
+          kind: MeshService
+          labels:
+            kuma.io/display-name: backend
+        default:
+          loadBalancer:
+            type: LeastRequest
+            leastRequest:
+              choiceCount: 4
+              activeRequestBias: 1

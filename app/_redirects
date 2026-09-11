@@ -656,11 +656,11 @@
 /mesh/policies/meshidentity/examples/bundled-minimal/  /mesh/v2/policies/meshidentity/examples/bundled-minimal/  301
 /mesh/policies/meshidentity/examples/bundled-with-user-ca/  /mesh/v2/policies/meshidentity/examples/bundled-with-user-ca/  301
 /mesh/policies/meshidentity/examples/spire-provider/  /mesh/v2/policies/meshidentity/examples/spire-provider/  301
-/mesh/policies/meshloadbalancingstrategy/examples/disable-cross-zone-traffic/  /mesh/v2/policies/meshloadbalancingstrategy/examples/disable-cross-zone-traffic/  301
-/mesh/policies/meshloadbalancingstrategy/examples/disable-locality-aware/  /mesh/v2/policies/meshloadbalancingstrategy/examples/disable-locality-aware/  301
-/mesh/policies/meshloadbalancingstrategy/examples/load-balancing-http-traffic/  /mesh/v2/policies/meshloadbalancingstrategy/examples/load-balancing-http-traffic/  301
-/mesh/policies/meshloadbalancingstrategy/examples/prioritize-traffic-to-data-planes/  /mesh/v2/policies/meshloadbalancingstrategy/examples/prioritize-traffic-to-data-planes/  301
-/mesh/policies/meshloadbalancingstrategy/examples/route-equally/  /mesh/v2/policies/meshloadbalancingstrategy/examples/route-equally/  301
+/mesh/policies/meshloadbalancingstrategy/examples/disable-cross-zone-traffic/  /mesh/policies/meshloadbalancingstrategy/examples/prefer-nearby-endpoints/  301
+/mesh/policies/meshloadbalancingstrategy/examples/disable-locality-aware/  /mesh/policies/meshloadbalancingstrategy/examples/spread-requests-across-zones/  301
+/mesh/policies/meshloadbalancingstrategy/examples/load-balancing-http-traffic/  /mesh/policies/meshloadbalancingstrategy/examples/hash-on-a-header/  301
+/mesh/policies/meshloadbalancingstrategy/examples/prioritize-traffic-to-data-planes/  /mesh/policies/meshloadbalancingstrategy/examples/fail-over-between-regions/  301
+/mesh/policies/meshloadbalancingstrategy/examples/route-equally/  /mesh/policies/meshloadbalancingstrategy/examples/prefer-nearby-endpoints/  301
 /mesh/policies/meshmetric/examples/default/  /mesh/v2/policies/meshmetric/examples/default/  301
 /mesh/policies/meshopa/examples/support-for-external-api/  /mesh/v2/policies/meshopa/examples/support-for-external-api/  301
 /mesh/policies/meshpassthrough/examples/disable-passthrough/  /mesh/v2/policies/meshpassthrough/examples/disable-passthrough/  301

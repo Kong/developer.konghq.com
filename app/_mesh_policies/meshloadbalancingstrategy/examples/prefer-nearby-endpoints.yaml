@@ -1,0 +1,26 @@
+title: 'Prefer endpoints on the same node, then the same availability zone'
+
+description: 'Order the endpoints in a zone with affinityTags, so most requests stay on the local node and the rest stay in the local availability zone.'
+
+weight: 800
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshLoadBalancingStrategy
+  name: backend-local-affinity
+  mesh: default
+  spec:
+    to:
+      - targetRef:
+          kind: MeshService
+          labels:
+            kuma.io/display-name: backend
+        default:
+          localityAwareness:
+            localZone:
+              affinityTags:
+                - key: kubernetes.io/hostname
+                  weight: 9000
+                - key: topology.kubernetes.io/zone
+                  weight: 9

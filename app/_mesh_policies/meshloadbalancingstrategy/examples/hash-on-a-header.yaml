@@ -1,0 +1,29 @@
+title: 'Pin requests to an endpoint by header'
+
+description: 'Hash the x-user header with RingHash so every request from one user reaches the same endpoint.'
+
+weight: 900
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshLoadBalancingStrategy
+  name: backend-hash-on-user
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: frontend
+    to:
+      - targetRef:
+          kind: MeshService
+          labels:
+            kuma.io/display-name: backend
+        default:
+          loadBalancer:
+            type: RingHash
+          hashPolicies:
+            - type: Header
+              header:
+                name: x-user
