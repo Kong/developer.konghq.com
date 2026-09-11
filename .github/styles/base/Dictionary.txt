@@ -136,6 +136,7 @@ CNAMEs
 CNIs
 cohere
 cognito
+Colang
 collectd
 config
 config_hash
@@ -550,6 +551,7 @@ NATs
 navtabs
 nbf
 neg_ttl
+NeMo
 Netcat
 Netlify
 Netrc
