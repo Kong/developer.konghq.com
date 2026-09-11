@@ -166,16 +166,16 @@ If the same role runs migrations and runtime, skip this section. Ownership alrea
 columns:
   - title: Privilege
     key: privilege
-  - title: On
-    key: on
+  - title: "On"
+    key: object
   - title: Purpose
     key: purpose
 rows:
   - privilege: "`USAGE`"
-    on: "`pg_schema` schema"
+    object: "`pg_schema` schema"
     purpose: Access the {{site.base_gateway}} schema.
   - privilege: "`SELECT`, `INSERT`, `UPDATE`, `DELETE`"
-    on: All tables in the schema
+    object: All tables in the schema
     purpose: Admin API CRUD operations, audit logging, and plugin DAO writes.
 {% endtable %}
 <!--vale on-->
@@ -230,13 +230,13 @@ If the same role runs the admin CLI and migrations, skip this section. Ownership
 columns:
   - title: Privilege
     key: privilege
-  - title: On
-    key: on
+  - title: "On"
+    key: object
   - title: Purpose
     key: purpose
 rows:
   - privilege: "`TRUNCATE`"
-    on: Clustering sync tables
+    object: Clustering sync tables
     purpose: "`kong workspace` and `kong config db_import` need this privilege. Both commands call `truncate_clustering_sync_version()`."
 {% endtable %}
 <!--vale on-->
