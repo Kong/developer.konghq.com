@@ -163,6 +163,9 @@ konnect:
     setup:
       commands: []
 
+    quickstart:
+      command: curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway -n automated-tests-event-gateway-quickstart
+
     cleanup:
       commands:
         - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -n automated-tests-event-gateway-quickstart -d
@@ -175,6 +178,9 @@ konnect:
       commands:
         - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -n automated-tests-event-gateway-quickstart -d
         - docker compose -f /files/event-gateway/docker-compose.yaml down
+        # Wipe files a previous test file generated (kafkactl configs, certs, credential
+        # scripts) so a stale one can't influence the file about to run.
+        - find . -mindepth 1 -delete
         - docker compose -f /files/event-gateway/docker-compose.yaml up -d
         - sleep 5
         - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway -n automated-tests-event-gateway-quickstart | tail -1 >> /env-vars.sh
