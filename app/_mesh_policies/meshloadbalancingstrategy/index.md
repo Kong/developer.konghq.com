@@ -68,7 +68,8 @@ Two of those kinds are constrained:
   `field is not allowed when targetRef.kind is MeshHTTPRoute, only hashPolicies is supported`.
   Hashing is a per-request decision, so it can be set per route; the algorithm and the locality
   preference belong to the destination's cluster, which a route does not own.
-- `localityAwareness.crossZone` is accepted only with `kind: MeshMultiZoneService`. On any
+- `localityAwareness.crossZone` is accepted only with `kind: MeshMultiZoneService` — see
+  [MeshMultiZoneService](/mesh/meshmultizoneservice/). On any
   other kind it is rejected with
   `crossZone is only supported when targetRef.kind is MeshMultiZoneService`.
 

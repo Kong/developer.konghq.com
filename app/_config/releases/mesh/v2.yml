@@ -107,20 +107,16 @@ app/_landing_pages/mesh/v2/konnect.yaml:
   status: pending
   canonical_url:
 app/_mesh_policies/v2/external-services/examples/accessible-from-specific-zone-through-zoneegress.yml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/meshexternalservice/
 app/_mesh_policies/v2/external-services/examples/zone-egress.yml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/meshexternalservice/
 app/_mesh_policies/v2/external-services/index.md:
-  status: pending
   canonical_url: /mesh/meshexternalservice/
 # The keys below name pages that the policy generator builds, not files on
 # disk. A policy configuration reference has no source file; the generator
 # gives the page the path `<policy folder>/reference.md` and the release map
 # addresses it by that path. Do not delete these keys as dead entries.
 app/_mesh_policies/v2/external-services/reference.md:
-  status: pending
   canonical_url: /mesh/meshexternalservice/
 app/_mesh_policies/v2/meshaccesslog/examples/log-incoming-traffic.yaml:
   canonical_url: /mesh/policies/meshaccesslog/examples/log-incoming-traffic/
@@ -436,8 +432,7 @@ app/mesh/v2/mesh.md:
   status: pending
   canonical_url:
 app/mesh/v2/meshexternalservice.md:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/meshexternalservice/
 app/mesh/v2/meshgateway.md:
   status: pending
   canonical_url:
@@ -445,13 +440,11 @@ app/mesh/v2/meshgatewayinstance.md:
   status: pending
   canonical_url:
 app/mesh/v2/meshmultizoneservice.md:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/meshmultizoneservice/
 app/mesh/v2/meshopentelemetrybackend.md:
   canonical_url: /mesh/meshopentelemetrybackend/
 app/mesh/v2/meshservice.md:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/meshservice/
 app/mesh/v2/multi-zone-authentication.md:
   status: pending
   canonical_url:
