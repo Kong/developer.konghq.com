@@ -882,6 +882,7 @@ unenrolls
 unescaped
 ungroup
 ungrouped
+unhashed
 unicode
 unix
 unlinking
