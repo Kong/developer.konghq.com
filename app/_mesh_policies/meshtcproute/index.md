@@ -15,8 +15,6 @@ related_resources:
   url: "/mesh/policies/meshhttproute/"
 - text: MeshCircuitBreaker policy
   url: "/mesh/policies/meshcircuitbreaker/"
-- text: MeshTimeout policy
-  url: "/mesh/policies/meshtimeout/"
 ---
 
 `MeshTCPRoute` changes where a client's connections to a destination go. It can point them at a

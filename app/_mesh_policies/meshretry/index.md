@@ -15,8 +15,6 @@ related_resources:
   url: "/mesh/policies/meshtimeout/"
 - text: MeshCircuitBreaker policy
   url: "/mesh/policies/meshcircuitbreaker/"
-- text: MeshHTTPRoute policy
-  url: "/mesh/policies/meshhttproute/"
 ---
 
 `MeshRetry` makes a client proxy try a failed request again, instead of returning the failure

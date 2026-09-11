@@ -15,8 +15,6 @@ related_resources:
   url: "/mesh/policies/meshretry/"
 - text: MeshCircuitBreaker policy
   url: "/mesh/policies/meshcircuitbreaker/"
-- text: MeshHTTPRoute policy
-  url: "/mesh/policies/meshhttproute/"
 ---
 
 `MeshTimeout` sets how long a proxy waits before giving up: on establishing a connection, on

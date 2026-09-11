@@ -177,16 +177,12 @@ app/_mesh_policies/v2/meshhttproute/index.md:
 app/_mesh_policies/v2/meshhttproute/reference.md:
   canonical_url: /mesh/policies/meshhttproute/reference/
 app/_mesh_policies/v2/meshidentity/examples/bundled-minimal.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshidentity/examples/issue-for-every-workload/
 app/_mesh_policies/v2/meshidentity/examples/bundled-with-user-ca.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshidentity/examples/issue-from-your-own-ca/
 app/_mesh_policies/v2/meshidentity/examples/spire-provider.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshidentity/examples/issue-through-spire/
 app/_mesh_policies/v2/meshidentity/index.md:
-  status: pending
   canonical_url: /mesh/policies/meshidentity/
 app/_mesh_policies/v2/meshidentity/reference.md:
   canonical_url: /mesh/policies/meshidentity/reference/
@@ -317,10 +313,8 @@ app/_mesh_policies/v2/meshtrafficpermission_experimental/index.md:
 app/_mesh_policies/v2/meshtrafficpermission_experimental/reference.md:
   canonical_url: /mesh/policies/meshtrafficpermission/reference/
 app/_mesh_policies/v2/meshtrust/examples/allow-encrypted-traffic.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshtrust/examples/trust-an-external-ca/
 app/_mesh_policies/v2/meshtrust/index.md:
-  status: pending
   canonical_url: /mesh/policies/meshtrust/
 app/_mesh_policies/v2/meshtrust/reference.md:
   canonical_url: /mesh/policies/meshtrust/reference/
