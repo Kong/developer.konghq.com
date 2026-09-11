@@ -9,6 +9,8 @@ icon: meshaccesslog.png
 related_resources:
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
+- text: Migrate policies to {{site.mesh_product_name}} 3
+  url: "/mesh/migrate-policies-to-3/"
 ---
 
 `MeshAccessLog` makes data plane proxies write a record for every request or connection they
@@ -357,99 +359,3 @@ spec:
 
 For the selectors a policy can carry and why inbound matches an identity rather than a name,
 see [How policies select traffic](/mesh/policy-targeting/).
-
-## Upgrading from {{site.mesh_product_name}} 2.x
-
-Three things move: inbound logging from `from` to `rules`, OpenTelemetry endpoints from an
-inline field to a resource, and mesh-wide logging from `Mesh.spec.logging` to this policy.
-Only the second is rejected on apply. The other two are accepted and quietly do nothing, so
-work through them before upgrading rather than after.
-
-### Rewrite `from` as `rules`
-
-`spec.from` is removed. Inbound access logging is configured through `spec.rules`, which match
-on the client's identity rather than on a `targetRef`.
-
-`from` is dropped rather than rejected. A policy that also sets `to` or `rules` is accepted and
-loses its inbound logging silently; one where `from` was the only field is rejected, because
-the remaining spec configures nothing.
-
-```yaml
-# 2.x
-spec:
-  from:
-    - targetRef:
-        kind: Mesh
-      default:
-        backends:
-          - type: File
-            file:
-              path: /tmp/access.log
-
-# 3.x
-spec:
-  rules:
-    - default:
-        backends:
-          - type: File
-            file:
-              path: /tmp/access.log
-```
-
-A `from` entry targeting `kind: Mesh`, meaning every client, becomes a single rule with no
-`matches`. To keep logging a subset of clients, match on their SPIFFE ID as described under
-[Match on client identity or SNI](#match-on-client-identity-or-sni).
-
-### Point OpenTelemetry backends at a MeshOpenTelemetryBackend
-
-`openTelemetry.endpoint` is removed, and `openTelemetry.backendRef` is the only way to name a
-collector. A policy still setting `endpoint` is rejected with
-`openTelemetry.backendRef (): must be defined`.
-
-Create a `MeshOpenTelemetryBackend` carrying the endpoint, then reference it by labels:
-
-```yaml
-# 2.x
-backends:
-  - type: OpenTelemetry
-    openTelemetry:
-      endpoint: otel-collector.observability:4317
-
-# 3.x
-backends:
-  - type: OpenTelemetry
-    openTelemetry:
-      backendRef:
-        kind: MeshOpenTelemetryBackend
-        labels:
-          kuma.io/display-name: otel-collector
-```
-
-### Move Mesh.spec.logging into a policy
-
-`Mesh.spec.logging`, with its `LoggingBackend` definitions, is removed. A `Mesh` still setting
-it applies successfully and the field is ignored, so mesh-wide access logging stops without an
-error. Express the same backends as a `MeshAccessLog` policy targeting `kind: Mesh`.
-
-### Rewrite the top-level targetRef
-
-`spec.targetRef.kind` accepts `Mesh` and `Dataplane`. `MeshSubset`, `MeshService`,
-`MeshServiceSubset` and `MeshGateway` are rejected with
-`in body should be one of [Mesh Dataplane]`. A subset selector becomes `kind: Dataplane` with
-the equivalent labels, and a `MeshGateway` selector becomes `kind: Dataplane` too, since a
-delegated gateway is an ordinary `Dataplane`.
-
-{:.warning}
-> `kind: Dataplane` selects proxies by `labels` only, and a reference carrying `name` or
-> `namespace` instead is **accepted**. Those fields are not in the schema, so they are dropped,
-> and what remains is a bare `kind: Dataplane` — every proxy in the mesh. Nothing reports it, so
-> read the policy back after rewriting one: a stored `targetRef` with a `kind` and no `labels`
-> covers the whole mesh.
-
-### Check routes this policy targets
-
-`to[].targetRef.kind: MeshHTTPRoute` still applies a log configuration to the requests one
-route matches. What changed is the route: a request matching none of a `MeshHTTPRoute`'s rules
-now gets a `404` instead of reaching the destination, so a route that exists only to anchor
-this policy will answer `404` on every path it does not match. See
-[the MeshHTTPRoute upgrade guide](/mesh/policies/meshhttproute/#add-a-catch-all-rule-to-every-route).

@@ -9,6 +9,8 @@ icon: meshtcproute.png
 related_resources:
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
+- text: Migrate policies to {{site.mesh_product_name}} 3
+  url: "/mesh/migrate-policies-to-3/"
 - text: MeshHTTPRoute policy
   url: "/mesh/policies/meshhttproute/"
 - text: MeshCircuitBreaker policy
@@ -112,83 +114,3 @@ Where a destination's protocol is HTTP based, `MeshHTTPRoute` owns its routing a
 HTTP-based destination that no `MeshHTTPRoute` targets. The protocol comes from
 `networking.inbound[].protocol` on the destination's `Dataplane`, which on Kubernetes is
 derived from the `Service` port.
-
-## Upgrading from {{site.mesh_product_name}} 2.x
-
-`MeshTCPRoute` keeps its shape. What changes is how its references name things, and one of the
-three changes is silent.
-
-### Select real resources by labels
-
-`MeshService`, `MeshExternalService` and `MeshMultiZoneService` are selected by `labels` only,
-in `to[].targetRef` and `backendRefs[]` alike. A reference carrying `name` and `namespace`
-instead is rejected with `labels (): must be set when kind is MeshService`. `sectionName` is
-unchanged and still names a port.
-
-```yaml
-# 2.x
-to:
-  - targetRef:
-      kind: MeshService
-      name: backend
-      namespace: kong-mesh-demo
-      sectionName: http
-
-# 3.x
-to:
-  - targetRef:
-      kind: MeshService
-      labels:
-        kuma.io/display-name: backend
-        k8s.kuma.io/namespace: kong-mesh-demo
-      sectionName: http
-```
-
-### Replace MeshServiceSubset backendRefs
-
-`backendRefs[].kind` no longer accepts `MeshServiceSubset`, and `tags` is gone from the schema.
-A stored route carrying one keeps being served, but the control plane no longer resolves that
-kind, so the reference is dropped and the rule loses that share of its connections. Where every
-entry is a subset reference, the client loses its listener for the destination.
-
-```yaml
-# 2.x
-backendRefs:
-  - kind: MeshServiceSubset
-    tags:
-      kuma.io/service: backend
-      version: v1
-
-# 3.x
-backendRefs:
-  - kind: MeshService
-    labels:
-      kuma.io/display-name: backend-v1
-    port: 8080
-```
-
-Splitting connections between tagged subsets of one service has no replacement. That service
-has to become separate `MeshService` resources for the route to address.
-
-### Rewrite the top-level targetRef
-
-`spec.targetRef.kind` accepts `Mesh` and `Dataplane`. `MeshSubset`, `MeshServiceSubset` and
-`MeshGateway` are rejected with `in body should be one of [Mesh Dataplane]`. A subset selector
-becomes `kind: Dataplane` with the equivalent labels, and a `MeshGateway` selector becomes
-`kind: Dataplane` too, since a delegated gateway is an ordinary `Dataplane`.
-
-{:.warning}
-> `kind: Dataplane` selects proxies by `labels` only, and a reference carrying `name` or
-> `namespace` instead is **accepted**. Those fields are not in the schema, so they are dropped,
-> and what remains is a bare `kind: Dataplane` — every proxy in the mesh. Nothing reports it, so
-> read the policy back after rewriting one: a stored `targetRef` with a `kind` and no `labels`
-> covers the whole mesh.
-
-A 2.x gateway route also set `to[].targetRef.kind: Mesh`, which is now rejected. Name the
-destination in `to[].targetRef` instead.
-
-### Delete leftover TrafficRoute and VirtualOutbound resources
-
-`TrafficRoute` is removed, along with the legacy policies that matched on the routes it
-defined. `VirtualOutbound` no longer affects generated Envoy configuration either. Where both a
-`MeshTCPRoute` and a `TrafficRoute` applied to a proxy, the `MeshTCPRoute` already won.
