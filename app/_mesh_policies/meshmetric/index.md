@@ -176,7 +176,7 @@ rows:
 
 ### OpenTelemetry
 
-`openTelemetry.backendRef` names a `MeshOpenTelemetryBackend` by labels, and
+`openTelemetry.backendRef` names a [MeshOpenTelemetryBackend](/mesh/meshopentelemetrybackend/) by labels, and
 `refreshInterval` sets how often metrics are pushed to it.
 
 {% policy_yaml namespace=kong-mesh-demo %}

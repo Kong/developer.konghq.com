@@ -389,7 +389,7 @@ Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kind
 collector. A policy still setting `endpoint` is rejected with
 `openTelemetry.backendRef (): must be defined`.
 
-Create a `MeshOpenTelemetryBackend` carrying the endpoint, then reference it by labels:
+Create a [MeshOpenTelemetryBackend](/mesh/meshopentelemetrybackend/) carrying the endpoint, then reference it by labels:
 
 ```yaml
 # 2.x

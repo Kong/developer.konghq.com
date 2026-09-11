@@ -96,7 +96,7 @@ backends:
 
 ### OpenTelemetry
 
-Sends records to an OpenTelemetry collector. Point `backendRef` at a `MeshOpenTelemetryBackend`
+Sends records to an OpenTelemetry collector. Point `backendRef` at a [MeshOpenTelemetryBackend](/mesh/meshopentelemetrybackend/)
 resource, which holds the collector endpoint so that several policies can share it:
 
 ```yaml
