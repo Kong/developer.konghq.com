@@ -96,6 +96,8 @@ rows:
     description: Authenticate a Consumer by verifying a JWT from one of two possible sources, each backed by a different JWKS.
   - usecase: "[Sign JWT with Consumer ID](/plugins/datakit/examples/sign-consumer-jwt/)"
     description: Sign an outgoing JWT in a request header using the authenticated Consumer’s ID as the subject.
+  - usecase: "[Sign JWT with Principal ID](/plugins/datakit/examples/sign-principal-jwt/)"
+    description: Sign an outgoing JWT in a request header using the authenticated Principal’s ID as the subject.
   - usecase: "[Route requests to different upstreams based on the authenticated caller](/plugins/datakit/examples/route-upstream-by-credential/)"
     description: Read a credential set by the OpenID Connect plugin and map its value to a named Upstream entity, routing different callers to different backends on a single Route.
   - usecase: "[Route requests to different hosts based on the authenticated caller](/plugins/datakit/examples/route-host-by-credential/)"
@@ -1247,6 +1249,10 @@ columns:
   - title: Data type
     key: type
 rows:
+  - property: "`kong.client.principal`"
+    desc: "`kong.client.get_principal()`"
+    type: "`object`"
+    
   - property: "`kong.client.consumer`"
     desc: "`kong.client.get_consumer()`"
     type: "`object`"
@@ -1389,9 +1395,10 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-For examples that read `kong.client.credential` and route different callers to different backends, see:
-* [Dynamically set upstream based on the authenticated caller](/how-to/configure-oidc-datakit-upstream-routing/) (using named Upstream entities)
-* [Dynamically set host based on the authenticated caller](/how-to/configure-oidc-datakit-host-routing/) (using direct `host:port` targets)
+For examples that route different callers to different backends, see:
+* [Dynamically set upstream based on the authenticated caller](/how-to/configure-oidc-datakit-upstream-routing/) (reads `kong.client.credential`, routes to named Upstream entities)
+* [Dynamically set host based on the authenticated caller](/how-to/configure-oidc-datakit-host-routing/) (reads `kong.client.credential`, routes to direct `host:port` targets)
+* [Dynamically set host based on the authenticated Principal](/how-to/configure-oidc-datakit-host-routing-with-principals-metadata/) (reads `kong.client.principal`, routes to a `host:port` target stored in {{site.identity}} Principal metadata)
 
 The following properties support `get` and `set` operations:
 
