@@ -85,7 +85,7 @@ required, and a path, query, fragment, user or opaque part is rejected. `https:/
 fails with `scheme must be http`, and `http://agent:8126/traces` with `path must not be
 defined`.
 
-An OpenTelemetry backend is named indirectly, through a `MeshOpenTelemetryBackend` resource:
+An OpenTelemetry backend is named indirectly, through a [MeshOpenTelemetryBackend](/mesh/meshopentelemetrybackend/) resource:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml

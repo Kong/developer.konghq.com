@@ -448,8 +448,7 @@ app/mesh/v2/meshmultizoneservice.md:
   status: pending
   canonical_url:
 app/mesh/v2/meshopentelemetrybackend.md:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/meshopentelemetrybackend/
 app/mesh/v2/meshservice.md:
   status: pending
   canonical_url:
