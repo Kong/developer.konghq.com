@@ -853,6 +853,40 @@ Find the affected resources before upgrading:
 kubectl get meshtls -A -o yaml | grep -B5 'from:'
 ```
 
+## MeshTrace
+
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed).
+
+### Point OpenTelemetry backends at a MeshOpenTelemetryBackend
+
+`openTelemetry.endpoint` is removed, and `backendRef` is the only way to name a collector. A
+policy still setting `endpoint` is rejected with `openTelemetry.backendRef (): must be defined`.
+
+```yaml
+# 2.x
+backends:
+  - type: OpenTelemetry
+    openTelemetry:
+      endpoint: otel-collector:4317
+
+# 3.x
+backends:
+  - type: OpenTelemetry
+    openTelemetry:
+      backendRef:
+        kind: MeshOpenTelemetryBackend
+        labels:
+          kuma.io/display-name: otel-collector
+```
+
+Create the `MeshOpenTelemetryBackend` carrying the endpoint first, otherwise the reference does
+not resolve and the backend is skipped. This is the same move `MeshAccessLog` makes, described
+under
+[Point OpenTelemetry backends at a MeshOpenTelemetryBackend](#point-opentelemetry-backends-at-a-meshopentelemetrybackend),
+and the export path change under
+[OpenTelemetry backends now always export through kuma-dp](#opentelemetry-backends-now-always-export-through-kuma-dp)
+applies here too.
+
 ## MeshTimeout
 
 MeshTimeout has no changes of its own. What it is subject to: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#real-resources-are-selected-by-labels), [the `from` to `rules` move](#the-from-array-is-replaced-by-rules), [the `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404), [the Universal inbound protocol change](#universal-inbounds-must-declare-their-protocol) and [the legacy policies going inert](#legacy-policies-no-longer-generate-configuration).

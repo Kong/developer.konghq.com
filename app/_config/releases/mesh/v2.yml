@@ -291,22 +291,16 @@ app/_mesh_policies/v2/meshtls/index.md:
 app/_mesh_policies/v2/meshtls/reference.md:
   canonical_url: /mesh/policies/meshtls/reference/
 app/_mesh_policies/v2/meshtrace/examples/datadog.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshtrace/examples/trace-to-datadog/
 app/_mesh_policies/v2/meshtrace/examples/opentelemetry.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshtrace/examples/trace-to-opentelemetry/
 app/_mesh_policies/v2/meshtrace/examples/target-east.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshtrace/
 app/_mesh_policies/v2/meshtrace/examples/target-west.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshtrace/
 app/_mesh_policies/v2/meshtrace/examples/zipkin.yaml:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policies/meshtrace/examples/trace-to-zipkin/
 app/_mesh_policies/v2/meshtrace/index.md:
-  status: pending
   canonical_url: /mesh/policies/meshtrace/
 app/_mesh_policies/v2/meshtrace/reference.md:
   canonical_url: /mesh/policies/meshtrace/reference/
