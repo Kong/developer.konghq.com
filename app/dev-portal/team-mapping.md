@@ -71,20 +71,23 @@ You can configure more than one IdP for a {{site.dev_portal}}, but only one IdP 
 
 {% navtabs "map-idp-teams" %}
 {% navtab "UI" %}
-1. In [**{{site.dev_portal}}**](https://cloud.konghq.com/portal), click **Settings**.
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.dev_portal}}** > **Portals**.
+1. Click your {{site.dev_portal}}.
+1. Click the **Settings** tab.
+1. Click the **Security** tab.
+1. Enable **Role-based access control (RBAC)**.
+   
+   Enabling RBAC allows you to create teams in {{site.konnect_short_name}}. You can disable RBAC after you map teams from your IdP if you don't want to use it.
 
-1. In the **General** setting tab, enable **Portal RBAC**.
-    
-    Enabling RBAC allows you to create teams in {{site.konnect_short_name}}. You can disable RBAC after you map teams from your IdP if you don't want to use it.
-
-1. From the **Teams** settings in the side bar, click **New Team** and configure the team.
-
+1. Click the **Developers** tab.
+1. Click the **Teams** tab.
+1. Click **New Team** and configure the team.
 2. From the IdP team you just created, click the **APIs** tab and click **Add Roles**. This allows you to assign APIs and the role for the APIs to members of your IdP team.
-
-3. From **Settings** in the {{site.dev_portal}} side bar, click the **Identity** tab and then click **Configure OIDC provider**.
-
+1. Navigate back to your {{site.dev_portal}} overview and click the **Settings** tab.
+1. Click the **Security** tab.
+1. In the User authentication settings, click **Configure** next to OIDC.
 4. Configure the IdP settings using the following mappings:
-    * **Provider URL:** The value stored in the `issuer` variable from your application in your IdP.
+    * **Issuer URI:** The value stored in the `issuer` variable from your application in your IdP.
     * **Client ID:** The application ID from your application in your IdP.
     * **Client Secret:** The client secret from your application in your IdP.
     * **Scopes:** The scopes to be requested from your application in your IdP.
@@ -92,7 +95,7 @@ You can configure more than one IdP for a {{site.dev_portal}}, but only one IdP 
     * **Claim Mappings - Email:** `email`
     * **Claim Mappings - Groups:** `groups`
 
-5. Click the **Team Mappings** tab, and then select **IdP Mapping Enabled**.
+5. Click the **Team Mapping** tab, and then select **IdP Mapping Enabled**.
 
 6. Enter the exact name of your team from your IdP next to the name of the {{site.konnect_short_name}} team you want to map it to.
 
