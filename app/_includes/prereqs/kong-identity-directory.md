@@ -15,5 +15,8 @@ body:
 capture:
   - variable: DIRECTORY_ID
     jq: ".id"
+extract_body:
+  - name: 'id'
+    variable: DIRECTORY_ID
 {% endkonnect_api_request %}
 <!--vale on-->

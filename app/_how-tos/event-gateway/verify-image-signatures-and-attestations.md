@@ -63,8 +63,6 @@ tldr:
       {{site.event_gateway}} images are published to `kong/kong-event-gateway` on Docker Hub and signed with [Cosign](https://github.com/sigstore/cosign) using GitHub's OIDC identity.
 
       List every supply chain artifact attached to an image with `cosign tree kong/kong-event-gateway:VERSION`, verify the image signature with `cosign verify`, and verify or extract individual attestations (SBOM, vulnerability scans) with `cosign verify-attestation`.
-
-automated_tests: false
 ---
 
 {% assign egw_release = site.data.products["event-gateway"].releases | where: "latest", true | first %}
@@ -83,9 +81,13 @@ Each image is signed with [Cosign](https://github.com/sigstore/cosign) using Git
 
 Use `cosign tree` to see every signature and attestation attached to an image:
 
-```sh
-cosign tree kong/kong-event-gateway:{{ egw_release.version }}
-```
+{% validation custom-command %}
+command: |
+  cosign tree kong/kong-event-gateway:{{ egw_release.version }}
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
 The output lists the supply chain artifacts (signatures and attestations) that are stored alongside the image in the registry.
 
@@ -93,31 +95,37 @@ The output lists the supply chain artifacts (signatures and attestations) that a
 
 1. Read the manifest digest for the image with `regctl` and store it in a variable:
 
-    ```sh
-    export IMAGE_DIGEST=$(regctl manifest digest kong/kong-event-gateway:{{ egw_release.version }})
-    echo $IMAGE_DIGEST
-    ```
+    {% env_variables %}
+    IMAGE_DIGEST: $(regctl manifest digest kong/kong-event-gateway:{{ egw_release.version }})
+    indent: 3
+    {% endenv_variables %}
 
     This captures the image's SHA-256 digest so you can reuse it in the commands below, and prints it:
 
     ```sh
+    echo $IMAGE_DIGEST
     sha256:...
     ```
     {:.no-copy-code}
 
     Pinning to a digest guarantees you verify exactly the image you're going to run, even if the tag is later moved to a different image.
 
-1. Verify the signature with `cosign verify`:
+2. Verify the signature with `cosign verify`:
 
-    ```sh
-    cosign verify \
-      --new-bundle-format=true \
-      -a repo="kong-gateway/event-gateway" \
-      -a workflow="CI" \
-      --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
-      --certificate-identity="https://github.com/kong-gateway/event-gateway/.github/workflows/ci.yaml@refs/tags/v{{ egw_release.version }}" \
-      kong/kong-event-gateway@${IMAGE_DIGEST}
-    ```
+   {% validation custom-command %}
+   command: |
+     cosign verify \
+       --new-bundle-format=true \
+       -a repo="kong-gateway/event-gateway" \
+       -a workflow="CI" \
+       --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
+       --certificate-identity="https://github.com/kong-gateway/event-gateway/.github/workflows/ci.yaml@refs/tags/v{{ egw_release.version }}" \
+       kong/kong-event-gateway@${IMAGE_DIGEST}
+   expected:
+     return_code: 0
+   render_output: false
+   indent: 3
+   {% endvalidation %}
 
     If verification succeeds, the response contains a summary of the checks that were performed:
 
@@ -163,13 +171,17 @@ rows:
 
 To verify an attestation's signature and print its contents, use `cosign verify-attestation` with the matching `--type`. For example, to verify the SPDX SBOM, run:
 
-```sh
-cosign verify-attestation \
-  --type="spdxjson" \
-  --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
-  --certificate-identity="https://github.com/kong-gateway/event-gateway/.github/workflows/ci.yaml@refs/tags/v{{ egw_release.version }}" \
-  kong/kong-event-gateway@${IMAGE_DIGEST}
-```
+{% validation custom-command %}
+command: |
+  cosign verify-attestation \
+    --type="spdxjson" \
+    --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
+    --certificate-identity="https://github.com/kong-gateway/event-gateway/.github/workflows/ci.yaml@refs/tags/v{{ egw_release.version }}" \
+    kong/kong-event-gateway@${IMAGE_DIGEST}
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
 For predicate types that don't have a built-in alias, pass the full predicate type URL to `--type` instead. For example: `--type="https://cisecurity.org/docker/amd64"`.
 
@@ -177,11 +189,15 @@ For predicate types that don't have a built-in alias, pass the full predicate ty
 
 To save the SPDX SBOM to a file, download the attestations and filter for the SBOM predicate type with `jq`:
 
-```sh
-cosign download attestation kong/kong-event-gateway@${IMAGE_DIGEST} \
-  | jq -r 'select((.dsseEnvelope.payload // .payload | @base64d | fromjson | .predicateType) == "https://spdx.dev/Document") | (.dsseEnvelope.payload // .payload) | @base64d | fromjson | .predicate' \
-  > sbom.spdx.json
-```
+{% validation custom-command %}
+command: |
+  cosign download attestation kong/kong-event-gateway@${IMAGE_DIGEST} \
+    | jq -r 'select((.dsseEnvelope.payload // .payload | @base64d | fromjson | .predicateType) == "https://spdx.dev/Document") | (.dsseEnvelope.payload // .payload) | @base64d | fromjson | .predicate' \
+    > sbom.spdx.json
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
 This writes the SBOM document to `sbom.spdx.json`, which you can then feed into your SBOM tooling. To extract the CycloneDX SBOM instead, replace the predicate type with `https://cyclonedx.org/bom`.
 
@@ -189,9 +205,13 @@ This writes the SBOM document to `sbom.spdx.json`, which you can then feed into 
 
 Confirm that the extracted file is valid JSON and contains the expected SPDX fields:
 
-```sh
-jq -e '.spdxVersion and (.packages | length > 0)' sbom.spdx.json \
-  && echo "Valid SPDX SBOM with $(jq '.packages | length' sbom.spdx.json) packages"
-```
+{% validation custom-command %}
+command: |
+  jq -e '.spdxVersion and (.packages | length > 0)' sbom.spdx.json \
+    && echo "Valid SPDX SBOM with $(jq '.packages | length' sbom.spdx.json) packages"
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
 If the file is a well-formed SPDX SBOM, the command prints `true` followed by the package count. If `jq` reports a parse error or the expression evaluates to `false`, the download or filter step didn't produce a valid document. Re-check the predicate type and confirm the previous commands completed successfully.

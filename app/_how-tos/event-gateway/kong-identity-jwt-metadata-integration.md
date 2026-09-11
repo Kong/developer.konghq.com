@@ -50,6 +50,12 @@ cleanup:
     - title: Clean up {{site.event_gateway}} resources
       include_content: cleanup/products/event-gateway
       icon_url: /assets/icons/gateway.svg
+    - title: Clean up Kong Identity directory
+      include_content: md/identity/delete_directory
+      icon_url: /assets/icons/identity.svg
+    - title: Clean up the auth server
+      include_content: md/identity/delete_auth_server
+
 
 related_resources:
   - text: Set up {{site.event_gateway}} with Kong Identity OAuth
@@ -63,8 +69,6 @@ related_resources:
 
 min_version:
   event-gateway: '1.2.0'
-
-automated_tests: false
 ---
 
 In this guide, you'll authenticate a Kafka client to {{site.event_gateway_short}} with a JWT issued by a Kong Identity auth server, look up the connecting principal in a Kong Identity directory by the token's issuer and subject, and use the principal's metadata to drive a Modify Headers policy.

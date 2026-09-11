@@ -98,3 +98,15 @@ RUN ARCH=$(dpkg --print-architecture) && \
     echo "$CHECKSUM  yq" | sha256sum -c - && \
     install -o root -g root -m 0755 yq /usr/local/bin/yq && \
     rm yq
+
+# Install cosign (latest)
+RUN ARCH=$(dpkg --print-architecture) && \
+    curl -fsSL -o cosign "https://github.com/sigstore/cosign/releases/latest/download/cosign-linux-${ARCH}" && \
+    install -o root -g root -m 0755 cosign /usr/local/bin/cosign && \
+    rm cosign
+
+# Install regctl (latest)
+RUN ARCH=$(dpkg --print-architecture) && \
+    curl -fsSL -o regctl "https://github.com/regclient/regclient/releases/latest/download/regctl-linux-${ARCH}" && \
+    install -o root -g root -m 0755 regctl /usr/local/bin/regctl && \
+    rm regctl
