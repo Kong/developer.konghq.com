@@ -249,8 +249,25 @@ condition: 'http.headers.x_block == "true"'
 ```
 
 For more information, see:
-* [Plugin expressions reference](/gateway/plugins/expressions/)
+* [Plugin conditional execution reference](/gateway/plugins/conditions/)
+* [CEL reference](/gateway/plugins/expressions/)
 * [How to: Configure conditional plugin execution in {{site.base_gateway}}](/gateway/configure-conditional-plugin-execution/)
+
+## Dynamic configuration {% new_in 3.16 %}
+
+Some plugin config fields can be computed per request from a CEL expression. For example, you could read an attribute of the authenticated Consumer or Principal instead of always using a fixed value.
+
+Unlike a `condition`, which decides whether the whole plugin runs, this only changes the value of one specific field.
+
+Only specific fields on the following plugins support dynamic plugin config:
+* [ACL](/plugins/acl/#dynamic-allow-and-deny-rules)
+* [Rate Limiting](/plugins/rate-limiting/#dynamic-configuration-with-cel)
+* [Rate Limiting Advanced](/plugins/rate-limiting-advanced/#dynamic-configuration-with-cel)
+
+For more information, see:
+* [Dynamic plugin config with CEL](/gateway/plugins/expressible-fields/)
+* [CEL reference](/gateway/plugins/expressions/)
+* [How-to: Configure dynamic plugin config with CEL](/gateway/configure-dynamic-plugin-config-with-cel/)
 
 ## Cloning plugins {% new_in 3.15 %}
 
@@ -266,7 +283,7 @@ Cloned plugins are useful in many situations. For example:
 * Allowing different teams who want to use the same plugin logic to apply different business rules. 
 For example, a platform team may want to add a global IP deny list to a Gateway to enforce a global security policy, while an engineering team may also want to block IPs from a particular problematic customer on a single Route.
 * Running multiple instances of the [Datakit](/plugins/datakit/) plugin where different teams want to independently manage their own distinct flows on the same Gateway.
-* In conjunction with [conditional plugins](/gateway/plugins/expressions/), running different configurations of the plugin based on different environmental conditions.
+* In conjunction with [conditional plugins](/gateway/plugins/conditions/), running different configurations of the plugin based on different environmental conditions.
 
 ### Permissions required
 

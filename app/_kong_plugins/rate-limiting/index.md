@@ -27,6 +27,8 @@ related_resources:
     url: /how-to/throttle-apis-with-services-and-consumers/
   - text: Rate Limiting Advanced plugin
     url: /plugins/rate-limiting-advanced/
+  - text: Dynamic plugin config with CEL
+    url: /gateway/plugins/expressible-fields/
 
 products:
   - gateway
@@ -92,4 +94,39 @@ See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose 
 ## Headers sent to the client
 
 {% include_cached /plugins/rate-limiting/headers.md name=page.name %}
+
+## Rate limit by Principal {% new_in 3.16 %}
+
+Set [`limit_by`](/plugins/rate-limiting/reference/#schema--config-limit-by) to `principal` to rate limit based on the authenticated [{{site.identity}} Principal](/identity/principals/) instead of the Consumer, credential, IP address, or other supported identifiers.
+
+```yaml
+config:
+  limit_by: principal
+  second: 10
+```
+
+`principal` requires an auth plugin that populates the Principal, such as Key Auth configured for {{site.identity}} Principal authentication.
+
+[`custom_key`](/plugins/rate-limiting/reference/#schema--config-custom-key) overrides the computed rate limiting key with a literal string, regardless of `limit_by`. This is most useful in combination with [expressible config fields](#dynamic-configuration-with-cel), where `custom_key`'s value comes from a CEL expression instead of a fixed string.
+
+## Dynamic configuration with CEL {% new_in 3.16 %}
+
+`custom_key` and each of `second`, `minute`, `hour`, `day`, `month`, and `year` are [expressible config fields](/gateway/plugins/expressible-fields/#expressible-config-fields): instead of always using the static value in `config`, {{site.base_gateway}} can compute the field's value per request from a CEL expression, for example, reading an attribute of the authenticated Consumer or Principal. 
+If the expression is unset, invalid, or fails to evaluate, {{site.base_gateway}} falls back to the field's static value in `config`.
+
+For example, you can set `custom_key` and `second` as expressions with a static fallback:
+
+```yaml
+config:
+  limit_by: principal
+  custom_key: unknown-partner    # static fallback
+  second: 10                     # static fallback
+expressions:
+  custom_key: principal.metadata.partner_id
+  second: principal.metadata.rate_limit
+```
+
+See also:
+* For an example plugin configuration, see [Rate limit by Principal metadata](/plugins/rate-limiting/examples/rate-limit-by-principal-metadata/).
+* For general information on expressible config fields, including limitations, see [Dynamic plugin config with CEL](/gateway/plugins/expressible-fields/).
 
