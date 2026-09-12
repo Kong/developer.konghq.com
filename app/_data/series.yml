@@ -46,7 +46,7 @@ mesh-get-started-universal-3:
   url: /mesh/get-started/universal/install/
 mesh-get-started-universal:
   title: Get started with {{site.mesh_product_name}} on Universal
-  url: /mesh/get-started/universal/install/
+  url: /mesh/v2/get-started/universal/install/
 mesh-scoped-zone-proxy:
   title: Deploy and configure mesh-scoped zone proxies
   url: /mesh/zone-proxies/
