@@ -1,0 +1,54 @@
+title: Protected resource metadata
+description: |
+   Use the OpenID Connect plugin to advertise this API as an OAuth 2.0 protected resource per RFC 9728.
+
+extended_description: |
+  Use the OpenID Connect plugin to advertise this API as an OAuth 2.0 protected resource, as defined by [RFC 9728](https://www.rfc-editor.org/rfc/rfc9728).
+  This lets OAuth and OpenID Connect clients, including MCP (Model Context Protocol) clients, automatically discover which authorization server protects this API and which scopes it supports.
+
+  When configured, the OIDC plugin serves a metadata document at a well-known URI derived from `resource`, and adds a `resource_metadata` attribute (and a `scope` attribute, if `scopes_supported` is set) to the `WWW-Authenticate` header on `401 Unauthorized` responses.
+
+  This example pairs protected resource metadata with JWT access token (bearer) authentication. 
+  A client that presents no token, or an invalid one, receives a `401` response whose `WWW-Authenticate` header points it to the metadata document.
+
+  For more detail, see [Protected resource metadata](/plugins/openid-connect/#protected-resource-metadata).
+
+weight: 703
+
+min_version:
+  gateway: '3.16'
+
+config:
+  issuer: ${issuer}
+  auth_methods:
+    - bearer
+  protected_resource_metadata:
+    resource: ${resource}
+    authorization_servers:
+      - ${issuer}
+    scopes_supported:
+      - ${scope}
+
+variables:
+  issuer:
+    value: $ISSUER
+    description: |
+      The issuer authentication URL for the authorization server that protects this API.
+      For example, if you're using Keycloak as your IdP, the issuer URL looks like this: `http://localhost:8080/realms/example-realm`.
+  resource:
+    value: $RESOURCE
+    description: |
+      The URI of this protected resource, for example `https://api.example.com/mcp`.
+      This is also used to derive the well-known metadata endpoint path.
+  scope:
+    value: $SCOPE
+    description: A scope supported by this protected resource, for example `mcp:read`.
+
+tools:
+  - deck
+  - admin-api
+  - kic
+  - konnect
+  - terraform
+
+group: other
