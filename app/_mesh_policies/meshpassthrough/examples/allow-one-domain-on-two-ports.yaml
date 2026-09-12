@@ -1,6 +1,6 @@
 title: 'Allow one domain on two ports'
 
-description: 'A Domain match is resolved by the sidecar and pinned to its port, so allowing the same domain on a second port takes a second entry.'
+description: 'Allow the same domain name on two explicit ports. Domain matches check SNI or HTTP authority and forward to the address the application dialed; they do not pin that address through DNS resolution.'
 
 weight: 600
 

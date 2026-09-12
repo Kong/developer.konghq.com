@@ -29,10 +29,19 @@ A proxy with no matching `MeshMetric` does not expose a Prometheus endpoint or p
 an OpenTelemetry collector. A matching policy also needs at least one entry in `backends` before
 it publishes anything.
 
+This policy does not install Prometheus, deploy an OpenTelemetry collector, or add metrics
+instrumentation to your application. The application must already expose metrics in
+Prometheus format if you want the sidecar to collect them. Control-plane metrics are
+configured separately; this page describes data-plane and workload metrics.
+
 ## Publish sidecar and application metrics for Prometheus
 
 This policy applies to proxies labeled `app: backend`, scrapes the application's own metrics
 endpoint, and exposes the combined application and proxy metrics on port 5670:
+
+Before applying it, confirm that the application serves Prometheus metrics at
+`/metrics/prometheus` on port `8888`, and that `5670` is available on the selected proxies.
+If you only need proxy metrics, omit `applications`.
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -67,6 +76,12 @@ What each field does:
 Because this example does not set `sidecar.profiles`, the proxy publishes the `Basic` profile.
 It leaves out unused metrics until the proxy records them.
 
+Configure Prometheus discovery or a scrape target for each selected data-plane address,
+port `5670`, and path `/metrics`. Creating this policy exposes an endpoint; it does not
+make an existing Prometheus server discover that endpoint automatically. Avoid also
+scraping the application directly into the same monitoring pipeline unless you intend
+to retain duplicate observations under different target labels.
+
 ### Check that it works
 
 Send some traffic through the workload, then request the metrics endpoint from a host that can
@@ -79,6 +94,8 @@ curl http://DATAPLANE_ADDRESS:5670/metrics
 The response uses the Prometheus text format. It contains the used metrics from the `Basic`
 sidecar profile and the metrics returned by the application at port 8888. If the application
 metrics are absent, confirm that `/metrics/prometheus` is reachable from the sidecar.
+Then check the target in Prometheus itself: a successful manual request proves the endpoint
+works, but not that Prometheus can discover, reach, and store its metrics.
 
 ## Where this policy applies
 
@@ -97,6 +114,12 @@ broader list instead of being appended to it.
 
 Set `backends: []` in the more specific policy to stop the selected proxies from publishing
 metrics while leaving the mesh-wide policy in place for every other proxy.
+
+For example, replacing a mesh-wide Prometheus `backends` list with an OpenTelemetry-only
+list removes Prometheus exposure for the selected proxies. Include both backends in the
+narrower list if both must remain enabled. `sidecar.profiles.appendProfiles` is an exception
+to list replacement: those profile entries accumulate across applicable policies. Adding
+`None` cannot subtract an inherited `Basic` or `All` profile.
 
 ## Choose which sidecar metrics are published
 
@@ -121,7 +144,13 @@ rows:
 
 `appendProfiles` combines profiles, `exclude` removes metrics from the result, and `include`
 adds them back. **`include` takes precedence over `exclude`**, so a metric matched by both is
-published.
+selected by the name filter. `Basic` also removes samples for internal proxy components;
+an `include` name match does not undo that sample-level filtering. Use an explicit `All`
+or `None` base when building a selection that needs those internal samples.
+
+Selectors match Prometheus metric-family names, such as `envoy_cluster_upstream_rq_total`,
+not raw Envoy stat names such as `cluster.backend.upstream_rq_total`, and not label values.
+These filters apply to sidecar metrics, not to the application's own metric families.
 
 Each entry in `include` and `exclude` is a `type` and a `match`:
 
@@ -142,6 +171,9 @@ rows:
     what: "Metric names matching the expression. An expression that does not compile is rejected with `invalid regex`."
 {% endtable %}
 
+Place this fragment under `default`. It starts with `Basic`, removes cluster metric
+families, then adds back families whose names contain `upstream_rq`:
+
 ```yaml
 sidecar:
   profiles:
@@ -158,6 +190,12 @@ sidecar:
 `sidecar.includeUnused` publishes metrics that have never been touched — counters still at
 zero, histograms with no observations. It defaults to false, which keeps the output to metrics
 the proxy has actually recorded.
+
+A missing metric is therefore not necessarily a collection failure or a zero value. It
+can be outside the selected profile or unused since the proxy started. Generate the relevant
+traffic before checking, or enable `includeUnused` when a dashboard needs untouched series.
+Using `All` together with `includeUnused: true` can substantially increase output and storage;
+test the volume on a small set of proxies first.
 
 ## Scrape the application
 
@@ -185,6 +223,11 @@ rows:
 `applications` is ignored on a zone-proxy-only `Dataplane`, which has no co-located workload to
 scrape.
 
+Application scraping is an HTTP metrics request, not application instrumentation. Verify
+the address, port, and path from the sidecar's network environment; `localhost` in an
+operator's terminal is not necessarily the application's address. The endpoint must return
+valid Prometheus metrics, not a health-check response or an HTML login page.
+
 ## Backends
 
 `default.backends` accepts more than one entry, so the same metrics can be exposed for
@@ -195,6 +238,10 @@ list, publishes nothing.
 
 The sidecar exposes an endpoint for Prometheus to scrape, on `port` 5670 and `path` `/metrics`
 by default. `clientId` identifies the backend when MADS is used for proxy discovery.
+
+Prometheus controls how often it scrapes this endpoint. The OpenTelemetry
+`refreshInterval` does not change the Prometheus scrape interval. Restrict network access
+to the metrics port: metrics can reveal service names, topology, and application labels.
 
 `prometheus.tls.mode` sets whether that endpoint uses TLS:
 
@@ -217,11 +264,23 @@ rows:
 > `ActiveMTLSBackend` is accepted and serves its metrics endpoint in plaintext. It took its
 > certificates from the mesh CA backend, which v3 removed.
 
+`ProvidedTLS` also falls back to plaintext when either certificate path is missing from
+the proxy metadata. Mount the certificate and key where the data-plane process can read
+them, set both environment variables, and verify the actual HTTPS endpoint before relying
+on encryption. Configure Prometheus to trust the issuing CA and the certificate's server
+name; setting this mode does not automatically configure the scraper.
+
 ### OpenTelemetry
 
 `openTelemetry.backendRef` names a
 [MeshOpenTelemetryBackend](/mesh/meshopentelemetrybackend/) by labels, and `refreshInterval`
 sets how often metrics are pushed to it. The interval defaults to one minute.
+
+Create that backend resource first, with a reachable collector endpoint and a metrics
+receiver enabled. Copy its identifying labels into `backendRef.labels`; the example
+selects the resource labeled `kuma.io/display-name: otel-collector`, not a Kubernetes
+Service merely named `otel-collector`. Collector transport and credentials belong in
+the backend resource, not in this policy.
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -245,6 +304,24 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-Metrics for an OpenTelemetry backend leave through `kuma-dp`: Envoy exports to a Unix socket
-and `kuma-dp` forwards to the collector. Where several `MeshOpenTelemetryBackend` resources
-match the labels, the oldest wins.
+`kuma-dp` collects Envoy and application metrics and exports them through its OpenTelemetry
+pipeline to the collector. Where several `MeshOpenTelemetryBackend` resources match the
+labels, the oldest wins; use labels that identify one intended resource. If no backend
+resolves, that export destination is skipped rather than replaced with a default collector.
+
+## Validate collection and export
+
+1. Generate traffic and choose one proxy metric and one application metric whose values
+   should change. Confirm both at the combined Prometheus endpoint, if configured.
+1. For OpenTelemetry, wait at least the configured export interval, then inspect the
+   collector's received metrics and the final storage backend. Collector receipt and
+   successful downstream storage are separate checks.
+1. If proxy metrics are present but application metrics are absent, request the application
+   endpoint from the sidecar's network environment and inspect `kuma-dp` logs for failed
+   scrapes, non-200 responses, or parsing errors.
+1. If only some proxy series are absent, check profiles, name selectors, and `includeUnused`
+   before changing the collector configuration.
+1. If OpenTelemetry receives nothing, check backend label resolution, endpoint and protocol,
+   credentials, network reachability, and exporter errors in `kuma-dp`.
+1. When TLS is required, test HTTPS with certificate verification and confirm plaintext
+   access is not available. Policy acceptance alone does not prove the endpoint is encrypted.

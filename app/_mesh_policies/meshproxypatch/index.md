@@ -25,6 +25,16 @@ configuration {{site.mesh_product_name}} happens to generate: a patch matching a
 name or a filter by position can stop matching after an upgrade changes how that configuration
 is built, and nothing reports it beyond the patch no longer taking effect.
 
+Use a dedicated policy whenever one exposes the behavior you need. Without a matching
+`MeshProxyPatch`, the proxy receives the configuration produced by the other policies
+without these additional modifications.
+
+{:.warning}
+> A patch can remove routing or security filters, overwrite a generated resource, or
+> produce configuration Envoy rejects. Start with a small set of proxies, save their
+> working configuration, and verify both traffic behavior and configuration acceptance
+> before expanding the selector.
+
 ## Add a Lua filter to outbound requests
 
 This policy applies to proxies labeled `app: backend` and inserts a Lua filter before the
@@ -63,6 +73,10 @@ router filter, and `origin: outbound` limits the match to outbound HTTP filter c
 `AddBefore` inserts the Lua filter immediately before that router, so every matching outbound
 HTTP request receives the `x-header: test` header before it is forwarded.
 
+This example affects requests sent by `backend`, not requests arriving at its application.
+It requires outbound traffic that the proxy parses as HTTP; TCP or opaque TLS has no HTTP
+router filter to match. The header is for demonstration, not an authenticated identity.
+
 ## Where this policy applies
 
 `spec.targetRef` selects the proxies whose configuration is patched, and accepts `Mesh` or
@@ -70,6 +84,24 @@ HTTP request receives the `x-header: test` header before it is forwarded.
 proxy's configuration, so everything sits under `default.appendModifications`.
 
 For the selectors a policy can carry, see [How policies select traffic](/mesh/policy-targeting/).
+
+Use the modification's `match.listenerName` or resource `match.name` to narrow the actual
+Envoy object being edited. Read the current generated name instead of constructing it
+from a service name. Listener tags, where supported, refer to metadata on the generated
+listener, not automatically to every label on the selected Dataplane.
+
+## How multiple modifications combine
+
+Modifications run in list order, and each sees the result of earlier modifications.
+Applicable policies append their `appendModifications` lists; a narrower policy does not
+replace a broader patch list. The merged order follows policy precedence, not the time
+you last edited a resource.
+
+For example, one modification can add a cluster and a later modification can patch it.
+If an earlier modification removes the filter a later `AddBefore` names, that later
+insertion has no match. Two additions can also produce duplicate filters rather than
+one overriding the other. Keep dependent modifications together and inspect the merged
+result when several policies select the same proxy.
 
 ## What a modification looks like
 
@@ -180,6 +212,11 @@ modification matching on either origin acts on what an earlier one added.
 `jsonPatches` entries take `op` — `add`, `remove`, `replace`, `move` or `copy` — a `path`, a
 `value` for `add` and `replace`, and a `from` for `move` and `copy`:
 
+The following example demonstrates JSON Patch syntax. For an ordinary stream idle timeout,
+prefer [MeshTimeout](/mesh/policies/meshtimeout/) instead of patching Envoy directly.
+Before using `replace`, confirm that the field exists on every matched filter; replacing
+an absent path fails when the patch is applied to generated configuration.
+
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
 type: MeshProxyPatch
@@ -203,6 +240,12 @@ spec:
               value: 15s
 ```
 {% endpolicy_yaml %}
+
+For a filter modification, JSON paths start inside the filter's decoded `typedConfig`.
+That is why the path is `/streamIdleTimeout`, not `/typedConfig/streamIdleTimeout`.
+For a cluster, listener, or virtual host modification, paths start at that resource's root.
+Use JSON Patch when you need to replace a list rather than append to it, and check array
+indexes against the actual generated resource.
 
 ## How a value merges on Patch
 
@@ -232,3 +275,21 @@ and confirm that the destination receives `x-header: test`.
 Repeat the configuration check after upgrading {{site.mesh_product_name}}. A
 `MeshProxyPatch` can remain valid and stored while matching no generated resource, so successful
 resource validation alone does not prove that the patch still applies.
+
+Check three separate outcomes:
+
+1. The policy is accepted by the control plane.
+1. Configuration generation succeeds and Envoy accepts the update. Inspect control-plane
+   patch errors and proxy configuration-rejection messages if the active configuration stays unchanged.
+1. The active `/config_dump` contains the intended change and test traffic demonstrates it.
+
+Use the proxy's locally accessible admin interface to retrieve `/config_dump`; do not expose
+the admin listener publicly. Compare only the intended resources with your saved baseline.
+If no change appears and there is no error, check the exact resource name, origin, and
+whether another modification removed the match. If a list contains duplicates, check for
+overlapping policies and value-merge append behavior.
+
+To roll back, remove or narrow the patch policy and verify the regenerated active
+configuration. This restores the result of the policies that still apply, not necessarily
+the exact configuration captured before other policy changes. There is no need to add
+an inverse patch for every field unless another patch must remain in place.

@@ -1,6 +1,6 @@
-title: 'Prefer endpoints on the same node, then the same availability zone'
+title: 'Give nearby endpoints a larger share of traffic'
 
-description: 'Order the endpoints in a zone with affinityTags, so most requests stay on the local node and the rest stay in the local availability zone.'
+description: 'Weight local endpoint groups by labels they share with the caller. The caller Dataplane and destination endpoint metadata must carry the listed keys. These groups share traffic by weight rather than acting as sequential failover targets.'
 
 weight: 800
 

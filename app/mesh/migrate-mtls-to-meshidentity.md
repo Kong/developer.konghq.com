@@ -147,8 +147,9 @@ This example uses the default SPIFFE ID templates:
 - Universal: `spiffe://<mesh>.<zone>.mesh.local/workload/<workload>`
 
 To use custom `spiffeID.trustDomain` or `spiffeID.path` templates, add the same values to the
-temporary and issuing identities. These fields are immutable after the identity is initialized,
-so decide them before continuing.
+temporary and issuing identities. Although the API accepts later template changes, those
+changes can invalidate existing trust and permission assumptions. Keep the templates stable
+during this migration and plan any identity-format change as a separate transition.
 
 The temporary identity is expected to report `Ready=False` with the reason `PartiallyReady`.
 Its `SpiffeIDProvider` condition must be `True`; that condition confirms that it is publishing
@@ -335,7 +336,7 @@ Do not expand the selector until all of these checks pass:
 1. The issuing `MeshIdentity` reports `Provider=True` and `Ready=True`. For a provider that
    generates `MeshTrust`, `MeshTrustCreated` is also `True`.
 1. The required trust configuration is available. For a generated `MeshTrust`, the resource
-   exists and contains the identity's `status.trustDomain`.
+   exists and its `spec.trustDomain` matches the domain in the canary certificate's SPIFFE URI.
 1. The canary's `DataplaneInsight.mTLS.issuedBackend` identifies the new `MeshIdentity`, and
    its certificate has a future expiration time.
 1. The canary's `MeshService.spec.identities` includes its new SPIFFE ID.

@@ -1,6 +1,6 @@
 title: 'Serve the metrics endpoint over TLS'
 
-description: 'Set ProvidedTLS and supply the certificate and key to the sidecar through KUMA_DATAPLANE_RUNTIME_METRICS_CERT_PATH and KUMA_DATAPLANE_RUNTIME_METRICS_KEY_PATH.'
+description: 'Set ProvidedTLS and supply readable certificate and key files through KUMA_DATAPLANE_RUNTIME_METRICS_CERT_PATH and KUMA_DATAPLANE_RUNTIME_METRICS_KEY_PATH. Configure the scraper to trust the certificate and verify HTTPS: missing paths cause plaintext fallback.'
 
 weight: 600
 

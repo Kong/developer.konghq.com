@@ -34,4 +34,4 @@ config:
                     type: Only
                     zones: ["us-4"]
               failoverThreshold:
-                percentage: 70
+                percentage: 50

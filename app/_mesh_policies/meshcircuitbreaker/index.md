@@ -19,19 +19,27 @@ related_resources:
 
 `MeshCircuitBreaker` does two separate jobs, and a policy can configure either or both.
 
-`connectionLimits` caps how much traffic a proxy will send to a destination. Past the cap,
-new requests fail immediately rather than queueing, which stops one slow destination from
-consuming the caller's resources.
+`connectionLimits` bounds connections, active requests, pending requests, and concurrent
+retries at a proxy. Work that cannot fit within the applicable limit is rejected. Pending
+requests may wait for a connection up to their configured limit; this is not a requests-per-second
+rate limit.
 
 `outlierDetection` watches how endpoints behave and removes the ones failing more than their
 peers from the load balancing pool. It is passive health checking: it draws its conclusions
 from real traffic rather than from probes, which is what distinguishes it from
 [MeshHealthCheck](/mesh/policies/meshhealthcheck/).
 
+Both mechanisms operate locally at each proxy and its destination cluster. A limit of 100
+does not create a shared allowance of 100 across all callers. Scaling the client deployment
+adds proxies with their own limits and health observations.
+
 ## Cap connections to a destination
 
 This policy applies to proxies labeled `app: web`, and governs the connections they open to
 `backend`:
+
+These deliberately small limits make the behavior easy to test. Size production limits for
+expected concurrency and the resources available to each caller.
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -63,6 +71,10 @@ What each field does:
 * `to[].targetRef` selects **which destination** is being protected.
 * `connectionLimits` caps the traffic between the two.
 
+`maxRetries` limits retries running at the same time across requests to this destination.
+`MeshRetry.numRetries` instead limits attempts for one request. Setting either one does not
+replace the other.
+
 {% table %}
 columns:
   - title: Limit
@@ -84,6 +96,10 @@ rows:
 
 ## Where this policy applies
 
+The initial mesh-wide circuit-breaker policy sets `maxConnections`, `maxPendingRequests`,
+and `maxRequests` to 1024, and `maxRetries` to 3. It does not enable outlier detection.
+Installations that skip creating this initial policy still have Envoy's underlying limits.
+
 `spec.targetRef` selects which proxies the configuration is installed on: `Mesh`, or
 `Dataplane` with `labels`. `spec.to[].targetRef` selects the destination being protected, and
 accepts `Mesh`, `MeshService`, `MeshExternalService` or `MeshMultiZoneService`. `spec.rules[]`
@@ -100,11 +116,20 @@ catch-all entry is the only available shape.
 
 For the selectors a policy can carry, see [How policies select traffic](/mesh/policy-targeting/).
 
+## How overlapping policies combine
+
+A narrower policy overrides fields it sets while retaining fields from broader policies.
+For example, setting only `maxConnections: 100` for web-to-backend traffic retains the
+broader request and retry limits. To disable inherited outlier detection, set
+`outlierDetection.disabled: true`; omitting the block from the narrower policy does not remove
+the broader configuration.
+
 ## Eject failing endpoints
 
-`outlierDetection` runs a sweep every `interval`, ejects any endpoint a detector flags, and
-returns it after `baseEjectionTime`. Repeat offenders stay out longer: the real ejection time
-is `baseEjectionTime` multiplied by the number of times that endpoint has been ejected.
+`outlierDetection` temporarily removes failing endpoints from a proxy's healthy pool.
+Consecutive-failure detectors react to observed failures; statistical detectors use analysis
+intervals. `baseEjectionTime` starts the exclusion period, and repeated ejections can extend
+it. Returning to the pool permits another attempt; it does not prove the endpoint has recovered.
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -133,8 +158,10 @@ spec:
 {% endpolicy_yaml %}
 
 `maxEjectionPercent` caps how much of the pool can be ejected at once, and defaults to 10%.
-**At least one endpoint can always be ejected, whatever the percentage says**, so a
-two-endpoint destination can lose one of them even at a low setting.
+Do not assume that one endpoint can always be ejected regardless of this limit.
+Envoy provides a separate `always_eject_one_host` option for that behavior, which this
+policy does not enable. Test the limit with your actual endpoint count, especially for
+small pools. See [Envoy's outlier detection reference](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/outlier_detection.proto).
 
 `detectors` is required whenever `outlierDetection` is set, and needs at least one detector.
 Setting `disabled: true` turns the whole block off without deleting it.
@@ -207,6 +234,10 @@ spec:
 `rules` currently applies to all inbound traffic at the selected proxies. There is no L7
 matching, so a single catch-all entry is the only shape available.
 
+Inbound limits apply to the destination proxy's connections to its local application. They do
+not impose a global limit across every replica of that application. Use `targetRef.sectionName`
+to select a specific named inbound when the proxy serves multiple ports.
+
 ## Validate the circuit breaker
 
 1. Drive more concurrent work than the configured `connectionLimits` allow and confirm that the
@@ -218,3 +249,15 @@ matching, so a single catch-all entry is the only shape available.
    `baseEjectionTime`.
 1. Test the `healthyPanicThreshold` behavior with enough unhealthy endpoints to cross the
    configured percentage.
+
+Inspect the selected proxy's Envoy `/stats` endpoint for the affected cluster's
+`circuit_breakers` gauges and overflow counters. For ejections, inspect its
+`outlier_detection` counters and `/clusters` health state. Compare values before and after
+the controlled test, rather than interpreting a historical nonzero counter as a current failure.
+
+| Unexpected result | Check |
+| --- | --- |
+| The service receives more concurrency than the configured limit | Count caller proxies and destination clusters; limits are not shared mesh-wide. |
+| Requests queue instead of failing immediately | Check pending-request capacity and whether an established connection can accept more work. |
+| No endpoint is ejected | Check detector thresholds, minimum traffic volume, and whether the chosen detector counts that failure. |
+| An ejected endpoint receives traffic again | Check panic mode, the ejection period, and other proxies' independent health views. |

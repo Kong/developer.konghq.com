@@ -1,6 +1,6 @@
 title: 'Limit requests and customise the rejection'
 
-description: 'Cap a destination at five requests per ten seconds, and answer rejected requests with a chosen status and header.'
+description: 'Allow a burst of five requests per inbound route and proxy, replenished at five requests per ten seconds. Customize rejected responses with a status and header; check whether returning 503 triggers client retries.'
 
 weight: 900
 

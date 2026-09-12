@@ -26,9 +26,16 @@ other direction. Its `outlierDetection` draws conclusions from the traffic alrea
 which is passive health checking. A destination that receives little traffic is a case for
 active checks, since there may not be enough requests to judge it by.
 
+Each selected client proxy maintains its own health view. Marking an endpoint unhealthy does
+not delete its Pod or change Kubernetes readiness, and another proxy may reach a different
+health decision. Without an applicable check configuration, this policy adds no probes.
+
 ## Probe a destination over HTTP
 
 This policy applies to proxies labeled `app: web`, and probes the endpoints of `backend`:
+
+The backend must expose `/health` on the selected service port and return 200 when it can
+serve traffic. Choose a lightweight endpoint: every selected client proxy probes each endpoint.
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -58,8 +65,10 @@ spec:
 {% endpolicy_yaml %}
 
 `targetRef` selects the `web` proxies that send probes, while `to[].targetRef` selects the
-`backend` endpoints they probe. An endpoint is removed after three consecutive probes fail or
-time out, and one successful probe returns it to the healthy pool.
+`backend` endpoints they probe. `interval: 10s` schedules checks and `timeout: 2s` limits
+the wait for each response. Three consecutive network failures or timeouts mark an endpoint
+unhealthy; an HTTP response outside the expected status set can mark it unhealthy immediately.
+One successful probe meets this example's recovery threshold.
 
 ## Where this policy applies
 
@@ -106,17 +115,21 @@ rows:
     default: "`true`"
 {% endtable %}
 
-The default `interval` of one minute with an `unhealthyThreshold` of 5 means an endpoint that
-fails every probe is removed roughly five minutes after it starts failing. Shorten both to
-detect a failure sooner, at the cost of more probe traffic.
+Thresholds do not provide an exact detection deadline. Probe duration, jitter, and the
+no-traffic interval affect timing. HTTP status failures can bypass the failure threshold.
+See [Envoy's health-check behavior](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/core/v3/health_check.proto.html).
+
+Estimate probe load before reducing the interval. With 100 client proxies checking 10 endpoints
+every 10 seconds, the destination receives about 100 probes per second before jitter and
+special intervals are considered.
 
 ### Spread the probes out
 
 Every proxy probing on the same schedule produces a burst of traffic at each interval.
 `initialJitter` delays the first probe by a random amount between zero and the value given,
-which staggers proxies that start together. `intervalJitter` adds a fixed amount to each
-wait, and `intervalJitterPercent` adds a proportion of `intervalJitter`. Setting both applies
-both.
+which staggers proxies that start together. `intervalJitter` adds a random delay bounded by
+the supplied duration. `intervalJitterPercent` calculates additional jitter from the check
+interval, not from `intervalJitter`. Setting both combines their contributions.
 
 ### Behavior in panic mode
 
@@ -130,13 +143,26 @@ The panic threshold itself is set on
 
 ## Probes per protocol
 
-The protocol is chosen by taking the most specific one configured. Setting `disabled: true`
-on a protocol falls back to the more general one, so a policy can define an HTTP check for
-most destinations and disable it for one that only speaks TCP.
+Configure the check for the destination's declared protocol:
+
+| Destination protocol | Check selected |
+| --- | --- |
+| HTTP or HTTP/2 | Enabled `http` configuration. |
+| gRPC | Enabled `grpc` configuration. |
+| TCP | Enabled `tcp` configuration. |
+
+For an HTTP or gRPC destination, TCP fallback requires both an explicitly disabled
+protocol-specific check and an enabled `tcp` block. A `tcp` block alone does not make
+every HTTP or gRPC destination use a TCP check.
+
+A narrower policy inherits settings it omits. For example, overriding only `interval` keeps
+the broader policy's HTTP path and thresholds. To stop an inherited HTTP check, set
+`http.disabled: true`; check whether an inherited TCP block then enables fallback.
 
 ### HTTP
 
-HTTP probes are sent over HTTP/2.
+HTTP destinations use HTTP/1 probes; HTTP/2 destinations use HTTP/2 probes. Check the service's
+declared protocol when probes fail even though a manual request succeeds.
 
 {% table %}
 columns:
@@ -160,12 +186,16 @@ rows:
 
 ### TCP
 
-`send` is base64-encoded content to write, and `receive` is a list of base64-encoded blocks
-expected in the response. Matching is fuzzy but ordered: each block must appear, in the order
-given, though not necessarily contiguously.
+`send` is the literal string to write, and `receive` lists literal strings expected in the
+response. The current implementation sends those strings as bytes; it does not decode base64,
+despite the wording in the generated field descriptions. Each receive string must appear in
+order, though the strings need not be adjacent.
 
 Leaving `receive` empty or unset makes the probe connect-only, and it succeeds as soon as a
 TCP connection is established.
+
+A connect-only check proves that the endpoint accepts connections, not that the application
+can complete an operation.
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -195,15 +225,32 @@ spec:
 `:authority` header on the probe, and defaults to the name of the cluster the check belongs
 to.
 
+The destination must implement the gRPC health-check service. A working application RPC does
+not by itself provide that service.
+
+## Observe probe failures
+
+Set `default.eventLogPath: /dev/stdout` to write health-check events to the proxy's output.
+Set `default.alwaysLogHealthCheckFailures: true` while diagnosing repeated failures.
+On Kubernetes, read the selected client Pod's `kuma-sidecar` logs. These events describe
+probes performed by that client, not by the destination proxy.
+
 ## Validate endpoint health
 
 1. Make one destination endpoint fail the configured health check while leaving another
    endpoint healthy.
-1. Wait for `unhealthyThreshold` consecutive probes and confirm that new traffic stops reaching
-   the failing endpoint.
+1. Observe the unhealthy event and confirm that new traffic stops reaching the failing endpoint,
+   provided the pool has not entered panic mode.
 1. Restore the endpoint, wait for `healthyThreshold` successful probes, and confirm that it
    receives traffic again.
 1. Confirm that a probe timeout is shorter than the interval and that the probe volume is safe
    for the number of client proxies.
 1. If `failTrafficOnPanic` is enabled, make enough endpoints unhealthy to enter panic mode and
    confirm that requests fail instead of returning to unhealthy endpoints.
+
+| Unexpected result | Check |
+| --- | --- |
+| No probes are sent | Check the destination protocol, enabled check block, and policy selectors. |
+| Probes are slower than `interval` | Check `noTrafficInterval` for a destination not yet used by this proxy. |
+| An unhealthy endpoint still receives traffic | Check panic mode and whether another client proxy has a different health view. |
+| Every HTTP check fails | Verify the path, expected status, protocol, and permission for the probing caller. |

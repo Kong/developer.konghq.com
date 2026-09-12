@@ -1,6 +1,6 @@
-title: 'Limit traffic through gateways'
+title: 'Limit HTTP traffic through a zone proxy'
 
-description: 'Use the Mesh form of the policy, with a to entry, to rate limit what gateways accept. A gateway has no inbound side of its own to configure.'
+description: 'Apply local HTTP rate limits to the selected zone-proxy listener. Replace the labels with those on your zone-proxy Dataplane and sectionName with the listener name from spec.networking.listeners. Each HTTP route has its own bucket; traffic handled as TCP is not limited by this example.'
 
 weight: 500
 
@@ -8,15 +8,16 @@ namespace: kong-mesh-demo
 
 config:
   type: MeshRateLimit
-  name: gateway-rate-limit
+  name: zone-proxy-rate-limit
   mesh: default
   spec:
     targetRef:
-      kind: Mesh
-    to:
-      - targetRef:
-          kind: Mesh
-        default:
+      kind: Dataplane
+      labels:
+        app: zone-proxy
+      sectionName: zone-egress
+    rules:
+      - default:
           local:
             http:
               requestRate:

@@ -1,6 +1,6 @@
 title: 'Pin requests to an endpoint by header'
 
-description: 'Hash the x-user header with RingHash so every request from one user reaches the same endpoint.'
+description: 'Use the x-user header for endpoint affinity with RingHash. Requests with the same value stay on the same endpoint while the eligible endpoint set and configuration remain stable; scaling or health changes can move them.'
 
 weight: 900
 

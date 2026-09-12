@@ -1,6 +1,6 @@
 title: 'Configure the OPA agent'
 
-description: 'Pass bootstrap configuration to the agent, here turning on decision logging to the console.'
+description: 'Enable console decision logs for a diagnostic workload. Retain your real authorization modules in production, and mask sensitive request data before sending decision logs to shared storage.'
 
 weight: 500
 
