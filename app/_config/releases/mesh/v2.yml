@@ -339,8 +339,7 @@ app/mesh/v2/cert-manager.md:
   status: pending
   canonical_url:
 app/mesh/v2/cli.md:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/cli/
 app/mesh/v2/cni.md:
   status: pending
   canonical_url:
