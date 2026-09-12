@@ -1,0 +1,79 @@
+title: Token exchange with an actor token
+description: |
+   Use the OpenID Connect plugin to include an actor token in a token exchange request.
+
+extended_description: |
+  Use the OpenID Connect plugin to include an actor token in a token exchange request, representing the identity of the party acting on behalf of the subject.
+  This is useful for delegation scenarios, such as a backend service or AI agent acting on behalf of a user, and is required by identity providers (such as Okta) that expect an actor token during certain token exchange grants.
+
+  In this example, {{site.base_gateway}} reads the actor token from a request header and includes it in the token exchange request along with the subject token.
+
+  Here's how token exchange works with the OIDC plugin:
+
+  {% include_cached /plugins/oidc/diagrams/token-exchange.md %}
+
+  For more detail on token exchange support, see the [Token exchange reference](/plugins/openid-connect/#token-exchange).
+
+weight: 702
+
+min_version:
+  gateway: '3.16'
+
+requirements:
+  - An identity provider that supports token exchange and accepts an actor token during the exchange.
+
+config:
+  issuer: ${issuer}
+  client_id:
+    - ${client-id}
+  client_secret:
+    - ${client-secret}
+  client_auth:
+    - client_secret_post
+  auth_methods:
+    - bearer
+  token_exchange:
+    subject_token_issuers:
+      - issuer: ${issuer}
+        conditions:
+          missing_audience: null
+          has_audience: null
+          missing_scopes:
+            - profile
+          has_scopes: null
+    request:
+      empty_audience: false
+      scopes: null
+      empty_scopes: false
+      audience: null
+      actor_token:
+        source: header
+        header_name: ${actor-token-header}
+        type: urn:ietf:params:oauth:token-type:access_token
+
+variables:
+  issuer:
+    value: $ISSUER
+    description: |
+      The issuer authentication URL for the authorization server that issued the token in the incoming request.
+      For example, if you're using Keycloak as your IdP, the issuer URL looks like this: `http://localhost:8080/realms/example-realm`.
+  client-id:
+    value: $CLIENT_ID
+    description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP.
+  client-secret:
+    value: $CLIENT_SECRET
+    description: The client secret needed to connect to your IdP.
+  actor-token-header:
+    value: $ACTOR_TOKEN_HEADER
+    description: |
+      The name of the request header that carries the actor token, for example `X-Actor-Token`.
+      The client or an upstream service must set this header on the incoming request for {{site.base_gateway}} to include it in the exchange.
+
+tools:
+  - deck
+  - admin-api
+  - kic
+  - konnect
+  - terraform
+
+group: other
