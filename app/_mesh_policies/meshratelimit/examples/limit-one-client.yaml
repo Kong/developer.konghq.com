@@ -1,6 +1,6 @@
-title: 'Give one client a tighter limit'
+title: 'Give one workload identity a separate limit'
 
-description: 'Match a caller SPIFFE ID to hold a batch job to ten requests per second, while every other client keeps a thousand.'
+description: 'Give requests from the batch identity a separate ten-per-second bucket on each destination proxy. Other callers share a thousand-per-second bucket. Replace the example SPIFFE ID with the complete URI from the batch workload certificate.'
 
 weight: 700
 
@@ -18,7 +18,7 @@ config:
     rules:
       - matches:
           - spiffeID:
-              type: Prefix
+              type: Exact
               value: spiffe://default.default.mesh.local/ns/kong-mesh-demo/sa/batch
         default:
           local:

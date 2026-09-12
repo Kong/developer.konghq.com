@@ -13,14 +13,18 @@ related_resources:
   url: "/mesh/migrate-policies-to-3/#meshaccesslog"
 ---
 
-`MeshAccessLog` makes data plane proxies write a record for every request or connection they
-handle, and ships those records somewhere you can read them: the proxy's own output, a TCP
-server, or an OpenTelemetry collector.
+`MeshAccessLog` records traffic handled by selected proxies and sends the records to a file,
+a TCP log server, or an OpenTelemetry collector. You choose whether to record traffic arriving
+at a proxy, traffic it sends, or both through separate policies.
 
 Use it to trace a failing request across services, audit which client called which service,
 or feed traffic data into an existing log pipeline.
 
-With the default format, one HTTP request produces one line like this:
+Without a matching policy, this policy produces no access logs. HTTP-aware listeners record
+requests; TCP listeners record connections, so application requests inside a TCP connection
+are not separate log events.
+
+With the default HTTP format, a record looks like this:
 
 ```text
 [2026-09-10T12:04:51.190Z] default "GET /api/orders HTTP/1.1" 200 - 0 1274 12 11 "10.42.0.9" "curl/8.4.0" "-" "b7c1e0f4-9a1d-4c86-9a02-1f0e6d3c55aa" "orders.kong-mesh-demo.svc:8080" "unknown" "orders_kong-mesh-demo_svc_8080" "10.42.0.9" "10.42.1.4:8080"
@@ -58,6 +62,9 @@ What each field does:
 
 Send a request through the mesh, then read the sidecar's output:
 
+The command below assumes an `orders` Deployment in `kong-mesh-demo`. Replace those values
+with the destination workload you tested.
+
 ```sh
 kubectl logs deploy/orders -n kong-mesh-demo -c kuma-sidecar --tail 5
 ```
@@ -70,6 +77,9 @@ actually receiving traffic.
 
 Every `backends` entry is one destination. A single rule can list several, and each record is
 written to all of them.
+
+The backend fragments below go under `rules[].default` for inbound logging, or
+`to[].default` for outbound logging.
 
 ### File
 
@@ -87,6 +97,9 @@ backends:
 
 Streams records to a log server over a plain TCP connection:
 
+The example address refers to a server beside the logging proxy. Replace it with your log
+server's reachable address and port when the server runs elsewhere.
+
 ```yaml
 backends:
   - type: Tcp
@@ -98,6 +111,9 @@ backends:
 
 Sends records to an OpenTelemetry collector. Point `backendRef` at a [MeshOpenTelemetryBackend](/mesh/meshopentelemetrybackend/)
 resource, which holds the collector endpoint so that several policies can share it:
+
+Create that resource first. Its labels must match `backendRef.labels`; here,
+`kuma.io/display-name: otel-collector`. An unresolved reference does not fall back to stdout.
 
 ```yaml
 backends:
@@ -139,7 +155,8 @@ resource wins.
 
 ## Choose what each record contains
 
-Add a `format` to a backend to override the default record shape. Formats are built from
+For File and TCP backends, set `file.format` or `tcp.format` to override the default record
+shape. OpenTelemetry uses `body` and `attributes` instead. Formats are built from
 _command operators_ such as `%START_TIME%`, which the proxy replaces with a value per request.
 
 ### Plain text
@@ -186,8 +203,8 @@ That produces:
 
 ### Command operators
 
-Every [command operator defined by Envoy](https://www.envoyproxy.io/docs/envoy/latest/configuration/observability/access_log/usage#command-operators)
-works here. {{site.mesh_product_name}} adds these, all valid for both HTTP and TCP traffic:
+Use the [command operators supported by Envoy](https://www.envoyproxy.io/docs/envoy/latest/configuration/observability/access_log/usage#command-operators)
+for the protocol and data you need. {{site.mesh_product_name}} adds these operators:
 
 <!-- vale off -->
 {% table %}
@@ -217,10 +234,10 @@ rows:
 <!-- vale on -->
 
 {:.info}
-> On inbound records, the client isn't identified at the point the record is written, so
-> `%KUMA_SOURCE_SERVICE%` renders as `unknown` — that's the `"unknown"` field in the sample
-> line above. To tell clients apart, split them into separate rules with a
-> [`spiffeID` match](#match-on-client-identity-or-sni).
+> On inbound records, `%KUMA_SOURCE_SERVICE%` is populated as `unknown`. This does not mean
+> that an mTLS caller has no identity. Include `%DOWNSTREAM_PEER_URI_SAN%` in the format to
+> record the peer certificate's SPIFFE URI. Use a [`spiffeID` match](#match-on-client-identity-or-sni)
+> when you also want to restrict which callers are logged.
 
 An operator that only applies to HTTP traffic, such as `%REQ(X?Y):Z%`, becomes `-` in a plain
 record and `null` in a JSON record when the traffic is TCP. Set `format.omitEmptyValues: true`
@@ -273,9 +290,9 @@ rows:
 <!-- vale on -->
 
 {:.warning}
-> `rules` and `to` are mutually exclusive within one policy. Setting both is rejected with
-> `fields 'to' and 'from' must be empty when 'rules' is defined`. To log both directions,
-> create two policies.
+> `rules` and `to` are mutually exclusive within one policy. To log both directions, create
+> two policies. A request may then appear in the caller's outbound log and the destination's
+> inbound log; these are separate observations of the same traffic.
 
 ### Match on client identity or SNI
 
@@ -284,12 +301,16 @@ SPIFFE ID (with `Exact` or `Prefix`) or on the SNI of the TLS connection (with `
 
 By default, {{site.mesh_product_name}} issues SPIFFE IDs shaped like
 `spiffe://{mesh}.{zone}.mesh.local/ns/{namespace}/sa/{service-account}` on Kubernetes, and
-`spiffe://{mesh}.{zone}.mesh.local/workload/{workload}` on Universal. Read the domain actually
-used by the issuer from `MeshIdentity.status.trustDomain`, and use it after `spiffe://` in the
-`rules[].matches[].spiffeID.value`. Read the path template from
-`MeshIdentity.spec.spiffeID.path`. For example, a status value of
+`spiffe://{mesh}.{zone}.mesh.local/workload/{workload}` on Universal. Read the domain from the
+caller's issued certificate, or from its issuer's generated `MeshTrust.spec.trustDomain`.
+Use it after `spiffe://` in `rules[].matches[].spiffeID.value`. Check
+`MeshIdentity.spec.spiffeID.path` for a custom path template. For example, a domain of
 `payments.eu.mesh.local` and the default Kubernetes path produce a namespace prefix of
 `spiffe://payments.eu.mesh.local/ns/kong-mesh-demo/`.
+
+Keep the final slash on a namespace prefix so it does not also match similarly named
+namespaces. A plaintext caller has no certificate identity and cannot satisfy a `spiffeID`
+match. SNI identifies the name requested in a TLS handshake, not the caller.
 
 This policy logs only the requests that reach `orders` from workloads in the `kong-mesh-demo`
 namespace of zone `zone-1`:
@@ -320,6 +341,10 @@ spec:
 {:.info}
 > Rules fire independently. A connection matching several rules is logged to every matching
 > rule's backends, so one request can produce more than one record.
+
+For example, a catch-all rule writing to stdout and a namespace rule writing to a collector
+both log requests from that namespace. Adding the narrower rule does not stop the catch-all
+from logging them. Remove or narrow the catch-all if only selected callers should be recorded.
 
 ### Log outbound traffic
 
@@ -362,3 +387,17 @@ spec:
 
 For the selectors a policy can carry and why inbound matches an identity rather than a name,
 see [How policies select traffic](/mesh/policy-targeting/).
+
+## Troubleshoot missing or duplicate records
+
+| Symptom | Check |
+| --- | --- |
+| No stdout record | Confirm the policy selects the proxy you are reading and the traffic direction you tested. Use `/dev/stdout` for the File path. |
+| TCP traffic has no record yet | Close the test connection; the default connection log is written when it ends. |
+| Logs appear locally but not at the collector | Check that the backend reference resolves and that the collector accepts logs at its configured endpoint. |
+| An identity-filtered rule produces nothing | Compare the peer's issued SPIFFE URI with the matcher and confirm the connection uses mTLS. |
+| One request produces several records | Check overlapping inbound rules, multiple backends, and whether both client and destination proxies log the request. |
+| HTTP fields are empty | Confirm the listener treats the service as HTTP. TCP logging cannot extract HTTP headers or status codes. |
+
+When adding headers or query strings to a format, select only the fields needed for diagnosis.
+Tokens and personal data written to logs inherit the log system's access and retention settings.

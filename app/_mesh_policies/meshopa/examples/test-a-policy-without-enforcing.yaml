@@ -1,6 +1,6 @@
-title: 'Test a policy without enforcing it'
+title: 'Load a helper module without a separate decision'
 
-description: 'Set ignoreDecision so a new rule is loaded on the agent and exercised against real traffic while its verdict is left out of the decision.'
+description: 'Use ignoreDecision for a helper module referenced by an enforcing module. The helper does not need its own allow decision. This does not enable automatic shadow evaluation of an independent candidate policy.'
 
 weight: 700
 
@@ -22,12 +22,21 @@ config:
             type: InsecureInline
             insecureInline:
               value: |
-                package envoy.authz
+                package backend.helpers
 
                 import input.attributes.request.http as http_request
+
+                method_is_get {
+                  http_request.method == "GET"
+                }
+        - rego:
+            type: InsecureInline
+            insecureInline:
+              value: |
+                package backend.authorization
 
                 default allow = false
 
                 allow {
-                  http_request.method == "GET"
+                  data.backend.helpers.method_is_get
                 }

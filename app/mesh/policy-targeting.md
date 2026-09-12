@@ -16,8 +16,8 @@ related_resources:
     url: /mesh/policies/meshtrafficpermission/
   - text: MeshIdentity policy
     url: /mesh/policies/meshidentity/
-  - text: Apply policies to mesh-scoped zone proxies
-    url: /mesh/zone-proxy-policies/
+  - text: Mesh-scoped zone proxies
+    url: /mesh/mesh-scoped-zone-proxies/
 ---
 
 A {{site.mesh_product_name}} policy carries up to three selectors. They answer different

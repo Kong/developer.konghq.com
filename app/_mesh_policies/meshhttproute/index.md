@@ -26,10 +26,18 @@ A route is also a target other policies can attach to. `MeshRetry`, `MeshTimeout
 `MeshAccessLog` accept `to[].targetRef.kind: MeshHTTPRoute`, which applies them to the requests
 one route matches rather than to everything sent to a destination.
 
+Without an applicable HTTP route, requests use normal destination routing. Once a route applies,
+requests that match none of the effective rules receive `404`. Include a catch-all rule when
+other paths must continue to work.
+
 ## Route two paths to different destinations
 
 This policy applies to proxies labeled `app: frontend` and splits requests to `backend` by
 path prefix:
+
+The application continues to call `backend`; its proxy chooses between the `orders` and
+`backend` MeshServices. Both resources must exist with the labels below and expose an
+HTTP-capable service port 8080. Destination permissions must allow the caller to reach both.
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -74,6 +82,14 @@ The first rule sends `/orders` and every path below it to the `orders` service. 
 the catch-all: it sends every other path to `backend`. Both destinations use port 8080. The
 order in the YAML does not decide which rule wins; `/orders` is more specific than `/`.
 
+- `targetRef` identifies the client proxies that perform the routing.
+- `to[].targetRef` identifies the destination the application originally called.
+- `matches` identifies requests within that traffic.
+- `backendRefs` identifies where the selected requests are forwarded.
+
+Matching a path does not rewrite it. A request for `/orders/123` still arrives as
+`/orders/123` at the orders application unless you add a URL rewrite.
+
 ## Where this policy applies
 
 `spec.targetRef` selects the client proxies whose outbound requests are routed, and accepts
@@ -83,6 +99,11 @@ order in the YAML does not decide which rule wins; `/orders` is more specific th
 `MeshService`, `MeshExternalService` and `MeshMultiZoneService`. `Mesh` is not accepted here,
 so a route always names a destination. Add `sectionName` to confine the rules to one named
 port of a `MeshService`; without it they apply to every HTTP port that service exposes.
+
+Use the value from `MeshService.spec.ports[].name` for `sectionName`.
+`backendRefs[].port` instead takes the numeric service port from `spec.ports[].port`.
+Verify the service's `appProtocol` identifies HTTP, HTTP/2, or gRPC; the proxy cannot apply
+HTTP request matches to traffic configured as opaque TCP.
 
 `spec.to[].hostnames` is present in the schema but not implemented. Setting it is rejected with
 `must not be defined`.
@@ -114,6 +135,10 @@ A match may constrain any combination of the four fields below, and all of the c
 one match entry must hold. Several entries in `matches` are alternatives: the rule applies if
 any one of them matches.
 
+For example, putting `method: GET` and a `/orders` path prefix in the same match selects
+GET requests under that path. Putting them in separate match entries selects all GET requests
+as well as requests using any method under `/orders`.
+
 {% table %}
 columns:
   - title: Field
@@ -141,10 +166,14 @@ Gateway API precedence rules. The first of these that distinguishes two rules de
 
 1. A rule with a `path` match beats one without.
 2. `Exact` beats `PathPrefix`, which beats `RegularExpression`.
-3. Within the same type, the longer `value` wins.
+3. Between prefixes, or between regular expressions, the longer `value` wins.
 4. A rule with a `method` match beats one without.
 5. More `headers` matches wins.
 6. More `queryParams` matches wins.
+
+Regular-expression ordering by length is {{site.mesh_product_name}} behavior; length does
+not necessarily indicate a more restrictive expression. Avoid overlapping expressions whose
+intended priority depends on regex semantics.
 
 ## An unmatched request gets a 404
 
@@ -212,6 +241,11 @@ it is rejected.
 Filters may also be attached to an individual entry in `backendRefs`, where only
 `RequestHeaderModifier` is accepted.
 
+A redirect tells the client to make another request; a rewrite changes the request the proxy
+forwards without asking the client to redirect. Mirroring sends an additional request, so the
+mirror destination may perform writes or other side effects even though its response is ignored.
+Use a mirror destination prepared to receive copies of production traffic.
+
 ## Splitting traffic across destinations
 
 `default.backendRefs` is a list of destinations, each with a `weight`. A request is assigned to
@@ -252,6 +286,11 @@ rules are merged. `rules` is treated as a map keyed on `matches`, so two rules w
 side by side. The order the policies merge in is decided by their top-level `targetRef`, as
 described in [How policies select traffic](/mesh/policy-targeting/).
 
+For example, a mesh-wide `/orders` rule and a client-specific `/payments` rule both remain
+available to that client. A narrower policy does not discard every rule from the broader policy.
+If both policies use identical matches, the narrower policy can change that match's backend
+configuration. Request specificity then selects among the resulting rules.
+
 ## Interaction with MeshTCPRoute
 
 Where a proxy is matched by both a `MeshHTTPRoute` and a
@@ -268,3 +307,15 @@ When a route splits traffic by weight, send enough requests to observe the distr
 small sample does not prove the configured ratio. If a request returns `500` or `503`, inspect
 the `backendRefs` first: the destination may not resolve, the named port may not exist, or all
 weights may be zero.
+
+For the first example, check `/orders`, `/orders/123`, and `/health`. The first two
+should reach orders with their paths unchanged, while `/health` should reach backend.
+Confirm the receiving application through its logs or a response that identifies the backend.
+
+| Unexpected result | Check |
+| --- | --- |
+| An unlisted path returns 404 | Add a catch-all if that path should retain normal routing. |
+| The backend receives an unexpected path | Matching selects the route; only URLRewrite changes the forwarded path. |
+| A fraction of requests returns 500 | Check whether a weighted backend reference fails to resolve in the client's zone. |
+| A backend resolves but requests fail | Check healthy endpoints, protocol compatibility, and destination permissions. |
+| A narrower policy does not remove an old route | Rules with different matches coexist; review the effective matches from all applicable policies. |

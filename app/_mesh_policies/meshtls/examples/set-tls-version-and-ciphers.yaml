@@ -1,6 +1,6 @@
 title: 'Pin the TLS version and ciphers'
 
-description: 'Restrict the whole mesh to TLS 1.3 and one cipher suite. Both fields are accepted only on a mesh-wide policy, so the two ends of a connection stay consistent.'
+description: 'Restrict mesh connections to TLS 1.2 and one ECDSA cipher suite. Both peers need compatible certificates. The cipher list does not control TLS 1.3 suites.'
 
 weight: 700
 
@@ -16,7 +16,7 @@ config:
     rules:
       - default:
           tlsVersion:
-            min: TLS13
-            max: TLS13
+            min: TLS12
+            max: TLS12
           tlsCiphers:
             - ECDHE-ECDSA-AES256-GCM-SHA384

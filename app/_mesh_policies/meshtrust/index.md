@@ -17,21 +17,35 @@ related_resources:
   url: "/mesh/policies/meshtls/"
 ---
 
-`MeshTrust` publishes the CA bundles that verify certificates in one trust domain.
-[MeshIdentity](/mesh/policies/meshidentity/) issues a workload its certificate; `MeshTrust` is
-how every other proxy comes to accept it.
+`MeshTrust` tells proxies which certificate authorities (CAs) they can use to verify workload
+certificates in a trust domain. A trust domain is the part of a SPIFFE ID between
+`spiffe://` and the next `/`.
 
-Most meshes never write one. A `MeshIdentity` with a `Bundled` provider creates the `MeshTrust`
+For example, verifying `spiffe://corp.example.com/workload/payments` requires trust material
+for `corp.example.com`. The certificate must chain to a CA published for that domain.
+[MeshIdentity](/mesh/policies/meshidentity/) configures certificate issuance;
+`MeshTrust` supplies the public certificates needed for verification.
+
+Trust does not grant access. Once the peer's certificate is verified,
+[MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) determines whether the caller
+may connect. A trusted caller can still be denied by authorization.
+
+You usually do not need to create this resource yourself. A `MeshIdentity` with a `Bundled` provider creates the `MeshTrust`
 for its own CA automatically, and that covers a single-zone mesh issuing its own identities.
-Writing one by hand is for the cases that automatic creation cannot cover: trusting a CA the
-mesh does not own, or keeping a second trust domain verifiable while workloads move between
-them.
+Create one manually when you manage trust separately, such as when accepting certificates
+issued by an external identity system. A migration between two Bundled identities can use
+their automatically generated trust resources.
 
 Like `MeshIdentity`, this is not a policy. It has no `targetRef`, `to` or `rules` — a trust
 domain is either trusted or it is not, mesh-wide — and on Kubernetes it is accepted only in the
 system namespace.
 
 ## Trust an external CA
+
+Obtain the issuing system's CA certificate bundle and the trust domain used in its workload
+identities. Set `spec.trustDomain` to that domain and replace the abbreviated PEM below with
+the complete CA certificate, including its BEGIN and END lines. The example cannot be applied
+with the `...` placeholder. Never put a private key in this resource.
 
 {% policy_yaml %}
 ```yaml
@@ -74,9 +88,17 @@ rows:
     value: "The CA bundles, at least one. Each has a `type` of `Pem` and the certificate under `pem.value`."
 {% endtable %}
 
-`caBundles` accepts several entries, which is what makes a CA rotation possible: publish the new
-CA alongside the old one, wait for every workload to be re-issued from the new one, then remove
-the old entry.
+`caBundles` accepts several entries so old and new certificates can remain verifiable during
+a CA rotation:
+
+1. Publish the new CA alongside the old CA.
+1. Confirm that receiving proxies have received the updated trust configuration.
+1. Switch certificate issuance to the new CA and verify connections using the new certificates.
+1. Remove the old CA only when no workload needs certificates issued by it.
+
+Adding a CA here does not change the issuer or renew workload certificates. Coordinate that
+change with the identity provider. Both entries belong to the same `spec.trustDomain`;
+a different trust domain needs a separate trust resource.
 
 A `pem.value` that is not a certificate is rejected with
 `provided certificate has incorrect format`. That check also rejects a PEM private-key block
@@ -88,32 +110,32 @@ proxy.
 A certificate verifies only if some `MeshTrust` publishes a CA bundle for the exact trust
 domain in its SPIFFE ID. When identities are not verifying, compare three things:
 
-- `status.trustDomain` on the `MeshIdentity`, which is the domain it actually issues in
+- the trust domain in the peer certificate's SPIFFE URI
 - `spec.trustDomain` on each `MeshTrust`
 - the `spiffeID` values in any [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/)
   rules, which are matched against the ID the client presents
 
-A mismatch in any of them shows up as traffic being denied rather than as an error on the
-resource.
+A mismatch between the certificate and the trust bundle prevents certificate verification.
+A mismatch in a permission rule denies authorization after a successful handshake. The resource
+may be accepted in either case, so diagnose the handshake and the authorization decision separately.
 
 ## Resources created from a MeshIdentity
 
 A `MeshTrust` the control plane created carries `status.origin.kri`, identifying the
 `MeshIdentity` it came from. One written by hand has no origin.
 
-The generated resource is keyed by the identity's name, which is why moving a trust domain means
-creating a second `MeshIdentity` under a new name rather than editing the existing one — see
-[Changing it is a migration, not an edit](/mesh/policies/meshidentity/#changing-it-is-a-migration-not-an-edit).
-Two identities publish two `MeshTrust` resources, so both domains stay verifiable for the whole
-transition.
+The control plane updates the generated trust resource when its issuer's trust domain changes.
+For a staged transition, use a second `MeshIdentity` with a different name so the two issuers
+can publish separate trust resources. Keep the old trust until no workload requires it, and
+update authorization rules to accept the new caller identities before moving workloads.
 
 To publish trust bundles some other way, set `meshTrustCreation: Disabled` on the
 `MeshIdentity`'s `Bundled` provider and write the `MeshTrust` resources yourself.
 
 ## Validate certificate trust
 
-1. Compare `MeshIdentity.status.trustDomain` with `MeshTrust.spec.trustDomain`. The strings must
-   be identical.
+1. Compare the trust domain in the peer certificate's SPIFFE URI with `MeshTrust.spec.trustDomain`.
+   The strings must be identical.
 1. Confirm that `caBundles` contains the CA that signed the client certificate, not the client
    certificate or its private key.
 1. Connect from a workload issued in that trust domain and confirm that the mTLS handshake

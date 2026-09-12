@@ -17,14 +17,12 @@ related_resources:
   url: "/mesh/policies/meshtrafficpermission/"
 ---
 
-`MeshTLS` controls two things about a proxy's inbound listeners: whether they accept plaintext
-as well as mTLS, and which TLS versions and ciphers are permitted.
+`MeshTLS` controls whether destination proxies accept plaintext alongside mTLS. It also sets
+the TLS versions and cipher suites used for mesh connections.
 
-It sits on top of [MeshIdentity](/mesh/policies/meshidentity/), which is what gives a proxy a
-certificate in the first place. A proxy that no `MeshIdentity` matches gets no mTLS transport
-socket at all, and this policy is skipped for it, logging `skip applying MeshTLS, the proxy has
-no workload identity`. Neither the mode nor the TLS settings below mean anything until a mesh
-has an identity.
+[MeshIdentity](/mesh/policies/meshidentity/) supplies the workload identity and certificate.
+Without a workload identity, the proxy skips `MeshTLS`; setting `Strict` alone does not
+create certificates or enable mTLS.
 
 Given an identity, an inbound is `Strict` unless a `MeshTLS` policy says otherwise, so plaintext
 is rejected by default. A policy is only needed to relax that, or to narrow the versions and
@@ -57,13 +55,21 @@ spec:
 {% endpolicy_yaml %}
 
 `targetRef` selects the `legacy` proxies whose inbound listeners change. `mode: Permissive`
-keeps the normal mTLS filter chain and adds a plaintext path. It does not turn outbound mTLS off,
-and it does not give plaintext clients an identity.
+allows them to accept plaintext as well as mesh mTLS. It does not turn outbound mTLS off.
+
+Plaintext connections bypass [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/)
+checks because they carry no authenticated workload identity. Limit this exception to the
+destinations that need it. Before restoring `Strict`, give the remaining callers identities,
+allow them in the destination's permissions, and verify their mTLS connections.
 
 ## Where this policy applies
 
 `spec.targetRef` selects the proxies whose inbounds are configured, and accepts `Mesh` or
 `Dataplane` with `labels`.
+
+Omitting `targetRef` selects the whole mesh. To limit a mode change to one inbound, set
+`targetRef.sectionName` to its `name` in the selected Dataplane's `networking.inbound[]`.
+For an unnamed inbound, use its port as a string, such as `"8080"`.
 
 Configuration goes in `spec.rules`. There is no `to`: TLS on an inbound is a property of the
 proxy accepting the connection, not of the client. `rules` also takes no `matches` — the
@@ -91,6 +97,19 @@ Both peers have to agree on a version and a cipher, so setting them per workload
 one half of a connection permitting something the other half does not. Applying them mesh-wide
 keeps the two ends consistent.
 
+Although these fields are written under `rules`, the mesh-wide version and cipher settings
+also configure outbound mesh TLS connections. They do not configure TLS to external services.
+
+## How mode overrides work
+
+A more specific Dataplane policy can override the mode set by a mesh-wide policy. For example,
+with mesh-wide `Permissive` and a Dataplane policy setting `Strict` for `app: payments`,
+payments accepts only mTLS while the other destinations still accept plaintext.
+
+Removing a specific override exposes the broader policy again. Removing the payments policy
+in that example restores `Permissive`, not the built-in `Strict` default. Set `Strict`
+explicitly when a broader permissive policy must remain in place.
+
 For the selectors a policy can carry, see [How policies select traffic](/mesh/policy-targeting/).
 
 ## Modes
@@ -105,17 +124,16 @@ rows:
   - mode: "`Strict`"
     what: "mTLS only. The default, applied when no policy sets a mode."
   - mode: "`Permissive`"
-    what: "mTLS or plaintext. The listener gets a second filter chain matching raw TCP alongside the TLS one, and the connection takes whichever matches."
+    what: "Mesh mTLS or connections without mesh mTLS, including plaintext and application-managed TLS."
 {% endtable %}
 
-`Permissive` changes the inbound side only. Outbound connections are encrypted either way, so a
-permissive destination still receives mTLS from a meshed client; what it gains is the ability to
-also serve a client that speaks plaintext.
+`Permissive` changes how the destination accepts connections. It does not downgrade mesh mTLS
+sent by an identified caller. Application-managed TLS can also pass through to the application;
+its certificate and authorization checks are the application's responsibility.
 
-A permissive inbound cannot tell who an unencrypted client is, since the identity comes out of
-the TLS handshake. A [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) matching on
-`spiffeID` therefore has nothing to match for plaintext traffic. Treat `Permissive` as a state
-to pass through during a migration rather than one to stay in.
+Only the mesh mTLS path provides the workload identity used by `MeshTrafficPermission`.
+Encryption provided by the application does not turn that connection into mesh-authenticated
+traffic.
 
 ## TLS versions
 
@@ -141,6 +159,11 @@ spec:
 
 A `min` above `max` is rejected with `min version must be lower than max`. `TLSAuto` at either
 end is not compared, so it never triggers that.
+
+This example requires TLS 1.3 on both ends of mesh connections. Check peer compatibility before
+applying it across the mesh: a peer with no permitted version in common cannot complete the
+handshake. `TLSAuto` follows the Envoy version shipped with your installation, rather than
+fixing a particular minimum or maximum.
 
 ## Ciphers
 
@@ -177,3 +200,15 @@ older versions.
    range.
 1. When setting `tlsCiphers`, inspect the negotiated cipher and confirm that both peers share at
    least one permitted suite.
+
+Use an allowed mesh caller for the mTLS test. A TLS handshake can succeed while
+`MeshTrafficPermission` rejects the request afterward. For the plaintext test, use a caller
+without a mesh proxy; an identified mesh caller may add mTLS even when the application requests
+an `http://` URL.
+
+| Unexpected result | Check |
+| --- | --- |
+| Plaintext still reaches a supposedly strict destination | Confirm that traffic crosses the selected proxy and that its workload identity is available. Inspect other matching mode policies. |
+| mTLS connects but the request is denied | Check destination traffic permissions and the caller's SPIFFE ID. |
+| The handshake fails after a version or cipher change | Confirm a common TLS version, compatible certificate key type, and permitted cipher on both peers. |
+| Changing `tlsCiphers` has no effect | Check the negotiated version: this list does not control TLS 1.3 suites. |

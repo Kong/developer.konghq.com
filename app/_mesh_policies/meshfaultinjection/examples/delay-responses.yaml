@@ -1,6 +1,6 @@
-title: 'Delay responses to test caller timeouts'
+title: 'Delay requests to test caller timeouts'
 
-description: 'Hold back 50.5% of responses by five seconds, so a caller MeshTimeout can be checked against a slow destination.'
+description: 'Wait five seconds before forwarding 50.5% of requests to the application, to test whether the caller times out as expected.'
 
 weight: 800
 

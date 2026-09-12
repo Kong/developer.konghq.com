@@ -12,6 +12,8 @@ tags:
   - upgrade
   - policy
 related_resources:
+  - text: Migrate zone proxies to Mesh 3
+    url: /mesh/migrate-zone-proxies-to-3/
   - text: How policies select traffic
     url: /mesh/policy-targeting/
   - text: Upgrade {{site.mesh_product_name}}
@@ -81,11 +83,11 @@ the policies present in your exported configuration.
 
 | Policy or resource | Main migration work | Risk if missed |
 | --- | --- | --- |
-| [MeshIdentity](#meshidentity) | Replace `Mesh.mtls`; plan immutable trust domains. | Proxies can lose mTLS and serve plaintext. |
+| [MeshIdentity](#meshidentity) | Replace `Mesh.mtls`; coordinate identities, trust, and permissions. | Proxies can lose mTLS and serve plaintext. |
 | [MeshTrust](#meshtrust) | Preserve external and transitional trust; remove generated trusts deliberately. | Peers can stop verifying workload certificates. |
 | [MeshTrafficPermission](#meshtrafficpermission) | Create identity first, rewrite `from` as `rules`, and remove deny-all rules. | Traffic is denied, or intended grants match no identity. |
 | [MeshTLS](#meshtls) | Preserve permissive mode explicitly and rewrite `from` as `rules`. | Plaintext is unexpectedly allowed or rejected. |
-| [MeshPassthrough](#meshpassthrough) | Replace `Mesh` settings, add domain ports, and resolve filter-chain collisions. | External traffic becomes broader or stops working. |
+| [MeshPassthrough](#meshpassthrough) | Replace `Mesh` settings, review domain and port scope, and resolve filter-chain collisions. | External traffic becomes broader or stops working. |
 | [MeshHTTPRoute](#meshhttproute) | Rewrite selectors and backend refs; add intentional catch-all behavior. | Requests return `404`, `500`, or `503`. |
 | [MeshTCPRoute](#meshtcproute) | Add required backend refs and resolve every destination. | Connections lose traffic shares or fail to connect. |
 | [MeshLoadBalancingStrategy](#meshloadbalancingstrategy) | Move hash policies and cross-zone failover configuration. | Session affinity or locality behavior changes silently. |
@@ -614,21 +616,22 @@ Create a `MeshIdentity` for every mesh that had mTLS through `Mesh.mtls`, before
 [MeshIdentity](/mesh/policies/meshidentity/) for the provider options, and
 [MeshTrafficPermission](#meshtrafficpermission) for the access control that depends on it.
 
-### The trust domain is immutable after the first write
+### Stage changes to the trust domain and workload path
 
-`spiffeID.trustDomain` and `spiffeID.path` are rejected on update, on Kubernetes by the
-admission webhook and on Universal by the API server:
-`is immutable, cannot be changed from "..." to "..."`.
+The API accepts changes to `spiffeID.trustDomain` and `spiffeID.path`, but existing
+certificates, peer trust, and permissions can still depend on the old values. Treat a
+template change as an identity migration, not an ordinary text edit.
 
-The control plane also renders the trust domain once, when it first initializes the identity,
-and records it in `status.trustDomain`. A template such as
-`{% raw %}{{ .Zone }}{% endraw %}` no longer re-renders when the zone is renamed, which used to
-move issuance into a trust domain no `MeshTrust` published yet.
+The default trust-domain template includes the zone name. Changing that name changes
+the rendered domain, and the control plane updates the generated
+`MeshTrust.spec.trustDomain`. `MeshIdentity` status contains conditions, not a pinned
+trust domain. Read the workload certificate's SPIFFE URI to verify its actual identity.
 
-To change either field, create a second `MeshIdentity` under a **different name** and delete the
-old one once every workload has been issued from it. Both publish their own `MeshTrust`, and
-`MeshService.spec.identities` lists every matching identity's SPIFFE ID, so peers accept
-certificates from both for the whole transition.
+For a staged transition, create a second `MeshIdentity` under a different name, publish
+the required trust, and allow both old and new caller identities in destination
+permissions. Move a small group using a more specific selector, verify calls in both
+directions, then expand. Remove the old issuer and trust only after no workload needs them.
+Two trusted issuers alone do not guarantee access: authorization must also allow the new IDs.
 
 Recreating under the same name is accepted and does converge, but it is not a migration: the
 `MeshTrust` and the CA are keyed by the identity's name, so there is a window with one trust
@@ -870,7 +873,9 @@ A policy in the old shape is rejected after upgrading, because the missing `type
 is a validation violation: `rego.type (): in body is required`.
 
 An inline rego policy is compiled when the resource is applied, so the rewrite is checked at
-write time. One supplied through a `Secret` is not, since the control plane does not read it.
+write time. A module supplied through a `Secret` is resolved and compiled by the control
+plane when generating agent configuration instead. Check source-loading and combined-module
+compilation errors after applying; resource acceptance alone does not prove the policy is active.
 
 ### Replace a MeshService or named targetRef
 
@@ -938,26 +943,28 @@ spec:
     passthroughMode: None
 ```
 
-### Add a port to every non-wildcard Domain match
+### Review the address and port scope of domain matches
 
-A `Domain` match used to build an `ORIGINAL_DST` cluster: the sidecar matched the SNI or the
-`Host` header and then sent the request to the address the client dialed. A workload covered by
-the policy could dial any address, present an allowed domain, and reach that address through the
-policy — the opposite of what an allowlist is for.
+Both exact and wildcard `Domain` matches use the original destination address. The
+sidecar checks TLS SNI or HTTP authority and forwards to the address the application
+dialed. It does not independently resolve an exact domain and pin traffic to that address.
 
-The sidecar now resolves the domain itself and connects to the resolved address, so the
-destination no longer depends on the address the client dialed. Resolving needs a port, so a
-`Domain` that is not a wildcard requires one. A policy without it is rejected with
-`port must be defined for a domain, the sidecar resolves the domain to pin the destination`.
+A client can dial a different address while presenting an allowed name. Use IP or CIDR
+restrictions, registered external destinations, and network controls when the address
+must be constrained. Separate allowlist entries are alternatives: adding an IP entry
+does not restrict a domain entry.
+
+Specify ports explicitly to keep allowances narrow. The following is a scope reduction,
+not a mandatory v3 syntax conversion:
 
 ```yaml
-# 2.x
+# All destination ports
 appendMatch:
   - type: Domain
     value: api.example.com
     protocol: tls
 
-# 3.x
+# Only port 443
 appendMatch:
   - type: Domain
     value: api.example.com
@@ -965,18 +972,10 @@ appendMatch:
     protocol: tls
 ```
 
-In a policy stored before the upgrade, such a match stops applying. Where it was the only match,
-nothing is left to allow and the sidecar rejects all passthrough traffic for the proxies that
-policy covers until the port is added.
-
-Duplicate the entry to allow one domain on several ports, and check that the sidecar can resolve
-those names: a domain it cannot resolve has no endpoint, so its traffic fails rather than
-following the original destination.
-
-A wildcard `Domain` keeps the old behavior, because there is no single address to resolve. Its
-traffic goes to the address the client dialed and the match only restricts the SNI or `Host`, so
-a workload covered by a wildcard entry can still dial any address and present a matching name to
-reach it. Prefer exact domains, IPs or CIDR ranges where the set of destinations is known.
+Duplicate the entry to allow one domain on several explicit ports. HTTP-family wildcard
+domains require a port; TLS domain matches can omit it, which allows all destination ports.
+Test allowed and unlisted ports as well as allowed and unlisted names. See
+[MeshPassthrough](/mesh/policies/meshpassthrough/) for matching and security boundaries.
 
 ### Resolve matches that describe the same filter chain
 
