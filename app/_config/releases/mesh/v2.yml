@@ -35,8 +35,7 @@ app/_how-tos/mesh/v2/deploy-multi-zone-global-control-plane-universal-docker.md:
   status: pending
   canonical_url:
 app/_how-tos/mesh/v2/deploy-universal-self-managed.md:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/universal-control-plane/
 app/_how-tos/mesh/v2/federate-zone-control-plane-to-konnect.md:
   status: pending
   canonical_url:
@@ -359,20 +358,15 @@ app/mesh/v2/data-plane-kubernetes.md:
   status: pending
   canonical_url:
 app/mesh/v2/data-plane-proxy-authentication.md:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/universal-control-plane/
 app/mesh/v2/data-plane-proxy.md:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/universal-data-plane/
 app/mesh/v2/data-plane-universal.md:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/universal-data-plane/
 app/mesh/v2/dataplane-health.md:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/universal-data-plane/
 app/mesh/v2/dataplane.md:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/universal-data-plane/
 app/mesh/v2/delegated-gateways.md:
   status: pending
   canonical_url:
