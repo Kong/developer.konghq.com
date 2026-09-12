@@ -136,6 +136,61 @@ kongctl delete mesh meshtimeout slow -m prod
 
 `--auto-approve` skips the confirmation prompt, which is what scripts need.
 
+### Inspecting what the control plane computed
+
+`get mesh` reads resources back as they were written. `inspect` answers the questions only the
+control plane can, once matching and merging have run.
+
+```sh
+# which policies apply to a proxy, and on which of its ports
+kongctl get mesh inspect dataplane backend-01
+
+# which proxies a policy matches
+kongctl get mesh inspect meshtimeout slow
+
+# overviews
+kongctl get mesh inspect dataplanes
+kongctl get mesh inspect meshes
+kongctl get mesh inspect zones
+```
+
+`inspect dataplane` reports per port rather than per proxy, because that is where a policy
+actually lands — one applying to a proxy's inbound but not its outbounds is the case that is
+hard to see any other way:
+
+```
+PORT       KIND         ORIGINS
+admin-ssl  MeshTimeout  kri_mt_default___mesh-wide-timeout_
+proxy      MeshTimeout  kri_mt_default___mesh-wide-timeout_
+postgres   MeshTimeout  kri_mt_default___outbound-timeout_
+```
+
+`--type` reaches the proxy's own Envoy configuration instead of the control plane's view:
+
+{% table %}
+columns:
+  - title: "`--type`"
+    key: type
+  - title: Reports
+    key: what
+rows:
+  - type: "`policies`"
+    what: "The policies the control plane matched to each port. The default, and the only one that does not need the proxy reachable."
+  - type: "`stats`"
+    what: "Envoy statistics."
+  - type: "`clusters`"
+    what: "The proxy's clusters."
+  - type: "`xds`"
+    what: "The xDS configuration dump."
+  - type: "`config`"
+    what: "The proxy's configuration."
+{% endtable %}
+
+Everything but `policies` is relayed from the proxy's Envoy admin interface verbatim, so it
+needs the zone connected to the control plane and the proxy reachable from the zone. A failure
+at either hop is reported as it arrives — `zone is offline` when the zone is down, and a
+connection error naming the admin port when the proxy is.
+
 ### Exporting a control plane
 
 ```sh
@@ -246,6 +301,10 @@ rows:
     new: "`kongctl dump mesh`"
   - old: "`kumactl generate dataplane-token`"
     new: "`kongctl create mesh dataplane-token`"
+  - old: "`kumactl inspect dataplane NAME`"
+    new: "`kongctl get mesh inspect dataplane NAME`"
+  - old: "`kumactl inspect <policy> NAME`"
+    new: "`kongctl get mesh inspect <policy> NAME`"
   - old: "`kumactl config control-planes add`"
     new: "`kongctl login`, or `--control-plane-url` for a self-managed control plane"
 {% endtable %}
@@ -259,10 +318,6 @@ Beyond the command names:
   it installs `kongctl`'s own features, not a control plane.)
 - **`kumactl apply -v` variables are gone.** Templating a resource before applying it is a job
   for whatever produces the YAML.
-- **There is no `inspect` equivalent yet.** The control plane still serves the inspect
-  endpoints — `_policies` for a dataplane, `_resources/dataplanes` for a policy — and `kumactl
-  inspect` still reaches them. `kongctl` does not surface them, so that is the one case where
-  `kumactl` still does something `kongctl` cannot.
 
 Read-only behaviour is unchanged in substance: on Kubernetes the control plane generates some
 resources and refuses writes to them, as [MeshService](/mesh/meshservice/) does.
