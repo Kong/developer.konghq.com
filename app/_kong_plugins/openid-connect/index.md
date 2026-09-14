@@ -620,8 +620,8 @@ Some clients, including MCP (Model Context Protocol) clients that follow the [MC
 [RFC 9728](https://www.rfc-editor.org/rfc/rfc9728) (OAuth 2.0 Protected Resource Metadata) solves this by letting a resource server advertise itself, including which authorization servers protect it and what scopes it supports, at a well-known URI that clients can discover automatically.
 
 When you configure [`config.protected_resource_metadata`](/plugins/openid-connect/reference/#schema--config-protected-resource-metadata), the OIDC plugin:
-* Serves an RFC 9728 metadata document at a well-known URI.
-* Adds a `resource_metadata` attribute, and optionally a `scope` attribute, to the `WWW-Authenticate` header on `401 Unauthorized` responses, so clients that receive a challenge can locate the metadata document.
+* Serves an RFC 9728 metadata document at a well-known URI, with no authentication required.
+* Rejects a request with no bearer token with a `401 Unauthorized` response instead of `403 Forbidden`, and adds a `resource_metadata` attribute, and optionally a `scope` attribute, to its `WWW-Authenticate` header, so clients that receive a challenge can locate the metadata document.
 
 {:.info}
 > Configuring this setting only advertises protected resource metadata and adds it to unauthorized responses.
@@ -641,6 +641,23 @@ The plugin intercepts requests to this path before any authentication logic runs
 The document always includes `resource`, and includes `authorization_servers` and `scopes_supported` when they're configured.
 * Requests using any other method receive a `405` response with an `Allow: GET` header.
 
+For example, with `resource` set to `https://api.example.com/mcp`:
+
+```sh
+curl -s https://api.example.com/mcp/.well-known/oauth-protected-resource
+```
+
+The response is the metadata document, and requires no `Authorization` header, since a client fetches it before it has a token:
+
+```json
+{
+  "resource": "https://api.example.com/mcp",
+  "authorization_servers": ["https://idp.example.com"],
+  "scopes_supported": ["openid", "profile"]
+}
+```
+{:.no-copy-code}
+
 {:.info}
 > The plugin doesn't handle CORS for the metadata endpoint.
 If MCP or browser-based clients need to fetch the metadata document cross-origin, add the [CORS plugin](/plugins/cors/) to the same route.
@@ -651,10 +668,19 @@ When a request is rejected with a `401 Unauthorized` response, the OIDC plugin a
 If [`config.protected_resource_metadata.scopes_supported`](/plugins/openid-connect/reference/#schema--config-protected-resource-metadata-scopes-supported) is set, the header also includes a `scope` attribute listing the supported scopes.
 This only applies to `401` responses.
 
-For example:
+For example, a request with no bearer token:
 
 ```sh
-WWW-Authenticate: Bearer realm="example", resource_metadata="https://api.example.com/mcp/.well-known/oauth-protected-resource", scope="mcp:read mcp:write"
+curl -s -i https://api.example.com/mcp
+```
+
+Returns a `401` response whose `WWW-Authenticate` header carries the discovery information:
+
+```
+HTTP/1.1 401 Unauthorized
+WWW-Authenticate: Bearer realm="idp.example.com", resource_metadata="https://api.example.com/mcp/.well-known/oauth-protected-resource", scope="openid profile", error="invalid_token"
+
+{"message":"Unauthorized"}
 ```
 {:.no-copy-code}
 

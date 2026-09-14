@@ -18,6 +18,9 @@ weight: 703
 min_version:
   gateway: '3.16'
 
+requirements:
+  - An identity provider that issues bearer tokens for this API.
+
 config:
   issuer: ${issuer}
   auth_methods:

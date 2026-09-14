@@ -7,6 +7,15 @@ extended_description: |
 
   Configure the plugin to use the `kong` validator to check that the request body contains a `name` field with a string value, and set `config.enforcement_mode` to `log_only` so that requests failing validation are logged instead of blocked.
 
+  In this example, an empty body (`{}`) is proxied through unchanged with a `200` response. {{site.base_gateway}} logs:
+
+  ```
+  [warn] request-validator: validation failed in log_only mode, validation_category=body_schema, {"message":"required field missing: name"}
+  ```
+
+  With `config.verbose_response` enabled, the log names the specific field that failed.
+  Disabled, it logs a generic validation-failure message instead.
+
 title: 'Log invalid requests without blocking'
 
 weight: 901
@@ -15,6 +24,10 @@ config:
   version: kong
   body_schema: '[{"name":{"type":"string","required":true}}]'
   enforcement_mode: log_only
+  verbose_response: true
+
+min_version:
+  gateway: '3.16'
 
 tools:
   - deck
