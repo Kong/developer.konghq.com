@@ -268,8 +268,8 @@ The starter policy logs everything, which gets expensive and noisy in production
 two ways: pick which proxies log, with `targetRef`, and pick which of their traffic logs, with
 `rules` or `to`.
 
-`targetRef` accepts `kind: Mesh` for every proxy [the proxies the policy reaches](/mesh/policy-targeting/#where-a-policy-applies), or
-`kind: Dataplane` with `labels` to select a subset.
+`targetRef` accepts `kind: Mesh` for every proxy [the policy reaches](/mesh/policy-targeting/#where-a-policy-applies),
+or `kind: Dataplane` with `labels` to select a subset.
 
 Traffic direction is where `rules` and `to` differ:
 
