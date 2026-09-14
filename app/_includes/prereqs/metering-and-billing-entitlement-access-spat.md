@@ -6,7 +6,7 @@ This is a different token from the **Ingest** token used by the {{site.metering_
 Export your system account token:
 
 ```sh
-export DECK_ENTITLEMENT_ACCESS_TOKEN='YOUR SPAT TOKEN'
+export DECK_ENTITLEMENT_ACCESS_TOKEN='YOUR SPAT'
 ```
 
 For more information, see [system accounts and access tokens](/konnect-api/#system-accounts-and-access-tokens).

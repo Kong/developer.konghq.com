@@ -11,7 +11,9 @@ products:
     - gateway
     - ai-gateway
     - metering-and-billing
-
+plugins:
+  - entitlement-enforcement
+  - metering-and-billing
 works_on:
     - konnect
 
@@ -92,12 +94,12 @@ automated_tests: false
 This guide shows how to enforce an LLM token allowance on {{site.ai_gateway}} traffic. [Metering LLM traffic](/ai-gateway/v1/how-to/meter-llm-traffic/) tells you what a customer consumed, but it doesn't stop them consuming more. The [Entitlement Enforcement plugin](/plugins/entitlement-enforcement/) closes that gap: it polls the {{site.metering_and_billing}} Entitlement Access API for the customer's remaining token allowance and blocks requests once the allowance is spent.
 
 In this guide, you'll:
-* Create a {{site.base_gateway}} Consumer that you'll map to a customer
-* Route LLM traffic through the {{site.ai_gateway}} AI Proxy plugin
-* Set up a meter for LLM tokens and a feature that counts only prompt tokens
-* Create a plan that grants a token allowance as a metered entitlement, and publish it
-* Create a customer and start a subscription so the entitlement is active
-* Enable the {{site.metering_and_billing}} plugin to report token usage, and the Entitlement Enforcement plugin to enforce the allowance
+* Create a {{site.base_gateway}} [Consumer](/gateway/entities/consumer/) that you'll map to a customer
+* Route LLM traffic through the {{site.ai_gateway}} [AI Proxy plugin](/plugins/ai-proxy/)
+* Set up a [meter for LLM tokens](/metering-and-billing/metering/) and a [feature](/metering-and-billing/product-catalog/#features) that counts only prompt tokens
+* Create a [plan](/metering-and-billing/product-catalog/#plans) that grants a token allowance as a metered entitlement, and publish it
+* Create a [customer](/metering-and-billing/customer/) and start a subscription so the entitlement is active
+* Enable the [{{site.metering_and_billing}} plugin](/plugins/metering-and-billing/) to report token usage, and the [Entitlement Enforcement](/plugins/entitlement-enforcement/) plugin to enforce the allowance
 * Verify that LLM requests are allowed until the token allowance runs out, then blocked
 
 Enforcement needs configuration on both sides, and the pieces reference each other. The following table lists what you'll create, why each piece is needed, and what it connects to:
@@ -162,7 +164,7 @@ The following diagram shows how those pieces relate:
 {% mermaid %}
 flowchart TB
   client(["Client (API key)"])
-  subgraph gateway["<b>Kong Gateway</b>"]
+  subgraph gateway["<b>{{site.base_gateway}}</b>"]
         route["example-route"]
         service["example-service"]
         consumer1["Consumer (Kong Air)"]
@@ -172,7 +174,7 @@ flowchart TB
   end
   redis[("Redis<br>enforcement cache")]
   openai(["OpenAI (gpt-4o)"])
-  subgraph mb["<b>Konnect {{site.metering_and_billing}}</b>"]
+  subgraph mb["<b>{{site.konnect_short_name}} {{site.metering_and_billing}}</b>"]
         events["Events API"]
         access["Entitlement Access API"]
         meter["Meter (LLM tokens)"]
@@ -204,7 +206,7 @@ flowchart TB
 
 ## Create a Consumer
 
-Before you configure {{site.metering_and_billing}}, set up a Consumer, Kong Air. [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}. Later in this guide, you'll map this Consumer to a customer in {{site.metering_and_billing}}.
+Before you configure {{site.metering_and_billing}}, set up a Consumer (`kong-air` in this example). [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}. Later in this guide, you'll map this Consumer to a customer in {{site.metering_and_billing}}.
 
 The Entitlement Enforcement plugin identifies the customer from the request's Consumer and sends the subject key `consumer:<consumer-id>` to the Entitlement Access API. To keep that subject key predictable, this guide sets an explicit `id` on the Consumer so you can reference it directly when you create the customer.
 
@@ -346,7 +348,7 @@ variables:
 
 Plans are the core building blocks of your [product catalog](/metering-and-billing/product-catalog/). A plan is a collection of [rate cards](/metering-and-billing/product-catalog/#rate-cards), where each rate card ties a feature to a price and an optional [entitlement](/metering-and-billing/entitlements/). The entitlement is what the Entitlement Enforcement plugin reads to decide access.
 
-Create a Token plan with one rate card that grants 100 prompt tokens per hour. The rate card uses a free price, because enforcement depends only on the entitlement, not on price:
+Create a token plan with one rate card that grants 100 prompt tokens per hour. The rate card uses a free price, because enforcement depends only on the entitlement, not on price:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -414,7 +416,7 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Now subscribe the customer to the Token plan. The subscription becomes active as soon as you create it, which materializes the token entitlement onto the customer:
+Now subscribe the customer to the token plan. The subscription becomes active as soon as you create it, which materializes the token entitlement onto the customer:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -509,9 +511,9 @@ done
 
 Expect the following progression:
 
-* **Cold start:** the first requests may return `403` with `"Customer is not found by subject."` The Entitlement Enforcement plugin hasn't polled the customer's state yet. It records the subject and fetches its entitlements on the next poll (every `refresh_interval` seconds), so retry for up to a minute.
-* **Within the allowance:** once the state is loaded, requests return `200` and reach the model. Each one spends prompt tokens against the 100-token entitlement.
-* **Allowance spent:** once the reported prompt tokens cross 100 in the usage period, the Entitlement Enforcement plugin blocks further requests with `429` and `"Customer has reached usage limit for feature."`
+* **Cold start:** The first requests may return `403` with `"Customer is not found by subject."` The Entitlement Enforcement plugin hasn't polled the customer's state yet. It records the subject and fetches its entitlements on the next poll (every `refresh_interval` seconds), so retry for up to a minute.
+* **Within the allowance:** Once the state is loaded, requests return `200` and reach the model. Each one spends prompt tokens against the 100-token entitlement.
+* **Allowance spent:** Once the reported prompt tokens cross 100 in the usage period, the Entitlement Enforcement plugin blocks further requests with `429` and `"Customer has reached usage limit for feature."`
 
 {:.info}
 > Blocking is not instant, which is why the loop above sleeps between requests. Two delays stack up: {{site.metering_and_billing}} aggregates entitlement usage at one-minute granularity, so tokens you just spent take up to a minute to count, and the plugin then needs another `refresh_interval` seconds to poll the updated state. If you don't see `429` right after the allowance should have run out, keep sending requests for another minute.
@@ -521,7 +523,7 @@ Expect the following progression:
 To confirm the customer's remaining allowance independent of the plugin's cache, you can call the same endpoint the plugin uses. This reports `has_access` per feature for the subject:
 
 {:.warning}
-> The Entitlement Access query endpoint is an internal, unstable API. It may change without notice — use it for verification, not for production integrations.
+> The Entitlement Access query endpoint is an internal, unstable API. It may change without notice. Use it for verification only, and **do not** use it for production integrations.
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -540,4 +542,4 @@ body:
 In the response, `data[0].features.llm_token_access.has_access` is `true` while the customer still has tokens left and `false` once the allowance is spent, with a `reason.code` of `usage_limit_reached`.
 
 {:.info}
-> **Enforce at the gateway, not downstream:** without the Entitlement Enforcement plugin, an exhausted entitlement only shows up in reporting and notifications, and the LLM request still reaches the model — and still costs you. With the plugin on the Route, the request is rejected before it's proxied. Customize the `response_codes` in the plugin configuration to control the status code and message returned for each denial reason.
+> **Enforce at the gateway, not downstream**: Without the Entitlement Enforcement plugin, an exhausted entitlement only shows up in reporting and notifications, and the LLM request still reaches the model and still costs you. With the plugin on the Route, the request is rejected before it's proxied. Customize the `response_codes` in the plugin configuration to control the status code and message returned for each denial reason.

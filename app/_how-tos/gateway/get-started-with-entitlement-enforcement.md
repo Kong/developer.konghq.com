@@ -10,7 +10,9 @@ breadcrumbs:
 products:
     - gateway
     - metering-and-billing
-
+plugins:
+  - entitlement-enforcement
+  - metering-and-billing
 works_on:
     - konnect
 
@@ -25,7 +27,7 @@ tldr:
   a: |
     The [Entitlement Enforcement plugin](/plugins/entitlement-enforcement/) enforces per-customer, per-feature access by polling the {{site.metering_and_billing}} Entitlement Access API and blocking requests when a customer has no access or has exhausted a usage limit.
 
-    In this tutorial you'll set up the full {{site.metering_and_billing}} product catalog needed for enforcement — a meter, a metered feature, a plan with an entitlement, a customer, and a subscription — and then enable the Entitlement Enforcement plugin on a {{site.base_gateway}} Route to enforce that entitlement.
+    In this tutorial you'll set up the full {{site.metering_and_billing}} product catalog needed for enforcement: a meter, a metered feature, a plan with an entitlement, a customer, and a subscription. Then, enable the Entitlement Enforcement plugin on a {{site.base_gateway}} Route to enforce that entitlement.
 
 tools:
     - deck
@@ -85,12 +87,12 @@ automated_tests: false
 This guide shows how to enforce {{site.metering_and_billing}} entitlements on {{site.base_gateway}} API traffic with the [Entitlement Enforcement plugin](/plugins/entitlement-enforcement/). Unlike the {{site.metering_and_billing}} plugin, which only meters usage, the Entitlement Enforcement plugin actively **blocks** requests: it polls the {{site.metering_and_billing}} Entitlement Access API for each customer and returns an error when the customer has no access to a feature or has exhausted a usage limit.
 
 In this guide, you'll:
-* Create a {{site.base_gateway}} Consumer that you'll map to a customer
-* Set up a meter for {{site.base_gateway}} API requests
-* Create a metered feature
-* Create a plan that grants that feature as an entitlement, and publish it
-* Create a customer and start a subscription so the entitlement is active
-* Enable the {{site.metering_and_billing}} plugin to report usage, and the Entitlement Enforcement plugin to enforce the entitlements
+* Create a {{site.base_gateway}} [Consumer](/gateway/entities/consumer/) that you'll map to a customer
+* Set up a [meter](/metering-and-billing/metering/) for {{site.base_gateway}} API requests
+* Create a metered [feature](/metering-and-billing/product-catalog/#features)
+* Create a [plan](/metering-and-billing/product-catalog/#plans) that grants that feature as an entitlement, and publish it
+* Create a [customer](/metering-and-billing/customer/) and start a subscription so the entitlement is active
+* Enable the [{{site.metering_and_billing}} plugin](/plugins/metering-and-billing/) to report usage, and the [Entitlement Enforcement plugin](/plugins/entitlement-enforcement/) to enforce the entitlements
 * Verify that traffic is allowed within the limit and blocked once the limit is reached
 
 Enforcement needs configuration on both sides, and the pieces reference each other. The following table lists what you'll create, why each piece is needed, and what it connects to:
@@ -149,7 +151,7 @@ The following diagram shows how those pieces relate:
 {% mermaid %}
 flowchart TB
   client(["Client (API key)"])
-  subgraph gateway["<b>Kong Gateway</b>"]
+  subgraph gateway["<b>{{site.base_gateway}}</b>"]
         route["example-route"]
         service["example-service"]
         consumer1["Consumer (Kong Air)"]
@@ -157,7 +159,7 @@ flowchart TB
         metering["Metering & Billing plugin"]
   end
   redis[("Redis<br>enforcement cache")]
-  subgraph mb["<b>Konnect {{site.metering_and_billing}}</b>"]
+  subgraph mb["<b>{{site.konnect_short_name}} {{site.metering_and_billing}}</b>"]
         events["Events API"]
         access["Entitlement Access API"]
         meter["Meter"]
@@ -187,7 +189,7 @@ flowchart TB
 
 ## Create a Consumer
 
-Before you configure {{site.metering_and_billing}}, set up a Consumer, Kong Air. [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}. Later in this guide, you'll map this Consumer to a customer in {{site.metering_and_billing}}.
+Before you configure {{site.metering_and_billing}}, set up a Consumer (in this example, `kong-air`. [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}. Later in this guide, you'll map this Consumer to a customer in {{site.metering_and_billing}}.
 
 The Entitlement Enforcement plugin identifies the customer from the request's Consumer and sends the subject key `consumer:<consumer-id>` to the Entitlement Access API. To keep that subject key predictable, this guide sets an explicit `id` on the Consumer so you can reference it directly when you create the customer.
 
@@ -434,9 +436,9 @@ done
 
 Expect the following progression:
 
-* **Cold start:** the first requests may return `403` with `"Customer is not found by subject."` The Entitlement Enforcement plugin hasn't polled the customer's state yet. It records the subject and fetches its entitlements on the next poll (every `refresh_interval` seconds), so retry for up to a minute.
-* **Within the limit:** once the state is loaded, requests return `200`. The customer has access to `premium_api_access` and hasn't reached the limit of 5.
-* **Limit reached:** as the {{site.metering_and_billing}} plugin reports usage and it crosses 5 requests in the period, the Entitlement Enforcement plugin blocks further requests with `429` and `"Customer has reached usage limit for feature."`
+* **Cold start:** The first requests may return `403` with `"Customer is not found by subject."` The Entitlement Enforcement plugin hasn't polled the customer's state yet. It records the subject and fetches its entitlements on the next poll (every `refresh_interval` seconds), so retry for up to a minute.
+* **Within the limit:** Once the state is loaded, requests return `200`. The customer has access to `premium_api_access` and hasn't reached the limit of 5.
+* **Limit reached:** As the {{site.metering_and_billing}} plugin reports usage and it crosses 5 requests in the period, the Entitlement Enforcement plugin blocks further requests with `429` and `"Customer has reached usage limit for feature."`
 
 {:.info}
 > There's a short delay between metering a request and the Entitlement Access API reflecting the new usage, and another delay while the plugin polls the updated state. If you don't see `429` immediately after the sixth request, keep sending requests for a few more seconds.
@@ -446,7 +448,7 @@ Expect the following progression:
 To confirm the customer's access independent of the plugin's cache, you can call the same endpoint the plugin uses. This reports `has_access` per feature for the subject:
 
 {:.warning}
-> The Entitlement Access query endpoint is an internal, unstable API. It may change without notice — use it for verification, not for production integrations.
+> The Entitlement Access query endpoint is an internal, unstable API. It may change without notice. Use it for verification only, and **do not** use it for production integrations.
 
 <!--vale off-->
 {% konnect_api_request %}
