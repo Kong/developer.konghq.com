@@ -29,7 +29,7 @@ faqs:
 
 The ACL (access control list) policy allows you to restrict [AI Consumers](/ai-gateway/entities/ai-consumer/) or [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) access to {{site.ai_gateway}} entities. This is the same capability provided by `access.acls` for AI Models, AI MCP Servers, and AI Agents. However, the policy provides additional configuration options.
 
-You can configure **either** an allow list or a deny list with AI Consumers, AI Consumer Groups or authenticated groups (discovered by an [AI Auth Strategy](https://developer.konghq.com/ai-gateway/entities/ai-auth-strategy/#oidc-token-authentication) running in `openid-connect` mode).
+You can configure **either** an allow list or a deny list with AI Consumers, AI Consumer Groups or authenticated groups (discovered by an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/#oidc-token-authentication) running in `openid-connect` mode).
 
 The ACL policy requires that AI Consumers are authenticated and you should set up [AI Auth Strategies](/ai-gateway/entities/ai-auth-strategy/) before enabling this policy.
 
