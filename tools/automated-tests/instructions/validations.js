@@ -487,6 +487,9 @@ async function quickstart(config, runtimeConfig, container) {
     await setEnvVariable(container, name, value);
   }
 
+  // Give the gateway time to boot before running validations against it.
+  await sleep(5000);
+
   return [];
 }
 
