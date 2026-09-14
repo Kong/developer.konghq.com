@@ -228,7 +228,7 @@ Then, create the backend cluster:
 url: /v1/event-gateways/$EVENT_GATEWAY_ID/backend-clusters
 status_code: 201
 method: POST
-body_cmd: $(cat mtls_backend_cluster.json)
+body_file: mtls_backend_cluster.json
 extract_body:
   - name: id
     variable: MTLS_BACKEND_CLUSTER_ID
