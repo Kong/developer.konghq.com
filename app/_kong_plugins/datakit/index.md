@@ -102,6 +102,8 @@ rows:
     description: Read a credential set by the OpenID Connect plugin and map its value to a named Upstream entity, routing different callers to different backends on a single Route.
   - usecase: "[Route requests to different hosts based on the authenticated caller](/plugins/datakit/examples/route-host-by-credential/)"
     description: Read a credential set by the OpenID Connect plugin and map its value directly to a `host:port` backend, bypassing Upstream entities and load balancing. Use this when each backend is a fixed address and you don't need health checks or retries.
+  - usecase: "[Verify a call node's TLS connection using a custom CA](/plugins/datakit/examples/verify-call-node-with-custom-ca/)"
+    description: "Verify a `call` node's outbound TLS connection against a private CA using the plugin's `ca_certificates` field, instead of relying on the global trusted CA store."
 {% endtable %}
 <!--vale on-->
 
@@ -801,6 +803,32 @@ For example:
 
 #### Proxy options
 The `call` node supports performing requests via a proxy server. This is controlled by proxy options. See above example for more details.
+
+#### Verify TLS against a custom CA {% new_in 3.16 %}
+
+By default, a `call` node verifies the server's TLS certificate against {{site.base_gateway}}'s global trusted CA store (`lua_ssl_trusted_certificate`).
+
+To verify against a private CA instead, set `ca_certificates` to an array of [CA Certificate](/gateway/entities/ca-certificate/) object UUIDs. This field is set at the top level of the plugin's `config`, alongside `nodes`:
+
+```yaml
+config:
+  ca_certificates:
+    - 9a5edeea-5bbf-47c1-8251-303d64ad1b86
+
+  nodes:
+    - name: CALL
+      type: call
+      url: https://internal.example.private/
+      ssl_verify: true
+```
+
+* `ca_certificates` applies to every `call` node in the plugin instance. There's no per-node CA scoping.
+* When `ca_certificates` is set, it replaces the global trusted CA store for outbound `call` requests.
+  If you still need to trust publicly-signed endpoints, include a public CA alongside your private CA.
+* If `ca_certificates` is unset or empty, `call` nodes fall back to the global trusted CA store.
+* `ca_certificates` has no effect when a node's `ssl_verify` is `false`.
+
+For a complete example, see [Verify a call node's TLS connection using a custom CA](/plugins/datakit/examples/verify-call-node-with-custom-ca/).
 
 #### Request body encoding
 Call node supports following content types for request body encoding:
