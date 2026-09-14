@@ -122,44 +122,6 @@ formats:
   - kongctl
 {% endentity_example %}
 
-### Combine multiple stored configurations
-
-Use `config_ids` to combine several stored configurations. NeMo applies them in the order you list them:
-
-{% entity_example %}
-type: policy
-data:
-  display_name: AI NVIDIA NeMo Guardrail - Combined Stored Configurations
-  name: ai-nvidia-nemo-guardrail
-  type: ai-nvidia-nemo-guardrail
-  config:
-    nemo_endpoint: http://nemo:7331/v1/guardrail/checks
-    model: gpt-4o
-    guarding_mode: BOTH
-    timeout: 30000
-    auth:
-      api_key: ${openai_api_key}
-      header: X-Model-Authorization
-      prefix: ""
-    guardrails:
-      config_ids:
-        - content_safety
-        - jailbreak_detection
-        - topic_control
-
-variables:
-  openai_api_key:
-    value: $OPENAI_API_KEY
-    description: Your OpenAI API key.
-
-formats:
-  - konnect-api
-  - kongctl
-{% endentity_example %}
-
-{:.info}
-> Each configuration referenced in `config_ids` must define its own complete `models` list. NeMo does not merge model definitions across the configurations it combines, so a configuration that depends on a model defined only in a different, separately stored configuration won't resolve it when used this way.
-
 ### Send an inline configuration
 
 Use `config` to send a complete NeMo guardrail configuration with every check, without storing anything on the NeMo server:
