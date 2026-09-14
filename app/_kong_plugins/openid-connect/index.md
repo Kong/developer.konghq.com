@@ -658,8 +658,7 @@ WWW-Authenticate: Bearer realm="example", resource_metadata="https://api.example
 ```
 {:.no-copy-code}
 
-Set up protected resource metadata:
-* [Example: Protected resource metadata](/plugins/openid-connect/examples/protected-resource-metadata/)
+See the [Set up protected resource metadata](/plugins/openid-connect/examples/protected-resource-metadata/) example for a full configuration.
 
 ## Token exchange {% new_in 3.14 %}
 
