@@ -84,9 +84,14 @@ deployment available until every mesh that depends on it has passed the migratio
 
 ## 2. Prepare identities, destinations and policies
 
-Complete the relevant [MeshIdentity migration](/mesh/migrate-mtls-to-meshidentity/) and
-ensure the new egress proxies will match an identity selector. Include the clients that will
-connect to them and establish the required trust before allowing traffic.
+Prepare the identity and trust configuration described in the
+[MeshIdentity migration](/mesh/migrate-mtls-to-meshidentity/). Give the new egress proxies an
+issuing identity, and prepare permissions for the clients that will connect to them.
+
+Do not complete the application identity rollout before deploying egress. Workloads using
+MeshExternalService need mesh-scoped zone egress when they switch to MeshIdentity. Deploy
+and validate the egress first, then switch a canary client and test its external-service calls
+before migrating the remaining clients.
 
 Use `MeshExternalService` for external destinations served by the new egress. Legacy
 `ExternalService` configuration is not consumed by its listener generator. Verify the
