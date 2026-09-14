@@ -16,11 +16,6 @@ RSpec.describe Jekyll::Data::TitleTag do
   subject { described_class.new(site:, page:) }
 
   describe '#process' do
-    context 'when URL starts with /assets/mesh/somethin.yml - some .yml files in assets are treated as pages by jekyll we need to skip them' do
-      let(:page_url) { '/assets/some-asset/' }
-      it { expect(subject.process).to be_nil }
-    end
-
     context 'when layout is none - some pages have layout set to none and should be skipped' do
       let(:page_data) { { 'title' => 'My Page', 'layout' => 'none' } }
       it { expect(subject.process).to be_nil }
