@@ -18,6 +18,9 @@ works_on:
 min_version:
   gateway: '3.16'
 
+major_version:
+  ai-gateway: 1
+
 tags:
     - get-started
 
