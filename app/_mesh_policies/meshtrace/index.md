@@ -102,10 +102,12 @@ listener, so two would have no meaning; more than one is rejected with
 `must have zero or one backend defined`.
 
 To send the same spans to multiple storage systems, export to one collector and configure
-that collector to forward to the required systems. Do not add a second `MeshTrace` backend.
+that collector to forward to the required systems. A second entry is not an option: the
+schema caps the list at one, and a policy listing two is rejected with
+`spec.default.backends: Too many: 2: must have at most 1 items`.
 
-The field itself is required. Omitting it is rejected with `backends (): must be defined`,
-while an empty list is accepted and covered under
+The field itself is required. Omitting it is rejected with `spec.default.backends: must be
+defined`, while an empty list is accepted and covered under
 [Turn tracing off for part of the mesh](#turn-tracing-off-for-part-of-the-mesh).
 
 {% table %}

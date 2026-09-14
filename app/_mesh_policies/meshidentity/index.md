@@ -146,7 +146,7 @@ spec:
 {% endpolicy_yaml %}
 
 A `Bundled` provider with neither `autogenerate` nor `ca` is rejected with
-`ca (): must be defined`. `certificateParameters.expiry` sets how long issued leaf certificates
+`provider.bundled.ca: must be defined`. `certificateParameters.expiry` sets how long issued leaf certificates
 last, and must not be negative.
 
 Create the referenced secrets before applying this example. `mesh-ca-cert` supplies the
