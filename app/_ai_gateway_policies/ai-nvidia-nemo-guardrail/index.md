@@ -40,11 +40,11 @@ The AI NVIDIA NeMo Guardrail Policy inspects requests and responses handled by t
 
 This AI Policy doesn't evaluate content. It delegates every decision to NeMo Guardrails, so the rails you define in NeMo (content safety, topic control, jailbreak detection, or your own Colang flows) determine what {{site.ai_gateway}} allows through.
 
-## Prerequisites
+Before using the AI NVIDIA NeMo Guardrail Policy, you need:
 
-Before using the AI NVIDIA NeMo Guardrail Policy, you need a running [NeMo Guardrails microservice](https://docs.nvidia.com/nemo/microservices/latest/guardrails/index.html) that {{site.ai_gateway}} can reach. The microservice listens on port `7331` by default, and the Policy calls its `/v1/guardrail/checks` endpoint.
+* A running [NeMo Guardrails microservice](https://docs.nvidia.com/nemo/microservices/latest/guardrails/index.html) that {{site.ai_gateway}} can reach. The microservice listens on port `7331` by default, and the Policy calls its `/v1/guardrail/checks` endpoint.
 
-You also need at least one guardrail configuration. You can store configurations on the NeMo server and reference them by ID, or send a configuration inline with every check. For more information, see [Manage guardrail configurations](https://docs.nvidia.com/nemo/microservices/latest/guardrails/manage-guardrail-configs/) in the NVIDIA documentation.
+* At least one guardrail configuration. You can store configurations on the NeMo server and reference them by ID, or send a configuration inline with every check. For more information, see [Manage guardrail configurations](https://docs.nvidia.com/nemo/microservices/latest/guardrails/manage-guardrail-configs/) in the NVIDIA documentation.
 
 ## How it works
 
@@ -56,37 +56,6 @@ The AI NVIDIA NeMo Guardrail Policy intercepts traffic, extracts the text to eva
 1. On the way back, the Policy intercepts the response and sends the extracted text to NeMo Guardrails.
    - NeMo runs the configured output rails and returns a pass or block status.
 1. If NeMo allows the content, {{site.ai_gateway}} forwards the response to the client.
-
-{% comment %}
-<!--vale off-->
-{% mermaid %}
-sequenceDiagram
-    autonumber
-    participant Client
-    participant Gateway as {{site.ai_gateway}}
-    participant Policy as AI NVIDIA NeMo Guardrail Policy
-    participant NeMo as NeMo Guardrails service
-    participant AI as Upstream AI service
-
-    Client->>Gateway: Send request
-    Gateway->>Policy: Route request
-    Policy->>NeMo: Intercept & send extracted request text
-    NeMo->>NeMo: Run configured input rails
-    NeMo->>Policy: Allow or block request
-    Policy->>Gateway: Forward allowed request
-    Gateway->>AI: Process allowed request
-    AI->>Gateway: Return AI response
-    Gateway->>Policy: Forward response
-    Policy->>NeMo: Intercept & send extracted response text
-    NeMo->>NeMo: Run configured output rails
-    NeMo->>Policy: Allow or block response
-    Policy->>Gateway: Forward allowed response
-    Gateway->>Client: Forward allowed response to client
-{% endmermaid %}
-<!--vale on-->
-
-> _Figure 1: Diagram showing the request and response flow with the AI NVIDIA NeMo Guardrail Policy._
-{% endcomment %}
 
 ### Guarding mode
 
@@ -139,11 +108,17 @@ data:
     guarding_mode: INPUT
     timeout: 30000
     auth:
-      api_key: ${api_key}
+      api_key: ${openai_api_key}
       header: X-Model-Authorization
       prefix: ""
     guardrails:
       config_id: content_safety
+
+variables:
+  openai_api_key:
+    value: $OPENAI_API_KEY
+    description: Your OpenAI API key.
+
 formats:
   - konnect-api
   - kongctl
@@ -165,7 +140,7 @@ data:
     guarding_mode: BOTH
     timeout: 30000
     auth:
-      api_key: ${api_key}
+      api_key: ${openai_api_key}
       header: X-Model-Authorization
       prefix: ""
     guardrails:
@@ -173,6 +148,12 @@ data:
         - content_safety
         - jailbreak_detection
         - topic_control
+
+variables:
+  openai_api_key:
+    value: $OPENAI_API_KEY
+    description: Your OpenAI API key.
+
 formats:
   - konnect-api
   - kongctl
@@ -197,7 +178,7 @@ data:
     guarding_mode: INPUT
     timeout: 30000
     auth:
-      api_key: ${api_key}
+      api_key: ${openai_api_key}
       header: X-Model-Authorization
       prefix: ""
     guardrails:
@@ -218,6 +199,12 @@ data:
               Task: Check if there is unsafe content in the user message.
             output_parser: nemoguard_parse_prompt_safety
             max_tokens: 50
+
+variables:
+  openai_api_key:
+    value: $OPENAI_API_KEY
+    description: Your OpenAI API key.
+
 formats:
   - konnect-api
   - kongctl
