@@ -1,0 +1,44 @@
+title: Mask a field before it reaches the cluster
+
+description: Redact an SSN field on produce, so the cluster never stores the original value.
+
+extended_description: |
+  Redact an SSN field before {{site.event_gateway_short}} writes the record to the backend cluster.
+
+  The `keep_chars` strategy keeps the first character and the last two characters, and replaces the middle with `***`.
+  The phrase has a fixed length, so the masked value does not reveal the length of the original.
+
+  This change is irreversible. Use the produce phase when no client, and no operator of the backend cluster, can see the original value.
+
+weight: 900
+
+requirements:
+ - "A [Schema Validation Produce policy](/event-gateway/policies/schema-validation-produce/) that parses the record value."
+
+variables:
+  policy_id:
+    description: The UUID of the parent Schema Validation policy.
+    value: $PARENT_POLICY_ID
+
+type: mask_fields
+name: mask-ssn-produce
+parent_policy_id: ${policy_id}
+config:
+  failure_mode: reject
+  mask_fields:
+    - paths:
+        - match: "user.ssn"
+      strategy:
+        type: keep_chars
+        keep_chars:
+          first: 1
+          last: 2
+          phrase: "***"
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
+
+min_version:
+  event-gateway: '1.3'
