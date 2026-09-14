@@ -89,7 +89,7 @@ columns:
 rows:
   - kind: "`Dataplane`, with `labels`"
     field: "`rules`. Defining `to` is rejected with `spec.to: must not be defined`."
-    limits: "Traffic arriving at the selected proxies. Omit `labels` to select every proxy [the proxies the policy reaches](/mesh/policy-targeting/#where-a-policy-applies)."
+    limits: "Traffic arriving at the selected proxies. Omit `labels` to select every proxy [the policy reaches](/mesh/policy-targeting/#where-a-policy-applies)."
   - kind: "`Mesh`"
     field: "`to`, whose `targetRef` accepts `kind: Mesh` and nothing else. Defining `rules` is rejected with `spec.rules: must not be defined`."
     limits: "The API accepts this form, but the v3 proxy implementation applies limits from rules, not to. Migrate to the Dataplane/rules form."
