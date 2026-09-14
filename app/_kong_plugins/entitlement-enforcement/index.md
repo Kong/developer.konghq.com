@@ -54,7 +54,7 @@ related_resources:
 > {{site.metering_and_billing}} requires a separate purchase. [Contact Sales](https://konghq.com/contact-sales) for pricing and availability.
 
 The Entitlement Enforcement plugin blocks API requests based on the customer entitlements defined in [{{site.metering_and_billing}}](/metering-and-billing/).
-It works alongside the [Metering & Billing plugin](/plugins/metering-and-billing/): Metering & Billing reports usage, and Entitlement Enforcement checks that usage against a customer's plan and blocks the request when the customer is over their limit.
+It works alongside the [Metering & Billing plugin](/plugins/metering-and-billing/): Entitlement Enforcement checks the customer's current usage against their entitlement and decides whether to allow the request, before it reaches your upstream service. Metering & Billing then reports the request as new usage.
 
 The plugin blocks a request when a customer:
 * Has reached the usage limit for a metered feature.
@@ -64,9 +64,7 @@ Requests from customers that are within their entitlements are allowed through.
 
 ## How it works
 
-Each Entitlement Enforcement plugin instance attaches to a single feature, set with [`config.feature.key`](/plugins/entitlement-enforcement/reference/#schema--config-feature-key). To enforce more than one feature, add a plugin instance per feature on the Routes that serve it.
-
-For each request, the plugin:
+For each request, the Entitlement Enforcement plugin:
 
 1. Resolves the customer's subject key from the configured source: a Consumer, a Dev Portal application, or a request header or query parameter.
    This is the same subject the Metering & Billing plugin uses to attribute usage, so both plugins agree on who's being billed.
@@ -74,9 +72,50 @@ For each request, the plugin:
 3. If the feature is available and the customer's usage is within their entitlement, allows the request.
 4. If the feature is unavailable or the usage limit is reached, blocks the request with the configured HTTP status and message.
 
-The plugin never calls the {{site.metering_and_billing}} Entitlement Access API directly from the request path. Instead, a background timer polls the endpoint on [`config.refresh_interval`](/plugins/entitlement-enforcement/reference/#schema--config-refresh-interval) and writes the result to Redis, and a second timer syncs Redis into each worker's local cache on [`config.sync_rate`](/plugins/entitlement-enforcement/reference/#schema--config-sync-rate). This two-tier cache keeps the request path fast and avoids calling the Entitlement Access API on every request.
+The following diagram shows the request's path through the plugin:
 
-Because enforcement state is cached and refreshed on an interval, it's eventually consistent, not real time. A customer's usage has to be reported and aggregated in {{site.metering_and_billing}}, then polled by the plugin, before enforcement reflects it. See [Cold start and fail policy](#cold-start-and-fail-policy) for what happens the first time the plugin sees a customer, and when it can't retrieve enforcement state at all.
+{% mermaid %}
+sequenceDiagram
+    participant Client
+    participant Enforcement as Entitlement Enforcement
+    participant Cache as Local cache
+    participant Service as Upstream service
+    participant Metering as Metering & Billing
+
+    Client->>Enforcement: Request
+    Enforcement->>Cache: Check cached state
+    alt If allowed
+        Cache-->>Enforcement: Allowed
+        Enforcement->>Service: Forward request
+        Service-->>Metering: Report usage
+    else If blocked
+        Cache-->>Enforcement: Blocked
+        Enforcement-->>Client: HTTP error
+    end
+    note over Cache: Cache refreshed from Redis every sync_rate seconds.<br>Redis is refreshed from the Entitlement Access API every refresh_interval seconds.
+{% endmermaid %}
+
+The request only ever waits on the local cache. Redis and the Entitlement Access API are updated on their own schedules, never as part of handling a request.
+
+Each Entitlement Enforcement plugin instance attaches to a single feature, set with [`config.feature.key`](/plugins/entitlement-enforcement/reference/#schema--config-feature-key). 
+To enforce more than one feature, add a plugin instance per feature on the Routes that serve it.
+
+The plugin never calls the {{site.metering_and_billing}} Entitlement Access API directly from the request path. 
+Instead, a background timer polls the endpoint on [`config.refresh_interval`](/plugins/entitlement-enforcement/reference/#schema--config-refresh-interval) and writes the result to Redis, and a second timer syncs Redis into each worker's local cache on [`config.sync_rate`](/plugins/entitlement-enforcement/reference/#schema--config-sync-rate). 
+This two-tier cache keeps the request path fast and avoids calling the Entitlement Access API on every request.
+
+Because enforcement state is cached and refreshed on an interval, it's eventually consistent, not real time. 
+A customer's usage has to be reported and aggregated in {{site.metering_and_billing}}, then polled by the plugin, before enforcement reflects it. 
+See [Cold start and fail policy](#cold-start-and-fail-policy) for what happens the first time the plugin sees a customer, and when it can't retrieve enforcement state at all.
+
+## Excluding blocked requests from usage
+
+By default, the Metering & Billing plugin meters every request that reaches its Route, including requests that Entitlement Enforcement blocks.
+The two plugins act independently, so a blocked request still counts as usage unless you configure one of the plugins to exclude it.
+
+To stop blocked requests from counting toward a customer's usage, use one of the following:
+* Set [`config.allow_status_codes`](/plugins/metering-and-billing/reference/#schema--config-allow-status-codes) on the Metering & Billing plugin to only log usage events for successful response codes, for example `200-299`.
+* Set [`meter.filters`](/api/konnect/metering-and-billing/#/operations/create-feature) on the metered feature to filter its meter's dimensions, for example on an HTTP status dimension, so only events for successful requests count toward the entitlement.
 
 ## Enforcement decisions and response codes
 
@@ -126,6 +165,7 @@ The response body for a blocked request contains the message and reason code, fo
   "reason": "USAGE_LIMIT_REACHED"
 }
 ```
+
 
 ## Configuring the customer
 
@@ -178,7 +218,3 @@ The following config fields exist in the plugin's schema but currently have no e
 * The `NO_CREDIT_AVAILABLE` reason code under [`config.response_codes`](/plugins/entitlement-enforcement/reference/#schema--config-response-codes)
 
 The plugin currently enforces usage limits and feature access only. See the [known issues](/gateway/breaking-changes/#known-issues-in-3-16-0-0) for details.
-
-The Metering & Billing plugin meters every request that reaches its Route, including requests that Entitlement Enforcement blocks.
-The two plugins act independently, so a blocked request still counts against the customer's usage limit.
-If you're close to a limit, this can cause usage to exceed the entitlement's grant even though the requests never reached your upstream.
