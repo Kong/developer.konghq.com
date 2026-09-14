@@ -1,6 +1,6 @@
 ---
 title: Basic LLM Routing
-description: Route requests to any supported LLM provider through {{site.ai_gateway_name}} with Consumer authentication and per-request model selection.
+description: Route requests to any supported LLM provider through Kong AI Gateway with Consumer authentication and per-request model selection.
 url: "/cookbooks/basic-llm-routing/"
 content_type: cookbook
 layout: cookbook
@@ -15,7 +15,6 @@ min_version:
   gateway: '3.14'
 categories:
   - llm
-  - llm-routing
 featured: false
 popular: false
 
@@ -29,6 +28,7 @@ providers:
   - anthropic
   - bedrock
   - azure
+  - gemini
   - mistral
 
 hint: "Requires API credentials for your chosen LLM provider and Python 3.11+."
@@ -36,7 +36,7 @@ prereqs:
   skip_product: true
   skip_tool: true
   inline:
-    - title: "{{site.konnect_product_name}}"
+    - title: Kong Konnect
       content: |
         This tutorial uses {{site.konnect_product_name}}. You will provision a recipe-scoped Control Plane and local Data Plane via the [quickstart script](https://get.konghq.com/quickstart).
 
@@ -59,7 +59,7 @@ prereqs:
       content: |
         This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
+        1. Install **kongctl** from [developer.konghq.com/kongctl](https://developer.konghq.com/kongctl/).
         1. Install **decK** version 1.43 or later from [docs.konghq.com/deck](https://docs.konghq.com/deck/).
         1. Verify both are installed:
 
@@ -123,6 +123,19 @@ prereqs:
            ```
 
            If you only have one deployment available, point both variables at the same value. The recipe still applies, but both aliases route to the same upstream model.
+        {% endnavtab %}
+        {% navtab "Google Gemini" %}
+        This tutorial uses Google Gemini via Vertex AI:
+
+        1. [Create a Google Cloud project](https://console.cloud.google.com/) with Vertex AI enabled.
+        1. Create a service account and mount the JSON key file in your Kong container.
+        1. Create decK variables:
+
+           ```sh
+           export DECK_GCP_API_ENDPOINT='your-api-endpoint'
+           export DECK_GCP_PROJECT_ID='your-project-id'
+           export DECK_GCP_LOCATION_ID='us-central1'
+           ```
         {% endnavtab %}
         {% navtab "Mistral" %}
         This tutorial uses Mistral:
@@ -191,7 +204,7 @@ quotas, or routing policy.
 {% mermaid %}
 sequenceDiagram
     participant C as Client
-    participant K as {{site.ai_gateway_name}}
+    participant K as Kong AI Gateway
     participant L as LLM Provider
 
     C->>K: POST /basic-llm-routing (apikey, model: fast or smart)
@@ -251,7 +264,7 @@ The Key Auth Plugin sits in front of the AI Proxy Advanced Plugin and gates ever
 ```
 {:.no-copy-code}
 
-**`key_names: [apikey]`**. The headers (or query parameters) the Plugin looks in for the API key. The recipe uses `apikey` because the Key Auth Plugin performs an exact string match on the header value and does not inspect `Authorization` for Bearer tokens. The OpenAI SDK's `api_key` field always serializes as `Authorization: Bearer <key>`, which Kong would read as the literal string `Bearer <key>` and fail to match against any stored credential. The "Try it out" section below points at a pre-function pattern that bridges the SDK's Bearer token to the `apikey` header server-side; the [Authenticate OpenAI SDK clients with Key Auth](/how-to/authenticate-openai-sdk-clients-with-key-auth/) guide has the full pattern.
+**`key_names: [apikey]`**. The headers (or query parameters) the Plugin looks in for the API key. The recipe uses `apikey` because the Key Auth Plugin performs an exact string match on the header value and does not inspect `Authorization` for Bearer tokens. The OpenAI SDK's `api_key` field always serializes as `Authorization: Bearer <key>`, which Kong would read as the literal string `Bearer <key>` and fail to match against any stored credential. The "Try it out" section below points at a pre-function pattern that bridges the SDK's Bearer token to the `apikey` header server-side; the [Authenticate OpenAI SDK clients with Key Auth](https://developer.konghq.com/how-to/authenticate-openai-sdk-clients-with-key-auth/) guide has the full pattern.
 
 **`hide_credentials: true`**. Strips the API key from the request before forwarding upstream. The provider never sees the Consumer's API key. This is a 3.14 default but the recipe sets it explicitly for clarity and to remain portable to older Gateway versions.
 
@@ -319,7 +332,7 @@ The AI Proxy Advanced Plugin sits behind the Key Auth Plugin and handles everyth
 - **Additional route types.** A single Plugin instance can have multiple targets for different route types, each with their own model and auth configuration. Beyond `llm/v1/chat`, the Plugin supports additional route types for embeddings, completions, responses, realtime, and multimodal traffic. See the [ai-proxy-advanced reference](/plugins/ai-proxy-advanced/) for the current list.
 
 {:.info}
-> **Production credentials.** This recipe stores the Consumer API key directly in Plugin config and the LLM provider credentials in environment variables for simplicity. In production, use [Kong Vaults](/gateway/secrets-management/) to reference both from your preferred secret manager (AWS Secrets Manager, HashiCorp Vault, GCP Secret Manager, Azure Key Vault) instead.
+> **Production credentials.** This recipe stores the Consumer API key directly in Plugin config and the LLM provider credentials in environment variables for simplicity. In production, use [Kong Vaults](/gateway/latest/kong-enterprise/secrets-management/) to reference both from your preferred secret manager (AWS Secrets Manager, HashiCorp Vault, GCP Secret Manager, Azure Key Vault) instead.
 
 ### Example response
 
@@ -775,6 +788,105 @@ rm -f kong-recipe.yaml
 {: data-test-step="block" .collapsible }
 
 {% endtab %}
+{% tab Google Gemini %}
+
+Export the model env vars:
+
+```bash
+export DECK_CHAT_MODEL_1='gemini-2.0-flash'  # the "fast" alias
+export DECK_CHAT_MODEL_2='gemini-1.5-pro'    # the "smart" alias
+```
+
+Apply the Kong configuration:
+
+```bash
+{%- raw %}
+cat <<'EOF' > kong-recipe.yaml
+_format_version: '3.0'
+_info:
+  select_tags:
+  - basic-llm-routing-recipe
+services:
+- name: basic-llm-routing
+  url: http://localhost
+  routes:
+  - name: basic-llm-routing
+    paths:
+    - /basic-llm-routing
+    protocols:
+    - http
+    - https
+    methods:
+    - POST
+    - OPTIONS
+    strip_path: true
+  plugins:
+  - name: key-auth
+    instance_name: basic-llm-routing-auth
+    config:
+      key_names:
+      - apikey
+      hide_credentials: true
+  - name: ai-proxy-advanced
+    instance_name: basic-llm-routing-proxy
+    config:
+      max_request_body_size: 10485760
+      response_streaming: allow
+      targets:
+      - route_type: llm/v1/chat
+        auth:
+          gcp_use_service_account: true
+        logging:
+          log_statistics: true
+          log_payloads: true
+        model:
+          model_alias: fast
+          provider: gemini
+          name: ${{ env "DECK_CHAT_MODEL_1" }}
+          options:
+            gemini:
+              api_endpoint: ${{ env "DECK_GCP_API_ENDPOINT" }}
+              project_id: ${{ env "DECK_GCP_PROJECT_ID" }}
+              location_id: ${{ env "DECK_GCP_LOCATION_ID" }}
+      - route_type: llm/v1/chat
+        auth:
+          gcp_use_service_account: true
+        logging:
+          log_statistics: true
+          log_payloads: true
+        model:
+          model_alias: smart
+          provider: gemini
+          name: ${{ env "DECK_CHAT_MODEL_2" }}
+          options:
+            gemini:
+              api_endpoint: ${{ env "DECK_GCP_API_ENDPOINT" }}
+              project_id: ${{ env "DECK_GCP_PROJECT_ID" }}
+              location_id: ${{ env "DECK_GCP_LOCATION_ID" }}
+consumers:
+- username: demo-app
+  keyauth_credentials:
+  - key: demo-api-key
+EOF
+{% endraw -%}
+
+echo "
+_defaults:
+  kongctl:
+    namespace: basic-llm-routing-recipe
+control_planes:
+  - ref: recipe-cp
+    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
+    _deck:
+      files:
+        - kong-recipe.yaml
+" | kongctl apply -f - -o text --auto-approve --pat "${KONNECT_TOKEN}"
+
+rm -f kong-recipe.yaml
+```
+{: data-test-step="block" .collapsible }
+
+{% endtab %}
 {% tab Mistral %}
 
 Export the model env vars:
@@ -879,7 +991,7 @@ rm -f kong-recipe.yaml
 The demo script makes three calls. The first two send the same prompt with different `model` values (`fast` then `smart`) and print the `X-Kong-LLM-Model` header so you can confirm Kong routed each request to a different upstream model. The third call presents an invalid API key and shows Kong rejecting it with `401` before any upstream call.
 
 {:.info}
-> The demo passes the API key via `default_headers` because the OpenAI SDK reserves `api_key` for the `Authorization: Bearer` header. To let clients pass the key through `api_key` directly, attach a [pre-function](/plugins/pre-function/) Plugin that copies the Bearer token to the `apikey` header server-side. See [Authenticate OpenAI SDK clients with Key Auth](/how-to/authenticate-openai-sdk-clients-with-key-auth/) for the pattern.
+> The demo passes the API key via `default_headers` because the OpenAI SDK reserves `api_key` for the `Authorization: Bearer` header. To let clients pass the key through `api_key` directly, attach a [pre-function](/plugins/pre-function/) Plugin that copies the Bearer token to the `apikey` header server-side. See [Authenticate OpenAI SDK clients with Key Auth](https://developer.konghq.com/how-to/authenticate-openai-sdk-clients-with-key-auth/) for the pattern.
 
 Create the demo script:
 

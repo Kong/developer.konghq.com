@@ -156,11 +156,11 @@ overview: |
   The recipe configures Copilot's
   [Bring Your Own Key (BYOK) Custom Endpoint](https://code.visualstudio.com/docs/copilot/customization/language-models)
   in VS Code to post to a Kong Route at `/github-copilot/v1/chat/completions`, then
-  uses four Kong plugins on that Route: 
+  uses four Kong plugins on that Route:
     * The [Pre-function](/plugins/pre-function/)
   plugin to normalize the request
     * The [Key Auth](/plugins/key-auth/) plugin to
-  authenticate each developer, 
+  authenticate each developer,
     * The [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin to inject the provider key and forward the request
     * The [AI Rate Limiting Advanced](/plugins/ai-rate-limiting-advanced/) plugin to enforce
   per-Consumer token budgets
