@@ -20,9 +20,8 @@ related_resources:
 `MeshTimeout` sets how long a proxy waits before giving up: on establishing a connection, on
 an idle connection, and on a response arriving.
 
-A mesh already has timeouts. {{site.mesh_product_name}} creates a default `MeshTimeout` for
-every mesh, so a policy of your own changes those values rather than introducing timeouts
-where there were none.
+A mesh already has timeouts. Every proxy starts with the values below, so a policy of your
+own changes those values rather than introducing timeouts where there were none.
 
 Choose the side that owns the limit: `to` controls waits by a caller proxy, while `rules`
 controls traffic handled by a destination proxy. A limit on either side can end the request.
@@ -113,8 +112,16 @@ rows:
 
 ## The defaults a mesh starts with
 
-{{site.mesh_product_name}} creates two `MeshTimeout` policies for each mesh, one for inbound
-and one for outbound, both targeting `kind: Mesh`.
+These values apply to every proxy whether or not a `MeshTimeout` resource exists. On a mesh
+created without `skipCreatingInitialPolicies`, {{site.mesh_product_name}} also writes them
+out as two `MeshTimeout` policies, one for inbound and one for outbound, both targeting
+`kind: Mesh`. They are separate resources because `to` and `rules` cannot appear on the same
+policy.
+
+{:.info}
+> A mesh created by a Konnect control plane sets `skipCreatingInitialPolicies`, so
+> `kubectl get meshtimeouts -A` returns nothing there. The defaults still apply: the proxy is
+> configured with them directly. Do not read an empty list as "no timeouts are set".
 
 {% table %}
 columns:
