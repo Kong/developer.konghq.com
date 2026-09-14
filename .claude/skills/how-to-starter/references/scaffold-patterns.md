@@ -47,7 +47,7 @@ tags:
 
 tldr:
   q: How do I <accomplish the use case>?
-  a: <One or two sentences, the shape of the answer>
+  a: <One or two sentences that describes how to accomplish the task in the how to for advanced users who don't want to follow the full how to. This is NOT an overview of the guide.>
 
 related_resources:
   - text: <link text>
