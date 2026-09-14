@@ -1,4 +1,16 @@
 {
+  "3.16.0.0": [
+    {
+      "message": "Fixed an issue where empty `callouts[].request.body.custom` or `upstream.body.custom` maps caused the plugin to send `{}` request bodies.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a callout that failed and then succeeded\non retry still returned the earlier failed response. The plugin now returns the\nresponse from the successful retry.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "The option `callouts.http_opts.ssl_verify`, which controls the verification\nof the certificate presented by the server, is now enabled by default.\n",

@@ -1,4 +1,16 @@
 {
+  "3.16.0.0": [
+    {
+      "message": "Added `cache_by_principal` configuration option to switch\ncache key segmentation by Principal when using Kong Identity Directory. When\nenabled, the authenticated Principal's id is used to compose the cache key.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the cache key did not correctly\nsegment by consumer group.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.8.0.0": [
     {
       "message": "Fixed an issue where the Age header was not being updated correctly when serving cached responses.\n",

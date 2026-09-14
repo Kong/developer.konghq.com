@@ -1,4 +1,16 @@
 {
+  "3.16.0.0": [
+    {
+      "message": "Added `cache_by_principal` configuration option to\nswitch cache key segmentation by Principal when using Kong Identity Directory.\nWhen enabled, the authenticated Principal's ID is used to compose the cache\nkey.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the cache key did not\ncorrectly segment by consumer group.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.15.0.0": [
     {
       "message": "Fixed an issue where the cache management Admin API did not work when the `redis` strategy configuration was provided via a partial.",

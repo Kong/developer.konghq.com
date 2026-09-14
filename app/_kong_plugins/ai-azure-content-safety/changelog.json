@@ -1,4 +1,11 @@
 {
+  "3.16.0.0": [
+    {
+      "message": "Added `last_message` as new optional value for `config.text_source`.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.15.0.0": [
     {
       "message": "Fixed a crash (HTTP 500) that occurred when `azure_use_managed_identity` was enabled.",

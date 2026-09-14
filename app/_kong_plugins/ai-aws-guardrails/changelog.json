@@ -1,4 +1,21 @@
 {
+  "3.16.0.0": [
+    {
+      "message": "Added `last_message` as new optional value for `config.text_source`.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the plugin ignored the configured `text_source` option when `allow_masking` was enabled, masking the entire raw request body instead.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the request to the AWS Guardrails service could return a 500 error due to a failure in request signature.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.15.0.4": [
     {
       "message": "Added `last_message` as a new optional value for `config.text_source`.",
