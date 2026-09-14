@@ -35,8 +35,8 @@ rows:
             kongctl also ships installable AI agent skills that help coding agents generate, review, and operate kongctl configuration from a repository.
 
             **[CI/CD with GitHub Actions](/kongctl/ci-cd/github-actions/)**:
-            Follow the quickstart to review {{site.ai_gateway}} diffs in
-            pull requests and apply changes on main.
+            Follow the quickstart to publish an API to a Dev Portal, review
+            diffs in pull requests, and apply changes on main.
             
             kongctl is one of multiple tools you can use to manage {{site.konnect_short_name}} and {{site.base_gateway}}.
             To learn about other tools, see the [tools page](/tools/).
@@ -355,8 +355,8 @@ rows:
                 [GitHub Actions quickstart](/kongctl/ci-cd/github-actions/)
                 to show configuration diffs in pull requests and apply
                 changes on pushes to main. The example manages an
-                {{site.ai_gateway}}, provider, and model using repository
-                secrets for non-interactive authentication.
+                Dev Portal and API using a Konnect token stored in a
+                repository secret for non-interactive authentication.
 
             - q: How is kongctl different from the {{site.konnect_short_name}} APIs?
               a: |
