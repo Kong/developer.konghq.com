@@ -45,29 +45,30 @@ faqs:
 
 ---
 
-This guide shows you how to migrate from the legacy OAuth 2.0 plugin to {{site.identity}} for an on-prem {{site.base_gateway}} Enterprise setup.
+This guide shows you how to migrate from the [OAuth 2.0 plugin](/plugins/oauth2/) in an on-prem {{site.base_gateway}} Enterprise setup to [{{site.identity}}](/identity/).
 
 {:.info}
 > **Scope:** This guide covers apps using the `client_credentials` grant, presenting the resulting token to {{site.base_gateway}} as a Bearer token. Migrating apps using the `authorization_code` grant isn't covered, because `grant_types` on a {{site.identity}} client only accepts `implicit` or `client_credentials`.
 
-## Requirements
+## Prerequisites
 
 - An on-prem {{site.base_gateway}} Enterprise setup
 - Access to the {{site.base_gateway}} Admin API
 - The OAuth 2.0 plugin configured for authentication
 - Admin access to the PostgreSQL database connected to the plugin
 - A {{site.konnect_short_name}} account
-- A Personal Access Token (PAT) linked to your account
+- A [{{site.konnect_short_name}} Personal Access Token (PAT)](https://developer.konghq.com/konnect-api/#personal-access-tokens) that you've exported:
+   
 
 ## Migration overview
 
 The migration follows this order:
 
 1. Get the Consumer credentials.
-1. Create an authorization server and a client with existing credentials.
-1. Map Consumers.
-1. Configure the OIDC plugin.
-1. Verify.
+1. Create an {{site.identity}} authorization server and a client with existing credentials.
+1. Map Consumers to the {{site.identity}} clients.
+1. Configure the OIDC plugin to use with the {{site.identity}} clients.
+1. Validate the {{site.identity}} configuration.
 1. Deactivate and delete the OAuth 2.0 plugin.
 
 Your apps keep using the credentials already set up with the Consumers. The migration only changes your auth workflows, as follows:
@@ -102,24 +103,21 @@ rows:
 {% endtable %}
 
 
-Read the following sections to get the information that best suits your configuration.
+The following sections explain how to migrate step-by-step.
 
-## Set up the Admin API URL
+## Export the Admin API URL
 
-To call your on-prem {{site.base_gateway}} instance, use your {{site.base_gateway}} Admin API. When you run it locally, the default Admin API URL is `localhost:8001`. The command examples assume you run the commands from a local setup. If you're calling your Admin API from a different location, replace the value with your actual URL:
+Export your {{site.base_gateway}} Admin API URL: 
 
-```sh
-export KONG_ADMIN_API='localhost:8001'
-```
 
-You also need the proxy URL to verify the migration at the end of this guide. When you run {{site.base_gateway}} locally, the default HTTPS proxy URL is `https://localhost:8443`:
+You also need to export the proxy URL to verify the migration at the end of this guide:
 
 ```sh
 export KONG_PROXY_URL='https://localhost:8443'
-```
 
 ### List the existing Consumers
 
+List your existing [Consumers](/gateway/entities/consumer/):
 ```sh
 curl -s $KONG_ADMIN_API/consumers | jq
 ```
@@ -258,7 +256,7 @@ curl -s -X PATCH "$KONG_ADMIN_API/consumers/$CONSUMER" \
 
 {% endnavtab %}
 {% navtab "Multiple Consumers/credentials" %}
-Migrating Consumer credentials to {{site.identity}} clients requires preventing two collision risks that this section solves:
+When you migrate Consumer credentials to {{site.identity}} clients, you must avoid the following collision risks:
 
 - **Name collision:** Each client needs a unique name. A Consumer that contains multiple credentials is the equivalent of multiple clients with the same name. Trying to migrate this configuration fails, because client names can't be duplicated. To avoid that, this section sets each client's name to the Consumer's `client_id`, which is unique even when a Consumer has multiple credentials.
 - **`custom_id` collision:** Each client contains a unique `custom_id` value that you can set, which is useful for mapping Consumers to Services and plugins. This value is extracted from the credential's `client_id` and passed to the client. Because a Consumer can contain multiple credentials, this section groups Consumers into sub-Consumers, each with its own `custom_id`, to avoid `custom_id` collisions.
@@ -269,7 +267,7 @@ Unlike the previous steps, the bulk script calls the {{site.identity}} API direc
 export KONNECT_API='https://us.api.konghq.com'
 ```
 
-The script reuses `$KONNECT_TOKEN` and the `$AUTH_SERVER_ID` captured when you [created the authorization server](#create-a-kong-identity-authorization-server).
+The script reuses `$KONNECT_TOKEN` and the `$AUTH_SERVER_ID` that you captured when you [created the authorization server](#create-a-kong-identity-authorization-server).
 
 Run the migration script:
 
@@ -306,7 +304,7 @@ for consumer in $(curl -s $KONG_ADMIN_API/consumers | jq -r '.data[].username');
 done
 ```
 
-The preceding script:
+The script does the following:
 
 - Retrieves the credentials for every Consumer.
 - Splits Consumers that have more than one credential into one sub-Consumer per credential, then groups them.
@@ -380,7 +378,7 @@ curl -s -X POST "$KONG_ADMIN_API/services/$SERVICE/plugins" \
 ```
 {% endnavtab %}
 {% navtab "Use existing plugin" %}
-If `$OIDC_PLUGIN_ID` already has a value, update the existing instance instead. A `POST` fails with a `unique constraint violation` if a plugin of the same name already exists on this Service:
+If `$OIDC_PLUGIN_ID` already has a value, update the existing instance instead. A `POST` fails with a `unique constraint violation` if a plugin with the same name already exists on this Service:
 
 ```sh
 curl -s -X PATCH "$KONG_ADMIN_API/plugins/$OIDC_PLUGIN_ID" \
@@ -438,12 +436,12 @@ while read -r service_id; do
 done
 ```
 
-This script checks if an existing plugin already exists, and either use it or create it before attaching it to all your Services.
+This script checks if an existing plugin already exists, and either uses it or creates it before attaching it to all your Services.
 
 {% endnavtab %}
 {% endnavtabs %}
 
-## Verify
+## Validate
 
 {:.warning}
 > **Before testing:** The `oauth2` and `openid-connect` plugins can't both be active on the same Service. If both are enabled, `oauth2` intercepts and rejects the request before `openid-connect` runs. Complete the deactivation step below before testing.
@@ -465,7 +463,7 @@ curl -s $KONG_ADMIN_API/services | jq -r '.data[] | {name, id}'
 Save the Service you want to test as an environment variable:
 
 ```sh
-export SERVICE='<service-name-or-id>'
+export SERVICE='SERVICE NAME OR ID'
 ```
 {% endnavtab %}
 {% endnavtabs %}
@@ -483,7 +481,7 @@ curl -s -X PATCH $KONG_ADMIN_API/plugins/$OAUTH2_PLUGIN_ID \
 
 ### Call the token endpoint
 
-Pull the token endpoint path and save it as an environment variable:
+Get the token endpoint path and save it as an environment variable:
 
 ```sh
 export TOKEN_ENDPOINT=$(curl -s "$ISSUER/.well-known/openid-configuration" | jq -r '.token_endpoint')
@@ -498,7 +496,7 @@ export ACCESS_TOKEN=$(curl -s -X POST "$TOKEN_ENDPOINT" \
   -d "client_secret=$CLIENT_SECRET" | jq -r '.access_token')
 ```
 
-Pull a Route from your Service:
+Get a Route from your Service:
 
 ```sh
 export ROUTE_PATH=$(curl -s "$KONG_ADMIN_API/services/$SERVICE/routes" | jq -r '.data[0].paths[0]')
@@ -537,13 +535,13 @@ If you sanitized a `client_id` or created a new credential to replace a hashed s
 
 To avoid downtime in production, recreate your environment with the minimum requirements:
 
-- A staging app.
-- A staging {{site.base_gateway}} setup.
-- An authorization server in {{site.konnect_short_name}} dedicated to testing the migration.
+- A staging app
+- A staging {{site.base_gateway}} setup
+- An authorization server in {{site.konnect_short_name}} dedicated to testing the migration
 
 ### Delete the OAuth 2.0 plugin
 
-Once you have confirmed that the traffic and the auth workflows work as expected after deactivating the OAuth 2.0 plugin, you can safely delete it:
+After you've confirmed that the traffic and the auth workflows work as expected after deactivating the OAuth 2.0 plugin, you can safely delete it:
 
 ```sh
 curl -s -X DELETE $KONG_ADMIN_API/plugins/$OAUTH2_PLUGIN_ID
