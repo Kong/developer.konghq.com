@@ -54,7 +54,7 @@ issued certificate. For a Bundled issuer with automatic trust creation, the corr
 `MeshTrust.spec.trustDomain` publishes that value. The trust domain is the part between
 `spiffe://` and the next `/`. For example, if that field contains `payments.eu.mesh.local`,
 set `rules[].default.allow[].spiffeID.value` to
-`spiffe://payments.eu.mesh.local/ns/storefront/`. Use that same domain when adapting the
+`spiffe://payments.eu.mesh.local/ns/storefront/sa`. Use that same domain when adapting the
 later examples.
 
 {% policy_yaml namespace=kong-mesh-demo %}
@@ -72,7 +72,7 @@ spec:
         allow:
           - spiffeID:
               type: Prefix
-              value: spiffe://default.default.mesh.local/ns/storefront/
+              value: spiffe://default.default.mesh.local/ns/storefront/sa
 ```
 {% endpolicy_yaml %}
 
@@ -81,12 +81,25 @@ Read the policy from the destination back to the caller:
 - `targetRef` selects the `orders` data plane proxies that enforce the policy.
 - `rules[].default.allow` contains the client identities those proxies accept.
 - `Prefix` matches identities starting with the supplied string. With the default Kubernetes
-  path, this includes every service account in `storefront` in that trust domain.
+  path, ending it at `/ns/storefront/sa` covers every service account in `storefront` in that
+  trust domain, and nothing in a namespace that merely starts with that name.
 - Other clients are denied unless another applicable policy allows them. A matching deny
   still takes precedence.
 
-Keep the trailing `/`. A prefix ending in `/ns/storefront` would also match
-`/ns/storefront-test/sa/client`. This is a string match, not a Kubernetes namespace selector.
+`Prefix` is a plain string comparison against the caller's SPIFFE ID, not a Kubernetes
+namespace selector. A prefix ending at `/ns/storefront` therefore also matches
+`/ns/storefront-test/sa/client`, because the second string starts with the first.
+
+The value must still be a syntactically valid SPIFFE ID, so a trailing `/` cannot be used to
+close that gap. The control plane rejects it:
+
+```
+spec.rules[0].allow[0].spiffeID: must be a valid Spiffe ID: path cannot have a trailing slash
+```
+
+To match a namespace and nothing that merely starts with its name, extend the prefix through
+the next path separator, `spiffe://default.default.mesh.local/ns/storefront/sa`, or name each
+caller with `type: Exact`.
 
 There is no `to` array. Access control is enforced inbound at the destination.
 
@@ -98,8 +111,8 @@ the same beginning.
 | Match | Example value | Callers covered |
 | --- | --- | --- |
 | Exact service account | `spiffe://default.default.mesh.local/ns/storefront/sa/frontend` | All workloads using this identity, not just one replica. |
-| Namespace prefix | `spiffe://default.default.mesh.local/ns/storefront/` | All service accounts in this namespace and trust domain, using the default Kubernetes path. |
-| Trust-domain prefix | `spiffe://default.default.mesh.local/` | Every identity in this trust domain. |
+| Namespace prefix | `spiffe://default.default.mesh.local/ns/storefront/sa` | Every service account in this namespace and trust domain, using the default Kubernetes path. Stopping the prefix at `/ns/storefront` would also match `storefront-test`. |
+| Trust-domain prefix | `spiffe://default.default.mesh.local` | Every identity in this trust domain. Written without a trailing `/`, which the control plane rejects. |
 
 The default Kubernetes identity path is `/ns/<namespace>/sa/<service-account>`. On Universal,
 the default is `/workload/<workload>`. An exact Universal matcher could therefore use
@@ -161,14 +174,14 @@ spec:
         deny:
           - spiffeID:
               type: Prefix
-              value: spiffe://default.default.mesh.local/ns/legacy/
+              value: spiffe://default.default.mesh.local/ns/legacy/sa
           - spiffeID:
               type: Exact
               value: spiffe://default.default.mesh.local/ns/storefront/sa/retired-client
         allow:
           - spiffeID:
               type: Prefix
-              value: spiffe://default.default.mesh.local/
+              value: spiffe://default.default.mesh.local
 ```
 {% endpolicy_yaml %}
 
@@ -197,11 +210,11 @@ spec:
         allowWithShadowDeny:
           - spiffeID:
               type: Prefix
-              value: spiffe://default.default.mesh.local/ns/legacy/
+              value: spiffe://default.default.mesh.local/ns/legacy/sa
         allow:
           - spiffeID:
               type: Prefix
-              value: spiffe://default.default.mesh.local/
+              value: spiffe://default.default.mesh.local
 ```
 {% endpolicy_yaml %}
 
@@ -236,11 +249,18 @@ When the identified traffic is safe to block, move its matcher from `allowWithSh
 
 | Target | Effect |
 | --- | --- |
-| `kind: Mesh` | Enforce the rules on every identified workload in the mesh. |
+| `kind: Mesh` | Enforce the rules on every identified workload the policy reaches. |
 | `kind: Dataplane` with `labels` | Enforce the rules only on matching destination proxies. |
 | `kind: Dataplane` with `labels` and `sectionName` | Enforce the rules only on one named inbound of those proxies. |
 
 Omitting `targetRef` has the same effect as `kind: Mesh`.
+
+{:.warning}
+> `MeshTrafficPermission` has no `to` array, so a policy created in an application namespace
+> is always `workload-owner` scoped: `kind: Mesh` reaches every proxy **in that namespace**,
+> not the whole mesh. To authorize across namespaces, create the policy in
+> `{{site.mesh_namespace}}` with the label `kuma.io/origin: zone`. See
+> [Where a policy applies](/mesh/policy-targeting/#where-a-policy-applies).
 
 ### Narrow authorization to one port
 
@@ -249,7 +269,7 @@ leaving its other ports alone. Read `spec.networking.inbound[]` from the destina
 Kubernetes `Dataplane` resource:
 
 ```sh
-kubectl get dataplane DESTINATION_DATAPLANE -n DESTINATION_NAMESPACE -o jsonpath='{.spec.networking.inbound}'
+kubectl get dataplanes.kuma.io DESTINATION_DATAPLANE -n DESTINATION_NAMESPACE -o jsonpath='{.spec.networking.inbound}'
 ```
 
 Copy the intended inbound's `name` into `targetRef.sectionName`. If it has no name, use its
@@ -273,7 +293,7 @@ spec:
         deny:
           - spiffeID:
               type: Prefix
-              value: spiffe://default.default.mesh.local/ns/observability/
+              value: spiffe://default.default.mesh.local/ns/observability/sa
 ```
 {% endpolicy_yaml %}
 
@@ -290,7 +310,7 @@ its name, so on a Helm install with default ports that means `10001` for zone in
 the defaults:
 
 ```sh
-kubectl get dataplane ZONE_PROXY_DATAPLANE -n kong-mesh-system -o jsonpath='{.spec.networking.listeners}'
+kubectl get dataplanes.kuma.io ZONE_PROXY_DATAPLANE -n kong-mesh-system -o jsonpath='{.spec.networking.listeners}'
 ```
 
 On zone egress, `sni` matches the destination name sent in the TLS handshake. SNI identifies

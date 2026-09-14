@@ -306,10 +306,15 @@ caller's issued certificate, or from its issuer's generated `MeshTrust.spec.trus
 Use it after `spiffe://` in `rules[].matches[].spiffeID.value`. Check
 `MeshIdentity.spec.spiffeID.path` for a custom path template. For example, a domain of
 `payments.eu.mesh.local` and the default Kubernetes path produce a namespace prefix of
-`spiffe://payments.eu.mesh.local/ns/kong-mesh-demo/`.
+`spiffe://payments.eu.mesh.local/ns/kong-mesh-demo/sa`.
 
-Keep the final slash on a namespace prefix so it does not also match similarly named
-namespaces. A plaintext caller has no certificate identity and cannot satisfy a `spiffeID`
+The value must be a syntactically valid SPIFFE ID, so it cannot end in `/`; the control
+plane rejects `path cannot have a trailing slash`. Because `Prefix` is a plain string
+comparison, a prefix stopping at `/ns/kong-mesh-demo` would also match
+`kong-mesh-demo-test`. Extend it through the next separator, to `/ns/kong-mesh-demo/sa`,
+to match that namespace and nothing that merely starts with its name.
+
+A plaintext caller has no certificate identity and cannot satisfy a `spiffeID`
 match. SNI identifies the name requested in a TLS handshake, not the caller.
 
 This policy logs only the requests that reach `orders` from workloads in the `kong-mesh-demo`
@@ -329,7 +334,7 @@ spec:
     - matches:
         - spiffeID:
             type: Prefix
-            value: spiffe://default.zone-1.mesh.local/ns/kong-mesh-demo/
+            value: spiffe://default.zone-1.mesh.local/ns/kong-mesh-demo/sa
       default:
         backends:
           - type: File

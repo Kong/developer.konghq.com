@@ -270,7 +270,7 @@ spec:
     - matches:
         - spiffeID:
             type: Prefix
-            value: spiffe://default.default.mesh.local/ns/observability/
+            value: spiffe://default.default.mesh.local/ns/observability/sa
       default:
         local:
           http:
