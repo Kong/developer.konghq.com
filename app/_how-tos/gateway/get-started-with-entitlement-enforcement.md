@@ -359,16 +359,19 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Now subscribe the customer to the Premium plan. Starting the subscription materializes the metered entitlement onto the customer:
+Now subscribe the customer to the Premium plan. The subscription becomes active as soon as you create it, which materializes the metered entitlement onto the customer:
 
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
-1. Click **Kong Air**.
-1. Click the **Subscriptions** tab.
-1. Click **Create a Subscription**.
-1. From the **Subscribed Plan** dropdown, select "Premium".
-1. Click **Next Step**.
-1. Click **Start Subscription**.
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/subscriptions
+method: POST
+body:
+  customer:
+    key: kong-air
+  plan:
+    key: premium
+{% endkonnect_api_request %}
+<!--vale on-->
 
 ## Enable the Entitlement Enforcement plugin
 
