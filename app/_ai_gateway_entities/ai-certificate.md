@@ -119,6 +119,7 @@ variables:
   tls_key:
     value: $TLS_CERT_KEY
     secret: true
+    description: The value of your private key.
 {% endentity_example %}
 
 ## Schema
