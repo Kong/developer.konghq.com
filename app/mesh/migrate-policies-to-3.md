@@ -719,7 +719,7 @@ Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kind
 
 Header names carry a lower-case-only pattern. A 2.x policy naming `Retry-After` in
 `rateLimitedBackOff.resetHeaders` is rejected with
-`name (): in body should match '^[a-z0-9!#$%&'*+\-.^_\x60|~]+$'`. Write `retry-after`. HTTP
+`resetHeaders[0].name in body should match '^[a-z0-9!#$%&'*+\-.^_\x60|~]+$'`. Write `retry-after`. HTTP
 header names are case insensitive on the wire, so the matching is unaffected.
 
 ## MeshRateLimit
@@ -732,9 +732,9 @@ Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kind
 top-level `targetRef`:
 
 - `kind: Dataplane` accepts `rules` only. Defining `to` is rejected with
-  `spec.to (): must not be defined`.
+  `spec.to: must not be defined`.
 - `kind: Mesh` accepts `to` only, whose `targetRef` takes `kind: Mesh` and nothing else.
-  Defining `rules` is rejected with `spec.rules (): must not be defined`.
+  Defining `rules` is rejected with `spec.rules: must not be defined`.
 
 Setting both is rejected with `field 'to' must be empty when 'rules' is defined`.
 
@@ -1192,7 +1192,7 @@ Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kind
 
 `spec.to` is accepted only when `spec.targetRef.kind` is `Mesh`, and then `to[].targetRef`
 accepts `kind: Mesh` and nothing else. With `kind: Dataplane`, defining `to` at all is rejected
-with `spec.to (): must not be defined`.
+with `spec.to: must not be defined`.
 
 A fault is produced by the proxy answering the request, so it is configured on that proxy's
 inbound side. A gateway has no inbound side to configure, which is the case the `to` form

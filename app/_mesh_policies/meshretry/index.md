@@ -24,9 +24,10 @@ the perspective of the proxy making the request.
 Use it to absorb transient failures: a destination restarting, a connection reset mid-flight,
 or a rate limit that clears in a second or two.
 
-A newly created mesh normally includes a mesh-wide retry policy. Writing a narrower policy
-changes that behavior for selected traffic; it does not necessarily introduce retries for the
-first time. See [the initial defaults](#defaults-and-disabling-retries) below.
+A newly created mesh usually includes a mesh-wide retry policy, in which case a narrower
+policy changes that behavior for selected traffic rather than introducing retries for the
+first time. Some meshes are created without it. See
+[the initial defaults](#defaults-and-disabling-retries) below.
 
 {:.warning}
 > Retries multiply load on a struggling destination. Pair a retry policy with
@@ -101,10 +102,16 @@ retry to one path rather than a whole service. For the selectors a policy can ca
 
 ## Defaults and disabling retries
 
-The initial `mesh-retry-all` policy sets HTTP and gRPC `numRetries: 5`,
-`perTryTimeout: 16s`, and backoff from 25ms to 250ms. TCP uses
-`maxConnectAttempt: 5`. Installations that skip initial MeshRetry creation do not receive
-this policy.
+The initial policy is named `mesh-retry-all-<mesh>`, so `mesh-retry-all-default` on the
+`default` mesh. It sets HTTP and gRPC `numRetries: 5`, `perTryTimeout: 16s`, and backoff from
+25ms to 250ms. TCP uses `maxConnectAttempt: 5`.
+
+{:.info}
+> Unlike [MeshTimeout](/mesh/policies/meshtimeout/), retry defaults live only in that policy.
+> A mesh created with `skipCreatingInitialPolicies`, which includes a mesh created by a
+> Konnect control plane, has no `MeshRetry` and therefore no retries at all: the generated
+> route carries no retry policy and each request is attempted once. On such a mesh your first
+> `MeshRetry` does introduce retries for the first time.
 
 The initial HTTP conditions cover gateway errors, connection failures, and refused streams.
 If no effective HTTP retry configuration supplies `numRetries`, Envoy's retry count is one.

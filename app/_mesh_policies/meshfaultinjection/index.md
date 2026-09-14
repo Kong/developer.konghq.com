@@ -84,7 +84,7 @@ declared inbound protocol before testing. See
 [Universal inbound protocols](/mesh/migrate-policies-to-3/#universal-inbounds-must-declare-their-protocol).
 
 **`spec.to[]` is accepted only when `spec.targetRef.kind` is `Mesh`.** With
-`kind: Dataplane`, defining `to` at all is rejected with `spec.to (): must not be defined`.
+`kind: Dataplane`, defining `to` at all is rejected with `spec.to: must not be defined`.
 Where it is allowed, `to[].targetRef` accepts `kind: Mesh` and nothing else.
 
 The v3 proxy implementation applies faults from `rules`, not `to`. When migrating an

@@ -88,10 +88,10 @@ columns:
     key: limits
 rows:
   - kind: "`Dataplane`, with `labels`"
-    field: "`rules`. Defining `to` is rejected with `spec.to (): must not be defined`."
+    field: "`rules`. Defining `to` is rejected with `spec.to: must not be defined`."
     limits: "Traffic arriving at the selected proxies. Omit `labels` to select every proxy in the mesh."
   - kind: "`Mesh`"
-    field: "`to`, whose `targetRef` accepts `kind: Mesh` and nothing else. Defining `rules` is rejected with `spec.rules (): must not be defined`."
+    field: "`to`, whose `targetRef` accepts `kind: Mesh` and nothing else. Defining `rules` is rejected with `spec.rules: must not be defined`."
     limits: "The API accepts this form, but the v3 proxy implementation applies limits from rules, not to. Migrate to the Dataplane/rules form."
 {% endtable %}
 
