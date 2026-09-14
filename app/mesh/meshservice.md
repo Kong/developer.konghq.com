@@ -30,10 +30,16 @@ you do not write one at all.
 
 ## Where MeshServices come from
 
-On Kubernetes the control plane generates a `MeshService` from each `Service`, and the resource
-is read-only. Writing one is rejected with
-`Mesh Service is read only on this control plane and cannot be created or updated`. Change the
-`Service` instead; the ports and protocols follow from it.
+On Kubernetes the control plane generates a `MeshService` from each `Service`. Change the
+`Service` instead of the generated resource; the ports and protocols follow from it.
+
+{:.warning}
+> The generated resource is not protected. A zone control plane accepts a hand-written
+> `MeshService`, and it accepts edits to a generated one — the change is stored and is **not**
+> reconciled back from the `Service`. Editing a generated `MeshService` therefore breaks
+> routing to that service until you undo it: changing a port on one made every request to it
+> fail, and the resource stayed changed. Treat these as control-plane output and leave them
+> alone.
 
 On Universal you author them, selecting proxies with `spec.selector`.
 
