@@ -57,7 +57,7 @@ This guide shows you how to migrate from the [OAuth 2.0 plugin](/plugins/oauth2/
 - The OAuth 2.0 plugin configured for authentication
 - Admin access to the PostgreSQL database connected to the plugin
 - A {{site.konnect_short_name}} account
-- A [{{site.konnect_short_name}} Personal Access Token (PAT)](https://developer.konghq.com/konnect-api/#personal-access-tokens) that you've exported:
+- A [{{site.konnect_short_name}} Personal Access Token (PAT)](/konnect-api/#personal-access-tokens) that you've exported:
    
 
 ## Migration overview
