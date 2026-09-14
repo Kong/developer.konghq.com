@@ -4253,6 +4253,7 @@ components:
             properties:
                 id:
                     default: c3cfba2d-1617-453f-a416-52e6edb5f9a0
+                    minLength: 1
                     nullable: true
                     type: string
                 jwks:
@@ -4792,6 +4793,25 @@ components:
                                                     description: S3 URI (s3://bucket/prefix) where Bedrock will store generated video files. Required for video generation.
                                                     type: string
                                             type: object
+                                        cache_read_cost:
+                                            description: Defines the cost per 1M cache-read (cached) prompt tokens.
+                                            type: number
+                                        cache_write_cost:
+                                            description: Defines the cost per 1M cache-write prompt tokens.
+                                            type: number
+                                        cache_write_cost_list:
+                                            description: Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this if the upstream provider charges differently for different cache TTLs, as Anthropic does for 5m and 1h TTLs.
+                                            items:
+                                                properties:
+                                                    cost:
+                                                        type: number
+                                                    ttl:
+                                                        type: string
+                                                required:
+                                                    - cost
+                                                    - ttl
+                                                type: object
+                                            type: array
                                         cohere:
                                             properties:
                                                 embedding_input_type:
@@ -4808,6 +4828,22 @@ components:
                                                     description: Wait for the model if it is not ready
                                                     type: boolean
                                             type: object
+                                        context_window_factor:
+                                            description: Above an input-token threshold, scale input/output pricing with the corresponding factor.
+                                            items:
+                                                properties:
+                                                    above:
+                                                        type: string
+                                                    input_factor:
+                                                        type: number
+                                                    output_factor:
+                                                        type: number
+                                                required:
+                                                    - above
+                                                    - input_factor
+                                                    - output_factor
+                                                type: object
+                                            type: array
                                         dashscope:
                                             properties:
                                                 international:
@@ -4872,6 +4908,21 @@ components:
                                         output_cost:
                                             description: Defines the cost per 1M tokens in the output of the AI.
                                             type: number
+                                        service_tier_factor:
+                                            description: Multiplier applied to the whole request for a service tier. No need to configure a standard/default tier, as the default factor is 1.0 if none of the tier is matched.
+                                            items:
+                                                properties:
+                                                    factor:
+                                                        type: number
+                                                    tier:
+                                                        description: A word matched case-insensitively as a substring of the vendor's reported service tier (e.g. 'priority', 'flex', or 'throughput' for Gemini/Vertex's PROVISIONED_THROUGHPUT). If several entries match, the longest (most specific) wins; array order doesn't matter. Configure 'priority' will also match 'fast' (whole word) as OpenAI returns either 'priority' or 'fast' for priority service tier.
+                                                        minLength: 1
+                                                        type: string
+                                                required:
+                                                    - factor
+                                                    - tier
+                                                type: object
+                                            type: array
                                         temperature:
                                             description: Defines the matching temperature, if using chat or completion models.
                                             maximum: 5
@@ -5003,6 +5054,7 @@ components:
                                         - aws
                                         - azure
                                         - gcp
+                                        - oauth
                                     type: string
                                     x-referenceable: true
                                 aws_access_key_id:
@@ -5057,6 +5109,84 @@ components:
                                     type: string
                                     x-encrypted: true
                                     x-referenceable: true
+                                oauth:
+                                    description: OAuth 2.0 client configuration used to authenticate to Redis when `auth_provider` is set to `oauth`.
+                                    properties:
+                                        auth_method:
+                                            default: client_secret_post
+                                            description: Client authentication method used against the token endpoint.
+                                            enum:
+                                                - client_secret_basic
+                                                - client_secret_jwt
+                                                - client_secret_post
+                                            type: string
+                                        client_id:
+                                            description: OAuth 2.0 client ID.
+                                            type: string
+                                            x-referenceable: true
+                                        client_secret:
+                                            description: OAuth 2.0 client secret.
+                                            type: string
+                                            x-encrypted: true
+                                            x-referenceable: true
+                                        client_secret_jwt_alg:
+                                            default: HS512
+                                            description: Signing algorithm used for `client_secret_jwt` client authentication.
+                                            enum:
+                                                - HS256
+                                                - HS512
+                                            type: string
+                                        grant_type:
+                                            default: client_credentials
+                                            description: OAuth 2.0 grant type used to request access tokens.
+                                            enum:
+                                                - client_credentials
+                                                - password
+                                            type: string
+                                        password:
+                                            description: Resource owner password, used with the `password` grant type.
+                                            type: string
+                                            x-encrypted: true
+                                            x-referenceable: true
+                                        redis_username:
+                                            description: Static Redis ACL username sent with `AUTH <username> <token>`.
+                                            type: string
+                                            x-referenceable: true
+                                        redis_username_claim:
+                                            description: JWT claim in the access token used to derive the Redis ACL username (for example, `oid` for Microsoft Entra ID).
+                                            type: string
+                                        scopes:
+                                            default: []
+                                            description: OAuth 2.0 scopes to request.
+                                            items:
+                                                type: string
+                                            type: array
+                                        ssl_verify:
+                                            default: true
+                                            description: Whether to verify the TLS certificate of the token endpoint.
+                                            type: boolean
+                                        timeout:
+                                            default: 10000
+                                            description: Timeout, in milliseconds, for requests to the token endpoint.
+                                            type: number
+                                        token_endpoint:
+                                            description: OAuth 2.0 token endpoint URL used to request access tokens.
+                                            type: string
+                                        token_headers:
+                                            additionalProperties:
+                                                type: string
+                                            description: Additional HTTP headers to send with the token request.
+                                            type: object
+                                        token_post_args:
+                                            additionalProperties:
+                                                type: string
+                                            description: Additional POST body arguments to send with the token request.
+                                            type: object
+                                        username:
+                                            description: Resource owner username, used with the `password` grant type.
+                                            type: string
+                                            x-referenceable: true
+                                    type: object
                             type: object
                         database:
                             default: 0
@@ -5167,6 +5297,7 @@ components:
                                         - aws
                                         - azure
                                         - gcp
+                                        - oauth
                                     type: string
                                     x-referenceable: true
                                 aws_access_key_id:
@@ -5221,6 +5352,86 @@ components:
                                     type: string
                                     x-encrypted: true
                                     x-referenceable: true
+                                oauth:
+                                    description: OAuth 2.0 client configuration used to authenticate to Redis when `auth_provider` is set to `oauth`.
+                                    properties:
+                                        auth_method:
+                                            default: client_secret_post
+                                            description: Client authentication method used against the token endpoint.
+                                            enum:
+                                                - client_secret_basic
+                                                - client_secret_jwt
+                                                - client_secret_post
+                                            type: string
+                                        client_id:
+                                            description: OAuth 2.0 client ID.
+                                            type: string
+                                            x-referenceable: true
+                                        client_secret:
+                                            description: OAuth 2.0 client secret.
+                                            type: string
+                                            x-encrypted: true
+                                            x-referenceable: true
+                                        client_secret_jwt_alg:
+                                            default: HS512
+                                            description: Signing algorithm used for `client_secret_jwt` client authentication.
+                                            enum:
+                                                - HS256
+                                                - HS512
+                                            type: string
+                                        grant_type:
+                                            default: client_credentials
+                                            description: OAuth 2.0 grant type used to request access tokens.
+                                            enum:
+                                                - client_credentials
+                                                - password
+                                            type: string
+                                        password:
+                                            description: Resource owner password, used with the `password` grant type.
+                                            type: string
+                                            x-encrypted: true
+                                            x-referenceable: true
+                                        redis_username:
+                                            description: Static Redis ACL username sent with `AUTH <username> <token>`.
+                                            type: string
+                                            x-referenceable: true
+                                        redis_username_claim:
+                                            description: JWT claim in the access token used to derive the Redis ACL username (for example, `oid` for Microsoft Entra ID).
+                                            type: string
+                                        scopes:
+                                            default: []
+                                            description: OAuth 2.0 scopes to request.
+                                            items:
+                                                type: string
+                                            type: array
+                                        ssl_verify:
+                                            default: true
+                                            description: Whether to verify the TLS certificate of the token endpoint.
+                                            type: boolean
+                                        timeout:
+                                            default: 10000
+                                            description: Timeout, in milliseconds, for requests to the token endpoint.
+                                            maximum: 2.147483646e+09
+                                            minimum: 0
+                                            type: integer
+                                        token_endpoint:
+                                            description: OAuth 2.0 token endpoint URL used to request access tokens.
+                                            type: string
+                                        token_headers:
+                                            additionalProperties:
+                                                type: string
+                                            description: Additional HTTP headers to send with the token request.
+                                            type: object
+                                        token_post_args:
+                                            additionalProperties:
+                                                type: string
+                                            description: Additional POST body arguments to send with the token request.
+                                            type: object
+                                        username:
+                                            description: Resource owner username, used with the `password` grant type.
+                                            type: string
+                                            x-referenceable: true
+                                    type: object
                             type: object
                         cluster_max_redirections:
                             default: 5
@@ -5473,6 +5684,7 @@ components:
                                                 - aws
                                                 - azure
                                                 - gcp
+                                                - oauth
                                             type: string
                                             x-referenceable: true
                                         aws_access_key_id:
@@ -5527,6 +5739,86 @@ components:
                                             type: string
                                             x-encrypted: true
                                             x-referenceable: true
+                                        oauth:
+                                            description: OAuth 2.0 client configuration used to authenticate to Redis when `auth_provider` is set to `oauth`.
+                                            properties:
+                                                auth_method:
+                                                    default: client_secret_post
+                                                    description: Client authentication method used against the token endpoint.
+                                                    enum:
+                                                        - client_secret_basic
+                                                        - client_secret_jwt
+                                                        - client_secret_post
+                                                    type: string
+                                                client_id:
+                                                    description: OAuth 2.0 client ID.
+                                                    type: string
+                                                    x-referenceable: true
+                                                client_secret:
+                                                    description: OAuth 2.0 client secret.
+                                                    type: string
+                                                    x-encrypted: true
+                                                    x-referenceable: true
+                                                client_secret_jwt_alg:
+                                                    default: HS512
+                                                    description: Signing algorithm used for `client_secret_jwt` client authentication.
+                                                    enum:
+                                                        - HS256
+                                                        - HS512
+                                                    type: string
+                                                grant_type:
+                                                    default: client_credentials
+                                                    description: OAuth 2.0 grant type used to request access tokens.
+                                                    enum:
+                                                        - client_credentials
+                                                        - password
+                                                    type: string
+                                                password:
+                                                    description: Resource owner password, used with the `password` grant type.
+                                                    type: string
+                                                    x-encrypted: true
+                                                    x-referenceable: true
+                                                redis_username:
+                                                    description: Static Redis ACL username sent with `AUTH <username> <token>`.
+                                                    type: string
+                                                    x-referenceable: true
+                                                redis_username_claim:
+                                                    description: JWT claim in the access token used to derive the Redis ACL username (for example, `oid` for Microsoft Entra ID).
+                                                    type: string
+                                                scopes:
+                                                    default: []
+                                                    description: OAuth 2.0 scopes to request.
+                                                    items:
+                                                        type: string
+                                                    type: array
+                                                ssl_verify:
+                                                    default: true
+                                                    description: Whether to verify the TLS certificate of the token endpoint.
+                                                    type: boolean
+                                                timeout:
+                                                    default: 10000
+                                                    description: Timeout, in milliseconds, for requests to the token endpoint.
+                                                    maximum: 2.147483646e+09
+                                                    minimum: 0
+                                                    type: integer
+                                                token_endpoint:
+                                                    description: OAuth 2.0 token endpoint URL used to request access tokens.
+                                                    type: string
+                                                token_headers:
+                                                    additionalProperties:
+                                                        type: string
+                                                    description: Additional HTTP headers to send with the token request.
+                                                    type: object
+                                                token_post_args:
+                                                    additionalProperties:
+                                                        type: string
+                                                    description: Additional POST body arguments to send with the token request.
+                                                    type: object
+                                                username:
+                                                    description: Resource owner username, used with the `password` grant type.
+                                                    type: string
+                                                    x-referenceable: true
+                                            type: object
                                     type: object
                                 cluster_max_redirections:
                                     default: 5
@@ -5749,7 +6041,7 @@ components:
                     type: object
                     x-foreign: true
                 consumer_group:
-                    description: If set, the plugin will activate only for requests where the specified group has been authenticated
+                    description: If set, the plugin will activate only for requests where the specified group has been authenticated.
                     nullable: true
                     properties:
                         id:
@@ -5765,6 +6057,11 @@ components:
                     description: Whether the plugin is applied.
                     nullable: true
                     type: boolean
+                expressions:
+                    additionalProperties: true
+                    description: CEL expressions driving individual expressible fields in config. Derived automatically from the plugin's schema, never set directly by a plugin author.
+                    nullable: true
+                    type: object
                 id:
                     description: A string representing a UUID (universally unique identifier).
                     minLength: 1
@@ -5945,7 +6242,7 @@ components:
                     type: object
                     x-foreign: true
                 consumer_group:
-                    description: If set, the plugin will activate only for requests where the specified group has been authenticated
+                    description: If set, the plugin will activate only for requests where the specified group has been authenticated.
                     nullable: true
                     properties:
                         id:
@@ -5961,6 +6258,11 @@ components:
                     description: Whether the plugin is applied.
                     nullable: true
                     type: boolean
+                expressions:
+                    additionalProperties: true
+                    description: CEL expressions driving individual expressible fields in config. Derived automatically from the plugin's schema, never set directly by a plugin author.
+                    nullable: true
+                    type: object
                 id:
                     description: A string representing a UUID (universally unique identifier).
                     minLength: 1
@@ -7225,7 +7527,7 @@ components:
                                             type: number
                                         successes:
                                             default: 0
-                                            maximum: 255
+                                            maximum: 254
                                             minimum: 0
                                             type: integer
                                     type: object
@@ -7271,7 +7573,7 @@ components:
                                     properties:
                                         http_failures:
                                             default: 0
-                                            maximum: 255
+                                            maximum: 254
                                             minimum: 0
                                             type: integer
                                         http_statuses:
@@ -7296,12 +7598,12 @@ components:
                                             type: number
                                         tcp_failures:
                                             default: 0
-                                            maximum: 255
+                                            maximum: 254
                                             minimum: 0
                                             type: integer
                                         timeouts:
                                             default: 0
-                                            maximum: 255
+                                            maximum: 254
                                             minimum: 0
                                             type: integer
                                     type: object
@@ -7392,7 +7694,7 @@ components:
                                             type: array
                                         successes:
                                             default: 0
-                                            maximum: 255
+                                            maximum: 254
                                             minimum: 0
                                             type: integer
                                     type: object
@@ -7417,7 +7719,7 @@ components:
                                     properties:
                                         http_failures:
                                             default: 0
-                                            maximum: 255
+                                            maximum: 254
                                             minimum: 0
                                             type: integer
                                         http_statuses:
@@ -7432,12 +7734,12 @@ components:
                                             type: array
                                         tcp_failures:
                                             default: 0
-                                            maximum: 255
+                                            maximum: 254
                                             minimum: 0
                                             type: integer
                                         timeouts:
                                             default: 0
-                                            maximum: 255
+                                            maximum: 254
                                             minimum: 0
                                             type: integer
                                     type: object
@@ -7687,7 +7989,7 @@ info:
         name: Apache 2.0
         url: https://www.apache.org/licenses/LICENSE-2.0.html
     title: Kong Enterprise Admin API
-    version: 3.15.0
+    version: 3.16.0
 openapi: 3.1.0
 paths:
     /:
@@ -10074,151 +10376,6 @@ paths:
             summary: Remove consumer from consumer group in a workspace
             tags:
                 - Consumers
-    /{workspace}/custom-plugins:
-        get:
-            description: List all CustomPlugins in a workspace
-            operationId: list-custom-plugin-in-workspace
-            parameters:
-                - $ref: '#/components/parameters/PaginationSize'
-                - $ref: '#/components/parameters/PaginationOffset'
-                - $ref: '#/components/parameters/PaginationTagsFilter'
-                - $ref: '#/components/parameters/Workspace'
-            responses:
-                "200":
-                    content:
-                        application/json:
-                            schema:
-                                properties:
-                                    data:
-                                        items:
-                                            $ref: '#/components/schemas/CustomPlugin'
-                                        type: array
-                                    next:
-                                        $ref: '#/components/schemas/PaginationNextResponse'
-                                    offset:
-                                        $ref: '#/components/schemas/PaginationOffsetResponse'
-                                type: object
-                    description: A successful response listing CustomPlugins
-                "401":
-                    $ref: '#/components/responses/HTTP401Error'
-            summary: List all CustomPlugins in a workspace
-            tags:
-                - CustomPlugins
-            x-unstable: true
-        post:
-            description: Create a new CustomPlugin in a workspace
-            operationId: create-custom-plugin-in-workspace
-            parameters:
-                - $ref: '#/components/parameters/Workspace'
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CustomPlugin'
-                description: Description of the new CustomPlugin for creation
-                required: true
-            responses:
-                "201":
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/CustomPlugin'
-                    description: Successfully created CustomPlugin
-                "401":
-                    $ref: '#/components/responses/HTTP401Error'
-            summary: Create a new CustomPlugin in a workspace
-            tags:
-                - CustomPlugins
-            x-unstable: true
-    /{workspace}/custom-plugins/{CustomPluginIdOrName}:
-        delete:
-            description: Delete a CustomPlugin in a workspace
-            operationId: delete-custom-plugin-in-workspace
-            parameters:
-                - $ref: '#/components/parameters/CustomPluginIdOrName'
-                - $ref: '#/components/parameters/Workspace'
-            responses:
-                "204":
-                    description: Successfully deleted CustomPlugin or the resource didn't exist
-                "401":
-                    $ref: '#/components/responses/HTTP401Error'
-            summary: Delete a CustomPlugin in a workspace
-            tags:
-                - CustomPlugins
-            x-unstable: true
-        get:
-            description: Get a CustomPlugin using ID or name in a workspace.
-            operationId: get-custom-plugin-in-workspace
-            parameters:
-                - $ref: '#/components/parameters/Workspace'
-            responses:
-                "200":
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/CustomPlugin'
-                    description: Successfully fetched CustomPlugin
-                "401":
-                    $ref: '#/components/responses/HTTP401Error'
-                "404":
-                    description: Resource does not exist
-            summary: Get a CustomPlugin in a workspace
-            tags:
-                - CustomPlugins
-            x-unstable: true
-        parameters:
-            - $ref: '#/components/parameters/CustomPluginIdOrName'
-        patch:
-            description: Update a CustomPlugin in a workspace
-            operationId: update-custom-plugin-in-workspace
-            parameters:
-                - $ref: '#/components/parameters/Workspace'
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CustomPlugin'
-                description: Fields of the CustomPlugin that need to be updated
-                required: true
-            responses:
-                "200":
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/CustomPlugin'
-                    description: Successfully updated CustomPlugin
-                "401":
-                    $ref: '#/components/responses/HTTP401Error'
-                "404":
-                    description: Resource does not exist
-            summary: Update a CustomPlugin in a workspace
-            tags:
-                - CustomPlugins
-        put:
-            description: Create or Update CustomPlugin using ID or name in a workspace.
-            operationId: upsert-custom-plugin-in-workspace
-            parameters:
-                - $ref: '#/components/parameters/Workspace'
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CustomPlugin'
-                description: Description of the CustomPlugin
-                required: true
-            responses:
-                "200":
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/CustomPlugin'
-                    description: Successfully upserted CustomPlugin
-                "401":
-                    $ref: '#/components/responses/HTTP401Error'
-            summary: Upsert a CustomPlugin in a workspace
-            tags:
-                - CustomPlugins
-            x-unstable: true
     /{workspace}/degraphql_routes:
         get:
             description: List all Degraphql_routes in a workspace
@@ -15428,8 +15585,6 @@ paths:
             summary: List all Cloned Plugins
             tags:
                 - Cloned Plugins
-            x-internal: true
-            x-unstable: true
         post:
             description: Create a new Cloned Plugin
             operationId: create-cloned-plugin
@@ -15452,8 +15607,6 @@ paths:
             summary: Create a new Cloned Plugin
             tags:
                 - Cloned Plugins
-            x-internal: true
-            x-unstable: true
     /cloned-plugins/{ClonedPluginIdOrName}:
         delete:
             description: Delete a Cloned Plugin
@@ -15468,8 +15621,6 @@ paths:
             summary: Delete a Cloned Plugin
             tags:
                 - Cloned Plugins
-            x-internal: true
-            x-unstable: true
         get:
             description: Get a Cloned Plugin using ID or name.
             operationId: get-cloned-plugin
@@ -15487,8 +15638,6 @@ paths:
             summary: Get a Cloned Plugin
             tags:
                 - Cloned Plugins
-            x-internal: true
-            x-unstable: true
         parameters:
             - $ref: '#/components/parameters/ClonedPluginIdOrName'
         patch:
@@ -15537,8 +15686,6 @@ paths:
             summary: Upsert a Cloned Plugin
             tags:
                 - Cloned Plugins
-            x-internal: true
-            x-unstable: true
     /clustering/data-planes:
         get:
             description: |
@@ -17194,7 +17341,6 @@ paths:
             summary: List all CustomPlugins
             tags:
                 - CustomPlugins
-            x-unstable: true
         post:
             description: Create a new CustomPlugin
             operationId: create-custom-plugin
@@ -17217,7 +17363,6 @@ paths:
             summary: Create a new CustomPlugin
             tags:
                 - CustomPlugins
-            x-unstable: true
     /custom-plugins/{CustomPluginIdOrName}:
         delete:
             description: Delete a CustomPlugin
@@ -17232,7 +17377,6 @@ paths:
             summary: Delete a CustomPlugin
             tags:
                 - CustomPlugins
-            x-unstable: true
         get:
             description: Get a CustomPlugin using ID or name.
             operationId: get-custom-plugin
@@ -17250,7 +17394,6 @@ paths:
             summary: Get a CustomPlugin
             tags:
                 - CustomPlugins
-            x-unstable: true
         parameters:
             - $ref: '#/components/parameters/CustomPluginIdOrName'
         patch:
@@ -17299,7 +17442,6 @@ paths:
             summary: Upsert a CustomPlugin
             tags:
                 - CustomPlugins
-            x-unstable: true
     /debug/cluster/control-planes-nodes/log-level/{logLevel}:
         parameters:
             - description: The log level
