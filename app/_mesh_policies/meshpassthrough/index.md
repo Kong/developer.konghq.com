@@ -73,7 +73,8 @@ Read the policy from the proxy to the external destination:
 
 - `targetRef.kind: Mesh` applies the policy to every proxy [the policy reaches](/mesh/policy-targeting/#where-a-policy-applies).
   Rendered into an application namespace, as here, that is every proxy in that namespace;
-  create it in `{{site.mesh_namespace}}` to cover the mesh.
+  create it in `{{site.mesh_namespace}}` to cover a zone, or on the global control plane to
+  cover every zone.
 - `passthroughMode: Matched` rejects destinations not listed in `appendMatch`.
 - The `Domain` entry permits TLS traffic to `api.example.com:443`.
 - The `CIDR` entry permits TCP traffic to port `5432` anywhere in `10.42.0.0/16`.

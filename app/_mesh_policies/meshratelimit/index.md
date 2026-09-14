@@ -99,9 +99,10 @@ Setting both `to` and `rules` is rejected with
 `field 'to' must be empty when 'rules' is defined`, and setting neither with
 `at least one of 'to' or 'rules' has to be defined`.
 
-A mesh-wide inbound limit is therefore written as `kind: Dataplane` with no `labels`, not as
+A zone-wide inbound limit is therefore written as `kind: Dataplane` with no `labels`, not as
 `kind: Mesh`, and it has to be created in `{{site.mesh_namespace}}`. The same policy in an
-application namespace reaches only that namespace.
+application namespace reaches only that namespace, and covering every zone requires the
+global control plane.
 
 To limit one inbound, set `targetRef.sectionName` to its `name` in the destination
 Dataplane's `spec.networking.inbound[]`. If it has no name, use its port as a string, such

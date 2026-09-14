@@ -258,8 +258,9 @@ Omitting `targetRef` has the same effect as `kind: Mesh`.
 {:.warning}
 > `MeshTrafficPermission` has no `to` array, so a policy created in an application namespace
 > is always `workload-owner` scoped: `kind: Mesh` reaches every proxy **in that namespace**,
-> not the whole mesh. To authorize across namespaces, create the policy in
-> `{{site.mesh_namespace}}` with the label `kuma.io/origin: zone`. See
+> not the whole mesh. To authorize across namespaces in one zone, create the policy in
+> `{{site.mesh_namespace}}` with the label `kuma.io/origin: zone`; to authorize across zones,
+> create it on the global control plane. See
 > [Where a policy applies](/mesh/policy-targeting/#where-a-policy-applies).
 
 ### Narrow authorization to one port

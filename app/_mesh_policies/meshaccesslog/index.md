@@ -56,7 +56,8 @@ What each field does:
 
 * `targetRef` selects **which proxies** log. `kind: Mesh` means every proxy the policy
   reaches, which is every proxy in the policy's own namespace unless the policy is created in
-  `{{site.mesh_namespace}}`. Create it there to log the whole mesh. See
+  `{{site.mesh_namespace}}`, which widens it to that zone. Logging every zone requires the
+  global control plane. See
   [Where a policy applies](/mesh/policy-targeting/#where-a-policy-applies).
 * `rules` describes **what to do with inbound traffic** at those proxies. One entry with no
   filter means "log everything", and `backends` says where the records go.

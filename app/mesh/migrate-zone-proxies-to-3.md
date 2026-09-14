@@ -12,6 +12,8 @@ tags:
   - upgrade
   - multi-zone
 related_resources:
+  - text: Check readiness for Mesh 3
+    url: /mesh/check-upgrade-readiness/
   - text: Mesh-scoped zone proxies
     url: /mesh/mesh-scoped-zone-proxies/
   - text: Migrate mesh mTLS to MeshIdentity
@@ -36,6 +38,11 @@ to verify before removing the old proxies.
 > resources owned by that release because their templates no longer exist.
 
 ## Choose the transition release
+
+Start by [running the Mesh 3 readiness checker](/mesh/check-upgrade-readiness/) against the
+complete estate. Its report identifies legacy ZoneIngress and ZoneEgress resources, related
+`Mesh` settings, and version or control plane configuration that blocks the upgrade. Save the
+report as the baseline for the migration.
 
 Mesh-scoped zone proxies were introduced in 2.14. First bring the deployment to a supported
 2.14.x release that includes the new deployment and policy functionality, following the
@@ -185,6 +192,28 @@ Pause the rollout if configuration is rejected, expected traffic fails, or denie
 unexpectedly allowed. Investigate on the transition release rather than upgrading to v3 to
 try to resolve the failure.
 
+{:.warning}
+> **Restart the zone proxies after upgrading a zone control plane.** A zone-proxy Pod keeps
+> the data-plane image it was admitted with, so upgrading the control plane alone leaves it
+> running the previous `kuma-dp`. {{site.mesh_product_name}} 3 removed state-of-the-world xDS,
+> and a proxy whose bootstrap still requests it never receives configuration at all:
+>
+> ```
+> StreamAggregatedResources gRPC config stream closed: 12, unsupported
+> SOTW/state-of-the-world xDS StreamAggregatedResources; restart the proxy with a
+> delta-capable bootstrap to use Delta ADS
+> ```
+>
+> The Pod stays `Running` and `Ready` while this repeats, and its listeners keep whatever
+> they last held, so the failure surfaces only as cross-zone requests returning `503`.
+> Restart the ingress and egress Deployments, then confirm the new Pods run the expected
+> image and that the message above has stopped:
+>
+> ```sh
+> kubectl -n {{site.mesh_namespace}} rollout restart deploy/kong-mesh-default-ingress deploy/kong-mesh-default-egress
+> kubectl -n {{site.mesh_namespace}} logs deploy/kong-mesh-default-ingress -c kuma-sidecar | grep SOTW
+> ```
+
 ## 5. Remove legacy configuration, then upgrade to v3
 
 After all affected meshes pass validation, retire the legacy deployments through the tool that
@@ -209,6 +238,12 @@ control plane API and GUI, not cross-zone traffic.
 Proceed with the supported v3 upgrade sequence only after traffic no longer depends on
 standalone zone proxies. Repeat the traffic checks after each zone upgrade and update
 dashboards that still query legacy proxy resources or insight endpoints.
+
+Before the first zone upgrade, rerun the
+[Mesh 3 readiness checker](/mesh/check-upgrade-readiness/) while all control planes are still on
+the latest supported 2.14 patch. Resolve every remaining legacy zone-proxy finding and coverage
+gap. The report cannot verify addresses, firewall rules, capacity, or live traffic, so it does not
+replace the checks in this guide.
 
 ## Roll back while both models are supported
 

@@ -56,9 +56,12 @@ columns:
   - title: Reaches
     key: reach
 rows:
-  - policy: "Created in the system namespace, `{{site.mesh_namespace}}`"
+  - policy: "Created on the **global** control plane"
     role: "`system`"
-    reach: "Every proxy in the mesh."
+    reach: "Every proxy in the mesh, in every zone."
+  - policy: "Created in the system namespace, `{{site.mesh_namespace}}`, of a zone control plane"
+    role: "`system`"
+    reach: "Every proxy in **that zone**. It is not distributed to other zones."
   - policy: "Created in an application namespace, every `to[]` item naming a single `MeshService` or `MeshHTTPRoute` by `kuma.io/display-name`"
     role: "`producer`"
     reach: "Every client of that destination, in any namespace and any zone."
@@ -75,8 +78,10 @@ A policy cannot mix producer and consumer items. One that names a single destina
 
 {:.warning}
 > `targetRef.kind: Mesh` does not mean "the whole mesh" on its own. In a `consumer` or
-> `workload-owner` policy it means every proxy in that policy's namespace. To apply a rule
-> across the mesh, create the policy in `{{site.mesh_namespace}}`.
+> `workload-owner` policy it means every proxy in that policy's namespace. Creating it in
+> `{{site.mesh_namespace}}` widens it to the whole **zone**, not the whole mesh: a policy
+> created on a zone control plane stays in that zone. Only the global control plane, or a
+> producer policy, reaches every zone.
 
 On a Zone control plane, a policy created in `{{site.mesh_namespace}}` must also carry the
 label `kuma.io/origin: zone`. Without it, admission rejects the policy:
