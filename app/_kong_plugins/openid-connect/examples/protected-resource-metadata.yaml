@@ -48,7 +48,7 @@ tools:
   - deck
   - admin-api
   - kic
-  - konnect
+  - konnect-api
   - terraform
 
 group: other
