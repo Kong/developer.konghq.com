@@ -1,4 +1,11 @@
 {
+  "3.16.0.0": [
+    {
+      "message": "Fixed an issue where when Postgres strategy is used for session storage, concurrent authentication requests could result in race condition and session creation collisions.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.7": [
     {
       "message": "Fixed an issue where concurrent authentication requests using Postgres for session storage caused race conditions and session creation collisions.",

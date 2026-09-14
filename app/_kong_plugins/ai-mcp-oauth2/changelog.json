@@ -1,4 +1,11 @@
 {
+  "3.16.0.0": [
+    {
+      "message": "Fixed a JWT security vulnerability.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.15.0.0": [
     {
       "message": "Fixed an issue where token introspection crashed when `client_auth` was set to `private_key_jwt` and `client_jwk` was provided as a JSON string.",

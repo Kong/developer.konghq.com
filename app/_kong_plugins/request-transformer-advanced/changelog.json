@@ -1,4 +1,11 @@
 {
+  "3.16.0.0": [
+    {
+      "message": "Added a `max_request_body_size` configuration option that lets the plugin apply body transformations to request bodies that Nginx buffers to a temporary file (bodies larger than `client_body_buffer_size`). Previously such bodies were never read, so the configured body transformations were silently skipped and the original body was proxied upstream. The option defaults to `-1`, which preserves that behavior; set it to a positive byte limit to opt in (or `0` for unlimited, still bounded by Nginx's `client_max_body_size`).",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.4.0.0": [
     {
       "message": "Fixed an issue where the plugin wouldn’t transform the response body when the upstream returned a Content-Type with a `+json` suffix as the subtype.",
