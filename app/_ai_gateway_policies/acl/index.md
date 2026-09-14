@@ -19,12 +19,12 @@ related_resources:
     url: /ai-gateway/entities/ai-auth-strategy/
   - text: AI Consumer
     url: /ai-gateway/entities/ai-consumer/
-  - text: AI Consumer Group
-    url: /ai-gateway/entities/ai-consumer-group/
+  - text: Enforce tiered AI budgets on AI Models with {{site.identity}}
+    url: /ai-gateway/enforce-tiered-ai-budgets-with-kong-identity/
 faqs:
   - q: What are the differences between an ACL AI Policy and the `access.acl` field?
     a: |
-      The ACL AI Policy allows you to set `always_use_authenticated_groups` and `include_consumer_groups` which are `false` by default. When setting `access.acl` fields on an entity these are always `true`.
+      The ACL AI Policy allows you to set `always_use_authenticated_groups` and `include_consumer_groups` which are `false` by default. When setting `access.acl` fields on an entity these are always `true`. You can use an ACL AI Policy in place of `access.acl` fields for greater control or to share configurations.
 ---
 
 The ACL (access control list) policy allows you to restrict [AI Consumers](/ai-gateway/entities/ai-consumer/) or [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) access to {{site.ai_gateway}} entities. This is the same capability provided by `access.acls` for AI Models, AI MCP Servers, and AI Agents. However, the policy provides additional configuration options.
