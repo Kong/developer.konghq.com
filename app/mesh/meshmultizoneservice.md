@@ -71,6 +71,15 @@ not.
 Adding `kuma.io/zone` narrows the aggregate to particular zones, which is how a service is
 exposed across a subset of them.
 
+{:.warning}
+> A display name is not unique across namespaces. `kuma.io/display-name: backend` matches every
+> `MeshService` called `backend` in every namespace of every zone, including an unrelated
+> service that happens to share the name. The aggregate then load balances across all of them,
+> and requests that land on the unintended one usually fail authorization rather than
+> erroring visibly. Add `k8s.kuma.io/namespace` on Kubernetes to pin the aggregate to one
+> namespace, and read the `MeshServicesMatched` condition to confirm the count is what you
+> expect.
+
 ## Ports
 
 `spec.ports[]` lists the ports the aggregate exposes, and at least one is required — an empty
@@ -120,7 +129,8 @@ out without any change here.
 How traffic is distributed across the zones that remain is
 [MeshLoadBalancingStrategy](/mesh/policies/meshloadbalancingstrategy/)'s job: locality awareness
 prefers the local zone, and `crossZone.failover` sets the order the others are tried in.
-Deciding which endpoints count as healthy needs a
-[MeshHealthCheck](/mesh/policies/meshhealthcheck/) or a
-[MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/) — without one there is nothing to
-count, and failover never starts.
+A zone that has no ready endpoints at all drops out on its own: its `MeshService` moves to
+`Unavailable` and the aggregate stops using it, with no health-checking policy involved.
+[MeshHealthCheck](/mesh/policies/meshhealthcheck/) and
+[MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/) cover the other case — endpoints that
+are present and reachable but answering badly, which nothing else detects.
