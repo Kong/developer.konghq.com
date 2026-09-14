@@ -205,6 +205,19 @@ identities. Include the egress proxies and the clients that connect to them in t
 The egress listener requires a workload identity; without one, the control plane skips
 generating that listener.
 
+An egress listener also requires something to serve. Until a `MeshExternalService` exists in
+the mesh, the proxy is generated with no egress listener even when an identity covers it. The
+two causes produce the same symptom, so check both:
+
+```sh
+kubectl get meshidentities -A
+kubectl get meshexternalservices -A
+```
+
+A running egress Pod whose `Dataplane` shows a `ZoneEgress` listener still proves nothing —
+that listener is the requested configuration, not the generated one. Confirm the proxy
+received `self_zoneegress_dp_<port>` in its Envoy configuration.
+
 [MeshTrust](/mesh/policies/meshtrust/) supplies the trust needed to validate peer
 certificates. Trust establishes who the caller is; it does not grant access.
 [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) grants that access.

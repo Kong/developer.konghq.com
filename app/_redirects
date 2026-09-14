@@ -634,7 +634,6 @@
 /mesh/workload/                                                            /mesh/v2/workload/  301
 /mesh/zone-egress/                                                         /mesh/v2/zone-egress/  301
 /mesh/zone-ingress/                                                        /mesh/v2/zone-ingress/  301
-/mesh/zone-proxies/                                                        /mesh/v2/zone-proxies/  301
 /mesh/zone-proxy-auth/                                                     /mesh/v2/zone-proxy-auth/  301
 /mesh/zone-proxy-policies/                                                 /mesh/v2/zone-proxy-policies/  301
 
