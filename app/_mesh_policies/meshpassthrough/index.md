@@ -42,8 +42,8 @@ reject.
 
 ## Allow two external destinations
 
-This policy applies to every proxy in the mesh and allows two categories of otherwise
-unknown traffic: TLS to one API, and TCP to a database port across a subnet. Replace the
+This policy applies to every proxy [the proxies the policy reaches](/mesh/policy-targeting/#where-a-policy-applies) and allows two
+categories of otherwise unknown traffic: TLS to one API, and TCP to a database port across a subnet. Replace the
 example domain and subnet with destinations your workloads need:
 
 {% policy_yaml namespace=kong-mesh-demo %}
@@ -70,7 +70,9 @@ spec:
 
 Read the policy from the proxy to the external destination:
 
-- `targetRef.kind: Mesh` applies the policy to every proxy in the mesh.
+- `targetRef.kind: Mesh` applies the policy to every proxy [the proxies the policy reaches](/mesh/policy-targeting/#where-a-policy-applies).
+  Rendered into an application namespace, as here, that is every proxy in that namespace;
+  create it in `{{site.mesh_namespace}}` to cover the mesh.
 - `passthroughMode: Matched` rejects destinations not listed in `appendMatch`.
 - The `Domain` entry permits TLS traffic to `api.example.com:443`.
 - The `CIDR` entry permits TCP traffic to port `5432` anywhere in `10.42.0.0/16`.

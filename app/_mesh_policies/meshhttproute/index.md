@@ -102,6 +102,15 @@ port of a `MeshService`; without it they apply to every HTTP port that service e
 
 Use the value from `MeshService.spec.ports[].name` for `sectionName`.
 `backendRefs[].port` instead takes the numeric service port from `spec.ports[].port`.
+
+{:.warning}
+> `kuma.io/display-name` identifies a `MeshService` only within one namespace, and the same
+> name usually also exists in every other zone. A `backendRefs` entry that selects on the
+> display name alone resolves only when the route is in the same namespace as the service.
+> From anywhere else, including `{{site.mesh_namespace}}`, it matches nothing and the proxy
+> answers matching requests with an empty `500` rather than reporting an error on the
+> resource. Add `k8s.kuma.io/namespace` to the selector whenever the route and the service
+> are in different namespaces.
 Verify the service's `appProtocol` identifies HTTP, HTTP/2, or gRPC; the proxy cannot apply
 HTTP request matches to traffic configured as opaque TCP.
 
