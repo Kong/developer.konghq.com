@@ -48,9 +48,14 @@ Before using the AI NVIDIA NeMo Guardrail Policy, you need:
 
 ## How it works
 
-The AI NVIDIA NeMo Guardrail Policy intercepts traffic, extracts the text to evaluate, and calls the NeMo Guardrails `/v1/guardrail/checks` endpoint. NeMo returns a status for every rail it ran. If any rail reports a violation, {{site.ai_gateway}} blocks the request or response and returns a failure message to the client instead of the model output.
+The AI NVIDIA NeMo Guardrail Policy can be applied to:
+* Input data (requests)
+* Output data (responses)
+* Both input and output data
 
-1. The Policy intercepts the request and sends the extracted text to the NeMo Guardrails microservice.
+Here's how it works if you apply it to both requests and responses:
+
+1. The AI Policy intercepts the request and sends the extracted text to the NeMo Guardrails microservice.
    - NeMo runs the configured input rails and returns a pass or block status.
 1. If NeMo allows the content, {{site.ai_gateway}} forwards the request to the upstream model.
 1. On the way back, the Policy intercepts the response and sends the extracted text to NeMo Guardrails.
@@ -80,13 +85,6 @@ To control which parts of the conversation the Policy sends for evaluation, use 
 
 {:.info}
 > Match the rails defined in your NeMo guardrail configuration to the phases named in `config.guarding_mode`. A configuration used with `guarding_mode: INPUT` should define only an input rail; a configuration used with `guarding_mode: OUTPUT` should define only an output rail. NeMo evaluates whichever rails a configuration defines every time it's called, regardless of `guarding_mode`, so an output rail included in an input-only check runs against an empty response.
-
-### Response buffering
-
-[`config.response_buffer_size`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-response-buffer-size) controls how many bytes of a streamed upstream response {{site.ai_gateway}} buffers before sending them to NeMo Guardrails. The default is `100` bytes.
-
-{:.info}
-> A smaller buffer evaluates content sooner and rejects unsafe responses faster, but it increases the number of calls to the NeMo service. A larger buffer reduces calls at the cost of slower enforcement.
 
 ## Guardrail configuration modes
 
@@ -228,10 +226,8 @@ Two fields control how {{site.ai_gateway}} builds the header:
 * [`config.auth.prefix`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-auth-prefix): The string prepended to the key. Defaults to `Bearer `.
 
 {:.warning}
-> **Do not** change `config.auth.header` unless your NeMo deployment expects a different header. The NeMo microservice reads `X-Model-Authorization` to resolve which LLM provider to use for the guardrail check. If the header is missing, NeMo falls back to its configured default provider, and your rails may run against a model you did not intend.
-
-{:.warning}
-> For a NeMo model configured with `engine: openai`, set `config.auth.prefix` to an empty string (`""`). NeMo passes the `X-Model-Authorization` header value straight to its OpenAI client as the API key, without stripping a `Bearer ` scheme from it first, so the default prefix becomes part of the credential and the check fails to authenticate.
+> * **Do not** change `config.auth.header` unless your NeMo deployment expects a different header. The NeMo microservice reads `X-Model-Authorization` to resolve which LLM provider to use for the guardrail check. If the header is missing, NeMo falls back to its configured default provider, and your rails may run against a model you did not intend.
+> * For a NeMo model configured with `engine: openai`, set `config.auth.prefix` to an empty string (`""`). NeMo passes the `X-Model-Authorization` header value straight to its OpenAI client as the API key, without stripping a `Bearer ` scheme from it first, so the default prefix becomes part of the credential and the check fails to authenticate.
 
 `config.auth.api_key` is a [referenceable](/gateway/entities/vault/) and encrypted field, so you can store the value in a Vault instead of in your configuration.
 
@@ -249,10 +245,6 @@ Two other fields change how the Policy reacts:
 
 {:.warning}
 > Setting `stop_on_error: false` means an outage in the NeMo Guardrails service silently disables your safety rails. Only disable it when availability matters more than enforcement.
-
-## TLS verification
-
-[`config.ssl_verify`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-ssl-verify) is enabled by default, so the Policy verifies the TLS certificate of the NeMo Guardrails endpoint. To skip verification, for example when you run NeMo with a self-signed certificate in a development environment, set `ssl_verify: false`.
 
 ## Logging
 
