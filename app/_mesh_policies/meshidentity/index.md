@@ -76,6 +76,28 @@ certificates using the CA published in `MeshTrust`; the setting does not disable
 verification. If your organization requires certificates issued through an existing PKI,
 use the supplied-CA configuration below.
 
+### Multi-zone meshes
+
+`selector.dataplane: {}` selects every proxy the resource reaches, which for a `MeshIdentity`
+created on a zone control plane means every proxy **in that zone**. A zone-created identity is
+not distributed to sibling zones, and neither is the `MeshTrust` it publishes. In a multi-zone
+mesh, create the identity on the **global** control plane so every zone receives it and shares
+one CA.
+
+{:.warning}
+> A zone with no applicable `MeshIdentity` has no workload certificates, so its proxies get
+> **no inbound TLS listener at all**: traffic inside that zone is plaintext, and
+> [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) cannot apply, because it only
+> attaches authorization to TLS-protected filter chains. Requests still succeed, so the zone
+> looks healthy. Cross-zone requests into it fail with `503`, because the calling proxy
+> attempts mTLS.
+>
+> Check every zone rather than assuming the mesh is covered:
+>
+> ```sh
+> kubectl get meshidentities -A
+> ```
+
 ## Choose which proxies an identity covers
 
 `spec.selector.dataplane.matchLabels` picks the proxies. An empty `dataplane: {}` matches every
