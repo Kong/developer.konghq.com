@@ -1,8 +1,8 @@
 ---
 title: Set up CI/CD with kongctl and GitHub Actions
 description: >-
-  Review AI Gateway configuration diffs in pull requests and apply changes
-  from main with kongctl and GitHub Actions.
+  Review {{site.ai_gateway}} configuration diffs in pull requests and apply
+  changes from main with kongctl and GitHub Actions.
 content_type: how_to
 permalink: /kongctl/ci-cd/github-actions/
 breadcrumbs:
@@ -33,7 +33,7 @@ prereqs:
       content: |
         You need a {{site.konnect_short_name}} account with access to
         {{site.ai_gateway}} and a personal or system account access token
-        with permission to read and manage AI Gateway resources. See
+        with permission to read and manage {{site.ai_gateway}} resources. See
         [kongctl authentication](/kongctl/authentication/).
       icon_url: /assets/icons/gateway.svg
     - title: GitHub repository and OpenAI key
@@ -45,7 +45,7 @@ prereqs:
 related_resources:
   - text: Declarative configuration with kongctl
     url: /kongctl/declarative/
-  - text: AI Gateway resource reference
+  - text: "{{site.ai_gateway}} resource reference"
     url: /kongctl/supported-resources/#ai-gateway
   - text: Use kongctl with AI agent skills
     url: /kongctl/skills/
