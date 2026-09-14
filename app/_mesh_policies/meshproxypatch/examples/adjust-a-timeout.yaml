@@ -1,0 +1,28 @@
+title: 'Change a timeout Envoy exposes but no policy does'
+
+description: 'Replace streamIdleTimeout on the inbound HTTP connection manager with a JSON patch.'
+
+weight: 800
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshProxyPatch
+  name: backend-stream-idle-timeout
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    default:
+      appendModifications:
+        - networkFilter:
+            operation: Patch
+            match:
+              name: envoy.filters.network.http_connection_manager
+              origin: inbound
+            jsonPatches:
+              - op: replace
+                path: /streamIdleTimeout
+                value: 15s

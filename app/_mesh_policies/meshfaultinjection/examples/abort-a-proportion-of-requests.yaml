@@ -1,0 +1,23 @@
+title: 'Return 500 for half the requests a destination receives'
+
+description: 'Make backend answer 50% of incoming requests with a 500, without changing the application.'
+
+weight: 900
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshFaultInjection
+  name: backend-abort-500
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    rules:
+      - default:
+          http:
+            - abort:
+                httpStatus: 500
+                percentage: 50

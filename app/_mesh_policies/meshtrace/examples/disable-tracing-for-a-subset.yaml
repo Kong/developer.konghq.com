@@ -1,0 +1,19 @@
+title: 'Turn tracing off for a subset of proxies'
+
+description: 'An empty backends list produces no tracing configuration, which exempts the selected proxies from a mesh-wide policy.'
+
+weight: 500
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshTrace
+  name: no-tracing-for-batch
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: batch
+    default:
+      backends: []

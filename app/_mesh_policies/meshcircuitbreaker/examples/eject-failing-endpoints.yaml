@@ -1,0 +1,30 @@
+title: 'Eject endpoints that keep failing'
+
+description: 'Use MeshCircuitBreaker outlierDetection to remove an endpoint from the load balancing pool after consecutive server-side errors, and return it after a delay.'
+
+weight: 800
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshCircuitBreaker
+  name: backend-outlier-detection
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: web
+    to:
+      - targetRef:
+          kind: MeshService
+          labels:
+            kuma.io/display-name: backend
+        default:
+          outlierDetection:
+            interval: 5s
+            baseEjectionTime: 30s
+            maxEjectionPercent: 20
+            detectors:
+              totalFailures:
+                consecutive: 10

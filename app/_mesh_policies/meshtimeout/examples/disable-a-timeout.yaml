@@ -1,0 +1,21 @@
+title: 'Disable a timeout'
+
+description: 'Set a timeout to 0 to disable it, rather than setting a very large value. This is how the default inbound request timeout is disabled.'
+
+weight: 600
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshTimeout
+  name: backend-no-request-timeout
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    rules:
+      - default:
+          http:
+            requestTimeout: 0s

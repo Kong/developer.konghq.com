@@ -1,0 +1,25 @@
+title: 'Patch every outbound cluster'
+
+description: 'Match on origin alone to change a field on all outbound clusters, without naming each one.'
+
+weight: 700
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshProxyPatch
+  name: backend-outbound-connect-timeout
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    default:
+      appendModifications:
+        - cluster:
+            operation: Patch
+            match:
+              origin: outbound
+            value: |
+              connectTimeout: 10s

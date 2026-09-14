@@ -1,0 +1,20 @@
+title: 'Trust a CA the mesh does not own'
+
+description: 'Publish an external CA bundle so proxies accept certificates issued in another trust domain.'
+
+weight: 900
+
+config:
+  type: MeshTrust
+  name: corporate-ca
+  mesh: default
+  spec:
+    trustDomain: corp.example.com
+    caBundles:
+      - type: Pem
+        pem:
+          value: |
+            -----BEGIN CERTIFICATE-----
+            MIIDazCCAlOgAwIBAgIRAKrcbXW7tGrFmOA1rNBBCPkwDQYJKoZIhvcNAQELBQAw
+            ...
+            -----END CERTIFICATE-----
