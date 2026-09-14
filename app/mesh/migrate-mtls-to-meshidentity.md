@@ -13,6 +13,8 @@ tags:
   - security
   - mtls
 related_resources:
+  - text: Migrate zone proxies to Mesh 3
+    url: /mesh/migrate-zone-proxies-to-3/
   - text: Migrate policies to {{site.mesh_product_name}} 3
     url: /mesh/migrate-policies-to-3/
   - text: MeshIdentity reference
@@ -46,6 +48,13 @@ control planes are still running 2.x.
 
 ## Migration workflow
 
+{:.warning}
+> If workloads use `MeshExternalService`, deploy mesh-scoped zone egress before switching
+> those workloads to an issuing `MeshIdentity`. Their external-service connections need the
+> new egress path; legacy zone egress or the previous direct path does not preserve that
+> connectivity after the identity switch. Prepare the egress identity, trust and permissions
+> first, then validate external-service traffic with a canary workload.
+
 Use this order for each mesh:
 
 1. Upgrade to the latest supported 2.x release in your upgrade path. The control planes must
@@ -59,6 +68,9 @@ Use this order for each mesh:
    SPIFFE IDs that workloads will use later without replacing their current certificates.
 1. Rewrite `MeshTrafficPermission` to authorize those SPIFFE IDs. If the mesh is permissive,
    also create a `MeshTLS` policy that preserves that behavior.
+1. If the mesh uses `MeshExternalService`, [prepare and deploy mesh-scoped zone
+   egress](#prepare-egress-before-switching-external-service-clients) in each zone whose
+   workloads need that access. Do this before the issuing identity selects application workloads.
 1. Create an issuing `MeshIdentity` for a small set of workloads and validate both allowed and
    denied traffic.
 1. Expand the issuing identity to every workload in the mesh.
@@ -204,6 +216,36 @@ spec:
 ```
 
 A mesh already using `STRICT` does not need a `MeshTLS` policy to preserve its mode.
+
+## Prepare egress before switching external-service clients
+
+Skip this step only if the mesh does not use `MeshExternalService`.
+
+With `MeshIdentity`, a client's proxy connects to mesh-scoped zone egress using mTLS, and
+egress connects to the external endpoint. `MeshExternalService` is still supported, but it
+requires this egress path. Switching the client's identity before that path is ready can
+interrupt its external-service calls.
+
+While still on the 2.14 transition release:
+
+1. Identify the MeshExternalServices used by each mesh and zone, including endpoint ports
+   and upstream TLS requirements.
+1. Prepare an issuing MeshIdentity that selects the new egress proxies, without yet selecting
+   the application workloads. Use the provider configuration in the next section and a
+   selector scoped to the egress proxies. A provider-less identity alone cannot supply the
+   certificate that egress needs.
+1. Establish the required trust and apply MeshTrafficPermission rules on egress for the
+   intended caller identities and external destinations. No matching allow means access is denied.
+1. Deploy mesh-scoped zone egress and confirm its identity, generated listener and destination
+   endpoints. Follow the [zone-proxy migration guide](/mesh/migrate-zone-proxies-to-3/),
+   including its traffic-cutover and rollback precautions: making the new egress discoverable
+   can change traffic before the old egress is removed.
+1. Only then select a canary application workload with an issuing MeshIdentity. Verify its
+   allowed and denied external-service calls before expanding the identity rollout.
+
+An existing legacy ZoneEgress does not satisfy this prerequisite. Check the replacement
+Dataplane and its `ZoneEgress` listener, not only whether an egress Deployment is running.
+Keep the egress proxies covered by an issuing identity throughout the workload migration.
 
 ## Create the issuing identity
 
@@ -396,6 +438,8 @@ connected proxy once more. Only then is the mesh ready for its first 3.x zone up
 - Every issuing identity is ready and its required `MeshTrust` is available in every zone.
 - `MeshTrafficPermission` rules authorize the intended SPIFFE IDs.
 - `MeshTLS` preserves any required permissive behavior.
+- MeshExternalService clients use working mesh-scoped zone egress, with identity, trust and
+  permissions verified in every zone that needs external-service access.
 - No connected proxy reports a certificate from the legacy mesh CA backend.
 - The stored `Mesh` and the source-controlled manifest no longer contain `mtls`.
-- Allowed, denied, plaintext, and cross-zone traffic behave as designed.
+- Allowed, denied, plaintext, cross-zone and external-service traffic behave as designed.
