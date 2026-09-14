@@ -53,35 +53,39 @@ This only affects conditional plugin execution, and only the two behaviors descr
 columns:
   - title: Function
     key: function
-  - title: cel-rust behavior, before migration (3.15)
+  - title: cel-rust behavior (3.15)
     key: before
-  - title: cel-cpp behavior, after migration (3.16)
+  - title: cel-cpp behavior (3.16)
     key: after
   - title: Impacted expressions
     key: impact
 rows:
   - function: |
-      String escape sequences (quote escapes)
+      Quote escape sequences in strings
     before: |
-      `"\'"` (or `'\"'`) is parsed as the 2-character string `\'` (backslash + quote).
+      The string literal `"\'"` (or `'\"'`) is parsed as the 2-character string `\'` (backslash + quote).
     after: |
       `\'` is correctly unescaped to the 1-character string `'`.
     impact: |
       For example, if the expression is `http.query.contains("\'")`:
+      <br><br>
       * On `cel-cpp`: Searches for `'`, so a request like `?name=a'b` matches.
       * On `cel-rust`: Searches for `\'` (backslash-then-quote), so `?name=a'b` has no backslash and doesn't match.
   - function: |
-      Missing map key (maps we currently support: `kong.shared[key]` and `principal.metadata[key]`)
+      Missing map key
     before: |
       Returns `null`.
     after: |
       Raises a `no such key` error.
     impact: |
+      Affects the currently supported maps: `kong.ctx.shared[key]` and `principal.metadata[key]`.
+      <br><br>
       For example, if the expression includes map-type variables (`kong.ctx.shared` and `principal.metadata`), such as `kong.ctx.shared["my_flag"] == "enabled"` configured as a condition of a plugin:
+      <br><br>
       * On `cel-cpp`: {{site.base_gateway}} reports a `no such key` error if `my_flag` doesn't exist in `kong.ctx.shared`.
       * On `cel-rust`: The missing key returns `null`, so the expression evaluates to `false` (`null == "enabled"`), and {{site.base_gateway}} skips the related plugin.
       <br><br>
-      See [Null handling](/gateway/plugins/expressions/#null-handling) documentation for the correct behavior for a missing key.
+      See [Null handling](/gateway/plugins/expressions/#null-handling) for the correct behavior for a missing key.
 {% endtable %}
 
 #### Known issues in 3.16.0.0
