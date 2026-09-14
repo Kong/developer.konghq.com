@@ -212,6 +212,22 @@ export async function runInstructions(instructions, runtimeConfig, container) {
     await runCleanup(instructions.cleanup, container, runtimeConfig);
   } catch (err) {
     log(`   cleanup ❌. ${err.message}`);
+
+    // A failing cleanup leaves state behind and is a real failure: surface it
+    // instead of letting the run report success. If the steps already failed,
+    // keep their assertions first (expected-failure matching keys off
+    // assertions[0]) and append the cleanup error.
+    const cleanupAssertions =
+      err instanceof ValidationError
+        ? err.assertions
+        : [err.message];
+
+    if (result["status"] === "failed") {
+      result["assertions"] = [...result["assertions"], ...cleanupAssertions];
+    } else {
+      result["status"] = "failed";
+      result["assertions"] = cleanupAssertions;
+    }
   }
 
   return result;
