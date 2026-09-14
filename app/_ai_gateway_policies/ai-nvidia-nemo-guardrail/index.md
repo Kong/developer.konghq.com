@@ -32,6 +32,8 @@ related_resources:
     url: /ai-gateway/policies/ai-azure-content-safety/
   - text: "{{site.ai_gateway}} audit log reference"
     url: /ai-gateway/ai-audit-log-reference/
+
+icon: ai-nvidia-nemo-guardrail.png
 ---
 
 The AI NVIDIA NeMo Guardrail Policy inspects requests and responses handled by the [AI Model](/ai-gateway/entities/ai-model/) entity and checks them against [NVIDIA NeMo Guardrails](https://docs.nvidia.com/nemo/guardrails/). {{site.ai_gateway}} sends the content it extracts to the NeMo Guardrails microservice, and blocks any request or response that violates the safety rails you configure.
