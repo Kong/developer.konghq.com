@@ -2,7 +2,7 @@ name: Event Gateway Automated Tests
 on:
   workflow_dispatch:
   schedule:
-  - cron: '0 0 1 * *'
+  - cron: '0 0 * * WED'
 
 concurrency:
   cancel-in-progress: true
