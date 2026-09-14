@@ -31,7 +31,16 @@ targeting a `MeshMultiZoneService`, because the failover order is a statement ab
 this is the resource that spans them.
 
 It is not a policy — there is no `targetRef`, the resource is the destination — and it is created
-on the **global** control plane only, then synced out to zones.
+on the **global** control plane only, then synced out to zones. A zone control plane attached to
+a global one rejects it:
+
+```
+Operation not allowed. Kong Mesh resources like MeshMultiZoneService can be updated or
+deleted only from the GLOBAL control plane and not from a ZONE control plane.
+```
+
+It is the only mesh resource with that restriction: every other policy and resource a zone
+receives can also be written locally on that zone.
 
 ## Aggregate a service across zones
 
