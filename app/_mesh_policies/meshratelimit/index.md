@@ -89,7 +89,7 @@ columns:
 rows:
   - kind: "`Dataplane`, with `labels`"
     field: "`rules`. Defining `to` is rejected with `spec.to: must not be defined`."
-    limits: "Traffic arriving at the selected proxies. Omit `labels` to select every proxy in the mesh."
+    limits: "Traffic arriving at the selected proxies. Omit `labels` to select every proxy [the proxies the policy reaches](/mesh/policy-targeting/#where-a-policy-applies)."
   - kind: "`Mesh`"
     field: "`to`, whose `targetRef` accepts `kind: Mesh` and nothing else. Defining `rules` is rejected with `spec.rules: must not be defined`."
     limits: "The API accepts this form, but the v3 proxy implementation applies limits from rules, not to. Migrate to the Dataplane/rules form."
@@ -100,7 +100,8 @@ Setting both `to` and `rules` is rejected with
 `at least one of 'to' or 'rules' has to be defined`.
 
 A mesh-wide inbound limit is therefore written as `kind: Dataplane` with no `labels`, not as
-`kind: Mesh`.
+`kind: Mesh`, and it has to be created in `{{site.mesh_namespace}}`. The same policy in an
+application namespace reaches only that namespace.
 
 To limit one inbound, set `targetRef.sectionName` to its `name` in the destination
 Dataplane's `spec.networking.inbound[]`. If it has no name, use its port as a string, such
