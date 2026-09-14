@@ -68,6 +68,8 @@ cleanup:
         docker stop internal-service && docker rm internal-service
         rm -rf ~/datakit-custom-ca
         ```
+        {: data-test-cleanup="block" }
+
       icon_url: /assets/icons/key.svg
     - title: Clean up Konnect environment
       include_content: cleanup/platform/konnect
@@ -76,7 +78,6 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 
-automated_tests: false
 ---
 
 The Datakit plugin's [`call` node](/plugins/datakit/#call-node) makes outbound HTTPS requests as part of the plugin's workflow, independent of any Service's TLS configuration.
@@ -101,6 +102,7 @@ The internal service runs in its own Docker container, published to your host ma
    ```bash
    mkdir -p ~/datakit-custom-ca && cd ~/datakit-custom-ca
    ```
+   {: data-test-step="block" }
 
 1. Generate a CA certificate:
 
@@ -110,6 +112,7 @@ The internal service runs in its own Docker container, published to your host ma
      -keyout ca.key \
      -out ca.crt
    ```
+   {: data-test-step="block" }
 
 1. Generate a certificate for the internal service, signed by the CA.
    The `subjectAltName` must include `host.docker.internal`, since that's the hostname the Datakit `call` node uses to reach your host machine from inside the {{site.base_gateway}} container:
@@ -133,10 +136,12 @@ The internal service runs in its own Docker container, published to your host ma
      -CA ca.crt -CAkey ca.key -CAcreateserial \
      -out internal-service.crt -days 365 -sha256 -extfile internal-service.ext
    ```
+   {: data-test-step="block" }
 
 ## Start the internal service
 
-For this guide, use Nginx to simulate an internal service that only serves HTTPS with the certificate you just generated.
+For this guide, we'll use Nginx to simulate an internal service that only serves HTTPS with the certificate you just generated.
+In production, you will point this to your real service.
 
 1. Create a directory for the service and copy the certificates into it:
 
@@ -145,6 +150,7 @@ For this guide, use Nginx to simulate an internal service that only serves HTTPS
    cp ~/datakit-custom-ca/internal-service.crt ~/datakit-custom-ca/internal-service/
    cp ~/datakit-custom-ca/internal-service.key ~/datakit-custom-ca/internal-service/
    ```
+   {: data-test-step="block" }
 
 1. Create a configuration file named `nginx.conf`:
 
@@ -173,7 +179,7 @@ For this guide, use Nginx to simulate an internal service that only serves HTTPS
    }
    EOF
    ```
-   {:.collapsible}
+   {: data-test-step="block" .collapsible }
 
 1. Create the `Dockerfile`:
 
@@ -187,6 +193,7 @@ For this guide, use Nginx to simulate an internal service that only serves HTTPS
    CMD ["nginx", "-g", "daemon off;"]
    EOF
    ```
+   {: data-test-step="block" }
 
 1. Build and start the internal service, publishing its port to your host machine:
 
@@ -195,6 +202,7 @@ For this guide, use Nginx to simulate an internal service that only serves HTTPS
    docker build -t internal-service .
    docker run -d --name internal-service -p 9443:443 internal-service
    ```
+   {: data-test-step="block" }
 
 1. Verify that the service is reachable and presents the expected certificate:
 
@@ -203,6 +211,7 @@ For this guide, use Nginx to simulate an internal service that only serves HTTPS
      --resolve host.docker.internal:9443:127.0.0.1 \
      https://host.docker.internal:9443/author
    ```
+   {: data-test-step="block" }
 
    You should receive:
 
@@ -215,13 +224,27 @@ For this guide, use Nginx to simulate an internal service that only serves HTTPS
 
 The Datakit plugin uses a {{site.base_gateway}} [CA Certificate](/gateway/entities/ca-certificate/) entity to verify the internal service's TLS certificate.
 
+Change back into the working directory, then build the request body from the certificate file:
+
+<!--vale off-->
+{% validation custom-command %}
+command: |
+  cd ~/datakit-custom-ca
+  jq -n --rawfile cert ca.crt '{"cert": $cert}' > ca-cert-body.json
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
+<!--vale on-->
+
 Add the CA certificate and export its ID:
 
 ```bash
 export DECK_CA_CERT_ID=$(curl -s -X POST http://localhost:8001/ca_certificates \
-    --data-urlencode "cert=$(cat ~/datakit-custom-ca/ca.crt)" | jq -r .id)
+    --json @ca-cert-body.json | jq -r .id)
 echo "CA Cert ID: $DECK_CA_CERT_ID"
 ```
+{: data-test-step="block" }
 
 ## Configure the Datakit plugin
 
@@ -272,28 +295,45 @@ You should get an HTTP `200` response with the internal service's response body:
 ```
 {:.no-copy-code}
 
-This confirms that the `AUTHOR` node's TLS handshake succeeded using only the private CA referenced in `ca_certificates`. {{site.base_gateway}}'s global trusted CA store was never consulted for this request.
+This confirms that the `AUTHOR` node's TLS handshake succeeded using only the private CA referenced in `ca_certificates`. 
+{{site.base_gateway}}'s global trusted CA store was never consulted for this request.
 
 ### Confirm the CA is being enforced
 
 To see what happens when the referenced CA doesn't match the internal service's certificate, update the plugin to point at a CA that didn't sign it.
 
-Generate an unrelated CA certificate:
+Change into the `internal-service` directory and generate an unrelated CA certificate:
 
 ```bash
+cd internal-service
 openssl req -new -x509 -nodes -days 365 \
   -subj '/CN=unrelated-ca' \
   -keyout ~/datakit-custom-ca/unrelated-ca.key \
   -out ~/datakit-custom-ca/unrelated-ca.crt
 ```
+{: data-test-step="block" }
+
+Change back into `datakit-custom-ca`, then build the request body from the certificate file:
+
+<!--vale off-->
+{% validation custom-command %}
+command: |
+  cd ~/datakit-custom-ca
+  jq -n --rawfile cert unrelated-ca.crt '{"cert": $cert}' > unrelated-ca-cert-body.json
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
+<!--vale on-->
 
 Add it to {{site.base_gateway}} and export its ID:
 
 ```bash
 export DECK_WRONG_CA_CERT_ID=$(curl -s -X POST http://localhost:8001/ca_certificates \
-    --data-urlencode "cert=$(cat ~/datakit-custom-ca/unrelated-ca.crt)" | jq -r .id)
+    --json @unrelated-ca-cert-body.json | jq -r .id)
 echo "Wrong CA Cert ID: $DECK_WRONG_CA_CERT_ID"
 ```
+{: data-test-step="block" }
 
 Update the Datakit plugin's `ca_certificates` to reference the unrelated CA instead:
 
