@@ -1,8 +1,8 @@
 ---
-title: "Deploy an MCP server with {{site.context_mesh}} and {{site.operator_product_name}}"
+title: "Deploy a {{site.context_mesh}} Interface with {{site.operator_product_name}}"
 permalink: /context-mesh/get-started-with-context-mesh/
 content_type: how_to
-description: "Deploy the OpenWeather {{site.context_mesh}} MCP server from the Konnect UI"
+description: "Deploy the OpenWeather {{site.context_mesh}} Interface from the Konnect UI"
 breadcrumbs:
   - /mcp/
 
@@ -32,8 +32,8 @@ tags:
   - kubernetes
 
 tldr:
-  q: "How do I deploy the OpenWeather {{site.context_mesh}} MCP server?"
-  a: "Install {{site.kong_operator}} 2.2 with the `mcp-server` feature gate, create a Konnect-managed control plane and data plane, then create the MCP server from the Konnect UI."
+  q: "How do I deploy the OpenWeather {{site.context_mesh}} Interface?"
+  a: "Install {{site.kong_operator}} 2.2 with the `mcp-server` feature gate, create a Konnect-managed control plane and data plane, then create the Interface from the Konnect UI."
 
 tools:
   - operator
@@ -72,7 +72,7 @@ prereqs:
       icon_url: /assets/icons/kubernetes.svg
     - title: Claude Code
       content: |
-        Install [{{site.claude_code}}](https://claude.ai/code) for terminal access to the MCP server.
+        Install [{{site.claude_code}}](https://claude.ai/code) for terminal access to the Interface.
       icon_url: /assets/icons/third-party/claude.svg
     - title: OpenWeatherMap account and API key
       content: |
@@ -407,9 +407,9 @@ prereqs:
 
 cleanup:
   inline:
-    - title: Delete the MCP server
+    - title: Delete the Interface
       content: |
-        In the {{site.konnect_short_name}} UI, open the MCP server and delete it. This disassociates the MCP server from the control plane.
+        In the {{site.konnect_short_name}} UI, open the Interface and delete it. This disassociates the Interface from the control plane.
       icon_url: /assets/icons/gateway.svg
 ---
 
@@ -503,24 +503,24 @@ EOF
 kubectl wait --timeout=3m dataplane dataplane --for=condition=Ready
 ```
 
-## Create the OpenWeather {{site.context_mesh}} server
+## Create the OpenWeather {{site.context_mesh}} Interface
 
-1. In {{site.konnect_short_name}}, go to **{{site.context_mesh}}** > **MCP Servers**
-1. Select **New MCP server**.
+1. In {{site.konnect_short_name}}, go to **{{site.context_mesh}}** > **Interfaces**
+1. Select **New Interface**.
 1. In the **Add a source** section, click the hyperlink to add a new source.
 1. Select the **Upload new** tab and upload the `openweathermap.json`.
 1. Click **Add Source**.
-1. Select the OpenWeather API in the New MCP server wizard.
+1. Select the OpenWeather API in the New Interface wizard.
 1. Click **Next**.
-1. Name the server `openweather-service`.
+1. Name the Interface `openweather-service`.
 1. Select the Operator-managed control plane (`context-mesh-demo`).
-1. Click **Create server** and wait for the server status to become **Healthy**.
+1. Click **Create Interface** and wait for the Interface status to become **Healthy**.
 
-The MCP runtime is now exposed at `/mcp/openweather-service`.
+The Interface is now exposed at `/mcp/openweather-service`.
 
-## Test the OpenWeather MCP server
+## Test the OpenWeather Interface
 
-Hook up the MCP server to an agent:
+Hook up the Interface to an agent:
 
 ```shell
 claude mcp add --transport http context-mesh-weather http://localhost/mcp/openweather-service \

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 540" role="img" aria-labelledby="cc-title cc-desc" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace">
-  <title id="cc-title">Claude Code terminal session calling an OpenWeather MCP server</title>
-  <desc id="cc-desc">A dark-mode terminal window showing Claude Code answering a weather question by calling the get_current_weather tool on an MCP server, returning conditions for San Francisco.</desc>
+  <title id="cc-title">Claude Code terminal session calling an OpenWeather Context Mesh Interface</title>
+  <desc id="cc-desc">A dark-mode terminal window showing Claude Code answering a weather question by calling the get_current_weather tool on a Context Mesh Interface, returning conditions for San Francisco.</desc>
 
   <defs>
     <clipPath id="window-clip">

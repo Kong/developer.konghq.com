@@ -1,6 +1,6 @@
 ---
 title: "Connect MCP clients to {{site.context_mesh}}"
-description: "Configure MCP clients including Claude Code CLI, VS Code, Cursor, and GitHub Copilot to connect to your {{site.context_mesh}} servers."
+description: "Configure MCP clients including Claude Code CLI, VS Code, Cursor, and GitHub Copilot to connect to your {{site.context_mesh}} Interfaces."
 content_type: reference
 layout: reference
 products:
@@ -22,7 +22,7 @@ related_resources:
     url: /context-mesh/
 ---
 
-Once you've created a {{site.context_mesh}} MCP server, configure your MCP client by adding the server endpoint and any required authentication headers. Replace the placeholders below with your server's actual URL and credentials.
+Once you've created a {{site.context_mesh}} Interface, configure your MCP client by adding the Interface endpoint and any required authentication headers. Replace the placeholders below with your Interface's actual URL and credentials.
 
 ## Generic MCP client config
 
@@ -42,8 +42,8 @@ For any standard MCP client, use this JSON configuration format:
 ```
 
 Replace:
-- `SERVER_NAME` with your server's name (e.g., `flights_service`, `openweather-service`)
-- `http://localhost/mcp/SERVER_PATH` with your server's endpoint URL
+- `SERVER_NAME` with your Interface's name (e.g., `flights_service`, `openweather-service`)
+- `http://localhost/mcp/SERVER_PATH` with your Interface's endpoint URL
 - `HEADER_NAME` and `ENV_VAR_NAME` with the authentication header required by your API
 
 ## {{ site.claude_code }} CLI
@@ -73,20 +73,20 @@ Or edit `~/.claude.json` directly:
 
 **Verify the configuration**
 
-List all configured servers:
+List all configured MCP servers:
 
 ```sh
 claude mcp list
 ```
 
-You should see your server listed with a status indicator.
+You should see your Interface listed with a status indicator.
 
 ## Visual Studio Code
 
 1. Open Visual Studio Code
 1. Open the Command Palette (`Cmd+Shift+P` on Mac, `Ctrl+Shift+P` on Windows/Linux)
 1. Type "MCP" and select **MCP: Open User Configuration**
-1. Add your {{site.context_mesh}} server configuration:
+1. Add your {{site.context_mesh}} Interface configuration:
 
     ```json
     {
@@ -110,11 +110,11 @@ You should see your server listed with a status indicator.
     }
     ```
 
-1. Replace the placeholders with your server details
+1. Replace the placeholders with your Interface details
 1. Save the configuration file
 1. Reload VS Code (Command Palette > **Developer: Reload Window**)
 1. When prompted, enter your API key or authentication token
-1. Verify the server is running in the MCP settings
+1. Verify the Interface is running in the MCP settings
 
 {:.info}
 > VS Code securely stores your credentials after the first prompt.
@@ -140,11 +140,11 @@ You should see your server listed with a status indicator.
     }
     ```
 
-1. Replace the placeholders with your server details
+1. Replace the placeholders with your Interface details
 1. Save the configuration file
-1. Return to **Cursor Settings > MCP** and verify your server is listed
+1. Return to **Cursor Settings > MCP** and verify your Interface is listed
 1. Press `Cmd+L` (Mac) or `Ctrl+L` (Windows/Linux) to open Cursor chat
-1. Click `@` to add context and select tools from your {{site.context_mesh}} server
+1. Click `@` to add context and select tools from your {{site.context_mesh}} Interface
 
 ## GitHub Copilot for VS Code
 
@@ -152,7 +152,7 @@ You should see your server listed with a status indicator.
 1. Ensure GitHub Copilot extension is installed
 1. Open the Command Palette (`Cmd+Shift+P` on Mac, `Ctrl+Shift+P` on Windows/Linux)
 1. Type "MCP" and select **MCP: Open User Configuration**
-1. Add your {{site.context_mesh}} server configuration:
+1. Add your {{site.context_mesh}} Interface configuration:
 
     ```json
     {
@@ -176,7 +176,7 @@ You should see your server listed with a status indicator.
     }
     ```
 
-1. Replace the placeholders with your server details
+1. Replace the placeholders with your Interface details
 1. Save the configuration file
 1. Reload VS Code (Command Palette > **Developer: Reload Window**)
 1. When prompted, enter your API key
@@ -196,7 +196,7 @@ For IntelliJ IDEA, PyCharm, WebStorm, and other JetBrains IDEs:
 1. Switch to **Agent mode** in the chat panel
 1. Click the **tools icon** (wrench/settings)
 1. Select **Edit settings** to open MCP configuration
-1. Add your {{site.context_mesh}} server configuration:
+1. Add your {{site.context_mesh}} Interface configuration:
 
     ```json
     {
@@ -212,7 +212,7 @@ For IntelliJ IDEA, PyCharm, WebStorm, and other JetBrains IDEs:
     }
     ```
 
-1. Replace the placeholders with your server details
+1. Replace the placeholders with your Interface details
 1. Save the configuration file
 1. Restart your IDE
 1. Open GitHub Copilot chat and verify your {{site.context_mesh}} tools are available
@@ -236,7 +236,7 @@ For IntelliJ IDEA, PyCharm, WebStorm, and other JetBrains IDEs:
     }
     ```
 
-1. Replace the placeholders with your server details
+1. Replace the placeholders with your Interface details
 1. Save the file
 1. Restart Windsurf
 1. Open Cascade chat and verify your {{site.context_mesh}} tools are available
@@ -246,7 +246,7 @@ For IntelliJ IDEA, PyCharm, WebStorm, and other JetBrains IDEs:
 For Eclipse, Xcode, and other IDEs with MCP or GitHub Copilot support:
 
 1. Locate your IDE's MCP or GitHub Copilot settings
-1. Add your {{site.context_mesh}} server using the generic JSON format:
+1. Add your {{site.context_mesh}} Interface using the generic JSON format:
 
     ```json
     {
@@ -261,7 +261,7 @@ For Eclipse, Xcode, and other IDEs with MCP or GitHub Copilot support:
     }
     ```
 
-1. Replace the placeholders with your server details
+1. Replace the placeholders with your Interface details
 1. Save and restart your IDE
 1. Verify your {{site.context_mesh}} tools are available in your AI assistant
 
