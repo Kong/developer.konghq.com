@@ -40,6 +40,54 @@ rows:
 
 Not every policy has all three. A policy states its own shape on its own page.
 
+## Where a policy applies
+
+On Kubernetes, the namespace a policy is created in restricts which proxies it can reach.
+`targetRef` narrows within that reach; it cannot widen it. The control plane works out the
+reach from the policy's shape and records it in the `kuma.io/policy-role` label, which it
+sets and overwrites itself.
+
+{% table %}
+columns:
+  - title: Policy
+    key: policy
+  - title: "`kuma.io/policy-role`"
+    key: role
+  - title: Reaches
+    key: reach
+rows:
+  - policy: "Created in the system namespace, `{{site.mesh_namespace}}`"
+    role: "`system`"
+    reach: "Every proxy in the mesh."
+  - policy: "Created in an application namespace, every `to[]` item naming a single `MeshService` or `MeshHTTPRoute` by `kuma.io/display-name`"
+    role: "`producer`"
+    reach: "Every client of that destination, in any namespace and any zone."
+  - policy: "Created in an application namespace, with `to[]` items that are not all of that form"
+    role: "`consumer`"
+    reach: "Only proxies in the policy's own namespace."
+  - policy: "Created in an application namespace, with no `to[]` at all"
+    role: "`workload-owner`"
+    reach: "Only proxies in the policy's own namespace."
+{% endtable %}
+
+A policy cannot mix producer and consumer items. One that names a single destination in one
+`to[]` item and something broader in another is rejected on admission.
+
+{:.warning}
+> `targetRef.kind: Mesh` does not mean "the whole mesh" on its own. In a `consumer` or
+> `workload-owner` policy it means every proxy in that policy's namespace. To apply a rule
+> across the mesh, create the policy in `{{site.mesh_namespace}}`.
+
+On a Zone control plane, a policy created in `{{site.mesh_namespace}}` must also carry the
+label `kuma.io/origin: zone`. Without it, admission rejects the policy:
+
+```
+Operation not allowed. Applying policies on Zone CP on a system namespace requires
+'kuma.io/origin' label to be set to 'zone'.
+```
+
+Universal has no namespaces, so every policy there is `system` and reaches the whole mesh.
+
 ## Why outbound names a destination and inbound matches an identity
 
 A **destination** is something the proxy chooses to call. Your proxy decides to send a

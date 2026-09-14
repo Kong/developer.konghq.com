@@ -220,7 +220,7 @@ spec:
     - matches:
         - spiffeID:
             type: Prefix
-            value: spiffe://default.default.mesh.local/ns/kong-mesh-demo/
+            value: spiffe://default.default.mesh.local/ns/kong-mesh-demo/sa
       default:
         http:
           requestTimeout: 45s
@@ -231,8 +231,13 @@ Read the SPIFFE URI in a matching caller's certificate. Replace `default.default
 with its trust domain: the text between `spiffe://` and the next `/`. That value goes after
 `spiffe://` in `rules[].matches[].spiffeID.value`. For example, a trust domain of
 `payments.eu.mesh.local` produces the namespace prefix
-`spiffe://payments.eu.mesh.local/ns/kong-mesh-demo/`. Keep the trailing slash so the prefix
-does not also match a namespace whose name merely starts with `kong-mesh-demo`.
+`spiffe://payments.eu.mesh.local/ns/kong-mesh-demo/sa`.
+
+The value must be a syntactically valid SPIFFE ID, so it cannot end in `/`; the control
+plane rejects `path cannot have a trailing slash`. Because `Prefix` is a plain string
+comparison, a prefix stopping at `/ns/kong-mesh-demo` would also match
+`kong-mesh-demo-test`. Extend it through the next separator, to `/ns/kong-mesh-demo/sa`,
+to match that namespace and nothing that merely starts with its name.
 
 ## Disable a timeout
 
