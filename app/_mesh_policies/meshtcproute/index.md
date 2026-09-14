@@ -109,7 +109,7 @@ spec:
 
 A `to` entry accepts exactly one rule, since there is nothing to distinguish a second one by,
 and that rule must declare `backendRefs`. An empty or missing list is rejected with
-`backendRefs (): must be defined`.
+`backendRefs: must be defined`.
 
 ## Where connections go
 

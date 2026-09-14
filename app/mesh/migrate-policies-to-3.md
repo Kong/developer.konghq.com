@@ -151,7 +151,7 @@ are selected by `labels` only, in `spec.targetRef`, `spec.to[].targetRef` and `b
 alike. `name` and `namespace` select nothing.
 
 Unlike the `Dataplane` case above, the four real-resource kinds require `labels`, so a reference
-missing them is rejected with `labels (): must be set when kind is MeshService`.
+missing them is rejected with `labels: must be set when kind is MeshService`.
 
 ```yaml
 # 2.x
@@ -457,7 +457,7 @@ Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kind
 
 `openTelemetry.endpoint` is removed, and `openTelemetry.backendRef` is the only way to name a
 collector. A policy still setting `endpoint` is rejected with
-`openTelemetry.backendRef (): must be defined`.
+`openTelemetry.backendRef: must be defined`.
 
 Create a [MeshOpenTelemetryBackend](/mesh/meshopentelemetrybackend/) carrying the endpoint, then reference it by labels:
 
@@ -586,7 +586,7 @@ Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kind
 ### `backendRefs` is now required
 
 A rule must declare `backendRefs`. An empty or missing list is rejected with
-`backendRefs (): must be defined`. This differs from `MeshHTTPRoute`, where omitting the list
+`backendRefs: must be defined`. This differs from `MeshHTTPRoute`, where omitting the list
 sends matched requests to the destination in the `to` entry.
 
 `to` needs at least one entry, and a `to` entry accepts at most one rule.
@@ -764,7 +764,7 @@ Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kind
 ### Point OpenTelemetry backends at a MeshOpenTelemetryBackend
 
 `openTelemetry.endpoint` is removed, and `backendRef` is the only way to name a collector. A
-policy still setting `endpoint` is rejected with `openTelemetry.backendRef (): must be defined`.
+policy still setting `endpoint` is rejected with `openTelemetry.backendRef: must be defined`.
 
 ```yaml
 # 2.x
@@ -1137,7 +1137,7 @@ Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kind
 ### Point OpenTelemetry backends at a MeshOpenTelemetryBackend
 
 `openTelemetry.endpoint` is removed, and `backendRef` is the only way to name a collector. A
-policy still setting `endpoint` is rejected with `openTelemetry.backendRef (): must be defined`.
+policy still setting `endpoint` is rejected with `openTelemetry.backendRef: must be defined`.
 
 ```yaml
 # 2.x
