@@ -341,6 +341,44 @@ custom_fields_by_lua_name='custom_attributes_by_lua'
 name=page.name
 slug=page.slug %}
 
+### Array indices {% new_in 3.15 %}
+
+Array indices should be enclosed within square brackets. For example:
+
+```sh
+curl -i -X POST http://localhost:8001/plugins \
+  --header 'Accept: application/json' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "name": "opentelemetry",
+  "config": {
+    "access_logs": {
+      "custom_attributes_by_lua": {
+        "foo[1].bar[2].woo": "return 456"
+      }
+    }
+  }
+}'
+```
+
+Array indices only support positive integers.
+
+### Special characters {% new_in 3.10 %}
+
+{% include /plugins/logging/custom-lua-special-characters.md 
+custom_fields_by_lua='config.access_logs.custom_attributes_by_lua'
+custom_fields_by_lua_slug='config-access-logs-custom-attributes-by-lua'
+custom_fields_by_lua_name='custom_attributes_by_lua'
+name=page.name
+slug=page.slug %}
+
+{:.warning}
+> The OpenTelemetry plugin doesn't use the same table for logging as the other logging plugins. This is because it uses `config.access_logs.custom_attributes_by_lua` instead of `config.custom_fields_by_lua`.
+
+### Limitations
+
+{% include /plugins/logging/custom-lua-limitations.md %}
+
 ## Troubleshooting
 
 The OpenTelemetry spans are printed to the console when the log level is set to `debug` in the {{site.base_gateway}} configuration file.
