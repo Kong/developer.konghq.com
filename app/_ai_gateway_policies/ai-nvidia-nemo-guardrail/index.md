@@ -38,7 +38,7 @@ icon: ai-nvidia-nemo-guardrail.png
 
 The AI NVIDIA NeMo Guardrail Policy inspects requests and responses handled by the [AI Model](/ai-gateway/entities/ai-model/) entity and checks them against [NVIDIA NeMo Guardrails](https://docs.nvidia.com/nemo/guardrails/). {{site.ai_gateway}} sends the content it extracts to the NeMo Guardrails microservice, and blocks any request or response that violates the safety rails you configure.
 
-The Policy doesn't evaluate content itself. It delegates every decision to NeMo Guardrails, so the rails you define in NeMo (content safety, topic control, jailbreak detection, or your own Colang flows) determine what {{site.ai_gateway}} allows through.
+This AI Policy doesn't evaluate content. It delegates every decision to NeMo Guardrails, so the rails you define in NeMo (content safety, topic control, jailbreak detection, or your own Colang flows) determine what {{site.ai_gateway}} allows through.
 
 ## Prerequisites
 
@@ -56,6 +56,37 @@ The AI NVIDIA NeMo Guardrail Policy intercepts traffic, extracts the text to eva
 1. On the way back, the Policy intercepts the response and sends the extracted text to NeMo Guardrails.
    - NeMo runs the configured output rails and returns a pass or block status.
 1. If NeMo allows the content, {{site.ai_gateway}} forwards the response to the client.
+
+{% comment %}
+<!--vale off-->
+{% mermaid %}
+sequenceDiagram
+    autonumber
+    participant Client
+    participant Gateway as {{site.ai_gateway}}
+    participant Policy as AI NVIDIA NeMo Guardrail Policy
+    participant NeMo as NeMo Guardrails service
+    participant AI as Upstream AI service
+
+    Client->>Gateway: Send request
+    Gateway->>Policy: Route request
+    Policy->>NeMo: Intercept & send extracted request text
+    NeMo->>NeMo: Run configured input rails
+    NeMo->>Policy: Allow or block request
+    Policy->>Gateway: Forward allowed request
+    Gateway->>AI: Process allowed request
+    AI->>Gateway: Return AI response
+    Gateway->>Policy: Forward response
+    Policy->>NeMo: Intercept & send extracted response text
+    NeMo->>NeMo: Run configured output rails
+    NeMo->>Policy: Allow or block response
+    Policy->>Gateway: Forward allowed response
+    Gateway->>Client: Forward allowed response to client
+{% endmermaid %}
+<!--vale on-->
+
+> _Figure 1: Diagram showing the request and response flow with the AI NVIDIA NeMo Guardrail Policy._
+{% endcomment %}
 
 ### Guarding mode
 
@@ -238,24 +269,9 @@ Two other fields change how the Policy reacts:
 
 ## Logging
 
-The AI NVIDIA NeMo Guardrail Policy emits structured log data for every check it runs, under `ai.proxy.nvidia-nemo-guardrail` in the request log. For the full list of shared AI log fields, see the [{{site.ai_gateway}} audit log reference](/ai-gateway/ai-audit-log-reference/).
+The AI NVIDIA NeMo Guardrail Policy emits structured log data for every check it runs, under `ai.proxy.nvidia-nemo-guardrail` in the request log. For the full list of log fields, see the [{{site.ai_gateway}} audit log reference](/ai-gateway/ai-audit-log-reference/#ai-nvidia-nemo-guardrail-logs).
 
-Fields available under `ai.proxy.nvidia-nemo-guardrail`:
-
-* `mode`: The `config.guarding_mode` value in effect for the request (`INPUT`, `OUTPUT`, or `BOTH`).
-* `input_block_reason` / `output_block_reason`: The name of the rail that blocked the content, for example `self check input`.
-* `input_block_source` / `output_block_source`: The Policy that produced the block, for example `ai-nvidia-nemo-guardrail`.
-* `input_block_consumer_id` / `output_block_consumer_id`: The consumer associated with the blocked request, or `unknown` if none is identified.
-* `input_processing_latency` / `output_processing_latency`: Time in milliseconds spent on the NeMo check for that phase.
-* `input_faulty_prompt` / `output_faulty_response`: The raw blocked content, populated only when `config.log_blocked_content` is enabled.
-
-A blocked request or response also populates the shared `ai.proxy.guardrail_triggered` object, common across AI guardrail policies:
-
-* `blocked_content`: The content that triggered the block.
-* `block_source`: The Policy that produced the block.
-* `block_direction`: `AI_GUARDRAIL_BLOCK_INPUT` or `AI_GUARDRAIL_BLOCK_OUTPUT`.
-
-To log the raw content of blocked requests and responses, enable [`config.log_blocked_content`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-log-blocked-content). This field is disabled by default.
+To log the raw content of blocked requests and responses, enable [`config.log_blocked_content`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-log-blocked-content). This field is disabled by default. When enabled, the blocked prompt or response body appears under `ai.proxy.nvidia-nemo-guardrail.input_faulty_prompt` and `ai.proxy.nvidia-nemo-guardrail.output_faulty_response` in each log entry.
 
 {:.warning}
 > Blocked prompts and responses can contain sensitive or unsafe content. Enable `config.log_blocked_content` only when your logging pipeline is authorized to store that data.

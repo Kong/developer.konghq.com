@@ -386,6 +386,53 @@ rows:
 {:.info}
 > The Policy also allows you to define [custom metrics](/ai-gateway/policies/ai-custom-guardrail/#metrics) based on Lua expressions.
 
+### AI NVIDIA NeMo Guardrail logs
+
+If you use the [AI NVIDIA NeMo Guardrail Policy](/ai-gateway/policies/ai-nvidia-nemo-guardrail/), {{site.ai_gateway}} logs include fields under the `ai.proxy.nvidia-nemo-guardrail` object. These fields capture the guarding mode, processing latency, block reasons, and violation details when requests or responses are blocked.
+
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: "`ai.proxy.nvidia-nemo-guardrail.mode`"
+    description: |
+       The content guarding mode configured for the Policy. Possible values: `INPUT`, `OUTPUT`, `BOTH`.
+  - property: "`ai.proxy.nvidia-nemo-guardrail.input_processing_latency`"
+    description: The time, in milliseconds, spent processing the request through NeMo Guardrails.
+  - property: "`ai.proxy.nvidia-nemo-guardrail.output_processing_latency`"
+    description: The time, in milliseconds, spent processing the response through NeMo Guardrails.
+  - property: "`ai.proxy.nvidia-nemo-guardrail.input_block_reason`"
+    description: "The name of the rail that blocked the request, for example `self check input`. Empty if the request was allowed."
+  - property: "`ai.proxy.nvidia-nemo-guardrail.output_block_reason`"
+    description: "The name of the rail that blocked the response, for example `self check output`. Empty if the response was allowed."
+  - property: "`ai.proxy.nvidia-nemo-guardrail.input_block_source`"
+    description: |
+       The name of the Policy that blocked the request, for example `ai-nvidia-nemo-guardrail`. Empty if the request was allowed.
+  - property: "`ai.proxy.nvidia-nemo-guardrail.output_block_source`"
+    description: |
+       The name of the Policy that blocked the response. Empty if the response was allowed.
+  - property: "`ai.proxy.nvidia-nemo-guardrail.input_block_consumer_id`"
+    description: |
+       The ID of the AI Consumer whose request was blocked, or `unknown` if no AI Consumer identity was resolved.
+  - property: "`ai.proxy.nvidia-nemo-guardrail.output_block_consumer_id`"
+    description: |
+       The ID of the AI Consumer whose response was blocked, or `unknown` if no AI Consumer identity was resolved.
+  - property: "`ai.proxy.nvidia-nemo-guardrail.input_faulty_prompt`"
+    description: |
+       The raw request prompt that was blocked. Only present when `config.log_blocked_content` is `true`.
+  - property: "`ai.proxy.nvidia-nemo-guardrail.output_faulty_response`"
+    description: |
+       The raw response that was blocked. Only present when `config.log_blocked_content` is `true`.
+{% endtable %}
+
+A blocked request or response also populates the shared `ai.proxy.guardrail_triggered` object, common across AI guardrail policies:
+
+* `blocked_content`: The content that triggered the block.
+* `block_source`: The Policy that produced the block.
+* `block_direction`: `AI_GUARDRAIL_BLOCK_INPUT` or `AI_GUARDRAIL_BLOCK_OUTPUT`.
 
 ### AI PII Sanitizer logs
 
