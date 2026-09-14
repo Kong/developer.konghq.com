@@ -99,6 +99,33 @@ wins**, so labels that match more than one backend make the choice depend on cre
 > backend does not switch traffic to it because the oldest match continues to win. Give the new
 > backend a distinct label and update the referring policies when you want to move traffic.
 
+## Where to run the collector
+
+The proxy does not send OTLP through its own outbound listeners. `kuma-dp` runs a local
+receiver on a Unix socket, Envoy writes to that socket, and `kuma-dp` exports to the address in
+this resource. That export leaves the sidecar's own process, which transparent proxying does
+not intercept, so it arrives at the collector as **plain gRPC with no mesh mTLS**.
+
+That decides where a collector can run:
+
+{% table %}
+columns:
+  - title: Collector
+    key: where
+  - title: Result
+    key: result
+rows:
+  - where: "Outside the mesh"
+    result: "Works. The export is plaintext and nothing expects otherwise."
+  - where: "In the mesh, default `Strict`"
+    result: "**Fails silently.** No telemetry arrives and `kuma-dp` logs `failed to upload metrics: ... error reading server preface: unexpected EOF`, because the collector's inbound rejects the unauthenticated connection."
+  - where: "In the mesh, with [MeshTLS](/mesh/policies/meshtls/) `Permissive` on the collector"
+    result: "Works, at a cost: a `Permissive` inbound accepts unauthenticated plaintext from anything that can reach it, and [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) cannot apply to those connections."
+{% endtable %}
+
+Running the collector outside the mesh is the simpler choice. If it has to sit inside, use
+network controls to limit who can reach its OTLP port, since mesh authorization will not.
+
 ## Configure the collector connection
 
 Every field is optional. An empty spec is valid, and describes the node-local default: the
