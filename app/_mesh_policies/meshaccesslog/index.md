@@ -27,13 +27,13 @@ are not separate log events.
 With the default HTTP format, a record looks like this:
 
 ```text
-[2026-09-10T12:04:51.190Z] default "GET /api/orders HTTP/1.1" 200 - 0 1274 12 11 "10.42.0.9" "curl/8.4.0" "-" "b7c1e0f4-9a1d-4c86-9a02-1f0e6d3c55aa" "orders.kong-mesh-demo.svc:8080" "unknown" "orders_kong-mesh-demo_svc_8080" "10.42.0.9" "10.42.1.4:8080"
+[2026-09-10T12:04:51.190Z] default "GET /api/orders HTTP/2" 200 - 0 1274 12 11 "10.42.0.9" "curl/8.4.0" "-" "b7c1e0f4-9a1d-4c86-9a02-1f0e6d3c55aa" "orders.kong-mesh-demo.svc.cluster.local" "unknown" "kri_dp_default_zone-1_kong-mesh-demo_orders-6f4c9b7d55-xk2vq_http" "10.42.0.9" "10.42.1.4:8080"
 ```
 
 ## Log all incoming traffic
 
-This policy logs every request arriving at every proxy in the `default` mesh, writing each
-record to the sidecar's standard output:
+This policy logs requests arriving at the proxies it reaches, writing each record to the
+sidecar's standard output:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -54,7 +54,10 @@ spec:
 
 What each field does:
 
-* `targetRef` selects **which proxies** log. `kind: Mesh` means all of them.
+* `targetRef` selects **which proxies** log. `kind: Mesh` means every proxy the policy
+  reaches, which is every proxy in the policy's own namespace unless the policy is created in
+  `{{site.mesh_namespace}}`. Create it there to log the whole mesh. See
+  [Where a policy applies](/mesh/policy-targeting/#where-a-policy-applies).
 * `rules` describes **what to do with inbound traffic** at those proxies. One entry with no
   filter means "log everything", and `backends` says where the records go.
 
