@@ -39,6 +39,9 @@ columns:
   - title: Direct Download link
     key: download
 rows:
+  - version: 3.16.0.0
+    download: |
+      [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block" alt=""> Download 3.16 SBOM](https://packages.konghq.com/public/gateway-316/raw/names/security-assets/versions/3.16.0.0/security-assets.tar.gz)
   - version: 3.15.0.0
     download: |
       [<img src="/assets/icons/download.svg" class="w-5 m-2 inline-block" alt=""> Download 3.15 SBOM](https://packages.konghq.com/public/gateway-315/raw/names/security-assets/versions/3.15.0.0/security-assets.tar.gz)
