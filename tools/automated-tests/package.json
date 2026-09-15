@@ -10,7 +10,7 @@
     "keywords": [],
     "license": "MIT",
     "dependencies": {
-        "@dotenvx/dotenvx": "^1.51.1",
+        "@dotenvx/dotenvx": "^2.0.0",
         "debug": "^4.4.0",
         "dockerode": "^5.0.0",
         "tinyglobby": "^0.2.12",
