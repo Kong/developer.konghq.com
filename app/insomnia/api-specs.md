@@ -15,7 +15,6 @@ related_resources:
     url: /how-to/generate-requests-from-an-api-spec/
 
 tags:
-    - insomnia-documents
     - collections
     - design-apis
 

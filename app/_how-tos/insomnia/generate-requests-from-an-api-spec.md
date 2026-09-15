@@ -10,7 +10,6 @@ min_version:
   insomnia: "13.3"
 
 tags:
-  - insomnia-documents
   - collections
   - design-apis
 

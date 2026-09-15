@@ -12,7 +12,7 @@ products:
 min_version:
   insomnia: "13.0"
 tags:
-  - insomnia-documents
+  - design-apis
   - linting
 
 related_resources:
