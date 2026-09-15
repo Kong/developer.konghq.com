@@ -15,6 +15,7 @@ config:
         kuma.io/zone: east
     default:
       backends:
-        - zipkin:
+        - type: Zipkin
+          zipkin:
             url: http://east.zipkincollector:9411/api/v2/spans
             apiVersion: httpJson
