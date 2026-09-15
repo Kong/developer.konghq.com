@@ -294,7 +294,10 @@ variables:
 {% endentity_examples %}
 <!--vale on-->
 
-`allow_status_codes` limits metering to the response codes you list, which is `200-299` here. The two plugins work independently, so without it the {{site.metering_and_billing}} plugin also reports usage for requests that the Entitlement Enforcement plugin blocks, and a customer who is already over their limit keeps spending usage on rejected requests. For the alternatives, see [Excluding blocked requests from usage](/plugins/entitlement-enforcement/#excluding-blocked-requests-from-usage).
+`allow_status_codes` limits metering to the response codes you list, which is `200-299` in this example. 
+The two plugins work independently, so without `allow_status_codes`, the {{site.metering_and_billing}} plugin also reports usage for failed requests, and a customer who already reached their usage limit keeps spending it on requests the Entitlement Enforcement plugin rejects.
+
+For alternatives, see [Excluding blocked requests from usage](/plugins/entitlement-enforcement/#excluding-blocked-requests-from-usage).
 
 ## Create a plan with entitlements
 
