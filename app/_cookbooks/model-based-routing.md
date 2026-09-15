@@ -14,7 +14,8 @@ works_on:
 min_version:
   gateway: '3.14'
 categories:
-  - llm-routing
+  - llm
+  - cost-optimization
 featured: true
 popular: false
 
@@ -34,7 +35,7 @@ prereqs:
   skip_product: true
   skip_tool: true
   inline:
-    - title: "{{site.konnect_product_name}}"
+    - title: Kong Konnect
       content: |
         This tutorial uses {{site.konnect_product_name}}. The [quickstart script](https://get.konghq.com/quickstart) provisions a recipe-scoped Control Plane and local Data Plane.
 
@@ -74,10 +75,15 @@ prereqs:
         3. Export credentials:
 
            ```sh
-           export DECK_OPENAI_TOKEN='Bearer sk-YOUR-KEY'
-           export DECK_AWS_ACCESS_KEY_ID='YOUR-AWS-ACCESS-KEY'
-           export DECK_AWS_SECRET_ACCESS_KEY='YOUR-AWS-SECRET-KEY'
-           export DECK_AWS_REGION='us-east-1'
+          export DECK_OPENAI_SELECTOR_SLM='o3-mini'                # Model selection (SLM)
+          export DECK_OPENAI_FAST_MODEL='gpt-4o-mini'              # Fast tier
+          export DECK_BEDROCK_SMART_MODEL='global.anthropic.claude-sonnet-4-6'  # Smart tier (Claude on Bedrock)
+
+          # Also export your provider credentials
+          export DECK_OPENAI_TOKEN='Bearer sk-...'
+          export DECK_AWS_ACCESS_KEY_ID='your-access-key-id'
+          export DECK_AWS_SECRET_ACCESS_KEY='your-secret-access-key'
+          export DECK_AWS_REGION='us-east-1'
            ```
 overview: |
   This recipe demonstrates intelligent cross-provider routing where {{site.ai_gateway_name}} analyzes each prompt and dynamically routes it to the optimal provider based on complexity. Simple prompts are routed to OpenAI for speed and cost efficiency, while complex tasks requiring deep reasoning are routed to AWS Bedrock (Claude).
@@ -105,7 +111,7 @@ The solution uses two Routes working in tandem:
 
 1. **Model selection Route:** Receives prompts, analyzes complexity via OpenAI o3-mini, and returns a tier recommendation ("fast" or "smart").
 
-2. **Default LLM Route:** Your application's main chat endpoint. The Datakit plugin intercepts requests, calls the model selection Route, extracts the tier recommendation, modifies the request body to specify the recommended tier, and forwards it to the AI Proxy Advanced plugin. The plugin has two targets — one for OpenAI (fast tier) and one for AWS Bedrock (smart tier) — and routes based on the tier field.
+2. **Default LLM Route:** Your application's main chat endpoint. The DataKit plugin intercepts requests, calls the model selection Route, extracts the tier recommendation, modifies the request body to specify the recommended tier, and forwards it to the AI Proxy Advanced plugin. The plugin has two targets — one for OpenAI (fast tier) and one for AWS Bedrock (smart tier) — and routes based on the tier field.
 
 This architecture provides:
 
@@ -119,17 +125,17 @@ This architecture provides:
 sequenceDiagram
     participant Client
     participant Kong as Kong AI Gateway
-    participant Selector as Model Selection Route<br/>(OpenAI o3-mini)
+    participant Model Selector as Model Selection Route<br/>(OpenAI o3-mini)
     participant OpenAI
     participant Bedrock as AWS Bedrock<br/>(Claude)
 
     Client->>Kong: POST /chat (with prompt)
     Note over Kong: DataKit plugin intercepts
 
-    Kong->>Selector: Call /model-selection (with prompt)
-    Selector->>OpenAI: Analyze prompt complexity (o3-mini)
-    OpenAI-->>Selector: Return tier recommendation
-    Selector-->>Kong: Return tier ("fast" or "smart")
+    Kong->>Model Selector: Call /model-selection (with prompt)
+    Model Selector->>OpenAI: Analyze prompt complexity (o3-mini)
+    OpenAI-->>Model Selector: Return tier recommendation
+    Model Selector-->>Kong: Return tier ("fast" or "smart")
     Note over Kong: DataKit updates request body model field
 
     alt Fast Tier
@@ -146,19 +152,21 @@ sequenceDiagram
 
 {% table %}
 columns:
-  - title: Component
-    key: component
-  - title: Responsibility
-    key: responsibility
+  - title: "Component"
+  - title: "Responsibility"
 rows:
-  - component: Client application
-    responsibility: "Sends standard chat completion requests to `/chat`. No routing logic required."
-  - component: DataKit plugin (default-llm)
-    responsibility: "Extracts prompt, calls `/model-selection`, modifies request body with tier recommendation."
-  - component: Model selection Route
-    responsibility: "Analyzes prompt complexity using OpenAI o3-mini, returns `fast` or `smart`."
-  - component: AI Proxy Advanced (default-llm)
-    responsibility: "Routes to OpenAI (fast) or AWS Bedrock (smart) based on the `model` field in the request body. Handles provider auth and format translation."
+  - columns:
+      - "Client application"
+      - "Sends standard chat completion requests to `/chat`. No routing logic required."
+  - columns:
+      - "DataKit plugin (default-llm)"
+      - "Extracts prompt, calls `/model-selection`, modifies request body with tier recommendation."
+  - columns:
+      - "Model selection Route"
+      - "Analyzes prompt complexity using OpenAI o3-mini, returns `\"fast\"` or `\"smart\"`."
+  - columns:
+      - "AI Proxy Advanced (default-llm)"
+      - "Routes to OpenAI (fast) or AWS Bedrock (smart) based on `model` field in request body. Handles provider auth and format translation."
 {% endtable %}
 
 ## How it works
@@ -191,16 +199,12 @@ The Key Auth plugin enforces authentication on both Routes using a shared `apike
 - **`hide_credentials: true`:** Strips the `apikey` header before forwarding requests to the LLM provider, so API keys never leave {{site.base_gateway}}.
 - **`key_names`:** Defines which header carries the key. The demo uses `apikey` via the OpenAI SDK's `default_headers` parameter.
 
-The recipe defines two Consumers:
-- **`demo-consumer`:** Client-facing authentication. End users authenticate with `apikey: demo-consumer-key`.
-- **`internal-router`:** Service-to-service authentication. The Datakit plugin uses `apikey: internal-router-key` for internal calls to `/model-selection`.
+The same Key Auth configuration applies to both the `model-selection` and `default-llm` Routes. The recipe defines one Consumer (`demo-consumer`) with key `demo-consumer-key` that authenticates to both.
 
-This two-consumer pattern is standard for internal service-to-service traffic: clients authenticate once at the gateway edge, but internal service calls use separate credentials. When the DataKit plugin calls the model-selection Route internally, it uses the `internal-router-key` (via the `DECK_INTERNAL_ROUTER_KEY` environment variable), so the internal call passes authentication without needing to extract or forward the client's credentials.
-
-For production deployments, use [{{site.base_gateway}} Vaults](/gateway/secrets-management/) to store API keys:
+When the DataKit plugin on the default-llm Route calls the model-selection Route internally, it extracts the `apikey` header from the incoming client request and forwards it, so the internal call also passes authentication.
 
 {:.info}
-> In production, store credentials in [{{site.base_gateway}} Vaults](/gateway/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. {{site.base_gateway}} supports HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the {{site.konnect_product_name}} Config Store.
+> In production, store credentials in [{{site.base_gateway}} Vaults](/gateway/latest/kong-enterprise/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. {{site.base_gateway}} supports HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the {{site.konnect_product_name}} Config Store.
 
 ### AI Prompt Decorator: Inject routing instructions
 
@@ -268,15 +272,15 @@ The [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin on the model-selecti
 - **`max_request_body_size: 5242880`:** Allows prompts up to 5 MB. Model selection prompts are typically small (the decorator message plus the user's prompt), so this limit is generous.
 - **`response_streaming: deny`:** The DataKit plugin needs the full response body to extract the tier decision, so streaming is disabled.
 - **`logging.log_statistics: true`:** Logs token counts and latency for cost tracking. Set `log_payloads: true` in development to see request/response bodies, but never in production (exposes user prompts and tier decisions in logs).
-- **`model.name`:** References `{% raw %}${{ env "DECK_OPENAI_SELECTOR_SLM" }}{% endraw %}`, which defaults to `o3-mini`.
+- **`model.name`:** References `${{ env "DECK_OPENAI_SELECTOR_SLM" }}`, which defaults to `o3-mini`.
 
 The model responds with a single word ("fast" or "smart").
 
-### Datakit: Route selection orchestration
+### DataKit: Route selection orchestration
 
-The [Datakit](/plugins/datakit/) plugin on the default-llm Route orchestrates the model selection flow. It extracts the prompt from the client request, calls the `/model-selection` Route, parses the tier recommendation from the response, and modifies the request body's `model` field before the request reaches the AI Proxy Advanced plugin.
+The [DataKit](/plugins/datakit/) plugin on the default-llm Route orchestrates the model selection flow. It extracts the prompt from the client request, calls the `/model-selection` Route, parses the tier recommendation from the response, and modifies the request body's `model` field before the request reaches the AI Proxy Advanced plugin.
 
-Datakit operates as a workflow engine with node-based processing. Each node performs one transformation, and nodes connect by referencing each other's outputs.
+DataKit operates as a workflow engine with node-based processing. Each node performs one transformation, and nodes connect by referencing each other's outputs.
 
 #### Configuration details
 
@@ -387,8 +391,8 @@ The [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin on the default-llm R
 - **`max_request_body_size: 10485760`:** Allows request bodies up to 10 MB, which accommodates large conversation histories or RAG-injected context.
 - **`response_streaming: allow`:** Enables streaming responses for interactive chat applications. The client can receive tokens as they're generated.
 - **`model.model_alias`:** Maps the tier name to this target. When the DataKit plugin sets `.model = "fast"`, the plugin routes to OpenAI. When `.model = "smart"`, it routes to AWS Bedrock.
-- **Fast target (OpenAI):** Uses `{% raw %}${{ env "DECK_OPENAI_FAST_MODEL" }}{% endraw %}` (defaults to `gpt-4o-mini`) with Bearer token authentication.
-- **Smart target (AWS Bedrock):** Uses `{% raw %}${{ env "DECK_BEDROCK_SMART_MODEL" }}{% endraw %}` (defaults to `us.anthropic.claude-haiku-4-5-20251001-v1:0`) with AWS IAM credentials and region configuration.
+- **Fast target (OpenAI):** Uses `${{ env "DECK_OPENAI_FAST_MODEL" }}` (defaults to `gpt-4o-mini`) with Bearer token authentication.
+- **Smart target (AWS Bedrock):** Uses `${{ env "DECK_BEDROCK_SMART_MODEL" }}` (defaults to `global.anthropic.claude-sonnet-4-6`) with AWS IAM credentials and region configuration.
 
 The plugin adds an `X-Kong-LLM-Model` response header showing which model served the request. The demo script reads this header to confirm the provider routing decision.
 
@@ -396,44 +400,30 @@ The plugin adds an `X-Kong-LLM-Model` response header showing which model served
 
 Export your environment variables:
 
+Sync the configuration to your Control Plane using decK:
+
 ```bash
-export DECK_OPENAI_SELECTOR_SLM='o3-mini'                # Model selection (SLM)
-export DECK_OPENAI_FAST_MODEL='gpt-4o-mini'              # Fast tier
-export DECK_BEDROCK_SMART_MODEL='us.anthropic.claude-haiku-4-5-20251001-v1:0'  # Smart tier (Claude on Bedrock)
-
-# Service-to-service authentication for internal Datakit calls
-export DECK_INTERNAL_ROUTER_KEY='internal-router-key'    # Must match the internal-router consumer's key
-
-# Also export your provider credentials
-export DECK_OPENAI_TOKEN='Bearer sk-...'
-export DECK_AWS_ACCESS_KEY_ID='your-access-key-id'
-export DECK_AWS_SECRET_ACCESS_KEY='your-secret-access-key'
-export DECK_AWS_REGION='us-east-1'
+deck gateway sync recipes/model-based-routing/kong-config/deck/multi-provider.yaml \
+  --konnect-token "${KONNECT_TOKEN}" \
+  --konnect-control-plane-name "${KONNECT_CONTROL_PLANE_NAME}"
 ```
+{: data-test-step="block" .collapsible }
 
-Create the `multi-provider.yaml` file:
+The configuration file contents:
 
 {%- raw %}
 
-```bash
-cat <<'EOF' > multi-provider.yaml
-
+```yaml
 _format_version: '3.0'
 _info:
   select_tags:
     - model-based-routing-recipe
 
-# Consumers for authentication
+# Consumer for authentication
 consumers:
-  # Client-facing consumer
   - username: demo-consumer
     keyauth_credentials:
       - key: demo-consumer-key
-
-  # Service-to-service consumer for internal Datakit calls
-  - username: internal-router
-    keyauth_credentials:
-      - key: internal-router-key
 
 # Model selection service - analyzes prompts using OpenAI o3-mini
 services:
@@ -529,14 +519,14 @@ services:
               jq: |
                 ({"messages": .messages})
 
-            # Use service-to-service API key for internal model-selection call
+            # Extract API key from request headers for internal call
             - name: EXTRACT_AUTH
               type: jq
               input: request.headers
               output: service_request.headers
               jq: |
                 {
-                  apikey: "internal-router-key"
+                  apikey: (.apikey // .Apikey // .APIKey)
                 }
 
 
@@ -614,18 +604,9 @@ services:
               model:
                 provider: openai
                 name: ${{ env "DECK_OPENAI_SELECTOR_SLM" }}
-EOF
 ```
 {% endraw -%}
-
-Then sync it to your Control Plane using decK:
-
-```bash
-deck gateway sync multi-provider.yaml \
-  --konnect-token "${KONNECT_TOKEN}" \
-  --konnect-control-plane-name "${KONNECT_CONTROL_PLANE_NAME}"
-```
-{: data-test-step="block" }
+{:.no-copy-code}
 
 ## Try it out
 
@@ -689,7 +670,7 @@ curl -X POST http://localhost:8000/chat \
   -i
 ```
 
-Check the `X-Kong-LLM-Model` response header - it should show the model you configured for the smart tier (for example, `us.anthropic.claude-haiku-4-5-20251001-v1:0`), confirming routing to the AWS Bedrock smart tier.
+Check the `X-Kong-LLM-Model` response header - it should show `global.anthropic.claude-sonnet-4-5-20250929-v1:0`, confirming routing to the AWS Bedrock smart tier.
 
 Example response for complex prompt (truncated):
 
@@ -719,9 +700,9 @@ Content-Type: application/json
 
 ### What happened
 
-1. **Simple prompt routing:** The simple prompt ("Hi there! What's 2 + 2?") routes to OpenAI's fast tier. The Datakit plugin calls the model-selection Route, OpenAI o3-mini analyzes the prompt complexity, returns "fast", Datakit updates the request body, and AI Proxy Advanced routes to the OpenAI target. The `X-Kong-LLM-Model` header shows `gpt-4o-mini`.
+1. **Simple prompt routing:** The simple prompt ("Hi there! What's 2 + 2?") routes to OpenAI's fast tier. The DataKit plugin calls the model-selection Route, OpenAI o3-mini analyzes the prompt complexity, returns "fast", DataKit updates the request body, and AI Proxy Advanced routes to the OpenAI target. The `X-Kong-LLM-Model` header shows `gpt-4o-mini`.
 
-2. **Complex prompt routing:** The complex prompt (binary search implementation) routes to AWS Bedrock's smart tier. The model-selection LLM recognizes this as a reasoning-heavy task and returns "smart", which Datakit forwards to the AWS Bedrock target (Claude). The `X-Kong-LLM-Model` header shows `us.anthropic.claude-haiku-4-5-20251001-v1:0`.
+2. **Complex prompt routing:** The complex prompt (binary search implementation) routes to AWS Bedrock's smart tier. The model-selection LLM recognizes this as a reasoning-heavy task and returns "smart", which DataKit forwards to the AWS Bedrock target (Claude). The `X-Kong-LLM-Model` header shows `global.anthropic.claude-sonnet-4-5-20250929-v1:0`.
 
 3. **`X-Kong-LLM-Model` header:** Every response includes this header showing which model served the request. In production, this header enables per-request observability — your application can log it for cost attribution or debugging.
 
