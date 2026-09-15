@@ -1,0 +1,21 @@
+{
+    "name": "mesh-policy-examples-validator",
+    "version": "1.0.0",
+    "description": "Validates published Kong Mesh policy example config blocks against the vendored Kuma CRD schemas",
+    "type": "module",
+    "main": "index.js",
+    "scripts": {
+      "validate": "node index.js",
+      "test": "node --test"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "ajv": "^8.17.1",
+        "ajv-formats": "^3.0.1",
+        "linkedom": "^0.18.5",
+        "tinyglobby": "^0.2.12",
+        "yaml": "^2.6.0"
+    }
+}
