@@ -18,6 +18,8 @@ breadcrumbs:
   - /kongctl/
 
 related_resources:
+  - text: APIOps for Konnect with kongctl and GitHub Actions
+    url: /kongctl/ci-cd/github-actions/
   - text: Declarative configuration with kongctl
     url: /kongctl/declarative/
   - text: kongctl install skills
@@ -82,6 +84,11 @@ agent:
 - Generate API configuration from OpenAPI documents.
 - Work through plan, diff, apply, sync, delete, and adopt workflows.
 - Scaffold CI/CD workflows for declarative configuration.
+
+For a complete starting point, use the
+[GitHub Actions quickstart](/kongctl/ci-cd/github-actions/). It shows diffs in
+pull requests and applies changes on main for a Dev Portal and an API with
+an inline OpenAPI specification.
 
 <!--vale off-->
 ### kongctl-extension-builder

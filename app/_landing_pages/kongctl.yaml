@@ -33,6 +33,10 @@ rows:
             The declarative configuration feature lets you define API platform infrastructure as code using YAML and a stateless reconciliation system. kongctl manages APIs, Dev Portals, control planes, {{site.ai_gateway}}, {{site.event_gateway_short}}, organization, and {{site.konnect_catalog}} resources.
 
             kongctl also ships installable AI agent skills that help coding agents generate, review, and operate kongctl configuration from a repository.
+
+            **[CI/CD with GitHub Actions](/kongctl/ci-cd/github-actions/)**:
+            Follow the quickstart to publish an API to a Dev Portal, review
+            diffs in pull requests, and apply changes on main.
             
             kongctl is one of multiple tools you can use to manage {{site.konnect_short_name}} and {{site.base_gateway}}.
             To learn about other tools, see the [tools page](/tools/).
@@ -347,13 +351,12 @@ rows:
                 Configuration and device flow authentication credentials are stored in `$XDG_CONFIG_HOME/kongctl/` (typically `~/.config/kongctl/`).
             - q: Can I use kongctl in CI/CD pipelines?
               a: |
-                Yes. kongctl is designed for CI/CD integration:
-
-                * Use personal access tokens for non-interactive authentication
-                * Generate plan artifacts in pull requests for review before applying changes
-                * Store plan JSON files in version control for audit trails
-                * Use namespace isolation to separate environments
-                * Implement approval gates for production deployments
+                Yes. Start with the
+                [GitHub Actions quickstart](/kongctl/ci-cd/github-actions/)
+                to show configuration diffs in pull requests and apply
+                changes on pushes to main. The example manages an
+                Dev Portal and API using a Konnect token stored in a
+                repository secret for non-interactive authentication.
 
             - q: How is kongctl different from the {{site.konnect_short_name}} APIs?
               a: |
