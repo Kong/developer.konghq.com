@@ -33,13 +33,19 @@ you do not write one at all.
 On Kubernetes the control plane generates a `MeshService` from each `Service`. Change the
 `Service` instead of the generated resource; the ports and protocols follow from it.
 
+`MeshService` is read-only on the **global** control plane, since zones are what produce it.
+Writing one there through kongctl is refused before the request is sent:
+
+```
+Mesh Service is read only on this control plane and cannot be created or updated
+```
+
 {:.warning}
-> The generated resource is not protected. A zone control plane accepts a hand-written
-> `MeshService`, and it accepts edits to a generated one — the change is stored and is **not**
-> reconciled back from the `Service`. Editing a generated `MeshService` therefore breaks
-> routing to that service until you undo it: changing a port on one made every request to it
-> fail, and the resource stayed changed. Treat these as control-plane output and leave them
-> alone.
+> A **zone** control plane does not protect it. It accepts a hand-written `MeshService`, and it
+> accepts edits to a generated one — the change is stored and is **not** reconciled back from
+> the `Service`. Editing a generated `MeshService` therefore breaks routing to that service
+> until you undo it: changing a port on one made every request to it fail, and the resource
+> stayed changed. Treat these as control-plane output and leave them alone.
 
 On Universal you author them, selecting proxies with `spec.selector`.
 
