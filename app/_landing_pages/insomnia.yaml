@@ -68,17 +68,8 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Documents
-            description: Build and iterate on your OpenAPI specs to design your next API.
-            icon:  /assets/icons/file.svg
-            cta:
-              text: Learn more
-              url: /insomnia/documents/
-      - blocks:
-        - type: card
-          config:
-            title: Collections
-            description: Use collections to call APIs and run automated tests.
+            title: API Collections
+            description: Design your API with an OpenAPI spec, then call it and run automated tests from the same place.
             icon: /assets/icons/bars.svg
             cta:
               text: Learn more
@@ -105,7 +96,7 @@ rows:
         - type: card
           config:
             title: Environments
-            description: Use environments to reuse values across requests and collections.
+            description: Use environments to reuse values across requests and API Collections.
             icon: /assets/icons/code.svg
             cta:
               text: Learn more
@@ -123,7 +114,7 @@ rows:
         - type: card
           config:
             title: Koh CLI
-            description: Let AI agents like Claude Code work with your Insomnia collections, requests, and specs.
+            description: Let AI agents like Claude Code work with your Insomnia API Collections, requests, and specs.
             icon:  /assets/icons/ai.svg
             tech_preview: true
             cta:

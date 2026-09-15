@@ -23,7 +23,7 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    Using Insomnia, you can create or upload an API spec to a document. 
+                    Using Insomnia, you can create or upload an API spec to an API Collection, then call the API from the same place. Click the **Spec** tab on any API Collection to get started. 
                       
                       Insomnia can help you write or edit your spec with the following:  
                 - type: text
@@ -46,12 +46,12 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Design APIs with documents
+            title: Design APIs with API Collections
             description: Use Insomnia to create APIs with a spec-first approach. Leverage OpenAPI, live API previews, and more.
             icon: /assets/icons/insomnia/design.svg
             cta:
               text: Learn more
-              url: /how-to/create-a-design-document/
+              url: /how-to/create-an-api-collection/
               align: end
       - blocks:
         - type: card
@@ -103,14 +103,14 @@ rows:
       - blocks:    
           - type: card
             config:
-              title: Documents
+              title: API Collections
               description: |
-                Design documents (also called documents) hold API specifications, API requests, and tests. 
+                An API Collection holds your API specification, your requests, and your environments. 
 
-                Documents have three main capabilities: design APIs, debug APIs, and test APIs.
+                {% new_in 13.3 %} API Collections replace the separate documents and collections of Insomnia 13.2 and earlier.
               icon: /assets/icons/insomnia/design.svg
               cta:
-                text: Learn about design documents
-                url: /insomnia/documents/
+                text: Learn about API Collections
+                url: /insomnia/collections/
                 align: end
   
