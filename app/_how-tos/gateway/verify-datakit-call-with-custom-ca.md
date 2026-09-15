@@ -84,7 +84,7 @@ The Datakit plugin's [`call` node](/plugins/datakit/#call-node) makes outbound H
 By default, it verifies the server's certificate against {{site.base_gateway}}'s global trusted CA store (`lua_ssl_trusted_certificate`).
 
 If a `call` node needs to reach an internal service signed by a private certificate authority, that global store often isn't an option:
-* On {{site.konnect_short_name}} Dedicated Cloud Gateways, the global store is managed by {{site.konnect_short_name}}, so you can't add your own private CAs to it.
+* On {{site.konnect_short_name}} [Dedicated Cloud Gateways](/dedicated-cloud-gateways/), the global store is managed by {{site.konnect_short_name}}, so you can't add your own private CAs to it.
 * Editing global {{site.base_gateway}} configuration to add a private CA affects every plugin and connection on the node.
 
 This guide shows how to configure the Datakit plugin's `ca_certificates` field so a `call` node verifies its outbound TLS connection against your private CA.
@@ -224,7 +224,7 @@ In production, you will point this to your real service.
 
 The Datakit plugin uses a {{site.base_gateway}} [CA Certificate](/gateway/entities/ca-certificate/) entity to verify the internal service's TLS certificate.
 
-Change back into the working directory, then build the request body from the certificate file:
+Navigate back to the working directory, then build the request body from the certificate file:
 
 <!--vale off-->
 {% validation custom-command %}
@@ -244,8 +244,17 @@ export DECK_CA_CERT_ID=$(curl -s -X POST http://localhost:8001/ca_certificates \
     --json @ca-cert-body.json | jq -r .id)
 echo "CA Cert ID: $DECK_CA_CERT_ID"
 ```
-{: data-test-step="block" }
-
+{: data-deployment-topology="on-prem" data-test-step="block" }
+{% konnect_api_request %}
+url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/ca_certificates
+status_code: 201
+method: POST
+body_file: ca-cert-body.json
+capture:
+  - variable: DECK_CA_CERT_ID
+    jq: ".id"
+{% endkonnect_api_request %}
+{: data-deployment-topology="konnect" data-test-step="block" }
 ## Configure the Datakit plugin
 
 Using the `example-service` and `example-route` from the [prerequisites](#prerequisites), configure the Datakit plugin with a `call` node that reaches the internal service over HTTPS, and reference the CA Certificate object in `ca_certificates`:
@@ -313,7 +322,7 @@ openssl req -new -x509 -nodes -days 365 \
 ```
 {: data-test-step="block" }
 
-Change back into `datakit-custom-ca`, then build the request body from the certificate file:
+Navigate back to the `datakit-custom-ca` directory, then build the request body from the certificate file:
 
 <!--vale off-->
 {% validation custom-command %}
@@ -333,7 +342,18 @@ export DECK_WRONG_CA_CERT_ID=$(curl -s -X POST http://localhost:8001/ca_certific
     --json @unrelated-ca-cert-body.json | jq -r .id)
 echo "Wrong CA Cert ID: $DECK_WRONG_CA_CERT_ID"
 ```
-{: data-test-step="block" }
+{: data-deployment-topology="on-prem" data-test-step="block" }
+
+{% konnect_api_request %}
+url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/ca_certificates
+status_code: 201
+method: POST
+body_file: unrelated-ca-cert-body.json
+capture:
+  - variable: DECK_WRONG_CA_CERT_ID
+    jq: ".id"
+{% endkonnect_api_request %}
+{: data-deployment-topology="konnect" data-test-step="block" }
 
 Update the Datakit plugin's `ca_certificates` to reference the unrelated CA instead:
 
