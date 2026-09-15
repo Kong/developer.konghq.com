@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.10.0
+  version: 3.10.2
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@50e82517a7d3f00f35d62877b852b50a92486651
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/50e82517a7d3f00f35d62877b852b50a92486651'
+  x-oas-source: kong/platform-api@3431f88ec6af3cefe1c63b9e594c7465d950269c
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/3431f88ec6af3cefe1c63b9e594c7465d950269c'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -6491,21 +6491,6 @@ components:
               description: Let users define a custom server URL for endpoints. This will be used to generate code snippets and to test the API. The URL is client-side only and is not saved.
               type: boolean
               default: true
-            try_it_ui_audience:
-              description: |
-                The audience for the Try It UI feature.
-
-                `all` means that the Try It UI will be available to all users, including unauthenticated users.
-
-                `authenticated` means that the Try It UI will only be available to authenticated users.
-
-                `registered` means that the Try It UI will only be available to users who have registered for the API.
-              type: string
-              default: all
-              enum:
-                - all
-                - authenticated
-                - registered
           title: PortalCustomizationSpecRenderer
         robots:
           type: string
