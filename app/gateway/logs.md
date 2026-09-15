@@ -221,20 +221,15 @@ rows:
 
 To see a data plane's current effective log level, and the details of any active override, get its node information:
 
+<!--vale off-->
 {% navtabs "dynamic log level state" %}
 {% navtab "Self-managed" %}
-
-<!--vale off-->
-{% control_plane_request %}
-url: /clustering/data-planes
-method: GET
-status_code: 200
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
-{% endcontrol_plane_request %}
-<!--vale on-->
-
+```sh
+curl -X GET "http://localhost:8001/clustering/data-planes" \
+     --no-progress-meter --fail-with-body  \
+     -H "Accept: application/json"\
+     -H "Content-Type: application/json"
+```
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}}" %}
 
@@ -246,6 +241,7 @@ method: GET
 
 {% endnavtab %}
 {% endnavtabs %}
+<!--vale on-->
 
 Each node has a `log_level` field with its current effective level.
 
