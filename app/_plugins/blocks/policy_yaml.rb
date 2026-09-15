@@ -49,7 +49,7 @@ module Jekyll
       @callbacks = []
 
       register_callback(
-        _and(has_path(%w[spec to targetRef]), kind_is('MeshService')),
+        _and(has_path(%w[spec to targetRef]), _or(kind_is('MeshService'), kind_is('MeshMultiZoneService'))),
         lambda do |target_ref, context|
           case context[:env]
           when :kubernetes
@@ -60,7 +60,7 @@ module Jekyll
               }
             else
               {
-                'kind' => 'MeshService',
+                'kind' => target_ref['kind'],
                 'name' => target_ref['name'],
                 'namespace' => target_ref['namespace'],
                 'sectionName' => target_ref['sectionName']
@@ -74,7 +74,7 @@ module Jekyll
               }
             else
               {
-                'kind' => 'MeshService',
+                'kind' => target_ref['kind'],
                 'name' => target_ref['name'],
                 'sectionName' => target_ref['sectionName']
               }
