@@ -1833,6 +1833,7 @@ releases:
         - valkey:
             versions:
               - 8
+              - AWS ElastiCache Valkey 8.1
         - influxdb:
             versions:
               - 1
@@ -2034,6 +2035,7 @@ releases:
         - valkey:
             versions:
               - 8
+              - AWS ElastiCache Valkey 8.1
         - influxdb:
             versions:
               - 1
