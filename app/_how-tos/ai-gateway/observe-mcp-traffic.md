@@ -85,7 +85,7 @@ ai_gateway_mcp_servers:
       - !ref my-file-log#name
     access:
       auth_strategies:
-        - !ref my-key-auth#name
+        - my-key-auth
       acl_attribute_type: consumer
       acls:
         allow: []
