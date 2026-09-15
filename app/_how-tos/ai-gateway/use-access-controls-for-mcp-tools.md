@@ -124,8 +124,9 @@ ai_gateway_consumer_groups:
 
 ## Create AI Consumers
 
-Configure individual AI Consumers. Each one inherits the ACL rules of its group, and Eason, who belongs to no group, is only reachable through the tool-level ACLs you'll set in the next section:
+1. Configure individual AI Consumers. Each one inherits the ACL rules of its group, and Eason, who belongs to no group, is only reachable through the tool-level ACLs you'll set in the next section:
 
+{% capture consumers %}
 {% entity_examples %}
 ai_gateway_consumers:
   - ref: alice
@@ -153,9 +154,13 @@ ai_gateway_consumers:
     type: api-key
     policies: []
 {% endentity_examples %}
+{% endcapture %}
 
-Add each AI Consumer to its group:
+{{ consumers | indent }}
 
+1. Add each AI Consumer to its group:
+
+{% capture consumer_groups %}
 {% entity_examples %}
 ai_gateway_consumer_groups:
   - ref: admin
@@ -180,9 +185,13 @@ ai_gateway_consumer_groups:
     consumers:
       - !ref carol#name
 {% endentity_examples %}
+{% endcapture %}
 
-Create an API key credential for each AI Consumer, and save the generated keys. {{site.ai_gateway}} generates the key value; it isn't set by you and can't be retrieved again after this step:
+{{ consumer_groups | indent }}
 
+1. Create an API key credential for Alice, and save the generated key. {{site.ai_gateway}} generates the key value; it isn't set by you and can't be retrieved again after this step:
+
+{% capture alice_credential %}
 <!-- vale off -->
 {% konnect_api_request %}
 url: /v1/ai-gateways/$AI_GATEWAY_ID/consumers/$ALICE_ID/credentials
@@ -199,7 +208,15 @@ capture:
   - variable: ALICE_API_KEY
     command: "jq -r '.api_key'"
 {% endkonnect_api_request %}
+<!-- vale on -->
+{% endcapture %}
 
+{{ alice_credential | indent }}
+
+1. Create an API key credential for Bob:
+
+{% capture bob_credential %}
+<!-- vale off -->
 {% konnect_api_request %}
 url: /v1/ai-gateways/$AI_GATEWAY_ID/consumers/$BOB_ID/credentials
 status_code: 201
@@ -215,7 +232,15 @@ capture:
   - variable: BOB_API_KEY
     command: "jq -r '.api_key'"
 {% endkonnect_api_request %}
+<!-- vale on -->
+{% endcapture %}
 
+{{ bob_credential | indent }}
+
+1. Create an API key credential for Carol:
+
+{% capture carol_credential %}
+<!-- vale off -->
 {% konnect_api_request %}
 url: /v1/ai-gateways/$AI_GATEWAY_ID/consumers/$CAROL_ID/credentials
 status_code: 201
@@ -231,7 +256,15 @@ capture:
   - variable: CAROL_API_KEY
     command: "jq -r '.api_key'"
 {% endkonnect_api_request %}
+<!-- vale on -->
+{% endcapture %}
 
+{{ carol_credential | indent }}
+
+1. Create an API key credential for Eason:
+
+{% capture eason_credential %}
+<!-- vale off -->
 {% konnect_api_request %}
 url: /v1/ai-gateways/$AI_GATEWAY_ID/consumers/$EASON_ID/credentials
 status_code: 201
@@ -248,6 +281,9 @@ capture:
     command: "jq -r '.api_key'"
 {% endkonnect_api_request %}
 <!-- vale on -->
+{% endcapture %}
+
+{{ eason_credential | indent }}
 
 ## Create an AI Auth Strategy
 
@@ -414,8 +450,9 @@ ai_gateway_mcp_servers:
 
 `2026-07-28` clients don't perform an `initialize` handshake, and {{site.ai_gateway}} doesn't issue an `Mcp-Session-Id`. Every request declares its protocol revision through the `MCP-Protocol-Version` header and carries the AI Consumer's API key in the `apikey` header. Validate the ACL rules by calling `tools/list` directly against the route for each AI Consumer.
 
-### Alice (admin group): sees every tool
+1. Alice (admin group): sees every tool
 
+{% capture alice_list %}
 <!-- vale off -->
 {% validation request-check %}
 url: /mcp/
@@ -433,9 +470,13 @@ body:
   method: tools/list
 {% endvalidation %}
 <!-- vale on -->
+{% endcapture %}
 
-The response lists all five tools. Alice belongs to `admin`, so calling `search_orders`, the most restricted tool, also succeeds:
+{{ alice_list | indent }}
 
+   The response lists all five tools. Alice belongs to `admin`, so calling `search_orders`, the most restricted tool, also succeeds:
+
+{% capture alice_search %}
 <!-- vale off -->
 {% validation request-check %}
 url: /mcp/
@@ -455,9 +496,13 @@ body:
     arguments: {}
 {% endvalidation %}
 <!-- vale on -->
+{% endcapture %}
 
-### Bob (developer group): denied list_users and search_orders
+{{ alice_search | indent }}
 
+1. Bob (developer group): denied list_users and search_orders
+
+{% capture bob_list %}
 <!-- vale off -->
 {% validation request-check %}
 url: /mcp/
@@ -475,9 +520,13 @@ body:
   method: tools/list
 {% endvalidation %}
 <!-- vale on -->
+{% endcapture %}
 
-The response only lists `get_user`, `list_orders`, and `list_orders_for_user`. Calling `list_users` directly confirms the same rule:
+{{ bob_list | indent }}
 
+   The response only lists `get_user`, `list_orders`, and `list_orders_for_user`. Calling `list_users` directly confirms the same rule:
+
+{% capture bob_call %}
 <!-- vale off -->
 {% validation request-check %}
 url: /mcp/
@@ -497,11 +546,15 @@ body:
     arguments: {}
 {% endvalidation %}
 <!-- vale on -->
+{% endcapture %}
 
-The call returns `HTTP 403 Forbidden`. Bob's `developer` group is on the `deny` list for `list_users` and isn't on the `allow` list for `search_orders`, so both tools are unreachable.
+{{ bob_call | indent }}
 
-### Carol (suspended group): denied every tool
+   The call returns `HTTP 403 Forbidden`. Bob's `developer` group is on the `deny` list for `list_users` and isn't on the `allow` list for `search_orders`, so both tools are unreachable.
 
+1. Carol (suspended group): denied every tool
+
+{% capture carol_call %}
 <!-- vale off -->
 {% validation request-check %}
 url: /mcp/
@@ -521,11 +574,15 @@ body:
     arguments: {}
 {% endvalidation %}
 <!-- vale on -->
+{% endcapture %}
 
-Carol belongs to `suspended`, which isn't in `access.default_tool_acls.allow` and has no tool-specific override, so every tool call returns `HTTP 403 Forbidden`.
+{{ carol_call | indent }}
 
-### Eason (no group): only list_users
+   Carol belongs to `suspended`, which isn't in `access.default_tool_acls.allow` and has no tool-specific override, so every tool call returns `HTTP 403 Forbidden`.
 
+1. Eason (no group): only list_users
+
+{% capture eason_list %}
 <!-- vale off -->
 {% validation request-check %}
 url: /mcp/
@@ -543,7 +600,10 @@ body:
   method: tools/list
 {% endvalidation %}
 <!-- vale on -->
+{% endcapture %}
 
-The response lists only `list_users`. Eason belongs to no AI Consumer Group, but `list_users`' own `access.acls.allow` names him directly, alongside `admin`. Every other tool falls back to `access.default_tool_acls`, which doesn't include him.
+{{ eason_list | indent }}
+
+   The response lists only `list_users`. Eason belongs to no AI Consumer Group, but `list_users`' own `access.acls.allow` names him directly, alongside `admin`. Every other tool falls back to `access.default_tool_acls`, which doesn't include him.
 
 To see how these allow and deny decisions are recorded, see [Observe MCP traffic with the File Log Policy](/ai-gateway/observe-mcp-traffic/).

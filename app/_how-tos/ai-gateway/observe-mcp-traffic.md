@@ -171,8 +171,9 @@ ai_gateway_mcp_servers:
 
 Call the MCP server as both AI Consumers, as stateless `2026-07-28` clients: no `initialize` handshake and no `Mcp-Session-Id`, only the `MCP-Protocol-Version` header and each AI Consumer's API key in the `apikey` header.
 
-Alice, in `admin`, successfully calls `list_orders`:
+1. Alice, in `admin`, successfully calls `list_orders`:
 
+{% capture alice_call %}
 <!-- vale off -->
 {% validation request-check %}
 url: /mcp/
@@ -192,9 +193,13 @@ body:
     arguments: {}
 {% endvalidation %}
 <!-- vale on -->
+{% endcapture %}
 
-Bob, in `developer`, is denied `list_users`:
+{{ alice_call | indent }}
 
+1. Bob, in `developer`, is denied `list_users`:
+
+{% capture bob_call %}
 <!-- vale off -->
 {% validation request-check %}
 url: /mcp/
@@ -214,6 +219,9 @@ body:
     arguments: {}
 {% endvalidation %}
 <!-- vale on -->
+{% endcapture %}
+
+{{ bob_call | indent }}
 
 ## Validate the log entries
 
