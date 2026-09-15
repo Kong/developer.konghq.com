@@ -12,7 +12,6 @@ min_version:
 description: Import an API specification into Insomnia from a file, URL, or your clipboard.
 
 tags:
-  - insomnia-documents
   - design-apis
 
 tldr: 

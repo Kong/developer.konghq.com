@@ -10,7 +10,6 @@ min_version:
 breadcrumbs:
   - /insomnia/collections/
 tags:
-  - insomnia-documents
   - design-apis
 related_resources:
   - text: About Insomnia
