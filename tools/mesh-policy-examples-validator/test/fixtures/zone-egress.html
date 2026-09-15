@@ -1,0 +1,219 @@
+<!doctype html>
+<html>
+<body>
+<main>
+<p>Prose description with an example block:</p>
+<div class="custom-code-block w-full h-fit inline-grid rounded-lg">
+    
+    
+    
+    
+    <div class="flex w-full relative bg-code-block rounded-b-lg border border-primary overflow-auto p-3 rounded-t-lg pr-11" data-code-snippet="">
+        <div class="code-block h-full w-full"><pre class="shiki shiki-themes catppuccin-latte catppuccin-mocha" style="background-color:#eff1f5;--shiki-dark-bg:#1e1e2e;color:#4c4f69;--shiki-dark:#cdd6f4" tabindex="0"><code id="7c6554eb-417d-4ba3-9443-ff0e3659abba">  ---
+  type: ExternalService
+  mesh: default
+  name: example-1
+  tags:
+    kuma.io/service: example
+    kuma.io/protocol: tcp
+  networking:
+    address: example.com:443
+  ---
+  type: ExternalService
+  mesh: default
+  name: example-2
+  tags:
+    kuma.io/service: example
+    kuma.io/protocol: tcp
+  networking:
+    address: 192.168.0.1:443</code></pre></div>
+        
+        <div class="flex absolute right-3 top-[10px] items-center gap-2">
+            
+            
+            
+<div class="absolute right-8 flex text-xs text-button bg-brand p-1 rounded invisible opacity-0">Copied!</div>
+<clipboard-copy for="7c6554eb-417d-4ba3-9443-ff0e3659abba" aria-label="Copy" data-copy-feedback="Copied!" class="copy-action group">
+    
+    
+</clipboard-copy>
+
+            
+        </div>
+        
+    </div>
+    
+</div>
+<div class="tabs flex flex-col" data-tab-group="policy-yaml additional_classes heading_level">
+  <ul class="tablist" role="tablist">
+    
+      
+      
+      <button id="navtab-cd90c799-35ac-4f04-9873-ecbedea18a96-tab-1" class="tab-button__horizontal" aria-controls="navtab-cd90c799-35ac-4f04-9873-ecbedea18a96-tabpanel-1" role="tab" aria-selected="true" tabindex="0" data-slug="kubernetes">
+        
+        Kubernetes
+
+      </button>
+    
+      
+      
+      <button id="navtab-cd90c799-35ac-4f04-9873-ecbedea18a96-tab-2" class="tab-button__horizontal" aria-controls="navtab-cd90c799-35ac-4f04-9873-ecbedea18a96-tabpanel-2" role="tab" aria-selected="false" tabindex="-1" data-slug="universal">
+        
+        Universal
+
+      </button>
+    
+      
+      
+      <button id="navtab-cd90c799-35ac-4f04-9873-ecbedea18a96-tab-3" class="tab-button__horizontal" aria-controls="navtab-cd90c799-35ac-4f04-9873-ecbedea18a96-tabpanel-3" role="tab" aria-selected="false" tabindex="-1" data-slug="terraform">
+        
+        Terraform
+
+      </button>
+    
+  </ul>
+
+  <div class="navtab-contents mt-6 flex flex-col">
+    
+      
+      <div class="navtab-content flex flex-col gap-3 prose-ol:" role="tabpanel" data-id="navtab-cd90c799-35ac-4f04-9873-ecbedea18a96-tabpanel-1" tabindex="0" aria-labelledby="navtab-cd90c799-35ac-4f04-9873-ecbedea18a96-tab-1" data-panel="kubernetes">
+        
+
+
+<div class="custom-code-block w-full h-fit inline-grid rounded-lg">
+    
+    
+    
+    
+    <div class="flex w-full relative bg-code-block rounded-b-lg border border-primary overflow-auto p-3 rounded-t-lg pr-11" data-code-snippet="">
+        <div class="code-block h-full w-full"><pre class="shiki shiki-themes catppuccin-latte catppuccin-mocha" style="background-color:#eff1f5;--shiki-dark-bg:#1e1e2e;color:#4c4f69;--shiki-dark:#cdd6f4" tabindex="0"><code id="93c0a61b-690f-4402-828f-e23c1546142b">apiVersion: kuma.io/v1alpha1
+kind: ExternalService
+metadata:
+  name: example
+  namespace: kuma-demo
+  labels:
+    kuma.io/mesh: default
+spec:</code></pre></div>
+        
+        <div class="flex absolute right-3 top-[10px] items-center gap-2">
+            
+            
+            
+<div class="absolute right-8 flex text-xs text-button bg-brand p-1 rounded invisible opacity-0">Copied!</div>
+<clipboard-copy for="93c0a61b-690f-4402-828f-e23c1546142b" aria-label="Copy" data-copy-feedback="Copied!" class="copy-action group">
+    
+    
+</clipboard-copy>
+
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+
+      </div>
+    
+      
+      <div class="navtab-content flex flex-col gap-3 prose-ol: hidden" role="tabpanel" data-id="navtab-cd90c799-35ac-4f04-9873-ecbedea18a96-tabpanel-2" tabindex="0" aria-labelledby="navtab-cd90c799-35ac-4f04-9873-ecbedea18a96-tab-2" data-panel="universal">
+        
+
+
+<div class="custom-code-block w-full h-fit inline-grid rounded-lg">
+    
+    
+    
+    
+    <div class="flex w-full relative bg-code-block rounded-b-lg border border-primary overflow-auto p-3 rounded-t-lg pr-11" data-code-snippet="">
+        <div class="code-block h-full w-full"><pre class="shiki shiki-themes catppuccin-latte catppuccin-mocha" style="background-color:#eff1f5;--shiki-dark-bg:#1e1e2e;color:#4c4f69;--shiki-dark:#cdd6f4" tabindex="0"><code id="8987ece7-e8be-4a2c-aa55-5cd9b1e87ae1">type: ExternalService
+mesh: default
+name: example
+tags:
+  kuma.io/service: example
+  kuma.io/protocol: tcp
+networking:
+  address: example.com:443
+  tls:
+    enabled: false</code></pre></div>
+        
+        <div class="flex absolute right-3 top-[10px] items-center gap-2">
+            
+            
+            
+<div class="absolute right-8 flex text-xs text-button bg-brand p-1 rounded invisible opacity-0">Copied!</div>
+<clipboard-copy for="8987ece7-e8be-4a2c-aa55-5cd9b1e87ae1" aria-label="Copy" data-copy-feedback="Copied!" class="copy-action group">
+    
+    
+</clipboard-copy>
+
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+
+      </div>
+    
+      
+      <div class="navtab-content flex flex-col gap-3 prose-ol: hidden" role="tabpanel" data-id="navtab-cd90c799-35ac-4f04-9873-ecbedea18a96-tabpanel-3" tabindex="0" aria-labelledby="navtab-cd90c799-35ac-4f04-9873-ecbedea18a96-tab-3" data-panel="terraform">
+        
+<p class="text-sm">Adjust <strong>konnect_mesh_control_plane.my_meshcontrolplane.id</strong> and <strong>konnect_mesh.my_mesh.name</strong> according to your current configuration.</p>
+
+
+
+<div class="custom-code-block w-full h-fit inline-grid rounded-lg">
+    
+    
+    
+    
+    <div class="flex w-full relative bg-code-block rounded-b-lg border border-primary overflow-auto p-3 rounded-t-lg pr-11" data-code-snippet="">
+        <div class="code-block h-full w-full"><pre class="shiki shiki-themes catppuccin-latte catppuccin-mocha" style="background-color:#eff1f5;--shiki-dark-bg:#1e1e2e;color:#4c4f69;--shiki-dark:#cdd6f4" tabindex="0"><code id="417f414d-8416-4607-9d9a-56de9d5199d8">resource "konnect_external_service" "example" {
+  provider = konnect-beta
+  type = "ExternalService"
+  name = "example"
+  tags = {
+    kuma.io/service = "example"
+    kuma.io/protocol = "tcp"
+  }
+  networking = {
+    address = "example.com:443"
+    tls = {
+      enabled = "false"
+    }
+  }
+  labels   = {
+  "kuma.io/mesh" = konnect_mesh.my_mesh.name
+  }
+  cp_id    = konnect_mesh_control_plane.my_meshcontrolplane.id
+  mesh     = konnect_mesh.my_mesh.name
+}
+</code></pre></div>
+        
+        <div class="flex absolute right-3 top-[10px] items-center gap-2">
+            
+            
+            
+<div class="absolute right-8 flex text-xs text-button bg-brand p-1 rounded invisible opacity-0">Copied!</div>
+<clipboard-copy for="417f414d-8416-4607-9d9a-56de9d5199d8" aria-label="Copy" data-copy-feedback="Copied!" class="copy-action group">
+    
+    
+</clipboard-copy>
+
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+
+      </div>
+    
+  </div>
+</div>
+</main>
+</body>
+</html>
