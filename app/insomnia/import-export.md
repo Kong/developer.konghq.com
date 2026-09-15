@@ -23,19 +23,15 @@ faqs:
   - q: What’s the difference between "Export all data" and scoped export options?
     a: |
       * **Export all data**: Includes your entire account's data.
-      * **Scoped export options**: Allow you to export only specific parts of your data, such as a single **Document** or **Project**, for more targeted backups or sharing.
+      * **Scoped export options**: Allow you to export only specific parts of your data, such as a single **Document** or **Project**, for more targeted backups or sharing. An API Collection that contains a spec is exported as a **Document**.
 
 related_resources:
   - text: Inso CLI reference
-    url: /inso-cli/cli-command-reference/
-  - text: Design documents
-    url: /insomnia/get-started-with-documents/
-  - text: Insomnia Storage Options
-    url: /insomnia/insomnia-storage-options-guide/
-  - text: Get started with documents
-    url: /insomnia/get-started-with-documents/
+    url: /inso-cli/reference/
+  - text: API Collections
+    url: /insomnia/collections/
   - text: Storage options in Insomnia
-    url: /insomnia/insomnia-storage-options-guide/
+    url: /insomnia/storage/
   - text: Import content from Postman to multiple Insomnia projects
     url: /how-to/import-content-from-postman-to-multiple-insomnia-projects/
   - text: Migrate collections and environments from Postman to Insomnia
@@ -54,9 +50,9 @@ columns:
   - title: Method
     key: method
 rows:
-  - use_case: Export a design document for version control
+  - use_case: Export an API Collection for version control
     method: |
-      UI export from document menu or Preferences; or `inso export spec` for OpenAPI in CI.
+      UI export from the API Collection menu or Preferences; or `inso export spec` for OpenAPI in CI.
   - use_case: Transfer all API work to another machine
     method: |
       **UI → Preferences → Data → Export** all data.
@@ -66,9 +62,9 @@ rows:
   - use_case: Integrate spec validation into CI pipelines
     method: |
       In CI, use `inso lint spec <identifier>` to lint OpenAPI and fail builds on errors.
-  - use_case: Automate test execution from Insomnia test suites in CI
+  - use_case: Automate test execution from Insomnia legacy test suites in CI
     method: |
-      In CI, use `inso run test <identifier>` to run defined tests and return pass/fail exit codes.
+      In CI, use `inso run test <identifier>` to run defined tests and return pass/fail exit codes. Legacy unit tests are hidden in the app by default since Insomnia 13.3.
   - use_case: Import a Postman environment into Insomnia
     method: | 
       1. Organize each project into its own folder.
@@ -85,7 +81,7 @@ Depending on your workflow requirements, you can import into Insomnia with eithe
 ### UI import
 
 
-In a workspace or document header, select **Import** and then specify your import method:
+In a workspace or API Collection header, select **Import** and then specify your import method:
 - File
 - URL
 - Clipboard
@@ -95,7 +91,7 @@ Insomnia supports the following formats:
 - **Export formats (UI)**: Insomnia YAML (v5) and HAR
 - **Export formats (CLI)**: OpenAPI spec
 
-For more information on importing with the UI, go to [how to import an API spec as a document](/how-to/import-an-api-spec-as-a-document/).
+For more information on importing with the UI, go to [how to import an API spec into an API Collection](/how-to/import-an-api-spec/).
 
 ### CLI import
 Use Inso CLI to supplement UI workflows with command-line capabilities. Instead of importing files into the application directly, you can use Inso CLI to run tests, execute collections, validate specs, export OpenAPI artifacts, and run custom scripts.
@@ -103,10 +99,10 @@ Use Inso CLI to supplement UI workflows with command-line capabilities. Instead 
 An example of our key commands:
 * **Execute test suites via CLI**
 
-  `inso run test "<Design Document Name>" --env "<Environment Name>"`: Runs unit tests defined in the Insomnia application. The execution runs as in CI pipelines and returns a non-zero exit code if tests fail.
+  `inso run test "<API Collection Name>" --env "<Environment Name>"`: Runs unit tests defined in the Insomnia application. The execution runs as in CI pipelines and returns a non-zero exit code if tests fail.
 * **Validate an OpenAPI specification**
 
-  `inso export spec "<Design Document Name>" --output <filename>.yaml`: Extracts the raw OpenAPI spec tied to a design document. Without `--output`, the CLI prints the spec to stdout for easy scripting.
+  `inso export spec "<API Collection Name>" --output <filename>.yaml`: Extracts the raw OpenAPI spec tied to an API Collection. Without `--output`, the CLI prints the spec to stdout for easy scripting.
 
 * **Run request collections automatically**
 
@@ -119,8 +115,8 @@ For more information, see the [Inso CLI reference](/inso-cli/).
 Insomnia supports flexible export options that are tailored to both manual and automated workflows. You can either use the desktop app, ideal for immediate data transfer or archival, or use Inso CLI to script OpenAPI specification exports within CI pipelines.
 
 ### UI export
-In a workspace or document header, select **Export**  and then specify the file type. The following file types are supported:
-- **Document**: Export only the active design document. This includes the requests, environment settings, and tests. It does not include other workspace data.
+In a workspace or API Collection header, select **Export**  and then specify the file type. The following file types are supported:
+- **Document**: Export only the active API Collection. This includes the spec, the requests, environment settings, and tests. It does not include other workspace data.
 - **Project**: Export the selected collection. This includes all contained requests and environments.
 - **All data**: Export everything in your workspace.
 
@@ -129,16 +125,16 @@ The UI method supports the following formats:
 - HAR
 
 ### CLI export
-Use Inso CLI to automate exports of your OpenAPI specification from a design document. You can write the spec to a file, or let the CLI print to standard output for piping in scripts and CI. For a full overview, see the Inso CLI reference.
+Use Inso CLI to automate exports of your OpenAPI specification from an API Collection. You can write the spec to a file, or let the CLI print to standard output for piping in scripts and CI. For a full overview, see the Inso CLI reference.
 
 An example of the key commands:
 * **Export an OpenAPI spec to a file**
   
-  Use `inso export spec "<Design Document Name>" --output spec.yaml` to extract the raw OpenAPI specification tied to a design document and save it to a file. The identifier can be the spec name or its ID.
+  Use `inso export spec "<API Collection Name>" --output spec.yaml` to extract the raw OpenAPI specification tied to an API Collection and save it to a file. The identifier can be the spec name or its ID.
 
 * **Export to standard output for piping**
   
-  Use `inso export spec "<Design Document Name>"` without `--output` to print the spec to the console. This is useful for shell redirection or piping into other tools. 
+  Use `inso export spec "<API Collection Name>"` without `--output` to print the spec to the console. This is useful for shell redirection or piping into other tools. 
 
 ## v4 and v5 file formats
 
@@ -149,7 +145,7 @@ Insomnia exports in the v5 file format and can still import legacy v4 JSON files
 
 The v5 file format is a native YAML format that Insomnia generates in the following cases:
 
-* When you export a collection, design document, environment, or mock server.
+* When you export an API Collection, environment, or mock server.
 * When you use [Git Sync](/insomnia/storage/#git-sync): Insomnia writes your project data to the Git repository as v5 files.
 
 Each v5 file represents a single entity and identifies itself with a top-level `type` field.
@@ -166,9 +162,9 @@ columns:
     key: file
 rows:
   - type: "`collection.insomnia.rest/5.0`"
-    file: Request collection
+    file: API Collection without a spec (a request collection in Insomnia 13.2 and earlier)
   - type: "`spec.insomnia.rest/5.0`"
-    file: API spec / design document
+    file: API Collection with a spec (a design document in Insomnia 13.2 and earlier)
   - type: "`mock.insomnia.rest/5.0`"
     file: Mock server
   - type: "`environment.insomnia.rest/5.0`"

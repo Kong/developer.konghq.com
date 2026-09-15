@@ -68,17 +68,8 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Documents
-            description: Build and iterate on your OpenAPI specs to design your next API.
-            icon:  /assets/icons/file.svg
-            cta:
-              text: Learn more
-              url: /insomnia/documents/
-      - blocks:
-        - type: card
-          config:
-            title: Collections
-            description: Use collections to call APIs and run automated tests.
+            title: API Collections
+            description: Design your API with an OpenAPI spec, then call it and run automated tests from the same place.
             icon: /assets/icons/bars.svg
             cta:
               text: Learn more
