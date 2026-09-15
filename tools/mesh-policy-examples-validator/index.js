@@ -17,19 +17,32 @@ const ROOT = path.resolve(__dirname, "../..");
 const BUILT_PAGES_GLOB = "dist/mesh/policies/*/examples/*/index.html";
 const SOURCE_EXAMPLES_GLOB = "app/_mesh_policies/*/examples/*.{yaml,yml}";
 
+const BUILT_PAGE_POLICY_PATTERN = /dist\/mesh\/policies\/([^/]+)\/examples\//;
+const SOURCE_EXAMPLE_POLICY_PATTERN = /app\/_mesh_policies\/([^/]+)\/examples\//;
+
 function parseArgs(argv) {
   const versionIndex = argv.indexOf("--version");
   const version = versionIndex === -1 ? undefined : argv[versionIndex + 1];
   const rootIndex = argv.indexOf("--root");
   const root = rootIndex === -1 ? undefined : argv[rootIndex + 1];
-  return { version, root };
+  const skipIndex = argv.indexOf("--skip");
+  const skip =
+    skipIndex === -1
+      ? []
+      : argv[skipIndex + 1].split(",").filter((name) => name.length > 0);
+  return { version, root, skip };
+}
+
+function excludeSkippedPolicies(paths, pattern, skip) {
+  if (skip.length === 0) return paths;
+  return paths.filter((p) => !skip.includes(p.match(pattern)[1]));
 }
 
 // --root points the validator at a fixture directory laid out like a repo
 // root; test/cli.test.js is the only caller, to exercise the CLI end to end
 // without a real production build.
 export async function run(argv, root) {
-  const { version, root: rootArg } = parseArgs(argv);
+  const { version, root: rootArg, skip } = parseArgs(argv);
   root = root ?? (rootArg ? path.resolve(rootArg) : ROOT);
 
   const { release, crdsDir } = resolveRelease(root, version);
@@ -37,8 +50,16 @@ export async function run(argv, root) {
 
   const crds = loadCrds(crdsDir);
 
-  const builtPages = await glob(BUILT_PAGES_GLOB, { cwd: root });
-  const sourceExamples = await glob(SOURCE_EXAMPLES_GLOB, { cwd: root });
+  const builtPages = excludeSkippedPolicies(
+    await glob(BUILT_PAGES_GLOB, { cwd: root }),
+    BUILT_PAGE_POLICY_PATTERN,
+    skip,
+  );
+  const sourceExamples = excludeSkippedPolicies(
+    await glob(SOURCE_EXAMPLES_GLOB, { cwd: root }),
+    SOURCE_EXAMPLE_POLICY_PATTERN,
+    skip,
+  );
 
   const preconditions = checkPreconditions(builtPages, sourceExamples);
   if (!preconditions.ok) {
@@ -109,7 +130,8 @@ export async function run(argv, root) {
   console.log(
     `\nChecked ${builtPages.length} pages, ${blocksChecked} blocks ` +
       `(${blocksWithCoverage} with meaningful schema coverage). ` +
-      `${findings.length} finding(s).`,
+      `${findings.length} finding(s).` +
+      (skip.length > 0 ? ` Skipped: ${skip.join(", ")}.` : ""),
   );
 
   return findings.length > 0 ? 1 : 0;
