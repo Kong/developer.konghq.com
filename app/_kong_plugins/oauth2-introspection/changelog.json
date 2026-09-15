@@ -1,4 +1,11 @@
 {
+  "3.16.0.0": [
+    {
+      "message": "Fixed an authentication bypass where a revoked or\nexpired token stayed authorized indefinitely instead of being rejected. An\nauthoritative `active:false` result is now also cached briefly (5 seconds).",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.15.0.5": [
     {
       "message": "Fixed an authentication bypass where a revoked or\nexpired token stayed authorized indefinitely instead of being rejected. An\nauthoritative `active:false` result is now also cached briefly (5 seconds).",

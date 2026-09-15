@@ -117,6 +117,7 @@
 /plugins/request-callout/examples/dynamic-url/ /plugins/request-callout/examples/dynamic-url-via-lua-code/
 /gateway/plugin-development/  /custom-plugins/
 /gateway/plugin-development/*  /custom-plugins/
+/gateway/plugins/plugin-ordering/  /gateway/plugins/plugin-ordering-priority-preserving/
 
 # Renames
 /mesh-manager/federate-zone/  /mesh/federate-zone-control-plane-to-konnect/

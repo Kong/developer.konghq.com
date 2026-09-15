@@ -91,6 +91,8 @@ rows:
     support: "{{site.metering_and_billing}}"
   - capability: "[**Entitlement management** (feature access and usage limits)](/metering-and-billing/entitlements/)"
     support: "{{site.metering_and_billing}}"
+  - capability: "[**Entitlement enforcement** (block traffic when an entitlement is exhausted)](/plugins/entitlement-enforcement/)"
+    support: "{{site.metering_and_billing}}"
   - capability: "[**Rating** (unit × price, discounts, etc.)](/metering-and-billing/billing-invoicing/#discounts-and-commitments)"
     support: "{{site.metering_and_billing}}"
   - capability: "[**Invoice generation** (billing periods, lines)](/metering-and-billing/billing-invoicing/#invoicing)"

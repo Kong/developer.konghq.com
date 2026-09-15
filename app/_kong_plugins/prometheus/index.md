@@ -90,6 +90,7 @@ license signature. Those metrics are only exported on self-managed {{site.base_g
 - **Number of Nginx timers** : A gauge metric that measures the total number of Nginx
     timers in a Running or Pending state.
 - **[AI LLM metrics for {{site.ai_gateway}} running on {{site.base_gateway}}](#llm-traffic-metrics)** {% new_in 3.8 %}: AI LLM metrics are available per provider, model, cache, database name (if cached), embeddings provider (if cached), embeddings model (if cached), and Workspace.
+- **Entitlement enforcement** {% new_in 3.16 %}: `kong_entitlement_enforcement_total`, the total number of entitlement enforcement decisions made by the [Entitlement Enforcement plugin](/plugins/entitlement-enforcement/), labeled by decision, denial reason, and feature key.
 
 ### Optional metrics
 The following metrics are disabled by default as it may create high cardinality of metrics and may

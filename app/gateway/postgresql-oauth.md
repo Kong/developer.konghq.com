@@ -22,6 +22,8 @@ tags:
 description: Configure {{site.base_gateway}} to authenticate to PostgreSQL using OAUTHBEARER SASL and an OAuth access token.
 
 related_resources:
+  - text: PostgreSQL privileges reference
+    url: /gateway/postgresql-privileges-reference/
   - text: PostgreSQL TLS configuration reference
     url: /gateway/postgresql-tls-reference/
   - text: "{{site.base_gateway}} Amazon RDS database authentication with AWS IAM"

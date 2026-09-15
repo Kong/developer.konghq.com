@@ -33,6 +33,87 @@ affect your current installation.
 You may need to adopt different [upgrade paths](/gateway/upgrade/) depending on your
 deployment methods, set of features in use, or custom plugins, for example.
 
+## 3.16.x breaking changes
+
+Review the [changelog](/gateway/changelog/#3-16-0-0) for all the changes in this release.
+
+### 3.16.0.0
+
+Breaking changes in the 3.16.0.0 release.
+
+#### CEL engine change: cel-rust to cel-cpp
+
+{{site.base_gateway}} 3.15 introduced `cel-rust` as the CEL engine for [conditional plugin execution](/gateway/plugins/expressions/).
+Due to stability gaps, missing capabilities (such as optional values and native type inference), and bugs in that implementation, {{site.base_gateway}} 3.16 migrates the CEL engine to `cel-cpp` (Google's official CEL reference implementation).
+
+Because `cel-rust` didn't fully comply with the CEL spec while `cel-cpp` does, a small number of expressions behave differently after the migration.
+This only affects conditional plugin execution, and only the two behaviors described in the following table:
+
+{% table %}
+columns:
+  - title: Function
+    key: function
+  - title: cel-rust behavior (3.15)
+    key: before
+  - title: cel-cpp behavior (3.16)
+    key: after
+  - title: Impacted expressions
+    key: impact
+rows:
+  - function: |
+      Quote escape sequences in strings
+    before: |
+      The string literal `"\'"` (or `'\"'`) is parsed as the 2-character string `\'` (backslash + quote).
+    after: |
+      `\'` is correctly unescaped to the 1-character string `'`.
+    impact: |
+      For example, if the expression is `http.query.contains("\'")`:
+      <br><br>
+      * On `cel-cpp`: Searches for `'`, so a request like `?name=a'b` matches.
+      * On `cel-rust`: Searches for `\'` (backslash-then-quote), so `?name=a'b` has no backslash and doesn't match.
+  - function: |
+      Missing map key
+    before: |
+      Returns `null`.
+    after: |
+      Raises a `no such key` error.
+    impact: |
+      Affects the currently supported maps: `kong.ctx.shared[key]` and `principal.metadata[key]`.
+      <br><br>
+      For example, if the expression includes map-type variables (`kong.ctx.shared` and `principal.metadata`), such as `kong.ctx.shared["my_flag"] == "enabled"` configured as a condition of a plugin:
+      <br><br>
+      * On `cel-cpp`: {{site.base_gateway}} reports a `no such key` error if `my_flag` doesn't exist in `kong.ctx.shared`.
+      * On `cel-rust`: The missing key returns `null`, so the expression evaluates to `false` (`null == "enabled"`), and {{site.base_gateway}} skips the related plugin.
+      <br><br>
+      See [Null handling](/gateway/plugins/expressions/#null-handling) for the correct behavior for a missing key.
+{% endtable %}
+
+#### Known issues in 3.16.0.0
+
+The following is a list of known issues in 3.16.0.0 that may be fixed in a future release.
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Known issue
+    key: issue
+  - title: Description
+    key: description
+  - title: Status
+    key: status
+rows:
+  - issue: |
+      Entitlement Enforcement plugin doesn't support credit balance enforcement
+    description: |
+      The [Entitlement Enforcement plugin](/plugins/entitlement-enforcement/) ships with a `config.credit_balance_required` field and a `NO_CREDIT_AVAILABLE` reason code under `config.response_codes`, but credit balance enforcement isn't implemented yet.
+      <br><br>
+      These fields are accepted by the plugin's schema but currently have no effect. The plugin enforces usage limits and feature access only.
+      <br><br>
+      **Workaround:** None. Don't use `config.credit_balance_required` and the `NO_CREDIT_AVAILABLE` reason code, as they will have no effect.
+    status: Not fixed.
+{% endtable %}
+<!--vale on-->
+
 ## 3.15.x breaking changes
 
 Review the [changelog](/gateway/changelog/#3-15-0-0) for all the changes in this release.

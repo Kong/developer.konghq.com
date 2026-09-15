@@ -121,4 +121,4 @@ Keep the following limitations in mind when you configure brute force protection
 
 {% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
 
-{% include_cached /plugins/redis/oss.md name=page.name heading_level=2 %}
+{% include_cached /plugins/redis/oss.md name=page.name heading_level=2 redis_group="brute_force_protection" %}

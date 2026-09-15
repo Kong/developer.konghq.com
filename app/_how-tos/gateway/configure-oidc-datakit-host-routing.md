@@ -10,6 +10,8 @@ related_resources:
     url: /plugins/datakit/
   - text: Dynamically set upstream based on the authenticated caller
     url: /how-to/configure-oidc-datakit-upstream-routing/
+  - text: Dynamically set host based on the authenticated Principal with Datakit
+    url: /how-to/configure-oidc-datakit-host-routing-with-principals-metadata/
   - text: OpenID Connect tutorials
     url: /how-to/?query=openid-connect
 

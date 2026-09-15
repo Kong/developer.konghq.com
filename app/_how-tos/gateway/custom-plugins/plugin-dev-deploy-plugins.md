@@ -10,7 +10,7 @@ breadcrumbs:
 
 series:
   id: plugin-dev-get-started
-  position: 5
+  position: 6
 
 tldr:
   q: How can I deploy my custom plugin to {{site.base_gateway}}?

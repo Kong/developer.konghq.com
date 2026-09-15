@@ -1,12 +1,17 @@
 ---
 name: third-party-plugin
 description: >
-  Create complete documentation for a new third-party Kong Gateway plugin on developer.konghq.com.
-  Use this skill whenever the user asks to document, write, or create a new third-party Kong Gateway
-  plugin page, including index.md, schema.json, or example YAML files.
-  Also use it when someone shares a plugin schema (Lua or JSON), a GitHub repo, or vendor plugin assets
-  and asks for help turning them into developer.konghq.com documentation.
-  Trigger even if the user only says "write docs for my plugin", "add a plugin page", or "document this schema".
+  Create or update documentation for a third-party Kong Gateway plugin on developer.konghq.com,
+  meaning any plugin published by a vendor rather than by Kong. Covers a brand new plugin page
+  (index.md, schema.json, example YAML files) as well as adding or editing an example YAML file
+  for a third-party plugin that already has docs.
+  Use this skill whenever the user asks to document, write, create, or update a third-party
+  Kong Gateway plugin page or example, or shares a plugin schema (Lua or JSON), a GitHub repo,
+  or vendor plugin assets and asks for help turning them into developer.konghq.com documentation.
+  Trigger even if the user only says "write docs for my plugin", "add a plugin page", "document
+  this schema", or "add an example for the <vendor> plugin".
+  Not for Kong's own first-party plugins (publisher: kong-inc), use the plugin-example skill
+  for writing or updating an example on one of those instead.
 ---
 
 # Third-party plugin documentation skill

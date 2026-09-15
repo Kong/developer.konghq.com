@@ -3,79 +3,79 @@
     {
       "title": "GENERAL",
       "start": 22,
-      "end": 318,
+      "end": 315,
       "description": ""
     },
     {
       "title": "HYBRID MODE",
-      "start": 319,
-      "end": 419,
+      "start": 316,
+      "end": 416,
       "description": ""
     },
     {
       "title": "HYBRID MODE DATA PLANE",
-      "start": 420,
-      "end": 459,
+      "start": 417,
+      "end": 456,
       "description": ""
     },
     {
       "title": "HYBRID MODE CONTROL PLANE",
-      "start": 460,
-      "end": 536,
+      "start": 457,
+      "end": 555,
       "description": ""
     },
     {
       "title": "NGINX",
-      "start": 537,
-      "end": 1205,
+      "start": 556,
+      "end": 1230,
       "description": ""
     },
     {
       "title": "NGINX injected directives",
-      "start": 1206,
-      "end": 1360,
+      "start": 1231,
+      "end": 1385,
       "description": "Nginx directives can be dynamically injected in the runtime nginx.conf file\nwithout requiring a custom Nginx configuration template.\n\nAll configuration properties following the naming scheme\n`nginx_<namespace>_<directive>` will result in `<directive>` being injected in\nthe Nginx configuration block corresponding to the property's `<namespace>`.\nExample:\n`nginx_proxy_large_client_header_buffers = 8 24k`\n\nWill inject the following directive in Kong's proxy `server {}` block:\n\n`large_client_header_buffers 8 24k;`\n\nThe following namespaces are supported:\n\n- `nginx_main_<directive>`: Injects `<directive>` in Kong's configuration\n`main` context.\n- `nginx_events_<directive>`: Injects `<directive>` in Kong's `events {}`\nblock.\n- `nginx_http_<directive>`: Injects `<directive>` in Kong's `http {}` block.\n- `nginx_proxy_<directive>`: Injects `<directive>` in Kong's proxy\n`server {}` block.\n- `nginx_location_<directive>`: Injects `<directive>` in Kong's proxy `/`\nlocation block (nested under Kong's proxy `server {}` block).\n- `nginx_upstream_<directive>`: Injects `<directive>` in Kong's proxy\n`upstream {}` block.\n- `nginx_admin_<directive>`: Injects `<directive>` in Kong's Admin API\n`server {}` block.\n- `nginx_status_<directive>`: Injects `<directive>` in Kong's Status API\n`server {}` block (only effective if `status_listen` is enabled).\n- `nginx_debug_<directive>`: Injects `<directive>` in Kong's Debug API\n`server{}` block (only effective if `debug_listen` or `debug_listen_local`\nis enabled).\n- `nginx_stream_<directive>`: Injects `<directive>` in Kong's stream module\n`stream {}` block (only effective if `stream_listen` is enabled).\n- `nginx_sproxy_<directive>`: Injects `<directive>` in Kong's stream module\n`server {}` block (only effective if `stream_listen` is enabled).\n- `nginx_supstream_<directive>`: Injects `<directive>` in Kong's stream\nmodule `upstream {}` block.\n\nAs with other configuration properties, Nginx directives can be injected via\nenvironment variables when capitalized and prefixed with `KONG_`.\nExample:\n`KONG_NGINX_HTTP_SSL_PROTOCOLS` -> `nginx_http_ssl_protocols`\n\nWill inject the following directive in Kong's `http {}` block:\n\n`ssl_protocols <value>;`\n\nIf different sets of protocols are desired between the proxy and Admin API\nserver, you may specify `nginx_proxy_ssl_protocols` and/or\n`nginx_admin_ssl_protocols`, both of which take precedence over the\n`http {}` block.\n"
     },
     {
       "title": "DATASTORE",
-      "start": 1361,
-      "end": 1823,
+      "start": 1386,
+      "end": 1848,
       "description": "Kong can run with a database to store coordinated data between Kong nodes in\na cluster, or without a database, where each node stores its information\nindependently in memory.\n\nWhen using a database, Kong will store data for all its entities (such as\nroutes, services, consumers, and plugins) in PostgreSQL,\nand all Kong nodes belonging to the same cluster must connect to the same database.\n\nKong supports PostgreSQL versions 9.5 and above.\n\nWhen not using a database, Kong is said to be in \"DB-less mode\": it will keep\nits entities in memory, and each node needs to have this data entered via a\ndeclarative configuration file, which can be specified through the\n`declarative_config` property, or via the Admin API using the `/config`\nendpoint.\n\nWhen using Postgres as the backend storage, you can optionally enable Kong\nto serve read queries from a separate database instance.\nWhen the number of proxies is large, this can greatly reduce the load\non the main Postgres instance and achieve better scalability. It may also\nreduce the latency jitter if the Kong proxy node's latency to the main\nPostgres instance is high.\n\nThe read-only Postgres instance only serves read queries, and write\nqueries still go to the main connection. The read-only Postgres instance\ncan be eventually consistent while replicating changes from the main\ninstance.\n\nAt least the `pg_ro_host` config is needed to enable this feature.\nBy default, all other database config for the read-only connection is\ninherited from the corresponding main connection config described above but\nmay be optionally overwritten explicitly using the `pg_ro_*` config below.\n"
     },
     {
       "title": "DATASTORE CACHE",
-      "start": 1824,
-      "end": 1899,
+      "start": 1849,
+      "end": 1924,
       "description": "In order to avoid unnecessary communication with the datastore, Kong caches\nentities (such as APIs, consumers, credentials...) for a configurable period\nof time. It also handles invalidations if such an entity is updated.\n\nThis section allows for configuring the behavior of Kong regarding the\ncaching of such configuration entities.\n"
     },
     {
       "title": "DNS RESOLVER",
-      "start": 1900,
-      "end": 1981,
+      "start": 1925,
+      "end": 2006,
       "description": "By default, the DNS resolver will use the standard configuration files\n`/etc/hosts` and `/etc/resolv.conf`. The settings in the latter file will be\noverridden by the environment variables `LOCALDOMAIN` and `RES_OPTIONS` if\nthey have been set.\n\nKong will resolve hostnames as either `SRV` or `A` records (in that order, and\n`CNAME` records will be dereferenced in the process).\nIn case a name is resolved as an `SRV` record, it will also override any given\nport number with the `port` field contents received from the DNS server.\n\nThe DNS options `SEARCH` and `NDOTS` (from the `/etc/resolv.conf` file) will\nbe used to expand short names to fully qualified ones. So it will first try\nthe entire `SEARCH` list for the `SRV` type, if that fails it will try the\n`SEARCH` list for `A`, etc.\n\nFor the duration of the `ttl`, the internal DNS resolver will load balance each\nrequest it gets over the entries in the DNS record. For `SRV` records, the\n`weight` fields will be honored, but it will only use the lowest `priority`\nfield entries in the record.\n\nFor DNS records returned with a TTL value of 0, Kong will default to caching\nthese records for 1 second. Strict adherence to the requirement of not caching\nTTL 0 records could generate excessive query frequency to upstream DNS servers,\nleading to unsustainable load and potential service degradation. As a result,\nmost DNS resolver implementations deviate from this requirement in practice.\n"
     },
     {
       "title": "VAULTS",
-      "start": 2081,
-      "end": 2471,
+      "start": 2106,
+      "end": 2496,
       "description": "A secret is any sensitive piece of information required for API gateway\noperations. Secrets may be part of the core Kong Gateway configuration,\nused in plugins, or part of the configuration associated with APIs serviced\nby the gateway.\n\nSome of the most common types of secrets used by Kong Gateway include:\n\n- Data store usernames and passwords, used with PostgreSQL and Redis\n- Private X.509 certificates\n- API keys\n\nSensitive plugin configuration fields are generally used for authentication,\nhashing, signing, or encryption. Kong Gateway lets you store certain values\nin a vault. Here are the vault specific configuration options.\n"
     },
     {
       "title": "TUNING & BEHAVIOR",
-      "start": 2478,
-      "end": 2641,
+      "start": 2503,
+      "end": 2709,
       "description": ""
     },
     {
       "title": "MISCELLANEOUS",
-      "start": 2642,
-      "end": 2763,
-      "description": "Additional settings inherited from lua-nginx-module allowing for more\nflexibility and advanced usage.\n\nSee the lua-nginx-module documentation for more information:\nhttps://github.com/openresty/lua-nginx-module\n"
+      "start": 2710,
+      "end": 2831,
+      "description": "Additional settings inherited from lua-nginx-module allowing for more\nflexibility and advanced usage.\n\nSee the lua-nginx-module documentation for more information:\n[lua-nginx-module](https://github.com/openresty/lua-nginx-module)\n"
     },
     {
       "title": "KONG MANAGER",
-      "start": 2764,
-      "end": 3039,
+      "start": 2832,
+      "end": 3107,
       "description": "\nThe Admin GUI for Kong Enterprise.\n\n"
     },
     {
@@ -86,14 +86,14 @@
     },
     {
       "title": "Konnect",
-      "start": 3040,
-      "end": 3045,
+      "start": 3108,
+      "end": 3113,
       "description": ""
     },
     {
       "title": "Analytics for Konnect",
-      "start": 3046,
-      "end": 3079,
+      "start": 3114,
+      "end": 3150,
       "description": ""
     },
     {
@@ -116,20 +116,20 @@
     },
     {
       "title": "ADMIN SMTP CONFIGURATION",
-      "start": 3080,
-      "end": 3094,
+      "start": 3151,
+      "end": 3165,
       "description": ""
     },
     {
       "title": "GENERAL SMTP CONFIGURATION",
-      "start": 3095,
-      "end": 3145,
+      "start": 3166,
+      "end": 3216,
       "description": ""
     },
     {
       "title": "DATA & ADMIN AUDIT",
-      "start": 3146,
-      "end": 3191,
+      "start": 3217,
+      "end": 3262,
       "description": "When enabled, Kong will store detailed audit data regarding Admin API and\ndatabase access. In most cases, updates to the database are associated with\nAdmin API requests. As such, database object audit log data is tied to a\ngiven HTTP request via a unique identifier, providing built-in association of\nAdmin API and database traffic.\n\n"
     },
     {
@@ -140,14 +140,14 @@
     },
     {
       "title": "ROUTE COLLISION DETECTION/PREVENTION",
-      "start": 3192,
-      "end": 3239,
+      "start": 3263,
+      "end": 3310,
       "description": ""
     },
     {
       "title": "DATABASE ENCRYPTION & KEYRING MANAGEMENT",
-      "start": 3240,
-      "end": 3448,
+      "start": 3311,
+      "end": 3519,
       "description": "When enabled, Kong will transparently encrypt sensitive fields, such as consumer\ncredentials, TLS private keys, and RBAC user tokens, among others. A full list\nof encrypted fields is available from the Kong Enterprise documentation site.\nEncrypted data is transparently decrypted before being displayed to the Admin\nAPI or made available to plugins or core routing logic.\n\nWhile this feature is GA, do note that we currently do not provide normal semantic\nversioning compatibility guarantees on the keyring feature's APIs in that Kong may\nmake a breaking change to the feature in a minor version. Also note that\nmismanagement of keyring data may result in irrecoverable data loss.\n\n"
     },
     {
@@ -158,26 +158,26 @@
     },
     {
       "title": "REQUEST DEBUGGING",
-      "start": 3520,
-      "end": 3582,
+      "start": 3591,
+      "end": 3653,
       "description": "Request debugging is a mechanism that allows admins to collect the timing of\nproxy path requests in the response header (X-Kong-Request-Debug-Output)\nand optionally, the error log.\n\nThis feature provides insights into the time spent within various components of Kong,\nsuch as plugins, DNS resolution, load balancing, and more. It also provides contextual\ninformation such as domain names tried during these processes.\n\n"
     },
     {
       "title": "CLUSTER FALLBACK CONFIGURATION",
-      "start": 3449,
-      "end": 3519,
+      "start": 3520,
+      "end": 3590,
       "description": ""
     },
     {
       "title": "New DNS RESOLVER",
-      "start": 1982,
-      "end": 2080,
+      "start": 2007,
+      "end": 2105,
       "description": "This DNS resolver introduces global caching for DNS records across workers,\nsignificantly reducing the query load on DNS servers.\n\nIt provides observable statistics, you can retrieve them through the Admin API\n`/status/dns`.\n"
     },
     {
       "title": "AI",
-      "start": 2472,
-      "end": 2477,
+      "start": 2497,
+      "end": 2502,
       "description": ""
     }
   ],
@@ -189,7 +189,7 @@
     },
     "log_level": {
       "defaultValue": "notice",
-      "description": "Log level of the Nginx server. Logs are\nfound at `<prefix>/logs/error.log`.\n",
+      "description": "Log level of the Nginx server. Logs are found at `<prefix>/logs/error.log`.\nSee [Nginx error log reference](http://nginx.org/en/docs/ngx_core_module.html#error_log) for a list of accepted values.\n",
       "sectionTitle": "GENERAL"
     },
     "proxy_access_log": {
@@ -384,7 +384,7 @@
     },
     "cluster_dp_labels": {
       "defaultValue": null,
-      "description": "Comma-separated list of labels for the data plane.\nLabels are key-value pairs that provide additional\ncontext information for each DP.\nEach label must be configured as a string in the\nformat `key:value`.\n\nKeys and values follow the AIP standards:\nhttps://kong-aip.netlify.app/aip/129/\n\nExample:\n`deployment:mycloud,region:us-east-1`\n",
+      "description": "Comma-separated list of labels for the data plane.\nLabels are key-value pairs that provide additional\ncontext information for each DP.\nEach label must be configured as a string in the\nformat `key:value`.\n\nKeys and values follow the AIP standards:\n[AIP standards](https://kong-aip.netlify.app/aip/129/)\n\nExample:\n`deployment:mycloud,region:us-east-1`\n",
       "sectionTitle": "HYBRID MODE DATA PLANE"
     },
     "cluster_listen": {
@@ -422,7 +422,7 @@
         "0.0.0.0:8000 reuseport backlog=16384",
         "0.0.0.0:8443 http2 ssl reuseport backlog=16384"
       ],
-      "description": "Comma-separated list of addresses and ports on\nwhich the proxy server should listen for\nHTTP/HTTPS traffic.\nThe proxy server is the public entry point of Kong,\nwhich proxies traffic from your consumers to your\nbackend services. This value accepts IPv4, IPv6, and\nhostnames.\n\nSome suffixes can be specified for each pair:\n\n- `ssl` will require that all connections made\n  through a particular address/port be made with TLS\n  enabled.\n- `http2` will allow for clients to open HTTP/2\n  connections to Kong's proxy server.\n- `proxy_protocol` will enable usage of the\n  PROXY protocol for a given address/port.\n- `deferred` instructs to use a deferred accept on\n  Linux (the `TCP_DEFER_ACCEPT` socket option).\n- `bind` instructs to make a separate bind() call\n  for a given address:port pair.\n- `reuseport` instructs to create an individual\n  listening socket for each worker process,\n  allowing the kernel to better distribute incoming\n  connections between worker processes.\n- `backlog=N` sets the maximum length for the queue\n  of pending TCP connections. This number should\n  not be too small to prevent clients\n  seeing \"Connection refused\" errors when connecting to\n  a busy Kong instance.\n  **Note:** On Linux, this value is limited by the\n  setting of the `net.core.somaxconn` kernel parameter.\n  In order for the larger `backlog` set here to take\n  effect, it is necessary to raise\n  `net.core.somaxconn` at the same time to match or\n  exceed the `backlog` number set.\n- `ipv6only=on|off` specifies whether an IPv6 socket listening\n  on a wildcard address [::] will accept only IPv6\n  connections or both IPv6 and IPv4 connections.\n- `so_keepalive=on|off|[keepidle]:[keepintvl]:[keepcnt]`\n  configures the TCP keepalive behavior for the listening\n  socket. If this parameter is omitted, the operating\n  system’s settings will be in effect for the socket. If it\n  is set to the value `on`, the `SO_KEEPALIVE` option is turned\n  on for the socket. If it is set to the value `off`, the\n  `SO_KEEPALIVE` option is turned off for the socket. Some\n  operating systems support setting of TCP keepalive parameters\n  on a per-socket basis using the `TCP_KEEPIDLE`,` TCP_KEEPINTVL`,\n  and `TCP_KEEPCNT` socket options.\n\nThis value can be set to `off`, thus disabling\nthe HTTP/HTTPS proxy port for this node.\nIf `stream_listen` is also set to `off`, this enables\ncontrol plane mode for this node\n(in which all traffic proxying capabilities are\ndisabled). This node can then be used only to\nconfigure a cluster of Kong\nnodes connected to the same datastore.\n\nExample:\n`proxy_listen = 0.0.0.0:443 ssl, 0.0.0.0:444 http2 ssl`\n\nSee http://nginx.org/en/docs/http/ngx_http_core_module.html#listen\nfor a description of the accepted formats for this\nand other `*_listen` values.\n\nSee https://www.nginx.com/resources/admin-guide/proxy-protocol/\nfor more details about the `proxy_protocol`\nparameter.\n\nNot all `*_listen` values accept all formats\nspecified in nginx's documentation.\n",
+      "description": "Comma-separated list of addresses and ports on\nwhich the proxy server should listen for\nHTTP/HTTPS traffic.\nThe proxy server is the public entry point of Kong,\nwhich proxies traffic from your consumers to your\nbackend services. This value accepts IPv4, IPv6, and\nhostnames.\n\nSome suffixes can be specified for each pair:\n\n- `ssl` will require that all connections made\n  through a particular address/port be made with TLS\n  enabled.\n- `http2` will allow for clients to open HTTP/2\n  connections to Kong's proxy server.\n- `proxy_protocol` will enable usage of the\n  PROXY protocol for a given address/port.\n- `deferred` instructs to use a deferred accept on\n  Linux (the `TCP_DEFER_ACCEPT` socket option).\n- `bind` instructs to make a separate bind() call\n  for a given address:port pair.\n- `reuseport` instructs to create an individual\n  listening socket for each worker process,\n  allowing the kernel to better distribute incoming\n  connections between worker processes.\n- `backlog=N` sets the maximum length for the queue\n  of pending TCP connections. This number should\n  not be too small to prevent clients\n  seeing \"Connection refused\" errors when connecting to\n  a busy Kong instance.\n  **Note:** On Linux, this value is limited by the\n  setting of the `net.core.somaxconn` kernel parameter.\n  In order for the larger `backlog` set here to take\n  effect, it is necessary to raise\n  `net.core.somaxconn` at the same time to match or\n  exceed the `backlog` number set.\n- `ipv6only=on|off` specifies whether an IPv6 socket listening\n  on a wildcard address [::] will accept only IPv6\n  connections or both IPv6 and IPv4 connections.\n- `so_keepalive=on|off|[keepidle]:[keepintvl]:[keepcnt]`\n  configures the TCP keepalive behavior for the listening\n  socket. If this parameter is omitted, the operating\n  system’s settings will be in effect for the socket. If it\n  is set to the value `on`, the `SO_KEEPALIVE` option is turned\n  on for the socket. If it is set to the value `off`, the\n  `SO_KEEPALIVE` option is turned off for the socket. Some\n  operating systems support setting of TCP keepalive parameters\n  on a per-socket basis using the `TCP_KEEPIDLE`,` TCP_KEEPINTVL`,\n  and `TCP_KEEPCNT` socket options.\n\nThis value can be set to `off`, thus disabling\nthe HTTP/HTTPS proxy port for this node.\nIf `stream_listen` is also set to `off`, this enables\ncontrol plane mode for this node\n(in which all traffic proxying capabilities are\ndisabled). This node can then be used only to\nconfigure a cluster of Kong\nnodes connected to the same datastore.\n\nExample:\n`proxy_listen = 0.0.0.0:443 ssl, 0.0.0.0:444 http2 ssl`\n\nSee [Nginx listen directive](http://nginx.org/en/docs/http/ngx_http_core_module.html#listen)\nfor a description of the accepted formats for this\nand other `*_listen` values.\n\nSee [Nginx proxy_protocol guide](https://www.nginx.com/resources/admin-guide/proxy-protocol/)\nfor more details about the `proxy_protocol`\nparameter.\n\nNot all `*_listen` values accept all formats\nspecified in nginx's documentation.\n",
       "sectionTitle": "NGINX"
     },
     "proxy_url": {
@@ -445,7 +445,7 @@
         "127.0.0.1:8001 reuseport backlog=16384",
         "127.0.0.1:8444 http2 ssl reuseport backlog=16384"
       ],
-      "description": "Comma-separated list of addresses and ports on\nwhich the Admin interface should listen.\nThe Admin interface is the API allowing you to\nconfigure and manage Kong.\nAccess to this interface should be *restricted*\nto Kong administrators *only*. This value accepts\nIPv4, IPv6, and hostnames.\n\nIt is highly recommended to avoid exposing the Admin API to public\ninterfaces, by using values such as `0.0.0.0:8001`\n\nSee https://developer.konghq.com/gateway/secure-the-admin-api/\nfor more information about how to secure your Admin API.\n\nSome suffixes can be specified for each pair:\n\n- `ssl` will require that all connections made\n  through a particular address/port be made with TLS\n  enabled.\n- `http2` will allow for clients to open HTTP/2\n  connections to Kong's proxy server.\n- `proxy_protocol` will enable usage of the\n  PROXY protocol for a given address/port.\n- `deferred` instructs to use a deferred accept on\n  Linux (the `TCP_DEFER_ACCEPT` socket option).\n- `bind` instructs to make a separate bind() call\n  for a given address:port pair.\n- `reuseport` instructs to create an individual\n  listening socket for each worker process,\n  allowing the Kernel to better distribute incoming\n  connections between worker processes.\n- `backlog=N` sets the maximum length for the queue\n  of pending TCP connections. This number should\n  not be too small to prevent clients\n  seeing \"Connection refused\" errors when connecting to\n  a busy Kong instance.\n  **Note:** On Linux, this value is limited by the\n  setting of the `net.core.somaxconn` kernel parameter.\n  In order for the larger `backlog` set here to take\n  effect, it is necessary to raise\n  `net.core.somaxconn` at the same time to match or\n  exceed the `backlog` number set.\n- `ipv6only=on|off` specifies whether an IPv6 socket listening\n  on a wildcard address [::] will accept only IPv6\n  connections or both IPv6 and IPv4 connections.\n- `so_keepalive=on|off|[keepidle]:[keepintvl]:[keepcnt]`\n  configures the “TCP keepalive” behavior for the listening\n  socket. If this parameter is omitted, the operating\n  system’s settings will be in effect for the socket. If it\n  is set to the value `on`, the `SO_KEEPALIVE` option is turned\n  on for the socket. If it is set to the value `off`, the\n  `SO_KEEPALIVE` option is turned off for the socket. Some\n  operating systems support setting of TCP keepalive parameters\n  on a per-socket basis using the `TCP_KEEPIDLE`, `TCP_KEEPINTVL`,\n  and `TCP_KEEPCNT` socket options.\n\nThis value can be set to `off`, thus disabling\nthe Admin interface for this node, enabling a\ndata plane mode (without configuration\ncapabilities) pulling its configuration changes\nfrom the database.\n\nExample: `admin_listen = 127.0.0.1:8444 http2 ssl`\n",
+      "description": "Comma-separated list of addresses and ports on\nwhich the Admin interface should listen.\nThe Admin interface is the API allowing you to\nconfigure and manage Kong.\nAccess to this interface should be *restricted*\nto Kong administrators *only*. This value accepts\nIPv4, IPv6, and hostnames.\n\nIt is highly recommended to avoid exposing the Admin API to public\ninterfaces, by using values such as `0.0.0.0:8001`\n\nSee [Kong's Admin API security guide](https://developer.konghq.com/gateway/secure-the-admin-api/)\nfor more information about how to secure your Admin API.\n\nSome suffixes can be specified for each pair:\n\n- `ssl` will require that all connections made\n  through a particular address/port be made with TLS\n  enabled.\n- `http2` will allow for clients to open HTTP/2\n  connections to Kong's proxy server.\n- `proxy_protocol` will enable usage of the\n  PROXY protocol for a given address/port.\n- `deferred` instructs to use a deferred accept on\n  Linux (the `TCP_DEFER_ACCEPT` socket option).\n- `bind` instructs to make a separate bind() call\n  for a given address:port pair.\n- `reuseport` instructs to create an individual\n  listening socket for each worker process,\n  allowing the Kernel to better distribute incoming\n  connections between worker processes.\n- `backlog=N` sets the maximum length for the queue\n  of pending TCP connections. This number should\n  not be too small to prevent clients\n  seeing \"Connection refused\" errors when connecting to\n  a busy Kong instance.\n  **Note:** On Linux, this value is limited by the\n  setting of the `net.core.somaxconn` kernel parameter.\n  In order for the larger `backlog` set here to take\n  effect, it is necessary to raise\n  `net.core.somaxconn` at the same time to match or\n  exceed the `backlog` number set.\n- `ipv6only=on|off` specifies whether an IPv6 socket listening\n  on a wildcard address [::] will accept only IPv6\n  connections or both IPv6 and IPv4 connections.\n- `so_keepalive=on|off|[keepidle]:[keepintvl]:[keepcnt]`\n  configures the “TCP keepalive” behavior for the listening\n  socket. If this parameter is omitted, the operating\n  system’s settings will be in effect for the socket. If it\n  is set to the value `on`, the `SO_KEEPALIVE` option is turned\n  on for the socket. If it is set to the value `off`, the\n  `SO_KEEPALIVE` option is turned off for the socket. Some\n  operating systems support setting of TCP keepalive parameters\n  on a per-socket basis using the `TCP_KEEPIDLE`, `TCP_KEEPINTVL`,\n  and `TCP_KEEPCNT` socket options.\n\nThis value can be set to `off`, thus disabling\nthe Admin interface for this node, enabling a\ndata plane mode (without configuration\ncapabilities) pulling its configuration changes\nfrom the database.\n\nExample: `admin_listen = 127.0.0.1:8444 http2 ssl`\n",
       "sectionTitle": "NGINX"
     },
     "status_listen": {
@@ -465,12 +465,12 @@
     },
     "nginx_worker_processes": {
       "defaultValue": "auto",
-      "description": "Determines the number of worker processes\nspawned by Nginx.\n\nSee http://nginx.org/en/docs/ngx_core_module.html#worker_processes\nfor detailed usage of the equivalent Nginx\ndirective and a description of accepted\nvalues.\n",
+      "description": "Determines the number of worker processes\nspawned by Nginx.\n\nSee [Nginx worker_processes directive](http://nginx.org/en/docs/ngx_core_module.html#worker_processes)\nfor detailed usage of the equivalent Nginx\ndirective and a description of accepted\nvalues.\n",
       "sectionTitle": "NGINX"
     },
     "nginx_daemon": {
       "defaultValue": "on",
-      "description": "Determines whether Nginx will run as a daemon\nor as a foreground process. Mainly useful\nfor development or when running Kong inside\na Docker environment.\n\nSee http://nginx.org/en/docs/ngx_core_module.html#daemon.\n",
+      "description": "Determines whether Nginx will run as a daemon\nor as a foreground process. Mainly useful\nfor development or when running Kong inside\na Docker environment.\n\nSee [Nginx daemon directive](http://nginx.org/en/docs/ngx_core_module.html#daemon).\n",
       "sectionTitle": "NGINX"
     },
     "mem_cache_size": {
@@ -480,7 +480,7 @@
     },
     "ssl_cipher_suite": {
       "defaultValue": "intermediate",
-      "description": "Defines the TLS ciphers served by Nginx.\nAccepted values are `modern`,\n`intermediate`, `old`, `fips` or `custom`.\nIf you want to enable TLSv1.1, this value has to be `old`.\n\nSee https://wiki.mozilla.org/Security/Server_Side_TLS\nfor detailed descriptions of each cipher\nsuite. `fips` cipher suites are as described in\nhttps://wiki.openssl.org/index.php/FIPS_mode_and_TLS.\n",
+      "description": "Defines the TLS ciphers served by Nginx.\nAccepted values are `modern`,\n`intermediate`, `old`, `fips` or `custom`.\nIf you want to enable TLSv1.1, this value has to be `old`.\n\nSee [Mozilla Server Side TLS](https://wiki.mozilla.org/Security/Server_Side_TLS)\nfor detailed descriptions of each cipher\nsuite. `fips` cipher suites are as described in\n[OpenSSL FIPS mode and TLS](https://wiki.openssl.org/index.php/FIPS_mode_and_TLS).\n",
       "sectionTitle": "NGINX"
     },
     "ssl_ciphers": {
@@ -490,32 +490,32 @@
     },
     "ssl_protocols": {
       "defaultValue": "TLSv1.2 TLSv1.3",
-      "description": "Enables the specified protocols for\nclient-side connections. The set of\nsupported protocol versions also depends\non the version of OpenSSL Kong was built\nwith. This value is ignored if\n`ssl_cipher_suite` is not `custom`.\nIf you want to enable TLSv1.1, you should\nset `ssl_cipher_suite` to `old`.\n\nSee http://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_protocols\n",
+      "description": "Enables the specified protocols for\nclient-side connections. The set of\nsupported protocol versions also depends\non the version of OpenSSL Kong was built\nwith. This value is ignored if\n`ssl_cipher_suite` is not `custom`.\nIf you want to enable TLSv1.1, you should\nset `ssl_cipher_suite` to `old`.\n\nSee [Nginx ssl_protocols directive](http://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_protocols)\n",
       "sectionTitle": "NGINX"
     },
     "ssl_prefer_server_ciphers": {
       "defaultValue": "on",
-      "description": "Specifies that server ciphers should be\npreferred over client ciphers when using\nthe SSLv3 and TLS protocols. This value is\nignored if `ssl_cipher_suite` is not `custom`.\n\nSee http://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_prefer_server_ciphers\n",
+      "description": "Specifies that server ciphers should be\npreferred over client ciphers when using\nthe SSLv3 and TLS protocols. This value is\nignored if `ssl_cipher_suite` is not `custom`.\n\nSee [Nginx ssl_prefer_server_ciphers directive](http://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_prefer_server_ciphers)\n",
       "sectionTitle": "NGINX"
     },
     "ssl_dhparam": {
       "defaultValue": null,
-      "description": "Defines DH parameters for DHE ciphers from the\npredefined groups: `ffdhe2048`, `ffdhe3072`,\n`ffdhe4096`, `ffdhe6144`, `ffdhe8192`,\nfrom the absolute path to a parameters file, or\ndirectly from the parameters content.\n\nThis value is ignored if `ssl_cipher_suite`\nis `modern` or `intermediate`. The reason is\nthat `modern` has no ciphers that need this,\nand `intermediate` uses `ffdhe2048`.\n\nSee http://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_dhparam\n",
+      "description": "Defines DH parameters for DHE ciphers from the\npredefined groups: `ffdhe2048`, `ffdhe3072`,\n`ffdhe4096`, `ffdhe6144`, `ffdhe8192`,\nfrom the absolute path to a parameters file, or\ndirectly from the parameters content.\n\nThis value is ignored if `ssl_cipher_suite`\nis `modern` or `intermediate`. The reason is\nthat `modern` has no ciphers that need this,\nand `intermediate` uses `ffdhe2048`.\n\nSee [Nginx ssl_dhparam directive](http://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_dhparam)\n",
       "sectionTitle": "NGINX"
     },
     "ssl_session_tickets": {
       "defaultValue": "on",
-      "description": "Enables or disables session resumption through\nTLS session tickets. This has no impact when\nused with TLSv1.3.\n\nKong enables this by default for performance\nreasons, but it has security implications:\nhttps://github.com/mozilla/server-side-tls/issues/135\n\nSee http://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_session_tickets\n",
+      "description": "Enables or disables session resumption through\nTLS session tickets. This has no impact when\nused with TLSv1.3.\n\nKong enables this by default for performance\nreasons, but it has security implications:\n[Mozilla server-side-tls issue #135](https://github.com/mozilla/server-side-tls/issues/135)\n\nSee [Nginx ssl_session_tickets directive](http://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_session_tickets)\n",
       "sectionTitle": "NGINX"
     },
     "ssl_session_timeout": {
       "defaultValue": "1d",
-      "description": "Specifies a time during which a client may\nreuse the session parameters. See the rationale:\nhttps://github.com/mozilla/server-side-tls/issues/198\n\nSee http://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_session_timeout\n",
+      "description": "Specifies a time during which a client may\nreuse the session parameters. See the rationale:\n[Mozilla server-side-tls issue #198](https://github.com/mozilla/server-side-tls/issues/198)\n\nSee [Nginx ssl_session_timeout directive](http://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_session_timeout)\n",
       "sectionTitle": "NGINX"
     },
     "ssl_session_cache_size": {
       "defaultValue": "10m",
-      "description": "Sets the size of the caches that store session parameters.\n\nSee https://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_session_cache\n",
+      "description": "Sets the size of the caches that store session parameters.\n\nSee [Nginx ssl_session_cache directive](https://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_session_cache)\n",
       "sectionTitle": "NGINX"
     },
     "ssl_cert": {
@@ -589,17 +589,17 @@
     },
     "trusted_ips": {
       "defaultValue": null,
-      "description": "Defines trusted IP address blocks that are\nknown to send correct `X-Forwarded-*`\nheaders.\nRequests from trusted IPs make Kong forward\ntheir `X-Forwarded-*` headers upstream.\nNon-trusted requests make Kong insert its\nown `X-Forwarded-*` headers.\n\nThis property also sets the\n`set_real_ip_from` directive(s) in the Nginx\nconfiguration. It accepts the same type of\nvalues (CIDR blocks) but as a\ncomma-separated list.\n\nTo trust *all* IPs, set this value to\n`0.0.0.0/0,::/0`.\n\nIf the special value `unix:` is specified,\nall UNIX-domain sockets will be trusted.\n\nSee http://nginx.org/en/docs/http/ngx_http_realip_module.html#set_real_ip_from\nfor examples of accepted values.\n",
+      "description": "Defines trusted IP address blocks that are\nknown to send correct `X-Forwarded-*`\nheaders.\nRequests from trusted IPs make Kong forward\ntheir `X-Forwarded-*` headers upstream.\nNon-trusted requests make Kong insert its\nown `X-Forwarded-*` headers.\n\nThis property also sets the\n`set_real_ip_from` directive(s) in the Nginx\nconfiguration. It accepts the same type of\nvalues (CIDR blocks) but as a\ncomma-separated list.\n\nTo trust *all* IPs, set this value to\n`0.0.0.0/0,::/0`.\n\nIf the special value `unix:` is specified,\nall UNIX-domain sockets will be trusted.\n\nSee [Nginx set_real_ip_from directive](http://nginx.org/en/docs/http/ngx_http_realip_module.html#set_real_ip_from)\nfor examples of accepted values.\n",
       "sectionTitle": "NGINX"
     },
     "real_ip_header": {
       "defaultValue": "X-Real-IP",
-      "description": "Defines the request header field whose value\nwill be used to replace the client address.\nThis value sets the `ngx_http_realip_module`\ndirective of the same name in the Nginx\nconfiguration.\n\nIf this value receives `proxy_protocol`:\n\n- at least one of the `proxy_listen` entries\n  must have the `proxy_protocol` flag\n  enabled.\n- the `proxy_protocol` parameter will be\n  appended to the `listen` directive of the\n  Nginx template.\n\nSee http://nginx.org/en/docs/http/ngx_http_realip_module.html#real_ip_header\nfor a description of this directive.\n",
+      "description": "Defines the request header field whose value\nwill be used to replace the client address.\nThis value sets the `ngx_http_realip_module`\ndirective of the same name in the Nginx\nconfiguration.\n\nIf this value receives `proxy_protocol`:\n\n- at least one of the `proxy_listen` entries\n  must have the `proxy_protocol` flag\n  enabled.\n- the `proxy_protocol` parameter will be\n  appended to the `listen` directive of the\n  Nginx template.\n\nSee [Nginx real_ip_header directive](http://nginx.org/en/docs/http/ngx_http_realip_module.html#real_ip_header)\nfor a description of this directive.\n",
       "sectionTitle": "NGINX"
     },
     "real_ip_recursive": {
       "defaultValue": "off",
-      "description": "This value sets the `ngx_http_realip_module`\ndirective of the same name in the Nginx\nconfiguration.\n\nSee http://nginx.org/en/docs/http/ngx_http_realip_module.html#real_ip_recursive\nfor a description of this directive.\n",
+      "description": "This value sets the `ngx_http_realip_module`\ndirective of the same name in the Nginx\nconfiguration.\n\nSee [Nginx real_ip_recursive directive](http://nginx.org/en/docs/http/ngx_http_realip_module.html#real_ip_recursive)\nfor a description of this directive.\n",
       "sectionTitle": "NGINX"
     },
     "error_default_type": {
@@ -629,27 +629,27 @@
     },
     "nginx_main_worker_rlimit_nofile": {
       "defaultValue": "auto",
-      "description": "Changes the limit on the maximum number of open files\nfor worker processes.\n\nThe special and default value of `auto` sets this\nvalue to `ulimit -n` with the upper bound limited to\n16384 as a measure to protect against excess memory use,\nand the lower bound of 1024 as a good default.\n\nSee http://nginx.org/en/docs/ngx_core_module.html#worker_rlimit_nofile\n",
+      "description": "Changes the limit on the maximum number of open files\nfor worker processes.\n\nThe special and default value of `auto` sets this\nvalue to `ulimit -n` with the upper bound limited to\n16384 as a measure to protect against excess memory use,\nand the lower bound of 1024 as a good default.\n\nSee [Nginx worker_rlimit_nofile directive](http://nginx.org/en/docs/ngx_core_module.html#worker_rlimit_nofile)\n",
       "sectionTitle": "NGINX injected directives"
     },
     "nginx_events_worker_connections": {
       "defaultValue": "auto",
-      "description": "Sets the maximum number of simultaneous\nconnections that can be opened by a worker process.\n\nThe special and default value of `auto` sets this\nvalue to `ulimit -n` with the upper bound limited to\n16384 as a measure to protect against excess memory use,\nand the lower bound of 1024 as a good default.\n\nSee http://nginx.org/en/docs/ngx_core_module.html#worker_connections\n",
+      "description": "Sets the maximum number of simultaneous\nconnections that can be opened by a worker process.\n\nThe special and default value of `auto` sets this\nvalue to `ulimit -n` with the upper bound limited to\n16384 as a measure to protect against excess memory use,\nand the lower bound of 1024 as a good default.\n\nSee [Nginx worker_connections directive](http://nginx.org/en/docs/ngx_core_module.html#worker_connections)\n",
       "sectionTitle": "NGINX injected directives"
     },
     "nginx_http_client_header_buffer_size": {
       "defaultValue": "1k",
-      "description": "Sets buffer size for reading the\nclient request headers.\nSee http://nginx.org/en/docs/http/ngx_http_core_module.html#client_header_buffer_size\n",
+      "description": "Sets buffer size for reading the\nclient request headers.\nSee [Nginx client_header_buffer_size directive](http://nginx.org/en/docs/http/ngx_http_core_module.html#client_header_buffer_size)\n",
       "sectionTitle": "NGINX injected directives"
     },
     "nginx_http_large_client_header_buffers": {
       "defaultValue": "4 8k",
-      "description": "Sets the maximum number and\nsize of buffers used for\nreading large client\nrequest headers.\nSee http://nginx.org/en/docs/http/ngx_http_core_module.html#large_client_header_buffers\n",
+      "description": "Sets the maximum number and\nsize of buffers used for\nreading large client\nrequest headers.\nSee [Nginx large_client_header_buffers directive](http://nginx.org/en/docs/http/ngx_http_core_module.html#large_client_header_buffers)\n",
       "sectionTitle": "NGINX injected directives"
     },
     "nginx_http_client_max_body_size": {
       "defaultValue": "0",
-      "description": "Defines the maximum request body size\nallowed by requests proxied by Kong,\nspecified in the Content-Length request\nheader. If a request exceeds this\nlimit, Kong will respond with a 413\n(Request Entity Too Large). Setting\nthis value to 0 disables checking the\nrequest body size.\nSee http://nginx.org/en/docs/http/ngx_http_core_module.html#client_max_body_size\n",
+      "description": "Defines the maximum request body size\nallowed by requests proxied by Kong,\nspecified in the Content-Length request\nheader. If a request exceeds this\nlimit, Kong will respond with a 413\n(Request Entity Too Large). Setting\nthis value to 0 disables checking the\nrequest body size.\nSee [Nginx client_max_body_size directive](http://nginx.org/en/docs/http/ngx_http_core_module.html#client_max_body_size)\n",
       "sectionTitle": "NGINX injected directives"
     },
     "nginx_admin_client_max_body_size": {
@@ -659,12 +659,12 @@
     },
     "nginx_http_charset": {
       "defaultValue": "UTF-8",
-      "description": "Adds the specified charset to the \"Content-Type\"\nresponse header field. If this charset is different\nfrom the charset specified in the `source_charset`\ndirective, a conversion is performed.\n\nThe parameter `off` cancels the addition of\ncharset to the \"Content-Type\" response header field.\nSee http://nginx.org/en/docs/http/ngx_http_charset_module.html#charset\n",
+      "description": "Adds the specified charset to the \"Content-Type\"\nresponse header field. If this charset is different\nfrom the charset specified in the `source_charset`\ndirective, a conversion is performed.\n\nThe parameter `off` cancels the addition of\ncharset to the \"Content-Type\" response header field.\nSee [Nginx charset directive](http://nginx.org/en/docs/http/ngx_http_charset_module.html#charset)\n",
       "sectionTitle": "NGINX injected directives"
     },
     "nginx_http_client_body_buffer_size": {
       "defaultValue": "8k",
-      "description": "Defines the buffer size for reading\nthe request body. If the client\nrequest body is larger than this\nvalue, the body will be buffered to\ndisk. Note that when the body is\nbuffered to disk, Kong plugins that\naccess or manipulate the request\nbody may not work, so it is\nadvisable to set this value as high\nas possible (e.g., set it as high\nas `client_max_body_size` to force\nrequest bodies to be kept in\nmemory). Do note that\nhigh-concurrency environments will\nrequire significant memory\nallocations to process many\nconcurrent large request bodies.\nSee http://nginx.org/en/docs/http/ngx_http_core_module.html#client_body_buffer_size\n",
+      "description": "Defines the buffer size for reading\nthe request body. If the client\nrequest body is larger than this\nvalue, the body will be buffered to\ndisk. Note that when the body is\nbuffered to disk, Kong plugins that\naccess or manipulate the request\nbody may not work, so it is\nadvisable to set this value as high\nas possible (e.g., set it as high\nas `client_max_body_size` to force\nrequest bodies to be kept in\nmemory). Do note that\nhigh-concurrency environments will\nrequire significant memory\nallocations to process many\nconcurrent large request bodies.\nSee [Nginx client_body_buffer_size directive](http://nginx.org/en/docs/http/ngx_http_core_module.html#client_body_buffer_size)\n",
       "sectionTitle": "NGINX injected directives"
     },
     "nginx_admin_client_body_buffer_size": {
@@ -684,7 +684,7 @@
     },
     "nginx_http_keepalive_requests": {
       "defaultValue": "10000",
-      "description": "Sets the maximum number of client requests that can be served through one\nkeep-alive connection. After the maximum number of requests are made,\nthe connection is closed.\nClosing connections periodically is necessary to free per-connection\nmemory allocations. Therefore, using too high a maximum number of requests\ncould result in excessive memory usage and is not recommended.\nSee: https://nginx.org/en/docs/http/ngx_http_core_module.html#keepalive_requests\n",
+      "description": "Sets the maximum number of client requests that can be served through one\nkeep-alive connection. After the maximum number of requests are made,\nthe connection is closed.\nClosing connections periodically is necessary to free per-connection\nmemory allocations. Therefore, using too high a maximum number of requests\ncould result in excessive memory usage and is not recommended.\nSee: [Nginx keepalive_requests directive](https://nginx.org/en/docs/http/ngx_http_core_module.html#keepalive_requests)\n",
       "sectionTitle": "NGINX injected directives"
     },
     "database": {
@@ -1239,12 +1239,12 @@
     },
     "lua_ssl_trusted_certificate": {
       "defaultValue": "system",
-      "description": "Comma-separated list of certificate authorities\nfor Lua cosockets in PEM format.\n\nThe special value `system` attempts to search for the\n\"usual default\" provided by each distro, according\nto an arbitrary heuristic. In the current implementation,\nthe following pathnames will be tested in order,\nand the first one found will be used:\n\n- `/etc/ssl/certs/ca-certificates.crt` (Debian/Ubuntu/Gentoo)\n- `/etc/pki/tls/certs/ca-bundle.crt` (Fedora/RHEL 6)\n- `/etc/ssl/ca-bundle.pem` (OpenSUSE)\n- `/etc/pki/tls/cacert.pem` (OpenELEC)\n- `/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem` (CentOS/RHEL 7)\n- `/etc/ssl/cert.pem` (OpenBSD, Alpine)\n\n`system` can be used by itself or in conjunction with other\nCA file paths.\n\nWhen `pg_ssl_verify` is enabled, these\ncertificate authority files will be\nused for verifying Kong's database connections.\n\nCertificates can be configured on this property\nwith any of the following values:\n- `system`\n- absolute path to the certificate\n- certificate content\n- base64 encoded certificate content\n\nSee https://github.com/openresty/lua-nginx-module#lua_ssl_trusted_certificate\n",
+      "description": "Comma-separated list of certificate authorities\nfor Lua cosockets in PEM format.\n\nThe special value `system` attempts to search for the\n\"usual default\" provided by each distro, according\nto an arbitrary heuristic. In the current implementation,\nthe following pathnames will be tested in order,\nand the first one found will be used:\n\n- `/etc/ssl/certs/ca-certificates.crt` (Debian/Ubuntu/Gentoo)\n- `/etc/pki/tls/certs/ca-bundle.crt` (Fedora/RHEL 6)\n- `/etc/ssl/ca-bundle.pem` (OpenSUSE)\n- `/etc/pki/tls/cacert.pem` (OpenELEC)\n- `/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem` (CentOS/RHEL 7)\n- `/etc/ssl/cert.pem` (OpenBSD, Alpine)\n\n`system` can be used by itself or in conjunction with other\nCA file paths.\n\nWhen `pg_ssl_verify` is enabled, these\ncertificate authority files will be\nused for verifying Kong's database connections.\n\nCertificates can be configured on this property\nwith any of the following values:\n- `system`\n- absolute path to the certificate\n- certificate content\n- base64 encoded certificate content\n\nSee [lua-nginx-module lua_ssl_trusted_certificate](https://github.com/openresty/lua-nginx-module#lua_ssl_trusted_certificate)\n",
       "sectionTitle": "MISCELLANEOUS"
     },
     "lua_ssl_verify_depth": {
-      "defaultValue": "1",
-      "description": "Sets the verification depth in the server\ncertificates chain used by Lua cosockets,\nset by `lua_ssl_trusted_certificate`.\nThis includes the certificates configured\nfor Kong's database connections.\nIf the maximum depth is reached before\nreaching the end of the chain, verification\nwill fail. This helps mitigate certificate\nbased DoS attacks.\n\nSee https://github.com/openresty/lua-nginx-module#lua_ssl_verify_depth\n",
+      "defaultValue": "5",
+      "description": "Sets the verification depth in the server\ncertificates chain used by Lua cosockets,\nset by `lua_ssl_trusted_certificate`.\nThis includes the certificates configured\nfor Kong's database connections.\nIf the maximum depth is reached before\nreaching the end of the chain, verification\nwill fail. This helps mitigate certificate\nbased DoS attacks.\n\nSee [lua-nginx-module lua_ssl_verify_depth](https://github.com/openresty/lua-nginx-module#lua_ssl_verify_depth)\n",
       "sectionTitle": "MISCELLANEOUS"
     },
     "lua_ssl_protocols": {
@@ -1254,17 +1254,17 @@
     },
     "lua_package_path": {
       "defaultValue": "./?.lua;./?/init.lua;",
-      "description": "Sets the Lua module search path\n(LUA_PATH). Useful when developing\nor using custom plugins not stored\nin the default search path.\n\nSee https://github.com/openresty/lua-nginx-module#lua_package_path\n",
+      "description": "Sets the Lua module search path\n(LUA_PATH). Useful when developing\nor using custom plugins not stored\nin the default search path.\n\nSee [lua-nginx-module lua_package_path](https://github.com/openresty/lua-nginx-module#lua_package_path)\n",
       "sectionTitle": "MISCELLANEOUS"
     },
     "lua_package_cpath": {
       "defaultValue": null,
-      "description": "Sets the Lua C module search path\n(LUA_CPATH).\n\nSee https://github.com/openresty/lua-nginx-module#lua_package_cpath\n",
+      "description": "Sets the Lua C module search path\n(LUA_CPATH).\n\nSee [lua-nginx-module lua_package_cpath](https://github.com/openresty/lua-nginx-module#lua_package_cpath)\n",
       "sectionTitle": "MISCELLANEOUS"
     },
     "lua_socket_pool_size": {
       "defaultValue": "256",
-      "description": "Specifies the size limit for every cosocket\nconnection pool associated with every remote\nserver.\n\nSee https://github.com/openresty/lua-nginx-module#lua_socket_pool_size\n",
+      "description": "Specifies the size limit for every cosocket\nconnection pool associated with every remote\nserver.\n\nSee [lua-nginx-module lua_socket_pool_size](https://github.com/openresty/lua-nginx-module#lua_socket_pool_size)\n",
       "sectionTitle": "MISCELLANEOUS"
     },
     "enforce_rbac": {
@@ -1279,7 +1279,7 @@
     },
     "event_hooks_enabled": {
       "defaultValue": "on",
-      "description": "When enabled, event hook entities represent a relationship\nbetween an event (source and event) and an action\n(handler). Similar to web hooks, event hooks can be used to\ncommunicate Kong Gateway service events. When a particular\nevent happens on a service, the event hook calls a URL with\ninformation about that event. Event hook configurations\ndiffer depending on the handler. The events that are\ntriggered send associated data.\n\nSee: https://developer.konghq.com/gateway/entities/event-hook/\n",
+      "description": "When enabled, event hook entities represent a relationship\nbetween an event (source and event) and an action\n(handler). Similar to web hooks, event hooks can be used to\ncommunicate Kong Gateway service events. When a particular\nevent happens on a service, the event hook calls a URL with\ninformation about that event. Event hook configurations\ndiffer depending on the handler. The events that are\ntriggered send associated data.\n\nSee: [Kong event hook documentation](https://developer.konghq.com/gateway/entities/event-hook/)\n",
       "sectionTitle": "MISCELLANEOUS"
     },
     "fips": {
@@ -1347,7 +1347,7 @@
     },
     "admin_gui_auth_password_complexity": {
       "defaultValue": null,
-      "description": "Kong Manager Authentication Password Complexity (JSON)\n\nWhen `admin_gui_auth = basic-auth`, this property defines\nthe rules required for Kong Manager passwords. Choose\nfrom preset rules or write your own.\n\nExample using preset rules:\n\n`admin_gui_auth_password_complexity = { \"kong-preset\": \"min_8\" }`\n\nAll values for kong-preset require the password to contain\ncharacters from at least three of the following categories:\n\n1. Uppercase characters (A through Z)\n\n2. Lowercase characters (a through z)\n\n3. Base-10 digits (0 through 9)\n\n4. Special characters (for example, &, $, #, %)\n\nSupported preset rules:\n- `min_8`: minimum length of 8\n- `min_12`: minimum length of 12\n- `min_20`: minimum length of 20\n\nTo write your own rules, see\nhttps://manpages.debian.org/jessie/passwdqc/passwdqc.conf.5.en.html.\n\nNOTE: Only keywords \"min\", \"max\" and \"passphrase\" are supported.\n\nExample:\n\n`admin_gui_auth_password_complexity = { \"min\": \"disabled,24,11,9,8\" }`\n",
+      "description": "Kong Manager Authentication Password Complexity (JSON)\n\nWhen `admin_gui_auth = basic-auth`, this property defines\nthe rules required for Kong Manager passwords. Choose\nfrom preset rules or write your own.\n\nExample using preset rules:\n\n`admin_gui_auth_password_complexity = { \"kong-preset\": \"min_8\" }`\n\nAll values for kong-preset require the password to contain\ncharacters from at least three of the following categories:\n\n1. Uppercase characters (A through Z)\n\n2. Lowercase characters (a through z)\n\n3. Base-10 digits (0 through 9)\n\n4. Special characters (for example, &, $, #, %)\n\nSupported preset rules:\n- `min_8`: minimum length of 8\n- `min_12`: minimum length of 12\n- `min_20`: minimum length of 20\n\nTo write your own rules, see\n[passwdqc.conf reference](https://manpages.debian.org/jessie/passwdqc/passwdqc.conf.5.en.html).\n\nNOTE: Only keywords \"min\", \"max\" and \"passphrase\" are supported.\n\nExample:\n\n`admin_gui_auth_password_complexity = { \"min\": \"disabled,24,11,9,8\" }`\n",
       "sectionTitle": "KONG MANAGER"
     },
     "admin_gui_session_conf": {
@@ -1828,7 +1828,7 @@
     },
     "route_validation_strategy": {
       "defaultValue": "smart",
-      "description": "The strategy used to validate\nroutes when creating or updating them.\nDifferent strategies are available to tune\nhow to enforce splitting traffic of\nworkspaces.\n- `smart` is the default option and uses the\n  algorithm described in\n  https://developer.konghq.com/gateway/entities/workspace/.\n- `off` disables any check.\n- `path` enforces routes to comply with the pattern\n  described in config `enforce_route_path_pattern`.\n- `static` relies on the PostgreSQL database.\nBefore creating a new route, it checks if the\nroute is unique across all workspaces based on\nthe following params: `paths`, `methods`, and\n`hosts`. If all fields of the new route overlap\nwith an existing one, a 409 is returned with the\nroute of the collision. The array order is not\nimportant for the overlap filter.\n",
+      "description": "The strategy used to validate\nroutes when creating or updating them.\nDifferent strategies are available to tune\nhow to enforce splitting traffic of\nworkspaces.\n- `smart` is the default option and uses the\n  algorithm described in\n  [Kong workspace documentation](https://developer.konghq.com/gateway/entities/workspace/).\n- `off` disables any check.\n- `path` enforces routes to comply with the pattern\n  described in config `enforce_route_path_pattern`.\n- `static` relies on the PostgreSQL database.\nBefore creating a new route, it checks if the\nroute is unique across all workspaces based on\nthe following params: `paths`, `methods`, and\n`hosts`. If all fields of the new route overlap\nwith an existing one, a 409 is returned with the\nroute of the collision. The array order is not\nimportant for the overlap filter.\n",
       "sectionTitle": "ROUTE COLLISION DETECTION/PREVENTION"
     },
     "enforce_route_path_pattern": {
@@ -2001,7 +2001,7 @@
     },
     "cluster_fallback_export_s3_config": {
       "defaultValue": null,
-      "description": "Fallback config export S3 configuration.\nThis is used only when `cluster_fallback_config_storage` is an S3-like schema.\nIf set, it will add the config table to the Kong exporter config S3 putObject request.\nThe config table should be in JSON format and can be unserialized into a table.\nIt should contain the necessary parameters as described in the documentation:\nhttps://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property.\nFor example, if you want to set the ServerSideEncryption headers/KMS Key ID\nfor the S3 putObject request, you can set the config table to:\n`{\"ServerSideEncryption\": \"aws:kms\", \"SSEKMSKeyId\": \"your-kms-key-id\"}`\n",
+      "description": "Fallback config export S3 configuration.\nThis is used only when `cluster_fallback_config_storage` is an S3-like schema.\nIf set, it will add the config table to the Kong exporter config S3 putObject request.\nThe config table should be in JSON format and can be unserialized into a table.\nIt should contain the necessary parameters as described in the documentation:\n[AWS S3 putObject reference](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property).\nFor example, if you want to set the ServerSideEncryption headers/KMS Key ID\nfor the S3 putObject request, you can set the config table to:\n`{\"ServerSideEncryption\": \"aws:kms\", \"SSEKMSKeyId\": \"your-kms-key-id\"}`\n",
       "sectionTitle": "CLUSTER FALLBACK CONFIGURATION",
       "min_version": {
         "gateway": "3.5"
@@ -2170,7 +2170,7 @@
     },
     "admin_gui_csp_header_value": {
       "defaultValue": null,
-      "description": "The value of the `Content-Security-Policy` (CSP) header for Kong Manager.\n\nThis configuration controls the value of the CSP header when serving\nKong Manager. If omitted or left empty, the default CSP header value\nwill be used.\n\nThis is an advanced configuration intended for cases where the default\nCSP header value does not meet your requirements. Use with caution.\n\nFor more information on the CSP header, see:\nhttps://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy\n",
+      "description": "The value of the `Content-Security-Policy` (CSP) header for Kong Manager.\n\nThis configuration controls the value of the CSP header when serving\nKong Manager. If omitted or left empty, the default CSP header value\nwill be used.\n\nThis is an advanced configuration intended for cases where the default\nCSP header value does not meet your requirements. Use with caution.\n\nFor more information on the CSP header, see:\n[MDN Content-Security-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy)\n",
       "sectionTitle": "KONG MANAGER",
       "min_version": {
         "gateway": "3.10"
@@ -2854,6 +2854,54 @@
       "sectionTitle": "VAULTS",
       "min_version": {
         "gateway": "3.15"
+      }
+    },
+    "cluster_compat_cache": {
+      "defaultValue": "off",
+      "description": "When enabled, the control plane caches the\nversion-compatible config payloads it sends to data\nplanes, so each payload is built once and reused across\ndata planes instead of being rebuilt on every push.\nThis reduces CPU and transient memory usage on control\nplanes serving many data planes.\n\nOnly takes effect on control plane nodes.\n",
+      "sectionTitle": "HYBRID MODE CONTROL PLANE",
+      "min_version": {
+        "gateway": "3.16"
+      }
+    },
+    "cluster_compat_cache_size": {
+      "defaultValue": "256m",
+      "description": "Size of the shared memory zone used by\n`cluster_compat_cache`. The cache stores the\ngzip-compressed payloads, so it must be large enough\nfor the configurations being synced; if it is too\nsmall the control plane logs a warning and rebuilds\npayloads more often. Increase it for very large\nconfigurations or when raising `cluster_max_payload`.\n\nThis zone is only allocated on control plane nodes\nwhen `cluster_compat_cache` is enabled.\n",
+      "sectionTitle": "HYBRID MODE CONTROL PLANE",
+      "min_version": {
+        "gateway": "3.16"
+      }
+    },
+    "metrics_mem_size": {
+      "defaultValue": "10m",
+      "description": "Size of the shared memory for the\nMetrics PDK (`kong.metrics`) to store metrics data.\n\nThe accepted units are `k` and `m`, with a minimum\nrecommended value of a few MBs.\n",
+      "sectionTitle": "NGINX",
+      "min_version": {
+        "gateway": "3.16"
+      }
+    },
+    "plugin_ordering_algorithm": {
+      "defaultValue": "legacy",
+      "description": "Selects the algorithm that dynamic plugin ordering\n(a plugin's `ordering.before`/`after` configuration)\nuses to reorder plugins in the `access` phase. It\nhas no effect on workspaces that do not use the\n`ordering` field.\n\nAccepted values are:\n- `legacy`: the default value. `before` and `after`\n  express the same dependency, and reordering one\n  plugin can displace unrelated plugins from their\n  priority position.\n- `priority_preserving`: only the plugin you\n  configure moves, next to the plugin it references.\n  Plugins you did not configure keep their priority\n  order, and `before` and `after` can give different\n  results. This value can change the `access`-phase\n  order of workspaces that already use `ordering`.\n\nThis is a node-level static option. In hybrid mode,\nset it on the data planes and restart them. It has no\neffect on a control plane. Use the same value on every\ndata plane, because two data planes with different\nvalues run the same configuration in a different\norder.\n",
+      "sectionTitle": "TUNING & BEHAVIOR",
+      "min_version": {
+        "gateway": "3.16"
+      }
+    },
+    "use_standard_grpc_status_codes": {
+      "defaultValue": "off",
+      "description": "A boolean value that controls the gRPC status\ncode mappings that Kong uses.\n\nWhen 'on', Kong uses the corrected mappings that\nalign with the gRPC standard. This affects both\nthe HTTP-to-gRPC mapping in `kong.response.exit`\nand the gRPC-to-HTTP mapping in the grpc-gateway\nplugin.\n\nWhen 'off' (the default), Kong keeps the legacy\nmappings for backward compatibility.\n\nSee:\n- [HTTP-to-gRPC mapping](https://github.com/grpc/grpc/blob/master/doc/http-grpc-status-mapping.md)\n- [gRPC-to-HTTP mapping](https://github.com/grpc/grpc/blob/master/doc/statuscodes.md)\n",
+      "sectionTitle": "TUNING & BEHAVIOR",
+      "min_version": {
+        "gateway": "3.16"
+      }
+    },
+    "analytics_enabled": {
+      "defaultValue": "on",
+      "description": "Granularly control the analytics feature\nunder Konnect mode.\n",
+      "sectionTitle": "Analytics for Konnect",
+      "min_version": {
+        "gateway": "3.16"
       }
     }
   }

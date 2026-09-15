@@ -86,6 +86,10 @@ rows:
   - use_case: "[Enable the OTEL plugin for metrics](./examples/metrics/)"
     description: Configure the OpenTelemetry plugin to send metrics.
 
+  - use_case: |
+      [Add Principal attributes to metrics](./examples/metrics-principal-attributes/) {% new_in 3.16 %}
+    description: Attach the authenticated Principal's ID and display name to request count and bandwidth metrics.
+
   - use_case: "[Enable the OTEL plugin for API transactional logs](./examples/transactional-logs/)"
     description: Configure the OpenTelemetry plugin to send API transactional logs.
 
@@ -132,6 +136,45 @@ In {{site.base_gateway}}, metrics are natively supported by the OpenTelemetry pl
 * For all available metrics, see the [OpenTelemetry metrics reference](/gateway/otel-metrics/).
 * For AI metrics and required setup prerequisites, see the [Gen AI OpenTelemetry metrics reference](/ai-gateway/ai-otel-metrics/).
 * For a step-by-step setup using an OpenTelemetry Collector, see [Collect metrics, logs, and traces with the OpenTelemetry plugin](/how-to/collect-metrics-logs-and-traces-with-opentelemetry/).
+
+### Identifying requests in metrics
+
+You can attach the client's identity as attributes to the `http.server.request.count`, `http.server.request.size`, and `http.server.response.size` metrics. 
+These attributes can capture the [Consumer](/gateway/entities/consumer/) and the [Principal](/identity/principals/). You can enable both at the same time.
+
+Enable these identity attributes alongside `enable_request_metrics` or `enable_bandwidth_metrics`, which produce the metrics themselves.
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Metric attribute
+    key: attribute
+  - title: Config
+    key: config
+  - title: Description
+    key: description
+rows:
+  - attribute: "`kong.auth.consumer.name`"
+    config: "[`enable_consumer_attribute`](./reference/#schema--config-metrics-enable-consumer-attribute)"
+    description: Name of the authenticated Consumer.
+  - attribute: "`kong.auth.principal.id`"
+    config: |
+      [`enable_principal_attribute`](./reference/#schema--config-metrics-enable-principal-attribute) {% new_in 3.16 %}
+    description: ID of the authenticated Principal managed by {{site.identity}}.
+  - attribute: "`kong.auth.principal.display_name`"
+    config: |
+      [`enable_principal_attribute`](./reference/#schema--config-metrics-enable-principal-attribute) {% new_in 3.16 %}
+    description: Display name of the authenticated Principal managed by {{site.identity}}.
+{% endtable %}
+<!--vale on-->
+
+If the request has no authenticated Consumer or Principal, the corresponding attribute is left empty on the exported metrics.
+
+### Custom metrics {% new_in 3.16 %}
+
+Custom plugins can register and record their own counter, gauge, and histogram metrics using the [Metrics PDK](/custom-plugins/metrics-pdk/) (`kong.metrics`). When the OpenTelemetry plugin is configured with metrics enabled, it exports these custom metrics through the same OTLP path as {{site.base_gateway}}'s built-in metrics.
+
+Custom metrics currently export through the OpenTelemetry plugin only. The Prometheus and StatsD plugins don't export them.
 
 ### Metrics with {{site.base_gateway}} 3.12 or earlier
 
@@ -332,7 +375,21 @@ for each different header format, as in the following example:
 },
 ```
 
+## Custom log fields {% new_in 3.16 %}
+
+Access logs automatically include any field a plugin sets with [`kong.log.set_serialize_value`](/gateway/pdk/reference/kong.log/#kong-log-set-serialize-value-key-value-options).
+Each field appears at the same path it was set.
+
+For example, a [Pre-function](/plugins/pre-function/) plugin can run `kong.log.set_serialize_value("gateway.host", ngx.var.host)`. This adds a `gateway.host` attribute to the exported access log, alongside the OpenTelemetry plugin's own mapped fields.
+No OpenTelemetry-specific configuration is needed.
+
+If two plugins set the same key in different phases, the first plugin to set the key decides whether it's a new field. 
+The last plugin to set it determines the final value.
+This matches the ordinary last-write behavior of `kong.log.set_serialize_value` itself.
+
 ## Custom attributes by Lua {% new_in 3.14 %}
+
+Use `custom_attributes_by_lua` instead of `kong.log.set_serialize_value` when you want a field to appear in this plugin's export without appearing in every other logging plugin that runs afterward. See [Plugin precedence and managing fields](#plugin-precedence-and-managing-fields).
 
 {% include /plugins/logging/log-custom-fields-by-lua.md
 custom_fields_by_lua='config.access_logs.custom_attributes_by_lua'

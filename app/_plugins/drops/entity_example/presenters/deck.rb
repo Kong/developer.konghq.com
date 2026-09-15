@@ -65,6 +65,10 @@ module Jekyll
               plugin.merge!('tags' => @example_drop.tags) unless @example_drop.tags.empty?
               config_field = @example_drop.data.fetch('config', {})
               plugin.merge!('config' => config_field) unless config_field.empty?
+              expressions_field = @example_drop.data.fetch('expressions', {})
+              plugin.merge!('expressions' => expressions_field) unless expressions_field.empty?
+              condition_field = @example_drop.data['condition']
+              plugin.merge!('condition' => condition_field) unless condition_field.nil?
               plugin.merge!('ordering' => ordering) unless ordering.nil?
 
               plugin = Utils::VariableReplacer::DeckData.run(

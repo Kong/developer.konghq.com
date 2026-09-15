@@ -1,0 +1,64 @@
+description: |
+  Verify a call node's outbound TLS connection against a private CA using the plugin's `ca_certificates` field, then return the response directly to the client.
+
+extended_description: |
+  Verify a `call` node's outbound TLS connection against a private CA using the plugin's `ca_certificates` field, instead of relying on {{site.base_gateway}}'s global trusted CA store.
+
+  This is useful when a `call` node contacts an internal service whose certificate is signed by a private CA that can't be added to a global trust store, 
+  for example on {{site.konnect_short_name}} Dedicated Cloud Gateways.
+
+  This example contains the following nodes:
+  1. The node `AUTHOR` calls an internal HTTPS endpoint. 
+     Its certificate is verified against the CA Certificate object referenced in `ca_certificates`, 
+     instead of the global trusted CA store.
+  1. The node `EXIT` returns the call's response body directly to the client.
+
+  If the internal endpoint's certificate isn't signed by a CA in `ca_certificates`, 
+  the `AUTHOR` node fails with a TLS verification error, and Datakit returns a `500` response instead of reaching `EXIT`.
+
+  {:.info}
+  > **Note:** `ca_certificates` is set at the root of the plugin's config.
+  All `call` nodes in the plugin instance share the same trust store. 
+  When set, it replaces the global trusted CA store for verifying outbound calls, 
+  so include any public CAs you still need to trust alongside your private CA. 
+  The field has no effect if a node's `ssl_verify` is `false`.
+
+title: Verify TLS connection using a custom CA
+weight: 800
+
+requirements:
+  - "You have added your private CA to {{site.base_gateway}} as a [CA Certificate](/gateway/entities/ca-certificate/) object."
+
+variables:
+  ca_cert_id:
+    value: $CA_CERT_ID
+    description: The ID of your CA Certificate object in {{site.base_gateway}}.
+  service_url:
+    value: $SERVICE_URL
+    description: The URL of the internal service the `AUTHOR` node will call.
+
+config:
+  ca_certificates:
+    - ${ca_cert_id}
+  nodes:
+    - name: AUTHOR
+      type: call
+      url: ${service_url}
+      ssl_verify: true
+    - name: EXIT
+      type: exit
+      inputs:
+        body: AUTHOR.body
+      status: 200
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.16'
+
+group: authentication

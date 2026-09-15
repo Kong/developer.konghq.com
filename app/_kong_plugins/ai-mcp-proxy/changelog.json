@@ -1,4 +1,26 @@
 {
+  "3.16.0.0": [
+    {
+      "message": "Fixed an issue where the ACL decision cache has collision.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where non-managed MCP listeners advertised unsupported SSE streams.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where converted HTTPS MCP tool calls lost the original forwarded port on the internal TLS Unix socket.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where gzip-compressed and malformed MCP request bodies were incorrectly rejected with HTTP 413.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.15.0.0": [
     {
       "message": "Fixed an issue where raw non-200 upstream responses triggered misleading MCP body parse warnings.",

@@ -1,4 +1,11 @@
 {
+  "3.16.0.0": [
+    {
+      "message": "Fixed an issue where an invalid API key was not falling back to the configured anonymous consumer when `principals.error_on_miss` was set to `false`, unlike every other authentication failure.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.15.0.0": [
     {
       "message": "Added support for authentication via the Kong Identity service with caching, consumer compatibility, and basic analytics.",

@@ -1,4 +1,216 @@
 {
+  "3.16.0.0": [
+    {
+      "message": "Added `cache_read_cost` and `cache_write_cost` to `model.options` so cached and cache-write prompt tokens can be priced per 1M tokens, alongside `input_cost` / `output_cost`.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added filtering for empty Anthropic thinking blocks in request history.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for reporting prompt cache token metrics when using native (non-OpenAI) request/response formats.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for reporting prompt cache token metrics in OpenAI-compatible format.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for per-cache-TTL cache-write pricing, context-window pricing factors, and service-tier pricing factors via `model.options` (`cache_write_cost_list`, `context_window_factor`, `service_tier_factor`).\nAnthropic (cache TTL + service tier), OpenAI, and Gemini service tiers are collected from upstream responses.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a bug where a response from Anthropic could fail to decode when the client's request advertised Brotli support, since Anthropic's edge may then return a Brotli-encoded body that Kong's response decompression -- which only understands gzip -- can't inflate. Kong now normalizes the outgoing `Accept-Encoding` request header before proxying to any LLM provider: `gzip, identity` when the client accepts gzip, and `identity` otherwise, so a client that cannot inflate gzip is never handed a compressed body on the paths that pass the upstream response through untouched.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Gemini and Anthropic token usage metadata was lost in streaming responses.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where modern OpenAI output token limits were discarded or overridden during request normalization.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where some Claude Code MCP tools did not correctly handle empty 'requires' array.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where `cache_creation_input_tokens` and `cache_read_input_tokens` were excluded from prompt token counts, causing undercounting when Anthropic prompt caching was active.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where `stream_options` was forwarded to Databricks upstreams, causing a 400 error since Databricks does not support this field.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where native Anthropic streaming counted provisional `message_start` output tokens and summed cumulative `message_delta` usage.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where cache_control in Bedrock Anthropic format requests using ARN model IDs was lost.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Bedrock native ConverseStream requests using ARN model IDs could fail while handling streamed responses.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `context-management-2025-06-27` Anthropic beta flag was dropped when routing to a Bedrock target, causing Bedrock to reject requests carrying `context_management` with a `400` error on failover from an Anthropic target.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where output token usage was reported as zero for Bedrock native format request to AWS models like Nova.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where signed Anthropic thinking blocks with omitted text were removed from request history.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Anthropic-format requests could report zero usage when it targets Bedrock's own model via conversion.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where full-sync reconfigure reset balancer state even when plugin configs were unchanged.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where OpenAI, Azure, and Gemini realtime upstream URLs using `wss` were downgraded to `ws`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a credential header could appear unredacted in access logs when using AWS temporary credentials with Bedrock.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Ollama rejected OpenAI message content arrays.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where OpenAI content array was sent as bedrock/gemini system message which only support string.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the configured auth header (e.g. `api-key`, `x-api-key`) leaked the provider credential into access logs instead of being redacted.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where token usage for Anthropic requests using the compaction beta was undercounted. Kong now sums `usage.iterations` when present instead of relying solely on the top-level `input_tokens` / `output_tokens`, which only reflect non-compaction iterations.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a malformed RSA private key in a Gemini provider's `service_account_json` caused crash with SIGSEGV",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where adapted Anthropic responses omitted cache and reasoning usage details.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Claude Sonnet 5 and Opus 5 rejected OpenAI-format reasoning requests on Bedrock due to an unsupported thinking.type value.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where repeated cumulative usage in streaming responses inflated token counts.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Gemini non-streaming responses that reached `max_tokens` reported a `stop` finish reason instead of `length`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a Gemini response with JSON `null` token counts in `usageMetadata` caused an HTTP 500 on non-streaming chat requests and an empty HTTP 200 response on streaming chat requests.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where provider-reported reasoning-token details were not correctly reported.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where xAI reasoning tokens were not folded into completion_tokens, breaking the OpenAI usage identity.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Gemini's tool-use token usage (billed when server-side tools such as grounding, code execution, or URL context are used) was not counted in the reported token usage or cost.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed Azure OpenAI responses support in deployment style.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed Gemini image generation token accounting to include reasoning tokens (`thoughtsTokenCount`) in `output_tokens` and report them as `output_tokens_details.reasoning_tokens`. Previously the reasoning tokens were dropped, which under-reported output tokens, analytics, and calculated cost for thinking-enabled image models.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed Gemini realtime (Live API) token accounting to include reasoning tokens (`thoughtsTokenCount`) in the reported output tokens, and to report them as `output_tokens_reasoning_tokens_count`. Previously the reasoning tokens were dropped, which under-reported the output and total token counts of thinking-enabled realtime sessions.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed multipart video generation requests to OpenAI-compatible providers leaking internal multipart metadata into JSON upstream bodies, which caused the requests to fail.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed token usage statistics being silently dropped for `audio/v1/audio/transcriptions`\nrequests. Token-billed OpenAI/Azure transcription models (e.g. `gpt-4o-transcribe`) now report\n`input_tokens`/`output_tokens`/`total_tokens` and the `text_tokens`/`audio_tokens` breakdown in the analytics\nlog when `logging.log_statistics` is enabled.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Gemini streaming analytics could over-report token usage. Gemini repeats its usage metadata on every stream chunk as a running request-level total, but the counts were summed across chunks instead of replaced, multiplying the reported usage by the number of chunks. Reasoning tokens were affected the most, because Gemini reports them in full on the first chunk and does not change them afterwards. A chunk that carried no usage metadata also reset the recorded output token count to zero.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a 500 crash on Bedrock Converse requests when a `cachePoint` content block immediately followed a `toolResult` block in the same message.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed vector database indexes and cached embedding records being left behind when a plugin instance was deleted.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.15.0.0": [
     {
       "message": "Fixed an issue where we didn't support the Azure GA version of Realtime API.",
