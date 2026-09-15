@@ -20,3 +20,28 @@ export function findNullValues(value, pointer = "") {
   }
   return findings;
 }
+
+const MARKER_NAME_PATTERN = /^_/;
+const MARKER_NAMES = new Set(["name_uni", "name_kube"]);
+
+// Returns a JSON pointer for every renderer marker key that survived into the
+// published output: keys matching `_*`, plus `name_uni` and `name_kube`.
+export function findMarkerFields(value, pointer = "") {
+  if (value === null || typeof value !== "object") return [];
+
+  if (Array.isArray(value)) {
+    return value.flatMap((item, index) =>
+      findMarkerFields(item, `${pointer}/${index}`),
+    );
+  }
+
+  const findings = [];
+  for (const [key, child] of Object.entries(value)) {
+    const childPointer = `${pointer}/${escapeSegment(key)}`;
+    if (MARKER_NAME_PATTERN.test(key) || MARKER_NAMES.has(key)) {
+      findings.push(childPointer);
+    }
+    findings.push(...findMarkerFields(child, childPointer));
+  }
+  return findings;
+}

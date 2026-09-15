@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { parse } from "yaml";
-import { findNullValues } from "../lib/rules.js";
+import { findNullValues, findMarkerFields } from "../lib/rules.js";
 
 test("a mis-indented nested block reports the empty key", () => {
   const doc = parse(`
@@ -32,4 +32,24 @@ spec:
     kind: Dataplane
 `);
   assert.deepEqual(findNullValues(doc), []);
+});
+
+test("a surviving marker field is reported", () => {
+  const doc = parse(`
+type: MeshMultiZoneService
+spec:
+  conf:
+    _port: 8080
+`);
+  assert.deepEqual(findMarkerFields(doc), ["/spec/conf/_port"]);
+});
+
+test("a document with no marker fields reports no findings", () => {
+  const doc = parse(`
+type: MeshTimeout
+spec:
+  targetRef:
+    kind: Dataplane
+`);
+  assert.deepEqual(findMarkerFields(doc), []);
 });
