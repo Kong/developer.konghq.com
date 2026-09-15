@@ -56,8 +56,11 @@ function builtPage(kubernetesYaml, universalYaml) {
 
 // Builds a fixture root laid out like a repo, with the minimal set of files
 // the CLI reads: product release data, one vendored CRD, and a built page
-// paired with its source example for each of the given examples.
-function buildFixtureRoot({ policy = "widget", examples }) {
+// paired with its source example for each of the given examples. Pass
+// `policies` (an array of `{ policy, examples, skipBuiltPage }`) instead of
+// `policy`/`examples` to lay out more than one policy; `skipBuiltPage` omits
+// the built page for that policy's examples, to exercise `--skip`.
+function buildFixtureRoot({ policy = "widget", examples, policies }) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "mesh-policy-cli-"));
 
   fs.mkdirSync(path.join(root, "app/_data/products"), { recursive: true });
@@ -70,24 +73,47 @@ function buildFixtureRoot({ policy = "widget", examples }) {
   fs.mkdirSync(crdsDir, { recursive: true });
   fs.writeFileSync(path.join(crdsDir, "widget.yaml"), WIDGET_CRD);
 
-  for (const { name, kubernetesYaml, universalYaml } of examples) {
-    const examplesDir = path.join(root, "app/_mesh_policies", policy, "examples");
-    fs.mkdirSync(examplesDir, { recursive: true });
-    fs.writeFileSync(path.join(examplesDir, `${name}.yaml`), "config: {}\n");
+  const policyList = policies ?? [{ policy, examples, skipBuiltPage: false }];
 
-    const pageDir = path.join(root, "dist/mesh/policies", policy, "examples", name);
-    fs.mkdirSync(pageDir, { recursive: true });
-    fs.writeFileSync(
-      path.join(pageDir, "index.html"),
-      builtPage(kubernetesYaml, universalYaml),
-    );
+  for (const {
+    policy: policyName,
+    examples: policyExamples,
+    skipBuiltPage,
+  } of policyList) {
+    for (const { name, kubernetesYaml, universalYaml } of policyExamples) {
+      const examplesDir = path.join(
+        root,
+        "app/_mesh_policies",
+        policyName,
+        "examples",
+      );
+      fs.mkdirSync(examplesDir, { recursive: true });
+      fs.writeFileSync(path.join(examplesDir, `${name}.yaml`), "config: {}\n");
+
+      if (skipBuiltPage) continue;
+
+      const pageDir = path.join(
+        root,
+        "dist/mesh/policies",
+        policyName,
+        "examples",
+        name,
+      );
+      fs.mkdirSync(pageDir, { recursive: true });
+      fs.writeFileSync(
+        path.join(pageDir, "index.html"),
+        builtPage(kubernetesYaml, universalYaml),
+      );
+    }
   }
 
   return root;
 }
 
-function runCli(root) {
-  return spawnSync("node", [INDEX_JS, "--root", root], { encoding: "utf-8" });
+function runCli(root, extraArgs = []) {
+  return spawnSync("node", [INDEX_JS, "--root", root, ...extraArgs], {
+    encoding: "utf-8",
+  });
 }
 
 test("a clean run exits zero and reports pages and blocks checked", () => {
@@ -128,4 +154,81 @@ test("a failing run exits non-zero and reports the finding and the source file",
   );
   assert.match(result.stdout, /Checked 1 pages, 2 blocks/);
   assert.match(result.stdout, /[1-9]\d* finding\(s\)/);
+});
+
+test("--skip excludes a policy with no built page from the precondition check", () => {
+  const cleanExample = {
+    name: "clean",
+    kubernetesYaml: "kind: Widget\nspec:\n  name: ok\n",
+    universalYaml: "type: Widget\nspec:\n  name: ok\n",
+  };
+  const root = buildFixtureRoot({
+    policies: [
+      { policy: "widget", examples: [cleanExample], skipBuiltPage: false },
+      {
+        policy: "broken-policy",
+        examples: [cleanExample],
+        skipBuiltPage: true,
+      },
+    ],
+  });
+
+  const result = runCli(root, ["--skip", "broken-policy"]);
+
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /Checked 1 pages, 2 blocks/);
+  assert.match(result.stdout, /Skipped: broken-policy\./);
+});
+
+test("--skip accepts a comma-separated list and excludes every named policy", () => {
+  const cleanExample = {
+    name: "clean",
+    kubernetesYaml: "kind: Widget\nspec:\n  name: ok\n",
+    universalYaml: "type: Widget\nspec:\n  name: ok\n",
+  };
+  const root = buildFixtureRoot({
+    policies: [
+      { policy: "widget", examples: [cleanExample], skipBuiltPage: false },
+      {
+        policy: "broken-policy-a",
+        examples: [cleanExample],
+        skipBuiltPage: true,
+      },
+      {
+        policy: "broken-policy-b",
+        examples: [cleanExample],
+        skipBuiltPage: true,
+      },
+    ],
+  });
+
+  const result = runCli(root, [
+    "--skip",
+    "broken-policy-a,broken-policy-b",
+  ]);
+
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /Checked 1 pages, 2 blocks/);
+  assert.match(
+    result.stdout,
+    /Skipped: broken-policy-a, broken-policy-b\./,
+  );
+});
+
+test("--skip naming an unmatched policy is a no-op", () => {
+  const root = buildFixtureRoot({
+    examples: [
+      {
+        name: "clean",
+        kubernetesYaml: "kind: Widget\nspec:\n  name: ok\n",
+        universalYaml: "type: Widget\nspec:\n  name: ok\n",
+      },
+    ],
+  });
+
+  const result = runCli(root, ["--skip", "no-such-policy"]);
+
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /Checked 1 pages, 2 blocks/);
+  assert.match(result.stdout, /0 finding\(s\)/);
 });
