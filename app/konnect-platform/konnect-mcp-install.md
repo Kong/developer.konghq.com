@@ -26,7 +26,6 @@ Configure the MCP client of your choice by adding the {{site.konnect_product_nam
 
 ## {{ site.claude_code }} CLI
 
-For regional server URLs, see [Regional server endpoints](/konnect-platform/konnect-mcp/#regional-server-endpoints).
 
 Using the `claude mcp add` command:
 
@@ -36,7 +35,7 @@ claude mcp add --transport http kong-konnect https://us.mcp.konghq.com/ \
 ```
 
 {:.info}
-> Replace `https://us.mcp.konghq.com/` with your regional server URL and `YOUR_KONNECT_PAT` with your actual Personal Access Token.
+> Replace `https://us.mcp.konghq.com/` with your regional server URL and `YOUR_KONNECT_PAT` with your actual Personal Access Token. For regional server URLs, see [Regional server endpoints](/konnect-platform/konnect-mcp/#regional-server-endpoints).
 
 You can also configure by editing the configuration file directly:
 
