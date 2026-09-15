@@ -23,7 +23,7 @@ faqs:
   - q: What’s the difference between "Export all data" and scoped export options?
     a: |
       * **Export all data**: Includes your entire account's data.
-      * **Scoped export options**: Allow you to export only specific parts of your data, such as a single **Document** or **Project**, for more targeted backups or sharing. An API Collection that contains a spec is exported as a **Document**.
+      * **Scoped export options**: Allow you to export only specific parts of your data, such as a single API Collection or Project, for more targeted backups or sharing.
 
 related_resources:
   - text: Inso CLI reference
@@ -115,14 +115,14 @@ For more information, see the [Inso CLI reference](/inso-cli/).
 Insomnia supports flexible export options that are tailored to both manual and automated workflows. You can either use the desktop app, ideal for immediate data transfer or archival, or use Inso CLI to script OpenAPI specification exports within CI pipelines.
 
 ### UI export
-In a workspace or API Collection header, select **Export**  and then specify the file type. The following file types are supported:
-- **Document**: Export only the active API Collection. This includes the spec, the requests, environment settings, and tests. It does not include other workspace data.
-- **Project**: Export the selected collection. This includes all contained requests and environments.
-- **All data**: Export everything in your workspace.
+Each export option is labeled with the name of what you're exporting, for example `Export the "Flights Service 0.1.0" API Collection`. You can export at the following scopes:
+- **API Collection**: Exports only that API Collection, including its spec, requests, environment settings, and tests. It doesn't include other workspace data.
+- **Project**: Exports every workspace in that project.
+- **All data**: Exports everything in your account. Go to **Preferences** > **Data** and click **Export all data**.
 
-The UI method supports the following formats:
-- Insomnia YAML (v5)
-- HAR
+Each export asks which format to use. The UI method supports the following formats:
+- Insomnia v5
+- HAR (HTTP Archive Format)
 
 ### CLI export
 Use Inso CLI to automate exports of your OpenAPI specification from an API Collection. You can write the spec to a file, or let the CLI print to standard output for piping in scripts and CI. For a full overview, see the Inso CLI reference.
