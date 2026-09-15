@@ -41,7 +41,7 @@ The following sample GitHub Actions performs the following tasks:
 Here's the example Inso CLI GitHub Action:
 
 {:.warning}
-> {% new_in 13.3 %} `inso run test` runs legacy unit tests, which are hidden in the app by default and are planned for deprecation in a future release. To create or edit these tests in {{ site.insomnia }}, go to **Preferences** > **General** and enable **Enable Legacy Tests**. For new work, use [pre-request and after-response scripts](/insomnia/scripts/) and run them with `inso run collection`.
+> {% new_in 13.3 %} `inso run test` runs legacy unit tests, which are hidden in the app by default and are planned for deprecation in a future release. To create or edit these tests in {{ site.insomnia }}, go to **Preferences** > **General** > **Application** and enable **Show legacy unit tests**. For new work, use [pre-request and after-response scripts](/insomnia/scripts/) and run them with `inso run collection`.
 
 ```yaml
 name: Test
