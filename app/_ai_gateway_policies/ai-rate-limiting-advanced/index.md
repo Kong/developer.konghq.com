@@ -237,6 +237,33 @@ To configure it, specify the function in [`config.request_prompt_count_function`
 
 When using the request prompt provider, it will call the function to get the token count at the request level and implement a limit.
 
+## Identification strategies
+
+The AI Rate Limiting Advanced Policy supports several identifiers that allow you to define an identity based scopes for rate limiting. Counters are tracked separately based on the scope you set.
+
+You can configure the type of identifier with the [`config.identifier`](./reference/#schema--config-identifier) field and scope to it using [`config.policies.match`](./reference/#schema--config-policies-match).
+
+{% table %}
+columns:
+  - title: Identifier type
+    key: type
+  - title: Description
+    key: description
+rows:
+  - type: "`consumer`"
+    description: (Default) An [AI Consumer](/ai-gateway/entities/ai-consumer/) entity.
+  - type: "`consumer-group`"
+    description: An [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) entity. Requires that the Rate Limiting Advanced Policy is referenced by an AI Consumer Group.
+  - type: "`credential`"
+    description: A virtual credential created by an [OIDC AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/#oidc-token-authentication).
+  - type: "`header`"
+    description: An HTTP header.
+  - type: "`ip`"
+    description: An `ip` address.
+  - type: "`path`"
+    description: An endpoint URL path.
+{% endtable %}
+
 ## Known limitations of AI Rate Limiting Advanced
 
 The cost is only reflected during the next request.
