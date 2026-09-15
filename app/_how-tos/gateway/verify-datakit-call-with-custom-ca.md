@@ -39,6 +39,9 @@ prereqs:
       - example-service
     routes:
       - example-route
+  inline:
+    - title: "{{site.konnect_short_name}} API"
+      include_content: prereqs/konnect-api-for-curl
 
 tags:
   - transformations
@@ -78,6 +81,7 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 
+automated_tests: false
 ---
 
 The Datakit plugin's [`call` node](/plugins/datakit/#call-node) makes outbound HTTPS requests as part of the plugin's workflow, independent of any Service's TLS configuration.
@@ -239,26 +243,35 @@ render_output: false
 
 Add the CA certificate and export its ID:
 
+<!--vale off-->
 ```bash
 export DECK_CA_CERT_ID=$(curl -s -X POST http://localhost:8001/ca_certificates \
     --json @ca-cert-body.json | jq -r .id)
 echo "CA Cert ID: $DECK_CA_CERT_ID"
 ```
 {: data-deployment-topology="on-prem" data-test-step="block" }
+
 {% konnect_api_request %}
 url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/ca_certificates
 status_code: 201
 method: POST
-body_file: ca-cert-body.json
-capture:
-  - variable: DECK_CA_CERT_ID
-    jq: ".id"
+body_cmd: $(cat ca-cert-body.json)
 {% endkonnect_api_request %}
 {: data-deployment-topology="konnect" data-test-step="block" }
+<!--vale on-->
+
+Save the CA cert ID from the response as an environment variable:
+{: data-deployment-topology="konnect" }
+```sh
+export DECK_CA_CERT_ID="ID_OF_CA_CERT"
+```
+{: data-deployment-topology="konnect" }
+
 ## Configure the Datakit plugin
 
 Using the `example-service` and `example-route` from the [prerequisites](#prerequisites), configure the Datakit plugin with a `call` node that reaches the internal service over HTTPS, and reference the CA Certificate object in `ca_certificates`:
 
+<!--vale off-->
 {% entity_examples %}
 entities:
   plugins:
@@ -281,6 +294,7 @@ variables:
   ca-cert-id:
     value: $CA_CERT_ID
 {% endentity_examples %}
+<!--vale on-->
 
 In this configuration:
 * `ca_certificates`: A list of CA Certificate entity UUIDs. This is set at the top level of the plugin's `config`, so every `call` node in this plugin instance shares the same trust store.
@@ -337,6 +351,7 @@ render_output: false
 
 Add it to {{site.base_gateway}} and export its ID:
 
+<!--vale off-->
 ```bash
 export DECK_WRONG_CA_CERT_ID=$(curl -s -X POST http://localhost:8001/ca_certificates \
     --json @unrelated-ca-cert-body.json | jq -r .id)
@@ -348,15 +363,21 @@ echo "Wrong CA Cert ID: $DECK_WRONG_CA_CERT_ID"
 url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/ca_certificates
 status_code: 201
 method: POST
-body_file: unrelated-ca-cert-body.json
-capture:
-  - variable: DECK_WRONG_CA_CERT_ID
-    jq: ".id"
+body_cmd: $(cat unrelated-ca-cert-body.json)
 {% endkonnect_api_request %}
 {: data-deployment-topology="konnect" data-test-step="block" }
+<!--vale on-->
+
+Save the CA cert ID from the response as an environment variable:
+{: data-deployment-topology="konnect" }
+```sh
+export DECK_WRONG_CA_CERT_ID="ID_OF_CA_CERT"
+```
+{: data-deployment-topology="konnect" }
 
 Update the Datakit plugin's `ca_certificates` to reference the unrelated CA instead:
 
+<!--vale off-->
 {% entity_examples %}
 entities:
   plugins:
@@ -379,6 +400,7 @@ variables:
   wrong-ca-cert-id:
     value: $WRONG_CA_CERT_ID
 {% endentity_examples %}
+<!--vale on-->
 
 Send the same request again:
 
@@ -390,3 +412,6 @@ status_code: 500
 
 You should get an HTTP `500` response, because the `AUTHOR` node's TLS certificate no longer chains to a CA in `ca_certificates`.
 This confirms that {{site.base_gateway}} is enforcing the configured trust store rather than silently falling back to the global one.
+
+{:.info}
+> You may need to wait a few seconds before {{site.base_gateway}} responds with a 500, as the responses are cached.
