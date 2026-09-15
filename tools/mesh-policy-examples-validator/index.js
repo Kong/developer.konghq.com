@@ -20,11 +20,17 @@ const SOURCE_EXAMPLES_GLOB = "app/_mesh_policies/*/examples/*.{yaml,yml}";
 function parseArgs(argv) {
   const versionIndex = argv.indexOf("--version");
   const version = versionIndex === -1 ? undefined : argv[versionIndex + 1];
-  return { version };
+  const rootIndex = argv.indexOf("--root");
+  const root = rootIndex === -1 ? undefined : argv[rootIndex + 1];
+  return { version, root };
 }
 
-export async function run(argv, root = ROOT) {
-  const { version } = parseArgs(argv);
+// --root points the validator at a fixture directory laid out like a repo
+// root; test/cli.test.js is the only caller, to exercise the CLI end to end
+// without a real production build.
+export async function run(argv, root) {
+  const { version, root: rootArg } = parseArgs(argv);
+  root = root ?? (rootArg ? path.resolve(rootArg) : ROOT);
 
   const { release, crdsDir } = resolveRelease(root, version);
   console.log(`Using mesh release: ${release}`);
