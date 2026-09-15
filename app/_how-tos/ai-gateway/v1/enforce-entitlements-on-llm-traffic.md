@@ -346,7 +346,10 @@ variables:
 {% endentity_examples %}
 <!--vale on-->
 
-`allow_status_codes` limits metering to the response codes you list, which is `200-299` here. The two plugins work independently, so without it the {{site.metering_and_billing}} plugin also reports token usage for failed requests, and a customer whose allowance is already spent keeps spending it on requests the Entitlement Enforcement plugin rejects. For the alternatives, see [Excluding blocked requests from usage](/plugins/entitlement-enforcement/#excluding-blocked-requests-from-usage).
+`allow_status_codes` limits metering to the response codes you list, which is `200-299` in this example. 
+The two plugins work independently, so without `allow_status_codes`, the {{site.metering_and_billing}} plugin also reports token usage for failed requests, and a customer who already reached their usage limit keeps spending tokens on requests the Entitlement Enforcement plugin rejects.
+
+For alternatives, see [Excluding blocked requests from usage](/plugins/entitlement-enforcement/#excluding-blocked-requests-from-usage).
 
 ## Create a plan with a token entitlement
 
@@ -520,7 +523,7 @@ Expect the following progression:
 * **Allowance spent:** Once the reported prompt tokens cross 100 in the usage period, the Entitlement Enforcement plugin blocks further requests with `429` and `"Customer has reached usage limit for feature."`
 
 {:.info}
-> Blocking is not instant, which is why the loop above sleeps between requests. Two delays stack up: {{site.metering_and_billing}} aggregates entitlement usage at one-minute granularity, so tokens you just spent take up to a minute to count, and the plugin then needs another `refresh_interval` seconds to poll the updated state. If you don't see `429` right after the allowance should have run out, keep sending requests for another minute.
+> Blocking is not instant, which is why the verification loop sleeps between requests. Two delays stack up: {{site.metering_and_billing}} aggregates entitlement usage at one-minute granularity, so tokens you just spent take up to a minute to count, and the plugin then needs another `refresh_interval` seconds to poll the updated state. If you don't see `429` right after the allowance should have run out, keep sending requests for another minute.
 
 ### Query the Entitlement Access API directly
 
