@@ -58,7 +58,7 @@ prereqs:
       content: |
         This tutorial uses [kongctl](/kongctl/) to manage {{site.ai_gateway}} configuration.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](https://developer.konghq.com/kongctl/).
+        1. Install [**kongctl**](/kongctl/.
         1. Verify it's installed:
 
            ```bash
@@ -234,7 +234,7 @@ ai_gateway_models:
 {:.no-copy-code}
 
 - **`capabilities: [generate]`**: exposes `/chat/completions` under the base path. The embeddings model instead declares `capabilities: [embeddings]`, which exposes `/embeddings`.
-- **`config.route.model`**: lets clients send `mistral-chat` instead of `mistral-small-latest`. Repointing the target at a different Mistral model is then invisible to callers. Each AI Model accepts exactly one alias value.
+- **`config.route.model`**: lets clients send `mistral-chat` instead of `mistral-small-latest`. Pointing the target at a different Mistral model is then invisible to callers. Each AI Model accepts exactly one alias value.
 - **`response_streaming: allow`**: permits streamed chat responses. The embeddings model sets `deny`, since embeddings return a single payload.
 - **`targets[].config.format: openai`**: tells Kong which contract to speak to Mistral. This is the 2.0 replacement for the 1.0 `mistral_format` option.
 - **`access.auth_strategies`**: attaches inbound authentication. Authentication is not a policy in 2.0. The `policies` field is reserved for guardrails, caching, and rate limiting.
@@ -681,7 +681,7 @@ Done.
 ### What happened
 
 1. **The OpenAI SDK talked to Mistral without knowing it.** The client set `base_url` to Kong and sent an OpenAI-shaped request. `formats: [{type: openai}]` on the AI Model translated it into Mistral's contract and translated the reply back. No Mistral SDK is installed; the only dependency is `openai`.
-2. **The client sent an alias, not a model name.** Every call used `model: mistral-chat`, which `config.route.model` resolved to the `mistral-small-latest` target. `X-Kong-LLM-Model` reports what actually served the request. Repointing that target is a one-line change, invisible to callers.
+2. **The client sent an alias, not a model name.** Every call used `model: mistral-chat`, which `config.route.model` resolved to the `mistral-small-latest` target. `X-Kong-LLM-Model` reports what actually served the request. Re-pointing that target is a one-line change, invisible to callers.
 3. **Streaming worked over the same endpoint.** Adding `stream=True` produced incremental chunks with a first token at 395 ms, with no separate route or model.
 4. **Chat and embeddings shared one credential and one provider.** The embeddings call went to `/mistral/embeddings` and returned 1024-dimension vectors from `mistral-embed`, authenticated by the same AI Consumer key and backed by the same AI Model Provider. Two capabilities, one base path, one credential.
 5. **The invalid key never reached Mistral.** Kong rejected it in 6 ms, against the 881 ms the real call above took once it reached Mistral. No Mistral quota was spent, and no token was billed.
@@ -710,7 +710,7 @@ mistral-ai-with-kong-ai-gateway-chat  ["generate"]  ["/mistral"]
 ```
 {:.no-copy-code}
 
-{{site.ai_gateway_name}} records token consumption, request latency, and per-provider cost for every AI Model with no extra configuration, so you can monitor spend and see which AI Models drive the most usage. Platform-wide telemetry lives under the [Observability](https://developer.konghq.com/observability/) menu.
+{{site.ai_gateway_name}} records token consumption, request latency, and per-provider cost for every AI Model with no extra configuration, so you can monitor spend and see which AI Models drive the most usage. Platform-wide telemetry lives under the [Observability](/observability/) menu.
 
 ## Variations and next steps
 
