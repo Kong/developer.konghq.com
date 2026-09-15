@@ -245,7 +245,7 @@ You can configure the type of identifier with the [`config.identifier`](./refere
 
 {% table %}
 columns:
-  - title: Type
+  - title: Identifier type
     key: type
   - title: Description
     key: description
@@ -253,11 +253,11 @@ rows:
   - type: "`consumer`"
     description: (Default) An [AI Consumer](/ai-gateway/entities/ai-consumer/) entity.
   - type: "`consumer-group`"
-    description: An [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) entity.
+    description: An [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) entity. Requires that the Rate Limiting Advanced Policy is referenced by an AI Consumer Group.
   - type: "`credential`"
     description: A virtual credential created by an [OIDC AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/#oidc-token-authentication).
   - type: "`header`"
-    description: A HTTP header.
+    description: An HTTP header.
   - type: "`ip`"
     description: An `ip` address.
   - type: "`path`"
