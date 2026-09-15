@@ -219,7 +219,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-To see a data plane's current effective log level, and the details of any active override, get its node information:
+To see a data plane's current effective log level, and the details of any active override, get its node information by sending the following request from a control plane:
 
 <!--vale off-->
 {% navtabs "dynamic log level state" %}
