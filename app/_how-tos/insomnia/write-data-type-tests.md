@@ -23,7 +23,7 @@ tags:
 
 tldr:
     q: How do I write data type tests in Insomnia?
-    a: After you add a collection, you can create a new test suite for the collection and then create individual tests in the suite. 
+    a: Legacy unit tests are hidden by default since Insomnia 13.3. After you enable them and add an API Collection, you can create a new test suite for the API Collection and then create individual tests in the suite.
 
 prereqs:
     inline:
@@ -36,6 +36,8 @@ cleanup:
       include_content: cleanup/products/insomnia
       icon_url: /assets/icons/insomnia/insomnia.svg
 ---
+
+{% include insomnia/legacy-tests-deprecation.md %}
 
 ## Create a test suite
 
