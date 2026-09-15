@@ -239,7 +239,7 @@ When using the request prompt provider, it will call the function to get the tok
 
 ## Identification strategies
 
-The AI Rate Limiting Advanced Policy supports several identifiers that allow you to define an identity based scopes for rate limiting counters.
+The AI Rate Limiting Advanced Policy supports several identifiers that allow you to define an identity based scopes for rate limiting. Counters are tracked separately based on the scope you set.
 
 You can configure the type of identifier with the [`config.identifier`](./reference/#schema--config-identifier) field and scope to it using [`config.policies.match`](./reference/#schema--config-policies-match).
 
