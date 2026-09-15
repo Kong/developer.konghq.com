@@ -40,6 +40,22 @@ pending:
 node index.js --version 2.13
 ```
 
+## The `--skip` flag
+
+Pass `--skip <policy1,policy2,...>` to exclude one or more policy folders (the
+directory name under `app/_mesh_policies/`) from a run, for example while a policy's
+examples are under active rewrite:
+
+```bash
+node index.js --skip external-services,mesh-rate-limit
+```
+
+The listed policies are filtered out of both the built-page and source-example globs
+before the build-precondition check runs, so a skipped policy's missing or mismatched
+build output no longer fails the run. Every other policy is still checked. The run
+summary always names the requested skip list, so a skip (or a typo'd, unmatched
+policy name) stays visible in the output.
+
 ## Requires a production build
 
 The validator reads `dist/`, not the Markdown source. `jekyll-dev.yml` skips the
