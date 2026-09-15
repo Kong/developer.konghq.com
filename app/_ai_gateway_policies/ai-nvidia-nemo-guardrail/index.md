@@ -62,6 +62,32 @@ Here's how it works if you apply it to both requests and responses:
    - NeMo runs the configured output rails and returns a pass or block status.
 1. If NeMo allows the content, {{site.ai_gateway}} forwards the response to the client.
 
+<!--vale off-->
+{% mermaid %}
+sequenceDiagram
+    autonumber
+    participant Client
+    participant Policy as AI NVIDIA NeMo Guardrail
+    participant NeMo as NeMo Guardrails
+    participant AI as Upstream AI Service
+
+    Client->>Policy: Send request
+    Policy->>NeMo: Intercept & send extracted request text
+    NeMo->>NeMo: Run configured input rails
+    NeMo->>Policy: Return pass or block status
+    Policy->>{{site.ai_gateway}}: Forward allowed request
+    {{site.ai_gateway}}->>AI: Process allowed request
+    AI->>{{site.ai_gateway}}: Return AI response
+    {{site.ai_gateway}}->>Policy: Forward response
+    Policy->>NeMo: Intercept & send extracted response text
+    NeMo->>NeMo: Run configured output rails
+    NeMo->>Policy: Return pass or block status
+    Policy->>Client: Return allowed response
+{% endmermaid %}
+<!--vale on-->
+
+> _Figure 1: Diagram showing the request and response flow with the AI NVIDIA NeMo Guardrail Policy._
+
 ### Guarding mode
 
 By default, the Policy checks requests only. Use [`config.guarding_mode`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-guarding-mode) to change which phases it inspects:
