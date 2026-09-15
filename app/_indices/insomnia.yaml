@@ -100,7 +100,7 @@ sections:
       - path: /insomnia/organizations/
       - path: /how-to/synchronize-with-git/
       - path: /insomnia/verify-binary-provenance/
-      - path: /insomnia/keyboard-shortcuts/
+      - path: /insomnia/Keyboard-shortcuts/
       - path: /insomnia/import-export/
       - path: /insomnia/terminology/
 

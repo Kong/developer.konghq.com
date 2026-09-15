@@ -96,7 +96,7 @@ rows:
         - type: card
           config:
             title: Environments
-            description: Use environments to reuse values across requests and collections.
+            description: Use environments to reuse values across requests and API Collections.
             icon: /assets/icons/code.svg
             cta:
               text: Learn more
@@ -114,7 +114,7 @@ rows:
         - type: card
           config:
             title: Koh CLI
-            description: Let AI agents like Claude Code work with your Insomnia collections, requests, and specs.
+            description: Let AI agents like Claude Code work with your Insomnia API Collections, requests, and specs.
             icon:  /assets/icons/ai.svg
             tech_preview: true
             cta:
