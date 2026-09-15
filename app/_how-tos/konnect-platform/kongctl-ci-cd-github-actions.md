@@ -53,12 +53,7 @@ next_steps:
 ---
 
 This quickstart publishes a simple API and its OpenAPI specification to a
-Dev Portal. It uses two files:
-
-```text
-konnect/portal.yaml
-.github/workflows/kongctl.yaml
-```
+Dev Portal.
 
 ## Configure GitHub authentication
 
@@ -69,18 +64,19 @@ In **Settings > Secrets and variables > Actions**, add:
 | Secret | `KONNECT_TOKEN` | Your Konnect access token |
 | Variable | `KONNECT_REGION` | Your Konnect region, such as `us` or `eu` |
 
-The workflow maps the token to `KONGCTL_DEFAULT_KONNECT_PAT`, so no
-interactive login or additional credentials are needed.
+## Create a branch
+
+In your local repository, create a branch for all the files in this guide:
+
+```sh
+git switch -c konnect-apiops
+```
 
 ## Declare the portal and API
 
-Create a branch and add `konnect/portal.yaml`:
+On this branch, create `konnect/portal.yaml`:
 
 ```yaml
-_defaults:
-  kongctl:
-    namespace: portal-cicd
-
 portals:
   - ref: example-portal
     name: Example Portal
@@ -114,7 +110,6 @@ apis:
         visibility: public
 ```
 
-Choose names and a namespace unique to this repository before deploying.
 The publication's `!ref` links the API to the portal. Portal authentication
 is disabled so the published API documentation is publicly accessible.
 
