@@ -103,6 +103,8 @@ For everything else:
 
 - **Exception — flag these**: Any reference to AI A2A Proxy, AI MCP Proxy, AI Proxy, or AI Proxy Advanced as plugins should be flagged for manual review (these don't have policy equivalents).
 
+- **File and permalink naming**: When a v1 how-to's filename ends in `-plugin.md` (and its `permalink:` matches), the v2 replacement's filename and `permalink:` must end in `-policy.md` / `-policy/` instead — not just the frontmatter `title:` or body prose. Confirmed pattern: `use-ai-prompt-guard-plugin.md` → `use-ai-prompt-guard-policy.md`, `use-ai-aws-guardrails-plugin.md` → `use-ai-aws-guardrails-policy.md`. Flag any newly created v2 file that kept a `-plugin.md`/`-plugin/` name or permalink without checking whether it should be `-policy` instead. Exception: files about the four plugin-only exceptions (AI A2A Proxy, AI MCP Proxy, AI Proxy, AI Proxy Advanced) correctly keep "plugin" in the filename too, since those never get a Policy equivalent.
+
 - **Landing page plugin blocks**: In YAML landing pages (`.yaml` files under `_landing_pages/`), replace `type: plugin` blocks with `type: aigw_policy`. Example:
   ```yaml
   # Before (v1)
@@ -218,6 +220,9 @@ When producing a **report**, structure it like this for each file reviewed:
 
 **Plugin → AI Policy issues:**
 - <issue description>
+
+**File/permalink naming:**
+- <filename or permalink still ends in -plugin instead of -policy, or vice versa>
 
 **Include/data file references (including `{% include /plugins/` tags):**
 - <issue description>
