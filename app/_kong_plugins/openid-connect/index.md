@@ -647,7 +647,7 @@ For example, with `resource` set to `https://api.example.com/mcp`:
 curl -s https://api.example.com/mcp/.well-known/oauth-protected-resource
 ```
 
-The response is the metadata document, and requires no `Authorization` header, since a client fetches it before it has a token:
+The response is the metadata document, and doesn't require an `Authorization` header since a client fetches it before it has a token:
 
 ```json
 {
@@ -668,7 +668,7 @@ When a request is rejected with a `401 Unauthorized` response, the OIDC plugin a
 If [`config.protected_resource_metadata.scopes_supported`](/plugins/openid-connect/reference/#schema--config-protected-resource-metadata-scopes-supported) is set, the header also includes a `scope` attribute listing the supported scopes.
 This only applies to `401` responses.
 
-For example, a request with no bearer token:
+For example, a request without a bearer token:
 
 ```sh
 curl -s -i https://api.example.com/mcp

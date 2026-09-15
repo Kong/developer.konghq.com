@@ -224,16 +224,25 @@ To see a data plane's current effective log level, and the details of any active
 {% navtabs "dynamic log level state" %}
 {% navtab "Self-managed" %}
 
-```sh
-GET /clustering/data-planes
-```
+<!--vale off-->
+{% control_plane_request %}
+url: /clustering/data-planes
+method: GET
+status_code: 200
+headers:
+    - 'Accept: application/json'
+    - 'Content-Type: application/json'
+{% endcontrol_plane_request %}
+<!--vale on-->
 
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}}" %}
 
-```sh
-GET /control-planes/{controlPlaneId}/nodes
-```
+{% konnect_api_request %}
+url: /v2/control-planes/$CONTROL_PLANE_ID/nodes
+status_code: 201
+method: GET
+{% endkonnect_api_request %}
 
 {% endnavtab %}
 {% endnavtabs %}
