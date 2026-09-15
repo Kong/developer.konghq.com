@@ -38,12 +38,11 @@ related_resources:
   - text: AI Consumer Group entity
     url: /ai-gateway/entities/ai-consumer-group/
 faqs:
-  - q: What's the difference between an AI Model entity and the `model` field in an AI Policy configuration?
+  - q: What's the difference between an AI Model entity and an AI Policy entity?
     a: |
       An AI Model entity is the first-class {{site.ai_gateway}} entity you declare through the {{site.konnect_short_name}} API and UI.
-      It defines routing, capabilities, and load balancing. An AI Policy is a reusable configuration that adds behavior (like caching or guardrails) to an AI Model.
-      You declare both separately and attach AI Policies to AI Models.
-
+      It defines routing, capabilities, and load balancing. An AI Policy is a reusable configuration that adds behavior (like caching or guardrails) to an AI Model or other entity.
+      You declare each separately and reference AI Policies in AI Model configurations.
 
   - q: What happens when I update an AI Model?
     a: |
@@ -52,9 +51,7 @@ faqs:
 
   - q: Can I apply the same configuration to multiple AI Models?
     a: |
-      Yes, by attaching one AI Policy with that configuration to each AI Model.
-      AI Policies are not shared between entities, each instance is independent.
-      See [AI Policy entity](/ai-gateway/entities/ai-policy/).
+      Yes, by referencing the same AI Policy in each AI Model configuration. See [AI Policy entity](/ai-gateway/entities/ai-policy/) for details.
 
   - q: How do I limit which AI Consumers can reach an AI Model?
     a: |
