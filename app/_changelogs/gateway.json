@@ -26936,7 +26936,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**kafka-upstream, kafka-log, confluent**: Added a `payload_encoding` option (`avro_json` | `simple_json`) to the schema registry `value_schema` and `key_schema` configuration. When set to `simple_json`, the gateway accepts plain JSON request bodies for Avro schemas and resolves union/nullable branches against the schema, so clients no longer need to type-tag union fields (e.g. `{\"int\": 1}`, `{\"null\": null}`). Defaults to `avro_json` to preserve existing behavior.",
+        "message": "**kafka-upstream, kafka-log, confluent**: Added a `payload_encoding` option (`avro_json` or `simple_json`) to the schema registry `value_schema` and `key_schema` configuration. When set to `simple_json`, the gateway accepts plain JSON request bodies for Avro schemas and resolves union/nullable branches against the schema, so clients no longer need to type-tag union fields (e.g. `{\"int\": 1}`, `{\"null\": null}`). Defaults to `avro_json` to preserve existing behavior.",
         "type": "feature",
         "scope": "Plugin"
       },
