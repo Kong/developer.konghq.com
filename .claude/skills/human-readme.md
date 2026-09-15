@@ -1,8 +1,17 @@
 # AI Gateway docs skills — quick reference
 
-Plain-language guide to the skills built for AI Gateway docs work in this
-repo. Not a skill itself — Claude Code doesn't read this to decide anything,
-it's here so a human can quickly figure out which skill to reach for.
+## Which one do I want?
+
+| Situation | Skill |
+|---|---|
+| "I don't know where to start / where's X" | `aigw-doc-resources` |
+| Feature has a PRD + spec, nothing's written yet | `feature-docs-from-prd` |
+| A v1 doc needs to become a v2 doc | draft by hand using `aigw-doc-resources`'s pointers, then check it with `ai-gateway-migration-review` |
+| Checking an existing file for v1→v2 correctness issues | `ai-gateway-migration-review` |
+| "Does this doc actually work against a real gateway?" | `aigw-doc-testing` |
+| Brand-new how-to, no existing page to build on, not AI Gateway-specific | `how-to-starter` |
+
+
 
 - **`feature-docs-from-prd`** — Hand it a PRD (Google Doc or pasted) plus
   the spec/API diff for the feature, and it drafts the actual doc changes —
@@ -51,13 +60,4 @@ it's here so a human can quickly figure out which skill to reach for.
   actually calls for is a new tutorial rather than edits to existing
   reference pages.
 
-## Which one do I want?
 
-| Situation | Skill |
-|---|---|
-| "I don't know where to start / where's X" | `aigw-doc-resources` |
-| Feature has a PRD + spec, nothing's written yet | `feature-docs-from-prd` |
-| A v1 doc needs to become a v2 doc | draft by hand using `aigw-doc-resources`'s pointers, then check it with `ai-gateway-migration-review` |
-| Checking an existing file for v1→v2 correctness issues | `ai-gateway-migration-review` |
-| "Does this doc actually work against a real gateway?" | `aigw-doc-testing` |
-| Brand-new how-to, no existing page to build on, not AI Gateway-specific | `how-to-starter` |
