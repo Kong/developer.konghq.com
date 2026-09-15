@@ -7,11 +7,6 @@ products:
   - ai-gateway
 content_type: plugin
 description: Integrate {{site.ai_gateway}} with the AppDynamics APM Platform
-tags:
-- analytics
-- monitoring
-categories:
-  - analytics-monitoring
 search_aliases:
   - app dynamics
   - app-dynamics
@@ -29,7 +24,7 @@ The AppDynamics policy reports request and response timestamps and error informa
 
 ## AppDynamics installation prerequisites
 
-Before using the policy, download the [AppDynamics C/C++ SDK](https://help.splunk.com/en/appdynamics-saas/application-performance-monitoring/26.8.0/install-app-server-agents/cc-sdk) on the machine or within the container running the {{site.base_gateway}} data plane. To use the AppDynamics policy, the `libappdynamics.so` shared library must be available on all data plane nodes running {{site.ai_gateway}}. You can install the AppDynamics C/C++ SDK or extract the `libappdynamics.so` shared library, which is the only required file.
+Before using the policy, download the [AppDynamics C/C++ SDK](https://help.splunk.com/en/appdynamics-saas/application-performance-monitoring/26.8.0/install-app-server-agents/cc-sdk) on the machine or within the container running the {{site.ai_gateway}} data plane. To use the AppDynamics policy, the `libappdynamics.so` shared library must be available on all data plane nodes running {{site.ai_gateway}}. You can install the AppDynamics C/C++ SDK or extract the `libappdynamics.so` shared library, which is the only required file.
 
 For information about installation and configuration, see the [AppDynamics SaaS](https://help.splunk.com/en/appdynamics-saas) and [AppDynamics On-Premises](https://help.splunk.com/en/appdynamics-on-premises) documentation.
 
@@ -37,19 +32,19 @@ For information about installation and configuration, see the [AppDynamics SaaS]
 
 We recommended installing the `libappdynamics.so` in the `/usr/local/kong/lib` directory. This directory is included in the {{site.ai_gateway}} search path for shared libraries, so the `libappdynamics.so` file will be found automatically.
 
-When using the quickstart container perform the following steps:
+If you're using the [{{site.ai_gateway}} quickstart container](/ai-gateway/#get-started-with-ai-gateway), perform the following steps:
 
-1. Extract the SDK.
+1. Extract the SDK:
 
    ```sh
    tar -xzf appdynamics-sdk-native-64bit-linux-VERSION.tgz
    ```
-2. Locate the library file.
+2. Locate the library file:
 
    ```sh
    cd appdynamics-cpp-sdk/lib
    ```
-3. Copy the file into the container running the {{site.ai_gateway}} dataplane.
+3. Copy the file into the container running the {{site.ai_gateway}} data plane:
 
    ```sh
    docker cp libappdynamics.so <container_id>:/usr/local/kong/lib
@@ -61,8 +56,8 @@ If you prefer to install the `libappdynamics.so` file in a different location, y
 
 - If {{site.ai_gateway}} is deployed on RHEL or CentOS, the `libappdynamics.so` file can be in the `/usr/lib64` directory, which is included in the default search path for shared libraries.
 - If {{site.ai_gateway}} is deployed on Debian or Ubuntu, the `libappdynamics.so` file can be in the `/usr/lib` directory, which is included in the default search path for shared libraries.
-- If above options are not available, the `libappdynamics.so` file can be in one of the locations configured by the [system's shared library loader](https://tldp.org/HOWTO/Program-Library-HOWTO/shared-libraries.html).
-- Alternatively, the `LD_LIBRARY_PATH` environment variable can be set to the directory containing the `libappdynamics.so` file when starting {{site.base_gateway}}.
+- If these options aren't available, the `libappdynamics.so` file can be in one of the locations configured by the [system's shared library loader](https://tldp.org/HOWTO/Program-Library-HOWTO/shared-libraries.html).
+- Alternatively, the `LD_LIBRARY_PATH` environment variable can be set to the directory containing the `libappdynamics.so` file when starting {{site.ai_gateway}}.
 
 ## Enable the AppDynamics policy
 
@@ -73,7 +68,7 @@ The AppDynamics policy is not bundled in {{site.ai_gateway}} packages by default
 
 ## AppDynamics policy configuration
 
-The AppDynamics policy is configured through environment variables that must be set when {{site.ai_gateway}} is started. The AppDynamics policy makes use of the AppDynamics C/C++ SDK to send information to the AppDynamics controller. See the [AppDynamics C/C++ SDK documentation](https://help.splunk.com/en/appdynamics-saas/application-performance-monitoring/26.8.0/install-app-server-agents/cc-sdk/use-the-cc-sdk) for more information about the configuration parameters.
+The AppDynamics policy is configured through environment variables that must be set when {{site.ai_gateway}} is started. The AppDynamics policy uses the AppDynamics C/C++ SDK to send information to the AppDynamics controller. See the [AppDynamics C/C++ SDK documentation](https://help.splunk.com/appdynamics-saas/application-performance-monitoring/26.8.0/install-app-server-agents/cc-sdk/use-the-cc-sdk) for more information about the configuration parameters.
 
 {:.info}
 > All non-default environment variables in the table **must** be set.
@@ -97,15 +92,15 @@ rows:
     type: "String"
     default: ""
   - variable: "`KONG_APPD_CONTROLLER_PORT`"
-    description: "Port number to use to communicate with the controller."
+    description: "Port number used to communicate with the controller."
     type: "Integer"
     default: "`443`"
   - variable: "`KONG_APPD_CONTROLLER_ACCOUNT`"
-    description: "Account name to use with the controller."
+    description: "Account name used with the controller."
     type: "String"
     default: ""
   - variable: "`KONG_APPD_CONTROLLER_ACCESS_KEY`"
-    description: "Access key to use with the AppDynamics controller."
+    description: "Access key used with the AppDynamics controller."
     type: "String"
     default: ""
   - variable: "`KONG_APPD_LOGGING_LEVEL`"
@@ -113,19 +108,19 @@ rows:
     type: "Integer"
     default: "`2`"
   - variable: "`KONG_APPD_LOGGING_LOG_DIR`"
-    description: "Directory into which agent log files are written."
+    description: "Directory where agent log files are written."
     type: "String"
     default: "`/tmp/appd`"
   - variable: "`KONG_APPD_TIER_NAME`"
-    description: "Tier name to use for business transactions."
+    description: "Tier name used for business transactions."
     type: "String"
     default: ""
   - variable: "`KONG_APPD_APP_NAME`"
-    description: "Application name to report to AppDynamics."
+    description: "Application name reported to AppDynamics."
     type: "String"
     default: "`Kong`"
   - variable: "`KONG_APPD_NODE_NAME`"
-    description: "Node name to report to AppDynamics. This value defaults to the system's hostname."
+    description: "Node name reported to AppDynamics. This value defaults to the system's hostname."
     type: "String"
     default: "`hostname`"
   - variable: "`KONG_APPD_INIT_TIMEOUT_MS`"
@@ -137,19 +132,19 @@ rows:
     type: "Boolean"
     default: "`on`"
   - variable: "`KONG_APPD_CONTROLLER_HTTP_PROXY_HOST`"
-    description: "Hostname of proxy to use to communicate with controller."
+    description: "Hostname of the proxy used to communicate with controller."
     type: "String"
     default: ""
   - variable: "`KONG_APPD_CONTROLLER_HTTP_PROXY_PORT`"
-    description: "Port number of controller proxy."
+    description: "Port number of the controller proxy."
     type: "Integer"
     default: ""
   - variable: "`KONG_APPD_CONTROLLER_HTTP_PROXY_USERNAME`"
-    description: "Username to use to identify to proxy. This value is a string that is never shown in logs. This value can be specified as a vault reference."
+    description: "Username used to identify to proxy. This value is a string that is never shown in logs. This value can be specified as a vault reference."
     type: "String"
     default: ""
   - variable: "`KONG_APPD_CONTROLLER_HTTP_PROXY_PASSWORD`"
-    description: "Password to use to identify to proxy. This value is a string that is never shown in logs. This value can be specified as a vault reference."
+    description: "Password used to identify with the proxy. This value is a string that is never shown in logs. This value can be specified as a vault reference."
     type: "String"
     default: ""
   - variable: "`KONG_APPD_CONTROLLER_CERTIFICATE_FILE`"
@@ -189,7 +184,7 @@ rows:
     description: "Reports fine-grained informational events that may be useful to debug an application."
   - value: "2"
     name: "`INFO`"
-    description: "Default log level. Reports informational messages that highlight the progress of the application at coarse-grained level."
+    description: "Default log level. Reports informational messages that highlight the progress of the application at a coarse-grained level."
   - value: "3"
     name: "`WARN`"
     description: "Reports on potentially harmful situations."
