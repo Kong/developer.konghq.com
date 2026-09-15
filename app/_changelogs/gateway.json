@@ -26681,6 +26681,11 @@
     ],
     "kong-ee": [
       {
+        "message": "Changed the Common Expression Language (CEL) backend from `cel-rust` 0.11.6 to `cel-cpp` 0.15.0. This is a breaking change for conditional plugin execution: `cel-cpp` is spec-compliant where `cel-rust` was not, so a small number of expressions involving quote-escaped strings or missing map keys (`kong.ctx.shared`, `principal.metadata`) now behave differently. See [3.16.x breaking changes](/gateway/breaking-changes/#3-16-0-0) for details.",
+        "type": "Breaking Change",
+        "scope": "Core"
+      },
+      {
         "message": "Added RHEL 10 (el10) to build.",
         "type": "dependency",
         "scope": "Default"
