@@ -139,7 +139,7 @@ rows:
     why: "Materializes the entitlement onto the customer. Until the subscription starts, the customer has no entitlement to enforce."
   - what: "{{site.metering_and_billing}} plugin, with the Ingest token"
     where: "`example-service`"
-    why: "Reports usage events. Nothing counts against the limit unless usage is reported."
+    why: "Reports usage events. Nothing counts against the limit unless usage is reported, and `allow_status_codes` keeps failed responses out of that usage."
   - what: "Entitlement Enforcement plugin, with the Entitlement Access token"
     where: "`example-route`"
     why: "Reads the customer's entitlement for the configured feature and blocks the request when they're over the limit."
@@ -285,12 +285,16 @@ entities:
         meter_ai_token_usage: false
         subject:
           look_up_value_in: consumer
+        allow_status_codes:
+          - 200-299
 variables:
   AUTH_TOKEN:
     value: $AUTH_TOKEN
     description: A {{site.konnect_short_name}} system account token (`spat_`) with the Metering Ingest role.
 {% endentity_examples %}
 <!--vale on-->
+
+`allow_status_codes` limits metering to the response codes you list, which is `200-299` here. The two plugins work independently, so without it the {{site.metering_and_billing}} plugin also reports usage for requests that the Entitlement Enforcement plugin blocks, and a customer who is already over their limit keeps spending usage on rejected requests. For the alternatives, see [Excluding blocked requests from usage](/plugins/entitlement-enforcement/#excluding-blocked-requests-from-usage).
 
 ## Create a plan with entitlements
 
