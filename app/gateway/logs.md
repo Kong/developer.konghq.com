@@ -194,7 +194,56 @@ The data plane applies the new log level and automatically reverts to the previo
 {:.info}
 > **Note**: The `ttl` must be an integer between 10 and 3600 seconds. If you don't set one, it defaults to 600 seconds (10 minutes). The 10 second minimum exists because data planes poll the control plane for updates every 5 seconds, so the `ttl` needs to cover at least two poll intervals for the node to reliably apply the change before it expires.
 
-Data plane nodes on older {{site.base_gateway}} versions that don't support dynamic log levels report a status of `unsupported` instead of `applied`, both in `GET` and `POST` responses.
+A dynamic log level operation reports one of the following statuses:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Status
+    key: status
+  - title: Description
+    key: description
+rows:
+  - status: "`in_progress`"
+    description: "The control plane accepted the operation. The data plane hasn't applied it yet."
+  - status: "`applied`"
+    description: "The data plane applied the log level change."
+  - status: "`reverted`"
+    description: "The `ttl` expired, and the data plane reverted to its configured log level."
+  - status: "`superseded`"
+    description: "A newer operation replaced this one before it finished, because it targeted the same node."
+  - status: "`failed`"
+    description: "The data plane failed to apply the log level change."
+  - status: "`unsupported`"
+    description: "The data plane is on an older {{site.base_gateway}} version that doesn't support dynamic log levels."
+{% endtable %}
+<!--vale on-->
+
+To see a data plane's current effective log level, and the details of any active override, get its node information by sending the following request from a control plane:
+
+<!--vale off-->
+{% navtabs "dynamic log level state" %}
+{% navtab "Self-managed" %}
+```sh
+curl -X GET "http://localhost:8001/clustering/data-planes" \
+     --no-progress-meter --fail-with-body  \
+     -H "Accept: application/json"\
+     -H "Content-Type: application/json"
+```
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}}" %}
+
+{% konnect_api_request %}
+url: /v2/control-planes/$CONTROL_PLANE_ID/nodes
+status_code: 201
+method: GET
+{% endkonnect_api_request %}
+
+{% endnavtab %}
+{% endnavtabs %}
+<!--vale on-->
+
+Each node has a `log_level` field with its current effective level.
 
 Reading the current log level is available to any Control Plane Viewer. You can also use the [Debugger](/observability/debugger/#reading-traces-and-logs) to do this directly from the {{site.konnect_short_name}} UI.
 Creating or changing a dynamic log level operation is a privileged action and requires Control Plane Admin permissions or higher.

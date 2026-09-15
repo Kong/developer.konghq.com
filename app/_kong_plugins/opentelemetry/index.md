@@ -375,7 +375,21 @@ for each different header format, as in the following example:
 },
 ```
 
+## Custom log fields {% new_in 3.16 %}
+
+Access logs automatically include any field a plugin sets with [`kong.log.set_serialize_value`](/gateway/pdk/reference/kong.log/#kong-log-set-serialize-value-key-value-options).
+Each field appears at the same path it was set.
+
+For example, a [Pre-function](/plugins/pre-function/) plugin can run `kong.log.set_serialize_value("gateway.host", ngx.var.host)`. This adds a `gateway.host` attribute to the exported access log, alongside the OpenTelemetry plugin's own mapped fields.
+No OpenTelemetry-specific configuration is needed.
+
+If two plugins set the same key in different phases, the first plugin to set the key decides whether it's a new field. 
+The last plugin to set it determines the final value.
+This matches the ordinary last-write behavior of `kong.log.set_serialize_value` itself.
+
 ## Custom attributes by Lua {% new_in 3.14 %}
+
+Use `custom_attributes_by_lua` instead of `kong.log.set_serialize_value` when you want a field to appear in this plugin's export without appearing in every other logging plugin that runs afterward. See [Plugin precedence and managing fields](#plugin-precedence-and-managing-fields).
 
 {% include /plugins/logging/log-custom-fields-by-lua.md
 custom_fields_by_lua='config.access_logs.custom_attributes_by_lua'
