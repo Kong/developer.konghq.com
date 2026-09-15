@@ -1,14 +1,14 @@
 openapi: 3.0.3
 info:
   title: Konnect AI Catalog
-  version: 1.10.3
+  version: 1.12.2
   description: |
     Konnect AI Catalog is the API for creating and managing AI interfaces in the Konnect Catalog.
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@c8fcb8807718d490f019a58c92a4ca208e56c3e7
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c8fcb8807718d490f019a58c92a4ca208e56c3e7'
+  x-oas-source: kong/platform-api@25cd4ec84ca39bd6bc894775fffb9985c50e1977
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/25cd4ec84ca39bd6bc894775fffb9985c50e1977'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -1228,6 +1228,7 @@ components:
           enum:
             - oas
           readOnly: true
+          x-terraform-transform-const: true
         spec_provider:
           description: |
             Provenance of the specification. `null` (or absent) for a user-uploaded specification.
@@ -1775,6 +1776,7 @@ components:
           type: string
           enum:
             - ai-gateway
+          x-terraform-transform-const: true
         config:
           $ref: '#/components/schemas/CatalogMCPGatewayImplementationConfig'
       additionalProperties: false
@@ -2451,6 +2453,7 @@ components:
           example: streamable-http
           enum:
             - streamable-http
+          x-terraform-transform-const: true
         url:
           description: URL template for the streamable-http transport.
           type: string
@@ -2477,6 +2480,7 @@ components:
           example: sse
           enum:
             - sse
+          x-terraform-transform-const: true
         url:
           description: Server-Sent Events endpoint URL template.
           type: string
@@ -2517,6 +2521,7 @@ components:
           example: stdio
           enum:
             - stdio
+          x-terraform-transform-const: true
       example:
         type: stdio
       required:
@@ -2545,6 +2550,7 @@ components:
               example: positional
               enum:
                 - positional
+              x-terraform-transform-const: true
             value_hint:
               description: An identifier for the positional argument.
               type: string
@@ -2578,6 +2584,7 @@ components:
               example: named
               enum:
                 - named
+              x-terraform-transform-const: true
             name:
               description: 'The flag name, including any leading dashes.'
               type: string

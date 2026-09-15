@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect AI Gateway
-  version: 2.0.5
+  version: 2.0.7
   description: The API for configuring AI Gateways in Konnect.
   x-extensions-note: |
     Entities and properties may be annotated with `x-min-runtime-version`, the
@@ -18,8 +18,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@77e990db7b9619bacdc1556080e5b1244d78efd1
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/77e990db7b9619bacdc1556080e5b1244d78efd1'
+  x-oas-source: kong/platform-api@3c15afb6443b43a048dbac13d021b7d28682bb6d
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/3c15afb6443b43a048dbac13d021b7d28682bb6d'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -9860,7 +9860,62 @@ components:
           maximum: 2147483646
           minimum: 0
         server:
-          $ref: '#/components/schemas/AIGatewayMCPServerServerConfigBase'
+          description: Server-side configuration specific to modes where Kong answers as the MCP server.
+          type: object
+          additionalProperties: false
+          properties:
+            forward_client_headers:
+              description: Whether to forward the client request headers to the upstream server when calling the tools.
+              type: boolean
+              default: true
+            session:
+              description: |
+                Enable managed session when Kong responds as MCP server in listener, conversion-listener, or upstream-server modes.
+                This doesn't affect the passthrough-listener mode as the state in that mode is maintained by the upstream MCP servers.
+              type: object
+              additionalProperties: false
+              properties:
+                client:
+                  description: The configuration for client-side session storage.
+                  type: object
+                  additionalProperties: false
+                  properties:
+                    secrets:
+                      description: |
+                        The secrets that are used in session encryption. Required when the strategy is 'client'.
+                        The first secret is used for encryption, while all secrets are used for decryption to support key rotation.
+                      type: array
+                      items:
+                        type: string
+                        minLength: 8
+                        x-referenceable: true
+                        description: |
+                          This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).
+                      minItems: 1
+                managed:
+                  description: 'If enabled, Kong will maintain managed sessions with the MCP server.'
+                  type: boolean
+                  default: true
+                redis:
+                  $ref: '#/components/schemas/AIGatewayRedisCloudConfiguration'
+                session_ttl:
+                  description: The time-to-live (TTL) for each session in seconds.
+                  type: integer
+                  default: 86400
+                  maximum: 2147483646
+                  minimum: 0
+                strategy:
+                  description: 'The strategy for the session. If the value is ''client'', the session is encrypted into MCP session id assigned to the client. If the value is not ''client'', the session is stored in the configured database.'
+                  type: string
+                  enum:
+                    - client
+                    - redis
+            timeout:
+              description: The timeout for calling the tools in milliseconds.
+              type: integer
+              default: 10000
+              maximum: 2147483646
+              minimum: 0
         url:
           description: |
             Helper field to set protocol, host, port and path of the upstream service using a URL.
