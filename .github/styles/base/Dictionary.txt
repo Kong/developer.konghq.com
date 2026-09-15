@@ -726,6 +726,7 @@ sandboxed
 sandboxing
 sanitization
 sasl_oauth_bearer
+saas
 sbom
 sboms
 SCCs
