@@ -6,9 +6,6 @@ require_relative '../component_templates'
 
 module Jekyll
   class RenderPolicyYaml < Liquid::Block
-    TARGET_VERSION = Gem::Version.new('2.9')
-    TF_TARGET_VERSION = Gem::Version.new('2.10')
-
     def has_path(path)
       ->(node_path, _, _) { node_path == path }
     end
@@ -291,14 +288,13 @@ module Jekyll
       content = content.gsub(/`{3}yaml\n/, '').gsub(/`{3}/, '')
       site_data = context.registers[:site].config
 
-      use_meshservice = @params['use_meshservice'] == true && Gem::Version.new(release.number.dup.sub('x',
-                                                                                                      '0')) >= TARGET_VERSION
-      show_tf = Gem::Version.new(release.number.dup.sub('x', '0')) >= TF_TARGET_VERSION
+      use_meshservice = @params['use_meshservice'] == true
+      show_tf = true
 
       tools = Array(@params['tools'])
-      show_kubernetes = (tools.empty? || tools.include?('kubernetes'))
-      show_universal = (tools.empty? || tools.include?('universal'))
-      show_tf = show_tf && (tools.empty? || tools.include?('terraform'))
+      show_kubernetes = tools.empty? || tools.include?('kubernetes')
+      show_universal = tools.empty? || tools.include?('universal')
+      show_tf &&= tools.empty? || tools.include?('terraform')
 
       namespace = @params['namespace'] || site_data['mesh_namespace']
       styles = [
@@ -346,7 +342,6 @@ module Jekyll
         ComponentTemplates.fetch('policy_yaml', 'markdown').render(context)
       end
     end
-
   end
 end
 
