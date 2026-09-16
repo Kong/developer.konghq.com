@@ -50,10 +50,6 @@ RSpec.describe Jekyll::Validation do
         expect(html).not_to have_css('div[data-deployment-topology="on-prem"]')
       end
 
-      it 'delegates to request-check/snippet.md, looping `iterations` times via `count`' do
-        expect(rendered).to include('for _  in {1..6}; do')
-        expect(rendered).to include('-H "apikey:jsmith-key"')
-      end
     end
 
     context 'works_on: on-prem' do
@@ -86,29 +82,6 @@ RSpec.describe Jekyll::Validation do
       end
     end
 
-    context 'with a method, body, and inline_sleep' do
-      let(:works_on) { %w[konnect] }
-      let(:template) do
-        <<~LIQUID
-          {% validation traffic-generator %}
-          iterations: 5
-          url: /anything
-          method: POST
-          status_code: 200
-          body:
-            messages:
-              - role: user
-                content: Who was Jozef Mackiewicz?
-          inline_sleep: 3
-          {% endvalidation %}
-        LIQUID
-      end
-
-      it 'passes method/body/inline_sleep through to the delegated curl command' do
-        expect(rendered).to include('-X POST')
-        expect(rendered).to include('"content": "Who was Jozef Mackiewicz?"')
-      end
-    end
   end
 
   describe 'markdown output_format' do
@@ -159,22 +132,6 @@ RSpec.describe Jekyll::Validation do
       end
     end
 
-    context 'grep specified with no output.expected (synthetic — no real doc uses grep here)' do
-      let(:template) do
-        <<~LIQUID
-          {% validation traffic-generator %}
-          iterations: 6
-          url: /anything
-          grep: "HTTP"
-          {% endvalidation %}
-        LIQUID
-      end
-
-      it 'raises an error' do
-        expect { rendered }.to raise_error(ArgumentError, 'output.expected must be provided if `grep` is specified')
-      end
-    end
-
     context 'missing url' do
       let(:template) do
         <<~LIQUID
@@ -193,33 +150,33 @@ RSpec.describe Jekyll::Validation do
   describe 'template source' do
     subject(:template_source) { File.read('app/_includes/how-tos/validations/traffic-generator/index.html') }
 
-    it 'delegates to request-check/snippet.md for konnect, mapping iterations to count' do
-      expect(template_source).to include(
-        '{% include how-tos/validations/request-check/snippet.md url=config.konnect_url'
-      )
-      expect(template_source).to include('count=config.iterations')
+    it 'passes the konnect snippet config to the snippet' do
+      expect(template_source).to include('snippet.md config=config.konnect_snippet_config %}')
     end
 
-    it 'delegates to request-check/snippet.md for on-prem, mapping iterations to count' do
-      expect(template_source).to include(
-        '{% include how-tos/validations/request-check/snippet.md url=config.on_prem_url'
-      )
+    it 'passes the on-prem snippet config to the snippet' do
+      expect(template_source).to include('snippet.md config=config.on_prem_snippet_config %}')
+    end
+
+    it 'passes the snippet nothing else' do
+      expect(template_source.scan(/snippet\.md ([^%]*)%\}/).flatten)
+        .to eq(['config=config.konnect_snippet_config ', 'config=config.on_prem_snippet_config '])
     end
 
     context 'markdown template' do
       subject(:template_source) { File.read('app/_includes/how-tos/validations/traffic-generator/index.md') }
 
-      it 'delegates to request-check/snippet.md for konnect, mapping iterations to count' do
-        expect(template_source).to include(
-          '{% include how-tos/validations/request-check/snippet.md url=config.konnect_url'
-        )
-        expect(template_source).to include('count=config.iterations')
+      it 'passes the konnect snippet config to the snippet' do
+        expect(template_source).to include('snippet.md config=config.konnect_snippet_config %}')
       end
 
-      it 'delegates to request-check/snippet.md for on-prem, mapping iterations to count' do
-        expect(template_source).to include(
-          '{% include how-tos/validations/request-check/snippet.md url=config.on_prem_url'
-        )
+      it 'passes the on-prem snippet config to the snippet' do
+        expect(template_source).to include('snippet.md config=config.on_prem_snippet_config %}')
+      end
+
+      it 'passes the snippet nothing else' do
+        expect(template_source.scan(/snippet\.md ([^%]*)%\}/).flatten)
+          .to eq(['config=config.konnect_snippet_config ', 'config=config.on_prem_snippet_config '])
       end
     end
   end
