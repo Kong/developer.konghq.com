@@ -52,6 +52,10 @@ Flags:
                                 - Config path: [ telemetry.enabled ]
                                 - Env var    : [ KONGCTL_NO_TELEMETRY ]
                                 - Default    : [ false ]
+      --no-trunc                Preserve full cell widths in static text tables beyond terminal width.
+                                Does not change column selection, UUID formatting, or explicit string slices.
+                                - Config path: [ text.no-trunc ]
+                                - Default    : [ false ]
       --node-id string          The ID of the AI Gateway Node to retrieve.
                                 - Config path: [ konnect.ai-gateway.node.id ]
   -o, --output string           Configures the format of data written to STDOUT.
