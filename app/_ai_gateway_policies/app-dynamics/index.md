@@ -65,6 +65,7 @@ The AppDynamics policy is not bundled in {{site.ai_gateway}} packages by default
 
 - **Docker:** Set `export KONG_PLUGINS=bundled,app-dynamics` in the environment
 - **Kubernetes:** Set `KONG_PLUGINS=bundled,app-dynamics` using the [Custom Plugin](/kubernetes-ingress-controller/custom-plugins/) instructions.
+- **Package install:** Set `plugins=bundled,app-dynamics` in `kong.conf` before starting {{site.ai_gateway}}.
 
 ## AppDynamics policy configuration
 
