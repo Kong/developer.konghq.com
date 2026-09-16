@@ -46,8 +46,6 @@ tldr:
   a: |
     Use the [File Log Policy](/ai-gateway/policies/file-log/) to write MCP tool activity to a local file. Inspect the entries to see which tools each AI Consumer or AI Consumer Group accessed, and whether ACLs allowed or denied the call.
 
-    This tutorial reuses the AI Consumers and ACL-protected AI MCP Server from [Control MCP tool access with AI Consumer and AI Consumer Group ACLs](/ai-gateway/use-access-controls-for-mcp-tools/), attaches a File Log Policy, and generates stateless `2026-07-28` MCP traffic to inspect.
-
 tools:
   - kongctl
 
@@ -56,11 +54,19 @@ cleanup:
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
       icon_url: '/assets/icons/ai-gateway.svg'
+
+faqs:
+  - q: What's different about `2026-07-28` MCP traffic in these log entries compared to `2025-06-18` or `2025-11-25`?
+    a: |
+      Two things are specific to `2026-07-28` traffic:
+
+      - There's no `mcp_session_id` field anywhere in the entry. `2026-07-28` removes the session concept entirely, so the runtime doesn't populate or expect one. See [MCP version support](/ai-gateway/mcp-version-support/).
+      - `rpc.tool_name` is populated from the `Mcp-Name` header rather than parsed out of the JSON-RPC body, since `2026-07-28` requires that header on every call.
 ---
 
 ## Attach a File Log Policy
 
-Create a File Log AI Policy and add it to the existing AI MCP Server, alongside the ACL configuration:
+Create a File Log Policy and add it to the existing AI MCP Server, alongside the ACL configuration:
 
 {% entity_examples %}
 ai_gateway_policies:
@@ -169,7 +175,7 @@ ai_gateway_mcp_servers:
 
 ## Generate MCP traffic
 
-Call the MCP server as both AI Consumers, as stateless `2026-07-28` clients: no `initialize` handshake and no `Mcp-Session-Id`, only the `MCP-Protocol-Version` header and each AI Consumer's API key in the `apikey` header.
+Call the MCP server as two different AI Consumers.
 
 1. Alice, in `admin`, successfully calls `list_orders`:
 
@@ -301,11 +307,6 @@ Bob's denied `list_users` call looks like:
 }
 ```
 {:.collapsible .no-copy-code}
-
-Two things are specific to `2026-07-28` traffic here, compared to the same log entries under `2025-06-18` or `2025-11-25`:
-
-- There's no `mcp_session_id` field anywhere in the entry. `2026-07-28` removes the session concept entirely, so the runtime doesn't populate or expect one. See [MCP version support](/ai-gateway/mcp-version-support/).
-- `rpc.tool_name` is populated from the `Mcp-Name` header rather than parsed out of the JSON-RPC body, since `2026-07-28` requires that header on every call.
 
 {:.success}
 > **MCP traffic in {{site.konnect_short_name}}**
