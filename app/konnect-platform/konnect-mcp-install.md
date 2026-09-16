@@ -22,7 +22,7 @@ related_resources:
     url: /konnect-platform/kai/
 ---
 
-Configure the MCP client of your choice by adding the {{site.konnect_product_name}} MCP Server with your URL and PAT.
+Configure the MCP client of your choice by adding the {{site.konnect_product_name}} MCP Server with your URL, then authenticate with a PAT, a System Account Access Token, or, if your client supports it, a browser-based OAuth sign-in.
 
 ## {{ site.claude_code }} CLI
 
@@ -53,6 +53,9 @@ You can also configure by editing the configuration file directly:
   }
 }
 ```
+
+{:.info}
+> {{ site.claude_code }} also supports signing in through a browser-based OAuth flow instead of a PAT. Omit the `--header` flag (or the `headers` object in the JSON configuration), and {{ site.claude_code }} opens a browser window so you can sign in to {{site.konnect_product_name}} and authorize access.
 
 **Verify the configuration**
 

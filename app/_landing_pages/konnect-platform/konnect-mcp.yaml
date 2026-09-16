@@ -101,7 +101,7 @@ rows:
       text: Authentication and access
       type: h2
       sub_text: |
-        The {{site.konnect_product_name}} MCP Server uses token-based authentication to ensure secure access to your {{site.konnect_short_name}} resources. You can authenticate using either a Personal Access Token (PAT) or a Service Accout Access Token, depending on your use case. Some MCP clients also support signing in through a browser-based OAuth flow instead of a token.
+        The {{site.konnect_product_name}} MCP Server supports multiple ways to authenticate, depending on your client and use case.
     columns:
         - blocks:
           - type: structured_text
@@ -121,6 +121,15 @@ rows:
                     **System Account Access Token**
 
                     For automated workflows, you can also use a [System Account Access Token](https://cloud.konghq.com/global/organization/system-accounts/). SPATs are tied to specific service accounts with defined permissions, allowing secure machine-to-machine authentication without user intervention.
+        - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    **Browser-based sign-in**
+
+                    Some MCP clients, including {{ site.claude_code }}, can also authenticate by opening a browser window so you can sign in to {{site.konnect_product_name}} and authorize access, instead of using a token. Check your client's documentation to see whether it supports this method.
   - header:
         text: "Server endpoint"
         type: h2
