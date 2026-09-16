@@ -165,6 +165,7 @@ Create a meter to count API requests:
 <!-- vale off -->
 {% konnect_api_request %}
 url: /v3/openmeter/meters
+status_code: 201
 method: POST
 body:
   name: API requests

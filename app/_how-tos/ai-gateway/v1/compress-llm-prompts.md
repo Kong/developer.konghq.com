@@ -329,6 +329,7 @@ When sending the following request:
 
  {% validation request-check %}
   url: /anything
+  status_code: 200
   headers:
     - 'Content-Type: application/json'
     - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -381,6 +382,7 @@ Now, on any request not related to the ingested content, for example:
 
 {% validation request-check %}
   url: /anything
+  status_code: 200
   headers:
     - 'Content-Type: application/json'
     - 'Authorization: Bearer $DECK_OPENAI_API_KEY'

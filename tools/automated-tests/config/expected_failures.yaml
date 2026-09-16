@@ -5,7 +5,7 @@ input/instructions/ai-gateway/v1/how-to/transform-a-response-with-ai/on-prem/gat
 input/instructions/ai-gateway/v1/how-to/set-up-ai-proxy-with-openai/on-prem/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 401."
 input/instructions/ai-gateway/v1/how-to/set-up-ai-proxy-advanced-with-openai/on-prem/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 401."
 input/instructions/ai-gateway/v1/mcp/secure-mcp-traffic/on-prem/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 401."
-input/instructions/ai-gateway/v1/how-to/compress-llm-prompts/on-prem/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code undefined, got: 400."
+input/instructions/ai-gateway/v1/how-to/compress-llm-prompts/on-prem/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 400."
 input/instructions/ai-gateway/v1/how-to/protect-sensitive-information-output-with-ai/on-prem/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 401."
 input/instructions/ai-gateway/v1/how-to/protect-sensitive-information-with-ai/on-prem/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 500."
 input/instructions/ai-gateway/v1/how-to/use-ai-semantic-prompt-guard-plugin/on-prem/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 500."
