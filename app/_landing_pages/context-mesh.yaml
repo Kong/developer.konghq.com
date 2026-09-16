@@ -181,7 +181,7 @@ rows:
       text: "Common usage patterns"
       type: h2
       description: |
-        What an agent can do depends on the sources you add to {{site.context_mesh}}. Every pattern uses the same setup flow, covered in [Get started with {{site.context_mesh}}](/context-mesh/get-started-with-context-mesh/).
+        What an agent can do depends on the sources you add to {{site.context_mesh}}. Every pattern uses the same setup flow, covered in [Get started with {{site.context_mesh}}](/context-mesh/get-started/).
     columns:
       - blocks:
         - type: table
