@@ -16,6 +16,10 @@ Flags:
                                 - Config path: [ telemetry.enabled ]
                                 - Env var    : [ KONGCTL_NO_TELEMETRY ]
                                 - Default    : [ false ]
+      --no-trunc                Preserve full cell widths in static text tables beyond terminal width.
+                                Does not change column selection, UUID formatting, or explicit string slices.
+                                - Config path: [ text.no-trunc ]
+                                - Default    : [ false ]
       --text-id-format string   Configure UUID rendering in static text-table ID columns.
                                 - Config path: [ text.id-format ]
                                 - Allowed    : [ compact|full ]
