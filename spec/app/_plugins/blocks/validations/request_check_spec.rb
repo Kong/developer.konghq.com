@@ -171,31 +171,33 @@ RSpec.describe Jekyll::Validation do
   describe 'template source' do
     subject(:template_source) { File.read('app/_includes/how-tos/validations/request-check/index.html') }
 
-    it 'renders the snippet include for konnect' do
-      expect(template_source).to include(
-        '{% include how-tos/validations/request-check/snippet.md url=config.konnect_url headers=config.headers form_data=config.form_data form_url_encoded_data=config.form_url_encoded_data body_file=config.body_file body=config.body body_cmd=config.body_cmd method=config.method user=config.user sleep=config.sleep inline_sleep=config.inline_sleep display_headers=config.display_headers cookie_jar=config.cookie_jar cookie=config.cookie message=config.message mtls=config.mtls count=config.count insecure=config.insecure expected_headers=config.expected_headers output=config.output capture=config.capture jq=config.jq %}' # rubocop:disable Layout/LineLength
-      )
+    it 'passes the konnect snippet config to the snippet' do
+      expect(template_source).to include('snippet.md config=config.konnect_snippet_config %}')
     end
 
-    it 'renders the snippet include for on-prem' do
-      expect(template_source).to include(
-        '{% include how-tos/validations/request-check/snippet.md url=config.on_prem_url headers=config.headers form_data=config.form_data form_url_encoded_data=config.form_url_encoded_data body_file=config.body_file body=config.body body_cmd=config.body_cmd method=config.method user=config.user sleep=config.sleep inline_sleep=config.inline_sleep display_headers=config.display_headers cookie_jar=config.cookie_jar cookie=config.cookie message=config.message mtls=config.mtls count=config.count insecure=config.insecure expected_headers=config.expected_headers output=config.output capture=config.capture jq=config.jq %}' # rubocop:disable Layout/LineLength
-      )
+    it 'passes the on-prem snippet config to the snippet' do
+      expect(template_source).to include('snippet.md config=config.on_prem_snippet_config %}')
+    end
+
+    it 'passes the snippet nothing else' do
+      expect(template_source.scan(/snippet\.md ([^%]*)%\}/).flatten)
+        .to eq(['config=config.konnect_snippet_config ', 'config=config.on_prem_snippet_config '])
     end
 
     context 'markdown template' do
       subject(:template_source) { File.read('app/_includes/how-tos/validations/request-check/index.md') }
 
-      it 'renders the snippet include for konnect' do
-        expect(template_source).to include(
-          '{% include how-tos/validations/request-check/snippet.md url=config.konnect_url headers=config.headers form_data=config.form_data form_url_encoded_data=config.form_url_encoded_data body_file=config.body_file body=config.body body_cmd=config.body_cmd method=config.method user=config.user sleep=config.sleep inline_sleep=config.inline_sleep display_headers=config.display_headers cookie_jar=config.cookie_jar cookie=config.cookie message=config.message mtls=config.mtls count=config.count insecure=config.insecure expected_headers=config.expected_headers output=config.output capture=config.capture jq=config.jq %}' # rubocop:disable Layout/LineLength
-        )
+      it 'passes the konnect snippet config to the snippet' do
+        expect(template_source).to include('snippet.md config=config.konnect_snippet_config %}')
       end
 
-      it 'renders the snippet include for on-prem' do
-        expect(template_source).to include(
-          '{% include how-tos/validations/request-check/snippet.md url=config.on_prem_url headers=config.headers form_data=config.form_data form_url_encoded_data=config.form_url_encoded_data body_file=config.body_file body=config.body body_cmd=config.body_cmd method=config.method user=config.user sleep=config.sleep inline_sleep=config.inline_sleep display_headers=config.display_headers cookie_jar=config.cookie_jar cookie=config.cookie message=config.message mtls=config.mtls count=config.count insecure=config.insecure expected_headers=config.expected_headers output=config.output capture=config.capture jq=config.jq %}' # rubocop:disable Layout/LineLength
-        )
+      it 'passes the on-prem snippet config to the snippet' do
+        expect(template_source).to include('snippet.md config=config.on_prem_snippet_config %}')
+      end
+
+      it 'passes the snippet nothing else' do
+        expect(template_source.scan(/snippet\.md ([^%]*)%\}/).flatten)
+          .to eq(['config=config.konnect_snippet_config ', 'config=config.on_prem_snippet_config '])
       end
     end
   end
