@@ -34,7 +34,7 @@ rows:
 
                     Adding existing MCP servers as sources allows AI agents to access a broader range of enterprise context without requiring direct integration with each individual server. You can then centralize and customize the management and exposure of these sources through {{site.context_mesh}}.
 
-                    {{site.context_mesh}} complements [{% site.ai_gateway %}](/ai-gateway/) by covering the other half of an agent's traffic. {% site.ai_gateway %} is the control layer between agents and LLMs. {{site.context_mesh}} is the mediation layer between agents and APIs.
+                    {{site.context_mesh}} complements [{{site.ai_gateway}}](/ai-gateway/) by covering the other half of an agent's traffic. {{site.ai_gateway}} is the control layer between agents and LLMs. {{site.context_mesh}} is the mediation layer between agents and APIs.
 
                     {:.success}
                     > {{site.context_mesh}} is in active development. The current release supports APIs and MCP servers as source types. Additional source types are planned for future releases.
@@ -42,7 +42,7 @@ rows:
           - type: image
             config:
               url: /assets/images/context-mesh/context-mesh.svg
-              alt_text: "{{site.context_mesh}} architecture diagram. AI agents connect through {% site.ai_gateway %} as the control layer for LLMs, and through {{site.context_mesh}} as the mediation layer for enterprise sources including APIs, data, docs, and code."
+              alt_text: "{{site.context_mesh}} architecture diagram. AI agents connect through {{site.ai_gateway}} as the control layer for LLMs, and through {{site.context_mesh}} as the mediation layer for enterprise sources including APIs, data, docs, and code."
 
   - columns:
       - blocks:
@@ -228,6 +228,6 @@ rows:
             - q: What type of source can I use with {{site.context_mesh}}?
               a: |
                 {{site.context_mesh}} supports two source types: REST APIs, added as OpenAPI specifications, and existing MCP servers. You can mix both in the same {{site.context_mesh}} MCP server.
-            - q: Does {{site.context_mesh}} require {% site.ai_gateway %}?
+            - q: Does {{site.context_mesh}} require {{site.ai_gateway}}?
               a: |
-                Yes. {{site.context_mesh}} runs on top of {% site.ai_gateway %}, so it requires an {% site.ai_gateway %} control plane to deploy  and function.
+                Yes. {{site.context_mesh}} runs on top of {{site.ai_gateway}}, so it requires an {{site.ai_gateway}} control plane to deploy  and function.
