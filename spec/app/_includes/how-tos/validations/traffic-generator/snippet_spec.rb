@@ -20,8 +20,6 @@ RSpec.describe '{% validation traffic-generator %} rendered command' do
   let(:page) do
     { 'output_format' => output_format, 'path' => 'test.md', 'products' => ['gateway'], 'works_on' => works_on }
   end
-  let(:block_yaml) { config.to_yaml.delete_prefix("---\n") }
-  let(:template) { "{% validation traffic-generator %}\n#{block_yaml}{% endvalidation %}\n" }
 
   subject(:rendered) { render_liquid(template, page:) }
 
@@ -41,8 +39,16 @@ RSpec.describe '{% validation traffic-generator %} rendered command' do
   end
 
   context 'iterations, which the snippet reads as count' do
-    let(:config) do
-      { 'url' => '/anything', 'iterations' => 6, 'headers' => ['apikey:jsmith-key'], 'status_code' => 200 }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation traffic-generator %}
+        url: /anything
+        iterations: 6
+        headers:
+          - apikey:jsmith-key
+        status_code: 200
+        {% endvalidation %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
@@ -59,8 +65,14 @@ RSpec.describe '{% validation traffic-generator %} rendered command' do
   end
 
   context 'an option that the template dropped before' do
-    let(:config) do
-      { 'url' => '/anything', 'iterations' => 2, 'output' => 'response.json' }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation traffic-generator %}
+        url: /anything
+        iterations: 2
+        output: response.json
+        {% endvalidation %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
@@ -76,7 +88,15 @@ RSpec.describe '{% validation traffic-generator %} rendered command' do
   end
 
   context 'grep, which the block no longer supports' do
-    let(:config) { { 'url' => '/anything', 'iterations' => 2, 'grep' => 'HTTP' } }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation traffic-generator %}
+        url: /anything
+        iterations: 2
+        grep: HTTP
+        {% endvalidation %}
+      LIQUID
+    end
 
     include_examples 'a valid curl command'
 
@@ -87,7 +107,14 @@ RSpec.describe '{% validation traffic-generator %} rendered command' do
 
   context 'a page that works on both topologies' do
     let(:works_on) { %w[konnect on-prem] }
-    let(:config) { { 'url' => '/anything', 'iterations' => 2 } }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation traffic-generator %}
+        url: /anything
+        iterations: 2
+        {% endvalidation %}
+      LIQUID
+    end
     let(:commands) { rendered.scan(/```bash\n(.*?)\n```/m).flatten }
 
     it 'renders one command per topology, konnect first' do

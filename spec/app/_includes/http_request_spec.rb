@@ -5,8 +5,6 @@ RSpec.describe '{% http_request %} rendered command' do
   let(:page) do
     { 'output_format' => output_format, 'path' => 'test.md', 'products' => ['gateway'], 'works_on' => %w[konnect] }
   end
-  let(:block_yaml) { config.to_yaml.delete_prefix("---\n") }
-  let(:template) { "{% http_request %}\n#{block_yaml}{% endhttp_request %}\n" }
 
   subject(:rendered) { render_liquid(template, page:) }
 
@@ -27,8 +25,15 @@ RSpec.describe '{% http_request %} rendered command' do
   end
 
   context 'a plain request' do
-    let(:config) do
-      { 'url' => 'localhost:8000/anything', 'method' => 'GET', 'headers' => ['apikey: my-key'] }
+    let(:template) do
+      <<~'LIQUID'
+        {% http_request %}
+        url: localhost:8000/anything
+        method: GET
+        headers:
+          - 'apikey: my-key'
+        {% endhttp_request %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
@@ -44,7 +49,14 @@ RSpec.describe '{% http_request %} rendered command' do
   end
 
   context 'an option that the template dropped before' do
-    let(:config) { { 'url' => 'localhost:8000/anything', 'count' => 3 } }
+    let(:template) do
+      <<~'LIQUID'
+        {% http_request %}
+        url: localhost:8000/anything
+        count: 3
+        {% endhttp_request %}
+      LIQUID
+    end
 
     include_examples 'a valid curl command'
 
@@ -59,7 +71,14 @@ RSpec.describe '{% http_request %} rendered command' do
   end
 
   context 'insecure over https' do
-    let(:config) { { 'url' => 'localhost:8443/anything', 'insecure' => true } }
+    let(:template) do
+      <<~'LIQUID'
+        {% http_request %}
+        url: localhost:8443/anything
+        insecure: true
+        {% endhttp_request %}
+      LIQUID
+    end
 
     include_examples 'a valid curl command'
 
