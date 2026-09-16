@@ -1,360 +1,274 @@
 metadata:
-  title: "Kong Mesh"
+  title: Kong Mesh
   content_type: landing_page
-  description: Learn how Kong Mesh works and how to configure it.
-  products:
-    - mesh
-  tags:
-    - control-plane
-    - data-plane
+  description: Secure, connect, and observe services across Kubernetes and virtual machines with Kong Mesh 3.
+  products: [mesh]
+  tags: [control-plane, data-plane]
 
 rows:
   - header:
       type: h1
-      text: "Kong Mesh"
-      sub_text: Modernized service mesh for API developers and Platform Operators
-
-  - columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    With Kong Mesh, you can run and manage a distributed service mesh across Kubernetes and VMs in any environment.
-
-                    **Benefits of Kong Mesh:**
-                    - Built-in mTLS, service discovery, and traffic management.
-                    - Support for [multi-zone](/mesh/mesh-multizone-service-deployment/) and multi-tenant topologies.
-                    - Runs on both Kubernetes and Universal (VM / Bare metal) environments.
-                    - [Enterprise features](/mesh/enterprise/) like access control and advanced observability.
-
-                    You can manage your mesh environments using the [Konnect Mesh GUI](https://cloud.konghq.com/us/mesh-manager/).
-      - blocks:
-        - type: image
-          config:
-            url: /assets/images/mesh/gw_mesh.png
-            alt_text: "Kong Mesh Architecture Diagram"
-
-  - header:
-      type: h2
-      text: "Learn"
-    columns:
-      - blocks:
-          - type: card
-            config:
-              title: "Why use a service mesh?"
-              description: |
-                Overview of service mesh concepts and how Kong Mesh simplifies secure and reliable service-to-service communication using sidecar proxies and a Control Plane.
-              cta:
-                text: Learn more 
-                url: /mesh/service-mesh/
-      - blocks:
-          - type: card
-            config:
-              title: "{{site.mesh_product_name}} concepts"
-              description: |
-                Understand the core concepts of Kong Mesh, including the Control Plane, Data Plane proxies, inbounds and outbounds, and resources like policies.
-              cta:
-                text: Learn more 
-                url: /mesh/concepts/
-      - blocks:
-          - type: card
-            config:
-              title: "{{site.mesh_product_name}} architecture"
-              description: |
-                Understand the architecture of a Kong Mesh mesh, including Control and Data Plane components, Kubernetes and Universal modes, and how Services integrate into the mesh.
-              cta:
-                text: Learn more 
-                url: /mesh/architecture/
-
-  - header:
-      type: h2
-      text: "Get started"
-    columns:
-      - blocks:
-        - type: card
-          config:
-            icon: /assets/logos/Konnect-logo.svg
-            title: Managed global control plane
-            description: |
-              Use Konnect to host and manage your {{site.mesh_product_name}} global control plane. Your data plane can be deployed on Kubernetes, virtual machines, or bare metal.
-            featured: true
-            cta:
-                text: See the quickstart
-                url: /mesh/configure-mesh-global-control-plane-on-universal-with-konnect-api/
-
-      - blocks:
-          - type: card
-            config:
-              title: Self hosted control plane
-              description: |
-                Deploy and manage the control plane and data plane on your Kubernetes, Virtual Machines or Bare Metal infrastructure.
-              icon: /assets/icons/plug.svg
-              cta:
-                text: See the quickstart 
-                url: /mesh/deploy-mesh-self-managed/
+      text: Kong Mesh
+      sub_text: Secure, connect, and observe services across Kubernetes and virtual machines
   - columns:
       - blocks:
           - type: structured_text
             config:
               header:
-                text: "{{site.mesh_product_name}} in {{site.konnect_short_name}}"
+                text: Introducing Kong Mesh
               blocks:
                 - type: text
                   text: |
-                    {{site.konnect_short_name}} allows you to create, manage, and view your {{site.mesh_product_name}} service meshes
-                    using the {{site.konnect_short_name}} platform.
+                    Applications increasingly span Kubernetes clusters, virtual machines, clouds, and data centers. As they grow, teams need a consistent way to secure service-to-service traffic, control access, and understand what happens between services.
 
-                    **Key benefits include:**
-                    - **Kong-managed global control plane**: Kong handles the management of your global control plane.
-                    - **Centralized view**: See all your Services, control planes, and data plane proxies in one place.
-                    - **Multi-zone support**: Deploy across Kubernetes, Universal environments, and multiple clouds. 
+                    {{site.mesh_product_name}} adds a proxy alongside each application. These proxies discover destinations and enforce identity, access, routing, reliability, and observability policies where application traffic flows.
 
-                    See [{{site.mesh_product_name}} in {{site.konnect_short_name}}](/mesh/konnect/) for more details.
+                    A central control plane distributes configuration while application traffic remains on your network. In a multi-zone deployment, mesh-scoped zone proxies connect services across environments and provide a controlled path to external services.
 
-          - type: button
-            config:
-              text: "Create a service mesh in {{site.konnect_short_name}} &rarr; "
-              url: https://cloud.konghq.com/mesh-manager/create-control-plane
+                    With {{site.mesh_product_name}} 3, workload identity, trust, and traffic permission have separate responsibilities. This makes it explicit who a workload is, which certificate issuers are trusted, and which connections are allowed.
+          - type: text
+            config: |
+              [Get started with {{site.mesh_product_name}}](#get-started-with-kong-mesh), [plan a 2.x migration](#already-running-kong-mesh-2-x), or [browse all policies](/mesh/policies/).
+
       - blocks:
           - type: image
             config:
-              url: /assets/images/mesh-manager/konnect-mesh-control-plane-dashboard.png
-              alt_text: "Service Mesh Dashboard"
-      
-  - header:
-      type: h2
-      text: "Next steps"
-    column_count: 3
-    columns:
-      - blocks:
-          - type: card
-            config:
-              title: Deployment types
-              icon: /assets/icons/mesh.svg
-              description: |
-                You can deploy {{site.mesh_product_name}} in a single zone or across multiple zones, such as data centers, Kubernetes clusters, or cloud regions - giving you unified control over all your services.
-              ctas:
-                - text: Single Zone 
-                  url: /mesh/single-zone/
-                - text: Multi Zone
-                  url: /mesh/mesh-multizone-service-deployment/
-
-      - blocks:
-          - type: card
-            config:
-              title: Control service traffic
-              icon: /assets/icons/linked-services.svg
-              description: |
-                Enforce service-to-service communication with fine-grained policies for access control, mutual TLS, traffic permissions, and L4/L7 routing. Ensuring secure and compliant traffic flows across your mesh.
-              ctas:
-                - text: Mesh Traffic Permission 
-                  url: /mesh/policies/meshtrafficpermission/
-                - text: Mesh HTTP Route 
-                  url: /mesh/policies/meshhttproute/
-                - text: Mesh TCP Route 
-                  url: /mesh/policies/meshtcproute/
-      - blocks:
-          - type: card
-            config:
-              title: Service reliability
-              icon: /assets/icons/refresh.svg
-              description: |
-                Improve service reliability with built-in policies for health checks, circuit breakers, timeouts, and outlier detection. Automatically prevent unhealthy or overloaded services from impacting the rest of your mesh.
-              ctas:
-                - text: Mesh Health Check 
-                  url: /mesh/policies/meshhealthcheck/
-                - text: Mesh Retry 
-                  url: /mesh/policies/meshretry/
-                - text: Mesh Circuit Breaker 
-                  url: /mesh/policies/meshcircuitbreaker/
-      - blocks:
-          - type: card
-            config:
-              title: Observability
-              icon: /assets/icons/monitor.svg
-              description: |
-                Monitor service to service communication using Prometheus and/or OpenTelemetry.
-              ctas:
-                - text: Introduction 
-                  url: /mesh/observability/
-                - text: Deploy an OpenTelemetry collector
-                  url: /mesh/deploy-an-opentelemetry-collector/
-      - blocks:
-          - type: card
-            config:
-              title: Multi tenant Mesh
-              icon: /assets/icons/organization.svg
-
-              description: |
-                Creating multiple isolated service meshes within the same {{site.mesh_product_name}} cluster.
-              cta:
-                text: Learn more 
-                url: /mesh/mesh-multi-tenancy/
-      - blocks:
-          - type: card
-            config:
-              title: Configure ingress traffic
-              icon: /assets/icons/load-balance.svg
-              description: |
-                Configure ingress (north / south traffic into your Mesh) using built-in or Kong gateway.
-              cta:
-                text: Learn more 
-                url: /mesh/ingress/
+              url: /assets/images/mesh/mesh-v3-overview.svg
+              alt_text: Kong Mesh distributes configuration through zone control planes while application proxies enforce traffic policies across Kubernetes and VMs. Separate paths show cross-zone ingress, application ingress, and external-service egress.
 
   - header:
       type: h2
-      text: Security and access
+      text: Get started with Kong Mesh
     columns:
       - blocks:
-          - type: card
+          - type: tabs
+            tab_group: run-mesh
             config:
-              title: "Configure Mutual TLS"
-              description: |
-                Enables automatic encrypted mTLS traffic for all the services in a Mesh, as well as assigning an identity to every data plane proxy.
-              cta:
-                text: View the reference
-                url: /mesh/policies/mutual-tls/
-                align: end
-      - blocks:
-          - type: card
-            config:
-              title: "Issue identity with MeshIdentity"
-              description: |
-                Issue SPIFFE-compliant workload identities with the MeshIdentity bundled provider and allow traffic with MeshTrafficPermission SPIFFE ID matching.
-              cta:
-                text: View the guide
-                url: /mesh/issue-identity-with-meshidentity/
-                align: end
-      - blocks:
-          - type: card
-            config:
-              title: "Issue identity with MeshIdentity and Spire"
-              description: |
-                Issue SPIFFE-compliant workload identities with the MeshIdentity Spire provider, where Spire manages the trust externally.
-              cta:
-                text: View the guide
-                url: /mesh/issue-identity-with-meshidentity-spire/
-                align: end
+              - title: Konnect
+                content: |
+                  Use {{site.konnect_short_name}} to host and operate the global control plane. You run the zone control planes and application proxies in your own infrastructure.
+
+                  Choose the environment for your first zone:
+
+                  - **Kubernetes (recommended):** [Choose the Konnect UI, API, or Terraform installation](/mesh/konnect/#where-will-your-zone-run).
+                  - **Virtual machines and bare metal:** [Choose the Konnect UI or API installation](/mesh/konnect/#where-will-your-zone-run).
+
+                  Both paths create or connect to a {{site.mesh_product_name}} 3 global control plane in {{site.konnect_short_name}} and deploy the zone control plane in your environment.
+              - title: Self-hosted
+                content: |
+                  Run and operate the control plane and application proxies in your own infrastructure:
+
+                  - **Try {{site.mesh_product_name}} 3 locally:** Follow the [Universal quickstart](/mesh/get-started/universal/install/) to run a control plane and two application proxies in containers.
+                  - **Plan a production deployment:** Use the [Universal control plane reference](/mesh/universal-control-plane/) to choose the mode, persistent store, and zone configuration.
+                  - **Connect applications:** Follow the [Universal data plane reference](/mesh/universal-data-plane/) to register and authenticate application proxies.
+
+                  A self-hosted Kubernetes installation guide for {{site.mesh_product_name}} 3 is not yet available. Do not use the 2.x installation procedure for a 3.x control plane.
+
   - columns:
       - blocks:
           - type: card
             config:
-              title: "{{site.mesh_product_name}} audit logs"
-              description: |
-                Track all user and system actions in {{site.mesh_product_name}} using the AccessAudit resource and configurable backends.
+              title: Secure service traffic
+              description: Issue workload identities, establish trust, and allow only the callers that should reach a destination.
+              icon: /assets/icons/mesh_policies/meshtrafficpermission.png
               cta:
-                text: View the reference 
-                url: /mesh/access-audit/
+                url: /mesh/policies/meshtrafficpermission/
                 align: end
       - blocks:
           - type: card
             config:
-              title: "{{site.mesh_product_name}} RBAC"
-              description: |
-                Use AccessRole and AccessRoleBinding resources in {{site.mesh_product_name}} to implement fine-grained, role-based access to policies and actions.
+              title: Connect multiple zones
+              description: Deploy mesh-scoped zone proxies and make services available across Kubernetes and Universal zones.
+              icon: /assets/icons/mesh.svg
               cta:
-                text: View the reference 
-                url: /mesh/rbac/
+                url: /mesh/mesh-scoped-zone-proxies/
                 align: end
       - blocks:
           - type: card
             config:
-              title: "Secure access between Mesh components"
-              description: |
-                Learn how secure access is provided across a Kong Mesh deployment.
+              title: Migrate from Mesh 2.x
+              description: Prepare identity, zone proxies, and policies in the required order before upgrading to Mesh 3.
+              icon: /assets/icons/migrate.svg
               cta:
-                text: View the reference 
-                url: /mesh/secure-access/
+                url: /mesh/migrate-policies-to-3/
                 align: end
 
   - header:
+    columns:
+      - header:
+          type: h2
+          text: One mesh, every environment
+        blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Apply a consistent traffic model to services across Kubernetes, virtual machines, zones, and external destinations:
+
+                    - Discover [services within a zone](/mesh/meshservice/)
+                    - Connect [services across zones](/mesh/meshmultizoneservice/)
+                    - Bring [application traffic into the mesh](/mesh/application-ingress/)
+                    - Reach [services outside the mesh](/mesh/meshexternalservice/)
+      - header:
+          type: h2
+          text: Tools to manage Kong Mesh
+        blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Manage Mesh resources through the interface that fits your workflow:
+
+                    - [Mesh Manager](https://cloud.konghq.com/mesh-manager): Create and manage Mesh control planes in {{site.konnect_short_name}}.
+                    - [Mesh Control Plane API](/api/konnect/mesh-control-planes/): Automate control plane management through the {{site.konnect_short_name}} API.
+                    - [kongctl](/mesh/cli/): Inspect and configure Mesh 3 resources from the command line.
+
+  - header:
       type: h2
-      text: Key references
+      text: Configure your mesh
+      description: Start with the traffic behavior you need, then use the reference pages for configuration, examples, and validation.
     column_count: 3
     columns:
       - blocks:
           - type: card
             config:
-              title: Policy Hub
-              description: |
-                {{site.mesh_product_name}} policies are bundled features for your service traffic and network configuration.
+              title: Secure service communication
+              description: Issue workload identities, establish trust, and allow specific callers. Configure how destinations accept encrypted connections.
               ctas:
-                - text: Learn about policies 
-                  url: /mesh/policies-introduction/
-                - text: See all policies 
-                  url: /mesh/policies/
+                - {text: Allow specific callers, url: /mesh/policies/meshtrafficpermission/}
+                - {text: Configure TLS, url: /mesh/policies/meshtls/}
       - blocks:
           - type: card
             config:
-              title: "{{site.mesh_product_name}} requirements and performance"
-              description: |
-                See the different requirements to deploy {{site.mesh_product_name}} as well as managing performance and resource requirements
+              title: Route traffic and handle failures
+              description: Choose destinations for requests and connections. Set timeouts, retry selected failures, and limit the impact of unhealthy destinations.
               ctas:
-                - text: View the requirements 
-                  url: /mesh/requirements/
-                - text: Kubernetes sidecar resources
-                  url: /mesh/data-plane-kubernetes/#custom-container-configuration
-                - text: Performance tuning
-                  url: /mesh/performance-tuning/
+                - {text: HTTP routing, url: /mesh/policies/meshhttproute/}
+                - {text: TCP routing, url: /mesh/policies/meshtcproute/}
+                - {text: Timeouts, url: /mesh/policies/meshtimeout/}
+                - {text: Retries, url: /mesh/policies/meshretry/}
+                - {text: Circuit breaking, url: /mesh/policies/meshcircuitbreaker/}
       - blocks:
           - type: card
             config:
-              title: "Use {{site.mesh_product_name}} CLI and API"
-              description: |
-                Access Kong Mesh via GUI, HTTP API, kubectl, or kumactl in Kubernetes or Universal environments. Understand available permissions and Control Plane ports.
+              title: Connect services across zones
+              description: Make a service available across zones and understand the proxies carrying its traffic. Apply policies at the right point in the connection.
               ctas:
-                - text: Learn more 
-                  url: /mesh/interact-with-control-plane/
-                - text: Kuma Control Plane CLI options
-                  url: /mesh/reference/kuma-cp/
-
+                - {text: Configure a multi-zone service, url: /mesh/meshmultizoneservice/}
+      - blocks:
+          - type: card
+            config:
+              title: Bring external traffic into the mesh
+              description: Connect an API gateway to mesh services and control what its workload identity can access. This is application ingress, not cross-zone ingress.
+              cta: {text: Configure application ingress, url: /mesh/application-ingress/}
+      - blocks:
+          - type: card
+            config:
+              title: Reach services outside the mesh
+              description: Define external destinations and configure their path through mesh-scoped zone egress, including access permissions and destination TLS.
+              ctas:
+                - {text: Configure an external service, url: /mesh/meshexternalservice/}
+      - blocks:
+          - type: card
+            config:
+              title: Observe service traffic
+              description: Collect metrics, access logs, and traces. Choose which proxies report telemetry and where they export it.
+              ctas:
+                - {text: Metrics, url: /mesh/policies/meshmetric/}
+                - {text: Access logs, url: /mesh/policies/meshaccesslog/}
+                - {text: Traces, url: /mesh/policies/meshtrace/}
+                - {text: OpenTelemetry backends, url: /mesh/meshopentelemetrybackend/}
 
   - header:
       type: h2
-      text: Support policies
+      text: Understand how Kong Mesh works
+      description: Control planes distribute configuration. Proxies handle application traffic and enforce the policies that apply to their part of the connection.
+    column_count: 2
     columns:
       - blocks:
           - type: card
             config:
-              title: "{{site.mesh_product_name}} version support policy"
-              description: |
-                The {{site.mesh_product_name}} version support policy outlines the {{site.mesh_product_name}} 
-                versioning scheme and version lifecycle, from release to sunset support.
+              title: Workload identity and trust
+              description: An identity tells a proxy who is calling. Trust determines which issuers it accepts. Traffic permissions decide whether that caller can connect.
               ctas:
-                - text: View the version support policy 
-                  url: /mesh/support-policy/
-                - text: View Kuma Mesh changelog 
-                  url: /mesh/changelog/
+                - {text: Issue identities with MeshIdentity, url: /mesh/policies/meshidentity/}
+                - {text: Establish trust with MeshTrust, url: /mesh/policies/meshtrust/}
       - blocks:
           - type: card
             config:
-              title: "{{site.mesh_product_name}} vulnerability patching process"
-              description: |
-                Understand how Kong addresses and patches vulnerabilities in {{site.mesh_product_name}} binaries, third-party dependencies, and Docker images.
-              cta:
-                text: View the vulnerability support policy 
-                url: /mesh/vulnerability-patching-process
-                align: end
+              title: Services and destinations
+              description: Give applications destinations they can reach within a zone, across zones, or outside the mesh. Choose the service resource that describes where the destination runs.
+              cta: {text: Understand service discovery, url: /mesh/meshservice/}
       - blocks:
           - type: card
             config:
-              title: "{{site.mesh_product_name}} software bill of materials"
-              description: |
-                See the SBOM for {{site.mesh_product_name}} releases.
-              cta:
-                text: View the SBOM
-                url: /mesh/sbom/
+              title: Policies and traffic decisions
+              description: Select the proxies that enforce a policy, then the traffic it governs. Understand which decisions happen at the client or destination and how overlapping policies combine.
+              cta: {text: Understand policy targeting, url: /mesh/policy-targeting/}
+      - blocks:
+          - type: card
+            config:
+              title: Proxies and zones
+              description: Application proxies handle workload traffic. Mesh-scoped zone ingress carries connections between zones; mesh-scoped zone egress handles the path to external services.
+              cta: {text: Understand mesh-scoped zone proxies, url: /mesh/mesh-scoped-zone-proxies/}
 
   - header:
       type: h2
-      text: Frequently asked questions
+      text: Key references
+    column_count: 2
     columns:
       - blocks:
-        - type: faqs
-          config:
-            - q: I'm getting connection errors when connecting to {{site.konnect_short_name}}. What should I check?
-              a: |
-                {% include_cached faqs/konnect-connection-errors.md %}
-                align: end
+          - type: card
+            config:
+              title: Policy reference
+              description: Look up supported targets, defaults, configuration examples, and runtime behavior for every policy.
+              cta: {text: Browse all policies, url: /mesh/policies/}
+      - blocks:
+          - type: card
+            config:
+              title: Command-line reference
+              description: Use kongctl to authenticate, select a control plane and mesh, and inspect or configure resources.
+              cta: {text: Use the Mesh CLI, url: /mesh/cli/}
+
+  - header:
+      type: h2
+      text: Operate and troubleshoot
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Plan upgrades
+              description: Check upgrade order, version-specific requirements, and tested platform versions before changing a deployment.
+              ctas:
+                - {text: Upgrade guidance, url: /mesh/upgrade/}
+                - {text: Version-specific upgrade notes, url: /mesh/version-specific-upgrade-notes/}
+                - {text: Validated versions, url: /mesh/validated-versions/}
+      - blocks:
+          - type: card
+            config:
+              title: Verify traffic behavior
+              description: Use the verification and troubleshooting sections in each reference to check identities, destinations, permissions, and proxy readiness.
+              ctas:
+                - {text: Check traffic permissions, url: /mesh/policies/meshtrafficpermission/}
+                - {text: Check zone proxies, url: /mesh/mesh-scoped-zone-proxies/}
+                - {text: Check application ingress, url: /mesh/application-ingress/}
+      - blocks:
+          - type: card
+            config:
+              title: Run Universal deployments
+              description: Configure the control plane and application proxies you operate on virtual machines and bare metal.
+              ctas:
+                - {text: Control plane reference, url: /mesh/universal-control-plane/}
+                - {text: Data plane reference, url: /mesh/universal-data-plane/}
+
+  - header:
+      type: h2
+      text: Releases and support
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              [Changelog](/mesh/changelog/) · [Version support policy](/mesh/support-policy/) · [Vulnerability patching](/mesh/vulnerability-patching-process/) · [Software bill of materials](/mesh/sbom/)

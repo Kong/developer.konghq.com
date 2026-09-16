@@ -13,6 +13,8 @@ tags:
   - security
   - mtls
 related_resources:
+  - text: Check readiness for Mesh 3
+    url: /mesh/check-upgrade-readiness/
   - text: Migrate zone proxies to Mesh 3
     url: /mesh/migrate-zone-proxies-to-3/
   - text: Migrate policies to {{site.mesh_product_name}} 3
@@ -57,6 +59,9 @@ control planes are still running 2.x.
 
 Use this order for each mesh:
 
+1. [Run the Mesh 3 readiness checker](/mesh/check-upgrade-readiness/) against the complete estate
+   and save the report. Use its identity, trust, service-model, permission, and zone-egress
+   findings to scope this migration.
 1. Upgrade to the latest supported 2.x release in your upgrade path. The control planes must
    support both `Mesh.mtls` and `MeshIdentity` for the rolling migration.
 1. Record the enabled CA backend, certificate expiry, TLS mode, and effective traffic
@@ -443,3 +448,9 @@ connected proxy once more. Only then is the mesh ready for its first 3.x zone up
 - No connected proxy reports a certificate from the legacy mesh CA backend.
 - The stored `Mesh` and the source-controlled manifest no longer contain `mtls`.
 - Allowed, denied, plaintext, cross-zone and external-service traffic behave as designed.
+
+After every mesh meets these conditions, rerun the
+[Mesh 3 readiness checker](/mesh/check-upgrade-readiness/) while the control planes are still on
+the latest supported 2.14 patch. Resolve any remaining blocker or coverage gap before upgrading a
+zone. The checker cannot prove that certificates work together or that traffic is correctly
+allowed and denied, so retain the validation above as a separate gate.
