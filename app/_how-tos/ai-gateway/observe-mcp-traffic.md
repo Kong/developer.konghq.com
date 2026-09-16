@@ -171,7 +171,7 @@ ai_gateway_mcp_servers:
               - developer
 {% endentity_examples %}
 
-`config.logging.audits: true` tells the runtime to record an ACL decision entry for every tool discovery and call, not just the RPC timing and size data that's recorded by default.
+Setting `config.logging.audits: true` in the AI MCP Server configuration tells the runtime to record an ACL decision entry for every tool discovery and call, not just the RPC timing and size data that's recorded by default.
 
 ## Generate MCP traffic
 

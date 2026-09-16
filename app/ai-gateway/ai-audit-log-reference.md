@@ -540,7 +540,7 @@ If you create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), {{site.ai
 
 The MCP log structure groups traffic by **MCP session ID** for `2025-06-18` and `2025-11-25` traffic, with each session containing zero or more recorded JSON-RPC requests. 
 
-{% new_in 2.1 %} `2026-07-28` traffic has no session concept, so each entry is a single stateless request with no `mcp_session_id` field. See [MCP version support](/ai-gateway/mcp-version-support/) for what else differs between revisions.
+{% new_in 2.1 %} `2026-07-28` traffic has no session concept, so each entry is a single stateless request with no `mcp_session_id` field. See [MCP version support](/ai-gateway/mcp-version-support/) for other differences between revisions.
 
 <!-- vale off -->
 {% table %}
@@ -554,7 +554,7 @@ rows:
     description: |
       The ID of the MCP session. A session can contain multiple requests. Only present for `2025-06-18` and `2025-11-25` traffic. 
       
-      {% new_in 2.1 %} `2026-07-28` removes the session concept, so this field is absent.
+      {% new_in 2.1 %} `2026-07-28` removes the session concept, so this field is absent for that traffic.
   - property: "`ai.mcp.rpc`"
     description: An array of recorded JSON-RPC requests. Only JSON-RPC traffic is logged.
   - property: "`ai.mcp.rpc[].id`"
