@@ -93,6 +93,24 @@ cleanup:
       icon_url: '/assets/icons/ai-gateway.svg'
 ---
 
+## Create an AI Auth Strategy
+
+Create a `key-auth` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) so each AI Consumer presents their key in the `apikey` header:
+
+{% entity_examples %}
+ai_gateway_auth_strategies:
+  - ref: my-key-auth
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: my-key-auth
+    display_name: "my-key-auth"
+    type: key-auth
+    config:
+      key_names:
+        - apikey
+      key_in_header: true
+      key_in_query: false
+{% endentity_examples %}
+
 ## Create AI Consumer Groups for each usage tier
 
 Configure [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) that reflect access levels. These groups govern MCP tool permissions:
@@ -282,24 +300,6 @@ capture:
 {% endcapture %}
 
 {{ eason_credential | indent }}
-
-## Create an AI Auth Strategy
-
-Create a `key-auth` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) so each AI Consumer presents their key in the `apikey` header:
-
-{% entity_examples %}
-ai_gateway_auth_strategies:
-  - ref: my-key-auth
-    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
-    name: my-key-auth
-    display_name: "my-key-auth"
-    type: key-auth
-    config:
-      key_names:
-        - apikey
-      key_in_header: true
-      key_in_query: false
-{% endentity_examples %}
 
 ## Configure the AI MCP Server
 
