@@ -762,7 +762,7 @@ This lets you treat {{site.ai_gateway}} migration as a versioned, reviewable, an
 
 If you would rather start clean instead of converting an existing configuration, you can provision AI Models, AI MCP Servers, and AI Agents directly through the [Kong {{site.konnect_short_name}} MCP Server](/konnect-platform/konnect-mcp/). This is well suited to teams that want to drive setup from an AI assistant or IDE copilot.
 
-Connect your MCP client to the {{site.konnect_short_name}} MCP Server endpoint at `https://global.mcp.konghq.com/`. Your client opens a browser window so you can sign in to {{site.konnect_short_name}} and authorize access. All actions respect the permissions of the user who signs in.
+Connect your MCP client to the {{site.konnect_short_name}} MCP Server endpoint at `https://global.mcp.konghq.com/`, and authenticate with a {{site.konnect_short_name}} PAT or System Account Access Token. All actions respect the permissions of the token you use.
 
 The {{site.konnect_short_name}} MCP Server exposes a discover-then-execute pattern with three core tools:
 
