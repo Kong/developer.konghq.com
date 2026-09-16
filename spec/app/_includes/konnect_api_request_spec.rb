@@ -10,8 +10,6 @@ RSpec.describe '{% konnect_api_request %} rendered command' do
   let(:page) do
     { 'output_format' => output_format, 'path' => 'test.md', 'products' => ['gateway'], 'works_on' => %w[konnect] }
   end
-  let(:block_yaml) { config.to_yaml.delete_prefix("---\n") }
-  let(:template) { "{% konnect_api_request %}\n#{block_yaml}{% endkonnect_api_request %}\n" }
 
   subject(:rendered) { render_liquid(template, page:) }
 
@@ -32,7 +30,15 @@ RSpec.describe '{% konnect_api_request %} rendered command' do
   end
 
   context 'a plain request' do
-    let(:config) { { 'url' => '/v2/control-planes', 'method' => 'POST', 'status_code' => 201 } }
+    let(:template) do
+      <<~'LIQUID'
+        {% konnect_api_request %}
+        url: /v2/control-planes
+        method: POST
+        status_code: 201
+        {% endkonnect_api_request %}
+      LIQUID
+    end
 
     include_examples 'a valid curl command'
 
@@ -47,8 +53,14 @@ RSpec.describe '{% konnect_api_request %} rendered command' do
   end
 
   context 'a writer-supplied header' do
-    let(:config) do
-      { 'url' => '/v2/control-planes', 'headers' => ['Content-Type: application/json'] }
+    let(:template) do
+      <<~'LIQUID'
+        {% konnect_api_request %}
+        url: /v2/control-planes
+        headers:
+          - 'Content-Type: application/json'
+        {% endkonnect_api_request %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
@@ -64,8 +76,14 @@ RSpec.describe '{% konnect_api_request %} rendered command' do
   end
 
   context 'an option that the template dropped before' do
-    let(:config) do
-      { 'url' => '/v2/control-planes', 'expected_headers' => ['X-Kong-Admin: true'] }
+    let(:template) do
+      <<~'LIQUID'
+        {% konnect_api_request %}
+        url: /v2/control-planes
+        expected_headers:
+          - 'X-Kong-Admin: true'
+        {% endkonnect_api_request %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
@@ -77,7 +95,13 @@ RSpec.describe '{% konnect_api_request %} rendered command' do
   end
 
   context 'a page that also works on-prem' do
-    let(:config) { { 'url' => '/v2/control-planes' } }
+    let(:template) do
+      <<~'LIQUID'
+        {% konnect_api_request %}
+        url: /v2/control-planes
+        {% endkonnect_api_request %}
+      LIQUID
+    end
     let(:page) do
       {
         'output_format' => 'html',

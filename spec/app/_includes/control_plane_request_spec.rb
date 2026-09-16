@@ -14,8 +14,6 @@ RSpec.describe '{% control_plane_request %} rendered command' do
   let(:page) do
     { 'output_format' => output_format, 'path' => 'test.md', 'products' => ['gateway'], 'works_on' => works_on }
   end
-  let(:block_yaml) { config.to_yaml.delete_prefix("---\n") }
-  let(:template) { "{% control_plane_request %}\n#{block_yaml}{% endcontrol_plane_request %}\n" }
 
   subject(:rendered) { render_liquid(template, page:) }
 
@@ -36,7 +34,15 @@ RSpec.describe '{% control_plane_request %} rendered command' do
   end
 
   context 'a plain request' do
-    let(:config) { { 'url' => '/services', 'method' => 'POST', 'status_code' => 201 } }
+    let(:template) do
+      <<~'LIQUID'
+        {% control_plane_request %}
+        url: /services
+        method: POST
+        status_code: 201
+        {% endcontrol_plane_request %}
+      LIQUID
+    end
 
     include_examples 'a valid curl command'
 
@@ -49,12 +55,16 @@ RSpec.describe '{% control_plane_request %} rendered command' do
   end
 
   context 'an option that the template dropped before' do
-    let(:config) do
-      {
-        'url' => '/services',
-        'method' => 'POST',
-        'capture' => [{ 'variable' => 'SERVICE_ID', 'jq' => '.id' }]
-      }
+    let(:template) do
+      <<~'LIQUID'
+        {% control_plane_request %}
+        url: /services
+        method: POST
+        capture:
+          - variable: SERVICE_ID
+            jq: .id
+        {% endcontrol_plane_request %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
@@ -69,7 +79,14 @@ RSpec.describe '{% control_plane_request %} rendered command' do
   end
 
   context 'display_headers, the option that 2 how-to pages already set' do
-    let(:config) { { 'url' => '/routes', 'display_headers' => true } }
+    let(:template) do
+      <<~'LIQUID'
+        {% control_plane_request %}
+        url: /routes
+        display_headers: true
+        {% endcontrol_plane_request %}
+      LIQUID
+    end
     let(:works_on) { %w[on-prem] }
 
     include_examples 'a valid curl command'
@@ -84,7 +101,13 @@ RSpec.describe '{% control_plane_request %} rendered command' do
 
   context 'a page that works on both topologies' do
     let(:works_on) { %w[konnect on-prem] }
-    let(:config) { { 'url' => '/services' } }
+    let(:template) do
+      <<~'LIQUID'
+        {% control_plane_request %}
+        url: /services
+        {% endcontrol_plane_request %}
+      LIQUID
+    end
 
     it 'renders one command per topology, konnect first' do
       expect(commands.size).to eq(2)
