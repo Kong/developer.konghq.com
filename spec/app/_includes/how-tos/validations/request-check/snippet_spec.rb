@@ -36,6 +36,13 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
     it 'renders syntactically valid bash' do
       validate_bash_syntax!(code)
     end
+  
+    it 'renders the same command in both output formats' do
+      html = bash_code_block(render_liquid(template, page: page.merge('output_format' => 'html')))
+      markdown = bash_code_block(render_liquid(template, page: page.merge('output_format' => 'markdown')))
+  
+      expect(markdown).to eq(html)
+    end
   end
 
   context 'minimal url only (get-started-with-ai-agent.md)' do
