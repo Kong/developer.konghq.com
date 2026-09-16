@@ -50,8 +50,6 @@ tldr:
   a: |
     Use the [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity to control access to MCP tools with default and per-tool ACLs based on AI Consumers and AI Consumer Groups.
 
-    This tutorial shows you how to configure four AI Consumers across three access tiers, and how to validate which tools each one can see and call as a stateless `2026-07-28` MCP client, no session handshake required.
-
 tools:
   - kongctl
 
@@ -99,9 +97,9 @@ cleanup:
 
 Configure [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) that reflect access levels. These groups govern MCP tool permissions:
 
-- `admin`, full access
-- `developer`, limited access
-- `suspended`, blocked from MCP tools
+- `admin`: full access
+- `developer`: limited access
+- `suspended`: blocked from MCP tools
 
 {% entity_examples %}
 ai_gateway_consumer_groups:
@@ -351,7 +349,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-The following configuration applies the ACL rules for the MCP tools shown in the preceding table:
+Apply the following configuration to configure the ACL rules for the MCP tools:
 
 {% entity_examples %}
 ai_gateway_mcp_servers:
@@ -446,11 +444,14 @@ ai_gateway_mcp_servers:
 {:.info}
 > `suspended` has no per-tool ACL entry anywhere, so Carol falls through to `access.default_tool_acls`, which only allows `admin`. That's what blocks her from every tool without needing an explicit `deny`.
 
-## Validate access as a stateless MCP client
+## Validate
 
-`2026-07-28` clients don't perform an `initialize` handshake, and {{site.ai_gateway}} doesn't issue an `Mcp-Session-Id`. Every request declares its protocol revision through the `MCP-Protocol-Version` header and carries the AI Consumer's API key in the `apikey` header. Validate the ACL rules by calling `tools/list` directly against the route for each AI Consumer.
+Validate the ACL rules by calling `tools/list` directly against the route for each AI Consumer.
 
-1. Alice (admin group): sees every tool
+{:.info}
+> Clients using the [`2026-07-28` MCP version](/ai-gateway/mcp-version-support/#2026-07-28) don't perform an `initialize` handshake, and {{site.ai_gateway}} doesn't issue an `Mcp-Session-Id`. Every request declares its protocol revision through the `MCP-Protocol-Version` header and carries the AI Consumer's API key in the `apikey` header. 
+
+1. Check that Alice (`admin` group) sees every tool:
 
 {% capture alice_list %}
 <!-- vale off -->
@@ -500,7 +501,7 @@ body:
 
 {{ alice_search | indent }}
 
-1. Bob (developer group): denied list_users and search_orders
+1. Check that Bob (`developer` group) is denied access to `list_users` and `search_orders`:
 
 {% capture bob_list %}
 <!-- vale off -->
@@ -552,7 +553,7 @@ body:
 
    The call returns `HTTP 403 Forbidden`. Bob's `developer` group is on the `deny` list for `list_users` and isn't on the `allow` list for `search_orders`, so both tools are unreachable.
 
-1. Carol (suspended group): denied every tool
+1. Check that Carol (`suspended` group) is denied access to every tool
 
 {% capture carol_call %}
 <!-- vale off -->
@@ -580,7 +581,7 @@ body:
 
    Carol belongs to `suspended`, which isn't in `access.default_tool_acls.allow` and has no tool-specific override, so every tool call returns `HTTP 403 Forbidden`.
 
-1. Eason (no group): only list_users
+1. Check that Eason (no group) only has access to `list_users`:
 
 {% capture eason_list %}
 <!-- vale off -->
@@ -605,5 +606,3 @@ body:
 {{ eason_list | indent }}
 
    The response lists only `list_users`. Eason belongs to no AI Consumer Group, but `list_users`' own `access.acls.allow` names him directly, alongside `admin`. Every other tool falls back to `access.default_tool_acls`, which doesn't include him.
-
-To see how these allow and deny decisions are recorded, see [Observe MCP traffic with the File Log Policy](/ai-gateway/observe-mcp-traffic/).
