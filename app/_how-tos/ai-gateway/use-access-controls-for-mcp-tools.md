@@ -305,7 +305,7 @@ ai_gateway_auth_strategies:
 
 Configure the AI MCP Server to apply tool-level access rules. The AI MCP Server controls which AI Consumers can see or call each MCP tool. Access is determined by AI Consumer Groups and individual AI Consumers using `allow` and `deny` lists. A tool ACL replaces the default rule when present.
 
-The following table shows the effective permissions for the configuration:
+The following table shows the effective permissions for this configuration:
 
 <!-- vale off -->
 {% table %}
@@ -442,7 +442,7 @@ ai_gateway_mcp_servers:
 {% endentity_examples %}
 
 {:.info}
-> `suspended` has no per-tool ACL entry anywhere, so Carol falls through to `access.default_tool_acls`, which only allows `admin`. That's what blocks her from every tool without needing an explicit `deny`.
+> `suspended` has no per-tool ACL entry anywhere, so Carol falls through to `access.default_tool_acls`, which only allows `admin`. This blocks her from every tool without needing an explicit `deny`.
 
 ## Validate
 
