@@ -8,7 +8,7 @@ module Jekyll
   module Drops
     class ControlPlaneRequest < Liquid::Drop # rubocop:disable Style/Documentation
       include Jekyll::SiteAccessor
-      include Jekyll::Drops::Concerns::RequestSnippetConfig
+      include Jekyll::Drops::Concerns::DualTopologySnippetConfig
 
       def initialize(yaml:, format:) # rubocop:disable Lint/MissingSuper
         @yaml = yaml
@@ -42,14 +42,6 @@ module Jekyll
         @on_prem_url ||= File.join(
           base_url, @yaml['url']
         ).to_s
-      end
-
-      def konnect_snippet_config
-        @konnect_snippet_config ||= snippet_config_for(konnect_url)
-      end
-
-      def on_prem_snippet_config
-        @on_prem_snippet_config ||= snippet_config_for(on_prem_url)
       end
 
       def data_validate_konnect
