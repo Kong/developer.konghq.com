@@ -9,7 +9,7 @@ module Jekyll
     module Validations
       class Base < Liquid::Drop # rubocop:disable Style/Documentation
         include Jekyll::SiteAccessor
-        include Jekyll::Drops::Concerns::RequestSnippetConfig
+        include Jekyll::Drops::Concerns::DualTopologySnippetConfig
 
         def self.make_for(id:, yaml:, format: 'html')
           case id
@@ -83,14 +83,6 @@ module Jekyll
           @on_prem_url ||= File.join(
             base_url, @yaml['url']
           ).to_s
-        end
-
-        def konnect_snippet_config
-          @konnect_snippet_config ||= snippet_config_for(konnect_url)
-        end
-
-        def on_prem_snippet_config
-          @on_prem_snippet_config ||= snippet_config_for(on_prem_url)
         end
 
         def data_validate_konnect

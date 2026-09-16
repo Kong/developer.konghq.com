@@ -39,6 +39,18 @@ module Jekyll
           {}
         end
       end
+
+      module DualTopologySnippetConfig # rubocop:disable Style/Documentation
+        include RequestSnippetConfig
+
+        def konnect_snippet_config
+          @konnect_snippet_config ||= snippet_config_for(konnect_url)
+        end
+
+        def on_prem_snippet_config
+          @on_prem_snippet_config ||= snippet_config_for(on_prem_url)
+        end
+      end
     end
   end
 end
