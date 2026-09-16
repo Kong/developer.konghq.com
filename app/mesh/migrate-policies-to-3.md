@@ -12,6 +12,8 @@ tags:
   - upgrade
   - policy
 related_resources:
+  - text: Check readiness for Mesh 3
+    url: /mesh/check-upgrade-readiness/
   - text: Migrate zone proxies to Mesh 3
     url: /mesh/migrate-zone-proxies-to-3/
   - text: How policies select traffic
@@ -54,9 +56,11 @@ old behavior was preserved.
 
 Follow this order so later policy rewrites build on identities and resources that already exist:
 
-1. **Inventory and export the current state.** Save every `Mesh`, policy, legacy policy, and
-   observability backend from the Global and Zone control planes. Include resources that are
-   normally generated or managed through GitOps, not only resources applied by hand.
+1. **Run the readiness checker, then export the current state.**
+   [Create a Mesh 3 readiness report](/mesh/check-upgrade-readiness/) and save every `Mesh`,
+   policy, legacy policy, and observability backend from the Global and Zone control planes.
+   Include resources that are normally generated or managed through GitOps, not only resources
+   applied by hand. Use the report to identify which sections of this guide apply.
 1. **Create workload identity and trust first.** Replace `Mesh.mtls` with
    [MeshIdentity](/mesh/migrate-mtls-to-meshidentity/) and confirm its
    [MeshTrust](#meshtrust) before changing `MeshTrafficPermission` or `MeshTLS`.
@@ -1224,6 +1228,11 @@ by checking the behavior each policy is intended to produce.
    synchronization failures, and policies that no longer generate configuration.
 7. Upgrade a non-production zone first, repeat these checks, and then proceed with the remaining
    zones.
+
+While every control plane is still running the latest supported 2.14 patch, rerun the
+[Mesh 3 readiness checker](/mesh/check-upgrade-readiness/) against the complete estate. Do not
+upgrade the first zone until the report has no blockers or coverage gaps and its manual checks are
+complete. A clean report complements the behavioral checks above; it does not replace them.
 
 The migration is complete when the stored resources match the intended 3.x configuration, the
 proxies receive valid configuration, and both the expected success and failure paths behave as
