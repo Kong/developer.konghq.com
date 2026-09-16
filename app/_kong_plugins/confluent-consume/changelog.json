@@ -55,6 +55,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.6": [
+    {
+      "message": "Fixed an issue where the consumer group subscription\ndeclared protocol version 1 but carried the version 0 layout, so a topic-rewriting proxy rejected it.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "the `ssl_verify` option to validate the server\ncertificate is now enabled by default.\n",

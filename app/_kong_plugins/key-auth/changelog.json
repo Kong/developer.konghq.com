@@ -18,6 +18,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.6": [
+    {
+      "message": "Fixed an issue where an invalid API key was not falling back to the configured anonymous consumer when `principals.error_on_miss` was set to `false`, unlike every other authentication failure.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Fixed an issue where the consumer authentication cache was not isolated by realm.\n",
