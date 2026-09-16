@@ -415,6 +415,7 @@ async function requestCheck(validationName, config, runtimeConfig, container) {
     console.log(`Sleeping for ${config.sleep} ms before making the request...`);
     await sleep(config.sleep);
   }
+  const statusCode = config.status_code ?? 200;
   return validateRequest(
     validationName,
     config,
@@ -422,11 +423,11 @@ async function requestCheck(validationName, config, runtimeConfig, container) {
     container,
     [
       (response) => ({
-        assert: response.status === config.status_code,
-        message: `Expected: request ${config.url} to have status code ${config.status_code}, got: ${response.status}.`,
+        assert: response.status === statusCode,
+        message: `Expected: request ${config.url} to have status code ${statusCode}, got: ${response.status}.`,
       }),
     ],
-    config.status_code,
+    statusCode,
   );
 }
 
@@ -464,29 +465,6 @@ async function envVariables(config, runtimeConfig, container) {
   }
 
   return [];
-}
-
-async function controlPlaneRequest(
-  validationName,
-  config,
-  runtimeConfig,
-  container,
-) {
-  const statusCode =
-    config.status_code !== undefined ? config.status_code : 200;
-  return validateRequest(
-    validationName,
-    config,
-    runtimeConfig,
-    container,
-    [
-      (response) => ({
-        assert: response.status === statusCode,
-        message: `Expected: request ${config.url} to have status code ${statusCode}, got: ${response.status}.`,
-      }),
-    ],
-    statusCode,
-  );
 }
 
 async function customCommand(validationName, config, runtimeConfig, container) {
@@ -631,6 +609,7 @@ export async function validate(container, validation, runtimeConfig) {
       break;
     case "request-check":
     case "konnect-api-request":
+    case "control_plane_request":
       result = await requestCheck(
         validation.name,
         validation.config,
@@ -648,14 +627,6 @@ export async function validate(container, validation, runtimeConfig) {
       break;
     case "env-variables":
       result = await envVariables(validation.config, runtimeConfig, container);
-      break;
-    case "control_plane_request":
-      result = await controlPlaneRequest(
-        validation.name,
-        validation.config,
-        runtimeConfig,
-        container,
-      );
       break;
     case "custom-command":
     case "claude-code":
