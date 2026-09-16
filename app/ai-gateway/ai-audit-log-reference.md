@@ -585,7 +585,9 @@ rows:
 
 If you create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), {{site.ai_gateway}} logs include additional fields under the `ai.mcp` object. These fields provide insight into Model Context Protocol (MCP) traffic, including session IDs, JSON-RPC request/response payloads, latency, tool usage, and access control audit entries.
 
-The MCP log structure groups traffic by **MCP session ID**, with each session containing zero or more recorded JSON-RPC requests:
+The MCP log structure groups traffic by **MCP session ID** for `2025-06-18` and `2025-11-25` traffic, with each session containing zero or more recorded JSON-RPC requests. 
+
+{% new_in 2.1 %} `2026-07-28` traffic has no session concept, so each entry is a single stateless request with no `mcp_session_id` field. See [MCP version support](/ai-gateway/mcp-version-support/) for what else differs between revisions.
 
 <!-- vale off -->
 {% table %}
@@ -596,7 +598,10 @@ columns:
     key: description
 rows:
   - property: "`ai.mcp.mcp_session_id`"
-    description: The ID of the MCP session. A session can contain multiple requests.
+    description: |
+      The ID of the MCP session. A session can contain multiple requests. Only present for `2025-06-18` and `2025-11-25` traffic. 
+      
+      {% new_in 2.1 %} `2026-07-28` removes the session concept, so this field is absent.
   - property: "`ai.mcp.rpc`"
     description: An array of recorded JSON-RPC requests. Only JSON-RPC traffic is logged.
   - property: "`ai.mcp.rpc[].id`"
@@ -610,7 +615,10 @@ rows:
   - property: "`ai.mcp.rpc[].method`"
     description: The JSON-RPC method name.
   - property: "`ai.mcp.rpc[].tool_name`"
-    description: If the method is a tool call, the name of the tool being invoked.
+    description: |
+      If the method is a tool call, the name of the tool being invoked. 
+      * Parsed from the JSON-RPC body for `2025-06-18` and `2025-11-25` traffic
+      * {% new_in 2.1 %} Populated from the `Mcp-Name` header for `2026-07-28` traffic, since that revision requires the header on every call.
   - property: "`ai.mcp.rpc[].error`"
     description: The error message if an error occurred during the request.
   - property: "`ai.mcp.rpc[].response_body_size`"
@@ -761,7 +769,7 @@ The following example shows a structured {{site.ai_gateway}} log entry:
 
 ### MCP traffic entry
 
-The following example shows an MCP log entry:
+The following example shows an MCP log entry for `2025-06-18` or `2025-11-25` traffic, which is session-based:
 
 ```json
 {
@@ -774,6 +782,41 @@ The following example shows an MCP log entry:
           "latency": 6,
           "id": "2",
           "response_body_size": 5030,
+          "tool_name": "list_orders"
+        }
+      ],
+      "audit": [
+        {
+          "primitive_name": "list_orders",
+          "consumer": {
+            "id": "6c95a611-9991-407b-b1c3-bc608d3bccc3",
+            "name": "admin",
+            "identifier": "consumer_group"
+          },
+          "scope": "primitive",
+          "primitive": "tool",
+          "action": "allow"
+        }
+      ]
+    }
+  }
+}
+```
+
+
+
+{% new_in 2.1 %} `2026-07-28` traffic has no session concept, so there's no `mcp_session_id` field, and `tool_name` comes from the `Mcp-Name` header instead of the JSON-RPC body:
+
+```json
+{
+  "ai": {
+    "mcp": {
+      "rpc": [
+        {
+          "method": "tools/call",
+          "latency": 4,
+          "id": "3",
+          "response_body_size": 2210,
           "tool_name": "list_orders"
         }
       ],
