@@ -49,7 +49,6 @@ RSpec.describe Jekyll::Validation do
       it 'does not render an on-prem content div' do
         expect(html).not_to have_css('div[data-deployment-topology="on-prem"]')
       end
-
     end
 
     context 'works_on: on-prem' do
@@ -81,7 +80,6 @@ RSpec.describe Jekyll::Validation do
         expect(html).to have_css('div[data-deployment-topology="on-prem"][data-test-step]')
       end
     end
-
   end
 
   describe 'markdown output_format' do

@@ -60,7 +60,6 @@ RSpec.describe Jekyll::Validation do
           expect(html).not_to have_css('div.content[data-deployment-topology="konnect"][data-test-step]')
         end
       end
-
     end
 
     context 'works_on: on-prem' do
