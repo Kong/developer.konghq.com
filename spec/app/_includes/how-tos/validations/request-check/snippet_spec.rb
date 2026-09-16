@@ -628,4 +628,66 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
       expect(rendered).to include('X-RateLimit-Limit: 100')
     end
   end
+
+  context 'inline_sleep after a capture (synthetic — no real doc uses inline_sleep)' do
+    let(:config) do
+      {
+        'url' => '/oauth/token',
+        'method' => 'POST',
+        'inline_sleep' => 5,
+        'capture' => [{ 'variable' => 'ACCESS_TOKEN', 'jq' => '.access_token' }]
+      }
+    end
+
+    include_examples 'a valid curl command'
+
+    it 'renders the exact curl command' do
+      expect(code).to eq(<<~'BASH'.chomp)
+        ACCESS_TOKEN=$(curl -X POST "https://konnect.example.com/oauth/token" \
+             --no-progress-meter --fail-with-body  | jq -r ".access_token"
+         sleep 5
+        )
+      BASH
+    end
+  end
+
+  context 'a page that works on both topologies' do
+    let(:works_on) { %w[konnect on-prem] }
+    let(:config) { { 'url' => '/anything', 'method' => 'GET' } }
+    let(:commands) { rendered.scan(/```bash\n(.*?)\n```/m).flatten }
+
+    it 'renders one command per topology, konnect first' do
+      expect(commands).to eq(
+        [
+          <<~'BASH'.chomp,
+            curl -X GET "https://konnect.example.com/anything" \
+                 --no-progress-meter --fail-with-body 
+          BASH
+          <<~'BASH'.chomp
+            curl -X GET "https://on-prem.example.com/anything" \
+                 --no-progress-meter --fail-with-body 
+          BASH
+        ]
+      )
+    end
+
+    context 'in the markdown output format' do
+      let(:output_format) { 'markdown' }
+
+      it 'renders the same two commands' do
+        expect(commands).to eq(
+          [
+            <<~'BASH'.chomp,
+              curl -X GET "https://konnect.example.com/anything" \
+                   --no-progress-meter --fail-with-body 
+            BASH
+            <<~'BASH'.chomp
+              curl -X GET "https://on-prem.example.com/anything" \
+                   --no-progress-meter --fail-with-body 
+            BASH
+          ]
+        )
+      end
+    end
+  end
 end
