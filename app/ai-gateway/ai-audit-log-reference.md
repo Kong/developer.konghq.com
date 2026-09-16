@@ -569,9 +569,9 @@ rows:
     description: The JSON-RPC method name.
   - property: "`ai.mcp.rpc[].tool_name`"
     description: |
-      If the method is a tool call, the name of the tool being invoked. 
-      * Parsed from the JSON-RPC body for `2025-06-18` and `2025-11-25` traffic
-      * {% new_in 2.1 %} Populated from the `Mcp-Name` header for `2026-07-28` traffic, since that revision requires the header on every call.
+      If the method is a tool call, the name of the tool being invoked:
+      - Parsed from the JSON-RPC body for `2025-06-18` and `2025-11-25` traffic
+      - {% new_in 2.1 %} Populated from the `Mcp-Name` header for `2026-07-28` traffic, since that revision requires the header on every call.
   - property: "`ai.mcp.rpc[].error`"
     description: The error message if an error occurred during the request.
   - property: "`ai.mcp.rpc[].response_body_size`"
