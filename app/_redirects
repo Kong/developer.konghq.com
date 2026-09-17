@@ -111,6 +111,9 @@
 /kongctl/tail/konnect/audit-logs/   /kongctl/tail/konnect/#kongctl-tail-konnect-audit-logs
 
 # Plugins
+/plugins/nonamesecurity/ /plugins/akamai-api-security/
+/plugins/nonamesecurity/reference/ /plugins/akamai-api-security/reference/
+/plugins/nonamesecurity/examples/enable-nonamesecurity-plugin/ /plugins/akamai-api-security/examples/enable-akamai-plugin/
 /plugins/traceableai/  /plugins/harness-waap/
 /plugins/traceableai/reference/  /plugins/harness-waap/reference/
 /plugins/traceableai/examples/enable-traceable/  /plugins/harness-waap/examples/enable-harness-waap/
