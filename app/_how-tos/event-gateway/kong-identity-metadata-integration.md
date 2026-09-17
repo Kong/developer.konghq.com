@@ -290,7 +290,7 @@ method: POST
 body:
   type: modify_headers
   name: tag-operators-team
-  condition: context.auth.principal.metadata.team == "operators"
+  condition: '{% raw %}{{has(context.auth.principal.metadata.team) && context.auth.principal.metadata.team == "operators"}}{% endraw %}'
   config:
     actions:
       - op: set

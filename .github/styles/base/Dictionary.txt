@@ -111,6 +111,7 @@ camelCase
 CDNs
 ce
 cef
+cel
 cerebras
 certificate_admin
 charset
@@ -409,6 +410,7 @@ JMeter
 journald
 jq
 jQuery
+js
 json
 JSONObject
 JSONObjects
@@ -814,6 +816,7 @@ supports_konnect
 svg
 svgs
 swaggerhub
+syntaxes
 syscall
 syslog
 systemd
