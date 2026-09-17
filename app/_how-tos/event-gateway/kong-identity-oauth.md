@@ -315,7 +315,7 @@ body:
         - name: describe_configs
         - name: read
         - name: write
-      resource_names: '[context.auth.token.claims.topic_prefix + "*"]'
+      resource_names: '{% raw %}{{[context.auth.token.claims.topic_prefix + "*"]}}{% endraw %}'
 {% endkonnect_api_request %}
 <!--vale on-->
 

@@ -362,7 +362,7 @@ body:
     key_sources:
       - type: static
     decrypt_fields:
-      paths: "context.auth.principal.name == \"$CLIENT_ID\" ? [\"personal.ssn\"] : []"
+      paths: '{% raw %}{{context.auth.principal.name == "$CLIENT_ID" ? ["personal.ssn"] : []}}{% endraw %}'
 {% endkonnect_api_request %}
 <!--vale on-->
 
