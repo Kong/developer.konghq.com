@@ -87,7 +87,7 @@ Use this method when {{site.base_gateway}} runs as a container and you build you
 
 Use this method when {{site.base_gateway}} is deployed on Kubernetes using the official Helm chart.
 
-1. Untar the plugin package and locate the `kong/plugins/nonamesecurity/` directory.
+1. Unpack the plugin package and locate the `kong/plugins/nonamesecurity/` directory.
 
 1. Bundle the directory into a ConfigMap:
 
