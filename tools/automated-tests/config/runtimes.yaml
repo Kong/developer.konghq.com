@@ -165,6 +165,7 @@ konnect:
       commands:
         - curl -Ls https://get.konghq.com/ai | bash -s -- -r "" -k $KONNECT_TOKEN -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -e KONG_NGINX_HTTP_CLIENT_BODY_BUFFER_SIZE=2m -n automated-tests-ai-gateway-quickstart | grep '^export AI_GATEWAY_ID' >> /env-vars.sh
         - sleep 5
+        - find . -mindepth 1 -delete
   event-gateway:
     setup:
       commands: []
