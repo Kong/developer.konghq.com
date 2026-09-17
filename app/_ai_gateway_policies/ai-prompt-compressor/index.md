@@ -26,6 +26,9 @@ related_resources:
 
 The AI Prompt Compressor Policy compresses retrieved chunks before sending them to a Large Language Model (LLM), reducing text length while preserving meaning. It uses the [LLMLingua 2 library](https://github.com/microsoft/LLMLingua) for fast, high-quality compression. The AI Prompt Compressor Policy supports:
 
+{:.info}
+> For a [Headroom](https://github.com/headroomlabs-ai/headroom) sidecar as a compression backend, use the separate [AI Prompt Compressor v2 Policy](/ai-gateway/policies/ai-prompt-compressor-v2/) instead. It's a distinct Policy with its own configuration shape, and installing it doesn't migrate this Policy's config.
+
 * **Ratio-based or target token compression**: for example, reduce a message to 80% of the original length or compress to 150 tokens.
 * **Configurable compression ranges**: for example, compress prompts under 100 tokens with a 0.8 ratio or compress them to exactly 100 tokens.
 * **Selective compression**: use `<LLMLINGUA>...</LLMLINGUA>` tags to target specific sections of the prompt. These tags work **only in the `inject_template` field of the [AI RAG Injector Policy](/ai-gateway/policies/ai-rag-injector/)** and must be used **in combination with the AI Prompt Compressor Policy**.

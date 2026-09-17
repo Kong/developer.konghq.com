@@ -99,6 +99,15 @@
     ]
   },
   {
+    "name": "ai-prompt-compressor-v2",
+    "scopes": [
+      "models",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
     "name": "ai-prompt-decorator",
     "scopes": [
       "models",
