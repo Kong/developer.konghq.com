@@ -14,7 +14,7 @@ tldr:
     After running `deck file openapi2kong`, add the global plugin to a `plugins:` entry in the declarative config by hand, then sync it with a tag, for example `deck gateway sync --select-tag global-plugins`, to avoid affecting the rest of the workspace.
 related_resources:
   - text: rate limiting advanced plugin basic example
-    url: /plugins/rate-limiting-advanced/examples/
+    url: /plugins/rate-limiting-advanced/examples/fixed-window-200-requests-per-30-min/
   - text: "`deck_sync` flags reference"
     url: /deck/gateway/sync/#command-usage
 ---
