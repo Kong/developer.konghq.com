@@ -8,6 +8,11 @@ module Jekyll
 
     def initialize(env: ENV)
       @env = env
+      @jekyll_env = Jekyll.env
+    end
+
+    def development?
+      @jekyll_env == 'development'
     end
 
     def content_type
@@ -23,7 +28,7 @@ module Jekyll
     end
 
     def filtered?
-      Jekyll.env == 'development' &&
+      development? &&
         (!@env['KONG_PRODUCTS'].nil? || !@env['PAGE_PATHS'].nil? || !@env['CONTENT_TYPE'].nil?)
     end
 
@@ -32,7 +37,7 @@ module Jekyll
     end
 
     def excludes_prefix?(prefix)
-      Jekyll.env == 'development' && page_paths.any? && page_paths.none? { |path| path.start_with?(prefix) }
+      development? && page_paths.any? && page_paths.none? { |path| path.start_with?(prefix) }
     end
   end
 end

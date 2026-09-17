@@ -380,7 +380,7 @@ The global control plane syncs these trust bundles to all zones, enabling cross-
 
 1. Create the demo app configuration:
 
-   {% capture demo %}{% include /mesh/demo.md %}{% endcapture %}{{demo | indent}}
+   {% capture demo %}{% include /md/mesh/v2/demo.md %}{% endcapture %}{{demo | indent}}
 
 1. Deploy the {{site.mesh_product_name}} demo app into each zone:
 

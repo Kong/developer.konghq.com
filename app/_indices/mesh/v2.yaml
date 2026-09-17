@@ -1,0 +1,157 @@
+title: Kong Mesh 2.x Documentation
+canonical_url: /index/mesh/
+major_version:
+  mesh: 2
+description: Index containing all documentation for {{site.mesh_product_name}} 2.x.
+sections:
+  - title: Overview
+    items:
+      - path: /mesh/v2/
+      - path: /mesh/v2/service-mesh/
+      - path: /mesh/v2/konnect/
+      - title: Mesh policies
+        description: Bundled features for your service traffic and network configuration.
+        url: /mesh/v2/policies/
+      - title: Mesh changelog
+        description: Changelog for supported Kong Mesh versions.
+        url: /mesh/v2/changelog/
+      - path: /mesh/v2/enterprise/
+
+  - title: Install & Configure
+    items:
+      - path: /mesh/validated-versions/
+      - path: /mesh/v2/get-started/universal/install/
+      - path: /mesh/v2/kubernetes/
+      - path: /mesh/v2/ecs/
+      - path: /mesh/v2/openshift-quickstart/
+      - path: /mesh/v2/ubi-images/
+      - path: /mesh/v2/deploy-mesh-using-terraform-and-konnect/
+      - path: /mesh/v2/import-konnect-deployment-to-terraform/
+
+  - title: Mesh guides
+    items:
+      - path: /mesh/v2/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui/
+      - path: /mesh/v2/configure-mesh-global-control-plane-on-kubernetes-with-konnect-api/
+      - path: /mesh/v2/configure-mesh-global-control-plane-on-universal-with-konnect-ui/
+      - path: /mesh/v2/configure-mesh-global-control-plane-on-universal-with-konnect-api/
+      - path: /mesh/v2/federate-zone-control-plane-to-konnect/
+      - path: /mesh/v2/migrate-self-managed-zone-to-konnect/
+      - path: /mesh/v2/deploy-mesh-self-managed/
+      - path: /mesh/v2/deploy-universal-self-managed/
+      - path: /mesh/v2/deploy-multi-zone-global-control-plane-universal-docker/
+  - title: How Mesh Works
+    items:
+      - path: /mesh/v2/concepts/
+      - path: /mesh/v2/architecture/
+      - path: /mesh/v2/ingress/
+      - path: /mesh/v2/service-discovery/
+      - path: /mesh/v2/mesh-multi-tenancy/
+      - path: /mesh/v2/single-zone/
+      - path: /mesh/v2/mesh-multizone-service-deployment/
+      - path: /mesh/v2/zone-proxies/
+      - path: /mesh/v2/zone-proxy-policies/
+      - path: /mesh/v2/interact-with-control-plane/
+      - path: /mesh/v2/annotations/
+      - path: /mesh/v2/data-plane-proxy/
+      - path: /mesh/v2/data-plane-kubernetes/
+      - path: /mesh/v2/data-plane-universal/
+
+  - title: Production Deployments
+    items:
+      - path: /mesh/v2/license/
+      - path: /mesh/v2/production-usage-values/
+
+  - title: Upgrade
+    items:
+      - path: /mesh/v2/upgrade/
+      - path: /mesh/v2/version-specific-upgrade-notes/
+      - path: /mesh/v2/migration-to-the-new-policies/
+
+  - title: Resource References
+    items:
+      - path: /mesh/v2/mesh/
+      - path: /mesh/v2/meshgateway/
+      - path: /mesh/v2/meshgatewayinstance/
+      - path: /mesh/v2/dataplane/
+      - path: /mesh/v2/workload/
+      - path: /mesh/v2/meshexternalservice/
+      - path: /mesh/v2/meshmultizoneservice/
+      - path: /mesh/v2/meshopentelemetrybackend/
+      - path: /mesh/v2/meshservice/
+
+  - title: Policies
+    items:
+      - path: /mesh/v2/policies-introduction/
+      - path: /mesh/v2/consumer-producer-policies/
+      - path: /mesh/v2/policies/**/*
+      - path: /mesh/v2/acm-private-ca-policy/
+      - path: /mesh/v2/cert-manager/
+      - path: /mesh/v2/hostnamegenerator/
+      - path: /mesh/v2/vault/
+    auto_exclude: true
+
+  - title: Built-in Gateways
+    items:
+      - path: /how-to/set-up-a-built-in-mesh-gateway/
+      - path: /mesh/v2/built-in-gateway/
+      - path: /mesh/v2/gateway-routes/
+      - path: /how-to/set-up-a-built-in-kubernetes-gateway/
+      - path: /mesh/v2/kubernetes-gateway-api/
+
+  - title: Delegated Gateways
+    items:
+      - path: /mesh/v2/delegated-gateways/
+      - path: /mesh/v2/use-kong-as-delegated-gateway/
+
+  - title: Authentication and Authorization
+    items:
+      - path: /mesh/v2/multi-zone-authentication/
+      - path: /mesh/v2/secure-access/
+      - path: /mesh/v2/rbac/
+      - path: /mesh/v2/authentication-with-the-api-server/
+      - path: /mesh/v2/data-plane-proxy-authentication/
+      - path: /mesh/v2/zone-proxy-auth/
+      - path: /mesh/v2/manage-control-plane-permissions-on-kubernetes/
+      - path: /mesh/v2/restrict-permissions-to-selected-namespaces-on-kubernetes/
+
+  - title: Security
+    items:
+      - path: /mesh/v2/ca-rotation/
+      - path: /mesh/v2/manage-secrets/
+      - path: /mesh/v2/progressively-rolling-in-strict-mtls/
+      - path: /mesh/v2/access-audit/
+      - path: /mesh/v2/provenance-verification-binaries/
+      - path: /mesh/v2/provenance-verification-images/
+      - path: /mesh/v2/signed-images/
+      - path: /mesh/v2/issue-identity-with-meshidentity/
+      - path: /mesh/v2/issue-identity-with-meshidentity-spire/
+      - path: /mesh/v2/use-cert-manager-for-control-plane-certificates/
+
+  - title: Observability
+    items:
+      - path: /mesh/v2/observability/
+      - path: /mesh/v2/deploy-an-opentelemetry-collector/
+      - path: /mesh/v2/dataplane-health/
+
+  - title: References
+    items:
+      - path: /mesh/v2/zone-egress/
+      - path: /mesh/v2/zone-ingress/
+      - path: /mesh/v2/cli/
+      - path: /mesh/v2/sbom/
+      - path: /mesh/v2/reference/kuma-cp/
+      - path: /mesh/v2/data-collection/
+      - path: /mesh/v2/configure-data-plane-proxy-membership/
+      - path: /mesh/v2/control-plane-configuration/
+      - path: /mesh/v2/dns/
+      - path: /mesh/v2/ipv6-support/
+      - path: /mesh/v2/performance-tuning/
+      - path: /mesh/v2/vulnerability-patching-process/
+      - path: /mesh/v2/support-policy/
+
+  - title: Hidden paths
+    hidden: true
+    items:
+      - path: /mesh/v2/policies/*/examples/**/*
+      - path: /mesh/v2/policies/*/reference/
+      - path: /mesh/v2/policies/*/reference/*/
