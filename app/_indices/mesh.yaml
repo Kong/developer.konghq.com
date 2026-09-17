@@ -1,2 +1,67 @@
 title: Mesh Documentation
 description: Index containing all documentation for {{site.mesh_product_name}}.
+sections:
+  - title: Overview
+    items:
+      - path: /mesh/
+      - path: /mesh/introduction/
+      - path: /mesh/architecture-overview/
+      - path: /mesh/multi-zone-architecture/
+      - title: Mesh policies
+        description: Bundled features for your service traffic and network configuration.
+        url: /mesh/policies/
+
+  - title: Policy model
+    items:
+      - path: /mesh/policy-targeting-and-precedence/
+      - path: /mesh/target-workloads-and-services/
+      - path: /mesh/resource-scoping/
+
+  - title: Fundamentals
+    items:
+      - path: /mesh/scenarios/
+      - path: /mesh/get-started-with-your-first-policy/
+      - path: /mesh/split-traffic-with-meshservice-resources/
+
+  - title: Observability and security
+    items:
+      - path: /mesh/observe-mesh-traffic-in-practice/
+      - path: /mesh/manage-workload-identity-and-mtls/
+      - path: /mesh/integrate-an-external-ca/
+
+  - title: Global mesh operations
+    items:
+      - path: /mesh/zone-proxies/
+      - path: /mesh/configure-mesh-scoped-zone-proxies/
+      - path: /mesh/route-across-zones-with-canary-rollouts-and-color-rings/
+
+  - title: Expert operations
+    items:
+      - path: /mesh/secure-the-perimeter-with-meshpassthrough/
+      - path: /mesh/manage-external-services-with-meshexternalservice/
+      - path: /mesh/validate-resilience-with-fault-injection/
+
+  - title: Explore by role
+    items:
+      - path: /mesh/persona/
+      - path: /mesh/persona/developer/
+      - path: /mesh/persona/operator/
+      - path: /mesh/persona/security/
+
+  - title: References
+    items:
+      - path: /mesh/changelog/
+      - path: /mesh/validated-versions/
+      - path: /mesh/upgrade/
+      - path: /mesh/version-specific-upgrade-notes/
+      - path: /mesh/license/
+      - path: /mesh/sbom/
+      - path: /mesh/support-policy/
+      - path: /mesh/vulnerability-patching-process/
+
+  - title: Hidden paths
+    hidden: true
+    items:
+      - path: /mesh/policies/*/examples/**/*
+      - path: /mesh/policies/*/reference/
+      - path: /mesh/policies/*/reference/*/
