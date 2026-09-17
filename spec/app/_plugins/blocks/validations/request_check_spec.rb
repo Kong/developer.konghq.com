@@ -33,88 +33,38 @@ RSpec.describe Jekyll::Validation do
   let(:html) { Capybara::Node::Simple.new(rendered) }
 
   describe 'html output' do
-    context 'works_on: konnect' do
-      let(:works_on) { %w[konnect] }
+    include_examples 'a dual-topology content div'
 
-      it 'renders a konnect content div with the markdown attribute' do
-        expect(html).to have_css('div.content[data-deployment-topology="konnect"][markdown="1"]')
+    context 'when config.skip is true' do
+      let(:template) do
+        <<~LIQUID
+          {% validation request-check %}
+          url: /mock/anything
+          method: GET
+          status_code: 200
+          skip: true
+          {% endvalidation %}
+        LIQUID
       end
 
-      it 'renders a data-test-step attribute' do
-        expect(html).to have_css('div.content[data-deployment-topology="konnect"][data-test-step]')
-      end
-
-      context 'when config.skip is true' do
-        let(:template) do
-          <<~LIQUID
-            {% validation request-check %}
-            url: /mock/anything
-            method: GET
-            status_code: 200
-            skip: true
-            {% endvalidation %}
-          LIQUID
-        end
+      context 'works_on: konnect' do
+        let(:works_on) { %w[konnect] }
 
         it 'does not render a data-test-step attribute' do
           expect(html).not_to have_css('div.content[data-deployment-topology="konnect"][data-test-step]')
         end
       end
-    end
 
-    context 'works_on: on-prem' do
-      let(:works_on) { %w[on-prem] }
-
-      it 'renders an on-prem content div with the markdown attribute' do
-        expect(html).to have_css('div.content[data-deployment-topology="on-prem"][markdown="1"]')
-      end
-
-      it 'renders a data-test-step attribute' do
-        expect(html).to have_css('div.content[data-deployment-topology="on-prem"][data-test-step]')
-      end
-
-      context 'when config.skip is true' do
-        let(:template) do
-          <<~LIQUID
-            {% validation request-check %}
-            url: /mock/anything
-            method: GET
-            status_code: 200
-            skip: true
-            {% endvalidation %}
-          LIQUID
-        end
+      context 'works_on: on-prem' do
+        let(:works_on) { %w[on-prem] }
 
         it 'does not render a data-test-step attribute' do
           expect(html).not_to have_css('div.content[data-deployment-topology="on-prem"][data-test-step]')
         end
       end
-    end
 
-    context 'works_on: konnect and on-prem' do
-      let(:works_on) { %w[konnect on-prem] }
-
-      it 'renders both content divs with the markdown attribute' do
-        expect(html).to have_css('div.content[data-deployment-topology="konnect"][markdown="1"]')
-        expect(html).to have_css('div.content[data-deployment-topology="on-prem"][markdown="1"]')
-      end
-
-      it 'renders a data-test-step attribute on both content divs' do
-        expect(html).to have_css('div.content[data-deployment-topology="konnect"][data-test-step]')
-        expect(html).to have_css('div.content[data-deployment-topology="on-prem"][data-test-step]')
-      end
-
-      context 'when config.skip is true' do
-        let(:template) do
-          <<~LIQUID
-            {% validation request-check %}
-            url: /mock/anything
-            method: GET
-            status_code: 200
-            skip: true
-            {% endvalidation %}
-          LIQUID
-        end
+      context 'works_on: konnect and on-prem' do
+        let(:works_on) { %w[konnect on-prem] }
 
         it 'does not render a data-test-step attribute on either content div' do
           expect(html).not_to have_css('div.content[data-deployment-topology="konnect"][data-test-step]')
