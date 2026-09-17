@@ -5058,11 +5058,11 @@ messages:
       are set: `llm.model.options.cache_read_cost`,
       `llm.model.options.cache_write_cost`, `llm.model.options.cache_write_cost_list`,
       `llm.model.options.context_window_factor`,
-      `llm.model.options.service_tier_factor` but Kong Gateway versions < 3.14.0.13 || >=
-      3.15.0.0 < 3.15.0.4 do not support these fields. Plugin features that rely on
-      these fields are not working as intended.
+      `llm.model.options.service_tier_factor` but Kong Gateway versions earlier than 
+      3.14.0.13, and versions 3.15.0.0-3.15.0.3 do not support these fields.
+      Plugin features that rely on these fields are not working as intended.
     Resolution: |
-      Please upgrade Kong Gateway to version >=3.14.0.3 or >=3.15.0.4
+      Please upgrade Kong Gateway to version >=3.14.0.13 or >=3.15.0.4
     DocumentationURL: |
       [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - ID: D628
@@ -5072,11 +5072,11 @@ messages:
       are set: `llm.model.options.cache_read_cost`,
       `llm.model.options.cache_write_cost`, `llm.model.options.cache_write_cost_list`,
       `llm.model.options.context_window_factor`,
-      `llm.model.options.service_tier_factor` but Kong Gateway versions < 3.14.0.13 || >=
-      3.15.0.0 < 3.15.0.4 do not support these fields. Plugin features that rely on
-      these fields are not working as intended.
+      `llm.model.options.service_tier_factor` but Kong Gateway versions earlier than 
+      3.14.0.13, and versions 3.15.0.0-3.15.0.3 do not support these fields.
+      Plugin features that rely on these fields are not working as intended.
     Resolution: |
-      Please upgrade Kong Gateway to version >=3.14.0.3 or >=3.15.0.4
+      Please upgrade Kong Gateway to version >=3.14.0.13 or >=3.15.0.4
     DocumentationURL: |
       [AI LLM as Judge plugin](/plugins/ai-llm-as-judge/)
   - ID: D629
@@ -8751,11 +8751,11 @@ messages:
       `llm.model.options.cache_read_cost`, `llm.model.options.cache_write_cost`,
       `llm.model.options.cache_write_cost_list`,
       `llm.model.options.context_window_factor`,
-      `llm.model.options.service_tier_factor` but Kong Gateway versions < 3.14.0.13 || >=
-      3.15.0.0 < 3.15.0.4 do not support these fields. Plugin features that rely on
-      these fields are not working as intended.
+      `llm.model.options.service_tier_factor` but Kong Gateway versions earlier than 
+      3.14.0.13, and versions 3.15.0.0-3.15.0.3 do not support these fields.
+      Plugin features that rely on these fields are not working as intended.
     Resolution: |
-      Please upgrade Kong Gateway to version >=3.14.0.3 or >=3.15.0.4
+      Please upgrade Kong Gateway to version >=3.14.0.13 or >=3.15.0.4
     DocumentationURL: |
       [AI Proxy plugin](/plugins/ai-proxy/)
   - ID: P426
@@ -8765,11 +8765,11 @@ messages:
       fields are set: `llm.model.options.cache_read_cost`,
       `llm.model.options.cache_write_cost`, `llm.model.options.cache_write_cost_list`,
       `llm.model.options.context_window_factor`,
-      `llm.model.options.service_tier_factor` but Kong Gateway versions < 3.14.0.13 || >=
-      3.15.0.0 < 3.15.0.4 do not support these fields. Plugin features that rely on
-      these fields are not working as intended.
+      `llm.model.options.service_tier_factor` but Kong Gateway versions earlier than 
+      3.14.0.13, and versions 3.15.0.0-3.15.0.3 do not support these fields.
+      Plugin features that rely on these fields are not working as intended.
     Resolution: |
-      Please upgrade Kong Gateway to version >=3.14.0.3 or >=3.15.0.4
+      Please upgrade Kong Gateway to version >=3.14.0.13 or >=3.15.0.4
     DocumentationURL: |
       [AI Request Transformer plugin](/plugins/ai-request-transformer/)
   - ID: P427
@@ -8779,11 +8779,11 @@ messages:
       fields are set: `llm.model.options.cache_read_cost`,
       `llm.model.options.cache_write_cost`, `llm.model.options.cache_write_cost_list`,
       `llm.model.options.context_window_factor`,
-      `llm.model.options.service_tier_factor` but Kong Gateway versions < 3.14.0.13 || >=
-      3.15.0.0 < 3.15.0.4 do not support these fields. Plugin features that rely on
-      these fields are not working as intended.
+      `llm.model.options.service_tier_factor` but Kong Gateway versions earlier than 
+      3.14.0.13, and versions 3.15.0.0-3.15.0.3 do not support these fields.
+      Plugin features that rely on these fields are not working as intended.
     Resolution: |
-      Please upgrade Kong Gateway to version >=3.14.0.3 or >=3.15.0.4
+      Please upgrade Kong Gateway to version >=3.14.0.13 or >=3.15.0.4
     DocumentationURL: |
       [AI Response Transformer plugin](/plugins/ai-response-transformer/)
   - ID: P428
