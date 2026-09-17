@@ -352,6 +352,8 @@ huggingface
 hybridgateway
 Hybridgateway
 idempotency
+IDE
+IDEs
 IdPs
 if_version
 If-Match
