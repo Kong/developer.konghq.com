@@ -179,6 +179,8 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
+This example meters a few representative dimensions. For every field the plugin can emit, see [Captured event dimensions](/plugins/metering-and-billing/#captured-event-dimensions).
+
 ## Enable the {{site.metering_and_billing}} plugin
 
 Next, configure the [{{site.metering_and_billing}} plugin](/plugins/metering-and-billing/) to emit API request events from {{site.base_gateway}} to {{site.metering_and_billing}} so that you can charge customers for API traffic usage:
