@@ -137,13 +137,16 @@ on-prem:
 konnect:
   gateway:
     setup:
-      commands: []
+      commands:
+        - deck gateway reset -f
 
     cleanup:
-      commands: []
+      commands:
+        - deck gateway reset -f
 
     reset:
-      commands: []
+      commands:
+        - deck gateway reset -f
 
   ai-gateway:
     env:
