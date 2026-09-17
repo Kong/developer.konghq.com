@@ -32,7 +32,7 @@ Configure the MCP client of your choice by adding the {{site.konnect_product_nam
 Using the `claude mcp add` command:
 
 ```bash
-claude mcp add --transport http kong-konnect3 https://global.mcp.konghq.com
+claude mcp add --transport http kong-konnect https://global.mcp.konghq.com
 ```
 Claude will open a browser window where you can sign in to {{site.konnect_product_name}} and authorize access.
 
