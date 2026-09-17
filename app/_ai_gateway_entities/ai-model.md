@@ -219,7 +219,7 @@ rows:
     provider: "[Hugging Face](/ai-gateway/ai-providers/huggingface/#supported-native-llm-formats-for-hugging-face)"
     capabilities: Text generation, streaming.
   - format: "`passthrough`"
-    provider: Any provider
+    provider: Any upstream
     capabilities: Forwards request and response bodies byte-for-byte, with no parsing or transformation.
 {% endtable %}
 <!-- vale on -->
@@ -228,11 +228,11 @@ When a native format is set, only the corresponding provider is supported with i
 
 ### Passthrough {% new_in 2.2 %}
 
-A native format still parses the payload to dispatch on a known capability. If your upstream exposes a schema {{site.ai_gateway}} doesn't recognize at all, set `formats[].type` to `passthrough`. Request and response bodies are forwarded byte-for-byte, with no schema validation and no `Content-Type` enforcement.
+A native format still parses the payload to dispatch on a known capability. If your upstream exposes a wire format {{site.ai_gateway}} doesn't recognize at all, set `formats[].type` to `passthrough`. Request and response bodies are forwarded byte-for-byte, with no `Content-Type` enforcement and no schema validation.
 
-Passthrough keeps AI Consumer authentication, request-count rate limiting, and logging, but gives up format normalization, model aliasing, semantic load balancing, and most guardrails. Every entry in `formats` must be `passthrough`, so an AI Model can't mix passthrough with other formats.
+Passthrough keeps upstream provider authentication, AI Consumer identity, request-count rate limiting, and logging. It gives up format normalization, model aliasing, semantic load balancing, and the `realtime` capability. Guardrails and token accounting are opt-in through the [`content_ref` and `token_ref`](#targets) fields on a target.
 
-For the full Policy compatibility matrix and usage extraction behavior, see [Passthrough format in {{site.ai_gateway}}](/ai-gateway/passthrough/).
+Every entry in `formats` must be `passthrough`, so an AI Model can't mix passthrough with other formats. For the full Policy compatibility matrix and migration steps from the `preserve` route type, see [Passthrough format in {{site.ai_gateway}}](/ai-gateway/passthrough/).
 
 ## Targets
 
@@ -241,6 +241,8 @@ An AI Model is a virtual model: it exposes a single [`config.route`](#schema-aig
 For each target, you provide the upstream model name (for example, `gpt-4o`) and reference the AI Model Provider to use by its `name`. Each target can also apply settings such as [`temperature`](#schema-aigateway-target-config-temperature), [`max_tokens`](#schema-aigateway-target-config-max-tokens), [`input_cost`](#schema-aigateway-target-config-input-cost), and [`output_cost`](#schema-aigateway-target-config-output-cost). For providers with cache, context-window, or service-tier pricing, a target also accepts `cache_read_cost`, `cache_write_cost`, `cache_write_cost_list`, `context_window_factor`, and `service_tier_factor`. See [Model cost management](/ai-gateway/model-cost-management/) for how these fields combine to calculate a request's cost.
 
 There's no separate target entity or endpoint. Targets are managed only as nested data inside an AI Model, through the same AI Model API surface used to create, update, and delete the parent. Adding, removing, or modifying a target is an update to the AI Model itself.
+
+{% new_in 2.2 %} Targets on a [passthrough](/ai-gateway/passthrough/) AI Model also accept `content_ref` and `token_ref`. These are JSONPath expressions that tell {{site.ai_gateway}} where to find prompt content and token counts in a payload it can't otherwise parse, which re-enables guardrails and usage accounting. Leave them unset for upstreams {{site.ai_gateway}} recognizes by URL. See [Extract content and usage](/ai-gateway/passthrough/#extract-content-and-usage).
 
 ## Load balancing
 
