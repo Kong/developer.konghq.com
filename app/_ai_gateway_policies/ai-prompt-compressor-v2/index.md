@@ -1,4 +1,7 @@
 ---
+title: 'AI Prompt Compressor v2'
+name: 'AI Prompt Compressor v2'
+publisher: kong-inc
 min_version:
   ai-gateway: '2.0'
 works_on:
@@ -12,6 +15,9 @@ categories:
 tags:
   - ai
   - performance
+search_aliases:
+  - ai-prompt-compressor-v2
+  - headroom
 
 related_resources:
   - text: AI Prompt Compressor Policy (v1)
