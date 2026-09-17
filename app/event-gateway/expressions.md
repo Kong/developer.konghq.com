@@ -21,9 +21,10 @@ breadcrumbs:
 works_on:
   - konnect
 
+toc_depth: 4
 ---
 
-In {{site.event_gateway}}, you can use a policy's `condition` field to determine whether a policy should execute, and in some policies, to compute a dynamic value such as a list of fields to encrypt.
+In {{site.event_gateway}}, you can use expressions in a policy's `condition` field to determine whether the policy should execute. Some policies also accept expressions in other fields, to compute a dynamic value such as a list of fields to encrypt.
 
 {{site.event_gateway_short}} expressions are written in [Common Expression Language (CEL)](https://cel.dev/), wrapped in double curly braces. For example, this condition selects all topics that end with the suffix `my_suffix`:
 
@@ -36,7 +37,7 @@ In {{site.event_gateway}}, you can use a policy's `condition` field to determine
 Conditions must be between 1 and 1000 characters long.
 
 {:.info}
-> **Legacy syntax**: Expressions without the double curly brace wrapper are parsed as {{site.event_gateway_short}}'s older JavaScript-subset syntax, which is currently supported but will be deprecated in an upcoming update. See [Legacy JavaScript-style syntax](#legacy-javascript-style-syntax).
+> **Legacy syntax**: Expressions without the double curly brace wrapper are parsed as {{site.event_gateway_short}}'s older JavaScript-subset syntax, which is still supported but will be deprecated in a future update. See [Legacy JavaScript-style syntax](#legacy-javascript-style-syntax).
 
 ## Expression syntax
 
@@ -457,22 +458,20 @@ context.auth.principal.name == "external-partner" ? ["personal.ssn", "personal.n
 
 ## Migrating from the legacy JavaScript-style syntax
 
-{{site.event_gateway_short}} originally shipped with an expression language based on a subset of JavaScript, and has now moved to CEL as its expression language.
-CEL is a widely adopted standard, has a stricter and better-specified grammar than a JavaScript subset, and gives {{site.event_gateway_short}} room to support additional CEL-native capabilities over time.
+{{site.event_gateway_short}} originally shipped with an expression language based on a subset of JavaScript, and has now moved to CEL.
+CEL is a widely adopted standard with a stricter, better-specified grammar than a JavaScript subset, and gives {{site.event_gateway_short}} room to support additional CEL-native capabilities over time.
 
-### How the two syntaxes coexist
-
-Both syntaxes are accepted today, and the notation you use decides which one parses your `condition` (and other expression fields):
+Both syntaxes are accepted today. The notation you use decides which one parses your `condition` (and other expression fields):
 
 * **Wrapped in double curly braces**: Parsed as CEL.
 * **Not wrapped**: Parsed as the legacy JavaScript-style syntax.
 
-Existing expressions written in the legacy syntax continue to work unchanged. You don't need to migrate them immediately, but new expressions should use CEL.
+Existing expressions written in the legacy syntax continue to work unchanged, but the legacy syntax will be deprecated in a future update.
+We recommend migrating existing expressions to CEL syntax, and creating all new expressions in CEL.
 
 ### Syntax comparison
 
-The fields available to an expression are the same in both syntaxes. 
-Only the notation for accessing and comparing them differs.
+The fields available to an expression are the same in both syntaxes. Only the notation for accessing and comparing them differs.
 
 <!--vale off-->
 {% table %}
@@ -523,9 +522,6 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-{:.info}
-> **`vault` and `env` aren't available inside `condition` expressions.** Use the legacy `${env[...]}`/`${vault...}` syntax for secret and environment references on fields like `condition`, even in a policy where other fields use CEL.
-
 ### Example migrations
 
 {% table %}
@@ -550,9 +546,11 @@ rows:
 ### Legacy JavaScript-style syntax
 
 The following reference covers the JavaScript-subset syntax used when an expression isn't wrapped in double curly braces.
-The [available fields](#available-fields) are the same as for CEL; only the operators and functions differ.
+The [available fields](#available-fields) are the same as for CEL; only the operators and functions are different.
 
 #### Supported operators and expressions
+
+{{site.event_gateway_short}} supports the following operators and expressions in the legacy syntax:
 
 {% table %}
 columns:
@@ -583,45 +581,9 @@ rows:
 
 #### Legacy string functions
 
-* `includes`: Performs a case-sensitive search to determine whether a given string may be found within this string, as
-  defined in
-  the [JavaScript standard](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes).
-* `startsWith`: Determines whether the string begins with the characters of a specified
-  string, [equivalent to the JavaScript standard function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith).
-* `endsWith`: Determines whether the string ends with the characters of a specified
-  string, [equivalent to the JavaScript standard function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith).
+* `includes`: Performs a case-sensitive search to determine whether a given string may be found within this string, as defined in the [JavaScript standard](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes).
+* `startsWith`: Determines whether the string begins with the characters of a specified string, [equivalent to the JavaScript standard function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith).
+* `endsWith`: Determines whether the string ends with the characters of a specified string, [equivalent to the JavaScript standard function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith).
 * `substring`: Returns the part of this string from the start index up to and excluding the end index.
-* `match`: Retrieves the result of matching this string against
-  an [RE2 regular expression](https://github.com/google/re2/wiki/syntax) string.
+* `match`: Retrieves the result of matching this string against an [RE2 regular expression](https://github.com/google/re2/wiki/syntax) string.
 * `length`: Returns the number of characters in the string.
-
-#### Legacy example expressions
-
-Don't apply a policy if a record has a `x-restricted=true` header and user is not admin:
-
-```sh
-context.topic.name == 'filterdemo' && record.headers['x-restricted'] == 'true' && context.auth.principal.name != 'admin'
-```
-
-Apply a policy only for `user1` and `user2`:
-```sh
-context.auth.principal.name == 'user1' || context.auth.principal.name == 'user2'
-```
-
-Apply a policy only for topics that start with `my-prefix`:
-
-```sh
-context.topic.name.startsWith('my-prefix')
-```
-
-Apply a policy if a header is present regardless of the value:
-
-```sh
-'x-optional-header' in record.headers
-```
-
-Apply a policy if the topic is `filterdemo` and that the record content has a field `foo` equal to `bar` and a sub field `sub.other` equal to 3.
-
-```sh
-context.topic.name == 'filterdemo' && record.value.content['foo'] == 'bar' || record.value.content['sub.other'] == 3
-```
