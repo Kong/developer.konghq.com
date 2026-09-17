@@ -54,7 +54,7 @@ events:
         type: string
         description: "Type of the resolved subject, for example consumer_id."
       - field: upstream_status
-        type: integer
+        type: string
         description: "HTTP status code returned by the upstream service."
   - type: kong.llm_request
     when: "Emitted for AI traffic when `meter_ai_token_usage` is enabled. A separate event is produced for the request and the response."
