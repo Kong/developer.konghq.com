@@ -6,6 +6,8 @@ class EntityExampleComponent {
     this.formatSelectKey = "entity-example-select-format";
     this.targetSelectKey = "entity-example-select-target";
 
+    this.suppressBroadcast = false;
+
     this.addEventListeners();
     this.initializeSelects();
 
@@ -36,7 +38,9 @@ class EntityExampleComponent {
       } catch (error) {
         console.log(error);
       }
+      this.suppressBroadcast = true;
       this.targetSelect.dispatchEvent(new Event("change"));
+      this.suppressBroadcast = false;
     } else {
       const targetPanel = this.elem.querySelector(
         ".entity-example-target-panel"
@@ -64,7 +68,9 @@ class EntityExampleComponent {
       } catch (error) {
         console.log(error);
       }
+      this.suppressBroadcast = true;
       this.formatSelect.dispatchEvent(new Event("change"));
+      this.suppressBroadcast = false;
     }
   }
 
@@ -97,6 +103,12 @@ class EntityExampleComponent {
         }
       });
     localStorage.setItem(this.formatSelectKey, select.value);
+
+    if (!this.suppressBroadcast) {
+      document.dispatchEvent(
+        new CustomEvent("formatSelected", { detail: { option: select.value } })
+      );
+    }
   }
 
   onTargetChange(event) {
@@ -113,6 +125,12 @@ class EntityExampleComponent {
         }
       });
     localStorage.setItem(this.targetSelectKey, select.value);
+
+    if (!this.suppressBroadcast) {
+      document.dispatchEvent(
+        new CustomEvent("targetSelected", { detail: { option: select.value } })
+      );
+    }
   }
 
   onFormatSelected(event) {
@@ -122,8 +140,9 @@ class EntityExampleComponent {
 
       if (optionElement) {
         this.formatSelect.value = optionElement.value;
-        const event = new Event("change", { bubbles: false });
-        this.formatSelect.dispatchEvent(event);
+        this.suppressBroadcast = true;
+        this.formatSelect.dispatchEvent(new Event("change", { bubbles: false }));
+        this.suppressBroadcast = false;
       }
     }
   }
@@ -135,8 +154,9 @@ class EntityExampleComponent {
 
       if (optionElement) {
         this.targetSelect.value = optionElement.value;
-        const event = new Event("change", { bubbles: false });
-        this.targetSelect.dispatchEvent(event);
+        this.suppressBroadcast = true;
+        this.targetSelect.dispatchEvent(new Event("change", { bubbles: false }));
+        this.suppressBroadcast = false;
       }
     }
   }
