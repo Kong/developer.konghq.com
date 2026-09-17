@@ -123,6 +123,7 @@ In this setup:
 
 ## Create an {{site.event_gateway_short}} control plane and data plane
 
+<!--vale off-->
 {% event_gateway_quickstart %}
 env:
   OTEL_EXPORTER_OTLP_PROTOCOL: grpc
@@ -130,6 +131,7 @@ env:
   OTEL_EXPORTER_OTLP_TIMEOUT: 10s
   OTEL_SERVICE_NAME: eventgw
 {% endevent_gateway_quickstart %}
+<!--vale on-->
 
 The quickstart script configures the following custom telemetry settings:
 
