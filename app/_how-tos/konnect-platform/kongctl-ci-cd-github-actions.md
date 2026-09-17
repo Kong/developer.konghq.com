@@ -14,8 +14,6 @@ works_on:
   - konnect
 tools:
   - kongctl
-min_version:
-  kongctl: '1.15.1'
 tags:
   - declarative-config
 automated_tests: false
@@ -27,6 +25,7 @@ tldr:
     changes on pushes to main.
 prereqs:
   skip_product: false
+  skip_tool: true
   show_works_on: false
   inline:
     - title: Konnect access
@@ -144,6 +143,11 @@ mkdir -p .github/workflows
 Create a file `.github/workflows/konnect.yaml` with the following GitHub
 Actions workflow definition:
 
+The workflow installs kongctl on the runner. The version below comes from
+the docs site's shared release data and is an explicit version when you
+copy it. Update `kongctl-version` in your repository when you're ready to
+upgrade; existing workflows keep using the version you copied.
+
 {% raw %}
 ```yaml
 name: Konnect APIOps
@@ -162,6 +166,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
 
 concurrency:
   group: konnect-${{ github.ref }}
@@ -182,7 +187,8 @@ jobs:
       - uses: actions/checkout@v7
       - uses: kong/setup-kongctl@v1
         with:
-          kongctl-version: '1.15.1'
+          kongctl-version: >-
+            {% endraw %}{{site.data.kongctl_latest.version}}{% raw %}
       - name: Check configuration
         run: |
           : "${KONGCTL_DEFAULT_KONNECT_PAT:?Set the KONNECT_TOKEN secret}"
@@ -193,10 +199,19 @@ jobs:
         run: |
           kongctl diff --mode apply -f konnect/portal.yaml -o text \
             --region "$KONGCTL_DEFAULT_KONNECT_REGION" | tee diff.txt
-          echo '## Konnect configuration diff' >> "$GITHUB_STEP_SUMMARY"
-          echo '```text' >> "$GITHUB_STEP_SUMMARY"
-          cat diff.txt >> "$GITHUB_STEP_SUMMARY"
-          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          {
+            echo '## Konnect configuration diff'
+            echo '```text'
+            cat diff.txt
+            echo '```'
+          } > comment.md
+          cat comment.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Post diff comment
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: konnect-diff
+          path: comment.md
       - name: Apply configuration
         if: github.event_name == 'push'
         run: |
@@ -215,7 +230,9 @@ The workflow has two behaviors:
 
 - **Pull requests targeting `main`:** `kongctl diff` compares the proposed
   configuration with live Konnect state. It shows the changes in the
-  workflow summary for review without applying them.
+  workflow summary and a PR comment for review without applying them.
+  Each successful diff run updates the same comment. The
+  `pull-requests: write` permission lets the workflow post this comment.
 - **Pushes to `main`:** `kongctl apply` calculates a fresh plan from live
   Konnect state and executes it without prompting. This plan reflects the
   state at deployment time, which may have changed since the PR diff.
@@ -223,8 +240,8 @@ The workflow has two behaviors:
 
 ## Review and deploy
 
-1. Commit both files and open a PR targeting `main`. Open the **Konnect
-   APIOps** workflow run and review the diff in its summary.
+1. Commit both files, push your branch, and open a PR targeting `main`.
+   Review the diff comment posted by the **Konnect APIOps** workflow.
 1. Merge the PR. Check that the **Apply configuration** step succeeds, then
    open your Dev Portal in Konnect and verify the published API and spec.
 
@@ -247,9 +264,13 @@ delete resources.
 1. In `konnect/portal.yaml`, change the API's `description` to
    `An example API deployed with GitOps`.
 1. Commit the change, push your branch, and open a PR targeting `main`.
-   Open the **Konnect APIOps** workflow run and check that the summary
-   shows an update to the API description.
+   Check that the **Konnect APIOps** diff comment shows an update to the
+   API description.
 1. Merge the PR and check that the **Apply configuration** step succeeds.
    Open your Dev Portal and verify that the API description has changed.
-1. Re-run the apply job without changing the configuration. It should
-   report no further changes.
+1. In your GitHub repository's **Actions** tab, open the **Konnect APIOps**
+   run triggered by the merge's push to `main`. Select **Re-run all jobs**
+   and confirm the re-run. The **Apply configuration** step should report
+   no further changes if the configuration and live state are unchanged.
+   This repeats the existing push run; it doesn't require a
+   `workflow_dispatch` trigger.
