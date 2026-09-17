@@ -19,6 +19,8 @@ related_resources:
     url: /event-gateway/entities/virtual-cluster/
   - text: Policies
     url: /event-gateway/entities/policy/
+  - text: Record Transcode Consume policy
+    url: /event-gateway/policies/record-transcode-consume/
 
 api_specs:
   - konnect/event-gateway
