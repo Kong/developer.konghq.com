@@ -21,7 +21,7 @@ prereqs:
   inline:
     - title: Kong Air demo deployment
       content: |
-        A running {{site.mesh_product_name}} deployment with the Kong Air demo apps and `meshServices.mode: Exclusive` on the `kong-air-mesh` Mesh. See [Get started with your first policy](/mesh/get-started-with-your-first-policy/).
+        A running {{site.mesh_product_name}} deployment with the Kong Air demo apps in `kong-air-mesh`. See [Get started with your first policy](/mesh/get-started-with-your-first-policy/).
 next_steps:
   - text: "Multi-zone architecture"
     url: "/mesh/multi-zone-architecture/"
@@ -39,9 +39,6 @@ Using an external CA ensures that Kong Air's service identities are governed by 
 
 {:.info}
 > The `MeshIdentity` and `MeshTrust` resources in this guide are system-namespace resources. On a Zone CP federated to a Global CP, create them in `{{site.mesh_namespace}}` with the `kuma.io/origin: zone` label (shown in every example below). See the [Resource scoping](/mesh/resource-scoping/) for which control plane to target.
-
-{:.info}
-> This guide roots the mesh CA through the `MeshIdentity` Extension model. The legacy CA pages document the older `Mesh.mtls.backends` model instead: [HashiCorp Vault CA](/mesh/vault/), [cert-manager](/mesh/cert-manager/), and [AWS Certificate Manager Private CA](/mesh/acm-private-ca-policy/).
 
 ## Why use an external CA?
 

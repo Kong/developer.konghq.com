@@ -23,7 +23,7 @@ prereqs:
   inline:
     - title: Architecture
       content: |
-        A multi-zone {{site.mesh_product_name}} deployment with `spec.meshServices.mode: Exclusive` set on the `kong-air-mesh` `Mesh` resource. If you haven't set one up, start with [Multi-zone architecture](/mesh/multi-zone-architecture/).
+        A multi-zone {{site.mesh_product_name}} deployment for `kong-air-mesh`. If you haven't set one up, start with [Multi-zone architecture](/mesh/multi-zone-architecture/).
     - title: Mesh foundation
       content: |
         `MeshIdentity` and `MeshTLS` applied for `kong-air-mesh` (see [Get started with your first policy](/mesh/get-started-with-your-first-policy/)). If you apply or change `MeshIdentity` on existing workloads, restart them before testing routes so they serve the new certificate.

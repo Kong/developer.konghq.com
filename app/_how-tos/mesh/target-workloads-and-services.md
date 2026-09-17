@@ -17,12 +17,11 @@ tldr:
     Modern {{site.mesh_product_name}} uses two targeting primitives:
     1. `Dataplane` with `labels:` at the top level of a policy, to scope it to a slice of the fleet (a zone, an environment, a team).
     2. `MeshService` in `spec.to[].targetRef` and `backendRefs`, to address explicit destinations (including canaries and blue/green variants).
-    The older `MeshSubset`, `MeshServiceSubset`, and top-level `MeshService` kinds are legacy targeting shapes. Use `Dataplane` selectors and explicit service resources instead.
 prereqs:
   inline:
     - title: Kong Air demo deployment
       content: |
-        A running {{site.mesh_product_name}} deployment with the Kong Air demo apps and `meshServices.mode: Exclusive` on the `kong-air-mesh` Mesh. See [Get started with your first policy](/mesh/get-started-with-your-first-policy/).
+        A running {{site.mesh_product_name}} deployment with the Kong Air demo apps in `kong-air-mesh`. See [Get started with your first policy](/mesh/get-started-with-your-first-policy/).
 next_steps:
   - text: "Observe mesh traffic in practice"
     url: "/mesh/observe-mesh-traffic-in-practice/"
@@ -74,15 +73,11 @@ By naming your subsets explicitly, your routing rules become clear, predictable,
 > For a step-by-step tutorial on implementing rollouts using this model, see [Split traffic with MeshService resources](/mesh/split-traffic-with-meshservice-resources/).
 
 
-## Why use explicit MeshServices instead of legacy subsets?
+## Why use explicit MeshServices?
 
 1.  Deterministic Routing: The Control Plane resolves named resources directly to a known set of IP addresses, making the mesh more reliable at scale.
 2.  Granular Metrics: You get separate metrics for `passenger-portal-v1` and `passenger-portal-v2` automatically. No more filtering logs by tags.
 3.  Kubernetes Native: This pattern matches how Argo CD, Flagger, and the Gateway API handle traffic splitting, so existing automation tooling works the same way.
-
-## Deprecation note: MeshSubset and MeshServiceSubset
-
-`MeshSubset` and `MeshServiceSubset` are legacy "virtual kinds" that predate explicit `MeshService` resources. Use `Dataplane` with `labels:` at the top level and `MeshService` (or `MeshMultiZoneService` / `MeshExternalService`) in `to[].targetRef` / `backendRefs` instead. See [Policies](/mesh/policies-introduction/) for the deprecation details.
 
 ## Validate
 

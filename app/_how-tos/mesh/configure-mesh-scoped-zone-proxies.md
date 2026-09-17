@@ -2,7 +2,7 @@
 title: Configure mesh-scoped zone proxies
 content_type: how_to
 permalink: /mesh/configure-mesh-scoped-zone-proxies/
-description: Give each mesh its own dedicated zone ingress and egress in {{site.mesh_product_name}} 2.14, with per-mesh workload identity, targetable policy, isolated observability, and a deny-by-default egress perimeter for cross-zone traffic.
+description: Give each mesh its own dedicated zone ingress and egress, with per-mesh workload identity, targetable policy, isolated observability, and a deny-by-default egress perimeter.
 breadcrumbs:
   - /mesh/
   - /mesh/scenarios/
@@ -14,16 +14,15 @@ works_on:
 tldr:
   q: How do I give one mesh its own identity, policies, and observability on cross-zone traffic?
   a: |
-    Give the mesh its own dedicated zone proxies instead of sharing one global pair:
-    1. Put the mesh in `spec.meshServices.mode: Exclusive`.
-    2. Deploy a dedicated ingress and egress pair for it (see [Deploy mesh-scoped zone proxies](/mesh/zone-proxies/)).
-    3. Target the proxies with mesh-scoped policy using the `kuma.io/listener-zoneingress` / `kuma.io/listener-zoneegress` labels (see [Apply policies to mesh-scoped zone proxies](/mesh/zone-proxy-policies/)).
-    4. Cross-zone traffic now carries the mesh's own SPIFFE identity, honors its policies, and reports its own metrics.
+    Give the mesh its own dedicated zone proxies:
+    1. Deploy a dedicated ingress and egress pair for it (see [Deploy mesh-scoped zone proxies](/mesh/zone-proxies/)).
+    2. Target the proxies with mesh-scoped policy using the `kuma.io/listener-zoneingress` / `kuma.io/listener-zoneegress` labels (see [Apply policies to mesh-scoped zone proxies](/mesh/zone-proxy-policies/)).
+    3. Cross-zone traffic now carries the mesh's own SPIFFE identity, honors its policies, and reports its own metrics.
 prereqs:
   inline:
     - title: Kong Air demo deployment
       content: |
-        A running {{site.mesh_product_name}} deployment with the Kong Air demo apps and `meshServices.mode: Exclusive` on the `kong-air-mesh` Mesh. See [Get started with your first policy](/mesh/get-started-with-your-first-policy/).
+        A running {{site.mesh_product_name}} deployment with the Kong Air demo apps in `kong-air-mesh`. See [Get started with your first policy](/mesh/get-started-with-your-first-policy/).
 next_steps:
   - text: "Route across zones with canary rollouts and color rings"
     url: "/mesh/route-across-zones-with-canary-rollouts-and-color-rings/"
@@ -34,11 +33,7 @@ related_resources:
     url: /mesh/zone-proxy-policies/
 ---
 
-Cross-zone traffic used to be the one place where every mesh in a zone looked the same. Before {{site.mesh_product_name}} 2.14, a single ZoneIngress and ZoneEgress carried traffic for all meshes in a zone. That meant `kong-air-mesh` could not present its own identity on the wire, could not have its own timeouts or access logs on cross-zone calls, and shared one blended observability view with every other mesh in the zone.
-
-For Kong Air that was a compliance blocker. `kong-air-mesh` carries passenger PII, and auditors require its cross-zone traffic to present a verifiable mTLS identity distinct from any other mesh sharing the zone. A single shared egress made that impossible.
-
-Mesh-scoped zone proxies give each mesh its own dedicated ingress and egress. For Kong Air, that turns the shared perimeter into one they fully own:
+`kong-air-mesh` carries passenger PII, so its cross-zone traffic must present a verifiable mTLS identity and remain independently observable and governable. Mesh-scoped zone proxies give the mesh a dedicated ingress and egress for that traffic:
 
 <!-- vale off -->
 {% table %}
@@ -53,99 +48,17 @@ rows:
   - outcome: "Cross-zone traffic they can govern"
     meaning: "Any mesh-scoped policy (`MeshTimeout`, `MeshAccessLog`, `MeshRateLimit`, and more) can target the proxies directly."
   - outcome: "Observability scoped to one mesh"
-    meaning: "Metrics and logs cover only `kong-air-mesh`, instead of a blend of every mesh in the zone."
+    meaning: "Metrics and logs cover the traffic carried by `kong-air-mesh`."
   - outcome: "A deny-by-default perimeter"
     meaning: "The egress refuses outbound traffic unless a policy explicitly allows it, no more open forwarding."
 {% endtable %}
 <!-- vale on -->
 
-This is possible because each mesh-scoped proxy is just an ordinary `Dataplane` inside the mesh, the same kind of resource as an application sidecar. That is the whole trick: anything you can do to a workload, you can now do to your zone proxies.
-
-## Turn on Exclusive mode
-
-Mesh-scoped proxies are only generated for a mesh running in `Exclusive` mode.
-
-1. Confirm the mesh is running in `Exclusive` mode:
-
-   ```bash
-   kubectl get mesh kong-air-mesh -o yaml | grep -A3 "meshServices:"
-   ```
-
-1. If `meshServices.mode` is not `Exclusive`, switch it on:
-
-   ```bash
-   kubectl patch mesh kong-air-mesh \
-     --type merge \
-     -p '{"spec":{"meshServices":{"mode":"Exclusive"}}}'
-   ```
+Each mesh-scoped proxy is a `Dataplane` inside the mesh, the same resource kind used for application sidecars. Policies can therefore select a zone proxy by its labels and listener role.
 
 ## Give your mesh its own zone proxies
 
-You ask for a dedicated pair of proxies per mesh in your zone Helm values, instead of the one cluster-wide pair. Here is what changes between the two models:
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: "&nbsp;"
-    key: attribute
-  - title: Shared (global zone proxies)
-    key: shared
-  - title: Dedicated (mesh-scoped zone proxies)
-    key: dedicated
-rows:
-  - attribute: |
-      Scope
-    shared: |
-      All meshes in the zone
-    dedicated: |
-      One mesh
-  - attribute: |
-      Own SPIFFE identity
-    shared: |
-      Not possible
-    dedicated: |
-      Yes, via `MeshIdentity`
-  - attribute: |
-      Targetable by mesh policy
-    shared: |
-      No
-    dedicated: |
-      Yes
-  - attribute: |
-      Resource kind
-    shared: |
-      `ZoneIngress` / `ZoneEgress`
-    dedicated: |
-      `Dataplane` with `networking.listeners[]`
-  - attribute: |
-      Helm key
-    shared: |
-      `kuma.ingress.enabled: true`
-    dedicated: |
-      `kuma.meshes[].ingress.enabled: true`
-  - attribute: |
-      Policy selector
-    shared: |
-      N/A
-    dedicated: |
-      `kuma.io/listener-zoneingress: enabled` / `kuma.io/listener-zoneegress: enabled`
-{% endtable %}
-<!-- vale on -->
-
-{:.info}
-> The two models can coexist during a migration window. The old `kuma.ingress.enabled: true` key and the new `kuma.meshes:` key are both honored in 2.14, so you can stand up the dedicated proxies before retiring the shared ones. See [Migrating from global zone proxies](#migrating-from-global-zone-proxies).
-
-You request a dedicated pair per mesh by adding a `meshes:` entry to each zone CP's Helm values, naming the mesh and enabling its `ingress` and `egress`, then running `helm upgrade`. This gives `kong-air-mesh` its own ingress and egress Deployment, each with its own Service and ServiceAccount. For the full Helm `kuma.meshes[]` values and upgrade commands, see [Deploy mesh-scoped zone proxies](/mesh/zone-proxies/).
-
-{:.info}
-> Use `combinedProxies` instead of separate `ingress` and `egress` entries when you want a single lower-footprint Deployment for a small or staging environment. The two shapes are mutually exclusive per mesh entry.
-
-```yaml
-meshes:
-  - name: kong-air-mesh
-    combinedProxies:
-      enabled: true
-```
+Add a `meshes:` entry to each zone control plane's Helm values, name the mesh, and enable its `ingress` and `egress`. This gives `kong-air-mesh` its own ingress and egress Deployment, each with its own Service and ServiceAccount. For the Helm values and upgrade commands, see [Deploy mesh-scoped zone proxies](/mesh/zone-proxies/).
 
 ## Confirm the proxies belong to your mesh
 
@@ -220,55 +133,15 @@ If you scale the zone ingress to zero, its `MeshZoneAddress` is withdrawn automa
 
 ## Apply per-mesh identity, policy, and observability
 
-Because the proxies are ordinary `Dataplane` resources in `kong-air-mesh`, every mesh-scoped policy can now target them, the controls that were impossible with a shared global proxy. You select them with `targetRef.kind: Dataplane` and the `kuma.io/listener-zoneingress: enabled` or `kuma.io/listener-zoneegress: enabled` labels, adding a `sectionName` to target one specific listener by name.
+Because the proxies are `Dataplane` resources in `kong-air-mesh`, supported mesh policies can target them. Select them with `targetRef.kind: Dataplane` and the `kuma.io/listener-zoneingress: enabled` or `kuma.io/listener-zoneegress: enabled` labels, adding a `sectionName` to target one specific listener by name.
 
 For the full policy-targeting recipes, giving cross-zone traffic a verifiable `MeshIdentity`, scoping `MeshMetric` observability to one mesh, and setting `MeshTimeout` and `MeshAccessLog` on the proxies, see [Apply policies to mesh-scoped zone proxies](/mesh/zone-proxy-policies/).
 
 ## A deny-by-default egress perimeter
 
-The shared egress forwarded any traffic that reached it. A mesh-scoped egress is closed by default: every `MeshExternalService` is SNI-matched at the listener and refused unless a `MeshTrafficPermission` explicitly allows the caller's SPIFFE identity. You decide exactly what may leave the mesh.
+A mesh-scoped egress is closed by default: every `MeshExternalService` is SNI-matched at the listener and refused unless a `MeshTrafficPermission` explicitly allows the caller's SPIFFE identity. You decide exactly what may leave the mesh.
 
 Grant each caller the access it needs with a `MeshTrafficPermission` that targets the zone-egress `Dataplane` and matches the caller's `spiffeID` together with the destination `sni`. Without an allow rule, the egress refuses the request with a `503` before `MeshPassthrough` or any other policy evaluates, so add the permissions before you route real traffic through it. For the policy YAML and the SNI format, see [Apply policies to mesh-scoped zone proxies](/mesh/zone-proxy-policies/).
-
-## Migrating from global zone proxies
-
-The move is additive: stand up the mesh-scoped proxies alongside the existing global ones, confirm cross-zone traffic flows through the new pair, then retire the old.
-
-1. Add the mesh-scoped proxies alongside the existing global ones:
-
-   ```yaml
-   # Transition values, both models active simultaneously
-   kuma:
-     ingress:
-       enabled: true   # old global, leave until migration is confirmed
-     egress:
-       enabled: true   # old global, leave until migration is confirmed
-
-     meshes:
-       - name: kong-air-mesh
-         ingress:
-           enabled: true   # new mesh-scoped
-         egress:
-           enabled: true   # new mesh-scoped
-   ```
-
-1. Once traffic is flowing through the mesh-scoped proxies, remove the old keys:
-
-   ```yaml
-   kuma:
-     # ingress.enabled and egress.enabled removed
-     meshes:
-       - name: kong-air-mesh
-         ingress:
-           enabled: true
-         egress:
-           enabled: true
-   ```
-
-{:.warning}
-> Scale down the old global ZoneIngress before removing its Helm key. Deleting the key without scaling first can cause a brief traffic interruption if KDS has not yet propagated the new proxies' `MeshZoneAddress` to other zones.
-
-The old `ZoneIngress` and `ZoneEgress` resource kinds remain in the API for backward compatibility in 2.14, and are planned for deprecation in a future major release.
 
 ## Validate
 
@@ -287,22 +160,23 @@ The old `ZoneIngress` and `ZoneEgress` resource kinds remain in the API for back
    ```
    {:.no-copy-code}
 
-1. If you still have a legacy shared pair running during a migration window, confirm the two are distinct. Only the mesh-scoped `Dataplane` proxies carry the `kuma.io/mesh` label, the legacy `ZoneIngress`/`ZoneEgress` resources don't, because they serve every mesh in the zone:
+1. Confirm each proxy is attributed to the right mesh and has the role you expect:
 
    ```sh
-   kubectl get dataplanes,zoneingresses,zoneegresses -n kong-mesh-system \
-     -o custom-columns='KIND:.kind,NAME:.metadata.name,MESH:.metadata.labels.kuma\.io/mesh'
+   kubectl get pods -n kong-mesh-system -l kuma.io/mesh=kong-air-mesh \
+     -o custom-columns='NAME:.metadata.name,MESH:.metadata.labels.kuma\.io/mesh,TYPE:.metadata.labels.k8s\.kuma\.io/zone-proxy-type'
    ```
 
-   Expected output: the mesh-scoped `Dataplane` entries show `kong-air-mesh`, while any remaining `ZoneIngress`/`ZoneEgress` entries show `<none>`:
+   Expected output, one ingress and one egress for the mesh:
 
    ```text
-   KIND          NAME                                                MESH
-   Dataplane     kong-mesh-kong-air-mesh-ingress-77499bbc58-kkssn    kong-air-mesh
-   Dataplane     kong-mesh-kong-air-mesh-egress-5d8f7c9b6d-p4x2q     kong-air-mesh
-   ZoneIngress   kong-mesh-zone-ingress-6f9c8d7b5a-9k2mp             <none>
-   ZoneEgress    kong-mesh-zone-egress-7d8e9f6c4b-3l1nq              <none>
+   NAME                                               MESH            TYPE
+   kong-mesh-kong-air-mesh-ingress-77499bbc58-kkssn   kong-air-mesh   ingress
+   kong-mesh-kong-air-mesh-egress-5d8f7c9b6d-p4x2q    kong-air-mesh   egress
    ```
    {:.no-copy-code}
 
-Together, these confirm the mesh-scoped proxies are healthy, and that they remain cleanly distinguishable from any legacy shared pair by the `kuma.io/mesh` label.
+   {:.info}
+   > Check the pods rather than `kubectl get dataplanes`. A zone proxy's `Dataplane` is generated by the control plane and is not a Kubernetes object, so it does not appear in `kubectl` output. To see it, query the control plane with `kumactl inspect dataplanes`.
+
+Together, these confirm the mesh-scoped proxies are healthy and that each one is bound to `kong-air-mesh` by its `kuma.io/mesh` label.

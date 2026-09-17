@@ -9,7 +9,6 @@ breadcrumbs:
 products:
   - mesh
 works_on:
-  - on-prem
   - konnect
 next_steps:
   - text: "Resource scoping"
@@ -22,11 +21,11 @@ related_resources:
 ---
 {{site.mesh_product_name}} uses one consistent shape for every policy: you select the proxies to target with `targetRef`, then describe the behavior in the same resource. For the full policy model, see [Introduction to policies](/mesh/policies-introduction/).
 
-This page shows how Kong Air applies that model to its own workloads.
+This page shows how Kong Air applies that model to workloads running across its zones.
 
 ## What Kong Air targets with `targetRef`
 
-At the top level, Kong Air attaches its policies to one of these:
+At the top level, Kong Air attaches policy to either the whole mesh or a selected group of data plane proxies:
 
 <!-- vale off -->
 {% table %}
@@ -44,15 +43,20 @@ rows:
   - kind: "`Dataplane` with `labels`"
     scope: "The proxies whose labels match."
     use_case: "Override timeouts for `kuma.io/zone: zone1`, or allow callers into `app: check-in-api`."
-  - kind: "`MeshGateway`"
-    scope: "A built-in mesh gateway."
-    use_case: "Routing and TLS rules for `booking-gateway`, the mesh's external entry point."
 {% endtable %}
 <!-- vale on -->
 
 {:.info}
-> {% new_in 2.14 %} Zone proxies are targetable too. You can attach `MeshTrafficPermission`, `MeshTimeout`, `MeshRateLimit`, `MeshFaultInjection`, `MeshCircuitBreaker`, `MeshHealthCheck`, `MeshMetric`, `MeshTrace`, and `MeshAccessLog` directly to a zone ingress or zone egress with `targetRef.kind: Dataplane` and the computed listener labels (for example `kuma.io/listener-zoneegress: enabled`).
+> Mesh-scoped zone proxies are `Dataplane` resources too. Target a zone ingress or zone egress with its computed listener labels, for example `kuma.io/listener-zoneegress: enabled`, when a policy supports that proxy role.
+
+## Select a destination with `to`
+
+The top-level `targetRef` answers **which proxies receive this configuration?** A policy's `to` list answers **which destination does this behavior apply to?**
+
+For example, a `MeshTimeout` can select the `passenger-portal` proxies at the top level, then use `to[].targetRef` to apply a timeout only when those proxies call `check-in-api`. Destination references use first-class resources such as `MeshService`, `MeshMultiZoneService`, and `MeshExternalService`. Check the policy reference before choosing a kind because each policy supports a specific set of destination targets.
+
+Inbound policies such as `MeshTrafficPermission` use `rules` instead. The policy first selects the receiving proxies, then each rule matches properties of the incoming connection, such as the caller's authenticated SPIFFE ID. This is why the first-policy scenario targets `app: check-in-api` and allows the SPIFFE ID presented by `flight-control`.
 
 ## MeshTrafficPermission precedence caveat
 
-`MeshTrafficPermission` is the exception to the most-specific-wins rule most other policies follow. It evaluates all matching rules for a request, and if any matched rule produces a `Deny`, the deny wins. To enforce a default-deny posture cleanly, delete the permissive `allow-all` policy first, then layer narrower allows on top. Treat it as an RBAC-style allow/deny pass rather than a most-specific-wins override.
+`MeshTrafficPermission` is the exception to the most-specific-wins rule most other policies follow. It evaluates all matching rules for a request, and if any matched rule produces a `Deny`, the deny wins. Remove permissive `allow-all` policies before building narrower authorization rules. Treat the result as an RBAC-style allow/deny pass rather than a most-specific-wins override.

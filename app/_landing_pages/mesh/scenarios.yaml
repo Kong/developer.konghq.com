@@ -151,7 +151,7 @@ rows:
             config:
               title: Configure mesh-scoped zone proxies
               description: |
-                Per-mesh zone proxies via the Helm `meshes:` list (new in 2.14).
+                Per-mesh zone proxies deployed through the Helm `meshes:` list.
               cta:
                 text: Read
                 url: /mesh/configure-mesh-scoped-zone-proxies/
