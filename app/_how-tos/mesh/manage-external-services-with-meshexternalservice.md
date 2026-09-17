@@ -22,7 +22,7 @@ prereqs:
   inline:
     - title: Architecture
       content: |
-        A running {{site.mesh_product_name}} deployment with ZoneEgress enabled. If you use mesh-scoped zone proxies, deploy them through the Helm `meshes:` list and keep the mesh in `spec.meshServices.mode: Exclusive`.
+        A running {{site.mesh_product_name}} deployment with zone egress enabled. Deploy mesh-scoped zone proxies through the Helm `meshes:` list.
     - title: Policy
       content: |
         mTLS must be enabled on the `Mesh`.
@@ -90,7 +90,7 @@ This keeps the application configuration simple while still aiming for encrypted
 
 The `flight-db` MeshExternalService is now reachable from any workload that routes through zone egress, too broad for a production database. Only `flight-control` should have direct access.
 
-With mesh-scoped zone proxies ({{site.mesh_product_name}} 2.14+), the zone egress Dataplane is deny-all by default for `MeshExternalService` traffic. Grant access per workload with `MeshTrafficPermission`:
+The mesh-scoped zone egress Dataplane is deny-all by default for `MeshExternalService` traffic. Grant access per workload with `MeshTrafficPermission`:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -111,7 +111,7 @@ spec:
         allow:
           - spiffeID:
               type: Exact
-              value: spiffe://kong-air-mesh.mesh.local/ns/kong-air-production/sa/flight-control
+              value: spiffe://kong-air-mesh.zone1.mesh.local/ns/kong-air-production/sa/flight-control
             sni:
               type: Exact
               value: sni.extsvc.kong-air-mesh.zone1.{{site.mesh_namespace}}.flight-db.5432
@@ -149,24 +149,21 @@ kubectl get dataplane -n {{site.mesh_namespace}} \
 spiffe://<trust-domain>/ns/<namespace>/sa/<service-account>
 ```
 
-The trust domain is set in the `MeshIdentity` backend (the `trustDomain` field, or the auto-generated `<mesh-name>.mesh.local` when using the built-in backend). For `flight-control` running in the `kong-air-production` namespace with the `flight-control` Kubernetes service account:
+The trust domain comes from the `MeshIdentity` that issued the certificate. When the built-in backend generates it, the default format is `<mesh>.<zone>.mesh.local`. For `flight-control` in zone `zone1`, running in the `kong-air-production` namespace with the `flight-control` Kubernetes service account, the SPIFFE ID is:
 
 ```
-spiffe://kong-air-mesh.mesh.local/ns/kong-air-production/sa/flight-control
+spiffe://kong-air-mesh.zone1.mesh.local/ns/kong-air-production/sa/flight-control
 ```
 
-To look up the trust domain from the active identity backend:
+Read the resolved trust domain from the status of the `MeshIdentity` used in this scenario:
 
 ```bash
-kubectl get meshidentity -n {{site.mesh_namespace}} \
-  -o jsonpath='{.items[0].spec.spiffeID.trustDomain}'
+kubectl get meshidentity kong-air-identity -n {{site.mesh_namespace}} \
+  -o jsonpath='{.status.trustDomain}{"\\n"}'
 ```
 
 {:.info}
 > Multiple workloads, multiple rules. Add more entries under `rules[0].default.allow` to grant additional workloads access to the same or different external services. To allow a workload to reach any external service through zone egress, omit the `sni` field from that entry.
-
-{:.info}
-> The `deny-all by default` behavior is specific to mesh-scoped zone proxies introduced in 2.14. If you are still using the legacy global `ZoneEgress`, set `spec.routing.defaultForbidMeshExternalServiceAccess: true` on the `Mesh` resource to enforce a mesh-wide deny.
 
 ## Secure AeroPay (HTTPS with TLS origination)
 
@@ -235,10 +232,9 @@ spec:
       meshTrustCreation: Enabled
   spiffeID:
     path: /ns/{% raw %}{{ .Namespace }}{% endraw %}/sa/{% raw %}{{ .ServiceAccount }}{% endraw %}
-    trustDomain: kong-air-mesh.mesh.local
 ```
 
-The mesh-wide `MeshIdentity` from [Get started with your first policy](/mesh/get-started-with-your-first-policy/) already covers the zone proxies. If yours is instead scoped to a single app namespace, broaden its selector to the mesh label rather than adding a second identity. Apply it at the Global CP, then restart the zone proxies so they pick up a certificate:
+The zone-origin `MeshIdentity` from [Get started with your first policy](/mesh/get-started-with-your-first-policy/) already covers the zone proxies. If yours is instead scoped to a single app namespace, broaden its selector to the mesh label rather than adding a second identity. Apply the update in the Kubernetes zone, then restart the zone proxies so they pick up a certificate:
 
 ```bash
 # The mesh-scoped zone-proxy deployments carry the kuma.io/mesh label.
@@ -253,7 +249,7 @@ kubectl get dataplaneinsight -n {{site.mesh_namespace}} "$ZE" \
 ```
 
 {:.info}
-> Multi-zone: prefer a shared external CA (Vault, cert-manager, or ACM, see [Integrate an external CA](/mesh/integrate-an-external-ca/)) over `autogenerate`. With `autogenerate`, every `MeshIdentity` mints its own per-zone CA, and each one then needs the same cross-zone `MeshTrust` reconciliation described in [Workload Identity](/mesh/manage-workload-identity-and-mtls/#cross-zone-trust-with-autogenerated-cas). A shared root means apps and zone proxies in every zone chain to one CA, so this just works. Avoid adding a separate per-namespace `autogenerate` identity for the zone proxies in multi-zone, it multiplies the CAs you have to reconcile.
+> Multi-zone: prefer a shared external CA (Vault, cert-manager, or ACM, see [Integrate an external CA](/mesh/integrate-an-external-ca/)) over `autogenerate`. With `autogenerate`, every `MeshIdentity` mints its own per-zone CA, and each one then needs the same cross-zone `MeshTrust` distribution described in [Workload Identity](/mesh/manage-workload-identity-and-mtls/#extend-autogenerated-identity-across-zones). A shared root means apps and zone proxies in every zone chain to one CA, so this just works. Avoid adding a separate per-namespace `autogenerate` identity for the zone proxies in multi-zone, it multiplies the CAs you have to distribute.
 
 ## Add resiliency with MeshRetry
 
@@ -276,7 +272,8 @@ spec:
   to:
     - targetRef:
         kind: MeshExternalService
-        name: aeropay-api
+        labels:
+          kuma.io/display-name: aeropay-api
       default:
         http:
           numRetries: 3
@@ -287,7 +284,7 @@ spec:
 ```
 
 {:.info}
-> `MeshRetry` targets a `Dataplane` (or `MeshService`) through `spec.targetRef` and applies its retry configuration to the destination named in the `to[]` list. It cannot target a `MeshHTTPRoute` (a route).
+> A top-level `spec.targetRef` accepts only `Mesh` or `Dataplane`, so `MeshRetry` attaches to the clients whose retry behavior it configures, and names the destination in the `to[]` list. Destinations are selected by `labels`, not by `name`. It cannot target a `MeshHTTPRoute` (a route).
 
 {:.info}
 > Pair this with `MeshCircuitBreaker` to stop the mesh from hammering an external service that is already struggling, and `MeshTimeout` to bound the total time spent retrying.

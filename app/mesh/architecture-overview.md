@@ -9,7 +9,6 @@ breadcrumbs:
 products:
   - mesh
 works_on:
-  - on-prem
   - konnect
 next_steps:
   - text: "Get started with your first policy"
@@ -20,28 +19,23 @@ related_resources:
   - text: Multi-zone deployment
     url: /mesh/mesh-multizone-service-deployment/
 ---
-{{site.mesh_product_name}} separates the control plane from the data plane and introduces a multi-zone model for distributed environments. For an organization like Kong Air, this architecture enables a unified management layer that spans from legacy booking systems to modern cloud-native APIs.
+{{site.mesh_product_name}} separates the control plane from the data plane and uses zones to represent the environments where workloads run. Kubernetes or Universal zone control planes run close to the workloads they manage and connect to a global control plane.
 
 ## Core architecture
 
 {{site.mesh_product_name}} is built from:
-* A control plane (a global CP that owns policy and the resource registry, and zone CPs that discover local services and serve xDS to Envoy)
-* An Envoy-based data plane that enforces policy and intercepts traffic, networking proxies (zone ingress and egress) for cross-zone communication, 
-* A standardized service model (`MeshService`, `MeshMultiZoneService`, `MeshExternalService`)
-* Workload identity (`MeshIdentity`, `MeshTrust`). 
+
+* A global control plane that provides the central view of meshes and resources.
+* Zone control planes that discover local workloads, exchange supported resources with the global control plane over KDS, and serve xDS configuration to local proxies.
+* An Envoy-based data plane that intercepts application traffic and enforces policy.
+* Mesh-scoped zone ingress and egress proxies that carry traffic across zone boundaries.
+* A service model built from `MeshService`, `MeshMultiZoneService`, and `MeshExternalService`.
+* Workload identity and trust managed with `MeshIdentity` and `MeshTrust`.
 
 For definitions of each component and their configuration options, see the [{{site.mesh_product_name}} architecture](/mesh/architecture/) reference.
 
 {:.info}
-> These scenarios set `meshServices.mode: Exclusive` on the `kong-air-mesh` `Mesh` resource:
->
-> ```yaml
-> spec:
->   meshServices:
->     mode: Exclusive
-> ```
->
-> In Exclusive mode, the control plane generates a first-class `MeshService` resource for every workload, and policies address those `MeshService` objects directly instead of the older `kuma.io/service` tags. This is the modern model the rest of these scenarios assume, and it is a prerequisite for features like mesh-scoped zone proxies. You'll see it listed as a prerequisite in the hands-on guides that follow.
+> A Kubernetes `Service` produces a `MeshService`, `MeshMultiZoneService` groups services across zones, and `MeshExternalService` represents a destination outside the mesh.
 
 ## Day-2 operations: differences from Istio-style meshes
 
@@ -65,7 +59,7 @@ rows:
     mesh: "A built-in global/zone model with automatic KDS sync. Adding a region means adding a zone CP, not redesigning a topology, and if the global CP is offline, each zone CP keeps serving its last-known config, so data plane traffic is unaffected."
   - concern: Hybrid estate (VMs + Kubernetes)
     istio: "Kubernetes-native; VMs run through `WorkloadEntry` / `WorkloadGroup`."
-    mesh: "Kubernetes and Universal (VMs, bare metal) use the same resource model, so one team operates one mesh across both, no separate paradigm for the legacy estate."
+    mesh: "Kubernetes and Universal (VMs, bare metal) use the same resource model, so one team operates one mesh across both."
 {% endtable %}
 <!-- vale on -->
 
@@ -82,18 +76,16 @@ The following elements are used in both diagrams::
 
 ### High-level: global CP and zone CPs
 
-The global CP is the single source of truth for the mesh. Each zone runs its own zone CP, which syncs from the global CP over the Kuma Discovery Service (KDS) and serves xDS to the local data planes.
+The global control plane owns global resources and provides the central view of the deployment. Each zone runs its own zone control plane, which exchanges supported resources with the global control plane over the Kuma Discovery Service (KDS) and serves xDS to local data planes. Zone-origin resources, such as discovered workloads and zone-local policy, can also sync towards the global control plane.
 
 {% mermaid %}
 flowchart TD
-    GUI["Konnect/kumactl"]
     GCP["Global control plane"]
     Z1CP["Zone CP<br/>(Kubernetes, zone1)"]
     Z2CP["Zone CP<br/>(Universal VM, zone2)"]
     DP1["Data planes<br/>(Envoy sidecars)"]
     DP2["Data planes<br/>(Envoy sidecars)"]
 
-    GUI -.- GCP
     GCP -.->|KDS| Z1CP
     GCP -.->|KDS| Z2CP
     Z1CP -.->|xDS| DP1

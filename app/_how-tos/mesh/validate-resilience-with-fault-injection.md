@@ -52,7 +52,7 @@ The `MeshFaultInjection` policy allows you to introduce three types of failure d
 Immediately return a specific HTTP status code for a percentage of requests. See [MeshFaultInjection](/mesh/policies/meshfaultinjection/) for the full `abort` field definitions.
 
 {:.info}
-> Use `kind: Dataplane` with `labels` in `targetRef` to select the workloads being faulted. The `rules` block then names the callers whose requests should be faulted, using their SPIFFE identities. A `Prefix` match against the trust domain faults every caller; an `Exact` match faults one specific caller. (The older top-level `kind: MeshService` / `MeshSubset` selectors and the `spec.from` block are legacy forms, see the compatibility note after the example.)
+> Use `kind: Dataplane` with `labels` in `targetRef` to select the workloads being faulted. The `rules` block then names the callers whose requests should be faulted, using their SPIFFE identities. A `Prefix` match against the trust domain faults every caller; an `Exact` match faults one specific caller.
 
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1
@@ -71,7 +71,7 @@ spec:
     - matches:
         - spiffeID:
             type: Prefix
-            value: spiffe://kong-air-mesh.mesh.local
+            value: spiffe://kong-air-mesh.zone1.mesh.local
       default:
         http:
           - abort:
@@ -79,13 +79,10 @@ spec:
               percentage: 10' | kubectl apply -f -
 ```
 
-To fault only a specific caller, swap the `Prefix` matcher for an `Exact` match against that caller's SPIFFE ID, for example `spiffe://kong-air-mesh.mesh.local/ns/kong-air-production/sa/passenger-portal`. This ties chaos targeting to authenticated identity rather than topology.
+To fault only a specific caller, swap the `Prefix` matcher for an `Exact` match against that caller's SPIFFE ID, for example `spiffe://kong-air-mesh.zone1.mesh.local/ns/kong-air-production/sa/passenger-portal`. This ties chaos targeting to authenticated identity rather than topology.
 
 {:.info}
-> Legacy `spec.from` form. Older policies select callers with a `spec.from[].targetRef` (for example `kind: Mesh`) instead of `rules[].matches[].spiffeID`. It still works for backward compatibility, but prefer `rules` with SPIFFE matchers for new policies.
-
-{:.info}
-> ZoneEgress-specific chaos in 2.14. The same rules model can fault a single external destination flowing through mesh-scoped zone egress by matching on SNI:
+> The same rules model can fault a single external destination flowing through mesh-scoped zone egress by matching on SNI:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
