@@ -22,7 +22,7 @@ prereqs:
   inline:
     - title: Kong Air demo deployment
       content: |
-        A running {{site.mesh_product_name}} deployment with the Kong Air demo apps and `meshServices.mode: Exclusive` on the `kong-air-mesh` Mesh. See [Get started with your first policy](/mesh/get-started-with-your-first-policy/).
+        A running {{site.mesh_product_name}} deployment with the Kong Air demo apps in `kong-air-mesh`. See [Get started with your first policy](/mesh/get-started-with-your-first-policy/).
 next_steps:
   - text: "Manage workload identity and mTLS"
     url: "/mesh/manage-workload-identity-and-mtls/"
@@ -41,22 +41,22 @@ related_resources:
 columns:
   - title: Challenge
     key: challenge
-  - title: Legacy approach
-    key: legacy
+  - title: Without mesh-level telemetry
+    key: without_mesh
   - title: {{site.mesh_product_name}} solution
     key: solution
 rows:
   - challenge: Consistency
-    legacy: Different languages and frameworks use different libraries and formats.
+    without_mesh: Different languages and frameworks use different libraries and formats.
     solution: "Uniform Data Collection: Every service produces data in the same format via the sidecar."
   - challenge: Effort
-    legacy: Manual instrumentation and SDK maintenance.
+    without_mesh: Manual instrumentation and SDK maintenance.
     solution: "Zero-Code Instrumentation: Capture metrics and traces automatically at the proxy level."
   - challenge: Context
-    legacy: Manual header propagation (`x-request-id`) is error-prone.
+    without_mesh: Manual header propagation (`x-request-id`) is error-prone.
     solution: "Automated Propagation: The mesh handles span generation and context preservation."
   - challenge: Visibility
-    legacy: Siloed monitoring tools across clouds.
+    without_mesh: Siloed monitoring tools across clouds.
     solution: "Unified Global View: Multi-zone MADS aggregates service targets into a single source of truth for discovery."
 {% endtable %}
 <!-- vale on -->
@@ -72,12 +72,6 @@ rows:
 ## Install the observability stack
 
 Install and wire up the Prometheus, Grafana, and tracing backends by following the canonical [mesh observability](/mesh/observability/) reference. To collect traces and OTel-based logs, deploy a collector as described in [Deploy an OpenTelemetry collector](/mesh/deploy-an-opentelemetry-collector/). Once the stack is running, wire {{site.mesh_product_name}} into it with the `MeshMetric`, `MeshTrace`, and `MeshAccessLog` policies below.
-
-{:.warning}
-> Prometheus metric format change in 2.14. Control-plane metrics moved from Summary to Histogram. Any dashboard or alert that uses `quantile="0.5"` / `"0.9"` / `"0.99"` series on {{site.mesh_product_name}} CP metrics will break, switch to `histogram_quantile()` against `_bucket` series. Data-plane sidecar metrics are unaffected by this change.
-
-{:.info}
-> Stat name format change (KRI). A feature flag in 2.14 (`KUMA_DATAPLANE_RUNTIME_METRICS_KRI_STATS` on the DP, `KUMA_MESH_SERVICE_KRI_STATS_ENABLED` on the CP) renames Envoy cluster, listener, and stat names to the KRI format, `kri_wl_<mesh>_<zone>_<namespace>_<name>_<section>`. If you enable it, expect dashboard panels that hard-code old stat names (for example, `cluster.outbound:check-in-api_kong-air-production_svc_8080.upstream_rq_total`) to need updating.
 
 ## Metrics with `MeshMetric`
 
@@ -132,7 +126,7 @@ Enable sidecar metrics exposure so Prometheus can scrape them:
 
 ### Observing mesh-scoped zone egress
 
-One of the important 2.14 improvements is that observability policies can target mesh-scoped zone proxies directly. For example, Kong Air can gather Prometheus metrics for every zone egress proxy with:
+Observability policies can target mesh-scoped zone proxies directly. For example, Kong Air can gather Prometheus metrics for every zone egress proxy with:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -161,7 +155,27 @@ This is the cleanest way to get telemetry on the cross-zone and external-service
 
 ## Tracing with `MeshTrace`
 
-Configure distributed tracing to an OTLP gRPC receiver:
+Configure distributed tracing to an OTLP receiver.
+
+A `MeshTrace` OpenTelemetry backend references a `MeshOpenTelemetryBackend` resource, so define the collector once first:
+
+1. Define the collector:
+
+   ```bash
+   echo 'apiVersion: kuma.io/v1alpha1
+   kind: MeshOpenTelemetryBackend
+   metadata:
+     name: otel-collector
+     namespace: {{site.mesh_namespace}}
+     labels:
+       kuma.io/mesh: kong-air-mesh
+       kuma.io/origin: zone
+   spec:
+     endpoint:
+       address: otel-collector.mesh-observability
+       port: 4317   # defaults to 4317 when omitted
+     protocol: grpc' | kubectl apply -f -
+   ```
 
 1. Apply the `MeshTrace` policy:
 
@@ -183,7 +197,10 @@ Configure distributed tracing to an OTLP gRPC receiver:
        backends:
          - type: OpenTelemetry
            openTelemetry:
-             endpoint: otel-collector.mesh-observability:4317
+             backendRef:
+               kind: MeshOpenTelemetryBackend
+               labels:
+                 kuma.io/display-name: otel-collector
        tags:
          - name: division
            literal: passenger-service
@@ -204,11 +221,11 @@ Configure distributed tracing to an OTLP gRPC receiver:
 > End-to-end trace export still depends on having a working collector in-cluster, so treat that part of the scenario as an integration check.
 
 {:.warning}
-> OTLP transport: gRPC only in 2.14. Earlier releases briefly supported HTTP/HTTPS OTel transports; those were dropped on master. Configure your tracing backend's gRPC OTLP receiver (port 4317 by convention) and use `type: OpenTelemetry` as shown above.
+> A `MeshTrace` OpenTelemetry backend takes a `backendRef` only. There is no inline `endpoint` field, so the collector address always comes from a `MeshOpenTelemetryBackend`. That resource's `protocol` accepts `grpc` or `http`; `grpc` on port 4317 is the usual choice for a tracing receiver.
 
 ### Sharing one OTel backend across policies (`MeshOpenTelemetryBackend`)
 
-If you also configure access logs or metrics over OTel, repeating the same collector endpoint in every policy is brittle. 2.14 adds the `MeshOpenTelemetryBackend` resource, which you can reference from `MeshMetric`, `MeshTrace`, and `MeshAccessLog` via `backendRef` instead of embedding the endpoint inline. This is the recommended pattern going forward. See [MeshOpenTelemetryBackend](/mesh/meshopentelemetrybackend/) for the resource fields and configuration examples.
+`MeshOpenTelemetryBackend` holds the collector address, port, and protocol in one place, and `MeshMetric`, `MeshTrace`, and `MeshAccessLog` all reach it through a `backendRef`. Define it once and every OTel-bound policy points at the same resource, so moving the collector is a one-resource change. See [MeshOpenTelemetryBackend](/mesh/meshopentelemetrybackend/) for the resource fields and configuration examples.
 
 ## Logging with `MeshAccessLog`
 
@@ -268,11 +285,11 @@ Capture structured request logs from every sidecar:
 {:.info}
 > On Kubernetes, the file-backed access log showed up on the source sidecar after traffic was generated.
 >
-> For production, use a TCP backend pointing to your Loki or Fluentd instance instead of a file, or share a `MeshOpenTelemetryBackend` to ship logs over OTLP gRPC. In 2.14, the `KUMA_SOURCE_SERVICE` / `KUMA_DESTINATION_SERVICE` format codes will return KRI-format identifiers if you enable the KRI stat-name feature flag, adjust downstream log parsing accordingly.
+> For production, use a TCP backend pointing to your Loki or Fluentd instance instead of a file, or share a `MeshOpenTelemetryBackend` to ship logs over OTLP gRPC.
 
 ## Grafana dashboards
 
-{{site.mesh_product_name}} 2.14 ships six Grafana dashboards. Two are new in this release, Zone Ingress and Zone Egress, providing first-class observability for [Configure mesh-scoped zone proxies](/mesh/configure-mesh-scoped-zone-proxies/).
+The observability package includes six Grafana dashboards, including Zone Ingress and Zone Egress dashboards for [mesh-scoped zone proxies](/mesh/configure-mesh-scoped-zone-proxies/).
 
 <!-- vale off -->
 {% table %}
@@ -336,7 +353,7 @@ The dashboards filter metrics by `job` label and rely on three scrape jobs added
 
 - `kuma-dataplanes`: sidecar metrics discovered automatically through {{site.mesh_product_name}}'s native MADS service discovery (`kuma_sd_configs`). Feeds the Workload Health, Workload Debug, and Mesh Drilldown dashboards.
 - `kuma-control-plane`: the Control Plane's own `/metrics` endpoint. Feeds the Control Plane dashboard.
-- `kuma-zone-proxies`: zone ingress and egress metrics scraped from zone proxy pods on port `9902` (new in 2.14). Feeds the new Zone Ingress and Zone Egress dashboards.
+- `kuma-zone-proxies`: zone ingress and egress metrics scraped from zone proxy pods on port `9902`. Feeds the Zone Ingress and Zone Egress dashboards.
 
 For the full `additionalScrapeConfigs` values and MADS `kuma_sd_configs` setup, see the canonical [mesh observability](/mesh/observability/) reference.
 

@@ -152,24 +152,28 @@ metadata:
   namespace: kong-air-production
   labels:
     kuma.io/mesh: kong-air-mesh
+    kuma.io/origin: zone
 spec:
   targetRef:
     kind: Mesh # Applies to every client that calls passenger-portal
   to:
     - targetRef:
         kind: MeshService
-        name: passenger-portal # The shared booking API entry point
+        labels:
+          kuma.io/display-name: passenger-portal # The shared booking API entry point
       rules:
         - matches:
             - path: { value: "/", type: PathPrefix }
           default:
             backendRefs:
               - kind: MeshService
-                name: passenger-portal-v1
+                labels:
+                  kuma.io/display-name: passenger-portal-v1
                 port: 8080
                 weight: 90 # 90% traffic to stable
               - kind: MeshService
-                name: passenger-portal-v2
+                labels:
+                  kuma.io/display-name: passenger-portal-v2
                 port: 8080
                 weight: 10 # 10% traffic to canary' | kubectl apply -f -
 ```
@@ -186,6 +190,7 @@ metadata:
   namespace: {{site.mesh_namespace}}
   labels:
     kuma.io/mesh: kong-air-mesh
+    kuma.io/origin: zone
 spec:
   targetRef:
     kind: Dataplane
@@ -196,7 +201,7 @@ spec:
         allow:
           - spiffeID:
               type: Exact
-              value: spiffe://kong-air-mesh.mesh.local/ns/kong-air-production/sa/check-in-api' | kubectl apply -f -
+              value: spiffe://kong-air-mesh.zone1.mesh.local/ns/kong-air-production/sa/check-in-api' | kubectl apply -f -
 ```
 
 ## Validate
