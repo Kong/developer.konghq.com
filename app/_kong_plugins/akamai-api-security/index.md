@@ -116,8 +116,9 @@ Use this method when {{site.base_gateway}} is deployed on Kubernetes using the o
    kubectl logs -n kong deploy/kong-proxy | grep nonamesecurity
    ```
 
+   Check the list of enabled plugins:
    ```bash
-   curl http://<admin-api>:8001/plugins/enabled
+   curl http://localhost:8001/plugins/enabled
    ```
 
 If you aren't using Helm, add the following to the `spec.container.env` section of your Kong Deployment or DaemonSet instead:
@@ -183,12 +184,12 @@ Upload the plugin schema so the control plane can validate and distribute {{page
    export CONTROL_PLANE_ID="your-control-plane-id"
    ```
 
-1. Upload the schema:
+1. Upload the schema, setting your own control plane ID and {{site.konnect_short_name}} access token:
 
    ```bash
    curl -i -X POST \
-     "https://us.api.konghq.com/v2/control-planes/${CONTROL_PLANE_ID}/core-entities/plugin-schemas" \
-     --header "Authorization: Bearer ${KONNECT_TOKEN}" \
+     "https://us.api.konghq.com/v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugin-schemas" \
+     --header "Authorization: Bearer $KONNECT_TOKEN" \
      --header "Content-Type: application/json" \
      --data "{\"lua_schema\": $(jq -Rs '.' kong-plugin-nonamesecurity-<version>/nonamesecurity/schema.lua)}"
    ```
