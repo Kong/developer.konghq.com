@@ -7,6 +7,13 @@ products:
   - ai-gateway
 content_type: plugin
 description: Expose metrics related to {{site.ai_gateway_name}} in Prometheus exposition format
+related_resources:
+  - text: "{{site.konnect_product_name}} Observability"
+    url: /observability/
+  - text: "OpenTelemetry Policy"
+    url: /ai-gateway/policies/opentelemetry/
+  - text: "Monitor AI LLM metrics"
+    url: /ai-gateway/monitor-ai-llm-metrics/
 ---
 
 This AI Policy allows you to expose metrics related to {{site.ai_gateway}} and proxied upstream services in [Prometheus](https://prometheus.io/docs/introduction/overview/) exposition format, which can be scraped by a Prometheus Server.
@@ -22,21 +29,7 @@ This AI Policy records and exposes metrics at the node level. Your Prometheus se
 
 To collect metrics you must enable the Status API on each data plane by passing the `KONG_STATUS_LISTEN` environment variable, the standard value is `KONG_STATUS_LISTEN=0.0.0.0:8100`. Your Prometheus instance must be able to reach each data plane on this port over the network.
 
-Set you [Prometheus configuration](https://prometheus.io/docs/prometheus/latest/configuration/configuration/) to scrape data by targeting your data plane by it's hostname and the metrics endpoint at the port you set. 
-
-For example, a simple Prometheus configuration file might include:
-
-```yaml
-scrape_configs:
-- job_name: kong-gateway
-  static_configs:
-  - targets:
-    - ai-quickstart-gateway:8100
-```
-
-## Configure the Prometheus policy 
-
-Configure an Prometheus AI Policy with `ai_metrics: true` to capture {{site.ai_gateway_name}} traffic:
+Configure a Prometheus AI Policy with `ai_metrics: true` to capture {{site.ai_gateway_name}} traffic:
 
 {% entity_example %}
 type: policy
@@ -53,6 +46,18 @@ formats:
   - kongctl
 {% endentity_example %}
 
+Set your [Prometheus configuration](https://prometheus.io/docs/prometheus/latest/configuration/configuration/) to scrape data by targeting your data plane by it's hostname and the metrics endpoint at the port you set.
+
+For example, a simple Prometheus configuration file could include:
+
+```yaml
+scrape_configs:
+- job_name: kong-gateway
+  static_configs:
+  - targets:
+    - ai-quickstart-gateway:8100
+```
+
 ## Available metrics
 
 You can expose the following metrics:
@@ -61,13 +66,13 @@ You can expose the following metrics:
   whether the database can be reached by a {{site.ai_gateway}} node.
 - **Connections**: Various Nginx connection metrics like active, reading,
   writing, and number of accepted connections.
-- **Dataplane Status**: The last seen timestamp, config hash, config sync status, and certificate expiration timestamp for
+- **Data Plane Status**: The last seen timestamp, config hash, config sync status, and certificate expiration timestamp for
 Data Plane nodes are exported to the Control Plane.
 - **Enterprise License Information**: The {{site.ai_gateway}} license expiration date, features and
 license signature. Those metrics are only exported on self-managed {{site.ai_gateway}}.
 - **DB Entity Count**: A gauge metric that
     measures the current number of database entities.
-- **Number of Nginx timers** : A gauge metric that measures the total number of Nginx
+- **Number of Nginx timers**: A gauge metric that measures the total number of Nginx
     timers in a Running or Pending state.
 - **AI LLM metrics**: AI LLM metrics are available per provider, model, cache, database name (if cached), embeddings provider (if cached), embeddings model (if cached), and Workspace.
 
@@ -115,7 +120,7 @@ have a `subsystem` label to indicate which subsystem the metric refers to.
 Here is an example of output you could expect from the `/metrics` endpoint:
 
 ```bash
-curl -i http://localhost:8001/metrics
+curl -i http://localhost:8100/metrics
 ```
 
 Response:
