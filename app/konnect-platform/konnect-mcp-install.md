@@ -26,6 +26,18 @@ Configure the MCP client of your choice by adding the {{site.konnect_product_nam
 
 ## {{ site.claude_code }} CLI
 
+{% navtabs 'install' %}
+{% navtab "Browser-based authentication" %}
+
+Using the `claude mcp add` command:
+
+```bash
+claude mcp add --transport http kong-konnect3 https://global.mcp.konghq.com
+```
+Claude will open a browser window where you can sign in to {{site.konnect_product_name}} and authorize access.
+
+{% endnavtab %}
+{% navtab "Personal Access Token" %}
 Using the `claude mcp add` command:
 
 ```bash
@@ -54,8 +66,8 @@ You can also configure by editing the configuration file directly:
 }
 ```
 
-{:.info}
-> {{ site.claude_code }} also supports signing in through a browser-based OAuth flow instead of a PAT. Omit the `--header` flag (or the `headers` object in the JSON configuration), and {{ site.claude_code }} opens a browser window so you can sign in to {{site.konnect_product_name}} and authorize access.
+{% endnavtab %}
+{% endnavtabs %}
 
 **Verify the configuration**
 

@@ -109,6 +109,15 @@ rows:
               blocks:
                 - type: text
                   text: |
+                    **Browser-based authentication**
+
+                    Some MCP clients, including {{ site.claude_code }}, can also authenticate by opening a browser window so you can sign in to {{site.konnect_product_name}} and authorize access, instead of using a token.
+        - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
                     **Personal Access Token**
 
                     The MCP server can authenticate using your [Personal Access Token (PAT)](https://cloud.konghq.com/global/account/tokens), which means it only accesses resources you have permission to view. Create a token by opening the [{{site.konnect_product_name}} tokens page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**. All queries respect your organization's role-based access controls and regional data boundaries.
@@ -121,15 +130,7 @@ rows:
                     **System Account Access Token**
 
                     For automated workflows, you can also use a [System Account Access Token](https://cloud.konghq.com/global/organization/system-accounts/). SPATs are tied to specific service accounts with defined permissions, allowing secure machine-to-machine authentication without user intervention.
-        - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    **Browser-based sign-in**
-
-                    Some MCP clients, including {{ site.claude_code }}, can also authenticate by opening a browser window so you can sign in to {{site.konnect_product_name}} and authorize access, instead of using a token. Check your client's documentation to see whether it supports this method.
+        
   - header:
         text: "Access the server"
         type: h2
