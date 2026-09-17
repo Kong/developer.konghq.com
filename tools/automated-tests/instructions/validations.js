@@ -466,6 +466,33 @@ async function envVariables(config, runtimeConfig, container) {
   return [];
 }
 
+async function quickstart(config, runtimeConfig, container) {
+  const baseCommand = runtimeConfig.quickstart?.command;
+  if (!baseCommand) {
+    throw new Error(
+      `No quickstart base command configured for ${runtimeConfig.deploymentModel}/${runtimeConfig.product}.`,
+    );
+  }
+
+  const env = config.env || {};
+  const flags = Object.entries(env)
+    .map(([key, value]) => `-e "${key}=${value}"`)
+    .join(" ");
+  const command = flags ? `${baseCommand} ${flags}` : baseCommand;
+
+  const result = await executeCommand(container, command);
+
+  for (const match of result.output.matchAll(/^export (\w+)=(.*)$/gm)) {
+    const [, name, value] = match;
+    await setEnvVariable(container, name, value);
+  }
+
+  // Give the gateway time to boot before running validations against it.
+  await sleep(5000);
+
+  return [];
+}
+
 async function controlPlaneRequest(
   validationName,
   config,
@@ -648,6 +675,9 @@ export async function validate(container, validation, runtimeConfig) {
       break;
     case "env-variables":
       result = await envVariables(validation.config, runtimeConfig, container);
+      break;
+    case "quickstart":
+      result = await quickstart(validation.config, runtimeConfig, container);
       break;
     case "control_plane_request":
       result = await controlPlaneRequest(

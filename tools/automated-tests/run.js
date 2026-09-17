@@ -10,6 +10,7 @@ import {
   startBaseline,
   cleanupRuntime,
   resetRuntime,
+  provisionRuntime,
   getRuntimeConfig,
   afterAll,
   beforeAll,
@@ -70,6 +71,23 @@ async function partitionByStandaloneGateway(instructionFiles) {
   return { standalone, standard };
 }
 
+// A file that runs the quickstart itself (a `quickstart` validation in its prereqs or its
+// steps) provisions its own gateway, and usually its own cluster too. Provisioning the
+// shared baseline underneath it would collide with it, so the runtime only provisions when
+// the file declares no quickstart of its own.
+async function selfProvisions(file) {
+  const fileContent = await fs.readFile(file, "utf8");
+  const instructions = yaml.load(fileContent);
+  const declarations = [
+    ...(instructions.prereqs?.blocks || []),
+    ...(instructions.steps || []),
+  ];
+  return declarations.some(
+    (declaration) =>
+      typeof declaration === "object" && declaration.name === "quickstart",
+  );
+}
+
 // resetRuntime/runInstructionsFile can reject on infra-level failures (e.g. a
 // flaky `deck gateway reset -f`) outside the per-test try/catch. Uncaught,
 // that would abort every remaining file in the batch regardless of
@@ -78,6 +96,10 @@ async function runFile(instructionFile, runtimeConfig, container, { reset }) {
   try {
     if (reset) {
       await resetRuntime(runtimeConfig, container);
+
+      if (!(await selfProvisions(instructionFile))) {
+        await provisionRuntime(runtimeConfig, container);
+      }
     }
     return await runInstructionsFile(instructionFile, runtimeConfig, container);
   } catch (error) {
