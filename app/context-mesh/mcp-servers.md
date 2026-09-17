@@ -23,13 +23,6 @@ search_aliases:
   - Code Mode MCP
   - MCP server
 
-related_resources:
-  - text: "{{site.context_mesh}} overview"
-    url: /context-mesh/
-  - text: Connect MCP clients to {{site.context_mesh}}
-    url: /context-mesh/client-installation/
-  - text: Get started with {{site.context_mesh}}
-    url: /how-to/get-started-with-context-mesh/
 ---
 
 ## MCP Servers
