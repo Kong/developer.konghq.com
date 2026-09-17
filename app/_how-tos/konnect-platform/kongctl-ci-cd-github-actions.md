@@ -40,7 +40,8 @@ prereqs:
       icon_url: /assets/icons/gateway.svg
     - title: GitHub repository
       content: |
-        Use a GitHub repository with Actions enabled and a `main` branch.
+        Use a GitHub repository with Actions enabled and `main` as its
+        default branch.
         You need permission to add repository secrets and variables.
       icon_url: /assets/icons/code.svg
 related_resources:
@@ -57,6 +58,9 @@ next_steps:
 
 This quickstart builds a CI/CD pipeline to deliver a simple API and its
 OpenAPI specification to a Dev Portal using GitOps and GitHub Actions.
+
+Use a test Konnect organization: this example creates a Dev Portal and API
+with publicly accessible API documentation.
 
 ## Configure GitHub authentication
 
@@ -122,13 +126,11 @@ apis:
         visibility: public
 ```
 
-The publication's `!ref` links the API to the portal. Portal authentication
-is disabled so the published API documentation is publicly accessible.
-
-The API specification is inline to keep the example simple and
-self-contained. See the
-[portal example][ex] for a larger configuration with separate
-specification files, pages, and customization.
+This configuration defines a Dev Portal, an API with an inline OpenAPI
+specification, and a publication that makes the API available in the
+portal. The publication's `!ref` links it to the portal. Authentication is
+disabled so anyone can read the API documentation. See the
+[portal example][ex] for separate specification files and customization.
 
 [ex]: https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/portal
 
@@ -143,16 +145,12 @@ mkdir -p .github/workflows
 Create a file `.github/workflows/konnect.yaml` with the following GitHub
 Actions workflow definition:
 
-The workflow installs kongctl on the runner. The version below comes from
-the docs site's shared release data and is an explicit version when you
-copy it. Update `kongctl-version` in your repository when you're ready to
-upgrade; existing workflows keep using the version you copied.
-
 {% raw %}
 ```yaml
 name: Konnect APIOps
 
 on:
+  workflow_dispatch:
   pull_request:
     branches: [main]
     paths:
@@ -175,8 +173,11 @@ concurrency:
 jobs:
   configure:
     if: >-
-      github.event_name == 'push' ||
-      (github.event.pull_request.head.repo.full_name == github.repository &&
+      ((github.event_name == 'push' ||
+        github.event_name == 'workflow_dispatch') &&
+       github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' &&
+       github.event.pull_request.head.repo.full_name == github.repository &&
        github.actor != 'dependabot[bot]')
     runs-on: ubuntu-latest
     env:
@@ -213,37 +214,43 @@ jobs:
           header: konnect-diff
           path: comment.md
       - name: Apply configuration
-        if: github.event_name == 'push'
+        if: >-
+          github.ref == 'refs/heads/main' &&
+          (github.event_name == 'push' ||
+           github.event_name == 'workflow_dispatch')
         run: |
           kongctl apply -f konnect/portal.yaml --auto-approve -o text \
             --region "$KONGCTL_DEFAULT_KONNECT_REGION"
 ```
 {% endraw %}
 
-This workflow runs PR checks for branches in the same GitHub repository.
-Contributors who can push to these branches can modify workflows that use
-your Konnect token, so give that access only to people you trust. The
-workflow skips pull requests from forks and `dependabot[bot]`, which don't
-receive the repository's Actions secrets.
+The workflow installs the pinned kongctl version and:
 
-The workflow has two behaviors:
+- **On pull requests targeting `main`:** compares configuration with live
+  Konnect state and posts a diff in the summary and an updating PR comment.
+  It doesn't apply changes. `pull-requests: write` allows the comment.
+- **On pushes or manual runs on `main`:** calculates a fresh plan and
+  applies it without prompting. Concurrency prevents overlapping applies.
+  Manual runs on other branches are skipped.
 
-- **Pull requests targeting `main`:** `kongctl diff` compares the proposed
-  configuration with live Konnect state. It shows the changes in the
-  workflow summary and a PR comment for review without applying them.
-  Each successful diff run updates the same comment. The
-  `pull-requests: write` permission lets the workflow post this comment.
-- **Pushes to `main`:** `kongctl apply` calculates a fresh plan from live
-  Konnect state and executes it without prompting. This plan reflects the
-  state at deployment time, which may have changed since the PR diff.
-  The concurrency group prevents overlapping deployments to `main`.
+Only give trusted contributors branch access: they can edit workflows
+that use your Konnect token. Fork and dependency-bot pull requests are
+skipped because they don't receive repository secrets.
+
+The version comes from the docs site's shared release data when the page
+is built. Your copied workflow stays pinned; update `kongctl-version`
+when you're ready to upgrade.
 
 ## Review and deploy
 
 1. Commit both files, push your branch, and open a PR targeting `main`.
-   Review the diff comment posted by the **Konnect APIOps** workflow.
-1. Merge the PR. Check that the **Apply configuration** step succeeds, then
-   open your Dev Portal in Konnect and verify the published API and spec.
+   Wait for the **Konnect APIOps** workflow to finish, then review its diff
+   comment.
+1. Merge the PR. In **Actions**, open the **Konnect APIOps** run for the
+   push to `main`, then open **configure > Apply configuration**. Expect
+   four creates in the `default` namespace: `portal`, `api`, `api_version`,
+   and `api_publication`, followed by successful creation messages. Open
+   your Dev Portal in Konnect and verify the published API and spec.
 
 Every matching push to `main` deploys, including direct pushes. Use branch
 rules if all changes must go through PR review. `apply` creates and updates
@@ -264,13 +271,12 @@ delete resources.
 1. In `konnect/portal.yaml`, change the API's `description` to
    `An example API deployed with GitOps`.
 1. Commit the change, push your branch, and open a PR targeting `main`.
-   Check that the **Konnect APIOps** diff comment shows an update to the
-   API description.
+   Wait for the **Konnect APIOps** workflow to finish, then check that its
+   diff comment shows an update to the API description.
 1. Merge the PR and check that the **Apply configuration** step succeeds.
    Open your Dev Portal and verify that the API description has changed.
-1. In your GitHub repository's **Actions** tab, open the **Konnect APIOps**
-   run triggered by the merge's push to `main`. Select **Re-run all jobs**
-   and confirm the re-run. The **Apply configuration** step should report
-   no further changes if the configuration and live state are unchanged.
-   This repeats the existing push run; it doesn't require a
-   `workflow_dispatch` trigger.
+1. In your GitHub repository's **Actions** tab, select **Konnect APIOps**,
+   click **Run workflow**, select the `main` branch, and confirm with
+   **Run workflow**. When the run completes, open
+   **configure > Apply configuration**. It should report no further
+   changes if the configuration and live state are unchanged.
