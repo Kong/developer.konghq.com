@@ -103,6 +103,11 @@ body:
   response_types:
     - id_token
     - token
+extract_body:
+  - name: 'client_secret'
+    variable: CLIENT_SECRET
+  - name: 'id'
+    variable: CLIENT_ID
 capture:
   - variable: CLIENT_SECRET
     jq: ".client_secret"
