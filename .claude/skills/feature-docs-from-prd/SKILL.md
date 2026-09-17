@@ -31,6 +31,30 @@ adding a `skills` capability to the AI Gateway `AIGatewayModelAPI`, from
 `Kong/platform-api#3398` and its PRD). Expect to extend it as more PRDs come
 through with shapes this version hasn't seen yet.
 
+## Scope: AI Gateway 2.0 on Konnect only — Policies, not plugins
+
+This skill documents **AI Gateway 2.0 on Konnect**. That product surface uses
+**Policies** (`app/_ai_gateway_policies/<slug>/index.md`), not self-hosted
+Gateway **plugins** (`app/_kong_plugins/<slug>/`).
+
+Even when the underlying implementation PR is a `kong-ee` plugin (new Lua
+schema, `kong/plugins/<name>/`, a `changelog/unreleased/kong-aigw/*.yml`
+entry), do **not** create or edit a page under `app/_kong_plugins/` for it,
+and do not add a `min_version.gateway` frontmatter field. Only create/edit
+the `app/_ai_gateway_policies/` page, with `min_version.ai-gateway` (every
+existing AI Gateway v2 policy page uses `'2.0'` as this baseline — that's an
+established repo convention, not a guess per feature). If a PRD or ticket
+talks about "the plugin," translate that to "the Policy" in the docs and in
+the page's own prose, matching the wording of existing sibling pages under
+`app/_ai_gateway_policies/`.
+
+If the feature also needs to reach self-hosted Gateway users outside
+Konnect, that's a separate, explicit ask from the person requesting the
+docs — don't infer it from the implementation PR living in `kong-ee`, and
+don't build the paired plugin+policy page pattern by default just because
+an older sibling capability (like `ai-prompt-compressor` v1) happens to have
+both.
+
 ## Step 1: Intake
 
 Ask for all of this up front, in one message, if it wasn't already given:
@@ -91,11 +115,20 @@ This determines which files move and which pattern to follow:
   a different job than editing existing reference content from a PRD.
 - **Anything else** (a new entity type, a schema-only change with no prose
   implications, a deprecation) — there's no proven playbook for this yet.
-  Read 2-3 sibling pages for the closest existing pattern in this repo,
-  draft conservatively, and say explicitly in your summary that this change
-  shape hasn't been validated against a real example — that's a signal for
-  whoever reviews the draft to look closer, and a candidate for the next
-  round of iterating on this skill.
+  Read 2-3 sibling pages under `app/_ai_gateway_policies/` (see the Scope
+  section above — not `app/_kong_plugins/`) for the closest existing pattern
+  in this repo, draft conservatively, and say explicitly in your summary
+  that this change shape hasn't been validated against a real example —
+  that's a signal for whoever reviews the draft to look closer, and a
+  candidate for the next round of iterating on this skill.
+- **A brand-new plugin/Policy with no existing sibling page at all** — still
+  a Policy-only page under `app/_ai_gateway_policies/<slug>/index.md`. Model
+  its frontmatter and structure on the nearest existing Policy of a similar
+  shape (an external-backend policy, a guardrail policy, etc.), not on a
+  `app/_kong_plugins/` plugin page's frontmatter fields (`tier`, `publisher`,
+  `topologies`, `min_version.gateway`, an `examples/` directory, or a
+  `reference.md` stub) — those are plugin-page-only conventions that don't
+  apply to a Policy page.
 
 ## Step 6: Never fabricate a per-provider or per-target support value
 
