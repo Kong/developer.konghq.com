@@ -40,6 +40,11 @@ faqs:
     a: |
       No, the secret is only shared once when the client is created. Store it securely.
 
+cleanup:
+  inline:
+    - title: Clean up {{site.identity}} resources
+      include_content: md/identity/delete_auth_server
+
 related_resources:
   - text: "{{site.identity}}"
     url: /identity/
