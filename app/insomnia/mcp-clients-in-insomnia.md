@@ -195,7 +195,7 @@ For more information about sampling, go to the MCP [Sampling](https://modelconte
 ## Set a token limit per request
 
 By default, a request can consume as many tokens as the model allows. To cap
-token usage on each request and control cost, {{ site.data.products.insomnia.name }}
+token usage on each request and control cost, {{ site.insomnia }}
 lets you set a maximum number of tokens per request:
 
 1. Navigate to **Preferences** > **AI Settings** > **Activate an LLM**.

@@ -19,6 +19,7 @@ works_on:
   - konnect
 tools:
   - konnect-api
+  - kongctl
 related_resources:
   - text: "About {{site.ai_gateway}}"
     url: /ai-gateway/
@@ -113,9 +114,12 @@ data:
   cert: |
       -----BEGIN CERTIFICATE-----
       -----END CERTIFICATE-----
-  key: |
-      -----BEGIN PRIVATE KEY-----
-      -----END PRIVATE KEY-----
+  key: ${tls_key}
+variables:
+  tls_key:
+    value: $TLS_CERT_KEY
+    secret: true
+    description: The value of your private key.
 {% endentity_example %}
 
 ## Schema

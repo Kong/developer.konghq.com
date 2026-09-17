@@ -19,9 +19,6 @@ require_relative 'policy_yaml/code_block_formatter'
 
 module Jekyll
   class RenderPolicyYaml < Liquid::Block
-    TARGET_VERSION = Gem::Version.new('2.9')
-    TF_TARGET_VERSION = Gem::Version.new('2.10')
-
     def initialize(tag_name, markup, options)
       super
       @params = PolicyYaml::Params.new(markup)
@@ -40,11 +37,10 @@ module Jekyll
     private
 
     def render_component(context, content)
-      release = context.registers[:page]['release']
       contents, terraform_content = render_styles(context, content)
 
       context.stack do
-        assign_context(context, release, contents, terraform_content)
+        assign_context(context, contents, terraform_content)
         ComponentTemplates.fetch('policy_yaml', 'markdown').render(context)
       end
     end
@@ -58,16 +54,16 @@ module Jekyll
       ).render(extract_documents(content))
     end
 
-    def assign_context(context, release, contents, terraform_content)
+    def assign_context(context, contents, terraform_content)
       tools = Array(@params['tools'])
       formatter = PolicyYaml::CodeBlockFormatter.new(raw: raw_body?)
-      meshservice = use_meshservice?(release)
+      meshservice = use_meshservice?
 
       context['additional_classes'] = meshservice ? nil : 'codeblock'
       context['use_meshservice'] = meshservice
       context['show_kubernetes'] = tools.empty? || tools.include?('kubernetes')
       context['show_universal'] = tools.empty? || tools.include?('universal')
-      context['show_tf'] = show_terraform?(release, tools)
+      context['show_tf'] = show_terraform?(tools)
       context['terraform_content'] = formatter.hcl(terraform_content)
       context['kube_legacy'] = formatter.yaml(contents[:kube_legacy])
       context['kube'] = formatter.yaml(contents[:kube])
@@ -90,16 +86,12 @@ module Jekyll
                                     ])
     end
 
-    def use_meshservice?(release)
-      @params['use_meshservice'] == true && version(release) >= TARGET_VERSION
+    def use_meshservice?
+      @params['use_meshservice'] == true
     end
 
-    def show_terraform?(release, tools)
-      version(release) >= TF_TARGET_VERSION && (tools.empty? || tools.include?('terraform'))
-    end
-
-    def version(release)
-      Gem::Version.new(release.number.dup.sub('x', '0'))
+    def show_terraform?(tools)
+      tools.empty? || tools.include?('terraform')
     end
 
     def raw_body?

@@ -48,11 +48,6 @@ RSpec.describe Jekyll::Data::LlmMetadata do
   subject { described_class.new(site:, page:) }
 
   describe '#process' do
-    context 'when URL starts with /assets/' do
-      let(:page_url) { '/assets/mesh/test.yaml' }
-      it { expect(subject.process).to be_nil }
-    end
-
     context 'when layout is none' do
       let(:page_data) { base_page_data.merge('layout' => 'none') }
       it { expect(subject.process).to be_nil }

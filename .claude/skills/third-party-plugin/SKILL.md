@@ -1,12 +1,17 @@
 ---
 name: third-party-plugin
 description: >
-  Create complete documentation for a new third-party Kong Gateway plugin on developer.konghq.com.
-  Use this skill whenever the user asks to document, write, or create a new third-party Kong Gateway
-  plugin page, including index.md, schema.json, or example YAML files.
-  Also use it when someone shares a plugin schema (Lua or JSON), a GitHub repo, or vendor plugin assets
-  and asks for help turning them into developer.konghq.com documentation.
-  Trigger even if the user only says "write docs for my plugin", "add a plugin page", or "document this schema".
+  Create or update documentation for a third-party Kong Gateway plugin on developer.konghq.com,
+  meaning any plugin published by a vendor rather than by Kong. Covers a brand new plugin page
+  (index.md, schema.json, example YAML files) as well as adding or editing an example YAML file
+  for a third-party plugin that already has docs.
+  Use this skill whenever the user asks to document, write, create, or update a third-party
+  Kong Gateway plugin page or example, or shares a plugin schema (Lua or JSON), a GitHub repo,
+  or vendor plugin assets and asks for help turning them into developer.konghq.com documentation.
+  Trigger even if the user only says "write docs for my plugin", "add a plugin page", "document
+  this schema", or "add an example for the <vendor> plugin".
+  Not for Kong's own first-party plugins (publisher: kong-inc), use the plugin-example skill
+  for writing or updating an example on one of those instead.
 ---
 
 # Third-party plugin documentation skill
@@ -14,7 +19,7 @@ description: >
 This skill guides you through creating complete documentation for a new third-party Kong Gateway plugin on developer.konghq.com.
 The output is a new directory under `app/_kong_plugins/<plugin-slug>/` containing `index.md`, `schema.json`, and at least one `examples/*.yaml` file.
 
-Use the Skyflow De-identify plugin (app/_kong_plugins/skyflow-ai-data-control/index.md) as the canonical worked example of a complex plugin, and the Noma Runtime Protection (app/_kong_plugins/noma-runtime-protection/index.md) and TrendAI API Security (app/_kong_plugins/trend-micro-kong-plugin-aps/index.md) plugins as examples of simpler ones.
+Use the Skyflow De-identify plugin (app/_kong_plugins/skyflow-ai-data-control/index.md) as the canonical worked example of a complex plugin, and the Noma Runtime Protection (app/_kong_plugins/noma-runtime-protection/index.md) and TrendAI API Security (app/_kong_plugins/trend-micro-kong-plugin-aps/index.md) plugins as examples of simpler ones. For a vendor shipping multiple sibling plugins from one LuaRock, use the Harness AI Security / Harness WAAP pair (app/_kong_plugins/harness-ai-security/index.md, app/_kong_plugins/harness-waap/index.md) as the model: separate pages with install steps written inline per page, not deduplicated into a shared include.
 
 Read `references/patterns.md` before drafting anything. It contains the front matter schema, body section order, navtab patterns, style rules, and schema.json structure.
 
@@ -42,6 +47,7 @@ Collect the following. Where information is ambiguous, ask rather than assume.
 **Products and deployment**
 - Products: `gateway` and/or `ai-gateway`
 - `works_on`: `on-prem` and/or `konnect`
+- If the plugin targets AI Gateway, ask whether it's been validated against AI Gateway 2.0. If not, see the Callouts section in patterns.md for the warning to add.
 
 **Schema**
 - The plugin's schema, as either a `schema.lua` file (provide a path or URL) or a `schema.json` file
@@ -64,6 +70,7 @@ Collect the following. Where information is ambiguous, ask rather than assume.
   publisher-slug:
     name: Publisher Display Name
   
+- Also add the vendor name (lowercase), in alphabetical order, to `.github/styles/base/Dictionary.txt`, so Vale doesn't flag it as an unknown spelling.
 
 **Icon check**
 - Check whether the icon file exists at `app/assets/icons/plugins/<icon-filename>.svg`
@@ -71,6 +78,10 @@ Collect the following. Where information is ambiguous, ask rather than assume.
 - If the file is not present, note it as a gap in the pre-draft confirmation and tell the user:
   "The icon file `<filename>.svg` does not exist in `app/assets/icons/plugins/`. You'll need to obtain it from the vendor and add it before the plugin page will render correctly."
 - Do not block drafting the docs on this — just flag it clearly.
+
+**Multiple plugins from one vendor/rock**
+- Ask whether the plugins interact: mutually exclusive (attach only one per Route), complementary (attach together), or dependent (one requires the other already attached). This determines how strongly to cross-link them and whether a decision aid (e.g. a small flowchart) would help the reader pick the right one.
+- Give each plugin its own `app/_kong_plugins/<slug>/` directory and cross-link siblings (see `related_resources` guidance in patterns.md).
 
 ---
 
@@ -153,6 +164,8 @@ Key rules:
 - No empty `min_version` — omit the field if unknown
 - Bold only UI labels, not prose emphasis
 - Sentence-case headings
+- Refer to another plugin in prose by its title-case display name, linked to its page (e.g. "[Request Transformer](/plugins/request-transformer/)"), not its code-style slug. A slug in code style is fine only when it's illustrating a literal config value, e.g. inside `KONG_PLUGINS=bundled,request-transformer`
+- Avoid a "not X, Y" construction (a clause stating what something is *not* before saying what it is). Rephrase as a direct positive statement instead
 
 Place at: `app/_kong_plugins/<slug>/index.md`
 
@@ -184,3 +197,4 @@ Present the drafted files. Accept feedback and revise. Pay particular attention 
 - Config field descriptions: are they accurate to the actual schema?
 - Example variable names: do they match what a user would actually set in their environment?
 - Installation steps: are they complete enough for someone who has never installed a custom plugin?
+- Internal contradictions: does a caveat or warning in one section hold up against claims made elsewhere on the page (or a sibling plugin's page)?

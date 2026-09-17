@@ -13,10 +13,10 @@ tags:
   - dlp
   - security
 related_resources:
-  - text: AI Model
-    url: /ai-gateway/entities/ai-model/
-  - text: AI Policy
-    url: /ai-gateway/entities/ai-policy/
+  - text: How to protect sensitive data in requests
+    url: /ai-gateway/protect-sensitive-information-with-ai/
+  - text: How to protect sensitive data in responses
+    url: /ai-gateway/protect-sensitive-information-output-with-ai/
   - text: AI Custom Guardrail Policy
     url: /ai-gateway/policies/ai-custom-guardrail/
   - text: "{{site.ai_gateway}} audit log reference"

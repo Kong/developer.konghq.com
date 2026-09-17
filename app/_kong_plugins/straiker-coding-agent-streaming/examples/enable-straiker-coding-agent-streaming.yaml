@@ -1,0 +1,38 @@
+description: 'Enable the Straiker Coding Agent Streaming plugin on an Anthropic Messages route.'
+
+extended_description: |
+  Enable the Straiker Coding Agent Streaming plugin on a Route that proxies Anthropic Messages traffic, for example from Claude Code.
+
+  This configuration fails open if Straiker Defend is unreachable, so coding-agent traffic keeps flowing during a Straiker outage, and relays the streamed response to Straiker Defend asynchronously after it ships to the client.
+  Because the response is never held, this plugin can't stop a `tool_use` before the client runs it.
+  Use the [buffered plugin](/plugins/straiker-coding-agent-buffered/) instead when a tool call must be stopped before it runs.
+
+  This plugin requires `nginx_http_client_body_buffer_size` raised to at least `32m`. See [Body buffer](/plugins/straiker-coding-agent-streaming/#body-buffer).
+
+title: 'Enable Straiker Coding Agent Streaming'
+
+weight: 900
+
+requirements:
+  - "The Straiker Coding Agent Streaming plugin is [installed](/plugins/straiker-coding-agent-streaming/#install-the-straiker-coding-agent-streaming-plugin), with `nginx_http_client_body_buffer_size` raised."
+  - "A Straiker Defend API key. Contact your Straiker team for enterprise API keys and sandbox access."
+  - "A Service pointing at the Anthropic Messages API, for example `https://api.anthropic.com`."
+
+variables:
+  api-key:
+    value: $STRAIKER_API_KEY
+    description: Your Straiker Defend API key.
+
+config:
+  api_key: ${api-key}
+  fail_open: true
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.14'

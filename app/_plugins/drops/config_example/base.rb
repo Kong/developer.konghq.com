@@ -35,6 +35,14 @@ module Jekyll
           @config ||= example.fetch('config', {})
         end
 
+        def expressions
+          @expressions ||= example.fetch('expressions', {})
+        end
+
+        def condition
+          @condition ||= example['condition']
+        end
+
         def description
           @description ||= example.fetch('description')
         end

@@ -1,0 +1,2 @@
+The {{include.name}} plugin transparently decompresses record batches on read. 
+If a producer writes a topic with `gzip`, `snappy`, `lz4`, or `zstd` compression, {{include.name}} automatically decompresses the batch before returning message data.

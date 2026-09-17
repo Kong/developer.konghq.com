@@ -14,6 +14,8 @@ related_resources:
     url: /ai-gateway/entities/ai-model-provider/
   - text: AI Model
     url: /ai-gateway/entities/ai-model/
+  - text: Identify AI Consumers on AI Model traffic with {{site.identity}}
+    url: /ai-gateway/identify-ai-consumers-with-kong-identity/
 
 description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic to an OpenAI model
 

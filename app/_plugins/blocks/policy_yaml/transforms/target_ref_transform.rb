@@ -5,11 +5,15 @@ require_relative './base'
 module Jekyll
   module PolicyYaml
     module Transforms
-      # Rewrites a MeshService `targetRef` under `spec.to.targetRef` into its
-      # Kubernetes or Universal shape, legacy tag-based or MeshService-ref based.
+      # Rewrites a MeshService or MeshMultiZoneService `targetRef` under
+      # `spec.to.targetRef` into its Kubernetes or Universal shape, legacy
+      # tag-based or MeshService-ref based.
       class TargetRefTransform < Base
         def initialize
-          super(Condition.all(Condition.path(%w[spec to targetRef]), Condition.kind('MeshService')))
+          super(Condition.all(
+            Condition.path(%w[spec to targetRef]),
+            Condition.any(Condition.kind('MeshService'), Condition.kind('MeshMultiZoneService'))
+          ))
         end
 
         def call(target_ref, context)
@@ -26,7 +30,7 @@ module Jekyll
           return legacy_kubernetes_ref(target_ref) if legacy
 
           {
-            'kind' => 'MeshService',
+            'kind' => target_ref['kind'],
             'name' => target_ref['name'],
             'namespace' => target_ref['namespace'],
             'sectionName' => target_ref['sectionName']
@@ -43,7 +47,7 @@ module Jekyll
         def universal_ref(target_ref, legacy)
           return { 'kind' => 'MeshService', 'name' => target_ref['name'] } if legacy
 
-          { 'kind' => 'MeshService', 'name' => target_ref['name'], 'sectionName' => target_ref['sectionName'] }
+          { 'kind' => target_ref['kind'], 'name' => target_ref['name'], 'sectionName' => target_ref['sectionName'] }
         end
       end
     end

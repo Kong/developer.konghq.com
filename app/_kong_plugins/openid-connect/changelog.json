@@ -1,4 +1,91 @@
 {
+  "3.16.0.0": [
+    {
+      "message": "Added actor token support to token exchange. Configure `token_exchange.request.actor_token` to include an actor token, read from a request header or a static token value, in the token exchange request.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added `protected_resource_metadata` configuration to support RFC 9728 OAuth 2.0 Protected Resource Metadata, enabling automatic authorization server discovery by serving a well-known metadata document and enriching `WWW-Authenticate` challenge headers with `resource_metadata` and `scope` attributes.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for Microsoft Entra ID's On-Behalf-Of flow through a new `token_exchange.grant_type = jwt_bearer` (RFC 7523) mode, plus `map_identities_from` and `token_exchange.provider`.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "`KONG_FIPS=on` no longer generates default EdDSA JWKS keys. Use an RSA-PSS or NIST-curve ECDSA key instead.\n\n    If you are migrating from the FIPS package to the FIPS 3 package for compliance with FIPS 140-3, please note that this is a breaking change in the standard that requires your manual intervention.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where `token_exchange` scope and audience conditions matched only the claims `scope` and `aud`. Support for `scopes_claim`/`audience_claim` is now added to `token_exchange`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a request that authenticated but failed an authorization check (such as `scopes_required`) was not attributed to its consumer, consumer groups, or Kong Identity principal in logs and analytics.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a revoked or inactive token from the introspection endpoint was cached using the default/positive TTL instead of `cache_ttl_neg`, keeping the token marked inactive in the cache longer than configured.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `redirect_uri` parameter was sent to the token endpoint for all grant types. It is now included only for the `authorization_code` grant, as required by RFC 6749.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a token endpoint response with `expires_in <= 0` was cached indefinitely with the proactive expiry re-check disabled, causing the plugin to silently forward an already-expired token to the upstream until a worker/process restart.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where `token_endpoint_auth_method`, custom token headers, and extra token POST args were ignored during token exchange, causing the exchange request to always use `client_secret_basic` regardless of configuration.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where `token_exchange.cache` defaulted to disabled instead of its documented enabled default when omitted.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a session was not saved on a request that performed a token exchange. A session-restored request now reuses the exchanged identity instead of re-exchanging.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where disabling `verify_signature` gave no warning, even though it also skips signature verification for bearer tokens from clients. The plugin now logs a warning when `verify_signature` is `false` and `auth_methods` includes `bearer`. It logs a notice instead when `bearer` is not enabled. `token_exchange.subject_token_issuers` entries for a different issuer now also warn when they don't set `verify_signature` to `true`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where switching clients within a single request (via `client_arg`) failed to use the matching client's JWK.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where consumer groups could not be resolved\nwhen the groups claim was only available from the user info endpoint, which\nresulted in a `500` error.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed the token exchange cache to stop outliving its subject token, mixing entries across `grant_type`/`provider`/client, and serving stale results after a plugin update under incremental config sync. Use `cache_tokens_salt` to scope the cache further.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "The `ignore_signature` option now logs a warning when it is set,\nbecause it turns off JWS signature verification for the listed grants.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.15.0.0": [
     {
       "message": "Added `proof_of_possession_mtls_from_header` for mTLS PoP validation via HTTP header when TLS is pre-terminated by downstream.",
@@ -81,6 +168,13 @@
     },
     {
       "message": "The `ignore_signature` option now logs a warning when it is set,\nbecause it turns off JWS signature verification for the listed grants.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.15.0.6": [
+    {
+      "message": "Fixed an issue where disabling `verify_signature` gave no warning, even though it also skips signature verification for bearer tokens from clients. The plugin now logs a warning when `verify_signature` is `false` and `auth_methods` includes `bearer`. It logs a notice instead when `bearer` is not enabled. `token_exchange.subject_token_issuers` entries for a different issuer now also warn when they don't set `verify_signature` to `true`.",
       "type": "bugfix",
       "scope": "Plugin"
     }
@@ -207,6 +301,13 @@
     },
     {
       "message": "The `ignore_signature` option now logs a warning when it is set,\nbecause it turns off JWS signature verification for the listed grants.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.14.0.15": [
+    {
+      "message": "Fixed an issue where disabling `verify_signature` gave no warning, even though it also skips signature verification for bearer tokens from clients. The plugin now logs a warning when `verify_signature` is `false` and `auth_methods` includes `bearer`. It logs a notice instead when `bearer` is not enabled.",
       "type": "bugfix",
       "scope": "Plugin"
     }

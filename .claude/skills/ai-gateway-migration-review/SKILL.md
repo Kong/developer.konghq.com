@@ -58,15 +58,17 @@ products:
 works_on:
     - konnect             # Only konnect, no on-prem
 tools:
-    - konnect-api         # Optional field, if it exists, must be only konnect-api
+    - kongctl             # Optional field. If it exists, must be only kongctl or only konnect-api
 min_version:
     ai-gateway: '2.0'
 ```
 
+Prefer `kongctl` over `konnect-api` when both would work — it's what every real v2 how-to uses, and it's required for `{% entity_examples %}` to resolve a format at all (only `deck` and `kongctl` are supported formats there). Reach for `konnect-api` only when the page has no `entity_examples` block and is written entirely as raw `{% konnect_api_request %}` calls.
+
 Flag any deviation:
 - `products` containing anything other than `ai-gateway`
 - `works_on` containing `on-prem` or anything other than `konnect`
-- `tools` containing `deck`, `admin-api`, or anything other than `konnect-api`
+- `tools` containing `deck`, `admin-api`, or a mix of `kongctl` and `konnect-api` on the same page
 - Missing or wrong `min_version` (must be `ai-gateway: '2.0'`)
 
 #### `content_type` on AI Policy pages
@@ -100,6 +102,8 @@ For everything else:
   Be careful: `/gateway/entities/plugin/` can also be a legitimate reference to the generic Gateway Plugin entity — for instance when a page contrasts AI Policies with how {{site.base_gateway}} plugins work. Only rewrite when the link is genuinely about an AI Policy. **Flag ambiguous cases for manual review** rather than rewriting automatically.
 
 - **Exception — flag these**: Any reference to AI A2A Proxy, AI MCP Proxy, AI Proxy, or AI Proxy Advanced as plugins should be flagged for manual review (these don't have policy equivalents).
+
+- **File and permalink naming**: When a v1 how-to's filename ends in `-plugin.md` (and its `permalink:` matches), the v2 replacement's filename and `permalink:` must end in `-policy.md` / `-policy/` instead — not just the frontmatter `title:` or body prose. Confirmed pattern: `use-ai-prompt-guard-plugin.md` → `use-ai-prompt-guard-policy.md`, `use-ai-aws-guardrails-plugin.md` → `use-ai-aws-guardrails-policy.md`. Flag any newly created v2 file that kept a `-plugin.md`/`-plugin/` name or permalink without checking whether it should be `-policy` instead. Exception: files about the four plugin-only exceptions (AI A2A Proxy, AI MCP Proxy, AI Proxy, AI Proxy Advanced) correctly keep "plugin" in the filename too, since those never get a Policy equivalent.
 
 - **Landing page plugin blocks**: In YAML landing pages (`.yaml` files under `_landing_pages/`), replace `type: plugin` blocks with `type: aigw_policy`. Example:
   ```yaml
@@ -216,6 +220,9 @@ When producing a **report**, structure it like this for each file reviewed:
 
 **Plugin → AI Policy issues:**
 - <issue description>
+
+**File/permalink naming:**
+- <filename or permalink still ends in -plugin instead of -policy, or vice versa>
 
 **Include/data file references (including `{% include /plugins/` tags):**
 - <issue description>

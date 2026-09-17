@@ -163,6 +163,7 @@ entities:
       config:
         ingest_endpoint: https://us.api.konghq.com/v3/openmeter/events
         api_token: ${AUTH_TOKEN}
+        ssl_verify: true
         meter_api_requests: false
         meter_ai_token_usage: true
         subject:
@@ -173,6 +174,8 @@ variables:
     description: A {{site.konnect_short_name}} system account token (`spat_`) with the Metering Ingest role.
 {% endentity_examples %}
 <!--vale on-->
+
+This example meters a few representative dimensions. For every field the plugin can emit, see [Captured event dimensions](/plugins/metering-and-billing/#captured-event-dimensions).
 
 ## Create a feature
 
@@ -269,7 +272,9 @@ body:
 This will generate AI LLM token usage that will be captured by {{site.metering_and_billing}}.
 
 {:.info}
-> **Entitlement enforcement:** The {{site.ai_gateway}} does not automatically block traffic when a customer's entitlement is exhausted. To enforce limits, set up a webhook notification rule and cut off access in your own infrastructure. See [Enforcing entitlements](/metering-and-billing/entitlements/#entitlement-enforcement) for details.
+> **Entitlement enforcement:** Metering alone does not block traffic when a customer's entitlement is exhausted. To reject requests at the gateway, add the Entitlement Enforcement plugin: see the how-to guide to [Enforce entitlements on LLM traffic](/ai-gateway/v1/how-to/enforce-entitlements-on-llm-traffic/). 
+> <br><br>
+> You can also set up a webhook notification rule and cut off access in your own infrastructure. See [Enforcing entitlements](/metering-and-billing/entitlements/#entitlement-enforcement) for details.
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.

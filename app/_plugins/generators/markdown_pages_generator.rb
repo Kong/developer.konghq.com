@@ -17,7 +17,6 @@ module Jekyll
       site.pages.each do |page|
         next if page.data['llm'] == false
         next if page.data['published'] == false
-        next if page.path.start_with?('assets/')
 
         site.config['markdown_pages_to_render'] << MarkdownPage.new(site:, page:)
       end

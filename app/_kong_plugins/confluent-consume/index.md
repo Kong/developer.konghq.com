@@ -85,6 +85,10 @@ The plugin supports the following modes of operation:
 
 {% include_cached /plugins/confluent-kafka-consume/schema-registry.md name=page.name slug=page.slug workflow='consumer' %}
 
+## Message decompression {% new_in 3.16 %}
+
+{% include_cached /plugins/confluent-kafka-consume/decompression.md name=page.name %}
+
 ## Filter and transform messages {% new_in 3.12 %}
 
 You can use the `config.message_by_lua_functions` parameter to specify custom Lua code that will filter or transform Kafka messages. 

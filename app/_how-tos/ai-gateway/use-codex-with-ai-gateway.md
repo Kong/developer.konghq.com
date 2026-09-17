@@ -127,3 +127,4 @@ When prompted for network access, select **Yes, proceed**. Codex routes the requ
 
 {:.info}
 > The Codex CLI requires `OPENAI_API_KEY` to be set even though the real key lives on the {{site.ai_gateway}}, so setting a placeholder is fine. You may be prompted to confirm this in the UI.
+> In a production environment, we strongly recommend using consumer credentials to authenticate and track usage per-consumer. For more information, see [Identify AI Consumers on AI Model traffic with {{site.identity}}](/ai-gateway/identify-ai-consumers-with-kong-identity/).

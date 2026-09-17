@@ -80,6 +80,9 @@ rows:
 Tracing events capture the full lifecycle of each node, including input and output values.
 Each event corresponds to a specific point in a node's execution and includes the data the node was working with at that point.
 
+{% new_in 3.16 %} A request can run several Datakit instances, the base plugin plus any clones. 
+Each instance reports its own tracing capture, identified by a top-level `plugin_name` field (the base plugin name or clone name) and a `parent_span_id` field, so you can tell which instance's events belong together and where the capture is in the span tree.
+
 {:.info}
 > **Note**: Large values may be omitted from tracing events if they exceed the capture size limit.
 
@@ -111,6 +114,17 @@ rows:
   - field: "`error`"
     description: |
       The error message, if the action is `fail`.
+  - field: |
+      `phase` {% new_in 3.16 %}
+    description: |
+      The runtime phase the node executed in, `access` or `response`. 
+      Only present on the node's first lifecycle event.
+  - field: |
+      `sources` {% new_in 3.16 %}
+    description: |
+      The node's incoming connections from other nodes, used to reconstruct the Datakit node graph even after the Datakit configuration has changed. 
+      Each source identifies the originating node and whether the connection is a regular I/O value or a branch path (`then` or `else`). 
+      Only present on the node's first lifecycle event.
 {% endtable %}
 <!--vale on-->
 

@@ -70,6 +70,12 @@ When encoding request bodies, several things happen:
 
 {% include_cached /plugins/confluent-kafka-consume/record-headers.md name=page.name %}
 
+## Message compression {% new_in 3.16 %}
+
+{% include_cached /plugins/confluent-kafka-consume/compression.md name=page.name %}
+
+For an example, see [Compress messages before sending to Kafka](/plugins/kafka-upstream/examples/compress-messages/).
+
 ## Debugging {% new_in 3.15 %}
 
 By default, when producing a message fails, the plugin returns a generic error to the HTTP client and logs the real cause in the {{site.base_gateway}} logs:
@@ -89,7 +95,6 @@ This lets you see the exact broker rejection (for example, `TopicAuthorizationFa
 
 Known limitations:
 
-1. Message compression is not supported.
 1. In {{site.base_gateway}} 3.9 or earlier, the message format is not customizable.
 
 ## Authentication

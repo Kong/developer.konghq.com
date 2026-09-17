@@ -26,9 +26,7 @@ module Jekyll
       end
 
       def metadata
-        @metadata ||= api_plugin
-                      .data['plugin']
-                      .metadata.slice(*policies_metadata.fetch('keep'))
+        @metadata ||= api_plugin_metadata
                       .merge('schema' => schema, 'scopes' => scopes)
                       .merge(super)
       end
@@ -39,8 +37,17 @@ module Jekyll
 
       private
 
+      # Some AI Gateway policies (Konnect-only) have no backing classic Gateway
+      # plugin under `_kong_plugins`, so this falls back to the policy's own
+      # frontmatter for metadata instead of the plugin's.
+      def api_plugin_metadata
+        return {} unless api_plugin
+
+        api_plugin.data['plugin'].metadata.slice(*policies_metadata.fetch('keep'))
+      end
+
       def api_plugin
-        @api_plugin ||= site.data['kong_plugins'].fetch(@slug)
+        @api_plugin ||= site.data['kong_plugins'][@slug]
       end
 
       def policies_metadata

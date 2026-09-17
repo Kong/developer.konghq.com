@@ -1,7 +1,7 @@
 ---
-title: "{{ site.konnect_short_name }} Gateway Service integration in {{ site.data.products.insomnia.name }}"
+title: "{{ site.konnect_short_name }} Gateway Service integration in {{ site.insomnia }}"
 
-description: "Link {{ site.konnect_short_name }} to send requests from {{ site.data.products.insomnia.name }} to Routes in your Gateway Services."
+description: "Link {{ site.konnect_short_name }} to send requests from {{ site.insomnia }} to Routes in your Gateway Services."
 
 content_type: reference
 layout: reference
@@ -16,7 +16,7 @@ products:
 tier: enterprise
 
 next_steps:
-  - text: Link a {{ site.konnect_short_name }} Gateway Service to {{ site.data.products.insomnia.name }}
+  - text: Link a {{ site.konnect_short_name }} Gateway Service to {{ site.insomnia }}
     url: /how-to/link-konnect-to-insomnia/
 
 related_resources:
@@ -40,17 +40,17 @@ faqs:
   - q: What is the "Skipped Routes" Collection?
     a: |
       The "Skipped Routes" Collection contains Routes using an unsupported protocol. You can't use the Collection runner to send requests against them.    
-  - q: Why does {{ site.data.products.insomnia.name }} skip some Routes?
+  - q: Why does {{ site.insomnia }} skip some Routes?
     a: |
-      {{ site.data.products.insomnia.name }} skips Routes that use an unsupported protocol, such as SNI matching, TCP, or UDP. {{ site.data.products.insomnia.name }} displays the skipped Routes in a separate collection named "Skipped Routes".
+      {{ site.insomnia }} skips Routes that use an unsupported protocol, such as SNI matching, TCP, or UDP. {{ site.insomnia }} displays the skipped Routes in a separate collection named "Skipped Routes".
 
 ---
 
 ## About the {{ site.konnect_short_name }} integration
 
-Starting from {{ site.data.products.insomnia.name }} 13, Enterprise users can link {{ site.data.products.insomnia.name }} to Gateway Services deployed in {{ site.konnect_short_name }}. The integration allows sending requests from Collections against Routes pulled from {{ site.konnect_short_name }}, using the {{ site.data.products.insomnia.name }} app.
+Starting from {{ site.insomnia }} 13, Enterprise users can link {{ site.insomnia }} to Gateway Services deployed in {{ site.konnect_short_name }}. The integration allows sending requests from Collections against Routes pulled from {{ site.konnect_short_name }}, using the {{ site.insomnia }} app.
 
-After connecting and syncing your Gateway Services, {{ site.data.products.insomnia.name }}:
+After connecting and syncing your Gateway Services, {{ site.insomnia }}:
 
 - Displays the list of your control planes in {{ site.konnect_short_name }} as projects.
 - Nests the Gateway Services on each control plane as Collections under each project.
@@ -59,13 +59,13 @@ After connecting and syncing your Gateway Services, {{ site.data.products.insomn
 
 ### Requirements
 
-- An {{ site.data.products.insomnia.name }} [Enterprise account](/insomnia/enterprise/)
+- An {{ site.insomnia }} [Enterprise account](/insomnia/enterprise/)
 - A {{ site.konnect_short_name }} [Gateway Service](/gateway/).
 - A [Personal Access Token (PAT)](/konnect-api/#personal-access-tokens) 
 
 ## Available features
 
-Collections work the same as for local Routes. The following table lists the features that allow you to link {{ site.data.products.insomnia.name }} to {{ site.konnect_short_name }}:
+Collections work the same as for local Routes. The following table lists the features that allow you to link {{ site.insomnia }} to {{ site.konnect_short_name }}:
 
 {% table %}
 columns:
@@ -77,7 +77,7 @@ columns:
     key: how
 rows:
   - feature: "Authenticate"
-    usage: "Link {{ site.data.products.insomnia.name }} to your Gateway Service"
+    usage: "Link {{ site.insomnia }} to your Gateway Service"
     how: |
       1. From {{ site.konnect_short_name }}, generate a [Personal Access Token (PAT)](/konnect-api/#personal-access-tokens).
       1. Copy the PAT.
@@ -91,22 +91,22 @@ rows:
     how: |
       Open the personal workspace linked to {{ site.konnect_short_name }}.
   - feature: "Sync"
-    usage: "Pull the latest updates from {{ site.konnect_short_name }} into {{ site.data.products.insomnia.name }}."
+    usage: "Pull the latest updates from {{ site.konnect_short_name }} into {{ site.insomnia }}."
     how: |
       From the **Konnect** tab, click **Sync**.
 {% endtable %}
 
 ### Sync
 
-Every time you click **Sync** from the {{ site.konnect_short_name }} tab, {{ site.data.products.insomnia.name }} pulls changes from {{ site.konnect_short_name }}. Syncing:
+Every time you click **Sync** from the {{ site.konnect_short_name }} tab, {{ site.insomnia }} pulls changes from {{ site.konnect_short_name }}. Syncing:
 
-- Doesn't push any changes from {{ site.data.products.insomnia.name }} to {{ site.konnect_short_name }}.
+- Doesn't push any changes from {{ site.insomnia }} to {{ site.konnect_short_name }}.
 - Pulls changes or configurations from {{ site.konnect_short_name }} for the related Routes.
 
 
 This preserves the local changes on Routes while allowing pulling any updates from {{ site.konnect_short_name }}.
 
-Syncing preserves or resets the following data for each pulled route in {{ site.data.products.insomnia.name }}:
+Syncing preserves or resets the following data for each pulled route in {{ site.insomnia }}:
 
 
 - Parameters

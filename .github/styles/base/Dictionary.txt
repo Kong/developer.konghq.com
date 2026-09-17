@@ -119,6 +119,7 @@ chatwise
 cidr
 cidr_block
 cidrs
+claude
 cleartext
 cli
 clis
@@ -134,8 +135,10 @@ cncf
 cncf's
 CNAMEs
 CNIs
+codec
 cohere
 cognito
+Colang
 collectd
 config
 config_hash
@@ -550,6 +553,7 @@ NATs
 navtabs
 nbf
 neg_ttl
+NeMo
 Netcat
 Netlify
 Netrc
@@ -564,6 +568,7 @@ no_version
 node_quantifier
 Node.js
 nodeport
+nullable
 Nullsoft
 nunjucks
 Noname
@@ -574,6 +579,7 @@ npm
 nrec
 Nvidia
 OAuth
+oauth
 observability
 oc
 odks
@@ -633,6 +639,7 @@ prepends
 prepopulated
 preprocessors
 preread
+priority_preserving
 printf
 prisma
 private_key
@@ -722,6 +729,7 @@ sandboxed
 sandboxing
 sanitization
 sasl_oauth_bearer
+saas
 sbom
 sboms
 SCCs
@@ -762,6 +770,7 @@ sso
 Stakater
 Stap
 stapxx
+straiker
 start_cmd
 statsd
 status_code
@@ -817,6 +826,7 @@ TCPRoutes
 teardown
 templated
 Templatized
+temporality
 Terraform
 Terraform's
 text_splitters

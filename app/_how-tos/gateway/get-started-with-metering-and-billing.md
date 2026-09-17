@@ -179,6 +179,8 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
+This example meters a few representative dimensions. For every field the plugin can emit, see [Captured event dimensions](/plugins/metering-and-billing/#captured-event-dimensions).
+
 ## Enable the {{site.metering_and_billing}} plugin
 
 Next, configure the [{{site.metering_and_billing}} plugin](/plugins/metering-and-billing/) to emit API request events from {{site.base_gateway}} to {{site.metering_and_billing}} so that you can charge customers for API traffic usage:
@@ -192,6 +194,7 @@ entities:
       config:
         ingest_endpoint: https://us.api.konghq.com/v3/openmeter/events
         api_token: ${AUTH_TOKEN}
+        ssl_verify: true
         meter_api_requests: true
         meter_ai_token_usage: false
         subject:

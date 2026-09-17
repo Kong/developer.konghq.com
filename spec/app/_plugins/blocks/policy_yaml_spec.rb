@@ -52,8 +52,8 @@ RSpec.describe Jekyll::RenderPolicyYaml do
       LIQUID
     end
 
-    it 'renders a Kubernetes tab and a Universal tab' do
-      expect(tab_titles(render(template, release_number: '2.9'))).to eq(%w[Kubernetes Universal])
+    it 'renders a Kubernetes tab, a Universal tab and a Terraform tab' do
+      expect(tab_titles(render(template))).to eq(%w[Kubernetes Universal Terraform])
     end
 
     it 'wraps the type and name into apiVersion/kind/metadata for Kubernetes' do
@@ -96,13 +96,7 @@ RSpec.describe Jekyll::RenderPolicyYaml do
       YAML
     end
 
-    it 'does not render a Terraform tab when the release predates 2.10' do
-      html = render(template, release_number: '2.9')
-      expect(tab_titles(html)).to eq(%w[Kubernetes Universal])
-      expect(html).not_to have_css('div[data-panel="terraform"]')
-    end
-
-    it 'renders a Terraform tab when the release is at least 2.10' do
+    it 'renders the Terraform document in the Terraform tab' do
       html = render(template)
       expect(tab_titles(html)).to eq(%w[Kubernetes Universal Terraform])
       expect(html.find('div[data-panel="terraform"]').find('code').text).to eq(<<~HCL)
@@ -217,180 +211,167 @@ RSpec.describe Jekyll::RenderPolicyYaml do
       LIQUID
     end
 
-    context 'when the release is at least 2.9' do
-      it 'shows the MeshService opt-in checkbox' do
-        expect(render(template)).to have_css('.meshservice input.checkbox')
-      end
-
-      it 'renders a legacy tag-based backendRef for Kubernetes' do
-        expect(yaml_text(render(template), 'kubernetes', index: 0)).to eq(<<~YAML.strip)
-          apiVersion: kuma.io/v1alpha1
-          kind: MeshTCPRoute
-          metadata:
-            name: tcp-route
-            namespace: kong-mesh-system
-            labels:
-              kuma.io/mesh: default
-          spec:
-            targetRef:
-              kind: MeshGateway
-              name: edge-gateway
-            to:
-            - targetRef:
-                kind: Mesh
-              rules:
-              - default:
-                  backendRefs:
-                  - kind: MeshService
-                    name: example-v1_app_svc_8080
-                    weight: 90
-                  - kind: MeshService
-                    name: example-v2_app_svc_8080
-                    weight: 10
-        YAML
-      end
-
-      it 'renders a MeshService backendRef for Kubernetes' do
-        expect(yaml_text(render(template), 'kubernetes', index: 1)).to eq(<<~YAML.strip)
-          apiVersion: kuma.io/v1alpha1
-          kind: MeshTCPRoute
-          metadata:
-            name: tcp-route
-            namespace: kong-mesh-system
-            labels:
-              kuma.io/mesh: default
-          spec:
-            targetRef:
-              kind: MeshGateway
-              name: edge-gateway
-            to:
-            - targetRef:
-                kind: Mesh
-              rules:
-              - default:
-                  backendRefs:
-                  - kind: MeshService
-                    name: example-v1
-                    namespace: app
-                    port: 8080
-                    weight: 90
-                  - kind: MeshService
-                    name: example-v2
-                    namespace: app
-                    port: 8080
-                    weight: 10
-        YAML
-      end
-
-      it 'renders a legacy tag-based backendRef for Universal' do
-        expect(yaml_text(render(template), 'universal', index: 0)).to eq(<<~YAML.strip)
-          type: MeshTCPRoute
-          name: tcp-route
-          mesh: default
-          spec:
-            targetRef:
-              kind: MeshGateway
-              name: edge-gateway
-            to:
-            - targetRef:
-                kind: Mesh
-              rules:
-              - default:
-                  backendRefs:
-                  - kind: MeshService
-                    name: example-v1
-                    weight: 90
-                  - kind: MeshService
-                    name: example-v2
-                    weight: 10
-        YAML
-      end
-
-      it 'renders a MeshService backendRef for Universal' do
-        expect(yaml_text(render(template), 'universal', index: 1)).to eq(<<~YAML.strip)
-          type: MeshTCPRoute
-          name: tcp-route
-          mesh: default
-          spec:
-            targetRef:
-              kind: MeshGateway
-              name: edge-gateway
-            to:
-            - targetRef:
-                kind: Mesh
-              rules:
-              - default:
-                  backendRefs:
-                  - kind: MeshService
-                    name: example-v1
-                    port: 8080
-                    weight: 90
-                  - kind: MeshService
-                    name: example-v2
-                    port: 8080
-                    weight: 10
-        YAML
-      end
-
-      it 'derives the Terraform resource from the Universal, non-legacy rendering (no namespace field)' do
-        tf = render(template).find('div[data-panel="terraform"]').find('code').text
-        expect(tf).to eq(<<~HCL)
-          resource "konnect_mesh_tcp_route" "tcp_route" {
-            provider = konnect-beta
-            type = "MeshTCPRoute"
-            name = "tcp-route"
-            spec = {
-              target_ref = {
-                kind = "MeshGateway"
-                name = "edge-gateway"
-              }
-              to = [
-                {
-                  target_ref = {
-                    kind = "Mesh"
-                  }
-                  rules = [
-                    {
-                      default = {
-                        backend_refs = [
-                          {
-                            kind = "MeshService"
-                            name = "example-v1"
-                            port = "8080"
-                            weight = "90"
-                          },
-                          {
-                            kind = "MeshService"
-                            name = "example-v2"
-                            port = "8080"
-                            weight = "10"
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-            labels   = {
-            "kuma.io/mesh" = konnect_mesh.my_mesh.name
-            }
-            cp_id    = konnect_mesh_control_plane.my_meshcontrolplane.id
-            mesh     = konnect_mesh.my_mesh.name
-          }
-        HCL
-      end
+    it 'shows the MeshService opt-in checkbox' do
+      expect(render(template)).to have_css('.meshservice input.checkbox')
     end
 
-    context 'when the release predates 2.9' do
-      it 'does not show the MeshService opt-in checkbox' do
-        expect(render(template, release_number: '2.8')).not_to have_css('.meshservice')
-      end
+    it 'renders a legacy tag-based backendRef for Kubernetes' do
+      expect(yaml_text(render(template), 'kubernetes', index: 0)).to eq(<<~YAML.strip)
+        apiVersion: kuma.io/v1alpha1
+        kind: MeshTCPRoute
+        metadata:
+          name: tcp-route
+          namespace: kong-mesh-system
+          labels:
+            kuma.io/mesh: default
+        spec:
+          targetRef:
+            kind: MeshGateway
+            name: edge-gateway
+          to:
+          - targetRef:
+              kind: Mesh
+            rules:
+            - default:
+                backendRefs:
+                - kind: MeshService
+                  name: example-v1_app_svc_8080
+                  weight: 90
+                - kind: MeshService
+                  name: example-v2_app_svc_8080
+                  weight: 10
+      YAML
+    end
 
-      it 'renders only the legacy tag-based backendRef for Kubernetes' do
-        html = render(template, release_number: '2.8')
-        expect(html.find('div[data-panel="kubernetes"]').all('code').length).to eq(1)
-      end
+    it 'renders a MeshService backendRef for Kubernetes' do
+      expect(yaml_text(render(template), 'kubernetes', index: 1)).to eq(<<~YAML.strip)
+        apiVersion: kuma.io/v1alpha1
+        kind: MeshTCPRoute
+        metadata:
+          name: tcp-route
+          namespace: kong-mesh-system
+          labels:
+            kuma.io/mesh: default
+        spec:
+          targetRef:
+            kind: MeshGateway
+            name: edge-gateway
+          to:
+          - targetRef:
+              kind: Mesh
+            rules:
+            - default:
+                backendRefs:
+                - kind: MeshService
+                  name: example-v1
+                  namespace: app
+                  port: 8080
+                  weight: 90
+                - kind: MeshService
+                  name: example-v2
+                  namespace: app
+                  port: 8080
+                  weight: 10
+      YAML
+    end
+
+    it 'renders a legacy tag-based backendRef for Universal' do
+      expect(yaml_text(render(template), 'universal', index: 0)).to eq(<<~YAML.strip)
+        type: MeshTCPRoute
+        name: tcp-route
+        mesh: default
+        spec:
+          targetRef:
+            kind: MeshGateway
+            name: edge-gateway
+          to:
+          - targetRef:
+              kind: Mesh
+            rules:
+            - default:
+                backendRefs:
+                - kind: MeshService
+                  name: example-v1
+                  weight: 90
+                - kind: MeshService
+                  name: example-v2
+                  weight: 10
+      YAML
+    end
+
+    it 'renders a MeshService backendRef for Universal' do
+      expect(yaml_text(render(template), 'universal', index: 1)).to eq(<<~YAML.strip)
+        type: MeshTCPRoute
+        name: tcp-route
+        mesh: default
+        spec:
+          targetRef:
+            kind: MeshGateway
+            name: edge-gateway
+          to:
+          - targetRef:
+              kind: Mesh
+            rules:
+            - default:
+                backendRefs:
+                - kind: MeshService
+                  name: example-v1
+                  port: 8080
+                  weight: 90
+                - kind: MeshService
+                  name: example-v2
+                  port: 8080
+                  weight: 10
+      YAML
+    end
+
+    it 'derives the Terraform resource from the Universal, non-legacy rendering (no namespace field)' do
+      tf = render(template).find('div[data-panel="terraform"]').find('code').text
+      expect(tf).to eq(<<~HCL)
+        resource "konnect_mesh_tcp_route" "tcp_route" {
+          provider = konnect-beta
+          type = "MeshTCPRoute"
+          name = "tcp-route"
+          spec = {
+            target_ref = {
+              kind = "MeshGateway"
+              name = "edge-gateway"
+            }
+            to = [
+              {
+                target_ref = {
+                  kind = "Mesh"
+                }
+                rules = [
+                  {
+                    default = {
+                      backend_refs = [
+                        {
+                          kind = "MeshService"
+                          name = "example-v1"
+                          port = "8080"
+                          weight = "90"
+                        },
+                        {
+                          kind = "MeshService"
+                          name = "example-v2"
+                          port = "8080"
+                          weight = "10"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+          labels   = {
+          "kuma.io/mesh" = konnect_mesh.my_mesh.name
+          }
+          cp_id    = konnect_mesh_control_plane.my_meshcontrolplane.id
+          mesh     = konnect_mesh.my_mesh.name
+        }
+      HCL
     end
   end
 

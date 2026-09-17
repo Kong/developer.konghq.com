@@ -129,3 +129,4 @@ Qwen Code CLI returns a response, proxied through {{site.ai_gateway}} to the ups
 
 {:.info}
 > The Qwen Code CLI requires `OPENAI_API_KEY` to be set even though the real key lives on the {{site.ai_gateway}}, so setting a placeholder is fine.
+> In a production environment, we strongly recommend using consumer credentials to authenticate and track usage per-consumer. For more information, see [Identify AI Consumers on AI Model traffic with {{site.identity}}](/ai-gateway/identify-ai-consumers-with-kong-identity/).
