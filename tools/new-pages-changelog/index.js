@@ -23,6 +23,7 @@ const CURATED_CONTENT_TYPES = new Set([
   "landing_page",
   "concept",
   "plugin",
+  "plugin_example",
   "policy",
   "cookbook",
   "reference",
@@ -179,10 +180,44 @@ function isCuratedPath(file) {
   if (isExcluded(file)) return false;
   if (file.endsWith(".md")) return true;
   if (file.startsWith("app/_landing_pages/") && /\.ya?ml$/.test(file)) return true;
+  // Plugin example configs (e.g. app/_kong_plugins/datakit/examples/foo.yaml)
+  // are plain YAML; content_type: plugin_example is injected by
+  // app/_plugins/generators/plugins/pages/example.rb at build time.
+  // Handled specially in loadFrontmatter().
+  if (/^app\/_kong_plugins\/[^/]+\/examples\/[^/]+\.ya?ml$/.test(file)) return true;
   return false;
 }
 
+// Plugin example configs have no `content_type`/`products` of their own —
+// both are injected at build time by
+// app/_plugins/generators/plugins/pages/example.rb, which sets
+// content_type: plugin_example explicitly and inherits `products` wholesale
+// from the parent plugin's index.md frontmatter. Reconstruct that here from
+// the sibling app/_kong_plugins/<slug>/index.md, same approach as
+// aiGatewayPolicyTitle() below for AI Gateway policies.
+const PLUGIN_EXAMPLE_PATTERN = /^app\/_kong_plugins\/([^/]+)\/examples\/([^/]+)\.ya?ml$/;
+
+function loadPluginExampleFrontmatter(repoRoot, file, slug) {
+  const data = { content_type: "plugin_example" };
+  const pluginIndexPath = path.join(repoRoot, "app/_kong_plugins", slug, "index.md");
+  if (fs.existsSync(pluginIndexPath)) {
+    try {
+      const pluginData = matter(fs.readFileSync(pluginIndexPath, "utf8")).data || {};
+      if (Array.isArray(pluginData.products)) data.products = pluginData.products;
+    } catch {
+      // fall through with no products (falls back to "other" in buildEntries)
+    }
+  }
+  const example = YAML.parse(fs.readFileSync(path.join(repoRoot, file), "utf8")) || {};
+  if (typeof example.title === "string" && example.title) data.title = example.title;
+  return data;
+}
+
 function loadFrontmatter(repoRoot, file) {
+  const pluginExampleMatch = file.match(PLUGIN_EXAMPLE_PATTERN);
+  if (pluginExampleMatch) {
+    return loadPluginExampleFrontmatter(repoRoot, file, pluginExampleMatch[1]);
+  }
   const absPath = path.join(repoRoot, file);
   const raw = fs.readFileSync(absPath, "utf8");
   if (file.endsWith(".md")) {
@@ -210,7 +245,7 @@ function derivePermalink(file) {
   if ((match = file.match(/^app\/_kong_plugins\/([^/]+)\/index\.md$/))) {
     return `/plugins/${match[1]}/`;
   }
-  if ((match = file.match(/^app\/_kong_plugins\/([^/]+)\/examples\/([^/]+)\.md$/))) {
+  if ((match = file.match(/^app\/_kong_plugins\/([^/]+)\/examples\/([^/]+)\.ya?ml$/))) {
     return `/plugins/${match[1]}/examples/${match[2]}/`;
   }
   if ((match = file.match(/^app\/_ai_gateway_policies\/([^/]+)\/index\.md$/))) {
@@ -318,9 +353,11 @@ function buildEntries(repoRoot, addedFiles, siteVars) {
     }
 
     const policySlugMatch = file.match(/^app\/_ai_gateway_policies\/([^/]+)\/index\.md$/);
-    const title = policySlugMatch
+    let title = policySlugMatch
       ? aiGatewayPolicyTitle(repoRoot, policySlugMatch[1])
       : resolveSiteVars(data.title, siteVars) || file;
+    if (data.content_type === "plugin_example") title = `Example: ${title}`;
+    else if (data.content_type === "how_to") title = `How-to: ${title}`;
     const products = Array.isArray(data.products) && data.products.length ? data.products : ["other"];
     const { label, sortKey } = weekLabel(date);
 
