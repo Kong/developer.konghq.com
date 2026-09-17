@@ -31,6 +31,15 @@ prereqs:
       include_content: prereqs/ai-sanitizer
       icon_url: /assets/icons/cloudsmith.svg
 
+cleanup:
+  inline:
+    - title: Cleanup PII service
+      content: |
+        ```sh
+        docker rm -f pii-service
+        ```
+        {: data-test-cleanup="block" }
+
 related_resources:
   - text: Use AI PII Sanitizer plugin to protect sensitive information in requests
     url: /ai-gateway/protect-sensitive-information-with-ai/
@@ -43,7 +52,7 @@ related_resources:
 Make sure you have [access to the  AI PII service](#ai-pii-anonymizer-service-access), then run the following command to start it locally with Docker:
 
 ```sh
-docker run --rm -d -p 8080:8080 kong/ai-pii-service:v0.2.2-en
+docker run --rm --name pii-service -d -p 8080:8080 kong/ai-pii-service:v0.2.2-en
 ```
 {: data-test-step="block" }
 
