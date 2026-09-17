@@ -1,0 +1,65 @@
+metadata:
+  title: "{{site.mesh_product_name}} in {{site.konnect_short_name}}"
+  content_type: landing_page
+  description: Choose Kubernetes or Universal and an installation method for Kong Mesh with a Konnect-managed global control plane.
+  products:
+    - mesh
+  tags:
+    - service-mesh
+
+rows:
+  - header:
+      type: h1
+      text: "{{site.mesh_product_name}} in {{site.konnect_short_name}}"
+      sub_text: Choose your environment and start installing.
+  - columns:
+      - blocks:
+          - type: text
+            config: |
+              {{site.konnect_short_name}} manages your global control plane. You run the zone control planes and application proxies in your infrastructure. Choose where to deploy your first zone, then how you want to configure it.
+
+  - header:
+      type: h2
+      text: Where will your zone run?
+      description: Start with the Konnect UI for a guided setup. Choose the API for scripted setup, or Terraform to manage the deployment as infrastructure as code.
+    column_count: 2
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Kubernetes
+              featured: true
+              description: Deploy a zone control plane in your Kubernetes cluster and connect application Pods to the mesh.
+              ctas:
+                - text: Set up with the Konnect UI
+                  url: /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui/
+                - text: Set up with the API
+                  url: /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-api/
+                - text: Set up with Terraform
+                  url: /mesh/deploy-mesh-using-terraform-and-konnect/
+      - blocks:
+          - type: card
+            config:
+              title: Virtual machines and bare metal
+              description: Deploy a Universal zone control plane and run proxies alongside applications outside Kubernetes.
+              ctas:
+                - text: Set up with the Konnect UI
+                  url: /mesh/configure-mesh-global-control-plane-on-universal-with-konnect-ui/
+                - text: Set up with the API
+                  url: /mesh/configure-mesh-global-control-plane-on-universal-with-konnect-api/
+  - columns:
+      - blocks:
+          - type: text
+            config: |
+              You can connect both Kubernetes and Universal zones to the same global control plane.
+
+  - header:
+      type: h2
+      text: Looking for a different starting point?
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              - **Run the control plane yourself:** Follow the [self-hosted Mesh 3 quickstart](/mesh/get-started/universal/install/).
+              - **Upgrade an existing 2.x mesh:** Review [identity and mTLS](/mesh/migrate-mtls-to-meshidentity/), [zone proxies](/mesh/migrate-zone-proxies-to-3/), and [policy migration](/mesh/migrate-policies-to-3/).
+              - **Understand Mesh 3 before installing:** Explore the [core concepts](/mesh/#understand-how-kong-mesh-works).

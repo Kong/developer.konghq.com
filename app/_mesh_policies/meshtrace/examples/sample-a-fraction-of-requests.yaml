@@ -1,0 +1,31 @@
+title: 'Trace a fraction of requests'
+
+description: 'Keep client-requested traces at 100% while sampling only a tenth of a percent of ordinary traffic, to hold down trace volume on a busy mesh.'
+
+weight: 600
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshTrace
+  name: sampled-tracing
+  mesh: default
+  spec:
+    targetRef:
+      kind: Mesh
+    default:
+      backends:
+        - type: Zipkin
+          zipkin:
+            url: http://jaeger-collector.observability:9411/api/v2/spans
+      sampling:
+        client: 100
+        random: "0.1"
+        overall: 100
+      tags:
+        - name: team
+          literal: core
+        - name: env
+          header:
+            name: x-env
+            default: unknown

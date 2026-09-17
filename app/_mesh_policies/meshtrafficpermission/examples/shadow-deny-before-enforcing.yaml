@@ -1,0 +1,27 @@
+title: 'Test a deny rule before enforcing it'
+
+description: 'Observe how denying one namespace would behave while a broader trust-domain allow continues to admit traffic.'
+
+weight: 600
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshTrafficPermission
+  name: shadow-deny-legacy
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    rules:
+      - default:
+          allowWithShadowDeny:
+            - spiffeID:
+                type: Prefix
+                value: spiffe://default.default.mesh.local/ns/legacy/
+          allow:
+            - spiffeID:
+                type: Prefix
+                value: spiffe://default.default.mesh.local/
