@@ -208,7 +208,7 @@ rows:
                   Several OpenAPI specifications that you either:
                   * Import from the {{site.konnect_short_name}} API catalog as a single source.
                   * Upload directly as anOpenAPI Specification (OAS) v3.0 file, each one as its own source.
-                configuration: "Add a single source containing multiple API specifications as a single source, or add multiple sources to the MCP server."
+                configuration: "Add a single source containing multiple API specifications, or add multiple sources to the MCP server."
                 outcome: "Complete a task that spans the APIs, choosing which operations to call and in what order."
               - use_case: "**Combine APIs with existing MCP servers**"
                 sources: "OpenAPI specifications alongside existing MCP servers."
