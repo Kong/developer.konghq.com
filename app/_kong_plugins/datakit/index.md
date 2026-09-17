@@ -1016,6 +1016,9 @@ This filter will function correctly if the client sets the `X-Extra` header or
 omits it entirely, but it won't have the intended effect if the client sets
 the header `X-EXTRA` or `x-extra`.
 
+{:.warning}
+> This is a known limitation of the `jq` node. Always normalize header names to lowercase in a `jq` filter, as shown in the following example, instead of matching a specific casing.
+
 `jq` lets you write a robust filter that handles this condition. 
 The following implementation normalizes header names to lowercase before looking up values from the input:
 
