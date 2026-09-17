@@ -53,63 +53,6 @@ formats:
   - kongctl
 {% endentity_example %}
 
-## Metrics output example
-Here is an example of output you could expect from the `/metrics` endpoint:
-
-```bash
-curl -i http://localhost:8001/metrics
-```
-
-Response:
-```sh
-HTTP/1.1 200 OK
-Server: openresty/1.15.8.3
-Date: Tue, 7 Jun 2020 16:35:40 GMT
-Content-Type: text/plain; charset=UTF-8
-Transfer-Encoding: chunked
-Connection: keep-alive
-Access-Control-Allow-Origin: *
-
-# HELP kong_control_plane_connected Kong connected to control plane, 0 is unconnected
-# TYPE kong_control_plane_connected gauge
-kong_control_plane_connected{instance="localhost:8100", job="kong"}	1
-# HELP kong_data_plane_cluster_cert_expiry_timestamp Unix timestamp of Data Plane's cluster_cert expiry time
-# TYPE kong_data_plane_cluster_cert_expiry_timestamp gauge
-kong_data_plane_cluster_cert_expiry_timestamp 2068058801
-# HELP kong_bandwidth_bytes Total bandwidth (ingress/egress) throughput in bytes
-# TYPE kong_bandwidth_bytes counter
-kong_bandwidth_bytes{service="google",route="google.route-1",direction="egress",consumer=""} 264
-kong_bandwidth_bytes{service="google",route="google.route-1",direction="ingress",consumer=""} 93
-# HELP kong_datastore_reachable Datastore reachable from {{site.base_gateway}}, 0 is unreachable
-# TYPE kong_datastore_reachable gauge
-kong_datastore_reachable 1
-# HELP kong_http_requests_total HTTP status codes per Consumer/Service/Route in {{site.base_gateway}}
-# TYPE kong_http_requests_total counter
-kong_http_requests_total{service="google",route="google.route-1",code="200",source="service",consumer=""} 1
-# HELP kong_node_info {{site.base_gateway}} Node metadata information
-# TYPE kong_node_info gauge
-kong_node_info{node_id="849373c5-45c1-4c1d-b595-fdeaea6daed8",version="3.0.0"} 1
-# HELP kong_kong_latency_ms Latency added by {{site.base_gateway}} and enabled plugins for each Service/Route in {{site.base_gateway}}
-# TYPE kong_kong_latency_ms histogram
-kong_kong_latency_ms_bucket{service="google",route="google.route-1",le="5"} 1
-kong_kong_latency_ms_bucket{service="google",route="google.route-1",le="7"} 1
-kong_kong_latency_ms_bucket{service="google",route="google.route-1",le="10"} 1
-kong_kong_latency_ms_bucket{service="google",route="google.route-1",le="15"} 1
-kong_kong_latency_ms_bucket{service="google",route="google.route-1",le="20"} 1
-kong_kong_latency_ms_bucket{service="google",route="google.route-1",le="30"} 1
-kong_kong_latency_ms_bucket{service="google",route="google.route-1",le="50"} 1
-kong_kong_latency_ms_bucket{service="google",route="google.route-1",le="75"} 1
-kong_kong_latency_ms_bucket{service="google",route="google.route-1",le="100"} 1
-kong_kong_latency_ms_bucket{service="google",route="google.route-1",le="200"} 1
-kong_kong_latency_ms_bucket{service="google",route="google.route-1",le="500"} 1
-kong_kong_latency_ms_bucket{service="google",route="google.route-1",le="750"} 1
-kong_kong_latency_ms_bucket{service="google",route="google.route-1",le="1000"} 1
-kong_kong_latency_ms_bucket{service="google",route="google.route-1",le="+Inf"} 1
-kong_kong_latency_ms_count{service="google",route="google.route-1"} 1
-kong_kong_latency_ms_sum{service="google",route="google.route-1"} 4
-...
-```
-
 ## Available metrics
 
 You can expose the following metrics:
@@ -128,9 +71,14 @@ license signature. Those metrics are only exported on self-managed {{site.ai_gat
     timers in a Running or Pending state.
 - **AI LLM metrics**: AI LLM metrics are available per provider, model, cache, database name (if cached), embeddings provider (if cached), embeddings model (if cached), and Workspace.
 
+{:.info}
+> **Note:** Metrics in Prometheus may be prefixed by a `kong` label.
+
 ### Optional metrics
 The following metrics are disabled by default as it may create high cardinality of metrics and may
 cause performance issues.
+
+{% include md/ai-gateway/v2/llm-metrics.md %}
 
 #### Status code metrics
 When [`config.status_code_metrics`](/ai-gateway/policies/prometheus/reference/#schema--config-status-code-metrics) is set to true:
@@ -162,4 +110,74 @@ When [`config.upstream_health_metrics`](/ai-gateway/policies/prometheus/referenc
 stream and HTTP listeners are enabled, targets' health will appear twice. Health metrics
 have a `subsystem` label to indicate which subsystem the metric refers to.
 
-{% include md/ai-gateway/v2/llm-metrics.md %}
+## Metrics output example
+
+Here is an example of output you could expect from the `/metrics` endpoint:
+
+```bash
+curl -i http://localhost:8001/metrics
+```
+
+Response:
+```sh
+HTTP/1.1 200 OK
+Date: Thu, 17 Sep 2026 16:04:29 GMT
+Content-Type: text/plain; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Access-Control-Allow-Origin: *
+X-Kong-Status-Request-ID: swA08FHVHQdk3rSJAqf96TKAWjBpYLCf
+X-Kong-Admin-Latency: 2
+Server: kong/2.1.0-ai-gateway
+
+# HELP kong_ai_llm_provider_latency_ms LLM response Latency for each AI plugins per ai_provider in Kong
+# TYPE kong_ai_llm_provider_latency_ms histogram
+kong_ai_llm_provider_latency_ms_bucket{ai_provider="openai",ai_model="gpt-4o",cache_status="",vector_db="",embeddings_provider="",embeddings_model="",workspace="default",consumer="",request_mode="oneshot",le="1500"} 1
+kong_ai_llm_provider_latency_ms_bucket{ai_provider="openai",ai_model="gpt-4o",cache_status="",vector_db="",embeddings_provider="",embeddings_model="",workspace="default",consumer="",request_mode="oneshot",le="2000"} 1
+...
+kong_ai_llm_provider_latency_ms_bucket{ai_provider="openai",ai_model="gpt-4o",cache_status="",vector_db="",embeddings_provider="",embeddings_model="",workspace="default",consumer="",request_mode="oneshot",le="+Inf"} 1
+kong_ai_llm_provider_latency_ms_count{ai_provider="openai",ai_model="gpt-4o",cache_status="",vector_db="",embeddings_provider="",embeddings_model="",workspace="default",consumer="",request_mode="oneshot"} 1
+kong_ai_llm_provider_latency_ms_sum{ai_provider="openai",ai_model="gpt-4o",cache_status="",vector_db="",embeddings_provider="",embeddings_model="",workspace="default",consumer="",request_mode="oneshot"} 1029
+# HELP kong_ai_llm_requests_total AI requests total per ai_provider in Kong
+# TYPE kong_ai_llm_requests_total counter
+kong_ai_llm_requests_total{ai_provider="openai",ai_model="gpt-4o",cache_status="",vector_db="",embeddings_provider="",embeddings_model="",workspace="default",consumer="",request_mode="oneshot"} 1
+# HELP kong_ai_llm_tokens_total AI requests cost per ai_provider/cache in Kong
+# TYPE kong_ai_llm_tokens_total counter
+kong_ai_llm_tokens_total{ai_provider="openai",ai_model="gpt-4o",cache_status="",vector_db="",embeddings_provider="",embeddings_model="",token_type="completion_tokens",workspace="default",consumer=""} 12
+kong_ai_llm_tokens_total{ai_provider="openai",ai_model="gpt-4o",cache_status="",vector_db="",embeddings_provider="",embeddings_model="",token_type="prompt_tokens",workspace="default",consumer=""} 13
+kong_ai_llm_tokens_total{ai_provider="openai",ai_model="gpt-4o",cache_status="",vector_db="",embeddings_provider="",embeddings_model="",token_type="total_tokens",workspace="default",consumer=""} 25
+# HELP kong_ai_llm_tpot_latency_ms LLM time per token latency for each AI plugins per ai_provider in Kong
+# TYPE kong_ai_llm_tpot_latency_ms histogram
+kong_ai_llm_tpot_latency_ms_bucket{ai_provider="openai",ai_model="gpt-4o",cache_status="",vector_db="",embeddings_provider="",embeddings_model="",workspace="default",consumer="",request_mode="oneshot",le="100"} 1
+kong_ai_llm_tpot_latency_ms_bucket{ai_provider="openai",ai_model="gpt-4o",cache_status="",vector_db="",embeddings_provider="",embeddings_model="",workspace="default",consumer="",request_mode="oneshot",le="200"} 1
+...
+kong_ai_llm_tpot_latency_ms_bucket{ai_provider="openai",ai_model="gpt-4o",cache_status="",vector_db="",embeddings_provider="",embeddings_model="",workspace="default",consumer="",request_mode="oneshot",le="+Inf"} 1
+kong_ai_llm_tpot_latency_ms_count{ai_provider="openai",ai_model="gpt-4o",cache_status="",vector_db="",embeddings_provider="",embeddings_model="",workspace="default",consumer="",request_mode="oneshot"} 1
+kong_ai_llm_tpot_latency_ms_sum{ai_provider="openai",ai_model="gpt-4o",cache_status="",vector_db="",embeddings_provider="",embeddings_model="",workspace="default",consumer="",request_mode="oneshot"} 85.75
+# HELP kong_ai_llm_ttft_latency_ms LLM time to first token latency for each AI plugins per ai_provider in Kong
+# TYPE kong_ai_llm_ttft_latency_ms histogram
+kong_ai_llm_ttft_latency_ms_bucket{ai_provider="openai",ai_model="gpt-4o",cache_status="",vector_db="",embeddings_provider="",embeddings_model="",workspace="default",consumer="",request_mode="oneshot",le="1500"} 1
+kong_ai_llm_ttft_latency_ms_bucket{ai_provider="openai",ai_model="gpt-4o",cache_status="",vector_db="",embeddings_provider="",embeddings_model="",workspace="default",consumer="",request_mode="oneshot",le="2000"} 1
+...
+kong_ai_llm_ttft_latency_ms_bucket{ai_provider="openai",ai_model="gpt-4o",cache_status="",vector_db="",embeddings_provider="",embeddings_model="",workspace="default",consumer="",request_mode="oneshot",le="+Inf"} 1
+kong_ai_llm_ttft_latency_ms_count{ai_provider="openai",ai_model="gpt-4o",cache_status="",vector_db="",embeddings_provider="",embeddings_model="",workspace="default",consumer="",request_mode="oneshot"} 1
+kong_ai_llm_ttft_latency_ms_sum{ai_provider="openai",ai_model="gpt-4o",cache_status="",vector_db="",embeddings_provider="",embeddings_model="",workspace="default",consumer="",request_mode="oneshot"} 1029
+# HELP kong_control_plane_connected Kong connected to control plane, 0 is unconnected
+# TYPE kong_control_plane_connected gauge
+kong_control_plane_connected 1
+# HELP kong_data_plane_cluster_cert_expiry_timestamp Unix timestamp of Data Plane's cluster_cert expiry time
+# TYPE kong_data_plane_cluster_cert_expiry_timestamp gauge
+kong_data_plane_cluster_cert_expiry_timestamp 1792252942
+# HELP kong_datastore_reachable Datastore reachable from Kong, 0 is unreachable
+# TYPE kong_datastore_reachable gauge
+kong_datastore_reachable 1
+# HELP kong_http_requests_total HTTP status codes per consumer/service/route in Kong
+# TYPE kong_http_requests_total counter
+kong_http_requests_total{service="ai-gateway",route="openai-chat",code="200",source="service",type="",workspace="default",consumer=""} 1
+# HELP kong_kong_internal_latency_ms Internal latency for each service/route in Kong, excluding the I/O latency
+# TYPE kong_kong_internal_latency_ms histogram
+kong_kong_internal_latency_ms_bucket{service="ai-gateway",route="openai-chat",workspace="default",le="10"} 1
+kong_kong_internal_latency_ms_bucket{service="ai-gateway",route="openai-chat",workspace="default",le="15"} 1
+kong_kong_internal_latency_ms_bucket{service="ai-gateway",route="openai-chat",workspace="default",le="20"} 1
+...
+```
