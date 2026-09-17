@@ -33,7 +33,7 @@ agents_section:
     - id: mcp
       title: "Konnect MCP server"
       description: "Give Claude, Cursor, and ChatGPT scoped access to manage Konnect."
-      endpoint: "https://mcp.konghq.com/sse"
+      endpoint: "https://global.mcp.konghq.com"
       cta_text: "Build with Konnect MCP"
       cta_url: /konnect-platform/konnect-mcp/
       icon: /assets/icons/mcp.svg

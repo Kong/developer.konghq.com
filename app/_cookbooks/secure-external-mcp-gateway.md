@@ -61,7 +61,7 @@ prereqs:
            ```
 
            {:.warning}
-           > This reuses your PAT as the upstream credential so the demo only needs one Konnect token. In production, generate a **System Account Token** with least-privilege permissions in **Organization > System Accounts** and store it in a [Kong Vault](/gateway/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references. PATs inherit the creator's full role and are tied to an individual user, which is unsuitable for a shared, audited service-account credential.
+           > This reuses your PAT as the upstream credential so the demo only needs one Konnect token. In production, generate a **System Account Token** with least-privilege permissions in **Organization > System Accounts** and store it in a [Kong Vault](/gateway/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references. a PAT inherits the creator's full role and are tied to an individual user, which is unsuitable for a shared, audited service-account credential.
 
         1. Set the recipe-scoped Control Plane name and run the quickstart script:
 
@@ -205,11 +205,10 @@ prereqs:
         {% endnavtabs %}
     - title: Konnect MCP region
       content: |
-        The [Konnect MCP server](/konnect-platform/konnect-mcp/#regional-server-endpoints) has region-scoped endpoints; resources don't cross regions. Set this to the host matching the Konnect region your organization runs in:
+        The [Konnect MCP server](/konnect-platform/konnect-mcp/#server-endpoint) is available at a single global host. Set this environment variable before running the recipe:
 
         ```bash
-        # Pick one: us.mcp.konghq.com, eu.mcp.konghq.com, or au.mcp.konghq.com
-        export DECK_KONNECT_MCP_HOST='us.mcp.konghq.com'
+        export DECK_KONNECT_MCP_HOST='global.mcp.konghq.com'
         ```
     - title: Insomnia 12+
       content: |
@@ -975,7 +974,7 @@ The Konnect MCP route demonstrates the token-swap pattern: the user authenticate
 
 1. **Complete OAuth via your IdP.** Insomnia opens your browser to the IdP (Okta or Keycloak) authorization endpoint and runs the PKCE flow. Sign in and approve the application; Insomnia captures the redirect and obtains an access token issued by your IdP.
 
-1. **Reconnect.** Insomnia sends the MCP `initialize` again with `Authorization: Bearer <idp-token>`. The AI MCP OAuth2 Plugin introspects the token, maps the `sub` claim to a Kong Consumer, and **strips** the user's `Authorization` header (`passthrough_credentials: false`). The Request Transformer Advanced Plugin then **adds** the stored Konnect credential from `DECK_KONNECT_MCP_TOKEN` into the now-empty `Authorization` header before the request reaches the regional Konnect MCP endpoint. The token swap is invisible from the Insomnia side. It shows up only in the upstream Konnect audit log and in the **Analytics** view on the `konnect-mcp-service` Service in Konnect, where you can confirm Kong forwarded the request authenticated as the stored Konnect identity, not the end user.
+1. **Reconnect.** Insomnia sends the MCP `initialize` again with `Authorization: Bearer <idp-token>`. The AI MCP OAuth2 Plugin introspects the token, maps the `sub` claim to a Kong Consumer, and **strips** the user's `Authorization` header (`passthrough_credentials: false`). The Request Transformer Advanced Plugin then **adds** the stored Konnect credential from `DECK_KONNECT_MCP_TOKEN` into the now-empty `Authorization` header before the request reaches the Konnect MCP endpoint. The token swap is invisible from the Insomnia side. It shows up only in the upstream Konnect audit log and in the **Analytics** view on the `konnect-mcp-service` Service in Konnect, where you can confirm Kong forwarded the request authenticated as the stored Konnect identity, not the end user.
 
 1. **List Konnect MCP tools.** Insomnia displays the tools exposed by the Konnect MCP server (Control Plane management, API exploration, and similar operations). Call a read-only tool such as the one that lists Control Planes; the response comes from Konnect, served under the stored credential's permissions.
 
