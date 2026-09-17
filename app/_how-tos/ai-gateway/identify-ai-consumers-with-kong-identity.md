@@ -174,8 +174,7 @@ In this example:
 ## Validate
 
 1. Send a chat completion request without a token:
-
-<!--vale off-->
+   <!--vale off-->
 {% validation request-check %}
 url: /chat/completions
 method: POST
@@ -189,13 +188,11 @@ body:
 status_code: 401
 indent: 3
 {% endvalidation %}
-<!--vale on-->
-
+   <!--vale on-->
    The request fails with `401 Unauthorized`.
 
 1. Generate a token for the client and export it:
-
-<!-- vale off -->
+   <!-- vale off -->
 {% validation request-check %}
 konnect_url: $ISSUER_URL
 url: /oauth/token
@@ -216,11 +213,10 @@ capture:
 status_code: 200
 indent: 3
 {% endvalidation %}
-<!--vale on-->
+   <!--vale on-->
 
 1. Send the same request with the token:
-
-<!--vale off-->
+   <!--vale off-->
 {% validation request-check %}
 url: /chat/completions
 method: POST
@@ -235,7 +231,7 @@ body:
 status_code: 200
 indent: 3
 {% endvalidation %}
-<!--vale on-->
+   <!--vale on-->
 
    {{site.ai_gateway}} validates the bearer token against {{site.identity}}, matches its `sub` claim to the `cli-tool-consumer` AI Consumer, then proxies the request to OpenAI.
 
