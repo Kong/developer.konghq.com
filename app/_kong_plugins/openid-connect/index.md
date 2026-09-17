@@ -133,7 +133,8 @@ Unlike other authentication types like Key Auth and Basic Auth, with OpenID Conn
 Instead, you can offload the task to a trusted identity provider of your choice.
 
 ## Discovery cache
-When you configure `config.issuer` in the OIDC plugin, {{site.base_gateway}} automatically retrieves the provider’s discovery metadata. The OIDC plugin stores the metadata as a discovery cache object and uses the cache avoid repeated fetches. This cache includes the discovery document endpoints, JWKS keys, and the token endpoint. 
+When you configure `config.issuer` in the OIDC plugin, {{site.base_gateway}} automatically retrieves the provider’s discovery metadata. 
+The OIDC plugin stores the metadata as a discovery cache object and uses the cache to avoid repeated fetches. This cache includes the discovery document endpoints, JWKS keys, and the token endpoint. 
 
 {{site.base_gateway}} uses the discovery cache whenever validation needs issuer metadata. The cache behaves in the following way:
 - Discovery data is stored in the **{{site.base_gateway}} database** when using DB mode, or in **worker memory** when using DB‑less mode.  
