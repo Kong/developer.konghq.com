@@ -1521,11 +1521,8 @@ previous release, so you will need to rebuild them with the latest patches.
 
 The required OpenResty version for {{site.base_gateway}} 3.0.x is
 [1.21.4.1](https://openresty.org/en/ann-1021004001.html). In addition to an upgraded
-OpenResty, you need the correct [OpenResty patches](https://github.com/Kong/kong-build-tools/tree/master/openresty-build-tools/patches)
+OpenResty, you need the correct OpenResty patches.
 for this new version, including the latest release of [lua-kong-nginx-module](https://github.com/Kong/lua-kong-nginx-module).
-The [kong-build-tools](https://github.com/Kong/kong-build-tools)
-repository contains [openresty-build-tools](https://github.com/Kong/kong-build-tools/tree/master/openresty-build-tools),
-which allows you to more easily build OpenResty with the necessary patches and modules.
 
 #### Migrations
 
