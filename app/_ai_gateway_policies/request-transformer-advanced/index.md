@@ -47,7 +47,7 @@ Body transformations are only performed for requests where the `Content-Type` he
 
 ## Example
 
-Allowlist which JSON body fields a client can send, then move a query parameter into the body before {{site.ai_gateway}} forwards the request upstream:
+Define which JSON body fields a client can send, then move a query parameter into the body before {{site.ai_gateway}} forwards the request upstream:
 
 {% entity_example %}
 type: policy
@@ -72,5 +72,3 @@ data:
 formats:
   - kongctl
 {% endentity_example %}
-
-Attach this Policy to an [AI Model](/ai-gateway/entities/ai-model/)'s `policies` array so it applies before {{site.ai_gateway}} forwards the request upstream. Don't remove the `model` field: {{site.ai_gateway}} uses it to select the target, and removing it breaks routing.
