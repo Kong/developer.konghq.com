@@ -223,8 +223,8 @@ jobs:
 This workflow runs PR checks for branches in the same GitHub repository.
 Contributors who can push to these branches can modify workflows that use
 your Konnect token, so give that access only to people you trust. The
-workflow skips PRs from forks and `dependabot[bot]`, which don't receive the
-repository's Actions secrets.
+workflow skips pull requests from forks and `dependabot[bot]`, which don't
+receive the repository's Actions secrets.
 
 The workflow has two behaviors:
 
