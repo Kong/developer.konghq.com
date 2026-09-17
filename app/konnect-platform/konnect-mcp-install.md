@@ -105,6 +105,7 @@ kong-konnect: https://global.mcp.konghq.com/ (HTTP) - ✓ Connected
 
 1. Save the configuration file
 1. Reload VS Code window (Command Palette > **Developer: Reload Window**)
+1. Start the server: Open the Command Palette, enter **MCP: List Servers** > **kong-konnect** > **Start Server**.
 1. When prompted, enter your {{site.konnect_product_name}} Personal Access Token or System Access Token
 1. Press Enter to confirm
 1. In the `mcp.json` settings file you should see that the server is running and that the tools are available
@@ -173,6 +174,7 @@ kong-konnect: https://global.mcp.konghq.com/ (HTTP) - ✓ Connected
     ```
 
 1. Save the configuration file
+1. Start the server: Open the Command Palette, enter **MCP: List Servers** > **kong-konnect** > **Start Server**.
 1. Reload VS Code window (Command Palette > **Developer: Reload Window**)
 1. When prompted, enter your {{site.konnect_product_name}} Personal Access Token
 1. Open GitHub Copilot chat and verify Kong {{site.konnect_product_name}} tools are available

@@ -131,7 +131,7 @@ rows:
 
                     Some MCP clients, including {{ site.claude_code }}, can also authenticate by opening a browser window so you can sign in to {{site.konnect_product_name}} and authorize access, instead of using a token. Check your client's documentation to see whether it supports this method.
   - header:
-        text: "Server endpoint"
+        text: "Access the server"
         type: h2
     columns:
         - blocks:
