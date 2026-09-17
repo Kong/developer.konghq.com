@@ -61,7 +61,7 @@ prereqs:
            ```
 
            {:.warning}
-           > This reuses your PAT as the upstream credential so the demo only needs one Konnect token. In production, generate a **System Account Token** with least-privilege permissions in **Organization > System Accounts** and store it in a [Kong Vault](/gateway/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references. PATs inherit the creator's full role and are tied to an individual user, which is unsuitable for a shared, audited service-account credential.
+           > This reuses your PAT as the upstream credential so the demo only needs one Konnect token. In production, generate a **System Account Token** with least-privilege permissions in **Organization > System Accounts** and store it in a [Kong Vault](/gateway/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references. a PAT inherits the creator's full role and are tied to an individual user, which is unsuitable for a shared, audited service-account credential.
 
         1. Set the recipe-scoped Control Plane name and run the quickstart script:
 
