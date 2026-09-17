@@ -47,7 +47,10 @@ faqs:
   - q: Can I retrieve my client’s secret again?
     a: |
       No, the secret is only shared once when the client is created. Store it securely.
-automated_tests: false
+cleanup:
+  inline:
+    - title: Clean up {{site.identity}} resources
+      include_content: md/identity/delete_auth_server
 related_resources:
   - text: "{{site.identity}}"
     url: /identity/
@@ -72,13 +75,14 @@ First, get the ID of the `quickstart` control plane you configured in the prereq
 url: /v2/control-planes?filter%5Bname%5D%5Bcontains%5D=quickstart
 status_code: 200
 method: GET
+extract_body:
+  - name: 'data.0.id'
+    variable: CONTROL_PLANE_ID
+capture:
+  - variable: CONTROL_PLANE_ID
+    jq: ".data[0].id"
 {% endkonnect_api_request %}
 <!--vale on-->
-
-Export the control plane ID:
-```sh
-export CONTROL_PLANE_ID='YOUR-CONTROL-PLANE-ID'
-```
 
 Enable the OIDC plugin globally:
 <!--vale off-->
