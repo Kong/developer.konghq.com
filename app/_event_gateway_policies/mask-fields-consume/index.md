@@ -86,9 +86,9 @@ This policy runs in the [consume phase](/event-gateway/entities/policy/#phases),
 {% mermaid %}
 sequenceDiagram
   autonumber
-  participant broker as Event broker
-  participant egw as {{site.event_gateway_short}}
   participant client as Client
+  participant egw as {{site.event_gateway_short}}
+  participant broker as Event broker
 
   client->>egw: consume request
   egw->>broker: fetch records
