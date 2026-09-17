@@ -94,6 +94,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.15": [
+    {
+      "message": "Fixed a issue where the request to the AWS Guardrails service could return a 500 error due to a failure in request signing.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Enabled at-rest keyring encryption for sensitive fields in AI AWS Guardrails plugin.",
