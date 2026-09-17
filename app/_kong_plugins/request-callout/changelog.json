@@ -30,6 +30,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.15": [
+    {
+      "message": "Fixed an issue where a callout that failed and then succeeded\non retry still returned the earlier failed response. The plugin now returns the\nresponse from the successful retry.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added support for the `tls_certificate_verify` global option. When this option is enabled, the plugin's `ssl_verify` setting for HTTPS callouts cannot be disabled.",

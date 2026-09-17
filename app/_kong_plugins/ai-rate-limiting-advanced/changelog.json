@@ -88,6 +88,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.15": [
+    {
+      "message": "Fixed an issue where policies using a consumer `custom_id` match condition resolved to the consumer username instead.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added support to count cost for routes with dynamic AI models.\n",

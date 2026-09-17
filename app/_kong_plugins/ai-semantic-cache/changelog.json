@@ -13,6 +13,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.15": [
+    {
+      "message": "Fixed an issue that failed to delete vector database indexes and cached embedding records when a plugin instance was deleted.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Fixed an issue where cost savings attributes `ai_proxy_cache_cost_savings` were not properly calculated when cache hits.\n",

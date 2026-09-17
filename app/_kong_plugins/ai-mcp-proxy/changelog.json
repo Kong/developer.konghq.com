@@ -184,6 +184,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.15": [
+    {
+      "message": "Fixed an issue where gzip-compressed and malformed MCP request bodies were incorrectly rejected with HTTP 413.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added support for MCP ACL control.\n",

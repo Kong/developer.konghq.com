@@ -100,6 +100,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.15": [
+    {
+      "message": "Fixed an issue where AI Sanitizer returned a 500 status code when the provider was using another model, such as a `claude-*` model served by the `gemini` provider on Vertex AI.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Cohere native chat requests and responses were not extracted. The plugin now detects and redacts PII in Cohere-format traffic.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added a `skip_logging_sanitized_items` option to control whether to log the sanitized items, which may contain sensitive data.\n",
