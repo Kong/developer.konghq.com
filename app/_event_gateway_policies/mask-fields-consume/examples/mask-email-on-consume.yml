@@ -3,12 +3,12 @@ title: Mask a field for consumers only
 description: Redact an email field on consume, and keep the stored record unchanged.
 
 extended_description: |
-  Redact an email field for the client that reads it. The record in the backend cluster does not change,
+  Redact an email field for the client that reads it. The record in the backend cluster doesn't change,
   so systems that are permitted to see the original value keep their access to it.
 
   The `email` strategy applies a separate strategy to each part of the address.
   This example keeps the first character of the local part and the whole domain, which is enough to recognize an account
-  without exposure of the full address.
+  without exposing the full address.
 
 weight: 900
 

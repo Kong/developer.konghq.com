@@ -6,7 +6,7 @@ extended_description: |
   Redact an SSN field before {{site.event_gateway_short}} writes the record to the backend cluster.
 
   The `keep_chars` strategy keeps the first character and the last two characters, and replaces the middle with `***`.
-  The phrase has a fixed length, so the masked value does not reveal the length of the original.
+  The phrase has a fixed length, so the masked value doesn't reveal the length of the original.
 
   This change is irreversible. Use the produce phase when no client, and no operator of the backend cluster, can see the original value.
 

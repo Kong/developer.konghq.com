@@ -45,7 +45,7 @@ The Mask Fields Produce policy redacts `string` fields of Kafka records during t
 It runs on a record that a [Schema Validation Produce policy](/event-gateway/policies/schema-validation-produce/) parsed, so you must nest it under that policy.
 
 Use this policy to redact a value before {{site.event_gateway_short}} writes it to the backend cluster.
-The cluster never receives the original value, so this change is irreversible.
+This change is irreversible, as the cluster never receives the original value.
 To redact a value for the client that reads it, and keep the stored record unchanged, use the [Mask Fields Consume policy](/event-gateway/policies/mask-fields-consume/) instead.
 
 Select the fields to redact as a static list of paths, or as a single expression that returns a list of paths.
@@ -78,13 +78,29 @@ This policy runs in the [produce phase](/event-gateway/entities/policy/#phases),
 1. The Mask Fields Produce policy replaces the value of each selected field with a masked value.
 1. {{site.event_gateway_short}} sends the record to the backend cluster, which stores the masked value.
 
+<!--vale off-->
+{% mermaid %}
+sequenceDiagram
+  autonumber
+  participant client as Client
+  participant egw as {{site.event_gateway_short}}
+  participant broker as Event broker
+
+  client->>egw: produce record
+  egw->>egw: parse record (Schema Validation)
+  egw->>egw: mask selected fields
+
+  egw->>broker: send record with masked value
+{% endmermaid %}
+<!--vale on-->
+
 This policy masks `string` fields only:
 * A selected field that is not present in the record is ignored.
-* A selected field that is not a `string` is a policy failure. The `failure_mode` setting controls the result.
+* A selected field that is not a `string` is a policy failure. The `failure_mode` setting controls what happens in this situation.
 
 {:.warning}
-> Masking can break client-side validation. For example, a client that validates the format of an SSN can reject a masked value.
-Make sure your clients accept masked values before you enable this policy.
+> **Warning**: Masking can break client-side validation. For example, a client that validates the format of an SSN can reject a masked value.
+> Make sure your clients accept masked values before you enable this policy.
 
 ## Masking strategies
 
@@ -102,14 +118,16 @@ rows:
     description: |
       Keeps the number of leading characters in `first` and the number of trailing characters in `last`.
       Replaces the middle of the value with `phrase`, which is required.
-
+      <br><br>
       If `first` plus `last` is equal to or more than the length of the value, the policy replaces the whole value with `phrase`.
-      The policy never shows more characters than the original value. Because `phrase` has a fixed length, the masked value does not reveal the length of the original.
+      The policy never shows more characters than the original value. 
+      Because `phrase` has a fixed length, the masked value doesn't reveal the length of the original.
   - strategy: "`email`"
     description: |
       Masks an email address. Applies a separate strategy to `local_part` and to `domain`, and both are required.
-
-      `local_part` accepts `keep_chars` or `replace`. `domain` accepts `keep_chars`, `replace`, or `keep_all`, which keeps the whole domain.
+      <br><br>
+      * `local_part` accepts `keep_chars` or `replace`. 
+      * `domain` accepts `keep_chars`, `replace`, or `keep_all`, which keeps the whole domain.
   - strategy: "`replace`"
     description: |
       Replaces the whole value with `phrase`. Use this strategy when no character of the original value can show.
@@ -137,12 +155,11 @@ rows:
       The value of the header is the reason for the failure.
 {% endtable %}
 
-For a redaction policy, use `reject`.
-Do not use `passthrough` or `mark`, because both write the original value to the cluster.
+For a redaction policy, use `reject`. Don't use `passthrough` or `mark`, because both write the original value to the cluster.
 
 ## Policy order
 
-This policy needs the original value, so the order is important when a field is also encrypted.
+This policy needs the original value, so the policy order is important when a field is also encrypted.
 Mask the fields before the [Encrypt Fields policy](/event-gateway/policies/encrypt-fields/) encrypts them.
 
 See the reference for [nested policies](/event-gateway/entities/policy/#policy-nesting) for more detail.
