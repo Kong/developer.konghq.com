@@ -580,6 +580,15 @@ rows:
 
       There is no workaround for this issue.
     status: Not fixed
+  - issue: "Datakit plugin: `jq` node header lookups are case-sensitive"
+    description: |
+      A [Datakit](/plugins/datakit/) `jq` node always looks up header keys with exact, case-sensitive matching.
+      This is an issue, as HTTP header names are case-insensitive.
+      A filter that expects a header like `.["X-Secret"]` won't match if the client sends `x-secret` or `X-SECRET`.
+      <br><br>
+      **Workaround:** Normalize header keys to lowercase before looking them up in a `jq` filter. 
+      See [Handling HTTP headers in jq](/plugins/datakit/#handling-http-headers-in-jq).
+    status: Not fixed
 {% endtable %}
 
 ## 3.10.x breaking changes
