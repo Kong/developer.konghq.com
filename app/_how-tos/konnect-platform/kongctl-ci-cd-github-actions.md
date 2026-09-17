@@ -33,7 +33,11 @@ prereqs:
       content: |
         You need a {{site.konnect_short_name}} account and a personal or
         system account access token with permission to manage Dev Portals
-        and APIs. See [kongctl authentication](/kongctl/authentication/).
+        and APIs. To get started easily, use a token for an account in the
+        **Organization Admin** team. See
+        [Konnect teams and roles](/konnect-platform/teams-and-roles/)
+        for permissions and
+        [kongctl authentication](/kongctl/authentication/) for token setup.
       icon_url: /assets/icons/gateway.svg
     - title: GitHub repository
       content: |
@@ -52,12 +56,13 @@ next_steps:
     url: /dev-portal/
 ---
 
-This quickstart publishes a simple API and its OpenAPI specification to a
-Dev Portal.
+This quickstart builds a CI/CD pipeline to deliver a simple API and its
+OpenAPI specification to a Dev Portal using GitOps and GitHub Actions.
 
 ## Configure GitHub authentication
 
-In **Settings > Secrets and variables > Actions**, add:
+In your GitHub repository's web interface, go to
+**Settings > Secrets and variables > Actions** and add:
 
 | Type | Name | Value |
 | --- | --- | --- |
@@ -66,7 +71,8 @@ In **Settings > Secrets and variables > Actions**, add:
 
 ## Create a branch
 
-In your local repository, create a branch for all the files in this guide:
+On your development machine, clone your GitHub repository if necessary
+and change into its directory. Create a new branch to build this example:
 
 ```sh
 git switch -c konnect-apiops
@@ -74,7 +80,14 @@ git switch -c konnect-apiops
 
 ## Declare the portal and API
 
-On this branch, create `konnect/portal.yaml`:
+Create the configuration directory if it doesn't already exist:
+
+```sh
+mkdir -p konnect
+```
+
+On your new branch, create a file `konnect/portal.yaml` with the following
+kongctl resource definitions:
 
 ```yaml
 portals:
@@ -113,7 +126,8 @@ apis:
 The publication's `!ref` links the API to the portal. Portal authentication
 is disabled so the published API documentation is publicly accessible.
 
-The specification is inline to keep the example self-contained. See the
+The API specification is inline to keep the example simple and
+self-contained. See the
 [portal example][ex] for a larger configuration with separate
 specification files, pages, and customization.
 
@@ -121,7 +135,14 @@ specification files, pages, and customization.
 
 ## Add the GitHub Actions workflow
 
-Create `.github/workflows/kongctl.yaml`:
+Create the workflows directory if it doesn't already exist:
+
+```sh
+mkdir -p .github/workflows
+```
+
+Create a file `.github/workflows/konnect.yaml` with the following GitHub
+Actions workflow definition:
 
 {% raw %}
 ```yaml
@@ -132,18 +153,18 @@ on:
     branches: [main]
     paths:
       - konnect/**
-      - .github/workflows/kongctl.yaml
+      - .github/workflows/konnect.yaml
   push:
     branches: [main]
     paths:
       - konnect/**
-      - .github/workflows/kongctl.yaml
+      - .github/workflows/konnect.yaml
 
 permissions:
   contents: read
 
 concurrency:
-  group: kongctl-${{ github.ref }}
+  group: konnect-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -184,13 +205,21 @@ jobs:
 ```
 {% endraw %}
 
-Use trusted branches in the same repository. The workflow skips fork and
-dependency-bot PRs because they lack repository secrets. The concurrency
-group prevents overlapping deployments to `main`.
+This workflow runs PR checks for branches in the same GitHub repository.
+Contributors who can push to these branches can modify workflows that use
+your Konnect token, so give that access only to people you trust. The
+workflow skips PRs from forks and `dependabot[bot]`, which don't receive the
+repository's Actions secrets.
 
-`diff` reads live Konnect state and displays proposed changes without
-applying them. On a push to `main`, `apply` calculates a fresh plan and
-executes it without prompting.
+The workflow has two behaviors:
+
+- **Pull requests targeting `main`:** `kongctl diff` compares the proposed
+  configuration with live Konnect state. It shows the changes in the
+  workflow summary for review without applying them.
+- **Pushes to `main`:** `kongctl apply` calculates a fresh plan from live
+  Konnect state and executes it without prompting. This plan reflects the
+  state at deployment time, which may have changed since the PR diff.
+  The concurrency group prevents overlapping deployments to `main`.
 
 ## Review and deploy
 
@@ -198,11 +227,29 @@ executes it without prompting.
    APIOps** workflow run and review the diff in its summary.
 1. Merge the PR. Check that the **Apply configuration** step succeeds, then
    open your Dev Portal in Konnect and verify the published API and spec.
-1. In a new PR, change the API's `description`. Review the update in the
-   diff, merge, and verify the change. Re-running the apply job without
-   changing configuration should produce no further changes.
 
 Every matching push to `main` deploys, including direct pushes. Use branch
 rules if all changes must go through PR review. `apply` creates and updates
 resources; use [sync](/kongctl/sync/) when you want removed declarations to
 delete resources.
+
+## Update the API
+
+1. On your development machine, switch to `main`, pull the merged changes,
+   and create a new branch:
+
+   ```sh
+   git switch main
+   git pull --ff-only
+   git switch -c update-example-api
+   ```
+
+1. In `konnect/portal.yaml`, change the API's `description` to
+   `An example API deployed with GitOps`.
+1. Commit the change, push your branch, and open a PR targeting `main`.
+   Open the **Konnect APIOps** workflow run and check that the summary
+   shows an update to the API description.
+1. Merge the PR and check that the **Apply configuration** step succeeds.
+   Open your Dev Portal and verify that the API description has changed.
+1. Re-run the apply job without changing the configuration. It should
+   report no further changes.
