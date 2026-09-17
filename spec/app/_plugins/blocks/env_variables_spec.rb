@@ -24,26 +24,7 @@ RSpec.describe Jekyll::EnvVariables do
   let(:html) { Capybara::Node::Simple.new(rendered) }
 
   describe 'html output' do
-    context 'works_on: konnect' do
-      let(:works_on) { %w[konnect] }
-
-      it 'renders a konnect content div with the markdown attribute' do
-        expect(html).to have_css('div[data-deployment-topology="konnect"][markdown="1"]')
-      end
-
-      it 'renders a data-test-step attribute' do
-        expect(html).to have_css('div[data-deployment-topology="konnect"][data-test-step]')
-      end
-    end
-
-    context 'works_on: konnect and on-prem' do
-      let(:works_on) { %w[konnect on-prem] }
-
-      it 'renders both content divs with the markdown attribute' do
-        expect(html).to have_css('div[data-deployment-topology="konnect"][markdown="1"]')
-        expect(html).to have_css('div[data-deployment-topology="on-prem"][markdown="1"]')
-      end
-    end
+    include_examples 'a dual-topology content div'
 
     context 'when section is prereqs' do
       let(:works_on) { %w[konnect] }
@@ -57,8 +38,8 @@ RSpec.describe Jekyll::EnvVariables do
       end
 
       it 'renders a data-test-prereq attribute instead of data-test-step' do
-        expect(html).to have_css('div[data-deployment-topology="konnect"][data-test-prereq]')
-        expect(html).not_to have_css('div[data-deployment-topology="konnect"][data-test-step]')
+        expect(html).to have_css('div.content[data-deployment-topology="konnect"][data-test-prereq]')
+        expect(html).not_to have_css('div.content[data-deployment-topology="konnect"][data-test-step]')
       end
     end
 
@@ -67,7 +48,7 @@ RSpec.describe Jekyll::EnvVariables do
       let(:products) { ['not-a-real-product'] }
 
       it 'still renders, since Jekyll::EnvVariables performs no product-type check' do
-        expect(html).to have_css('div[data-deployment-topology="konnect"]')
+        expect(html).to have_css('div.content[data-deployment-topology="konnect"]')
       end
     end
   end

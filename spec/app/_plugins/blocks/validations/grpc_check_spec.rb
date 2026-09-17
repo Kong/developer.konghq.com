@@ -32,57 +32,17 @@ RSpec.describe Jekyll::Validation do
   let(:html) { Capybara::Node::Simple.new(rendered) }
 
   describe 'html output' do
+    include_examples 'a dual-topology content div'
+
     context 'works_on: konnect' do
       let(:works_on) { %w[konnect] }
-
-      it 'renders a konnect content div with the markdown attribute' do
-        expect(html).to have_css('div[data-deployment-topology="konnect"][markdown="1"]')
-      end
-
-      it 'renders a data-test-step attribute' do
-        expect(html).to have_css('div[data-deployment-topology="konnect"][data-test-step]')
-      end
 
       it 'renders the flex layout classes' do
         expect(html).to have_css('div.flex.flex-col.gap-3[data-deployment-topology="konnect"]')
       end
 
-      it 'does not render an on-prem content div' do
-        expect(html).not_to have_css('div[data-deployment-topology="on-prem"]')
-      end
-
       it 'resolves the konnect url from how_tos_config, with no path suffix' do
         expect(rendered).to include('https://konnect.example.com:443')
-      end
-    end
-
-    context 'works_on: on-prem' do
-      let(:works_on) { %w[on-prem] }
-
-      it 'renders an on-prem content div with the markdown attribute' do
-        expect(html).to have_css('div[data-deployment-topology="on-prem"][markdown="1"]')
-      end
-
-      it 'renders a data-test-step attribute' do
-        expect(html).to have_css('div[data-deployment-topology="on-prem"][data-test-step]')
-      end
-
-      it 'does not render a konnect content div' do
-        expect(html).not_to have_css('div[data-deployment-topology="konnect"]')
-      end
-    end
-
-    context 'works_on: konnect and on-prem' do
-      let(:works_on) { %w[konnect on-prem] }
-
-      it 'renders both content divs with the markdown attribute' do
-        expect(html).to have_css('div[data-deployment-topology="konnect"][markdown="1"]')
-        expect(html).to have_css('div[data-deployment-topology="on-prem"][markdown="1"]')
-      end
-
-      it 'renders a data-test-step attribute on both content divs' do
-        expect(html).to have_css('div[data-deployment-topology="konnect"][data-test-step]')
-        expect(html).to have_css('div[data-deployment-topology="on-prem"][data-test-step]')
       end
     end
 
