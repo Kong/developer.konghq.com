@@ -43,6 +43,23 @@ RSpec.describe Jekyll::EnvVariables do
       end
     end
 
+    context 'when section is cleanup' do
+      let(:works_on) { %w[konnect] }
+      let(:template) do
+        <<~LIQUID
+          {% env_variables %}
+          KONNECT_TOKEN: kpat_xxx
+          section: cleanup
+          {% endenv_variables %}
+        LIQUID
+      end
+
+      it 'renders a data-test-cleanup attribute instead of data-test-step' do
+        expect(html).to have_css('div.content[data-deployment-topology="konnect"][data-test-cleanup]')
+        expect(html).not_to have_css('div.content[data-deployment-topology="konnect"][data-test-step]')
+      end
+    end
+
     context 'with no supported product listed (real {% validation %} block would reject this)' do
       let(:works_on) { %w[konnect] }
       let(:products) { ['not-a-real-product'] }

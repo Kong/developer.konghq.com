@@ -51,7 +51,33 @@ RSpec.describe Jekyll::Validation do
       end
 
       it 'renders a data-test-prereq attribute instead of data-test-step' do
-        expect(html).to have_css('div.content[data-test-prereq="block"]')
+        expect(html).to have_css('div.content[data-test-prereq]')
+        expect(html).not_to have_css('div.content[data-test-step]')
+      end
+
+      it 'keeps the attribute value unchanged from the step case' do
+        step_value = Capybara::Node::Simple.new(
+          render_liquid(template.sub("section: prereqs\n", ''), page: page)
+        ).find('div.content')['data-test-step']
+
+        expect(html.find('div.content')['data-test-prereq']).to eq(step_value)
+      end
+    end
+
+    context 'when section is cleanup' do
+      let(:template) do
+        <<~LIQUID
+          {% validation custom-command %}
+          command: kong version
+          expected:
+            return_code: 0
+          section: cleanup
+          {% endvalidation %}
+        LIQUID
+      end
+
+      it 'renders a data-test-cleanup attribute instead of data-test-step' do
+        expect(html).to have_css('div.content[data-test-cleanup]')
         expect(html).not_to have_css('div.content[data-test-step]')
       end
     end
