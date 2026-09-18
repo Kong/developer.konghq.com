@@ -419,7 +419,7 @@ data:
 
 You can also configure an AI Model entity with `api` type capabilities: `skills`, `batches`, and `files`. API capabilities are set on a dedicated AI Model, separate from any `model`-type AI Model handling synchronous capabilities like `generate`.
 
-The following example set's up an AI Model to provide the `skills` capability. The Skills API only supports native format passthrough: an OpenAI target must use `formats: [{type: openai}]`, and an Anthropic target must use `formats: [{type: anthropic}]`. Mixing providers within a single Skills AI Model, or pairing a provider with another's native format, is not supported.
+The following example set's up an AI Model to provide the `skills` capability. The Skills API only supports native format passthrough for each provider. This means an OpenAI target must use `formats: [{type: openai}]`, and an Anthropic target must use `formats: [{type: anthropic}]`. Mixing providers within a single Skills AI Model, or pairing a provider with a skill in another's native format, is not supported.
 
 {:.info}
 > `targets[].name` is still required by the schema, but Skills requests don't select a model, so any placeholder value works.
