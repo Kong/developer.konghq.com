@@ -204,7 +204,10 @@ You can store and reference the following as secrets in a Vault:
 > * <sup>2</sup>: In {{site.konnect_short_name}}, the {{site.base_gateway}} license is managed and stored by {{site.konnect_short_name}}, and doesn't need to be stored manually in any Vault.
 
 {:.warning}
-> **Vault references and startup-critical `kong.conf` parameters:** If a vault reference in `kong.conf` fails to resolve, {{site.base_gateway}} fails to start. This is especially important for the [hybrid mode](/gateway/hybrid-mode/) parameters `cluster_cert`, `cluster_cert_key`, and `cluster_ca_cert`, which the Data Plane needs to establish its mTLS connection to the Control Plane. Because the Data Plane never starts in this scenario, [Data Plane resilience](/gateway/cp-outage/)—which only takes effect after a Data Plane has already started successfully—can't help. Verify vault reference resolution and backend availability for these parameters before deploying to production.
+> **Vault references and startup-critical `kong.conf` parameters:** If a vault reference in `kong.conf` fails to resolve, {{site.base_gateway}} fails to start. This is especially important for the [hybrid mode](/gateway/hybrid-mode/) parameters `cluster_cert`, `cluster_cert_key`, and `cluster_ca_cert`, which the data plane needs to establish its mTLS connection to the control plane. 
+> <br><br>
+> Because the data plane never starts in this scenario, [data plane resilience](/gateway/cp-outage/) (which only takes effect after a data plane has already started successfully) can't help. 
+> Verify vault reference resolution and backend availability for these parameters before deploying to production.
 
 ### Referenceable plugin fields
 

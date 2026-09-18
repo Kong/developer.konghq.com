@@ -430,4 +430,7 @@ config:
 <!--vale on-->
 
 {:.warning}
-> **`cluster_cert`, `cluster_cert_key`, and `cluster_ca_cert` are startup-critical.** {{site.base_gateway}} must resolve these values before the Data Plane can start. If you reference any of them with a [vault reference](/gateway/entities/vault/) and that reference fails to resolve, the Data Plane fails to start entirely. Because it never starts, [Data Plane resilience](/gateway/cp-outage/) can't kick in to recover it.
+> **Warning**: `cluster_cert`, `cluster_cert_key`, and `cluster_ca_cert` are startup-critical. 
+{{site.base_gateway}} must resolve these values before the data plane can start. 
+> If you reference any of them with a [vault reference](/gateway/entities/vault/) and that reference fails to resolve, the data plane fails to start entirely. 
+Because it never starts, [data plane resilience](/gateway/cp-outage/) can't kick in to recover it.
