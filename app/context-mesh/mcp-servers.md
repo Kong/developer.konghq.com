@@ -187,6 +187,7 @@ Custom headers on {{site.context_mesh}} sources have these properties:
 
 ## Deployments
 
+To run the {{site.context_mesh}} MCP server, you deploy it on a {{site.konnect}} Control Plane.
 You can deploy a {{site.context_mesh}} MCP server in two modes:
 
 {% table %}
@@ -198,7 +199,10 @@ columns:
 rows:
   - mode: "**Basic**"
     description: |
-      The default mode. {{site.konnect_short_name}} handles the deployment: it generates the server code from the mapped sources, runs that code in containers, and sets up the {{site.base_gateway}} Routes and Services needed to receive traffic.
+      The default mode. {{site.konnect_short_name}} handles the deployment:
+      1. It generates the server code from the sources.
+      1. It runs the code in containers.
+      1. It sets up the {{site.base_gateway}} Routes and Services needed to receive traffic.
   - mode: "**Advanced**"
     description: |
       You control the deployment directly with {{site.operator_product_name}} custom resources instead of using the {{site.konnect_short_name}} defaults.
