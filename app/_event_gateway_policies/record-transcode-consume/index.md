@@ -28,6 +28,8 @@ related_resources:
     url: /event-gateway/entities/virtual-cluster/
   - text: Policies
     url: /event-gateway/entities/policy/
+  - text: Consume Kafka records as JSON with {{site.event_gateway}}
+    url: /event-gateway/consume-kafka-records-as-json-with-event-gateway/
 
 phases:
   - consume
@@ -70,6 +72,9 @@ rows:
   - use_case: "[Example: Convert records for a specific topic to JSON](/event-gateway/policies/record-transcode-consume/examples/convert-topic-to-json-on-condition/)"
     description: |
       Use a `condition` to convert records consumed from a single topic to JSON, and leave records on other topics unchanged.
+  - use_case: "[Tutorial: Consume Kafka records as JSON](/event-gateway/consume-kafka-records-as-json-with-event-gateway/)"
+    description: |
+      Store records as Avro in the backend cluster, and convert them to JSON for a consumer that doesn't run a Schema Registry client.
 {% endtable %}
 <!--vale on-->
 

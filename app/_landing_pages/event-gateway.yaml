@@ -320,7 +320,8 @@ rows:
                       feature: |
                         [Record Transcode Produce policy](/event-gateway/policies/record-transcode-produce/) and
                         [Record Transcode Consume policy](/event-gateway/policies/record-transcode-consume/)
-                      guide: "--"
+                      guide: |
+                        [Consume Kafka records as JSON](/event-gateway/consume-kafka-records-as-json-with-event-gateway/)
                     - outcome: |
                         Onboard apps using OAuth flows developers already know, with no Kafka expertise required
                       feature: |
