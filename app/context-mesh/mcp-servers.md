@@ -40,7 +40,11 @@ faqs:
   - q: Can I add new tools to an MCP server source from {{site.context_mesh}}?
     a: |
       No. {{site.context_mesh}} inherits the tools that an MCP server source already exposes.
-      You can't define additional tools on the source from {{site.context_mesh}}, only proxy them.  
+      You can't define additional tools on the source from {{site.context_mesh}}, only proxy them.
+  - q: Can I add auth to a {{site.context_mesh}} MCP server?
+    a: |
+      Not on the MCP server itself. You configure authentication on the source using custom headers, and {{site.context_mesh}} attaches those headers to every request it sends to that source's backing service.
+      Because headers belong to the source, every MCP server built from that source sends the same headers. There is no per MCP server override.
 ---
 
 {{site.context_mesh}} lets you turn enterprise assets (such as MCP servers and APIs) into context that AI agents can call. It works by composing those assets into a single deployable Code Mode MCP server.
@@ -135,9 +139,9 @@ You can deploy the {{site.context_mesh}} MCP server at creation or later.
 
 By default, {{site.context_mesh}} inherits everything a source can do. For example, if an API source contains 20 operations, the {{site.context_mesh}} MCP server that uses it gives the agent access to the 20 operations. The same applies to all the tools a remote MCP server source exposes.
 
-{{site.context_mesh}} MCP servers lets you restrict specific paths, methods, and tools, without changing the source itself, using **blocked capabilities**. This feature blocks source items on a specific {{site.context_mesh}} MCP server. This tells the {{site.context_mesh}} MCP server to let agents access the designated items.
+{{site.context_mesh}} MCP servers lets you restrict specific paths, methods, and tools, without changing the source itself, using **blocked capabilities**. This feature blocks source items on a specific {{site.context_mesh}} MCP server. This tells the {{site.context_mesh}} MCP server to let agents access the designated items. You configure this at the {{site.context_mesh}} MCP server level, on each source listed in its configuration.
 
-What you can block depends on the type of source:
+What you can block depends on the type of source the {{site.context_mesh}} MCP server uses:
 
 {% table %}
 columns:
@@ -166,5 +170,19 @@ rows:
       * `summarize-booking`
 
 {% endtable %}
+
+## Auth
+
+{{site.context_mesh}} sources can contain an authetication layer with custom headers. When an agent calls a tool though a {{site.context_mesh}} MCP server, that call turns into a network request: an HTTP call to an API, or a proxied call to a remote MCP server. Custom headers are a set of key-value pairs that work as follows:
+
+1. You configure the custom headers once on the {{site.context_mesh}} source.
+1. {{site.context_mesh}} attach the custom headers to every request, without the agent ever knowing they exist.
+
+Custom headers on {{site.context_mesh}} sources have these properties:
+
+* You set them per Source, not per {{site.context_mesh}} MCP server. If three {{site.context_mesh}} MCP servers use the same source, all three send the same headers. Tthere's no {{site.context_mesh}} MCP server override for this.
+* They're plain key-value text pairs. The schema is: `headers: { additionalProperties: string }`.
+* They apply identically to both source types: API sources and MCP server sources both support them, with the same shape.
+* They're optional.
 
 ## Deployments
