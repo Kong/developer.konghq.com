@@ -218,7 +218,7 @@ Headroom uses loopback-trust by default. It answers unauthenticated calls on `12
 3. The AI Prompt Compressor sends a `POST` request to Headroom's `/v1/compress` endpoint with the content to compress and any configuration specified in the policy.
 4. Headroom returns `200` with the compressed replacement messages and metadata. AI Prompt Compressor records `ccr_hashes` alongside the compressed block so a later retrieval request can be resolved.
 
-If Headroom returns a failure response (such as a `400` invalid request, `503` service unavailable, `compression_timeout`, or `compression_error`) then the AI Prompt Compressor fails open. The original uncompressed message is sent to the upstream provider.
+If the call to Headroom fails, the AI Prompt Compressor rejects the request by default. For details, see [Failure behavior](#failure-behavior).
 
 The following diagram illustrates how the AI Prompt Compressor Policy processes and compresses incoming prompts using Headroom:
 
@@ -233,24 +233,19 @@ sequenceDiagram
     User->>KongAICompressor: Sends initial request
     activate KongAICompressor
     KongAICompressor->>KongAICompressor: Build OpenAI-format messages array per block
-
     KongAICompressor->>Headroom: POST /v1/compress
-    activate Headroom
 
     alt Compression succeeds
         Headroom-->>KongAICompressor: Return 200 with compressed messages and metadata
         KongAICompressor->>KongAICompressor: Record ccr_hashes for later retrieval
+        KongAICompressor->>LLM: Send compressed message to upstream provider
+        LLM-->>KongAICompressor: Return response
+        KongAICompressor-->>User: Return response
     else Compression fails
         Headroom-->>KongAICompressor: Return failure response
-        KongAICompressor->>KongAICompressor: Fail open, use original uncompressed message
+        KongAICompressor--xUser: Return HTTP 500, request not forwarded
     end
-    deactivate Headroom
-
-    KongAICompressor->>LLM: Send message to upstream provider
     deactivate KongAICompressor
-    activate LLM
-    LLM-->>User: Return response
-    deactivate LLM
 {% endmermaid %}
 <!-- vale on -->
 
