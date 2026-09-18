@@ -256,7 +256,7 @@ For example, you can create a condition that selects all topics that end with th
 {% raw %}
 
 ```json
-"condition": "{{context.topic.name.endsWith(\"my_suffix\")}}"
+"condition": "{{context.topic.name.endsWith('my_suffix')}}"
 ```
 
 {% endraw %}
