@@ -32,17 +32,20 @@ prereqs:
       content: |
         You need a {{site.konnect_short_name}} account and a personal or
         system account access token with permission to manage Dev Portals
-        and APIs. To get started easily, use a token for an account in the
-        **Organization Admin** team. See
-        [Konnect teams and roles](/konnect-platform/teams-and-roles/)
-        for permissions and
+        and APIs. For this quickstart in a test organization, an account
+        in the **Organization Admin** team is an easy way to get started.
+        For production, follow least privilege: assign only the
+        [API roles](/konnect-platform/teams-and-roles/#apis) and
+        [Dev Portal roles](/konnect-platform/teams-and-roles/#portals)
+        your workflow needs. See
         [kongctl authentication](/kongctl/authentication/) for token setup.
       icon_url: /assets/icons/gateway.svg
     - title: GitHub repository
       content: |
         Use a GitHub repository with Actions enabled and `main` as its
         default branch.
-        You need permission to add repository secrets and variables.
+        You need permission to add repository secrets and variables,
+        create branches and pull requests, and merge them into `main`.
       icon_url: /assets/icons/code.svg
 related_resources:
   - text: Declarative configuration with kongctl
