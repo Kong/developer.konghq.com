@@ -109,7 +109,7 @@ rows:
 ## Available fields
 
 Depending on where an expression is authored, the fields available in the context vary.
-The source of truth for these is the `x-expression` field in the [API specification](/api/konnect/event-gateway/).
+The source of truth for these is the `x-expression` vendor extension in the [API specification](/api/konnect/event-gateway/), which marks a field as expecting a `boolean` expression (like `condition`) or a `string` expression (like `principal_mapping`).
 
 {% table %}
 columns:
@@ -466,6 +466,9 @@ Both syntaxes are accepted today. The notation you use decides which one parses 
 * **Wrapped in double curly braces**: Parsed as CEL.
 * **Not wrapped**: Parsed as the legacy JavaScript-style syntax.
 
+CEL uses this same double curly brace wrapper for every field type: a boolean field like `condition`, a string field like `principal_mapping`, and a list field like `encrypt_fields[].paths` are all wrapped the same way.
+The legacy syntax treats the fields differently: `condition` is unwrapped, but other string fields use `${...}` template literals instead.
+
 Existing expressions written in the legacy syntax continue to work unchanged, but the legacy syntax will be deprecated in a future update.
 We recommend migrating existing expressions to CEL syntax, and creating all new expressions in CEL.
 
@@ -521,6 +524,11 @@ rows:
     cel: "Not available inside `condition` or other boolean/comparison expressions; `vault` and `env` aren't declared fields there. Continue using the legacy `${...}` syntax for `condition` and similar expression fields."
 {% endtable %}
 <!--vale on-->
+
+{:.info}
+> Some fields that accept secret and environment references, such as `encrypt_fields[].encryption_key`, are also sensitive fields.
+> * A sensitive field that's set to a literal value is encrypted at rest and never returned in API responses. 
+> * A sensitive field that's set to an expression is stored and returned as the expression itself, not encrypted, since the actual secret isn't known until the expression resolves at runtime.
 
 ### Example migrations
 
