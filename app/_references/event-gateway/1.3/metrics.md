@@ -18,13 +18,117 @@ related_resources:
 
 Units follow the case-sensitive [UCUM](https://ucum.org/ucum) form (e.g. `s`, `By`).
 
+## `http.client.request.duration`
+
+|Type|Unit|
+|:---|:---|
+|Histogram|`s`|
+
+Duration of outbound HTTP client requests.
+
+**Labels:**
+
+- `kong.http.client.name`: Logical name of the outbound HTTP client, set by the caller to tell multiple clients apart.
+- `http.request.method`: HTTP request method. Any method outside the known set maps to `_OTHER`. (one of `CONNECT`, `DELETE`, `GET`, `HEAD`, `OPTIONS`, `PATCH`, `POST`, `PUT`, `TRACE`)
+- `server.address`: Host name of the server the request was sent to.
+- `server.port`: Port of the server the request was sent to.
+- `url.scheme`: URL scheme of the request, e.g. `https`. (one of `http`, `https`)
+- `network.protocol.version`: Negotiated HTTP version of the response. Absent when the request did not succeed. (one of `1.0`, `1.1`, `2`, `3`)
+- `http.response.status_code`: The status code of an http response. Absent if a request did not succeed.
+- `error.type`: The error type encountered on executing http request. Absent if a request was successful. (one of `timeout`, `connect`, `unknown`)
+
+## `kong.capability_manager.batches_sent`
+
+|Type|Unit|
+|:---|:---|
+|Counter|`{batch}`|
+
+Total number of signal batches sent to the client.
+
+**Labels:**
+
+- `kong.control_plane`: The Control Plane URL a source is polling.
+
+## `kong.capability_manager.channel_send_retries`
+
+|Type|Unit|
+|:---|:---|
+|Counter|`{retry}`|
+
+Total number of retries sending batches to the client channel (channel full).
+
+**Labels:**
+
+- `kong.control_plane`: The Control Plane URL a source is polling.
+
+## `kong.capability_manager.client_processing_duration`
+
+|Type|Unit|
+|:---|:---|
+|Histogram|`s`|
+
+Time between sending batch to client and receiving acknowledgment.
+
+**Labels:**
+
+- `kong.control_plane`: The Control Plane URL a source is polling.
+
+## `kong.capability_manager.consecutive_failures`
+
+|Type|Unit|
+|:---|:---|
+|Gauge|`{failure}`|
+
+Current number of consecutive poll failures.
+
+**Labels:**
+
+- `kong.control_plane`: The Control Plane URL a source is polling.
+
+## `kong.capability_manager.signals_received`
+
+|Type|Unit|
+|:---|:---|
+|Counter|`{signal}`|
+
+Total number of signals received from the control plane (before filtering).
+
+**Labels:**
+
+- `kong.control_plane`: The Control Plane URL a source is polling.
+- `kong.capability.type`: The capability type (e.g. `config_sync`).
+
+## `kong.capability_manager.signals_sent`
+
+|Type|Unit|
+|:---|:---|
+|Counter|`{signal}`|
+
+Total number of signals sent to the client (after filtering).
+
+**Labels:**
+
+- `kong.control_plane`: The Control Plane URL a source is polling.
+
+## `kong.core.task_registry.tracked_tasks`
+
+|Type|Unit|
+|:---|:---|
+|Gauge|`{task}`|
+
+Number of active tasks currently tracked by the task tracker.
+
+**Labels:**
+
+_None._
+
 ## `kong.dataplane.lifecycle.component.ready`
 
 |Type|Unit|
 |:---|:---|
-|Gauge|N/A|
+|Gauge|`1`|
 
-Is a specific component ready; the service being ready implies all components are ready
+Is a specific component ready; the service being ready implies all components are ready.
 
 **Labels:**
 
@@ -34,9 +138,9 @@ Is a specific component ready; the service being ready implies all components ar
 
 |Type|Unit|
 |:---|:---|
-|Gauge|N/A|
+|Gauge|`1`|
 
-Is the service healthy
+Is the service healthy.
 
 **Labels:**
 
@@ -46,9 +150,9 @@ _None._
 
 |Type|Unit|
 |:---|:---|
-|Gauge|N/A|
+|Gauge|`1`|
 
-Is the service ready
+Is the service ready.
 
 **Labels:**
 
@@ -58,9 +162,9 @@ _None._
 
 |Type|Unit|
 |:---|:---|
-|Counter|N/A|
+|Counter|`{error}`|
 
-Count of errors when loading the config received from the control plane
+Count of errors when loading the config received from the control plane.
 
 **Labels:**
 
@@ -70,7 +174,7 @@ _None._
 
 |Type|Unit|
 |:---|:---|
-|Gauge|N/A|
+|Gauge|`1`|
 
 Version number of the configuration loaded from the control plane. Updated each time the control plane pushes a new config.
 
@@ -82,9 +186,9 @@ _None._
 
 |Type|Unit|
 |:---|:---|
-|Counter|N/A|
+|Counter|`{attempt}`|
 
-Counts the results of every ACL attempt
+Counts the results of every ACL attempt.
 
 **Labels:**
 
@@ -102,7 +206,7 @@ Counts the results of every ACL attempt
 |:---|:---|
 |Histogram|`s`|
 
-The time spent validating client credentials against virtual cluster auth rules. Passthrough rules are always considered successful even if the backend cluster rejects the authentication
+The time spent validating client credentials against virtual cluster auth rules. Passthrough rules are always considered successful even if the backend cluster rejects the authentication.
 
 **Labels:**
 
@@ -119,9 +223,9 @@ The time spent validating client credentials against virtual cluster auth rules.
 
 |Type|Unit|
 |:---|:---|
-|Counter|N/A|
+|Counter|`{connection}`|
 
-The number of connection errors to the backend cluster
+The number of connection errors to the backend cluster.
 
 **Labels:**
 
@@ -133,7 +237,7 @@ The number of connection errors to the backend cluster
 |:---|:---|
 |Histogram|`s`|
 
-The time spent communicating with backend cluster (send request and receive response)
+The time spent communicating with backend cluster (send request and receive response).
 
 **Labels:**
 
@@ -147,9 +251,9 @@ The time spent communicating with backend cluster (send request and receive resp
 
 |Type|Unit|
 |:---|:---|
-|Counter|N/A|
+|Counter|`{connection}`|
 
-The number of proxied connections that resulted in an error
+The number of proxied connections that resulted in an error.
 
 **Labels:**
 
@@ -165,9 +269,9 @@ The number of proxied connections that resulted in an error
 
 |Type|Unit|
 |:---|:---|
-|Gauge|N/A|
+|Gauge|`{connection}`|
 
-The number of active proxied connections
+The number of active proxied connections.
 
 **Labels:**
 
@@ -185,7 +289,7 @@ The number of active proxied connections
 
 |Type|Unit|
 |:---|:---|
-|Counter|N/A|
+|Counter|`{attempt}`|
 
 The number of attempts to decrypt records. This includes both successful and failed calls
 
@@ -204,7 +308,7 @@ The number of attempts to decrypt records. This includes both successful and fai
 
 |Type|Unit|
 |:---|:---|
-|Counter|N/A|
+|Counter|`{attempt}`|
 
 The number of attempts to encrypt records. This includes both successful and failed calls
 
@@ -223,7 +327,7 @@ The number of attempts to encrypt records. This includes both successful and fai
 
 |Type|Unit|
 |:---|:---|
-|Counter|N/A|
+|Counter|`{attempt}`|
 
 The number of attempts to run kscheme scripts. This includes both successful and failed calls
 
@@ -242,7 +346,7 @@ The number of attempts to run kscheme scripts. This includes both successful and
 |:---|:---|
 |Histogram|`s`|
 
-The time to update the metadata from the backend broker
+The time to update the metadata from the backend broker.
 
 **Labels:**
 
@@ -254,7 +358,7 @@ The time to update the metadata from the backend broker
 
 |Type|Unit|
 |:---|:---|
-|Gauge|N/A|
+|Gauge|`1`|
 
 Indicates whether the namespace topic mapping encountered conflicts (1) or not (0).
 
@@ -267,9 +371,9 @@ Indicates whether the namespace topic mapping encountered conflicts (1) or not (
 
 |Type|Unit|
 |:---|:---|
-|Counter|N/A|
+|Counter|`{failure}`|
 
-The number of times the policy condition failed to execute due to an error
+The number of times the policy condition failed to execute due to an error.
 
 **Labels:**
 
@@ -281,7 +385,7 @@ _None._
 |:---|:---|
 |Histogram|`s`|
 
-The time to process a policy
+The time to process a policy.
 
 **Labels:**
 
@@ -296,9 +400,9 @@ The time to process a policy
 
 |Type|Unit|
 |:---|:---|
-|Counter|N/A|
+|Counter|`{invocation}`|
 
-The number of policy invocation for policies. This includes both successful and failed invocations
+The number of policy invocation for policies. This includes both successful and failed invocations.
 
 **Labels:**
 
@@ -316,7 +420,7 @@ The number of policy invocation for policies. This includes both successful and 
 |:---|:---|
 |Histogram|`s`|
 
-The end-to-end time for the entire proxy operation
+The end-to-end time for the entire proxy operation.
 
 **Labels:**
 
@@ -332,7 +436,7 @@ The end-to-end time for the entire proxy operation
 |:---|:---|
 |Histogram|`s`|
 
-The time spent processing the received request before forwarding it to the backend cluster
+The time spent processing the received request before forwarding it to the backend cluster.
 
 **Labels:**
 
@@ -346,9 +450,9 @@ The time spent processing the received request before forwarding it to the backe
 
 |Type|Unit|
 |:---|:---|
-|Counter|N/A|
+|Counter|`{request}`|
 
-The number of requests coming from the client
+The number of requests coming from the client.
 
 **Labels:**
 
@@ -362,9 +466,9 @@ The number of requests coming from the client
 
 |Type|Unit|
 |:---|:---|
-|Counter|N/A|
+|Counter|`{request}`|
 
-The number of requests sent to the backend broker
+The number of requests sent to the backend broker.
 
 **Labels:**
 
@@ -380,7 +484,7 @@ The number of requests sent to the backend broker
 |:---|:---|
 |Histogram|`s`|
 
-The time spent processing the received response before forwarding it to the client
+The time spent processing the received response before forwarding it to the client.
 
 **Labels:**
 
@@ -394,9 +498,9 @@ The time spent processing the received response before forwarding it to the clie
 
 |Type|Unit|
 |:---|:---|
-|Counter|N/A|
+|Counter|`{response}`|
 
-The number of responses received from the backend broker
+The number of responses received from the backend broker.
 
 **Labels:**
 
@@ -408,11 +512,30 @@ The number of responses received from the backend broker
 
 ## `kong.keg.kafka.response.received.errors`
 
+> **Deprecated.** Use `kong.keg.kafka.response.received_errors` instead: the old name collided with `kong.keg.kafka.response.received` as a metric namespace.
+
 |Type|Unit|
 |:---|:---|
-|Counter|N/A|
+|Counter|`{response}`|
 
-The number of response messages received from the backend that contain at least one error. The error_code label represents the lowest error in the response
+The number of response messages received from the backend that contain at least one error. The error_code label represents the lowest error in the response.
+
+**Labels:**
+
+- `kong.keg.kafka.error_code`: The lowest error code in the response
+- `kong.konnect.virtual_cluster.id`: The Konnect virtual cluster identifier
+- `kong.konnect.virtual_cluster.name`: The Konnect virtual cluster name
+- `kong.konnect.backend_cluster.id`: The Konnect backend cluster identifier
+- `kong.konnect.backend_cluster.name`: The Konnect backend cluster name
+- `kong.keg.component`: The component name
+
+## `kong.keg.kafka.response.received_errors`
+
+|Type|Unit|
+|:---|:---|
+|Counter|`{response}`|
+
+The number of response messages received from the backend that contain at least one error. The error_code label represents the lowest error in the response.
 
 **Labels:**
 
@@ -427,9 +550,9 @@ The number of response messages received from the backend that contain at least 
 
 |Type|Unit|
 |:---|:---|
-|Counter|N/A|
+|Counter|`{response}`|
 
-The number of responses sent by the proxy to the client
+The number of responses sent by the proxy to the client.
 
 **Labels:**
 
@@ -441,9 +564,28 @@ The number of responses sent by the proxy to the client
 
 ## `kong.keg.kafka.response.sent.errors`
 
+> **Deprecated.** Use `kong.keg.kafka.response.sent_errors` instead: the old name collided with `kong.keg.kafka.response.sent` as a metric namespace.
+
 |Type|Unit|
 |:---|:---|
-|Counter|N/A|
+|Counter|`{response}`|
+
+The number of response messages sent back to the client that contain at least one error.
+
+**Labels:**
+
+- `kong.keg.kafka.error_code`: The lowest error code in the response
+- `kong.konnect.virtual_cluster.id`: The Konnect virtual cluster identifier
+- `kong.konnect.virtual_cluster.name`: The Konnect virtual cluster name
+- `kong.konnect.backend_cluster.id`: The Konnect backend cluster identifier
+- `kong.konnect.backend_cluster.name`: The Konnect backend cluster name
+- `kong.keg.component`: The component name
+
+## `kong.keg.kafka.response.sent_errors`
+
+|Type|Unit|
+|:---|:---|
+|Counter|`{response}`|
 
 The number of response messages sent back to the client that contain at least one error.
 
@@ -462,7 +604,7 @@ The number of response messages sent back to the client that contain at least on
 
 |Type|Unit|
 |:---|:---|
-|Counter|N/A|
+|Counter|`{attempt}`|
 
 The number of attempts to validate schema. This includes both successful and failed calls
 
@@ -480,7 +622,7 @@ The number of attempts to validate schema. This includes both successful and fai
 
 |Type|Unit|
 |:---|:---|
-|Gauge|N/A|
+|Gauge|`1`|
 
 Emitted (value=1) when a topic alias shadows a physical topic name.
 
@@ -497,7 +639,7 @@ Emitted (value=1) when a topic alias shadows a physical topic name.
 
 |Type|Unit|
 |:---|:---|
-|Counter|N/A|
+|Counter|`By`|
 
 Total number of analytics bytes sent in binary websocket messages to the analytics endpoint
 
@@ -509,9 +651,9 @@ _None._
 
 |Type|Unit|
 |:---|:---|
-|Counter|N/A|
+|Counter|`{message}`|
 
-Total number of analytics messages sent to the analytics endpoint
+Total number of analytics messages sent to the analytics endpoint.
 
 **Labels:**
 
@@ -521,9 +663,9 @@ _None._
 
 |Type|Unit|
 |:---|:---|
-|Counter|N/A|
+|Counter|`{event}`|
 
-Number of events dropped from the queue because the max queue size was reached
+Number of events dropped from the queue because the max queue size was reached.
 
 **Labels:**
 
@@ -533,9 +675,9 @@ _None._
 
 |Type|Unit|
 |:---|:---|
-|Counter|N/A|
+|Counter|`{event}`|
 
-Total number of events added to the queue
+Total number of events added to the queue.
 
 **Labels:**
 
@@ -547,7 +689,7 @@ _None._
 |:---|:---|
 |Counter|`By`|
 
-Total bytes sent in binary websocket messages to the analytics endpoint
+Total bytes sent in binary websocket messages to the analytics endpoint.
 
 **Labels:**
 
@@ -557,9 +699,9 @@ _None._
 
 |Type|Unit|
 |:---|:---|
-|Counter|N/A|
+|Counter|`{error}`|
 
-Number of times an error occurred on the analytics websocket connection while sending or receiving messages
+Number of times an error occurred on the analytics websocket connection while sending or receiving messages.
 
 **Labels:**
 
@@ -567,11 +709,13 @@ _None._
 
 ## `kong.keg.konnect.request.duration`
 
+> **Deprecated.** Use `http.client.request.duration` with the `kong.http.client.name` label instead.
+
 |Type|Unit|
 |:---|:---|
 |Histogram|`s`|
 
-The time sending and receiving the response to a request to the upstream broker
+The time sending and receiving the response to a request to the Konnect control plane.
 
 **Labels:**
 
@@ -585,9 +729,9 @@ The time sending and receiving the response to a request to the upstream broker
 
 |Type|Unit|
 |:---|:---|
-|Gauge|N/A|
+|Gauge|`1`|
 
-Is a specific component ready; the service being ready implies all components are ready
+Is a specific component ready; the service being ready implies all components are ready.
 
 **Labels:**
 
@@ -599,9 +743,9 @@ Is a specific component ready; the service being ready implies all components ar
 
 |Type|Unit|
 |:---|:---|
-|Gauge|N/A|
+|Gauge|`1`|
 
-Is the service healthy
+Is the service healthy.
 
 **Labels:**
 
@@ -613,9 +757,9 @@ _None._
 
 |Type|Unit|
 |:---|:---|
-|Gauge|N/A|
+|Gauge|`1`|
 
-Is the service ready
+Is the service ready.
 
 **Labels:**
 
@@ -625,12 +769,46 @@ _None._
 
 |Type|Unit|
 |:---|:---|
-|Gauge|N/A|
+|Gauge|`{connection}`|
 
-The number of allowed connections to the listener
+The number of allowed connections to the listener.
 
 **Labels:**
 
 _None._
 
-<!--vale on-->
+## `kong.keg.request_rule.condition.failures`
+
+|Type|Unit|
+|:---|:---|
+|Counter|`{failure}`|
+
+The number of times a request rule expression failed to execute due to an error.
+
+**Labels:**
+
+- `kong.keg.kafka.request`: The type of the Kafka request
+- `kong.konnect.policy.id`: The Konnect policy identifier
+- `kong.konnect.policy.name`: The Konnect policy name
+- `kong.keg.component`: The component name
+
+## `kong.keg.request_rule.evaluations`
+
+|Type|Unit|
+|:---|:---|
+|Counter|`{evaluation}`|
+
+Counts the result of every request rule evaluation. Incremented once per evaluated rule.
+
+**Labels:**
+
+- `kong.keg.request_rule.result`: The result of the request rule evaluation (pass or violation) (one of `pass`, `violation`)
+- `kong.keg.request_rule.action`: The configured action of the evaluated rule (one of `reject`, `passthrough`)
+- `kong.keg.kafka.request`: The type of the Kafka request
+- `kong.konnect.policy.id`: The Konnect policy identifier
+- `kong.konnect.policy.name`: The Konnect policy name
+- `kong.konnect.virtual_cluster.id`: The Konnect virtual cluster identifier
+- `kong.konnect.virtual_cluster.name`: The Konnect virtual cluster name
+- `kong.konnect.backend_cluster.id`: The Konnect backend cluster identifier
+- `kong.konnect.backend_cluster.name`: The Konnect backend cluster name
+- `kong.keg.component`: The component name
