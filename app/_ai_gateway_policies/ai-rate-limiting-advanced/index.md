@@ -237,7 +237,7 @@ To configure it, specify the function in [`config.request_prompt_count_function`
 
 When using the request prompt provider, it will call the function to get the token count at the request level and implement a limit.
 
-## Identification strategies
+## Incrementing counters per identity
 
 The AI Rate Limiting Advanced policy supports several identifiers that allow you to define an identity based scopes for rate limiting.
 
