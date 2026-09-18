@@ -203,6 +203,9 @@ You can store and reference the following as secrets in a Vault:
 > * <sup>1</sup>: You can't reference secrets stored in a [{{site.konnect_short_name}} Config Store](/how-to/configure-the-konnect-config-store/) Vault in `kong.conf` because {{site.konnect_short_name}} resolves the secret after {{site.base_gateway}} connects to the Control Plane. For this same reason, you can't use {{site.konnect_short_name}} Config Store secrets directly in Lua code via the Kong PDK, for example.
 > * <sup>2</sup>: In {{site.konnect_short_name}}, the {{site.base_gateway}} license is managed and stored by {{site.konnect_short_name}}, and doesn't need to be stored manually in any Vault.
 
+{:.warning}
+> **Vault references and startup-critical `kong.conf` parameters:** If a vault reference in `kong.conf` fails to resolve, {{site.base_gateway}} fails to start. This is especially important for the [hybrid mode](/gateway/hybrid-mode/) parameters `cluster_cert`, `cluster_cert_key`, and `cluster_ca_cert`, which the Data Plane needs to establish its mTLS connection to the Control Plane. Because the Data Plane never starts in this scenario, [Data Plane resilience](/gateway/cp-outage/)—which only takes effect after a Data Plane has already started successfully—can't help. Verify vault reference resolution and backend availability for these parameters before deploying to production.
+
 ### Referenceable plugin fields
 
 The following plugin fields can be stored and referenced as secrets:

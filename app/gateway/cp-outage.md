@@ -52,6 +52,9 @@ faqs:
 {:.info}
 >This option is only recommended for users who have to adhere to strict high-availability SLAs because it requires a larger maintenance load.
 
+{:.warning}
+> **Data Plane resilience doesn't help if the Data Plane never starts.** This feature only takes effect after a Data Plane node has already started successfully. If {{site.base_gateway}} fails to start—for example, because a [vault reference](/gateway/entities/vault/) in `kong.conf` can't be resolved—the fallback mechanism never engages. This risk is highest for startup-critical parameters like `cluster_cert`, `cluster_cert_key`, and `cluster_ca_cert`, which are required to establish the Data Plane's connection to the Control Plane.
+
 ## How Data Plane resilience works
 
 When the cluster adds new Data Plane nodes, the nodes are configured by the Control Plane using a configuration file. 
