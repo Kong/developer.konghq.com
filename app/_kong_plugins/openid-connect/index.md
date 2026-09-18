@@ -534,289 +534,31 @@ rows:
 
 ### Certificate-bound access tokens
 
-One of the main vulnerabilities of OAuth is bearer tokens. With OAuth, presenting a valid bearer token is enough proof to access a resource.
-This can create problems since the client presenting the token isn't validated as the legitimate user that the token was issued to.
-
-Certificate-bound access tokens can solve this problem by binding tokens to clients. 
-This ensures the legitimacy of the token because the it requires proof that the sender is authorized to use a particular token to access protected resources. 
-
-Certificate-bound access tokens are supported by the following auth methods:
-
-* [JWT Access Token authentication](#jwt-access-token-authentication-flow)
-* [Introspection authentication](#introspection-authentication-flow)
-* [Session authentication](#session-authentication-workflow)
-
-Session authentication is only compatible with certificate-bound access tokens when used along with one of the other supported authentication methods:
-
-* When the configuration option [`config.proof_of_possession_auth_methods_validation`](/plugins/openid-connect/reference/#schema--config-proof-of-possession-auth-methods-validation) is set to `false` and other non-compatible methods are enabled, if a valid session is found, the proof of possession validation will only be performed if the session was originally created using one of the compatible methods. 
-* If multiple `openid-connect` plugins are configured with the `session` auth method, we strongly recommend configuring different values of [`config.session_secret`](/plugins/openid-connect/reference/#schema--config-session-secret) across plugin instances for additional security. This avoids sessions being shared across plugins and possibly bypassing the proof of possession validation.
-
-To enable certificate-bound access for OpenID Connect:
-* Ensure that the auth server (IdP) that you're using is set up to generate OAuth 2.0 Mutual TLS certificate-bound access tokens.
-* Use the [`proof_of_possession_mtls`](/plugins/openid-connect/reference/#schema--config-proof-of-possession-mtls) configuration option to ensure that the supplied access token belongs to the client by verifying its binding with the client certificate provided in the request.
-
-See the [cert-bound configuration example](/plugins/openid-connect/examples/cert-bound-access-tokens/) for more detail and [Configure OpenID Connect with cert-bound access tokens](/how-to/configure-oidc-with-cert-bound-tokens/) for a complete tutorial.
+{% include_cached plugins/oidc/cert-bound-access-tokens.md type="plugin" gateway=site.base_gateway %}
 
 ### mTLS Proof-of-Possession via HTTP header {% new_in 3.15 %}
 
-Many enterprise deployments terminate TLS at a WAF or Layer-7 proxy before traffic reaches {{site.base_gateway}}.
-In these environments, the TLS connection between the proxy and {{site.base_gateway}} carries no client certificate, which prevents the standard mTLS PoP flow from working.
-
-You can enable the OIDC plugin to validate mTLS Proof-of-Possession (PoP) via a header.
-When configured, the plugin reads the client certificate from an HTTP header injected by the WAF or proxy, validates it against a trusted CA, and verifies that its thumbprint matches the `cnf.x5t#S256` claim bound in the access token.
-
-To enable mTLS PoP via header:
-* Configure your IdP to generate OAuth 2.0 mTLS certificate-bound access tokens.
-* Configure your WAF or L7 proxy to inject the client certificate into a known HTTP header.
-* Set [`config.proof_of_possession_mtls`](/plugins/openid-connect/reference/#schema--config-proof-of-possession-mtls) to `strict` and configure [`config.proof_of_possession_mtls_from_header`](/plugins/openid-connect/reference/#schema--config-proof-of-possession-mtls-from-header) with the header name, expected certificate format, and a trusted CA certificate.
-
-See the [mTLS PoP via header example](/plugins/openid-connect/examples/mtls-pop-from-header/) and [Configure OpenID Connect with mTLS Proof-of-Possession via header](/how-to/configure-oidc-with-pop-token-in-header/) for a complete tutorial.
+{% include_cached plugins/oidc/mtls-pop-header.md type="plugin" gateway=site.base_gateway %}
 
 ### Demonstrating Proof-of-Possession (DPoP)
 
-Demonstrating Proof-of-Possession (DPoP) is an alternative technique to the [mutual TLS certificate-bound access tokens](#mutual-tls-client-authentication). Unlike its alternative, which binds the token to the mTLS client certificate, it binds the token to a JSON Web Key (JWK) provided by the client.
-
-{% include_cached plugins/oidc/diagrams/dpop.md %}
-
-You can use the Demonstrating Proof-of-Possession option without mTLS, and even with plain HTTP, although HTTPS is recommended for enhanced security.
-
-When verification of the DPoP proof is enabled, {{site.base_gateway}} removes the `DPoP` header and changes the token type from `dpop` to `bearer`.
-This effectively downgrades the request to use a conventional bearer token, and allows an OAuth2 upstream without DPoP support to work with the DPoP token without losing the protection of the key binding mechanism.
-
-DPoP is compatible with the following authentication methods:
-
-* [JWT Access Token authentication](#jwt-access-token-authentication-flow)
-* [Introspection authentication](#introspection-authentication-flow)
-* [Session authentication](#session-authentication-workflow)
-
-Session authentication is only compatible with DPoP when used along with one of the other supported authentication methods. If multiple `openid-connect` plugins are configured with the `session` authentication method, we strongly recommend configuring different values of [`config.session_secret`](/plugins/openid-connect/reference/#schema--config-session-secret) across plugin instances for additional security. This avoids sessions being shared across plugins and possibly bypassing the proof of possession validation.
-
-To enable DPoP for OpenID Connect:
-* Ensure that the auth server (IdP) that you're using has DPoP enabled.
-* Use the [`config.proof_of_possession_dpop`](/plugins/openid-connect/reference/#schema--config-proof-of-possession-dpop) configuration option to ensure that the supplied access token is bound to the client by verifying its association with the JWT provided in the request.
-
-See the [DPoP configuration example](/plugins/openid-connect/examples/dpop/) for more detail.
+{% include_cached plugins/oidc/dpop.md type="plugin" gateway=site.base_gateway %}
 
 ## Multi-IdP support
 
-If your APIs serve clients that authenticate with different identity providers, the OIDC plugin can validate tokens from multiple issuers at the gateway layer, so backends don't need per-IdP logic.
-
-You can implement this in one of the following ways:
-
-* **Trusted issuers registry**: Configure the OIDC plugin with a list of trusted issuers and their JWKS endpoints using [`config.issuers_allowed`](/plugins/openid-connect/reference/#schema--config-issuers-allowed) and [`config.extra_jwks_uris`](/plugins/openid-connect/reference/#schema--config-extra-jwks-uris).
-{{site.base_gateway}} validates incoming tokens against the appropriate public keys and forwards them to the backend as-is.
-This works best when token formats are consistent across IdPs.
-
-* **Token exchange** {% new_in 3.14 %}: Configure the OIDC plugin to swap incoming tokens for a canonical token from one trusted issuer using [`config.token_exchange`](/plugins/openid-connect/reference/#schema--config-token-exchange).
-The backend always receives tokens from a single issuer regardless of which IdP the client used.
-This works best when backends must trust one issuer, or when you need to normalize scopes and claims across IdPs.
-
-For a detailed comparison, configuration parameters, and examples, see [Multi-IdP token validation at the gateway layer](/plugins/openid-connect/multi-idp/).
+{% include_cached plugins/oidc/multi-idp.md type="plugin" gateway=site.base_gateway %}
 
 ## Protected resource metadata {% new_in 3.16 %}
 
-Some clients, including MCP (Model Context Protocol) clients that follow the [MCP authorization specification](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization), need to know which authorization server protects an API before they can request a token.
-
-[RFC 9728](https://www.rfc-editor.org/rfc/rfc9728) (OAuth 2.0 Protected Resource Metadata) solves this by letting a resource server advertise itself, including which authorization servers protect it and what scopes it supports, at a well-known URI that clients can discover automatically.
-
-When you configure [`config.protected_resource_metadata`](/plugins/openid-connect/reference/#schema--config-protected-resource-metadata), the OIDC plugin:
-* Serves an RFC 9728 metadata document at a well-known URI, with no authentication required.
-* Rejects a request with no bearer token with a `401 Unauthorized` response instead of `403 Forbidden`, and adds a `resource_metadata` attribute, and optionally a `scope` attribute, to its `WWW-Authenticate` header, so clients that receive a challenge can locate the metadata document.
-
-{:.info}
-> Configuring this setting only advertises protected resource metadata and adds it to unauthorized responses.
-It doesn't change how the OIDC plugin authenticates requests, and the authorization server URLs you configure here aren't validated against `config.issuer`.
-
-### Well-known metadata endpoint
-
-By default, the OIDC plugin derives the metadata document's path from [`config.protected_resource_metadata.resource`](/plugins/openid-connect/reference/#schema--config-protected-resource-metadata-resource) by appending `/.well-known/oauth-protected-resource` to its path component. For example:
-
-* `resource`: `https://api.example.com/mcp`
-* Metadata document served at: `https://api.example.com/mcp/.well-known/oauth-protected-resource`
-
-To serve the document at a different path, set [`config.protected_resource_metadata.metadata_endpoint`](/plugins/openid-connect/reference/#schema--config-protected-resource-metadata-metadata-endpoint).
-
-The plugin intercepts requests to this path before any authentication logic runs:
-* `GET` requests receive a `200` response with the metadata document as a JSON body (`Content-Type: application/json`, `Cache-Control: no-store`).
-The document always includes `resource`, and includes `authorization_servers` and `scopes_supported` when they're configured.
-* Requests using any other method receive a `405` response with an `Allow: GET` header.
-
-For example, with `resource` set to `https://api.example.com/mcp`:
-
-```sh
-curl -s https://api.example.com/mcp/.well-known/oauth-protected-resource
-```
-
-The response is the metadata document, and doesn't require an `Authorization` header since a client fetches it before it has a token:
-
-```json
-{
-  "resource": "https://api.example.com/mcp",
-  "authorization_servers": ["https://idp.example.com"],
-  "scopes_supported": ["openid", "profile"]
-}
-```
-{:.no-copy-code}
-
-{:.info}
-> The plugin doesn't handle CORS for the metadata endpoint.
-If MCP or browser-based clients need to fetch the metadata document cross-origin, add the [CORS plugin](/plugins/cors/) to the same route.
-
-### WWW-Authenticate header
-
-When a request is rejected with a `401 Unauthorized` response, the OIDC plugin adds a `resource_metadata` attribute to the `WWW-Authenticate` header, pointing to the well-known metadata endpoint.
-If [`config.protected_resource_metadata.scopes_supported`](/plugins/openid-connect/reference/#schema--config-protected-resource-metadata-scopes-supported) is set, the header also includes a `scope` attribute listing the supported scopes.
-This only applies to `401` responses.
-
-For example, a request without a bearer token:
-
-```sh
-curl -s -i https://api.example.com/mcp
-```
-
-Returns a `401` response whose `WWW-Authenticate` header carries the discovery information:
-
-```
-HTTP/1.1 401 Unauthorized
-WWW-Authenticate: Bearer realm="idp.example.com", resource_metadata="https://api.example.com/mcp/.well-known/oauth-protected-resource", scope="openid profile", error="invalid_token"
-
-{"message":"Unauthorized"}
-```
-{:.no-copy-code}
-
-See the [Set up protected resource metadata](/plugins/openid-connect/examples/protected-resource-metadata/) example for a full configuration.
+{% include_cached plugins/oidc/protected-resource-metadata.md type="plugin" gateway=site.base_gateway cors="[CORS plugin](/plugins/cors/)" %}
 
 ## Token exchange {% new_in 3.14 %}
 
-The [OAuth 2.0 Token Exchange](https://oauth.net/2/token-exchange/) (RFC 8693) is an extension to the OAuth 2.0 framework that allows exchanging an existing security token for a new one. 
-The RFC defines a protocol approach to support scenarios where a client can exchange a token for a new token by interacting with the authorization server. 
-This is particularly useful in complex environments like microservices or cross-domain federations. 
-
-{:.info}
-> **Note**: The OpenID Connect plugin only supports exchanging access tokens.
-
-### Why use token exchange?
-
-Token exchange can be used in several critical use cases:
-
-* **Downscoping**: A service receives a powerful token but only needs a subset of those permissions to call an upstream service. 
-It exchanges the powerful token for one with fewer scopes to maintain the Principle of Least Privilege.
-* **Internal vs. external tokens**: Converting an external opaque token or a third-party token (like a SAML assertion) into an internal JWT that the microservices understand.
-* **Impersonation and delegation**: Allowing a service to act on behalf of a user. 
-For example, a frontend service needs to trade its token for a new token with specific scopes to call a backend service.
-* **Privacy**: Removing sensitive user information from a token before passing it to an upstream service.
-
-{:.info}
-> Because token exchange allows for the creation of new tokens, trust models are vital. 
-The trust model must strictly define which clients are allowed to exchange tokens and which scopes they are permitted to elevate or downgrade to prevent security flaws like privilege escalations.
-
-### How token exchange works
-
-In a typical [OAuth flow](#kong-oauth-token-authentication-flow), a token is obtained to access a resource. 
-However, in a token exchange, a client already has a token (the "subject token"). 
-{{site.base_gateway}} acts as the gatekeeper that decides which incoming tokens are eligible for exchange and facilitates the token exchange using its own client credentials. 
-The subject token is presented to the authorization server to get a different token (the "requested token") that is better suited for accessing the resource.
-
-{% include_cached /plugins/oidc/diagrams/token-exchange.md %}
-
-The OpenID Connect plugin performs the following checks on the incoming token before triggering the exchange:
-1. Checks the incoming subject token meets the following criteria:
-  * The issuer (`iss` claim) matches a configured trusted issuer (`subject_token_issuers`).
-  * The token is not expired (`exp` claim).
-  * The token is not used before its time (`nbf` claim).
-  * {% new_in 3.15 %} If [`verify_signature`](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers-verify-signature) is enabled for the issuer, {{site.base_gateway}} cryptographically verifies the token signature before sending the exchange request to the IdP.
-1. If the `subject_token_issuer` and `target_issuer` are different, token exchange is triggered.
-1. If the `subject_token_issuer` and `target_issuer` are the same, the configured conditions are evaluated to determine whether to trigger token exchange.
-1. {{site.base_gateway}} uses its client credentials to trigger the exchange.
-
-Afterwards, the rest of the OpenID Connect plugin flow continues on the exchanged token.
-
-Depending on the use case, {{site.base_gateway}} can exchange the token either with the same authorization server that issued the initial subject token, or exchange tokens between different authorization servers.
-
-Set up token exchange:
-* [Example: Cross-domain token exchange](/plugins/openid-connect/examples/token-exchange-cross-domain/)
-* [Example: Token transformation](/plugins/openid-connect/examples/token-exchange-transformation/)
-* [Example: Token exchange with an actor token](/plugins/openid-connect/examples/token-exchange-actor-token/)
-* [How-to: Configure OIDC with token exchange](/how-to/configure-oidc-with-token-exchange/)
-
-#### Key terms
-
-The token exchange flow uses the following terms:
-
-* **Subject token**: The input token representing the identity/authorization being exchanged.
-* **Subject token issuer**: The authorization server that issued the initial token (subject token).
-* **Target issuer**: The authorization server protecting the resources (APIs/services).
-* **Conditions**: Conditions under which to trigger token exchange. 
-Conditions look for the presence or absence of two claims: `scopes` and `audience`. 
-
-### Subject token signature verification {% new_in 3.15 %}
-
-By default, {{site.base_gateway}} validates the `iss`, `exp`, and `nbf` claims of an incoming subject token but doesn't verify its cryptographic signature before sending the exchange request to the IdP.
-The IdP performs its own signature check, so validation happens eventually.
-
-Enabling signature verification in {{site.base_gateway}} adds an earlier check that rejects tokens with invalid signatures before they reach the IdP.
-This reduces unnecessary round-trips to the IdP and keeps {{site.base_gateway}}'s security posture consistent with other authentication flows.
-
-You can configure this setting per issuer on each entry in [`config.token_exchange.subject_token_issuers`](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers):
-
-* [`config.token_exchange.subject_token_issuers[].verify_signature`](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers-verify-signature): Set to `true` to enable signature verification for that issuer.
-Defaults to `false` for backward compatibility.
-We recommend enabling this for all subject token issuers to prevent tokens with invalid signatures from consuming IdP resources.
-* [`config.token_exchange.subject_token_issuers[].jwks_uri`](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers-jwks-uri): An optional explicit JWKS endpoint for fetching the signing keys for this issuer.
-If not set, {{site.base_gateway}} resolves the JWKS URI from OIDC discovery using the issuer URL.
-Set this when the issuer doesn't publish a discovery document or when you want to pin to a specific key endpoint.
-
-### Actor tokens {% new_in 3.16 %}
-
-An actor token represents the identity of the party acting on behalf of the subject in a token exchange, as defined by [RFC 8693](https://www.rfc-editor.org/rfc/rfc8693#name-actor-token-and-actor-toke).
-This is useful for delegation scenarios, such as an AI agent or backend service that needs to identify itself separately from the user (the subject) it's acting for.
-Some identity providers require an actor token to be present for certain token exchange grants.
-
-Configure [`config.token_exchange.request.actor_token`](/plugins/openid-connect/reference/#schema--config-token-exchange-request-actor-token) to include an actor token in the exchange request.
-
-Use [`config.token_exchange.request.actor_token.type`](/plugins/openid-connect/reference/#schema--config-token-exchange-request-actor-token-type) to set the token type identifier sent as `actor_token_type`.
-This defaults to `urn:ietf:params:oauth:token-type:access_token`.
-
-See the [actor token example](/plugins/openid-connect/examples/token-exchange-actor-token/) for more details.
+{% include_cached plugins/oidc/token-exchange.md type="plugin" gateway=site.base_gateway %}
 
 ## Multiple clients
 
-You can configure the OIDC plugin with multiple client IDs ([`config.client_id`](./reference/#schema--config-client-id)) and 
-client secrets ([`config.client_secret`](./reference/#schema--config-client-secret)), where the ID and client pairs correspond based on their locations in the array.
-
-For example:
-
-```yaml
-config:
-  issuer: example-issuer-url
-  client_id:
-    - my-first-client
-    - my-second-client
-  client_secret:
-    - first-client-secret
-    - second-client-secret
-```
-
-When making a request, you can specify which client to target to use by including a client ID argument.
-For example, after configuring the plugin with two client IDs and client secrets, you can target a client by name:
-
-```sh
-curl -X GET "http://localhost:8000?client_id=my-second-client"
-```
-
-Or by its index value (starting with 1):
-
-```sh
-curl -X GET "http://localhost:8000?client_id=2"
-```
-
-{{site.base_gateway}} will look for the client ID in the following locations, in order of precedence:
-1. If [`config.client_arg`](./reference/#schema--config-client-arg) is set, {{site.base_gateway}} checks for that value in the following order: in the request header, URI argument, and body.
-1. If `config.client_arg` is not set, {{site.base_gateway}} checks for a `client_id` in the following order: in the request header, URI argument, and body.
-1. If no client is found in either of those places, {{site.base_gateway}} uses the first client ID and client secret pair.
-
-{:.info}
-> **Note:** Configuring multiple clients is not possible with the client credentials grant, as the plugin always uses the client ID passed directly from the client.
+{% include_cached plugins/oidc/multiple-clients.md type="plugin" gateway=site.base_gateway %}
 
 ## Using cloud authentication with Redis {% new_in 3.13 %}
 

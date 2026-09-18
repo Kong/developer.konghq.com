@@ -3,7 +3,7 @@
 sequenceDiagram
     autonumber
     participant client as Client <br>(e.g. mobile app)
-    participant kong as API Gateway <br>({{site.base_gateway}})
+    participant kong as Gateway
     participant upstream as Upstream <br>(backend service,<br> e.g. httpbin)
     participant idp as Authentication Server <br>(e.g. Keycloak)
     activate client
