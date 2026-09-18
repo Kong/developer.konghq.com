@@ -84,8 +84,6 @@ on-prem:
       WEBHOOK_URL: http://httpbin.konghq.com/anything
       SLACK_WEBHOOK_URL: http://httpbin.konghq.com/anything
       ANTHROPIC_API_KEY: anthropic-api-key
-      KONNECT_DOMAIN: konghq.tech
-      KONGCTL_DEFAULT_KONNECT_ENVIRONMENT: tech
     setup:
       commands:
         - export KONGCTL_DEFAULT_KONNECT_PAT=$KONNECT_TOKEN
