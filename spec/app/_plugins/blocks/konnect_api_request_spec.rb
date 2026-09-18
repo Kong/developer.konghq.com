@@ -2,7 +2,7 @@
 
 RSpec.describe Jekyll::KonnectApiRequest do
   let(:site_data) { { 'konnect_api_request' => { 'region' => 'us' } } }
-  let(:site) { instance_double(Jekyll::Site, data: site_data) }
+  let(:site) { instance_double(Jekyll::Site, data: site_data, config: { 'konnect_domain' => 'konghq.com' }) }
 
   before { allow(Jekyll).to receive(:sites).and_return([site]) }
 
