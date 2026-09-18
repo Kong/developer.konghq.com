@@ -1,3 +1,3 @@
-<div class="content" data-deployment-topology="konnect" markdown="1" {% if config.section == 'cleanup' %}data-test-cleanup="{{ config.data_validate_konnect | escape }}"{% else %}data-test-step="block" data-test-step="{{ config.data_validate_konnect | escape }}"{% endif %}>
+<div class="content" data-deployment-topology="konnect" markdown="1" {{ config.test_attribute }}="{{ config.data_validate_konnect | escape }}">
   {% include how-tos/validations/request-check/snippet.md config=config.snippet_config %}
 </div>
