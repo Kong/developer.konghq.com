@@ -23,9 +23,19 @@ search_aliases:
   - Code Mode MCP
   - MCP server
 
+faqs:
+  - q: Does a source stay in sync with the {{site.konnect_catalog}}?
+    a: |
+      No. When you add a source from the {{site.konnect_short_name}} {{site.konnect_catalog}}, {{site.context_mesh}} creates a forked copy of the item.
+      There is no sync between {{site.context_mesh}} and the {{site.konnect_catalog}}.
+  - q: Can I change a source's type or definition after I create it?
+    a: |
+      No. You can't change a source's type, for example changing an API into an MCP server, and you can't update the spec or the MCP server endpoint.
+      To update a source, create a new source and delete the outdated one.
+
 ---
 
-{{site.context_mesh}} lets you turn enterprise assets (such as MCP servers and APIs) into context that AI agents can call. It works by composing those assets into a single deployable Code Mode MCP server, also called a Context Interface.
+{{site.context_mesh}} lets you turn enterprise assets (such as MCP servers and APIs) into context that AI agents can call. It works by composing those assets into a single deployable Code Mode MCP server.
 
 ## Sources
 
@@ -69,7 +79,7 @@ features:
 
 {% endfeature_table %}
 
-Once you've added and configured the {{site.context_mesh}}, you can create an MCP server.
+Once you've added and configured the {{site.context_mesh}} sources, you can create an MCP server.
 
 ## MCP servers
 
