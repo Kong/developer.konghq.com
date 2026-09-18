@@ -213,7 +213,7 @@ in the **Application** > **Sign On** section of the Okta configuration, setting 
 
     * **Client ID**: Located in your Application **General > Client Credentials** settings.
     * **Client Secret**: Located in your Application **General > Client Secrets** settings.
-    * **Issuer URI** : The Issuer is typically found in the **Security > API > Authorization Servers** settings. You can also find your Okta org ID by clicking your account dropdown menu on the top right. 
+    * **Issuer URI** : The Issuer is typically found in the **Security > API > Authorization Servers** settings in the sidebar. You can also find your Okta org ID by clicking your account dropdown menu on the top right. 
     It should look like the following: `https://<okta-org-id>.okta.com/oauth2/default`
 {% endnavtab %}
 {% navtab "SAML" %}
