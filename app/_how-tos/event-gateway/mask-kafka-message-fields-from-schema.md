@@ -295,7 +295,7 @@ is replaced with `REDACTED`. The untagged `city` field passes through unchanged.
 
 The policy uses `failure_mode: skip`, so a record the policy can't mask is never delivered.
 For a redaction policy, choose between `skip` and `error` to not let unmasked data through.
-Prefer `skip`, because `error` blocks the whole batch and leaves consumers stuck on the problematic offset
+We generally recommend using `skip`, because `error` blocks the whole batch and leaves consumers stuck on the problematic offset
 until someone intervenes.
 
 ## Configure kafkactl

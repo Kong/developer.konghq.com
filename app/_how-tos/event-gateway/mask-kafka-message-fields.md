@@ -67,7 +67,7 @@ Consumers that connect through the virtual cluster receive the same records with
 stays intact in the broker and remains available to systems that are allowed to see it.
 
 Masking runs in the consume phase, which means the stored records are never modified.
-If you need the data to reach the broker already redacted, apply the same policy in the produce phase instead. That change is irreversible.
+If you need data to reach the broker in a redacted state, apply the same policy in the produce phase instead. That change is irreversible: the original values are permanently discarded, since only the redacted version ever reaches Kafka.
 
 The Mask Fields policy supports three strategies, and this guide uses all of them:
 
@@ -215,7 +215,7 @@ This fails closed: a record the {{site.event_gateway_short}} can't parse also ca
 ## Create a Mask Fields policy
 
 Create the Mask Fields policy nested under the Schema Validation policy.
-Each entry of `mask_fields` selects a set of field paths and the strategy that redacts them:
+Each entry under `mask_fields` selects a set of field paths and the strategy that redacts them:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -267,7 +267,8 @@ In this configuration:
 
 Both policies use `failure_mode: skip`, so a record the policy can't mask is never delivered. The alternatives are `error`, `passthrough`, and `mark`.
 For a redaction policy, choose between `skip` and `error` to not let unmasked data through.
-Prefer `skip`, because `error` blocks the whole batch and leaves consumers stuck on the problematic offset until someone intervenes.
+We generally recommend using `skip`, because `error` blocks the whole batch and leaves consumers stuck on the problematic offset until someone intervenes.
+
 Don't use `passthrough` or `mark` here, because both deliver the record with the sensitive fields still readable.
 
 ## Configure kafkactl
