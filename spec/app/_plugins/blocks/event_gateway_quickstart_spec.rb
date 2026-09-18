@@ -38,11 +38,11 @@ RSpec.describe Jekyll::EventGatewayQuickstart do
       end
     end
 
-    context 'section: prereq' do
+    context 'section: prereqs' do
       let(:template) do
         <<~LIQUID
           {% event_gateway_quickstart %}
-          section: prereq
+          section: prereqs
           env:
             FOO: bar
           {% endevent_gateway_quickstart %}
@@ -56,6 +56,22 @@ RSpec.describe Jekyll::EventGatewayQuickstart do
 
         expect(payload['name']).to eq('quickstart')
         expect(payload['config']['env']).to eq({ 'FOO' => 'bar' })
+      end
+    end
+
+    context 'section: prereq (the singular is rejected)' do
+      let(:template) do
+        <<~LIQUID
+          {% event_gateway_quickstart %}
+          section: prereq
+          env:
+            FOO: bar
+          {% endevent_gateway_quickstart %}
+        LIQUID
+      end
+
+      it 'raises an error naming the rejected value' do
+        expect { rendered }.to raise_error(ArgumentError, /prereq/)
       end
     end
   end
