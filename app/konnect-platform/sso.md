@@ -119,7 +119,7 @@ rows:
     ui: "Go to the [Authentication Scheme organization settings](https://cloud.konghq.com/global/organization/settings#authentication-scheme)<sup>1</sup>"
     api: "[`/identity-providers`](/api/konnect/identity/#/operations/create-identity-provider)<sup>1</sup>"
   - feature: "Dev Portal"
-    ui: "Navigate to your [Dev Portal](https://cloud.konghq.com/portals/), click **Settings** in the sidebar, and then click the **Security** tab. Enable **User authentication**."
+    ui: "Navigate to your [Dev Portal](https://cloud.konghq.com/portals/), click **Settings** tab, and then click the **Security** tab. Enable **User authentication**."
     api: "[`/portals/{portalId}/identity-providers`](/api/konnect/portal-management/#/operations/create-portal-identity-provider)"
 {% endtable %}
 <!--vale on-->
@@ -211,9 +211,9 @@ in the **Application** > **Sign On** section of the Okta configuration, setting 
 1. Locate the following values in the Okta console, which will be used later for the
 {{site.konnect_short_name}} configuration.
 
-    * **Client ID**: Located in your Application **General -> Client Credentials** settings.
-    * **Client Secret**: Located in your Application **General -> Client Secrets** settings.
-    * **Issuer URI** : The Issuer is typically found in the **Security -> API -> Authorization Servers** settings.
+    * **Client ID**: Located in your Application **General > Client Credentials** settings.
+    * **Client Secret**: Located in your Application **General > Client Secrets** settings.
+    * **Issuer URI** : The Issuer is typically found in the **Security > API > Authorization Servers** settings. You can also find your Okta org ID by clicking your account dropdown menu on the top right. 
     It should look like the following: `https://<okta-org-id>.okta.com/oauth2/default`
 {% endnavtab %}
 {% navtab "SAML" %}
