@@ -66,12 +66,12 @@
     "id": "937dcdd7-4485-47dc-af5f-b805d562552f",
     "title": "Gateway Admin - EE",
     "latestVersion": {
-      "name": "3.15.0.0",
-      "id": "aad7d299-60ff-445c-836a-4a4a1107627b"
+      "name": "3.16.0.0",
+      "id": "9d641658-8ce6-49ce-a62d-e00ef4e21dcb"
     },
     "description": "Kong Gateway (EE) comes with an internal RESTful API for administration purposes.",
     "documentCount": 2,
-    "versionCount": 13,
+    "versionCount": 14,
     "versions": [
       {
         "id": "be79b812-46d5-4cc1-b757-b5270bf4fa60",
@@ -174,6 +174,14 @@
         "created_at": "2026-07-02T16:46:33.422Z",
         "updated_at": "2026-07-02T16:47:10.255Z",
         "name": "3.15.0.0",
+        "deprecated": false,
+        "registration_configs": []
+      },
+      {
+        "id": "9d641658-8ce6-49ce-a62d-e00ef4e21dcb",
+        "created_at": "2026-09-15T16:52:06.527Z",
+        "updated_at": "2026-09-18T10:09:56.375Z",
+        "name": "3.16.0.0",
         "deprecated": false,
         "registration_configs": []
       }
