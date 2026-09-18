@@ -10,6 +10,14 @@ const log = debug("tests:setup:runtime");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+const PASSTHROUGH_VARIABLES = ["KONNECT_DOMAIN", "KONGCTL_DEFAULT_KONNECT_ENVIRONMENT"];
+
+async function konnectRegion() {
+  const filePath = path.resolve(__dirname, "../../app/_data/konnect_api_request.yml");
+  const fileContent = await fs.readFile(filePath, "utf8");
+  return yaml.load(fileContent).region;
+}
+
 export async function getRuntimeConfig(deploymentModel, product) {
   const fileContent = await fs.readFile(`./config/runtimes.yaml`, "utf8");
   const configs = yaml.load(fileContent);
@@ -50,6 +58,23 @@ export async function runtimeEnvironment(runtimeConfig) {
 
   for (const [key, value] of Object.entries({ ...runtimeConfig.env })) {
     environment[`DECK_${key}`] = value;
+  }
+
+  for (const variable of PASSTHROUGH_VARIABLES) {
+    if (process.env[variable] !== undefined) {
+      environment[variable] = process.env[variable];
+    }
+  }
+
+  const konnectDomain = process.env.KONNECT_DOMAIN;
+  if (konnectDomain) {
+    const controlPlaneUrl = `https://${await konnectRegion()}.api.${konnectDomain}`;
+    environment["KONNECT_CONTROL_PLANE_URL"] = controlPlaneUrl;
+    environment["DECK_KONNECT_CONTROL_PLANE_URL"] = controlPlaneUrl;
+
+    if (konnectDomain === "konghq.tech") {
+      environment["KONGCTL_DEFAULT_KONNECT_ENVIRONMENT"] = "tech";
+    }
   }
 
   Object.entries(process.env)
