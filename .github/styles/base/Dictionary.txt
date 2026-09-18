@@ -206,6 +206,9 @@ dereferenced
 dereferencing
 deserialization
 deserialize
+deserializer
+deserializing
+deserializes
 deserialized
 destructuring
 dev
