@@ -55,6 +55,23 @@ RSpec.describe Jekyll::Validation do
         expect(html).not_to have_css('div.content[data-test-step]')
       end
     end
+
+    context 'when section is unrecognized' do
+      let(:template) do
+        <<~LIQUID
+          {% validation custom-command %}
+          command: kong version
+          expected:
+            return_code: 0
+          section: prereq
+          {% endvalidation %}
+        LIQUID
+      end
+
+      it 'raises an error naming the rejected value' do
+        expect { rendered }.to raise_error(ArgumentError, /prereq/)
+      end
+    end
   end
 
   context 'when command or expected is missing' do
