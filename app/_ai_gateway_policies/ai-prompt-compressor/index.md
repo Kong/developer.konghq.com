@@ -6,12 +6,14 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
-description: 'Compress prompts with LLMLingua 2 before they reach the upstream LLM to stay within context limits, cut token costs, and reduce latency.'
+description: 'Compress prompts with LLMLingua 2 or a Headroom sidecar before they reach the upstream LLM to stay within context limits, cut token costs, and reduce latency.'
 categories:
   - ai
 tags:
   - ai
   - performance
+search_aliases:
+  - headroom
 
 related_resources:
   - text: AI RAG Injector Policy
@@ -24,7 +26,16 @@ related_resources:
     url: /ai-gateway/forward-proxy/
 ---
 
-The AI Prompt Compressor Policy compresses retrieved chunks before sending them to a Large Language Model (LLM), reducing text length while preserving meaning. It uses the [LLMLingua 2 library](https://github.com/microsoft/LLMLingua) for fast, high-quality compression. The AI Prompt Compressor Policy supports:
+The AI Prompt Compressor Policy compresses retrieved chunks and other LLM request content before sending them to a Large Language Model (LLM), reducing text length while preserving meaning. It supports two compression backends: the [LLMLingua 2 library](https://github.com/microsoft/LLMLingua) for fast, high-quality compression of prose, and a [Headroom](https://github.com/headroomlabs-ai/headroom) sidecar for cache-safe, session-aware compression of agentic traffic such as tool results.
+
+<!--
+TODO: the Headroom backend documented here is sourced from Kong/kong-ee#21675, which as of
+writing ships Headroom support as a *separate* plugin (ai-prompt-compressor-v2) rather than
+adding it to this plugin's own schema. Re-verify the exact config field names/shape against
+whatever actually merges before publishing, since the field surface may change.
+-->
+
+With the LLMLingua 2 backend, the AI Prompt Compressor Policy supports:
 
 * **Ratio-based or target token compression**: for example, reduce a message to 80% of the original length or compress to 150 tokens.
 * **Configurable compression ranges**: for example, compress prompts under 100 tokens with a 0.8 ratio or compress them to exactly 100 tokens.
@@ -62,13 +73,15 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-## AI Prompt Compression Service
+## Backends
+
+### LLMLingua 2 backend
 
 Kong provides a Docker image for the AI Prompt Compressor service, which compresses LLM prompts before sending them upstream. It uses [LLMLingua 2](https://github.com/microsoft/LLMLingua) to reduce prompt size, which helps you manage token limits and maintain context fidelity. The service supports both HTTP and JSON-RPC APIs and is designed to work with the AI Prompt Compressor Policy in {{site.ai_gateway}}.
 
 {% include prereqs/cloudsmith.md %}
 
-### Image configuration options
+#### Image configuration options
 
 You can configure the Kong AI Prompt Compressor Service using environment variables. These affect model selection, hardware usage, logging, and worker behavior.
 
@@ -98,7 +111,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-### Compression endpoints
+#### Compression endpoints
 
 The AI Prompt Compressor Service exposes both REST and JSON-RPC endpoints. You can use these interfaces to compress prompts, check the current status, or integrate the service with the AI Prompt Compressor Policy and other upstream services.
 
@@ -108,7 +121,7 @@ The AI Prompt Compressor Service exposes both REST and JSON-RPC endpoints. You c
 
 * **POST `/`**: JSON-RPC endpoint that supports the `llm.v1.compressPrompt` method. Use this to invoke compression programmatically over JSON-RPC.
 
-## Prompt compression options
+#### Prompt compression options
 
 The AI Prompt Compressor Policy offers flexible compression controls to fit different use cases. You can choose between full-prompt compression, conditional strategies, or selectively compressing only parts of the prompt:
 
@@ -135,7 +148,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-## How it works
+#### How it works
 
 1. The user sends the final prompt to the AI Prompt Compressor Policy.
 1. The AI Prompt Compressor Policy checks the prompt for `<LLMLINGUA>`...`</LLMLINGUA>` tags.
@@ -181,6 +194,62 @@ sequenceDiagram
 <!-- vale on -->
 
 The AI Prompt Compressor Policy applies structured compression to preserve essential context of prompts sent by users, rather than trimming prompts arbitrarily or risking token overflows. This ensures the LLM receives a well-formed, focused prompt keeping token usage under control.
+
+### Headroom backend
+
+[Headroom](https://github.com/headroomlabs-ai/headroom) is a local-first compression sidecar.
+The Headroom backend calls its direct `POST /v1/compress` API with the request's `messages`
+array and replaces the content with what Headroom returns.
+
+#### Deployment and trust model
+
+Headroom is loopback-trust by default: it answers unauthenticated calls on `127.0.0.1`, and
+returns `404` to non-loopback callers unless it's started with
+`HEADROOM_COMPRESS_ALLOW_REMOTE=1`. Run Headroom as a co-located sidecar reachable only from
+the {{site.ai_gateway}} data plane (the recommended, default topology), or point the Policy at
+a remote instance and configure a bearer token, sent as both the `X-Headroom-Proxy-Token` and
+`Authorization: Bearer` headers.
+
+Headroom sessions are held in memory on a single Headroom process. Point every data plane node
+at its own sidecar, or all of them at one shared instance. Never point them at a load-balanced
+set of Headroom instances, since a session's turns must all reach the same process.
+
+#### Session-based cache replay
+
+The Headroom backend derives one session id per conversation from a configurable set of
+request headers (or, if none of those headers are present, from the model name, the leading
+system prompt, and the first user message) and sends it to Headroom as part of the compress
+request. Headroom uses this to replay an already-compressed prefix byte-for-byte on later
+turns, which keeps the upstream LLM provider's own prompt cache hitting through the
+compressor. This requires **Headroom v0.37.0 or newer**: older images silently ignore the
+session id and run stateless.
+
+#### Request format support
+
+The Headroom backend compresses an OpenAI-shaped `messages` array, and also compresses a
+**native Anthropic** request body directly (not just an OpenAI-compatible one), which is what
+makes it useful in front of a coding agent that speaks Anthropic's API natively. A request
+with no `messages` array (for example a completions-style `prompt` body, or a Responses API
+`input` list) isn't supported and is forwarded unchanged.
+
+#### Failure behavior
+
+By default, if the call to Headroom fails, times out, or returns an error, the Policy returns
+an HTTP `500` to the client rather than forwarding the request uncompressed. This backend can
+also be configured to fail open instead: the original, uncompressed request is forwarded and
+the failure is logged.
+
+A `503` response indicating a compression timeout is retried automatically before the Policy
+gives up; every other non-`200` response (for example a `400` from a bad configuration, or a
+`401` from a missing or incorrect bearer token) fails immediately.
+
+#### What this doesn't do yet
+
+* No content-retrieval mechanism: Headroom's compress-cache-retrieve (CCR) hashes aren't
+  stored or resolved by this Policy.
+* No tuning fields for Headroom's own target compression ratio or protected-recent-turns
+  settings: Headroom's own defaults apply.
+* No MCP tool-response compression: only the LLM request path is supported.
 
 ## Forward proxy support
 
