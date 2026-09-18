@@ -107,9 +107,9 @@ Pinned data uses the retention period selected when you create the pin: **7 days
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.observability}}**.
 1. In the {{site.observability}} sidebar, click **Debugger**.
 1. Open the debug session that contains the trace or CPU profile.
-1. To save a trace, open the trace row's actions menu and select **Save trace**. To save a CPU profile, open the **CPU Profiling** tab, open the actions menu, and select **Save profile**. CPU profiles are available after the session completes.
-1. Enter a **Name** and, optionally, a **Description**.
-1. Select a **Retention period**.
+1. To save a trace, from the trace row's actions menu, select **Save trace**. To save a CPU profile, click the **CPU Profiling** tab, then from the actions menu, select **Save profile**. CPU profiles are available after the session completes.
+1. In the **Name** field, enter a name for the pin, such as `slow-requests-trace`. Optionally, in the **Description** field, enter a description of the pin.
+1. From the **Retention period** dropdown menu, select a retention period, such as **30 days**.
 1. Click **Save**.
 
 ### View and manage pins
