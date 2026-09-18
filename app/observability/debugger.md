@@ -1,6 +1,6 @@
 ---
 title: "Troubleshooting with {{site.konnect_short_name}} Debugger"
-description: "The Debugger enables control plane administrators to initiate targeted deep session traces in specific data plane nodes and pin traces and CPU profiles for later analysis."
+description: "The Debugger enables control plane administrators to initiate targeted deep session traces in specific data plane nodes and pin them, along with CPU profiles, for later analysis."
 breadcrumbs:
   - /observability/
 content_type: reference
@@ -87,40 +87,6 @@ Traces captured during a debug session can be visualized in debugger's built-in 
 
 All {{site.konnect_short_name}} users can upload a trace `.json` or `.zip` file (for example, one downloaded from a debug session) to view by navigating to **{{site.observability}}** > **Debugger** and clicking **Upload trace**. This lets users view traces even if they don't have permission to create or start debug sessions.   
 
-## Pin traces and profiles
-
-A pin is a named snapshot of a trace or the session's CPU profile. It is stored separately from the debug session and remains available for the retention period you choose.
-
-When you pin a trace, any logs, payload captures, and Datakit plugin captures available for that trace are included automatically. A profile pin saves the session's CPU profile. Pins contain only data available when they are created and don't update with the original session.
-
-To make data available for a pin, enable the corresponding capture option when you create the session:
-
-* Enable log capture to include logs.
-* Enable payload capture for headers or body to include payload captures.
-* Enable body capture to include Datakit captures. Header-only capture records Datakit node spans but doesn't upload Datakit tracing events.
-* Enable CPU profiling to include the session's CPU profile.
-
-Pinned data uses the retention period selected when you create the pin: **7 days**, **30 days**, **3 months**, or **1 year**. Unpinned debug sessions are retained for up to 15 days, and unpinned payload data is retained for up to three days.
-
-### Save a trace or profile
-
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.observability}}**.
-1. In the {{site.observability}} sidebar, click **Debugger**.
-1. Open the debug session that contains the trace or CPU profile.
-1. To save a trace, from the trace row's actions menu, select **Save trace**. To save a CPU profile, click the **CPU Profiling** tab, then from the actions menu, select **Save profile**. CPU profiles are available after the session completes.
-1. In the **Name** field, enter a name for the pin, such as `slow-requests-trace`. Optionally, in the **Description** field, enter a description of the pin.
-1. From the **Retention period** dropdown menu, select a retention period, such as **30 days**.
-1. Click **Save**.
-
-### View and manage pins
-
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.observability}}**.
-1. In the {{site.observability}} sidebar, click **Debugger**.
-1. Click the **Saved traces & profile** tab.
-1. Select a saved trace or profile to open it. Saved traces open in the trace viewer with any included logs, payload captures, and Datakit captures. Saved profiles open in the **CPU Profiling** view.
-
-From the saved list, use the row actions menu to **Edit** or **Delete** a pin. You can edit a pin's name or description, but you can't add data or change its retention period.
-
 ### Summary view
 Summary view helps you visualize the entire API request-response flow in a single glance. This view provides a concise overview of critical latency metrics and a transaction map. The lifecycle map includes the different phases of {{site.base_gateway}} and the plugins executed by {{site.base_gateway}} on both the request and the response along with the times spent in each phase. 
 
@@ -154,6 +120,40 @@ When viewing a trace, you can click **Analyze with KAi** to send the trace to [K
 * Why is the `/flights` API slow?
 * What is the plugin execution order for this route?
 * Why does my hybrid gateway have connectivity issues with the upstream?
+
+## Pin traces and profiles
+
+A pin is a named snapshot of a trace or the session's CPU profile. It is stored separately from the debug session and remains available for the retention period you choose.
+
+When you pin a trace, any logs, payload captures, and Datakit plugin captures available for that trace are included automatically. A profile pin saves the session's CPU profile. Pins contain only data available when they are created and don't update with the original session.
+
+To make data available for a pin, enable the corresponding capture option when you create the session:
+
+* Enable log capture to include logs.
+* Enable payload capture for headers or body to include payload captures.
+* Enable body capture to include Datakit captures. Header-only capture records Datakit node spans but doesn't upload Datakit tracing events.
+* Enable CPU profiling to include the session's CPU profile.
+
+Pinned data uses the retention period selected when you create the pin: **7 days**, **30 days**, **3 months**, or **1 year**. Unpinned debug sessions are retained for up to 15 days, and unpinned payload data is retained for up to three days.
+
+### Save a trace or profile
+
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.observability}}**.
+1. In the {{site.observability}} sidebar, click **Debugger**.
+1. Open the debug session that contains the trace or CPU profile.
+1. To save a trace, from the trace row's actions menu, select **Save trace**. To save a CPU profile, click the **CPU Profiling** tab, then from the actions menu, select **Save profile**. CPU profiles are available after the session completes.
+1. In the **Name** field, enter a name for the pin, such as `slow-requests-trace`. Optionally, in the **Description** field, enter a description of the pin.
+1. From the **Retention period** dropdown menu, select a retention period, such as **30 days**.
+1. Click **Save**.
+
+### View and manage pins
+
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.observability}}**.
+1. In the {{site.observability}} sidebar, click **Debugger**.
+1. Click the **Saved traces & profile** tab.
+1. Select a saved trace or profile to open it. Saved traces open in the trace viewer with any included logs, payload captures, and Datakit captures. Saved profiles open in the **CPU Profiling** view.
+
+From the saved list, use the row actions menu to **Edit** or **Delete** a pin. You can edit a pin's name or description, but you can't add data or change its retention period.
 
 ## Payload capture
 

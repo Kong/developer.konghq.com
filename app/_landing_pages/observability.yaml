@@ -48,7 +48,7 @@ rows:
             config:
               title: Debugger
               description: |
-                Debugger enables control plane administrators to initiate targeted deep session traces in specific data plane nodes and pin traces and CPU profiles for later analysis.
+                Debugger enables control plane administrators to initiate targeted deep session traces in specific data plane nodes and pin them, along with CPU profiles, for later analysis.
               icon: /assets/icons/debug.svg
               cta:
                 text: Troubleshoot with Debugger
