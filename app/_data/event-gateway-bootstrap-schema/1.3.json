@@ -22,7 +22,7 @@
           "type": "string"
         },
         "api_request_timeout": {
-          "description": "Timeout for API requests to Konnect (in seconds)",
+          "description": "Timeout for API requests to Konnect",
           "type": "string",
           "pattern": "^\\d+(\\.\\d+)?(ns|us|µs|ms|s|m|h)$",
           "examples": [
@@ -30,7 +30,7 @@
             "100ms",
             "1h30m"
           ],
-          "default": "5s"
+          "default": "2m"
         },
         "insecure_skip_verify": {
           "description": "Skip TLS verification (insecure, for testing only)",
@@ -104,17 +104,6 @@
           ]
         }
       ]
-    },
-    "config_poll_interval": {
-      "description": "The interval at which to poll for configuration updates\n\nEnvironment variable: `KEG__CONFIG_POLL_INTERVAL`",
-      "type": "string",
-      "pattern": "^\\d+(\\.\\d+)?(ns|us|µs|ms|s|m|h)$",
-      "examples": [
-        "5s",
-        "100ms",
-        "1h30m"
-      ],
-      "default": "5s"
     },
     "runtime": {
       "description": "Runtime configuration (shared runtime section, embedded from the SDK)",
