@@ -187,6 +187,47 @@ Custom headers on {{site.context_mesh}} sources have these properties:
 
 ## Deployments
 
+You can deploy a {{site.context_mesh}} MCP server in two modes:
+
+{% table %}
+columns:
+  - title: Mode
+    key: mode
+  - title: How it works
+    key: description
+rows:
+  - mode: "**Basic**"
+    description: |
+      The default mode. {{site.konnect_short_name}} handles the deployment: it generates the server code from the mapped sources, runs that code in containers, and sets up the {{site.base_gateway}} Routes and Services needed to receive traffic.
+  - mode: "**Advanced**"
+    description: |
+      You control the deployment directly with {{site.operator_product_name}} custom resources instead of using the {{site.konnect_short_name}} defaults.
+
+{% endtable %}
+
+You can deploy the same {{site.context_mesh}} MCP server to more than one control plane at once.
+
+The MCP server reports a status so you can tell whether it's up and working:
+
+{% table %}
+columns:
+  - title: Status
+    key: status
+  - title: Description
+    key: description
+rows:
+  - status: "**Healthy**"
+    description: The MCP server is running and serving traffic.
+  - status: "**Deploying**"
+    description: {{site.konnect_short_name}} is rolling out the MCP server for the first time.
+  - status: "**Upgrading**"
+    description: {{site.konnect_short_name}} is rolling out a new version over a running MCP server.
+  - status: "**Unhealthy**"
+    description: The MCP server is deployed but isn't serving traffic correctly.
+  - status: "**Pending**"
+    description: The MCP server is mapped to a control plane, but the rollout hasn't started.
+
+{% endtable %}
 
 ## Set up a {{site.context_mesh}} MCP server
 
