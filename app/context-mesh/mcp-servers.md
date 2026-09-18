@@ -24,6 +24,11 @@ search_aliases:
   - MCP server
 
 faqs:
+  - q: What is a Code Mode MCP server?
+    a: |
+      [Code Mode](https://blog.cloudflare.com/code-mode/) is a configuration that exposes an API as a single SDK-like interface instead of one tool per operation.
+      The agent writes short code snippets against that interface rather than choosing between many similar tools, and only the final result returns to the context window.
+      This lets an agent work with a large API surface without flooding the model's context. {{site.context_mesh}} generates all of its MCP servers in Code Mode.
   - q: Does a source stay in sync with the {{site.konnect_catalog}}?
     a: |
       No. When you add a source from the {{site.konnect_short_name}} {{site.konnect_catalog}}, {{site.context_mesh}} creates a forked copy of the item.
@@ -90,7 +95,7 @@ You can update these fields at any time to change a {{site.context_mesh}} source
 
 Each {{site.context_mesh}} MCP server inherits the capabilities listed in each one of its sources as follows:
 
-* **API sources:** each operation in the OpenAPI spec (a path and a method, for example `/flight` and `GET`) becomes a capabiliy. {{site.context_mesh}} automatically turns API operations into MCP tools.
+* **API sources:** each operation in the OpenAPI spec (a path and a method, for example `/flight` and `GET`) becomes a capabiliy. {{site.context_mesh}} automatically turns API operations into MCP tools. It does this by translatinf each API opeartion into Python code that creates an MCP tool that your agents can call. Fore example, an API source's `GET /flights` operation becomes a `listFlights` tool.
 * **MCP server sources:** {{site.context_mesh}} inherits whatever tools the remote MCP server already exposes. {{site.context_mesh}} doesn't define the tools, it only proxies them.
 
 When you create a {{site.context_mesh}} MCP server, you configure it with the following parameters:
@@ -126,13 +131,40 @@ features:
 
 You can deploy the {{site.context_mesh}} MCP server at creation or later.
 
-### Code Mode
-
 ## Blocked capabilities
 
+By default, {{site.context_mesh}} inherits everything a source can do. For example, if an API source contains 20 operations, the {{site.context_mesh}} MCP server that uses it gives the agent access to the 20 operations. The same applies to all the tools a remote MCP server source exposes.
 
+{{site.context_mesh}} MCP servers lets you restrict specific paths, methods, and tools, without changing the source itself, using **blocked capabilities**. This feature blocks source items on a specific {{site.context_mesh}} MCP server. This tells the {{site.context_mesh}} MCP server to let agents access the designated items.
 
+What you can block depends on the type of source:
 
-## Auth
+{% table %}
+columns:
+  - title: Source type
+    key: source
+  - title: What you can block
+    key: item
+  - title: Examples
+    key: examples
+rows:
+  - source: "**API sources**"
+    item: |
+      * Paths
+      * Methods
+    examples: |
+      * `/flights`
+      * `PUT`
+  - source: "**MCP server sources**"
+    item: |
+      * Tools
+      * Resources
+      * Prompts
+    examples: |
+      * `listFlights`
+      * `flight-schedule.json`
+      * `summarize-booking`
+
+{% endtable %}
 
 ## Deployments
