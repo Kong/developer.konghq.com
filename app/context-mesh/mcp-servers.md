@@ -185,4 +185,136 @@ Custom headers on {{site.context_mesh}} sources have these properties:
 * They apply identically to both source types: API sources and MCP server sources both support them, with the same shape.
 * They're optional.
 
-## Deployments
+## Set up a {{site.context_mesh}} MCP server
+
+Setting up a {{site.context_mesh}} MCP server is a multi-step process. You create the sources first, then the MCP server, then map each source to it. Deploying to a control plane is the final step.
+
+### Create a source
+
+Repeat this step for each source you want the MCP server to expose.
+
+{% navtabs "create-source" %}
+{% navtab "API" %}
+
+Send a `POST` request to the `/v1/context-sources` endpoint:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/context-sources
+status_code: 201
+method: POST
+body:
+  display_name: Flights API
+  name: flights-api
+  description: Flight search and booking operations
+  base_url: https://api.example.com
+  headers:
+    Authorization: Bearer $API_TOKEN
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{% endnavtab %}
+{% navtab "UI" %}
+
+{% endnavtab %}
+{% endnavtabs %}
+
+### Create the MCP server
+
+{% navtabs "create-mcp-server" %}
+{% navtab "API" %}
+
+Send a `POST` request to the `/v1/context-interfaces` endpoint:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/context-interfaces
+status_code: 201
+method: POST
+body:
+  display_name: Travel Assistant
+  name: travel-assistant
+  description: Flight and booking context for travel agents
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{% endnavtab %}
+{% navtab "UI" %}
+
+{% endnavtab %}
+{% endnavtabs %}
+
+### Map the sources to the MCP server
+
+{% navtabs "map-sources" %}
+{% navtab "API" %}
+
+Send a `POST` request to the `/v1/context-interfaces/{interfaceId}/context-source-mappings` endpoint for each source:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/context-interfaces/$INTERFACE_ID/context-source-mappings
+status_code: 201
+method: POST
+body:
+  context_source_id: $SOURCE_ID
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{:.info}
+> To block capabilities on a mapping, send a `POST` request to `/v1/context-interfaces/{interfaceId}/context-source-mappings/{mappingId}/capability-controls`.
+> Use `PATCH` on the same endpoint to change them later. Omitted deny keys keep their existing value, an empty array clears a capability, and a non-empty array replaces it.
+
+{% endnavtab %}
+{% navtab "UI" %}
+
+{% endnavtab %}
+{% endnavtabs %}
+
+### Deploy the MCP server
+
+Deploy the MCP server by mapping it to a control plane.
+
+{% navtabs "deploy-mcp-server" %}
+{% navtab "API" %}
+
+Send a `POST` request to the `/v1/context-interfaces/{interfaceId}/control-plane-mappings` endpoint:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/context-interfaces/$INTERFACE_ID/control-plane-mappings
+status_code: 201
+method: POST
+body:
+  control_plane_id: $CONTROL_PLANE_ID
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{% endnavtab %}
+{% navtab "UI" %}
+
+{% endnavtab %}
+{% endnavtabs %}
+
+### Check the deployment status
+
+{% navtabs "check-status" %}
+{% navtab "API" %}
+
+Send a `GET` request to the `/v1/context-interfaces/{interfaceId}/status` endpoint:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/context-interfaces/$INTERFACE_ID/status
+status_code: 200
+method: GET
+{% endkonnect_api_request %}
+<!--vale on-->
+
+To review the Python code {{site.context_mesh}} generates for the MCP server, send a `GET` request to `/v1/context-interfaces/{interfaceId}/code`.
+
+{% endnavtab %}
+{% navtab "UI" %}
+
+{% endnavtab %}
+{% endnavtabs %}
