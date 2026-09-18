@@ -14,6 +14,11 @@ related_resources:
     url: /ai-gateway/policies/opentelemetry/
   - text: "Monitor AI LLM metrics"
     url: /ai-gateway/monitor-ai-llm-metrics/
+faqs:
+  - q: If I have multiple data plane nodes, does the metrics data reflect a single node or an aggregate?
+    a: Metrics data is reported per data plane node.
+  - q: Why do I see `kong_nginx_connections_total` that are not AI related?
+    a: {{site.ai_gateway_name}} is built on the same foundation as {{site.base_gateway}} and some metrics reflect the underlying implementation.
 ---
 
 This AI Policy allows you to expose metrics related to {{site.ai_gateway}} and proxied upstream services in [Prometheus](https://prometheus.io/docs/introduction/overview/) exposition format, which can be scraped by a Prometheus Server.
