@@ -44,6 +44,8 @@ related_resources:
     url: /ai-gateway/entities/ai-consumer/
   - text: AI Auth Strategy entity
     url: /ai-gateway/entities/ai-auth-strategy/
+  - text: OpenID Connect authentication with {{site.ai_gateway}} 2.0
+    url: /ai-gateway/openid-connect/
   - text: AI Model entity
     url: /ai-gateway/entities/ai-model/
   - text: Secure AI Agent traffic with an AI Auth Strategy and {{site.identity}}
@@ -66,7 +68,7 @@ faqs:
       Yes. The `openid-connect` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) type works with any OIDC-compliant identity provider (Okta, Keycloak, Auth0, Azure AD, and others). Replace `issuer`, `client_id`, and `client_secret` with values from your provider, and set `config.consumer_claims` to wherever that provider places the identifier you use as the AI Consumer's `custom_id`.
   - q: What happens if a token's claim doesn't match any AI Consumer's `custom_id`?
     a: |
-      {{site.ai_gateway}} treats the request as an anonymous AI Consumer. Attach a [Request Termination Policy](/ai-gateway/policies/request-termination/reference/) to the anonymous AI Consumer if you want unmatched tokens rejected outright rather than proxied as anonymous.
+      By default, {{site.ai_gateway}} rejects the request with `401 Unauthorized`. See [Default termination behavior](/ai-gateway/entities/ai-auth-strategy/#default-termination-behavior) for more information. Set `config.consumer_optional: true` on the AI Auth Strategy if you want unmatched tokens proxied as an anonymous AI Consumer instead of rejected outright.
   - q: Can I combine this with `api-key` AI Consumers on the same AI Model?
     a: |
       Yes. Each AI Model supports one `key-auth` AI Auth Strategy and one `openid-connect` AI Auth Strategy at the same time. A request is authenticated if it satisfies either one, so you can keep issuing static API keys to some callers while others authenticate through {{site.identity}}.
