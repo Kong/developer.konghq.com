@@ -6,13 +6,15 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
-description: 'Compress prompts with LLMLingua 2 before they reach the upstream LLM to stay within context limits, cut token costs, and reduce latency.'
+description: 'Compress prompts before they reach the upstream LLM to stay within context limits, cut token costs, and reduce latency.'
 categories:
   - ai
 tags:
   - ai
   - performance
-
+search_aliases:
+  - headroom
+  - llmlingua
 related_resources:
   - text: AI RAG Injector Policy
     url: /ai-gateway/policies/ai-rag-injector/
@@ -73,7 +75,7 @@ rows:
 
 Prompt caching lets a provider reuse a token prefix it has already seen and bills that warm read at much lower cost. For agentic and RAG workloads, where a large system prompt, tool definitions, and history repeat every turn, caching is the single biggest lever to reduce costs. Compression is the second best lever, it shrinks the tokens the provider still has to read. Deterministic compression is required since it ensures the same input results in the same output at a byte-for-byte level which then hits the cache. This allows both methods of cost reduction to coexist.
 
-## LLMLingua based compression service
+## LLMLingua compressor service
 
 Kong provides a Docker image for a compressor service, which compresses LLM prompts before sending them upstream. It uses [LLMLingua 2](https://github.com/microsoft/LLMLingua) to reduce prompt size, which helps you manage token limits and maintain context fidelity. The compressor service supports both HTTP and JSON-RPC APIs and is designed to work with the AI Prompt Compressor Policy in {{site.ai_gateway}}.
 
@@ -166,7 +168,7 @@ sequenceDiagram
 
 The AI Prompt Compressor Policy applies structured compression to preserve essential context of prompts sent by users, rather than trimming prompts arbitrarily or risking token overflows. This ensures the LLM receives a well-formed, focused prompt keeping token usage under control.
 
-## Headroom Compression Service
+## Headroom compressor service
 
 Before using Headroom with AI Prompt Compressor Policy you must have a Headroom instance accessible to your {{site.ai_gateway}}.
 
@@ -177,7 +179,7 @@ You can do this with one of the following:
 
 ### Configure Headroom connection
 
-To configure an AI Prompt Compressor Policy with headroom as the compressor service:
+To configure an AI Prompt Compressor Policy with Headroom as the compressor service:
 
 {% entity_examples %}
 type: policy
@@ -205,7 +207,9 @@ For more details, see the [configuration reference](/ai-gateway/policies/ai-prom
 
 ### Compressor Service endpoint
 
-The compressor service exposes a [`/v1/compress`](https://docs.headroomlabs.ai/docs/proxy#post-v1compress) endpoint that compresses messages and returns them. This endpoint accepts openai and anthropic's message formats. For an enterprise deployment you must specify an API key, for a local deployment no PAI key is required. You can use this interface to compress prompts, check the current status, or integrate the service with the AI Prompt Compressor Policy.
+The compressor service exposes a [`/v1/compress`](https://docs.headroomlabs.ai/docs/proxy#post-v1compress) endpoint that compresses messages and returns them. This endpoint accepts openai and anthropic's message formats. Requests in unsupported formats are forwarded unchanged. You can use this interface to compress prompts, check the current status, or integrate the service with the AI Prompt Compressor Policy.
+
+Headroom uses loopback-trust by default. It answers unauthenticated calls on `127.0.0.1`, and returns `404` to non-loopback callers unless it's started with `HEADROOM_COMPRESS_ALLOW_REMOTE=1`. You can run Headroom as a co-located sidecar reachable from the {{site.ai_gateway}} data plane without authentication, or point the Policy at a remote instance and configure a bearer token, sent as both the `X-Headroom-Proxy-Token` and `Authorization: Bearer` headers.
 
 ### Headroom prompt flow
 
@@ -250,7 +254,11 @@ sequenceDiagram
 {% endmermaid %}
 <!-- vale on -->
 
+#### Failure behavior
 
+By default, if the call to Headroom fails, times out, or returns an error, the Policy returns an HTTP `500` to the client rather than forwarding the request uncompressed.
+
+A `503` response indicating a compression timeout is retried automatically before the Policy gives up; every other non-`200` response (for example a `400` from a bad configuration, or a `401` from a missing or incorrect bearer token) fails immediately.
 
 ## Prompt compression options
 
