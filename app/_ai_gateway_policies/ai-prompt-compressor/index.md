@@ -32,7 +32,7 @@ The AI Prompt Compressor Policy supports:
 
 * **Ratio-based or target token compression**: for example, reduce a message to 80% of the original length or compress to 150 tokens.
 * **Configurable compression ranges**: for example, compress prompts under 100 tokens with a 0.8 ratio or compress them to exactly 100 tokens.
-* **Selective compression**: use `<LLMLINGUA>...</LLMLINGUA>` tags to target specific sections of the prompt. These tags work **only in the `inject_template` field of the [AI RAG Injector Policy](/ai-gateway/policies/ai-rag-injector/)** and must be used **in combination with the AI Prompt Compressor Policy**.
+* **Selective compression with llmlingua**: use `<LLMLINGUA>...</LLMLINGUA>` tags to target specific sections of the prompt. These tags work **only in the `inject_template` field of the [AI RAG Injector Policy](/ai-gateway/policies/ai-rag-injector/)** and must be used **in combination with the AI Prompt Compressor Policy**.
 
 The following backends are available:
 
@@ -245,7 +245,7 @@ Headroom uses loopback-trust by default. It answers unauthenticated calls on `12
 3. The AI Prompt Compressor sends a `POST` request to Headroom's `/v1/compress` endpoint with the content to compress and any configuration specified in the policy.
 4. Headroom returns `200` with the compressed replacement messages and metadata.
 
-If the call to Headroom fails, the AI Prompt Compressor rejects the request by default. For details, see [Failure behavior](#failure-behavior).
+If the call to Headroom fails, the AI Prompt Compressor rejects the request by default. For details, see [Failure behavior](#failure-handling).
 
 The following diagram illustrates how the AI Prompt Compressor Policy processes and compresses incoming prompts using Headroom:
 
@@ -259,7 +259,6 @@ sequenceDiagram
 
     User->>KongAICompressor: Sends initial request
     activate KongAICompressor
-    KongAICompressor->>KongAICompressor: Build OpenAI-format messages array per block
     KongAICompressor->>Headroom: POST /v1/compress
 
     alt Compression succeeds
@@ -283,8 +282,7 @@ A `503` response indicating a compression timeout is retried automatically befor
 
 ### Limitations
 
-- Deterministic compression requires sessions which is only available in **Headroom v0.37.0 or newer**: older images silently ignore the
-session id and run stateless.
+- Deterministic compression requires sessions which is only available in **Headroom v0.37.0 or newer**. Older images silently ignore the session id and run stateless.
 - Headroom sessions are held in memory on a single Headroom process. You must point every data plane node at its own sidecar, or all of them at one shared instance. Never point an {{site.ai_gateway}} data plane at a load-balanced set of Headroom instances, since a session's turns must all reach the same process.
 - No MCP tool-response compression: only the LLM request path is supported.
 
