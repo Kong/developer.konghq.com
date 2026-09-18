@@ -32,6 +32,10 @@ one fits their situation.
 When revising a reference page, this is one of the first things to check for,
 before any line-level wordsmithing.
 
+This interpretive layer should frame use cases by the pain they solve, not
+as a feature pitch — see `app/contributing/style-guide.md`'s Use-case
+framing subsection for the rule and a worked example.
+
 ### Common sections
 
 Not every page needs every section; use
@@ -96,8 +100,10 @@ doesn't need.
   sections and before any health/lifecycle section.
 - **FAQs.** Implemented through the `faqs:` frontmatter list, never an inline
   `## FAQ` heading — the page layout always renders them at the very bottom
-  regardless of where the block sits in frontmatter. Adding an FAQ is a writer's
-  judgment call, not a default section every page needs. On some
+  regardless of where the block sits in frontmatter. Adding an FAQ is the
+  writer's call, not this skill's: if a good candidate turns up while
+  drafting or revising, flag it to the writer rather than adding the
+  section — don't add an FAQ unless the writer asks for one. On some
   architecture/procedural pages (`gateway/control-plane-groups.md`,
   `gateway/cp-outage.md`, `event-gateway/upgrade.md`), the FAQ carries
   substantial explanatory weight alongside a short H2 body — don't read

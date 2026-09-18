@@ -57,12 +57,12 @@ page of that type is built. FLAGGING
 
 ## API-primacy calibration
 
-For a product with a real API, default to full API-primacy — including
-prerequisites, not just the visible body steps — unless the feature is
-genuinely UI-only. Don't treat a prerequisite or a linked setup step as
-exempt from this by default just because it's not part of the main step
-sequence; the same preference for reproducible, API-driven steps applies
-there too.
+`app/contributing/style-guide.md`'s Tool preference for steps section sets
+the baseline: default to API/CLI/Terraform over UI steps unless the feature
+is genuinely UI-only. The judgment call while drafting is scope, not the
+rule itself: don't treat a prerequisite or a linked setup step as exempt
+from that default just because it's not part of the main step sequence —
+the same preference for reproducible, API-driven steps applies there too.
 
 ## UI steps without screenshots
 

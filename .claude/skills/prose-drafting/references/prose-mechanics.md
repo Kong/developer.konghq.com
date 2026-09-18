@@ -50,14 +50,29 @@ here, check there before assuming it's undocumented.
 - **Hedging language**: remove "simply," "just," "easily," "obviously," and
   similar words entirely. No exceptions.
 - **AI-tells** — edit these out on sight, whether drafting or revising:
-  - Anthropomorphism: for example, "fires (a request)," "lands," "wins." Use the literal
-    mechanism instead: "sends," "is assigned to," "takes precedence."
-  - "By hand" → "manually."
+  - Anthropomorphism, and "by hand" instead of "manually," are style-guide rules, not just skill rules — see
+    `app/contributing/style-guide.md`'s Voice and tone section for the full
+    wording and examples.
+  - Positional language ("below," "above") is also a style-guide rule
+    — see that file's Links section for the fix (link directly instead).
   - "Genuinely" as a filler intensifier.
   - Semicolon overuse — prefer two sentences, or a comma/colon where it
     actually fits.
   - Never use em dashes.
   - "is a real", never use "real" as a qualifier
+  - No documentation-authoring or verification meta-commentary in
+    reader-facing prose. Never write a sentence whose subject is your own
+    drafting process rather than the product or the reader's situation —
+    for example, "this is schema-confirmed, though only these two defaults
+    have a demonstrated example in this documentation." Remove a sentence
+    like that regardless of whether it's true. If it points at a real
+    product issue (a field that's unofficial, undocumented, or reachable
+    only through a passthrough mechanism), that's not something to word
+    around with an inline reader warning — flag it to the writer in the
+    plan or the post-plan summary instead, and let them decide whether it
+    becomes a real reader-facing note or gets fixed upstream in the
+    schema/UI. Trigger phrase to watch for: "confirmed," "verified," or
+    "demonstrated in this documentation" as a sentence's subject.
 - **Negation and conditional clauses**: avoid an awkward negative like
   "requires no X" — prefer the direct negative, "doesn't require X." Avoid a
   fragment or adjective-led conditional opener like "With X enabled," or
@@ -76,6 +91,10 @@ here, check there before assuming it's undocumented.
 
 ## Examples and lead-ins
 
+- **Avoid exclusionary or sensitive example data** (for example, don't
+  default to "Age" as a generic numeric-field example) — see
+  `app/contributing/style-guide.md`'s Bias-free language section for the
+  full rule and examples.
 - **An example lead-in should say what the example shows**, not just
   announce that an example follows. "The following example is a request without a bearer
   token:" tells the reader what to look for in the block below; a bare "For
@@ -84,6 +103,17 @@ here, check there before assuming it's undocumented.
   not just "run the following": "Create an auth server using the
   [`/v1/auth-servers` endpoint](...):" rather than "Run this command:". See
   `page-shape.md`'s how-to section for more on this pattern.
+
+## Heading-independent sentences
+
+The sentence right after any heading must restate its subject by name, not
+lean on the heading via "this" or "it" — the same reasoning as the FAQ rule
+below, generalized to every heading: due to RAG retrieval and search, a
+section can surface without its heading attached, so the sentence has to
+stand on its own. For example, for a heading with "Authorization code flow," don't write
+"This is the three-legged OAuth/OpenID Connect flow, including session
+cookie issuance" — write "The authorization code flow is a three-legged
+OAuth/OpenID Connect flow, including session cookie issuance."
 
 ## Opening conventions
 
@@ -106,6 +136,21 @@ entirely, not an overview of the guide. It answers "how do I do this" tersely
 enough to act on without reading further — never "In this guide, you'll..."
 framing. This is a mistake worth actively watching for: it's a common way to
 get a TLDR wrong.
+
+## description (frontmatter)
+
+Every page needs a `description` in frontmatter. It's a one- or two-sentence
+summary of what the page covers, written for search results and link
+previews, not for a reader already on the page — so it should stand alone
+the same way an FAQ answer does. For example, this repo's own style guide
+uses:
+
+```yaml
+description: "Writing and formatting guidelines for contributing to the Kong Developer site. Covers language, tone, grammar, capitalization, code formatting, icons, and third-party tool documentation."
+```
+
+The description should explain what the page is, then what it covers, in plain
+sentences — not "In this reference, you'll find..." framing.
 
 ## FAQs
 
