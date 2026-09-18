@@ -189,6 +189,9 @@ Custom headers on {{site.context_mesh}} sources have these properties:
 
 Setting up a {{site.context_mesh}} MCP server is a multi-step process. You create the sources first, then the MCP server, then map each source to it. Deploying to a control plane is the final step.
 
+{:.info}
+> The API uses a different name for {{site.context_mesh}} MCP servers. Wherever the endpoints refer to a context interface, for example `/v1/context-interfaces`, that is a {{site.context_mesh}} MCP server.
+
 ### Create a source
 
 Repeat this step for each source you want the MCP server to expose.
