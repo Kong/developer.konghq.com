@@ -185,12 +185,15 @@ Custom headers on {{site.context_mesh}} sources have these properties:
 * They apply identically to both source types: API sources and MCP server sources both support them, with the same shape.
 * They're optional.
 
+## Deployments
+
+
 ## Set up a {{site.context_mesh}} MCP server
 
 Setting up a {{site.context_mesh}} MCP server is a multi-step process. You create the sources first, then the MCP server, then map each source to it. Deploying to a control plane is the final step.
 
 {:.info}
-> The API uses a different name for {{site.context_mesh}} MCP servers. Wherever the endpoints refer to a context interface, for example `/v1/context-interfaces`, that is a {{site.context_mesh}} MCP server.
+> The API uses `/v1/context-interfaces` for {{site.context_mesh}} MCP servers. Wherever the endpoints refer to a context interface, that is a {{site.context_mesh}} MCP server.
 
 ### Create a source
 
