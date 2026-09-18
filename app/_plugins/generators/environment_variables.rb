@@ -8,6 +8,7 @@ module Jekyll
       site.config['git_branch'] = ENV['HEAD'] || 'main'
       site.config['ENABLE_KAPA_AI'] = ENV['ENABLE_KAPA_AI']
       site.config['ENABLE_ALGOLIA'] = enable_algolia
+      site.config['konnect_domain'] = ENV['KONNECT_DOMAIN'] || 'konghq.com'
     end
 
     private
