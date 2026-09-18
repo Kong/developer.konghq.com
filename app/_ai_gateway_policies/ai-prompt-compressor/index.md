@@ -29,6 +29,7 @@ The AI Prompt Compressor Policy compresses retrieved chunks before sending them 
 * **Ratio-based or target token compression**: for example, reduce a message to 80% of the original length or compress to 150 tokens.
 * **Configurable compression ranges**: for example, compress prompts under 100 tokens with a 0.8 ratio or compress them to exactly 100 tokens.
 * **Selective compression**: use `<LLMLINGUA>...</LLMLINGUA>` tags to target specific sections of the prompt. These tags work **only in the `inject_template` field of the [AI RAG Injector Policy](/ai-gateway/policies/ai-rag-injector/)** and must be used **in combination with the AI Prompt Compressor Policy**.
+* **A choice of compression providers**: compress with Kong's built-in LLMLingua 2 service, or with an external [Headroom](#headroom-compression-provider) compression backend.
 
 ## Why use prompt compression
 
@@ -181,6 +182,92 @@ sequenceDiagram
 <!-- vale on -->
 
 The AI Prompt Compressor Policy applies structured compression to preserve essential context of prompts sent by users, rather than trimming prompts arbitrarily or risking token overflows. This ensures the LLM receives a well-formed, focused prompt keeping token usage under control.
+
+## Headroom compression provider
+
+As an alternative to the built-in LLMLingua 2 service, the AI Prompt Compressor Policy can compress requests through [Headroom](https://github.com/headroomlabs-ai/headroom), a local-first compression proxy. Kong calls Headroom's direct `POST /v1/compress` API rather than routing traffic through Headroom's transparent proxy mode, so {{site.konnect_short_name}} remains the sole point of egress to the upstream LLM. Headroom itself is an unmanaged, operator-deployed dependency: {{site.konnect_short_name}} doesn't deploy, health check, or configure the Headroom process.
+
+### How Headroom compression works
+
+The Headroom provider compresses the entire `messages` array of a request in one call, rather than compressing individual tagged sections. A request is only compressed when it has a `messages` array (an OpenAI-shaped or native Anthropic-shaped request) and a resolvable model name (from the request body or from the model negotiated by an AI Model or AI Model Chain). Any other request shape, such as a completions-style `prompt` or a Responses-style `input` list, is forwarded to the upstream LLM unchanged.
+
+Each request also carries a session ID derived from the conversation, either from a configurable set of request headers or, if none are present, from the model name, system prompt, and first user message. Headroom uses this session ID to replay an already-compressed prefix byte-for-byte on later turns of the same conversation, which keeps the upstream LLM provider's own prompt cache hitting. This session-aware replay requires Headroom v0.37.0 or newer; older Headroom versions ignore the session ID and compress each request independently, without keeping session state.
+
+### Deployment and trust model
+
+Headroom trusts the loopback interface by default:
+
+* **Loopback deployment (recommended)**: run Headroom as a sidecar bound to `127.0.0.1` alongside the Kong node. No token is required, and Headroom rejects non-loopback callers on `/v1/compress` regardless of any token.
+* **Non-loopback deployment**: if your topology requires Headroom to bind elsewhere, configure a proxy token so the plugin can authenticate. Headroom must also be started with remote callers explicitly allowed, or it continues to reject requests with `404`.
+
+Because Headroom keeps session state in memory on a single process, point every Kong node at its own Headroom sidecar, or at one shared Headroom instance, never at a load-balanced set of Headroom instances.
+
+### Failure handling
+
+By default, a failed Headroom call (an unreachable endpoint, a timeout, or a non-`200` response) causes the Policy to reject the request. Set `stop_on_error` to `false` to instead forward the request uncompressed and log the failure. A `503` response with `compression_timeout` is retried automatically before either outcome.
+
+### Configuration
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Field
+    key: option
+  - title: Description
+    key: description
+rows:
+  - option: endpoint
+    description: |
+      The Headroom `/v1/compress` endpoint to call. Defaults to `http://127.0.0.1:8787/v1/compress`.
+  - option: proxy_token
+    description: |
+      Bearer token sent to Headroom. Required only when `endpoint` isn't a loopback address.
+  - option: timeout
+    description: |
+      Request timeout, in milliseconds, for the call to Headroom. Defaults to `60000`.
+  - option: ssl_verify
+    description: |
+      Whether to verify the TLS certificate when `endpoint` is an `https` URL. Defaults to `true`.
+  - option: use_forward_proxy
+    description: |
+      Whether to route the call to Headroom through the Policy's configured forward proxy. `auto` (default) uses the proxy only when `endpoint` isn't loopback. See [Forward proxy support](/ai-gateway/forward-proxy/).
+  - option: session_id_headers
+    description: |
+      Request headers used to derive the conversation's session ID. Use headers that stay stable across every turn of a conversation.
+  - option: stop_on_error
+    description: |
+      Whether a failed Headroom call rejects the request (`true`, default) or forwards it uncompressed (`false`).
+{% endtable %}
+<!-- vale on -->
+
+### Example configurations
+
+Headroom co-located on loopback, no token required:
+
+```yaml
+plugins:
+  - name: ai-prompt-compressor
+    route: my-llm-route
+    config:
+      providers:
+        - name: headroom
+          headroom:
+            endpoint: http://127.0.0.1:8787/v1/compress
+```
+
+Headroom reachable over a private network, with a token:
+
+```yaml
+plugins:
+  - name: ai-prompt-compressor
+    route: my-llm-route
+    config:
+      providers:
+        - name: headroom
+          headroom:
+            endpoint: http://headroom.internal:8787/v1/compress
+            proxy_token: "{vault://headroom-token}"
+```
 
 ## Forward proxy support
 
