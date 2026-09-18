@@ -168,6 +168,33 @@ sequenceDiagram
 
 The AI Prompt Compressor Policy applies structured compression to preserve essential context of prompts sent by users, rather than trimming prompts arbitrarily or risking token overflows. This ensures the LLM receives a well-formed, focused prompt keeping token usage under control.
 
+### Prompt compression options
+
+The AI Prompt Compressor Policy offers flexible compression controls to fit different use cases. You can choose between full-prompt compression, conditional strategies, or selectively compressing only parts of the prompt:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Configuration Option
+    key: option
+  - title: Description
+    key: description
+rows:
+  - option: Compression by ratio
+    description: |
+      Compress the prompt to a percentage of its original length (for example, reduce to 80%). This allows for consistent shrinkage regardless of the initial size.
+  - option: Compression by token count
+    description: |
+      Compress the prompt to a specific token target (for example, 150 tokens). Useful when working close to LLM context window limits.
+  - option: Conditional rules
+    description: |
+      Apply different compression strategies based on prompt length. For example, compress prompts under 100 tokens using a 0.8 ratio, and compress longer prompts to a fixed token count.
+  - option: Selective compression with tags
+    description: |
+      Wrap sections of the prompt in `<LLMLINGUA>...</LLMLINGUA>` to target only specific parts for compression, preserving untagged content as-is.
+{% endtable %}
+<!-- vale on -->
+
 ## Headroom compressor service
 
 Before using Headroom with AI Prompt Compressor Policy you must have a Headroom instance accessible to your {{site.ai_gateway}}.
@@ -214,9 +241,9 @@ Headroom uses loopback-trust by default. It answers unauthenticated calls on `12
 ### Headroom prompt flow
 
 1. {{site.ai_gateway}} sends the user or agent's request to the AI Prompt Compressor.
-2. The AI Prompt Compressor builds an OpenAI-format messages array from the eligible content. This operates on a per block basis, not the whole request, to ensure cache compatibility.
+2. The AI Prompt Compressor builds an OpenAI-format messages array from the eligible content. This operates on the whole messages array.
 3. The AI Prompt Compressor sends a `POST` request to Headroom's `/v1/compress` endpoint with the content to compress and any configuration specified in the policy.
-4. Headroom returns `200` with the compressed replacement messages and metadata. AI Prompt Compressor records `ccr_hashes` alongside the compressed block so a later retrieval request can be resolved.
+4. Headroom returns `200` with the compressed replacement messages and metadata.
 
 If the call to Headroom fails, the AI Prompt Compressor rejects the request by default. For details, see [Failure behavior](#failure-behavior).
 
@@ -237,7 +264,6 @@ sequenceDiagram
 
     alt Compression succeeds
         Headroom-->>KongAICompressor: Return 200 with compressed messages and metadata
-        KongAICompressor->>KongAICompressor: Record ccr_hashes for later retrieval
         KongAICompressor->>LLM: Send compressed message to upstream provider
         LLM-->>KongAICompressor: Return response
         KongAICompressor-->>User: Return response
@@ -249,38 +275,18 @@ sequenceDiagram
 {% endmermaid %}
 <!-- vale on -->
 
-#### Failure behavior
+### Failure handling
 
 By default, if the call to Headroom fails, times out, or returns an error, the Policy returns an HTTP `500` to the client rather than forwarding the request uncompressed.
 
 A `503` response indicating a compression timeout is retried automatically before the Policy gives up; every other non-`200` response (for example a `400` from a bad configuration, or a `401` from a missing or incorrect bearer token) fails immediately.
 
-## Prompt compression options
+### Limitations
 
-The AI Prompt Compressor Policy offers flexible compression controls to fit different use cases. You can choose between full-prompt compression, conditional strategies, or selectively compressing only parts of the prompt:
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Configuration Option
-    key: option
-  - title: Description
-    key: description
-rows:
-  - option: Compression by ratio
-    description: |
-      Compress the prompt to a percentage of its original length (for example, reduce to 80%). This allows for consistent shrinkage regardless of the initial size.
-  - option: Compression by token count
-    description: |
-      Compress the prompt to a specific token target (for example, 150 tokens). Useful when working close to LLM context window limits.
-  - option: Conditional rules
-    description: |
-      Apply different compression strategies based on prompt length. For example, compress prompts under 100 tokens using a 0.8 ratio, and compress longer prompts to a fixed token count.
-  - option: Selective compression with tags
-    description: |
-      Wrap sections of the prompt in `<LLMLINGUA>...</LLMLINGUA>` to target only specific parts for compression, preserving untagged content as-is.
-{% endtable %}
-<!-- vale on -->
+- Deterministic compression requires sessions which is only available in **Headroom v0.37.0 or newer**: older images silently ignore the
+session id and run stateless.
+- Headroom sessions are held in memory on a single Headroom process. You must point every data plane node at its own sidecar, or all of them at one shared instance. Never point an {{site.ai_gateway}} data plane at a load-balanced set of Headroom instances, since a session's turns must all reach the same process.
+- No MCP tool-response compression: only the LLM request path is supported.
 
 ## Forward proxy support
 
