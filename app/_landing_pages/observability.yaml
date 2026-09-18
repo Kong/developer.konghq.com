@@ -48,7 +48,7 @@ rows:
             config:
               title: Debugger
               description: |
-                Debugger enables control plane administrators to initiate targeted deep session traces in specific data plane nodes.
+                Debugger enables control plane administrators to initiate targeted deep session traces in specific data plane nodes and pin traces and CPU profiles for later analysis.
               icon: /assets/icons/debug.svg
               cta:
                 text: Troubleshoot with Debugger
@@ -127,7 +127,7 @@ rows:
                     This applies across permission types in Konnect, including control plane permissions, API permissions, and Portal permissions. For example, a user with access to a specific control plane will see analytics data for that control plane only.
 
                     Keep the following in mind when you are determining access and permissions to {{site.observability}}:
-                    * Explorer and Debugger are available to all {{site.observability}} users without extra role assignments.
+                    * Explorer and Debugger are available to all {{site.observability}} users without extra role assignments. Creating debug sessions or pins requires permissions on the relevant control plane, such as the [Debug Session Creator](/konnect-platform/teams-and-roles/#control-planes), Control Plane Admin, or Org Admin roles.
                     Users only see traffic and metrics for the control planes within their permissions scope.
                     * Organization Admins and users in the Analytics Admin or Analytics Viewer prebuilt teams have access to {{site.observability}} data across the entire organization.
                     * Access to Dashboards and Reports requires additional role assignments, such as Dashboard Viewer or Report Viewer. 
