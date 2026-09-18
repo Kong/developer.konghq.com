@@ -14,8 +14,8 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
   version: 3.15.0
-  x-oas-source: kong/platform-api@a94229333afb72c855b11ec3751d7ae7690d096a
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a94229333afb72c855b11ec3751d7ae7690d096a'
+  x-oas-source: kong/platform-api@9c7686a9d1631951a45739cfab8ac570b6e0d06f
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9c7686a9d1631951a45739cfab8ac570b6e0d06f'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -4967,6 +4967,23 @@ components:
           x-sensitive: true
       required:
         - value
+    NodeError:
+      type: object
+      properties:
+        name:
+          type: string
+        error_message:
+          type: string
+        config_hash:
+          type: string
+        code:
+          type: integer
+        source:
+          type: string
+        traceback:
+          type: string
+      additionalProperties: false
+      title: A Node Error
     NodeCompatibilityIssue:
       type: object
       properties:
@@ -9098,48 +9115,6 @@ components:
       required:
         - name
         - prefix
-    BaseError:
-      description: standard error
-      type: object
-      properties:
-        status:
-          description: |
-            The HTTP status code of the error. Useful when passing the response
-            body to child properties in a frontend UI. Must be returned as an integer.
-          type: integer
-          readOnly: true
-        title:
-          description: |
-            A short, human-readable summary of the problem. It should not
-            change between occurences of a problem, except for localization.
-            Should be provided as "Sentence case" for direct use in the UI.
-          type: string
-          readOnly: true
-        type:
-          description: The error type.
-          type: string
-          readOnly: true
-        instance:
-          description: |
-            Used to return the correlation ID back to the user, in the format
-            kong:trace:<correlation_id>. This helps us find the relevant logs
-            when a customer reports an issue.
-          type: string
-          readOnly: true
-        detail:
-          description: |
-            A human readable explanation specific to this occurence of the problem.
-            This field may contain request/entity data to help the user understand
-            what went wrong. Enclose variable values in square brackets. Should be
-            provided as "Sentence case" for direct use in the UI.
-          type: string
-          readOnly: true
-      required:
-        - status
-        - title
-        - instance
-        - detail
-      title: Error
     InvalidRules:
       description: invalid parameters rules
       type: string
@@ -9276,7 +9251,8 @@ components:
           readOnly: true
         choices:
           type: array
-          items: {}
+          items:
+            type: string
           minItems: 1
           nullable: false
           readOnly: true
@@ -9310,7 +9286,8 @@ components:
           readOnly: true
         dependents:
           type: array
-          items: {}
+          items:
+            type: string
           nullable: true
           readOnly: true
           uniqueItems: true
@@ -9337,45 +9314,145 @@ components:
       nullable: false
       uniqueItems: true
     BadRequestError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          required:
-            - invalid_parameters
-          properties:
-            invalid_parameters:
-              $ref: '#/components/schemas/InvalidParameters'
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+        invalid_parameters:
+          $ref: '#/components/schemas/InvalidParameters'
+      required:
+        - status
+        - title
+        - instance
+        - detail
+        - invalid_parameters
+      title: Error
     UnauthorizedError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 401
-            title:
-              example: Unauthorized
-            type:
-              example: 'https://httpstatuses.com/401'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Invalid credentials
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          example: 401
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Unauthorized
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          example: 'https://httpstatuses.com/401'
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          example: 'kong:trace:1234567890'
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Invalid credentials
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
     ForbiddenError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 403
-            title:
-              example: Forbidden
-            type:
-              example: 'https://httpstatuses.com/403'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Forbidden
-    KonnectCPLegacyBaseError:
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          example: 403
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Forbidden
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          example: 'https://httpstatuses.com/403'
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          example: 'kong:trace:1234567890'
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Forbidden
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
+    KonnectCPLegacyUnauthorizedError:
       description: standard error
       type: object
       properties:
@@ -9383,43 +9460,53 @@ components:
           description: |
             A short summary of the problem.
           type: string
+          example: Unauthorized
           readOnly: true
       title: Error
-    KonnectCPLegacyUnauthorizedError:
-      allOf:
-        - $ref: '#/components/schemas/KonnectCPLegacyBaseError'
-        - type: object
-          properties:
-            message:
-              example: Unauthorized
     KonnectCPLegacyForbiddenError:
-      allOf:
-        - $ref: '#/components/schemas/KonnectCPLegacyBaseError'
-        - type: object
-          properties:
-            message:
-              example: Forbidden
+      description: standard error
+      type: object
+      properties:
+        message:
+          description: |
+            A short summary of the problem.
+          type: string
+          example: Forbidden
+          readOnly: true
+      title: Error
     KonnectCPLegacyNotFoundError:
-      allOf:
-        - $ref: '#/components/schemas/KonnectCPLegacyBaseError'
-        - type: object
-          properties:
-            message:
-              example: Not Found
+      description: standard error
+      type: object
+      properties:
+        message:
+          description: |
+            A short summary of the problem.
+          type: string
+          example: Not Found
+          readOnly: true
+      title: Error
     KonnectCPLegacyBadRequestError:
-      allOf:
-        - $ref: '#/components/schemas/KonnectCPLegacyBaseError'
-        - type: object
-          properties:
-            message:
-              example: Bad Request
+      description: standard error
+      type: object
+      properties:
+        message:
+          description: |
+            A short summary of the problem.
+          type: string
+          example: Bad Request
+          readOnly: true
+      title: Error
     KonnectCPLegacyConflictError:
-      allOf:
-        - $ref: '#/components/schemas/KonnectCPLegacyBaseError'
-        - type: object
-          properties:
-            message:
-              example: Conflict
+      description: standard error
+      type: object
+      properties:
+        message:
+          description: |
+            A short summary of the problem.
+          type: string
+          example: Conflict
+          readOnly: true
+      title: Error
     CursorMetaPage:
       type: object
       properties:
@@ -9470,35 +9557,99 @@ components:
       example: '2022-11-04T20:10:06.927Z'
       readOnly: true
     UnsupportedMediaTypeError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 415
-            title:
-              example: UnsupportedMediaType
-            type:
-              example: 'https://httpstatuses.com/415'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: UnsupportedMediaType
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          example: 415
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: UnsupportedMediaType
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          example: 'https://httpstatuses.com/415'
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          example: 'kong:trace:1234567890'
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: UnsupportedMediaType
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
     NotFoundError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 404
-            title:
-              example: Not Found
-            type:
-              example: 'https://httpstatuses.com/404'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Not found
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          example: 404
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Not Found
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          example: 'https://httpstatuses.com/404'
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          example: 'kong:trace:1234567890'
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Not found
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
   examples:
     ConfigStoreExample:
       value:
@@ -9761,6 +9912,25 @@ components:
                       type: integer
                     config_hash:
                       type: string
+                    config_sync:
+                      type: object
+                      properties:
+                        state:
+                          description: 'Config sync state. One of `STATE_UNSPECIFIED`, `STATE_IN_SYNC`, `STATE_PENDING`, or `STATE_RESILIENCY`.'
+                          type: string
+                        version_id:
+                          type: string
+                        resiliency:
+                          type: object
+                          properties:
+                            fallback_hash:
+                              type: string
+                            activated_at:
+                              type: integer
+                            latest_config_errors:
+                              type: array
+                              items:
+                                $ref: '#/components/schemas/NodeError'
                     compatibility_status:
                       type: object
                       properties:
@@ -9826,6 +9996,25 @@ components:
                     type: integer
                   config_hash:
                     type: string
+                  config_sync:
+                    type: object
+                    properties:
+                      state:
+                        description: 'Config sync state. One of `STATE_UNSPECIFIED`, `STATE_IN_SYNC`, `STATE_PENDING`, or `STATE_RESILIENCY`.'
+                        type: string
+                      version_id:
+                        type: string
+                      resiliency:
+                        type: object
+                        properties:
+                          fallback_hash:
+                            type: string
+                          activated_at:
+                            type: integer
+                          latest_config_errors:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/NodeError'
                   compatibility_status:
                     type: object
                     properties:

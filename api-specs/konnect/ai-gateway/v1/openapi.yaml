@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect AI Gateway
-  version: 2.0.5
+  version: 2.0.11
   description: The API for configuring AI Gateways in Konnect.
   x-extensions-note: |
     Entities and properties may be annotated with `x-min-runtime-version`, the
@@ -18,8 +18,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@77e990db7b9619bacdc1556080e5b1244d78efd1
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/77e990db7b9619bacdc1556080e5b1244d78efd1'
+  x-oas-source: kong/platform-api@e122a1b5743d5ce1d6be30723dd921d808cbb4c8
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e122a1b5743d5ce1d6be30723dd921d808cbb4c8'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -8889,7 +8889,43 @@ components:
             - conversion-listener
           x-terraform-transform-const: true
         config:
-          $ref: '#/components/schemas/AIGatewayMCPServerWithUpstreamNoProxyConfig'
+          description: Server-side configuration specific to modes where Kong answers as the MCP server.
+          type: object
+          additionalProperties: false
+          properties:
+            route:
+              $ref: '#/components/schemas/AIGatewayMCPServerRouteWithMatcher'
+            logging:
+              description: Configuration for AI Gateway logging.
+              type: object
+              additionalProperties: false
+              properties:
+                payloads:
+                  type: boolean
+                  default: false
+                audits:
+                  type: boolean
+                  default: false
+            max_request_body_size:
+              description: Maximum size of request body to parse. Set to 0 for unlimited.
+              type: integer
+              default: 8388608
+              maximum: 2147483646
+              minimum: 0
+            server:
+              $ref: '#/components/schemas/AIGatewayMCPServerServerConfigBase'
+            url:
+              description: |
+                Helper field to set protocol, host, port and path of the upstream service using a URL.
+                This is the same as a Kong Gateway Service URL: ${scheme}://${host}:${port}/${path}
+              type: string
+              format: uri
+              example: 'https://mcp.internal.kongair.com'
+            upstream:
+              $ref: '#/components/schemas/AIGatewayUpstreamConfig'
+          required:
+            - url
+          title: AIGatewayMCPServerKongListenerConfig
         tools:
           description: |
             List of tools exposed by this MCP Server. Each tool's `path`, `method`, and `host`
@@ -8939,7 +8975,32 @@ components:
             - listener
           x-terraform-transform-const: true
         config:
-          $ref: '#/components/schemas/AIGatewayMCPServerNoUpstreamConfig'
+          description: Server-side configuration specific to modes where Kong answers as the MCP server.
+          type: object
+          additionalProperties: false
+          properties:
+            route:
+              $ref: '#/components/schemas/AIGatewayMCPServerRouteWithMatcher'
+            logging:
+              description: Configuration for AI Gateway logging.
+              type: object
+              additionalProperties: false
+              properties:
+                payloads:
+                  type: boolean
+                  default: false
+                audits:
+                  type: boolean
+                  default: false
+            max_request_body_size:
+              description: Maximum size of request body to parse. Set to 0 for unlimited.
+              type: integer
+              default: 8388608
+              maximum: 2147483646
+              minimum: 0
+            server:
+              $ref: '#/components/schemas/AIGatewayMCPServerServerConfigBase'
+          title: AIGatewayMCPServerKongListenerConfig
         sources:
           description: |
             The explicit list of source MCP Servers whose tools this listener exposes.
@@ -9740,32 +9801,6 @@ components:
           type: boolean
           default: false
       additionalProperties: false
-    AIGatewayMCPServerNoUpstreamConfig:
-      description: 'Routing, logging, and server configuration for the MCP Server.'
-      type: object
-      properties:
-        route:
-          $ref: '#/components/schemas/AIGatewayMCPServerRouteWithMatcher'
-        logging:
-          description: Configuration for AI Gateway logging.
-          type: object
-          additionalProperties: false
-          properties:
-            payloads:
-              type: boolean
-              default: false
-            audits:
-              type: boolean
-              default: false
-        max_request_body_size:
-          description: Maximum size of request body to parse. Set to 0 for unlimited.
-          type: integer
-          default: 8388608
-          maximum: 2147483646
-          minimum: 0
-        server:
-          $ref: '#/components/schemas/AIGatewayMCPServerServerConfigBase'
-      additionalProperties: false
     AIGatewayMCPServerWithUpstreamNoProxyConfigNoServerConfig:
       description: 'Routing, logging, and request body size limits for the MCP Server.'
       type: object
@@ -9787,43 +9822,6 @@ components:
           description: Maximum size of request body to parse. Set to 0 for unlimited.
           type: integer
           default: 8388608
-        url:
-          description: |
-            Helper field to set protocol, host, port and path of the upstream service using a URL.
-            This is the same as a Kong Gateway Service URL: ${scheme}://${host}:${port}/${path}
-          type: string
-          format: uri
-          example: 'https://mcp.internal.kongair.com'
-        upstream:
-          $ref: '#/components/schemas/AIGatewayUpstreamConfig'
-      additionalProperties: false
-      required:
-        - url
-    AIGatewayMCPServerWithUpstreamNoProxyConfig:
-      description: 'Routing, logging, and server configuration for the MCP Server.'
-      type: object
-      properties:
-        route:
-          $ref: '#/components/schemas/AIGatewayMCPServerRouteWithMatcher'
-        logging:
-          description: Configuration for AI Gateway logging.
-          type: object
-          additionalProperties: false
-          properties:
-            payloads:
-              type: boolean
-              default: false
-            audits:
-              type: boolean
-              default: false
-        max_request_body_size:
-          description: Maximum size of request body to parse. Set to 0 for unlimited.
-          type: integer
-          default: 8388608
-          maximum: 2147483646
-          minimum: 0
-        server:
-          $ref: '#/components/schemas/AIGatewayMCPServerServerConfigBase'
         url:
           description: |
             Helper field to set protocol, host, port and path of the upstream service using a URL.
@@ -9860,7 +9858,62 @@ components:
           maximum: 2147483646
           minimum: 0
         server:
-          $ref: '#/components/schemas/AIGatewayMCPServerServerConfigBase'
+          description: Server-side configuration for the MCP Server.
+          type: object
+          additionalProperties: false
+          properties:
+            forward_client_headers:
+              description: Whether to forward the client request headers to the upstream server when calling the tools.
+              type: boolean
+              default: true
+            session:
+              description: |
+                Enable managed session when Kong responds as MCP server in listener, conversion-listener, or upstream-server modes.
+                This doesn't affect the passthrough-listener mode as the state in that mode is maintained by the upstream MCP servers.
+              type: object
+              additionalProperties: false
+              properties:
+                client:
+                  description: The configuration for client-side session storage.
+                  type: object
+                  additionalProperties: false
+                  properties:
+                    secrets:
+                      description: |
+                        The secrets that are used in session encryption. Required when the strategy is 'client'.
+                        The first secret is used for encryption, while all secrets are used for decryption to support key rotation.
+                      type: array
+                      items:
+                        type: string
+                        minLength: 8
+                        x-referenceable: true
+                        description: |
+                          This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).
+                      minItems: 1
+                managed:
+                  description: 'If enabled, Kong will maintain managed sessions with the MCP server.'
+                  type: boolean
+                  default: true
+                redis:
+                  $ref: '#/components/schemas/AIGatewayRedisCloudConfiguration'
+                session_ttl:
+                  description: The time-to-live (TTL) for each session in seconds.
+                  type: integer
+                  default: 86400
+                  maximum: 2147483646
+                  minimum: 0
+                strategy:
+                  description: 'The strategy for the session. If the value is ''client'', the session is encrypted into MCP session id assigned to the client. If the value is not ''client'', the session is stored in the configured database.'
+                  type: string
+                  enum:
+                    - client
+                    - redis
+            timeout:
+              description: The timeout for calling the tools in milliseconds.
+              type: integer
+              default: 10000
+              maximum: 2147483646
+              minimum: 0
         url:
           description: |
             Helper field to set protocol, host, port and path of the upstream service using a URL.
@@ -10282,7 +10335,43 @@ components:
             - conversion-listener
           x-terraform-transform-const: true
         config:
-          $ref: '#/components/schemas/AIGatewayMCPServerWithUpstreamNoProxyConfig'
+          description: Server-side configuration specific to modes where Kong answers as the MCP server.
+          type: object
+          additionalProperties: false
+          properties:
+            route:
+              $ref: '#/components/schemas/AIGatewayMCPServerRouteWithMatcher'
+            logging:
+              description: Configuration for AI Gateway logging.
+              type: object
+              additionalProperties: false
+              properties:
+                payloads:
+                  type: boolean
+                  default: false
+                audits:
+                  type: boolean
+                  default: false
+            max_request_body_size:
+              description: Maximum size of request body to parse. Set to 0 for unlimited.
+              type: integer
+              default: 8388608
+              maximum: 2147483646
+              minimum: 0
+            server:
+              $ref: '#/components/schemas/AIGatewayMCPServerServerConfigBase'
+            url:
+              description: |
+                Helper field to set protocol, host, port and path of the upstream service using a URL.
+                This is the same as a Kong Gateway Service URL: ${scheme}://${host}:${port}/${path}
+              type: string
+              format: uri
+              example: 'https://mcp.internal.kongair.com'
+            upstream:
+              $ref: '#/components/schemas/AIGatewayUpstreamConfig'
+          required:
+            - url
+          title: AIGatewayMCPServerKongListenerConfig
         tools:
           description: |
             List of tools exposed by this MCP Server. Each tool's `path`, `method`, and `host`
@@ -10342,7 +10431,32 @@ components:
             - listener
           x-terraform-transform-const: true
         config:
-          $ref: '#/components/schemas/AIGatewayMCPServerNoUpstreamConfig'
+          description: Server-side configuration specific to modes where Kong answers as the MCP server.
+          type: object
+          additionalProperties: false
+          properties:
+            route:
+              $ref: '#/components/schemas/AIGatewayMCPServerRouteWithMatcher'
+            logging:
+              description: Configuration for AI Gateway logging.
+              type: object
+              additionalProperties: false
+              properties:
+                payloads:
+                  type: boolean
+                  default: false
+                audits:
+                  type: boolean
+                  default: false
+            max_request_body_size:
+              description: Maximum size of request body to parse. Set to 0 for unlimited.
+              type: integer
+              default: 8388608
+              maximum: 2147483646
+              minimum: 0
+            server:
+              $ref: '#/components/schemas/AIGatewayMCPServerServerConfigBase'
+          title: AIGatewayMCPServerKongListenerConfig
         sources:
           description: |
             The explicit list of source MCP Servers whose tools this listener exposes.
@@ -13689,7 +13803,7 @@ components:
       required:
         - page
       title: PaginatedMeta
-    BaseError:
+    UnauthorizedError:
       description: standard error
       type: object
       properties:
@@ -13698,6 +13812,7 @@ components:
             The HTTP status code of the error. Useful when passing the response
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
+          example: 401
           readOnly: true
         title:
           description: |
@@ -13705,10 +13820,12 @@ components:
             change between occurences of a problem, except for localization.
             Should be provided as "Sentence case" for direct use in the UI.
           type: string
+          example: Unauthorized
           readOnly: true
         type:
           description: The error type.
           type: string
+          example: 'https://httpstatuses.com/401'
           readOnly: true
         instance:
           description: |
@@ -13716,6 +13833,7 @@ components:
             kong:trace:<correlation_id>. This helps us find the relevant logs
             when a customer reports an issue.
           type: string
+          example: 'kong:trace:1234567890'
           readOnly: true
         detail:
           description: |
@@ -13724,6 +13842,7 @@ components:
             what went wrong. Enclose variable values in square brackets. Should be
             provided as "Sentence case" for direct use in the UI.
           type: string
+          example: Invalid credentials
           readOnly: true
       required:
         - status
@@ -13731,51 +13850,100 @@ components:
         - instance
         - detail
       title: Error
-    UnauthorizedError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 401
-            title:
-              example: Unauthorized
-            type:
-              example: 'https://httpstatuses.com/401'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Invalid credentials
     ForbiddenError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 403
-            title:
-              example: Forbidden
-            type:
-              example: 'https://httpstatuses.com/403'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Forbidden
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          example: 403
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Forbidden
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          example: 'https://httpstatuses.com/403'
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          example: 'kong:trace:1234567890'
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Forbidden
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
     TooManyRequestsError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 429
-            title:
-              example: Too Many Requests
-            type:
-              example: 'https://httpstatuses.com/429'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Too Many Requests
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          example: 429
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Too Many Requests
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          example: 'https://httpstatuses.com/429'
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          example: 'kong:trace:1234567890'
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Too Many Requests
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
     InvalidRules:
       description: invalid parameters rules
       type: string
@@ -13912,7 +14080,8 @@ components:
           readOnly: true
         choices:
           type: array
-          items: {}
+          items:
+            type: string
           minItems: 1
           nullable: false
           readOnly: true
@@ -13946,7 +14115,8 @@ components:
           readOnly: true
         dependents:
           type: array
-          items: {}
+          items:
+            type: string
           nullable: true
           readOnly: true
           uniqueItems: true
@@ -13973,44 +14143,159 @@ components:
       nullable: false
       uniqueItems: true
     BadRequestError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          required:
-            - invalid_parameters
-          properties:
-            invalid_parameters:
-              $ref: '#/components/schemas/InvalidParameters'
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+        invalid_parameters:
+          $ref: '#/components/schemas/InvalidParameters'
+      required:
+        - status
+        - title
+        - instance
+        - detail
+        - invalid_parameters
+      title: Error
     ConflictError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 409
-            title:
-              example: Conflict
-            type:
-              example: 'https://httpstatuses.com/409'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Conflict
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          example: 409
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Conflict
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          example: 'https://httpstatuses.com/409'
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          example: 'kong:trace:1234567890'
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Conflict
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
     NotFoundError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 404
-            title:
-              example: Not Found
-            type:
-              example: 'https://httpstatuses.com/404'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Not found
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          example: 404
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Not Found
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          example: 'https://httpstatuses.com/404'
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          example: 'kong:trace:1234567890'
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Not found
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
+    ManagedBy:
+      description: |
+        Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).
+
+        Keys must be 1–63 characters long and start with an alphanumeric character.
+      type: object
+      example:
+        owner: terraform
+      additionalProperties:
+        type: string
+        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+        minLength: 1
+        maxLength: 63
+      maxProperties: 5
+      title: ManagedBy
     CursorMetaPage:
       type: object
       properties:
@@ -14048,21 +14333,6 @@ components:
           $ref: '#/components/schemas/CursorMetaPage'
       required:
         - page
-    ManagedBy:
-      description: |
-        Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).
-
-        Keys must be 1–63 characters long and start with an alphanumeric character.
-      type: object
-      example:
-        owner: terraform
-      additionalProperties:
-        type: string
-        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
-        minLength: 1
-        maxLength: 63
-      maxProperties: 5
-      title: ManagedBy
     CursorMetaWithTotal:
       description: Pagination metadata with exact total. Useful when the collection size is inexpensive to provide.
       type: object
