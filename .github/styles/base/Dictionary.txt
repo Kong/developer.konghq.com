@@ -206,6 +206,9 @@ dereferenced
 dereferencing
 deserialization
 deserialize
+deserializer
+deserializing
+deserializes
 deserialized
 destructuring
 dev
@@ -841,6 +844,7 @@ tooltip
 tproxy
 traceable
 Traefik
+transcode
 transcoded
 transcoder
 transpile
