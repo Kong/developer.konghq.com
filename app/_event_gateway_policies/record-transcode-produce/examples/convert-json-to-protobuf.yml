@@ -1,0 +1,50 @@
+title: Convert JSON records to Protobuf before they reach the cluster
+
+description: Convert a client's JSON records to Protobuf using an inline schema, so the backend cluster only stores Protobuf data.
+
+extended_description: |
+  Convert JSON records produced by a client to Protobuf before {{site.event_gateway_short}} writes them to the backend cluster.
+
+  This example embeds the target Protobuf schema directly in the policy using `inline`, where it:
+  * Sets `message_name` to the fully qualified message to serialize the record value as
+  * Prefixes the converted record with a reference to the schema using `confluent_format`, 
+  so any Confluent-compatible consumer can deserialize it
+
+  This change is irreversible. Use the produce phase when every downstream consumer of the topic reads Protobuf.
+
+weight: 900
+
+requirements:
+ - "A [Schema Validation Produce policy](/event-gateway/policies/schema-validation-produce/) that parses the record value as JSON."
+
+variables:
+  policy_id:
+    description: The UUID of the parent Schema Validation policy.
+    value: $PARENT_POLICY_ID
+
+type: transcode
+name: convert-produce-json-to-protobuf
+parent_policy_id: ${policy_id}
+config:
+  failure_mode: reject
+  output_format: protobuf
+  schema_source:
+    type: inline
+    inline: |
+      syntax = "proto3";
+      package example;
+      message User {
+        string name = 1;
+        int64 age = 2;
+      }
+    message_name: example.User
+  schema_ref_destination:
+    type: confluent_format
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
+
+min_version:
+  event-gateway: '1.3'

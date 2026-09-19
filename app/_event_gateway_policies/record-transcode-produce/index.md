@@ -46,7 +46,7 @@ min_version:
 The Record Transcode Produce policy converts an already schema-validated record value into a different serialization format before {{site.event_gateway_short}} produces it to the backend cluster.
 It runs on a record that was already parsed by a [Schema Validation Produce policy](/event-gateway/policies/schema-validation-produce/), so you must nest it under that policy.
 
-This policy supports converting between JSON and Avro.
+This policy supports converting between JSON, Avro, and Protobuf.
 
 Use this policy to change the format of a record before {{site.event_gateway_short}} writes it to the backend cluster.
 This change is irreversible, because the cluster never receives the record in its original format.
@@ -70,6 +70,9 @@ rows:
   - use_case: "[Example: Convert records for a specific topic to Avro](/event-gateway/policies/record-transcode-produce/examples/convert-topic-to-avro-on-condition/)"
     description: |
       Use a `condition` to convert records produced to a single topic to Avro, and leave records on other topics unchanged.
+  - use_case: "[Example: Convert JSON records to Protobuf before they reach the cluster](/event-gateway/policies/record-transcode-produce/examples/convert-json-to-protobuf/)"
+    description: |
+      Convert a client's JSON records to Protobuf using an inline schema, so the backend cluster only stores Protobuf data.
 {% endtable %}
 <!--vale on-->
 
@@ -102,7 +105,7 @@ sequenceDiagram
 
 ## Configuring the target schema
 
-Set `output_format` to `json` or `avro`. Converting to Avro requires `schema_source`, because Avro needs a schema to serialize the record value. 
+Set `output_format` to `json`, `avro`, or `protobuf`. Converting to Avro or Protobuf requires `schema_source`, because both formats need a schema to serialize the record value. 
 Converting to JSON can optionally use `schema_source` to validate the converted value.
 
 `schema_source` accepts one of the following types:
@@ -123,6 +126,8 @@ rows:
       Embeds the raw schema text (for example, an Avro JSON schema) directly in the policy configuration.
 {% endtable %}
 <!--vale on-->
+
+When converting to Protobuf, `schema_source` must also set `message_name` to the fully qualified name of the Protobuf message to serialize the record value as. A single Protobuf schema can define multiple messages, so {{site.event_gateway_short}} can't infer which one to use.
 
 Leave `schema_source` unset if you don't need a schema for the output data, for example when converting to JSON without validating the result.
 

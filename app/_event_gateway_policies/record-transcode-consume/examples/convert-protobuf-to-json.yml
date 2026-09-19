@@ -1,0 +1,48 @@
+title: Convert Protobuf records to JSON for a consumer
+
+description: Convert Protobuf records read from the backend cluster to JSON using a schema registry reference, so a consumer that only understands JSON can read them.
+
+extended_description: |
+  Convert Protobuf records to JSON for the client that consumes them. 
+  The record in the backend cluster doesn't change, so systems that read Protobuf directly from the cluster keep their access to the original format.
+
+  This example uses `reference` to look up the Protobuf source schema in a [schema registry](/event-gateway/entities/schema-registry/),
+  where it:
+  * Computes the subject from the topic name
+  * Always uses the latest version of the schema
+  * Sets `message_name` to the fully qualified message that the record value was serialized as
+
+weight: 900
+
+requirements:
+ - "A [Schema Validation Consume policy](/event-gateway/policies/schema-validation-consume/) that parses the record value as Protobuf against a schema registry."
+
+variables:
+  policy_id:
+    description: The UUID of the parent Schema Validation policy.
+    value: $PARENT_POLICY_ID
+
+type: transcode
+name: convert-consume-protobuf-to-json
+parent_policy_id: ${policy_id}
+config:
+  failure_mode: skip
+  output_format: json
+  schema_source:
+    type: reference
+    reference:
+      schema_registry:
+        name: my-schema-registry
+      subject: ${context.topic.name + '-value'}
+      version: ${'latest'}
+      message_name: example.User
+  schema_ref_destination:
+    type: none
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
+
+min_version:
+  event-gateway: '1.3'

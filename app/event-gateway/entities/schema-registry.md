@@ -41,6 +41,7 @@ to validate messages against the [Confluent schema registry](https://docs.conflu
 {{site.event_gateway_short}} supports the following registry types:
 * Avro
 * JSON Schema
+* Protobuf
 
 ## Set up a schema registry
 
