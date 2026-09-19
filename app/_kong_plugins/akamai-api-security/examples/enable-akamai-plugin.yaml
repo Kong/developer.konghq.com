@@ -5,8 +5,8 @@ title: 'Enable Akamai API Security'
 weight: 900
 
 requirements:
-  - "You have created an [integration profile](/plugins/nonamesecurity/#create-the-integration-profile) in the Akamai API Security UI."
-  - "The Akamai API Security plugin is [installed](/plugins/nonamesecurity/#choose-your-installation-method)."
+  - "You have created an [integration profile](/plugins/akamai-api-security/#create-the-integration-profile) in the Akamai API Security UI."
+  - "The Akamai API Security plugin is [installed](/plugins/akamai-api-security/#choose-your-installation-method)."
 
 config: []
 
