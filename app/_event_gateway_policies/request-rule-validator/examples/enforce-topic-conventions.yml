@@ -1,0 +1,47 @@
+title: Enforce topic naming, sizing, and retention conventions
+
+description: Require a topic name prefix, cap partitions and enforce a minimum replication factor, and pin retention to a fixed value.
+
+extended_description: |
+  This Request Rule Validator policy enforces conventions on `CreateTopics` requests for a shared Kafka cluster:
+  
+  In this example:
+  * Topic names must start with `team-a.`.
+  * Topics can't have more than 50 partitions.
+  * Topics must have a replication factor of at least 3.
+  * `retention.ms` must be set to 24 hours (`86400000`).
+
+  Each rule's expression describes the request state that's allowed.
+  When a topic in the request doesn't match a rule, {{site.event_gateway_short}} rejects only that topic with the Kafka `POLICY_VIOLATION` error
+  code.
+  Other topics in the same batched request are still created.
+
+weight: 900
+
+name: request_rule_validator_policy
+type: request_rule_validator
+config:
+  requests:
+    - type: create_topics
+      create_topics:
+        rules:
+          - description: "Topic name must start with 'team-a.'"
+            rule: '{{topic.name.startsWith("team-a.")}}'
+            action: reject
+          - description: "Topic must have 50 partitions or fewer"
+            rule: '{{topic.num_partitions != -1 ? topic.num_partitions <= 50 : size(topic.assignments) <= 50}}'
+            action: reject
+          - description: "Replication factor must be at least 3"
+            rule: '{{topic.replication_factor != -1 ? topic.replication_factor >= 3 : topic.assignments.all(a, size(a.broker_ids) >= 3)}}'
+            action: reject
+          - description: "retention.ms must be set to 24h (86400000)"
+            rule: '{{"retention.ms" in topic.configs && topic.configs["retention.ms"] != null && int(topic.configs["retention.ms"]) == 86400000}}'
+            action: reject
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
+
+min_version:
+  event-gateway: '1.3'

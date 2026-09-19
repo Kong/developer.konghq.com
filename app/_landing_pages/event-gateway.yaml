@@ -254,6 +254,12 @@ rows:
                       guide: |
                         [Get started with {{site.event_gateway_short}} and ACLs](/event-gateway/get-started/)
                     - outcome: |
+                        Enforce naming, sizing, and configuration conventions on admin requests, without limiting who can send them
+                      feature: |
+                        [Request Rule Validator policy](/event-gateway/policies/request-rule-validator/)
+                      guide: |
+                        [Example: Enforce topic naming, sizing, and retention conventions](/event-gateway/policies/request-rule-validator/examples/enforce-topic-conventions/)
+                    - outcome: |
                         Replace legacy auth methods with modern enterprise identity standards your team already uses
                       feature: |
                         [OAuth](/identity/)

@@ -28,6 +28,8 @@ categories:
   - security
 
 related_resources:
+  - text: Request Rule Validator policy
+    url: /event-gateway/policies/request-rule-validator/
   - text: Virtual clusters
     url: /event-gateway/entities/virtual-cluster/
   - text: Policies
@@ -106,6 +108,16 @@ ACL policies on the [virtual cluster](/event-gateway/entities/virtual-cluster/) 
 
 Each client's principal is evaluated against ACL rules before the {{site.event_gateway_short}} forwards any request to the backend.
 Consumer Group management commands (for example, create or delete) are also intercepted and evaluated against ACL rules using the `group` resource type.
+
+### Constraining the content of an allowed action
+
+The ACL policy decides whether a principal can perform an action at all, based on the resource, operation, and permission type.
+It doesn't inspect the content of the request beyond the resource name.
+
+If you need to constrain the content of an allowed action, for example capping the number of partitions a client can request or enforcing a topic naming pattern, use the [Request Rule Validator policy](/event-gateway/policies/request-rule-validator/) instead.
+
+You can combine both policies on the same virtual cluster: ACLs decide who can act, and Request Rule Validator decides what the action contains.
+We recommend placing ACLs before Request Rule Validator, so an unauthorized client learns nothing about your content rules before it's rejected on authorization grounds.
 
 ## Security considerations
 
