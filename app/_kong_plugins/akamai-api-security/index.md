@@ -59,6 +59,10 @@ Configure the integration profile in the Akamai API Security UI and download the
 
 ### Choose your installation method
 
+Unzip the plugin file you got from your [integration profile](#create-an-integration-profile). You'll find the LuaRock file you need for the plugin installation.
+
+Then, choose your installation method:
+
 {% navtabs "install-akamai" %}
 {% navtab "Docker" %}
 
