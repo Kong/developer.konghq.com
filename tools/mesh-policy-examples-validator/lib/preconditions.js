@@ -1,10 +1,10 @@
 const SOURCE_EXAMPLE_PATTERN =
-  /app\/_mesh_policies\/([^/]+)\/examples\/([^/]+)\.ya?ml$/;
+  /app\/_mesh_policies\/(v2\/)?([^/]+)\/examples\/([^/]+)\.ya?ml$/;
 const BUILT_PAGE_PATTERN =
-  /dist\/mesh\/policies\/([^/]+)\/examples\/([^/]+)\/index\.html$/;
+  /dist\/mesh\/(v2\/)?policies\/([^/]+)\/examples\/([^/]+)\/index\.html$/;
 
-function exampleKey(policy, name) {
-  return `${policy}/${name}`;
+function exampleKey(scope, policy, name) {
+  return `${scope}/${policy}/${name}`;
 }
 
 export function checkPreconditions(builtPages, sourceExamples) {
@@ -13,20 +13,21 @@ export function checkPreconditions(builtPages, sourceExamples) {
       ok: false,
       message:
         "No built mesh policy example pages found. Build the site for " +
-        "production first (dist/mesh/policies/*/examples/*/index.html).",
+        "production first (dist/mesh/policies/*/examples/*/index.html or " +
+        "dist/mesh/v2/policies/*/examples/*/index.html).",
     };
   }
 
   const builtKeys = new Set(
     builtPages.map((page) => {
       const match = page.match(BUILT_PAGE_PATTERN);
-      return exampleKey(match[1], match[2]);
+      return exampleKey(match[1] ?? "", match[2], match[3]);
     }),
   );
 
   const missing = sourceExamples.filter((source) => {
     const match = source.match(SOURCE_EXAMPLE_PATTERN);
-    return !builtKeys.has(exampleKey(match[1], match[2]));
+    return !builtKeys.has(exampleKey(match[1] ?? "", match[2], match[3]));
   });
 
   if (missing.length > 0) {

@@ -4,7 +4,11 @@ import { fileURLToPath } from "url";
 import { glob } from "tinyglobby";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
-import { resolveRelease } from "./lib/release.js";
+import {
+  resolveRelease,
+  latestMajor,
+  releaseMajor,
+} from "./lib/release.js";
 import { loadCrds } from "./lib/crds.js";
 import { extractDocuments } from "./lib/extract.js";
 import { findNullValues, findMarkerFields, checkSchema } from "./lib/rules.js";
@@ -14,11 +18,18 @@ import { checkPreconditions } from "./lib/preconditions.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "../..");
 
-const BUILT_PAGES_GLOB = "dist/mesh/policies/*/examples/*/index.html";
-const SOURCE_EXAMPLES_GLOB = "app/_mesh_policies/*/examples/*.{yaml,yml}";
+const BUILT_PAGES_GLOBS = [
+  "dist/mesh/policies/*/examples/*/index.html",
+  "dist/mesh/v2/policies/*/examples/*/index.html",
+];
+const SOURCE_EXAMPLES_GLOBS = [
+  "app/_mesh_policies/*/examples/*.{yaml,yml}",
+  "app/_mesh_policies/v2/*/examples/*.{yaml,yml}",
+];
 
-const BUILT_PAGE_POLICY_PATTERN = /dist\/mesh\/policies\/([^/]+)\/examples\//;
-const SOURCE_EXAMPLE_POLICY_PATTERN = /app\/_mesh_policies\/([^/]+)\/examples\//;
+const BUILT_PAGE_POLICY_PATTERN = /dist\/mesh\/(?:v2\/)?policies\/([^/]+)\/examples\//;
+const SOURCE_EXAMPLE_POLICY_PATTERN = /app\/_mesh_policies\/(?:v2\/)?([^/]+)\/examples\//;
+const V2_URL_PATTERN = /dist\/mesh\/v2\//;
 
 function parseArgs(argv) {
   const versionIndex = argv.indexOf("--version");
@@ -38,6 +49,10 @@ function excludeSkippedPolicies(paths, pattern, skip) {
   return paths.filter((p) => !skip.includes(p.match(pattern)[1]));
 }
 
+function builtPageMajor(builtPage, latest) {
+  return V2_URL_PATTERN.test(builtPage) ? 2 : latest;
+}
+
 // --root points the validator at a fixture directory laid out like a repo
 // root; test/cli.test.js is the only caller, to exercise the CLI end to end
 // without a real production build.
@@ -45,20 +60,36 @@ export async function run(argv, root) {
   const { version, root: rootArg, skip } = parseArgs(argv);
   root = root ?? (rootArg ? path.resolve(rootArg) : ROOT);
 
-  const { release, crdsDir } = resolveRelease(root, version);
-  console.log(`Using mesh release: ${release}`);
-
-  const crds = loadCrds(crdsDir);
+  const latest = latestMajor(root);
 
   const builtPages = excludeSkippedPolicies(
-    await glob(BUILT_PAGES_GLOB, { cwd: root }),
+    await glob(BUILT_PAGES_GLOBS, { cwd: root }),
     BUILT_PAGE_POLICY_PATTERN,
     skip,
   );
   const sourceExamples = excludeSkippedPolicies(
-    await glob(SOURCE_EXAMPLES_GLOB, { cwd: root }),
+    await glob(SOURCE_EXAMPLES_GLOBS, { cwd: root }),
     SOURCE_EXAMPLE_POLICY_PATTERN,
     skip,
+  );
+
+  const majors = new Set(builtPages.map((page) => builtPageMajor(page, latest)));
+  if (version) majors.add(releaseMajor(version));
+
+  const releasesByMajor = new Map();
+  try {
+    for (const major of [...majors].sort((a, b) => a - b)) {
+      const { release, crdsDir } = resolveRelease(root, major, version);
+      releasesByMajor.set(major, { release, crds: loadCrds(crdsDir) });
+    }
+  } catch (err) {
+    console.error(err.message);
+    return 1;
+  }
+  console.log(
+    `Using mesh releases: ${[...releasesByMajor]
+      .map(([major, { release }]) => `major ${major} -> ${release}`)
+      .join(", ")}.`,
   );
 
   const preconditions = checkPreconditions(builtPages, sourceExamples);
@@ -75,6 +106,7 @@ export async function run(argv, root) {
   let blocksWithCoverage = 0;
 
   for (const builtPage of builtPages) {
+    const { crds } = releasesByMajor.get(builtPageMajor(builtPage, latest));
     const sourcePath = builtPageToSourcePath(root, builtPage);
     const relativeSource = path.relative(root, sourcePath);
     const html = fs.readFileSync(path.join(root, builtPage), "utf-8");

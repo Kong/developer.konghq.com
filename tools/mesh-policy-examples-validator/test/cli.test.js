@@ -55,23 +55,27 @@ function builtPage(kubernetesYaml, universalYaml) {
 }
 
 // Builds a fixture root laid out like a repo, with the minimal set of files
-// the CLI reads: product release data, one vendored CRD, and a built page
-// paired with its source example for each of the given examples. Pass
-// `policies` (an array of `{ policy, examples, skipBuiltPage }`) instead of
-// `policy`/`examples` to lay out more than one policy; `skipBuiltPage` omits
-// the built page for that policy's examples, to exercise `--skip`.
+// the CLI reads: product release data, one vendored CRD per major, and a built
+// page paired with its source example for each of the given examples. Pass
+// `policies` (an array of `{ policy, examples, skipBuiltPage, major }`)
+// instead of `policy`/`examples` to lay out more than one policy;
+// `skipBuiltPage` omits the built page for that policy's examples, to
+// exercise `--skip`; `major: 2` lays the policy out in the v2 source tree and
+// under the /mesh/v2/ URL segment.
 function buildFixtureRoot({ policy = "widget", examples, policies }) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "mesh-policy-cli-"));
 
   fs.mkdirSync(path.join(root, "app/_data/products"), { recursive: true });
   fs.writeFileSync(
     path.join(root, "app/_data/products/mesh.yml"),
-    "releases:\n  - release: '1.0'\n    latest: true\n",
+    "releases:\n  - release: '1.0'\n    latest: true\n  - release: '2.1'\n",
   );
 
-  const crdsDir = path.join(root, "app/assets/mesh/1.0.x/raw/crds");
-  fs.mkdirSync(crdsDir, { recursive: true });
-  fs.writeFileSync(path.join(crdsDir, "widget.yaml"), WIDGET_CRD);
+  for (const dir of ["1.0.x", "2.1.x"]) {
+    const crdsDir = path.join(root, "app/assets/mesh", dir, "raw/crds");
+    fs.mkdirSync(crdsDir, { recursive: true });
+    fs.writeFileSync(path.join(crdsDir, "widget.yaml"), WIDGET_CRD);
+  }
 
   const policyList = policies ?? [{ policy, examples, skipBuiltPage: false }];
 
@@ -79,11 +83,14 @@ function buildFixtureRoot({ policy = "widget", examples, policies }) {
     policy: policyName,
     examples: policyExamples,
     skipBuiltPage,
+    major,
   } of policyList) {
+    const versionParts = major === 2 ? ["v2"] : [];
     for (const { name, kubernetesYaml, universalYaml } of policyExamples) {
       const examplesDir = path.join(
         root,
         "app/_mesh_policies",
+        ...versionParts,
         policyName,
         "examples",
       );
@@ -94,7 +101,9 @@ function buildFixtureRoot({ policy = "widget", examples, policies }) {
 
       const pageDir = path.join(
         root,
-        "dist/mesh/policies",
+        "dist/mesh",
+        ...versionParts,
+        "policies",
         policyName,
         "examples",
         name,
@@ -231,4 +240,46 @@ test("--skip naming an unmatched policy is a no-op", () => {
   assert.equal(result.status, 0);
   assert.match(result.stdout, /Checked 1 pages, 2 blocks/);
   assert.match(result.stdout, /0 finding\(s\)/);
+});
+
+test("the run covers built pages of both URL shapes and source examples of both trees", () => {
+  const cleanExample = {
+    name: "clean",
+    kubernetesYaml: "kind: Widget\nspec:\n  name: ok\n",
+    universalYaml: "type: Widget\nspec:\n  name: ok\n",
+  };
+  const root = buildFixtureRoot({
+    policies: [
+      { policy: "widget", examples: [cleanExample] },
+      { policy: "widget", examples: [cleanExample], major: 2 },
+    ],
+  });
+
+  const result = runCli(root);
+
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /Checked 2 pages, 4 blocks/);
+  assert.match(result.stdout, /0 finding\(s\)/);
+  assert.match(result.stdout, /major 1 -> 1\.0, major 2 -> 2\.1/);
+});
+
+test("--skip excludes a policy in both majors", () => {
+  const cleanExample = {
+    name: "clean",
+    kubernetesYaml: "kind: Widget\nspec:\n  name: ok\n",
+    universalYaml: "type: Widget\nspec:\n  name: ok\n",
+  };
+  const root = buildFixtureRoot({
+    policies: [
+      { policy: "other", examples: [cleanExample] },
+      { policy: "widget", examples: [cleanExample] },
+      { policy: "widget", examples: [cleanExample], major: 2 },
+    ],
+  });
+
+  const result = runCli(root, ["--skip", "widget"]);
+
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /Checked 1 pages, 2 blocks/);
+  assert.match(result.stdout, /Skipped: widget\./);
 });

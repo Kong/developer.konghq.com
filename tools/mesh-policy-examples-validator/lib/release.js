@@ -40,7 +40,17 @@ export function resolveRelease(root, major, override) {
   return { release, crdsDir };
 }
 
-function releaseMajor(release) {
+export function latestMajor(root) {
+  const productsPath = path.join(root, "app/_data/products/mesh.yml");
+  const releases = YAML.parse(fs.readFileSync(productsPath, "utf-8")).releases || [];
+  const latest = releases.find((entry) => entry.latest === true);
+  if (!latest) {
+    throw new Error(`No release marked "latest: true" in ${productsPath}`);
+  }
+  return releaseMajor(latest.release);
+}
+
+export function releaseMajor(release) {
   return Number(String(release).split(".")[0]);
 }
 
