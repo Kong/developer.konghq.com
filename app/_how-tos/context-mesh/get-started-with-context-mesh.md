@@ -9,21 +9,12 @@ breadcrumbs:
 products:
   - context-mesh
   - gateway
-  - ai-gateway
 
 works_on:
   - konnect
 
 min_version:
   gateway: '3.13'
-
-plugins:
-  - ai-mcp-proxy
-
-entities:
-  - service
-  - route
-  - plugin
 
 published: true
 tags:
@@ -33,55 +24,43 @@ tags:
 
 tldr:
   q: "How do I deploy the OpenWeather {{site.context_mesh}} MCP server?"
-  a: "Install {{site.kong_operator}} 2.2 with the `mcp-server` feature gate, create a Konnect-managed control plane and data plane, then create the MCP server from the Konnect UI."
+  a: "Install {{site.kong_operator}} {{site.data.operator_latest.release}} with the `mcp-server` feature gate, create a Konnect-managed control plane and data plane, then create the MCP server from the Konnect UI."
 
 tools:
   - operator
 
 prereqs:
   inline:
-    - title: Konnect Personal Access Token
-      content: |
-        Generate a token in {{site.konnect_short_name}} and set the environment variable:
-
-        {% env_variables %}
-        KONNECT_TOKEN: kpat_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-        {% endenv_variables %}
     - title: Kubernetes cluster
       content: |
-        Set up a local Kubernetes cluster using one of these options:
-
-        **Kind**
-
-        ```bash
-        kind create cluster --name context-mesh-demo
-        ```
+        Set up a local Kubernetes cluster:
 
         **Minikube**
 
         ```bash
-        minikube start --cpus=4 --memory=8192
+        minikube start
         ```
 
-        **Docker Desktop**
+        Open a separate terminal window, and activate load balancing on your cluster:
 
-        1. Open Docker Desktop preferences
-        2. Go to **Kubernetes** tab
-        3. Enable Kubernetes
-        4. Wait for it to be ready (shows "Kubernetes is running")
+        ```sh
+        minikube tunnel
+        ```
+
+        Type your password when prompted. Leave this window open on the side as you follow this guide.
+
       icon_url: /assets/icons/kubernetes.svg
     - title: Claude Code
-      content: |
-        Install [{{site.claude_code}}](https://claude.ai/code) for terminal access to the MCP server.
+      include_content: prereqs/claude-code
       icon_url: /assets/icons/third-party/claude.svg
     - title: OpenWeatherMap account and API key
       content: |
         1. Create an account at [openweathermap.org](https://home.openweathermap.org/users/sign_in)
         2. Generate an API key (may take several hours to activate)
 
-        {% env_variables %}
-        OPENWEATHERMAP_API_KEY: <your-api-key>
-        {% endenv_variables %}
+        ```sh
+        export OPENWEATHERMAP_API_KEY='<your-api-key'
+        ```
     - title: OpenWeather OpenAPI spec
       content: |
         Save the following as `openweathermap.json`:
@@ -413,30 +392,51 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## Update the Helm repository
+## Add the Kong Helm repository
+
+Map the name `kong` to the Kong Helm charts URL and download the latest chart index:
 
 ```shell
+helm repo add kong https://charts.konghq.com
 helm repo update
 ```
 
-{:.info}
-> This ensures you have the latest Kong Helm chart available locally.
-
 ## Install {{site.kong_operator}}
 
+{{site.base_gateway}} needs {{site.kong_operator}} to run a {{site.context_mesh}} MCP server:
+
 ```shell
-helm upgrade --install kong-operator \
-  kong/kong-operator \
-  --set image.tag=2.2 \
-  --set env.FEATURE_GATES=mcp-server \
-  --set env.ENABLE_CONTROLLER_KONNECT=true \
+helm upgrade --install kong-operator kong/kong-operator -n kong \
   --create-namespace \
-  --namespace kong-system
+  --set image.tag={{ site.data.operator_latest.release }} \
+  --set env.ENABLE_CONTROLLER_KONNECT=true \
+  --set env.FEATURE_GATES=mcp-server
 ```
 
-## Deploy Konnect-connected ControlPlane and DataPlane
+This command creates the `kong` namespace containing:
 
-Apply the manifest below:
+* The operator itself (`kong-operator-kong-operator-controller-manager`).
+* CustomResourceDefinitions (CRDs) that add resource types such as `DataPlane` to your Kubernetes cluster.
+* Role-based access control (RBAC) rules that let the operator manage those resources on your behalf.
+* Webhook configurations that validate the resources before they're applied.
+
+Wait for the {{site.kong_operator}} deployment to become available before you create any {{site.konnect_short_name}} resources:
+
+```shell
+kubectl -n kong wait --for=condition=Available=true --timeout=120s \
+  deployment/kong-operator-kong-operator-controller-manager
+```
+
+## Deploy a {{site.konnect_short_name}} control plane and data plane
+
+The following manifest creates the four resources that {{site.operator_product_name}} needs to run a {{site.konnect_short_name}}-managed data plane in your cluster:
+
+* `KonnectAPIAuthConfiguration`: Authenticates {{site.operator_product_name}} against the {{site.konnect_short_name}} API with your personal access token. The `serverURL` is read from `KONNECT_CONTROL_PLANE_URL`, so it points at whichever region your account uses.
+* `KonnectGatewayControlPlane`: Creates a control plane named `context-mesh-demo` in {{site.konnect_short_name}}. This is the control plane you attach the MCP server to in a later step.
+* `KonnectExtension`: Links the cluster to that control plane and provisions the mTLS certificates the data plane uses to connect to it.
+* `DataPlane`: Deploys three {{site.base_gateway}} {{site.data.gateway_latest.release}} proxy replicas. The `KonnectExtension` reference configures them to run in hybrid mode and pull their configuration from `context-mesh-demo`.
+
+Apply the manifest:
 
 ```shell
 kubectl apply -f - <<EOF
@@ -448,7 +448,7 @@ metadata:
 spec:
   type: token
   token: ${KONNECT_TOKEN}
-  serverURL: us.api.konghq.com
+  serverURL: ${KONNECT_CONTROL_PLANE_URL}
 ---
 kind: KonnectGatewayControlPlane
 apiVersion: konnect.konghq.com/v1alpha2
@@ -493,11 +493,11 @@ spec:
       spec:
         containers:
         - name: proxy
-          image: kong/kong-gateway:3.14
+          image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
 EOF
 ```
 
-## Wait for the DataPlane to be ready
+## Wait for the data plane to be ready
 
 ```shell
 kubectl wait --timeout=3m dataplane dataplane --for=condition=Ready
@@ -505,26 +505,38 @@ kubectl wait --timeout=3m dataplane dataplane --for=condition=Ready
 
 ## Create the OpenWeather {{site.context_mesh}} server
 
-1. In {{site.konnect_short_name}}, go to **{{site.context_mesh}}** > **MCP Servers**
-1. Select **New MCP server**.
-1. In the **Add a source** section, click the hyperlink to add a new source.
-1. Select the **Upload new** tab and upload the `openweathermap.json`.
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.context_mesh}}**.
+1. In the {{site.context_mesh}} sidebar, click **Sources**.
+1. In **New source**, select **API**.
+1. Click the **Upload new** tab.
+1. Upload `openweathermap.json`.
 1. Click **Add Source**.
-1. Select the OpenWeather API in the New MCP server wizard.
-1. Click **Next**.
-1. Name the server `openweather-service`.
-1. Select the Operator-managed control plane (`context-mesh-demo`).
-1. Click **Create server** and wait for the server status to become **Healthy**.
+1. In the {{site.context_mesh}} sidebar, click **MCP Servers**.
+1. Click **New MCP server**.
+1. In **Sources**, select **OpenWeatherMap One Call API**.
+1. In the **Name** field, enter `openweather-service`.
+1. Click **Create server**.
+1. In **Deploy**, select the `context-mesh-demo` control plane.
+1. Click **Deploy and finish**.
+1. Wait for the server status to become **Healthy**.
 
 The MCP runtime is now exposed at `/mcp/openweather-service`.
 
-## Test the OpenWeather MCP server
+## Add the OpenWeather MCP server to Claude
 
-Hook up the MCP server to an agent:
+Connect the MCP server to an agent:
 
 ```shell
 claude mcp add --transport http context-mesh-weather http://localhost/mcp/openweather-service \
   --header "X-Upstream-Api-Key: ${OPENWEATHERMAP_API_KEY}"
+```
+
+## Validate
+
+Start Claude Code:
+
+```sh
+claude
 ```
 
 Try a prompt in Claude Code:
@@ -532,4 +544,3 @@ Try a prompt in Claude Code:
 ```
 Tell me the weather in Hawaii.
 ```
-{:.no-copy-code}
