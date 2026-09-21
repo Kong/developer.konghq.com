@@ -529,6 +529,123 @@ RSpec.describe Jekyll::RenderPolicyYaml do
     end
   end
 
+  describe 'TargetRefTransform key emission (v3 non-legacy refs)' do
+    let(:page) { page_with('3.0') }
+
+    describe 'a name-based MeshService targetRef without namespace/sectionName' do
+      let(:template) do
+        <<~LIQUID
+          {% policy_yaml %}
+          ```yaml
+          type: MeshRetry
+          mesh: default
+          name: retry
+          spec:
+            to:
+              - targetRef:
+                  kind: MeshService
+                  name: backend
+                default:
+                  action: Allow
+          ```
+          {% endpolicy_yaml %}
+        LIQUID
+      end
+
+      it 'emits no empty namespace/sectionName keys' do
+        html = render(template)
+
+        expect(yaml_text(html, 'kubernetes')).to eq(<<~YAML.strip)
+          apiVersion: kuma.io/v1alpha1
+          kind: MeshRetry
+          metadata:
+            name: retry
+            namespace: kong-mesh-system
+            labels:
+              kuma.io/mesh: default
+          spec:
+            to:
+            - targetRef:
+                kind: MeshService
+                name: backend
+              default:
+                action: Allow
+        YAML
+
+        expect(yaml_text(html, 'universal')).to eq(<<~YAML.strip)
+          type: MeshRetry
+          mesh: default
+          name: retry
+          spec:
+            to:
+            - targetRef:
+                kind: MeshService
+                name: backend
+              default:
+                action: Allow
+        YAML
+      end
+    end
+
+    describe 'a labels-based MeshMultiZoneService targetRef (no name)' do
+      let(:template) do
+        <<~LIQUID
+          {% policy_yaml %}
+          ```yaml
+          type: MeshRetry
+          mesh: default
+          name: retry
+          spec:
+            to:
+              - targetRef:
+                  kind: MeshMultiZoneService
+                  labels:
+                    kuma.io/display-name: backend
+                default:
+                  action: Allow
+          ```
+          {% endpolicy_yaml %}
+        LIQUID
+      end
+
+      it 'passes the ref through unchanged' do
+        html = render(template)
+
+        expect(yaml_text(html, 'kubernetes')).to eq(<<~YAML.strip)
+          apiVersion: kuma.io/v1alpha1
+          kind: MeshRetry
+          metadata:
+            name: retry
+            namespace: kong-mesh-system
+            labels:
+              kuma.io/mesh: default
+          spec:
+            to:
+            - targetRef:
+                kind: MeshMultiZoneService
+                labels:
+                  kuma.io/display-name: backend
+              default:
+                action: Allow
+        YAML
+
+        expect(yaml_text(html, 'universal')).to eq(<<~YAML.strip)
+          type: MeshRetry
+          mesh: default
+          name: retry
+          spec:
+            to:
+            - targetRef:
+                kind: MeshMultiZoneService
+                labels:
+                  kuma.io/display-name: backend
+              default:
+                action: Allow
+        YAML
+      end
+    end
+  end
+
   describe 'tools= param' do
     let(:template) do
       <<~LIQUID
