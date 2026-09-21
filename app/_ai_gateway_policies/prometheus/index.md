@@ -15,10 +15,10 @@ related_resources:
   - text: "Monitor AI LLM metrics"
     url: /ai-gateway/monitor-ai-llm-metrics/
 faqs:
-  - q: If I have multiple data plane nodes, does the metrics data reflect a single node or an aggregate?
+  - q: If I have multiple data plane nodes, does the Prometheus policy metrics data reflect a single node or an aggregate?
     a: Metrics data is reported per data plane node.
-  - q: Why do I see `kong_nginx_connections_total` that are not AI related?
-    a: {{site.ai_gateway_name}} is built on the same foundation as {{site.base_gateway}} and some metrics reflect the underlying implementation.
+  - q: Why do I see `kong_nginx_connections_total` metrics that aren't AI related when I'm using the Prometheus policy?
+    a: "{{site.ai_gateway_name}} is built on the same foundation as {{site.base_gateway}} and some metrics reflect the underlying implementation."
 ---
 
 This AI Policy allows you to expose metrics related to {{site.ai_gateway}} and proxied upstream services in [Prometheus](https://prometheus.io/docs/introduction/overview/) exposition format, which can be scraped by a Prometheus Server.
@@ -68,18 +68,18 @@ scrape_configs:
 You can expose the following metrics:
 
 - **DB reachability**: A gauge type with a value of 0 or 1, which represents
-  whether the database can be reached by a {{site.ai_gateway}} node.
+  whether the database can be reached by an {{site.ai_gateway}} node.
 - **Connections**: Various Nginx connection metrics like active, reading,
   writing, and number of accepted connections.
 - **Data Plane Status**: The last seen timestamp, config hash, config sync status, and certificate expiration timestamp for
-Data Plane nodes are exported to the Control Plane.
+data plane nodes are exported to the control plane.
 - **Enterprise License Information**: The {{site.ai_gateway}} license expiration date, features and
 license signature. Those metrics are only exported on self-managed {{site.ai_gateway}}.
 - **DB Entity Count**: A gauge metric that
     measures the current number of database entities.
 - **Number of Nginx timers**: A gauge metric that measures the total number of Nginx
     timers in a Running or Pending state.
-- **AI LLM metrics**: AI LLM metrics are available per provider, model, cache, database name (if cached), embeddings provider (if cached), embeddings model (if cached), and Workspace.
+- **AI LLM metrics**: AI LLM metrics are available per provider, model, cache, database name (if cached), embeddings provider (if cached), and embeddings model (if cached).
 
 {:.info}
 > **Note:** Metrics in Prometheus may be prefixed by a `kong` label.
@@ -102,7 +102,7 @@ When [`config.latency_metrics`](/ai-gateway/policies/prometheus/reference/#schem
    - **Request**: Total time taken by {{site.ai_gateway}} and upstream services to serve
      requests.
    - **{{site.ai_gateway}}**: Time taken for {{site.ai_gateway}} to route a request and run all configured
-     plugins.
+     policies.
    - **Upstream**: Time taken by the upstream service to respond to requests.
 
 #### Bandwidth metrics
@@ -112,8 +112,8 @@ When [`config.bandwidth_metrics`](/ai-gateway/policies/prometheus/reference/#sch
 
 #### Upstream health metrics
 When [`config.upstream_health_metrics`](/ai-gateway/policies/prometheus/reference/#schema--config-upstream-health-metrics) is set to true:
-- **Target Health**: The healthiness status (`healthchecks_off`, `healthy`, `unhealthy`, or `dns_error`) of Targets
-  belonging to a given Upstream as well as their subsystem (`http` or `stream`).
+- **Target Health**: The healthiness status (`healthchecks_off`, `healthy`, `unhealthy`, or `dns_error`) of targets
+  that belong to a given upstream as well as their subsystem (`http` or `stream`).
 
 {:.info}
 > **Note:** Upstream targets' health information is exported once per subsystem. If both
