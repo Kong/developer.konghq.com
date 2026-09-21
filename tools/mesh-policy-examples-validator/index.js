@@ -30,6 +30,7 @@ const SOURCE_EXAMPLES_GLOBS = [
 const BUILT_PAGE_POLICY_PATTERN = /dist\/mesh\/(?:v2\/)?policies\/([^/]+)\/examples\//;
 const SOURCE_EXAMPLE_POLICY_PATTERN = /app\/_mesh_policies\/(?:v2\/)?([^/]+)\/examples\//;
 const V2_URL_PATTERN = /dist\/mesh\/v2\//;
+const SOURCE_V2_PATTERN = /app\/_mesh_policies\/v2\//;
 
 function parseArgs(argv) {
   const versionIndex = argv.indexOf("--version");
@@ -40,17 +41,51 @@ function parseArgs(argv) {
   const skip =
     skipIndex === -1
       ? []
-      : argv[skipIndex + 1].split(",").filter((name) => name.length > 0);
+      : argv[skipIndex + 1]
+          .split(",")
+          .filter((entry) => entry.length > 0)
+          .map(parseSkipEntry);
   return { version, root, skip };
 }
 
-function excludeSkippedPolicies(paths, pattern, skip) {
+// A skip entry is `<policy>` (every major) or `<policy>@v<major>` (that
+// major only), e.g. `meshaccesslog@v2`.
+function parseSkipEntry(entry) {
+  const at = entry.indexOf("@");
+  if (at === -1) return { name: entry, major: undefined };
+  const name = entry.slice(0, at);
+  const major = Number(entry.slice(at + 1).replace(/^v/, ""));
+  if (name.length === 0 || !Number.isInteger(major) || major < 1) {
+    throw new Error(
+      `Invalid --skip entry "${entry}". Use <policy> or <policy>@v<major>.`,
+    );
+  }
+  return { name, major };
+}
+
+function skipEntryLabel(entry) {
+  return entry.major === undefined
+    ? entry.name
+    : `${entry.name}@v${entry.major}`;
+}
+
+function excludeSkippedPolicies(paths, pattern, skip, majorOfPath) {
   if (skip.length === 0) return paths;
-  return paths.filter((p) => !skip.includes(p.match(pattern)[1]));
+  return paths.filter(
+    (p) =>
+      !skip.some((entry) => {
+        if (entry.name !== p.match(pattern)[1]) return false;
+        return entry.major === undefined || entry.major === majorOfPath(p);
+      }),
+  );
 }
 
 function builtPageMajor(builtPage, latest) {
   return V2_URL_PATTERN.test(builtPage) ? 2 : latest;
+}
+
+function sourceExampleMajor(sourceExample, latest) {
+  return SOURCE_V2_PATTERN.test(sourceExample) ? 2 : latest;
 }
 
 // --root points the validator at a fixture directory laid out like a repo
@@ -66,11 +101,13 @@ export async function run(argv, root) {
     await glob(BUILT_PAGES_GLOBS, { cwd: root }),
     BUILT_PAGE_POLICY_PATTERN,
     skip,
+    (page) => builtPageMajor(page, latest),
   );
   const sourceExamples = excludeSkippedPolicies(
     await glob(SOURCE_EXAMPLES_GLOBS, { cwd: root }),
     SOURCE_EXAMPLE_POLICY_PATTERN,
     skip,
+    (source) => sourceExampleMajor(source, latest),
   );
 
   const majors = new Set(builtPages.map((page) => builtPageMajor(page, latest)));
@@ -163,12 +200,20 @@ export async function run(argv, root) {
     `\nChecked ${builtPages.length} pages, ${blocksChecked} blocks ` +
       `(${blocksWithCoverage} with meaningful schema coverage). ` +
       `${findings.length} finding(s).` +
-      (skip.length > 0 ? ` Skipped: ${skip.join(", ")}.` : ""),
+      (skip.length > 0
+        ? ` Skipped: ${skip.map(skipEntryLabel).join(", ")}.`
+        : ""),
   );
 
   return findings.length > 0 ? 1 : 0;
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  run(process.argv.slice(2)).then((code) => process.exit(code));
+  run(process.argv.slice(2)).then(
+    (code) => process.exit(code),
+    (err) => {
+      console.error(err.message);
+      process.exit(1);
+    },
+  );
 }

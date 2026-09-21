@@ -61,17 +61,23 @@ function builtPage(kubernetesYaml, universalYaml) {
 // instead of `policy`/`examples` to lay out more than one policy;
 // `skipBuiltPage` omits the built page for that policy's examples, to
 // exercise `--skip`; `major: 2` lays the policy out in the v2 source tree and
-// under the /mesh/v2/ URL segment.
-function buildFixtureRoot({ policy = "widget", examples, policies }) {
+// under the /mesh/v2/ URL segment; `crds` names the vendored release
+// directories to lay out (pass fewer to leave a major without schemas).
+function buildFixtureRoot({
+  policy = "widget",
+  examples,
+  policies,
+  crds = ["2.1.x", "3.0.x"],
+}) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "mesh-policy-cli-"));
 
   fs.mkdirSync(path.join(root, "app/_data/products"), { recursive: true });
   fs.writeFileSync(
     path.join(root, "app/_data/products/mesh.yml"),
-    "releases:\n  - release: '1.0'\n    latest: true\n  - release: '2.1'\n",
+    "releases:\n  - release: '2.1'\n  - release: '3.0'\n    latest: true\n",
   );
 
-  for (const dir of ["1.0.x", "2.1.x"]) {
+  for (const dir of crds) {
     const crdsDir = path.join(root, "app/assets/mesh", dir, "raw/crds");
     fs.mkdirSync(crdsDir, { recursive: true });
     fs.writeFileSync(path.join(crdsDir, "widget.yaml"), WIDGET_CRD);
@@ -260,10 +266,52 @@ test("the run covers built pages of both URL shapes and source examples of both 
   assert.equal(result.status, 0);
   assert.match(result.stdout, /Checked 2 pages, 4 blocks/);
   assert.match(result.stdout, /0 finding\(s\)/);
-  assert.match(result.stdout, /major 1 -> 1\.0, major 2 -> 2\.1/);
+  assert.match(result.stdout, /major 2 -> 2\.1, major 3 -> 3\.0/);
 });
 
-test("--skip excludes a policy in both majors", () => {
+test("--skip <policy>@v2 excludes the policy only in the v2 tree", () => {
+  const cleanExample = {
+    name: "clean",
+    kubernetesYaml: "kind: Widget\nspec:\n  name: ok\n",
+    universalYaml: "type: Widget\nspec:\n  name: ok\n",
+  };
+  const root = buildFixtureRoot({
+    policies: [
+      { policy: "other", examples: [cleanExample] },
+      { policy: "widget", examples: [cleanExample] },
+      { policy: "widget", examples: [cleanExample], major: 2 },
+    ],
+  });
+
+  const result = runCli(root, ["--skip", "widget@v2"]);
+
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /Checked 2 pages, 4 blocks/);
+  assert.match(result.stdout, /Skipped: widget@v2\./);
+});
+
+test("--skip <policy>@v3 excludes the policy only in the latest tree", () => {
+  const cleanExample = {
+    name: "clean",
+    kubernetesYaml: "kind: Widget\nspec:\n  name: ok\n",
+    universalYaml: "type: Widget\nspec:\n  name: ok\n",
+  };
+  const root = buildFixtureRoot({
+    policies: [
+      { policy: "other", examples: [cleanExample] },
+      { policy: "widget", examples: [cleanExample] },
+      { policy: "widget", examples: [cleanExample], major: 2 },
+    ],
+  });
+
+  const result = runCli(root, ["--skip", "widget@v3"]);
+
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /Checked 2 pages, 4 blocks/);
+  assert.match(result.stdout, /Skipped: widget@v3\./);
+});
+
+test("--skip without a version qualifier still excludes the policy in both majors", () => {
   const cleanExample = {
     name: "clean",
     kubernetesYaml: "kind: Widget\nspec:\n  name: ok\n",
@@ -282,4 +330,42 @@ test("--skip excludes a policy in both majors", () => {
   assert.equal(result.status, 0);
   assert.match(result.stdout, /Checked 1 pages, 2 blocks/);
   assert.match(result.stdout, /Skipped: widget\./);
+});
+
+test("skipping every page of a major avoids resolving that major's release", () => {
+  const cleanExample = {
+    name: "clean",
+    kubernetesYaml: "kind: Widget\nspec:\n  name: ok\n",
+    universalYaml: "type: Widget\nspec:\n  name: ok\n",
+  };
+  const root = buildFixtureRoot({
+    crds: ["3.0.x"],
+    policies: [
+      { policy: "widget", examples: [cleanExample] },
+      { policy: "widget", examples: [cleanExample], major: 2 },
+    ],
+  });
+
+  const result = runCli(root, ["--skip", "widget@v2"]);
+
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /major 3 -> 3\.0/);
+  assert.doesNotMatch(result.stdout, /major 2/);
+  assert.match(result.stdout, /Skipped: widget@v2\./);
+});
+
+test("an invalid --skip version qualifier exits non-zero with a diagnostic", () => {
+  const cleanExample = {
+    name: "clean",
+    kubernetesYaml: "kind: Widget\nspec:\n  name: ok\n",
+    universalYaml: "type: Widget\nspec:\n  name: ok\n",
+  };
+  const root = buildFixtureRoot({
+    examples: [cleanExample],
+  });
+
+  const result = runCli(root, ["--skip", "widget@banana"]);
+
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /Invalid --skip entry "widget@banana"/);
 });
