@@ -43,7 +43,7 @@ related_resources:
   - text: Get started with Entitlement Enforcement
     url: /metering-and-billing/entitlement-enforcement/get-started/
   - text: Enforce entitlements on LLM traffic
-    url: /how-to/enforce-entitlements-on-llm-traffic/
+    url: /ai-gateway/v1/how-to/enforce-entitlements-on-llm-traffic/
   - text: Entitlements
     url: /metering-and-billing/entitlements/
   - text: Metering & Billing plugin
