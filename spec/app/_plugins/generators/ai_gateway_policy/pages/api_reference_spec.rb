@@ -18,7 +18,8 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::ApiReference do
       unreleased?: false,
       min_release: nil,
       overview_content: '',
-      api_spec_exists?: true
+      api_spec_exists?: true,
+      explicit_major: nil
     )
   end
 

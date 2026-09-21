@@ -18,7 +18,7 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Base do
   let(:page) { described_class.new(policy:, file: '/app/_ai_gateway_policies/my-policy/index.md') }
 
   describe '.base_url' do
-    it { expect(described_class.base_url).to eq('/ai-gateway/policies/') }
+    it { expect(described_class.base_url(policy)).to eq('/ai-gateway/policies/') }
   end
 
   describe '#breadcrumbs' do

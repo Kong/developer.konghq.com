@@ -1,0 +1,14 @@
+---
+title: Kong Mesh 2.x Policies Hub
+layout: default
+edit_and_issue_links: true
+products:
+  - mesh
+breadcrumbs:
+  - /mesh/v2/
+major_version:
+  mesh: 2
+description: Bundled features for your service traffic and network configuration.
+---
+{%- assign policies = site.data.mesh_policies[2] | where_exp: "policy", "policy.published != false" | sort: "title" -%}
+{% include policies/index/mesh_hub.html policies=policies heading="Kong Mesh 2.x Policies Hub" intro_url="/mesh/v2/policies-introduction/" %}

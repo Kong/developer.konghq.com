@@ -1,7 +1,12 @@
 ---
+title: "Latest Kong Mesh version"
+description: "Plain-text endpoint that returns the newest Kong Mesh patch version."
 layout: none
+content_type: reference
+products:
+  - mesh
 skip_index: true
 llm: false
+no_wrap: true
 ---
-{%- assign latest = site.data.products.mesh.releases | find: "latest", true -%}
-{{latest.version}}
+{{page.release.version}}

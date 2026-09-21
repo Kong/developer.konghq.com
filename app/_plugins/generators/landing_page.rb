@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-module Jekyll
-  class LandingPagesGenerator < Jekyll::Generator
-    priority :high
+require_relative '../lib/ordered_generator'
 
+module Jekyll
+  class LandingPagesGenerator < OrderedGenerator
     def generate(site)
       Jekyll::LandingPages::Generator.run(site)
     end

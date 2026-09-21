@@ -9,3 +9,9 @@
     Access-Control-Allow-Methods: GET
     Access-Control-Allow-Headers: Content-Type
     Content-Type: text/plain
+
+/mesh/v2/latest_version
+    Access-Control-Allow-Origin: *
+    Access-Control-Allow-Methods: GET
+    Access-Control-Allow-Headers: Content-Type
+    Content-Type: text/plain
