@@ -5,15 +5,19 @@ Kuma CRD schemas.
 
 ## How it works
 
-1. Resolves the CRD directory from the release marked `latest: true` in
-   `app/_data/products/mesh.yml` (or the release passed via `--version`), at
+1. Resolves one vendored CRD directory per mesh major present in the build: the
+   release marked `latest: true` in `app/_data/products/mesh.yml` (or the
+   release passed via `--version`) for the unversioned pages, and the biggest
+   2.x release for the `/mesh/v2/` pages, at
    `app/assets/mesh/<number>.x/raw/crds`.
 1. Indexes every CRD by its declared `spec.names.kind`, and hardens each schema by
    adding `additionalProperties: false` to every object that declares `properties`,
    skipping any node carrying `x-kubernetes-preserve-unknown-fields`.
-1. Globs the built pages at `dist/mesh/policies/*/examples/*/index.html` and the
-   source examples at `app/_mesh_policies/*/examples/*.{yaml,yml}`, and fails loudly
-   if the built page count doesn't match the source example count.
+1. Globs the built pages at `dist/mesh/policies/*/examples/*/index.html` and
+   `dist/mesh/v2/policies/*/examples/*/index.html`, and the source examples at
+   `app/_mesh_policies/*/examples/*.{yaml,yml}` and
+   `app/_mesh_policies/v2/*/examples/*.{yaml,yml}`, and fails loudly if the built
+   page count doesn't match the source example count.
 1. For each built page, extracts the published config blocks from
    `div[data-tab-group^="policy-yaml"] div[data-panel] code[id]`, keeping the
    `kubernetes` and `universal` panels and skipping `terraform`.
@@ -49,6 +53,12 @@ examples are under active rewrite:
 ```bash
 node index.js --skip external-services,mesh-rate-limit
 ```
+
+A plain policy name applies to every major. To exclude the policy in one major
+only, qualify the name with the major: `--skip external-services@v2` skips the
+`/mesh/v2/` pages and the `app/_mesh_policies/v2/` source tree, while the same
+policy in the latest tree is still checked (`--skip external-services@v3` does
+the reverse).
 
 The listed policies are filtered out of both the built-page and source-example globs
 before the build-precondition check runs, so a skipped policy's missing or mismatched
