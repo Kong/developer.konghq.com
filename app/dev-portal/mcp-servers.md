@@ -194,6 +194,16 @@ There are two settings you can use to manage AI settings on your {{site.dev_port
 
 You can also optionally enable write operations to let agents manage applications on a developer's behalf.
 
+1. In the {{site.konnect_short_name}} sidebar, expand **Dev Portal** and click **Portals**.
+1. Click your {{site.dev_portal}}.
+1. Click the **Settings** tab.
+1. Click the **AI Settings** tab.
+1. Enable **AI Settings**.
+1. Enable **MCP Server**.
+1. (Optional) Enable **MCP server write operations** to let agents manage applications on a developer's behalf.
+1. Click **Save changes**.
+
+{% comment %}
 {% navtabs "enable-mcp-server" %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a PATCH request to the [`/portals/{portalId}/ai-settings` endpoint](/api/konnect/portal-management/v3/#/operations/update-ai-settings):
@@ -224,6 +234,7 @@ You can enable just the AI settings by omitting `features` parameters. You can s
 1. Click **Save changes**.
 {% endnavtab %}
 {% endnavtabs %}
+{% endcomment %}
 
 ## Connect an agent to a {{site.dev_portal}} MCP server
 
