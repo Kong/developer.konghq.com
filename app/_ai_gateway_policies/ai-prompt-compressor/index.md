@@ -14,7 +14,7 @@ tags:
   - performance
 search_aliases:
   - headroom
-  - llmlingua
+  - LLMLingua
 related_resources:
   - text: AI RAG Injector Policy
     url: /ai-gateway/policies/ai-rag-injector/
