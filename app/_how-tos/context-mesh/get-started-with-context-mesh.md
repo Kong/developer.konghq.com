@@ -41,7 +41,7 @@ prereqs:
 
            ```sh
            export KONNECT_TOKEN='YOUR_KONNECT_PAT'
-           export KONNECT_CONTROL_PLANE_URL='https://us.api.konghq.com'
+           export KONNECT_CONTROL_PLANE_URL='us.api.konghq.com'
            ```
       icon_url: /assets/icons/gateway.svg
     - title: Kubernetes cluster
@@ -232,7 +232,7 @@ kubectl wait --timeout=3m dataplane dataplane -n default --for=condition=Ready
 1. In **Sources**, select **OpenWeatherMap Current Weather API**.
 1. In the **Name** field, enter `openweather-service`.
 1. Click **Create server**.
-1. In **Deploy**, select the `context-mesh-demo` control plane.
+1. In **Deploy**, select the `context-mesh-demo` control plane and **Basic Mode**.
 1. Click **Deploy and finish**.
 1. Wait for the server status to become **Healthy**.
 
