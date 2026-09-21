@@ -24,24 +24,36 @@ tags:
 
 tldr:
   q: "How do I deploy the OpenWeather {{site.context_mesh}} MCP server?"
-  a: "Install {{site.kong_operator}} {{site.data.operator_latest.release}} with the `mcp-server` feature gate, create a Konnect-managed control plane and data plane, then create the MCP server from the Konnect UI."
+  a: "Install {{site.operator_product_name}} {{site.data.operator_latest.release}} with the `mcp-server` feature gate, create a Konnect-managed control plane and data plane, then create the MCP server from the Konnect UI."
 
 tools:
   - operator
 
 prereqs:
+  skip_product: true
   inline:
+    - title: Konnect personal access token
+      position: before
+      content: |
+        1. Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
+
+        2. Export the token and the Konnect API URL for your region:
+
+           ```sh
+           export KONNECT_TOKEN='YOUR_KONNECT_PAT'
+           export KONNECT_CONTROL_PLANE_URL='https://us.api.konghq.com'
+           ```
+      icon_url: /assets/icons/gateway.svg
     - title: Kubernetes cluster
+      position: before
       content: |
         Set up a local Kubernetes cluster:
-
-        **Minikube**
 
         ```bash
         minikube start
         ```
 
-        Open a separate terminal window, and activate load balancing on your cluster:
+        Once started, open a separate terminal window, and activate load balancing on your cluster:
 
         ```sh
         minikube tunnel
@@ -76,6 +88,24 @@ cleanup:
       content: |
         In the {{site.konnect_short_name}} UI, open the MCP server and delete it. This disassociates the MCP server from the control plane.
       icon_url: /assets/icons/gateway.svg
+    - title: Delete the control plane and data plane
+      content: |
+        ```bash
+        kubectl delete -n default dataplane dataplane
+        kubectl delete -n default konnectextension my-konnect-config
+        kubectl delete -n default konnectgatewaycontrolplane test
+        kubectl delete -n default konnectapiauthconfiguration konnect-api-auth
+        ```
+
+        Deleting the `KonnectGatewayControlPlane` also deletes the `context-mesh-demo` control plane in {{site.konnect_short_name}}. Run this step even if you plan to repeat the guide: control plane names must be unique within an organization, so a leftover `context-mesh-demo` makes the next run fail with a `409 Conflict` and the data plane never becomes ready.
+      icon_url: /assets/icons/kubernetes.svg
+    - title: Uninstall {{site.operator_product_name}}
+      content: |
+        ```bash
+        helm uninstall kong-operator -n kong
+        kubectl delete namespace kong
+        ```
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 ## Add the Kong Helm repository
@@ -87,9 +117,9 @@ helm repo add kong https://charts.konghq.com
 helm repo update
 ```
 
-## Install {{site.kong_operator}}
+## Install {{site.operator_product_name}}
 
-{{site.base_gateway}} needs {{site.kong_operator}} to run a {{site.context_mesh}} MCP server:
+{{site.base_gateway}} needs {{site.operator_product_name}} to run a {{site.context_mesh}} MCP server:
 
 ```shell
 helm upgrade --install kong-operator kong/kong-operator -n kong \
@@ -106,7 +136,7 @@ This command creates the `kong` namespace containing:
 * Role-based access control (RBAC) rules that let the operator manage those resources on your behalf.
 * Webhook configurations that validate the resources before they're applied.
 
-Wait for the {{site.kong_operator}} deployment to become available before you create any {{site.konnect_short_name}} resources:
+Wait for the {{site.operator_product_name}} deployment to become available before you create any {{site.konnect_short_name}} resources:
 
 ```shell
 kubectl -n kong wait --for=condition=Available=true --timeout=120s \
@@ -186,7 +216,7 @@ EOF
 ## Wait for the data plane to be ready
 
 ```shell
-kubectl wait --timeout=3m dataplane dataplane --for=condition=Ready
+kubectl wait --timeout=3m dataplane dataplane -n default --for=condition=Ready
 ```
 
 ## Create the OpenWeather {{site.context_mesh}} server
