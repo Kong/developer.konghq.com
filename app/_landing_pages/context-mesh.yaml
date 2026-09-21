@@ -4,9 +4,9 @@ metadata:
   description: "Turn enterprise APIs into Code Mode MCP servers that AI agents can call directly, and combine them with existing MCP servers to customize the overall enterprise context under a single source of truth."
   products:
     - context-mesh
-    - ai-gateway
+    - gateway
   breadcrumbs:
-    - /ai-gateway/
+    - /gateway/
     - /konnect/
   tags:
     - ai
@@ -34,7 +34,7 @@ rows:
 
                     Adding existing MCP servers as sources allows AI agents to access a broader range of enterprise context without requiring direct integration with each individual server. You can then centralize and customize the management and exposure of these sources through {{site.context_mesh}}.
 
-                    {{site.context_mesh}} complements [{{site.ai_gateway}}](/ai-gateway/) by covering the other half of an agent's traffic. {{site.ai_gateway}} is the control layer between agents and LLMs. {{site.context_mesh}} is the mediation layer between agents and APIs.
+                    {{site.context_mesh}} is the mediation layer between agents and APIs that runs on {{site.base_gateway}} to complement [{{site.ai_gateway}}](/ai-gateway/).
 
                     {:.success}
                     > {{site.context_mesh}} is in active development. The current release supports APIs and MCP servers as source types. Additional source types are planned for future releases.
@@ -42,7 +42,7 @@ rows:
           - type: image
             config:
               url: /assets/images/context-mesh/context-mesh.svg
-              alt_text: "{{site.context_mesh}} architecture diagram. AI agents connect through {{site.ai_gateway}} as the control layer for LLMs, and through {{site.context_mesh}} as the mediation layer for enterprise sources including APIs, data, docs, and code."
+              alt_text: "Context Mesh architecture diagram. Context Mesh deploys on Kong Gateway as the mediation layer for enterprise sources including APIs, data, docs, and code."
 
   - columns:
       - blocks:
@@ -129,7 +129,7 @@ rows:
                 sources: |
                   Several OpenAPI specifications that you either:
                   * Import from the {{site.konnect_short_name}} API catalog as a single source.
-                  * Upload directly as anOpenAPI Specification (OAS) v3.0 file, each one as its own source.
+                  * Upload directly as an OpenAPI Specification (OAS) v3.0 file, each one as its own source.
                 configuration: "Add a single source containing multiple API specifications, or add multiple sources to the MCP server."
                 outcome: "Complete a task that spans the APIs, choosing which operations to call and in what order."
               - use_case: "**Combine APIs with existing MCP servers**"
@@ -152,4 +152,4 @@ rows:
                 {{site.context_mesh}} supports two source types: REST APIs, added as OpenAPI specifications, and existing MCP servers. You can mix both in the same {{site.context_mesh}} MCP server.
             - q: Does {{site.context_mesh}} require {{site.ai_gateway}}?
               a: |
-                Yes. {{site.context_mesh}} runs on top of {{site.ai_gateway}}, so it requires an {{site.ai_gateway}} control plane to deploy  and function.
+                No. {{site.context_mesh}} runs on top of {{site.base_gateway}}, so it requires a {{site.base_gateway}} control plane to deploy and function.
