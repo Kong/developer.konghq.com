@@ -31,10 +31,19 @@ prereqs:
         You need a Microsoft Entra account with the Cloud Application Administrator or Application Administrator role.
 
         Copy your {{site.konnect_short_name}} organization ID from **{{site.konnect_short_name}} > Organization > Settings > General**.
+
+        Create an enterprise application in Microsoft Entra ID:
+
+        1. Sign in to the [Microsoft Entra admin center](https://entra.microsoft.com) using your admin account.
+        1. In the sidebar, navigate to **Entra ID** > **Enterprise apps**.
+        1. Click **New application**.
+        1. then click **Create your own application**.
+        1. Enter a name for the application (for example, `Kong Konnect SSO`), select **Integrate any other application you don't find in the gallery (Non-gallery)**, and click **Create**.
+
       icon_url: /assets/icons/azure.svg
 ---
 
-The following diagram shows the SAML authentication flow between a user, {{site.konnect_short_name}}, and Microsoft Entra ID:
+The following diagram shows the [SAML](/konnect-platform/sso/) authentication flow between a user, {{site.konnect_short_name}}, and Microsoft Entra ID:
 
 {% comment %}
 {% mermaid %}
@@ -53,21 +62,9 @@ sequenceDiagram
 {% endmermaid %}
 {% endcomment %}
 
-## Create an enterprise application in Microsoft Entra ID 
+## Configure Basic SAML in Microsoft Entra
 
-MAKE THIS A PREREQ AND JUST SPECIFY A LINK TO ENTRA DOCS FOR HOW TO DO THIS AND NOTE THAT YOU NEED TO CLICK THE NON-GALLERY OPTION.
-
-1. Sign in to the [Microsoft Entra admin center](https://entra.microsoft.com) using your admin account.
-1. In the sidebar, navigate to **Entra ID** > **Enterprise apps**.
-1. Click **New application**.
-1. then click **Create your own application**.
-1. Enter a name for the application (for example, `Kong Konnect SSO`), select **Integrate any other application you don't find in the gallery (Non-gallery)**, and click **Create**.
-
-## Configure SAML settings in Microsoft Entra ID
-
-### Configure Basic SAML
-
-Before configuring Entra ID, decide on the login path you want to use for your {{site.konnect_short_name}} organization. You'll use this same value in both Entra ID and {{site.konnect_short_name}}.
+Before configuring Basic SAML in Entra ID, decide on the login path you want to use for your {{site.konnect_short_name}} organization. You'll use this same value in both Entra ID and {{site.konnect_short_name}}.
 
 1. In the application, click **Single sign-on** in the sidebar.
 1. Select **SAML** as the single sign-on method.
@@ -77,7 +74,7 @@ Before configuring Entra ID, decide on the login path you want to use for your {
 1. In the **Sign on URL** field, enter `https://cloud.konghq.com/login/<your-login-path>`.
 1. Click **Save**.
 
-### Configure user attributes and claims
+## Configure user attributes and claims in Microsoft Entra
 
 1. In the **Attributes & Claims** section, click **Edit**.
 1. Configure the following claims. For each claim, clear the namespace URI before saving:
@@ -102,16 +99,16 @@ Before configuring Entra ID, decide on the login path you want to use for your {
 1. In the **Login Path** field, enter the login path you chose when configuring Entra ID (for example, `my-org`). {{site.konnect_short_name}} uses this to generate your organization's custom login URL: `https://cloud.konghq.com/login/<login-path>`.
 1. Click **Save**.
 
-## Configure team mappings
+## Configure team mappings in {{site.konnect_short_name}}
 
-Team mappings let you automatically assign {{site.konnect_short_name}} teams based on Entra ID group membership.
+[Team mappings](/konnect-platform/sso/#team-mapping-configuration) let you automatically assign {{site.konnect_short_name}} teams based on Entra ID group membership.
 
 1. Click the **Team mappings** tab.
 1. Select the **IdP Mapping Enabled** checkbox.
 1. For each team you want to map, enter the corresponding Entra ID group name in the **Group Name** field.
 1. Click **Save**.
 
-## Enable SAML
+## Enable SAML in {{site.konnect_short_name}}
 
 1. Click the **Authentication scheme** tab.
 1. On the **SAML** tile, click the action menu icon.
