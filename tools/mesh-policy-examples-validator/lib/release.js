@@ -11,23 +11,17 @@ export class MissingCrdDirectoryError extends Error {
   }
 }
 
-// root: repo root. major: the mesh major to resolve (2, 3, ...). override: an
-// explicit release string (e.g. "2.10") that pins this major when it belongs
-// to it; releases of other majors keep their default resolution.
-export function resolveRelease(root, major, override) {
+// root: repo root. major: the mesh major to resolve (2, 3, ...). The release
+// resolved is the biggest release of that major in mesh.yml.
+export function resolveRelease(root, major) {
   const productsPath = path.join(root, "app/_data/products/mesh.yml");
   const releases = YAML.parse(
     fs.readFileSync(productsPath, "utf-8"),
   ).releases.filter((entry) => releaseMajor(entry.release) === major);
 
-  let release;
-  if (override && releaseMajor(override) === major) {
-    release = String(override);
-  } else {
-    release = biggestRelease(releases);
-    if (!release) {
-      throw new Error(`No release for mesh major ${major} in ${productsPath}`);
-    }
+  const release = biggestRelease(releases);
+  if (!release) {
+    throw new Error(`No release for mesh major ${major} in ${productsPath}`);
   }
 
   const entry = releases.find((candidate) => candidate.release === release) || {};
@@ -50,7 +44,7 @@ export function latestMajor(root) {
   return releaseMajor(latest.release);
 }
 
-export function releaseMajor(release) {
+function releaseMajor(release) {
   return Number(String(release).split(".")[0]);
 }
 

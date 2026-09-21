@@ -369,3 +369,19 @@ test("an invalid --skip version qualifier exits non-zero with a diagnostic", () 
   assert.equal(result.status, 1);
   assert.match(result.stderr, /Invalid --skip entry "widget@banana"/);
 });
+
+test("--version exits non-zero with a diagnostic", () => {
+  const cleanExample = {
+    name: "clean",
+    kubernetesYaml: "kind: Widget\nspec:\n  name: ok\n",
+    universalYaml: "type: Widget\nspec:\n  name: ok\n",
+  };
+  const root = buildFixtureRoot({
+    examples: [cleanExample],
+  });
+
+  const result = runCli(root, ["--version", "2.1"]);
+
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /--version is no longer supported/);
+});

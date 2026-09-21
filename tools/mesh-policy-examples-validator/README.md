@@ -6,10 +6,9 @@ Kuma CRD schemas.
 ## How it works
 
 1. Resolves one vendored CRD directory per mesh major present in the build: the
-   release marked `latest: true` in `app/_data/products/mesh.yml` (or the
-   release passed via `--version`) for the unversioned pages, and the biggest
-   2.x release for the `/mesh/v2/` pages, at
-   `app/assets/mesh/<number>.x/raw/crds`.
+   release marked `latest: true` in `app/_data/products/mesh.yml` for the
+   unversioned pages, and the biggest 2.x release for the `/mesh/v2/` pages,
+   at `app/assets/mesh/<number>.x/raw/crds`.
 1. Indexes every CRD by its declared `spec.names.kind`, and hardens each schema by
    adding `additionalProperties: false` to every object that declares `properties`,
    skipping any node carrying `x-kubernetes-preserve-unknown-fields`.
@@ -32,17 +31,6 @@ Kuma CRD schemas.
      `name_uni`, `name_kube`) may survive into the published output.
 1. Prints a summary giving the number of pages checked, blocks checked, blocks with
    meaningful schema coverage, and the finding count.
-
-## The `--version` flag
-
-By default the validator resolves the CRD directory from the release marked
-`latest: true` in `app/_data/products/mesh.yml`. Pass `--version <number>` to
-validate against a different vendored release, for example while a CRD refresh is
-pending:
-
-```bash
-node index.js --version 2.13
-```
 
 ## The `--skip` flag
 

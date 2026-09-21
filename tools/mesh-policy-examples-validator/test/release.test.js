@@ -21,19 +21,6 @@ test("major 2 resolves the biggest 2.x release", () => {
   assert.equal(crdsDir, path.join(ROOT, "app/assets/mesh/2.14.x/raw/crds"));
 });
 
-test("an override pins only the major it belongs to", () => {
-  const pinned = resolveRelease(ROOT, 2, "2.10");
-  assert.equal(pinned.release, "2.10");
-  assert.equal(pinned.crdsDir, path.join(ROOT, "app/assets/mesh/2.10.x/raw/crds"));
-
-  const otherMajor = resolveRelease(ROOT, 2, "3.0");
-  assert.equal(otherMajor.release, "2.14");
-  assert.equal(
-    otherMajor.crdsDir,
-    path.join(ROOT, "app/assets/mesh/2.14.x/raw/crds"),
-  );
-});
-
 test("a release entry without a label falls back to the <release>.x directory", () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "mesh-policy-release-"));
   fs.mkdirSync(path.join(root, "app/_data/products"), { recursive: true });
@@ -50,9 +37,16 @@ test("a release entry without a label falls back to the <release>.x directory", 
   assert.equal(crdsDir, path.join(root, "app/assets/mesh/4.0.x/raw/crds"));
 });
 
-test("a major with no vendored schemas raises the missing-CRD error", () => {
+test("a release with no vendored schemas raises the missing-CRD error", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "mesh-policy-release-"));
+  fs.mkdirSync(path.join(root, "app/_data/products"), { recursive: true });
+  fs.writeFileSync(
+    path.join(root, "app/_data/products/mesh.yml"),
+    "releases:\n  - release: '2.1'\n",
+  );
+
   assert.throws(
-    () => resolveRelease(ROOT, 2, "2.1"),
+    () => resolveRelease(root, 2),
     (err) => {
       assert.ok(err instanceof MissingCrdDirectoryError);
       assert.match(err.message, /2\.1/);
@@ -62,13 +56,9 @@ test("a major with no vendored schemas raises the missing-CRD error", () => {
   );
 });
 
-test("throws a named error when the CRD directory is absent", () => {
+test("a major with no release in mesh.yml raises a diagnostic", () => {
   assert.throws(
-    () => resolveRelease(ROOT, 999, "999.0"),
-    (err) => {
-      assert.ok(err instanceof MissingCrdDirectoryError);
-      assert.match(err.message, /999\.0/);
-      return true;
-    },
+    () => resolveRelease(ROOT, 999),
+    /No release for mesh major 999/,
   );
 });
