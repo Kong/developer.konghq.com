@@ -264,6 +264,8 @@ rows:
     description: An endpoint URL path.
 {% endtable %}
 
+Both [`config.identifier`](./reference/#schema--config-identifier) and [`config.policies.match`](./reference/#schema--config-policies-match) allow you to increment counters per `credential`.
+This is a virtual credential derived by an [OIDC AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/#oidc-token-authentication) from the `credential_claim` field.
 ## Known limitations of AI Rate Limiting Advanced
 
 The cost is only reflected during the next request.
