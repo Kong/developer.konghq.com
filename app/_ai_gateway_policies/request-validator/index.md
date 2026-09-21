@@ -33,7 +33,7 @@ At least one of `body_schema` or `parameter_schema` must be set.
 
 By default, a failed validation returns a generic `400 Bad Request`. Enable [`config.verbose_response`](./reference/#schema--config-verbose-response) to have the response name the specific field that failed instead.
 
-The Policy also restricts which `Content-Type` values it accepts, using [`config.allowed_content_types`](./reference/#schema--config-allowed-content-types) (default `application/json`). A request with a `Content-Type` that isn't in this list is rejected with `400 Bad Request` and `{"message":"specified Content-Type is not allowed"}`, regardless of whether the body itself would otherwise have passed schema validation. Use [`config.content_type_parameter_validation`](./reference/#schema--config-content-type-parameter-validation) to control whether `Content-Type` parameters (like `; charset=UTF-8`) are also validated.
+The Policy can restrict which `Content-Type` values it accepts, using [`config.allowed_content_types`](./reference/#schema--config-allowed-content-types) (default `application/json`). A request with a `Content-Type` that isn't in this list is rejected with `400 Bad Request` and `{"message":"specified Content-Type is not allowed"}`, regardless of whether the body itself would otherwise have passed schema validation. Use [`config.content_type_parameter_validation`](./reference/#schema--config-content-type-parameter-validation) to control whether `Content-Type` parameters (like `; charset=UTF-8`) are also validated.
 
 ### Schema format
 
