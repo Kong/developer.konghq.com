@@ -4,17 +4,20 @@ require 'yaml'
 
 RSpec.describe Jekyll::RenderPolicyYaml do
   let(:locals) { {} }
+  let(:page) { nil }
 
   def release(number)
     Jekyll::Drops::Release.new('release' => number)
   end
 
-  def page_with(release_number)
-    { 'output_format' => 'html', 'path' => 'test.md', 'content' => '', 'release' => release(release_number) }
+  def page_with(release_number, major_version: nil)
+    page = { 'output_format' => 'html', 'path' => 'test.md', 'content' => '', 'release' => release(release_number) }
+    page['major_version'] = { 'mesh' => major_version } if major_version
+    page
   end
 
   def render(template, release_number: '2.10')
-    Capybara::Node::Simple.new(render_liquid(template, page: page_with(release_number), locals: locals))
+    Capybara::Node::Simple.new(render_liquid(template, page: page || page_with(release_number), locals: locals))
   end
 
   def tab_titles(html)
@@ -179,6 +182,8 @@ RSpec.describe Jekyll::RenderPolicyYaml do
   end
 
   describe 'use_meshservice= param (MeshService backendRefs with weight)' do
+    let(:page) { page_with('2.10', major_version: 2) }
+
     let(:template) do
       <<~LIQUID
         {% policy_yaml use_meshservice=true %}
@@ -372,6 +377,155 @@ RSpec.describe Jekyll::RenderPolicyYaml do
           mesh     = konnect_mesh.my_mesh.name
         }
       HCL
+    end
+  end
+
+  describe 'version-aware style selection (major_version.mesh)' do
+    let(:template) do
+      <<~LIQUID
+        {% policy_yaml use_meshservice=true %}
+        ```yaml
+        type: MeshRetry
+        mesh: default
+        name: retry
+        spec:
+          to:
+            - targetRef:
+                kind: MeshService
+                name: backend
+                namespace: kuma-demo
+                sectionName: http
+              default:
+                action: Allow
+        ```
+        {% endpolicy_yaml %}
+      LIQUID
+    end
+
+    describe 'a v3 page (no major_version) renders MeshService-based configurations only' do
+      let(:page) { page_with('3.0') }
+
+      it 'renders one code block per tab, in the MeshService form' do
+        html = render(template)
+
+        expect(html.find('div[data-panel="kubernetes"]').all('code').length).to eq(1)
+        expect(yaml_text(html, 'kubernetes')).to eq(<<~YAML.strip)
+          apiVersion: kuma.io/v1alpha1
+          kind: MeshRetry
+          metadata:
+            name: retry
+            namespace: kong-mesh-system
+            labels:
+              kuma.io/mesh: default
+          spec:
+            to:
+            - targetRef:
+                kind: MeshService
+                name: backend
+                namespace: kuma-demo
+                sectionName: http
+              default:
+                action: Allow
+        YAML
+
+        expect(html.find('div[data-panel="universal"]').all('code').length).to eq(1)
+        expect(yaml_text(html, 'universal')).to eq(<<~YAML.strip)
+          type: MeshRetry
+          mesh: default
+          name: retry
+          spec:
+            to:
+            - targetRef:
+                kind: MeshService
+                name: backend
+                sectionName: http
+              default:
+                action: Allow
+        YAML
+      end
+
+      it 'does not show the MeshService opt-in checkbox' do
+        expect(render(template)).not_to have_css('.meshservice')
+      end
+
+      it 'renders no variant labels in markdown output' do
+        markdown = render_liquid(template, page: page.merge('output_format' => 'markdown'))
+
+        expect(markdown).not_to include('tag-based naming')
+        expect(markdown).not_to include('Using `MeshService`')
+        expect(markdown).to include('sectionName: http')
+      end
+    end
+
+    describe 'a v2 page (major_version.mesh: 2) keeps the legacy-plus-MeshService rendering' do
+      let(:page) { page_with('2.10', major_version: 2) }
+
+      it 'renders both blocks per tab with the opt-in checkbox' do
+        html = render(template)
+
+        expect(html).to have_css('.meshservice input.checkbox')
+        expect(html.find('div[data-panel="kubernetes"]').all('code').length).to eq(2)
+        expect(yaml_text(html, 'kubernetes', index: 0)).to include('name: backend_kuma-demo_svc')
+        expect(yaml_text(html, 'kubernetes', index: 1)).to include('sectionName: http')
+        expect(html.find('div[data-panel="universal"]').all('code').length).to eq(2)
+      end
+
+      it 'keeps the variant labels in markdown output' do
+        markdown = render_liquid(template, page: page.merge('output_format' => 'markdown'))
+
+        expect(markdown).to include('Using `kuma.io/service` tag-based naming')
+        expect(markdown).to include('Using `MeshService` Kubernetes resources')
+      end
+    end
+  end
+
+  describe 'show_legacy / show_meshservice variant selection' do
+    let(:template) do
+      <<~LIQUID
+        {% policy_yaml %}
+        ```yaml
+        type: MeshRetry
+        mesh: default
+        name: retry
+        spec:
+          to:
+            - targetRef:
+                kind: MeshService
+                name: backend
+                namespace: kuma-demo
+                sectionName: http
+              default:
+                action: Allow
+        ```
+        {% endpolicy_yaml %}
+      LIQUID
+    end
+
+    describe 'a v3 page (no major_version)' do
+      let(:page) { page_with('3.0') }
+
+      it 'still renders the MeshService block only' do
+        html = render(template)
+
+        expect(html).not_to have_css('.meshservice')
+        expect(html.find('div[data-panel="kubernetes"]').all('code').length).to eq(1)
+        expect(yaml_text(html, 'kubernetes')).to include('sectionName: http')
+        expect(yaml_text(html, 'kubernetes')).not_to include('backend_kuma-demo_svc')
+        expect(html.find('div[data-panel="universal"]').all('code').length).to eq(1)
+      end
+    end
+
+    describe 'a v2 page (major_version.mesh: 2)' do
+      let(:page) { page_with('2.10', major_version: 2) }
+
+      it 'shows the legacy block only' do
+        html = render(template)
+
+        expect(html).not_to have_css('.meshservice')
+        expect(html.find('div[data-panel="kubernetes"]').all('code').length).to eq(1)
+        expect(yaml_text(html, 'kubernetes')).to include('name: backend_kuma-demo_svc')
+        expect(yaml_text(html, 'kubernetes')).not_to include('sectionName: http')
+      end
     end
   end
 
