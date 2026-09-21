@@ -133,5 +133,5 @@ In previous versions, {{site.base_gateway}} had no plugin to enforce M&B entitle
 
 ## Usage-based billing
 
-The Metering & Billing plugin can't bill customers. If you want to bill customers based on usage events from the plugin, use [{{site.konnect_short_name}} {{site.metering_and_billing}}](/metering-and-billing/billing-invoicing-subscriptions/) or [OpenMeter self-hosted](https://openmeter.io/).
+The Metering & Billing plugin can't bill customers. If you want to bill customers based on usage events from the plugin, use [{{site.konnect_short_name}} {{site.metering_and_billing}}](/metering-and-billing/billing-invoicing/) or [OpenMeter self-hosted](https://openmeter.io/).
 

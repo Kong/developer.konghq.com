@@ -15,7 +15,7 @@ related_resources:
   - text: "{{site.konnect_short_name}} {{site.metering_and_billing}}"
     url: /metering-and-billing/
   - text: "Billing, invoicing, and subscriptions"
-    url: /metering-and-billing/billing-invoicing-subscriptions/
+    url: /metering-and-billing/billing-invoicing/
   - text: Integrate Stripe with {{site.metering_and_billing}}
     url: /metering-and-billing/stripe-integration/
 ---
@@ -76,7 +76,7 @@ Before you install the Custom Invoicing app, create a notification channel so {{
 For steps to create and manage notification channels, see the [Notifications documentation](/metering-and-billing/notifications/).
 ## Implementation
 
-The Custom Invoicing app pauses invoice processing at key states and waits for your integration to signal completion before the invoice progresses through its [lifecycle](/metering-and-billing/billing-invoicing-subscriptions/#invoice-lifecycle).
+The Custom Invoicing app pauses invoice processing at key states and waits for your integration to signal completion before the invoice progresses through its [lifecycle](/metering-and-billing/billing-invoicing/#invoice-lifecycle).
 
 The app provides two optional synchronization hooks:
 
@@ -101,13 +101,13 @@ Additionally, payment status synchronization is mandatory once an invoice enters
 
 For initial implementation and testing, start with both synchronization hooks disabled. Enable them later as your integration matures. See [Draft Sync Hook](#draft-sync-hook) and [Issuing Sync Hook](#issuing-sync-hook) for details.
 
-After enabling the app, create a billing profile that references it. Use [customer overrides](/metering-and-billing/billing-invoicing-subscriptions/#customer-billing-profile-overrides) to limit the app's effect to specific customers rather than making it the default billing profile.
+After enabling the app, create a billing profile that references it. Use [customer overrides](/metering-and-billing/billing-invoicing/#customer-billing-profile-overrides) to limit the app's effect to specific customers rather than making it the default billing profile.
 
 ### Basic setup
 
 When no sync hooks are enabled, the invoice flow works as follows:
 
-1. {{site.metering_and_billing}} creates the invoice according to the [invoice lifecycle](/metering-and-billing/billing-invoicing-subscriptions/#invoice-lifecycle) rules.
+1. {{site.metering_and_billing}} creates the invoice according to the [invoice lifecycle](/metering-and-billing/billing-invoicing/#invoice-lifecycle) rules.
 1. The invoice reaches payment processing state. Your integration must:
    1. Send the invoice to the customer.
    1. Initiate and accept payment.
@@ -158,4 +158,4 @@ During issuing synchronization, your integration can:
 1. Click **Create Billing Profile**.
 1. Do one of the following:
    * To set this as the default billing profile, click **Set as Default Profile**.
-   * To limit the app to specific customers, disable **Set this as the new default billing profile**, click **Keep Current Default Profile**, and then configure [customer overrides](/metering-and-billing/billing-invoicing-subscriptions/#customer-billing-profile-overrides).
+   * To limit the app to specific customers, disable **Set this as the new default billing profile**, click **Keep Current Default Profile**, and then configure [customer overrides](/metering-and-billing/billing-invoicing/#customer-billing-profile-overrides).
