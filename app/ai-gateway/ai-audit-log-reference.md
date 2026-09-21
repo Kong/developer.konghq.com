@@ -602,9 +602,9 @@ rows:
       The ID of the MCP session. A session can contain multiple requests. Only present for `2025-06-18` and `2025-11-25` traffic. 
       
       {% new_in 2.1 %} `2026-07-28` removes the session concept, so this field is absent for that traffic.
-  - property: "`ai.mcp.mcp_server_id` {% new_in 2.1 %}"
+  - property: '`ai.mcp.mcp_server_id` {% new_in 2.1 %}'
     description: The UUID of the AI MCP Server entity that handled the request.
-  - property: "`ai.mcp.protocol_version` {% new_in 2.1 %}"
+  - property: '`ai.mcp.protocol_version` {% new_in 2.1 %}'
     description: "The negotiated MCP protocol revision for the request (for example, `2026-07-28`)."
   - property: "`ai.mcp.rpc`"
     description: |
