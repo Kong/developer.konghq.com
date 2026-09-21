@@ -43,10 +43,9 @@ RSpec.describe 'plugins/example.md' do
   subject(:html) { Capybara::Node::Simple.new(rendered) }
 
   it 'renders the Consumer and credential section before the plugin configuration section' do
-    credential_heading = html.find('h2 a[href="#create-a-consumer-and-credential"]')
-    plugin_config_heading = html.find('h2#set-up-the-plugin')
+    heading_ids = html.all('h2').map { |heading| heading[:id] }
 
-    expect(credential_heading.native).to be < plugin_config_heading.native
+    expect(heading_ids.index('create-a-consumer-and-credential')).to be < heading_ids.index('set-up-the-plugin')
   end
 
   it 'renders the Consumer and credential section heading with its own anchor' do
