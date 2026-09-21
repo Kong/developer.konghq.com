@@ -125,7 +125,7 @@ An AI Model is a managed entity. {{site.ai_gateway}} owns its runtime configurat
 
 When you expose an AI Model, you choose which AI capabilities it provides through the [`capabilities`](#schema-aigateway-model-capabilities) field. The [`type`](#schema-aigateway-model-type) you select determines which capabilities are available:
 
-* **`model` type**: for synchronous request/response workloads. Available capabilities: `generate`, `agentic`, `embeddings`, `audio/speech`, `audio/transcription`, `audio/translation`, `image`, `video`, `realtime`, `rerank`.
+* **`model` type**: for synchronous request/response workloads. Available capabilities: `generate`, `agentic`, `embeddings`, `audio/speech`, `audio/transcription`, `audio/translation`, `image`, `video`, `realtime`, `rerank`, `decisions`.
 * **`api` type**: for asynchronous batch processing. Available capabilities: `batches`, `files`.
 
 Not every LLM service supports every capability. The set of capabilities you can declare on an AI Model depends on what the AI Model Provider in [`targets`](#schema-aigateway-model-targets) exposes. See [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for per-provider details.

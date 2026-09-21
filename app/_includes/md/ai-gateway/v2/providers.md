@@ -38,6 +38,7 @@ You can proxy requests to {{ provider.name }} AI models through {{site.ai_gatewa
 {%- capture audio_translation_label -%}{% if page.output_format == 'markdown' %}Audio translation{% else %}[Audio translation](#audio){% endif %}{%- endcapture -%}
 {%- capture video_label -%}{% if page.output_format == 'markdown' %}Video{% else %}[Video](#video){% endif %}{%- endcapture -%}
 {%- capture rerank_label -%}{% if page.output_format == 'markdown' %}Rerank{% else %}[Rerank](#rerank){% endif %}{%- endcapture -%}
+{%- capture decisions_label -%}{% if page.output_format == 'markdown' %}Decisions{% else %}[Decisions](#decisions){% endif %}{%- endcapture -%}
 {%- capture batches_label -%}{% if page.output_format == 'markdown' %}Batches{% else %}[Batches](#batches){% endif %}{%- endcapture -%}
 {%- capture files_label -%}{% if page.output_format == 'markdown' %}Files{% else %}[Files](#files){% endif %}{%- endcapture -%}
 
@@ -61,7 +62,7 @@ columns:
   - title: Upstream path or API
     key: upstream_path
 rows:
-{%- assign all_capability_keys = "generate,agentic,realtime,embeddings,image,audio_speech,audio_transcription,audio_translation,video,rerank,batches,files" | split: "," -%}
+{%- assign all_capability_keys = "generate,agentic,realtime,embeddings,image,audio_speech,audio_transcription,audio_translation,video,rerank,batches,files,decisions" | split: "," -%}
 {% for cap in all_capability_keys %}
 {% assign cap_supported = false %}
 {% if provider.capabilities[cap].supported %}{% assign cap_supported = true %}{% endif %}
@@ -81,6 +82,7 @@ rows:
 {% when 'rerank' %}{% assign cap_label = rerank_label %}{% assign cap_path_template = "`/rerank`" %}{% assign cap_description = "Semantic reranking of documents" %}
 {% when 'batches' %}{% assign cap_label = batches_label %}{% assign cap_path_template = "`/batches`" %}{% assign cap_description = "Batch processing of requests" %}
 {% when 'files' %}{% assign cap_label = files_label %}{% assign cap_path_template = "`/files`" %}{% assign cap_description = "File management and storage" %}
+{% when 'decisions' %}{% assign cap_label = decisions_label %}{% assign cap_path_template = "`/decisions`" %}{% assign cap_description = "Typed decision requests with per-option probabilities and a confidence score" %}
 {% endcase %}
 {% if compare_provider %}
 {% if cap_supported and cap_supported_compare %}
@@ -138,6 +140,7 @@ rows:
 {%- assign batches_note_num = 0 %}{% if provider.capabilities.batches.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign batches_note_num = note_counter %}{% endif -%}
 {%- assign files_note_num = 0 %}{% if provider.capabilities.files.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign files_note_num = note_counter %}{% endif -%}
 {%- assign rerank_note_num = 0 %}{% if provider.capabilities.rerank.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign rerank_note_num = note_counter %}{% endif -%}
+{%- assign decisions_note_num = 0 %}{% if provider.capabilities.decisions.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign decisions_note_num = note_counter %}{% endif -%}
 {%- assign compare_generate_note_num = 0 %}{% if compare_provider.capabilities.generate.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign compare_generate_note_num = note_counter %}{% endif -%}
 {%- assign compare_embeddings_note_num = 0 %}{% if compare_provider.capabilities.embeddings.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign compare_embeddings_note_num = note_counter %}{% endif -%}
 {%- assign compare_agentic_note_num = 0 %}{% if compare_provider.capabilities.agentic.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign compare_agentic_note_num = note_counter %}{% endif -%}
@@ -150,6 +153,7 @@ rows:
 {%- assign compare_batches_note_num = 0 %}{% if compare_provider.capabilities.batches.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign compare_batches_note_num = note_counter %}{% endif -%}
 {%- assign compare_files_note_num = 0 %}{% if compare_provider.capabilities.files.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign compare_files_note_num = note_counter %}{% endif -%}
 {%- assign compare_rerank_note_num = 0 %}{% if compare_provider.capabilities.rerank.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign compare_rerank_note_num = note_counter %}{% endif -%}
+{%- assign compare_decisions_note_num = 0 %}{% if compare_provider.capabilities.decisions.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign compare_decisions_note_num = note_counter %}{% endif -%}
 {%- assign has_text = false -%}
 {%- assign has_embeddings = false -%}
 {%- assign has_agentic = false -%}
@@ -160,6 +164,7 @@ rows:
 {%- assign has_batches = false -%}
 {%- assign has_files = false -%}
 {%- assign has_rerank = false -%}
+{%- assign has_decisions = false -%}
 {%- if provider.capabilities.generate.supported or compare_provider.capabilities.generate.supported %}{% assign has_text = true %}{% endif -%}
 {%- if provider.capabilities.embeddings.supported or compare_provider.capabilities.embeddings.supported %}{% assign has_embeddings = true %}{% endif -%}
 {%- if provider.capabilities.agentic.supported or compare_provider.capabilities.agentic.supported %}{% assign has_agentic = true %}{% endif -%}
@@ -170,6 +175,7 @@ rows:
 {%- if provider.capabilities.batches.supported or compare_provider.capabilities.batches.supported %}{% assign has_batches = true %}{% endif -%}
 {%- if provider.capabilities.files.supported or compare_provider.capabilities.files.supported %}{% assign has_files = true %}{% endif -%}
 {%- if provider.capabilities.rerank.supported or compare_provider.capabilities.rerank.supported %}{% assign has_rerank = true %}{% endif -%}
+{%- if provider.capabilities.decisions.supported or compare_provider.capabilities.decisions.supported %}{% assign has_decisions = true %}{% endif -%}
 
 ## Supported capabilities
 
@@ -781,6 +787,58 @@ rows:
 {% endtable %}
 {% if provider.capabilities.rerank.note.content %}<sup>{{ rerank_note_num }}</sup> {% if compare_provider %}**{{ include.variant_label }}:** {% endif %}{{ provider.capabilities.rerank.note.content }}{% endif %}
 {% if compare_provider.capabilities.rerank.note.content %}<sup>{{ compare_rerank_note_num }}</sup> **{{ include.compare_variant_label }}:** {{ compare_provider.capabilities.rerank.note.content }}{% endif %}
+{%- endif -%}
+{% if has_decisions %}
+
+### Decisions
+
+Support for {{ provider.name }} decision capabilities:
+
+{% table %}
+vertical_align: middle
+columns:
+  - title: Capability
+    key: capability
+{% if compare_provider %}
+  - title: Variant
+    key: variant
+{% endif %}
+  - title: Model example
+    key: model_example
+  - title: Path template
+    key: path_template
+  - title: Min version
+    key: min_version
+rows:
+{% if compare_provider %}
+{% if provider.capabilities.decisions.supported and compare_provider.capabilities.decisions.supported %}
+  - capability: "decisions{% if decisions_note_num != 0 %}<sup>{{ decisions_note_num }}</sup>{% endif %}"
+    variant: "{{ include.variant_label }} & {{ include.compare_variant_label }}"
+    model_example: "{{ provider.capabilities.decisions.model_example }}"
+    path_template: "`/decisions`"
+    min_version: "{{ provider.capabilities.decisions.min_version }}"
+{% elsif provider.capabilities.decisions.supported %}
+  - capability: "decisions{% if decisions_note_num != 0 %}<sup>{{ decisions_note_num }}</sup>{% endif %}"
+    variant: "{{ include.variant_label }} only"
+    model_example: "{{ provider.capabilities.decisions.model_example }}"
+    path_template: "`/decisions`"
+    min_version: "{{ provider.capabilities.decisions.min_version }}"
+{% else %}
+  - capability: "decisions{% if compare_decisions_note_num != 0 %}<sup>{{ compare_decisions_note_num }}</sup>{% endif %}"
+    variant: "{{ include.compare_variant_label }} only"
+    model_example: "{{ compare_provider.capabilities.decisions.model_example }}"
+    path_template: "`/decisions`"
+    min_version: "{{ compare_provider.capabilities.decisions.min_version }}"
+{% endif %}
+{% elsif provider.capabilities.decisions %}
+  - capability: "decisions{% if decisions_note_num != 0 %}<sup>{{ decisions_note_num }}</sup>{% endif %}"
+    model_example: "{{ provider.capabilities.decisions.model_example }}"
+    path_template: "`/decisions`"
+    min_version: "{{ provider.capabilities.decisions.min_version }}"
+{% endif %}
+{% endtable %}
+{% if provider.capabilities.decisions.note.content %}<sup>{{ decisions_note_num }}</sup> {% if compare_provider %}**{{ include.variant_label }}:** {% endif %}{{ provider.capabilities.decisions.note.content }}{% endif %}
+{% if compare_provider.capabilities.decisions.note.content %}<sup>{{ compare_decisions_note_num }}</sup> **{{ include.compare_variant_label }}:** {{ compare_provider.capabilities.decisions.note.content }}{% endif %}
 {%- endif -%}
 
 ## {{ provider.name }} base URL
