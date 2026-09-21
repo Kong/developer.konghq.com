@@ -4,3 +4,4 @@ The Policy performs the transformations in the following order:
 1. [Replace](./reference/#schema--config-replace)
 1. [Add](./reference/#schema--config-add)
 1. [Append](./reference/#schema--config-append)
+1. [Allow](./reference/#schema--config-allow)

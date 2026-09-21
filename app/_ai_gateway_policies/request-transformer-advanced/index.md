@@ -1,5 +1,4 @@
 ---
-description: Use powerful regular expressions, variables, and templates to transform API requests
 min_version:
   ai-gateway: '2.0'
 works_on:
@@ -7,10 +6,6 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
-tags:
-  - transformations
-categories:
-  - transformations
 search_aliases:
   - request-transformer-advanced
 faqs:
@@ -27,7 +22,7 @@ related_resources:
 
 {% include md/ai-gateway/v2/policies/request-response-transformer/request-transformer-description.md %}
 
-The Request Transformer Advanced Policy provides features that aren't available in the [Request Transformer Policy](/ai-gateway/policies/request-transformer/), including the ability to limit the list of allowed parameters in the request body with the [config.allow.body](./reference/#schema--config-allow-body) parameter.
+The Request Transformer Advanced Policy provides features that aren't available in the [Request Transformer Policy](/ai-gateway/policies/request-transformer/), including the ability to limit the list of allowed parameters in the request body with the [`config.allow.body`](./reference/#schema--config-allow-body) parameter.
 
 ## Order of execution
 
@@ -45,7 +40,7 @@ The Request Transformer Advanced Policy provides features that aren't available 
 
 Body transformations are only performed for requests where the `Content-Type` header is set to `application/json`.
 
-## Example
+## Example: Define JSON fields a client can send and move query parameters
 
 Define which JSON body fields a client can send, then move a query parameter into the body before {{site.ai_gateway}} forwards the request upstream:
 

@@ -1,5 +1,4 @@
 ---
-description: Use regular expressions, variables, and templates to transform requests
 min_version:
   ai-gateway: '2.0'
 works_on:
@@ -7,10 +6,6 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
-tags:
-  - transformations
-categories:
-  - transformations
 search_aliases:
   - request-transformer
 related_resources:
@@ -34,7 +29,7 @@ For more advanced features, see the [Request Transformer Advanced Policy](/ai-ga
 
 {% include md/ai-gateway/v2/policies/request-response-transformer/templates.md %}
 
-## Example
+## Example: Remove Anthropic-specific beta fields
 
 A common use for this Policy in {{site.ai_gateway}} is removing headers, query string parameters, or body fields that a client sends but that a specific upstream AI Model Provider rejects. For example, a client that sends Anthropic-specific beta fields to a provider whose API doesn't support them:
 
