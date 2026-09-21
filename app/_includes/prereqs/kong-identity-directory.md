@@ -34,6 +34,9 @@ Look up an existing directory:
 url: /v2/directories
 status_code: 200
 method: GET
+extract_body:
+  - name: 'id'
+    variable: DIRECTORY_ID
 capture:
   - variable: DIRECTORY_ID
     jq: ".data[0].id"
