@@ -16,7 +16,7 @@ automated_tests: false
 tldr:
   q: How do I configure SAML SSO for Konnect with Microsoft Entra ID?
   a: |
-    Create a non-gallery enterprise application in Microsoft Entra ID, configure the SAML settings with your {{site.konnect_short_name}} organization ID and login path, and map the required user attributes and claims. Then configure the SAML authentication scheme in {{site.konnect_short_name}} Organization settings with the App Federation Metadata URL from Entra ID and enable SAML.
+    Get your {{site.konnect_short_name}} organization ID from the `/organizations/me` endpoint, then create a non-gallery enterprise application in Microsoft Entra ID, configure the SAML settings with that organization ID and your chosen login path, and map the required user attributes and claims. Then create a SAML identity provider using the `/identity-providers` endpoint with the App Federation Metadata URL from Entra ID, and enable SAML using the `/authentication-settings` endpoint.
 related_resources:
   - text: "{{site.konnect_short_name}} authentication"
     url: /konnect-platform/authentication/
@@ -29,8 +29,6 @@ prereqs:
     - title: Microsoft Entra ID
       content: |
         You need a Microsoft Entra account with the Cloud Application Administrator or Application Administrator role.
-
-        Copy your {{site.konnect_short_name}} organization ID from **{{site.konnect_short_name}} > Organization > Settings > General**.
 
         Create an enterprise application in Microsoft Entra ID:
 
@@ -62,16 +60,32 @@ sequenceDiagram
 {% endmermaid %}
 {% endcomment %}
 
-## Configure Basic SAML in Microsoft Entra
+## Get your organization ID
 
-Before configuring Basic SAML in Entra ID, decide on the login path you want to use for your {{site.konnect_short_name}} organization. You'll use this same value in both Entra ID and {{site.konnect_short_name}}.
+Before configuring Basic SAML in Entra ID, get your {{site.konnect_short_name}} organization ID, which you'll need to build the SAML values Entra ID expects. Send a `GET` request to the [`/organizations/me` endpoint](/api/konnect/identity/#/operations/get-organizations-me):
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /organizations/me
+method: GET
+status_code: 200
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Also decide on the login path you want to use for your {{site.konnect_short_name}} organization, and export it as an environment variable. You'll use this same value in both Entra ID and {{site.konnect_short_name}}:
+
+```sh
+export LOGIN_PATH='my-org'
+```
+
+## Configure Basic SAML in Microsoft Entra
 
 1. In the application, click **Single sign-on** in the sidebar.
 1. Select **SAML** as the single sign-on method.
 1. In the **Basic SAML Configuration** section, click **Edit**.
-1. In the **Identifier (Entity ID)** field, enter `https://cloud.konghq.com/sp/<your-organization-id>`.
-1. In the **Reply URL (Assertion Consumer Service URL)** field, enter `https://global.api.konghq.com/v2/authenticate/<your-login-path>/saml/acs`.
-1. In the **Sign on URL** field, enter `https://cloud.konghq.com/login/<your-login-path>`.
+1. In the **Identifier (Entity ID)** field, enter `https://cloud.konghq.com/sp/$KONNECT_ORG_ID`.
+1. In the **Reply URL (Assertion Consumer Service URL)** field, enter `https://global.api.konghq.com/v2/authenticate/$LOGIN_PATH/saml/acs`.
+1. In the **Sign on URL** field, enter `https://cloud.konghq.com/login/$LOGIN_PATH`.
 1. Click **Save**.
 
 ## Configure user attributes and claims in Microsoft Entra
@@ -84,38 +98,104 @@ Before configuring Basic SAML in Entra ID, decide on the login path you want to 
    1. Add a claim named `lastname` with source attribute `user.surname`.
    1. Add a claim named `email` with source attribute `user.mail`.
 1. Click **Save**.
-1. Copy the **App Federation Metadata URL** from the **SAML Certificates** section. You'll need this in the next section.
+1. Copy the **App Federation Metadata URL** from the **SAML Certificates** section, and export it as an environment variable. You'll need this in the next section:
+   ```sh
+   export APP_FEDERATION_METADATA_URL='YOUR-APP-FEDERATION-METADATA-URL'
+   ```
 
 {:.warning}
 > **Important:** Use the App Federation Metadata URL, not the tenant-level metadata URL. Using the tenant-level URL causes an invalid SAML response error due to a certificate mismatch.
 
 ## Configure SAML in {{site.konnect_short_name}}
 
-1. In the {{site.konnect_short_name}} sidebar, click **Organization**.
-1. Click the **Settings** tab.
-1. Click the **Authentication scheme** tab.
-1. On the **SAML** tile, click **Configure**.
-1. In the **IDP Metadata URL** field, enter the App Federation Metadata URL from Microsoft Entra ID.
-1. In the **Login Path** field, enter the login path you chose when configuring Entra ID (for example, `my-org`). {{site.konnect_short_name}} uses this to generate your organization's custom login URL: `https://cloud.konghq.com/login/<login-path>`.
-1. Click **Save**.
+Create the SAML identity provider using the App Federation Metadata URL from Microsoft Entra ID and the login path you chose earlier, by sending a `POST` request to the [`/identity-providers` endpoint](/api/konnect/identity/#/operations/create-identity-provider). {{site.konnect_short_name}} uses the login path to generate your organization's custom login URL: `https://cloud.konghq.com/login/$LOGIN_PATH`. Capture the identity provider's ID as `$IDP_ID`:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /identity-providers
+method: POST
+status_code: 201
+body:
+  type: saml
+  login_path: $LOGIN_PATH
+  config:
+    idp_metadata_url: $APP_FEDERATION_METADATA_URL
+capture:
+  - variable: IDP_ID
+    jq: '.id'
+{% endkonnect_api_request %}
+<!--vale on-->
 
 ## Configure team mappings in {{site.konnect_short_name}}
 
 [Team mappings](/konnect-platform/sso/#team-mapping-configuration) let you automatically assign {{site.konnect_short_name}} teams based on Entra ID group membership.
 
-1. Click the **Team mappings** tab.
-1. Select the **IdP Mapping Enabled** checkbox.
-1. For each team you want to map, enter the corresponding Entra ID group name in the **Group Name** field.
-1. Click **Save**.
+1. Turn on IdP mapping by sending a `PATCH` request to the [`/authentication-settings` endpoint](/api/konnect/identity/#/operations/update-authentication-settings):
+{% capture enable-idp-mapping %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /authentication-settings
+method: PATCH
+status_code: 200
+body:
+  idp_mapping_enabled: true
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{ enable-idp-mapping | indent: 3}}
+1. Create the {{site.konnect_short_name}} team you want to map to an Entra ID group, and capture its ID as `$TEAM_ID`, by sending a `POST` request to the [`/teams` endpoint](/api/konnect/identity/#/operations/create-team). If you already have a team to map, send a `GET` request to the [`/teams` endpoint](/api/konnect/identity/#/operations/list-teams) instead, filtered on its name, to look up its ID:
+{% capture create-team %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /teams
+method: POST
+status_code: 201
+body:
+  name: IDM - Developers
+  description: The Identity Management (IDM) team.
+capture:
+  - variable: TEAM_ID
+    jq: '.id'
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{ create-team | indent: 3}}
+1. Export the name of the Entra ID group you want to map to this team:
+   ```sh
+   export ENTRA_GROUP_NAME='YOUR-ENTRA-GROUP-NAME'
+   ```
+1. Map the Entra ID group to the team by sending a `POST` request to the [`/identity-providers/{idpId}/team-group-mappings` endpoint](/api/konnect/identity/#/operations/create-idp-team-group-mapping):
+{% capture create-team-mapping %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /identity-providers/$IDP_ID/team-group-mappings
+method: POST
+status_code: 201
+body:
+  team_id: $TEAM_ID
+  group: $ENTRA_GROUP_NAME
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{ create-team-mapping | indent: 3}}
+   Repeat this request for each additional team you want to map.
 
 ## Enable SAML in {{site.konnect_short_name}}
 
-1. Click the **Authentication scheme** tab.
-1. On the **SAML** tile, click the action menu icon.
-1. Click **Enable SAML**.
+Enable SAML as an authentication method for your organization by sending a `PATCH` request to the [`/authentication-settings` endpoint](/api/konnect/identity/#/operations/update-authentication-settings):
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /authentication-settings
+method: PATCH
+status_code: 200
+body:
+  saml_auth_enabled: true
+{% endkonnect_api_request %}
+<!--vale on-->
 
 ## Validate
 
-1. Navigate to your custom login URL: `https://cloud.konghq.com/login/<your-login-path>`.
+1. Navigate to your custom login URL: `https://cloud.konghq.com/login/$LOGIN_PATH`.
 1. You are redirected to the Microsoft Entra ID sign-in page.
 1. Log in with your Entra ID credentials. If the configuration is correct, you are authenticated into {{site.konnect_short_name}}.
