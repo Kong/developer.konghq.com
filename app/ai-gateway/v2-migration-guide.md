@@ -5,6 +5,7 @@ layout: reference
 
 works_on:
  - konnect
+ - on-prem
 
 products:
   - ai-gateway
