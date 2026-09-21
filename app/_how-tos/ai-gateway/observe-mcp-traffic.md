@@ -100,7 +100,7 @@ ai_gateway_mcp_servers:
           - admin
         deny: []
     config:
-      url: http://localhost:3001
+      url: http://host.docker.internal:3001/mcp
       route:
         paths:
           - /mcp
@@ -111,10 +111,6 @@ ai_gateway_mcp_servers:
         timeout: 60000
     tools:
       - name: list_users
-        description: List users
-        method: GET
-        path: /mcp/list_users
-        parameters: []
         access:
           acls:
             allow:
@@ -123,46 +119,24 @@ ai_gateway_mcp_servers:
             deny:
               - developer
       - name: get_user
-        description: Get user
-        method: GET
-        path: /mcp/get_user
-        parameters:
-          - name: id
-            in: query
-            required: false
-            schema:
-              type: string
-            description: Optional user ID
         access:
           acls:
             allow:
               - admin
               - developer
       - name: list_orders
-        description: List orders
-        method: GET
-        path: /mcp/list_orders
-        parameters: []
         access:
           acls:
             allow:
               - admin
               - developer
       - name: list_orders_for_user
-        description: List orders for a user
-        method: GET
-        path: /mcp/list_orders_for_user
-        parameters: []
         access:
           acls:
             allow:
               - admin
               - developer
       - name: search_orders
-        description: Search orders by name (case-insensitive substring)
-        method: GET
-        path: /mcp/search_orders
-        parameters: []
         access:
           acls:
             allow:
@@ -189,6 +163,8 @@ headers:
   - 'Content-Type: application/json'
   - 'Accept: application/json, text/event-stream'
   - 'MCP-Protocol-Version: 2026-07-28'
+  - 'Mcp-Method: tools/call'
+  - 'Mcp-Name: list_orders'
   - 'apikey: $ALICE_API_KEY'
 body:
   jsonrpc: '2.0'
@@ -197,6 +173,9 @@ body:
   params:
     name: "list_orders"
     arguments: {}
+    _meta:
+      'io.modelcontextprotocol/protocolVersion': '2026-07-28'
+      'io.modelcontextprotocol/clientCapabilities': {}
 {% endvalidation %}
 <!-- vale on -->
 {% endcapture %}
@@ -215,6 +194,8 @@ headers:
   - 'Content-Type: application/json'
   - 'Accept: application/json, text/event-stream'
   - 'MCP-Protocol-Version: 2026-07-28'
+  - 'Mcp-Method: tools/call'
+  - 'Mcp-Name: list_users'
   - 'apikey: $BOB_API_KEY'
 body:
   jsonrpc: '2.0'
@@ -223,6 +204,9 @@ body:
   params:
     name: "list_users"
     arguments: {}
+    _meta:
+      'io.modelcontextprotocol/protocolVersion': '2026-07-28'
+      'io.modelcontextprotocol/clientCapabilities': {}
 {% endvalidation %}
 <!-- vale on -->
 {% endcapture %}
@@ -241,7 +225,7 @@ expected:
 render_output: false
 {% endvalidation %}
 
-You should see one `rpc` entry and one `audit` entry per call. Alice's allowed `list_orders` call looks like:
+An allowed call produces both an `rpc` entry and an `audit` entry; a denied call produces only an `audit` entry. Alice's allowed `list_orders` call looks like:
 
 ```json
 {
@@ -273,22 +257,14 @@ You should see one `rpc` entry and one `audit` entry per call. Alice's allowed `
   }
 }
 ```
-{:.collapsible .no-copy-code}
+{:.no-copy-code}
 
-Bob's denied `list_users` call looks like:
+Bob's denied `list_users` call has no `rpc` entry at all, only the `audit` entry recording the ACL decision:
 
 ```json
 {
   "ai": {
     "mcp": {
-      "rpc": [
-        {
-          "method": "tools/call",
-          "id": "1",
-          "tool_name": "list_users",
-          "error": "HTTP 403 Forbidden"
-        }
-      ],
       "audit": [
         {
           "primitive_name": "list_users",
@@ -306,7 +282,7 @@ Bob's denied `list_users` call looks like:
   }
 }
 ```
-{:.collapsible .no-copy-code}
+{:.no-copy-code}
 
 {:.success}
 > **MCP traffic in {{site.konnect_short_name}}**

@@ -53,6 +53,17 @@ tldr:
 tools:
   - kongctl
 
+faqs:
+  - q: Why doesn't a `2026-07-28` client perform an `initialize` handshake or receive an `Mcp-Session-Id`?
+    a: |
+      The [`2026-07-28` MCP revision](/ai-gateway/mcp-version-support/#2026-07-28) removes the session concept entirely. Every request is self-contained: it declares its protocol revision through the `MCP-Protocol-Version` header and carries the AI Consumer's API key in the `apikey` header, instead of relying on state established during a prior handshake.
+  - q: Why does every `2026-07-28` request body need a `params._meta` envelope?
+    a: |
+      The [stateless `2026-07-28` base protocol](https://modelcontextprotocol.io/specification/2026-07-28/basic#_meta) requires every request body to repeat the protocol version, plus the calling client's capabilities, in a `params._meta` envelope, since the server can't infer either from a prior handshake.
+  - q: Why do `2026-07-28` requests need `Mcp-Method` and `Mcp-Name` headers?
+    a: |
+      The [Streamable HTTP transport](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http#request-metadata) mirrors the body's `method` into an `Mcp-Method` header on every request, and its `params.name` into an `Mcp-Name` header on `tools/call` requests specifically. A header that doesn't match the body is rejected with `HTTP 400` and JSON-RPC error `-32020`.
+
 prereqs:
   inline:
     - title: Mock API Server
@@ -67,23 +78,264 @@ prereqs:
         * `list_orders_for_user`
         * `search_orders`
 
-        These tools operate on in-memory marketplace data, allowing you to test MCP behavior without connecting to a real backend.
+        These tools operate on in-memory marketplace data, allowing you to test MCP behavior without connecting to a real backend. It's built on the [MCP TypeScript SDK v2](https://github.com/modelcontextprotocol/typescript-sdk), so it speaks the stateless `2026-07-28` revision this guide validates against.
 
-        Run the following command to clone the repository, install dependencies, build the server, and start it:
+        1. Create a project directory for the mock server:
 
-        ```bash
-        git clone https://github.com/tomek-labuk/marketplace-acl.git && \
-        cd marketplace-acl && \
-        npm install && \
-        npm run build && \
-        node dist/server.js
-        ```
+           ```bash
+           mkdir marketplace-mcp && cd marketplace-mcp
+           ```
 
-        When the server starts, it listens at:
+        1. Set up the package manifest:
 
-        ```
-        http://localhost:3001/mcp
-        ```
+           ```bash
+           cat <<'EOF' > package.json
+           {
+             "name": "sample-users-mcp-server",
+             "version": "2.0.0",
+             "private": true,
+             "type": "module",
+             "scripts": {
+               "build": "tsc -p tsconfig.json",
+               "start": "node --enable-source-maps ./dist/server.js"
+             },
+             "dependencies": {
+               "@modelcontextprotocol/server": "^2.0.0",
+               "@modelcontextprotocol/express": "^2.0.0",
+               "@modelcontextprotocol/node": "^2.0.0",
+               "express": "^4.19.2",
+               "zod": "^4.2.0"
+             },
+             "devDependencies": {
+               "@types/express": "^5.0.5",
+               "@types/node": "^24.9.2",
+               "typescript": "^5.6.3"
+             }
+           }
+           EOF
+           ```
+           {:.collapsible}
+
+        1. Add a `tsconfig.json`:
+
+           ```bash
+           cat <<'EOF' > tsconfig.json
+           {
+             "compilerOptions": {
+               "target": "ES2022",
+               "module": "ESNext",
+               "moduleResolution": "Bundler",
+               "strict": true,
+               "esModuleInterop": true,
+               "forceConsistentCasingInFileNames": true,
+               "outDir": "dist",
+               "skipLibCheck": true,
+               "types": ["node"]
+             },
+             "include": ["src"]
+           }
+           EOF
+           ```
+           {:.collapsible}
+
+        1. Add the server itself:
+
+           ```bash
+           mkdir src
+           cat <<'EOF' > src/server.ts
+           import { createMcpExpressApp } from '@modelcontextprotocol/express';
+           import { toNodeHandler } from '@modelcontextprotocol/node';
+           import { createMcpHandler, McpServer } from '@modelcontextprotocol/server';
+           import * as z from 'zod/v4';
+
+           // -------------------- In-memory data --------------------
+           const users: Record<string, string> = {
+             a1b2c3d4: "Alice Johnson",
+             e5f6g7h8: "Bob Smith",
+             i9j0k1l2: "Charlie Lee",
+             m3n4o5p6: "Diana Evans",
+             q7r8s9t0: "Ethan Brown",
+             u1v2w3x4: "Fiona Clark",
+             y5z6a7b8: "George Harris",
+             c9d0e1f2: "Hannah Lewis",
+             g3h4i5j6: "Ian Walker",
+             k7l8m9n0: "Julia Turner"
+           };
+
+           type Order = { id: string; name: string; userId: string };
+           const orders: Order[] = [
+             { id: "ord001", name: "Sugar (50kg)", userId: "a1b2c3d4" },
+             { id: "ord002", name: "Cleaning Supplies Pack", userId: "a1b2c3d4" },
+             { id: "ord003", name: "Canned Tomatoes (100 cans)", userId: "a1b2c3d4" },
+             { id: "ord004", name: "Flour (100kg)", userId: "e5f6g7h8" },
+             { id: "ord005", name: "Dish Soap (10 bottles)", userId: "e5f6g7h8" },
+             { id: "ord006", name: "Salt (25kg)", userId: "e5f6g7h8" },
+             { id: "ord007", name: "Olive Oil (20L)", userId: "i9j0k1l2" },
+             { id: "ord008", name: "Baking Powder (10kg)", userId: "i9j0k1l2" },
+             { id: "ord009", name: "Rice (200kg)", userId: "m3n4o5p6" },
+             { id: "ord010", name: "Vegetable Oil (15L)", userId: "m3n4o5p6" },
+             { id: "ord011", name: "Pasta (80kg)", userId: "m3n4o5p6" },
+             { id: "ord012", name: "Canned Beans (50 cans)", userId: "m3n4o5p6" },
+             { id: "ord013", name: "Toilet Paper (Case of 48)", userId: "q7r8s9t0" },
+             { id: "ord014", name: "Hand Sanitizer (20 bottles)", userId: "q7r8s9t0" },
+             { id: "ord015", name: "Laundry Detergent (10L)", userId: "u1v2w3x4" },
+             { id: "ord016", name: "Trash Bags (100 ct)", userId: "u1v2w3x4" },
+             { id: "ord017", name: "Disinfectant Spray (5 bottles)", userId: "u1v2w3x4" },
+             { id: "ord018", name: "Coffee Beans (30kg)", userId: "k7l8m9n0" },
+             { id: "ord019", name: "Tea Bags (500ct)", userId: "k7l8m9n0" },
+             { id: "ord020", name: "Condensed Milk (40 cans)", userId: "k7l8m9n0" },
+             { id: "ord021", name: "Paper Towels (24 rolls)", userId: "g3h4i5j6" },
+             { id: "ord022", name: "Broom & Mop Set", userId: "g3h4i5j6" },
+             { id: "ord023", name: "Cereal (20 boxes)", userId: "c9d0e1f2" },
+             { id: "ord024", name: "Powdered Milk (10kg)", userId: "c9d0e1f2" },
+             { id: "ord025", name: "Snacks Variety Pack", userId: "c9d0e1f2" },
+             { id: "ord026", name: "Cooking Gas Cylinder", userId: "y5z6a7b8" },
+             { id: "ord027", name: "Napkins (1000ct)", userId: "y5z6a7b8" }
+           ];
+
+           // -------------------- MCP Server --------------------
+           const handler = createMcpHandler(
+             () => {
+               const server = new McpServer({ name: "sample-users-mcp", version: "2.0.0" });
+
+               server.registerTool(
+                 "list_users",
+                 {
+                   description: "List all users (id, fullName).",
+                   inputSchema: z.object({}),
+                   outputSchema: z.object({
+                     users: z.array(z.object({ id: z.string(), fullName: z.string() }))
+                   })
+                 },
+                 async () => {
+                   const list = Object.entries(users).map(([id, fullName]) => ({ id, fullName }));
+                   const output = { users: list };
+                   return {
+                     content: [{ type: "text", text: JSON.stringify(output, null, 2) }],
+                     structuredContent: output
+                   };
+                 }
+               );
+
+               server.registerTool(
+                 "get_user",
+                 {
+                   description: "Get a single user by id.",
+                   inputSchema: z.object({ id: z.string() }),
+                   outputSchema: z.object({
+                     found: z.boolean(),
+                     user: z.object({ id: z.string(), fullName: z.string() }).nullable()
+                   })
+                 },
+                 async ({ id }) => {
+                   const fullName = users[id];
+                   const output = fullName != null
+                     ? { found: true, user: { id, fullName } }
+                     : { found: false, user: null };
+                   return {
+                     content: [{ type: "text", text: JSON.stringify(output, null, 2) }],
+                     structuredContent: output
+                   };
+                 }
+               );
+
+               server.registerTool(
+                 "list_orders",
+                 {
+                   description: "List all orders.",
+                   inputSchema: z.object({}),
+                   outputSchema: z.object({
+                     orders: z.array(z.object({ id: z.string(), name: z.string(), userId: z.string() }))
+                   })
+                 },
+                 async () => {
+                   const output = { orders };
+                   return {
+                     content: [{ type: "text", text: JSON.stringify(output, null, 2) }],
+                     structuredContent: output
+                   };
+                 }
+               );
+
+               server.registerTool(
+                 "list_orders_for_user",
+                 {
+                   description: "List orders by userId.",
+                   inputSchema: z.object({ userId: z.string() }),
+                   outputSchema: z.object({
+                     userExists: z.boolean(),
+                     orders: z.array(z.object({ id: z.string(), name: z.string(), userId: z.string() }))
+                   })
+                 },
+                 async ({ userId }) => {
+                   const exists = users[userId] != null;
+                   const userOrders = exists ? orders.filter((o) => o.userId === userId) : [];
+                   const output = { userExists: exists, orders: userOrders };
+                   return {
+                     content: [{ type: "text", text: JSON.stringify(output, null, 2) }],
+                     structuredContent: output
+                   };
+                 }
+               );
+
+               server.registerTool(
+                 "search_orders",
+                 {
+                   description: "Search orders by name (case-insensitive substring).",
+                   inputSchema: z.object({ q: z.string().min(1) }),
+                   outputSchema: z.object({
+                     count: z.number(),
+                     results: z.array(z.object({ id: z.string(), name: z.string(), userId: z.string() }))
+                   })
+                 },
+                 async ({ q }) => {
+                   const needle = q.toLowerCase();
+                   const results = orders.filter((o) => o.name.toLowerCase().includes(needle));
+                   const output = { count: results.length, results };
+                   return {
+                     content: [{ type: "text", text: JSON.stringify(output, null, 2) }],
+                     structuredContent: output
+                   };
+                 }
+               );
+
+               return server;
+             },
+             { responseMode: 'json' }
+           );
+
+           // -------------------- HTTP wiring --------------------
+           // Bind to every interface and allow the Host header Kong's dataplane container
+           // sends (host.docker.internal) so the containerized gateway can reach this process.
+           const app = createMcpExpressApp({
+             host: '0.0.0.0',
+             allowedHosts: ['localhost', '127.0.0.1', 'host.docker.internal']
+           });
+
+           const node = toNodeHandler(handler);
+           app.all('/mcp', (req, res) => void node(req, res, req.body));
+
+           const PORT = parseInt(process.env.PORT || "3001", 10);
+           app.listen(PORT, '0.0.0.0', () => {
+             console.log(`MCP Server (Streamable HTTP, 2026-07-28) listening at http://localhost:${PORT}/mcp`);
+           });
+           EOF
+           ```
+           {:.collapsible}
+
+        1. Install dependencies, build, and start the server:
+
+           ```bash
+           npm install && \
+           npm run build && \
+           npm start
+           ```
+
+           When the server starts, it listens at:
+
+           ```
+           http://localhost:3001/mcp
+           ```
       icon_url: /assets/icons/github.svg
 
 cleanup:
@@ -92,24 +344,6 @@ cleanup:
       include_content: cleanup/products/ai-gateway
       icon_url: '/assets/icons/ai-gateway.svg'
 ---
-
-## Create an AI Auth Strategy
-
-Create a `key-auth` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) so each AI Consumer presents their key in the `apikey` header:
-
-{% entity_examples %}
-ai_gateway_auth_strategies:
-  - ref: my-key-auth
-    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
-    name: my-key-auth
-    display_name: "my-key-auth"
-    type: key-auth
-    config:
-      key_names:
-        - apikey
-      key_in_header: true
-      key_in_query: false
-{% endentity_examples %}
 
 ## Create AI Consumer Groups for each usage tier
 
@@ -140,7 +374,7 @@ ai_gateway_consumer_groups:
 
 ## Create AI Consumers
 
-1. Configure individual AI Consumers. Each one inherits the ACL rules of its group, and Eason, who belongs to no group, is only reachable through the tool-level ACLs you'll set in the next section:
+1. Configure individual AI Consumers and add them to their groups. Each one inherits the ACL rules of its group, and Eason, who belongs to no group, is only reachable through the tool-level ACLs you'll set in the next section:
 
 {% capture consumers %}
 {% entity_examples %}
@@ -169,15 +403,6 @@ ai_gateway_consumers:
     name: eason
     type: api-key
     policies: []
-{% endentity_examples %}
-{% endcapture %}
-
-{{ consumers | indent }}
-
-1. Add each AI Consumer to its group:
-
-{% capture consumer_groups %}
-{% entity_examples %}
 ai_gateway_consumer_groups:
   - ref: admin
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
@@ -203,7 +428,16 @@ ai_gateway_consumer_groups:
 {% endentity_examples %}
 {% endcapture %}
 
-{{ consumer_groups | indent }}
+{{ consumers | indent }}
+
+1. Export each AI Consumer's ID as an environment variable using `kongctl get`. The credential requests that follow identify each consumer by ID, not by name:
+
+   ```bash
+   export ALICE_ID=$(kongctl get ai-gateway consumers --gateway-id "$AI_GATEWAY_ID" alice --output json --jq '.id' -r)
+   export BOB_ID=$(kongctl get ai-gateway consumers --gateway-id "$AI_GATEWAY_ID" bob --output json --jq '.id' -r)
+   export CAROL_ID=$(kongctl get ai-gateway consumers --gateway-id "$AI_GATEWAY_ID" carol --output json --jq '.id' -r)
+   export EASON_ID=$(kongctl get ai-gateway consumers --gateway-id "$AI_GATEWAY_ID" eason --output json --jq '.id' -r)
+   ```
 
 1. Create an API key credential for Alice, and save the generated key. {{site.ai_gateway}} generates the key value; it isn't set by you and can't be retrieved again after this step:
 
@@ -220,6 +454,9 @@ body:
   display_name: Alice key
   name: alice-key
   type: api-key
+extract_body:
+  - name: 'api_key'
+    variable: ALICE_API_KEY
 capture:
   - variable: ALICE_API_KEY
     command: "jq -r '.api_key'"
@@ -244,6 +481,9 @@ body:
   display_name: Bob key
   name: bob-key
   type: api-key
+extract_body:
+  - name: 'api_key'
+    variable: BOB_API_KEY
 capture:
   - variable: BOB_API_KEY
     command: "jq -r '.api_key'"
@@ -268,6 +508,9 @@ body:
   display_name: Carol key
   name: carol-key
   type: api-key
+extract_body:
+  - name: 'api_key'
+    variable: CAROL_API_KEY
 capture:
   - variable: CAROL_API_KEY
     command: "jq -r '.api_key'"
@@ -292,6 +535,9 @@ body:
   display_name: Eason key
   name: eason-key
   type: api-key
+extract_body:
+  - name: 'api_key'
+    variable: EASON_API_KEY
 capture:
   - variable: EASON_API_KEY
     command: "jq -r '.api_key'"
@@ -303,7 +549,7 @@ capture:
 
 ## Configure the AI MCP Server
 
-Configure the AI MCP Server to apply tool-level access rules. The AI MCP Server controls which AI Consumers can see or call each MCP tool. Access is determined by AI Consumer Groups and individual AI Consumers using `allow` and `deny` lists. A tool ACL replaces the default rule when present.
+Configure the [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) to apply tool-level access rules. The AI MCP Server controls which AI Consumers can see or call each MCP tool. Access is determined by AI Consumer Groups and individual AI Consumers using `allow` and `deny` lists. A tool ACL replaces the default rule when present.
 
 The following table shows the effective permissions for this configuration:
 
@@ -349,9 +595,22 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-Apply the following configuration to configure the ACL rules for the MCP tools:
+Apply the following configuration to configure:
+* A `key-auth` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) so each AI Consumer presents their key in the `apikey` header
+* The AI MCP Servers and their ACL rules
 
 {% entity_examples %}
+ai_gateway_auth_strategies:
+  - ref: my-key-auth
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: my-key-auth
+    display_name: "my-key-auth"
+    type: key-auth
+    config:
+      key_names:
+        - apikey
+      key_in_header: true
+      key_in_query: false
 ai_gateway_mcp_servers:
   - ref: marketplace-mcp
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
@@ -371,7 +630,7 @@ ai_gateway_mcp_servers:
           - admin
         deny: []
     config:
-      url: http://localhost:3001
+      url: http://host.docker.internal:3001/mcp
       route:
         paths:
           - /mcp
@@ -381,10 +640,6 @@ ai_gateway_mcp_servers:
         timeout: 60000
     tools:
       - name: list_users
-        description: List users
-        method: GET
-        path: /mcp/list_users
-        parameters: []
         access:
           acls:
             allow:
@@ -393,46 +648,24 @@ ai_gateway_mcp_servers:
             deny:
               - developer
       - name: get_user
-        description: Get user
-        method: GET
-        path: /mcp/get_user
-        parameters:
-          - name: id
-            in: query
-            required: false
-            schema:
-              type: string
-            description: Optional user ID
         access:
           acls:
             allow:
               - admin
               - developer
       - name: list_orders
-        description: List orders
-        method: GET
-        path: /mcp/list_orders
-        parameters: []
         access:
           acls:
             allow:
               - admin
               - developer
       - name: list_orders_for_user
-        description: List orders for a user
-        method: GET
-        path: /mcp/list_orders_for_user
-        parameters: []
         access:
           acls:
             allow:
               - admin
               - developer
       - name: search_orders
-        description: Search orders by name (case-insensitive substring)
-        method: GET
-        path: /mcp/search_orders
-        parameters: []
         access:
           acls:
             allow:
@@ -448,9 +681,6 @@ ai_gateway_mcp_servers:
 
 Validate the ACL rules by calling `tools/list` directly against the route for each AI Consumer.
 
-{:.info}
-> Clients using the [`2026-07-28` MCP version](/ai-gateway/mcp-version-support/#2026-07-28) don't perform an `initialize` handshake, and {{site.ai_gateway}} doesn't issue an `Mcp-Session-Id`. Every request declares its protocol revision through the `MCP-Protocol-Version` header and carries the AI Consumer's API key in the `apikey` header. 
-
 1. Check that Alice (`admin` group) sees every tool:
 
 {% capture alice_list %}
@@ -463,12 +693,17 @@ headers:
   - 'Content-Type: application/json'
   - 'Accept: application/json, text/event-stream'
   - 'MCP-Protocol-Version: 2026-07-28'
+  - 'Mcp-Method: tools/list'
   - 'apikey: $ALICE_API_KEY'
 display_headers: true
 body:
   jsonrpc: '2.0'
   id: 1
   method: tools/list
+  params:
+    _meta:
+      'io.modelcontextprotocol/protocolVersion': '2026-07-28'
+      'io.modelcontextprotocol/clientCapabilities': {}
 {% endvalidation %}
 <!-- vale on -->
 {% endcapture %}
@@ -487,6 +722,8 @@ headers:
   - 'Content-Type: application/json'
   - 'Accept: application/json, text/event-stream'
   - 'MCP-Protocol-Version: 2026-07-28'
+  - 'Mcp-Method: tools/call'
+  - 'Mcp-Name: search_orders'
   - 'apikey: $ALICE_API_KEY'
 body:
   jsonrpc: '2.0'
@@ -494,7 +731,11 @@ body:
   method: tools/call
   params:
     name: "search_orders"
-    arguments: {}
+    arguments:
+      q: "rice"
+    _meta:
+      'io.modelcontextprotocol/protocolVersion': '2026-07-28'
+      'io.modelcontextprotocol/clientCapabilities': {}
 {% endvalidation %}
 <!-- vale on -->
 {% endcapture %}
@@ -513,12 +754,17 @@ headers:
   - 'Content-Type: application/json'
   - 'Accept: application/json, text/event-stream'
   - 'MCP-Protocol-Version: 2026-07-28'
+  - 'Mcp-Method: tools/list'
   - 'apikey: $BOB_API_KEY'
 display_headers: true
 body:
   jsonrpc: '2.0'
   id: 1
   method: tools/list
+  params:
+    _meta:
+      'io.modelcontextprotocol/protocolVersion': '2026-07-28'
+      'io.modelcontextprotocol/clientCapabilities': {}
 {% endvalidation %}
 <!-- vale on -->
 {% endcapture %}
@@ -537,6 +783,8 @@ headers:
   - 'Content-Type: application/json'
   - 'Accept: application/json, text/event-stream'
   - 'MCP-Protocol-Version: 2026-07-28'
+  - 'Mcp-Method: tools/call'
+  - 'Mcp-Name: list_users'
   - 'apikey: $BOB_API_KEY'
 body:
   jsonrpc: '2.0'
@@ -545,6 +793,9 @@ body:
   params:
     name: "list_users"
     arguments: {}
+    _meta:
+      'io.modelcontextprotocol/protocolVersion': '2026-07-28'
+      'io.modelcontextprotocol/clientCapabilities': {}
 {% endvalidation %}
 <!-- vale on -->
 {% endcapture %}
@@ -565,6 +816,8 @@ headers:
   - 'Content-Type: application/json'
   - 'Accept: application/json, text/event-stream'
   - 'MCP-Protocol-Version: 2026-07-28'
+  - 'Mcp-Method: tools/call'
+  - 'Mcp-Name: list_orders'
   - 'apikey: $CAROL_API_KEY'
 body:
   jsonrpc: '2.0'
@@ -573,6 +826,9 @@ body:
   params:
     name: "list_orders"
     arguments: {}
+    _meta:
+      'io.modelcontextprotocol/protocolVersion': '2026-07-28'
+      'io.modelcontextprotocol/clientCapabilities': {}
 {% endvalidation %}
 <!-- vale on -->
 {% endcapture %}
@@ -593,12 +849,17 @@ headers:
   - 'Content-Type: application/json'
   - 'Accept: application/json, text/event-stream'
   - 'MCP-Protocol-Version: 2026-07-28'
+  - 'Mcp-Method: tools/list'
   - 'apikey: $EASON_API_KEY'
 display_headers: true
 body:
   jsonrpc: '2.0'
   id: 1
   method: tools/list
+  params:
+    _meta:
+      'io.modelcontextprotocol/protocolVersion': '2026-07-28'
+      'io.modelcontextprotocol/clientCapabilities': {}
 {% endvalidation %}
 <!-- vale on -->
 {% endcapture %}

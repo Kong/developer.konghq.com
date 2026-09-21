@@ -602,8 +602,15 @@ rows:
       The ID of the MCP session. A session can contain multiple requests. Only present for `2025-06-18` and `2025-11-25` traffic. 
       
       {% new_in 2.1 %} `2026-07-28` removes the session concept, so this field is absent for that traffic.
+  - property: "`ai.mcp.mcp_server_id` {% new_in 2.1 %}"
+    description: The UUID of the AI MCP Server entity that handled the request.
+  - property: "`ai.mcp.protocol_version` {% new_in 2.1 %}"
+    description: "The negotiated MCP protocol revision for the request (for example, `2026-07-28`)."
   - property: "`ai.mcp.rpc`"
-    description: An array of recorded JSON-RPC requests. Only JSON-RPC traffic is logged.
+    description: |
+      An array of recorded JSON-RPC requests. Only JSON-RPC traffic is logged.
+
+      A call denied by an access control rule doesn't produce an `rpc` entry at all, since the runtime rejects it before dispatching the request as an RPC. Only the `ai.mcp.audit` entry records a denied call.
   - property: "`ai.mcp.rpc[].id`"
     description: The ID of the JSON-RPC request. Not all JSON-RPC requests have an ID.
   - property: "`ai.mcp.rpc[].latency`"
@@ -805,12 +812,14 @@ The following example shows an MCP log entry for `2025-06-18` or `2025-11-25` tr
 
 
 
-{% new_in 2.1 %} `2026-07-28` traffic has no session concept, so there's no `mcp_session_id` field, and `tool_name` comes from the `Mcp-Name` header instead of the JSON-RPC body:
+{% new_in 2.1 %} `2026-07-28` traffic has no session concept, so there's no `mcp_session_id` field, and `tool_name` comes from the `Mcp-Name` header instead of the JSON-RPC body. An allowed call produces both an `rpc` entry and an `audit` entry:
 
 ```json
 {
   "ai": {
     "mcp": {
+      "mcp_server_id": "1da5a575-20a4-402a-85b4-ffc19f4c3e4a",
+      "protocol_version": "2026-07-28",
       "rpc": [
         {
           "method": "tools/call",
@@ -831,6 +840,32 @@ The following example shows an MCP log entry for `2025-06-18` or `2025-11-25` tr
           "scope": "primitive",
           "primitive": "tool",
           "action": "allow"
+        }
+      ]
+    }
+  }
+}
+```
+
+A call denied by an access control rule has no `rpc` entry, only the `audit` entry recording the decision:
+
+```json
+{
+  "ai": {
+    "mcp": {
+      "mcp_server_id": "1da5a575-20a4-402a-85b4-ffc19f4c3e4a",
+      "protocol_version": "2026-07-28",
+      "audit": [
+        {
+          "primitive_name": "list_users",
+          "consumer": {
+            "id": "b2f6a2b1-6a15-4e3f-9e0b-6a2f7a1c9d10",
+            "name": "developer",
+            "identifier": "consumer_group"
+          },
+          "scope": "primitive",
+          "primitive": "tool",
+          "action": "deny"
         }
       ]
     }
