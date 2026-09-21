@@ -646,6 +646,99 @@ RSpec.describe Jekyll::RenderPolicyYaml do
     end
   end
 
+  describe 'BackendRefTransform key emission (v3 non-legacy refs)' do
+    let(:page) { page_with('3.0') }
+
+    let(:template) do
+      <<~LIQUID
+        {% policy_yaml %}
+        ```yaml
+        type: MeshTCPRoute
+        mesh: default
+        name: frontend-to-backend
+        spec:
+          to:
+            - targetRef:
+                kind: Mesh
+              rules:
+                - default:
+                    backendRefs:
+                      - kind: MeshService
+                        labels:
+                          kuma.io/display-name: backend
+                        port: 5432
+                    filters:
+                      - type: RequestMirror
+                        requestMirror:
+                          backendRef:
+                            kind: MeshService
+                            labels:
+                              kuma.io/display-name: backend-replica
+                            port: 8080
+        ```
+        {% endpolicy_yaml %}
+      LIQUID
+    end
+
+    it 'passes labels-based backendRefs through unchanged, with no empty name keys' do
+      html = render(template)
+
+      expect(yaml_text(html, 'kubernetes')).to eq(<<~YAML.strip)
+        apiVersion: kuma.io/v1alpha1
+        kind: MeshTCPRoute
+        metadata:
+          name: frontend-to-backend
+          namespace: kong-mesh-system
+          labels:
+            kuma.io/mesh: default
+        spec:
+          to:
+          - targetRef:
+              kind: Mesh
+            rules:
+            - default:
+                backendRefs:
+                - kind: MeshService
+                  labels:
+                    kuma.io/display-name: backend
+                  port: 5432
+                filters:
+                - type: RequestMirror
+                  requestMirror:
+                    backendRef:
+                      kind: MeshService
+                      labels:
+                        kuma.io/display-name: backend-replica
+                      port: 8080
+      YAML
+
+      expect(yaml_text(html, 'universal')).to eq(<<~YAML.strip)
+        type: MeshTCPRoute
+        mesh: default
+        name: frontend-to-backend
+        spec:
+          to:
+          - targetRef:
+              kind: Mesh
+            rules:
+            - default:
+                backendRefs:
+                - kind: MeshService
+                  labels:
+                    kuma.io/display-name: backend
+                  port: 5432
+                filters:
+                - type: RequestMirror
+                  requestMirror:
+                    backendRef:
+                      kind: MeshService
+                      labels:
+                        kuma.io/display-name: backend-replica
+                      port: 8080
+      YAML
+    end
+  end
+
   describe 'tools= param' do
     let(:template) do
       <<~LIQUID
