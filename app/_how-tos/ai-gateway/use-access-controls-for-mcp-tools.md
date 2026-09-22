@@ -83,11 +83,12 @@ cleanup:
 ## Create AI Consumer Groups for each access tier
 
 Configure three different [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) that reflect access levels:
-
 - `admin`: Full access, including destructive tools
 - `support`: Read-only access to pet and store data
 - `suspended`: Blocked from MCP tools
+
 These groups govern MCP tool permissions.
+
 {% entity_examples %}
 ai_gateway_consumer_groups:
   - ref: admin
@@ -203,6 +204,7 @@ capture:
 {% endcapture %}
 
 {{ alice_credential | indent }}
+    
     {:.warning}
     > If this fails with a `405` error, log in with `kongctl login` and export the AI Consumer IDs again.
 

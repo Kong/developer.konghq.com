@@ -204,7 +204,6 @@ ai_gateway_mcp_servers:
             schema:
               type: integer
 {% endentity_examples %}
-{:.collapsible}
 
 ## Generate MCP traffic
 
