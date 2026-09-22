@@ -30,9 +30,8 @@ rows:
                   text: |
                     AI agents are only as good as the context they can reach. {{site.context_mesh}} exposes REST APIs and existing MCP servers to AI agents as a single Code Mode MCP server. It is the mediation layer between agents and your APIs. Agent traffic to those APIs passes through the same path as the rest of your API traffic, so the policies and observability you already apply continue to apply.
 
-                    Agents cannot call most APIs directly. Each one requires either a custom SDK or prior training on that specific API, and neither approach scales when an organization runs dozens of internal APIs that change over time. {{site.context_mesh}} closes that gap. Given an OpenAPI specification, it produces an MCP server that agents call without per-agent integration code.
-
-                    Adding existing MCP servers as sources allows AI agents to access a broader range of enterprise context without requiring direct integration with each individual server. You can then centralize and customize the management and exposure of these sources through {{site.context_mesh}}.
+                    Agents cannot call most APIs directly and most MCP servers would require an integration with each individual server. 
+                    {{site.context_mesh}} closes that gap by allowing agents to call the {{site.context_mesh}} MCP server without per-agent integration code.
 
                     {{site.context_mesh}} is the mediation layer between agents and APIs that runs on {{site.base_gateway}} to complement [{{site.ai_gateway}}](/ai-gateway/).
 
@@ -87,7 +86,7 @@ rows:
       type: h2
       description: |
         Walk through creating a Code Mode MCP server from an OpenAPI specification, deploying it, and calling it from an MCP client.
-    column_count: 2
+    column_count: 3
     columns:
       - blocks:
         - type: card
@@ -103,39 +102,22 @@ rows:
       text: "Common usage patterns"
       type: h2
       description: |
-        What an agent can do depends on the sources you add to {{site.context_mesh}}. Every pattern uses the same setup flow, covered in [Get started with {{site.context_mesh}}](/context-mesh/get-started/).
+        What an agent can do depends on the sources you add to {{site.context_mesh}}. 
     columns:
       - blocks:
-        - type: table
-          config:
-            columns:
-              - title: Use case
-                key: use_case
-              - title: Sources you add
-                key: sources
-              - title: How you configure the MCP server
-                key: configuration
-              - title: What the agent can do
-                key: outcome
-            rows:
-              - use_case: "**Expose a single internal API**"
-                sources: |
-                  One OpenAPI specification that you either:
-                  * Import from the {{site.konnect_short_name}} API catalog.
-                  * Upload directly as an OpenAPI Specification (OAS) v3.0 file.
-                outcome: "Call any operation in that API through a single Code Mode MCP server, with no per-agent integration code."
-                configuration: "Add the source to the MCP server."
-              - use_case: "**Compose multiple APIs**"
-                sources: |
-                  Several OpenAPI specifications that you either:
-                  * Import from the {{site.konnect_short_name}} API catalog as a single source.
-                  * Upload directly as an OpenAPI Specification (OAS) v3.0 file, each one as its own source.
-                configuration: "Add a single source containing multiple API specifications, or add multiple sources to the MCP server."
-                outcome: "Complete a task that spans the APIs, choosing which operations to call and in what order."
-              - use_case: "**Combine APIs with existing MCP servers**"
-                sources: "OpenAPI specifications alongside existing MCP servers."
-                configuration: "Add the OpenAPI specifications and existing MCP servers as sources to the MCP server."
-                outcome: "Reach your APIs and your existing MCP tooling through one endpoint, governed and observed in the same place."
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    When you create a {{site.context_mesh}} Code Mode MCP server, you can choose to create your MCP server from the following:
+                    * Expose a single internal API
+                    * Compose multiple APIs
+                    * Combine APIs with existing MCP servers
+                    
+                    You must manually add MCP servers using their upstream URL. You cannot use {{site.ai_gateway}} MCP servers.
+                    
+                    If you're adding one or many APIs to your Code Mode MCP server, you can either upload a OpenAPI Specification (OAS) v3.0 file for each API or add them directly from APIs that you already have in [Catalog](/catalog).                     
 
   - header:
       text: "Frequently asked questions"
