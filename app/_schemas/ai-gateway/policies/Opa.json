@@ -1,53 +1,8 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ]
-      },
-      "description": "A set of strings representing HTTP protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
-        "ssl_verify": {
-          "type": "boolean",
-          "description": "If set to true, the OPA certificate will be verified according to the CA certificates specified in lua_ssl_trusted_certificate.",
-          "default": true
-        },
-        "opa_port": {
-          "type": "integer",
-          "maximum": 65535,
-          "minimum": 0,
-          "description": "An integer representing a port number between 0 and 65535, inclusive.",
-          "default": 8181
-        },
-        "opa_path": {
-          "type": "string",
-          "description": "A string representing a URL path, such as /path/to/resource. Must start with a forward slash (/) and must not contain empty segments (i.e., two consecutive forward slashes)."
-        },
-        "include_service_in_opa_input": {
-          "type": "boolean",
-          "description": "If set to true, the Kong Gateway Service object in use for the current request is included as input to OPA.",
-          "default": false
-        },
-        "include_route_in_opa_input": {
-          "type": "boolean",
-          "description": "If set to true, the Kong Gateway Route object in use for the current request is included as input to OPA.",
-          "default": false
-        },
         "include_consumer_in_opa_input": {
           "type": "boolean",
           "description": "If set to true, the Kong Gateway Consumer object in use for the current request (if any) is included as input to OPA.",
@@ -67,6 +22,21 @@
           "description": "If set to true, the regex capture groups captured on the Kong Gateway Route's path field in the current request (if any) are included as input to OPA.",
           "default": false
         },
+        "opa_host": {
+          "type": "string",
+          "description": "A string representing a host name, such as example.com.",
+          "default": "localhost"
+        },
+        "include_route_in_opa_input": {
+          "type": "boolean",
+          "description": "If set to true, the Kong Gateway Route object in use for the current request is included as input to OPA.",
+          "default": false
+        },
+        "ssl_verify": {
+          "type": "boolean",
+          "description": "If set to true, the OPA certificate will be verified according to the CA certificates specified in lua_ssl_trusted_certificate.",
+          "default": true
+        },
         "opa_protocol": {
           "type": "string",
           "enum": [
@@ -76,14 +46,44 @@
           "description": "The protocol to use when talking to Open Policy Agent (OPA) server. Allowed protocols are `http` and `https`.",
           "default": "http"
         },
-        "opa_host": {
+        "opa_port": {
+          "type": "integer",
+          "maximum": 65535,
+          "minimum": 0,
+          "description": "An integer representing a port number between 0 and 65535, inclusive.",
+          "default": 8181
+        },
+        "opa_path": {
           "type": "string",
-          "description": "A string representing a host name, such as example.com.",
-          "default": "localhost"
+          "description": "A string representing a URL path, such as /path/to/resource. Must start with a forward slash (/) and must not contain empty segments (i.e., two consecutive forward slashes)."
+        },
+        "include_service_in_opa_input": {
+          "type": "boolean",
+          "description": "If set to true, the Kong Gateway Service object in use for the current request is included as input to OPA.",
+          "default": false
         }
       },
       "required": [
         "opa_path"
+      ]
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
       ]
     },
     "route": {

@@ -1,55 +1,47 @@
 {
   "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "ws",
+          "wss"
+        ]
+      },
+      "description": "A list of the request protocols that will trigger this policy. The default value, as well as the possible values allowed on this field, may change depending on the policy type. For example, policies that only work in stream mode will only support tcp and tls.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https",
+        "ws",
+        "wss"
+      ]
+    },
     "config": {
       "type": "object",
       "properties": {
         "session": {
           "type": "object",
           "properties": {
-            "vpn_name": {
-              "type": "string",
-              "maxLength": 32,
-              "description": "The name of the Message VPN to attempt to join when connecting to an event broker."
-            },
-            "connect_timeout": {
-              "type": "integer",
-              "maximum": 100000,
-              "minimum": 100,
-              "description": "The timeout period (in milliseconds) for a connect operation to a given host (per host).",
-              "default": 3000
-            },
-            "generate_rcv_timestamps": {
-              "type": "boolean",
-              "description": "When enabled, a receive timestamp is recorded for each message.",
-              "default": true
-            },
-            "generate_send_timestamps": {
-              "type": "boolean",
-              "description": "When enabled, a send timestamp is automatically included (if not already present) in the Solace-defined fields for each message sent.",
-              "default": true
-            },
-            "generate_sender_id": {
-              "type": "boolean",
-              "description": "When enabled, a sender id is automatically included (if not already present) in the Solace-defined fields for each message sent.",
-              "default": true
-            },
-            "generate_sequence_number": {
-              "type": "boolean",
-              "description": "When enabled, a sequence number is automatically included (if not already present) in the Solace-defined fields for each message sent.",
-              "default": true
-            },
-            "properties": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "string",
-                "x-lua-required": true,
-                "x-referenceable": true
-              },
-              "description": "Additional Solace session properties (each setting needs to have `SESSION_` prefix)."
-            },
             "authentication": {
               "type": "object",
               "properties": {
+                "id_token": {
+                  "type": "string",
+                  "description": "The OpenID Connect ID token used with `OAUTH2` authentication scheme when connecting to an event broker.",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                },
+                "id_token_header": {
+                  "type": "string",
+                  "description": "Specifies the header that contains id token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `id_token` field."
+                },
                 "scheme": {
                   "type": "string",
                   "enum": [
@@ -87,16 +79,6 @@
                 "access_token_header": {
                   "type": "string",
                   "description": "Specifies the header that contains access token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `access_token` field."
-                },
-                "id_token": {
-                  "type": "string",
-                  "description": "The OpenID Connect ID token used with `OAUTH2` authentication scheme when connecting to an event broker.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "id_token_header": {
-                  "type": "string",
-                  "description": "Specifies the header that contains id token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `id_token` field."
                 }
               },
               "description": "Session authentication related configuration."
@@ -111,10 +93,51 @@
               "description": "If this property is true and time-to-live has a positive value in a message, the expiration time is calculated when the message is sent or received",
               "default": true
             },
+            "generate_sender_id": {
+              "type": "boolean",
+              "description": "When enabled, a sender id is automatically included (if not already present) in the Solace-defined fields for each message sent.",
+              "default": true
+            },
+            "generate_sequence_number": {
+              "type": "boolean",
+              "description": "When enabled, a sequence number is automatically included (if not already present) in the Solace-defined fields for each message sent.",
+              "default": true
+            },
+            "connect_timeout": {
+              "type": "integer",
+              "maximum": 100000,
+              "minimum": 100,
+              "description": "The timeout period (in milliseconds) for a connect operation to a given host (per host).",
+              "default": 3000
+            },
+            "generate_rcv_timestamps": {
+              "type": "boolean",
+              "description": "When enabled, a receive timestamp is recorded for each message.",
+              "default": true
+            },
+            "generate_send_timestamps": {
+              "type": "boolean",
+              "description": "When enabled, a send timestamp is automatically included (if not already present) in the Solace-defined fields for each message sent.",
+              "default": true
+            },
+            "properties": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "x-referenceable": true,
+                "x-lua-required": true
+              },
+              "description": "Additional Solace session properties (each setting needs to have `SESSION_` prefix)."
+            },
             "host": {
               "type": "string",
               "description": "The IPv4 or IPv6 address or host name to connect to (see: https://docs.solace.com/API-Developer-Online-Ref-Documentation/c/index.html#host-entry).",
               "x-referenceable": true
+            },
+            "vpn_name": {
+              "type": "string",
+              "maxLength": 32,
+              "description": "The name of the Message VPN to attempt to join when connecting to an event broker."
             }
           },
           "required": [
@@ -125,10 +148,40 @@
         "message": {
           "type": "object",
           "properties": {
-            "tracing": {
-              "type": "boolean",
-              "description": "Enable or disable the tracing propagation. This is primarily used for distributed tracing and message correlation, especially in debugging or tracking message flows across multiple systems.",
-              "default": false
+            "destinations": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the destination. You can use `$(uri_captures['<capture-identifier>'])` in this field to capture the name from a regex request URI (replace `<capture-identifier>` with a real value; for example `$(uri_captures['queue'])` when the matched route has a path `~/(?<queue>[a-z]+)`)."
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "QUEUE",
+                      "TOPIC"
+                    ],
+                    "description": "The type of the destination.",
+                    "default": "QUEUE"
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              },
+              "minLength": 1,
+              "description": "The log message destinations."
+            },
+            "delivery_mode": {
+              "type": "string",
+              "enum": [
+                "DIRECT",
+                "PERSISTENT"
+              ],
+              "description": "Sets the log message delivery mode.",
+              "default": "DIRECT"
             },
             "priority": {
               "type": "integer",
@@ -156,46 +209,6 @@
               },
               "description": "A key-value map that dynamically modifies log fields using Lua code."
             },
-            "tracing_sampled": {
-              "type": "boolean",
-              "description": "Forcibly turn on the tracing on all the messages for distributed tracing (tracing needs to be enabled as well).",
-              "default": false
-            },
-            "destinations": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "QUEUE",
-                      "TOPIC"
-                    ],
-                    "description": "The type of the destination.",
-                    "default": "QUEUE"
-                  },
-                  "name": {
-                    "type": "string",
-                    "description": "The name of the destination. You can use `$(uri_captures['<capture-identifier>'])` in this field to capture the name from a regex request URI (replace `<capture-identifier>` with a real value; for example `$(uri_captures['queue'])` when the matched route has a path `~/(?<queue>[a-z]+)`)."
-                  }
-                },
-                "required": [
-                  "name"
-                ]
-              },
-              "minLength": 1,
-              "description": "The log message destinations."
-            },
-            "delivery_mode": {
-              "type": "string",
-              "enum": [
-                "DIRECT",
-                "PERSISTENT"
-              ],
-              "description": "Sets the log message delivery mode.",
-              "default": "DIRECT"
-            },
             "sender_id": {
               "type": "string",
               "description": "Allows the application to set the sender identifier."
@@ -203,6 +216,16 @@
             "dmq_eligible": {
               "type": "boolean",
               "description": "Sets the dead message queue (DMQ) eligible property on the log message.",
+              "default": false
+            },
+            "tracing": {
+              "type": "boolean",
+              "description": "Enable or disable the tracing propagation. This is primarily used for distributed tracing and message correlation, especially in debugging or tracking message flows across multiple systems.",
+              "default": false
+            },
+            "tracing_sampled": {
+              "type": "boolean",
+              "description": "Forcibly turn on the tracing on all the messages for distributed tracing (tracing needs to be enabled as well).",
               "default": false
             }
           },
@@ -215,29 +238,6 @@
       "required": [
         "message",
         "session"
-      ]
-    },
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https",
-          "ws",
-          "wss"
-        ]
-      },
-      "description": "A list of the request protocols that will trigger this policy. The default value, as well as the possible values allowed on this field, may change depending on the policy type. For example, policies that only work in stream mode will only support tcp and tls.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https",
-        "ws",
-        "wss"
       ]
     },
     "route": {

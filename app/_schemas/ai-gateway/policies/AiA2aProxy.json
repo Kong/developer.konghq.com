@@ -57,24 +57,6 @@
             "aws_iam": {
               "type": "object",
               "properties": {
-                "aws_secret_access_key": {
-                  "type": "string",
-                  "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_SECRET_ACCESS_KEY environment variable for this policy instance.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "aws_session_token": {
-                  "type": "string",
-                  "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_SESSION_TOKEN environment variable for this policy instance.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "bearer_token": {
-                  "type": "string",
-                  "description": "If the target AWS service supports Bearer token auth, you can set this token. This will disable request signing and also will override the AWS_BEARER_TOKEN_BEDROCK environment variable. It will also replace/ignore all settings pertaining to AWS IAM access keys and assumed-roles.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
                 "aws_region": {
                   "type": "string",
                   "description": "If using AWS providers (Bedrock) you can override the `AWS_REGION` environment variable by setting this option."
@@ -94,6 +76,24 @@
                 "aws_access_key_id": {
                   "type": "string",
                   "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_ACCESS_KEY_ID environment variable for this policy instance.",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                },
+                "aws_secret_access_key": {
+                  "type": "string",
+                  "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_SECRET_ACCESS_KEY environment variable for this policy instance.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "aws_session_token": {
+                  "type": "string",
+                  "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_SESSION_TOKEN environment variable for this policy instance.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "bearer_token": {
+                  "type": "string",
+                  "description": "If the target AWS service supports Bearer token auth, you can set this token. This will disable request signing and also will override the AWS_BEARER_TOKEN_BEDROCK environment variable. It will also replace/ignore all settings pertaining to AWS IAM access keys and assumed-roles.",
                   "x-referenceable": true,
                   "x-encrypted": true
                 }
@@ -111,6 +111,12 @@
         "proxy_config": {
           "type": "object",
           "properties": {
+            "https_proxy_port": {
+              "type": "integer",
+              "maximum": 65535,
+              "minimum": 0,
+              "description": "An integer representing a port number between 0 and 65535, inclusive."
+            },
             "proxy_scheme": {
               "type": "string",
               "enum": [
@@ -147,12 +153,6 @@
             "https_proxy_host": {
               "type": "string",
               "description": "A string representing a host name, such as example.com."
-            },
-            "https_proxy_port": {
-              "type": "integer",
-              "maximum": 65535,
-              "minimum": 0,
-              "description": "An integer representing a port number between 0 and 65535, inclusive."
             }
           }
         }

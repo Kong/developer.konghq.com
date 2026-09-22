@@ -3,16 +3,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "inject_client_cert_details": {
-          "type": "boolean",
-          "description": "Enables TLS client certificate metadata values to be injected into HTTP headers.",
-          "default": false
-        },
-        "client_cert_header_name": {
-          "type": "string",
-          "description": "Define the HTTP header name used for the PEM format URL encoded client certificate.",
-          "default": "X-Client-Cert"
-        },
         "client_serial_header_name": {
           "type": "string",
           "description": "Define the HTTP header name used for the serial number of the client certificate.",
@@ -32,6 +22,16 @@
           "type": "string",
           "description": "Define the HTTP header name used for the SHA1 fingerprint of the client certificate.",
           "default": "X-Client-Cert-Fingerprint"
+        },
+        "inject_client_cert_details": {
+          "type": "boolean",
+          "description": "Enables TLS client certificate metadata values to be injected into HTTP headers.",
+          "default": false
+        },
+        "client_cert_header_name": {
+          "type": "string",
+          "description": "Define the HTTP header name used for the PEM format URL encoded client certificate.",
+          "default": "X-Client-Cert"
         }
       }
     },
