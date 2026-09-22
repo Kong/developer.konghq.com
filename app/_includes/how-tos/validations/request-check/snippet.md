@@ -20,7 +20,7 @@
      --json "{{ include.config.body_cmd }}"{% endif %}{% endcapture -%}
 ```bash
 {% if capture_size == 1 -%}
-{{ include.config.capture[0].variable }}=$({{ curl_cmd }}{% if include.config.capture[0].jq %} | jq -r "{{ include.config.capture[0].jq | strip }}"{% elsif include.config.capture[0].command %} | {{ include.config.capture[0].command | strip }}{% endif %}{% if include.config.inline_sleep %}
+export {{ include.config.capture[0].variable }}=$({{ curl_cmd }}{% if include.config.capture[0].jq %} | jq -r "{{ include.config.capture[0].jq | strip }}"{% elsif include.config.capture[0].command %} | {{ include.config.capture[0].command | strip }}{% endif %}{% if include.config.inline_sleep %}
  sleep {{include.config.inline_sleep}}{%- endif %}
 )
 {%- elsif capture_size > 1 -%}

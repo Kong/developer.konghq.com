@@ -57,12 +57,6 @@ prereqs:
   inline:
     - title: Petstore API
       include_content: prereqs/third-party/swagger-petstore
-    - title: MCP tool access controls
-      content: |
-        This tutorial builds directly on [Control MCP tool access with AI Consumer and AI Consumer Group ACLs](/ai-gateway/use-access-controls-for-mcp-tools/). Complete that tutorial first, and keep the `$ALICE_API_KEY` and `$BOB_API_KEY` values it exports in your terminal.
-
-        The AI Consumers, AI Consumer Groups, `my-key-auth` AI Auth Strategy, and `petstore-acl-mcp` AI MCP Server created there are all reused here.
-      icon_url: '/assets/icons/ai-gateway.svg'
 
 cleanup:
   inline:
@@ -78,7 +72,9 @@ faqs:
       The ACL check runs before the request is dispatched as an RPC, so a denied call never becomes one. Only the `ai.mcp.audit` entry records it. That also means `rpc` latency and size data only ever covers calls that reached the upstream MCP server.
   - q: Why does a single tool call write several log entries?
     a: |
-      The MCP Inspector CLI opens a fresh MCP session for each invocation, so one `tools/call` command produces a short sequence of requests: `initialize`, `notifications/initialized`, and the tool call itself. Each one is a separate request through {{site.ai_gateway}}, so each gets its own File Log entry. The entries share one `ai.mcp.mcp_session_id`, and only the tool call carries an `ai.mcp.audit` array.
+      The MCP Inspector CLI opens a fresh MCP session for each invocation, so one `tools/call` command produces a short sequence of requests: `initialize`, `notifications/initialized`, `tools/list`, and the tool call itself. Each one is a separate request through {{site.ai_gateway}}, so each gets its own File Log entry, and all of them share one `ai.mcp.mcp_session_id`.
+
+      Both `tools/list` and the tool call carry an `ai.mcp.audit` array, because discovery and invocation are separate ACL decisions. The discovery entry has no `primitive_name`, since it covers the tool list as a whole rather than one tool.
   - q: Which MCP protocol revision appears in `ai.mcp.protocol_version`?
     a: |
       Whichever revision the client negotiates during `initialize`, not a value you configure on the AI MCP Server. The MCP Inspector CLI used in this tutorial negotiates `2025-11-25`, so entries include an `ai.mcp.mcp_session_id`. A client that negotiates `2026-07-28` has no session concept, and {{site.ai_gateway}} omits `mcp_session_id` for that traffic. See [MCP version support](/ai-gateway/mcp-version-support/).
@@ -88,7 +84,7 @@ faqs:
 
 Create a File Log Policy and attach it to the existing `petstore-acl-mcp` AI MCP Server.
 
-Because `kongctl` manages each AI MCP Server declaratively, this configuration repeats the entity's full definition from the previous tutorial, with two additions: the new Policy in `policies`, and `config.logging.audits: true`.
+Because `kongctl` manages each AI MCP Server declaratively, this configuration repeats the entity's full definition from the previous tutorial, with two additions: the new AI Policy in `policies`, and `config.logging.audits: true`.
 
 {% entity_examples %}
 ai_gateway_policies:
@@ -213,8 +209,6 @@ ai_gateway_mcp_servers:
               type: integer
 {% endentity_examples %}
 
-`config.logging.audits: true` tells the runtime to record an ACL decision for every tool discovery and tool call. Without it, entries carry only the `rpc` timing and size data that's logged by default, and you can't tell from the logs why a call was rejected.
-
 ## Generate MCP traffic
 
 Call the AI MCP Server as two different AI Consumers, using the [MCP Inspector CLI](https://modelcontextprotocol.io/docs/tools/inspector#cli) and passing each one's API key in the `apikey` header.
@@ -226,7 +220,7 @@ Call the AI MCP Server as two different AI Consumers, using the [MCP Inspector C
 {% validation custom-command %}
 command: |
   npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
-    http://localhost:8000/petstore-acl \
+    $KONNECT_PROXY_URL/petstore-acl \
     --transport http --method tools/call \
     --tool-name get-pet-by-id \
     --tool-arg path_petId=7 \
@@ -249,7 +243,7 @@ render_output: false
 {% validation custom-command %}
 command: |
   npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
-    http://localhost:8000/petstore-acl \
+    $KONNECT_PROXY_URL/petstore-acl \
     --transport http --method tools/call \
     --tool-name delete-pet \
     --tool-arg path_petId=9 \
@@ -267,7 +261,7 @@ render_output: false
 
 Each line in `/tmp/mcp.json` is a complete File Log entry, and MCP activity sits in its `ai.mcp` object alongside the standard `request`, `response`, and `consumer` fields.
 
-Read the log from inside your {{site.ai_gateway}} Docker container. Filtering to entries that carry an `audit` array narrows the output to the two tool calls, skipping the session handshake requests that each MCP Inspector CLI invocation also generates:
+Read the log from inside your {{site.ai_gateway}} Docker container. Filtering to entries that carry an `audit` array narrows the output to the ACL decisions, skipping the `initialize` and `notifications/initialized` handshake requests that each MCP Inspector CLI invocation also generates:
 
 <!--vale off-->
 {% validation custom-command %}
@@ -280,14 +274,15 @@ render_output: false
 {% endvalidation %}
 <!--vale on-->
 
+You get four entries, because each AI Consumer's client discovers the tool list before invoking a tool, and discovery is itself an ACL decision. The entries without a `primitive_name` are the `tools/list` decisions; the two that name a tool are the calls.
+
 An allowed call produces both an `rpc` entry and an `audit` entry. Alice's `get-pet-by-id` call looks like the following:
 
 ```json
 {
-  "mcp_session_id": "eddd6086-5f18-4b36-9da8-2d6f7cd8da75",
-  "mcp_server_id": "3c6c6e81-5163-4bcb-a354-b4340ae5d1e9",
+  "mcp_session_id": "98971c19-9539-4611-9cfe-a9eefc11f702",
+  "mcp_server_id": "8c3cd66f-4c4f-4809-a671-2f412a794d01",
   "protocol_version": "2025-11-25",
-  "tool_list_cache_hit": true,
   "rpc": [
     {
       "method": "tools/call",
@@ -300,41 +295,47 @@ An allowed call produces both an `rpc` entry and an `audit` entry. Alice's `get-
   "audit": [
     {
       "primitive": "tool",
-      "primitive_name": "get-pet-by-id",
       "scope": "primitive",
-      "action": "allow",
+      "primitive_name": "get-pet-by-id",
       "consumer": {
-        "id": "327670e0-4d13-47a8-9453-5b7370bfbba7",
         "name": "admin",
+        "id": "327670e0-4d13-47a8-9453-5b7370bfbba7",
         "identifier": "consumer_group"
-      }
+      },
+      "action": "allow"
     }
-  ]
+  ],
+  "tool_list_cache_hit": true
 }
 ```
 {:.no-copy-code}
 
-In an `audit` entry, `consumer.identifier` tells you what `consumer.name` refers to. Here it's `consumer_group`, so `name` is the AI Consumer Group that granted access (`admin`), while `id` is the UUID of the AI Consumer that made the call (Alice). For the full field list, see the [audit log reference](/ai-gateway/ai-audit-log-reference/#ai-mcp-logs).
+In an `audit` entry, `consumer.id` is always the UUID of the AI Consumer that made the call, while `consumer.name` is the subject that actually matched the ACL rule. `consumer.identifier` tells you which kind of subject that was:
+
+- `consumer_group`: an AI Consumer Group granted the decision, and `name` is the group. Alice's call matched through `admin`.
+- `username`: the individual AI Consumer matched, and `name` is the AI Consumer's own name.
+
+That means the same AI Consumer can show up under either identifier depending on which rule decided a given request. For the full field list, see the [audit log reference](/ai-gateway/ai-audit-log-reference/#ai-mcp-logs).
 
 Bob's denied `delete-pet` call has no `rpc` entry at all, only the `audit` entry recording the ACL decision:
 
 ```json
 {
-  "mcp_session_id": "0eee0187-d459-4549-a026-a09879ecbd29",
-  "mcp_server_id": "3c6c6e81-5163-4bcb-a354-b4340ae5d1e9",
+  "mcp_session_id": "1d8ca25a-50b5-4871-b4e9-81d0f2f3fa89",
+  "mcp_server_id": "8c3cd66f-4c4f-4809-a671-2f412a794d01",
   "protocol_version": "2025-11-25",
   "tool_list_cache_hit": true,
   "audit": [
     {
       "primitive": "tool",
-      "primitive_name": "delete-pet",
       "scope": "primitive",
-      "action": "deny",
+      "primitive_name": "delete-pet",
       "consumer": {
-        "id": "ae05d1a5-1a43-4176-a882-af5c2d0b2e78",
         "name": "support",
+        "id": "ae05d1a5-1a43-4176-a882-af5c2d0b2e78",
         "identifier": "consumer_group"
-      }
+      },
+      "action": "deny"
     }
   ]
 }

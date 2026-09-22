@@ -470,7 +470,7 @@ Alice is in `admin`, which `access.default_tool_acls` allows and every tool's `a
 {% validation custom-command %}
 command: |
   npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
-    http://localhost:8000/petstore-acl \
+    $KONNECT_PROXY_URL/petstore-acl \
     --transport http --method tools/list \
     --header "apikey: $ALICE_API_KEY" | jq -r '.tools[].name' | sort
 expected:
@@ -502,7 +502,7 @@ Calling `delete-pet`, the only tool restricted to `admin`, also succeeds:
 {% validation custom-command %}
 command: |
   npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
-    http://localhost:8000/petstore-acl \
+    $KONNECT_PROXY_URL/petstore-acl \
     --transport http --method tools/call \
     --tool-name delete-pet \
     --tool-arg path_petId=10 \
@@ -524,7 +524,7 @@ Bob is in `support`, which is on the `deny` list for `delete-pet`. Tool discover
 {% validation custom-command %}
 command: |
   npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
-    http://localhost:8000/petstore-acl \
+    $KONNECT_PROXY_URL/petstore-acl \
     --transport http --method tools/list \
     --header "apikey: $BOB_API_KEY" | jq -r '.tools[].name' | sort
 expected:
@@ -554,7 +554,7 @@ The tools he can reach work as normal. Calling `get-pet-by-id` returns `Lion 1`:
 {% validation custom-command %}
 command: |
   npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
-    http://localhost:8000/petstore-acl \
+    $KONNECT_PROXY_URL/petstore-acl \
     --transport http --method tools/call \
     --tool-name get-pet-by-id \
     --tool-arg path_petId=7 \
@@ -580,7 +580,7 @@ Invoking `delete-pet` directly confirms the same rule that filtered it out of hi
 {% validation custom-command %}
 command: |
   npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
-    http://localhost:8000/petstore-acl \
+    $KONNECT_PROXY_URL/petstore-acl \
     --transport http --method tools/call \
     --tool-name delete-pet \
     --tool-arg path_petId=9 \
@@ -606,7 +606,7 @@ Carol is in `suspended`, which no tool allows and `access.default_tool_acls` doe
 {% validation custom-command %}
 command: |
   npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
-    http://localhost:8000/petstore-acl \
+    $KONNECT_PROXY_URL/petstore-acl \
     --transport http --method tools/list \
     --header "apikey: $CAROL_API_KEY" | jq '.tools | length'
 expected:
@@ -622,7 +622,7 @@ Invoking a tool directly is what returns `HTTP 403 Forbidden`:
 {% validation custom-command %}
 command: |
   npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
-    http://localhost:8000/petstore-acl \
+    $KONNECT_PROXY_URL/petstore-acl \
     --transport http --method tools/call \
     --tool-name get-inventory \
     --header "apikey: $CAROL_API_KEY"
@@ -632,6 +632,13 @@ render_output: false
 {% endvalidation %}
 <!--vale on-->
 
+You should see output similar to the following:
+
+```text
+Failed to call tool delete-pet: Streamable HTTP error: Error POSTing to endpoint: ...403 Forbidden...
+```
+{:.no-copy-code.wrap}
+
 ### Eason only has access to the pet catalogue
 
 Eason belongs to no AI Consumer Group, but the `get-pets-by-status` tool's own `access.acls.allow` names him directly, alongside `admin` and `support`. Every other tool falls back to `access.default_tool_acls`, which doesn't include him, so he sees a single tool:
@@ -640,7 +647,7 @@ Eason belongs to no AI Consumer Group, but the `get-pets-by-status` tool's own `
 {% validation custom-command %}
 command: |
   npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
-    http://localhost:8000/petstore-acl \
+    $KONNECT_PROXY_URL/petstore-acl \
     --transport http --method tools/list \
     --header "apikey: $EASON_API_KEY" | jq -r '.tools[].name' | sort
 expected:

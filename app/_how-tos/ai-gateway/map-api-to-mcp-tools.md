@@ -133,7 +133,7 @@ Use [MCP Inspector CLI](https://modelcontextprotocol.io/docs/tools/inspector#cli
 {% validation custom-command %}
 command: |
   npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
-    http://localhost:8000/petstore \
+    $KONNECT_PROXY_URL/petstore \
     --transport http --method tools/list |  jq -r '.tools[].name'
 expected:
   return_code: 0
@@ -160,7 +160,7 @@ Let's call the `get-pets-by-status` tool to see which pets are available:
 {% validation custom-command %}
 command: |
   npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
-    http://localhost:8000/petstore \
+    $KONNECT_PROXY_URL/petstore \
     --transport http --method tools/call \
     --tool-name get-pets-by-status \
     --tool-arg query_status=available | jq -r '.content[0].text' | jq -c '.[]'
@@ -197,7 +197,7 @@ Now, we can check the details of `Lion 1` - `id:7` - by calling the `get-pet-by-
 {% validation custom-command %}
 command: |
   npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
-    http://localhost:8000/petstore \
+    $KONNECT_PROXY_URL/petstore \
     --transport http --method tools/call \
     --tool-name get-pet-by-id \
     --tool-arg path_petId=7 | jq -r '.content[0].text' | jq -c '.'
