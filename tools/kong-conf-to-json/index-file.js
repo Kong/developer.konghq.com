@@ -109,9 +109,11 @@ function generateIndexFile(product) {
 }
 
 (function main() {
-  const args = minimist(process.argv.slice(2), { string: ["product", "set-min-version"] });
+  const args = minimist(process.argv.slice(2), {
+    string: ["product", "baseline-min-version"],
+  });
   const product = args.product || "gateway";
-  const setMinVersion = args["set-min-version"] || null;
+  const baselineMinVersion = args["baseline-min-version"] || null;
 
   if (!["gateway", "ai-gateway"].includes(product)) {
     console.error(`Invalid --product "${product}". Must be "gateway" or "ai-gateway".`);
@@ -120,9 +122,11 @@ function generateIndexFile(product) {
 
   const indexFile = generateIndexFile(product);
 
-  if (setMinVersion) {
+  if (baselineMinVersion) {
     Object.keys(indexFile.params).forEach((param) => {
-      indexFile.params[param].min_version = { [product]: setMinVersion };
+      if (!indexFile.params[param].min_version) {
+        indexFile.params[param].min_version = { [product]: baselineMinVersion };
+      }
     });
   }
 
