@@ -5,7 +5,7 @@ import { processPrereqs } from "./prereqs.js";
 import { processCleanup } from "./cleanup.js";
 import { processSteps } from "./step.js";
 import { validate, ValidationError } from "./validations.js";
-import { executeDocCommand } from "../docker-helper.js";
+import { executeCommand, executeDocCommand } from "../docker-helper.js";
 import { getSetupConfig } from "./setup.js";
 import { logResult } from "../reporting.js";
 
