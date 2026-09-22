@@ -35,8 +35,10 @@ prereqs:
         1. Sign in to the [Microsoft Entra admin center](https://entra.microsoft.com) using your admin account.
         1. In the sidebar, navigate to **Entra ID** > **Enterprise apps**.
         1. Click **New application**.
-        1. then click **Create your own application**.
-        1. Enter a name for the application (for example, `Kong Konnect SSO`), select **Integrate any other application you don't find in the gallery (Non-gallery)**, and click **Create**.
+        1. Click **Create your own application**.
+        1. Enter a name for the application (for example, `Kong Konnect SSO`).
+        1. Select **Integrate any other application you don't find in the gallery (Non-gallery)**.
+        1. Click **Create**.
 
       icon_url: /assets/icons/azure.svg
 ---
@@ -62,17 +64,21 @@ sequenceDiagram
 
 ## Get your organization ID
 
-Before configuring Basic SAML in Entra ID, get your {{site.konnect_short_name}} organization ID, which you'll need to build the SAML values Entra ID expects. Send a `GET` request to the [`/organizations/me` endpoint](/api/konnect/identity/#/operations/get-organizations-me):
+Before configuring Basic SAML in Entra ID, get and save your {{site.konnect_short_name}} organization ID. 
+You'll need this to build the SAML values Entra ID expects. Send a `GET` request to the [`/organizations/me` endpoint](/api/konnect/identity/#/operations/get-organizations-me):
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /organizations/me
+url: /v3/organizations/me
 method: GET
 status_code: 200
+region: global
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Also decide on the login path you want to use for your {{site.konnect_short_name}} organization, and export it as an environment variable. You'll use this same value in both Entra ID and {{site.konnect_short_name}}:
+Also decide on the login path you want to use for your {{site.konnect_short_name}} organization, and export it as an environment variable. 
+This will be appended to the {{site.konnect_short_name}} login, for example: `https://cloud.konghq.com/login/$LOGIN_PATH`
+You'll use this same value in both Entra ID and {{site.konnect_short_name}}:
 
 ```sh
 export LOGIN_PATH='my-org'
@@ -87,9 +93,6 @@ export LOGIN_PATH='my-org'
 1. In the **Reply URL (Assertion Consumer Service URL)** field, enter `https://global.api.konghq.com/v2/authenticate/$LOGIN_PATH/saml/acs`.
 1. In the **Sign on URL** field, enter `https://cloud.konghq.com/login/$LOGIN_PATH`.
 1. Click **Save**.
-
-## Configure user attributes and claims in Microsoft Entra
-
 1. In the **Attributes & Claims** section, click **Edit**.
 1. Configure the following claims. For each claim, clear the namespace URI before saving:
    1. Set **Unique user identifier** to `user.userprincipalname`.
