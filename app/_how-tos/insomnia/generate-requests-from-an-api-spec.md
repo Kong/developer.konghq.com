@@ -47,7 +47,7 @@ If your API specification contains variables, you can use the environment to rep
     ```json
     {
       "base_url": "https://us.api.konghq.com/v2",
-      "bearerToken": "YOUR_PATH_TOKEN"
+      "bearerToken": "YOUR_PAT_TOKEN"
     }
     ```
 
