@@ -22,19 +22,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "llm_format": {
-          "type": "string",
-          "enum": [
-            "anthropic",
-            "bedrock",
-            "cohere",
-            "gemini",
-            "huggingface",
-            "openai"
-          ],
-          "description": "LLM input and output format and schema to use",
-          "default": "openai"
-        },
         "prompts": {
           "type": "object",
           "properties": {
@@ -98,6 +85,19 @@
           "type": "integer",
           "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
           "default": 8388608
+        },
+        "llm_format": {
+          "type": "string",
+          "enum": [
+            "anthropic",
+            "bedrock",
+            "cohere",
+            "gemini",
+            "huggingface",
+            "openai"
+          ],
+          "description": "LLM input and output format and schema to use",
+          "default": "openai"
         }
       }
     },

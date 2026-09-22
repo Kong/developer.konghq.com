@@ -22,17 +22,17 @@
     "config": {
       "type": "object",
       "properties": {
+        "port": {
+          "type": "string"
+        },
+        "host": {
+          "type": "string"
+        },
         "escape_path": {
           "type": "boolean",
           "default": false
         },
         "path": {
-          "type": "string"
-        },
-        "port": {
-          "type": "string"
-        },
-        "host": {
           "type": "string"
         }
       }

@@ -33,16 +33,14 @@ related_resources:
 faqs:
   - q: Are AI Policies shared across multiple entities?
     a: |
-      No. Each AI Policy is an independent configuration. To apply the same
-      configuration to two AI Models, create two AI Policies with matching `config`,
-      one per AI Model.
+      Each AI Policy is an independent entity. You can apply the same AI Policy
+      to multiple other entities by referencing the policy in each entity's configuration.
 
   - q: How is an AI Policy different from a plugin?
     a: |
       An AI Policy is a policy configuration created through the {{site.ai_gateway}} entity surface
       instead of the classic `/plugins` endpoint. The runtime effect is the same: a policy attached
-      at the appropriate scope. {{site.ai_gateway}} manages the AI Policy's lifecycle alongside the
-      entity it's attached to.
+      at the appropriate scope.
 
   - q: Can an AI Policy be scoped to an AI Consumer or AI Consumer Group?
     a: |
@@ -66,8 +64,6 @@ Create an AI Policy when you want to add governance, security, transformation, o
 
 To control access and verify identity, assign an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) instead of an AI Policy.
 
-**Each AI Policy is independent.** To apply the same configuration across multiple entities, create separate Policies for each one. This ensures that deleting an entity deletes only its own Policies, not configurations shared with other parts of your gateway.
-
 {:.info}
 > For the complete set of available policy types and configurations, see the [AI Policies hub](/ai-gateway/policies/).
 
@@ -83,7 +79,7 @@ For configuration examples and step-by-step setup instructions, see [Set up a gl
 
 ## AI Policy scopes
 
-An AI Policy's scope is determined by where it's referenced. Each AI Policy is an independent configuration that applies at exactly one scope. To apply identical configuration in multiple places, create one AI Policy per target.
+Each AI Policy is an independent configuration that applies at exactly one scope. 
 
 The available scopes are:
 
@@ -91,9 +87,11 @@ The available scopes are:
 
 * **Entity-scoped**: Reference the policy from the `policies` array on an [AI Model](/ai-gateway/entities/ai-model/), [AI Agent](/ai-gateway/entities/ai-agent/), [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), [AI Consumer](/ai-gateway/entities/ai-consumer/), or [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) entity. The policy applies at that entity's scope.
 
+To apply an identical configuration in multiple places, create an entity-scoped AI Policy and reference it in each entity's configuration.
+
 ## Set up a global AI Policy
 
-An AI Policy specifies a `type` (like AI Sanitizer or AI Rate Limiting Advanced) and a `config` block that configures that behavior. {{site.ai_gateway}} applies the policy at the scope you choose: globally across all traffic, or scoped to a specific entity.
+An AI Policy specifies a `type` (like AI Sanitizer or AI Rate Limiting Advanced) and a `config` block that configures that behavior. {{site.ai_gateway}} applies the policy at the scope you choose: globally across all traffic, or scoped to the entities where it is referenced.
 
 The following example creates a global AI PII Sanitizer Policy that runs for every {{site.ai_gateway}} Route. It anonymizes high-risk PII categories (email, phone, SSN, and credit cards) along with custom patterns for sensitive tokens like AWS API keys and GitHub tokens.
 

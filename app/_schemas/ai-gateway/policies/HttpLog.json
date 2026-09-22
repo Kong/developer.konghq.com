@@ -29,6 +29,42 @@
     "config": {
       "type": "object",
       "properties": {
+        "custom_fields_by_lua": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Lua code as a key-value map"
+        },
+        "http_endpoint": {
+          "type": "string",
+          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+          "x-referenceable": true,
+          "x-encrypted": true
+        },
+        "ssl_verify": {
+          "type": "boolean",
+          "description": "When using TLS, this option enables verification of the certificate presented by the server.",
+          "default": true
+        },
+        "timeout": {
+          "type": "number",
+          "description": "An optional timeout in milliseconds when sending data to the upstream server.",
+          "default": 10000
+        },
+        "keepalive": {
+          "type": "number",
+          "description": "An optional value in milliseconds that defines how long an idle connection will live before being closed.",
+          "default": 60000
+        },
+        "retry_count": {
+          "type": "integer",
+          "description": "Number of times to retry when sending data to the upstream server."
+        },
+        "queue_size": {
+          "type": "integer",
+          "description": "Maximum number of log entries to be sent on each message to the upstream server."
+        },
         "flush_timeout": {
           "type": "number",
           "description": "Optional time in seconds. If `queue_size` > 1, this is the max idle time before sending a log with less than `queue_size` records."
@@ -40,25 +76,28 @@
           },
           "description": "An optional table of headers included in the HTTP message to the upstream server. Values are indexed by header name, and each header name accepts a single string."
         },
+        "method": {
+          "type": "string",
+          "enum": [
+            "PATCH",
+            "POST",
+            "PUT"
+          ],
+          "description": "An optional method used to send data to the HTTP server. Supported values are `POST` (default), `PUT`, and `PATCH`.",
+          "default": "POST"
+        },
+        "content_type": {
+          "type": "string",
+          "enum": [
+            "application/json",
+            "application/json; charset=utf-8"
+          ],
+          "description": "Indicates the type of data sent. The only available option is `application/json`.",
+          "default": "application/json"
+        },
         "queue": {
           "type": "object",
           "properties": {
-            "concurrency_limit": {
-              "type": "integer",
-              "enum": [
-                -1,
-                1
-              ],
-              "description": "The number of of queue delivery timers. -1 indicates unlimited.",
-              "default": 1
-            },
-            "max_batch_size": {
-              "type": "integer",
-              "maximum": 1000000,
-              "minimum": 1,
-              "description": "Maximum number of entries that can be processed at a time.",
-              "default": 1
-            },
             "max_coalescing_delay": {
               "type": "number",
               "maximum": 3600,
@@ -95,63 +134,24 @@
               "minimum": 0.001,
               "description": "Maximum time in seconds between retries, caps exponential backoff.",
               "default": 60
+            },
+            "concurrency_limit": {
+              "type": "integer",
+              "enum": [
+                -1,
+                1
+              ],
+              "description": "The number of of queue delivery timers. -1 indicates unlimited.",
+              "default": 1
+            },
+            "max_batch_size": {
+              "type": "integer",
+              "maximum": 1000000,
+              "minimum": 1,
+              "description": "Maximum number of entries that can be processed at a time.",
+              "default": 1
             }
           }
-        },
-        "http_endpoint": {
-          "type": "string",
-          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
-          "x-referenceable": true,
-          "x-encrypted": true
-        },
-        "ssl_verify": {
-          "type": "boolean",
-          "description": "When using TLS, this option enables verification of the certificate presented by the server.",
-          "default": true
-        },
-        "keepalive": {
-          "type": "number",
-          "description": "An optional value in milliseconds that defines how long an idle connection will live before being closed.",
-          "default": 60000
-        },
-        "custom_fields_by_lua": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Lua code as a key-value map"
-        },
-        "method": {
-          "type": "string",
-          "enum": [
-            "PATCH",
-            "POST",
-            "PUT"
-          ],
-          "description": "An optional method used to send data to the HTTP server. Supported values are `POST` (default), `PUT`, and `PATCH`.",
-          "default": "POST"
-        },
-        "content_type": {
-          "type": "string",
-          "enum": [
-            "application/json",
-            "application/json; charset=utf-8"
-          ],
-          "description": "Indicates the type of data sent. The only available option is `application/json`.",
-          "default": "application/json"
-        },
-        "timeout": {
-          "type": "number",
-          "description": "An optional timeout in milliseconds when sending data to the upstream server.",
-          "default": 10000
-        },
-        "retry_count": {
-          "type": "integer",
-          "description": "Number of times to retry when sending data to the upstream server."
-        },
-        "queue_size": {
-          "type": "integer",
-          "description": "Maximum number of log entries to be sent on each message to the upstream server."
         }
       },
       "required": [

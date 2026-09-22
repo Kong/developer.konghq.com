@@ -3,21 +3,11 @@
     "config": {
       "type": "object",
       "properties": {
-        "timeout": {
-          "type": "number",
-          "description": "Timeout in milliseconds before closing a connection to the Azure Functions server.",
-          "default": 600000
-        },
-        "https": {
-          "type": "boolean",
-          "description": "Use of HTTPS to connect with the Azure Functions server.",
-          "default": true
-        },
         "clientid": {
           "type": "string",
           "description": "The `clientid` to access the Azure resources. If provided, it is injected as the `x-functions-clientid` header.",
-          "x-referenceable": true,
-          "x-encrypted": true
+          "x-encrypted": true,
+          "x-referenceable": true
         },
         "appname": {
           "type": "string",
@@ -32,10 +22,20 @@
           "type": "string",
           "description": "Name of the Azure function to invoke."
         },
+        "timeout": {
+          "type": "number",
+          "description": "Timeout in milliseconds before closing a connection to the Azure Functions server.",
+          "default": 600000
+        },
         "keepalive": {
           "type": "number",
           "description": "Time in milliseconds during which an idle connection to the Azure Functions server lives before being closed.",
           "default": 60000
+        },
+        "https": {
+          "type": "boolean",
+          "description": "Use of HTTPS to connect with the Azure Functions server.",
+          "default": true
         },
         "https_verify": {
           "type": "boolean",
@@ -45,8 +45,8 @@
         "apikey": {
           "type": "string",
           "description": "The apikey to access the Azure resources. If provided, it is injected as the `x-functions-key` header.",
-          "x-encrypted": true,
-          "x-referenceable": true
+          "x-referenceable": true,
+          "x-encrypted": true
         },
         "hostdomain": {
           "type": "string",

@@ -22,21 +22,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "allow_all_conversation_history": {
-          "type": "boolean",
-          "description": "If true, will ignore all previous chat prompts from the conversation history.",
-          "default": false
-        },
-        "max_request_body_size": {
-          "type": "integer",
-          "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
-          "default": 8388608
-        },
-        "match_all_roles": {
-          "type": "boolean",
-          "description": "If true, will match all roles in addition to 'user' role in conversation history.",
-          "default": false
-        },
         "allow_patterns": {
           "type": "array",
           "items": {
@@ -56,6 +41,11 @@
           },
           "maxLength": 10,
           "description": "Array of invalid regex patterns, or invalid questions from the 'user' role in chat."
+        },
+        "match_all_roles": {
+          "type": "boolean",
+          "description": "If true, will match all roles in addition to 'user' role in conversation history.",
+          "default": false
         },
         "llm_format": {
           "type": "string",
@@ -82,6 +72,16 @@
           ],
           "description": "Generative AI category of the request",
           "default": "text/generation"
+        },
+        "allow_all_conversation_history": {
+          "type": "boolean",
+          "description": "If true, will ignore all previous chat prompts from the conversation history.",
+          "default": false
+        },
+        "max_request_body_size": {
+          "type": "integer",
+          "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
+          "default": 8388608
         },
         "continue_on_detection": {
           "type": "boolean",

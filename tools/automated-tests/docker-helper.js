@@ -2,6 +2,12 @@ import debug from "debug";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
+import {
+  parseExportAssignment,
+  buildPersistCommand,
+  base64EnvLine,
+} from "./instructions/export-assignment.js";
+
 const debugCmd = debug("debug:request");
 const debugLog = debug("debug:response");
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -62,7 +68,7 @@ export async function fetchImage(docker, imageName, log) {
   }
 }
 
-export async function executeCommand(container, cmd) {
+export async function executeCommand(container, cmd, displayCmd = cmd) {
   return new Promise(async (resolve, reject) => {
     try {
       // Get decoded environment variables
@@ -124,7 +130,7 @@ export async function executeCommand(container, cmd) {
         resolve({ exitCode: execInfo.ExitCode, output: result });
       } else {
         const message = `
-        Failed to run command ${cmd}
+        Failed to run command ${displayCmd}
         Got:
         ${result}`;
         reject({ exitCode: execInfo.ExitCode, output: result, message });
@@ -133,6 +139,22 @@ export async function executeCommand(container, cmd) {
       throw error;
     }
   });
+}
+
+// Doc-sourced string commands (prereqs and steps). Commands that assign a
+// variable from a command substitution run in the throwaway exec, so the
+// variable would evaporate before the next step reads it. Wrap those so the
+// value is persisted to /env-vars.sh; the persistence contract lives in
+// instructions/export-assignment.js. Infra commands (runtime setup/reset/
+// cleanup, tests.yaml before/after) keep calling executeCommand directly, so
+// their behavior is unchanged.
+export async function executeDocCommand(container, cmd, exec = executeCommand) {
+  const name = parseExportAssignment(cmd);
+  if (!name) {
+    return exec(container, cmd);
+  }
+  // Report failures against the original doc command, not the wrapped script.
+  return exec(container, buildPersistCommand(cmd, name), cmd);
 }
 
 export async function stopContainer(container) {
@@ -164,14 +186,15 @@ export async function setEnvVariable(container, name, value) {
     // Convert literal \n to actual newlines
     const withNewlines = output.replace(/\\n/g, "\n");
 
-    // Base64 encode to safely store in env file
+    // Base64 encode to safely store in env file (format owned by
+    // base64EnvLine in instructions/export-assignment.js)
     const base64Value = Buffer.from(withNewlines).toString("base64");
 
     writeEnvVar = await container.exec({
       Cmd: [
         "bash",
         "-c",
-        `echo 'export ${name}_BASE64="${base64Value}"' >> /env-vars.sh`,
+        `echo '${base64EnvLine(name, `"${base64Value}"`)}' >> /env-vars.sh`,
       ],
       AttachStdout: true,
       AttachStderr: true,

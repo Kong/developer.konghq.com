@@ -1169,5 +1169,274 @@
         "scope": "Clustering"
       }
     ]
+  },
+  "2.1.0": {
+    "kong-aigw": [
+      {
+        "message": "**Conditional Plugin Execution**: The plugin `condition` field now uses\na new standardized expression language with broader operator and type\nsupport, aligned across UI, Control Plane, and Data Plane.  Refer to\nthe official documentation for the full syntax, supported variables,\noperators, and types.",
+        "type": "Breaking Change",
+        "scope": "Core"
+      },
+      {
+        "message": "Workspace names that shadow existing top-level admin API routes are no longer allowed. If you have an existing workspace name that conflicts with a admin route, it may be impacted. Check `GET /endpoints` to review the reserved first-level segments.",
+        "type": "Breaking Change",
+        "scope": "Core"
+      },
+      {
+        "message": "Uses now `cel-cpp` `0.15.0` instead of `cel-rust` `0.11.6` for Common Expression Language backend.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**acl**: Added `allow_when`/`deny_when` fields that evaluate CEL boolean expressions against the request context to provide more expressive access‑control policies.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Added a `kong workspace` CLI command. `kong workspace rename OLD_NAME NEW_NAME`\nrenames a workspace (cascading the new name to RBAC role-endpoint permissions),\nand `kong workspace detect-admin-endpoint-conflicts` lists workspaces whose names\ncollide with admin API URL prefixes.",
+        "type": "feature",
+        "scope": "CLI Command"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Added `config.server.cache` for the `ttlMs` and `cacheScope` hints Kong emits on `tools/list` and `server/discover`, and `config.server.allowed_versions` to narrow the MCP protocol revisions this server accepts. `allowed_versions` is unset by default, meaning every revision Kong implements; when set, `server/discover` advertises exactly that list and a request declaring anything else is rejected with `-32022`. A `public` cache scope is rejected on a configuration whose tool list is ACL-filtered per subject.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Added propagation of the inbound W3C trace context to MCP tool call requests.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Added support for speaking MCP protocol revision `2026-07-28` to upstream MCP servers. Added `config.server.upstream_protocol_version` to select the revision Kong speaks upstream.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Added support for MCP protocol revision `2026-07-28`. Kong answers a client at the revision it declares, resolved per request from the `MCP-Protocol-Version` header and the `_meta` protocol version. The revision brings `server/discover`, `subscriptions/listen`, `resultType`, `ttlMs`/`cacheScope` cache hints, HTTP status codes on protocol errors, header mirroring validation against the request body, and no sessions or standalone `GET` stream. `2025-03-26`, `2025-06-18` and `2025-11-25` clients are unaffected.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added handling for JSON null metadata fields in native-format analytics.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added per-modality usage cost for text, audio, image and video tokens, configured through the pricing catalog or the new `model.options` `*_cost_list` fields.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Analytics**: MCP analytics now carry `protocol_version`, the revision the client declared, and `tool_list_cache_hit`, whether a `tools/list` was answered from the gateway tool cache, alongside the JSON-RPC error `code` per RPC. `mcp_session_id` is empty from revision `2026-07-28` on, which mints no session.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "**Conditional Plugin Execution**: Added support for conditional plugin execution through a new `condition` field in the plugin configuration. Plugins can now be conditionally skipped at runtime based on request attributes such as HTTP method, path, headers, query parameters, consumer, route, service, and network information. The condition expression uses the ATC expression language and is evaluated once during the collecting phase; skipped plugins are excluded from all downstream phases automatically.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "Konnect analytics now propagates a `custom` string key/value map on the request\npayload (`RequestMetadata.custom`). Plugins can populate it with\n`kong.log.set_serialize_value(\"custom.<key>\", \"<value>\")`.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "**openid-connect**: Added support for reading bearer tokens from a custom header.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Plugin conditions**: Plugin condition expressions are now type-checked at\nconfiguration time. Expressions whose result is provably non-boolean (for\nexample `1 + 1`, `\"foo\"`, or `size(x)`) are rejected when the plugin is\nconfigured, instead of failing at request time. Boolean and\nstatically-unknown expressions are accepted as before.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "Required identical AI Gateway versions on control planes and data planes before allowing full or incremental configuration synchronization. Data planes with missing versions or different patch or prerelease versions were rejected.",
+        "type": "feature",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Supported plugin cloning. You can now clone existing bundled plugins, give them a new name and optionally specify a priority. This is useful when you want to have multiple instances of a plugin with different configurations running in the same request. Currently, the cloneable plugins are: `openid-connect`, `acl`, `pre-function`, `post-function`, `request-transformer-advanced`, `request-transformer`, `response-transformer-advanced`, `response-transformer`, `key-auth`, `file-log`, `http-log`, `tcp-log`, `ip-restriction`, `route-by-header`, `opa`, `datakit`.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "Supported plugin streaming. You can now stream custom plugins dynamically. Refer to the documentation for more details on how to use this feature.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-a2a-proxy**: Fixed an issue where non-A2A and oversized requests could reach upstream services without configured AWS authentication.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Analytics**: Fixed an issue where `ai.model_id` were absent in Analytics.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: A request declaring a protocol revision Kong does not serve is now answered with HTTP 400 and JSON-RPC error `-32022`, listing the revisions Kong serves, instead of being served silently at a different revision.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy/ai-a2a-proxy**: Fixed an issue where the `mcp_server_id` and `agent_id` fields were missing from the AI analytics telemetry payload unless the plugin was scoped to a gateway service.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where AWS request signing did not read file-backed request bodies within the configured size limit.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: W3C trace context sent in `params._meta` (`traceparent`, `tracestate`, `baggage`) now reaches the upstream as headers on the request Kong actually sends, in every mode. A value containing a control character is dropped instead of being written to a header.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added video token metrics to the usage token details.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where a Gemini response with JSON `null` token counts in `usageMetadata` caused an HTTP 500 on non-streaming chat requests and an empty HTTP 200 response on streaming chat requests.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where adapted Anthropic responses omitted cache and reasoning usage details.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Claude Sonnet 5 and Opus 5 rejected OpenAI-format reasoning requests on Bedrock due to an unsupported thinking.type value.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where provider-reported reasoning-token details were not correctly reported.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where some providers would not properly  respect the `stream_options: include_usage` flag, and return out-of-order SSE  stream end frames.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where xAI reasoning tokens were not folded into completion_tokens, breaking the OpenAI usage identity.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where the consistent-hashing balancer routed requests with the same hash_on_header value to different targets when multiple workers were running.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed empty and statistics-only SSE streams. Empty Anthropic responses no longer emit an unmatched `content_block_stop`, and `log_statistics`-only streams now track streamed response length for completion-token estimation.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed multipart video generation requests to OpenAI-compatible providers leaking internal multipart metadata into JSON upstream bodies, which caused the requests to fail.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Fixed an issue where parallel tool call results were sent to Bedrock in the wrong order, causing a 400 \"Expected toolResult blocks\" error.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-sanitizer**: Fixed an issue where ai-sanitizer returned 500 status code when the provider was using another model, such as a `claude-*` model served by the `gemini` provider on Vertex AI.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-semantic-prompt-guard**, **ai-semantic-response-guard**, **ai-proxy-advanced**, **ai-semantic-cache**: Fixed vector database indexes and cached embedding records being left behind when a plugin instance was deleted.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**datakit**: Fixed an issue where the `exit` node sent a string body without a correct `Content-Type`. It now uses the content type that the source node declares, for example `application/xml` for `json_to_xml` output, and defaults to `application/octet-stream` in the request phase.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**DataKit**: Fixed the body handling of the `exit` and `service_request` nodes when the body input is a JSON null. The nodes sent the internal Lua value as the string \"userdata: NULL\". The `exit` node now sends no body. The `service_request` node now keeps the upstream request body.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where an in-flight request that completed after its\nupstream target became unavailable could restore the target to the\nlatency balancer and route subsequent requests to it.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where `custom_validator` in schema definitions forwarded the\nenclosing schema as a second argument. This changed the call signature and\ncould affect custom validators that declare more than one parameter. The\nsingle-argument call signature is restored.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where older data planes stopped receiving configuration updates when sync v2 was unavailable by restoring automatic sync v1 fallback.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where paginated full sync could keep stale pending foreign-key references across a failed resume, causing spurious validation failures.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where self-managed control planes rejected updates to a streamed plugin's handler while the plugin was referenced by a plugin instance.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where streamed custom plugins were not recognized when configured in the `ordering` field of `plugins` on Data Planes.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the priority field of a cloned plugin could not be updated while it was still referenced by plugin instances.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where updates to a streamed plugin's definition (e.g. `handler`), or to a cloned plugin's definition (e.g. `priority`), were not applied on data planes when no referencing plugin instances changed. The data plane now rebuilds its plugins iterator so the updated definition takes effect, instead of continuing to execute the previous version.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**jwt**: Fixed an issue where the plugin failed to decode standard Base64\nsecrets that contained `+` or `/` when `config.secret_is_base64` was enabled.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka-consume**, **confluent-consume**: Fixed an issue where the consumer group subscription\ndeclared protocol version 1 but carried the version 0 layout, so a topic-rewriting proxy rejected it.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where the OAS specification cache failed to distinguish between different values of `api_spec_encoded` for the same specification content.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**prometheus**, **opentelemetry**: Fixed an issue where prompt-cache token usage was missing\nfrom observability: added per-TTL cache-write token types (e.g. `cache_write_1h_tokens`,\n`cache_write_5m_tokens`) to the Prometheus `ai_llm_tokens_total` and OpenTelemetry\n`gen_ai.client.token.usage` metrics, and `gen_ai.usage.cache_creation.input_tokens` /\n`gen_ai.usage.cache_read.input_tokens` to OpenTelemetry traces and access logs.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Improved the configuration synchronization latency when incremental sync enabled under some circumstances.",
+        "type": "performance",
+        "scope": "Clustering"
+      }
+    ]
   }
 }

@@ -25,45 +25,43 @@
         "session": {
           "type": "object",
           "properties": {
+            "properties": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "x-referenceable": true,
+                "x-lua-required": true
+              },
+              "description": "Additional Solace session properties (each setting needs to have `SESSION_` prefix)."
+            },
             "vpn_name": {
               "type": "string",
               "maxLength": 32,
               "description": "The name of the Message VPN to attempt to join when connecting to an event broker."
             },
+            "ssl_validate_certificate": {
+              "type": "boolean",
+              "description": "Indicates whether the API should validate server certificates with the trusted certificates.",
+              "default": true
+            },
+            "generate_rcv_timestamps": {
+              "type": "boolean",
+              "description": "When enabled, a receive timestamp is recorded for each message.",
+              "default": true
+            },
+            "generate_send_timestamps": {
+              "type": "boolean",
+              "description": "When enabled, a send timestamp is automatically included (if not already present) in the Solace-defined fields for each message sent.",
+              "default": true
+            },
+            "host": {
+              "type": "string",
+              "description": "The IPv4 or IPv6 address or host name to connect to (see: https://docs.solace.com/API-Developer-Online-Ref-Documentation/c/index.html#host-entry).",
+              "x-referenceable": true
+            },
             "authentication": {
               "type": "object",
               "properties": {
-                "password": {
-                  "type": "string",
-                  "maxLength": 128,
-                  "description": "The password used with `BASIC` authentication scheme when connecting to an event broker.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "basic_auth_header": {
-                  "type": "string",
-                  "description": "Specifies the header that contains Basic Authentication credentials for the `BASIC` authentication scheme when connecting to an event broker. This header takes precedence over the `username` and `password` fields."
-                },
-                "access_token": {
-                  "type": "string",
-                  "description": "The OAuth2 access token used with `OAUTH2` authentication scheme when connecting to an event broker.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "access_token_header": {
-                  "type": "string",
-                  "description": "Specifies the header that contains access token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `access_token` field."
-                },
-                "id_token": {
-                  "type": "string",
-                  "description": "The OpenID Connect ID token used with `OAUTH2` authentication scheme when connecting to an event broker.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "id_token_header": {
-                  "type": "string",
-                  "description": "Specifies the header that contains id token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `id_token` field."
-                },
                 "scheme": {
                   "type": "string",
                   "enum": [
@@ -80,23 +78,51 @@
                   "description": "The username used with `BASIC` authentication scheme when connecting to an event broker.",
                   "x-referenceable": true,
                   "x-encrypted": true
+                },
+                "password": {
+                  "type": "string",
+                  "maxLength": 128,
+                  "description": "The password used with `BASIC` authentication scheme when connecting to an event broker.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "basic_auth_header": {
+                  "type": "string",
+                  "description": "Specifies the header that contains Basic Authentication credentials for the `BASIC` authentication scheme when connecting to an event broker. This header takes precedence over the `username` and `password` fields."
+                },
+                "access_token": {
+                  "type": "string",
+                  "description": "The OAuth2 access token used with `OAUTH2` authentication scheme when connecting to an event broker.",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                },
+                "access_token_header": {
+                  "type": "string",
+                  "description": "Specifies the header that contains access token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `access_token` field."
+                },
+                "id_token": {
+                  "type": "string",
+                  "description": "The OpenID Connect ID token used with `OAUTH2` authentication scheme when connecting to an event broker.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "id_token_header": {
+                  "type": "string",
+                  "description": "Specifies the header that contains id token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `id_token` field."
                 }
               },
               "description": "Session authentication related configuration."
             },
-            "ssl_validate_certificate": {
-              "type": "boolean",
-              "description": "Indicates whether the API should validate server certificates with the trusted certificates.",
-              "default": true
+            "connect_timeout": {
+              "type": "integer",
+              "maximum": 100000,
+              "minimum": 100,
+              "description": "The timeout period (in milliseconds) for a connect operation to a given host (per host).",
+              "default": 3000
             },
             "calculate_message_expiry": {
               "type": "boolean",
               "description": "If this property is true and time-to-live has a positive value in a message, the expiration time is calculated when the message is sent or received",
-              "default": true
-            },
-            "generate_rcv_timestamps": {
-              "type": "boolean",
-              "description": "When enabled, a receive timestamp is recorded for each message.",
               "default": true
             },
             "generate_sender_id": {
@@ -108,32 +134,6 @@
               "type": "boolean",
               "description": "When enabled, a sequence number is automatically included (if not already present) in the Solace-defined fields for each message sent.",
               "default": true
-            },
-            "host": {
-              "type": "string",
-              "description": "The IPv4 or IPv6 address or host name to connect to (see: https://docs.solace.com/API-Developer-Online-Ref-Documentation/c/index.html#host-entry).",
-              "x-referenceable": true
-            },
-            "connect_timeout": {
-              "type": "integer",
-              "maximum": 100000,
-              "minimum": 100,
-              "description": "The timeout period (in milliseconds) for a connect operation to a given host (per host).",
-              "default": 3000
-            },
-            "generate_send_timestamps": {
-              "type": "boolean",
-              "description": "When enabled, a send timestamp is automatically included (if not already present) in the Solace-defined fields for each message sent.",
-              "default": true
-            },
-            "properties": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "string",
-                "x-referenceable": true,
-                "x-lua-required": true
-              },
-              "description": "Additional Solace session properties (each setting needs to have `SESSION_` prefix)."
             }
           },
           "required": [
@@ -144,6 +144,13 @@
         "flow": {
           "type": "object",
           "properties": {
+            "window_size": {
+              "type": "integer",
+              "maximum": 255,
+              "minimum": 1,
+              "description": "The Guaranteed message window size for the Flow.",
+              "default": 255
+            },
             "wait_timeout": {
               "type": "integer",
               "maximum": 5000,
@@ -208,13 +215,6 @@
               "type": "integer",
               "description": "This property controls the maximum number of messages that may be unacknowledged on the Flow.",
               "default": -1
-            },
-            "window_size": {
-              "type": "integer",
-              "maximum": 255,
-              "minimum": 1,
-              "description": "The Guaranteed message window size for the Flow.",
-              "default": 255
             }
           },
           "required": [
@@ -249,13 +249,6 @@
         "websocket": {
           "type": "object",
           "properties": {
-            "timeout": {
-              "type": "integer",
-              "maximum": 60000,
-              "minimum": 1,
-              "description": "Specifies the network timeout threshold in milliseconds.",
-              "default": 1000
-            },
             "max_recv_len": {
               "type": "integer",
               "description": "Specifies the maximal length of payload allowed when receiving WebSocket frames.",
@@ -265,6 +258,13 @@
               "type": "integer",
               "description": "Specifies the maximal length of payload allowed when sending WebSocket frames.",
               "default": 65536
+            },
+            "timeout": {
+              "type": "integer",
+              "maximum": 60000,
+              "minimum": 1,
+              "description": "Specifies the network timeout threshold in milliseconds.",
+              "default": 1000
             }
           },
           "description": "The `WEBSOCKET` mode related configuration settings."

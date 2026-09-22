@@ -65,8 +65,6 @@ related_resources:
     url: /metering-and-billing/billing-invoicing/
   - text: Get started with {{site.metering_and_billing}} generic meters
     url: /how-to/get-started-with-metering-and-billing-generic-meters/
-
-automated_tests: false
 ---
 
 This guide shows how to meter LLM traffic from {{site.ai_gateway}} and convert that usage into billable revenue with [{{site.metering_and_billing}}](/metering-and-billing/) in {{site.konnect_short_name}}.
@@ -170,7 +168,7 @@ ai_gateway_policies:
     global: false
     config:
       ingest_endpoint: https://us.api.konghq.com/v3/openmeter/events
-      api_token: !env AUTH_TOKEN
+      api_token: !env KONNECT_SPAT_TOKEN
       meter_api_requests: false
       meter_ai_token_usage: true
       subject:

@@ -4,7 +4,7 @@ This token authenticates the {{site.metering_and_billing}} plugin when it sends 
 Export your system account token:
 
 ```sh
-export AUTH_TOKEN='YOUR SPAT TOKEN'
+export KONNECT_SPAT_TOKEN='YOUR SPAT TOKEN'
 ```
 
 For more information, see [system accounts and access tokens](/konnect-api/#system-accounts-and-access-tokens).
