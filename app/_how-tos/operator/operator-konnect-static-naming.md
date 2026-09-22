@@ -37,15 +37,14 @@ prereqs:
 
 By default, {{ site.operator_product_name }} generates unique, dynamic names for `KonnectGatewayControlPlane` resources created from a `Gateway`. 
 
-The `gateway-operator.konghq.com/static-naming: "true"` annotation instructs {{site.operator_product_name}} to use a static, predictable name for the generated control plane based on the Gateway's namespace and name (for example, `default-hybrid`). This enables you to configure references before the control plane is created.
+The `gateway-operator.konghq.com/static-naming: "true"` annotation instructs {{site.operator_product_name}} to use static, predictable names for the resources it generates from a `Gateway`. The `KonnectGatewayControlPlane` resource is named after the `Gateway`, and the control plane this resource creates in {{site.konnect_short_name}} is named `<namespace>_<gateway-name>` (for example, `default_hybrid`). This enables you to configure references before the control plane is created.
 
 {:.warning}
-> Once a `KonnectGatewayControlPlane` name is created, it can't be modified. Plan your naming carefully before enabling this annotation.
+> The name of a `KonnectGatewayControlPlane` resource can't be modified after creation, and the name of the control plane in {{site.konnect_short_name}} is derived from the Gateway's namespace and name when that control plane is created. Plan your naming carefully before enabling this annotation, and keep in mind that control planes created before you upgrade {{site.operator_product_name}} keep the name they already have.
 
-When static naming is enabled, {{site.operator_product_name}} derives the name for the `KonnectGatewayControlPlane` using the following logic:
+When static naming is enabled, {{site.operator_product_name}} names the `KonnectGatewayControlPlane` resource after the `Gateway`, and names the control plane it creates in {{site.konnect_short_name}} `<namespace>_<gateway-name>`.
 
-* If the Gateway is in the same namespace as {{site.operator_product_name}}, the name will be the same as the Gateway name.
-* If the Gateway is in a different namespace, the name will be the Gateway name prefixed with the namespace.
+The namespace is part of the {{site.konnect_short_name}} name because control plane names must be unique across your whole {{site.konnect_short_name}} organization, while Gateway names only have to be unique within a namespace. The two parts are joined with an underscore, which can't appear in a namespace or a Gateway name, so the namespace and the Gateway name stay unambiguously separated. As a result, the Kubernetes and {{site.konnect_short_name}} names of the same control plane differ, for example `hybrid` and `kong_hybrid`.
 
 ## Create the GatewayConfiguration and GatewayClass resources
 
@@ -116,9 +115,9 @@ method: GET
 {% endkonnect_api_request %}
 <!--vale on-->
 
-You should see a control plane named `kong-hybrid`.
+You should see a control plane named `kong_hybrid`.
 
-You can now reference the control plane in other resources using the Gateway name. For example, here's how to reference it in a `KongConsumer` resource:
+You can now reference the control plane in other resources using the name of the `KonnectGatewayControlPlane` resource, which matches the Gateway name. No resource looks up the control plane by its {{site.konnect_short_name}} name. For example, here's how to reference it in a `KongConsumer` resource:
 
 ```sh
 echo '
