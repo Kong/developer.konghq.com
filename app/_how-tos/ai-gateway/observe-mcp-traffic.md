@@ -17,7 +17,7 @@ related_resources:
   - text: Control MCP tool access with AI Consumer and AI Consumer Group ACLs
     url: /ai-gateway/use-access-controls-for-mcp-tools/
 
-description: Learn how to observe MCP tool activity after you apply access controls. Attach a File Log Policy, then review audit entries to confirm permitted tools and RPC calls, using stateless 2026-07-28 MCP traffic.
+description: Learn how to observe MCP tool activity after you apply access controls. Attach a File Log Policy to an AI MCP Server, generate traffic with the MCP Inspector CLI, then read the audit entries to see which tools each AI Consumer reached and how the ACLs decided each call.
 
 products:
   - ai-gateway
@@ -46,53 +46,49 @@ tags:
 tldr:
   q: How do I observe MCP tool usage with {{site.ai_gateway}}?
   a: |
-    Use the [File Log Policy](/ai-gateway/policies/file-log/) to write MCP tool activity to a local file. Inspect the entries to see which tools each AI Consumer or AI Consumer Group accessed, and whether ACLs allowed or denied the call.
+    Use the [File Log Policy](/ai-gateway/policies/file-log/) to write MCP tool activity to a local file, and set `config.logging.audits: true` on the AI MCP Server so every ACL decision is recorded.
+
+    This tutorial attaches a File Log Policy to the Petstore AI MCP Server you built in [Control MCP tool access with AI Consumer and AI Consumer Group ACLs](/ai-gateway/use-access-controls-for-mcp-tools/), generates allowed and denied tool calls with the MCP Inspector CLI, then reads the resulting `ai.mcp` log entries.
 
 tools:
   - kongctl
 
 prereqs:
   inline:
-    - title: Mock API Server
+    - title: Petstore API
+      include_content: prereqs/third-party/swagger-petstore
+    - title: MCP tool access controls
       content: |
-        This tutorial reuses the AI Consumers, AI Consumer Groups, AI Auth Strategy, and AI MCP Server created in [Control MCP tool access with AI Consumer and AI Consumer Group ACLs](/ai-gateway/use-access-controls-for-mcp-tools/), along with the `$ALICE_API_KEY` and `$BOB_API_KEY` values exported there.
+        This tutorial builds directly on [Control MCP tool access with AI Consumer and AI Consumer Group ACLs](/ai-gateway/use-access-controls-for-mcp-tools/). Complete that tutorial first, and keep the `$ALICE_API_KEY` and `$BOB_API_KEY` values it exports in your terminal.
 
-        Keep the mock marketplace MCP server from that tutorial running on port `3001`. The AI MCP Server proxies to it, so the traffic you generate here fails without it. Confirm it's still listening, which returns `200`:
-
-        ```bash
-        curl -s -o /dev/null -w '%{http_code}\n' -X POST http://localhost:3001/mcp \
-          -H 'Content-Type: application/json' \
-          -H 'Accept: application/json, text/event-stream' \
-          -H 'MCP-Protocol-Version: 2026-07-28' \
-          -H 'Mcp-Method: tools/list' \
-          -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{"_meta":{"io.modelcontextprotocol/protocolVersion":"2026-07-28","io.modelcontextprotocol/clientCapabilities":{}}}}'
-        ```
-      icon_url: /assets/icons/github.svg
+        The AI Consumers, AI Consumer Groups, `my-key-auth` AI Auth Strategy, and `petstore-acl-mcp` AI MCP Server created there are all reused here.
+      icon_url: '/assets/icons/ai-gateway.svg'
 
 cleanup:
   inline:
-    - title: Stop the mock API server
-      content: |
-        Stop the mock marketplace MCP server with `Ctrl+C` in the terminal running it.
-      icon_url: '/assets/icons/code.svg'
+    - title: Stop Petstore API
+      include_content: cleanup/third-party/swagger-petstore
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
       icon_url: '/assets/icons/ai-gateway.svg'
 
 faqs:
-  - q: What's different about `2026-07-28` MCP traffic in these log entries compared to `2025-06-18` or `2025-11-25`?
-    a: |
-      There's no `mcp_session_id` field anywhere in the entry. `2026-07-28` removes the session concept entirely, so the runtime doesn't populate or expect one, and `ai.mcp.protocol_version` records the revision instead. See [MCP version support](/ai-gateway/mcp-version-support/).
-
-      Every other `ai.mcp` field behaves the same way across revisions. For the full list, see the [audit log reference](/ai-gateway/ai-audit-log-reference/#ai-mcp-logs).
   - q: Why does a denied call have no `rpc` entry?
     a: |
       The ACL check runs before the request is dispatched as an RPC, so a denied call never becomes one. Only the `ai.mcp.audit` entry records it. That also means `rpc` latency and size data only ever covers calls that reached the upstream MCP server.
+  - q: Why does a single tool call write several log entries?
+    a: |
+      The MCP Inspector CLI opens a fresh MCP session for each invocation, so one `tools/call` command produces a short sequence of requests: `initialize`, `notifications/initialized`, and the tool call itself. Each one is a separate request through {{site.ai_gateway}}, so each gets its own File Log entry. The entries share one `ai.mcp.mcp_session_id`, and only the tool call carries an `ai.mcp.audit` array.
+  - q: Which MCP protocol revision appears in `ai.mcp.protocol_version`?
+    a: |
+      Whichever revision the client negotiates during `initialize`, not a value you configure on the AI MCP Server. The MCP Inspector CLI used in this tutorial negotiates `2025-11-25`, so entries include an `ai.mcp.mcp_session_id`. A client that negotiates `2026-07-28` has no session concept, and {{site.ai_gateway}} omits `mcp_session_id` for that traffic. See [MCP version support](/ai-gateway/mcp-version-support/).
 ---
 
 ## Attach a File Log Policy
 
-Create a File Log Policy and add it to the existing AI MCP Server, alongside the ACL configuration:
+Create a File Log Policy and attach it to the existing `petstore-acl-mcp` AI MCP Server.
+
+Because `kongctl` manages each AI MCP Server declaratively, this configuration repeats the entity's full definition from the previous tutorial, with two additions: the new Policy in `policies`, and `config.logging.audits: true`.
 
 {% entity_examples %}
 ai_gateway_policies:
@@ -107,11 +103,11 @@ ai_gateway_policies:
       path: /tmp/mcp.json
 
 ai_gateway_mcp_servers:
-  - ref: marketplace-mcp
+  - ref: petstore-acl-mcp
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
-    name: marketplace-mcp
-    display_name: "Marketplace API"
-    type: passthrough-listener
+    name: petstore-acl-mcp
+    display_name: "Petstore API"
+    type: conversion-listener
     enabled: true
     policies:
       - !ref my-file-log#name
@@ -126,157 +122,192 @@ ai_gateway_mcp_servers:
           - admin
         deny: []
     config:
-      url: http://host.docker.internal:3001/mcp
+      url: http://host.docker.internal:8080/api/v3
       route:
         paths:
-          - /mcp
+          - /petstore-acl
       logging:
         payloads: false
         audits: true
       server:
         timeout: 60000
     tools:
-      - name: list_users
+      - name: get-pets-by-status
+        description: Find pets by status
+        method: GET
+        path: /petstore-acl/pet/findByStatus
         access:
           acls:
             allow:
               - admin
+              - support
               - eason
+        parameters:
+          - name: status
+            in: query
+            required: true
+            schema:
+              type: string
+              enum:
+                - available
+                - pending
+                - sold
+            description: Status value to filter pets by
+      - name: get-pet-by-id
+        description: Get a pet by ID
+        method: GET
+        path: /petstore-acl/pet/{petId}
+        access:
+          acls:
+            allow:
+              - admin
+              - support
+        parameters:
+          - description: ID of the pet to retrieve
+            in: path
+            name: petId
+            required: true
+            schema:
+              type: integer
+      - name: get-inventory
+        description: Get pet inventories by status
+        method: GET
+        path: /petstore-acl/store/inventory
+        access:
+          acls:
+            allow:
+              - admin
+              - support
+      - name: get-order-by-id
+        description: Get a purchase order by ID
+        method: GET
+        path: /petstore-acl/store/order/{orderId}
+        access:
+          acls:
+            allow:
+              - admin
+              - support
+        parameters:
+          - description: ID of the order to retrieve
+            in: path
+            name: orderId
+            required: true
+            schema:
+              type: integer
+      - name: delete-pet
+        description: Delete a pet
+        method: DELETE
+        path: /petstore-acl/pet/{petId}
+        access:
+          acls:
+            allow:
+              - admin
             deny:
-              - developer
-      - name: get_user
-        access:
-          acls:
-            allow:
-              - admin
-              - developer
-      - name: list_orders
-        access:
-          acls:
-            allow:
-              - admin
-              - developer
-      - name: list_orders_for_user
-        access:
-          acls:
-            allow:
-              - admin
-              - developer
-      - name: search_orders
-        access:
-          acls:
-            allow:
-              - admin
-            deny:
-              - developer
+              - support
+        parameters:
+          - description: ID of the pet to delete
+            in: path
+            name: petId
+            required: true
+            schema:
+              type: integer
 {% endentity_examples %}
 
-Setting `config.logging.audits: true` in the AI MCP Server configuration tells the runtime to record an ACL decision entry for every tool discovery and call, not just the RPC timing and size data that's recorded by default.
+`config.logging.audits: true` tells the runtime to record an ACL decision for every tool discovery and tool call. Without it, entries carry only the `rpc` timing and size data that's logged by default, and you can't tell from the logs why a call was rejected.
 
 ## Generate MCP traffic
 
-Call the MCP server as two different AI Consumers.
+Call the AI MCP Server as two different AI Consumers, using the [MCP Inspector CLI](https://modelcontextprotocol.io/docs/tools/inspector#cli) and passing each one's API key in the `apikey` header.
 
-1. Alice, in `admin`, successfully calls `list_orders`:
+1. Alice, in `admin`, successfully calls `get-pet-by-id`:
 
 {% capture alice_call %}
-<!-- vale off -->
-{% validation request-check %}
-url: /mcp/
-method: POST
-status_code: 200
-headers:
-  - 'Content-Type: application/json'
-  - 'Accept: application/json, text/event-stream'
-  - 'MCP-Protocol-Version: 2026-07-28'
-  - 'Mcp-Method: tools/call'
-  - 'Mcp-Name: list_orders'
-  - 'apikey: $ALICE_API_KEY'
-body:
-  jsonrpc: '2.0'
-  id: 1
-  method: tools/call
-  params:
-    name: "list_orders"
-    arguments: {}
-    _meta:
-      'io.modelcontextprotocol/protocolVersion': '2026-07-28'
-      'io.modelcontextprotocol/clientCapabilities': {}
+<!--vale off-->
+{% validation custom-command %}
+command: |
+  npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
+    http://localhost:8000/petstore-acl \
+    --transport http --method tools/call \
+    --tool-name get-pet-by-id \
+    --tool-arg path_petId=7 \
+    --header "apikey: $ALICE_API_KEY" | jq -r '.content[0].text' | jq -c '.'
+expected:
+  return_code: 0
+  message: |
+    {"id":7,"category":{"id":4,"name":"Lions"},"name":"Lion 1","photoUrls":["url1","url2"],"tags":[{"id":1,"name":"tag1"},{"id":2,"name":"tag2"}],"status":"available"}
+render_output: false
 {% endvalidation %}
-<!-- vale on -->
+<!--vale on-->
 {% endcapture %}
 
 {{ alice_call | indent }}
 
-1. Bob, in `developer`, is denied `list_users`:
+1. Bob, in `support`, is denied `delete-pet`. The call is rejected with `HTTP 403 Forbidden`, which the MCP Inspector CLI reports as a transport error and a non-zero exit code:
 
 {% capture bob_call %}
-<!-- vale off -->
-{% validation request-check %}
-url: /mcp/
-method: POST
-status_code: 403
-headers:
-  - 'Content-Type: application/json'
-  - 'Accept: application/json, text/event-stream'
-  - 'MCP-Protocol-Version: 2026-07-28'
-  - 'Mcp-Method: tools/call'
-  - 'Mcp-Name: list_users'
-  - 'apikey: $BOB_API_KEY'
-body:
-  jsonrpc: '2.0'
-  id: 1
-  method: tools/call
-  params:
-    name: "list_users"
-    arguments: {}
-    _meta:
-      'io.modelcontextprotocol/protocolVersion': '2026-07-28'
-      'io.modelcontextprotocol/clientCapabilities': {}
+<!--vale off-->
+{% validation custom-command %}
+command: |
+  npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
+    http://localhost:8000/petstore-acl \
+    --transport http --method tools/call \
+    --tool-name delete-pet \
+    --tool-arg path_petId=9 \
+    --header "apikey: $BOB_API_KEY"
+expected:
+  return_code: 1
+render_output: false
 {% endvalidation %}
-<!-- vale on -->
+<!--vale on-->
 {% endcapture %}
 
 {{ bob_call | indent }}
 
 ## Validate the log entries
 
-Each line in `/tmp/mcp.json` is a complete File Log entry, and MCP activity sits in its `ai.mcp` object alongside the standard `request`, `response`, and `consumer` fields. Read the audit logs in your Docker container, filtering to that object:
+Each line in `/tmp/mcp.json` is a complete File Log entry, and MCP activity sits in its `ai.mcp` object alongside the standard `request`, `response`, and `consumer` fields.
 
+Read the log from inside your {{site.ai_gateway}} Docker container. Filtering to entries that carry an `audit` array narrows the output to the two tool calls, skipping the session handshake requests that each MCP Inspector CLI invocation also generates:
+
+<!--vale off-->
 {% validation custom-command %}
 command: |
-  docker exec kong-ai-quickstart-gateway cat /tmp/mcp.json | jq '.ai.mcp'
+  docker exec kong-ai-quickstart-gateway cat /tmp/mcp.json \
+    | jq 'select(.ai.mcp.audit) | .ai.mcp'
 expected:
   return_code: 0
 render_output: false
 {% endvalidation %}
+<!--vale on-->
 
-An allowed call produces both an `rpc` entry and an `audit` entry; a denied call produces only an `audit` entry. Alice's allowed `list_orders` call produces:
+An allowed call produces both an `rpc` entry and an `audit` entry. Alice's `get-pet-by-id` call looks like the following:
 
 ```json
 {
-  "mcp_server_id": "37102e42-f18b-410a-ab8c-6719c914dd1c",
-  "protocol_version": "2026-07-28",
+  "mcp_session_id": "eddd6086-5f18-4b36-9da8-2d6f7cd8da75",
+  "mcp_server_id": "3c6c6e81-5163-4bcb-a354-b4340ae5d1e9",
+  "protocol_version": "2025-11-25",
+  "tool_list_cache_hit": true,
   "rpc": [
     {
       "method": "tools/call",
-      "id": "1",
-      "latency": 3,
-      "tool_name": "list_orders",
-      "response_body_size": 5030
+      "tool_name": "get-pet-by-id",
+      "latency": 46,
+      "response_body_size": 290,
+      "id": "2"
     }
   ],
   "audit": [
     {
-      "primitive_name": "list_orders",
+      "primitive": "tool",
+      "primitive_name": "get-pet-by-id",
+      "scope": "primitive",
+      "action": "allow",
       "consumer": {
-        "id": "6c95a611-9991-407b-b1c3-bc608d3bccc3",
+        "id": "327670e0-4d13-47a8-9453-5b7370bfbba7",
         "name": "admin",
         "identifier": "consumer_group"
-      },
-      "scope": "primitive",
-      "primitive": "tool",
-      "action": "allow"
+      }
     }
   ]
 }
@@ -285,30 +316,45 @@ An allowed call produces both an `rpc` entry and an `audit` entry; a denied call
 
 In an `audit` entry, `consumer.identifier` tells you what `consumer.name` refers to. Here it's `consumer_group`, so `name` is the AI Consumer Group that granted access (`admin`), while `id` is the UUID of the AI Consumer that made the call (Alice). For the full field list, see the [audit log reference](/ai-gateway/ai-audit-log-reference/#ai-mcp-logs).
 
-Bob's denied `list_users` call has no `rpc` entry at all, only the `audit` entry recording the ACL decision:
+Bob's denied `delete-pet` call has no `rpc` entry at all, only the `audit` entry recording the ACL decision:
 
 ```json
 {
-  "ai": {
-    "mcp": {
-      "audit": [
-        {
-          "primitive_name": "list_users",
-          "consumer": {
-            "id": "b2f6a2b1-6a15-4e3f-9e0b-6a2f7a1c9d10",
-            "name": "developer",
-            "identifier": "consumer_group"
-          },
-          "scope": "primitive",
-          "primitive": "tool",
-          "action": "deny"
-        }
-      ]
+  "mcp_session_id": "0eee0187-d459-4549-a026-a09879ecbd29",
+  "mcp_server_id": "3c6c6e81-5163-4bcb-a354-b4340ae5d1e9",
+  "protocol_version": "2025-11-25",
+  "tool_list_cache_hit": true,
+  "audit": [
+    {
+      "primitive": "tool",
+      "primitive_name": "delete-pet",
+      "scope": "primitive",
+      "action": "deny",
+      "consumer": {
+        "id": "ae05d1a5-1a43-4176-a882-af5c2d0b2e78",
+        "name": "support",
+        "identifier": "consumer_group"
+      }
     }
-  }
+  ]
 }
 ```
 {:.no-copy-code}
+
+Confirm that the denial was recorded:
+
+<!--vale off-->
+{% validation custom-command %}
+command: |
+  docker exec kong-ai-quickstart-gateway cat /tmp/mcp.json \
+    | jq -r '.ai.mcp.audit[]? | select(.primitive_name == "delete-pet") | .action' \
+    | sort -u
+expected:
+  return_code: 0
+  message: "deny"
+render_output: false
+{% endvalidation %}
+<!--vale on-->
 
 {:.success}
 > **MCP traffic in {{site.konnect_short_name}}**
