@@ -1,0 +1,16 @@
+title: 'Fixture Auth without a credential section'
+description: 'An example that opts out of the Consumer and credential section.'
+weight: 80
+
+consumer_credential: false
+
+config:
+  key_names:
+  - apikey
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

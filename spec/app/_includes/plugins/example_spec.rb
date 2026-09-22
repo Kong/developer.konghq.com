@@ -7,48 +7,77 @@ RSpec.describe 'plugins/example.md' do
     JekyllSite.instance.data['entity_examples'] =
       { 'config' => YAML.load_file(File.join(PROJECT_ROOT, 'app/_data/entity_examples/config.yml'), aliases: true) }
     allow(Jekyll).to receive(:sites).and_return([JekyllSite.instance])
+    stub_const('Jekyll::Drops::Plugins::Schema::SCHEMAS_BASE', fixture_schemas_base)
   end
 
-  after { JekyllSite.instance.data.delete('entity_examples') }
+  after do
+    JekyllSite.instance.data.delete('entity_examples')
+    Jekyll::Drops::Plugins::Schema::FILE_INDEX
+      .reject { |dir, _| dir.start_with?(fixture_schemas_base) }
+      .each_key { |dir| Jekyll::Drops::Plugins::Schema::FILE_INDEX.delete(dir) }
+  end
+
+  let(:fixture_schemas_base) { File.join(JekyllSite.instance.source, '_schemas/gateway/plugins') }
 
   let(:plugin) do
     Jekyll::PluginPages::Plugin.new(
-      folder: File.join(PROJECT_ROOT, 'app/_kong_plugins/key-auth'),
-      slug: 'key-auth'
+      folder: File.join(JekyllSite.instance.source, '_kong_plugins', 'fixture-auth'),
+      slug: 'fixture-auth'
     )
   end
 
-  let(:example) { plugin.examples.detect { |e| e.slug == 'enable-key-auth' } }
+  def render_example_page(example_slug)
+    file = plugin.example_files.detect { |f| File.basename(f, File.extname(f)) == example_slug }
+    page = Jekyll::PluginPages::Pages::Example.new(plugin:, file:)
 
-  let(:credential_example) do
-    Jekyll::Drops::PluginCredentialExample.new(
-      plugin_name: 'Key Auth',
-      example_formats: %w[deck admin-api konnect-api kic terraform],
-      definition: YAML.load_file('app/_data/plugins/credentials/key-auth.yml')
-    )
+    rendered = render_liquid(page.content, page: page.data)
+    Capybara::Node::Simple.new(Kramdown::Document.new(rendered, input: 'GFM').to_html)
   end
 
-  let(:template) do
-    '{% include plugins/example.md %}'
+  def heading_ids(html)
+    html.all('h2').map { |heading| heading[:id] }
   end
 
-  let(:rendered) do
-    render_liquid(template, page: {
-                    'example' => example,
-                    'credential_example' => credential_example,
-                    'min_version' => {}
-                  })
+  shared_examples 'a page with an ordered credential section' do
+    it 'renders the credential section after the example title and directly before the plugin configuration section' do
+      ids = heading_ids(html)
+
+      expect(ids.index('create-a-consumer-and-credential')).to be > ids.index(title_id)
+      expect(ids.index('create-a-consumer-and-credential')).to be < ids.index('set-up-the-plugin')
+    end
+
+    it 'renders the credential section heading with its own anchor' do
+      expect(html).to have_css('h2#create-a-consumer-and-credential a[href="#create-a-consumer-and-credential"]')
+    end
   end
 
-  subject(:html) { Capybara::Node::Simple.new(rendered) }
+  context 'when the example has no Prerequisites and Environment variables sections' do
+    let(:html) { render_example_page('enable-fixture-auth') }
+    let(:title_id) { 'enable-fixture-auth' }
 
-  it 'renders the Consumer and credential section before the plugin configuration section' do
-    heading_ids = html.all('h2').map { |heading| heading[:id] }
-
-    expect(heading_ids.index('create-a-consumer-and-credential')).to be < heading_ids.index('set-up-the-plugin')
+    include_examples 'a page with an ordered credential section'
   end
 
-  it 'renders the Consumer and credential section heading with its own anchor' do
-    expect(html).to have_css('h2 a[href="#create-a-consumer-and-credential"]')
+  context 'when the example has Prerequisites and Environment variables sections' do
+    let(:html) { render_example_page('with-prerequisites') }
+    let(:title_id) { 'enable-fixture-auth-with-prerequisites' }
+
+    include_examples 'a page with an ordered credential section'
+
+    it 'renders the credential section after the Prerequisites and Environment variables sections' do
+      ids = heading_ids(html)
+
+      expect(ids.index('create-a-consumer-and-credential')).to be > ids.index('prerequisites')
+      expect(ids.index('create-a-consumer-and-credential')).to be > ids.index('environment-variables')
+    end
+  end
+
+  context 'when the example opts out of the credential section' do
+    let(:html) { render_example_page('opted-out') }
+
+    it 'renders no credential section' do
+      expect(heading_ids(html)).not_to include('create-a-consumer-and-credential')
+      expect(heading_ids(html)).to include('set-up-the-plugin')
+    end
   end
 end
