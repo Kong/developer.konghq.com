@@ -5,7 +5,7 @@ import { processPrereqs } from "./prereqs.js";
 import { processCleanup } from "./cleanup.js";
 import { processSteps } from "./step.js";
 import { validate, ValidationError } from "./validations.js";
-import { executeCommand } from "../docker-helper.js";
+import { executeDocCommand } from "../docker-helper.js";
 import { getSetupConfig } from "./setup.js";
 import { logResult } from "../reporting.js";
 
@@ -86,7 +86,7 @@ async function runPrereqs(prereqs, container, runtimeConfig) {
     if (config.commands) {
       for (const command of config.commands) {
         if (typeof command === "string") {
-          await executeCommand(container, command);
+          await executeDocCommand(container, command);
         } else {
           await validate(container, command, runtimeConfig);
         }
@@ -122,7 +122,7 @@ async function runSteps(steps, runtimeConfig, container) {
       if (config.commands) {
         for (const command of config.commands) {
           if (typeof command === "string") {
-            await executeCommand(container, command);
+            await executeDocCommand(container, command);
             log(`   step ✅ .`);
           } else {
             // XXX: Sleep needed here because we need to wait for the iterator
