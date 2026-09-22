@@ -94,10 +94,10 @@ No packages are installed: Alpine already ships `/bin/sh`, `apk`, and `ca-certif
 Pin both images by digest, since the version tags are mutable:
 
 ```sh
-docker buildx imagetools inspect kong/deck:v1.66.1 --format '{{.Manifest.Digest}}'
+docker buildx imagetools inspect kong/deck:v1.66.1 --format '{% raw %}{{.Manifest.Digest}}{% endraw %}'
 # then: COPY --from=kong/deck:v1.66.1@sha256:<digest> ...
 
-docker buildx imagetools inspect alpine:3.24.2 --format '{{.Manifest.Digest}}'
+docker buildx imagetools inspect alpine:3.24.2 --format '{% raw %}{{.Manifest.Digest}}{% endraw %}'
 # then: FROM alpine:3.24.2@sha256:<digest>
 ```
 
