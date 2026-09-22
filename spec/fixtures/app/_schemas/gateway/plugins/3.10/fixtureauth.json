@@ -1,0 +1,9 @@
+{
+  "properties": {
+    "protocols": {
+      "items": {
+        "enum": ["http", "https"]
+      }
+    }
+  }
+}
