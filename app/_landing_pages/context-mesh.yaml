@@ -28,7 +28,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    AI agents are only as good as the context they can reach. {{site.context_mesh}} exposes REST APIs and existing MCP servers to AI agents as a single Code Mode MCP server. It is the mediation layer between agents and your APIs. Agent traffic to those APIs passes through the same path as the rest of your API traffic, so the policies and observability you already apply continue to apply.
+                    AI agents are only as good as the context they can reach. {{site.context_mesh}} exposes REST APIs and existing MCP servers to AI agents as a single Code Mode MCP server.
 
                     Agents cannot call most APIs directly and most MCP servers would require an integration with each individual server. 
                     {{site.context_mesh}} closes that gap by allowing agents to call the {{site.context_mesh}} MCP server without per-agent integration code.
