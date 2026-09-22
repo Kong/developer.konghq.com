@@ -42,12 +42,12 @@ If your API specification contains variables, you can use the environment to rep
 
 1. Click **Base Environment**.
 1. Click the pencil icon to open the **Manage Environment** window.
-1. [Define the environment variables](/insomnia/environments/) you need. In this example, you need to define at least the base URL and token:
+1. [Define the environment variables](/insomnia/environments/) you need. In this example, you need to define at least the base URL and [Personal Access Token](/konnect-api/#personal-access-tokens):
 
     ```json
     {
       "base_url": "https://us.api.konghq.com/v2",
-      "bearerToken": "MY TOKEN"
+      "bearerToken": "YOUR_PATH_TOKEN"
     }
     ```
 
