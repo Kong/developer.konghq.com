@@ -168,7 +168,7 @@ ai_gateway_policies:
     global: false
     config:
       ingest_endpoint: https://us.api.konghq.com/v3/openmeter/events
-      api_token: !env AUTH_TOKEN
+      api_token: !env KONNECT_SPAT_TOKEN
       meter_api_requests: false
       meter_ai_token_usage: true
       subject:
