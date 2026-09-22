@@ -176,6 +176,7 @@ rows:
     notes: |
       Must be a fiat currency.
       If the customer has no currency when you start their first paid subscription, {{site.metering_and_billing}} sets it to that subscription's invoice currency.
+      A customer without a currency can't be granted credits.
   - entity: "Plan"
     who: "You, when you create the plan"
     notes: |
