@@ -46,7 +46,7 @@ tags:
   - security
 
 tldr:
-  q: How do I enforce control access to MCP tools using {{site.ai_gateway}}?
+  q: How do I control access to MCP tools using {{site.ai_gateway}}?
   a: |
     Use the [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity to control access to MCP tools with default and per-tool ACLs based on AI Consumers and AI Consumer Groups.
 
@@ -336,6 +336,8 @@ prereqs:
            ```
            http://localhost:3001/mcp
            ```
+
+           The server also logs a `responseMode: 'json' drops mid-call notifications` warning on startup. This is expected: the tools in this tutorial each return a single result, so there are no mid-call notifications to drop.
       icon_url: /assets/icons/github.svg
 
 cleanup:
@@ -677,6 +679,8 @@ ai_gateway_mcp_servers:
 {:.info}
 > `suspended` has no per-tool ACL entry anywhere, so Carol falls through to `access.default_tool_acls`, which only allows `admin`. This blocks her from every tool without needing an explicit `deny`.
 
+`access.acls` is the server-level gate, evaluated before any tool ACL. Every AI Consumer passes it here: an empty `allow` list means no server-level rule is configured, so access is decided entirely by `access.default_tool_acls` and the per-tool ACLs. Populate `access.acls` when you want to block an AI Consumer from the AI MCP Server as a whole, rather than from individual tools.
+
 ## Validate
 
 Validate the ACL rules by calling `tools/list` directly against the route for each AI Consumer.
@@ -804,7 +808,39 @@ body:
 
    The call returns `HTTP 403 Forbidden`. Bob's `developer` group is on the `deny` list for `list_users` and isn't on the `allow` list for `search_orders`, so both tools are unreachable.
 
-1. Check that Carol (`suspended` group) is denied access to every tool
+   {:.info}
+   > A denied call returns an `HTTP 403` with an HTML body, not a JSON-RPC error object. An MCP client that expects every response to be JSON-RPC needs to handle the status code itself.
+
+1. Check that Carol (`suspended` group) is denied access to every tool. Because she can't reach any tool, her `tools/list` succeeds but returns an empty list:
+
+{% capture carol_list %}
+<!-- vale off -->
+{% validation request-check %}
+url: /mcp/
+method: POST
+status_code: 200
+headers:
+  - 'Content-Type: application/json'
+  - 'Accept: application/json, text/event-stream'
+  - 'MCP-Protocol-Version: 2026-07-28'
+  - 'Mcp-Method: tools/list'
+  - 'apikey: $CAROL_API_KEY'
+display_headers: true
+body:
+  jsonrpc: '2.0'
+  id: 1
+  method: tools/list
+  params:
+    _meta:
+      'io.modelcontextprotocol/protocolVersion': '2026-07-28'
+      'io.modelcontextprotocol/clientCapabilities': {}
+{% endvalidation %}
+<!-- vale on -->
+{% endcapture %}
+
+{{ carol_list | indent }}
+
+   The response contains an empty `tools` array. Tool discovery and tool invocation are evaluated separately: discovery filters the list down to the tools an AI Consumer can reach, so Carol sees nothing rather than being rejected outright. Invoking a tool directly is what returns `HTTP 403 Forbidden`:
 
 {% capture carol_call %}
 <!-- vale off -->
