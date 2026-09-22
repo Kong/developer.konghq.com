@@ -130,6 +130,9 @@ ai_tools:
   - text: Konnect MCP
     url: /konnect-platform/konnect-mcp/
     icon: /assets/icons/mcp.svg
+  - text: Context Mesh
+    url: /context-mesh/
+    icon: /assets/images/context-mesh/context-mesh.svg
   - text: AI Cookbooks
     url: /cookbooks/
     icon: /assets/icons/book.svg
