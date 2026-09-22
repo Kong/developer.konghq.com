@@ -215,6 +215,9 @@ rows:
   - format: "`huggingface`"
     provider: "[Hugging Face](/ai-gateway/ai-providers/huggingface/#supported-native-llm-formats-for-hugging-face)"
     capabilities: Text generation, streaming.
+  - format: "`typesafe`"
+    provider: "[TypeSafe AI](/ai-gateway/ai-providers/typesafe/#supported-native-llm-formats-for-typesafe-ai)"
+    capabilities: "Decisions. Required for the `decisions` capability: there's no OpenAI-translated equivalent for a request with no `messages` or `input` field."
 {% endtable %}
 <!-- vale on -->
 

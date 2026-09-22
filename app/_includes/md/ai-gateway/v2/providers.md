@@ -82,7 +82,7 @@ rows:
 {% when 'rerank' %}{% assign cap_label = rerank_label %}{% assign cap_path_template = "`/rerank`" %}{% assign cap_description = "Semantic reranking of documents" %}
 {% when 'batches' %}{% assign cap_label = batches_label %}{% assign cap_path_template = "`/batches`" %}{% assign cap_description = "Batch processing of requests" %}
 {% when 'files' %}{% assign cap_label = files_label %}{% assign cap_path_template = "`/files`" %}{% assign cap_description = "File management and storage" %}
-{% when 'decisions' %}{% assign cap_label = decisions_label %}{% assign cap_path_template = "`/decisions`" %}{% assign cap_description = "Typed decision requests with per-option probabilities and a confidence score" %}
+{% when 'decisions' %}{% assign cap_label = decisions_label %}{% assign cap_path_template = "`/v1/systemone`" %}{% assign cap_description = "Typed decision requests with per-option probabilities and a confidence score" %}
 {% endcase %}
 {% if compare_provider %}
 {% if cap_supported and cap_supported_compare %}
@@ -815,25 +815,25 @@ rows:
   - capability: "decisions{% if decisions_note_num != 0 %}<sup>{{ decisions_note_num }}</sup>{% endif %}"
     variant: "{{ include.variant_label }} & {{ include.compare_variant_label }}"
     model_example: "{{ provider.capabilities.decisions.model_example }}"
-    path_template: "`/decisions`"
+    path_template: "`/v1/systemone`"
     min_version: "{{ provider.capabilities.decisions.min_version }}"
 {% elsif provider.capabilities.decisions.supported %}
   - capability: "decisions{% if decisions_note_num != 0 %}<sup>{{ decisions_note_num }}</sup>{% endif %}"
     variant: "{{ include.variant_label }} only"
     model_example: "{{ provider.capabilities.decisions.model_example }}"
-    path_template: "`/decisions`"
+    path_template: "`/v1/systemone`"
     min_version: "{{ provider.capabilities.decisions.min_version }}"
 {% else %}
   - capability: "decisions{% if compare_decisions_note_num != 0 %}<sup>{{ compare_decisions_note_num }}</sup>{% endif %}"
     variant: "{{ include.compare_variant_label }} only"
     model_example: "{{ compare_provider.capabilities.decisions.model_example }}"
-    path_template: "`/decisions`"
+    path_template: "`/v1/systemone`"
     min_version: "{{ compare_provider.capabilities.decisions.min_version }}"
 {% endif %}
 {% elsif provider.capabilities.decisions %}
   - capability: "decisions{% if decisions_note_num != 0 %}<sup>{{ decisions_note_num }}</sup>{% endif %}"
     model_example: "{{ provider.capabilities.decisions.model_example }}"
-    path_template: "`/decisions`"
+    path_template: "`/v1/systemone`"
     min_version: "{{ provider.capabilities.decisions.min_version }}"
 {% endif %}
 {% endtable %}

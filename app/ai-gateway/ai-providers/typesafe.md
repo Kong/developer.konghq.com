@@ -23,7 +23,7 @@ tags:
   - ai
 
 min_version:
-  ai-gateway: '2.0'
+  ai-gateway: '2.2'
 
 related_resources:
   - text: "{{site.ai_gateway}}"
@@ -40,6 +40,8 @@ related_resources:
 
 
 {% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="TypeSafe AI" %}
+
+{% include md/ai-gateway/v2/native-routes.md providers=site.data.ai-gateway.v2.providers provider_name="TypeSafe AI" %}
 
 ## Configure a {{ provider.name }} provider
 
@@ -66,24 +68,75 @@ variables:
     description: "The API key used to connect to TypeSafe AI. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
 {% endentity_example %}
 
-## Configure a model target for {{ provider.name }}
+## Configure a {{ provider.name }} model
 
 {:.info}
-> Only the `decisions` capability is supported for {{ provider.name }} targets.
+> The `decisions` capability requires `formats: [{type: typesafe}]` on the AI Model. There's no OpenAI-translated equivalent for this capability, so the native format isn't optional the way it is for other passthrough providers.
 
-A [target](/ai-gateway/entities/ai-model/#targets) is an entry in the `targets` array on the AI Model entity, not the AI Model Provider. Unlike providers such as Amazon SageMaker, a target routing to {{ provider.name }} has no provider-specific `config` fields — only the common target options apply: `name` (the upstream model, for example `jev-latest`), `provider`, and `weight`.
+{% entity_example %}
+type: model
+data:
+  display_name: TypeSafe Jev
+  name: jev-decisions
+  type: model
+  capabilities:
+    - decisions
+  formats:
+    - type: typesafe
+  config:
+    route:
+      paths:
+        - /jev
+  targets:
+    - name: jev-latest
+      provider: my-typesafe-account
+      config:
+        type: typesafe
+{% endentity_example %}
+
+With this configuration, requests reach the AI Model at `{route path}/v1/systemone` (`/jev/v1/systemone` for the example above). See [Request and response shape](#request-and-response-shape) for the request and response body.
+
+### Route a target to an alternate TypeSafe-compatible host
+
+A target's `config.upstream_url` can point at a different host serving the same `Jev` model, for example a provider that re-hosts TypeSafe models behind its own endpoint. Because credentials differ per host, configure a separate `typesafe`-type AI Model Provider for it:
+
+{% entity_example %}
+type: model-provider
+data:
+  display_name: Jev via OpenRouter
+  name: my-openrouter-account
+  type: typesafe
+  config:
+    auth:
+      type: basic
+      headers:
+        - name: Authorization
+          value: ${key}
+variables:
+  key:
+    value: $OPENROUTER_API_KEY
+    secret: true
+    description: "The API key used to connect to the OpenRouter-hosted Jev endpoint. Include the `Bearer` prefix, for example `Bearer <your-api-key>`."
+{% endentity_example %}
+
+Then add a second target on the same AI Model, referencing that provider and overriding `upstream_url`:
 
 ```yaml
 targets:
   - name: jev-latest
     provider: my-typesafe-account
-    weight: 100
+  - name: typesafe/jev-1.13-20260917
+    provider: my-openrouter-account
+    config:
+      type: typesafe
+      upstream_url: https://openrouter.ai/api/alpha/decisions
 ```
 
 ## Request and response shape
 
-{{ provider.name }}'s API takes a `state` string plus a map of typed `questions`, and returns typed decisions instead of generated text. {{site.ai_gateway}} passes this body through to {{ provider.name }} unmodified — it doesn't translate it into the OpenAI chat shape, because there's no `messages` or `input` field to translate. See [TypeSafe's API reference](https://docs.typesafe.ai/api) for the full request and response schema. A few details worth calling out:
+{{ provider.name }}'s API takes a `state` string plus a map of typed `questions`, and returns typed decisions instead of generated text. {{site.ai_gateway}} passes this body through to {{ provider.name }} unmodified. It doesn't translate the body into the OpenAI chat shape, because there's no `messages` or `input` field to translate. See [TypeSafe's API reference](https://docs.typesafe.ai/api) for the full request and response schema. A few details worth calling out:
 
 * The response's `answers` field is a map keyed by the question's name, not an array.
-* Answers to `noul`-type questions carry no `confidence` or `probabilities` — for that question type, the number itself is the belief.
+* Answers to `noul`-type questions carry no `confidence` or `probabilities`. For that question type, the number itself is the belief.
 * {{site.ai_gateway}} extracts `usage.input_tokens` and `usage.output_tokens` from the response for token-usage analytics, but because the request body carries no extractable prompt, this capability doesn't support guardrails, semantic caching, semantic routing, `ai-llm-as-judge`, prompt-based rate limiting, or `model_alias`.
+* {{ provider.name }}'s own API reference documents a `401` status for authentication failures, but a missing or invalid API key currently returns `403`. Error bodies arrive under a `detail` field rather than an `error` field.
