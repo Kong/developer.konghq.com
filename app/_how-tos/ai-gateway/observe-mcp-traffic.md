@@ -259,7 +259,7 @@ render_output: false
 
 ## Validate the log entries
 
-Each line in `/tmp/mcp.json` is a complete File Log entry, and MCP activity sits in its `ai.mcp` object alongside the standard `request`, `response`, and `consumer` fields.
+Each line in `/tmp/mcp.json` is a complete File Log entry, and MCP activity sits in an `ai.mcp` object alongside the standard `request`, `response`, and `consumer` fields.
 
 Read the log from inside your {{site.ai_gateway}} Docker container. Filtering to entries that carry an `audit` array narrows the output to the ACL decisions, skipping the `initialize` and `notifications/initialized` handshake requests that each MCP Inspector CLI invocation also generates:
 
