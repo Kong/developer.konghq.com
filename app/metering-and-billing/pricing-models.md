@@ -22,7 +22,7 @@ related_resources:
 
 With {{site.metering_and_billing}}, you can implement various pricing strategies to meet your business needs.
 
-The currency for all pricing models is set based on the related plan.
+The [currency](/metering-and-billing/currencies/) for all pricing models is set based on the related plan.
 
 ## Free
 

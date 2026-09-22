@@ -200,7 +200,7 @@ rows:
 
 Gathering invoices are automatically deleted when the last item for a subscription has been billed for.
 
-Given an invoice is always single currency, if the customer was migrated between currencies they might have one gathering invoice per currency.
+Given an invoice is always a single [currency](/metering-and-billing/currencies/), if the customer was migrated between currencies they might have one gathering invoice per currency.
 
 {:.warning}
 > **Important:** For systematic changes that need to persist across billing cycles, we recommend modifying the subscription directly rather than editing gathering invoices. This ensures consistent billing behavior aligned with the intended subscription terms.
