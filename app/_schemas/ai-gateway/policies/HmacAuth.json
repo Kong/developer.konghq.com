@@ -1,5 +1,15 @@
 {
   "properties": {
+    "model": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "description": "Custom type for representing a foreign key with a null value allowed.",
+      "x-foreign": true
+    },
     "config": {
       "type": "object",
       "properties": {
@@ -78,16 +88,6 @@
         "ws",
         "wss"
       ]
-    },
-    "model": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "description": "Custom type for representing a foreign key with a null value allowed.",
-      "x-foreign": true
     },
     "route": {
       "type": "object",

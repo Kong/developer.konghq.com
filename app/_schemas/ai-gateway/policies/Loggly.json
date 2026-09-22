@@ -1,66 +1,18 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https",
-          "tcp",
-          "tls",
-          "tls_passthrough",
-          "udp",
-          "ws",
-          "wss"
-        ],
-        "description": "A string representing a protocol, such as HTTP or HTTPS."
-      },
-      "description": "A set of strings representing protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "kong"
+          ]
+        },
         "successful_severity": {
-          "type": "string",
-          "enum": [
-            "alert",
-            "crit",
-            "debug",
-            "emerg",
-            "err",
-            "info",
-            "notice",
-            "warning"
-          ],
-          "default": "info"
-        },
-        "host": {
-          "type": "string",
-          "description": "A string representing a host name, such as example.com.",
-          "default": "logs-01.loggly.com"
-        },
-        "port": {
-          "type": "integer",
-          "maximum": 65535,
-          "minimum": 0,
-          "description": "An integer representing a port number between 0 and 65535, inclusive.",
-          "default": 514
-        },
-        "key": {
-          "type": "string",
-          "x-referenceable": true,
-          "x-encrypted": true
-        },
-        "client_errors_severity": {
           "type": "string",
           "enum": [
             "alert",
@@ -92,21 +44,22 @@
           "type": "number",
           "default": 10000
         },
-        "custom_fields_by_lua": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Lua code as a key-value map"
+        "host": {
+          "type": "string",
+          "description": "A string representing a host name, such as example.com.",
+          "default": "logs-01.loggly.com"
         },
-        "tags": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "default": [
-            "kong"
-          ]
+        "port": {
+          "type": "integer",
+          "maximum": 65535,
+          "minimum": 0,
+          "description": "An integer representing a port number between 0 and 65535, inclusive.",
+          "default": 514
+        },
+        "key": {
+          "type": "string",
+          "x-referenceable": true,
+          "x-encrypted": true
         },
         "log_level": {
           "type": "string",
@@ -121,10 +74,57 @@
             "warning"
           ],
           "default": "info"
+        },
+        "client_errors_severity": {
+          "type": "string",
+          "enum": [
+            "alert",
+            "crit",
+            "debug",
+            "emerg",
+            "err",
+            "info",
+            "notice",
+            "warning"
+          ],
+          "default": "info"
+        },
+        "custom_fields_by_lua": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Lua code as a key-value map"
         }
       },
       "required": [
         "key"
+      ]
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "tcp",
+          "tls",
+          "tls_passthrough",
+          "udp",
+          "ws",
+          "wss"
+        ],
+        "description": "A string representing a protocol, such as HTTP or HTTPS."
+      },
+      "description": "A set of strings representing protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
       ]
     },
     "consumer": {

@@ -13,29 +13,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "uri_param_names": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "A list of querystring parameters that Kong will inspect to retrieve JWTs.",
-          "default": [
-            "jwt"
-          ]
-        },
-        "cookie_names": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "A list of cookie names that Kong will inspect to retrieve JWTs.",
-          "default": []
-        },
-        "secret_is_base64": {
-          "type": "boolean",
-          "description": "If true, the policy assumes the credential’s secret to be base64 encoded. You will need to create a base64-encoded secret for your Consumer, and sign your JWT with the original secret.",
-          "default": false
-        },
         "maximum_expiration": {
           "type": "number",
           "maximum": 31536000,
@@ -53,14 +30,37 @@
             "authorization"
           ]
         },
+        "cookie_names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A list of cookie names that Kong will inspect to retrieve JWTs.",
+          "default": []
+        },
         "realm": {
           "type": "string",
           "description": "When authentication fails the policy sends `WWW-Authenticate` header with `realm` attribute value."
+        },
+        "uri_param_names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A list of querystring parameters that Kong will inspect to retrieve JWTs.",
+          "default": [
+            "jwt"
+          ]
         },
         "key_claim_name": {
           "type": "string",
           "description": "The name of the claim in which the key identifying the secret must be passed. The policy will attempt to read this claim from the JWT payload and the header, in that order.",
           "default": "iss"
+        },
+        "secret_is_base64": {
+          "type": "boolean",
+          "description": "If true, the policy assumes the credential’s secret to be base64 encoded. You will need to create a base64-encoded secret for your Consumer, and sign your JWT with the original secret.",
+          "default": false
         },
         "claims_to_verify": {
           "type": "array",

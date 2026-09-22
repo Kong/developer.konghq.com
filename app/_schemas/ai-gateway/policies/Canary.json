@@ -22,22 +22,29 @@
     "config": {
       "type": "object",
       "properties": {
+        "hash_header": {
+          "type": "string",
+          "description": "A string representing an HTTP header name."
+        },
         "percentage": {
           "type": "number",
           "maximum": 100,
           "minimum": 0,
           "description": "The percentage of traffic to be routed to the canary release."
         },
-        "upstream_host": {
-          "type": "string",
-          "description": "A string representing a host name, such as example.com."
+        "upstream_port": {
+          "type": "integer",
+          "maximum": 65535,
+          "minimum": 0,
+          "description": "An integer representing a port number between 0 and 65535, inclusive."
         },
-        "groups": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "The groups allowed to access the canary release."
+        "canary_by_header_name": {
+          "type": "string",
+          "description": "A string representing an HTTP header name."
+        },
+        "start": {
+          "type": "number",
+          "description": "Future time in seconds since epoch, when the canary release will start. Ignored when `percentage` is set, or when using `allow` or `deny` in `hash`."
         },
         "hash": {
           "type": "string",
@@ -52,10 +59,6 @@
           "description": "Hash algorithm to be used for canary release.\n\n* `consumer`: The hash will be based on the consumer.\n* `ip`: The hash will be based on the client IP address.\n* `none`: No hash will be applied.\n* `allow`: Allows the specified groups to access the canary release.\n* `deny`: Denies the specified groups from accessing the canary release.\n* `header`: The hash will be based on the specified header value.",
           "default": "consumer"
         },
-        "hash_header": {
-          "type": "string",
-          "description": "A string representing an HTTP header name."
-        },
         "duration": {
           "type": "number",
           "description": "The duration of the canary release in seconds.",
@@ -67,11 +70,9 @@
           "description": "The number of steps for the canary release.",
           "default": 1000
         },
-        "upstream_port": {
-          "type": "integer",
-          "maximum": 65535,
-          "minimum": 0,
-          "description": "An integer representing a port number between 0 and 65535, inclusive."
+        "upstream_host": {
+          "type": "string",
+          "description": "A string representing a host name, such as example.com."
         },
         "upstream_uri": {
           "type": "string",
@@ -83,13 +84,12 @@
           "description": "Specifies whether to fallback to the upstream server if the canary release fails.",
           "default": false
         },
-        "canary_by_header_name": {
-          "type": "string",
-          "description": "A string representing an HTTP header name."
-        },
-        "start": {
-          "type": "number",
-          "description": "Future time in seconds since epoch, when the canary release will start. Ignored when `percentage` is set, or when using `allow` or `deny` in `hash`."
+        "groups": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The groups allowed to access the canary release."
         }
       }
     },

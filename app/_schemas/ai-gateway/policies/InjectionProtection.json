@@ -1,44 +1,27 @@
 {
   "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
     "config": {
       "type": "object",
       "properties": {
-        "injection_types": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "enum": [
-              "java_exception",
-              "js",
-              "sql",
-              "sql_low_sensitivity",
-              "ssi",
-              "xpath_abbreviated",
-              "xpath_extended"
-            ]
-          },
-          "description": "The type of injections to check for.",
-          "default": [
-            "sql"
-          ]
-        },
-        "locations": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "enum": [
-              "body",
-              "headers",
-              "path",
-              "path_and_query",
-              "query"
-            ]
-          },
-          "description": "The locations to check for injection.",
-          "default": [
-            "path_and_query"
-          ]
-        },
         "custom_injections": {
           "type": "array",
           "items": {
@@ -80,27 +63,44 @@
           "type": "string",
           "description": "The response message when validation fails",
           "default": "Bad Request"
+        },
+        "injection_types": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "java_exception",
+              "js",
+              "sql",
+              "sql_low_sensitivity",
+              "ssi",
+              "xpath_abbreviated",
+              "xpath_extended"
+            ]
+          },
+          "description": "The type of injections to check for.",
+          "default": [
+            "sql"
+          ]
+        },
+        "locations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "body",
+              "headers",
+              "path",
+              "path_and_query",
+              "query"
+            ]
+          },
+          "description": "The locations to check for injection.",
+          "default": [
+            "path_and_query"
+          ]
         }
       }
-    },
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ]
-      },
-      "description": "A set of strings representing HTTP protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
     },
     "route": {
       "type": "object",

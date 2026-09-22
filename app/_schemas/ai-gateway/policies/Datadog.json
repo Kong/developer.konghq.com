@@ -29,9 +29,109 @@
     "config": {
       "type": "object",
       "properties": {
+        "service_name_tag": {
+          "type": "string",
+          "description": "String to be attached as the name of the service.",
+          "default": "name"
+        },
+        "status_tag": {
+          "type": "string",
+          "description": "String to be attached as the tag of the HTTP status.",
+          "default": "status"
+        },
+        "consumer_tag": {
+          "type": "string",
+          "description": "String to be attached as tag of the consumer.",
+          "default": "consumer"
+        },
+        "queue_size": {
+          "type": "integer",
+          "description": "Maximum number of log entries to be sent on each message to the upstream server."
+        },
         "flush_timeout": {
           "type": "number",
           "description": "Optional time in seconds. If `queue_size` > 1, this is the max idle time before sending a log with less than `queue_size` records."
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "stat_type": {
+                "type": "string",
+                "enum": [
+                  "counter",
+                  "distribution",
+                  "gauge",
+                  "histogram",
+                  "meter",
+                  "set",
+                  "timer"
+                ],
+                "description": "Determines what sort of event the metric represents"
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "List of tags"
+              },
+              "sample_rate": {
+                "type": "number",
+                "maximum": 1,
+                "minimum": 0,
+                "description": "Sampling rate"
+              },
+              "consumer_identifier": {
+                "type": "string",
+                "enum": [
+                  "consumer_id",
+                  "custom_id",
+                  "username"
+                ],
+                "description": "Authenticated user detail"
+              },
+              "name": {
+                "type": "string",
+                "enum": [
+                  "kong_latency",
+                  "latency",
+                  "request_count",
+                  "request_size",
+                  "response_size",
+                  "upstream_latency"
+                ],
+                "description": "Datadog metric’s name"
+              }
+            },
+            "required": [
+              "name",
+              "stat_type"
+            ]
+          },
+          "description": "List of metrics to be logged."
+        },
+        "host": {
+          "type": "string",
+          "description": "A string representing a host name, such as example.com.",
+          "default": "localhost",
+          "x-referenceable": true
+        },
+        "port": {
+          "type": "integer",
+          "maximum": 65535,
+          "minimum": 0,
+          "description": "An integer representing a port number between 0 and 65535, inclusive.",
+          "default": 8125
+        },
+        "route_name_tag": {
+          "type": "string",
+          "description": "String to be attached as tag of the route name or ID."
+        },
+        "retry_count": {
+          "type": "integer",
+          "description": "Number of times to retry when sending data to the upstream server."
         },
         "queue": {
           "type": "object",
@@ -91,110 +191,10 @@
             }
           }
         },
-        "metrics": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string",
-                "enum": [
-                  "kong_latency",
-                  "latency",
-                  "request_count",
-                  "request_size",
-                  "response_size",
-                  "upstream_latency"
-                ],
-                "description": "Datadog metric’s name"
-              },
-              "stat_type": {
-                "type": "string",
-                "enum": [
-                  "counter",
-                  "distribution",
-                  "gauge",
-                  "histogram",
-                  "meter",
-                  "set",
-                  "timer"
-                ],
-                "description": "Determines what sort of event the metric represents"
-              },
-              "tags": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "description": "List of tags"
-              },
-              "sample_rate": {
-                "type": "number",
-                "maximum": 1,
-                "minimum": 0,
-                "description": "Sampling rate"
-              },
-              "consumer_identifier": {
-                "type": "string",
-                "enum": [
-                  "consumer_id",
-                  "custom_id",
-                  "username"
-                ],
-                "description": "Authenticated user detail"
-              }
-            },
-            "required": [
-              "name",
-              "stat_type"
-            ]
-          },
-          "description": "List of metrics to be logged."
-        },
-        "host": {
-          "type": "string",
-          "description": "A string representing a host name, such as example.com.",
-          "default": "localhost",
-          "x-referenceable": true
-        },
-        "consumer_tag": {
-          "type": "string",
-          "description": "String to be attached as tag of the consumer.",
-          "default": "consumer"
-        },
-        "retry_count": {
-          "type": "integer",
-          "description": "Number of times to retry when sending data to the upstream server."
-        },
-        "queue_size": {
-          "type": "integer",
-          "description": "Maximum number of log entries to be sent on each message to the upstream server."
-        },
-        "port": {
-          "type": "integer",
-          "maximum": 65535,
-          "minimum": 0,
-          "description": "An integer representing a port number between 0 and 65535, inclusive.",
-          "default": 8125
-        },
         "prefix": {
           "type": "string",
           "description": "String to be attached as a prefix to a metric's name.",
           "default": "kong"
-        },
-        "service_name_tag": {
-          "type": "string",
-          "description": "String to be attached as the name of the service.",
-          "default": "name"
-        },
-        "status_tag": {
-          "type": "string",
-          "description": "String to be attached as the tag of the HTTP status.",
-          "default": "status"
-        },
-        "route_name_tag": {
-          "type": "string",
-          "description": "String to be attached as tag of the route name or ID."
         }
       }
     },
