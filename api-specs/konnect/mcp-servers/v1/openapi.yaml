@@ -1,0 +1,3111 @@
+openapi: 3.0.0
+info:
+  title: Konnect MCP Servers
+  version: 1.38.0
+  description: |
+    The endpoints for managing MCP Servers in Konnect.
+  contact:
+    name: Kong
+    url: https://cloud.konghq.com
+servers:
+  - url: 'https://us.api.konghq.com/v1'
+    description: US Region Base URL
+security:
+  - personalAccessToken: []
+  - systemAccountAccessToken: []
+tags:
+  - name: Context Interfaces
+  - name: Context Sources
+  - name: Context Source Contents
+  - name: Context Source Mappings
+  - name: Control Plane Mappings
+  - name: Skills
+  - name: Context Provider Credentials
+  - name: Context Interface Configs
+  - name: MCP Servers
+  - name: MCP Server Runtime
+paths:
+  /context-interfaces:
+    get:
+      x-unstable: true
+      x-internal: true
+      summary: List all Context Interfaces
+      responses:
+        '200':
+          $ref: '#/components/responses/ListMCPServersResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+      operationId: list-context-interfaces
+      description: Returns an array of MCP server objects.
+      parameters:
+        - $ref: '../../../../common/definitions/metadatas.yaml#/components/parameters/CursorPageQuery'
+        - $ref: '#/components/parameters/MCPServerFilter'
+        - $ref: '#/components/parameters/MCPServerSort'
+      tags:
+        - Context Interfaces
+    post:
+      x-unstable: true
+      x-internal: true
+      summary: Create a Context Interface
+      operationId: create-context-interface
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateMCPServerResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '409':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Conflict'
+      tags:
+        - Context Interfaces
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMCPServerRequest'
+      description: Create a Context Interface in the Konnect Organization.
+  /context-interfaces/{interfaceId}:
+    parameters:
+      - $ref: '#/components/parameters/interfaceId'
+    get:
+      x-unstable: true
+      x-internal: true
+      summary: Get Context Interface
+      responses:
+        '200':
+          description: A response to retrieving a single Context Interface.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MCPServer'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      operationId: get-context-interface
+      description: Returns information about an individual Context Interface.
+      tags:
+        - Context Interfaces
+    put:
+      x-unstable: true
+      x-internal: true
+      summary: Update MCP Server
+      operationId: update-context-interface
+      responses:
+        '200':
+          $ref: '#/components/responses/UpdateMCPServerResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+        '409':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Conflict'
+      description: Update an individual Context Interface.
+      tags:
+        - Context Interfaces
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMCPServerRequest'
+    patch:
+      x-unstable: true
+      x-internal: true
+      summary: Partially Update Context Interface
+      operationId: patch-context-interface
+      responses:
+        '200':
+          $ref: '#/components/responses/UpdateMCPServerResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+        '409':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Conflict'
+      description: Partially update an individual Context Interface.
+      tags:
+        - Context Interfaces
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchMCPServerRequest'
+    delete:
+      x-unstable: true
+      x-internal: true
+      summary: Delete MCP Server
+      operationId: delete-context-interface
+      responses:
+        '204':
+          description: Successfully deleted MCP server.
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      description: Delete a Context Interface.
+      tags:
+        - Context Interfaces
+  /context-sources/{sourceId}/context-interfaces:
+    parameters:
+      - $ref: '#/components/parameters/mcpResourceId'
+    get:
+      x-unstable: true
+      x-internal: true
+      operationId: list-context-interfaces-by-context-source
+      summary: List Context Source Context Interfaces
+      description: >
+        List Context Interfaces which are mapped by the provided Context Source ID in the path parameter
+      parameters:
+        - $ref: '../../../../common/definitions/metadatas.yaml#/components/parameters/PageSize'
+        - $ref: '../../../../common/definitions/metadatas.yaml#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/MCPServerFilter'
+        - $ref: '#/components/parameters/MCPServerSort'
+      responses:
+        '200':
+          $ref: '#/components/responses/PaginateMCPServersResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - Context Interfaces
+  /context-interfaces/{interfaceId}/status:
+    parameters:
+      - $ref: '#/components/parameters/interfaceId'
+    get:
+      x-unstable: true
+      x-internal: true
+      operationId: get-mcp-server-status
+      summary: Get Context Interface deployment status
+      description: Returns the current aggregated deployment status of a Context Interface.
+      responses:
+        '200':
+          description: Deployment status of the Context Interface.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MCPServerStatusResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - Context Interfaces
+  /context-interfaces/{interfaceId}/code:
+    parameters:
+      - $ref: '#/components/parameters/interfaceId'
+    get:
+      x-unstable: true
+      x-internal: true
+      operationId: get-context-interface-generated-code
+      summary: Get generated code for a Context Interface
+      description: >
+        Generates MCP server Python code from the OpenAPI specifications associated with the Context Interface.
+      responses:
+        '200':
+          description: Generated Python code for the Context Interface
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MCPServerCodeResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - Context Interfaces
+  /context-sources:
+    get:
+      x-unstable: true
+      x-internal: true
+      summary: List Context Sources
+      operationId: list-context-sources
+      description: Returns a list of Context Source objects.
+      parameters:
+        - $ref: '../../../../common/definitions/metadatas.yaml#/components/parameters/PageSize'
+        - $ref: '../../../../common/definitions/metadatas.yaml#/components/parameters/PageAfter'
+        - $ref: '#/components/parameters/MCPResourceCommonFilter'
+      responses:
+        '200':
+          description: A response to listing Context Sources.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMCPResourcesResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+      tags:
+        - Context Sources
+    post:
+      x-unstable: true
+      x-internal: true
+      summary: Create a Context Source
+      operationId: create-context-source
+      description: Create a Context Source in the Konnect Organization.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/ApiResourcePayload'
+                - $ref: '#/components/schemas/McpServerResourcePayload'
+            examples:
+              Catalog API:
+                $ref: '#/components/examples/CatalogApiPayload'
+              Raw API:
+                $ref: '#/components/examples/RawApiPayload'
+              Remote MCP Server:
+                $ref: '#/components/examples/RemoteMcpServerPayload'
+      responses:
+        '201':
+          description: A response to creating a Context Source.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MCPResourceInfo'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '409':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Conflict'
+      tags:
+        - Context Sources
+  /context-sources/{sourceId}:
+    parameters:
+      - $ref: '#/components/parameters/mcpResourceId'
+    get:
+      x-unstable: true
+      x-internal: true
+      summary: Get a Context Source
+      operationId: get-context-source
+      description: Retrieve an MCP resource by its ID.
+      responses:
+        '200':
+          description: A response to retrieving a Context Source.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MCPResourceInfo'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - Context Sources
+    delete:
+      x-unstable: true
+      x-internal: true
+      summary: Delete a Context Source
+      operationId: delete-context-source
+      description: Delete a Context Source by its ID.
+      responses:
+        '204':
+          description: Successfully deleted Context Source.
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - Context Sources
+    put:
+      x-unstable: true
+      x-internal: true
+      summary: Update a Context Source
+      operationId: update-context-source
+      description: Update a Context Source by its ID.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/ApiResourcePayload'
+                - $ref: '#/components/schemas/McpServerResourcePayload'
+      responses:
+        '200':
+          description: A response to updating a Context Source.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MCPResourceInfo'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+        '409':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Conflict'
+      tags:
+        - Context Sources
+  /context-sources/{sourceId}/contents:
+    parameters:
+      - $ref: '#/components/parameters/mcpResourceId'
+    get:
+      x-unstable: true
+      x-internal: true
+      summary: Get Context Source Contents
+      operationId: get-context-source-contents
+      description: Retrieve the contents for a Context Source.
+      responses:
+        '200':
+          description: |
+            A response to retrieving a Context Source's contents.
+            Use `Accept` header to specify the format of the response content, either JSON or YAML.
+            When `Accept` header is not specified, JSON is returned by default.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MCPAPISpec'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/MCPAPISpecYAML'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - Context Source Contents
+  /mcp-cp/{controlPlaneId}/signals:
+    parameters:
+      - $ref: '../../../../common/definitions/portal.yaml#/components/parameters/controlPlaneId'
+    get:
+      x-unstable: true
+      operationId: get-mcp-server-signals
+      summary: Get MCP Server Signals
+      description: >
+        Client-initiated signals fetch with long-polling capabilities.
+
+        The client supplies `capabilities` as a deepObject query parameter:
+          - Keys are capability names (e.g. `mcp`)
+          - Values contain the capability request fields (`version`)
+
+        Example:
+          GET /mcp-cp/{controlPlaneId}/signals?capabilities[mcp][version]=5
+
+        The CP responds with a JSON payload containing zero or more signals that
+        the client should process.
+
+        If no signals are available, the CP responds with HTTP 304 Not Modified.
+      parameters:
+        - $ref: '#/components/parameters/MCPCapabilities'
+      responses:
+        '200':
+          $ref: '#/components/responses/MCPServerSignalsResponse'
+        '304':
+          description: No signals available (client is up to date)
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+      tags:
+        - MCP Servers
+  /mcp-cp/{controlPlaneId}/mcp-servers:
+    parameters:
+      - $ref: '../../../../common/definitions/portal.yaml#/components/parameters/controlPlaneId'
+    get:
+      x-unstable: true
+      operationId: list-mcp-servers-by-control-plane
+      summary: List MCP Servers by Control Plane
+      description: >
+        Returns an array of MCP server objects for the specified control plane.
+      parameters:
+        - $ref: '../../../../common/definitions/metadatas.yaml#/components/parameters/PageSize'
+        - $ref: '../../../../common/definitions/metadatas.yaml#/components/parameters/PageAfter'
+        - $ref: '#/components/parameters/MCPServerCommonFilter'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListMCPServersCPInfoResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+      tags:
+        - MCP Servers
+  /mcp-cp/{controlPlaneId}/mcp-servers/{mcpServerId}:
+    parameters:
+      - $ref: '../../../../common/definitions/portal.yaml#/components/parameters/controlPlaneId'
+      - $ref: '#/components/parameters/mcpServerId'
+    get:
+      x-unstable: true
+      operationId: get-mcp-server-by-control-plane
+      summary: Get MCP Server by Control Plane
+      description: >
+        Retrieves an MCP server by its ID within a specific control plane context.
+      responses:
+        '200':
+          description: A response to retrieving a single MCP server within a control plane context.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MCPServerCPInfo'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - MCP Servers
+  /mcp-cp/{controlPlaneId}/mcp-servers/{mcpServerId}/kong-entities:
+    parameters:
+      - $ref: '../../../../common/definitions/portal.yaml#/components/parameters/controlPlaneId'
+      - $ref: '#/components/parameters/mcpServerId'
+    get:
+      x-unstable: true
+      operationId: get-mcp-server-kong-entities
+      summary: Get Kong entities for the MCP Server Gateway
+      description: |
+        Retrieves Kong entities (Routes, Services, Plugins) for the Gateway in front of the MCP Server.
+      parameters:
+        - name: runtime_version
+          in: query
+          required: false
+          description: Kong Gateway runtime version to generate entities for
+          schema:
+            type: string
+            example: "3.13.0.0"
+      responses:
+        '200':
+          description: Kong entities for the MCP server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KongEntitiesResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - MCP Servers
+  /mcp-cp/{controlPlaneId}/mcp-servers/{mcpServerId}/status:
+    parameters:
+      - $ref: '../../../../common/definitions/portal.yaml#/components/parameters/controlPlaneId'
+      - $ref: '#/components/parameters/mcpServerId'
+    post:
+      x-unstable: true
+      operationId: post-mcp-server-status
+      summary: Report MCP Server deployment status
+      description: >
+        Reports the current deployment status of an MCP server, including
+        replica counts and per-version pod statuses.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MCPServerStatusRequest'
+      responses:
+        '204':
+          description: Status accepted.
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - MCP Servers
+  /mcp-cp/{controlPlaneId}/mcp-servers/{mcpServerId}/code:
+    parameters:
+      - $ref: '../../../../common/definitions/portal.yaml#/components/parameters/controlPlaneId'
+      - $ref: '#/components/parameters/mcpServerId'
+    get:
+      x-unstable: true
+      operationId: get-mcp-server-code
+      summary: Get generated Python code for the MCP Server
+      description: |
+        Generates MCP server Python code from the OpenAPI specifications associated with the MCP server.
+      responses:
+        '200':
+          description: Generated Python code for the MCP server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MCPServerCodeResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - MCP Servers
+  /mcp-cp/{controlPlaneId}/mcp-servers/{mcpServerId}/skills:
+    parameters:
+      - $ref: '../../../../common/definitions/portal.yaml#/components/parameters/controlPlaneId'
+      - $ref: '#/components/parameters/mcpServerId'
+    get:
+      x-unstable: true
+      operationId: list-mcp-server-skills-by-control-plane
+      summary: List Skills by Control Plane
+      description: >
+        Separate control-plane-scoped list endpoint for KO to enumerate skills at deploy time.
+      parameters:
+        - $ref: '../../../../common/definitions/metadatas.yaml#/components/parameters/PageSize'
+        - $ref: '../../../../common/definitions/metadatas.yaml#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/SkillFilter'
+        - $ref: '#/components/parameters/SkillSort'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListSkillsResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - Skills
+  /mcp-cp/{controlPlaneId}/mcp-servers/{mcpServerId}/skills/{skillId}/contents:
+    parameters:
+      - $ref: '../../../../common/definitions/portal.yaml#/components/parameters/controlPlaneId'
+      - $ref: '#/components/parameters/mcpServerId'
+      - $ref: '#/components/parameters/skillId'
+    get:
+      x-unstable: true
+      operationId: get-mcp-server-skill-contents-by-control-plane
+      summary: Get Skill Contents by Control Plane
+      description: >
+        KO-only endpoint that redirects to a presigned S3 URL for the skill's SKILL.md file.
+      responses:
+        '302':
+          description: Found. The `Location` header contains a presigned S3 URL for the skill's content.
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - Skills
+  /context-interfaces/{interfaceId}/context-source-mappings:
+    parameters:
+      - $ref: '#/components/parameters/interfaceId'
+    post:
+      x-unstable: true
+      x-internal: true
+      summary: Create Context Interface Source Mapping
+      operationId: create-context-interface-source-mapping
+      description: Create a mapping between a Context Interface and a Context Source.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMCPServerMCPResourceMappingRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateMCPServerMCPResourceMappingResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+        '409':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Conflict'
+      tags:
+        - Context Source Mappings
+    get:
+      x-unstable: true
+      x-internal: true
+      summary: List Context Interface Source Mappings
+      operationId: list-context-interface-source-mappings
+      description: Returns a list of Context Interface Source Mappings for the given Context Interface.
+      parameters:
+        - $ref: '../../../../common/definitions/metadatas.yaml#/components/parameters/PageSize'
+        - $ref: '../../../../common/definitions/metadatas.yaml#/components/parameters/PageAfter'
+        - $ref: '#/components/parameters/MCPResourceMappingFilter'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListMCPServerMCPResourceMappingsResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - Context Source Mappings
+  /context-interfaces/{interfaceId}/context-source-mappings/{mappingId}:
+    parameters:
+      - $ref: '#/components/parameters/interfaceId'
+      - $ref: '#/components/parameters/contextSourceMappingId'
+    delete:
+      x-unstable: true
+      x-internal: true
+      summary: Delete Context Interface Source Mapping
+      operationId: delete-context-interface-source-mapping
+      description: Delete a mapping between a Context Interface and a Context Source.
+      responses:
+        '204':
+          description: Successfully deleted Context Interface Source Mapping.
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - Context Source Mappings
+    get:
+      x-unstable: true
+      x-internal: true
+      summary: Get Context Interface Source Mapping
+      operationId: get-context-interface-source-mapping
+      description: Retrieve a specific Context Interface Source Mapping by its ID.
+      responses:
+        '200':
+          description: A response to retrieving a Context Interface Source Mapping.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MCPServerMCPResourceMapping'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - Context Source Mappings
+  /context-interfaces/{interfaceId}/context-source-mappings/{mappingId}/capability-controls:
+    parameters:
+      - $ref: '#/components/parameters/interfaceId'
+      - $ref: '#/components/parameters/contextSourceMappingId'
+    get:
+      x-unstable: true
+      x-internal: true
+      summary: Get Interface-Source Capability Controls
+      operationId: get-context-interfaces-source-mapping-capability-controls
+      description: >
+        Retrieve the capability controls configured for a context
+        interface-source mapping.
+      responses:
+        '200':
+          $ref: '#/components/responses/GetMCPServerMCPResourceMappingCapabilityControlsResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/MCPServerMCPResourceMappingCapabilityControlsNotFound'
+      tags:
+        - Context Interface Configs
+    post:
+      x-unstable: true
+      x-internal: true
+      summary: Create Interface-Source Capability Controls
+      operationId: create-context-interfaces-source-mapping-capability-controls
+      description: >
+        Create the capability controls for a context interface-source mapping.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CapabilityControls'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateContextInterfaceContextSourceMappingCapabilityControlsResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+        '409':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Conflict'
+      tags:
+        - Context Interface Configs
+    patch:
+      x-unstable: true
+      x-internal: true
+      summary: Update Interface-Source Capability Controls
+      operationId: patch-context-interfaces-source-mapping-capability-controls
+      description: >
+        Partially update the capability controls configured for a context
+        interface-source mapping. Omitted deny keys preserve their existing
+        value, an empty array clears a capability, and a non-empty array
+        replaces.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchCapabilityControls'
+      responses:
+        '200':
+          $ref: '#/components/responses/PatchContextInterfaceContextSourceMappingCapabilityControlsResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/MCPServerMCPResourceMappingCapabilityControlsNotFound'
+      tags:
+        - Context Interface Configs
+  /context-interfaces/{interfaceId}/control-plane-mappings:
+    parameters:
+      - $ref: '#/components/parameters/interfaceId'
+    get:
+      x-unstable: true
+      x-internal: true
+      operationId: list-control-plane-mappings
+      summary: Get a list of CPs mapped to Context Interface
+      description: >
+        Get a list of all Control Planes that have been mapped to the given Context
+        Interface.
+      parameters:
+        - $ref: '../../../../common/definitions/metadatas.yaml#/components/parameters/CursorPageQuery'
+        - $ref: '#/components/parameters/MCPServerControlPlaneMappingFilter'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListMCPServerControlPlaneMappingResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - Control Plane Mappings
+    post:
+      x-unstable: true
+      x-internal: true
+      operationId: create-context-interface-control-plane-mapping
+      summary: Create Context Interface CP Mapping
+      description: Create a Context Interface - Control Plane mapping
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateMCPServerControlPlaneMappingResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '409':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Conflict'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMCPServerControlPlaneMappingRequest'
+      tags:
+        - Control Plane Mappings
+  /context-interfaces/{interfaceId}/control-plane-mappings/{mappingId}:
+    parameters:
+      - $ref: '#/components/parameters/interfaceId'
+      - $ref: '#/components/parameters/mcpServerControlPlaneMappingId'
+    get:
+      x-unstable: true
+      x-internal: true
+      operationId: get-control-plane-mapping
+      summary: Get Context Interface Control Plane Mapping
+      description: Retrieve a mapping by its ID.
+      responses:
+        '200':
+          description: Details of an Context Interface and Control Plane mapping.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MCPServerControlPlaneMappingInfo'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - Control Plane Mappings
+    patch:
+      x-unstable: true
+      x-internal: true
+      operationId: patch-context-interface-control-plane-mapping
+      summary: Patch Context Interface Control Plane Mapping
+      description: Update a mapping between a Context Interface and a Control Plane.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchMCPServerControlPlaneMappingRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/PatchMCPServerControlPlaneMappingResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - Control Plane Mappings
+    delete:
+      x-unstable: true
+      x-internal: true
+      operationId: delete-context-interface-control-plane-mapping
+      summary: Delete Context Interface CP Mapping
+      description: Delete Context Interface Control Plane Mapping.
+      responses:
+        '204':
+          description: Successfully deleted Context Interface Control Plane mapping.
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - Control Plane Mappings
+  /context-interfaces/{interfaceId}/skills/{skillId}:
+    parameters:
+      - $ref: '#/components/parameters/interfaceId'
+      - $ref: '#/components/parameters/skillId'
+    get:
+      x-unstable: true
+      x-internal: true
+      summary: Get a Skill
+      operationId: get-context-interface-skill
+      description: Retrieve a single skill by its ID.
+      responses:
+        '200':
+          description: A response to retrieving a skill.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Skill'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - Skills
+    patch:
+      x-unstable: true
+      x-internal: true
+      summary: Update a Skill
+      operationId: patch-context-interface-skill
+      description: Partially update a skill.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchSkillRequest'
+      responses:
+        '200':
+          description: A response to updating a skill.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Skill'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+        '409':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Conflict'
+      tags:
+        - Skills
+    delete:
+      x-unstable: true
+      x-internal: true
+      summary: Delete a Skill
+      operationId: delete-context-interface-skill
+      description: Delete a skill and its associated content.
+      responses:
+        '204':
+          description: Successfully deleted skill.
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - Skills
+  /context-interfaces/{interfaceId}/skills/{skillId}/contents:
+    parameters:
+      - $ref: '#/components/parameters/interfaceId'
+      - $ref: '#/components/parameters/skillId'
+    get:
+      x-unstable: true
+      x-internal: true
+      summary: Get Skill Contents
+      operationId: get-context-interface-skill-contents
+      description: >
+        Returns a presigned S3 URL for the skill's SKILL.md file. Used by
+        the Konnect UI to let a user view a skill's content.
+      responses:
+        '200':
+          $ref: '#/components/responses/SkillContentsResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - Skills
+  /context-interfaces/{interfaceId}/skills:
+    parameters:
+      - $ref: '#/components/parameters/interfaceId'
+    get:
+      x-unstable: true
+      x-internal: true
+      summary: List Skills
+      operationId: list-context-interface-skills
+      description: Returns a list of skills for the specified Context Interface.
+      parameters:
+        - $ref: '../../../../common/definitions/metadatas.yaml#/components/parameters/PageSize'
+        - $ref: '../../../../common/definitions/metadatas.yaml#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/SkillFilter'
+        - $ref: '#/components/parameters/SkillSort'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListSkillsResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - Skills
+    post:
+      x-unstable: true
+      x-internal: true
+      summary: Create a Skill
+      operationId: create-context-interface-skill
+      description: Create a skill for the specified Context Interface.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSkillRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateSkillResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '409':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Conflict'
+      tags:
+        - Skills
+  /context-provider-credentials:
+    get:
+      x-unstable: true
+      x-internal: true
+      summary: List Context Provider Credentials
+      operationId: list-context-provider-credentials
+      description: Returns a list of context provider credentials for the organization.
+      parameters:
+        - $ref: '../../../../common/definitions/metadatas.yaml#/components/parameters/PageSize'
+        - $ref: '../../../../common/definitions/metadatas.yaml#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/ContextProviderCredentialFilter'
+        - $ref: '#/components/parameters/ContextProviderCredentialSort'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListContextProviderCredentialsResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+      tags:
+        - Context Provider Credentials
+    post:
+      x-unstable: true
+      x-internal: true
+      summary: Create a Context Provider Credential
+      operationId: create-context-provider-credential
+      description: Create a context provider credential for the organization.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateContextProviderCredentialRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateContextProviderCredentialResponse'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '409':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Conflict'
+      tags:
+        - Context Provider Credentials
+  /context-provider-credentials/{contextProviderCredentialId}:
+    parameters:
+      - $ref: '#/components/parameters/contextProviderCredentialId'
+    get:
+      x-unstable: true
+      x-internal: true
+      summary: Get a Context Provider Credential
+      operationId: get-context-provider-credential
+      description: Retrieve a single context provider credential by its ID.
+      responses:
+        '200':
+          description: A response to retrieving a context provider credential.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContextProviderCredential'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - Context Provider Credentials
+    patch:
+      x-unstable: true
+      x-internal: true
+      summary: Update a Context Provider Credential
+      operationId: patch-context-provider-credential
+      description: >
+        Partially update a context provider credential. `provider` cannot be changed after
+        creation. `config`, if provided, must be specified in its entirety — it replaces the
+        existing configuration rather than merging into it.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchContextProviderCredentialRequest'
+      responses:
+        '200':
+          description: A response to updating a context provider credential.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContextProviderCredential'
+        '400':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+        '409':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Conflict'
+      tags:
+        - Context Provider Credentials
+    delete:
+      x-unstable: true
+      x-internal: true
+      summary: Delete a Context Provider Credential
+      operationId: delete-context-provider-credential
+      description: >
+        Delete a context provider credential. Skills that reference this credential are not
+        deleted and keep serving their last promoted version, but subsequent syncs for them
+        will fail.
+      responses:
+        '204':
+          description: Successfully deleted context provider credential.
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - Context Provider Credentials
+  /mcp-cp/{controlPlaneId}/mcp-servers/{mcpServerId}/runtime-config:
+    parameters:
+      - $ref: '../../../../common/definitions/portal.yaml#/components/parameters/controlPlaneId'
+      - $ref: '#/components/parameters/mcpServerId'
+    get:
+      x-unstable: true
+      operationId: get-mcp-server-runtime-config
+      summary: Get MCP Server Runtime Configuration
+      description: Returns the runtime configuration for a deployed MCP server.
+      responses:
+        '200':
+          $ref: '#/components/responses/MCPServerRuntimeResponse'
+        '401':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../../../common/definitions/errors.yaml#/components/responses/NotFound'
+      tags:
+        - MCP Server Runtime
+components:
+  parameters:
+    MCPServerCommonFilter:
+      schema:
+        type: object
+        properties:
+          name:
+            $ref: '../../../../common/definitions/aip_filters.yaml#/components/schemas/StringFieldContainsFilter'
+      in: query
+      name: filter
+      description: Filter documents returned in the response.
+      required: false
+      style: deepObject
+    MCPServerFilter:
+      schema:
+        type: object
+        properties:
+          id:
+            $ref: '../../../../common/definitions/aip_filters.yaml#/components/schemas/UuidFieldFilter'
+          name:
+            $ref: '../../../../common/definitions/aip_filters.yaml#/components/schemas/StringFieldFilter'
+          display_name:
+            $ref: '../../../../common/definitions/aip_filters.yaml#/components/schemas/StringFieldFilter'
+          labels:
+            $ref: "../../../../common/definitions/aip_filters.yaml#/components/schemas/LabelsFieldFilter"
+      in: query
+      name: filter
+      description: Filter for MCP Servers.
+      required: false
+      style: deepObject
+    MCPServerSort:
+      name: sort
+      required: false
+      in: query
+      description: |
+        Sorts a collection of MCP Servers. Supported sort attributes are:
+          - `name`
+          - `created_at`
+          - `updated_at`
+
+        Default sort is `name` in ascending order.
+      schema:
+        $ref: "../../../../common/definitions/aip_filters.yaml#/components/schemas/SortQuery"
+    SkillFilter:
+      name: filter
+      in: query
+      required: false
+      description: Filter skills returned in the response.
+      style: deepObject
+      schema:
+        type: object
+        properties:
+          id:
+            $ref: '../../../../common/definitions/aip_filters.yaml#/components/schemas/UuidFieldFilter'
+          display_name:
+            $ref: '../../../../common/definitions/aip_filters.yaml#/components/schemas/StringFieldFilter'
+    SkillSort:
+      name: sort
+      required: false
+      in: query
+      description: |
+        Sorts a collection of skills. Supported sort attributes are:
+          - `display_name`
+          - `created_at`
+          - `updated_at`
+
+        Default sort is `display_name` in ascending order.
+      schema:
+        $ref: "../../../../common/definitions/aip_filters.yaml#/components/schemas/SortQuery"
+    MCPResourceCommonFilter:
+      schema:
+        type: object
+        properties:
+          name:
+            $ref: '../../../../common/definitions/aip_filters.yaml#/components/schemas/StringFieldFilter'
+      in: query
+      name: filter
+      description: Filters for MCP Resources.
+      required: false
+      style: deepObject
+    mcpServerId:
+      name: mcpServerId
+      in: path
+      required: true
+      description: The ID of the MCP server.
+      schema:
+        type: string
+        format: uuid
+    interfaceId:
+      name: interfaceId
+      in: path
+      required: true
+      description: The ID of the Context Interface.
+      schema:
+        type: string
+        format: uuid
+    mcpServerToolId:
+      name: toolId
+      in: path
+      required: true
+      description: The ID of the MCP server tool.
+      schema:
+        type: string
+        format: uuid
+    skillId:
+      name: skillId
+      in: path
+      required: true
+      description: The ID of the skill.
+      schema:
+        type: string
+        format: uuid
+    contextProviderCredentialId:
+      name: contextProviderCredentialId
+      in: path
+      required: true
+      description: The ID of the context provider credential.
+      schema:
+        type: string
+        format: uuid
+    ContextProviderCredentialFilter:
+      name: filter
+      in: query
+      required: false
+      description: Filter context provider credentials returned in the response.
+      style: deepObject
+      schema:
+        type: object
+        properties:
+          id:
+            $ref: '../../../../common/definitions/aip_filters.yaml#/components/schemas/UuidFieldFilter'
+          display_name:
+            $ref: '../../../../common/definitions/aip_filters.yaml#/components/schemas/StringFieldFilter'
+    ContextProviderCredentialSort:
+      name: sort
+      required: false
+      in: query
+      description: |
+        Sorts a collection of context provider credentials. Supported sort attributes are:
+          - `display_name`
+          - `created_at`
+          - `updated_at`
+
+        Default sort is `display_name` in ascending order.
+      schema:
+        $ref: "../../../../common/definitions/aip_filters.yaml#/components/schemas/SortQuery"
+    mcpResourceId:
+      name: sourceId
+      in: path
+      required: true
+      description: The ID of the MCP resource.
+      schema:
+        type: string
+        format: uuid
+    contextSourceMappingId:
+      name: mappingId
+      in: path
+      required: true
+      description: The ID of the Context Interface Source Mapping.
+      schema:
+        type: string
+        format: uuid
+    MCPResourceMappingFilter:
+      name: filter
+      in: query
+      required: false
+      description: Filter documents returned in the response.
+      style: deepObject
+      schema:
+        type: object
+        properties:
+          context_source_id:
+            $ref: '../../../../common/definitions/aip_filters.yaml#/components/schemas/UuidFieldFilter'
+    MCPServerControlPlaneMappingFilter:
+      name: filter
+      in: query
+      required: false
+      description: Filter control planes returned in the response.
+      style: deepObject
+      schema:
+        type: object
+        properties:
+          control_plane_id:
+            $ref: '../../../../common/definitions/aip_filters.yaml#/components/schemas/UuidFieldFilter'
+    mcpServerControlPlaneMappingId:
+      name: mappingId
+      in: path
+      required: true
+      description: The ID of the MCP Server - Control Plane mapping.
+      schema:
+        type: string
+        format: uuid
+    includeLayoutMetadata:
+      name: include_layout_metadata
+      in: query
+      required: false
+      description: Determines whether layout metadata is included in the response.
+      schema:
+        type: boolean
+        default: false
+    MCPCapabilities:
+      name: capabilities
+      in: query
+      style: deepObject
+      explode: true
+      description: >
+        Capability requests as a deepObject map.
+
+        - Keys are capability names (e.g. `mcp`).
+
+        - Values contain the capability request fields (`version`).
+      schema:
+        $ref: '#/components/schemas/MCPCapabilitiesMap'
+      example:
+        mcp:
+          version: '5'
+
+  schemas:
+    MCPServerPodsStatus:
+      type: object
+      required:
+        - ready
+        - starting
+        - failing
+      properties:
+        ready:
+          type: integer
+          minimum: 0
+          description: Number of pods in the ready state.
+          example: 2
+        starting:
+          type: integer
+          minimum: 0
+          description: Number of pods in the starting state.
+          example: 0
+        failing:
+          type: integer
+          minimum: 0
+          description: Number of pods in the failing state.
+          example: 0
+    MCPServerVersionStatus:
+      type: object
+      required:
+        - version
+        - desired_replicas
+        - created_replicas
+        - pods_status
+      properties:
+        version:
+          type: string
+          description: The version identifier of the MCP server deployment.
+          example: v1
+        desired_replicas:
+          type: integer
+          minimum: 0
+          description: The desired number of replicas for this version.
+          example: 2
+        created_replicas:
+          type: integer
+          minimum: 0
+          description: The number of replicas that have been created for this version.
+          example: 2
+        pods_status:
+          $ref: '#/components/schemas/MCPServerPodsStatus'
+    MCPServerStatusRequest:
+      type: array
+      description: >
+        List of per-version deployment statuses for the MCP server.
+      items:
+        $ref: '#/components/schemas/MCPServerVersionStatus'
+    MCPServerStatusResponse:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - deploying
+            - healthy
+            - pending
+            - unhealthy
+            - upgrading
+          description: >-
+            Aggregated deployment status of the MCP server.
+
+            - `deploying` — single version with desired replicas not yet fully ready.
+
+            - `healthy` — single version running with no failing pods.
+
+            - `pending` — no deployment status has been reported yet.
+
+            - `unhealthy` — one or more failing pods across any version.
+
+            - `upgrading` — multiple versions running with no failing pods.
+          example: healthy
+    MCPServer:
+      type: object
+      required:
+        - id
+        - name
+        - display_name
+        - description
+        - labels
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier for the MCP server.
+        name:
+          type: string
+          description: The machine name of the MCP server.
+          minLength: 1
+          maxLength: 256
+        display_name:
+          type: string
+          description: The human-readable display name of the MCP server.
+          minLength: 1
+          maxLength: 120
+        description:
+          type: string
+          nullable: true
+          description: A description of the MCP server.
+          maxLength: 1024
+        labels:
+          $ref: '../../../../common/definitions/konnect_properties.yaml#/components/schemas/Labels'
+        created_at:
+          $ref: '../../../../common/definitions/properties.yaml#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '../../../../common/definitions/properties.yaml#/components/schemas/UpdatedAt'
+    MCPServerInfo:
+      type: object
+      required:
+        - id
+        - name
+        - created_at
+        - updated_at
+        - version
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier for the MCP server.
+        name:
+          type: string
+          description: The name of the MCP server.
+          minLength: 1
+          maxLength: 256
+        description:
+          type: string
+          description: A description of the MCP server.
+          maxLength: 1024
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+          description: Labels for the MCP server.
+        deployed_at:
+          type: string
+          format: date-time
+          description: The timestamp when the MCP server was deployed.
+        control_plane_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: The control plane ID associated with the MCP server.
+        resource_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: The MCP resource ID associated with the MCP server.
+        mode:
+          allOf:
+            - $ref: '#/components/schemas/MCPServerControlPlaneMappingMode'
+          nullable: false
+          description: >
+            The deployment mode of the MCP server on the associated Control
+            Plane.
+        version:
+          type: string
+          description: The version of the MCP server.
+        created_at:
+          $ref: '../../../../common/definitions/properties.yaml#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '../../../../common/definitions/properties.yaml#/components/schemas/UpdatedAt'
+    ContainerSpec:
+      type: object
+      properties:
+        image:
+          type: string
+          description: The container image to use.
+    MCPServerCPInfo:
+      allOf:
+        - $ref: '#/components/schemas/MCPServerInfo'
+        - type: object
+          properties:
+            container:
+              allOf:
+                - $ref: '#/components/schemas/ContainerSpec'
+                - description: Configuration for the main container.
+            init_container:
+              allOf:
+                - $ref: '#/components/schemas/ContainerSpec'
+                - description: Configuration for the init container.
+    CreateMCPServerRequest:
+      type: object
+      required:
+        - name
+        - display_name
+        - description
+        - labels
+      properties:
+        name:
+          type: string
+          description: The machine name of the MCP server.
+          minLength: 1
+          maxLength: 256
+        display_name:
+          type: string
+          description: The human-readable display name of the MCP server.
+          minLength: 1
+          maxLength: 120
+        description:
+          type: string
+          description: A description of the MCP server.
+          maxLength: 1024
+        labels:
+          $ref: '../../../../common/definitions/konnect_properties.yaml#/components/schemas/Labels'
+    PatchMCPServerRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The machine name of the MCP server.
+          minLength: 1
+          maxLength: 256
+        display_name:
+          type: string
+          description: The human-readable display name of the MCP server.
+          minLength: 1
+          maxLength: 120
+        description:
+          type: string
+          description: A description of the MCP server.
+          maxLength: 1024
+        labels:
+          $ref: '../../../../common/definitions/konnect_properties.yaml#/components/schemas/Labels'
+    BaseResourcePayload:
+      type: object
+      required:
+        - name
+        - display_name
+        - description
+        - labels
+      properties:
+        name:
+          type: string
+          description: The name of the MCP resource. Must be unique within the organization and follow machine name conventions.
+          minLength: 1
+          maxLength: 256
+          pattern: '^[0-9a-z.-]+$'
+          example: my-api-resource
+        display_name:
+          type: string
+          description: The display name of the MCP resource.
+          minLength: 1
+          maxLength: 120
+        description:
+          type: string
+          description: A description of the MCP resource.
+          maxLength: 1024
+        labels:
+          $ref: '../../../../common/definitions/konnect_properties.yaml#/components/schemas/Labels'
+    ApiResourcePayload:
+      allOf:
+        - $ref: '#/components/schemas/BaseResourcePayload'
+        - type: object
+          required:
+            - type
+            - source
+          properties:
+            type:
+              type: string
+              description: The type of the MCP resource.
+              enum: ["api"]
+              default: "api"
+            source:
+              $ref: '#/components/schemas/ApiResourceSourcePayload'
+    McpServerResourcePayload:
+      allOf:
+        - $ref: '#/components/schemas/BaseResourcePayload'
+        - type: object
+          required:
+            - type
+            - source
+          properties:
+            type:
+              type: string
+              description: The type of the MCP resource.
+              enum: ["mcp_server"]
+              default: "mcp_server"
+            source:
+              $ref: '#/components/schemas/McpServerResourceSourcePayload'
+    BaseMcpResource:
+      type: object
+      description: The MCP resource object.
+      required:
+        - id
+        - name
+        - display_name
+        - description
+        - labels
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier for the MCP resource.
+        name:
+          type: string
+          description: The unique name of the MCP resource.
+          minLength: 1
+          maxLength: 256
+        display_name:
+          type: string
+          description: The display name of the MCP resource.
+          minLength: 1
+          maxLength: 120
+        description:
+          type: string
+          description: A description of the MCP resource.
+          maxLength: 1024
+        labels:
+          $ref: '../../../../common/definitions/konnect_properties.yaml#/components/schemas/Labels'
+        created_at:
+          $ref: '../../../../common/definitions/properties.yaml#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '../../../../common/definitions/properties.yaml#/components/schemas/UpdatedAt'
+    ApiResourceSourceInfo:
+      description: The source of an API MCP resource.
+      oneOf:
+        - $ref: '#/components/schemas/MCPResourceSourceAPICatalog'
+        - $ref: '#/components/schemas/MCPResourceSourceRaw'
+      discriminator:
+        propertyName: type
+        mapping:
+          api_catalog: '#/components/schemas/MCPResourceSourceAPICatalog'
+          raw: '#/components/schemas/MCPResourceSourceRaw'
+    ApiResource:
+      x-flatten-allOf: true
+      allOf:
+        - $ref: '#/components/schemas/BaseMcpResource'
+        - type: object
+          required:
+            - type
+            - source
+          properties:
+            type:
+              type: string
+              description: The type of the MCP resource.
+              enum: ["api"]
+            source:
+              $ref: '#/components/schemas/ApiResourceSourceInfo'
+    McpServerResource:
+      x-flatten-allOf: true
+      allOf:
+        - $ref: '#/components/schemas/BaseMcpResource'
+        - type: object
+          required:
+            - type
+            - source
+          properties:
+            type:
+              type: string
+              description: The type of the MCP resource.
+              enum: ["mcp_server"]
+            source:
+              $ref: '#/components/schemas/MCPResourceRemoteMcpServerPayload'
+    MCPResourceInfo:
+      oneOf:
+        - $ref: '#/components/schemas/ApiResource'
+        - $ref: '#/components/schemas/McpServerResource'
+      discriminator:
+        propertyName: type
+        mapping:
+          api: '#/components/schemas/ApiResource'
+          mcp_server: '#/components/schemas/McpServerResource'
+    MCPResourceSourceConfigType:
+      type: string
+      enum: ["api_catalog", "raw", "remote_mcp_server"]
+      description: The type of the MCP resource source.
+      x-enum-varnames:
+        - MCPResourceSourceConfigTypeAPICatalog
+        - MCPResourceSourceConfigTypeRaw
+        - MCPResourceSourceConfigTypeRemoteMcpServer
+    CommonApiResourceConfigPayload:
+      type: object
+      properties:
+        base_url:
+          description: |
+            Base URL to use when calling backing API service.
+            This URL will be used over what is defined in the resource specification if provided
+            Must include a protocol (http/https), and cannot contain query parameters or fragments.
+          type: string
+          format: uri
+          pattern: ^https?://[^?#]+$
+          nullable: true
+        headers:
+          description: Default headers sent to backing API service.
+          type: object
+          additionalProperties:
+            type: string
+    CommonApiResourceConfigResponse:
+      type: object
+      required:
+        - base_url
+        - headers
+      properties:
+        base_url:
+          description: |
+            Base URL to use when calling backing API service.
+            This URL will be used over what is defined in the resource specification if provided
+            Must include a protocol (http/https), and cannot contain query parameters or fragments.
+          type: string
+          nullable: true
+        headers:
+          description: Default headers sent to backing API service.
+          type: object
+          additionalProperties:
+            type: string
+    MCPResourceSourceAPICatalogConfig:
+       x-flatten-allOf: true
+       allOf:
+        - type: object
+          description: Identifies the API catalog entry the MCP resource was sourced from.
+          required:
+            - api_id
+            - api_version_id
+          properties:
+            api_id:
+              type: string
+              format: uuid
+              description: The unique identifier for the API catalog entry.
+            api_version_id:
+              type: string
+              format: uuid
+              description: The unique identifier for the API catalog entry version.
+        - $ref: '#/components/schemas/CommonApiResourceConfigResponse'
+    MCPResourceSourceAPICatalogConfigPayload:
+       x-flatten-allOf: true
+       allOf:
+        - type: object
+          description: Identifies the API catalog entry the MCP resource was sourced from.
+          required:
+            - api_id
+            - api_version_id
+          properties:
+            api_id:
+              type: string
+              format: uuid
+              description: The unique identifier for the API catalog entry.
+            api_version_id:
+              type: string
+              format: uuid
+              description: The unique identifier for the API catalog entry version.
+        - $ref: '#/components/schemas/CommonApiResourceConfigPayload'
+    MCPResourceSourceAPICatalog:
+      type: object
+      description: An MCP resource sourced from an API catalog entry.
+      required:
+        - type
+        - config
+      properties:
+        type:
+          type: string
+          enum: ["api_catalog"]
+        config:
+          $ref: '#/components/schemas/MCPResourceSourceAPICatalogConfig'
+      example:
+        type: api_catalog
+        config:
+          api_id: 158a0fc7-479a-4928-8a64-7656c1824f7f
+          api_version_id: bc0b9df1-67ba-475f-9670-37de3cc2e4f6
+          base_url: null
+          headers: {}
+    MCPResourceSourceAPICatalogPayload:
+      type: object
+      description: An MCP resource sourced from an API catalog entry.
+      required:
+        - type
+        - config
+      properties:
+        type:
+          type: string
+          enum: ["api_catalog"]
+        config:
+          $ref: '#/components/schemas/MCPResourceSourceAPICatalogConfigPayload'
+      example:
+        type: api_catalog
+        config:
+          api_id: 158a0fc7-479a-4928-8a64-7656c1824f7f
+          api_version_id: bc0b9df1-67ba-475f-9670-37de3cc2e4f6
+    MCPResourceSourceRaw:
+      type: object
+      description: An MCP resource sourced from a raw spec upload.
+      required:
+        - type
+        - config
+      properties:
+        type:
+          type: string
+          enum: ["raw"]
+        config:
+          $ref: '#/components/schemas/CommonApiResourceConfigResponse'
+      example:
+        type: raw
+        config:
+          base_url: null
+          headers: {}
+    MCPResourceSourceRawInput:
+      type: object
+      description: A raw spec upload used when creating or updating an MCP resource.
+      required:
+        - type
+        - config
+      properties:
+        type:
+          allOf:
+            - $ref: '#/components/schemas/MCPResourceSourceConfigType'
+            - type: string
+              enum: ["raw"]
+              x-go-type: MCPResourceSourceConfigType
+        config:
+          x-flatten-allOf: true
+          allOf:
+            - type: object
+              required:
+                - spec
+              properties:
+                spec:
+                  type: string
+                  description: The raw contents of the API spec in JSON or YAML format.
+            - $ref: '#/components/schemas/CommonApiResourceConfigPayload'
+      example:
+        type: raw
+        config:
+          spec: "openapi: 3.0.0\ninfo:\n  title: My API\n  version: 1.0.0"
+    MCPResourceRemoteMcpServerPayload:
+      type: object
+      required:
+        - type
+        - config
+      properties:
+        type:
+          allOf:
+            - $ref: '#/components/schemas/MCPResourceSourceConfigType'
+            - type: string
+              enum: ["remote_mcp_server"]
+              x-go-type: MCPResourceSourceConfigType
+        config:
+          description: Configuration of a remote MCP Server.
+          type: object
+          required:
+            - url
+            - headers
+          properties:
+            url:
+              description: URL to a remote MCP Server that must include a protocol (http/https), and cannot contain query parameters or fragments.
+              type: string
+              format: uri
+              pattern: ^https?://[^?#]+$
+            headers:
+              description: Headers to be used when making proxying requests to a MCP Server
+              type: object
+              additionalProperties:
+                type: string
+    ApiResourceSourcePayload:
+      description: The source of the MCP resource used in create and update requests.
+      oneOf:
+        - $ref: '#/components/schemas/MCPResourceSourceAPICatalogPayload'
+        - $ref: '#/components/schemas/MCPResourceSourceRawInput'
+      discriminator:
+        propertyName: type
+        mapping:
+          api_catalog: '#/components/schemas/MCPResourceSourceAPICatalogPayload'
+          raw: '#/components/schemas/MCPResourceSourceRawInput'
+    McpServerResourceSourcePayload:
+      description: The source of the MCP resource used in create and update requests.
+      oneOf:
+        - $ref: '#/components/schemas/MCPResourceRemoteMcpServerPayload'
+      discriminator:
+        propertyName: type
+        mapping:
+          remote_mcp_server: '#/components/schemas/MCPResourceRemoteMcpServerPayload'
+    ListMCPResourcesResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/MCPResourceInfo'
+        meta:
+          $ref: '../../../../common/definitions/metadatas.yaml#/components/schemas/CursorMeta'
+    ListMCPServersResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/MCPServer'
+        meta:
+          $ref: '../../../../common/definitions/metadatas.yaml#/components/schemas/CursorMeta'
+    PaginateMCPServersResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/MCPServer'
+        meta:
+          $ref: '../../../../common/definitions/metadatas.yaml#/components/schemas/PaginatedMeta'
+    ListMCPServersCPInfoResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/MCPServerCPInfo'
+        meta:
+          $ref: '../../../../common/definitions/metadatas.yaml#/components/schemas/CursorMeta'
+    MCPAPISpec:
+      description: Represents raw API spec content, such as an OpenAPI document.
+      type: object
+      additionalProperties: true
+      example:
+        openapi: "3.0.0"
+        info:
+          version: 1.0.0
+          title: Swagger Petstore
+        servers:
+          - url: http://petstore.swagger.io/v1
+        paths: {}
+    MCPAPISpecYAML:
+      description: Represents raw API spec content in YAML format, such as an OpenAPI document.
+      type: string
+      example: |
+        openapi: "3.0.0"
+        info:
+          version: 1.0.0
+          title: Swagger Petstore
+        servers:
+          - url: http://petstore.swagger.io/v1
+        paths: {}
+    KongEntitiesResponse:
+      type: object
+      required:
+        - routes
+        - services
+      properties:
+        routes:
+          type: array
+          items:
+            $ref: '#/components/schemas/KongRoute'
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/KongService'
+    KongService:
+      type: object
+      required:
+        - name
+        - protocol
+        - host
+        - port
+        - path
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Service ID
+        name:
+          type: string
+          description: Service name
+          example: "mcp-test-service"
+        protocol:
+          type: string
+          description: The protocol used to communicate with the Service.
+          example: "https"
+        host:
+          type: string
+          description: Service host
+          example: "mcp-test-service.svc.cluster.local"
+        port:
+          type: integer
+          minimum: 1
+          maximum: 65535
+          description: Service port
+          example: 80
+        path:
+          type: string
+          description: Service path
+          example: "/"
+    KongRoute:
+      type: object
+      required:
+        - name
+        - paths
+        - methods
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Route ID
+        name:
+          type: string
+          description: Route name
+          example: "mcp-test-route-jsonrpc"
+        service:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+          description: Reference to the service
+        paths:
+          type: array
+          items:
+            type: string
+          description: Request paths
+          example: [ "/mcp/test-service" ]
+        methods:
+          type: array
+          items:
+            type: string
+          description: HTTP methods
+          example: [ "POST" ]
+    MCPServerCodeResponse:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          description: Generated Python code for the MCP server implementation
+          example: "print(\"Hello MCP\")"
+    MCPCapabilitiesMap:
+      type: object
+      description: |
+        Map of capability name -> capability request fields.
+
+        Example:
+          {
+            "mcp": { "version": "v1", "offset": "5" }
+          }
+      properties:
+        mcp:
+          $ref: '#/components/schemas/MCPCapabilityRequest'
+    MCPCapabilityRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - version
+      properties:
+        version:
+          type: string
+          description: The version of the capability schema (e.g., v1).
+        offset:
+          type: string
+          description: The version of the control plane known by the client.
+    MCPServerSignalV1:
+      description: >
+        Signal notifying the client that the MCP control plane config has changed.
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - version
+        - offset
+      properties:
+        type:
+          type: string
+          enum:
+            - mcp
+        version:
+          type: string
+          description: The current version of the MCP control plane.
+        offset:
+          type: string
+          description: The offset for the MCP signal.
+      example:
+        type: mcp
+        version: "v1"
+        offset: "6"
+    MCPServerSignal:
+      description: A single signal envelope containing exactly one typed capability signal.
+      oneOf:
+        - $ref: '#/components/schemas/MCPServerSignalV1'
+      discriminator:
+        propertyName: type
+        mapping:
+          mcp: '#/components/schemas/MCPServerSignalV1'
+    MCPServerSignals:
+      type: object
+      description: The MCP server signals response.
+      required:
+        - signals
+      properties:
+        signals:
+          type: array
+          description: A list of signals for the MCP server.
+          items:
+            $ref: '#/components/schemas/MCPServerSignal'
+    CreateMCPServerMCPResourceMappingRequest:
+      type: object
+      required:
+        - context_source_id
+      properties:
+        context_source_id:
+          type: string
+          format: uuid
+          description: The ID of the Context Source to map to the Context Interface.
+          example: a60eceeb-dd7c-4884-8b26-806489c2f704
+    MCPServerMCPResourceMapping:
+      type: object
+      required:
+        - id
+        - context_interface_id
+        - context_source_id
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier for the MCP server MCP resource mapping.
+          example: edf35010-61d0-4fc4-a3b2-8095b02ec3fe
+        context_interface_id:
+          type: string
+          format: uuid
+          description: The ID of the Context Interface.
+          example: d5756e2a-75e4-470b-9a48-326eb9303fd6
+        context_source_id:
+          type: string
+          format: uuid
+          description: The ID of the Context Source.
+          example: a60eceeb-dd7c-4884-8b26-806489c2f704
+        created_at:
+          $ref: '../../../../common/definitions/properties.yaml#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '../../../../common/definitions/properties.yaml#/components/schemas/UpdatedAt'
+    ListMCPServerMCPResourceMappingsResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/MCPServerMCPResourceMapping'
+        meta:
+          $ref: '../../../../common/definitions/metadatas.yaml#/components/schemas/CursorMeta'
+    APICapabilityControlsOperation:
+      type: object
+      description: An API operation that is denied.
+      required:
+        - path
+        - methods
+      properties:
+        path:
+          type: string
+          description: The path of the API operation.
+          example: /library/{id}/books
+        methods:
+          type: array
+          description: The HTTP methods of the API operation that are denied.
+          items:
+            type: string
+          example:
+            - GET
+    APICapabilityControlsDeny:
+      type: object
+      description: The capabilities of the mapped API that are denied.
+      required:
+        - operations
+      properties:
+        operations:
+          type: array
+          description: The API operations that are denied.
+          items:
+            $ref: '#/components/schemas/APICapabilityControlsOperation'
+    APICapabilityControls:
+      type: object
+      description: Capability controls for a mapping to an API MCP resource.
+      required:
+        - type
+        - deny
+      properties:
+        type:
+          type: string
+          description: The type of the mapped MCP resource.
+          enum: ["api"]
+        deny:
+          $ref: '#/components/schemas/APICapabilityControlsDeny'
+      example:
+        type: api
+        deny:
+          operations:
+            - path: /library/{id}/books
+              methods:
+                - GET
+    MCPCapabilityControlsDeny:
+      type: object
+      description: The capabilities of the mapped MCP server that are denied.
+      required:
+        - tools
+        - resources
+        - prompts
+      properties:
+        tools:
+          type: array
+          description: The names of the tools that are denied.
+          items:
+            type: string
+        resources:
+          type: array
+          description: The URIs of the resources that are denied.
+          items:
+            type: string
+        prompts:
+          type: array
+          description: The names of the prompts that are denied.
+          items:
+            type: string
+    MCPCapabilityControls:
+      type: object
+      description: Capability controls for a mapping to an MCP server MCP resource.
+      required:
+        - type
+        - deny
+      properties:
+        type:
+          type: string
+          description: The type of the mapped MCP resource.
+          enum: ["mcp_server"]
+        deny:
+          $ref: '#/components/schemas/MCPCapabilityControlsDeny'
+      example:
+        type: mcp_server
+        deny:
+          tools:
+            - search_books
+          resources:
+            - file:///library/catalog.json
+          prompts:
+            - summarize_book
+    CapabilityControls:
+      description: >
+        The capabilities of a mapped MCP resource that the MCP server does not
+        expose.
+      oneOf:
+        - $ref: '#/components/schemas/APICapabilityControls'
+        - $ref: '#/components/schemas/MCPCapabilityControls'
+      discriminator:
+        propertyName: type
+        mapping:
+          api: '#/components/schemas/APICapabilityControls'
+          mcp_server: '#/components/schemas/MCPCapabilityControls'
+    PatchAPICapabilityControlsDeny:
+      type: object
+      description: >
+        The capabilities of the mapped API to deny. Omitted keys preserve
+        their current value, an empty array clears the capability, and a
+        non-empty array replaces.
+      properties:
+        operations:
+          type: array
+          description: The API operations that are denied.
+          items:
+            $ref: '#/components/schemas/APICapabilityControlsOperation'
+    PatchAPICapabilityControls:
+      type: object
+      description: Partial capability controls for a mapping to an API MCP resource.
+      required:
+        - type
+        - deny
+      properties:
+        type:
+          type: string
+          description: The type of the mapped MCP resource.
+          enum: ["api"]
+        deny:
+          $ref: '#/components/schemas/PatchAPICapabilityControlsDeny'
+      example:
+        type: api
+        deny:
+          operations:
+            - path: /library/{id}/books
+              methods:
+                - GET
+    PatchMCPCapabilityControlsDeny:
+      type: object
+      description: >
+        The capabilities of the mapped MCP server to deny. Omitted keys
+        preserve their current value, an empty array clears the capability,
+        and a non-empty array replaces.
+      properties:
+        tools:
+          type: array
+          description: The names of the tools that are denied.
+          items:
+            type: string
+        resources:
+          type: array
+          description: The URIs of the resources that are denied.
+          items:
+            type: string
+        prompts:
+          type: array
+          description: The names of the prompts that are denied.
+          items:
+            type: string
+    PatchMCPCapabilityControls:
+      type: object
+      description: Partial capability controls for a mapping to an MCP server MCP resource.
+      required:
+        - type
+        - deny
+      properties:
+        type:
+          type: string
+          description: The type of the mapped MCP resource.
+          enum: ["mcp_server"]
+        deny:
+          $ref: '#/components/schemas/PatchMCPCapabilityControlsDeny'
+      example:
+        type: mcp_server
+        deny:
+          prompts:
+            - prompt_a
+          resources:
+            - res_a
+    PatchCapabilityControls:
+      description: >
+        The capability controls to merge into the existing configuration for
+        a mapped context source. Omitted deny keys preserve their current
+        value, an empty array clears a capability, and a non-empty array
+        replaces.
+      oneOf:
+        - $ref: '#/components/schemas/PatchAPICapabilityControls'
+        - $ref: '#/components/schemas/PatchMCPCapabilityControls'
+      discriminator:
+        propertyName: type
+        mapping:
+          api: '#/components/schemas/PatchAPICapabilityControls'
+          mcp_server: '#/components/schemas/PatchMCPCapabilityControls'
+    MCPServerControlPlaneMappingMode:
+      type: string
+      enum:
+        - basic
+        - advanced
+      description: "Whether the MCP Server deployment on this Control Plane is managed by Konnect defaults ('basic') or configured directly via Kong Operator custom resources ('advanced')."
+    MCPServerControlPlaneMappingInfo:
+      type: object
+      required:
+        - id
+        - context_interface_id
+        - control_plane_id
+        - mode
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier for the mapping.
+        context_interface_id:
+          type: string
+          format: uuid
+          description: The unique identifier for the Context Interface.
+        control_plane_id:
+          type: string
+          format: uuid
+          description: The unique identifier for the Control Plane.
+        mode:
+          $ref: '#/components/schemas/MCPServerControlPlaneMappingMode'
+        created_at:
+          $ref: '../../../../common/definitions/properties.yaml#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '../../../../common/definitions/properties.yaml#/components/schemas/UpdatedAt'
+    ListMCPServerControlPlaneMappingResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/MCPServerControlPlaneMappingInfo'
+        meta:
+          $ref: '../../../../common/definitions/metadatas.yaml#/components/schemas/CursorMeta'
+    CreateMCPServerControlPlaneMappingRequest:
+      type: object
+      required:
+        - control_plane_id
+      properties:
+        control_plane_id:
+          type: string
+          format: uuid
+          description: The unique identifier for the Control Plane.
+        mode:
+          $ref: '#/components/schemas/MCPServerControlPlaneMappingMode'
+    PatchMCPServerControlPlaneMappingRequest:
+      type: object
+      properties:
+        mode:
+          $ref: '#/components/schemas/MCPServerControlPlaneMappingMode'
+
+    MCPServerRuntime:
+      title: MCPServerRuntime
+      type: object
+      required:
+        - init_container
+        - runtime_container
+      properties:
+        init_container:
+          allOf:
+            - $ref: '#/components/schemas/ContainerSpec'
+            - description: Configuration for the init container.
+        runtime_container:
+          allOf:
+            - $ref: '#/components/schemas/ContainerSpec'
+            - description: Configuration for the main container.
+    PatchSkillRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The machine name of the skill. Must be unique within the MCP server and must match the name declared in the frontmatter.
+          minLength: 1
+          maxLength: 64
+          pattern: '^[a-z0-9]([a-z0-9-]*[a-z0-9])?$'
+        display_name:
+          type: string
+          description: The human-readable display name of the skill.
+          minLength: 1
+          maxLength: 120
+        description:
+          type: string
+          description: A description of the skill.
+          maxLength: 1024
+        content:
+          type: string
+          description: The raw SKILL.md content — a markdown document beginning with a YAML frontmatter block.
+        labels:
+          $ref: '../../../../common/definitions/konnect_properties.yaml#/components/schemas/Labels'
+    ListSkillsResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Skill'
+        meta:
+          $ref: '../../../../common/definitions/metadatas.yaml#/components/schemas/PaginatedMeta'
+    SkillContentsResponse:
+      type: object
+      required:
+        - url
+      properties:
+        url:
+          type: string
+          format: uri
+          description: Presigned S3 URL for the skill's content.
+    CreateSkillRequest:
+      type: object
+      required:
+        - name
+        - display_name
+        - description
+        - content
+        - labels
+      properties:
+        name:
+          type: string
+          description: The machine name of the skill. Must be unique within the MCP server and must match the name declared in the frontmatter.
+          minLength: 1
+          maxLength: 64
+          pattern: '^[a-z0-9]([a-z0-9-]*[a-z0-9])?$'
+          example: pdf-processing
+        display_name:
+          type: string
+          description: The human-readable display name of the skill.
+          minLength: 1
+          maxLength: 120
+          example: PDF Processing
+        description:
+          type: string
+          description: A description of the skill.
+          maxLength: 1024
+          example: Extract and summarize content from PDF documents
+        content:
+          type: string
+          description: The raw SKILL.md content — a markdown document beginning with a YAML frontmatter block.
+          example: "---\nname: pdf-processing\ndescription: Extract and summarize content from PDF documents\n---\n# PDF Processing\n..."
+        labels:
+          $ref: '../../../../common/definitions/konnect_properties.yaml#/components/schemas/Labels'
+    SkillFrontmatter:
+      type: object
+      required:
+        - name
+        - description
+      properties:
+        name:
+          type: string
+          maxLength: 64
+          pattern: '^[a-z0-9]([a-z0-9-]*[a-z0-9])?$'
+          description: The machine name declared in the frontmatter.
+        description:
+          type: string
+          minLength: 1
+          maxLength: 1024
+          description: A description of the skill declared in the frontmatter.
+        license:
+          type: string
+          description: License name or reference to a bundled license file.
+        compatibility:
+          type: string
+          maxLength: 500
+          description: Compatibility information for the skill, indicating environment requirements such as intended product, system packages, and network access.
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          description: Arbitrary key-value metadata for the skill.
+        allowed_tools:
+          type: string
+          description: Space-separated list of pre-approved tools the skill is permitted to use.
+    Skill:
+      type: object
+      required:
+        - id
+        - context_interface_id
+        - name
+        - display_name
+        - description
+        - frontmatter
+        - labels
+        - source_type
+        - status
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier for the skill.
+        context_interface_id:
+          type: string
+          format: uuid
+          description: The ID of the Context Interface this skill belongs to.
+        name:
+          type: string
+          description: The machine name of the skill.
+          minLength: 1
+          maxLength: 64
+          pattern: '^[a-z0-9]([a-z0-9-]*[a-z0-9])?$'
+        display_name:
+          type: string
+          description: The human-readable display name of the skill.
+          minLength: 1
+          maxLength: 120
+        description:
+          type: string
+          description: A description of the skill.
+          maxLength: 1024
+        frontmatter:
+          $ref: '#/components/schemas/SkillFrontmatter'
+        labels:
+          $ref: '../../../../common/definitions/konnect_properties.yaml#/components/schemas/Labels'
+        source_type:
+          type: string
+          enum: ["raw"]
+          description: The source type of the skill content.
+        status:
+          type: string
+          enum: ["valid", "invalid"]
+          description: The current validation status of the skill.
+        created_at:
+          $ref: '../../../../common/definitions/properties.yaml#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '../../../../common/definitions/properties.yaml#/components/schemas/UpdatedAt'
+    BearerCredentialSecrets:
+      type: object
+      required:
+        - token
+      properties:
+        token:
+          type: string
+          description: The bearer token (e.g. a GitHub personal access token). Write-only — never returned by the API.
+    BearerContextProviderCredentialConfigPayload:
+      type: object
+      required:
+        - auth_type
+        - secrets
+      properties:
+        auth_type:
+          type: string
+          enum: ["bearer"]
+        secrets:
+          $ref: '#/components/schemas/BearerCredentialSecrets'
+    ContextProviderCredentialConfigPayload:
+      description: >-
+        The provider-specific authentication configuration for the credential, used in create
+        and update requests. The shape of `secrets` is determined by `auth_type`.
+      oneOf:
+        - $ref: '#/components/schemas/BearerContextProviderCredentialConfigPayload'
+      discriminator:
+        propertyName: auth_type
+        mapping:
+          bearer: '#/components/schemas/BearerContextProviderCredentialConfigPayload'
+    BearerContextProviderCredentialConfig:
+      type: object
+      required:
+        - auth_type
+      properties:
+        auth_type:
+          type: string
+          enum: ["bearer"]
+    ContextProviderCredentialConfig:
+      description: >-
+        The provider-specific authentication configuration for the credential, as returned by
+        the API. Never includes secret values — `secrets` is write-only and omitted entirely
+        from every response.
+      oneOf:
+        - $ref: '#/components/schemas/BearerContextProviderCredentialConfig'
+      discriminator:
+        propertyName: auth_type
+        mapping:
+          bearer: '#/components/schemas/BearerContextProviderCredentialConfig'
+    CreateContextProviderCredentialRequest:
+      type: object
+      required:
+        - name
+        - display_name
+        - description
+        - provider
+        - config
+      properties:
+        name:
+          type: string
+          description: The machine name of the context provider credential. Must be unique within the organization.
+          minLength: 1
+          maxLength: 120
+          pattern: '^[0-9a-z.-]+$'
+          example: bob-github-pat
+        display_name:
+          type: string
+          description: The human-readable display name of the context provider credential.
+          minLength: 1
+          maxLength: 120
+          example: Bob's Github Pat
+        description:
+          type: string
+          description: A description of the context provider credential.
+          maxLength: 2048
+          example: Expires on 2027-01-30
+        provider:
+          type: string
+          enum: ["github"]
+          description: The external system this credential authenticates against.
+          example: github
+        config:
+          $ref: '#/components/schemas/ContextProviderCredentialConfigPayload'
+    PatchContextProviderCredentialRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The machine name of the context provider credential. Must be unique within the organization.
+          minLength: 1
+          maxLength: 120
+          pattern: '^[0-9a-z.-]+$'
+        display_name:
+          type: string
+          description: The human-readable display name of the context provider credential.
+          minLength: 1
+          maxLength: 120
+        description:
+          type: string
+          description: A description of the context provider credential.
+          maxLength: 2048
+        config:
+          description: >-
+            Replaces the existing configuration in its entirety, including `secrets` — partial
+            updates to individual config attributes are not supported.
+          allOf:
+            - $ref: '#/components/schemas/ContextProviderCredentialConfigPayload'
+    ContextProviderCredential:
+      type: object
+      required:
+        - id
+        - name
+        - display_name
+        - description
+        - provider
+        - config
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier for the context provider credential.
+        name:
+          type: string
+          description: The machine name of the context provider credential.
+          minLength: 1
+          maxLength: 120
+          pattern: '^[0-9a-z.-]+$'
+        display_name:
+          type: string
+          description: The human-readable display name of the context provider credential.
+          minLength: 1
+          maxLength: 120
+        description:
+          type: string
+          description: A description of the context provider credential.
+          maxLength: 2048
+        provider:
+          type: string
+          enum: ["github"]
+          description: The external system this credential authenticates against.
+        config:
+          $ref: '#/components/schemas/ContextProviderCredentialConfig'
+        created_at:
+          $ref: '../../../../common/definitions/properties.yaml#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '../../../../common/definitions/properties.yaml#/components/schemas/UpdatedAt'
+    ListContextProviderCredentialsResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContextProviderCredential'
+        meta:
+          $ref: '../../../../common/definitions/metadatas.yaml#/components/schemas/PaginatedMeta'
+  responses:
+    MCPServerSignalsResponse:
+      description: The MCP server signals response.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MCPServerSignals'
+    ListMCPServersResponse:
+      description: A response to listing MCP servers.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListMCPServersResponse'
+    PaginateMCPServersResponse:
+      description: A response to listing MCP servers.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PaginateMCPServersResponse'
+    CreateMCPServerResponse:
+      description: A response to creating an MCP server.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MCPServer'
+    ListMCPServersCPInfoResponse:
+      description: A response to listing MCP servers with CP info.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListMCPServersCPInfoResponse'
+    UpdateMCPServerResponse:
+      description: A response to updating an MCP server.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MCPServer'
+    CreateMCPServerMCPResourceMappingResponse:
+      description: A response to creating an MCP server MCP resource mapping.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MCPServerMCPResourceMapping'
+    ListMCPServerMCPResourceMappingsResponse:
+      description: A response to listing Context Interface Source Mappings.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListMCPServerMCPResourceMappingsResponse'
+    GetMCPServerMCPResourceMappingCapabilityControlsResponse:
+      description: A response to retrieving the capability controls for an MCP server MCP resource mapping.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CapabilityControls'
+    CreateContextInterfaceContextSourceMappingCapabilityControlsResponse:
+      description: A response to creating the capability controls for a Context Interface-Source mapping.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CapabilityControls'
+    PatchContextInterfaceContextSourceMappingCapabilityControlsResponse:
+      description: A response to updating the capability controls for a Context Interface-Source mapping.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CapabilityControls'
+    MCPServerMCPResourceMappingCapabilityControlsNotFound:
+      description: >
+        The MCP resource mapping does not exist, or it has no capability
+        controls configured.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../../../common/definitions/errors.yaml#/components/schemas/NotFoundError'
+          examples:
+            NotFoundExample:
+              $ref: '../../../../common/definitions/errors.yaml#/components/examples/NotFoundExample'
+    ListMCPServerControlPlaneMappingResponse:
+      description: Listing MCP Server to Control Plane mappings.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListMCPServerControlPlaneMappingResponse'
+    CreateMCPServerControlPlaneMappingResponse:
+      description: Details of MCP Server - Control Plane mapping creation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MCPServerControlPlaneMappingInfo'
+    PatchMCPServerControlPlaneMappingResponse:
+      description: Details of MCP Server - Control Plane mapping after update.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MCPServerControlPlaneMappingInfo'
+    MCPServerRuntimeResponse:
+      description: A response containing the MCP server runtime configuration
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MCPServerRuntime'
+          examples:
+            MCPServerRuntime:
+              $ref: '#/components/examples/MCPServerRuntimeResponse'
+    ListSkillsResponse:
+      description: A response to listing skills.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListSkillsResponse'
+    SkillContentsResponse:
+      description: A response containing a presigned URL for the skill's content.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SkillContentsResponse'
+    CreateSkillResponse:
+      description: A response to creating a skill.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Skill'
+    ListContextProviderCredentialsResponse:
+      description: A response to listing context provider credentials.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListContextProviderCredentialsResponse'
+    CreateContextProviderCredentialResponse:
+      description: A response to creating a context provider credential.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ContextProviderCredential'
+  securitySchemes:
+    personalAccessToken:
+      $ref: '../../../../common/definitions/security.yaml#/components/securitySchemes/personalAccessToken'
+    systemAccountAccessToken:
+      $ref: '../../../../common/definitions/security.yaml#/components/securitySchemes/systemAccountAccessToken'
+  examples:
+    CatalogApiPayload:
+      value:
+        name: api-catalog-resource
+        display_name: API Catalog Resource
+        description: An MCP resource sourced from an API catalog entry.
+        labels: {}
+        type: api
+        source:
+          type: api_catalog
+          config:
+            api_id: 158a0fc7-479a-4928-8a64-7656c1824f7f
+            api_version_id: bc0b9df1-67ba-475f-9670-37de3cc2e4f6
+    RawApiPayload:
+      value:
+        name: api-raw-resource
+        display_name: API Raw Resource
+        description: An MCP resource sourced from a raw API spec.
+        labels: {}
+        type: api
+        source:
+          type: raw
+          config:
+            spec: '{"info":{"title":"my-api","version":"0.0.1"}}'
+    RemoteMcpServerPayload:
+      value:
+         name: remote-mcp-server-resource
+         display_name: Remote MCP Server Resource
+         description: An MCP resource pointing to a remote MCP server.
+         labels: {}
+         type: mcp_server
+         source:
+           type: remote_mcp_server
+           config:
+             url: https://example.com/mcp
+             headers: {}
+    MCPServerRuntimeResponse:
+      value:
+        init_container:
+          image: kong/mcp-server-init:0.5.0
+        runtime_container:
+          image: kong/mcp-server-runner:0.5.0
