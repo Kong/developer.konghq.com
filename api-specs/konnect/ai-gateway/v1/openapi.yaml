@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect AI Gateway
-  version: 2.0.5
+  version: 2.1.2
   description: The API for configuring AI Gateways in Konnect.
   x-extensions-note: |
     Entities and properties may be annotated with `x-min-runtime-version`, the
@@ -18,8 +18,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@77e990db7b9619bacdc1556080e5b1244d78efd1
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/77e990db7b9619bacdc1556080e5b1244d78efd1'
+  x-oas-source: kong/platform-api@e093c5112ead42c82ea337722e8e5c7594d82531
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e093c5112ead42c82ea337722e8e5c7594d82531'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -2730,6 +2730,30 @@ components:
         - host
         - port
         - protocol
+    AIGatewayMinRuntimeVersion:
+      description: |
+        The minimum AI Gateway runtime version supported by this AI Gateway. This is the lowest data plane version that may receive configuration from it, and it controls which features the API accepts.
+
+        Data planes older than this version still connect for topology visibility.
+
+        When not specified, the latest generally available runtime version is used.
+      type: string
+      example: '2.0'
+      pattern: ^\d+\.\d+$
+    AIGatewayMinRuntimeVersionUpdate:
+      description: |
+        The minimum AI Gateway runtime version supported by this AI Gateway. This is the lowest data plane version that may receive configuration from it, and it controls which features the API accepts.
+
+        It may be lowered only when no configuration already stored uses a feature that requires a runtime version above the requested one. Otherwise the request is rejected, naming the entities and fields that stand in the way so that they can be removed or downgraded first.
+
+        When not specified, the minimum runtime version is left unchanged.
+      type: string
+      example: '2.0'
+      pattern: ^\d+\.\d+$
+    AIGatewayRuntimeAutoUpgrade:
+      description: Whether the control plane should automatically raise min_runtime_version as connected data planes report a newer AI Gateway runtime version.
+      type: boolean
+      default: true
     CreateAIGatewayRequest:
       type: object
       properties:
@@ -2742,6 +2766,10 @@ components:
             - hybrid
             - managed
             - serverless
+        min_runtime_version:
+          $ref: '#/components/schemas/AIGatewayMinRuntimeVersion'
+        runtime_auto_upgrade:
+          $ref: '#/components/schemas/AIGatewayRuntimeAutoUpgrade'
         display_name:
           description: The display name for this AI Gateway.
           type: string
@@ -2775,6 +2803,10 @@ components:
     UpdateAIGatewayRequest:
       type: object
       properties:
+        min_runtime_version:
+          $ref: '#/components/schemas/AIGatewayMinRuntimeVersionUpdate'
+        runtime_auto_upgrade:
+          $ref: '#/components/schemas/AIGatewayRuntimeAutoUpgrade'
         display_name:
           description: The display name for this AI Gateway.
           type: string
@@ -2826,6 +2858,10 @@ components:
           items:
             $ref: '#/components/schemas/AIGatewayProxyURL'
           format: set
+        min_runtime_version:
+          $ref: '#/components/schemas/AIGatewayMinRuntimeVersionUpdate'
+        runtime_auto_upgrade:
+          $ref: '#/components/schemas/AIGatewayRuntimeAutoUpgrade'
         labels:
           $ref: '#/components/schemas/PublicLabels'
       additionalProperties: false
@@ -2861,6 +2897,10 @@ components:
           $ref: '#/components/schemas/PublicLabels'
         id:
           $ref: '#/components/schemas/UUID'
+        min_runtime_version:
+          $ref: '#/components/schemas/AIGatewayMinRuntimeVersion'
+        runtime_auto_upgrade:
+          $ref: '#/components/schemas/AIGatewayRuntimeAutoUpgrade'
         deployment_type:
           description: How this AI Gateway's control plane is deployed.
           type: string
@@ -3961,13 +4001,12 @@ components:
           minLength: 1
         values:
           description: |
-            An optional model alias. When omitted, the model name is used.
+            Optional model aliases. When omitted, the model name is used.
             When no selector location is configured, the format default selector is used.
           type: array
           items:
             type: string
             minLength: 1
-          maxItems: 1
           minItems: 1
       additionalProperties: false
       title: AIGatewayModelSelectorConfig
@@ -5101,6 +5140,26 @@ components:
         - ttl
         - cost
       title: AIGatewayCacheWriteCost
+    AIGatewayModalCostList:
+      type: object
+      properties:
+        modal:
+          description: The modal type this price applies to.
+          type: string
+          enum:
+            - text
+            - audio
+            - image
+            - video
+        cost:
+          description: Cost per 1M tokens for this modal type.
+          type: number
+          minimum: 0
+      additionalProperties: false
+      required:
+        - modal
+        - cost
+      title: AIGatewayModalCostList
     AIGatewayContextWindowFactor:
       type: object
       properties:
@@ -5167,6 +5226,33 @@ components:
         cache_write_cost:
           description: Cost per 1M cache-write prompt tokens for billing and cost tracking.
           type: number
+        input_cost_list:
+          description: |-
+            Per-modality override of `input_cost`, in cost per 1M prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        output_cost_list:
+          description: |-
+            Per-modality override of `output_cost`, in cost per 1M output tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        cache_read_cost_list:
+          description: |-
+            Per-modality override of `cache_read_cost`, in cost per 1M cache-read prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
         cache_write_cost_list:
           description: Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this when the upstream provider charges differently for different cache TTLs.
           type: array
@@ -5234,6 +5320,33 @@ components:
         cache_write_cost:
           description: Cost per 1M cache-write prompt tokens for billing and cost tracking.
           type: number
+        input_cost_list:
+          description: |-
+            Per-modality override of `input_cost`, in cost per 1M prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        output_cost_list:
+          description: |-
+            Per-modality override of `output_cost`, in cost per 1M output tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        cache_read_cost_list:
+          description: |-
+            Per-modality override of `cache_read_cost`, in cost per 1M cache-read prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
         cache_write_cost_list:
           description: Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this when the upstream provider charges differently for different cache TTLs.
           type: array
@@ -5317,6 +5430,33 @@ components:
         cache_write_cost:
           description: Cost per 1M cache-write prompt tokens for billing and cost tracking.
           type: number
+        input_cost_list:
+          description: |-
+            Per-modality override of `input_cost`, in cost per 1M prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        output_cost_list:
+          description: |-
+            Per-modality override of `output_cost`, in cost per 1M output tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        cache_read_cost_list:
+          description: |-
+            Per-modality override of `cache_read_cost`, in cost per 1M cache-read prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
         cache_write_cost_list:
           description: Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this when the upstream provider charges differently for different cache TTLs.
           type: array
@@ -5398,6 +5538,33 @@ components:
         cache_write_cost:
           description: Cost per 1M cache-write prompt tokens for billing and cost tracking.
           type: number
+        input_cost_list:
+          description: |-
+            Per-modality override of `input_cost`, in cost per 1M prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        output_cost_list:
+          description: |-
+            Per-modality override of `output_cost`, in cost per 1M output tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        cache_read_cost_list:
+          description: |-
+            Per-modality override of `cache_read_cost`, in cost per 1M cache-read prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
         cache_write_cost_list:
           description: Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this when the upstream provider charges differently for different cache TTLs.
           type: array
@@ -5461,6 +5628,33 @@ components:
         cache_write_cost:
           description: Cost per 1M cache-write prompt tokens for billing and cost tracking.
           type: number
+        input_cost_list:
+          description: |-
+            Per-modality override of `input_cost`, in cost per 1M prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        output_cost_list:
+          description: |-
+            Per-modality override of `output_cost`, in cost per 1M output tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        cache_read_cost_list:
+          description: |-
+            Per-modality override of `cache_read_cost`, in cost per 1M cache-read prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
         cache_write_cost_list:
           description: Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this when the upstream provider charges differently for different cache TTLs.
           type: array
@@ -5547,6 +5741,33 @@ components:
         cache_write_cost:
           description: Cost per 1M cache-write prompt tokens for billing and cost tracking.
           type: number
+        input_cost_list:
+          description: |-
+            Per-modality override of `input_cost`, in cost per 1M prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        output_cost_list:
+          description: |-
+            Per-modality override of `output_cost`, in cost per 1M output tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        cache_read_cost_list:
+          description: |-
+            Per-modality override of `cache_read_cost`, in cost per 1M cache-read prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
         cache_write_cost_list:
           description: Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this when the upstream provider charges differently for different cache TTLs.
           type: array
@@ -5614,6 +5835,33 @@ components:
         cache_write_cost:
           description: Cost per 1M cache-write prompt tokens for billing and cost tracking.
           type: number
+        input_cost_list:
+          description: |-
+            Per-modality override of `input_cost`, in cost per 1M prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        output_cost_list:
+          description: |-
+            Per-modality override of `output_cost`, in cost per 1M output tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        cache_read_cost_list:
+          description: |-
+            Per-modality override of `cache_read_cost`, in cost per 1M cache-read prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
         cache_write_cost_list:
           description: Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this when the upstream provider charges differently for different cache TTLs.
           type: array
@@ -5681,6 +5929,33 @@ components:
         cache_write_cost:
           description: Cost per 1M cache-write prompt tokens for billing and cost tracking.
           type: number
+        input_cost_list:
+          description: |-
+            Per-modality override of `input_cost`, in cost per 1M prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        output_cost_list:
+          description: |-
+            Per-modality override of `output_cost`, in cost per 1M output tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        cache_read_cost_list:
+          description: |-
+            Per-modality override of `cache_read_cost`, in cost per 1M cache-read prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
         cache_write_cost_list:
           description: Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this when the upstream provider charges differently for different cache TTLs.
           type: array
@@ -5744,6 +6019,33 @@ components:
         cache_write_cost:
           description: Cost per 1M cache-write prompt tokens for billing and cost tracking.
           type: number
+        input_cost_list:
+          description: |-
+            Per-modality override of `input_cost`, in cost per 1M prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        output_cost_list:
+          description: |-
+            Per-modality override of `output_cost`, in cost per 1M output tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        cache_read_cost_list:
+          description: |-
+            Per-modality override of `cache_read_cost`, in cost per 1M cache-read prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
         cache_write_cost_list:
           description: Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this when the upstream provider charges differently for different cache TTLs.
           type: array
@@ -5809,6 +6111,33 @@ components:
         cache_write_cost:
           description: Cost per 1M cache-write prompt tokens for billing and cost tracking.
           type: number
+        input_cost_list:
+          description: |-
+            Per-modality override of `input_cost`, in cost per 1M prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        output_cost_list:
+          description: |-
+            Per-modality override of `output_cost`, in cost per 1M output tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        cache_read_cost_list:
+          description: |-
+            Per-modality override of `cache_read_cost`, in cost per 1M cache-read prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
         cache_write_cost_list:
           description: Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this when the upstream provider charges differently for different cache TTLs.
           type: array
@@ -5880,6 +6209,33 @@ components:
         cache_write_cost:
           description: Cost per 1M cache-write prompt tokens for billing and cost tracking.
           type: number
+        input_cost_list:
+          description: |-
+            Per-modality override of `input_cost`, in cost per 1M prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        output_cost_list:
+          description: |-
+            Per-modality override of `output_cost`, in cost per 1M output tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        cache_read_cost_list:
+          description: |-
+            Per-modality override of `cache_read_cost`, in cost per 1M cache-read prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
         cache_write_cost_list:
           description: Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this when the upstream provider charges differently for different cache TTLs.
           type: array
@@ -5949,6 +6305,33 @@ components:
         cache_write_cost:
           description: Cost per 1M cache-write prompt tokens for billing and cost tracking.
           type: number
+        input_cost_list:
+          description: |-
+            Per-modality override of `input_cost`, in cost per 1M prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        output_cost_list:
+          description: |-
+            Per-modality override of `output_cost`, in cost per 1M output tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        cache_read_cost_list:
+          description: |-
+            Per-modality override of `cache_read_cost`, in cost per 1M cache-read prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
         cache_write_cost_list:
           description: Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this when the upstream provider charges differently for different cache TTLs.
           type: array
@@ -6021,6 +6404,33 @@ components:
         cache_write_cost:
           description: Cost per 1M cache-write prompt tokens for billing and cost tracking.
           type: number
+        input_cost_list:
+          description: |-
+            Per-modality override of `input_cost`, in cost per 1M prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        output_cost_list:
+          description: |-
+            Per-modality override of `output_cost`, in cost per 1M output tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        cache_read_cost_list:
+          description: |-
+            Per-modality override of `cache_read_cost`, in cost per 1M cache-read prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
         cache_write_cost_list:
           description: Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this when the upstream provider charges differently for different cache TTLs.
           type: array
@@ -6091,6 +6501,33 @@ components:
         cache_write_cost:
           description: Cost per 1M cache-write prompt tokens for billing and cost tracking.
           type: number
+        input_cost_list:
+          description: |-
+            Per-modality override of `input_cost`, in cost per 1M prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        output_cost_list:
+          description: |-
+            Per-modality override of `output_cost`, in cost per 1M output tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        cache_read_cost_list:
+          description: |-
+            Per-modality override of `cache_read_cost`, in cost per 1M cache-read prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
         cache_write_cost_list:
           description: Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this when the upstream provider charges differently for different cache TTLs.
           type: array
@@ -6154,6 +6591,33 @@ components:
         cache_write_cost:
           description: Cost per 1M cache-write prompt tokens for billing and cost tracking.
           type: number
+        input_cost_list:
+          description: |-
+            Per-modality override of `input_cost`, in cost per 1M prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        output_cost_list:
+          description: |-
+            Per-modality override of `output_cost`, in cost per 1M output tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        cache_read_cost_list:
+          description: |-
+            Per-modality override of `cache_read_cost`, in cost per 1M cache-read prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
         cache_write_cost_list:
           description: Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this when the upstream provider charges differently for different cache TTLs.
           type: array
@@ -6217,6 +6681,33 @@ components:
         cache_write_cost:
           description: Cost per 1M cache-write prompt tokens for billing and cost tracking.
           type: number
+        input_cost_list:
+          description: |-
+            Per-modality override of `input_cost`, in cost per 1M prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        output_cost_list:
+          description: |-
+            Per-modality override of `output_cost`, in cost per 1M output tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        cache_read_cost_list:
+          description: |-
+            Per-modality override of `cache_read_cost`, in cost per 1M cache-read prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
         cache_write_cost_list:
           description: Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this when the upstream provider charges differently for different cache TTLs.
           type: array
@@ -6280,6 +6771,33 @@ components:
         cache_write_cost:
           description: Cost per 1M cache-write prompt tokens for billing and cost tracking.
           type: number
+        input_cost_list:
+          description: |-
+            Per-modality override of `input_cost`, in cost per 1M prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        output_cost_list:
+          description: |-
+            Per-modality override of `output_cost`, in cost per 1M output tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        cache_read_cost_list:
+          description: |-
+            Per-modality override of `cache_read_cost`, in cost per 1M cache-read prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
         cache_write_cost_list:
           description: Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this when the upstream provider charges differently for different cache TTLs.
           type: array
@@ -6344,6 +6862,33 @@ components:
         cache_write_cost:
           description: Cost per 1M cache-write prompt tokens for billing and cost tracking.
           type: number
+        input_cost_list:
+          description: |-
+            Per-modality override of `input_cost`, in cost per 1M prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        output_cost_list:
+          description: |-
+            Per-modality override of `output_cost`, in cost per 1M output tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        cache_read_cost_list:
+          description: |-
+            Per-modality override of `cache_read_cost`, in cost per 1M cache-read prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
         cache_write_cost_list:
           description: Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this when the upstream provider charges differently for different cache TTLs.
           type: array
@@ -6407,6 +6952,33 @@ components:
         cache_write_cost:
           description: Cost per 1M cache-write prompt tokens for billing and cost tracking.
           type: number
+        input_cost_list:
+          description: |-
+            Per-modality override of `input_cost`, in cost per 1M prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        output_cost_list:
+          description: |-
+            Per-modality override of `output_cost`, in cost per 1M output tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
+        cache_read_cost_list:
+          description: |-
+            Per-modality override of `cache_read_cost`, in cost per 1M cache-read prompt tokens. Set it for models that price each modality separately.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayModalCostList'
+          x-min-runtime-version: '2.1'
         cache_write_cost_list:
           description: Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this when the upstream provider charges differently for different cache TTLs.
           type: array
@@ -8134,6 +8706,15 @@ components:
               - creditcard
             stop_on_error: true
           additionalProperties: true
+        condition:
+          description: |-
+            An expression used for conditional control over plugin execution. If the expression evaluates to `true` during the request flow, the plugin is executed; otherwise, it is skipped.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: string
+          maxLength: 1024
+          nullable: true
+          x-min-runtime-version: '2.1'
         labels:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
@@ -8186,6 +8767,15 @@ components:
               - creditcard
             stop_on_error: true
           additionalProperties: true
+        condition:
+          description: |-
+            An expression used for conditional control over plugin execution. If the expression evaluates to `true` during the request flow, the plugin is executed; otherwise, it is skipped.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: string
+          maxLength: 1024
+          nullable: true
+          x-min-runtime-version: '2.1'
         labels:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
@@ -8238,6 +8828,15 @@ components:
               - creditcard
             stop_on_error: true
           additionalProperties: true
+        condition:
+          description: |-
+            An expression used for conditional control over plugin execution. If the expression evaluates to `true` during the request flow, the plugin is executed; otherwise, it is skipped.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: string
+          maxLength: 1024
+          nullable: true
+          x-min-runtime-version: '2.1'
         labels:
           $ref: '#/components/schemas/PublicLabels'
         managed_by:
@@ -8889,7 +9488,75 @@ components:
             - conversion-listener
           x-terraform-transform-const: true
         config:
-          $ref: '#/components/schemas/AIGatewayMCPServerWithUpstreamNoProxyConfig'
+          description: Server-side configuration specific to modes where Kong answers as the MCP server.
+          type: object
+          additionalProperties: false
+          properties:
+            route:
+              $ref: '#/components/schemas/AIGatewayMCPServerRouteWithMatcher'
+            logging:
+              description: Configuration for AI Gateway logging.
+              type: object
+              additionalProperties: false
+              properties:
+                payloads:
+                  type: boolean
+                  default: false
+                audits:
+                  type: boolean
+                  default: false
+            max_request_body_size:
+              description: Maximum size of request body to parse. Set to 0 for unlimited.
+              type: integer
+              default: 8388608
+              maximum: 2147483646
+              minimum: 0
+            server:
+              $ref: '#/components/schemas/AIGatewayMCPServerServerConfigBase'
+            url:
+              description: |
+                Helper field to set protocol, host, port and path of the upstream service using a URL.
+                This is the same as a Kong Gateway Service URL: ${scheme}://${host}:${port}/${path}
+              type: string
+              format: uri
+              example: 'https://mcp.internal.kongair.com'
+            upstream:
+              $ref: '#/components/schemas/AIGatewayUpstreamConfig'
+            allowed_versions:
+              description: |-
+                The MCP protocol revisions this server accepts. Leave unset to accept every revision Kong
+                implements, which is the default. When set, `server/discover` advertises exactly this
+                list and a request declaring anything else is rejected. Listing only per-request
+                revisions refuses handshake clients.
+
+                **Requires a minimum runtime version of `2.1`**.
+              type: array
+              items:
+                type: string
+                enum:
+                  - '2026-07-28'
+                  - '2025-11-25'
+                  - '2025-06-18'
+                  - '2025-03-26'
+              minItems: 1
+              x-min-runtime-version: '2.1'
+            cache:
+              description: |-
+                Cache hints Kong emits on the cacheable operations it serves. Only clients on a protocol
+                revision that defines them receive them.
+
+                **Requires a minimum runtime version of `2.1`**.
+              type: object
+              additionalProperties: false
+              properties:
+                tools_list:
+                  $ref: '#/components/schemas/AIGatewayMCPServerCacheHint'
+                discover:
+                  $ref: '#/components/schemas/AIGatewayMCPServerCacheHint'
+              x-min-runtime-version: '2.1'
+          required:
+            - url
+          title: AIGatewayMCPServerKongListenerConfig
         tools:
           description: |
             List of tools exposed by this MCP Server. Each tool's `path`, `method`, and `host`
@@ -8939,7 +9606,64 @@ components:
             - listener
           x-terraform-transform-const: true
         config:
-          $ref: '#/components/schemas/AIGatewayMCPServerNoUpstreamConfig'
+          description: Server-side configuration specific to modes where Kong answers as the MCP server.
+          type: object
+          additionalProperties: false
+          properties:
+            route:
+              $ref: '#/components/schemas/AIGatewayMCPServerRouteWithMatcher'
+            logging:
+              description: Configuration for AI Gateway logging.
+              type: object
+              additionalProperties: false
+              properties:
+                payloads:
+                  type: boolean
+                  default: false
+                audits:
+                  type: boolean
+                  default: false
+            max_request_body_size:
+              description: Maximum size of request body to parse. Set to 0 for unlimited.
+              type: integer
+              default: 8388608
+              maximum: 2147483646
+              minimum: 0
+            server:
+              $ref: '#/components/schemas/AIGatewayMCPServerServerConfigBase'
+            allowed_versions:
+              description: |-
+                The MCP protocol revisions this server accepts. Leave unset to accept every revision Kong
+                implements, which is the default. When set, `server/discover` advertises exactly this
+                list and a request declaring anything else is rejected. Listing only per-request
+                revisions refuses handshake clients.
+
+                **Requires a minimum runtime version of `2.1`**.
+              type: array
+              items:
+                type: string
+                enum:
+                  - '2026-07-28'
+                  - '2025-11-25'
+                  - '2025-06-18'
+                  - '2025-03-26'
+              minItems: 1
+              x-min-runtime-version: '2.1'
+            cache:
+              description: |-
+                Cache hints Kong emits on the cacheable operations it serves. Only clients on a protocol
+                revision that defines them receive them.
+
+                **Requires a minimum runtime version of `2.1`**.
+              type: object
+              additionalProperties: false
+              properties:
+                tools_list:
+                  $ref: '#/components/schemas/AIGatewayMCPServerCacheHint'
+                discover:
+                  $ref: '#/components/schemas/AIGatewayMCPServerCacheHint'
+              x-min-runtime-version: '2.1'
+          title: AIGatewayMCPServerKongListenerConfig
         sources:
           description: |
             The explicit list of source MCP Servers whose tools this listener exposes.
@@ -9740,32 +10464,6 @@ components:
           type: boolean
           default: false
       additionalProperties: false
-    AIGatewayMCPServerNoUpstreamConfig:
-      description: 'Routing, logging, and server configuration for the MCP Server.'
-      type: object
-      properties:
-        route:
-          $ref: '#/components/schemas/AIGatewayMCPServerRouteWithMatcher'
-        logging:
-          description: Configuration for AI Gateway logging.
-          type: object
-          additionalProperties: false
-          properties:
-            payloads:
-              type: boolean
-              default: false
-            audits:
-              type: boolean
-              default: false
-        max_request_body_size:
-          description: Maximum size of request body to parse. Set to 0 for unlimited.
-          type: integer
-          default: 8388608
-          maximum: 2147483646
-          minimum: 0
-        server:
-          $ref: '#/components/schemas/AIGatewayMCPServerServerConfigBase'
-      additionalProperties: false
     AIGatewayMCPServerWithUpstreamNoProxyConfigNoServerConfig:
       description: 'Routing, logging, and request body size limits for the MCP Server.'
       type: object
@@ -9787,43 +10485,6 @@ components:
           description: Maximum size of request body to parse. Set to 0 for unlimited.
           type: integer
           default: 8388608
-        url:
-          description: |
-            Helper field to set protocol, host, port and path of the upstream service using a URL.
-            This is the same as a Kong Gateway Service URL: ${scheme}://${host}:${port}/${path}
-          type: string
-          format: uri
-          example: 'https://mcp.internal.kongair.com'
-        upstream:
-          $ref: '#/components/schemas/AIGatewayUpstreamConfig'
-      additionalProperties: false
-      required:
-        - url
-    AIGatewayMCPServerWithUpstreamNoProxyConfig:
-      description: 'Routing, logging, and server configuration for the MCP Server.'
-      type: object
-      properties:
-        route:
-          $ref: '#/components/schemas/AIGatewayMCPServerRouteWithMatcher'
-        logging:
-          description: Configuration for AI Gateway logging.
-          type: object
-          additionalProperties: false
-          properties:
-            payloads:
-              type: boolean
-              default: false
-            audits:
-              type: boolean
-              default: false
-        max_request_body_size:
-          description: Maximum size of request body to parse. Set to 0 for unlimited.
-          type: integer
-          default: 8388608
-          maximum: 2147483646
-          minimum: 0
-        server:
-          $ref: '#/components/schemas/AIGatewayMCPServerServerConfigBase'
         url:
           description: |
             Helper field to set protocol, host, port and path of the upstream service using a URL.
@@ -9860,7 +10521,62 @@ components:
           maximum: 2147483646
           minimum: 0
         server:
-          $ref: '#/components/schemas/AIGatewayMCPServerServerConfigBase'
+          description: Server-side configuration for the MCP Server.
+          type: object
+          additionalProperties: false
+          properties:
+            forward_client_headers:
+              description: Whether to forward the client request headers to the upstream server when calling the tools.
+              type: boolean
+              default: true
+            session:
+              description: |
+                Enable managed session when Kong responds as MCP server in listener, conversion-listener, or upstream-server modes.
+                This doesn't affect the passthrough-listener mode as the state in that mode is maintained by the upstream MCP servers.
+              type: object
+              additionalProperties: false
+              properties:
+                client:
+                  description: The configuration for client-side session storage.
+                  type: object
+                  additionalProperties: false
+                  properties:
+                    secrets:
+                      description: |
+                        The secrets that are used in session encryption. Required when the strategy is 'client'.
+                        The first secret is used for encryption, while all secrets are used for decryption to support key rotation.
+                      type: array
+                      items:
+                        type: string
+                        minLength: 8
+                        x-referenceable: true
+                        description: |
+                          This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).
+                      minItems: 1
+                managed:
+                  description: 'If enabled, Kong will maintain managed sessions with the MCP server.'
+                  type: boolean
+                  default: true
+                redis:
+                  $ref: '#/components/schemas/AIGatewayRedisCloudConfiguration'
+                session_ttl:
+                  description: The time-to-live (TTL) for each session in seconds.
+                  type: integer
+                  default: 86400
+                  maximum: 2147483646
+                  minimum: 0
+                strategy:
+                  description: 'The strategy for the session. If the value is ''client'', the session is encrypted into MCP session id assigned to the client. If the value is not ''client'', the session is stored in the configured database.'
+                  type: string
+                  enum:
+                    - client
+                    - redis
+            timeout:
+              description: The timeout for calling the tools in milliseconds.
+              type: integer
+              default: 10000
+              maximum: 2147483646
+              minimum: 0
         url:
           description: |
             Helper field to set protocol, host, port and path of the upstream service using a URL.
@@ -10005,6 +10721,25 @@ components:
           maximum: 2147483646
           minimum: 0
       additionalProperties: false
+    AIGatewayMCPServerCacheHint:
+      description: A cache hint Kong emits on a cacheable operation it serves.
+      type: object
+      properties:
+        ttl_ms:
+          description: 'How long a client may treat the result as fresh, in milliseconds.'
+          type: integer
+          minimum: 0
+        cache_scope:
+          description: |
+            Whether the result may be cached across authorization contexts. `public` is rejected when
+            the server's tool list is filtered per subject by `default_tool_acls` or a tool's own
+            `access.acls`.
+          type: string
+          default: private
+          enum:
+            - public
+            - private
+      additionalProperties: false
     AIGatewayMCPServerUpstreamServerServerConfig:
       description: Server-side configuration specific to `upstream-server` mode.
       type: object
@@ -10070,6 +10805,20 @@ components:
           default: false
         tools_list_auth:
           $ref: '#/components/schemas/AIGatewayMCPServerUpstreamServerServerToolAuthConfig'
+        upstream_protocol_version:
+          description: |-
+            The MCP protocol revision Kong speaks to the upstream MCP server. Leave unset to
+            negotiate a handshake revision with an `initialize` exchange, which is the default. Set a
+            per-request revision to reach an upstream that answers no handshake and mints no session.
+
+            **Requires a minimum runtime version of `2.1`**.
+          type: string
+          enum:
+            - '2026-07-28'
+            - '2025-11-25'
+            - '2025-06-18'
+            - '2025-03-26'
+          x-min-runtime-version: '2.1'
       additionalProperties: false
     AIGatewayMCPServerUpstreamServerServerToolAuthConfig:
       description: Configuration for an Upstream Server's MCP Server Tools' Authentication.
@@ -10282,7 +11031,75 @@ components:
             - conversion-listener
           x-terraform-transform-const: true
         config:
-          $ref: '#/components/schemas/AIGatewayMCPServerWithUpstreamNoProxyConfig'
+          description: Server-side configuration specific to modes where Kong answers as the MCP server.
+          type: object
+          additionalProperties: false
+          properties:
+            route:
+              $ref: '#/components/schemas/AIGatewayMCPServerRouteWithMatcher'
+            logging:
+              description: Configuration for AI Gateway logging.
+              type: object
+              additionalProperties: false
+              properties:
+                payloads:
+                  type: boolean
+                  default: false
+                audits:
+                  type: boolean
+                  default: false
+            max_request_body_size:
+              description: Maximum size of request body to parse. Set to 0 for unlimited.
+              type: integer
+              default: 8388608
+              maximum: 2147483646
+              minimum: 0
+            server:
+              $ref: '#/components/schemas/AIGatewayMCPServerServerConfigBase'
+            url:
+              description: |
+                Helper field to set protocol, host, port and path of the upstream service using a URL.
+                This is the same as a Kong Gateway Service URL: ${scheme}://${host}:${port}/${path}
+              type: string
+              format: uri
+              example: 'https://mcp.internal.kongair.com'
+            upstream:
+              $ref: '#/components/schemas/AIGatewayUpstreamConfig'
+            allowed_versions:
+              description: |-
+                The MCP protocol revisions this server accepts. Leave unset to accept every revision Kong
+                implements, which is the default. When set, `server/discover` advertises exactly this
+                list and a request declaring anything else is rejected. Listing only per-request
+                revisions refuses handshake clients.
+
+                **Requires a minimum runtime version of `2.1`**.
+              type: array
+              items:
+                type: string
+                enum:
+                  - '2026-07-28'
+                  - '2025-11-25'
+                  - '2025-06-18'
+                  - '2025-03-26'
+              minItems: 1
+              x-min-runtime-version: '2.1'
+            cache:
+              description: |-
+                Cache hints Kong emits on the cacheable operations it serves. Only clients on a protocol
+                revision that defines them receive them.
+
+                **Requires a minimum runtime version of `2.1`**.
+              type: object
+              additionalProperties: false
+              properties:
+                tools_list:
+                  $ref: '#/components/schemas/AIGatewayMCPServerCacheHint'
+                discover:
+                  $ref: '#/components/schemas/AIGatewayMCPServerCacheHint'
+              x-min-runtime-version: '2.1'
+          required:
+            - url
+          title: AIGatewayMCPServerKongListenerConfig
         tools:
           description: |
             List of tools exposed by this MCP Server. Each tool's `path`, `method`, and `host`
@@ -10342,7 +11159,64 @@ components:
             - listener
           x-terraform-transform-const: true
         config:
-          $ref: '#/components/schemas/AIGatewayMCPServerNoUpstreamConfig'
+          description: Server-side configuration specific to modes where Kong answers as the MCP server.
+          type: object
+          additionalProperties: false
+          properties:
+            route:
+              $ref: '#/components/schemas/AIGatewayMCPServerRouteWithMatcher'
+            logging:
+              description: Configuration for AI Gateway logging.
+              type: object
+              additionalProperties: false
+              properties:
+                payloads:
+                  type: boolean
+                  default: false
+                audits:
+                  type: boolean
+                  default: false
+            max_request_body_size:
+              description: Maximum size of request body to parse. Set to 0 for unlimited.
+              type: integer
+              default: 8388608
+              maximum: 2147483646
+              minimum: 0
+            server:
+              $ref: '#/components/schemas/AIGatewayMCPServerServerConfigBase'
+            allowed_versions:
+              description: |-
+                The MCP protocol revisions this server accepts. Leave unset to accept every revision Kong
+                implements, which is the default. When set, `server/discover` advertises exactly this
+                list and a request declaring anything else is rejected. Listing only per-request
+                revisions refuses handshake clients.
+
+                **Requires a minimum runtime version of `2.1`**.
+              type: array
+              items:
+                type: string
+                enum:
+                  - '2026-07-28'
+                  - '2025-11-25'
+                  - '2025-06-18'
+                  - '2025-03-26'
+              minItems: 1
+              x-min-runtime-version: '2.1'
+            cache:
+              description: |-
+                Cache hints Kong emits on the cacheable operations it serves. Only clients on a protocol
+                revision that defines them receive them.
+
+                **Requires a minimum runtime version of `2.1`**.
+              type: object
+              additionalProperties: false
+              properties:
+                tools_list:
+                  $ref: '#/components/schemas/AIGatewayMCPServerCacheHint'
+                discover:
+                  $ref: '#/components/schemas/AIGatewayMCPServerCacheHint'
+              x-min-runtime-version: '2.1'
+          title: AIGatewayMCPServerKongListenerConfig
         sources:
           description: |
             The explicit list of source MCP Servers whose tools this listener exposes.
@@ -13689,7 +14563,7 @@ components:
       required:
         - page
       title: PaginatedMeta
-    BaseError:
+    UnauthorizedError:
       description: standard error
       type: object
       properties:
@@ -13698,6 +14572,7 @@ components:
             The HTTP status code of the error. Useful when passing the response
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
+          example: 401
           readOnly: true
         title:
           description: |
@@ -13705,10 +14580,12 @@ components:
             change between occurences of a problem, except for localization.
             Should be provided as "Sentence case" for direct use in the UI.
           type: string
+          example: Unauthorized
           readOnly: true
         type:
           description: The error type.
           type: string
+          example: 'https://httpstatuses.com/401'
           readOnly: true
         instance:
           description: |
@@ -13716,6 +14593,7 @@ components:
             kong:trace:<correlation_id>. This helps us find the relevant logs
             when a customer reports an issue.
           type: string
+          example: 'kong:trace:1234567890'
           readOnly: true
         detail:
           description: |
@@ -13724,6 +14602,7 @@ components:
             what went wrong. Enclose variable values in square brackets. Should be
             provided as "Sentence case" for direct use in the UI.
           type: string
+          example: Invalid credentials
           readOnly: true
       required:
         - status
@@ -13731,51 +14610,100 @@ components:
         - instance
         - detail
       title: Error
-    UnauthorizedError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 401
-            title:
-              example: Unauthorized
-            type:
-              example: 'https://httpstatuses.com/401'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Invalid credentials
     ForbiddenError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 403
-            title:
-              example: Forbidden
-            type:
-              example: 'https://httpstatuses.com/403'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Forbidden
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          example: 403
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Forbidden
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          example: 'https://httpstatuses.com/403'
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          example: 'kong:trace:1234567890'
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Forbidden
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
     TooManyRequestsError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 429
-            title:
-              example: Too Many Requests
-            type:
-              example: 'https://httpstatuses.com/429'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Too Many Requests
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          example: 429
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Too Many Requests
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          example: 'https://httpstatuses.com/429'
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          example: 'kong:trace:1234567890'
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Too Many Requests
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
     InvalidRules:
       description: invalid parameters rules
       type: string
@@ -13912,7 +14840,8 @@ components:
           readOnly: true
         choices:
           type: array
-          items: {}
+          items:
+            type: string
           minItems: 1
           nullable: false
           readOnly: true
@@ -13946,7 +14875,8 @@ components:
           readOnly: true
         dependents:
           type: array
-          items: {}
+          items:
+            type: string
           nullable: true
           readOnly: true
           uniqueItems: true
@@ -13973,44 +14903,159 @@ components:
       nullable: false
       uniqueItems: true
     BadRequestError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          required:
-            - invalid_parameters
-          properties:
-            invalid_parameters:
-              $ref: '#/components/schemas/InvalidParameters'
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+        invalid_parameters:
+          $ref: '#/components/schemas/InvalidParameters'
+      required:
+        - status
+        - title
+        - instance
+        - detail
+        - invalid_parameters
+      title: Error
     ConflictError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 409
-            title:
-              example: Conflict
-            type:
-              example: 'https://httpstatuses.com/409'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Conflict
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          example: 409
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Conflict
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          example: 'https://httpstatuses.com/409'
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          example: 'kong:trace:1234567890'
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Conflict
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
     NotFoundError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 404
-            title:
-              example: Not Found
-            type:
-              example: 'https://httpstatuses.com/404'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Not found
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          example: 404
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Not Found
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          example: 'https://httpstatuses.com/404'
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          example: 'kong:trace:1234567890'
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Not found
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
+    ManagedBy:
+      description: |
+        Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).
+
+        Keys must be 1–63 characters long and start with an alphanumeric character.
+      type: object
+      example:
+        owner: terraform
+      additionalProperties:
+        type: string
+        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+        minLength: 1
+        maxLength: 63
+      maxProperties: 5
+      title: ManagedBy
     CursorMetaPage:
       type: object
       properties:
@@ -14048,21 +15093,6 @@ components:
           $ref: '#/components/schemas/CursorMetaPage'
       required:
         - page
-    ManagedBy:
-      description: |
-        Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).
-
-        Keys must be 1–63 characters long and start with an alphanumeric character.
-      type: object
-      example:
-        owner: terraform
-      additionalProperties:
-        type: string
-        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
-        minLength: 1
-        maxLength: 63
-      maxProperties: 5
-      title: ManagedBy
     CursorMetaWithTotal:
       description: Pagination metadata with exact total. Useful when the collection size is inexpensive to provide.
       type: object

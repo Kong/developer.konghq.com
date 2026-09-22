@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect Search
-  version: 1.0.1
+  version: 1.0.3
   description: The search API for Kong Konnect.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@e90181e408e99cce61be90b6bb06326db50ca56f
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e90181e408e99cce61be90b6bb06326db50ca56f'
+  x-oas-source: kong/platform-api@21fd58f003179728513bc7495110052890ed83b4
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/21fd58f003179728513bc7495110052890ed83b4'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -40,6 +40,11 @@ paths:
           schema:
             type: string
           example: 'name:"John Smith"'
+        - name: mode
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/SearchMode'
       responses:
         '200':
           $ref: '#/components/responses/SearchResponse'
@@ -228,6 +233,14 @@ components:
         - type
         - name
       title: SearchResultItem
+    SearchMode:
+      description: |
+        The mode of search to perform.
+      type: string
+      default: advanced
+      enum:
+        - basic
+        - advanced
     Relation:
       type: object
       properties:
@@ -247,48 +260,6 @@ components:
         - type
         - id
         - child_relations
-    BaseError:
-      description: standard error
-      type: object
-      properties:
-        status:
-          description: |
-            The HTTP status code of the error. Useful when passing the response
-            body to child properties in a frontend UI. Must be returned as an integer.
-          type: integer
-          readOnly: true
-        title:
-          description: |
-            A short, human-readable summary of the problem. It should not
-            change between occurences of a problem, except for localization.
-            Should be provided as "Sentence case" for direct use in the UI.
-          type: string
-          readOnly: true
-        type:
-          description: The error type.
-          type: string
-          readOnly: true
-        instance:
-          description: |
-            Used to return the correlation ID back to the user, in the format
-            kong:trace:<correlation_id>. This helps us find the relevant logs
-            when a customer reports an issue.
-          type: string
-          readOnly: true
-        detail:
-          description: |
-            A human readable explanation specific to this occurence of the problem.
-            This field may contain request/entity data to help the user understand
-            what went wrong. Enclose variable values in square brackets. Should be
-            provided as "Sentence case" for direct use in the UI.
-          type: string
-          readOnly: true
-      required:
-        - status
-        - title
-        - instance
-        - detail
-      title: Error
     InvalidRules:
       description: invalid parameters rules
       type: string
@@ -425,7 +396,8 @@ components:
           readOnly: true
         choices:
           type: array
-          items: {}
+          items:
+            type: string
           minItems: 1
           nullable: false
           readOnly: true
@@ -459,7 +431,8 @@ components:
           readOnly: true
         dependents:
           type: array
-          items: {}
+          items:
+            type: string
           nullable: true
           readOnly: true
           uniqueItems: true
@@ -486,14 +459,50 @@ components:
       nullable: false
       uniqueItems: true
     BadRequestError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          required:
-            - invalid_parameters
-          properties:
-            invalid_parameters:
-              $ref: '#/components/schemas/InvalidParameters'
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+        invalid_parameters:
+          $ref: '#/components/schemas/InvalidParameters'
+      required:
+        - status
+        - title
+        - instance
+        - detail
+        - invalid_parameters
+      title: Error
   examples:
     400-query-is-invalid:
       value:
