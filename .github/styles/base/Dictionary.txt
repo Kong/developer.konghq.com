@@ -705,6 +705,7 @@ reranked
 reranking
 resourceVersion
 response_format
+RESTful
 resty
 resync
 Resync
