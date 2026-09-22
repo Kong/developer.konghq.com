@@ -2,6 +2,11 @@ import debug from "debug";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
+import {
+  parseExportAssignment,
+  buildPersistCommand,
+} from "./instructions/export-assignment.js";
+
 const debugCmd = debug("debug:request");
 const debugLog = debug("debug:response");
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -133,6 +138,20 @@ export async function executeCommand(container, cmd) {
       throw error;
     }
   });
+}
+
+// Doc-sourced string commands (prereqs and steps). Commands that assign a
+// variable from a command substitution run in the throwaway exec, so the
+// variable would evaporate before the next step reads it. Wrap those so the
+// value is persisted to /env-vars.sh (see instructions/export-assignment.js).
+// Infra commands (runtime setup/reset/cleanup, tests.yaml before/after) keep
+// calling executeCommand directly.
+export async function executeDocCommand(container, cmd, exec = executeCommand) {
+  const name = parseExportAssignment(cmd);
+  if (!name) {
+    return exec(container, cmd);
+  }
+  return exec(container, buildPersistCommand(cmd, name));
 }
 
 export async function stopContainer(container) {

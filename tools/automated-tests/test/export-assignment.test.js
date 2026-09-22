@@ -6,6 +6,8 @@ import {
   buildPersistCommand,
 } from "../instructions/export-assignment.js";
 
+import { executeDocCommand } from "../docker-helper.js";
+
 test("detects export with quoted command substitution", () => {
   const cmd = `export CONSUMER_ID="$(kongctl get ai-gateway consumers \\
   --gateway-id "$AI_GATEWAY_ID" kong-air \\
@@ -79,4 +81,38 @@ test("wrapper bakes the computed value into the env file line", () => {
   // The written line must be single-quoted relative to the executing shell so the
   // value is evaluated once here, not re-evaluated at every getLiveEnv source.
   assert.match(wrapped, /echo "export TOKEN_BASE64=\\\x22\$\(printf %s "\$TOKEN" \| base64 -w0\)\\\x22"/);
+});
+
+test("executeDocCommand wraps assignment commands for persistence", async () => {
+  const calls = [];
+  const stub = async (container, command) => {
+    calls.push(command);
+    return { exitCode: 0, output: "" };
+  };
+  await executeDocCommand({}, 'export FOO="$(printf abc123)"', stub);
+  assert.equal(calls.length, 1);
+  assert.match(calls[0], /FOO_BASE64/);
+  assert.match(calls[0], />> \/env-vars\.sh/);
+});
+
+test("executeDocCommand passes plain commands through untouched", async () => {
+  const calls = [];
+  const stub = async (container, command) => {
+    calls.push(command);
+    return { exitCode: 0, output: "" };
+  };
+  const cmd = "export GREETING=hello";
+  await executeDocCommand({}, cmd, stub);
+  assert.deepEqual(calls, [cmd]);
+});
+
+test("executeDocCommand passes non-assignment commands through untouched", async () => {
+  const calls = [];
+  const stub = async (container, command) => {
+    calls.push(command);
+    return { exitCode: 0, output: "" };
+  };
+  const cmd = "curl -s http://localhost:8000/routes";
+  await executeDocCommand({}, cmd, stub);
+  assert.deepEqual(calls, [cmd]);
 });
