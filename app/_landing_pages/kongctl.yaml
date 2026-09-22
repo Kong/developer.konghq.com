@@ -33,10 +33,6 @@ rows:
             The declarative configuration feature lets you define API platform infrastructure as code using YAML and a stateless reconciliation system. kongctl manages APIs, Dev Portals, control planes, {{site.ai_gateway}}, {{site.event_gateway_short}}, organization, and {{site.konnect_catalog}} resources.
 
             kongctl also ships installable AI agent skills that help coding agents generate, review, and operate kongctl configuration from a repository.
-
-            **[CI/CD with GitHub Actions](/kongctl/ci-cd/github-actions/)**:
-            Follow the quickstart to publish an API to a Dev Portal, review
-            diffs in pull requests, and apply changes on main.
             
             kongctl is one of multiple tools you can use to manage {{site.konnect_short_name}} and {{site.base_gateway}}.
             To learn about other tools, see the [tools page](/tools/).
@@ -100,6 +96,10 @@ rows:
 
             **Flexible Authorization**: kongctl communicates with {{site.konnect_short_name}} via its APIs and supports authentication
             through browser-based device flow or personal access tokens.
+
+            **[CI/CD with GitHub Actions](/kongctl/ci-cd/github-actions/)**:
+            Follow the quickstart to publish an API to a Dev Portal, review
+            diffs in pull requests, and apply changes on main.
 
       - header:
           type: h2

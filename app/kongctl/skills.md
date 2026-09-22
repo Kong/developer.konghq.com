@@ -18,7 +18,7 @@ breadcrumbs:
   - /kongctl/
 
 related_resources:
-  - text: APIOps for Konnect with kongctl and GitHub Actions
+  - text: APIOps for {{site.konnect_short_name}} with kongctl and GitHub Actions
     url: /kongctl/ci-cd/github-actions/
   - text: Declarative configuration with kongctl
     url: /kongctl/declarative/
@@ -79,7 +79,7 @@ agent:
 
 - Discover supported resource fields with `kongctl explain`.
 - Generate starter YAML with `kongctl scaffold`.
-- Create manifests for APIs, Dev Portals, control planes, {{site.ai_gateway}} resources, and other supported resources.
+- Create manifests for APIs, {{site.dev_portal}}s, control planes, {{site.ai_gateway}} resources, and other supported resources.
 - Integrate decK Gateway state through `_deck`.
 - Generate API configuration from OpenAPI documents.
 - Work through plan, diff, apply, sync, delete, and adopt workflows.
@@ -87,7 +87,7 @@ agent:
 
 For a complete starting point, use the
 [GitHub Actions quickstart](/kongctl/ci-cd/github-actions/). It shows diffs in
-pull requests and applies changes on main for a Dev Portal and an API with
+pull requests and applies changes on main for a {{site.dev_portal}} and an API with
 an inline OpenAPI specification.
 
 <!--vale off-->
