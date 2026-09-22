@@ -8,6 +8,8 @@ related_resources:
     url: /ai-gateway/entities/ai-mcp-server/
   - text: File Log Policy
     url: /ai-gateway/policies/file-log/
+  - text: "{{site.ai_gateway}} audit log reference"
+    url: /ai-gateway/ai-audit-log-reference/#ai-mcp-logs
   - text: MCP version support
     url: /ai-gateway/mcp-version-support/
   - text: Monitor MCP traffic with OpenTelemetry
@@ -49,8 +51,30 @@ tldr:
 tools:
   - kongctl
 
+prereqs:
+  inline:
+    - title: Mock API Server
+      content: |
+        This tutorial reuses the AI Consumers, AI Consumer Groups, AI Auth Strategy, and AI MCP Server created in [Control MCP tool access with AI Consumer and AI Consumer Group ACLs](/ai-gateway/use-access-controls-for-mcp-tools/), along with the `$ALICE_API_KEY` and `$BOB_API_KEY` values exported there.
+
+        Keep the mock marketplace MCP server from that tutorial running on port `3001`. The AI MCP Server proxies to it, so the traffic you generate here fails without it. Confirm it's still listening, which returns `200`:
+
+        ```bash
+        curl -s -o /dev/null -w '%{http_code}\n' -X POST http://localhost:3001/mcp \
+          -H 'Content-Type: application/json' \
+          -H 'Accept: application/json, text/event-stream' \
+          -H 'MCP-Protocol-Version: 2026-07-28' \
+          -H 'Mcp-Method: tools/list' \
+          -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{"_meta":{"io.modelcontextprotocol/protocolVersion":"2026-07-28","io.modelcontextprotocol/clientCapabilities":{}}}}'
+        ```
+      icon_url: /assets/icons/github.svg
+
 cleanup:
   inline:
+    - title: Stop the mock API server
+      content: |
+        Stop the mock marketplace MCP server with `Ctrl+C` in the terminal running it.
+      icon_url: '/assets/icons/code.svg'
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
       icon_url: '/assets/icons/ai-gateway.svg'
@@ -58,10 +82,12 @@ cleanup:
 faqs:
   - q: What's different about `2026-07-28` MCP traffic in these log entries compared to `2025-06-18` or `2025-11-25`?
     a: |
-      Two things are specific to `2026-07-28` traffic:
+      There's no `mcp_session_id` field anywhere in the entry. `2026-07-28` removes the session concept entirely, so the runtime doesn't populate or expect one, and `ai.mcp.protocol_version` records the revision instead. See [MCP version support](/ai-gateway/mcp-version-support/).
 
-      - There's no `mcp_session_id` field anywhere in the entry. `2026-07-28` removes the session concept entirely, so the runtime doesn't populate or expect one. See [MCP version support](/ai-gateway/mcp-version-support/).
-      - `rpc.tool_name` is populated from the `Mcp-Name` header rather than parsed out of the JSON-RPC body, since `2026-07-28` requires that header on every call.
+      Every other `ai.mcp` field behaves the same way across revisions. For the full list, see the [audit log reference](/ai-gateway/ai-audit-log-reference/#ai-mcp-logs).
+  - q: Why does a denied call have no `rpc` entry?
+    a: |
+      The ACL check runs before the request is dispatched as an RPC, so a denied call never becomes one. Only the `ai.mcp.audit` entry records it. That also means `rpc` latency and size data only ever covers calls that reached the upstream MCP server.
 ---
 
 ## Attach a File Log Policy
@@ -215,49 +241,49 @@ body:
 
 ## Validate the log entries
 
-Check the audit logs in your Docker container:
+Each line in `/tmp/mcp.json` is a complete File Log entry, and MCP activity sits in its `ai.mcp` object alongside the standard `request`, `response`, and `consumer` fields. Read the audit logs in your Docker container, filtering to that object:
 
 {% validation custom-command %}
 command: |
-  docker exec -it kong-quickstart-gateway cat /tmp/mcp.json
+  docker exec kong-ai-quickstart-gateway cat /tmp/mcp.json | jq '.ai.mcp'
 expected:
   return_code: 0
 render_output: false
 {% endvalidation %}
 
-An allowed call produces both an `rpc` entry and an `audit` entry; a denied call produces only an `audit` entry. Alice's allowed `list_orders` call looks like:
+An allowed call produces both an `rpc` entry and an `audit` entry; a denied call produces only an `audit` entry. Alice's allowed `list_orders` call produces:
 
 ```json
 {
-  "ai": {
-    "mcp": {
-      "rpc": [
-        {
-          "method": "tools/call",
-          "id": "1",
-          "latency": 3,
-          "tool_name": "list_orders",
-          "response_body_size": 5030
-        }
-      ],
-      "audit": [
-        {
-          "primitive_name": "list_orders",
-          "consumer": {
-            "id": "6c95a611-9991-407b-b1c3-bc608d3bccc3",
-            "name": "admin",
-            "identifier": "consumer_group"
-          },
-          "scope": "primitive",
-          "primitive": "tool",
-          "action": "allow"
-        }
-      ]
+  "mcp_server_id": "37102e42-f18b-410a-ab8c-6719c914dd1c",
+  "protocol_version": "2026-07-28",
+  "rpc": [
+    {
+      "method": "tools/call",
+      "id": "1",
+      "latency": 3,
+      "tool_name": "list_orders",
+      "response_body_size": 5030
     }
-  }
+  ],
+  "audit": [
+    {
+      "primitive_name": "list_orders",
+      "consumer": {
+        "id": "6c95a611-9991-407b-b1c3-bc608d3bccc3",
+        "name": "admin",
+        "identifier": "consumer_group"
+      },
+      "scope": "primitive",
+      "primitive": "tool",
+      "action": "allow"
+    }
+  ]
 }
 ```
 {:.no-copy-code}
+
+In an `audit` entry, `consumer.identifier` tells you what `consumer.name` refers to. Here it's `consumer_group`, so `name` is the AI Consumer Group that granted access (`admin`), while `id` is the UUID of the AI Consumer that made the call (Alice). For the full field list, see the [audit log reference](/ai-gateway/ai-audit-log-reference/#ai-mcp-logs).
 
 Bob's denied `list_users` call has no `rpc` entry at all, only the `audit` entry recording the ACL decision:
 
