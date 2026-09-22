@@ -2,7 +2,7 @@
 title: Configure SAML SSO for Konnect with Microsoft Entra ID
 permalink: /konnect-platform/entra-saml-sso/
 content_type: how_to
-description: Learn how to configure SAML 2.0 SSO for Kong Konnect using Microsoft Entra ID as the identity provider.
+description: Learn how to configure SAML 2.0 SSO for Konnect using Microsoft Entra ID as the identity provider.
 products:
   - konnect
 works_on:
@@ -20,6 +20,8 @@ tldr:
 related_resources:
   - text: "{{site.konnect_short_name}} authentication"
     url: /konnect-platform/authentication/
+  - text: "{{site.konnect_short_name}} SSO"
+    url: /konnect-platform/sso/
 prereqs:
   skip_product: true
   inline:
@@ -39,7 +41,7 @@ prereqs:
         1. In the sidebar, navigate to **Entra ID** > **Enterprise apps**.
         1. Click **New application**.
         1. Click **Create your own application**.
-        1. Enter a name for the application (for example, `Kong Konnect SSO`).
+        1. Enter a name for the application (for example, `Konnect SSO`).
         1. Select **Integrate any other application you don't find in the gallery (Non-gallery)**.
         1. Click **Create**.
 
