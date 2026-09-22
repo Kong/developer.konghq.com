@@ -167,40 +167,47 @@ rows:
 
   - header:
       type: h2
-      text: "Developer authentication and access"
+      text: "Developer and agent authentication and access"
     columns:
       - blocks:
-          - type: card
+          - type: structured_text
             config:
-              title: Access and authentication settings
-              description: |
-                Security settings help you configure visibility and access control for developers accessing your {{site.dev_portal}}.
-              cta:
-                url: "/dev-portal/security-settings/"
+              blocks:
+                - type: text
+                  text: |
+                    You can allow both developers and agents to access your {{site.dev_portal}}. 
+                    Enabling AI agent access to {{site.dev_portal}} isn't a separate flow from enabling developers, it builds on the same developer authentication and access settings. 
+                    After a developer is set up, they can also connect their own AI agent to browse and, depending on configuration, act on their behalf.
+
+  - columns:
       - blocks:
           - type: card
             config:
-              title: SSO
+              title: For developers
+              icon: /assets/icons/team.svg
               description: |
-                Set up SSO for the {{site.konnect_short_name}} {{site.dev_portal}} using OpenID Connect (OIDC) or SAML.
-              cta:
-                url: "/dev-portal/sso/"
+                Configure authentication, SSO, IdP team mappings, and RBAC for developers accessing your {{site.dev_portal}}.
+              ctas:
+                - text: Access and authentication settings
+                  url: "/dev-portal/security-settings/"
+                - text: SSO
+                  url: "/dev-portal/sso/"
+                - text: IdP team mappings
+                  url: "/dev-portal/team-mapping/"
+                - text: Developer RBAC
+                  url: "/dev-portal/developer-rbac/"
       - blocks:
           - type: card
             config:
-              title: IdP team mappings
+              icon: /assets/icons/mcp.svg
+              title: For AI agents
               description: |
-                Map existing developer teams from a third-party identity provider (IdP) and their permissions to elements in a {{site.konnect_short_name}} {{site.dev_portal}}.
-              cta:
-                url: "/dev-portal/team-mapping/"
-      - blocks:
-          - type: card
-            config:
-              title: Developer RBAC
-              description: |
-                Learn about pre-defined developer teams and roles for RBAC.
-              cta:
-                url: /dev-portal/developer-rbac/
+                Generate an MCP server from the APIs published to a {{site.dev_portal}} so developers can connect their AI agents to browse and, depending on configuration, use them.
+              ctas:
+                - text: "{{site.dev_portal}} MCP servers reference"
+                  url: "/dev-portal/mcp-servers/"
+                - text: "Enable an MCP server for your {{site.dev_portal}}"
+                  url: "/dev-portal/mcp-servers/#generate-an-mcp-server-from-dev-portal"
 
   - header:
       type: h2
