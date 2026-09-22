@@ -11,6 +11,7 @@ ai_rate_limiting_policy
 agentic
 Agno
 Agno's
+akamai
 AIGateway
 Alertmanager
 Alibaba
@@ -574,7 +575,8 @@ nodeport
 nullable
 Nullsoft
 nunjucks
-Noname
+noname
+nonamesecurity
 nopp
 nopped
 nopping

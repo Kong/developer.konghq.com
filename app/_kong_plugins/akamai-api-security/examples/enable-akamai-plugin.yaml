@@ -1,0 +1,18 @@
+description: 'Enable the Akamai API Security plugin.'
+
+title: 'Enable Akamai API Security'
+
+weight: 900
+
+requirements:
+  - "You have created an [integration profile](/plugins/akamai-api-security/#create-the-integration-profile) in the Akamai API Security UI."
+  - "The Akamai API Security plugin is [installed](/plugins/akamai-api-security/#choose-your-installation-method)."
+
+config: []
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
