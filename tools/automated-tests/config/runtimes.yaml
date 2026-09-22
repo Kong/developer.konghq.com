@@ -6,6 +6,10 @@ on-prem:
       ANTHROPIC_API_KEY: anthropic-api-key
 
     versions: &gateway-versions
+      - version: "3.16"
+        env:
+          KONG_IMAGE_NAME: kong/kong-gateway
+          KONG_IMAGE_TAG: "3.16"
       - version: "3.15"
         env:
           KONG_IMAGE_NAME: kong/kong-gateway
@@ -133,19 +137,24 @@ on-prem:
 konnect:
   gateway:
     setup:
-      commands: []
+      commands:
+        - deck gateway reset -f
 
     cleanup:
-      commands: []
+      commands:
+        - deck gateway reset -f
 
     reset:
-      commands: []
+      commands:
+        - deck gateway reset -f
 
   ai-gateway:
     env:
       WEBHOOK_URL: http://httpbin.konghq.com/anything
       SLACK_WEBHOOK_URL: http://httpbin.konghq.com/anything
       OUTPUT_DIR: ./kong/quickstart
+      KONG_IMAGE_NAME: kong/kong-ai-gateway
+      KONG_IMAGE_TAG: latest
     setup:
       commands:
         - curl -Ls https://get.konghq.com/ai | bash -s -- -r "" -k $KONNECT_TOKEN -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -e KONG_NGINX_HTTP_CLIENT_BODY_BUFFER_SIZE=2m -n automated-tests-ai-gateway-quickstart
@@ -159,6 +168,7 @@ konnect:
       commands:
         - curl -Ls https://get.konghq.com/ai | bash -s -- -r "" -k $KONNECT_TOKEN -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -e KONG_NGINX_HTTP_CLIENT_BODY_BUFFER_SIZE=2m -n automated-tests-ai-gateway-quickstart | grep '^export AI_GATEWAY_ID' >> /env-vars.sh
         - sleep 5
+        - find . -mindepth 1 -delete
   event-gateway:
     setup:
       commands: []

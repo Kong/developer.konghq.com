@@ -1,0 +1,3 @@
+To monitor traffic instead of blocking it, set [`config.enforcement_mode`](./reference/#schema--config-enforcement-mode) to `log_only` to run the plugin in tap mode. In tap mode, if the plugin detects a validation failure, it logs a warning and proxies the request to the upstream service instead of blocking it.
+
+The warning log contains the same validation details that {{include.name}} would otherwise return to the client in block mode. The only difference between the two modes is how that information is delivered: block mode returns it to the client in the response, and tap mode writes it to the log.

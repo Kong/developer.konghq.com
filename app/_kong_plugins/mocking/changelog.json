@@ -1,4 +1,11 @@
 {
+  "3.16.0.0": [
+    {
+      "message": "Fixed a memory leak where the plugin config cache did not use weak keys due to a misspelled `__mode` metatable field.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.15.0.0": [
     {
       "message": "Fixed an issue where `$ref` dereferencing failed with `invalid ref: <code>` when bare-numeric keys were used under `components.responses`. Now supports numeric-key fallback.",

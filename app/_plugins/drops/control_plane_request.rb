@@ -2,11 +2,13 @@
 
 require 'json'
 require_relative '../lib/site_accessor'
+require_relative './concerns/request_snippet_config'
 
 module Jekyll
   module Drops
     class ControlPlaneRequest < Liquid::Drop # rubocop:disable Style/Documentation
       include Jekyll::SiteAccessor
+      include Jekyll::Drops::Concerns::DualTopologySnippetConfig
 
       def initialize(yaml:, format:) # rubocop:disable Lint/MissingSuper
         @yaml = yaml

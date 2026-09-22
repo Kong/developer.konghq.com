@@ -1,0 +1,49 @@
+description: 'Configure the Kafka Log plugin to accept plain JSON for an Avro schema with nullable fields, instead of Avro-encoded JSON with type-tagged unions.'
+
+title: 'Simple JSON encoding for Avro schemas'
+
+weight: 910
+
+min_version:
+  gateway: '3.16'
+
+requirements:
+ - "[Kafka installed](https://kafka.apache.org/quickstart#quickstart_download) and running"
+ - "[Create a Kafka topic](https://kafka.apache.org/quickstart#quickstart_createtopic)"
+ - "[Schema Registry configured](https://docs.confluent.io/platform/current/schema-registry/index.html) with an Avro schema that includes at least one nullable (union) field"
+
+variables:
+  topic:
+    description: 'The name of your Kafka topic.'
+    value: $KAFKA_TOPIC
+  host:
+    description: 'The bootstrap server host.'
+    value: $BOOTSTRAP_SERVER_HOST
+  registry_url:
+    description: "The URL of your Confluent Schema Registry instance. For example, `http://schema-registry:8081`."
+    value: $REGISTRY_URL
+
+config:
+  bootstrap_servers:
+  - host: ${host}
+    port: 9092
+  topic: ${topic}
+  schema_registry:
+    confluent:
+      url: ${registry_url}
+      authentication:
+        mode: basic
+        basic:
+          username: user
+          password: password
+      value_schema:
+        subject_name: kong-logs-value
+        schema_version: latest
+        payload_encoding: simple_json
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

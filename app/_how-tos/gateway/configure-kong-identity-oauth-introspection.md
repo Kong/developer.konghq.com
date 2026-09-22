@@ -40,7 +40,11 @@ faqs:
     a: |
       No, the secret is only shared once when the client is created. Store it securely.
 
-automated_tests: false
+cleanup:
+  inline:
+    - title: Clean up {{site.identity}} resources
+      include_content: md/identity/delete_auth_server
+
 related_resources:
   - text: "{{site.identity}}"
     url: /identity/
@@ -58,15 +62,11 @@ related_resources:
 
 When you configure the OAuth 2.0 Introspection plugin with {{site.identity}}, you must pass the `client_id` and `client_secret` as a Base64-encoded Basic Auth string (`Basic MG9hNWl...`) in the `config.authorization_value` field.
 
-Base64-encode your client ID and client secret:
-```sh
-echo -n "$CLIENT_ID:$CLIENT_SECRET" | base64
-```
+Base64-encode your client ID and client secret, and export the result:
 
-Export your encoded credentials:
-```sh
-export ENCODED_CREDENTIALS='YOUR-ENCODED-CREDENTIALS'
-```
+{% env_variables %}
+ENCODED_CREDENTIALS: $(echo -n "$CLIENT_ID:$CLIENT_SECRET" | base64)
+{% endenv_variables %}
 
 ## Configure the OAuth 2.0 Introspection plugin
 
@@ -77,15 +77,16 @@ First, get the ID of the `quickstart` control plane you configured in the [prere
 <!--vale off-->
 {% konnect_api_request %}
 url: /v2/control-planes?filter%5Bname%5D%5Bcontains%5D=quickstart
-status_code: 201
+status_code: 200
 method: GET
+extract_body:
+  - name: 'data.0.id'
+    variable: CONTROL_PLANE_ID
+capture:
+  - variable: CONTROL_PLANE_ID
+    jq: ".data[0].id"
 {% endkonnect_api_request %}
 <!--vale on-->
-
-Export the control plane ID:
-```sh
-export CONTROL_PLANE_ID='YOUR-CONTROL-PLANE-ID'
-```
 
 Enable the OAuth 2.0 Introspection plugin globally:
 <!--vale off-->

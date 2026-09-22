@@ -59,7 +59,7 @@ related_resources:
   - text: Billing and invoicing
     url: /metering-and-billing/billing-invoicing/
   - text: Meter and bill {{site.ai_gateway}} LLM tokens
-    url: /how-to/meter-llm-traffic/
+    url: /ai-gateway/meter-llm-traffic/
   - text: Get started with {{site.metering_and_billing}} generic meters
     url: /how-to/get-started-with-metering-and-billing-generic-meters/
 min_version:
@@ -165,6 +165,7 @@ Create a meter to count API requests:
 <!-- vale off -->
 {% konnect_api_request %}
 url: /v3/openmeter/meters
+status_code: 201
 method: POST
 body:
   name: API requests
@@ -178,6 +179,8 @@ body:
     service_name: $.service_name
 {% endkonnect_api_request %}
 <!--vale on-->
+
+This example meters a few representative dimensions. For every field the plugin can emit, see [Captured event dimensions](/plugins/metering-and-billing/#captured-event-dimensions).
 
 ## Enable the {{site.metering_and_billing}} plugin
 

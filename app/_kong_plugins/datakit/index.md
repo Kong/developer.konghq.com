@@ -96,10 +96,14 @@ rows:
     description: Authenticate a Consumer by verifying a JWT from one of two possible sources, each backed by a different JWKS.
   - usecase: "[Sign JWT with Consumer ID](/plugins/datakit/examples/sign-consumer-jwt/)"
     description: Sign an outgoing JWT in a request header using the authenticated Consumer’s ID as the subject.
+  - usecase: "[Sign JWT with Principal ID](/plugins/datakit/examples/sign-principal-jwt/)"
+    description: Sign an outgoing JWT in a request header using the authenticated Principal’s ID as the subject.
   - usecase: "[Route requests to different upstreams based on the authenticated caller](/plugins/datakit/examples/route-upstream-by-credential/)"
     description: Read a credential set by the OpenID Connect plugin and map its value to a named Upstream entity, routing different callers to different backends on a single Route.
   - usecase: "[Route requests to different hosts based on the authenticated caller](/plugins/datakit/examples/route-host-by-credential/)"
     description: Read a credential set by the OpenID Connect plugin and map its value directly to a `host:port` backend, bypassing Upstream entities and load balancing. Use this when each backend is a fixed address and you don't need health checks or retries.
+  - usecase: "[Verify a call node's TLS connection using a custom CA](/plugins/datakit/examples/verify-call-node-with-custom-ca/)"
+    description: "Verify a `call` node's outbound TLS connection against a private CA using the plugin's `ca_certificates` field, instead of relying on the global trusted CA store."
 {% endtable %}
 <!--vale on-->
 
@@ -800,6 +804,32 @@ For example:
 #### Proxy options
 The `call` node supports performing requests via a proxy server. This is controlled by proxy options. See above example for more details.
 
+#### Verify TLS against a custom CA {% new_in 3.16 %}
+
+By default, a `call` node verifies the server's TLS certificate against {{site.base_gateway}}'s global trusted CA store (`lua_ssl_trusted_certificate`).
+
+To verify against a private CA instead, set `ca_certificates` to an array of [CA Certificate](/gateway/entities/ca-certificate/) object UUIDs. This field is set at the top level of the plugin's `config`, alongside `nodes`:
+
+```yaml
+config:
+  ca_certificates:
+    - 9a5edeea-5bbf-47c1-8251-303d64ad1b86
+
+  nodes:
+    - name: CALL
+      type: call
+      url: https://internal.example.private/
+      ssl_verify: true
+```
+
+* `ca_certificates` applies to every `call` node in the plugin instance. There's no per-node CA scoping.
+* When `ca_certificates` is set, it replaces the global trusted CA store for outbound `call` requests.
+  If you still need to trust publicly-signed endpoints, include a public CA alongside your private CA.
+* If `ca_certificates` is unset or empty, `call` nodes fall back to the global trusted CA store.
+* `ca_certificates` has no effect when a node's `ssl_verify` is `false`.
+
+For a complete example, see [Verify a call node's TLS connection using a custom CA](/plugins/datakit/examples/verify-call-node-with-custom-ca/).
+
 #### Request body encoding
 Call node supports following content types for request body encoding:
 * `application/json`
@@ -985,6 +1015,9 @@ For example:
 This filter will function correctly if the client sets the `X-Extra` header or
 omits it entirely, but it won't have the intended effect if the client sets
 the header `X-EXTRA` or `x-extra`.
+
+{:.warning}
+> This is a known limitation of the `jq` node. Always normalize header names to lowercase in a `jq` filter, as shown in the following example, instead of matching a specific casing.
 
 `jq` lets you write a robust filter that handles this condition. 
 The following implementation normalizes header names to lowercase before looking up values from the input:
@@ -1247,6 +1280,10 @@ columns:
   - title: Data type
     key: type
 rows:
+  - property: "`kong.client.principal`"
+    desc: "`kong.client.get_principal()`"
+    type: "`object`"
+    
   - property: "`kong.client.consumer`"
     desc: "`kong.client.get_consumer()`"
     type: "`object`"
@@ -1389,9 +1426,10 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-For examples that read `kong.client.credential` and route different callers to different backends, see:
-* [Dynamically set upstream based on the authenticated caller](/how-to/configure-oidc-datakit-upstream-routing/) (using named Upstream entities)
-* [Dynamically set host based on the authenticated caller](/how-to/configure-oidc-datakit-host-routing/) (using direct `host:port` targets)
+For examples that route different callers to different backends, see:
+* [Dynamically set upstream based on the authenticated caller](/how-to/configure-oidc-datakit-upstream-routing/) (reads `kong.client.credential`, routes to named Upstream entities)
+* [Dynamically set host based on the authenticated caller](/how-to/configure-oidc-datakit-host-routing/) (reads `kong.client.credential`, routes to direct `host:port` targets)
+* [Dynamically set host based on the authenticated Principal](/how-to/configure-oidc-datakit-host-routing-with-principals-metadata/) (reads `kong.client.principal`, routes to a `host:port` target stored in {{site.identity}} Principal metadata)
 
 The following properties support `get` and `set` operations:
 
@@ -1838,7 +1876,7 @@ The [`cache` node](#cache-node) requires a `resources.cache` resource definition
 
 {% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
 
-{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=4 %}
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=4 redis_group="datakit" %}
 
 ### Vault resource {% new_in 3.12 %}
 

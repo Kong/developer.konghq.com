@@ -29,37 +29,25 @@
     "config": {
       "type": "object",
       "properties": {
-        "prefix": {
-          "type": "string",
-          "description": "String to prefix to each metric's name.",
-          "default": "kong"
-        },
-        "allow_status_codes": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "List of status code ranges that are allowed to be logged in metrics."
-        },
-        "hostname_in_prefix": {
-          "type": "boolean",
-          "description": "Include the `hostname` in the `prefix` for each metric name.",
-          "default": false
-        },
-        "service_identifier_default": {
+        "workspace_identifier_default": {
           "type": "string",
           "enum": [
-            "service_host",
-            "service_id",
-            "service_name",
-            "service_name_or_host"
+            "workspace_id",
+            "workspace_name"
           ],
-          "description": "The default service identifier for metrics. This will take effect when a metric's service identifier is omitted. Allowed values are `service_name_or_host`, `service_id`, `service_name`, `service_host`.",
-          "default": "service_name_or_host"
+          "description": "The default workspace identifier for metrics. This will take effect when a metric's workspace identifier is omitted. Allowed values are `workspace_id`, `workspace_name`.   ",
+          "default": "workspace_id"
         },
         "queue": {
           "type": "object",
           "properties": {
+            "max_coalescing_delay": {
+              "type": "number",
+              "maximum": 3600,
+              "minimum": 0,
+              "description": "Maximum number of (fractional) seconds to elapse after the first entry was queued before the queue starts calling the handler.",
+              "default": 1
+            },
             "max_entries": {
               "type": "integer",
               "maximum": 1000000,
@@ -105,13 +93,6 @@
               "minimum": 1,
               "description": "Maximum number of entries that can be processed at a time.",
               "default": 1
-            },
-            "max_coalescing_delay": {
-              "type": "number",
-              "maximum": 3600,
-              "minimum": 0,
-              "description": "Maximum number of (fractional) seconds to elapse after the first entry was queued before the queue starts calling the handler.",
-              "default": 1
             }
           }
         },
@@ -120,6 +101,39 @@
           "description": "A string representing a host name, such as example.com.",
           "default": "localhost"
         },
+        "allow_status_codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of status code ranges that are allowed to be logged in metrics."
+        },
+        "hostname_in_prefix": {
+          "type": "boolean",
+          "description": "Include the `hostname` in the `prefix` for each metric name.",
+          "default": false
+        },
+        "consumer_identifier_default": {
+          "type": "string",
+          "enum": [
+            "consumer_id",
+            "custom_id",
+            "username"
+          ],
+          "description": "The default consumer identifier for metrics. This will take effect when a metric's consumer identifier is omitted. Allowed values are `custom_id`, `consumer_id`, `username`.",
+          "default": "custom_id"
+        },
+        "service_identifier_default": {
+          "type": "string",
+          "enum": [
+            "service_host",
+            "service_id",
+            "service_name",
+            "service_name_or_host"
+          ],
+          "description": "The default service identifier for metrics. This will take effect when a metric's service identifier is omitted. Allowed values are `service_name_or_host`, `service_id`, `service_name`, `service_host`.",
+          "default": "service_name_or_host"
+        },
         "port": {
           "type": "integer",
           "maximum": 65535,
@@ -127,19 +141,16 @@
           "description": "An integer representing a port number between 0 and 65535, inclusive.",
           "default": 8125
         },
+        "prefix": {
+          "type": "string",
+          "description": "String to prefix to each metric's name.",
+          "default": "kong"
+        },
         "metrics": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "consumer_identifier": {
-                "type": "string",
-                "enum": [
-                  "consumer_id",
-                  "custom_id",
-                  "username"
-                ]
-              },
               "service_identifier": {
                 "type": "string",
                 "enum": [
@@ -189,6 +200,14 @@
               },
               "sample_rate": {
                 "type": "number"
+              },
+              "consumer_identifier": {
+                "type": "string",
+                "enum": [
+                  "consumer_id",
+                  "custom_id",
+                  "username"
+                ]
               }
             },
             "required": [
@@ -209,25 +228,6 @@
           "type": "boolean",
           "description": "Use TCP instead of UDP.",
           "default": false
-        },
-        "consumer_identifier_default": {
-          "type": "string",
-          "enum": [
-            "consumer_id",
-            "custom_id",
-            "username"
-          ],
-          "description": "The default consumer identifier for metrics. This will take effect when a metric's consumer identifier is omitted. Allowed values are `custom_id`, `consumer_id`, `username`.",
-          "default": "custom_id"
-        },
-        "workspace_identifier_default": {
-          "type": "string",
-          "enum": [
-            "workspace_id",
-            "workspace_name"
-          ],
-          "description": "The default workspace identifier for metrics. This will take effect when a metric's workspace identifier is omitted. Allowed values are `workspace_id`, `workspace_name`.   ",
-          "default": "workspace_id"
         }
       }
     },

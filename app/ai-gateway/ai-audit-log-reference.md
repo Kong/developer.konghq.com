@@ -386,6 +386,53 @@ rows:
 {:.info}
 > The Policy also allows you to define [custom metrics](/ai-gateway/policies/ai-custom-guardrail/#metrics) based on Lua expressions.
 
+### AI NVIDIA NeMo Guardrail logs
+
+If you use the [AI NVIDIA NeMo Guardrail Policy](/ai-gateway/policies/ai-nvidia-nemo-guardrail/), {{site.ai_gateway}} logs include fields under the `ai.proxy.nvidia-nemo-guardrail` object. These fields capture the guarding mode, processing latency, block reasons, and violation details when requests or responses are blocked.
+
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: "`ai.proxy.nvidia-nemo-guardrail.mode`"
+    description: |
+       The content guarding mode configured for the Policy. Possible values: `INPUT`, `OUTPUT`, `BOTH`.
+  - property: "`ai.proxy.nvidia-nemo-guardrail.input_processing_latency`"
+    description: The time, in milliseconds, spent processing the request through NeMo Guardrails.
+  - property: "`ai.proxy.nvidia-nemo-guardrail.output_processing_latency`"
+    description: The time, in milliseconds, spent processing the response through NeMo Guardrails.
+  - property: "`ai.proxy.nvidia-nemo-guardrail.input_block_reason`"
+    description: "The name of the rail that blocked the request, for example `self check input`. Empty if the request was allowed."
+  - property: "`ai.proxy.nvidia-nemo-guardrail.output_block_reason`"
+    description: "The name of the rail that blocked the response, for example `self check output`. Empty if the response was allowed."
+  - property: "`ai.proxy.nvidia-nemo-guardrail.input_block_source`"
+    description: |
+       The name of the Policy that blocked the request, for example `ai-nvidia-nemo-guardrail`. Empty if the request was allowed.
+  - property: "`ai.proxy.nvidia-nemo-guardrail.output_block_source`"
+    description: |
+       The name of the Policy that blocked the response. Empty if the response was allowed.
+  - property: "`ai.proxy.nvidia-nemo-guardrail.input_block_consumer_id`"
+    description: |
+       The ID of the AI Consumer whose request was blocked, or `unknown` if no AI Consumer identity was resolved.
+  - property: "`ai.proxy.nvidia-nemo-guardrail.output_block_consumer_id`"
+    description: |
+       The ID of the AI Consumer whose response was blocked, or `unknown` if no AI Consumer identity was resolved.
+  - property: "`ai.proxy.nvidia-nemo-guardrail.input_faulty_prompt`"
+    description: |
+       The raw request prompt that was blocked. Only present when `config.log_blocked_content` is `true`.
+  - property: "`ai.proxy.nvidia-nemo-guardrail.output_faulty_response`"
+    description: |
+       The raw response that was blocked. Only present when `config.log_blocked_content` is `true`.
+{% endtable %}
+
+A blocked request or response also populates the shared `ai.proxy.guardrail_triggered` object, common across AI guardrail policies:
+
+* `blocked_content`: The content that triggered the block.
+* `block_source`: The Policy that produced the block.
+* `block_direction`: `AI_GUARDRAIL_BLOCK_INPUT` or `AI_GUARDRAIL_BLOCK_OUTPUT`.
 
 ### AI PII Sanitizer logs
 
@@ -538,7 +585,9 @@ rows:
 
 If you create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), {{site.ai_gateway}} logs include additional fields under the `ai.mcp` object. These fields provide insight into Model Context Protocol (MCP) traffic, including session IDs, JSON-RPC request/response payloads, latency, tool usage, and access control audit entries.
 
-The MCP log structure groups traffic by **MCP session ID**, with each session containing zero or more recorded JSON-RPC requests:
+The MCP log structure groups traffic by **MCP session ID** for `2025-06-18` and `2025-11-25` traffic, with each session containing zero or more recorded JSON-RPC requests. 
+
+{% new_in 2.1 %} `2026-07-28` traffic has no session concept, so each entry is a single stateless request with no `mcp_session_id` field. See [MCP version support](/ai-gateway/mcp-version-support/) for other differences between revisions.
 
 <!-- vale off -->
 {% table %}
@@ -549,9 +598,19 @@ columns:
     key: description
 rows:
   - property: "`ai.mcp.mcp_session_id`"
-    description: The ID of the MCP session. A session can contain multiple requests.
+    description: |
+      The ID of the MCP session. A session can contain multiple requests. Only present for `2025-06-18` and `2025-11-25` traffic. 
+      
+      {% new_in 2.1 %} `2026-07-28` removes the session concept, so this field is absent for that traffic.
+  - property: '`ai.mcp.mcp_server_id` {% new_in 2.1 %}'
+    description: The UUID of the AI MCP Server entity that handled the request.
+  - property: '`ai.mcp.protocol_version` {% new_in 2.1 %}'
+    description: "The negotiated MCP protocol revision for the request (for example, `2026-07-28`)."
   - property: "`ai.mcp.rpc`"
-    description: An array of recorded JSON-RPC requests. Only JSON-RPC traffic is logged.
+    description: |
+      An array of recorded JSON-RPC requests. Only JSON-RPC traffic is logged.
+
+      A call denied by an access control rule doesn't produce an `rpc` entry at all, since the runtime rejects it before dispatching the request as an RPC. Only the `ai.mcp.audit` entry records a denied call.
   - property: "`ai.mcp.rpc[].id`"
     description: The ID of the JSON-RPC request. Not all JSON-RPC requests have an ID.
   - property: "`ai.mcp.rpc[].latency`"
@@ -563,7 +622,10 @@ rows:
   - property: "`ai.mcp.rpc[].method`"
     description: The JSON-RPC method name.
   - property: "`ai.mcp.rpc[].tool_name`"
-    description: If the method is a tool call, the name of the tool being invoked.
+    description: |
+      If the method is a tool call, the name of the tool being invoked:
+      - Parsed from the JSON-RPC body for `2025-06-18` and `2025-11-25` traffic
+      - {% new_in 2.1 %} Populated from the `Mcp-Name` header for `2026-07-28` traffic, since that revision requires the header on every call.
   - property: "`ai.mcp.rpc[].error`"
     description: The error message if an error occurred during the request.
   - property: "`ai.mcp.rpc[].response_body_size`"
@@ -714,7 +776,7 @@ The following example shows a structured {{site.ai_gateway}} log entry:
 
 ### MCP traffic entry
 
-The following example shows an MCP log entry:
+The following example shows an MCP log entry for `2025-06-18` or `2025-11-25` traffic, which is session-based:
 
 ```json
 {
@@ -741,6 +803,69 @@ The following example shows an MCP log entry:
           "scope": "primitive",
           "primitive": "tool",
           "action": "allow"
+        }
+      ]
+    }
+  }
+}
+```
+
+
+
+{% new_in 2.1 %} `2026-07-28` traffic has no session concept, so there's no `mcp_session_id` field, and `tool_name` comes from the `Mcp-Name` header instead of the JSON-RPC body. An allowed call produces both an `rpc` entry and an `audit` entry:
+
+```json
+{
+  "ai": {
+    "mcp": {
+      "mcp_server_id": "1da5a575-20a4-402a-85b4-ffc19f4c3e4a",
+      "protocol_version": "2026-07-28",
+      "rpc": [
+        {
+          "method": "tools/call",
+          "latency": 4,
+          "id": "3",
+          "response_body_size": 2210,
+          "tool_name": "list_orders"
+        }
+      ],
+      "audit": [
+        {
+          "primitive_name": "list_orders",
+          "consumer": {
+            "id": "6c95a611-9991-407b-b1c3-bc608d3bccc3",
+            "name": "admin",
+            "identifier": "consumer_group"
+          },
+          "scope": "primitive",
+          "primitive": "tool",
+          "action": "allow"
+        }
+      ]
+    }
+  }
+}
+```
+
+A call denied by an access control rule has no `rpc` entry, only the `audit` entry recording the decision:
+
+```json
+{
+  "ai": {
+    "mcp": {
+      "mcp_server_id": "1da5a575-20a4-402a-85b4-ffc19f4c3e4a",
+      "protocol_version": "2026-07-28",
+      "audit": [
+        {
+          "primitive_name": "list_users",
+          "consumer": {
+            "id": "b2f6a2b1-6a15-4e3f-9e0b-6a2f7a1c9d10",
+            "name": "developer",
+            "identifier": "consumer_group"
+          },
+          "scope": "primitive",
+          "primitive": "tool",
+          "action": "deny"
         }
       ]
     }

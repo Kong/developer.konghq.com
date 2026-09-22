@@ -22,11 +22,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "log_text_data": {
-          "type": "boolean",
-          "description": "Log the text data",
-          "default": false
-        },
         "compressor_type": {
           "type": "string",
           "enum": [
@@ -36,9 +31,59 @@
           "description": "What compression type to use to compress with",
           "default": "rate"
         },
+        "compressor_url": {
+          "type": "string",
+          "description": "The url of the compressor",
+          "default": "http://localhost:8080"
+        },
+        "timeout": {
+          "type": "number",
+          "description": "Connection timeout with the compressor",
+          "default": 10000
+        },
+        "stop_on_error": {
+          "type": "boolean",
+          "description": "Stop processing if an error occurs",
+          "default": true
+        },
+        "log_text_data": {
+          "type": "boolean",
+          "description": "Log the text data",
+          "default": false
+        },
+        "message_type": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "assistant",
+              "system",
+              "user"
+            ]
+          },
+          "default": [
+            "user"
+          ]
+        },
         "proxy_config": {
           "type": "object",
           "properties": {
+            "http_proxy_port": {
+              "type": "integer",
+              "maximum": 65535,
+              "minimum": 0,
+              "description": "An integer representing a port number between 0 and 65535, inclusive."
+            },
+            "https_proxy_host": {
+              "type": "string",
+              "description": "A string representing a host name, such as example.com."
+            },
+            "https_proxy_port": {
+              "type": "integer",
+              "maximum": 65535,
+              "minimum": 0,
+              "description": "An integer representing a port number between 0 and 65535, inclusive."
+            },
             "proxy_scheme": {
               "type": "string",
               "enum": [
@@ -55,8 +100,8 @@
             "auth_password": {
               "type": "string",
               "description": "The password to authenticate with, if the forward proxy is protected by basic authentication.",
-              "x-referenceable": true,
-              "x-encrypted": true
+              "x-encrypted": true,
+              "x-referenceable": true
             },
             "no_proxy": {
               "type": "string",
@@ -65,22 +110,6 @@
             "http_proxy_host": {
               "type": "string",
               "description": "A string representing a host name, such as example.com."
-            },
-            "http_proxy_port": {
-              "type": "integer",
-              "maximum": 65535,
-              "minimum": 0,
-              "description": "An integer representing a port number between 0 and 65535, inclusive."
-            },
-            "https_proxy_host": {
-              "type": "string",
-              "description": "A string representing a host name, such as example.com."
-            },
-            "https_proxy_port": {
-              "type": "integer",
-              "maximum": 65535,
-              "minimum": 0,
-              "description": "An integer representing a port number between 0 and 65535, inclusive."
             }
           }
         },
@@ -89,14 +118,14 @@
           "items": {
             "type": "object",
             "properties": {
-              "value": {
-                "type": "number"
-              },
               "min_tokens": {
                 "type": "integer"
               },
               "max_tokens": {
                 "type": "integer"
+              },
+              "value": {
+                "type": "number"
               }
             },
             "required": [
@@ -107,39 +136,10 @@
           },
           "description": "What value to be used to compress with. The 'value' is interpreted as rate or target_token depending on compressor_type."
         },
-        "compressor_url": {
-          "type": "string",
-          "description": "The url of the compressor",
-          "default": "http://localhost:8080"
-        },
-        "timeout": {
-          "type": "number",
-          "description": "Connection timeout with the compressor",
-          "default": 10000
-        },
         "keepalive_timeout": {
           "type": "number",
           "description": "The keepalive timeout for the established http connnection",
           "default": 60000
-        },
-        "stop_on_error": {
-          "type": "boolean",
-          "description": "Stop processing if an error occurs",
-          "default": true
-        },
-        "message_type": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "enum": [
-              "assistant",
-              "system",
-              "user"
-            ]
-          },
-          "default": [
-            "user"
-          ]
         }
       },
       "required": [

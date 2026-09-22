@@ -217,6 +217,238 @@ A zone proxy (zone ingress/egress) is now just a `Dataplane` with zone proxy lis
 {:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
+### DPP configuration refresh interval default raised to 10s
+
+`xdsServer.dataplaneConfigurationRefreshInterval` (`KUMA_XDS_SERVER_DATAPLANE_CONFIGURATION_REFRESH_INTERVAL`) now defaults to `10s` instead of `1s`. The control plane regenerates the xDS configuration of every connected proxy on this interval, so a 1s default kept the control plane busy and scaled poorly with the number of data plane proxies.
+
+**Action required**
+
+None. Changes to meshes, policies, and services now take up to 10 seconds to reach data plane proxies instead of up to 1 second. The same applies to trust bundles, so a CA rotation must leave the old CA in place for at least one refresh interval after the new one is added, otherwise proxies that have not yet been refreshed will fail mTLS. If your deployment needs faster propagation, set `xdsServer.dataplaneConfigurationRefreshInterval` back to the previous value, keeping in mind the control plane CPU cost.
+
+### `MeshIdentity.spec.spiffeID` is immutable and its trust domain no longer follows the zone
+
+A trust domain is an identity namespace, so moving one is a migration rather
+than an edit. `spec.spiffeID.trustDomain` and `spec.spiffeID.path` are now
+rejected on update, on Kubernetes by the admission webhook and on Universal by
+the API server. The control plane also renders the trust domain once, when it
+first initializes the identity, and records it in
+`status.trustDomain`. A template such as `{{ .Zone }}` no longer re-renders when
+the zone is renamed, which used to move issuance into a trust domain no
+`MeshTrust` published yet.
+
+**Action required**
+
+To move to a different trust domain or SPIFFE ID path, create a second
+`MeshIdentity` **under a different name** with the new value and delete the old
+one once every workload has been issued a certificate from it. Both identities
+publish their own `MeshTrust` and `MeshService.spec.identities` lists the SPIFFE
+IDs of every matching identity, so peers accept leaves from both for the whole
+transition. Use `spec.selector.dataplane.matchLabels` or the name to steer which
+identity a workload picks while both exist.
+
+Deleting the identity and recreating it under the same name is accepted, and
+the control plane does converge on the new trust domain, but it is not a
+migration: the `MeshTrust` and the CA are keyed by the identity name, so for as
+long as convergence takes there is a single trust domain in flight and leaves
+issued under the old one no longer verify. Two identities never have that gap.
+
+### Zones no longer require the `kuma.io/origin` label
+
+A zone control plane used to reject a policy applied without
+`kuma.io/origin: zone` on the system namespace on Kubernetes, or on any
+federated zone on Universal, unless `multizone.zone.disableOriginLabelValidation`
+was set. The origin of a resource applied on a zone is obvious, so a missing
+label is now accepted and the zone sets it itself. A label with any value
+other than `zone` is still rejected, which is what keeps resources synced from
+the global control plane read-only on the zone. The
+`disableOriginLabelValidation` setting
+(`KUMA_MULTIZONE_ZONE_DISABLE_ORIGIN_LABEL_VALIDATION`) is removed with it.
+
+**Action required**
+
+Remove `multizone.zone.disableOriginLabelValidation` from your configuration.
+A control plane started with the setting still present fails to load its
+configuration.
+### The resource store cache can no longer be disabled
+
+The resource store cache (`store.cache.enabled`,
+`KUMA_STORE_CACHE_ENABLED`) was on by default and disabling it degraded
+performance so much that the option is removed. The cache is now always
+enabled, on every control plane instance. The cache is local to an
+instance and eventually consistent, so reads may briefly observe stale
+resources right after a write, which is also what happened with the
+default configuration before.
+
+**Action required**
+
+Remove `store.cache.enabled` / `KUMA_STORE_CACHE_ENABLED` from your
+configuration if present. The setting is ignored and only
+`store.cache.expirationTime` (`KUMA_STORE_CACHE_EXPIRATION_TIME`)
+remains configurable.
+
+### `MeshPassthrough` resolves a domain match itself and needs a port for it
+
+A `Domain` match used to build an `ORIGINAL_DST` cluster: the sidecar matched the SNI or the `Host` header of the request and then sent it to the address the client dialed. A workload selected by the policy could therefore dial any address, present an allowed domain, and reach that address through the policy, which is the opposite of what an allowlist in `passthroughMode: Matched` is for.
+
+A `Domain` match now resolves the domain in the sidecar and connects to the resolved address, so the destination no longer depends on the address the client dialed. Resolving needs a port, so a `Domain` that is not a wildcard requires `port`. A policy that has one without a port is rejected on apply. In a policy stored before the upgrade that match stops applying, and when it was the only match in the policy nothing is left to allow, so the sidecar rejects all passthrough traffic until you add the port.
+
+A wildcard `Domain`, for example `*.example.com`, has no address to resolve, so its traffic still goes to the address the client dials and the match only restricts the SNI or `Host`. Keep that in mind when a wildcard entry is part of an allowlist.
+
+**Action required**
+
+- Add `port` to every `Domain` match that is not a wildcard. Duplicate the match if the domain is used on more than one port:
+
+  ```yaml
+  # before
+  appendMatch:
+  - type: Domain
+    value: api.example.com
+    protocol: tls
+  # after
+  appendMatch:
+  - type: Domain
+    value: api.example.com
+    port: 443
+    protocol: tls
+  ```
+
+- Make sure the sidecar can resolve those domains. A domain the sidecar cannot resolve has no endpoint, so its traffic fails instead of following the original destination.
+
+### Meshes no longer come with default policies
+
+Creating a `Mesh` used to create four policies with it: `mesh-timeout-all-<mesh>`, `mesh-timeout-to-all-<mesh>`, `mesh-circuit-breaker-all-<mesh>` and `mesh-retry-all-<mesh>`. Kuma 3.0 creates none of them, so a new mesh starts with no policies at all, and `skipCreatingInitialPolicies` is removed from the `Mesh` spec.
+
+A mesh that already has these policies keeps them. The control plane neither recreates nor deletes them, so an upgraded mesh behaves as it did before, and `kumactl delete meshtimeout -m <mesh> mesh-timeout-all-<mesh>` removes one when you no longer want it.
+
+Timeouts and circuit breakers are unchanged, because the values those policies carried are the ones the control plane writes anyway when no policy selects a listener, a cluster or a route. Outbound keeps its 5s connect timeout, 1h cluster idle timeout, 15s request timeout and 30m stream idle timeout. Inbound keeps the larger values it is meant to have, so the side that receives a request never cuts it before the side that sent it: a 10s connect timeout, a 2h cluster idle timeout, a 1h stream idle timeout and no request timeout at all. Circuit breakers fall back to Envoy's own limits, which are what the removed policy set: 1024 connections, 1024 pending requests, 1024 requests and 3 retries.
+
+Retries are the one thing that changes. A mesh without a `MeshRetry` does not retry: the removed policy retried an HTTP or gRPC request 5 times with a 16s per-try timeout and a 25ms to 250ms backoff, and made 5 TCP connection attempts.
+
+**Action required**
+
+- Apply a `MeshRetry` of your own to any new mesh that needs requests retried.
+- Drop `skipCreatingInitialPolicies` from your `Mesh` manifests. The control plane ignores the field, so a manifest that still sets it applies without an error, and a mesh stored with it loads fine. The first write to such a mesh drops the field, which matters only if you then roll back to 2.14: that mesh gets the default policies created again.
+
+### Strict inbound ports and `SO_REUSEPORT` can no longer be turned off
+
+`kuma-dp` no longer reads `KUMA_DATAPLANE_RUNTIME_STRICT_INBOUND_PORTS_ENABLED` or `KUMA_DATAPLANE_RUNTIME_REUSE_PORT_ENABLED`. Both defaulted to `true`, and the control plane now applies that behavior to every data plane:
+
+- A sidecar with transparent proxy and a workload identity accepts inbound traffic only on the ports of its inbounds, unless a `MeshTLS` policy sets `Permissive` mode for it. Sidecars without a workload identity keep accepting inbound traffic on every port.
+- Every inbound Envoy listener sets `enable_reuse_port: true`.
+
+**Action required**
+
+- If a workload relies on `KUMA_DATAPLANE_RUNTIME_STRICT_INBOUND_PORTS_ENABLED=false` to receive traffic on ports it does not declare, declare those ports as inbounds before you upgrade.
+- Restart data planes that run with `KUMA_DATAPLANE_RUNTIME_REUSE_PORT_ENABLED=false` after you upgrade the control plane. Envoy cannot change `enable_reuse_port` on a running listener, so it rejects listener updates until the data plane restarts.
+
+### OpenTelemetry backends referenced by `backendRef` always export through `kuma-dp`
+
+`MeshTrace`, `MeshAccessLog`, and `MeshMetric` send data for a `backendRef` to a `MeshOpenTelemetryBackend` through `kuma-dp`: Envoy exports to a Unix socket and `kuma-dp` forwards to the collector. Setting `runtime.kubernetes.injector.otelPipeEnabled` (`KUMA_RUNTIME_KUBERNETES_INJECTOR_OTEL_PIPE_ENABLED`) or `KUMA_DATAPLANE_RUNTIME_OTEL_PIPE_ENABLED` to `false` used to make Envoy export to the collector directly. Both settings are removed.
+
+**Action required**
+
+None unless you set either setting to `false`. The control plane and `kuma-dp` now ignore both, so remove them from your control plane configuration and sidecar environment.
+
+### Redirect ports and IP family mode removed from `Dataplane`
+
+Kuma 3.0 removes `ipFamilyMode` from `Dataplane.networking.transparentProxying` and deprecates `redirectPortInbound` and `redirectPortOutbound`. `directAccessServices` and `reachableBackends` stay. The control plane reads the redirect ports and the IP family mode from `kuma-dp`, which sends them when it runs with `--transparent-proxy` or `--transparent-proxy-config`.
+
+A proxy that sends none, which means a sidecar injected before 3.0, still gets its redirect ports from the two deprecated fields, so upgrading the control plane does not take transparent proxying away from workloads that have not restarted yet. The IP family comes from what the proxy reports about its machine rather than from the removed `ipFamilyMode` field. Both fields go away in 3.1, so restart your workloads on 3.0 rather than leaving them on a pre-3.0 sidecar.
+
+On Kubernetes, sidecars injected by a 3.0 control plane always pass the transparent proxy configuration to `kuma-dp`, and the control plane keeps writing the redirect ports onto the `Dataplane` of a pod injected by 2.14 for as long as that pod lives.
+
+On Universal, a `Dataplane` that still sets the deprecated fields keeps working on 3.0 and stops working on 3.1.
+
+Before:
+
+```yaml
+networking:
+  address: 192.168.0.1
+  inbound:
+    - port: 8080
+  transparentProxying:
+    redirectPortInbound: 15006
+    redirectPortOutbound: 15001
+```
+
+```sh
+kuma-dp run --dataplane-file=backend.yaml
+```
+
+After:
+
+```yaml
+networking:
+  address: 192.168.0.1
+  inbound:
+    - port: 8080
+```
+
+```sh
+kuma-dp run --dataplane-file=backend.yaml --transparent-proxy
+```
+
+**Action required**
+
+Nothing on 3.0. To be ready for 3.1, on Universal drop `redirectPortInbound`, `redirectPortOutbound`, and `ipFamilyMode` from your `Dataplane` manifests and `kuma-dp` dataplane files, and start `kuma-dp` with `--transparent-proxy`. If you installed the transparent proxy with a non-default IP family mode, redirect ports, inbound redirection, or virtual networks, pass the same values to `kuma-dp` in a file with `--transparent-proxy-config` instead:
+
+```yaml
+ipFamilyMode: ipv4
+redirect:
+  inbound:
+    port: 15006
+  outbound:
+    port: 15001
+```
+
+`kuma-dp` 2.14 already supports both flags, so you can do this before or after the upgrade. On hosts with IPv6 disabled, `kuma-dp` 2.14 cannot start its DNS proxy in the default dual-stack mode, so use `--transparent-proxy-config` with `ipFamilyMode: ipv4` there.
+
+On Kubernetes, restart your workloads at some point on 3.0. Until a pod restarts, its sidecar is the one 2.14 injected.
+
+### `Dataplane` outbounds always carry an address
+
+`Dataplane.networking.outbound[].address` used to be left empty when it was not
+set, and every reader applied `127.0.0.1` on its own. The control plane now
+writes `127.0.0.1` into an outbound that comes in without an address, and the
+OpenAPI schema marks the field as required, so a `Dataplane` read back from the
+API always has one. Data plane behavior is unchanged: an outbound without an
+address was already bound to `127.0.0.1`.
+
+**Action required**
+
+None. Writing an outbound without an address keeps working. A `Dataplane`
+stored before the upgrade keeps its empty address until it is applied again,
+and a global control plane serves whatever a zone sent it, so a client that
+reads from a global control plane federated with zones on an older version
+should still fall back to `127.0.0.1`.
+
+### KDS full resync is periodic again, not every second
+
+Removing the polling KDS watchdog carried the poll loop's `refreshInterval` of
+`1s` onto the event-based watchdog that replaced it. The two intervals do not
+mean the same thing: polling had no events, so `1s` was how quickly a change
+reached a zone, while the event-based watchdog already delivers changes as they
+happen and schedules a full resync only to recover events it may have missed.
+At `1s` every connected zone rebuilt and re-hashed its entire snapshot every
+second and shipped an identical one, so the defaults return to the values the
+event-based watchdog shipped with:
+
+- `flushInterval` `1s` -> `5s`
+- `fullResyncInterval` `1s` -> `1m`
+- `delayFullResync` `false` -> `true`
+
+on both `multizone.global.kds.eventBasedWatchdog` and
+`multizone.zone.kds.eventBasedWatchdog`.
+
+**Action required**
+
+None. Changes still reach zones on the event path, now coalesced over
+`flushInterval` instead of `1s`. A change that is missed on the event path is
+now repaired by the next full resync within `fullResyncInterval` rather than
+within a second. Set the intervals explicitly if you depend on the previous
+timing.
+
+
 ### `Zone` on Kubernetes reaches the defaulting webhook
 
 The defaulting webhook selected `zone` where the CRD plural is `zones`, so the rule matched nothing and a `Zone` written straight to the Kubernetes API skipped the webhook entirely. It now matches, which means a `Zone` created or updated with `kubectl` gets the same computed labels a `Zone` created through the HTTP API already got: `kuma.io/display-name`, `kuma.io/origin`, and on a zone control plane `kuma.io/zone` and `kuma.io/env`.
@@ -451,19 +683,19 @@ None. Existing generated `MeshHTTPRoute`s are backfilled with the timestamp labe
 
 The built-in gateway implementation was removed over the previous releases, and the Dataplane validator has been rejecting `networking.gateway.type: BUILTIN` since then. The remaining API surface is now gone too:
 
-- `Dataplane.networking.gateway` is gone entirely, `type` and `tags` with it — see [A delegated gateway is marked by the `kuma.io/gateway` label](#a-delegated-gateway-is-marked-by-the-kumaiogateway-label). A `Dataplane` carrying `type: BUILTIN` no longer produces the `BUILTIN gateways are no longer supported, use DELEGATED instead` validation error; the whole message is ignored and what remains is an ordinary `Dataplane`.
-- `MeshInsight.dataplanesByType.gatewayBuiltin` and the `gateway_builtin` `ServiceInsight` service type are removed. `dataplanesByType.gateway` now reports the delegated gateway totals only.
-- `GET /meshes/{mesh}/dataplanes+insights?gateway=builtin` is no longer a valid filter. Use `gateway=delegated`, or `gateway=true` for any gateway.
+- `Dataplane.networking.gateway` is gone entirely, `type` and `tags` with it — see [`kuma.io/gateway` is removed](#kumaiogateway-is-removed). A `Dataplane` carrying `type: BUILTIN` no longer produces the `BUILTIN gateways are no longer supported, use DELEGATED instead` validation error; the whole message is ignored and what remains is an ordinary `Dataplane`.
+- `MeshInsight.dataplanesByType.gatewayBuiltin` and the `gateway_builtin` `ServiceInsight` service type are removed, as are `dataplanesByType.gateway` and `dataplanesByType.gatewayDelegated` — see [`kuma.io/gateway` is removed](#kumaiogateway-is-removed).
+- `GET /meshes/{mesh}/dataplanes+insights?gateway=builtin` is no longer a valid filter. Neither is any other `gateway=` value.
 - `GET /meshes/{mesh}/service-insights?type=gateway_builtin` is no longer a valid filter and returns `400`. Use `type=gateway_delegated`.
 - The `gatewayBuiltin` object disappears from the `/global-insight` response, in both `dataplanes` and `services`.
 
-All three protobuf ordinals are reserved, so they can never be reused for something else. A Zone control plane on an older version still syncs to a Global control plane on this one, though its gateways are not recognised as such until it is upgraded — see [A delegated gateway is marked by the `kuma.io/gateway` label](#a-delegated-gateway-is-marked-by-the-kumaiogateway-label).
+All three protobuf ordinals are reserved, so they can never be reused for something else.
 
 **Action required**
 
 Stop consuming the `gatewayBuiltin` fields and the `gateway=builtin` / `type=gateway_builtin` filters if you query the API directly.
 
-A `Dataplane` still carrying `type: BUILTIN` keeps loading after the upgrade, because the whole `networking.gateway` message is ignored rather than parsed, so it no longer has to be deleted first. It becomes an ordinary `Dataplane` with no inbounds — not a gateway, since that is now the `kuma.io/gateway` label — so no policy selects it. Find them with `kumactl get dataplanes -o yaml` per mesh, or `kubectl get dataplanes -A -o yaml`, grep for `BUILTIN`, and delete the ones you no longer serve traffic with. Drop `type: BUILTIN` from any manifest you keep under source control.
+A `Dataplane` still carrying `type: BUILTIN` keeps loading after the upgrade, because the whole `networking.gateway` message is ignored rather than parsed, so it no longer has to be deleted first. It becomes an ordinary `Dataplane` with no inbounds. Find them with `kumactl get dataplanes -o yaml` per mesh, or `kubectl get dataplanes -A -o yaml`, grep for `BUILTIN`, and delete the ones you no longer serve traffic with. Drop `type: BUILTIN` from any manifest you keep under source control.
 
 ### Control plane RBAC is narrowed on Kubernetes
 
@@ -1132,15 +1364,13 @@ legacy statistics:
   data until the next resync deletes it again. Once every replica is upgraded
   and a resync interval has elapsed, `GET /meshes/{mesh}/service-insights`
   returns an empty list and `GET /meshes/{mesh}/service-insights/{name}`
-  returns `404`. This also covers delegated gateways, which used to be the
-  last services reported there, along with their per-service `zones` list.
-  The GUI pages backed by that endpoint list nothing. `kumactl inspect
+  returns `404`. The GUI pages backed by that endpoint list nothing. `kumactl inspect
   services` is removed; use `kumactl get meshservices` instead.
 - `MeshInsight.services` is removed from the API. Field number 6 is reserved
   and will not be reused. Mesh-scoped service status now comes from
   `MeshService` and `MeshExternalService`; the aggregated
-  `internal`/`external`/`gatewayDelegated` counts live under `services` in the
-  global insight endpoint, not in `MeshInsight`.
+  `internal`/`external` counts live under `services` in the global insight
+  endpoint, not in `MeshInsight`.
 - The Dataplane/MeshGateway inspect `_rules` endpoint no longer returns the
   legacy `toRules` and `fromRules` fields on each rule entry; both fields are
   removed from the response. `toResourceRules` and `inboundRules` are
@@ -1156,10 +1386,7 @@ resource or `/meshes/{mesh}/service-insights` endpoints, `MeshInsight.services`,
 or the `_rules` `toRules`/`fromRules` fields. Use `MeshService`/
 `MeshExternalService` status for per-resource service state, `_rules`
 `toResourceRules`/`inboundRules` for inspect output, and the global insight
-endpoint's `services` object for aggregated `internal`/`external`/
-`gatewayDelegated` counts. For delegated gateways, which are never turned into
-a `MeshService`, use the `Dataplane`/`DataplaneOverview` endpoints filtered by
-gateway type when you need per-gateway detail.
+endpoint's `services` object for aggregated `internal`/`external` counts.
 
 ### Zone proxies authenticate with a dataplane token
 
@@ -1315,59 +1542,55 @@ removed" below for the separate removal of `MeshGatewayInstance` management.
   own system namespace. Remove this key from your config file and Helm
   values — leaving it in place is harmless but has no effect.
 
-### A delegated gateway is marked by the `kuma.io/gateway` label
+### `kuma.io/gateway` is removed
 
-`Dataplane.networking.gateway` is removed, field number reserved, along with the tag map and the single-valued type enum it held. A delegated gateway is now a `Dataplane` carrying the label `kuma.io/gateway: "true"` and is otherwise an ordinary `Dataplane`.
+The gateway marking is gone: the `kuma.io/gateway` Pod annotation, the `kuma.io/gateway` Dataplane label, and `Dataplane.networking.gateway` (field number reserved) no longer exist. A gateway is an ordinary `Dataplane` that keeps its listen ports out of inbound redirection with the `traffic.kuma.io/exclude-inbound-ports` annotation, which is where the behaviour that mattered — Kuma not proxying the traffic the gateway terminates — actually came from.
 
-Everything that asks "is this a gateway" reads the label: policy matching, the inbound and listener validation, `DataplaneOverview` status, the `MeshMetric` proxy role, mesh and global insights, and the `?gateway=` filter.
+Everything that used to branch on the marking is gone with it: policy matching, the validation that forbade inbounds and listeners, `DataplaneOverview` status, the `MeshMetric` `gateway` proxy role, the mesh and global insight gateway counters, and the `?gateway=` filter.
 
-On Kubernetes nothing changes for you. The pod annotation `kuma.io/gateway` stays the only thing you set, and the control plane computes the label from it. The annotation also wins over a pod label of the same name, so a stray label cannot turn a workload into a gateway.
-
-On Universal you set the label yourself, and this is a breaking change: the removed field is ignored on input, so a `Dataplane` that still relies on `networking.gateway` becomes a proxy with no inbounds and no gateway marking. No policy selects it, since policies match a proxy through its inbounds or its gateway marking, and it is counted as a standard proxy.
-
-```yaml
-type: Dataplane
-mesh: default
-name: gateway-01
-labels:
-  kuma.io/gateway: "true"      # replaces networking.gateway
-networking:
-  address: 192.168.0.1
-```
+The annotation is now ignored rather than rejected, so a Pod that still carries it is admitted and keeps running. It stops meaning anything, though: the pod is injected like any other workload, gets inbounds generated from its `Service`, and has its inbound traffic redirected through Envoy.
 
 **Action required**
 
-Add `kuma.io/gateway: "true"` to the labels of every gateway `Dataplane` on Universal, and drop `networking.gateway` from the manifests and `kuma-dp` dataplane files that still carry it. Do this before upgrading: an unmarked gateway keeps serving traffic but loses every policy that targeted it.
+On Kubernetes, replace the annotation with the ports the gateway listens on, before or together with the upgrade:
 
-Also move any key you use in a `MeshLoadBalancingStrategy` `localZone.affinityTags` from `networking.gateway.tags` to the `Dataplane`'s labels — an affinity key that exists only as a gateway tag stops matching and its locality group is dropped.
+```yaml
+metadata:
+  annotations:
+    traffic.kuma.io/exclude-inbound-ports: "8000,8443"   # replaces kuma.io/gateway
+```
 
-If you scrape `kds_zone_attribution_rewrites_total`, drop it from your dashboards and alerts.
+List every port the gateway accepts traffic on. The annotation takes a comma-separated list and has no all-ports spelling. A port left off it is redirected into Envoy and served by an inbound listener, so the traffic the gateway terminates becomes mesh inbound traffic, subject to `MeshTrafficPermission` and mTLS — a client outside the mesh is then rejected rather than reaching the gateway. Restart the pods so the injector rewrites the transparent proxy configuration.
 
-**Multi-zone upgrade order**
+An excluded port is not a `Dataplane` inbound. Envoy does not receive traffic on it, so it is not addressable through the mesh, and the workload accepts connections on it directly. This is also true for a workload that is not a gateway: excluding one of its `Service` target ports takes that port out of the mesh.
 
-Upgrade global first, as usual, then the zones. Between the two, a zone on an older version syncs its gateways without the label, and the upgraded global does not recognise them as gateways: they are counted as standard proxies in mesh and global insights, are returned by `?gateway=false`, and show no gateway marking in `kumactl`. Nothing is lost, and the counts correct themselves once the zone is upgraded and re-syncs its `Dataplane`s. Policy matching and xDS are unaffected, because both happen on the zone.
+If the gateway is fronted by a `Service`, annotate that `Service` too:
+
+```yaml
+metadata:
+  annotations:
+    kuma.io/ignore: "true"
+```
+
+The gateway marking used to suppress both the `Dataplane` inbounds and the `MeshService` generated from the gateway's `Service`; `kuma.io/ignore` is what does that now. Without it the `Service` produces a `MeshService`, and in-mesh clients that address the gateway through it get a mesh destination with no endpoints instead of the passthrough traffic they got before.
+
+On Universal, drop `kuma.io/gateway: "true"` from the labels of gateway `Dataplane`s and run `kuma-dp` with `--exclude-inbound-ports` (or `redirect.inbound.excludePorts` in the transparent proxy config) covering the same ports.
 
 **What this changes elsewhere**
 
-- `kumactl get dataplanes` and `kumactl inspect dataplanes` print only labels in the `TAGS` column for a gateway, and `?tag=` on the `Dataplane` and `DataplaneOverview` endpoints matches only labels.
-- `GET /meshes/{mesh}/dataplanes+insights?gateway=delegated` matches the same proxies as `gateway=true`, since delegated is the only kind of gateway left.
-- The control plane no longer writes `kuma.io/zone` into a gateway's tags. The `kuma.io/zone` label carries the zone, as it does for every other resource.
-- KDS no longer rewrites a zone tag inside a synced `Dataplane` spec, because there is no in-spec zone tag left to spoof. The `kds_zone_attribution_rewrites_total` metric is removed with it; zone attribution on labels is unaffected.
-- A `Dataplane` carrying `networking.gateway.type: BUILTIN` no longer fails to parse. The whole `networking.gateway` message is dropped on read, so what remains is an ordinary `Dataplane` — one more reason to find those and delete them.
+- A policy with a proxy-wide top-level `targetRef` — `kind: Mesh`, or `kind: Dataplane` without a `sectionName` — selects a proxy that declares no inbounds. Gateways used to need the marking for this; now nothing does.
+- A `Dataplane` may declare both inbounds and zone proxy listeners without the validator rejecting it. The messages `inbound cannot be defined for delegated gateways` and `listeners cannot be defined for delegated gateways` are gone.
+- `DataplaneOverview` status for a proxy with no inbounds and no listeners is `Online` while it is connected, which is what gateways reported before. Proxies that do declare inbounds are unaffected.
+- `MeshMetric` no longer emits `gateway` for `kuma.proxy_role`; a former gateway reports `sidecar`. Update dashboards and alerts that select on it.
+- `MeshInsight.dataplanesByType.gateway` and `.gatewayDelegated` are removed, field numbers 2 and 4 reserved. Every proxy is counted under `standard`.
+- `dataplanes.gatewayDelegated` and `services.gatewayDelegated` are removed from the `/global-insight` response.
+- `GET /meshes/{mesh}/dataplanes/_overview?gateway=` is no longer a valid filter and is ignored, and `kumactl inspect dataplanes --gateway` is removed.
+- A `Service` or `Pod` that was skipped for carrying the annotation now gets a `MeshService` like any other workload, unless the `Service` carries `kuma.io/ignore: "true"`.
+- The injected sidecar of a former gateway pod gets the regular application probe proxy port instead of `0`, so its probes are proxied.
+- The control plane no longer writes `kuma.io/zone` into a gateway's tags, and KDS no longer rewrites a zone tag inside a synced `Dataplane` spec. The `kds_zone_attribution_rewrites_total` metric is removed with it; zone attribution on labels is unaffected.
+- A `kuma.io/gateway` label left on a stored `Dataplane` by an older control plane is deleted the next time that `Dataplane` is written, so a `targetRef` or `MeshLoadBalancingStrategy` affinity key that still selects on it stops matching. Move those to a label the control plane does not manage.
 
-### `kuma.io/gateway` is a boolean annotation
-
-The `kuma.io/gateway` Pod annotation is now read the same way on both sides of the injection: as a boolean, accepting `enabled`, `true`, `yes` to mark a delegated gateway and `disabled`, `false`, `no` to opt out. Anything else is rejected with `annotation "kuma.io/gateway" has wrong value "<value>"`.
-
-The `provided` value is gone. It has not worked since 2.10: the injector parses this annotation as a boolean, so a Pod annotated `kuma.io/gateway: provided` fails admission before any `Dataplane` is created. Its only effect on the `Dataplane` was a `kuma.io/service-name` gateway tag that nothing has read since `kuma.io/service` was removed.
-
-Two values that used to be inconsistent now behave as the injector always intended. `kuma.io/gateway: "true"` was injected as a gateway but then failed conversion with `invalid delegated gateway type 'true'`; it now produces a gateway `Dataplane`. `kuma.io/gateway: disabled` was injected as a regular Pod but also failed conversion, so the Pod never got a `Dataplane` at all; it now produces a regular `Dataplane` with inbounds.
-
-The consumers that keyed off the annotation being present rather than its value follow the same rule now. A Pod or `Service` annotated `kuma.io/gateway: disabled` gets a `MeshService` like any other workload instead of being skipped, a change of the annotation between enabled and disabled triggers a `MeshService` reconcile, and the injected sidecar of such a Pod gets the regular application probe proxy port instead of `0`, which previously left its probes pointing at a port nothing served.
-
-**Action required**
-
-Replace `kuma.io/gateway: provided` with `kuma.io/gateway: enabled` on any Pod, Deployment template, or Helm value that still sets it. Such a Pod is currently failing admission, so this is a fix rather than a regression, but the annotation has to change before the Pod can start.
+Also move any key you use in a `MeshLoadBalancingStrategy` `localZone.affinityTags` from `networking.gateway.tags` to the `Dataplane`'s labels — an affinity key that exists only as a gateway tag stops matching and its locality group is dropped.
 
 ### Built-in gateway Kubernetes controllers removed
 
@@ -1376,9 +1599,8 @@ Kubernetes. It no longer creates or manages the `Service` and `Deployment`
 generated for a `MeshGatewayInstance`, no longer converts `Pod`s annotated
 `kuma.io/gateway: builtin` into a built-in gateway `Dataplane`, and no longer
 runs the `MeshGatewayInstance` admission validator. `kumactl inspect
-meshgateway` has been removed along with its client. Delegated gateways
-(`kuma.io/gateway: enabled`) and the Gateway API `HTTPRoute` GAMMA path are
-unaffected.
+meshgateway` has been removed along with its client. Gateways you run yourself
+and the Gateway API `HTTPRoute` GAMMA path are unaffected.
 
 The `MeshGatewayInstance` CRD, its API types, and the `MeshGateway`/
 `MeshGatewayRoute` resources themselves are not removed by this change.
@@ -1389,8 +1611,10 @@ The `MeshGatewayInstance` CRD, its API types, and the `MeshGateway`/
   stops reconciling them, so any `Service`, `Deployment`, and `BUILTIN`
   `Dataplane` it previously generated for them is not updated, recreated, or
   cleaned up automatically. If you still rely on a built-in gateway, migrate
-  it to a delegated gateway (bring your own `Deployment`/`Service` fronting a
-  Kuma-injected pod annotated `kuma.io/gateway: enabled`) before upgrading.
+  it to a gateway you run yourself (bring your own `Deployment`/`Service`
+  fronting a Kuma-injected pod that excludes its listen ports with
+  `traffic.kuma.io/exclude-inbound-ports`) before upgrading — see
+  [`kuma.io/gateway` is removed](#kumaiogateway-is-removed).
 - Before upgrading, or as part of your migration, manually delete the
   `MeshGatewayInstance` resources you no longer need, along with the
   `Service`, `Deployment`, and `Dataplane` objects they previously generated
@@ -1474,8 +1698,7 @@ migrate:
 - Only `MeshAccessLog`, `MeshLoadBalancingStrategy`, `MeshRetry`, and
   `MeshTimeout` accept `kind: MeshHTTPRoute`. For example,
   `MeshCircuitBreaker` rejects it.
-- `MeshRateLimit` and `MeshFaultInjection` accept `kind: Mesh` only, and only
-  when the top-level `targetRef` selects a gateway.
+- `MeshRateLimit` and `MeshFaultInjection` accept `kind: Mesh` only.
 
 `MeshServiceSubset` remains valid only as a route `backendRefs[].kind`, not as
 a top-level or `to[]` `targetRef.kind`.
@@ -1947,9 +2170,9 @@ a valid `targetRef.kind` for any policy.
 
 A `Dataplane` with `networking.gateway.type: BUILTIN` is now rejected at
 admission and update. The `Dataplane.networking.gateway` message and the
-`DELEGATED` gateway type are unaffected — delegated gateways (bring your own
-`Deployment`/`Service` fronting a Kuma-injected pod annotated
-`kuma.io/gateway: enabled`) continue to work exactly as before.
+`DELEGATED` gateway type are unaffected by this change — they are removed
+later in this same release, see
+[`kuma.io/gateway` is removed](#kumaiogateway-is-removed).
 
 **Action required**
 

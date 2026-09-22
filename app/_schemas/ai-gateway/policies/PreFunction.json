@@ -29,27 +29,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "certificate": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "default": []
-        },
-        "rewrite": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "default": []
-        },
-        "body_filter": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "default": []
-        },
         "ws_client_frame": {
           "type": "array",
           "items": {
@@ -64,7 +43,7 @@
           },
           "default": []
         },
-        "ws_close": {
+        "certificate": {
           "type": "array",
           "items": {
             "type": "string"
@@ -85,7 +64,7 @@
           },
           "default": []
         },
-        "log": {
+        "body_filter": {
           "type": "array",
           "items": {
             "type": "string"
@@ -93,6 +72,27 @@
           "default": []
         },
         "ws_handshake": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "ws_close": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "rewrite": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "log": {
           "type": "array",
           "items": {
             "type": "string"

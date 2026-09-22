@@ -7,7 +7,7 @@ cat <<'EOF' > docker-compose.yaml
 services:
   a2a-agent:
     container_name: a2a-kongair-agent
-    image: ghcr.io/kong/a2a-kongair-openai-agent:sha-d449d76
+    image: ghcr.io/kong/a2a-kongair-openai-agent:sha-ce2221d
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - OPENAI_MODEL=gpt-5-mini

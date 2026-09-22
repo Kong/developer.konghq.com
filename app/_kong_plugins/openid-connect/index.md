@@ -133,7 +133,8 @@ Unlike other authentication types like Key Auth and Basic Auth, with OpenID Conn
 Instead, you can offload the task to a trusted identity provider of your choice.
 
 ## Discovery cache
-When you configure `config.issuer` in the OIDC plugin, {{site.base_gateway}} automatically retrieves the provider’s discovery metadata. The OIDC plugin stores the metadata as a discovery cache object and uses the cache avoid repeated fetches. This cache includes the discovery document endpoints, JWKS keys, and the token endpoint. 
+When you configure `config.issuer` in the OIDC plugin, {{site.base_gateway}} automatically retrieves the provider’s discovery metadata. 
+The OIDC plugin stores the metadata as a discovery cache object and uses the cache to avoid repeated fetches. This cache includes the discovery document endpoints, JWKS keys, and the token endpoint. 
 
 {{site.base_gateway}} uses the discovery cache whenever validation needs issuer metadata. The cache behaves in the following way:
 - Discovery data is stored in the **{{site.base_gateway}} database** when using DB mode, or in **worker memory** when using DB‑less mode.  
@@ -613,6 +614,79 @@ This works best when backends must trust one issuer, or when you need to normali
 
 For a detailed comparison, configuration parameters, and examples, see [Multi-IdP token validation at the gateway layer](/plugins/openid-connect/multi-idp/).
 
+## Protected resource metadata {% new_in 3.16 %}
+
+Some clients, including MCP (Model Context Protocol) clients that follow the [MCP authorization specification](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization), need to know which authorization server protects an API before they can request a token.
+
+[RFC 9728](https://www.rfc-editor.org/rfc/rfc9728) (OAuth 2.0 Protected Resource Metadata) solves this by letting a resource server advertise itself, including which authorization servers protect it and what scopes it supports, at a well-known URI that clients can discover automatically.
+
+When you configure [`config.protected_resource_metadata`](/plugins/openid-connect/reference/#schema--config-protected-resource-metadata), the OIDC plugin:
+* Serves an RFC 9728 metadata document at a well-known URI, with no authentication required.
+* Rejects a request with no bearer token with a `401 Unauthorized` response instead of `403 Forbidden`, and adds a `resource_metadata` attribute, and optionally a `scope` attribute, to its `WWW-Authenticate` header, so clients that receive a challenge can locate the metadata document.
+
+{:.info}
+> Configuring this setting only advertises protected resource metadata and adds it to unauthorized responses.
+It doesn't change how the OIDC plugin authenticates requests, and the authorization server URLs you configure here aren't validated against `config.issuer`.
+
+### Well-known metadata endpoint
+
+By default, the OIDC plugin derives the metadata document's path from [`config.protected_resource_metadata.resource`](/plugins/openid-connect/reference/#schema--config-protected-resource-metadata-resource) by appending `/.well-known/oauth-protected-resource` to its path component. For example:
+
+* `resource`: `https://api.example.com/mcp`
+* Metadata document served at: `https://api.example.com/mcp/.well-known/oauth-protected-resource`
+
+To serve the document at a different path, set [`config.protected_resource_metadata.metadata_endpoint`](/plugins/openid-connect/reference/#schema--config-protected-resource-metadata-metadata-endpoint).
+
+The plugin intercepts requests to this path before any authentication logic runs:
+* `GET` requests receive a `200` response with the metadata document as a JSON body (`Content-Type: application/json`, `Cache-Control: no-store`).
+The document always includes `resource`, and includes `authorization_servers` and `scopes_supported` when they're configured.
+* Requests using any other method receive a `405` response with an `Allow: GET` header.
+
+For example, with `resource` set to `https://api.example.com/mcp`:
+
+```sh
+curl -s https://api.example.com/mcp/.well-known/oauth-protected-resource
+```
+
+The response is the metadata document, and doesn't require an `Authorization` header since a client fetches it before it has a token:
+
+```json
+{
+  "resource": "https://api.example.com/mcp",
+  "authorization_servers": ["https://idp.example.com"],
+  "scopes_supported": ["openid", "profile"]
+}
+```
+{:.no-copy-code}
+
+{:.info}
+> The plugin doesn't handle CORS for the metadata endpoint.
+If MCP or browser-based clients need to fetch the metadata document cross-origin, add the [CORS plugin](/plugins/cors/) to the same route.
+
+### WWW-Authenticate header
+
+When a request is rejected with a `401 Unauthorized` response, the OIDC plugin adds a `resource_metadata` attribute to the `WWW-Authenticate` header, pointing to the well-known metadata endpoint.
+If [`config.protected_resource_metadata.scopes_supported`](/plugins/openid-connect/reference/#schema--config-protected-resource-metadata-scopes-supported) is set, the header also includes a `scope` attribute listing the supported scopes.
+This only applies to `401` responses.
+
+For example, a request without a bearer token:
+
+```sh
+curl -s -i https://api.example.com/mcp
+```
+
+Returns a `401` response whose `WWW-Authenticate` header carries the discovery information:
+
+```
+HTTP/1.1 401 Unauthorized
+WWW-Authenticate: Bearer realm="idp.example.com", resource_metadata="https://api.example.com/mcp/.well-known/oauth-protected-resource", scope="openid profile", error="invalid_token"
+
+{"message":"Unauthorized"}
+```
+{:.no-copy-code}
+
+See the [Set up protected resource metadata](/plugins/openid-connect/examples/protected-resource-metadata/) example for a full configuration.
+
 ## Token exchange {% new_in 3.14 %}
 
 The [OAuth 2.0 Token Exchange](https://oauth.net/2/token-exchange/) (RFC 8693) is an extension to the OAuth 2.0 framework that allows exchanging an existing security token for a new one. 
@@ -663,6 +737,7 @@ Depending on the use case, {{site.base_gateway}} can exchange the token either w
 Set up token exchange:
 * [Example: Cross-domain token exchange](/plugins/openid-connect/examples/token-exchange-cross-domain/)
 * [Example: Token transformation](/plugins/openid-connect/examples/token-exchange-transformation/)
+* [Example: Token exchange with an actor token](/plugins/openid-connect/examples/token-exchange-actor-token/)
 * [How-to: Configure OIDC with token exchange](/how-to/configure-oidc-with-token-exchange/)
 
 #### Key terms
@@ -691,6 +766,19 @@ We recommend enabling this for all subject token issuers to prevent tokens with 
 * [`config.token_exchange.subject_token_issuers[].jwks_uri`](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers-jwks-uri): An optional explicit JWKS endpoint for fetching the signing keys for this issuer.
 If not set, {{site.base_gateway}} resolves the JWKS URI from OIDC discovery using the issuer URL.
 Set this when the issuer doesn't publish a discovery document or when you want to pin to a specific key endpoint.
+
+### Actor tokens {% new_in 3.16 %}
+
+An actor token represents the identity of the party acting on behalf of the subject in a token exchange, as defined by [RFC 8693](https://www.rfc-editor.org/rfc/rfc8693#name-actor-token-and-actor-toke).
+This is useful for delegation scenarios, such as an AI agent or backend service that needs to identify itself separately from the user (the subject) it's acting for.
+Some identity providers require an actor token to be present for certain token exchange grants.
+
+Configure [`config.token_exchange.request.actor_token`](/plugins/openid-connect/reference/#schema--config-token-exchange-request-actor-token) to include an actor token in the exchange request.
+
+Use [`config.token_exchange.request.actor_token.type`](/plugins/openid-connect/reference/#schema--config-token-exchange-request-actor-token-type) to set the token type identifier sent as `actor_token_type`.
+This defaults to `urn:ietf:params:oauth:token-type:access_token`.
+
+See the [actor token example](/plugins/openid-connect/examples/token-exchange-actor-token/) for more details.
 
 ## Multiple clients
 
@@ -735,7 +823,7 @@ curl -X GET "http://localhost:8000?client_id=2"
 
 {% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
 
-{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=2 %}
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=2 redis_group="oidc" %}
 
 ## Debugging the OIDC plugin
 

@@ -26,7 +26,10 @@ module Jekyll
               'consumer_group' => 'consumer_groups',
               'mcp_server' => 'mcp_servers',
               'auth-strategy' => 'auth_strategies',
-              'policy' => 'policies'
+              'policy' => 'policies',
+              'ca_certificate' => 'ca_certificates',
+              'certificate' => 'certificates',
+              'sni' => 'snis'
             }.freeze
 
             def data

@@ -13499,7 +13499,16 @@ components:
                               - Patch
                             x-speakeasy-param-computed: false
                           value:
-                            description: Value of xDS resource in YAML format to add or patch.
+                            description: |-
+                              Value of xDS resource in YAML format to add or patch.
+
+                              Patch merges the value into the matched cluster, and repeated fields are
+                              appended to what the cluster already has. Circuit breaker thresholds are
+                              the exception: Envoy resolves them by routing priority and ignores every
+                              threshold after the first one of a given priority, so appending would be
+                              dead config. They are merged into the existing threshold with the same
+                              priority instead, and a value listing one priority twice keeps only the
+                              first entry.
                             type: string
                             x-speakeasy-param-computed: false
                         required:
@@ -22314,7 +22323,8 @@ components:
           readOnly: true
         choices:
           type: array
-          items: {}
+          items:
+            type: string
           minItems: 1
           nullable: false
           readOnly: true
@@ -22348,7 +22358,8 @@ components:
           readOnly: true
         dependents:
           type: array
-          items: {}
+          items:
+            type: string
           nullable: true
           readOnly: true
           uniqueItems: true
@@ -22383,6 +22394,7 @@ components:
           properties:
             invalid_parameters:
               $ref: '#/components/schemas/InvalidParameters'
+      x-flatten-allOf: true
     InternalError:
       $ref: '#/components/schemas/BaseError'
     NotFoundError:
@@ -22400,6 +22412,7 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Not found
+      x-flatten-allOf: true
     StringFieldEqualsFilter:
       description: Filters on the given string field value by exact match.
       oneOf:
@@ -22546,6 +22559,7 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Conflict
+      x-flatten-allOf: true
     NotImplementedError:
       allOf:
         - $ref: '#/components/schemas/BaseError'
@@ -22561,6 +22575,7 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Not Implemented
+      x-flatten-allOf: true
     ForbiddenError:
       allOf:
         - $ref: '#/components/schemas/BaseError'
@@ -22576,6 +22591,7 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Forbidden
+      x-flatten-allOf: true
     UnauthorizedError:
       allOf:
         - $ref: '#/components/schemas/BaseError'
@@ -22591,6 +22607,7 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Invalid credentials
+      x-flatten-allOf: true
   examples:
     GlobalInsightExample:
       value:

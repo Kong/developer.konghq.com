@@ -16,12 +16,12 @@ info:
     - For queries that use the time dimension, the granularity of the result may be coarser than requested. The finest allowed granularity depends on the query's time range: data farther in the past may have coarser granularity. The exact result granularity will be reported in the response `meta.granularity_ms` field.
     - Queries must complete within 10 seconds. If a query takes longer than 10 seconds, a 408 will be returned. In this case, it is suggested to add more filters, and/or reduce the time range.
     - This endpoint is rate limited to 10 requests per minute per user.
-  version: 4.2.0
+  version: 4.1.1
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@e9225277ad20f1068555baeabe5c9aa67444a940
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e9225277ad20f1068555baeabe5c9aa67444a940'
+  x-oas-source: kong/platform-api@9c7686a9d1631951a45739cfab8ac570b6e0d06f
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9c7686a9d1631951a45739cfab8ac570b6e0d06f'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -2399,7 +2399,7 @@ components:
           - $ref: '#/components/schemas/MetricsStatusCodeGroupedFilterByField'
           - $ref: '#/components/schemas/MetricsUpstreamStatusCodeFilterByField'
           - $ref: '#/components/schemas/MetricsUpstreamStatusCodeGroupedFilterByField'
-    BaseError:
+    UnauthorizedError:
       description: standard error
       type: object
       properties:
@@ -2408,6 +2408,7 @@ components:
             The HTTP status code of the error. Useful when passing the response
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
+          example: 401
           readOnly: true
         title:
           description: |
@@ -2415,10 +2416,12 @@ components:
             change between occurences of a problem, except for localization.
             Should be provided as "Sentence case" for direct use in the UI.
           type: string
+          example: Unauthorized
           readOnly: true
         type:
           description: The error type.
           type: string
+          example: 'https://httpstatuses.com/401'
           readOnly: true
         instance:
           description: |
@@ -2426,6 +2429,7 @@ components:
             kong:trace:<correlation_id>. This helps us find the relevant logs
             when a customer reports an issue.
           type: string
+          example: 'kong:trace:1234567890'
           readOnly: true
         detail:
           description: |
@@ -2434,6 +2438,7 @@ components:
             what went wrong. Enclose variable values in square brackets. Should be
             provided as "Sentence case" for direct use in the UI.
           type: string
+          example: Invalid credentials
           readOnly: true
       required:
         - status
@@ -2441,36 +2446,53 @@ components:
         - instance
         - detail
       title: Error
-    UnauthorizedError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 401
-            title:
-              example: Unauthorized
-            type:
-              example: 'https://httpstatuses.com/401'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Invalid credentials
     ForbiddenError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 403
-            title:
-              example: Forbidden
-            type:
-              example: 'https://httpstatuses.com/403'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Forbidden
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          example: 403
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Forbidden
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          example: 'https://httpstatuses.com/403'
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          example: 'kong:trace:1234567890'
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Forbidden
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
   examples:
     BadRequestExample:
       value:

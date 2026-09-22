@@ -2,12 +2,14 @@
 
 require 'json'
 require_relative '../../lib/site_accessor'
+require_relative '../concerns/request_snippet_config'
 
 module Jekyll
   module Drops
     module Validations
       class Base < Liquid::Drop # rubocop:disable Style/Documentation
         include Jekyll::SiteAccessor
+        include Jekyll::Drops::Concerns::DualTopologySnippetConfig
 
         def self.make_for(id:, yaml:, format: 'html')
           case id

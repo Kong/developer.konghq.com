@@ -16,6 +16,8 @@ related_resources:
     url: /metering-and-billing/entitlements/
   - text: "Billing and invoicing"
     url: /metering-and-billing/billing-invoicing/
+  - text: Entitlement Enforcement plugin
+    url: /plugins/entitlement-enforcement/
 ---
 
 {{site.metering_and_billing}} Notifications let you configure automated webhook alerts that trigger when specific usage thresholds or billing events occur. Instead of polling for usage data, you define rules that trigger notification events to a channel of your choice when conditions are met.
@@ -33,7 +35,7 @@ columns:
 rows:
   - case: Entitlement enforcement
     description: |
-      Receive a webhook when a customer reaches a percentage of their entitlement allowance (for example, 80% or 100%) and take action in your system, such as restricting access or sending a warning to the customer.
+      To block traffic when a customer's entitlement is exhausted, use the [Entitlement Enforcement plugin](/plugins/entitlement-enforcement/). Use a webhook alongside the plugin when you also want to take action outside {{site.base_gateway}}, such as notifying the customer or updating a system of record.
       <br><br>
       See [Enforcing entitlement limits](#enforcing-entitlement-limits) for details.
   - case: Customer warnings
@@ -191,9 +193,9 @@ You can view past notification events in {{site.konnect_short_name}} by navigati
 
 ## Enforcing entitlement limits
 
-{{site.metering_and_billing}} tracks entitlement balances and triggers notification events when thresholds are crossed, but it does not automatically block API traffic when a customer's entitlement is exhausted.
+{{site.metering_and_billing}} tracks entitlement balances and triggers notification events when thresholds are crossed, but Notifications alone don't block API traffic when a customer's entitlement is exhausted. To block traffic, use the [Entitlement Enforcement plugin](/plugins/entitlement-enforcement/). See [Get started with Entitlement Enforcement](/metering-and-billing/entitlement-enforcement/get-started/) for setup steps.
 
-To enforce entitlement limits today, configure a webhook notification rule and handle the incoming event in your own system:
+You can still use a webhook notification rule alongside the plugin to take action in your own system, for example to warn a customer before they're blocked:
 
 1. [Create a webhook channel](#create-a-channel) pointing to an endpoint you control.
 1. [Create an entitlement balance threshold rule](#entitlement-balance-threshold-rules) with a threshold at 100% for the feature you want to enforce.

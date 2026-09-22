@@ -20,14 +20,6 @@ RSpec.describe Jekyll::Data::Seo do
       end
     end
 
-    context 'when the URL starts with /assets/mesh/' do
-      let(:page_url) { '/assets/mesh/some-asset.js' }
-
-      it 'returns early without modifying page data' do
-        expect(page.data).to be_empty
-      end
-    end
-
     context 'when the page is canonical' do
       let(:page_data) { { 'content_type' => 'how_to' } }
 

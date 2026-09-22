@@ -6,13 +6,27 @@
 # have zero real-doc usage anywhere in the repo, so those fixtures are synthetic, built
 # directly from the snippet.md logic, to get full branch coverage.
 RSpec.describe 'how-tos/validations/request-check/snippet.md' do
-  let(:template) do
-    <<~LIQUID
-      {% include how-tos/validations/request-check/snippet.md url=config.url method=config.method headers=config.headers body=config.body body_file=config.body_file body_cmd=config.body_cmd form_data=config.form_data form_url_encoded_data=config.form_url_encoded_data display_headers=config.display_headers message=config.message capture=config.capture count=config.count user=config.user cookie_jar=config.cookie_jar cookie=config.cookie insecure=config.insecure sleep=config.sleep mtls=config.mtls output=config.output expected_headers=config.expected_headers %}
-    LIQUID
+  let(:how_tos_config) do
+    {
+      'url_origin' => {
+        'konnect' => 'https://konnect.example.com',
+        'on_prem' => 'https://on-prem.example.com'
+      },
+      'validations' => []
+    }
+  end
+  let(:site_data) { { 'how-tos' => { 'config' => how_tos_config } } }
+  let(:site) { instance_double(Jekyll::Site, data: site_data) }
+
+  before { allow(Jekyll).to receive(:sites).and_return([site]) }
+
+  let(:works_on) { %w[konnect] }
+  let(:output_format) { 'html' }
+  let(:page) do
+    { 'output_format' => output_format, 'path' => 'test.md', 'products' => ['gateway'], 'works_on' => works_on }
   end
 
-  subject(:rendered) { render_liquid(template, locals: { 'config' => config }) }
+  subject(:rendered) { render_liquid(template, page:) }
 
   let(:code) { bash_code_block(rendered) }
 
@@ -20,36 +34,58 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
     it 'renders syntactically valid bash' do
       validate_bash_syntax!(code)
     end
+  
+    it 'renders the same command in both output formats' do
+      html = bash_code_block(render_liquid(template, page: page.merge('output_format' => 'html')))
+      markdown = bash_code_block(render_liquid(template, page: page.merge('output_format' => 'markdown')))
+  
+      expect(markdown).to eq(html)
+    end
   end
 
   context 'minimal url only (get-started-with-ai-agent.md)' do
-    let(:config) { { 'url' => '/a2a/.well-known/agent-card.json' } }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        url: /a2a/.well-known/agent-card.json
+        {% endvalidation %}
+      LIQUID
+    end
 
     include_examples 'a valid curl command'
 
     it 'renders the exact curl command' do
       expect(code).to eq(<<~'BASH'.chomp)
-        curl "/a2a/.well-known/agent-card.json" \
+        curl "https://konnect.example.com/a2a/.well-known/agent-card.json" \
              --no-progress-meter --fail-with-body 
       BASH
     end
   end
 
   context 'headers and a JSON body (get-started-with-ai-gateway.md)' do
-    let(:config) do
-      {
-        'url' => '/v1/chat/completions',
-        'method' => 'POST',
-        'headers' => ['Accept: application/json', 'Content-Type: application/json', 'Authorization: Bearer $OPENAI_API_KEY'],
-        'body' => { 'messages' => [{ 'role' => 'user', 'content' => 'Say this is a test!' }], 'model' => 'my-gpt-4o' }
-      }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        url: /v1/chat/completions
+        method: POST
+        headers:
+          - 'Accept: application/json'
+          - 'Content-Type: application/json'
+          - 'Authorization: Bearer $OPENAI_API_KEY'
+        body:
+          messages:
+            - role: user
+              content: Say this is a test!
+          model: my-gpt-4o
+        {% endvalidation %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
 
     it 'renders the exact curl command' do
       expect(code).to eq(<<~'BASH'.chomp)
-        curl -X POST "/v1/chat/completions" \
+        curl -X POST "https://konnect.example.com/v1/chat/completions" \
              --no-progress-meter --fail-with-body  \
              -H "Accept: application/json"\
              -H "Content-Type: application/json"\
@@ -68,20 +104,23 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
   end
 
   context 'a header only, with display_headers (rate-limit-a2a-traffic.md)' do
-    let(:config) do
-      {
-        'url' => '/a2a/.well-known/agent-card.json',
-        'method' => 'GET',
-        'display_headers' => true,
-        'headers' => ['apikey: a2a-secret-key-1']
-      }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        url: /a2a/.well-known/agent-card.json
+        method: GET
+        display_headers: true
+        headers:
+          - 'apikey: a2a-secret-key-1'
+        {% endvalidation %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
 
     it 'renders the exact curl command' do
       expect(code).to eq(<<~'BASH'.chomp)
-        curl -i -X GET "/a2a/.well-known/agent-card.json" \
+        curl -i -X GET "https://konnect.example.com/a2a/.well-known/agent-card.json" \
              --no-progress-meter --fail-with-body  \
              -H "apikey: a2a-secret-key-1"
       BASH
@@ -89,20 +128,23 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
   end
 
   context 'a body_file reference (limit-a2a-body-size.md)' do
-    let(:config) do
-      {
-        'url' => '/a2a',
-        'method' => 'POST',
-        'headers' => ['Content-Type: application/json'],
-        'body_file' => '@large_payload.json'
-      }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        url: /a2a
+        method: POST
+        headers:
+          - 'Content-Type: application/json'
+        body_file: '@large_payload.json'
+        {% endvalidation %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
 
     it 'renders the exact curl command' do
       expect(code).to eq(<<~'BASH'.chomp)
-        curl -X POST "/a2a" \
+        curl -X POST "https://konnect.example.com/a2a" \
              --no-progress-meter --fail-with-body  \
              -H "Content-Type: application/json" \
              -F file="@large_payload.json"
@@ -111,26 +153,30 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
   end
 
   context 'form_url_encoded_data with a jq capture (enforce-tiered-ai-budgets-with-kong-identity.md)' do
-    let(:config) do
-      {
-        'url' => '/oauth/token',
-        'method' => 'POST',
-        'headers' => ['Content-Type: application/x-www-form-urlencoded'],
-        'form_url_encoded_data' => {
-          'grant_type' => 'client_credentials',
-          'client_id' => '$CAROL_CLIENT_ID',
-          'client_secret' => '$CAROL_CLIENT_SECRET',
-          'scope' => 'budgets-access'
-        },
-        'capture' => [{ 'variable' => 'CAROL_ACCESS_TOKEN', 'jq' => '.access_token' }]
-      }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        url: /oauth/token
+        method: POST
+        headers:
+          - 'Content-Type: application/x-www-form-urlencoded'
+        form_url_encoded_data:
+          grant_type: client_credentials
+          client_id: $CAROL_CLIENT_ID
+          client_secret: $CAROL_CLIENT_SECRET
+          scope: budgets-access
+        capture:
+          - variable: CAROL_ACCESS_TOKEN
+            jq: .access_token
+        {% endvalidation %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
 
     it 'renders the exact curl command' do
       expect(code).to eq(<<~'BASH'.chomp)
-        CAROL_ACCESS_TOKEN=$(curl -X POST "/oauth/token" \
+        CAROL_ACCESS_TOKEN=$(curl -X POST "https://konnect.example.com/oauth/token" \
              --no-progress-meter --fail-with-body  \
              -H "Content-Type: application/x-www-form-urlencoded" \
              -d "grant_type=client_credentials" \
@@ -143,31 +189,37 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
   end
 
   context 'a nested JSON body with a command capture (get-started-with-mcp-server.md)' do
-    let(:config) do
-      {
-        'url' => '/weather/',
-        'method' => 'POST',
-        'headers' => ['Content-Type: application/json', 'Accept: application/json, text/event-stream'],
-        'display_headers' => true,
-        'body' => {
-          'jsonrpc' => '2.0',
-          'id' => 1,
-          'method' => 'initialize',
-          'params' => {
-            'protocolVersion' => '2025-06-18',
-            'capabilities' => {},
-            'clientInfo' => { 'name' => 'weather-mcp-test', 'version' => '1.0.0' }
-          }
-        },
-        'capture' => [{ 'variable' => 'SESSION_ID', 'command' => "grep -i '^mcp-session-id:' | tr -d '\\r' | cut -d' ' -f2" }]
-      }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        url: /weather/
+        method: POST
+        headers:
+          - 'Content-Type: application/json'
+          - 'Accept: application/json, text/event-stream'
+        display_headers: true
+        body:
+          jsonrpc: '2.0'
+          id: 1
+          method: initialize
+          params:
+            protocolVersion: '2025-06-18'
+            capabilities: {}
+            clientInfo:
+              name: weather-mcp-test
+              version: 1.0.0
+        capture:
+          - variable: SESSION_ID
+            command: grep -i '^mcp-session-id:' | tr -d '\r' | cut -d' ' -f2
+        {% endvalidation %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
 
     it 'renders the exact curl command' do
       expect(code).to eq(<<~'BASH'.chomp)
-        SESSION_ID=$(curl -i -X POST "/weather/" \
+        SESSION_ID=$(curl -i -X POST "https://konnect.example.com/weather/" \
              --no-progress-meter --fail-with-body  \
              -H "Content-Type: application/json"\
              -H "Accept: application/json, text/event-stream" \
@@ -190,32 +242,34 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
   end
 
   context 'a deeply nested JSON body with an array (get-started-with-ai-agent.md)' do
-    let(:config) do
-      {
-        'url' => '/a2a/',
-        'method' => 'POST',
-        'headers' => ['Content-Type: application/json'],
-        'body' => {
-          'jsonrpc' => '2.0',
-          'id' => '1',
-          'method' => 'message/send',
-          'params' => {
-            'message' => {
-              'kind' => 'message',
-              'messageId' => 'msg-001',
-              'role' => 'user',
-              'parts' => [{ 'kind' => 'text', 'text' => 'What flights are available on route KA-123?' }]
-            }
-          }
-        }
-      }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        url: /a2a/
+        method: POST
+        headers:
+          - 'Content-Type: application/json'
+        body:
+          jsonrpc: '2.0'
+          id: '1'
+          method: message/send
+          params:
+            message:
+              kind: message
+              messageId: msg-001
+              role: user
+              parts:
+                - kind: text
+                  text: What flights are available on route KA-123?
+        {% endvalidation %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
 
     it 'renders the exact curl command' do
       expect(code).to eq(<<~'BASH'.chomp)
-        curl -X POST "/a2a/" \
+        curl -X POST "https://konnect.example.com/a2a/" \
              --no-progress-meter --fail-with-body  \
              -H "Content-Type: application/json" \
              --json '{
@@ -241,20 +295,23 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
   end
 
   context 'an expected message (use-ai-prompt-guard-policy.md)' do
-    let(:config) do
-      {
-        'url' => '/chat/completions',
-        'method' => 'POST',
-        'headers' => ['Content-Type: application/json'],
-        'message' => 'prompt pattern is blocked.'
-      }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        url: /chat/completions
+        method: POST
+        headers:
+          - 'Content-Type: application/json'
+        message: prompt pattern is blocked.
+        {% endvalidation %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
 
     it 'renders the exact curl command' do
       expect(code).to eq(<<~'BASH'.chomp)
-        curl -X POST "/chat/completions" \
+        curl -X POST "https://konnect.example.com/chat/completions" \
              --no-progress-meter --fail-with-body  \
              -H "Content-Type: application/json"
       BASH
@@ -267,21 +324,23 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
   end
 
   context 'user and cookie_jar (configure-oidc-with-session-auth.md)' do
-    let(:config) do
-      {
-        'url' => '/anything',
-        'method' => 'GET',
-        'user' => 'alex:doe',
-        'display_headers' => true,
-        'cookie_jar' => 'example-user'
-      }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        url: /anything
+        method: GET
+        user: 'alex:doe'
+        display_headers: true
+        cookie_jar: example-user
+        {% endvalidation %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
 
     it 'renders the exact curl command' do
       expect(code).to eq(<<~'BASH'.chomp)
-        curl -i -X GET "/anything" \
+        curl -i -X GET "https://konnect.example.com/anything" \
              --no-progress-meter --fail-with-body  \
              -u alex:doe \
              --cookie-jar example-user
@@ -290,20 +349,22 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
   end
 
   context 'a cookie (configure-oidc-with-session-auth.md)' do
-    let(:config) do
-      {
-        'url' => '/anything',
-        'method' => 'GET',
-        'display_headers' => true,
-        'cookie' => 'example-user'
-      }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        url: /anything
+        method: GET
+        display_headers: true
+        cookie: example-user
+        {% endvalidation %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
 
     it 'renders the exact curl command' do
       expect(code).to eq(<<~'BASH'.chomp)
-        curl -i -X GET "/anything" \
+        curl -i -X GET "https://konnect.example.com/anything" \
              --no-progress-meter --fail-with-body  \
              --cookie example-user
       BASH
@@ -311,14 +372,21 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
   end
 
   context 'insecure with a JSON body (enable-oauth2-authentication-with-kong-gateway.md)' do
-    let(:config) do
-      {
-        'url' => 'https://localhost:8443/anything/oauth2/token',
-        'method' => 'POST',
-        'headers' => ['Content-Type: application/json'],
-        'insecure' => true,
-        'body' => { 'client_id' => '$CLIENT_ID', 'client_secret' => '$CLIENT_SECRET', 'grant_type' => 'client_credentials' }
-      }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        konnect_url: https://localhost:8443
+        url: /anything/oauth2/token
+        method: POST
+        headers:
+          - 'Content-Type: application/json'
+        insecure: true
+        body:
+          client_id: $CLIENT_ID
+          client_secret: $CLIENT_SECRET
+          grant_type: client_credentials
+        {% endvalidation %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
@@ -338,21 +406,30 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
   end
 
   context 'a body with an array of scalars (validate-incoming-json-request-bodies.md)' do
-    let(:config) do
-      {
-        'url' => '/anything',
-        'method' => 'POST',
-        'headers' => ['Content-Type: application/json'],
-        'display_headers' => true,
-        'body' => { 'name' => 'Jason', 'age' => 20, 'gender' => 'male', 'parents' => ['Joseph', 'Viva'] }
-      }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        url: /anything
+        method: POST
+        headers:
+          - 'Content-Type: application/json'
+        display_headers: true
+        body:
+          name: Jason
+          age: 20
+          gender: male
+          parents:
+            - Joseph
+            - Viva
+        {% endvalidation %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
 
     it 'renders the exact curl command' do
       expect(code).to eq(<<~'BASH'.chomp)
-        curl -i -X POST "/anything" \
+        curl -i -X POST "https://konnect.example.com/anything" \
              --no-progress-meter --fail-with-body  \
              -H "Content-Type: application/json" \
              --json '{
@@ -369,14 +446,21 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
   end
 
   context 'a request loop with no other params (collect-metrics-with-datadog-and-prometheus-plugin.md)' do
-    let(:config) { { 'url' => '/anything', 'count' => 10 } }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        url: /anything
+        count: 10
+        {% endvalidation %}
+      LIQUID
+    end
 
     include_examples 'a valid curl command'
 
     it 'renders the exact curl command' do
       expect(code).to eq(<<~'BASH'.chomp)
         for _  in {1..10}; do
-        curl "/anything" \
+        curl "https://konnect.example.com/anything" \
              --no-progress-meter --fail-with-body  \
         ; done
       BASH
@@ -384,15 +468,24 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
   end
 
   context 'insecure with a jq capture (configure-oidc-with-kong-oauth2.md)' do
-    let(:config) do
-      {
-        'url' => 'https://localhost:8443/anything/oauth2/token',
-        'method' => 'POST',
-        'headers' => ['Content-Type: application/json'],
-        'insecure' => true,
-        'body' => { 'client_id' => 'client', 'client_secret' => 'secret', 'grant_type' => 'client_credentials' },
-        'capture' => [{ 'variable' => 'ACCESS_TOKEN', 'jq' => '.access_token' }]
-      }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        konnect_url: https://localhost:8443
+        url: /anything/oauth2/token
+        method: POST
+        headers:
+          - 'Content-Type: application/json'
+        insecure: true
+        body:
+          client_id: client
+          client_secret: secret
+          grant_type: client_credentials
+        capture:
+          - variable: ACCESS_TOKEN
+            jq: .access_token
+        {% endvalidation %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
@@ -413,12 +506,15 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
   end
 
   context 'sleep before the request (kic-service-healthchecks.md)' do
-    let(:config) do
-      {
-        'url' => '$PROXY_IP/httpbin/status/200',
-        'display_headers' => true,
-        'sleep' => 15
-      }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        konnect_url: $PROXY_IP
+        url: /httpbin/status/200
+        display_headers: true
+        sleep: 15
+        {% endvalidation %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
@@ -432,12 +528,15 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
   end
 
   context 'a second real count-loop case, no continuation (kic-service-healthchecks.md)' do
-    let(:config) do
-      {
-        'url' => '$PROXY_IP/httpbin/status/500',
-        'display_headers' => true,
-        'count' => 2
-      }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        konnect_url: $PROXY_IP
+        url: /httpbin/status/500
+        display_headers: true
+        count: 2
+        {% endvalidation %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
@@ -453,19 +552,21 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
   end
 
   context 'a message with no other params (filter-requests-based-on-header-names.md)' do
-    let(:config) do
-      {
-        'url' => '/anything',
-        'display_headers' => true,
-        'message' => 'Invalid Credentials'
-      }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        url: /anything
+        display_headers: true
+        message: Invalid Credentials
+        {% endvalidation %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
 
     it 'renders the exact curl command' do
       expect(code).to eq(<<~'BASH'.chomp)
-        curl -i "/anything" \
+        curl -i "https://konnect.example.com/anything" \
              --no-progress-meter --fail-with-body 
       BASH
     end
@@ -477,24 +578,31 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
   end
 
   context 'more than one capture, exercising the capture_size > 1 branch (synthetic — no real doc uses 2+ captures)' do
-    let(:config) do
-      {
-        'url' => '/oauth/token',
-        'method' => 'POST',
-        'headers' => ['Content-Type: application/json'],
-        'body' => { 'client_id' => 'client', 'client_secret' => 'secret', 'grant_type' => 'client_credentials' },
-        'capture' => [
-          { 'variable' => 'ACCESS_TOKEN', 'jq' => '.access_token' },
-          { 'variable' => 'EXPIRES_IN', 'jq' => '.expires_in' }
-        ]
-      }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        url: /oauth/token
+        method: POST
+        headers:
+          - 'Content-Type: application/json'
+        body:
+          client_id: client
+          client_secret: secret
+          grant_type: client_credentials
+        capture:
+          - variable: ACCESS_TOKEN
+            jq: .access_token
+          - variable: EXPIRES_IN
+            jq: .expires_in
+        {% endvalidation %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
 
     it 'renders the exact curl command, wrapped in a shared _response variable' do
       expect(code).to eq(<<~'BASH'.chomp)
-        _response=$(curl -X POST "/oauth/token" \
+        _response=$(curl -X POST "https://konnect.example.com/oauth/token" \
              --no-progress-meter --fail-with-body  \
              -H "Content-Type: application/json" \
              --json '{
@@ -513,7 +621,16 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
   end
 
   context 'mtls (synthetic — no real doc uses mtls)' do
-    let(:config) { { 'url' => 'https://secure.example.com/orders', 'method' => 'GET', 'mtls' => true } }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        konnect_url: https://secure.example.com
+        url: /orders
+        method: GET
+        mtls: true
+        {% endvalidation %}
+      LIQUID
+    end
 
     include_examples 'a valid curl command'
 
@@ -526,19 +643,23 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
   end
 
   context 'form_data, a multipart upload (synthetic — no real doc uses form_data)' do
-    let(:config) do
-      {
-        'url' => '/upload',
-        'method' => 'POST',
-        'form_data' => { 'file' => '@photo.png', 'description' => 'profile picture' }
-      }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        url: /upload
+        method: POST
+        form_data:
+          file: '@photo.png'
+          description: profile picture
+        {% endvalidation %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
 
     it 'renders the exact curl command' do
       expect(code).to eq(<<~'BASH'.chomp)
-        curl -X POST "/upload" \
+        curl -X POST "https://konnect.example.com/upload" \
              --no-progress-meter --fail-with-body  \
              -F file="@photo.png" \
              -F description="profile picture" 
@@ -547,20 +668,23 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
   end
 
   context 'body_cmd, a shell command substitution as the body (synthetic — no real doc uses body_cmd)' do
-    let(:config) do
-      {
-        'url' => '/anything',
-        'method' => 'POST',
-        'headers' => ['Content-Type: application/json'],
-        'body_cmd' => '$(cat payload.json)'
-      }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        url: /anything
+        method: POST
+        headers:
+          - 'Content-Type: application/json'
+        body_cmd: $(cat payload.json)
+        {% endvalidation %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
 
     it 'renders the exact curl command' do
       expect(code).to eq(<<~'BASH'.chomp)
-        curl -X POST "/anything" \
+        curl -X POST "https://konnect.example.com/anything" \
              --no-progress-meter --fail-with-body  \
              -H "Content-Type: application/json" \
              --json "$(cat payload.json)"
@@ -569,26 +693,38 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
   end
 
   context 'output, saving the response to a file (synthetic — no real doc uses output)' do
-    let(:config) { { 'url' => '/anything', 'method' => 'GET', 'output' => 'response.json' } }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        url: /anything
+        method: GET
+        output: response.json
+        {% endvalidation %}
+      LIQUID
+    end
 
     include_examples 'a valid curl command'
 
     it 'renders the exact curl command' do
       expect(code).to eq(<<~'BASH'.chomp)
-        curl -X GET "/anything" \
+        curl -X GET "https://konnect.example.com/anything" \
              -o response.json --no-progress-meter --fail-with-body 
       BASH
     end
   end
 
   context 'expected_headers, a pluralized list (synthetic — no real doc uses expected_headers)' do
-    let(:config) do
-      {
-        'url' => '/anything',
-        'method' => 'GET',
-        'display_headers' => true,
-        'expected_headers' => ['X-RateLimit-Remaining: 99', 'X-RateLimit-Limit: 100']
-      }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        url: /anything
+        method: GET
+        display_headers: true
+        expected_headers:
+          - 'X-RateLimit-Remaining: 99'
+          - 'X-RateLimit-Limit: 100'
+        {% endvalidation %}
+      LIQUID
     end
 
     include_examples 'a valid curl command'
@@ -597,6 +733,79 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
       expect(rendered).to include('You should see the following headers:')
       expect(rendered).to include('X-RateLimit-Remaining: 99')
       expect(rendered).to include('X-RateLimit-Limit: 100')
+    end
+  end
+
+  context 'inline_sleep after a capture (synthetic — no real doc uses inline_sleep)' do
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        url: /oauth/token
+        method: POST
+        inline_sleep: 5
+        capture:
+          - variable: ACCESS_TOKEN
+            jq: .access_token
+        {% endvalidation %}
+      LIQUID
+    end
+
+    include_examples 'a valid curl command'
+
+    it 'renders the exact curl command' do
+      expect(code).to eq(<<~'BASH'.chomp)
+        ACCESS_TOKEN=$(curl -X POST "https://konnect.example.com/oauth/token" \
+             --no-progress-meter --fail-with-body  | jq -r ".access_token"
+         sleep 5
+        )
+      BASH
+    end
+  end
+
+  context 'a page that works on both topologies' do
+    let(:works_on) { %w[konnect on-prem] }
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        url: /anything
+        method: GET
+        {% endvalidation %}
+      LIQUID
+    end
+    let(:commands) { rendered.scan(/```bash\n(.*?)\n```/m).flatten }
+
+    it 'renders one command per topology, konnect first' do
+      expect(commands).to eq(
+        [
+          <<~'BASH'.chomp,
+            curl -X GET "https://konnect.example.com/anything" \
+                 --no-progress-meter --fail-with-body 
+          BASH
+          <<~'BASH'.chomp
+            curl -X GET "https://on-prem.example.com/anything" \
+                 --no-progress-meter --fail-with-body 
+          BASH
+        ]
+      )
+    end
+
+    context 'in the markdown output format' do
+      let(:output_format) { 'markdown' }
+
+      it 'renders the same two commands' do
+        expect(commands).to eq(
+          [
+            <<~'BASH'.chomp,
+              curl -X GET "https://konnect.example.com/anything" \
+                   --no-progress-meter --fail-with-body 
+            BASH
+            <<~'BASH'.chomp
+              curl -X GET "https://on-prem.example.com/anything" \
+                   --no-progress-meter --fail-with-body 
+            BASH
+          ]
+        )
+      end
     end
   end
 end

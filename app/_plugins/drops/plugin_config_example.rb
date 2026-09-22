@@ -57,6 +57,8 @@ module Jekyll
 
       def build_data(target)
         data = { 'name' => plugin_slug, target => nil, 'config' => config }
+        data['expressions'] = expressions unless expressions.empty?
+        data['condition'] = condition unless condition.nil?
         data['tags'] = tags unless tags.empty?
         data
       end

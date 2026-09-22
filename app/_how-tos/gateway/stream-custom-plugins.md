@@ -167,7 +167,7 @@ EOF
 ## Configure the plugins
 
 Now that both plugins are defined, apply them globally.
-Apply `replaceme` with a [condition](/gateway/plugins/expressions/) so it only runs when the request path doesn't contain `skip`:
+Apply `replaceme` with a [condition](/gateway/plugins/conditions/) so it only runs when the request path doesn't contain `skip`:
 
 {% entity_examples %}
 entities:

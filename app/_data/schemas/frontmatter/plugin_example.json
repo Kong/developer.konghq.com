@@ -1,0 +1,5 @@
+{
+    "$id": "schema:plugin_example",
+    "allOf": [{ "$ref": "schema:base" }],
+    "required": ["title", "description"]
+  }

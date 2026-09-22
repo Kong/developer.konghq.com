@@ -25,7 +25,8 @@ You need:
 
 To configure cloud authentication with Redis, add the following parameters to your plugin configuration:
 
-{% if include.name == 'Basic Auth' %}
+{% case include.redis_group %}
+{% when "brute_force_protection" %}
 ```yaml
 config:
   brute_force_protection:
@@ -42,7 +43,7 @@ config:
         aws_access_key_id: $AWS_ACCESS_KEY_ID
         aws_secret_access_key: $AWS_ACCESS_SECRET_KEY
 ```
-{% elsif include.name == 'Rate Limiting' or include.name == 'Response Rate Limiting' %}
+{% when "policy" %}
 ```yaml
 config:
   policy: redis
@@ -58,7 +59,7 @@ config:
       aws_access_key_id: $AWS_ACCESS_KEY_ID
       aws_secret_access_key: $AWS_ACCESS_SECRET_KEY
 ```
-{% else %}
+{% when "storage_config" %}
 ```yaml
 config:
   storage: redis
@@ -75,7 +76,7 @@ config:
         aws_access_key_id: $AWS_ACCESS_KEY_ID
         aws_secret_access_key: $AWS_ACCESS_SECRET_KEY
 ```
-{% endif %}
+{% endcase %}
 
 Replace the following with your actual values:
 * `$INSTANCE_ADDRESS`: The ElastiCache instance address.
@@ -93,7 +94,8 @@ You need:
 
 To configure cloud authentication with Redis, add the following parameters to your plugin configuration:
 
-{% if include.name == 'Basic Auth' %}
+{% case include.redis_group %}
+{% when "brute_force_protection" %}
 ```yaml
 config:
   brute_force_protection:
@@ -108,7 +110,7 @@ config:
         azure_client_secret: $AZURE_CLIENT_SECRET
         azure_tenant_id: $AZURE_TENANT_ID
 ```
-{% elsif include.name == 'Rate Limiting' or include.name == 'Response Rate Limiting' %}
+{% when "policy" %}
 ```yaml
 config:
   policy: redis
@@ -122,7 +124,7 @@ config:
       azure_client_secret: $AZURE_CLIENT_SECRET
       azure_tenant_id: $AZURE_TENANT_ID
 ```
-{% else %}
+{% when "storage_config" %}
 ```yaml
 config:
   storage: redis
@@ -137,7 +139,7 @@ config:
         azure_client_secret: $AZURE_CLIENT_SECRET
         azure_tenant_id: $AZURE_TENANT_ID
 ```
-{% endif %}
+{% endcase %}
 
 Replace the following with your actual values:
 * `$INSTANCE_ADDRESS`: The Azure Managed Redis instance address.
@@ -157,7 +159,8 @@ You need:
 
 To configure cloud authentication with Redis, add the following parameters to your plugin configuration:
 
-{% if include.name == 'Basic Auth' %}
+{% case include.redis_group %}
+{% when "brute_force_protection" %}
 ```yaml
 config:
   brute_force_protection:
@@ -169,7 +172,7 @@ config:
         auth_provider: gcp
         gcp_service_account_json: $GCP_SERVICE_ACCOUNT
 ```
-{% elsif include.name == 'Rate Limiting' or include.name == 'Response Rate Limiting' %}
+{% when "policy" %}
 ```yaml
 config:
   policy: redis
@@ -180,7 +183,7 @@ config:
       auth_provider: gcp
       gcp_service_account_json: $GCP_SERVICE_ACCOUNT
 ```
-{% else %}
+{% when "storage_config" %}
 ```yaml
 config:
   storage: redis
@@ -192,10 +195,82 @@ config:
         auth_provider: gcp
         gcp_service_account_json: $GCP_SERVICE_ACCOUNT
 ```
-{% endif %}
+{% endcase %}
 
 Replace the following with your actual values:
 * `$INSTANCE_ADDRESS`: The Memorystore instance address.
 * `$GCP_SERVICE_ACCOUNT`: (Optional) The GCP service account JSON.
+{% endnavtab %}
+{% navtab "OAuth 2.0" %}
+
+You need:
+* An OAuth 2.0 token endpoint that issues access tokens for the `client_credentials` or `password` grant type
+* A [Redis deployment](https://redis.io/tutorials/authentication-token-storage-with-redis/) that accepts the issued access token as a bearer credential, either natively or through an OAuth-aware proxy (such as Envoy) placed in front of it
+
+To configure OAuth 2.0 authentication with Redis, add the following parameters to your plugin configuration:
+
+{% case include.redis_group %}
+{% when "brute_force_protection" %}
+```yaml
+config:
+  brute_force_protection:
+    strategy: redis
+    redis:
+      host: $INSTANCE_ADDRESS
+      port: 6379
+      cloud_authentication:
+        auth_provider: oauth
+        oauth:
+          token_endpoint: $OAUTH_TOKEN_ENDPOINT
+          grant_type: client_credentials
+          client_id: $OAUTH_CLIENT_ID
+          client_secret: $OAUTH_CLIENT_SECRET
+```
+{% when "policy" %}
+```yaml
+config:
+  policy: redis
+  redis:
+    host: $INSTANCE_ADDRESS
+    port: 6379
+    cloud_authentication:
+      auth_provider: oauth
+      oauth:
+        token_endpoint: $OAUTH_TOKEN_ENDPOINT
+        grant_type: client_credentials
+        client_id: $OAUTH_CLIENT_ID
+        client_secret: $OAUTH_CLIENT_SECRET
+```
+{% when "storage_config" %}
+```yaml
+config:
+  storage: redis
+  storage_config:
+    redis:
+      host: $INSTANCE_ADDRESS
+      port: 6379
+      cloud_authentication:
+        auth_provider: oauth
+        oauth:
+          token_endpoint: $OAUTH_TOKEN_ENDPOINT
+          grant_type: client_credentials
+          client_id: $OAUTH_CLIENT_ID
+          client_secret: $OAUTH_CLIENT_SECRET
+```
+{% endcase %}
+
+Replace the following with your actual values:
+* `$INSTANCE_ADDRESS`: The Redis instance or proxy address.
+* `$OAUTH_TOKEN_ENDPOINT`: The OAuth 2.0 token endpoint URL used to request access tokens.
+* `$OAUTH_CLIENT_ID`: Your OAuth 2.0 client ID.
+* `$OAUTH_CLIENT_SECRET`: Your OAuth 2.0 client secret.
+
+{{site.base_gateway}} caches the acquired token for the duration of its validity and refreshes it asynchronously before it expires. 
+To use the `password` grant type instead, set `oauth.grant_type` to `password` and also provide `oauth.username` and `oauth.password`.
+
+If your Redis deployment uses ACL-based authentication and needs a username sent alongside the token, also set one of:
+* `oauth.redis_username`: A static username to send with `AUTH <username> <token>`.
+* `oauth.redis_username_claim`: The name of a claim in the access token (for example, `oid` for Microsoft Entra ID) to derive the username from.
+
 {% endnavtab %}
 {% endnavtabs %}

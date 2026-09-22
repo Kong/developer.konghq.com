@@ -1,4 +1,11 @@
 {
+  "3.16.0.0": [
+    {
+      "message": "Added a new config option `enforcement_mode` (default `block`) that allows users to set the plugin to `log_only` mode, where validation failures are logged but requests are not rejected.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.15.0.0": [
     {
       "message": "Added `array_length_compat` config option to allow legacy Draft 4 schemas to use `minLength`/`maxLength` keywords for array length validation.",

@@ -810,6 +810,7 @@ portals:
      - ref: string
        name: string required
        description: string (max 250 chars)
+       can_own_applications: boolean (default: false)
        roles: # /api/konnect/portal-management/v3/#/operations/assign-role-to-portal-teams
          - ref: string
            role_name: string

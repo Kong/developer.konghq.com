@@ -1,4 +1,21 @@
 {
+  "3.16.0.0": [
+    {
+      "message": "Added `allow_when`/`deny_when` fields that evaluate CEL boolean expressions against the request context to provide more expressive access‑control policies.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the ACL plugin returned 403 for authenticated\ncredentials with no consumer and no groups (e.g. ACE / Dev Portal application\ncredentials) when configured with a deny list. A group-less identity cannot\nmatch a deny list and should be allowed through.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the ACL plugin ignored a consumer's ACL groups when `include_consumer_groups` was enabled and the consumer belonged to an enterprise consumer group, causing incorrect `403` denials (with `allow`) or incorrect access (with `deny`) for authenticated and anonymous consumers. The plugin now falls back to the consumer's ACL groups when no third-party authenticated groups are present.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.15.0.0": [
     {
       "message": "Fixed an issue where anonymous consumers with valid legacy ACL group credentials were rejected with a 403 error when `include_consumer_groups` was enabled and no Enterprise consumer groups were assigned.",

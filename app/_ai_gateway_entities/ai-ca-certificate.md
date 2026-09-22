@@ -19,6 +19,7 @@ works_on:
   - konnect
 tools:
   - konnect-api
+  - kongctl
 related_resources:
   - text: "{{site.ai_gateway}} architecture"
     url: /ai-gateway/architecture/

@@ -1,4 +1,51 @@
 {
+  "3.16.0.0": [
+    {
+      "message": "Added a `ca_certificates` config option. When set, `call` nodes\nverify the server's TLS certificate against a trust store built solely from the\nreferenced CA certificates instead of the global `lua_ssl_trusted_certificate`\nset. Ignored when a node's `ssl_verify` is disabled.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for reading the authenticated Kong Identity principal with the `property` node using `kong.client.principal` and nested fields such as `kong.client.principal.metadata.rate_tier`.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where replaced response bodies kept stale upstream validators and representation metadata.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `response` node set `Content-Type: application/octet-stream` for `json_to_xml` output. It now defaults to `application/xml` when no explicit `Content-Type` is provided.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `exit` node sent a string body without a correct `Content-Type`. It now uses the content type that the source node declares, for example `application/xml` for `json_to_xml` output, and defaults to `application/octet-stream` in the request phase.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed CVE-2026-14916 by binding the JWT algorithm to the\nverification key's type in the `jwt_verify` node, so a symmetric algorithm can\nno longer be verified against an asymmetric key, preventing an authentication\nbypass where an attacker forges tokens by using the public key as an HMAC\nshared secret, under configurations where the node uses a PEM key string and\n`allowed_algorithms` is unset (any algorithm accepted).",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed the body handling of the `exit` and `service_request` nodes when the body input is a JSON null. The nodes sent the internal Lua value as the string \"userdata: NULL\". The `exit` node now sends no body. The `service_request` node now keeps the upstream request body.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added node source and runtime phase metadata to Datakit tracing events so Konnect Debugger can reconstruct the Datakit node graph from captured trace data.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where several datakit instances (the base plugin\nplus clones) that ran in one request overwrote each other's active-tracing\ncapture. Each datakit instance now reports its own capture, keyed by its plugin\nid, and the capture payload carries the `plugin_name` field. Datakit plugin\nspans also carry a `proxy.kong.plugin.ref` attribute set to the base plugin name.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.15.0.0": [
     {
       "message": "Added a `non_nil` config attribute to the `property` node. When set to `true`, GET operations fail with an error if the property is unset, and SET operations fail with an error if the input is nil/null.",
@@ -33,6 +80,18 @@
   "3.15.0.5": [
     {
       "message": "Fixed an issue where the `response` node set `Content-Type: application/octet-stream` for `json_to_xml` output. It now defaults to `application/xml` when no explicit `Content-Type` is provided.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.15.0.6": [
+    {
+      "message": "Fixed an issue where the `exit` node sent a string body without a correct `Content-Type`. It now uses the content type that the source node declares, for example `application/xml` for `json_to_xml` output, and defaults to `application/octet-stream` in the request phase.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed the body handling of the `exit` and `service_request` nodes when the body input is a JSON null. The nodes sent the internal Lua value as the string `\"userdata: NULL\"`. The `exit` node now sends no body, and the `service_request` node now keeps the upstream request body.",
       "type": "bugfix",
       "scope": "Plugin"
     }
@@ -98,6 +157,18 @@
   "3.14.0.14": [
     {
       "message": "Fixed an issue where the `response` node set `Content-Type: application/octet-stream` for `json_to_xml` output. It now defaults to `application/xml` when no explicit `Content-Type` is provided.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.14.0.15": [
+    {
+      "message": "Fixed an issue where the `exit` node sent a string body without a correct `Content-Type`. It now uses the content type that the source node declares, for example `application/xml` for `json_to_xml` output, and defaults to `application/octet-stream` in the request phase.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed the body handling of the `exit` and `service_request` nodes when the body input is a JSON null. The nodes sent the internal Lua value as the string `\"userdata: NULL\"`. The `exit` node now sends no body, and the `service_request` node now keeps the upstream request body.",
       "type": "bugfix",
       "scope": "Plugin"
     }

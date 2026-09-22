@@ -33,89 +33,38 @@ RSpec.describe Jekyll::Validation do
   let(:html) { Capybara::Node::Simple.new(rendered) }
 
   describe 'html output' do
-    context 'works_on: konnect' do
-      let(:works_on) { %w[konnect] }
+    include_examples 'a dual-topology content div'
 
-      it 'renders a konnect content div with the markdown attribute' do
-        expect(html).to have_css('div.content[data-deployment-topology="konnect"][markdown="1"]')
+    context 'when config.skip is true' do
+      let(:template) do
+        <<~LIQUID
+          {% validation request-check %}
+          url: /mock/anything
+          method: GET
+          status_code: 200
+          skip: true
+          {% endvalidation %}
+        LIQUID
       end
 
-      it 'renders a data-test-step attribute' do
-        expect(html).to have_css('div.content[data-deployment-topology="konnect"][data-test-step]')
-      end
-
-      context 'when config.skip is true' do
-        let(:template) do
-          <<~LIQUID
-            {% validation request-check %}
-            url: /mock/anything
-            method: GET
-            status_code: 200
-            skip: true
-            {% endvalidation %}
-          LIQUID
-        end
+      context 'works_on: konnect' do
+        let(:works_on) { %w[konnect] }
 
         it 'does not render a data-test-step attribute' do
           expect(html).not_to have_css('div.content[data-deployment-topology="konnect"][data-test-step]')
         end
       end
 
-    end
-
-    context 'works_on: on-prem' do
-      let(:works_on) { %w[on-prem] }
-
-      it 'renders an on-prem content div with the markdown attribute' do
-        expect(html).to have_css('div.content[data-deployment-topology="on-prem"][markdown="1"]')
-      end
-
-      it 'renders a data-test-step attribute' do
-        expect(html).to have_css('div.content[data-deployment-topology="on-prem"][data-test-step]')
-      end
-
-      context 'when config.skip is true' do
-        let(:template) do
-          <<~LIQUID
-            {% validation request-check %}
-            url: /mock/anything
-            method: GET
-            status_code: 200
-            skip: true
-            {% endvalidation %}
-          LIQUID
-        end
+      context 'works_on: on-prem' do
+        let(:works_on) { %w[on-prem] }
 
         it 'does not render a data-test-step attribute' do
           expect(html).not_to have_css('div.content[data-deployment-topology="on-prem"][data-test-step]')
         end
       end
-    end
 
-    context 'works_on: konnect and on-prem' do
-      let(:works_on) { %w[konnect on-prem] }
-
-      it 'renders both content divs with the markdown attribute' do
-        expect(html).to have_css('div.content[data-deployment-topology="konnect"][markdown="1"]')
-        expect(html).to have_css('div.content[data-deployment-topology="on-prem"][markdown="1"]')
-      end
-
-      it 'renders a data-test-step attribute on both content divs' do
-        expect(html).to have_css('div.content[data-deployment-topology="konnect"][data-test-step]')
-        expect(html).to have_css('div.content[data-deployment-topology="on-prem"][data-test-step]')
-      end
-
-      context 'when config.skip is true' do
-        let(:template) do
-          <<~LIQUID
-            {% validation request-check %}
-            url: /mock/anything
-            method: GET
-            status_code: 200
-            skip: true
-            {% endvalidation %}
-          LIQUID
-        end
+      context 'works_on: konnect and on-prem' do
+        let(:works_on) { %w[konnect on-prem] }
 
         it 'does not render a data-test-step attribute on either content div' do
           expect(html).not_to have_css('div.content[data-deployment-topology="konnect"][data-test-step]')
@@ -171,23 +120,33 @@ RSpec.describe Jekyll::Validation do
   describe 'template source' do
     subject(:template_source) { File.read('app/_includes/how-tos/validations/request-check/index.html') }
 
-    it 'renders the snippet include for konnect' do
-      expect(template_source).to include('{% include how-tos/validations/request-check/snippet.md url=config.konnect_url')
+    it 'passes the konnect snippet config to the snippet' do
+      expect(template_source).to include('snippet.md config=config.konnect_snippet_config %}')
     end
 
-    it 'renders the snippet include for on-prem' do
-      expect(template_source).to include('{% include how-tos/validations/request-check/snippet.md url=config.on_prem_url')
+    it 'passes the on-prem snippet config to the snippet' do
+      expect(template_source).to include('snippet.md config=config.on_prem_snippet_config %}')
+    end
+
+    it 'passes the snippet nothing else' do
+      expect(template_source.scan(/snippet\.md ([^%]*)%\}/).flatten)
+        .to eq(['config=config.konnect_snippet_config ', 'config=config.on_prem_snippet_config '])
     end
 
     context 'markdown template' do
       subject(:template_source) { File.read('app/_includes/how-tos/validations/request-check/index.md') }
 
-      it 'renders the snippet include for konnect' do
-        expect(template_source).to include('{% include how-tos/validations/request-check/snippet.md url=config.konnect_url')
+      it 'passes the konnect snippet config to the snippet' do
+        expect(template_source).to include('snippet.md config=config.konnect_snippet_config %}')
       end
 
-      it 'renders the snippet include for on-prem' do
-        expect(template_source).to include('{% include how-tos/validations/request-check/snippet.md url=config.on_prem_url')
+      it 'passes the on-prem snippet config to the snippet' do
+        expect(template_source).to include('snippet.md config=config.on_prem_snippet_config %}')
+      end
+
+      it 'passes the snippet nothing else' do
+        expect(template_source.scan(/snippet\.md ([^%]*)%\}/).flatten)
+          .to eq(['config=config.konnect_snippet_config ', 'config=config.on_prem_snippet_config '])
       end
     end
   end

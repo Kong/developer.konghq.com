@@ -1,0 +1,317 @@
+<!doctype html>
+<html>
+<body>
+<main>
+<div class="tabs flex flex-col" data-tab-group="policy-yaml additional_classes heading_level">
+  <ul class="tablist" role="tablist">
+    
+      
+      
+      <button id="navtab-f248c4bf-023d-4b40-bd92-14fcf6fe1d6d-tab-1" class="tab-button__horizontal" aria-controls="navtab-f248c4bf-023d-4b40-bd92-14fcf6fe1d6d-tabpanel-1" role="tab" aria-selected="true" tabindex="0" data-slug="kubernetes">
+        
+        Kubernetes
+
+      </button>
+    
+      
+      
+      <button id="navtab-f248c4bf-023d-4b40-bd92-14fcf6fe1d6d-tab-2" class="tab-button__horizontal" aria-controls="navtab-f248c4bf-023d-4b40-bd92-14fcf6fe1d6d-tabpanel-2" role="tab" aria-selected="false" tabindex="-1" data-slug="universal">
+        
+        Universal
+
+      </button>
+    
+      
+      
+      <button id="navtab-f248c4bf-023d-4b40-bd92-14fcf6fe1d6d-tab-3" class="tab-button__horizontal" aria-controls="navtab-f248c4bf-023d-4b40-bd92-14fcf6fe1d6d-tabpanel-3" role="tab" aria-selected="false" tabindex="-1" data-slug="terraform">
+        
+        Terraform
+
+      </button>
+    
+  </ul>
+
+  <div class="navtab-contents mt-6 flex flex-col">
+    
+      
+      <div class="navtab-content flex flex-col gap-3 prose-ol:" role="tabpanel" data-id="navtab-f248c4bf-023d-4b40-bd92-14fcf6fe1d6d-tabpanel-1" tabindex="0" aria-labelledby="navtab-f248c4bf-023d-4b40-bd92-14fcf6fe1d6d-tab-1" data-panel="kubernetes">
+        <div class="meshservice text-sm">
+<label class="flex gap-2 py-0.5 w-full text-sm text-primary md:pl-1 items-center">
+<input class="checkbox" type="checkbox"> I am using <a href="/mesh/networking/meshservice/">MeshService</a></label>
+</div>
+
+
+
+<div class="custom-code-block w-full h-fit inline-grid rounded-lg">
+    
+    
+    
+    
+    <div class="flex w-full relative bg-code-block rounded-b-lg border border-primary overflow-auto p-3 rounded-t-lg pr-11" data-code-snippet="">
+        <div class="code-block h-full w-full"><pre class="shiki shiki-themes catppuccin-latte catppuccin-mocha" style="background-color:#eff1f5;--shiki-dark-bg:#1e1e2e;color:#4c4f69;--shiki-dark:#cdd6f4" tabindex="0"><code id="4a6542a6-a114-447c-8134-7c7d53a12040">apiVersion: kuma.io/v1alpha1
+kind: MeshCircuitBreaker
+metadata:
+  name: web-to-backend-circuit-breaker
+  namespace: kuma-demo
+  labels:
+    kuma.io/mesh: default
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      app: web
+  to:
+  - targetRef:
+      kind: MeshService
+      name: backend_kuma-demo_svc_8080
+    default:
+      connectionLimits:
+        maxConnections: 2
+        maxPendingRequests: 8
+        maxRetries: 2
+        maxRequests: 2</code></pre></div>
+        
+        <div class="flex absolute right-3 top-[10px] items-center gap-2">
+            
+            
+            
+<div class="absolute right-8 flex text-xs text-button bg-brand p-1 rounded invisible opacity-0">Copied!</div>
+<clipboard-copy for="4a6542a6-a114-447c-8134-7c7d53a12040" aria-label="Copy" data-copy-feedback="Copied!" class="copy-action group">
+    
+    
+</clipboard-copy>
+
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+
+
+<div class="custom-code-block w-full h-fit inline-grid rounded-lg">
+    
+    
+    
+    
+    <div class="flex w-full relative bg-code-block rounded-b-lg border border-primary overflow-auto p-3 rounded-t-lg pr-11" data-code-snippet="">
+        <div class="code-block h-full w-full"><pre class="shiki shiki-themes catppuccin-latte catppuccin-mocha" style="background-color:#eff1f5;--shiki-dark-bg:#1e1e2e;color:#4c4f69;--shiki-dark:#cdd6f4" tabindex="0"><code id="47becbe7-26cc-42aa-a392-80976ea9a71c">apiVersion: kuma.io/v1alpha1
+kind: MeshCircuitBreaker
+metadata:
+  name: web-to-backend-circuit-breaker
+  namespace: kuma-demo
+  labels:
+    kuma.io/mesh: default
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      app: web
+  to:
+  - targetRef:
+      kind: MeshService
+      name: backend
+      namespace: kuma-demo
+      sectionName: http
+    default:
+      connectionLimits:
+        maxConnections: 2
+        maxPendingRequests: 8
+        maxRetries: 2
+        maxRequests: 2</code></pre></div>
+        
+        <div class="flex absolute right-3 top-[10px] items-center gap-2">
+            
+            
+            
+<div class="absolute right-8 flex text-xs text-button bg-brand p-1 rounded invisible opacity-0">Copied!</div>
+<clipboard-copy for="47becbe7-26cc-42aa-a392-80976ea9a71c" aria-label="Copy" data-copy-feedback="Copied!" class="copy-action group">
+    
+    
+</clipboard-copy>
+
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+
+      </div>
+    
+      
+      <div class="navtab-content flex flex-col gap-3 prose-ol: hidden" role="tabpanel" data-id="navtab-f248c4bf-023d-4b40-bd92-14fcf6fe1d6d-tabpanel-2" tabindex="0" aria-labelledby="navtab-f248c4bf-023d-4b40-bd92-14fcf6fe1d6d-tab-2" data-panel="universal">
+        <div class="meshservice text-sm">
+<label class="flex gap-2 py-0.5 w-full text-sm text-primary md:pl-1 items-center">
+<input class="checkbox" type="checkbox"> I am using <a href="/mesh/networking/meshservice/">MeshService</a></label>
+</div>
+
+
+
+<div class="custom-code-block w-full h-fit inline-grid rounded-lg">
+    
+    
+    
+    
+    <div class="flex w-full relative bg-code-block rounded-b-lg border border-primary overflow-auto p-3 rounded-t-lg pr-11" data-code-snippet="">
+        <div class="code-block h-full w-full"><pre class="shiki shiki-themes catppuccin-latte catppuccin-mocha" style="background-color:#eff1f5;--shiki-dark-bg:#1e1e2e;color:#4c4f69;--shiki-dark:#cdd6f4" tabindex="0"><code id="6198e46e-dd1c-48b5-8cf8-8c786b903992">type: MeshCircuitBreaker
+name: web-to-backend-circuit-breaker
+mesh: default
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      app: web
+  to:
+  - targetRef:
+      kind: MeshService
+      name: backend
+    default:
+      connectionLimits:
+        maxConnections: 2
+        maxPendingRequests: 8
+        maxRetries: 2
+        maxRequests: 2</code></pre></div>
+        
+        <div class="flex absolute right-3 top-[10px] items-center gap-2">
+            
+            
+            
+<div class="absolute right-8 flex text-xs text-button bg-brand p-1 rounded invisible opacity-0">Copied!</div>
+<clipboard-copy for="6198e46e-dd1c-48b5-8cf8-8c786b903992" aria-label="Copy" data-copy-feedback="Copied!" class="copy-action group">
+    
+    
+</clipboard-copy>
+
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+
+
+<div class="custom-code-block w-full h-fit inline-grid rounded-lg">
+    
+    
+    
+    
+    <div class="flex w-full relative bg-code-block rounded-b-lg border border-primary overflow-auto p-3 rounded-t-lg pr-11" data-code-snippet="">
+        <div class="code-block h-full w-full"><pre class="shiki shiki-themes catppuccin-latte catppuccin-mocha" style="background-color:#eff1f5;--shiki-dark-bg:#1e1e2e;color:#4c4f69;--shiki-dark:#cdd6f4" tabindex="0"><code id="4396287a-4fd2-4eb2-ae1e-f26f37d4e9eb">type: MeshCircuitBreaker
+name: web-to-backend-circuit-breaker
+mesh: default
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      app: web
+  to:
+  - targetRef:
+      kind: MeshService
+      name: backend
+      sectionName: http
+    default:
+      connectionLimits:
+        maxConnections: 2
+        maxPendingRequests: 8
+        maxRetries: 2
+        maxRequests: 2</code></pre></div>
+        
+        <div class="flex absolute right-3 top-[10px] items-center gap-2">
+            
+            
+            
+<div class="absolute right-8 flex text-xs text-button bg-brand p-1 rounded invisible opacity-0">Copied!</div>
+<clipboard-copy for="4396287a-4fd2-4eb2-ae1e-f26f37d4e9eb" aria-label="Copy" data-copy-feedback="Copied!" class="copy-action group">
+    
+    
+</clipboard-copy>
+
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+
+      </div>
+    
+      
+      <div class="navtab-content flex flex-col gap-3 prose-ol: hidden" role="tabpanel" data-id="navtab-f248c4bf-023d-4b40-bd92-14fcf6fe1d6d-tabpanel-3" tabindex="0" aria-labelledby="navtab-f248c4bf-023d-4b40-bd92-14fcf6fe1d6d-tab-3" data-panel="terraform">
+        
+<p class="text-sm">Adjust <strong>konnect_mesh_control_plane.my_meshcontrolplane.id</strong> and <strong>konnect_mesh.my_mesh.name</strong> according to your current configuration.</p>
+
+
+
+<div class="custom-code-block w-full h-fit inline-grid rounded-lg">
+    
+    
+    
+    
+    <div class="flex w-full relative bg-code-block rounded-b-lg border border-primary overflow-auto p-3 rounded-t-lg pr-11" data-code-snippet="">
+        <div class="code-block h-full w-full"><pre class="shiki shiki-themes catppuccin-latte catppuccin-mocha" style="background-color:#eff1f5;--shiki-dark-bg:#1e1e2e;color:#4c4f69;--shiki-dark:#cdd6f4" tabindex="0"><code id="3c1304ac-7aae-43e9-bca5-31fa8b564ca2">resource "konnect_mesh_circuit_breaker" "web_to_backend_circuit_breaker" {
+  provider = konnect-beta
+  type = "MeshCircuitBreaker"
+  name = "web-to-backend-circuit-breaker"
+  spec = {
+    target_ref = {
+      kind = "Dataplane"
+      labels = {
+        app = "web"
+      }
+    }
+    to = [
+      {
+        target_ref = {
+          kind = "MeshService"
+          name = "backend"
+          section_name = "http"
+        }
+        default = {
+          connection_limits = {
+            max_connections = "2"
+            max_pending_requests = "8"
+            max_retries = "2"
+            max_requests = "2"
+          }
+        }
+      }
+    ]
+  }
+  labels   = {
+  "kuma.io/mesh" = konnect_mesh.my_mesh.name
+  }
+  cp_id    = konnect_mesh_control_plane.my_meshcontrolplane.id
+  mesh     = konnect_mesh.my_mesh.name
+}
+</code></pre></div>
+        
+        <div class="flex absolute right-3 top-[10px] items-center gap-2">
+            
+            
+            
+<div class="absolute right-8 flex text-xs text-button bg-brand p-1 rounded invisible opacity-0">Copied!</div>
+<clipboard-copy for="3c1304ac-7aae-43e9-bca5-31fa8b564ca2" aria-label="Copy" data-copy-feedback="Copied!" class="copy-action group">
+    
+    
+</clipboard-copy>
+
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+
+      </div>
+    
+  </div>
+</div>
+</main>
+</body>
+</html>

@@ -5,12 +5,12 @@ runs:
   steps:
     # Configure Ruby to build Jekyll site
     - name: Set up Ruby
-      uses: ruby/setup-ruby@84684c07c1965536eb4802c8daf1a77968df0cb1 # v1
+      uses: ruby/setup-ruby@a0102e0972be65f351c307e2d64b9314a57c8073 # v1.324.0
       with:
         ruby-version: .ruby-version
 
     - name: Ruby gem cache
-      uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
       with:
         path: ${{ github.workspace }}/vendor/bundle
         key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
