@@ -12,12 +12,12 @@ related_resources:
     url: /ai-gateway/entities/ai-consumer-group/
   - text: AI Auth Strategy entity
     url: /ai-gateway/entities/ai-auth-strategy/
-  - text: MCP version support
-    url: /ai-gateway/mcp-version-support/
+  - text: Map a RESTful API to MCP tools
+    url: /ai-gateway/map-api-to-mcp-tools/
   - text: Observe MCP traffic with the File Log Policy
     url: /ai-gateway/observe-mcp-traffic/
 
-description: Learn how to create an AI MCP Server entity in {{site.ai_gateway}} to restrict access to specific MCP tools based on AI Consumers and AI Consumer Groups. Configure default and per-tool ACLs, define user roles, and validate access behavior as a stateless 2026-07-28 MCP client.
+description: Learn how to create an AI MCP Server entity in {{site.ai_gateway}} to restrict access to specific MCP tools based on AI Consumers and AI Consumer Groups. Configure default and per-tool ACLs, define user roles, and validate access behavior with the MCP Inspector CLI.
 
 products:
   - ai-gateway
@@ -50,309 +50,42 @@ tldr:
   a: |
     Use the [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) entity to control access to MCP tools with default and per-tool ACLs based on AI Consumers and AI Consumer Groups.
 
+    This tutorial converts the Swagger Petstore API into MCP tools, authenticates callers with a `key-auth` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/), then gates each tool by AI Consumer Group membership and by individual AI Consumer.
+
 tools:
   - kongctl
 
 faqs:
-  - q: Why doesn't a `2026-07-28` client perform an `initialize` handshake or receive an `Mcp-Session-Id`?
+  - q: Why does a denied tool call fail at the transport layer instead of returning a JSON-RPC error?
     a: |
-      The [`2026-07-28` MCP revision](/ai-gateway/mcp-version-support/#2026-07-28) removes the session concept entirely. Every request is self-contained: it declares its protocol revision through the `MCP-Protocol-Version` header and carries the AI Consumer's API key in the `apikey` header, instead of relying on state established during a prior handshake.
-  - q: Why does every `2026-07-28` request body need a `params._meta` envelope?
+      An ACL denial is enforced on the route, before the request is dispatched as an MCP RPC, so {{site.ai_gateway}} returns a plain `HTTP 403 Forbidden` response rather than a JSON-RPC error object. The MCP Inspector CLI surfaces this as a `Streamable HTTP error` and exits with a non-zero status. An MCP client that assumes every response is JSON-RPC needs to handle the status code itself.
+  - q: Why does `tools/list` succeed for a blocked AI Consumer instead of failing?
     a: |
-      The [stateless `2026-07-28` base protocol](https://modelcontextprotocol.io/specification/2026-07-28/basic#_meta) requires every request body to repeat the protocol version, plus the calling client's capabilities, in a `params._meta` envelope, since the server can't infer either from a prior handshake.
-  - q: Why do `2026-07-28` requests need `Mcp-Method` and `Mcp-Name` headers?
+      Tool discovery and tool invocation are evaluated separately. Discovery filters the list down to the tools the AI Consumer is allowed to reach, so a fully blocked AI Consumer gets an `HTTP 200` response with an empty `tools` array instead of an outright rejection. Invoking a tool directly is what returns `HTTP 403 Forbidden`.
+  - q: Why does a per-tool ACL have to repeat groups that `access.default_tool_acls` already allows?
     a: |
-      The [Streamable HTTP transport](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http#request-metadata) mirrors the body's `method` into an `Mcp-Method` header on every request, and its `params.name` into an `Mcp-Name` header on `tools/call` requests specifically. A header that doesn't match the body is rejected with `HTTP 400` and JSON-RPC error `-32020`.
+      A per-tool ACL replaces the default for that tool, it doesn't merge with it. When a tool defines its own `access.acls`, {{site.ai_gateway}} ignores `access.default_tool_acls` for that tool entirely, so the tool's `allow` list must name every subject that should reach it. See [How default and per-tool ACLs work](/ai-gateway/entities/ai-mcp-server/#how-default-and-per-tool-acls-work).
 
 prereqs:
   inline:
-    - title: Mock API Server
-      content: |
-        Before creating an AI MCP Server, you need an upstream MCP-compatible HTTP server to expose. For this tutorial, use a simple Express-based MCP server that simulates a marketplace system. It provides read-only access to sample users and their orders.
-
-        The server exposes a single `/mcp` endpoint and registers tools instead of REST routes, including:
-
-        * `list_users`
-        * `get_user`
-        * `list_orders`
-        * `list_orders_for_user`
-        * `search_orders`
-
-        These tools operate on in-memory marketplace data, allowing you to test MCP behavior without connecting to a real backend. It's built on the [MCP TypeScript SDK v2](https://github.com/modelcontextprotocol/typescript-sdk), so it speaks the stateless `2026-07-28` revision this guide validates against.
-
-        1. Create a project directory for the mock server:
-
-           ```bash
-           mkdir marketplace-mcp && cd marketplace-mcp
-           ```
-
-        1. Set up the package manifest:
-
-           ```bash
-           cat <<'EOF' > package.json
-           {
-             "name": "sample-users-mcp-server",
-             "version": "2.0.0",
-             "private": true,
-             "type": "module",
-             "scripts": {
-               "build": "tsc -p tsconfig.json",
-               "start": "node --enable-source-maps ./dist/server.js"
-             },
-             "dependencies": {
-               "@modelcontextprotocol/server": "^2.0.0",
-               "@modelcontextprotocol/express": "^2.0.0",
-               "@modelcontextprotocol/node": "^2.0.0",
-               "express": "^4.19.2",
-               "zod": "^4.2.0"
-             },
-             "devDependencies": {
-               "@types/express": "^5.0.5",
-               "@types/node": "^24.9.2",
-               "typescript": "^5.6.3"
-             }
-           }
-           EOF
-           ```
-           {:.collapsible}
-
-        1. Add a `tsconfig.json`:
-
-           ```bash
-           cat <<'EOF' > tsconfig.json
-           {
-             "compilerOptions": {
-               "target": "ES2022",
-               "module": "ESNext",
-               "moduleResolution": "Bundler",
-               "strict": true,
-               "esModuleInterop": true,
-               "forceConsistentCasingInFileNames": true,
-               "outDir": "dist",
-               "skipLibCheck": true,
-               "types": ["node"]
-             },
-             "include": ["src"]
-           }
-           EOF
-           ```
-           {:.collapsible}
-
-        1. Add the server itself:
-
-           ```bash
-           mkdir src
-           cat <<'EOF' > src/server.ts
-           import { createMcpExpressApp } from '@modelcontextprotocol/express';
-           import { toNodeHandler } from '@modelcontextprotocol/node';
-           import { createMcpHandler, McpServer } from '@modelcontextprotocol/server';
-           import * as z from 'zod/v4';
-
-           // -------------------- In-memory data --------------------
-           const users: Record<string, string> = {
-             a1b2c3d4: "Alice Johnson",
-             e5f6g7h8: "Bob Smith",
-             i9j0k1l2: "Charlie Lee",
-             m3n4o5p6: "Diana Evans",
-             q7r8s9t0: "Ethan Brown",
-             u1v2w3x4: "Fiona Clark",
-             y5z6a7b8: "George Harris",
-             c9d0e1f2: "Hannah Lewis",
-             g3h4i5j6: "Ian Walker",
-             k7l8m9n0: "Julia Turner"
-           };
-
-           type Order = { id: string; name: string; userId: string };
-           const orders: Order[] = [
-             { id: "ord001", name: "Sugar (50kg)", userId: "a1b2c3d4" },
-             { id: "ord002", name: "Cleaning Supplies Pack", userId: "a1b2c3d4" },
-             { id: "ord003", name: "Canned Tomatoes (100 cans)", userId: "a1b2c3d4" },
-             { id: "ord004", name: "Flour (100kg)", userId: "e5f6g7h8" },
-             { id: "ord005", name: "Dish Soap (10 bottles)", userId: "e5f6g7h8" },
-             { id: "ord006", name: "Salt (25kg)", userId: "e5f6g7h8" },
-             { id: "ord007", name: "Olive Oil (20L)", userId: "i9j0k1l2" },
-             { id: "ord008", name: "Baking Powder (10kg)", userId: "i9j0k1l2" },
-             { id: "ord009", name: "Rice (200kg)", userId: "m3n4o5p6" },
-             { id: "ord010", name: "Vegetable Oil (15L)", userId: "m3n4o5p6" },
-             { id: "ord011", name: "Pasta (80kg)", userId: "m3n4o5p6" },
-             { id: "ord012", name: "Canned Beans (50 cans)", userId: "m3n4o5p6" },
-             { id: "ord013", name: "Toilet Paper (Case of 48)", userId: "q7r8s9t0" },
-             { id: "ord014", name: "Hand Sanitizer (20 bottles)", userId: "q7r8s9t0" },
-             { id: "ord015", name: "Laundry Detergent (10L)", userId: "u1v2w3x4" },
-             { id: "ord016", name: "Trash Bags (100 ct)", userId: "u1v2w3x4" },
-             { id: "ord017", name: "Disinfectant Spray (5 bottles)", userId: "u1v2w3x4" },
-             { id: "ord018", name: "Coffee Beans (30kg)", userId: "k7l8m9n0" },
-             { id: "ord019", name: "Tea Bags (500ct)", userId: "k7l8m9n0" },
-             { id: "ord020", name: "Condensed Milk (40 cans)", userId: "k7l8m9n0" },
-             { id: "ord021", name: "Paper Towels (24 rolls)", userId: "g3h4i5j6" },
-             { id: "ord022", name: "Broom & Mop Set", userId: "g3h4i5j6" },
-             { id: "ord023", name: "Cereal (20 boxes)", userId: "c9d0e1f2" },
-             { id: "ord024", name: "Powdered Milk (10kg)", userId: "c9d0e1f2" },
-             { id: "ord025", name: "Snacks Variety Pack", userId: "c9d0e1f2" },
-             { id: "ord026", name: "Cooking Gas Cylinder", userId: "y5z6a7b8" },
-             { id: "ord027", name: "Napkins (1000ct)", userId: "y5z6a7b8" }
-           ];
-
-           // -------------------- MCP Server --------------------
-           const handler = createMcpHandler(
-             () => {
-               const server = new McpServer({ name: "sample-users-mcp", version: "2.0.0" });
-
-               server.registerTool(
-                 "list_users",
-                 {
-                   description: "List all users (id, fullName).",
-                   inputSchema: z.object({}),
-                   outputSchema: z.object({
-                     users: z.array(z.object({ id: z.string(), fullName: z.string() }))
-                   })
-                 },
-                 async () => {
-                   const list = Object.entries(users).map(([id, fullName]) => ({ id, fullName }));
-                   const output = { users: list };
-                   return {
-                     content: [{ type: "text", text: JSON.stringify(output, null, 2) }],
-                     structuredContent: output
-                   };
-                 }
-               );
-
-               server.registerTool(
-                 "get_user",
-                 {
-                   description: "Get a single user by id.",
-                   inputSchema: z.object({ id: z.string() }),
-                   outputSchema: z.object({
-                     found: z.boolean(),
-                     user: z.object({ id: z.string(), fullName: z.string() }).nullable()
-                   })
-                 },
-                 async ({ id }) => {
-                   const fullName = users[id];
-                   const output = fullName != null
-                     ? { found: true, user: { id, fullName } }
-                     : { found: false, user: null };
-                   return {
-                     content: [{ type: "text", text: JSON.stringify(output, null, 2) }],
-                     structuredContent: output
-                   };
-                 }
-               );
-
-               server.registerTool(
-                 "list_orders",
-                 {
-                   description: "List all orders.",
-                   inputSchema: z.object({}),
-                   outputSchema: z.object({
-                     orders: z.array(z.object({ id: z.string(), name: z.string(), userId: z.string() }))
-                   })
-                 },
-                 async () => {
-                   const output = { orders };
-                   return {
-                     content: [{ type: "text", text: JSON.stringify(output, null, 2) }],
-                     structuredContent: output
-                   };
-                 }
-               );
-
-               server.registerTool(
-                 "list_orders_for_user",
-                 {
-                   description: "List orders by userId.",
-                   inputSchema: z.object({ userId: z.string() }),
-                   outputSchema: z.object({
-                     userExists: z.boolean(),
-                     orders: z.array(z.object({ id: z.string(), name: z.string(), userId: z.string() }))
-                   })
-                 },
-                 async ({ userId }) => {
-                   const exists = users[userId] != null;
-                   const userOrders = exists ? orders.filter((o) => o.userId === userId) : [];
-                   const output = { userExists: exists, orders: userOrders };
-                   return {
-                     content: [{ type: "text", text: JSON.stringify(output, null, 2) }],
-                     structuredContent: output
-                   };
-                 }
-               );
-
-               server.registerTool(
-                 "search_orders",
-                 {
-                   description: "Search orders by name (case-insensitive substring).",
-                   inputSchema: z.object({ q: z.string().min(1) }),
-                   outputSchema: z.object({
-                     count: z.number(),
-                     results: z.array(z.object({ id: z.string(), name: z.string(), userId: z.string() }))
-                   })
-                 },
-                 async ({ q }) => {
-                   const needle = q.toLowerCase();
-                   const results = orders.filter((o) => o.name.toLowerCase().includes(needle));
-                   const output = { count: results.length, results };
-                   return {
-                     content: [{ type: "text", text: JSON.stringify(output, null, 2) }],
-                     structuredContent: output
-                   };
-                 }
-               );
-
-               return server;
-             },
-             { responseMode: 'json' }
-           );
-
-           // -------------------- HTTP wiring --------------------
-           // Bind to every interface and allow the Host header Kong's dataplane container
-           // sends (host.docker.internal) so the containerized gateway can reach this process.
-           const app = createMcpExpressApp({
-             host: '0.0.0.0',
-             allowedHosts: ['localhost', '127.0.0.1', 'host.docker.internal']
-           });
-
-           const node = toNodeHandler(handler);
-           app.all('/mcp', (req, res) => void node(req, res, req.body));
-
-           const PORT = parseInt(process.env.PORT || "3001", 10);
-           app.listen(PORT, '0.0.0.0', () => {
-             console.log(`MCP Server (Streamable HTTP, 2026-07-28) listening at http://localhost:${PORT}/mcp`);
-           });
-           EOF
-           ```
-           {:.collapsible}
-
-        1. Install dependencies, build, and start the server:
-
-           ```bash
-           npm install && \
-           npm run build && \
-           npm start
-           ```
-
-           When the server starts, it listens at:
-
-           ```
-           http://localhost:3001/mcp
-           ```
-
-           The server also logs a `responseMode: 'json' drops mid-call notifications` warning on startup. This is expected: the tools in this tutorial each return a single result, so there are no mid-call notifications to drop.
-      icon_url: /assets/icons/github.svg
+    - title: Petstore API
+      include_content: prereqs/third-party/swagger-petstore
 
 cleanup:
   inline:
+    - title: Stop Petstore API
+      include_content: cleanup/third-party/swagger-petstore
     - title: Clean up {{site.ai_gateway}} resources
       include_content: cleanup/products/ai-gateway
       icon_url: '/assets/icons/ai-gateway.svg'
 ---
 
-## Create AI Consumer Groups for each usage tier
+## Create AI Consumer Groups for each access tier
 
 Configure [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) that reflect access levels. These groups govern MCP tool permissions:
 
-- `admin`: full access
-- `developer`: limited access
+- `admin`: full access, including destructive tools
+- `support`: read-only access to pet and store data
 - `suspended`: blocked from MCP tools
 
 {% entity_examples %}
@@ -362,10 +95,10 @@ ai_gateway_consumer_groups:
     display_name: Admin
     name: admin
     policies: []
-  - ref: developer
+  - ref: support
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
-    display_name: Developer
-    name: developer
+    display_name: Support
+    name: support
     policies: []
   - ref: suspended
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
@@ -413,10 +146,10 @@ ai_gateway_consumer_groups:
     policies: []
     consumers:
       - !ref alice#name
-  - ref: developer
+  - ref: support
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
-    name: developer
-    display_name: Developer
+    name: support
+    display_name: Support
     policies: []
     consumers:
       - !ref bob#name
@@ -551,7 +284,7 @@ capture:
 
 ## Configure the AI MCP Server
 
-Configure the [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) to apply tool-level access rules. The AI MCP Server controls which AI Consumers can see or call each MCP tool. Access is determined by AI Consumer Groups and individual AI Consumers using `allow` and `deny` lists. A tool ACL replaces the default rule when present.
+Configure the [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) to convert the Petstore API into MCP tools and apply tool-level access rules. Access is determined by AI Consumer Groups and individual AI Consumers using `allow` and `deny` lists. A tool ACL replaces the default rule when present.
 
 The following table shows the effective permissions for this configuration:
 
@@ -562,36 +295,36 @@ columns:
     key: tool
   - title: Admin group
     key: admin
-  - title: Developer group
-    key: developer
+  - title: Support group
+    key: support
   - title: Eason consumer
     key: eason
   - title: Suspended group
     key: suspended
 rows:
-  - tool: "`list_users`"
+  - tool: "`get-pets-by-status`"
     admin: Yes
-    developer: No
+    support: Yes
     eason: Yes
     suspended: No
-  - tool: "`get_user`"
+  - tool: "`get-pet-by-id`"
     admin: Yes
-    developer: Yes
+    support: Yes
     eason: No
     suspended: No
-  - tool: "`list_orders`"
+  - tool: "`get-inventory`"
     admin: Yes
-    developer: Yes
+    support: Yes
     eason: No
     suspended: No
-  - tool: "`list_orders_for_user`"
+  - tool: "`get-order-by-id`"
     admin: Yes
-    developer: Yes
+    support: Yes
     eason: No
     suspended: No
-  - tool: "`search_orders`"
+  - tool: "`delete-pet`"
     admin: Yes
-    developer: No
+    support: No
     eason: No
     suspended: No
 {% endtable %}
@@ -599,7 +332,7 @@ rows:
 
 Apply the following configuration to configure:
 * A `key-auth` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) so each AI Consumer presents their key in the `apikey` header
-* The AI MCP Servers and their ACL rules
+* The AI MCP Server, its converted Petstore tools, and their ACL rules
 
 {% entity_examples %}
 ai_gateway_auth_strategies:
@@ -614,11 +347,11 @@ ai_gateway_auth_strategies:
       key_in_header: true
       key_in_query: false
 ai_gateway_mcp_servers:
-  - ref: marketplace-mcp
+  - ref: petstore-acl-mcp
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
-    name: marketplace-mcp
-    display_name: "Marketplace API"
-    type: passthrough-listener
+    name: petstore-acl-mcp
+    display_name: "Petstore API"
+    type: conversion-listener
     enabled: true
     policies: []
     access:
@@ -632,48 +365,94 @@ ai_gateway_mcp_servers:
           - admin
         deny: []
     config:
-      url: http://host.docker.internal:3001/mcp
+      url: http://host.docker.internal:8080/api/v3
       route:
         paths:
-          - /mcp
+          - /petstore-acl
       logging:
         payloads: false
       server:
         timeout: 60000
     tools:
-      - name: list_users
+      - name: get-pets-by-status
+        description: Find pets by status
+        method: GET
+        path: /petstore-acl/pet/findByStatus
         access:
           acls:
             allow:
               - admin
+              - support
               - eason
+        parameters:
+          - name: status
+            in: query
+            required: true
+            schema:
+              type: string
+              enum:
+                - available
+                - pending
+                - sold
+            description: Status value to filter pets by
+      - name: get-pet-by-id
+        description: Get a pet by ID
+        method: GET
+        path: /petstore-acl/pet/{petId}
+        access:
+          acls:
+            allow:
+              - admin
+              - support
+        parameters:
+          - description: ID of the pet to retrieve
+            in: path
+            name: petId
+            required: true
+            schema:
+              type: integer
+      - name: get-inventory
+        description: Get pet inventories by status
+        method: GET
+        path: /petstore-acl/store/inventory
+        access:
+          acls:
+            allow:
+              - admin
+              - support
+      - name: get-order-by-id
+        description: Get a purchase order by ID
+        method: GET
+        path: /petstore-acl/store/order/{orderId}
+        access:
+          acls:
+            allow:
+              - admin
+              - support
+        parameters:
+          - description: ID of the order to retrieve
+            in: path
+            name: orderId
+            required: true
+            schema:
+              type: integer
+      - name: delete-pet
+        description: Delete a pet
+        method: DELETE
+        path: /petstore-acl/pet/{petId}
+        access:
+          acls:
+            allow:
+              - admin
             deny:
-              - developer
-      - name: get_user
-        access:
-          acls:
-            allow:
-              - admin
-              - developer
-      - name: list_orders
-        access:
-          acls:
-            allow:
-              - admin
-              - developer
-      - name: list_orders_for_user
-        access:
-          acls:
-            allow:
-              - admin
-              - developer
-      - name: search_orders
-        access:
-          acls:
-            allow:
-              - admin
-            deny:
-              - developer
+              - support
+        parameters:
+          - description: ID of the pet to delete
+            in: path
+            name: petId
+            required: true
+            schema:
+              type: integer
 {% endentity_examples %}
 
 {:.info}
@@ -681,225 +460,206 @@ ai_gateway_mcp_servers:
 
 `access.acls` is the server-level gate, evaluated before any tool ACL. Every AI Consumer passes it here: an empty `allow` list means no server-level rule is configured, so access is decided entirely by `access.default_tool_acls` and the per-tool ACLs. Populate `access.acls` when you want to block an AI Consumer from the AI MCP Server as a whole, rather than from individual tools.
 
+Because this is a `conversion-listener`, {{site.ai_gateway}} builds each tool's input schema from its `parameters` list, prefixing every parameter name with its `in` location. The `status` query parameter is exposed to MCP clients as `query_status`, and the `petId` and `orderId` path parameters as `path_petId` and `path_orderId`.
+
 ## Validate
 
-Validate the ACL rules by calling `tools/list` directly against the route for each AI Consumer.
+Validate the ACL rules with the [MCP Inspector CLI](https://modelcontextprotocol.io/docs/tools/inspector#cli), passing each AI Consumer's API key in the `apikey` header. The set of tools each AI Consumer can discover and call reflects their group membership.
 
-1. Check that Alice (`admin` group) sees every tool:
+### Alice sees and can call every tool
 
-{% capture alice_list %}
-<!-- vale off -->
-{% validation request-check %}
-url: /mcp/
-method: POST
-status_code: 200
-headers:
-  - 'Content-Type: application/json'
-  - 'Accept: application/json, text/event-stream'
-  - 'MCP-Protocol-Version: 2026-07-28'
-  - 'Mcp-Method: tools/list'
-  - 'apikey: $ALICE_API_KEY'
-display_headers: true
-body:
-  jsonrpc: '2.0'
-  id: 1
-  method: tools/list
-  params:
-    _meta:
-      'io.modelcontextprotocol/protocolVersion': '2026-07-28'
-      'io.modelcontextprotocol/clientCapabilities': {}
+Alice is in `admin`, which `access.default_tool_acls` allows and every tool's `allow` list names, so she discovers all five tools:
+
+<!--vale off-->
+{% validation custom-command %}
+command: |
+  npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
+    http://localhost:8000/petstore-acl \
+    --transport http --method tools/list \
+    --header "apikey: $ALICE_API_KEY" | jq -r '.tools[].name' | sort
+expected:
+  return_code: 0
+  message: |
+    delete-pet
+    get-inventory
+    get-order-by-id
+    get-pet-by-id
+    get-pets-by-status
+render_output: false
 {% endvalidation %}
-<!-- vale on -->
-{% endcapture %}
+<!--vale on-->
 
-{{ alice_list | indent }}
+You should see the following output:
 
-   The response lists all five tools. Alice belongs to `admin`, so calling `search_orders`, the most restricted tool, also succeeds:
+```text
+delete-pet
+get-inventory
+get-order-by-id
+get-pet-by-id
+get-pets-by-status
+```
+{:.no-copy-code}
 
-{% capture alice_search %}
-<!-- vale off -->
-{% validation request-check %}
-url: /mcp/
-method: POST
-status_code: 200
-headers:
-  - 'Content-Type: application/json'
-  - 'Accept: application/json, text/event-stream'
-  - 'MCP-Protocol-Version: 2026-07-28'
-  - 'Mcp-Method: tools/call'
-  - 'Mcp-Name: search_orders'
-  - 'apikey: $ALICE_API_KEY'
-body:
-  jsonrpc: '2.0'
-  id: 2
-  method: tools/call
-  params:
-    name: "search_orders"
-    arguments:
-      q: "rice"
-    _meta:
-      'io.modelcontextprotocol/protocolVersion': '2026-07-28'
-      'io.modelcontextprotocol/clientCapabilities': {}
+Calling `delete-pet`, the only tool restricted to `admin`, also succeeds:
+
+<!--vale off-->
+{% validation custom-command %}
+command: |
+  npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
+    http://localhost:8000/petstore-acl \
+    --transport http --method tools/call \
+    --tool-name delete-pet \
+    --tool-arg path_petId=10 \
+    --header "apikey: $ALICE_API_KEY"
+expected:
+  return_code: 0
+  message: "Pet deleted"
+render_output: false
 {% endvalidation %}
-<!-- vale on -->
-{% endcapture %}
+<!--vale on-->
 
-{{ alice_search | indent }}
+The tool result confirms the deletion with `Pet deleted`.
 
-1. Check that Bob (`developer` group) is denied access to `list_users` and `search_orders`:
+### Bob can read, but not delete
 
-{% capture bob_list %}
-<!-- vale off -->
-{% validation request-check %}
-url: /mcp/
-method: POST
-status_code: 200
-headers:
-  - 'Content-Type: application/json'
-  - 'Accept: application/json, text/event-stream'
-  - 'MCP-Protocol-Version: 2026-07-28'
-  - 'Mcp-Method: tools/list'
-  - 'apikey: $BOB_API_KEY'
-display_headers: true
-body:
-  jsonrpc: '2.0'
-  id: 1
-  method: tools/list
-  params:
-    _meta:
-      'io.modelcontextprotocol/protocolVersion': '2026-07-28'
-      'io.modelcontextprotocol/clientCapabilities': {}
+Bob is in `support`, which is on the `deny` list for `delete-pet`. Tool discovery filters that tool out, so he sees only four:
+
+<!--vale off-->
+{% validation custom-command %}
+command: |
+  npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
+    http://localhost:8000/petstore-acl \
+    --transport http --method tools/list \
+    --header "apikey: $BOB_API_KEY" | jq -r '.tools[].name' | sort
+expected:
+  return_code: 0
+  message: |
+    get-inventory
+    get-order-by-id
+    get-pet-by-id
+    get-pets-by-status
+render_output: false
 {% endvalidation %}
-<!-- vale on -->
-{% endcapture %}
+<!--vale on-->
 
-{{ bob_list | indent }}
+You should see the following output:
 
-   The response only lists `get_user`, `list_orders`, and `list_orders_for_user`. Calling `list_users` directly confirms the same rule:
+```text
+get-inventory
+get-order-by-id
+get-pet-by-id
+get-pets-by-status
+```
+{:.no-copy-code}
 
-{% capture bob_call %}
-<!-- vale off -->
-{% validation request-check %}
-url: /mcp/
-method: POST
-status_code: 403
-headers:
-  - 'Content-Type: application/json'
-  - 'Accept: application/json, text/event-stream'
-  - 'MCP-Protocol-Version: 2026-07-28'
-  - 'Mcp-Method: tools/call'
-  - 'Mcp-Name: list_users'
-  - 'apikey: $BOB_API_KEY'
-body:
-  jsonrpc: '2.0'
-  id: 2
-  method: tools/call
-  params:
-    name: "list_users"
-    arguments: {}
-    _meta:
-      'io.modelcontextprotocol/protocolVersion': '2026-07-28'
-      'io.modelcontextprotocol/clientCapabilities': {}
+The tools he can reach work as normal. Calling `get-pet-by-id` returns `Lion 1`:
+
+<!--vale off-->
+{% validation custom-command %}
+command: |
+  npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
+    http://localhost:8000/petstore-acl \
+    --transport http --method tools/call \
+    --tool-name get-pet-by-id \
+    --tool-arg path_petId=7 \
+    --header "apikey: $BOB_API_KEY" | jq -r '.content[0].text' | jq -c '.'
+expected:
+  return_code: 0
+  message: |
+    {"id":7,"category":{"id":4,"name":"Lions"},"name":"Lion 1","photoUrls":["url1","url2"],"tags":[{"id":1,"name":"tag1"},{"id":2,"name":"tag2"}],"status":"available"}
+render_output: false
 {% endvalidation %}
-<!-- vale on -->
-{% endcapture %}
+<!--vale on-->
 
-{{ bob_call | indent }}
+You should see the following response:
 
-   The call returns `HTTP 403 Forbidden`. Bob's `developer` group is on the `deny` list for `list_users` and isn't on the `allow` list for `search_orders`, so both tools are unreachable.
+```text
+{"id":7,"category":{"id":4,"name":"Lions"},"name":"Lion 1","photoUrls":["url1","url2"],"tags":[{"id":1,"name":"tag1"},{"id":2,"name":"tag2"}],"status":"available"}
+```
+{:.no-copy-code}
 
-   {:.info}
-   > A denied call returns an `HTTP 403` with an HTML body, not a JSON-RPC error object. An MCP client that expects every response to be JSON-RPC needs to handle the status code itself.
+Invoking `delete-pet` directly confirms the same rule that filtered it out of his tool list. The call is rejected with `HTTP 403 Forbidden`, which the MCP Inspector CLI reports as a transport error and a non-zero exit code:
 
-1. Check that Carol (`suspended` group) is denied access to every tool. Because she can't reach any tool, her `tools/list` succeeds but returns an empty list:
-
-{% capture carol_list %}
-<!-- vale off -->
-{% validation request-check %}
-url: /mcp/
-method: POST
-status_code: 200
-headers:
-  - 'Content-Type: application/json'
-  - 'Accept: application/json, text/event-stream'
-  - 'MCP-Protocol-Version: 2026-07-28'
-  - 'Mcp-Method: tools/list'
-  - 'apikey: $CAROL_API_KEY'
-display_headers: true
-body:
-  jsonrpc: '2.0'
-  id: 1
-  method: tools/list
-  params:
-    _meta:
-      'io.modelcontextprotocol/protocolVersion': '2026-07-28'
-      'io.modelcontextprotocol/clientCapabilities': {}
+<!--vale off-->
+{% validation custom-command %}
+command: |
+  npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
+    http://localhost:8000/petstore-acl \
+    --transport http --method tools/call \
+    --tool-name delete-pet \
+    --tool-arg path_petId=9 \
+    --header "apikey: $BOB_API_KEY"
+expected:
+  return_code: 1
+render_output: false
 {% endvalidation %}
-<!-- vale on -->
-{% endcapture %}
+<!--vale on-->
 
-{{ carol_list | indent }}
+You should see output similar to the following:
 
-   The response contains an empty `tools` array. Tool discovery and tool invocation are evaluated separately: discovery filters the list down to the tools an AI Consumer can reach, so Carol sees nothing rather than being rejected outright. Invoking a tool directly is what returns `HTTP 403 Forbidden`:
+```text
+Failed to call tool delete-pet: Streamable HTTP error: Error POSTing to endpoint: ...403 Forbidden...
+```
+{:.no-copy-code.wrap}
 
-{% capture carol_call %}
-<!-- vale off -->
-{% validation request-check %}
-url: /mcp/
-method: POST
-status_code: 403
-headers:
-  - 'Content-Type: application/json'
-  - 'Accept: application/json, text/event-stream'
-  - 'MCP-Protocol-Version: 2026-07-28'
-  - 'Mcp-Method: tools/call'
-  - 'Mcp-Name: list_orders'
-  - 'apikey: $CAROL_API_KEY'
-body:
-  jsonrpc: '2.0'
-  id: 1
-  method: tools/call
-  params:
-    name: "list_orders"
-    arguments: {}
-    _meta:
-      'io.modelcontextprotocol/protocolVersion': '2026-07-28'
-      'io.modelcontextprotocol/clientCapabilities': {}
+### Carol is blocked from every tool
+
+Carol is in `suspended`, which no tool allows and `access.default_tool_acls` doesn't include, so her `tools/list` succeeds but returns an empty list:
+
+<!--vale off-->
+{% validation custom-command %}
+command: |
+  npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
+    http://localhost:8000/petstore-acl \
+    --transport http --method tools/list \
+    --header "apikey: $CAROL_API_KEY" | jq '.tools | length'
+expected:
+  return_code: 0
+  message: "0"
+render_output: false
 {% endvalidation %}
-<!-- vale on -->
-{% endcapture %}
+<!--vale on-->
 
-{{ carol_call | indent }}
+Invoking a tool directly is what returns `HTTP 403 Forbidden`:
 
-   Carol belongs to `suspended`, which isn't in `access.default_tool_acls.allow` and has no tool-specific override, so every tool call returns `HTTP 403 Forbidden`.
-
-1. Check that Eason (no group) only has access to `list_users`:
-
-{% capture eason_list %}
-<!-- vale off -->
-{% validation request-check %}
-url: /mcp/
-method: POST
-status_code: 200
-headers:
-  - 'Content-Type: application/json'
-  - 'Accept: application/json, text/event-stream'
-  - 'MCP-Protocol-Version: 2026-07-28'
-  - 'Mcp-Method: tools/list'
-  - 'apikey: $EASON_API_KEY'
-display_headers: true
-body:
-  jsonrpc: '2.0'
-  id: 1
-  method: tools/list
-  params:
-    _meta:
-      'io.modelcontextprotocol/protocolVersion': '2026-07-28'
-      'io.modelcontextprotocol/clientCapabilities': {}
+<!--vale off-->
+{% validation custom-command %}
+command: |
+  npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
+    http://localhost:8000/petstore-acl \
+    --transport http --method tools/call \
+    --tool-name get-inventory \
+    --header "apikey: $CAROL_API_KEY"
+expected:
+  return_code: 1
+render_output: false
 {% endvalidation %}
-<!-- vale on -->
-{% endcapture %}
+<!--vale on-->
 
-{{ eason_list | indent }}
+### Eason only has access to the pet catalogue
 
-   The response lists only `list_users`. Eason belongs to no AI Consumer Group, but `list_users`' own `access.acls.allow` names him directly, alongside `admin`. Every other tool falls back to `access.default_tool_acls`, which doesn't include him.
+Eason belongs to no AI Consumer Group, but the `get-pets-by-status` tool's own `access.acls.allow` names him directly, alongside `admin` and `support`. Every other tool falls back to `access.default_tool_acls`, which doesn't include him, so he sees a single tool:
+
+<!--vale off-->
+{% validation custom-command %}
+command: |
+  npx -y @modelcontextprotocol/inspector@0.22.0 --cli \
+    http://localhost:8000/petstore-acl \
+    --transport http --method tools/list \
+    --header "apikey: $EASON_API_KEY" | jq -r '.tools[].name' | sort
+expected:
+  return_code: 0
+  message: |
+    get-pets-by-status
+render_output: false
+{% endvalidation %}
+<!--vale on-->
+
+You should see the following output:
+
+```text
+get-pets-by-status
+```
+{:.no-copy-code}
+
+This is how an individual AI Consumer can be granted an exception without creating an AI Consumer Group for them, and why a tool ACL has to name every subject it allows: `get-pets-by-status` lists `admin` explicitly, because its own ACL replaced `access.default_tool_acls` rather than extending it.
