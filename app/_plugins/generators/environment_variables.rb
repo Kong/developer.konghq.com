@@ -7,7 +7,6 @@ module Jekyll
     def generate(site)
       site.config['git_branch'] = ENV['HEAD'] || 'main'
       site.config['ENABLE_KAPA_AI'] = ENV['ENABLE_KAPA_AI']
-      site.config['ENABLE_ADOBE'] = ENV['ENABLE_ADOBE']
       site.config['ENABLE_ALGOLIA'] = enable_algolia
     end
 
