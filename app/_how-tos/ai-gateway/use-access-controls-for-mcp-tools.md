@@ -458,10 +458,6 @@ ai_gateway_mcp_servers:
 {:.info}
 > `suspended` has no per-tool ACL entry anywhere, so Carol falls through to `access.default_tool_acls`, which only allows `admin`. This blocks her from every tool without needing an explicit `deny`.
 
-`access.acls` is the server-level gate, evaluated before any tool ACL. Every AI Consumer passes it here: an empty `allow` list means no server-level rule is configured, so access is decided entirely by `access.default_tool_acls` and the per-tool ACLs. Populate `access.acls` when you want to block an AI Consumer from the AI MCP Server as a whole, rather than from individual tools.
-
-Because this is a `conversion-listener`, {{site.ai_gateway}} builds each tool's input schema from its `parameters` list, prefixing every parameter name with its `in` location. The `status` query parameter is exposed to MCP clients as `query_status`, and the `petId` and `orderId` path parameters as `path_petId` and `path_orderId`.
-
 ## Validate
 
 Validate the ACL rules with the [MCP Inspector CLI](https://modelcontextprotocol.io/docs/tools/inspector#cli), passing each AI Consumer's API key in the `apikey` header. The set of tools each AI Consumer can discover and call reflects their group membership.
