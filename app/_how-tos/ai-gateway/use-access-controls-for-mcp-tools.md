@@ -61,7 +61,7 @@ faqs:
       An ACL denial is enforced on the route, before the request is dispatched as an MCP RPC, so {{site.ai_gateway}} returns a plain `HTTP 403 Forbidden` response rather than a JSON-RPC error object. The MCP Inspector CLI surfaces this as a `Streamable HTTP error` and exits with a non-zero status. An MCP client that assumes every response is JSON-RPC needs to handle the status code itself.
   - q: Why does `tools/list` succeed for a blocked AI Consumer instead of failing?
     a: |
-      Tool discovery and tool invocation are evaluated separately. Discovery filters the list down to the tools the AI Consumer is allowed to reach, so a fully blocked AI Consumer gets an `HTTP 200` response with an empty `tools` array instead of an outright rejection. Invoking a tool directly is what returns `HTTP 403 Forbidden`.
+      Tool discovery and tool invocation are evaluated separately. Discovery filters the list down to the tools the AI Consumer is allowed to reach, so a fully blocked AI Consumer gets an `HTTP 200` response with an empty `tools` array instead of an outright rejection. Invoking a tool directly returns `HTTP 403 Forbidden`.
   - q: Why does a per-tool ACL have to repeat groups that `access.default_tool_acls` already allows?
     a: |
       A per-tool ACL replaces the default for that tool, it doesn't merge with it. When a tool defines its own `access.acls`, {{site.ai_gateway}} ignores `access.default_tool_acls` for that tool entirely, so the tool's `allow` list must name every subject that should reach it. See [How default and per-tool ACLs work](/ai-gateway/entities/ai-mcp-server/#how-default-and-per-tool-acls-work).
@@ -82,12 +82,12 @@ cleanup:
 
 ## Create AI Consumer Groups for each access tier
 
-Configure [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) that reflect access levels. These groups govern MCP tool permissions:
+Configure three different [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) that reflect access levels:
 
-- `admin`: full access, including destructive tools
-- `support`: read-only access to pet and store data
-- `suspended`: blocked from MCP tools
-
+- `admin`: Full access, including destructive tools
+- `support`: Read-only access to pet and store data
+- `suspended`: Blocked from MCP tools
+These groups govern MCP tool permissions.
 {% entity_examples %}
 ai_gateway_consumer_groups:
   - ref: admin
@@ -109,7 +109,7 @@ ai_gateway_consumer_groups:
 
 ## Create AI Consumers
 
-1. Configure individual AI Consumers and add them to their groups. Each one inherits the ACL rules of its group, and Eason, who belongs to no group, is only reachable through the tool-level ACLs you'll set in the next section:
+1. Configure individual [AI Consumers](/ai-gateway/entities/ai-consumer/) and add them to their groups. Each one inherits the ACL rules of its group, and Eason, who belongs to no group, is only reachable through the tool-level ACLs you'll set in the next section:
 
 {% capture consumers %}
 {% entity_examples %}
@@ -165,6 +165,9 @@ ai_gateway_consumer_groups:
 
 {{ consumers | indent }}
 
+   {:.warning}
+   > **Consumer credentials for production environments:** In a production environment, we recommend using OpenID Connect with consumer credentials instead of key auth to authenticate human users. For a complete tutorial, see [Identify AI Consumers on AI Model traffic with {{site.identity}}](/ai-gateway/identify-ai-consumers-with-kong-identity/).
+
 1. Export each AI Consumer's ID as an environment variable using `kongctl get`. The credential requests that follow identify each consumer by ID, not by name:
 
    ```bash
@@ -200,6 +203,8 @@ capture:
 {% endcapture %}
 
 {{ alice_credential | indent }}
+    {:.warning}
+    > If this fails with a `405` error, log in with `kongctl login` and export the AI Consumer IDs again.
 
 1. Create an API key credential for Bob:
 
@@ -330,7 +335,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-Apply the following configuration to configure:
+Apply the following configuration:
 * A `key-auth` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) so each AI Consumer presents their key in the `apikey` header
 * The AI MCP Server, its converted Petstore tools, and their ACL rules
 
@@ -456,7 +461,7 @@ ai_gateway_mcp_servers:
 {% endentity_examples %}
 
 {:.info}
-> `suspended` has no per-tool ACL entry anywhere, so Carol falls through to `access.default_tool_acls`, which only allows `admin`. This blocks her from every tool without needing an explicit `deny`.
+> `suspended` has no per-tool ACL entry anywhere, so Carol falls through to `access.default_tool_acls`, which only allows `admin`. This blocks Carol from every tool without needing an explicit `deny`.
 
 ## Validate
 
@@ -464,7 +469,7 @@ Validate the ACL rules with the [MCP Inspector CLI](https://modelcontextprotocol
 
 ### Alice sees and can call every tool
 
-Alice is in `admin`, which `access.default_tool_acls` allows and every tool's `allow` list names, so she discovers all five tools:
+Alice is in `admin`, which `access.default_tool_acls` allows and every tool's `allow` list names, so Alice discovers all five tools:
 
 <!--vale off-->
 {% validation custom-command %}
@@ -518,7 +523,7 @@ The tool result confirms the deletion with `Pet deleted`.
 
 ### Bob can read, but not delete
 
-Bob is in `support`, which is on the `deny` list for `delete-pet`. Tool discovery filters that tool out, so he sees only four:
+Bob is in `support`, which is on the `deny` list for `delete-pet`. Tool discovery filters that tool out, so Bob only sees four:
 
 <!--vale off-->
 {% validation custom-command %}
@@ -548,7 +553,7 @@ get-pets-by-status
 ```
 {:.no-copy-code}
 
-The tools he can reach work as normal. Calling `get-pet-by-id` returns `Lion 1`:
+The tools Bob can reach work as normal. Calling `get-pet-by-id` returns `Lion 1`:
 
 <!--vale off-->
 {% validation custom-command %}
@@ -600,7 +605,7 @@ Failed to call tool delete-pet: Streamable HTTP error: Error POSTing to endpoint
 
 ### Carol is blocked from every tool
 
-Carol is in `suspended`, which no tool allows and `access.default_tool_acls` doesn't include, so her `tools/list` succeeds but returns an empty list:
+Carol is in `suspended`, which no tool allows and `access.default_tool_acls` doesn't include, so Carol's `tools/list` succeeds but returns an empty list:
 
 <!--vale off-->
 {% validation custom-command %}
@@ -616,7 +621,7 @@ render_output: false
 {% endvalidation %}
 <!--vale on-->
 
-Invoking a tool directly is what returns `HTTP 403 Forbidden`:
+Invoking a tool directly returns `HTTP 403 Forbidden`:
 
 <!--vale off-->
 {% validation custom-command %}
@@ -641,7 +646,7 @@ Failed to call tool delete-pet: Streamable HTTP error: Error POSTing to endpoint
 
 ### Eason only has access to the pet catalogue
 
-Eason belongs to no AI Consumer Group, but the `get-pets-by-status` tool's own `access.acls.allow` names him directly, alongside `admin` and `support`. Every other tool falls back to `access.default_tool_acls`, which doesn't include him, so he sees a single tool:
+Eason belongs to no AI Consumer Group, but the `get-pets-by-status` tool's own `access.acls.allow` names Eason directly, alongside `admin` and `support`. Every other tool falls back to `access.default_tool_acls`, which doesn't include them, so Eason sees a single tool:
 
 <!--vale off-->
 {% validation custom-command %}

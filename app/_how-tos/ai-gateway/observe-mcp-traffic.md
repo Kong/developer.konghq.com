@@ -53,10 +53,6 @@ tldr:
 tools:
   - kongctl
 
-prereqs:
-  inline:
-    - title: Petstore API
-      include_content: prereqs/third-party/swagger-petstore
 
 cleanup:
   inline:
@@ -67,7 +63,7 @@ cleanup:
       icon_url: '/assets/icons/ai-gateway.svg'
 
 faqs:
-  - q: Why does a denied call have no `rpc` entry?
+  - q: Why doesn't a denied call have a `rpc` entry?
     a: |
       The ACL check runs before the request is dispatched as an RPC, so a denied call never becomes one. Only the `ai.mcp.audit` entry records it. That also means `rpc` latency and size data only ever covers calls that reached the upstream MCP server.
   - q: Why does a single tool call write several log entries?
@@ -208,10 +204,11 @@ ai_gateway_mcp_servers:
             schema:
               type: integer
 {% endentity_examples %}
+{:.collapsible}
 
 ## Generate MCP traffic
 
-Call the AI MCP Server as two different AI Consumers, using the [MCP Inspector CLI](https://modelcontextprotocol.io/docs/tools/inspector#cli) and passing each one's API key in the `apikey` header.
+Call the AI MCP Server as two different AI Consumers using the [MCP Inspector CLI](https://modelcontextprotocol.io/docs/tools/inspector#cli) and passing each one's API key in the `apikey` header.
 
 1. Alice, in `admin`, successfully calls `get-pet-by-id`:
 
@@ -259,7 +256,7 @@ render_output: false
 
 ## Validate the log entries
 
-Each line in `/tmp/mcp.json` is a complete File Log entry, and MCP activity sits in an `ai.mcp` object alongside the standard `request`, `response`, and `consumer` fields.
+Each line in `/tmp/mcp.json` is a complete File Log entry, and MCP activity is in an `ai.mcp` object alongside the standard `request`, `response`, and `consumer` fields.
 
 Read the log from inside your {{site.ai_gateway}} Docker container. Filtering to entries that carry an `audit` array narrows the output to the ACL decisions, skipping the `initialize` and `notifications/initialized` handshake requests that each MCP Inspector CLI invocation also generates:
 
