@@ -1,9 +1,9 @@
 openapi: 3.0.3
 info:
   title: Konnect Sliver
-  version: 1.5.3
-  x-oas-source: kong/platform-api@63be650f859ba5013134edfa85692c891d2001c5
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/63be650f859ba5013134edfa85692c891d2001c5'
+  version: 1.7.1
+  x-oas-source: kong/platform-api@9c7686a9d1631951a45739cfab8ac570b6e0d06f
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9c7686a9d1631951a45739cfab8ac570b6e0d06f'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -881,6 +881,37 @@ components:
       type: string
       format: uri
       example: 'https://example.com'
+    DcrDefaultAccessTokenDuration:
+      description: 'The default access token duration, in seconds, applied to DCR clients registered against this auth server'
+      type: integer
+      default: 300
+      maximum: 2592000
+      minimum: 60
+    UpdateDcrDefaultAccessTokenDuration:
+      description: 'The default access token duration, in seconds, applied to DCR clients registered against this auth server'
+      type: integer
+      maximum: 2592000
+      minimum: 60
+    DcrSettings:
+      description: Dynamic Client Registration settings for the auth server
+      type: object
+      properties:
+        default_access_token_duration:
+          $ref: '#/components/schemas/DcrDefaultAccessTokenDuration'
+      required:
+        - default_access_token_duration
+    UpdateDcrSettings:
+      description: Dynamic Client Registration settings for the auth server
+      type: object
+      properties:
+        default_access_token_duration:
+          $ref: '#/components/schemas/UpdateDcrDefaultAccessTokenDuration'
+    CreateDcrSettings:
+      description: Dynamic Client Registration settings for the auth server. Both fields are optional; an omitted field falls back to its default.
+      type: object
+      properties:
+        default_access_token_duration:
+          $ref: '#/components/schemas/DcrDefaultAccessTokenDuration'
     AuthServer:
       type: object
       properties:
@@ -915,6 +946,8 @@ components:
           $ref: '#/components/schemas/UpdatedAt'
         trusted_origins:
           $ref: '#/components/schemas/TrustedOrigins'
+        dcr:
+          $ref: '#/components/schemas/DcrSettings'
       required:
         - id
         - name
@@ -1233,48 +1266,6 @@ components:
       format: date-time
       example: '2022-11-04T20:10:06.927Z'
       readOnly: true
-    BaseError:
-      description: standard error
-      type: object
-      properties:
-        status:
-          description: |
-            The HTTP status code of the error. Useful when passing the response
-            body to child properties in a frontend UI. Must be returned as an integer.
-          type: integer
-          readOnly: true
-        title:
-          description: |
-            A short, human-readable summary of the problem. It should not
-            change between occurences of a problem, except for localization.
-            Should be provided as "Sentence case" for direct use in the UI.
-          type: string
-          readOnly: true
-        type:
-          description: The error type.
-          type: string
-          readOnly: true
-        instance:
-          description: |
-            Used to return the correlation ID back to the user, in the format
-            kong:trace:<correlation_id>. This helps us find the relevant logs
-            when a customer reports an issue.
-          type: string
-          readOnly: true
-        detail:
-          description: |
-            A human readable explanation specific to this occurence of the problem.
-            This field may contain request/entity data to help the user understand
-            what went wrong. Enclose variable values in square brackets. Should be
-            provided as "Sentence case" for direct use in the UI.
-          type: string
-          readOnly: true
-      required:
-        - status
-        - title
-        - instance
-        - detail
-      title: Error
     InvalidRules:
       description: invalid parameters rules
       type: string
@@ -1411,7 +1402,8 @@ components:
           readOnly: true
         choices:
           type: array
-          items: {}
+          items:
+            type: string
           minItems: 1
           nullable: false
           readOnly: true
@@ -1445,7 +1437,8 @@ components:
           readOnly: true
         dependents:
           type: array
-          items: {}
+          items:
+            type: string
           nullable: true
           readOnly: true
           uniqueItems: true
@@ -1472,44 +1465,144 @@ components:
       nullable: false
       uniqueItems: true
     BadRequestError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          required:
-            - invalid_parameters
-          properties:
-            invalid_parameters:
-              $ref: '#/components/schemas/InvalidParameters'
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+        invalid_parameters:
+          $ref: '#/components/schemas/InvalidParameters'
+      required:
+        - status
+        - title
+        - instance
+        - detail
+        - invalid_parameters
+      title: Error
     NotFoundError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 404
-            title:
-              example: Not Found
-            type:
-              example: 'https://httpstatuses.com/404'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Not found
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          example: 404
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Not Found
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          example: 'https://httpstatuses.com/404'
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          example: 'kong:trace:1234567890'
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Not found
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
     ConflictError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 409
-            title:
-              example: Conflict
-            type:
-              example: 'https://httpstatuses.com/409'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Conflict
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          example: 409
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Conflict
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          example: 'https://httpstatuses.com/409'
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          example: 'kong:trace:1234567890'
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Conflict
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
     SortQuery:
       description: |
         The `asc` suffix is optional as the default sort order is ascending.
@@ -1599,20 +1692,52 @@ components:
       x-examples:
         example-1: true
     ForbiddenError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 403
-            title:
-              example: Forbidden
-            type:
-              example: 'https://httpstatuses.com/403'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Forbidden
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          example: 403
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Forbidden
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          example: 'https://httpstatuses.com/403'
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          example: 'kong:trace:1234567890'
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Forbidden
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
   examples:
     ClientSecretList:
       value:
@@ -2010,6 +2135,8 @@ components:
                 $ref: '#/components/schemas/Labels'
               trusted_origins:
                 $ref: '#/components/schemas/TrustedOrigins'
+              dcr:
+                $ref: '#/components/schemas/CreateDcrSettings'
             required:
               - name
               - audience
@@ -2036,6 +2163,8 @@ components:
                 $ref: '#/components/schemas/LabelsUpdate'
               trusted_origins:
                 $ref: '#/components/schemas/TrustedOrigins'
+              dcr:
+                $ref: '#/components/schemas/UpdateDcrSettings'
           examples:
             AuthServer:
               $ref: '#/components/examples/UpdateAuthServer'
