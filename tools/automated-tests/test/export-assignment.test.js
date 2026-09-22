@@ -73,26 +73,44 @@ test("wrapper keeps multiline continuation command intact and exits with its sta
   --pat "$KONNECT_TOKEN")"`;
   const wrapped = buildPersistCommand(cmd, "CONSUMER_ID");
   assert.ok(wrapped.includes(cmd), "multiline command must be embedded verbatim");
-  assert.match(wrapped, /exit "\$__at_status"/);
+  assert.match(wrapped, /exit "\$__doc_cmd_status"/);
+});
+
+test("wrapper produces the exact expected script for a single-line command", () => {
+  const cmd = 'export TOKEN="$(curl -s http://x)"';
+  assert.equal(
+    buildPersistCommand(cmd, "TOKEN"),
+    [
+      cmd,
+      "__doc_cmd_status=$?",
+      'if [ "$__doc_cmd_status" -eq 0 ]; then',
+      '  echo "export TOKEN_BASE64=\\"$(printf %s "$TOKEN" | base64 -w0)\\"" >> /env-vars.sh',
+      "fi",
+      'exit "$__doc_cmd_status"',
+    ].join("\n"),
+  );
 });
 
 test("wrapper bakes the computed value into the env file line", () => {
   const wrapped = buildPersistCommand('export TOKEN="$(curl -s http://x)"', "TOKEN");
-  // The written line must be single-quoted relative to the executing shell so the
-  // value is evaluated once here, not re-evaluated at every getLiveEnv source.
+  // The echo is double-quoted, so the substitution is evaluated once here in the
+  // shell where $TOKEN was just set; the env file receives the literal base64
+  // value and never re-evaluates at getLiveEnv source time.
   assert.match(wrapped, /echo "export TOKEN_BASE64=\\\x22\$\(printf %s "\$TOKEN" \| base64 -w0\)\\\x22"/);
 });
 
 test("executeDocCommand wraps assignment commands for persistence", async () => {
   const calls = [];
-  const stub = async (container, command) => {
-    calls.push(command);
+  const stub = async (container, command, displayCmd) => {
+    calls.push([command, displayCmd]);
     return { exitCode: 0, output: "" };
   };
-  await executeDocCommand({}, 'export FOO="$(printf abc123)"', stub);
+  const cmd = 'export FOO="$(printf abc123)"';
+  await executeDocCommand({}, cmd, stub);
   assert.equal(calls.length, 1);
-  assert.match(calls[0], /FOO_BASE64/);
-  assert.match(calls[0], />> \/env-vars\.sh/);
+  assert.match(calls[0][0], /FOO_BASE64/);
+  assert.match(calls[0][0], />> \/env-vars\.sh/);
+  assert.equal(calls[0][1], cmd, "failures must report the original doc command");
 });
 
 test("executeDocCommand passes plain commands through untouched", async () => {
