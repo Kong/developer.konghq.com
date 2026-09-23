@@ -72,7 +72,7 @@ Use [`config.policy`](./reference/#schema--config-policy) to choose how counters
 
 {% include_cached md/ai-gateway/v2/redis-cloud-auth.md %}
 
-{% include_cached md/ai-gateway/v2/redis-cloud-providers.md %}
+{% include_cached md/ai-gateway/v2/redis-cloud-providers.md name=page.name %}
 
 ### Fallback from Redis
 
