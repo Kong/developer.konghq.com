@@ -145,7 +145,7 @@ You can create a Local Vault project when you create a new project in Insomnia a
 
 ## Scratch pad
 
-Scratch pad is a storage option that allows all project data to be stored locally on your device.
+Scratch pad is a storage option that allows all project data to be stored locally on your device. The Scratch Pad works with API Collections, so each one can hold requests and one OpenAPI spec.
 This option is ideal for users who prefer or require their data to remain off the cloud for privacy or security reasons.
 
 Key features:
@@ -187,12 +187,12 @@ The following diagram shows how data flows when Insomnia is configured with Clou
 {% mermaid %}
 flowchart LR
     subgraph userDesktop [User desktop]
-        A(<b>Insomnia resources</b><br>Design documents<br>Request collections<br>Unit tests)
+        A(<b>Insomnia resources</b><br>API Collections)
         B(<b>Cloud Sync capabilities</b><br>Manage commits<br>Cloud pull/push<br>Cloud branches)
     end 
 
     subgraph unsure [ ]
-        C(<b>Insomnia resources</b><br>Design documents<br>Request collections<br>Unit tests<br>Environments<br>RBAC<br>License)
+        C(<b>Insomnia resources</b><br>API Collections<br>Environments<br>RBAC<br>License)
         D(<b>Cloud Sync capabilities</b><br>Manage commits<br>Git pull/push<br>Git branches)
     end
 
@@ -243,12 +243,12 @@ The following diagram shows how data flows when Insomnia is configured with Git 
 {% mermaid %}
 flowchart LR
     subgraph userDesktop [User desktop]
-        A(<b>Insomnia resources</b><br>Design documents<br>Request collections<br>Unit tests<br>Environments)
+        A(<b>Insomnia resources</b><br>API Collections<br>Environments)
         B(<b>Git capabilities</b><br>Manage commits<br>Git pull/push<br>Git branches)
     end 
 
     subgraph unsure [ ]
-        C(<b>Insomnia resources</b><br>Design documents<br>Request collections<br>Unit tests<br>Environments)
+        C(<b>Insomnia resources</b><br>API Collections<br>Environments)
         D(<b>Git capabilities</b><br>Manage commits<br>Git pull/push<br>Git branches)
     end
 
