@@ -1,6 +1,9 @@
 {% comment %}
-Used in 'AI RAG Injector' 'AI Semantic Cache' 'AI Semantic Prompt Guard' 'AI Semantic Response Guard' 'AI Rate Limiting Advanced' 'Rate Limiting' 'Rate Limiting Advanced'
+Used in 'AI RAG Injector' 'AI Semantic Cache' 'AI Semantic Prompt Guard' 'AI Semantic Response Guard' 'AI Rate Limiting Advanced' 'Rate Limiting' 'Rate Limiting Advanced' 'Response Rate Limiting'
 {% endcomment %}
+
+{% assign vectordb_policies = "AI RAG Injector,AI Semantic Cache,AI Semantic Prompt Guard,AI Semantic Response Guard" | split: "," %}
+{% assign policy_field_policies = "Rate Limiting,Response Rate Limiting" | split: "," %}
 
 {% navtabs "providers" %}
 {% navtab "AWS instance" %}
@@ -29,7 +32,7 @@ You need:
 
 To configure cloud authentication with Redis, add the following parameters to your Policy configuration:
 
-{% if include.name == 'AI RAG Injector' or include.name == 'AI Semantic Cache' or include.name == 'AI Semantic Prompt Guard' or include.name == 'AI Semantic Response Guard' %}
+{% if vectordb_policies contains include.name %}
 ```yaml
 config:
   vectordb:
@@ -45,6 +48,22 @@ config:
         aws_region: $AWS_REGION
         aws_access_key_id: $AWS_ACCESS_KEY_ID
         aws_secret_access_key: $AWS_ACCESS_SECRET_KEY
+```
+{% elsif policy_field_policies contains include.name %}
+```yaml
+config:
+  policy: redis
+  redis:
+    host: $INSTANCE_ADDRESS
+    username: $INSTANCE_USERNAME
+    port: 6379
+    cloud_authentication:
+      auth_provider: aws
+      aws_cache_name: $AWS_CACHE_NAME
+      aws_is_serverless: false
+      aws_region: $AWS_REGION
+      aws_access_key_id: $AWS_ACCESS_KEY_ID
+      aws_secret_access_key: $AWS_ACCESS_SECRET_KEY
 ```
 {% else %}
 ```yaml
@@ -72,6 +91,7 @@ Replace the following with your actual values:
 * `$AWS_ACCESS_KEY_ID`: (Optional) Your AWS access key ID.
 * `$AWS_ACCESS_SECRET_KEY`: (Optional) Your AWS secret access key.
 {% endnavtab %}
+{% unless policy_field_policies contains include.name %}
 {% navtab "AWS cluster" %}
 
 You need:
@@ -98,7 +118,7 @@ You need:
 
 To configure cloud authentication with Redis, add the following parameters to your Policy configuration:
 
-{% if include.name == 'AI RAG Injector' or include.name == 'AI Semantic Cache' or include.name == 'AI Semantic Prompt Guard' or include.name == 'AI Semantic Response Guard' %}
+{% if vectordb_policies contains include.name %}
 ```yaml
 config:
   vectordb:
@@ -145,6 +165,7 @@ Replace the following with your actual values:
 * `$AWS_ACCESS_KEY_ID`: (Optional) Your AWS access key ID.
 * `$AWS_ACCESS_SECRET_KEY`: (Optional) Your AWS secret access key.
 {% endnavtab %}
+{% endunless %}
 {% navtab "Azure instance" %}
 
 You need:
@@ -153,7 +174,7 @@ You need:
 
 To configure cloud authentication with Redis, add the following parameters to your Policy configuration:
 
-{% if include.name == 'AI RAG Injector' or include.name == 'AI Semantic Cache' or include.name == 'AI Semantic Prompt Guard' or include.name == 'AI Semantic Response Guard' %}
+{% if vectordb_policies contains include.name %}
 ```yaml
 config:
   vectordb:
@@ -167,6 +188,20 @@ config:
         azure_client_id: $AZURE_CLIENT_ID
         azure_client_secret: $AZURE_CLIENT_SECRET
         azure_tenant_id: $AZURE_TENANT_ID
+```
+{% elsif policy_field_policies contains include.name %}
+```yaml
+config:
+  policy: redis
+  redis:
+    host: $INSTANCE_ADDRESS
+    username: $INSTANCE_USERNAME
+    port: 10000
+    cloud_authentication:
+      auth_provider: azure
+      azure_client_id: $AZURE_CLIENT_ID
+      azure_client_secret: $AZURE_CLIENT_SECRET
+      azure_tenant_id: $AZURE_TENANT_ID
 ```
 {% else %}
 ```yaml
@@ -192,6 +227,7 @@ Replace the following with your actual values:
 * `$AZURE_TENANT_ID`: (Optional) The tenant ID of the Principal/Identity.
 
 {% endnavtab %}
+{% unless policy_field_policies contains include.name %}
 {% navtab "Azure cluster" %}
 
 You need:
@@ -200,7 +236,7 @@ You need:
 
 To configure cloud authentication with Redis, add the following parameters to your Policy configuration:
 
-{% if include.name == 'AI RAG Injector' or include.name == 'AI Semantic Cache' or include.name == 'AI Semantic Prompt Guard' or include.name == 'AI Semantic Response Guard' %}
+{% if vectordb_policies contains include.name %}
 ```yaml
 config:
   vectordb:
@@ -243,6 +279,7 @@ Replace the following with your actual values:
 * `$AZURE_TENANT_ID`: (Optional) The tenant ID of the Principal/Identity.
 
 {% endnavtab %}
+{% endunless %}
 {% navtab "GCP instance" %}
 
 You need:
@@ -253,7 +290,7 @@ You need:
 
 To configure cloud authentication with Redis, add the following parameters to your Policy configuration:
 
-{% if include.name == 'AI RAG Injector' or include.name == 'AI Semantic Cache' or include.name == 'AI Semantic Prompt Guard' or include.name == 'AI Semantic Response Guard' %}
+{% if vectordb_policies contains include.name %}
 ```yaml
 config:
   vectordb:
@@ -264,6 +301,17 @@ config:
       cloud_authentication:
         auth_provider: gcp
         gcp_service_account_json: $GCP_SERVICE_ACCOUNT
+```
+{% elsif policy_field_policies contains include.name %}
+```yaml
+config:
+  policy: redis
+  redis:
+    host: $INSTANCE_ADDRESS
+    port: 6379
+    cloud_authentication:
+      auth_provider: gcp
+      gcp_service_account_json: $GCP_SERVICE_ACCOUNT
 ```
 {% else %}
 ```yaml
@@ -282,6 +330,7 @@ Replace the following with your actual values:
 * `$INSTANCE_ADDRESS`: The Memorystore instance address.
 * `$GCP_SERVICE_ACCOUNT`: (Optional) The GCP service account JSON.
 {% endnavtab %}
+{% unless policy_field_policies contains include.name %}
 {% navtab "GCP cluster" %}
 
 You need:
@@ -292,7 +341,7 @@ You need:
 
 To configure cloud authentication with Redis, add the following parameters to your Policy configuration:
 
-{% if include.name == 'AI RAG Injector' or include.name == 'AI Semantic Cache' or include.name == 'AI Semantic Prompt Guard' or include.name == 'AI Semantic Response Guard' %}
+{% if vectordb_policies contains include.name %}
 ```yaml
 config:
   vectordb:
@@ -325,4 +374,5 @@ Replace the following with your actual values:
 * `$CLUSTER_ADDRESS`: The Memorystore cluster address.
 * `$GCP_SERVICE_ACCOUNT`: The GCP service account JSON.
 {% endnavtab %}
+{% endunless %}
 {% endnavtabs %}
