@@ -2,7 +2,7 @@
 title: "Deploy an MCP server with {{site.context_mesh}} and {{site.operator_product_name}}"
 permalink: /context-mesh/get-started/
 content_type: how_to
-description: "Deploy a Context Mesh-backed MCP server from the Konnect UI onto an Operator-managed data plane"
+description: "Deploy a Context Mesh-backed MCP server with the Konnect API onto an Operator-managed data plane"
 breadcrumbs:
   - /context-mesh/
 
@@ -24,10 +24,11 @@ tags:
 
 tldr:
   q: "How do I deploy the OpenWeather {{site.context_mesh}} MCP server?"
-  a: "Install {{site.operator_product_name}} {{site.data.operator_latest.release}} with the `mcp-server` feature gate, create a Konnect-managed control plane and data plane, then create the MCP server from the Konnect UI."
+  a: "Install {{site.operator_product_name}} {{site.data.operator_latest.release}} with the `mcp-server` feature gate, create a Konnect-managed control plane and data plane, then create and deploy the MCP server with the Konnect API."
 
 tools:
   - operator
+  - konnect-api
 
 prereqs:
   skip_product: true
@@ -47,7 +48,7 @@ prereqs:
     - title: Kubernetes cluster
       position: before
       content: |
-        Set up a local Kubernetes cluster:
+        Set up a local Kubernetes cluster. This example uses [minikube](https://minikube.sigs.k8s.io/docs/start/?arch=%2Fmacos%2Farm64%2Fstable%2Fbinary+download):
 
         ```bash
         minikube start
@@ -86,7 +87,21 @@ cleanup:
   inline:
     - title: Delete the MCP server
       content: |
-        In the {{site.konnect_short_name}} UI, open the MCP server and delete it. This disassociates the MCP server from the control plane.
+        Undeploy the MCP server by deleting its control plane mapping, then delete the MCP server and its source:
+
+        ```sh
+        curl -X DELETE "https://us.api.konghq.com/v1/context-interfaces/$MCP_SERVER_ID/control-plane-mappings/$CP_MAPPING_ID" \
+             --no-progress-meter --fail-with-body \
+             -H "Authorization: Bearer $KONNECT_TOKEN"
+
+        curl -X DELETE "https://us.api.konghq.com/v1/context-interfaces/$MCP_SERVER_ID" \
+             --no-progress-meter --fail-with-body \
+             -H "Authorization: Bearer $KONNECT_TOKEN"
+
+        curl -X DELETE "https://us.api.konghq.com/v1/context-sources/$SOURCE_ID" \
+             --no-progress-meter --fail-with-body \
+             -H "Authorization: Bearer $KONNECT_TOKEN"
+        ```
       icon_url: /assets/icons/gateway.svg
     - title: Delete the control plane and data plane
       content: |
@@ -219,22 +234,171 @@ EOF
 kubectl wait --timeout=3m dataplane dataplane -n default --for=condition=Ready
 ```
 
-## Create the OpenWeather {{site.context_mesh}} server
+## Get the control plane ID
 
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.context_mesh}}**.
-1. In the {{site.context_mesh}} sidebar, click **Sources**.
-1. In **New source**, select **API**.
-1. Click the **Upload new** tab.
-1. Upload `openweathermap.json`.
-1. Click **Add Source**.
-1. In the {{site.context_mesh}} sidebar, click **MCP Servers**.
-1. Click **New MCP server**.
-1. In **Sources**, select **OpenWeatherMap Current Weather API**.
-1. In the **Name** field, enter `openweather-service`.
-1. Click **Create server**.
-1. In **Deploy**, select the `context-mesh-demo` control plane and **Basic Mode**.
-1. Click **Deploy and finish**.
-1. Wait for the server status to become **Healthy**.
+You attach the MCP server to the `context-mesh-demo` control plane that {{site.operator_product_name}} created, which the API references by ID:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/control-planes?filter%5Bname%5D%5Beq%5D=context-mesh-demo
+status_code: 200
+method: GET
+extract_body:
+  - name: data[0].id
+    variable: CONTROL_PLANE_ID
+capture:
+  - variable: CONTROL_PLANE_ID
+    jq: ".data[0].id"
+{% endkonnect_api_request %}
+<!--vale on-->
+
+## Add the OpenWeather API as a source
+
+A source holds the OpenAPI specification that {{site.context_mesh}} generates the MCP server from.
+The specification is sent as a single JSON string, so build the request body from the file you downloaded:
+
+<!--vale off-->
+{% validation custom-command %}
+command: |
+  jq -n --rawfile spec openweathermap.json '{
+    "name": "openweathermap",
+    "display_name": "OpenWeatherMap Current Weather API",
+    "description": "Current weather data from OpenWeatherMap",
+    "labels": {},
+    "type": "api",
+    "source": {
+      "type": "raw",
+      "config": {"spec": $spec}
+    }
+  }' > source.json
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
+<!--vale on-->
+
+Create the source:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/context-sources
+status_code: 201
+method: POST
+body_cmd: $(cat source.json)
+extract_body:
+  - name: id
+    variable: SOURCE_ID
+capture:
+  - variable: SOURCE_ID
+    jq: ".id"
+{% endkonnect_api_request %}
+<!--vale on-->
+
+The `name` must be unique within your organization and can only contain lowercase letters, digits, periods, and hyphens.
+
+## Create the MCP server
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/context-interfaces
+status_code: 201
+method: POST
+body:
+    name: openweather-service
+    display_name: OpenWeather Service
+    description: Code Mode MCP server for the OpenWeatherMap API
+    labels: {}
+extract_body:
+  - name: id
+    variable: MCP_SERVER_ID
+capture:
+  - variable: MCP_SERVER_ID
+    jq: ".id"
+{% endkonnect_api_request %}
+<!--vale on-->
+
+The MCP server has no sources yet. Map the OpenWeather source to it:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/context-interfaces/$MCP_SERVER_ID/context-source-mappings
+status_code: 201
+method: POST
+body:
+    context_source_id: $SOURCE_ID
+extract_body:
+  - name: id
+    variable: SOURCE_MAPPING_ID
+capture:
+  - variable: SOURCE_MAPPING_ID
+    jq: ".id"
+{% endkonnect_api_request %}
+<!--vale on-->
+
+To expose more than one API or MCP server through the same MCP server, repeat this call for each source.
+
+## Deploy the MCP server
+
+Mapping the MCP server to a control plane deploys it. Set `mode` to `basic` to let {{site.konnect_short_name}} manage the underlying Kubernetes workload with its defaults:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/context-interfaces/$MCP_SERVER_ID/control-plane-mappings
+status_code: 201
+method: POST
+body:
+    control_plane_id: $CONTROL_PLANE_ID
+    mode: basic
+extract_body:
+  - name: id
+    variable: CP_MAPPING_ID
+capture:
+  - variable: CP_MAPPING_ID
+    jq: ".id"
+{% endkonnect_api_request %}
+<!--vale on-->
+
+## Wait for the MCP server to be healthy
+
+Check the deployment status:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/context-interfaces/$MCP_SERVER_ID/status
+status_code: 200
+method: GET
+{% endkonnect_api_request %}
+<!--vale on-->
+
+The status is one of the following:
+
+{% table %}
+columns:
+  - title: Status
+    key: status
+  - title: Description
+    key: description
+rows:
+  - status: "`pending`"
+    description: No deployment status has been reported yet.
+  - status: "`deploying`"
+    description: A single version is running, and the desired replicas aren't fully ready.
+  - status: "`healthy`"
+    description: A single version is running with no failing pods.
+  - status: "`upgrading`"
+    description: Multiple versions are running with no failing pods.
+  - status: "`unhealthy`"
+    description: One or more pods are failing across any version.
+{% endtable %}
+
+Poll until the status is `healthy`:
+
+```sh
+until [ "$(curl -s "https://us.api.konghq.com/v1/context-interfaces/$MCP_SERVER_ID/status" \
+  -H "Authorization: Bearer $KONNECT_TOKEN" | jq -r '.status')" = "healthy" ]; do
+  sleep 5
+done
+```
 
 The MCP runtime is now exposed at `/mcp/openweather-service`.
 
@@ -254,6 +418,14 @@ Start Claude Code:
 ```sh
 claude
 ```
+
+Verify that the local `context-mesh-weather` MCP is in your list:
+
+```sh
+/mcp
+```
+
+If the MCP appears as `disabled`, select it and enable it. You might need to input your sudo password on [the minikube tunnel terminal for this step](#kubernetes-cluster).
 
 Try a prompt in Claude Code:
 
