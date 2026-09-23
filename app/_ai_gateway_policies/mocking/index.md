@@ -27,57 +27,21 @@ faqs:
     a: "No. A request with `stream: true` still receives the single non-streaming JSON response from the spec, sent with a `Content-Type` of `application/json` rather than as server-sent events."
 ---
 
-The Mocking Policy answers requests from an OpenAPI Specification (OAS) instead of proxying them, and supports both Swagger 2.0 and OpenAPI 3.0. When it matches an incoming request against a path and method in the spec you give it, it returns one of that operation's response examples and {{site.ai_gateway}} never contacts the upstream [AI Provider](/ai-gateway/entities/ai-provider/).
+The Mocking Policy allows you to provide mock endpoints to test APIs in development against your existing services and supports both Swagger 2.0 and OpenAPI 3.0. When it matches an incoming request against a path and method in the provided [`api_specification`](/ai-gateway/policies/mocking/reference/#schema--config-api-specification), it returns response examples and {{site.ai_gateway}} never contacts the upstream [AI Provider](/ai-gateway/entities/ai-provider/).
 
-In an {{site.ai_gateway}} context, this lets you exercise a gateway's configuration against realistic responses without spending tokens. Attach the Policy to an [AI Model](/ai-gateway/entities/ai-model/) and give it a spec describing that AI Model's own route, for example `POST /v1/chat/completions` with a provider-shaped response example. Every call to the AI Model then returns your example, so you can drive rate limits, metering, logging, and other AI Policies without a real AI Provider behind them.
+This lets you test an {{site.ai_gateway}}'s configuration against realistic responses without spending tokens. Attach the Policy to an [AI Model](/ai-gateway/entities/ai-model/) and give it an API specification describing that AI Model's route, for example `POST /v1/chat/completions` with a provider-shaped response example. This allows you to test rate limits, metering, logging, and other AI Policies without a real AI Provider behind them.
 
 Mocked responses carry an `X-Kong-Mocking-Plugin: true` response header, so a client can tell a mock from a real completion.
-
-{:.warning}
-> The Mocking Policy intercepts the request a client sends to {{site.ai_gateway}}, not the call {{site.ai_gateway}} makes upstream. It can't stand in for the REST API that an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) fronts: attached to an AI MCP Server, it short-circuits the JSON-RPC endpoint itself, and MCP clients fail on `tools/list` because a JSON-RPC `POST` doesn't match any path in the spec.
-
-<!-- TODO: link a how-to here once one exists. Nothing under app/_how-tos/ai-gateway/ covers
-     mocking yet. -->
-
-## Use cases
-
-<!--vale off-->
-{% table %}
-columns:
-  - title: Use case
-    key: usecase
-  - title: Description
-    key: description
-rows:
-  - usecase: Exercise gateway config without spending tokens
-    description: |
-      Return canned completions in place of real AI Provider calls while you test
-      rate limiting, metering, logging, and guardrail AI Policies.
-  - usecase: Unblock client development
-    description: |
-      Give application teams a working endpoint with provider-shaped responses before
-      AI Provider credentials or model access are in place.
-  - usecase: Simulate a slow AI Provider
-    description: |
-      Add a fixed or random delay to mocked responses to see how a client behaves
-      when inference takes seconds rather than milliseconds.
-{% endtable %}
-<!--vale on-->
 
 ## Supported status codes
 
 The Mocking Policy can return `200`, `201`, and `204`.
 
-<!-- TODO: VERIFY the 200/201/204 limit. Carried over from the v1 plugin page; only 200 was
-     exercised in testing, and the schema doesn't state the restriction anywhere.
-     "lowest status code by default" is schema-backed (see config.random_status_code) but also
-     untested. Notes: .idea/mocking-notes.md -->
-
-By default it returns the lowest status code defined for the matched operation. You can restrict the set it's allowed to pick from with [`config.included_status_codes`](./reference/#schema--config-included-status-codes), or have it choose at random from the operation's responses with [`config.random_status_code`](./reference/#schema--config-random-status-code).
+You can restrict the allowed status codes with [`config.included_status_codes`](./reference/#schema--config-included-status-codes), or select them randomly with [`config.random_status_code`](./reference/#schema--config-random-status-code).
 
 ## Load an API specification
 
-{{site.ai_gateway}} 2.0 runs in hybrid mode, so pass the contents of the spec inline in [`config.api_specification`](./reference/#schema--config-api-specification):
+You can pass a specification inline using [`config.api_specification`](./reference/#schema--config-api-specification):
 
 {% entity_example %}
 type: policy
@@ -121,7 +85,11 @@ formats:
   - kongctl
 {% endentity_example %}
 
-Attach this Policy to an [AI Model](/ai-gateway/entities/ai-model/)'s `policies` array. A request to that AI Model's route then returns the example verbatim:
+### Mock responses
+
+If you attach a Mocking Policy to an [AI Model](/ai-gateway/entities/ai-model/)'s `policies` array, a request to that AI Model's route returns the example verbatim. 
+
+For the example above:
 
 ```json
 {
@@ -139,10 +107,7 @@ Attach this Policy to an [AI Model](/ai-gateway/entities/ai-model/)'s `policies`
 }
 ```
 
-Because the example is returned verbatim, whatever you put in it is what downstream AI Policies see. Including a `usage` block gives metering and logging realistic token counts to work with.
-
-{:.warning}
-> Use `config.api_specification`, not `config.api_specification_filename`. The `api_specification_filename` option loads a spec from a database, and {{site.ai_gateway}} has none, so the control plane accepts the configuration but every request to it fails with a `500` and the message `The api_specification_filename is not supported in dbless mode, use api_specification instead`.
+Downstream AI Policies see the mocked response. Including a `usage` block gives metering and logging realistic token counts to work with.
 
 ### Path matching
 
