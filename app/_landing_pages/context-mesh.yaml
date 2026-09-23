@@ -119,6 +119,66 @@ rows:
                     
                     If you're adding one or many APIs to your Code Mode MCP server, you can either upload a OpenAPI Specification (OAS) v3.0 file for each API or add them directly from APIs that you already have in [Catalog](/catalog).                     
 
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Deploying a {{site.context_mesh}} MCP server"
+            blocks:
+              - type: text
+                text: |
+                  To deploy a {{site.context_mesh}} MCP server, configure its [source APIs and MCP servers](#common-usage-patterns), then create the MCP server and map it to a {{site.base_gateway}} control plane.
+                  When you create it, you choose how [{{site.operator_product_name}}](/operator/) manages the underlying Kubernetes workload. Basic mode uses its preconfigured defaults, and advanced mode hands the deployment over to you:
+
+                  {% feature_table %}
+                  item_title: Capability
+                  columns:
+                    - title: Basic mode (default)
+                      key: basic
+                    - title: |
+                        Advanced mode {% assign tp = site.data.stages.tech_preview %}{% include badge.html url=tp.url text=tp.text css_class="bg-semantic-yellow-secondary text-semantic-yellow-primary" %}
+                      key: advanced
+
+                  features:
+                    - title: Initial deployment created for you
+                      basic: true
+                      advanced: true
+                    - title: Deployment managed by {{site.konnect_short_name}} after creation
+                      basic: true
+                      advanced: false
+                    - title: Managed through the [`MCPServerDataPlane`](/operator/reference/custom-resources/#mcpserverdataplane) custom resource
+                      basic: false
+                      advanced: true
+                    - title: Customize replica count and CPU and memory resources
+                      basic: false
+                      advanced: true
+                    - title: Set custom labels and annotations on the deployment
+                      basic: false
+                      advanced: true
+                    - title: MCP server code managed by {{site.konnect_short_name}}
+                      basic: true
+                      advanced: true
+                  {% endfeature_table %}
+
+                  You can switch an existing MCP server between basic and advanced mode.
+
+                  Either way, {{site.base_gateway}} creates a [Gateway Service](/gateway/entities/service/) entity for your MCP server, named something like `mcpserver-98dd0356`.
+                  This lets you apply [plugins](/plugins/) and other governing strategies to your {{site.context_mesh}} MCP server.
+
+                  For an end-to-end walkthrough, see [Deploy an MCP server with {{site.context_mesh}} and {{site.operator_product_name}}](/context-mesh/get-started/).
+                                  
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "{{site.context_mesh}} limitations"
+            blocks:
+              - type: text
+                text: |
+                  {{site.context_mesh}} MCP servers can only be linked to and proxied with {{site.base_gateway}} control planes that were provisioned with [{{site.operator_product_name}}](/operator/).
+  
   - header:
       text: "Frequently asked questions"
       type: h2
