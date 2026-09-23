@@ -1,0 +1,49 @@
+description: 'Enable the NVIDIA Switchyard AI Routing plugin on a Route alongside AI Proxy Advanced.'
+
+extended_description: |
+  Enable the NVIDIA Switchyard AI Routing plugin (`ai-routing-provider`) on a Route that dynamically
+  dispatches requests between a cost-effective weak tier (`z-ai/glm-5.3`) and a high-capability strong
+  tier (`google/gemini-3.8-flash`).
+
+  The plugin runs in the access phase at priority `775`, ahead of AI Proxy Advanced at `770`.
+  It queries the Switchyard Decision API, validates the returned target against `targets`, and
+  rewrites `body.model` to that target's `model_alias` before AI Proxy Advanced evaluates it.
+
+title: 'Enable NVIDIA Switchyard AI routing'
+
+weight: 900
+
+requirements:
+  - "The NVIDIA Switchyard AI Routing plugin is [installed](/plugins/ai-routing-provider/#install-the-nvidia-switchyard-ai-routing-plugin) on your data planes."
+  - "On {{site.konnect_short_name}}, the plugin schema is uploaded to the control plane."
+  - "A reachable NVIDIA Switchyard Decision API is serving `POST /v1/decision`."
+  - "A Route is configured with the [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin enabled, with `model_alias` targets named `weak` and `strong`."
+
+config:
+  decision_api_url: http://switchyard:4000/v1/decision
+  decision_route: kong-router
+  mode: enforce
+  dispatch: model_alias
+  default_target: weak
+  prompt_disclosure: none
+  timeout_ms: 2000
+  targets:
+    weak:
+      model_alias: weak
+      model: z-ai/glm-5.3
+      provider: openai
+      protocol: openai_chat
+      base_url: https://openrouter.ai/api/v1
+    strong:
+      model_alias: strong
+      model: google/gemini-3.8-flash
+      provider: openai
+      protocol: openai_chat
+      base_url: https://openrouter.ai/api/v1
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
