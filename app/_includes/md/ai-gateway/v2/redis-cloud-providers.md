@@ -3,7 +3,7 @@ Used in 'AI RAG Injector' 'AI Semantic Cache' 'AI Semantic Prompt Guard' 'AI Sem
 {% endcomment %}
 
 {% assign vectordb_policies = "AI RAG Injector,AI Semantic Cache,AI Semantic Prompt Guard,AI Semantic Response Guard" | split: "," %}
-{% assign policy_field_policies = "Response Rate Limiting" | split: "," %}
+{% assign policy_field_policies = "Rate Limiting,Response Rate Limiting" | split: "," %}
 
 {% navtabs "providers" %}
 {% navtab "AWS instance" %}
