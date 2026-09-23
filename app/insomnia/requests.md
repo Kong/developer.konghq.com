@@ -19,7 +19,7 @@ related_resources:
   - text: API Collections
     url: /insomnia/collections/
   - text: Keyboard Shortcuts
-    url: /insomnia/Keyboard-shortcuts/   
+    url: /insomnia/keyboard-shortcuts/   
 
 faqs:
   - q: What type of requests can I send with Insomnia?
