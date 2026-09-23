@@ -44,7 +44,7 @@ faqs:
 
   - q: Why is my passthrough traffic showing no token counts or cost?
     a: |
-      {{site.ai_gateway}} reads token counts only from upstreams it recognizes by URL. Self-hosted and model-agnostic upstreams can serve any model behind an operator-chosen path, so they have no fixed response shape to read from, and token and cost fields stay empty.
+      {{site.ai_gateway}} reads token counts out of the response body using a native adapter for the target's declared `provider` (`anthropic`, `bedrock`, `cohere`, `gemini`, or `huggingface`), falling back to generic OpenAI-shape parsing when there's no adapter or the adapter finds nothing. If your upstream's response matches neither, for example a custom or self-hosted server with its own field names, token and cost fields stay empty.
       Latency, status codes, and byte counts are recorded for every passthrough request either way.
 
   - q: Do `temperature` and `max_tokens` work on a passthrough target?
@@ -71,7 +71,7 @@ You keep everything that doesn't depend on payload shape:
 * Request-count rate limiting
 * Logging and metrics
 
-You give up format normalization and anything that rewrites the request. Content-aware features such as guardrails and token accounting depend on whether {{site.ai_gateway}} [recognizes the upstream](#recognized-upstreams) from its URL. For the full breakdown, see [Policy compatibility](#policy-compatibility).
+You give up format normalization and anything that rewrites the request. Content-aware features such as guardrails and token accounting depend on whether {{site.ai_gateway}} can make sense of your upstream's actual request and response shape. See [Recognized upstreams](#recognized-upstreams) and [Policy compatibility](#policy-compatibility) for the full breakdown.
 
 Passthrough is additive and off until you configure it. Existing formats and AI Models are unaffected.
 
@@ -149,19 +149,13 @@ rows:
 
 ## Recognized upstreams
 
-{{site.ai_gateway}} inspects each target's `upstream_url`, matching on hostname and path suffix, to work out which upstream it's talking to. When it recognizes one, it applies that upstream's built-in field mappings, which is what makes guardrails and token accounting possible on an otherwise unparsed payload. Amazon Bedrock, Gemini, Vertex AI, and Anthropic are recognized this way.
+Token and cost extraction depends on whether {{site.ai_gateway}} can parse the response body, and that depends on the target's declared `provider`, not its `upstream_url`. {{site.ai_gateway}} has a native response adapter for five providers: `anthropic`, `bedrock`, `cohere`, `gemini` (including Vertex AI), and `huggingface`. When a target's `provider` is one of these, {{site.ai_gateway}} tries that adapter's extraction logic first, against both buffered and streaming responses.
 
-Some upstreams can't be identified from a URL, because they host any model behind an operator-chosen path and so have no fixed request or response shape:
+If no adapter matches the target's `provider`, or the adapter finds no usage data, {{site.ai_gateway}} falls back to generic parsing: it looks for a top-level, OpenAI-shaped `usage` object in the JSON response. This can still populate token counts for an OpenAI-compatible self-hosted server, such as vLLM or Ollama returning an OpenAI-shaped `usage` block, but there's no guarantee, since passthrough forwards whatever shape the upstream actually returns.
 
-* Amazon SageMaker
-* vLLM
-* Ollama
-* Llama 2 and other self-hosted servers
-* Custom and preview APIs
+For everything else, for example Amazon SageMaker, Llama 2, and other custom or self-hosted servers whose response matches neither an adapter nor the OpenAI shape, {{site.ai_gateway}} has no way to locate token counts in the payload. Traffic proxies normally, and latency, status codes, byte counts, and AI Consumer identity are all still recorded, but usage data stays empty.
 
-For these, {{site.ai_gateway}} has no way to locate prompt content or token counts in the payload. Traffic proxies normally, and latency, status codes, byte counts, and AI Consumer identity are all still recorded, but guardrail Policies are skipped and usage data is empty. Plan for this before you put a passthrough AI Model in front of an unrecognized upstream, especially if you were relying on guardrails.
-
-<!-- TODO: confirm the full list of upstreams in the provider-path detection registry before publishing, and whether Vertex AI ships token paths separately from Gemini. -->
+Guardrail Policies don't depend on this same mechanism. See [Policy compatibility](#policy-compatibility).
 
 ## Observability in passthrough mode
 
@@ -175,14 +169,21 @@ The log phase still runs, so HTTP Log, File Log, OpenTelemetry, and Prometheus r
 
 ### Token usage and cost
 
-Token counts and cost have to be read out of the response body, so they're available only for a [recognized upstream](#recognized-upstreams). Extraction then works for both buffered and streaming responses. On a streaming response, {{site.ai_gateway}} reads usage from each event as it passes through, including the nested shape Anthropic uses in its `message_start` event, and inflates gzip-encoded streams before reading them.
+Token counts and cost depend on whether {{site.ai_gateway}} can extract usage from the response body, as described in [Recognized upstreams](#recognized-upstreams). Extraction works for both buffered and streaming responses, and inflates gzip-encoded streams before reading them.
+
+Some providers split usage across multiple events instead of sending one self-contained payload:
+
+* Anthropic sends prompt, cache, and completion tokens across separate `message_start` and `message_delta` events, which {{site.ai_gateway}} merges into a single usage record.
+* Amazon Bedrock's `InvokeModelWithResponseStream` API carries the authoritative counts in a base64-encoded `amazon-bedrock-invocationMetrics` field on the final chunk; its `ConverseStream` API sends usage in a dedicated `metadata` event.
+* Cohere also splits usage across streaming events.
+* Gemini and Hugging Face send a self-contained usage shape on every event, so no merging is needed.
 
 Once token counts are available, cost calculation and token-based rate limiting both work from them. The `input_cost` and `output_cost` settings on a target apply only to requests whose token counts {{site.ai_gateway}} could read.
 
-For an unrecognized upstream, token and cost fields stay empty in analytics and logs, and [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) has nothing to meter. Request-count limiting is unaffected.
+Where extraction fails, token and cost fields stay empty in analytics and logs, and [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) has nothing to meter. Request-count limiting is unaffected.
 
 {:.warning}
-> Before you rely on passthrough usage data for billing or quota enforcement, confirm that your upstream is recognized and that token counts appear for real traffic, streaming and buffered.
+> Before you rely on passthrough usage data for billing or quota enforcement, confirm that your target's `provider` has a native adapter, or that its response includes an OpenAI-shaped `usage` object, and that token counts appear for real traffic, streaming and buffered.
 
 ### Streaming detection
 
@@ -232,9 +233,9 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-### Needs a recognized upstream
+### Depends on your upstream's request and response shape
 
-These Policies read prompt or completion content, so they work only when {{site.ai_gateway}} [recognizes the upstream](#recognized-upstreams) and can locate that content. Against an unrecognized upstream they're skipped.
+These Policies read prompt or completion content out of the request or response body. Under passthrough, that's a separate mechanism from the token and cost extraction in [Recognized upstreams](#recognized-upstreams): {{site.ai_gateway}} makes a best-effort attempt to read the prompt from common request shapes, such as an OpenAI-style `messages` or `input` array, and falls back to provider-specific extraction for requests those don't match. Whether a given Policy actually works depends on how closely your upstream's real request and response shapes match what the Policy or that fallback extraction expects, not on a fixed provider list. A Policy that can't locate the content it needs is skipped rather than failing the request.
 
 <!-- vale off -->
 {% table %}
@@ -320,9 +321,9 @@ If you relied on the full raw path reaching your upstream under `preserve`, set 
 
 ### Re-verify guardrails
 
-Plugin behavior under `preserve` was inconsistent. Some plugins passed traffic through silently, AI RAG Injector returned a hard `400`, and AI Semantic Cache bypassed with a warning. Under passthrough, behavior is defined per Policy in [Policy compatibility](#policy-compatibility), and depends on whether {{site.ai_gateway}} [recognizes your upstream](#recognized-upstreams).
+Plugin behavior under `preserve` was inconsistent. Some plugins passed traffic through silently, AI RAG Injector returned a hard `400`, and AI Semantic Cache bypassed with a warning. Under passthrough, behavior is defined per Policy in [Policy compatibility](#policy-compatibility): a guardrail is skipped when it can't locate the content it needs in your upstream's actual request or response shape, and usage data is empty when your target's `provider` has no matching adapter and the response isn't OpenAI-shaped either. See [Recognized upstreams](#recognized-upstreams).
 
-If your `preserve` targets pointed at a self-hosted or model-agnostic upstream, content-reading guardrails are skipped and usage data is empty. If you need either, use a typed capability with a native format instead of passthrough.
+If your `preserve` targets pointed at a self-hosted or model-agnostic upstream, both are plausible: check each guardrail and usage data against real traffic rather than assuming either works. If you need guaranteed guardrail or usage support, use a typed capability with a native format instead of passthrough.
 
 ### Migration checklist
 
@@ -332,8 +333,8 @@ If your `preserve` targets pointed at a self-hosted or model-agnostic upstream, 
 * Verify the path arriving upstream, now that client-path forwarding strips the AI Model's base path.
 * Split any plugin instance that mixed `preserve` with other route types into separate AI Models.
 * Remove any dependency on model aliasing, semantic load balancing, the realtime capability, and generation parameters.
-* Check whether each target's upstream is recognized, and confirm you can accept skipped guardrails and empty usage data where it isn't.
-* Re-verify every guardrail Policy attached to a passthrough AI Model. A guardrail that can't read the body is skipped, not enforced.
+* Check whether each target's `provider` has a native adapter, or its response is OpenAI-shaped, and confirm you can accept empty usage data where neither applies.
+* Re-verify every guardrail Policy attached to a passthrough AI Model against real traffic. A guardrail that can't locate the content it needs in your upstream's shape is skipped, not enforced.
 
 ## Set up passthrough in {{site.konnect_short_name}}
 
