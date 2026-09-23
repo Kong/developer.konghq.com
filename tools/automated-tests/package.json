@@ -6,7 +6,7 @@
         "test": "node --test",
         "generate-instruction-files": "node ./generate-instructions-files.js",
         "run-tests": "NODE_ENV=test dotenvx run --convention=nextjs -- node ./run.js",
-        "test": "node --test \"**/*.test.js\""
+        "test": "node --test"
     },
     "type": "module",
     "keywords": [],

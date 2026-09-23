@@ -24,6 +24,15 @@ works_on:
 min_version:
   ai-gateway: '2.0'
 
+cleanup:
+  inline:
+    - title: Cleanup Petstore API
+      content: |
+        ```sh
+        docker rm -f swagger-petstore
+        ```
+        {: data-test-cleanup="block" }
+
 entities:
   - ai-mcp-server
 
