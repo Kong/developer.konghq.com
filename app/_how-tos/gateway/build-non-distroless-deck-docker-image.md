@@ -46,7 +46,7 @@ prereqs:
   inline:
     - title: Docker Buildx
       content: |
-        This guide requires [Docker Buildx](https://docs.docker.com/build/buildx/), which is bundled with recent Docker Desktop releases or installed separately as the `docker-buildx-plugin` package.
+        This guide requires [Docker Buildx](https://docs.docker.com/build/concepts/overview/), which is bundled with recent Docker Desktop releases or installed separately as the `docker-buildx-plugin` package.
     - title: Network access to Docker Hub
       content: |
         The build pulls both the official `kong/deck` image and the Alpine base image from Docker Hub.
