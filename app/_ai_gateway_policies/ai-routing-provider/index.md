@@ -121,8 +121,7 @@ the {{site.base_gateway}} plugin page.
 
 {{site.ai_gateway}} 2.0 lets you register your own Lua schema and handler as a **custom
 policy**, without shipping a custom data plane image. Register the AI Routing Provider
-Policy once per {{site.ai_gateway}}, using its `schema.lua` and `handler.lua` from the
-[NVIDIA Switchyard plugin repository](https://github.com/kong-partner-solutions/nvidia-switchyard-plugin):
+Policy once per {{site.ai_gateway}}, using its `schema.lua` and `handler.lua`:
 
 ```bash
 curl -X POST \
