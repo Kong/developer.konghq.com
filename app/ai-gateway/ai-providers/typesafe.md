@@ -71,7 +71,7 @@ variables:
 ## Configure a {{ provider.name }} model
 
 {:.info}
-> The `decisions` capability requires `formats: [{type: typesafe}]` on the AI Model. There's no OpenAI-translated equivalent for this capability, so the native format isn't optional like other passthrough providers.
+> The `decisions` capability requires `formats: [{type: typesafe}]` on the AI Model. There's no OpenAI-translated equivalent for this capability, so the native format is required here, unlike for other passthrough providers.
 
 {% entity_example %}
 type: model
@@ -94,11 +94,11 @@ data:
         type: typesafe
 {% endentity_example %}
 
-With this configuration, requests reach the AI Model at `{route path}/v1/systemone` for this example the path is `/jev/v1/systemone`. See [Request and response shape](#request-and-response-shape) for the request and response body.
+With this configuration, requests reach the AI Model at `{route path}/v1/systemone`. For this example, the path is `/jev/v1/systemone`. See [Request and response shape](#request-and-response-shape) for the request and response body.
 
 ### Route a target to an alternate TypeSafe-compatible host
 
-A target's `config.upstream_url` can point at a different host serving the same `Jev` model, for example a provider that rehosts TypeSafe models behind its own endpoint. Because credentials differ per host, configure a separate `typesafe`-type AI Model Provider for it:
+A target's `config.upstream_url` can point at a different host serving the same `Jev` model, for example, a provider that re-hosts TypeSafe models behind its own endpoint. Because credentials differ per host, configure a separate `typesafe`-type AI Model Provider for it:
 
 {% entity_example %}
 type: model-provider
@@ -139,6 +139,15 @@ targets:
 Note the following:
 
 * The response's `answers` field is a map keyed by the question's name, not an array.
-* Answers to `noul`-type questions carry no `confidence` or `probabilities`. For that question type, the number itself is the belief.
-* {{site.ai_gateway}} extracts `usage.input_tokens` and `usage.output_tokens` from the response for token-usage analytics, but because the request body carries no extractable prompt, this capability doesn't support guardrails, semantic caching, semantic routing, `ai-llm-as-judge`, prompt-based rate limiting, or `model_alias`.
+* Answers to `noul`-type questions don't carry a `confidence` or `probabilities` field. For that question type, the number itself is the belief.
+
+## Limitations
+
+* The `decisions` capability's request body doesn't carry an extractable prompt, so it doesn't support:
+  * Guardrails
+  * Semantic caching
+  * Semantic routing
+  * `ai-llm-as-judge`
+  * Prompt-based rate limiting
+  * `model_alias`
 * {{ provider.name }}'s own API reference documents a `401` status for authentication failures, but a missing or invalid API key currently returns `403`. Error bodies arrive under a `detail` field rather than an `error` field.
