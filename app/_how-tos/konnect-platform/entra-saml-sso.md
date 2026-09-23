@@ -48,7 +48,7 @@ prereqs:
       icon_url: /assets/icons/azure.svg
 ---
 
-{{site.konnect_short_name}} supports external single sign-on SAML authentication using an Microsoft Entra. 
+{{site.konnect_short_name}} supports external single sign-on with SAML authentication using Microsoft Entra. 
 This allows [Org admins](/konnect-platform/teams-and-roles/) to log in with SSO and is an alternative to {{site.konnect_short_name}}'s [built-in authentication](https://cloud.konghq.com/global/organization/settings#authentication-scheme).
 
 The following diagram shows the [SAML](/konnect-platform/sso/) authentication flow between a user, {{site.konnect_short_name}}, and Microsoft Entra ID:
@@ -91,6 +91,8 @@ export LOGIN_PATH='my-org'
 ```
 
 ## Configure Basic SAML in Microsoft Entra
+
+Configure [SAML authentication](https://learn.microsoft.com/entra/identity/enterprise-apps/add-application-portal-setup-sso) for your Enterprise app in Entra:
 
 1. In the application, click **Single sign-on** in the sidebar.
 1. Select **SAML** as the single sign-on method.
@@ -140,7 +142,7 @@ capture:
 
 ## Configure teams in {{site.konnect_short_name}}
 
-Before you can map teams from Entra, you must create them or modify the existing teams in {{site.konnect_short_name}}
+Before you can map teams from Entra, you must create them or modify the existing teams in {{site.konnect_short_name}}.
 
 1. Create the {{site.konnect_short_name}} team you want to map to an Entra ID group, and capture its ID as `$TEAM_ID`, by sending a `POST` request to the [`/teams` endpoint](/api/konnect/identity/#/operations/create-team). If you already have a team to map, send a `GET` request to the [`/teams` endpoint](/api/konnect/identity/#/operations/list-teams) instead, filtered on its name, to look up its ID:
 {% capture create-team %}

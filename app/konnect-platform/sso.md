@@ -97,7 +97,7 @@ Keep built-in authentication enabled while you are testing IdP authentication. O
 ## SSO configuration
 
 {:.success}
-> For a complete SAML SSO in {{site.konnect_short_name}} tutorial, see [Configure SAML SSO for Konnect with Microsoft Entra ID](/konnect-platform/entra-saml-sso/).
+> For a complete SAML SSO in {{site.konnect_short_name}} guide, see [Configure SAML SSO for Konnect with Microsoft Entra ID](/konnect-platform/entra-saml-sso/).
 
 To configure SSO in {{site.konnect_short_name}}, you must configure the following in your IdP:
 * Add {{site.konnect_short_name}} to your IdP as an application
