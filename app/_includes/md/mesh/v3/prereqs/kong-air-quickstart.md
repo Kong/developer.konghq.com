@@ -1,28 +1,7 @@
-1. Install {{site.mesh_product_name}}:
-
-   ```sh
-   helm repo add kong-mesh https://kong.github.io/kong-mesh-charts
-   helm repo update
-   helm upgrade \
-     --install \
-     --create-namespace \
-     --namespace kong-mesh-system \
-     kong-mesh kong-mesh/kong-mesh
-   kubectl wait -n kong-mesh-system --for=condition=ready pod --selector=app=kong-mesh-control-plane --timeout=90s
-   ```
-
-1. Create the `kong-air-mesh` mesh in `Exclusive` mode and deploy the Kong Air demo applications. The `passenger-portal`, `check-in-api`, and `flight-control` services each run in the `kong-air-production` namespace with their own service account, so every workload receives a distinct SPIFFE identity:
+1. Deploy the Kong Air demo applications. The `passenger-portal`, `check-in-api`, and `flight-control` services each run in the `kong-air-production` namespace with their own service account, so every workload receives a distinct SPIFFE identity:
 
    ```sh
    kubectl apply -f - <<'EOF'
-   apiVersion: kuma.io/v1alpha1
-   kind: Mesh
-   metadata:
-     name: kong-air-mesh
-   spec:
-     meshServices:
-       mode: Exclusive
-   ---
    apiVersion: v1
    kind: Namespace
    metadata:

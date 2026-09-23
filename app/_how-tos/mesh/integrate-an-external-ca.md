@@ -22,6 +22,14 @@ prereqs:
     - title: Kong Air demo deployment
       content: |
         A running {{site.mesh_product_name}} deployment with the Kong Air demo apps in `kong-air-mesh`. See [Get started with your first policy](/mesh/get-started-with-your-first-policy/).
+    - title: kongctl
+      include_content: md/mesh/v3/prereqs/kongctl
+cleanup:
+  inline:
+    - title: Remove the external CA configuration
+      include_content: md/mesh/v3/cleanup/external-ca
+    - title: Remove the Kong Air foundation
+      include_content: md/mesh/v3/cleanup/kong-air-foundation
 next_steps:
   - text: "Multi-zone architecture"
     url: "/mesh/multi-zone-architecture/"
@@ -38,7 +46,7 @@ related_resources:
 Using an external CA ensures that Kong Air's service identities are governed by the same corporate PKI standards as their physical servers and employee devices.
 
 {:.info}
-> The `MeshIdentity` and `MeshTrust` resources in this guide are system-namespace resources. On a Zone CP federated to a Global CP, create them in `{{site.mesh_namespace}}` with the `kuma.io/origin: zone` label (shown in every example below). See the [Resource scoping](/mesh/resource-scoping/) for which control plane to target.
+> On Kubernetes, the `MeshIdentity` and `MeshTrust` resources in this guide can only be created in the system namespace (`{{site.mesh_namespace}}`). A zone control plane connected to a global control plane requires every resource created in that namespace to carry `kuma.io/origin: zone`, and rejects it otherwise, which is why every example in this guide sets the label. In an application namespace the control plane computes the label for you. See [Resource scoping](/mesh/resource-scoping/) for which control plane to target.
 
 ## Why use an external CA?
 
@@ -209,17 +217,26 @@ Point the `Bundled` provider at the two {{site.mesh_product_name}} Secrets from 
 
 1. After restarting the targeted workloads, verify the MeshService shows the new trust domain:
 
-   ```bash
-   kubectl get meshservice flight-control -n kong-air-production \
-     -o jsonpath='{.spec.identities}' | jq .
-   # Expected: includes "spiffe://internal.kongair.com/ns/kong-air-production/sa/flight-control"
+   ```sh
+   kongctl get mesh meshservices flight-control.kong-air-production \
+     --control-plane-name "$MESH_CP" --mesh kong-air-mesh -o yaml
    ```
+
+   The control plane reports the identities it computed for the service. Look for the new trust domain under `spec.identities`:
+
+   ```yaml
+   spec:
+       identities:
+           - type: SpiffeID
+             value: spiffe://internal.kongair.com/ns/kong-air-production/sa/flight-control
+   ```
+   {:.no-copy-code}
 
 ## Extension providers
 
 Instead of signing workload certs from a CA it holds, {{site.mesh_product_name}} delegates signing to an external system. The workload-facing `MeshIdentity` API stays unchanged, only `provider.type` and `extension.config` change. On each sidecar cert rotation, the control plane submits a signing request to the extension (cert-manager creates a `CertificateRequest`, Vault issues via its PKI engine), then delivers the signed cert to the sidecar via xDS. Kong Air can switch issuers by changing two fields, with no application restarts.
 
-All three providers below share the same `spiffeID.path` and `trustDomain`, so the cert-manager example is shown end-to-end and the Vault and ACM examples show only the `provider` block that differs. Adapt the provider-specific config values to your environment.
+All three providers in this section share the same `spiffeID.path` and `trustDomain`, so the cert-manager example is shown end-to-end and the Vault and ACM examples show only the `provider` block that differs. Adapt the provider-specific config values to your environment.
 
 ### cert-manager
 
@@ -312,13 +329,17 @@ Prerequisites: cert-manager installed with a `ClusterIssuer` or `Issuer` for the
 
 1. Verify:
 
-   ```bash
-   # Watch for CertificateRequests being created and signed as workloads connect
-   kubectl get certificaterequests -n {{site.mesh_namespace}} -w
+   Watch for `CertificateRequests` being created and signed as workloads connect:
 
-   # After workloads restart, check SPIFFE IDs
-   kubectl get meshservice flight-control -n kong-air-production \
-     -o jsonpath='{.spec.identities}' | jq .
+   ```sh
+   kubectl get certificaterequests -n {{site.mesh_namespace}} -w
+   ```
+
+   After the workloads restart, check the SPIFFE IDs the control plane computed:
+
+   ```sh
+   kongctl get mesh meshservices flight-control.kong-air-production \
+     --control-plane-name "$MESH_CP" --mesh kong-air-mesh -o yaml
    ```
 
 ### HashiCorp Vault

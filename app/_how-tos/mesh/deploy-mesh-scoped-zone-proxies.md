@@ -10,7 +10,7 @@ related_resources:
     url: '/mesh/mesh-multizone-service-deployment/'
 
 min_version:
-  mesh: '2.14'
+  mesh: '3.0'
 
 products:
   - mesh
@@ -24,7 +24,7 @@ series:
 tldr:
   q: How do I deploy mesh-scoped zone ingress and zone egress with per-mesh Helm values?
   a: |
-    1. Create a `Mesh` with `spec.meshServices.mode: Exclusive` and a `MeshIdentity` on the global control plane.
+    1. Create a `Mesh` and a `MeshIdentity` on the global control plane, which runs in Universal mode.
     1. Install each zone control plane with a `kuma.meshes[]` entry.
     1. {{site.mesh_product_name}} renders a per-mesh Deployment and Service for each role, and generates the Dataplane listeners automatically.
 
@@ -60,24 +60,18 @@ faqs:
 
   - q: How do I inspect the MeshZoneAddress resources?
     a: |
-      `MeshZoneAddress` resources are namespaced, so query `kong-mesh-system` explicitly:
+      Query the global control plane with [kongctl](/kongctl/):
 
       ```sh
-      kubectl --context $GLOBAL_PROFILE -n kong-mesh-system get meshzoneaddress -o json | \
-        jq -r '.items[] |
-          [
-            .metadata.labels["kuma.io/zone"],
-            .metadata.name,
-            (.spec.address + ":" + (.spec.port | tostring))
-          ] | @tsv'
+      kongctl get mesh meshzoneaddresses --mesh default -o yaml
       ```
 
-      The addresses should use the shared Docker bridge IPs and the published ingress `NodePort` values.
+      Each entry's `spec.address` and `spec.port` should use the shared Docker bridge IPs and the published ingress `NodePort` values.
 
   - q: How do I view the zone proxy Dataplane resources?
     a: |
       ```sh
-      kubectl --context $GLOBAL_PROFILE get dataplane -A
+      kongctl get mesh dataplanes --mesh default
       ```
 
 prereqs:
@@ -87,42 +81,45 @@ prereqs:
       include_content: prereqs/helm
     - title: minikube
       content: |
-        This series requires [minikube](https://minikube.sigs.k8s.io/docs/start/) with the Docker driver to run three local Kubernetes clusters (one global and two zones).
+        This series requires [minikube](https://minikube.sigs.k8s.io/docs/start/) with the Docker driver to run two local Kubernetes zone clusters.
+    - title: kongctl
+      content: |
+        The global control plane runs in Universal mode, so you manage its resources with [kongctl](/kongctl/). You also need `docker`, and `jq` to decode the control plane's bootstrap admin token.
 
 cleanup:
   inline:
     - title: Clean up {{site.mesh_product_name}} resources
       content: |
-        Delete the three minikube profiles and the shared Docker network:
+        Delete the two minikube profiles, the global control plane containers, and the shared Docker network:
 
         ```sh
-        minikube delete -p guide-mz-global
         minikube delete -p guide-mz-zone-1
         minikube delete -p guide-mz-zone-2
+        docker rm -f guide-mz-global guide-mz-postgres
         docker network rm guide-mz-net
         ```
 ---
 
-Starting in {{site.mesh_product_name}} 2.14, zone ingresses and zone egresses are mesh-scoped.
+Zone ingresses and zone egresses are mesh-scoped.
 Declare them in your zone control plane values under `kuma.meshes[]`.
-Each entry creates a Deployment, Service, and Dataplane for that mesh, and the zone proxies carry per-mesh workload identities so policies can target them directly.
+Each entry creates a Deployment, Service, and `Dataplane` for that mesh, and the zone proxies carry per-mesh workload identities so policies can target them directly.
 
-This guide walks through a three-cluster setup: a global control plane and two zone control planes, each deploying a zone ingress and zone egress through `kuma.meshes[]`.
-It uses the minikube Docker driver and one shared Docker bridge so the three clusters can reach each other directly through `NodePort` Services.
+This guide walks through a global control plane and two zone control planes, each deploying a zone ingress and zone egress through `kuma.meshes[]`.
+The global control plane runs in Universal mode backed by Postgres, because a Kubernetes-native global control plane is not supported.
+The two zone control planes run on Kubernetes, using the minikube Docker driver and one shared Docker bridge so every component can reach the others directly.
 
-## Start the global control plane cluster
+## Set up the shared network
 
-1. Export the profile names, the shared Docker network, the static node IPs, and the fixed KDS `NodePort`:
+1. Export the profile names, the shared Docker network, and the static IPs:
 
    ```sh
    export MZ_NETWORK=guide-mz-net
-   export GLOBAL_PROFILE=guide-mz-global
    export ZONE1_PROFILE=guide-mz-zone-1
    export ZONE2_PROFILE=guide-mz-zone-2
    export GLOBAL_IP=192.168.240.11
+   export POSTGRES_IP=192.168.240.10
    export ZONE1_IP=192.168.240.21
    export ZONE2_IP=192.168.240.31
-   export KDS_NODEPORT=30685
    ```
 
 1. Create the shared Docker bridge:
@@ -142,67 +139,92 @@ It uses the minikube Docker driver and one shared Docker bridge so the three clu
    >
    > Then restart the affected profile.
 
-1. Create a new minikube cluster for the global control plane:
-
-   ```sh
-   minikube start -p $GLOBAL_PROFILE --driver=docker --network=$MZ_NETWORK --static-ip=$GLOBAL_IP
-   ```
-
 ## Deploy the global control plane
 
-1. Install the global control plane:
+The global control plane runs in Universal mode and stores its resources in Postgres.
+Both run as containers on the shared bridge, so the zone clusters can reach the KDS port directly.
+
+1. Start Postgres:
 
    ```sh
-   helm repo add kong-mesh https://kong.github.io/kong-mesh-charts
-   helm repo update
-   helm install --kube-context $GLOBAL_PROFILE --create-namespace --namespace kong-mesh-system \
-     --set kuma.controlPlane.mode=global \
-     --set kuma.controlPlane.defaults.skipMeshCreation=true \
-     --set kuma.controlPlane.globalZoneSyncService.type=NodePort \
-     --set kuma.controlPlane.globalZoneSyncService.nodePort=$KDS_NODEPORT \
-     kong-mesh kong-mesh/kong-mesh
+   docker run --detach --name guide-mz-postgres --hostname postgres \
+     --network $MZ_NETWORK --ip $POSTGRES_IP \
+     --env POSTGRES_USER=kong \
+     --env POSTGRES_PASSWORD=pass123 \
+     --env POSTGRES_DB=global \
+     postgres:16
    ```
 
+1. Run the schema migration:
+
+   ```sh
+   docker run --rm --network $MZ_NETWORK \
+     --env KUMA_STORE_TYPE=postgres \
+     --env KUMA_STORE_POSTGRES_HOST=postgres \
+     --env KUMA_STORE_POSTGRES_PORT=5432 \
+     --env KUMA_STORE_POSTGRES_USER=kong \
+     --env KUMA_STORE_POSTGRES_PASSWORD=pass123 \
+     --env KUMA_STORE_POSTGRES_DB_NAME=global \
+     kong/kuma-cp:{{page.latest_release.version}} migrate up
+   ```
+
+1. Start the global control plane:
+
+   ```sh
+   docker run --detach --name guide-mz-global --hostname global-control-plane \
+     --network $MZ_NETWORK --ip $GLOBAL_IP \
+     --publish 5681:5681 --publish 5685:5685 \
+     --env KUMA_MODE=global \
+     --env KUMA_ENVIRONMENT=universal \
+     --env KUMA_DEFAULTS_SKIP_MESH_CREATION=true \
+     --env KUMA_STORE_TYPE=postgres \
+     --env KUMA_STORE_POSTGRES_HOST=postgres \
+     --env KUMA_STORE_POSTGRES_PORT=5432 \
+     --env KUMA_STORE_POSTGRES_USER=kong \
+     --env KUMA_STORE_POSTGRES_PASSWORD=pass123 \
+     --env KUMA_STORE_POSTGRES_DB_NAME=global \
+     kong/kuma-cp:{{page.latest_release.version}} run
+   ```
+
+   Port `5681` serves the HTTP API and the GUI, and port `5685` serves KDS.
    We're skipping default mesh creation because we'll apply a custom `Mesh` in the next step.
 
-1. Wait for the control plane to become ready:
+1. Point `kongctl` at the global control plane:
 
    ```sh
-   kubectl --context $GLOBAL_PROFILE -n kong-mesh-system wait \
-     --for=condition=ready pod --selector=app=kong-mesh-control-plane --timeout=120s
+   export MZ_ADMIN_TOKEN="$(docker exec guide-mz-global \
+     wget --quiet --output-document - http://127.0.0.1:5681/global-secrets/admin-user-token \
+     | jq --raw-output .data | base64 --decode)"
+
+   export KONGCTL_DEFAULT_KONNECT_MESH_CONTROL_PLANE_URL=http://127.0.0.1:5681
+   export KONGCTL_DEFAULT_KONNECT_MESH_CONTROL_PLANE_TOKEN="$MZ_ADMIN_TOKEN"
    ```
+
+   Every `kongctl` command in this guide reads those two variables, so you don't have to repeat `--control-plane-url` and `--control-plane-token` each time.
+
+   If the token endpoint returns nothing, the control plane is still starting. Wait a few seconds and retry.
 
 1. Export the KDS address that the zone control planes will connect to:
 
    ```sh
-   export KDS_ADDRESS=grpcs://${GLOBAL_IP}:${KDS_NODEPORT}
+   export KDS_ADDRESS=grpcs://${GLOBAL_IP}:5685
    ```
 
-   The global control plane is now reachable at `${GLOBAL_IP}:${KDS_NODEPORT}` from the other two minikube clusters.
+   The global control plane is now reachable at `${GLOBAL_IP}:5685` from both minikube clusters on the shared bridge.
 
 ## Create the mesh on the global control plane
 
-Zone proxy listeners are only generated when the mesh uses the `MeshService` exclusive mode.
-Without this, the zone proxies install but produce no listeners.
+Because the global control plane runs in Universal mode, its resources use the Universal format (`type`, `name`, `mesh`, `spec`) rather than Kubernetes manifests.
 
 1. Create the mesh and allow all traffic:
 
    ```sh
-   echo 'apiVersion: kuma.io/v1alpha1
-   kind: Mesh
-   metadata:
-     name: default
-   spec:
-     meshServices:
-       mode: Exclusive
+   echo 'type: Mesh
+   name: default
    ---
-   apiVersion: kuma.io/v1alpha1
-   kind: MeshTrafficPermission
-   metadata:
-     name: allow-all
-     namespace: kong-mesh-system
-     labels:
-       kuma.io/mesh: default
+   type: MeshTrafficPermission
+   name: allow-all
+   mesh: default
    spec:
      targetRef:
        kind: Mesh
@@ -211,7 +233,7 @@ Without this, the zone proxies install but produce no listeners.
            allow:
              - spiffeID:
                  type: Prefix
-                 value: "spiffe://default."' | kubectl --context $GLOBAL_PROFILE apply -f -
+                 value: "spiffe://default."' | kongctl apply mesh -f -
    ```
 
    This rule allows traffic from any workload identity whose SPIFFE trust domain starts with `default.`.
@@ -223,13 +245,9 @@ Zone egress listeners need a workload identity to terminate mTLS for cross-zone 
 Apply a `MeshIdentity` on the global control plane:
 
 ```sh
-echo 'apiVersion: kuma.io/v1alpha1
-kind: MeshIdentity
-metadata:
-  name: identity
-  namespace: kong-mesh-system
-  labels:
-    kuma.io/mesh: default
+echo 'type: MeshIdentity
+name: identity
+mesh: default
 spec:
   selector:
     dataplane:
@@ -244,7 +262,7 @@ spec:
       certificateParameters:
         expiry: 24h
       autogenerate:
-        enabled: true' | kubectl --context $GLOBAL_PROFILE apply -f -
+        enabled: true' | kongctl apply mesh -f -
 ```
 
 The resource will sync to every zone automatically.
@@ -349,29 +367,38 @@ The `MeshIdentity` controller appends a content hash to the trust name (for exam
 For cross-zone mTLS to work, each zone must trust the other zone's CA.
 Publish each zone's trust bundle to the global control plane so it syncs everywhere.
 
+A `MeshTrust` spec holds only a `trustDomain` and a list of `caBundles`, so read those two fields from the zone and build a fresh resource on the global control plane. Select the source by the `kuma.io/origin: zone` label, which is the trust the local zone created. Resources synced back from the global control plane carry `kuma.io/origin: global`, and publishing one of those would send the wrong zone's CA.
+
 1. Export zone-1's trust bundle and apply it to the global CP:
 
    ```sh
-   kubectl --context $ZONE1_PROFILE -n kong-mesh-system get meshtrust -o json | \
-     jq '.items[] | select(.metadata.labels["kuma.io/origin"] == "zone") |
-         .metadata.name = "trust-of-zone-1" |
-         .metadata.labels["kuma.io/origin"] = "global" |
-         del(.metadata.resourceVersion, .metadata.uid, .metadata.creationTimestamp, .metadata.generation, .metadata.ownerReferences)' | \
-     kubectl --context $GLOBAL_PROFILE apply -f -
+   kongctl apply mesh -f - <<EOF
+   type: MeshTrust
+   name: trust-of-zone-1
+   mesh: default
+   labels:
+     kuma.io/origin: global
+   spec:
+     trustDomain: $(kubectl --context $ZONE1_PROFILE -n kong-mesh-system get meshtrust -l kuma.io/origin=zone,kuma.io/mesh=default -o jsonpath='{.items[0].spec.trustDomain}')
+     caBundles: $(kubectl --context $ZONE1_PROFILE -n kong-mesh-system get meshtrust -l kuma.io/origin=zone,kuma.io/mesh=default -o jsonpath='{.items[0].spec.caBundles}')
+   EOF
    ```
 
-   The `jq` filter selects only resources where `kuma.io/origin: zone`, which is the trust the local zone created.
-   Resources synced back from the global control plane carry `kuma.io/origin: global` and must be excluded, otherwise you would publish the wrong zone's CA.
+   The `caBundles` value is emitted as JSON, which is valid YAML flow syntax, so it drops straight into the document.
 
 1. Export zone-2's trust bundle and apply it to the global CP:
 
    ```sh
-   kubectl --context $ZONE2_PROFILE -n kong-mesh-system get meshtrust -o json | \
-     jq '.items[] | select(.metadata.labels["kuma.io/origin"] == "zone") |
-         .metadata.name = "trust-of-zone-2" |
-         .metadata.labels["kuma.io/origin"] = "global" |
-         del(.metadata.resourceVersion, .metadata.uid, .metadata.creationTimestamp, .metadata.generation, .metadata.ownerReferences)' | \
-     kubectl --context $GLOBAL_PROFILE apply -f -
+   kongctl apply mesh -f - <<EOF
+   type: MeshTrust
+   name: trust-of-zone-2
+   mesh: default
+   labels:
+     kuma.io/origin: global
+   spec:
+     trustDomain: $(kubectl --context $ZONE2_PROFILE -n kong-mesh-system get meshtrust -l kuma.io/origin=zone,kuma.io/mesh=default -o jsonpath='{.items[0].spec.trustDomain}')
+     caBundles: $(kubectl --context $ZONE2_PROFILE -n kong-mesh-system get meshtrust -l kuma.io/origin=zone,kuma.io/mesh=default -o jsonpath='{.items[0].spec.caBundles}')
+   EOF
    ```
 
 The global control plane syncs these trust bundles to all zones, enabling cross-zone certificate validation.
@@ -411,29 +438,19 @@ The global control plane syncs these trust bundles to all zones, enabling cross-
    {:.info}
    > If the request times out, re-check the `MeshZoneAddress` output and confirm the ingress Services still publish the expected `NodePort` values.
 
-1. Reset the stats counters on the zone-2 ingress:
+1. Find the name of the zone-2 ingress proxy. The global control plane sees every proxy in both zones:
 
    ```sh
-   kubectl --context $ZONE2_PROFILE -n kong-mesh-system \
-     exec deploy/kong-mesh-default-ingress -c kuma-sidecar -- \
-     wget -qO- --post-data='' 'http://127.0.0.1:9902/reset_counters'
+   kongctl get mesh dataplanes --mesh default
    ```
 
-1. Send the cross-zone request again:
+   The zone ingress is the entry named after the `kong-mesh-default-ingress` Deployment, carrying the `kuma.io/zone: zone-2` tag.
+
+1. Read that proxy's Envoy request counters, using the name from the previous step:
 
    ```sh
-   kubectl --context $ZONE1_PROFILE -n kong-mesh-demo exec deploy/demo-app -c demo-app -- \
-     wget -qO /dev/null http://demo-app.kong-mesh-demo.svc.zone-2.mesh.local:5000/
+   kongctl get mesh inspect dataplane <zone-2-ingress-name> --mesh default --type stats | grep upstream_rq_total
    ```
 
-1. Inspect the ingress Envoy cluster stats:
-
-   ```sh
-   kubectl --context $ZONE2_PROFILE -n kong-mesh-system \
-     exec deploy/kong-mesh-default-ingress -c kuma-sidecar -- \
-     wget -qO- 'http://127.0.0.1:9902/stats?format=json&filter=demo-app' | \
-     jq '.stats[] | select(.name | strings | test("upstream_rq_total"))'
-   ```
-
-   `upstream_rq_total` for the zone-2 `demo-app` ingress cluster should be greater than zero.
+   The counter for the zone-2 `demo-app` cluster should be greater than zero, which confirms the cross-zone request arrived through the ingress rather than being served locally.
    The follow-up guide shows how to inspect zone-egress-specific traffic on top of this setup.

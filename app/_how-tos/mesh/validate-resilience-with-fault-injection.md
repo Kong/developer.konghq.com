@@ -26,6 +26,12 @@ prereqs:
     - title: Resources
       content: |
         Workloads to target (for example, `flight-control`) and a client (for example, `check-in-api`) to generate traffic.
+cleanup:
+  inline:
+    - title: Remove the fault injection policies
+      include_content: md/mesh/v3/cleanup/fault-injection
+    - title: Remove the Kong Air foundation
+      include_content: md/mesh/v3/cleanup/kong-air-foundation
 next_steps:
   - text: "Explore by role"
     url: "/mesh/persona/"
@@ -92,6 +98,7 @@ metadata:
   namespace: {{site.mesh_namespace}}
   labels:
     kuma.io/mesh: kong-air-mesh
+    kuma.io/origin: zone
 spec:
   targetRef:
     kind: Dataplane
@@ -133,7 +140,7 @@ spec:
     - matches:
         - spiffeID:
             type: Prefix
-            value: spiffe://kong-air-mesh.mesh.local
+            value: spiffe://kong-air-mesh.zone1.mesh.local
       default:
         http:
           - delay:
@@ -161,7 +168,7 @@ spec:
     - matches:
         - spiffeID:
             type: Prefix
-            value: spiffe://kong-air-mesh.mesh.local
+            value: spiffe://kong-air-mesh.zone1.mesh.local
       default:
         http:
           - responseBandwidth:
