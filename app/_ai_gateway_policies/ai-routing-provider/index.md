@@ -52,13 +52,13 @@ The AI Routing Provider Policy is the {{site.ai_gateway}} 2.0 equivalent of the
 [NVIDIA Switchyard AI Routing plugin](/plugins/ai-routing-provider/): it asks the NVIDIA
 Switchyard Decision API which model should serve each request, then dispatches natively
 to an [AI Model](/ai-gateway/entities/ai-model/) entity you've already configured on this
-{{site.ai_gateway}}. The decision service names a target; {{site.ai_gateway}} decides what that
-name is allowed to mean.
+{{site.ai_gateway}}.
+The decision service names a target.
+{{site.ai_gateway}} decides what that name is allowed to mean.
 
-Unlike the classic {{site.base_gateway}} plugin, this Policy doesn't need
-[AI Proxy Advanced](/plugins/ai-proxy-advanced/) in front of it. It resolves the selected
-target directly against your {{site.ai_gateway}}'s own AI Model entities and hands the request to
-{{site.ai_gateway}}'s native routing.
+This Policy resolves the selected target directly against your {{site.ai_gateway}}'s own AI
+Model entities, and {{site.ai_gateway}}'s native routing takes over from there.
+Unlike the classic {{site.base_gateway}} plugin, it doesn't need [AI Proxy Advanced](/plugins/ai-proxy-advanced/) in front of it.
 
 This Policy is registered as a **custom policy**: you bring the same `schema.lua` and
 `handler.lua` that back the [NVIDIA Switchyard AI Routing plugin](/plugins/ai-routing-provider/),
@@ -79,8 +79,8 @@ The Policy runs in the access phase. It builds a decision request from the incom
 request, submits it to the Switchyard Decision API, and validates the returned
 `selected.target` against its own `targets` map.
 
-With [`config.dispatch`](/ai-gateway/policies/ai-routing-provider/reference/#schema--config-dispatch)
-set to `konnect_model`, a match resolves the target's `model` against this {{site.ai_gateway}}'s own
+When [`config.dispatch`](/ai-gateway/policies/ai-routing-provider/reference/#schema--config-dispatch)
+is set to `konnect_model`, a match resolves the target's `model` against this {{site.ai_gateway}}'s own
 AI Model entities (by name, then by alias) and sets that model as the request's active model.
 {{site.ai_gateway}} then proxies to whichever provider that AI Model is configured with.
 On anything else, unknown target, drift, timeout, or error, the Policy falls back to
