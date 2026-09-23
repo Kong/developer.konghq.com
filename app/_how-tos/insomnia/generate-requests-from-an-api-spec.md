@@ -25,7 +25,7 @@ related_resources:
 
 tldr: 
   q: How do I generate requests from an API spec?
-  a: Add an API spec to an API Collection and define your environment variables, then click the **Spec** tab, click **Generate**, and select "Requests". Insomnia adds a request for each endpoint in the spec so you can send requests while you're still working on the design.
+  a: Add an API spec to an API Collection and define your environment variables, then click the **Spec** tab. If the spec has no linting error, the **Generate** button appears. Click it and select "Requests". Insomnia adds a request for each endpoint in the spec so you can send requests while you're still working on the design.
 
 prereqs:
   inline:
