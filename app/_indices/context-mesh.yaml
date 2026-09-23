@@ -3,10 +3,8 @@ description: Index containing all documentation for {{site.context_mesh}}.
 sections:
   - title: Overview
     items:
-      - title: "{{site.context_mesh}} Overview"
-        url: /context-mesh/
-      - title: Get started with {{site.context_mesh}}
-        url: /context-mesh/get-started/
+      - path: /context-mesh/
+      - path:  /context-mesh/get-started/
   - title: How-tos
     items:
       - type: how-to

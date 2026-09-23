@@ -79,7 +79,9 @@ platform:
           product: identity
         - text: Scorecards
           icon: /assets/icons/monochrome/document.svg
-          url: /catalog/scorecards/
+- text: Context Mesh
+    url: /context-mesh/
+    icon: /assets/images/context-mesh/context-mesh.svg
           color: red
         - text: API Security & Access Control
           icon: /assets/icons/monochrome/security.svg
@@ -130,9 +132,6 @@ ai_tools:
   - text: Konnect MCP
     url: /konnect-platform/konnect-mcp/
     icon: /assets/icons/mcp.svg
-  - text: Context Mesh
-    url: /context-mesh/
-    icon: /assets/images/context-mesh/context-mesh.svg
   - text: AI Cookbooks
     url: /cookbooks/
     icon: /assets/icons/book.svg
