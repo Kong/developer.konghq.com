@@ -10,7 +10,7 @@ const log = debug("tests:setup:runtime");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const PASSTHROUGH_VARIABLES = ["KONNECT_DOMAIN", "KONGCTL_DEFAULT_KONNECT_ENVIRONMENT"];
+const PASSTHROUGH_VARIABLES = ["KONNECT_DOMAIN", "KONGCTL_DEFAULT_KONNECT_ENVIRONMENT", "KONNECT_EVENT_GATEWAY_MIN_VERSION"];
 
 async function konnectRegion() {
   const filePath = path.resolve(__dirname, "../../app/_data/konnect_api_request.yml");
