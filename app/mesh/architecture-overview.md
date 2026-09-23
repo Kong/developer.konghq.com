@@ -14,10 +14,10 @@ next_steps:
   - text: "Get started with your first policy"
     url: "/mesh/get-started-with-your-first-policy/"
 related_resources:
-  - text: "{{site.mesh_product_name}} architecture"
-    url: "/mesh/architecture/"
-  - text: Multi-zone deployment
-    url: /mesh/mesh-multizone-service-deployment/
+  - text: Multi-zone architecture
+    url: /mesh/multi-zone-architecture/
+  - text: Resource scoping
+    url: /mesh/resource-scoping/
 ---
 {{site.mesh_product_name}} separates the control plane from the data plane and uses zones to represent the environments where workloads run. Kubernetes or Universal zone control planes run close to the workloads they manage and connect to a global control plane.
 
@@ -28,18 +28,18 @@ related_resources:
 * A global control plane that provides the central view of meshes and resources.
 * Zone control planes that discover local workloads, exchange supported resources with the global control plane over KDS, and serve xDS configuration to local proxies.
 * An Envoy-based data plane that intercepts application traffic and enforces policy.
-* Mesh-scoped zone ingress and egress proxies that carry traffic across zone boundaries.
+* Mesh-scoped zone proxies, ordinary `Dataplane` resources carrying zone ingress and egress listeners, that carry traffic across zone boundaries.
 * A service model built from `MeshService`, `MeshMultiZoneService`, and `MeshExternalService`.
 * Workload identity and trust managed with `MeshIdentity` and `MeshTrust`.
 
-For definitions of each component and their configuration options, see the [{{site.mesh_product_name}} architecture](/mesh/architecture/) reference.
+For how these components behave once a second zone joins, see [Multi-zone architecture](/mesh/multi-zone-architecture/). For which control plane owns each resource and where it lives on Kubernetes, see [Resource scoping](/mesh/resource-scoping/).
 
 {:.info}
 > A Kubernetes `Service` produces a `MeshService`, `MeshMultiZoneService` groups services across zones, and `MeshExternalService` represents a destination outside the mesh.
 
 ## Day-2 operations: differences from Istio-style meshes
 
-Teams evaluating {{site.mesh_product_name}} are often already running an Istio-style mesh, a model built around multiple traffic-management CRDs (`VirtualService`, `DestinationRule`, `ServiceEntry`) on a Kubernetes-first control plane. Both models support mTLS, traffic routing, and observability, and initial setup is comparable in either. The differences appear in day-2 operations, running the mesh in production, across regions, and through upgrades, which is what the comparison below covers.
+Teams evaluating {{site.mesh_product_name}} are often already running an Istio-style mesh, a model built around multiple traffic-management CRDs (`VirtualService`, `DestinationRule`, `ServiceEntry`) on a Kubernetes-first control plane. Both models support mTLS, traffic routing, and observability, and initial setup is comparable in either. The differences appear in day-2 operations, running the mesh in production, across regions, and through upgrades, which is what the following comparison covers.
 
 <!-- vale off -->
 {% table %}
@@ -67,9 +67,9 @@ In summary, {{site.mesh_product_name}} uses fewer resource types per policy, tre
 
 ## {{site.mesh_product_name}} architecture
 
-the two sections below show a high-level view of how the control plane is distributed, and a zone-level view of how data plane traffic flows.
+The following two sections show a high-level view of how the control plane is distributed, and a zone-level view of how data plane traffic flows.
 
-The following elements are used in both diagrams::
+The following elements are used in both diagrams:
 - Solid arrow: data plane traffic (encrypted with mTLS between sidecars).
 - Dashed arrow: control plane channel (xDS, KDS, admin API).
 - Box border: control plane that owns the resource (global CP or a specific zone CP).
@@ -96,7 +96,7 @@ Everything in this diagram is a control plane channel, no application traffic cr
 
 ### Zone-level: request flow
 
-Inside a zone, every workload runs alongside an Envoy sidecar that enforces mTLS, retries, timeouts, and access policy, while cross-zone calls route through zone ingress and egress. For the canonical mechanics of cross-zone service discovery and routing, see [Multi-zone deployment](/mesh/mesh-multizone-service-deployment/).
+Inside a zone, every workload runs alongside an Envoy sidecar that enforces mTLS, retries, timeouts, and access policy, while cross-zone calls route through zone ingress and egress. For the canonical mechanics of cross-zone service discovery and routing, see [Multi-zone architecture](/mesh/multi-zone-architecture/).
 
 {% mermaid %}
 flowchart LR
@@ -111,10 +111,10 @@ flowchart LR
             CI_App["check-in-api"]
             CI_Envoy["Envoy sidecar"]
         end
-        ZE_East["ZoneEgress"]
+        ZE_East["Zone egress listeners<br/>(Dataplane)"]
     end
     subgraph ZoneWest["zone2 (VMs)"]
-        ZI_West["ZoneIngress"]
+        ZI_West["Zone ingress listeners<br/>(Dataplane)"]
         subgraph FCSvc["flight-control VM"]
             FC_App["flight-control"]
             FC_Envoy["Envoy sidecar"]
@@ -142,13 +142,13 @@ flowchart LR
 Tracing a cross-zone call, `check-in-api` (zone1) calling `flight-control` (zone2), the request passes through six hops:
 
 1. `check-in-api` sends the request to its local Envoy sidecar over localhost.
-2. The sidecar looks up the destination in its xDS config (served by the zone1 CP) and determines that `flight-control` lives in another zone, so it routes the request to the local `ZoneEgress`.
-3. `ZoneEgress` forwards the request out of zone1 toward zone2's `ZoneIngress`.
-4. `ZoneIngress` in zone2 receives the request and, based on its own xDS config from the zone2 CP, routes it to a healthy `flight-control` instance.
+2. The sidecar looks up the destination in its xDS config (served by the zone1 CP) and determines that `flight-control` lives in another zone, so it routes the request to the local zone egress.
+3. The zone egress forwards the request out of zone1 toward the zone ingress in zone2, at the address that zone published as a `MeshZoneAddress`.
+4. The zone ingress in zone2 receives the request and, based on its own xDS config from the zone2 CP, routes it to a healthy `flight-control` instance.
 5. The request reaches the Envoy sidecar running alongside `flight-control`.
 6. That sidecar forwards the request to the `flight-control` application over localhost.
 
-Every hop between sidecars (steps 2 through 5) is encrypted and mutually authenticated using the SPIFFE identities issued by `MeshIdentity` and enforced by `MeshTLS`; only the first and last hops (app to local sidecar) are plaintext, since they never leave the pod or VM. Calls to external SaaS (here, `weather-api`) follow the same egress path but are modelled as `MeshExternalService` instead of a zone-to-zone `ZoneIngress` hop, since there is no remote mesh zone to route into.
+Every hop between sidecars (steps 2 through 5) is encrypted and mutually authenticated using the SPIFFE identities issued by `MeshIdentity` and enforced by `MeshTLS`; only the first and last hops (app to local sidecar) are plaintext, since they never leave the pod or VM. Calls to external SaaS (here, `weather-api`) follow the same egress path but are modelled as `MeshExternalService` instead of a zone-to-zone ingress hop, since there is no remote mesh zone to route into.
 
 ## Scalability and fault tolerance
 {{site.mesh_product_name}}'s separation of global and zone control planes ensures that your mesh can scale across thousands of services and multiple geographical regions without creating a single point of failure. Even if a zone becomes isolated from the global CP, it remains fully operational for existing and new workloads within that zone.

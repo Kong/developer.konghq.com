@@ -20,7 +20,11 @@ prereqs:
   inline:
     - title: Secure the first service path
       content: |
-        Complete [Get started with your first policy](/mesh/get-started-with-your-first-policy/). It creates `kong-air-mesh`, connects the Kubernetes zone `zone1`, and applies the zone-origin `kong-air-identity` used below.
+        Complete [Get started with your first policy](/mesh/get-started-with-your-first-policy/). It creates `kong-air-mesh`, connects the Kubernetes zone `zone1`, and applies the zone-origin `kong-air-identity` that this guide builds on.
+cleanup:
+  inline:
+    - title: Remove the Kong Air foundation
+      include_content: md/mesh/v3/cleanup/kong-air-foundation
 next_steps:
   - text: "Integrate an external CA"
     url: "/mesh/integrate-an-external-ca/"
@@ -165,7 +169,7 @@ The resource names do not collide at the global control plane: KDS adds zone and
 
 ### Apply the identity in the second zone
 
-When `zone2` is connected to the same global control plane, apply the same zone-origin identity to it. The omitted trust domain resolves to `kong-air-mesh.zone2.mesh.local` in that zone:
+When `zone2` is connected to the same global control plane, apply the same zone-origin identity to it. `MeshIdentity` can only be created in the system namespace, and a zone control plane connected to a global control plane requires everything created there to carry `kuma.io/origin: zone` (see [Resource scoping](/mesh/resource-scoping/)). The omitted trust domain resolves to `kong-air-mesh.zone2.mesh.local` in that zone:
 
 ```sh
 kubectl --context zone2 apply -f - <<'EOF'
@@ -198,24 +202,22 @@ For production, prefer a managed CA or SPIRE rather than self-signed autogenerat
 
 ### Copy zone1 trust into zone2
 
-Copy the public trust resource, not the CA private key. Give the copy a distinct name and remove metadata owned by the source cluster:
+Copy the public trust resource, not the CA private key. A `MeshTrust` spec holds only a `trustDomain` and a list of `caBundles`, so read those two fields from the source zone and build a fresh resource in the target zone under a distinct name:
 
 ```sh
-kubectl --context zone1 get meshtrust kong-air-identity -n {{site.mesh_namespace}} -o json | \
-  jq '
-    .metadata.name = "kong-air-mesh-trust-of-zone1" |
-    .metadata.labels["kuma.io/origin"] = "zone" |
-    del(
-      .metadata.creationTimestamp,
-      .metadata.generation,
-      .metadata.managedFields,
-      .metadata.ownerReferences,
-      .metadata.resourceVersion,
-      .metadata.uid,
-      .metadata.labels["kuma.io/zone"],
-      .status
-    )' | \
-  kubectl --context zone2 apply -f -
+kubectl --context zone2 apply -f - <<EOF
+apiVersion: kuma.io/v1alpha1
+kind: MeshTrust
+metadata:
+  name: kong-air-mesh-trust-of-zone1
+  namespace: {{site.mesh_namespace}}
+  labels:
+    kuma.io/mesh: kong-air-mesh
+    kuma.io/origin: zone
+spec:
+  trustDomain: $(kubectl --context zone1 get meshtrust kong-air-identity -n {{site.mesh_namespace}} -o jsonpath='{.spec.trustDomain}')
+  caBundles: $(kubectl --context zone1 get meshtrust kong-air-identity -n {{site.mesh_namespace}} -o jsonpath='{.spec.caBundles}')
+EOF
 ```
 
 ### Copy zone2 trust into zone1
@@ -223,21 +225,19 @@ kubectl --context zone1 get meshtrust kong-air-identity -n {{site.mesh_namespace
 Repeat the operation in the other direction:
 
 ```sh
-kubectl --context zone2 get meshtrust kong-air-identity -n {{site.mesh_namespace}} -o json | \
-  jq '
-    .metadata.name = "kong-air-mesh-trust-of-zone2" |
-    .metadata.labels["kuma.io/origin"] = "zone" |
-    del(
-      .metadata.creationTimestamp,
-      .metadata.generation,
-      .metadata.managedFields,
-      .metadata.ownerReferences,
-      .metadata.resourceVersion,
-      .metadata.uid,
-      .metadata.labels["kuma.io/zone"],
-      .status
-    )' | \
-  kubectl --context zone1 apply -f -
+kubectl --context zone1 apply -f - <<EOF
+apiVersion: kuma.io/v1alpha1
+kind: MeshTrust
+metadata:
+  name: kong-air-mesh-trust-of-zone2
+  namespace: {{site.mesh_namespace}}
+  labels:
+    kuma.io/mesh: kong-air-mesh
+    kuma.io/origin: zone
+spec:
+  trustDomain: $(kubectl --context zone2 get meshtrust kong-air-identity -n {{site.mesh_namespace}} -o jsonpath='{.spec.trustDomain}')
+  caBundles: $(kubectl --context zone2 get meshtrust kong-air-identity -n {{site.mesh_namespace}} -o jsonpath='{.spec.caBundles}')
+EOF
 ```
 
 For three or more zones, repeat this as an all-to-all operation: every zone needs one `MeshTrust` for every other zone whose certificates it must accept. Automate the distribution rather than maintaining an increasingly large set of manual copy commands.

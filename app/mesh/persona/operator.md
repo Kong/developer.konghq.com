@@ -20,40 +20,43 @@ The operator is a Platform Engineer at Kong Air. The operator's mission is to pr
 
 The operator manages a distributed architecture consisting of a Global Control Plane and multiple Zone Control Planes.
 
-- Global CP: Acts as the single source of truth for all {{site.mesh_product_name}} policies. The operator applies configurations once at the global level, and they are automatically synchronized to all zones.
+- Global CP: Acts as the single source of truth for all {{site.mesh_product_name}} policies. The operator applies configurations once at the global level, and they are automatically synchronized to all zones. The global control plane runs in Universal mode backed by Postgres; a Kubernetes-native global control plane is not supported.
 - Zone CP: Handles the actual distribution of xDS configuration to local sidecars in zones like `zone1` and `zone2`.
 
 ## Multi-zone networking
 
 For the "Global Flight Search" service to span continents, the operator configures specialized infrastructure proxies.
 
-### Entry points with `ZoneIngress`
-The operator ensures that every zone has a ZoneIngress. This proxy acts as the gateway for all cross-zone mTLS traffic. It automatically discovers local services and advertises them to other zones via the Global CP.
+A zone proxy is an ordinary `Dataplane` that carries zone ingress or zone egress listeners. The control plane computes the `kuma.io/listener-zoneingress` and `kuma.io/listener-zoneegress` labels on that `Dataplane`, which is how the operator selects it from policy. There is no separate `ZoneIngress` or `ZoneEgress` resource to manage.
 
-### Secure exits with `ZoneEgress`
-To satisfy strict aviation industry regulations, the operator routes all outgoing traffic (to other zones or the internet) through a ZoneEgress.
-*   Centralized Compliance: Instead of every sidecar needing a path to the internet, only the ZoneEgress needs it.
+### Entry points: zone ingress listeners
+The operator ensures that every zone has a proxy carrying zone ingress listeners. It accepts cross-zone mTLS traffic and routes it to a local instance. Service state reaches other zones through KDS synchronization between the control planes, and the reachable address is published as a `MeshZoneAddress`.
+
+### Secure exits: zone egress listeners
+To satisfy strict aviation industry regulations, the operator routes outgoing traffic (to other zones or the internet) through a proxy carrying zone egress listeners.
+*   Centralized Compliance: Instead of every sidecar needing a path to the internet, only the zone egress needs it.
 *   Auditability: The operator has a single point to audit every request leaving the zone.
 
+The operator provisions this pair per mesh through the Helm `meshes:` list rather than a field on the `Mesh` resource:
+
 ```yaml
-# The operator ensures ZoneEgress is enabled on the kong-air-mesh
-apiVersion: kuma.io/v1alpha1
-kind: Mesh
-metadata:
-  name: kong-air-mesh
-spec:
-  routing:
-    zoneEgress: true
+# One entry per mesh that needs cross-zone connectivity
+meshes:
+  - name: kong-air-mesh
+    ingress:
+      enabled: true
+    egress:
+      enabled: true
 ```
 
 ### Mesh-scoped zone proxies
 
 For a mesh-per-tenant model, the operator deploys dedicated zone proxies per mesh using the Helm `meshes:` list. Each entry provisions its own ingress/egress with independent HPA, PDB, and ServiceAccount, keeping `kong-air-mesh` isolated from any sibling meshes (for example, a separate mesh for ground operations). Two operational details:
 
-*   The new embedded ZoneEgress listeners are deny-by-default. Every `MeshExternalService` is SNI-matched; the operator needs to coordinate with the security architect on `MeshTrafficPermission` `Allow` rules tied to the caller's SPIFFE identity before any external call works.
+*   Zone egress listeners are deny-by-default. Every `MeshExternalService` is SNI-matched; the operator needs to coordinate with the security architect on `MeshTrafficPermission` `Allow` rules tied to the caller's SPIFFE identity before any external call works.
 *   The mesh-scoped model is the preferred operational shape for new deployments.
 
-The operator only enables this after confirming that `kong-air-mesh` is running with `spec.meshServices.mode: Exclusive`; otherwise the control plane skips zone proxy listener generation. See [Configure mesh-scoped zone proxies](/mesh/configure-mesh-scoped-zone-proxies/) for the Helm `meshes:` shape and for how the operator targets the proxies as ordinary `Dataplane` targets, using the `kuma.io/listener-zoneingress` / `kuma.io/listener-zoneegress` labels and `sectionName` for policies such as `MeshTrace`.
+Zone proxy listeners are generated for every mesh that has an entry in the Helm `meshes:` list, with no additional field to set on the `Mesh` resource. See [Configure mesh-scoped zone proxies](/mesh/configure-mesh-scoped-zone-proxies/) for the Helm `meshes:` shape and for how the operator targets the proxies as ordinary `Dataplane` targets, using the `kuma.io/listener-zoneingress` / `kuma.io/listener-zoneegress` labels and `sectionName` for policies such as `MeshTrace`.
 
 ### Envoy admin API on UDS
 
@@ -61,27 +64,27 @@ Sidecar Envoy admin uses a Unix domain socket by default. A readiness reverse-pr
 
 ## High-availability gateway infrastructure
 
-The operator manages the `MeshGatewayInstance` resources that surface the developer's services to the outside world, scaling replicas for peak travel season. When a policy needs to target this gateway, address it as a `MeshService` rather than a `kuma.io/service` tag selector, which is the modern label-selected targeting model used throughout these scenarios.
+The operator runs a delegated gateway ({{site.base_gateway}}) to surface the developer's services to the outside world, scaling replicas for peak travel season. The gateway's proxies are marked with the `kuma.io/gateway` label, and a policy targets them as a `Dataplane` with a `labels:` selector, which is the label-selected targeting model used throughout these scenarios.
 
 ## Global observability policies
 
 The operator provides "Observability as a Service" so the developer doesn't have to worry about where the developer's logs and traces go.
 
 ### Distributed tracing (`MeshTrace`)
-The operator sets up end-to-end tracing across all zones, exporting spans via OTLP/gRPC to a global collector. In 2.14, the recommended pattern is to define one `MeshOpenTelemetryBackend` and reference it from every observability policy; only the gRPC OTel transport is supported, as the earlier HTTP/HTTPS OTel transports have been removed.
+The operator sets up end-to-end tracing across all zones, exporting spans via OTLP/gRPC to a global collector. The operator defines one `MeshOpenTelemetryBackend` and references it from every observability policy through a `backendRef`; only the gRPC OTel transport is supported.
 
 ### Log aggregation (`MeshAccessLog`)
 To maintain a historical record of all flight search requests, the operator streams access logs to a central logging server through a `Tcp` backend. See [Observe mesh traffic in practice](/mesh/observe-mesh-traffic-in-practice/) for the full `MeshTrace` and `MeshAccessLog` configuration.
 
 {:.info}
-> To scope a policy to a slice of the fleet (a whole zone, an environment, a region), the operator sets the top-level `targetRef` to `Dataplane` with a `labels:` selector, for example `kuma.io/zone: zone1` or `environment: production`. Top-level `MeshSubset`, `MeshServiceSubset`, and `MeshService` are older targeting shapes; use `Dataplane` with labels going forward. See the [Target workloads and services](/mesh/target-workloads-and-services/) for examples.
+> To scope a policy to a slice of the fleet (a whole zone, an environment, a region), the operator sets the top-level `targetRef` to `Dataplane` with a `labels:` selector, for example `kuma.io/zone: zone1` or `environment: production`. A top-level `targetRef` accepts only `Mesh` or `Dataplane`, so `Dataplane` with labels is how you scope to anything narrower than the whole mesh. See [Target workloads and services](/mesh/target-workloads-and-services/) for examples.
 
 ## Operational health and lifecycle
 
 The operator monitors the health of the mesh using the Control Plane's built-in metrics. The operator tracks:
 - CP-to-DP Latency: How quickly policy changes reach the developer's sidecars.
 - Cross-Zone Latency: The performance of the network between US and EU zones.
-- Resource Utilization: Ensuring ZoneIngress and Egress proxies have sufficient CPU/RAM.
+- Resource Utilization: Ensuring the zone ingress and zone egress proxies have sufficient CPU/RAM.
 
 ## The operator's result
 By operating the control plane, zone proxies, gateways, and observability stack centrally, the operator gives the developer's and the security architect's teams a consistent platform to build on, they configure behavior through policy without managing the underlying networking themselves.

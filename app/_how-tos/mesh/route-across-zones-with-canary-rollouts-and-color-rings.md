@@ -27,6 +27,12 @@ prereqs:
     - title: Mesh foundation
       content: |
         `MeshIdentity` and `MeshTLS` applied for `kong-air-mesh` (see [Get started with your first policy](/mesh/get-started-with-your-first-policy/)). If you apply or change `MeshIdentity` on existing workloads, restart them before testing routes so they serve the new certificate.
+cleanup:
+  inline:
+    - title: Remove the canary and color-ring resources
+      include_content: md/mesh/v3/cleanup/canary-color-routing
+    - title: Remove the Kong Air foundation
+      include_content: md/mesh/v3/cleanup/kong-air-foundation
 next_steps:
   - text: "Secure the perimeter with MeshPassthrough"
     url: "/mesh/secure-the-perimeter-with-meshpassthrough/"
@@ -89,7 +95,7 @@ This pattern needs a stable `MeshService` in every zone you want to fail over be
 Create the MMZS resources on the Global Control Plane, selecting the generated `MeshService` objects by their service-name labels.
 
 {:.warning}
-> `MeshMultiZoneService` is a Global CP resource; apply it there. The synced zone copies receive a hash suffix in `metadata.name`, so zone-local policies should reference them by labels, not by name.
+> `MeshMultiZoneService` is a Global CP resource; apply it there. Every resource created on a Kubernetes global control plane lives in the system namespace (`{{site.mesh_namespace}}`), and `kuma.io/origin: global` is the value that control plane computes, so the examples state it. A zone control plane instead requires `kuma.io/origin: zone` on anything created in its own system namespace. The synced zone copies receive a hash suffix in `metadata.name`, so zone-local policies should reference them by labels, not by name.
 
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1

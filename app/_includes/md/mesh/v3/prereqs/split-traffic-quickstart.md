@@ -1,4 +1,6 @@
-This guide builds on [Get started with your first policy](/mesh/get-started-with-your-first-policy/). If you haven't completed it, run the following commands to install {{site.mesh_product_name}}, deploy the Kong Air demo apps, and apply that guide's `MeshIdentity`, `MeshTLS`, and `MeshTrafficPermission`:
+This guide builds on [Get started with your first policy](/mesh/get-started-with-your-first-policy/). If you haven't completed it, run the following commands to install {{site.mesh_product_name}}, deploy the Kong Air demo apps, and apply that guide's `MeshIdentity`, `MeshTLS`, and `MeshTrafficPermission`.
+
+The `MeshIdentity` sets `spiffeID.trustDomain` explicitly to `kong-air-mesh.zone1.mesh.local`. A standalone control plane would otherwise derive a trust domain from its own zone name, and the SPIFFE IDs used throughout this collection are written against `zone1`:
 
 ```sh
 helm repo add kong-mesh https://kong.github.io/kong-mesh-charts
@@ -12,9 +14,6 @@ apiVersion: kuma.io/v1alpha1
 kind: Mesh
 metadata:
   name: kong-air-mesh
-spec:
-  meshServices:
-    mode: Exclusive
 ---
 apiVersion: v1
 kind: Namespace
@@ -224,6 +223,7 @@ metadata:
   namespace: {{site.mesh_namespace}}
   labels:
     kuma.io/mesh: kong-air-mesh
+    kuma.io/origin: zone
 spec:
   selector:
     dataplane:
@@ -238,7 +238,7 @@ spec:
       meshTrustCreation: Enabled
   spiffeID:
     path: /ns/{% raw %}{{ .Namespace }}{% endraw %}/sa/{% raw %}{{ .ServiceAccount }}{% endraw %}
-    trustDomain: kong-air-mesh.mesh.local
+    trustDomain: kong-air-mesh.zone1.mesh.local
 EOF
 kubectl rollout restart deployment -n kong-air-production
 kubectl wait -n kong-air-production --for=condition=available --timeout=5m deployment --all
@@ -251,6 +251,7 @@ metadata:
   namespace: {{site.mesh_namespace}}
   labels:
     kuma.io/mesh: kong-air-mesh
+    kuma.io/origin: zone
 spec:
   targetRef:
     kind: Mesh
@@ -267,6 +268,7 @@ metadata:
   namespace: {{site.mesh_namespace}}
   labels:
     kuma.io/mesh: kong-air-mesh
+    kuma.io/origin: zone
 spec:
   targetRef:
     kind: Dataplane
@@ -277,7 +279,7 @@ spec:
         allow:
           - spiffeID:
               type: Exact
-              value: spiffe://kong-air-mesh.mesh.local/ns/kong-air-production/sa/flight-control
+              value: spiffe://kong-air-mesh.zone1.mesh.local/ns/kong-air-production/sa/flight-control
 EOF
 ```
 {:.collapsible}
