@@ -40,9 +40,7 @@ faqs:
       Use `/D=your_path` only when you want to specify a custom installation directory.
      
 next_steps:
-  - text: Get started with documents
-    url: /insomnia/documents/
-  - text: Get started with collections
+  - text: Get started with API Collections
     url: /insomnia/collections/
 
 no_wrap: true    

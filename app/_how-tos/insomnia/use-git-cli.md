@@ -13,7 +13,6 @@ min_version:
   insomnia: "12.6"
 
 tags:
-- insomnia-documents
 - collections
 - mock-servers
 - git
