@@ -821,6 +821,7 @@ supports_konnect
 svg
 svgs
 swaggerhub
+switchyard
 syscall
 syslog
 systemd
