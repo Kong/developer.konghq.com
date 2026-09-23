@@ -45,7 +45,8 @@ min_version:
 ---
 
 The NVIDIA Switchyard AI Routing plugin asks an external decision service which model should serve each AI request, then applies that answer through {{site.base_gateway}}'s own {{site.ai_gateway}} machinery.
-The decision service returns the name of a target; {{site.base_gateway}} decides what that name is allowed to mean.
+The decision service returns the name of a target.
+{{site.base_gateway}} decides what that name is allowed to mean.
 
 Sending every prompt to your most capable model is expensive, and sending every prompt to your cheapest one is unreliable.
 Deciding per request needs a model of prompt difficulty, which is a research problem rather than a gateway problem.
@@ -61,8 +62,8 @@ Integrating the NVIDIA Switchyard AI Routing plugin into your {{site.base_gatewa
 - **Adopt it without risk**: The plugin starts in `observe_only`, where decisions are logged but never applied.
 
 {:.info}
-> **Note**: This plugin doesn't itself route traffic to an LLM.
-> It sets the model alias that [AI Proxy Advanced](/plugins/ai-proxy-advanced/) uses to select a target, and runs ahead of it in the same request.
+> **Note**: This plugin sets the model alias that [AI Proxy Advanced](/plugins/ai-proxy-advanced/) uses to select a target, and executes at a higher priority so its alias is in place first.
+> It doesn't route traffic to an LLM directly.
 
 ## How it works
 
@@ -127,11 +128,12 @@ rows:
 {% endtable %}
 
 Nothing from the decision response reaches the network layer: `base_url` is read for comparison only.
-This matters because the decision service is a separate system, often owned by a different team, and a compromised or simply misconfigured one shouldn't be able to redirect your traffic to an arbitrary host.
+This matters because the decision service is a separate system, often owned by a different team, and a compromised or misconfigured one shouldn't be able to redirect your traffic to an arbitrary host.
 
 ### What is sent to the decision service
 
-`POST /v1/decision` takes a whole provider request; it has no summary-only mode.
+`POST /v1/decision` takes a whole provider request.
+It has no summary-only mode.
 The plugin builds that request, so the disclosure boundary is enforced by {{site.base_gateway}} rather than requested of the decision service.
 
 By default the plugin sends no prompt content.
@@ -197,6 +199,9 @@ Before installing the plugin, make sure you have:
 - A {{site.base_gateway}} Enterprise license, for AI Proxy Advanced.
 - A reachable NVIDIA Switchyard Decision API, exposing `POST /v1/decision`.
 - A route configured in Switchyard whose targets correspond to the models you intend to route between.
+
+Set [`config.dispatch`](/plugins/ai-routing-provider/reference/#schema--config-dispatch) to `model_alias` for the production path, since it dispatches through AI Proxy Advanced.
+Use `upstream` only to test the plugin without AI Proxy Advanced or an Enterprise license, since it changes the Service's upstream target directly instead of rewriting a model alias.
 
 #### Run the Switchyard Decision API
 
@@ -368,7 +373,8 @@ See the following examples:
 - [Enable NVIDIA Switchyard AI routing](/plugins/ai-routing-provider/examples/enable-ai-routing-provider/): a two-tier configuration in `enforce` mode.
 - [Route between model tiers](/plugins/ai-routing-provider/examples/model-tier-routing/): the same configuration, with guidance on adopting it safely from `observe_only` to `enforce`.
 
-The plugin sets a model alias; AI Proxy Advanced resolves it.
+The plugin sets a model alias.
+AI Proxy Advanced resolves it.
 Enable both on the same Route, and make sure each alias referenced here exists as a target there.
 
 Start with `mode: observe_only` to see what the decision service would do without changing behavior, then switch to `enforce`.
@@ -380,8 +386,7 @@ This is required: the alias is only useful if it's set before AI Proxy Advanced 
 
 ## Test the plugin
 
-Send a request and inspect the routing headers.
-For example:
+Send a chat completion request to the configured Route and inspect the routing headers:
 
 ```bash
 curl -i -X POST http://localhost:8000/ai/chat \
