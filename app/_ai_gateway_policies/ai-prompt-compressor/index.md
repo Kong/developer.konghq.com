@@ -197,6 +197,8 @@ rows:
 
 ## Headroom compressor service {% new_in 2.2 %}
 
+{:.warning}
+> This feature is currently in [Tech Preview](/stages-of-software-availability/#tech-preview) and should not be used in a production environment.
 
 Before using Headroom with AI Prompt Compressor Policy you must have a Headroom instance accessible to your {{site.ai_gateway}}.
 
@@ -246,10 +248,13 @@ Headroom uses loopback-trust by default. It answers unauthenticated calls on `12
 
 ### Headroom prompt flow
 
+The AI Prompt Compressor Policy derives a session identifier for each conversation, based on the configured `headroom.session_id_headers`, so Headroom can recognize the turns it has already compressed for that conversation. Recognized turns are replayed unchanged instead of compressed again, which ensures the upstream LLM provider's cache hits on repeated turns.
+
 1. {{site.ai_gateway}} sends the user or agent's request to the AI Prompt Compressor.
-2. The AI Prompt Compressor builds an OpenAI-format messages array from the eligible content. This operates on the whole messages array.
-3. The AI Prompt Compressor sends a `POST` request to Headroom's `/v1/compress` endpoint with the content to compress and any configuration specified in the policy.
-4. Headroom returns `200` with the compressed replacement messages and metadata.
+2. The AI Prompt Compressor builds an OpenAI-format messages array from the whole conversation.
+3. The AI Prompt Compressor sends a `POST` request to Headroom's `/v1/compress` endpoint with the messages array and a session identifier for the conversation.
+4. If Headroom recognizes the session identifier, it replays the turns it already compressed unchanged and compresses only the new messages. Otherwise, it compresses the whole conversation.
+5. Headroom returns `200` with the compressed messages and metadata.
 
 If the call to Headroom fails, the AI Prompt Compressor rejects the request by default. For details, see [Failure behavior](#failure-handling).
 
@@ -261,15 +266,21 @@ sequenceDiagram
     actor User as User/Agent
     participant KongAICompressor as AI Prompt Compressor Policy
     participant Headroom
-    participant LLM as Large Language Model
+    participant LLM as LLM Provider
 
-    User->>KongAICompressor: Sends initial request
+    User->>KongAICompressor: Sends request
     activate KongAICompressor
-    KongAICompressor->>Headroom: POST /v1/compress
+    KongAICompressor->>Headroom: POST /v1/compress with messages and session ID
+
+    alt Session recognized
+        Headroom->>Headroom: Replay cached turns, compress only new messages
+    else New session
+        Headroom->>Headroom: Compress whole conversation
+    end
 
     alt Compression succeeds
         Headroom-->>KongAICompressor: Return 200 with compressed messages and metadata
-        KongAICompressor->>LLM: Send compressed message to upstream provider
+        KongAICompressor->>LLM: Send compressed messages to upstream provider
         LLM-->>KongAICompressor: Return response
         KongAICompressor-->>User: Return response
     else Compression fails
