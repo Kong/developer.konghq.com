@@ -4,7 +4,7 @@ description: Require a topic name prefix, cap partitions and enforce a minimum r
 
 extended_description: |
   This Request Rule Validator policy enforces conventions on `CreateTopics` requests for a shared Kafka cluster:
-  
+
   In this example:
   * Topic names must start with `team-a.`.
   * Topics can't have more than 50 partitions.
@@ -23,20 +23,19 @@ type: request_rule_validator
 config:
   requests:
     - type: create_topics
-      create_topics:
-        rules:
-          - description: "Topic name must start with 'team-a.'"
-            rule: '{{topic.name.startsWith("team-a.")}}'
-            action: reject
-          - description: "Topic must have 50 partitions or fewer"
-            rule: '{{topic.num_partitions != -1 ? topic.num_partitions <= 50 : size(topic.assignments) <= 50}}'
-            action: reject
-          - description: "Replication factor must be at least 3"
-            rule: '{{topic.replication_factor != -1 ? topic.replication_factor >= 3 : topic.assignments.all(a, size(a.broker_ids) >= 3)}}'
-            action: reject
-          - description: "retention.ms must be set to 24h (86400000)"
-            rule: '{{"retention.ms" in topic.configs && topic.configs["retention.ms"] != null && int(topic.configs["retention.ms"]) == 86400000}}'
-            action: reject
+      rules:
+        - description: "Topic name must start with \"team-a.\""
+          rule: '{{topic.name.startsWith("team-a.")}}'
+          action: reject
+        - description: "Topic must have 50 partitions or fewer"
+          rule: '{{topic.num_partitions != -1 ? topic.num_partitions <= 50 : size(topic.assignments) <= 50}}'
+          action: reject
+        - description: "Replication factor must be at least 3"
+          rule: '{{topic.replication_factor != -1 ? topic.replication_factor >= 3 : topic.assignments.all(a, size(a.broker_ids) >= 3)}}'
+          action: reject
+        - description: "retention.ms must be set to 24h (86400000)"
+          rule: '{{"retention.ms" in topic.configs && int(topic.configs["retention.ms"]) == 86400000}}'
+          action: reject
 
 tools:
   - konnect-api
