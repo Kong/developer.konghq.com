@@ -107,6 +107,14 @@ sections:
       - path: /how-to/build-a-custom-docker-image/
       - path: /gateway/cloud-provider-support-matrix/
 
+  - title: Disaster Recovery
+    items:
+      - path: /gateway/disaster-recovery/kubernetes/
+      - path: /gateway/disaster-recovery/kubernetes/prepare/
+      - path: /gateway/disaster-recovery/kubernetes/konnect/
+      - path: /gateway/disaster-recovery/kubernetes/hybrid/
+      - path: /gateway/disaster-recovery/kubernetes/test/
+
   - title: Upgrade and Migration
     items:
       - path: /gateway/upgrade/

@@ -87,6 +87,10 @@ groups:
           - path: /operator/dataplanes/reference/autoscale-gateway/
           - path: /operator/dataplanes/reference/autoscale-workloads/
           - path: /operator/dataplanes/reference/service-annotations/
+      - title: Disaster Recovery
+        items:
+          - path: /operator/dataplanes/disaster-recovery/
+          - path: /gateway/disaster-recovery/kubernetes/konnect/
       - title: Upgrading
         items:
           - path: /operator/migrate/migrate-1.6.x-2.0.0/
