@@ -87,7 +87,7 @@ cleanup:
   inline:
     - title: Delete the MCP server
       content: |
-        Undeploy the MCP server by deleting its control plane mapping, then delete the MCP server and its source:
+        Stop the MCP server by deleting its control plane mapping, then delete the MCP server and its source:
 
         ```sh
         curl -X DELETE "https://us.api.konghq.com/v1/context-interfaces/$MCP_SERVER_ID/control-plane-mappings/$CP_MAPPING_ID" \
