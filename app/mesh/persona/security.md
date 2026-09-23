@@ -53,12 +53,12 @@ spec:
 This ties authorization to the caller's authenticated SPIFFE identity: the policy attaches to the `flight-db` proxies and allows only the `flight-control` identity.
 
 {:.info}
-> Older policies expressed this with a top-level `kind: MeshService` target and a `from[]` block naming another `MeshService`. Both top-level `MeshService` targeting and the `from` shape are on the deprecation list, use the `Dataplane` selector + SPIFFE-id `allow` rule shown above.
+> A top-level `targetRef` accepts only `Mesh` or `Dataplane`, and `MeshTrafficPermission` expresses authorization through `rules[]` with `allow`, `deny`, or `allowWithShadowDeny`. The `Dataplane` selector plus a SPIFFE-id `allow` rule is the shape shown here.
 
 Replace `<flight-control-spiffe-id>` with the actual SPIFFE ID emitted by your `MeshIdentity` template. On the Kubernetes best-practice path, that is usually a ServiceAccount-based identity rather than a short `spiffe://<mesh>/<workload>` form.
 
 {:.info}
-> To allow communication between broad security zones (for example, `zone: dmz` to `zone: internal`), the security architect uses a `Dataplane` selector with `labels:` at the top level. Top-level `MeshSubset` / `MeshServiceSubset` are older targeting shapes, see the [Target workloads and services](/mesh/target-workloads-and-services/).
+> To allow communication between broad security zones (for example, `zone: dmz` to `zone: internal`), the security architect uses a `Dataplane` selector with `labels:` at the top level. See [Target workloads and services](/mesh/target-workloads-and-services/).
 
 ## External security and governance
 
@@ -68,12 +68,9 @@ The security architect's security posture extends beyond the mesh boundaries.
 External requests from passengers enter through `booking-gateway` ({{site.base_gateway}}, operated by the operator). The security architect configures the gateway to validate passenger JWTs (OpenID Connect) before translating that identity into the mesh.
 
 ### Egress control and filtering
-When internal services need to fetch weather data from `weather-api` (a SaaS provider), the security architect uses ZoneEgress and `MeshExternalService` (defined by the operator) to strictly control and log these outbound connections.
+When internal services need to fetch weather data from `weather-api` (a SaaS provider), the security architect uses the zone egress listeners and `MeshExternalService` (defined by the operator) to strictly control and log these outbound connections.
 
-`MeshExternalService` traffic is deny-by-default at the ZoneEgress listener itself, so the security architect's `MeshTrafficPermission` targets the zone-proxy `Dataplane` (the computed label `kuma.io/listener-zoneegress: enabled`, narrowed with `sectionName`) and its `Allow` rule matches both the caller's authenticated identity (`spiffeID`) and the destination external service (`sni`). In 2.14 the SNI format is `sni.extsvc.<mesh>.<zone>.<namespace>.<name>.<port>`. See [Manage external services with MeshExternalService](/mesh/manage-external-services-with-meshexternalservice/) for the full egress `MeshTrafficPermission` and how to derive the SNI.
-
-{:.warning}
-> Older `kind: MeshExternalService` targeting is gone in 2.14. Earlier releases allowed a `MeshTrafficPermission` to target the external service directly (top-level `targetRef.kind: MeshExternalService` with a `from[]` block naming the calling `MeshService`). That form is rejected by the admission webhook in 2.14. The listener-targeted form is the only supported model for mesh-scoped ZoneEgress.
+`MeshExternalService` traffic is deny-by-default at the zone egress listener itself, so the security architect's `MeshTrafficPermission` targets the zone-proxy `Dataplane` (the computed label `kuma.io/listener-zoneegress: enabled`, narrowed with `sectionName`) and its `allow` rule matches both the caller's authenticated identity (`spiffeID`) and the destination external service (`sni`). The SNI format is `sni.extsvc.<mesh>.<zone>.<namespace>.<name>.<port>`. See [Manage external services with MeshExternalService](/mesh/manage-external-services-with-meshexternalservice/) for the full egress `MeshTrafficPermission` and how to derive the SNI.
 
 ## Governance and audit trails
 

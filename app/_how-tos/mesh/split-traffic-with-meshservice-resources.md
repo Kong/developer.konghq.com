@@ -10,31 +10,40 @@ products:
   - mesh
 works_on:
   - on-prem
+  - konnect
+min_version:
+  mesh: '3.0'
 faqs:
   - q: "Why does the Service need `appProtocol: http`?"
     a: |
-      The Kubernetes `Service` example sets `appProtocol: http` on the port. In `Exclusive` mode, {{site.mesh_product_name}} reads this field to set the protocol on the generated `MeshService`.
+      {{site.mesh_product_name}} reads `appProtocol` from each Kubernetes `Service` port to set the protocol on the `MeshService` it generates. Generation is always on, so there is no mode to opt into.
 
-      Without it, the `MeshService` defaults to `tcp`, and HTTP-aware policies, `MeshHTTPRoute`, weighted splits, retries on `5xx`, silently won't apply. Always set `appProtocol` on Services you intend to route at L7.
+      Without `appProtocol`, the generated port defaults to `tcp`, and HTTP-aware behavior (`MeshHTTPRoute`, weighted splits, retries on `5xx`) silently won't apply. Always set `appProtocol` on Services you intend to route at L7.
 tldr:
   q: How do I split traffic between different versions of my service?
   a: |
-    Use Explicit Subsetting by:
-    1. Defining distinct versioned destinations for each version you want to route independently (for example, `v1` and `v2`).
-    2. Using MeshHTTPRoute to assign `weights` to each `backendRef`.
-    3. Verifying the split by monitoring the distribution of requests across the named services.
+    Give each version its own Kubernetes `Service` so {{site.mesh_product_name}} generates a `MeshService` per version, then:
+    1. Target the shared entry point from a `MeshHTTPRoute` `to[].targetRef`.
+    2. Assign a `weight` to each `backendRef`, one per versioned `MeshService`.
+    3. Verify the split by tallying which pod served each response.
 prereqs:
   inline:
     - title: Set up the scenario
       include_content: md/mesh/v3/prereqs/split-traffic-quickstart
+cleanup:
+  inline:
+    - title: Remove the traffic split
+      include_content: md/mesh/v3/cleanup/split-traffic
+    - title: Remove the Kong Air foundation
+      include_content: md/mesh/v3/cleanup/kong-air-foundation
 next_steps:
   - text: "Target workloads and services"
     url: "/mesh/target-workloads-and-services/"
 related_resources:
   - text: MeshHTTPRoute
     url: /mesh/policies/meshhttproute/
-  - text: MeshService
-    url: /mesh/meshservice/
+  - text: Resource scoping
+    url: /mesh/resource-scoping/
   - text: Policy targeting and precedence
     url: /mesh/policy-targeting-and-precedence/
 ---
@@ -140,6 +149,24 @@ spec:
       appProtocol: http' | kubectl apply -f -
 ```
 
+Confirm that the control plane generated a `MeshService` for each versioned `Service`:
+
+```bash
+kubectl get meshservices -n kong-air-production -o name
+```
+
+```text
+meshservice.kuma.io/check-in-api
+meshservice.kuma.io/flight-control
+meshservice.kuma.io/passenger-portal
+meshservice.kuma.io/passenger-portal-v1
+meshservice.kuma.io/passenger-portal-v2
+```
+{:.no-copy-code}
+
+{:.info}
+> On Kubernetes, `kuma.io/display-name` is stored as an annotation rather than a label, so `kubectl get meshservice --show-labels` does not list it. The control plane still computes it from the object name when it evaluates a policy, which is why `kuma.io/display-name: passenger-portal-v1` selects the `passenger-portal-v1` `MeshService`.
+
 ## Configure the weighted route
 
 Create a `MeshHTTPRoute` that distributes traffic between these two resources. The top-level `targetRef` is `Mesh`, so the split applies to every client that calls `passenger-portal`:
@@ -152,7 +179,6 @@ metadata:
   namespace: kong-air-production
   labels:
     kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: zone
 spec:
   targetRef:
     kind: Mesh # Applies to every client that calls passenger-portal
@@ -177,6 +203,9 @@ spec:
                 port: 8080
                 weight: 10 # 10% traffic to canary' | kubectl apply -f -
 ```
+
+{:.info}
+> This route needs no `kuma.io/origin` label, but the `MeshTrafficPermission` in the following section does. A zone control plane connected to a global control plane requires every resource created in the system namespace (`{{site.mesh_namespace}}`) to carry `kuma.io/origin: zone`, and rejects it otherwise. In an application namespace such as `kong-air-production`, the control plane computes the label for you. See [Resource scoping](/mesh/resource-scoping/).
 
 ## Authorize check-in-api to call passenger-portal
 

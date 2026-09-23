@@ -26,6 +26,12 @@ prereqs:
     - title: Resources
       content: |
         A client workload (for example, `check-in-api`) to test outbound connectivity.
+cleanup:
+  inline:
+    - title: Remove the passthrough policies
+      include_content: md/mesh/v3/cleanup/meshpassthrough
+    - title: Remove the Kong Air foundation
+      include_content: md/mesh/v3/cleanup/kong-air-foundation
 next_steps:
   - text: "Manage external services with MeshExternalService"
     url: "/mesh/manage-external-services-with-meshexternalservice/"
@@ -49,7 +55,7 @@ Using `MeshPassthrough`, you explicitly define which outbound destinations are a
 *   Auditability: A single, declarative record of which external destinations workloads may reach, useful evidence for controls like PCI, HIPAA, or SOC 2.
 
 {:.info}
-> Interaction with mesh-scoped ZoneEgress. If you've enabled mesh-scoped ZoneEgress (the `meshes:` Helm list, see [Multi-zone architecture](/mesh/multi-zone-architecture/)), `MeshExternalService` traffic flowing through that listener is deny-by-default at the ZE itself, SNI-matched per external service. A `MeshTrafficPermission` `Allow` for the caller's SPIFFE identity is required even before `MeshPassthrough` gets a chance to evaluate. `MeshPassthrough` remains the right control for non-`MeshExternalService` egress.
+> Interaction with mesh-scoped zone egress. If you've enabled mesh-scoped zone proxies (the `meshes:` Helm list, see [Multi-zone architecture](/mesh/multi-zone-architecture/)), `MeshExternalService` traffic flowing through the zone egress listener is deny-by-default at that listener, SNI-matched per external service. A `MeshTrafficPermission` `allow` rule for the caller's SPIFFE identity is required even before `MeshPassthrough` gets a chance to evaluate. `MeshPassthrough` remains the right control for non-`MeshExternalService` egress.
 
 ## Configure MeshPassthrough
 
@@ -124,9 +130,9 @@ spec:
 
 ## Interaction with egress gateways
 
-For maximum security, combine `MeshPassthrough` with a ZoneEgress.
+For maximum security, combine `MeshPassthrough` with a zone egress.
 1.  Direct mode: Sidecar tries to call the external service directly. `MeshPassthrough` logic happens in the sidecar.
-2.  Egress mode: Sidecar is forced to route external traffic to the `ZoneEgress`. Once the destination is a `MeshExternalService`, the mesh-scoped ZoneEgress listener is deny-by-default and needs a matching `MeshTrafficPermission` allow before `MeshPassthrough` ever evaluates.
+2.  Egress mode: Sidecar is forced to route external traffic to the zone egress listener. Once the destination is a `MeshExternalService`, that listener is deny-by-default and needs a matching `MeshTrafficPermission` allow rule before `MeshPassthrough` ever evaluates.
 
 {:.info}
 > Use `MeshPassthrough` at the `Mesh` level to set a global security baseline, then use more specific `Dataplane` selectors (by `labels:`) to grant exceptions to the workloads that need broader internet access.

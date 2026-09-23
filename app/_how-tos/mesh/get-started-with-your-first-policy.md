@@ -28,8 +28,16 @@ prereqs:
       include_content: prereqs/products/konnect-account-only
     - title: A running Kubernetes cluster
       include_content: md/mesh/v3/prereqs/kubernetes-cluster
-    - title: Connect a Kubernetes zone and deploy Kong Air
+    - title: kongctl
+      include_content: md/mesh/v3/prereqs/kongctl
+    - title: Create the mesh and connect a Kubernetes zone
+      include_content: md/mesh/v3/prereqs/konnect-zone
+    - title: Deploy Kong Air
       include_content: md/mesh/v3/prereqs/kong-air-quickstart
+cleanup:
+  inline:
+    - title: Remove the Kong Air foundation
+      include_content: md/mesh/v3/cleanup/kong-air-foundation
 related_resources:
   - text: Issue identity with MeshIdentity
     url: /mesh/issue-identity-with-meshidentity/
@@ -60,7 +68,7 @@ The response is the `check-in-api` pod hostname. This establishes the baseline t
 In {{site.mesh_product_name}}, workload identity is issued by the `MeshIdentity` resource. This one-zone scenario uses the `Bundled` provider with `autogenerate` as a quick starting point. For the full identity walkthrough, including production provider and multi-zone trust choices, see [Issue identity with MeshIdentity](/mesh/issue-identity-with-meshidentity/).
 
 {:.warning}
-> `MeshIdentity` must be created in the system namespace (`{{site.mesh_namespace}}`) on Kubernetes. This scenario creates a zone-origin identity in the connected Kubernetes zone, so the resource includes `kuma.io/origin: zone`.
+> On Kubernetes, `MeshIdentity` can only be created in the system namespace (`{{site.mesh_namespace}}`). A zone control plane connected to a global control plane requires every resource created in that namespace to carry `kuma.io/origin: zone`, and rejects it otherwise, which is why this identity and the two policies that follow it all set the label. In an application namespace the control plane computes the label for you. See [Resource scoping](/mesh/resource-scoping/).
 
 1. Apply the `MeshIdentity`:
 
@@ -115,7 +123,7 @@ spiffe://kong-air-mesh.zone1.mesh.local/ns/kong-air-production/sa/passenger-port
 {:.info}
 > `MeshIdentity` is an issuer, not an identity. It sets the CA/provider, the SPIFFE ID path template, and the trust domain. The actual SPIFFE ID is rendered per workload from that template. Every workload still gets a unique identity, and `MeshTrafficPermission` keeps full per-workload granularity even with one mesh-wide identity.
 >
-> Because this example omits `spiffeID.trustDomain`, the zone-aware default is `{% raw %}{{ .Mesh }}.{{ .Zone }}.mesh.local{% endraw %}`. For `kong-air-mesh` in `zone1`, that becomes `kong-air-mesh.zone1.mesh.local`.
+> Because this example omits `spiffeID.trustDomain`, the zone-aware default is `{% raw %}{{ .Mesh }}.{{ .Zone }}.mesh.local{% endraw %}`. For `kong-air-mesh` in `zone1`, that becomes `kong-air-mesh.zone1.mesh.local`. `.Zone` is the zone name you set in `kuma.controlPlane.zone` when you connected the zone, so these identities change if you used a different one.
 >
 > Add more `MeshIdentity` resources only when a group of workloads needs different issuance (a different CA/provider, path scheme, or rotation policy), not to authorize app-to-app traffic.
 
@@ -150,13 +158,20 @@ spiffe://kong-air-mesh.zone1.mesh.local/ns/kong-air-production/sa/passenger-port
    kubectl exec -n kong-air-production deploy/flight-control -- wget -q -T 5 -O- http://check-in-api.kong-air-production.svc.cluster.local:8080/
    ```
 
-   The command should fail.
+   The request is now rejected:
+
+   ```text
+   wget: server returned error: HTTP/1.1 403 Forbidden
+   ```
+   {:.no-copy-code}
+
+   The `403` is the proxy refusing the connection, not the application responding. Every inbound listener in the mesh is closed until a `MeshTrafficPermission` opens it.
 
 ## Authorize service-to-service traffic
 
 Now let's grant `flight-control` access to `check-in-api`. The best practice path is to target the receiving data plane and allow the caller's authenticated SPIFFE identity explicitly.
 
-Because each workload runs as its own Kubernetes `ServiceAccount`, the SPIFFE ID encodes the zone, namespace, and service account name. `flight-control` runs in `zone1` as the `flight-control` `ServiceAccount`, so its SPIFFE ID is `spiffe://kong-air-mesh.zone1.mesh.local/ns/kong-air-production/sa/flight-control`:
+Because each workload runs as its own Kubernetes `ServiceAccount`, the SPIFFE ID encodes the zone, namespace, and service account name. `flight-control` runs in `zone1` as the `flight-control` `ServiceAccount`, so its SPIFFE ID is `spiffe://kong-air-mesh.zone1.mesh.local/ns/kong-air-production/sa/flight-control`. If you named your zone something other than `zone1` when you connected it, substitute that name in the trust domain:
 
 ```sh
 echo 'apiVersion: kuma.io/v1alpha1
@@ -206,5 +221,12 @@ spec:
    ```sh
    kubectl exec -n kong-air-production deploy/passenger-portal -- wget -q -T 5 -O- http://check-in-api.kong-air-production.svc.cluster.local:8080/
    ```
+
+   It fails with the same error as before:
+
+   ```text
+   wget: server returned error: HTTP/1.1 403 Forbidden
+   ```
+   {:.no-copy-code}
 
 These two results confirm the policy is scoped correctly: `flight-control` is explicitly authorized, and every other workload remains blocked by the default-deny posture.

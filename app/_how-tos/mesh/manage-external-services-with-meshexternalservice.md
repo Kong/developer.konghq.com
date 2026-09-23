@@ -26,6 +26,12 @@ prereqs:
     - title: Policy
       content: |
         mTLS must be enabled on the `Mesh`.
+cleanup:
+  inline:
+    - title: Remove the external service definitions
+      include_content: md/mesh/v3/cleanup/external-services
+    - title: Remove the Kong Air foundation
+      include_content: md/mesh/v3/cleanup/kong-air-foundation
 next_steps:
   - text: "Validate resilience with fault injection"
     url: "/mesh/validate-resilience-with-fault-injection/"
@@ -58,7 +64,7 @@ If Kong Air wants a custom naming scheme, that is an operator-level customizatio
 Kong Air uses a managed PostgreSQL instance for flight data. By defining it as a `MeshExternalService`, the application can reach it through a mesh-generated hostname instead of hardcoding the AWS endpoint directly.
 
 {:.info}
-> On Kubernetes in multi-zone mode, `MeshExternalService` is a system-namespace resource. On a Zone CP, it must be created in `{{site.mesh_namespace}}` and carry the label `kuma.io/origin: zone`.
+> On Kubernetes, `MeshExternalService` can only be created in the system namespace (`{{site.mesh_namespace}}`). A zone control plane connected to a global control plane requires every resource created in that namespace to carry `kuma.io/origin: zone`, and rejects it otherwise, which applies to the `MeshTrafficPermission` and `MeshRetry` in this guide as well. In an application namespace the control plane computes the label for you. See [Resource scoping](/mesh/resource-scoping/).
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -219,6 +225,7 @@ metadata:
   namespace: {{site.mesh_namespace}}
   labels:
     kuma.io/mesh: kong-air-mesh
+    kuma.io/origin: zone
 spec:
   selector:
     dataplane:

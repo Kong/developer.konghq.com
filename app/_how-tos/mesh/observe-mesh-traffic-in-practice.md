@@ -23,6 +23,12 @@ prereqs:
     - title: Kong Air demo deployment
       content: |
         A running {{site.mesh_product_name}} deployment with the Kong Air demo apps in `kong-air-mesh`. See [Get started with your first policy](/mesh/get-started-with-your-first-policy/).
+cleanup:
+  inline:
+    - title: Remove the telemetry policies
+      include_content: md/mesh/v3/cleanup/observability
+    - title: Remove the Kong Air foundation
+      include_content: md/mesh/v3/cleanup/kong-air-foundation
 next_steps:
   - text: "Manage workload identity and mTLS"
     url: "/mesh/manage-workload-identity-and-mtls/"
@@ -71,7 +77,7 @@ rows:
 
 ## Install the observability stack
 
-Install and wire up the Prometheus, Grafana, and tracing backends by following the canonical [mesh observability](/mesh/observability/) reference. To collect traces and OTel-based logs, deploy a collector as described in [Deploy an OpenTelemetry collector](/mesh/deploy-an-opentelemetry-collector/). Once the stack is running, wire {{site.mesh_product_name}} into it with the `MeshMetric`, `MeshTrace`, and `MeshAccessLog` policies below.
+Install and wire up the Prometheus, Grafana, and tracing backends by following the canonical [mesh observability](/mesh/observability/) reference. To collect traces and OTel-based logs, deploy a collector as described in [Deploy an OpenTelemetry collector](/mesh/deploy-an-opentelemetry-collector/). Once the stack is running, wire {{site.mesh_product_name}} into it with the following `MeshMetric`, `MeshTrace`, and `MeshAccessLog` policies.
 
 ## Metrics with `MeshMetric`
 
@@ -115,7 +121,7 @@ Enable sidecar metrics exposure so Prometheus can scrape them:
    ```
 
 {:.info}
-> On a Zone CP, mesh-scoped observability policies created in the system namespace need `kuma.io/origin: zone`, just like `MeshExternalService`.
+> `MeshMetric`, `MeshTrace`, and `MeshAccessLog` can live in an application namespace, but this guide applies them mesh-wide from the system namespace (`{{site.mesh_namespace}}`), and `MeshOpenTelemetryBackend` can only be created there. A zone control plane connected to a global control plane requires every resource created in that namespace to carry `kuma.io/origin: zone`, and rejects it otherwise. See [Resource scoping](/mesh/resource-scoping/).
 >
 > `MeshMetric` opens port `5670` on each sidecar for Prometheus to scrape. This requires a pod restart to take effect, as the sidecar must bind the new port on startup.
 >
@@ -136,6 +142,7 @@ metadata:
   namespace: {{site.mesh_namespace}}
   labels:
     kuma.io/mesh: kong-air-mesh
+    kuma.io/origin: zone
 spec:
   targetRef:
     kind: Dataplane
