@@ -26,7 +26,7 @@ related_resources:
     url: /ai-gateway/forward-proxy/
 ---
 
-The AI Prompt Compressor Policy compresses retrieved chunks before sending them to a Large Language Model (LLM), reducing text length while preserving meaning. It supports multiple cache-aware compression providers.
+The AI Prompt Compressor Policy compresses messages before sending them to a Large Language Model (LLM), reducing text length while preserving meaning. It supports multiple cache-aware compression providers.
 
 The AI Prompt Compressor Policy supports:
 
@@ -34,7 +34,7 @@ The AI Prompt Compressor Policy supports:
 - **Configurable compression ranges**: for example, compress prompts under 100 tokens with a 0.8 ratio or compress them to exactly 100 tokens.
 - **Selective compression with LLMLingua**: use `<LLMLINGUA>...</LLMLINGUA>` tags to target specific sections of the prompt. These tags work **only in the `inject_template` field of the [AI RAG Injector Policy](/ai-gateway/policies/ai-rag-injector/)** and must be used **in combination with the AI Prompt Compressor Policy**.
 
-The following providers are available:
+The following compression providers are available:
 
 - `kong`: Use the [LLMLingua 2 library](https://github.com/microsoft/LLMLingua) to compress prose in user messages.
 - `headroom`: Use [Headroom](https://github.com/headroomlabs-ai/headroom) to compress agent traffic such as tool results, large JSON payloads, search output, and logs returned by tools.
@@ -248,10 +248,12 @@ Headroom uses loopback-trust by default. It answers unauthenticated calls on `12
 
 ### Headroom prompt flow
 
-The AI Prompt Compressor Policy derives a session identifier for each conversation, based on the configured `headroom.session_id_headers`, so Headroom can recognize the turns it has already compressed for that conversation. Recognized turns are replayed unchanged instead of compressed again, which ensures the upstream LLM provider's cache hits on repeated turns.
+The AI Prompt Compressor Policy uses Headroom in a stateful mode and derives a session identifier for each conversation, based on the configured `headroom.session_id_headers`, a [Consumer](/ai-gateway/entities/ai-consumer/), or a `credential`. Headroom can recognize the turns it has already compressed for that conversation, recognized turns are replayed unchanged instead of compressed again. This ensures the upstream LLM provider's cache hits on repeated turns. 
+
+If no session identifier is present then every client that opens with the same prompt shares one session state on the Headroom side. If sessions collide then only one will hit the upstream cache.
 
 1. {{site.ai_gateway}} sends the user or agent's request to the AI Prompt Compressor.
-2. The AI Prompt Compressor builds an OpenAI-format messages array from the whole conversation.
+2. The AI Prompt Compressor builds a messages array from the whole conversation.
 3. The AI Prompt Compressor sends a `POST` request to Headroom's `/v1/compress` endpoint with the messages array and a session identifier for the conversation.
 4. If Headroom recognizes the session identifier, it replays the turns it already compressed unchanged and compresses only the new messages. Otherwise, it compresses the whole conversation.
 5. Headroom returns `200` with the compressed messages and metadata.
