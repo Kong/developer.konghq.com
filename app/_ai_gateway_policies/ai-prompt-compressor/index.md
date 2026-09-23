@@ -26,18 +26,18 @@ related_resources:
     url: /ai-gateway/forward-proxy/
 ---
 
-The AI Prompt Compressor Policy compresses retrieved chunks before sending them to a Large Language Model (LLM), reducing text length while preserving meaning. It supports multiple cache-aware compression backends that provide fast, high-quality, deterministic compression.
+The AI Prompt Compressor Policy compresses retrieved chunks before sending them to a Large Language Model (LLM), reducing text length while preserving meaning. It supports multiple cache-aware compression providers.
 
 The AI Prompt Compressor Policy supports:
 
-* **Ratio-based or target token compression**: for example, reduce a message to 80% of the original length or compress to 150 tokens.
-* **Configurable compression ranges**: for example, compress prompts under 100 tokens with a 0.8 ratio or compress them to exactly 100 tokens.
-* **Selective compression with LLMLingua**: use `<LLMLINGUA>...</LLMLINGUA>` tags to target specific sections of the prompt. These tags work **only in the `inject_template` field of the [AI RAG Injector Policy](/ai-gateway/policies/ai-rag-injector/)** and must be used **in combination with the AI Prompt Compressor Policy**.
+- **Ratio-based or target token compression**: for example, reduce a message to 80% of the original length or compress to 150 tokens.
+- **Configurable compression ranges**: for example, compress prompts under 100 tokens with a 0.8 ratio or compress them to exactly 100 tokens.
+- **Selective compression with LLMLingua**: use `<LLMLINGUA>...</LLMLINGUA>` tags to target specific sections of the prompt. These tags work **only in the `inject_template` field of the [AI RAG Injector Policy](/ai-gateway/policies/ai-rag-injector/)** and must be used **in combination with the AI Prompt Compressor Policy**.
 
-The following backends are available:
+The following providers are available:
 
-* [LLMLingua 2 library](https://github.com/microsoft/LLMLingua): use this to compress prose in user messages.
-* [Headroom](https://github.com/headroomlabs-ai/headroom): use this to compress agent traffic such as tool results, large JSON payloads, search output, and logs returned by tools.
+- `kong`: Use the [LLMLingua 2 library](https://github.com/microsoft/LLMLingua) to compress prose in user messages.
+- `headroom`: Use [Headroom](https://github.com/headroomlabs-ai/headroom) to compress agent traffic such as tool results, large JSON payloads, search output, and logs returned by tools.
 
 ## Why use prompt compression
 
@@ -195,7 +195,8 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-## Headroom compressor service
+## Headroom compressor service {% new_in 2.2 %}
+
 
 Before using Headroom with AI Prompt Compressor Policy you must have a Headroom instance accessible to your {{site.ai_gateway}}.
 
@@ -215,16 +216,21 @@ data:
   name: my-ai-prompt-compressor
   type: ai-prompt-compressor
   config:
-    lossy_backend: external
-    headroom_endpoint: http://headroom-service:8787
-    headroom_auth_token: !env HEADROOM_API_KEY
-    headroom_target_ratio: 0.5
-    headroom_protect_recent: 4
-    headroom_timeout_ms: 5000
+    provider: headroom
+    compressor_url: http://headroom-service:8787/v1/compress
+    timeout: 45000
     keepalive_timeout: 60000
     log_text_data: false
     stop_on_error: true
-    timeout: 10000
+    headroom:
+      proxy_token: !env HEADROOM_PROXY_TOKEN
+      ssl_verify: true
+      session_id_headers:
+        - x-claude-code-session-id
+        - x-claude-code-agent-id
+        - thread-id
+        - session-id
+        - x-session-id
 formats:
   - konnect-api
   - kongctl
