@@ -188,14 +188,14 @@ export async function run(argv, root) {
       }
     }
 
-    for (const tfText of extractTerraformBlocks(html)) {
+    for (const tfBlock of extractTerraformBlocks(html)) {
       terraformBlocksChecked++;
 
-      const grammarFinding = checkHclGrammar(tfText);
+      const grammarFinding = checkHclGrammar(tfBlock.text);
       if (grammarFinding) {
         findings.push({
           source: relativeSource,
-          panel: "terraform",
+          panel: tfBlock.panel,
           pointer: "/",
           severity: "gating",
           ...grammarFinding,

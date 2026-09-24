@@ -57,7 +57,8 @@ test("the terraform panel is extracted as raw text and kept out of the YAML rule
   const tfBlocks = extractTerraformBlocks(html);
 
   assert.equal(tfBlocks.length, 1);
-  assert.match(tfBlocks[0], /^resource "konnect_mesh_timeout"/);
+  assert.equal(tfBlocks[0].panel, "terraform");
+  assert.match(tfBlocks[0].text, /^resource "konnect_mesh_timeout"/);
 
   const { entries, findings } = extractDocuments(html);
   assert.ok(!entries.some((e) => e.panel === "terraform"));

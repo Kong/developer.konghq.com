@@ -22,9 +22,7 @@ export function extractBlocks(html) {
 // A terraform block is not YAML: it is extracted as raw text and never
 // reaches the YAML parse, schema, empty-value, or marker rules.
 export function extractTerraformBlocks(html) {
-  return extractBlocks(html)
-    .filter((block) => block.panel === "terraform")
-    .map((block) => block.text);
+  return extractBlocks(html).filter((block) => block.panel === "terraform");
 }
 
 export function extractDocuments(html) {
