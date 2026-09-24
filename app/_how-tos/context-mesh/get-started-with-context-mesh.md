@@ -298,6 +298,9 @@ The `name` must be unique within your organization and can only contain lowercas
 
 ## Create the MCP server
 
+
+Create the MCP server:
+
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/context-interfaces
