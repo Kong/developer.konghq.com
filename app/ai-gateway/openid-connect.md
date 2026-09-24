@@ -231,7 +231,7 @@ ai_gateway_auth_strategies:
 {% endnavtab %}
 {% endnavtabs %}
 
-{% include_cached plugins/oidc/client-auth.md %}
+{% include_cached /md/ai-gateway/v2/oidc/client-auth.md %}
 
 ### User info authentication
 
@@ -267,7 +267,7 @@ ai_gateway_auth_strategies:
 {% endnavtab %}
 {% endnavtabs %}
 
-{% include_cached plugins/oidc/client-auth.md %}
+{% include_cached /md/ai-gateway/v2/oidc/client-auth.md %}
 
 ### Refresh token grant
 
@@ -304,7 +304,7 @@ ai_gateway_auth_strategies:
 {% endnavtab %}
 {% endnavtabs %}
 
-{% include_cached plugins/oidc/client-auth.md %}
+{% include_cached /md/ai-gateway/v2/oidc/client-auth.md %}
 
 ### Password grant
 
@@ -375,7 +375,7 @@ ai_gateway_auth_strategies:
 {% endnavtab %}
 {% endnavtabs %}
 
-{% include_cached plugins/oidc/client-auth.md %}
+{% include_cached /md/ai-gateway/v2/oidc/client-auth.md %}
 
 ### Authorization code flow
 
@@ -418,7 +418,7 @@ ai_gateway_auth_strategies:
 {% endnavtab %}
 {% endnavtabs %}
 
-{% include_cached plugins/oidc/client-auth.md %}
+{% include_cached /md/ai-gateway/v2/oidc/client-auth.md %}
 
 {:.info}
 > If using PKCE, the IdP must include `code_challenge_methods_supported` in its `/.well-known/openid-configuration` discovery response, per [RFC 8414](https://www.rfc-editor.org/rfc/rfc8414.html).
@@ -508,7 +508,7 @@ This runs independently of `access.acls`, which authorizes an already-resolved A
 
 `config.client_auth` selects how {{site.ai_gateway}} authenticates itself to the IdP, including through mutual TLS (mTLS) client authentication.
 
-{% include_cached plugins/oidc/client-auth.md schema_page="/ai-gateway/openid-connect/#schema" %}
+{% include_cached /md/ai-gateway/v2/oidc/client-auth.md %}
 
 ## Advanced OpenID Connect plugin capabilities
 
@@ -578,7 +578,27 @@ rows:
 
 #### Certificate-bound access tokens
 
-{% include_cached plugins/oidc/cert-bound-access-tokens.md type="auth strategy" gateway=site.ai_gateway schema_page="/ai-gateway/openid-connect/#schema" hide_examples=true jwt_flow_anchor="#jwt-access-token-authentication-bearer" introspection_flow_anchor="#introspection-authentication" session_flow_anchor="#session-authentication" %}
+One of the main vulnerabilities of OAuth is bearer tokens.
+With OAuth, presenting a valid bearer token is enough proof to access a resource.
+This can create problems, since the client presenting the token isn't validated as the legitimate user the token was issued to.
+
+Certificate-bound access tokens solve this problem by binding tokens to clients.
+This ensures the legitimacy of the token, because it requires proof that the sender is authorized to use a particular token to access protected resources.
+
+Certificate-bound access tokens are supported by the following auth methods:
+
+* [JWT access token authentication](#jwt-access-token-authentication-bearer)
+* [Introspection authentication](#introspection-authentication)
+* [Session authentication](#session-authentication)
+
+Session authentication is only compatible with certificate-bound access tokens when used along with one of the other supported authentication methods:
+
+* When [`config.proof_of_possession_auth_methods_validation`](/plugins/openid-connect/reference/#schema--config-proof-of-possession-auth-methods-validation) is set to `false` and other non-compatible methods are enabled, and a valid session is found, {{ site.ai_gateway }} only performs the proof of possession validation if the session was originally created using one of the compatible methods.
+* If you configure multiple OpenID Connect auth strategy instances with the `session` auth method, configure a different [`config.session_secret`](/plugins/openid-connect/reference/#schema--config-session-secret) value on each for additional security. This avoids sessions being shared across auth strategy instances and possibly bypassing the proof of possession validation.
+
+To enable certificate-bound access tokens:
+* Ensure that the IdP you're using is set up to generate OAuth 2.0 mutual TLS certificate-bound access tokens.
+* Use [`config.proof_of_possession_mtls`](/plugins/openid-connect/reference/#schema--config-proof-of-possession-mtls) to verify that the supplied access token belongs to the client, by checking its binding with the client certificate provided in the request.
 
 The following is an example cert-bound access token config:
 {% entity_examples %}
