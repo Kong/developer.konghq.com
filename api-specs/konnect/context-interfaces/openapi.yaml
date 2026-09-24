@@ -1,9 +1,8 @@
 openapi: 3.0.0
 info:
-  title: Konnect MCP Servers
-  version: 1.38.0
-  description: |
-    The endpoints for managing MCP Servers in Konnect.
+  title: Konnect Context Mesh
+  version: 1.40.0
+  description: The platform API for Konnect Context Mesh
   contact:
     name: Kong
     url: https://cloud.konghq.com
@@ -40,7 +39,7 @@ paths:
         '403':
           $ref: '../../../../common/definitions/errors.yaml#/components/responses/Forbidden'
       operationId: list-context-interfaces
-      description: Returns an array of MCP server objects.
+      description: Returns an array of Context Interfaces.
       parameters:
         - $ref: '../../../../common/definitions/metadatas.yaml#/components/parameters/CursorPageQuery'
         - $ref: '#/components/parameters/MCPServerFilter'
@@ -155,7 +154,7 @@ paths:
     delete:
       x-unstable: true
       x-internal: true
-      summary: Delete MCP Server
+      summary: Delete Context Interface
       operationId: delete-context-interface
       responses:
         '204':
@@ -206,7 +205,7 @@ paths:
       x-unstable: true
       x-internal: true
       operationId: get-mcp-server-status
-      summary: Get Context Interface deployment status
+      summary: Get Context Interface Deployment Status
       description: Returns the current aggregated deployment status of a Context Interface.
       responses:
         '200':
@@ -232,12 +231,12 @@ paths:
       x-unstable: true
       x-internal: true
       operationId: get-context-interface-generated-code
-      summary: Get generated code for a Context Interface
+      summary: Get Generated Code for a Context Interface
       description: >
-        Generates MCP server Python code from the OpenAPI specifications associated with the Context Interface.
+        Generated MCP Server code of a Context Interface.
       responses:
         '200':
-          description: Generated Python code for the Context Interface
+          description: Generated code for the Context Interface
           content:
             application/json:
               schema:
@@ -324,7 +323,7 @@ paths:
       x-internal: true
       summary: Get a Context Source
       operationId: get-context-source
-      description: Retrieve an MCP resource by its ID.
+      description: Retrieve an Context Source by its ID.
       responses:
         '200':
           description: A response to retrieving a Context Source.
@@ -989,7 +988,9 @@ paths:
       x-internal: true
       summary: Update a Skill
       operationId: patch-context-interface-skill
-      description: Partially update a skill.
+      description: >
+        Partially update a skill. Supplying `source` replaces the skill's source in its entirety
+        and re-runs validation against the new content.
       requestBody:
         required: true
         content:
@@ -1089,7 +1090,9 @@ paths:
       x-internal: true
       summary: Create a Skill
       operationId: create-context-interface-skill
-      description: Create a skill for the specified Context Interface.
+      description: >
+        Create a skill for the specified Context Interface. The `source` determines where the
+        skill's content comes from.
       requestBody:
         required: true
         content:
@@ -1284,7 +1287,7 @@ components:
             $ref: "../../../../common/definitions/aip_filters.yaml#/components/schemas/LabelsFieldFilter"
       in: query
       name: filter
-      description: Filter for MCP Servers.
+      description: Filter for Context Interfaces.
       required: false
       style: deepObject
     MCPServerSort:
@@ -1292,7 +1295,7 @@ components:
       required: false
       in: query
       description: |
-        Sorts a collection of MCP Servers. Supported sort attributes are:
+        Sorts a collection of Context Interfaces. Supported sort attributes are:
           - `name`
           - `created_at`
           - `updated_at`
@@ -1334,7 +1337,7 @@ components:
             $ref: '../../../../common/definitions/aip_filters.yaml#/components/schemas/StringFieldFilter'
       in: query
       name: filter
-      description: Filters for MCP Resources.
+      description: Filters for Context Sources.
       required: false
       style: deepObject
     mcpServerId:
@@ -1407,7 +1410,7 @@ components:
       name: sourceId
       in: path
       required: true
-      description: The ID of the MCP resource.
+      description: The ID of the Context Source.
       schema:
         type: string
         format: uuid
@@ -1445,7 +1448,7 @@ components:
       name: mappingId
       in: path
       required: true
-      description: The ID of the MCP Server - Control Plane mapping.
+      description: The ID of the Context Interface - Control Plane mapping.
       schema:
         type: string
         format: uuid
@@ -1541,7 +1544,7 @@ components:
             - unhealthy
             - upgrading
           description: >-
-            Aggregated deployment status of the MCP server.
+            Aggregated deployment status of the Context Interface.
 
             - `deploying` — single version with desired replicas not yet fully ready.
 
@@ -1567,21 +1570,21 @@ components:
         id:
           type: string
           format: uuid
-          description: The unique identifier for the MCP server.
+          description: The unique identifier for the Context Interface.
         name:
           type: string
-          description: The machine name of the MCP server.
+          description: The machine name of the Context Interface.
           minLength: 1
           maxLength: 256
         display_name:
           type: string
-          description: The human-readable display name of the MCP server.
+          description: The human-readable display name of the Context Interface.
           minLength: 1
           maxLength: 120
         description:
           type: string
           nullable: true
-          description: A description of the MCP server.
+          description: A description of the Context Interface.
           maxLength: 1024
         labels:
           $ref: '../../../../common/definitions/konnect_properties.yaml#/components/schemas/Labels'
@@ -1673,17 +1676,17 @@ components:
       properties:
         name:
           type: string
-          description: The machine name of the MCP server.
+          description: The machine name of the Context Interface.
           minLength: 1
           maxLength: 256
         display_name:
           type: string
-          description: The human-readable display name of the MCP server.
+          description: The human-readable display name of the Context Interface.
           minLength: 1
           maxLength: 120
         description:
           type: string
-          description: A description of the MCP server.
+          description: A description of the Context Interface.
           maxLength: 1024
         labels:
           $ref: '../../../../common/definitions/konnect_properties.yaml#/components/schemas/Labels'
@@ -1692,17 +1695,17 @@ components:
       properties:
         name:
           type: string
-          description: The machine name of the MCP server.
+          description: The machine name of the Context Interface.
           minLength: 1
           maxLength: 256
         display_name:
           type: string
-          description: The human-readable display name of the MCP server.
+          description: The human-readable display name of the Context Interface.
           minLength: 1
           maxLength: 120
         description:
           type: string
-          description: A description of the MCP server.
+          description: A description of the Context Interface.
           maxLength: 1024
         labels:
           $ref: '../../../../common/definitions/konnect_properties.yaml#/components/schemas/Labels'
@@ -1716,19 +1719,19 @@ components:
       properties:
         name:
           type: string
-          description: The name of the MCP resource. Must be unique within the organization and follow machine name conventions.
+          description: The name of the Context Source. Must be unique within the organization and follow machine name conventions.
           minLength: 1
           maxLength: 256
           pattern: '^[0-9a-z.-]+$'
           example: my-api-resource
         display_name:
           type: string
-          description: The display name of the MCP resource.
+          description: The display name of the Context Source.
           minLength: 1
           maxLength: 120
         description:
           type: string
-          description: A description of the MCP resource.
+          description: A description of the Context Source.
           maxLength: 1024
         labels:
           $ref: '../../../../common/definitions/konnect_properties.yaml#/components/schemas/Labels'
@@ -1742,7 +1745,7 @@ components:
           properties:
             type:
               type: string
-              description: The type of the MCP resource.
+              description: The type of the Context Source.
               enum: ["api"]
               default: "api"
             source:
@@ -1777,20 +1780,20 @@ components:
         id:
           type: string
           format: uuid
-          description: The unique identifier for the MCP resource.
+          description: The unique identifier for the Context Source.
         name:
           type: string
-          description: The unique name of the MCP resource.
+          description: The unique name of the Context Source.
           minLength: 1
           maxLength: 256
         display_name:
           type: string
-          description: The display name of the MCP resource.
+          description: The display name of the Context Source.
           minLength: 1
           maxLength: 120
         description:
           type: string
-          description: A description of the MCP resource.
+          description: A description of the Context Source.
           maxLength: 1024
         labels:
           $ref: '../../../../common/definitions/konnect_properties.yaml#/components/schemas/Labels'
@@ -1799,7 +1802,7 @@ components:
         updated_at:
           $ref: '../../../../common/definitions/properties.yaml#/components/schemas/UpdatedAt'
     ApiResourceSourceInfo:
-      description: The source of an API MCP resource.
+      description: The source of an API Context Source.
       oneOf:
         - $ref: '#/components/schemas/MCPResourceSourceAPICatalog'
         - $ref: '#/components/schemas/MCPResourceSourceRaw'
@@ -1819,7 +1822,7 @@ components:
           properties:
             type:
               type: string
-              description: The type of the MCP resource.
+              description: The type of the Context Source.
               enum: ["api"]
             source:
               $ref: '#/components/schemas/ApiResourceSourceInfo'
@@ -1834,7 +1837,7 @@ components:
           properties:
             type:
               type: string
-              description: The type of the MCP resource.
+              description: The type of the Context Source.
               enum: ["mcp_server"]
             source:
               $ref: '#/components/schemas/MCPResourceRemoteMcpServerPayload'
@@ -1850,7 +1853,7 @@ components:
     MCPResourceSourceConfigType:
       type: string
       enum: ["api_catalog", "raw", "remote_mcp_server"]
-      description: The type of the MCP resource source.
+      description: The type of the Context Source source.
       x-enum-varnames:
         - MCPResourceSourceConfigTypeAPICatalog
         - MCPResourceSourceConfigTypeRaw
@@ -1894,7 +1897,7 @@ components:
        x-flatten-allOf: true
        allOf:
         - type: object
-          description: Identifies the API catalog entry the MCP resource was sourced from.
+          description: Identifies the API catalog entry the Context Source was sourced from.
           required:
             - api_id
             - api_version_id
@@ -1912,7 +1915,7 @@ components:
        x-flatten-allOf: true
        allOf:
         - type: object
-          description: Identifies the API catalog entry the MCP resource was sourced from.
+          description: Identifies the API catalog entry the Context Source was sourced from.
           required:
             - api_id
             - api_version_id
@@ -2037,7 +2040,7 @@ components:
               additionalProperties:
                 type: string
     ApiResourceSourcePayload:
-      description: The source of the MCP resource used in create and update requests.
+      description: The source of the Context Source used in create and update requests.
       oneOf:
         - $ref: '#/components/schemas/MCPResourceSourceAPICatalogPayload'
         - $ref: '#/components/schemas/MCPResourceSourceRawInput'
@@ -2215,7 +2218,7 @@ components:
       properties:
         code:
           type: string
-          description: Generated Python code for the MCP server implementation
+          description: Generated code for the Context Interface
           example: "print(\"Hello MCP\")"
     MCPCapabilitiesMap:
       type: object
@@ -2306,7 +2309,7 @@ components:
         id:
           type: string
           format: uuid
-          description: The unique identifier for the MCP server MCP resource mapping.
+          description: The unique identifier for the Context Inerface Source mapping.
           example: edf35010-61d0-4fc4-a3b2-8095b02ec3fe
         context_interface_id:
           type: string
@@ -2533,7 +2536,7 @@ components:
       enum:
         - basic
         - advanced
-      description: "Whether the MCP Server deployment on this Control Plane is managed by Konnect defaults ('basic') or configured directly via Kong Operator custom resources ('advanced')."
+      description: "Whether the Context Interface deployment on this Control Plane is managed by Konnect defaults ('basic') or configured directly via Kong Operator custom resources ('advanced')."
     MCPServerControlPlaneMappingInfo:
       type: object
       required:
@@ -2606,6 +2609,78 @@ components:
           allOf:
             - $ref: '#/components/schemas/ContainerSpec'
             - description: Configuration for the main container.
+    RawSkillSourceConfigPayload:
+      type: object
+      required:
+        - contents
+      properties:
+        contents:
+          type: string
+          description: The raw SKILL.md content — a markdown document beginning with a YAML frontmatter block.
+          minLength: 1
+          example: "---\nname: pdf-processing\ndescription: Extract and summarize content from PDF documents\n---\n# PDF Processing\n..."
+    RawSkillSourcePayload:
+      type: object
+      required:
+        - type
+        - config
+      properties:
+        type:
+          type: string
+          enum: ["raw"]
+          description: The skill content is supplied inline in the request body.
+          example: raw
+        config:
+          $ref: '#/components/schemas/RawSkillSourceConfigPayload'
+    SkillSourcePayload:
+      description: >-
+        Where the skill's content comes from, used in create and update requests. The shape of
+        `config` is determined by `type`.
+      oneOf:
+        - $ref: '#/components/schemas/RawSkillSourcePayload'
+      discriminator:
+        propertyName: type
+        mapping:
+          raw: '#/components/schemas/RawSkillSourcePayload'
+    RawSkillSource:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum: ["raw"]
+          description: The skill content was supplied inline when the skill was created or updated.
+    SkillSource:
+      description: >-
+        Where the skill's content comes from, as returned by the API. Never includes the content
+        itself — read it through the skill contents endpoint.
+      oneOf:
+        - $ref: '#/components/schemas/RawSkillSource'
+      discriminator:
+        propertyName: type
+        mapping:
+          raw: '#/components/schemas/RawSkillSource'
+    SkillSyncStatus:
+      type: object
+      description: The outcome of the most recent attempt to fetch the skill's content from its source.
+      required:
+        - status
+        - timestamp
+      properties:
+        status:
+          type: string
+          enum: ["pending", "success", "failed"]
+          description: The state of the most recent synchronization attempt.
+        timestamp:
+          type: string
+          format: date-time
+          description: The time the synchronization reached this state.
+        error_message:
+          type: string
+          nullable: true
+          description: The reason the synchronization failed. `null` unless `status` is `failed`.
+          maxLength: 2048
     PatchSkillRequest:
       type: object
       properties:
@@ -2624,9 +2699,14 @@ components:
           type: string
           description: A description of the skill.
           maxLength: 1024
-        content:
-          type: string
-          description: The raw SKILL.md content — a markdown document beginning with a YAML frontmatter block.
+        source:
+          x-flatten-allOf: true
+          allOf:
+            - $ref: '#/components/schemas/SkillSourcePayload'
+            - description: >-
+                Replaces the existing source in its entirety — partial updates to individual
+                source attributes are not supported. The source `type` cannot be changed after
+                creation.
         labels:
           $ref: '../../../../common/definitions/konnect_properties.yaml#/components/schemas/Labels'
     ListSkillsResponse:
@@ -2656,7 +2736,7 @@ components:
         - name
         - display_name
         - description
-        - content
+        - source
         - labels
       properties:
         name:
@@ -2677,10 +2757,8 @@ components:
           description: A description of the skill.
           maxLength: 1024
           example: Extract and summarize content from PDF documents
-        content:
-          type: string
-          description: The raw SKILL.md content — a markdown document beginning with a YAML frontmatter block.
-          example: "---\nname: pdf-processing\ndescription: Extract and summarize content from PDF documents\n---\n# PDF Processing\n..."
+        source:
+          $ref: '#/components/schemas/SkillSourcePayload'
         labels:
           $ref: '../../../../common/definitions/konnect_properties.yaml#/components/schemas/Labels'
     SkillFrontmatter:
@@ -2724,8 +2802,10 @@ components:
         - description
         - frontmatter
         - labels
-        - source_type
+        - source
         - status
+        - sync_status
+        - validation_message
         - created_at
         - updated_at
       properties:
@@ -2756,14 +2836,26 @@ components:
           $ref: '#/components/schemas/SkillFrontmatter'
         labels:
           $ref: '../../../../common/definitions/konnect_properties.yaml#/components/schemas/Labels'
-        source_type:
-          type: string
-          enum: ["raw"]
-          description: The source type of the skill content.
+        source:
+          $ref: '#/components/schemas/SkillSource'
         status:
           type: string
-          enum: ["valid", "invalid"]
-          description: The current validation status of the skill.
+          enum: ["pending", "valid", "invalid"]
+          description: >-
+            The current validation status of the skill. `pending` means the content has not yet
+            been read and validated.
+        sync_status:
+          allOf:
+            - $ref: '#/components/schemas/SkillSyncStatus'
+          nullable: true
+          description: >-
+            The outcome of the most recent attempt to fetch the skill's content from its source.
+            `null` for sources whose content is supplied inline.
+        validation_message:
+          type: string
+          nullable: true
+          description: The reason the skill failed validation. `null` unless `status` is `invalid`.
+          maxLength: 2048
         created_at:
           $ref: '../../../../common/definitions/properties.yaml#/components/schemas/CreatedAt'
         updated_at:
@@ -2775,6 +2867,7 @@ components:
       properties:
         token:
           type: string
+          maxLength: 2048
           description: The bearer token (e.g. a GitHub personal access token). Write-only — never returned by the API.
     BearerContextProviderCredentialConfigPayload:
       type: object
@@ -2935,19 +3028,19 @@ components:
           schema:
             $ref: '#/components/schemas/MCPServerSignals'
     ListMCPServersResponse:
-      description: A response to listing MCP servers.
+      description: A response to listing Context Interfaces.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ListMCPServersResponse'
     PaginateMCPServersResponse:
-      description: A response to listing MCP servers.
+      description: A response to listing Context Interfaces.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/PaginateMCPServersResponse'
     CreateMCPServerResponse:
-      description: A response to creating an MCP server.
+      description: A response to creating a Context Interface.
       content:
         application/json:
           schema:
@@ -3012,19 +3105,19 @@ components:
           schema:
             $ref: '#/components/schemas/ListMCPServerControlPlaneMappingResponse'
     CreateMCPServerControlPlaneMappingResponse:
-      description: Details of MCP Server - Control Plane mapping creation.
+      description: Details of Context Interface - Control Plane mapping creation.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/MCPServerControlPlaneMappingInfo'
     PatchMCPServerControlPlaneMappingResponse:
-      description: Details of MCP Server - Control Plane mapping after update.
+      description: Details of Context Interface - Control Plane mapping after update.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/MCPServerControlPlaneMappingInfo'
     MCPServerRuntimeResponse:
-      description: A response containing the MCP server runtime configuration
+      description: A response containing the Context Interface runtime configuration
       content:
         application/json:
           schema:
