@@ -19,10 +19,11 @@ tools:
   - konnect-api
 
 min_version:
-  ai-gateway: '2.0'
+  ai-gateway: '2.2'
 
 tags:
   - ai
+  - custom-plugins
 
 related_resources:
   - text: "{{site.ai_gateway}}"
@@ -33,11 +34,17 @@ related_resources:
     url: /custom-plugins/streaming-plugins/
   - text: AI Policy entity
     url: /ai-gateway/entities/ai-policy/
+
+faqs:
+  - q: How do I use a custom policy?
+    a: Configure a [AI Policy](/ai-gateway/entities/ai-policy/) entity as normal and use the `name` of the custom policy as the `type`.
 ---
 
 {{site.ai_gateway}} allows you to develop and deploy custom AI Policies. A custom AI policy has two parts, a schema and a plugin handler that implements the custom functionality.
 
-Plugins consist of Lua modules interacting with request and response objects or network streams to implement arbitrary logic. Plugin development operates in the same way for both {{site.ai_gateway}} and {{site.base_gateway}}. Kong provides a  [Plugin Development Kit (PDK)](/gateway/pdk/reference/) which is a set of Lua functions that are used to facilitate interactions between plugins, the {{site.base_gateway}} core, and other components.
+Plugins consist of Lua modules interacting with request and response objects or network streams to implement arbitrary logic. Plugin development operates in the same way for both {{site.ai_gateway}} and {{site.base_gateway}}. We provide a  [Plugin Development Kit (PDK)](/gateway/pdk/reference/) which is a set of Lua functions that are used to facilitate interactions between plugins, the {{site.base_gateway}} core, and other components.
+
+A custom policy can be used in the same way as any other [AI Policy](/ai-gateway/entities/ai-policy/) and the `name` you set when creating the custom policy is the `type` used when creating an AI Policy entity. The schema you provide is used for validation in the same way as a built-in AI Policy.
 
 This page describes how to run a custom policy you have already developed and manage its lifecycle.
 
@@ -64,7 +71,7 @@ Next upload the policy's schema to the control plane. You can then reference it 
 
 ## Manage custom policies
 
-You can manage the lifecycle of a custom plugin using any of the following:
+You can manage the lifecycle of a custom policy using any of the following:
 
 - {{site.konnect_short_name}} UI
 - {{site.ai_gateway}} API with the `/v1/ai-gateways/{aiGatewayId}/custom-policies` endpoint
@@ -154,8 +161,6 @@ data:
 
 {:.info}
 > Including a `handler` in `installed` mode or omitting it in `streaming` mode results in an error.
-
-
 
 ### Update a custom policy
 
