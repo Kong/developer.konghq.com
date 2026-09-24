@@ -144,8 +144,15 @@ data:
   name: my-streaming-custom-policy
   type: streaming
   display_name: Custom Policy - Streaming plugin
-  schema: <lua_schema>
-  handler: <lua_handler>
+  schema: ${schema}
+  handler: ${handler}
+variables:
+  schema:
+    value: $LUA_SCHEMA
+    description: Your Lua schema
+  handler:
+    value: $LUA_HANDLER
+    description: Your plugin handler.
 {% endentity_example %}
 
 To create a custom policy in `installed` mode:
@@ -156,7 +163,11 @@ data:
   name: my-installed-custom-policy
   type: installed
   display_name: Custom Policy - Installed plugin
-  schema: <lua_schema>
+  schema: ${schema}
+variables:
+  schema:
+    value: $LUA_SCHEMA
+    description: Your Lua schema
 {% endentity_example %}
 
 {:.info}
@@ -172,8 +183,15 @@ data:
   name: my-streaming-custom-policy
   type: streaming
   display_name: Custom Policy - Streaming plugin (updated)
-  schema: <lua_schema>
-  handler: <lua_handler>
+  schema: ${schema}
+  handler: ${handler}
+variables:
+  schema:
+    value: $LUA_SCHEMA
+    description: Your Lua schema
+  handler:
+    value: $LUA_HANDLER
+    description: Your plugin handler.
 {% endentity_example %}
 
 {:.info}
