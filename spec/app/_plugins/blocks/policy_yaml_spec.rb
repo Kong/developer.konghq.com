@@ -193,6 +193,104 @@ RSpec.describe Jekyll::RenderPolicyYaml do
     end
   end
 
+  describe 'Terraform heredocs, quoted map keys, and resource type naming' do
+    let(:template) do
+      <<~LIQUID
+        {% policy_yaml %}
+        ```yaml
+        type: MeshTrace
+        mesh: default
+        name: trace-east
+        spec:
+          targetRef:
+            kind: Dataplane
+            labels:
+              kuma.io/zone: east
+          default:
+            conf: |
+              plugins:
+                - name: opa
+                  conf:
+                    address: 127.0.0.1:9191
+        ```
+        {% endpolicy_yaml %}
+      LIQUID
+    end
+
+    it 'quotes non-identifier map keys and renders multiline strings as heredocs' do
+      html = render(template)
+      expect(yaml_text(html, 'terraform')).to eq(<<~HCL)
+        resource "konnect_mesh_trace" "trace_east" {
+          provider = konnect-beta
+          type = "MeshTrace"
+          name = "trace-east"
+          spec = {
+            target_ref = {
+              kind = "Dataplane"
+              labels = {
+                "kuma.io/zone" = "east"
+              }
+            }
+            default = {
+              conf = <<-EOT
+        plugins:
+          - name: opa
+            conf:
+              address: 127.0.0.1:9191
+              EOT
+            }
+          }
+          labels   = {
+          "kuma.io/mesh" = konnect_mesh.my_mesh.name
+          }
+          cp_id    = konnect_mesh_control_plane.my_meshcontrolplane.id
+          mesh     = konnect_mesh.my_mesh.name
+        }
+      HCL
+    end
+  end
+
+  describe 'ExternalService Terraform resource naming' do
+    let(:template) do
+      <<~LIQUID
+        {% policy_yaml %}
+        ```yaml
+        type: ExternalService
+        mesh: default
+        name: example
+        tags:
+          kuma.io/service: example
+          kuma.io/protocol: tcp
+        networking:
+          address: example.com:443
+        ```
+        {% endpolicy_yaml %}
+      LIQUID
+    end
+
+    it 'maps the type to the konnect_mesh_external_service resource' do
+      expect(yaml_text(render(template), 'terraform')).to eq(<<~HCL)
+        resource "konnect_mesh_external_service" "example" {
+          provider = konnect-beta
+          type = "ExternalService"
+          name = "example"
+          tags = {
+            "kuma.io/service" = "example"
+            "kuma.io/protocol" = "tcp"
+          }
+          networking = {
+            address = "example.com:443"
+          }
+          labels   = {
+          "kuma.io/mesh" = konnect_mesh.my_mesh.name
+          }
+          cp_id    = konnect_mesh_control_plane.my_meshcontrolplane.id
+          mesh     = konnect_mesh.my_mesh.name
+        }
+      HCL
+    end
+  end
+
   describe 'namespace= param' do
     let(:template) do
       <<~LIQUID

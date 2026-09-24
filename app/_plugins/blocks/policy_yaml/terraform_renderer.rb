@@ -25,7 +25,7 @@ module Jekyll
       private
 
       def resource_type
-        "konnect_#{snake_case(@yaml_data['type'])}"
+        "konnect_mesh_#{snake_case(@yaml_data['type'].sub(/\AMesh/, ''))}"
       end
 
       def resource_label
@@ -54,7 +54,7 @@ module Jekyll
 
       def convert_hash(key, value, indent_level, in_array, last)
         indent = '  ' * indent_level
-        opening = in_array ? "#{indent}{\n" : "#{indent}#{snake_case(key)} = {\n"
+        opening = in_array ? "#{indent}{\n" : "#{indent}#{hcl_key(key)} = {\n"
         entries = value.each_with_index.reduce(+'') do |acc, ((k, v), index)|
           acc << convert(k, v, indent_level + 1, last: index == value.size - 1)
         end
@@ -66,13 +66,31 @@ module Jekyll
         entries = value.each_with_index.reduce(+'') do |acc, (v, index)|
           acc << convert('', v, indent_level + 1, in_array: true, last: index == value.size - 1)
         end
-        "#{indent}#{snake_case(key)} = [\n#{entries}#{indent}]#{trailing_comma(in_array, last)}\n"
+        "#{indent}#{hcl_key(key)} = [\n#{entries}#{indent}]#{trailing_comma(in_array, last)}\n"
       end
 
       def convert_scalar(key, value, indent_level, in_array, last)
         indent = '  ' * indent_level
-        prefix = in_array ? '' : "#{snake_case(key)} = "
-        "#{indent}#{prefix}#{format_scalar(value)}#{trailing_comma(in_array, last)}\n"
+        prefix = in_array ? '' : "#{hcl_key(key)} = "
+        "#{indent}#{prefix}#{format_value(value, indent)}#{trailing_comma(in_array, last)}\n"
+      end
+
+      def format_value(value, indent)
+        if value.is_a?(String) && value.include?("\n")
+          heredoc_value(value, indent)
+        else
+          format_scalar(value)
+        end
+      end
+
+      def heredoc_value(value, indent)
+        body = value.end_with?("\n") ? value : "#{value}\n"
+        "<<-EOT\n#{body}#{indent}EOT"
+      end
+
+      def hcl_key(key)
+        snake_key = snake_case(key)
+        snake_key.match?(/\A[A-Za-z_][A-Za-z0-9_-]*\z/) ? snake_key : "\"#{snake_key}\""
       end
 
       def format_scalar(value)

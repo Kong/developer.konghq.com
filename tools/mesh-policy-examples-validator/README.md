@@ -80,15 +80,19 @@ of the terraform blocks. The default is `warn`: findings are printed and counted
 as advisory, and the exit status is unaffected. `gate` makes them gating.
 `off` skips the check. The grammar check always runs. The warn default is a
 transition state: a follow-up change flips the default to `gate` once the
-baseline run is clean. `--skip` remains the escape hatch for policies the
-provider does not support yet.
+baseline run is clean. The current baseline is recorded in `BASELINE.md`.
+`--skip` remains the escape hatch for policies the provider does not support
+yet.
 
 ## Requires a production build
 
 The validator reads `dist/`, not the Markdown source. `jekyll-dev.yml` skips the
 mesh policy and markdown page generators in a dev build, so a dev build produces
 nothing to validate. Run `make build` first, or comment out the `skip:` section in
-`jekyll-dev.yml`.
+`jekyll-dev.yml`. A scoped `KONG_PRODUCTS=mesh exe/build` also produces every mesh
+policy example page. Validate against a clean `dist/` (`make clean` first): a
+build over an existing `dist/` can leave stale pages behind, and the validator
+cannot tell a stale page from a fresh one.
 
 ## Requires the terraform binary
 
