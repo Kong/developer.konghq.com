@@ -77,7 +77,6 @@ module Jekyll
 
       def format_scalar(value)
         case value
-        when String then "\"#{value}\""
         when Integer, Float, TrueClass, FalseClass then value.to_s
         else "\"#{value}\""
         end

@@ -162,7 +162,7 @@ RSpec.describe Jekyll::RenderPolicyYaml do
 
     it 'renders scalar array elements as bare values with correct types' do
       html = render(template)
-      expect(html.find('div[data-panel="terraform"]').find('code').text).to eq(<<~HCL)
+      expect(yaml_text(html, 'terraform')).to eq(<<~HCL)
         resource "konnect_mesh_check" "scalar_shapes" {
           provider = konnect-beta
           type = "MeshCheck"
