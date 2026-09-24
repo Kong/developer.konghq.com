@@ -6,6 +6,7 @@
     * N. Virginia (`us-east-1`)
     * N. California(`us-west-1`)
     * Montreal (`ca-central-1`)
+    * Canada West - Calgary (`ca-west-1`)
 * Europe:
     * Frankfurt (`eu-central-1`)
     * Ireland (`eu-west-1`)
@@ -59,6 +60,11 @@ rows:
       * `cac1-az1`
       * `cac1-az2`
       * `cac1-az4`
+  - region: "Canada West - Calgary (`ca-west-1`)"
+    az: |
+      * `caw1-az1`
+      * `caw1-az2`
+      * `caw1-az4`
   - region: "Frankfurt (`eu-central-1`)"
     az: |
       * `euc1-az1`
