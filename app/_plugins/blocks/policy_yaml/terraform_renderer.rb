@@ -54,7 +54,7 @@ module Jekyll
 
       def convert_hash(key, value, indent_level, in_array, last)
         indent = '  ' * indent_level
-        opening = in_array ? "#{indent}{\n" : "#{indent}#{snake_key(key)} = {\n"
+        opening = in_array ? "#{indent}{\n" : "#{indent}#{snake_case(key)} = {\n"
         entries = value.each_with_index.reduce(+'') do |acc, ((k, v), index)|
           acc << convert(k, v, indent_level + 1, last: index == value.size - 1)
         end
@@ -66,16 +66,21 @@ module Jekyll
         entries = value.each_with_index.reduce(+'') do |acc, (v, index)|
           acc << convert('', v, indent_level + 1, in_array: true, last: index == value.size - 1)
         end
-        "#{indent}#{snake_key(key)} = [\n#{entries}#{indent}]#{trailing_comma(in_array, last)}\n"
+        "#{indent}#{snake_case(key)} = [\n#{entries}#{indent}]#{trailing_comma(in_array, last)}\n"
       end
 
       def convert_scalar(key, value, indent_level, in_array, last)
         indent = '  ' * indent_level
-        "#{indent}#{snake_key(key)} = \"#{value}\"#{trailing_comma(in_array, last)}\n"
+        prefix = in_array ? '' : "#{snake_case(key)} = "
+        "#{indent}#{prefix}#{format_scalar(value)}#{trailing_comma(in_array, last)}\n"
       end
 
-      def snake_key(key)
-        key.empty? ? key : snake_case(key)
+      def format_scalar(value)
+        case value
+        when String then "\"#{value}\""
+        when Integer, Float, TrueClass, FalseClass then value.to_s
+        else "\"#{value}\""
+        end
       end
 
       def trailing_comma(in_array, last)

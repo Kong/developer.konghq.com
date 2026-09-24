@@ -111,7 +111,7 @@ RSpec.describe Jekyll::RenderPolicyYaml do
             target_ref = {
               kind = "MeshSubset"
               tags = {
-                custom_tag = "true"
+                custom_tag = true
               }
             }
             from = [
@@ -124,6 +124,64 @@ RSpec.describe Jekyll::RenderPolicyYaml do
                 }
               }
             ]
+          }
+          labels   = {
+          "kuma.io/mesh" = konnect_mesh.my_mesh.name
+          }
+          cp_id    = konnect_mesh_control_plane.my_meshcontrolplane.id
+          mesh     = konnect_mesh.my_mesh.name
+        }
+      HCL
+    end
+  end
+
+  describe 'Terraform scalar arrays and typed values' do
+    let(:template) do
+      <<~LIQUID
+        {% policy_yaml %}
+        ```yaml
+        type: MeshCheck
+        mesh: default
+        name: scalar-shapes
+        spec:
+          zones:
+            - us-1
+            - us-2
+          expectedStatuses:
+            - 200
+            - 404
+          settings:
+            weight: 9000
+            ratio: 0.5
+            enabled: true
+            name: example
+        ```
+        {% endpolicy_yaml %}
+      LIQUID
+    end
+
+    it 'renders scalar array elements as bare values with correct types' do
+      html = render(template)
+      expect(html.find('div[data-panel="terraform"]').find('code').text).to eq(<<~HCL)
+        resource "konnect_mesh_check" "scalar_shapes" {
+          provider = konnect-beta
+          type = "MeshCheck"
+          name = "scalar-shapes"
+          spec = {
+            zones = [
+              "us-1",
+              "us-2"
+            ]
+            expected_statuses = [
+              200,
+              404
+            ]
+            settings = {
+              weight = 9000
+              ratio = 0.5
+              enabled = true
+              name = "example"
+            }
           }
           labels   = {
           "kuma.io/mesh" = konnect_mesh.my_mesh.name
@@ -354,14 +412,14 @@ RSpec.describe Jekyll::RenderPolicyYaml do
                         {
                           kind = "MeshService"
                           name = "example-v1"
-                          port = "8080"
-                          weight = "90"
+                          port = 8080
+                          weight = 90
                         },
                         {
                           kind = "MeshService"
                           name = "example-v2"
-                          port = "8080"
-                          weight = "10"
+                          port = 8080
+                          weight = 10
                         }
                       ]
                     }
