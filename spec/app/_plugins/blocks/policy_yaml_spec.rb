@@ -250,6 +250,54 @@ RSpec.describe Jekyll::RenderPolicyYaml do
     end
   end
 
+  describe 'Terraform multiline strings inside arrays' do
+    let(:template) do
+      <<~LIQUID
+        {% policy_yaml %}
+        ```yaml
+        type: MeshTrace
+        mesh: default
+        name: trace-filters
+        spec:
+          filters:
+            - |
+              {
+                "name": "one"
+              }
+            - plain
+        ```
+        {% endpolicy_yaml %}
+      LIQUID
+    end
+
+    it 'separates the heredoc marker from the element comma' do
+      html = render(template)
+      expect(yaml_text(html, 'terraform')).to eq(<<~HCL)
+        resource "konnect_mesh_trace" "trace_filters" {
+          provider = konnect-beta
+          type = "MeshTrace"
+          name = "trace-filters"
+          spec = {
+            filters = [
+              <<-EOT
+        {
+          "name": "one"
+        }
+              EOT
+              ,
+              "plain"
+            ]
+          }
+          labels   = {
+          "kuma.io/mesh" = konnect_mesh.my_mesh.name
+          }
+          cp_id    = konnect_mesh_control_plane.my_meshcontrolplane.id
+          mesh     = konnect_mesh.my_mesh.name
+        }
+      HCL
+    end
+  end
+
   describe 'ExternalService Terraform resource naming' do
     let(:template) do
       <<~LIQUID

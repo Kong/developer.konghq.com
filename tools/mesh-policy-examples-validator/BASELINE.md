@@ -1,13 +1,16 @@
 # Provider-schema baseline
 
-The recorded state of the provider-schema rule (`--terraform-validate=warn`,
-the default) over a full mesh build: `KONG_PRODUCTS=mesh exe/build` into a
-clean `dist/`, then `node index.js --skip external-services@v2` from the tool
-directory. The run exits zero: every remaining finding is advisory. The
-grammar rule reports zero findings on every published terraform block.
+The recorded state of the provider-schema rule over a full mesh build:
+`KONG_PRODUCTS=mesh exe/build` into a clean `dist/`, then
+`node index.js --skip external-services@v2` from the tool directory. A
+`--terraform-validate=gate` run reports the same findings as gating; in the
+default `warn` mode every remaining finding is advisory and the run exits
+zero. The grammar rule reports zero findings on every published terraform
+block.
 
 This record is the input for the follow-up change that flips the default mode
-to `gate`: fix a class below, rerun, and remove it from this list.
+to `gate`: fix one of the classes in the list that follows, rerun, and remove
+it from this list.
 
 ## Skipped: external-services@v2
 

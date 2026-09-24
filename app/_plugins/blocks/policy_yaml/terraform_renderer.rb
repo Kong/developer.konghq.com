@@ -5,6 +5,7 @@ module Jekyll
     # Renders a processed Universal-style YAML document as a Terraform `resource` block.
     class TerraformRenderer
       RESOURCE_PREFIX = "  provider = konnect-beta\n"
+      HCL_IDENTIFIER = /\A[A-Za-z_][A-Za-z0-9_-]*\z/
       RESOURCE_SUFFIX = <<-HCL
   labels   = {
   "kuma.io/mesh" = konnect_mesh.my_mesh.name
@@ -72,7 +73,14 @@ module Jekyll
       def convert_scalar(key, value, indent_level, in_array, last)
         indent = '  ' * indent_level
         prefix = in_array ? '' : "#{hcl_key(key)} = "
-        "#{indent}#{prefix}#{format_value(value, indent)}#{trailing_comma(in_array, last)}\n"
+        rendered = format_value(value, indent)
+        return "#{indent}#{prefix}#{rendered}#{trailing_comma(in_array, last)}\n" unless heredoc?(rendered, in_array)
+
+        "#{indent}#{prefix}#{rendered}#{trailing_comma(in_array, last).sub(',', "\n#{indent},")}\n"
+      end
+
+      def heredoc?(rendered, in_array)
+        in_array && rendered.include?('<<-EOT')
       end
 
       def format_value(value, indent)
@@ -90,7 +98,7 @@ module Jekyll
 
       def hcl_key(key)
         snake_key = snake_case(key)
-        snake_key.match?(/\A[A-Za-z_][A-Za-z0-9_-]*\z/) ? snake_key : "\"#{snake_key}\""
+        snake_key.match?(HCL_IDENTIFIER) ? snake_key : "\"#{snake_key}\""
       end
 
       def format_scalar(value)
