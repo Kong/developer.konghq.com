@@ -171,12 +171,18 @@ ai_gateway_consumer_groups:
 
 1. Export each AI Consumer's ID as an environment variable using `kongctl get`. The credential requests that follow identify each consumer by ID, not by name:
 
-   ```bash
-   export ALICE_ID=$(kongctl get ai-gateway consumers --gateway-id "$AI_GATEWAY_ID" alice --output json --jq '.id' -r)
-   export BOB_ID=$(kongctl get ai-gateway consumers --gateway-id "$AI_GATEWAY_ID" bob --output json --jq '.id' -r)
-   export CAROL_ID=$(kongctl get ai-gateway consumers --gateway-id "$AI_GATEWAY_ID" carol --output json --jq '.id' -r)
-   export EASON_ID=$(kongctl get ai-gateway consumers --gateway-id "$AI_GATEWAY_ID" eason --output json --jq '.id' -r)
-   ```
+{% capture consumer_ids %}
+<!-- vale off -->
+{% env_variables %}
+ALICE_ID: $(kongctl get ai-gateway consumers --gateway-id "$AI_GATEWAY_ID" alice --output json --jq '.id' -r --pat "$KONNECT_TOKEN")
+BOB_ID: $(kongctl get ai-gateway consumers --gateway-id "$AI_GATEWAY_ID" bob --output json --jq '.id' -r --pat "$KONNECT_TOKEN")
+CAROL_ID: $(kongctl get ai-gateway consumers --gateway-id "$AI_GATEWAY_ID" carol --output json --jq '.id' -r --pat "$KONNECT_TOKEN")
+EASON_ID: $(kongctl get ai-gateway consumers --gateway-id "$AI_GATEWAY_ID" eason --output json --jq '.id' -r --pat "$KONNECT_TOKEN")
+{% endenv_variables %}
+<!-- vale on -->
+{% endcapture %}
+
+{{ consumer_ids | indent }}
 
 1. Create an API key credential for Alice, and save the generated key. {{site.ai_gateway}} generates the key value; it isn't set by you and can't be retrieved again after this step:
 
