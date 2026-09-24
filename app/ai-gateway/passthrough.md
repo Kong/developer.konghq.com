@@ -37,6 +37,18 @@ related_resources:
     url: /ai-gateway/ai-providers/
 
 faqs:
+  - q: Can a single AI Model mix passthrough and non-passthrough formats?
+    a: |
+      No. If you need both passthrough and a native format, declare two AI Models.
+
+  - q: What does passthrough disable?
+    a: |
+      The following capabilities are not compatible with passthrough mode:
+
+      * Format normalization: no translation between the OpenAI shape and a provider shape, in either direction.
+      * Semantic load balancing: an AI Model can't combine the `semantic` algorithm with a passthrough target. Configuration is rejected at validation time for every provider, because the `semantic` algorithm needs a parsed body to match against each target's `semantic_description`. Other [load balancing](/ai-gateway/load-balancing/) algorithms, including round-robin, priority, and lowest-latency, work normally.
+      * Realtime: passthrough is explicitly rejected for the `realtime/generation` category. Every other capability category is allowed under passthrough.
+
   - q: Which Policies work with passthrough?
     a: |
       Policies that operate on raw bytes (AI Request Transformer, AI Response Transformer, AI Sanitizer in PII mode) and request-count rate limiting always work.
@@ -53,7 +65,7 @@ In an [AI Model](/ai-gateway/entities/ai-model/), the `passthrough` format forwa
 * Request-count rate limiting
 * Logging and metrics
 
-AI Models using the passthrough format don't support format normalization or anything that rewrites the request. Token accounting depends on whether {{site.ai_gateway}} can make sense of your upstream's actual response shape; see [Token usage and cost](#token-usage-and-cost). Guardrails aren't supported under passthrough, since there's no parsed body for them to read.
+AI Models using the passthrough format don't support format normalization or anything that rewrites the request. Token accounting depends on whether {{site.ai_gateway}} can make sense of your upstream's actual response shape; see [Token usage and cost](#token-usage-and-cost). Guardrails aren't supported under passthrough, since there's no parsed body for them to read. For more information, see [What does passthrough disable?](#what-does-passthrough-disable)
 
 ### Use cases
 
