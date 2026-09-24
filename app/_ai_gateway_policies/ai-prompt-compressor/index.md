@@ -249,7 +249,7 @@ Headroom uses loopback-trust by default. It answers unauthenticated calls on `12
 
 ### Headroom prompt flow
 
-The AI Prompt Compressor Policy uses Headroom in a stateful mode and derives a session identifier for each conversation, based on the configured `config.headroom.session_id_headers`, a [AI Consumer](/ai-gateway/entities/ai-consumer/), or a `credential`. Headroom can recognize the turns it has already compressed for that conversation. Recognized turns are replayed unchanged instead of compressed again. This ensures the upstream LLM provider's cache hits on repeated turns. 
+The AI Prompt Compressor Policy uses Headroom in a stateful mode and derives a session identifier for each conversation, based on the configured `config.headroom.session_id_headers`, an [AI Consumer](/ai-gateway/entities/ai-consumer/), or a `credential`. Headroom can recognize the turns it has already compressed for that conversation. Recognized turns are replayed unchanged instead of compressed again. This ensures the upstream LLM provider's cache hits on repeated turns. 
 
 If a session identifier isn't present, then every client that opens with the same prompt shares one session state on the Headroom side. If sessions collide, then only one will hit the upstream cache.
 
