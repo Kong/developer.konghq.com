@@ -217,7 +217,7 @@ rows:
     capabilities: Text generation, streaming.
   - format: "`typesafe`"
     provider: "[TypeSafe AI](/ai-gateway/ai-providers/typesafe/#supported-native-llm-formats-for-typesafe-ai)"
-    capabilities: "Decisions. Required for the `decisions` capability, since a request without `messages` or `input` has no OpenAI-translated equivalent."
+    capabilities: "Decisions (native format required)."
 {% endtable %}
 <!-- vale on -->
 
