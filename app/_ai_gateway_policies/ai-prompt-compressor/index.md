@@ -30,9 +30,9 @@ The AI Prompt Compressor Policy compresses messages before sending them to a Lar
 
 The AI Prompt Compressor Policy supports:
 
-- **Ratio-based or target token compression**: for example, reduce a message to 80% of the original length or compress to 150 tokens.
-- **Configurable compression ranges**: for example, compress prompts under 100 tokens with a 0.8 ratio or compress them to exactly 100 tokens.
-- **Selective compression with LLMLingua**: use `<LLMLINGUA>...</LLMLINGUA>` tags to target specific sections of the prompt. These tags work **only in the `inject_template` field of the [AI RAG Injector Policy](/ai-gateway/policies/ai-rag-injector/)** and must be used **in combination with the AI Prompt Compressor Policy**.
+- **Ratio-based or target token compression**: For example, reduce a message to 80% of the original length or compress to 150 tokens.
+- **Configurable compression ranges**: For example, compress prompts under 100 tokens with a 0.8 ratio or compress them to exactly 100 tokens.
+- **Selective compression with LLMLingua**: Use `<LLMLINGUA>...</LLMLINGUA>` tags to target specific sections of the prompt. These tags work **only in the `inject_template` field of the [AI RAG Injector Policy](/ai-gateway/policies/ai-rag-injector/)** and must be used **in combination with the AI Prompt Compressor Policy**.
 
 The following compression providers are available:
 
@@ -197,7 +197,7 @@ rows:
 {:.warning}
 > This feature is currently in [Tech Preview](/stages-of-software-availability/#tech-preview) and should not be used in a production environment.
 
-Before using Headroom with AI Prompt Compressor Policy you must have a Headroom instance accessible to your {{site.ai_gateway}}.
+Before you use Headroom with the AI Prompt Compressor Policy, you need a Headroom instance accessible to your {{site.ai_gateway}}.
 
 You can do this with one of the following:
 
@@ -206,15 +206,19 @@ You can do this with one of the following:
 
 ### Configure Headroom connection
 
-To configure an AI Prompt Compressor Policy with Headroom as the compressor service:
+To configure an AI Prompt Compressor Policy with Headroom as the compressor service, do the following:
 
-{% entity_examples %}
+{% entity_example %}
 type: policy
 data:
   display_name: AI Prompt Compressor with Headroom
   name: my-ai-prompt-compressor
   type: ai-prompt-compressor
   config:
+    compression_ranges:
+    - min_tokens: 20
+       max_tokens: 100
+       value: 0.8
     provider: headroom
     compressor_url: http://headroom-service:8787/v1/compress
     timeout: 45000
@@ -233,21 +237,21 @@ data:
 formats:
   - konnect-api
   - kongctl
-{% endentity_examples %}
+{% endentity_example %}
 
 For more details, see the [configuration reference](/ai-gateway/policies/ai-prompt-compressor/reference/#configuration).
 
 ### Compressor Service endpoint
 
-The compressor service exposes a [`/v1/compress`](https://docs.headroomlabs.ai/docs/proxy#post-v1compress) endpoint that compresses messages and returns them. This endpoint accepts openai and anthropic's message formats. Requests in unsupported formats are forwarded unchanged. You can use this interface to compress prompts, check the current status, or integrate the service with the AI Prompt Compressor Policy.
+The compressor service exposes a [`/v1/compress`](https://docs.headroomlabs.ai/docs/proxy#post-v1compress) endpoint that compresses messages and returns them. This endpoint accepts OpenAI and Anthropic's message formats. Requests in unsupported formats are forwarded unchanged. You can use this interface to compress prompts, check the current status, or integrate the service with the AI Prompt Compressor Policy.
 
 Headroom uses loopback-trust by default. It answers unauthenticated calls on `127.0.0.1`, and returns `404` to non-loopback callers unless it's started with `HEADROOM_COMPRESS_ALLOW_REMOTE=1`. You can run Headroom as a co-located sidecar reachable from the {{site.ai_gateway}} data plane without authentication, or point the Policy at a remote instance and configure a bearer token, sent as both the `X-Headroom-Proxy-Token` and `Authorization: Bearer` headers.
 
 ### Headroom prompt flow
 
-The AI Prompt Compressor Policy uses Headroom in a stateful mode and derives a session identifier for each conversation, based on the configured `headroom.session_id_headers`, a [Consumer](/ai-gateway/entities/ai-consumer/), or a `credential`. Headroom can recognize the turns it has already compressed for that conversation, recognized turns are replayed unchanged instead of compressed again. This ensures the upstream LLM provider's cache hits on repeated turns. 
+The AI Prompt Compressor Policy uses Headroom in a stateful mode and derives a session identifier for each conversation, based on the configured `config.headroom.session_id_headers`, a [AI Consumer](/ai-gateway/entities/ai-consumer/), or a `credential`. Headroom can recognize the turns it has already compressed for that conversation. Recognized turns are replayed unchanged instead of compressed again. This ensures the upstream LLM provider's cache hits on repeated turns. 
 
-If no session identifier is present then every client that opens with the same prompt shares one session state on the Headroom side. If sessions collide then only one will hit the upstream cache.
+If a session identifier isn't present, then every client that opens with the same prompt shares one session state on the Headroom side. If sessions collide, then only one will hit the upstream cache.
 
 1. {{site.ai_gateway}} sends the user or agent's request to the AI Prompt Compressor.
 2. The AI Prompt Compressor builds a messages array from the whole conversation.
