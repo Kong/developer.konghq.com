@@ -217,8 +217,8 @@ data:
   config:
     compression_ranges:
     - min_tokens: 20
-       max_tokens: 100
-       value: 0.8
+      max_tokens: 100
+      value: 0.8
     provider: headroom
     compressor_url: http://headroom-service:8787/v1/compress
     timeout: 45000
