@@ -31,6 +31,8 @@ related_resources:
     url: /ai-gateway/entities/ai-model-provider/
   - text: AI Auth Strategy entity
     url: /ai-gateway/entities/ai-auth-strategy/
+  - text: OpenID Connect authentication with {{site.ai_gateway}} 2.0
+    url: /ai-gateway/openid-connect/
   - text: AI Policy entity
     url: /ai-gateway/entities/ai-policy/
   - text: "{{site.ai_gateway}} entities"
@@ -338,7 +340,7 @@ When [`config.route.model`](#schema-aigateway-model-config-route-model) isn't se
 
 To limit which teams or applications can call an AI Model, use the [`access.acls`](#schema-aigateway-model-access) field to set an allow list or a deny list. Reference [AI Consumers](/ai-gateway/entities/ai-consumer/) (individual applications), [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) (teams), or Authenticated Groups (all consumers authenticated via a specific OAuth2 scope or claim) by name.
 
-To control how consumers authenticate before their access is evaluated, configure the [`access.auth_strategies`](#schema-aigateway-model-access-identity-providers) array with one or more [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) references. Each AI Model supports one `key-auth` auth strategy and one `openid-connect` auth strategy simultaneously.
+To control how consumers authenticate before their access is evaluated, configure the [`access.auth_strategies`](#schema-aigateway-model-access-identity-providers) array with one or more [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) references. Each AI Model supports one `key-auth` auth strategy and one [`openid-connect`](/ai-gateway/openid-connect/) auth strategy simultaneously.
 
 ## Attach AI Policies
 
