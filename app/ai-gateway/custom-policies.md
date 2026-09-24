@@ -110,36 +110,26 @@ rows:
 
 To create a custom policy in `installed` mode:
 
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/custom-policies
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-  - 'Accept: application/json, application/problem+json'
-body:
+{% entity_example %}
+type: custom_policy
+data:
   name: my-installed-custom-policy
   type: installed
   display_name: Custom Policy - Installed plugin
   schema: <lua_schema>
-{% endkonnect_api_request %}
+{% endentity_example %}
 
-To create a custom policy in `streamed` mode:
+To create a custom policy in `streaming` mode:
 
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/custom-policies
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-  - 'Accept: application/json, application/problem+json'
-body:
+{% entity_example %}
+type: custom_policy
+data:
   name: my-streaming-custom-policy
   type: streaming
   display_name: Custom Policy - Streaming plugin
   schema: <lua_schema>
   handler: <lua_handler>
-{% endkonnect_api_request %}
+{% endentity_example %}
 
 Note that duplicate names are not allowed and will return a `409` error.
 
