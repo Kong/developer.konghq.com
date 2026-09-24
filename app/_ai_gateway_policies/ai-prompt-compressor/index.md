@@ -53,18 +53,15 @@ columns:
   - title: Description
     key: description
 rows:
-  - option: Token limit management
-    description: |
-      Compress verbose inputs like chat history or documents to stay within the LLM's context window. Prevents truncation of important content.
   - option: Cost reduction
     description: |
       Reducing token count in prompts decreases API costs when calling large language models, especially for high-volume use cases.
+  - option: Token limit management
+    description: |
+      Compress verbose inputs like chat history or documents to stay within the LLM's context window. Prevents truncation of important content.
   - option: Latency reduction
     description: |
       Smaller prompts result in faster request/response cycles, improving performance for real-time applications like voice assistants.
-  - option: Data privacy
-    description: |
-      Compress or abstract sensitive or personally identifiable information to maintain privacy and comply with data protection standards.
   - option: Dynamic prompt optimization
     description: |
       Automatically strip verbose or low-value content before sending to the LLM, keeping the focus on what's most relevant.
