@@ -9,7 +9,7 @@ icon: meshmetric.png
 related_resources:
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
-- text: Migrate policies to {{site.mesh_product_name}} 3
+- text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshmetric"
 - text: MeshTrace policy
   url: "/mesh/policies/meshtrace/"
@@ -187,7 +187,7 @@ sidecar:
         match: envoy_cluster_
 ```
 
-`sidecar.includeUnused` publishes metrics that have never been touched — counters still at
+`sidecar.includeUnused` publishes metrics that have never been touched: counters still at
 zero, histograms with no observations. It defaults to false, which keeps the output to metrics
 the proxy has actually recorded.
 

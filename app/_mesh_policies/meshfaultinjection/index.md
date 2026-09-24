@@ -9,7 +9,7 @@ icon: meshfaultinjection.png
 related_resources:
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
-- text: Migrate policies to {{site.mesh_product_name}} 3
+- text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshfaultinjection"
 - text: MeshRetry policy
   url: "/mesh/policies/meshretry/"

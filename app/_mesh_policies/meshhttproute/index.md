@@ -9,7 +9,7 @@ icon: meshhttproute.png
 related_resources:
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
-- text: Migrate policies to {{site.mesh_product_name}} 3
+- text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshhttproute"
 - text: MeshTCPRoute policy
   url: "/mesh/policies/meshtcproute/"
@@ -36,7 +36,7 @@ This policy applies to proxies labeled `app: frontend` and splits requests to `b
 path prefix:
 
 The application continues to call `backend`; its proxy chooses between the `orders` and
-`backend` MeshServices. Both resources must exist with the labels below and expose an
+`backend` MeshServices. Both resources must exist with the following labels and expose an
 HTTP-capable service port 8080. Destination permissions must allow the caller to reach both.
 
 {% policy_yaml namespace=kong-mesh-demo %}
@@ -140,7 +140,7 @@ Every rule needs at least one entry in `matches`.
 
 ## Matching a request
 
-A match may constrain any combination of the four fields below, and all of the constraints in
+A match may constrain any combination of the following four fields, and all of the constraints in
 one match entry must hold. Several entries in `matches` are alternatives: the rule applies if
 any one of them matches.
 

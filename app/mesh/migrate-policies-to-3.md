@@ -1,6 +1,6 @@
 ---
-title: "Migrate policies to {{site.mesh_product_name}} 3"
-description: "Prepare and migrate policies from {{site.mesh_product_name}} 2.x to 3, including shared API changes, policy-specific rewrites, and validation checks."
+title: "Migrate policies to {{site.mesh_product_name}} 3.x"
+description: "Prepare and migrate policies from {{site.mesh_product_name}} 2.x to 3.x, including shared API changes, policy-specific rewrites, and validation checks."
 content_type: reference
 layout: reference
 products:
@@ -12,9 +12,9 @@ tags:
   - upgrade
   - policy
 related_resources:
-  - text: Check readiness for Mesh 3
+  - text: Check readiness for {{site.mesh_product_name}} 3.x
     url: /mesh/check-upgrade-readiness/
-  - text: Migrate zone proxies to Mesh 3
+  - text: Migrate zone proxies to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-zone-proxies-to-3/
   - text: How policies select traffic
     url: /mesh/policy-targeting/
@@ -57,7 +57,7 @@ old behavior was preserved.
 Follow this order so later policy rewrites build on identities and resources that already exist:
 
 1. **Run the readiness checker, then export the current state.**
-   [Create a Mesh 3 readiness report](/mesh/check-upgrade-readiness/) and save every `Mesh`,
+   [Create a {{site.mesh_product_name}} 3.x readiness report](/mesh/check-upgrade-readiness/) and save every `Mesh`,
    policy, legacy policy, and observability backend from the Global and Zone control planes.
    Include resources that are normally generated or managed through GitOps, not only resources
    applied by hand. Use the report to identify which sections of this guide apply.
@@ -140,7 +140,7 @@ delegated gateway is an ordinary `Dataplane` as far as the control plane is conc
 {:.warning}
 > `kind: Dataplane` selects proxies by `labels` only, and a reference carrying `name` or
 > `namespace` instead is **accepted**. Those fields are not in the schema, so they are dropped,
-> and what remains is a bare `kind: Dataplane` — every proxy in the mesh. A policy written for
+> and what remains is a bare `kind: Dataplane`: every proxy in the mesh. A policy written for
 > one destination silently becomes a policy that applies to all of them. Read the policy back
 > after rewriting one: a stored `targetRef` with a `kind` and no `labels` covers the whole mesh.
 
@@ -154,7 +154,7 @@ page for its `to`.
 are selected by `labels` only, in `spec.targetRef`, `spec.to[].targetRef` and `backendRefs[]`
 alike. `name` and `namespace` select nothing.
 
-Unlike the `Dataplane` case above, the four real-resource kinds require `labels`, so a reference
+Unlike `kind: Dataplane`, the four real-resource kinds require `labels`, so a reference
 missing them is rejected with `labels: must be set when kind is MeshService`.
 
 ```yaml
@@ -294,7 +294,7 @@ The `404` covers every HTTP port of the destination when the `to[].targetRef` na
 is a destination with no `MeshHTTPRoute` at all.
 
 On the route itself, the catch-all also inherits the policies attached to that route. Where that
-is wrong — a 1s `MeshTimeout` that suits `/orders` but not a file download on another path — put
+is wrong (a 1s `MeshTimeout` that suits `/orders` but not a file download on another path), put
 the catch-all in a second `MeshHTTPRoute` instead.
 
 ### Universal inbounds must declare their protocol
@@ -363,8 +363,8 @@ traffic between tagged subsets of one service, that service has to become separa
 ### A route names a destination, not the mesh
 
 `to[].targetRef` accepts `MeshService`, `MeshExternalService` and `MeshMultiZoneService`.
-`Mesh` is rejected with `value 'Mesh' is not supported`, so the 2.x gateway form — a
-`MeshGateway` top-level `targetRef` with `to[].targetRef.kind: Mesh` — has no equivalent on
+`Mesh` is rejected with `value 'Mesh' is not supported`, so the 2.x gateway form (a
+`MeshGateway` top-level `targetRef` with `to[].targetRef.kind: Mesh`) has no equivalent on
 either route policy. Name the destination directly.
 
 ## MeshTrafficPermission
@@ -448,7 +448,7 @@ rows:
   - setting: "`KUMA_MESH_TRAFFIC_PERMISSION_DISABLE_CLIQUES_ALGORITHM`"
     replacement: "Nothing. Rule generation always uses the cliques-based grouping algorithm."
   - setting: "`experimental.autoReachableServices` / `KUMA_EXPERIMENTAL_AUTO_REACHABLE_SERVICES`"
-    replacement: "The control plane no longer derives a proxy's reachable services from its `MeshTrafficPermission` policies. To trim the outbound clusters a proxy receives, set reachable backends on the `Dataplane` — the `kuma.io/reachable-backends` annotation on Kubernetes. Access control itself is unaffected: traffic that no policy permits is still denied at the proxy, it is only no longer pruned from the configuration."
+    replacement: "The control plane no longer derives a proxy's reachable services from its `MeshTrafficPermission` policies. To trim the outbound clusters a proxy receives, set reachable backends on the `Dataplane` using the `kuma.io/reachable-backends` annotation on Kubernetes. Access control itself is unaffected: traffic that no policy permits is still denied at the proxy, it is only no longer pruned from the configuration."
   - setting: "`defaults.createMeshRoutingResources` / `KUMA_DEFAULTS_CREATE_MESH_ROUTING_RESOURCES`"
     replacement: "Nothing. A new `Mesh` gets no default `TrafficPermission` or `TrafficRoute`."
 {% endtable %}
@@ -571,7 +571,7 @@ another port of the same destination.
 
 Both were misconfigurations that traffic survived, which is why they are worth an explicit
 pass: after the upgrade they become visible traffic loss. The references to check are the ones
-that were never exercised — a `MeshService` in another zone that KDS may not have synced, a
+that were never exercised: a `MeshService` in another zone that KDS may not have synced, a
 destination in another namespace, and any `backendRef` with an explicit `port` or `sectionName`.
 
 A rule whose `backendRefs` all have weight `0` answers `503`, and a rule carrying a
@@ -605,8 +605,8 @@ destination at all, and its connections fail at connect time.
 ## MeshIdentity
 
 `MeshIdentity` and [MeshTrust](#meshtrust) are how a mesh issues and verifies workload
-identities in v3. They are not policies and have no `targetRef`, so the shared changes above do
-not apply to them. What does apply is that they are now required.
+identities in v3. They are not policies and have no `targetRef`, so the [changes that affect every
+policy](#changes-that-affect-every-policy) do not apply to them. What does apply is that they are now required.
 
 {:.warning}
 > `Mesh.mtls` is removed from the API, and the transport socket builders no longer read it. A
@@ -889,7 +889,7 @@ a policy keeping it fails to sync from a Global control plane into an upgraded Z
 
 {:.warning}
 > `spec.targetRef.name`, `namespace` and `mesh` are removed, and are **pruned rather than
-> rejected** — by the API server on the next write on Kubernetes, and on load on Universal. A
+> rejected**, by the API server on the next write on Kubernetes, and on load on Universal. A
 > `MeshOPA` that used `name` to scope itself to one service therefore widens to every proxy
 > matching `kind`, and its rego starts evaluating requests it never saw before. Nothing reports
 > it.
@@ -1068,7 +1068,7 @@ change described under
 
 Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed).
 
-Both changes below are silent, and both can leave an inbound stricter or looser than intended.
+The following two changes are silent, and both can leave an inbound stricter or looser than intended.
 
 ### Author a policy for every mesh that relied on a permissive CA backend
 
@@ -1103,7 +1103,7 @@ without a policy.
 
 {:.warning}
 > `MeshTLS` has no check that the remaining spec configures anything, so a policy whose only
-> field was `from` is **accepted**, not rejected — unlike the other policies that lost `from`.
+> field was `from` is **accepted**, not rejected, unlike the other policies that lost `from`.
 > It applies with an empty spec, and reading it back shows nothing but the `targetRef`. Since an
 > inbound with no policy is `Strict`, a `from` that was there to allow plaintext silently stops
 > allowing it.
@@ -1230,9 +1230,9 @@ by checking the behavior each policy is intended to produce.
    zones.
 
 While every control plane is still running the latest supported 2.14 patch, rerun the
-[Mesh 3 readiness checker](/mesh/check-upgrade-readiness/) against the complete estate. Do not
+[{{site.mesh_product_name}} 3.x readiness checker](/mesh/check-upgrade-readiness/) against the complete estate. Do not
 upgrade the first zone until the report has no blockers or coverage gaps and its manual checks are
-complete. A clean report complements the behavioral checks above; it does not replace them.
+complete. A clean report complements the preceding behavioral checks; it does not replace them.
 
 The migration is complete when the stored resources match the intended 3.x configuration, the
 proxies receive valid configuration, and both the expected success and failure paths behave as

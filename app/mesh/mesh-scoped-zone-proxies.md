@@ -1,6 +1,6 @@
 ---
 title: Mesh-scoped zone proxies
-description: Understand zone ingress and zone egress in Mesh 3, deploy them for a mesh, and apply policies at the correct point in the traffic path.
+description: Understand zone ingress and zone egress in {{site.mesh_product_name}} 3.x, deploy them for a mesh, and apply policies at the correct point in the traffic path.
 content_type: reference
 layout: reference
 products:
@@ -13,7 +13,7 @@ tags:
 related_resources:
   - text: Bring external traffic into the mesh
     url: /mesh/application-ingress/
-  - text: Migrate zone proxies to Mesh 3
+  - text: Migrate zone proxies to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-zone-proxies-to-3/
   - text: Deploy mesh-scoped zone proxies
     url: /mesh/zone-proxies/
@@ -28,7 +28,7 @@ related_resources:
 ---
 
 Zone proxies carry traffic between zones or from a mesh to external services. In
-{{site.mesh_product_name}} 3, each zone proxy belongs to one mesh and is represented by a
+{{site.mesh_product_name}} 3.x, each zone proxy belongs to one mesh and is represented by a
 `Dataplane`. Its `networking.listeners` entries give it an ingress or egress role.
 
 This lets you select zone proxies with policies just as you select workload proxies. The
@@ -40,7 +40,7 @@ Use this reference to choose where to deploy a proxy, where to enforce a policy,
 verify the result. The [deployment walkthrough](/mesh/zone-proxies/) provides a complete
 Kubernetes environment to try these concepts.
 
-## Why the model changed in Mesh 3
+## Why the model changed in {{site.mesh_product_name}} 3.x
 
 The legacy `ZoneIngress` and `ZoneEgress` resources were shared across meshes in a zone.
 That made them different from workload proxies: they did not belong to the mesh whose
@@ -59,7 +59,7 @@ The tradeoff is more infrastructure: separate meshes need separate proxy capacit
 need separate ingress load balancers. This provides a clearer configuration and operational
 boundary, not automatic network isolation or permission to access another mesh.
 
-Mesh-scoped proxies were introduced in 2.14; Mesh 3 removes support for the legacy standalone
+Mesh-scoped proxies were introduced in 2.14; {{site.mesh_product_name}} 3.x removes support for the legacy standalone
 proxy types. Existing customers should [migrate zone proxies before upgrading their zone
 control planes](/mesh/migrate-zone-proxies-to-3/). This is a deployment and traffic migration,
 not just a resource rename.
@@ -89,7 +89,7 @@ Client proxy → zone egress → external endpoint
              mesh mTLS     separate connection, with TLS configured by MeshExternalService
 ```
 
-Zone egress is not an additional hop in the cross-zone workload path shown above. Nor is it
+Zone egress is not an additional hop in the cross-zone workload path between a client proxy and a destination proxy through zone ingress. Nor is it
 an automatic gateway for every address an application can dial. Unknown destinations and
 traffic outside interception are separate concerns; see
 [MeshPassthrough](/mesh/policies/meshpassthrough/). Use network controls as well when you
@@ -161,7 +161,7 @@ networking:
 Replace the address with the proxy's listening address. Use `type: ZoneEgress` for an egress
 listener. The listener `name` is the value policies use as `sectionName`; if omitted, the port
 number becomes its name as a string. The API can represent both roles on one `Dataplane`,
-but the Kubernetes chart above deploys them separately.
+though a Kubernetes deployment using the {{site.mesh_product_name}} Helm chart runs them as separate Deployments.
 
 Use a dataplane token for control plane authentication, not a legacy zone-proxy token or
 `--proxy-type=ingress`. Registration credentials are separate from the workload certificate
@@ -183,7 +183,7 @@ external IP. A plain ClusterIP without an external address is not sufficient for
 Inspect the generated value and check that it is reachable from the other zones.
 
 On Universal, publish a `MeshZoneAddress` on the zone control plane for the mesh. For example,
-if a load balancer forwards `ingress.zone-b.example.com:10001` to the listener above:
+if a load balancer forwards `ingress.zone-b.example.com:10001` to the `zone-ingress-01` Dataplane's `ingress` listener:
 
 ```yaml
 type: MeshZoneAddress
@@ -214,7 +214,7 @@ kubectl get meshidentities -A
 kubectl get meshexternalservices -A
 ```
 
-A running egress Pod whose `Dataplane` shows a `ZoneEgress` listener still proves nothing —
+A running egress Pod whose `Dataplane` shows a `ZoneEgress` listener still proves nothing:
 that listener is the requested configuration, not the generated one. Confirm the proxy
 received `self_zoneegress_dp_<port>` in its Envoy configuration.
 
@@ -347,7 +347,7 @@ A mesh-wide policy can include zone proxies. A narrower policy does not automati
 the broader configuration: each policy type has its own merge rules.
 
 For permissions, any matching deny wins over allows. Do not add a blanket deny-all and expect
-the example above to reopen access. Conversely, an existing broad allow can continue granting
+the [allow example](#allow-one-caller-to-one-external-destination) to reopen access. Conversely, an existing broad allow can continue granting
 traffic beyond this example's caller and destination. Review all applicable permissions before
 using a narrow allow as evidence that access is restricted.
 

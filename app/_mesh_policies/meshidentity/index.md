@@ -11,7 +11,7 @@ related_resources:
   url: "/mesh/migrate-mtls-to-meshidentity/"
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
-- text: Migrate policies to {{site.mesh_product_name}} 3
+- text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshidentity"
 - text: MeshTrust resource
   url: "/mesh/policies/meshtrust/"
@@ -74,7 +74,7 @@ the identities it issues.
 `insecureAllowSelfSigned: true` permits the generated self-signed CA. Peers verify its
 certificates using the CA published in `MeshTrust`; the setting does not disable certificate
 verification. If your organization requires certificates issued through an existing PKI,
-use the supplied-CA configuration below.
+use the [supplied-CA configuration](#a-ca-you-supply).
 
 ### Multi-zone meshes
 
@@ -106,8 +106,8 @@ proxy in the mesh.
 Where several identities match one proxy, the **most specific wins**: the one with the most
 match labels. Where two tie on that, the one whose name sorts first alphabetically wins.
 
-That makes a mesh-wide identity with an empty selector a base that a narrower identity overrides
-— and it means adding a narrowly-scoped identity changes the trust domain of the proxies it
+That makes a mesh-wide identity with an empty selector a base that a narrower identity overrides.
+It also means adding a narrowly-scoped identity changes the trust domain of the proxies it
 matches, if its trust domain differs from the one they had.
 
 For example, an identity with `matchLabels: {app: payments}` wins over one with
@@ -248,7 +248,7 @@ issuer and its trust material while moving workloads:
 1. Configure the new identity and make its CA trusted by the receiving proxies.
 1. Update destination `MeshTrafficPermission` rules to allow both the old and new caller IDs.
 1. Use `selector.dataplane.matchLabels` to move a small group of workloads to the new identity.
-   Ensure the new selector wins according to the specificity rules above.
+   Ensure the new selector wins according to the [specificity rules](#choose-which-proxies-an-identity-covers).
 1. Verify the workloads' issued certificates and their calls to destinations.
 1. Move the remaining workloads. Remove the old permissions and trust only after no workload
    still needs them.
@@ -283,7 +283,7 @@ columns:
     key: what
 rows:
   - condition: "`Provider`"
-    what: "The provider initialized — the CA was generated or loaded."
+    what: "The provider initialized: the CA was generated or loaded."
   - condition: "`MeshTrustCreated`"
     what: "The `MeshTrust` publishing the CA bundle exists."
   - condition: "`Ready`"

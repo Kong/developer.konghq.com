@@ -9,7 +9,7 @@ icon: meshtrace.png
 related_resources:
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
-- text: Migrate policies to {{site.mesh_product_name}} 3
+- text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshtrace"
 - text: MeshAccessLog policy
   url: "/mesh/policies/meshaccesslog/"
@@ -180,7 +180,7 @@ rows:
   - field: "`random`"
     what: "Requests picked at random, where the client neither asked for a trace nor forced one."
   - field: "`overall`"
-    what: "The ceiling on everything above. A `client` of 100 with an `overall` of 1 still traces only 1% of the requests that asked for it."
+    what: "The ceiling on `client` and `random` combined. A `client` of 100 with an `overall` of 1 still traces only 1% of the requests that asked for it."
 {% endtable %}
 
 {% policy_yaml namespace=kong-mesh-demo %}

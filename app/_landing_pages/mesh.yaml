@@ -1,21 +1,21 @@
 metadata:
-  title: Kong Mesh
+  title: "{{site.mesh_product_name}}"
   content_type: landing_page
-  description: Secure, connect, and observe services across Kubernetes and virtual machines with Kong Mesh 3.
+  description: Secure, connect, and observe services across Kubernetes and virtual machines with {{site.mesh_product_name}} 3.x.
   products: [mesh]
   tags: [control-plane, data-plane]
 
 rows:
   - header:
       type: h1
-      text: Kong Mesh
+      text: "{{site.mesh_product_name}}"
       sub_text: Secure, connect, and observe services across Kubernetes and virtual machines
   - columns:
       - blocks:
           - type: structured_text
             config:
               header:
-                text: Introducing Kong Mesh
+                text: Introducing {{site.mesh_product_name}}
               blocks:
                 - type: text
                   text: |
@@ -25,7 +25,7 @@ rows:
 
                     A central control plane distributes configuration while application traffic remains on your network. In a multi-zone deployment, mesh-scoped zone proxies connect services across environments and provide a controlled path to external services.
 
-                    With {{site.mesh_product_name}} 3, workload identity, trust, and traffic permission have separate responsibilities. This makes it explicit who a workload is, which certificate issuers are trusted, and which connections are allowed.
+                    With {{site.mesh_product_name}} 3.x, workload identity, trust, and traffic permission have separate responsibilities. This makes it explicit who a workload is, which certificate issuers are trusted, and which connections are allowed.
           - type: text
             config: |
               [Get started with {{site.mesh_product_name}}](#get-started-with-kong-mesh), [plan a 2.x migration](#already-running-kong-mesh-2-x), or [browse all policies](/mesh/policies/).
@@ -34,11 +34,11 @@ rows:
           - type: image
             config:
               url: /assets/images/mesh/mesh-v3-overview.svg
-              alt_text: Kong Mesh distributes configuration through zone control planes while application proxies enforce traffic policies across Kubernetes and VMs. Separate paths show cross-zone ingress, application ingress, and external-service egress.
+              alt_text: "{{site.mesh_product_name}} distributes configuration through zone control planes while application proxies enforce traffic policies across Kubernetes and VMs. Separate paths show cross-zone ingress, application ingress, and external-service egress."
 
   - header:
       type: h2
-      text: Get started with Kong Mesh
+      text: Get started with {{site.mesh_product_name}}
     columns:
       - blocks:
           - type: tabs
@@ -50,19 +50,19 @@ rows:
 
                   Choose the environment for your first zone:
 
-                  - **Kubernetes (recommended):** [Choose the Konnect UI, API, or Terraform installation](/mesh/konnect/#where-will-your-zone-run).
-                  - **Virtual machines and bare metal:** [Choose the Konnect UI or API installation](/mesh/konnect/#where-will-your-zone-run).
+                  - **Kubernetes (recommended):** [Choose the {{site.konnect_short_name}} UI, API, or Terraform installation](/mesh/konnect/#where-will-your-zone-run).
+                  - **Virtual machines and bare metal:** [Choose the {{site.konnect_short_name}} UI or API installation](/mesh/konnect/#where-will-your-zone-run).
 
-                  Both paths create or connect to a {{site.mesh_product_name}} 3 global control plane in {{site.konnect_short_name}} and deploy the zone control plane in your environment.
+                  Both paths create or connect to a {{site.mesh_product_name}} 3.x global control plane in {{site.konnect_short_name}} and deploy the zone control plane in your environment.
               - title: Self-hosted
                 content: |
                   Run and operate the control plane and application proxies in your own infrastructure:
 
-                  - **Try {{site.mesh_product_name}} 3 locally:** Follow the [Universal quickstart](/mesh/get-started/universal/install/) to run a control plane and two application proxies in containers.
+                  - **Try {{site.mesh_product_name}} 3.x locally:** Follow the [Universal quickstart](/mesh/get-started/universal/install/) to run a control plane and two application proxies in containers.
                   - **Plan a production deployment:** Use the [Universal control plane reference](/mesh/universal-control-plane/) to choose the mode, persistent store, and zone configuration.
                   - **Connect applications:** Follow the [Universal data plane reference](/mesh/universal-data-plane/) to register and authenticate application proxies.
 
-                  A self-hosted Kubernetes installation guide for {{site.mesh_product_name}} 3 is not yet available. Do not use the 2.x installation procedure for a 3.x control plane.
+                  A self-hosted Kubernetes installation guide for {{site.mesh_product_name}} 3.x is not yet available. Do not use the 2.x installation procedure for a 3.x control plane.
 
   - columns:
       - blocks:
@@ -86,8 +86,8 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Migrate from Mesh 2.x
-              description: Prepare identity, zone proxies, and policies in the required order before upgrading to Mesh 3.
+              title: Migrate from {{site.mesh_product_name}} 2.x
+              description: Prepare identity, zone proxies, and policies in the required order before upgrading to {{site.mesh_product_name}} 3.x.
               icon: /assets/icons/migrate.svg
               cta:
                 url: /mesh/migrate-policies-to-3/
@@ -112,18 +112,18 @@ rows:
                     - Reach [services outside the mesh](/mesh/meshexternalservice/)
       - header:
           type: h2
-          text: Tools to manage Kong Mesh
+          text: Tools to manage {{site.mesh_product_name}}
         blocks:
           - type: structured_text
             config:
               blocks:
                 - type: text
                   text: |
-                    Manage Mesh resources through the interface that fits your workflow:
+                    Manage {{site.mesh_product_name}} resources through the interface that fits your workflow:
 
-                    - [Mesh Manager](https://cloud.konghq.com/mesh-manager): Create and manage Mesh control planes in {{site.konnect_short_name}}.
+                    - [Mesh Manager](https://cloud.konghq.com/mesh-manager): Create and manage {{site.mesh_product_name}} control planes in {{site.konnect_short_name}}.
                     - [Mesh Control Plane API](/api/konnect/mesh-control-planes/): Automate control plane management through the {{site.konnect_short_name}} API.
-                    - [kongctl](/mesh/cli/): Inspect and configure Mesh 3 resources from the command line.
+                    - [kongctl](/mesh/cli/): Inspect and configure {{site.mesh_product_name}} 3.x resources from the command line.
 
   - header:
       type: h2
@@ -183,7 +183,7 @@ rows:
 
   - header:
       type: h2
-      text: Understand how Kong Mesh works
+      text: Understand how {{site.mesh_product_name}} works
       description: Control planes distribute configuration. Proxies handle application traffic and enforce the policies that apply to their part of the connection.
     column_count: 2
     columns:
@@ -230,7 +230,7 @@ rows:
             config:
               title: Command-line reference
               description: Use kongctl to authenticate, select a control plane and mesh, and inspect or configure resources.
-              cta: {text: Use the Mesh CLI, url: /mesh/cli/}
+              cta: {text: "Use the {{site.mesh_product_name}} CLI", url: /mesh/cli/}
 
   - header:
       type: h2
