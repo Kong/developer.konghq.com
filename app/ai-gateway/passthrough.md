@@ -53,7 +53,7 @@ In an [AI Model](/ai-gateway/entities/ai-model/), the `passthrough` format forwa
 * Request-count rate limiting
 * Logging and metrics
 
-AI Models using the passthrough format don't support format normalization or anything that rewrites the request. Token accounting depends on whether {{site.ai_gateway}} can make sense of your upstream's actual response shape; see [Token usage and cost](#token-usage-and-cost). Guardrails aren't supported under passthrough, since there's no parsed body for them to read; see [Which Policies work with passthrough?](#which-policies-work-with-passthrough).
+AI Models using the passthrough format don't support format normalization or anything that rewrites the request. Token accounting depends on whether {{site.ai_gateway}} can make sense of your upstream's actual response shape; see [Token usage and cost](#token-usage-and-cost). Guardrails aren't supported under passthrough, since there's no parsed body for them to read.
 
 ### Use cases
 
