@@ -4,7 +4,7 @@ name: 'NVIDIA Switchyard AI Routing'
 
 content_type: plugin
 
-publisher: nvidia
+publisher: kong-inc
 
 description: "Delegate per-request LLM model selection to the NVIDIA Switchyard Decision API, while {{site.base_gateway}} retains authority over which models can be reached."
 
@@ -17,6 +17,8 @@ works_on:
   - konnect
 
 third_party: true
+
+support_url: https://support.konghq.com/s/
 
 icon: nvidia.svg
 
@@ -42,6 +44,8 @@ related_resources:
 
 min_version:
   gateway: '3.14'
+
+ai_gateway_url: "/ai-gateway/policies/ai-routing-provider/"
 ---
 
 The NVIDIA Switchyard AI Routing plugin asks an external decision service which model should serve each AI request, then applies that answer through {{site.base_gateway}}'s own {{site.ai_gateway}} machinery.
@@ -389,7 +393,7 @@ This is required: the alias is only useful if it's set before AI Proxy Advanced 
 Send a chat completion request to the configured Route and inspect the routing headers:
 
 ```bash
-curl -i -X POST http://localhost:8000/ai/chat \
+curl -i -X POST http://localhost:8000/ai/chat/completions \
   -H "Content-Type: application/json" \
   -d '{"model":"router","messages":[{"role":"user","content":"Say hello."}]}'
 ```
