@@ -163,7 +163,7 @@ If none of these match, {{site.ai_gateway}} buffers the response instead of stre
 <!--
 ## Migrate from the `preserve` route type
 
-The passthrough format in AI Models replaces `route_type: preserve` in the [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin. If you're converting a `preserve` configuration with [`kongctl convert ai-gateway`](/ai-gateway/v2-migration-guide/), the following sections cover what the converter can't infer.
+`kongctl convert ai-gateway` doesn't have any special handling for `route_type: preserve`. Recreate the AI Model manually using [Configure a passthrough AI Model](#configure-a-passthrough-ai-model) as your starting point, and use the following sections as a manual field-by-field reference for what `preserve` used to do.
 
 ### Field mapping
 
@@ -186,26 +186,27 @@ rows:
     v2: "Accepted on `targets[].config` but inert under passthrough. Remove them."
 {% endtable %}
 
-Under `preserve`, `upstream_path` was honored only when `upstream_url` was unset, and applied as a literal path against the provider's default host. There's no separate path setting in 2.x, so `upstream_url` has to carry the full path. If you set both under `preserve`, `upstream_path` was already being ignored, so delete it.
+Under `preserve`, `upstream_path` was honored only when `upstream_url` was unset, and applied as a literal path against the provider's default host. There's no separate path setting in 2.x, so `upstream_url` has to carry the full path. If you set both under `preserve`, `upstream_path` was already being ignored, so drop it.
 
 ### Client-path forwarding changed
 
 Under `preserve`, path fallback used the raw incoming request path and ignored the Route's `strip_path` setting. An AI Model has no {{site.base_gateway}} Route, so the equivalent fallback strips the AI Model's `config.route.paths` prefix before forwarding, the way every other AI Model does.
 
-If you relied on the full raw path reaching your upstream under `preserve`, set an explicit `upstream_url` with a fixed path so client-path forwarding doesn't apply at all. Otherwise, verify the path arriving upstream is still what your backend expects.
+If you relied on the full raw path reaching your upstream under `preserve`, set an explicit `upstream_url` with a fixed path on the new AI Model so client-path forwarding doesn't apply at all. Otherwise, verify the path arriving upstream is still what your backend expects once you've recreated the target.
 
 ### Re-verify guardrails
 
-Plugin behavior under `preserve` was inconsistent. Some plugins passed traffic through silently, AI RAG Injector returned a hard `400`, and AI Semantic Cache bypassed with a warning. Passthrough replaces that inconsistency with the defined behavior in [Which Policies work with passthrough?](#which-policies-work-with-passthrough) and the extraction rules in [Token usage and cost](#token-usage-and-cost). If your `preserve` targets pointed at a self-hosted or model-agnostic upstream, check both against real traffic rather than assuming either carries over. If you need guaranteed guardrail or usage support, use a typed capability with a native format instead of passthrough.
+Plugin behavior under `preserve` was inconsistent. Some plugins passed traffic through silently, AI RAG Injector returned a hard `400`, and AI Semantic Cache bypassed with a warning. None of that carries over: guardrails aren't supported under passthrough at all. See [Which Policies work with passthrough?](#which-policies-work-with-passthrough). If you need guardrail or guaranteed usage support, use a typed capability with a native format instead of passthrough.
 
 ### Migration steps
 
-* Replace each `preserve` target with an AI Model whose `formats[].type` is `passthrough`.
+* Don't rely on `kongctl convert ai-gateway` for `preserve` targets: it warns and skips them, producing no output for them at all. Recreate each one as a new AI Model by hand.
+* Set `formats[].type` to `passthrough` on the new AI Model.
 * Merge any `upstream_path` value into `targets[].config.upstream_url`.
 * Set `upstream_url` explicitly on Azure and Databricks targets, which have no default host. Azure fails at request time without it; Databricks fails configuration validation instead.
 * Verify the path arriving upstream, now that client-path forwarding strips the AI Model's base path.
-* Split any plugin instance that mixed `preserve` with other route types into separate AI Models.
+* Split any plugin instance that mixed `preserve` with other route types into separate AI Models, since the old instance is gone either way.
 * Remove any dependency on model aliasing, semantic load balancing, the realtime capability, and generation parameters.
 * Check whether each target's `provider` has a native adapter, or its response is OpenAI-shaped, and confirm you can accept empty usage data where neither applies.
-* Remove any guardrail Policy attached to a passthrough AI Model: guardrails aren't supported under passthrough. See [Which Policies work with passthrough?](#which-policies-work-with-passthrough)
+* Don't attach any guardrail Policy to the new passthrough AI Model: guardrails aren't supported under passthrough. See [Which Policies work with passthrough?](#which-policies-work-with-passthrough)
 -->
