@@ -192,6 +192,7 @@ db_import
 db-ip
 dbless
 dcr
+debounce
 DECK_
 deck_files
 declaratively
@@ -501,6 +502,7 @@ M_Link
 M_Resource
 maglev
 major_version
+malforming
 managedfields
 matchers
 max_args
@@ -661,6 +663,7 @@ proxy_listen
 proxy_ssl
 proxying
 public_key
+pushable
 Qdrant
 qubit
 querystring
@@ -698,6 +701,8 @@ reportingComponent
 reportingInstance
 requery
 requeue
+requeued
+requeues
 requeuing
 request_counts
 requestable
@@ -745,6 +750,7 @@ Scriptable
 SDKs
 search_by_username
 secret_id
+semver
 sequenceDiagram
 serializer
 serverless
@@ -900,6 +906,7 @@ unicode
 unix
 unlinking
 unmanaged
+unmarshal
 unmarshalled
 unnamespaced
 unnormalized

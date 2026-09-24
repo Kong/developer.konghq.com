@@ -20,7 +20,7 @@ Changelog for supported {{ site.operator_product_name }} versions.
 
 ### Added
 
-- Added support for AI Gateway runtime `2.1`: `AIGatewayMCPServer`
+- Added support for {{site.ai_gateway}} runtime `2.1`: `AIGatewayMCPServer`
   `listener`/`conversion-listener` gain `config.allowedVersions` and
   `config.cache.{discover,toolsList}` (cache hints with `cacheScope`/`ttlMs`);
   `AIGatewayPolicy` gains `condition` for conditional plugin execution;
@@ -85,23 +85,23 @@ Changelog for supported {{ site.operator_product_name }} versions.
   is not assembled from the spec in this change, so full configuration handling
   (including restarts driven by spec changes) lands in a later change.
   [#5402](https://github.com/Kong/kong-operator/issues/5402)
-- Added `AIGatewayCACertificate` CRD: manage Konnect AI Gateway CA
+- Added `AIGatewayCACertificate` CRD: manage Konnect {{site.ai_gateway}} CA
   certificates (`aiconfiguration.konghq.com/v1alpha1`), parented to
   `KonnectAIGateway`, with the certificate PEM sourced from a Kubernetes
   `Secret`.
   [#5656](https://github.com/Kong/kong-operator/pull/5656)
-- Added `AIGatewayCertificate` CRD: manage Konnect AI Gateway certificates
+- Added `AIGatewayCertificate` CRD: manage Konnect {{site.ai_gateway}} certificates
   (`aiconfiguration.konghq.com/v1alpha1`), parented to `KonnectAIGateway`,
   with the certificate, private key, and alternate cert/key sourced from a
   Kubernetes `Secret`.
   [#5658](https://github.com/Kong/kong-operator/pull/5658)
-- Added `AIGatewaySNI` CRD: manage Konnect AI Gateway SNIs
+- Added `AIGatewaySNI` CRD: manage Konnect {{site.ai_gateway}} SNIs
   (`aiconfiguration.konghq.com/v1alpha1`), parented to `KonnectAIGateway`,
   with the SNI associated to an `AIGatewayCertificate` by certificate reference.
   [#5667](https://github.com/Kong/kong-operator/pull/5667)
 - `OnPremAIGateway`: the reconciler now lists the `AIGatewayModel`s referencing it,
   translates each into `github.com/Kong/ai-deck-converter`'s entity model, and
-  renders the result into a dbless configuration payload, restarting the control
+  renders the result into a DB-less configuration payload, restarting the control
   plane instance when it changes. The other nine `aiconfiguration` entity kinds
   aren't translated yet, so the rendered payload isn't a complete, pushable
   configuration on its own; pushing it to data planes is also not wired yet.
@@ -208,7 +208,7 @@ by the operator's semver:
   This change enforces patching of `Deployment`s, which causes
   a rolling restart of the underlying `Pod`s when updating operator to this version.
   [#5771](https://github.com/Kong/kong-operator/pull/5771)
-- AI Gateway configuration entities (`AIGatewayModel`, `AIGatewayPolicy`,
+- {{site.ai_gateway}} configuration entities (`AIGatewayModel`, `AIGatewayPolicy`,
   `AIGatewayConsumer`, and the other `aiconfiguration.konghq.com` kinds):
   `spec.aiGatewayRef` now uses a dedicated `AIGatewayRef` type instead of the
   shared `commonv1alpha1.ObjectRef`. And configuration entities can target an
@@ -395,7 +395,7 @@ by the operator's semver:
   - introduce `AIGatewayMCPServer` CRD with reconciler.
   [#4836](https://github.com/Kong/kong-operator/pull/4836)
   - `KonnectAIGateway` now supports `spec.source: Mirror`, referencing an
-    existing Konnect AI Gateway by ID (`spec.mirror.konnect.id`) instead of
+    existing Konnect {{site.ai_gateway}} by ID (`spec.mirror.konnect.id`) instead of
     creating one. `Origin` (the default) is unchanged.
     [#4928](https://github.com/Kong/kong-operator/pull/4928)
 - GRPCRoute: enable GRPCRoute for on-prem gateway
@@ -514,7 +514,7 @@ by the operator's semver:
   [#5354](https://github.com/Kong/kong-operator/pull/5354)
 - `AIGatewayDataPlane`: made `spec.controlPlaneRef` optional. When omitted, the
   operator performs no `KonnectAIGateway` lookup or certificate registration
-  automation, letting the AI Gateway be configured against a manually-managed
+  automation, letting the {{site.ai_gateway}} be configured against a manually-managed
   control plane and certificate via `spec.deployment.podTemplateSpec`.
   `controlPlaneRef` is immutable once set: it can be added later, but not
   removed or changed to a different reference.
@@ -585,7 +585,7 @@ by the operator's semver:
   `AIGatewayModelProvider` and `AIGatewayPolicy` from the `konnect.konghq.com`
   API group to a new `aiconfiguration.konghq.com` API group.
   [#5407](https://github.com/Kong/kong-operator/pull/5407)
-- AIGateway: update the default AI Gateway DataPlane image to
+- AIGateway: update the default {{site.ai_gateway}} DataPlane image to
   `kong/kong-ai-gateway-dev:2.0.3`.
   [#5459](https://github.com/Kong/kong-operator/pull/5459)
 
@@ -752,7 +752,7 @@ by the operator's semver:
   [#5091](https://github.com/Kong/kong-operator/pull/5091)
 - Admission webhook maintains its semantic to provide best effort validation
   to not block potentially valid `Ingress` or `HTTPRoute` resources when the
-  webhook is not able to reach Kong Gateway.
+  webhook is not able to reach {{site.base_gateway}}.
   [#5095](https://github.com/Kong/kong-operator/pull/5095)
 - `HybridGateway`: fix KongRoute created without updating KongService's hybrid-route annotation
   [#5136](https://github.com/Kong/kong-operator/pull/5136)
@@ -874,7 +874,7 @@ by the operator's semver:
   finalizers of the parent resource
   [#4785](https://github.com/Kong/kong-operator/pull/4785) [#4892](https://github.com/Kong/kong-operator/pull/4892)
 - Preserve only one CA certificate from secrets if there are multiple ones with
-  the duplicte IDs.
+  the duplicate IDs.
   [#4877](https://github.com/Kong/kong-operator/pull/4877)
 
 ## 2.2.2
@@ -1068,7 +1068,7 @@ by the operator's semver:
   Be default that is set to 10 seconds.
   [#3513](https://github.com/Kong/kong-operator/pull/3513)
 - Added `sticky_sessions_cookie` and `sticky_sessions_cookie_path` fields to
-  `KongUpstream` CRD, enabling sticky session configuration for Kong Gateway 3.11+
+  `KongUpstream` CRD, enabling sticky session configuration for {{site.base_gateway}} 3.11+
   upstreams synced to Konnect. A CEL validation rule enforces that
   `sticky_sessions_cookie` is set when `algorithm` is `sticky-sessions`.
   [#3555](https://github.com/Kong/kong-operator/pull/3555)
@@ -1080,7 +1080,7 @@ by the operator's semver:
   to reference existing Konnect control planes by ID.
   [#3612](https://github.com/Kong/kong-operator/pull/3612)
 - Added `managed-by:kong-operator` tag to all Konnect entities to allow
-  filtering resources managed by Kong Operator in Konnect.
+  filtering resources managed by {{site.operator_product_name}} in Konnect.
   [#3609](https://github.com/Kong/kong-operator/pull/3609)
 - Added MCP ControlPlane signalling controller: a new `MCPServerCPReconciler` watches
   `KonnectGatewayControlPlane` resources and, via a `SignalManager`, maintains per-control-plane
@@ -1151,7 +1151,7 @@ by the operator's semver:
   new CRDs before the upgrade, see [UPGRADE](charts/kong-operator/UPGRADE.md).
   [#3596](https://github.com/Kong/kong-operator/pull/3596)
   [#3599](https://github.com/Kong/kong-operator/pull/3599)
-- Bump Kong Gateway to 3.14 and double the default CPU (now `2000m`) and memory limits (now `2000Mi`)
+- Bump {{site.base_gateway}} to 3.14 and double the default CPU (now `2000m`) and memory limits (now `2000Mi`)
   for the `DataPlane` deployment.
   [#3995](https://github.com/Kong/kong-operator/pull/3995)
 
@@ -1287,7 +1287,7 @@ by the operator's semver:
 ### Fixes
 
 - Preserve only one CA certificate from secrets if there are multiple ones with
-  the duplicte IDs.
+  the duplicate IDs.
   [#4876](https://github.com/Kong/kong-operator/pull/4876)
 
 ## 2.1.8
@@ -1386,10 +1386,10 @@ by the operator's semver:
 - Sanitize the plugin configuration when `ControlPlane`'s `configDump.dumpSensitive` isn't enabled.
   [#4119](https://github.com/Kong/kong-operator/pull/4119) [#4194](https://github.com/Kong/kong-operator/pull/4194)
 - **Changed (potentially breaking):** As part of our secure-by-default initiative, everything out of the box relies on
-  defaults from Kong Gateway. It may break existing configurations that relied on previous implicit protocol behavior
-  (access via http will result `426` status code.), when version of Kong Gateway changes.
+  defaults from {{site.base_gateway}}. It may break existing configurations that relied on previous implicit protocol behavior
+  (access via http will result `426` status code.), when version of {{site.base_gateway}} changes.
   - For `HTTPRoute`, protocol now matches the attached Gateway listener protocol (and when `parentRef.sectionName` is set, it must match that specific listener). When `parentRef.sectionName` is not specified it binds to all `Gateway`s listeners.
-  - For `Ingress`, default protocol relies on Kong Gateway, can be set explicitly via `konghq.com/protocols: "http"` (or `https`)
+  - For `Ingress`, default protocol relies on {{site.base_gateway}}, can be set explicitly via `konghq.com/protocols: "http"` (or `https`)
     annotation on particular `Ingress`.
   [#4067](https://github.com/Kong/kong-operator/pull/4067)
   [#4245](https://github.com/Kong/kong-operator/pull/4245)
@@ -1426,7 +1426,7 @@ by the operator's semver:
   [#3753](https://github.com/Kong/kong-operator/pull/3753) [3759](https://github.com/Kong/kong-operator/pull/3759)
 - Revert change in configuring SNIs in ingress-controller when running with local controlplane.
   [#3761](https://github.com/Kong/kong-operator/pull/3761) [3764](https://github.com/Kong/kong-operator/pull/3764)
-- Fix `KongPlugin` admission validation when multiple Kong Gateway Admin API
+- Fix `KongPlugin` admission validation when multiple {{site.base_gateway}} Admin API
   clients are discovered: probe plugin schema on every gateway (order-independent),
   validate only on gateways that expose the plugin, and fall back to the previous
   single-client behavior when none match. Partial probe failures on one gateway do
@@ -1841,7 +1841,7 @@ by the operator's semver:
 ### Fixes
 
 - Preserve only one CA certificate from secrets if there are multiple ones with
-  the duplicte IDs.
+  the duplicate IDs.
   [#4875](https://github.com/Kong/kong-operator/pull/4875)
 
 ## 2.0.10
@@ -1983,9 +1983,9 @@ by the operator's semver:
 
 **Release date**: 2025-09-09
 
-> KGO becomes KO, which stands for Kong Operator. Kubernetes Gateway Operator and Kubernetes Ingress Controller
-> become a single product. Furthermore, Kong Operator provides all features that used to be reserved for the
-> Enterprise flavor of Kong Gateway Operator.
+> KGO becomes KO, which stands for {{site.operator_product_name}}. Kubernetes Gateway Operator and Kubernetes Ingress Controller
+> become a single product. Furthermore, {{site.operator_product_name}} provides all features that used to be reserved for the
+> Enterprise flavor of {{site.gateway_operator_product_name}}.
 
 ### Breaking Changes
 
@@ -1993,7 +1993,7 @@ by the operator's semver:
   has been removed. `Mirror` `GatewayControlPlane` resource is now the only way to reference remote
   control planes in read-only.
   [#1711](https://github.com/kong/kong-operator/pull/1711)
-- Rename product from Kong Gateway Operator to Kong Operator.
+- Rename product from {{site.gateway_operator_product_name}} to {{site.operator_product_name}}.
   [#1767](https://github.com/Kong/kong-operator/pull/1767)
 - Add `--cluster-domain` flag and set default to `'cluster.local'`
   This commit introduces a new `--cluster-domain` flag to the KO binary, which is now propagated to the ingress-controller.
@@ -2022,7 +2022,7 @@ by the operator's semver:
   [#1792](https://github.com/Kong/kong-operator/pull/1972)
 - Removed `KongIngress`, `TCPIngress` and `UDPIngress` CRDs together with their controllers.
   For migration guidance from these resources to Gateway API, please refer to the
-  [migration documentation](https://developer.konghq.com/kubernetes-ingress-controller/migrate/ingress-to-gateway/).
+  [migration documentation](/kubernetes-ingress-controller/migrate/ingress-to-gateway/).
   [#1971](https://github.com/Kong/kong-operator/pull/1971)
 - Change env vars prefix from `GATEWAY_OPERATOR_` to `KONG_OPERATOR_`.
   `GATEWAY_OPERATOR_` prefixed env vars are still accepted but reported as deprecated.
@@ -2104,7 +2104,7 @@ by the operator's semver:
   - `raw-error` for raw errors returned from the dataplane in the last failed
      application.
   - `diff-report` for summaries of differences between the last applied
-     configuration and the confiugration in the dataplane before that application.
+     configuration and the configuration in the dataplane before that application.
      It requires the `ControlPlane` set `spec.configDump.dumpSensitive` to `enabled`.
   [#1894](https://github.com/Kong/kong-operator/pull/1894)
 - Introduce the flag `--watch-namespaces` to specify which namespaces the operator
@@ -2286,7 +2286,7 @@ by the operator's semver:
   [#1148](https://github.com/kong/kong-operator/pull/1148)
 - Support for the `konnect-extension.gateway-operator.konghq.com` CRD has been interrupted. The new
   API `konnect-extension.konnect.konghq.com` must be used instead. The migration path is described in
-  the [Kong documentation](https://developer.konghq.com/operator/konnect/reference/migrate-1.4-1.5/).
+  the [Kong documentation](/operator/konnect/reference/migrate-1.4-1.5/).
   [#1183](https://github.com/kong/kong-operator/pull/1183)
 - Migrate KGO CRDs conditions to the kubernetes-configuration repo.
   With this migration process, we have moved all conditions from the KGO repo to [kubernetes-configuration][kubernetes-configuration].
@@ -2636,7 +2636,7 @@ by the operator's semver:
 - `Gateway` do not have their `Ready` status condition set anymore.
   This aligns with Gateway API and its conformance test suite.
   [#246](https://github.com/kong/kong-operator/pull/246)
-- `Gateway`s' listeners now have their `attachedRoutes` count filled in in status.
+- `Gateway`s' listeners now have their `attachedRoutes` count filled in status.
   [#251](https://github.com/kong/kong-operator/pull/251)
 - Detect when `ControlPlane` has its admission webhook disabled via
   `CONTROLLER_ADMISSION_WEBHOOK_LISTEN` environment variable and ensure that
