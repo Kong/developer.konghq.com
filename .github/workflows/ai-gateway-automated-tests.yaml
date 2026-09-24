@@ -79,6 +79,7 @@ jobs:
           KONG_IMAGE_NAME: ${{ env.KONG_IMAGE_NAME }}
           KONNECT_DOMAIN: ${{ env.KONNECT_DOMAIN }}
           TESTS_KONNECT_TOKEN: ${{ inputs.konnect_domain != '' && secrets.KONNECT_TOKEN_TECH || secrets.KONNECT_TOKEN }}
+          TESTS_KONNECT_SPAT_TOKEN: ${{ inputs.konnect_domain != '' && secrets.KONNECT_TOKEN_TECH || secrets.KONNECT_TOKEN }}
           TESTS_OPENAI_AUTH_HEADER: ${{ secrets.OPENAI_AUTH_HEADER }}
           TESTS_OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           TESTS_CODEX_API_KEY: ${{ secrets.CODEX_API_KEY }}
