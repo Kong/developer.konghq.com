@@ -995,7 +995,7 @@ When you configure [`config.protected_resource_metadata`](./#schema--config-prot
 > Configuring this setting only advertises protected resource metadata and adds it to unauthorized responses.
 It doesn't change how the OIDC auth strategy authenticates requests, and the authorization server URLs you configure here aren't validated against `config.issuer`.
 
-### Well-known metadata endpoint
+#### Well-known metadata endpoint
 
 By default, the OIDC auth strategy derives the metadata document's path from [`config.protected_resource_metadata.resource`](./#schema--config-protected-resource-metadata-resource) by appending `/.well-known/oauth-protected-resource` to its path component. For example:
 
@@ -1030,7 +1030,7 @@ The response is the metadata document, and doesn't require an `Authorization` he
 > {{ site.ai_gateway }} doesn't handle CORS for the metadata endpoint.
 If MCP or browser-based clients need to fetch the metadata document cross-origin, add the [CORS policy](/ai-gateway/policies/cors/) to the same route.
 
-### WWW-Authenticate header
+#### WWW-Authenticate header
 
 When a request is rejected with a `401 Unauthorized` response, the OIDC auth strategy adds a `resource_metadata` attribute to the `WWW-Authenticate` header, pointing to the well-known metadata endpoint.
 If [`config.protected_resource_metadata.scopes_supported`](./#schema--config-protected-resource-metadata-scopes-supported) is set, the header also includes a `scope` attribute listing the supported scopes.
@@ -1061,7 +1061,7 @@ This is particularly useful in complex environments like microservices or cross-
 {:.info}
 > **Note**: Only access tokens can be exchanged with the OIDC auth strategy.
 
-### Why use token exchange?
+#### Why use token exchange?
 
 Token exchange can be used in several critical use cases:
 
@@ -1076,7 +1076,7 @@ For example, a frontend service needs to trade its token for a new token with sp
 > Because token exchange allows for the creation of new tokens, trust models are vital.
 The trust model must strictly define which clients are allowed to exchange tokens and which scopes they are permitted to elevate or downgrade to prevent security flaws like privilege escalations.
 
-### How token exchange works
+#### How token exchange works
 
 In a typical OAuth flow, a token is obtained to access a resource.
 However, in a token exchange, a client already has a token (the "subject token").
@@ -1122,7 +1122,7 @@ Afterwards, the OIDC auth strategy continues processing the exchanged token thro
 
 Depending on the use case, {{ site.ai_gateway }} can exchange the token either with the same authorization server that issued the initial subject token, or exchange tokens between different authorization servers.
 
-#### Key terms
+##### Key terms
 
 The token exchange flow uses the following terms:
 
@@ -1132,7 +1132,7 @@ The token exchange flow uses the following terms:
 * **Conditions**: Conditions under which to trigger token exchange.
 Conditions look for the presence or absence of two claims: `scopes` and `audience`.
 
-### Subject token signature verification {% new_in 3.15 %}
+#### Subject token signature verification {% new_in 3.15 %}
 
 By default, {{ site.ai_gateway }} validates the `iss`, `exp`, and `nbf` claims of an incoming subject token but doesn't verify its cryptographic signature before sending the exchange request to the IdP.
 The IdP performs its own signature check, so validation happens eventually.
@@ -1149,7 +1149,7 @@ We recommend enabling this for all subject token issuers to prevent tokens with 
 If not set, {{ site.ai_gateway }} resolves the JWKS URI from OIDC discovery using the issuer URL.
 Set this when the issuer doesn't publish a discovery document or when you want to pin to a specific key endpoint.
 
-### Actor tokens {% new_in 3.16 %}
+#### Actor tokens {% new_in 3.16 %}
 
 An actor token represents the identity of the party acting on behalf of the subject in a token exchange, as defined by [RFC 8693](https://www.rfc-editor.org/rfc/rfc8693#name-actor-token-and-actor-toke).
 This is useful for delegation scenarios, such as an AI agent or backend service that needs to identify itself separately from the user (the subject) it's acting for.
@@ -1166,7 +1166,7 @@ This defaults to `urn:ietf:params:oauth:token-type:access_token`.
 
 {% include_cached /md/ai-gateway/v2/redis-cloud-providers.md redis_group="oidc" %}
 
-## Multiple clients
+### Multiple clients
 
 `config.client_id` and `config.client_secret` are array fields on the OpenID Connect AI Auth Strategy schema, and behave the same way as on the plugin.
 
