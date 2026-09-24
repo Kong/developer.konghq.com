@@ -2,7 +2,7 @@
 title: 'AI Routing Provider'
 name: 'AI Routing Provider'
 
-publisher: nvidia
+publisher: kong-inc
 
 min_version:
   ai-gateway: '2.1'
@@ -39,14 +39,11 @@ related_resources:
     url: https://github.com/NVIDIA-NeMo/Switchyard
   - text: AI Model entity
     url: /ai-gateway/entities/ai-model/
+  - text: Custom policies
+    url: /ai-gateway/custom-policies/
 
 icon: nvidia.svg
 ---
-
-<!-- Drafted against the Konnect Platform API's `/ai-gateways/{gatewayId}/custom-policies`
-endpoints (platform-api PR #3541, merged), which are marked `x-internal` and `x-unstable`
-as of this writing. Verify those flags have lifted, and verify the "Configure the policy"
-step below against a real AI Gateway before publishing or merging this page. -->
 
 The AI Routing Provider Policy is the {{site.ai_gateway}} 2.0 equivalent of the
 [NVIDIA Switchyard AI Routing plugin](/plugins/ai-routing-provider/): it asks the NVIDIA
@@ -60,10 +57,10 @@ This Policy resolves the selected target directly against your {{site.ai_gateway
 Model entities, and {{site.ai_gateway}}'s native routing takes over from there.
 Unlike the classic {{site.base_gateway}} plugin, it doesn't need [AI Proxy Advanced](/plugins/ai-proxy-advanced/) in front of it.
 
-This Policy is registered as a **custom policy**: you bring the same `schema.lua` and
-`handler.lua` that back the [NVIDIA Switchyard AI Routing plugin](/plugins/ai-routing-provider/),
-and {{site.konnect_short_name}} runs them as a first-class {{site.ai_gateway}} Policy, without a custom
-Docker image or a self-managed data plane.
+This Policy runs the same `schema.lua` and `handler.lua` that back the
+[NVIDIA Switchyard AI Routing plugin](/plugins/ai-routing-provider/), registered as a
+**custom policy** rather than installed as a plugin.
+See [Register the custom policy](#register-the-custom-policy) for how.
 
 Benefits of using the AI Routing Provider Policy:
 
@@ -119,37 +116,38 @@ the {{site.base_gateway}} plugin page.
 
 ## Register the custom policy
 
-{{site.ai_gateway}} 2.0 lets you register your own Lua schema and handler as a **custom
-policy**, without shipping a custom data plane image. Register the AI Routing Provider
-Policy once per {{site.ai_gateway}}, using its `schema.lua` and `handler.lua`:
+The AI Routing Provider Policy is registered as a **streaming custom policy**: you upload the
+plugin's `schema.lua` and `handler.lua` directly, and {{site.konnect_short_name}} distributes
+and runs the handler for you, without a custom data plane image or a self-managed data plane.
+See [Custom policies](/ai-gateway/custom-policies/) for the full deployment and lifecycle
+mechanics shared by every custom policy.
 
-```bash
-curl -X POST \
-  "https://us.api.konghq.com/v2/ai-gateways/${AI_GATEWAY_ID}/custom-policies" \
-  --header "Authorization: Bearer ${KONNECT_TOKEN}" \
-  --header "Content-Type: application/json" \
-  --data "$(jq -n \
-      --arg name "ai-routing-provider" \
-      --arg display_name "NVIDIA Switchyard AI Routing" \
-      --rawfile schema kong-plugin/kong/plugins/ai-routing-provider/schema.lua \
-      --rawfile handler kong-plugin/kong/plugins/ai-routing-provider/handler.lua \
-      '{name: $name, type: "streaming", display_name: $display_name, schema: $schema, handler: $handler}')"
-```
+Register it once per {{site.ai_gateway}}:
 
-A `streaming` custom policy uploads both files directly. {{site.konnect_short_name}}
-distributes and runs the handler for you, the same way a
-[streamed custom plugin](/plugins/ai-routing-provider/#install-the-nvidia-switchyard-ai-routing-plugin)
-works for classic {{site.base_gateway}}: no image rebuild and no data plane restart.
+{% entity_example %}
+type: custom_policy
+data:
+  name: ai-routing-provider
+  type: streaming
+  display_name: NVIDIA Switchyard AI Routing
+  schema: ${schema}
+  handler: ${handler}
+variables:
+  schema:
+    value: $LUA_SCHEMA
+    description: The `schema.lua` from the NVIDIA Switchyard AI Routing plugin.
+  handler:
+    value: $LUA_HANDLER
+    description: The `handler.lua` from the NVIDIA Switchyard AI Routing plugin.
+{% endentity_example %}
 
 {:.info}
-> **Note**: This registers the policy type once per {{site.ai_gateway}}. You still need to
-> configure and attach an instance of it, in the next section.
+> **Note**: Data planes must be started with `KONG_CUSTOM_PLUGIN_STREAMING_ENABLED` to accept
+> streamed custom policies.
+> This registers the policy type once per {{site.ai_gateway}}. You still need to configure and
+> attach an instance of it, in the next section.
 
 ## Configure the policy
-
-<!-- TODO: verify against a real AI Gateway once the custom-policies API is stable.
-The shape below is the expected pattern (matching how other AI Gateway Policies are
-declared), not yet confirmed against a live create-instance call. -->
 
 After registering the custom policy type, attach and configure it the same way as any
 other {{site.ai_gateway}} Policy, referencing it by the `name` you registered above:
@@ -196,7 +194,7 @@ Send a request and inspect the routing headers, the same way as the
 [classic plugin](/plugins/ai-routing-provider/#test-the-plugin):
 
 ```bash
-curl -i -X POST https://your-ai-gateway-endpoint/ai/chat \
+curl -i -X POST https://your-ai-gateway-endpoint/ai/chat/completions \
   -H "Content-Type: application/json" \
   -d '{"model":"router","messages":[{"role":"user","content":"Say hello."}]}'
 ```
