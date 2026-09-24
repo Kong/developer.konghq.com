@@ -226,7 +226,7 @@ data:
     log_text_data: false
     stop_on_error: true
     headroom:
-      proxy_token: !env HEADROOM_PROXY_TOKEN
+      proxy_token: ${headroom_proxy_token}
       ssl_verify: true
       session_id_headers:
         - x-claude-code-session-id
@@ -234,6 +234,10 @@ data:
         - thread-id
         - session-id
         - x-session-id
+variables:
+  headroom_proxy_token:
+    value: $HEADROOM_PROXY_TOKEN
+    description: Your Headroom provider authentication token.
 formats:
   - konnect-api
   - kongctl
