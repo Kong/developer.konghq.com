@@ -1,4 +1,5 @@
 import fs from "fs";
+import os from "os";
 import path from "path";
 import { fileURLToPath } from "url";
 import { glob } from "tinyglobby";
@@ -8,7 +9,7 @@ import { resolveRelease, latestMajor } from "./lib/release.js";
 import { loadCrds } from "./lib/crds.js";
 import { extractDocuments, extractTerraformBlocks } from "./lib/extract.js";
 import { findNullValues, findMarkerFields, checkSchema } from "./lib/rules.js";
-import { checkHclGrammar } from "./lib/terraform.js";
+import { checkHclGrammar, checkProviderSchema, runTerraform } from "./lib/terraform.js";
 import {
   builtPageToSourcePath,
   parseBuiltPage,
@@ -28,6 +29,25 @@ const SOURCE_EXAMPLES_GLOBS = [
   "app/_mesh_policies/v2/*/examples/*.{yaml,yml}",
 ];
 
+const TERRAFORM_VALIDATE_MODES = new Set(["off", "warn", "gate"]);
+
+function parseTerraformValidate(argv) {
+  const index = argv.findIndex(
+    (arg) => arg === "--terraform-validate" || arg.startsWith("--terraform-validate="),
+  );
+  if (index === -1) return "warn";
+  const arg = argv[index];
+  const value = arg.includes("=")
+    ? arg.slice(arg.indexOf("=") + 1)
+    : argv[index + 1];
+  if (!TERRAFORM_VALIDATE_MODES.has(value)) {
+    throw new Error(
+      `Invalid --terraform-validate value "${value}". Use off, warn, or gate.`,
+    );
+  }
+  return value;
+}
+
 function parseArgs(argv) {
   if (argv.includes("--version")) {
     throw new Error(
@@ -45,7 +65,8 @@ function parseArgs(argv) {
           .split(",")
           .filter((entry) => entry.length > 0)
           .map(parseSkipEntry);
-  return { root, skip };
+  const terraformValidate = parseTerraformValidate(argv);
+  return { root, skip, terraformValidate };
 }
 
 // A skip entry is `<policy>` (every major) or `<policy>@v<major>` (that
@@ -87,7 +108,7 @@ function excludeSkippedPolicies(paths, skip, parse, latest) {
 // root; test/cli.test.js is the only caller, to exercise the CLI end to end
 // without a real production build.
 export async function run(argv, root) {
-  const { root: rootArg, skip } = parseArgs(argv);
+  const { root: rootArg, skip, terraformValidate } = parseArgs(argv);
   root = root ?? (rootArg ? path.resolve(rootArg) : ROOT);
 
   const latest = latestMajor(root);
@@ -138,6 +159,11 @@ export async function run(argv, root) {
   let blocksChecked = 0;
   let blocksWithCoverage = 0;
   let terraformBlocksChecked = 0;
+  let pluginCacheDir;
+  const terraformEnv = () => {
+    pluginCacheDir ??= fs.mkdtempSync(path.join(os.tmpdir(), "mesh-policy-tf-cache-"));
+    return { ...process.env, TF_PLUGIN_CACHE_DIR: pluginCacheDir };
+  };
 
   for (const builtPage of builtPages) {
     const { crds } = releasesByMajor.get(
@@ -201,30 +227,55 @@ export async function run(argv, root) {
           ...grammarFinding,
         });
       }
+
+      if (terraformValidate === "off") continue;
+
+      const schemaFinding = checkProviderSchema(
+        tfBlock.text,
+        runTerraform,
+        terraformEnv(),
+      );
+      if (schemaFinding) {
+        findings.push({
+          source: relativeSource,
+          panel: tfBlock.panel,
+          pointer: "/",
+          severity: terraformValidate === "warn" ? "advisory" : "gating",
+          ...schemaFinding,
+        });
+      }
     }
   }
 
   for (const finding of findings) {
+    const advisorySuffix =
+      (finding.severity ?? "gating") === "advisory" ? " (advisory)" : "";
     console.log(
-      `${finding.source} [${finding.panel ?? "-"}] ${finding.pointer}: ${finding.message}`,
+      `${finding.source} [${finding.panel ?? "-"}] ${finding.pointer}: ` +
+        `${finding.message}${advisorySuffix}`,
     );
   }
+
+  const gatingCount = findings.filter(
+    (finding) => (finding.severity ?? "gating") !== "advisory",
+  ).length;
+  const advisoryCount = findings.length - gatingCount;
 
   console.log(
     `\nChecked ${builtPages.length} pages, ${blocksChecked} blocks ` +
       `(${blocksWithCoverage} with meaningful schema coverage), ` +
       `${terraformBlocksChecked} terraform block(s). ` +
-      `${findings.length} finding(s).` +
+      `${findings.length} finding(s): ${gatingCount} gating, ${advisoryCount} advisory.` +
       (skip.length > 0
         ? ` Skipped: ${skip.map(skipEntryLabel).join(", ")}.`
         : ""),
   );
 
-  const gatingFindings = findings.filter(
-    (finding) => (finding.severity ?? "gating") !== "advisory",
-  );
+  if (pluginCacheDir) {
+    fs.rmSync(pluginCacheDir, { recursive: true, force: true });
+  }
 
-  return gatingFindings.length > 0 ? 1 : 0;
+  return gatingCount > 0 ? 1 : 0;
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

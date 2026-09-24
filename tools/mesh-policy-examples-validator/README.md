@@ -34,9 +34,22 @@ Kuma CRD schemas.
 1. Checks every terraform block for HCL grammar: the block is written to a temp
    `.tf` file and `terraform fmt` (write mode) runs on it. The rewritten file is
    discarded, so style never matters; a non-zero exit is a gating finding naming
-   the source example. This rule runs on every run.
+   the source example. This rule runs on every run and is not affected by the
+   `--terraform-validate` mode flag.
+1. Checks every terraform block against the schema of the pinned Konnect
+   Terraform provider (`kong/konnect-beta`), controlled by
+   `--terraform-validate=off|warn|gate` (default `warn`): the block is wrapped
+   in a per-block harness that declares the provider, an empty
+   `provider "konnect-beta" {}` block (validate never contacts Konnect and needs
+   no token), and stub `konnect_mesh` and `konnect_mesh_control_plane` resources
+   for the mesh references the published blocks carry. `terraform init` and
+   `terraform validate` run in that harness directory. All harness directories
+   share a `TF_PLUGIN_CACHE_DIR`, so the provider downloads once per run. In
+   `warn` mode a finding is advisory: it is printed and counted, but does not
+   affect the exit status. In `gate` mode it is gating. `off` skips the check.
 1. Prints a summary giving the number of pages checked, blocks checked, blocks with
-   meaningful schema coverage, terraform blocks checked, and the finding count.
+   meaningful schema coverage, terraform blocks checked, and the finding count
+   split into gating and advisory.
 
 ## The `--skip` flag
 
@@ -60,6 +73,16 @@ build output no longer fails the run. Every other policy is still checked. The r
 summary always names the requested skip list, so a skip (or a typo'd, unmatched
 policy name) stays visible in the output.
 
+## The `--terraform-validate` flag
+
+Pass `--terraform-validate=off|warn|gate` to control the provider-schema check
+of the terraform blocks. The default is `warn`: findings are printed and counted
+as advisory, and the exit status is unaffected. `gate` makes them gating.
+`off` skips the check. The grammar check always runs. The warn default is a
+transition state: a follow-up change flips the default to `gate` once the
+baseline run is clean. `--skip` remains the escape hatch for policies the
+provider does not support yet.
+
 ## Requires a production build
 
 The validator reads `dist/`, not the Markdown source. `jekyll-dev.yml` skips the
@@ -69,11 +92,15 @@ nothing to validate. Run `make build` first, or comment out the `skip:` section 
 
 ## Requires the terraform binary
 
-The terraform grammar rule shells out to `terraform`. Install terraform
+The validator shells out to `terraform`. Install terraform
 (https://developer.hashicorp.com/terraform/downloads) and make sure `terraform`
 is on PATH. The binary is only needed to check terraform blocks; pages without a
-terraform panel validate without it. Tests that exercise the grammar rule spawn
-the real binary; the tests never contact a registry.
+terraform panel validate without it, and `--terraform-validate=off` skips the
+part that needs network access to registry.terraform.io for the provider
+download. Set `MESH_VALIDATOR_TERRAFORM_BIN` to point at another binary or a
+stub. Tests that exercise the grammar rule spawn the real binary; the
+provider-schema tests point `MESH_VALIDATOR_TERRAFORM_BIN` at a stub, so the
+suite never contacts a registry.
 
 ## Caveat: permissive schemas pass quietly
 

@@ -132,10 +132,27 @@ function buildFixtureRoot({
   return root;
 }
 
-function runCli(root, extraArgs = []) {
+function runCli(root, extraArgs = [], env = {}) {
   return spawnSync("node", [INDEX_JS, "--root", root, ...extraArgs], {
     encoding: "utf-8",
+    env: { ...process.env, ...env },
   });
+}
+
+// A stub terraform binary: fmt and init succeed, validate reports one
+// unsupported attribute. Pointing MESH_VALIDATOR_TERRAFORM_BIN here runs the
+// CLI end to end without the real binary or registry.terraform.io.
+function stubTerraform() {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "mesh-policy-tf-stub-"));
+  const stub = path.join(dir, "terraform-stub.sh");
+  fs.writeFileSync(
+    stub,
+    '#!/bin/sh\n[ "$1" = "validate" ] || exit 0\n' +
+      'echo \'Error: Unsupported attribute: a setting named "bogus" is not defined here\' >&2\n' +
+      "exit 1\n",
+  );
+  fs.chmodSync(stub, 0o755);
+  return stub;
 }
 
 test("a clean run exits zero and reports pages and blocks checked", () => {
@@ -403,7 +420,7 @@ test(
       ],
     });
 
-    const result = runCli(root);
+    const result = runCli(root, ["--terraform-validate=off"]);
 
     assert.equal(result.status, 0);
     assert.match(result.stdout, /Checked 1 pages, 2 blocks/);
@@ -423,7 +440,7 @@ test(
       ],
     });
 
-    const result = runCli(root);
+    const result = runCli(root, ["--terraform-validate=off"]);
 
     assert.equal(result.status, 1);
     assert.match(
@@ -434,3 +451,76 @@ test(
     assert.match(result.stdout, /[1-9]\d* finding\(s\)/);
   },
 );
+
+test("default mode reports a provider-schema finding as advisory and exits zero", () => {
+  const root = buildFixtureRoot({
+    examples: [
+      { name: "terraform-valid", pageHtml: fixture("terraform-valid.html") },
+    ],
+  });
+
+  const result = runCli(root, [], {
+    MESH_VALIDATOR_TERRAFORM_BIN: stubTerraform(),
+  });
+
+  assert.equal(result.status, 0);
+  assert.match(
+    result.stdout,
+    /app\/_mesh_policies\/widget\/examples\/terraform-valid\.yaml \[terraform\] \/: .*Unsupported attribute/,
+  );
+  assert.match(result.stdout, /\(advisory\)/);
+  assert.match(result.stdout, /1 finding\(s\): 0 gating, 1 advisory\./);
+});
+
+test("gate mode makes a provider-schema finding gating and exits non-zero", () => {
+  const root = buildFixtureRoot({
+    examples: [
+      { name: "terraform-valid", pageHtml: fixture("terraform-valid.html") },
+    ],
+  });
+
+  const result = runCli(root, ["--terraform-validate=gate"], {
+    MESH_VALIDATOR_TERRAFORM_BIN: stubTerraform(),
+  });
+
+  assert.equal(result.status, 1);
+  assert.match(
+    result.stdout,
+    /app\/_mesh_policies\/widget\/examples\/terraform-valid\.yaml \[terraform\]/,
+  );
+  assert.match(result.stdout, /1 finding\(s\): 1 gating, 0 advisory\./);
+});
+
+test("off mode runs no provider-schema check and reports no such finding", () => {
+  const root = buildFixtureRoot({
+    examples: [
+      { name: "terraform-valid", pageHtml: fixture("terraform-valid.html") },
+    ],
+  });
+
+  const result = runCli(root, ["--terraform-validate=off"], {
+    MESH_VALIDATOR_TERRAFORM_BIN: stubTerraform(),
+  });
+
+  assert.equal(result.status, 0);
+  assert.doesNotMatch(result.stdout, /Unsupported attribute/);
+  assert.match(result.stdout, /0 finding\(s\): 0 gating, 0 advisory\./);
+});
+
+test("an invalid --terraform-validate value exits non-zero with a diagnostic", () => {
+  const root = buildFixtureRoot({
+    examples: [
+      { name: "clean",
+        kubernetesYaml: "kind: Widget\nspec:\n  name: ok\n",
+        universalYaml: "type: Widget\nspec:\n  name: ok\n" },
+    ],
+  });
+
+  const result = runCli(root, ["--terraform-validate=banana"]);
+
+  assert.equal(result.status, 1);
+  assert.match(
+    result.stderr,
+    /Invalid --terraform-validate value "banana". Use off, warn, or gate./,
+  );
+});
