@@ -85,11 +85,11 @@ formats:
   - kongctl
 {% endentity_example %}
 
-### Mock responses
+## Mock responses
 
 If you attach a Mocking Policy to an [AI Model](/ai-gateway/entities/ai-model/)'s `policies` array, a request to that AI Model's route returns the example verbatim. 
 
-For the example above:
+For the example above the response should look similar to:
 
 ```json
 {
@@ -111,13 +111,13 @@ Downstream AI Policies see the mocked response. Including a `usage` block gives 
 
 ### Path matching
 
-By default the Policy matches spec paths against the full request path and ignores any base path in the spec's `servers` entry. A spec with `servers: [{url: https://api.example.com/v1}]` and a path of `/chat/completions` therefore doesn't match a request to `/v1/chat/completions`, and the Policy returns a `404`:
+By default the Policy matches against the full request path and ignores any base path in the API specification's `servers` entry. A specification with `servers: [{url: https://api.example.com/v1}]` and a path of `/chat/completions` therefore doesn't match a request to `/v1/chat/completions`, and the Policy returns a `404`:
 
 ```json
 {"message":"Corresponding path and method spec does not exist in API Specification"}
 ```
 
-Either write the spec paths out in full, or set [`config.include_base_path`](./reference/#schema--config-include-base-path) to `true` so the Policy prepends the base path before matching. To match against a base path other than the spec's own, set [`config.custom_base_path`](./reference/#schema--config-custom-base-path) as well.
+Optionally, you can set [`config.include_base_path`](./reference/#schema--config-include-base-path) to `true` so the Policy prepends the base path before matching. To match against a base path other than the one provided in the API specification, set [`config.custom_base_path`](./reference/#schema--config-custom-base-path).
 
 ## Behavioral headers
 
@@ -125,54 +125,20 @@ Behavioral headers change the Mocking Policy's behavior for a single request wit
 
 ### X-Kong-Mocking-Delay
 
-`X-Kong-Mocking-Delay` sets how many milliseconds the Policy waits before responding. The value must be a number between `0` and `10000`, inclusive. Anything else returns a `400`:
-
-```json
-{"message":"Invalid value for X-Kong-Mocking-Delay. The delay value should be a number between 0 and 10000"}
-```
+`X-Kong-Mocking-Delay` sets how many milliseconds the AI Policy waits before responding. The value must be a number between `0` and `10000`, inclusive. 
 
 This header takes precedence over [`config.random_delay`](./reference/#schema--config-random-delay).
 
 ### X-Kong-Mocking-Example-Id
 
-`X-Kong-Mocking-Example-Id` selects which response example to return when the matched status code has more than one. OpenAPI 3.0 lets you define multiple examples under a single MIME type, so the following fragment offers two candidates, `User1` and `User2`:
-
-```yaml
-paths:
-  /query_user:
-    get:
-      responses:
-        '200':
-          description: A user object.
-          content:
-            application/json:
-              examples:
-                User1:
-                  value:
-                    id: 10
-                    name: User1
-                User2:
-                  value:
-                    id: 20
-                    name: User2
-```
-
-Sending `X-Kong-Mocking-Example-Id: User2` returns the second example. An ID that isn't in the spec, such as `User3`, returns a `400`:
-
-```json
-{"message":"could not find the example id 'User3'"}
-```
+`X-Kong-Mocking-Example-Id` selects which response example to return by `name`.
 
 {:.info}
-> When an operation defines several examples for the same status code and the request doesn't name one, the Policy's choice isn't deterministic: identical requests can return different examples even with [`config.random_examples`](./reference/#schema--config-random-examples) left at its `false` default. Send `X-Kong-Mocking-Example-Id` whenever a caller needs a specific example, such as in an automated test.
+> When an operation defines several examples with the same status code and the request doesn't name one, the AI Policy's choice isn't deterministic. Identical requests can return different examples even if [`config.random_examples`](./reference/#schema--config-random-examples) is `false`. Send `X-Kong-Mocking-Example-Id` whenever a caller needs a specific example, such as in an automated test.
 
 ### X-Kong-Mocking-Status-Code
 
-`X-Kong-Mocking-Status-Code` overrides the default status code selection. The status code you ask for has to be defined for the matched operation, otherwise the Policy returns a `400`:
-
-```json
-{"message":"could not find the status code '201'"}
-```
+`X-Kong-Mocking-Status-Code` overrides the default status code selection. The status code you ask for must be defined for the matched operation, otherwise the AI Policy returns a `400`.
 
 ## Simulate a slow AI Provider
 
@@ -180,8 +146,3 @@ Set [`config.random_delay`](./reference/#schema--config-random-delay) to `true` 
 
 {:.info}
 > `min_delay_time` and `max_delay_time` are in **seconds**, while the `X-Kong-Mocking-Delay` header is in **milliseconds**. A `max_delay_time` of `4` is a four second delay, not four milliseconds.
-
-<!-- TODO: add an entity_example combining random_delay with random_status_code and
-     random_examples once this page carries a spec with several status codes to pick from.
-     All three are verified working; notes in .idea/mocking-notes.md. -->
-
