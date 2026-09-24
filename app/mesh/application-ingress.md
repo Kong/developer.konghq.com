@@ -12,7 +12,7 @@ tags:
   - routing
   - security
 related_resources:
-  - text: Kong Operator Gateway API support
+  - text: "{{site.operator_product_name}} Gateway API support"
     url: /operator/dataplanes/gateway-api/
   - text: Mesh-scoped zone proxies
     url: /mesh/mesh-scoped-zone-proxies/
