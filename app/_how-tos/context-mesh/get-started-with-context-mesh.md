@@ -89,19 +89,32 @@ cleanup:
       content: |
         Stop the MCP server by deleting its control plane mapping, then delete the MCP server and its source:
 
-        ```sh
-        curl -X DELETE "https://us.api.konghq.com/v1/context-interfaces/$MCP_SERVER_ID/control-plane-mappings/$CP_MAPPING_ID" \
-             --no-progress-meter --fail-with-body \
-             -H "Authorization: Bearer $KONNECT_TOKEN"
-
-        curl -X DELETE "https://us.api.konghq.com/v1/context-interfaces/$MCP_SERVER_ID" \
-             --no-progress-meter --fail-with-body \
-             -H "Authorization: Bearer $KONNECT_TOKEN"
-
-        curl -X DELETE "https://us.api.konghq.com/v1/context-sources/$SOURCE_ID" \
-             --no-progress-meter --fail-with-body \
-             -H "Authorization: Bearer $KONNECT_TOKEN"
-        ```
+        Delete the control plane mapping: 
+        <!--vale off-->
+        {% konnect_api_request %}
+        url: /v1/context-interfaces/$MCP_SERVER_ID/control-plane-mappings/$CP_MAPPING_ID
+        method: DELETE
+        status_code: 204
+        {% endkonnect_api_request %}
+        <!--vale on-->
+        
+        Delete the MCP server:
+        <!--vale off-->
+        {% konnect_api_request %}
+        url: /v1/context-interfaces/$MCP_SERVER_ID
+        method: DELETE
+        status_code: 204
+        {% endkonnect_api_request %}
+        <!--vale on-->
+        
+        Delete the MCP source:
+        <!--vale off-->
+        {% konnect_api_request %}
+        url: /v1/context-sources/$SOURCE_ID
+        method: DELETE
+        status_code: 204
+        {% endkonnect_api_request %}
+        <!--vale on-->
       icon_url: /assets/icons/gateway.svg
     - title: Delete the control plane and data plane
       content: |
