@@ -6,8 +6,9 @@ import Ajv from "ajv";
 import addFormats from "ajv-formats";
 import { resolveRelease, latestMajor } from "./lib/release.js";
 import { loadCrds } from "./lib/crds.js";
-import { extractDocuments } from "./lib/extract.js";
+import { extractDocuments, extractTerraformBlocks } from "./lib/extract.js";
 import { findNullValues, findMarkerFields, checkSchema } from "./lib/rules.js";
+import { checkHclGrammar } from "./lib/terraform.js";
 import {
   builtPageToSourcePath,
   parseBuiltPage,
@@ -136,6 +137,7 @@ export async function run(argv, root) {
   const findings = [];
   let blocksChecked = 0;
   let blocksWithCoverage = 0;
+  let terraformBlocksChecked = 0;
 
   for (const builtPage of builtPages) {
     const { crds } = releasesByMajor.get(
@@ -185,6 +187,21 @@ export async function run(argv, root) {
         });
       }
     }
+
+    for (const tfText of extractTerraformBlocks(html)) {
+      terraformBlocksChecked++;
+
+      const grammarFinding = checkHclGrammar(tfText);
+      if (grammarFinding) {
+        findings.push({
+          source: relativeSource,
+          panel: "terraform",
+          pointer: "/",
+          severity: "gating",
+          ...grammarFinding,
+        });
+      }
+    }
   }
 
   for (const finding of findings) {
@@ -195,14 +212,19 @@ export async function run(argv, root) {
 
   console.log(
     `\nChecked ${builtPages.length} pages, ${blocksChecked} blocks ` +
-      `(${blocksWithCoverage} with meaningful schema coverage). ` +
+      `(${blocksWithCoverage} with meaningful schema coverage), ` +
+      `${terraformBlocksChecked} terraform block(s). ` +
       `${findings.length} finding(s).` +
       (skip.length > 0
         ? ` Skipped: ${skip.map(skipEntryLabel).join(", ")}.`
         : ""),
   );
 
-  return findings.length > 0 ? 1 : 0;
+  const gatingFindings = findings.filter(
+    (finding) => (finding.severity ?? "gating") !== "advisory",
+  );
+
+  return gatingFindings.length > 0 ? 1 : 0;
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

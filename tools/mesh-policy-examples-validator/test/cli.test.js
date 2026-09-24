@@ -47,6 +47,13 @@ function code(id, text) {
   return `<code id="${id}">${text}</code>`;
 }
 
+function fixture(name) {
+  return fs.readFileSync(path.join(__dirname, "fixtures", name), "utf-8");
+}
+
+const TERRAFORM_AVAILABLE =
+  spawnSync("terraform", ["version"], { encoding: "utf-8" }).status === 0;
+
 function builtPage(kubernetesYaml, universalYaml) {
   return tabGroup(
     panel("kubernetes", code("k", kubernetesYaml)) +
@@ -92,7 +99,7 @@ function buildFixtureRoot({
     major,
   } of policyList) {
     const versionParts = major === 2 ? ["v2"] : [];
-    for (const { name, kubernetesYaml, universalYaml } of policyExamples) {
+    for (const { name, kubernetesYaml, universalYaml, pageHtml } of policyExamples) {
       const examplesDir = path.join(
         root,
         "app/_mesh_policies",
@@ -117,7 +124,7 @@ function buildFixtureRoot({
       fs.mkdirSync(pageDir, { recursive: true });
       fs.writeFileSync(
         path.join(pageDir, "index.html"),
-        builtPage(kubernetesYaml, universalYaml),
+        pageHtml ?? builtPage(kubernetesYaml, universalYaml),
       );
     }
   }
@@ -385,3 +392,45 @@ test("--version exits non-zero with a diagnostic", () => {
   assert.equal(result.status, 1);
   assert.match(result.stderr, /--version is no longer supported/);
 });
+
+test(
+  "a valid terraform panel is extracted as raw text and receives no schema, empty-value, marker, or YAML finding",
+  { skip: !TERRAFORM_AVAILABLE },
+  () => {
+    const root = buildFixtureRoot({
+      examples: [
+        { name: "terraform-valid", pageHtml: fixture("terraform-valid.html") },
+      ],
+    });
+
+    const result = runCli(root);
+
+    assert.equal(result.status, 0);
+    assert.match(result.stdout, /Checked 1 pages, 2 blocks/);
+    assert.match(result.stdout, /1 terraform block\(s\)/);
+    assert.match(result.stdout, /0 finding\(s\)/);
+    assert.doesNotMatch(result.stdout, /\[terraform\]/);
+  },
+);
+
+test(
+  "a terraform panel with the empty-key defect reports a gating finding naming the source example file",
+  { skip: !TERRAFORM_AVAILABLE },
+  () => {
+    const root = buildFixtureRoot({
+      examples: [
+        { name: "terraform-broken", pageHtml: fixture("terraform-invalid.html") },
+      ],
+    });
+
+    const result = runCli(root);
+
+    assert.equal(result.status, 1);
+    assert.match(
+      result.stdout,
+      /app\/_mesh_policies\/widget\/examples\/terraform-broken\.yaml \[terraform\]/,
+    );
+    assert.match(result.stdout, /terraform fmt/);
+    assert.match(result.stdout, /[1-9]\d* finding\(s\)/);
+  },
+);

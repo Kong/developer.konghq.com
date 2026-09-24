@@ -19,18 +19,24 @@ Kuma CRD schemas.
    page count doesn't match the source example count.
 1. For each built page, extracts the published config blocks from
    `div[data-tab-group^="policy-yaml"] div[data-panel] code[id]`, keeping the
-   `kubernetes` and `universal` panels and skipping `terraform`.
-1. Applies three rules to each block, and reports findings as the source path
+   `kubernetes` and `universal` panels, and the `terraform` panel as raw text.
+   A terraform block is not YAML: it never reaches the YAML parse, schema,
+   empty-value, or marker rules.
+1. Applies three rules to each YAML block, and reports findings as the source path
    (`app/_mesh_policies/<policy>/examples/<name>.yaml`), the panel, and a JSON
    pointer:
-   - **Schema**: validates a `kubernetes` block as a whole manifest against the
-     hardened CRD schema, and a `universal` block's `spec` against the hardened
-     `properties.spec`.
-   - **No null values**: no published key may hold a null value.
-   - **No surviving marker fields**: no internal renderer marker key (`_*`,
-     `name_uni`, `name_kube`) may survive into the published output.
+    - **Schema**: validates a `kubernetes` block as a whole manifest against the
+      hardened CRD schema, and a `universal` block's `spec` against the hardened
+      `properties.spec`.
+    - **No null values**: no published key may hold a null value.
+    - **No surviving marker fields**: no internal renderer marker key (`_*`,
+      `name_uni`, `name_kube`) may survive into the published output.
+1. Checks every terraform block for HCL grammar: the block is written to a temp
+   `.tf` file and `terraform fmt` (write mode) runs on it. The rewritten file is
+   discarded, so style never matters; a non-zero exit is a gating finding naming
+   the source example. This rule runs on every run.
 1. Prints a summary giving the number of pages checked, blocks checked, blocks with
-   meaningful schema coverage, and the finding count.
+   meaningful schema coverage, terraform blocks checked, and the finding count.
 
 ## The `--skip` flag
 
@@ -60,6 +66,14 @@ The validator reads `dist/`, not the Markdown source. `jekyll-dev.yml` skips the
 mesh policy and markdown page generators in a dev build, so a dev build produces
 nothing to validate. Run `make build` first, or comment out the `skip:` section in
 `jekyll-dev.yml`.
+
+## Requires the terraform binary
+
+The terraform grammar rule shells out to `terraform`. Install terraform
+(https://developer.hashicorp.com/terraform/downloads) and make sure `terraform`
+is on PATH. The binary is only needed to check terraform blocks; pages without a
+terraform panel validate without it. Tests that exercise the grammar rule spawn
+the real binary; the tests never contact a registry.
 
 ## Caveat: permissive schemas pass quietly
 
