@@ -617,7 +617,7 @@ event_gateways:
        labels: object [string]string
          key: value
        config: object required
-         schema_type: One of (avro | json) required
+         schema_type: One of (avro | json | protobuf) required
          endpoint: string (uri) required
          timeout_seconds: integer (min 1, default 10)
          authentication: object
