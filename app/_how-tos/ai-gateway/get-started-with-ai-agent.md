@@ -93,6 +93,7 @@ ai_gateway_agents:
   - ref: kongair-flight-booking-agent
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
     display_name: "Kong Air Flight Booking Agent"
+    name: kong-air-flight-booking-agent
     type: a2a
     enabled: true
     config:
@@ -209,4 +210,3 @@ A successful response (status 200) contains the agent's reply:
   }
 }
 ```
-
