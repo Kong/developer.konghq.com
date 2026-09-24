@@ -9,7 +9,7 @@ description: >
   page types, or hands over an outline/brain dump to turn into finished copy. Do not
   use this for scaffolding a brand-new how-to's structure/frontmatter (use
   how-to-starter instead) or for the full domain-specific drafting flows owned by
-  kong-identity-how-to, dcgw-terraform-how-to, or third-party-plugin — this skill
+  feature-docs-from-prd, kong-identity-how-to, dcgw-terraform-how-to, or third-party-plugin — this skill
   only touches the prose of pages those skills already own, when asked to. Not for
   AI cookbooks (app/_cookbooks/), which have a different narrative structure this
   skill doesn't cover. Not for content migration — copy-pasting existing sections
