@@ -9,7 +9,7 @@ icon: policy.svg
 related_resources:
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
-- text: Migrate policies to {{site.mesh_product_name}} 3
+- text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshpassthrough"
 - text: MeshTrafficPermission policy
   url: "/mesh/policies/meshtrafficpermission/"
@@ -219,7 +219,7 @@ resolve to the same chain are rejected on apply. These collide when they configu
 port, or both configure no port, with:
 
 - two of `grpc`, `http` and `http2`, which share one chain per port
-- the same address written differently — an IP and a CIDR covering only that IP, a CIDR with
+- the same address written differently: an IP and a CIDR covering only that IP, a CIDR with
   host bits set, or another textual form of the same IPv6 address
 - `tcp` and `mysql` on the same address, which generate an identical TCP proxy chain
 

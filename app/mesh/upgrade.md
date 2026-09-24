@@ -15,7 +15,7 @@ works_on:
   - on-prem
 
 related_resources:
-  - text: Check readiness for {{site.mesh_product_name}} 3
+  - text: Check readiness for {{site.mesh_product_name}} 3.x
     url: /mesh/check-upgrade-readiness/
   - text: Version-specific upgrade notes
     url: /mesh/version-specific-upgrade-notes/
@@ -26,13 +26,13 @@ min_version:
   mesh: '2.6'
 ---
 
-## Upgrade from 2.x to 3
+## Upgrade from 2.x to 3.x
 
-Version 3 removes legacy policy APIs, mesh-wide mTLS configuration, and shared ZoneIngress and
+Version 3.x removes legacy policy APIs, mesh-wide mTLS configuration, and shared ZoneIngress and
 ZoneEgress resources. Prepare those resources and traffic paths while the deployment is still on
 2.14; this is more than a control plane and data plane rollout.
 
-1. [Run the Mesh 3 readiness checker](/mesh/check-upgrade-readiness/) against the current 2.x
+1. [Run the {{site.mesh_product_name}} 3.x readiness checker](/mesh/check-upgrade-readiness/) against the current 2.x
    deployment and save the report.
 1. Bring every control plane and data plane proxy to the latest supported 2.14 patch. Follow the
    [version-specific upgrade notes](/mesh/version-specific-upgrade-notes/) for every intermediate
@@ -47,7 +47,7 @@ ZoneEgress resources. Prepare those resources and traffic paths while the deploy
 1. Upgrade a non-production zone first. Repeat the product and traffic checks before proceeding
    through the remaining zones.
 
-Do not use the normal rolling-upgrade sequence below as a substitute for the 2.x-to-3 migration.
+Do not use the normal rolling-upgrade sequence described in [Single-zone](#single-zone) and [Multi-zone](#multi-zone) as a substitute for the 2.x-to-3.x migration.
 The readiness report identifies configuration visible through the control plane API; the migration
 guides cover the live traffic behavior that the report cannot verify.
 
@@ -64,11 +64,11 @@ Starting with {{site.mesh_product_name}} 1.4.x, upgrades can be performed up to 
 {:.info}
 > To avoid control plane downtime when restarting on the new version, make sure you have more than one instance of the control plane in each zone.
 
-`kuma-dp` follows the above compatibility rules with `kuma-cp`. For example:
+`kuma-dp` follows the same compatibility rules with `kuma-cp`. For example:
 * You can connect `kuma-dp` `2.11.x` to `kuma-cp` `2.13.x`.
 * You cannot connect `kuma-dp` `2.10.x` to `kuma-cp` `2.13.x`. It may cause undefined behavior.
 
-The global control plane follows the above compatibility rules with zone control planes. For example:
+The global control plane follows the same compatibility rules with zone control planes. For example:
 * You can connect zone control plane `2.11.x` to global control plane `2.13.x`.
 * You cannot connect zone control plane `2.10.x` to global control plane `2.13.x`. It may cause undefined behavior.
 

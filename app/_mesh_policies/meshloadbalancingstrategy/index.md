@@ -9,7 +9,7 @@ icon: policy.svg
 related_resources:
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
-- text: Migrate policies to {{site.mesh_product_name}} 3
+- text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshloadbalancingstrategy"
 - text: MeshCircuitBreaker policy
   url: "/mesh/policies/meshcircuitbreaker/"
@@ -96,7 +96,7 @@ Two of those kinds are constrained:
   `field is not allowed when targetRef.kind is MeshHTTPRoute, only hashPolicies is supported`.
   Hashing is a per-request decision, so it can be set per route; the algorithm and the locality
   preference belong to the destination's cluster, which a route does not own.
-- `localityAwareness.crossZone` is accepted only with `kind: MeshMultiZoneService` — see
+- `localityAwareness.crossZone` is accepted only with `kind: MeshMultiZoneService`. See
   [MeshMultiZoneService](/mesh/meshmultizoneservice/). On any
   other kind it is rejected with
   `crossZone is only supported when targetRef.kind is MeshMultiZoneService`.

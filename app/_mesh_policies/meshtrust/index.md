@@ -9,7 +9,7 @@ icon: policy.svg
 related_resources:
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
-- text: Migrate policies to {{site.mesh_product_name}} 3
+- text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshtrust"
 - text: MeshIdentity resource
   url: "/mesh/policies/meshidentity/"
@@ -36,15 +36,15 @@ Create one manually when you manage trust separately, such as when accepting cer
 issued by an external identity system. A migration between two Bundled identities can use
 their automatically generated trust resources.
 
-Like `MeshIdentity`, this is not a policy. It has no `targetRef`, `to` or `rules` — a trust
-domain is either trusted or it is not, mesh-wide — and on Kubernetes it is accepted only in the
+Like `MeshIdentity`, this is not a policy. It has no `targetRef`, `to` or `rules`: a trust
+domain is either trusted or it is not, mesh-wide, and on Kubernetes it is accepted only in the
 system namespace.
 
 ## Trust an external CA
 
 Obtain the issuing system's CA certificate bundle and the trust domain used in its workload
-identities. Set `spec.trustDomain` to that domain and replace the abbreviated PEM below with
-the complete CA certificate, including its BEGIN and END lines. The example cannot be applied
+identities. Set `spec.trustDomain` to that domain and replace the abbreviated PEM in the following
+example with the complete CA certificate, including its BEGIN and END lines. The example cannot be applied
 with the `...` placeholder. Never put a private key in this resource.
 
 {% policy_yaml %}

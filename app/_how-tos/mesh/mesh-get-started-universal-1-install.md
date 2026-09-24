@@ -24,6 +24,15 @@ related_resources:
     url: /mesh/universal/
   - text: "{{site.mesh_product_name}} CLI"
     url: /mesh/cli/
+prereqs:
+  inline:
+    - title: A container runtime
+      content: |
+        A container runtime that can run Linux containers and give them addresses on a user-defined
+        network.
+    - title: curl
+      content: |
+        Used to download the {{site.mesh_product_name}} binaries.
 ---
 
 This series runs {{site.mesh_product_name}} on Universal from nothing to a two-service mesh with
@@ -32,12 +41,6 @@ mTLS and a gateway, entirely in containers on one machine. Each step builds on t
 Universal here means what it means in production: there is no Kubernetes API server to derive
 anything from, so you declare each proxy yourself. Where Kubernetes would infer ports, protocols
 and identity from a Pod and a Service, you supply them.
-
-## What you need
-
-- A container runtime that can run Linux containers and give them addresses on a user-defined
-  network.
-- `curl`.
 
 ## Install the binaries
 
@@ -54,7 +57,7 @@ sudo mv kong-mesh-*/bin/* /usr/local/bin/
 
 ## Install kongctl
 
-`kongctl` is the CLI for {{site.mesh_product_name}} 3, and replaces `kumactl`. Install it and
+`kongctl` is the CLI for {{site.mesh_product_name}} 3.x, and replaces `kumactl`. Install it and
 confirm it runs:
 
 ```sh

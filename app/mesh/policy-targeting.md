@@ -100,12 +100,12 @@ request to `backend`, so naming that service is both sufficient and natural:
 `kind: MeshService`.
 
 A **client** is remote and describes itself. If an inbound rule selected a caller by label or
-by service tag, it would be trusting the caller's own claim about what it is — and a workload
+by service tag, it would be trusting the caller's own claim about what it is, and a workload
 can assert any tag. So inbound matches on the SPIFFE ID that
 [MeshIdentity](/mesh/policies/meshidentity/) issued and mTLS proves, which the caller cannot
 forge.
 
-{{site.mesh_product_name}} 3 removed the `from` array and `MeshServiceSubset` from
+{{site.mesh_product_name}} 3.x removed the `from` array and `MeshServiceSubset` from
 [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) for this reason: those
 selectors matched an inbound client on tags the client set itself.
 
@@ -121,7 +121,7 @@ the selected proxy.
 
 {:.warning}
 > `MeshSubset`, `MeshService` and `MeshServiceSubset` are rejected here in
-> {{site.mesh_product_name}} 3. A policy still using one fails validation, including when a
+> {{site.mesh_product_name}} 3.x. A policy still using one fails validation, including when a
 > Global control plane replicates it to an upgraded Zone, so it can silently stop syncing.
 
 ### `spec.to[].targetRef`
