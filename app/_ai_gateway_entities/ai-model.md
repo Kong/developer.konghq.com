@@ -228,11 +228,9 @@ When a native format is set, only the corresponding provider is supported with i
 
 ### Passthrough {% new_in 2.2 %}
 
-A native format still parses the payload to dispatch on a known capability. If your upstream exposes a wire format {{site.ai_gateway}} doesn't recognize at all, set `formats[].type` to `passthrough`. Request and response bodies are forwarded byte-for-byte, with no `Content-Type` enforcement and no schema validation.
+If your upstream exposes a format {{site.ai_gateway}} doesn't recognize, set `formats[].type` to `passthrough`. Request and response bodies are forwarded byte-for-byte, with no `Content-Type` enforcement and no schema validation.
 
-Passthrough keeps upstream provider authentication, AI Consumer identity, request-count rate limiting, and logging. It gives up format normalization, model aliasing, semantic load balancing, and the `realtime` capability. Token and cost accounting work when the target's declared provider has a native response adapter, or when its response happens to match the OpenAI usage shape. Guardrails depend separately on whether a Policy can locate the content it needs in your upstream's actual request or response shape.
-
-Every entry in `formats` must be `passthrough`, so an AI Model can't mix passthrough with other formats. For the full Policy compatibility matrix and migration steps from the `preserve` route type, see [Passthrough format in {{site.ai_gateway}}](/ai-gateway/passthrough/).
+Passthrough keeps upstream provider authentication, AI Consumer identity, request-count rate limiting, and logging. For more information, see [Passthrough format in {{site.ai_gateway}}](/ai-gateway/passthrough/).
 
 ## Targets
 
