@@ -9,7 +9,7 @@ import { resolveRelease, latestMajor } from "./lib/release.js";
 import { loadCrds } from "./lib/crds.js";
 import { extractDocuments, extractTerraformBlocks } from "./lib/extract.js";
 import { findNullValues, findMarkerFields, checkSchema } from "./lib/rules.js";
-import { checkHclGrammar, checkProviderSchema, runTerraform } from "./lib/terraform.js";
+import { checkHclGrammar, checkProviderSchema } from "./lib/terraform.js";
 import {
   builtPageToSourcePath,
   parseBuiltPage,
@@ -88,6 +88,10 @@ function skipEntryLabel(entry) {
   return entry.major === undefined
     ? entry.name
     : `${entry.name}@v${entry.major}`;
+}
+
+function isAdvisory(finding) {
+  return (finding.severity ?? "gating") === "advisory";
 }
 
 function excludeSkippedPolicies(paths, skip, parse, latest) {
@@ -230,11 +234,7 @@ export async function run(argv, root) {
 
       if (terraformValidate === "off") continue;
 
-      const schemaFinding = checkProviderSchema(
-        tfBlock.text,
-        runTerraform,
-        terraformEnv(),
-      );
+      const schemaFinding = checkProviderSchema(tfBlock.text, terraformEnv());
       if (schemaFinding) {
         findings.push({
           source: relativeSource,
@@ -248,17 +248,14 @@ export async function run(argv, root) {
   }
 
   for (const finding of findings) {
-    const advisorySuffix =
-      (finding.severity ?? "gating") === "advisory" ? " (advisory)" : "";
+    const advisorySuffix = isAdvisory(finding) ? " (advisory)" : "";
     console.log(
       `${finding.source} [${finding.panel ?? "-"}] ${finding.pointer}: ` +
         `${finding.message}${advisorySuffix}`,
     );
   }
 
-  const gatingCount = findings.filter(
-    (finding) => (finding.severity ?? "gating") !== "advisory",
-  ).length;
+  const gatingCount = findings.filter((finding) => !isAdvisory(finding)).length;
   const advisoryCount = findings.length - gatingCount;
 
   console.log(

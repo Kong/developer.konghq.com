@@ -82,17 +82,20 @@ resource "konnect_mesh_control_plane" "my_meshcontrolplane" {
 // temp directory, then run `terraform init` and `terraform validate` there.
 // The caller sets TF_PLUGIN_CACHE_DIR in `env` so the provider downloads once
 // per run, and turns the finding into an advisory or gating finding.
-export function checkProviderSchema(blockText, run = runTerraform, env = process.env) {
+export function checkProviderSchema(blockText, env = process.env) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "mesh-policy-tf-"));
   try {
     fs.writeFileSync(path.join(dir, "main.tf"), HARNESS + blockText);
-    const init = run(["init", "-no-color", "-input=false"], { cwd: dir, env });
+    const init = runTerraform(["init", "-no-color", "-input=false"], {
+      cwd: dir,
+      env,
+    });
     if (init.status !== 0) {
       return {
         message: `terraform init failed: ${compactDetail(init.stderr)}`,
       };
     }
-    const validate = run(["validate", "-no-color"], { cwd: dir, env });
+    const validate = runTerraform(["validate", "-no-color"], { cwd: dir, env });
     if (validate.status !== 0) {
       return {
         message: `terraform validate failed: ${compactDetail(validate.stderr)}`,

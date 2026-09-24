@@ -155,6 +155,14 @@ function stubTerraform() {
   return stub;
 }
 
+function stubTerraformPassing() {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "mesh-policy-tf-stub-"));
+  const stub = path.join(dir, "terraform-stub.sh");
+  fs.writeFileSync(stub, "#!/bin/sh\nexit 0\n");
+  fs.chmodSync(stub, 0o755);
+  return stub;
+}
+
 test("a clean run exits zero and reports pages and blocks checked", () => {
   const root = buildFixtureRoot({
     examples: [
@@ -466,10 +474,25 @@ test("default mode reports a provider-schema finding as advisory and exits zero"
   assert.equal(result.status, 0);
   assert.match(
     result.stdout,
-    /app\/_mesh_policies\/widget\/examples\/terraform-valid\.yaml \[terraform\] \/: .*Unsupported attribute/,
+    /app\/_mesh_policies\/widget\/examples\/terraform-valid\.yaml \[terraform\] \/: .*Unsupported attribute.*bogus/,
   );
   assert.match(result.stdout, /\(advisory\)/);
   assert.match(result.stdout, /1 finding\(s\): 0 gating, 1 advisory\./);
+});
+
+test("a block carrying only stubbed mesh references reports no finding", () => {
+  const root = buildFixtureRoot({
+    examples: [
+      { name: "terraform-valid", pageHtml: fixture("terraform-valid.html") },
+    ],
+  });
+
+  const result = runCli(root, [], {
+    MESH_VALIDATOR_TERRAFORM_BIN: stubTerraformPassing(),
+  });
+
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /0 finding\(s\): 0 gating, 0 advisory\./);
 });
 
 test("gate mode makes a provider-schema finding gating and exits non-zero", () => {
@@ -510,9 +533,11 @@ test("off mode runs no provider-schema check and reports no such finding", () =>
 test("an invalid --terraform-validate value exits non-zero with a diagnostic", () => {
   const root = buildFixtureRoot({
     examples: [
-      { name: "clean",
+      {
+        name: "clean",
         kubernetesYaml: "kind: Widget\nspec:\n  name: ok\n",
-        universalYaml: "type: Widget\nspec:\n  name: ok\n" },
+        universalYaml: "type: Widget\nspec:\n  name: ok\n",
+      },
     ],
   });
 
