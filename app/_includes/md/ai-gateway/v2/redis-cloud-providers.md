@@ -65,6 +65,22 @@ config:
       aws_access_key_id: $AWS_ACCESS_KEY_ID
       aws_secret_access_key: $AWS_ACCESS_SECRET_KEY
 ```
+{% elsif include.redis_group == "oidc" %}
+```yaml
+config:
+  cluster_cache_strategy: redis
+  cluster_cache_redis:
+    host: $INSTANCE_ADDRESS
+    username: $INSTANCE_USERNAME
+    port: 6379
+    cloud_authentication:
+      auth_provider: aws
+      aws_cache_name: $AWS_CACHE_NAME
+      aws_is_serverless: false
+      aws_region: $AWS_REGION
+      aws_access_key_id: $AWS_ACCESS_KEY_ID
+      aws_secret_access_key: $AWS_ACCESS_SECRET_KEY
+```
 {% else %}
 ```yaml
 config:
@@ -137,6 +153,24 @@ config:
         aws_access_key_id: $AWS_ACCESS_KEY_ID
         aws_secret_access_key: $AWS_ACCESS_SECRET_KEY
 ```
+{% elsif include.redis_group == "oidc" %}
+```yaml
+config:
+  cluster_cache_strategy: redis
+  cluster_cache_redis:
+    cluster_nodes:
+    - ip: $CLUSTER_ADDRESS
+      port: 6379
+    username: $CLUSTER_USERNAME
+    port: 6379
+    cloud_authentication:
+      auth_provider: aws
+      aws_cache_name: $AWS_CACHE_NAME
+      aws_is_serverless: false
+      aws_region: $AWS_REGION
+      aws_access_key_id: $AWS_ACCESS_KEY_ID
+      aws_secret_access_key: $AWS_ACCESS_SECRET_KEY
+```
 {% else %}
 ```yaml
 config:
@@ -203,6 +237,20 @@ config:
       azure_client_secret: $AZURE_CLIENT_SECRET
       azure_tenant_id: $AZURE_TENANT_ID
 ```
+{% elsif include.redis_group == "oidc" %}
+```yaml
+config:
+  cluster_cache_strategy: redis
+  cluster_cache_redis:
+    host: $INSTANCE_ADDRESS
+    username: $INSTANCE_USERNAME
+    port: 10000
+    cloud_authentication:
+      auth_provider: azure
+      azure_client_id: $AZURE_CLIENT_ID
+      azure_client_secret: $AZURE_CLIENT_SECRET
+      azure_tenant_id: $AZURE_TENANT_ID
+```
 {% else %}
 ```yaml
 config:
@@ -252,6 +300,22 @@ config:
         azure_client_id: $AZURE_CLIENT_ID
         azure_client_secret: $AZURE_CLIENT_SECRET
         azure_tenant_id: $AZURE_TENANT_ID
+```
+{% elsif include.redis_group == "oidc" %}
+```yaml
+config:
+  cluster_cache_strategy: redis
+  cluster_cache_redis:
+    cluster_nodes:
+    - ip: $CLUSTER_ADDRESS
+      port: 10000
+    username: $CLUSTER_USERNAME
+    port: 10000
+    cloud_authentication:
+      auth_provider: azure
+      azure_client_id: $AZURE_CLIENT_ID
+      azure_client_secret: $AZURE_CLIENT_SECRET
+      azure_tenant_id: $AZURE_TENANT_ID
 ```
 {% else %}
 ```yaml
@@ -313,6 +377,17 @@ config:
       auth_provider: gcp
       gcp_service_account_json: $GCP_SERVICE_ACCOUNT
 ```
+{% elsif include.redis_group == "oidc" %}
+```yaml
+config:
+  cluster_cache_strategy: redis
+  cluster_cache_redis:
+    host: $INSTANCE_ADDRESS
+    port: 6379
+    cloud_authentication:
+      auth_provider: gcp
+      gcp_service_account_json: $GCP_SERVICE_ACCOUNT
+```
 {% else %}
 ```yaml
 config:
@@ -354,6 +429,19 @@ config:
       cloud_authentication:
         auth_provider: gcp
         gcp_service_account_json: $GCP_SERVICE_ACCOUNT
+```
+{% elsif include.redis_group == "oidc" %}
+```yaml
+config:
+  cluster_cache_strategy: redis
+  cluster_cache_redis:
+    cluster_nodes:
+    - ip: $CLUSTER_ADDRESS
+      port: 6379
+    port: 6379
+    cloud_authentication:
+      auth_provider: gcp
+      gcp_service_account_json: $GCP_SERVICE_ACCOUNT
 ```
 {% else %}
 ```yaml
