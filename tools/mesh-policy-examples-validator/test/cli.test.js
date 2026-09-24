@@ -5,6 +5,7 @@ import os from "os";
 import path from "path";
 import { fileURLToPath } from "url";
 import { spawnSync } from "child_process";
+import { KONNECT_BETA_PROVIDER_VERSION } from "../lib/terraform.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const INDEX_JS = path.resolve(__dirname, "../index.js");
@@ -159,6 +160,33 @@ function stubTerraformPassing() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "mesh-policy-tf-stub-"));
   const stub = path.join(dir, "terraform-stub.sh");
   fs.writeFileSync(stub, "#!/bin/sh\nexit 0\n");
+  fs.chmodSync(stub, 0o755);
+  return stub;
+}
+
+// A stub terraform that inspects the harness it runs in: `validate` fails
+// unless the main.tf the validator assembled declares the pinned provider
+// and the stub mesh resources the published blocks reference. Without this,
+// a regression that drops the provider pin or the stubs would keep the suite
+// green and only drift in warn mode.
+function stubTerraformInspectingHarness() {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "mesh-policy-tf-stub-"));
+  const stub = path.join(dir, "terraform-stub.sh");
+  fs.writeFileSync(
+    stub,
+    [
+      "#!/bin/sh",
+      '[ "$1" = "validate" ] || exit 0',
+      "missing=''",
+      `grep -q 'version = \"${KONNECT_BETA_PROVIDER_VERSION}\"' main.tf || missing=\"$missing no-provider-pin\"`,
+      `grep -q 'source  = \"kong/konnect-beta\"' main.tf || missing=\"$missing no-provider-source\"`,
+      `grep -q '\"konnect_mesh\" \"my_mesh\"' main.tf || missing=\"$missing no-stub-mesh\"`,
+      `grep -q '\"konnect_mesh_control_plane\" \"my_meshcontrolplane\"' main.tf || missing=\"$missing no-stub-control-plane\"`,
+      '[ -z "$missing" ] && exit 0',
+      'echo "Error: harness incomplete:$missing" >&2',
+      "exit 1",
+    ].join("\n"),
+  );
   fs.chmodSync(stub, 0o755);
   return stub;
 }
@@ -489,6 +517,21 @@ test("a block carrying only stubbed mesh references reports no finding", () => {
 
   const result = runCli(root, [], {
     MESH_VALIDATOR_TERRAFORM_BIN: stubTerraformPassing(),
+  });
+
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /0 finding\(s\): 0 gating, 0 advisory\./);
+});
+
+test("the harness declares the pinned provider and supplies the stub mesh references", () => {
+  const root = buildFixtureRoot({
+    examples: [
+      { name: "terraform-valid", pageHtml: fixture("terraform-valid.html") },
+    ],
+  });
+
+  const result = runCli(root, [], {
+    MESH_VALIDATOR_TERRAFORM_BIN: stubTerraformInspectingHarness(),
   });
 
   assert.equal(result.status, 0);
