@@ -3,7 +3,7 @@ title: "Custom policies"
 content_type: reference
 layout: reference
 
-description: "Learn how to deploy a custom policy in {{site.ai_gateway}}"
+description: "Custom AI Policies let you deploy your own plugin schema and handler in {{site.ai_gateway}}, either streamed from the control plane or installed directly on data planes."
 
 breadcrumbs:
   - /ai-gateway/
@@ -37,14 +37,18 @@ related_resources:
 
 faqs:
   - q: How do I use a custom policy?
-    a: Configure a [AI Policy](/ai-gateway/entities/ai-policy/) entity as normal and use the `name` of the custom policy as the `type`.
+    a: Configure an [AI Policy](/ai-gateway/entities/ai-policy/) entity as normal and use the `name` of the custom policy as the `type`.
 ---
 
-{{site.ai_gateway}} allows you to develop and deploy custom AI Policies. A custom AI policy has two parts, a schema and a plugin handler that implements the custom functionality.
+{{site.ai_gateway}} allows you to develop and deploy custom AI Policies.
+A custom AI policy has two parts, a schema and a plugin handler that implements the custom functionality.
 
-Plugins consist of Lua modules interacting with request and response objects or network streams to implement arbitrary logic. Plugin development operates in the same way for both {{site.ai_gateway}} and {{site.base_gateway}}. We provide a  [Plugin Development Kit (PDK)](/gateway/pdk/reference/) which is a set of Lua functions that are used to facilitate interactions between plugins, the {{site.base_gateway}} core, and other components.
+Plugins consist of Lua modules interacting with request and response objects or network streams to implement arbitrary logic.
+Plugin development operates in the same way for both {{site.ai_gateway}} and {{site.base_gateway}}.
+We provide a [Plugin Development Kit (PDK)](/gateway/pdk/reference/), a set of Lua functions that facilitate interactions between plugins, the {{site.base_gateway}} core, and other components.
 
-A custom policy can be used in the same way as any other [AI Policy](/ai-gateway/entities/ai-policy/) and the `name` you set when creating the custom policy is the `type` used when creating an AI Policy entity. The schema you provide is used for validation in the same way as a built-in AI Policy.
+A custom policy can be used in the same way as any other [AI Policy](/ai-gateway/entities/ai-policy/) and the `name` you set when creating the custom policy is the `type` used when creating an AI Policy entity.
+The schema you provide is used for validation in the same way as a built-in AI Policy.
 
 This page describes how to run a custom policy you have already developed and manage its lifecycle.
 
@@ -57,19 +61,23 @@ You can deploy custom policies in two ways:
 
 ### Streamed policies
 
-You can deploy a custom policy's schema and plugin handler by uploading both to a single control plane. During configuration reconciliation, the plugin handler is sent to the data plane in a payload. You can then reference it as a `type` in any AI Policy configuration.
+You can deploy a custom policy's schema and plugin handler by uploading both to a single control plane.
+During configuration reconciliation, the control plane sends the plugin handler to the data plane in a payload.
+You can then reference it as a `type` in any AI Policy configuration.
  
 Data planes must be started with `KONG_CUSTOM_PLUGIN_STREAMING_ENABLED` to accept custom policies from the control plane.
 
-The same limitations as streaming {{site.base_gateway}} apply. For more information, see [Streaming custom plugins](/custom-plugins/streaming-plugins/#streaming-plugin-limitations).
+The same limitations as streaming {{site.base_gateway}} apply.
+For more information, see [Streaming custom plugins](/custom-plugins/streaming-plugins/#streaming-plugin-limitations).
 
 ### Direct installation
 
-First manually install the custom plugin handler on each data plane by following the [installation guide](/custom-plugins/installation-and-distribution/). 
+First manually install the custom plugin handler on each data plane by following the [installation guide](/custom-plugins/installation-and-distribution/).
 
-Next upload the policy's schema to the control plane. You can then reference it as a `type` in any AI Policy configuration.
+Next upload the policy's schema to the control plane.
+You can then reference it as a `type` in any AI Policy configuration.
 
-## Manage custom policies
+## Managing custom policies
 
 You can manage the lifecycle of a custom policy using any of the following:
 
@@ -92,10 +100,10 @@ columns:
 rows:
   - field: "`name`"
     type: string
-    notes: Unique identifier. Immutable after creation. Duplicate names are not allowed and will return a `409` error if you try to create one.
+    notes: Unique identifier. Immutable after creation. Creating a duplicate returns a `409` error.
   - field: "`type`"
     type: "`installed` or `streaming`"
-    notes: Discriminator. Determines whether `handler` is allowed/required.
+    notes: Discriminator. Determines whether `handler` is required.
   - field: "`display_name`"
     type: string
     notes: 1-256 characters.
@@ -104,7 +112,7 @@ rows:
     notes: Lua schema, equivalent to a plugin's `schema.lua`.
   - field: "`handler`"
     type: string
-    notes: "Lua handler, equivalent to a plugin's `handler.lua`. Required for `streaming`, not allowed for `installed`."
+    notes: "Lua handler, equivalent to a plugin's `handler.lua`. Required for `streaming`. Disallowed for `installed`."
   - field: "`id`, `created_at`, `updated_at`"
     type: "-"
     notes: Server-assigned.
@@ -112,7 +120,7 @@ rows:
 
 ### List custom policies
 
-To get a paginated list of existing custom policies, run the following:
+To get a paginated list of existing custom policies, use the `/v1/ai-gateways/{aiGatewayId}/custom-policies` endpoint:
 
 {% konnect_api_request %}
 url: /v1/ai-gateways/$AI_GATEWAY_ID/custom-policies
@@ -124,7 +132,7 @@ headers:
 
 ### Get a custom policy
 
-To fetch a custom policy by `name` or `id`, run the following:
+To fetch a custom policy by `name` or `id`, use the `/v1/ai-gateways/{aiGatewayId}/custom-policies/{name|id}` endpoint:
 
 {% konnect_api_request %}
 url: /v1/ai-gateways/$AI_GATEWAY_ID/custom-policies/my-streaming-custom-policy
@@ -175,7 +183,7 @@ variables:
 
 ### Update a custom policy
 
-To update an existing custom policy, run the following:
+To update an existing custom policy, redeploy the `custom_policy` entity with the same `name`:
 
 {% entity_example %}
 type: custom_policy
@@ -199,7 +207,7 @@ variables:
 
 ### Delete a custom policy
 
-To delete a custom policy by `name` or `id`, run the following:
+To delete a custom policy by `name` or `id`, use the `/v1/ai-gateways/{aiGatewayId}/custom-policies/{name|id}` endpoint:
 
 {% konnect_api_request %}
 url: /v1/ai-gateways/$AI_GATEWAY_ID/custom-policies/my-streaming-custom-policy
