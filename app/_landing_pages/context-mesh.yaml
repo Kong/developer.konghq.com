@@ -128,7 +128,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  To deploy a {{site.context_mesh}} MCP server, configure its [source APIs and MCP servers](#common-usage-patterns), then create the MCP server and map it to a {{site.base_gateway}} control plane.
+                  To deploy a {{site.context_mesh}} MCP server, configure its source APIs and MCP servers, then create the MCP server and map it to a {{site.base_gateway}} control plane.
                   When you create it, you choose how [{{site.operator_product_name}}](/operator/) manages the underlying Kubernetes workload. Basic mode uses its preconfigured defaults, and advanced mode hands the deployment over to you:
 
                   {% feature_table %}
