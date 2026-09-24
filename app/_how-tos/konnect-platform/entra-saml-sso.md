@@ -162,7 +162,7 @@ capture:
 <!--vale on-->
 {% endcapture %}
 {{ create-team | indent: 3}}
-1. Map the Entra ID group to the team by sending a `POST` request to the [`/identity-providers/{idpId}/team-group-mappings` endpoint](/api/konnect/identity/#/operations/create-idp-team-group-mapping):
+1. Map the Entra ID group to the team by sending a `POST` request to the `/identity-providers/{idpId}/team-group-mappings` endpoint:
 {% capture create-team-mapping %}
 <!--vale off-->
 {% konnect_api_request %}
