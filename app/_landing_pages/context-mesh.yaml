@@ -67,7 +67,7 @@ rows:
                 text: |
                   {{site.context_mesh}} generates MCP servers in [Code Mode](https://blog.cloudflare.com/code-mode/), a configuration that exposes an API as a single SDK-like interface rather than one tool per operation.
 
-                  A standard MCP server registers each API operation as a separate tool. For an API with dozens or hundreds of endpoints, the agent's tool list grows past what the model can reason about, and tool selection degrades.
+                  A common pattern for MCP servers generated from an OpenAPI spec is to map each API operation to a separate tool. For an API with dozens or hundreds of endpoints, the agent's tool list grows past what the model can reason about, and tool selection degrades.
 
                   A Code Mode server exposes the API as a programmatic interface that the agent calls by writing short code snippets against it. The agent works at the SDK level instead of picking between many similar tools. This scales to large API surfaces without flooding the model's context, and lets an agent use your API without prior training on it.
 
