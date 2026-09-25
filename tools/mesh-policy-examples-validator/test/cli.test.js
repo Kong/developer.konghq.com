@@ -909,6 +909,101 @@ test("a multi-instance finding carries the instance ordinal and a count mismatch
   assert.match(result.stdout, /3 finding\(s\): 3 gating, 0 advisory\./);
 });
 
+test("the instance ordinal is driven by the source instance count, not the built group count", () => {
+  const brokenInstance = {
+    kubernetesYaml: "kind: Widget\nspec:\n  name:\n",
+    universalYaml: "type: Widget\nspec:\n  name: ok\n",
+  };
+  const root = buildFixtureRoot({
+    examples: [
+      {
+        name: "clean",
+        kubernetesYaml: "kind: Widget\nspec:\n  name: ok\n",
+        universalYaml: "type: Widget\nspec:\n  name: ok\n",
+      },
+    ],
+    overviews: [
+      // A stale build renders two groups for a single-instance source: the
+      // page is multi-instance in neither direction, so its findings keep the
+      // plain panel format and the count rule reports the mismatch.
+      {
+        policy: "stale",
+        instances: [CLEAN_INSTANCE, brokenInstance],
+        tagCount: 1,
+      },
+      // A short build renders one group for a two-instance source: the
+      // finding still names the ordinal of the rendered instance.
+      { policy: "short2", instances: [brokenInstance], tagCount: 2 },
+    ],
+  });
+
+  const result = runCli(root, [], {
+    MESH_VALIDATOR_TERRAFORM_BIN: stubTerraformPassing(),
+  });
+
+  assert.equal(result.status, 1);
+  assert.match(
+    result.stdout,
+    /app\/_mesh_policies\/stale\/index\.md \[kubernetes\] \/spec\/name: value is null/,
+  );
+  assert.match(
+    result.stdout,
+    /app\/_mesh_policies\/stale\/index\.md \[-\] \/: built page renders 2 policy-yaml tab group\(s\) but the source contains 1 policy_yaml instance\(s\)/,
+  );
+  assert.match(
+    result.stdout,
+    /app\/_mesh_policies\/short2\/index\.md \[kubernetes, block 1\] \/spec\/name: value is null/,
+  );
+  assert.match(
+    result.stdout,
+    /app\/_mesh_policies\/short2\/index\.md \[-\] \/: built page renders 1 policy-yaml tab group\(s\) but the source contains 2 policy_yaml instance\(s\)/,
+  );
+  // Both mismatched pages are still checked; the run does not abort.
+  assert.match(result.stdout, /policy overview pages 2 pages/);
+});
+
+test("an overview source that does not use the tag is not checked", () => {
+  const root = buildFixtureRoot({
+    examples: [
+      {
+        name: "clean",
+        kubernetesYaml: "kind: Widget\nspec:\n  name: ok\n",
+        universalYaml: "type: Widget\nspec:\n  name: ok\n",
+      },
+    ],
+    overviews: [{ policy: "plain", instances: [], tagCount: 0, skipBuiltPage: true }],
+  });
+
+  const result = runCli(root, [], {
+    MESH_VALIDATOR_TERRAFORM_BIN: stubTerraformPassing(),
+  });
+
+  assert.equal(result.status, 0);
+  assert.doesNotMatch(result.stdout, /plain/);
+  assert.match(result.stdout, /Checked 1 pages, 2 blocks/);
+});
+
+test("a skipped other mesh page with no built page does not fail the precondition check", () => {
+  const root = buildFixtureRoot({
+    examples: [
+      {
+        name: "clean",
+        kubernetesYaml: "kind: Widget\nspec:\n  name: ok\n",
+        universalYaml: "type: Widget\nspec:\n  name: ok\n",
+      },
+    ],
+    others: [{ slug: "vanished", instances: [CLEAN_INSTANCE], skipBuiltPage: true }],
+  });
+
+  const result = runCli(root, ["--skip", "vanished"], {
+    MESH_VALIDATOR_TERRAFORM_BIN: stubTerraformPassing(),
+  });
+
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /Checked 1 pages, 2 blocks/);
+  assert.match(result.stdout, /Skipped: vanished\./);
+});
+
 test("an overview page whose built page is missing aborts and names the source", () => {
   const root = buildFixtureRoot({
     examples: [

@@ -250,6 +250,220 @@ RSpec.describe Jekyll::RenderPolicyYaml do
     end
   end
 
+  describe 'Terraform labels and mesh attachment' do
+    describe 'a mesh-scoped resource with top-level labels' do
+      let(:template) do
+        <<~LIQUID
+          {% policy_yaml %}
+          ```yaml
+          type: MeshOpenTelemetryBackend
+          mesh: default
+          name: otel-collector
+          labels:
+            kuma.io/display-name: otel-collector
+          spec:
+            endpoint:
+              address: otel-collector.observability
+              port: 4317
+          ```
+          {% endpolicy_yaml %}
+        LIQUID
+      end
+
+      it 'merges the source labels with the mesh label into one labels attribute' do
+        html = render(template)
+        expect(yaml_text(html, 'terraform')).to eq(<<~HCL)
+          resource "konnect_mesh_open_telemetry_backend" "otel_collector" {
+            provider = konnect-beta
+            type = "MeshOpenTelemetryBackend"
+            name = "otel-collector"
+            spec = {
+              endpoint = {
+                address = "otel-collector.observability"
+                port = 4317
+              }
+            }
+            labels   = {
+            "kuma.io/display-name" = "otel-collector"
+            "kuma.io/mesh" = konnect_mesh.my_mesh.name
+            }
+            cp_id    = konnect_mesh_control_plane.my_meshcontrolplane.id
+            mesh     = konnect_mesh.my_mesh.name
+          }
+        HCL
+      end
+
+      it 'keeps one kuma.io/mesh label when the source sets its own' do
+        template = <<~LIQUID
+          {% policy_yaml %}
+          ```yaml
+          type: MeshOpenTelemetryBackend
+          mesh: default
+          name: otel-collector
+          labels:
+            kuma.io/mesh: default
+            kuma.io/display-name: otel-collector
+          spec:
+            endpoint:
+              address: otel-collector.observability
+          ```
+          {% endpolicy_yaml %}
+        LIQUID
+        html = render(template)
+
+        expect(yaml_text(html, 'terraform')).to eq(<<~HCL)
+          resource "konnect_mesh_open_telemetry_backend" "otel_collector" {
+            provider = konnect-beta
+            type = "MeshOpenTelemetryBackend"
+            name = "otel-collector"
+            spec = {
+              endpoint = {
+                address = "otel-collector.observability"
+              }
+            }
+            labels   = {
+            "kuma.io/display-name" = "otel-collector"
+            "kuma.io/mesh" = konnect_mesh.my_mesh.name
+            }
+            cp_id    = konnect_mesh_control_plane.my_meshcontrolplane.id
+            mesh     = konnect_mesh.my_mesh.name
+          }
+        HCL
+      end
+    end
+
+    describe 'a control-plane-scoped resource' do
+      let(:template) do
+        <<~LIQUID
+          {% policy_yaml %}
+          ```yaml
+          type: HostnameGenerator
+          name: synced-kube-mesh-service
+          spec:
+            selector:
+              meshService:
+                matchLabels:
+                  kuma.io/origin: global
+          ```
+          {% endpolicy_yaml %}
+        LIQUID
+      end
+
+      it 'renders no mesh attribute and no kuma.io/mesh label' do
+        html = render(template)
+        expect(yaml_text(html, 'terraform')).to eq(<<~HCL)
+          resource "konnect_mesh_hostname_generator" "synced_kube_mesh_service" {
+            provider = konnect-beta
+            type = "HostnameGenerator"
+            name = "synced-kube-mesh-service"
+            spec = {
+              selector = {
+                mesh_service = {
+                  match_labels = {
+                    "kuma.io/origin" = "global"
+                  }
+                }
+              }
+            }
+            cp_id    = konnect_mesh_control_plane.my_meshcontrolplane.id
+          }
+        HCL
+      end
+    end
+
+    describe 'a control-plane-scoped resource with top-level labels' do
+      let(:template) do
+        <<~LIQUID
+          {% policy_yaml %}
+          ```yaml
+          type: HostnameGenerator
+          name: labeled-generator
+          labels:
+            team: db-operators
+          spec:
+            selector:
+              meshExternalService:
+                matchLabels:
+                  kuma.io/origin: zone
+          ```
+          {% endpolicy_yaml %}
+        LIQUID
+      end
+
+      it 'renders the source labels without a mesh label or a mesh attribute' do
+        html = render(template)
+        expect(yaml_text(html, 'terraform')).to eq(<<~HCL)
+          resource "konnect_mesh_hostname_generator" "labeled_generator" {
+            provider = konnect-beta
+            type = "HostnameGenerator"
+            name = "labeled-generator"
+            spec = {
+              selector = {
+                mesh_external_service = {
+                  match_labels = {
+                    "kuma.io/origin" = "zone"
+                  }
+                }
+              }
+            }
+            labels   = {
+            team = "db-operators"
+            }
+            cp_id    = konnect_mesh_control_plane.my_meshcontrolplane.id
+          }
+        HCL
+      end
+    end
+  end
+
+  describe 'Terraform system-managed fields' do
+    let(:template) do
+      <<~LIQUID
+        {% policy_yaml %}
+        ```yaml
+        type: MeshService
+        mesh: default
+        name: redis
+        labels:
+          team: db-operators
+        spec:
+          selector:
+            dataplaneTags:
+              app: redis
+        status:
+          vips:
+            - ip: 10.0.1.1
+        ```
+        {% endpolicy_yaml %}
+      LIQUID
+    end
+
+    it 'omits the read-only status field from the Terraform tab and keeps it in Universal' do
+      html = render(template)
+      expect(yaml_text(html, 'terraform')).to eq(<<~HCL)
+        resource "konnect_mesh_service" "redis" {
+          provider = konnect-beta
+          type = "MeshService"
+          name = "redis"
+          spec = {
+            selector = {
+              dataplane_tags = {
+                app = "redis"
+              }
+            }
+          }
+          labels   = {
+          team = "db-operators"
+          "kuma.io/mesh" = konnect_mesh.my_mesh.name
+          }
+          cp_id    = konnect_mesh_control_plane.my_meshcontrolplane.id
+          mesh     = konnect_mesh.my_mesh.name
+        }
+      HCL
+      expect(yaml_text(html, 'universal')).to include('status:')
+    end
+  end
+
   describe 'Terraform multiline strings inside arrays' do
     let(:template) do
       <<~LIQUID

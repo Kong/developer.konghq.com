@@ -274,13 +274,25 @@ export async function run(argv, root) {
       const html = fs.readFileSync(path.join(root, page.builtPath), "utf-8");
       const { entries, findings: parseFindings } = extractDocuments(html);
       const groupCount = countPolicyYamlGroups(html);
+      const sourceCount = cls.checkInstanceCount
+        ? countPolicyYamlInstances(
+            fs.readFileSync(path.join(root, page.relativeSource), "utf-8"),
+          )
+        : undefined;
       return {
         ...page,
         entries,
         parseFindings,
         tfBlocks: extractTerraformBlocks(html),
         groupCount,
-        multiInstance: groupCount > 1,
+        sourceCount,
+        // The instance ordinal is driven by the source instance count: a page
+        // whose source holds several policy_yaml instances labels its
+        // findings with the ordinal even when the build rendered fewer
+        // groups, and a stale build cannot add ordinals to a
+        // single-instance page. Example pages have no policy_yaml source
+        // tag, so their group count is the only available signal.
+        multiInstance: (sourceCount ?? groupCount) > 1,
       };
     });
 
@@ -289,16 +301,13 @@ export async function run(argv, root) {
     // still checks every page.
     if (cls.checkInstanceCount) {
       for (const page of pages) {
-        const sourceCount = countPolicyYamlInstances(
-          fs.readFileSync(path.join(root, page.relativeSource), "utf-8"),
-        );
-        if (sourceCount !== page.groupCount) {
+        if (page.sourceCount !== page.groupCount) {
           findings.push({
             source: page.relativeSource,
             pointer: "/",
             message:
               `built page renders ${page.groupCount} policy-yaml tab group(s) ` +
-              `but the source contains ${sourceCount} policy_yaml instance(s)`,
+              `but the source contains ${page.sourceCount} policy_yaml instance(s)`,
           });
         }
       }

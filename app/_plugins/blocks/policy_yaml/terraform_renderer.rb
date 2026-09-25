@@ -19,13 +19,14 @@ module Jekyll
         target_port
       ].freeze
       SAMPLING_FIELD_NAMES = %w[client overall random].freeze
-      RESOURCE_SUFFIX = <<-HCL
-  labels   = {
-  "kuma.io/mesh" = konnect_mesh.my_mesh.name
-  }
-  cp_id    = konnect_mesh_control_plane.my_meshcontrolplane.id
-  mesh     = konnect_mesh.my_mesh.name
-      HCL
+      # Resource types the Konnect API serves at control-plane scope
+      # (/api/<plural> without a mesh segment): the pinned provider's
+      # resources for them take no `mesh` argument, so the rendered block
+      # must set neither a `mesh` attribute nor a `kuma.io/mesh` label.
+      CP_SCOPED_TYPES = %w[HostnameGenerator].freeze
+      # The HCL key of the mesh label the suffix adds; a source label with
+      # the same key is dropped, so the block never defines the label twice.
+      MESH_LABEL_KEY = '"kuma.io/mesh"'
 
       def initialize(yaml_data)
         @yaml_data = yaml_data
@@ -33,7 +34,7 @@ module Jekyll
 
       def render
         "resource \"#{resource_type}\" \"#{resource_label}\" {\n" \
-          "#{RESOURCE_PREFIX}#{body}#{RESOURCE_SUFFIX}}\n"
+          "#{RESOURCE_PREFIX}#{body}#{suffix}}\n"
       end
 
       private
@@ -49,9 +50,44 @@ module Jekyll
       def body
         @yaml_data.each_with_object(+'') do |(key, value), result|
           next if key == 'mesh' # We use a reference at the end of the provider
+          next if key == 'labels' # Rendered once, merged, in the suffix
+          # `status` is system-managed: every konnect_mesh_* resource models
+          # it read-only, so a resource block that sets it never validates.
+          next if key == 'status'
 
           result << convert(key, value, 1)
         end
+      end
+
+      # One `labels` attribute per resource: the source labels first, then
+      # the mesh label for mesh-scoped resources. Control-plane-scoped
+      # resources without source labels render no `labels` attribute at all.
+      def suffix
+        "#{labels_block}  cp_id    = konnect_mesh_control_plane.my_meshcontrolplane.id\n#{mesh_line}"
+      end
+
+      def labels_block
+        return +'' if @yaml_data['labels'].nil? && cp_scoped?
+
+        entries = (@yaml_data['labels'] || {})
+                  .reject { |key, _value| hcl_key(key) == MESH_LABEL_KEY }
+                  .map do |key, value|
+          "  #{hcl_key(key)} = #{format_value(
+            value, '  '
+          )}"
+        end
+        entries << "  #{MESH_LABEL_KEY} = konnect_mesh.my_mesh.name" unless cp_scoped?
+        "  labels   = {\n#{entries.join("\n")}\n  }\n"
+      end
+
+      def mesh_line
+        return +'' if cp_scoped?
+
+        "  mesh     = konnect_mesh.my_mesh.name\n"
+      end
+
+      def cp_scoped?
+        CP_SCOPED_TYPES.include?(@yaml_data['type'])
       end
 
       def snake_case(str)

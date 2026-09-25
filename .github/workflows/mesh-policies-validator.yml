@@ -4,6 +4,7 @@ on:
     types: [synchronize, ready_for_review, opened, reopened]
     paths:
       - app/_mesh_policies/**
+      - app/mesh/**
   workflow_dispatch:
 
 permissions:

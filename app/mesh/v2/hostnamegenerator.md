@@ -89,7 +89,7 @@ spec:
     meshService:
       matchLabels:
         kuma.io/origin: global
-        k8s.kuma.io/is-headless-service: false
+        k8s.kuma.io/is-headless-service: "false"
         kuma.io/env: kubernetes
   template: "{% raw %}{{ .DisplayName }}.{{ .Namespace }}.svc.{{ .Zone }}.mesh.local{% endraw %}"
 ```
@@ -107,7 +107,7 @@ spec:
     meshService:
       matchLabels:
         kuma.io/origin: global
-        k8s.kuma.io/is-headless-service: true
+        k8s.kuma.io/is-headless-service: "true"
         kuma.io/env: kubernetes
   template: "{% raw %}{{ label 'statefulset.kubernetes.io/pod-name' }}.{{ label 'k8s.kuma.io/service-name' }}.{{ .Namespace }}.svc.{{ .Zone }}.mesh.local{% endraw %}"
 ```
