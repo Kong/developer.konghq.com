@@ -218,10 +218,19 @@ rows:
   - format: "`typesafe`"
     provider: "[TypeSafe AI](/ai-gateway/ai-providers/typesafe/#supported-native-llm-formats-for-typesafe-ai)"
     capabilities: "Decisions (native format required)."
+  - format: "`passthrough`"
+    provider: Any upstream
+    capabilities: Forwards request and response bodies byte-for-byte, without parsing or transformation.
 {% endtable %}
 <!-- vale on -->
 
 When a native format is set, only the corresponding provider is supported with its specific APIs.
+
+### Passthrough {% new_in 2.2 %}
+
+If your upstream exposes a format {{site.ai_gateway}} doesn't recognize, set `formats[].type` to `passthrough`. Request and response bodies are forwarded byte-for-byte, without `Content-Type` enforcement or schema validation.
+
+Passthrough keeps upstream provider authentication, AI Consumer identity, request-count rate limiting, and logging. For more information, see [Passthrough format in {{site.ai_gateway}}](/ai-gateway/passthrough/).
 
 ## Targets
 
