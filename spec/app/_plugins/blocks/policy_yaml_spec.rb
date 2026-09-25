@@ -489,7 +489,39 @@ RSpec.describe Jekyll::RenderPolicyYaml do
 
     it 'renders an integer percentage as a wrapper object' do
       tf = render(template).find('div[data-panel="terraform"]').find('code').text
-      expect(tf).to include('percentage = { integer = 50 }')
+      expect(tf).to eq(<<~HCL)
+        resource "konnect_mesh_fault_injection" "abort_some" {
+          provider = konnect-beta
+          type = "MeshFaultInjection"
+          name = "abort-some"
+          spec = {
+            target_ref = {
+              kind = "Mesh"
+            }
+            to = [
+              {
+                target_ref = {
+                  kind = "Mesh"
+                }
+                default = {
+                  http = [
+                    {
+                      abort = {
+                        percentage = { integer = 50 }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+          labels   = {
+          "kuma.io/mesh" = konnect_mesh.my_mesh.name
+          }
+          cp_id    = konnect_mesh_control_plane.my_meshcontrolplane.id
+          mesh     = konnect_mesh.my_mesh.name
+        }
+      HCL
     end
   end
 
