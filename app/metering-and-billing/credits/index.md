@@ -1,7 +1,6 @@
 ---
 title: "Prepaid credits"
 content_type: reference
-beta: true
 description: "Understand how prepaid credits work in {{site.konnect_short_name}} {{site.metering_and_billing}}: key concepts, terminology, and correctness guarantees."
 layout: reference
 products:

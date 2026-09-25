@@ -1,7 +1,6 @@
 ---
 title: "Correctness guarantees"
 content_type: reference
-beta: true
 description: "{{site.konnect_short_name}} {{site.metering_and_billing}} keeps credit balances correct through a double-entry ledger, immutable movements, and deterministic consumption order."
 layout: reference
 products:
