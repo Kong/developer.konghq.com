@@ -39,6 +39,12 @@ export function countPolicyYamlGroups(html) {
   return document.querySelectorAll('div[data-tab-group^="policy-yaml"]').length;
 }
 
+// The number of {% policy_yaml %} invocations in a source file. The built page
+// must render one tab group per invocation.
+export function countPolicyYamlInstances(sourceText) {
+  return (sourceText.match(/\{%\s*policy_yaml/g) || []).length;
+}
+
 // A terraform block is not YAML: it is extracted as raw text and never
 // reaches the YAML parse, schema, empty-value, or marker rules.
 export function extractTerraformBlocks(html) {

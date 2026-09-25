@@ -1,5 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import fs from "fs";
+import os from "os";
+import path from "path";
 import { checkPreconditions } from "../lib/preconditions.js";
 
 const SOURCES = [
@@ -73,4 +76,61 @@ test("the totals count both URL shapes", () => {
   assert.equal(result.ok, false);
   assert.match(result.message, /Built 2 mesh policy example pages/);
   assert.match(result.message, /found 3 source examples/);
+});
+
+function tempRoot() {
+  return fs.mkdtempSync(path.join(os.tmpdir(), "mesh-policy-preconditions-"));
+}
+
+function writeBuiltPage(root, builtPath) {
+  fs.mkdirSync(path.join(root, builtPath), { recursive: true });
+  fs.writeFileSync(path.join(root, builtPath, "index.html"), "<html></html>");
+}
+
+const EXAMPLES_BUILT = [
+  "dist/mesh/policies/meshcircuitbreaker/examples/basic-circuit-breaker/index.html",
+  "dist/mesh/policies/external-services/examples/zone-egress/index.html",
+];
+
+test("an overview source page with no built page aborts and names the source", () => {
+  const root = tempRoot();
+  const result = checkPreconditions(
+    EXAMPLES_BUILT,
+    SOURCES,
+    ["app/_mesh_policies/meshtimeout/index.md"],
+    [],
+    root,
+  );
+  assert.equal(result.ok, false);
+  assert.match(
+    result.message,
+    /app\/_mesh_policies\/meshtimeout\/index\.md/,
+  );
+});
+
+test("an other mesh source page with no built page aborts and names the source", () => {
+  const root = tempRoot();
+  const result = checkPreconditions(
+    EXAMPLES_BUILT,
+    SOURCES,
+    [],
+    ["app/mesh/v2/hostnamegenerator.md"],
+    root,
+  );
+  assert.equal(result.ok, false);
+  assert.match(result.message, /app\/mesh\/v2\/hostnamegenerator\.md/);
+});
+
+test("a checked page class whose built pages all exist passes", () => {
+  const root = tempRoot();
+  writeBuiltPage(root, "dist/mesh/policies/meshtimeout/index.html");
+  writeBuiltPage(root, "dist/mesh/v2/hostnamegenerator/index.html");
+  const result = checkPreconditions(
+    EXAMPLES_BUILT,
+    SOURCES,
+    ["app/_mesh_policies/meshtimeout/index.md"],
+    ["app/mesh/v2/hostnamegenerator.md"],
+    root,
+  );
+  assert.deepEqual(result, { ok: true });
 });

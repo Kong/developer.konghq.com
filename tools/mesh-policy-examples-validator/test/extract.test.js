@@ -3,7 +3,13 @@ import assert from "node:assert/strict";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { extractBlocks, extractDocuments, extractTerraformBlocks } from "../lib/extract.js";
+import {
+  countPolicyYamlGroups,
+  countPolicyYamlInstances,
+  extractBlocks,
+  extractDocuments,
+  extractTerraformBlocks,
+} from "../lib/extract.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const fixture = (name) =>
@@ -159,4 +165,43 @@ test("a single-instance page keeps its existing block output", () => {
     "terraform",
   ]);
   assert.ok(blocks.every((b) => b.instance === 1));
+});
+
+test("the source-instance counter counts policy_yaml invocations per source file", () => {
+  const source = [
+    "---",
+    "title: MeshTimeout",
+    "---",
+    "",
+    "{% policy_yaml /mesh/meshtimeout/examples/basic.yaml %}",
+    "",
+    "Some prose in between.",
+    "",
+    "{% policy_yaml /examples/another.yaml %}",
+    "",
+    "{% policy_yaml /examples/third.yaml %}",
+  ].join("\n");
+
+  assert.equal(countPolicyYamlInstances(source), 3);
+});
+
+test("the source-instance counter returns zero for a file without the tag", () => {
+  assert.equal(countPolicyYamlInstances("---\ntitle: No tags\n---\n\nprose\n"), 0);
+});
+
+test("the tab-group counter counts policy-yaml groups, including empty ones", () => {
+  const html =
+    tabGroup(panel("kubernetes", code("a", "kind: MeshTimeout"))) +
+    `<div data-tab-group="policy-yaml x"></div>` +
+    tabGroup(panel("universal", code("b", "type: MeshTimeout")));
+
+  assert.equal(countPolicyYamlGroups(html), 3);
+});
+
+test("the tab-group counter ignores other tab groups", () => {
+  const html =
+    tabGroup(panel("kubernetes", code("a", "kind: MeshTimeout"))) +
+    `<div data-tab-group="support-matrix x">${panel("kubernetes", code("b", "kind: Nope"))}</div>`;
+
+  assert.equal(countPolicyYamlGroups(html), 1);
 });
