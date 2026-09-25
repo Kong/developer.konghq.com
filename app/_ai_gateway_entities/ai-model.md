@@ -442,7 +442,7 @@ data:
   config:
     route:
       paths:
-        - /openai/v1
+        - /openai
 {% endentity_example %}
 
 For Anthropic formats run:
@@ -466,7 +466,7 @@ data:
   config:
     route:
       paths:
-        - /anthropic/v1
+        - /anthropic
 {% endentity_example %}
 
 ## Schema
