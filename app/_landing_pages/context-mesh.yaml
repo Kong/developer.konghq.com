@@ -1,0 +1,192 @@
+metadata:
+  title: "{{site.context_mesh}}"
+  content_type: landing_page
+  description: "Turn enterprise APIs into Code Mode MCP servers that AI agents can call directly, and combine them with existing MCP servers to customize the overall enterprise context under a single source of truth."
+  products:
+    - context-mesh
+    - gateway
+  breadcrumbs:
+    - /gateway/
+    - /konnect/
+  tags:
+    - ai
+    - mcp
+  search_aliases:
+    - agent context
+    - code mode mcp
+
+rows:
+  - header:
+      type: h1
+      text: "Kong {{site.context_mesh}}"
+      sub_text: "Turn enterprise APIs into Code Mode MCP servers that AI agents can call directly, and combine them with existing MCP servers to customize the overall enterprise context under a single source of truth."
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    AI agents are only as good as the context they can reach. {{site.context_mesh}} exposes REST APIs and existing MCP servers to AI agents as a single Code Mode MCP server.
+
+                    Standard MCP tool calling doesn't scale: every tool definition and every intermediate result burns tokens as they flow through the model. Code Mode removes that ceiling: agents can use far more tools at far lower cost.
+
+                    {{site.context_mesh}} is the mediation layer between agents and APIs that you deploy on {{site.base_gateway}} to complement [{{site.ai_gateway}}](/ai-gateway/).
+
+                    {:.success}
+                    > {{site.context_mesh}} is in active development. The current release supports APIs and MCP servers as source types. Additional source types are planned for future releases.
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/context-mesh/context-mesh.svg
+              alt_text: "Context Mesh architecture diagram. Context Mesh deploys on Kong Gateway as the mediation layer for enterprise sources including APIs, data, docs, and code."
+
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Why {{site.context_mesh}}?"
+            blocks:
+              - type: text
+                text: |
+                  {{site.context_mesh}} is designed to make enterprise APIs and MCP servers usable by AI agents without adding integration complexity to your teams.
+
+                  * **One agent, many sources**: Aggregate sources (OpenAPI specs, existing MCP servers) into a single source of truth for agents.
+                  * **Traffic stays on Kong**: Because each MCP server runs on a {{site.konnect_short_name}} control plane, agent calls to your APIs pass through Kong and can be governed with the plugins you already use.
+
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Code Mode MCP servers"
+            blocks:
+              - type: text
+                text: |
+                  {{site.context_mesh}} generates MCP servers in [Code Mode](https://blog.cloudflare.com/code-mode/), a configuration that exposes an API as a single SDK-like interface rather than one tool per operation.
+
+                  A common pattern for MCP servers generated from an OpenAPI spec is to map each API operation to a separate tool. For an API with dozens or hundreds of endpoints, the agent's tool list grows past what the model can reason about, and tool selection degrades.
+
+                  A Code Mode server exposes the API as a programmatic interface that the agent calls by writing short code snippets against it. The agent works at the SDK level instead of picking between many similar tools. This scales to large API surfaces without flooding the model's context, and lets an agent use your API without prior training on it.
+
+                  Code Mode eliminates intermediate tool invocations by allowing agents to write and execute API calls as code. Instead of streaming every operation through the model, Code Mode returns only the final result to the context window. This reduces token consumption by **~99%** (from ~120,000 tokens to ~1,200 tokens) while maintaining full observability of the workflow.
+      - blocks:
+        - type: image
+          config:
+            url: /assets/images/context-mesh/context-mesh-terminal.svg
+            alt_text: "{{site.context_mesh}} terminal workflow example showing MCP server setup and usage."
+
+  - header:
+      text: "Get started"
+      type: h2
+      description: |
+        Walk through creating a Code Mode MCP server from an OpenAPI specification, deploying it, and calling it from an MCP client.
+    column_count: 3
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Create your first {{site.context_mesh}} MCP server
+            description: |
+              Step-by-step setup from OpenAPI spec to a working agent call.
+            cta:
+              text: "Get started"
+              url: "/context-mesh/get-started/"
+
+  - header:
+      text: "Common usage patterns"
+      type: h2
+      description: |
+        What an agent can do depends on the sources you add to {{site.context_mesh}}. 
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    When you create a {{site.context_mesh}} Code Mode MCP server, you can choose to create your MCP server from the following:
+                    * Expose a single internal API
+                    * Compose multiple APIs
+                    * Combine APIs with existing MCP servers
+                    
+                    You must manually add MCP servers using their upstream URL. You cannot use {{site.ai_gateway}} MCP servers.
+                    
+                    If you're adding one or many APIs to your Code Mode MCP server, you can either upload a OpenAPI Specification (OAS) v3.0 file for each API or add them directly from APIs that you already have in [Catalog](/catalog).                     
+
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Deploying a {{site.context_mesh}} MCP server"
+            blocks:
+              - type: text
+                text: |
+                  To deploy a {{site.context_mesh}} MCP server, configure its source APIs and MCP servers, then create the MCP server and map it to a {{site.base_gateway}} control plane.
+                  When you create it, you choose how [{{site.operator_product_name}}](/operator/) manages the underlying Kubernetes workload. Basic mode uses its preconfigured defaults, and advanced mode hands the deployment over to you:
+
+                  {% feature_table %}
+                  item_title: Capability
+                  columns:
+                    - title: Basic mode (default)
+                      key: basic
+                    - title: |
+                        Advanced mode {% assign tp = site.data.stages.tech_preview %}{% include badge.html url=tp.url text=tp.text css_class="bg-semantic-yellow-secondary text-semantic-yellow-primary" %}
+                      key: advanced
+
+                  features:
+                    - title: Initial deployment created for you
+                      basic: true
+                      advanced: false
+                    - title: Deployment managed by {{site.konnect_short_name}} after creation
+                      basic: true
+                      advanced: true
+                    - title: Customize replica count and CPU and memory resources
+                      basic: false
+                      advanced: true
+                    - title: Set custom labels and annotations on the deployment
+                      basic: false
+                      advanced: true
+                    - title: MCP server code managed by {{site.konnect_short_name}}
+                      basic: true
+                      advanced: true
+                  {% endfeature_table %}
+
+                  You can switch an existing MCP server between basic and advanced mode.
+
+                  Either way, {{site.base_gateway}} creates a [Gateway Service](/gateway/entities/service/) entity for your MCP server, named something like `mcpserver-98dd0356`.
+                  This lets you apply [plugins](/plugins/) and other governing strategies to your {{site.context_mesh}} MCP server.
+
+                  For an end-to-end walkthrough, see [Deploy an MCP server with {{site.context_mesh}} and {{site.operator_product_name}}](/context-mesh/get-started/).
+                                  
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "{{site.context_mesh}} limitations"
+            blocks:
+              - type: text
+                text: |
+                  {{site.context_mesh}} MCP servers can only be linked to and proxied with {{site.base_gateway}} control planes that were provisioned with [{{site.operator_product_name}}](/operator/).
+  
+  - header:
+      text: "Frequently asked questions"
+      type: h2
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: Is {{site.context_mesh}} different from the {{site.ai_gateway}} MCP Server?
+              a: |
+                Yes. You configure a [{{site.ai_gateway}} MCP Server](/ai-gateway/entities/ai-mcp-server/) by hand, tool by tool, with full governance (auth, ACLs, rate limiting) built into that configuration. {{site.ai_gateway}} MCP Servers don't support Code Mode.
+                
+                {{site.context_mesh}} MCP servers use Code Mode instead: rather than declaring tools manually, {{site.context_mesh}} generates the MCP server directly from each source's existing configuration, so you can combine multiple types of sources into a single context surface for agents.
+                
+                In short: {{site.ai_gateway}} MCP Servers are built for fine-grained control over one endpoint. {{site.context_mesh}} is built for assembling different sources quickly, as a Code Mode MCP server.
+            - q: What type of source can I use with {{site.context_mesh}}?
+              a: |
+                {{site.context_mesh}} supports two source types: REST APIs, added as OpenAPI specifications, and existing MCP servers. You can mix both in the same {{site.context_mesh}} MCP server.

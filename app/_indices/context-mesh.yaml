@@ -1,0 +1,12 @@
+title: "{{site.context_mesh}} Documentation"
+description: Index containing all documentation for {{site.context_mesh}}.
+sections:
+  - title: Overview
+    items:
+      - path: /context-mesh/
+      - path:  /context-mesh/get-started/
+  - title: How-tos
+    items:
+      - type: how-to
+        products:
+          - context-mesh
