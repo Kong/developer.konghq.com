@@ -28,12 +28,6 @@ related_resources:
 
 The AI Prompt Compressor Policy compresses messages before sending them to a Large Language Model (LLM), reducing text length while preserving meaning. It supports multiple cache-aware compression providers.
 
-The AI Prompt Compressor Policy supports:
-
-- **Ratio-based or target token compression**: For example, reduce a message to 80% of the original length or compress to 150 tokens.
-- **Configurable compression ranges**: For example, compress prompts under 100 tokens with a 0.8 ratio or compress them to exactly 100 tokens.
-- **Selective compression with LLMLingua**: Use `<LLMLINGUA>...</LLMLINGUA>` tags to target specific sections of the prompt. These tags work **only in the `inject_template` field of the [AI RAG Injector Policy](/ai-gateway/policies/ai-rag-injector/)** and must be used **in combination with the AI Prompt Compressor Policy**.
-
 The following compression providers are available:
 
 - `kong`: Use the [LLMLingua 2 library](https://github.com/microsoft/LLMLingua) to compress prose in user messages.
@@ -70,7 +64,7 @@ rows:
 
 ### Deterministic compression  
 
-Prompt caching lets a provider reuse a token prefix it has already seen and bills that warm read at much lower cost. For agentic and RAG workloads, where a large system prompt, tool definitions, and history repeat every turn, caching is the single biggest lever to reduce costs. Compression is the second best lever, it shrinks the tokens the provider still has to read. Deterministic compression is required since it ensures the same input results in the same output at a byte-for-byte level which then hits the cache. This allows both methods of cost reduction to coexist.
+Prompt compression is a powerful lever to reduce costs by shrinking the number of input tokens sent to the LLM provider. However, standard compression techniques can alter the text slightly on each run. Because LLM providers offer native prompt caching that relies on exact prefix matches, any variation in the compressed payload triggers a cache miss, forcing you to pay full price for those tokens. Deterministic compression solves this by ensuring that identical inputs always produce identical compressed outputs. This avoids cache misses and guarantees a cache hit on the provider's side, allowing the {{site.ai_gateway}} to stack the cost-saving benefits of both input token reduction and provider-level caching.
 
 ## LLMLingua compressor service
 
@@ -249,7 +243,7 @@ For more details, see the [configuration reference](/ai-gateway/policies/ai-prom
 
 The compressor service exposes a [`/v1/compress`](https://docs.headroomlabs.ai/docs/proxy#post-v1compress) endpoint that compresses messages and returns them. This endpoint accepts OpenAI and Anthropic's message formats. Requests in unsupported formats are forwarded unchanged. You can use this interface to compress prompts, check the current status, or integrate the service with the AI Prompt Compressor Policy.
 
-Headroom uses loopback-trust by default. It answers unauthenticated calls on `127.0.0.1`, and returns `404` to non-loopback callers unless it's started with `HEADROOM_COMPRESS_ALLOW_REMOTE=1`. You can run Headroom as a co-located sidecar reachable from the {{site.ai_gateway}} data plane without authentication, or point the Policy at a remote instance and configure a bearer token, sent as both the `X-Headroom-Proxy-Token` and `Authorization: Bearer` headers.
+Headroom uses loopback-trust by default. It answers unauthenticated calls on `127.0.0.1`, and returns `404` to non-loopback callers unless it's started with `HEADROOM_COMPRESS_ALLOW_REMOTE=1`. You can run Headroom as a co-located sidecar reachable from the {{site.ai_gateway}} data plane without authentication. Alternatively, you can point the Policy at a remote instance and configure a bearer token, sent as both the `X-Headroom-Proxy-Token` and `Authorization: Bearer` headers, set with the `headroom.proxy_token` configuration field. 
 
 ### Headroom prompt flow
 
@@ -309,7 +303,6 @@ A `503` response indicating a compression timeout is retried automatically befor
 - Deterministic compression requires sessions which is only available in **Headroom v0.37.0 or newer**. Older images silently ignore the session id and run stateless.
 - Headroom sessions are held in memory on a single Headroom process. You must point every data plane node at its own sidecar, or all of them at one shared instance. Never point an {{site.ai_gateway}} data plane at a load-balanced set of Headroom instances, since a session's turns must all reach the same process.
 - No MCP tool-response compression: only the LLM request path is supported.
-- Switching models mid conversation will change the session identifier and break caching.
 - Only requests with a `messages` or `input` conversation array are sent to Headroom. Other formats are forwarded uncompressed.
 
 ## Forward proxy support
