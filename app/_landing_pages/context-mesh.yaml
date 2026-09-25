@@ -30,8 +30,7 @@ rows:
                   text: |
                     AI agents are only as good as the context they can reach. {{site.context_mesh}} exposes REST APIs and existing MCP servers to AI agents as a single Code Mode MCP server.
 
-                    Agents cannot call most APIs directly and most MCP servers would require an integration with each individual server. 
-                    {{site.context_mesh}} closes that gap by allowing agents to call the {{site.context_mesh}} MCP server without per-agent integration code.
+                    Standard MCP tool calling doesn't scale: every tool definition and every intermediate result burns tokens as they flow through the model. Code Mode removes that ceiling: agents can use far more tools at far lower cost.
 
                     {{site.context_mesh}} is the mediation layer between agents and APIs that runs on {{site.base_gateway}} to complement [{{site.ai_gateway}}](/ai-gateway/).
 
