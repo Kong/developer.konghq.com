@@ -1,7 +1,6 @@
 ---
 title: "Credit transaction history"
 content_type: reference
-beta: true
 description: "Understand credit movements, transaction history structure, ordering, and corrections in {{site.konnect_short_name}} {{site.metering_and_billing}}."
 layout: reference
 products:
