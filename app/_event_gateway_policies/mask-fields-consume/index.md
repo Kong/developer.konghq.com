@@ -152,9 +152,13 @@ columns:
     key: description
 rows:
   - failure: "`skip`"
-    description: Doesn't deliver the record to the client.
+    description: |
+      Doesn't deliver the record to the client.
+      Recommended for most situations.
   - failure: "`error`"
-    description: Doesn't deliver the batch to the client.
+    description: |
+      Doesn't deliver the batch to the client.
+      Use `error` sparingly, because an error on a batch makes clients stop at the problematic offset, and an operator must intervene to skip it.
   - failure: "`passthrough`"
     description: Delivers the record to the client without a mask.
   - failure: "`mark`"
@@ -163,10 +167,23 @@ rows:
       The value of the header is the reason for the failure.
 {% endtable %}
 
-For a redaction policy:
-* In most situations, use `skip`.
-* Use `error` sparingly, because an error on a batch makes clients stop at the problematic offset, and an operator must intervene to skip it.
-* Don't use `passthrough` or `mark`, because both deliver the original value to the client.
+The parent [Schema Validation Consume policy](/event-gateway/policies/schema-validation-consume/) must not use `passthrough` or `mark`.
+With these failure modes, the parent delivers the record without parsing it. The Mask Fields Consume policy then never runs, and the client receives the fields unmasked.
+Set the parent policy to `skip` or `error`.
+
+## Selecting fields from schema metadata
+
+Instead of listing paths one by one, the `paths` entry can take a single expression that reads the record's schema metadata and returns the tagged field paths. For example, with a Confluent Schema Registry, an expression can return every field path that carries a `PII` tag:
+
+```
+paths: 'record.value.schema.metadata.tags["PII"]'
+```
+
+This is the recommended way to mask fields. The mask follows the schema, so when the schema evolves and a new field gets tagged, it is masked without any policy change.
+
+In this case, the schema becomes the input that decides which fields are masked, so anyone who can edit the schema tags can change the masking. Keep schema registry write access restricted to trusted roles.
+
+See the full walkthrough in [Mask Kafka message fields selected by schema registry tags](/event-gateway/mask-kafka-message-fields-from-schema/).
 
 ## Policy order
 
