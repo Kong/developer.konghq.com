@@ -146,7 +146,9 @@ columns:
     key: description
 rows:
   - failure: "`reject`"
-    description: Rejects the record batch that holds the record.
+    description: |
+      Rejects the record batch that holds the record.
+      Recommended for most situations.
   - failure: "`passthrough`"
     description: Sends the record to the backend cluster without a mask.
   - failure: "`mark`"
@@ -155,7 +157,23 @@ rows:
       The value of the header is the reason for the failure.
 {% endtable %}
 
-For a redaction policy, use `reject`. Don't use `passthrough` or `mark`, because both write the original value to the cluster.
+The parent [Schema Validation Produce policy](/event-gateway/policies/schema-validation-produce/) must not use `passthrough` or `mark`.
+With these failure modes, the parent sends the record without parsing it. The Mask Fields Produce policy then never runs, and the cluster stores the fields unmasked.
+Set the parent policy to `reject`.
+
+## Selecting fields from schema metadata
+
+Instead of listing paths one by one, the `paths` entry can take a single expression that reads the record's schema metadata and returns the tagged field paths. For example, with a Confluent Schema Registry, an expression can return every field path that carries a `PII` tag:
+
+```
+paths: 'record.value.schema.metadata.tags["PII"]'
+```
+
+This is the recommended way to mask fields. The mask follows the schema, so when the schema evolves and a new field gets tagged, it is masked without any policy change.
+
+In this case, the schema becomes the input that decides which fields are masked, so anyone who can edit the schema tags can change the masking. Keep schema registry write access restricted to trusted roles.
+
+See the full walkthrough in [Mask Kafka message fields selected by schema registry tags](/event-gateway/mask-kafka-message-fields-from-schema/).
 
 ## Policy order
 
