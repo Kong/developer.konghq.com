@@ -1,0 +1,6 @@
+entity_card:
+  entity: service
+api:
+  title: Gateway Admin - EE
+plugin:
+  slug: platform-tour-demo

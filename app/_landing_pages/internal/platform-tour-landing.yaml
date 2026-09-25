@@ -1,0 +1,189 @@
+metadata:
+  title: "Platform Tour"
+  content_type: landing_page
+  description: "A real landing page demonstrating every landing-page capability: cards, tabs, tables, diagrams, and content generated at build time"
+  products:
+    - gateway
+  works_on:
+    - on-prem
+    - konnect
+  tags:
+    - konnect
+  beta: true
+  seo_noindex: true
+
+rows:
+  - header:
+      type: h1
+      text: "Platform Tour"
+      sub_text: |
+        Just a tour of our docs platform
+
+  - header:
+      type: h2
+      text: "The tour, in order"
+    column_count: 5
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: "1. How-to page"
+            description: |
+              entity_example tabs, a  Konnect/on-prem switch, and a validation block that's also a
+              live test. Click everything.
+            icon: /assets/icons/gateway.svg
+            cta:
+              text: See it live
+              url: /how-to/platform-tour/
+      - blocks:
+        - type: card
+          config:
+            title: "2. Reference pages"
+            description: |
+              reference pages
+            icon: /assets/icons/gateway.svg
+            cta:
+              text: See it live
+              url: /reference/platform-tour-reference/
+      - blocks:
+        - type: card
+          config:
+            title: "3. Plugin page"
+            description: |
+              A brand-new plugin, built from three files, generating four pages
+            icon: /assets/icons/gateway.svg
+            cta:
+              text: See it live
+              url: /plugins/platform-tour-demo/
+      - blocks:
+        - type: card
+          config:
+            title: "4. How-to's/testing"
+            description: |
+              Two testing systems
+            icon: /assets/icons/gateway.svg
+            cta:
+              text: See it live
+              url: /how-to/platform-tour-testing/
+      - blocks:
+        - type: card
+          config:
+            title: "5. Pipeline"
+            description: |
+              a per-PR preview URL, automated Vale checks, and the CDN that serves
+              production.
+            icon: /assets/icons/gateway.svg
+            cta:
+              text: See it live
+              url: /reference/platform-tour-pipeline/
+
+  - header:
+      type: h2
+      text: "Tabs, from one config block"
+    columns:
+      - blocks:
+        - type: tabs
+          tab_group: platform-tour-landing
+          config:
+            - title: Tab 1
+              include_content: platform-tour/sourcing-table
+            - title: Tab 2
+              content: |
+                ```liquid
+                {% table %}
+                columns:
+                  - title: System
+                    key: system
+                  - title: Source
+                    key: source
+                  - title: Mechanism
+                    key: mechanism
+                  - title: Auto-generates the page?
+                    key: auto
+                rows:
+                  - system: Inso CLI reference
+                    source: "`Kong/insomnia`"
+                    mechanism: "GitHub Action checks out the repo, runs the  `inso generate-docs` command, copies the output, opens a PR."
+                    auto: "Yes"
+                  - system: Plugin/Gateway changelogs
+                    source: "`Kong/kong-ee`"
+                    mechanism: "GitHub Action checks out the repo, parses raw changelog markdown, opens a PR."
+                    auto: "Yes (the changelog tab)"
+                  - system: kongctl reference
+                    source: Compiled kongctl binary
+                    mechanism: "GitHub Action installs the al binary, scrapes `--help` output, writes snippets, opens a PR. Auto-deletes wrapper pages for dropped commands."
+                    auto: "No, a hand-written wrapper page transcludes the snippet"
+                  - system: decK reference
+                    source: Compiled decK binary
+                    mechanism: "Same help-scraping pattern as kongctl, no stale-page pruning."
+                    auto: "No, same hand-written-wrapper pattern"
+                  - system: Skills Hub
+                    source: "`Kong/ai-marketplace`"
+                    mechanism: "True git submodule. At build time, a generator reads skill files straight out of it."
+                    auto: "Yes, entirely, no human step"
+                  - system: Kuma → Mesh
+                    source: "`kumahq/kuma-website`"
+                    mechanism: "True git submodule. A build-time generator can auto-convert pages, but its page list is empty today."
+                    auto: "Used to, automatically. Today, no."
+                {% endtable %}
+                ```
+
+
+  - header:
+      type: h2
+      text: "Live lookup at render time"
+      sub_text: |
+        Each card below names only an entity slug, an API spec title, or a plugin slug. The title,
+        description, and link come from a page elsewhere in this repo, at build time.
+    columns:
+      - blocks:
+        - type: tabs
+          tab_group: platform-tour-cards
+          config:
+            - title: Syntax
+              content: |
+                ```yaml
+                type: entity_card
+                config:
+                  entity: service
+                ---
+                type: api
+                config:
+                  title: Gateway Admin - EE
+                ---
+                type: plugin
+                config:
+                  slug: platform-tour-demo
+                ```
+            - title: Live
+              include_content: platform-tour/cards-live
+
+  - header:
+      type: h2
+      text: "Content nobody typed by hand"
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: What's the latest version of kongctl?
+              a: |
+                **{{site.data.kongctl_latest.version}}**. This number isn't typed on this page. It's computed
+                at build time from `app/_data/tools/kongctl.yml`'s release list, the same mechanism the
+                [`/kongctl/`](/kongctl/) page uses.
+            - q: What's the latest version of decK?
+              a: |
+                **{{site.data.deck_latest.version}}**. Same mechanism, a different tool's release data.
+
+  - header:
+      type: h2
+      text: "A live query, not a hand-typed list"
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              tags:
+                - konnect
+              products:
+                - gateway
+              quantity: 8
+              allow_empty: true
