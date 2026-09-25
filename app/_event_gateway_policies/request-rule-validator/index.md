@@ -122,7 +122,7 @@ When one item in a batch violates a `reject` rule, only that item is rejected wi
 Each rule configures one of two actions, which runs when the rule's expression evaluates to `false`:
 
 * `reject`: Fails the request, or the offending item in a batch, with the `POLICY_VIOLATION` error code.
-* `passthrough`: Lets the request continue, but records the violation the same way `reject` does.
+* `passthrough`: Lets the request continue, but records the violation the same way `reject` does (metrics and logs on a debug level).
 
 If a rule's expression can't be evaluated, for example because a value has an unexpected format, {{site.event_gateway_short}} treats the result as `false` and runs the rule's action.
 
