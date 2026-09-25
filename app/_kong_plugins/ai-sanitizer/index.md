@@ -173,6 +173,18 @@ This service takes the following optional environment variables at startup:
 * `GUNICORN_WORKERS`: Specifies the number of Gunicorn processes to run
 * `PII_SERVICE_ENGINE_CONF`: Specifies the natural language processing (NLP) engine configuration file
 * `GUNICORN_LOG_LEVEL`: Specifies log level
+* `GUNICORN_CERTFILE` and `GUNICORN_KEYFILE`: Specifies TLS certificates for HTTPS access. 
+
+### Serve AI PII service securely
+
+To serve the AI PII service over https requires additional configuration:
+
+1. Ensure you have trusted TLS certificates for your environment.
+2. Set the `GUNICORN_CERTFILE` and `GUNICORN_KEYFILE` environment variables when starting the AI PII service. The service will switch to serving HTTPS on port `8443`.
+3. Set `scheme: https` and `port: 8443` when configuring the AI PII Sanitizer Plugin. The plugin will connect with HTTPS.
+
+{:.info}
+> This plugin does not verify SSL/TLS connections directly, it follows the global [tls_certificate_verify](/ai-gateway/configuration/#tls-certificate-verify) setting.
 
 ### Sanitization endpoints
 
