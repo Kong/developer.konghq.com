@@ -140,9 +140,6 @@ To create a customer in {{site.konnect_short_name}}, do the following:
 {% endnavtab %}
 {% navtab "Subject" %}
 
-{:.warning}
-> **Important:** During the billing beta, customers are limited to **one subject**. Support for multiple subjects will be available in the future.
-
 Subjects are created when you create the customer. To create a customer associated with a subject, send a `POST` request to the `/openmeter/customers` endpoint:
 
 <!--vale off-->
@@ -153,8 +150,8 @@ method: POST
 body:
     name: "ACME Inc."
     key: "019ae40f-4258-7f15-9491-842f42a7d6ac"
-    usageAttribution:
-      subjectKeys:
+    usage_attribution:
+      subject_keys:
       - "YOUR-SUBJECT-KEY"
 {% endkonnect_api_request %}
 <!--vale on-->
