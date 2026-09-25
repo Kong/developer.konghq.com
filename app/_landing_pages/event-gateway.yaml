@@ -254,6 +254,12 @@ rows:
                       guide: |
                         [Get started with {{site.event_gateway_short}} and ACLs](/event-gateway/get-started/)
                     - outcome: |
+                        Enforce naming, sizing, and configuration conventions on admin requests, without limiting who can send them
+                      feature: |
+                        [Request Rule Validator policy](/event-gateway/policies/request-rule-validator/)
+                      guide: |
+                        [Example: Enforce topic naming, sizing, and retention conventions](/event-gateway/policies/request-rule-validator/examples/enforce-topic-conventions/)
+                    - outcome: |
                         Replace legacy auth methods with modern enterprise identity standards your team already uses
                       feature: |
                         [OAuth](/identity/)
@@ -282,6 +288,14 @@ rows:
                         [Encrypt and decrypt Kafka messages](/event-gateway/encrypt-kafka-messages-with-event-gateway/),
                          [encrypt and decrypt Kafka message fields](/event-gateway/encrypt-kafka-message-fields-with-event-gateway/)
                         or [encrypt and decrypt Kafka message fields dynamically](/event-gateway/encrypt-kafka-message-fields-dynamic/)
+                    - outcome: |
+                        Let consumers work with real production topics while personal data stays hidden from them
+                      feature: |
+                        [Mask Fields Produce policy](/event-gateway/policies/mask-fields-produce/),
+                        [Mask Fields Consume policy](/event-gateway/policies/mask-fields-consume/)
+                      guide: |
+                        [Mask sensitive fields in Kafka messages](/event-gateway/mask-kafka-message-fields/)
+                        or [mask fields selected by schema registry tags](/event-gateway/mask-kafka-message-fields-from-schema/)
                 - usecase: |
                     **Simplify your Kafka deployment** because it's too complicated and expensive
                   outcomes:
@@ -303,10 +317,17 @@ rows:
                     - outcome: |
                         Prevent malformed messages from ever reaching consumers
                       feature: |
-                        [Schema validation - produce phase](/event-gateway/policies/schema-validation-produce/) and 
+                        [Schema validation - produce phase](/event-gateway/policies/schema-validation-produce/) and
                         [Schema validation - consume phase](/event-gateway/policies/schema-validation-consume/)
                       guide: |
                         [Ensure data quality with schema validation](/event-gateway/filter-records-by-classification/)
+                    - outcome: |
+                        Let consumers read data in the format they expect, regardless of how it was produced
+                      feature: |
+                        [Record Transcode Produce policy](/event-gateway/policies/record-transcode-produce/) and
+                        [Record Transcode Consume policy](/event-gateway/policies/record-transcode-consume/)
+                      guide: |
+                        [Consume Kafka records as JSON](/event-gateway/consume-kafka-records-as-json-with-event-gateway/)
                     - outcome: |
                         Onboard apps using OAuth flows developers already know, with no Kafka expertise required
                       feature: |

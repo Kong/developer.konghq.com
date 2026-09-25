@@ -19,6 +19,24 @@ RSpec.describe Jekyll::Drops::KonnectApiRequest do
     end
   end
 
+  describe '#validate_section!' do
+    context 'when section is unrecognized' do
+      let(:yaml) { { 'url' => '/v2/control-planes', 'section' => 'prereq' } }
+
+      it 'raises an error naming the rejected value' do
+        expect { drop }.to raise_error(ArgumentError, /prereq/)
+      end
+    end
+  end
+
+  describe '#config' do
+    let(:yaml) { { 'url' => '/v2/control-planes', 'section' => 'cleanup' } }
+
+    it 'drops section from the instruction config' do
+      expect(drop.config).not_to have_key('section')
+    end
+  end
+
   describe '#snippet_config' do
     it 'targets the region api host' do
       expect(drop.snippet_config['url']).to eq('https://us.api.konghq.com/v2/control-planes')

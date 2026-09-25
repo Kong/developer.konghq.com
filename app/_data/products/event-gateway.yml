@@ -15,9 +15,15 @@ releases:
     version: "1.1.2"
     name: "v1"
   - release: "1.2"
-    latest: true
     release_date: "2026-06-29"
     eol: "2027-06-29"
     sunset: "2028-06-29"
     version: "1.2.1"
+    name: "v1"
+  - release: "1.3"
+    latest: true
+    release_date: "2026-XX-XX"
+    eol: "2027-XX-XX"
+    sunset: "2028-XX-XX"
+    version: "1.3.0"
     name: "v1"

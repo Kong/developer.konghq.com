@@ -191,21 +191,25 @@ konnect:
     setup:
       commands: []
 
+    quickstart:
+      command: curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway -n automated-tests-event-gateway-quickstart -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG
+
     cleanup:
       commands:
-        - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -n automated-tests-event-gateway-quickstart -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -d
+        - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -n automated-tests-event-gateway-quickstart -d
         - docker compose -f /files/event-gateway/docker-compose.yaml down --remove-orphans
         - *delete-auth-servers
         - *delete-directories
 
+    # Teardown only. Every event-gateway how-to starts its own Kafka cluster and runs the
+    # quickstart itself, so the harness must not leave a cluster or a gateway of its own
+    # running underneath the file about to start: how-tos that bring up a different compose
+    # file (SASL, mTLS) reuse the `kafka_cluster` project name, so a leftover container from
+    # the shared stack (schema-registry) would attach to their brokers and create topics.
     reset:
       commands:
-        - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -n automated-tests-event-gateway-quickstart -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -d
+        - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -n automated-tests-event-gateway-quickstart -d
         - docker compose -f /files/event-gateway/docker-compose.yaml down --remove-orphans
-        - docker compose -f /files/event-gateway/docker-compose.yaml up -d
-        - sleep 5
-        - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway -n automated-tests-event-gateway-quickstart -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG | tail -1 >> /env-vars.sh
-        - sleep 5
         # Wipe files a previous test file generated (kafkactl configs, certs, credential
         # scripts) so a stale one can't influence the file about to run.
         - find . -mindepth 1 -delete

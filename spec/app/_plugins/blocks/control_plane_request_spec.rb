@@ -27,6 +27,7 @@ RSpec.describe Jekyll::ControlPlaneRequest do
 
   describe 'html output' do
     include_examples 'a dual-topology content div'
+    include_examples 'a section-aware dual-topology content div'
   end
 
   describe 'markdown output_format' do

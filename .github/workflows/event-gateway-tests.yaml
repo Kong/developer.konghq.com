@@ -6,7 +6,7 @@ on:
         description: "Set to konghq.tech to run against .tech"
         required: false
   schedule:
-  - cron: '0 0 1 * *'
+  - cron: '0 0 * * WED'
 
 concurrency:
   cancel-in-progress: true
