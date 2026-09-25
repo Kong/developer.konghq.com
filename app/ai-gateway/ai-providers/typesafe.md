@@ -136,7 +136,7 @@ targets:
 
 {{ provider.name }}'s API takes a `state` string plus a map of typed `questions`, and returns typed decisions instead of generated text. {{site.ai_gateway}} passes this body through to {{ provider.name }} unmodified. It doesn't translate the body into the OpenAI chat shape, because there's no `messages` or `input` field to translate. See [TypeSafe's API reference](https://docs.typesafe.ai/api) for the full request and response schema. 
 
-`model` is required and must be the AI Model entity's `name`.
+The `model` field is required and must match the AI Model entity's `name`.
 
 For example, this request:
 
@@ -158,7 +158,7 @@ body:
 {% endvalidation %}
 <!-- vale on -->
 
-Returns a response like this:
+Returns a response similar to:
 
 ```json
 {
