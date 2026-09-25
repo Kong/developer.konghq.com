@@ -8,6 +8,17 @@ module Jekyll
     class TerraformRenderer
       RESOURCE_PREFIX = "  provider = konnect-beta\n"
       HCL_IDENTIFIER = /\A[A-Za-z_][A-Za-z0-9_-]*\z/
+      # Field names the pinned provider models as int-or-string wrapper
+      # objects: every provider instance of a bare name here has the wrapper
+      # shape. `client`, `overall`, and `random` match only under `sampling`.
+      WRAPPER_FIELD_NAMES = %w[
+        percentage
+        standard_deviation_factor
+        active_request_bias
+        healthy_panic_threshold
+        target_port
+      ].freeze
+      SAMPLING_FIELD_NAMES = %w[client overall random].freeze
       RESOURCE_SUFFIX = <<-HCL
   labels   = {
   "kuma.io/mesh" = konnect_mesh.my_mesh.name
@@ -73,27 +84,47 @@ module Jekyll
         "#{indent}#{hcl_key(key)} = [\n#{entries}#{indent}]#{trailing_comma(in_array, last)}\n"
       end
 
-      def convert_scalar(key, value, indent_level, in_array, last, _parent_key, array_key)
+      def convert_scalar(key, value, indent_level, in_array, last, parent_key, array_key)
         indent = '  ' * indent_level
         prefix = in_array ? '' : "#{hcl_key(key)} = "
-        rendered = if json_patch_value?(key, array_key)
-                     json_patch_value(value)
-                   else
-                     format_value(value, indent)
-                   end
+        rendered = scalar_rendering(key, value, indent, parent_key, array_key)
         return "#{indent}#{prefix}#{rendered}#{trailing_comma(in_array, last)}\n" unless heredoc?(rendered, in_array)
 
         "#{indent}#{prefix}#{rendered}#{trailing_comma(in_array, last).sub(',', "\n#{indent},")}\n"
       end
 
-      # The provider types jsonPatches[].value as a string holding RFC 7159
-      # JSON text, so a scalar patch value renders as its JSON encoding.
-      def json_patch_value?(key, array_key)
-        key == 'value' && array_key == 'jsonPatches'
+      def scalar_rendering(key, value, indent, parent_key, array_key)
+        # The provider types jsonPatches[].value as a string holding RFC 7159
+        # JSON text, so a scalar patch value renders as its JSON encoding.
+        return json_patch_value(value) if key == 'value' && array_key == 'jsonPatches'
+
+        wrapper = wrapper_object(key, value, parent_key)
+        return wrapper unless wrapper.nil?
+
+        format_value(value, indent)
       end
 
       def json_patch_value(value)
         format_scalar(JSON.generate(value))
+      end
+
+      # Renders a field the provider models as an int-or-string wrapper as a
+      # wrapper object: Integer/Float as an `integer` attribute, String as a
+      # `str` attribute. Other value classes keep their plain rendering.
+      def wrapper_object(key, value, parent_key)
+        return nil unless wrapper_field?(key, parent_key)
+
+        case value
+        when Integer, Float then "{ integer = #{value} }"
+        when String then "{ str = #{format_scalar(value)} }"
+        end
+      end
+
+      def wrapper_field?(key, parent_key)
+        snake_key = snake_case(key)
+        return true if WRAPPER_FIELD_NAMES.include?(snake_key)
+
+        SAMPLING_FIELD_NAMES.include?(snake_key) && snake_case(parent_key.to_s) == 'sampling'
       end
 
       def heredoc?(rendered, in_array)

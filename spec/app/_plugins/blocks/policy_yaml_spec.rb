@@ -464,6 +464,160 @@ RSpec.describe Jekyll::RenderPolicyYaml do
     end
   end
 
+  describe 'Provider int-or-string wrapper fields' do
+    let(:template) do
+      <<~LIQUID
+        {% policy_yaml %}
+        ```yaml
+        type: MeshFaultInjection
+        mesh: default
+        name: abort-some
+        spec:
+          targetRef:
+            kind: Mesh
+          to:
+            - targetRef:
+                kind: Mesh
+              default:
+                http:
+                  - abort:
+                      percentage: 50
+        ```
+        {% endpolicy_yaml %}
+      LIQUID
+    end
+
+    it 'renders an integer percentage as a wrapper object' do
+      tf = render(template).find('div[data-panel="terraform"]').find('code').text
+      expect(tf).to include('percentage = { integer = 50 }')
+    end
+  end
+
+  describe 'Provider int-or-string wrapper fields with string values' do
+    let(:template) do
+      <<~LIQUID
+        {% policy_yaml %}
+        ```yaml
+        type: MeshFaultInjection
+        mesh: default
+        name: delay-some
+        spec:
+          targetRef:
+            kind: Mesh
+          to:
+            - targetRef:
+                kind: Mesh
+              default:
+                http:
+                  - delay:
+                      percentage: "50.5"
+        ```
+        {% endpolicy_yaml %}
+      LIQUID
+    end
+
+    it 'renders a string percentage as a wrapper object with a str attribute' do
+      tf = render(template).find('div[data-panel="terraform"]').find('code').text
+      expect(tf).to include('percentage = { str = "50.5" }')
+    end
+  end
+
+  describe 'Provider sampling wrapper fields' do
+    let(:template) do
+      <<~LIQUID
+        {% policy_yaml %}
+        ```yaml
+        type: MeshTrace
+        mesh: default
+        name: sampled-tracing
+        spec:
+          targetRef:
+            kind: Mesh
+          default:
+            sampling:
+              client: 100
+              overall: 100
+              random: 10
+        ```
+        {% endpolicy_yaml %}
+      LIQUID
+    end
+
+    it 'renders each sampling field as a wrapper object' do
+      tf = render(template).find('div[data-panel="terraform"]').find('code').text
+      expect(tf).to include('client = { integer = 100 }')
+      expect(tf).to include('overall = { integer = 100 }')
+      expect(tf).to include('random = { integer = 10 }')
+    end
+  end
+
+  describe 'Provider wrapper fields of MeshCircuitBreaker and MeshLoadBalancingStrategy' do
+    let(:template) do
+      <<~LIQUID
+        {% policy_yaml %}
+        ```yaml
+        type: MeshCircuitBreaker
+        mesh: default
+        name: split-errors
+        spec:
+          targetRef:
+            kind: Dataplane
+            labels:
+              app: web
+          to:
+            - targetRef:
+                kind: MeshService
+                name: backend
+              default:
+                outlierDetection:
+                  detectors:
+                    successRate:
+                      minimumHosts: 5
+                      standardDeviationFactor: "1.9"
+        ```
+        {% endpolicy_yaml %}
+      LIQUID
+    end
+
+    it 'renders standardDeviationFactor as a wrapper object and keeps other numerics plain' do
+      tf = render(template).find('div[data-panel="terraform"]').find('code').text
+      expect(tf).to include('standard_deviation_factor = { str = "1.9" }')
+      expect(tf).to include('minimum_hosts = 5')
+    end
+  end
+
+  describe 'Provider wrapper fields and plain numeric fields side by side' do
+    let(:template) do
+      <<~LIQUID
+        {% policy_yaml %}
+        ```yaml
+        type: MeshLoadBalancingStrategy
+        mesh: default
+        name: least-request
+        spec:
+          to:
+            - targetRef:
+                kind: MeshService
+                name: backend
+              default:
+                loadBalancer:
+                  type: LeastRequest
+                  leastRequest:
+                    choiceCount: 4
+                    activeRequestBias: 1
+        ```
+        {% endpolicy_yaml %}
+      LIQUID
+    end
+
+    it 'wraps activeRequestBias and keeps choiceCount and weight plain' do
+      tf = render(template).find('div[data-panel="terraform"]').find('code').text
+      expect(tf).to include('active_request_bias = { integer = 1 }')
+      expect(tf).to include('choice_count = 4')
+      expect(tf).not_to include('choice_count = {')
+    end
+  end
+
   describe 'ExternalService Terraform resource naming' do
     let(:template) do
       <<~LIQUID
