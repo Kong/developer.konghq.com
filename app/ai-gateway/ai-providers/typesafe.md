@@ -175,6 +175,7 @@ Returns a response like this:
   }
 }
 ```
+{:.no-copy-code}
 
 Note the following:
 
