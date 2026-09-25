@@ -53,7 +53,7 @@ rows:
                 text: |
                   {{site.context_mesh}} is designed to make enterprise APIs and MCP servers usable by AI agents without adding integration complexity to your teams.
 
-                  * **No per-agent integration code**: Generate the MCP server from an existing OpenAPI spec. The agent uses your API without anyone writing an SDK or per-agent glue.
+                  * **One agent, many sources**: Aggregate sources (OpenAPI specs, existing MCP servers) into a single source of truth for agents.
                   * **One place to manage agent context**: Every MCP server you create is registered in {{site.konnect_product_name}} alongside the rest of your API infrastructure, not scattered across developer laptops.
                   * **Traffic stays on Kong**: Because each MCP server runs on a {{site.konnect_short_name}} control plane, agent calls to your APIs pass through Kong and can be governed with the plugins you already use.
                   * **One agent, many APIs**: Connect an agent to several {{site.context_mesh}} MCP servers at once and let it decide which to call to complete a task.
