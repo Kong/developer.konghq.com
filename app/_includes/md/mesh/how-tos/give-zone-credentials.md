@@ -1,28 +1,5 @@
-{% if include.create_control_plane %}
-## Create a Mesh 3 global control plane
-
-Create a **new** control plane. Do not use this procedure to upgrade an existing deployment.
-The API defaults to v2, so specify `version: v3` explicitly:
-
-```sh
-curl --fail-with-body -sS -X POST \
-  "https://$KONNECT_REGION.api.konghq.com/v1/mesh/control-planes" \
-  -H "Authorization: Bearer $KONNECT_TOKEN" \
-  -H 'Content-Type: application/json' \
-  -d '{"name":"example-cp","version":"v3"}'
-```
-
-Export the returned control plane `id`:
-
-```sh
-export CONTROL_PLANE_ID='YOUR_CONTROL_PLANE_ID'
-```
-{% endif %}
-
-## Give the zone credentials to connect
-
 The zone uses a system account access token with the `Connector` role on this control plane.
-This authenticates configuration exchange with Konnect; it does not issue workload identities.
+This authenticates configuration exchange with {{site.konnect_short_name}}; it does not issue workload identities.
 
 Create a system account:
 

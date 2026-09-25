@@ -9,7 +9,7 @@ icon: meshretry.png
 related_resources:
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
-- text: Migrate policies to {{site.mesh_product_name}} 3
+- text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshretry"
 - text: MeshTimeout policy
   url: "/mesh/policies/meshtimeout/"
@@ -27,7 +27,7 @@ or a rate limit that clears in a second or two.
 A newly created mesh usually includes a mesh-wide retry policy, in which case a narrower
 policy changes that behavior for selected traffic rather than introducing retries for the
 first time. Some meshes are created without it. See
-[the initial defaults](#defaults-and-disabling-retries) below.
+[the initial defaults](#defaults-and-disabling-retries).
 
 {:.warning}
 > Retries multiply load on a struggling destination. Pair a retry policy with
@@ -109,7 +109,7 @@ The initial policy is named `mesh-retry-all-<mesh>`, so `mesh-retry-all-default`
 {:.info}
 > Unlike [MeshTimeout](/mesh/policies/meshtimeout/), retry defaults live only in that policy.
 > A mesh created with `skipCreatingInitialPolicies`, which includes a mesh created by a
-> Konnect control plane, has no `MeshRetry` and therefore no retries at all: the generated
+> {{site.konnect_short_name}} control plane, has no `MeshRetry` and therefore no retries at all: the generated
 > route carries no retry policy and each request is attempted once. On such a mesh your first
 > `MeshRetry` does introduce retries for the first time.
 

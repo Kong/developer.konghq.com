@@ -1,7 +1,7 @@
 metadata:
   title: "{{site.mesh_product_name}} in {{site.konnect_short_name}}"
   content_type: landing_page
-  description: Choose Kubernetes or Universal and an installation method for Kong Mesh with a Konnect-managed global control plane.
+  description: Choose Kubernetes or Universal and an installation method for {{site.mesh_product_name}} with a {{site.konnect_short_name}}-managed global control plane.
   products:
     - mesh
   tags:
@@ -21,7 +21,7 @@ rows:
   - header:
       type: h2
       text: Where will your zone run?
-      description: Start with the Konnect UI for a guided setup. Choose the API for scripted setup, or Terraform to manage the deployment as infrastructure as code.
+      description: Start with the {{site.konnect_short_name}} UI for a guided setup. Choose the API for scripted setup, or Terraform to manage the deployment as infrastructure as code.
     column_count: 2
     columns:
       - blocks:
@@ -31,7 +31,7 @@ rows:
               featured: true
               description: Deploy a zone control plane in your Kubernetes cluster and connect application Pods to the mesh.
               ctas:
-                - text: Set up with the Konnect UI
+                - text: Set up with the {{site.konnect_short_name}} UI
                   url: /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui/
                 - text: Set up with the API
                   url: /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-api/
@@ -43,7 +43,7 @@ rows:
               title: Virtual machines and bare metal
               description: Deploy a Universal zone control plane and run proxies alongside applications outside Kubernetes.
               ctas:
-                - text: Set up with the Konnect UI
+                - text: Set up with the {{site.konnect_short_name}} UI
                   url: /mesh/configure-mesh-global-control-plane-on-universal-with-konnect-ui/
                 - text: Set up with the API
                   url: /mesh/configure-mesh-global-control-plane-on-universal-with-konnect-api/
@@ -60,6 +60,6 @@ rows:
       - blocks:
           - type: text
             config: |
-              - **Run the control plane yourself:** Follow the [self-hosted Mesh 3 quickstart](/mesh/get-started/universal/install/).
+              - **Run the control plane yourself:** Follow the [self-hosted {{site.mesh_product_name}} 3.x quickstart](/mesh/get-started/universal/install/).
               - **Upgrade an existing 2.x mesh:** Review [identity and mTLS](/mesh/migrate-mtls-to-meshidentity/), [zone proxies](/mesh/migrate-zone-proxies-to-3/), and [policy migration](/mesh/migrate-policies-to-3/).
-              - **Understand Mesh 3 before installing:** Explore the [core concepts](/mesh/#understand-how-kong-mesh-works).
+              - **Understand {{site.mesh_product_name}} 3.x before installing:** Explore the [core concepts](/mesh/#understand-how-kong-mesh-works).

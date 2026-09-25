@@ -82,7 +82,7 @@ docker exec --detach kong-mesh-demo-kv \
 
 {:.warning}
 > `--skip-verify` skips TLS verification of the control plane certificate. It is here because the
-> demo control plane uses a self-signed certificate. Never use it outside a demo — give
+> demo control plane uses a self-signed certificate. Never use it outside a demo; give
 > `kuma-dp` the CA with `--ca-cert-file` instead.
 
 `--dataplane-file` applies the `Dataplane` as the proxy starts, so there is no separate step.

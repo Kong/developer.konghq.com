@@ -1,6 +1,6 @@
 ---
 title: "Migrate mesh mTLS to MeshIdentity"
-description: "Move workload certificate issuance, trust, TLS mode, and authorization from Mesh.mtls to MeshIdentity before upgrading to {{site.mesh_product_name}} 3."
+description: "Move workload certificate issuance, trust, TLS mode, and authorization from Mesh.mtls to MeshIdentity before upgrading to {{site.mesh_product_name}} 3.x."
 content_type: reference
 layout: reference
 products:
@@ -13,11 +13,11 @@ tags:
   - security
   - mtls
 related_resources:
-  - text: Check readiness for Mesh 3
+  - text: Check readiness for {{site.mesh_product_name}} 3.x
     url: /mesh/check-upgrade-readiness/
-  - text: Migrate zone proxies to Mesh 3
+  - text: Migrate zone proxies to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-zone-proxies-to-3/
-  - text: Migrate policies to {{site.mesh_product_name}} 3
+  - text: Migrate policies to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-policies-to-3/
   - text: MeshIdentity reference
     url: /mesh/policies/meshidentity/
@@ -59,7 +59,7 @@ control planes are still running 2.x.
 
 Use this order for each mesh:
 
-1. [Run the Mesh 3 readiness checker](/mesh/check-upgrade-readiness/) against the complete estate
+1. [Run the {{site.mesh_product_name}} 3.x readiness checker](/mesh/check-upgrade-readiness/) against the complete estate
    and save the report. Use its identity, trust, service-model, permission, and zone-egress
    findings to scope this migration.
 1. Upgrade to the latest supported 2.x release in your upgrade path. The control planes must
@@ -264,7 +264,7 @@ Choose the provider that replaces the enabled backend:
 | `certmanager` | `CertManager` | Move the issuer settings to the matching enterprise provider. |
 | `vault` | `Vault` | Move the Vault settings to the matching enterprise provider. |
 
-The examples below cover `builtin` and `provided`. An external issuer can publish trust through
+The following examples cover `builtin` and `provided`. An external issuer can publish trust through
 its own provider integration, so follow that provider's trust instructions instead of assuming
 that it creates a PEM-backed `MeshTrust`.
 
@@ -450,7 +450,7 @@ connected proxy once more. Only then is the mesh ready for its first 3.x zone up
 - Allowed, denied, plaintext, cross-zone and external-service traffic behave as designed.
 
 After every mesh meets these conditions, rerun the
-[Mesh 3 readiness checker](/mesh/check-upgrade-readiness/) while the control planes are still on
+[{{site.mesh_product_name}} 3.x readiness checker](/mesh/check-upgrade-readiness/) while the control planes are still on
 the latest supported 2.14 patch. Resolve any remaining blocker or coverage gap before upgrading a
 zone. The checker cannot prove that certificates work together or that traffic is correctly
-allowed and denied, so retain the validation above as a separate gate.
+allowed and denied, so retain this validation as a separate gate.

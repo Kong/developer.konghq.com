@@ -1,6 +1,6 @@
 ---
 title: Deploy a Universal data plane proxy
-description: Running kuma-dp on a VM or container host — the Dataplane resource, tokens, transparent proxying, and health.
+description: "Running kuma-dp on a VM or container host: the Dataplane resource, tokens, transparent proxying, and health."
 content_type: reference
 layout: reference
 products:
@@ -82,7 +82,7 @@ rows:
   - label: "`kuma.io/workload`"
     effect: "Names the workload this proxy belongs to. The control plane generates one `MeshService` per distinct value, and the SPIFFE ID defaults to `/workload/{value}`. Without it, no `MeshService` is generated and the workload has nothing for a policy or route to target."
   - label: "Your own labels"
-    effect: "Anything else you set — `app`, `version`, `team` — is what `spec.targetRef.labels` and `MeshService.spec.selector.dataplaneLabels` match on."
+    effect: "Anything else you set (`app`, `version`, `team`) is what `spec.targetRef.labels` and `MeshService.spec.selector.dataplaneLabels` match on."
 {% endtable %}
 
 `kuma.io/workload` has to be a valid RFC 1035 DNS label, since it becomes a `MeshService` name.
@@ -105,7 +105,7 @@ rows:
   - field: "`name`"
     meaning: "Names the port, which is what a policy's `sectionName` refers to. Defaults to the port number as a string."
   - field: "`protocol`"
-    meaning: "`tcp`, `http`, `http2` or `grpc`. **Set this.** See below."
+    meaning: "`tcp`, `http`, `http2` or `grpc`. **Set this.** See the following warning."
   - field: "`servicePort`"
     meaning: "Where traffic is forwarded, if it differs from `port`."
   - field: "`serviceAddress`"
@@ -121,7 +121,7 @@ rows:
 > this in and no longer does. Nothing rejects the `Dataplane`, so the only sign is the policies
 > quietly not applying.
 
-`networking.address` must be a real address — not empty, not `0.0.0.0` or `::`. The admin port,
+`networking.address` must be a real address: not empty, not `0.0.0.0` or `::`. The admin port,
 if set, has to differ from every inbound and outbound port.
 
 ## Outbounds
@@ -147,14 +147,14 @@ networking:
 
 The application then connects to `127.0.0.1:5432` and the proxy carries it to the destination.
 
-`backendRef` is required — an outbound without one is rejected with `backendRef: must be
+`backendRef` is required: an outbound without one is rejected with `backendRef: must be
 defined`. `kind` is `MeshService`, `MeshExternalService` or `MeshMultiZoneService`, and the
 reference takes **either** `name` **or** `labels`, never both: `either 'name' or 'labels' should
 be specified`.
 
 {:.warning}
 > `networking.outbound[].tags` is removed. A stored `Dataplane` still carrying tags keeps being
-> served, the tags are discarded, and no outbound listener is generated — so the workload loses
+> served, the tags are discarded, and no outbound listener is generated, so the workload loses
 > connectivity to that destination with nothing reported. Rewrite these before upgrading.
 
 ## Transparent proxying
@@ -171,7 +171,7 @@ kuma-dp run \
 ```
 
 `--transparent-proxy-config` takes a file, a comma-separated list of files, or `-` for stdin,
-and can be repeated — later values override earlier ones. That is how the redirect ports,
+and can be repeated (later values override earlier ones). That is how the redirect ports,
 excluded ranges and DNS settings are tuned.
 
 With transparent proxying on, `--dns-enabled` runs the embedded DNS proxy so the workload
@@ -267,7 +267,7 @@ newline so it can be redirected straight into that file.
 
 Once the `Dataplane` is applied and the proxy is connected, the zone control plane generates the
 `MeshService` for its `kuma.io/workload` value, allocates a VIP and hostname, and creates the
-matching `Workload` resource — checked every two seconds by default.
+matching `Workload` resource (checked every two seconds by default).
 
 So the ongoing task on Universal is keeping `Dataplane` resources accurate. The rest follows
 from them. See [{{site.mesh_product_name}} on Universal](/mesh/universal/) for the full split of

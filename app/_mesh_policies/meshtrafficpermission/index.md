@@ -14,7 +14,7 @@ tags:
 related_resources:
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
-- text: Migrate policies to {{site.mesh_product_name}} 3
+- text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshtrafficpermission"
 - text: MeshIdentity policy
   url: "/mesh/policies/meshidentity/"
@@ -274,7 +274,7 @@ kubectl get dataplanes.kuma.io DESTINATION_DATAPLANE -n DESTINATION_NAMESPACE -o
 ```
 
 Copy the intended inbound's `name` into `targetRef.sectionName`. If it has no name, use its
-`port` as a quoted string, such as `"8080"`. The example below assumes an inbound named
+`port` as a quoted string, such as `"8080"`. The following example assumes an inbound named
 `backend-admin-api`. It denies `observability` access on that inbound even when another
 applicable policy allows that namespace.
 
@@ -320,8 +320,8 @@ the value must be a DNS subdomain.
 
 To find the value, inspect the zone-egress proxy's Envoy `/config_dump`. Find the filter chain
 for the external service and read `filter_chain_match.server_names`. Copy the corresponding
-server name into `rules[].default.deny[].sni.value`. The value below is an example of that
-internal routing name; it is not the external service's public hostname.
+server name into `rules[].default.deny[].sni.value`. The value in the following example is
+that internal routing name; it is not the external service's public hostname.
 
 {% policy_yaml namespace=kong-mesh-system %}
 ```yaml

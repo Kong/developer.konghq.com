@@ -1,6 +1,6 @@
 ---
-title: "Migrate zone proxies to {{site.mesh_product_name}} 3"
-description: Replace shared ZoneIngress and ZoneEgress deployments with mesh-scoped Dataplanes before upgrading zone control planes to Mesh 3.
+title: "Migrate zone proxies to {{site.mesh_product_name}} 3.x"
+description: Replace shared ZoneIngress and ZoneEgress deployments with mesh-scoped Dataplanes before upgrading zone control planes to {{site.mesh_product_name}} 3.x.
 content_type: reference
 layout: reference
 products:
@@ -12,18 +12,18 @@ tags:
   - upgrade
   - multi-zone
 related_resources:
-  - text: Check readiness for Mesh 3
+  - text: Check readiness for {{site.mesh_product_name}} 3.x
     url: /mesh/check-upgrade-readiness/
   - text: Mesh-scoped zone proxies
     url: /mesh/mesh-scoped-zone-proxies/
   - text: Migrate mesh mTLS to MeshIdentity
     url: /mesh/migrate-mtls-to-meshidentity/
-  - text: Migrate policies to Mesh 3
+  - text: Migrate policies to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-policies-to-3/
 ---
 
 Replace legacy `ZoneIngress` and `ZoneEgress` proxies while your deployment still runs a
-2.x version that supports both models. In {{site.mesh_product_name}} 3, zone proxies are
+2.x version that supports both models. In {{site.mesh_product_name}} 3.x, zone proxies are
 ordinary `Dataplane` resources with `ZoneIngress` or `ZoneEgress` listeners, and each belongs
 to one mesh.
 
@@ -39,7 +39,7 @@ to verify before removing the old proxies.
 
 ## Choose the transition release
 
-Start by [running the Mesh 3 readiness checker](/mesh/check-upgrade-readiness/) against the
+Start by [running the {{site.mesh_product_name}} 3.x readiness checker](/mesh/check-upgrade-readiness/) against the
 complete estate. Its report identifies legacy ZoneIngress and ZoneEgress resources, related
 `Mesh` settings, and version or control plane configuration that blocks the upgrade. Save the
 report as the baseline for the migration.
@@ -50,7 +50,7 @@ upgrade instructions for that release. Verify compatibility for the global contr
 all affected zones and data plane versions before starting the traffic migration.
 
 Do not treat the presence of the new API alone as proof that every required migration fix is
-available in your installed patch release. Rehearse the sequence below with the exact chart
+available in your installed patch release. Rehearse the following sequence with the exact chart
 and images you plan to use. This guide does not replace the product's supported version
 upgrade sequence.
 
@@ -195,7 +195,7 @@ try to resolve the failure.
 {:.warning}
 > **Restart the zone proxies after upgrading a zone control plane.** A zone-proxy Pod keeps
 > the data-plane image it was admitted with, so upgrading the control plane alone leaves it
-> running the previous `kuma-dp`. {{site.mesh_product_name}} 3 removed state-of-the-world xDS,
+> running the previous `kuma-dp`. {{site.mesh_product_name}} 3.x removed state-of-the-world xDS,
 > and a proxy whose bootstrap still requests it never receives configuration at all:
 >
 > ```
@@ -207,7 +207,7 @@ try to resolve the failure.
 > The Pod stays `Running` and `Ready` while this repeats, and its listeners keep whatever
 > they last held, so the failure surfaces only as cross-zone requests returning `503`.
 > Restart the ingress and egress Deployments, then confirm the new Pods run the expected
-> image and that the message above has stopped:
+> image and that the SOTW gRPC config stream error has stopped:
 >
 > ```sh
 > kubectl -n {{site.mesh_namespace}} rollout restart deploy/kong-mesh-default-ingress deploy/kong-mesh-default-egress
@@ -240,7 +240,7 @@ standalone zone proxies. Repeat the traffic checks after each zone upgrade and u
 dashboards that still query legacy proxy resources or insight endpoints.
 
 Before the first zone upgrade, rerun the
-[Mesh 3 readiness checker](/mesh/check-upgrade-readiness/) while all control planes are still on
+[{{site.mesh_product_name}} 3.x readiness checker](/mesh/check-upgrade-readiness/) while all control planes are still on
 the latest supported 2.14 patch. Resolve every remaining legacy zone-proxy finding and coverage
 gap. The report cannot verify addresses, firewall rules, capacity, or live traffic, so it does not
 replace the checks in this guide.

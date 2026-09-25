@@ -1,6 +1,6 @@
 ---
 title: "{{site.mesh_product_name}} CLI"
-description: Reference for kongctl, the CLI for working with {{site.mesh_product_name}} 3 control planes and their resources.
+description: Reference for kongctl, the CLI for working with {{site.mesh_product_name}} 3.x control planes and their resources.
 content_type: reference
 layout: reference
 products:
@@ -15,17 +15,17 @@ works_on:
 related_resources:
   - text: How policies select traffic
     url: /mesh/policy-targeting/
-  - text: Migrate policies to {{site.mesh_product_name}} 3
+  - text: Migrate policies to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-policies-to-3/
   - text: MeshIdentity
     url: /mesh/policies/meshidentity/
 ---
 
-`kongctl` is the CLI for {{site.mesh_product_name}} 3, replacing `kumactl`. It talks to a
-control plane over its HTTP API and works the same way against Konnect and a self-managed
+`kongctl` is the CLI for {{site.mesh_product_name}} 3.x, replacing `kumactl`. It talks to a
+control plane over its HTTP API and works the same way against {{site.konnect_short_name}} and a self-managed
 control plane.
 
-One difference from `kumactl` shapes everything below: **`kongctl` learns the resource types
+One difference from `kumactl` shapes every command in this reference: **`kongctl` learns the resource types
 from the control plane itself**, by reading what the control plane serves rather than carrying a
 compiled-in list. A policy added in a newer {{site.mesh_product_name}} release is usable without
 upgrading the CLI, and `kongctl get mesh resource-types` is the authoritative list for the
@@ -36,7 +36,7 @@ API and are not supported.
 
 ## Authenticating
 
-Against Konnect, log in once:
+Against {{site.konnect_short_name}}, log in once:
 
 ```sh
 kongctl login
@@ -63,10 +63,10 @@ columns:
     key: config
 rows:
   - flag: "`--control-plane-id`"
-    what: "A Konnect control plane by ID."
+    what: "A {{site.konnect_short_name}} control plane by ID."
     config: "`konnect.mesh.control-plane.id`"
   - flag: "`--control-plane-name`"
-    what: "A Konnect control plane by name."
+    what: "A {{site.konnect_short_name}} control plane by name."
     config: "`konnect.mesh.control-plane.name`"
   - flag: "`--control-plane-url`"
     what: "A self-managed control plane by API URL. Takes precedence over `--control-plane-id`."
@@ -79,7 +79,7 @@ rows:
     config: "—"
 {% endtable %}
 
-Setting the control plane in configuration once is what makes the examples below readable; every
+Setting the control plane in configuration once is what makes the following examples readable; every
 one of them would otherwise carry `--control-plane-id <id>`.
 
 To see what is available:
@@ -106,7 +106,7 @@ kongctl get mesh meshtimeouts slow -o yaml
 kongctl get mesh meshtrafficpermissions --all-meshes
 ```
 
-A type can be given as its plural name, its singular, or its short alias — `meshtrafficpermissions`,
+A type can be given as its plural name, its singular, or its short alias: `meshtrafficpermissions`,
 `meshtrafficpermission` and `mtp` all work, and matching is case-insensitive.
 `resource-types` lists the aliases.
 
@@ -155,7 +155,7 @@ kongctl get mesh inspect zones
 ```
 
 `inspect dataplane` reports per port rather than per proxy, because that is where a policy
-actually lands — one applying to a proxy's inbound but not its outbounds is the case that is
+actually lands. One applying to a proxy's inbound but not its outbounds is the case that is
 hard to see any other way:
 
 ```
@@ -188,7 +188,7 @@ rows:
 
 Everything but `policies` is relayed from the proxy's Envoy admin interface verbatim, so it
 needs the zone connected to the control plane and the proxy reachable from the zone. A failure
-at either hop is reported as it arrives — `zone is offline` when the zone is down, and a
+at either hop is reported as it arrives: `zone is offline` when the zone is down, and a
 connection error naming the admin port when the proxy is.
 
 ### Exporting a control plane
@@ -222,8 +222,8 @@ rows:
 {% endtable %}
 
 {:.warning}
-> On `dump mesh`, `--profile` means the export profile above, and the global `-p, --profile`
-> flag that selects a `kongctl` configuration profile is not available on this command. Use a
+> On `dump mesh`, `--profile` means the export profile, not the global `-p, --profile`
+> flag that selects a `kongctl` configuration profile; that flag is not available on this command. Use a
 > different command, or set the configuration profile another way, if you need both.
 
 ### Issuing tokens
@@ -239,8 +239,8 @@ kongctl create mesh zone-token --zone zone-1 --valid-for 720h > token
 Both write the token to stdout with no trailing newline, so the output can be redirected
 straight into the file `kuma-dp` reads.
 
-Bind a dataplane token as narrowly as the deployment allows — `--name`, `--workload`, or
-`--tag` — rather than to the mesh alone. A token bound only to a mesh authenticates any proxy in
+Bind a dataplane token as narrowly as the deployment allows (`--name`, `--workload`, or
+`--tag`) rather than to the mesh alone. A token bound only to a mesh authenticates any proxy in
 it.
 
 {% table %}
@@ -331,6 +331,6 @@ kongctl get mesh --help
 kongctl create mesh dataplane-token --help
 ```
 
-`kongctl` covers the whole of Konnect, not only {{site.mesh_product_name}}, so its top-level
+`kongctl` covers the whole of {{site.konnect_short_name}}, not only {{site.mesh_product_name}}, so its top-level
 command list is longer than what is documented here. The `mesh` subcommand of `get`, `create`,
 `delete` and `dump` is the {{site.mesh_product_name}} surface.

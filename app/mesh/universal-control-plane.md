@@ -1,6 +1,6 @@
 ---
 title: Deploy a Universal control plane
-description: Running kuma-cp outside Kubernetes — modes, stores, and joining a zone to a global control plane.
+description: "Running kuma-cp outside Kubernetes: modes, stores, and joining a zone to a global control plane."
 content_type: reference
 layout: reference
 products:
@@ -49,7 +49,7 @@ validation at startup otherwise, and the Helm chart fails at template time.
 {:.warning}
 > A Global control plane cannot run on Kubernetes. `mode: global` is rejected with
 > `environment: kubernetes`, and rejected again with `store.type: kubernetes`. It must run
-> `environment: universal` against a non-Kubernetes store — PostgreSQL in any real deployment —
+> `environment: universal` against a non-Kubernetes store (PostgreSQL in any real deployment),
 > even if the `kuma-cp` process itself is deployed onto a Kubernetes cluster. Zone control
 > planes on Kubernetes are unaffected.
 
@@ -85,8 +85,8 @@ store:
       mode: verifyCa
 ```
 
-Every field has a `KUMA_STORE_POSTGRES_*` equivalent — `KUMA_STORE_POSTGRES_HOST`,
-`_PORT`, `_USER`, `_PASSWORD`, `_DB_NAME` — which is usually how the password is supplied.
+Every field has a `KUMA_STORE_POSTGRES_*` equivalent: `KUMA_STORE_POSTGRES_HOST`,
+`_PORT`, `_USER`, `_PASSWORD`, `_DB_NAME`, which is usually how the password is supplied.
 
 ## A single zone
 
@@ -133,7 +133,7 @@ store:
     dbName: kuma
 ```
 
-The zone `name` is mandatory and has to be a valid RFC 1035 DNS label — lower-case letters,
+The zone `name` is mandatory and has to be a valid RFC 1035 DNS label: lower-case letters,
 digits and dashes, starting with a letter. It is not cosmetic: the name is stamped onto every
 resource the zone owns, appears in KRIs, and is what a
 [MeshMultiZoneService](/mesh/meshmultizoneservice/) selects zones by.
@@ -161,7 +161,7 @@ store:
 from the environment automatically: `serviceAccountToken` on Kubernetes, `dpToken` on
 Universal.
 
-On Universal that means every proxy — including the zone proxies that carry cross-zone traffic —
+On Universal that means every proxy (including the zone proxies that carry cross-zone traffic)
 presents a **dataplane token**:
 
 ```sh
@@ -207,7 +207,7 @@ on Universal as on Kubernetes. What differs is the default SPIFFE path: `/worklo
 on Universal, against `/ns/{namespace}/sa/{service-account}` on Kubernetes. The workload name
 comes from the `kuma.io/workload` label on the `Dataplane`.
 
-Without a `MeshIdentity`, proxies get no certificate and therefore no mTLS —
+Without a `MeshIdentity`, proxies get no certificate and therefore no mTLS:
 `Mesh.mtls` is removed in 3.0 and is no longer an identity source.
 
 ## Monitoring
