@@ -494,7 +494,7 @@ If you omit `access.metadata`, `access.auth_strategies` still authenticates requ
 
 Access control and AI Auth Strategies govern who can reach the AI MCP Server. Separately, [`config.upstream.auth`](#schema-aigateway-mcpserver-config-upstream) controls how {{site.ai_gateway}} authenticates itself when forwarding tool-call requests to the upstream service. By default, {{site.ai_gateway}} proxies these requests without adding credentials.
 
-This applies to any mode that connects directly to an upstream service: `conversion-only`, `conversion-listener`, `passthrough-listener`, and `upstream-server`. A `listener` AI MCP Server has no upstream of its own, since it only aggregates tools from other AI MCP Servers. `config.upstream.auth` is also distinct from [`config.server.tools_list_auth`](#tool-list-authentication), which only authenticates the one-time fetch of an `upstream-server`'s tool list, not the tool-call requests themselves.
+This applies to the following modes that connect directly to an upstream service: `passthrough-listener`. A `listener` AI MCP Server has no upstream of its own, since it only aggregates tools from other AI MCP Servers. `config.upstream.auth` is also distinct from [`config.server.tools_list_auth`](#tool-list-authentication), which only authenticates the one-time fetch of an `upstream-server`'s tool list, not the tool-call requests themselves.
 
 Some upstream services don't accept bearer tokens or API keys at all, and only accept requests signed with AWS IAM (SigV4), such as a service fronted by an IAM-protected Amazon API Gateway. For these, set `config.upstream.auth.type` to `aws`.
 
