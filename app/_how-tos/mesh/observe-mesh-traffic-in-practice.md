@@ -63,7 +63,7 @@ rows:
     solution: "Automated Propagation: The mesh handles span generation and context preservation."
   - challenge: Visibility
     without_mesh: Siloed monitoring tools across clouds.
-    solution: "Unified Global View: Multi-zone MADS aggregates service targets into a single source of truth for discovery."
+    solution: "Unified Global View: Every proxy in every zone emits the same series, tagged with `mesh`, `zone`, `kuma_workload`, and `kuma_proxy_role`, so one Prometheus and Grafana stack covers the whole deployment."
 {% endtable %}
 <!-- vale on -->
 
@@ -125,7 +125,7 @@ Enable sidecar metrics exposure so Prometheus can scrape them:
 >
 > `MeshMetric` opens port `5670` on each sidecar for Prometheus to scrape. This requires a pod restart to take effect, as the sidecar must bind the new port on startup.
 >
-> Prometheus uses the Monitoring Assignment Discovery Service (MADS) a native HTTP Service Discovery endpoint provided by the Zone Control Plane to automatically discover all sidecars, requiring no manual scrape config.
+> Exposing the port is only half the job. Prometheus still needs a scrape config that targets it, which [Prometheus scrape jobs](#prometheus-scrape-jobs) covers.
 
 {:.info}
 > Envoy binds the metrics listener on the pod IP, not `127.0.0.1`. `http://localhost:5670/metrics` returns `connection refused`, while `http://$POD_IP:5670/metrics` works.
@@ -217,6 +217,19 @@ A `MeshTrace` OpenTelemetry backend references a `MeshOpenTelemetryBackend` reso
              default: "SFO"' | kubectl apply -f -
    ```
 
+1. Confirm the policy resolved its `backendRef`. A `backendRef` that matches no `MeshOpenTelemetryBackend` still leaves the policy accepted, and it exports nothing without reporting an error, so check the status condition:
+
+   ```sh
+   kubectl get meshtrace flight-tracking -n {{site.mesh_namespace}} -o jsonpath='{.status.conditions}'
+   ```
+
+   Expected output:
+
+   ```json
+   [{"message":"All MeshOpenTelemetryBackend references are resolved","reason":"AllBackendRefsResolved","status":"True","type":"BackendRefsResolved"}]
+   ```
+   {:.no-copy-code}
+
 1. Verify traces appear in your backend (Tempo, Jaeger, or another OTLP-capable collector you installed):
 
    ```bash
@@ -275,23 +288,26 @@ Capture structured request logs from every sidecar:
                        value: "%DURATION%"' | kubectl apply -f -
    ```
 
-1. Verify logs are writing immediately (no restart required):
+1. Send a request so there is something to log, then read the log. `MeshAccessLog` takes effect without restarting the workload:
 
    ```bash
-   SRC=$(kubectl get pod -n kong-air-production -l app=passenger-portal -o jsonpath='{.items[0].metadata.name}')
-   kubectl exec -n kong-air-production "$SRC" -c kuma-sidecar -- tail -n 5 /tmp/access.log
+   kubectl exec -n kong-air-production deploy/passenger-portal -- \
+     wget -q -T 5 -O- http://check-in-api.kong-air-production.svc.cluster.local:8080/
+   kubectl exec -n kong-air-production deploy/passenger-portal -c kuma-sidecar -- tail -n 1 /tmp/access.log
    ```
 
    Example output:
 
    ```json
-   {"destination":"check-in-api","duration_ms":4,"source":"passenger-portal_kong-air-production_svc","start_time":"2026-05-21T11:20:02.701Z","status":200}
+   {"destination":"check-in-api","duration_ms":15,"source":"passenger-portal","start_time":"2026-09-23T16:36:03.178Z","status":403}
    ```
    {:.no-copy-code}
 
+   The `403` is expected, and it is what makes this step worth running. The `MeshTrafficPermission` from [Get started with your first policy](/mesh/get-started-with-your-first-policy/) admits only `flight-control` into `check-in-api`, so `wget` reports `server returned error: HTTP/1.1 403 Forbidden` and the sidecar records the refusal. Access logs capture denied requests as well as permitted ones, which is what makes them useful for audit.
+
+   The `source` and `destination` values are the workloads' `kuma.io/workload` labels. Read the log on the calling workload's sidecar, since the file backend writes on the proxy that originates the request. The sidecar creates `/tmp/access.log` at startup, so a workload that has sent no outbound traffic has an empty file rather than a missing one.
+
 {:.info}
-> On Kubernetes, the file-backed access log showed up on the source sidecar after traffic was generated.
->
 > For production, use a TCP backend pointing to your Loki or Fluentd instance instead of a file, or share a `MeshOpenTelemetryBackend` to ship logs over OTLP gRPC.
 
 ## Grafana dashboards
@@ -321,10 +337,10 @@ rows:
     title: Workload Debug
     focus: Envoy-level retries, circuit-breaker state, connection pool saturation, DNS
   - file: "`kuma-zone-ingress.json`"
-    title: Zone Ingress (new)
+    title: Zone Ingress
     focus: Cross-zone inbound traffic, mTLS handshakes, upstream cluster health, xDS delivery
   - file: "`kuma-zone-egress.json`"
-    title: Zone Egress (new)
+    title: Zone Egress
     focus: Outbound traffic to remote zones and external services, MeshExternalService connection metrics
 {% endtable %}
 <!-- vale on -->
@@ -342,27 +358,56 @@ You can also download individual dashboards directly from the [Kuma GitHub repos
 
 ### Option B, ConfigMap auto-provisioning (kube-prometheus-stack)
 
-`kube-prometheus-stack` includes a Grafana sidecar that watches for ConfigMaps labeled `grafana_dashboard: "1"`. Create one ConfigMap per dashboard, then label it:
+`kube-prometheus-stack` includes a Grafana sidecar that watches for ConfigMaps labeled `grafana_dashboard: "1"`. From the directory holding the six downloaded `.json` files, create one ConfigMap for all of them, then label it:
 
 ```bash
-for f in kuma-*.json; do
-  name="kuma-dashboard-${f%.json}"
-  kubectl create configmap "$name" --from-file="$f" -n mesh-observability
-  kubectl label configmap "$name" grafana_dashboard=1 -n mesh-observability
-done
+kubectl create configmap kuma-dashboards -n mesh-observability \
+  --from-file=kuma-control-plane.json \
+  --from-file=kuma-mesh.json \
+  --from-file=kuma-service-health.json \
+  --from-file=kuma-service-debug.json \
+  --from-file=kuma-zone-ingress.json \
+  --from-file=kuma-zone-egress.json
+
+kubectl label configmap kuma-dashboards grafana_dashboard=1 -n mesh-observability
 ```
 
-The sidecar detects the ConfigMaps within seconds and provisions the dashboards automatically into Grafana.
+The sidecar provisions every key in the ConfigMap as its own dashboard, and picks up the change within seconds. The six files total around 450 KB, comfortably inside the 1 MiB limit on a single ConfigMap.
 
 ## Prometheus scrape jobs
 
-The dashboards filter metrics by `job` label and rely on three scrape jobs added under `prometheus.prometheusSpec.additionalScrapeConfigs`:
+Two scrape jobs cover the whole mesh:
 
-- `kuma-dataplanes`: sidecar metrics discovered automatically through {{site.mesh_product_name}}'s native MADS service discovery (`kuma_sd_configs`). Feeds the Workload Health, Workload Debug, and Mesh Drilldown dashboards.
-- `kuma-control-plane`: the Control Plane's own `/metrics` endpoint. Feeds the Control Plane dashboard.
-- `kuma-zone-proxies`: zone ingress and egress metrics scraped from zone proxy pods on port `9902`. Feeds the Zone Ingress and Zone Egress dashboards.
+- `kuma-dataplanes`: proxy metrics on port `5670`, discovered with the Kubernetes pod role. Mesh-scoped zone proxies are ordinary `Dataplane` resources with an injected sidecar, so this one job covers zone ingress and zone egress alongside workload sidecars. Feeds the Mesh Drilldown, Workload Health, Workload Debug, Zone Ingress, and Zone Egress dashboards.
+- `kuma-control-plane`: the control plane's own `/metrics` endpoint on port `5680`. Feeds the Control Plane dashboard.
 
-For the full `additionalScrapeConfigs` values and MADS `kuma_sd_configs` setup, see the canonical [mesh observability](/mesh/observability/) reference.
+Add the proxy job under `prometheus.prometheusSpec.additionalScrapeConfigs`:
+
+```yaml
+- job_name: kuma-dataplanes
+  metrics_path: /metrics
+  kubernetes_sd_configs:
+    - role: pod
+  relabel_configs:
+    - source_labels: [__meta_kubernetes_pod_container_name]
+      regex: kuma-sidecar
+      action: keep
+    - source_labels: [__meta_kubernetes_pod_phase]
+      regex: Running
+      action: keep
+    - source_labels: [__address__]
+      regex: '(.+?)(:[0-9]+)?'
+      target_label: __address__
+      replacement: '${1}:5670'
+    - source_labels: [__meta_kubernetes_pod_name]
+      target_label: pod
+    - source_labels: [__meta_kubernetes_namespace]
+      target_label: namespace
+```
+
+Only the Control Plane dashboard filters on the `job` label, because `kuma-cp` metrics carry no proxy labels. Every sample a proxy emits already carries `mesh`, `zone`, `kuma_workload`, and `kuma_proxy_role` (`sidecar`, `gateway`, `zone-ingress`, or `zone-egress`), so the other five dashboards select proxies by those labels and need no relabeling beyond `pod` and `namespace`.
+
+For the rest of the stack configuration, see the canonical [mesh observability](/mesh/observability/) reference.
 
 ## Validate
 
@@ -381,7 +426,7 @@ For the full `additionalScrapeConfigs` values and MADS `kuma_sd_configs` setup, 
    Expected output, with `destination`, `status`, and `duration_ms` confirming the request was logged:
 
    ```json
-   {"destination":"check-in-api_kong-air-production_svc","duration_ms":4,"source":"flight-control_kong-air-production_svc","start_time":"2026-08-12T09:04:55.455Z","status":200}
+   {"destination":"check-in-api","duration_ms":3,"source":"flight-control","start_time":"2026-09-23T16:30:37.200Z","status":200}
    ```
    {:.no-copy-code}
 

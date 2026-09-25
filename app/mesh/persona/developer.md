@@ -85,7 +85,7 @@ For the SaaS weather feed, the operator has registered a `MeshExternalService`, 
 The developer needs full control over how requests land on these services.
 
 ### Canary routing with `MeshHTTPRoute`
-Launching v2 of the passenger portal? The developer shifts a percentage of traffic to the new version with a `MeshHTTPRoute` to verify its performance before a full rollout. See [Split traffic with MeshService resources](/mesh/split-traffic-with-meshservice-resources/) for weighted canary routing, and [Route across zones with canary rollouts and color rings](/mesh/route-across-zones-with-canary-rollouts-and-color-rings/) for progressive cross-zone rollouts.
+Launching v2 of the passenger portal? The developer shifts a percentage of traffic to the new version with a `MeshHTTPRoute` to verify its performance before a full rollout. See [Split traffic with MeshService resources](/mesh/split-traffic-with-meshservice-resources/) for weighted canary routing.
 
 {:.warning}
 > The traffic hierarchy: routing versus load balancing.

@@ -155,15 +155,6 @@ rows:
               cta:
                 text: Read
                 url: /mesh/configure-mesh-scoped-zone-proxies/
-      - blocks:
-          - type: card
-            config:
-              title: Route across zones with canary rollouts and color rings
-              description: |
-                Weighted canary rollouts and permanent color rings across zones with `MeshMultiZoneService`.
-              cta:
-                text: Read
-                url: /mesh/route-across-zones-with-canary-rollouts-and-color-rings/
 
   - header:
       type: h2
