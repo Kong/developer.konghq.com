@@ -136,6 +136,47 @@ targets:
 
 {{ provider.name }}'s API takes a `state` string plus a map of typed `questions`, and returns typed decisions instead of generated text. {{site.ai_gateway}} passes this body through to {{ provider.name }} unmodified. It doesn't translate the body into the OpenAI chat shape, because there's no `messages` or `input` field to translate. See [TypeSafe's API reference](https://docs.typesafe.ai/api) for the full request and response schema. 
 
+The `model` field is required and must match the AI Model entity's `name`.
+
+For example, this request:
+
+<!-- vale off -->
+{% validation request-check %}
+url: /jev/v1/systemone
+status_code: 200
+method: POST
+headers:
+  - 'Accept: application/json'
+  - 'Content-Type: application/json'
+body:
+  state: "Help! My payouts have been failing for 3 days."
+  model: jev-decisions
+  questions:
+    is_urgent:
+      type: noul
+      instructions: "Does this convey urgency?"
+{% endvalidation %}
+<!-- vale on -->
+
+Returns a response similar to:
+
+```json
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "is_urgent": {
+      "type": "noul",
+      "noul": 0.95
+    }
+  },
+  "usage": {
+    "input_tokens": 283,
+    "output_tokens": 23
+  }
+}
+```
+{:.no-copy-code}
+
 Note the following:
 
 * The response's `answers` field is a map keyed by the question's name, not an array.
