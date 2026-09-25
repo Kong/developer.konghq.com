@@ -421,6 +421,8 @@ The following example set's up an AI Model to provide the `skills` capability. T
 {:.info}
 > `targets[].name` is still required by the schema, but Skills requests don't select a model, so any placeholder value works.
 
+For OpenAI formats run:
+
 {% entity_example %}
 type: model
 data:
@@ -437,6 +439,30 @@ data:
       provider: my-openai-account
       config:
         type: openai
+  config:
+    route:
+      paths:
+        - /v1
+{% endentity_example %}
+
+For Anthropic formats run:
+
+{% entity_example %}
+type: model
+data:
+  display_name: my-anthropic-skills
+  name: my-anthropic-skills
+  type: api
+  capabilities:
+    - skills
+  formats:
+    - type: anthropic
+  policies: []
+  targets:
+    - name: anthropic-skills
+      provider: my-anthropic-account
+      config:
+        type: anthropic
   config:
     route:
       paths:
