@@ -94,3 +94,69 @@ test("a block that isn't parseable as YAML reports a finding", () => {
   assert.equal(findings[0].panel, "universal");
   assert.equal(findings[0].pointer, "/");
 });
+
+test("a page with three policy-yaml tab groups numbers every block by its instance in document order", () => {
+  const group = (id, name) =>
+    tabGroup(
+      panel("kubernetes", code(id, `kind: MeshTimeout\nmetadata:\n  name: ${name}`)) +
+        panel("universal", code(`u-${id}`, `type: MeshTimeout\nname: ${name}`)),
+    );
+  const blocks = extractBlocks(group("a", "one") + group("b", "two") + group("c", "three"));
+
+  assert.deepEqual(
+    blocks.map((b) => [b.instance, b.panel]),
+    [
+      [1, "kubernetes"],
+      [1, "universal"],
+      [2, "kubernetes"],
+      [2, "universal"],
+      [3, "kubernetes"],
+      [3, "universal"],
+    ],
+  );
+});
+
+test("a dual-variant tab keeps both code blocks under one instance ordinal", () => {
+  const html = tabGroup(
+    panel(
+      "kubernetes",
+      code("legacy", "kind: MeshService") + code("variant", "kind: MeshService"),
+    ),
+  );
+  const blocks = extractBlocks(html);
+
+  assert.deepEqual(
+    blocks.map((b) => [b.instance, b.panel]),
+    [
+      [1, "kubernetes"],
+      [1, "kubernetes"],
+    ],
+  );
+});
+
+test("another tab group on the page contributes no blocks and no ordinals", () => {
+  const html =
+    tabGroup(panel("kubernetes", code("a", "kind: MeshTimeout"))) +
+    `<div data-tab-group="support-matrix x">${panel("kubernetes", code("b", "kind: Nope"))}</div>` +
+    tabGroup(panel("universal", code("c", "type: MeshTimeout")));
+  const blocks = extractBlocks(html);
+
+  assert.deepEqual(
+    blocks.map((b) => [b.instance, b.panel]),
+    [
+      [1, "kubernetes"],
+      [2, "universal"],
+    ],
+  );
+});
+
+test("a single-instance page keeps its existing block output", () => {
+  const blocks = extractBlocks(fixture("single-variant.html"));
+
+  assert.deepEqual(blocks.map((b) => b.panel), [
+    "kubernetes",
+    "universal",
+    "terraform",
+  ]);
+  assert.ok(blocks.every((b) => b.instance === 1));
+});
