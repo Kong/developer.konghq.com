@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@21fd58f003179728513bc7495110052890ed83b4
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/21fd58f003179728513bc7495110052890ed83b4'
+  x-oas-source: kong/platform-api@71eb5f9b874a36c530766e00e19ed197d3399d4d
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/71eb5f9b874a36c530766e00e19ed197d3399d4d'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -467,6 +467,8 @@ components:
             The HTTP status code of the error. Useful when passing the response
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
+          enum:
+            - 400
           readOnly: true
         title:
           description: |

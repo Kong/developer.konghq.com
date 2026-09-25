@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect AI Gateway
-  version: 2.1.3
+  version: 2.1.16
   description: The API for configuring AI Gateways in Konnect.
   x-extensions-note: |
     Entities and properties may be annotated with `x-min-runtime-version`, the
@@ -18,8 +18,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@967ef5d7063968ff669a94e5574ba15cb8fe23d0
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/967ef5d7063968ff669a94e5574ba15cb8fe23d0'
+  x-oas-source: kong/platform-api@92b788720d2366f463e6b91d947bedcc8463d0c7
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/92b788720d2366f463e6b91d947bedcc8463d0c7'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -2737,6 +2737,8 @@ components:
         Data planes older than this version still connect for topology visibility.
 
         When not specified, the latest generally available runtime version is used.
+
+        When runtime_auto_upgrade is enabled (the default), this value is raised automatically to track the minimum runtime version reported across connected data planes, so any value set here may be superseded as the fleet upgrades.
       type: string
       example: '2.0'
       pattern: ^\d+\.\d+$
@@ -2747,11 +2749,13 @@ components:
         It may be lowered only when no configuration already stored uses a feature that requires a runtime version above the requested one. Otherwise the request is rejected, naming the entities and fields that stand in the way so that they can be removed or downgraded first.
 
         When not specified, the minimum runtime version is left unchanged.
+
+        When runtime_auto_upgrade is enabled (the default), this value is raised automatically to track the minimum runtime version reported across connected data planes, so any value set here may be superseded as the fleet upgrades.
       type: string
       example: '2.0'
       pattern: ^\d+\.\d+$
     AIGatewayRuntimeAutoUpgrade:
-      description: Whether the control plane should automatically raise min_runtime_version as connected data planes report a newer AI Gateway runtime version.
+      description: Whether the control plane should automatically raise min_runtime_version to match the DP fleet's minimum runtime version (the lowest AI Gateway runtime version reported across all connected data planes) as that value increases.
       type: boolean
       default: true
     CreateAIGatewayRequest:
@@ -3723,7 +3727,6 @@ components:
               - audio/translation
               - video
               - rerank
-          minItems: 1
       required:
         - display_name
         - name
@@ -3733,7 +3736,7 @@ components:
         - config
         - capabilities
     AIGatewayModelAPI:
-      description: Configuration for proxying asynchronous requests/responses to/from an AI Gateway model using the files and batches APIs.
+      description: 'Configuration for proxying asynchronous requests/responses to/from an AI Gateway model using the files, batches, and skills APIs.'
       type: object
       properties:
         display_name:
@@ -14573,6 +14576,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 401
+          enum:
+            - 401
           readOnly: true
         title:
           description: |
@@ -14620,6 +14625,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 403
+          enum:
+            - 403
           readOnly: true
         title:
           description: |
@@ -14911,6 +14918,8 @@ components:
             The HTTP status code of the error. Useful when passing the response
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
+          enum:
+            - 400
           readOnly: true
         title:
           description: |
@@ -14957,6 +14966,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 409
+          enum:
+            - 409
           readOnly: true
         title:
           description: |
@@ -15004,6 +15015,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 404
+          enum:
+            - 404
           readOnly: true
         title:
           description: |
