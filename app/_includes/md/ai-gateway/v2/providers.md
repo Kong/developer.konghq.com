@@ -62,7 +62,7 @@ columns:
   - title: Upstream path or API
     key: upstream_path
 rows:
-{%- assign all_capability_keys = "generate,agentic,realtime,embeddings,image,audio_speech,audio_transcription,audio_translation,video,rerank,batches,files,skills" | split: "," -%}
+{%- assign all_capability_keys = "generate,agentic,realtime,embeddings,image,audio_speech,audio_transcription,audio_translation,video,rerank,batches,files,decisions,skills" | split: "," -%}
 {% for cap in all_capability_keys %}
 {% assign cap_supported = false %}
 {% if provider.capabilities[cap].supported %}{% assign cap_supported = true %}{% endif %}
@@ -83,6 +83,7 @@ rows:
 {% when 'batches' %}{% assign cap_label = batches_label %}{% assign cap_path_template = "`/batches`" %}{% assign cap_description = "Batch processing of requests" %}
 {% when 'files' %}{% assign cap_label = files_label %}{% assign cap_path_template = "`/files`" %}{% assign cap_description = "File management and storage" %}
 {% when 'skills' %}{% assign cap_label = skills_label %}{% assign cap_path_template = "`/skills`" %}{% assign cap_description = "Manage reusable skill bundles hosted with the provider" %}
+{% when 'decisions' %}{% assign cap_label = decisions_label %}{% assign cap_path_template = "`/v1/systemone`" %}{% assign cap_description = "Typed decision requests with per-option probabilities and a confidence score" %}
 {% endcase %}
 {% if compare_provider %}
 {% if cap_supported and cap_supported_compare %}
