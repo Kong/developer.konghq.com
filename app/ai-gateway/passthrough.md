@@ -41,13 +41,6 @@ faqs:
     a: |
       No. If you need both passthrough and a native format, declare two AI Models.
 
-  - q: What does passthrough disable?
-    a: |
-      The following capabilities are not compatible with passthrough mode:
-
-      * Format normalization: no translation between the OpenAI shape and a provider shape, in either direction.
-      * Semantic load balancing: an AI Model can't combine the `semantic` algorithm with a passthrough target. Configuration is rejected at validation time for every provider, because the `semantic` algorithm needs a parsed body to match against each target's `semantic_description`. Other [load balancing](/ai-gateway/load-balancing/) algorithms, including round-robin, priority, and lowest-latency, work normally.
-      * Realtime: passthrough is explicitly rejected for the `realtime/generation` category. Every other capability category is allowed under passthrough.
 
   - q: Which Policies work with passthrough?
     a: |
@@ -65,7 +58,6 @@ In an [AI Model](/ai-gateway/entities/ai-model/), the `passthrough` format forwa
 * Request-count rate limiting
 * Logging and metrics
 
-AI Models using the passthrough format don't support format normalization or anything that rewrites the request. Token accounting depends on whether {{site.ai_gateway}} can make sense of your upstream's actual response shape; see [Token usage and cost](#token-usage-and-cost). Guardrails aren't supported under passthrough, since there's no parsed body for them to read. For more information, see [What does passthrough disable?](#what-does-passthrough-disable)
 
 ### Use cases
 
@@ -76,7 +68,7 @@ Passthrough is useful for AI endpoints that fall outside the [providers](/ai-gat
 * Non-LLM AI endpoints, such as custom computer vision or speech APIs, that don't map to any [capability](/ai-gateway/entities/ai-model/#capabilities).
 
 {:.info}
-> If you're moving off the `preserve` route type in the [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin, passthrough is its replacement. See [Migrate from the `preserve` route type](#migrate-from-the-preserve-route-type).
+> If you're migrating from the `preserve` route type in the [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin, passthrough is its replacement. See [Migrate from the `preserve` route type](#migrate-from-the-preserve-route-type).
 
 ## Configure a passthrough AI Model
 
@@ -112,7 +104,7 @@ In this example:
 * `config.route.paths: [/custom-inference]` sets the base path clients send requests to. Passthrough adds no capability-specific suffix, so clients can call any path under this prefix.
 * `targets[].config.upstream_url` sets the destination, including the path. See [Upstream paths](#upstream-paths).
 * `targets[].config.type` selects `openai` here for its API-key authentication behavior, not because the upstream is OpenAI. Passthrough never checks this value against the actual payload shape, so pick whichever supported type's auth mechanism matches your upstream, such as `openai` for a plain API key or `bedrock` for AWS Signature Version 4.
-* `provider: my-triton-account` references an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) that holds the upstream connection and credentials, the same as any other AI Model.
+* `provider: my-triton-account` references an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) that contains the upstream connection and credentials, the same as any other AI Model.
 
 Credentials still come from the AI Model Provider, and {{site.ai_gateway}} signs each upstream request as it normally would. Passthrough skips format transformation, not authentication, so AWS Signature Version 4, OAuth 2.0, and API key auth all work. Set [`targets[].allow_auth_override`](/ai-gateway/entities/ai-model/#schema-aigateway-target-allow-auth-override) to `true` if you want request-level credentials to take precedence instead.
 
@@ -155,7 +147,7 @@ The log phase still runs, so HTTP Log, File Log, OpenTelemetry, and Prometheus r
 Whether {{site.ai_gateway}} can report token counts and cost for a passthrough request depends on your target's `provider`:
 
 * `anthropic`, `bedrock`, `cohere`, `gemini`, or `huggingface` token counts and cost are extracted reliably, for both streaming and buffered responses.
-* With an OpenAI-compatible custom or self-hosted server, such as vLLM or Ollama, returning an OpenAI-shaped `usage` object, token counts can populate. However, this isn't guaranteed, since passthrough forwards whatever shape your upstream actually returns.
+* With an OpenAI-compatible custom or self-hosted server, such as vLLM or Ollama, that return an OpenAI-shaped `usage` object, token counts can populate. However, this isn't guaranteed, since passthrough forwards whatever shape your upstream actually returns.
 * With anything else, for example Amazon SageMaker, Llama 2, and other custom or self-hosted servers with their own response shape, {{site.ai_gateway}} has no way to locate token counts, and usage stays empty.
 
 Cost calculation and token-based rate limiting only work when token counts are available. The `input_cost` and `output_cost` settings on a target apply only to requests whose token counts {{site.ai_gateway}} could read, and [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) has nothing to meter when extraction fails.
@@ -201,10 +193,21 @@ Under `preserve`, path fallback used the raw incoming request path and ignored t
 
 ### Migration steps
 
-* Don't rely on `kongctl convert ai-gateway` for `preserve` targets: it warns and skips them, producing no output for them at all. Recreate each one as a new AI Model manually.
+* Don't rely on `kongctl convert ai-gateway` for `preserve` targets: it warns and skips them, without producing an output for them. Recreate each one as a new AI Model manually.
 * Set `formats[].type` to `passthrough` on the new AI Model.
 * Merge any `upstream_path` value into `targets[].config.upstream_url`.
-* Set `upstream_url` explicitly on Azure and Databricks targets, which have no default host. Azure fails at request time without it; Databricks fails configuration validation instead.
+* Set `upstream_url` explicitly on Azure and Databricks targets, which don't have a default host. Azure fails at request time without it; Databricks fails configuration validation instead.
 * Verify the path arriving upstream, now that client-path forwarding strips the AI Model's base path.
 * Split any plugin instance that mixed `preserve` with other route types into separate AI Models.
 * Remove any dependency on model aliasing, semantic load balancing, the realtime capability, and generation parameters.
+
+## Limitations
+
+* AI Models using the passthrough format don't support format normalization or anything that rewrites the request. 
+* Token accounting depends on whether {{site.ai_gateway}} can make sense of your upstream's actual response shape; see [Token usage and cost](#token-usage-and-cost).
+* Guardrail Policies (AI Prompt Guard, AI Semantic Prompt/Response Guard, AI AWS/Azure/GCP/Lakera/Custom Guardrails) aren't supported under passthrough, since there's no parsed body for them to read. 
+* Policies that write into a specific body field (AI Prompt Decorator, AI Prompt Compressor, AI RAG Injector, AI Prompt Template, AI Semantic Cache) aren't supported. Passthrough doesn't parse the body into a shape these Policies can read or write. MCP and agent-to-agent traffic isn't affected either way.
+* The following capabilities are not compatible with passthrough mode:
+      * Format normalization: No translation between the OpenAI shape and a provider shape, in either direction.
+      * Semantic load balancing: An AI Model can't combine the `semantic` algorithm with a passthrough target. Configuration is rejected at validation time for every provider, because the `semantic` algorithm needs a parsed body to match against each target's `semantic_description`. Other [load balancing](/ai-gateway/load-balancing/) algorithms, including round-robin, priority, and lowest-latency, work normally.
+      * Realtime: Passthrough is explicitly rejected for the `realtime/generation` category. Every other capability category is allowed under passthrough.
