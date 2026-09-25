@@ -35,7 +35,7 @@ function parseTerraformValidate(argv) {
   const index = argv.findIndex(
     (arg) => arg === "--terraform-validate" || arg.startsWith("--terraform-validate="),
   );
-  if (index === -1) return "warn";
+  if (index === -1) return "gate";
   const arg = argv[index];
   const value = arg.includes("=")
     ? arg.slice(arg.indexOf("=") + 1)

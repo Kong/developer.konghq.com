@@ -488,7 +488,7 @@ test(
   },
 );
 
-test("default mode reports a provider-schema finding as advisory and exits zero", () => {
+test("default mode gates a provider-schema finding and exits non-zero", () => {
   const root = buildFixtureRoot({
     examples: [
       { name: "terraform-valid", pageHtml: fixture("terraform-valid.html") },
@@ -496,6 +496,26 @@ test("default mode reports a provider-schema finding as advisory and exits zero"
   });
 
   const result = runCli(root, [], {
+    MESH_VALIDATOR_TERRAFORM_BIN: stubTerraform(),
+  });
+
+  assert.equal(result.status, 1);
+  assert.match(
+    result.stdout,
+    /app\/_mesh_policies\/widget\/examples\/terraform-valid\.yaml \[terraform\] \/: .*Unsupported attribute.*bogus/,
+  );
+  assert.doesNotMatch(result.stdout, /\(advisory\)/);
+  assert.match(result.stdout, /1 finding\(s\): 1 gating, 0 advisory\./);
+});
+
+test("warn mode reports a provider-schema finding as advisory and exits zero", () => {
+  const root = buildFixtureRoot({
+    examples: [
+      { name: "terraform-valid", pageHtml: fixture("terraform-valid.html") },
+    ],
+  });
+
+  const result = runCli(root, ["--terraform-validate=warn"], {
     MESH_VALIDATOR_TERRAFORM_BIN: stubTerraform(),
   });
 

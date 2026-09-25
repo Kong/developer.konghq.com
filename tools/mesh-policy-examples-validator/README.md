@@ -38,15 +38,16 @@ Kuma CRD schemas.
    `--terraform-validate` mode flag.
 1. Checks every terraform block against the schema of the pinned Konnect
    Terraform provider (`kong/konnect-beta`), controlled by
-   `--terraform-validate=off|warn|gate` (default `warn`): the block is wrapped
+   `--terraform-validate=off|warn|gate` (default `gate`): the block is wrapped
    in a per-block harness that declares the provider, an empty
    `provider "konnect-beta" {}` block (validate never contacts Konnect and needs
    no token), and stub `konnect_mesh` and `konnect_mesh_control_plane` resources
    for the mesh references the published blocks carry. `terraform init` and
    `terraform validate` run in that harness directory. All harness directories
    share a `TF_PLUGIN_CACHE_DIR`, so the provider downloads once per run. In
-   `warn` mode a finding is advisory: it is printed and counted, but does not
-   affect the exit status. In `gate` mode it is gating. `off` skips the check.
+   `gate` mode a finding is gating: it is printed, counted, and makes the run
+   exit non-zero. In `warn` mode it is advisory: printed and counted, but it
+   does not affect the exit status. `off` skips the check.
 1. Prints a summary giving the number of pages checked, blocks checked, blocks with
    meaningful schema coverage, terraform blocks checked, and the finding count
    split into gating and advisory.
@@ -76,13 +77,22 @@ policy name) stays visible in the output.
 ## The `--terraform-validate` flag
 
 Pass `--terraform-validate=off|warn|gate` to control the provider-schema check
-of the terraform blocks. The default is `warn`: findings are printed and counted
-as advisory, and the exit status is unaffected. `gate` makes them gating.
-`off` skips the check. The grammar check always runs. The warn default is a
-transition state: a follow-up change flips the default to `gate` once the
-baseline run is clean. The current baseline is recorded in `BASELINE.md`.
-`--skip` remains the escape hatch for policies the provider does not support
-yet.
+of the terraform blocks. The default is `gate`: a finding is printed, counted as
+gating, and makes the run exit non-zero. `warn` is an explicit opt-in that
+keeps findings advisory: they are printed and counted, but do not affect the
+exit status. `off` skips the check. The grammar check always runs. `--skip`
+remains the escape hatch for policies the provider does not support.
+
+One skip is standing: the workflow runs with `--skip external-services@v2`
+because the legacy `ExternalService` policy has no top-level `spec`, so its
+Kubernetes tab renders a null `spec` (a known renderer defect, out of scope
+here) and the run reports it as a gating finding. A later change that fixes
+that transform should remove both this note and the skip.
+
+When the provider pin (`kong/konnect-beta` in `lib/terraform.js`) is bumped,
+re-dump the provider schema and re-run the gate before merging: a wrapper
+attribute or resource rename in the new provider turns published blocks
+invalid, and the gate run is what surfaces it.
 
 ## Requires a production build
 
