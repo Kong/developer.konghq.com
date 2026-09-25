@@ -33,7 +33,6 @@ sections:
     items:
       - path: /mesh/zone-proxies/
       - path: /mesh/configure-mesh-scoped-zone-proxies/
-      - path: /mesh/route-across-zones-with-canary-rollouts-and-color-rings/
 
   - title: Expert operations
     items:

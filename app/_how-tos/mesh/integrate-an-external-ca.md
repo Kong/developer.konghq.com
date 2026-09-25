@@ -34,12 +34,10 @@ next_steps:
   - text: "Multi-zone architecture"
     url: "/mesh/multi-zone-architecture/"
 related_resources:
-  - text: HashiCorp Vault CA
-    url: /mesh/vault/
-  - text: cert-manager
-    url: /mesh/cert-manager/
-  - text: AWS Certificate Manager Private CA
-    url: /mesh/acm-private-ca-policy/
+  - text: Manage workload identity and mTLS
+    url: /mesh/manage-workload-identity-and-mtls/
+  - text: Resource scoping
+    url: /mesh/resource-scoping/
   - text: Manage secrets
     url: /mesh/manage-secrets/
 ---
@@ -215,7 +213,7 @@ Point the `Bundled` provider at the two {{site.mesh_product_name}} Secrets from 
    EOF
    ```
 
-1. After restarting the targeted workloads, verify the MeshService shows the new trust domain:
+1. Verify the MeshService picked up the new trust domain. The change reaches the sidecars over xDS within a few seconds, so no workload restart is needed:
 
    ```sh
    kongctl get mesh meshservices flight-control.kong-air-production \
@@ -229,14 +227,51 @@ Point the `Bundled` provider at the two {{site.mesh_product_name}} Secrets from 
        identities:
            - type: SpiffeID
              value: spiffe://internal.kongair.com/ns/kong-air-production/sa/flight-control
+           - type: SpiffeID
+             value: spiffe://kong-air-mesh.zone1.mesh.local/ns/kong-air-production/sa/flight-control
    ```
    {:.no-copy-code}
+
+   {:.info}
+   > `spec.identities` lists the SPIFFE ID of *every* `MeshIdentity` whose selector matches the workload, so the mesh-wide `kong-air-identity` entry stays alongside the new one. Only one identity actually issues certificates. To see which one won, read `status.mTLS.issuedBackend` on the workload's `DataplaneInsight`, as shown in [Validate](#validate).
+
+1. Update any `MeshTrafficPermission` that matches `flight-control` by its old SPIFFE ID. Changing `trustDomain` changes the workload's SPIFFE ID, so an `Exact` rule written against the old value silently stops matching and callers start getting `403 Forbidden`:
+
+   ```bash
+   kubectl apply -f - <<'EOF'
+   apiVersion: kuma.io/v1alpha1
+   kind: MeshTrafficPermission
+   metadata:
+     name: allow-flight-control-to-check-in
+     namespace: {{site.mesh_namespace}}
+     labels:
+       kuma.io/mesh: kong-air-mesh
+       kuma.io/origin: zone
+   spec:
+     targetRef:
+       kind: Dataplane
+       labels:
+         app: check-in-api
+     rules:
+       - default:
+           allow:
+             - spiffeID:
+                 type: Exact
+                 value: spiffe://internal.kongair.com/ns/kong-air-production/sa/flight-control
+   EOF
+   ```
+
+   {:.warning}
+   > Plan a trust domain change the way you would a rename. Audit every policy that references a SPIFFE ID (`MeshTrafficPermission`, `MeshTLS`, external service configuration) before you apply the `MeshIdentity`, because the switch takes effect in seconds and traffic fails closed. Using a `Prefix` match instead of `Exact` narrows the blast radius but still needs updating when the trust domain changes.
 
 ## Extension providers
 
 Instead of signing workload certs from a CA it holds, {{site.mesh_product_name}} delegates signing to an external system. The workload-facing `MeshIdentity` API stays unchanged, only `provider.type` and `extension.config` change. On each sidecar cert rotation, the control plane submits a signing request to the extension (cert-manager creates a `CertificateRequest`, Vault issues via its PKI engine), then delivers the signed cert to the sidecar via xDS. Kong Air can switch issuers by changing two fields, with no application restarts.
 
-All three providers in this section share the same `spiffeID.path` and `trustDomain`, so the cert-manager example is shown end-to-end and the Vault and ACM examples show only the `provider` block that differs. Adapt the provider-specific config values to your environment.
+All three providers in this section share the same `spiffeID.path` and `trustDomain`. Only `extension.name` and the keys under `extension.config` change between them. The cert-manager example is the one to run through end to end; the Vault and ACM examples are reference material, since both need infrastructure outside the cluster. Adapt the provider-specific config values to your environment.
+
+{:.warning}
+> The `Bundled` and extension examples are alternatives, not a sequence. They select the same workloads, so applying more than one leaves two `MeshIdentity` resources competing for `flight-control`. The control plane picks the most specific selector, and breaks a tie on the number of `matchLabels` by choosing the lexicographically smallest name, which means `flight-operations-id` always wins over `kong-air-certmanager-identity`. Delete the `MeshIdentity` from the previous section before applying the next one.
 
 ### cert-manager
 
@@ -262,14 +297,14 @@ Prerequisites: cert-manager installed with a `ClusterIssuer` or `Issuer` for the
    apiVersion: cert-manager.io/v1
    kind: Certificate
    metadata:
-     name: kong-air-mesh-ca
+     name: kong-air-certmanager-ca
      namespace: {{site.mesh_namespace}}
    spec:
      isCA: true
-     commonName: kong-air-mesh-ca
+     commonName: kong-air-certmanager-ca
      duration: 87600h
      renewBefore: 720h
-     secretName: kong-air-mesh-ca-secret
+     secretName: kong-air-certmanager-ca-tls
      privateKey:
        algorithm: ECDSA
        size: 256
@@ -285,11 +320,32 @@ Prerequisites: cert-manager installed with a `ClusterIssuer` or `Issuer` for the
      namespace: {{site.mesh_namespace}}
    spec:
      ca:
-       secretName: kong-air-mesh-ca-secret
+       secretName: kong-air-certmanager-ca-tls
    EOF
 
-   kubectl wait --for=condition=ready certificate/kong-air-mesh-ca \
+   kubectl wait --for=condition=ready certificate/kong-air-certmanager-ca \
      -n {{site.mesh_namespace}} --timeout=30s
+   ```
+
+1. Publish the issuer's CA certificate as a {{site.mesh_product_name}} Secret. The extension uses it to build the `MeshTrust` that tells every other proxy in the mesh to trust certificates signed by this issuer:
+
+   ```bash
+   CA_PEM=$(kubectl get secret kong-air-certmanager-ca-tls \
+     -n {{site.mesh_namespace}} -o jsonpath='{.data.ca\.crt}' | base64 -d)
+
+   kubectl apply -f - <<EOF
+   apiVersion: v1
+   kind: Secret
+   metadata:
+     name: kong-air-certmanager-trust
+     namespace: {{site.mesh_namespace}}
+     labels:
+       kuma.io/mesh: kong-air-mesh
+   type: system.kuma.io/secret
+   stringData:
+     value: |
+   $(echo "$CA_PEM" | sed 's/^/    /')
+   EOF
    ```
 
 1. Apply the `MeshIdentity`:
@@ -322,10 +378,20 @@ Prerequisites: cert-manager installed with a `ClusterIssuer` or `Issuer` for the
              name: kong-air-mesh-ca-issuer
              kind: Issuer
              group: cert-manager.io
+           caCert:                       # Trust anchor published as a MeshTrust
+             type: Secret
+             secretRef:
+               kind: Secret
+               name: kong-air-certmanager-trust
    EOF
    ```
 
    How it works: {{site.mesh_product_name}} creates a `CertificateRequest` in `{{site.mesh_namespace}}` for each sidecar that needs a new identity cert. cert-manager approves and signs it using the configured `Issuer`, and the signed cert is delivered to the sidecar via xDS. CertificateRequests are cleaned up after use.
+
+   {:.warning}
+   > `caCert` is optional in the schema but required in practice. cert-manager returns only the signed leaf certificate, so unlike the Vault and ACM providers, {{site.mesh_product_name}} has no way to discover the issuing CA on its own. Without `caCert` the `MeshIdentity` still reports `Ready` and workloads still get certificates, but no `MeshTrust` is created, no peer trusts the new certificates, and mTLS fails with no obvious error. If you leave `caCert` out, you must create the `MeshTrust` yourself.
+   >
+   > Keep `caCert` in sync with the issuer. If the CA is rotated and this Secret is not updated, {{site.mesh_product_name}} advertises a stale trust anchor while signing with the new CA, which breaks mTLS the same way.
 
 1. Verify:
 
@@ -335,16 +401,18 @@ Prerequisites: cert-manager installed with a `ClusterIssuer` or `Issuer` for the
    kubectl get certificaterequests -n {{site.mesh_namespace}} -w
    ```
 
-   After the workloads restart, check the SPIFFE IDs the control plane computed:
+   Confirm the `MeshTrust` was created from `caCert`, and check the SPIFFE IDs the control plane computed:
 
    ```sh
+   kubectl get meshtrust kong-air-certmanager-identity -n {{site.mesh_namespace}}
+
    kongctl get mesh meshservices flight-control.kong-air-production \
      --control-plane-name "$MESH_CP" --mesh kong-air-mesh -o yaml
    ```
 
 ### HashiCorp Vault
 
-Delegates signing to a Vault PKI secrets engine. {{site.mesh_product_name}} authenticates to Vault and requests a certificate on each rotation. Only the `provider` block changes from the cert-manager example:
+Delegates signing to a Vault PKI secrets engine. {{site.mesh_product_name}} authenticates to Vault and requests a certificate on each rotation. Vault returns the issuing CA along with the signed certificate, so the provider builds the `MeshTrust` without a `caCert` field:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -369,14 +437,27 @@ spec:
     extension:
       name: vault
       config:
-        address: https://vault.example.com
-        mountPath: pki
-        role: kong-mesh-workload
+        connection:
+          type: Server
+          server:
+            address: https://vault.example.com
+            auth:
+              type: Token           # Token, TLS, or AWS
+              token:
+                type: Secret
+                secretRef:
+                  kind: Secret
+                  name: kong-air-vault-token
+        pki:
+          mount: kong-mesh-pki-kong-air-mesh   # Vault PKI secrets engine mount path
+          role: dataplanes                     # Vault PKI role that issues workload certs
 ```
+
+The Vault token is read from a {{site.mesh_product_name}} Secret in the system namespace, the same `system.kuma.io/secret` format used for the `Bundled` CA material. `auth.type` accepts `Token`, `TLS` for client certificate authentication, and `AWS` for IAM or EC2 authentication. There is no Kubernetes auth method.
 
 ### AWS Private CA
 
-Delegates signing to AWS Private Certificate Authority (ACM PCA). Again, only the `provider` block differs:
+Delegates signing to AWS Private Certificate Authority (ACM PCA). Like Vault, ACM PCA returns the CA chain with each issued certificate, so no `caCert` field is needed:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -401,9 +482,10 @@ spec:
     extension:
       name: acmpca
       config:
-        certificateAuthorityArn: arn:aws:acm-pca:us-east-1:123456789012:certificate-authority/example
-        region: us-east-1
+        arn: arn:aws:acm-pca:us-east-1:123456789012:certificate-authority/example
 ```
+
+The AWS region is parsed from the ARN, so there is no separate `region` field. Credentials come from the control plane's ambient AWS configuration (IRSA, instance profile, or environment), or from an optional `credentials` block in the same config.
 
 {:.info}
 > Every extension provider honors the same `spiffeID.path` and `trustDomain` fields. Only `extension.name` and the provider-specific `extension.config` keys change, so Kong Air can switch from cert-manager to Vault by editing two fields, without touching any application or policy config.
@@ -435,7 +517,7 @@ rows:
     cert_manager: |
       Kubernetes RBAC
     hashicorp_vault: |
-      Vault token / Kubernetes auth
+      Vault token, TLS client cert, or AWS IAM
   - feature: |
       Client
     cert_manager: |
@@ -491,7 +573,7 @@ sequenceDiagram
     Note over DP, V: Centralized Request flow
     DP->>CP: 1. Start & Discover
     CP->>CP: 2. Generate Private Key & CSR
-    CP->>V: 3. Authentication (Token/K8s)
+    CP->>V: 3. Authenticate (Token/TLS/AWS)
     CP->>V: 4. Request Certificate (CSR + TTL)
     V-->>CP: 5. Return Signed Certificate
     CP->>DP: 6. Push Identity via xDS
@@ -509,8 +591,8 @@ sequenceDiagram
    Expected output matches the `kong-air-mesh-ca` certificate you created in Step 1, confirming the mesh trusts your external CA rather than an autogenerated one:
 
    ```text
-   subject=CN = kong-air-mesh-ca
-   issuer=CN = kong-air-mesh-ca
+   subject=CN=kong-air-mesh-ca
+   issuer=CN=kong-air-mesh-ca
    ```
    {:.no-copy-code}
 
@@ -524,8 +606,10 @@ sequenceDiagram
    Expected output:
 
    ```text
-   kri_mid_kong-air-mesh___flight-operations-id_
+   kri_mid_kong-air-mesh_zone1_kong-mesh-system_flight-operations-id_
    ```
    {:.no-copy-code}
+
+   The value is a {{site.mesh_product_name}} Resource Identifier: `kri_mid_<mesh>_<zone>_<namespace>_<name>_`. Substitute your own zone name if it is not `zone1`. If you see `kri_mid_kong-air-mesh_zone1_kong-mesh-system_kong-air-identity_` instead, the mesh-wide identity is still winning and your `MeshIdentity` selector is not matching the workload.
 
 Together, these two checks confirm the external CA is actually rooting `flight-control`'s identity: the auto-generated `MeshTrust` carries your CA's certificate, and the workload's issued certificate is backed by the `MeshIdentity` you pointed at it.
