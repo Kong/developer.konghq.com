@@ -140,12 +140,9 @@ rows:
                   features:
                     - title: Initial deployment created for you
                       basic: true
-                      advanced: true
+                      advanced: false
                     - title: Deployment managed by {{site.konnect_short_name}} after creation
                       basic: true
-                      advanced: false
-                    - title: Managed through the [`MCPServerDataPlane`](/operator/reference/custom-resources/#mcpserverdataplane) custom resource
-                      basic: false
                       advanced: true
                     - title: Customize replica count and CPU and memory resources
                       basic: false
