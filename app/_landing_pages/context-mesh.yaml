@@ -32,7 +32,7 @@ rows:
 
                     Standard MCP tool calling doesn't scale: every tool definition and every intermediate result burns tokens as they flow through the model. Code Mode removes that ceiling: agents can use far more tools at far lower cost.
 
-                    {{site.context_mesh}} is the mediation layer between agents and APIs that runs on {{site.base_gateway}} to complement [{{site.ai_gateway}}](/ai-gateway/).
+                    {{site.context_mesh}} is the mediation layer between agents and APIs that you deploy on {{site.base_gateway}} to complement [{{site.ai_gateway}}](/ai-gateway/).
 
                     {:.success}
                     > {{site.context_mesh}} is in active development. The current release supports APIs and MCP servers as source types. Additional source types are planned for future releases.
