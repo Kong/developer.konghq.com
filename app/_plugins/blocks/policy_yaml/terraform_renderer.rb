@@ -93,7 +93,7 @@ module Jekyll
 
       def heredoc_value(value, indent)
         body = value.end_with?("\n") ? value : "#{value}\n"
-        "<<-EOT\n#{body}#{indent}EOT"
+        "<<-EOT\n#{body.gsub('${', '$${')}#{indent}EOT"
       end
 
       def hcl_key(key)
@@ -104,8 +104,18 @@ module Jekyll
       def format_scalar(value)
         case value
         when Integer, Float, TrueClass, FalseClass then value.to_s
-        else "\"#{value}\""
+        else "\"#{escape_hcl_string(value)}\""
         end
+      end
+
+      # Escapes a string so it parses as a single HCL string literal: backslash
+      # and double quote are escaped, and a literal template interpolation
+      # start is doubled so terraform reads it as the literal sequence.
+      def escape_hcl_string(value)
+        value
+          .gsub('\\') { '\\\\' }
+          .gsub('"') { '\\"' }
+          .gsub('${', '$${')
       end
 
       def trailing_comma(in_array, last)

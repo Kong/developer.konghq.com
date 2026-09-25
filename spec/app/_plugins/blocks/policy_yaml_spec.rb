@@ -298,6 +298,55 @@ RSpec.describe Jekyll::RenderPolicyYaml do
     end
   end
 
+  describe 'Terraform string escaping' do
+    let(:template) do
+      <<~LIQUID
+        {% policy_yaml %}
+        ```yaml
+        type: MeshCheck
+        mesh: default
+        name: escape-check
+        spec:
+          settings:
+            message: 'say "hi"'
+            path: 'C:\\temp'
+            weight: 10
+        ```
+        {% endpolicy_yaml %}
+      LIQUID
+    end
+
+    it 'escapes double quotes and backslashes in quoted string values' do
+      tf = render(template).find('div[data-panel="terraform"]').find('code').text
+      expect(tf).to include('message = "say \\"hi\\""')
+      expect(tf).to include('path = "C:\\\\temp"')
+      expect(tf).to include('weight = 10')
+    end
+  end
+
+  describe 'Terraform heredoc interpolation escaping' do
+    let(:template) do
+      <<~LIQUID
+        {% policy_yaml %}
+        ```yaml
+        type: MeshCheck
+        mesh: default
+        name: heredoc-escape
+        spec:
+          settings:
+            conf: |
+              value: ${foo}
+        ```
+        {% endpolicy_yaml %}
+      LIQUID
+    end
+
+    it 'renders a literal interpolation sequence escaped in the heredoc body' do
+      tf = render(template).find('div[data-panel="terraform"]').find('code').text
+      expect(tf).to include('value: $${foo}')
+    end
+  end
+
   describe 'ExternalService Terraform resource naming' do
     let(:template) do
       <<~LIQUID
