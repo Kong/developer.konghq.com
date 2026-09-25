@@ -1,0 +1,15 @@
+title: 'Block all traffic out of the mesh'
+
+description: 'Set passthroughMode to None so proxies reject traffic to any destination the mesh does not know about.'
+
+weight: 800
+
+config:
+  type: MeshPassthrough
+  name: disable-passthrough
+  mesh: default
+  spec:
+    targetRef:
+      kind: Mesh
+    default:
+      passthroughMode: None

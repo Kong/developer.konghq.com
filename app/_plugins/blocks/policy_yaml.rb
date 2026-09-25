@@ -50,7 +50,8 @@ module Jekyll
 
       PolicyYaml::StyleRenderer.new(
         node_processor: node_processor,
-        namespace: namespace
+        namespace: namespace,
+        mode: mode
       ).render(extract_documents(content))
     end
 
@@ -59,8 +60,13 @@ module Jekyll
       formatter = PolicyYaml::CodeBlockFormatter.new(raw: raw_body?)
       meshservice = use_meshservice?
 
-      context['additional_classes'] = meshservice ? nil : 'codeblock'
+      show_legacy = mode == :v2
+      show_meshservice = mode == :v3 || meshservice
+
+      context['additional_classes'] = show_legacy && show_meshservice ? nil : 'codeblock'
       context['use_meshservice'] = meshservice
+      context['show_legacy'] = show_legacy
+      context['show_meshservice'] = show_meshservice
       context['show_kubernetes'] = tools.empty? || tools.include?('kubernetes')
       context['show_universal'] = tools.empty? || tools.include?('universal')
       context['show_tf'] = show_terraform?(tools)
@@ -88,6 +94,16 @@ module Jekyll
 
     def use_meshservice?
       @params['use_meshservice'] == true
+    end
+
+    # The page's mesh major decides the rendering mode: pages scoped to a major
+    # <= 2 keep the legacy tag-based variant, everything else (absent
+    # major_version, or >= 3) renders MeshService-based configurations only.
+    def mode
+      major = @page['major_version'] && @page['major_version']['mesh']
+      return :v3 if major.nil?
+
+      major >= 3 ? :v3 : :v2
     end
 
     def show_terraform?(tools)

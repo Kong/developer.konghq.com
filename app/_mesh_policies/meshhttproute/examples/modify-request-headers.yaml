@@ -1,0 +1,34 @@
+title: 'Add a header to matched requests'
+
+description: 'Use a RequestHeaderModifier filter to set a header on requests to one path, leaving the destination unchanged.'
+
+weight: 700
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshHTTPRoute
+  name: backend-add-header
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: frontend
+    to:
+      - targetRef:
+          kind: MeshService
+          labels:
+            kuma.io/display-name: backend
+        rules:
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /
+            default:
+              filters:
+                - type: RequestHeaderModifier
+                  requestHeaderModifier:
+                    set:
+                      - name: x-custom-header
+                        value: xyz

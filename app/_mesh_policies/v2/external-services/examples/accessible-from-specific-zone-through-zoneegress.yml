@@ -1,5 +1,9 @@
 title: 'ExternalService Accessible from specific zone through ZoneEgress'
 
+tools:
+  - kubernetes
+  - universal
+
 description: ExternalService Accessible from specific zone through ZoneEgress
 
 extended_description: |
@@ -23,4 +27,4 @@ config:
     kuma.io/protocol: http
     kuma.io/zone: zone-2
   networking:
-  address: httpbin.org:80
+    address: httpbin.org:80

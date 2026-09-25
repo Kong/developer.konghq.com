@@ -108,7 +108,7 @@ spec:
   targetRef:
     kind: MeshSubset
     tags:
-      customTag: true
+      customTag: "true"
   from:
     - targetRef:
         kind: Mesh

@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<body>
+<main>
+<div data-tab-group="policy-yaml additional_classes heading_level">
+  <div data-panel="kubernetes"><code id="kube">kind: Widget
+spec:
+  name: ok
+</code></div>
+  <div data-panel="universal"><code id="uni">type: Widget
+spec:
+  name: ok
+</code></div>
+  <div data-panel="terraform"><code id="tf">resource "konnect_mesh_widget" "ok" {
+  provider = konnect-beta
+  type = "Widget"
+  name = "ok"
+  spec = {
+    zones = [
+      "us-1",
+      "us-2"
+    ]
+  }
+  labels   = {
+  "kuma.io/mesh" = konnect_mesh.my_mesh.name
+  }
+  cp_id    = konnect_mesh_control_plane.my_meshcontrolplane.id
+  mesh     = konnect_mesh.my_mesh.name
+}
+</code></div>
+</div>
+</main>
+</body>
+</html>

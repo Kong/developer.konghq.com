@@ -1,0 +1,18 @@
+title: 'Issue through SPIRE'
+
+description: 'Delegate issuance to a SPIRE agent on the node, reached over its socket.'
+
+weight: 700
+
+config:
+  type: MeshIdentity
+  name: spire-identity
+  mesh: default
+  spec:
+    selector:
+      dataplane: {}
+    provider:
+      type: Spire
+      spire:
+        agent:
+          timeout: 2s
