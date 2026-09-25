@@ -29,6 +29,11 @@ providers:
         min_version: '2.0'
         note:
           content: 'Batches processing for Bedrock is supported in the native format from SDK only'
+      skills:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
       files:
         supported: true
         streaming: false
@@ -126,6 +131,14 @@ providers:
         min_version: '2.0'
         note:
           content: 'Batches processing for Anthropic is supported in the native format from SDK only'
+      skills:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/skills`'
+        model_example: 'n/a'
+        min_version: '2.1'
+        note:
+          content: 'Only supports native format passthrough (anthropic-to-anthropic); no cross-provider translation.'
       embeddings:
         supported: false
         streaming: false
@@ -186,11 +199,13 @@ providers:
         supported_apis:
           - '/v1/messages'
           - '/v1/messages/batches'
+          - '/v1/skills'
     limitations:
       provider_specific:
         - 'Does not support embeddings'
       statistics_logging:
         - 'No statistics logging for completions'
+        - 'No statistics logging for skills'
 
   - name: Azure OpenAI
     url_patterns:
@@ -229,6 +244,11 @@ providers:
         upstream_path: '`/openai/batches`'
         model_example: 'n/a'
         min_version: '2.0'
+      skills:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
       agentic:
         supported: true
         streaming: false
@@ -317,6 +337,11 @@ providers:
         model_example: ''
         min_version: ''
       batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      skills:
         supported: false
         streaming: false
         model_example: ''
@@ -414,6 +439,11 @@ providers:
         streaming: false
         model_example: ''
         min_version: ''
+      skills:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
       agentic:
         supported: false
         streaming: false
@@ -497,6 +527,11 @@ providers:
         streaming: false
         model_example: ''
         min_version: ''
+      skills:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
       agentic:
         supported: false
         streaming: false
@@ -574,6 +609,11 @@ providers:
         min_version: '2.0'
         note:
           content: 'Batches processing for Gemini is supported in the native format from SDK only'
+      skills:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
       image:
         supported: true
         streaming: false
@@ -682,6 +722,11 @@ providers:
         upstream_path: 'Uses `batchPredictionJobs` API'
         model_example: 'n/a'
         min_version: '2.0'
+      skills:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
       image:
         supported: true
         streaming: false
@@ -793,6 +838,11 @@ providers:
         streaming: false
         model_example: ''
         min_version: ''
+      skills:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
       agentic:
         supported: false
         streaming: false
@@ -863,6 +913,11 @@ providers:
         model_example: ''
         min_version: ''
       batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      skills:
         supported: false
         streaming: false
         model_example: ''
@@ -951,6 +1006,11 @@ providers:
         streaming: false
         model_example: ''
         min_version: ''
+      skills:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
       agentic:
         supported: false
         streaming: false
@@ -1029,6 +1089,11 @@ providers:
         model_example: ''
         min_version: ''
       batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      skills:
         supported: false
         streaming: false
         model_example: ''
@@ -1117,6 +1182,14 @@ providers:
         upstream_path: '`/v1/batches`'
         model_example: 'n/a'
         min_version: '2.0'
+      skills:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/skills`'
+        model_example: 'n/a'
+        min_version: '2.1'
+        note:
+          content: 'Only supports native format passthrough (openai-to-openai); no cross-provider translation.'
       agentic:
         supported: true
         streaming: false
@@ -1176,7 +1249,7 @@ providers:
     limitations:
       provider_specific: []
       statistics_logging:
-        - 'No statistics logging for assistants, batch, or audio APIs'
+        - 'No statistics logging for assistants, batch, skills, or audio APIs'
 
   - name: vLLM
     url_patterns:
@@ -1205,6 +1278,11 @@ providers:
         model_example: ''
         min_version: ''
       batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      skills:
         supported: false
         streaming: false
         model_example: ''
@@ -1302,6 +1380,11 @@ providers:
         streaming: false
         model_example: ''
         min_version: ''
+      skills:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
       audio_speech:
         supported: false
         streaming: false
@@ -1368,6 +1451,11 @@ providers:
         model_example: ''
         min_version: ''
       batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      skills:
         supported: false
         streaming: false
         model_example: ''
@@ -1445,6 +1533,11 @@ providers:
         model_example: ''
         min_version: ''
       batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      skills:
         supported: false
         streaming: false
         model_example: ''
@@ -1529,6 +1622,11 @@ providers:
         streaming: false
         model_example: ''
         min_version: ''
+      skills:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
       agentic:
         supported: false
         streaming: false
@@ -1605,6 +1703,11 @@ providers:
         model_example: ''
         min_version: ''
       batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      skills:
         supported: false
         streaming: false
         model_example: ''
@@ -1686,6 +1789,11 @@ providers:
         model_example: ''
         min_version: ''
       batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      skills:
         supported: false
         streaming: false
         model_example: ''
