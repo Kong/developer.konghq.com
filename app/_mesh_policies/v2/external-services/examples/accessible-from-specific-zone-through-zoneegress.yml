@@ -1,5 +1,9 @@
 title: 'ExternalService Accessible from specific zone through ZoneEgress'
 
+tools:
+  - kubernetes
+  - universal
+
 description: ExternalService Accessible from specific zone through ZoneEgress
 
 extended_description: |
