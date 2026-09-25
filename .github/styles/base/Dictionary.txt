@@ -1058,3 +1058,7 @@ server_version_num
 unredact
 userinfo
 xyz
+musl
+buildx
+containerd
+rootfs
