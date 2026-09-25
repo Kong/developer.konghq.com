@@ -3,7 +3,7 @@ title: "Migrating from the OAuth 2.0 plugin to {{site.identity}}"
 content_type: reference
 layout: reference
 
-permalink: /identity/migrate-oauth-to-identity
+permalink: /identity/migrate-oauth-to-identity/
 
 breadcrumbs:
   - /identity/
