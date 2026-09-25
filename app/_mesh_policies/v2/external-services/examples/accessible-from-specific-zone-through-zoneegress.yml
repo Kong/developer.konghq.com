@@ -23,4 +23,4 @@ config:
     kuma.io/protocol: http
     kuma.io/zone: zone-2
   networking:
-  address: httpbin.org:80
+    address: httpbin.org:80
