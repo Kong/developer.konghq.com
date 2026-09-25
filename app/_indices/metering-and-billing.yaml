@@ -76,6 +76,7 @@ sections:
       - title: Tax calculations
         description: Manage tax codes and configure tax behavior for invoices.
         url: /metering-and-billing/billing-invoicing/#tax-calculations
+      - path: /metering-and-billing/currencies/
       - path: /metering-and-billing/tax-codes/
       - path: /metering-and-billing/stripe-integration/
   - title: How-tos
@@ -87,6 +88,7 @@ sections:
       - path: /ai-gateway/meter-llm-traffic/
       - path: /how-to/meter-and-bill-active-users/
       - path: /how-to/configure-metering-and-billing-tax-codes/
+      - path: /how-to/configure-metering-and-billing-custom-currencies/
       - path: /how-to/get-started-with-prepaid-credits/
       - path: /metering-and-billing/entitlement-enforcement/get-started/
       - path: /ai-gateway/v1/how-to/enforce-entitlements-on-llm-traffic/
