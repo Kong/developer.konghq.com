@@ -184,7 +184,7 @@ To serve the AI PII service over https requires additional configuration:
 3. Set `scheme: https` and `port: 8443` when configuring the AI PII Sanitizer Plugin. The plugin will connect with HTTPS.
 
 {:.info}
-> This plugin does not verify SSL/TLS connections directly, it follows the global [tls_certificate_verify](/ai-gateway/configuration/#tls-certificate-verify) setting.
+> This plugin does not verify SSL/TLS connections directly, it follows the global [`tls_certificate_verify`](/ai-gateway/configuration/#tls-certificate-verify) setting.
 
 ### Sanitization endpoints
 

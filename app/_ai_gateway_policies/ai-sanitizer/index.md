@@ -209,7 +209,7 @@ To serve the AI PII service over https requires additional configuration:
 3. Set `scheme: https` and `port: 8443` when configuring the AI PII Sanitizer Policy. The policy will connect with HTTPS.
 
 {:.info}
-> This policy does not verify SSL/TLS connections directly, it follows the global [tls_certificate_verify](/ai-gateway/configuration/#tls-certificate-verify) setting. Certificates can be managed with the [AI CA Certificates](/ai-gateway/entities/ai-ca-certificate/) and [AI CErtificates](/ai-gateway/entities/ai-certificate/) entities.
+> This policy does not verify SSL/TLS connections directly, it follows the global [`tls_certificate_verify`](/ai-gateway/configuration/#tls-certificate-verify) setting. Certificates can be managed with the [AI CA Certificates](/ai-gateway/entities/ai-ca-certificate/) and [AI Certificates](/ai-gateway/entities/ai-certificate/) entities.
 
 ## Forward proxy support
 
