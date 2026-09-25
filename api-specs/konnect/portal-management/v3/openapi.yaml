@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.11.1
+  version: 3.11.6
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@967ef5d7063968ff669a94e5574ba15cb8fe23d0
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/967ef5d7063968ff669a94e5574ba15cb8fe23d0'
+  x-oas-source: kong/platform-api@71eb5f9b874a36c530766e00e19ed197d3399d4d
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/71eb5f9b874a36c530766e00e19ed197d3399d4d'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -6217,6 +6217,8 @@ components:
             The HTTP status code of the error. Useful when passing the response
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
+          enum:
+            - 400
           readOnly: true
         title:
           description: |
@@ -6263,6 +6265,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 401
+          enum:
+            - 401
           readOnly: true
         title:
           description: |
@@ -6310,6 +6314,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 403
+          enum:
+            - 403
           readOnly: true
         title:
           description: |
@@ -6376,6 +6382,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 404
+          enum:
+            - 404
           readOnly: true
         title:
           description: |
@@ -6423,6 +6431,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 409
+          enum:
+            - 409
           readOnly: true
         title:
           description: |

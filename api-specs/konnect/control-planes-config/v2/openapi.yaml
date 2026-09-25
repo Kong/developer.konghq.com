@@ -14,8 +14,8 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
   version: 3.15.0
-  x-oas-source: kong/platform-api@9c7686a9d1631951a45739cfab8ac570b6e0d06f
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9c7686a9d1631951a45739cfab8ac570b6e0d06f'
+  x-oas-source: kong/platform-api@0c7edec932103fe85f1ab063d21ff1bb56ae2f46
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/0c7edec932103fe85f1ab063d21ff1bb56ae2f46'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -9322,6 +9322,8 @@ components:
             The HTTP status code of the error. Useful when passing the response
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
+          enum:
+            - 400
           readOnly: true
         title:
           description: |
@@ -9368,6 +9370,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 401
+          enum:
+            - 401
           readOnly: true
         title:
           description: |
@@ -9415,6 +9419,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 403
+          enum:
+            - 403
           readOnly: true
         title:
           description: |
@@ -9613,6 +9619,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 404
+          enum:
+            - 404
           readOnly: true
         title:
           description: |
@@ -9931,6 +9939,10 @@ components:
                               type: array
                               items:
                                 $ref: '#/components/schemas/NodeError'
+                    errors:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/NodeError'
                     compatibility_status:
                       type: object
                       properties:
@@ -10015,6 +10027,10 @@ components:
                             type: array
                             items:
                               $ref: '#/components/schemas/NodeError'
+                  errors:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NodeError'
                   compatibility_status:
                     type: object
                     properties:

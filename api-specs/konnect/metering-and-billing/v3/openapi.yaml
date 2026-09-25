@@ -1,13 +1,13 @@
 openapi: 3.0.0
 info:
   title: Konnect Metering & Billing
-  version: 1.2.0
+  version: 1.0.0
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
   description: Konnect Metering & Billing API.
-  x-oas-source: kong/platform-api@9c7686a9d1631951a45739cfab8ac570b6e0d06f
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9c7686a9d1631951a45739cfab8ac570b6e0d06f'
+  x-oas-source: kong/platform-api@2634c9e092678b9a8f4e2da7cbb93c9c6e835c3d
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/2634c9e092678b9a8f4e2da7cbb93c9c6e835c3d'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -273,6 +273,31 @@ paths:
       description: List installed apps.
       parameters:
         - $ref: '#/components/parameters/PagePaginationQuery'
+        - name: sort
+          in: query
+          description: |-
+            Sort apps returned in the response. Supported sort attributes are:
+
+            - `id`
+            - `created_at` (default)
+
+            The `asc` suffix is optional as the default sort order is ascending. The `desc`
+            suffix is used to specify a descending order.
+          required: false
+          schema:
+            $ref: '#/components/schemas/SortQuery'
+          explode: false
+          style: form
+        - name: filter
+          in: query
+          description: |-
+            Filter apps returned in the response.
+
+            To filter apps by name add the following query param: filter[name]=my-app
+          required: false
+          schema:
+            $ref: '#/components/schemas/ListAppsParamsFilter'
+          style: deepObject
       responses:
         '200':
           description: Page paginated response.
@@ -2109,6 +2134,33 @@ paths:
       description: List billing profiles.
       parameters:
         - $ref: '#/components/parameters/PagePaginationQuery'
+        - name: sort
+          in: query
+          description: |-
+            Sort billing profiles returned in the response. Supported sort attributes are:
+
+            - `id`
+            - `name`
+            - `created_at` (default)
+
+            The `asc` suffix is optional as the default sort order is ascending. The `desc`
+            suffix is used to specify a descending order.
+          required: false
+          schema:
+            $ref: '#/components/schemas/SortQuery'
+          explode: false
+          style: form
+        - name: filter
+          in: query
+          description: |-
+            Filter billing profiles returned in the response.
+
+            To filter billing profiles by name add the following query param:
+            filter[name]=my-profile
+          required: false
+          schema:
+            $ref: '#/components/schemas/ListBillingProfilesParamsFilter'
+          style: deepObject
       responses:
         '200':
           description: Page paginated response.
@@ -3901,12 +3953,19 @@ components:
           additionalProperties: false
           properties:
             behavior:
-              description: Tax behavior applied to the invoice line item.
+              description: |-
+                Tax behavior.
+
+                This enum is used to specify whether tax is included in the price or excluded
+                from the price. If not specified, the billing profile is used to determine the
+                tax behavior. If not specified in the billing profile, the provider's default
+                behavior is used.
               type: string
               enum:
                 - inclusive
                 - exclusive
-            tax_code:
+              title: Tax behavior
+            code:
               description: Tax code applied to the invoice line item.
               type: object
               additionalProperties: false
@@ -3915,7 +3974,8 @@ components:
                   $ref: '#/components/schemas/ULID'
               required:
                 - id
-          title: Tax configuration for a credit grant
+              title: Tax code
+          title: Tax code configuration
         invoice:
           description: Available when `funding_method` is `invoice`.
           type: object
@@ -3996,6 +4056,17 @@ components:
             - voided
           readOnly: true
           title: Credit grant lifecycle status
+        validation_issues:
+          description: |-
+            Validation issues found while processing the credit grant.
+
+            Present only when there are one or more validation findings. An empty list is
+            omitted.
+          type: array
+          items:
+            $ref: '#/components/schemas/BillingValidationIssue'
+          readOnly: true
+          title: Validation issues
       additionalProperties: false
       required:
         - id
@@ -4083,6 +4154,16 @@ components:
             - $ref: '#/components/schemas/CurrencyCode'
             - $ref: '#/components/schemas/BillingCurrencyCodeCustom'
           readOnly: true
+        custom_currency:
+          description: Managed currency reference. Present only for custom currencies.
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              $ref: '#/components/schemas/ULID'
+          readOnly: true
+          required:
+            - id
         amount:
           description: |-
             Signed amount of the credit movement. Positive values add balance, negative
@@ -4660,6 +4741,53 @@ components:
           type: string
           example: '{ "availableModels": ["gpt-5", "gpt-4o"] }'
           readOnly: true
+        value:
+          description: |-
+            Only available for metered entitlements. The current balance details of the
+            entitlement. Requires the `value` expand.
+          type: object
+          example:
+            balance: '100'
+            usage: '50'
+            overage: '0'
+            total_available_grant_amount: '100'
+            grant_balances:
+              additional_property: '1'
+          additionalProperties: false
+          properties:
+            balance:
+              type: string
+              pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+              description: The remaining balance of the entitlement in the current usage period.
+              readOnly: true
+            grant_balances:
+              type: object
+              additionalProperties:
+                $ref: '#/components/schemas/Numeric'
+              description: 'The remaining balance of each grant, keyed by grant ID.'
+              readOnly: true
+            overage:
+              type: string
+              pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+              description: The usage exceeding the available balance in the current usage period.
+              readOnly: true
+            total_available_grant_amount:
+              type: string
+              pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+              description: The total amount granted and currently available to the entitlement.
+              readOnly: true
+            usage:
+              type: string
+              pattern: '^\-?[0-9]+(\.[0-9]+)?$'
+              description: The usage recorded in the current usage period.
+              readOnly: true
+          readOnly: true
+          required:
+            - balance
+            - usage
+            - overage
+            - total_available_grant_amount
+            - grant_balances
       additionalProperties: false
       required:
         - type
@@ -4921,7 +5049,6 @@ components:
             invoiced.
             - `credit_only`: Usage is settled exclusively against credits.
           type: string
-          default: credit_then_invoice
           enum:
             - credit_then_invoice
             - credit_only
@@ -4948,6 +5075,7 @@ components:
         - billing_cadence
         - status
         - phases
+        - settlement_mode
     BillingPlanPhase:
       description: |-
         The plan phase or pricing ramp allows changing a plan's rate cards over time as
@@ -5718,11 +5846,28 @@ components:
           additionalProperties: false
           properties:
             behavior:
-              $ref: '#/components/schemas/BillingTaxBehavior'
+              description: |-
+                Tax behavior.
+
+                This enum is used to specify whether tax is included in the price or excluded
+                from the price. If not specified, the billing profile is used to determine the
+                tax behavior. If not specified in the billing profile, the provider's default
+                behavior is used.
+              type: string
+              enum:
+                - inclusive
+                - exclusive
+              title: Tax behavior
             code:
-              $ref: '#/components/schemas/TaxCodeReference'
-          required:
-            - code
+              description: Tax code applied to the invoice line item.
+              type: object
+              additionalProperties: false
+              properties:
+                id:
+                  $ref: '#/components/schemas/ULID'
+              required:
+                - id
+              title: Tax code
           title: Tax config
         entitlement:
           description: |-
@@ -6244,6 +6389,16 @@ components:
             - billing_cadence
             - phases
           title: Custom plan
+        starting_phase:
+          description: |-
+            The key of the phase to start the subscription in. If not provided, the
+            subscription starts in the first phase of the plan.
+
+            Only applies when creating from a published `plan`; custom plans define their
+            own phases inline.
+          type: string
+          minLength: 1
+          title: Starting phase
         billing_anchor:
           description: |-
             A billing anchor is the fixed point in time that determines the subscription's
@@ -7004,6 +7159,27 @@ components:
             - billing_cadence
             - phases
           title: Custom plan
+        starting_phase:
+          description: |-
+            The key of the phase to start the subscription in. If not provided, the
+            subscription starts in the first phase of the plan.
+
+            Only applies when creating from a published `plan`; custom plans define their
+            own phases inline.
+          type: string
+          minLength: 1
+          title: Starting phase
+        timing:
+          description: |-
+            When the subscription should start. If not provided, the subscription starts
+            immediately. Provide a future timestamp to schedule the subscription to start
+            later — this creates a not-yet-active, scheduled subscription. A timestamp in
+            the past is rejected.
+          example: immediate
+          oneOf:
+            - $ref: '#/components/schemas/BillingSubscriptionCreateTimingEnum'
+            - $ref: '#/components/schemas/DateTime'
+          title: Timing
         billing_anchor:
           description: |-
             A billing anchor is the fixed point in time that determines the subscription's
@@ -7031,6 +7207,14 @@ components:
       additionalProperties: false
       required:
         - customer
+    BillingSubscriptionCreateTimingEnum:
+      description: |-
+        Subscription create timing. Only immediate is supported as an enum value —
+        unlike edit timing, next_billing_cycle is not accepted on create, since a new
+        subscription has no current billing cycle to schedule against.
+      type: string
+      enum:
+        - immediate
     BillingSubscriptionEdit:
       description: |-
         Request for editing a running subscription. Applies an ordered batch of
@@ -7259,11 +7443,28 @@ components:
               additionalProperties: false
               properties:
                 behavior:
-                  $ref: '#/components/schemas/BillingTaxBehavior'
+                  description: |-
+                    Tax behavior.
+
+                    This enum is used to specify whether tax is included in the price or excluded
+                    from the price. If not specified, the billing profile is used to determine the
+                    tax behavior. If not specified in the billing profile, the provider's default
+                    behavior is used.
+                  type: string
+                  enum:
+                    - inclusive
+                    - exclusive
+                  title: Tax behavior
                 code:
-                  $ref: '#/components/schemas/TaxCodeReference'
-              required:
-                - code
+                  description: Tax code applied to the invoice line item.
+                  type: object
+                  additionalProperties: false
+                  properties:
+                    id:
+                      $ref: '#/components/schemas/ULID'
+                  required:
+                    - id
+                  title: Tax code
               title: Tax config
             entitlement:
               description: |-
@@ -7686,11 +7887,28 @@ components:
               additionalProperties: false
               properties:
                 behavior:
-                  $ref: '#/components/schemas/BillingTaxBehavior'
+                  description: |-
+                    Tax behavior.
+
+                    This enum is used to specify whether tax is included in the price or excluded
+                    from the price. If not specified, the billing profile is used to determine the
+                    tax behavior. If not specified in the billing profile, the provider's default
+                    behavior is used.
+                  type: string
+                  enum:
+                    - inclusive
+                    - exclusive
+                  title: Tax behavior
                 code:
-                  $ref: '#/components/schemas/TaxCodeReference'
-              required:
-                - code
+                  description: Tax code applied to the invoice line item.
+                  type: object
+                  additionalProperties: false
+                  properties:
+                    id:
+                      $ref: '#/components/schemas/ULID'
+                  required:
+                    - id
+                  title: Tax code
               title: Tax config
             entitlement:
               description: |-
@@ -7807,16 +8025,6 @@ components:
         - key
         - active_from
         - items
-    BillingTaxBehavior:
-      description: |-
-        Tax behavior.
-
-        This enum is used to specify whether tax is included in the price or excluded
-        from the price.
-      type: string
-      enum:
-        - inclusive
-        - exclusive
     BillingTaxCode:
       description: Tax codes by provider.
       type: object
@@ -7902,6 +8110,49 @@ components:
       required:
         - app_type
         - tax_code
+    BillingValidationIssue:
+      description: A validation issue found while processing a billing resource.
+      type: object
+      properties:
+        code:
+          description: Machine-readable error code.
+          type: string
+          readOnly: true
+          title: Code
+        message:
+          description: Human-readable description of the error.
+          type: string
+          readOnly: true
+          title: Message
+        attributes:
+          description: Additional structured context.
+          type: object
+          additionalProperties: {}
+          readOnly: true
+          title: Attributes
+        severity:
+          description: Severity of the validation issue.
+          type: string
+          enum:
+            - critical
+            - warning
+          readOnly: true
+          title: Severity
+        field:
+          description: 'JSON path to the field that caused the validation issue, if applicable.'
+          type: string
+          readOnly: true
+          title: Field path
+        component:
+          description: 'Component that reported the validation issue, if applicable.'
+          type: string
+          readOnly: true
+          title: Component
+      additionalProperties: false
+      required:
+        - code
+        - message
+        - severity
     BillingWorkflowCollectionAlignmentAnchored:
       description: |-
         BillingWorkflowCollectionAlignmentAnchored specifies the alignment for
@@ -8610,12 +8861,19 @@ components:
           additionalProperties: false
           properties:
             behavior:
-              description: Tax behavior applied to the invoice line item.
+              description: |-
+                Tax behavior.
+
+                This enum is used to specify whether tax is included in the price or excluded
+                from the price. If not specified, the billing profile is used to determine the
+                tax behavior. If not specified in the billing profile, the provider's default
+                behavior is used.
               type: string
               enum:
                 - inclusive
                 - exclusive
-            tax_code:
+              title: Tax behavior
+            code:
               description: Tax code applied to the invoice line item.
               type: object
               additionalProperties: false
@@ -8624,7 +8882,8 @@ components:
                   $ref: '#/components/schemas/ULID'
               required:
                 - id
-          title: Tax configuration for a credit grant
+              title: Tax code
+          title: Tax code configuration
         filters:
           $ref: '#/components/schemas/CreateCreditGrantFilters'
         priority:
@@ -8961,7 +9220,9 @@ components:
         - addon
         - from_plan_phase
     CreatePlanRequest:
-      description: Plan create request.
+      description: |-
+        Plan create request. `settlement_mode` is re-declared as optional with a
+        `credit_then_invoice` default, applied only on create.
       type: object
       properties:
         name:
@@ -9019,6 +9280,14 @@ components:
             $ref: '#/components/schemas/BillingPlanPhase'
           minItems: 1
           title: Plan phases
+        settlement_mode:
+          description: Settlement mode for the plan. Defaults to `credit_then_invoice` when omitted.
+          type: string
+          default: credit_then_invoice
+          enum:
+            - credit_then_invoice
+            - credit_only
+          title: Settlement Mode
       additionalProperties: false
       required:
         - name
@@ -9070,6 +9339,16 @@ components:
             - $ref: '#/components/schemas/CurrencyCode'
             - $ref: '#/components/schemas/BillingCurrencyCodeCustom'
           readOnly: true
+        custom_currency:
+          description: Managed currency reference. Present only for custom currencies.
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              $ref: '#/components/schemas/ULID'
+          readOnly: true
+          required:
+            - id
         live:
           description: |-
             Credits available after applying currently live charge impacts.
@@ -9658,6 +9937,28 @@ components:
         currency:
           $ref: '#/components/schemas/StringFieldFilterExact'
       additionalProperties: false
+    ListAppsParamsFilter:
+      description: Filter options for listing apps.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ULIDFieldFilter'
+        name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        type:
+          $ref: '#/components/schemas/StringFieldFilterExact'
+        status:
+          $ref: '#/components/schemas/StringFieldFilterExact'
+      additionalProperties: false
+    ListBillingProfilesParamsFilter:
+      description: Filter options for listing billing profiles.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ULIDFieldFilter'
+        name:
+          $ref: '#/components/schemas/StringFieldFilter'
+      additionalProperties: false
     ListCreditGrantsParamsFilter:
       description: Filter options for listing credit grants.
       type: object
@@ -9725,7 +10026,9 @@ components:
             - expired
             - voided
         currency:
-          description: Filter credit transactions by currency.
+          description: |-
+            Filter credit transactions by currency code. Custom-currency rows retain their
+            managed currency identifier.
           oneOf:
             - $ref: '#/components/schemas/CurrencyCode'
             - $ref: '#/components/schemas/BillingCurrencyCodeCustom'
@@ -11671,11 +11974,28 @@ components:
               additionalProperties: false
               properties:
                 behavior:
-                  $ref: '#/components/schemas/BillingTaxBehavior'
+                  description: |-
+                    Tax behavior.
+
+                    This enum is used to specify whether tax is included in the price or excluded
+                    from the price. If not specified, the billing profile is used to determine the
+                    tax behavior. If not specified in the billing profile, the provider's default
+                    behavior is used.
+                  type: string
+                  enum:
+                    - inclusive
+                    - exclusive
+                  title: Tax behavior
                 code:
-                  $ref: '#/components/schemas/TaxCodeReference'
-              required:
-                - code
+                  description: Tax code applied to the invoice line item.
+                  type: object
+                  additionalProperties: false
+                  properties:
+                    id:
+                      $ref: '#/components/schemas/ULID'
+                  required:
+                    - id
+                  title: Tax code
               title: Tax config
             entitlement:
               description: |-
@@ -11766,15 +12086,6 @@ components:
       required:
         - data
         - meta
-    TaxCodeReference:
-      description: TaxCode reference.
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/ULID'
-      additionalProperties: false
-      required:
-        - id
     ULID:
       description: ULID (Universally Unique Lexicographically Sortable Identifier).
       type: string
@@ -12500,7 +12811,10 @@ components:
         - name
         - from_plan_phase
     UpsertPlanRequest:
-      description: Plan upsert request.
+      description: |-
+        Plan upsert (update) request. `settlement_mode` is re-declared as optional with
+        no default, so an omitted value leaves the plan's existing settlement mode
+        unchanged.
       type: object
       properties:
         name:
@@ -12534,6 +12848,15 @@ components:
             $ref: '#/components/schemas/BillingPlanPhase'
           minItems: 1
           title: Plan phases
+        settlement_mode:
+          description: |-
+            Settlement mode for the plan. When omitted, the existing settlement mode is
+            preserved.
+          type: string
+          enum:
+            - credit_then_invoice
+            - credit_only
+          title: Settlement Mode
       additionalProperties: false
       required:
         - name
@@ -12830,6 +13153,8 @@ components:
             The HTTP status code of the error. Useful when passing the response
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
+          enum:
+            - 400
           readOnly: true
         title:
           description: |
@@ -12876,6 +13201,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 401
+          enum:
+            - 401
           readOnly: true
         title:
           description: |
@@ -12923,6 +13250,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 403
+          enum:
+            - 403
           readOnly: true
         title:
           description: |
@@ -12970,6 +13299,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 404
+          enum:
+            - 404
           readOnly: true
         title:
           description: |
@@ -13017,6 +13348,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 410
+          enum:
+            - 410
           readOnly: true
         title:
           description: |
@@ -13064,6 +13397,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 409
+          enum:
+            - 409
           readOnly: true
         title:
           description: |

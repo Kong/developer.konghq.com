@@ -1,9 +1,9 @@
 openapi: 3.0.3
 info:
   title: Konnect Sliver
-  version: 1.7.1
-  x-oas-source: kong/platform-api@9c7686a9d1631951a45739cfab8ac570b6e0d06f
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9c7686a9d1631951a45739cfab8ac570b6e0d06f'
+  version: 1.8.0
+  x-oas-source: kong/platform-api@8f7389e74d923c3dd92c6234789f15b6d2d79960
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8f7389e74d923c3dd92c6234789f15b6d2d79960'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -18,6 +18,131 @@ servers:
   - url: 'https://sg.api.konghq.com/v1'
     description: Singapore Production region
 paths:
+  '/connected-apps/portals/{portalId}':
+    parameters:
+      - $ref: '#/components/parameters/portalId'
+    patch:
+      operationId: patchPortalConnectedApps
+      summary: Patch Portal Connected Apps configuration
+      description: 'Partially updates the given portal''s Connected Apps configuration. Only fields present in the request body are changed. Setting `enabled` enables or disables Connected Apps for this portal (same effect as POST /connected-apps; enabling for the first time requires default_url to also be set); omitting it patches dcr and/or default_url on the already-enabled auth server, which returns 404 if Connected Apps has not been enabled yet for this portal. The portal id is immutable and always taken from the path.'
+      requestBody:
+        $ref: '#/components/requestBodies/PatchPortalConnectedApps'
+      responses:
+        '200':
+          $ref: '#/components/responses/ConnectedApps'
+        '204':
+          description: Connected Apps disabled successfully
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Connected Apps
+  '/connected-apps/portals/{portalId}/sessions':
+    parameters:
+      - $ref: '#/components/parameters/portalId'
+    get:
+      operationId: listPortalConnectedAppSessionsAdmin
+      summary: List Portal Connected App sessions
+      description: 'Returns all active Portal Connected App sessions (active refresh tokens) for the given portal, across all developers. Optionally filter to a single developer with filter[developer_id].'
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - name: sort
+          in: query
+          description: |
+            Sorts a collection of sessions. Supported sort attributes are:
+            - created_at
+            - expires_at
+          required: false
+          schema:
+            $ref: '#/components/schemas/SortQuery'
+        - name: filter
+          in: query
+          description: Filter sessions returned in the response.
+          required: false
+          schema:
+            type: object
+            properties:
+              developer_id:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+          style: deepObject
+      responses:
+        '200':
+          $ref: '#/components/responses/ListPortalConnectedAppSessionsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Connected Apps
+  '/connected-apps/portals/{portalId}/sessions/{sessionId}':
+    parameters:
+      - $ref: '#/components/parameters/portalId'
+      - $ref: '#/components/parameters/sessionId'
+    delete:
+      operationId: revokePortalConnectedAppSessionAdmin
+      summary: Revoke a Portal Connected App session
+      description: 'Revokes a single active Portal Connected App session (refresh token) for the given portal, regardless of which developer owns it.'
+      responses:
+        '204':
+          description: Session revoked successfully
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Connected Apps
+  /connected-apps/portal/me/sessions:
+    get:
+      operationId: listPortalConnectedAppSessions
+      summary: List caller's Portal Connected App sessions
+      description: Returns the authenticated caller's active Portal Connected App sessions (active refresh tokens). Restricted to developer principals carrying a portal_id claim. Authenticated but not authorized.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - name: sort
+          in: query
+          description: |
+            Sorts a collection of sessions. Supported sort attributes are:
+            - created_at
+            - expires_at
+          required: false
+          schema:
+            $ref: '#/components/schemas/SortQuery'
+      responses:
+        '200':
+          description: Paginated list of connected app sessions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListConnectedAppSessionsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Connected Apps
+  '/connected-apps/portal/me/sessions/{sessionId}':
+    parameters:
+      - $ref: '#/components/parameters/sessionId'
+    delete:
+      operationId: revokePortalConnectedAppSession
+      summary: Revoke one of caller's Portal App sessions
+      description: Revokes a single active Portal Connected App session (refresh token) owned by the authenticated caller. Restricted to developer principals carrying a portal_id claim. Authenticated but not authorized.
+      responses:
+        '204':
+          description: Session revoked successfully
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Connected Apps
   /auth-servers:
     get:
       operationId: listAuthServers
@@ -685,6 +810,16 @@ components:
       schema:
         type: integer
         example: 10
+    portalId:
+      schema:
+        type: string
+        format: uuid
+        example: d32d905a-ed33-46a3-a093-d8f536af9a8a
+      name: portalId
+      in: path
+      required: true
+      description: The portal ID
+      x-go-name: PortalID
     scopeId:
       schema:
         type: string
@@ -694,6 +829,16 @@ components:
       in: path
       required: true
       description: The scope ID
+    sessionId:
+      schema:
+        type: string
+        format: uuid
+        example: 3f1e5c2a-7b8d-4e6f-9a0b-1c2d3e4f5a6b
+      name: sessionId
+      in: path
+      required: true
+      description: The session ID
+      x-go-name: SessionID
     tokenId:
       schema:
         type: string
@@ -704,6 +849,89 @@ components:
       required: true
       description: The token ID
   schemas:
+    ConnectedAppsResponse:
+      description: 'Explicitly lists the AuthServer fields it exposes, rather than inheriting AuthServer wholesale, so that adding a field to AuthServer is not automatically also a Connected Apps change.'
+      type: object
+      properties:
+        id:
+          description: The ID of the auth server
+          type: string
+          format: uuid
+        name:
+          $ref: '#/components/schemas/AuthServerName'
+        description:
+          $ref: '#/components/schemas/AuthServerDescription'
+        audience:
+          $ref: '#/components/schemas/Audience'
+        signing_algorithm:
+          $ref: '#/components/schemas/Algorithm'
+        issuer:
+          $ref: '#/components/schemas/Issuer'
+        metadata_uri:
+          description: The URI of the metadata document for the auth server
+          type: string
+          format: uri
+        jwks_uri:
+          description: The URI of the JWKS endpoint for the auth server
+          type: string
+          format: uri
+          readOnly: true
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        trusted_origins:
+          $ref: '#/components/schemas/TrustedOrigins'
+        dcr_default_access_token_duration:
+          $ref: '#/components/schemas/DcrDefaultAccessTokenDuration'
+        konnect_managed:
+          description: Indicates this auth server is managed by Konnect
+          type: boolean
+          example: true
+        domain:
+          description: Domain of Connected Apps configuration
+          type: string
+          enum:
+            - konnect
+            - portal
+        portal:
+          description: Portal configuration (only present when domain is 'portal')
+          type: object
+          properties:
+            id:
+              description: The ID of the portal
+              type: string
+              format: uuid
+              example: d32d905a-ed33-46a3-a093-d8f536af9a8a
+            default_url:
+              description: The default URL for the portal
+              type: string
+              format: uri
+              example: 'https://portal.example.com'
+          required:
+            - id
+            - default_url
+        scopes:
+          description: Predefined scopes for API access
+          type: array
+          items:
+            $ref: '#/components/schemas/Scope'
+      required:
+        - id
+        - name
+        - description
+        - audience
+        - signing_algorithm
+        - issuer
+        - metadata_uri
+        - labels
+        - created_at
+        - updated_at
+        - konnect_managed
+        - scopes
+        - domain
     CreateSecretPayload:
       type: object
       properties:
@@ -892,6 +1120,12 @@ components:
       type: integer
       maximum: 2592000
       minimum: 60
+    PatchDcrSettings:
+      description: Dynamic Client Registration settings to patch
+      type: object
+      properties:
+        default_access_token_duration:
+          $ref: '#/components/schemas/UpdateDcrDefaultAccessTokenDuration'
     DcrSettings:
       description: Dynamic Client Registration settings for the auth server
       type: object
@@ -1239,6 +1473,103 @@ components:
       required:
         - data
         - meta
+    ConnectedAppSessionBase:
+      description: Common fields shared by all Connected App sessions (refresh tokens)
+      type: object
+      properties:
+        id:
+          description: The ID of the session
+          type: string
+          format: uuid
+          x-go-name: ID
+        client_id:
+          description: The client ID of the connected app
+          type: string
+          example: abc123-client
+          x-go-name: ClientID
+        client_name:
+          description: The name of the connected app
+          type: string
+          example: My Connected App
+        granted_scope_names:
+          description: The scopes that the session has been granted
+          type: array
+          items:
+            type: string
+          example:
+            - 'konnect:read'
+            - 'konnect:write'
+          nullable: false
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        expires_at:
+          description: An ISO-8601 timestamp representation of the expiration date
+          type: string
+          format: date-time
+          example: '2022-11-04T20:10:06.927Z'
+          readOnly: true
+      required:
+        - id
+        - client_id
+        - client_name
+        - granted_scope_names
+        - created_at
+        - expires_at
+    PortalConnectedAppSession:
+      description: An active Portal Connected App session (refresh token)
+      allOf:
+        - $ref: '#/components/schemas/ConnectedAppSessionBase'
+        - type: object
+          required:
+            - developer_id
+          properties:
+            developer_id:
+              description: The ID of the developer who owns the session
+              type: string
+              format: uuid
+              x-go-name: DeveloperID
+    ListPortalConnectedAppSessionsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PortalConnectedAppSession'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      required:
+        - data
+        - meta
+    ListConnectedAppSessionsResponse:
+      description: Paginated list of connected app sessions.
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConnectedAppSessionBase'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      example:
+        data:
+          - id: d32d905a-ed33-46a3-a093-d8f536af9a8a
+            client_id: abc123-client
+            client_name: My Connected App
+            granted_scope_names:
+              - 'read:profile'
+              - 'write:applications'
+            created_at: '2024-01-15T10:30:00Z'
+            expires_at: '2024-12-31T23:59:59Z'
+        meta:
+          page:
+            total: 1
+            size: 10
+            number: 1
+      additionalProperties: false
+      required:
+        - data
+        - meta
+      title: ListConnectedAppSessionsResponse
     Labels:
       description: |
         Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
@@ -1473,6 +1804,8 @@ components:
             The HTTP status code of the error. Useful when passing the response
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
+          enum:
+            - 400
           readOnly: true
         title:
           description: |
@@ -1519,6 +1852,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 404
+          enum:
+            - 404
           readOnly: true
         title:
           description: |
@@ -1566,6 +1901,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 409
+          enum:
+            - 409
           readOnly: true
         title:
           description: |
@@ -1648,6 +1985,55 @@ components:
       required:
         - page
       title: PaginatedMeta
+    UnauthorizedError:
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          example: 401
+          enum:
+            - 401
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Unauthorized
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          example: 'https://httpstatuses.com/401'
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          example: 'kong:trace:1234567890'
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Invalid credentials
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
     LegacyStringFieldFilter:
       description: 'Filter using **one** of the following operators: `eq`, `contains`'
       type: object
@@ -1701,6 +2087,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 403
+          enum:
+            - 403
           readOnly: true
         title:
           description: |
@@ -1739,6 +2127,71 @@ components:
         - detail
       title: Error
   examples:
+    ConnectedAppsResponse:
+      value:
+        id: f44567da-a0b1-4eef-86c9-b27ab2e22048
+        name: Konnect Connected Apps
+        description: Reserved auth server for Connected Apps
+        audience: kauth.konghq.tech
+        signing_algorithm: RS256
+        issuer: 'https://auth-server-1.com'
+        metadata_uri: 'https://auth-server-1.com/.well-known/openid-configuration'
+        labels: {}
+        created_at: '2023-03-20T09:29:14.52Z'
+        updated_at: '2023-03-20T09:29:14.52Z'
+        konnect_managed: true
+        domain: konnect
+        scopes:
+          - id: c5e12516-182c-4928-ae04-05374b3b1cca
+            name: 'konnect:read'
+            description: Read access to Konnect APIs
+            default: true
+            include_in_metadata: true
+            enabled: true
+            created_at: '2023-03-20T09:29:14.52Z'
+            updated_at: '2023-03-20T09:29:14.52Z'
+          - id: b5525b78-f3a0-4bd6-befc-7696be58717e
+            name: 'konnect:write'
+            description: Write access to Konnect APIs
+            default: true
+            include_in_metadata: true
+            enabled: true
+            created_at: '2023-03-20T09:29:14.52Z'
+            updated_at: '2023-03-20T09:29:14.52Z'
+    ConnectedAppsResponsePortal:
+      value:
+        id: a8b7c6d5-e4f3-42a1-9b8c-7d6e5f4a3b2c
+        name: Portal Connected Apps
+        description: Reserved auth server for Portal Connected Apps
+        audience: portal-api
+        signing_algorithm: RS256
+        issuer: 'https://portal-auth-server.com'
+        metadata_uri: 'https://portal-auth-server.com/.well-known/openid-configuration'
+        labels: {}
+        created_at: '2023-03-20T09:29:14.52Z'
+        updated_at: '2023-03-20T09:29:14.52Z'
+        konnect_managed: true
+        domain: portal
+        portal:
+          id: d32d905a-ed33-46a3-a093-d8f536af9a8a
+          default_url: 'https://portal.example.com'
+        scopes:
+          - id: e1f2a3b4-c5d6-47e8-9f0a-1b2c3d4e5f6a
+            name: 'portal:read'
+            description: Read access to Portal APIs
+            default: true
+            include_in_metadata: true
+            enabled: true
+            created_at: '2023-03-20T09:29:14.52Z'
+            updated_at: '2023-03-20T09:29:14.52Z'
+          - id: f2e3d4c5-b6a7-48f9-a0b1-2c3d4e5f6a7b
+            name: 'portal:write'
+            description: Write access to Portal APIs
+            default: true
+            include_in_metadata: true
+            enabled: true
+            created_at: '2023-03-20T09:29:14.52Z'
+            updated_at: '2023-03-20T09:29:14.52Z'
     ClientSecretList:
       value:
         data:
@@ -2077,12 +2530,43 @@ components:
           - profile
         created_at: '2023-03-20T09:29:14.52Z'
         expires_at: '2022-11-04T20:10:06.927Z'
+    ListPortalConnectedAppSessionsResponse:
+      value:
+        data:
+          - id: a1b2c3d4-e5f6-47a8-9b0c-1d2e3f4a5b6c
+            client_id: abc123-client
+            client_name: My Connected App
+            granted_scope_names:
+              - 'portal:read'
+              - 'portal:write'
+            developer_id: f44567da-a0b1-4eef-86c9-b27ab2e22048
+            created_at: '2023-03-20T09:29:14.52Z'
+            expires_at: '2023-04-19T09:29:14.52Z'
+          - id: b2c3d4e5-f6a7-48b9-0c1d-2e3f4a5b6c7d
+            client_id: def456-client
+            client_name: Another Connected App
+            granted_scope_names:
+              - 'portal:read'
+            developer_id: 5e051473-3b98-45c9-aa99-75b18c158bbf
+            created_at: '2023-03-21T09:29:14.52Z'
+            expires_at: '2023-04-20T09:29:14.52Z'
+        meta:
+          page:
+            number: 1
+            size: 2
+            total: 2
     NotFoundExample:
       value:
         status: 404
         title: Not Found
         instance: 'kong:trace:6816496025408232265'
         detail: Not Found
+    UnauthorizedExample:
+      value:
+        status: 401
+        title: Unauthorized
+        instance: 'kong:trace:8347343766220159418'
+        detail: Unauthorized
     ForbiddenExample:
       value:
         status: 403
@@ -2090,6 +2574,24 @@ components:
         instance: 'kong:trace:2723154947768991354'
         detail: You do not have permission to perform this action
   requestBodies:
+    PatchPortalConnectedApps:
+      description: Portal Connected Apps configuration fields to patch
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              enabled:
+                description: 'When present, enables or disables Connected Apps for this portal (same effect as POST /connected-apps). Enabling for the first time requires default_url to also be set.'
+                type: boolean
+              dcr:
+                $ref: '#/components/schemas/PatchDcrSettings'
+              default_url:
+                description: The portal's default URL.
+                type: string
+                format: uri
+                example: 'https://portal.example.com'
     CreateSecretPayload:
       description: Secret to be created
       required: true
@@ -2378,6 +2880,26 @@ components:
             Client:
               $ref: '#/components/examples/ReplaceClient'
   responses:
+    ConnectedApps:
+      description: Connected Apps reserved auth server details (when enabled)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ConnectedAppsResponse'
+          examples:
+            Konnect:
+              $ref: '#/components/examples/ConnectedAppsResponse'
+            Portal:
+              $ref: '#/components/examples/ConnectedAppsResponsePortal'
+    ListPortalConnectedAppSessionsResponse:
+      description: Paginated list of Portal Connected App sessions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListPortalConnectedAppSessionsResponse'
+          examples:
+            ListPortalConnectedAppSessionsResponse:
+              $ref: '#/components/examples/ListPortalConnectedAppSessionsResponse'
     ClientSecretList:
       description: List of client Secrets
       content:
@@ -2525,6 +3047,15 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/ConflictError'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/UnauthorizedExample'
     Forbidden:
       description: Forbidden
       content:
@@ -2568,6 +3099,8 @@ tags:
     description: 'Claims are statements about the Client, included in tokens issued by the Auth Server. The management API will give you the ability to create, configure and manage multiple Claims per Auth Server, and include them in tokens based on the requested Scopes.'
   - name: Auth Server Scopes
     description: 'Scopes define the extent of access that an access token grants to a Client. The management API will give you the ability to create, configure and manage multiple Scopes per Auth Server, and restrict their usage by Client.'
+  - name: Connected Apps
+    description: 'Connected Apps enable third-party applications to access Konnect APIs on behalf of an organization using OAuth 2.0. When enabled, a reserved auth server is created with predefined scopes.'
 security:
   - systemAccountAccessToken: []
   - personalAccessToken: []
