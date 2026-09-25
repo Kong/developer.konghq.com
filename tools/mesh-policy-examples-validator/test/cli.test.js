@@ -62,6 +62,35 @@ function builtPage(kubernetesYaml, universalYaml) {
   );
 }
 
+const CLEAN_INSTANCE = {
+  kubernetesYaml: "kind: Widget\nspec:\n  name: ok\n",
+  universalYaml: "type: Widget\nspec:\n  name: ok\n",
+};
+
+function instancesPageHtml(instances) {
+  return instances
+    .map((instance) =>
+      tabGroup(
+        panel("kubernetes", code("k", instance.kubernetesYaml)) +
+          panel("universal", code("u", instance.universalYaml)),
+      ),
+    )
+    .join("");
+}
+
+function policyYamlSource(tagCount) {
+  return [
+    "---",
+    "title: Fixture",
+    "---",
+    "",
+    ...Array.from(
+      { length: tagCount },
+      (_, i) => `{% policy_yaml /examples/instance-${i}.yaml %}`,
+    ),
+  ].join("\n");
+}
+
 // Builds a fixture root laid out like a repo, with the minimal set of files
 // the CLI reads: product release data, one vendored CRD per major, and a built
 // page paired with its source example for each of the given examples. Pass
@@ -71,10 +100,21 @@ function builtPage(kubernetesYaml, universalYaml) {
 // exercise `--skip`; `major: 2` lays the policy out in the v2 source tree and
 // under the /mesh/v2/ URL segment; `crds` names the vendored release
 // directories to lay out (pass fewer to leave a major without schemas).
+//
+// `overviews` lays out policy overview pages: `{ policy, instances, tagCount,
+// major, skipBuiltPage }` writes an `index.md` source with `tagCount ??`
+// `instances.length` policy_yaml invocations and a built page with one tab
+// group per entry of `instances` (pass more `tagCount` than `instances` to
+// force an instance-count mismatch). `others` lays out other mesh pages the
+// same way, keyed by `slug` under `app/mesh/`. `parked` writes a built page
+// under the policies URL space with no source, like `mutual-tls`.
 function buildFixtureRoot({
   policy = "widget",
   examples,
   policies,
+  overviews = [],
+  others = [],
+  parked = [],
   crds = ["2.1.x", "3.0.x"],
 }) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "mesh-policy-cli-"));
@@ -128,6 +168,80 @@ function buildFixtureRoot({
         pageHtml ?? builtPage(kubernetesYaml, universalYaml),
       );
     }
+  }
+
+  for (const {
+    policy: policyName,
+    instances = [CLEAN_INSTANCE],
+    tagCount,
+    pageHtml,
+    major,
+    skipBuiltPage,
+  } of overviews) {
+    const versionParts = major === 2 ? ["v2"] : [];
+    const sourceDir = path.join(
+      root,
+      "app/_mesh_policies",
+      ...versionParts,
+      policyName,
+    );
+    fs.mkdirSync(sourceDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(sourceDir, "index.md"),
+      policyYamlSource(tagCount ?? instances.length),
+    );
+
+    if (skipBuiltPage) continue;
+
+    const pageDir = path.join(
+      root,
+      "dist/mesh",
+      ...versionParts,
+      "policies",
+      policyName,
+    );
+    fs.mkdirSync(pageDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(pageDir, "index.html"),
+      pageHtml ?? instancesPageHtml(instances),
+    );
+  }
+
+  for (const {
+    slug,
+    instances = [CLEAN_INSTANCE],
+    tagCount,
+    pageHtml,
+    major,
+    skipBuiltPage,
+  } of others) {
+    const versionParts = major === 2 ? ["v2"] : [];
+    const sourcePath = path.join(
+      root,
+      "app/mesh",
+      ...versionParts,
+      `${slug}.md`,
+    );
+    fs.mkdirSync(path.dirname(sourcePath), { recursive: true });
+    fs.writeFileSync(
+      sourcePath,
+      policyYamlSource(tagCount ?? instances.length),
+    );
+
+    if (skipBuiltPage) continue;
+
+    const pageDir = path.join(root, "dist/mesh", ...versionParts, slug);
+    fs.mkdirSync(pageDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(pageDir, "index.html"),
+      pageHtml ?? instancesPageHtml(instances),
+    );
+  }
+
+  for (const { policy: policyName, pageHtml } of parked) {
+    const pageDir = path.join(root, "dist/mesh/policies", policyName);
+    fs.mkdirSync(pageDir, { recursive: true });
+    fs.writeFileSync(path.join(pageDir, "index.html"), pageHtml);
   }
 
   return root;
@@ -669,4 +783,176 @@ test("off mode prints no provider-schema progress line but keeps the other phase
   );
   assert.match(result.stdout, /Checking terraform grammar\.\.\. done/);
   assert.match(result.stdout, /Checked 1 pages, 2 blocks/);
+});
+
+test("a phased run prints one label and three progress lines per page class", () => {
+  const root = buildFixtureRoot({
+    examples: [
+      {
+        name: "clean",
+        kubernetesYaml: "kind: Widget\nspec:\n  name: ok\n",
+        universalYaml: "type: Widget\nspec:\n  name: ok\n",
+      },
+    ],
+    overviews: [{ policy: "gadget", instances: [CLEAN_INSTANCE, CLEAN_INSTANCE] }],
+    others: [{ slug: "entitything", instances: [CLEAN_INSTANCE] }],
+  });
+
+  const result = runCli(root, [], {
+    MESH_VALIDATOR_TERRAFORM_BIN: stubTerraformPassing(),
+  });
+
+  assert.equal(result.status, 0);
+
+  const labels = [
+    result.stdout.indexOf("Policy example pages:"),
+    result.stdout.indexOf("Policy overview pages:"),
+    result.stdout.indexOf("Other mesh pages:"),
+  ];
+  assert.ok(
+    labels.every((index, i) => index !== -1 && (i === 0 || index > labels[i - 1])),
+    `phase labels appear in order, got indexes ${labels.join(", ")}`,
+  );
+  assert.equal(
+    (result.stdout.match(/Checking Kubernetes and Universal blocks/g) || []).length,
+    3,
+  );
+  assert.equal(
+    (result.stdout.match(/Checking terraform grammar/g) || []).length,
+    3,
+  );
+  assert.equal(
+    (result.stdout.match(/Validating against the provider schema/g) || []).length,
+    3,
+  );
+  assert.match(
+    result.stdout,
+    /Checked 3 pages, 8 blocks/,
+  );
+  assert.match(
+    result.stdout,
+    /policy example pages 1 pages, 2 blocks; policy overview pages 1 pages, 4 blocks; other mesh pages 1 pages, 2 blocks/,
+  );
+});
+
+test("a parked page with hand-written navtabs is never checked", () => {
+  const root = buildFixtureRoot({
+    examples: [
+      {
+        name: "clean",
+        kubernetesYaml: "kind: Widget\nspec:\n  name: ok\n",
+        universalYaml: "type: Widget\nspec:\n  name: ok\n",
+      },
+    ],
+    parked: [
+      {
+        policy: "parked",
+        pageHtml: builtPage("kind: Widget\nspec:\n  name:\n", "type: Widget\nspec:\n  name: ok\n"),
+      },
+    ],
+  });
+
+  const result = runCli(root, [], {
+    MESH_VALIDATOR_TERRAFORM_BIN: stubTerraformPassing(),
+  });
+
+  assert.equal(result.status, 0);
+  assert.doesNotMatch(result.stdout, /parked/);
+  assert.match(result.stdout, /Checked 1 pages, 2 blocks/);
+});
+
+test("a multi-instance finding carries the instance ordinal and a count mismatch is a gating finding", () => {
+  const root = buildFixtureRoot({
+    examples: [
+      {
+        name: "clean",
+        kubernetesYaml: "kind: Widget\nspec:\n  name: ok\n",
+        universalYaml: "type: Widget\nspec:\n  name: ok\n",
+      },
+    ],
+    overviews: [
+      {
+        policy: "multi",
+        instances: [
+          CLEAN_INSTANCE,
+          { kubernetesYaml: "kind: Widget\nspec:\n  name:\n", universalYaml: "type: Widget\nspec:\n  name: ok\n" },
+          CLEAN_INSTANCE,
+        ],
+      },
+      {
+        policy: "short",
+        instances: [CLEAN_INSTANCE],
+        tagCount: 2,
+      },
+    ],
+  });
+
+  const result = runCli(root, [], {
+    MESH_VALIDATOR_TERRAFORM_BIN: stubTerraformPassing(),
+  });
+
+  assert.equal(result.status, 1);
+  assert.match(
+    result.stdout,
+    /app\/_mesh_policies\/multi\/index\.md \[kubernetes, block 2\] \/spec\/name: value is null/,
+  );
+  assert.match(
+    result.stdout,
+    /app\/_mesh_policies\/short\/index\.md \[-\] \/: built page renders 1 policy-yaml tab group\(s\) but the source contains 2 policy_yaml instance\(s\)/,
+  );
+  // The mismatch does not abort the run: every other page is still checked.
+  assert.match(result.stdout, /Checked 3 pages, 10 blocks/);
+  assert.match(
+    result.stdout,
+    /policy example pages 1 pages, 2 blocks; policy overview pages 2 pages, 8 blocks/,
+  );
+  assert.match(result.stdout, /3 finding\(s\): 3 gating, 0 advisory\./);
+});
+
+test("an overview page whose built page is missing aborts and names the source", () => {
+  const root = buildFixtureRoot({
+    examples: [
+      {
+        name: "clean",
+        kubernetesYaml: "kind: Widget\nspec:\n  name: ok\n",
+        universalYaml: "type: Widget\nspec:\n  name: ok\n",
+      },
+    ],
+    overviews: [{ policy: "vanished", instances: [CLEAN_INSTANCE], skipBuiltPage: true }],
+  });
+
+  const result = runCli(root, [], {
+    MESH_VALIDATOR_TERRAFORM_BIN: stubTerraformPassing(),
+  });
+
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /app\/_mesh_policies\/vanished\/index\.md/);
+});
+
+test("--skip <slug>@v2 excludes that mesh page and its phase prints nothing when fully skipped", () => {
+  const root = buildFixtureRoot({
+    examples: [
+      {
+        name: "clean",
+        kubernetesYaml: "kind: Widget\nspec:\n  name: ok\n",
+        universalYaml: "type: Widget\nspec:\n  name: ok\n",
+      },
+    ],
+    others: [{ slug: "hostnamegenerator", major: 2, instances: [CLEAN_INSTANCE] }],
+  });
+
+  const withoutSkip = runCli(root, [], {
+    MESH_VALIDATOR_TERRAFORM_BIN: stubTerraformPassing(),
+  });
+  assert.equal(withoutSkip.status, 0);
+  assert.match(withoutSkip.stdout, /Other mesh pages:/);
+  assert.match(withoutSkip.stdout, /other mesh pages 1 pages, 2 blocks/);
+
+  const withSkip = runCli(root, ["--skip", "hostnamegenerator@v2"], {
+    MESH_VALIDATOR_TERRAFORM_BIN: stubTerraformPassing(),
+  });
+  assert.equal(withSkip.status, 0);
+  assert.doesNotMatch(withSkip.stdout, /Other mesh pages:/);
+  assert.doesNotMatch(withSkip.stdout, /other mesh pages/);
+  assert.match(withSkip.stdout, /Skipped: hostnamegenerator@v2\./);
 });
