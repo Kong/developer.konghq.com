@@ -84,8 +84,6 @@ on-prem:
       WEBHOOK_URL: http://httpbin.konghq.com/anything
       SLACK_WEBHOOK_URL: http://httpbin.konghq.com/anything
       ANTHROPIC_API_KEY: anthropic-api-key
-      KONNECT_DOMAIN: konghq.tech
-      KONGCTL_DEFAULT_KONNECT_ENVIRONMENT: tech
     setup:
       commands:
         - export KONGCTL_DEFAULT_KONNECT_PAT=$KONNECT_TOKEN
@@ -187,20 +185,27 @@ konnect:
         - *delete-directories
 
   event-gateway:
+    env:
+      KONG_IMAGE_NAME: kong-event-gateway
+      KONG_IMAGE_TAG: latest
     setup:
       commands: []
 
     cleanup:
       commands:
-        - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -n automated-tests-event-gateway-quickstart -d
+        - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -n automated-tests-event-gateway-quickstart -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -d
         - docker compose -f /files/event-gateway/docker-compose.yaml down --remove-orphans
         - *delete-auth-servers
         - *delete-directories
 
     reset:
       commands:
-        - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -n automated-tests-event-gateway-quickstart -d
+        - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -n automated-tests-event-gateway-quickstart -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -d
         - docker compose -f /files/event-gateway/docker-compose.yaml down --remove-orphans
+        - docker compose -f /files/event-gateway/docker-compose.yaml up -d
+        - sleep 5
+        - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway -n automated-tests-event-gateway-quickstart -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG | tail -1 >> /env-vars.sh
+        - sleep 5
         # Wipe files a previous test file generated (kafkactl configs, certs, credential
         # scripts) so a stale one can't influence the file about to run.
         - find . -mindepth 1 -delete
@@ -213,5 +218,5 @@ konnect:
         commands:
           - docker compose -f /files/event-gateway/docker-compose.yaml up -d
           - sleep 5
-          - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway -n automated-tests-event-gateway-quickstart | tail -1 >> /env-vars.sh
+          - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway -n automated-tests-event-gateway-quickstart -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG | tail -1 >> /env-vars.sh
           - sleep 5

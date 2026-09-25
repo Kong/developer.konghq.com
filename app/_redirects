@@ -531,3 +531,9 @@
 
 # AI Auth Strategy rename
 /ai-gateway/entities/ai-identity-provider/ /ai-gateway/entities/ai-auth-strategy/ 301
+
+# Insomnia 13.3: documents and collections merged into API Collections
+/insomnia/documents/ /insomnia/collections/ 301
+/how-to/create-a-design-document/ /how-to/create-an-api-collection/ 301
+/how-to/import-an-api-spec-as-a-document/ /how-to/import-an-api-spec/ 301
+/how-to/generate-a-collection-from-a-design-document/ /how-to/generate-requests-from-an-api-spec/ 301

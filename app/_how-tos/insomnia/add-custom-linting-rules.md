@@ -12,7 +12,7 @@ products:
 min_version:
   insomnia: "13.0"
 tags:
-  - insomnia-documents
+  - design-apis
   - linting
 
 related_resources:
@@ -21,18 +21,18 @@ related_resources:
 
 tldr:
   q: How do I customize linting in {{ site.insomnia }}?
-  a: In your {{ site.insomnia }} document, click the upload icon for the **Default OAS Ruleset** and add a Spectral ruleset YAML file with your custom ruleset.
+  a: On the **Spec** tab of your {{ site.insomnia }} API Collection, click the upload icon for the **Default OAS Ruleset** and add a Spectral ruleset YAML file with your custom ruleset.
 
 prereqs:
   inline:
-  - title: Create a design document
-    include_content: prereqs/design-document
+  - title: Create an API Collection with a spec
+    include_content: prereqs/api-collection
     icon_url: /assets/icons/file.svg
 
 faqs:
   - q: How can I use custom linting with Inso CLI?
     a: |
-      Create a [Spectral ruleset](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) in YAML format, and upload it to an OAS file document in Insomnia by clicking the upload icon for the **Default OAS Ruleset**.
+      Create a [Spectral ruleset](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) in YAML format, and upload it to the OAS file in Insomnia by clicking the upload icon for the **Default OAS Ruleset**.
 
 ---
 
@@ -61,8 +61,9 @@ rules:
 
 ## Upload the ruleset file
 
-1. In the {{ site.insomnia }} app, navigate to a document with the OAS file you want to lint.
-2. Click the upload icon for **Default OAS Ruleset** at the bottom of the pane.
+1. In the {{ site.insomnia }} app, navigate to the API Collection with the OAS file you want to lint.
+1. Click the **Spec** tab.
+1. Click the upload icon for **Default OAS Ruleset** at the bottom of the pane.
 
 This places the ruleset file in the local working directory. {{ site.insomnia }} renames this custom ruleset as `.spectral.yaml`.
 

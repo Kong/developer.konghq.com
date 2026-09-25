@@ -50,6 +50,9 @@ mesh-scoped-zone-proxy:
 mcp-conversion-2-0:
   title: Map a RESTful API to MCP tools and observe MCP traffic
   url: /ai-gateway/map-api-to-mcp-tools/
+mcp-acls-2-1:
+  title: Control and observe MCP tool access with {{site.ai_gateway}}
+  url: /ai-gateway/use-access-controls-for-mcp-tools/
 a2a-identity-2-0:
   title: Secure AI Agent A2A traffic with {{site.identity}}
   url: /ai-gateway/set-up-kong-identity-for-a2a/

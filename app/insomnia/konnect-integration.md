@@ -29,7 +29,7 @@ related_resources:
   - text: Enterprise user management
     url: /insomnia/enterprise-user-management/
   - text: Migrate from scratch pad to Enterprise
-    url: /insomnia/migrate-from-scratch-pad-to-enterprise/
+    url: /insomnia/migrate-to-enterprise-from-scratchpad/
   - text: Link Konnect to Insomnia
     url: /how-to/link-konnect-to-insomnia/
 

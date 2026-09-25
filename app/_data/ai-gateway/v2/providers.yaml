@@ -84,6 +84,11 @@ providers:
         streaming: false
         model_example: ''
         min_version: ''
+      decisions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
     native_formats:
       - llm_format: 'bedrock'
         supported_apis:
@@ -180,6 +185,11 @@ providers:
         model_example: ''
         min_version: ''
       rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      decisions:
         supported: false
         streaming: false
         model_example: ''
@@ -290,6 +300,11 @@ providers:
         streaming: false
         model_example: ''
         min_version: ''
+      decisions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
     limitations:
       provider_specific: []
       statistics_logging:
@@ -371,6 +386,11 @@ providers:
         streaming: false
         model_example: ''
         min_version: ''
+      decisions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
     limitations:
       provider_specific: []
       statistics_logging: []
@@ -404,6 +424,11 @@ providers:
         upstream_path: '`/v1/rerank` or `/v2/rerank`'
         model_example: 'n/a'
         min_version: '2.0'
+      decisions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
       files:
         supported: false
         streaming: false
@@ -542,6 +567,11 @@ providers:
         streaming: false
         model_example: ''
         min_version: ''
+      decisions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
     limitations:
       provider_specific: []
       statistics_logging: []
@@ -630,6 +660,11 @@ providers:
         model_example: ''
         min_version: ''
       rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      decisions:
         supported: false
         streaming: false
         model_example: ''
@@ -734,6 +769,11 @@ providers:
         streaming: false
         model_example: ''
         min_version: ''
+      decisions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
     native_formats:
       - llm_format: 'gemini'
         supported_apis:
@@ -828,6 +868,11 @@ providers:
         streaming: false
         model_example: ''
         min_version: ''
+      decisions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
     native_formats:
       - llm_format: 'huggingface'
         supported_apis:
@@ -917,6 +962,11 @@ providers:
         streaming: false
         model_example: ''
         min_version: ''
+      decisions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
     limitations:
       provider_specific:
         - 'Raw format lacks support for embeddings'
@@ -997,6 +1047,11 @@ providers:
         model_example: ''
         min_version: ''
       rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      decisions:
         supported: false
         streaming: false
         model_example: ''
@@ -1084,6 +1139,11 @@ providers:
         model_example: ''
         min_version: ''
 
+      decisions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
   - name: OpenAI
     url_patterns:
       - 'https://api.openai.com:443/{capability_path}'
@@ -1181,6 +1241,11 @@ providers:
         streaming: false
         model_example: ''
         min_version: ''
+      decisions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
     limitations:
       provider_specific: []
       statistics_logging:
@@ -1258,6 +1323,11 @@ providers:
         model_example: ''
         min_version: ''
       rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      decisions:
         supported: false
         streaming: false
         model_example: ''
@@ -1345,6 +1415,11 @@ providers:
         streaming: false
         model_example: ''
         min_version: ''
+      decisions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
     limitations:
       provider_specific: []
       statistics_logging: []
@@ -1426,6 +1501,11 @@ providers:
         model_example: ''
         min_version: ''
 
+      decisions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
   - name: Kimi
     url_patterns:
       - 'https://api.moonshot.ai'
@@ -1498,6 +1578,11 @@ providers:
         model_example: ''
         min_version: ''
       rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      decisions:
         supported: false
         streaming: false
         model_example: ''
@@ -1582,6 +1667,11 @@ providers:
         streaming: false
         model_example: ''
         min_version: ''
+      decisions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
     limitations:
       provider_specific: []
       statistics_logging: []
@@ -1658,6 +1748,11 @@ providers:
         model_example: ''
         min_version: ''
       rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      decisions:
         supported: false
         streaming: false
         model_example: ''
@@ -1743,6 +1838,97 @@ providers:
         streaming: false
         model_example: ''
         min_version: ''
+      decisions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+    limitations:
+      provider_specific: []
+      statistics_logging: []
+
+  - name: TypeSafe AI
+    url_patterns:
+      - 'https://api.typesafe.ai'
+    min_version: '2.2'
+    capabilities:
+      generate:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      completions:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      embeddings:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      batches:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      files:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      image:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      video:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      agentic:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_speech:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_transcription:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      audio_translation:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      realtime:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      rerank:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
+      decisions:
+        supported: true
+        streaming: false
+        upstream_path: '`/v1/systemone`'
+        model_example: 'jev-latest'
+        min_version: '2.2'
+        note:
+          content: 'Requires `formats: [{type: typesafe}]` on the AI Model. See the [TypeSafe AI provider page](/ai-gateway/ai-providers/typesafe/) for request/response shape and limitations.'
+    native_formats:
+      - llm_format: 'typesafe'
+        supported_apis:
+          - '/v1/systemone'
     limitations:
       provider_specific: []
       statistics_logging: []
