@@ -1,7 +1,6 @@
 ---
 title: "Credit consumption and expiration"
 content_type: reference
-beta: true
 description: "Learn how credits are consumed by charges and how unused credits expire in {{site.konnect_short_name}} {{site.metering_and_billing}}."
 layout: reference
 products:

@@ -1,7 +1,6 @@
 ---
 title: "Prepaid credit operational flows"
 content_type: reference
-beta: true
 description: "Reference for common prepaid credit workflows in {{site.konnect_short_name}} {{site.metering_and_billing}}."
 layout: reference
 products:
