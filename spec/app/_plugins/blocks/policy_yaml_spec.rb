@@ -347,6 +347,123 @@ RSpec.describe Jekyll::RenderPolicyYaml do
     end
   end
 
+  describe 'JSON patch values as RFC 7159 text' do
+    let(:template) do
+      <<~LIQUID
+        {% policy_yaml %}
+        ```yaml
+        type: MeshProxyPatch
+        mesh: default
+        name: backend-stream-idle-timeout
+        spec:
+          targetRef:
+            kind: Dataplane
+            labels:
+              app: backend
+          default:
+            appendModifications:
+              - networkFilter:
+                  operation: Patch
+                  match:
+                    name: envoy.filters.network.http_connection_manager
+                    origin: inbound
+                  jsonPatches:
+                    - op: replace
+                      path: /streamIdleTimeout
+                      value: 15s
+        ```
+        {% endpolicy_yaml %}
+      LIQUID
+    end
+
+    it 'renders a string JSON patch value as its quoted JSON form on the Terraform tab only' do
+      html = render(template)
+      tf = html.find('div[data-panel="terraform"]').find('code').text
+      expect(tf).to eq(<<~HCL)
+        resource "konnect_mesh_proxy_patch" "backend_stream_idle_timeout" {
+          provider = konnect-beta
+          type = "MeshProxyPatch"
+          name = "backend-stream-idle-timeout"
+          spec = {
+            target_ref = {
+              kind = "Dataplane"
+              labels = {
+                app = "backend"
+              }
+            }
+            default = {
+              append_modifications = [
+                {
+                  network_filter = {
+                    operation = "Patch"
+                    match = {
+                      name = "envoy.filters.network.http_connection_manager"
+                      origin = "inbound"
+                    }
+                    json_patches = [
+                      {
+                        op = "replace"
+                        path = "/streamIdleTimeout"
+                        value = "\\"15s\\""
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+          labels   = {
+          "kuma.io/mesh" = konnect_mesh.my_mesh.name
+          }
+          cp_id    = konnect_mesh_control_plane.my_meshcontrolplane.id
+          mesh     = konnect_mesh.my_mesh.name
+        }
+      HCL
+
+      expect(yaml_text(html, 'kubernetes')).to include('value: 15s')
+      expect(yaml_text(html, 'universal')).to include('value: 15s')
+    end
+  end
+
+  describe 'JSON patch numeric values as RFC 7159 text' do
+    let(:template) do
+      <<~LIQUID
+        {% policy_yaml %}
+        ```yaml
+        type: MeshProxyPatch
+        mesh: default
+        name: patch-numeric
+        spec:
+          targetRef:
+            kind: Dataplane
+            labels:
+              app: backend
+          default:
+            appendModifications:
+              - networkFilter:
+                  operation: Patch
+                  match:
+                    name: envoy.filters.network.http_connection_manager
+                    origin: inbound
+                  jsonPatches:
+                    - op: replace
+                      path: /streamIdleTimeout
+                      value: 15
+        ```
+        {% endpolicy_yaml %}
+      LIQUID
+    end
+
+    it 'renders a number JSON patch value as its JSON literal in quotes' do
+      html = render(template)
+      tf = html.find('div[data-panel="terraform"]').find('code').text
+      expect(tf).to include('value = "15"')
+      expect(tf).not_to include('value = 15')
+      expect(yaml_text(html, 'kubernetes')).to include('value: 15')
+      expect(yaml_text(html, 'universal')).to include('value: 15')
+    end
+  end
+
   describe 'ExternalService Terraform resource naming' do
     let(:template) do
       <<~LIQUID

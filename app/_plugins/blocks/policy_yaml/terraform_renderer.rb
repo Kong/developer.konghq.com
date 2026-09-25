@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'json'
+
 module Jekyll
   module PolicyYaml
     # Renders a processed Universal-style YAML document as a Terraform `resource` block.
@@ -45,38 +47,53 @@ module Jekyll
         str.gsub(/([a-z])([A-Z])/, '\1_\2').gsub(/([A-Z])([A-Z][a-z])/, '\1_\2').downcase
       end
 
-      def convert(key, value, indent_level, in_array: false, last: true)
+      def convert(key, value, indent_level, in_array: false, last: true, parent_key: nil, array_key: nil)
         case value
-        when Hash then convert_hash(key, value, indent_level, in_array, last)
-        when Array then convert_array(key, value, indent_level, in_array, last)
-        else convert_scalar(key, value, indent_level, in_array, last)
+        when Hash then convert_hash(key, value, indent_level, in_array, last, parent_key, array_key)
+        when Array then convert_array(key, value, indent_level, in_array, last, array_key)
+        else convert_scalar(key, value, indent_level, in_array, last, parent_key, array_key)
         end
       end
 
-      def convert_hash(key, value, indent_level, in_array, last)
+      def convert_hash(key, value, indent_level, in_array, last, _parent_key, array_key)
         indent = '  ' * indent_level
         opening = in_array ? "#{indent}{\n" : "#{indent}#{hcl_key(key)} = {\n"
         entries = value.each_with_index.reduce(+'') do |acc, ((k, v), index)|
-          acc << convert(k, v, indent_level + 1, last: index == value.size - 1)
+          acc << convert(k, v, indent_level + 1, last: index == value.size - 1, parent_key: key, array_key: array_key)
         end
         "#{opening}#{entries}#{indent}}#{trailing_comma(in_array, last)}\n"
       end
 
-      def convert_array(key, value, indent_level, in_array, last)
+      def convert_array(key, value, indent_level, in_array, last, _array_key)
         indent = '  ' * indent_level
         entries = value.each_with_index.reduce(+'') do |acc, (v, index)|
-          acc << convert('', v, indent_level + 1, in_array: true, last: index == value.size - 1)
+          acc << convert('', v, indent_level + 1, in_array: true, last: index == value.size - 1,
+                                                  parent_key: '', array_key: key)
         end
         "#{indent}#{hcl_key(key)} = [\n#{entries}#{indent}]#{trailing_comma(in_array, last)}\n"
       end
 
-      def convert_scalar(key, value, indent_level, in_array, last)
+      def convert_scalar(key, value, indent_level, in_array, last, _parent_key, array_key)
         indent = '  ' * indent_level
         prefix = in_array ? '' : "#{hcl_key(key)} = "
-        rendered = format_value(value, indent)
+        rendered = if json_patch_value?(key, array_key)
+                     json_patch_value(value)
+                   else
+                     format_value(value, indent)
+                   end
         return "#{indent}#{prefix}#{rendered}#{trailing_comma(in_array, last)}\n" unless heredoc?(rendered, in_array)
 
         "#{indent}#{prefix}#{rendered}#{trailing_comma(in_array, last).sub(',', "\n#{indent},")}\n"
+      end
+
+      # The provider types jsonPatches[].value as a string holding RFC 7159
+      # JSON text, so a scalar patch value renders as its JSON encoding.
+      def json_patch_value?(key, array_key)
+        key == 'value' && array_key == 'jsonPatches'
+      end
+
+      def json_patch_value(value)
+        format_scalar(JSON.generate(value))
       end
 
       def heredoc?(rendered, in_array)
