@@ -612,3 +612,61 @@ test("an invalid --terraform-validate value exits non-zero with a diagnostic", (
     /Invalid --terraform-validate value "banana". Use off, warn, or gate./,
   );
 });
+
+test("the run prints a progress line per checking phase, completed when the phase ends", () => {
+  const root = buildFixtureRoot({
+    examples: [
+      { name: "terraform-valid", pageHtml: fixture("terraform-valid.html") },
+    ],
+  });
+
+  const result = runCli(root, [], {
+    MESH_VALIDATOR_TERRAFORM_BIN: stubTerraformPassing(),
+  });
+
+  assert.equal(result.status, 0);
+  assert.match(
+    result.stdout,
+    /Checking Kubernetes and Universal blocks\.\.\. done \(2 blocks\)/,
+  );
+  assert.match(
+    result.stdout,
+    /Checking terraform grammar\.\.\. done \(1 terraform block\(s\)\)/,
+  );
+  assert.match(
+    result.stdout,
+    /Validating against the provider schema\.\.\. done \(1 terraform block\(s\)\)/,
+  );
+
+  const phases = [
+    result.stdout.indexOf("Checking Kubernetes and Universal blocks..."),
+    result.stdout.indexOf("Checking terraform grammar..."),
+    result.stdout.indexOf("Validating against the provider schema..."),
+    result.stdout.indexOf("Checked 1 pages, 2 blocks"),
+  ];
+  assert.ok(
+    phases.every((index, i) => index !== -1 && (i === 0 || index > phases[i - 1])),
+    `phase lines and summary appear in order, got indexes ${phases.join(", ")}`,
+  );
+});
+
+test("off mode prints no provider-schema progress line but keeps the other phase lines", () => {
+  const root = buildFixtureRoot({
+    examples: [
+      { name: "terraform-valid", pageHtml: fixture("terraform-valid.html") },
+    ],
+  });
+
+  const result = runCli(root, ["--terraform-validate=off"], {
+    MESH_VALIDATOR_TERRAFORM_BIN: stubTerraform(),
+  });
+
+  assert.equal(result.status, 0);
+  assert.doesNotMatch(result.stdout, /Validating against the provider schema/);
+  assert.match(
+    result.stdout,
+    /Checking Kubernetes and Universal blocks\.\.\. done \(2 blocks\)/,
+  );
+  assert.match(result.stdout, /Checking terraform grammar\.\.\. done/);
+  assert.match(result.stdout, /Checked 1 pages, 2 blocks/);
+});

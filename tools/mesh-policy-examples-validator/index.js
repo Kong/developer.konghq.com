@@ -169,25 +169,37 @@ export async function run(argv, root) {
     return { ...process.env, TF_PLUGIN_CACHE_DIR: pluginCacheDir };
   };
 
-  for (const builtPage of builtPages) {
+  // Parse every page once and cache the extracted blocks, so the second and
+  // third passes do not re-read the pages.
+  const pages = builtPages.map((builtPage) => {
     const { crds } = releasesByMajor.get(
       parseBuiltPage(builtPage).major ?? latest,
     );
     const sourcePath = builtPageToSourcePath(root, builtPage);
-    const relativeSource = path.relative(root, sourcePath);
     const html = fs.readFileSync(path.join(root, builtPage), "utf-8");
-
     const { entries, findings: parseFindings } = extractDocuments(html);
-    for (const finding of parseFindings) {
-      findings.push({ source: relativeSource, ...finding });
+    return {
+      crds,
+      relativeSource: path.relative(root, sourcePath),
+      entries,
+      parseFindings,
+      tfBlocks: extractTerraformBlocks(html),
+    };
+  });
+
+  // First pass: the Kubernetes and Universal block checks.
+  process.stdout.write("Checking Kubernetes and Universal blocks... ");
+  for (const page of pages) {
+    for (const finding of page.parseFindings) {
+      findings.push({ source: page.relativeSource, ...finding });
     }
 
-    for (const block of entries) {
+    for (const block of page.entries) {
       blocksChecked++;
 
       for (const pointer of findNullValues(block.value)) {
         findings.push({
-          source: relativeSource,
+          source: page.relativeSource,
           panel: block.panel,
           pointer,
           message: "value is null",
@@ -196,7 +208,7 @@ export async function run(argv, root) {
 
       for (const pointer of findMarkerFields(block.value)) {
         findings.push({
-          source: relativeSource,
+          source: page.relativeSource,
           panel: block.panel,
           pointer,
           message: "renderer marker field survived rendering",
@@ -205,46 +217,59 @@ export async function run(argv, root) {
 
       const { findings: schemaFindings, hasCoverage } = checkSchema(
         block,
-        crds,
+        page.crds,
         ajv,
       );
       if (hasCoverage) blocksWithCoverage++;
       for (const finding of schemaFindings) {
         findings.push({
-          source: relativeSource,
+          source: page.relativeSource,
           panel: block.panel,
           ...finding,
         });
       }
     }
+  }
+  console.log(`done (${blocksChecked} blocks)`);
 
-    for (const tfBlock of extractTerraformBlocks(html)) {
+  // Second pass: the terraform grammar check, which runs in every mode.
+  process.stdout.write("Checking terraform grammar... ");
+  for (const page of pages) {
+    for (const tfBlock of page.tfBlocks) {
       terraformBlocksChecked++;
 
       const grammarFinding = checkHclGrammar(tfBlock.text);
       if (grammarFinding) {
         findings.push({
-          source: relativeSource,
+          source: page.relativeSource,
           panel: tfBlock.panel,
           pointer: "/",
           severity: "gating",
           ...grammarFinding,
         });
       }
+    }
+  }
+  console.log(`done (${terraformBlocksChecked} terraform block(s))`);
 
-      if (terraformValidate === "off") continue;
-
-      const schemaFinding = checkProviderSchema(tfBlock.text, terraformEnv());
-      if (schemaFinding) {
-        findings.push({
-          source: relativeSource,
-          panel: tfBlock.panel,
-          pointer: "/",
-          severity: terraformValidate === "warn" ? "advisory" : "gating",
-          ...schemaFinding,
-        });
+  // Third pass: the provider-schema validation, skipped in off mode.
+  if (terraformValidate !== "off") {
+    process.stdout.write("Validating against the provider schema... ");
+    for (const page of pages) {
+      for (const tfBlock of page.tfBlocks) {
+        const schemaFinding = checkProviderSchema(tfBlock.text, terraformEnv());
+        if (schemaFinding) {
+          findings.push({
+            source: page.relativeSource,
+            panel: tfBlock.panel,
+            pointer: "/",
+            severity: terraformValidate === "warn" ? "advisory" : "gating",
+            ...schemaFinding,
+          });
+        }
       }
     }
+    console.log(`done (${terraformBlocksChecked} terraform block(s))`);
   }
 
   for (const finding of findings) {
