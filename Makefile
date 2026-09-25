@@ -19,9 +19,13 @@ install:
 	yarn install --immutable
 	bundle install
 	cd tools/frontmatter-validator && npm ci
+	cd tools/changelog-validator && npm ci
 
 validate-frontmatters:
 	npm --prefix tools/frontmatter-validator run validate
+
+validate-konnect-changelog:
+	npm --prefix tools/changelog-validator run validate
 
 # Using local dependencies, starts a doc site instance on http://localhost:4000.
 run: ruby-version-check validate-frontmatters

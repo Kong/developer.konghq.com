@@ -1,0 +1,24 @@
+{
+  "$id": "schema:changelog:konnect",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["title", "date", "content"],
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "content": {
+      "type": "string",
+      "minLength": 1
+    },
+    "url": {
+      "type": "string",
+      "format": "uri"
+    }
+  }
+}
