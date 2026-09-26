@@ -31,6 +31,7 @@ Flags:
                                 - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
                                 - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
       --config-file string      Path to the configuration file to load.
+                                - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
   -D, --display-only-failures   Only output results with severity equal to or greater than --fail-severity
   -F, --fail-severity string    Results of this severity or above will trigger a failure exit code. Allowed: [ error | warn | info | hint ] (default "error")

@@ -27,6 +27,7 @@ Flags:
       --columns stringArray     Select text columns as HEADER=.field (repeatable or comma-separated).
                                 Supports nested fields, quoted keys, array indexes, and string slices.
       --config-file string      Path to the configuration file to load.
+                                - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
       --consumer-id string      The ID of the AI Gateway Consumer to retrieve.
                                 - Config path: [ konnect.ai-gateway.consumer.id ]
