@@ -14,6 +14,8 @@ related_resources:
     url: /plugins/openid-connect/#kong-oauth-token-authentication-flow
   - text: OpenID Connect tutorials
     url: /how-to/?query=openid-connect
+  - text: Migrate from the OAuth 2.0 plugin to {{site.identity}}
+    url: /identity/migrate-oauth-to-identity/
 
 plugins:
   - openid-connect
