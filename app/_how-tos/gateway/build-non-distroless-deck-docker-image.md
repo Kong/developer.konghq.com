@@ -28,8 +28,6 @@ tldr:
     The result is the released binaries with a shell and package manager available inside the container.
 
 related_resources:
-  - text: Use the decK Docker container
-    url: /support/how-to-use-the-deck-with-container/
   - text: Build a custom {{site.base_gateway}} Docker image
     url: /how-to/build-custom-docker-image/
   - text: Kong decK GitHub repository
@@ -42,7 +40,6 @@ related_resources:
     url: https://hub.docker.com/r/kong/deck
 
 prereqs:
-  skip_product: true
   inline:
     - title: Docker Buildx
       content: |
@@ -50,6 +47,25 @@ prereqs:
     - title: Network access to Docker Hub
       content: |
         The build pulls both the official `kong/deck` image and the Alpine base image from Docker Hub.
+    - title: A reachable {{site.base_gateway}} Admin API
+      content: |
+        Validating the image and running decK against a real configuration requires a {{site.base_gateway}} Admin API reachable from the container `deck` runs in. Set `KONG_HOST` to that address:
+        ```sh
+        export KONG_HOST=<kong-host>
+        ```
+
+faqs:
+  - q: Why does a write operation like `deck gateway dump` fail with a permission error in this image?
+    a: |
+      The non-distroless decK Docker image runs as UID `65532`. On a Linux host, bind mounts preserve host ownership, so a write operation like `deck gateway dump -o kong.yaml` fails with a permission error on a directory owned by your own user.
+
+      Either make the directory writable by that UID (`chmod a+w .` or `chown 65532 .`), or run as your own user for write operations:
+      ```sh
+      docker run --rm -u "$(id -u):$(id -g)" -v "$(pwd):/files" -w /files \
+        my-org/deck:v1.66.1-alpine gateway dump --kong-addr http://$KONG_HOST:8001 -o kong.yaml
+      ```
+
+      On Docker for Mac or Windows this usually isn't needed: bind mounts pass through a VM translation layer that presents the mount as `uid=0` and doesn't enforce host UID ownership, so writes as 65532 succeed anyway.
 
 automated_tests: false
 ---
@@ -66,52 +82,60 @@ The official `kong/deck` Docker image uses a distroless base starting with v1.65
 
 Kong's official image is multi-arch and already contains both `deck` and `jq` at `/usr/local/bin`. Reference a release tag by digest and copy them onto a full-OS base, rather than building decK from source.
 
-Create `Dockerfile.alpine` using the following as a reference.
+1. Create `Dockerfile.alpine`, which copies `deck` and `jq` from Kong's official image onto an Alpine base:
 
-```dockerfile
-FROM alpine:3.24.2@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6
+   ```bash
+   cat <<'EOF' > Dockerfile.alpine
+   FROM alpine:3.24.2@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6
 
-LABEL org.opencontainers.image.title="deck" \
-      org.opencontainers.image.description="Declarative configuration for Kong (non-distroless build)" \
-      org.opencontainers.image.url="https://github.com/Kong/deck" \
-      org.opencontainers.image.source="https://github.com/Kong/deck" \
-      org.opencontainers.image.licenses="Apache-2.0" \
-      org.opencontainers.image.vendor="Kong Inc."
+   LABEL org.opencontainers.image.title="deck" \
+         org.opencontainers.image.description="Declarative configuration for Kong (non-distroless build)" \
+         org.opencontainers.image.url="https://github.com/Kong/deck" \
+         org.opencontainers.image.source="https://github.com/Kong/deck" \
+         org.opencontainers.image.licenses="Apache-2.0" \
+         org.opencontainers.image.vendor="Kong Inc."
 
-USER 65532:65532
+   USER 65532:65532
 
-# Copy deck and jq straight out of Kong's official image.
-COPY --from=kong/deck:v1.66.1@sha256:0cc102cfc074abb865dcaf9222228176c39e548bb01ed7893f07c1c3adc298d6 \
-     /usr/local/bin/deck \
-     /usr/local/bin/jq \
-     /usr/local/bin/
+   # Copy deck and jq straight out of Kong's official image.
+   COPY --from=kong/deck:v1.66.1@sha256:0cc102cfc074abb865dcaf9222228176c39e548bb01ed7893f07c1c3adc298d6 \
+        /usr/local/bin/deck \
+        /usr/local/bin/jq \
+        /usr/local/bin/
 
-ENTRYPOINT ["deck"]
-```
+   ENTRYPOINT ["deck"]
+   EOF
+   ```
 
-No packages are installed: Alpine already ships `/bin/sh`, `apk`, and `ca-certificates-bundle`, so TLS to the Kong Admin API or {{site.konnect_short_name}} works as-is. `USER 65532:65532` reuses the distroless base's non-root UID, which also means `apk add` at runtime needs `docker run -u 0`.
+   No packages are installed: Alpine already ships `/bin/sh`, `apk`, and `ca-certificates-bundle`, so TLS to the Kong Admin API or {{site.konnect_short_name}} works as-is. `USER 65532:65532` reuses the distroless base's non-root UID, which also means `apk add` at runtime needs `docker run -u 0`.
 
-Pin both images by digest, since the version tags are mutable:
+2. Pin both images by digest, since the version tags are mutable:
 
-```sh
-docker buildx imagetools inspect kong/deck:v1.66.1 --format '{% raw %}{{.Manifest.Digest}}{% endraw %}'
-# then: COPY --from=kong/deck:v1.66.1@sha256:<digest> ...
+   ```sh
+   docker buildx imagetools inspect kong/deck:v1.66.1 --format '{% raw %}{{.Manifest.Digest}}{% endraw %}'
+   # then: COPY --from=kong/deck:v1.66.1@sha256:<digest> ...
 
-docker buildx imagetools inspect alpine:3.24.2 --format '{% raw %}{{.Manifest.Digest}}{% endraw %}'
-# then: FROM alpine:3.24.2@sha256:<digest>
-```
+   docker buildx imagetools inspect alpine:3.24.2 --format '{% raw %}{{.Manifest.Digest}}{% endraw %}'
+   # then: FROM alpine:3.24.2@sha256:<digest>
+   ```
 
-In `name:tag@sha256:...`, the digest wins and the tag is decorative, so update both together when you bump either image.
+   In `name:tag@sha256:...`, the digest wins and the tag is decorative, so update both together when you bump either image.
 
 ## Build the image
 
-For a single architecture:
+{% navtabs "build-deck-image" %}
+{% navtab "Single architecture" %}
+
+Build the image for your local architecture:
 
 ```sh
 docker build \
   -f Dockerfile.alpine \
   -t my-org/deck:v1.66.1-alpine .
 ```
+
+{% endnavtab %}
+{% navtab "Mixed architecture" %}
 
 If you're replacing the official image across a mixed-arch fleet, build the same Dockerfile with Buildx to match Kong's platform coverage:
 
@@ -125,32 +149,36 @@ docker buildx build \
 
 Log in to `<your-registry>` with `docker login` first. A multi-platform result can't be loaded into the default local image store, hence `--push`. If you've enabled the containerd image store, `--load` works instead.
 
-Because the Dockerfile has no `RUN` instruction, nothing executes inside the target rootfs (BuildKit performs the `COPY` on the host), so cross-building needs no QEMU emulation regardless of your host architecture. Adding a `RUN` changes that: `apk add --no-cache bash` for a richer shell, or `ca-certificates` for `update-ca-certificates` to trust a private CA, will execute on the target platform and cross-builds will then need emulation registered.
+{% endnavtab %}
+{% endnavtabs %}
+
+Because the Dockerfile has no `RUN` instruction, nothing executes inside the target rootfs (BuildKit performs the `COPY` on the host), so cross-building doesn't need QEMU emulation regardless of your host architecture. Adding a `RUN` changes that: `apk add --no-cache bash` for a richer shell, or `ca-certificates` for `update-ca-certificates` to trust a private CA, will execute on the target platform, so cross-builds will then need emulation registered for that platform.
 
 ## Validate the image
 
-Confirm the version:
+1. Confirm the version:
 
-```sh
-docker run --rm my-org/deck:v1.66.1-alpine version
-```
+   ```sh
+   docker run --rm my-org/deck:v1.66.1-alpine version
+   ```
 
-Confirm the shell is present. This is what fails against stock `kong/deck` v1.65.2 and later, which has no `sh`, `bash`, or `ash`:
+2. Confirm the shell is present:
 
-```sh
-docker run --rm -it --entrypoint sh my-org/deck:v1.66.1-alpine
-# should drop you into an interactive shell as UID 65532
-```
+   ```sh
+   docker run --rm -it --entrypoint sh my-org/deck:v1.66.1-alpine
+   ```
 
-Confirm the image can reach your Kong Admin API, and that decK itself works against it:
+   This will drop you into an interactive shell as UID `65532`.
 
-```sh
-docker run --rm --entrypoint sh my-org/deck:v1.66.1-alpine \
-  -c "wget -q -O- http://<kong-host>:8001/ && echo OK"
+3. Confirm the image can reach {{site.base_gateway}}, and that decK works with it:
 
-docker run --rm my-org/deck:v1.66.1-alpine \
-  gateway ping --kong-addr http://<kong-host>:8001
-```
+   ```sh
+   docker run --rm --entrypoint sh my-org/deck:v1.66.1-alpine \
+     -c "wget -q -O- http://$KONG_HOST:8001/ && echo OK"
+
+   docker run --rm my-org/deck:v1.66.1-alpine \
+     gateway ping --kong-addr http://$KONG_HOST:8001
+   ```
 
 ## Run decK with a declarative configuration
 
@@ -162,22 +190,13 @@ docker run --rm \
   -w /files \
   my-org/deck:v1.66.1-alpine \
   gateway sync \
-  --kong-addr http://<kong-host>:8001 \
+  --kong-addr http://$KONG_HOST:8001 \
   kong.yaml
 ```
 
-The container runs as UID 65532. On a Linux host, bind mounts preserve host ownership, so commands that write to the mount, for example `deck gateway dump -o kong.yaml`, fail with a permission error on a directory owned by your user. Either make the directory writable by that UID (`chmod a+w .` or `chown 65532 .`), or run as your own user for write operations:
-
-```sh
-docker run --rm -u "$(id -u):$(id -g)" -v "$(pwd):/files" -w /files \
-  my-org/deck:v1.66.1-alpine gateway dump --kong-addr http://<kong-host>:8001 -o kong.yaml
-```
-
-On Docker for Mac or Windows this usually isn't needed: bind mounts pass through a VM translation layer that presents the mount as `uid=0` and doesn't enforce host UID ownership, so writes as 65532 succeed anyway.
-
 ## Maintenance
 
-This is not a Kong-published artifact, so you own rebuilding it on every decK release and patching CVEs in whichever base OS you chose.
+The image you build here is not a Kong-published artifact, so you own rebuilding it on every decK release and patching CVEs in whichever base OS you chose.
 
 - Always reference an official `kong/deck` release tag, not a moving tag, so your image matches a released version of decK.
 - Bump the `kong/deck` tag and digest together to pick up a new decK release.
