@@ -1,0 +1,29 @@
+title: 'Give a subset of workloads their own identity'
+
+description: 'A narrower selector wins over a mesh-wide one, so these proxies are issued from this identity instead. Their trust domain changes with it, so publish a MeshTrust for it before applying.'
+
+weight: 600
+
+config:
+  type: MeshIdentity
+  name: payments-identity
+  mesh: default
+  spec:
+    selector:
+      dataplane:
+        matchLabels:
+          app: payments
+    provider:
+      type: Bundled
+      bundled:
+        ca:
+          certificate:
+            type: Secret
+            secretRef:
+              kind: Secret
+              name: payments-ca-cert
+          privateKey:
+            type: Secret
+            secretRef:
+              kind: Secret
+              name: payments-ca-key

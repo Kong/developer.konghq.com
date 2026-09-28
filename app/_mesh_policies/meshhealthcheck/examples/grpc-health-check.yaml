@@ -1,0 +1,27 @@
+title: 'Probe a gRPC destination'
+
+description: 'Use MeshHealthCheck to call a destination gRPC health service, naming the service to check.'
+
+weight: 700
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshHealthCheck
+  name: web-to-cart-grpc
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: web
+    to:
+      - targetRef:
+          kind: MeshService
+          labels:
+            kuma.io/display-name: cart
+        default:
+          interval: 10s
+          timeout: 2s
+          grpc:
+            serviceName: cart.v1.Cart

@@ -1,5 +1,9 @@
 title: 'Logging to multiple backends'
 
+tools:
+  - kubernetes
+  - universal
+
 description: 'This configuration logs to three backends: TCP, file and OpenTelemetry.'
 
 weight: 870

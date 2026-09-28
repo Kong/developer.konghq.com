@@ -1,0 +1,42 @@
+title: 'Load a helper module without a separate decision'
+
+description: 'Use ignoreDecision for a helper module referenced by an enforcing module. The helper does not need its own allow decision. This does not enable automatic shadow evaluation of an independent candidate policy.'
+
+weight: 700
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshOPA
+  name: candidate-rule
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    default:
+      appendPolicies:
+        - ignoreDecision: true
+          rego:
+            type: InsecureInline
+            insecureInline:
+              value: |
+                package backend.helpers
+
+                import input.attributes.request.http as http_request
+
+                method_is_get {
+                  http_request.method == "GET"
+                }
+        - rego:
+            type: InsecureInline
+            insecureInline:
+              value: |
+                package backend.authorization
+
+                default allow = false
+
+                allow {
+                  data.backend.helpers.method_is_get
+                }

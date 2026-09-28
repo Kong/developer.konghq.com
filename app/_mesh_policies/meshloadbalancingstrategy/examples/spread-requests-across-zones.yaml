@@ -1,0 +1,21 @@
+title: 'Remove the automatic local-zone preference'
+
+description: 'Remove the automatic preference for endpoints in the caller zone. Distribution still depends on the selected algorithm, endpoint weights, and health; this does not guarantee an equal share per zone. Remove any inherited localZone or crossZone grouping when using this configuration.'
+
+weight: 700
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshLoadBalancingStrategy
+  name: backend-no-locality
+  mesh: default
+  spec:
+    to:
+      - targetRef:
+          kind: MeshMultiZoneService
+          labels:
+            kuma.io/display-name: backend
+        default:
+          localityAwareness:
+            disabled: true

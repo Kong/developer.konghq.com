@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="825" viewBox="0 135 1600 825" role="img" aria-labelledby="title desc">
+  <title id="title">Kong Mesh: central configuration, distributed enforcement</title>
+  <desc id="desc">A Konnect-managed or self-hosted global control plane distributes configuration to zone control planes. Services on Kubernetes and virtual machines communicate through local mesh proxies. Cross-zone traffic passes through mesh-scoped zone ingress at the receiving zone. Separate examples show an API gateway with a mesh proxy handling application ingress, and zone egress handling external-service traffic. This is a conceptual overview, not an exhaustive deployment topology.</desc>
+  <defs>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0H0V48" fill="none" stroke="#15301e" stroke-opacity=".24"/></pattern>
+    <radialGradient id="glow"><stop stop-color="#a8db00" stop-opacity=".065"/><stop offset="1" stop-color="#a8db00" stop-opacity="0"/></radialGradient>
+    <marker id="lime-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="#c8ff00" stroke-width="1.5"/></marker>
+    <marker id="teal-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="#39d8c5" stroke-width="1.5"/></marker>
+    <style>
+      text{font-family:Inter,Arial,Helvetica,sans-serif;fill:#f4f7ef}
+      .eyebrow{font-size:14px;font-weight:700;letter-spacing:2px;fill:#aeb8a8}
+      .heading{font-size:24px;font-weight:700}
+      .body{font-size:18px;fill:#b7c2b0}
+      .label{font-size:18px;font-weight:600}
+      .small{font-size:15px;fill:#b7c2b0}
+      .lime{fill:#c8ff00}
+      .panel{fill:#09150e;stroke:#2b3d24;stroke-width:1.5}
+      .tile{fill:#101b12;stroke:#2b3928;stroke-width:1.2}
+      .proxy{fill:#1c290c;stroke:#789820;stroke-width:1}
+      .config{fill:none;stroke:#7d8e71;stroke-width:1.5;stroke-dasharray:5 7}
+      .traffic{fill:none;stroke:#c8ff00;stroke-width:2;marker-end:url(#lime-arrow)}
+      .boundary{fill:none;stroke:#39d8c5;stroke-width:2;marker-end:url(#teal-arrow)}
+    </style>
+  </defs>
+  <rect width="1600" height="1000" fill="#021108"/>
+  <rect width="1600" height="1000" fill="url(#grid)"/>
+  <ellipse cx="800" cy="500" rx="760" ry="480" fill="url(#glow)"/>
+
+  <rect x="350" y="158" width="900" height="165" rx="16" class="panel"/>
+  <circle cx="382" cy="190" r="5" fill="#c8ff00"/>
+  <text x="400" y="198" class="heading">Global control plane</text>
+  <text x="382" y="230" class="body">Konnect-managed or self-hosted</text>
+  <g class="small">
+    <rect x="374" y="254" width="196" height="44" rx="7" class="tile"/>
+    <text x="472" y="282" text-anchor="middle">Identity &amp; trust</text>
+    <rect x="583" y="254" width="183" height="44" rx="7" class="tile"/>
+    <text x="674" y="282" text-anchor="middle">Access policies</text>
+    <rect x="779" y="254" width="207" height="44" rx="7" class="tile"/>
+    <text x="882" y="282" text-anchor="middle">Routing &amp; resilience</text>
+    <rect x="999" y="254" width="227" height="44" rx="7" class="tile"/>
+    <text x="1112" y="282" text-anchor="middle">Metrics, logs &amp; traces</text>
+  </g>
+  <path d="M530 323V350H382V439M1070 323V350H1210V439" class="config"/>
+  <text x="800" y="359" text-anchor="middle" class="small">Configuration distributed to each zone</text>
+
+  <rect x="64" y="387" width="650" height="329" rx="15" class="panel"/>
+  <rect x="886" y="387" width="650" height="329" rx="15" class="panel"/>
+  <text x="91" y="423" class="eyebrow">ZONE A <tspan fill="#c8ff00">/ KUBERNETES</tspan></text>
+  <text x="913" y="423" class="eyebrow">ZONE B <tspan fill="#c8ff00">/ VMs &amp; BARE METAL</tspan></text>
+
+  <rect x="269" y="443" width="226" height="38" rx="7" class="tile"/>
+  <text x="382" y="468" text-anchor="middle" class="small">Zone control plane</text>
+  <rect x="1097" y="443" width="226" height="38" rx="7" class="tile"/>
+  <text x="1210" y="468" text-anchor="middle" class="small">Zone control plane</text>
+  <path d="M382 481V505H207V535M382 505H567V535M1210 481V505H1147V535M1210 505H1404V535M1210 505H963V575" class="config"/>
+
+  <rect x="99" y="535" width="216" height="139" rx="11" class="tile"/>
+  <text x="207" y="574" text-anchor="middle" class="heading">Frontend</text>
+  <text x="207" y="600" text-anchor="middle" class="small">Application Pod</text>
+  <rect x="113" y="621" width="188" height="38" rx="7" class="proxy"/>
+  <text x="207" y="646" text-anchor="middle" class="label lime">Mesh proxy</text>
+
+  <rect x="459" y="535" width="216" height="139" rx="11" class="tile"/>
+  <text x="567" y="574" text-anchor="middle" class="heading">Payments</text>
+  <text x="567" y="600" text-anchor="middle" class="small">Application Pod</text>
+  <rect x="473" y="621" width="188" height="38" rx="7" class="proxy"/>
+  <text x="567" y="646" text-anchor="middle" class="label lime">Mesh proxy</text>
+  <path d="M301 640H473" class="traffic"/>
+  <text x="387" y="624" text-anchor="middle" class="small">mTLS</text>
+
+  <rect x="912" y="575" width="102" height="99" rx="9" class="proxy"/>
+  <text x="963" y="601" text-anchor="middle" class="small">Mesh-scoped</text>
+  <text x="963" y="629" text-anchor="middle" class="label">Zone</text>
+  <text x="963" y="653" text-anchor="middle" class="label">ingress</text>
+
+  <rect x="1053" y="535" width="188" height="139" rx="11" class="tile"/>
+  <text x="1147" y="574" text-anchor="middle" class="heading">Orders</text>
+  <text x="1147" y="600" text-anchor="middle" class="small">VM workload</text>
+  <rect x="1065" y="621" width="164" height="38" rx="7" class="proxy"/>
+  <text x="1147" y="646" text-anchor="middle" class="label lime">Mesh proxy</text>
+
+  <rect x="1310" y="535" width="188" height="139" rx="11" class="tile"/>
+  <text x="1404" y="574" text-anchor="middle" class="heading">Inventory</text>
+  <text x="1404" y="600" text-anchor="middle" class="small">VM workload</text>
+  <rect x="1322" y="621" width="164" height="38" rx="7" class="proxy"/>
+  <text x="1404" y="646" text-anchor="middle" class="label lime">Mesh proxy</text>
+  <path d="M661 640H912M1014 640H1065M1229 640H1322" class="traffic"/>
+  <text x="800" y="586" text-anchor="middle" class="small">Across zones</text>
+  <text x="800" y="611" text-anchor="middle" class="small lime">End-to-end mTLS</text>
+  <text x="1276" y="624" text-anchor="middle" class="small">mTLS</text>
+  <text x="91" y="700" class="small">Traffic policies enforced by application proxies</text>
+  <text x="913" y="700" class="small">Zone ingress forwards the encrypted connection</text>
+
+  <text x="64" y="760" class="eyebrow">CONNECT BEYOND THE MESH</text>
+  <text x="1536" y="760" text-anchor="end" class="small">Two distinct traffic paths</text>
+  <rect x="64" y="783" width="718" height="119" rx="12" class="panel"/>
+  <rect x="804" y="783" width="732" height="119" rx="12" class="panel"/>
+  <text x="87" y="810" class="eyebrow">APPLICATION INGRESS</text>
+  <text x="827" y="810" class="eyebrow">EXTERNAL-SERVICE EGRESS</text>
+  <text x="87" y="853" class="label">External clients</text>
+  <path d="M230 847H292" class="boundary"/>
+  <rect x="300" y="825" width="243" height="57" rx="7" class="tile"/>
+  <text x="421" y="849" text-anchor="middle" class="label">API gateway</text>
+  <text x="421" y="871" text-anchor="middle" class="small lime">+ mesh proxy</text>
+  <path d="M543 847H601" class="traffic"/>
+  <text x="620" y="853" class="label">Mesh service</text>
+  <text x="620" y="876" class="small lime">+ mesh proxy</text>
+
+  <text x="827" y="853" class="label">Mesh service</text>
+  <text x="827" y="876" class="small lime">+ mesh proxy</text>
+  <path d="M956 847H1027" class="traffic"/>
+  <rect x="1040" y="825" width="220" height="57" rx="7" class="tile"/>
+  <text x="1150" y="849" text-anchor="middle" class="label">Zone egress</text>
+  <text x="1150" y="871" text-anchor="middle" class="small">Mesh-scoped</text>
+  <path d="M1260 847H1331" class="boundary"/>
+  <text x="1346" y="853" class="label">External service</text>
+
+  <path d="M66 952H103" class="config"/>
+  <text x="117" y="958" class="small">Configuration</text>
+  <path d="M291 952H328" stroke="#c8ff00" stroke-width="2"/>
+  <text x="342" y="958" class="small">Mesh mTLS</text>
+  <path d="M510 952H547" stroke="#39d8c5" stroke-width="2"/>
+  <text x="561" y="958" class="small">External connection</text>
+  <text x="1536" y="958" text-anchor="end" class="label">Central configuration. Distributed enforcement.</text>
+</svg>

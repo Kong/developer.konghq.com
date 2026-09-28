@@ -1,0 +1,25 @@
+title: 'Rotate a CA without breaking verification'
+
+description: 'Publish the new CA alongside the old one so both are trusted while workloads are re-issued, then remove the old entry.'
+
+weight: 800
+
+config:
+  type: MeshTrust
+  name: corporate-ca
+  mesh: default
+  spec:
+    trustDomain: corp.example.com
+    caBundles:
+      - type: Pem
+        pem:
+          value: |
+            -----BEGIN CERTIFICATE-----
+            ... the new CA ...
+            -----END CERTIFICATE-----
+      - type: Pem
+        pem:
+          value: |
+            -----BEGIN CERTIFICATE-----
+            ... the CA being retired ...
+            -----END CERTIFICATE-----

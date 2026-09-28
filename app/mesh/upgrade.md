@@ -15,6 +15,8 @@ works_on:
   - on-prem
 
 related_resources:
+  - text: Check readiness for {{site.mesh_product_name}} 3
+    url: /mesh/check-upgrade-readiness/
   - text: Version-specific upgrade notes
     url: /mesh/version-specific-upgrade-notes/
   - text: Version support policy
@@ -23,6 +25,33 @@ related_resources:
 min_version:
   mesh: '2.6'
 ---
+
+## Upgrade from 2.x to 3
+
+Version 3 removes legacy policy APIs, mesh-wide mTLS configuration, and shared ZoneIngress and
+ZoneEgress resources. Prepare those resources and traffic paths while the deployment is still on
+2.14; this is more than a control plane and data plane rollout.
+
+1. [Run the Mesh 3 readiness checker](/mesh/check-upgrade-readiness/) against the current 2.x
+   deployment and save the report.
+1. Bring every control plane and data plane proxy to the latest supported 2.14 patch. Follow the
+   [version-specific upgrade notes](/mesh/version-specific-upgrade-notes/) for every intermediate
+   release in the upgrade path.
+1. Resolve the report using the migration guides for
+   [mTLS and MeshIdentity](/mesh/migrate-mtls-to-meshidentity/),
+   [mesh-scoped zone proxies](/mesh/migrate-zone-proxies-to-3/), and
+   [policies](/mesh/migrate-policies-to-3/). The guides explain their dependencies and the order
+   in which live traffic changes.
+1. Rerun the readiness checker against the complete estate. Resolve every blocker and coverage
+   gap, complete its manual checks, and validate representative traffic.
+1. Upgrade a non-production zone first. Repeat the product and traffic checks before proceeding
+   through the remaining zones.
+
+Do not use the normal rolling-upgrade sequence below as a substitute for the 2.x-to-3 migration.
+The readiness report identifies configuration visible through the control plane API; the migration
+guides cover the live traffic behavior that the report cannot verify.
+
+## Compatibility between minor versions
 
 Starting with {{site.mesh_product_name}} 1.4.x, upgrades can be performed up to two minor versions. For example:
 * You can upgrade from `2.12.x` to `2.13.x`
