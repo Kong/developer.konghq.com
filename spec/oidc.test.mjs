@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { after, before, test } from "node:test";
+import vm from "node:vm";
 import { exportJWK, generateKeyPair, SignJWT } from "jose";
 import login from "../netlify/functions/oidc-login.mjs";
 import callback from "../netlify/functions/oidc-callback.mjs";
+import { fetchControlPlanes } from "../netlify/utils/oidc.mjs";
 
 const originalFetch = globalThis.fetch;
 const originalEnv = {
@@ -11,6 +13,7 @@ const originalEnv = {
   OIDC_CLIENT_ID: process.env.OIDC_CLIENT_ID,
   OIDC_CLIENT_SECRET: process.env.OIDC_CLIENT_SECRET,
   OIDC_DEBUG_TOKENS: process.env.OIDC_DEBUG_TOKENS,
+  KONNECT_CONTROL_PLANE_API_BASE_URL: process.env.KONNECT_CONTROL_PLANE_API_BASE_URL,
 };
 
 const issuer = "https://identity.example.test";
@@ -33,6 +36,10 @@ let profileFullName = "Ada Lovelace";
 let organizationRequests = 0;
 let organizationStatus = 200;
 let organizationName = "Kong";
+let controlPlaneRequests = 0;
+let controlPlaneStatus = 200;
+let paginateControlPlanes = false;
+let controlPlaneName = "Alpha";
 
 before(async () => {
   process.env.OIDC_ISSUER = issuer;
@@ -63,6 +70,17 @@ before(async () => {
       organizationRequests++;
       assert.equal(options.headers.Authorization, "Bearer konnect-access-token");
       return Response.json({ name: organizationName }, { status: organizationStatus });
+    }
+    if (url.startsWith("https://us.api.konghq.com/v2/control-planes")) {
+      controlPlaneRequests++;
+      assert.equal(options.headers.Authorization, "Bearer konnect-access-token");
+      if (url.endsWith("?page=2")) {
+        return Response.json({ data: [{ id: "cp-2", name: "Beta" }] });
+      }
+      return Response.json({
+        data: [{ id: "cp-1", name: controlPlaneName }],
+        meta: { page: { next: paginateControlPlanes ? "?page=2" : null } },
+      }, { status: controlPlaneStatus });
     }
     throw new Error(`Unexpected request: ${url}`);
   };
@@ -132,11 +150,65 @@ test("callback validates the ID token before returning browser storage script", 
   assert.match(html, /localStorage\.setItem\("oidc_id_token"/);
   assert.match(html, /localStorage\.setItem\("oidc_preferred_name", "Ada"\)/);
   assert.match(html, /localStorage\.setItem\("oidc_organization_name", "Kong"\)/);
+  assert.match(html, /localStorage\.setItem\("oidc_control_planes"/);
   assert.match(html, /location\.replace\("\/guides\/\?topic=auth"\)/);
   assert.match(html, /user-123|eyJ/);
   assert.equal(response.headers.get("cache-control"), "no-store");
   assert.equal(response.headers.get("referrer-policy"), "no-referrer");
   assert.match(response.headers.get("set-cookie"), /Max-Age=0/);
+});
+
+test("control plane lookup follows pages and defaults to the first plane", async () => {
+  paginateControlPlanes = true;
+  try {
+    assert.deepEqual(await fetchControlPlanes("konnect-access-token"), [
+      { id: "cp-1", name: "Alpha" },
+      { id: "cp-2", name: "Beta" },
+    ]);
+    const { location, cookie } = await startLogin();
+    issuedToken = await signToken(location.searchParams.get("nonce"));
+    const response = await callback(new Request(
+      `http://localhost:8888/auth/callback?code=abc&state=${location.searchParams.get("state")}`,
+      { headers: { Cookie: cookie } }
+    ));
+    const html = await response.text();
+    const values = new Map();
+    const localStorage = {
+      getItem: (key) => values.get(key) ?? null,
+      setItem: (key, value) => values.set(key, value),
+    };
+    const script = html.match(/<script nonce="[^"]+">([^]*?)<\/script>/)[1];
+    vm.runInNewContext(script, { localStorage, location: { replace() {} }, document: {} });
+    assert.deepEqual(JSON.parse(values.get("oidc_control_planes")), {
+      sub: "user-123",
+      items: [{ id: "cp-1", name: "Alpha" }, { id: "cp-2", name: "Beta" }],
+      activeId: "cp-1",
+      error: false,
+    });
+    values.set("oidc_control_planes", JSON.stringify({
+      sub: "user-123", items: [], activeId: "cp-2",
+    }));
+    vm.runInNewContext(script, { localStorage, location: { replace() {} }, document: {} });
+    assert.equal(JSON.parse(values.get("oidc_control_planes")).activeId, "cp-2");
+  } finally {
+    paginateControlPlanes = false;
+  }
+});
+
+test("control plane lookup failure leaves login valid without stale planes", async () => {
+  const { location, cookie } = await startLogin();
+  issuedToken = await signToken(location.searchParams.get("nonce"));
+  controlPlaneStatus = 401;
+  try {
+    const response = await callback(new Request(
+      `http://localhost:8888/auth/callback?code=abc&state=${location.searchParams.get("state")}`,
+      { headers: { Cookie: cookie } }
+    ));
+    assert.equal(response.status, 200);
+    assert.match(await response.text(), /items: controlPlanes, activeId, error: true/);
+  } finally {
+    controlPlaneStatus = 200;
+  }
 });
 
 test("callback uses full_name when preferred_name is missing", async () => {
@@ -192,6 +264,7 @@ test("callback rejects an ID token with the wrong nonce", async () => {
   issuedToken = await signToken("wrong-nonce");
   const count = profileRequests;
   const orgCount = organizationRequests;
+  const cpCount = controlPlaneRequests;
   const response = await callback(new Request(
     `http://localhost:8888/auth/callback?code=abc&state=${location.searchParams.get("state")}`,
     { headers: { Cookie: cookie } }
@@ -200,6 +273,7 @@ test("callback rejects an ID token with the wrong nonce", async () => {
   assert.doesNotMatch(await response.text(), /localStorage\.setItem/);
   assert.equal(profileRequests, count);
   assert.equal(organizationRequests, orgCount);
+  assert.equal(controlPlaneRequests, cpCount);
 });
 
 test("profile failure leaves login valid and clears a previous name", async () => {
@@ -244,6 +318,7 @@ test("callback escapes profile names before inserting them into HTML", async () 
   issuedToken = await signToken(location.searchParams.get("nonce"));
   profileName = "</script><script>alert(1)</script>";
   organizationName = "</script><script>alert(2)</script>";
+  controlPlaneName = "</script><script>alert(3)</script>";
   try {
     const response = await callback(new Request(
       `http://localhost:8888/auth/callback?code=abc&state=${location.searchParams.get("state")}`,
@@ -253,10 +328,12 @@ test("callback escapes profile names before inserting them into HTML", async () 
     assert.equal(response.status, 200);
     assert.doesNotMatch(html, /<script>alert\(1\)<\/script>/);
     assert.doesNotMatch(html, /<script>alert\(2\)<\/script>/);
+    assert.doesNotMatch(html, /<script>alert\(3\)<\/script>/);
     assert.match(html, /\\u003cscript>/);
   } finally {
     profileName = "Ada";
     organizationName = "Kong";
+    controlPlaneName = "Alpha";
   }
 });
 

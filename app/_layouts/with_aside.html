@@ -15,12 +15,22 @@ layout: default
     <aside class="hidden md:flex flex-col md:basis-1/4 pt-5 gap-8 text-sm grow-0">
         {% include layouts/aside.html %}
 
-        {% if page.toc != false %}
-            <div class="hidden md:flex flex-col w-full sticky top-[96px] items-baseline">
+        {% if page.toc != false or page.content_type == 'how_to' %}
+            <div class="hidden md:flex flex-col w-full sticky top-[96px] items-baseline gap-4">
+                {% if page.content_type == 'how_to' %}
+                <div id="how-to-control-plane-field" class="w-full">
+                    <label for="how-to-control-plane-picker" class="block font-semibold mb-2">Active control plane</label>
+                    <select id="how-to-control-plane-picker" class="w-full rounded-md border border-primary bg-primary text-primary p-2" disabled>
+                        <option>Log in to choose a control plane</option>
+                    </select>
+                </div>
+                {% endif %}
+                {% if page.toc != false %}
                 {% assign h_max = 2 %}
                 {% if page.content_type == 'reference' or page.content_type == 'plugin' %}{% assign h_max= 3 %}{% endif %}
                 {% if page.toc_depth %}{% assign h_max = page.toc_depth %}{% endif %}
                 {% include toc.html page_title=page.title toc_skip_page_title=page.toc_skip_page_title html=content h_min=2 h_max=h_max id='toc' anchor_class='tab-button__vertical scroll-to' class="tabcolumn" %}
+                {% endif %}
             </div>
         {% endif %}
     </aside>

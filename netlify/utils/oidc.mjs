@@ -4,6 +4,7 @@ import { createRemoteJWKSet, jwtVerify } from "jose";
 export const TOKEN_STORAGE_KEY = "oidc_id_token";
 export const PREFERRED_NAME_STORAGE_KEY = "oidc_preferred_name";
 export const ORGANIZATION_NAME_STORAGE_KEY = "oidc_organization_name";
+export const CONTROL_PLANES_STORAGE_KEY = "oidc_control_planes";
 
 const allowedAlgorithms = [
   "RS256", "RS384", "RS512",
@@ -153,6 +154,48 @@ export function fetchPreferredName(accessToken) {
 
 export function fetchOrganizationName(accessToken) {
   return fetchKonnectField(accessToken, "organizations/me", ["name"]);
+}
+
+export async function fetchControlPlanes(accessToken) {
+  if (typeof accessToken !== "string" || !accessToken) {
+    throw new Error("OIDC token response has no access token");
+  }
+
+  const base = new URL(process.env.KONNECT_CONTROL_PLANE_API_BASE_URL || "https://us.api.konghq.com");
+  if (base.protocol !== "https:" || base.pathname !== "/" || base.search || base.hash) {
+    throw new Error("KONNECT_CONTROL_PLANE_API_BASE_URL must be an HTTPS origin");
+  }
+
+  const endpoint = new URL("/v2/control-planes", base);
+  const seen = new Set();
+  const controlPlanes = [];
+  let next = endpoint.href;
+
+  while (next) {
+    const url = new URL(next, endpoint);
+    if (url.origin !== endpoint.origin || url.pathname !== endpoint.pathname || seen.has(url.href) || seen.size >= 100) {
+      throw new Error("Konnect control plane pagination is invalid");
+    }
+    seen.add(url.href);
+
+    const response = await fetch(url, {
+      headers: { Authorization: `Bearer ${accessToken}`, Accept: "application/json" },
+      cache: "no-store",
+    });
+    if (!response.ok) throw new Error(`Konnect control-planes request failed (${response.status})`);
+
+    const body = await response.json();
+    if (!Array.isArray(body.data)) throw new Error("Konnect control-planes response has no data list");
+    for (const item of body.data) {
+      if (typeof item.id === "string" && /^[A-Za-z0-9_-]+$/.test(item.id) &&
+          typeof item.name === "string" && item.name.trim()) {
+        controlPlanes.push({ id: item.id, name: item.name.trim().replace(/[\r\n]+/g, " ") });
+      }
+    }
+    next = body.meta?.page?.next || null;
+  }
+
+  return controlPlanes;
 }
 
 export async function verifyIdToken(idToken, nonce, config, metadata) {

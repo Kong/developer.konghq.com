@@ -1,7 +1,7 @@
 import { randomBytes, timingSafeEqual } from "node:crypto";
 import {
-  configuration, discovery, exchangeCode, fetchOrganizationName, fetchPreferredName,
-  noStoreHeaders, readTransaction, ORGANIZATION_NAME_STORAGE_KEY,
+  configuration, discovery, exchangeCode, fetchControlPlanes, fetchOrganizationName, fetchPreferredName,
+  noStoreHeaders, readTransaction, CONTROL_PLANES_STORAGE_KEY, ORGANIZATION_NAME_STORAGE_KEY,
   PREFERRED_NAME_STORAGE_KEY, TOKEN_STORAGE_KEY, transactionCookie, verifyIdToken, safeReturnTo,
 } from "../utils/oidc.mjs";
 
@@ -46,16 +46,17 @@ export default async function handler(request) {
     const config = configuration();
     const metadata = await discovery(config);
     const tokens = await exchangeCode(url.searchParams.get("code"), tx.verifier, request, config, metadata);
-    await verifyIdToken(tokens.id_token, tx.nonce, config, metadata);
+    const identity = await verifyIdToken(tokens.id_token, tx.nonce, config, metadata);
 
     if (process.env.OIDC_DEBUG_TOKENS === "true" &&
         ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)) {
       console.log("OIDC access token (local debug):", tokens.access_token);
     }
 
-    const [preferredNameResult, organizationNameResult] = await Promise.allSettled([
+    const [preferredNameResult, organizationNameResult, controlPlanesResult] = await Promise.allSettled([
       fetchPreferredName(tokens.access_token),
       fetchOrganizationName(tokens.access_token),
+      fetchControlPlanes(tokens.access_token),
     ]);
     if (preferredNameResult.status === "rejected") {
       console.error("Konnect profile lookup failed:", preferredNameResult.reason);
@@ -63,8 +64,12 @@ export default async function handler(request) {
     if (organizationNameResult.status === "rejected") {
       console.error("Konnect organization lookup failed:", organizationNameResult.reason);
     }
+    if (controlPlanesResult.status === "rejected") {
+      console.error("Konnect control plane lookup failed:", controlPlanesResult.reason);
+    }
     const preferredName = preferredNameResult.status === "fulfilled" ? preferredNameResult.value : null;
     const organizationName = organizationNameResult.status === "fulfilled" ? organizationNameResult.value : null;
+    const controlPlanes = controlPlanesResult.status === "fulfilled" ? controlPlanesResult.value : [];
 
     // The callback is on the same origin as the site. Keep the token out of URLs,
     // referrers, and analytics by writing it before navigating to the static page.
@@ -75,7 +80,8 @@ export default async function handler(request) {
     const organizationScript = organizationName
       ? `localStorage.setItem(${scriptValue(ORGANIZATION_NAME_STORAGE_KEY)}, ${scriptValue(organizationName)});`
       : `localStorage.removeItem(${scriptValue(ORGANIZATION_NAME_STORAGE_KEY)});`;
-    const script = `try { localStorage.setItem(${scriptValue(TOKEN_STORAGE_KEY)}, ${scriptValue(tokens.id_token)}); ${profileScript} ${organizationScript} location.replace(${scriptValue(returnTo)}); } catch { document.body.textContent = "Login succeeded, but browser storage is unavailable."; }`;
+    const controlPlanesScript = `let previousControlPlanes; try { previousControlPlanes = JSON.parse(localStorage.getItem(${scriptValue(CONTROL_PLANES_STORAGE_KEY)})); } catch {} const controlPlanes = ${scriptValue(controlPlanes)}; const activeId = previousControlPlanes?.sub === ${scriptValue(identity.sub)} && controlPlanes.some((plane) => plane.id === previousControlPlanes.activeId) ? previousControlPlanes.activeId : (controlPlanes[0]?.id || null); localStorage.setItem(${scriptValue(CONTROL_PLANES_STORAGE_KEY)}, JSON.stringify({ sub: ${scriptValue(identity.sub)}, items: controlPlanes, activeId, error: ${controlPlanesResult.status === "rejected"} }));`;
+    const script = `try { ${controlPlanesScript} localStorage.setItem(${scriptValue(TOKEN_STORAGE_KEY)}, ${scriptValue(tokens.id_token)}); ${profileScript} ${organizationScript} location.replace(${scriptValue(returnTo)}); } catch { document.body.textContent = "Login succeeded, but browser storage is unavailable."; }`;
     return page(script, "Finishing login…", 200, clearCookie);
   } catch (error) {
     console.error("OIDC callback failed:", error);
