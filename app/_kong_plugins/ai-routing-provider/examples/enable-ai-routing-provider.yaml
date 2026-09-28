@@ -5,7 +5,7 @@ extended_description: |
   dispatches requests between a cost-effective weak tier (`z-ai/glm-5.3`) and a high-capability strong
   tier (`google/gemini-3.8-flash`).
 
-  The plugin runs in the access phase at priority `775`, ahead of AI Proxy Advanced at `770`.
+  The plugin runs in the access phase at priority `775`, before AI Proxy Advanced at `770`.
   It queries the Switchyard Decision API, validates the returned target against `targets`, and
   rewrites `body.model` to that target's `model_alias` before AI Proxy Advanced evaluates it.
 
