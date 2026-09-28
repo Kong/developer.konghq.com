@@ -25,6 +25,7 @@ import "@/javascripts/mesh_service_switcher";
 import "@/javascripts/feedback";
 import "@/javascripts/clipboard_copy";
 import "@/javascripts/llm_dropdown";
+import "@/javascripts/oidc_auth";
 import "@/javascripts/collapsible_code";
 import "@/javascripts/tooltip";
 import "@github/clipboard-copy-element";

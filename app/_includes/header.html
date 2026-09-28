@@ -291,9 +291,14 @@
             </div>
           </div>
 
-          <div id="header-cta-buttons" class="flex flex-col lg:flex-row p-6 lg:p-0 gap-3 items-center w-full lg:w-fit border-t border-primary lg:border-0 xl:max-2xl:group-[.ai-assistant-open]/body-tag:hidden">
-            <a class="button button--primary no-icon w-full lg:w-fit justify-center !px-3 !py-[9px] !text-xs" href="https://konghq.com/contact-sales?ktm_medium=referral&ktm_source=docs&ktm_content=top-nav" target="_blank" rel="noopener nofollow noreferrer">Get a Demo</a>
-            <a class="button button--secondary no-icon w-full lg:w-fit justify-center !px-3 !py-[9px] !text-xs" href="https://konghq.com/products/kong-konnect/register?ktm_medium=referral&ktm_source=docs&ktm_content=top-nav" target="_blank" rel="noopener nofollow noreferrer">Start Free Trial</a>
+          <div id="header-cta-buttons" class="flex flex-col lg:flex-row p-6 lg:p-0 gap-3 items-center w-full lg:w-fit border-t border-primary lg:border-0">
+            <div id="oidc-auth" class="flex items-center gap-2 max-w-full">
+              <a id="oidc-login" class="no-icon whitespace-nowrap" href="/auth/login">Log in</a>
+              <span id="oidc-greeting" class="hidden truncate max-w-64 2xl:max-w-96"></span>
+              <button id="oidc-logout" class="hidden no-icon whitespace-nowrap" type="button">Log out</button>
+            </div>
+            <a class="button button--primary no-icon w-full lg:w-fit justify-center !px-3 !py-[9px] !text-xs xl:max-2xl:group-[.ai-assistant-open]/body-tag:hidden" href="https://konghq.com/contact-sales?ktm_medium=referral&ktm_source=docs&ktm_content=top-nav" target="_blank" rel="noopener nofollow noreferrer">Get a Demo</a>
+            <a class="button button--secondary no-icon w-full lg:w-fit justify-center !px-3 !py-[9px] !text-xs xl:max-2xl:group-[.ai-assistant-open]/body-tag:hidden" href="https://konghq.com/products/kong-konnect/register?ktm_medium=referral&ktm_source=docs&ktm_content=top-nav" target="_blank" rel="noopener nofollow noreferrer">Start Free Trial</a>
           </div>
         </div>
 
