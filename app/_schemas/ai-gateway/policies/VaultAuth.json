@@ -13,11 +13,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "access_token_name": {
-          "type": "string",
-          "description": "Describes an array of comma-separated parameter names where the policy looks for an access token. The client must send the access token in one of those key names, and the policy will try to read the credential from a header or the querystring parameter with the same name. The key names can only contain [a-z], [A-Z], [0-9], [_], and [-].",
-          "default": "access_token"
-        },
         "secret_token_name": {
           "type": "string",
           "description": "Describes an array of comma-separated parameter names where the policy looks for a secret token. The client must send the secret in one of those key names, and the policy will try to read the credential from a header or the querystring parameter with the same name. The key names can only contain [a-z], [A-Z], [0-9], [_], and [-].",
@@ -51,6 +46,11 @@
           "type": "boolean",
           "description": "A boolean value that indicates whether the policy should run (and try to authenticate) on `OPTIONS` preflight requests. If set to `false`, then `OPTIONS` requests will always be allowed.",
           "default": true
+        },
+        "access_token_name": {
+          "type": "string",
+          "description": "Describes an array of comma-separated parameter names where the policy looks for an access token. The client must send the access token in one of those key names, and the policy will try to read the credential from a header or the querystring parameter with the same name. The key names can only contain [a-z], [A-Z], [0-9], [_], and [-].",
+          "default": "access_token"
         }
       }
     },
