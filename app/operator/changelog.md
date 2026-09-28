@@ -14,6 +14,391 @@ breadcrumbs:
 
 Changelog for supported {{ site.operator_product_name }} versions.
 
+## 2.4.0-rapid.1
+
+**Release date**: 2026-09-23
+
+### Added
+
+- Added support for {{site.ai_gateway}} runtime `2.1`: `AIGatewayMCPServer`
+  `listener`/`conversion-listener` gain `config.allowedVersions` and
+  `config.cache.{discover,toolsList}` (cache hints with `cacheScope`/`ttlMs`);
+  `AIGatewayPolicy` gains `condition` for conditional plugin execution;
+  `KonnectAIGateway` gains `minRuntimeVersion` and `runtimeAutoUpgrade` to
+  control and report the control plane's runtime version. Also added:
+  `AIGatewayModel` per-modality cost overrides (`inputCostList`,
+  `outputCostList`, `cacheReadCostList`); `PortalTeam.konnectManaged`;
+  `EventGatewayVirtualClusterPolicy`'s new `requestRuleValidator` config
+  type; and `inlineSchema` as a new
+  `EventGatewayVirtualCluster{Consume,Produce}Policy` schema-validation
+  config type.
+  [#5825](https://github.com/Kong/kong-operator/pull/5825)
+- `PortalIdentityProviderRequest`: support adopting existing Konnect portal
+  identity provider configurations by matching the spec against the remote
+  configuration (OIDC: issuer URL and client ID; SAML: whichever of the IdP
+  metadata URL and XML the spec sets) when the Konnect ID is not set.
+  [#3956](https://github.com/Kong/kong-operator/pull/3956)
+- `AIGatewayDataPlane`: add management of admin API service, admin server cert and
+  admin listener to AIGatewayDataPlane reconciler.
+  [#5734](https://github.com/Kong/kong-operator/pull/5734)
+- Added `KonnectConfigStoreSync` CRD (`konnect.konghq.com/v1alpha1`): declares a
+  one-way sync from a Kubernetes `Secret` to a Konnect Config Store. This change
+  only adds the API types, CEL validation and CRD; it is not reconciled yet.
+  [#5773](https://github.com/Kong/kong-operator/pull/5773)
+- Added groundwork for the `KonnectConfigStoreSync` controller: key derivation,
+  entry resolution, x509 pair validation and value hashing helpers, field
+  indexers (including the `(storeID, storeKey)` conflict index), and a
+  semantics-accurate fake of the Konnect `ConfigStoreSecrets` SDK for tests.
+  [#5710](https://github.com/Kong/kong-operator/issues/5710)
+- `AIGatewayMCPServer`: reference fields now carry the referenced CR's
+  `metadata.name` and the operator resolves them to the referenced entity's
+  Konnect name at reconcile time: `spec.apiSpec.listener.sources` now references
+  `AIGatewayMCPServer` CRs, `access.{consumer,oauthAccessToken}.authStrategies`
+  reference `AIGatewayAuthStrategy` CRs, and
+  `access.{consumer,oauthAccessToken}.{acls,defaultToolAcls}.{allow,deny}` as
+  well as `tools[].access.acls.{allow,deny}` reference `AIGatewayConsumerGroup`
+  CRs.
+- `AIGatewayDataPlane`: `spec.controlPlaneRef` now supports the new
+  `onpremNamespacedRef` type, letting a data plane reference an `OnPremAIGateway`
+  control plane in the same namespace.
+  [#5666](https://github.com/Kong/kong-operator/issues/5666)
+- `MCPServerDataPlane`: add support for HPA (horizontal pod autoscaler) autoscaling
+  via `spec.deployment.scaling.horizontal`.
+  [#5556](https://github.com/Kong/kong-operator/pull/5556)
+- Added `OnPremAIGateway` CRD: the on-prem (non-Konnect) control plane for
+  `AIGatewayDataPlane`. This change only adds the CRD; it is not reconciled yet.
+  [#5567](https://github.com/Kong/kong-operator/issues/5567)
+- Added a reconciler for `OnPremAIGateway`, gated behind the new
+  `--enable-controller-onpremaigateway` flag (env
+  `KONG_OPERATOR_ENABLE_CONTROLLER_ONPREMAIGATEWAY`, default `false`). For now it
+  only reports readiness; configuration aggregation and pushing to data planes
+  land in a later change.
+  [#5567](https://github.com/Kong/kong-operator/issues/5567)
+- `AIGatewayDataPlane`: added `spec.certificateSecret.{provisioning,secretRef}`,
+  letting users supply their own same-namespace TLS Secret for the mTLS client
+  certificate instead of relying on operator auto-provisioning, with support
+  for switching between `Manual` and `Automatic` provisioning.
+  [#5548](https://github.com/Kong/kong-operator/pull/5548)
+- `OnPremAIGateway`: the reconciler now runs an in-process control plane instance
+  per resource and tears it down when the resource is deleted. The restart on
+  configuration change is wired but not effective yet: the instance configuration
+  is not assembled from the spec in this change, so full configuration handling
+  (including restarts driven by spec changes) lands in a later change.
+  [#5402](https://github.com/Kong/kong-operator/issues/5402)
+- Added `AIGatewayCACertificate` CRD: manage Konnect {{site.ai_gateway}} CA
+  certificates (`aiconfiguration.konghq.com/v1alpha1`), parented to
+  `KonnectAIGateway`, with the certificate PEM sourced from a Kubernetes
+  `Secret`.
+  [#5656](https://github.com/Kong/kong-operator/pull/5656)
+- Added `AIGatewayCertificate` CRD: manage Konnect {{site.ai_gateway}} certificates
+  (`aiconfiguration.konghq.com/v1alpha1`), parented to `KonnectAIGateway`,
+  with the certificate, private key, and alternate cert/key sourced from a
+  Kubernetes `Secret`.
+  [#5658](https://github.com/Kong/kong-operator/pull/5658)
+- Added `AIGatewaySNI` CRD: manage Konnect {{site.ai_gateway}} SNIs
+  (`aiconfiguration.konghq.com/v1alpha1`), parented to `KonnectAIGateway`,
+  with the SNI associated to an `AIGatewayCertificate` by certificate reference.
+  [#5667](https://github.com/Kong/kong-operator/pull/5667)
+- `OnPremAIGateway`: the reconciler now lists the `AIGatewayModel`s referencing it,
+  translates each into `github.com/Kong/ai-deck-converter`'s entity model, and
+  renders the result into a DB-less configuration payload, restarting the control
+  plane instance when it changes. The other nine `aiconfiguration` entity kinds
+  aren't translated yet, so the rendered payload isn't a complete, ready to submit
+  configuration on its own; pushing it to data planes is also not wired yet.
+  [#5661](https://github.com/Kong/kong-operator/pull/5661)
+- `KonnectEventGateway` now supports `spec.source: Mirror`, referencing an
+  existing Konnect Event Gateway by ID (`spec.mirror.konnect.id`) instead of
+  creating one. `Origin` (the default) is unchanged.
+- Konnect entities: Added `spec.id` in `KongCACertificate` to specify the ID of
+  the created CA certificate in Konnect.
+  [#5738](https://github.com/Kong/kong-operator/pull/5738)
+- Added IPv6 support for DataPlanes: Kong's proxy, admin, status and stream
+  listeners can now bind to IPv6 or dual-stack addresses, controlled by the new
+  `--ip-family` flag (`auto`, `ipv4`, `ipv6`, `dual`). The default `auto` detects
+  the cluster's IP family from the `default/kubernetes` Service at startup. If
+  detection failed, please set `--ip-family` manually.
+  [#5499](https://github.com/Kong/kong-operator/pull/5499)
+- {{site.ai_gateway}} configuration entities (`AIGatewayModel`, `AIGatewayPolicy`,
+  `AIGatewayConsumer`, and the other `aiconfiguration.konghq.com` kinds) target an
+  `OnPremAIGateway` via `spec.aiGatewayRef`.
+  [#5834](https://github.com/Kong/kong-operator/pull/5834)
+
+### Breaking changes
+
+The following APIs have breaking changes below. All are alpha (`v1alpha1`)
+APIs, which carry no backward-compatibility guarantee and are not covered
+by the operator's semver:
+
+- `PortalCustomization` (`konnect.konghq.com`)
+- `AIGatewayMCPServer` (`aiconfiguration.konghq.com`)
+- `KonnectConfigStore` (`konnect.konghq.com`)
+- `AIGatewayDataPlane` (`aigateway.konghq.com`)
+
+- `PortalCustomization`: `spec.apiSpec.specRenderer.tryItUiAudience` is removed,
+  following its removal from Konnect's public API in this SDK version. Existing
+  objects with this field set will have it silently dropped on the next spec
+  update, or have `kubectl apply` rejected outright under strict client-side
+  validation, depending on tooling.
+  [#5825](https://github.com/Kong/kong-operator/pull/5825)
+- `AIGatewayMCPServer`: `route` (under the `conversion-listener`/`conversion-only`/
+  `listener`/`passthrough-listener`/`upstream-server` `config`) changes from an
+  untyped string map to a structured matcher object, with `paths`/`hosts`/`methods`
+  as proper lists and `headers` as a map of header name to list of values. The
+  previous shape could only hold scalar strings, so `paths`/`hosts`/`methods`
+  could never be expressed as the arrays Kong's route matching actually requires,
+  and every `AIGatewayMCPServer` with a non-empty `route` failed to reconcile
+  (`Programmed=False`/`FailedToCreate`) with an SDK unmarshall error.
+  Recovery: change `route.paths`/`route.hosts`/`route.methods` from a bare string
+  to a list, e.g. `paths: /mcp/foo` becomes `paths: [/mcp/foo]`.
+  [#5804](https://github.com/Kong/kong-operator/pull/5804)
+- `KonnectConfigStore`: deleting a `KonnectConfigStore` no longer force-deletes
+  the Konnect config store together with all the secret entries it holds
+  (previously the delete op passed `Force: true`, so one accidental CR deletion
+  instantly removed every stored certificate/key and broke the SNIs referencing
+  them). Konnect rejects deleting a non-empty config store, so the operator now
+  keeps the CR's cleanup finalizer, sets the `Programmed` condition to `False`
+  with reason `DeletionBlocked`, and retries on a fixed interval. Deletion
+  proceeds automatically once the entries are removed from the store in
+  Konnect.
+  Recovery: while deletion is blocked the CR stays in `Terminating` (this also
+  blocks deletion of the containing namespace). Either remove the entries from
+  the config store in Konnect — the deletion then proceeds on its own — or, to
+  abandon the store in Konnect instead, remove the
+  `gateway.konghq.com/konnect-cleanup` finalizer from the CR manually, which
+  leaves the config store and its entries orphaned in Konnect.
+  [#5723](https://github.com/Kong/kong-operator/pull/5723)
+- `AIGatewayMCPServer`: reference fields changed from plain string items (holding
+  the referenced entity's Konnect name) to ref objects holding the referenced
+  CR's `metadata.name`; the operator now resolves them to the referenced
+  entity's Konnect name at reconcile time. Affected fields:
+  `spec.apiSpec.listener.sources` (now references `AIGatewayMCPServer` CRs),
+  `access.{consumer,oauthAccessToken}.authStrategies` (now references
+  `AIGatewayAuthStrategy` CRs), and
+  `access.{consumer,oauthAccessToken}.{acls,defaultToolAcls}.{allow,deny}` as
+  well as `tools[].access.acls.{allow,deny}` (now reference
+  `AIGatewayConsumerGroup` CRs).
+  On upgrade, existing `AIGatewayMCPServer` objects carrying the old string
+  items fail schema validation and fail typed decode in the controller cache.
+  Re-apply each affected `AIGatewayMCPServer` with the new object syntax
+  (`- name: <metadata.name-of-referenced-CR>`) to repair it.
+  [#5737](https://github.com/Kong/kong-operator/pull/5737)
+- `AIGatewayDataPlane`: the operator no longer provisions or mounts an mTLS
+  client certificate for an `AIGatewayDataPlane` that has no `spec.controlPlaneRef`.
+  This corrects a bug where a certificate was previously always auto-provisioned
+  and signed by the operator's shared cluster CA (the same one used for
+  `ControlPlane`/`DataPlane` hybrid-mode mTLS elsewhere), regardless of whether
+  there was any control plane configured to use it. On upgrade, an existing
+  `controlPlaneRef`-less `AIGatewayDataPlane` hand-wired (via
+  `spec.deployment.podTemplateSpec`) to a same-cluster, operator-managed
+  `ControlPlane` loses that auto-issued certificate and must supply its own via
+  `spec.deployment.podTemplateSpec`. `spec.certificateSecret` is not a valid
+  remedy here: with no `spec.controlPlaneRef` it sets
+  `CertificateProvisioned=False/ControlPlaneRefMissing` and the operator stops
+  reconciling the Deployment, the HPA and the ingress Service entirely.
+  [#5548](https://github.com/Kong/kong-operator/pull/5548)
+- `AIGatewayDataPlane`: the Deployment's Pod template now carries a certificate
+  checksum annotation. On upgrade, this causes a one-time rolling restart of
+  every existing `AIGatewayDataPlane` Deployment that has a `spec.controlPlaneRef`.
+  [#5548](https://github.com/Kong/kong-operator/pull/5548)
+
+### Changed
+
+- Security: harden containers for `MCPServerDataPlane`'s `Deployment` with
+  a tight security context:
+  - disallows privilege escalation
+  - drop all capabilities
+  - run as non-root user
+  - read-only root filesystem
+  This change enforces patching of `Deployment`s, which causes
+  a rolling restart of the underlying `Pod`s when updating operator to this version.
+  [#5771](https://github.com/Kong/kong-operator/pull/5771)
+- {{site.ai_gateway}} configuration entities (`AIGatewayModel`, `AIGatewayPolicy`,
+  `AIGatewayConsumer`, and the other `aiconfiguration.konghq.com` kinds):
+  `spec.aiGatewayRef` now uses a dedicated `AIGatewayRef` type instead of the
+  shared `commonv1alpha1.ObjectRef`. And configuration entities can target an
+  on-prem `OnPremAIGateway` in addition to a `KonnectAIGateway`.
+  [#5788](https://github.com/Kong/kong-operator/pull/5788)
+
+### Fixes
+
+- KonnectExtension: complete certificate cleanup when the referenced ControlPlane
+  was deleted before extension status was persisted. Keep shared client-certificate
+  Secret finalizers while another extension still uses the Secret or has pending
+  certificate cleanup.
+  [#5774](https://github.com/Kong/kong-operator/pull/5774)
+- KonnectExtension: the extension now gets its `gateway.konghq.com/konnect-cleanup`
+  finalizer before the reconciler stamps any cleanup finalizer
+  (`gateway.konghq.com/secret-in-use`, `gateway.konghq.com/konnect-cleanup`) on the
+  auto-generated certificate Secret. Previously the Secret gained its finalizers on one
+  reconcile and the extension gained its own only on the next one, so a deletion in
+  between (for example a Gateway torn down mid-provisioning) garbage-collected the
+  extension while the Secret kept finalizers that only the extension's reconcile could
+  release. The orphaned Secret then kept the whole namespace stuck in `Terminating`,
+  and operations waiting for namespace deletion failed with a context deadline.
+  [#5837](https://github.com/Kong/kong-operator/pull/5837)
+- On-prem gateway: generate a distinct Kong route for each match when its parent
+ `HTTPRoute` rule contains `ReplacePrefixMatch` typed `URLRewrite` filter or
+ `requestRedirect` filter.
+  This change will delete the combined Kong routes created for the matches with
+  these filters in their parent rules and create new distinct ones.
+ [#5521](https://github.com/Kong/kong-operator/pull/5521)
+- Gateway: When using `gateway-operator.konghq.com/static-naming: "true"`, the name of
+  the Control Plane created in Konnect is now qualified with the Gateway's namespace
+  (`<namespace>_<gateway-name>`), preventing HTTP 409 conflicts between Gateways sharing
+  a name across namespaces in the same Konnect organization. The Kubernetes
+  `KonnectGatewayControlPlane` resource name is unchanged and still matches the Gateway's
+  name. Control Planes already created in Konnect are not renamed.
+  Note: Gateways with the same namespace and name deployed to multiple clusters sharing a
+  Konnect organization still conflict; use `spec.konnect.mirror` for that scenario.
+  [#4079](https://github.com/Kong/kong-operator/issues/4079)
+- Konnect-hybrid gateways: resolve `spec.configFrom` and `spec.configPatches` of a
+  `KongPlugin` attached to an `HTTPRoute` or `GRPCRoute` through an `ExtensionRef`
+  filter. Both fields were previously ignored, so a plugin whose configuration came
+  from a `Secret` was pushed to Konnect without it. The referenced `Secret`s are now
+  watched, so changing one triggers a reconcile, and a failure to resolve them is
+  reported instead of silently yielding an empty configuration.
+  [#5600](https://github.com/Kong/kong-operator/pull/5600)
+- Konnect reconciler: release the cleanup finalizer with a non-optimistic merge
+  patch instead of an optimistic-locked update. A stale cached `resourceVersion`
+  could previously make that write conflict, which silently re-queued the
+  reconcile and deleted the same entity from Konnect a second time.
+- MCP server: an advanced-mode `MCPServer` (user-created, not mirrored by the
+  operator) was deleted on the first sync after creation, because the control
+  plane sync withheld its Konnect ID from the set of servers considered still
+  present. It is now kept, and it is annotated with the latest Konnect MCP
+  signal and reconciled like a mirrored `MCPServer`.
+- MCP server: a new Konnect MCP signal now redeploys the `MCPServerDataPlane`'s
+  `Deployment` so its init container re-fetches the updated server code.
+  Previously, only a change in the remote MCP server's own version triggered a
+  redeploy, so config changes surfaced through the signal API alone were never
+  picked up.
+  [#5643](https://github.com/Kong/kong-operator/pull/5643)
+- On-prem gateway: keep tags of translated Kong certificate stable when multiple
+  `Secret`s have the same certificate content. The tags generated from the `Secret`
+  with the earliest creation timestamp are chosen, and the one with the lowest
+  UID when a tie happens.
+  This aligns with choosing ID of the translated certificate.
+  [#5657](https://github.com/Kong/kong-operator/pull/5657)
+- Fix compatibility with Gateway API in version lower than v1.5.0,
+  where `ReferenceGrant` is only served at `v1beta1`.
+  [#5683](https://github.com/Kong/kong-operator/pull/5683)
+- MCP server: fixed listing MCP servers of a control plane across multiple
+  pages. The full `meta.page.next` URI was passed as the `page[after]` request
+  parameter instead of only the item cursor it contains, malforming every
+  page 2+ request: the fetch loop either retried the rejected request forever,
+  never returning any MCP server, or, if Konnect ignored the invalid cursor,
+  re-fetched the first page indefinitely. The item cursor is now extracted from
+  the next-page URI, and a fetch that cannot follow pagination to the end fails
+  and is retried with a backoff instead of returning a truncated list, which
+  was treated as authoritative and deleted the in-cluster `MCPServer`s missing
+  from it.
+  [#5727](https://github.com/Kong/kong-operator/pull/5727)
+
+## 2.3.2
+
+**Release date**: 2026-09-28
+
+### Breaking changes (before, it was broken)
+
+- `AIGatewayMCPServer`: `route` (under the `conversion-listener`/`conversion-only`/
+  `listener`/`passthrough-listener`/`upstream-server` `config`) changes from an
+  untyped string map to a structured matcher object, with `paths`/`hosts`/`methods`
+  as proper lists and `headers` as a map of header name to list of values. The
+  previous shape could only hold scalar strings, so `paths`/`hosts`/`methods`
+  could never be expressed as the arrays Kong's route matching actually requires,
+  and every `AIGatewayMCPServer` with a non-empty `route` failed to reconcile
+  (`Programmed=False`/`FailedToCreate`) with an SDK unmarshall error.
+  Recovery: change `route.paths`/`route.hosts`/`route.methods` from a bare string
+  to a list, e.g. `paths: /mcp/foo` becomes `paths: [/mcp/foo]`.
+  [#5804](https://github.com/Kong/kong-operator/pull/5804)
+  [#5835](https://github.com/Kong/kong-operator/pull/5835)
+- `AIGatewayMCPServer`: reference fields changed from plain string items (holding
+  the referenced entity's Konnect name) to ref objects holding the referenced
+  CR's `metadata.name`; the operator now resolves them to the referenced
+  entity's Konnect name at reconcile time. Affected fields:
+  `spec.apiSpec.listener.sources` (now references `AIGatewayMCPServer` CRs),
+  `access.{consumer,oauthAccessToken}.authStrategies` (now references
+  `AIGatewayAuthStrategy` CRs), and
+  `access.{consumer,oauthAccessToken}.{acls,defaultToolAcls}.{allow,deny}` as
+  well as `tools[].access.acls.{allow,deny}` (now reference
+  `AIGatewayConsumerGroup` CRs).
+  On upgrade, existing `AIGatewayMCPServer` objects carrying the old string
+  items fail schema validation and fail typed decode in the controller cache.
+  Re-apply each affected `AIGatewayMCPServer` with the new object syntax
+  (`- name: <metadata.name-of-referenced-CR>`) to repair it.
+  [#5737](https://github.com/Kong/kong-operator/pull/5737)
+  [#5838](https://github.com/Kong/kong-operator/pull/5838)
+
+### Added
+
+- `AIGatewayMCPServer`: reference fields now carry the referenced CR's
+  `metadata.name` and the operator resolves them to the referenced entity's
+  Konnect name at reconcile time: `spec.apiSpec.listener.sources` now references
+  `AIGatewayMCPServer` CRs, `access.{consumer,oauthAccessToken}.authStrategies`
+  reference `AIGatewayAuthStrategy` CRs, and
+  `access.{consumer,oauthAccessToken}.{acls,defaultToolAcls}.{allow,deny}` as
+  well as `tools[].access.acls.{allow,deny}` reference `AIGatewayConsumerGroup`
+  CRs.
+  [#5737](https://github.com/Kong/kong-operator/pull/5737)
+  [#5838](https://github.com/Kong/kong-operator/pull/5838)
+
+### Fixes
+
+- `AIGatewayMCPServer`: fixed `route` (`spec.apiSpec.<variant>.config.route`, in all
+  five variants: `conversion-only`, `conversion-listener`, `listener`,
+  `passthrough-listener`, `upstream-server`) being generated as an untyped
+  `map[string]string` instead of a structured matcher object. Because a string map
+  only holds scalar values, `paths`/`hosts`/`methods` could not be expressed as the
+  lists Kong's route matching requires: `kubectl apply` accepted the resource, but
+  every `AIGatewayMCPServer` with a non-empty `route` then failed to reconcile with
+  `Programmed=False`/`FailedToCreate` and an SDK unmarshall error
+  (`could not unmarshall ... into any supported union types for
+  AIGatewayMCPServerRouteWithMatcher`), making the field unusable in practice. The
+  root cause was in `crd-from-oas`, which fell back to `map[string]string` for a
+  schema composed via `allOf`; the generator now merges the `allOf` members'
+  properties, and the API types, CRDs, chart and docs are regenerated from the
+  unchanged OpenAPI spec. See the breaking change entry above for the required
+  manifest update.
+  [#5804](https://github.com/Kong/kong-operator/pull/5804)
+  [#5835](https://github.com/Kong/kong-operator/pull/5835)
+- KonnectExtension: complete certificate cleanup when the referenced ControlPlane
+  was deleted before extension status was persisted. Keep shared client-certificate
+  Secret finalizers while another extension still uses the Secret or has pending
+  certificate cleanup.
+  [#5774](https://github.com/Kong/kong-operator/pull/5774)
+  [#5778](https://github.com/Kong/kong-operator/pull/5778)
+- Fix compatibility with Gateway API in version lower than v1.5.0,
+  where `ReferenceGrant` is only served at `v1beta1`.
+  [#5683](https://github.com/Kong/kong-operator/pull/5683)
+  [#5693](https://github.com/Kong/kong-operator/pull/5693)
+- Gateway: When using `gateway-operator.konghq.com/static-naming: "true"`, the name of
+  the Control Plane created in Konnect is now qualified with the Gateway's namespace
+  (`<namespace>_<gateway-name>`), preventing HTTP 409 conflicts between Gateways sharing
+  a name across namespaces in the same Konnect organization. The Kubernetes
+  `KonnectGatewayControlPlane` resource name is unchanged and still matches the Gateway's
+  name. Control Planes already created in Konnect are not renamed.
+  Note: Gateways with the same namespace and name deployed to multiple clusters sharing a
+  Konnect organization still conflict; use `spec.konnect.mirror` for that scenario.
+  [#4079](https://github.com/Kong/kong-operator/issues/4079)
+- Konnect-hybrid gateways: resolve `spec.configFrom` and `spec.configPatches` of a
+  `KongPlugin` attached to an `HTTPRoute` or `GRPCRoute` through an `ExtensionRef`
+  filter. Both fields were previously ignored, so a plugin whose configuration came
+  from a `Secret` was pushed to Konnect without it. The referenced `Secret`s are now
+  watched, so changing one triggers a reconcile, and a failure to resolve them is
+  reported instead of silently yielding an empty configuration.
+  [#5600](https://github.com/Kong/kong-operator/pull/5600)
+  [#5707](https://github.com/Kong/kong-operator/pull/5707)
+- On-prem gateway: keep tags of translated Kong certificate stable when multiple
+  `Secret`s have the same certificate content. The tags generated from the `Secret`
+  with the earliest creation timestamp are chosen, and the one with the lowest
+  UID when a tie happens.
+  This aligns with choosing ID of the translated certificate.
+  [#5657](https://github.com/Kong/kong-operator/pull/5657)
+  [#5733](https://github.com/Kong/kong-operator/pull/5733)
+- Fix unnecessary reconciliations caused by incorrect status conditions updates.
+  [#5802](https://github.com/Kong/kong-operator/pull/5802)
+  [#5820](https://github.com/Kong/kong-operator/pull/5820)
+
 ## 2.3.1
 
 **Release date**: 2026-09-09
@@ -528,6 +913,40 @@ Changelog for supported {{ site.operator_product_name }} versions.
   desired replicas to be updated and available.
   [#5425](https://github.com/Kong/kong-operator/pull/5425)
 
+## 2.2.6
+
+**Release date**: 2026-09-28
+
+### Fixes
+
+- Fix compatibility with Gateway API in version lower than v1.5.0,
+  where `ReferenceGrant` is only served at `v1beta1`.
+  [#5724](https://github.com/Kong/kong-operator/pull/5724)
+- KonnectExtension: complete certificate cleanup when the referenced ControlPlane
+  was deleted before extension status was persisted. Keep shared client-certificate
+  Secret finalizers while another extension still uses the Secret or has pending
+  certificate cleanup.
+  [#5774](https://github.com/Kong/kong-operator/pull/5774)
+  [#5767](https://github.com/Kong/kong-operator/pull/5767)
+- On-prem gateway: keep tags of translated Kong certificate stable when multiple
+  `Secret`s have the same certificate content. The tags generated from the `Secret`
+  with the earliest creation timestamp are chosen, and the one with the lowest
+  UID when a tie happens.
+  This aligns with choosing ID of the translated certificate.
+  [#5657](https://github.com/Kong/kong-operator/pull/5657)
+  [#5735](https://github.com/Kong/kong-operator/pull/5735)
+- Konnect-hybrid gateways: resolve `spec.configFrom` and `spec.configPatches` of a
+  `KongPlugin` attached to an `HTTPRoute` through an `ExtensionRef`
+  filter. Both fields were previously ignored, so a plugin whose configuration came
+  from a `Secret` was pushed to Konnect without it. The referenced `Secret`s are now
+  watched, so changing one triggers a reconcile, and a failure to resolve them is
+  reported instead of silently yielding an empty configuration.
+  [#5600](https://github.com/Kong/kong-operator/pull/5600)
+  [#5712](https://github.com/Kong/kong-operator/pull/5712)
+- Fix unnecessary reconciliations caused by incorrect status conditions updates.
+  [#5820](https://github.com/Kong/kong-operator/pull/5820)
+  [#5823](https://github.com/Kong/kong-operator/pull/5823)
+
 ## 2.2.5
 
 **Release date**: 2026-09-09
@@ -968,6 +1387,20 @@ Changelog for supported {{ site.operator_product_name }} versions.
   the transition, both old and new entries may be present in Konnect
   simultaneously as creation and orphan cleanup are not synchronized.
   [#4509](https://github.com/Kong/kong-operator/pull/4509)
+
+## 2.1.12
+
+**Release date**: 2026-09-28
+
+### Fixes
+
+- On-prem gateway: keep tags of translated Kong certificate stable when multiple
+  `Secret`s have the same certificate content. The tags generated from the `Secret`
+  with the earliest creation timestamp are chosen, and the one with the lowest
+  UID when a tie happens.
+  This aligns with choosing ID of the translated certificate.
+  [#5657](https://github.com/Kong/kong-operator/pull/5657)
+  [#5736](https://github.com/Kong/kong-operator/pull/5736)
 
 ## 2.1.11
 
@@ -1648,7 +2081,7 @@ Changelog for supported {{ site.operator_product_name }} versions.
 - Fix `DataPlane`'s volumes and volume mounts patching when specified by user
   [#2425](https://github.com/Kong/kong-operator/pull/2425)
 - Do not cleanup `null`s in the configuration of plugins with Kong running in
-  DBLess mode in the translator of ingress-controller. This enables user to use
+  DB-less mode in the translator of ingress-controller. This enables user to use
   explicit `null`s in plugins.
   [#2459](https://github.com/Kong/kong-operator/pull/2459)
 
@@ -2377,4 +2810,3 @@ Changelog for supported {{ site.operator_product_name }} versions.
 
 - Fix enforcing up to date `ControlPlane`'s `ValidatingWebhookConfiguration`
   [#225](https://github.com/kong/kong-operator/pull/225)
-
