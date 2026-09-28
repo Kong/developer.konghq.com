@@ -112,7 +112,7 @@ rows:
                     Define a single endpoint for any traffic type: LLM, MCP, or A2A. Configure these entities once, then govern them from a unified control plane with built-in auth, policy enforcement, and observability:
 
                     * [Routing and load balancing](/ai-gateway/load-balancing/) across AI providers
-                    * [Streaming and authentication](/ai-gateway/streaming/)
+                    * [Streaming](/ai-gateway/streaming/)
                     * Control user access and ACLs
                     * See [usage analytics](/ai-gateway/monitor-ai-llm-metrics/) for requests, tokens, errors, and latency
       - header:
