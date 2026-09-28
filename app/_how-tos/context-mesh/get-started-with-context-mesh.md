@@ -221,7 +221,7 @@ kubectl wait --timeout=3m dataplane dataplane -n default --for=condition=Ready
 
 ## Get the control plane ID
 
-You attach the MCP server to the `context-mesh-demo` control plane that {{site.operator_product_name}} created, which the API references by ID:
+Retrieve the `context-mesh-demo` control plane ID that {{site.operator_product_name}} created. You'll use it to attach it to the MCP server when you deploy it:
 
 <!--vale off-->
 {% konnect_api_request %}
