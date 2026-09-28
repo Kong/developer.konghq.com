@@ -7,9 +7,7 @@ products:
 works_on:
   - on-prem
   - konnect
-related_resources:
-  - text: "#12288"
-    url: https://github.com/Kong/kong-ee/issues/12288
+related_resources: []
 tldr:
   q: Why did {{site.base_gateway}} 3.10.0.0 and 3.10.0.1 introduce a performance regression?
   a: |
