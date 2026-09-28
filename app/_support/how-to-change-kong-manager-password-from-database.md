@@ -28,7 +28,7 @@ Prerequisites:
 
 - {{site.base_gateway}} (Enterprise), self-managed/on-prem, with RBAC turned on and Basic Auth as Kong Manager authentication method (this method requires direct `psql` access to the underlying database, so it does not apply to Konnect, where the control plane database is managed by Kong and not reachable by the customer)
 - Postgres as database
-- User has access to the Postgresql database
+- User has access to the PostgreSQL database
 
 First of all, please log in to `psql` and connect to your Kong database.
 

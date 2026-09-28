@@ -1,5 +1,5 @@
 ---
-title: How TCP Active Healtchecks Work
+title: How TCP Active Healthchecks Work
 content_type: support
 description: TCP active health checks run in Kong's stream subsystem, so they behave differently across HTTP and TCP services and can't reliably report health for HTTP services.
 products:
@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: How do TCP Active Healtchecks work?
+  q: How do TCP Active Healthchecks work?
   a: |
     TCP active health checks run in Nginx's stream subsystem, which doesn't share health state with the HTTP subsystem. As a result, they report status correctly for TCP services but not for HTTP services, and can even cause the load balancer to route to an unhealthy HTTP target. Use HTTP active health checks, not TCP, when monitoring HTTP services.
 related_resources:
@@ -28,13 +28,13 @@ This is how active Health Checks work:
 - TCP  Active HealthChecks work with TCP  services. Admin API does not report health correctly.
 - TCP  Active HealthChecks do not work with HTTP services. Admin API does not report health correctly.
 
-TCP Active HealtchCheks will only be sent to targets if the Stream subsystem is enabled, by setting Kong `stream_listen` in Kong configuration.
+TCP Active HealthChecks will only be sent to targets if the Stream subsystem is enabled, by setting Kong `stream_listen` in Kong configuration.
 
 Let's see the logs. An upstream with 2 targets, one healthy (192.168.80.2:5000) and one unhealthy (192.168.80.2:5001)
 
-Case 1. HTTP Active HealtchCheck on an HTTP Service
+Case 1. HTTP Active HealthCheck on an HTTP Service
 
-Logs report a healtlhy and an unhealhty target. Balancer is choosing the right target.
+Logs report a healthy and an unhealthy target. Balancer is choosing the right target.
 
 ```
 2026/09/07 15:18:47 [debug] 2063#0: *609975 [lua] healthcheck.lua:1126: log(): [healthcheck] (01b90fff-5797-4b62-876c-a4d0cb242c34:flask-upstream) checking healthy targets: #1
@@ -49,7 +49,7 @@ Logs report a healtlhy and an unhealhty target. Balancer is choosing the right t
 192.168.80.1 - - [07/Sep/2026:15:18:50 +0000] "GET /flaskupstream HTTP/1.1" 200 20 "-" "curl/7.68.0" - -
 ```
 
-Case 2. TCP Active HealtchCheck on a TCP Service
+Case 2. TCP Active HealthCheck on a TCP Service
 
 Logs report a healthy and an unhealthy target. Balancer is choosing the right target
 

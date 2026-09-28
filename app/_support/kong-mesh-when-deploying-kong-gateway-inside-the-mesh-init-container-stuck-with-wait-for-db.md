@@ -29,7 +29,7 @@ Error: unexpected message during auth:
 
 ## Cause
 
-This issue occurs due to the sidecar on the {{site.base_gateway}} not being started yet and the init containers can't communicate to the postgres databases. So the `wait-for-db` container never completes.
+This issue occurs due to the sidecar on the {{site.base_gateway}} not being started yet and the init containers can't communicate to the Postgres databases. So the `wait-for-db` container never completes.
 
 ## Solution
 

@@ -16,7 +16,7 @@ related_resources: []
 
 ## Problem
 
-On older {{site.base_gateway}} versions, we would intermittently see the following type of error when using a postgres database:
+On older {{site.base_gateway}} versions, we would intermittently see the following type of error when using a Postgres database:
 
 ```
 
@@ -56,7 +56,7 @@ openssl s_client -connect <IPAddressToReachGate>:<sslPort> -servername <anyIpAdd
 
 The handshake itself still completes successfully (a certificate is returned to the client) — only the DEBUG-level log line above is produced; there is no client-visible impact.
 
-The fact that the older, ERROR-level log entry included postgres or cassandra depending on which database you use with Kong has nothing to do with connections of Kong to the database. The underlying SNI-must-not-be-an-IP validation is part of Kong's db subsystem code:
+The fact that the older, ERROR-level log entry included Postgres or Cassandra depending on which database you use with Kong has nothing to do with connections of Kong to the database. The underlying SNI-must-not-be-an-IP validation is part of Kong's db subsystem code:
 
 `kong/db/schema/typedefs.lua`
 

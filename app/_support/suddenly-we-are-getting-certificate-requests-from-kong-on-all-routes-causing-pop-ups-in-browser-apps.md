@@ -30,7 +30,7 @@ Note: if you are using expression-based routes (`router_flavor: expressions`), t
 
 ## Solution
 
-If you have confirmed that you do not have any global `mtls-auth` plugins in any workspace, and your normal procedure is to set a specific SNI property on all routes that are associated with an `mtls-auth` plugin, and you have access to the postgres backend of kong, you may find the following SQL query useful to find any route that may have been updated, and accidentally had the SNI property removed. This will give you the workspace name, route id, and route name of any route that is associated with an `mtls-auth` plugin and does NOT have an SNI property set.
+If you have confirmed that you do not have any global `mtls-auth` plugins in any workspace, and your normal procedure is to set a specific SNI property on all routes that are associated with an `mtls-auth` plugin, and you have access to the Postgres backend of kong, you may find the following SQL query useful to find any route that may have been updated, and accidentally had the SNI property removed. This will give you the workspace name, route id, and route name of any route that is associated with an `mtls-auth` plugin and does NOT have an SNI property set.
 
 ```sql
 

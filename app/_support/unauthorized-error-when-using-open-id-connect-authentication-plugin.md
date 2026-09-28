@@ -18,7 +18,7 @@ tldr:
 
 ## Problem
 
-When integrating the Open ID Connect Authentication Plugin for Kong Manager or Kong Portal, the user is authenticated correctly in the external IDP (eg. Azure AD) but the session cookie is not correctly set in the browser. After the external IDP redirects to Kong Manager or Kong Portal, you see an "Unauthorized" error on the UI because the session cookie isn't set correctly.
+When integrating the Open ID Connect Authentication Plugin for Kong Manager or Kong Portal, the user is authenticated correctly in the external IDP (e.g. Azure AD) but the session cookie is not correctly set in the browser. After the external IDP redirects to Kong Manager or Kong Portal, you see an "Unauthorized" error on the UI because the session cookie isn't set correctly.
 
 ## Cause
 
@@ -26,7 +26,7 @@ When looking into the HAR file, you find there is an `authorization` cookie that
 
 `set-cookie authorization=; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; Path=/; Secure`
 
-This issue can be caused because some IDPs like Azure AD return a session cookie larger than 4096 bytes. You can check it in the `Content-Length` header, eg: `Content-Length: 5362`. If this is the case, some web browsers like Google Chrome will reject the cookie as it can store a maximum cookie size of 4096 bytes.
+This issue can be caused because some IDPs like Azure AD return a session cookie larger than 4096 bytes. You can check it in the `Content-Length` header, e.g.: `Content-Length: 5362`. If this is the case, some web browsers like Google Chrome will reject the cookie as it can store a maximum cookie size of 4096 bytes.
 
 ## Solution
 
