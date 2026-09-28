@@ -922,16 +922,7 @@ description: !env
   store: true
 ```
 
-```yaml
-description: !env_store DESCRIPTION
-```
-
-`!env_store` is equivalent shorthand, including mapping options and
-extraction. It requires a variable name and rejects `store: false`.
-
-```yaml
-description: !env_store METADATA#description
-```
+Stored values support structured extraction using the mapping form:
 
 ```yaml
 description: !env
@@ -973,14 +964,14 @@ For example, an AI Gateway rate-limiting policy's dynamic `config` can use:
 ```yaml
 config:
   redis:
-    ssl: !env_store {var: REDIS_SSL, type: boolean}
+    ssl: !env {store: true, var: REDIS_SSL, type: boolean}
     ssl_verify: !env {var: REDIS_SSL_VERIFY, store: true, type: boolean}
-  sync_rate: !env_store {var: SYNC_RATE, type: number}
+  sync_rate: !env {store: true, var: SYNC_RATE, type: number}
 ```
 
 Set `REDIS_SSL=true`, `REDIS_SSL_VERIFY=false`, and `SYNC_RATE=0.5`.
 A known boolean field, such as a portal's `auto_approve_developers`, can
-instead use `!env_store AUTO_APPROVE` without a type option.
+instead use `!env {var: AUTO_APPROVE, store: true}` without a type option.
 
 Extraction parses the source as YAML/JSON before selecting an existing
 dot-separated mapping path. The selected value may be any supported type
@@ -1025,7 +1016,7 @@ supported. Stored tags cannot supply resource `ref` or
 deferred secret sources or supported vault references; `!secret` is
 unchanged.
 
-For a manifest containing `description: !env_store DESCRIPTION`:
+For a manifest containing the stored description declaration above:
 
 ```bash
 DESCRIPTION="Approved description" kongctl plan -f config.yaml > plan.json
