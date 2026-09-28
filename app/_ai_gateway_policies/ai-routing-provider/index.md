@@ -1,6 +1,6 @@
 ---
-title: 'AI Routing Provider'
-name: 'AI Routing Provider'
+title: 'NVIDIA Switchyard AI Routing'
+name: 'NVIDIA Switchyard AI Routing'
 
 publisher: kong-inc
 
@@ -1012,21 +1012,6 @@ Each `targets.*.model` must match the `name` or an alias of an
 Start with `mode: observe_only` to see what the decision service would do without
 changing behavior, then switch to `enforce`.
 
-## Test the policy
-
-Send a request and inspect the routing headers, the same way as the
-[classic plugin](/plugins/ai-routing-provider/#test-the-plugin):
-
-```bash
-curl -i -X POST $KONNECT_PROXY_URL/ai/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{"model":"router","messages":[{"role":"user","content":"Say hello."}]}'
-```
-
-A request that was routed by a decision returns `X-AI-Routing-Backend` and
-`X-AI-Routing-Outcome` response headers. To confirm the gateway fails open, stop the
-decision service and repeat the request: it should still return `200`, served by
-`default_target`, with `X-AI-Routing-Outcome: fallback`.
 
 ## Limitations
 

@@ -399,42 +399,7 @@ Start with `mode: observe_only` to see what the decision service would do withou
 The plugin runs at [priority](/gateway/entities/plugin/#plugin-priority) `775`, ahead of AI Proxy Advanced.
 This is required: the alias is only useful if it's set before AI Proxy Advanced reads it.
 
-## Test the plugin
 
-Send a chat completion request to the configured Route and inspect the routing headers:
-
-```bash
-curl -i -X POST http://localhost:8000/ai/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{"model":"router","messages":[{"role":"user","content":"Say hello."}]}'
-```
-
-A request that was routed by a decision returns:
-
-```
-X-AI-Routing-Backend: strong
-X-AI-Routing-Outcome: enforced
-X-Kong-LLM-Model: openai/google/gemini-3.8-flash
-```
-{:.no-copy-code}
-
-To confirm the gateway fails open, stop the decision service and repeat the request.
-It should still return `200`, served by `default_target`:
-
-```
-X-AI-Routing-Backend: weak
-X-AI-Routing-Outcome: fallback
-```
-{:.no-copy-code}
-
-{{site.base_gateway}} logs a single structured line explaining every fallback, at `warn` level so it's visible without raising the log level:
-
-```json
-{"outcome":"fallback","mode":"enforce","backend_id":"weak","reason":"decision call failed: connection refused"}
-```
-{:.no-copy-code}
-
-Enforced and observed decisions are logged the same way at `info` level, carrying `scope` and `fallbacks` instead of `reason`.
 
 ## Limitations
 
