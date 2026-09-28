@@ -6,7 +6,7 @@ publisher: kong-inc
 
 min_version:
   ai-gateway: '2.1'
-
+third_party: true
 works_on:
   - konnect
 
@@ -139,6 +139,9 @@ variables:
   handler:
     value: $LUA_HANDLER
     description: The `handler.lua` from the NVIDIA Switchyard AI Routing plugin.
+formats:
+  - konnect-api
+  - kongctl
 {% endentity_example %}
 
 {:.info}
@@ -206,9 +209,18 @@ decision service and repeat the request: it should still return `200`, served by
 
 ## Limitations
 
-- **This Policy shares its limitations with the classic {{site.base_gateway}} plugin.**
-  See [Limitations](/plugins/ai-routing-provider/#limitations) on the plugin page for
-  the full list (routing quality, no confidence score, no retry on the decision call).
+- **Routing quality depends on the Switchyard route type**, not on this Policy.
+  A `random` route proves the mechanism but makes no claim about choosing well.
+  Evaluating routing quality is separate work.
+- **`/v1/decision` doesn't return the confidence or reason code.**
+  A well-formed `selected.target` is the only validity signal available, so a route whose classifier failed still returns a usable decision that happens to be its default.
+  Read the decision service's `/v1/stats` to tell routing from falling back.
+- **Narrowing AI Model targets per request isn't possible.**
+  Its `filters/acl` configuration is static.
+  This Policy therefore dispatches by rewriting the model alias.
+- **Streaming responses haven't been exercised.**
+- **The decision call isn't retried.**
+  It's advisory and fails open, so a retry would double the worst-case added latency during an outage without improving the outcome.
 - **`dispatch: model_alias` and `dispatch: upstream` don't apply here.** They target
   [AI Proxy Advanced](/plugins/ai-proxy-advanced/) or a Service's upstream directly,
   neither of which this Policy runs alongside. Use `dispatch: konnect_model`.

@@ -48,13 +48,9 @@ min_version:
 ai_gateway_url: "/ai-gateway/policies/ai-routing-provider/"
 ---
 
-The NVIDIA Switchyard AI Routing plugin asks an external decision service which model should serve each AI request, then applies that answer through {{site.base_gateway}}'s own {{site.ai_gateway}} machinery.
-The decision service returns the name of a target.
-{{site.base_gateway}} decides what that name is allowed to mean.
-
 Sending every prompt to your most capable model is expensive, and sending every prompt to your cheapest one is unreliable.
-Deciding per request needs a model of prompt difficulty, which is a research problem rather than a gateway problem.
-This plugin lets that decision live in [NVIDIA Switchyard](https://github.com/NVIDIA-NeMo/Switchyard) while routing, credentials, and policy stay in {{site.base_gateway}}.
+The NVIDIA Switchyard AI Routing plugin asks an external decision service which model should serve each AI request, then applies that answer through {{site.ai_gateway}}.
+This plugin lets [NVIDIA Switchyard](https://github.com/NVIDIA-NeMo/Switchyard) decide the model to use while routing, credentials, and policy stay in {{site.base_gateway}}.
 
 Integrating the NVIDIA Switchyard AI Routing plugin into your {{site.base_gateway}} allows you to:
 
@@ -71,7 +67,7 @@ Integrating the NVIDIA Switchyard AI Routing plugin into your {{site.base_gatewa
 
 ## How it works
 
-The plugin runs in the access phase, ahead of AI Proxy Advanced.
+The plugin runs in the access phase, before [AI Proxy Advanced](/plugins/ai-proxy-advanced/).
 It builds a decision request from the incoming request, submits it to the Switchyard Decision API, and validates the returned `selected.target` against its own `targets` map.
 On a match, it rewrites `body.model` to that target's `model_alias`, which is what AI Proxy Advanced matches on.
 On anything else, it falls back to `default_target` and logs why.
@@ -110,7 +106,7 @@ A routing decision is advice, not an instruction.
 The Decision API returns a `selected.target` that the plugin looks up in the `targets` map you configured.
 A name it doesn't recognize is a failed decision, not an instruction to build a URL.
 
-The plugin refuses a decision when:
+The following table describes when the plugin refuses a decision:
 
 {% table %}
 columns:
@@ -140,10 +136,10 @@ This matters because the decision service is a separate system, often owned by a
 It has no summary-only mode.
 The plugin builds that request, so the disclosure boundary is enforced by {{site.base_gateway}} rather than requested of the decision service.
 
-By default the plugin sends no prompt content.
+By default, the plugin doesn't send prompt content.
 Each message keeps its role and position, but its body is replaced with a `[redacted: N chars]` marker, so the decision service sees the conversation's shape and none of its text.
 
-This is [`config.prompt_disclosure`](/plugins/ai-routing-provider/reference/#schema--config-prompt-disclosure) set to `none`.
+This is when [`config.prompt_disclosure`](/plugins/ai-routing-provider/reference/#schema--config-prompt-disclosure) is set to `none`.
 Richer modes include prompt text, which routes more accurately at the cost of sending user content to another service.
 Turning one on is a privacy decision, so the conservative mode is the default.
 
@@ -166,7 +162,6 @@ rows:
 
 Redaction preserves conversation shape, so an algorithm that keys on shape still works.
 An algorithm that reads text, such as a prompt classifier or a stage router scoring tool results, doesn't, and settles on its configured default.
-That's the trade, and it's why `none` is the default rather than the only option.
 
 ### Protocol support
 
@@ -200,8 +195,9 @@ Before installing the plugin, make sure you have:
 
 - {{site.base_gateway}} 3.14 or later, for [`model_alias`](/plugins/ai-proxy-advanced/) support in AI Proxy Advanced.
   Earlier versions can use `dispatch: upstream`.
+- [Rust and `cargo` installed](https://doc.rust-lang.org/cargo/getting-started/installation.html)
 - A {{site.base_gateway}} Enterprise license, for AI Proxy Advanced.
-- A reachable NVIDIA Switchyard Decision API, exposing `POST /v1/decision`.
+- A [reachable NVIDIA Switchyard Decision API](#run-the-switchyard-decision-api), exposing `POST /v1/decision`.
 - A route configured in Switchyard whose targets correspond to the models you intend to route between.
 
 Set [`config.dispatch`](/plugins/ai-routing-provider/reference/#schema--config-dispatch) to `model_alias` for the production path, since it dispatches through AI Proxy Advanced.
@@ -229,6 +225,11 @@ curl -s localhost:4000/health
 {"status":"ok"}
 ```
 {:.no-copy-code}
+
+Create a `config.toml` file:
+```sh
+touch config.toml
+```
 
 For example, a minimal `config.toml` with two tiers:
 
@@ -281,7 +282,7 @@ Install the plugin using one of the following options.
 Alternatively, build a custom {{site.base_gateway}} image with the plugin installed:
 
 ```dockerfile
-FROM kong/kong-gateway:3.15
+FROM kong/kong-gateway:{{ site.data.gateway_latest.release }}
 
 USER root
 COPY ./kong-plugin/kong/plugins/ai-routing-provider /usr/local/share/lua/5.1/kong/plugins/ai-routing-provider
@@ -326,8 +327,8 @@ In {{site.konnect_short_name}} hybrid mode, upload the plugin schema to the cont
 
    ```bash
    curl -X POST \
-     "https://us.api.konghq.com/v2/control-planes/${KONNECT_CP_ID}/core-entities/plugin-schemas" \
-     --header "Authorization: Bearer ${KONNECT_TOKEN}" \
+     "https://us.api.konghq.com/v2/control-planes/$KONNECT_CP_ID/core-entities/plugin-schemas" \
+     --header "Authorization: Bearer $KONNECT_TOKEN" \
      --header "Content-Type: application/json" \
      --data "{\"lua_schema\": $(jq -Rs . kong-plugin/kong/plugins/ai-routing-provider/schema.lua)}"
    ```
@@ -360,7 +361,7 @@ In {{site.konnect_short_name}} hybrid mode, upload the plugin schema to the cont
      -v "$PWD/kong-plugin/kong/plugins/ai-routing-provider:/opt/kong/plugins/ai-routing-provider:ro" \
      -v "$PWD/certs:/etc/kong/certs:ro" \
      -p 8000:8000 \
-     kong/kong-gateway:3.15
+     kong/kong-gateway:{{ site.data.gateway_latest.release }}
    ```
 
 1. Confirm the node appears as connected in the API Gateway UI before proceeding.
@@ -374,18 +375,18 @@ In {{site.konnect_short_name}} hybrid mode, upload the plugin schema to the cont
 After installing the plugin, enable it on a Route.
 See the following examples:
 
-- [Enable NVIDIA Switchyard AI routing](/plugins/ai-routing-provider/examples/enable-ai-routing-provider/): a two-tier configuration in `enforce` mode.
-- [Route between model tiers](/plugins/ai-routing-provider/examples/model-tier-routing/): the same configuration, with guidance on adopting it safely from `observe_only` to `enforce`.
+- [Enable NVIDIA Switchyard AI routing](/plugins/ai-routing-provider/examples/enable-ai-routing-provider/): A two-tier configuration in `enforce` mode.
+- [Route between model tiers](/plugins/ai-routing-provider/examples/model-tier-routing/): The same configuration, with guidance on adopting it safely from `observe_only` to `enforce`.
 
 The plugin sets a model alias.
 AI Proxy Advanced resolves it.
-Enable both on the same Route, and make sure each alias referenced here exists as a target there.
+Enable both the AI Proxy Advanced plugin and the NVIDIA Switchyard plugin on the same Route, and make sure each alias referenced here exists as a target there.
 
 Start with `mode: observe_only` to see what the decision service would do without changing behavior, then switch to `enforce`.
 
 ### Plugin ordering
 
-The plugin runs at priority `775`, ahead of AI Proxy Advanced.
+The plugin runs at [priority](/gateway/entities/plugin/#plugin-priority) `775`, ahead of AI Proxy Advanced.
 This is required: the alias is only useful if it's set before AI Proxy Advanced reads it.
 
 ## Test the plugin
@@ -430,7 +431,7 @@ Enforced and observed decisions are logged the same way at `info` level, carryin
 - **Routing quality depends on the Switchyard route type**, not on this plugin.
   A `random` route proves the mechanism but makes no claim about choosing well.
   Evaluating routing quality is separate work.
-- **`/v1/decision` returns no confidence or reason code.**
+- **`/v1/decision` doesn't return the confidence or reason code.**
   A well-formed `selected.target` is the only validity signal available, so a route whose classifier failed still returns a usable decision that happens to be its default.
   Read the decision service's `/v1/stats` to tell routing from falling back.
 - **Narrowing AI Proxy Advanced targets per request isn't possible.**
