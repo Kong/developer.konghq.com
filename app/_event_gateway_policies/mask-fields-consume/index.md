@@ -26,6 +26,8 @@ related_resources:
     url: /event-gateway/policies/decrypt-fields/
   - text: Mask sensitive fields in Kafka messages with {{site.event_gateway}}
     url: /event-gateway/mask-kafka-message-fields/
+  - text: Mask Kafka message fields selected by schema registry tags with {{site.event_gateway}}
+    url: /event-gateway/mask-kafka-message-fields-from-schema/
 
 phases:
   - consume
@@ -69,6 +71,9 @@ rows:
   - use_case: "[Tutorial: Mask sensitive fields in Kafka messages](/event-gateway/mask-kafka-message-fields/)"
     description: |
       Redact the name, email, and SSN fields of customer records, so that consumers can use a production topic while personal data stays hidden.
+  - use_case: "[Tutorial: Mask fields selected by schema registry tags](/event-gateway/mask-kafka-message-fields-from-schema/)"
+    description: |
+      Redact the fields that carry a `PII` tag in a Confluent Schema Registry, so that masking follows schema evolution without policy changes.
 {% endtable %}
 <!--vale on-->
 
