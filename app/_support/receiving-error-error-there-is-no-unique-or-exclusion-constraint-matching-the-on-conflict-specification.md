@@ -8,12 +8,12 @@ works_on:
   - on-prem
   - konnect
 related_resources:
-  - text: Upgrade Kong Gateway
+  - text: Upgrade {{site.base_gateway}}
     url: /gateway/upgrade/
 tldr:
   q: What does "there is no unique or exclusion constraint matching the ON CONFLICT specification" mean and how do I fix it?
   a: |
-    This happens when the Kong Gateway binary is newer than the migrations applied to its database, so an `INSERT ... ON CONFLICT` statement references an index that doesn't exist yet. Run the pending migrations (`kong migrations up` then `kong migrations finish`) before starting the newer binary, or restore a database backup matching the older version instead.
+    This happens when the {{site.base_gateway}} binary is newer than the migrations applied to its database, so an `INSERT ... ON CONFLICT` statement references an index that doesn't exist yet. Run the pending migrations (`kong migrations up` then `kong migrations finish`) before starting the newer binary, or restore a database backup matching the older version instead.
 ---
 
 ## Problem

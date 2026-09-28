@@ -13,7 +13,7 @@ tldr:
   a: |
     The identity provider's session cookie can exceed the browser's 4096-byte cookie size limit and get silently dropped, so the session is never established even though the IDP login succeeded.
 
-    On Kong Gateway 3.14.0.0, session data is compressed automatically by the bundled `lua-resty-session` library, so the older `session_compressor` field is a deprecated no-op. If the cookie is still too large, set `config.session_storage` to `redis` or `memcached` instead of the default `cookie`, so only a small session ID is stored in the browser and the actual session data lives server-side.
+    On {{site.base_gateway}} 3.14.0.0, session data is compressed automatically by the bundled `lua-resty-session` library, so the older `session_compressor` field is a deprecated no-op. If the cookie is still too large, set `config.session_storage` to `redis` or `memcached` instead of the default `cookie`, so only a small session ID is stored in the browser and the actual session data lives server-side.
 ---
 
 ## Problem

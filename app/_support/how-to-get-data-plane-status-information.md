@@ -13,9 +13,9 @@ related_resources:
   - text: the official Konnect API reference
     url: /api/
 tldr:
-  q: How do I get the Data Plane status in Kong Konnect?
+  q: How do I get the Data Plane status in {{site.konnect_product_name}}?
   a: |
-    Kong Konnect doesn't document a public API path for Data Plane status; the endpoint shown here (`.../clustering/data-planes?count_dp=true`) is an internal, UI-backing route authenticated with a session cookie, and can change without notice. Also, `konnect.konghq.com` no longer resolves — Konnect's UI is now at `cloud.konghq.com`. Prefer authenticating to the documented Konnect API with a Personal Access Token (PAT) and confirm the current Data Plane status path there instead of relying on the internal endpoint.
+    {{site.konnect_product_name}} doesn't document a public API path for Data Plane status; the endpoint shown here (`.../clustering/data-planes?count_dp=true`) is an internal, UI-backing route authenticated with a session cookie, and can change without notice. Also, `konnect.konghq.com` no longer resolves — Konnect's UI is now at `cloud.konghq.com`. Prefer authenticating to the documented Konnect API with a Personal Access Token (PAT) and confirm the current Data Plane status path there instead of relying on the internal endpoint.
 ---
 
 ## Overview

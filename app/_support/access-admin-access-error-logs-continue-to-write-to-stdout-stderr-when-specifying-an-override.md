@@ -12,7 +12,7 @@ tldr:
   a: |
     Kong's docker-entrypoint script symlinks the default log file paths (`access.log`, `admin_access.log`, `error.log`) to `/dev/stdout` and `/dev/stderr`. Setting `KONG_PROXY_ACCESS_LOG` and `KONG_PROXY_ERROR_LOG` has no effect if you leave the path and filename at their defaults — the symlinks still win. Point the variables at a different path or filename to actually redirect logging inside the container.
 related_resources:
-  - text: "Kong Gateway configuration reference: `proxy_access_log`"
+  - text: "{{site.base_gateway}} configuration reference: `proxy_access_log`"
     url: /gateway/configuration/#proxy-access-log
   - text: Kong's `docker-entrypoint.sh` script
     url: https://github.com/Kong/docker-kong/blob/master/docker-entrypoint.sh

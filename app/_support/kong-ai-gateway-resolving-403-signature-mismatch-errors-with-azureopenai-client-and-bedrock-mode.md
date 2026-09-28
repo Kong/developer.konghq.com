@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: Why does Kong AI Gateway return a 403 "signature mismatch" error when using the `AzureOpenAI` client in Bedrock mode?
+  q: Why does {{site.ai_gateway_name}} return a 403 "signature mismatch" error when using the `AzureOpenAI` client in Bedrock mode?
   a: |
     The `AzureOpenAI` SDK client always appends an `api_version` query parameter, which breaks AWS signature verification when the request is routed to a non-Azure provider like Bedrock. Set `api_version=""` when constructing the `AzureOpenAI` client so the SDK does not append the parameter, and the request signs and verifies correctly.
 related_resources: []

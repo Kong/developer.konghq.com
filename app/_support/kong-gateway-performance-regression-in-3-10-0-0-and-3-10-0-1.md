@@ -11,9 +11,9 @@ related_resources:
   - text: "#12288"
     url: https://github.com/Kong/kong-ee/issues/12288
 tldr:
-  q: Why did Kong Gateway 3.10.0.0 and 3.10.0.1 introduce a performance regression?
+  q: Why did {{site.base_gateway}} 3.10.0.0 and 3.10.0.1 introduce a performance regression?
   a: |
-    A bug in the underlying OpenResty `lua-nginx-module` truncated hostnames longer than 32 characters when matching pooled keepalive upstream connections, which could misidentify or fail to reuse pooled connections and reduce throughput. Upgrade to Kong Gateway `3.10.0.2` or later to pick up the upstream OpenResty fix.
+    A bug in the underlying OpenResty `lua-nginx-module` truncated hostnames longer than 32 characters when matching pooled keepalive upstream connections, which could misidentify or fail to reuse pooled connections and reduce throughput. Upgrade to {{site.base_gateway}} `3.10.0.2` or later to pick up the upstream OpenResty fix.
 ---
 
 ## Problem

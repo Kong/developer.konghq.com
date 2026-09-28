@@ -8,9 +8,9 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: "Kong Gateway: How can I prevent the Response Transformer Advanced plugin from running on large response bodies?"
+  q: "{{site.base_gateway}}: How can I prevent the Response Transformer Advanced plugin from running on large response bodies?"
   a: |
-    Kong Gateway supports feature flags to cap the size of the response body the plugin will process. Set `response_transformation_enable_limit_body=on` and `response_transformation_limit_body_size=<bytes>` in a feature-flags conf file, point `feature_conf_path` at it in `kong.conf` (or via environment variables), and restart Kong. Requests whose response body exceeds the limit are returned unmodified, and Kong logs a "response body size limit exceeded" message.
+    {{site.base_gateway}} supports feature flags to cap the size of the response body the plugin will process. Set `response_transformation_enable_limit_body=on` and `response_transformation_limit_body_size=<bytes>` in a feature-flags conf file, point `feature_conf_path` at it in `kong.conf` (or via environment variables), and restart Kong. Requests whose response body exceeds the limit are returned unmodified, and Kong logs a "response body size limit exceeded" message.
 related_resources: []
 ---
 

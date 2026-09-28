@@ -13,7 +13,7 @@ related_resources:
 tldr:
   q: How can I use Kong to allow SSE (Server-Sent Events)?
   a: |
-    SSE just needs a normal Service/Route through Kong Gateway, but two settings matter: raise the Service's `read_timeout` so Kong doesn't close long-lived SSE connections early, and have your upstream send `X-Accel-Buffering: no` so Kong doesn't buffer (and delay) the event stream — don't disable proxy buffering globally.
+    SSE just needs a normal Service/Route through {{site.base_gateway}}, but two settings matter: raise the Service's `read_timeout` so Kong doesn't close long-lived SSE connections early, and have your upstream send `X-Accel-Buffering: no` so Kong doesn't buffer (and delay) the event stream — don't disable proxy buffering globally.
 ---
 
 ## Overview

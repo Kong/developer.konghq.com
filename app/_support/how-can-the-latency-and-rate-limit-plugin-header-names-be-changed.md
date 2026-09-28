@@ -12,7 +12,7 @@ tldr:
   a: |
     Kong's latency and rate-limiting response headers have fixed names that can't be renamed through configuration. Turn off the default headers with the `headers` `kong.conf` parameter, then use a post-function plugin running in the `header_filter` phase to read the existing headers, set custom-named replacements with `kong.response.set_header()`, and clear the originals with `kong.response.clear_header()`.
 related_resources:
-  - text: Kong Gateway configuration property reference
+  - text: "{{site.base_gateway}} configuration property reference"
     url: /gateway/configuration/#headers
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: Notice in logs: \"response buffering was turned off: incompatible HTTP version (2)\""
+title: "{{site.base_gateway}}: Notice in logs: \"response buffering was turned off: incompatible HTTP version (2)\""
 content_type: support
 description: This informational message in the logs comes from the Nginx layer.
 products:
@@ -9,9 +9,9 @@ works_on:
   - konnect
 related_resources: []
 tldr:
-  q: 'Why does Kong Gateway log "response buffering was turned off: incompatible HTTP version (2)", and does it need action?'
+  q: 'Why does {{site.base_gateway}} log "response buffering was turned off: incompatible HTTP version (2)", and does it need action?'
   a: |
-    This is an informational Nginx/Kong log message, not an error. It appears when Kong Gateway turns buffered proxying back off for a request, most commonly during a connection upgrade such as a WebSocket request. On current Kong Gateway, the `"incompatible HTTP version (2)"` variant specifically should not occur, since `kong.service.request.enable_buffering()` and a plugin's `response` handler both work correctly over HTTP/2. If you're not seeing any impact and just want it out of your logs, raise the log level to `warn`, since there's no way to suppress this one notice specifically.
+    This is an informational Nginx/Kong log message, not an error. It appears when {{site.base_gateway}} turns buffered proxying back off for a request, most commonly during a connection upgrade such as a WebSocket request. On current {{site.base_gateway}}, the `"incompatible HTTP version (2)"` variant specifically should not occur, since `kong.service.request.enable_buffering()` and a plugin's `response` handler both work correctly over HTTP/2. If you're not seeing any impact and just want it out of your logs, raise the log level to `warn`, since there's no way to suppress this one notice specifically.
 ---
 
 ## Problem

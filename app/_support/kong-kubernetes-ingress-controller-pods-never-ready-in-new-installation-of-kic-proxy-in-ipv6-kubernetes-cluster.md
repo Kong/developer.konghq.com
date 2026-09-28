@@ -11,7 +11,7 @@ related_resources:
   - text: "Kong/kubernetes-ingress-controller PR #5139"
     url: https://github.com/Kong/kubernetes-ingress-controller/pull/5139
 tldr:
-  q: Why do Kong Ingress Controller pods never become ready on a fresh install in an IPv6-only Kubernetes cluster?
+  q: Why do {{site.kic_product_name}} pods never become ready on a fresh install in an IPv6-only Kubernetes cluster?
   a: |
     This was a KIC defect where a malformed, unbracketed IPv6 address in Admin API discovery caused connection failures and the resulting "no configuration available" readiness failure. It's fixed since KIC `2.11.0`; if you can't yet upgrade, remove `http2` from the proxy's `admin_listen` definition as a stopgap.
 ---

@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: Errors seen when using decK: \"HTTP status 403 (message: \"<failed to parse response body: invalid character '<' looking for beginning of value>\")\""
+title: "{{site.base_gateway}}: Errors seen when using decK: \"HTTP status 403 (message: \"<failed to parse response body: invalid character '<' looking for beginning of value>\")\""
 content_type: support
 description: This situation is rare but is known to be caused by network security rules, specifically those in a WAF (Web Application Firewall).
 products:
@@ -10,7 +10,7 @@ works_on:
 tldr:
   q: "Why does `deck sync` fail with \"HTTP status 403 ... failed to parse response body: invalid character '<' looking for beginning of value\"?"
   a: |
-    This is rare and is usually caused by a misconfigured WAF (Web Application Firewall) or other network security appliance rejecting or manipulating requests from decK to Kong Gateway — for example, dropping HTTP PUT requests. decK then fails to parse the HTML error page the WAF returns as JSON. Work with your network/security team to adjust the WAF rules so traffic from the decK workstation reaches Kong Gateway unmodified.
+    This is rare and is usually caused by a misconfigured WAF (Web Application Firewall) or other network security appliance rejecting or manipulating requests from decK to {{site.base_gateway}} — for example, dropping HTTP PUT requests. decK then fails to parse the HTML error page the WAF returns as JSON. Work with your network/security team to adjust the WAF rules so traffic from the decK workstation reaches {{site.base_gateway}} unmodified.
 related_resources: []
 ---
 

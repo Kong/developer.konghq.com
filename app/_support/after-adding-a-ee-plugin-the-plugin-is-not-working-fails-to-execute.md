@@ -10,7 +10,7 @@ works_on:
 tldr:
   q: Why does an Enterprise plugin (for example `mtls-auth` or `rate-limiting-advanced`) silently no-op instead of running?
   a: |
-    Kong Enterprise plugins require a valid license on the Data Plane; without one, EE plugins are skipped ("nop'd") and a debug log line reports it. In a Hybrid deployment, license the Control Plane via the Admin API `/licenses` endpoint so it distributes the license to Data Planes automatically. If you instead set the license via `license_data` or `license_path`, you must configure it explicitly on every Data Plane.
+    {{site.ee_product_name}} plugins require a valid license on the Data Plane; without one, EE plugins are skipped ("nop'd") and a debug log line reports it. In a Hybrid deployment, license the Control Plane via the Admin API `/licenses` endpoint so it distributes the license to Data Planes automatically. If you instead set the license via `license_data` or `license_path`, you must configure it explicitly on every Data Plane.
 related_resources:
   - text: documentation for deploying the license
     url: /gateway/licenses/deploy/

@@ -11,7 +11,7 @@ related_resources: []
 tldr:
   q: How do I get a list of specs using the files API?
   a: |
-    The `/specs` API only returns a single spec file (`.yaml` or `.json`), so list specs by querying the files API and filtering its output with `jq` — for example piping through `grep spec` or `egrep ^spec` to match paths under `specs/`. Note: on-premises Dev Portal API routes are gated behind a separate license entitlement as of Kong Gateway 3.11.0.0, so a 404 there may mean Dev Portal isn't enabled on your license.
+    The `/specs` API only returns a single spec file (`.yaml` or `.json`), so list specs by querying the files API and filtering its output with `jq` — for example piping through `grep spec` or `egrep ^spec` to match paths under `specs/`. Note: on-premises Dev Portal API routes are gated behind a separate license entitlement as of {{site.base_gateway}} 3.11.0.0, so a 404 there may mean Dev Portal isn't enabled on your license.
 ---
 
 ## Overview

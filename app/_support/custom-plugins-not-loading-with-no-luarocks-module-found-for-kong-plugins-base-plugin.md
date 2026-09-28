@@ -12,7 +12,7 @@ tldr:
   a: |
     The `kong.plugins.base_plugin` module was deprecated in Kong v2.4.x and removed in v3.0.x. A custom plugin whose handler still inherits from `base_plugin` will fail to load with this LuaRocks error on Kong 3.x. Update the plugin to the newer handler pattern that doesn't extend `BasePlugin`.
 related_resources:
-  - text: Kong Enterprise changelog (deprecated features)
+  - text: "{{site.ee_product_name}} changelog (deprecated features)"
     url: https://legacy-gateway--kongdocs.netlify.app/enterprise/changelog/#deprecated
   - text: Kong custom plugins documentation (handler.lua)
     url: /custom-plugins/handler.lua/

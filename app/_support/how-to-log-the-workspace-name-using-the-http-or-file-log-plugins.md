@@ -13,7 +13,7 @@ related_resources:
 tldr:
   q: How do I log the Kong workspace name using the `http-log` or `file-log` plugins?
   a: |
-    Kong Gateway Enterprise already adds a `workspace_name` field to the log-serializer output for `http-log`/`file-log` (and other log plugins), with no configuration needed. If you need the value under a custom key, opt into the legacy `untrusted_lua = sandbox` tier and set `untrusted_lua_sandbox_requires = kong.workspaces` to add a custom `custom_fields_by_lua` field instead.
+    {{site.ee_product_name}} already adds a `workspace_name` field to the log-serializer output for `http-log`/`file-log` (and other log plugins), with no configuration needed. If you need the value under a custom key, opt into the legacy `untrusted_lua = sandbox` tier and set `untrusted_lua_sandbox_requires = kong.workspaces` to add a custom `custom_fields_by_lua` field instead.
 ---
 
 ## Overview

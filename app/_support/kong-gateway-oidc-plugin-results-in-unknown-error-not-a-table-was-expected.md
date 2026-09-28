@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway OIDC plugin logs \"unknown error (not a table) was expected\" when the token's `iss` claim doesn't match the configured issuer"
+title: "{{site.base_gateway}} OIDC plugin logs \"unknown error (not a table) was expected\" when the token's `iss` claim doesn't match the configured issuer"
 content_type: support
 description: This error is caused by a mismatch between the token's `iss` claim and the OIDC plugin's configured issuer, not by a truncated or modified access token.
 products:

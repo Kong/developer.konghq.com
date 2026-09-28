@@ -10,7 +10,7 @@ works_on:
 tldr:
   q: "Why can't an empty workspace be deleted?"
   a: |
-    Workspace deletion can fail with a `"Workspace is not empty"` error even when the Admin API shows no entities, because the `workspace_entity_counters` table can become out of sync with the actual entity counts. Fix it by running `kong migrations reinitialize-workspace-entity-counters`, or by manually resetting the counters for that workspace in the database. On Kong Gateway 3.14.0.0, workspace deletion checks live entity counts directly instead of these counters, so this specific issue no longer occurs.
+    Workspace deletion can fail with a `"Workspace is not empty"` error even when the Admin API shows no entities, because the `workspace_entity_counters` table can become out of sync with the actual entity counts. Fix it by running `kong migrations reinitialize-workspace-entity-counters`, or by manually resetting the counters for that workspace in the database. On {{site.base_gateway}} 3.14.0.0, workspace deletion checks live entity counts directly instead of these counters, so this specific issue no longer occurs.
 related_resources:
   - text: the documentation for details of this command
     url: /gateway/reference/cli/#kong-migrations

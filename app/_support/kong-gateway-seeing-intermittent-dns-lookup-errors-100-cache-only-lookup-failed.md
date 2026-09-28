@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: Seeing intermittent DNS lookup errors: \"100 cache only lookup failed\""
+title: "{{site.base_gateway}}: Seeing intermittent DNS lookup errors: \"100 cache only lookup failed\""
 content_type: support
 description: Intermittent "100 cache only lookup failed" DNS errors occur when a retried request's cached DNS record expires before the retry completes, and can be mitigated by tuning `dns_stale_ttl` or `dns_valid_ttl`.
 products:
@@ -9,9 +9,9 @@ works_on:
   - konnect
 related_resources: []
 tldr:
-  q: Why do I see intermittent DNS lookup errors like `"100 cache only lookup failed"` in Kong Gateway?
+  q: Why do I see intermittent DNS lookup errors like `"100 cache only lookup failed"` in {{site.base_gateway}}?
   a: |
-    This happens when a retried request's cached DNS entry expires before the retry completes — retries only check the existing cache and don't issue a fresh DNS query. Fix the underlying slow upstream or timeout causing the retries where possible, and consider raising `dns_stale_ttl` (defaults to `3600` seconds on current Kong Gateway) or `dns_valid_ttl` to reduce exposure to this race.
+    This happens when a retried request's cached DNS entry expires before the retry completes — retries only check the existing cache and don't issue a fresh DNS query. Fix the underlying slow upstream or timeout causing the retries where possible, and consider raising `dns_stale_ttl` (defaults to `3600` seconds on current {{site.base_gateway}}) or `dns_valid_ttl` to reduce exposure to this race.
 ---
 
 ## Problem

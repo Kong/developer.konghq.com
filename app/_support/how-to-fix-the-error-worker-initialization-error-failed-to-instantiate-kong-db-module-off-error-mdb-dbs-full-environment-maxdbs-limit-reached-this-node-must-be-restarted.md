@@ -1,5 +1,5 @@
 ---
-title: "\"MDB_DBS_FULL: Environment maxdbs limit reached\" worker initialization error when upgrading to Kong Gateway 3.10.0.2 with a custom Nginx template"
+title: "\"MDB_DBS_FULL: Environment maxdbs limit reached\" worker initialization error when upgrading to {{site.base_gateway}} 3.10.0.2 with a custom Nginx template"
 content_type: support
 description: "How to fix the `worker initialization error: failed to instantiate 'kong.db' module: [off error] MDB_DBS_FULL: Environment maxdbs limit reached` error when {{site.base_gateway}} 3.10.0.2 fails to start with a custom Nginx template missing the `lmdb_max_databases` directive."
 products:
@@ -9,9 +9,9 @@ works_on:
   - konnect
 related_resources: []
 tldr:
-  q: "Why does Kong Gateway 3.10.0.2 fail to start with a \"MDB_DBS_FULL: Environment maxdbs limit reached\" worker initialization error after upgrading with a custom Nginx template?"
+  q: "Why does {{site.base_gateway}} 3.10.0.2 fail to start with a \"MDB_DBS_FULL: Environment maxdbs limit reached\" worker initialization error after upgrading with a custom Nginx template?"
   a: |
-    Kong Gateway 3.10.0.2 introduced a new requirement to set `lmdb_max_databases` for the incremental sync process's full sync pagination. A custom Nginx template that's missing the stock `include 'nginx-inject.conf';` line never gets this setting, so LMDB's max-databases limit is exceeded at worker init. Confirm your custom template still includes that file; only if it genuinely can't should you add `lmdb_max_databases 3;` (with `lmdb_environment_path` and `lmdb_map_size`) directly — the value `3` is hardcoded and must not be changed.
+    {{site.base_gateway}} 3.10.0.2 introduced a new requirement to set `lmdb_max_databases` for the incremental sync process's full sync pagination. A custom Nginx template that's missing the stock `include 'nginx-inject.conf';` line never gets this setting, so LMDB's max-databases limit is exceeded at worker init. Confirm your custom template still includes that file; only if it genuinely can't should you add `lmdb_max_databases 3;` (with `lmdb_environment_path` and `lmdb_map_size`) directly — the value `3` is hardcoded and must not be changed.
 ---
 
 ## Problem

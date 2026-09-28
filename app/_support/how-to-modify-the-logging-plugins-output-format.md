@@ -13,7 +13,7 @@ related_resources:
 tldr:
   q: How do I nest a logging plugin's output under a custom top-level element using `custom_fields_by_lua`?
   a: |
-    Use the `custom_fields_by_lua` config field to add a new top-level element (for example `message`) that returns `kong.log.serialize()`, then set every other standard top-level field to `return nil` so it doesn't leak out alongside the nested element. Some Kong Gateway versions' `kong.log.serialize()` also returns `workspace_name`, `upstream_status`, and `source`, so include those in the nil list too or they will appear as extra top-level keys.
+    Use the `custom_fields_by_lua` config field to add a new top-level element (for example `message`) that returns `kong.log.serialize()`, then set every other standard top-level field to `return nil` so it doesn't leak out alongside the nested element. Some {{site.base_gateway}} versions' `kong.log.serialize()` also returns `workspace_name`, `upstream_status`, and `source`, so include those in the nil list too or they will appear as extra top-level keys.
 ---
 
 ## Overview

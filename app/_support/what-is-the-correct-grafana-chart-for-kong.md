@@ -10,7 +10,7 @@ works_on:
 tldr:
   q: What is the correct Grafana chart for Kong?
   a: |
-    Kong publishes two Grafana dashboards for Kong Gateway: a Vitals-based Prometheus dashboard and a Prometheus-plugin dashboard. As of Kong Gateway 3.11.0.0, Vitals is deprecated, disabled by default, and gated behind an extra license entitlement most Enterprise licenses lack, so use the Prometheus plugin dashboard unless Vitals is specifically enabled and licensed.
+    Kong publishes two Grafana dashboards for {{site.base_gateway}}: a Vitals-based Prometheus dashboard and a Prometheus-plugin dashboard. As of {{site.base_gateway}} 3.11.0.0, Vitals is deprecated, disabled by default, and gated behind an extra license entitlement most Enterprise licenses lack, so use the Prometheus plugin dashboard unless Vitals is specifically enabled and licensed.
 related_resources:
   - text: Kong Vitals Prometheus dashboard (Grafana)
     url: "https://grafana.com/grafana/dashboards/11870-kong-vitals-prometheus-official/"

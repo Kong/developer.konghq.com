@@ -9,7 +9,7 @@ works_on:
   - konnect
 related_resources: []
 tldr:
-  q: How do I rate limit requests by a header's value combined with the Key Auth plugin in Kong Gateway?
+  q: How do I rate limit requests by a header's value combined with the Key Auth plugin in {{site.base_gateway}}?
   a: |
     Combine the Rate Limiting Advanced plugin with the Key Auth plugin and Consumer Groups: create a consumer with a `key-auth` credential, add the consumer to a Consumer Group, and attach a Rate Limiting Advanced policy to that group. Scope both plugins to the specific route or service you want to protect — leaving them unscoped creates a global plugin that affects unrelated traffic too.
 ---

@@ -9,7 +9,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: Why do I see `lua_max_running_timers are not enough` alerts in Kong Gateway logs, and why has the Gateway stopped accepting requests?
+  q: Why do I see `lua_max_running_timers are not enough` alerts in {{site.base_gateway}} logs, and why has the Gateway stopped accepting requests?
   a: |
     This happens when the timer system (set in the Nginx layer) runs out of timers for the traffic volume, usually combined with memory pressure, Vitals being enabled, DNS lookup failures, or delayed upstream responses. The recommended fix is to raise `lua_max_running_timers` above its default of 4096 via a custom Nginx template, increasing it in increments of no more than 4096 at a time and testing after each change. Disabling Vitals and resolving DNS/upstream latency issues are additional workarounds if memory can't be increased.
 related_resources: []

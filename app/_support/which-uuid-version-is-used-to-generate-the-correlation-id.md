@@ -10,7 +10,7 @@ works_on:
 tldr:
   q: Which UUID version is used to generate the Correlation ID?
   a: |
-    The `correlation-id` plugin uses the `resty.jit-uuid` library to generate a version 4 UUID. Its default generator, `uuid#counter`, creates one UUID per Nginx worker at startup and appends an incrementing counter per request rather than issuing a fresh UUID each time — set `config.generator` to `uuid` for a fully random UUID on every request. Kong Gateway also generates a unique Request ID by default (exposed via the `X-Kong-Request-Id` header), so the plugin isn't required just to get unique per-request tracking.
+    The `correlation-id` plugin uses the `resty.jit-uuid` library to generate a version 4 UUID. Its default generator, `uuid#counter`, creates one UUID per Nginx worker at startup and appends an incrementing counter per request rather than issuing a fresh UUID each time — set `config.generator` to `uuid` for a fully random UUID on every request. {{site.base_gateway}} also generates a unique Request ID by default (exposed via the `X-Kong-Request-Id` header), so the plugin isn't required just to get unique per-request tracking.
 related_resources:
   - text: the lua-resty-jit-uuid library documentation
     url: https://thibaultcha.github.io/lua-resty-jit-uuid/#generate_v4

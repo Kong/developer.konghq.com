@@ -11,11 +11,11 @@ related_resources:
   - text: the Kong PostgreSQL datastore settings
     url: /gateway/configuration/#pg-ssl-version
 tldr:
-  q: Why can't Kong Gateway connect to a PostgreSQL database that requires TLSv1.2 or higher?
+  q: Why can't {{site.base_gateway}} connect to a PostgreSQL database that requires TLSv1.2 or higher?
   a: |
     PostgreSQL server versions above 12.x may require a higher TLS protocol than Kong's default. Set `pg_ssl: on` and `pg_ssl_version: tlsv1_2` (or `tlsv1_3`) to match.
 
-    As of Kong Gateway 3.14.0.0, `pg_ssl_version` already defaults to `tlsv1_2`, so this is only needed on older Gateway versions or when a lower value has been explicitly set.
+    As of {{site.base_gateway}} 3.14.0.0, `pg_ssl_version` already defaults to `tlsv1_2`, so this is only needed on older Gateway versions or when a lower value has been explicitly set.
 ---
 
 ## Problem

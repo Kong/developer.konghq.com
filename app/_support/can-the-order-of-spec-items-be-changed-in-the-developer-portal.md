@@ -10,7 +10,7 @@ works_on:
 tldr:
   q: Can the order of spec items be changed in the Developer Portal?
   a: |
-    Yes — set an `operationsSorter` (for example `alpha`) in the spec-renderer layout's `swaggerUIOptions`. Note the sidebar doesn't follow this custom order, so disable it (`hasSidebar: false`) when using an `operationsSorter`. On Kong Gateway (Enterprise) 3.11.0.0 and later, this workflow requires a license with the `portal_and_vitals_key` extra, since it depends on the Portal's file-management Admin API.
+    Yes — set an `operationsSorter` (for example `alpha`) in the spec-renderer layout's `swaggerUIOptions`. Note the sidebar doesn't follow this custom order, so disable it (`hasSidebar: false`) when using an `operationsSorter`. On {{site.base_gateway}} (Enterprise) 3.11.0.0 and later, this workflow requires a license with the `portal_and_vitals_key` extra, since it depends on the Portal's file-management Admin API.
 related_resources:
   - text: Swagger UI configuration options (`operationsSorter`)
     url: https://github.com/swagger-api/swagger-ui/blob/master/docs/usage/configuration.md

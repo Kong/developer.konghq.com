@@ -10,7 +10,7 @@ works_on:
 tldr:
   q: How can I set LDAPS (LDAP over SSL) for LDAP authentication for Kong Manager?
   a: |
-    Enable LDAPS for Kong Manager by setting `ldap_port: 636`, `ldaps: true`, and `verify_ldap_host: false` in your `admin_gui_auth_conf` config (config file or the equivalent environment variables). To verify the LDAP host instead of disabling verification, set `verify_ldap_host: true` and add its CA certificate via `lua_ssl_trusted_certificate`. Note: since Kong Gateway 3.14.0.0, `tls_certificate_verify` defaults to `on`, which blocks `ldaps`/`start_tls` with `verify_ldap_host: false` on the standalone `ldap-auth-advanced` plugin (Admin API) — but this does not affect the `admin_gui_auth_conf` setup for Kong Manager shown here.
+    Enable LDAPS for Kong Manager by setting `ldap_port: 636`, `ldaps: true`, and `verify_ldap_host: false` in your `admin_gui_auth_conf` config (config file or the equivalent environment variables). To verify the LDAP host instead of disabling verification, set `verify_ldap_host: true` and add its CA certificate via `lua_ssl_trusted_certificate`. Note: since {{site.base_gateway}} 3.14.0.0, `tls_certificate_verify` defaults to `on`, which blocks `ldaps`/`start_tls` with `verify_ldap_host: false` on the standalone `ldap-auth-advanced` plugin (Admin API) — but this does not affect the `admin_gui_auth_conf` setup for Kong Manager shown here.
 related_resources: []
 ---
 

@@ -10,7 +10,7 @@ works_on:
 tldr:
   q: How can I enable Brotli HTTP response compression?
   a: |
-    Kong Gateway bundles the `ngx_brotli` module, so Brotli compression is available out of the box. Set the environment variables `KONG_NGINX_PROXY_BROTLI`, `KONG_NGINX_PROXY_BROTLI_COMP_LEVEL`, and `KONG_NGINX_PROXY_BROTLI_TYPES` to turn it on, then verify by requesting with an `Accept-Encoding: br` header and checking for `Content-Encoding: br` in the response.
+    {{site.base_gateway}} bundles the `ngx_brotli` module, so Brotli compression is available out of the box. Set the environment variables `KONG_NGINX_PROXY_BROTLI`, `KONG_NGINX_PROXY_BROTLI_COMP_LEVEL`, and `KONG_NGINX_PROXY_BROTLI_TYPES` to turn it on, then verify by requesting with an `Accept-Encoding: br` header and checking for `Content-Encoding: br` in the response.
 related_resources: []
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: "Kong Ingress Controller logs error: \"http2 requests not supported yet\""
+title: "{{site.kic_product_name}} logs error: \"http2 requests not supported yet\""
 content_type: support
 description: This error occurs because the {{site.kic_product_name}} accesses the {{site.base_gateway}} Admin API `/status` endpoint over HTTP/2.0, an incompatibility that's fixed in current {{site.base_gateway}} releases (confirmed on 3.14.0.0).
 products:
@@ -10,9 +10,9 @@ works_on:
   - konnect
 related_resources: []
 tldr:
-  q: 'Why does Kong Ingress Controller log "http2 requests not supported yet" when checking Kong Gateway status?'
+  q: 'Why does {{site.kic_product_name}} log "http2 requests not supported yet" when checking {{site.base_gateway}} status?'
   a: |
-    The Kong Ingress Controller's health check hits the Kong Gateway Admin API's `/status` endpoint over HTTP/2, which older Kong Gateway versions didn't support on that route. This is fixed in current Kong Gateway (confirmed on `3.14.0.0`) — if you're on an older version, you can ignore the log noise or remove `http2` from `admin_listen` until you upgrade.
+    The {{site.kic_product_name}}'s health check hits the {{site.base_gateway}} Admin API's `/status` endpoint over HTTP/2, which older {{site.base_gateway}} versions didn't support on that route. This is fixed in current {{site.base_gateway}} (confirmed on `3.14.0.0`) — if you're on an older version, you can ignore the log noise or remove `http2` from `admin_listen` until you upgrade.
 ---
 
 ## Problem

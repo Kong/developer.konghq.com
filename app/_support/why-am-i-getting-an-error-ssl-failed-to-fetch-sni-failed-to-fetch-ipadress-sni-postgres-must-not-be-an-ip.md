@@ -10,7 +10,7 @@ works_on:
 tldr:
   q: "Why am I getting an error: [ssl] failed to fetch SNI: failed to fetch '<IPAddress>' SNI: [postgres/cassandra] must not be an IP"
   a: |
-    This log entry appears when a client's TLS handshake sets the SNI to an IP address instead of a host name, which SSL certificates aren't associated with. It's unrelated to the actual Postgres or Cassandra connection despite the misleading tag, and has no functional impact. On current Kong Gateway versions the same condition logs at `DEBUG` level instead of `ERROR` and falls back to the default SSL certificate, so upgrading Kong Gateway removes the noisy log entry.
+    This log entry appears when a client's TLS handshake sets the SNI to an IP address instead of a host name, which SSL certificates aren't associated with. It's unrelated to the actual Postgres or Cassandra connection despite the misleading tag, and has no functional impact. On current {{site.base_gateway}} versions the same condition logs at `DEBUG` level instead of `ERROR` and falls back to the default SSL certificate, so upgrading {{site.base_gateway}} removes the noisy log entry.
 related_resources: []
 ---
 

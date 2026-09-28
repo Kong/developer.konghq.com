@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: How do I force an HTTP/1.1 downgrade on specific Kong Gateway routes?
+  q: How do I force an HTTP/1.1 downgrade on specific {{site.base_gateway}} routes?
   a: |
     Kong doesn't support downgrading the protocol version directly, but you can achieve it with a redirect: a pre-function/serverless plugin checks `ngx.req.http_version()` and, if it's HTTP/2, calls `kong.response.exit(301, nil, {["Location"] = "..."})` to redirect the client to an HTTP/1.1-only listener. Note that `kong.response.set_status()` alone does not short-circuit the request — you must use `kong.response.exit()`.
 related_resources: []

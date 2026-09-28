@@ -10,7 +10,7 @@ works_on:
 tldr:
   q: How do I add a custom variable (like the route name) to Kong's access logs?
   a: |
-    Set a temporary Nginx variable (for example `$foo`) via a custom Nginx template, reference it in `nginx_http_log_format`, then populate it from a `pre-function` plugin using `kong.router.get_route()`. That PDK call requires `untrusted_lua: lax`, since Kong Gateway 3.14.0.0 defaults `untrusted_lua` to `strict`, under which `kong.router` is absent from the sandbox and the plugin fails at request time.
+    Set a temporary Nginx variable (for example `$foo`) via a custom Nginx template, reference it in `nginx_http_log_format`, then populate it from a `pre-function` plugin using `kong.router.get_route()`. That PDK call requires `untrusted_lua: lax`, since {{site.base_gateway}} 3.14.0.0 defaults `untrusted_lua` to `strict`, under which `kong.router` is absent from the sandbox and the plugin fails at request time.
 related_resources: []
 ---
 

@@ -11,9 +11,9 @@ related_resources:
   - text: the current configuration property reference
     url: /gateway/configuration/
 tldr:
-  q: How do I disable TLS 1.1 on Kong Gateway?
+  q: How do I disable TLS 1.1 on {{site.base_gateway}}?
   a: |
-    Kong Gateway's default `ssl_protocols`/`lua_ssl_protocols` settings already exclude `TLSv1.1`, so no action is needed unless a `kong.conf` setting, environment variable, or custom nginx template still overrides them to include it. If one does, remove `TLSv1.1` from the value (or remove the override entirely) and restart Kong.
+    {{site.base_gateway}}'s default `ssl_protocols`/`lua_ssl_protocols` settings already exclude `TLSv1.1`, so no action is needed unless a `kong.conf` setting, environment variable, or custom nginx template still overrides them to include it. If one does, remove `TLSv1.1` from the value (or remove the override entirely) and restart Kong.
 ---
 
 ## Overview

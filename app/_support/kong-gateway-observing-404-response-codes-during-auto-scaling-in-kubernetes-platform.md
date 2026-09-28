@@ -11,9 +11,9 @@ related_resources:
   - text: Configure liveness, readiness, and startup probes
     url: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
 tldr:
-  q: Why does Kong Gateway return brief 404 responses when new pods are created during Kubernetes auto-scaling?
+  q: Why does {{site.base_gateway}} return brief 404 responses when new pods are created during Kubernetes auto-scaling?
   a: |
-    Kubernetes sends traffic to the new pod before Kong Gateway has finished loading its routing configuration, usually because the readiness probe is a generic process-up check that reports healthy before the router has built from the first config sync.
+    Kubernetes sends traffic to the new pod before {{site.base_gateway}} has finished loading its routing configuration, usually because the readiness probe is a generic process-up check that reports healthy before the router has built from the first config sync.
 
     The current Kong Helm chart's default `readinessProbe` already targets `/status/ready` on the status port (default `8100`), which stays `503` until routing is ready, so this is fixed out of the box on a current chart. On an older chart or a custom deployment, point the readiness probe at `/status/ready` instead of a generic check.
 ---

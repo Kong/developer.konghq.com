@@ -10,7 +10,7 @@ works_on:
 tldr:
   q: How do I enable HSTS headers for the Kong Dev Portal GUI?
   a: |
-    `NGINX_PROXY_ADD_HEADER` does not apply to the Portal GUI. Instead, add a custom Nginx template with an `add_header Strict-Transport-Security ...;` directive inside the Portal's `location /` block. Note that the Dev Portal is deprecated on Kong Gateway (Enterprise), and on a standard Enterprise license the Portal GUI listener returns a 404 regardless of this header configuration.
+    `NGINX_PROXY_ADD_HEADER` does not apply to the Portal GUI. Instead, add a custom Nginx template with an `add_header Strict-Transport-Security ...;` directive inside the Portal's `location /` block. Note that the Dev Portal is deprecated on {{site.base_gateway}} (Enterprise), and on a standard Enterprise license the Portal GUI listener returns a 404 regardless of this header configuration.
 related_resources:
   - text: Custom Nginx templates
     url: /gateway/nginx-directives/#custom-nginx-templates

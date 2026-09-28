@@ -1,7 +1,7 @@
 ---
-title: "Kong Gateway init container stuck on \"wait for db\" when added to Kong Mesh"
+title: "{{site.base_gateway}} init container stuck on \"wait for db\" when added to {{site.mesh_product_name}}"
 content_type: support
-description: "The Kong Gateway init container gets stuck on \"wait for db\" when added to Kong Mesh because the Kuma sidecar hasn't started yet and can't reach Postgres; adding a `traffic.kuma.io/exclude-outbound-ports-for-uids` annotation resolves it."
+description: "The {{site.base_gateway}} init container gets stuck on \"wait for db\" when added to {{site.mesh_product_name}} because the Kuma sidecar hasn't started yet and can't reach Postgres; adding a `traffic.kuma.io/exclude-outbound-ports-for-uids` annotation resolves it."
 products:
   - gateway
   - mesh
@@ -12,9 +12,9 @@ related_resources:
   - text: "Kuma docs: DPP configuration on Kubernetes (init containers)"
     url: https://kuma.io/docs/2.5.x/production/dp-config/dpp-on-kubernetes/#init-containers
 tldr:
-  q: Why does the Kong Gateway init container get stuck on "wait for db" when adding it to Kong Mesh?
+  q: Why does the {{site.base_gateway}} init container get stuck on "wait for db" when adding it to {{site.mesh_product_name}}?
   a: |
-    This happens because the Kuma sidecar hasn't started yet, so the init container can't reach the Postgres database until traffic exclusions are configured. Add a single `traffic.kuma.io/exclude-outbound-ports-for-uids` annotation (in `<protocol>:<port>:<uid>` format, e.g. `"udp:53:1000,tcp:5432:1000"`) to both the pod and migration pod annotations — the older split `exclude-outbound-tcp-ports-for-uids` / `exclude-outbound-udp-ports-for-uids` annotations have been removed from current Kuma/Kong Mesh.
+    This happens because the Kuma sidecar hasn't started yet, so the init container can't reach the Postgres database until traffic exclusions are configured. Add a single `traffic.kuma.io/exclude-outbound-ports-for-uids` annotation (in `<protocol>:<port>:<uid>` format, e.g. `"udp:53:1000,tcp:5432:1000"`) to both the pod and migration pod annotations — the older split `exclude-outbound-tcp-ports-for-uids` / `exclude-outbound-udp-ports-for-uids` annotations have been removed from current Kuma/{{site.mesh_product_name}}.
 ---
 
 ## Problem

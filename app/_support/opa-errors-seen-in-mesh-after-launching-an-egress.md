@@ -9,9 +9,9 @@ works_on:
   - konnect
 related_resources: []
 tldr:
-  q: 'Why does Kong Mesh log "could not receive OPA Config" after launching a Zone Egress?'
+  q: 'Why does {{site.mesh_product_name}} log "could not receive OPA Config" after launching a Zone Egress?'
   a: |
-    Kong Mesh's OPA integration doesn't support Zone Egress data planes — only regular sidecars and the built-in gateway. Disable the OPA policy for the Egress data plane to resolve it (historically `--opa-enabled=false` on `kuma-dp`; on current Kong Mesh, scope `MeshOPA` away from the Egress DP, or set `KMESH_OPA_ENABLED=false` there).
+    {{site.mesh_product_name}}'s OPA integration doesn't support Zone Egress data planes — only regular sidecars and the built-in gateway. Disable the OPA policy for the Egress data plane to resolve it (historically `--opa-enabled=false` on `kuma-dp`; on current {{site.mesh_product_name}}, scope `MeshOPA` away from the Egress DP, or set `KMESH_OPA_ENABLED=false` there).
 ---
 
 ## Problem
