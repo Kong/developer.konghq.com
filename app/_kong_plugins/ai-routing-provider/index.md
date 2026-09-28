@@ -314,16 +314,26 @@ Or, if you're managing plugins through `kong.conf` directly:
 
 In {{site.konnect_short_name}} hybrid mode, upload the plugin schema to the control plane and deploy the plugin code to each data plane node using a custom Docker image.
 
-1. Clone the plugin repository and set your credentials:
+1. Clone the plugin repository:
 
    ```bash
    git clone https://github.com/kong-partner-solutions/nvidia-switchyard-plugin.git
+   ```
+
+1. Navigate into the repository:
+
+   ```bash
    cd nvidia-switchyard-plugin
+   ```
+
+1. Set the credentials in your environment:
+
+   ```bash
    export KONNECT_CP_ID="your-control-plane-id"
    export KONNECT_TOKEN="your-konnect-pat"
    ```
 
-1. Upload the plugin schema using the [{{site.konnect_short_name}} API](/api/konnect/control-planes/):
+1. Upload the NVIDIA Switchyard AI Routing plugin schema using the [{{site.konnect_short_name}} API](/api/konnect/control-planes/):
 
    ```bash
    curl -X POST \
