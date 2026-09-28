@@ -31,7 +31,7 @@ What does this error mean and how can we resolve it?
 
 The error means that a running Kong node issued an `INSERT ... ON CONFLICT (...)` statement whose conflict columns don't match any unique index that actually exists on the target table in the database. This happens whenever the Kong Gateway binary is newer than the migrations that have actually been applied to the database it's connected to, so a column or index the binary expects isn't there yet.
 
-This is a general class of issue that can occur on any upgrade where migrations weren't fully applied before starting the newer binary, not just one specific version pair. For example, upgrading from Kong 2.6 to 2.7 without running the 2.7 migrations produces exactly this error, because the 2.7 migration adds new `year` and `month` columns (and a unique index built on them) to the `license_data` table that a database still on the 2.6 schema doesn't have. The same mechanism still applies on current Kong Gateway: the 3.12.0.0 migration changed that same table's unique index again (adding `license_creation_date` to it), so a 3.12.0.0-or-later binary connecting to a database that hasn't had that migration applied hits the identical class of error.
+This is a general class of issue that can occur on any upgrade where migrations weren't fully applied before starting the newer binary, not just one specific version pair. For example, on current Kong Gateway, the 3.12.0.0 migration changed the `license_data` table's unique index (adding `license_creation_date` to it), so a 3.12.0.0-or-later binary connecting to a database that hasn't had that migration applied hits exactly this error.
 
 ## Solution
 

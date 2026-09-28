@@ -1,7 +1,7 @@
 ---
 title: Configuring Kong Gateway to support SSE (Server-Sent Events)
 content_type: support
-description: SSE connections through Kong Gateway need enough `read_timeout` headroom and disabled response buffering (via `X-Accel-Buffering: no`) to avoid premature connection termination or delayed delivery.
+description: "SSE connections through Kong Gateway need enough `read_timeout` headroom and disabled response buffering (via `X-Accel-Buffering: no`) to avoid premature connection termination or delayed delivery."
 products:
   - gateway
 works_on:

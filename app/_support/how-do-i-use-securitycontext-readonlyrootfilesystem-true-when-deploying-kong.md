@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: How do I use `securityContext` `readOnlyRootFilesystem: true` when deploying Kong?
+  q: "How do I use `securityContext` `readOnlyRootFilesystem: true` when deploying Kong?"
   a: |
     Kong needs write access to `/tmp` and `/kong_prefix`, which `readOnlyRootFilesystem: true` blocks. Mount `emptyDir` volumes for both paths — the current Kong Helm chart already does this by default (`tmpDir.sizeLimit`, `prefixDir.sizeLimit`), or add them manually in your deployment YAML if you're not using Helm.
 related_resources:

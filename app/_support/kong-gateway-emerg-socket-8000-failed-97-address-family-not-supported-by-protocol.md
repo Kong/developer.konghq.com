@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: Why does Kong Gateway fail to start with "socket() [::]:8000 failed (97: Address family not supported by protocol)" when installed via Helm?
+  q: 'Why does Kong Gateway fail to start with "socket() [::]:8000 failed (97: Address family not supported by protocol)" when installed via Helm?'
   a: |
     The official `kong/kong` Helm chart's default listen values include an IPv6 `[::]` listener alongside the IPv4 `0.0.0.0` one. If IPv6 is disabled in the Kubernetes cluster, NGINX can't bind to it and Kong fails to start. Override the listen directives via the chart's `env:` block (for example `env.proxy_listen`) to drop the `[::]` entries and bind IPv4 only.
 related_resources: []

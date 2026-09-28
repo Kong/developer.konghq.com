@@ -1,6 +1,12 @@
 ---
 title: Rate Limiting Advanced value storage format in Redis
 content_type: support
+published: false
+# FLAGGED by freshness gate: example Redis key `1664978760:60:example-namespace` (line 38)
+# uses an epoch timestamp explicitly labeled "the Epoch Timestamp for the window in
+# question" that decodes to 2022-10-05 (pre-2023) — a stale/possibly-lifted example.
+# The described mechanism may still be accurate; a human should refresh the example
+# value to a current timestamp and re-publish rather than treat the mechanism as wrong.
 description: "Explains how the Rate Limiting Advanced plugin stores request counts in Redis as a hash keyed by epoch timestamp, `config.window_size`, and `config.namespace`, with `config.identifier` values as the hash fields."
 products:
   - gateway

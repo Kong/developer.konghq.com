@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: Why can't I log into Kong Manager when LDAP authentication is enabled with `consumer_optional: true`?
+  q: "Why can't I log into Kong Manager when LDAP authentication is enabled with `consumer_optional: true`?"
   a: |
     On current Kong Gateway, Kong Manager's `/auth` route no longer honors `admin_gui_auth_conf.consumer_optional` for `ldap-auth-advanced` — Kong forces `consumer_optional = true` internally and performs the Admin-to-Consumer mapping itself, based on the Consumer already attached to the matching Kong Admin object. If no Kong Admin exists with the LDAP username, the request fails immediately with `Admin not found` before Kong even queries LDAP, so check `GET /admins` for a matching username rather than the `consumer_optional` setting.
 related_resources: []

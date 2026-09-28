@@ -1,6 +1,11 @@
 ---
 title: When using helm to install Kong the IP Restriction plugin does not work
 content_type: support
+published: false
+# FLAGGED by freshness gate: article is anchored to Kong Gateway 1.5 and "2.x" behavior
+# ("In 1.5, the error is silently ignored..."), both long out of support (supported
+# minors: 3.14, 3.13, 3.12, 3.11, 3.10, 3.4). Needs rewriting against a current
+# supported version (behavior may differ) before re-publishing.
 description: "The IP Restriction plugin uses the wrong client IP when `real_ip_recursive` is set as an unquoted boolean instead of a quoted string in the Helm values."
 products:
   - kic

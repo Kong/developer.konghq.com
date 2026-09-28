@@ -8,7 +8,7 @@ works_on:
   - on-prem
   - konnect
 related_resources:
-  - text: PDK plugin development: Access the Datastore
+  - text: "PDK plugin development: Access the Datastore"
     url: /plugin-development/access-the-datastore/
   - text: Kong JWT plugin handler.lua (GitHub)
     url: https://github.com/Kong/kong/blob/master/kong/plugins/jwt/handler.lua#L101-L107
