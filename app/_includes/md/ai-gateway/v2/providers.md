@@ -5,7 +5,7 @@
   {%- assign compare_provider = include.providers.providers | where: "name", include.compare_provider_name | first -%}
 {%- endif -%}
 {% if provider %}
-{%- assign default_generate_paths = "/chat/completions|/completions|/responses" | split: "|" -%}
+{%- assign default_generate_paths = "/chat/completions|/completions" | split: "|" -%}
 {%- assign generate_paths = provider.capabilities.generate.paths -%}
 {%- if generate_paths == nil or generate_paths == empty -%}
   {%- assign generate_paths = default_generate_paths -%}
@@ -69,7 +69,7 @@ rows:
 {% if compare_provider.capabilities[cap].supported %}{% assign cap_supported_compare = true %}{% endif %}
 {% if cap_supported or cap_supported_compare %}
 {% case cap %}
-{% when 'generate' %}{% assign cap_label = generate_label %}{% assign cap_path_template = generate_paths_display %}{% assign cap_description = "Text generation for chat completions and responses" %}
+{% when 'generate' %}{% assign cap_label = generate_label %}{% assign cap_path_template = generate_paths_display %}{% assign cap_description = "Text generation for chat completions" %}
 {% when 'agentic' %}{% assign cap_label = agentic_label %}{% assign cap_path_template = "`/assistants` or `/responses`" %}{% assign cap_description = "Agent and assistant-based interactions" %}
 {% when 'realtime' %}{% assign cap_label = realtime_label %}{% assign cap_path_template = "`/realtime`" %}{% assign cap_description = "Bidirectional streaming for real-time applications" %}
 {% when 'embeddings' %}{% assign cap_label = embeddings_label %}{% assign cap_path_template = "`/embeddings`" %}{% assign cap_description = "Vector embeddings from text input" %}
