@@ -141,10 +141,10 @@ columns:
     key: description
 rows:
   - capability: "`generate`"
-    path: "`/chat/completions`, `/completions`, `/responses`"
+    path: "`/chat/completions`, `/completions`"
     description: Text generation and conversational responses from generative models.
   - capability: "`agentic`"
-    path: "`/assistants`"
+    path: "`/assistants`, `/responses`"
     description: Persistent tool-using agents with state management and metadata.
   - capability: "`embeddings`"
     path: "`/embeddings`"
