@@ -346,47 +346,31 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-## Wait for the MCP server to be healthy
+## Wait for the MCP server pod to be ready
 
-Check the deployment status:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/context-interfaces/$MCP_SERVER_ID/status
-status_code: 200
-method: GET
-{% endkonnect_api_request %}
-<!--vale on-->
-
-The status is one of the following:
-
-{% table %}
-columns:
-  - title: Status
-    key: status
-  - title: Description
-    key: description
-rows:
-  - status: "`pending`"
-    description: No deployment status has been reported yet.
-  - status: "`deploying`"
-    description: A single version is running, and the desired replicas aren't fully ready.
-  - status: "`healthy`"
-    description: A single version is running with no failing pods.
-  - status: "`upgrading`"
-    description: Multiple versions are running with no failing pods.
-  - status: "`unhealthy`"
-    description: One or more pods are failing across any version.
-{% endtable %}
-
-Poll until the status is `healthy`:
+{{site.operator_product_name}} runs the MCP server as an `mcpserver-` prefixed deployment in the `default` namespace of your cluster. Wait for its pod to appear, then wait for it to become ready:
 
 ```sh
-until [ "$(curl -s "https://us.api.konghq.com/v1/context-interfaces/$MCP_SERVER_ID/status" \
-  -H "Authorization: Bearer $KONNECT_TOKEN" | jq -r '.status')" = "healthy" ]; do
-  sleep 5
-done
+until kubectl get pods -n default -o name | grep -q '^pod/mcpserver-'; do sleep 5; done
+
+kubectl wait --for=condition=Ready --timeout=3m -n default \
+  $(kubectl get pods -n default -o name | grep '^pod/mcpserver-')
 ```
+
+Confirm that the pod is running:
+
+```sh
+kubectl get pods -n default | grep mcpserver
+```
+
+The output looks like this:
+
+```text
+mcpserver-test-45675cb3-764b4d6d6c-q2gnp   1/1     Running   0   57m
+```
+
+{:.warning}
+> If the pod stays in `Pending` or `CrashLoopBackOff`, check its logs with `kubectl logs -n default <pod-name>`.
 
 The MCP runtime is now exposed at `/mcp/openweather-service`.
 
