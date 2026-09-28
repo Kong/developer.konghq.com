@@ -22,7 +22,7 @@ Users see a "400 Bad Request - Request Header Or Cookie Too Large" error when tr
 
 This error typically occurs due to the size of the tokens returned by Azure AD, especially when the tokens include a large number of claims or group memberships. By default, Nginx uses 4 buffers of 8k each to read the request headers.
 
-This is not specific to the Developer Portal — the same fix applies to Kong Manager's own OpenID Connect admin login (`admin_gui_auth=openid-connect`) or any other Kong-fronted application hitting this class of error with a large SSO cookie/token. Note also that the on-prem/Gateway-native Developer Portal is deprecated on standard Enterprise licenses as of Kong Gateway 3.11.0.0+ (its Admin API routes return `404` without a separate license entitlement); if you cannot reach the Developer Portal login page at all, confirm your license's Developer Portal entitlement before assuming this buffer-size issue is the cause.
+This is not specific to the Developer Portal — the same fix applies to Kong Manager's own OpenID Connect admin login (`admin_gui_auth=openid-connect`) or any other Kong-fronted application hitting this class of error with a large SSO cookie/token. Note also that the on-prem/Gateway-native Developer Portal is deprecated on standard Enterprise licenses as of {{site.base_gateway}} 3.11.0.0+ (its Admin API routes return `404` without a separate license entitlement); if you cannot reach the Developer Portal login page at all, confirm your license's Developer Portal entitlement before assuming this buffer-size issue is the cause.
 
 ## Solution
 

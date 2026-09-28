@@ -1,7 +1,7 @@
 ---
 title: How to disable TLS 1.1 on Kong
 content_type: support
-description: "Learn how to disable TLS 1.1 on Kong Gateway by checking the default `ssl_protocols`/`lua_ssl_protocols` settings and removing any override that still enables it."
+description: "Learn how to disable TLS 1.1 on {{site.base_gateway}} by checking the default `ssl_protocols`/`lua_ssl_protocols` settings and removing any override that still enables it."
 products:
   - gateway
 works_on:
@@ -18,7 +18,7 @@ tldr:
 
 ## Overview
 
-TLS 1.1 has been deprecated. Older Kong Gateway versions supported TLS 1.1 by default; this article guides you on how to disable TLS 1.1 on Kong if your configuration still enables it.
+TLS 1.1 has been deprecated. Older {{site.base_gateway}} versions supported TLS 1.1 by default; this article guides you on how to disable TLS 1.1 on Kong if your configuration still enables it.
 
 ## Steps
 

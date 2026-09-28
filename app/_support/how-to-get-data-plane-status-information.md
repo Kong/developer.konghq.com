@@ -1,7 +1,7 @@
 ---
 title: How to get Data Plane Status information
 content_type: support
-description: "How to check a Control Plane's Data Plane status in Kong Konnect, and why to use the documented PAT-based Konnect API instead of an internal session-cookie endpoint."
+description: "How to check a Control Plane's Data Plane status in {{site.konnect_product_name}}, and why to use the documented PAT-based Konnect API instead of an internal session-cookie endpoint."
 products:
   - gateway
 works_on:
@@ -20,7 +20,7 @@ tldr:
 
 ## Overview
 
-How to get the Data Plane status in Kong Konnect?
+How to get the Data Plane status in {{site.konnect_product_name}}?
 
 ## Steps
 

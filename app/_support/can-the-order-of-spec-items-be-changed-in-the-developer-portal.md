@@ -28,7 +28,7 @@ The order can be changed by using an `operationsSorter` configuration. This can 
 
 For example to sort alphabetically, modify `workspaces/<workspace-name>/themes/<theme-name>/layouts/system/spec-renderer.html` in the `kong-portal-templates` repository (for example, `workspaces/default/themes/base/layouts/system/spec-renderer.html`) and change `swaggerUIOptions` to be as below (note, the sidebar is set to false too in the below example);
 
-Note: on Kong Gateway (Enterprise) 3.11.0.0 and later, the on-prem/Gateway-native Developer Portal is hard-deprecated and gated behind a separate, support-provided `portal_and_vitals_key` license extra — without it, the Portal's file-management Admin API that this custom-template workflow relies on to push the edited template returns a flat 404 regardless of workspace configuration. Confirm with Kong Support that your license includes this key before relying on this workflow.
+Note: on {{site.base_gateway}} (Enterprise) 3.11.0.0 and later, the on-prem/Gateway-native Developer Portal is hard-deprecated and gated behind a separate, support-provided `portal_and_vitals_key` license extra — without it, the Portal's file-management Admin API that this custom-template workflow relies on to push the edited template returns a flat 404 regardless of workspace configuration. Confirm with Kong Support that your license includes this key before relying on this workflow.
 
 ```javascript
 

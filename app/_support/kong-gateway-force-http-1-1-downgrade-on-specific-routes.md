@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: Force HTTP/1.1 downgrade on specific routes"
+title: "{{site.base_gateway}}: Force HTTP/1.1 downgrade on specific routes"
 content_type: support
 description: While Kong does not support downgrading of the connection for specific routes it can be achieved through the use of redirects.
 products:

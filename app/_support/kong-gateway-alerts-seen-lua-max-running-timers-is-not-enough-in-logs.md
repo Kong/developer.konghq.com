@@ -1,7 +1,7 @@
 ---
-title: "Kong Gateway: Alerts seen `lua_max_running_timers is not enough` in logs, Gateway no longer working"
+title: "{{site.base_gateway}}: Alerts seen `lua_max_running_timers is not enough` in logs, Gateway no longer working"
 content_type: support
-description: "How to resolve `lua_max_running_timers are not enough` alerts in Kong Gateway logs by increasing the timer limit, disabling Vitals, or resolving upstream DNS and latency issues."
+description: "How to resolve `lua_max_running_timers are not enough` alerts in {{site.base_gateway}} logs by increasing the timer limit, disabling Vitals, or resolving upstream DNS and latency issues."
 products:
   - gateway
   - kic
@@ -17,7 +17,7 @@ related_resources: []
 
 ## Problem
 
-We are experiencing various performance-related issues in our Kong Gateway ranging from increased latency to increased transaction failure rates to lack of Vitals information and more. In the worst-case scenario, our Gateway appears to be 'down' and unable to accept new requests.
+We are experiencing various performance-related issues in our {{site.base_gateway}} ranging from increased latency to increased transaction failure rates to lack of Vitals information and more. In the worst-case scenario, our Gateway appears to be 'down' and unable to accept new requests.
 
 When looking at the Gateway logs, we see the following example log entries:
 
@@ -29,20 +29,20 @@ When looking at the Gateway logs, we see the following example log entries:
 
 ## Cause
 
-These errors/alerts can occur when the timers system in Kong Gateway (specifically set in the Nginx component) is insufficient for the amount of traffic being received, combined with a mix of memory resources allocated to the node as well as other factors such as the use of Vitals or if there are a lot of DNS lookup errors or significantly delayed responses from upstream targets - all of this pools into consuming more timers than desired which will lead to a multitude of other issues over time.
+These errors/alerts can occur when the timers system in {{site.base_gateway}} (specifically set in the Nginx component) is insufficient for the amount of traffic being received, combined with a mix of memory resources allocated to the node as well as other factors such as the use of Vitals or if there are a lot of DNS lookup errors or significantly delayed responses from upstream targets - all of this pools into consuming more timers than desired which will lead to a multitude of other issues over time.
 
 ## Solution
 
 To resolve the situation, there are a few options:
 
-1. Increase `lua_max_running_timers` in Kong Gateway using a custom Nginx template
-2. Disable Vitals in the Kong Gateway node
+1. Increase `lua_max_running_timers` in {{site.base_gateway}} using a custom Nginx template
+2. Disable Vitals in the {{site.base_gateway}} node
 3. Resolve DNS lookup failures, typically this means removing outdated hostname entries from the Service URLs / Upstream Targets
 4. Resolve upstream latencies which can affect the timer usage in Kong as well
 
-Note: Vitals now defaults to fully disabled on current Kong Gateway Enterprise releases (confirmed on 3.14.0.0), so option 2 below only applies if Vitals has been explicitly enabled — on a stock, default-config install it isn't contributing to timer usage at all.
+Note: Vitals now defaults to fully disabled on current {{site.ee_product_name}} releases (confirmed on 3.14.0.0), so option 2 below only applies if Vitals has been explicitly enabled — on a stock, default-config install it isn't contributing to timer usage at all.
 
-While the first option may not be as easy as the rest, it is the recommended option especially in a situation where the traffic and environmental impacts may have surpassed the default configuration for Kong Gateway timers and simply needs to be increased to accommodate the volume of activity. This first option does generally require a bit more memory or at least sufficiently free memory for the environment. Thorough testing should be completed as the timers are increased. The other options are additional workarounds and may be more desirable if this is just a temporary increase in traffic for example causing the spikes in timer usage.
+While the first option may not be as easy as the rest, it is the recommended option especially in a situation where the traffic and environmental impacts may have surpassed the default configuration for {{site.base_gateway}} timers and simply needs to be increased to accommodate the volume of activity. This first option does generally require a bit more memory or at least sufficiently free memory for the environment. Thorough testing should be completed as the timers are increased. The other options are additional workarounds and may be more desirable if this is just a temporary increase in traffic for example causing the spikes in timer usage.
 
 For option #1: In an environment where memory is either under utilized or can easily be expanded, the `lua_max_running_timers` can be increased from the 4096 default to a higher value. As more timers when in-use will consume more memory, we strongly recommend this be increased in intervals of generally no more than 4096 at a time. So this would mean increasing from 4096 to 8192 and then next 12288 before increasing it further if needed.
 

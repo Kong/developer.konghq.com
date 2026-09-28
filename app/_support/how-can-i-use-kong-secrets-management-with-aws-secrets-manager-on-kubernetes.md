@@ -18,7 +18,7 @@ related_resources:
 
 ## Overview
 
-Kong Gateway includes GA support for secrets management. How can this be configured to work with AWS Secrets Manager on Kubernetes?
+{{site.base_gateway}} includes GA support for secrets management. How can this be configured to work with AWS Secrets Manager on Kubernetes?
 
 ## Steps
 
@@ -30,7 +30,7 @@ Setting Your Access Keys
 
 To configure Secrets Management you will first need to configure your deployment to use your AWS Access Keys via the environment variables below.
 
-As of Kong Gateway 3.14.0.0, the `aws` vault backend also supports IAM roles: if no static access keys are configured, Kong falls back to the AWS SDK's default credential provider chain, which auto-detects credentials from an attached IAM role (e.g. an EKS IRSA/Pod Identity role, or an EC2 instance profile). To assume a specific role, set the vault's `config.assume_role_arn` field (optionally with `config.role_session_name` and `config.sts_endpoint_url`) instead of/in addition to the static access keys below.
+As of {{site.base_gateway}} 3.14.0.0, the `aws` vault backend also supports IAM roles: if no static access keys are configured, Kong falls back to the AWS SDK's default credential provider chain, which auto-detects credentials from an attached IAM role (e.g. an EKS IRSA/Pod Identity role, or an EC2 instance profile). To assume a specific role, set the vault's `config.assume_role_arn` field (optionally with `config.role_session_name` and `config.sts_endpoint_url`) instead of/in addition to the static access keys below.
 
 The required variables (for the static access-key approach) are:
 

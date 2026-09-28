@@ -20,9 +20,9 @@ How do you get the list of specs using the files API?
 
 ## Steps
 
-> **Note:** As of Kong Gateway 3.11.0.0 (and unchanged through 3.14.0.0), the on-premises Developer Portal and its Admin API routes (`/specs`, `/files`, etc.) are gated behind an additional, undocumented license entitlement that a standard Enterprise license does not include. On a standard license, requests to these routes return a flat `404 {"message":"Not Found"}` regardless of workspace `portal` config. If you hit a 404 following the steps below, contact Kong Support to confirm whether Dev Portal is enabled on your license.
+> **Note:** As of {{site.base_gateway}} 3.11.0.0 (and unchanged through 3.14.0.0), the on-premises Developer Portal and its Admin API routes (`/specs`, `/files`, etc.) are gated behind an additional, undocumented license entitlement that a standard Enterprise license does not include. On a standard license, requests to these routes return a flat `404 {"message":"Not Found"}` regardless of workspace `portal` config. If you hit a 404 following the steps below, contact Kong Support to confirm whether Dev Portal is enabled on your license.
 
-Since you cannot utilize `/specs` as a whole (it will only allow one specific file ending in `.yaml` or `.json`), you will have to leverage the files API instead. The files API will output everything, so you will have to alter it to get specifically what you need - specs in this case. Using `jq`, you can follow the example commands below:
+Since you cannot use `/specs` as a whole (it will only allow one specific file ending in `.yaml` or `.json`), you will have to leverage the files API instead. The files API will output everything, so you will have to alter it to get specifically what you need - specs in this case. Using `jq`, you can follow the example commands below:
 
 ```bash
 curl -s -k http://<kongurl>:<port>/default/files/ | jq -r -M '.data[] | .path' | grep spec

@@ -16,7 +16,7 @@ tldr:
 
 ## Problem
 
-I am using the Kong Gateway and in reviewing the logs recently I discovered this notice appearing frequently:
+I am using the {{site.base_gateway}} and in reviewing the logs recently I discovered this notice appearing frequently:
 
 ```
 
@@ -27,19 +27,19 @@ What is the reason for this message and do I need to be concerned by it? How do 
 
 ## Cause
 
-This informational message in the logs comes from the Nginx/Kong core layer. It is meant to inform the reviewer that Kong Gateway had activated buffered proxying (for example because a plugin implements a `response` handler, or a plugin explicitly calls `kong.service.request.enable_buffering()`) but then had to turn it back off for the current request.
+This informational message in the logs comes from the Nginx/Kong core layer. It is meant to inform the reviewer that {{site.base_gateway}} had activated buffered proxying (for example because a plugin implements a `response` handler, or a plugin explicitly calls `kong.service.request.enable_buffering()`) but then had to turn it back off for the current request.
 
 ## Solution
 
 This should cause
-no impact to most traffic, which is why it's only logged at "notice" level. The requests & responses are still processed as expected without buffering. On Kong Gateway 3.14.0.0, the only condition that turns buffered proxying back off is a **connection upgrade** (e.g. a WebSocket `Upgrade` request), which logs the message:
+no impact to most traffic, which is why it's only logged at "notice" level. The requests & responses are still processed as expected without buffering. On {{site.base_gateway}} 3.14.0.0, the only condition that turns buffered proxying back off is a **connection upgrade** (e.g. a WebSocket `Upgrade` request), which logs the message:
 
 ```
 
 [notice] ...: [lua] init.lua:...: access(): response buffering was turned off: connection upgrade (websocket)
 ```
 
-If you are instead seeing the `"incompatible HTTP version (2)"` variant shown above, note that on current Kong Gateway, `kong.service.request.enable_buffering()` and the automatic buffered-proxy mode a plugin's `response` handler activates both work correctly over an HTTP/2 downstream connection, so that specific message should not occur.
+If you are instead seeing the `"incompatible HTTP version (2)"` variant shown above, note that on current {{site.base_gateway}}, `kong.service.request.enable_buffering()` and the automatic buffered-proxy mode a plugin's `response` handler activates both work correctly over an HTTP/2 downstream connection, so that specific message should not occur.
 
 However there may be some cases where this can cause issues in the event that a custom plugin is relying on response buffering, which may cause a custom plugin to fail on an upgraded connection. If you are using a custom plugin which relies on response buffering, please look to improve the resiliency of the custom plugin so that it's not 100% dependent on the buffering of responses on an upgraded connection. Please note that writing code for custom plugins falls outside the scope of Kong Support, however our Professional Services team can be hired for custom plugin work.
 

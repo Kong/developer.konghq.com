@@ -1,7 +1,7 @@
 ---
 title: How to know the admin username for each Admin API when RBAC and audit log are enabled
 content_type: support
-description: "Learn how to identify which Kong Gateway admin issued an Admin API request when RBAC and audit logging are enabled, using audit log fields or a direct database query."
+description: "Learn how to identify which {{site.base_gateway}} admin issued an Admin API request when RBAC and audit logging are enabled, using audit log fields or a direct database query."
 products:
   - gateway
 works_on:
@@ -20,7 +20,7 @@ We have enabled RBAC and audit log with Kong. However audit logs only show `rbac
 
 ## Steps
 
-Kong Gateway is able to show admin username.
+{{site.base_gateway}} is able to show admin username.
 
 Audit logs include `rbac_user_name` and `request_source`. By combining the data in the `request_source` field with the `path` field, you can determine login and logout events from the logs. See the documentation for more detail on interpreting audit logs.
 

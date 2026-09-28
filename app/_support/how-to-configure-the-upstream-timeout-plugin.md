@@ -40,7 +40,7 @@ curl -X POST http://<kong-admin-api>:8001/routes/{route_id}/plugins --header "ko
 --data "config.read_timeout=4000"
 ```
 
-If the target Route was created without an explicit `protocols` field, Kong Gateway defaults it to `["https"]` only (not `["http","https"]`), so a plain `http://` request to that route returns `426 Please use HTTPS protocol` regardless of this plugin. Set `protocols` explicitly (e.g. `["http","https"]`) when creating the Route if you need plain-HTTP access.
+If the target Route was created without an explicit `protocols` field, {{site.base_gateway}} defaults it to `["https"]` only (not `["http","https"]`), so a plain `http://` request to that route returns `426 Please use HTTPS protocol` regardless of this plugin. Set `protocols` explicitly (e.g. `["http","https"]`) when creating the Route if you need plain-HTTP access.
 
 ### To enable the plugin on Kubernetes
 

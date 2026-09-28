@@ -1,5 +1,5 @@
 ---
-title: Renaming or hiding the latency and rate-limiting plugin response headers in Kong Gateway
+title: Renaming or hiding the latency and rate-limiting plugin response headers in {{site.base_gateway}}
 content_type: support
 description: How to hide Kong's fixed-name latency and rate-limiting response headers and replace them with custom-named headers using a post-function plugin.
 products:
@@ -26,7 +26,7 @@ These headers have fixed names that cannot be altered via a configuration. How c
 
 ## Steps
 
-The latency headers (and other informational headers such as `Server`/`Via` tokens and the `X-Kong-Request-Id` header) are controlled via the `headers` `kong.conf` parameter; see the Kong Gateway configuration property reference for the current list of accepted values.
+The latency headers (and other informational headers such as `Server`/`Via` tokens and the `X-Kong-Request-Id` header) are controlled via the `headers` `kong.conf` parameter; see the {{site.base_gateway}} configuration property reference for the current list of accepted values.
 
 While it is not possible to change the name of these headers, the latency headers can be turned off and custom headers containing the same information can be added using a post-function plugin. Similarly, the rate-limit headers have fixed names, but these can be changed via the same post-function plugin.
 

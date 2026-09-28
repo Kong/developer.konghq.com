@@ -1,7 +1,7 @@
 ---
-title: Choosing the correct Grafana dashboard for Kong Gateway
+title: Choosing the correct Grafana dashboard for {{site.base_gateway}}
 content_type: support
-description: Kong publishes two Grafana dashboards, a legacy Vitals-based one and a current Prometheus plugin one, and only the Prometheus plugin dashboard has data on Kong Gateway 3.11.0.0 and later, since Vitals is deprecated and gated behind an extra license entitlement.
+description: Kong publishes two Grafana dashboards, a legacy Vitals-based one and a current Prometheus plugin one, and only the Prometheus plugin dashboard has data on {{site.base_gateway}} 3.11.0.0 and later, since Vitals is deprecated and gated behind an extra license entitlement.
 products:
   - gateway
 works_on:
@@ -18,12 +18,12 @@ related_resources:
     url: "https://grafana.com/grafana/dashboards/7424-kong-official/"
 ---
 
-## Choosing the correct Grafana dashboard for Kong Gateway
+## Choosing the correct Grafana dashboard for {{site.base_gateway}}
 
 Looking at Grafana dashboards for Kong I see two available for download. Which one is the correct one to use?
 
-Kong Gateway supports uploading "Vitals" metrics to Prometheus for scraping into Grafana dashboards. In the case of visualizing Kong Gateway Vitals metrics you should use the Kong Vitals Prometheus dashboard.
+{{site.base_gateway}} supports uploading "Vitals" metrics to Prometheus for scraping into Grafana dashboards. In the case of visualizing {{site.base_gateway}} Vitals metrics you should use the Kong Vitals Prometheus dashboard.
 
-Note: As of Kong Gateway 3.11.0.0 and later (including 3.14.0.0), Vitals is deprecated and disabled by default (`vitals = off`). Even on a standard Enterprise license, Vitals — and therefore the Prometheus Vitals strategy this dashboard is built to visualize — is gated behind an additional, undocumented license entitlement that most Enterprise licenses do not carry. If Vitals is not enabled and unlocked on your license, this dashboard will not have any data to display. For current metrics visualization, use the Prometheus plugin dashboard below instead.
+Note: As of {{site.base_gateway}} 3.11.0.0 and later (including 3.14.0.0), Vitals is deprecated and disabled by default (`vitals = off`). Even on a standard Enterprise license, Vitals — and therefore the Prometheus Vitals strategy this dashboard is built to visualize — is gated behind an additional, undocumented license entitlement that most Enterprise licenses do not carry. If Vitals is not enabled and unlocked on your license, this dashboard will not have any data to display. For current metrics visualization, use the Prometheus plugin dashboard below instead.
 
-Kong Gateway also has a plugin that can be applied to services and routes to export more detailed data to Prometheus. If you wish to visualize this data using Grafana, the recommended dashboard is the Kong official Prometheus plugin dashboard.
+{{site.base_gateway}} also has a plugin that can be applied to services and routes to export more detailed data to Prometheus. If you wish to visualize this data using Grafana, the recommended dashboard is the Kong official Prometheus plugin dashboard.

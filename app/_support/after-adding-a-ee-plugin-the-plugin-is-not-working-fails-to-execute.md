@@ -1,7 +1,7 @@
 ---
 title: "After adding an EE plugin, the plugin is not working/fails to execute"
 content_type: support
-description: Kong Enterprise plugins such as `mtls-auth` or `rate-limiting-advanced` silently no-op on the Data Plane when it lacks a valid Enterprise license.
+description: "{{site.ee_product_name}} plugins such as `mtls-auth` or `rate-limiting-advanced` silently no-op on the Data Plane when it lacks a valid Enterprise license."
 products:
   - gateway
 works_on:
@@ -35,7 +35,7 @@ kong-data-plane | 2024/07/04 10:13:25 [debug] 2435#0: *3272 [lua] init.lua:312: 
 
 ## Cause
 
-When using a Kong Enterprise plugin, the Data planes require a valid license. If no license is present for the Data plane, then EE plugins will not be run and the "no operation" message will be written to the logs.
+When using a {{site.ee_product_name}} plugin, the Data planes require a valid license. If no license is present for the Data plane, then EE plugins will not be run and the "no operation" message will be written to the logs.
 
 ## Solution
 

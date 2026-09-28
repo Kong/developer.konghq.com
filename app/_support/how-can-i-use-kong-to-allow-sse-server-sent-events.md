@@ -1,7 +1,7 @@
 ---
-title: Configuring Kong Gateway to support SSE (Server-Sent Events)
+title: Configuring {{site.base_gateway}} to support SSE (Server-Sent Events)
 content_type: support
-description: "SSE connections through Kong Gateway need enough `read_timeout` headroom and disabled response buffering (via `X-Accel-Buffering: no`) to avoid premature connection termination or delayed delivery."
+description: "SSE connections through {{site.base_gateway}} need enough `read_timeout` headroom and disabled response buffering (via `X-Accel-Buffering: no`) to avoid premature connection termination or delayed delivery."
 products:
   - gateway
 works_on:
@@ -18,8 +18,8 @@ tldr:
 
 ## Overview
 
-Server-Sent Events (SSE) is a standard that allows browser clients to receive a stream of updates from a server over an HTTP connection. To support SSE with Kong Gateway, configure a Service and Route to handle HTTP requests passing through Kong Gateway.
+Server-Sent Events (SSE) is a standard that allows browser clients to receive a stream of updates from a server over an HTTP connection. To support SSE with {{site.base_gateway}}, configure a Service and Route to handle HTTP requests passing through {{site.base_gateway}}.
 
-When proxying SSE connections, ensure the request does not exceed the configured proxy read timeout; otherwise, Kong Gateway will terminate the upstream connection. You can adjust this setting with the Service entity's `read_timeout` property (there is no field literally named `upstream_read_timeout`). For more details, see the Service object reference documentation.
+When proxying SSE connections, ensure the request does not exceed the configured proxy read timeout; otherwise, {{site.base_gateway}} will terminate the upstream connection. You can adjust this setting with the Service entity's `read_timeout` property (there is no field literally named `upstream_read_timeout`). For more details, see the Service object reference documentation.
 
-Buffering can cause issues with SSE. To prevent this, do not disable proxy buffering globally using Nginx directives. Instead, have your upstream service send the `X-Accel-Buffering: no` response header for SSE connections. This explicitly disables buffering for those responses when proxied through Kong Gateway.
+Buffering can cause issues with SSE. To prevent this, do not disable proxy buffering globally using Nginx directives. Instead, have your upstream service send the `X-Accel-Buffering: no` response header for SSE connections. This explicitly disables buffering for those responses when proxied through {{site.base_gateway}}.

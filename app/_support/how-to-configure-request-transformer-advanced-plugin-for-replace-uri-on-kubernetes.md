@@ -16,11 +16,11 @@ tldr:
 
 ## Overview
 
-How can we configure the Request Transformer Advanced plugin to utilize `config.replace.uri` in our Kubernetes environment. We see it as an available field but the documentation doesn't display an example on how to configure this.
+How can we configure the Request Transformer Advanced plugin to use `config.replace.uri` in our Kubernetes environment. We see it as an available field but the documentation doesn't display an example on how to configure this.
 
 ## Steps
 
-To configure the Request Transformer Advanced plugin to utilize the `config.replace.uri` parameter in kubernetes we can apply the following yaml file.
+To configure the Request Transformer Advanced plugin to use the `config.replace.uri` parameter in kubernetes we can apply the following yaml file.
 
 ```bash
 kubectl apply -f sample.yaml

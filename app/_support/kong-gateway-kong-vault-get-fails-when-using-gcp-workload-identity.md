@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: `kong vault get` fails when using GCP Workload Identity"
+title: "{{site.base_gateway}}: `kong vault get` fails when using GCP Workload Identity"
 content_type: support
 description: "Retrieving a GCP secret with `kong vault get` over Workload Identity can fail with an `invalid access token` error when resty CLI's default 64 `worker_connections` limit is exceeded during token retrieval."
 products:
@@ -45,15 +45,15 @@ The underlying cause (an invalid/expired GCP access token, or another vault-back
 
 ## Cause
 
-This error occurs because we utilize resty CLI which has a worker connection limit of 64 by default. The retrieval of the secret is seemingly using more than 64 connections and thus the token retrieval process breaks down.
+This error occurs because we use resty CLI which has a worker connection limit of 64 by default. The retrieval of the secret is seemingly using more than 64 connections and thus the token retrieval process breaks down.
 
 ## Solution
 
-Kong Gateway's Lua-timer subsystem (`lua-resty-timer-ng`) uses a bounded concurrency range designed to avoid exhausting the available `worker_connections`, so this specific failure mode is uncommon. If you still encounter a `worker_connections are not enough` error during `kong vault get`, use the workaround below.
+{{site.base_gateway}}'s Lua-timer subsystem (`lua-resty-timer-ng`) uses a bounded concurrency range designed to avoid exhausting the available `worker_connections`, so this specific failure mode is uncommon. If you still encounter a `worker_connections are not enough` error during `kong vault get`, use the workaround below.
 
 Current workaround:
 
-Allow resty CLI to utilize more connections (this will double the maximum to 128 connections):
+Allow resty CLI to use more connections (this will double the maximum to 128 connections):
 
 ```bash
 /usr/local/bin/resty -c 128 /usr/local/bin/kong vault get {vault://gcp/secrets/pizza/versions/1}

@@ -1,7 +1,7 @@
 ---
-title: Enabling Brotli HTTP response compression in Kong Gateway
+title: Enabling Brotli HTTP response compression in {{site.base_gateway}}
 content_type: support
-description: Kong Gateway bundles the `ngx_brotli` module, letting you turn on Brotli response compression with a few `KONG_NGINX_PROXY_BROTLI*` environment variables.
+description: "{{site.base_gateway}} bundles the `ngx_brotli` module, letting you turn on Brotli response compression with a few `KONG_NGINX_PROXY_BROTLI*` environment variables."
 products:
   - gateway
 works_on:
@@ -20,7 +20,7 @@ How can I enable Brotli compression for responses from Kong?
 
 ## Steps
 
-Kong Gateway supports Brotli compression, bundling the `ngx_brotli` module with Kong. This allows users to enable Brotli compression in a manner similar to gzip. Below are the steps and configurations needed to enable Brotli compression in Kong:
+{{site.base_gateway}} supports Brotli compression, bundling the `ngx_brotli` module with Kong. This allows users to enable Brotli compression in a manner similar to gzip. Below are the steps and configurations needed to enable Brotli compression in Kong:
 
 1. Verify ngx_brotli Module is Loaded:
 

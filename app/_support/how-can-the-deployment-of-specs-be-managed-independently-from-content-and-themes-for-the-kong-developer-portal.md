@@ -22,7 +22,7 @@ How can the deployment of specs be managed independently from the content and th
 
 When managing the deployment of content/themes and swagger specs to the Kong Developer Portal separately, it's important to handle spec files carefully to avoid unique constraint violations when a file with the same name already exists. The core issue revolves around updating or deleting existing spec files before uploading new or updated ones.
 
-Note: on the Kong Gateway (Enterprise) 3.11.0.0+ line, the on-prem/Gateway-native Developer Portal (and the `/files`/`/specs` Admin API routes this workflow depends on) is deprecated and returns a flat `404` on a standard Enterprise license, regardless of `KONG_PORTAL`/workspace `config.portal` settings — it requires a separate, non-standard license entitlement. If your `/files`/`/specs` calls return `404`, this is the likely cause; contact Kong support to confirm your license's Developer Portal entitlement. The workflow below remains correct for any environment where the Developer Portal is actually enabled and licensed.
+Note: on the {{site.base_gateway}} (Enterprise) 3.11.0.0+ line, the on-prem/Gateway-native Developer Portal (and the `/files`/`/specs` Admin API routes this workflow depends on) is deprecated and returns a flat `404` on a standard Enterprise license, regardless of `KONG_PORTAL`/workspace `config.portal` settings — it requires a separate, non-standard license entitlement. If your `/files`/`/specs` calls return `404`, this is the likely cause; contact Kong support to confirm your license's Developer Portal entitlement. The workflow below remains correct for any environment where the Developer Portal is actually enabled and licensed.
 
 To address this challenge, follow the steps below:
 

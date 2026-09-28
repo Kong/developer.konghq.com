@@ -1,7 +1,7 @@
 ---
 title: How to log the workspace name using the HTTP or file log plugins
 content_type: support
-description: "Learn how to include the workspace name in `http-log` and `file-log` output using Kong Gateway's built-in `workspace_name` log field, or a custom `custom_fields_by_lua` field for legacy setups."
+description: "Learn how to include the workspace name in `http-log` and `file-log` output using {{site.base_gateway}}'s built-in `workspace_name` log field, or a custom `custom_fields_by_lua` field for legacy setups."
 products:
   - gateway
 works_on:
@@ -22,7 +22,7 @@ How to add the workspace name to the HTTP or file logs.
 
 ## Steps
 
-Kong Gateway (Enterprise) already includes a native `workspace_name` field in the log-serializer output for `http-log`/`file-log` (and every other log plugin), e.g. `"workspace_name":"default"`, with zero configuration required. This is the recommended way to get the workspace's name into your logs and requires no custom Lua.
+{{site.base_gateway}} (Enterprise) already includes a native `workspace_name` field in the log-serializer output for `http-log`/`file-log` (and every other log plugin), e.g. `"workspace_name":"default"`, with zero configuration required. This is the recommended way to get the workspace's name into your logs and requires no custom Lua.
 
 If you need the value under a custom key, or combined with other logic, you can still leverage custom fields by Lua. Note that `untrusted_lua` defaults to `strict`, and under `strict` (or the `lax` tier), `untrusted_lua_sandbox_requires` has no effect at all -- it is only consulted by the legacy `sandbox` tier. To use the recipe below, first explicitly opt into the legacy sandbox tier by setting both
 

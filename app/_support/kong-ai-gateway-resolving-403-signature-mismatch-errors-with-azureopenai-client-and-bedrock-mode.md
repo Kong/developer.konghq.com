@@ -1,7 +1,7 @@
 ---
-title: "Kong AI Gateway: Resolving 403 Signature Mismatch Errors with `AzureOpenAI` Client and Bedrock Mode"
+title: "{{site.ai_gateway_name}}: Resolving 403 Signature Mismatch Errors with `AzureOpenAI` Client and Bedrock Mode"
 content_type: support
-description: "Kong AI Gateway returns a 403 signature mismatch error when using the `AzureOpenAI` client to access Bedrock models, caused by the `api_version` query parameter breaking AWS signature verification."
+description: "{{site.ai_gateway_name}} returns a 403 signature mismatch error when using the `AzureOpenAI` client to access Bedrock models, caused by the `api_version` query parameter breaking AWS signature verification."
 products:
   - gateway
 works_on:
@@ -16,7 +16,7 @@ related_resources: []
 
 ## Problem
 
-When using the `AzureOpenAI` client from the OpenAI Python SDK to access Bedrock models through a Kong AI Gateway, you may encounter the following error:
+When using the `AzureOpenAI` client from the OpenAI Python SDK to access Bedrock models through a {{site.ai_gateway_name}}, you may encounter the following error:
 
 ```
 403 Forbidden – The request signature calculated does not match the signature you provided.

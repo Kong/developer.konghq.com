@@ -22,7 +22,7 @@ When querying `/clustering/data-planes` on the Control Plane's Admin API, every 
 
 The `last_seen` field on each `data_plane` entry can be used to determine the "freshness" of the `data_plane` information — `sync_status` itself is written by the Data Plane the last time it successfully reported to the Control Plane, and is not re-evaluated or flipped based on whether that Data Plane is still reachable. A Data Plane that has gone silent simply keeps showing whatever `sync_status` it last reported, alongside a `last_seen` timestamp that stops advancing.
 
-If a `data_plane` stops reporting to the control plane it is still perfectly capable of continuing to proxy using its last good received configuration. A `data_plane` that does not report in will eventually be purged from the database table according to the configuration `cluster_data_plane_purge_delay`, which defaults to 14 days (1209600 seconds) on Kong Gateway 3.14.0.0.
+If a `data_plane` stops reporting to the control plane it is still perfectly capable of continuing to proxy using its last good received configuration. A `data_plane` that does not report in will eventually be purged from the database table according to the configuration `cluster_data_plane_purge_delay`, which defaults to 14 days (1209600 seconds) on {{site.base_gateway}} 3.14.0.0.
 
 The `data_planes` are designed to be resilient to loss of connection to the `control_plane`. The fact that a `data_plane` has not communicated with the control plane is not necessarily a problem.
 

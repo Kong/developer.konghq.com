@@ -32,7 +32,7 @@ Set the `upstream_headers` and `downstream_access_token_header` parameters in th
 
 This configuration allows the extraction of custom claims (like `employeeID`) from JWT tokens and injecting these claims as custom headers in the requests forwarded to the upstream services.
 
-`upstream_headers` - An array mapping token claims to the upstream header names that will carry their values, e.g. `- "employeeID:X-Employee-Id"`. (The older `upstream_headers_claims`/`upstream_headers_names` field pair is deprecated as of Kong Gateway 3.10 and slated for removal in 4.0 — it still works today, but new configurations should use the combined `upstream_headers` field instead. The equivalent combined field for the downstream/client-facing response is `downstream_headers`, replacing the older `downstream_headers_claims`/`downstream_headers_names` pair.)
+`upstream_headers` - An array mapping token claims to the upstream header names that will carry their values, e.g. `- "employeeID:X-Employee-Id"`. (The older `upstream_headers_claims`/`upstream_headers_names` field pair is deprecated as of {{site.base_gateway}} 3.10 and slated for removal in 4.0 — it still works today, but new configurations should use the combined `upstream_headers` field instead. The equivalent combined field for the downstream/client-facing response is `downstream_headers`, replacing the older `downstream_headers_claims`/`downstream_headers_names` pair.)
 
 `downstream_access_token_header` - The header name that contains the JWT token when a Bearer token is used
 

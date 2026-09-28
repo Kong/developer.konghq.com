@@ -34,7 +34,7 @@ Server: kong/3.14.0.0-enterprise-edition
 {"message":"Configuration does not fit in LMDB database, consider raising the \"lmdb_map_size\" config for Kong"}
 ```
 
-The corresponding Kong Gateway error log entry reads:
+The corresponding {{site.base_gateway}} error log entry reads:
 
 ```
 [error] ... [kong] config.lua:180 not enough space for declarative config, client: <client-ip>, server: kong_admin, request: "POST /config HTTP/1.1", host: "<host>:8001"

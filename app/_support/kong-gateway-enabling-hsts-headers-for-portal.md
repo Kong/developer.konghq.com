@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: Enabling HSTS headers for Portal"
+title: "{{site.base_gateway}}: Enabling HSTS headers for Portal"
 content_type: support
 description: "Enabling HSTS headers for the Dev Portal GUI requires a custom Nginx template, since `NGINX_PROXY_ADD_HEADER` doesn't affect the Portal."
 products:
@@ -37,4 +37,4 @@ The location block has been shortened for readability.
 
 The results can be seen when accessing your portal, in the example below the GUI is running on port 48003.
 
-> **Note:** The Dev Portal is deprecated on Kong Gateway (Enterprise). On a standard Enterprise license the Portal GUI listener returns `404 {"message":"Not Found"}` even with `KONG_PORTAL=on` explicitly set, because Portal is now gated behind a separate license entitlement that ordinary Enterprise licenses do not carry. The `location /` block above is still the correct place to add the header for anyone whose license does unlock the Portal, but on a standard license there is no served Portal GUI to add the header to.
+> **Note:** The Dev Portal is deprecated on {{site.base_gateway}} (Enterprise). On a standard Enterprise license the Portal GUI listener returns `404 {"message":"Not Found"}` even with `KONG_PORTAL=on` explicitly set, because Portal is now gated behind a separate license entitlement that ordinary Enterprise licenses do not carry. The `location /` block above is still the correct place to add the header for anyone whose license does unlock the Portal, but on a standard license there is no served Portal GUI to add the header to.

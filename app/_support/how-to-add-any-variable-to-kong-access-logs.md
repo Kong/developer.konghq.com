@@ -68,4 +68,4 @@ Specifically we will be using `route.name` to retrieve the route name.
    ngx.var.foo = route.name
    ```
 
-Note: `kong.router` is only available under `untrusted_lua = lax` (or `on`) — Kong Gateway 3.14.0.0 defaults `untrusted_lua` to `strict`, under which `kong.router` is entirely absent from the sandboxed `kong` table, and the snippet above fails at request time with `attempt to index field 'router' (a nil value)` (a `500` to the client). Set `untrusted_lua: lax` (`KONG_UNTRUSTED_LUA=lax`) before creating this plugin, or the snippet above will not work.
+Note: `kong.router` is only available under `untrusted_lua = lax` (or `on`) — {{site.base_gateway}} 3.14.0.0 defaults `untrusted_lua` to `strict`, under which `kong.router` is entirely absent from the sandboxed `kong` table, and the snippet above fails at request time with `attempt to index field 'router' (a nil value)` (a `500` to the client). Set `untrusted_lua: lax` (`KONG_UNTRUSTED_LUA=lax`) before creating this plugin, or the snippet above will not work.

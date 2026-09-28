@@ -20,7 +20,7 @@ tldr:
 
 ## Problem
 
-When attempting to connect Kong Gateway with a PostgreSQL database using SSL, an error is seen in the Kong logs similar to one of the below:
+When attempting to connect {{site.base_gateway}} with a PostgreSQL database using SSL, an error is seen in the Kong logs similar to one of the below:
 
 A.
 
@@ -65,9 +65,9 @@ Additionally, the Postgres log may show the entry below:
 
 When SSL/TLS is enabled in Kong for PostgreSQL connections via the `pg_ssl` setting, a TLS version must be specified too when connecting to newer PostgreSQL database server versions which require a higher TLS protocol than the Kong default. This affects connections to PostgreSQL server versions higher than 12.x.
 
-**This applies to older Kong Gateway versions.** As of Kong Gateway 3.14.0.0, `pg_ssl_version` already defaults to `tlsv1_2` (confirmed via `GET /` on the Admin API: `.configuration.pg_ssl_version` is `"tlsv1_2"` on a stock install with no explicit configuration), and `tlsv1`/`tlsv1_1` are no longer accepted values at all — only `tlsv1_2`, `tlsv1_3`, and `any` are valid. This means that on current Kong Gateway, connecting to a PostgreSQL server that requires TLSv1.2 works out of the box with `pg_ssl: on` and no `pg_ssl_version` override; you'll only see the errors above on 3.14.0.0 if `pg_ssl_version` has been explicitly set to an unsupported low value (which will now fail Kong's own config validation at startup, rather than failing the TLS handshake against PostgreSQL), or if the PostgreSQL server requires TLSv1.3.
+**This applies to older {{site.base_gateway}} versions.** As of {{site.base_gateway}} 3.14.0.0, `pg_ssl_version` already defaults to `tlsv1_2` (confirmed via `GET /` on the Admin API: `.configuration.pg_ssl_version` is `"tlsv1_2"` on a stock install with no explicit configuration), and `tlsv1`/`tlsv1_1` are no longer accepted values at all — only `tlsv1_2`, `tlsv1_3`, and `any` are valid. This means that on current {{site.base_gateway}}, connecting to a PostgreSQL server that requires TLSv1.2 works out of the box with `pg_ssl: on` and no `pg_ssl_version` override; you'll only see the errors above on 3.14.0.0 if `pg_ssl_version` has been explicitly set to an unsupported low value (which will now fail Kong's own config validation at startup, rather than failing the TLS handshake against PostgreSQL), or if the PostgreSQL server requires TLSv1.3.
 
-To accommodate TLSv1.2 (already the default on current Kong Gateway; only needed if it's been explicitly overridden to something lower, or on an older Kong version):
+To accommodate TLSv1.2 (already the default on current {{site.base_gateway}}; only needed if it's been explicitly overridden to something lower, or on an older Kong version):
 
 ```conf
 

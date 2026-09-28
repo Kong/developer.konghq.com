@@ -1,5 +1,5 @@
 ---
-title: "`[ssl] failed to fetch SNI: failed to fetch '<IPAddress>' SNI: [postgres/cassandra] must not be an IP` error logged on older Kong Gateway versions"
+title: "`[ssl] failed to fetch SNI: failed to fetch '<IPAddress>' SNI: [postgres/cassandra] must not be an IP` error logged on older {{site.base_gateway}} versions"
 content_type: support
 description: This error happens if a request reached the Kong https proxy listener port with the Server Name Indication (SNI) information in the client request set to an IP instead of a host name.
 products:
@@ -16,7 +16,7 @@ related_resources: []
 
 ## Problem
 
-On older Kong Gateway versions, we would intermittently see the following type of error when using a postgres database:
+On older {{site.base_gateway}} versions, we would intermittently see the following type of error when using a postgres database:
 
 ```
 
@@ -40,7 +40,7 @@ This log entry is produced if a request reaches the Kong https proxy listener po
 
 Normally, clients should not send SNI as an IP because SSL certificates are associated with a host or domain name rather than an IP, and sending SNI information with the ssl handshake request allows the server, i.e. Kong in this case, to present the correct certificate to the client if multiple certificates are available.
 
-On current Kong Gateway versions, sending SNI as an IP no longer produces an ERROR-level log entry, and the TLS handshake is not rejected. Kong instead logs a DEBUG-level message and gracefully falls back to serving the listener's default/fallback SSL certificate:
+On current {{site.base_gateway}} versions, sending SNI as an IP no longer produces an ERROR-level log entry, and the TLS handshake is not rejected. Kong instead logs a DEBUG-level message and gracefully falls back to serving the listener's default/fallback SSL certificate:
 
 ```
 
@@ -60,4 +60,4 @@ The fact that the older, ERROR-level log entry included postgres or cassandra de
 
 `kong/db/schema/typedefs.lua`
 
-Older Kong Gateway versions had a general setting that added the db strategy to all log entries in that code subsystem, which is why the tag showed up in this particular message. On current Kong Gateway versions the logging/caller code for this check has moved to `kong/runloop/certificate.lua`, and no longer carries the confusing db-strategy tag or the ERROR severity — if you are seeing the old tagged, ERROR-level form of this message, upgrading Kong Gateway resolves it.
+Older {{site.base_gateway}} versions had a general setting that added the db strategy to all log entries in that code subsystem, which is why the tag showed up in this particular message. On current {{site.base_gateway}} versions the logging/caller code for this check has moved to `kong/runloop/certificate.lua`, and no longer carries the confusing db-strategy tag or the ERROR severity — if you are seeing the old tagged, ERROR-level form of this message, upgrading {{site.base_gateway}} resolves it.

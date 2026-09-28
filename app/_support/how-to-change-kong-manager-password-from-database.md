@@ -26,7 +26,7 @@ This method does NOT reset RBAC token, it changes the Kong manager log-in passwo
 
 Prerequisites:
 
-- Kong Gateway (Enterprise), self-managed/on-prem, with RBAC turned on and Basic Auth as Kong Manager authentication method (this method requires direct `psql` access to the underlying database, so it does not apply to Konnect, where the control plane database is managed by Kong and not reachable by the customer)
+- {{site.base_gateway}} (Enterprise), self-managed/on-prem, with RBAC turned on and Basic Auth as Kong Manager authentication method (this method requires direct `psql` access to the underlying database, so it does not apply to Konnect, where the control plane database is managed by Kong and not reachable by the customer)
 - Postgres as database
 - User has access to the Postgresql database
 
@@ -78,7 +78,7 @@ Let's go back to the database, now we need to use below SQL to update record. If
 UPDATE basicauth_credentials SET password = '6d28f6d18ffbb49f38943977dcf72645288db273817f32a7e0728494d692d077' WHERE username = 'default:kong_admin';
 ```
 
-Note: older Kong Gateway versions hashed this password with SHA1 instead of SHA256. Kong still accepts a stored SHA1 hash for backward compatibility (it distinguishes the two purely by the stored hash's length: 40 hex characters for SHA1 vs. 64 for SHA256), but SHA256 is the algorithm current Kong Gateway versions use when writing a new credential, so a manually-computed hash should use SHA256 to match.
+Note: older {{site.base_gateway}} versions hashed this password with SHA1 instead of SHA256. Kong still accepts a stored SHA1 hash for backward compatibility (it distinguishes the two purely by the stored hash's length: 40 hex characters for SHA1 vs. 64 for SHA256), but SHA256 is the algorithm current {{site.base_gateway}} versions use when writing a new credential, so a manually-computed hash should use SHA256 to match.
 
 ### Clear cache or restart Kong container
 

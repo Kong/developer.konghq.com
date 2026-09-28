@@ -65,7 +65,7 @@ curl -s -X POST 'http://<kong-admin-api>:8001/default/routes/<route_id>/plugins/
 }'
 ```
 
-> **Note:** Some versions of `kong.log.serialize()`'s base table include additional fields not covered by shorter nil-lists from older examples of this recipe, such as `workspace_name`, `upstream_status`, and `source`. If these are omitted from `custom_fields_by_lua`, they leak through as extra top-level keys alongside `message` instead of being fully nested underneath it. The list above includes them so the output nests cleanly — confirm against your own Kong Gateway version's `kong.log.serialize()` output which fields it returns.
+> **Note:** Some versions of `kong.log.serialize()`'s base table include additional fields not covered by shorter nil-lists from older examples of this recipe, such as `workspace_name`, `upstream_status`, and `source`. If these are omitted from `custom_fields_by_lua`, they leak through as extra top-level keys alongside `message` instead of being fully nested underneath it. The list above includes them so the output nests cleanly — confirm against your own {{site.base_gateway}} version's `kong.log.serialize()` output which fields it returns.
 
 This will output all the standard log content nested under the parent element named `message`, for example:
 

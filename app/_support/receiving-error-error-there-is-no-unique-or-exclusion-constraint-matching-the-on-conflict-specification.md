@@ -29,9 +29,9 @@ What does this error mean and how can we resolve it?
 
 ## Cause
 
-The error means that a running Kong node issued an `INSERT ... ON CONFLICT (...)` statement whose conflict columns don't match any unique index that actually exists on the target table in the database. This happens whenever the Kong Gateway binary is newer than the migrations that have actually been applied to the database it's connected to, so a column or index the binary expects isn't there yet.
+The error means that a running Kong node issued an `INSERT ... ON CONFLICT (...)` statement whose conflict columns don't match any unique index that actually exists on the target table in the database. This happens whenever the {{site.base_gateway}} binary is newer than the migrations that have actually been applied to the database it's connected to, so a column or index the binary expects isn't there yet.
 
-This is a general class of issue that can occur on any upgrade where migrations weren't fully applied before starting the newer binary, not just one specific version pair. For example, on current Kong Gateway, the 3.12.0.0 migration changed the `license_data` table's unique index (adding `license_creation_date` to it), so a 3.12.0.0-or-later binary connecting to a database that hasn't had that migration applied hits exactly this error.
+This is a general class of issue that can occur on any upgrade where migrations weren't fully applied before starting the newer binary, not just one specific version pair. For example, on current {{site.base_gateway}}, the 3.12.0.0 migration changed the `license_data` table's unique index (adding `license_creation_date` to it), so a 3.12.0.0-or-later binary connecting to a database that hasn't had that migration applied hits exactly this error.
 
 ## Solution
 
@@ -40,4 +40,4 @@ To fix this:
 - If you're not ready to complete the upgrade, restore a database backup that matches the Kong version you were previously running, and hold off starting the newer binary until you're ready to migrate.
 - If you are proceeding with the upgrade, run the pending migrations to completion against the database (`kong migrations up`, followed by `kong migrations finish` once all nodes are upgraded) before starting the newer Kong binary against it, so the schema matches what that binary expects.
 
-Reference: Upgrade Kong Gateway
+Reference: Upgrade {{site.base_gateway}}

@@ -16,7 +16,7 @@ tldr:
 
 ## Problem
 
-We are using the OIDC plugin with JWTs. When attempting to utilize an Access token - We are running into the following error:
+We are using the OIDC plugin with JWTs. When attempting to use an Access token - We are running into the following error:
 
 ```
 
@@ -27,7 +27,7 @@ How can we resolve this issue?
 
 ## Cause
 
-This message is produced by the openid-connect plugin's issuer-validation code (`kong/openid-connect/token.lua`) when the token's `iss` claim doesn't match the plugin's configured issuer (or any of `config.issuers_allowed`). The `"unknown error (not a table)"` fragment is a fallback string that gets substituted in place of the expected-issuer list when that value can't be formatted as a list of URLs; in Kong Gateway 3.14.0.0 the code building that part of the message is guarded (`if issuers and type(issuers) == "table" and next(issuers) then ...`) so this specific fallback text should no longer be reachable for a normal issuer mismatch. If you do see it, treat it as a cosmetic detail of the message rather than a signal about what actually went wrong — the real problem is still the issuer mismatch itself.
+This message is produced by the openid-connect plugin's issuer-validation code (`kong/openid-connect/token.lua`) when the token's `iss` claim doesn't match the plugin's configured issuer (or any of `config.issuers_allowed`). The `"unknown error (not a table)"` fragment is a fallback string that gets substituted in place of the expected-issuer list when that value can't be formatted as a list of URLs; in {{site.base_gateway}} 3.14.0.0 the code building that part of the message is guarded (`if issuers and type(issuers) == "table" and next(issuers) then ...`) so this specific fallback text should no longer be reachable for a normal issuer mismatch. If you do see it, treat it as a cosmetic detail of the message rather than a signal about what actually went wrong — the real problem is still the issuer mismatch itself.
 
 The most common cause of an `iss` mismatch is a plugin/issuer configuration problem — for example `config.issuer` pointing at a different environment or tenant than the one that actually issued the token — rather than a corrupted/truncated token. A modified or truncated JWT will usually fail signature verification or JSON parsing first, before issuer validation is ever reached, so it's worth broadening the troubleshooting beyond "check for a truncated token."
 

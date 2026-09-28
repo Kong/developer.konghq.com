@@ -16,7 +16,7 @@ related_resources: []
 
 ## Problem
 
-I am trying to install Kong Gateway in my Kubernetes environment using Helm. When I install, I see the following error and Kong will not start:
+I am trying to install {{site.base_gateway}} in my Kubernetes environment using Helm. When I install, I see the following error and Kong will not start:
 
 ```
 nginx: [emerg] socket() [::]:8000 failed (97: Address family not supported by protocol)

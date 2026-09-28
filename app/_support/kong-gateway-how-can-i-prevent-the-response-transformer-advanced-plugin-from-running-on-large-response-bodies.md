@@ -1,7 +1,7 @@
 ---
-title: "Kong Gateway: Preventing the Response Transformer Advanced plugin from running on large response bodies"
+title: "{{site.base_gateway}}: Preventing the Response Transformer Advanced plugin from running on large response bodies"
 content_type: support
-description: "Kong Gateway supports feature flags to cap the response body size the Response Transformer Advanced plugin will process, avoiding memory pressure on large payloads."
+description: "{{site.base_gateway}} supports feature flags to cap the response body size the Response Transformer Advanced plugin will process, avoiding memory pressure on large payloads."
 products:
   - gateway
 works_on:
@@ -26,7 +26,7 @@ We want to prevent the plugin from executing when the response body meets a cert
 
 ## Solution
 
-Kong Gateway supports feature flags that allow for configuring this. To enable this you will need to follow the below:
+{{site.base_gateway}} supports feature flags that allow for configuring this. To enable this you will need to follow the below:
 
 1. Create a conf file containing these settings (i.e.: `/home/gruber/resp.conf`)
 

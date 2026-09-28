@@ -57,7 +57,7 @@ Desired result:
 
 This can be done through the Request Transformer Advanced plugin.
 
-The query parameter for `apikey` is coming into kong as a long string. To split this up we will utilize the advanced templates inside the Request Transformer Advanced plugin. This will allow us to grab the value of `apikey` and split the string into 2 query parameters.
+The query parameter for `apikey` is coming into kong as a long string. To split this up we will use the advanced templates inside the Request Transformer Advanced plugin. This will allow us to grab the value of `apikey` and split the string into 2 query parameters.
 
 Important: Request Transformer Advanced applies its transformations in a fixed order (remove, rename, replace, add, append). If `config.replace.querystring` rewrites a parameter's value, any `config.add.querystring` template that runs afterwards no longer sees that parameter's *original* value — it only sees the already-replaced one. Since both steps in this recipe need to read from the original, unmodified `apikey` value, the `add` step must read it via `kong.request.get_raw_query()` (the raw, untouched querystring) rather than via `query_params.apikey`, which will already reflect the `replace` step's output by the time `add` runs.
 

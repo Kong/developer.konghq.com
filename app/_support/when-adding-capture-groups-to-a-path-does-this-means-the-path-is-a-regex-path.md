@@ -1,7 +1,7 @@
 ---
 title: Adding capture groups to a path doesn't make it a regex path without a `~` prefix
 content_type: support
-description: On Kong Gateway 3.14.0.0, a path is only ever treated as a regex path if it is explicitly prefixed with a tilde (`~`) — adding capture groups alone does not make a path a regex path.
+description: On {{site.base_gateway}} 3.14.0.0, a path is only ever treated as a regex path if it is explicitly prefixed with a tilde (`~`) — adding capture groups alone does not make a path a regex path.
 products:
   - gateway
 works_on:
@@ -34,7 +34,7 @@ If a request is sent to `/customer/invoices/service/1234`, it matches both Route
 
 ## Solution
 
-On Kong Gateway 3.14.0.0, a path is only ever treated as a regex path if it is explicitly prefixed with a tilde (`~`) — Kong no longer auto-detects regex-ness based on which characters a path contains, so everything else is treated as a literal/plain path, no matter what characters it contains.
+On {{site.base_gateway}} 3.14.0.0, a path is only ever treated as a regex path if it is explicitly prefixed with a tilde (`~`) — Kong no longer auto-detects regex-ness based on which characters a path contains, so everything else is treated as a literal/plain path, no matter what characters it contains.
 
 Creating a Route with a path containing capture-group/regex syntax but **no** `~` prefix (for example `\/(?<who>customer\/invoices(?<rest>\/service))`) is rejected outright by the Admin API's schema validation:
 

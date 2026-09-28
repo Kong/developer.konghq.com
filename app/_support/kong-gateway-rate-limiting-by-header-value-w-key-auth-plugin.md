@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: Rate Limiting By Header Value w/ Key Auth Plugin"
+title: "{{site.base_gateway}}: Rate Limiting By Header Value w/ Key Auth Plugin"
 content_type: support
 description: Combine the Rate Limiting Advanced plugin with the Key Auth plugin and Consumer Groups to rate limit requests by a header's value.
 products:
@@ -144,7 +144,7 @@ RateLimit-Limit: 5
 }
 ```
 
-**Note on Kong Gateway 3.14.0.0:** `X-Special-Header` (the actual API key) is intentionally **not** present in the headers Kong forwards upstream above. As of 3.14.0.0, `hide_credentials` now defaults to `true` on newly-created `key-auth` plugin instances (previously it defaulted to `false`), so unless you explicitly set `config.hide_credentials=false`, the credential header will not be echoed back by the upstream the way it is in older examples.
+**Note on {{site.base_gateway}} 3.14.0.0:** `X-Special-Header` (the actual API key) is intentionally **not** present in the headers Kong forwards upstream above. As of 3.14.0.0, `hide_credentials` now defaults to `true` on newly-created `key-auth` plugin instances (previously it defaulted to `false`), so unless you explicitly set `config.hide_credentials=false`, the credential header will not be echoed back by the upstream the way it is in older examples.
 
 And to prove it, we can alter this header value:
 
@@ -157,4 +157,4 @@ curl http://localhost:8000/test -H "x-special-header:rumpus"
 }
 ```
 
-**Note on Kong Gateway 3.14.0.0:** the `key-auth` plugin's error message for an invalid/unrecognized key is `"Unauthorized"`, not the older `"Invalid authentication credentials"` text shown in some older examples — the response body and behavior above are otherwise unchanged.
+**Note on {{site.base_gateway}} 3.14.0.0:** the `key-auth` plugin's error message for an invalid/unrecognized key is `"Unauthorized"`, not the older `"Invalid authentication credentials"` text shown in some older examples — the response body and behavior above are otherwise unchanged.

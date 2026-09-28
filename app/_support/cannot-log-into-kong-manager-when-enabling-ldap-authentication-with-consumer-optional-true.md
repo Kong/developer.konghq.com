@@ -1,7 +1,7 @@
 ---
 title: "Cannot log into Kong Manager when enabling LDAP authentication with `consumer_optional: true`"
 content_type: support
-description: "On current Kong Gateway, `admin_gui_auth_conf.consumer_optional` has no effect on Kong Manager's `ldap-auth-advanced` login path — Kong now forces `consumer_optional` internally and handles the Admin-to-Consumer mapping itself."
+description: "On current {{site.base_gateway}}, `admin_gui_auth_conf.consumer_optional` has no effect on Kong Manager's `ldap-auth-advanced` login path — Kong now forces `consumer_optional` internally and handles the Admin-to-Consumer mapping itself."
 products:
   - gateway
 works_on:
@@ -20,7 +20,7 @@ We are using `ldap-auth-advanced` as the authentication method for the Kong Mana
 
 ## Cause
 
-On Kong Gateway (Enterprise) 3.14.0.0, Kong Manager's `/auth` route no longer relies on the `ldap-auth-advanced` plugin's own consumer-mapping logic: for `admin_gui_auth = "ldap-auth-advanced"`, Kong unconditionally forces `consumer_optional = true` on the invoked plugin's config internally (`kong/api/routes/kong.lua`, in the `/auth` route handler), regardless of what is configured in `admin_gui_auth_conf`. After the plugin runs (i.e. after a successful LDAP bind/search), Kong Manager performs the Admin-to-Consumer mapping itself via `auth_plugin_helpers.map_admin_groups_by_idp_claim()` and `auth_plugin_helpers.set_admin_consumer_to_ctx()`, using the Consumer already attached to the matching Kong Admin object — not a value returned by the plugin. As a result:
+On {{site.base_gateway}} (Enterprise) 3.14.0.0, Kong Manager's `/auth` route no longer relies on the `ldap-auth-advanced` plugin's own consumer-mapping logic: for `admin_gui_auth = "ldap-auth-advanced"`, Kong unconditionally forces `consumer_optional = true` on the invoked plugin's config internally (`kong/api/routes/kong.lua`, in the `/auth` route handler), regardless of what is configured in `admin_gui_auth_conf`. After the plugin runs (i.e. after a successful LDAP bind/search), Kong Manager performs the Admin-to-Consumer mapping itself via `auth_plugin_helpers.map_admin_groups_by_idp_claim()` and `auth_plugin_helpers.set_admin_consumer_to_ctx()`, using the Consumer already attached to the matching Kong Admin object — not a value returned by the plugin. As a result:
 
 - Explicitly setting `"consumer_optional":true` (or `false`) in `admin_gui_auth_conf` has no effect on this Kong Manager login path, and is not the actual cause of a login failure.
 - Kong Manager's `/auth` route looks up a matching Kong Admin object by username *before* invoking the `ldap-auth-advanced` plugin at all (via `auth_plugin_helpers.validate_admin_and_attach_ctx()`). If no Kong Admin exists with that username, the request fails immediately with `[auth_plugin_helpers] Admin not found` in the error log, and the LDAP server is never even contacted.

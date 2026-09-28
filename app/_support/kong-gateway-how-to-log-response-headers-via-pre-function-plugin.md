@@ -1,5 +1,5 @@
 ---
-title: "Kong Gateway: How to log response headers via pre-function plugin"
+title: "{{site.base_gateway}}: How to log response headers via pre-function plugin"
 content_type: support
 description: "Log response headers from the pre-function plugin using `kong.log.inspect()` for a full table dump or by looping over `kong.response.get_headers()` for one line per header."
 products:
@@ -26,7 +26,7 @@ It is possible to log the response headers. Depending how you'd like the logs to
 kong.log.inspect(kong.response.get_headers())
 ```
 
-Note: `require("inspect")` is blocked by Kong Gateway's Lua sandbox (`untrusted_lua`) at both the default `strict` tier and the more permissive `lax` tier — it only works if `untrusted_lua` is set fully open (`on`), which is not recommended. `kong.log.inspect()` is the PDK-native equivalent: it performs the same pretty-printed table dump and is not gated by the sandbox at any tier, so no `untrusted_lua` configuration change is needed.
+Note: `require("inspect")` is blocked by {{site.base_gateway}}'s Lua sandbox (`untrusted_lua`) at both the default `strict` tier and the more permissive `lax` tier — it only works if `untrusted_lua` is set fully open (`on`), which is not recommended. `kong.log.inspect()` is the PDK-native equivalent: it performs the same pretty-printed table dump and is not gated by the sandbox at any tier, so no `untrusted_lua` configuration change is needed.
 
 Sample output:
 

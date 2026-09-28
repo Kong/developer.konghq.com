@@ -16,7 +16,7 @@ related_resources: []
 
 ## Problem
 
-We are trying to use decK for our configurations in Kong Gateway; however, we are receiving an error response like the ones below, indicating a failed `deck sync` command:
+We are trying to use decK for our configurations in {{site.base_gateway}}; however, we are receiving an error response like the ones below, indicating a failed `deck sync` command:
 
 ```
 Error: 3 errors occurred:
@@ -27,8 +27,8 @@ while processing event: {action type} route {name of entity} failed: HTTP status
 
 ## Cause
 
-This situation is rare but is known to be caused by network security rules, specifically those in a WAF (Web Application Firewall). An improperly configured WAF can reject requests from the Kong decK tool to the Kong Gateway. There may exist some "deny" rules in the WAF which need to be adjusted by the network/security team. For example, the WAF may be set to manipulate or drop HTTP PUT requests.
+This situation is rare but is known to be caused by network security rules, specifically those in a WAF (Web Application Firewall). An improperly configured WAF can reject requests from the Kong decK tool to the {{site.base_gateway}}. There may exist some "deny" rules in the WAF which need to be adjusted by the network/security team. For example, the WAF may be set to manipulate or drop HTTP PUT requests.
 
 ## Solution
 
-The solution in this situation is to work with the network team to ensure that traffic from the workstation running `deck sync` commands is unencumbered when talking to the Kong Gateway destination. Once the WAF is properly configured to allow the traffic as expected, this issue should then be resolved. If the error persists, ensure that no other network / security appliances are affecting the requests between the client workstation and Kong Gateway.
+The solution in this situation is to work with the network team to ensure that traffic from the workstation running `deck sync` commands is unencumbered when talking to the {{site.base_gateway}} destination. Once the WAF is properly configured to allow the traffic as expected, this issue should then be resolved. If the error persists, ensure that no other network / security appliances are affecting the requests between the client workstation and {{site.base_gateway}}.
