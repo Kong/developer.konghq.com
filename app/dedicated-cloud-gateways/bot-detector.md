@@ -87,15 +87,6 @@ The following are an overview of the general steps you should take to enable, mo
 Bot Detector is enabled per control plane.
 Because Bot Detector is scoped to the control plane, not the organization, this allows you to enable it on a single control plane to evaluate it, leave your other control planes untouched, and expand once you're satisfied with the results.
 
-1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
-1. Click **Control planes**.
-1. Click the Dedicated Cloud Gateway control plane you want to enable Bot Detector for.
-1. Click the **Bot Detector** tab.
-1. Click **Enable bot detector**.
-
-Once enabled, a control plane's Bot Detector starts in monitoring mode.
-
-{% comment %}
 {% navtabs "bot-detector" %}
 {% navtab "API" %}
 Enable Bot Detector for a control plane by sending a `POST` request to the `/bot-gline-manager/waap/{cpId}/enabled` endpoint:
@@ -123,8 +114,7 @@ Setting `block_mode` to `false` starts the control plane in monitoring mode.
 
 Once enabled, a control plane's Bot Detector starts in monitoring mode.
 {% endnavtab %}
-{% endnavtabs %} 
-{% endcomment %}
+{% endnavtabs %}
 
 ### Assessing detections 
 
@@ -181,32 +171,6 @@ rows:
 Path, user agent, and JA4 conditions also have an Operator setting to choose whether the value should match exactly or by regular expression. 
 IP address and CIDR range conditions only support exact matches.
 
-1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
-1. Click **Control planes**.
-1. Click the Dedicated Cloud Gateway control with Bot Detector enabled.
-1. Click the **Bot Detector** tab.
-1. Click the **Rules** tab.
-1. Click **New rule**.
-1. For the General settings, do the following:
-   1. In the **Name** field, enter a name for the rule.
-   1. In the **Priority** field, enter a priority. Higher-priority rules are evaluated first, and the first matching rule takes precedence. For example, a rule with a priority of `100` will run before a rule with a priority of `50`. Kong-managed rules always run after your rules.
-1. For the Action settings, select one of the following:
-   * **Block**: Denies requests that match the conditions.
-   * **Monitor**: Records matching requests for analytics without blocking them.
-   * **Passthrough**: Allows requests that match the conditions.
-1. For the Match conditions settings, select one of the following:
-   * **Basic**: Build conditions using IP, CIDR, user agent, path, and JA4 matches. Do the following:
-     1. From the **Match type** dropdown menu, select a match type.
-     1. From the **Operator** dropdown menu, select whether to match the value exactly or by regular expression. This option isn't available for IP address or CIDR range match types.
-     1. In the **Value** field, enter the value you want to match.
-     1. (Optional) To add more match conditions to a rule, click **Add another condition** and repeat the previous three steps.
-
-        {:.warning}
-        > When multiple conditions are configured on a rule, **all conditions** must match for a rule to apply.
-   * **Advanced**: Write a custom expression using the Kong expression language in the **Rule expression** field.
-1. Click **Save**.
-
-{% comment %}
 {% navtabs "rules" %}
 {% navtab "API" %}
 1. List your existing rules by sending a `GET` request to the `/bot-gline-manager/waap/{cpId}/rules` endpoint:
@@ -251,6 +215,7 @@ IP address and CIDR range conditions only support exact matches.
    * To match on an IP address or CIDR range, use `"network_rules"` with `"ips"` or `"cidrs"` instead of `"application_rules"`.
    * Add more entries to `paths`, `user_agents`, `ja4`, `ips`, or `cidrs` to require multiple conditions on the same rule. All conditions on a rule must match for the rule to apply.
    * `"priority"` determines the order your rules are evaluated in relative to each other (higher integers runs sooner). It doesn't affect the position of Kong-managed rules, which always run after all your rules.
+   * To write an advanced rule instead of `application_rules`/`network_rules`, set `expression` to a raw [ATC expression](/gateway/plugins/expressions-314/). For example, `http.path == "/health"`.
 {% endnavtab %}
 {% navtab "UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
@@ -275,11 +240,10 @@ IP address and CIDR range conditions only support exact matches.
 
         {:.warning}
         > When multiple conditions are configured on a rule, **all conditions** must match for a rule to apply.
-   * **Advanced**: Write a custom expression using the Kong expression language in the **Rule expression** field.
+   * **Advanced**: Write a custom expression using [ATC expression syntax](/gateway/plugins/expressions-314/) in the **Rule expression** field. For example, `http.path == "/health"` matches a specific path.
 1. Click **Save**.
 {% endnavtab %}
 {% endnavtabs %}
-{% endcomment %}
 
 ### Switching to blocking bot traffic
 
@@ -291,14 +255,7 @@ While Bot Detector is enabled, you can switch between monitoring and block mode 
 Mode changes propagate to data planes on their next pull cycle (which can be up to five minutes). 
 No data plane restart or redeploy is required.
 
-After it's enabled, a control plane's Bot Detector starts in monitoring mode. 
-To switch the mode to blocking, click **Enable blocking**.
-Continue monitoring traffic to ensure traffic is flowing in the way you expect. 
-
-To turn Bot Detector off entirely, select "Disable bot detector" from the **Actions** dropdown menu.
-
-{% comment %}
-{% navtabs "rules" %}
+{% navtabs "bot-detector-switch-mode" %}
 {% navtab "API" %}
 Send a `POST` request to the same `/bot-gline-manager/waap/{cpId}/enabled` endpoint, setting `block_mode` to `true`:
 
@@ -337,7 +294,6 @@ Continue monitoring traffic to ensure traffic is flowing in the way you expect.
 To turn Bot Detector off entirely, select "Disable bot detector" from the **Actions** dropdown menu.
 {% endnavtab %}
 {% endnavtabs %}
-{% endcomment %}
 
 ## Limitation
 
