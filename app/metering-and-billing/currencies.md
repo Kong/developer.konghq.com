@@ -125,6 +125,40 @@ For any one fiat currency, only one cost basis is active at a time, and its succ
 ## Where currency is set
 
 {{site.metering_and_billing}} derives the currency of an invoice from the plan, the customer, and any rate card overrides.
+The following diagram follows a charge's currency from the product catalog to the invoice:
+
+{% mermaid %}
+flowchart TB
+    subgraph define["<b>1. Define</b>"]
+        direction LR
+        plan["<b>Plan</b><br/>Currency: fiat or custom<br/>Settlement mode"]
+        rate-card["<b>Rate card</b><br/>Inherits the plan currency,<br/>or overrides a fiat plan's<br/>currency to a custom one"]
+        plan --> rate-card
+    end
+
+    subgraph subscribe["<b>2. Subscribe</b>"]
+        direction LR
+        customer["<b>Customer</b><br/>Currency: fiat"]
+        subscription["<b>Subscription</b><br/>Fixes the invoice currency:<br/>the plan's, if it's fiat<br/>the customer's, if it's custom"]
+        customer --> subscription
+    end
+
+    subgraph settle["<b>3. Settle each charge</b>"]
+        direction LR
+        credits["<b>Credit balance</b><br/>In the charge's currency"]
+        cost-basis["<b>Cost basis</b><br/>Converts the custom<br/>currency into the<br/>invoice currency"]
+    end
+
+    invoice["<b>4. Invoice</b><br/>In the invoice currency<br/>Always fiat, rounded<br/>to its precision"]
+
+    define --> subscribe
+    subscribe -->|"Charges draw on credits first"| credits
+    credits -->|"credit_only: settled here"| done(["No invoice line<br/>A shortfall becomes<br/>a negative balance"])
+    credits -->|"credit_then_invoice:<br/>remaining custom amount"| cost-basis
+    credits -->|"credit_then_invoice:<br/>remaining fiat amount"| invoice
+    cost-basis --> invoice
+{% endmermaid %}
+
 The following table describes where each currency value comes from:
 
 <!--vale off-->
