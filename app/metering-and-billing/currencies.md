@@ -107,9 +107,9 @@ rows:
   - field: "Rate"
     description: "The fiat amount that one unit of the custom currency is worth. Rate amounts are expressed and formatted in the fiat currency, not the custom one."
   - field: "Effective from"
-    description: "When the rate starts applying. Defaults to the time you create the cost basis."
+    description: "When the rate starts applying. Defaults to the time you create the cost basis. If you set it, it must be in the future."
   - field: "Effective to"
-    description: "When the rate stops applying. Leave it empty for an open-ended rate."
+    description: "When the rate stops applying. Leave it empty for an open-ended rate. Must come after the effective from date."
 {% endtable %}
 <!--vale on-->
 
@@ -121,6 +121,14 @@ The rate of the superseded cost basis doesn't change, so the historical rates st
 
 A single custom currency can carry cost bases against several fiat currencies at once.
 For any one fiat currency, only one cost basis is active at a time, and its successive cost bases cover consecutive time windows.
+
+Keep the following rules in mind when you create a cost basis:
+
+* The rate must be a positive number.
+* The effective from date must be in the future, or left empty to start the rate now.
+* The effective to date must come after the effective from date.
+* The effective from date is inclusive, and the effective to date is exclusive.
+* Adding a cost basis for a fiat currency that already has an open-ended cost basis closes that cost basis on the new rate's effective from date.
 
 ## Where currency is set
 
@@ -235,6 +243,8 @@ Keep the following constraints in mind when you plan your product catalog:
 * A subscription's invoice currency is fixed for the life of the subscription.
 * There is no exchange rate between fiat currencies. To sell in several fiat currencies, create one plan per currency, or price a plan in a custom currency that has a cost basis for each fiat currency you sell in.
 * A custom currency is immutable and can't be deleted after you create it.
+* Custom currencies are only available through the v3 API. The v1 API rejects resources that use a custom currency.
+* Custom currencies require the credits feature to be enabled on your organization.
 
 ## Validation errors
 
@@ -264,5 +274,11 @@ rows:
     meaning: "The override matches the currency it would replace."
   - code: "`rate_card_currency_requires_price`"
     meaning: "A rate card with a currency override must define a price."
+  - code: "`currency_not_representable`"
+    meaning: "The resource uses a custom currency, which isn't supported by the v1 API."
+  - code: "`rate_card_currency_not_representable`"
+    meaning: "The rate card uses a custom-currency override, which isn't supported by the v1 API."
 {% endtable %}
 <!--vale on-->
+
+Creating a custom currency with a code that already exists in your organization returns a conflict error instead of a validation error.

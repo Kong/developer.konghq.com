@@ -23,6 +23,8 @@ related_resources:
 With {{site.metering_and_billing}}, you can implement various pricing strategies to meet your business needs.
 
 The [currency](/metering-and-billing/currencies/) for all pricing models is set based on the related plan.
+A rate card can override the plan's fiat currency with a [custom currency](/metering-and-billing/currencies/#custom-currencies), for example to price a single feature in credits.
+When a rate card is priced in a custom currency, its charges are converted to the invoice's fiat currency through the currency's [cost basis](/metering-and-billing/currencies/#cost-basis).
 
 ## Free
 
@@ -508,7 +510,7 @@ rows:
 With dynamic pricing, meters track cost instead of usage. 
 Meters are designed to track usage by default, so keep the following in mind:
 
-* There is no exchange rate. All customers and meter costs must be in the same currency.
+* There is no exchange rate. All customers and meter costs must be in the same currency. See [Currencies](/metering-and-billing/currencies/).
 * Cost-tracking meters look the same as usage-tracking meters. Use naming conventions to distinguish them.
 
 ### Markup rate
@@ -602,6 +604,11 @@ To set up a pricing model on a rate card:
    * [Dynamic](#dynamic)
 
    Free pricing models have no settings to configure.
+
+   {:.info}
+   > By default, prices are expressed in the plan's currency.
+   > To price this rate card in a [custom currency](/metering-and-billing/currencies/) instead, select it in the **Currency** dropdown menu.
+   > Custom currencies without an active cost basis for the plan's fiat currency aren't selectable unless the rate card settles in credits only.
 1. Set the [entitlement](/metering-and-billing/entitlements/).
 1. Click **Save Rate Card**.
 1. Click **Publish Plan**.
