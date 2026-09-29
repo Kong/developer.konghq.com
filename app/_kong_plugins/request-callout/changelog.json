@@ -256,5 +256,12 @@
       "type": "bugfix",
       "scope": "Plugin"
     }
+  ],
+  "3.10.0.19": [
+    {
+      "message": "Fixed an issue where a callout that failed and then succeeded\non retry still returned the earlier failed response. The plugin now returns the\nresponse from the successful retry.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
   ]
 }

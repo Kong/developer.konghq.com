@@ -191,5 +191,12 @@
       "type": "bugfix",
       "scope": "Plugin"
     }
+  ],
+  "3.10.0.19": [
+    {
+      "message": "Fixed an issue where the consumer group subscription\ndeclared protocol version 1 but carried the version 0 layout, so a topic-rewriting proxy rejected it.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
   ]
 }

@@ -28300,5 +28300,111 @@
         "scope": "Plugin"
       }
     ]
+  },
+  "3.10.0.19": {
+    "kong-aigw": [
+      {
+        "message": "**ai-proxy**: Fixed streaming token count metrics for third-party models hosted on Vertex AI (claude-*, mistral-*, jamba-*) that reported inflated totals because incremental counts were treated as cumulative.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "Bumped libexpat to 2.8.4.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped libxml2 to 2.15.4.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped msgpack-c to 7.0.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped OpenSSL from 3.5.7 to 3.5.8.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped PCRE2 to 10.48.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**ACME**: Fixed an issue where an expired `fail_backoff` key would keep blocking certificate issuance. Retries are now rejected only while the backoff timestamp is still in the future.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**degraphql**: Fixed an issue where the plugin router did not refresh after an incremental sync update on a Data Plane, leaving routes stale until the next full config push.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where a data plane failed to load config updates when a CA certificate expired. The data plane now accepts the config and logs a warning.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where Kong API Gateway skipped the WebSocket `ws_close` phase when it could not proxy the request.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where Kong API Gateway in DB-less mode could fail to detect configuration changes during reconfiguration, leaving the router or plugins iterator stale.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the control plane sent incremental sync v2 notifications to a data plane that had fallen back to legacy sync v1, logging a misleading error.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where the data plane router rebuild could falsely abort with a concurrent-change error when the router spanned more than one page, leaving routes stale until the next config push.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**kafka-consume**, **confluent-consume**: Fixed an issue where the consumer group subscription\ndeclared protocol version 1 but carried the version 0 layout, so a topic-rewriting proxy rejected it.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where YAML 1.1 `null` values were parsed incorrectly.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where the OAS specification cache failed to distinguish between different values of `api_spec_encoded` for the same specification content.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where disabling `verify_signature` gave no warning, even though it also skips signature verification for bearer tokens from clients. The plugin now logs a warning when `verify_signature` is `false` and `auth_methods` includes `bearer`. It logs a notice instead when `bearer` is not enabled.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**request-callout**: Fixed an issue where a callout that failed and then succeeded\non retry still returned the earlier failed response. The plugin now returns the\nresponse from the successful retry.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Improved the configuration synchronization latency when incremental sync enabled under some circumstances.",
+        "type": "performance",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**oas-validation**: Improved plugin performance by removing unnecessary hash computation. Enabling the plugin now adds much less latency and CPU overhead to requests.",
+        "type": "performance",
+        "scope": "Plugin"
+      }
+    ]
   }
 }
