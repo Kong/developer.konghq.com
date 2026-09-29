@@ -186,6 +186,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.13.0.11": [
+    {
+      "message": "Improved plugin performance by removing unnecessary hash computation. Enabling the plugin now adds much less latency and CPU overhead to requests.",
+      "type": "performance",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Fixed an issue where certain query strings in URLs that did not conform to the configured OpenAPI specification could cause the plugin to throw an unexpected runtime error and respond with an HTTP 500 error.\n",
