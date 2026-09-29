@@ -10,9 +10,9 @@ columns:
 rows:
   - header: X-Gql-Query-Cost
     description: The calculated cost of the GraphQL query in the request.
-  - header: X-RateLimit-Limit-<window>
+  - header: "`X-RateLimit-Limit-<window>`"
     description: The allowed limit for the matching [`config.window_size`](./reference/#schema--config-window_size) value, for example, `X-RateLimit-Limit-Minute`.
-  - header: X-RateLimit-Remaining-<window>
+  - header: "`X-RateLimit-Remaining-<window>`"
     description: The number of requests still available for the matching [`config.window_size`](./reference/#schema--config-window_size) value, for example, `X-RateLimit-Remaining-Minute`.
 {% endtable %}
 
