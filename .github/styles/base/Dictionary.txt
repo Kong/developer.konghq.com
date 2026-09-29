@@ -11,6 +11,8 @@ ai_rate_limiting_policy
 agentic
 Agno
 Agno's
+akamai
+AIGateway
 Alertmanager
 Alibaba
 allow_terminated
@@ -118,6 +120,7 @@ chatwise
 cidr
 cidr_block
 cidrs
+claude
 cleartext
 cli
 clis
@@ -133,8 +136,10 @@ cncf
 cncf's
 CNAMEs
 CNIs
+codec
 cohere
 cognito
+Colang
 collectd
 config
 config_hash
@@ -348,6 +353,8 @@ huggingface
 hybridgateway
 Hybridgateway
 idempotency
+IDE
+IDEs
 IdPs
 if_version
 If-Match
@@ -430,6 +437,8 @@ kiali
 Kibana
 kibibytes
 kic
+kimi
+Kimi
 knative
 Knative's
 Knatives
@@ -491,6 +500,7 @@ M_Account
 M_Link
 M_Resource
 maglev
+major_version
 managedfields
 matchers
 max_args
@@ -524,6 +534,7 @@ minio
 misconfiguration
 misconfigurations
 misconfigured
+misrouted
 mockbin
 modelarmor
 moesif
@@ -546,6 +557,7 @@ NATs
 navtabs
 nbf
 neg_ttl
+NeMo
 Netcat
 Netlify
 Netrc
@@ -560,9 +572,11 @@ no_version
 node_quantifier
 Node.js
 nodeport
+nullable
 Nullsoft
 nunjucks
-Noname
+noname
+nonamesecurity
 nopp
 nopped
 nopping
@@ -570,6 +584,7 @@ npm
 nrec
 Nvidia
 OAuth
+oauth
 observability
 oc
 odks
@@ -610,6 +625,7 @@ PDFs
 pg_max_concurrent_queries
 pgdump
 pgvector
+Pinecone
 pipeline
 pipelined
 pipelines
@@ -628,6 +644,7 @@ prepends
 prepopulated
 preprocessors
 preread
+priority_preserving
 printf
 prisma
 private_key
@@ -690,6 +707,7 @@ reranked
 reranking
 resourceVersion
 response_format
+RESTful
 resty
 resync
 Resync
@@ -717,6 +735,7 @@ sandboxed
 sandboxing
 sanitization
 sasl_oauth_bearer
+saas
 sbom
 sboms
 SCCs
@@ -745,6 +764,7 @@ SLT_Enc
 sni
 snis
 sonarqube
+spaCy
 Speedscope
 Splunk
 sse
@@ -756,6 +776,7 @@ sso
 Stakater
 Stap
 stapxx
+straiker
 start_cmd
 statsd
 status_code
@@ -811,6 +832,7 @@ TCPRoutes
 teardown
 templated
 Templatized
+temporality
 Terraform
 Terraform's
 text_splitters
@@ -867,6 +889,10 @@ uncommenting
 unconfigured
 underuse
 unencrypted
+unenroll
+unenrolled
+unenrolling
+unenrolls
 unescaped
 ungroup
 ungrouped
@@ -883,6 +909,7 @@ unprocessable
 unproxied
 unpublish
 unpublishing
+unredacted
 unregister
 unregistering
 unsecure
@@ -928,6 +955,8 @@ Valkey
 vendored
 vararg
 vc
+vercel
+Vercel
 viewport
 viewports
 vllm
@@ -982,6 +1011,7 @@ SSNs
 unsanitized
 vectorize
 vectordb
+veriknox
 substrings
 Figma
 Offboarding
@@ -994,3 +1024,37 @@ semconv
 rollup
 rollups
 llm_format
+Autodiscovery
+autostart
+CVEs
+Dockerized
+endscript
+HAProxy
+hardcodes
+Idletime
+IDPs
+Kyverno
+logrotate
+loopbacking
+multiline
+OOMKiller
+OOMKilled
+postrotate
+recrawl
+reenable
+stunnel
+supercookie
+systemctl
+tmp
+iat
+kong_rate_limiting_counters
+log_disconnections
+lokey
+mem_cache_size
+nginx_worker_processes
+podAnnotations
+prereading
+server_version_num
+unredact
+userinfo
+xyz

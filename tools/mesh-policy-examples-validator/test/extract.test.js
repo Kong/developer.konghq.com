@@ -1,0 +1,87 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { extractBlocks, extractDocuments } from "../lib/extract.js";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const fixture = (name) =>
+  fs.readFileSync(path.join(__dirname, "fixtures", name), "utf-8");
+
+function tabGroup(panels) {
+  return `<div data-tab-group="policy-yaml x">${panels}</div>`;
+}
+
+function panel(name, codes) {
+  return `<div data-panel="${name}">${codes}</div>`;
+}
+
+function code(id, text) {
+  return `<code id="${id}">${text}</code>`;
+}
+
+test("a page publishing one block per tab extracts both, each recording its panel", () => {
+  const blocks = extractBlocks(fixture("single-variant.html"));
+  const panels = blocks.map((b) => b.panel);
+
+  assert.deepEqual(panels, ["kubernetes", "universal"]);
+  assert.ok(blocks[0].text.includes("kind: MeshTimeout"));
+  assert.ok(blocks[1].text.includes("type: MeshTimeout"));
+});
+
+test("a use_meshservice page extracts both variants per tab independently", () => {
+  const blocks = extractBlocks(fixture("use-meshservice.html"));
+  const panels = blocks.map((b) => b.panel);
+
+  assert.deepEqual(panels, [
+    "kubernetes",
+    "kubernetes",
+    "universal",
+    "universal",
+  ]);
+});
+
+test("a prose code block outside the tab group is not extracted", () => {
+  const blocks = extractBlocks(fixture("zone-egress.html"));
+  const panels = blocks.map((b) => b.panel);
+
+  assert.deepEqual(panels, ["kubernetes", "universal"]);
+  assert.ok(!blocks.some((b) => b.text.includes("example-1")));
+});
+
+test("the terraform panel is skipped", () => {
+  const blocks = extractBlocks(fixture("single-variant.html"));
+
+  assert.ok(!blocks.some((b) => b.panel === "terraform"));
+});
+
+test("a block holding several YAML documents parses to one entry per document", () => {
+  const html = tabGroup(
+    panel(
+      "universal",
+      code(
+        "a",
+        "type: MeshTimeout\nname: one\n---\ntype: MeshTimeout\nname: two",
+      ),
+    ),
+  );
+  const { entries, findings } = extractDocuments(html);
+
+  assert.equal(findings.length, 0);
+  assert.equal(entries.length, 2);
+  assert.equal(entries[0].value.name, "one");
+  assert.equal(entries[1].value.name, "two");
+});
+
+test("a block that isn't parseable as YAML reports a finding", () => {
+  const html = tabGroup(
+    panel("universal", code("a", "type: MeshTimeout\n  bad: [unclosed")),
+  );
+  const { entries, findings } = extractDocuments(html);
+
+  assert.equal(entries.length, 0);
+  assert.equal(findings.length, 1);
+  assert.equal(findings[0].panel, "universal");
+  assert.equal(findings[0].pointer, "/");
+});

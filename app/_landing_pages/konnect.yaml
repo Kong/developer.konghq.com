@@ -182,6 +182,7 @@ rows:
               blocks:
               - type: unordered_list
                 items:
+                    - "[kongctl](/kongctl/): Manage {{site.konnect_short_name}} resources with imperative commands or declarative, plan-based workflows"
                     - "[decK](/deck/): Manage {{site.base_gateway}} configuration in {{site.konnect_short_name}} through declarative state files"
                     - "[Terraform](/terraform/): Manage infrastructure as code and automated deployments to streamline setup and configuration of {{site.konnect_short_name}}, {{site.base_gateway}}, and {{site.mesh_product_name}}"
                     - "[KIC](/kubernetes-ingress-controller/): Manage ingress traffic and routing rules for your services"

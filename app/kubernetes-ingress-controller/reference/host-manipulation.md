@@ -88,7 +88,7 @@ URL: /?details=true
 
 #### Using Gateway API {% new_in 3.2 %}
 
-You can set the Host header explicitly when using Gateway API's HTTPRoute with [`URLRewrite`](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io%2fv1.HTTPURLRewriteFilter) 
+You can set the Host header explicitly when using Gateway API's HTTPRoute with [`URLRewrite`](https://gateway-api.sigs.k8s.io/reference/api-types/gateway/#gateway.networking.k8s.io%2fv1.HTTPURLRewriteFilter) 
 filter's `hostname` field. You only need to add a `URLRewrite` filter to your HTTPRoute rule.
 
 ```yaml

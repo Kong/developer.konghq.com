@@ -16,13 +16,23 @@ class PruneNextStepsAndRelatedResources # rubocop:disable Style/Documentation
     @page_or_doc.data.fetch('related_resources', []).delete_if do |link|
       validate_relative_url!(link['url'])
 
-      link['url'].start_with?('/') && !relative_page_exist?(link['url'])
+      test = link['url'].start_with?('/') && !relative_page_exist?(link['url'])
+      if test && Jekyll.env == 'development'
+        Jekyll.logger.warn 'PruneNextStepsAndRelatedResources: related_resources',
+                           "Removing link to non-existent page: #{link['url']} on page: #{@page_or_doc.url}"
+      end
+      test
     end
 
     @page_or_doc.data.fetch('next_steps', []).delete_if do |link|
       validate_relative_url!(link['url'])
 
-      link['url'].start_with?('/') && !relative_page_exist?(link['url'])
+      test = link['url'].start_with?('/') && !relative_page_exist?(link['url'])
+      if test && Jekyll.env == 'development'
+        Jekyll.logger.warn 'PruneNextStepsAndRelatedResources: next_steps',
+                           "Removing link to non-existent page: #{link['url']} on page: #{@page_or_doc.url}"
+      end
+      test
     end
   end
 
@@ -31,7 +41,7 @@ class PruneNextStepsAndRelatedResources # rubocop:disable Style/Documentation
   def relative_page_exist?(url)
     url = url.gsub(/\{\{\s*page\.release\s*\}\}/, release)
 
-    site.data['pages_urls'].include?(URI(url).path) || redirects.include?(URI(url).path)
+    site.data['pages_urls'].include?(URI(url).path) || redirect_exists?(URI(url).path)
   end
 
   def release
@@ -48,10 +58,6 @@ class PruneNextStepsAndRelatedResources # rubocop:disable Style/Documentation
     return if base_path.end_with?('/')
 
     raise ArgumentError, "Relative URL must end with a trailing slash: #{path} on page: #{@page_or_doc.url}"
-  end
-
-  def redirects
-    @redirects ||= site_redirects
   end
 end
 

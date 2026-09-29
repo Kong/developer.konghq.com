@@ -10,6 +10,14 @@ const log = debug("tests:setup:runtime");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+const PASSTHROUGH_VARIABLES = ["KONNECT_DOMAIN", "KONGCTL_DEFAULT_KONNECT_ENVIRONMENT", "KONNECT_EVENT_GATEWAY_MIN_VERSION"];
+
+async function konnectRegion() {
+  const filePath = path.resolve(__dirname, "../../app/_data/konnect_api_request.yml");
+  const fileContent = await fs.readFile(filePath, "utf8");
+  return yaml.load(fileContent).region;
+}
+
 export async function getRuntimeConfig(deploymentModel, product) {
   const fileContent = await fs.readFile(`./config/runtimes.yaml`, "utf8");
   const configs = yaml.load(fileContent);
@@ -52,6 +60,23 @@ export async function runtimeEnvironment(runtimeConfig) {
     environment[`DECK_${key}`] = value;
   }
 
+  for (const variable of PASSTHROUGH_VARIABLES) {
+    if (process.env[variable] !== undefined) {
+      environment[variable] = process.env[variable];
+    }
+  }
+
+  const konnectDomain = process.env.KONNECT_DOMAIN;
+  if (konnectDomain) {
+    const controlPlaneUrl = `https://${await konnectRegion()}.api.${konnectDomain}`;
+    environment["KONNECT_CONTROL_PLANE_URL"] = controlPlaneUrl;
+    environment["DECK_KONNECT_CONTROL_PLANE_URL"] = controlPlaneUrl;
+
+    if (konnectDomain === "konghq.tech") {
+      environment["KONGCTL_DEFAULT_KONNECT_ENVIRONMENT"] = "tech";
+    }
+  }
+
   Object.entries(process.env)
     .filter(([key]) => key.startsWith("TESTS"))
     .forEach(([key, value]) => {
@@ -86,6 +111,9 @@ export async function runtimeEnvironment(runtimeConfig) {
     }
 
     environment = { ...environment, ...versionConfig["env"] };
+  } else if (process.env.KONG_IMAGE_NAME && process.env.KONG_IMAGE_TAG) {
+    environment["KONG_IMAGE_NAME"] = process.env.KONG_IMAGE_NAME;
+    environment["KONG_IMAGE_TAG"] = process.env.KONG_IMAGE_TAG;
   }
 
   return environment;
@@ -128,6 +156,14 @@ export async function setupRuntime(runtimeConfig, docker) {
   const workspaceHostPath = path.resolve(__dirname, ".workspace");
   await fs.mkdir(workspaceHostPath, { recursive: true });
 
+  // Same Docker-outside-of-Docker constraint as workspaceHostPath above:
+  // the AI Gateway quickstart script (fetched from get.konghq.com/ai) hardcodes
+  // OUTPUT_DIR to an absolute path under /tmp/kong, so that path must be
+  // bind-mounted onto itself for the cert volume it later passes to
+  // `docker run -v` to resolve on the host.
+  const kongTmpHostPath = "/tmp/kong";
+  await fs.mkdir(kongTmpHostPath, { recursive: true });
+
   const container = await docker.createContainer({
     Image: runtimeConfig.imageName,
     Tty: true,
@@ -139,6 +175,7 @@ export async function setupRuntime(runtimeConfig, docker) {
         `${exportedRealmHostPath}:/realms`,
         `${filesHostPath}:/files`,
         `${workspaceHostPath}:${workspaceHostPath}`,
+        `${kongTmpHostPath}:${kongTmpHostPath}`,
       ],
       NetworkMode: "host",
     },

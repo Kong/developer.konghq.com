@@ -41,6 +41,10 @@ PAGE_PATHS="/plugins/acme/,/gateway/entities/" make run
 
 The platform will generate all pages that match each specified path. For instance, `/gateway/entities/` will generate all pages whose paths start with `/gateway/entities/`.
 
+## Building against a different Konnect environment
+
+By default, `{% konnect_api_request %}` renders commands against `konghq.com`. To render against the internal `konghq.tech` environment instead, set `KONNECT_DOMAIN=konghq.tech` when building, e.g. `KONNECT_DOMAIN=konghq.tech make run`.
+
 ## Contributing to the docs
 
 If you want to contribute to the Kong Developer docs, see the [Contributing guide](https://developer.konghq.com/contributing/).

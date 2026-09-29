@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect API Request Analytics
-  version: 2.1.1
+  version: 2.2.0
   description: The API to query detailed records for every API request proxied by Kong
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@9439f2f60741551a17bc0eacba5ce859e1e38317
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9439f2f60741551a17bc0eacba5ce859e1e38317'
+  x-oas-source: kong/platform-api@9c7686a9d1631951a45739cfab8ac570b6e0d06f
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9c7686a9d1631951a45739cfab8ac570b6e0d06f'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -105,6 +105,7 @@ components:
               - $ref: '#/components/schemas/McpMethodFilterByField'
               - $ref: '#/components/schemas/McpSessionIdFilterByField'
               - $ref: '#/components/schemas/McpToolNameFilterByField'
+              - $ref: '#/components/schemas/OidcCredentialFilterByField'
               - $ref: '#/components/schemas/PortalFilterByField'
               - $ref: '#/components/schemas/PrincipalFilterByField'
               - $ref: '#/components/schemas/RealmFilterByField'
@@ -475,6 +476,10 @@ components:
                       description: 'Error message from the RPC call, if any.'
                       type: string
                       nullable: true
+          oidc_credential:
+            description: OIDC credential identifier associated with the request.
+            type: string
+            nullable: true
           portal:
             description: Portal ID associated with the request.
             type: string
@@ -1204,6 +1209,23 @@ components:
             - $ref: '#/components/schemas/FilterSingleValueString'
             - $ref: '#/components/schemas/FilterEmpty'
       title: Filter by mcp_tool_name
+    OidcCredentialFilterByField:
+      allOf:
+        - type: object
+          properties:
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - oidc_credential
+          required:
+            - field
+        - oneOf:
+            - $ref: '#/components/schemas/FilterMultiValueString'
+            - $ref: '#/components/schemas/FilterSingleValueString'
+            - $ref: '#/components/schemas/FilterWildcard'
+            - $ref: '#/components/schemas/FilterEmpty'
+      title: Filter by oidc_credential
     PortalFilterByField:
       allOf:
         - type: object
@@ -1841,7 +1863,7 @@ components:
         - type
         - values
       title: Filter by status_code_grouped
-    BaseError:
+    UnauthorizedError:
       description: standard error
       type: object
       properties:
@@ -1850,6 +1872,7 @@ components:
             The HTTP status code of the error. Useful when passing the response
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
+          example: 401
           readOnly: true
         title:
           description: |
@@ -1857,10 +1880,12 @@ components:
             change between occurences of a problem, except for localization.
             Should be provided as "Sentence case" for direct use in the UI.
           type: string
+          example: Unauthorized
           readOnly: true
         type:
           description: The error type.
           type: string
+          example: 'https://httpstatuses.com/401'
           readOnly: true
         instance:
           description: |
@@ -1868,6 +1893,7 @@ components:
             kong:trace:<correlation_id>. This helps us find the relevant logs
             when a customer reports an issue.
           type: string
+          example: 'kong:trace:1234567890'
           readOnly: true
         detail:
           description: |
@@ -1876,6 +1902,7 @@ components:
             what went wrong. Enclose variable values in square brackets. Should be
             provided as "Sentence case" for direct use in the UI.
           type: string
+          example: Invalid credentials
           readOnly: true
       required:
         - status
@@ -1883,36 +1910,53 @@ components:
         - instance
         - detail
       title: Error
-    UnauthorizedError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 401
-            title:
-              example: Unauthorized
-            type:
-              example: 'https://httpstatuses.com/401'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Invalid credentials
     ForbiddenError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 403
-            title:
-              example: Forbidden
-            type:
-              example: 'https://httpstatuses.com/403'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Forbidden
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          example: 403
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Forbidden
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          example: 'https://httpstatuses.com/403'
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          example: 'kong:trace:1234567890'
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          example: Forbidden
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
   examples:
     BadRequestExample:
       value:
@@ -2072,6 +2116,7 @@ components:
                   latency: 45
                   response_body_size: 1024
                   error: null
+            oidc_credential: null
             portal: 20076d8c-2d1b-4249-b323-4baa63796f8a
             principal: 9f8b2c1d-3e4a-4b5c-8d6e-7f8a9b0c1d2e
             realm: 5e6f7a8b-9c0d-4e1f-2a3b-4c5d6e7f8a9b
@@ -2113,6 +2158,7 @@ components:
             latencies_response_ms: 12
             latencies_upstream_ms: 10
             mcp_info: null
+            oidc_credential: null
             portal: null
             principal: null
             realm: null

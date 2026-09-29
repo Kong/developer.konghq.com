@@ -226,4 +226,4 @@ If you're using [ZeroSSL](https://zerossl.com/), the provider's external account
 
 {% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
 
-{% include_cached /plugins/redis/oss.md name=page.name heading_level=2 %}
+{% include_cached /plugins/redis/oss.md name=page.name heading_level=2 redis_group="storage_config" %}

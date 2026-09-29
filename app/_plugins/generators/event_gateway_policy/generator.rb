@@ -20,6 +20,10 @@ module Jekyll
       def skip?
         site.config.dig('skip', 'event_gateway_policy')
       end
+
+      def skip_locally?
+        @build_filter.excludes_prefix?('/event-gateway/')
+      end
     end
   end
 end

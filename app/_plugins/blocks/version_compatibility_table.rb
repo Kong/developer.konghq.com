@@ -2,6 +2,7 @@
 
 require 'yaml'
 require_relative '../monkey_patch'
+require_relative '../component_templates'
 
 module Jekyll
   class VersionCompatibilityTable < Liquid::Block
@@ -21,7 +22,7 @@ module Jekyll
         context['include'] =
           { 'columns' => config['columns'], 'rows' => config['features'], 'item_title' => config['item_title'],
             'compatibility_table' => true }
-        Liquid::Template.parse(template, { line_numbers: true }).render(context)
+        ComponentTemplates.fetch('feature_table', @page['output_format']).render(context)
       end
     rescue Psych::SyntaxError => e
       message = <<~STRING
@@ -48,14 +49,6 @@ module Jekyll
           feature
         end
       }
-    end
-
-    def template
-      if @page['output_format'] == 'markdown'
-        File.read(File.expand_path('app/_includes/components/feature_table.md'))
-      else
-        File.read(File.expand_path('app/_includes/components/feature_table.html'))
-      end
     end
   end
 end

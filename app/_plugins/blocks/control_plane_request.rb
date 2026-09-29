@@ -2,6 +2,7 @@
 
 require 'yaml'
 require_relative '../monkey_patch'
+require_relative '../component_templates'
 
 module Jekyll
   class ControlPlaneRequest < Liquid::Block # rubocop:disable Style/Documentation
@@ -18,21 +19,12 @@ module Jekyll
 
       contents = super
 
-      # unless @page.fetch('products', []).include?('gateway')
-      #   raise ArgumentError,
-      #         'Unsupported product for {% control-plane-request %}'
-      # end
-      # unless @page.key?('works_on')
-      #   raise ArgumentError,
-      #         "Required metadata `works_on` for {% control-plane-request %} missing on #{@page['path']}"
-      # end
-
       config = YAML.load(contents)
       drop = Drops::ControlPlaneRequest.new(yaml: config, format: @format)
 
       context.stack do
         context['config'] = drop
-        Liquid::Template.parse(File.read(drop.template_file), { line_numbers: true }).render(context)
+        ComponentTemplates.fetch('control_plane_request', @format, base: 'app/_includes').render(context)
       end
     rescue Psych::SyntaxError => e
       message = <<~STRING

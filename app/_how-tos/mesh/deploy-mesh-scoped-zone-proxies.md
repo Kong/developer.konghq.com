@@ -251,7 +251,7 @@ The resource will sync to every zone automatically.
 
 {:.info}
 > `insecureAllowSelfSigned: true` keeps the demo simple by using the bundled CA.
-> For production, follow the [`MeshIdentity` guide](/mesh/mesh-identity/) to integrate a SPIRE trust domain or an external CA.
+> For production, follow the [`MeshIdentity` guide](/mesh/issue-identity-with-meshidentity-spire/) to integrate a SPIRE trust domain or an external CA.
 
 ## Deploy zone-1 with mesh-scoped zone proxies
 

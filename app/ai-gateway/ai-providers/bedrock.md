@@ -10,106 +10,89 @@ breadcrumbs:
 permalink: /ai-gateway/ai-providers/bedrock/
 
 works_on:
- - on-prem
  - konnect
 
 products:
-  - gateway
   - ai-gateway
 
 tools:
-  - admin-api
   - konnect-api
-  - deck
-  - kic
-  - terraform
+  - kongctl
 
 tags:
   - ai
 
-plugins:
-  - ai-proxy-advanced
-  - ai-proxy
-
 min_version:
-  gateway: '3.8'
+  ai-gateway: '2.0'
 
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: Amazon Bedrock tutorials
-    url: /how-to/?tags=bedrock
-  - text: "{{site.ai_gateway}} plugins"
-    url: /plugins/?category=ai
+  - text: "{{site.ai_gateway}} Policies"
+    url: /ai-gateway/policies/
   - text: AI Providers
     url: /ai-gateway/ai-providers/
+  - text: AI Model Provider entity
+    url: /ai-gateway/entities/ai-model-provider/
+  - text: AI Model entity
+    url: /ai-gateway/entities/ai-model/
 
 
 faqs:
   - q: How do I specify model IDs for Amazon Bedrock cross-region inference profiles?
     a: |
-      {% include faqs/bedrock-models.md %}
+      {% include md/ai-gateway/v2/faqs/bedrock-models.md %}
   - q: How do I set the FPS parameter for video generation for Amazon Bedrock?
     a: |
-      {% include faqs/bedrock-fps.md %}
+      {% include md/ai-gateway/v2/faqs/bedrock-fps.md %}
   - q: How do I include guardrail configuration with Amazon Bedrock requests?
     a: |
-      {% include faqs/bedrock-guardrails.md %}
+      {% include md/ai-gateway/v2/faqs/bedrock-guardrails.md %}
   - q: How do I use Amazon Bedrock's Rerank API to improve RAG retrieval quality?
     a: |
-      {% include faqs/bedrock-rerank.md %}
-
-how_to_list:
-  config:
-    products:
-      - ai-gateway
-    tags:
-      - bedrock
-    description: true
-    view_more: false
+      {% include md/ai-gateway/v2/faqs/bedrock-rerank.md %}
 
 ---
 
 
-{% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="Amazon Bedrock" %}
+{% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="Amazon Bedrock" %}
 
-{% include plugins/ai-proxy/providers/native-routes.md providers=site.data.plugins.ai-proxy provider_name="Amazon Bedrock" %}
+{% include md/ai-gateway/v2/native-routes.md providers=site.data.ai-gateway.v2.providers provider_name="Amazon Bedrock" %}
 
-## Configure {{ provider.name }} with AI Proxy
+## Configure {{ provider.name }}
 
-To use {{ provider.name }} with {{site.ai_gateway}}, configure the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/).
+To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [AI Model Provider](/ai-gateway/entities/ai-model-provider/). You can then access supported [AI Models](/ai-gateway/entities/ai-model/) from  {{ provider.name }}.
 
 Here's a minimal configuration for chat completions:
 
 {% entity_example %}
-type: plugin
+type: model-provider
 data:
-  name: ai-proxy
+  display_name: AWS Production
+  name: my-aws-account
+  type: bedrock
   config:
-    route_type: llm/v1/chat
     auth:
-      allow_override: false
-      aws_access_key_id: ${key}
-      aws_secret_access_key: ${secret}
-    model:
-      provider: bedrock
-      name: meta.llama3-70b-instruct-v1:0
-      options:
-        bedrock:
-          aws_region: us-east-1
-
+      type: aws
+      access_key_id: ${key_id}
+      secret_access_key: ${access_key}
 variables:
-  key:
+  key_id:
     value: $AWS_ACCESS_KEY_ID
-    description: The AWS access key ID to use to connect to Bedrock.
-  secret:
+    description: Your AWS access key ID.
+  access_key:
     value: $AWS_SECRET_ACCESS_KEY
-    description: The AWS secret access key to use to connect to Bedrock.
+    secret: true
+    description: Your AWS secret access key.
 {% endentity_example %}
 
-{:.success}
-> For more configuration options and examples, see:
-> - [AI Proxy examples](/plugins/ai-proxy/examples/)
-> - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)
+## Authentication with AWS
 
-{% include plugins/ai-proxy/providers/how-tos.md %}
+You can also use {{ provider.name }} with AWS credentials by setting `auth` to `aws` and specifying:
+
+* **`access_key_id`** (optional): AWS access key ID for static IAM user credentials. If omitted, the default AWS credentials provider chain is used (EC2 instance profiles, environment variables, etc.).
+* **`secret_access_key`** (optional): AWS secret access key paired with `access_key_id`. Required if `access_key_id` is set.
+* **`assume_role_arn`** (optional): IAM role ARN to assume for temporary credentials. Useful for cross-account access.
+* **`role_session_name`** (optional): Session name for the assumed role. Required if `assume_role_arn` is set.
+* **`sts_endpoint_url`** (optional): Custom STS endpoint for role assumption. Defaults to `https://sts.amazonaws.com`.
+* **`batch_role_arn`** (optional): Separate role ARN for Bedrock batch API calls.

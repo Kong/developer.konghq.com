@@ -21,12 +21,18 @@ async function validateFrontmatters() {
 
   // Ignore plugins pages for now.
   const files = await glob(
-    ["app/**/*.md", "app/_landing_pages/**/*.{yaml,yml}"],
+    [
+      "app/**/*.md",
+      "app/_landing_pages/**/*.{yaml,yml}",
+      "app/_kong_plugins/**/examples/*.{yaml,yml}",
+      "app/_ai_gateway_policies/**/examples/*.{yaml,yml}",
+    ],
     {
       ignore: [
         "app/_layouts/**",
         "app/_includes/**",
         "app/_kong_plugins/**/changelog.md",
+        "app/_ai_gateway_policies/*/index.md",
         "app/_kong_plugins/**/reference.md",
         "app/_api/**/*.md",
         "app/_references/**/*.md",
@@ -41,14 +47,19 @@ async function validateFrontmatters() {
   for (const filePath of files) {
     let data;
     const file = await fs.readFile(`../../${filePath}`, "utf-8");
+    const isExample = /\/examples\/[^/]+\.ya?ml$/.test(filePath);
     if (path.extname(filePath) == ".md") {
       data = matter(file).data;
+    } else if (isExample) {
+      data = { content_type: "plugin_example", ...YAML.parse(file) };
     } else {
       data = YAML.parse(file)["metadata"];
     }
 
     // look for specific schema
-    let validate = ajv.getSchema(`schema:${data.content_type}`);
+    let validate = isExample
+      ? ajv.getSchema("schema:plugin_example")
+      : ajv.getSchema(`schema:${data.content_type}`);
     if (!validate) {
       validate = ajv.getSchema("schema:base");
     }

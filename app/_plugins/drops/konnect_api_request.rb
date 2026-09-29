@@ -2,11 +2,13 @@
 
 require 'json'
 require_relative '../lib/site_accessor'
+require_relative './concerns/request_snippet_config'
 
 module Jekyll
   module Drops
     class KonnectApiRequest < Liquid::Drop # rubocop:disable Style/Documentation
       include Jekyll::SiteAccessor
+      include Jekyll::Drops::Concerns::RequestSnippetConfig
 
       def initialize(yaml:, format:) # rubocop:disable Lint/MissingSuper
         @yaml = yaml
@@ -26,12 +28,16 @@ module Jekyll
         end
       end
 
+      def snippet_config
+        @snippet_config ||= snippet_config_for(url)
+      end
+
       def data_validate_konnect
         JSON.dump({ name: 'konnect-api-request', config: config.merge(url: url) })
       end
 
       def url
-        "https://#{self['region']}.api.konghq.com#{@yaml['url']}"
+        "https://#{self['region']}.api.#{site.config['konnect_domain']}#{@yaml['url']}"
       end
 
       def headers

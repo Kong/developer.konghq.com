@@ -120,10 +120,11 @@ Kong supports the following versions of {{site.ee_product_name}}:
 {% endfor %}
 {% endnavtabs %}
 
-{:.info}
-> **Notes**: 
-> - **OS End of Life**: If you're running a currently supported version of {{site.base_gateway}} on an OS that doesn't appear in this table, that OS has reached End of Life and Kong no longer supports it.
-> - **FIPS mode**: FIPS Docker images are only available for AMD64. ARM64 is not supported. For information about FIPS, see the [FIPS support policy](/gateway/fips-support/).
+{:.info .no-icon}
+> **Notes**:
+> * **OS End of Life**: If you're running a currently supported version of {{site.base_gateway}} on an OS that doesn't appear in this table, that OS has reached End of Life and Kong no longer supports it.
+> * **FIPS mode**: FIPS Docker images are only available for AMD64. ARM64 is not supported. For information about FIPS, see the [FIPS support policy](/gateway/fips-support/).
+
 
 ## Marketplaces
 

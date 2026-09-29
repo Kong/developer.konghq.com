@@ -32,6 +32,8 @@ related_resources:
     url: /how-to/package-apis-with-dev-portal/
   - text: API packages reference
     url: /catalog/api-packaging/
+  - text: "{{site.dev_portal}} MCP servers"
+    url: /dev-portal/mcp-servers/
 faqs:
   - q: I'm using the Try it feature in the spec renderer to send requests from {{site.dev_portal}}, but I'm getting a `401`. How do I fix it?
     a: If the published API has an [authentication strategy](/dev-portal/auth-strategies/) configured for it, you must include your key in the request. All requests without a key to the Service linked to the API are blocked if it is published with an auth strategy.
@@ -75,7 +77,10 @@ Additionally, you can link your API to a Gateway Service to allow developers to 
 To create an API, do one of the following:
 {% navtabs "create-api" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-Navigate to **Catalog > APIs** in the sidebar, and then click [**New API**](https://cloud.konghq.com/apis/create).
+Navigate to **Catalog** in the sidebar, click the **APIs** tab, and then click **New API**.
+
+{:.info}
+> If you're using [{{site.konnect_catalog}} Classic](/catalog-classic/), click **APIs** in the sidebar instead.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a POST request to the [`/apis` endpoint](/api/konnect/api-builder/v3/#/operations/create-api):
@@ -130,12 +135,18 @@ The API entity's `version` property is treated as "current", meaning it is the v
 To version an API, do one of the following:
 {% navtabs "api-version" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-1. In the {{site.konnect_short_name}} sidebar, click [**{{site.konnect_catalog}}**](https://cloud.konghq.com/service-catalog/).
-1. Click [**New API**](https://cloud.konghq.com/apis/create).
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.konnect_catalog}}**.
+   
+   {:.info}
+   > If you're using [{{site.konnect_catalog}} Classic](/catalog-classic/), click **Catalog > APIs** in the sidebar instead.
+1. Click **New API**.
 1. Enter a version in the **API version** field, or upload an API specification, which will set the version to match the API spec version. 
 
 You can also add versions to existing APIs when you edit them if they aren't associated with an API specification. To manage multiple versions of the API specification, do the following:
-1. In the {{site.konnect_short_name}} sidebar, click [**{{site.konnect_catalog}}**](https://cloud.konghq.com/service-catalog/). 
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.konnect_catalog}}**. 
+   
+   {:.info}
+   > If you're using [{{site.konnect_catalog}} Classic](/catalog-classic/), click **Catalog > APIs** in the sidebar instead.
 1. Click your API. 
 1. Click the **API specification** tab.
 1. From the Actions dropdown menu, select "Add or update API spec". 
@@ -196,7 +207,10 @@ While you are creating or editing an API document, you can also choose to publis
 To create a new API document, do one of the following:
 {% navtabs "link-service" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-1. Navigate to [**Catalog > APIs**](https://cloud.konghq.com/apis) in the sidebar and click your API. 
+1. Navigate to **Catalog** in the sidebar and click your API. 
+   
+   {:.info}
+   > If you're using [{{site.konnect_catalog}} Classic](/catalog-classic/), click **Catalog > APIs** in the sidebar instead.
 1. Click the **Documentation** tab, and then click **New document** to create a new Markdown document. 
 
 If you want to upload an existing Markdown documentation file, use the API or Terraform.
@@ -261,7 +275,10 @@ The image must be a PNG, JPG, or SVG image under 500 KB that’s no larger than 
 
 To upload an API image, do the following:
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.konnect_catalog}}**.
-1. In the {{site.konnect_catalog}} sidebar, click **[APIs](https://cloud.konghq.com/apis)**. 
+1. Click the **APIs** tab. 
+   
+   {:.info}
+   > If you're using [{{site.konnect_catalog}} Classic](/catalog-classic/), click **APIs** in the sidebar instead.
 1. Click the API you want to add the image to.
 1. From the action menu, select "Edit".
 1. Click **Upload image** and upload an image.
@@ -338,7 +355,7 @@ If you want the Gateway Service or control plane to restrict access to the API, 
 To link your API to a Gateway Service or control plane, do one of the following:
 {% navtabs "link-service" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-1. In the {{site.konnect_short_name}} sidebar, click [**Catalog**](https://cloud.konghq.com/catalog).
+1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. From the Catalog sidebar, click **APIs**.
 1. Click your API. 
 1. Click the **Gateway** tab.
@@ -449,7 +466,10 @@ rows:
 To publish your API, do one of the following:
 {% navtabs "link-service" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-Navigate to [**Catalog > APIs**](https://cloud.konghq.com/apis) and click your API. Click the **Portals** tab, and then click **Publish API**.
+Navigate to **Catalog**, click the **APIs** tab, and then click your API. Click the **Portals** tab, and then click **Publish API**.
+
+{:.info}
+> If you're using [{{site.konnect_catalog}} Classic](/catalog-classic/), click **APIs** in the sidebar instead.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a PUT request to the [`/apis/{apiId}/publications/{portalId}` endpoint](/api/konnect/api-builder/v3/#/operations/publish-api-to-portal):
@@ -480,6 +500,14 @@ resource "konnect_api_publication" "my_apipublication" {
 {% endnavtabs %}
 
 Once published, the API appears in the selected {{site.dev_portal}}. If [user authentication](/dev-portal/security-settings/) is enabled, developers can register, create applications, generate credentials, and begin using the API. If [RBAC](/dev-portal/security-settings/) is enabled, approved developers must be assigned to a team to access the API.
+
+### Generate an MCP server from your published APIs
+
+After an API is published to {{site.dev_portal}}, you can also expose it to AI agents through an MCP server generated directly from that {{site.dev_portal}}. This gives developers a way to connect their own agent or IDE to browse the same API documentation and specifications available in {{site.dev_portal}}, and, depending on configuration, register applications and use API credentials on their behalf.
+
+Agent access respects the same [user authentication](/dev-portal/security-settings/) and [RBAC](/dev-portal/developer-rbac/) settings that apply to the developer connecting the agent, so an agent never sees more than its developer already can.
+
+For details on enabling this and how {{site.dev_portal}} settings affect what an agent can do, see [{{site.dev_portal}} MCP servers](/dev-portal/mcp-servers/).
 
 ### Allow developers to try requests from the {{site.dev_portal}} spec renderer
 

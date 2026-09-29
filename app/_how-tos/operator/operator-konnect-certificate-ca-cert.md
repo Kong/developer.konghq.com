@@ -25,12 +25,39 @@ related_resources:
     url: /gateway/entities/ca-certificate/
   - text: Certificate
     url: /gateway/entities/certificate/
+  - text: Store TLS certificate private keys in a {{site.konnect_short_name}} Config Store
+    url: /operator/konnect/how-to/config-store-certificate-keys/
 tags:
   - konnect-crd
  
 tldr:
   q: How do I configure TLS and CA certificates for {{site.konnect_short_name}} using KGO?
   a: Use `KongCertificate` and `KongCACertificate` to manage TLS credentials and CA Certificates
+
+faqs:
+  - q: Can I reference certificate material from a Vault?
+    a: |
+      {% new_in 2.3 %} `spec.cert`, `spec.cert_alt`, `spec.key`, and `spec.key_alt` each independently accept either
+      inline PEM material or a [Kong vault](/operator/konnect/crd/gateway/vault/) reference of the form
+      `{vault://VAULT_PREFIX/SECRET_KEY}`. References are passed through unchanged and resolved from the Vault
+      backend, so you can keep the private key out of your Kubernetes manifests while the public certificate stays
+      inline:
+
+      ```yaml
+        cert: |
+          -----BEGIN CERTIFICATE-----
+          ...
+          -----END CERTIFICATE-----
+        key: '{vault://certvault/example-tls-key}'
+      ```
+
+      Because each field is independent, you can reference only the fields that are sensitive. Malformed references
+      are rejected at admission time, so a typo in a reference fails when you apply the resource rather than at TLS
+      handshake time.
+
+      Vault references are only supported with the default `spec.type: inline`. `spec.type: secretRef` reads the
+      certificate and key from a Kubernetes `Secret`, which stores the key in etcd. For a complete walkthrough, see
+      [Store TLS certificate private keys in a {{site.konnect_short_name}} Config Store](/operator/konnect/how-to/config-store-certificate-keys/).
 
 
 prereqs:
@@ -83,10 +110,12 @@ spec:
     -----END PRIVATE KEY-----
 {% endkonnect_crd %}
 <!-- vale on -->
+
 ## Create a `KongCACertificate`
 
 Use the `KongCACertificate` resource to provision a CA certificate in Konnect. This certificate can be used for client authentication or mutual TLS setups.
-<!-- vale on -->
+
+<!-- vale off -->
 {% konnect_crd %}
 kind: KongCACertificate
 apiVersion: configuration.konghq.com/v1alpha1
@@ -112,7 +141,7 @@ spec:
       qKjBs0k=
       -----END CERTIFICATE-----
 {% endkonnect_crd %}
-<!-- vale off -->
+<!-- vale on -->
 
 
 ## Validation

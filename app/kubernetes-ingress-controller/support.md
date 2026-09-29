@@ -57,9 +57,9 @@ columns:
   - title: End of Support
     key: support
 rows:
-  - version: "3.5.x"
-    release: "2025-07-04"
-    support: "2027-12-18"
+  - version: "**3.5.x**"
+    release: "**2025-07-04**"
+    support: "**2027-12-18**"
   - version: "**3.4.x**"
     release: "**2024-12-18**"
     support: "**2027-12-18**"

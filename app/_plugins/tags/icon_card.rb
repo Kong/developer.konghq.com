@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../monkey_patch'
+require_relative '../component_templates'
 
 module Jekyll
   class RenderIconCard < Liquid::Tag
@@ -26,15 +27,10 @@ module Jekyll
                            context[param[:value]]
                          end
         end
-        Liquid::Template.parse(template, { line_numbers: true }).render(context)
+        ComponentTemplates.fetch('icon_card', 'markdown', base: 'app/_includes/cards').render(context)
       end
     end
 
-    private
-
-    def template
-      File.read(File.expand_path('app/_includes/cards/icon_card.md'))
-    end
   end
 end
 

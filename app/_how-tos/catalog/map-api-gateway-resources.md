@@ -1,8 +1,8 @@
 ---
-title: Map API Gateway Services in Catalog
+title: Map API Gateway Services in {{site.konnect_catalog}} Classic
 permalink: /how-to/map-api-gateway-resources/
 content_type: how_to
-description: Learn how to map Gateway Services from {{site.konnect_short_name}} API Gateway in {{site.konnect_catalog}} to visualize services across multiple Control Planes.
+description: Learn how to map Gateway Services from {{site.konnect_short_name}} API Gateway in {{site.konnect_catalog}} Classic to visualize services across multiple Control Planes.
 products:
   - gateway
   - catalog
@@ -15,8 +15,8 @@ entities:
 search_aliases:
   - service catalog
 tldr:
-  q: How do I map Gateway Services in {{site.konnect_catalog}}?
-  a: Create a {{site.konnect_catalog}} service and associate it with your API Gateway resources to visualize Services across multiple Control Planes.
+  q: How do I map Gateway Services in {{site.konnect_catalog}} Classic?
+  a: Create a {{site.konnect_catalog}} Classic service and associate it with your API Gateway resources to visualize Services across multiple Control Planes.
 prereqs:
   entities:
     services:
@@ -24,15 +24,17 @@ prereqs:
 related_resources:
   - text: API Gateway integration
     url: /catalog/integrations/api-gateway/
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: "{{site.konnect_catalog}} integrations"
     url: /catalog/integrations/
 ---
 
-## Create a service in {{site.konnect_catalog}}
+{% include_cached catalog/catalog-classic-banner.md %}
 
-In this tutorial, you'll map Gateway Services from API Gateway to a service in {{site.konnect_catalog}}. Because the API Gateway integration is built-in, you don't need to install or authorize it like other {{site.konnect_catalog}} integrations. 
+## Create a service in {{site.konnect_catalog}} Classic
+
+In this tutorial, you'll map Gateway Services from API Gateway to a service in {{site.konnect_catalog}} Classic. Because the API Gateway integration is built-in, you don't need to install or authorize it like other {{site.konnect_catalog}} Classic integrations. 
 
 Create a service that you'll map to your API Gateway resources:
 
@@ -48,7 +50,7 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Export the {{site.konnect_catalog}} service ID:
+Export the {{site.konnect_catalog}} Classic service ID:
 
 ```sh
 export SERVICE_ID='YOUR-SERVICE-ID'
@@ -56,7 +58,7 @@ export SERVICE_ID='YOUR-SERVICE-ID'
 
 ## List API Gateway resources
 
-Before you can map a resource to {{site.konnect_catalog}}, you first need to find the resources that are pulled in from API Gateway:
+Before you can map a resource to {{site.konnect_catalog}} Classic, you first need to find the resources that are pulled in from API Gateway:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -73,7 +75,7 @@ Export the resource ID you want to map to the service:
 export API_GATEWAY_RESOURCE_ID='YOUR-RESOURCE-ID'
 ```
 
-## Map resources to a {{site.konnect_catalog}} service
+## Map resources to a {{site.konnect_catalog}} Classic service
 
 Now, you can map the API Gateway resource to the service:
 

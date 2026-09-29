@@ -100,6 +100,12 @@ or by passing the corresponding files, i.e.
 
 `npm run generate-instruction-files -- --files='../../app/_how-tos/x.md' --files='../../app/_how-tos/y.md'`.
 
+or by scoping to a single product, i.e.
+
+`npm run generate-instruction-files -- --product=ai-gateway`
+
+This collects the URLs for every non-versioned how-to under `app/_how-tos/<product>` (via `collect-urls.mjs`), skipping any version snapshot folders (e.g. `v1/`) and any file missing a `permalink` in its frontmatter. `--urls` and `--product` are mutually exclusive; passing both raises an error.
+
 ### Running the tests
 
 1. First, it groups the tests by **deployment model** (from the parent directory name, e.g. `on-prem`, `konnect`) and **product** (from the instruction file basename, e.g. `gateway.yaml`, `operator.yaml`).
@@ -144,6 +150,10 @@ By default, it will run all the instruction files, but it also supports running 
 
 `DEPLOYMENT_MODEL='konnect' PRODUCTS='event-gateway' npm run run-tests`
 
+#### Run konnect ai-gateway tests
+
+`DEPLOYMENT_MODEL='konnect' PRODUCTS='ai-gateway' npm run run-tests`
+
 #### Supported Env variables
 
 | Variable | Description | Required | Default Value |
@@ -152,3 +162,5 @@ By default, it will run all the instruction files, but it also supports running 
 | `DEPLOYMENT_MODEL` | Specifies which deployment model (`on-prem`/`konnect`) to run, runs all by default. | false | null |
 | `PRODUCTS` | Specifies which products to test (e.g. `gateway`, `ai-gateway`, `operator`, `event-gateway`). | true | null |
 | `CONTINUE_ON_ERROR` | Whether to continue running tests after a test fails. | false | null |
+| `KONNECT_DOMAIN` | Selects the Konnect target for the run (e.g. `konghq.tech` to run against the internal environment). Also builds the site if you pass it to `exe/build`, so the rendered commands and the test run agree. | false | `konghq.com` |
+| `KONNECT_EVENT_GATEWAY_MIN_VERSION` | Sets the minimum Konnect Event Gateway version that the `get.konghq.com/ai` quickstart script deploys. Passed through to the test container only when set. | false | null |

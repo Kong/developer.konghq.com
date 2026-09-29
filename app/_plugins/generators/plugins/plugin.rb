@@ -87,6 +87,10 @@ module Jekyll
         @name ||= metadata.fetch('name')
       end
 
+      def schema_name
+        @schema_name ||= metadata.fetch('schema_name', slug)
+      end
+
       def works_on
         @works_on ||= metadata['works_on']
       end

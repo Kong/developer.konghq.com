@@ -1,0 +1,209 @@
+<!doctype html>
+<html>
+<body>
+<main>
+<div class="tabs flex flex-col" data-tab-group="policy-yaml additional_classes heading_level">
+  <ul class="tablist" role="tablist">
+    
+      
+      
+      <button id="navtab-8865fb4b-8dd1-4c4f-8c12-d47a5f5017a2-tab-1" class="tab-button__horizontal" aria-controls="navtab-8865fb4b-8dd1-4c4f-8c12-d47a5f5017a2-tabpanel-1" role="tab" aria-selected="true" tabindex="0" data-slug="kubernetes">
+        
+        Kubernetes
+
+      </button>
+    
+      
+      
+      <button id="navtab-8865fb4b-8dd1-4c4f-8c12-d47a5f5017a2-tab-2" class="tab-button__horizontal" aria-controls="navtab-8865fb4b-8dd1-4c4f-8c12-d47a5f5017a2-tabpanel-2" role="tab" aria-selected="false" tabindex="-1" data-slug="universal">
+        
+        Universal
+
+      </button>
+    
+      
+      
+      <button id="navtab-8865fb4b-8dd1-4c4f-8c12-d47a5f5017a2-tab-3" class="tab-button__horizontal" aria-controls="navtab-8865fb4b-8dd1-4c4f-8c12-d47a5f5017a2-tabpanel-3" role="tab" aria-selected="false" tabindex="-1" data-slug="terraform">
+        
+        Terraform
+
+      </button>
+    
+  </ul>
+
+  <div class="navtab-contents mt-6 flex flex-col">
+    
+      
+      <div class="navtab-content flex flex-col gap-3 prose-ol:" role="tabpanel" data-id="navtab-8865fb4b-8dd1-4c4f-8c12-d47a5f5017a2-tabpanel-1" tabindex="0" aria-labelledby="navtab-8865fb4b-8dd1-4c4f-8c12-d47a5f5017a2-tab-1" data-panel="kubernetes">
+        
+
+
+<div class="custom-code-block w-full h-fit inline-grid rounded-lg">
+    
+    
+    
+    
+    <div class="flex w-full relative bg-code-block rounded-b-lg border border-primary overflow-auto p-3 rounded-t-lg pr-11" data-code-snippet="">
+        <div class="code-block h-full w-full"><pre class="shiki shiki-themes catppuccin-latte catppuccin-mocha" style="background-color:#eff1f5;--shiki-dark-bg:#1e1e2e;color:#4c4f69;--shiki-dark:#cdd6f4" tabindex="0"><code id="8e519b21-5d5f-4b7a-ac58-1e26e36bdb87">apiVersion: kuma.io/v1alpha1
+kind: MeshTimeout
+metadata:
+  name: inbound-timeout
+  namespace: kuma-demo
+  labels:
+    kuma.io/mesh: default
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      app: backend
+  rules:
+  - default:
+      idleTimeout: 60s
+      connectionTimeout: 2s
+      http:
+        requestTimeout: 10s
+        streamIdleTimeout: 1h
+        maxStreamDuration: 30m
+        maxConnectionDuration: 30m</code></pre></div>
+        
+        <div class="flex absolute right-3 top-[10px] items-center gap-2">
+            
+            
+            
+<div class="absolute right-8 flex text-xs text-button bg-brand p-1 rounded invisible opacity-0">Copied!</div>
+<clipboard-copy for="8e519b21-5d5f-4b7a-ac58-1e26e36bdb87" aria-label="Copy" data-copy-feedback="Copied!" class="copy-action group">
+    
+    
+</clipboard-copy>
+
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+
+      </div>
+    
+      
+      <div class="navtab-content flex flex-col gap-3 prose-ol: hidden" role="tabpanel" data-id="navtab-8865fb4b-8dd1-4c4f-8c12-d47a5f5017a2-tabpanel-2" tabindex="0" aria-labelledby="navtab-8865fb4b-8dd1-4c4f-8c12-d47a5f5017a2-tab-2" data-panel="universal">
+        
+
+
+<div class="custom-code-block w-full h-fit inline-grid rounded-lg">
+    
+    
+    
+    
+    <div class="flex w-full relative bg-code-block rounded-b-lg border border-primary overflow-auto p-3 rounded-t-lg pr-11" data-code-snippet="">
+        <div class="code-block h-full w-full"><pre class="shiki shiki-themes catppuccin-latte catppuccin-mocha" style="background-color:#eff1f5;--shiki-dark-bg:#1e1e2e;color:#4c4f69;--shiki-dark:#cdd6f4" tabindex="0"><code id="0cb2a43f-48d7-4db7-8fd4-4c6aef23780f">type: MeshTimeout
+name: inbound-timeout
+mesh: default
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      app: backend
+  rules:
+  - default:
+      idleTimeout: 60s
+      connectionTimeout: 2s
+      http:
+        requestTimeout: 10s
+        streamIdleTimeout: 1h
+        maxStreamDuration: 30m
+        maxConnectionDuration: 30m</code></pre></div>
+        
+        <div class="flex absolute right-3 top-[10px] items-center gap-2">
+            
+            
+            
+<div class="absolute right-8 flex text-xs text-button bg-brand p-1 rounded invisible opacity-0">Copied!</div>
+<clipboard-copy for="0cb2a43f-48d7-4db7-8fd4-4c6aef23780f" aria-label="Copy" data-copy-feedback="Copied!" class="copy-action group">
+    
+    
+</clipboard-copy>
+
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+
+      </div>
+    
+      
+      <div class="navtab-content flex flex-col gap-3 prose-ol: hidden" role="tabpanel" data-id="navtab-8865fb4b-8dd1-4c4f-8c12-d47a5f5017a2-tabpanel-3" tabindex="0" aria-labelledby="navtab-8865fb4b-8dd1-4c4f-8c12-d47a5f5017a2-tab-3" data-panel="terraform">
+        
+<p class="text-sm">Adjust <strong>konnect_mesh_control_plane.my_meshcontrolplane.id</strong> and <strong>konnect_mesh.my_mesh.name</strong> according to your current configuration.</p>
+
+
+
+<div class="custom-code-block w-full h-fit inline-grid rounded-lg">
+    
+    
+    
+    
+    <div class="flex w-full relative bg-code-block rounded-b-lg border border-primary overflow-auto p-3 rounded-t-lg pr-11" data-code-snippet="">
+        <div class="code-block h-full w-full"><pre class="shiki shiki-themes catppuccin-latte catppuccin-mocha" style="background-color:#eff1f5;--shiki-dark-bg:#1e1e2e;color:#4c4f69;--shiki-dark:#cdd6f4" tabindex="0"><code id="803444e3-bcc2-45bd-a07a-3a1f2c8620ef">resource "konnect_mesh_timeout" "inbound_timeout" {
+  provider = konnect-beta
+  type = "MeshTimeout"
+  name = "inbound-timeout"
+  spec = {
+    target_ref = {
+      kind = "Dataplane"
+      labels = {
+        app = "backend"
+      }
+    }
+    rules = [
+      {
+        default = {
+          idle_timeout = "60s"
+          connection_timeout = "2s"
+          http = {
+            request_timeout = "10s"
+            stream_idle_timeout = "1h"
+            max_stream_duration = "30m"
+            max_connection_duration = "30m"
+          }
+        }
+      }
+    ]
+  }
+  labels   = {
+  "kuma.io/mesh" = konnect_mesh.my_mesh.name
+  }
+  cp_id    = konnect_mesh_control_plane.my_meshcontrolplane.id
+  mesh     = konnect_mesh.my_mesh.name
+}
+</code></pre></div>
+        
+        <div class="flex absolute right-3 top-[10px] items-center gap-2">
+            
+            
+            
+<div class="absolute right-8 flex text-xs text-button bg-brand p-1 rounded invisible opacity-0">Copied!</div>
+<clipboard-copy for="803444e3-bcc2-45bd-a07a-3a1f2c8620ef" aria-label="Copy" data-copy-feedback="Copied!" class="copy-action group">
+    
+    
+</clipboard-copy>
+
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+
+      </div>
+    
+  </div>
+</div>
+</main>
+</body>
+</html>

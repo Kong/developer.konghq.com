@@ -48,6 +48,8 @@ related_resources:
     url: /metering-and-billing/metering/
   - text: Meter API requests by Consumer with {{site.metering_and_billing}}
     url: /how-to/meter-api-requests-by-consumer/
+  - text: Entitlement Enforcement plugin
+    url: /plugins/entitlement-enforcement/
 ---
 
 
@@ -80,6 +82,14 @@ For each request, the plugin:
 Every usage event has a subject that identifies who is billed for the request. The subject is the most important configuration decision because it determines how usage is grouped and aggregated. You can set the subject to a {{site.base_gateway}} [Consumer](/gateway/entities/consumer/), {{site.konnect_short_name}} [Dev Portal application](/dev-portal/self-service/), or any request header value such as `x-customer-id` or `x-tenant-id`.
 
 If the plugin can't resolve a subject from the configured source (for example, if the expected header is missing), the event is dropped.
+
+### Captured event dimensions
+
+For each request it meters, the plugin captures a set of standard fields on the event's `data` payload. The available fields depend on the event type:
+
+{% include plugins/metering-and-billing/event_dimensions.md %}
+
+In addition to these standard fields, you can attach operator-defined custom fields to events. See [Filtering traffic and custom dimensions](#filtering-traffic-and-custom-dimensions) for more information.
 
 ### Filtering traffic and custom dimensions
 
@@ -115,11 +125,13 @@ The plugin buffers events in a local queue before sending them to the ingest end
 
 ## Enforcing entitlements
 
-The Metering & Billing plugin only meters events, it doesn't enforce metered limits. You must use a [rate limiting plugin](/plugins/?terms=rate%2520limiting) alongside the Metering & Billing plugin to enforce limits.
+The Metering & Billing plugin only meters events, it doesn't enforce metered limits on its own.
 
-For example, if you're metering AI request tokens to 100 per month, you must use [AI Rate Limiting Advanced](/plugins/ai-rate-limiting-advanced/) to limit the tokens. 
+{% new_in 3.16 %} Use the [Entitlement Enforcement plugin](/plugins/entitlement-enforcement/) alongside Metering & Billing to block requests when a customer's credit balance, usage limit, or feature access is exhausted. See [Get started with Entitlement Enforcement](/metering-and-billing/entitlement-enforcement/get-started/) and [Enforce entitlements on LLM traffic](/ai-gateway/v1/how-to/enforce-entitlements-on-llm-traffic/) for step-by-step guides.
+
+In previous versions, {{site.base_gateway}} had no plugin to enforce M&B entitlements directly, so you had to pair Metering & Billing with a [rate limiting plugin](/plugins/?terms=rate%2520limiting) to cap traffic. We still recommend combining rate limiting with entitlement enforcement. For example, if you're metering AI request tokens to 100 per month, you can use [AI Rate Limiting Advanced](/plugins/ai-rate-limiting-advanced/) to protect the upstream from a burst of requests, in addition to the Entitlement Enforcement plugin blocking requests once the monthly allowance is spent.
 
 ## Usage-based billing
 
-The Metering & Billing plugin can't bill customers. If you want to bill customers based on usage events from the plugin, use [{{site.konnect_short_name}} {{site.metering_and_billing}}](/metering-and-billing/billing-invoicing-subscriptions/) or [OpenMeter self-hosted](https://openmeter.io/).
+The Metering & Billing plugin can't bill customers. If you want to bill customers based on usage events from the plugin, use [{{site.konnect_short_name}} {{site.metering_and_billing}}](/metering-and-billing/billing-invoicing/) or [OpenMeter self-hosted](https://openmeter.io/).
 

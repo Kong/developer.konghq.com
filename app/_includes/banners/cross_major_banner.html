@@ -1,0 +1,2 @@
+{% capture banner %}{% include_cached banners/cross_major_banner.md canonical_url=page.canonical_url major_version=page.major_version url=page.url %}{% endcapture %}
+{{ banner | markdownify}}

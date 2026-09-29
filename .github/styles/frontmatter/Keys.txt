@@ -53,3 +53,4 @@ no_edit_link
 how_to_list
 toc_depth
 event-gateway
+schema_name

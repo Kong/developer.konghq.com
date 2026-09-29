@@ -116,16 +116,33 @@ function buildTestList(results) {
   }));
 }
 
-export async function logResults(results, start, stop, products) {
-  const skippedInstructions = yaml.load(
-    await fs.readFile("./.automated-tests", "utf-8")
-  );
+export async function logResults(
+  results,
+  start,
+  stop,
+  products,
+  { includeGlobalSkips = true } = {}
+) {
+  let filteredSkippedInstructions = [];
 
-  const filteredSkippedInstructions = skippedInstructions.filter(
-    (instruction) =>
-      instruction.products &&
-      instruction.products.some((product) => products.includes(product))
-  );
+  if (includeGlobalSkips) {
+    let skippedInstructions;
+    try {
+      skippedInstructions = yaml.load(
+        await fs.readFile("./.automated-tests", "utf-8")
+      );
+    } catch (error) {
+      if (error.code !== "ENOENT") throw error;
+    }
+    skippedInstructions = skippedInstructions || [];
+
+    filteredSkippedInstructions = skippedInstructions.filter(
+      (instruction) =>
+        instruction.reason !== "series" &&
+        instruction.products &&
+        instruction.products.some((product) => products.includes(product))
+    );
+  }
 
   const { passed, failed, skipped } = categorizeResults(results);
 

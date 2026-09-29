@@ -57,7 +57,7 @@ function annotateNode(obj) {
   if (Array.isArray(obj)) {
     obj.forEach(annotateNode)
   } else if (obj && typeof obj === 'object') {
-    if (obj['x-referenceable'] === true) {
+    if (obj['x-referenceable'] === true && (!obj.description || !obj.description.includes('This field is [referenceable]'))) {
       const note = 'This field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).'
       obj.description = obj.description ? `${obj.description.trimEnd()}\n${note}` : note
     }

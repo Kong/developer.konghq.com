@@ -43,6 +43,12 @@ faqs:
       We recommend giving Workspaces unique names regardless of letter case to prevent confusion.
   - q: What happens if I create an entity without specifying a Workspace?
     a: If you don't specify a target Workspace, the entity will be created in the `default` workspace.
+  - q: |
+      How do I resolve the error `The following workspace(s) have names that conflict with admin API URL prefixes in this version of Kong`?
+    a: |
+      As of {{site.base_gateway}} 3.15.0.0, Workspace names that match a top-level Admin API route segment are no longer allowed.
+      You can use the [`kong workspace`](/gateway/cli/reference/#kong-workspace) utility to identify and rename all conflicting Workspaces.
+      See [Resolve Workspace name conflicts](#resolve-workspace-name-conflicts) for more information.
 
 api_specs:
     - gateway/admin-ee
@@ -196,6 +202,63 @@ type: workspace
 data:
   name: "my-workspace"
 {% endentity_example %}
+
+## Resolve Workspace name conflicts {% new_in 3.15 %}
+
+Starting in {{site.base_gateway}} 3.15.0.0, Workspace names that match a top-level Admin API route segment (such as `services`, `routes`, or `consumers`) are no longer allowed.
+{{site.base_gateway}} enforces this check at startup and before running migrations.
+If it detects a conflict, {{site.base_gateway}} exits with an error and won't start until all conflicting Workspaces are renamed.
+
+If you're running 3.15 or later and have Workspaces with conflicting names, update your configuration using the following steps:
+
+1. Using the [`kong workspace`](/gateway/cli/reference/#kong-workspace) utility, run the following command to list all Workspaces with conflicting names:
+
+   ```sh
+   kong workspace detect-admin-endpoint-conflicts
+   ```
+
+   If there are conflicts in your configuration, you'll see the following message:
+
+   ```sh
+   The following workspace(s) have names that conflict with active admin API URL prefixes in this version of Kong:
+
+     routes
+     services
+
+   Rename them with 'kong workspace rename OLD_NAME NEW_NAME'.
+   ```
+   {:.no-copy-code}
+
+2. For each Workspace listed in the output, run the following command:
+
+   ```sh
+   kong workspace rename OLD_NAME NEW_NAME
+   ```
+
+   Replace `OLD_NAME` with the current Workspace name and `NEW_NAME` with a name that doesn't conflict with an Admin API route segment.
+
+3. Run the `detect-admin-endpoint-conflicts` command again to verify that no conflicts remain:
+
+   ```sh
+   kong workspace detect-admin-endpoint-conflicts
+   ```
+
+   You should now see the following:
+
+   ```sh
+   No workspaces conflict with active admin API endpoints.
+   ```
+   {:.no-copy-code}
+
+
+Once all conflicts are resolved, you can start {{site.base_gateway}} or run migrations.
+
+{:.info}
+> **Note**: After renaming a Workspace, running {{site.base_gateway}} nodes serve cached configuration and won't pick up the change until they re-read the database.
+> * For traditional (non-hybrid) deployments, run `kong restart` or `kong reload` on every node.
+> * For hybrid deployments, run `kong restart` or `kong reload` on each control plane node so it re-reads the database.
+> 
+> Data planes don't need a manual restart. They update automatically when the control plane refreshes.
 
 ## Schema
 

@@ -26,6 +26,7 @@ kuma:
       adminRoleGroups:
         - mesh-system:admin
         - system:masters
+        - kubeadm:cluster-admins
 
     envVars:
       # if you want to access the API server using the HTTP port, change the following switch to "true"

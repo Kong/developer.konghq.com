@@ -23,12 +23,12 @@ config:
       bundled:
         meshTrustCreation: Enabled
         insecureAllowSelfSigned: true
-      ca:
-        certificate:
-          type: File
-          file:
-            path: /ca.crt
-        privateKey:
-          type: File
-          file:
-            path: /ca.key
+        ca:
+          certificate:
+            type: File
+            file:
+              path: /ca.crt
+          privateKey:
+            type: File
+            file:
+              path: /ca.key

@@ -11,7 +11,7 @@ tags:
   - integrations
 
 breadcrumbs:
-  - /catalog/
+  - /catalog-classic/
   - /catalog/integrations/
 
 works_on:
@@ -22,18 +22,20 @@ search_aliases:
 related_resources:
   - text: Map Service Mesh services in {{site.konnect_catalog}}
     url: /how-to/map-service-mesh-resources/
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
 discovery_support: true
 discovery_default: true
 bindable_entities: "Mesh Service"
 ---
 
+{% include_cached catalog/catalog-classic-banner.md %}
+
 The {{site.konnect_short_name}} Mesh integration allows users gain visibility into how their service is deployed across meshes and zones, determine whether their deployment is healthy, and (if used in conjunction with other built-in integrations) to identify links between their mesh services and other {{site.konnect_short_name}} resources.
 
 ## Authorize the Service Mesh integration
 
-The Service Mesh integration is built directly into {{site.konnect_catalog}}. No additional authorization is required. As new Mesh Services are created, they are automatically discovered by {{site.konnect_catalog}} and surfaced as Resources.
+The Service Mesh integration is built directly into {{site.konnect_catalog}} Classic. No additional authorization is required. As new Mesh Services are created, they are automatically discovered by {{site.konnect_catalog}} Classic and surfaced as Resources.
 
 ## Resources
 

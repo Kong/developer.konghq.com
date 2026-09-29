@@ -21,6 +21,8 @@ works_on:
 min_version:
     gateway: '3.10'
 
+ai_gateway_url: "/ai-gateway/policies/ai-sanitizer/"
+
 topologies:
   on_prem:
     - hybrid
@@ -127,38 +129,18 @@ Kong provides several AI PII Anonymizer service Docker images in a private repos
 
 ### Access the Docker images
 
-Kong distributes these images via a private Cloudsmith registry. Contact [Kong Support](https://support.konghq.com/support/s/) to request access.
-
-#### Authenticate with the private Cloudsmith registry
-
-To pull images, you must authenticate first with the token provided by the Support:
-
-```bash
-docker login docker.cloudsmith.io
-```
-
-Docker will then prompt you to enter username and password:
-
-```bash
-Username: kong/ai-pii
-Password: YOUR-TOKEN
-```
-
-{:.info}
-> This is a token-based login with read-only access. You can pull images but not push them.
-
 #### Pull the AI PII service image
 
 To pull an image:
 
 ```bash
-docker pull docker.cloudsmith.io/kong/ai-pii/IMAGE-NAME:TAG
+docker pull kong/ai-pii-service:TAG
 ```
 
-Replace `IMAGE-NAME` and `TAG` with the appropriate image and version, such as:
+Replace `TAG` with the appropriate version and language code, such as:
 
 ```bash
-docker pull docker.cloudsmith.io/kong/ai-pii/service:v0.1.4-en
+docker pull kong/ai-pii-service:v0.2.2-en
 ```
 
 #### AI PII service Dockerfile usage
@@ -166,7 +148,7 @@ docker pull docker.cloudsmith.io/kong/ai-pii/service:v0.1.4-en
 To use an image in a `Dockerfile`, reference it as follows:
 
 ```dockerfile
-FROM docker.cloudsmith.io/kong/ai-pii/ai-pii-service:v0.1.4-en
+FROM kong/ai-pii-service:v0.2.2-en
 ```
 
 ### Available language tags
@@ -183,8 +165,7 @@ The following language-specific images are currently available:
 * `-pt` (Portuguese)
 * `-tr` (Turkish)
 
-{:.info}
-> The PII Anonymizer service loads one NLP model by default. Ensure at least **600MB of free memory** is available when running the container.
+{% include /md/ai-gateway/v2/policies/spacy-pii-note.md %}
 
 ### Image configuration options
 
@@ -192,6 +173,18 @@ This service takes the following optional environment variables at startup:
 * `GUNICORN_WORKERS`: Specifies the number of Gunicorn processes to run
 * `PII_SERVICE_ENGINE_CONF`: Specifies the natural language processing (NLP) engine configuration file
 * `GUNICORN_LOG_LEVEL`: Specifies log level
+* `GUNICORN_CERTFILE` and `GUNICORN_KEYFILE`: Specifies TLS certificates for HTTPS access. 
+
+### Serve AI PII service securely
+
+To serve the AI PII service over https requires additional configuration:
+
+1. Ensure you have trusted TLS certificates for your environment.
+2. Set the `GUNICORN_CERTFILE` and `GUNICORN_KEYFILE` environment variables when starting the AI PII service. The service will switch to serving HTTPS on port `8443`.
+3. Set `scheme: https` and `port: 8443` when configuring the AI PII Sanitizer Plugin. The plugin will connect with HTTPS.
+
+{:.info}
+> This plugin does not verify SSL/TLS connections directly, it follows the global [`tls_certificate_verify`](/ai-gateway/configuration/#tls-certificate-verify) setting.
 
 ### Sanitization endpoints
 

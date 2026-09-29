@@ -59,6 +59,10 @@ Flags:
                                           - Config path: [ telemetry.enabled ]
                                           - Env var    : [ KONGCTL_NO_TELEMETRY ]
                                           - Default    : [ false ]
+      --no-trunc                          Preserve full cell widths in static text tables beyond terminal width.
+                                          Does not change column selection, UUID formatting, or explicit string slices.
+                                          - Config path: [ text.no-trunc ]
+                                          - Default    : [ false ]
   -o, --output string                     Configures the format of data written to STDOUT.
                                           - Config path: [ output ]
                                           - Allowed    : [ json|yaml|text ] (default "text")
@@ -93,6 +97,8 @@ Flags:
                                           - Config path: [ text.layout ]
                                           - Allowed    : [ compact|auto|wide ]
                                           - Default    : [ compact ]
+      --write-secret stringArray          Write configured secrets selected by [resource-type:]resource-ref[#field] (repeatable)
+      --write-secrets                     Write all eligible configured write-only secrets, warning when fields are skipped
 
 Use "kongctl sync [command] --help" for more information about a command.
 

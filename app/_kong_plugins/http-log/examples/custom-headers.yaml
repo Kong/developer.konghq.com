@@ -23,7 +23,6 @@ config:
     Authorization: "Bearer ${token}"
   method: POST
   timeout: 3000
-  retry_count: 1
 
 tools:
   - deck

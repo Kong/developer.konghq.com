@@ -54,7 +54,7 @@ prereqs:
         1. Click **New portal** to [create a Dev Portal](https://cloud.konghq.com/portals/create).
         1. Click your Dev Portal URL at the top of the Dev Portal overview.
         1. Click **Sign up** to [register a test developer account with your Dev Portal](/dev-portal/developer-signup/#1-register-or-sign-in).
-        1. If your settings require developer or application approval, you can manage approvals by navigating to **Access and approvals** in the {{site.konnect_short_name}} sidebar.
+        1. If your settings require developer or application approval, you can manage approvals by navigating to the **Developers** or **Applications** tab in your {{site.dev_portal}} overview in {{site.konnect_short_name}}.
       icon_url: /assets/icons/dev-portal.svg
     - title: SumoLogic SIEM provider
       include_content: /prereqs/sumologic-siem-for-konnect-ui

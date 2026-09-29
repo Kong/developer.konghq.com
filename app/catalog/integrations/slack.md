@@ -12,17 +12,17 @@ tags:
   - slack
 
 breadcrumbs:
-  - /catalog/
+  - /catalog-classic/
   - /catalog/integrations/
 search_aliases:
   - service catalog
 works_on:
     - konnect
-description: The Slack integration allows you to see Slack communication channels that are relevant to a {{site.konnect_catalog}} service.
+description: The Slack integration allows you to see Slack communication channels that are relevant to a {{site.konnect_catalog}} Classic service.
 
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: Integrations
     url: /catalog/integrations/
   - text: Import and map Slack resources in {{site.konnect_catalog}}
@@ -33,11 +33,12 @@ bindable_entities: "Slack Channel"
 mechanism: "pull/ingestion model"
 ---
 
+{% include_cached catalog/catalog-classic-banner.md %}
 
-The Slack integration allows you to see communication channels (via [Slack channels](https://slack.com/help/articles/360017938993-What-is-a-channel)) that are relevant to a {{site.konnect_catalog}} service.
+The Slack integration allows you to see communication channels (via [Slack channels](https://slack.com/help/articles/360017938993-What-is-a-channel)) that are relevant to a {{site.konnect_catalog}} Classic service.
 {% include /catalog/multi-resource.md %}
 
-For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map Slack resources in {{site.konnect_catalog}}](/how-to/install-and-map-slack-resources/).
+For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map Slack resources in {{site.konnect_catalog}} Classic](/how-to/install-and-map-slack-resources/).
 
 ## Prerequisites
 
@@ -45,7 +46,7 @@ For a complete tutorial using the {{site.konnect_short_name}} API, see [Import a
 
 ## Authenticate the Slack integration
 
-1. From the **Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**.
+1. From the **Catalog** in {{site.konnect_short_name}}, select **Integrations**.
 2. Select **Add Slack Instance**.
 3. Select **Authorize in Slack**, and name the instance.
    Only Slack admins can authorize the integration.
@@ -64,7 +65,7 @@ columns:
 rows:
   - entity: Slack Channel 
     description: 
-       A Slack channel that indicates who owns the {{site.konnect_catalog}} service. Ideally, this helps users identify who they can contact if they have questions about a service.
+       A Slack channel that indicates who owns the {{site.konnect_catalog}} Classic service. Ideally, this helps users identify who they can contact if they have questions about a service.
 {% endtable %}
 <!--vale on-->
 

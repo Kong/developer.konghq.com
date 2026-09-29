@@ -19,6 +19,8 @@ works_on:
 min_version:
     gateway: '3.8'
 
+ai_gateway_url: "/ai-gateway/policies/ai-semantic-cache/"
+
 topologies:
   on_prem:
     - hybrid
@@ -30,7 +32,8 @@ topologies:
     - serverless
 
 icon: ai-semantic-cache.png
-
+tags:
+  - ai
 categories:
   - ai
 
@@ -46,9 +49,9 @@ search_aliases:
 
 related_resources:
   - text: Get started with {{site.ai_gateway}}
-    url: /ai-gateway/get-started/
+    url: /ai-gateway/v1/get-started/
   - text: Embedding-based similarity matching in Kong AI gateway plugins
-    url: /ai-gateway/semantic-similarity/
+    url: /ai-gateway/v1/semantic-similarity/
 faqs:
   - q: |
       How do I resolve the MemoryDB error `Number of indexes exceeds the limit`?
@@ -181,4 +184,4 @@ The plugin respects cache control headers to determine if requests and responses
 
 {% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
 
-{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 %}
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 redis_group="vectordb" %}

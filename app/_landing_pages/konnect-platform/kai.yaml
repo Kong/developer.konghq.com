@@ -253,7 +253,7 @@ rows:
               a: No. Neither Kong nor any downstream LLMs that KAi uses train on user data.
             - q: Which models does KAi use?
               a: |
-                We currently use Anthropic Claude (US/EMEA/AU) and Z.ai GLM-5 (IN), both provided by AWS Bedrock.
+                We currently use Anthropic Claude, Z.ai GLM, and Alibaba Qwen models, all provided by AWS Bedrock.
                 Review the terms for models on the [AWS Third-Party Models page](https://aws.amazon.com/legal/bedrock/third-party-models/).
             - q: What regions is KAi available in?
               a: KAi is currently available in US, EU, AU, and IN. Other regions will be added over time.

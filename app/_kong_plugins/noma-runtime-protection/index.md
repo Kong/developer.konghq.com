@@ -62,13 +62,7 @@ Noma assets:
 {{site.konnect_short_name}} requires the custom plugin’s `schema.lua` file to create a plugin entry in the plugin catalog for your control plane.
 Upload the `schema.lua` file from the downloaded zip file to create a configurable entity in {{site.konnect_short_name}}:
 
-1. In the {{site.konnect_short_name}} menu, click **API Gateway**.
-1. Click a control plane.
-1. From the control plane's menu, click **Plugins**.
-1. Click **New Plugin**.
-1. Click **Custom Plugin**.
-1. Upload the `schema.lua` file for your plugin.
-1. Check that your file displays correctly in the preview, then click **Save**.
+{% include_cached plugins/third-party-konnect-plugin.md %}
 1. After uploading a schema to {{site.konnect_short_name}}, upload the `schema.lua` and `handler.lua` files from the downloaded zip archive to each {{site.base_gateway}} data plane node. 
    If a data plane node doesn’t have these files, the plugin won’t be able to run on that node.
 1. Follow the Dockerfile installation instructions on this page (switch tabs) to get your plugin set up on each node. 
@@ -138,7 +132,7 @@ Next, set up {{site.ai_gateway}} and enable the plugin.
 ## Enabling the plugin
 
 After installing the plugin, you will need the following {{site.base_gateway}} entity configuration:
-1. [Set up {{site.ai_gateway}}](/ai-gateway/get-started/) by creating a Service, a Route, and enabling the AI Proxy plugin.
+1. [Set up {{site.ai_gateway}} on {{site.base_gateway}}](/ai-gateway/v1/get-started/) by creating a Service, a Route, and enabling the AI Proxy plugin.
 1. [Create a Consumer and an auth key](/how-to/enable-key-authentication-on-a-service-with-kong-gateway/) to identify the application/client calling the API.
 1. [Group Consumers](/gateway/entities/consumer-group/) (Optional): If you want to set up shared runtime policies, group your Consumers into Consumer Groups.
 1. [Enable the Noma Runtime Protection plugin](/plugins/noma-runtime-protection/examples/enable-noma-runtime-protection/).

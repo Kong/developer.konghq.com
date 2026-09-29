@@ -137,7 +137,7 @@ to be configured in the plugin.
 
 {% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
 
-{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=2 %}
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=2 redis_group="session_storage" %}
 
 ## Troubleshooting the SAML plugin
 

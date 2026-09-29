@@ -6,6 +6,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.6": [
+    {
+      "message": "Fixed an issue where invalid credentials were not falling back to the configured anonymous consumer when `principals.error_on_miss` was set to `false`, unlike every other authentication failure.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Uses SHA256 by default even in non-FIPS mode instead of SHA1.\n",

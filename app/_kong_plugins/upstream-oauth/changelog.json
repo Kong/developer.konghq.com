@@ -1,4 +1,11 @@
 {
+  "3.16.0.0": [
+    {
+      "message": "added support for the `private_key_jwt` OAuth client authentication method.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added support for the `tls_certificate_verify` global option. When this option is enabled, the plugin's `client.ssl_verify` setting cannot be disabled.",

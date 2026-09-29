@@ -29,7 +29,6 @@ providers:
   - anthropic
   - bedrock
   - azure
-  - gemini
   - mistral
 
 hint: "Requires API credentials for your chosen LLM provider and Python 3.11+."
@@ -124,19 +123,6 @@ prereqs:
            ```
 
            If you only have one deployment available, point both variables at the same value. The recipe still applies, but both aliases route to the same upstream model.
-        {% endnavtab %}
-        {% navtab "Google Gemini" %}
-        This tutorial uses Google Gemini via Vertex AI:
-
-        1. [Create a Google Cloud project](https://console.cloud.google.com/) with Vertex AI enabled.
-        1. Create a service account and mount the JSON key file in your Kong container.
-        1. Create decK variables:
-
-           ```sh
-           export DECK_GCP_API_ENDPOINT='your-api-endpoint'
-           export DECK_GCP_PROJECT_ID='your-project-id'
-           export DECK_GCP_LOCATION_ID='us-central1'
-           ```
         {% endnavtab %}
         {% navtab "Mistral" %}
         This tutorial uses Mistral:
@@ -765,105 +751,6 @@ services:
             azure_api_version: ${{ env "DECK_AZURE_API_VERSION" }}
             azure_deployment_id: ${{ env "DECK_AZURE_DEPLOYMENT_ID_2" }}
             azure_instance: ${{ env "DECK_AZURE_INSTANCE" }}
-consumers:
-- username: demo-app
-  keyauth_credentials:
-  - key: demo-api-key
-EOF
-{% endraw -%}
-
-echo "
-_defaults:
-  kongctl:
-    namespace: basic-llm-routing-recipe
-control_planes:
-  - ref: recipe-cp
-    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
-    _deck:
-      files:
-        - kong-recipe.yaml
-" | kongctl apply -f - -o text --auto-approve --pat "${KONNECT_TOKEN}"
-
-rm -f kong-recipe.yaml
-```
-{: data-test-step="block" .collapsible }
-
-{% endtab %}
-{% tab Google Gemini %}
-
-Export the model env vars:
-
-```bash
-export DECK_CHAT_MODEL_1='gemini-2.0-flash'  # the "fast" alias
-export DECK_CHAT_MODEL_2='gemini-1.5-pro'    # the "smart" alias
-```
-
-Apply the Kong configuration:
-
-```bash
-{%- raw %}
-cat <<'EOF' > kong-recipe.yaml
-_format_version: '3.0'
-_info:
-  select_tags:
-  - basic-llm-routing-recipe
-services:
-- name: basic-llm-routing
-  url: http://localhost
-  routes:
-  - name: basic-llm-routing
-    paths:
-    - /basic-llm-routing
-    protocols:
-    - http
-    - https
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: key-auth
-    instance_name: basic-llm-routing-auth
-    config:
-      key_names:
-      - apikey
-      hide_credentials: true
-  - name: ai-proxy-advanced
-    instance_name: basic-llm-routing-proxy
-    config:
-      max_request_body_size: 10485760
-      response_streaming: allow
-      targets:
-      - route_type: llm/v1/chat
-        auth:
-          gcp_use_service_account: true
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          model_alias: fast
-          provider: gemini
-          name: ${{ env "DECK_CHAT_MODEL_1" }}
-          options:
-            gemini:
-              api_endpoint: ${{ env "DECK_GCP_API_ENDPOINT" }}
-              project_id: ${{ env "DECK_GCP_PROJECT_ID" }}
-              location_id: ${{ env "DECK_GCP_LOCATION_ID" }}
-      - route_type: llm/v1/chat
-        auth:
-          gcp_use_service_account: true
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          model_alias: smart
-          provider: gemini
-          name: ${{ env "DECK_CHAT_MODEL_2" }}
-          options:
-            gemini:
-              api_endpoint: ${{ env "DECK_GCP_API_ENDPOINT" }}
-              project_id: ${{ env "DECK_GCP_PROJECT_ID" }}
-              location_id: ${{ env "DECK_GCP_LOCATION_ID" }}
 consumers:
 - username: demo-app
   keyauth_credentials:

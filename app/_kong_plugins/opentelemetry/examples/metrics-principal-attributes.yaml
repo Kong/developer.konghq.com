@@ -1,0 +1,37 @@
+description: Add authenticated Principal attributes to the OTEL plugin's request count and bandwidth metrics.
+extended_description: |
+  Add authenticated Principal attributes to the OTEL plugin's request count and bandwidth metrics by enabling `enable_principal_attribute`.
+
+  In the example:
+  * `enable_request_metrics` adds request count metrics.
+  * `enable_bandwidth_metrics` adds request and response size metrics.
+  * `enable_principal_attribute` adds authenticated Principal attributes to the enabled metrics.
+
+  When a request carries an authenticated [Principal](/identity/principals/) managed by {{site.identity}}, 
+  the plugin exports `http.server.request.count`, `http.server.request.size`, and `http.server.response.size` with the `kong.auth.principal.id` and `kong.auth.principal.display_name` attributes.
+
+title: 'Add Principal attributes to metrics'
+
+requirements:
+  - "An OpenTelemetry backend"
+  - "An authentication plugin configured with [Principals](/identity/principals/) enabled, such as [Key Auth](/plugins/key-auth/examples/principals/) or [Basic Auth](/plugins/basic-auth/examples/principal/)"
+
+weight: 880
+
+min_version:
+  gateway: '3.16'
+
+config:
+  metrics:
+    endpoint: http://localhost:4318/v1/metrics
+    push_interval: 10
+    enable_request_metrics: true
+    enable_bandwidth_metrics: true
+    enable_principal_attribute: true
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

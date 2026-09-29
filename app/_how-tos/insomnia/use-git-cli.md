@@ -10,10 +10,9 @@ products:
 
 beta: true
 min_version:
-  insomnia: "beta-12.6"
+  insomnia: "12.6"
 
 tags:
-- insomnia-documents
 - collections
 - mock-servers
 - git

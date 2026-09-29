@@ -256,6 +256,74 @@ rows:
 {% endtable %}
 <!--vale on-->
 
+#### AI Gateways
+
+The following table describes the predefined roles for [{{site.ai_gateway}}](/ai-gateway/):
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Role
+    key: role
+  - title: Description
+    key: description
+  - title: CRUD permissions
+    key: permissions
+rows:
+  - role: "`Admin`"
+    description: "Owner of an existing {{site.ai_gateway}}. The owner has all write access related to an {{site.ai_gateway}} and its configuration."
+    permissions: |
+      * Read, edit, delete, and list {{site.ai_gateway}}s.
+      * Create, read, edit, delete, and list {{site.ai_gateway}} configurations, including data plane and CA certificates.
+  - role: "`Creator`"
+    description: "Access to create a new {{site.ai_gateway}}. The creator becomes the owner of the {{site.ai_gateway}} they create, gaining admin access to the new {{site.ai_gateway}}. This role does not grant access to existing {{site.ai_gateway}}s or their configurations."
+    permissions: |
+      * Create and list {{site.ai_gateway}}s.
+      * When creating an {{site.ai_gateway}}, grants the Admin role on the newly created {{site.ai_gateway}}.
+  - role: "`Viewer`"
+    description: "Read-only access to all the configurations of an {{site.ai_gateway}}."
+    permissions: |
+      * Read and list {{site.ai_gateway}}s and all of their configurations.
+{% endtable %}
+<!--vale on-->
+
+#### AI Models
+
+The following table describes the predefined roles for [AI Models](/catalog/ai-models/):
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Role
+    key: role
+  - title: Description
+    key: description
+  - title: CRUD permissions
+    key: permissions
+rows:
+  - role: "`Admin`"
+    description: "Admin of an existing AI Model, which allows you to read and edit configuration and delete the AI Model."
+    permissions: |
+      * Read, edit, delete, and list AI Models.
+      * Create, read, edit, delete, and list AI Model versions.
+  - role: "`Creator`"
+    description: "Access to create new AI Models. The creator becomes an admin of the AI Model they create."
+    permissions: |
+      * Create and list AI Models.
+      * List, edit, and delete AI Models they've created.
+  - role: "`Maintainer`"
+    description: "Access to read and edit configuration of an AI Model."
+    permissions: |
+      * Read, edit, and list AI Models.
+      * Create, read, edit, delete, and list AI Model versions.
+  - role: "`Viewer`"
+    description: "Read-only access to an AI Model configuration."
+    permissions: |
+      * Read and list AI Models.
+      * Read and list AI Model versions.
+{% endtable %}
+<!--vale on-->
+
 #### Application auth strategies
 
 The following table describes the predefined roles for [application auth strategies](/dev-portal/auth-strategies/):
@@ -508,15 +576,17 @@ rows:
       * Create and list control planes.
       * When creating a control plane, grants the Admin role on newly created Gateway control planes.
   - role: "`Debug Session Creator`"
-    description: "This role grants access to create debug sessions. This role also grants read-only access to all entities within a control plane."
+    description: "This role grants access to create and manage debug sessions and pins. This role also grants read-only access to all entities within a control plane."
     permissions: |
       * Create, read, list and delete debug sessions.
+      * Create, read, list, update, and delete debug session pins.
       * Read and list control planes and all configurations within them.
   - role: "`Deployer`"
     description: "This role grants full write access to administer services, routes and plugins necessary to deploy services in Service Catalog. This role cannot write partials."
     permissions: |
       * List and read control planes.
       * Create, read, edit, delete, and list plugins and custom plugins.
+      * Create, read, edit, delete, and list Services.
       * Create, read, edit, delete, and list Routes.
   - role: "`Event Gateways Creator`"
     description: "Access to create a new event gateway in {{site.konnect_short_name}}. The creator becomes the owner of the event gateway they create, gaining admin access to the new event gateway. This role does not grant access to existing event gateways, their runtime instances, or their configurations."
@@ -536,6 +606,7 @@ rows:
     description: "This role grants full write access to administer gateway services."
     permissions: |
       * List and read control planes.
+      * Create, read, edit, delete, and list Services
       * Create, read, edit, delete, and list plugins and custom plugins.
       * Create, read, edit, delete, and list Partials.
   - role: "`Key Admin`"
@@ -770,6 +841,10 @@ rows:
     description: "Ingests events only (intended only for machines)."
     permissions: |
       * Ingest events.
+  - role: "`Entitlement Access`"
+    description: "Can query entitlement access information from the Metering system (intended only for machines)."
+    permissions: |
+      * Query entitlement access.
   - role: "`Admin`"
     description: "Can read and write every resource. Includes billing apps, billing profiles, and notifications."
     permissions: |

@@ -1,0 +1,1 @@
+{% aigw_policy include.config %}

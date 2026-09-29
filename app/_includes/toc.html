@@ -115,6 +115,14 @@
         {% capture _hAttrToStrip %}{{ _workspace[0] | split: '>' | first }}>{% endcapture %}
         {% assign header = _workspace[0] | replace: _hAttrToStrip, '' %}
 
+        {% assign _tocLabelWS = _workspace[0] | split: 'data-toc-label="' %}
+        {% if _tocLabelWS.size > 1 %}
+          {% assign _tocLabelWS = _tocLabelWS[1] | split: '"' %}
+          {% assign _tocLabel = _tocLabelWS[0] %}
+        {% else %}
+          {% assign _tocLabel = nil %}
+        {% endif %}
+
         {% if include.item_class and include.item_class != blank %}
             {% capture listItemClass %} class="{{ include.item_class | replace: '%level%', currLevel | split: '.' | join: ' ' }}"{% endcapture %}
         {% endif %}
@@ -124,7 +132,7 @@
             {% capture subMenuClass %} class="{{ include.submenu_class | replace: '%level%', subMenuLevel | split: '.' | join: ' ' }}"{% endcapture %}
         {% endif %}
 
-        {% capture anchorBody %}{% if include.sanitize %}{{ header | strip_html }}{% else %}{{ header }}{% endif %}{% endcapture %}
+        {% capture anchorBody %}{% if _tocLabel %}{{ _tocLabel }}{% elsif include.sanitize %}{{ header | strip_html }}{% else %}{{ header }}{% endif %}{% endcapture %}
 
         {% if htmlID %}
             {% capture anchorAttributes %} href="{% if baseURL %}{{ baseURL }}{% endif %}#{{ htmlID }}"{% endcapture %}

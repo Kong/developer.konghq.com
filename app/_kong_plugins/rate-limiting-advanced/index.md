@@ -18,6 +18,10 @@ related_resources:
     url: /how-to/multiple-rate-limits-window-sizes/
   - text: Rate Limiting plugin
     url: /plugins/rate-limiting/
+  - text: Dynamic plugin config with CEL
+    url: /gateway/plugins/expressible-fields/
+  - text: "How-to: Configure dynamic plugin config with CEL"
+    url: /gateway/configure-dynamic-plugin-config-with-cel/
 
 products:
     - gateway
@@ -168,11 +172,11 @@ Otherwise the field will be regenerated automatically with every update.
 
 {% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
 
-{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 %}
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 redis_group="strategy" %}
 
 ### Fallback from Redis
 
-{% include /ai-gateway/redis-fallback.md %}
+{% include md/ai-gateway/v1/redis-fallback.md %}
 
 ## Limit by IP address
 
@@ -191,14 +195,14 @@ You can see an example of this in the guide on [enforcing rate limiting tiers wi
 
 ## Throttle rate limits {% new_in 3.12 %}
 
-In {{site.base_gateway}} 3.12 or later, you can enable request throttling using the Rate Limiting Advanced plugin to improve clients' experience and protect upstream origin servers from being overwhelmed by traffic spikes. With throttling, requests that exceed the rate limit threshold can be delayed and retried, rather than immediately rejected with a `429` status code. 
+In {{site.base_gateway}} 3.12 or later, you can enable request throttling using the Rate Limiting Advanced plugin to improve clients' experience and protect upstream origin servers from being overwhelmed by traffic spikes. With throttling, requests that exceed the rate limit threshold can be delayed and retried, rather than immediately rejected with a `429` status code.
 
-We recommend setting `disable_penalty` to `true` when using throttle rate limits with sliding window. Because for the sliding window type, if you set `disable_penalty` to `false`, all requests, including denied ones, will still be counted toward the rate limit. This can lead to a situation where every subsequent window immediately reaches the limit, causing all requests to be denied. In this case, the throttling mechanism will not take effect, because there are no accepted requests left to throttle. 
+We recommend setting `disable_penalty` to `true` when using throttle rate limits with sliding window. Because for the sliding window type, if you set `disable_penalty` to `false`, all requests, including denied ones, will still be counted toward the rate limit. This can lead to a situation where every subsequent window immediately reaches the limit, causing all requests to be denied. In this case, the throttling mechanism will not take effect, because there are no accepted requests left to throttle.
 
 Throttled rate limits work like the following:
 1. When a request hits the rate limit, it's placed into a "waiting room" or queue. The client's connection is held during this delay.
    * This queue uses local, Redis, or cluster strategies to manage the queue of throttled requests using a counter-based approach.
-1. Requests in the queue are automatically retried after a configurable interval ([`config.throttling.interval`](/plugins/rate-limiting-advanced/reference/#schema--config-interval)). 
+1. Requests in the queue are automatically retried after a configurable interval ([`config.throttling.interval`](/plugins/rate-limiting-advanced/reference/#schema--config-interval)).
    * There's a limit to retries for individual requests ([`config.throttling.retry_times`](/plugins/rate-limiting-advanced/reference/#schema--config-retry-times)), and a cap to the total number of requests waiting ([`config.throttling.queue_limit`](/plugins/rate-limiting-advanced/reference/#schema--config-queue-limit)).
    * All concurrent requests will retry at approximately the same time once the specified interval has elapsed.
 1. If a request exceeds its maximum retries or if the waiting room is full, it will ultimately be rejected with a 429 response.
@@ -217,6 +221,55 @@ This enables consistent rate limiting across distributed deployments that share 
 `counter_key` also applies when using [`compound_identifier`](/plugins/rate-limiting-advanced/reference/#schema--config-compound-identifier) with a Consumer segment, for example `["ip", "consumer"]`.
 
 For an example plugin configuration, see [Rate limit by consumer username](/plugins/rate-limiting-advanced/examples/rate-limit-counter-key/).
+
+## Rate limit by Principal {% new_in 3.16 %}
+
+Set [`identifier`](/plugins/rate-limiting-advanced/reference/#schema--config-identifier) to `principal` to rate limit based on the authenticated [{{site.identity}} Principal](/identity/principals/) instead of the Consumer, credential, IP address, or other supported identifiers. `principal` is also a valid segment in [`compound_identifier`](/plugins/rate-limiting-advanced/reference/#schema--config-compound-identifier).
+
+```yaml
+config:
+  identifier: principal
+  limit:
+    - 10
+  window_size:
+    - 60
+```
+
+`principal` requires an auth plugin that populates the Principal, such as Key Auth configured for Kong Identity Principal authentication.
+
+In [hybrid mode](/gateway/hybrid-mode/), if the control plane is running {{site.base_gateway}} 3.16 or later and a data plane is running an earlier version, {{site.base_gateway}} falls back to `identifier: ip` for that data plane, and drops `principal` from `compound_identifier` if it's set.
+
+[`custom_key`](/plugins/rate-limiting-advanced/reference/#schema--config-custom-key) overrides the computed rate limiting key with a literal string, regardless of `identifier` or `compound_identifier`. This is most useful in combination with [expressible config fields](#dynamic-configuration-with-cel), where `custom_key`'s value comes from a CEL expression instead of a fixed string.
+
+## Dynamic configuration with CEL {% new_in 3.16 %}
+
+`limit` and `custom_key` are [expressible config fields](/gateway/plugins/expressible-fields/#expressible-config-fields): instead of always using the static value in `config`, {{site.base_gateway}} can compute the field's value per request from a CEL expression, for example, reading an attribute of the authenticated Consumer or Principal. If the expression is unset, invalid, or fails to evaluate, {{site.base_gateway}} falls back to the field's static value in `config`.
+
+Because `limit` is an array field (one value per configured window), its expression is also an array, with one expression per element, in the same order:
+
+```yaml
+config:
+  identifier: principal
+  custom_key: unknown-partner    # static fallback
+  limit:
+    - 10                         # static fallback
+  window_size:
+    - 60
+expressions:
+  custom_key: principal.metadata.partner_id
+  limit:
+    - principal.metadata.rate_limit
+```
+
+{:.info}
+> **Note**: `window_size` is **not** expressible because it is unreliable.
+> For the `cluster` and `redis` strategies, window sizes are registered for cross-node counter synchronization once, from the static config, when the plugin is configured. 
+> A per-request expression-driven window size would never be picked up by that registration.
+
+See also:
+* For an example plugin configuration, see [Rate limit by Principal metadata](/plugins/rate-limiting-advanced/examples/rate-limit-by-principal-metadata/).
+* For a full walkthrough, see the how-to guide [Configure dynamic plugin config with CEL](/gateway/configure-dynamic-plugin-config-with-cel/).
+* For general information on expressible config fields, including limitations, see [Dynamic plugin config with CEL](/gateway/plugins/expressible-fields/).
 
 
 

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../../file_cache'
+
 module Jekyll
   module APIPages
     class Index
@@ -20,7 +22,7 @@ module Jekyll
       end
 
       def content
-        @content ||= File.read('app/_includes/api_specs.html')
+        @content ||= FileCache.read('app/_includes/api_specs.html')
       end
 
       def url

@@ -31,34 +31,21 @@ module Jekyll
 
       def set_release_info! # rubocop:disable Metrics/AbcSize
         if page.data['versioned'] && !latest_release_in_range
-          raise ArgumentError,
-                "Missing release for page: #{page.url}"
+          raise ArgumentError, "Missing release for page: #{page.url}"
         end
 
         page.data.merge!(
           'release' => latest_release_in_range,
           'releases' => deduplicated_releases,
-          'releases_dropdown' => Drops::ReleasesDropdown.new(base_url: page.url, releases: deduplicated_releases,
-                                                             use_name: use_release_name?)
+          'releases_dropdown' => Drops::ReleasesDropdown.new(
+            base_url: page.url, releases: deduplicated_releases,
+            use_name: use_release_name?
+          )
         )
       end
 
-      def handle_canonicals! # rubocop:disable Metrics/AbcSize, Metrics/MethodLength,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
-        if page.data['versioned']
-          page.data.merge!('canonical_url' => page.url, 'canonical?' => true)
-        elsif min_release && min_release > latest_available_release
-          if !page.data.key?('published') && !(page.data['plugin?'] && page.data['changelog?'])
-            # Setting published: false prevents Jekyll from rendering the page.
-            page.data.merge!('published' => false)
-          end
-        elsif max_release && max_release < latest_available_release
-          page.data.merge!(
-            'published' => false,
-            'canonical_url' => "#{page.url}#{max_release}/"
-          )
-        else
-          page.data.merge!('canonical_url' => page.url, 'canonical?' => true)
-        end
+      def handle_canonicals!
+        page.data.merge!(CanonicalPolicy.for(page:, release_info: @release_info).to_h)
       end
 
       def generate_pages! # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity

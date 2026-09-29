@@ -65,9 +65,10 @@ module Jekyll
 
         attr_reader :number
 
-        def initialize(number:, entries:) # rubocop:disable Lint/MissingSuper
+        def initialize(number:, entries:, product: 'gateway') # rubocop:disable Lint/MissingSuper
           @number = number
           @entries = entries
+          @product = product
 
           process_entries!
         end
@@ -79,7 +80,7 @@ module Jekyll
         end
 
         def release_date
-          @release_date ||= site.data.dig('products', 'gateway', 'release_dates', @number)
+          @release_date ||= site.data.dig('products', @product, 'release_dates', @number)
         end
 
         private
@@ -92,35 +93,45 @@ module Jekyll
             next unless match
 
             plugin = find_plugin(match[2])
-            e['message'].sub!(/\*\*(.*?):?\*\*?/, "[#{plugin.data['slug']}](#{plugin.url})") unless plugin.nil?
+            e['message'].sub!(/\*\*(.*?):?\*\*?/, "[#{plugin.data['slug']}](#{plugin_url(plugin)})") unless plugin.nil?
           end
         end
 
         def find_plugin(name_or_slug)
-          site.data['kong_plugins'].values.detect do |p|
+          plugin_collection.values.detect do |p|
             name_or_slug = name_or_slug.downcase
             p.data['name'].downcase == name_or_slug || p.data['slug'] == name_or_slug
           end
         end
 
+        def plugin_collection
+          @product == 'ai-gateway' ? site.data['ai_gateway_policies'] : site.data['kong_plugins']
+        end
+
+        def plugin_url(plugin)
+          @product == 'ai-gateway' ? plugin.data['overview_url'] : plugin.url
+        end
+
         def order
-          @order ||= site.data.dig('changelogs', 'config', 'order') || []
+          @order ||= YAML.safe_load(File.read(File.join(site.source, '_changelogs', 'config.yaml')))
+                         .fetch('order', [])
         end
       end
 
-      def initialize(site:) # rubocop:disable Lint/MissingSuper
+      def initialize(site:, product: 'gateway') # rubocop:disable Lint/MissingSuper
         @site = site
+        @product = product
       end
 
       def versions
         @versions ||= entries_by_version.map do |number, entries|
-          Version.new(number:, entries:)
+          Version.new(number:, entries:, product: @product)
         end.sort_by { |v| Gem::Version.new(v.number) }.reverse # rubocop:disable Style/MultilineBlockChain
       end
 
       def entries_by_version
         @entries_by_version ||= json_changelog.each_with_object({}) do |(version, values), hash|
-          values['kong-manager-ee'].map { |e| e['scope'] = 'Kong Manager' } if values.key?('kong-manager-ee')
+          remap_kong_manager(values) if @product == 'gateway'
           key = version_to_key(version)
           hash[key] ||= []
           hash[key].concat(values.values.flatten)
@@ -128,6 +139,8 @@ module Jekyll
       end
 
       def version_to_key(version)
+        return version unless @product == 'gateway'
+
         # treat ee and oss versions as ee versions
         parts = version.split('.').map(&:to_i)
         parts.fill(0, parts.size...4)
@@ -135,7 +148,13 @@ module Jekyll
       end
 
       def json_changelog
-        @json_changelog ||= @site.data.dig('changelogs', 'gateway')
+        @json_changelog ||= JSON.parse(File.read(File.join(@site.source, '_changelogs', "#{@product}.json")))
+      end
+
+      private
+
+      def remap_kong_manager(values)
+        values['kong-manager-ee'].each { |e| e['scope'] = 'Kong Manager' } if values.key?('kong-manager-ee')
       end
     end
   end

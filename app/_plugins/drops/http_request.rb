@@ -2,11 +2,13 @@
 
 require 'json'
 require_relative '../lib/site_accessor'
+require_relative './concerns/request_snippet_config'
 
 module Jekyll
   module Drops
     class HttpRequest < Liquid::Drop # rubocop:disable Style/Documentation
       include Jekyll::SiteAccessor
+      include Jekyll::Drops::Concerns::RequestSnippetConfig
 
       def initialize(yaml:, format:) # rubocop:disable Lint/MissingSuper
         @yaml = yaml
@@ -22,6 +24,10 @@ module Jekyll
         elsif @yaml.key?(key)
           @yaml[key]
         end
+      end
+
+      def snippet_config
+        @snippet_config ||= snippet_config_for(self['url'])
       end
 
       def config

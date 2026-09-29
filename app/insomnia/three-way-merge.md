@@ -26,8 +26,8 @@ faqs:
     a: Yes. Insomnia respects your Git provider’s branch protections. You can’t push to a protected branch from Insomnia. 
   - q: Can I create a Git-sync project now and connect the repository later?
     a: Yes. You can create a Git-sync project and add the repository later (supported in recent versions). See Storage options → Git sync.
-  - q: Does 3-way merge work for collections and design documents?
-    a: Yes. 3-way merge applies to the same project resources that Git sync manages—collections, design documents, tests, and environments—so you can resolve conflicts on the content you version in Git. See the [Insomnia docs index](/index/insomnia/) and [storage overview](/insomnia/storage/).
+  - q: Does 3-way merge work for API Collections?
+    a: "Yes. 3-way merge applies to the same project resources that Git sync manages: API Collections, their specs, tests, and environments. You can resolve conflicts on any content you version in Git. Insomnia stores an API Collection that contains a spec in the same file format as a design document from Insomnia 13.2 and earlier, so merges still work across both versions. See the [Insomnia docs index](/index/insomnia/) and [storage overview](/insomnia/storage/)."
   - q: Why does Insomnia sometimes fall back to the “choose local or remote file” conflict resolution instead of 3-way merge?
     a: |
       Insomnia uses 3-way merge to resolve Git conflicts when files are at least 20,000 lines. To protect performance and prevent errors with very large files, Insomnia applies a safety limit.

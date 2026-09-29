@@ -10,6 +10,8 @@ tier_inline: true
 
 {{ content }}
 
+{% include layouts/plugins/sections.html %}
+
 {% contentfor info_box %}
   {% include info_box/plugin.html %}
 {% endcontentfor %}

@@ -28,11 +28,11 @@ tags:
 
 tldr:
     q: How do I automate tests in Insomnia?
-    a: You can automate tests written in Insomnia by using the Inso CLI with the `inso run test "document name" --env "environment name"` command.
+    a: You can automate legacy unit tests written in Insomnia by using the Inso CLI with the `inso run test "<API Collection name>" --env "<environment name>"` command.
 
 prereqs:
     inline:
-        - title: Create and configure a collection
+        - title: Create and configure an API Collection
           include_content: prereqs/create-collection
           icon_url: /assets/icons/menu.svg
         - title: Write a test
@@ -40,11 +40,13 @@ prereqs:
           icon_url: /assets/icons/insomnia/checkbox-active.svg
 ---
 
+{% include insomnia/legacy-tests-deprecation.md %}
+
 ## Run a test with Inso CLI in the command line
 
-You can use the `inso run test` command to execute unit tests written inside Insomnia from your terminal or in a CI/CD environment. Once the command is executed, the Inso CLI will report test results and exit with an exit code. 
+You can use the `inso run test` command to execute legacy unit tests written inside Insomnia from your terminal or in a CI/CD environment. Once the command is executed, the Inso CLI will report test results and exit with an exit code. 
 
-Run the following to test the `Flights Service 0.1.0` document in the `OpenAPI env api.kong-air.com` environment:
+Run the following to test the `Flights Service 0.1.0` API Collection in the `OpenAPI env api.kong-air.com` environment:
 
 ```sh
 inso run test "Flights Service 0.1.0" --env "OpenAPI env api.kong-air.com"

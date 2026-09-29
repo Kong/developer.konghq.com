@@ -42,6 +42,8 @@ related_resources:
     url: /custom-plugins/installation-and-distribution/
   - text: Streaming custom plugins
     url: /custom-plugins/streaming-plugins/
+  - text: Metrics PDK
+    url: /custom-plugins/metrics-pdk/
 ---
 
 Kong allows you to develop and deploy custom plugins.

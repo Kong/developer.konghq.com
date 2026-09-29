@@ -25,6 +25,7 @@ This is a Konnect tutorial and requires a Konnect personal access token.
    ```bash
    export DECK_KONNECT_TOKEN=$KONNECT_TOKEN
    export DECK_KONNECT_CONTROL_PLANE_NAME=quickstart
+   export DECK_KONNECT_ADDR=https://us.api.konghq.com
    export KONNECT_CONTROL_PLANE_URL=https://us.api.konghq.com
    export KONNECT_PROXY_URL='http://localhost:8000'
    ```

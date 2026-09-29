@@ -27,6 +27,8 @@ topologies:
 min_version:
   gateway: '3.14'
 
+ai_gateway_url: "/ai-gateway/a2a/"
+
 categories:
   - ai
   - analytics-monitoring

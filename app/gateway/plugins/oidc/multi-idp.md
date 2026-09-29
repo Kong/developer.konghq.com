@@ -65,6 +65,7 @@ rows:
       * `config.token_exchange.subject_token_issuers`
       * `config.token_exchange.subject_token_issuers[].verify_signature` {% new_in 3.15 %}
       * `config.token_exchange.subject_token_issuers[].jwks_uri` {% new_in 3.15 %}
+      * `config.token_exchange.request.actor_token` {% new_in 3.16 %}
 {% endtable %}
 
 ## Option 1: Trusted issuers registry
@@ -147,6 +148,7 @@ Only used when `verify_signature` is `true`.
 If the subject token issuer and the target issuer (the one configured in `config.issuer`) are different, exchange always triggers.
 If they match, conditions determine whether to exchange.
 * [`config.token_exchange.request`](/plugins/openid-connect/reference/#schema--config-token-exchange-request): The scopes and audience to request in the exchanged token.
+* [`config.token_exchange.request.actor_token`](/plugins/openid-connect/reference/#schema--config-token-exchange-request-actor-token) {% new_in 3.16 %}: An optional actor token to include in the exchange request, representing the identity of the party acting on behalf of the subject. Required by some identity providers for delegation scenarios.
 
 With token exchange, trust is strictly enforced on both sides.
 {{site.base_gateway}} only exchanges tokens whose issuer is explicitly listed in `subject_token_issuers`.
@@ -179,6 +181,7 @@ Tokens already issued by `idp-a` are validated as-is unless conditions require a
 For more detail, see:
 * [Plugin example: Token exchange for cross-domain security](/plugins/openid-connect/examples/token-exchange-cross-domain/)
 * [Plugin example: Token transformation](/plugins/openid-connect/examples/token-exchange-transformation/)
+* [Plugin example: Token exchange with an actor token](/plugins/openid-connect/examples/token-exchange-actor-token/)
 * [How-to: Configure OpenID Connect with token exchange using Keycloak](/how-to/configure-oidc-with-token-exchange/)
 * [Token exchange reference](/plugins/openid-connect/#token-exchange)
 

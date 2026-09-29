@@ -3,6 +3,7 @@
 require 'json'
 require_relative '../monkey_patch'
 require_relative '../utils/json_schema_deref'
+require_relative '../component_templates'
 
 module Jekyll
   class EventGatewayConf < Liquid::Tag # rubocop:disable Style/Documentation
@@ -14,7 +15,7 @@ module Jekyll
       context.stack do
         raw = @site.data.dig('event-gateway-bootstrap-schema', release(@site, @page).gsub('.', ''))
         context['schema'] = Jekyll::Utils::JsonSchemaDeref.new(raw).resolve
-        Liquid::Template.parse(template, { line_numbers: true }).render(context)
+        ComponentTemplates.fetch('event_gateway_conf', @page['output_format']).render(context)
       end
     end
 
@@ -38,14 +39,6 @@ module Jekyll
 
     def releases(site)
       @releases ||= site.data.dig('products', 'event-gateway', 'releases')
-    end
-
-    def template
-      if @page['output_format'] == 'markdown'
-        File.read(File.expand_path('app/_includes/components/event_gateway_conf.md'))
-      else
-        File.read(File.expand_path('app/_includes/components/event_gateway_conf.html'))
-      end
     end
   end
 end

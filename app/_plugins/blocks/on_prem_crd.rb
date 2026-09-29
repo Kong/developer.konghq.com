@@ -2,6 +2,7 @@
 
 require 'yaml'
 require_relative '../monkey_patch'
+require_relative '../component_templates'
 
 module Jekyll
   class OnPremCrd < Liquid::Block # rubocop:disable Style/Documentation
@@ -33,7 +34,7 @@ module Jekyll
       context.stack do
         context['config'] = config
         context['should_create_namespace'] = should_create_namespace
-        Liquid::Template.parse(File.read('app/_includes/on_prem_crd.html'), { line_numbers: true }).render(context)
+        ComponentTemplates.fetch('on_prem_crd', 'html', base: 'app/_includes').render(context)
       end
     rescue Psych::SyntaxError => e
       message = <<~STRING

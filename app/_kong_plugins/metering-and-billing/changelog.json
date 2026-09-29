@@ -1,1 +1,9 @@
-{}
+{
+  "3.16.0.0": [
+    {
+      "message": "Added the `allow_status_codes` config option to limit usage-event logging to responses whose status code falls within the given ranges, for example `200-299`.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

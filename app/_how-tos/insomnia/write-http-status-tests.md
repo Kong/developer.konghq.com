@@ -28,11 +28,11 @@ automated_tests: false
 
 tldr:
     q: How do I write HTTP status code tests in Insomnia?
-    a: After you add a collection, you can create a new test suite for the collection and then use the default Javascript test. 
+    a: Legacy unit tests are hidden by default since Insomnia 13.3. After you enable them and add an API Collection, you can create a new test suite for the API Collection and then use the default JavaScript test.
 
 prereqs:
     inline:
-        - title: Create and configure a collection
+        - title: Create and configure an API Collection
           include_content: prereqs/create-collection
           icon_url: /assets/icons/menu.svg
 cleanup:
@@ -41,6 +41,8 @@ cleanup:
       include_content: cleanup/products/insomnia
       icon_url: /assets/icons/insomnia/insomnia.svg
 ---
+
+{% include insomnia/legacy-tests-deprecation.md %}
 
 ## Create a test suite
 

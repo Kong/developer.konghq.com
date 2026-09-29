@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../../component_templates'
+
 module Jekyll
   module KumaSpecific
     class JsonSchema < Liquid::Tag # rubocop:disable Style/Documentation
@@ -25,17 +27,7 @@ module Jekyll
 
         context.stack do
           context['schema'] = schema_file
-          Liquid::Template.parse(template, { line_numbers: true }).render(context)
-        end
-      end
-
-      private
-
-      def template
-        if @page['output_format'] == 'markdown'
-          File.read(File.expand_path('app/_includes/components/kuma_specific/json_schema.md'))
-        else
-          File.read(File.expand_path('app/_includes/components/kuma_specific/json_schema.html'))
+          ComponentTemplates.fetch('kuma_specific/json_schema', @page['output_format']).render(context)
         end
       end
     end

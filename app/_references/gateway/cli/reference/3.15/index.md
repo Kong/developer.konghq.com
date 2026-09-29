@@ -508,4 +508,40 @@ Options:
 ---
 
 
+### kong workspace
+
+```
+Usage: kong workspace COMMAND [OPTIONS]
+
+Workspace utilities for Kong.
+
+Example usage:
+ kong workspace rename old-name new-name
+ kong workspace detect-admin-endpoint-conflicts
+
+The available commands are:
+  rename OLD_NAME NEW_NAME          Rename workspace OLD_NAME to NEW_NAME.
+                                    Errors out if OLD_NAME does not exist,
+                                    if NEW_NAME already exists, or if NEW_NAME
+                                    is not a valid workspace name. RBAC
+                                    role-endpoint permissions that reference the
+                                    workspace are updated to the new name too.
+
+  detect-admin-endpoint-conflicts   List workspaces whose names collide with
+                                    active admin API URL prefixes. Exits non-zero
+                                    when any conflict is found.
+
+Options:
+ -c,--conf        (optional string)  Configuration file.
+
+ -p,--prefix      (optional string)  Override prefix directory.
+
+ --db-timeout     (optional number)  Timeout, in seconds, for all database
+                                     operations.
+
+```
+
+---
+
+
 [configuration-reference]: /gateway/configuration/

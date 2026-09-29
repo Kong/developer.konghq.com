@@ -51,6 +51,10 @@ Flags:
                                           - Config path: [ telemetry.enabled ]
                                           - Env var    : [ KONGCTL_NO_TELEMETRY ]
                                           - Default    : [ false ]
+      --no-trunc                          Preserve full cell widths in static text tables beyond terminal width.
+                                          Does not change column selection, UUID formatting, or explicit string slices.
+                                          - Config path: [ text.no-trunc ]
+                                          - Default    : [ false ]
       --output-file string                Save plan artifact to file
       --pat string                        Konnect Personal Access Token (PAT) used to authenticate the CLI. 
                                           Setting this value overrides tokens obtained from the login command.
@@ -82,5 +86,7 @@ Flags:
                                           - Config path: [ text.layout ]
                                           - Allowed    : [ compact|auto|wide ]
                                           - Default    : [ compact ]
+      --write-secret stringArray          Write configured secrets selected by [resource-type:]resource-ref[#field] (repeatable)
+      --write-secrets                     Write all eligible configured write-only secrets, warning when fields are skipped
 
 ```

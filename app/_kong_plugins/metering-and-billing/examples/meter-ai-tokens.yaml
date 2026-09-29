@@ -18,6 +18,7 @@ requirements:
 config:
   ingest_endpoint: ${ingest-endpoint}
   api_token: ${auth-token}
+  ssl_verify: true
   meter_api_requests: false
   meter_ai_token_usage: true
   subject:

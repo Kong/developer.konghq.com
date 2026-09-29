@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require 'yaml'
-
-require_relative '../lib/site_accessor'
+require 'json'
 
 module Jekyll
   module Drops
@@ -47,12 +45,13 @@ module Jekyll
         end
       end
 
-      include Jekyll::SiteAccessor
+      KONG_CONF_CACHE = {}
 
-      def initialize(config, release_number, mode) # rubocop:disable Lint/MissingSuper
+      def initialize(config, release_number, mode, product = 'gateway') # rubocop:disable Lint/MissingSuper
         @config = config
         @release_number = release_number
         @mode = mode
+        @product = product
 
         validate_config!
       end
@@ -62,7 +61,9 @@ module Jekyll
       end
 
       def params
-        @params ||= @config.fetch('config', []).map { |c| KongConfigField.new(c, kong_conf['params'][c['name']], @mode) }
+        @params ||= @config.fetch('config', []).map do |c|
+          KongConfigField.new(c, kong_conf['params'][c['name']], @mode)
+        end
       end
 
       def directives
@@ -71,11 +72,13 @@ module Jekyll
         end
       end
 
-      def kong_conf
-        @kong_conf ||= site.data.dig('kong-conf', @release_number.gsub('.', ''))
-      end
-
       private
+
+      def kong_conf
+        KONG_CONF_CACHE["#{@product}/#{@release_number}"] ||= JSON.parse(
+          File.read(File.expand_path("../../_kong-conf/#{@product}/#{@release_number}.json", __dir__))
+        )
+      end
 
       def validate_config!
         @config.fetch('directives', []).each do |d|

@@ -1,3 +1,9 @@
+- release: "3.16"
+  konnect: true
+  beginning: "3.16.0.0"
+  release_date: "2026-XX-XX"
+  eol: "2027-XX-XX"
+  sunset: "2028-XX-XX"
 - release: "3.15"
   konnect: true
   beginning: "3.15.0.0"

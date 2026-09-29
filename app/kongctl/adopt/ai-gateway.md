@@ -17,6 +17,8 @@ breadcrumbs:
 related_resources:
   - text: kongctl adopt commands
     url: /kongctl/adopt/
+  - text: Declarative configuration with kongctl
+    url: /kongctl/declarative/
 ---
 
 Apply the KONGCTL-namespace label to an existing {{site.konnect_short_name}} {{site.ai_gateway}} that is not currently managed by kongctl.

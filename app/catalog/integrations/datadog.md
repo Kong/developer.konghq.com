@@ -14,26 +14,28 @@ tags:
 search_aliases:
   - service catalog
 breadcrumbs:
-  - /catalog/
+  - /catalog-classic/
   - /catalog/integrations/
 
 works_on:
     - konnect
-description: The Datadog integration lets you connect Datadog entities directly to your {{site.konnect_catalog}} services.
+description: The Datadog integration lets you connect Datadog entities directly to your {{site.konnect_catalog}} Classic services.
 discovery_support: true
 bindable_entities: "Datadog Monitor, Datadog Dashboard"
 
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: Import and map Datadog resources in {{site.konnect_catalog}}
     url: /how-to/install-and-map-datadog-resources/
 ---
 
-The Datadog integration lets you connect Datadog entities directly to your {{site.konnect_catalog}} services.
+{% include_cached catalog/catalog-classic-banner.md %}
+
+The Datadog integration lets you connect Datadog entities directly to your {{site.konnect_catalog}} Classic services.
 {% include /catalog/multi-resource.md %}
 
-For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map Datadog resources in {{site.konnect_catalog}}](/how-to/install-and-map-datadog-resources/).
+For a complete tutorial using the {{site.konnect_short_name}} API, see [Import and map Datadog resources in {{site.konnect_catalog}} Classic](/how-to/install-and-map-datadog-resources/).
 
 ## Prerequisites
 
@@ -48,7 +50,7 @@ Your Datadog instance application key must either have no scopes or the followin
 
 {% navtabs "datadog-integration" %}
 {% navtab "UI" %}
-1. From the **Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/service-catalog/integrations)**. 
+1. From the **Catalog** in {{site.konnect_short_name}}, select **Integrations**. 
 1. Select **Add Datadog Instance**.
 1. Select your Datadog region and enter your [Datadog API and application keys](https://docs.datadoghq.com/account_management/api-app-keys/). 
 1. Select **Authorize**. 

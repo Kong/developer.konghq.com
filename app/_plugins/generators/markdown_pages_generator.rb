@@ -17,7 +17,6 @@ module Jekyll
       site.pages.each do |page|
         next if page.data['llm'] == false
         next if page.data['published'] == false
-        next if page.path.start_with?('assets/')
 
         site.config['markdown_pages_to_render'] << MarkdownPage.new(site:, page:)
       end
@@ -82,8 +81,8 @@ module Jekyll
       content.gsub!(/<!--\s*vale on\s*-->/, '')
       content.gsub!(/<!--\s*vale off\s*-->/, '')
 
-      %w[info warning danger success neutral decorative].each do |type|
-        content.gsub!(/{:\s*.#{type}}/, '')
+      %w[info warning danger success neutral decorative ai].each do |type|
+        content.gsub!(/{:\s*\.#{type}[^}]*}/, '')
       end
 
       content

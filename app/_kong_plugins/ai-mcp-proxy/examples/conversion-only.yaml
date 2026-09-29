@@ -64,9 +64,6 @@ config:
       description: User ID to filter orders
   max_request_body_size: 1048576
 
-tags:
-  - marketplace-tools
-
 tools:
   - deck
   - admin-api

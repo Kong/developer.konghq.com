@@ -2,12 +2,10 @@
 
 # Extracted from: https://github.com/kumahq/kuma-website/blob/master/jekyll-kuma-plugins/lib/jekyll/kuma-plugins/liquid/tags/policyyaml.rb
 require_relative '../monkey_patch'
+require_relative '../component_templates'
 
 module Jekyll
   class RenderPolicyYaml < Liquid::Block
-    TARGET_VERSION = Gem::Version.new('2.9')
-    TF_TARGET_VERSION = Gem::Version.new('2.10')
-
     def has_path(path)
       ->(node_path, _, _) { node_path == path }
     end
@@ -48,7 +46,7 @@ module Jekyll
       @callbacks = []
 
       register_callback(
-        _and(has_path(%w[spec to targetRef]), kind_is('MeshService')),
+        _and(has_path(%w[spec to targetRef]), _or(kind_is('MeshService'), kind_is('MeshMultiZoneService'))),
         lambda do |target_ref, context|
           case context[:env]
           when :kubernetes
@@ -59,7 +57,7 @@ module Jekyll
               }
             else
               {
-                'kind' => 'MeshService',
+                'kind' => target_ref['kind'],
                 'name' => target_ref['name'],
                 'namespace' => target_ref['namespace'],
                 'sectionName' => target_ref['sectionName']
@@ -73,7 +71,7 @@ module Jekyll
               }
             else
               {
-                'kind' => 'MeshService',
+                'kind' => target_ref['kind'],
                 'name' => target_ref['name'],
                 'sectionName' => target_ref['sectionName']
               }
@@ -290,14 +288,13 @@ module Jekyll
       content = content.gsub(/`{3}yaml\n/, '').gsub(/`{3}/, '')
       site_data = context.registers[:site].config
 
-      use_meshservice = @params['use_meshservice'] == true && Gem::Version.new(release.number.dup.sub('x',
-                                                                                                      '0')) >= TARGET_VERSION
-      show_tf = Gem::Version.new(release.number.dup.sub('x', '0')) >= TF_TARGET_VERSION
+      use_meshservice = @params['use_meshservice'] == true
+      show_tf = true
 
       tools = Array(@params['tools'])
-      show_kubernetes = (tools.empty? || tools.include?('kubernetes'))
-      show_universal = (tools.empty? || tools.include?('universal'))
-      show_tf = show_tf && (tools.empty? || tools.include?('terraform'))
+      show_kubernetes = tools.empty? || tools.include?('kubernetes')
+      show_universal = tools.empty? || tools.include?('universal')
+      show_tf &&= tools.empty? || tools.include?('terraform')
 
       namespace = @params['namespace'] || site_data['mesh_namespace']
       styles = [
@@ -342,12 +339,8 @@ module Jekyll
         context['uni_legacy'] = contents[:uni_legacy]
         context['uni'] = contents[:uni]
         context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
-        ::Liquid::Template.parse(template, { line_numbers: true }).render(context)
+        ComponentTemplates.fetch('policy_yaml', 'markdown').render(context)
       end
-    end
-
-    def template
-      File.read(File.join(@site.source, '_includes/components/policy_yaml.md'))
     end
   end
 end

@@ -2,9 +2,6 @@
 Usage:
   kongctl adopt ai-gateway <ai-gateway-id|ai-gateway-display-name> [flags]
 
-Maturity:
-  beta
-
 Aliases:
   ai-gateway, ai-gateways, aigw
 
@@ -33,6 +30,10 @@ Flags:
       --no-telemetry            Disable telemetry for this command invocation. Overrides config and env.
                                 - Config path: [ telemetry.enabled ]
                                 - Env var    : [ KONGCTL_NO_TELEMETRY ]
+                                - Default    : [ false ]
+      --no-trunc                Preserve full cell widths in static text tables beyond terminal width.
+                                Does not change column selection, UUID formatting, or explicit string slices.
+                                - Config path: [ text.no-trunc ]
                                 - Default    : [ false ]
   -o, --output string           Configures the format of data written to STDOUT.
                                 - Config path: [ output ]

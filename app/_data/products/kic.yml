@@ -8,6 +8,7 @@ topologies:
 releases:
   - release: "3.5"
     latest: true
+    lts: true
   - release: "3.4"
     lts: true
   - release: "3.3"

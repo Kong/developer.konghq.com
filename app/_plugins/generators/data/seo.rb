@@ -11,16 +11,18 @@ module Jekyll
       def process
         # TODO: consider redirects
         return if @page.data['canonical?']
-        return if @page.url.start_with?('/assets/mesh/')
 
         if !canonical?
           @page.data['seo_noindex'] = true
+          @page.data['canonical?'] = false
         else
           @page.data.merge!('canonical?' => true, 'canonical_url' => @page.url)
         end
       end
 
       def canonical?
+        return false if MajorReleaseCalculator.new(@page.data).previous_major?
+
         case @page.data['content_type']
         when 'how_to', 'landing_page', 'concept', 'plugin'
           true

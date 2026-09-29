@@ -67,6 +67,13 @@ To create streaming plugins, you must have the following permissions:
 
 ## How do I add a streamed plugin?
 
+### Prerequisites
+
+* [`custom_plugin_streaming_enabled`](/gateway/configuration/#custom-plugin-streaming-enabled) is set to `on` in `kong.conf` or as an environment variable.
+If running in {{site.konnect_short_name}}, launch your data plane with this setting.
+
+### Stream a custom plugin
+
 {% navtabs 'streaming' %}
 {% navtab "Admin API" %}
 

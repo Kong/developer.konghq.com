@@ -10,68 +10,67 @@ breadcrumbs:
 permalink: /ai-gateway/ai-providers/vllm/
 
 works_on:
-  - on-prem
   - konnect
 
 products:
-  - gateway
   - ai-gateway
 
 tools:
-  - admin-api
   - konnect-api
-  - deck
-  - kic
-  - terraform
+  - kongctl
 
 tags:
   - ai
   - vllm
 
-plugins:
-  - ai-proxy-advanced
-  - ai-proxy
 
 min_version:
-  gateway: '3.14'
+  ai-gateway: '2.0'
 
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: vLLM tutorials
-    url: /how-to/?tags=vllm
-  - text: "{{site.ai_gateway}} plugins"
-    url: /plugins/?category=ai
-  - text: AI providers
+  - text: "{{site.ai_gateway}} Policies"
+    url: /ai-gateway/policies/
+  - text: AI Providers
     url: /ai-gateway/ai-providers/
+  - text: AI Model Provider entity
+    url: /ai-gateway/entities/ai-model-provider/
+  - text: AI Model entity
+    url: /ai-gateway/entities/ai-model/
 
 ---
 
-{% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="vLLM" %}
+{% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="vLLM" %}
 
-## Configure {{ provider.name }} with AI Proxy
+## Configure {{ provider.name }}
 
-To use {{ provider.name }} with {{site.ai_gateway}}, configure the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin.
+To use {{ provider.name }} with {{site.ai_gateway}}, configure a new [AI Model Provider](/ai-gateway/entities/ai-model-provider/). You can then access supported [AI Models](/ai-gateway/entities/ai-model/) from {{ provider.name }}.
 
 Here's a minimal configuration for chat completions:
 
 {% entity_example %}
-type: plugin
+type: model-provider
 data:
-  name: ai-proxy
+  display_name: vllm Production
+  name: my-vllm-account
+  type: vllm
   config:
-    route_type: llm/v1/chat
-    model:
-      provider: vllm
-      name: ai/smollm2
-      options:
-        upstream_url: ${upstream_url}
-variables:
-  upstream_url:
-    value: $VLLM_UPSTREAM_URL
+    auth:
+      type: basic
 {% endentity_example %}
 
-{:.success}
-> For more configuration options and examples, see:
-> - [AI Proxy examples](/plugins/ai-proxy/examples/)
-> - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)
+## Configure a model target for {{ provider.name }}
+
+A [target](/ai-gateway/entities/ai-model/#targets) is an entry in the `targets` array on the AI Model entity, not the AI Model Provider. Beyond the common target options (`name`, `provider`, `weight`), a target routing to {{ provider.name }} requires:
+
+* **`upstream_url`**: The URL of your self-hosted vLLM server.
+
+```yaml
+targets:
+  - name: my-vllm-model
+    provider: my-vllm-account
+    config:
+      type: vllm
+      upstream_url: http://my-vllm-server.internal:8000
+```

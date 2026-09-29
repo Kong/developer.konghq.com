@@ -68,6 +68,9 @@ faqs:
       ```
 
       You can find this URI in your Okta developer account, under **Security** > **API**.
+  - q: When are group membership changes synced from my IdP?
+    a: |
+      Group memberships are synced when a user logs in. Because the session TTL is 12 hours, changes are synced at the next login or when the current session expires, within 12 hours. Instant updates are not available because {{site.konnect_short_name}} does not yet support back-channel logout. Support for back-channel logout is coming soon.
   - q: How do I debug my integration with Okta?
     a: |
       The Okta console provides a [Token Preview feature](https://help.okta.com/en-us/content/topics/security/api-config-test.htm) which will be useful in 
@@ -96,6 +99,9 @@ Keep built-in authentication enabled while you are testing IdP authentication. O
 
 ## SSO configuration
 
+{:.success}
+> For a complete SAML SSO in {{site.konnect_short_name}} guide, see [Configure SAML SSO for Konnect with Microsoft Entra ID](/konnect-platform/entra-saml-sso/).
+
 To configure SSO in {{site.konnect_short_name}}, you must configure the following in your IdP:
 * Add {{site.konnect_short_name}} to your IdP as an application
 * Add users that need to use SSO to the IdP tenant.
@@ -119,7 +125,7 @@ rows:
     ui: "Go to the [Authentication Scheme organization settings](https://cloud.konghq.com/global/organization/settings#authentication-scheme)<sup>1</sup>"
     api: "[`/identity-providers`](/api/konnect/identity/#/operations/create-identity-provider)<sup>1</sup>"
   - feature: "Dev Portal"
-    ui: "Navigate to your [Dev Portal](https://cloud.konghq.com/portals/), click **Settings** in the sidebar, and then click the **Security** tab. Enable **User authentication**."
+    ui: "Navigate to your [Dev Portal](https://cloud.konghq.com/portals/), click **Settings** tab, and then click the **Security** tab. Enable **User authentication**."
     api: "[`/portals/{portalId}/identity-providers`](/api/konnect/portal-management/#/operations/create-portal-identity-provider)"
 {% endtable %}
 <!--vale on-->
@@ -211,9 +217,9 @@ in the **Application** > **Sign On** section of the Okta configuration, setting 
 1. Locate the following values in the Okta console, which will be used later for the
 {{site.konnect_short_name}} configuration.
 
-    * **Client ID**: Located in your Application **General -> Client Credentials** settings.
-    * **Client Secret**: Located in your Application **General -> Client Secrets** settings.
-    * **Issuer URI** : The Issuer is typically found in the **Security -> API -> Authorization Servers** settings.
+    * **Client ID**: Located in your Application **General > Client Credentials** settings.
+    * **Client Secret**: Located in your Application **General > Client Secrets** settings.
+    * **Issuer URI** : The Issuer is typically found in the **Security > API > Authorization Servers** settings in the sidebar. You can also find your Okta org ID by clicking your account dropdown menu on the top right. 
     It should look like the following: `https://<okta-org-id>.okta.com/oauth2/default`
 {% endnavtab %}
 {% navtab "SAML" %}

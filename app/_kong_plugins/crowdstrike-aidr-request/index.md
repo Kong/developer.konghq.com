@@ -41,6 +41,8 @@ related_resources:
     url: https://pangea.cloud/docs/aidr
   - text: CrowdStrike Falcon AIDR Response plugin
     url: /plugins/crowdstrike-aidr-response/
+  - text: CrowdStrike Falcon AIDR MCP plugin
+    url: /plugins/crowdstrike-aidr-mcp/
 ---
 
 The {{page.name}} plugin intercepts AI prompts before they reach the upstream LLM, evaluating them against CrowdStrike's AIDR [input rules](https://aidr-docs.crowdstrike.com/docs/aidr/policies/prompt-rules) in real time.
@@ -90,13 +92,13 @@ _**Figure 1**: Request flow showing how the {{page.name}} plugin evaluates user 
 
 ## Install the {{page.name}} plugin
 
-{% include_cached /plugins/crowdstrike-aidr/install.md plugin_slug="crowdstrike-aidr-request" other_plugin_slug="crowdstrike-aidr-response" other_plugin_name="CrowdStrike Falcon AIDR Response" name=page.name %}
+{% include_cached /plugins/crowdstrike-aidr/install.md plugin_slug="crowdstrike-aidr-request" name=page.name %}
 
 ## Enable the plugin
 
 After installing the plugin, [enable the CrowdStrike Falcon AIDR Request plugin](/plugins/crowdstrike-aidr-request/examples/enable-crowdstrike-aidr-request/).
 
-If you're routing LLM traffic through {{site.ai_gateway}}, [set up {{site.ai_gateway}}](/ai-gateway/get-started/) first by creating a Service, a Route, and enabling the AI Proxy plugin. 
+If you're routing LLM traffic through {{site.ai_gateway}} running on {{site.base_gateway}}, [set up {{site.ai_gateway}}](/ai-gateway/v1/get-started/) first by creating a Service, a Route, and enabling the AI Proxy plugin. 
 Then set `upstream_llm.provider` to `kong` and `upstream_llm.api_uri` to the AI Proxy route path.
 
 ## Test the plugin

@@ -19,14 +19,13 @@ llm: false
 
 ### Agent tools
 
-{%- assign mcp = site.data.homepage.agents_section.featured_cards | where: "id", "mcp" | first %}
-- **{{ mcp.title }}** (endpoint: `{{ mcp.endpoint }}`) - {{ mcp.description }} [Explore]({{ mcp.cta_url }})
-{%- assign skills = site.data.homepage.agents_section.featured_cards | where: "id", "skills" | first %}
-- **{{ skills.title }}** (install: `{{ skills.snippet_lines | join: " && " }}`) - {{ skills.description }} [Explore]({{ skills.cta_url }})
-{%- assign cookbooks = site.data.homepage.agents_section.featured_cards | where: "id", "cookbooks" | first %}
-- **{{ cookbooks.title }}** {{ cookbooks.description }}
-{% for cta in cookbooks.ctas %}
-   - [{{ cta.text }}]({{ cta.url }})
+{%- for fcard in site.data.homepage.agents_section.featured_cards %}
+- **{{ fcard.title }}**{% if fcard.endpoint %} (endpoint: `{{ fcard.endpoint }}`){% elsif fcard.snippet_lines %} (install: `{{ fcard.snippet_lines | join: " && " }}`){% endif %}: {{ fcard.description }}
+{%- if fcard.ctas %}{%- for cta in fcard.ctas %}
+  - [{{ cta.text }}]({{ cta.url }})
+{%- endfor %}{%- elsif fcard.cta_url %}
+  - [{{ fcard.cta_text }}]({{ fcard.cta_url }})
+{%- endif %}
 {%- endfor %}
 
 ## Platform

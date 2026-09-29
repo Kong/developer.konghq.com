@@ -1,6 +1,6 @@
 The plugin expression language changed between 3.14 and 3.15.
 In {{site.base_gateway}} 3.14, the feature was in beta and used ATC (Abstract Tree Classifier) syntax for plugin conditions. 
-{{site.base_gateway}} 3.15 uses [CEL (Common Expression Language)](/gateway/plugins/expressions/), which isn't backwards-compatible.
+{{site.base_gateway}} 3.15 uses [CEL (Common Expression Language)](/gateway/plugins/conditions/), which isn't backwards-compatible.
 
 Any conditional expression that worked in 3.14 will need to be rewritten for 3.15.
 The main syntax changes are:

@@ -21,9 +21,7 @@ module Jekyll
       end
 
       def metadata
-        @metadata ||= Jekyll::Utils::MarkdownParser.new(
-          File.read(File.join(@folder, 'index.md'))
-        ).frontmatter
+        @metadata ||= Jekyll::Utils::MarkdownParser.new(index_file).frontmatter
       end
 
       def example_files
@@ -69,6 +67,12 @@ module Jekyll
 
       def max_version
         @max_version ||= metadata.fetch('max_version', {})
+      end
+
+      private
+
+      def index_file
+        @index_file ||= File.read(File.join(@folder, 'index.md'))
       end
     end
   end

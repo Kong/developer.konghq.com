@@ -1,6 +1,10 @@
 name: Event Gateway Automated Tests
 on:
   workflow_dispatch:
+    inputs:
+      konnect_domain:
+        description: "Set to konghq.tech to run against .tech"
+        required: false
   schedule:
   - cron: '0 0 1 * *'
 
@@ -20,9 +24,11 @@ env:
 jobs:
   run:
     runs-on: ubuntu-latest
+    env:
+      KONNECT_DOMAIN: ${{ inputs.konnect_domain || 'konghq.com' }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
         with:
           egress-policy: audit
 
@@ -35,9 +41,13 @@ jobs:
 
       - name: Run site
         uses: './.github/reusable-steps/run-site'
+        with:
+          konnect-domain: ${{ env.KONNECT_DOMAIN }}
 
       - name: Generate instruction files
         uses: './.github/reusable-steps/generate-instruction-files'
+        with:
+          product: event-gateway
 
       - name: Download Kong License
         uses: Kong/kong-license@master
@@ -52,7 +62,8 @@ jobs:
           KONG_LICENSE_DATA: ${{ steps.getLicense.outputs.license }}
           DEPLOYMENT_MODEL: konnect
           PRODUCTS: event-gateway
-          TESTS_KONNECT_TOKEN: ${{ secrets.KONNECT_TOKEN }}
+          KONNECT_DOMAIN: ${{ env.KONNECT_DOMAIN }}
+          TESTS_KONNECT_TOKEN: ${{ inputs.konnect_domain != '' && secrets.KONNECT_TOKEN_TECH || secrets.KONNECT_TOKEN }}
         run: |
           DEBUG=tests:*,debug npm run run-tests
 

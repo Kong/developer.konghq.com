@@ -557,7 +557,7 @@ The `require()` method grants access to the built-in library modules within the 
 * `chai`
 * `cheerio`
 * `crypto-js`
-* `csv-parse`
+* `csv-parse/lib/sync`
 * `lodash`
 * `moment`
 * `postman-collection`
@@ -573,7 +573,7 @@ The following NodeJS modules are also available:
 * `querystring`
 * `punycode`
 * `stream`
-* `string-decoder`
+* `string_decoder`
 * `timers`
 * `url`
 * `util`

@@ -1539,6 +1539,8 @@ app/_landing_pages/insomnia.yaml:
   - /insomnia/ai-runner.md
 app/_landing_pages/insomnia/collections.yaml:
   - /insomnia/request-collections.md
+  - /insomnia/design-documents.md
+  - /insomnia/get-started-with-documents.md
 app/_landing_pages/insomnia/design.yaml:
   - /insomnia/generate-code-snippet.md
   - /insomnia/get-started-with-documents.md
@@ -1546,9 +1548,6 @@ app/_landing_pages/insomnia/design.yaml:
 app/_how-tos/create-a-design-document.md:
   - /insomnia/get-started-with-documents.md
   - /insomnia/design-documents.md
-app/_landing_pages/insomnia/documents.yaml: 
-  - /insomnia/design-documents.md
-  - /insomnia/get-started-with-documents.md
 app/_landing_pages/insomnia/test.yaml:
   - /insomnia/request-collections.md
   - /insomnia/environment-variables.md

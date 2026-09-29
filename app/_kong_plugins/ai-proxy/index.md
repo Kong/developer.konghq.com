@@ -19,6 +19,8 @@ works_on:
 min_version:
     gateway: '3.6'
 
+ai_gateway_url: "/ai-gateway/entities/ai-model/"
+
 topologies:
   on_prem:
     - hybrid
@@ -49,11 +51,11 @@ related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: "{{site.ai_gateway}} providers"
-    url: /ai-gateway/ai-providers/
+    url: /ai-gateway/v1/ai-providers/
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/
   - text: Get started with {{site.ai_gateway}}
-    url: /ai-gateway/get-started/
+    url: /ai-gateway/v1/get-started/
 
 examples_groups:
   - slug: open-ai

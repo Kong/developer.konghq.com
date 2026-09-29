@@ -1,8 +1,8 @@
 ---
-title: Discover AWS Gateway APIs in Catalog with the Konnect API
+title: Discover AWS Gateway APIs in {{site.konnect_catalog}} Classic with the Konnect API
 permalink: /how-to/discover-aws-gateway-apis-using-konnect-api/
 content_type: how_to
-description: Learn how to connect an AWS Gateway API to your {{site.konnect_catalog}} service in {{site.konnect_short_name}} using the API.
+description: Learn how to connect an AWS Gateway API to your {{site.konnect_catalog}} Classic service in {{site.konnect_short_name}} using the API.
 products:
   - catalog
 works_on:
@@ -15,20 +15,20 @@ tags:
 search_aliases:
   - service catalog
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: Integrations
     url: /catalog/integrations/
   - text: AWS API Gateway reference
     url: /catalog/integrations/aws-api-gateway/
-  - text: "Discover AWS Gateway APIs in {{site.konnect_catalog}} with the {{site.konnect_short_name}} UI"
+  - text: "Discover AWS Gateway APIs in {{site.konnect_catalog}} Classic with the Konnect UI"
     url: /how-to/discover-aws-gateway-apis-using-konnect-ui/
   - text: Discover and govern APIs with {{site.konnect_catalog}}
     url: /how-to/discover-and-govern-apis-with-service-catalog/
 automated_tests: false
 tldr:
   q: How do I discover AWS API Gateway API in {{site.konnect_short_name}}?
-  a: Install the AWS API Gateway integration in {{site.konnect_short_name}} and authorize access with your {{site.konnect_catalog}} role ARN, then link an API to your {{site.konnect_catalog}} service.
+  a: Install the AWS API Gateway integration in {{site.konnect_short_name}} and authorize access with your {{site.konnect_catalog}} Classic role ARN, then link an API to your {{site.konnect_catalog}} Classic service.
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
@@ -39,13 +39,15 @@ prereqs:
       icon_url: /assets/icons/aws.svg
 ---
 
+{% include_cached catalog/catalog-classic-banner.md %}
+
 ## Configure the AWS API Gateway integration
 
-Before you can discover APIs in {{site.konnect_catalog}}, you must configure the AWS API Gateway integration.
+Before you can discover APIs in {{site.konnect_catalog}} Classic, you must configure the AWS API Gateway integration.
 
 {% include /catalog/aws-api-gateway-integration.md %}
 
-## Create a service in {{site.konnect_catalog}}
+## Create a service in {{site.konnect_catalog}} Classic
 
 Create a service that you'll map to your AWS API Gateway resources:
 
@@ -69,7 +71,7 @@ export AWS_SERVICE_ID='YOUR-SERVICE-ID'
 
 ## List AWS API Gateway resources
 
-Before you can map your AWS API Gateway resources to a service in {{site.konnect_catalog}}, you first need to find the resources that are pulled in from AWS API Gateway:
+Before you can map your AWS API Gateway resources to a service in {{site.konnect_catalog}} Classic, you first need to find the resources that are pulled in from AWS API Gateway:
 
 <!--vale off-->
 {% konnect_api_request %}

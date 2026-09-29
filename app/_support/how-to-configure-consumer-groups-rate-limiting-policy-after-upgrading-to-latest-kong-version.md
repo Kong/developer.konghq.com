@@ -15,7 +15,7 @@ tldr:
     using the `/consumer_groups/{id}/plugins` endpoint.
 related_resources:
   - text: Rate Limiting plugin examples
-    url: /plugins/rate-limiting/examples/
+    url: /plugins/rate-limiting/examples/rate-limit-with-local-policy/
   - text: Consumer Groups entity
     url: /gateway/entities/consumer-group/
   - text: Known limitations of dynamic plugin ordering

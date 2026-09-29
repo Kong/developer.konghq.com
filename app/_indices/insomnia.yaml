@@ -7,7 +7,6 @@ sections:
       - path: /insomnia/manage-insomnia/
       - path: /insomnia/enterprise/
       - path: /insomnia/collections/
-      - path: /insomnia/documents/
       - path: /insomnia/api-specs/
       - path: /insomnia/external-vault/
       - path: /insomnia/storage/
@@ -16,10 +15,10 @@ sections:
   - title: Design
     items:
       - path: /insomnia/design/
-      - path: /how-to/create-a-design-document/
+      - path: /how-to/create-an-api-collection/
       - path: /how-to/add-custom-linting-rules/
-      - path: /how-to/import-an-api-spec-as-a-document/
-      - path: /how-to/generate-a-collection-from-a-design-document/
+      - path: /how-to/import-an-api-spec/
+      - path: /how-to/generate-requests-from-an-api-spec/
       - path: /how-to/import-content-from-a-git-repository/
 
   - title: Test

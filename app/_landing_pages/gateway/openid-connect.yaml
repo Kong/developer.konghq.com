@@ -154,9 +154,10 @@ rows:
                     The [OAuth 2.0 Token Exchange](https://oauth.net/2/token-exchange/) (RFC 8693) is an extension to the OAuth 2.0 framework that allows exchanging an existing security token for a new one. 
                     <br><br>
                     [Workflow diagram &rarr;](/plugins/openid-connect/#token-exchange)
-                  example: | 
+                  example: |
                     * [Cross-domain token exchange](/plugins/openid-connect/examples/token-exchange-cross-domain/)
                     * [Token transformation](/plugins/openid-connect/examples/token-exchange-transformation/)
+                    * [Token exchange with an actor token](/plugins/openid-connect/examples/token-exchange-actor-token/)
                   howto: |
                     [Token exchange with OpenID Connect and Keycloak](/how-to/configure-oidc-with-token-exchange/)
   

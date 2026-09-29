@@ -38,7 +38,7 @@ faqs:
 > Get started with these tutorials:
 > * [Get started with {{site.metering_and_billing}} generic meters](/how-to/get-started-with-metering-and-billing-generic-meters/)
 > * [Meter and bill {{site.base_gateway}} API requests](/metering-and-billing/get-started/)
-> * [Meter and bill {{site.ai_gateway}} LLM tokens](/how-to/meter-llm-traffic/)
+> * [Meter and bill {{site.ai_gateway}} LLM tokens](/ai-gateway/meter-llm-traffic/)
 
 {{site.metering_and_billing}} provides a real-time event based usage metering to aggregate consumption over time precisely. It also provides deduplication and flexible usage attribution of events and consumers to billable customers.
 
@@ -250,7 +250,7 @@ Next, configure the [Metering & Billing plugin](/plugins/metering-and-billing/):
 1. Click **Save**.
 1. Send an LLM prompt through {{site.ai_gateway}} to start collecting token usage data.
 
-For a complete tutorial, see [Monetize LLM traffic in {{site.konnect_short_name}}](/how-to/meter-llm-traffic/).
+For a complete tutorial, see [Monetize LLM traffic in {{site.konnect_short_name}}](/ai-gateway/meter-llm-traffic/).
 {% endnavtab %}
 {% navtab "Generic meters" %}
 

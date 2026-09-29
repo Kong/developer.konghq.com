@@ -2,158 +2,157 @@
 title: Get started with {{site.ai_gateway}}
 content_type: how_to
 permalink: /ai-gateway/get-started/
-description: Learn how to quickly get started with {{site.ai_gateway}}
+description: Learn how to proxy LLM traffic with {{site.ai_gateway}} entities in {{site.konnect_product_name}}
 products:
-    - ai-gateway
-    - gateway
+  - ai-gateway
 
 works_on:
-    - on-prem
-    - konnect
-
-plugins:
-  - ai-proxy
+  - konnect
 
 entities:
-  - service
-  - route
-  - plugin
+  - ai-model-provider
+  - ai-model
 
 tags:
-    - get-started
-    - ai
-    - openai
+  - get-started
+  - ai
 
 tldr:
-  q: What is {{site.ai_gateway}}, and how can I get started with it?
+  q: How do I proxy LLM traffic with {{site.ai_gateway}} entities?
   a: |
-    With {{site.ai_gateway}}, you can deploy AI infrastructure for traffic
-    that is sent to one or more LLMs. This lets you semantically route, secure, observe, accelerate,
-    and govern traffic using a special set of AI plugins that are bundled with {{site.base_gateway}} distributions.
+    {{site.ai_gateway}} provides first-class entities for managing LLM providers and models in {{site.konnect_product_name}}.
+    Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to connect and authenticate to an LLM service like OpenAI, then create an [AI
+    Model](/ai-gateway/entities/ai-model/) entity to specify which model is available for requests.
 
-    This tutorial will help you get started with {{site.ai_gateway}} by setting up the AI Proxy plugin with OpenAI.
-
-    {:.info}
-    > **Note:**
-    > This quickstart runs a Docker container to explore {{ site.base_gateway }}'s capabilities.
-    If you want to run {{ site.base_gateway }} as a part of a production-ready API platform, start with the [Install](/gateway/install/) page.
+    This tutorial shows you how to set up an AI Provider and AI Model for OpenAI in {{site.konnect_product_name}} using kongctl and how to proxy your first request to OpenAI.
 
 tools:
-    - deck
+  - kongctl
 
 prereqs:
   inline:
     - title: OpenAI
-      content: |
-        This tutorial uses the AI Proxy plugin with OpenAI. You'll need to [create an OpenAI account](https://auth.openai.com/create-account) and [get an API key](https://platform.openai.com/api-keys). Once you have your API key, create an environment variable:
-
-        ```sh
-        export OPENAI_API_KEY='<api-key>'
-        ```
-
+      include_content: md/ai-gateway/v2/prereqs/openai
+      icon_url: /assets/icons/openai.svg
 cleanup:
   inline:
-    - title: Clean up Konnect environment
-      include_content: cleanup/platform/konnect
-      icon_url: /assets/icons/gateway.svg
-    - title: Destroy the {{site.base_gateway}} container
-      include_content: cleanup/products/gateway
-      icon_url: /assets/icons/gateway.svg
+    - title: Clean up {{site.ai_gateway}} resources
+      include_content: cleanup/products/ai-gateway
 
 min_version:
-    gateway: '3.6'
+  ai-gateway: '2.0'
 
-next_steps:
-  - text: Set up load balancing using AI Proxy Advanced plugin
-    url: /plugins/ai-proxy-advanced/
-  - text: Cache traffic using the AI Semantic cache plugin
-    url: /plugins/ai-semantic-cache/
-  - text: Secure traffic with the AI Prompt Guard
-    url: /plugins/ai-prompt-guard/
-  - text: Provide prompt templates with AI Prompt Template
-    url: /plugins/ai-prompt-template/
-  - text: Programmatically inject system or assistant prompts to all incoming prompts with the AI Prompt Decorator
-    url: /plugins/ai-prompt-decorator/
-  - text: Learn about all the AI plugins
-    url: /plugins/?category=ai
+related_resources:
+  - text: AI Model Provider entity reference
+    url: /ai-gateway/entities/ai-model-provider/
+  - text: AI Model entity reference
+    url: /ai-gateway/entities/ai-model/
+  - text: Route A2A agent traffic through {{site.ai_gateway}}
+    url: /ai-gateway/get-started-with-ai-agent/
+  - text: Map the WeatherAPI to an MCP Server
+    url: /ai-gateway/get-started-with-mcp-server/
 
 ---
 
-## Check that {{site.base_gateway}} is running
+## Create an AI Model Provider entity
 
-{% include how-tos/steps/ping-gateway.md %}
+Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity to define your connection to OpenAI and store your authentication credentials.
+
+First, set the `OPENAI_AUTH_HEADER` environment variable to your OpenAI API key:
+
+{% env_variables %}
+OPENAI_AUTH_HEADER: "Bearer $OPENAI_API_KEY"
+{% endenv_variables %}
 
 
-## Create a Gateway Service
-
-Create a Service to contain the Route for the LLM provider:
+Then, apply the configuration using `kongctl`:
 
 {% entity_examples %}
-entities:
-    services:
-    - name: llm-service
-      url: http://localhost:32000
+ai_gateway_model_providers:
+  - ref: generic-openai
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: generic-openai
+    display_name: "generic-openai"
+    type: openai
+    config:
+      auth:
+        type: basic
+        headers:
+        - name: Authorization
+          value: !secret {source: !env OPENAI_AUTH_HEADER}
 {% endentity_examples %}
 
-The URL can point to any empty host, as it won't be used by the plugin.
+{:.info}
+> `!env AI_GATEWAY_ID` references the {{site.ai_gateway}} created by the quickstart script in the [prerequisites](#prerequisites), instead of creating a new one. 
 
-## Create a Route
+In this example, we're setting up the AI Model Provider with:
 
-Create a Route for the LLM provider. In this example we're creating a chat route, so we'll use `/chat` as the path:
+* `type: openai`: Specifies that this provider connects to the OpenAI service using OpenAI's standard API format.
+* `name: generic-openai`: A unique identifier that AI Models will reference to route requests through this provider.
+* `config.auth`: Stores your OpenAI API key. {{site.ai_gateway}} securely manages this credential and injects it into upstream requests automatically, eliminating the need for clients to pass API keys.
 
-{% entity_examples %}
-entities:
-    routes:
-    - name: openai-chat
-      service:
-        name: llm-service
-      paths:
-      - /chat
-      protocols:
-      - http
-      - https
-{% endentity_examples %}
+## Create an AI Model entity
 
-## Enable the AI Proxy plugin
-
-Enable the AI Proxy plugin to create a chat route:
+Create an [AI Model](/ai-gateway/entities/ai-model/) entity to declare which upstream models are available, configure how client requests are routed, and specify which AI Model Provider to use:
 
 {% entity_examples %}
-entities:
-    plugins:
-    - name: ai-proxy
-      config:
-        route_type: "llm/v1/chat"
+ai_gateway_models:
+  - ref: my-gpt-4o
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    name: my-gpt-4o
+    display_name: "my-gpt-4o"
+    type: model
+    formats:
+      - type: openai
+    config:
+      route:
+        paths:
+          - /v1
         model:
-          provider: "openai"
+          body_param: model
+          values:
+            - my-gpt-4o
+    targets:
+      - name: gpt-4o
+        provider: generic-openai
+        config:
+          type: openai
+    policies: []
+    capabilities:
+      - generate
 {% endentity_examples %}
 
-In this example, we're setting up the plugin with minimal configuration, which means:
-* The client is allowed to use any model in the `openai` provider and must provide the model name in the request body.
-* The client must provide an `Authorization` header with an OpenAI API key.
+{:.info}
+> `!env AI_GATEWAY_ID` references the {{site.ai_gateway}} created by the quickstart script, same as in the previous step.
 
-If needed, you can restrict the models that can be consumed by specifying the model name explicitly using the [`config.model.name`](/plugins/ai-proxy/reference/#schema--config-model-name) parameter.
+In this example, we're setting up the AI Model with:
 
-You can also provide the OpenAI API key directly in the configuration with the [`config.auth.header_name`](/plugins/ai-proxy/reference/#schema--config-auth-header-name) and [`config.auth.header_value`](/plugins/ai-proxy/reference/#schema--config-auth-header-value) parameters so that the client doesn’t have to send them.
+* `type: model`: Specifies this is a synchronous model for request/response workloads.
+* `name: my-gpt-4o`: A unique identifier for this model.
+* `formats: [type: openai]`: Declares that this model accepts requests in OpenAI-compatible format.
+* `config.route.paths: [/v1]`: Configures the custom base path for this model's endpoints. Clients send requests to paths that combine this base path with capability-specific paths.
+* `capabilities: [generate]`: Enables the text generation capability. The `generate` capability creates a `/chat/completions` endpoint, so combined with your base path, clients send chat requests to `/v1/chat/completions`.
+* `config.route.model: { body_param: model, values: [my-gpt-4o] }`: Lets clients send `my-gpt-4o` in the request `model` field instead of the upstream model name.
+* `targets`: Specifies which upstream AI Model Provider model to route requests to. Here, `provider: generic-openai` references the AI Model Provider we created earlier, and `name: gpt-4o` specifies which OpenAI model to call upstream.
 
 ## Validate
 
-To validate, you can send a `POST` request to the `/chat` endpoint, using the correct [input format](/plugins/ai-proxy/#input-formats).
-Since we didn't add the model name and API key in the plugin configuration, make sure to include them in the request:
+Send a chat request to verify your setup:
 
+<!-- vale off -->
 {% validation request-check %}
-url: /chat
+url: /v1/chat/completions
 status_code: 200
 method: POST
+retry: true
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
     - 'Authorization: Bearer $OPENAI_API_KEY'
 body:
-  model: gpt-5-mini
   messages:
   - role: "user"
     content: "Say this is a test!"
+  model: my-gpt-4o
 {% endvalidation %}
-
-You should get a `200 OK` response, and the response body should contain `This is a test`.
+<!-- vale on -->

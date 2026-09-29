@@ -10,6 +10,8 @@ related_resources:
     url: /plugins/datakit/
   - text: Dynamically set host based on the authenticated caller with Datakit
     url: /how-to/configure-oidc-datakit-host-routing/
+  - text: Dynamically set host based on the authenticated Principal with Datakit
+    url: /how-to/configure-oidc-datakit-host-routing-with-principals-metadata/
   - text: OpenID Connect tutorials
     url: /how-to/?query=openid-connect
 

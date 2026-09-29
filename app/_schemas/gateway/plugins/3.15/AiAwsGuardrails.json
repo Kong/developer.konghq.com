@@ -78,7 +78,8 @@
           "description": "Select where to pick the 'text' for the Content Guard Services request.",
           "enum": [
             "concatenate_all_content",
-            "concatenate_user_content"
+            "concatenate_user_content",
+            "last_message"
           ],
           "type": "string"
         },

@@ -1,4 +1,21 @@
 {
+  "3.16.0.0": [
+    {
+      "message": "Added a `custom_key` field for overriding the\nrate-limiting key entirely. The field is expressible, so it can be driven\nby a CEL expression, for example to rate limit by a Kong Identity\nDirectory Principal's metadata.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support to rate limiting by Kong Identity Directory\nPrincipal.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "The `second`, `minute`, `hour`, `day`, `month`, and\n`year` fields are now expressible, so the rate limit value itself can be\ndriven by a CEL expression, for example to vary the limit by a Kong\nIdentity Directory Principal's metadata.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.15.0.0": [
     {
       "message": "Fixed an issue where the sync timer did not use updated configuration.",

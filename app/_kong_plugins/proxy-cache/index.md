@@ -69,6 +69,10 @@ In [Traditional mode](/gateway/traditional-mode/), cache entities can also be [f
 
 {% include_cached /plugins/caching/cache-key.md name=page.name slug=page.slug %}
 
+#### Cache by Principal {% new_in 3.16 %}
+
+{% include_cached /plugins/caching/cache-by-principal.md name=page.name %}
+
 ### Cache control
 
 {% include_cached /plugins/caching/cache-control.md %}

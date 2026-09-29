@@ -1,5 +1,5 @@
 ---
-title: "MCP Registries in {{site.konnect_catalog}}"
+title: "MCP registries in {{site.konnect_catalog}} (tech preview)"
 content_type: reference
 layout: reference
 tech_preview: true
@@ -25,11 +25,15 @@ related_resources:
 faqs:
     - q: Is the MCP Registry feature GA?
       a: |
-        No, MCP Registries in Catalog is only available in Tech Preview via {{site.konnect_short_name}} Labs.
+        No, MCP Registries in {{site.konnect_catalog}} is only available in Tech Preview via {{site.konnect_short_name}} Labs.
 
         This feature is built on top of Anthropic’s MCP Registry API specification, which is still rapidly evolving. Because the underlying standard continues to change, we cannot responsibly commit to GA timelines or long-term stability guarantees at this time.
 
         We are actively iterating in partnership with customers who are exploring MCP-based agent architectures and will evaluate GA readiness as the specification matures.
+    - q: |
+        {% include faqs/mcp-server-vs-registry.md section='question' %}
+      a: |
+        {% include faqs/mcp-server-vs-registry.md section='answer' %}
 ---
 
 ## What is an MCP Registry?
@@ -51,15 +55,34 @@ This feature is built on top of the MCP Registry API specification defined by {{
 
 MCP Registries in {{site.konnect_catalog}} are currently available in tech preview via {{site.konnect_short_name}} Labs.
 
-1. In the {{site.konnect_short_name}} sidebar, navigate to **Organizations**.
-1. In the Organization sidebar, click **Labs**.
+1. In {{site.konnect_short_name}}, click your organization dropdown and select "Manage organizations".
+1. Click the **Labs** tab.
 1. Click **Catalog - MCP Registry**.
-1. Click the toggle at the top right to enable the integration.
+1. Click **Enable feature**.
 
-You can access the MCP Registry by navigating to **Catalog** > **MCP Registries** in the sidebar.
+You can access MCP Registries by doing the following:
+
+1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
+1. Click the **MCP registries** tab.
+   
+   {:.info}
+   > If you're using [{{site.konnect_catalog}} Classic](/catalog-classic/), click **MCP Registries** in the sidebar instead.
 
 ## Create an MCP Registry
 
+{% navtabs "create-mcp-registry" %}
+{% navtab "{{site.konnect_short_name}} UI" %}
+1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
+1. From the **New** dropdown menu, select "MCP registry".
+   
+   {:.info}
+   > If you're using [{{site.konnect_catalog}} Classic](/catalog-classic/), click **MCP Registries** in the sidebar instead.
+1. In the **Display Name** field, enter a name for your registry, for example `Production Registry`.
+1. In the **Name** field, enter a unique identifier for the registry, for example `production-registry`. This must be lowercase and alphanumeric, and can include hyphens.
+1. (Optional) In the **Description** field, describe the purpose of this registry.
+1. Click **Create**.
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}} API" %}
 Send a POST request to the `/mcp-registries` endpoint:
 
 ```sh
@@ -71,8 +94,10 @@ curl -X POST "https://klabs.us.api.konghq.com/v0/mcp-registries" \
     "description": "Registry for MCP servers approved for internal AI agents"
   }'
 ```
+{% endnavtab %}
+{% endnavtabs %}
 
-## Publish an MCP server
+## Add an MCP server
 
 An MCP server represents an agent-facing service definition. It describes:
 
@@ -80,6 +105,45 @@ An MCP server represents an agent-facing service definition. It describes:
 * Its version  
 * How agents can connect to it
 
+{% navtabs "publish-mcp-server" %}
+{% navtab "{{site.konnect_short_name}} UI" %}
+1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
+1. Click the **MCP registries** tab.
+1. Click your MCP registry.
+1. From your MCP Registry's detail page, click **New MCP Server**.
+1. (Optional) In the **Title** field, enter a short, descriptive name for the server, for example `Filesystem Server`.
+1. In the **Name** field, enter a unique identifier in reverse-DNS format, for example `io.example/filesystem`. This must contain exactly one forward slash.
+1. In the **Version** field, enter a version number using semantic versioning, for example `1.0.0`.
+1. In the **Description** field, enter a description of what the server does.
+1. (Optional) Click **Show optional fields**, and do the following:
+   1. (Optional) In the **Schema URI** field, enter a URI, for example `https://example.com/schemas/server.json`.
+   1. (Optional) In the **GitHub repository URL** field, enter a URL, for example `https://github.com/owner/repo`.
+   1. (Optional) In the **Website URL** field, enter a URL, for example `https://example.com`.
+   1. (Optional) In the **Metadata** field, enter a JSON object, for example `{"license": "MIT", "author": "Example Corp", "certified": true}`.
+1. (Optional) To describe a run-it-yourself distribution option, such as an npm or PyPI package, click **Add Package** and do the following:
+   1. From the **Transport type** dropdown menu, select an option. 
+      If you select "Streamable-HTTP" or "SSE", also enter the transport URL.
+   1. From the **Registry type** dropdown menu, select how you want users to download packages.
+   1. In the **Registry base URL** field, enter `https://registry.npmjs.org`.
+   1. In the **Package identifier** field, enter the base URL of the package registry, for example `@modelcontextprotocol/mcp-server`.
+   1. (Optional) In the **Package version** field, enter a version, for example `1.0.0`.
+   1. Click **Save**.
+1. (Optional) To add a remote to describe a hosted MCP server endpoint that agents can connect to over the network, click **Add Remote** and do the following:
+   1. From the **Transport type** dropdown menu, select "Streamable-HTTP" or "SSE".
+   1. In the **Remote URL** field, enter the MCP server's endpoint, for example `https://example.com/mcp`.
+   1. (Optional) In the **Headers** field, enter headers as a JSON array of objects, for example, to pass an authorization token:
+   ```json
+   [
+     {
+       "name": "Authorization",
+       "value": "Bearer ${token}"
+     }
+   ]
+   ```
+   1. Click **Save**.
+1. Click **Publish**.
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}} API" %}
 To add an MCP server, send a POST request to the `/mcp-registries/{registryIdentifier}/v0.1/publish` endpoint:
 
 ```sh
@@ -107,6 +171,8 @@ curl -X POST "https://klabs.us.api.konghq.com/v0/mcp-registries/internal-mcp-reg
     ]
   }'
 ```
+{% endnavtab %}
+{% endnavtabs %}
 
 
 ## Packages and remotes
@@ -132,7 +198,6 @@ Remotes describe hosted MCP server endpoints that agents can connect to over the
 
 An MCP server can define multiple packages and multiple remotes simultaneously. This allows organizations to support different runtime environments without duplicating server definitions.
 
-
 ## Access and authentication
 
 Registry endpoints assume a {{site.konnect_short_name}} authentication context. Only authenticated clients with appropriate [access tokens](/konnect-api/#konnect-api-authentication) can query the registry URL:
@@ -142,17 +207,13 @@ curl -X GET "https://klabs.us.api.konghq.com/v0/mcp-registries/internal-mcp-regi
   -H "Authorization: Bearer $KONNECT_TOKEN"
 ```
 
-Future enhancements will allow publishing MCP servers to Dev Portal, enabling controlled exposure to broader audiences, including users and agents outside of {{site.konnect_short_name}}.
-
-
 ## What’s next
 
 We are continuing to evolve MCP Registries alongside the broader MCP ecosystem.
 
 Planned enhancements include:
 
-* Publishing MCP servers to Dev Portal  
-* Auto-registration of MCP servers created via {{site.konnect_short_name}}-native workflows such as {{site.ai_gateway}} 
+* Linking {{site.konnect_catalog}} MCP servers to MCP servers created in [{{site.ai_gateway}} 2.0](/ai-gateway/)
 * Additional governance and lifecycle controls
 
 Because the MCP specification is still evolving, we are committed to iterating in partnership with customers who have already begun developing MCP servers and experimenting with agent-based workflows.

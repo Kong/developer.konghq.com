@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../../policies/pages/reference'
+require_relative '../../../file_cache'
 
 module Jekyll
   module MeshPolicyPages
@@ -13,7 +14,7 @@ module Jekyll
         end
 
         def markdown_content
-          @markdown_content ||= File.read('app/_includes/mesh_policies/reference.md')
+          @markdown_content ||= FileCache.read('app/_includes/mesh_policies/reference.md')
         end
 
       end

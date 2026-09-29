@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'yaml'
+require_relative '../../../file_cache'
 
 module Jekyll
   module PluginPages
@@ -19,7 +20,7 @@ module Jekyll
         end
 
         def markdown_content
-          @markdown_content ||= File.read('app/_includes/plugins/reference.md')
+          @markdown_content ||= FileCache.read('app/_includes/plugins/reference.md')
         end
 
         def data

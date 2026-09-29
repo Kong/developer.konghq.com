@@ -20,6 +20,8 @@ works_on:
 min_version:
     gateway: '3.8'
 
+ai_gateway_url: "/ai-gateway/entities/ai-model/"
+
 topologies:
   on_prem:
     - hybrid
@@ -196,4 +198,4 @@ For setup instructions, see [AI plugin Partials](/gateway/entities/partial/#ai-p
 
 {% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
 
-{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 %}
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 redis_group="vectordb" %}

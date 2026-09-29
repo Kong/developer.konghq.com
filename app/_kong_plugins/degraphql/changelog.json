@@ -13,6 +13,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.19": [
+    {
+      "message": "Fixed an issue where the plugin router did not refresh after an incremental sync update on a Data Plane, leaving routes stale until the next full config push.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Fixed an issue where the degraphql routes were updated from the control plane but not updated in the degraphql router on the data plane.",

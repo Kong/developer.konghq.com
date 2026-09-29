@@ -13,7 +13,6 @@ module Jekyll
       end
 
       def process
-        return if @page.url.start_with?('/assets/')
         return if @page.data['layout'] && @page.data['layout'] == 'none'
         return if @site.config.dig('sitemap', 'exclude').include?(@page.url)
 

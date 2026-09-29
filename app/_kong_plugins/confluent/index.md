@@ -60,7 +60,6 @@ With Kafka at its core, [Confluent](https://confluent.io) offers complete, fully
 
 {:.info} 
 > **Note**: This plugin has the following known limitations:
-> * Message compression is not supported.
 > * The message format is not customizable.
 > * {{site.base_gateway}} supports Kafka 4.0 starting from version 3.10.
 
@@ -75,3 +74,9 @@ With Kafka at its core, [Confluent](https://confluent.io) offers complete, fully
 ## Kafka record headers {% new_in 3.15 %}
 
 {% include_cached /plugins/confluent-kafka-consume/record-headers.md name=page.name %}
+
+## Message compression {% new_in 3.16 %}
+
+{% include_cached /plugins/confluent-kafka-consume/compression.md name=page.name %}
+
+For an example, see [Compress messages before sending to Kafka](/plugins/confluent/examples/compress-messages/).

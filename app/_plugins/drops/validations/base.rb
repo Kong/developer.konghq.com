@@ -2,12 +2,14 @@
 
 require 'json'
 require_relative '../../lib/site_accessor'
+require_relative '../concerns/request_snippet_config'
 
 module Jekyll
   module Drops
     module Validations
       class Base < Liquid::Drop # rubocop:disable Style/Documentation
         include Jekyll::SiteAccessor
+        include Jekyll::Drops::Concerns::DualTopologySnippetConfig
 
         def self.make_for(id:, yaml:, format: 'html')
           case id
@@ -33,6 +35,14 @@ module Jekyll
             EnvVariables.new(id:, yaml:, format:)
           when 'custom-command'
             CustomCommand.new(id:, yaml:, format:)
+          when 'claude-code'
+            ClaudeCode.new(id:, yaml:, format:)
+          when 'codex'
+            Codex.new(id:, yaml:, format:)
+          when 'qwen'
+            Qwen.new(id:, yaml:, format:)
+          when 'gemini'
+            Gemini.new(id:, yaml:, format:)
           else
             raise ArgumentError, "Missing Drop for `#{id}`"
           end

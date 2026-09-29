@@ -2,6 +2,7 @@
 
 require 'yaml'
 require_relative '../monkey_patch'
+require_relative '../component_templates'
 
 module Jekyll
   class HttpRequest < Liquid::Block # rubocop:disable Style/Documentation
@@ -23,7 +24,7 @@ module Jekyll
 
       context.stack do
         context['config'] = drop
-        Liquid::Template.parse(File.read(drop.template_file), { line_numbers: true }).render(context)
+        ComponentTemplates.fetch('http_request', @format, base: 'app/_includes').render(context)
       end
     rescue Psych::SyntaxError => e
       message = <<~STRING

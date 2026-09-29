@@ -2,7 +2,7 @@
 {% for item in include.config %}
 {% navtab "{{ item.title }}" %}
 {%- if item.content -%}
-{{ item.content }}
+{{ item.content | liquify }}
 {%- elsif item.include_content -%}
 {%- assign include_path = item.include_content | append: ".md" -%}
 {% include {{ include_path }} %}

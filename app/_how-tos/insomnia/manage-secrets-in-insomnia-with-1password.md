@@ -80,7 +80,7 @@ The 1Password plugin creates a custom [template tag](/insomnia/template-tags/) t
 1. Create a new request. For this example, we'll send a `POST` request to `http://httpbin.konghq.com/anything`.
 1. Open the **Body** tab, click **No Body** and select **Form Data**.
 1. Enter a parameter name, `secret` for example.
-1. Click the **value** field field, press `Control+Space` to display the available template tags, and select **1Password => Fetch Secret**.
+1. Click the **value** field, press `Control+Space` to display the available template tags, and select **1Password => Fetch Secret**.
 1. Click the template tag to configure it, and add the reference to the 1Password secret we created in the [prerequisites](#1password): `op://insomnia/test-secret/password`. The live preview should show `my-password`.
 1. Click **Done** to apply the configuration.
 

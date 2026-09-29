@@ -11,18 +11,18 @@ tags:
   - gitlab
 
 breadcrumbs:
-  - /catalog/
+  - /catalog-classic/
   - /catalog/integrations/
 
 works_on:
     - konnect
 
-description: The GitLab integration allows you to associate your {{site.konnect_catalog}} Service to one or more GitLab projects
+description: The GitLab integration allows you to associate your {{site.konnect_catalog}} Classic Service to one or more GitLab projects
 search_aliases:
   - service catalog
 related_resources:
-  - text: "{{site.konnect_catalog}}"
-    url: /catalog/
+  - text: "{{site.konnect_catalog}} Classic"
+    url: /catalog-classic/
   - text: Integrations
     url: /catalog/integrations/
   - text: Import and map self-managed GitLab resources in {{site.konnect_catalog}}
@@ -32,14 +32,17 @@ related_resources:
 discovery_support: true
 bindable_entities: "Projects"
 ---
-The GitLab integration allows you to associate your {{site.konnect_catalog}} service to one or more [GitLab projects](https://docs.gitlab.com/ee/user/get_started/get_started_projects.html).
+
+{% include_cached catalog/catalog-classic-banner.md %}
+
+The GitLab integration allows you to associate your {{site.konnect_catalog}} Classic service to one or more [GitLab projects](https://docs.gitlab.com/ee/user/get_started/get_started_projects.html).
 {% include /catalog/multi-resource.md %}
 
 For each linked project, the UI can show a **Project Summary** with simple data pulled from the GitLab API, such as the number of open issues, open merge requests, contributors, languages, and latest releases.
 
 For a complete tutorial using the {{site.konnect_short_name}} API, see the following:
-* [Import and map self-managed GitLab resources in {{site.konnect_catalog}}](/how-to/install-and-map-gitlab-resources/)
-* [Import and map SaaS GitLab resources in {{site.konnect_catalog}}](/how-to/install-and-map-gitlab-saas-resources/)
+* [Import and map self-managed GitLab resources in {{site.konnect_catalog}} Classic](/how-to/install-and-map-gitlab-resources/)
+* [Import and map SaaS GitLab resources in {{site.konnect_catalog}} Classic](/how-to/install-and-map-gitlab-saas-resources/)
 
 ## Prerequisites
 
@@ -55,7 +58,7 @@ To use the GitLab integration in a self-hosted environment:
 1. [Create a group-owned application](https://docs.gitlab.com/integration/oauth_provider/#create-a-group-owned-application) in your GitLab instance. This is required to enable OAuth access for your organization.
    * Set the redirect URI in GitLab to `https://cloud.konghq.com/$KONNECT_REGION/service-catalog/integrations/gitlab`
    * Make sure the application has the `api` scope.
-1. In the {{site.konnect_short_name}} UI, navigate to the [GitLab integration](https://cloud.konghq.com/service-catalog/integrations/gitlab/configuration)
+1. In the {{site.konnect_short_name}} UI, navigate to the GitLab integration.
 1. In the **GitLab API Base URL** field, enter the full URL to your GitLab API, ending in `/api/v4`.  
    For example: `https://gitlab.example.com/api/v4`
 1. Fill out the authorization fields using the values from your GitLab OAuth application:
@@ -66,7 +69,7 @@ To use the GitLab integration in a self-hosted environment:
 1. Click **Authorize** to complete the connection.
 {% endnavtab %}
 {% navtab "SaaS" %}
-1. From the **Catalog** in {{site.konnect_short_name}}, select **[Integrations](https://cloud.konghq.com/us/service-catalog/integrations)**. 
+1. From the **Catalog** in {{site.konnect_short_name}}, select **Integrations**. 
 1. Select **GitLab**, then **Install GitLab**.
 1. Click **Authorize**. 
 {% endnavtab %}
@@ -82,7 +85,7 @@ columns:
     key: description
 rows:
   - entity: Projects
-    description: "Organizes all the data for a specific development project that relates to a {{site.konnect_catalog}} service."
+    description: "Organizes all the data for a specific development project that relates to a {{site.konnect_catalog}} Classic service."
 {% endtable %}
 <!--vale on-->
 

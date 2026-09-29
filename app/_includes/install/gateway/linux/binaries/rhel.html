@@ -2,7 +2,11 @@
 {% include install/gateway/linux/download_card.html arch='aarch64' distro=include.distro release=include.release os=include.os download_url=aarch_download_url %}
 {%- capture x86_download_url -%}{%- include install/gateway/linux/binaries/urls/rhel.html release=include.release distro=include.distro arch="x86_64" -%}{%- endcapture -%}
 {% include install/gateway/linux/download_card.html arch='x86_64' distro=include.distro release=include.release os=include.os download_url=x86_download_url %}
-{% if include.distro.package_support.fips -%}
-    {%- capture fips_download_url -%}{%- include install/gateway/linux/binaries/urls/rhel.html release=include.release distro=include.distro arch="x86_64" fips=true -%}{%- endcapture -%}
-    {% include install/gateway/linux/download_card.html arch='x86_64' distro=include.distro release=include.release os=include.os fips=true download_url=fips_download_url %}
+{% if include.distro.package_support.fips2 -%}
+    {%- capture fips2_download_url -%}{%- include install/gateway/linux/binaries/urls/rhel.html release=include.release distro=include.distro arch="x86_64" fips2=true -%}{%- endcapture -%}
+    {% include install/gateway/linux/download_card.html arch='x86_64' distro=include.distro release=include.release os=include.os fips2=true download_url=fips2_download_url %}
+{% endif %}
+{% if include.distro.package_support.fips3 -%}
+    {%- capture fips3_download_url -%}{%- include install/gateway/linux/binaries/urls/rhel.html release=include.release distro=include.distro arch="x86_64" fips3=true -%}{%- endcapture -%}
+    {% include install/gateway/linux/download_card.html arch='x86_64' distro=include.distro release=include.release os=include.os fips3=true download_url=fips3_download_url %}
 {% endif %}

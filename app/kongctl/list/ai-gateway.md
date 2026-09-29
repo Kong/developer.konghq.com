@@ -17,6 +17,8 @@ breadcrumbs:
 related_resources:
   - text: kongctl list commands
     url: /kongctl/list/
+  - text: kongctl declarative resource reference
+    url: /kongctl/supported-resources/#ai-gateway
 ---
 
 Use the `list` verb with the `ai-gateway` command to list {{site.konnect_short_name}} {{site.ai_gateway}}s.
@@ -34,6 +36,15 @@ rows:
       [kongctl list ai-gateway agents](#kongctl-list-ai-gateway-agents)
     description: "Use the `agents` command to list or retrieve Agents for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
   - command: |
+      [kongctl list ai-gateway auth-strategies](#kongctl-list-ai-gateway-auth-strategies)
+    description: "Use the `auth-strategies` command to list or retrieve Auth Strategies for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
+  - command: |
+      [kongctl list ai-gateway ca-certificates](#kongctl-list-ai-gateway-ca-certificates)
+    description: "Use the `ca-certificates` command to list or retrieve CA certificates for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
+  - command: |
+      [kongctl list ai-gateway certificates](#kongctl-list-ai-gateway-certificates)
+    description: "Use the `certificates` command to list or retrieve runtime certificates for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
+  - command: |
       [kongctl list ai-gateway config-stores](#kongctl-list-ai-gateway-config-stores)
     description: "Use the `config-stores` command to list or retrieve Config Stores for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
   - command: |
@@ -48,9 +59,6 @@ rows:
   - command: |
       [kongctl list ai-gateway data-plane-certificates](#kongctl-list-ai-gateway-data-plane-certificates)
     description: "Use the `data-plane-certificates` command to list or retrieve data plane certificates for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
-  - command: |
-      [kongctl list ai-gateway identity-providers](#kongctl-list-ai-gateway-identity-providers)
-    description: "Use the `identity-providers` command to list or retrieve identity providers for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
   - command: |
       [kongctl list ai-gateway mcp-servers](#kongctl-list-ai-gateway-mcp-servers)
     description: "Use the `mcp-servers` command to list or retrieve MCP Servers for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
@@ -67,6 +75,9 @@ rows:
       [kongctl list ai-gateway policies](#kongctl-list-ai-gateway-policies)
     description: "Use the `policies` command to list or retrieve Policies for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
   - command: |
+      [kongctl list ai-gateway snis](#kongctl-list-ai-gateway-snis)
+    description: "Use the `snis` command to list or retrieve SNIs for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
+  - command: |
       [kongctl list ai-gateway vaults](#kongctl-list-ai-gateway-vaults)
     description: "Use the `vaults` command to list or retrieve Vaults for a specific {{site.konnect_short_name}} {{site.ai_gateway}}."
 {% endtable %}
@@ -81,9 +92,27 @@ Use the `agents` command to list or retrieve Agents for a specific {{site.konnec
 
 {% include_cached /kongctl/help/list/ai-gateway/agents.md %}
 
+### kongctl list ai-gateway auth-strategies
+
+Use the `auth-strategies` command to list or retrieve Auth Strategies for a specific {{site.konnect_short_name}} {{site.ai_gateway}}.
+
+{% include_cached /kongctl/help/list/ai-gateway/auth-strategies.md %}
+
+### kongctl list ai-gateway ca-certificates
+
+Use the `ca-certificates` command to list or retrieve CA certificates for a specific {{site.konnect_short_name}} {{site.ai_gateway}}.
+
+{% include_cached /kongctl/help/list/ai-gateway/ca-certificates.md %}
+
+### kongctl list ai-gateway certificates
+
+Use the `certificates` command to list or retrieve runtime certificates for a specific {{site.konnect_short_name}} {{site.ai_gateway}}.
+
+{% include_cached /kongctl/help/list/ai-gateway/certificates.md %}
+
 ### kongctl list ai-gateway config-stores
 
-Use the `config-stores` command to list or retrieve Config Stores for a {{site.konnect_short_name}} {{site.ai_gateway}}.
+Use the `config-stores` command to list or retrieve Config Stores for a specific {{site.konnect_short_name}} {{site.ai_gateway}}.
 
 {% include_cached /kongctl/help/list/ai-gateway/config-stores.md %}
 
@@ -110,12 +139,6 @@ Use the `credentials` command to list or retrieve Credentials for a specific {{s
 Use the `data-plane-certificates` command to list or retrieve data plane certificates for a specific {{site.konnect_short_name}} {{site.ai_gateway}}.
 
 {% include_cached /kongctl/help/list/ai-gateway/data-plane-certificates.md %}
-
-### kongctl list ai-gateway identity-providers
-
-Use the `identity-providers` command to list or retrieve identity providers for a specific {{site.konnect_short_name}} {{site.ai_gateway}}.
-
-{% include_cached /kongctl/help/list/ai-gateway/identity-providers.md %}
 
 ### kongctl list ai-gateway mcp-servers
 
@@ -146,6 +169,12 @@ Use the `nodes` command to list or retrieve data plane Nodes for a specific {{si
 Use the `policies` command to list or retrieve Policies for a specific {{site.konnect_short_name}} {{site.ai_gateway}}.
 
 {% include_cached /kongctl/help/list/ai-gateway/policies.md %}
+
+### kongctl list ai-gateway snis
+
+Use the `snis` command to list or retrieve SNIs for a specific {{site.konnect_short_name}} {{site.ai_gateway}}.
+
+{% include_cached /kongctl/help/list/ai-gateway/snis.md %}
 
 ### kongctl list ai-gateway vaults
 

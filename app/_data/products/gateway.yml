@@ -30,12 +30,14 @@ releases:
     ee-version: "3.4.3.29"
     ce-version: "3.4.2"
     eol: 2026-08-31
+    sunset: true
     lts: true
     distributions:
       - amazonlinux2:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -45,7 +47,8 @@ releases:
       - amazonlinux2023:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -56,7 +59,8 @@ releases:
       - debian11:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -66,7 +70,8 @@ releases:
       - debian12:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -79,7 +84,8 @@ releases:
           package_support:
             arm: false
             graviton: false
-            fips: true
+            fips2: true
+            fips3: false
           docker: false
           eol: 2026-08-31
       - rhel9:
@@ -87,11 +93,13 @@ releases:
           package_support:
             graviton: false
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           eol: 2026-08-31
           default: true
       - ubuntu2204:
@@ -99,11 +107,13 @@ releases:
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           eol: 2026-08-31
           default: true
     third_party_support:
@@ -198,7 +208,8 @@ releases:
       - amazonlinux2:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -208,7 +219,8 @@ releases:
       - amazonlinux2023:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -220,13 +232,15 @@ releases:
           package: true
           package_support:
             arm: false
-            fips: false
+            fips2: false
+            fips3: false
             graviton: false
           eol: June 2024
       - debian11:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -236,7 +250,8 @@ releases:
       - debian12:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -248,7 +263,8 @@ releases:
           package: true
           package_support:
             arm: false
-            fips: false
+            fips2: false
+            fips3: false
             graviton: false
           eol: June 2024
       - rhel8:
@@ -256,7 +272,8 @@ releases:
           package_support:
             arm: false
             graviton: false
-            fips: true
+            fips2: true
+            fips3: false
           docker: false
           eol: May 2025
       - rhel9:
@@ -264,11 +281,13 @@ releases:
           package_support:
             graviton: false
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           eol: May 2025
           default: true
       - ubuntu2004:
@@ -276,7 +295,8 @@ releases:
           package_support:
             graviton: false
             arm: false
-            fips: true
+            fips2: true
+            fips3: false
           docker: false
           eol: May 2025
       - ubuntu2204:
@@ -284,11 +304,13 @@ releases:
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           eol: May 2025
           default: true
     third_party_support:
@@ -389,7 +411,8 @@ releases:
       - amazonlinux2:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -399,7 +422,8 @@ releases:
       - amazonlinux2023:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -410,7 +434,8 @@ releases:
       - debian11:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -420,7 +445,8 @@ releases:
       - debian12:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -433,7 +459,8 @@ releases:
           package_support:
             arm: false
             graviton: false
-            fips: true
+            fips2: true
+            fips3: false
           docker: false
           eol: Sept 2025
       - rhel9:
@@ -441,11 +468,13 @@ releases:
           package_support:
             graviton: false
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           eol: Sept 2025
           default: true
       - ubuntu2004:
@@ -454,18 +483,21 @@ releases:
             graviton: false
             arm: false
           docker: false
-          fips: true
+          fips2: true
+          fips3: false
           eol: April 2025
       - ubuntu2204:
           package: true
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           eol: Sept 2025
           default: true
     third_party_support:
@@ -568,7 +600,8 @@ releases:
       - amazonlinux2:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -578,7 +611,8 @@ releases:
       - amazonlinux2023:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -589,7 +623,8 @@ releases:
       - debian11:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -599,7 +634,8 @@ releases:
       - debian12:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -612,7 +648,8 @@ releases:
           package_support:
             arm: false
             graviton: false
-            fips: true
+            fips2: true
+            fips3: false
           docker: false
           eol: Dec 2025
       - rhel9:
@@ -620,11 +657,13 @@ releases:
           package_support:
             graviton: false
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           eol: Dec 2025
           default: true
       - ubuntu2004:
@@ -632,7 +671,8 @@ releases:
           package_support:
             graviton: false
             arm: false
-            fips: true
+            fips2: true
+            fips3: false
           docker: false
           eol: April 2025
       - ubuntu2204:
@@ -640,22 +680,26 @@ releases:
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           eol: Dec 2025
       - ubuntu2404:
           package: true
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           eol: Dec 2025
           default: true
     third_party_support:
@@ -756,14 +800,15 @@ releases:
               - 3.2
               - Confluent Cloud
   - release: "3.10"
-    ee-version: "3.10.0.17"
+    ee-version: "3.10.0.19"
     lts: true
     eol: 2028-03-31
     distributions:
       - amazonlinux2:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -773,7 +818,8 @@ releases:
       - amazonlinux2023:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -783,7 +829,8 @@ releases:
       - debian11:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -793,51 +840,68 @@ releases:
       - debian12:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
           docker_support:
             arm: true
+          default: true
+      - distroless:
+          package: false
+          docker: true
+          docker_support:
+            arm: true
+            fips2: false
+            fips3: false
+            graviton: true
           default: true
       - rhel8:
           package: true
           package_support:
             arm: false
             graviton: false
-            fips: true
+            fips2: true
+            fips3: false
           docker: false
       - rhel9:
           package: true
           package_support:
             graviton: false
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           default: true
       - ubuntu2204:
           package: true
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
       - ubuntu2404:
           package: true
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           default: true
     third_party_support:
       ai_providers:
@@ -952,7 +1016,8 @@ releases:
       - amazonlinux2:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -962,7 +1027,8 @@ releases:
       - amazonlinux2023:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -972,7 +1038,8 @@ releases:
       - debian11:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -981,7 +1048,8 @@ releases:
       - debian12:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -993,39 +1061,46 @@ releases:
           package_support:
             arm: false
             graviton: false
-            fips: true
+            fips2: true
+            fips3: false
           docker: false
       - rhel9:
           package: true
           package_support:
             graviton: false
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           default: true
       - ubuntu2204:
           package: true
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
       - ubuntu2404:
           package: true
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           default: true
     third_party_support:
       ai_providers:
@@ -1136,13 +1211,14 @@ releases:
               - Confluent Cloud
 
   - release: "3.12"
-    ee-version: "3.12.0.11"
+    ee-version: "3.12.0.12"
     eol: 2026-10-01
     distributions:
       - amazonlinux2:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1152,7 +1228,8 @@ releases:
       - amazonlinux2023:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1162,7 +1239,8 @@ releases:
       - debian11:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1172,7 +1250,8 @@ releases:
       - debian12:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1184,7 +1263,8 @@ releases:
           docker: true
           docker_support:
             arm: true
-            fips: false
+            fips2: false
+            fips3: false
             graviton: true
           default: true
       - rhel8:
@@ -1192,39 +1272,46 @@ releases:
           package_support:
             arm: false
             graviton: false
-            fips: true
+            fips2: true
+            fips3: false
           docker: false
       - rhel9:
           package: true
           package_support:
             graviton: false
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           default: true
       - ubuntu2204:
           package: true
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
       - ubuntu2404:
           package: true
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           default: true
     third_party_support:
       ai_providers:
@@ -1334,13 +1421,14 @@ releases:
               - Confluent Cloud
 
   - release: "3.13"
-    ee-version: "3.13.0.9"
+    ee-version: "3.13.0.11"
     eol: 2026-12-18
     distributions:
       - amazonlinux2:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1350,7 +1438,8 @@ releases:
       - amazonlinux2023:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1360,7 +1449,8 @@ releases:
       - debian11:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1370,7 +1460,8 @@ releases:
       - debian12:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1382,7 +1473,8 @@ releases:
           docker: true
           docker_support:
             arm: true
-            fips: false
+            fips2: false
+            fips3: false
             graviton: true
           default: true
       - rhel8:
@@ -1390,17 +1482,20 @@ releases:
           package_support:
             arm: false
             graviton: false
-            fips: true
+            fips2: true
+            fips3: false
           docker: false
       - rhel9:
           package: true
           package_support:
             graviton: false
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
-            fips: true
+            fips2: true
+            fips3: false
             arm: true
           default: true
       - ubuntu2204:
@@ -1408,20 +1503,24 @@ releases:
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
-            fips: true
+            fips2: true
+            fips3: false
             arm: true
       - ubuntu2404:
           package: true
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
-            fips: true
+            fips2: true
+            fips3: false
             arm: true
           default: true
     third_party_support:
@@ -1533,13 +1632,14 @@ releases:
 
   - release: "3.14"
     lts: true
-    ee-version: "3.14.0.13"
+    ee-version: "3.14.0.15"
     eol: 2029-04-07
     distributions:
       - amazonlinux2:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1549,7 +1649,8 @@ releases:
       - amazonlinux2023:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1559,7 +1660,8 @@ releases:
       - debian11:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1569,19 +1671,22 @@ releases:
       - debian12:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
           docker_support:
             arm: true
           default: true
+          eol: 2028-06-30
       - distroless:
           package: false
           docker: true
           docker_support:
             arm: true
-            fips: false
+            fips2: false
+            fips3: false
             graviton: true
           default: true
       - rhel8:
@@ -1589,17 +1694,20 @@ releases:
           package_support:
             arm: false
             graviton: false
-            fips: true
+            fips2: true
+            fips3: true
           docker: false
       - rhel9:
           package: true
           package_support:
             graviton: false
             arm: true
-            fips: true
+            fips2: true
+            fips3: true
           docker: true
           docker_support:
-            fips: true
+            fips2: true
+            fips3: true
             arm: true
           default: true
       - ubuntu2204:
@@ -1607,20 +1715,25 @@ releases:
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: true
           docker: true
           docker_support:
-            fips: true
+            fips2: true
+            fips3: true
             arm: true
+          eol: 2027-05-31
       - ubuntu2404:
           package: true
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: true
           docker: true
           docker_support:
-            fips: true
+            fips2: true
+            fips3: true
             arm: true
           default: true
     third_party_support:
@@ -1706,6 +1819,7 @@ releases:
       datastore:
         - postgres:
             versions:
+              - 18
               - 17
               - 16
               - 15
@@ -1731,14 +1845,14 @@ releases:
               - Confluent Cloud
 
   - release: "3.15"
-    latest: true
-    ee-version: "3.15.0.3"
+    ee-version: "3.15.0.6"
     eol: 2027-07-02
     distributions:
       - amazonlinux2023:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1748,7 +1862,8 @@ releases:
       - debian11:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1758,7 +1873,8 @@ releases:
       - debian12:
           package: true
           package_support:
-            fips: false
+            fips2: false
+            fips3: false
             arm: true
             graviton: true
           docker: true
@@ -1770,7 +1886,8 @@ releases:
           docker: true
           docker_support:
             arm: true
-            fips: false
+            fips2: false
+            fips3: false
             graviton: true
           default: true
       - rhel8:
@@ -1778,17 +1895,20 @@ releases:
           package_support:
             arm: false
             graviton: false
-            fips: true
+            fips2: true
+            fips3: false
           docker: false
       - rhel9:
           package: true
           package_support:
             graviton: false
             arm: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
-            fips: true
+            fips2: true
+            fips3: false
             arm: true
           default: true
       - ubuntu2204:
@@ -1796,21 +1916,242 @@ releases:
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
           docker: true
           docker_support:
-            fips: true
+            fips2: true
+            fips3: false
             arm: true
+          eol: 2027-05-31
       - ubuntu2404:
           package: true
           package_support:
             arm: true
             graviton: true
-            fips: true
+            fips2: true
+            fips3: false
+          docker: true
+          docker_support:
+            fips2: true
+            fips3: false
+            arm: true
+          default: true
+    third_party_support:
+      ai_providers:
+        - openai:
+        - cohere:
+        - azure_ai:
+        - anthropic:
+        - mistral:
+        - llama2:
+            format:
+              - Raw
+              - OLLAMA
+              - OpenAI
+        - bedrock:
+        - gemini:
+
+      s3_api:
+        - s3
+        - minio
+
+      log_provider:
+        - splunk
+        - datadog
+        - loggly
+
+      service_mesh:
+        - kongmesh:
+            versions:
+              - 2.0
+        - istio:
+            versions:
+              - 1.16
+              - 1.15
+              - 1.14
+
+      identity_provider:
+        - auth0
+        - cognito
+        - connect2id
+        - curity
+        - dex
+        - gluu
+        - google
+        - identityserver
+        - keycloak
+        - azure-ad
+        - microsoft-adfs
+        - microsoft-live-connect
+        - okta
+        - onelogin
+        - openam
+        - paypal
+        - pingfederate
+        - salesforce
+        - wso2
+        - yahoo
+
+      vault:
+        - vaultproject:
+            versions:
+              - 1.12
+        - aws-sm:
+        - azure-key-vaults:
+        - gcp-sm:
+        - conjur:
+            versions:
+              - 1.22.2-12
+      metrics:
+        - prometheus:
+            versions:
+              - 2.40
+              - 2.37
+        - statsd:
+            versions:
+              - 0.9
+        - opentelemetry:
+        - zipkin:
+            versions:
+              - 2.23
+              - 2.22
+
+      datastore:
+        - postgres:
+            versions:
+              - 18
+              - 17
+              - 16
+              - 15
+              - 14
+              - 13
+              - Amazon RDS
+              - Amazon Aurora
+        - redis:
+            versions:
+              - 6
+              - 7
+              - AWS Elasticache
+        - valkey:
+            versions:
+              - 8
+        - influxdb:
+            versions:
+              - 1
+        - kafka:
+            versions:
+              - 3.3
+              - 3.2
+              - Confluent Cloud
+
+  - release: "3.16"
+    latest: true
+    ee-version: "3.16.0.0"
+    eol: 2027-09-15
+    distributions:
+      - amazonlinux2023:
+          package: true
+          package_support:
+            fips2: false
+            fips3: false
+            arm: true
+            graviton: true
+          docker: true
+          docker_support:
+            arm: true
+          default: true
+      - debian12:
+          package: true
+          package_support:
+            fips2: false
+            fips3: false
+            arm: true
+            graviton: true
+          docker: true
+          docker_support:
+            arm: true
+          default: true
+      - debian13:
+          package: true
+          package_support:
+            fips2: false
+            fips3: false
+            arm: true
+            graviton: true
+          docker: false
+          default: true
+      - distroless:
+          package: false
+          docker: true
+          docker_support:
+            arm: true
+            fips2: true
+            fips3: true
+            graviton: true
+          default: true
+      - rhel8:
+          package: true
+          package_support:
+            arm: false
+            graviton: false
+            fips2: true
+            fips3: true
+          docker: false
+      - rhel9:
+          package: true
+          package_support:
+            graviton: false
+            arm: true
+            fips2: true
+            fips3: true
           docker: true
           docker_support:
             fips: true
             arm: true
+          default: true
+      - rhel10:
+          package: true
+          package_support:
+            graviton: false
+            arm: true
+            fips2: true
+            fips3: true
+          docker: false
+          default: true
+      - ubuntu2204:
+          package: true
+          package_support:
+            arm: true
+            graviton: true
+            fips2: true
+            fips3: true
+          docker: true
+          docker_support:
+            fips: true
+            arm: true
+          eol: 2027-05-31
+      - ubuntu2404:
+          package: true
+          package_support:
+            arm: true
+            graviton: true
+            fips2: true
+            fips3: true
+          docker: true
+          docker_support:
+            fips2: true
+            fips3: true
+            arm: true
+          default: true
+      - ubuntu2604:
+          package: true
+          package_support:
+            arm: true
+            graviton: true
+            fips2: true
+            fips3: true
+          docker: false
           default: true
     third_party_support:
       ai_providers:
@@ -1919,7 +2260,6 @@ releases:
               - 3.2
               - Confluent Cloud
 
-
 cloud_deployment_platforms:
   - AWS EKS
   - AWS EKS Fargate
@@ -1940,6 +2280,17 @@ marketplaces:
   - Google Cloud Marketplace
 
 release_dates:
+  '3.13.0.11': 2026/09/28
+  '3.10.0.19': 2026/09/28
+  '3.14.0.15': 2026/09/17
+  '3.15.0.6': 2026/09/16
+  '3.16.0.0': 2026/09/15
+  '3.12.0.12': 2026/09/02
+  '3.10.0.18': 2026/08/31
+  '3.14.0.14': 2026/08/26
+  '3.15.0.5': 2026/08/24
+  '3.13.0.10': 2026/08/20
+  '3.15.0.4': 2026/08/20
   '3.14.0.13': 2026/08/19
   '3.12.0.11': 2026/08/18
   '3.15.0.3': 2026/08/10

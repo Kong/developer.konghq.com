@@ -92,7 +92,8 @@ rows:
   - name: "`network.protocol.version`"
     description: |
       Version of the HTTP protocol used in establishing connection [1.2, 2.0].
-  - name: "`proxy.kong.request.host`"
+  - name: |
+      `proxy.kong.request.host` {% new_in 3.16 %}
     description: |
       The value of `Host` as determined by {{site.base_gateway}} in the following order of precedence: 
        1. Hostname from the request line.
@@ -105,6 +106,10 @@ rows:
   - name: "`proxy.kong.upstream.status_code`"
     description: |
       Status code returned by the upstream to {{site.base_gateway}}.
+  - name: |
+      `proxy.kong.upstream.address` {% new_in 3.16 %}
+    description: |
+      DNS name and port of the selected upstream.
   - name: "`http.response.status_code`"
     description: |
       Status code sent back by {{site.base_gateway}} to client.
@@ -155,6 +160,9 @@ rows:
     description: x509 DN for cert Kong presented.
   - name: "`tls.cipher`"
     description: Negotiated cipher.
+  - name: |
+      `tls.client.server_name` {% new_in 3.16 %}
+    description: TLS SNI value sent by the client.
 {% endtable %}
 <!--vale on-->
 ### kong.phase.certificate
@@ -226,7 +234,9 @@ A span capturing network i/o timing that occurs during plugin execution or other
 
 Can be one of:
 * `kong.io.http.request`: Requests done by the internal http client during the flow
+* `kong.io.http.request_uri` {% new_in 3.16 %}: Requests done by the internal http client's `request_uri()` function. The `connect`, DNS, and internal `request` spans it triggers are nested beneath it.
 * `kong.io.http.connect`: Connections done by the internal http client during the flow
+* `kong.io.http.read_resp_body` {% new_in 3.16 %}: Reading of the response body for an external HTTP call made by the internal http client. Linked to the associated `kong.io.http.request` span.
 * `kong.io.redis.<function>`: Redis functions
 * `kong.io.socket.connect`: Connections on the internal Nginx socket
 * `kong.io.socket.sslhandshake`: SSL handshake operations on the internal Nginx socket
@@ -252,6 +262,14 @@ rows:
     description: Address of the peer Kong connected with
   - name: "`network.protocol.name`"
     description: Protocol that was used (Redis, TCP, HTTP, gRPC, etc.)
+  - name: |
+      `http.url` {% new_in 3.16 %}
+    description: |
+      Full URL of the external HTTP call. Present on `kong.io.http.request` and `kong.io.http.request_uri` spans.
+  - name: |
+      `kong.3p.external_request_id` {% new_in 3.16 %}
+    description: |
+      ID linking an external HTTP call's `kong.io.http.request` span to its associated `kong.io.http.read_resp_body` span, and to the request/response headers and body items captured for that call.
 {% endtable %}
 
 
@@ -423,6 +441,8 @@ A span capturing the execution of a plugin configured to run in the `log` phase.
 
 A span that captures the execution of a single node in the Datakit plugin execution plan.
 One span is created for each Datakit node that starts execution, and each span appears as a child of [`kong.access.plugin.datakit`](#kongaccesspluginplugin_name) or [`kong.response.plugin.datakit`](#kongresponsepluginplugin_name).
+
+{% new_in 3.16 %} When multiple Datakit instances (the base plugin and its clones) run in the same request, each instance's `kong.access.plugin.datakit` or `kong.response.plugin.datakit` span carries a `proxy.kong.plugin.ref` attribute set to the base plugin name, so you can tell which instance a Datakit node span belongs to.
 
 This span has the following attributes:
 {% table %}

@@ -26,6 +26,10 @@ tags:
 related_resources:
   - text: Vault
     url: /gateway/entities/vault/
+  - text: Store TLS certificate private keys in a {{site.konnect_short_name}} Config Store
+    url: /operator/konnect/how-to/config-store-certificate-keys/
+  - text: Config Store-backed Vaults
+    url: /operator/konnect/config-store/
 tldr:
   q: How do I create and configure a Vault in Konnect using KGO?
   a: Define a `KongVault` resource and associate it with your `KonnectGatewayControlPlane` to manage secrets using a configured backend.
@@ -60,6 +64,9 @@ spec:
       namespace: kong
 {% endkonnect_crd %}
 <!-- vale on -->
+
+To store secrets in a {{site.konnect_short_name}} Config Store that {{site.operator_product_name}} manages for you,
+see [Store TLS certificate private keys in a {{site.konnect_short_name}} Config Store](/operator/konnect/how-to/config-store-certificate-keys/).
 
 ## Validation
 

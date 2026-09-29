@@ -20,6 +20,8 @@ works_on:
 min_version:
     gateway: '3.14'
 
+ai_gateway_url: "/ai-gateway/policies/ai-custom-guardrail/"
+
 topologies:
   on_prem:
     - hybrid

@@ -38,6 +38,10 @@ Flags:
                                 - Config path: [ telemetry.enabled ]
                                 - Env var    : [ KONGCTL_NO_TELEMETRY ]
                                 - Default    : [ false ]
+      --no-trunc                Preserve full cell widths in static text tables beyond terminal width.
+                                Does not change column selection, UUID formatting, or explicit string slices.
+                                - Config path: [ text.no-trunc ]
+                                - Default    : [ false ]
   -o, --output string           Configures the format of data written to STDOUT.
                                 - Config path: [ output ]
                                 - Allowed    : [ json|yaml|text ] (default "text")

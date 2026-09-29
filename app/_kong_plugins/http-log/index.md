@@ -73,6 +73,13 @@ It also supports stream data (TCP, TLS, and UDP).
 
 {% include_cached /plugins/queues.md name=page.name %}
 
+{:.warning}
+> [`config.retry_count`](./reference/#schema--config-retry-count) is deprecated and has no effect in {{site.base_gateway}} 3.3 or later.
+> It will be removed in 4.0. Configure
+> [`config.queue.initial_retry_delay`](./reference/#schema--config-queue-initial-retry-delay),
+> [`config.queue.max_retry_delay`](./reference/#schema--config-queue-max-retry-delay), and
+> [`config.queue.max_retry_time`](./reference/#schema--config-queue-max-retry-time) instead.
+
 ### Shared queues in HTTP Log plugin instances
 
 In contrast to other plugins that use queues, all HTTP Log plugin instances that have the same values for the following parameters share one queue:
@@ -91,6 +98,37 @@ custom_fields_by_lua_slug='config-custom-fields-by-lua'
 custom_fields_by_lua_name='custom_fields_by_lua' 
 name=page.name 
 slug=page.slug %}
+
+### Array indices {% new_in 3.15 %}
+
+{% include /plugins/logging/lua-custom-array-indices.md 
+custom_fields_by_lua='config.custom_fields_by_lua' 
+custom_fields_by_lua_slug='config-custom-fields-by-lua' 
+custom_fields_by_lua_name='custom_fields_by_lua' 
+name=page.name 
+slug=page.slug %}
+
+### Special characters {% new_in 3.10 %}
+
+{% include /plugins/logging/custom-lua-special-characters.md 
+custom_fields_by_lua='config.custom_fields_by_lua' 
+custom_fields_by_lua_slug='config-custom-fields-by-lua' 
+custom_fields_by_lua_name='custom_fields_by_lua' 
+name=page.name 
+slug=page.slug %}
+
+### Plugin precedence and managing fields
+
+{% include /plugins/logging/custom-lua-plugin-precedence.md 
+custom_fields_by_lua='config.custom_fields_by_lua' 
+custom_fields_by_lua_slug='config-custom-fields-by-lua' 
+custom_fields_by_lua_name='custom_fields_by_lua' 
+name=page.name 
+slug=page.slug %}
+
+### Limitations
+
+{% include /plugins/logging/custom-lua-limitations.md %}
 
 ## mTLS support {% new_in 3.15 %}
 

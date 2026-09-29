@@ -57,7 +57,7 @@ For body formatting standards, see `app/contributing/index.md`.
 
 These files are auto-generated from external sources:
 - `app/_references/`
-- `app/_data/changelogs/`
+- `app/_changelogs/`
 - `app/_kong_plugins/*/changelog.json` and `*/schema.json`
 - `app/_schemas/gateway/plugins/`
 - `app/_includes/deck/help/`
@@ -72,6 +72,11 @@ When writing UI steps, follow the formats in `docs/ui-steps-standards.md`.
 ## Tags
 
 When adding frontmatter `tags:`, follow the schema in `docs/update-tag-schema.md`.
+
+## Prose style
+
+- Don't use em dashes, en dashes, or dashes as sentence punctuation (e.g. "X — Y"). Rewrite as two sentences, or use a comma, colon, semicolon, or parentheses instead. (Hyphens in compound words like `well-known` or in code/YAML are fine.)
+- Don't use positional language like "below" or "above" to refer to other content on the page (e.g. "the table below", "see above"). Content gets reordered, so these references go stale. Use "the following" for content that comes next, or just link/name the section (e.g. "see [Set up an AI Consumer](#set-up-an-ai-consumer)") instead of describing where it sits on the page.
 
 ## PR review standards
 

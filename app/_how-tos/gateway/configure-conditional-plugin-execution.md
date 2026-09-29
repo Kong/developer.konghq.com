@@ -44,8 +44,8 @@ min_version:
     gateway: '3.15'
 
 related_resources:
-  - text: Plugin expressions reference
-    url: /gateway/plugins/expressions/
+  - text: Plugin conditional execution reference
+    url: /gateway/plugins/conditions/
 
 faqs:
   - q: Can I see the results of a condition check in the {{site.base_gateway}} logs?
@@ -69,7 +69,7 @@ faqs:
 
 ## Add a plugin with a condition
 
-Add the Request Termination plugin to your Route with a [`condition` expression](/gateway/plugins/expressions/). 
+Add the Request Termination plugin to your Route with a [`condition` expression](/gateway/plugins/conditions/). 
 In this example, the plugin only triggers when the request includes the header `x-block: true`, and blocks the request. 
 Requests without this header are proxied to the upstream service.
 {% entity_examples %}

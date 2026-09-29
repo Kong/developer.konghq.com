@@ -28,8 +28,8 @@ inigo:
 moesif:
   name: Moesif
 
-noname-security:
-  name: Noname Security
+akamai:
+  name: Akamai
 
 salt:
   name: Salt Security
@@ -54,3 +54,9 @@ crowdstrike:
 
 skyflow:
   name: Skyflow
+
+veriknox:
+  name: VeriKnox
+
+straiker:
+  name: Straiker

@@ -2,4 +2,4 @@
 _format_version: "3.0"
 {{ include.presenter.config }}
 ```
-{: data-file="kong.yaml" }
+{: data-file="kong.yaml" data-tool="deck" }

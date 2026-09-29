@@ -21,9 +21,15 @@ related_resources:
     url: /kongctl/get-started/
 ---
 
-Scaffold emits a commented YAML starter configuration for a supported declarative resource path.
+Scaffold emits a commented YAML starter configuration for a supported
+declarative resource path.
 
-The output is intended to be edited and then used with declarative commands such as apply or sync.
+Run `kongctl scaffold` without a path to list the available resource paths.
+The output is intended to be edited and then used with declarative commands
+such as `apply` or `sync`.
+
+Scaffolds for beta or tech-preview resources begin with a maturity comment. GA
+scaffolds don't include a maturity warning.
 
 ## Command usage
 

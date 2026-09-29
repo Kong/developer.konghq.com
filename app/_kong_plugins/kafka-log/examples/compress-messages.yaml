@@ -1,0 +1,32 @@
+description: 'Compress log batches before sending them to the Kafka broker.'
+
+extended_description: |
+  Compress log batches before sending them to the Kafka broker. This example uses `lz4` compression.
+  See [`config.compression_type`](/plugins/kafka-log/reference/#schema--config-compression-type) for all supported codecs.
+
+title: 'Compress log messages before sending to Kafka'
+
+weight: 910
+
+requirements:
+ - "[Kafka installed](https://kafka.apache.org/quickstart#quickstart_download) and running"
+ - "[Create a Kafka topic](https://kafka.apache.org/quickstart#quickstart_createtopic)"
+
+variables:
+  topic:
+    description: 'The name of your Kafka topic.'
+    value: $KAFKA_TOPIC
+
+config:
+  topic: ${topic}
+  compression_type: lz4
+
+min_version:
+  gateway: '3.16'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

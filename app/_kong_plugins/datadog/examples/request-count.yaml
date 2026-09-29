@@ -13,8 +13,6 @@ requirements:
 config:
   host: 127.0.0.1
   port: 8125
-  flush_timeout: 2
-  retry_count: 10
   metrics:
     - name: request_count
       stat_type: counter

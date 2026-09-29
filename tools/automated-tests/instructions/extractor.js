@@ -3,8 +3,32 @@ import fs from "fs/promises";
 import path from "path";
 import yaml from "js-yaml";
 
+class NonFirstSeriesPageError extends Error {}
+
 async function copyFromClipboard(page) {
   return await page.evaluate(() => navigator.clipboard.readText());
+}
+
+async function revealHiddenTabPanel(elem) {
+  // Content inside an inactive {% navtab %} panel is hidden via a "hidden"
+  // class until its tab is clicked, so Playwright's isVisible() reports
+  // false even though the instruction should still be extracted.
+  const panel = elem.locator("xpath=ancestor::*[@role='tabpanel'][1]");
+
+  if ((await panel.count()) === 0) {
+    return;
+  }
+
+  const isHidden = await panel.evaluate((el) => el.classList.contains("hidden"));
+  if (!isHidden) {
+    return;
+  }
+
+  const panelId = await panel.getAttribute("data-id");
+  // Use elem.page() rather than a passed-in page/locator, since callers
+  // (e.g. extractPrereqsBlocks) sometimes scope their "page" param to a
+  // subtree that doesn't contain the tab's trigger button.
+  await elem.page().locator(`[aria-controls="${panelId}"]`).click();
 }
 
 async function extractPrereqsBlocks(page) {
@@ -15,6 +39,7 @@ async function extractPrereqsBlocks(page) {
   const blocks = await page.locator("[data-test-prereq]").all();
 
   for (const elem of blocks) {
+    await revealHiddenTabPanel(elem);
     if (await elem.isVisible()) {
       const instruction = await elem.getAttribute("data-test-prereq");
 
@@ -70,19 +95,58 @@ async function extractPrereqs(page, platform) {
   return { blocks };
 }
 
-async function extractCleanup(page) {
+async function extractCleanupBlocks(elem) {
   const instructions = [];
-  const blocks = await page.locator("[data-test-cleanup='block']").all();
+  const blocks = await elem.locator("[data-test-cleanup]").all();
 
-  for (const elem of blocks) {
-    if (await elem.isVisible()) {
-      const copy = await elem.locator(".copy-action");
-      await copy.click();
+  for (const block of blocks) {
+    await revealHiddenTabPanel(block);
+    if (await block.isVisible()) {
+      const instruction = await block.getAttribute("data-test-cleanup");
 
-      const copiedText = await copyFromClipboard(page);
-      instructions.push(copiedText);
+      if (instruction === "block") {
+        const copy = await block.locator(".copy-action");
+        await copy.click();
+
+        const copiedText = await copyFromClipboard(block);
+        instructions.push(copiedText);
+      } else {
+        try {
+          const json = JSON.parse(instruction);
+          instructions.push(json);
+        } catch (error) {
+          console.error(
+            "There was an error parsing the cleanup instruction:",
+            error,
+          );
+        }
+      }
     }
   }
+  return instructions;
+}
+
+async function extractCleanup(page) {
+  // Like extractPrereqs, cleanup items live in an accordion where only the
+  // first item is open by default (see data-default="0" in
+  // components/cleanup.html), so later items must be clicked open before
+  // their [data-test-cleanup] blocks become visible.
+  const instructions = [];
+  const items = await page.locator('[data-test-id="cleanup"] > *').all();
+
+  for (const i in items) {
+    const item = items[i];
+    if (await item.isVisible()) {
+      const trigger = item.locator(".accordion-trigger");
+      if (i >= 1) {
+        await trigger.click();
+      }
+
+      const extractedBlocks = await extractCleanupBlocks(item);
+      instructions.push(...extractedBlocks);
+    }
+  }
+
   return instructions;
 }
 
@@ -113,6 +177,7 @@ async function extractSteps(page, config) {
   const steps = await page.locator("[data-test-step]").all();
 
   for (const elem of steps) {
+    await revealHiddenTabPanel(elem);
     if (await elem.isVisible()) {
       let step;
       if (config.extractInstructionsAs && config.extractInstructionsAs !== "default") {
@@ -182,16 +247,30 @@ function deriveProduct(setup, products) {
   // String value
   if (setupEntry === "konnect") {
     // For konnect, determine the product from the products list
-    if (products.includes("ai-gateway")) {
+    // Special case for ai-gateway v1
+    if (products.includes("ai-gateway") && products.includes("gateway")) {
+      return "gateway";
+    } else if (products.includes("ai-gateway")) {
       return "ai-gateway";
-    }
-    if (products.includes("event-gateway")) {
+    } else if (products.includes("event-gateway")) {
       return "event-gateway";
     }
     return "gateway";
   }
   // e.g., "operator"
   return setupEntry;
+}
+
+async function selectPlatform(page, platform) {
+  const toggleSwitch = page.locator("aside .switch__slider");
+
+  if ((await toggleSwitch.count()) > 0) {
+    const option = page.locator(`aside .switch input[value="${platform}"]`);
+    if (!(await option.isChecked())) {
+      await toggleSwitch.click();
+    }
+    await option.check();
+  }
 }
 
 async function writeInstructionsToFile(url, config, platform, product, instructions) {
@@ -218,6 +297,12 @@ export async function extractInstructionsFromURL(uri, config, context) {
     console.log(`Extracting instructions from: ${url}`);
     await page.goto(url.toString(), { waitUntil: "domcontentloaded" });
 
+    if ((await page.locator("[data-test-series-prev]").count()) > 0) {
+      throw new NonFirstSeriesPageError(
+        `${url} is not the first page of its series. Target the series' first how-to instead.`
+      );
+    }
+
     const productsString = await page
       .locator("[data-test-products]")
       .getAttribute("data-test-products");
@@ -236,19 +321,21 @@ export async function extractInstructionsFromURL(uri, config, context) {
     // Fetch product specific config. The first product is always the main one
     const productConfig = config.products[products[0]] || {};
 
+    // Tracks whether `page` is currently on the series' first page (`url`).
+    // It starts there (the goto above), but a previous platform's series
+    // walk (below) leaves it on the series' last page, so later platforms
+    // need to navigate back before extracting.
+    let pageIsAtSeriesStart = true;
+
     for (const platform of platforms) {
+      if (!pageIsAtSeriesStart) {
+        await page.goto(url.toString(), { waitUntil: "domcontentloaded" });
+        pageIsAtSeriesStart = true;
+      }
+      await selectPlatform(page, platform);
+
       const title = await page.locator("h1").textContent();
       const howToUrl = `${config.productionUrl}${url.pathname}`;
-
-      const toggleSwitch = await page.locator("aside .switch__slider");
-
-      if ((await toggleSwitch.count()) > 0) {
-        const option = page.locator(`aside .switch input[value="${platform}"]`);
-        if (!(await option.isChecked())) {
-          await page.locator("aside .switch__slider").click();
-        }
-        await page.locator(`aside .switch input[value="${platform}"]`).check();
-      }
 
       const name = `[${title}](${howToUrl}) [${platform}]`;
       const setup = await extractSetup(page);
@@ -256,6 +343,24 @@ export async function extractInstructionsFromURL(uri, config, context) {
       const prereqs = await extractPrereqs(page, platform);
       const steps = await extractSteps(page, productConfig);
       const cleanup = await extractCleanup(page);
+
+      while ((await page.locator("[data-test-series-next]").count()) > 0) {
+        await page.locator("[data-test-series-next]").click();
+        await page.waitForLoadState("domcontentloaded");
+        pageIsAtSeriesStart = false;
+        // The platform toggle persists across page loads via localStorage
+        // (see ToggleSwitchManager), but we reassert it explicitly here so
+        // extraction doesn't depend on that persistence working as expected.
+        await selectPlatform(page, platform);
+
+        // data-test-setup is intentionally not read on series continuation pages: the
+        // series' setup/product/version come from the first page only.
+        const continuationPrereqs = await extractPrereqs(page, platform);
+        steps.push(...continuationPrereqs.blocks);
+        steps.push(...(await extractSteps(page, productConfig)));
+        cleanup.push(...(await extractCleanup(page)));
+      }
+
       const instructionsFile = await writeInstructionsToFile(
         url,
         config,
@@ -287,13 +392,20 @@ export async function extractInstructionsFromURL(uri, config, context) {
       await promise;
     }
   } catch (error) {
+    if (error instanceof NonFirstSeriesPageError) {
+      throw error;
+    }
     console.error("There was an error extracting the instructions:", error);
   } finally {
     await page.close();
   }
 }
 
-export async function generateInstructionFiles(urlsToTest, config) {
+export async function generateInstructionFiles(
+  urlsToTest,
+  config,
+  { haltOnSeriesError = true } = {},
+) {
   const browser = await chromium.launch({
     args: [
       "--no-sandbox",
@@ -311,10 +423,16 @@ export async function generateInstructionFiles(urlsToTest, config) {
     });
 
     for (const uri of urlsToTest) {
-      await extractInstructionsFromURL(uri, config, context);
+      try {
+        await extractInstructionsFromURL(uri, config, context);
+      } catch (error) {
+        if (error instanceof NonFirstSeriesPageError && !haltOnSeriesError) {
+          console.error(error.message);
+          continue;
+        }
+        throw error;
+      }
     }
-  } catch (error) {
-    throw error;
   } finally {
     browser.close();
   }

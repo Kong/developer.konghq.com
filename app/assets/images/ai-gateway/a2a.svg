@@ -1,136 +1,85 @@
-<svg width="2546" height="1400" viewBox="0 0 2546 1400" fill="none" xmlns="http://www.w3.org/2000/svg">
-
-<rect width="2546" height="1400" fill="rgb(var(--color-bg-primary))"/>
-
-<g filter="url(#glow)">
-  <rect x="750" y="300" width="1046" height="600" fill="url(#gradGlow)"/>
-</g>
-
-<rect x="940" y="370" width="666" height="460" rx="24" fill="#1A1D24" stroke="#2A2D35" stroke-width="1.5"/>
-
-<text x="1273" y="430" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="28" font-weight="600" fill="#FFFFFF">Kong AI Gateway</text>
-
-<rect x="1010" y="480" width="526" height="300" rx="16" fill="#242529" stroke="#3A3D45" stroke-width="1"/>
-
-<text x="1273" y="525" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="20" font-weight="500" fill="#E0E4EA">AI A2A Proxy</text>
-
-<rect x="1050" y="555" width="200" height="42" rx="8" fill="#1C3A2E" stroke="#11A06B" stroke-width="0.8"/>
-<text x="1150" y="581" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" font-weight="500" fill="#4ADE80">Protocol detection</text>
-
-<rect x="1296" y="555" width="200" height="42" rx="8" fill="#1C2B3E" stroke="#286FEB" stroke-width="0.8"/>
-<text x="1396" y="581" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" font-weight="500" fill="#7CB3F4">URL rewriting</text>
-
-<rect x="1050" y="618" width="200" height="42" rx="8" fill="#1C2B3E" stroke="#286FEB" stroke-width="0.8"/>
-<text x="1150" y="644" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" font-weight="500" fill="#7CB3F4">OTel tracing</text>
-
-<rect x="1296" y="618" width="200" height="42" rx="8" fill="#1C3A2E" stroke="#11A06B" stroke-width="0.8"/>
-<text x="1396" y="644" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" font-weight="500" fill="#4ADE80">SSE streaming</text>
-
-<rect x="1050" y="681" width="200" height="42" rx="8" fill="#1C3A2E" stroke="#11A06B" stroke-width="0.8"/>
-<text x="1150" y="707" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" font-weight="500" fill="#4ADE80">Task extraction</text>
-
-<rect x="1296" y="681" width="200" height="42" rx="8" fill="#1C2B3E" stroke="#286FEB" stroke-width="0.8"/>
-<text x="1396" y="707" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" font-weight="500" fill="#7CB3F4">Analytics pipeline</text>
-
-<line x1="1050" y1="745" x2="1496" y2="745" stroke="#3A3D45" stroke-width="0.5"/>
-
-<rect x="1080" y="755" width="110" height="28" rx="6" fill="#2A1E3E" stroke="#7F77DD" stroke-width="0.6"/>
-<text x="1135" y="774" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="11" font-weight="500" fill="#AFA9EC">JSON-RPC</text>
-
-<rect x="1210" y="755" width="80" height="28" rx="6" fill="#2A1E3E" stroke="#7F77DD" stroke-width="0.6"/>
-<text x="1250" y="774" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="11" font-weight="500" fill="#AFA9EC">REST</text>
-
-<rect x="1310" y="755" width="80" height="28" rx="6" fill="#2A1E3E" stroke="#7F77DD" stroke-width="0.6"/>
-<text x="1350" y="774" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="11" font-weight="500" fill="#AFA9EC">SSE</text>
-
-
-<text x="320" y="390" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="14" font-weight="500" fill="#828F8F" letter-spacing="2">A2A CLIENTS</text>
-
-<rect x="160" y="420" width="320" height="100" rx="16" fill="#242529" stroke="#3A3D45" stroke-width="1"/>
-<text x="320" y="465" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="18" font-weight="500" fill="#E0E4EA">A2A client</text>
-<text x="320" y="495" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" fill="#828F8F">Orchestration agent</text>
-
-<rect x="160" y="560" width="320" height="100" rx="16" fill="#242529" stroke="#3A3D45" stroke-width="1"/>
-<text x="320" y="605" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="18" font-weight="500" fill="#E0E4EA">A2A client</text>
-<text x="320" y="635" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" fill="#828F8F">Task manager</text>
-
-<rect x="160" y="700" width="320" height="100" rx="16" fill="#242529" stroke="#3A3D45" stroke-width="1"/>
-<text x="320" y="745" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="18" font-weight="500" fill="#E0E4EA">A2A client</text>
-<text x="320" y="775" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" fill="#828F8F">Monitoring dashboard</text>
-
-
-<text x="2226" y="390" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="14" font-weight="500" fill="#828F8F" letter-spacing="2">UPSTREAM AGENTS</text>
-
-<rect x="2066" y="420" width="320" height="100" rx="16" fill="#242529" stroke="#3A3D45" stroke-width="1"/>
-<text x="2226" y="465" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="18" font-weight="500" fill="#E0E4EA">Research agent</text>
-<text x="2226" y="495" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" fill="#828F8F">Search, summarize, cite</text>
-
-<rect x="2066" y="560" width="320" height="100" rx="16" fill="#242529" stroke="#3A3D45" stroke-width="1"/>
-<text x="2226" y="605" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="18" font-weight="500" fill="#E0E4EA">Code agent</text>
-<text x="2226" y="635" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" fill="#828F8F">Generate, review, deploy</text>
-
-<rect x="2066" y="700" width="320" height="100" rx="16" fill="#242529" stroke="#3A3D45" stroke-width="1"/>
-<text x="2226" y="745" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="18" font-weight="500" fill="#E0E4EA">Data agent</text>
-<text x="2226" y="775" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" fill="#828F8F">Query, transform, report</text>
-
-
-<path d="M480 470 C720 470, 780 540, 940 540" stroke="url(#lineGradL)" stroke-width="1.5" fill="none"/>
-<path d="M480 610 C720 610, 780 590, 940 590" stroke="url(#lineGradL)" stroke-width="1.5" fill="none"/>
-<path d="M480 750 C720 750, 780 650, 940 650" stroke="url(#lineGradL)" stroke-width="1.5" fill="none"/>
-
-<path d="M1606 540 C1766 540, 1830 470, 2066 470" stroke="url(#lineGradR)" stroke-width="1.5" fill="none"/>
-<path d="M1606 590 C1766 590, 1830 610, 2066 610" stroke="url(#lineGradR)" stroke-width="1.5" fill="none"/>
-<path d="M1606 650 C1766 650, 1830 750, 2066 750" stroke="url(#lineGradR)" stroke-width="1.5" fill="none"/>
-
-
-<rect x="970" y="900" width="200" height="56" rx="10" fill="#242529" stroke="#3A3D45" stroke-width="1"/>
-<circle cx="1010" cy="928" r="8" fill="#11A06B" opacity="0.6"/>
-<circle cx="1010" cy="928" r="4" fill="#11A06B"/>
-<text x="1030" y="933" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" fill="#AAB4BB">Task tracking</text>
-
-<rect x="1198" y="900" width="200" height="56" rx="10" fill="#242529" stroke="#3A3D45" stroke-width="1"/>
-<circle cx="1238" cy="928" r="8" fill="#286FEB" opacity="0.6"/>
-<circle cx="1238" cy="928" r="4" fill="#286FEB"/>
-<text x="1258" y="933" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" fill="#AAB4BB">OTel spans</text>
-
-<rect x="1426" y="900" width="200" height="56" rx="10" fill="#242529" stroke="#3A3D45" stroke-width="1"/>
-<circle cx="1466" cy="928" r="8" fill="#7F77DD" opacity="0.6"/>
-<circle cx="1466" cy="928" r="4" fill="#7F77DD"/>
-<text x="1486" y="933" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" fill="#AAB4BB">Konnect analytics</text>
-
-<path d="M1273 830 C1273 860, 1273 870, 1273 895" stroke="url(#arrowGradDown)" stroke-width="1.5" fill="none"/>
-
-
-<text x="1273" y="1060" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="44" font-weight="600" fill="#AAB4BB" letter-spacing="-1">Agent-to-Agent protocol</text>
-
-<defs>
-  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-    <feGaussianBlur in="SourceGraphic" stdDeviation="80"/>
-  </filter>
-
-  <linearGradient id="gradGlow" x1="1820" y1="450" x2="1020" y2="1050" gradientUnits="userSpaceOnUse">
-    <stop offset="0.05" stop-color="#E9EEF7" stop-opacity="0"/>
-    <stop offset="0.36" stop-color="#11A06B"/>
-    <stop offset="0.65" stop-color="#286FEB"/>
-    <stop offset="1" stop-color="#E9EEF7" stop-opacity="0"/>
-  </linearGradient>
-
-  <linearGradient id="lineGradL" x1="480" y1="0" x2="940" y2="0" gradientUnits="userSpaceOnUse">
-    <stop offset="0" stop-color="#286FEB" stop-opacity="0.1"/>
-    <stop offset="0.4" stop-color="#286FEB" stop-opacity="0.5"/>
-    <stop offset="1" stop-color="#286FEB" stop-opacity="0.8"/>
-  </linearGradient>
-
-  <linearGradient id="lineGradR" x1="1606" y1="0" x2="2066" y2="0" gradientUnits="userSpaceOnUse">
-    <stop offset="0" stop-color="#286FEB" stop-opacity="0.8"/>
-    <stop offset="0.6" stop-color="#286FEB" stop-opacity="0.5"/>
-    <stop offset="1" stop-color="#286FEB" stop-opacity="0.1"/>
-  </linearGradient>
-
-  <linearGradient id="arrowGradDown" x1="0" y1="830" x2="0" y2="895" gradientUnits="userSpaceOnUse">
-    <stop offset="0" stop-color="#286FEB" stop-opacity="0.5"/>
-    <stop offset="1" stop-color="#286FEB" stop-opacity="0.15"/>
-  </linearGradient>
-</defs>
-
+<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="860" viewBox="0 0 1680 860">
+<rect x="0" y="0" width="1680" height="860" rx="0" fill="#000F06"></rect>
+<g stroke="#788C6E" stroke-opacity="0.05" stroke-width="1"><line x1="0" y1="0" x2="0" y2="860"></line><line x1="52" y1="0" x2="52" y2="860"></line><line x1="104" y1="0" x2="104" y2="860"></line><line x1="156" y1="0" x2="156" y2="860"></line><line x1="208" y1="0" x2="208" y2="860"></line><line x1="260" y1="0" x2="260" y2="860"></line><line x1="312" y1="0" x2="312" y2="860"></line><line x1="364" y1="0" x2="364" y2="860"></line><line x1="416" y1="0" x2="416" y2="860"></line><line x1="468" y1="0" x2="468" y2="860"></line><line x1="520" y1="0" x2="520" y2="860"></line><line x1="572" y1="0" x2="572" y2="860"></line><line x1="624" y1="0" x2="624" y2="860"></line><line x1="676" y1="0" x2="676" y2="860"></line><line x1="728" y1="0" x2="728" y2="860"></line><line x1="780" y1="0" x2="780" y2="860"></line><line x1="832" y1="0" x2="832" y2="860"></line><line x1="884" y1="0" x2="884" y2="860"></line><line x1="936" y1="0" x2="936" y2="860"></line><line x1="988" y1="0" x2="988" y2="860"></line><line x1="1040" y1="0" x2="1040" y2="860"></line><line x1="1092" y1="0" x2="1092" y2="860"></line><line x1="1144" y1="0" x2="1144" y2="860"></line><line x1="1196" y1="0" x2="1196" y2="860"></line><line x1="1248" y1="0" x2="1248" y2="860"></line><line x1="1300" y1="0" x2="1300" y2="860"></line><line x1="1352" y1="0" x2="1352" y2="860"></line><line x1="1404" y1="0" x2="1404" y2="860"></line><line x1="1456" y1="0" x2="1456" y2="860"></line><line x1="1508" y1="0" x2="1508" y2="860"></line><line x1="1560" y1="0" x2="1560" y2="860"></line><line x1="1612" y1="0" x2="1612" y2="860"></line><line x1="1664" y1="0" x2="1664" y2="860"></line><line x1="0" y1="0" x2="1680" y2="0"></line><line x1="0" y1="52" x2="1680" y2="52"></line><line x1="0" y1="104" x2="1680" y2="104"></line><line x1="0" y1="156" x2="1680" y2="156"></line><line x1="0" y1="208" x2="1680" y2="208"></line><line x1="0" y1="260" x2="1680" y2="260"></line><line x1="0" y1="312" x2="1680" y2="312"></line><line x1="0" y1="364" x2="1680" y2="364"></line><line x1="0" y1="416" x2="1680" y2="416"></line><line x1="0" y1="468" x2="1680" y2="468"></line><line x1="0" y1="520" x2="1680" y2="520"></line><line x1="0" y1="572" x2="1680" y2="572"></line><line x1="0" y1="624" x2="1680" y2="624"></line><line x1="0" y1="676" x2="1680" y2="676"></line><line x1="0" y1="728" x2="1680" y2="728"></line><line x1="0" y1="780" x2="1680" y2="780"></line><line x1="0" y1="832" x2="1680" y2="832"></line></g>
+<ellipse cx="840" cy="430" rx="560" ry="340" fill="#CCFF00" opacity="0.04"></ellipse>
+<text x="70" y="108" font-family="Funnel Sans, Arial, sans-serif" font-size="40" dominant-baseline="alphabetic" letter-spacing="-0.5"><tspan fill="#FFFFFF" font-weight="700">Agent-to-Agent </tspan><tspan fill="#CCFF00" font-style="italic" font-weight="300">protocol</tspan></text>
+<g><path d="M420 272 C 495 272, 495 366, 570 366" fill="none" stroke="#CCFF00" stroke-width="2" stroke-opacity="0.55"></path><path d="M420 410 C 495 410, 495 410, 570 410" fill="none" stroke="#CCFF00" stroke-width="2" stroke-opacity="0.55"></path><path d="M420 548 C 495 548, 495 454, 570 454" fill="none" stroke="#CCFF00" stroke-width="2" stroke-opacity="0.55"></path><path d="M1110 366 C 1185 366, 1185 272, 1260 272" fill="none" stroke="#CCFF00" stroke-width="2" stroke-opacity="0.55"></path><path d="M1110 410 C 1185 410, 1185 410, 1260 410" fill="none" stroke="#CCFF00" stroke-width="2" stroke-opacity="0.55"></path><path d="M1110 454 C 1185 454, 1185 548, 1260 548" fill="none" stroke="#CCFF00" stroke-width="2" stroke-opacity="0.55"></path></g>
+<text x="270" y="194" font-family="Funnel Sans, Arial, sans-serif" font-size="13" font-weight="700" fill="#7E867A" text-anchor="middle" dominant-baseline="middle" letter-spacing="2">A2A CLIENTS</text>
+<rect x="120" y="220" width="300" height="104" rx="12" fill="#0F160F" stroke="#3A4138" stroke-width="1.4"></rect>
+<rect x="140" y="250" width="44" height="44" rx="10" fill="rgba(204,255,0,0.07)"></rect>
+<g transform="translate(150 260) scale(1.0000)" fill="none" stroke="#CCFF00" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"></circle><circle cx="5" cy="19" r="2"></circle><circle cx="19" cy="19" r="2"></circle><path d="M12 7v4M12 11l-6 6M12 11l6 6"></path></g>
+<text x="200" y="261" font-family="Funnel Sans, Arial, sans-serif" font-size="18" font-weight="700" fill="#FFFFFF" text-anchor="start" dominant-baseline="middle">A2A client</text>
+<text x="200" y="285" font-family="Funnel Sans, Arial, sans-serif" font-size="13" font-weight="400" fill="#AEB5A7" text-anchor="start" dominant-baseline="middle">Orchestration agent</text>
+<rect x="120" y="358" width="300" height="104" rx="12" fill="#0F160F" stroke="#3A4138" stroke-width="1.4"></rect>
+<rect x="140" y="388" width="44" height="44" rx="10" fill="rgba(204,255,0,0.07)"></rect>
+<g transform="translate(150 398) scale(1.0000)" fill="none" stroke="#CCFF00" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16a9 9 0 1 1 18 0"></path><path d="M12 14l4-4"></path></g>
+<text x="200" y="399" font-family="Funnel Sans, Arial, sans-serif" font-size="18" font-weight="700" fill="#FFFFFF" text-anchor="start" dominant-baseline="middle">A2A client</text>
+<text x="200" y="423" font-family="Funnel Sans, Arial, sans-serif" font-size="13" font-weight="400" fill="#AEB5A7" text-anchor="start" dominant-baseline="middle">Task manager</text>
+<rect x="120" y="496" width="300" height="104" rx="12" fill="#0F160F" stroke="#3A4138" stroke-width="1.4"></rect>
+<rect x="140" y="526" width="44" height="44" rx="10" fill="rgba(204,255,0,0.07)"></rect>
+<g transform="translate(150 536) scale(1.0000)" fill="none" stroke="#CCFF00" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="9" width="16" height="10" rx="2"></rect><path d="M12 9V5.5"></path><circle cx="12" cy="4" r="1"></circle><path d="M9 13.5v1M15 13.5v1"></path></g>
+<text x="200" y="537" font-family="Funnel Sans, Arial, sans-serif" font-size="18" font-weight="700" fill="#FFFFFF" text-anchor="start" dominant-baseline="middle">A2A client</text>
+<text x="200" y="561" font-family="Funnel Sans, Arial, sans-serif" font-size="13" font-weight="400" fill="#AEB5A7" text-anchor="start" dominant-baseline="middle">Monitoring dashboard</text>
+<text x="1410" y="194" font-family="Funnel Sans, Arial, sans-serif" font-size="13" font-weight="700" fill="#7E867A" text-anchor="middle" dominant-baseline="middle" letter-spacing="2">UPSTREAM AGENTS</text>
+<rect x="1260" y="220" width="300" height="104" rx="12" fill="#0F160F" stroke="#3A4138" stroke-width="1.4"></rect>
+<rect x="1280" y="250" width="44" height="44" rx="10" fill="rgba(204,255,0,0.07)"></rect>
+<g transform="translate(1290 260) scale(1.0000)" fill="none" stroke="#CCFF00" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></g>
+<text x="1340" y="261" font-family="Funnel Sans, Arial, sans-serif" font-size="18" font-weight="700" fill="#FFFFFF" text-anchor="start" dominant-baseline="middle">Research agent</text>
+<text x="1340" y="285" font-family="Funnel Sans, Arial, sans-serif" font-size="13" font-weight="400" fill="#AEB5A7" text-anchor="start" dominant-baseline="middle">Search, summarize, cite</text>
+<rect x="1260" y="358" width="300" height="104" rx="12" fill="#0F160F" stroke="#3A4138" stroke-width="1.4"></rect>
+<rect x="1280" y="388" width="44" height="44" rx="10" fill="rgba(204,255,0,0.07)"></rect>
+<g transform="translate(1290 398) scale(1.0000)" fill="none" stroke="#CCFF00" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6l-6 6 6 6M16 6l6 6-6 6"></path></g>
+<text x="1340" y="399" font-family="Funnel Sans, Arial, sans-serif" font-size="18" font-weight="700" fill="#FFFFFF" text-anchor="start" dominant-baseline="middle">Code agent</text>
+<text x="1340" y="423" font-family="Funnel Sans, Arial, sans-serif" font-size="13" font-weight="400" fill="#AEB5A7" text-anchor="start" dominant-baseline="middle">Generate, review, deploy</text>
+<rect x="1260" y="496" width="300" height="104" rx="12" fill="#0F160F" stroke="#3A4138" stroke-width="1.4"></rect>
+<rect x="1280" y="526" width="44" height="44" rx="10" fill="rgba(204,255,0,0.07)"></rect>
+<g transform="translate(1290 536) scale(1.0000)" fill="none" stroke="#CCFF00" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="7" ry="3"></ellipse><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"></path></g>
+<text x="1340" y="537" font-family="Funnel Sans, Arial, sans-serif" font-size="18" font-weight="700" fill="#FFFFFF" text-anchor="start" dominant-baseline="middle">Data agent</text>
+<text x="1340" y="561" font-family="Funnel Sans, Arial, sans-serif" font-size="13" font-weight="400" fill="#AEB5A7" text-anchor="start" dominant-baseline="middle">Query, transform, report</text>
+<rect x="564" y="204" width="552" height="412" rx="20" fill="#CCFF00" opacity="0.05"></rect>
+<rect x="570" y="210" width="540" height="400" rx="16" fill="#0B120D" stroke="#CCFF00" stroke-width="1.8"></rect>
+<g transform="translate(730 232) scale(0.1898)" fill="#CCFF00"><path d="M50.5,112.9l-3.7,4.7,8.4,13.2-.9,6.1h35.6l2.5-6.1-14.3-17.9s-27.6,0-27.6,0Z"></path><path d="M69.9,32.6l-12.9,22.7,62.9,74.8-1.8,6.9h28.8l5.2-24.3L84.9,32.5h-15Z"></path><path d="M78.5,15.5l-6.1,11.3h15.2l26.1,31.2,15.5-12.8v-8.1l-5.4-7.6,4-4.2L96.7.6l-18.2,14.9Z"></path><path d="M31.7,78.7h-8.5L.8,107.3v29.6h24l4.2-5.5,18.5-24.1h26.8l8.3-12.7-29.1-34.7-21.9,18.9h0Z"></path></g>
+<text x="771.0364963503649" y="245" font-family="Funnel Sans, Arial, sans-serif" font-size="20" font-weight="700" fill="#FFFFFF" text-anchor="start" dominant-baseline="middle">Kong AI Gateway</text>
+<rect x="592" y="282" width="496" height="306" rx="12" fill="#0E1114" stroke="#3A4138" stroke-width="1.2"></rect>
+<g transform="translate(610 300) scale(0.8333)" fill="none" stroke="#CCFF00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M7 7l-4 5 4 5M17 7l4 5-4 5"></path></g>
+<text x="638" y="310" font-family="Funnel Sans, Arial, sans-serif" font-size="16" font-weight="700" fill="#FFFFFF" text-anchor="start" dominant-baseline="middle">AI A2A Proxy</text>
+<rect x="610" y="336" width="224" height="44" rx="8" fill="#0E140C" stroke="rgba(204,255,0,0.28)" stroke-width="1"></rect>
+<circle cx="626" cy="358" r="3.5" fill="#CCFF00"></circle>
+<text x="640" y="358" font-family="Funnel Sans, Arial, sans-serif" font-size="13.5" font-weight="600" fill="#FFFFFF" text-anchor="start" dominant-baseline="middle">Protocol detection</text>
+<rect x="846" y="336" width="224" height="44" rx="8" fill="#0E140C" stroke="rgba(204,255,0,0.28)" stroke-width="1"></rect>
+<circle cx="862" cy="358" r="3.5" fill="#CCFF00"></circle>
+<text x="876" y="358" font-family="Funnel Sans, Arial, sans-serif" font-size="13.5" font-weight="600" fill="#FFFFFF" text-anchor="start" dominant-baseline="middle">URL rewriting</text>
+<rect x="610" y="390" width="224" height="44" rx="8" fill="#0E140C" stroke="rgba(204,255,0,0.28)" stroke-width="1"></rect>
+<circle cx="626" cy="412" r="3.5" fill="#CCFF00"></circle>
+<text x="640" y="412" font-family="Funnel Sans, Arial, sans-serif" font-size="13.5" font-weight="600" fill="#FFFFFF" text-anchor="start" dominant-baseline="middle">OTel tracing</text>
+<rect x="846" y="390" width="224" height="44" rx="8" fill="#0E140C" stroke="rgba(204,255,0,0.28)" stroke-width="1"></rect>
+<circle cx="862" cy="412" r="3.5" fill="#CCFF00"></circle>
+<text x="876" y="412" font-family="Funnel Sans, Arial, sans-serif" font-size="13.5" font-weight="600" fill="#FFFFFF" text-anchor="start" dominant-baseline="middle">SSE streaming</text>
+<rect x="610" y="444" width="224" height="44" rx="8" fill="#0E140C" stroke="rgba(204,255,0,0.28)" stroke-width="1"></rect>
+<circle cx="626" cy="466" r="3.5" fill="#CCFF00"></circle>
+<text x="640" y="466" font-family="Funnel Sans, Arial, sans-serif" font-size="13.5" font-weight="600" fill="#FFFFFF" text-anchor="start" dominant-baseline="middle">Task extraction</text>
+<rect x="846" y="444" width="224" height="44" rx="8" fill="#0E140C" stroke="rgba(204,255,0,0.28)" stroke-width="1"></rect>
+<circle cx="862" cy="466" r="3.5" fill="#CCFF00"></circle>
+<text x="876" y="466" font-family="Funnel Sans, Arial, sans-serif" font-size="13.5" font-weight="600" fill="#FFFFFF" text-anchor="start" dominant-baseline="middle">Analytics pipeline</text>
+<line x1="610" y1="500" x2="1070" y2="500" stroke="#3A4138"></line>
+<rect x="610" y="514" width="93.2" height="30" rx="8" fill="rgba(204,255,0,0.06)" stroke="rgba(204,255,0,0.35)" stroke-width="1"></rect>
+<text x="656.6" y="529" font-family="Funnel Sans, Arial, sans-serif" font-size="12" font-weight="600" fill="#CCFF00" text-anchor="middle" dominant-baseline="middle">JSON-RPC</text>
+<rect x="713.2" y="514" width="59.6" height="30" rx="8" fill="rgba(204,255,0,0.06)" stroke="rgba(204,255,0,0.35)" stroke-width="1"></rect>
+<text x="743" y="529" font-family="Funnel Sans, Arial, sans-serif" font-size="12" font-weight="600" fill="#CCFF00" text-anchor="middle" dominant-baseline="middle">REST</text>
+<rect x="782.8000000000001" y="514" width="51.2" height="30" rx="8" fill="rgba(204,255,0,0.06)" stroke="rgba(204,255,0,0.35)" stroke-width="1"></rect>
+<text x="808.4000000000001" y="529" font-family="Funnel Sans, Arial, sans-serif" font-size="12" font-weight="600" fill="#CCFF00" text-anchor="middle" dominant-baseline="middle">SSE</text>
+<line x1="840" y1="610" x2="840" y2="650" stroke="#CCFF00" stroke-width="2" stroke-opacity="0.6"></line>
+<polygon points="840,650 834,642 846,642" fill="#CCFF00" fill-opacity="0.7"></polygon>
+<rect x="501" y="654" width="210" height="56" rx="10" fill="#0F160F" stroke="#3A4138" stroke-width="1"></rect>
+<circle cx="531" cy="682" r="8" fill="#CCFF00" opacity="0.25"></circle>
+<circle cx="531" cy="682" r="4" fill="#CCFF00"></circle>
+<text x="551" y="682" font-family="Funnel Sans, Arial, sans-serif" font-size="14" font-weight="500" fill="#BAC1B8" text-anchor="start" dominant-baseline="middle">Task tracking</text>
+<rect x="735" y="654" width="210" height="56" rx="10" fill="#0F160F" stroke="#3A4138" stroke-width="1"></rect>
+<circle cx="765" cy="682" r="8" fill="#CCFF00" opacity="0.25"></circle>
+<circle cx="765" cy="682" r="4" fill="#CCFF00"></circle>
+<text x="785" y="682" font-family="Funnel Sans, Arial, sans-serif" font-size="14" font-weight="500" fill="#BAC1B8" text-anchor="start" dominant-baseline="middle">OTel spans</text>
+<rect x="969" y="654" width="210" height="56" rx="10" fill="#0F160F" stroke="#3A4138" stroke-width="1"></rect>
+<circle cx="999" cy="682" r="8" fill="#CCFF00" opacity="0.25"></circle>
+<circle cx="999" cy="682" r="4" fill="#CCFF00"></circle>
+<text x="1019" y="682" font-family="Funnel Sans, Arial, sans-serif" font-size="14" font-weight="500" fill="#BAC1B8" text-anchor="start" dominant-baseline="middle">Konnect analytics</text>
 </svg>

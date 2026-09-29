@@ -12,6 +12,7 @@ products:
   - gateway
 works_on:
   - on-prem
+  - konnect
 
 related_resources:
   - text: "Pre-function plugin"
@@ -151,6 +152,7 @@ kong.client.get_jwt_token_header
 kong.client.get_jwt_token_payload
 kong.client.get_identity_realm_source
 kong.client.set_identity_realm_source
+kong.client.get_principal
 ```
 
 #### Kong Cluster PDK
@@ -302,6 +304,15 @@ kong.tracing.process_span
 kong.tracing.set_active_span
 kong.tracing.set_should_sample
 kong.tracing.start_span
+```
+
+#### Kong Metrics PDK {% new_in 3.16 %}
+
+```
+kong.metrics.counter
+kong.metrics.gauge
+kong.metrics.histogram
+kong.metrics.VALUE_TYPE
 ```
 
 #### Nginx Constants

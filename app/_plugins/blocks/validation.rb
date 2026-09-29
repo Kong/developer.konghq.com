@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'yaml'
+require_relative '../component_templates'
 
 module Jekyll
   class Validation < Liquid::Block # rubocop:disable Style/Documentation
@@ -31,7 +32,7 @@ module Jekyll
         context['config'] = drop
         context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
 
-        Liquid::Template.parse(File.read(drop.template_file), { line_numbers: true }).render(context)
+        ComponentTemplates.fetch("how-tos/validations/#{@name}/index", @format, base: 'app/_includes').render(context)
       end
 
       if config['indent']

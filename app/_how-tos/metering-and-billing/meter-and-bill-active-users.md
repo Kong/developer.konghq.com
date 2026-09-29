@@ -48,7 +48,7 @@ related_resources:
   - text: Meter and bill {{site.base_gateway}} API requests
     url: /metering-and-billing/get-started/
   - text: Meter and bill {{site.ai_gateway}} LLM tokens
-    url: /how-to/meter-llm-traffic/
+    url: /ai-gateway/meter-llm-traffic/
 faqs:
   - q: Why don't I see any events in my customer's invoice?
     a: |

@@ -66,12 +66,12 @@
     "id": "937dcdd7-4485-47dc-af5f-b805d562552f",
     "title": "Gateway Admin - EE",
     "latestVersion": {
-      "name": "3.15.0.0",
-      "id": "aad7d299-60ff-445c-836a-4a4a1107627b"
+      "name": "3.16.0.0",
+      "id": "9d641658-8ce6-49ce-a62d-e00ef4e21dcb"
     },
     "description": "Kong Gateway (EE) comes with an internal RESTful API for administration purposes.",
     "documentCount": 2,
-    "versionCount": 13,
+    "versionCount": 14,
     "versions": [
       {
         "id": "be79b812-46d5-4cc1-b757-b5270bf4fa60",
@@ -174,6 +174,14 @@
         "created_at": "2026-07-02T16:46:33.422Z",
         "updated_at": "2026-07-02T16:47:10.255Z",
         "name": "3.15.0.0",
+        "deprecated": false,
+        "registration_configs": []
+      },
+      {
+        "id": "9d641658-8ce6-49ce-a62d-e00ef4e21dcb",
+        "created_at": "2026-09-15T16:52:06.527Z",
+        "updated_at": "2026-09-18T10:09:56.375Z",
+        "name": "3.16.0.0",
         "deprecated": false,
         "registration_configs": []
       }
@@ -348,6 +356,48 @@
         "created_at": "2025-05-05T20:59:18.970Z",
         "updated_at": "2025-05-07T16:26:12.925Z",
         "name": "v0",
+        "deprecated": false,
+        "registration_configs": []
+      }
+    ]
+  },
+  {
+    "id": "be747e64-83cd-4b4c-b0bf-8ddb0a89528e",
+    "title": "Konnect AI Catalog",
+    "latestVersion": {
+      "name": "v1",
+      "id": "f79cb260-fb92-456a-b927-c8b6d8eee834"
+    },
+    "description": "Konnect AI Catalog is the API for creating and managing AI interfaces in the Konnect Catalog.",
+    "documentCount": 0,
+    "versionCount": 1,
+    "versions": [
+      {
+        "id": "f79cb260-fb92-456a-b927-c8b6d8eee834",
+        "created_at": "2026-08-31T20:50:42.170Z",
+        "updated_at": "2026-09-03T19:59:47.432Z",
+        "name": "v1",
+        "deprecated": false,
+        "registration_configs": []
+      }
+    ]
+  },
+  {
+    "id": "5e0005b9-232b-4808-8bdf-9560d4596080",
+    "title": "Konnect AI Gateway",
+    "latestVersion": {
+      "name": "v1",
+      "id": "8cf2d03b-e257-4cc8-8b02-04abee8376b3"
+    },
+    "description": "The API for configuring AI Gateways in Konnect.",
+    "documentCount": 0,
+    "versionCount": 1,
+    "versions": [
+      {
+        "id": "8cf2d03b-e257-4cc8-8b02-04abee8376b3",
+        "created_at": "2026-07-14T16:16:38.145Z",
+        "updated_at": "2026-07-14T16:20:12.585Z",
+        "name": "v1",
         "deprecated": false,
         "registration_configs": []
       }

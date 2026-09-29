@@ -15,7 +15,8 @@ Flags:
                                 - Config path: [ color-theme ]
                                 - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
                                 - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
-      --columns stringArray     Select text columns as HEADER=.field (repeatable or comma-separated). Supports nested fields, quoted keys, array indexes, and string slices.
+      --columns stringArray     Select text columns as HEADER=.field (repeatable or comma-separated).
+                                Supports nested fields, quoted keys, array indexes, and string slices.
       --config-file string      Path to the configuration file to load.
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
   -h, --help                    help for me
@@ -37,6 +38,10 @@ Flags:
       --no-telemetry            Disable telemetry for this command invocation. Overrides config and env.
                                 - Config path: [ telemetry.enabled ]
                                 - Env var    : [ KONGCTL_NO_TELEMETRY ]
+                                - Default    : [ false ]
+      --no-trunc                Preserve full cell widths in static text tables beyond terminal width.
+                                Does not change column selection, UUID formatting, or explicit string slices.
+                                - Config path: [ text.no-trunc ]
                                 - Default    : [ false ]
   -o, --output string           Configures the format of data written to STDOUT.
                                 - Config path: [ output ]

@@ -1,0 +1,10 @@
+{
+  "name": "aigw-policy-scopes",
+  "version": "1.0.0",
+  "description": "Fetch AI Gateway available policy scopes from Konnect and save to app/_data/policies/ai-gateway/scopes.json",
+  "type": "module",
+  "scripts": {
+    "fetch-scopes": "node fetch-scopes.js"
+  },
+  "license": "MIT"
+}

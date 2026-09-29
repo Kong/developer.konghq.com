@@ -1,0 +1,1050 @@
+[
+  {
+    "name": "ace",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "acl",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "acme",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "ai-aws-guardrails",
+    "scopes": [
+      "models",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "ai-azure-content-safety",
+    "scopes": [
+      "models",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "ai-custom-guardrail",
+    "scopes": [
+      "models",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "ai-gcp-model-armor",
+    "scopes": [
+      "models",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "ai-lakera-guard",
+    "scopes": [
+      "models",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "ai-llm-as-judge",
+    "scopes": [
+      "models",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "ai-mcp-oauth2",
+    "scopes": [
+      "mcp-servers",
+      "global"
+    ]
+  },
+  {
+    "name": "ai-prompt-compressor",
+    "scopes": [
+      "models",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "ai-prompt-decorator",
+    "scopes": [
+      "models",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "ai-prompt-guard",
+    "scopes": [
+      "models",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "ai-prompt-template",
+    "scopes": [
+      "models",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "ai-rag-injector",
+    "scopes": [
+      "models",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "ai-rate-limiting-advanced",
+    "scopes": [
+      "models",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "ai-request-transformer",
+    "scopes": [
+      "models",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "ai-response-transformer",
+    "scopes": [
+      "models",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "ai-sanitizer",
+    "scopes": [
+      "models",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "ai-semantic-cache",
+    "scopes": [
+      "models",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "ai-semantic-prompt-guard",
+    "scopes": [
+      "models",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "ai-semantic-response-guard",
+    "scopes": [
+      "models",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "app-dynamics",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "aws-lambda",
+    "scopes": [
+      "consumers",
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "azure-functions",
+    "scopes": [
+      "consumers",
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "basic-auth",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "bot-detection",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "canary",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "confluent",
+    "scopes": [
+      "consumers",
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "confluent-consume",
+    "scopes": [
+      "consumers",
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "correlation-id",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "cors",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "datadog",
+    "scopes": [
+      "consumers",
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "datakit",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "degraphql",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "exit-transformer",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "file-log",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "forward-proxy",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "graphql-proxy-cache-advanced",
+    "scopes": [
+      "consumers",
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "graphql-rate-limiting-advanced",
+    "scopes": [
+      "consumers",
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "grpc-gateway",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "grpc-web",
+    "scopes": [
+      "consumers",
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "header-cert-auth",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "hmac-auth",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "http-log",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "injection-protection",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "ip-restriction",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "jq",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "json-threat-protection",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "jwe-decrypt",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "jwt",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "jwt-signer",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "kafka-consume",
+    "scopes": [
+      "consumers",
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "kafka-log",
+    "scopes": [
+      "consumers",
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "kafka-upstream",
+    "scopes": [
+      "consumers",
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "key-auth",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "ldap-auth",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "ldap-auth-advanced",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "loggly",
+    "scopes": [
+      "consumers",
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "metering-and-billing",
+    "scopes": [
+      "consumers",
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "mocking",
+    "scopes": [
+      "consumers",
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "mtls-auth",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "oas-validation",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "oauth2-introspection",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "opa",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "openid-connect",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "opentelemetry",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "post-function",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "pre-function",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "prometheus",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "proxy-cache",
+    "scopes": [
+      "consumers",
+      "consumer-groups",
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "proxy-cache-advanced",
+    "scopes": [
+      "consumers",
+      "consumer-groups",
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "rate-limiting",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "rate-limiting-advanced",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "redirect",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "request-callout",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "request-size-limiting",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "request-termination",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "request-transformer",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "request-transformer-advanced",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "request-validator",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "response-ratelimiting",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "response-transformer",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "response-transformer-advanced",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "route-by-header",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "global"
+    ]
+  },
+  {
+    "name": "route-transformer-advanced",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "global"
+    ]
+  },
+  {
+    "name": "saml",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "service-protection",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "session",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "solace-consume",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "solace-log",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "solace-upstream",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "standard-webhooks",
+    "scopes": [
+      "consumer-groups",
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "statsd",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "syslog",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "tcp-log",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "tls-handshake-modifier",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "tls-metadata-headers",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "udp-log",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "upstream-oauth",
+    "scopes": [
+      "consumers",
+      "consumer-groups",
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "upstream-timeout",
+    "scopes": [
+      "consumers",
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  },
+  {
+    "name": "websocket-size-limit",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "websocket-validator",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "xml-threat-protection",
+    "scopes": [
+      "models",
+      "mcp-servers",
+      "agents",
+      "consumers",
+      "consumer-groups",
+      "global"
+    ]
+  },
+  {
+    "name": "zipkin",
+    "scopes": [
+      "consumers",
+      "models",
+      "mcp-servers",
+      "agents",
+      "global"
+    ]
+  }
+]

@@ -5,7 +5,7 @@ import { processPrereqs } from "./prereqs.js";
 import { processCleanup } from "./cleanup.js";
 import { processSteps } from "./step.js";
 import { validate, ValidationError } from "./validations.js";
-import { executeCommand } from "../docker-helper.js";
+import { executeCommand, executeDocCommand } from "../docker-helper.js";
 import { getSetupConfig } from "./setup.js";
 import { logResult } from "../reporting.js";
 
@@ -44,18 +44,6 @@ function appendEnvFlags(command, env_variables) {
     .map(([key, value]) => (value ? `-e ${key}=${value}` : `-e ${key}`))
     .join(" ");
   return `${command} ${flags}`;
-}
-
-async function runConfig(config, container) {
-  try {
-    if (config.commands) {
-      for (const command of config.commands) {
-        await executeCommand(container, command);
-      }
-    }
-  } catch (error) {
-    throw error;
-  }
 }
 
 async function checkSetup(setup, runtimeConfig, container) {
@@ -98,7 +86,7 @@ async function runPrereqs(prereqs, container, runtimeConfig) {
     if (config.commands) {
       for (const command of config.commands) {
         if (typeof command === "string") {
-          await executeCommand(container, command);
+          await executeDocCommand(container, command);
         } else {
           await validate(container, command, runtimeConfig);
         }
@@ -108,11 +96,19 @@ async function runPrereqs(prereqs, container, runtimeConfig) {
   }
 }
 
-async function runCleanup(cleanup, container) {
+async function runCleanup(cleanup, container, runtimeConfig) {
   log("Running cleanup...");
   if (cleanup) {
     const config = await processCleanup(cleanup);
-    await runConfig(config, container);
+    if (config.commands) {
+      for (const command of config.commands) {
+        if (typeof command === "string") {
+          await executeCommand(container, command);
+        } else {
+          await validate(container, command, runtimeConfig);
+        }
+      }
+    }
     log(`   cleanup ✅ .`);
   }
 }
@@ -126,7 +122,7 @@ async function runSteps(steps, runtimeConfig, container) {
       if (config.commands) {
         for (const command of config.commands) {
           if (typeof command === "string") {
-            await executeCommand(container, command);
+            await executeDocCommand(container, command);
             log(`   step ✅ .`);
           } else {
             // XXX: Sleep needed here because we need to wait for the iterator
@@ -153,6 +149,7 @@ async function runSteps(steps, runtimeConfig, container) {
 export async function runInstructions(instructions, runtimeConfig, container) {
   let result = { name: instructions.name };
   const { rbac, wasm, env_variables } = await getSetupConfig(instructions.setup);
+  let redeployed = false;
   try {
     const check = await checkSetup(
       instructions.setup,
@@ -170,6 +167,10 @@ export async function runInstructions(instructions, runtimeConfig, container) {
       Object.keys(env_variables).length > 0 &&
       runtimeConfig.setup?.env_variables?.command
     ) {
+      // Set before the command runs, not after: the redeploy script destroys the
+      // running gateway before it starts the new one, so a failure here also
+      // leaves the baseline gone and still needs the restore below.
+      redeployed = true;
       await executeCommand(
         container,
         appendEnvFlags(runtimeConfig.setup.env_variables.command, env_variables)
@@ -177,11 +178,13 @@ export async function runInstructions(instructions, runtimeConfig, container) {
     }
 
     if (rbac && runtimeConfig.setup?.rbac?.commands) {
+      redeployed = true;
       for (const command of runtimeConfig.setup.rbac.commands) {
         await executeCommand(container, command);
       }
     }
     if (wasm && runtimeConfig.setup?.wasm?.commands) {
+      redeployed = true;
       for (const command of runtimeConfig.setup.wasm.commands) {
         await executeCommand(container, command);
       }
@@ -207,13 +210,13 @@ export async function runInstructions(instructions, runtimeConfig, container) {
   }
 
   try {
-    if ((rbac || wasm) && runtimeConfig.setup?.commands) {
+    if (redeployed && runtimeConfig.setup?.commands) {
       for (const command of runtimeConfig.setup.commands) {
         await executeCommand(container, command);
       }
     }
 
-    await runCleanup(instructions.cleanup, container);
+    await runCleanup(instructions.cleanup, container, runtimeConfig);
   } catch (err) {
     log(`   cleanup ❌. ${err.message}`);
   }

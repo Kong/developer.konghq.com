@@ -1,4 +1,16 @@
 {
+  "3.16.0.0": [
+    {
+      "message": "Added WebSocket (`ws`/`wss`) protocol support. OPA is evaluated\nat handshake time before the connection is established.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where OPA decision headers could break\nthe WebSocket handshake.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Fixed json body processing to recognize `application/json` content-type with charset, ensuring proper handling of JSON request bodies.\n",

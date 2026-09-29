@@ -1,0 +1,106 @@
+{
+  "properties": {
+    "consumer": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified consumer has been authenticated.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "consumer_group": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "protocols": {
+      "description": "A list of the request protocols that will trigger this plugin.",
+      "items": {
+        "enum": ["grpc", "grpcs", "http", "https", "tcp", "tls", "tls_passthrough", "udp", "ws", "wss"],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "config": {
+      "additionalProperties": false,
+      "properties": {
+        "endpoint": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Identifies the upstream protocol and provider for this Route.",
+          "properties": {
+            "specification": {
+              "type": "string",
+              "description": "The protocol specification to inspect. Determines how the plugin parses request and response bodies.",
+              "enum": [
+                "MCP",
+                "A2A",
+                "Inference:Claude/Messages",
+                "Inference:OpenAI/Chat_Completions",
+                "Inference:OpenAI/Responses",
+                "Inference:OpenRouter/Chat_Completions",
+                "Inference:Google/Gemini_Generate_Content"
+              ]
+            },
+            "provider": {
+              "type": "string",
+              "description": "Logical name for the upstream service. Used in audit receipts sent to VeriKnox Hub to identify which provider handled the request."
+            }
+          },
+          "required": ["specification", "provider"]
+        },
+        "agent_passphrase": {
+          "type": "string",
+          "description": "Passphrase used to decrypt the enrolled data plane identity at runtime. The plugin uses this to sign receipts via the native identity library. Store this value in a Kong Vault and reference it as `{vault://...}` rather than setting a plain string."
+        },
+        "veriknox_hub": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Connection settings for the VeriKnox Hub instance that receives signed receipts and enforces policy.",
+          "properties": {
+            "base_url": {
+              "type": "string",
+              "description": "Base URL of your VeriKnox Hub instance.",
+              "default": "https://hub.veriknox.ai"
+            }
+          },
+          "required": ["base_url"]
+        },
+        "http_session_header": {
+          "type": "string",
+          "description": "Name of the HTTP request header from which the plugin extracts a session ID to include in audit receipts. For example, `X-Session-Id` or `X-Claude-Code-Session-Id`. If omitted, no session ID is attached to receipts."
+        }
+      },
+      "required": ["endpoint", "agent_passphrase", "veriknox_hub"],
+      "type": "object"
+    }
+  },
+  "required": []
+}

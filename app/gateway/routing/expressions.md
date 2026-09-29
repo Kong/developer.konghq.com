@@ -18,8 +18,8 @@ related_resources:
     url: /gateway/routing/traditional/
   - text: Traffic control and routing
     url: /gateway/traffic-control-and-routing/
-  - text: Conditional plugin expressions
-    url: /gateway/plugins/expressions/
+  - text: Plugin conditional execution reference
+    url: /gateway/plugins/conditions/
 
 min_version:
   gateway: '3.0'
@@ -59,7 +59,7 @@ You can do the following with the expressions router:
 
 {:.info}
 > The plugin `condition` field also supports expressions, with some differences in options and considerations. 
-> See the [Conditional expressions for plugins reference](/gateway/plugins/expressions/) for more information.
+> See the [Conditional expressions for plugins reference](/gateway/plugins/conditions/) for more information.
 
 ## Enable the expressions router
 

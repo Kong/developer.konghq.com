@@ -1,4 +1,11 @@
 {
+  "3.16.0.0": [
+    {
+      "message": "Fixed an issue where gzipped response handling attempted to change the status during body filtering.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Fixed a failure that occurred when Nginx gzip was enabled for an upstream.",

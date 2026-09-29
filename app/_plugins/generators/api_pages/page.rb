@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative './base'
+require_relative '../../file_cache'
 
 module Jekyll
   module APIPages
@@ -37,7 +38,7 @@ module Jekyll
       end
 
       def markdown_content
-        @markdown_content ||= File.read('app/_includes/api_spec/spec.md')
+        @markdown_content ||= FileCache.read('app/_includes/api_spec/spec.md')
       end
 
       def llm

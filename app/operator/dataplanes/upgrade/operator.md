@@ -45,6 +45,7 @@ Any change that needs manual action is called out in the [changelog](/operator/c
 ## Before you upgrade
 
 1. Read the [changelog](/operator/changelog/) for every version between your current version and the target, and check [`UPGRADE.md`](https://github.com/Kong/charts/blob/main/charts/kong-operator/UPGRADE.md) for version-specific steps.
+1. Read the [chart changelog](https://github.com/Kong/charts/blob/main/charts/kong-operator/CHANGELOG.md) for every chart version between your current version and the one including the {{site.operator_product_name}} version bump.
 1. Check [version compatibility](/operator/reference/version-compatibility/) with your Kubernetes and Gateway API versions.
 1. Back up your resources. Your `Gateway`, `GatewayConfiguration`, `DataPlane`, `ControlPlane`, and `KonnectExtension` resources are the source of truth. Export them so you can restore if needed:
 
