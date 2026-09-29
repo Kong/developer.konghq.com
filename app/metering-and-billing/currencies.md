@@ -114,8 +114,13 @@ rows:
 <!--vale on-->
 
 Cost bases are append-only.
-To change a rate, add a new cost basis with a later effective date rather than editing the existing one, which keeps the historical rates intact for past invoices.
-A single custom currency can carry several cost bases at once, either against different fiat currencies or across different time windows for the same fiat currency.
+To change a rate, add a new cost basis for the same fiat currency.
+{{site.metering_and_billing}} ends the cost basis that's active at the new cost basis's effective date by setting its effective-to date to that time.
+After that time passes, the {{site.konnect_short_name}} UI shows the earlier cost basis as **Superseded**.
+The rate of the superseded cost basis doesn't change, so the historical rates stay intact.
+
+A single custom currency can carry cost bases against several fiat currencies at once.
+For any one fiat currency, only one cost basis is active at a time, and its successive cost bases cover consecutive time windows.
 
 ## Where currency is set
 
@@ -137,13 +142,20 @@ rows:
     notes: |
       Must be a fiat currency.
       If the customer has no currency when you start their first paid subscription, {{site.metering_and_billing}} sets it to that subscription's invoice currency.
-      A customer without a currency can't be granted credits.
   - entity: "Plan"
     who: "You, when you create the plan"
-    notes: "Read-only after the plan exists. A plan can contain only one fiat currency."
+    notes: |
+      Read-only after the plan exists. Can be a fiat or a custom currency.
+      A fiat-currency plan holds only that one fiat currency, though individual rate cards can override it to a custom currency.
+      A custom-currency plan holds no fiat currency at all, and its subscriptions are invoiced in the customer's currency.
+      With `credit_then_invoice` settlement, the custom currency needs a cost basis that's active against the customer's currency when the subscription starts, so its cost bases determine which customers can subscribe.
   - entity: "Add-on"
     who: "You, when you create the add-on"
-    notes: "Read-only after the add-on exists. Must match the currency of any plan it's attached to."
+    notes: |
+      Read-only after the add-on exists.
+      On a fiat-currency plan, the add-on can use the plan's fiat currency, and its rate cards can use a custom currency under the same override rules as the plan's rate cards.
+      On a custom-currency plan, the add-on's rate cards must use the plan's custom currency.
+      An add-on rate card that shares its key with a plan rate card must keep that rate card's currency.
   - entity: "Rate card"
     who: "You, as an optional override"
     notes: "Inherits the plan or add-on currency unless you override it. Can only be overridden to a custom currency."
@@ -186,7 +198,7 @@ Keep the following constraints in mind when you plan your product catalog:
 
 * An invoice covers a single currency. If a customer is migrated between currencies, they can have one gathering invoice per currency.
 * A subscription's invoice currency is fixed for the life of the subscription.
-* There is no exchange rate between fiat currencies. To sell in several fiat currencies, create one plan per currency.
+* There is no exchange rate between fiat currencies. To sell in several fiat currencies, create one plan per currency, or price a plan in a custom currency that has a cost basis for each fiat currency you sell in.
 * A custom currency is immutable and can't be deleted after you create it.
 
 ## Validation errors
@@ -206,9 +218,11 @@ rows:
   - code: "`currency_not_found`"
     meaning: "The referenced currency doesn't exist in your organization."
   - code: "`currency_cost_basis_not_found`"
-    meaning: "The custom currency has no cost basis for the plan's fiat currency."
+    meaning: "The custom currency has no active cost basis for the fiat currency it needs to convert into: the plan's currency for a rate card override, or the customer's currency for a subscription to a custom-currency plan."
   - code: "`plan_multiple_fiat_currencies`"
     meaning: "A plan can't contain more than one fiat currency."
+  - code: "`plan_addon_currency_mismatch`"
+    meaning: "An add-on rate card would change the currency of a plan rate card with the same key."
   - code: "`rate_card_currency_override_not_allowed`"
     meaning: "The rate card already uses a custom currency, so it can't be overridden."
   - code: "`rate_card_currency_override_redundant`"
