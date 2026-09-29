@@ -126,3 +126,17 @@ When `resource_names` uses an expression that interpolates an identity into a gl
 For example, with `resource_names: '[context.auth.principal.name + "-*"]'`, a principal named `ali*` produces the pattern `ali*-*`, which matches topics such as `alibob-secrets` and `ali-data`, not just that principal's own topics.
 
 Only interpolate identity values into `resource_names` patterns when those values are guaranteed not to contain glob metacharacters.
+
+## Observability
+
+The ACL policy logs each decision:
+* Allowed requests are logged on the `trace` level.
+* Denied requests are logged on the `debug` level.
+
+By default, {{site.event_gateway_short}} logs on the `info` level, so it hides these logs.
+Kafka usually has high traffic, and logging every decision could overwhelm the logging system.
+To show ACL decisions without raising the level for the whole gateway, set the `debug` level for the ACL module only:
+
+```sh
+KEG__OBSERVABILITY__LOG_FLAGS=info,keg::kafka::proxy::transform::policies::acl=debug
+```

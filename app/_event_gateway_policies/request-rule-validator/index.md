@@ -12,7 +12,7 @@ tags:
 
 schema:
   api: konnect/event-gateway
-  path: /schemas/RequestRuleValidatorPolicy
+  path: /schemas/EventGatewayRequestRuleValidatorPolicy
 
 api_specs:
   - konnect/event-gateway
@@ -136,3 +136,17 @@ We recommend placing the Request Rule Validator policy after the [ACLs policy](/
 
 A rule's `description` is included in the error the client sees and in {{site.event_gateway_short}} logs.
 Avoid including sensitive details, like internal system names or other rules you enforce, in a rule's `description` if that information shouldn't be visible to the client that triggered the violation.
+
+## Observability
+
+The Request Rule Validator policy logs each rule evaluation:
+* Passed rules are logged on the `trace` level.
+* Rule violations are logged on the `debug` level.
+
+By default, {{site.event_gateway_short}} logs on the `info` level, so it hides these logs.
+Kafka usually has high traffic, and logging every evaluation could overwhelm the logging system.
+To show rule evaluations without raising the level for the whole gateway, set the `debug` level for the policy module only:
+
+```sh
+KEG__OBSERVABILITY__LOG_FLAGS=info,keg::kafka::proxy::transform::policies::request_rule_validator=debug
+```
