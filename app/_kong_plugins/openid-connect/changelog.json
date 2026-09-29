@@ -632,6 +632,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.19": [
+    {
+      "message": "Fixed an issue where disabling `verify_signature` gave no warning, even though it also skips signature verification for bearer tokens from clients. The plugin now logs a warning when `verify_signature` is `false` and `auth_methods` includes `bearer`. It logs a notice instead when `bearer` is not enabled.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.1.2": [
     {
       "message": "Fixed an issue where caused IdP to report invalid redirect_uri errors when `config.redirect_uri` was not configured and the uri path contained spaces.",

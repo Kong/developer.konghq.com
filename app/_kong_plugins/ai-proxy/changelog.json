@@ -695,6 +695,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.19": [
+    {
+      "message": "Fixed streaming token count metrics for third-party models hosted on Vertex AI (claude-*, mistral-*, jamba-*) that reported inflated totals because incremental counts were treated as cumulative.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.1.1": [
     {
       "message": "Fixed issue of template not being resolved correctly and supported nested fields.\n",

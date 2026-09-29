@@ -356,6 +356,23 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.19": [
+    {
+      "message": "Fixed an issue where YAML 1.1 `null` values were parsed incorrectly.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the OAS specification cache failed to distinguish between different values of `api_spec_encoded` for the same specification content.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Improved plugin performance by removing unnecessary hash computation. Enabling the plugin now adds much less latency and CPU overhead to requests.",
+      "type": "performance",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.1.2": [
     {
       "message": "Fixed an issue where the plugin throws an error for responses without a Content-Type header.",
