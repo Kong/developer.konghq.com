@@ -164,6 +164,16 @@ Replace `$KONNECT_TOKEN` with your [{{site.konnect_short_name}} personal or syst
 {% endnavtab %}
 {% endnavtabs %}
 
+## Customer currency
+
+Every customer has a currency, which must be a fiat [currency](/metering-and-billing/currencies/).
+You can select it when you create the customer, and it's shown on the customer's details page.
+
+The customer currency is the settlement currency for everything billed to the customer:
+
+* If the customer has no currency when you start their first paid subscription, {{site.metering_and_billing}} sets it to that subscription's invoice currency.
+* A customer without a currency can't be granted credits, because credit purchases settle in the customer's currency.
+* A plan priced in a [custom currency](/metering-and-billing/currencies/#custom-currencies) invoices the customer in their fiat currency, with custom-currency charges converted through the currency's cost basis.
 
 ## Schema
 
