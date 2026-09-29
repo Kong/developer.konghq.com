@@ -14,6 +14,8 @@ breadcrumbs:
 related_resources:
   - text: "Billing and invoicing"
     url: /metering-and-billing/billing-invoicing/
+  - text: "Currencies"
+    url: /metering-and-billing/currencies/
   - text: Product Catalog
     url: /metering-and-billing/product-catalog/
   - text: Entitlements
@@ -43,6 +45,23 @@ Subscriptions follow a billing cycle determined by their related [rate card](/me
 To add a subscription to a customer, navigate to **{{site.metering_and_billing}}** > **Billing**, click your customer, and then click the **Subscriptions** tab in the {{site.konnect_short_name}} UI.
 
 Active customer subscriptions can be enhanced with [add-ons](/metering-and-billing/add-ons/), which allow you to make changes to a customer's entitlements without changing the plan directly.
+
+## Currency
+
+A subscription is invoiced in a single [currency](/metering-and-billing/currencies/), which is derived when the subscription starts:
+
+* When the plan is priced in a fiat currency, the subscription is invoiced in the plan's currency.
+* When the plan is priced in a custom currency, the subscription is invoiced in the customer's currency instead. The customer's currency must already be set, and it must be a fiat currency.
+
+Either way, the invoice currency has to agree with the customer's currency.
+The invoice currency is fixed for the life of the subscription and can't be changed afterwards.
+
+In the {{site.konnect_short_name}} UI, the plan selector only offers plans whose pricing matches the customer's currency.
+A customer on a fiat currency can subscribe to a custom-currency plan only when the plan settles in credits only, or when the custom currency has an active cost basis for the customer's fiat currency.
+
+When a subscription uses a custom-currency rate card, {{site.metering_and_billing}} pins the cost basis that's active for the invoice currency at subscription start.
+The subscription keeps converting custom-currency charges at that pinned rate, so later changes to the currency's cost bases don't affect running subscriptions.
+Rate cards that settle in credits only don't need a cost basis, because their charges never convert to a fiat currency.
 
 ## Change plans
 
