@@ -3,7 +3,7 @@ title: Enforce topic naming, sizing, and retention conventions
 description: Require a topic name prefix, cap partitions and enforce a minimum replication factor, and pin retention to a fixed value.
 
 extended_description: |
-  This Request Rule Validator policy enforces conventions on `CreateTopics` requests for a shared Kafka cluster:
+  This Request Rule Validator policy enforces topic conventions for a shared Kafka cluster.
 
   In this example:
   * Topic names must start with `team-a.`.
@@ -11,10 +11,18 @@ extended_description: |
   * Topics must have a replication factor of at least 3.
   * `retention.ms` must be set to 24 hours (`86400000`).
 
+  Clients can change a topic after they create it, so the policy enforces the conventions on more than one request type:
+  * `create_topics`: Enforces all the conventions when a client creates a topic.
+    If the request uses a manual replica assignment, the partition count and replication factor are `-1`, so the rules check `context.topic.assignments` instead.
+  * `create_partitions`: Prevents clients from growing a topic past 50 partitions.
+  * `alter_configs`: This request replaces the full configuration of a topic, so it must include `retention.ms` with the required value.
+    Otherwise, `retention.ms` would go back to the broker default.
+  * `incremental_alter_configs`: Clients can change `retention.ms` only with the `SET` operation and the required value.
+    This rule also prevents clients from deleting `retention.ms`.
+
   Each rule's expression describes the request state that's allowed.
-  When a topic in the request doesn't match a rule, {{site.event_gateway_short}} rejects only that topic with the Kafka `POLICY_VIOLATION` error
-  code.
-  Other topics in the same batched request are still created.
+  When an item in the request, for example a topic, doesn't match a rule, {{site.event_gateway_short}} rejects only that item with the Kafka `POLICY_VIOLATION` error code.
+  Other items in the same batched request are still processed.
 
 weight: 900
 
@@ -25,16 +33,31 @@ config:
     - type: create_topics
       rules:
         - description: "Topic name must start with \"team-a.\""
-          rule: '{{topic.name.startsWith("team-a.")}}'
+          rule: '{{context.topic.name.startsWith("team-a.")}}'
           action: reject
         - description: "Topic must have 50 partitions or fewer"
-          rule: '{{topic.num_partitions != -1 ? topic.num_partitions <= 50 : size(topic.assignments) <= 50}}'
+          rule: '{{context.topic.num_partitions != -1 ? context.topic.num_partitions <= 50 : size(context.topic.assignments) <= 50}}'
           action: reject
         - description: "Replication factor must be at least 3"
-          rule: '{{topic.replication_factor != -1 ? topic.replication_factor >= 3 : topic.assignments.all(a, size(a.broker_ids) >= 3)}}'
+          rule: '{{context.topic.replication_factor != -1 ? context.topic.replication_factor >= 3 : context.topic.assignments.all(a, size(a.broker_ids) >= 3)}}'
           action: reject
         - description: "retention.ms must be set to 24h (86400000)"
-          rule: '{{"retention.ms" in topic.configs && int(topic.configs["retention.ms"]) == 86400000}}'
+          rule: '{{"retention.ms" in context.topic.configs && int(context.topic.configs["retention.ms"]) == 86400000}}'
+          action: reject
+    - type: create_partitions
+      rules:
+        - description: "Topic must have 50 partitions or fewer"
+          rule: '{{context.topic.count <= 50}}'
+          action: reject
+    - type: alter_configs
+      rules:
+        - description: "retention.ms must be set to 24h (86400000)"
+          rule: '{{context.resource.type != "TOPIC" || ("retention.ms" in context.resource.configs && int(context.resource.configs["retention.ms"]) == 86400000)}}'
+          action: reject
+    - type: incremental_alter_configs
+      rules:
+        - description: "retention.ms can only be set to 24h (86400000)"
+          rule: '{{context.resource.type != "TOPIC" || context.config.name != "retention.ms" || (context.config.operation == "SET" && int(context.config.value) == 86400000)}}'
           action: reject
 
 tools:
