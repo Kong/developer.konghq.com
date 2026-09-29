@@ -20,6 +20,8 @@ related_resources:
     url: /metering-and-billing/subjects/
   - text: "Pricing models"
     url: /metering-and-billing/pricing-models/
+  - text: "Currencies"
+    url: /metering-and-billing/currencies/
   - text: "Prepaid credits"
     url: /metering-and-billing/credits/
 
@@ -228,6 +230,17 @@ Plans can take different forms, for example:
 * 10 GB storage included
 * SAML or SSO support
 
+### Plan currency
+
+Every plan has a currency that its rate card prices are expressed in.
+When you create a plan, you select the currency, and it defaults to `USD`.
+
+A plan can hold only one fiat currency, and the currency is read-only after the plan is created.
+You can also price a plan in a [custom currency](/metering-and-billing/currencies/), such as credits or tokens.
+In that case, the invoice currency comes from the customer instead, so the customer must already have a fiat currency set.
+
+See [Currencies](/metering-and-billing/currencies/) for how fiat and custom currencies work.
+
 ### Rate cards
 
 Plans are built from rate cards, which determine which features a plan can access, the price, and how much of a feature they can use (called entitlements). Rate Cards define the configuration of features that subscribers will be entitled to and charged for.
@@ -347,6 +360,19 @@ When no price is set across all rate cards, subscriptions can be initiated witho
 If any rate card has an explicit $0 price, payment method information is still required during subscription setup.
 
 Using a 100% discount on the standard price provides transparency to users by displaying the original value of the feature before the discount.
+
+#### Currency
+
+A rate card inherits the currency of the plan or add-on it belongs to.
+If the plan or add-on uses a fiat currency, you can override the rate card to a [custom currency](/metering-and-billing/currencies/), for example to price a feature in credits while the rest of the plan is priced in USD.
+
+A currency override has the following rules:
+
+* The custom currency needs a cost basis that's active against the plan's fiat currency, unless the rate card settles in credits only.
+* You can't override one fiat currency with another fiat currency, because a plan can hold only one fiat currency.
+* You can't override a rate card that already inherits a custom currency.
+* The override must differ from the currency it replaces.
+* A rate card with a currency override must define a price.
 
 ### Plan versions
 

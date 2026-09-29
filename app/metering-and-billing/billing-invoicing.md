@@ -20,6 +20,8 @@ related_resources:
     url: /metering-and-billing/stripe-integration/
   - text: "Prepaid credits"
     url: /metering-and-billing/credits/
+  - text: "Currencies"
+    url: /metering-and-billing/currencies/
 faqs:
   - q: Why don't I see any events in my customer's invoice?
     a: |
@@ -235,6 +237,8 @@ Because this data is cloned at creation time, changes to customer information or
 
 #### Invoice totals
 
+Invoices are always issued in a fiat [currency](/metering-and-billing/currencies/), even when the underlying plan or rate card is priced in a custom currency.
+
 Each invoice includes a currency and the following monetary totals, all rounded to the currency's precision:
 
 {% table %}
@@ -274,6 +278,23 @@ The invoice can include two kinds of lines:
 * Usage-based line: Represents charges calculated from actual usage measured by meters. Each usage-based line is linked to:
   * A meter (defined by the feature reference) that tracks usage data
   * A Rate Card that defines the unit price, tiered pricing rules, volume discounts, and any minimum or maximum charge constraints
+
+#### Custom-currency charges
+
+A rate card priced in a [custom currency](/metering-and-billing/currencies/) doesn't invoice in that currency.
+When the charge reaches the invoice, {{site.metering_and_billing}} converts it to the invoice's fiat currency through the [cost basis](/metering-and-billing/currencies/#cost-basis) pinned to the subscription.
+For charges that settle in credits, custom-currency credits are consumed first and only the uncovered overage is converted to fiat and invoiced.
+
+The invoice line records both sides of the conversion:
+
+* The quantity in the custom currency, rounded to that currency's precision
+* The fiat amount, calculated as the custom-currency amount multiplied by the cost basis rate and rounded to the fiat currency's precision
+
+In the {{site.konnect_short_name}} UI, the line shows the custom-currency amount, and the invoice totals show the converted fiat amount.
+
+{:.info}
+> Conversion and rounding happen each time usage is realized into an invoice.
+> Rounding differences across separate realization runs within a billing period aren't corrected against each other.
 
 ## Discounts and commitments
 
