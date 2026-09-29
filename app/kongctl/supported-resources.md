@@ -100,8 +100,12 @@ Use YAML tags in field values to load files or reference other resources.
 
 - `!file`: Load content from a file. 
   Supports `path#extract.path` and `path`/`extract` map form.
-- `!env`: Load string content from an environment variable. 
-  Supports `VAR#extract.path` and `var`/`extract` map form.
+- `!env`: Load string content from an environment variable. Supports
+  `VAR#extract.path` and `var`/`extract` map form. Add `store: true` in
+  mapping form to retain typed values in plaintext plans. Known destination
+  types are inferred; unknown or ambiguous destinations require `type`.
+  See [stored environment values][stored-env]
+  for conversion types, numeric limits, errors, and nesting restrictions.
 - `!ref`: Reference another declarative resource by `ref`.
   `resource-ref#field` is supported; the default field is `id`.
 - `!lookup`: Resolve an existing resource directly in a relationship field.
@@ -1410,3 +1414,5 @@ supported.
 
 For examples, see the
 [{{site.ai_gateway}} declarative configurations](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/ai-gateway).
+
+[stored-env]: /kongctl/declarative/#storing-typed-environment-values-in-plans
