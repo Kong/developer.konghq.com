@@ -67,6 +67,10 @@ columns:
 rows:
   - use_case: "[Example: Enforce topic naming, sizing, and retention conventions](./examples/enforce-topic-conventions/)"
     description: Require a topic name prefix, cap partitions and enforce a minimum replication factor, and pin retention to a fixed value.
+  - use_case: "[Example: Enforce a consumer group naming convention](./examples/enforce-group-naming/)"
+    description: Require consumer group IDs to start with a team prefix, for every Kafka request type that carries a group ID.
+  - use_case: "[Example: Enforce producer and consumer settings](./examples/enforce-produce-fetch-settings/)"
+    description: Require durable writes and transactional ID naming for producers, and limit how consumers fetch records.
 {% endtable %}
 <!--vale on-->
 
@@ -110,6 +114,11 @@ Each request type exposes a different set of values to the rule's CEL expression
 All rule expressions also have access to the [authentication fields](/event-gateway/expressions/#available-fields).
 
 See the [policy reference](/event-gateway/policies/request-rule-validator/reference/) for the supported request types and the values available to each one.
+
+### Automatic topic creation
+
+When at least one `create_topics` rule is configured, {{site.event_gateway_short}} turns off automatic topic creation on `Metadata` requests.
+Otherwise, clients could create topics through `Metadata` requests and bypass the `create_topics` rules.
 
 ### Batched requests
 
