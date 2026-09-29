@@ -9,7 +9,7 @@ icon: meshaccesslog.png
 related_resources:
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
-- text: Migrate policies to {{site.mesh_product_name}} 3
+- text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshaccesslog"
 ---
 
@@ -66,14 +66,14 @@ What each field does:
 
 Send a request through the mesh, then read the sidecar's output:
 
-The command below assumes an `orders` Deployment in `kong-mesh-demo`. Replace those values
+The following command assumes an `orders` Deployment in `kong-mesh-demo`. Replace those values
 with the destination workload you tested.
 
 ```sh
 kubectl logs deploy/orders -n kong-mesh-demo -c kuma-sidecar --tail 5
 ```
 
-Each request through the `orders` proxy adds a line in the format shown above. If you see no
+Each request through the `orders` proxy adds a line in the format shown earlier. If you see no
 lines, confirm the policy landed in the same mesh as the workload, and that the workload is
 actually receiving traffic.
 
@@ -82,7 +82,7 @@ actually receiving traffic.
 Every `backends` entry is one destination. A single rule can list several, and each record is
 written to all of them.
 
-The backend fragments below go under `rules[].default` for inbound logging, or
+The following backend fragments go under `rules[].default` for inbound logging, or
 `to[].default` for outbound logging.
 
 ### File
@@ -285,10 +285,10 @@ columns:
     key: selects
 rows:
   - field: "`rules`"
-    direction: Inbound — traffic arriving at the selected proxies
+    direction: "Inbound: traffic arriving at the selected proxies"
     selects: Client identity or SNI, using `matches`
   - field: "`to`"
-    direction: Outbound — traffic the selected proxies send
+    direction: "Outbound: traffic the selected proxies send"
     selects: The destination, using `to[].targetRef`
 {% endtable %}
 <!-- vale on -->

@@ -10,7 +10,7 @@ icon: policy.svg
 related_resources:
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
-- text: Migrate policies to {{site.mesh_product_name}} 3
+- text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshopa"
 - text: MeshTrafficPermission policy
   url: "/mesh/policies/meshtrafficpermission/"
@@ -130,7 +130,7 @@ anyone who can read it. A rego policy is usually fine there, while an `agentConf
 bearer token for a management server belongs in a `Secret`.
 
 An inline rego policy is **compiled when the resource is applied**, so a syntax error is
-rejected at write time with the OPA parse error attached — `policy is not valid: ...
+rejected at write time with the OPA parse error attached: `policy is not valid: ...
 rego_parse_error: unexpected eof token`. A policy supplied through `Secret`, `File` or `EnvVar`
 is not compiled during that resource-write validation. The control plane resolves the
 source and compiles the combined modules when generating the agent configuration, so

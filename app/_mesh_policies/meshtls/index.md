@@ -9,7 +9,7 @@ icon: meshtls.png
 related_resources:
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
-- text: Migrate policies to {{site.mesh_product_name}} 3
+- text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshtls"
 - text: MeshIdentity policy
   url: "/mesh/policies/meshidentity/"
@@ -72,7 +72,7 @@ Omitting `targetRef` selects the whole mesh. To limit a mode change to one inbou
 For an unnamed inbound, use its port as a string, such as `"8080"`.
 
 Configuration goes in `spec.rules`. There is no `to`: TLS on an inbound is a property of the
-proxy accepting the connection, not of the client. `rules` also takes no `matches` — the
+proxy accepting the connection, not of the client. `rules` also takes no `matches`: the
 handshake happens before there is a request to match on, so a rule covers every client of the
 selected proxies.
 

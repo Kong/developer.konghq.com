@@ -17,13 +17,13 @@ related_resources:
     url: /mesh/meshservice/
   - text: MeshPassthrough policy
     url: /mesh/policies/meshpassthrough/
-  - text: Migrate policies to {{site.mesh_product_name}} 3
+  - text: Migrate policies to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-policies-to-3/
 ---
 
 `MeshExternalService` makes a destination outside the mesh into a resource the mesh understands.
 A policy can name it in `spec.to[].targetRef`, a route can send traffic to it in `backendRefs`,
-and the sidecar can originate TLS to it — so an external API or database is governed by the same
+and the sidecar can originate TLS to it, so an external API or database is governed by the same
 timeouts, retries and circuit breakers as anything inside the mesh.
 
 It replaces the legacy `ExternalService` resource, which is removed in 3.0.
@@ -92,12 +92,12 @@ rows:
 `MeshRetry` reach this destination.
 
 There is no `tls` protocol value here. Where the sidecar should originate TLS, set
-`protocol` to what the application speaks and turn on `spec.tls` below.
+`protocol` to what the application speaks and turn on `spec.tls`; see [Originating TLS](#originating-tls).
 
 ## Endpoints
 
-`spec.endpoints[]` is where the traffic actually goes. Each takes an `address` — an IP or a
-hostname — and a `port`.
+`spec.endpoints[]` is where the traffic actually goes. Each takes an `address` (an IP or a
+hostname) and a `port`.
 
 `priority` enables failover: lower wins, 0 is primary, and traffic moves to the next level when
 the endpoints above it are unhealthy.
@@ -146,8 +146,8 @@ rows:
 Defining `clientCert` without `clientKey` is rejected with
 `must be defined when clientCert is defined`, and the reverse likewise.
 
-The three data source fields accept `type: Secret` or `type: InsecureInline` only — not `File`
-or `EnvVar` — so the material is held by the control plane rather than read from the sidecar's
+The three data source fields accept `type: Secret` or `type: InsecureInline` only (not `File`
+or `EnvVar`), so the material is held by the control plane rather than read from the sidecar's
 filesystem.
 
 {:.warning}
@@ -164,5 +164,5 @@ carries per-generator status, which is where to look when an expected hostname w
 ## Extensions
 
 `spec.extension` hands configuration to a named extension, and in its presence `endpoints` and
-`tls` are no longer required — the extension validates its own configuration instead. An
+`tls` are no longer required: the extension validates its own configuration instead. An
 extension with an empty `type` is rejected.

@@ -9,7 +9,7 @@ icon: meshcircuitbreaker.png
 related_resources:
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
-- text: Migrate policies to {{site.mesh_product_name}} 3
+- text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshcircuitbreaker"
 - text: MeshRetry policy
   url: "/mesh/policies/meshretry/"
@@ -188,8 +188,8 @@ rows:
 {% endtable %}
 
 `successRate` and `failurePercentage` both need enough traffic to be meaningful, so both take
-`requestVolume` — the minimum requests an endpoint must have seen in an interval to be
-assessed — and `minimumHosts`, the minimum number of endpoints meeting that volume before the
+`requestVolume` (the minimum requests an endpoint must have seen in an interval to be
+assessed) and `minimumHosts`, the minimum number of endpoints meeting that volume before the
 detector runs at all.
 
 ### Distinguish local failures from upstream errors

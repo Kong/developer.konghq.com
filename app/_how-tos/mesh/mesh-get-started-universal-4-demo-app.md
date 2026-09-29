@@ -101,8 +101,8 @@ networking:
         port: 6379
 ```
 
-The application then connects to `127.0.0.1:6379`. `backendRef` is required — an outbound
-without one is rejected with `backendRef: must be defined` — and it takes either `name` or
+The application then connects to `127.0.0.1:6379`. `backendRef` is required: an outbound
+without one is rejected with `backendRef: must be defined`. It takes either `name` or
 `labels`, never both.
 
 ## Verify it works

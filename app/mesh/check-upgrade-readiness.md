@@ -1,5 +1,5 @@
 ---
-title: "Check readiness for {{site.mesh_product_name}} 3"
+title: "Check readiness for {{site.mesh_product_name}} 3.x"
 description: "Audit a running {{site.mesh_product_name}} 2.x deployment for changes required before upgrading to version 3."
 content_type: reference
 layout: reference
@@ -15,13 +15,13 @@ related_resources:
     url: /mesh/upgrade/
   - text: Migrate mesh mTLS to MeshIdentity
     url: /mesh/migrate-mtls-to-meshidentity/
-  - text: Migrate zone proxies to Mesh 3
+  - text: Migrate zone proxies to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-zone-proxies-to-3/
-  - text: Migrate policies to Mesh 3
+  - text: Migrate policies to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-policies-to-3/
 ---
 
-Before upgrading to {{site.mesh_product_name}} 3, run the Mesh 3 readiness checker against your
+Before upgrading to {{site.mesh_product_name}} 3.x, run the {{site.mesh_product_name}} 3.x readiness checker against your
 2.x control plane. The checker finds configuration that must change before the upgrade and writes
 a self-contained HTML report that you can keep with your migration records.
 
@@ -99,7 +99,7 @@ kuma3-preflight --help
 ```
 
 You can also build the checker with Go. See the
-[Mesh 3 readiness repository](https://github.com/Kong/kong-mesh-v3-readiness) for the source and
+[{{site.mesh_product_name}} 3.x readiness repository](https://github.com/Kong/kong-mesh-v3-readiness) for the source and
 the complete flag reference.
 
 ## Choose the control plane to audit
@@ -162,8 +162,8 @@ Use the finding type to continue the migration:
 | --- | --- |
 | Unsupported control plane or data plane version | [Upgrade {{site.mesh_product_name}}](/mesh/upgrade/) and the [version-specific upgrade notes](/mesh/version-specific-upgrade-notes/) |
 | `Mesh.mtls`, identity, trust, or identity-based permission | [Migrate mesh mTLS to MeshIdentity](/mesh/migrate-mtls-to-meshidentity/) |
-| `ZoneIngress`, `ZoneEgress`, or legacy zone routing | [Migrate zone proxies to Mesh 3](/mesh/migrate-zone-proxies-to-3/) |
-| Legacy policy or incompatible policy field | [Migrate policies to Mesh 3](/mesh/migrate-policies-to-3/) |
+| `ZoneIngress`, `ZoneEgress`, or legacy zone routing | [Migrate zone proxies to {{site.mesh_product_name}} 3.x](/mesh/migrate-zone-proxies-to-3/) |
+| Legacy policy or incompatible policy field | [Migrate policies to {{site.mesh_product_name}} 3.x](/mesh/migrate-policies-to-3/) |
 | `ExternalService` | [MeshExternalService](/mesh/meshexternalservice/) and the [zone-proxy migration](/mesh/migrate-zone-proxies-to-3/) |
 | Legacy gateway resource | [Application ingress](/mesh/application-ingress/) |
 | Legacy service discovery or service selection | [MeshService](/mesh/meshservice/) |

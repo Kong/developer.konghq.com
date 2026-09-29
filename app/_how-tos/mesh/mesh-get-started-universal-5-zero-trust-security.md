@@ -17,7 +17,7 @@ series:
   id: mesh-get-started-universal-3
   position: 5
 tldr:
-  q: How do I turn on mTLS and restrict traffic in {{site.mesh_product_name}} 3?
+  q: How do I turn on mTLS and restrict traffic in {{site.mesh_product_name}} 3.x?
   a: Create a `MeshIdentity` so workloads get certificates, which makes traffic default to deny, then allow specific callers with a `MeshTrafficPermission` matching on their SPIFFE ID.
 related_resources:
   - text: MeshIdentity
@@ -26,6 +26,15 @@ related_resources:
     url: /mesh/policies/meshtrafficpermission/
   - text: MeshTLS
     url: /mesh/policies/meshtls/
+cleanup:
+  inline:
+    - title: Remove the demo containers and network
+      content: |
+        ```sh
+        docker rm --force kong-mesh-demo-app kong-mesh-demo-kv kong-mesh-demo-control-plane
+        docker network rm kong-mesh-demo
+        rm -rf "$KONG_MESH_DEMO_TMP"
+        ```
 ---
 
 So far both workloads talk to each other with nothing stopping them, and nothing encrypting
@@ -64,7 +73,7 @@ EOF
 ```
 
 `selector.dataplane: {}` matches every proxy in the mesh. `insecureAllowSelfSigned` accepts a CA
-the control plane generates itself, which suits a demo and nothing else — a real mesh supplies a
+the control plane generates itself, which suits a demo and nothing else: a real mesh supplies a
 CA under `bundled.ca`.
 
 Setting `trustDomain` explicitly keeps the SPIFFE IDs predictable. Left out, it renders from
@@ -94,8 +103,8 @@ curl http://127.0.0.1:25050/api/v1/items/hello
 
 It fails. Two things changed at once:
 
-- Proxies now have identities, so `MeshTrafficPermission` applies — and no permission exists,
-  so nothing is allowed. {{site.mesh_product_name}} 3 creates no default allow-all permission.
+- Proxies now have identities, so `MeshTrafficPermission` applies, and no permission exists,
+  so nothing is allowed. {{site.mesh_product_name}} 3.x creates no default allow-all permission.
 - Inbounds are `Strict` unless a [MeshTLS](/mesh/policies/meshtls/) policy says otherwise, so
   plaintext from outside the mesh is rejected. `curl` on your host is outside the mesh.
 
@@ -145,7 +154,7 @@ PORT  KIND                   ORIGINS
 main  MeshTrafficPermission  kri_mtp_default___allow-demo-app-to-kv_
 ```
 
-That is the control plane's own view, per port, after matching — not a read-back of what you
+That is the control plane's own view, per port, after matching, not a read-back of what you
 applied. And from the other direction, the proxies a policy matches:
 
 ```sh
@@ -168,11 +177,11 @@ outside is not admitted at all.
 ## Letting external traffic in
 
 External traffic reaches a mesh through a gateway, and in
-{{site.mesh_product_name}} 3 that means a **delegated** gateway: a gateway you run yourself, with
+{{site.mesh_product_name}} 3.x that means a **delegated** gateway: a gateway you run yourself, with
 `kuma-dp` beside it, as an ordinary `Dataplane`.
 
 The built-in gateway is removed. `MeshGateway`, `MeshGatewayRoute`, `MeshGatewayInstance` and
-`MeshGatewayConfig` no longer exist — not as resources, not as CRDs, and `MeshGateway` is no
+`MeshGatewayConfig` no longer exist, not as resources and not as CRDs, and `MeshGateway` is no
 longer a valid `targetRef.kind` for any policy. The `kuma.io/gateway` marking is gone too.
 
 What made a gateway special was that {{site.mesh_product_name}} did not proxy the traffic it
@@ -180,11 +189,3 @@ terminates, and that now comes from keeping its listen ports out of inbound redi
 `traffic.kuma.io/exclude-inbound-ports` annotation. Everything else about it is an ordinary
 proxy: it gets a `Dataplane`, a token, an identity from the same `MeshIdentity`, and it is
 allowed through `MeshTrafficPermission` like any other caller.
-
-## Clean up
-
-```sh
-docker rm --force kong-mesh-demo-app kong-mesh-demo-kv kong-mesh-demo-control-plane
-docker network rm kong-mesh-demo
-rm -rf "$KONG_MESH_DEMO_TMP"
-```
