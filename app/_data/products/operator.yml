@@ -1,6 +1,14 @@
 name: Kong Operator
 icon: /_assets/icons/products/operator.svg
 
+# Rapid release channel. AI Gateway features ship here first. Kept out of
+# `releases` on purpose: rapid versions are pre-releases and must not become
+# `latest`, show in the version switcher, or feed `operator_latest`.
+# Bump both values with every rapid release.
+rapid:
+  chart: "1.5.0-rapid.2"
+  app: "2.4.0-rapid.2"
+
 releases:
   - release: "2.3"
     releaseDate: "2026-09-01"
