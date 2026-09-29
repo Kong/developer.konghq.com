@@ -55,10 +55,6 @@ faqs:
       Custom currencies are immutable.
       After you create one, you can't change its code, name, or formatting, and you can't delete it.
       If you need different properties, create a new custom currency.
-  - q: How do I change the rate of an existing custom currency?
-    a: |
-      Open the currency and click **Update Rate** on the cost basis you want to supersede.
-      The previous rate stays in the history so that past invoices keep the rate they were billed at.
 
 automated_tests: false
 ---
@@ -66,7 +62,7 @@ automated_tests: false
 A custom currency is a unit of value that you define for your organization, such as credits, tokens, or compute units.
 Because a custom currency isn't real money, it needs a cost basis, which is a rate that converts one unit of the currency into a fiat amount for invoicing.
 
-In this guide, you'll create a custom currency and define its first cost basis.
+In this guide, you'll create a custom currency, define its first cost basis, and then change its rate.
 
 For background on how currencies and cost bases work, see [Currencies](/metering-and-billing/currencies/).
 
@@ -98,4 +94,21 @@ For background on how currencies and cost bases work, see [Currencies](/metering
 1. Click the **Currencies** tab and confirm that your new currency is listed.
 1. Click the currency and confirm that the cost basis you defined is listed with the expected rate.
 
-To add another rate later, click **Add Cost Basis** on the currency's page.
+## Change the rate
+
+A cost basis can't be edited in place.
+When you update a rate, {{site.metering_and_billing}} adds a new cost basis that takes effect immediately and ends the previous one.
+
+1. On the currency's page, in the **Cost Basis** section, open the actions menu of the active cost basis and click **Update Rate**.
+1. Enter the new rate.
+1. Click **Save**.
+
+The new cost basis is listed with the status **Active**.
+Expand it to see the previous cost basis with the status **Superseded**, and confirm that its **Effective To** date matches the new cost basis's **Effective From** date.
+
+To price the currency against another fiat currency, click **Add Cost Basis** on the currency's page instead.
+
+## Next steps
+
+To charge in your custom currency, use it as the currency of a plan, or override a rate card in a fiat-currency plan to use it.
+For the rules that apply, see [Where currency is set](/metering-and-billing/currencies/#where-currency-is-set) and the [Product Catalog reference](/metering-and-billing/product-catalog/).
