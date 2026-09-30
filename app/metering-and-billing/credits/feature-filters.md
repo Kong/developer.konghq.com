@@ -77,7 +77,7 @@ rows:
 
 ## Querying by feature
 
-Use `filter[feature_key]` to scope a query to one or more features.
+Use `filter[feature_key]` to scope a query to a single feature, or to unrestricted credits only.
 The filter syntax is the same for the balance and transaction endpoints.
 
 <!--vale off-->
@@ -97,19 +97,16 @@ rows:
     syntax: "`filter[feature_key][eq]=input_tokens`"
     returns: "Credits or transactions relevant to `input_tokens`, including shared unrestricted credits."
   - operator: "`oeq`"
-    syntax: "`filter[feature_key][oeq]=input_tokens,output_tokens`"
-    returns: "Credits or transactions for any of the listed features."
-  - operator: "`neq`"
-    syntax: "`filter[feature_key][neq]=input_tokens`"
-    returns: "Credits or transactions not matching the specified feature, for example: `input_tokens`.."
-  - operator: "`contains`"
-    syntax: "`filter[feature_key][contains]=tokens`"
-    returns: "Credits or transactions where the feature key contains the string."
-  - operator: "`ocontains`"
-    syntax: "`filter[feature_key][ocontains]=input,output`"
-    returns: "Credits or transactions where the feature key contains any of the strings."
+    syntax: "`filter[feature_key][oeq]=input_tokens`"
+    returns: "Same as `eq`. Only a single value is accepted."
+  - operator: "`exists`"
+    syntax: "`filter[feature_key][exists]=false`"
+    returns: "Only unrestricted credits or transactions."
 {% endtable %}
 <!--vale on-->
+
+A query can target only one feature.
+Other operators, such as `neq`, `contains`, and `ocontains`, as well as `exists=true` and `oeq` with more than one value, return a `400` error.
 
 When you query by feature, the balance or transaction results include:
 

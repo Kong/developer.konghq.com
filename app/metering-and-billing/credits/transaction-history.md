@@ -62,6 +62,9 @@ rows:
   - type: "`expired`"
     sign: "Negative (-)"
     description: "Recorded when unused credits from a grant pass their expiration date."
+  - type: "`voided`"
+    sign: "Negative (-)"
+    description: "Recorded when a grant is voided. Represents the unused credit that was forfeited."
 {% endtable %}
 <!--vale on-->
 
@@ -81,24 +84,31 @@ columns:
   - title: Description
     key: description
 rows:
+  - field: "`id`"
+    description: "The ID of the movement."
+  - field: "`name`, `description`"
+    description: "A display name and optional description for the movement."
   - field: "`type`"
-    description: "The movement type: `funded`, `consumed`, or `expired`."
+    description: "The movement type: `funded`, `consumed`, `expired`, or `voided`."
   - field: "`amount`"
-    description: "The signed amount of the movement. Positive for funded, negative for consumed and expired."
+    description: "The signed amount of the movement. Positive for funded, negative for consumed, expired, and voided."
   - field: "`currency`"
-    description: "The currency of the movement."
-  - field: "`grant_id`"
-    description: "The ID of the grant this movement is associated with."
-  - field: "`balance_before`"
-    description: "The customer's settled credit balance immediately before this movement."
-  - field: "`balance_after`"
-    description: "The customer's settled credit balance immediately after this movement."
+    description: "The currency of the balance the movement affects."
+  - field: "`custom_currency`"
+    description: "A reference to the custom currency. Present only for movements in a custom currency."
+  - field: "`available_balance.before`, `available_balance.after`"
+    description: "The customer's available credit balance immediately before and after this movement."
+  - field: "`booked_at`"
+    description: "The time the movement takes effect on the balance. Movements are ordered by this time."
   - field: "`created_at`"
-    description: "The timestamp at which the movement was recorded."
-  - field: "`metadata`"
-    description: "Optional key-value metadata attached to the movement."
+    description: "The time the movement was recorded."
+  - field: "`labels`"
+    description: "System-set references to related resources, such as `charge_id`, `subscription_id`, and `feature_id`. A `funded` movement for a voided grant carries the label `voided`."
 {% endtable %}
 <!--vale on-->
+
+A movement doesn't carry a grant ID field.
+To relate movements to a grant or charge, use the `charge_id` label: on a `funded` movement, it's the ID of the grant.
 
 ## Filtering by feature
 
@@ -109,21 +119,34 @@ For the full reference on transaction filters, see [Feature filters](/metering-a
 
 ## Ordering and pagination
 
-Movements are returned in stable insertion order.
+Movements are returned newest first, ordered by `booked_at`, then `created_at`, then ID, so the order is stable.
 The API uses cursor-based pagination to ensure consistent results even when new movements are added while you're paginating.
 
-Pass the cursor from the previous response's `next` field to fetch the next page.
-Restarting pagination from the beginning always gives results in the same stable order.
+Use `page[size]` to set the page size.
+To fetch the next page, pass the cursor from the previous response's `meta.page.next` field as `page[after]`.
+To go back, pass `meta.page.previous` as `page[before]`.
+
+You can also filter the history by movement type with `filter[type]` and by currency with `filter[currency]`.
 
 ## Corrections
 
 Movements are immutable and can't be edited or deleted.
-If a movement was recorded in error (for example, a grant was issued for the wrong amount), issue a correction by creating a new movement that offsets the error.
+Grant amounts must be positive, so you can't offset a grant with a negative grant.
 
+If a grant was issued for the wrong amount, void it and issue a new grant for the correct amount.
 For example, if a grant of 100 USD was issued but should have been 80 USD:
 
-1. The original `funded` movement of +100 USD remains in the ledger unchanged.
-2. Issue a new correction grant of -20 USD (or void the original and reissue the correct amount using the appropriate API operation).
+1. In the customer's **Credits** tab, open the actions menu of the grant's `funded` movement in **Transaction History** and click **Void**.
+1. Confirm in the **Void Grant** dialog.
+   The unused remainder of the grant is forfeited and recorded as a `voided` movement.
+1. Grant 80 USD of credits.
 
-The full history, including the original movement and the correction, remains visible in transaction history.
+Keep the following in mind when you void a grant:
+
+* Voiding is irreversible.
+* Only active grants can be voided. You can't void a grant that is pending, expired, or fully consumed.
+* Credits already consumed by usage aren't affected. Only the unused remainder is forfeited.
+* Voiding doesn't adjust invoices or payments. If the grant was funded by an invoice, the original invoiced amount may still be collected.
+
+The full history, including the original movement and the void, remains visible in transaction history.
 This preserves the complete audit trail.

@@ -64,7 +64,7 @@ There is a settled balance from committed ledger movements, a live balance that 
 * **Charges** consume credits.
 The settlement mode on the plan controls whether credits are applied before invoicing or whether charges are settled only against credits.
 * **Transaction history** explains balance changes.
-Credit transaction history shows customer-facing movements: funded, consumed, and expired.
+Credit transaction history shows customer-facing movements: funded, consumed, expired, and voided.
 
 ## Core concepts
 
@@ -91,7 +91,7 @@ rows:
     definition: "A numeric field on a grant that controls draw-down order. Grants with lower priority values are consumed first."
     reference: "[Credit grants](/metering-and-billing/credits/grants/)"
   - term: "**Settled balance**"
-    definition: "The committed ledger balance at a given point in time. Reflects only finalized movements (funded, consumed, expired). Doesn't include open charges."
+    definition: "The committed ledger balance at a given point in time. Reflects only finalized movements (funded, consumed, expired, voided). Doesn't include open charges."
     reference: "[Credit balance model](/metering-and-billing/credits/balance-model/)"
   - term: "**Live balance**"
     definition: "A pessimistic balance of available credits. The settled balance minus the impact of open (in-flight) charges that have not yet been finalized."
