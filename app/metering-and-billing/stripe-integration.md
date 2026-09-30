@@ -32,6 +32,10 @@ You can integrate Stripe Invoicing with {{site.konnect_short_name}} {{site.meter
 * Enable automatic sales tax calculation via Stripe tax
 * Support multiple payment methods and [currencies](https://docs.stripe.com/currencies) including cryptocurrency
 
+{:.info}
+> Invoices are always issued in a fiat [currency](/metering-and-billing/currencies/), so [custom currencies](/metering-and-billing/currencies/#custom-currencies) don't change how the Stripe integration settles payments.
+> A custom currency is converted to the invoice's fiat currency before the invoice reaches Stripe.
+
 ## Revenue lifecycle
 
 The following lists show which parts of the revenue lifecycle is managed by {{site.konnect_short_name}} {{site.metering_and_billing}}, Stripe Invoicing, Stripe Tax, and Stripe Payments:

@@ -20,6 +20,8 @@ related_resources:
     url: /metering-and-billing/subscriptions/
   - text: "Prepaid credits"
     url: /metering-and-billing/credits/
+  - text: "Currencies"
+    url: /metering-and-billing/currencies/
 
 next_steps:
   - text: Get started with {{site.metering_and_billing}}
@@ -60,6 +62,8 @@ rows:
     description: "First-class support for metering AI token usage and computing LLM model costs."
   - feature: "[**Prepaid credits**](/metering-and-billing/credits/)"
     description: "Support paid or promotional credit grants with priority-based burn-down and expiration."
+  - feature: "[**Currencies**](/metering-and-billing/currencies/)"
+    description: "Price and grant in fiat or custom currencies, with cost bases that convert custom currencies to a fiat currency for invoicing."
 {% endtable %}
 <!--vale on-->
 
