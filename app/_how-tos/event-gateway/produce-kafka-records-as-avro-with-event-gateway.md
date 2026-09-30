@@ -1,10 +1,10 @@
 ---
-title: Consume Kafka records as JSON with {{site.event_gateway}}
+title: Produce Kafka records as Avro with {{site.event_gateway}}
 content_type: how_to
 breadcrumbs:
   - /event-gateway/
 
-permalink: /event-gateway/consume-kafka-records-as-json-with-event-gateway/
+permalink: /event-gateway/produce-kafka-records-as-avro-with-event-gateway/
 
 products:
     - event-gateway
@@ -19,13 +19,13 @@ tags:
     - schema-registry
     - avro
 
-description: "Store records as Avro in the backend cluster, and convert them to JSON for consumers that don't run a Schema Registry client."
+description: "Let producers send plain JSON, and store their records as Avro in the backend cluster using a Confluent Schema Registry."
 
 tldr:
-  q: How can I let a consumer read JSON while records are stored as Avro?
+  q: How can producers send JSON while records are stored as Avro?
   a: |
-    1. Create a Schema Validation policy (consume phase) to parse Avro records against a Confluent Schema Registry.
-    1. Nest a Record Transcode Consume policy that converts the parsed record to JSON.
+    1. Create a Schema Validation policy (produce phase) to parse a producer's JSON records.
+    1. Nest a Record Transcode Produce policy that converts the parsed record to Avro using a Confluent Schema Registry.
 
 tools:
     - konnect-api
@@ -49,37 +49,38 @@ min_version:
   event-gateway: '1.3'
 
 related_resources:
-  - text: Record Transcode Consume policy
-    url: /event-gateway/policies/record-transcode-consume/
+  - text: Record Transcode Produce policy
+    url: /event-gateway/policies/record-transcode-produce/
   - text: Schema Validation policy
-    url: /event-gateway/policies/schema-validation-consume/
+    url: /event-gateway/policies/schema-validation-produce/
   - text: Schema Registry entity
     url: /event-gateway/entities/schema-registry/
+  - text: Consume Kafka records as JSON with {{site.event_gateway}}
+    url: /event-gateway/consume-kafka-records-as-json-with-event-gateway/
   - text: Validate Avro messages with Confluent Schema Registry
     url: /event-gateway/validate-avro-messages-with-schema-registry/
 ---
 
 ## Overview
 
-In this guide, you'll learn how to store Kafka records as Avro and serve them as JSON to a consumer that doesn't run a Schema Registry client.
+In this guide, you'll learn how to let producers send plain JSON records while {{site.event_gateway_short}} stores them as Avro in the backend cluster.
 
-Avro keeps records compact and schema-governed in the cluster, but not every consumer wants the overhead of an Avro deserializer.
-The {{site.event_gateway_short}} [Record Transcode Consume policy](/event-gateway/policies/record-transcode-consume/) converts an already schema-validated record to a different format on its way to the client, so producers and the cluster keep using Avro while this consumer reads plain JSON.
+Not every producer wants to run a Schema Registry client or serialize Avro directly.
+The {{site.event_gateway_short}} [Record Transcode Produce policy](/event-gateway/policies/record-transcode-produce/) converts an already schema-validated record to a different format on its way to the backend cluster, so this producer can keep sending JSON while the cluster and every other consumer of the topic only ever see Avro.
 
-We'll use an `orders` topic that holds order records, produced and stored as Avro. A consumer that connects through the virtual cluster receives the same records converted to JSON, with no producer or cluster changes.
+We'll use an `orders` topic that holds order records. A producer that connects through the virtual cluster sends plain JSON, and {{site.event_gateway_short}} converts each record to Avro before it reaches the cluster.
 
 Here's how the data flows through the system:
 
 {% mermaid %}
 flowchart LR
-    P[Producer<br/>Avro] --> K[Kafka <br>Broker<br/>Avro records]
+    P[Producer<br/>JSON] --> SV
 
-    subgraph consume [Event Gateway Consume policy chain]
-        SV[Schema <br>Validation<br/>Parse Avro] --> RT[Record Transcode<br/>convert to JSON]
+    subgraph produce [Event Gateway Produce policy chain]
+        SV[Schema <br>Validation<br/>Parse JSON] --> RT[Record Transcode<br/>convert to Avro]
     end
 
-    K --> SV
-    RT --> CO[Consumer<br/>JSON records]
+    RT --> K[Kafka <br>Broker<br/>Avro records]
 {% endmermaid %}
 
 ## Create a backend cluster
@@ -88,7 +89,7 @@ flowchart LR
 
 ## Create a virtual cluster
 
-Create a virtual cluster that the consumer connects to:
+Create a virtual cluster that the producer connects to:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -126,7 +127,7 @@ body:
   addresses:
     - 0.0.0.0
   ports:
-    - 19092-19095
+    - 19092-19105
 extract_body:
   - name: id
     variable: LISTENER_ID
@@ -183,9 +184,9 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-## Register an Avro schema
+## Register the target Avro schema
 
-Register an Avro schema for the `orders` topic in the Confluent Schema Registry.
+Register the Avro schema that {{site.event_gateway_short}} converts records into, under the `orders-value` subject in the Confluent Schema Registry.
 The schema defines three fields: `order_id`, `item`, and `amount`:
 
 <!--vale off-->
@@ -201,25 +202,24 @@ render_output: false
 <!--vale on-->
 
 The subject name `orders-value` follows Confluent's default [TopicNameStrategy](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/index.html#subject-name-strategy), which uses the pattern `<topic>-value`.
+The Record Transcode Produce policy looks up this subject at runtime, so the schema must already exist before a producer sends records.
 
 ## Create a Schema Validation policy
 
-Create a [Schema Validation policy](/event-gateway/policies/schema-validation-consume/) that parses Avro records against the Confluent Schema Registry during the consume phase.
-The Record Transcode Consume policy needs a parsed record, so it must be nested under this policy:
+Create a [Schema Validation policy](/event-gateway/policies/schema-validation-produce/) that parses a producer's records as JSON during the produce phase.
+The Record Transcode Produce policy needs a parsed record, so it must be nested under this policy:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters/$VIRTUAL_CLUSTER_ID/consume-policies
+url: /v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters/$VIRTUAL_CLUSTER_ID/produce-policies
 status_code: 201
 method: POST
 body:
   type: schema_validation
-  name: validate_avro
+  name: validate_json
   config:
-    type: confluent_schema_registry
-    schema_registry:
-      name: local-schema-registry
-    value_validation_action: skip
+    type: json
+    value_validation_action: reject
 extract_body:
   - name: id
     variable: SCHEMA_VALIDATION_POLICY_ID
@@ -229,47 +229,55 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-The `value_validation_action: skip` setting means a record that can't be decoded against the registered Avro schema is never delivered to the consumer.
+The `value_validation_action: reject` setting means a batch that holds a record that isn't valid JSON is rejected outright.
 
-## Create a Record Transcode Consume policy
+## Create a Record Transcode Produce policy
 
-Create the [Record Transcode Consume policy](/event-gateway/policies/record-transcode-consume/) nested under the Schema Validation policy.
-Set `output_format: json` to convert each parsed Avro record to JSON before it reaches the consumer:
+Create the [Record Transcode Produce policy](/event-gateway/policies/record-transcode-produce/) nested under the Schema Validation policy.
+Set `output_format: avro` to convert each parsed JSON record to Avro before {{site.event_gateway_short}} writes it to the backend cluster:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters/$VIRTUAL_CLUSTER_ID/consume-policies
+url: /v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters/$VIRTUAL_CLUSTER_ID/produce-policies
 status_code: 201
 method: POST
 body:
   type: transcode
-  name: convert_orders_to_json
+  name: convert_orders_to_avro
   parent_policy_id: $SCHEMA_VALIDATION_POLICY_ID
   config:
-    failure_mode: skip
-    output_format: json
+    failure_mode: reject
+    output_format: avro
+    schema_source:
+      type: reference
+      schema_registry:
+        name: local-schema-registry
+      subject: context.topic.name + '-value'
+      version: 'latest'
     schema_ref_destination:
-      type: none
+      type: confluent_format
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Converting to JSON doesn't require a `schema_source`, because JSON doesn't need a schema to serialize the record value.
-`schema_ref_destination: none` means the converted record carries no reference to a schema, since a plain JSON consumer has no use for one.
+Converting to Avro requires a `schema_source`, because Avro needs a schema to serialize the record value.
+`subject` and `version` are expressions, so `context.topic.name + '-value'` resolves to `orders-value` for records produced to the `orders` topic, and `'latest'` always resolves to the newest registered version.
+`schema_ref_destination: confluent_format` prefixes the converted record with a reference to the schema, so any Confluent-compatible consumer of the topic can deserialize it.
 
-Both policies use `failure_mode: skip`, so a record either policy can't process is never delivered.
-The alternatives are `error`, `passthrough`, and `mark`.
-
-We generally recommend using `skip` over `error`, because `error` blocks the whole batch and leaves the consumer stuck on the problematic offset until someone intervenes.
+Both policies use `failure_mode: reject`, so a batch that holds a record either policy can't process is never written to the backend cluster.
+The alternatives are `passthrough` and `mark`.
 
 ## Configure kafkactl
 
-Create a kafkactl configuration with a `direct` context that connects to Kafka using the Schema Registry for Avro serialization, and a `vc` context that connects through the virtual cluster:
+Create a kafkactl configuration with a `vc` context that produces through the virtual cluster with no Schema Registry configured, and a `direct` context that connects straight to Kafka using the Schema Registry for Avro deserialization:
 
 <!--vale off-->
 {% validation custom-command %}
 command: |
   cat <<EOF > kafkactl.yaml
   contexts:
+    vc:
+      brokers:
+        - localhost:19092
     direct:
       brokers:
         - localhost:9094
@@ -277,9 +285,6 @@ command: |
         - localhost:9096
       schemaRegistry:
         url: http://localhost:8081
-    vc:
-      brokers:
-        - localhost:19092
   EOF
 expected:
   return_code: 0
@@ -287,7 +292,7 @@ render_output: false
 {% endvalidation %}
 <!--vale on-->
 
-The `vc` context has no Schema Registry configured, because the consumer reads plain JSON through the virtual cluster and doesn't need one.
+The `vc` context has no Schema Registry configured, because this producer sends plain JSON through the virtual cluster and doesn't need one.
 
 ## Create a topic and produce records
 
@@ -304,14 +309,13 @@ render_output: false
 {% endvalidation %}
 <!--vale on-->
 
-Produce two order records directly to Kafka.
-kafkactl serializes them to Avro using the schema from the registry:
+Produce two order records as plain JSON through the virtual cluster:
 
 <!--vale off-->
 {% validation custom-command %}
 command: |
   echo '{"order_id":"1001","item":"widget","amount":42.5}
-  {"order_id":"1002","item":"gadget","amount":19.99}' | kafkactl -C kafkactl.yaml --context direct produce orders
+  {"order_id":"1002","item":"gadget","amount":19.99}' | kafkactl -C kafkactl.yaml --context vc produce orders
 expected:
   message: "2 messages produced"
   return_code: 0
@@ -321,9 +325,7 @@ render_output: false
 
 ## Validate
 
-### Consume directly from Kafka
-
-Consume the records straight from the broker to confirm that Kafka stores them as Avro.
+Consume the records straight from the broker to confirm that Kafka stores them as Avro, even though the producer sent JSON.
 The `--print-schema` flag displays the Avro schema used for deserialization:
 
 <!--vale off-->
@@ -345,28 +347,4 @@ Both records come back deserialized from Avro, alongside the schema used to deco
 ```
 {:.no-copy-code}
 
-### Consume through the virtual cluster
-
-Now consume the same records through the virtual cluster, with no Schema Registry configured for this context:
-
-<!--vale off-->
-{% validation custom-command %}
-command: |
-  kafkactl -C kafkactl.yaml --context vc consume orders --from-beginning --exit
-expected:
-  message: '"order_id":"1001"'
-  return_code: 0
-render_output: false
-{% endvalidation %}
-<!--vale on-->
-
-The records arrive as plain JSON, with no Avro schema needed to read them:
-
-```json
-{"order_id":"1001","item":"widget","amount":42.5}
-{"order_id":"1002","item":"gadget","amount":19.99}
-```
-{:.no-copy-code}
-
-In this case, the producer and the backend cluster never changed formats. 
-The Schema Validation policy parsed the Avro records, and the Record Transcode Consume policy converted them to JSON for this consumer only.
+In this case, the producer never changed formats. It sent plain JSON, and the Schema Validation policy parsed it, then the Record Transcode Produce policy converted it to Avro before {{site.event_gateway_short}} wrote it to the backend cluster.
