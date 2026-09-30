@@ -210,6 +210,9 @@ deck gateway sync --konnect-token "$KONNECT_PAT" --konnect-control-plane-name sa
 
 In this example, replace `$KONNECT_PAT` with your {{site.konnect_short_name}} PAT or specify your PAT as an environment variable.
 
+{:.info}
+> **Basic Authentication credentials**: a plain dump and sync can't migrate Basic Authentication credentials, because their password field holds a hash, not the password itself. See [Migrate Basic Authentication credentials to Konnect](/how-to/migrate-basic-auth-credentials-to-konnect/) to move existing Consumer credentials over without resetting passwords.
+
 In addition to decK, {{site.konnect_short_name}} provides
 other tools that could be used for migrating your configuration. Each tool requires a different process. See their documentation for more information:
 
