@@ -55,6 +55,7 @@ When credits move into or out of a customer balance, {{site.metering_and_billing
 
 At a high level, the credit ledger contains customer accounts and business accounts:
 
+<!-- vale off -->
 {% mermaid %}
 flowchart LR
   subgraph Customer["Customer accounts"]
@@ -75,6 +76,7 @@ flowchart LR
   FBO --> BRK
   WASH --> REC
 {% endmermaid %}
+<!-- vale on -->
 
 The customer credit balance is the customer-facing account. 
 Receivable and accrued accounts exist so {{site.metering_and_billing}} can represent payment state, consumed usage, and recognition separately. 
@@ -101,16 +103,22 @@ Credit history is immutable.
 When usage changes, a charge is canceled, or a billing workflow reverses previously consumed credits, {{site.metering_and_billing}} books a correction movement. 
 {{site.metering_and_billing}} doesn't rewrite the original movement.
 
-This gives transaction history a stable audit shape:
+This gives the ledger a stable audit shape:
 
 ```text
 T1: +100 funded
 T2:  -40 consumed
-T3:  +10 correction
+T3:  +10 returned by a correction
 ```
 {:.no-copy-code}
 
-The customer can still see that 40 credits were consumed at T2. The later correction explains why 10 credits returned at T3.
+The ledger keeps the original consumption at T2 and records the 10 returned credits as a separate movement at T3, so the balance is 70 afterwards.
+
+## Safe grant retries
+
+To make grant creation safe to retry, set a `key` on the grant.
+The key is unique per customer: sending the same key again for the same customer returns a `409 Conflict` instead of creating a duplicate grant.
+You can reuse the same key for different customers.
 
 ## Deterministic consumption
 
@@ -118,13 +126,16 @@ When a customer has multiple grants in the same currency, {{site.metering_and_bi
 
 ```text
 priority asc
+restricted before unrestricted
 expires_at asc
 stable movement order asc
 ```
 {:.no-copy-code}
 
 Lower priority values are consumed first. 
-For equal priority, earlier-expiring credits are consumed first. If both are equal, {{site.metering_and_billing}} uses stable movement order.
+For equal priority, credits restricted to specific features or plans are consumed before unrestricted credits, then earlier-expiring credits are consumed first, and credits that never expire come last.
+If all of these are equal, {{site.metering_and_billing}} uses stable movement order.
+Only credits whose restrictions match the charge are eligible.
 
 This rule keeps consumption predictable and also protects expiration correctness. When credits are consumed, {{site.metering_and_billing}} knows which future expiration should be reduced.
 
@@ -160,7 +171,10 @@ rows:
     meaning: "credits were used by charges"
   - type: "`expired`"
     meaning: "unused credits expired"
+  - type: "`voided`"
+    meaning: "unused credits were forfeited because the grant was voided"
 {% endtable %}
 <!--vale on-->
 
 This projection keeps the public history understandable while preserving accounting correctness underneath.
+Internal accounting movements, such as the temporary movements used to convert a custom-currency overage into the invoice currency, aren't shown.

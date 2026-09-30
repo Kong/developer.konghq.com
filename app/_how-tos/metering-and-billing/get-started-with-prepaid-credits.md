@@ -86,7 +86,7 @@ Customers represent the individuals or organizations that subscribe to plans and
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
 1. Click **Create Customer**.
 1. Enter the customer's **Name**.
-1. Map the customer to a **Consumer**, **Application**, or **Subject** to ensure their usage is attributed correctly.
+1. In the **Usage Attribution** section, use **Include usage from** to select the Gateway Consumers, {{site.ai_gateway}} Consumers, Dev Portal Applications, or Generic Subjects whose usage belongs to this customer.
 1. Click **Save**.
 
 ## Start a subscription
@@ -94,20 +94,22 @@ Customers represent the individuals or organizations that subscribe to plans and
 Subscriptions link customers to a pricing model and track their usage against rate cards.
 
 1. On the customer's details page, click the **Subscriptions** tab.
-1. Add a new subscription and select the credits-only plan you created.
-1. Choose the start date and finalize the subscription.
+1. Click **New Subscription**.
+1. In **Subscribed Plan**, select the credits-only plan you created.
+1. In **Start subscription**, select **Immediately**, or select **At a specific date** and set the **Start date**.
+1. Keep the **Settlement mode** that the form fills in from the plan.
+1. Click **Start Subscription**.
 
 ## Grant prepaid credits
 
-Prepaid credits burn down as the customer incurs usage.
+Prepaid credits burn down as the customer's usage is billed.
 Issue a grant directly to the customer's balance.
 
 1. On the customer's page, click the **Credits** tab.
 1. Click **Grant Credits** and select **New credit grant**.
 1. In the **Grant** section, enter the **Credit amount**.
-1. In the **Charge** section, select **Promotional / Free** as the charge type.
-1. Set the **Credit availability** to **Available immediately on grant**.
-1. Optionally, expand **Policies** to set a **Credit draw-down order** to control consumption priority if this customer has multiple grants.
+1. In the **Charge** section, set **Charge Type** to **Promotional · Free**.
+1. Optionally, expand **Policies** and set **Credit draw-down priority**, from 1 to 100, to control consumption order if this customer has multiple grants. Lower numbers are consumed first.
 1. Click **Next** to review the **Grant Summary**.
 1. Click **Grant credits** to finalize.
 
@@ -117,14 +119,17 @@ A `funded` movement is recorded in the customer's transaction history and their 
 
 After the grant is issued, the customer's available balance reflects the new credits.
 Because this customer is on a `credit_only` plan, metered usage automatically deducts from this balance.
+Usage charges are booked at the end of each service period, so `consumed` movements appear then.
+Before that, the **Live balance** on the **Credits** tab already reflects the expected consumption.
 
 1. On the customer's page, click the **Credits** tab.
-1. Click **Transaction History**.
+1. Review the **Settled balance**, **Live balance**, and **Pending balance**.
+1. Scroll to the **Transaction History** card.
 
 You'll see:
 
 * A `funded` movement with a positive amount for the grant you issued.
-* `consumed` movements with negative amounts as usage charges are applied.
+* `consumed` movements with negative amounts as usage charges are booked.
 * The running balance before and after each movement.
 
 For more on movement types, pagination, and corrections, see [Credit transaction history](/metering-and-billing/credits/transaction-history/).

@@ -39,11 +39,12 @@ next_steps:
 ---
 
 Credits are consumed by charges.
-A charge can represent a flat fee, usage-based spend, or another billable item configured to settle with customer credits.
+Flat-fee and usage-based charges can settle against customer credits.
 
 ## Credit settlement modes
 
-The rate card's settlement mode controls whether {{site.metering_and_billing}} consumes credits, invoices the customer, or both.
+The settlement mode controls whether {{site.metering_and_billing}} consumes credits, invoices the customer, or both.
+You set it on the plan, and you can override it for an individual subscription when you create the subscription.
 
 ### Credit then invoice
 
@@ -63,11 +64,8 @@ Customers can use prepaid credits, but usage is not blocked if credits run out.
 
 ### Credit only
 
-With `credit_only`, the charge is settled exclusively against credits.
-If the credit balance is insufficient, the charge is blocked and no invoice overage is generated.
-
-{:.info}
-> Blocking a charge here only stops the billing line from being generated; it doesn't stop the API request that produced it.
+With `credit_only`, the charge is settled exclusively against credits, and no invoice overage is generated.
+If the credit balance covers the charge, the charge consumes credits like any other:
 
 ```text
 charge amount:       100 USD
@@ -77,12 +75,46 @@ invoice remainder:     0 USD
 ```
 {:.no-copy-code}
 
+If the credit balance is insufficient, the charge isn't blocked.
+{{site.metering_and_billing}} consumes the available credits, settles the uncovered amount as well, and the customer's credit balance goes negative:
+
+```text
+charge amount:       100 USD
+credit balance:       40 USD
+credits consumed:     40 USD
+uncovered amount:     60 USD
+invoice remainder:     0 USD
+balance afterwards:  -60 USD
+```
+{:.no-copy-code}
+
+### Negative balances
+
+A negative balance under `credit_only` represents usage the customer has already consumed but not yet paid for with credits.
+It's repaid by the next credits the customer receives: a new grant first covers the negative balance, and only the remainder increases the available balance.
+This happens as soon as the grant is created, even if the grant takes effect later.
+
+```text
+balance before grant:  -60 USD
+new grant:            +100 USD
+repays negative:        60 USD
+balance afterwards:     40 USD
+```
+{:.no-copy-code}
+
+If a customer has several negative amounts outstanding, new credits repay them in the order they were recorded.
+A grant restricted to specific features or plans only repays negative amounts from charges it's eligible for.
+
+A negative balance doesn't create a separate invoice.
+If you need to limit overspending, monitor the customer's balance and grant more credits, or use the `credit_then_invoice` settlement mode so that uncovered usage is invoiced.
+
 ## Draw-down order
 
 When a customer has multiple grants in the same currency, {{site.metering_and_billing}} consumes credits in a deterministic order:
 
 ```text
 priority asc
+restricted before unrestricted
 expires_at asc
 stable movement order asc
 ```
@@ -91,10 +123,13 @@ stable movement order asc
 This means:
 
 1. Grants with lower priority values are consumed first.
-1. For equal priority, credits that expire earlier are consumed first.
-1. If both are equal, {{site.metering_and_billing}} uses stable movement order.
+1. For equal priority, grants restricted to specific features or plans are consumed before unrestricted grants, so shared credit stays available for other usage.
+1. Then credits that expire earlier are consumed first. Credits that never expire come last.
+1. If all of these are equal, {{site.metering_and_billing}} uses stable movement order.
 
-This order makes the result predictable and prevents avoidable expiration: if two grants have the same priority, the one expiring sooner is used first.
+Only grants whose restrictions match the charge are eligible. For example, a grant restricted to `input_tokens` is never consumed by an `output_tokens` charge.
+
+This order makes the result predictable and prevents avoidable expiration: if two grants have the same priority and restrictions, the one expiring sooner is used first.
 
 ## Draw-down example
 
@@ -148,6 +183,17 @@ rows:
 
 Grant A is consumed first because it has the same priority as B but expires earlier.
 Grant C is untouched because its priority value is higher.
+
+## When credits are consumed
+
+Charges consume credits when they're booked, not as usage events arrive:
+
+* **Usage-based charges** book their consumption at the end of the service period, after late usage for that period has been collected.
+* **Flat-fee charges** book their consumption at the start of the service period when paid in advance, and at the end when paid in arrears.
+
+Until a charge is booked, its expected consumption shows up only in the live balance, not in the settled balance or transaction history.
+Credit that expires before a charge is booked isn't available to that charge.
+For example, credit that expires in the middle of a service period can't cover usage from that period.
 
 ## Credit expiration
 
@@ -226,7 +272,7 @@ Grant B is still available because A had the same priority and an earlier expira
 
 ## Transaction history
 
-When a charge is processed, a `consumed` movement is recorded for each grant drawn from.
+When a charge is booked, the credits it consumes are recorded as `consumed` movements.
 When a grant expires, an `expired` movement is recorded for the remaining unused amount.
 
 Both movement types appear as negative values in [credit transaction history](/metering-and-billing/credits/transaction-history/).

@@ -2,7 +2,7 @@
 title: "Credit balance model"
 content_type: reference
 beta: true
-description: "Understand the two credit balance types in {{site.konnect_short_name}} {{site.metering_and_billing}}: settled and pending."
+description: "Understand the three credit balance types in {{site.konnect_short_name}} {{site.metering_and_billing}}: settled, live, and pending."
 layout: reference
 products:
   - metering-and-billing
@@ -39,10 +39,11 @@ next_steps:
 ---
 
 
-The credit balance model has two balance types:
+A credit balance read returns three values:
 
 * **Settled balance** is the balance from committed ledger movements. It is the durable record of what has happened.
-* **Pending balance** is a live view that starts from the settled balance and accounts for open charges that may still consume credits.
+* **Live balance** starts from the settled balance and accounts for open charges that may still consume credits.
+* **Pending balance** is credit that has been granted but doesn't count toward the settled balance yet, such as a grant with a future effective time.
 
 ## Settled balance
 
@@ -89,36 +90,50 @@ rows:
 
 Settled balance is the right model for audit and history: the same timestamp always reflects the same visible ledger state.
 
+The settled balance can be negative.
+This happens when `credit_only` usage exceeds the available credits, as described in [Negative balances](/metering-and-billing/credits/consumption-and-expiration/#negative-balances).
+
 ## Live balance
 
 Live balance is a pessimistic operational view. 
 It accounts for open charges that may still consume credits, even before those charge movements are finalized into the settled balance.
 
 For example, assume a customer has 100 USD settled credits and an open charge is expected to consume 25 USD. 
-The settled balance is still 100 USD, but the pending balance is 75 USD, so the system doesn't overstate usable credit.
+The settled balance is still 100 USD, but the live balance is 75 USD, so the system doesn't overstate usable credit.
 
 ```text
 settled balance:         100
 open charge impact:      -25
-pending balance:          75
+live balance:             75
 ```
 {:.no-copy-code}
+
+The settlement mode affects how low the live balance can go.
+Open `credit_then_invoice` charges only consume available credit, so they never lower the live balance below 0, and the rest is invoiced.
+A balance that is already negative stays as it is.
+Open `credit_only` charges can take the live balance below 0.
+
+The live balance reflects open charges only as they are now, so it's only available for current reads.
+If you query a balance at a timestamp, the live balance is always 0.
 
 This distinction matters when you display balances:
 
 * Use settled balance when the user needs an audit-style view of committed movements.
 * Use live balance when the user needs a conservative "can this customer spend more?" view.
-## Pending grants
 
-Pending grants describes credits that have been granted but are not yet written to the ledger, or are written to the ledger with a future booked time.
+## Pending balance
+
+The pending balance is credit that has been granted but doesn't count toward the settled balance yet.
+This includes grants that aren't written to the ledger yet, and grants written to the ledger with a future booked time, such as a grant with a future effective time.
+When a pending grant takes effect, its amount moves into the settled balance.
+
 ## Currency
 
 Credit balances are currency-specific. 
 For example, a USD grant increases the customer's USD credit balance, while a EUR charge consumes from the customer's EUR credit balance.
 Balances can be held in fiat currencies or in [custom currencies](/metering-and-billing/currencies/).
 
-A balance is tied to the currency itself, not just its code.
-If you create a custom currency with the same code as a deleted one, the new currency gets its own separate balance.
+One case crosses currencies: when a `credit_then_invoice` charge in a custom currency isn't fully covered, the remainder is converted into the invoice's fiat currency, and the customer's credits in that fiat currency can cover part of it.
 
 **Do not** merge currencies in user-facing balance displays unless your product explicitly converts them.
 Treat each currency as a separate balance.
