@@ -38,8 +38,10 @@ next_steps:
     url: /how-to/get-started-with-prepaid-credits/
 ---
 
-Every change to a customer's credit balance is recorded as a movement in the transaction history.
-The history is a complete, ordered log of all credit activity for a customer and is the authoritative source for their balance.
+Changes to a customer's credit balance are recorded as movements in the transaction history.
+The history is the customer-facing view of the ledger, not a raw ledger log.
+Internal accounting movements aren't shown, and a future expiration only appears once its time has passed.
+For the authoritative current balance, read the customer's credit balance.
 
 ## Movement types
 
@@ -58,7 +60,7 @@ rows:
     description: "Recorded when a grant is issued. Represents credit added to the customer's balance."
   - type: "`consumed`"
     sign: "Negative (-)"
-    description: "Recorded when credits are applied to a charge. One movement per grant drawn from in a single charge."
+    description: "Recorded when credits are applied to a charge."
   - type: "`expired`"
     sign: "Negative (-)"
     description: "Recorded when unused credits from a grant pass their expiration date."

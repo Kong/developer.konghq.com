@@ -50,6 +50,7 @@ Balances can be held in fiat currencies or in [custom currencies](/metering-and-
 
 The purchase that funds a grant always settles in a fiat currency, even when the granted balance is in a custom currency.
 Custom-currency charges on a fiat invoice are converted through the currency's cost basis.
+Under `credit_then_invoice`, any credits the customer holds in the invoice's fiat currency can then cover part of that converted amount.
 
 For an end-to-end tutorial on setting up prepaid credits, see [Get started with prepaid credits](/how-to/get-started-with-prepaid-credits/).
 

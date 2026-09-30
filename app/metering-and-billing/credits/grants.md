@@ -50,6 +50,7 @@ A grant can also define how it's funded, when unused credits expire, and how {{s
 ## Funding methods
 
 The funding method describes how the customer receives or pays for the credits.
+In the API, set it with `funding_method`: `none` for promotional credits, `invoice` for invoice-funded credits, or `external` for externally funded credits.
 
 ### Promotional credits
 
@@ -78,12 +79,15 @@ purchase amount:   50.00 USD
 
 This distinction is important for discounts, commitments, negotiated rates, and cases where the commercial price of a credit differs from its face value.
 
+Invoice funding requires the customer to have an invoicing app that can calculate tax, invoice customers, and collect payments.
+
 ### Externally funded credits
 
-Use externally funded credits when invoicing and payment happen outside {{site.metering_and_billing}} through custom invoicing.
+Use externally funded credits when the credits are paid for outside {{site.metering_and_billing}}, for example by wire transfer, an external invoice, or manual reconciliation.
 
 The grant records the credits in {{site.metering_and_billing}}.
 Your integration is responsible for updating {{site.metering_and_billing}} when the external payment state changes.
+To do this, send a `POST` request to `/openmeter/customers/{customerId}/credits/grants/{creditGrantId}/settlement/external` with a `status` of `pending`, `authorized`, or `settled`.
 
 ## Priority
 
@@ -127,9 +131,15 @@ rows:
 If the customer consumes 150 credits, {{site.metering_and_billing}} consumes all of A, then 50 from B.
 C is not touched because its priority value is higher.
 
+## Effective time
+
+A grant takes effect at its `effective_at` time, which defaults to the time you create it.
+Until then, its credits count toward the customer's pending balance, not the settled balance.
+
 ## Expiration
 
-A grant can expire after a configured duration.
+A grant can expire after a configured duration, set with `expires_after` as an ISO 8601 duration such as `P30D`.
+If you omit it, the grant never expires.
 Expiration applies only to unused credits.
 If a customer uses part of the grant before expiration, only the remaining unused amount expires.
 
@@ -148,6 +158,10 @@ expired:     -60
 You can restrict a grant to one or more product features using the feature filters through the `filters.features` field.
 Restricted credits can only be consumed by charges for the specified features.
 Credits without a feature restriction are shared and available to all features.
+
+You can also restrict a grant to charges from specific plans with `filters.plans`.
+Each entry takes a plan `key` and an optional `version` filter; if you omit the version, all versions match, including future ones.
+When a grant has both feature and plan restrictions, a charge must match both.
 
 For details on how feature restrictions affect balance and transaction queries, see [Feature filters](/metering-and-billing/credits/feature-filters/).
 
@@ -202,3 +216,7 @@ If you omit it, the rate defaults to 1.
 
 Tax configuration is relevant for revenue recognition on usage charges that consume credits.
 Set [tax configuration](/metering-and-billing/tax-codes/) on all usage charges that need to be classified correctly for revenue recognition.
+
+The grant itself also has a `tax_config` field.
+Provide it for `invoice` and `external` grants so the purchase is classified correctly.
+If you omit it, the default credit grant tax code applies, or the global default tax code if that isn't set.

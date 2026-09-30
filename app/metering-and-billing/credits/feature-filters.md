@@ -142,7 +142,7 @@ rows:
 
 In the following examples, replace `{customerID}` with the customer's ID.
 The customer name and key aren't accepted in this path parameter.
-To find a customer ID, send a GET request to the [`/openmeter/customers`](/api/konnect/metering-and-billing/v3/#/operations/get-customer) endpoint, or check the URL of the customer's profile in the {{site.konnect_short_name}} UI.
+To find a customer ID, send a GET request to the [`/openmeter/customers`](/api/konnect/metering-and-billing/v3/#/operations/list-customers) endpoint, or check the URL of the customer's profile in the {{site.konnect_short_name}} UI.
 
 Filter parameters must be percent-encoded in the URL: use `%5B` for `[` and `%5D` for `]`.
 For example, `filter[feature_key][eq]` becomes `filter%5Bfeature_key%5D%5Beq%5D`.

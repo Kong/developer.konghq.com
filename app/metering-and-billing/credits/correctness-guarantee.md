@@ -101,16 +101,22 @@ Credit history is immutable.
 When usage changes, a charge is canceled, or a billing workflow reverses previously consumed credits, {{site.metering_and_billing}} books a correction movement. 
 {{site.metering_and_billing}} doesn't rewrite the original movement.
 
-This gives transaction history a stable audit shape:
+This gives the ledger a stable audit shape:
 
 ```text
 T1: +100 funded
 T2:  -40 consumed
-T3:  +10 correction
+T3:  +10 returned by a correction
 ```
 {:.no-copy-code}
 
-The customer can still see that 40 credits were consumed at T2. The later correction explains why 10 credits returned at T3.
+The ledger keeps the original consumption at T2 and records the 10 returned credits as a separate movement at T3, so the balance is 70 afterwards.
+
+## Safe grant retries
+
+To make grant creation safe to retry, set a `key` on the grant.
+The key is unique per customer: sending the same key again for the same customer returns a `409 Conflict` instead of creating a duplicate grant.
+You can reuse the same key for different customers.
 
 ## Deterministic consumption
 
@@ -163,7 +169,10 @@ rows:
     meaning: "credits were used by charges"
   - type: "`expired`"
     meaning: "unused credits expired"
+  - type: "`voided`"
+    meaning: "unused credits were forfeited because the grant was voided"
 {% endtable %}
 <!--vale on-->
 
 This projection keeps the public history understandable while preserving accounting correctness underneath.
+Internal accounting movements, such as the temporary movements used to convert a custom-currency overage into the invoice currency, aren't shown.

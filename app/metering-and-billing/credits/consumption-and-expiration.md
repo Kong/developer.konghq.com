@@ -39,7 +39,7 @@ next_steps:
 ---
 
 Credits are consumed by charges.
-A charge can represent a flat fee, usage-based spend, or another billable item configured to settle with customer credits.
+Flat-fee and usage-based charges can settle against customer credits.
 
 ## Credit settlement modes
 
@@ -272,7 +272,7 @@ Grant B is still available because A had the same priority and an earlier expira
 
 ## Transaction history
 
-When a charge is processed, a `consumed` movement is recorded for each grant drawn from.
+When a charge is booked, the credits it consumes are recorded as `consumed` movements.
 When a grant expires, an `expired` movement is recorded for the remaining unused amount.
 
 Both movement types appear as negative values in [credit transaction history](/metering-and-billing/credits/transaction-history/).

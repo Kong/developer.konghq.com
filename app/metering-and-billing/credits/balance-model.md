@@ -133,6 +133,8 @@ Credit balances are currency-specific.
 For example, a USD grant increases the customer's USD credit balance, while a EUR charge consumes from the customer's EUR credit balance.
 Balances can be held in fiat currencies or in [custom currencies](/metering-and-billing/currencies/).
 
+One case crosses currencies: when a `credit_then_invoice` charge in a custom currency isn't fully covered, the remainder is converted into the invoice's fiat currency, and the customer's credits in that fiat currency can cover part of it.
+
 **Do not** merge currencies in user-facing balance displays unless your product explicitly converts them.
 Treat each currency as a separate balance.
 

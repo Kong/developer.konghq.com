@@ -65,7 +65,7 @@ flowchart LR
 1. Read the customer's balance to confirm the credit was added.
 1. List transaction history to see the `funded` movement.
 
-Promotional credits are immediately usable after they are created.
+Promotional credits are usable as soon as the grant takes effect, which is immediately unless you set a future effective time.
 
 ## Sell credits by invoice
 
@@ -94,7 +94,7 @@ A customer might receive 1,000 credits but pay a negotiated amount based on the 
 
 ## Record externally funded credits
 
-Use externally funded credits when invoicing and payment happen outside {{site.metering_and_billing}} through custom invoicing.
+Use externally funded credits when the credits are paid for outside {{site.metering_and_billing}}, for example by wire transfer, an external invoice, or manual reconciliation.
 
 The flow looks like this:
 
@@ -108,7 +108,7 @@ flowchart LR
 
 1. Create a credit grant for the customer with the external funding method.
 1. Set purchase terms.
-1. Update the external settlement state as your external system changes.
+1. Update the external settlement state as your external system changes, by setting the grant's external settlement `status` to `pending`, `authorized`, or `settled`.
 1. Use balance and history to confirm credit availability and movement.
 
 This flow is useful when {{site.metering_and_billing}} tracks the credit balance, but your own invoicing system handles the commercial invoice and payment.
