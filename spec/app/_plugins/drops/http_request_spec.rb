@@ -13,6 +13,24 @@ RSpec.describe Jekyll::Drops::HttpRequest do
     end
   end
 
+  describe '#validate_section!' do
+    context 'when section is unrecognized' do
+      let(:yaml) { { 'url' => 'localhost:8000/anything', 'section' => 'prereq' } }
+
+      it 'raises an error naming the rejected value' do
+        expect { drop }.to raise_error(ArgumentError, /prereq/)
+      end
+    end
+  end
+
+  describe '#config' do
+    let(:yaml) { { 'url' => 'localhost:8000/anything', 'section' => 'cleanup' } }
+
+    it 'drops section from the instruction config' do
+      expect(drop.config).not_to have_key('section')
+    end
+  end
+
   describe '#snippet_config' do
     it 'keeps the url the writer set' do
       expect(drop.snippet_config['url']).to eq('localhost:8000/anything')

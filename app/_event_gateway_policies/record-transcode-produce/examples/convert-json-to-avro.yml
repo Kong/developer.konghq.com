@@ -1,0 +1,43 @@
+title: Convert JSON records to Avro before they reach the cluster
+
+description: Convert a client's JSON records to Avro using an inline schema, so the backend cluster only stores Avro data.
+
+extended_description: |
+  Convert JSON records produced by a client to Avro before {{site.event_gateway_short}} writes them to the backend cluster.
+
+  This example embeds the target Avro schema directly in the policy using `inline`, and prefixes the converted
+  record with a reference to the schema using `confluent_format`, so any Confluent-compatible consumer can
+  deserialize it.
+
+  This change is irreversible. Use the produce phase when every downstream consumer of the topic reads Avro.
+
+weight: 900
+
+requirements:
+ - "A [Schema Validation Produce policy](/event-gateway/policies/schema-validation-produce/) that parses the record value as JSON."
+
+variables:
+  policy_id:
+    description: The UUID of the parent Schema Validation policy.
+    value: $PARENT_POLICY_ID
+
+type: transcode
+name: convert-produce-json-to-avro
+parent_policy_id: ${policy_id}
+config:
+  failure_mode: reject
+  output_format: avro
+  schema_source:
+    type: inline
+    inline: |
+      {"type":"record","name":"User","fields":[{"name":"name","type":"string"},{"name":"age","type":"long"}]}
+  schema_ref_destination:
+    type: confluent_format
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
+
+min_version:
+  event-gateway: '1.3'

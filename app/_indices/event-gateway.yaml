@@ -35,6 +35,7 @@ sections:
   - title: "How-tos"
     items:
       - path: /event-gateway/productize-kafka-topics/
+      - path: /event-gateway/enforce-kafka-request-rules/
       - path: /event-gateway/encrypt-kafka-messages-with-event-gateway/
       - path: /event-gateway/configure-observability-with-otel/
       - path: /event-gateway/configure-sni-routing/

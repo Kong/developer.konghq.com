@@ -1,0 +1,8 @@
+{% capture wrapper %}
+<div class="content" markdown="1" {{ config.test_attribute }}="{{ config.data_validate | escape }}">
+
+{% include how-tos/event-gateway-quickstart/snippet.md config=config no_copy_code=true %}
+
+</div>
+{% endcapture %}
+{{wrapper}}

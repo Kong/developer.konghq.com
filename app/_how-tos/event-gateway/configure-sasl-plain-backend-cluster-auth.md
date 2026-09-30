@@ -46,8 +46,6 @@ related_resources:
     url: /event-gateway/get-started/
   - text: Authenticate connections to Kafka using mTLS
     url: /event-gateway/configure-mtls-backend-cluster-auth/
-
-automated_tests: false
 ---
 
 In this guide you'll configure {{site.event_gateway_short}} to connect to a secured Kafka cluster using SASL/PLAIN credentials.
@@ -79,6 +77,7 @@ KafkaServer {
 };
 EOF
 ```
+{:data-test-step="block"}
 
 Create the Docker Compose file:
 
@@ -87,6 +86,7 @@ cat <<'EOF' > docker-compose.yaml
 {% include_cached _files/event-gateway/docker-compose-sasl.yaml %}
 EOF
 ```
+{:data-test-step="block" .collapsible}
 
 The broker exposes a `SASL_PLAINTEXT` listener on port `9082` in the Docker network for {{site.event_gateway_short}} connections, and a `PLAINTEXT` listener on ports `9094`/`9095`/`9096` for direct local access.
 
@@ -95,22 +95,12 @@ Start the cluster:
 ```bash
 docker compose up -d
 ```
+{:data-test-step="block"}
 
 ## Create an {{site.event_gateway_short}} control plane and data plane
 
-Run the [quickstart script](https://get.konghq.com/event-gateway) to provision a local data plane and configure your environment:
-
-```bash
-curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway
-```
-
-Copy the exported variable into your terminal:
-
-```bash
-export EVENT_GATEWAY_ID=your-gateway-id
-```
-
-{% include_cached /knep/quickstart-note.md %}
+{% event_gateway_quickstart %}
+{% endevent_gateway_quickstart %}
 
 ## Configure kafkactl
 
@@ -262,8 +252,8 @@ command: |
 expected:
   return_code: 0
   message: |
-    TOPIC     PARTITIONS     REPLICATION FACTOR
-    orders    1              1
+    TOPIC      PARTITIONS     REPLICATION FACTOR
+    orders     1              1
 render_output: false
 {% endvalidation %}
 <!--vale on-->

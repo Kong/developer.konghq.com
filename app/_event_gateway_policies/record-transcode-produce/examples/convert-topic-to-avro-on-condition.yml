@@ -1,0 +1,47 @@
+title: Convert records for a specific topic to Avro
+
+description: Convert records produced to a single topic to Avro using a schema registry reference, and leave records on other topics unchanged.
+
+extended_description: |
+  Use `condition` to apply this policy only to records produced to a specific topic, so records on other topics
+  parsed by the same Schema Validation policy pass through without conversion.
+
+  This example uses `reference` to look up the target Avro schema in a [schema registry](/event-gateway/entities/schema-registry/),
+  computing the subject from the topic name and always using the latest version, and records the schema
+  reference in a header using `record_header`.
+
+weight: 900
+
+requirements:
+ - "A [Schema Validation Produce policy](/event-gateway/policies/schema-validation-produce/) that parses the record value as JSON."
+
+variables:
+  policy_id:
+    description: The UUID of the parent Schema Validation policy.
+    value: $PARENT_POLICY_ID
+
+type: transcode
+name: convert-produce-topic-to-avro
+parent_policy_id: ${policy_id}
+condition: >
+  context.topic.name == "my_topic"
+config:
+  failure_mode: reject
+  output_format: avro
+  schema_source:
+    type: reference
+    reference:
+      schema_registry:
+        name: my-schema-registry
+      subject: ${context.topic.name + '-value'}
+      version: ${'latest'}
+  schema_ref_destination:
+    type: record_header
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
+
+min_version:
+  event-gateway: '1.3'
