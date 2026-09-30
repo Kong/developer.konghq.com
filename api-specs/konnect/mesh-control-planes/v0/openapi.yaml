@@ -22394,9 +22394,20 @@ components:
           properties:
             invalid_parameters:
               $ref: '#/components/schemas/InvalidParameters'
+            status:
+              enum:
+                - 400
       x-flatten-allOf: true
     InternalError:
-      $ref: '#/components/schemas/BaseError'
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 500
+              enum:
+                - 500
+      x-flatten-allOf: true
     NotFoundError:
       allOf:
         - $ref: '#/components/schemas/BaseError'
@@ -22404,6 +22415,8 @@ components:
           properties:
             status:
               example: 404
+              enum:
+                - 404
             title:
               example: Not Found
             type:
@@ -22551,6 +22564,8 @@ components:
           properties:
             status:
               example: 409
+              enum:
+                - 409
             title:
               example: Conflict
             type:
@@ -22583,6 +22598,8 @@ components:
           properties:
             status:
               example: 403
+              enum:
+                - 403
             title:
               example: Forbidden
             type:
@@ -22599,6 +22616,8 @@ components:
           properties:
             status:
               example: 401
+              enum:
+                - 401
             title:
               example: Unauthorized
             type:
