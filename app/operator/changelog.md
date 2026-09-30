@@ -1400,7 +1400,7 @@ by the operator's semver:
   Note: routes count per rule may increase.
   [#3577](https://github.com/Kong/kong-operator/pull/3577)
 - Upgrade Gateway API to v1.5.1, it requires manual step of installing
-  new CRDs before the upgrade, see [UPGRADE](charts/kong-operator/UPGRADE.md).
+  new CRDs before the upgrade, see [UPGRADE](https://github.com/Kong/kong-operator/blob/main/charts/kong-operator/UPGRADE.md).
   [#3596](https://github.com/Kong/kong-operator/pull/3596)
   [#3599](https://github.com/Kong/kong-operator/pull/3599)
 - Bump {{site.base_gateway}} to 3.14 and double the default CPU (now `2000m`) and memory limits (now `2000Mi`)
