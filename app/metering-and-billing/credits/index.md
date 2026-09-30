@@ -62,7 +62,7 @@ A grant can be promotional, funded through a {{site.metering_and_billing}} invoi
 * **Balances** show how much credit the customer has.
 There is a settled balance from committed ledger movements, and a pending balance that accounts for open charges.
 * **Charges** consume credits.
-The settlement mode on the rate card controls whether credits are applied before invoicing or whether the full charge must be covered by credits.
+The settlement mode on the plan controls whether credits are applied before invoicing or whether charges are settled only against credits.
 * **Transaction history** explains balance changes.
 Credit transaction history shows customer-facing movements: funded, consumed, and expired.
 
@@ -173,6 +173,7 @@ To learn more about movements and transaction history, see [Credit transaction h
 ## Settlement modes
 
 Billing charges apply credits.
+You set the settlement mode on the plan, and you can override it for an individual subscription when you create the subscription.
 When a charge is raised against a customer, {{site.metering_and_billing}} uses the settlement mode to determine how to apply credits:
 
 <!--vale off-->
@@ -188,14 +189,17 @@ rows:
       Use available credits first.
       Any charge amount that exceeds the available credit balance is invoiced as a standard charge. This is the prepaid-plus-overage model.
   - mode: "`credit_only`"
-    behavior: "Credits must cover the full charge. If the credit balance is insufficient, the charge is blocked. No invoice overage is generated."
+    behavior: |
+      Settle the full charge against credits. No invoice overage is generated.
+      If the credit balance is insufficient, the uncovered amount still settles and the customer's credit balance goes negative.
 {% endtable %}
 <!--vale on-->
 
 The customer's credit balance, the charge's settlement mode, and the grant's expiration and priority rules together determine how much credit is consumed.
 
-{:.info}
-> Blocking a charge under `credit_only` only stops the billing line from being generated; it doesn't stop the API request that produced it.
+A negative balance is repaid by the next credits the customer receives.
+A new grant first covers the negative balance, and only the rest of the grant increases the available balance.
+For details, see [Negative balances](/metering-and-billing/credits/consumption-and-expiration/#negative-balances).
 
 For details on draw-down order and expiration behavior, see [credit consumption and expiration](/metering-and-billing/credits/consumption-and-expiration/).
 

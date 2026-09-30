@@ -43,7 +43,8 @@ A charge can represent a flat fee, usage-based spend, or another billable item c
 
 ## Credit settlement modes
 
-The rate card's settlement mode controls whether {{site.metering_and_billing}} consumes credits, invoices the customer, or both.
+The settlement mode controls whether {{site.metering_and_billing}} consumes credits, invoices the customer, or both.
+You set it on the plan, and you can override it for an individual subscription when you create the subscription.
 
 ### Credit then invoice
 
@@ -63,11 +64,8 @@ Customers can use prepaid credits, but usage is not blocked if credits run out.
 
 ### Credit only
 
-With `credit_only`, the charge is settled exclusively against credits.
-If the credit balance is insufficient, the charge is blocked and no invoice overage is generated.
-
-{:.info}
-> Blocking a charge here only stops the billing line from being generated; it doesn't stop the API request that produced it.
+With `credit_only`, the charge is settled exclusively against credits, and no invoice overage is generated.
+If the credit balance covers the charge, the charge consumes credits like any other:
 
 ```text
 charge amount:       100 USD
@@ -76,6 +74,39 @@ credits consumed:    100 USD
 invoice remainder:     0 USD
 ```
 {:.no-copy-code}
+
+If the credit balance is insufficient, the charge isn't blocked.
+{{site.metering_and_billing}} consumes the available credits, settles the uncovered amount as well, and the customer's credit balance goes negative:
+
+```text
+charge amount:       100 USD
+credit balance:       40 USD
+credits consumed:     40 USD
+uncovered amount:     60 USD
+invoice remainder:     0 USD
+balance afterwards:  -60 USD
+```
+{:.no-copy-code}
+
+### Negative balances
+
+A negative balance under `credit_only` represents usage the customer has already consumed but not yet paid for with credits.
+It's repaid by the next credits the customer receives: a new grant first covers the negative balance, and only the remainder increases the available balance.
+This happens as soon as the grant is created, even if the grant takes effect later.
+
+```text
+balance before grant:  -60 USD
+new grant:            +100 USD
+repays negative:        60 USD
+balance afterwards:     40 USD
+```
+{:.no-copy-code}
+
+If a customer has several negative amounts outstanding, new credits repay them in the order they were recorded.
+A grant restricted to specific features or plans only repays negative amounts from charges it's eligible for.
+
+A negative balance doesn't create a separate invoice.
+If you need to limit overspending, monitor the customer's balance and grant more credits, or use the `credit_then_invoice` settlement mode so that uncovered usage is invoiced.
 
 ## Draw-down order
 

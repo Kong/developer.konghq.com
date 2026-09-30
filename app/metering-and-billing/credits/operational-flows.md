@@ -138,21 +138,21 @@ See [Credit balance model](/metering-and-billing/credits/balance-model/) for det
 
 ## Consume credits through charges
 
-Credit consumption happens through billing charges and rate card settlement modes.
+Credit consumption happens through billing charges and the settlement mode of the customer's subscription.
 
 The flow looks like this:
 
 {% mermaid %}
 flowchart LR
-    A["Configure rate card\nwith credit settlement mode"] --> B["Charge is created\nfor customer"]
+    A["Configure plan\nwith credit settlement mode"] --> B["Charge is created\nfor customer"]
     B --> C{"Settlement mode"}
-    C -->|credit_only| D["Credits settle\nthe full charge"]
+    C -->|credit_only| D["Credits settle the full charge;\na shortfall makes the\nbalance negative"]
     C -->|credit_then_invoice| E["Credits reduce\ninvoiced amount"]
     D & E --> F["consumed movement\nin transaction history"]
     F --> G["Updated balance\nreflects remaining credits"]
 {% endmermaid %}
 
-1. Configure the relevant rate card with a credit settlement mode.
+1. Set the credit settlement mode on the plan, or override it when you create the customer's subscription.
 1. Create or run charges for the customer.
 1. {{site.metering_and_billing}} applies credits according to the settlement mode.
 1. Read transaction history to inspect consumed credits.
@@ -160,6 +160,7 @@ flowchart LR
 
 For `credit_then_invoice`, credits reduce the invoiced amount.
 For `credit_only`, credits are the sole settlement mechanism for the charge.
+If the balance can't cover a `credit_only` charge, the balance goes negative and the next credits the customer receives repay it first.
 
 ## Review credit history
 
