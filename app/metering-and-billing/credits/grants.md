@@ -56,13 +56,15 @@ The funding method describes how the customer receives or pays for the credits.
 Use promotional credits when no payment workflow applies.
 Common examples include onboarding credit, compensation credit, migration credit, or admin-created credit.
 
-Promotional credits are available without waiting for an invoice or external payment reconciliation.
+Promotional credits don't involve any payment.
 
 ### Invoice-funded credits
 
 Use invoice-funded credits when a customer buys credits through {{site.metering_and_billing}} billing.
 
 In this flow, the grant represents the credits the customer receives, and the invoice represents the payment workflow for those credits.
+The credits are available as soon as the grant takes effect.
+They don't wait for the invoice to be paid.
 The credit amount and the purchase amount are related but not necessarily identical.
 
 For example, if a customer receives 100 credits with a per-unit cost of 0.50 USD, the invoice amount is 50 USD.
@@ -87,9 +89,11 @@ Your integration is responsible for updating {{site.metering_and_billing}} when 
 
 Priority controls which credits are consumed first when a customer has multiple grants in the same currency.
 
+Priority is a number from 1 to 1000 through the API, or from 1 to 100 in the {{site.konnect_short_name}} UI. The default is 10.
 Lower priority values are consumed first.
-If two grants have the same priority, credits that expire earlier are consumed first.
-If priority and expiration are equal, {{site.metering_and_billing}} uses stable movement order.
+If two grants have the same priority, a grant restricted to specific features or plans is consumed before an unrestricted grant.
+Then credits that expire earlier are consumed first.
+If priority, restrictions, and expiration are equal, {{site.metering_and_billing}} uses stable movement order.
 
 Example:
 

@@ -76,9 +76,9 @@ The flow looks like this:
 {% mermaid %}
 flowchart LR
     A["Create credit grant\n(invoice)"] --> B["Set credit amount,\npurchase terms"]
-    B --> C["Invoice lifecycle:\nauthorize & settle payment"]
-    C --> D["Credits available\nafter settlement"]
-    D --> E["Show customer\ngrant & balance"]
+    B --> C["Credits available\nwhen the grant takes effect"]
+    C --> D["Invoice lifecycle:\nauthorize & settle payment"]
+    C --> E["Show customer\ngrant & balance"]
 {% endmermaid %}
 
 1. Create a credit grant for the customer with the invoice funding method.
@@ -86,6 +86,8 @@ flowchart LR
 1. Set purchase terms, including the purchase currency and per-unit cost.
 1. Let the invoice lifecycle handle payment authorization and settlement.
 1. Show the customer their credit grant and credit balance.
+
+The credits are available as soon as the grant takes effect, without waiting for the invoice to be paid.
 
 The credit amount and the invoice amount are different values.
 A customer might receive 1,000 credits but pay a negotiated amount based on the per-unit cost.

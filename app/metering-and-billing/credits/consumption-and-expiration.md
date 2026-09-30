@@ -114,6 +114,7 @@ When a customer has multiple grants in the same currency, {{site.metering_and_bi
 
 ```text
 priority asc
+restricted before unrestricted
 expires_at asc
 stable movement order asc
 ```
@@ -122,10 +123,13 @@ stable movement order asc
 This means:
 
 1. Grants with lower priority values are consumed first.
-1. For equal priority, credits that expire earlier are consumed first.
-1. If both are equal, {{site.metering_and_billing}} uses stable movement order.
+1. For equal priority, grants restricted to specific features or plans are consumed before unrestricted grants, so shared credit stays available for other usage.
+1. Then credits that expire earlier are consumed first. Credits that never expire come last.
+1. If all of these are equal, {{site.metering_and_billing}} uses stable movement order.
 
-This order makes the result predictable and prevents avoidable expiration: if two grants have the same priority, the one expiring sooner is used first.
+Only grants whose restrictions match the charge are eligible. For example, a grant restricted to `input_tokens` is never consumed by an `output_tokens` charge.
+
+This order makes the result predictable and prevents avoidable expiration: if two grants have the same priority and restrictions, the one expiring sooner is used first.
 
 ## Draw-down example
 
@@ -179,6 +183,17 @@ rows:
 
 Grant A is consumed first because it has the same priority as B but expires earlier.
 Grant C is untouched because its priority value is higher.
+
+## When credits are consumed
+
+Charges consume credits when they're booked, not as usage events arrive:
+
+* **Usage-based charges** book their consumption at the end of the service period, after late usage for that period has been collected.
+* **Flat-fee charges** book their consumption at the start of the service period when paid in advance, and at the end when paid in arrears.
+
+Until a charge is booked, its expected consumption shows up only in the live balance, not in the settled balance or transaction history.
+Credit that expires before a charge is booked isn't available to that charge.
+For example, credit that expires in the middle of a service period can't cover usage from that period.
 
 ## Credit expiration
 

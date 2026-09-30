@@ -99,7 +99,7 @@ Subscriptions link customers to a pricing model and track their usage against ra
 
 ## Grant prepaid credits
 
-Prepaid credits burn down as the customer incurs usage.
+Prepaid credits burn down as the customer's usage is billed.
 Issue a grant directly to the customer's balance.
 
 1. On the customer's page, click the **Credits** tab.
@@ -117,6 +117,8 @@ A `funded` movement is recorded in the customer's transaction history and their 
 
 After the grant is issued, the customer's available balance reflects the new credits.
 Because this customer is on a `credit_only` plan, metered usage automatically deducts from this balance.
+Usage charges are booked at the end of each service period, so `consumed` movements appear then.
+Before that, the **Live balance** on the **Credits** tab already reflects the expected consumption.
 
 1. On the customer's page, click the **Credits** tab.
 1. Click **Transaction History**.
@@ -124,7 +126,7 @@ Because this customer is on a `credit_only` plan, metered usage automatically de
 You'll see:
 
 * A `funded` movement with a positive amount for the grant you issued.
-* `consumed` movements with negative amounts as usage charges are applied.
+* `consumed` movements with negative amounts as usage charges are booked.
 * The running balance before and after each movement.
 
 For more on movement types, pagination, and corrections, see [Credit transaction history](/metering-and-billing/credits/transaction-history/).

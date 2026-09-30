@@ -118,13 +118,16 @@ When a customer has multiple grants in the same currency, {{site.metering_and_bi
 
 ```text
 priority asc
+restricted before unrestricted
 expires_at asc
 stable movement order asc
 ```
 {:.no-copy-code}
 
 Lower priority values are consumed first. 
-For equal priority, earlier-expiring credits are consumed first. If both are equal, {{site.metering_and_billing}} uses stable movement order.
+For equal priority, credits restricted to specific features or plans are consumed before unrestricted credits, then earlier-expiring credits are consumed first, and credits that never expire come last.
+If all of these are equal, {{site.metering_and_billing}} uses stable movement order.
+Only credits whose restrictions match the charge are eligible.
 
 This rule keeps consumption predictable and also protects expiration correctness. When credits are consumed, {{site.metering_and_billing}} knows which future expiration should be reduced.
 
