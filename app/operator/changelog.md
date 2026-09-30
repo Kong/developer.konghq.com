@@ -25,20 +25,20 @@ Changelog for supported {{ site.operator_product_name }} versions.
   supported by the cluster. When the operator's IP family is dual and both fields
   are unset, the ingress Service defaults to `PreferDualStack`.
   [#5797](https://github.com/Kong/kong-operator/pull/5797)
-- `KongLicense` is now handled for the on-prem AI Gateway: the operator picks
+- `KongLicense` is now handled for the on-prem {{site.ai_gateway}}: the operator picks
   the newest enabled `KongLicense` and propagates it to `AIGatewayDataPlane`
   gateway pods via the `KONG_LICENSE_DATA` environment variable. License
   availability is reported on the `AIGatewayDataPlane` and `OnPremAIGateway`
   status via a new `LicenseValid` condition, which does not gate `Ready`.
   [#5912](https://github.com/Kong/kong-operator/issues/5912)
-- The on-prem AI Gateway control plane instances now dynamically discover the
+- The on-prem {{site.ai_gateway}} control plane instances now dynamically discover the
   Admin API endpoints of all `AIGatewayDataPlane`s that reference the gateway
   via `spec.controlPlaneRef.type: onpremNamespacedRef` (through their Admin
   API Services' EndpointSlices) and re-render the configuration when the
   discovered endpoint set changes. Multiple `AIGatewayDataPlane`s can now
   reference the same `OnPremAIGateway`.
   [#5740](https://github.com/Kong/kong-operator/issues/5740)
-- The on-prem AI Gateway control plane instances now push the rendered
+- The on-prem {{site.ai_gateway}} control plane instances now push the rendered
   configuration to the Admin API of every discovered `AIGatewayDataPlane`
   endpoint over mTLS, using a cluster-CA-signed client certificate Secret
   provisioned per `OnPremAIGateway`. Push failures are reported on the
@@ -59,7 +59,7 @@ Changelog for supported {{ site.operator_product_name }} versions.
   the operator resolves the reference to the parent's Konnect ID and watches
   referenced pages for changes.
   [#5701](https://github.com/Kong/kong-operator/pull/5701)
-- Added `AIGatewayCustomPolicy` CRD: manage Konnect AI Gateway custom policies
+- Added `AIGatewayCustomPolicy` CRD: manage Konnect {{site.ai_gateway}} custom policies
   (`aiconfiguration.konghq.com/v1alpha1`), parented to `KonnectAIGateway`,
   supporting both `installed` and `streaming` (Lua `schema` and `handler`)
   custom policy types. `OnPremAIGateway` references are not supported yet
@@ -116,7 +116,7 @@ Changelog for supported {{ site.operator_product_name }} versions.
   operator then could not find the entity it owns in Konnect, so it could not
   recover a lost entity ID or delete the entity when the object was deleted.
   [#5917](https://github.com/Kong/kong-operator/pull/5917)
-- AI Gateway configuration entities: free-form `config` (e.g. of an
+- {{site.ai_gateway}} configuration entities: free-form `config` (e.g. of an
   `AIGatewayPolicy`) is now sent to Konnect verbatim. Previously, config whose
   data looked like a discriminated union (such as a headroom compressor config
   with `provider: headroom` next to a `headroom` block) was flattened, and
@@ -460,7 +460,7 @@ by the operator's semver:
   only holds scalar values, `paths`/`hosts`/`methods` could not be expressed as the
   lists Kong's route matching requires: `kubectl apply` accepted the resource, but
   every `AIGatewayMCPServer` with a non-empty `route` then failed to reconcile with
-  `Programmed=False`/`FailedToCreate` and an SDK unmarshall error
+  `Programmed=False`/`FailedToCreate` and an SDK unmarshal error
   (`could not unmarshall ... into any supported union types for
   AIGatewayMCPServerRouteWithMatcher`), making the field unusable in practice. The
   root cause was in `crd-from-oas`, which fell back to `map[string]string` for a
