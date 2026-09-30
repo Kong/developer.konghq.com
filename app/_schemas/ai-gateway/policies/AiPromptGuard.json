@@ -1,5 +1,87 @@
 {
   "properties": {
+    "config": {
+      "type": "object",
+      "properties": {
+        "allow_patterns": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 1
+          },
+          "maxLength": 10,
+          "description": "Array of valid regex patterns, or valid questions from the 'user' role in chat."
+        },
+        "allow_all_conversation_history": {
+          "type": "boolean",
+          "description": "If true, will ignore all previous chat prompts from the conversation history.",
+          "default": false
+        },
+        "match_all_roles": {
+          "type": "boolean",
+          "description": "If true, will match all roles in addition to 'user' role in conversation history.",
+          "default": false
+        },
+        "continue_on_detection": {
+          "type": "boolean",
+          "description": "If true, the guardrail will not block the request or response. Block data and details will still be visible via kong logs. You can expect this field to work coherently with `guarding_mode` parameter.",
+          "default": false
+        },
+        "deny_patterns": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 1
+          },
+          "maxLength": 10,
+          "description": "Array of invalid regex patterns, or invalid questions from the 'user' role in chat."
+        },
+        "max_request_body_size": {
+          "type": "integer",
+          "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
+          "default": 8388608
+        },
+        "llm_format": {
+          "type": "string",
+          "enum": [
+            "anthropic",
+            "bedrock",
+            "cohere",
+            "gemini",
+            "huggingface",
+            "openai",
+            "typesafe"
+          ],
+          "description": "LLM input and output format and schema to use",
+          "default": "openai"
+        },
+        "genai_category": {
+          "type": "string",
+          "enum": [
+            "audio/speech",
+            "audio/transcription",
+            "image/generation",
+            "realtime/generation",
+            "text/embeddings",
+            "text/generation"
+          ],
+          "description": "Generative AI category of the request",
+          "default": "text/generation"
+        },
+        "rejection_mode": {
+          "type": "string",
+          "enum": [
+            "none",
+            "stealth",
+            "verbose"
+          ],
+          "description": "Controls block response format and status code. 'none' returns 400 with plain text block reason, 'stealth' 403 without details and 'verbose' returns 403 with rich JSON details. In streaming mode, the final SSE chunk includes finish_reason='blocked_by_guard' and 'verbose' will include a 'guardrail_result' metadata entry under 'data.choices[0]' in OpenAI format.",
+          "default": "none"
+        }
+      }
+    },
     "protocols": {
       "type": "array",
       "items": {
@@ -18,87 +100,6 @@
         "http",
         "https"
       ]
-    },
-    "config": {
-      "type": "object",
-      "properties": {
-        "allow_patterns": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "maxLength": 500,
-            "minLength": 1
-          },
-          "maxLength": 10,
-          "description": "Array of valid regex patterns, or valid questions from the 'user' role in chat."
-        },
-        "deny_patterns": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "maxLength": 500,
-            "minLength": 1
-          },
-          "maxLength": 10,
-          "description": "Array of invalid regex patterns, or invalid questions from the 'user' role in chat."
-        },
-        "match_all_roles": {
-          "type": "boolean",
-          "description": "If true, will match all roles in addition to 'user' role in conversation history.",
-          "default": false
-        },
-        "llm_format": {
-          "type": "string",
-          "enum": [
-            "anthropic",
-            "bedrock",
-            "cohere",
-            "gemini",
-            "huggingface",
-            "openai"
-          ],
-          "description": "LLM input and output format and schema to use",
-          "default": "openai"
-        },
-        "genai_category": {
-          "type": "string",
-          "enum": [
-            "audio/speech",
-            "audio/transcription",
-            "image/generation",
-            "realtime/generation",
-            "text/embeddings",
-            "text/generation"
-          ],
-          "description": "Generative AI category of the request",
-          "default": "text/generation"
-        },
-        "allow_all_conversation_history": {
-          "type": "boolean",
-          "description": "If true, will ignore all previous chat prompts from the conversation history.",
-          "default": false
-        },
-        "max_request_body_size": {
-          "type": "integer",
-          "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
-          "default": 8388608
-        },
-        "continue_on_detection": {
-          "type": "boolean",
-          "description": "If true, the guardrail will not block the request or response. Block data and details will still be visible via kong logs. You can expect this field to work coherently with `guarding_mode` parameter.",
-          "default": false
-        },
-        "rejection_mode": {
-          "type": "string",
-          "enum": [
-            "none",
-            "stealth",
-            "verbose"
-          ],
-          "description": "Controls block response format and status code. 'none' returns 400 with plain text block reason, 'stealth' 403 without details and 'verbose' returns 403 with rich JSON details.In streaming mode, the final SSE chunk includes finish_reason='blocked_by_guard' and 'verbose' will include a 'guardrail_result' metadata entry under 'data.choices[0]' in OpenAI format.",
-          "default": "none"
-        }
-      }
     },
     "consumer": {
       "type": "object",

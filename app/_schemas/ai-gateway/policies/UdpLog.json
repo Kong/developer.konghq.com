@@ -1,36 +1,5 @@
 {
   "properties": {
-    "config": {
-      "type": "object",
-      "properties": {
-        "custom_fields_by_lua": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Lua code as a key-value map"
-        },
-        "host": {
-          "type": "string",
-          "description": "A string representing a host name, such as example.com."
-        },
-        "port": {
-          "type": "integer",
-          "maximum": 65535,
-          "minimum": 0,
-          "description": "An integer representing a port number between 0 and 65535, inclusive."
-        },
-        "timeout": {
-          "type": "number",
-          "description": "An optional timeout in milliseconds when sending data to the upstream server.",
-          "default": 10000
-        }
-      },
-      "required": [
-        "host",
-        "port"
-      ]
-    },
     "protocols": {
       "type": "array",
       "items": {
@@ -55,6 +24,37 @@
         "grpcs",
         "http",
         "https"
+      ]
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string",
+          "description": "A string representing a host name, such as example.com."
+        },
+        "port": {
+          "type": "integer",
+          "maximum": 65535,
+          "minimum": 0,
+          "description": "An integer representing a port number between 0 and 65535, inclusive."
+        },
+        "timeout": {
+          "type": "number",
+          "description": "An optional timeout in milliseconds when sending data to the upstream server.",
+          "default": 10000
+        },
+        "custom_fields_by_lua": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Lua code as a key-value map"
+        }
+      },
+      "required": [
+        "host",
+        "port"
       ]
     },
     "consumer": {

@@ -1,148 +1,22 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https",
-          "tcp",
-          "tls",
-          "tls_passthrough",
-          "udp",
-          "ws",
-          "wss"
-        ],
-        "description": "A string representing a protocol, such as HTTP or HTTPS."
-      },
-      "description": "A set of strings representing protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
-        "host": {
+        "queue_size": {
+          "type": "integer"
+        },
+        "prefix": {
           "type": "string",
-          "description": "The IP address or hostname of StatsD server to send data to.",
-          "default": "localhost"
+          "description": "String to prefix to each metric's name.",
+          "default": "kong"
         },
-        "port": {
-          "type": "integer",
-          "maximum": 65535,
-          "minimum": 0,
-          "description": "The port of StatsD server to send data to.",
-          "default": 8125
-        },
-        "udp_packet_size": {
-          "type": "number",
-          "maximum": 65507,
-          "minimum": 0,
-          "default": 0
-        },
-        "workspace_identifier_default": {
-          "type": "string",
-          "enum": [
-            "workspace_id",
-            "workspace_name"
-          ],
-          "default": "workspace_id"
-        },
-        "flush_timeout": {
-          "type": "number"
-        },
-        "tag_style": {
-          "type": "string",
-          "enum": [
-            "dogstatsd",
-            "influxdb",
-            "librato",
-            "signalfx"
-          ]
-        },
-        "metrics": {
+        "allow_status_codes": {
           "type": "array",
           "items": {
-            "type": "object",
-            "properties": {
-              "sample_rate": {
-                "type": "number",
-                "description": "Sampling rate"
-              },
-              "consumer_identifier": {
-                "type": "string",
-                "enum": [
-                  "consumer_id",
-                  "custom_id",
-                  "username"
-                ],
-                "description": "Authenticated user detail."
-              },
-              "service_identifier": {
-                "type": "string",
-                "enum": [
-                  "service_host",
-                  "service_id",
-                  "service_name",
-                  "service_name_or_host"
-                ],
-                "description": "Service detail."
-              },
-              "workspace_identifier": {
-                "type": "string",
-                "enum": [
-                  "workspace_id",
-                  "workspace_name"
-                ],
-                "description": "Workspace detail."
-              },
-              "name": {
-                "type": "string",
-                "enum": [
-                  "cache_datastore_hits_total",
-                  "cache_datastore_misses_total",
-                  "kong_latency",
-                  "latency",
-                  "request_count",
-                  "request_per_user",
-                  "request_size",
-                  "response_size",
-                  "shdict_usage",
-                  "status_count",
-                  "status_count_per_user",
-                  "status_count_per_user_per_route",
-                  "status_count_per_workspace",
-                  "unique_users",
-                  "upstream_latency"
-                ],
-                "description": "StatsD metric’s name."
-              },
-              "stat_type": {
-                "type": "string",
-                "enum": [
-                  "counter",
-                  "gauge",
-                  "histogram",
-                  "meter",
-                  "set",
-                  "timer"
-                ],
-                "description": "Determines what sort of event a metric represents."
-              }
-            },
-            "required": [
-              "name",
-              "stat_type"
-            ]
+            "type": "string"
           },
-          "description": "List of metrics to be logged."
+          "description": "List of status code ranges that are allowed to be logged in metrics."
         },
         "use_tcp": {
           "type": "boolean",
@@ -160,26 +34,9 @@
         "retry_count": {
           "type": "integer"
         },
-        "queue_size": {
-          "type": "integer"
-        },
         "queue": {
           "type": "object",
           "properties": {
-            "initial_retry_delay": {
-              "type": "number",
-              "maximum": 1000000,
-              "minimum": 0.001,
-              "description": "Time in seconds before the initial retry is made for a failing batch.",
-              "default": 0.01
-            },
-            "max_retry_delay": {
-              "type": "number",
-              "maximum": 1000000,
-              "minimum": 0.001,
-              "description": "Maximum time in seconds between retries, caps exponential backoff.",
-              "default": 60
-            },
             "concurrency_limit": {
               "type": "integer",
               "enum": [
@@ -218,15 +75,27 @@
               "type": "number",
               "description": "Time in seconds before the queue gives up calling a failed handler for a batch.",
               "default": 60
+            },
+            "initial_retry_delay": {
+              "type": "number",
+              "maximum": 1000000,
+              "minimum": 0.001,
+              "description": "Time in seconds before the initial retry is made for a failing batch.",
+              "default": 0.01
+            },
+            "max_retry_delay": {
+              "type": "number",
+              "maximum": 1000000,
+              "minimum": 0.001,
+              "description": "Maximum time in seconds between retries, caps exponential backoff.",
+              "default": 60
             }
           }
         },
-        "allow_status_codes": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "List of status code ranges that are allowed to be logged in metrics."
+        "host": {
+          "type": "string",
+          "description": "The IP address or hostname of StatsD server to send data to.",
+          "default": "localhost"
         },
         "service_identifier_default": {
           "type": "string",
@@ -238,26 +107,147 @@
           ],
           "default": "service_name_or_host"
         },
-        "prefix": {
+        "flush_timeout": {
+          "type": "number"
+        },
+        "port": {
+          "type": "integer",
+          "maximum": 65535,
+          "minimum": 0,
+          "description": "The port of StatsD server to send data to.",
+          "default": 8125
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "enum": [
+                  "cache_datastore_hits_total",
+                  "cache_datastore_misses_total",
+                  "kong_latency",
+                  "latency",
+                  "request_count",
+                  "request_per_user",
+                  "request_size",
+                  "response_size",
+                  "shdict_usage",
+                  "status_count",
+                  "status_count_per_user",
+                  "status_count_per_user_per_route",
+                  "status_count_per_workspace",
+                  "unique_users",
+                  "upstream_latency"
+                ],
+                "description": "StatsD metric’s name."
+              },
+              "stat_type": {
+                "type": "string",
+                "enum": [
+                  "counter",
+                  "gauge",
+                  "histogram",
+                  "meter",
+                  "set",
+                  "timer"
+                ],
+                "description": "Determines what sort of event a metric represents."
+              },
+              "sample_rate": {
+                "type": "number",
+                "description": "Sampling rate"
+              },
+              "consumer_identifier": {
+                "type": "string",
+                "enum": [
+                  "consumer_id",
+                  "custom_id",
+                  "username"
+                ],
+                "description": "Authenticated user detail."
+              },
+              "service_identifier": {
+                "type": "string",
+                "enum": [
+                  "service_host",
+                  "service_id",
+                  "service_name",
+                  "service_name_or_host"
+                ],
+                "description": "Service detail."
+              },
+              "workspace_identifier": {
+                "type": "string",
+                "enum": [
+                  "workspace_id",
+                  "workspace_name"
+                ],
+                "description": "Workspace detail."
+              }
+            },
+            "required": [
+              "name",
+              "stat_type"
+            ]
+          },
+          "description": "List of metrics to be logged."
+        },
+        "workspace_identifier_default": {
           "type": "string",
-          "description": "String to prefix to each metric's name.",
-          "default": "kong"
+          "enum": [
+            "workspace_id",
+            "workspace_name"
+          ],
+          "default": "workspace_id"
+        },
+        "udp_packet_size": {
+          "type": "number",
+          "maximum": 65507,
+          "minimum": 0,
+          "default": 0
         },
         "hostname_in_prefix": {
           "type": "boolean",
           "default": false
+        },
+        "tag_style": {
+          "type": "string",
+          "enum": [
+            "dogstatsd",
+            "influxdb",
+            "librato",
+            "signalfx"
+          ]
         }
       }
     },
-    "consumer": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "tcp",
+          "tls",
+          "tls_passthrough",
+          "udp",
+          "ws",
+          "wss"
+        ],
+        "description": "A string representing a protocol, such as HTTP or HTTPS."
       },
-      "additionalProperties": false,
-      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
+      "description": "A set of strings representing protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
     },
     "route": {
       "type": "object",
@@ -278,6 +268,16 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
+    },
+    "consumer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
     }
   }
 }

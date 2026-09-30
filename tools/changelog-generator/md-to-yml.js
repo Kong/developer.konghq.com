@@ -37,6 +37,10 @@
  *     "Dependencies"      -> dependency
  *
  *   #### sub-subsection   -> scope (verbatim: Core, Plugin, PDK, ...)
+ *
+ *   AI Gateway 2.2.0+ files have no component section: they start with a
+ *   "## Changelog - Kong AI Gateway <ver>" title, with types at ### and
+ *   scopes at ####. Those entries fall back to the "kong-aigw" component.
  */
 
 import fs from "node:fs";
@@ -144,7 +148,16 @@ function isRefLine(line) {
   return /^\s+\[[^\]]+\]\([^)]+\)\s*$/.test(line);
 }
 
-function parseChangelog(md) {
+// Newer AI Gateway releases (2.2.0+) dropped the "## Kong-AI-Gateway"
+// component heading in favor of a "## Changelog - Kong AI Gateway <ver>"
+// title, shifting types to ### and scopes to ####. When no component
+// section exists, fall back to this default.
+const DEFAULT_COMPONENT_BY_PRODUCT = {
+  gateway: null,
+  "ai-gateway": "kong-aigw",
+};
+
+function parseChangelog(md, defaultComponent) {
   const lines = md.split(/\r?\n/);
   const entries = [];
   let component = null;
@@ -156,9 +169,10 @@ function parseChangelog(md) {
     if (!current) return;
     let text = current.lines.join("\n").replace(/\s+$/, "");
     text = stripInlineRefs(text);
-    if (text && component && type) {
+    const comp = component || defaultComponent;
+    if (text && comp && type) {
       entries.push({
-        component,
+        component: comp,
         type,
         scope,
         message: text.replace(/[\r\n]+$/, ""),
@@ -173,15 +187,35 @@ function parseChangelog(md) {
     if (/^##\s+/.test(line) && !/^###/.test(line)) {
       flush();
       const name = line.replace(/^##\s+/, "").trim();
-      component = COMPONENT_BY_SECTION[name] || null;
-      type = null;
-      scope = null;
+      if (COMPONENT_BY_SECTION[name]) {
+        component = COMPONENT_BY_SECTION[name];
+        type = null;
+        scope = null;
+      } else if (TYPE_BY_SECTION[name]) {
+        component = component || defaultComponent;
+        type = TYPE_BY_SECTION[name];
+        scope = null;
+      } else if (/^Changelog - /.test(name)) {
+        // Release title (AI Gateway 2.2.0+ format). Keep parsing state.
+      } else {
+        component = null;
+        type = null;
+        scope = null;
+        process.stderr.write(
+          `warning: unrecognized ## section "${name}", entries until the next heading are skipped\n`,
+        );
+      }
       continue;
     }
     if (/^###\s+/.test(line) && !/^####/.test(line)) {
       flush();
       const name = line.replace(/^###\s+/, "").trim();
       type = TYPE_BY_SECTION[name] || null;
+      if (!type) {
+        process.stderr.write(
+          `warning: unrecognized ### section "${name}", entries until the next heading are skipped\n`,
+        );
+      }
       scope = null;
       continue;
     }
@@ -240,7 +274,10 @@ function toYaml(entry) {
 function main() {
   const args = parseArgs(process.argv);
   const md = fs.readFileSync(args.inputMd, "utf8");
-  const entries = parseChangelog(md);
+  const entries = parseChangelog(
+    md,
+    DEFAULT_COMPONENT_BY_PRODUCT[args.product],
+  );
 
   const usedByComponent = new Map();
   const byComponent = new Map();
