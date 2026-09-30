@@ -31,7 +31,6 @@ class CodeHighlighter < Nodo::Core # rubocop:disable Style/Documentation
           "ansi",
           "ini",
           "markdown",
-          "toml"
         ],
       });
     JS
