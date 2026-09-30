@@ -156,7 +156,11 @@ For details on how feature restrictions affect balance and transaction queries, 
 Purchase terms describe how the credits are funded.
 They define the purchase currency and the per-unit cost used to calculate the purchase amount.
 
-The purchase currency must be a fiat currency, and it has to match the customer's currency.
+The purchase currency must be a fiat currency.
+For a paid fiat-currency grant, it must be the same as the grant currency.
+For a custom-currency grant, it must be the same as the fiat currency of the grant's cost basis.
+The {{site.konnect_short_name}} UI uses the customer's currency as the purchase currency.
+
 When the granted credits are in a custom currency, the purchase converts the custom-currency amount into the fiat purchase amount through a cost basis:
 
 ```text
@@ -166,7 +170,7 @@ purchase amount:   50.00 USD
 ```
 {:.no-copy-code}
 
-A purchase that funds a custom-currency grant needs an explicit cost basis.
+A purchase that funds a custom-currency grant needs an explicit cost basis in `purchase.cost_basis`, with `fiat_currency` set to the purchase currency.
 You can define the cost basis in one of the following ways:
 
 <!--vale off-->
@@ -177,18 +181,24 @@ columns:
   - title: Description
     key: description
 rows:
-  - type: "Dynamic"
-    description: "The rate is resolved from the custom currency's active cost basis when the purchase is charged. Use this when you want the purchase to follow the currency's current rate."
-  - type: "Pinned"
-    description: "The rate is pinned to a specific cost basis of the custom currency, so later rate changes don't affect the purchase."
-  - type: "Manual"
-    description: "You provide an explicit rate for this purchase, independent of the currency's cost bases."
+  - type: "`dynamic`"
+    description: "The rate is resolved from the custom currency's cost basis that is effective at the grant's effective time. That cost basis must already be effective by then. Use this when you want the purchase to follow the currency's current rate."
+  - type: "`pinned`"
+    description: "The rate is pinned to a specific cost basis of the custom currency, set with `cost_basis_id`, so later rate changes don't affect the purchase."
+  - type: "`manual`"
+    description: "You provide an explicit `rate` for this purchase, independent of the currency's cost bases."
 {% endtable %}
 <!--vale on-->
 
+For a custom-currency grant, the {{site.konnect_short_name}} UI sends a `dynamic` cost basis when you keep the currency's current rate, and a `manual` one when you change the rate.
+
+For a fiat-currency grant, `purchase.cost_basis` only accepts the `manual` type, without `fiat_currency`, where `rate` is the fiat cost per credit.
+If you omit it, the rate defaults to 1.
+
 {:.info}
-> The `perUnitCostBasis` field only applies to fiat-currency grants.
-> For a custom-currency grant, use `purchase.costBasis` instead.
+> The older `purchase.per_unit_cost_basis` field is deprecated.
+> It only applies to fiat-currency grants and can't be combined with `purchase.cost_basis`.
+> Use `purchase.cost_basis` with the `manual` type instead.
 
 Tax configuration is relevant for revenue recognition on usage charges that consume credits.
 Set [tax configuration](/metering-and-billing/tax-codes/) on all usage charges that need to be classified correctly for revenue recognition.
