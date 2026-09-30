@@ -60,7 +60,7 @@ The credit system works as follows:
 * **Credit grants** add credits to a customer balance.
 A grant can be promotional, funded through a {{site.metering_and_billing}} invoice, or funded externally.
 * **Balances** show how much credit the customer has.
-There is a settled balance from committed ledger movements, and a pending balance that accounts for open charges.
+There is a settled balance from committed ledger movements, a live balance that also accounts for open charges, and a pending balance for granted credits that haven't taken effect yet.
 * **Charges** consume credits.
 The settlement mode on the plan controls whether credits are applied before invoicing or whether charges are settled only against credits.
 * **Transaction history** explains balance changes.
@@ -93,8 +93,11 @@ rows:
   - term: "**Settled balance**"
     definition: "The committed ledger balance at a given point in time. Reflects only finalized movements (funded, consumed, expired). Doesn't include open charges."
     reference: "[Credit balance model](/metering-and-billing/credits/balance-model/)"
+  - term: "**Live balance**"
+    definition: "A pessimistic balance of available credits. The settled balance minus the impact of open (in-flight) charges that have not yet been finalized."
+    reference: "[Credit balance model](/metering-and-billing/credits/balance-model/)"
   - term: "**Pending balance**"
-    definition: "A pessimistic balance of available credits. Includes the settled balance minus any open (in-flight) charges that have not yet been finalized."
+    definition: "Credits that have been granted but don't count toward the settled balance yet, such as a grant with a future effective time."
     reference: "[Credit balance model](/metering-and-billing/credits/balance-model/)"
   - term: "**Movement**"
     definition: "A record of a credit change. Movements are immutable: when something changes, a new movement is recorded instead of rewriting the old one. The balance is derived from the sum of all movements."

@@ -123,17 +123,20 @@ flowchart LR
     B --> C{"Currency-specific?"}
     C -->|Yes| D["Filter by currency"]
     C -->|No| E["Use full balance"]
-    D & E --> F["Settled balance:\ncommitted value"]
-    D & E --> G["Pending balance:\nconservative value"]
+    D & E --> R["Balance response"]
+    R --> F["Settled balance:\ncommitted value"]
+    R --> G["Live balance:\nconservative value"]
+    R --> H["Pending balance:\ncredits not yet in effect"]
 {% endmermaid %}
 
 1. Resolve the customer.
 1. Query the customer's credit balance.
 1. If the product surface is currency-specific, then filter by currency 
 1. Use the settled balance for committed historical value.
-1. Use the pending balance for conservative operational decisions.
+1. Use the live balance for conservative operational decisions.
+1. Use the pending balance to show granted credits that haven't taken effect yet.
 
-The pending balance can differ from the settled balance because open charges may still consume credits.
+The live balance can differ from the settled balance because open charges may still consume credits.
 See [Credit balance model](/metering-and-billing/credits/balance-model/) for details.
 
 ## Consume credits through charges
