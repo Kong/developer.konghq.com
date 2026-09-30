@@ -77,10 +77,9 @@ platform:
         - text: Kong Identity
           url: /identity/
           product: identity
-        - text: Scorecards
-          icon: /assets/icons/monochrome/document.svg
-          url: /catalog/scorecards/
-          color: red
+        - text: Context Mesh
+          url: /context-mesh/
+          product: context-mesh
         - text: API Security & Access Control
           icon: /assets/icons/monochrome/security.svg
           url: /gateway/security/

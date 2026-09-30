@@ -180,6 +180,18 @@ products_section:
               url: /how-to/?products=ai-gateway
             - text: All documentation
               url: /index/ai-gateway/
+        - title: "{{site.context_mesh}}"
+          icon: /assets/icons/context-mesh.svg
+          description: "Expose your APIs and existing MCP servers to AI agents as a single Code Mode MCP server."
+          links:
+            - text: Overview
+              url: /context-mesh/
+            - text: Get started
+              url: /context-mesh/get-started/
+            - text: How-to guides
+              url: /how-to/?products=context-mesh
+            - text: All documentation
+              url: /index/context-mesh/
         - title: Event Gateway
           product: event-gateway
           changelog_url: /event-gateway/changelog/
