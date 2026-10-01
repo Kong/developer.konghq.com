@@ -42,6 +42,8 @@ related_resources:
 
 {{ site.operator_product_name }} manages {{ site.ai_gateway_name }} using a set of Kubernetes Custom Resource Definitions (CRDs). Each CRD maps to a concept in the {{ site.ai_gateway }} control plane; you declare the desired state in Kubernetes, and {{site.operator_product_name}} reconciles it with {{ site.konnect_short_name }}.
 
+{% include operator/rapid-release.md %}
+
 {{site.operator_product_name}} manages three distinct layers:
 
 - **Control plane**: `KonnectAIGateway` provisions and owns the {{ site.ai_gateway }} control plane in {{ site.konnect_short_name }}. All other resources reference it as their parent.
