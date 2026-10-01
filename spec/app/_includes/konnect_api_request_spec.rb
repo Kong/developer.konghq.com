@@ -2,7 +2,8 @@
 
 RSpec.describe '{% konnect_api_request %} rendered command' do
   let(:site_data) { { 'konnect_api_request' => { 'region' => 'us' } } }
-  let(:site) { instance_double(Jekyll::Site, data: site_data) }
+  let(:site_config) { { 'konnect_domain' => 'konghq.com' } }
+  let(:site) { instance_double(Jekyll::Site, data: site_data, config: site_config) }
 
   before { allow(Jekyll).to receive(:sites).and_return([site]) }
 
@@ -46,6 +47,30 @@ RSpec.describe '{% konnect_api_request %} rendered command' do
       expect(commands.size).to eq(1)
       expect(code).to eq(<<~'BASH'.chomp)
         curl -X POST "https://us.api.konghq.com/v2/control-planes" \
+             --no-progress-meter --fail-with-body  \
+             -H "Authorization: Bearer $KONNECT_TOKEN"
+      BASH
+    end
+  end
+
+  context 'the internal Konnect domain' do
+    let(:site_config) { { 'konnect_domain' => 'konghq.tech' } }
+    let(:template) do
+      <<~'LIQUID'
+        {% konnect_api_request %}
+        url: /v2/control-planes
+        method: POST
+        status_code: 201
+        {% endkonnect_api_request %}
+      LIQUID
+    end
+
+    include_examples 'a valid curl command'
+
+    it 'renders one command against the region api host on that domain, with the bearer token' do
+      expect(commands.size).to eq(1)
+      expect(code).to eq(<<~'BASH'.chomp)
+        curl -X POST "https://us.api.konghq.tech/v2/control-planes" \
              --no-progress-meter --fail-with-body  \
              -H "Authorization: Bearer $KONNECT_TOKEN"
       BASH

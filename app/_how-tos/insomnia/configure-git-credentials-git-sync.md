@@ -9,7 +9,6 @@ products:
 description: Configure authentication and commit identity when using Git Sync in Insomnia.
 
 tags:
-  - insomnia-documents
   - git
   - git-sync
 

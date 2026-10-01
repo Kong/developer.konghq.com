@@ -576,9 +576,10 @@ rows:
       * Create and list control planes.
       * When creating a control plane, grants the Admin role on newly created Gateway control planes.
   - role: "`Debug Session Creator`"
-    description: "This role grants access to create debug sessions. This role also grants read-only access to all entities within a control plane."
+    description: "This role grants access to create and manage debug sessions and pins. This role also grants read-only access to all entities within a control plane."
     permissions: |
       * Create, read, list and delete debug sessions.
+      * Create, read, list, update, and delete debug session pins.
       * Read and list control planes and all configurations within them.
   - role: "`Deployer`"
     description: "This role grants full write access to administer services, routes and plugins necessary to deploy services in Service Catalog. This role cannot write partials."

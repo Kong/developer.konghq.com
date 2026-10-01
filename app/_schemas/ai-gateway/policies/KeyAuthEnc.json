@@ -13,6 +13,15 @@
     "config": {
       "type": "object",
       "properties": {
+        "run_on_preflight": {
+          "type": "boolean",
+          "description": "A boolean value that indicates whether the policy should run (and try to authenticate) on `OPTIONS` preflight requests. If set to `false`, then `OPTIONS` requests are always allowed.",
+          "default": true
+        },
+        "realm": {
+          "type": "string",
+          "description": "When authentication fails the policy sends `WWW-Authenticate` header with `realm` attribute value."
+        },
         "key_names": {
           "type": "array",
           "items": {
@@ -47,15 +56,6 @@
           "type": "boolean",
           "description": "If enabled, the policy reads the request body (if said request has one and its MIME type is supported) and tries to find the key in it. Supported MIME types: `application/www-form-urlencoded`, `application/json`, and `multipart/form-data`.",
           "default": false
-        },
-        "run_on_preflight": {
-          "type": "boolean",
-          "description": "A boolean value that indicates whether the policy should run (and try to authenticate) on `OPTIONS` preflight requests. If set to `false`, then `OPTIONS` requests are always allowed.",
-          "default": true
-        },
-        "realm": {
-          "type": "string",
-          "description": "When authentication fails the policy sends `WWW-Authenticate` header with `realm` attribute value."
         }
       }
     },
@@ -82,16 +82,6 @@
         "wss"
       ]
     },
-    "service": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
-    },
     "route": {
       "type": "object",
       "properties": {
@@ -101,6 +91,16 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     }
   }
 }

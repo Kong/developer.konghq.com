@@ -1,42 +1,8 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ]
-      },
-      "description": "A set of strings representing HTTP protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
-        "allow_untemplated_requests": {
-          "type": "boolean",
-          "description": "Set true to allow requests that don't call or match any template.",
-          "default": true
-        },
-        "log_original_request": {
-          "type": "boolean",
-          "description": "Set true to add the original request to the Kong log policy(s) output.",
-          "default": false
-        },
-        "max_request_body_size": {
-          "type": "integer",
-          "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
-          "default": 8388608
-        },
         "templates": {
           "type": "array",
           "items": {
@@ -57,10 +23,44 @@
             ]
           },
           "description": "Array of templates available to the request context."
+        },
+        "allow_untemplated_requests": {
+          "type": "boolean",
+          "description": "Set true to allow requests that don't call or match any template.",
+          "default": true
+        },
+        "log_original_request": {
+          "type": "boolean",
+          "description": "Set true to add the original request to the Kong log policy(s) output.",
+          "default": false
+        },
+        "max_request_body_size": {
+          "type": "integer",
+          "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
+          "default": 8388608
         }
       },
       "required": [
         "templates"
+      ]
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
       ]
     },
     "consumer": {

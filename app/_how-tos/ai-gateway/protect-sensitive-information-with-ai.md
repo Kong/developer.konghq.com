@@ -31,6 +31,15 @@ prereqs:
       include_content: prereqs/ai-sanitizer
       icon_url: /assets/icons/cloudsmith.svg
 
+cleanup:
+  inline:
+    - title: Cleanup PII service
+      content: |
+        ```sh
+        docker rm -f ai-pii-service
+        ```
+        {: data-test-cleanup="block" }
+
 min_version:
   ai-gateway: '2.0'
 

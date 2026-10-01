@@ -11,7 +11,6 @@ products:
 tech_preview: true
 
 tags:
-- insomnia-documents
 - collections
 - mock-servers
 - git

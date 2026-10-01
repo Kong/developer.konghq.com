@@ -30,6 +30,9 @@ groups:
           - path: /kongctl/declarative/
           - path: /kongctl/supported-resources/
           - path: /kongctl/kongctl-and-deck/
+      - title: CI/CD
+        items:
+          - path: /kongctl/ci-cd/github-actions/
       - title: Other References
         items:
           - path: /kongctl/skills/

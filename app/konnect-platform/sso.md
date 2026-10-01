@@ -68,6 +68,9 @@ faqs:
       ```
 
       You can find this URI in your Okta developer account, under **Security** > **API**.
+  - q: When are group membership changes synced from my IdP?
+    a: |
+      Group memberships are synced when a user logs in. Because the session TTL is 12 hours, changes are synced at the next login or when the current session expires, within 12 hours. Instant updates are not available because {{site.konnect_short_name}} does not yet support back-channel logout. Support for back-channel logout is coming soon.
   - q: How do I debug my integration with Okta?
     a: |
       The Okta console provides a [Token Preview feature](https://help.okta.com/en-us/content/topics/security/api-config-test.htm) which will be useful in 
@@ -95,6 +98,9 @@ Keep built-in authentication enabled while you are testing IdP authentication. O
 * Keycloak
 
 ## SSO configuration
+
+{:.success}
+> For a complete SAML SSO in {{site.konnect_short_name}} guide, see [Configure SAML SSO for Konnect with Microsoft Entra ID](/konnect-platform/entra-saml-sso/).
 
 To configure SSO in {{site.konnect_short_name}}, you must configure the following in your IdP:
 * Add {{site.konnect_short_name}} to your IdP as an application

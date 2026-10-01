@@ -16,7 +16,7 @@ tags:
 - collections
 
 related_resources:
-  - text: Collections
+  - text: API Collections
     url: /insomnia/collections/
   - text: Keyboard Shortcuts
     url: /insomnia/keyboard-shortcuts/   
@@ -138,7 +138,7 @@ rows:
 
 ## What can I do with requests?
 
-You can simply click **Send** to send a request, but you can also click the context menu to see more options.
+You can click **Send** to send a request, but you can also click the context menu to see more options, or change how Insomnia displays the response.
 
 {:.info}
 > These options are only available for HTTP and event stream requests.
@@ -158,6 +158,7 @@ rows:
     description: "Send the request on a loop with a specific interval. The loop needs to be stopped manually by clicking **Cancel**."
 {% endtable %}
 
+{% new_in 13.3 %} For event stream requests, click the **Summary** tab in the response pane to combine the messages in a response into one readable output. Enter a JSONPath, for example `$.choices[0].delta.content`, to select the field to extract from each message. Insomnia automatically detects and fills in the JSONPath on OpenAI, Anthropic, and Gemini streaming endpoints.
 
 ## WebSocket support in Insomnia
 
@@ -188,7 +189,7 @@ This method allows you to send raw CSV files directly in the request payload.
 
 Insomnia provides [template tags](/insomnia/template-tags/) that allow you to generate random data. Add a template tag in a request URL, query parameters, body, or authentication by pressing `Control+Space` and selecting a **Faker** tag. You can generate random timestamps, dates, text, and passwords.
 
-## What can I do with folders in a request collection?
+## What can I do with folders in an API collection?
 
 Folders can be used to organize requests, but you can also add configuration to be used by all requests in the folder:
 

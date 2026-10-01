@@ -1,6 +1,6 @@
 ---
 title: "Troubleshooting with {{site.konnect_short_name}} Debugger"
-description: "The Debugger enables control plane administrators to initiate targeted deep session traces in specific data plane nodes."
+description: "The Debugger enables control plane administrators to initiate targeted deep session traces in specific data plane nodes and pin them, along with CPU profiles, for later analysis."
 breadcrumbs:
   - /observability/
 content_type: reference
@@ -8,6 +8,8 @@ layout: reference
 search_aliases: 
   - active tracing
   - debugger
+  - pinned traces
+  - pinned profiles
 products:
     - observability
     - konnect
@@ -72,6 +74,7 @@ The debugger helps capture OpenTelemetry-compatible traces for all requests matc
 * Refined traces can be generated for all requests matching a sampling criteria
 * Sampling criteria can be defined with simple expressions language, for example: `http.method` == `GET`
 * Trace sessions are retained for up to 15 days
+* Traces and CPU profiles can be pinned for longer retention
 * Traces can be visualized in {{site.konnect_short_name}}'s built in trace viewer
 
 To ensure consistency and interoperability, tracing adheres to OpenTelemetry naming conventions for spans and attributes, wherever possible.
@@ -117,6 +120,40 @@ When viewing a trace, you can click **Analyze with KAi** to send the trace to [K
 * Why is the `/flights` API slow?
 * What is the plugin execution order for this route?
 * Why does my hybrid gateway have connectivity issues with the upstream?
+
+## Pin traces and profiles
+
+A pin is a named snapshot of a trace or the session's CPU profile. It is stored separately from the debug session and remains available for the retention period you choose.
+
+When you pin a trace, any logs, payload captures, and Datakit plugin captures available for that trace are included automatically. A profile pin saves the session's CPU profile. Pins contain only data available when they are created and don't update with the original session.
+
+To make data available for a pin, enable the corresponding capture option when you create the session:
+
+* Enable log capture to include logs.
+* Enable payload capture for headers or body to include payload captures.
+* Enable body capture to include Datakit captures. Header-only capture records Datakit node spans but doesn't upload Datakit tracing events.
+* Enable CPU profiling to include the session's CPU profile.
+
+Pinned data uses the retention period selected when you create the pin: **7 days**, **30 days**, **3 months**, or **1 year**. Unpinned debug sessions are retained for up to 15 days, and unpinned payload data is retained for up to three days.
+
+### Save a trace or profile
+
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.observability}}**.
+1. In the {{site.observability}} sidebar, click **Debugger**.
+1. Open the debug session that contains the trace or CPU profile.
+1. To save a trace, from the trace row's actions menu, select **Save trace**. To save a CPU profile, click the **CPU Profiling** tab, then from the actions menu, select **Save profile**. CPU profiles are available after the session completes.
+1. In the **Name** field, enter a name for the pin, such as `slow-requests-trace`. Optionally, in the **Description** field, enter a description of the pin.
+1. From the **Retention period** dropdown menu, select a retention period, such as **30 days**.
+1. Click **Save**.
+
+### View and manage pins
+
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.observability}}**.
+1. In the {{site.observability}} sidebar, click **Debugger**.
+1. Click the **Saved traces & profile** tab.
+1. Select a saved trace or profile to open it. Saved traces open in the trace viewer with any included logs, payload captures, and Datakit captures. Saved profiles open in the **CPU Profiling** view.
+
+From the saved list, use the row actions menu to **Edit** or **Delete** a pin. You can edit a pin's name or description, but you can't add data or change its retention period.
 
 ## Payload capture
 
@@ -199,7 +236,7 @@ By default, {{site.konnect_short_name}} encrypts captured payloads with a defaul
 You can also configure {{site.konnect_short_name}} to use [customer-managed encryption keys (CMEK)](/konnect-platform/cmek/).
 {{site.konnect_short_name}} supports symmetric key encryption and integrates with AWS Key Management Service (KMS).
 
-Debug sessions with payload data are retained for up to 3 days, after which they are purged from {{site.konnect_short_name}}.
+Debug session payload data is retained for up to 3 days, after which it is purged from {{site.konnect_short_name}}. When you include payload captures in a pin, the pinned copy follows the pin's retention period.
 
 ## Data Security with Customer-Managed Encryption Keys (CMEK)
 By default, logs are automatically encrypted using encryption keys that are owned and managed by {{site.konnect_short_name}}. However if you have a specific compliance and regulatory requirements related to the keys that protect your data, you can use the customer-managed encryption keys. This ensures that sensitive data are secured for each organization with their own key and nobody, including {{site.konnect_short_name}}, has access to that data. For more information about how to create and manage CMEK keys, see [Customer-Managed Encryption Keys (CMEK)](/konnect-platform/cmek/).
@@ -210,7 +247,7 @@ To begin using the Debugger, ensure the following requirements are met:
 
 * Your data plane nodes are running {{site.base_gateway}} version 3.9.1 or later.
 * Logs require {{site.base_gateway}} version 3.11.0 or later.
-* You need Debug Session Creator, Control Plane Admin, or Org Admin permissions to create debug sessions.
+* You need [Debug Session Creator](/konnect-platform/teams-and-roles/#control-planes), Control Plane Admin, or Org Admin permissions to create debug sessions or pins.
 * Your {{site.konnect_short_name}} data planes are hosted using self-managed hybrid, Dedicated Cloud Gateways, or serverless gateways. {{site.kic_product_name}} or {{site.event_gateway}} Gateways aren't currently supported.
 * For version 3.9.x only: set the following environment variables in `kong.conf`:
   * `KONG_CLUSTER_RPC=on`
@@ -226,7 +263,7 @@ To begin using the Debugger, ensure the following requirements are met:
 1. Define the sampling criteria.
 1. Click **Start Session**.
 
-Once the session starts, traces will be captured for requests that match the rule. Click a trace to view it in the span viewer.
+Once the session starts, traces will be captured for requests that match the rule. Click a trace to view it in the span viewer. To keep a trace after the session expires, [create a pin](#save-a-trace-or-profile).
 
 {:.success}
 > You can also start a debug session from the overview page of a control plane, Gateway Service, or Route by clicking the **Actions** dropdown menu and clicking **Start Debugging**. Additionally, you can use [KAi](/konnect-platform/kai/) to debug as well. 

@@ -2,7 +2,8 @@
 
 RSpec.describe Jekyll::Drops::KonnectApiRequest do
   let(:site_data) { { 'konnect_api_request' => { 'region' => 'us' } } }
-  let(:site) { instance_double(Jekyll::Site, data: site_data) }
+  let(:site_config) { { 'konnect_domain' => 'konghq.com' } }
+  let(:site) { instance_double(Jekyll::Site, data: site_data, config: site_config) }
 
   before { allow(Jekyll).to receive(:sites).and_return([site]) }
 
@@ -39,6 +40,15 @@ RSpec.describe Jekyll::Drops::KonnectApiRequest do
         expect(drop.snippet_config['url']).to eq('https://eu.api.konghq.com/v2/control-planes')
       end
     end
+
+    context 'when the site configures a Konnect domain' do
+      let(:site_config) { { 'konnect_domain' => 'konghq.tech' } }
+
+      it 'targets that domain' do
+        expect(drop.snippet_config['url']).to eq('https://us.api.konghq.tech/v2/control-planes')
+      end
+    end
+
 
     context 'when the writer also sets headers' do
       let(:yaml) do

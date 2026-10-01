@@ -4,8 +4,11 @@ icon: /_assets/icons/products/ai-gateway.svg
 previous_major_url_segment: v<major>
 
 releases:
-  - release: "2.1"
+  - release: "2.2"
     latest: true
+    version: "2.2.0"
+    name: "v1"
+  - release: "2.1"
     version: "2.1.0"
     name: "v1"
   - release: "2.0"
@@ -14,6 +17,7 @@ releases:
   - release: "1.0"
 
 release_dates:
+  '2.2.0': 2026/09/30
   '2.1.0': 2026/09/22
   '2.0.3': 2026/08/31
   '2.0.2': 2026/08/18

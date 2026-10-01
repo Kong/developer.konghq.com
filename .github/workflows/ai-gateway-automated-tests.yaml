@@ -6,6 +6,12 @@ on:
         description: 'Docker Image for Tests'
         required: true
         default: 'kong/kong-ai-gateway:latest'
+      konnect_domain:
+        description: "Set to konghq.tech to run against .tech"
+        required: false
+      konnect_event_gateway_min_version:
+        description: 'Minimum Konnect Event Gateway version for the get.konghq.com/ai quickstart (e.g. 2.2)'
+        required: false
   schedule:
     - cron: '0 0 * * MON'
 
@@ -25,6 +31,8 @@ env:
 jobs:
   run:
     runs-on: ubuntu-latest
+    env:
+      KONNECT_DOMAIN: ${{ inputs.konnect_domain || 'konghq.com' }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
@@ -40,6 +48,8 @@ jobs:
 
       - name: Run site
         uses: './.github/reusable-steps/run-site'
+        with:
+          konnect-domain: ${{ env.KONNECT_DOMAIN }}
 
       - name: Generate instruction files
         uses: './.github/reusable-steps/generate-instruction-files'
@@ -61,6 +71,12 @@ jobs:
       - name: Pre-pull AI Gateway quickstart dependencies
         run: docker pull ghcr.io/jqlang/jq:latest
 
+      - name: Set Event Gateway min version
+        if: ${{ inputs.konnect_event_gateway_min_version != '' }}
+        env:
+          MIN_VERSION: ${{ inputs.konnect_event_gateway_min_version }}
+        run: echo "KONNECT_EVENT_GATEWAY_MIN_VERSION=$MIN_VERSION" >> $GITHUB_ENV
+
       - name: Run tests
         working-directory: tools/automated-tests
         shell: bash
@@ -70,7 +86,9 @@ jobs:
           MAX_RETRIES: 7
           KONG_IMAGE_TAG: ${{ env.KONG_IMAGE_TAG }}
           KONG_IMAGE_NAME: ${{ env.KONG_IMAGE_NAME }}
-          TESTS_KONNECT_TOKEN: ${{ secrets.KONNECT_TOKEN }}
+          KONNECT_DOMAIN: ${{ env.KONNECT_DOMAIN }}
+          TESTS_KONNECT_TOKEN: ${{ inputs.konnect_domain != '' && secrets.KONNECT_TOKEN_TECH || secrets.KONNECT_TOKEN }}
+          TESTS_KONNECT_SPAT_TOKEN: ${{ inputs.konnect_domain != '' && secrets.KONNECT_TOKEN_TECH || secrets.KONNECT_TOKEN }}
           TESTS_OPENAI_AUTH_HEADER: ${{ secrets.OPENAI_AUTH_HEADER }}
           TESTS_OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           TESTS_CODEX_API_KEY: ${{ secrets.CODEX_API_KEY }}

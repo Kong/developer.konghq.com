@@ -64,7 +64,7 @@ data:
 
 A [target](/ai-gateway/entities/ai-model/#targets) is an entry in the `targets` array on the AI Model entity, not the AI Model Provider. Beyond the common target options (`name`, `provider`, `weight`), a target routing to {{ provider.name }} requires:
 
-* **`upstream_url`**: The URL of your self-hosted vLLM server.
+* **`upstream_url`**: The URL of your self-hosted vLLM server, including the `/v1/chat/completions` path.
 
 ```yaml
 targets:
@@ -72,5 +72,5 @@ targets:
     provider: my-vllm-account
     config:
       type: vllm
-      upstream_url: http://my-vllm-server.internal:8000
+      upstream_url: http://my-vllm-server.internal:8000/v1/chat/completions
 ```

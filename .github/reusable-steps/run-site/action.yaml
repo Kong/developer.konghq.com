@@ -1,5 +1,9 @@
 name: Run site
 description: Build and serve the site
+inputs:
+  konnect-domain:
+    description: "Konnect domain to build the site against. Set to konghq.tech to run against .tech."
+    required: false
 runs:
   using: composite
   steps:
@@ -10,6 +14,7 @@ runs:
         LC_CTYPE: en_US.UTF-8
         LANG: C.UTF-8
         NODE_OPTIONS: "--max_old_space_size=8192"
+        KONNECT_DOMAIN: ${{ inputs.konnect-domain }}
       run: exe/build
 
     - name: Serve site

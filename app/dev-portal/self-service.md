@@ -27,6 +27,8 @@ related_resources:
     url: /dev-portal/auth-strategies/
   - text: "{{site.dev_portal}} Dynamic Client Registration"
     url: /dev-portal/dynamic-client-registration/
+  - text: "{{site.dev_portal}} MCP servers"
+    url: /dev-portal/mcp-servers/
 
 faqs:
   - q: |
@@ -58,6 +60,7 @@ To enable developer self-service, do the following:
 1. Publish an [API to a {{site.dev_portal}}](/catalog/apis/#publish-your-api-to-dev-portal).
 1. Select an authentication strategy when publishing the API to a {{site.dev_portal}}.
 1. For public content with restricted access, use [visibility settings](/dev-portal/pages-and-content/#page-visibility-and-publishing) to show public pages or APIs to anonymous users while restricting actions to logged-in users.
+1. (Optional) Allow developers to connect an AI agent to a [MCP server](/dev-portal/mcp-servers/) generated from your published APIs. This allows agents to browse and, depending on configuration, register applications on behalf of the developer. 
 
 ## User authentication
 

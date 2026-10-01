@@ -41,6 +41,7 @@ Datakit tracing provides debugging detail without exposing sensitive data.
 
 To collect Datakit tracing events, start a {{site.konnect_short_name}} Debugger session with body payload capture enabled.
 If header-only payload capture is enabled, node spans will be recorded but tracing events won't be uploaded.
+You can include Datakit captures when you [pin a trace](/observability/debugger/#pin-traces-and-profiles), but the session must have body payload capture enabled.
 
 ## Datakit node spans
 

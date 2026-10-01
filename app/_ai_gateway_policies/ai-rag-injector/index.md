@@ -66,9 +66,11 @@ faqs:
 
       This means that the hardcoded MemoryDB instance limit has been reached.
       To resolve this, create more MemoryDB instances to handle multiple {{page.name}} policy instances.
-  - q: Does the AI RAG Injector Policy work with GCP Memorystore Redis clusters?
+  - q: Does the AI RAG Injector Policy work with {{site.google_cloud}} Memorystore?
     a: |
-      No. GCP Memorystore Redis clusters do not support the AI RAG Injector Policy. The Redis JSON module required for vector operations is not available in GCP's managed Redis service.
+      It depends on the Memorystore offering. Memorystore for Redis Cluster (version 8.0 or later) and Memorystore for Valkey (version 8.0 or later) include the JSON data type automatically, so they work with the AI RAG Injector Policy.
+
+      Standard (non-cluster) Memorystore for Redis instances, including the Basic tier, are frozen at Redis 7.2 and don't support the JSON module required for vector operations, so they can't be used with this Policy. See [Redis version and module requirements](#vector-databases) for supported versions across all cloud providers.
 ---
 
 ## What is Retrieval Augmented Generation (RAG)?
