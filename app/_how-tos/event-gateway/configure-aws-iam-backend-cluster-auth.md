@@ -82,7 +82,9 @@ flowchart LR
         L["IAM :9098"]
     end
     C -->|anonymous| VC
+<!-- vale off -->
     VC -->|AWS IAM| L
+<!-- vale on -->
 {% endmermaid %}
 
 ## Create an {{site.event_gateway_short}} control plane and data plane
