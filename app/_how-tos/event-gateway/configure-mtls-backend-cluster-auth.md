@@ -46,6 +46,8 @@ related_resources:
     url: /event-gateway/get-started/
   - text: Authenticate connections to Kafka using SASL/PLAIN
     url: /event-gateway/configure-sasl-plain-backend-cluster-auth/
+  - text: Authenticate connections to Kafka using AWS IAM
+    url: /event-gateway/configure-aws-iam-backend-cluster-auth/
 
 min_version:
   event-gateway: '1.1.0'
