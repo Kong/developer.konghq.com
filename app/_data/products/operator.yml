@@ -6,8 +6,8 @@ icon: /_assets/icons/products/operator.svg
 # `latest`, show in the version switcher, or feed `operator_latest`.
 # Bump both values with every rapid release.
 rapid:
-  chart: "1.5.0-rapid.2"
-  app: "2.4.0-rapid.2"
+  chart: "1.5.0-rapid.2.0"
+  app: "2.4.0-rapid.2.0"
 
 releases:
   - release: "2.3"
