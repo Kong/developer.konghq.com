@@ -49,11 +49,13 @@ You need an API spec you want to mock the endpoints of for the Mocking plugin to
 
 ## Mocked responses
 
-The Mocking plugin can mock the following responses: 
+By default, the Mocking plugin selects and returns the minimum HTTP status code defined for the matched operation in your API specification. In older versions of the plugin, this meant only `200`, `201`, and `204` responses could be mocked.
 
-* **`200`**
-* **`201`**
-* **`204`**
+{% new_in 3.1 %} The plugin can mock any HTTP status code defined in your API specification, not just `200`, `201`, and `204`. You can change which status code is returned using the following options:
+
+* [`config.included_status_codes`](/plugins/mocking/reference/#schema--config-included-status-codes): A global list of the only HTTP status codes that the plugin can select and return.
+* [`config.random_status_code`](/plugins/mocking/reference/#schema--config-random-status-code): When enabled, the plugin randomly selects a status code from the responses defined for the matched operation, instead of always returning the minimum status code.
+* The [`X-Kong-Mocking-Status-Code`](#x-kong-mocking-status-code) behavioral header, which lets a client request a specific status code that's defined for the matched operation.
 
 ## Behavioral headers
 
