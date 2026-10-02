@@ -74,6 +74,10 @@ This is different from the cost strategy ([`config.cost_strategy`](/plugins/grap
 
 {% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 redis_group="strategy" %}
 
+## Headers sent to the client
+
+{% include_cached /plugins/graphql-rate-limiting-advanced/headers.md name=page.name %}
+
 ## Introspection endpoint
 
 The [introspection](https://graphql.org/learn/introspection/) endpoint is generated based on the [Gateway Service path](/gateway/entities/service/), so you must define a path in the Gateway Service itself, 
