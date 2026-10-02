@@ -6,8 +6,8 @@ info:
     name: Kong
     url: 'https://cloud.konghq.com'
   description: Konnect Metering & Billing API.
-  x-oas-source: kong/platform-api@2634c9e092678b9a8f4e2da7cbb93c9c6e835c3d
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/2634c9e092678b9a8f4e2da7cbb93c9c6e835c3d'
+  x-oas-source: kong/platform-api@6b4d1b6df972efc2d2a60dcc6ad90c6910921ec5
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6b4d1b6df972efc2d2a60dcc6ad90c6910921ec5'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -4092,7 +4092,58 @@ components:
           example:
             - input_tokens
             - output_tokens
+        plans:
+          description: |-
+            Limit credits to charges from these plans. Entries are alternatives; when
+            features are also specified, both dimensions must match. Omission or an empty
+            list leaves plans unrestricted.
+          type: array
+          items:
+            $ref: '#/components/schemas/BillingCreditGrantPlanFilter'
       additionalProperties: false
+    BillingCreditGrantPlanFilter:
+      description: A plan key and an optional version constraint for matching credit grants.
+      type: object
+      properties:
+        key:
+          description: The plan key in the customer's namespace.
+          type: string
+          example: resource_key
+          maxLength: 64
+          minLength: 1
+          pattern: '^[a-z0-9]+(?:_[a-z0-9]+)*$'
+          title: Resource Key
+        version:
+          description: 'Omission matches all versions, including future versions.'
+          type: object
+          additionalProperties: false
+          properties:
+            eq:
+              description: Match this exact version.
+              type: integer
+              format: int32
+              minimum: 1
+            oeq:
+              description: Match one of these versions.
+              type: array
+              items:
+                type: integer
+                format: int32
+              maxItems: 100
+              minItems: 1
+            gte:
+              description: Match this version and later versions.
+              type: integer
+              format: int32
+              minimum: 1
+            lte:
+              description: Match this version and earlier versions.
+              type: integer
+              format: int32
+              minimum: 1
+      additionalProperties: false
+      required:
+        - key
     BillingCreditTransaction:
       description: |-
         A credit transaction represents a single credit movement on the customer's
@@ -4705,8 +4756,8 @@ components:
       additionalProperties: false
       required:
         - stripe_options
-    BillingEntitlementAccessResult:
-      description: Entitlement access result.
+    BillingEntitlementValueResult:
+      description: Entitlement value result.
       type: object
       properties:
         type:
@@ -4719,7 +4770,7 @@ components:
             - boolean
           readOnly: true
         feature_key:
-          description: The feature key of the entitlement.
+          description: The feature key being evaluated.
           type: string
           example: available_models
           maxLength: 64
@@ -4743,8 +4794,8 @@ components:
           readOnly: true
         value:
           description: |-
-            Only available for metered entitlements. The current balance details of the
-            entitlement. Requires the `value` expand.
+            Only available for metered entitlements. The balance details of the entitlement
+            at the evaluation time. Requires the `value` expand.
           type: object
           example:
             balance: '100'
@@ -4758,7 +4809,9 @@ components:
             balance:
               type: string
               pattern: '^\-?[0-9]+(\.[0-9]+)?$'
-              description: The remaining balance of the entitlement in the current usage period.
+              description: |-
+                The remaining balance of the entitlement in the usage period at the evaluation
+                time.
               readOnly: true
             grant_balances:
               type: object
@@ -4769,17 +4822,21 @@ components:
             overage:
               type: string
               pattern: '^\-?[0-9]+(\.[0-9]+)?$'
-              description: The usage exceeding the available balance in the current usage period.
+              description: |-
+                The usage exceeding the available balance in the usage period at the evaluation
+                time.
               readOnly: true
             total_available_grant_amount:
               type: string
               pattern: '^\-?[0-9]+(\.[0-9]+)?$'
-              description: The total amount granted and currently available to the entitlement.
+              description: |-
+                The total amount granted and available to the entitlement at the evaluation
+                time.
               readOnly: true
             usage:
               type: string
               pattern: '^\-?[0-9]+(\.[0-9]+)?$'
-              description: The usage recorded in the current usage period.
+              description: The usage recorded in the usage period at the evaluation time.
               readOnly: true
           readOnly: true
           required:
@@ -8741,7 +8798,58 @@ components:
           example:
             - input_tokens
             - output_tokens
+        plans:
+          description: |-
+            Limit credits to charges from these plans. Entries are alternatives; when
+            features are also specified, both dimensions must match. Omission or an empty
+            list leaves plans unrestricted.
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateCreditGrantPlanFilter'
       additionalProperties: false
+    CreateCreditGrantPlanFilter:
+      description: A plan key and an optional version constraint for matching credit grants.
+      type: object
+      properties:
+        key:
+          description: The plan key in the customer's namespace.
+          type: string
+          example: resource_key
+          maxLength: 64
+          minLength: 1
+          pattern: '^[a-z0-9]+(?:_[a-z0-9]+)*$'
+          title: Resource Key
+        version:
+          description: 'Omission matches all versions, including future versions.'
+          type: object
+          additionalProperties: false
+          properties:
+            eq:
+              description: Match this exact version.
+              type: integer
+              format: int32
+              minimum: 1
+            oeq:
+              description: Match one of these versions.
+              type: array
+              items:
+                type: integer
+                format: int32
+              maxItems: 100
+              minItems: 1
+            gte:
+              description: Match this version and later versions.
+              type: integer
+              format: int32
+              minimum: 1
+            lte:
+              description: Match this version and earlier versions.
+              type: integer
+              format: int32
+              minimum: 1
+      additionalProperties: false
+      required:
+        - key
     CreateCreditGrantRequest:
       description: CreditGrant create request.
       type: object
@@ -10074,7 +10182,7 @@ components:
           description: The list of entitlement access results.
           type: array
           items:
-            $ref: '#/components/schemas/BillingEntitlementAccessResult'
+            $ref: '#/components/schemas/BillingEntitlementValueResult'
           readOnly: true
       additionalProperties: false
       required:

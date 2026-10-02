@@ -18595,17 +18595,52 @@ components:
                       type: object
                       properties:
                         inline:
-                          description: Data source is inline bytes.
+                          description: 'Inline is the legacy, base64-encoded form of `type: InsecureInline` with `insecureInline.value`, not read by 3.0.'
                           type: string
                           format: byte
                           x-speakeasy-param-computed: false
                         inlineString:
-                          description: Data source is inline string`
+                          description: 'InlineString is the legacy form of `type: InsecureInline` with `insecureInline.value`, not read by 3.0.'
                           type: string
                           x-speakeasy-param-computed: false
+                        insecureInline:
+                          description: 'InsecureInline is the data source value as plain text, used with `type: InsecureInline`.'
+                          type: object
+                          properties:
+                            value:
+                              type: string
+                              x-speakeasy-param-computed: false
+                          required:
+                            - value
+                          x-speakeasy-param-computed: false
                         secret:
-                          description: Data source is a secret with given Secret key.
+                          description: 'Secret is the legacy form of `type: Secret` with `secretRef`, not read by 3.0.'
                           type: string
+                          x-speakeasy-param-computed: false
+                        secretRef:
+                          description: 'SecretRef references a Secret, used with `type: Secret`.'
+                          type: object
+                          properties:
+                            kind:
+                              type: string
+                              enum:
+                                - Secret
+                              x-speakeasy-param-computed: false
+                            name:
+                              type: string
+                              x-speakeasy-param-computed: false
+                          required:
+                            - kind
+                            - name
+                          x-speakeasy-param-computed: false
+                        type:
+                          description: 'Type of the data source, one of `Secret` or `InsecureInline`.'
+                          type: string
+                          enum:
+                            - File
+                            - Secret
+                            - EnvVar
+                            - InsecureInline
                           x-speakeasy-param-computed: false
                       x-speakeasy-param-computed: false
                     clientCert:
@@ -18613,17 +18648,52 @@ components:
                       type: object
                       properties:
                         inline:
-                          description: Data source is inline bytes.
+                          description: 'Inline is the legacy, base64-encoded form of `type: InsecureInline` with `insecureInline.value`, not read by 3.0.'
                           type: string
                           format: byte
                           x-speakeasy-param-computed: false
                         inlineString:
-                          description: Data source is inline string`
+                          description: 'InlineString is the legacy form of `type: InsecureInline` with `insecureInline.value`, not read by 3.0.'
                           type: string
                           x-speakeasy-param-computed: false
+                        insecureInline:
+                          description: 'InsecureInline is the data source value as plain text, used with `type: InsecureInline`.'
+                          type: object
+                          properties:
+                            value:
+                              type: string
+                              x-speakeasy-param-computed: false
+                          required:
+                            - value
+                          x-speakeasy-param-computed: false
                         secret:
-                          description: Data source is a secret with given Secret key.
+                          description: 'Secret is the legacy form of `type: Secret` with `secretRef`, not read by 3.0.'
                           type: string
+                          x-speakeasy-param-computed: false
+                        secretRef:
+                          description: 'SecretRef references a Secret, used with `type: Secret`.'
+                          type: object
+                          properties:
+                            kind:
+                              type: string
+                              enum:
+                                - Secret
+                              x-speakeasy-param-computed: false
+                            name:
+                              type: string
+                              x-speakeasy-param-computed: false
+                          required:
+                            - kind
+                            - name
+                          x-speakeasy-param-computed: false
+                        type:
+                          description: 'Type of the data source, one of `Secret` or `InsecureInline`.'
+                          type: string
+                          enum:
+                            - File
+                            - Secret
+                            - EnvVar
+                            - InsecureInline
                           x-speakeasy-param-computed: false
                       x-speakeasy-param-computed: false
                     clientKey:
@@ -18631,17 +18701,52 @@ components:
                       type: object
                       properties:
                         inline:
-                          description: Data source is inline bytes.
+                          description: 'Inline is the legacy, base64-encoded form of `type: InsecureInline` with `insecureInline.value`, not read by 3.0.'
                           type: string
                           format: byte
                           x-speakeasy-param-computed: false
                         inlineString:
-                          description: Data source is inline string`
+                          description: 'InlineString is the legacy form of `type: InsecureInline` with `insecureInline.value`, not read by 3.0.'
                           type: string
                           x-speakeasy-param-computed: false
+                        insecureInline:
+                          description: 'InsecureInline is the data source value as plain text, used with `type: InsecureInline`.'
+                          type: object
+                          properties:
+                            value:
+                              type: string
+                              x-speakeasy-param-computed: false
+                          required:
+                            - value
+                          x-speakeasy-param-computed: false
                         secret:
-                          description: Data source is a secret with given Secret key.
+                          description: 'Secret is the legacy form of `type: Secret` with `secretRef`, not read by 3.0.'
                           type: string
+                          x-speakeasy-param-computed: false
+                        secretRef:
+                          description: 'SecretRef references a Secret, used with `type: Secret`.'
+                          type: object
+                          properties:
+                            kind:
+                              type: string
+                              enum:
+                                - Secret
+                              x-speakeasy-param-computed: false
+                            name:
+                              type: string
+                              x-speakeasy-param-computed: false
+                          required:
+                            - kind
+                            - name
+                          x-speakeasy-param-computed: false
+                        type:
+                          description: 'Type of the data source, one of `Secret` or `InsecureInline`.'
+                          type: string
+                          enum:
+                            - File
+                            - Secret
+                            - EnvVar
+                            - InsecureInline
                           x-speakeasy-param-computed: false
                       x-speakeasy-param-computed: false
                     mode:
