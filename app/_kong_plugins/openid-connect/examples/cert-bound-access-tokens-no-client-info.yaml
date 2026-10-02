@@ -19,11 +19,17 @@ config:
   - bearer
   proof_of_possession_mtls: strict
   proof_of_possession_auth_methods_validation: true
+  cache_tokens_salt: ${salt-token}
 
 variables:
   issuer:
     value: $ISSUER
     description: The well-known issuer endpoint of your IdP, for example `http://keycloak.test:8080/realms/master`.
+  salt-token:
+    value: $DECK_TOKEN_SALT
+    description: |
+      A random string that decK requires (v1.59 and later) so session credentials aren't regenerated on every sync.
+      For example, generate one with `openssl rand -base64 16`.
 
 tools:
   - deck
