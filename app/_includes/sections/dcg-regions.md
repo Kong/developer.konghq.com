@@ -6,7 +6,7 @@
     * N. Virginia (`us-east-1`)
     * N. California(`us-west-1`)
     * Montreal (`ca-central-1`)
-    * Canada West - Calgary (`ca-west-1`)
+    * Canada West (`ca-west-1`)
 * Europe:
     * Frankfurt (`eu-central-1`)
     * Ireland (`eu-west-1`)
