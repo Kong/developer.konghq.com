@@ -64,7 +64,7 @@ rows:
     az: |
       * `caw1-az1`
       * `caw1-az2`
-      * `caw1-az4`
+      * `caw1-az3`
   - region: "Frankfurt (`eu-central-1`)"
     az: |
       * `euc1-az1`
