@@ -46,6 +46,7 @@ config:
       scopes: null
       empty_scopes: false
       audience: null
+  cache_tokens_salt: ${salt-token}
 
 variables:
   issuer:
@@ -59,6 +60,11 @@ variables:
   client-secret:
     value: $CLIENT_SECRET
     description: The client secret needed to connect to your IdP (in this case, Server A).
+  salt-token:
+    value: $DECK_TOKEN_SALT
+    description: |
+      A random string that decK requires (v1.59 and later) so session credentials aren't regenerated on every sync.
+      For example, generate one with `openssl rand -base64 16`.
 
 tools:
   - deck
