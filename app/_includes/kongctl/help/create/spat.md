@@ -18,6 +18,7 @@ Flags:
                                      - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
                                      - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
       --config-file string           Path to the configuration file to load.
+                                     - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
                                      - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
       --expires-at string            Token expiration timestamp in RFC3339 format, for example 2026-06-24T12:00:00Z or 2026-06-24T12:00:00+02:00. Fractional seconds are accepted. Must be between 1 day and 365 days (12 months) from now.
       --expires-in string            Token lifetime. Use a duration between 1 day and 365 days (12 months). Supported units are ns, us, ms, s, m, h, and d (days). Examples: 24h, 36h, 1d, 30d.
