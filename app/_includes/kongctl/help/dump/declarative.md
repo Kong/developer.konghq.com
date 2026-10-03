@@ -12,6 +12,7 @@ Flags:
                                    - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
                                    - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
       --config-file string         Path to the configuration file to load.
+                                   - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
                                    - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
       --default-namespace string   Default namespace to include in declarative output (_defaults.kongctl.namespace).
       --filter-id string           Filter resources by ID (exact match).
