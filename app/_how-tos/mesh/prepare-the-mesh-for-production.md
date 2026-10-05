@@ -65,6 +65,72 @@ In {{site.mesh_product_name}} 3.0 the control plane setting `defaults.restrictOu
 {:.warning}
 > Setting `defaults.restrictOutbound` to `false` restores the pre-3.0 behavior, where every proxy can reach every destination. Treat that as a step to help onboard workloads, not as the default.
 
+## Discover what each workload calls
+
+The Kong Air call graph is written out in this guide. Your own is not, and a `reachableBackends` list built from an out-of-date architecture diagram is how a workload loses a destination it quietly depended on.
+
+The sidecar resolves DNS through an embedded proxy in `kuma-dp`, and that proxy can log every name a workload looks up along with the answer it returned. Raise the log level for that one component and the sidecar log becomes a record of what the workload tried to reach.
+
+1. Raise the log level for the DNS proxy on the workload you want to profile:
+
+   ```sh
+   kubectl patch deployment passenger-portal -n kong-air-production --type merge -p '
+   spec:
+     template:
+       metadata:
+         annotations:
+           kuma.io/component-log-level: dnsproxy:debug
+   '
+   ```
+
+   The annotation raises one component rather than the whole sidecar, so you get the query log without the rest of `kuma-dp` at debug. It becomes an environment variable on the sidecar container, so it takes effect when the pod is recreated.
+
+1. Wait for the new pods to roll out:
+
+   ```sh
+   kubectl rollout status deployment/passenger-portal -n kong-air-production --timeout=120s
+   ```
+
+1. Let the workload serve its normal traffic. A profiling window has to cover the workload's real behavior, including the destinations it only reaches on a schedule or during a failure path.
+
+1. Read back the distinct names the workload resolved successfully:
+
+   ```sh
+   kubectl logs -n kong-air-production deploy/passenger-portal -c kuma-sidecar \
+     | grep '"rcode": "noerror"' | grep -o '"name": "[^"]*"' | cut -d'"' -f4 | sort -u
+   ```
+
+   Expected output:
+
+   ```text
+   check-in-api.kong-air-production.svc.cluster.local.
+   flight-control.kong-air-production.svc.cluster.local.
+   ```
+   {:.no-copy-code}
+
+   That is the candidate list. Each full log line carries `name`, `type`, `rcode`, `source`, `answers`, and `duration`, so dropping the filter shows what each lookup resolved to.
+
+1. Turn the log level back off once you have the list. Debug logging on a busy workload is expensive, and the query log is a profiling tool rather than something to leave running:
+
+   ```sh
+   kubectl patch deployment passenger-portal -n kong-air-production --type json \
+     -p '[{"op": "remove", "path": "/spec/template/metadata/annotations/kuma.io~1component-log-level"}]'
+   ```
+
+{:.warning}
+> Filter on `"rcode": "noerror"`. Kubernetes resolves names with `ndots:5`, so a single lookup for `check-in-api.kong-air-production.svc.cluster.local` first tries that name with each search domain appended and logs several `nxdomain` lines before the one that resolves. Reading the log unfiltered makes one destination look like four.
+
+A resolved name is evidence that the workload tried to reach something, not proof of a connection, and the log has two blind spots worth knowing before you treat its output as a finished list. It records no port, so you still have to decide whether a ref needs one. It also records nothing for a workload that connects to a literal IP address, because that path makes no DNS query at all. Treat the list as the starting point and confirm it with the reachability checks in [Confirm the declaration reached the control plane](#confirm-the-declaration-reached-the-control-plane).
+
+{:.info}
+> The `source` field reports whether the proxy answered from its own DNS map or forwarded the query to the cluster resolver, which is not the same as whether the destination is in the mesh. On Kubernetes, a `MeshService` is addressed through the Kubernetes `Service` ClusterIP, so the proxy's map is typically empty and every lookup reads `source: upstream`. Do not read `upstream` as "outside the mesh".
+
+### Watch for destinations you missed
+
+The same DNS proxy exports metrics, which is the ongoing signal once the profiling window is over. `kuma_dp_dns_queries_total` counts queries by type and source, `kuma_dp_dns_response_codes_total` counts responses by code, and `kuma_dp_dns_entries_total` reports the size of the proxy's map. Each carries `mesh`, `kuma_io_zone`, `kuma_workload`, and `k8s_kuma_io_namespace` labels, so you can see which workload the queries came from.
+
+The metrics are not labeled by hostname, deliberately, since that would make their cardinality grow with every name a workload resolves. They tell you that a workload is resolving more than you expected, and the query log tells you which name. Scrape them through [MeshMetric](/mesh/policies/meshmetric/), as set up in [Deploy an OpenTelemetry collector](/mesh/deploy-an-opentelemetry-collector/).
+
 ## Declare reachable backends for Kong Air
 
 The Kong Air call graph is small enough to write out in full. `passenger-portal` calls `check-in-api`, `check-in-api` calls `flight-control`, and `flight-control` calls nothing. Three declarations cover the whole mesh.
