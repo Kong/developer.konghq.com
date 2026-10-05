@@ -1213,6 +1213,7 @@ releases:
   - release: "3.12"
     ee-version: "3.12.0.12"
     eol: 2026-10-01
+    sunset: true
     distributions:
       - amazonlinux2:
           package: true
