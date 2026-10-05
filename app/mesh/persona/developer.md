@@ -122,7 +122,7 @@ The developer needs to see what is happening inside the code. The developer uses
 Finally, booking-gateway ({{site.base_gateway}}, owned by the operator) is the entry point into the developer's services. The developer doesn't operate the gateway itself, but just makes sure these services play well with it:
 
 *   Ingress: {{site.base_gateway}} terminates external HTTPS and forwards into the mesh. Passengers hit the gateway; the gateway routes to `passenger-portal`.
-*   Bridge: It translates external JWT authentication into the mesh identity, so the developer's services see which passenger is making the request.
+*   Claims: It validates the passenger's JWT and passes the resulting claims on as request headers, so the developer's services can tell which passenger is calling. The mesh identity on that connection stays the gateway's, so the developer's services authorize the gateway with `MeshTrafficPermission` and read the passenger from the headers. See [Security architect](/mesh/persona/security/) for what makes those headers trustworthy.
 
 The gateway itself is the operator's responsibility, see the [Operator](/mesh/persona/operator/) for how the gateway is wired into the mesh.
 

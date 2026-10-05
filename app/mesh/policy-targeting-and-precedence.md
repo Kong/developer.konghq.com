@@ -108,13 +108,6 @@ rows:
 
 Labels do not affect the sort. A `Dataplane` target with `labels` and one without carry the same priority, and the tie is broken by origin, role, and display name.
 
-The control plane computes `kuma.io/policy-role` from where the policy lives and whether it has `to` entries:
-
-* `system`: a policy on the global control plane or in the zone's system namespace.
-* `producer`: a policy in the same namespace as the service named by its `to[].targetRef`.
-* `consumer`: a policy in another namespace that has `to[]` entries.
-* `workload-owner`: a policy in a non-system namespace with no `to[]` entries.
-
 For policies that use `to`, the concatenated `to[]` entries of all matching policies are sorted again by destination kind, from `Mesh` through `MeshService`, `MeshService` with `sectionName`, `MeshExternalService`, `MeshMultiZoneService`, and `MeshHTTPRoute`, before the same merge runs.
 
 ## MeshTrafficPermission precedence caveat

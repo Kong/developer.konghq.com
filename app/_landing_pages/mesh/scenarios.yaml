@@ -192,6 +192,22 @@ rows:
 
   - header:
       type: h2
+      text: "Phase 5: Production readiness"
+      sub_text: Harden the mesh and bound the configuration each proxy receives before it carries real traffic.
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Prepare the mesh for production
+              description: |
+                Bound outbound config with `reachableBackends`, and the 3.0 defaults to set deliberately.
+              cta:
+                text: Read
+                url: /mesh/prepare-the-mesh-for-production/
+
+  - header:
+      type: h2
       text: Explore by role
       sub_text: Each persona guide maps the scenarios to what that team owns.
     column_count: 3

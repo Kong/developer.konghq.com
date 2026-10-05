@@ -35,10 +35,12 @@ next_steps:
 related_resources:
   - text: Deploy an OpenTelemetry collector
     url: /mesh/deploy-an-opentelemetry-collector/
-  - text: MeshOpenTelemetryBackend
-    url: /mesh/meshopentelemetrybackend/
-  - text: Mesh observability
-    url: /mesh/observability/
+  - text: MeshMetric policy
+    url: /mesh/policies/meshmetric/
+  - text: MeshTrace policy
+    url: /mesh/policies/meshtrace/
+  - text: MeshAccessLog policy
+    url: /mesh/policies/meshaccesslog/
 ---
 ## The observability gap
 
@@ -77,7 +79,7 @@ rows:
 
 ## Install the observability stack
 
-Install and wire up the Prometheus, Grafana, and tracing backends by following the canonical [mesh observability](/mesh/observability/) reference. To collect traces and OTel-based logs, deploy a collector as described in [Deploy an OpenTelemetry collector](/mesh/deploy-an-opentelemetry-collector/). Once the stack is running, wire {{site.mesh_product_name}} into it with the following `MeshMetric`, `MeshTrace`, and `MeshAccessLog` policies.
+Follow [Deploy an OpenTelemetry collector](/mesh/deploy-an-opentelemetry-collector/) to install Tempo, Loki, and Prometheus, run a collector in front of them, and create the `MeshOpenTelemetryBackend` that names it. Once the stack is running, wire {{site.mesh_product_name}} into it with the following `MeshMetric`, `MeshTrace`, and `MeshAccessLog` policies.
 
 ## Metrics with `MeshMetric`
 
@@ -158,8 +160,6 @@ spec:
             mode: Disabled
 ```
 
-This is the cleanest way to get telemetry on the cross-zone and external-service hop itself, not just on the calling and receiving sidecars.
-
 ## Tracing with `MeshTrace`
 
 Configure distributed tracing to an OTLP receiver.
@@ -217,35 +217,12 @@ A `MeshTrace` OpenTelemetry backend references a `MeshOpenTelemetryBackend` reso
              default: "SFO"' | kubectl apply -f -
    ```
 
-1. Confirm the policy resolved its `backendRef`. A `backendRef` that matches no `MeshOpenTelemetryBackend` still leaves the policy accepted, and it exports nothing without reporting an error, so check the status condition:
-
-   ```sh
-   kubectl get meshtrace flight-tracking -n {{site.mesh_namespace}} -o jsonpath='{.status.conditions}'
-   ```
-
-   Expected output:
-
-   ```json
-   [{"message":"All MeshOpenTelemetryBackend references are resolved","reason":"AllBackendRefsResolved","status":"True","type":"BackendRefsResolved"}]
-   ```
-   {:.no-copy-code}
-
 1. Verify traces appear in your backend (Tempo, Jaeger, or another OTLP-capable collector you installed):
 
    ```bash
    kubectl port-forward -n mesh-observability svc/tempo-query-frontend 3200:3200
    # Or for Jaeger: kubectl port-forward -n mesh-observability svc/jaeger-query 16686:80
    ```
-
-{:.info}
-> End-to-end trace export still depends on having a working collector in-cluster, so treat that part of the scenario as an integration check.
-
-{:.warning}
-> A `MeshTrace` OpenTelemetry backend takes a `backendRef` only. There is no inline `endpoint` field, so the collector address always comes from a `MeshOpenTelemetryBackend`. That resource's `protocol` accepts `grpc` or `http`; `grpc` on port 4317 is the usual choice for a tracing receiver.
-
-### Sharing one OTel backend across policies (`MeshOpenTelemetryBackend`)
-
-`MeshOpenTelemetryBackend` holds the collector address, port, and protocol in one place, and `MeshMetric`, `MeshTrace`, and `MeshAccessLog` all reach it through a `backendRef`. Define it once and every OTel-bound policy points at the same resource, so moving the collector is a one-resource change. See [MeshOpenTelemetryBackend](/mesh/meshopentelemetrybackend/) for the resource fields and configuration examples.
 
 ## Logging with `MeshAccessLog`
 
@@ -406,8 +383,6 @@ Add the proxy job under `prometheus.prometheusSpec.additionalScrapeConfigs`:
 ```
 
 Only the Control Plane dashboard filters on the `job` label, because `kuma-cp` metrics carry no proxy labels. Every sample a proxy emits already carries `mesh`, `zone`, `kuma_workload`, and `kuma_proxy_role` (`sidecar`, `gateway`, `zone-ingress`, or `zone-egress`), so the other five dashboards select proxies by those labels and need no relabeling beyond `pod` and `namespace`.
-
-For the rest of the stack configuration, see the canonical [mesh observability](/mesh/observability/) reference.
 
 ## Validate
 

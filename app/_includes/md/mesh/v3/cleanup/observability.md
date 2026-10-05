@@ -15,4 +15,4 @@
    kubectl delete configmap -n mesh-observability -l grafana_dashboard=1
    ```
 
-1. To remove the observability stack itself, follow the teardown steps in [mesh observability](/mesh/observability/) and [Deploy an OpenTelemetry collector](/mesh/deploy-an-opentelemetry-collector/). Both were installed outside this guide, and other workloads may be reporting into them.
+1. To remove the observability stack itself, follow the teardown steps in [Deploy an OpenTelemetry collector](/mesh/deploy-an-opentelemetry-collector/). It was installed outside this guide, and other workloads may be reporting into it.

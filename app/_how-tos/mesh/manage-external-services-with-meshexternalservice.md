@@ -68,10 +68,6 @@ If Kong Air wants a custom naming scheme, that is an operator-level customizatio
 
 When workloads have an identity from `MeshIdentity`, a sidecar does not dial an external endpoint itself. It routes `MeshExternalService` traffic to the mesh-scoped zone egress that belongs to the same mesh, and the egress makes the outbound call. That extra hop is what gives the mesh one enforcement point for every external dependency.
 
-The route is built from topology, not from a `Mesh` setting. Earlier versions gated this on `routing.zoneEgress` and `routing.defaultForbidMeshExternalServiceAccess`; both fields were removed from the `Mesh` schema in 3.0. What decides the path now is whether a mesh-scoped zone egress exists for the mesh, and what decides access is `MeshTrafficPermission`.
-
-{:.warning}
-> Without one, a `MeshExternalService` still gets its generated hostname and virtual IP, and the sidecar still gets a cluster for it, but that cluster has no endpoints. Every call fails with `503 Service Unavailable` even though DNS resolves. See [Configure mesh-scoped zone proxies](/mesh/configure-mesh-scoped-zone-proxies/).
 
 ## Define the RDS database
 
@@ -230,93 +226,6 @@ spec:
       mode: Secured
       serverName: api.aeropay.com
 ```
-
-### Troubleshooting: external calls fail
-
-The generated hostname resolves long before the path behind it works, so DNS succeeding tells you nothing. Start from the status code the caller receives:
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Symptom
-    key: symptom
-  - title: Cause
-    key: cause
-  - title: Fix
-    key: fix
-rows:
-  - symptom: "`403 Forbidden`"
-    cause: "The zone egress denied the connection. No `MeshTrafficPermission` rule matches this caller's SPIFFE ID and this destination's SNI together."
-    fix: "Add or correct the `allow` entry. A typo in either value fails the same way as no policy at all."
-  - symptom: "`503 Service Unavailable`, DNS resolves"
-    cause: "The mesh has no mesh-scoped zone egress, so the external service cluster has no endpoints."
-    fix: "Deploy a zone egress for the mesh, including its `Service`."
-  - symptom: "`503 Service Unavailable` with `Secret is not supplied by SDS`"
-    cause: "The zone egress has no workload identity certificate."
-    fix: "Broaden the `MeshIdentity` selector to cover the zone proxies."
-{% endtable %}
-<!-- vale on -->
-
-To tell the last two apart, check whether the external service cluster has an endpoint. An empty result means no zone egress is carrying this mesh:
-
-```bash
-kubectl get dataplanes.kuma.io -n {{site.mesh_namespace}} \
-  -l kuma.io/listener-zoneegress=enabled,kuma.io/mesh=kong-air-mesh
-```
-
-{:.warning}
-> If a request through a mesh-scoped zone egress fails with the following, the zone egress proxy has no workload identity certificate:
-
-```
-503 Service Unavailable
-TLS error: Secret is not supplied by SDS
-```
-{:.no-copy-code}
-
-Why it happens. The zone egress proxies run in `{{site.mesh_namespace}}`. If your `MeshIdentity` selector matches only an application namespace (for example `kong-air-production`), nothing selects the zone proxies, so the control plane issues them no certificate. The SDS secret backing the egress's mTLS leg is never delivered, and the connection fails on the in-mesh mTLS hop before it ever reaches the external endpoint. (This is why even a plain-HTTP `MeshExternalService` reproduces it: the failing leg is the hop to the egress, not the external TLS origination.)
-
-The fix: make sure a `MeshIdentity` selects the zone proxies. A `MeshIdentity` only covers the dataplanes its selector matches (an absent selector matches nothing). The cleanest fix is a single mesh-wide identity that covers both your apps and the zone proxies with one CA, selecting on the mesh label rather than an app namespace:
-
-```yaml
-apiVersion: kuma.io/v1alpha1
-kind: MeshIdentity
-metadata:
-  name: kong-air-identity
-  namespace: {{site.mesh_namespace}}
-  labels:
-    kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: zone
-spec:
-  selector:
-    dataplane:
-      matchLabels:
-        kuma.io/mesh: kong-air-mesh   # every dataplane in the mesh, incl. zone proxies
-  provider:
-    type: Bundled
-    bundled:
-      insecureAllowSelfSigned: true
-      autogenerate: { enabled: true }
-      meshTrustCreation: Enabled
-  spiffeID:
-    path: /ns/{% raw %}{{ .Namespace }}{% endraw %}/sa/{% raw %}{{ .ServiceAccount }}{% endraw %}
-```
-
-The zone-origin `MeshIdentity` from [Get started with your first policy](/mesh/get-started-with-your-first-policy/) already covers the zone proxies. If yours is instead scoped to a single app namespace, broaden its selector to the mesh label rather than adding a second identity. Apply the update in the Kubernetes zone, then restart the zone proxies so they pick up a certificate:
-
-```bash
-# The mesh-scoped zone-proxy deployments carry the kuma.io/mesh label.
-kubectl rollout restart deployment -n {{site.mesh_namespace}} -l kuma.io/mesh=kong-air-mesh
-
-# Verify the egress now has an issued identity (its DataplaneInsight is named after the pod):
-ZE=$(kubectl get pods -n {{site.mesh_namespace}} \
-  -l k8s.kuma.io/zone-proxy-type=egress -o jsonpath='{.items[0].metadata.name}')
-kubectl get dataplaneinsight -n {{site.mesh_namespace}} "$ZE" \
-  -o jsonpath='{.status.mTLS.issuedBackend}'
-# → a non-empty kri_mid_... backend (empty means no MeshIdentity selects the zone proxies)
-```
-
-{:.info}
-> Multi-zone: prefer a shared external CA (Vault, cert-manager, or ACM, see [Integrate an external CA](/mesh/integrate-an-external-ca/)) over `autogenerate`. With `autogenerate`, every `MeshIdentity` mints its own per-zone CA, and each one then needs the same cross-zone `MeshTrust` distribution described in [Workload Identity](/mesh/manage-workload-identity-and-mtls/#extend-autogenerated-identity-across-zones). A shared root means apps and zone proxies in every zone chain to one CA, so this just works. Avoid adding a separate per-namespace `autogenerate` identity for the zone proxies in multi-zone, it multiplies the CAs you have to distribute.
 
 ## Add resiliency with MeshRetry
 
