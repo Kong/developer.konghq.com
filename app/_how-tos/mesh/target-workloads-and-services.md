@@ -74,10 +74,6 @@ spec:
           requestTimeout: 15s' | kubectl apply -f -
 ```
 
-{:.warning}
-> A zone-wide policy has to live in the system namespace (`{{site.mesh_namespace}}`). The control plane computes `kuma.io/policy-role` from where a policy lives and what it targets. This policy in an application namespace computes to `consumer`, which selects only proxies in that same namespace, so the `kuma.io/zone: zone1` selector would never reach past it. In `{{site.mesh_namespace}}` it computes to `system`, which carries no namespace restriction. See [Policy targeting and precedence](/mesh/policy-targeting-and-precedence/).
-
-A zone control plane connected to a global control plane requires every resource created in the system namespace to carry `kuma.io/origin: zone`, and rejects it otherwise. In an application namespace the control plane computes the label for you. See [Resource scoping](/mesh/resource-scoping/).
 
 ## Explicit MeshService: the standard
 

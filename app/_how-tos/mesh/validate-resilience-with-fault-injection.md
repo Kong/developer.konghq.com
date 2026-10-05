@@ -107,7 +107,7 @@ spec:
 EOF
 ```
 
-To fault only a specific caller, swap the `Prefix` matcher for an `Exact` match against that caller's SPIFFE ID, for example `spiffe://kong-air-mesh.zone1.mesh.local/ns/kong-air-production/sa/flight-control`. This ties chaos targeting to authenticated identity rather than topology.
+To fault only a specific caller, swap the `Prefix` matcher for an `Exact` match against that caller's SPIFFE ID, for example `spiffe://kong-air-mesh.zone1.mesh.local/ns/kong-air-production/sa/flight-control`.
 
 {:.info}
 > The same rules model can fault a single external destination flowing through mesh-scoped zone egress by matching on SNI:

@@ -34,10 +34,6 @@ prereqs:
       include_content: md/mesh/v3/prereqs/konnect-zone
     - title: Deploy Kong Air
       include_content: md/mesh/v3/prereqs/kong-air-quickstart
-cleanup:
-  inline:
-    - title: Remove the Kong Air foundation
-      include_content: md/mesh/v3/cleanup/kong-air-foundation
 related_resources:
   - text: Issue identity with MeshIdentity
     url: /mesh/issue-identity-with-meshidentity/
@@ -123,9 +119,7 @@ spiffe://kong-air-mesh.zone1.mesh.local/ns/kong-air-production/sa/passenger-port
 {:.info}
 > `MeshIdentity` is an issuer, not an identity. It sets the CA/provider, the SPIFFE ID path template, and the trust domain. The actual SPIFFE ID is rendered per workload from that template. Every workload still gets a unique identity, and `MeshTrafficPermission` keeps full per-workload granularity even with one mesh-wide identity.
 >
-> Because this example omits `spiffeID.trustDomain`, the zone-aware default is `{% raw %}{{ .Mesh }}.{{ .Zone }}.mesh.local{% endraw %}`. For `kong-air-mesh` in `zone1`, that becomes `kong-air-mesh.zone1.mesh.local`. `.Zone` is the zone name you set in `kuma.controlPlane.zone` when you connected the zone, so these identities change if you used a different one.
->
-> Add more `MeshIdentity` resources only when a group of workloads needs different issuance (a different CA/provider, path scheme, or rotation policy), not to authorize app-to-app traffic.
+> Because this example omits `spiffeID.trustDomain`, the zone-aware default is `{% raw %}{{ .Mesh }}.{{ .Zone }}.mesh.local{% endraw %}`. For `kong-air-mesh` in `zone1`, that becomes `kong-air-mesh.zone1.mesh.local`. `.Zone` is the zone name you set when creating the zone, so these identities change if you used a different one.
 
 ## Enforce strict mTLS with `MeshTLS`
 

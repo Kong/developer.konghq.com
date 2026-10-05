@@ -41,10 +41,6 @@ related_resources:
   - text: Manage secrets
     url: /mesh/manage-secrets/
 ---
-Using an external CA ensures that Kong Air's service identities are governed by the same corporate PKI standards as their physical servers and employee devices.
-
-{:.info}
-> On Kubernetes, the `MeshIdentity` and `MeshTrust` resources in this guide can only be created in the system namespace (`{{site.mesh_namespace}}`). A zone control plane connected to a global control plane requires every resource created in that namespace to carry `kuma.io/origin: zone`, and rejects it otherwise, which is why every example in this guide sets the label. In an application namespace the control plane computes the label for you. See [Resource scoping](/mesh/resource-scoping/) for which control plane to target.
 
 ## Why use an external CA?
 
@@ -75,7 +71,7 @@ rows:
     how_it_works: |
       The control plane delegates signing to an external system (cert-manager, HashiCorp Vault, AWS Private CA) on each rotation. The CA private key never leaves that system.
     when_to_use: |
-      Enterprise PKI, where the CA key must stay in your existing system. Requires {{site.mesh_product_name}} enterprise.
+      Enterprise PKI, where the CA key must stay in your existing system.
 {% endtable %}
 <!-- vale on -->
 
@@ -388,10 +384,6 @@ Prerequisites: cert-manager installed with a `ClusterIssuer` or `Issuer` for the
 
    How it works: {{site.mesh_product_name}} creates a `CertificateRequest` in `{{site.mesh_namespace}}` for each sidecar that needs a new identity cert. cert-manager approves and signs it using the configured `Issuer`, and the signed cert is delivered to the sidecar via xDS. CertificateRequests are cleaned up after use.
 
-   {:.warning}
-   > `caCert` is optional in the schema but required in practice. cert-manager returns only the signed leaf certificate, so unlike the Vault and ACM providers, {{site.mesh_product_name}} has no way to discover the issuing CA on its own. Without `caCert` the `MeshIdentity` still reports `Ready` and workloads still get certificates, but no `MeshTrust` is created, no peer trusts the new certificates, and mTLS fails with no obvious error. If you leave `caCert` out, you must create the `MeshTrust` yourself.
-   >
-   > Keep `caCert` in sync with the issuer. If the CA is rotated and this Secret is not updated, {{site.mesh_product_name}} advertises a stale trust anchor while signing with the new CA, which breaks mTLS the same way.
 
 1. Verify:
 
@@ -489,95 +481,6 @@ The AWS region is parsed from the ARN, so there is no separate `region` field. C
 
 {:.info}
 > Every extension provider honors the same `spiffeID.path` and `trustDomain` fields. Only `extension.name` and the provider-specific `extension.config` keys change, so Kong Air can switch from cert-manager to Vault by editing two fields, without touching any application or policy config.
-
-## How issuance works
-
-Each CA model integrates with the control plane differently. Knowing the flow helps you choose a provider and reason about where the CA private key lives.
-
-In every model the control plane is the client that requests certificates from the CA, never the individual proxies. Workloads in private zones therefore need no direct network access to the CA, and no CA credentials are distributed to the data plane.
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Feature
-    key: feature
-  - title: cert-manager
-    key: cert_manager
-  - title: HashiCorp Vault
-    key: hashicorp_vault
-rows:
-  - feature: |
-      Platform
-    cert_manager: |
-      Kubernetes-native
-    hashicorp_vault: |
-      External API
-  - feature: |
-      Authentication
-    cert_manager: |
-      Kubernetes RBAC
-    hashicorp_vault: |
-      Vault token, TLS client cert, or AWS IAM
-  - feature: |
-      Client
-    cert_manager: |
-      Control Plane (via K8s API)
-    hashicorp_vault: |
-      Control Plane (via REST API)
-{% endtable %}
-<!-- vale on -->
-
-### Built-in CA (for contrast)
-
-The control plane acts as the Certificate Authority. No external dependencies.
-
-{% mermaid %}
-sequenceDiagram
-    participant DP as Data Plane (Proxy)
-    participant CP as Control Plane (Manager)
-    
-    Note over DP, CP: In-mesh CA
-    DP->>CP: 1. Request Identity
-    CP->>CP: 2. CP acts as CA (Self-Signs)
-    CP->>DP: 3. Push Identity via xDS
-{% endmermaid %}
-
-### cert-manager (platform-native)
-
-The control plane uses Kubernetes-native cert-manager APIs.
-
-{% mermaid %}
-sequenceDiagram
-    participant DP as Data Plane (Proxy)
-    participant CP as Control Plane (Manager)
-    participant CM as cert-manager (K8s API)
-    
-    Note over DP, CM: Platform Native Flow
-    DP->>CP: 1. Start & Discover
-    CP->>CM: 2. Create CertificateRequest
-    CM->>CM: 3. Sign using ClusterIssuer
-    CM-->>CP: 4. Return Signed Cert
-    CP->>DP: 5. Push Identity via xDS
-{% endmermaid %}
-
-### HashiCorp Vault (external API)
-
-The control plane authenticates to an external Vault API to request certificates.
-
-{% mermaid %}
-sequenceDiagram
-    participant DP as Data Plane (Proxy)
-    participant CP as Control Plane (Manager)
-    participant V as HashiCorp Vault API
-    
-    Note over DP, V: Centralized Request flow
-    DP->>CP: 1. Start & Discover
-    CP->>CP: 2. Generate Private Key & CSR
-    CP->>V: 3. Authenticate (Token/TLS/AWS)
-    CP->>V: 4. Request Certificate (CSR + TTL)
-    V-->>CP: 5. Return Signed Certificate
-    CP->>DP: 6. Push Identity via xDS
-{% endmermaid %}
 
 ## Validate
 

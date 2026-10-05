@@ -37,7 +37,7 @@ For how these components behave once a second zone joins, see [Multi-zone archit
 {:.info}
 > A Kubernetes `Service` produces a `MeshService`, `MeshMultiZoneService` groups services across zones, and `MeshExternalService` represents a destination outside the mesh.
 
-## Day-2 operations: differences from Istio-style meshes
+## Day-2 operations: differences from other meshes
 
 Teams evaluating {{site.mesh_product_name}} are often already running an Istio-style mesh, a model built around multiple traffic-management CRDs (`VirtualService`, `DestinationRule`, `ServiceEntry`) on a Kubernetes-first control plane. Both models support mTLS, traffic routing, and observability, and initial setup is comparable in either. The differences appear in day-2 operations, running the mesh in production, across regions, and through upgrades, which is what the following comparison covers.
 
@@ -62,8 +62,6 @@ rows:
     mesh: "Kubernetes and Universal (VMs, bare metal) use the same resource model, so one team operates one mesh across both."
 {% endtable %}
 <!-- vale on -->
-
-In summary, {{site.mesh_product_name}} uses fewer resource types per policy, treats multi-region as a deployment mode rather than a topology you build and maintain, and applies the same resource model to both Kubernetes and Universal workloads.
 
 ## {{site.mesh_product_name}} architecture
 

@@ -84,7 +84,7 @@ flowchart LR
 
 KDS and xDS are control-plane channels. The solid path is the application request; it does not pass through the global or zone control planes.
 
-This is the default path. The calling sidecar connects straight to the remote zone's ingress, so only one zone proxy sits in the request path. Deploying a mesh-scoped zone egress inserts it as an extra hop before the remote ingress. Topology decides this in 3.0: the `routing.zoneEgress` toggle was removed from the `Mesh` schema, so whether a zone egress exists for the mesh is what determines the path.
+This is the default path. The calling sidecar connects straight to the remote zone's ingress, so only one zone proxy sits in the request path. Deploying a mesh-scoped zone egress inserts it as an extra hop before the remote ingress. 
 
 ## Mesh-scoped zone proxies
 
@@ -112,8 +112,6 @@ metadata:
     kuma.io/zone: zone1
 ```
 {:.no-copy-code}
-
-`MeshZoneAddress` takes priority over the older deployment-wide `ZoneIngress` resource for any zone that publishes one, which is what makes the ingress path per-mesh rather than shared. Scaling a zone ingress to zero withdraws its `MeshZoneAddress`, so other zones stop routing to it.
 
 ## Identity and authorization across zones
 

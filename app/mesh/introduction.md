@@ -22,7 +22,7 @@ related_resources:
   - text: Resource scoping
     url: /mesh/resource-scoping/
 ---
-{{site.mesh_product_name}} is an enterprise-grade service mesh that provides a unified control plane to manage services across Kubernetes, VMs, and bare metal. Its policy-driven model works the same regardless of the underlying infrastructure, and focuses on day-2 operations: running, upgrading, and troubleshooting the mesh in production, across regions and mixed infrastructure. 
+{{site.mesh_product_name}} is an enterprise-grade service mesh that provides a unified control plane to manage services across Kubernetes, VMs, and bare metal. Its policy-driven model works the same regardless of the underlying infrastructure, and focuses on day-2 operations: running, upgrading, and managing the mesh in production, across regions and mixed infrastructure. 
 
 For more details, see the [Architecture overview](/mesh/architecture-overview/).
 

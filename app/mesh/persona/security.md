@@ -18,7 +18,7 @@ The security architect is the Lead Security Architect at Kong Air. In the airlin
 
 ## Workload identity and strict mTLS
 
-The security architect's foundation is `MeshIdentity`, which issues a unique SPIFFE identity to every workload in the mesh, replacing older IP- and tag-based trust models. Every downstream control (mTLS, traffic permission, audit) hangs off that identity. On top of it the security architect enforces `MeshTLS` in `mode: Strict` across the entire airline mesh, so every service must present a valid SPIFFE certificate issued by `MeshIdentity` and plaintext is refused, with negotiation constrained to TLS 1.2 / 1.3 for aviation compliance audits.
+The security architect's foundation is `MeshIdentity`, which issues a unique SPIFFE identity to every workload in the mesh. Every downstream control (mTLS, traffic permission, audit) hangs off that identity. On top of it the security architect enforces `MeshTLS` in `mode: Strict` across the entire airline mesh, so every service must present a valid SPIFFE certificate issued by `MeshIdentity` and plaintext is refused, with negotiation constrained to TLS 1.2 / 1.3 for aviation compliance audits.
 
 See [Manage workload identity and mTLS](/mesh/manage-workload-identity-and-mtls/) for the `MeshIdentity` and `MeshTLS` configuration, and [Integrate an external CA](/mesh/integrate-an-external-ca/) for the HashiCorp Vault wiring behind the security architect's `Bundled` provider.
 
@@ -64,8 +64,91 @@ Replace `<flight-control-spiffe-id>` with the actual SPIFFE ID emitted by your `
 
 The security architect's security posture extends beyond the mesh boundaries.
 
-### Gateway authentication (JWT)
-External requests from passengers enter through `booking-gateway` ({{site.base_gateway}}, operated by the operator). The security architect configures the gateway to validate passenger JWTs (OpenID Connect) before translating that identity into the mesh.
+### Gateway authentication and end-user identity
+External passenger requests enter through `booking-gateway` ({{site.base_gateway}}, operated by the operator), which validates passenger JWTs against Kong Air's OpenID Connect provider. That check establishes which passenger is calling. It does not change which workload the mesh sees calling.
+
+Kong Air runs two identity planes, and the security architect has to reason about both:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Identity
+    key: identity
+  - title: What it identifies
+    key: subject
+  - title: How it travels
+    key: travels
+  - title: What enforces it
+    key: enforces
+rows:
+  - identity: "Workload identity"
+    subject: "The calling service, for the lifetime of its pod."
+    travels: "The SPIFFE ID in the X.509 certificate presented on the mTLS connection."
+    enforces: "`MeshTLS` and `MeshTrafficPermission`."
+  - identity: "End-user identity"
+    subject: "One passenger, for one request."
+    travels: "Request headers the gateway sets after it validates the token."
+    enforces: "The gateway, and `MeshOPA` at the receiving sidecar."
+{% endtable %}
+<!-- vale on -->
+
+`MeshIdentity` issues certificates to workloads, attested from the pod and its ServiceAccount, so a SPIFFE ID cannot vary per request. `MeshTrafficPermission` matches on `spiffeID` and `sni`, and on nothing else. Once a request crosses into the mesh, every passenger is the same caller: `booking-gateway`. The passenger identity continues as application-layer data, and the mesh does not convert it into a mesh identity.
+
+#### Make the propagated claim trustworthy
+
+A header is worth only as much as the guarantee that nothing else could have set it. Two controls supply that guarantee together:
+
+1. The gateway strips any client-supplied copy of the trusted headers on ingress, so a passenger cannot assert their own consumer ID.
+1. A `MeshTrafficPermission` on `passenger-portal` allows only the gateway's SPIFFE ID, so no other workload in the mesh can connect directly and inject a forged header.
+
+#### Enforce the claim in the sidecar with MeshOPA
+
+For a service handling passenger PII, the security architect can stop relying on the application to honor the claim and move the decision into the proxy. `MeshOPA` runs Envoy external authorization against Open Policy Agent, with the agent built into the {{site.mesh_product_name}} sidecar rather than deployed separately. The Rego policy receives the HTTP request, including the `Authorization` header, and returns a decision before the application is reached:
+
+```yaml
+apiVersion: kuma.io/v1alpha1
+kind: MeshOPA
+metadata:
+  name: passenger-token-check
+  namespace: {{site.mesh_namespace}}
+  labels:
+    kuma.io/mesh: kong-air-mesh
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      app: passenger-portal
+  default:
+    appendPolicies:
+      - rego:
+          inlineString: |
+            package envoy.authz
+
+            import input.attributes.request.http as http_request
+
+            jwks := "<your OpenID Connect provider's JWKS>"
+
+            default allow = false
+
+            token = {"valid": valid, "payload": payload} {
+                [_, encoded] := split(http_request.headers.authorization, " ")
+                [valid, _, payload] := io.jwt.decode_verify(encoded, {"cert": jwks})
+            }
+
+            allow {
+                token.valid
+                token.payload.aud == "kong-air-booking"
+            }
+```
+
+Replace `<your OpenID Connect provider's JWKS>` with the verification material for the provider the gateway already trusts, so the sidecar and the gateway accept the same tokens.
+
+Three things this gives the security architect:
+
+*   Defense in depth. A compromised or buggy service cannot skip the passenger check, because the check runs before the request reaches it.
+*   One decision point. The same Rego runs for every workload the policy targets, so each team does not have to rebuild claim validation in its own language.
+*   Audit evidence. OPA decision logs record each allow and deny, which pairs with `MeshAccessLog` to show both the workload that connected and the passenger claim that was accepted.
+
 
 ### Egress control and filtering
 When internal services need to fetch weather data from `weather-api` (a SaaS provider), the security architect uses the zone egress listeners and `MeshExternalService` (defined by the operator) to strictly control and log these outbound connections.

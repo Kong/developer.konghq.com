@@ -65,9 +65,9 @@ rows:
   - goal: Version isolation
     outcome: Kong Air can manage `v1` and `v2` as independent, first-class resources with their own metrics.
   - goal: Weighted distribution
-    outcome: Traffic is precisely divided (90/10) without relying on fragile pod counts.
+    outcome: Traffic is precisely divided (90/10) without relying on pod counts.
   - goal: Resource stability
-    outcome: Adding or removing pods in either version does not require updating the routing policy.
+    outcome: Adding or removing replicas in either version does not require updating the routing policy.
 {% endtable %}
 <!-- vale on -->
 

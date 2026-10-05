@@ -44,6 +44,8 @@ related_resources:
     url: /mesh/policies/meshtrafficpermission/
   - text: Policy targeting and precedence
     url: /mesh/policy-targeting-and-precedence/
+  - text: Prepare the mesh for production
+    url: /mesh/prepare-the-mesh-for-production/
 ---
 
 ## The open mesh and the secure mesh
@@ -92,9 +94,6 @@ Two defaults are easy to confuse, and they point in opposite directions:
 
 * With **no** `MeshPassthrough` policy at all, the `Mesh` controls passthrough through `networking.outbound.passthrough`, which is `true` when unset. Outbound traffic is open.
 * With a `MeshPassthrough` policy whose `passthroughMode` is **omitted**, the policy defaults to `Matched`. A `Matched` policy with no `appendMatch` entries reaches nothing, so omitting the field is a deny, not a no-op.
-
-{:.warning}
-> When several `MeshPassthrough` policies select the same proxy, only one `passthroughMode` survives. Policies are ordered by how specific their `targetRef` is, so a `Dataplane` selector beats a `Mesh` selector. Policies with the same kind of `targetRef` are broken by name, and the alphabetically first name wins. A leftover `allow-all-passthrough` therefore silently overrides a later `secure-perimeter`. Delete the policy you are replacing rather than layering another one on top. See [Policy targeting and precedence](/mesh/policy-targeting-and-precedence/).
 
 ### Where the policy lives
 

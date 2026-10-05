@@ -544,7 +544,6 @@
 /mesh/cert-manager/                                                        /mesh/v2/cert-manager/  301
 /mesh/cli/                                                                 /mesh/v2/cli/  301
 /mesh/cni/                                                                 /mesh/v2/cni/  301
-/mesh/concepts/                                                            /mesh/v2/concepts/  301
 /mesh/configure-data-plane-proxy-membership/                               /mesh/v2/configure-data-plane-proxy-membership/  301
 /mesh/configure-inbound-traffic-rules-api/                                 /mesh/v2/configure-inbound-traffic-rules-api/  301
 /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-api/  /mesh/v2/configure-mesh-global-control-plane-on-kubernetes-with-konnect-api/  301
@@ -621,7 +620,6 @@
 /mesh/restrict-permissions-to-selected-namespaces-on-kubernetes/           /mesh/v2/restrict-permissions-to-selected-namespaces-on-kubernetes/  301
 /mesh/secure-access/                                                       /mesh/v2/secure-access/  301
 /mesh/service-discovery/                                                   /mesh/v2/service-discovery/  301
-/mesh/service-mesh/                                                        /mesh/v2/service-mesh/  301
 /mesh/signed-images/                                                       /mesh/v2/signed-images/  301
 /mesh/single-zone/                                                         /mesh/v2/single-zone/  301
 /mesh/systemd/                                                             /mesh/v2/systemd/  301

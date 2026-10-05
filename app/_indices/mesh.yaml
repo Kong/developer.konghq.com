@@ -5,6 +5,8 @@ sections:
     items:
       - path: /mesh/
       - path: /mesh/introduction/
+      - path: /mesh/service-mesh/
+      - path: /mesh/concepts/
       - path: /mesh/architecture-overview/
       - path: /mesh/multi-zone-architecture/
       - title: Mesh policies
@@ -26,6 +28,7 @@ sections:
   - title: Observability and security
     items:
       - path: /mesh/observe-mesh-traffic-in-practice/
+      - path: /mesh/deploy-an-opentelemetry-collector/
       - path: /mesh/manage-workload-identity-and-mtls/
       - path: /mesh/integrate-an-external-ca/
 
@@ -39,6 +42,10 @@ sections:
       - path: /mesh/secure-the-perimeter-with-meshpassthrough/
       - path: /mesh/manage-external-services-with-meshexternalservice/
       - path: /mesh/validate-resilience-with-fault-injection/
+
+  - title: Production readiness
+    items:
+      - path: /mesh/prepare-the-mesh-for-production/
 
   - title: Explore by role
     items:
