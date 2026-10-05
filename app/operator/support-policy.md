@@ -27,11 +27,11 @@ LTS versions of {{site.operator_product_name}} are supported for 3 years after r
 
 ## Rapid releases
 
-{{site.operator_product_name}} also has a rapid release channel. Some functionality, particularly {{site.ai_gateway_name}}, evolves faster than the quarterly minor release cadence that API Gateway functionality follows. Rapid releases let Kong ship that functionality when it is ready instead of holding it for the next quarterly minor.
+{{site.operator_product_name}} uses a rapid release channel. Some functionality, particularly {{site.ai_gateway_name}}, evolves faster than the quarterly minor release cadence that {{site.base_gateway}} functionality follows. Rapid releases let Kong ship that functionality when it's ready.
 
-Rapid releases are fully supported, production grade releases. Running one does not put you on a preview, beta, or experimental build.
+Rapid releases are fully supported, production grade releases. They aren't previews, betas, or experimental builds.
 
-The two channels are cumulative, not alternatives. Every change in a rapid release is included in the next standard quarterly minor version, so you can choose the channel that suits how you upgrade:
+The two channels are cumulative, not alternatives. Every change in a rapid release is included in the next standard quarterly minor version, so you can choose the channel that suits your use case:
 
 <!-- vale off -->
 {% table %}
@@ -42,12 +42,12 @@ columns:
     key: cadence
   - title: Supported versions
     key: supported
-  - title: Who it suits
+  - title: Use case
     key: suits
 rows:
   - channel: "Rapid"
     cadence: "Between quarterly minor versions, as functionality is ready."
-    supported: "The two most recent rapid releases."
+    supported: "The two most recent rapid releases. When a new rapid release ships, the third most recent one is no longer supported."
     suits: "Teams who want new {{site.ai_gateway_name}} functionality as soon as it ships and can upgrade often."
   - channel: "Standard"
     cadence: "Quarterly minor versions."
@@ -56,13 +56,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-### How long a rapid release is supported
-
-Rapid releases follow the same support model as {{site.ai_gateway_name}}, because they exist to deliver {{site.ai_gateway_name}} functionality. Kong supports the **two most recent rapid releases**. When a new rapid release ships, the third most recent one leaves support.
-
-This window is deliberately shorter than the 1 year that standard minor versions receive. Choosing the rapid channel means committing to upgrade as new rapid releases arrive. If a longer support window matters more to you than early access, stay on the standard quarterly minor versions, which still contain every rapid release change.
-
-See the [{{site.ai_gateway_name}} version support policy](/ai-gateway/version-support-policy/) for the support policy covering the {{site.ai_gateway_name}} functionality itself.
+See the [{{site.ai_gateway_name}} version support policy](/ai-gateway/version-support-policy/) for the support policy covering {{site.ai_gateway}} functionality.
 
 ### Versioning and installation
 
@@ -70,7 +64,7 @@ See the [{{site.ai_gateway_name}} version support policy](/ai-gateway/version-su
 
 A rapid release is versioned as a pre-release of the standard minor version it leads into, for example {{site.operator_product_name}} `{{ rapid.app }}` on chart version `{{ rapid.chart }}`.
 
-Helm therefore treats rapid releases as pre-releases and skips them unless you ask for one explicitly. Without `--version`, `helm install` gives you the latest stable chart, which does not include the functionality that has only shipped in a rapid release.
+Helm therefore treats rapid releases as pre-releases and skips them unless you ask for one explicitly. Without `--version`, `helm install` gives you the latest stable chart, which doesn't include the functionality that has only shipped in a rapid release.
 
 To list the rapid releases available in the chart repository:
 
