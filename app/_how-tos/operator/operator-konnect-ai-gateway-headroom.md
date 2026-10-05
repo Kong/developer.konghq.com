@@ -57,7 +57,7 @@ tags:
 faqs:
   - q: How do Headroom sessions affect compression?
     a: |
-      The data plane sends every call to Headroom with a session ID, and Headroom compresses differently depending on what it has already seen in that session. In our tests with the request from this guide:
+      The data plane sends every call to Headroom with a session ID, and Headroom compresses differently depending on what it has already seen in that session. In the example in this guide:
 
       * **Without the AI Prompt Compressor Policy**: about 16,900 prompt tokens. The LLM received the raw JSON tool result.
       * **First request in a session**: about 4,500 prompt tokens. The LLM received all 400 rows as a compact table.
