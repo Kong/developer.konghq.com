@@ -31,6 +31,9 @@ next_steps:
     url: /dedicated-cloud-gateways/flush-managed-cache/
   - text: Dedicated Cloud Gateways production readiness checklist
     url: /dedicated-cloud-gateways/production-readiness/
+faqs:
+  - q: Can I configure the memory reserve of a Dedicated Cloud Gateway managed cache?
+    a: No, it isn't configurable.
 tags:
   - dedicated-cloud-gateways
 ---
@@ -114,6 +117,9 @@ rows:
       `micro` fails at 10,000 RPS.
       <br>
       `small` handles a 1,000 RPS baseline cleanly.
+      <br>
+      {:.warning}
+      > Vector search isn't supported on `micro` and `small` instances.
   - profile: Standard enterprise
     entities: "≤1,000 × ≤100 × 3 windows"
     rps: "≤10,000"
