@@ -25,7 +25,7 @@ min_version:
 
 schema:
   api: konnect/ai-gateway
-  path: /schemas/AIGatewayAuthStrategyOpenIDConnectConfig
+  path: schemas/AIGatewayAuthStrategyOpenIDConnect
 
 related_resources:
   - text: AI Auth Strategy entity
@@ -981,6 +981,8 @@ This works best when token formats are consistent across IdPs.
 The backend always receives tokens from a single issuer regardless of which IdP the client used.
 This works best when backends must trust one issuer, or when you need to normalize scopes and claims across IdPs.
 
+{% comment %}
+NOT SUPPORTED CURRENTLY
 ### Protected resource metadata {% new_in 3.16 %}
 
 Some clients, including MCP (Model Context Protocol) clients that follow the [MCP authorization specification](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization), need to know which authorization server protects an API before they can request a token.
@@ -994,6 +996,7 @@ When you configure [`config.protected_resource_metadata`](./#schema--config-prot
 {:.info}
 > Configuring this setting only advertises protected resource metadata and adds it to unauthorized responses.
 It doesn't change how the OIDC auth strategy authenticates requests, and the authorization server URLs you configure here aren't validated against `config.issuer`.
+{% endcomment %}
 
 #### Well-known metadata endpoint
 
@@ -1149,6 +1152,8 @@ We recommend enabling this for all subject token issuers to prevent tokens with 
 If not set, {{ site.ai_gateway }} resolves the JWKS URI from OIDC discovery using the issuer URL.
 Set this when the issuer doesn't publish a discovery document or when you want to pin to a specific key endpoint.
 
+{% comment %}
+NOT SUPPORTED CURRENTLY
 #### Actor tokens {% new_in 3.16 %}
 
 An actor token represents the identity of the party acting on behalf of the subject in a token exchange, as defined by [RFC 8693](https://www.rfc-editor.org/rfc/rfc8693#name-actor-token-and-actor-toke).
@@ -1159,6 +1164,7 @@ Configure [`config.token_exchange.request.actor_token`](./#schema--config-token-
 
 Use [`config.token_exchange.request.actor_token.type`](./#schema--config-token-exchange-request-actor-token-type) to set the token type identifier sent as `actor_token_type`.
 This defaults to `urn:ietf:params:oauth:token-type:access_token`.
+{% endcomment %}
 
 ### Using cloud authentication with Redis
 
