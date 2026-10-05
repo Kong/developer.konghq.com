@@ -25,7 +25,7 @@ tldr:
   q: How do I build a decK Docker image that includes a shell?
   a: |
     Copy the `deck` and `jq` binaries out of Kong's official `kong/deck` image and place them on an Alpine base.
-    The result is the released binaries with a shell and package manager available inside the container.
+    This results in the released binaries with a shell and package manager available inside the container.
 
 related_resources:
   - text: Build a custom {{site.base_gateway}} Docker image
@@ -55,11 +55,13 @@ faqs:
 automated_tests: false
 ---
 
-The official `kong/deck` Docker image uses a distroless base starting with v1.65.2. This keeps the image small, but the container has no shell and no package manager. If required, you can build your own image using the steps in this guide.
+Starting in decK v1.65.2, the official `kong/deck` Docker image uses a distroless base. 
+This keeps the image small, but the container doesn't have a shell or package manager. 
+If these are required, you can build your own image using the steps in this guide.
 
 `deck` is a `CGO_ENABLED=0` static Go binary with no glibc or musl dependency, so you can copy it onto any base image without recompiling anything.
 
-{:.warning}
+{:.danger}
 > A non-distroless image reintroduces a shell and a package manager into a container that frequently carries {{site.konnect_short_name}} or {{site.base_gateway}} admin credentials.
 > That widens the attack surface available to anything that gets code execution inside the container, so prefer the stock distroless image unless you specifically need a shell.
 
