@@ -22,7 +22,7 @@ There's a config file `config/tests.yaml` with some basic configuration for the 
 
 The `config/runtimes.yaml` file defines the runtime configurations grouped by **deployment model** and **product**.
 
-The top-level keys are deployment models (`on-prem`, `konnect`). Under each deployment model, products are listed (e.g. `gateway`, `ai-gateway`, `operator`, `event-gateway`, `kic`, `operator`).
+The top-level keys are deployment models (`on-prem`, `konnect`). Under each deployment model, products are listed (e.g. `gateway`, `ai-gateway`, `operator`, `event-gateway`, `kic`).
 
 Each product can define:
 
@@ -70,7 +70,7 @@ The script will iterate over the list of `how-tos`, check if it needs to generat
 
 * The frontmatter doesn't include `automated_tests: false`.
 * The file's content doesn't include `@todo`
-* One of `gateway`, `ai-gateway`, or `event-gateway` is set as `products` in the frontmatter.
+* One of `gateway`, `ai-gateway`, `event-gateway`, or `operator` is set as `products` in the frontmatter.
 
 Next, it spins up a headless browser and visits the corresponding URL for each `how-to`. For every page, it extracts instructions from data-attributes on the page. These can be about the test's setup or the steps to run:
 
@@ -128,6 +128,7 @@ they never read `app/_how-tos`. Add a fixture page there to cover a new case.
  E.g. for on-prem gateway, when running the tests with `GATEWAY_VERSION='3.9'` it will set the env variables defined in `on-prem.gateway.versions` for the entry `version: '3.9'`.
 1. Tests can be scoped to a specific product by setting the `PRODUCTS` env variable, e.g. `PRODUCTS=gateway`.
 1. Tests can be scoped to a specific deployment model by setting the `DEPLOYMENT_MODEL` env variable, e.g. `DEPLOYMENT_MODEL=on-prem`.
+1. If the `PRODUCTS` and `DEPLOYMENT_MODEL` filters match no instruction file, the run prints the active filter values and exits with code 1 instead of reporting zero tests and passing.
 1. Runs the `setup` commands defined in `runtimes.yaml` once, and after each test it resets it by running the commands under `reset`.
 1. For each instruction file (test), it runs its `prereqs` block.
 1. Then, it runs the steps sequentially. Steps that are strings are executed as bash commands. Validation steps (defined as json objects), are treated as assertions. They run custom code based on the step's configuration and fail/success depending on the expectation. The validation functions are defined in `tools/automated-tests/instructions/validations.js`.
@@ -155,6 +156,8 @@ By default, it will run all the instruction files, but it also supports running 
 #### Run on-prem operator tests
 
 `DEPLOYMENT_MODEL='on-prem' PRODUCTS='operator' npm run run-tests`
+
+Operator how-tos are testable on-prem only: the generator extracts operator pages into `on-prem/operator.yaml` instruction files, and the `on-prem.operator` runtime installs the operator from the documented commands into a fresh k3d cluster and writes the license from `KONG_LICENSE_DATA` to `license.json` for the documented `KongLicense` apply. Konnect is not yet supported: a `konnect/operator.yaml` file is generated for how-tos that also work on Konnect, but running it fails fast with an `Unsupported product` error until a `konnect.operator` runtime is added.
 
 #### Run unreleased gateway version
 
