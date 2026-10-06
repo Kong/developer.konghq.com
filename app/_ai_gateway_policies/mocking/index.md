@@ -6,7 +6,7 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
-description: 'Return responses from an OpenAPI spec instead of calling an AI Provider, so you can exercise an AI Gateway without spending tokens'
+description: 'Return responses from an OpenAPI spec instead of calling an AI Model Provider, so you can exercise {{site.ai_gateway}} without spending tokens'
 tags:
   - mock-servers
 search_aliases:
@@ -21,21 +21,24 @@ related_resources:
   - text: AI Rate Limiting Advanced Policy
     url: /ai-gateway/policies/ai-rate-limiting-advanced/
 faqs:
-  - q: Does a mocked response still count against my AI Provider bill?
-    a: No. The Mocking Policy answers the request before {{site.ai_gateway}} calls the AI Provider, so no upstream request is made and no tokens are spent.
+  - q: Does a mocked response still count against my AI Model Provider bill?
+    a: No. The Mocking Policy answers the request before {{site.ai_gateway}} calls the AI Model Provider, so no upstream request is made and no tokens are spent.
   - q: Can I mock a streaming response?
-    a: "No. A request with `stream: true` still receives the single non-streaming JSON response from the spec, sent with a `Content-Type` of `application/json` rather than as server-sent events."
+    a: |
+      No. A request with `stream: true` still receives the single non-streaming response from the spec, not server-sent events. The response `Content-Type` is the media type from the spec that best matches the request's `Accept` header.
+
+      If the client sends `Accept: text/event-stream` and the spec only defines `application/json`, no media type matches and the Policy returns a `404` with the message `No examples exist in API specification for this resource matching Accept Header (text/event-stream)`.
 ---
 
-The Mocking Policy allows you to provide mock endpoints to test APIs in development against your existing services and supports both Swagger 2.0 and OpenAPI 3.0. When it matches an incoming request against a path and method in the provided [`api_specification`](/ai-gateway/policies/mocking/reference/#schema--config-api-specification), it returns response examples and {{site.ai_gateway}} never contacts the upstream [AI Provider](/ai-gateway/entities/ai-provider/).
+The Mocking Policy allows you to provide mock endpoints to test APIs in development against your existing services and supports both Swagger 2.0 and OpenAPI 3.0. When it matches an incoming request against a path and method in the provided [`api_specification`](/ai-gateway/policies/mocking/reference/#schema--config-api-specification), it returns response examples and {{site.ai_gateway}} never contacts the upstream [AI Model Provider](/ai-gateway/entities/ai-model-provider/).
 
-This lets you test an {{site.ai_gateway}}'s configuration against realistic responses without spending tokens. Attach the Policy to an [AI Model](/ai-gateway/entities/ai-model/) and give it an API specification describing that AI Model's route, for example `POST /v1/chat/completions` with a provider-shaped response example. This allows you to test rate limits, metering, logging, and other AI Policies without a real AI Provider behind them.
+The Policy lets you test an {{site.ai_gateway}}'s configuration against realistic responses without spending tokens. You can attach the Policy to an [AI Model](/ai-gateway/entities/ai-model/) and give it an API specification describing that AI Model's route, for example `POST /v1/chat/completions` with a provider-shaped response example. The Policy matches the full request path, so the spec path must include the AI Model's route path. You can also attach the Policy to an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), an [AI Agent](/ai-gateway/entities/ai-agent/), or an [AI Consumer](/ai-gateway/entities/ai-consumer/), or apply it globally.
 
 Mocked responses carry an `X-Kong-Mocking-Plugin: true` response header, so a client can tell a mock from a real completion.
 
 ## Supported status codes
 
-The Mocking Policy can return `200`, `201`, and `204`.
+The Policy can return any status code defined for the matched operation in the API specification, including error codes such as `429` or `500`. Mocking error responses is a useful way to test how a client handles AI Model Provider failures. By default, the Policy returns the lowest status code defined for the operation.
 
 You can restrict the allowed status codes with [`config.included_status_codes`](./reference/#schema--config-included-status-codes), or select them randomly with [`config.random_status_code`](./reference/#schema--config-random-status-code).
 
@@ -87,9 +90,9 @@ formats:
 
 ## Mock responses
 
-If you attach a Mocking Policy to an [AI Model](/ai-gateway/entities/ai-model/)'s `policies` array, a request to that AI Model's route returns the example verbatim. 
+If you attach a Mocking Policy to an [AI Model](/ai-gateway/entities/ai-model/)'s `policies` array, a request to that AI Model's route returns the example verbatim.
 
-For the example above the response should look similar to:
+For the example in [Load an API specification](#load-an-api-specification), the response looks similar to the following:
 
 ```json
 {
@@ -107,7 +110,20 @@ For the example above the response should look similar to:
 }
 ```
 
-Downstream AI Policies see the mocked response. Including a `usage` block gives metering and logging realistic token counts to work with.
+### Interaction with other AI Policies
+
+The Mocking Policy runs last in the request phase and returns the response itself, so the request never reaches the AI Model Provider. Policies that act on the request run first and still apply. For example:
+
+* Authentication and ACLs can reject the request before it reaches the mock.
+* Request guardrails can block a prompt.
+* AI Rate Limiting Advanced can reject a request that's over its limit.
+* An AI Semantic Cache hit returns the cached response instead of the mock.
+
+{{site.ai_gateway}} only processes responses that come from the AI Model Provider, so it skips mocked responses. As a result:
+
+* Token usage isn't recorded, even if the example includes a `usage` block. Token-based rate limits and metering don't count mocked requests.
+* Response guardrails and response transformations don't run on the mocked response.
+* AI Semantic Cache doesn't store the mocked response.
 
 ### Path matching
 
@@ -117,7 +133,7 @@ By default the Policy matches against the full request path and ignores any base
 {"message":"Corresponding path and method spec does not exist in API Specification"}
 ```
 
-Optionally, you can set [`config.include_base_path`](./reference/#schema--config-include-base-path) to `true` so the Policy prepends the base path before matching. To match against a base path other than the one provided in the API specification, set [`config.custom_base_path`](./reference/#schema--config-custom-base-path).
+Optionally, you can set [`config.include_base_path`](./reference/#schema--config-include-base-path) to `true` so the Policy prepends the base path before matching. To match against a base path other than the one provided in the API specification, set [`config.custom_base_path`](./reference/#schema--config-custom-base-path). The Policy ignores `custom_base_path` unless `include_base_path` is `true`.
 
 ## Behavioral headers
 
@@ -125,13 +141,15 @@ Behavioral headers change the Mocking Policy's behavior for a single request wit
 
 ### X-Kong-Mocking-Delay
 
-`X-Kong-Mocking-Delay` sets how many milliseconds the AI Policy waits before responding. The value must be a number between `0` and `10000`, inclusive. 
+`X-Kong-Mocking-Delay` sets how many milliseconds the AI Policy waits before responding. The value must be a number between `0` and `10000`, inclusive. Any other value returns a `400`.
 
 This header takes precedence over [`config.random_delay`](./reference/#schema--config-random-delay).
 
 ### X-Kong-Mocking-Example-Id
 
-`X-Kong-Mocking-Example-Id` selects which response example to return by `name`.
+`X-Kong-Mocking-Example-Id` selects which response example to return by its key in the OpenAPI 3.0 `examples` map. If no example has that key, the AI Policy returns a `400`.
+
+The header only applies to `examples`. The Policy ignores it when the response defines a single `example`, or when the API specification uses Swagger 2.0.
 
 {:.info}
 > When an operation defines several examples with the same status code and the request doesn't name one, the AI Policy's choice isn't deterministic. Identical requests can return different examples even if [`config.random_examples`](./reference/#schema--config-random-examples) is `false`. Send `X-Kong-Mocking-Example-Id` whenever a caller needs a specific example, such as in an automated test.
@@ -140,7 +158,7 @@ This header takes precedence over [`config.random_delay`](./reference/#schema--c
 
 `X-Kong-Mocking-Status-Code` overrides the default status code selection. The status code you ask for must be defined for the matched operation, otherwise the AI Policy returns a `400`.
 
-## Simulate a slow AI Provider
+## Simulate a slow AI Model Provider
 
 Set [`config.random_delay`](./reference/#schema--config-random-delay) to `true` to delay every mocked response by a random amount, then bound it with [`config.min_delay_time`](./reference/#schema--config-min-delay-time) and [`config.max_delay_time`](./reference/#schema--config-max-delay-time). This is a useful stand-in for inference latency when you're testing client timeouts.
 
