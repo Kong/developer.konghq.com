@@ -50,19 +50,22 @@ A grant can also define how it's funded, when unused credits expire, and how {{s
 ## Funding methods
 
 The funding method describes how the customer receives or pays for the credits.
+In the API, set it with `funding_method`: `none` for promotional credits, `invoice` for invoice-funded credits, or `external` for externally funded credits.
 
 ### Promotional credits
 
 Use promotional credits when no payment workflow applies.
 Common examples include onboarding credit, compensation credit, migration credit, or admin-created credit.
 
-Promotional credits are available without waiting for an invoice or external payment reconciliation.
+Promotional credits don't involve any payment.
 
 ### Invoice-funded credits
 
 Use invoice-funded credits when a customer buys credits through {{site.metering_and_billing}} billing.
 
 In this flow, the grant represents the credits the customer receives, and the invoice represents the payment workflow for those credits.
+The credits are available as soon as the grant takes effect.
+They don't wait for the invoice to be paid.
 The credit amount and the purchase amount are related but not necessarily identical.
 
 For example, if a customer receives 100 credits with a per-unit cost of 0.50 USD, the invoice amount is 50 USD.
@@ -76,20 +79,25 @@ purchase amount:   50.00 USD
 
 This distinction is important for discounts, commitments, negotiated rates, and cases where the commercial price of a credit differs from its face value.
 
+Invoice funding requires the customer to have an invoicing app that can calculate tax, invoice customers, and collect payments.
+
 ### Externally funded credits
 
-Use externally funded credits when invoicing and payment happen outside {{site.metering_and_billing}} through custom invoicing.
+Use externally funded credits when the credits are paid for outside {{site.metering_and_billing}}, for example by wire transfer, an external invoice, or manual reconciliation.
 
 The grant records the credits in {{site.metering_and_billing}}.
 Your integration is responsible for updating {{site.metering_and_billing}} when the external payment state changes.
+To do this, send a `POST` request to `/openmeter/customers/{customerId}/credits/grants/{creditGrantId}/settlement/external` with a `status` of `pending`, `authorized`, or `settled`.
 
 ## Priority
 
 Priority controls which credits are consumed first when a customer has multiple grants in the same currency.
 
+Priority is a number from 1 to 1000 through the API, or from 1 to 100 in the {{site.konnect_short_name}} UI. The default is 10.
 Lower priority values are consumed first.
-If two grants have the same priority, credits that expire earlier are consumed first.
-If priority and expiration are equal, {{site.metering_and_billing}} uses stable movement order.
+If two grants have the same priority, a grant restricted to specific features or plans is consumed before an unrestricted grant.
+Then credits that expire earlier are consumed first.
+If priority, restrictions, and expiration are equal, {{site.metering_and_billing}} uses stable movement order.
 
 Example:
 
@@ -123,9 +131,15 @@ rows:
 If the customer consumes 150 credits, {{site.metering_and_billing}} consumes all of A, then 50 from B.
 C is not touched because its priority value is higher.
 
+## Effective time
+
+A grant takes effect at its `effective_at` time, which defaults to the time you create it.
+Until then, its credits count toward the customer's pending balance, not the settled balance.
+
 ## Expiration
 
-A grant can expire after a configured duration.
+A grant can expire after a configured duration, set with `expires_after` as an ISO 8601 duration such as `P30D`.
+If you omit it, the grant never expires.
 Expiration applies only to unused credits.
 If a customer uses part of the grant before expiration, only the remaining unused amount expires.
 
@@ -145,6 +159,10 @@ You can restrict a grant to one or more product features using the feature filte
 Restricted credits can only be consumed by charges for the specified features.
 Credits without a feature restriction are shared and available to all features.
 
+You can also restrict a grant to charges from specific plans with `filters.plans`.
+Each entry takes a plan `key` and an optional `version` filter; if you omit the version, all versions match, including future ones.
+When a grant has both feature and plan restrictions, a charge must match both.
+
 For details on how feature restrictions affect balance and transaction queries, see [Feature filters](/metering-and-billing/credits/feature-filters/).
 
 ## Purchase and tax context
@@ -152,7 +170,11 @@ For details on how feature restrictions affect balance and transaction queries, 
 Purchase terms describe how the credits are funded.
 They define the purchase currency and the per-unit cost used to calculate the purchase amount.
 
-The purchase currency must be a fiat currency, and it has to match the customer's currency.
+The purchase currency must be a fiat currency.
+For a paid fiat-currency grant, it must be the same as the grant currency.
+For a custom-currency grant, it must be the same as the fiat currency of the grant's cost basis.
+The {{site.konnect_short_name}} UI uses the customer's currency as the purchase currency.
+
 When the granted credits are in a custom currency, the purchase converts the custom-currency amount into the fiat purchase amount through a cost basis:
 
 ```text
@@ -162,7 +184,7 @@ purchase amount:   50.00 USD
 ```
 {:.no-copy-code}
 
-A purchase that funds a custom-currency grant needs an explicit cost basis.
+A purchase that funds a custom-currency grant needs an explicit cost basis in `purchase.cost_basis`, with `fiat_currency` set to the purchase currency.
 You can define the cost basis in one of the following ways:
 
 <!--vale off-->
@@ -173,18 +195,28 @@ columns:
   - title: Description
     key: description
 rows:
-  - type: "Dynamic"
-    description: "The rate is resolved from the custom currency's active cost basis when the purchase is charged. Use this when you want the purchase to follow the currency's current rate."
-  - type: "Pinned"
-    description: "The rate is pinned to a specific cost basis of the custom currency, so later rate changes don't affect the purchase."
-  - type: "Manual"
-    description: "You provide an explicit rate for this purchase, independent of the currency's cost bases."
+  - type: "`dynamic`"
+    description: "The rate is resolved from the custom currency's cost basis that is effective at the grant's effective time. That cost basis must already be effective by then. Use this when you want the purchase to follow the currency's current rate."
+  - type: "`pinned`"
+    description: "The rate is pinned to a specific cost basis of the custom currency, set with `cost_basis_id`, so later rate changes don't affect the purchase."
+  - type: "`manual`"
+    description: "You provide an explicit `rate` for this purchase, independent of the currency's cost bases."
 {% endtable %}
 <!--vale on-->
 
+For a custom-currency grant, the {{site.konnect_short_name}} UI sends a `dynamic` cost basis when you keep the currency's current rate, and a `manual` one when you change the rate.
+
+For a fiat-currency grant, `purchase.cost_basis` only accepts the `manual` type, without `fiat_currency`, where `rate` is the fiat cost per credit.
+If you omit it, the rate defaults to 1.
+
 {:.info}
-> The `perUnitCostBasis` field only applies to fiat-currency grants.
-> For a custom-currency grant, use `purchase.costBasis` instead.
+> The older `purchase.per_unit_cost_basis` field is deprecated.
+> It only applies to fiat-currency grants and can't be combined with `purchase.cost_basis`.
+> Use `purchase.cost_basis` with the `manual` type instead.
 
 Tax configuration is relevant for revenue recognition on usage charges that consume credits.
 Set [tax configuration](/metering-and-billing/tax-codes/) on all usage charges that need to be classified correctly for revenue recognition.
+
+The grant itself also has a `tax_config` field.
+Provide it for `invoice` and `external` grants so the purchase is classified correctly.
+If you omit it, the default credit grant tax code applies, or the global default tax code if that isn't set.

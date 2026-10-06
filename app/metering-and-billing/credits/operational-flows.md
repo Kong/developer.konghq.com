@@ -65,7 +65,7 @@ flowchart LR
 1. Read the customer's balance to confirm the credit was added.
 1. List transaction history to see the `funded` movement.
 
-Promotional credits are immediately usable after they are created.
+Promotional credits are usable as soon as the grant takes effect, which is immediately unless you set a future effective time.
 
 ## Sell credits by invoice
 
@@ -76,9 +76,9 @@ The flow looks like this:
 {% mermaid %}
 flowchart LR
     A["Create credit grant\n(invoice)"] --> B["Set credit amount,\npurchase terms"]
-    B --> C["Invoice lifecycle:\nauthorize & settle payment"]
-    C --> D["Credits available\nafter settlement"]
-    D --> E["Show customer\ngrant & balance"]
+    B --> C["Credits available\nwhen the grant takes effect"]
+    C --> D["Invoice lifecycle:\nauthorize & settle payment"]
+    C --> E["Show customer\ngrant & balance"]
 {% endmermaid %}
 
 1. Create a credit grant for the customer with the invoice funding method.
@@ -87,12 +87,14 @@ flowchart LR
 1. Let the invoice lifecycle handle payment authorization and settlement.
 1. Show the customer their credit grant and credit balance.
 
+The credits are available as soon as the grant takes effect, without waiting for the invoice to be paid.
+
 The credit amount and the invoice amount are different values.
 A customer might receive 1,000 credits but pay a negotiated amount based on the per-unit cost.
 
 ## Record externally funded credits
 
-Use externally funded credits when invoicing and payment happen outside {{site.metering_and_billing}} through custom invoicing.
+Use externally funded credits when the credits are paid for outside {{site.metering_and_billing}}, for example by wire transfer, an external invoice, or manual reconciliation.
 
 The flow looks like this:
 
@@ -106,7 +108,7 @@ flowchart LR
 
 1. Create a credit grant for the customer with the external funding method.
 1. Set purchase terms.
-1. Update the external settlement state as your external system changes.
+1. Update the external settlement state as your external system changes, by setting the grant's external settlement `status` to `pending`, `authorized`, or `settled`.
 1. Use balance and history to confirm credit availability and movement.
 
 This flow is useful when {{site.metering_and_billing}} tracks the credit balance, but your own invoicing system handles the commercial invoice and payment.
@@ -123,36 +125,39 @@ flowchart LR
     B --> C{"Currency-specific?"}
     C -->|Yes| D["Filter by currency"]
     C -->|No| E["Use full balance"]
-    D & E --> F["Settled balance:\ncommitted value"]
-    D & E --> G["Pending balance:\nconservative value"]
+    D & E --> R["Balance response"]
+    R --> F["Settled balance:\ncommitted value"]
+    R --> G["Live balance:\nconservative value"]
+    R --> H["Pending balance:\ncredits not yet in effect"]
 {% endmermaid %}
 
 1. Resolve the customer.
 1. Query the customer's credit balance.
 1. If the product surface is currency-specific, then filter by currency 
 1. Use the settled balance for committed historical value.
-1. Use the pending balance for conservative operational decisions.
+1. Use the live balance for conservative operational decisions.
+1. Use the pending balance to show granted credits that haven't taken effect yet.
 
-The pending balance can differ from the settled balance because open charges may still consume credits.
+The live balance can differ from the settled balance because open charges may still consume credits.
 See [Credit balance model](/metering-and-billing/credits/balance-model/) for details.
 
 ## Consume credits through charges
 
-Credit consumption happens through billing charges and rate card settlement modes.
+Credit consumption happens through billing charges and the settlement mode of the customer's subscription.
 
 The flow looks like this:
 
 {% mermaid %}
 flowchart LR
-    A["Configure rate card\nwith credit settlement mode"] --> B["Charge is created\nfor customer"]
+    A["Configure plan\nwith credit settlement mode"] --> B["Charge is created\nfor customer"]
     B --> C{"Settlement mode"}
-    C -->|credit_only| D["Credits settle\nthe full charge"]
+    C -->|credit_only| D["Credits settle the full charge;\na shortfall makes the\nbalance negative"]
     C -->|credit_then_invoice| E["Credits reduce\ninvoiced amount"]
     D & E --> F["consumed movement\nin transaction history"]
     F --> G["Updated balance\nreflects remaining credits"]
 {% endmermaid %}
 
-1. Configure the relevant rate card with a credit settlement mode.
+1. Set the credit settlement mode on the plan, or override it when you create the customer's subscription.
 1. Create or run charges for the customer.
 1. {{site.metering_and_billing}} applies credits according to the settlement mode.
 1. Read transaction history to inspect consumed credits.
@@ -160,6 +165,7 @@ flowchart LR
 
 For `credit_then_invoice`, credits reduce the invoiced amount.
 For `credit_only`, credits are the sole settlement mechanism for the charge.
+If the balance can't cover a `credit_only` charge, the balance goes negative and the next credits the customer receives repay it first.
 
 ## Review credit history
 
