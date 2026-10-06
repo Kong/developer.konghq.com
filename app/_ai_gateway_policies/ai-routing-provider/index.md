@@ -5,7 +5,7 @@ name: 'NVIDIA Switchyard AI Routing Policy'
 publisher: kong-inc
 
 min_version:
-  ai-gateway: '2.1'
+  ai-gateway: '2.2'
 third_party: true
 works_on:
   - konnect
@@ -252,7 +252,7 @@ rows:
 > two modules but still exposes almost all of the `kong` and `ngx` global variables, and the value
 > is deprecated. Choose deliberately for production.
 
-Streaming custom policies need {{site.ai_gateway}} 2.1 or later.
+Streaming custom policies need {{site.ai_gateway}} 2.2 or later.
 The control plane and data plane versions must match exactly, including patch and pre-release, or configuration sync is rejected.
 
 ### Upload the policy code
