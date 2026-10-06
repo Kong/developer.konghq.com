@@ -49,6 +49,26 @@ RSpec.describe 'prereqs/products/operator.md' do
       expect(html).to have_no_css('.custom-code-block[data-test-prereq="block"]',
                                   text: 'ENABLE_CONTROLLER_KONNECT=true')
     end
+
+    it 'renders the on-prem Helm install command without a trailing continuation' do
+      install = html.find('.custom-code-block[data-test-prereq="block"]',
+                          text: 'helm upgrade --install kong-operator kong/kong-operator')
+      expect(install.find('pre').text.strip).not_to end_with('\\')
+    end
+  end
+
+  context 'a pinned chart version' do
+    let(:template) do
+      <<~'LIQUID'
+        {% include prereqs/products/operator.md chart_version="2.3.0" %}
+      LIQUID
+    end
+
+    it 'renders the on-prem Helm install command without a trailing continuation' do
+      install = html.find('.custom-code-block[data-test-prereq="block"]',
+                          text: 'helm upgrade --install kong-operator kong/kong-operator')
+      expect(install.find('pre').text.strip).not_to end_with('\\')
+    end
   end
 
   context 'the markdown output format' do
