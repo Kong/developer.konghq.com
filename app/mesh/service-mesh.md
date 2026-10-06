@@ -68,8 +68,8 @@ On Kubernetes you never start `kuma-dp` yourself: the control plane injects it i
 
 ## How {{site.mesh_product_name}} implements this
 
-{{site.mesh_product_name}} splits the control plane in two. A global control plane holds the central view of your meshes and resources, and each environment where workloads run (a Kubernetes cluster, a VPC, or a data center) runs its own zone control plane. The zone control plane discovers local workloads and serves them Envoy configuration over xDS, while exchanging supported resources with the global control plane over the Kuma Discovery Service (KDS). See [Architecture overview](/mesh/architecture-overview/).
+{{site.mesh_product_name}} splits the control plane in two. A global control plane holds the central view of your meshes and resources, and each environment where workloads run (a Kubernetes cluster, a VPC, or a data center) runs its own zone control plane. The zone control plane discovers local workloads and serves them Envoy configuration over xDS, while exchanging supported resources with the global control plane over the Kuma Discovery Service (KDS). For more information, see [Architecture overview](/mesh/architecture-overview/).
 
-Neither control plane sits on the traffic path. When a request has to leave its zone, it travels through mesh-scoped zone proxies, which are ordinary data plane proxies carrying a zone ingress or zone egress listener. See [Multi-zone architecture](/mesh/multi-zone-architecture/).
+Neither control plane sits on the traffic path. When a request has to leave its zone, it travels through mesh-scoped zone proxies, which are ordinary data plane proxies carrying a zone ingress or zone egress listener. For more information, see [Multi-zone architecture](/mesh/multi-zone-architecture/).
 
 For the vocabulary used across the {{site.mesh_product_name}} documentation, including xDS, KDS, SPIFFE IDs, and the service and policy resources, see [Concepts](/mesh/concepts/).
