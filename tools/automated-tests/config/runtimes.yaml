@@ -109,6 +109,9 @@ on-prem:
       commands:
         - helm repo add kong https://charts.konghq.com
         - helm repo update
+        # The documented on-prem KongLicense prereq reads ./license.json from
+        # the container's working directory (.workspace, see runtimes.js).
+        - 'printf "%s" "$KONG_LICENSE_DATA" > ./license.json'
     cleanup:
       commands:
         - k3d cluster delete operator-test
