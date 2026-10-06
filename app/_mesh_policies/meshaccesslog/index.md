@@ -6,6 +6,11 @@ products:
 description: Set up access logs on every data plane proxy in a mesh.
 content_type: plugin
 icon: meshaccesslog.png
+related_resources:
+- text: Deploy an OpenTelemetry collector
+  url: "/mesh/deploy-an-opentelemetry-collector/"
+- text: MeshOpenTelemetryBackend
+  url: "/mesh/deploy-an-opentelemetry-collector/#name-the-collector-with-meshopentelemetrybackend"
 ---
 
 `MeshAccessLog` makes data plane proxies write a record for every request or connection they
