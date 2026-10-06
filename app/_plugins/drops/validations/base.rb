@@ -3,6 +3,7 @@
 require 'json'
 require_relative '../../lib/site_accessor'
 require_relative '../concerns/request_snippet_config'
+require_relative '../concerns/test_section'
 
 module Jekyll
   module Drops
@@ -10,6 +11,7 @@ module Jekyll
       class Base < Liquid::Drop # rubocop:disable Style/Documentation
         include Jekyll::SiteAccessor
         include Jekyll::Drops::Concerns::DualTopologySnippetConfig
+        include Jekyll::Drops::Concerns::TestSection
 
         def self.make_for(id:, yaml:, format: 'html')
           case id
@@ -55,6 +57,7 @@ module Jekyll
           @yaml = yaml
           @format = format
 
+          validate_section!
           validate_yaml!
         end
 
@@ -103,10 +106,6 @@ module Jekyll
           else
             "app/_includes/how-tos/validations/#{id}/index.html"
           end
-        end
-
-        def section
-          @section ||= @yaml['section'] || 'step'
         end
 
         private

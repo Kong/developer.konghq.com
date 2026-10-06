@@ -1,0 +1,43 @@
+title: Convert records for a specific topic to JSON
+
+description: Convert Avro records consumed from a single topic to JSON using an inline schema, and leave records on other topics unchanged.
+
+extended_description: |
+  Use `condition` to apply this policy only to records consumed from a specific topic, so records on other
+  topics parsed by the same Schema Validation policy pass through without conversion.
+
+  This example embeds the target JSON schema directly in the policy using `inline`, and validates the converted
+  value against it before delivering the record to the client.
+
+weight: 900
+
+requirements:
+ - "A [Schema Validation Consume policy](/event-gateway/policies/schema-validation-consume/) that parses the record value as Avro against a schema registry."
+
+variables:
+  policy_id:
+    description: The UUID of the parent Schema Validation policy.
+    value: $PARENT_POLICY_ID
+
+type: transcode
+name: convert-consume-topic-to-json
+parent_policy_id: ${policy_id}
+condition: >
+  context.topic.name == "my_topic"
+config:
+  failure_mode: skip
+  output_format: json
+  schema_source:
+    type: inline
+    inline: |
+      {"type":"object","required":["name","age"],"properties":{"name":{"type":"string"},"age":{"type":"integer"}}}
+  schema_ref_destination:
+    type: none
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
+
+min_version:
+  event-gateway: '1.3'

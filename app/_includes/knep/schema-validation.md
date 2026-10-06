@@ -59,6 +59,9 @@ rows:
   - use_case: "[Example: Validate messages for a topic](/event-gateway/policies/{{include.slug}}/examples/validate-a-topic/)"
     description: |
       Ensure that all messages consumed from a topic are validated against a schema, and reject messages that don't conform.
+  - use_case: "[Tutorial: Consume Kafka records as JSON](/event-gateway/consume-kafka-records-as-json-with-event-gateway/)"
+    description: |
+      Store records as Avro in the backend cluster, and use a nested [Record Transcode Consume policy](/event-gateway/policies/record-transcode-consume/) to convert them to JSON for a consumer.
 {% endtable %}
 <!--vale on-->
 
@@ -149,9 +152,9 @@ rows:
 
 This policy can serve as a parent policy. 
 {%- if include.phase == 'produce' %}
-You can nest [Modify Headers](/event-gateway/policies/modify-headers/examples/nested-policy/) policies within it.
+You can nest [Modify Headers](/event-gateway/policies/modify-headers/examples/nested-policy/) and [Record Transcode Produce](/event-gateway/policies/record-transcode-produce/) policies within it.
 {%- elsif include.phase == 'consume' %}
-You can nest [Modify Headers](/event-gateway/policies/modify-headers/examples/nested-policy/) and [Skip Records](/event-gateway/policies/skip-record/examples/nested-policy/) policies within it.
+You can nest [Modify Headers](/event-gateway/policies/modify-headers/examples/nested-policy/), [Skip Records](/event-gateway/policies/skip-record/examples/nested-policy/), and [Record Transcode Consume](/event-gateway/policies/record-transcode-consume/) policies within it.
 {% endif %}
 
 See the reference for [nested policies](/event-gateway/entities/policy/#policy-nesting) for more detail.

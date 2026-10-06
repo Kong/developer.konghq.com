@@ -1,12 +1,12 @@
 {% capture wrapper %}
 {% assign indentation = 0 %}{% if config.indent %}{% assign indentation = config.indent %}{% endif %}
 {% if page.works_on contains 'on-prem' %}
-<div data-deployment-topology="on-prem" class="content" markdown="1" {% if config.section == 'prereqs' %}data-test-prereq="{{ config.data_validate | escape }}" {% else %}data-test-step="{{ config.data_validate | escape }}"{% endif %}>
+<div data-deployment-topology="on-prem" class="content" markdown="1" {{ config.test_attribute }}="{{ config.data_validate | escape }}">
 {% include how-tos/validations/env-variables/snippet.md variables=config.variables %}
 </div>
 {% endif %}
 {% if page.works_on contains 'konnect' %}
-<div data-deployment-topology="konnect" class="content" markdown="1" {% if config.section == 'prereqs' %}data-test-prereq="{{ config.data_validate | escape }}" {% else %}data-test-step="{{ config.data_validate | escape }}"{% endif %}>
+<div data-deployment-topology="konnect" class="content" markdown="1" {{ config.test_attribute }}="{{ config.data_validate | escape }}">
 {% include how-tos/validations/env-variables/snippet.md variables=config.variables %}
 </div>
 {% endif %}

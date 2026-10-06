@@ -223,6 +223,13 @@ export async function resetRuntime(runtimeConfig, container) {
   }
 }
 
+export async function provisionRuntime(runtimeConfig, container) {
+  log("Provisioning...");
+  for (const command of runtimeConfig.reset?.provision?.commands || []) {
+    await executeCommand(container, command);
+  }
+}
+
 export async function beforeAll(testsConfig, container) {
   log("BeforeAll...");
   if (testsConfig?.before?.commands) {

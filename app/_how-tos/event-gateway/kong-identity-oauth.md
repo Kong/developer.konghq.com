@@ -45,8 +45,10 @@ cleanup:
     - title: Clean up {{site.event_gateway}} resources
       include_content: cleanup/products/event-gateway
       icon_url: /assets/icons/gateway.svg
+    - title: Clean up Kong Identity resources
+      include_content: md/identity/delete_auth_server
 
-automated_tests: false
+
 related_resources:
   - text: Event Gateway
     url: /event-gateway/

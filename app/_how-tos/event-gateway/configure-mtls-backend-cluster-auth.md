@@ -49,8 +49,6 @@ related_resources:
 
 min_version:
   event-gateway: '1.1.0'
-
-automated_tests: false
 ---
 
 In this guide you'll configure {{site.event_gateway_short}} to connect to a secured Kafka cluster by presenting a mutual TLS client certificate.
@@ -80,6 +78,7 @@ This requires OpenSSL and `keytool` (included in any JDK installation).
     openssl req -new -x509 -nodes -keyout certs/ca.key -out certs/ca.crt \
       -days 365 -subj "/CN=Kafka-CA"
     ```
+    {:data-test-step="block"}
 
 1. Create the credentials file used as the password for all keystores, then import the CA into a shared truststore that all brokers will reference:
 
@@ -89,6 +88,7 @@ This requires OpenSSL and `keytool` (included in any JDK installation).
       -file certs/ca.crt -keystore certs/truststore.jks \
       -storepass changeit -noprompt
     ```
+    {:data-test-step="block"}
 
 1. For each broker, generate a key pair, sign it with the CA, and import both the CA certificate and the signed broker certificate into the broker's keystore:
 
@@ -115,15 +115,18 @@ This requires OpenSSL and `keytool` (included in any JDK installation).
         -storepass changeit -noprompt
     done
     ```
+    {:data-test-step="block"}
 
 1. Generate a PEM client certificate for {{site.event_gateway_short}}:
 
     ```bash
     openssl genrsa -out certs/client.key 2048
     openssl req -new -key certs/client.key -out certs/client.csr -subj "/CN=event-gateway"
+    printf "basicConstraints=CA:FALSE\nextendedKeyUsage=clientAuth\n" > certs/client.ext
     openssl x509 -req -in certs/client.csr -CA certs/ca.crt -CAkey certs/ca.key \
-      -CAcreateserial -out certs/client.crt -days 365
+      -CAcreateserial -out certs/client.crt -days 365 -extfile certs/client.ext
     ```
+    {:data-test-step="block"}
 
 ## Start the secured Kafka cluster
 
@@ -134,6 +137,7 @@ cat <<'EOF' > docker-compose.yaml
 {% include_cached _files/event-gateway/docker-compose-mtls.yaml %}
 EOF
 ```
+{:data-test-step="block"}
 
 The broker exposes an `SSL` listener on port `9088` in the Docker network for {{site.event_gateway_short}} mTLS connections (client certificate required), and a `PLAINTEXT` listener on ports `9094`/`9095`/`9096` for direct local access.
 
@@ -142,22 +146,12 @@ Start the cluster:
 ```bash
 docker compose up -d
 ```
+{:data-test-step="block"}
 
 ## Create an {{site.event_gateway_short}} control plane and data plane
 
-Run the [quickstart script](https://get.konghq.com/event-gateway) to provision a local data plane and configure your environment:
-
-```bash
-curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway
-```
-
-Copy the exported variable into your terminal:
-
-```bash
-export EVENT_GATEWAY_ID=your-gateway-id
-```
-
-{% include_cached /knep/quickstart-note.md %}
+{% event_gateway_quickstart %}
+{% endevent_gateway_quickstart %}
 
 ## Configure kafkactl
 
@@ -234,7 +228,7 @@ Then, create the backend cluster:
 url: /v1/event-gateways/$EVENT_GATEWAY_ID/backend-clusters
 status_code: 201
 method: POST
-body_cmd: $(cat mtls_backend_cluster.json)
+body_file: mtls_backend_cluster.json
 extract_body:
   - name: id
     variable: MTLS_BACKEND_CLUSTER_ID
@@ -329,15 +323,15 @@ command: |
 expected:
   return_code: 0
   message: |
-    TOPIC     PARTITIONS     REPLICATION FACTOR
-    orders    1              1
+    TOPIC      PARTITIONS     REPLICATION FACTOR
+    orders     1              1
 render_output: false
 {% endvalidation %}
 <!--vale on-->
 
 ```shell
-TOPIC     PARTITIONS     REPLICATION FACTOR
-orders    1              1
+TOPIC      PARTITIONS     REPLICATION FACTOR
+orders     1              1
 ```
 {:.no-copy-code}
 
