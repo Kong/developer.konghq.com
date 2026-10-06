@@ -37,5 +37,6 @@ tools/automated-tests/testReport.json
 tools/automated-tests/testReportFull.json
 tools/automated-tests/input/
 tools/automated-tests/.workspace/
+tools/automated-tests/AGENTS.md
 
 .idea/*
