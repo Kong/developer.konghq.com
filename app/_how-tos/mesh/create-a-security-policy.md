@@ -6,8 +6,6 @@ permalink: /mesh/create-a-security-policy/
 breadcrumbs:
   - /mesh/
   - /mesh/scenarios/
-tools:
-  - kongctl
 products:
   - mesh
 works_on:
@@ -41,8 +39,6 @@ next_steps:
     url: "/mesh/split-traffic-with-meshservice-resources/"
 ---
 
-This scenario starts with one connected Kubernetes zone. Use `kubectl` to manage its workloads and zone-local policies.
-
 ## Confirm the unsecured baseline
 
 Before adding security policy, confirm that `flight-control` can reach `check-in-api`:
@@ -52,7 +48,7 @@ kubectl exec -n kong-air-production deploy/flight-control -- \
   wget -q -T 5 -O- http://check-in-api.kong-air-production.svc.cluster.local:8080/
 ```
 
-The response is the `check-in-api` pod hostname. This establishes the baseline that the next two resources change: `MeshIdentity` gives the workloads authenticated identities, then `MeshTLS` requires those identities and closes the inbound listener until you explicitly authorize a caller.
+The response is the `check-in-api` pod hostname.
 
 ## Issue workload identity with `MeshIdentity`
 
@@ -114,13 +110,13 @@ spiffe://kong-air-mesh.zone1.mesh.local/ns/kong-air-production/sa/passenger-port
 {:.info}
 > `MeshIdentity` is an issuer, not an identity. It sets the CA/provider, the SPIFFE ID path template, and the trust domain. The actual SPIFFE ID is rendered per workload from that template. Every workload still gets a unique identity, and `MeshTrafficPermission` keeps full per-workload granularity even with one mesh-wide identity.
 >
-> Because this example omits `spiffeID.trustDomain`, the zone-aware default is `{% raw %}{{ .Mesh }}.{{ .Zone }}.mesh.local{% endraw %}`. For `kong-air-mesh` in `zone1`, that becomes `kong-air-mesh.zone1.mesh.local`. `.Zone` is the zone name you set when creating the zone, so these identities change if you used a different one.
+> Because this example omits `spiffeID.trustDomain`, the zone-aware default is `{% raw %}{{ .Mesh }}.{{ .Zone }}.mesh.local{% endraw %}`. For `kong-air-mesh` in `zone1`, that becomes `kong-air-mesh.zone1.mesh.local`. `.Zone` is the zone name you set when creating the zone.
 
 ## Enforce strict mTLS with `MeshTLS`
 
-`MeshIdentity` issues certificates but does not enforce their use. 
+`MeshIdentity` issues certificates but does not enforce their use. Use `MeshTLS` to reject any unencrypted or unauthenticated traffic.
 
-1. Apply a `MeshTLS` policy to reject any unencrypted or unauthenticated traffic across the mesh:
+1. Apply a `MeshTLS` policy:
 
    ```sh
    echo 'apiVersion: kuma.io/v1alpha1
@@ -158,9 +154,9 @@ spiffe://kong-air-mesh.zone1.mesh.local/ns/kong-air-production/sa/passenger-port
 
 ## Authorize service-to-service traffic
 
-Now let's grant `flight-control` access to `check-in-api`. The best practice path is to target the receiving data plane and allow the caller's authenticated SPIFFE identity explicitly.
+Now let's grant `flight-control` access to `check-in-api`. The best practice is to target the receiving data plane and allow the caller's authenticated SPIFFE identity explicitly.
 
-Because each workload runs as its own Kubernetes `ServiceAccount`, the SPIFFE ID encodes the zone, namespace, and service account name. `flight-control` runs in `zone1` as the `flight-control` `ServiceAccount`, so its SPIFFE ID is `spiffe://kong-air-mesh.zone1.mesh.local/ns/kong-air-production/sa/flight-control`. If you named your zone something other than `zone1` when you connected it, substitute that name in the trust domain:
+Because each workload runs as its own Kubernetes `ServiceAccount`, the SPIFFE ID encodes the zone, namespace, and service account name. `flight-control` runs in `zone1` as the `flight-control` `ServiceAccount`, so its SPIFFE ID is `spiffe://kong-air-mesh.zone1.mesh.local/ns/kong-air-production/sa/flight-control`.
 
 ```sh
 echo 'apiVersion: kuma.io/v1alpha1
