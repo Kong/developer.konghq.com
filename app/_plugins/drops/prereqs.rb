@@ -38,6 +38,8 @@ module Jekyll
       end
 
       def konnect_auth_only?
+        return false if prereqs['skip_product']
+
         @page.data['works_on']&.include?('konnect') && render_works_on? &&
           !(@page.data['products']&.include?('gateway') || @page.data['products']&.include?('ai-gateway'))
       end
@@ -61,6 +63,17 @@ module Jekyll
         products = [] if prereqs['skip_product']
 
         [tools, filtered_prereqs, products].any?(&:any?)
+      end
+
+      # True when the page renders the prereqs component only to expose the
+      # hidden test markers (no visible prerequisite content): a how-to whose
+      # product prereqs are declared inline in the body (skip_product) instead
+      # of in the standard prereqs accordion.
+      def test_markers_only?
+        return false unless prereqs['skip_product']
+        return false if @page.data['output_format'] == 'markdown'
+
+        @page.data.fetch('products', []).include?('operator')
       end
 
       def entities?

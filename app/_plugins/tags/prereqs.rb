@@ -9,7 +9,7 @@ module Jekyll
       @context = context
       @page = context.environments.first['page']
 
-      return unless @page['prerequisites'].any?
+      return unless @page['prerequisites'].any? || @page['prerequisites'].test_markers_only?
 
       # Set prereqs on both the context stack and the environment.
       # The `liquify` filter renders templates with only the environment hash,
