@@ -55,6 +55,61 @@ RSpec.describe 'prereqs/products/operator.md' do
                           text: 'helm upgrade --install kong-operator kong/kong-operator')
       expect(install.find('pre').text.strip).not_to end_with('\\')
     end
+
+    it 'waits for the operator deployment to become ready in the install prerequisite' do
+      install = html.find('.custom-code-block[data-test-prereq="block"]',
+                          text: 'helm upgrade --install kong-operator kong/kong-operator')
+      expect(install.find('pre').text).to include(
+        'kubectl -n kong-system wait --for=condition=Available=true --timeout=120s ' \
+        'deployment/kong-operator-kong-operator-controller-manager'
+      )
+    end
+  end
+
+  context 'extra Helm --set values' do
+    let(:template) do
+      <<~'LIQUID'
+        {% include prereqs/products/operator.md set='global.webhooks.options.certManager.enabled=true' %}
+      LIQUID
+    end
+
+    it 'renders the on-prem install command with single line continuations' do
+      install = html.find('.custom-code-block[data-test-prereq="block"]',
+                          text: 'helm upgrade --install kong-operator kong/kong-operator')
+      expect(install.find('pre').text.strip).to eq(<<~'CMD'.strip)
+        helm upgrade --install kong-operator kong/kong-operator -n kong-system \
+          --create-namespace \
+           --set image.tag= \
+          --set global.webhooks.options.certManager.enabled=true
+          kubectl -n kong-system wait --for=condition=Available=true --timeout=120s deployment/kong-operator-kong-operator-controller-manager
+      CMD
+    end
+  end
+
+  context 'page-level controller flags, a pinned chart version, and a KEG dataplane install' do
+    let(:template) do
+      <<~'LIQUID'
+        {% include prereqs/products/operator.md chart_version='2.4.0' keg_install=true set='a=b' %}
+      LIQUID
+    end
+    let(:page) do
+      {
+        'output_format' => 'html',
+        'path' => 'test.md',
+        'products' => ['operator'],
+        'works_on' => %w[konnect on-prem],
+        'prereqs' => { 'operator' => { 'controllers' => %w[AIGATEWAYDATAPLANE] } }
+      }
+    end
+
+    it 'renders the on-prem install command with single line continuations' do
+      install = html.find('.custom-code-block[data-test-prereq="block"]',
+                          text: 'helm upgrade --install kong-operator kong/kong-operator')
+      command = install.find('pre').text
+      expect(command).not_to include(' \ \\')
+      expect(command.strip).not_to end_with('\\')
+      validate_bash_syntax!(command)
+    end
   end
 
   context 'a pinned chart version' do
