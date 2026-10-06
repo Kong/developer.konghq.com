@@ -15,7 +15,7 @@ const PASSTHROUGH_VARIABLES = ["KONNECT_DOMAIN", "KONGCTL_DEFAULT_KONNECT_ENVIRO
 async function konnectRegion() {
   const filePath = path.resolve(__dirname, "../../app/_data/konnect_api_request.yml");
   const fileContent = await fs.readFile(filePath, "utf8");
-  return yaml.load(fileContent).region;
+  return load(fileContent).region;
 }
 
 export async function getRuntimeConfig(deploymentModel, product) {
