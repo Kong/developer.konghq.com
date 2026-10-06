@@ -33,8 +33,6 @@ search_aliases:
   - ai-routing-provider
 
 related_resources:
-  - text: NVIDIA Switchyard AI Routing plugin (classic {{site.base_gateway}})
-    url: /plugins/ai-routing-provider/
   - text: NVIDIA NeMo Switchyard
     url: https://github.com/NVIDIA-NeMo/Switchyard
   - text: AI Model entity
@@ -45,23 +43,19 @@ related_resources:
 icon: nvidia.svg
 ---
 
-The AI Routing Provider Policy is the {{site.ai_gateway}} 2.0 equivalent of the
-[NVIDIA Switchyard AI Routing plugin](/plugins/ai-routing-provider/): it asks the NVIDIA
-Switchyard Decision API which model should serve each request, then sends the request
-to an [AI Model](/ai-gateway/entities/ai-model/) entity you've already configured on this
-{{site.ai_gateway}}.
+The AI Routing Provider Policy asks the NVIDIA Switchyard Decision API which model should
+serve each request, then sends the request to an [AI Model](/ai-gateway/entities/ai-model/)
+entity you've already configured on this {{site.ai_gateway}}.
 
 This Policy resolves the selected target directly against your {{site.ai_gateway}}'s own AI
 Model entities, and {{site.ai_gateway}}'s native routing takes over from there.
-Unlike the classic {{site.base_gateway}} plugin, it doesn't need [AI Proxy Advanced](/plugins/ai-proxy-advanced/) in front of it.
 
-This Policy runs the same `schema.lua` and `handler.lua` that back the
-[NVIDIA Switchyard AI Routing plugin](/plugins/ai-routing-provider/), registered as a
-**custom policy** rather than installed as a plugin.
+It's implemented as a **custom policy**, using the `schema.lua` and `handler.lua` files in
+[Register the custom policy](#register-the-custom-policy).
 
 Benefits of using the AI Routing Provider Policy:
 
-- **Native dispatch**: Routes directly to an AI Model entity instead of rewriting a model alias for another plugin to resolve.
+- **Native dispatch**: Routes directly to an AI Model entity.
 - **Keep the gateway in control**: The decision service selects from a list of targets you configure. It can't introduce a model, a provider, or a URL that you didn't already authorize.
 - **Keep prompts inside the gateway**: By default, the Policy redacts every message before the decision request leaves {{site.ai_gateway}}, so routing doesn't cost you prompt disclosure.
 - **Fail open by default**: If the decision service is slow, down, or returns something unusable, traffic is still served by a configured default target.
@@ -107,19 +101,17 @@ sequenceDiagram
 
 The decision service names a target. The Policy resolves that name against its own
 configuration and this {{site.ai_gateway}}'s AI Model entities, and never accepts a URL or an
-unlisted model from the response. For the full safety and prompt-disclosure model shared
-with the classic plugin, see [How it works](/plugins/ai-routing-provider/#how-it-works) on
-the {{site.base_gateway}} plugin page.
+unlisted model from the response.
 
 ## Register the custom policy
 
 The AI Routing Provider Policy is registered as a **streaming custom policy**: you upload the
-plugin's `schema.lua` and `handler.lua` directly, and {{site.konnect_short_name}} distributes
+`schema.lua` and `handler.lua` files directly, and {{site.konnect_short_name}} distributes
 and runs the handler for you, without a custom data plane image or a self-managed data plane.
 See [Custom policies](/ai-gateway/custom-policies/) for the full deployment and lifecycle
 mechanics shared by every custom policy.
 
-Create a [`schema.lua` file](https://github.com/kong-partner-solutions/nvidia-switchyard-plugin/blob/main/kong-plugin/kong/plugins/ai-routing-provider/schema.lua) that defines the plugin’s configuration fields:
+Create a [`schema.lua` file](https://github.com/kong-partner-solutions/nvidia-switchyard-plugin/blob/main/kong-plugin/kong/plugins/ai-routing-provider/schema.lua) that defines the policy's configuration fields:
 ```sh
 cat <<'LUA_EOF' > schema.lua
 -- Copyright 2024-2026 Kong Inc.
@@ -1021,12 +1013,6 @@ changing behavior, then switch to `enforce`.
 - **`/v1/decision` doesn't return the confidence or reason code.**
   A well-formed `selected.target` is the only validity signal available, so a route whose classifier failed still returns a usable decision that happens to be its default.
   Read the decision service's `/v1/stats` to tell routing from falling back.
-- **Narrowing AI Model targets per request isn't possible.**
-  Its `filters/acl` configuration is static.
-  This Policy therefore dispatches by rewriting the model alias.
 - **Streaming responses haven't been exercised.**
 - **The decision call isn't retried.**
   It's advisory and fails open, so a retry would double the worst-case added latency during an outage without improving the outcome.
-- **`dispatch: model_alias` and `dispatch: upstream` don't apply here.** They target
-  [AI Proxy Advanced](/plugins/ai-proxy-advanced/) or a Service's upstream directly,
-  neither of which this Policy runs alongside. Use `dispatch: konnect_model`.
