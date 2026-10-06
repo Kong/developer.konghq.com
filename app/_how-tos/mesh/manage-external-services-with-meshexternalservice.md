@@ -13,6 +13,9 @@ works_on:
   - konnect
 min_version:
   mesh: '3.0'
+series:
+  id: mesh-kong-air-scenario
+  position: 11
 tldr:
   q: How do I manage specific external services as part of my mesh?
   a: |
@@ -22,12 +25,9 @@ tldr:
     3. **Apply Resiliency**: Use `MeshRetry`, `MeshTimeout`, and related mesh policies to configure retries and timeouts for external dependencies.
 prereqs:
   inline:
-    - title: Kong Air demo deployment
-      content: |
-        A running {{site.mesh_product_name}} deployment with the Kong Air demo apps in `kong-air-mesh`. See [Get started with your first policy](/mesh/get-started-with-your-first-policy/).
     - title: Mesh-scoped zone egress
       content: |
-        `kong-air-mesh` needs a mesh-scoped zone egress in the zone. Deploy it through the Helm `meshes:` list, which creates both the zone proxy `Deployment` and the `Service` the control plane reads the listener address and port from. A deployment without its `Service` registers as an ordinary `Dataplane` and never becomes a zone egress.
+        A mesh-scoped zone egress for `kong-air-mesh`. [Install {{site.mesh_product_name}} and deploy Kong Air](/mesh/install-kong-mesh-and-deploy-kong-air/) already deploys one, through the same Helm `meshes:` entry that creates the zone proxy `Deployment` and the `Service` the control plane reads the listener address and port from. See [Configure mesh-scoped zone proxies](/mesh/configure-mesh-scoped-zone-proxies/) to confirm it's running, or to add the same `meshes:` entry to a different zone control plane. A deployment without its `Service` registers as an ordinary `Dataplane` and never becomes a zone egress.
     - title: Workload identity
       content: |
         A `MeshIdentity` whose selector covers the zone proxies in `{{site.mesh_namespace}}` as well as the application workloads. See [Manage workload identity and mTLS](/mesh/manage-workload-identity-and-mtls/).

@@ -13,6 +13,9 @@ works_on:
   - konnect
 min_version:
   mesh: '3.0'
+series:
+  id: mesh-kong-air-scenario
+  position: 10
 tldr:
   q: How do I control traffic to services outside the mesh?
   a: |
@@ -22,9 +25,6 @@ tldr:
     3. **Enable visibility** by managing the mesh perimeter explicitly.
 prereqs:
   inline:
-    - title: Kong Air demo deployment
-      content: |
-        A running {{site.mesh_product_name}} deployment with the Kong Air demo apps in `kong-air-mesh`. See [Get started with your first policy](/mesh/get-started-with-your-first-policy/).
     - title: Transparent proxy
       content: |
         `MeshPassthrough` only applies to sidecars running with transparent proxy, which is the default for the Kubernetes sidecar injector. The control plane records a policy warning and skips the proxy otherwise.

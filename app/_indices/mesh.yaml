@@ -22,13 +22,14 @@ sections:
   - title: Fundamentals
     items:
       - path: /mesh/scenarios/
-      - path: /mesh/get-started-with-your-first-policy/
+      - path: /mesh/install-kong-mesh-and-deploy-kong-air/
+      - path: /mesh/create-a-security-policy/
       - path: /mesh/split-traffic-with-meshservice-resources/
 
   - title: Observability and security
     items:
-      - path: /mesh/observe-mesh-traffic-in-practice/
       - path: /mesh/deploy-an-opentelemetry-collector/
+      - path: /mesh/observe-mesh-traffic-in-practice/
       - path: /mesh/manage-workload-identity-and-mtls/
       - path: /mesh/integrate-an-external-ca/
 
@@ -46,6 +47,7 @@ sections:
   - title: Production readiness
     items:
       - path: /mesh/prepare-the-mesh-for-production/
+      - path: /mesh/production-readiness-checklist/
 
   - title: Explore by role
     items:

@@ -1,4 +1,4 @@
-This guide builds on [Get started with your first policy](/mesh/get-started-with-your-first-policy/). If you haven't completed it, run the following commands to install {{site.mesh_product_name}}, deploy the Kong Air demo apps, and apply that guide's `MeshIdentity`, `MeshTLS`, and `MeshTrafficPermission`.
+This guide builds on [Create a security policy](/mesh/create-a-security-policy/). If you haven't completed it, run the following commands to install {{site.mesh_product_name}}, deploy the Kong Air demo apps, and apply that guide's `MeshIdentity`, `MeshTLS`, and `MeshTrafficPermission`.
 
 The `MeshIdentity` sets `spiffeID.trustDomain` explicitly to `kong-air-mesh.zone1.mesh.local`. A standalone control plane would otherwise derive a trust domain from its own zone name, and the SPIFFE IDs used throughout this collection are written against `zone1`:
 

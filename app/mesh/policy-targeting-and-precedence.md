@@ -68,7 +68,7 @@ Matching labels is not sufficient on its own. Two further conditions decide whet
 The top-level `targetRef` answers **which proxies receive this configuration?** From there, a policy describes behavior in one of two directions:
 
 * `to[]` configures outbound traffic and answers **which destination does this behavior apply to?** For example, a `MeshTimeout` can select the `passenger-portal` proxies at the top level, then use `to[].targetRef` to apply a timeout only when those proxies call `check-in-api`. Destination references are first-class resources: `Mesh`, `MeshService`, `MeshMultiZoneService`, `MeshExternalService`, and `MeshHTTPRoute`.
-* `rules[]` configures inbound traffic. The policy selects the receiving proxies, then each rule matches properties of the incoming connection, such as the caller's authenticated SPIFFE ID. This is why the first-policy scenario targets `app: check-in-api` and allows the SPIFFE ID presented by `flight-control`.
+* `rules[]` configures inbound traffic. The policy selects the receiving proxies, then each rule matches properties of the incoming connection, such as the caller's authenticated SPIFFE ID. This is why [Create a security policy](/mesh/create-a-security-policy/) targets `app: check-in-api` and allows the SPIFFE ID presented by `flight-control`.
 
 The split is direction, not policy type, and many policies support both. `MeshTimeout`, `MeshCircuitBreaker`, `MeshAccessLog`, `MeshRateLimit`, and `MeshFaultInjection` carry `to` and `rules`. `MeshTLS` and `MeshTrafficPermission` are inbound only, so they carry `rules` alone. Check the policy reference before choosing a kind, because each policy supports its own set of destination targets.
 

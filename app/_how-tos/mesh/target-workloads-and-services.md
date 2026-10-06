@@ -6,24 +6,22 @@ description: How to scope policies in {{site.mesh_product_name}} using Dataplane
 breadcrumbs:
   - /mesh/
   - /mesh/scenarios/
+tools:
+  - kongctl
 products:
   - mesh
 works_on:
   - on-prem
   - konnect
+series:
+  id: mesh-kong-air-scenario
+  position: 4
 tldr:
   q: How should I target groups of proxies and services?
   a: |
     Modern {{site.mesh_product_name}} uses two targeting primitives:
     1. `Dataplane` with `labels:` at the top level of a policy, to scope it to a slice of the fleet (a zone, an environment, a team).
     2. `MeshService` in `spec.to[].targetRef` and `backendRefs`, to address explicit destinations (including canaries and blue/green variants).
-prereqs:
-  inline:
-    - title: Kong Air demo deployment
-      content: |
-        A running {{site.mesh_product_name}} deployment with the Kong Air demo apps in `kong-air-mesh`. See [Get started with your first policy](/mesh/get-started-with-your-first-policy/).
-    - title: kongctl
-      include_content: md/mesh/v3/prereqs/kongctl
 cleanup:
   inline:
     - title: Remove the timeout policies
@@ -31,8 +29,8 @@ cleanup:
     - title: Remove the Kong Air foundation
       include_content: md/mesh/v3/cleanup/kong-air-foundation
 next_steps:
-  - text: "Observe mesh traffic in practice"
-    url: "/mesh/observe-mesh-traffic-in-practice/"
+  - text: "Deploy an OpenTelemetry collector"
+    url: "/mesh/deploy-an-opentelemetry-collector/"
 related_resources:
   - text: MeshService
     url: /mesh/meshservice/

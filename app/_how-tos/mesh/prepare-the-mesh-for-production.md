@@ -6,6 +6,8 @@ description: Bound the outbound configuration each proxy receives with reachable
 breadcrumbs:
   - /mesh/
   - /mesh/scenarios/
+tools:
+  - kongctl
 products:
   - mesh
 works_on:
@@ -13,6 +15,9 @@ works_on:
   - konnect
 min_version:
   mesh: '3.0'
+series:
+  id: mesh-kong-air-scenario
+  position: 13
 tags:
   - service-mesh
   - data-plane
@@ -22,14 +27,16 @@ tldr:
   a: |
     Declare `reachableBackends` on every data plane proxy. It bounds the configuration the control plane generates and ships to each proxy, and in {{site.mesh_product_name}} 3.0 a proxy without it reaches nothing at all, because restricted outbound is on by default.
 
-    Then work through the rest of the 3.0 defaults that are now closed rather than open: outbound passthrough, retries, inbound ports, and the certificate authority behind your workload identity.
-prereqs:
-  inline:
-    - title: Kong Air demo deployment
-      content: |
-        A running {{site.mesh_product_name}} deployment with the Kong Air demo apps in `kong-air-mesh`. See [Get started with your first policy](/mesh/get-started-with-your-first-policy/).
-    - title: kongctl
-      include_content: md/mesh/v3/prereqs/kongctl
+    Then work through the rest of the 3.0 defaults that are now closed rather than open, such as outbound passthrough, retries, inbound ports, and the certificate authority behind your workload identity. See the [production readiness checklist](/mesh/production-readiness-checklist/).
+faqs:
+  - q: How do I spot destinations a workload starts calling after the profiling window?
+    a: |
+      The same DNS proxy exports metrics, which is the ongoing signal once the profiling window is over. `kuma_dp_dns_queries_total` counts queries by type and source, `kuma_dp_dns_response_codes_total` counts responses by code, and `kuma_dp_dns_entries_total` reports the size of the proxy's map. Each carries `mesh`, `kuma_io_zone`, `kuma_workload`, and `k8s_kuma_io_namespace` labels, so you can see which workload the queries came from.
+
+      The metrics are not labeled by hostname, deliberately, since that would make their cardinality grow with every name a workload resolves. They tell you that a workload is resolving more than you expected, and the query log tells you which name. Scrape them through [MeshMetric](/mesh/policies/meshmetric/), as set up in [Deploy an OpenTelemetry collector](/mesh/deploy-an-opentelemetry-collector/).
+  - q: What does the `source` field in the DNS query log mean?
+    a: |
+      The `source` field reports whether the proxy answered from its own DNS map or forwarded the query to the cluster resolver, which is not the same as whether the destination is in the mesh. On Kubernetes, a `MeshService` is addressed through the Kubernetes `Service` ClusterIP, so the proxy's map is typically empty and every lookup reads `source: upstream`. Do not read `upstream` as "outside the mesh".
 cleanup:
   inline:
     - title: Remove the reachable backend declarations
@@ -40,6 +47,8 @@ next_steps:
   - text: "Explore by role"
     url: "/mesh/persona/"
 related_resources:
+  - text: Production readiness checklist
+    url: /mesh/production-readiness-checklist/
   - text: Secure the perimeter with MeshPassthrough
     url: /mesh/secure-the-perimeter-with-meshpassthrough/
   - text: Manage external services with MeshExternalService
@@ -52,7 +61,7 @@ related_resources:
 
 Every scenario so far has added a capability to the Kong Air mesh. This one takes the mesh that results and makes it fit to run.
 
-Two kinds of work are involved. The first is bounding what the control plane has to compute and ship, which is what decides whether the mesh still behaves when Kong Air has three hundred services instead of three. The second is setting the {{site.mesh_product_name}} 3.0 defaults that are closed rather than open, so that nothing a production workload depends on is left to an implicit fallback.
+This guide bounds what the control plane has to compute and ship to each proxy, which is what decides whether the mesh still behaves when Kong Air has three hundred services instead of three. For the {{site.mesh_product_name}} 3.0 defaults that are closed rather than open, and the other controls that shape configuration at scale, see the [production readiness checklist](/mesh/production-readiness-checklist/).
 
 ## Why every proxy needs reachableBackends
 
@@ -93,7 +102,19 @@ The sidecar resolves DNS through an embedded proxy in `kuma-dp`, and that proxy 
    kubectl rollout status deployment/passenger-portal -n kong-air-production --timeout=120s
    ```
 
-1. Let the workload serve its normal traffic. A profiling window has to cover the workload's real behavior, including the destinations it only reaches on a schedule or during a failure path.
+1. Generate the lookups to profile. The Kong Air demo apps don't call each other on their own, so send a request from `passenger-portal` to `check-in-api`:
+
+   ```sh
+   kubectl exec -n kong-air-production deploy/passenger-portal -- wget -q -T 5 -O- http://check-in-api.kong-air-production.svc.cluster.local:8080/
+   ```
+
+1. Send a request from `passenger-portal` to `flight-control`:
+
+   ```sh
+   kubectl exec -n kong-air-production deploy/passenger-portal -- wget -q -T 5 -O- http://flight-control.kong-air-production.svc.cluster.local:8080/
+   ```
+
+   The query log records the DNS lookup, so the response doesn't matter here. On your own workloads, let the workload serve its normal traffic instead. A profiling window has to cover the workload's real behavior, including the destinations it only reaches on a schedule or during a failure path.
 
 1. Read back the distinct names the workload resolved successfully:
 
@@ -122,16 +143,7 @@ The sidecar resolves DNS through an embedded proxy in `kuma-dp`, and that proxy 
 {:.warning}
 > Filter on `"rcode": "noerror"`. Kubernetes resolves names with `ndots:5`, so a single lookup for `check-in-api.kong-air-production.svc.cluster.local` first tries that name with each search domain appended and logs several `nxdomain` lines before the one that resolves. Reading the log unfiltered makes one destination look like four.
 
-A resolved name is evidence that the workload tried to reach something, not proof of a connection, and the log has two blind spots worth knowing before you treat its output as a finished list. It records no port, so you still have to decide whether a ref needs one. It also records nothing for a workload that connects to a literal IP address, because that path makes no DNS query at all. Treat the list as the starting point and confirm it with the reachability checks in [Confirm the declaration reached the control plane](#confirm-the-declaration-reached-the-control-plane).
-
-{:.info}
-> The `source` field reports whether the proxy answered from its own DNS map or forwarded the query to the cluster resolver, which is not the same as whether the destination is in the mesh. On Kubernetes, a `MeshService` is addressed through the Kubernetes `Service` ClusterIP, so the proxy's map is typically empty and every lookup reads `source: upstream`. Do not read `upstream` as "outside the mesh".
-
-### Watch for destinations you missed
-
-The same DNS proxy exports metrics, which is the ongoing signal once the profiling window is over. `kuma_dp_dns_queries_total` counts queries by type and source, `kuma_dp_dns_response_codes_total` counts responses by code, and `kuma_dp_dns_entries_total` reports the size of the proxy's map. Each carries `mesh`, `kuma_io_zone`, `kuma_workload`, and `k8s_kuma_io_namespace` labels, so you can see which workload the queries came from.
-
-The metrics are not labeled by hostname, deliberately, since that would make their cardinality grow with every name a workload resolves. They tell you that a workload is resolving more than you expected, and the query log tells you which name. Scrape them through [MeshMetric](/mesh/policies/meshmetric/), as set up in [Deploy an OpenTelemetry collector](/mesh/deploy-an-opentelemetry-collector/).
+A resolved name is evidence that the workload tried to reach something, not proof of a connection, and the log has two blind spots worth knowing before you treat its output as a finished list. It records no port, so you still have to decide whether a ref needs one. It also records nothing for a workload that connects to a literal IP address, because that path makes no DNS query at all. Treat the list as the starting point and confirm it with the reachability checks in [Validate](#validate).
 
 ## Declare reachable backends for Kong Air
 
@@ -196,13 +208,9 @@ The Kong Air call graph is small enough to write out in full. `passenger-portal`
    kubectl rollout status deployment -n kong-air-production --timeout=120s
    ```
 
-### What else a ref can select
+A ref can also select `MeshMultiZoneService` and `MeshExternalService` backends. See [reachableBackends](/mesh/concepts/#reachablebackends) for what a ref can select.
 
-`kind` accepts `MeshService`, `MeshMultiZoneService`, and `MeshExternalService`, so a declaration covers in-zone services, multi-zone destinations, and external dependencies in one place. See [Concepts](/mesh/concepts/) for how those three resources differ.
-
-`labels: {}` selects every backend of that kind. The empty map is required rather than optional, because an omitted `labels` field and an empty one are indistinguishable once the ref is stored, so the control plane rejects a ref that omits it. Reaching for `labels: {}` to get a workload moving gives back most of the benefit of declaring anything, so prefer it as a short-lived diagnostic over a committed configuration.
-
-### Turn on restricted outbound
+## Turn on restricted outbound
 
 The three declarations are in place, so the mesh can now be closed without taking anything with it. Declaring first and closing second is the order to follow on a real mesh: closing first would drop every call that has not yet been declared.
 
@@ -212,10 +220,16 @@ The three declarations are in place, so the mesh can now be closed without takin
    helm upgrade kong-mesh kong-mesh/kong-mesh \
      --namespace kong-mesh-system --reuse-values \
      --set kuma.controlPlane.envVars.KUMA_DEFAULTS_RESTRICT_OUTBOUND="true"
-   kubectl wait -n kong-mesh-system --for=condition=ready pod --selector=app=kong-mesh-control-plane --timeout=90s
    ```
 
-   The control plane restarts and regenerates every proxy's configuration. The data plane proxies themselves do not restart, and they pick up the new configuration on their next xDS refresh, which the section [The xDS refresh interval](#the-xds-refresh-interval) covers.
+   The control plane restarts and regenerates every proxy's configuration. The data plane proxies themselves do not restart, and they pick up the new configuration on their next xDS refresh. See [The xDS refresh interval](/mesh/production-readiness-checklist/#the-xds-refresh-interval).
+
+1. Wait for the control plane to be ready:
+
+   ```sh
+   kubectl wait -n kong-mesh-system --for=condition=ready pod \
+     --selector=app=kong-mesh-control-plane --timeout=90s
+   ```
 
 1. Confirm the control plane is running with outbound restricted:
 
@@ -225,7 +239,7 @@ The three declarations are in place, so the mesh can now be closed without takin
 
    A control plane running with the setting off logs a warning at startup naming `KUMA_DEFAULTS_RESTRICT_OUTBOUND`. Once it is on, that warning is absent.
 
-### Confirm the declaration reached the control plane
+## Validate
 
 1. Read the generated `Dataplane` resources back from the control plane:
 
@@ -248,7 +262,7 @@ The three declarations are in place, so the mesh can now be closed without takin
    ```
    {:.no-copy-code}
 
-   A `403` is the right result here. It comes from `check-in-api`'s own inbound listener, which can only refuse a connection that arrived, so the outbound cluster exists and the request was delivered. [Get started with your first policy](/mesh/get-started-with-your-first-policy/) authorized `flight-control` and nothing else, so `MeshTrafficPermission` still denies `passenger-portal`. Reachability and authorization are separate gates, and this request cleared the first one.
+   A `403` is the right result here. It comes from `check-in-api`'s own inbound listener, which can only refuse a connection that arrived, so the outbound cluster exists and the request was delivered. [Create a security policy](/mesh/create-a-security-policy/) authorized `flight-control` and nothing else, so `MeshTrafficPermission` still denies `passenger-portal`. Reachability and authorization are separate gates, and this request cleared the first one.
 
 1. Confirm that an undeclared destination is not reachable. `passenger-portal` never declared `flight-control`:
 
@@ -265,7 +279,7 @@ The three declarations are in place, so the mesh can now be closed without takin
 
    No `403`, and no HTTP response at all. The caller's proxy has no cluster for that destination, so the request fails at the caller and never reaches `flight-control`. Without the declaration the same request returns `403`, so the two failures tell you which gate stopped the traffic.
 
-1. Confirm that `refs: []` means what it says. `flight-control` reached `check-in-api` successfully at the end of the first scenario, and `MeshTrafficPermission` still authorizes it:
+1. Confirm that `refs: []` means what it says. `flight-control` reached `check-in-api` successfully at the end of [Create a security policy](/mesh/create-a-security-policy/), and `MeshTrafficPermission` still authorizes it:
 
    ```sh
    kubectl exec -n kong-air-production deploy/flight-control -- wget -q -T 5 -O- http://check-in-api.kong-air-production.svc.cluster.local:8080/
@@ -279,89 +293,3 @@ The three declarations are in place, so the mesh can now be closed without takin
    {:.no-copy-code}
 
    An authorized path that the caller has not declared is not a path. Treat this as the check on your own service map: if a workload turns out to need a destination, give it a ref rather than leaving the permission to carry the traffic on its own.
-
-## Other controls that shape config at scale
-
-`reachableBackends` is the largest lever, because it is the one that scales with the service count. Three others decide how much work the control plane does and how quickly its output arrives.
-
-### The xDS refresh interval
-
-The control plane regenerates the xDS configuration of every connected proxy on `xdsServer.dataplaneConfigurationRefreshInterval` (`KUMA_XDS_SERVER_DATAPLANE_CONFIGURATION_REFRESH_INTERVAL`), which defaults to `10s` in 3.0 instead of the previous `1s`. Regenerating every proxy every second kept the control plane busy and scaled poorly with the number of proxies.
-
-Changes to meshes, policies, and services now take up to ten seconds to reach proxies. So do trust bundles, which has one consequence worth planning for: a CA rotation must leave the old CA in place for at least one refresh interval after the new one is added, or proxies that have not yet refreshed fail mTLS. See [Integrate an external CA](/mesh/integrate-an-external-ca/). If a deployment genuinely needs faster propagation, lower the interval deliberately and budget the control plane CPU for it.
-
-### KDS synchronization between zones
-
-In a multi-zone deployment the global and zone control planes exchange resources over KDS, and the event-based watchdog defaults changed in 3.0:
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Setting
-    key: setting
-  - title: Before
-    key: before
-  - title: "3.0"
-    key: after
-rows:
-  - setting: "`flushInterval`"
-    before: "`1s`"
-    after: "`5s`"
-  - setting: "`fullResyncInterval`"
-    before: "`1s`"
-    after: "`1m`"
-  - setting: "`delayFullResync`"
-    before: "`false`"
-    after: "`true`"
-{% endtable %}
-<!-- vale on -->
-
-These apply to both `multizone.global.kds.eventBasedWatchdog` and `multizone.zone.kds.eventBasedWatchdog`. At `1s` every connected zone rebuilt and re-hashed its entire snapshot every second and shipped an identical one. Changes still travel on the event path, coalesced over `flushInterval`, and a change missed on that path is repaired by the next full resync rather than within a second. See [Multi-zone architecture](/mesh/multi-zone-architecture/).
-
-### Policy target breadth
-
-A policy with a top-level `targetRef` of `kind: Mesh` has to be evaluated for every proxy in the mesh. Selecting the workloads a policy is actually meant to affect keeps that work proportional to the policy's real scope, and makes the policy easier to reason about when several of them overlap. See [Policy targeting and precedence](/mesh/policy-targeting-and-precedence/) and [Target workloads and services](/mesh/target-workloads-and-services/).
-
-## Production readiness checklist
-
-The remaining items are things {{site.mesh_product_name}} 3.0 expects you to decide rather than inherit. Each one is covered in full by the scenario it links to.
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Area
-    key: area
-  - title: What to do
-    key: action
-  - title: Where
-    key: where
-rows:
-  - area: "Outbound to the internet"
-    action: "Outbound passthrough defaults to `None`, so a transparent proxy that no `MeshPassthrough` selects drops traffic to anything outside the mesh. Allow the destinations your workloads use."
-    where: "[Secure the perimeter with MeshPassthrough](/mesh/secure-the-perimeter-with-meshpassthrough/)"
-  - area: "Retries"
-    action: "A new mesh gets no default policies. Timeouts and circuit breakers keep the values the control plane writes anyway, but a mesh without a `MeshRetry` does not retry at all. Apply one."
-    where: "[Validate resilience with fault injection](/mesh/validate-resilience-with-fault-injection/)"
-  - area: "Inbound ports"
-    action: "Strict inbound ports can no longer be turned off. A sidecar with transparent proxy and a workload identity accepts traffic only on the ports of its inbounds, so declare every port the workload receives on."
-    where: "[Concepts](/mesh/concepts/#inbound)"
-  - area: "Identity"
-    action: "Replace the autogenerated per-zone CA with one you control, so trust distribution and rotation belong to your identity platform rather than to a manual zone-to-zone operation."
-    where: "[Integrate an external CA](/mesh/integrate-an-external-ca/)"
-  - area: "Authorization"
-    action: "Run `MeshTLS` in `Strict` mode and keep `MeshTrafficPermission` default-deny, so an undeclared call path fails at authorization as well as at resolution."
-    where: "[Manage workload identity and mTLS](/mesh/manage-workload-identity-and-mtls/)"
-  - area: "External services"
-    action: "A `MeshExternalService` cluster requires a `MeshIdentity`. Confirm one matches the proxies that call it before the dependency is load bearing."
-    where: "[Manage external services with MeshExternalService](/mesh/manage-external-services-with-meshexternalservice/)"
-  - area: "Cross-zone load balancing"
-    action: "`MeshLoadBalancingStrategy` accepts `localityAwareness.crossZone` only on a `to` entry targeting a `MeshMultiZoneService`. The same block on a `Mesh`, `MeshService`, or `MeshExternalService` target is rejected."
-    where: "[Multi-zone architecture](/mesh/multi-zone-architecture/)"
-  - area: "Naming"
-    action: "Names of `Mesh`, `Zone`, `MeshService`, `MeshExternalService`, and `MeshMultiZoneService` must be RFC 1035 labels, because `HostnameGenerator` renders them into DNS hostnames. Non-conforming names are rejected rather than warned about."
-    where: "[Resource scoping](/mesh/resource-scoping/)"
-  - area: "Observability"
-    action: "Wire `MeshMetric`, `MeshTrace`, and `MeshAccessLog` to backends that share labels for mesh, zone, workload, and service, so one query spans every zone."
-    where: "[Observe mesh traffic in practice](/mesh/observe-mesh-traffic-in-practice/)"
-{% endtable %}
-<!-- vale on -->

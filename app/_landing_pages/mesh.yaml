@@ -222,12 +222,12 @@ rows:
       - blocks:
           - type: card
             config:
-              title: "Get started with your first policy"
+              title: "Create a security policy"
               description: |
                 Enable strict mTLS, give every workload a SPIFFE identity with MeshIdentity, and apply your first default-deny MeshTrafficPermission.
               cta:
                 text: View the guide
-                url: /mesh/get-started-with-your-first-policy/
+                url: /mesh/create-a-security-policy/
                 align: end
       - blocks:
           - type: card

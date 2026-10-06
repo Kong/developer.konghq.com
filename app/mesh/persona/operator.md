@@ -18,7 +18,7 @@ The operator is a Platform Engineer at Kong Air. The operator's mission is to pr
 
 ## Global infrastructure control
 
-The operator manages a distributed architecture consisting of a Global Control Plane and multiple Zone Control Planes.
+The operator manages a distributed architecture consisting of a global control plane and multiple zone control planes.
 
 - Global CP: Acts as the single source of truth for all {{site.mesh_product_name}} policies. The operator applies configurations once at the global level, and they are automatically synchronized to all zones. The global control plane runs on Konnect and is managed by Kong on behalf of the customer.
 - Zone CP: Handles the actual distribution of xDS configuration to local sidecars in zones like `zone1` and `zone2`.
@@ -67,7 +67,7 @@ To maintain a historical record of all flight search requests, the operator stre
 
 ## Operational health and lifecycle
 
-The operator monitors the health of the mesh using the Control Plane's built-in metrics. The operator tracks:
+The operator monitors the health of the mesh using the control plane's built-in metrics. The operator tracks:
 - CP-to-DP Latency: How quickly policy changes reach the developer's sidecars.
 - Cross-Zone Latency: The performance of the network between US and EU zones.
 - Resource Utilization: Ensuring the zone ingress and zone egress proxies have sufficient CPU/RAM.

@@ -47,7 +47,7 @@ spec:
         allow:
           - spiffeID:
               type: Exact
-              value: <flight-control-spiffe-id>
+              value: FLIGHT_CONTROL_SPIFFE_ID
 ```
 
 This ties authorization to the caller's authenticated SPIFFE identity: the policy attaches to the `flight-db` proxies and allows only the `flight-control` identity.
@@ -55,7 +55,7 @@ This ties authorization to the caller's authenticated SPIFFE identity: the polic
 {:.info}
 > A top-level `targetRef` accepts only `Mesh` or `Dataplane`, and `MeshTrafficPermission` expresses authorization through `rules[]` with `allow`, `deny`, or `allowWithShadowDeny`. The `Dataplane` selector plus a SPIFFE-id `allow` rule is the shape shown here.
 
-Replace `<flight-control-spiffe-id>` with the actual SPIFFE ID emitted by your `MeshIdentity` template. On the Kubernetes best-practice path, that is usually a ServiceAccount-based identity rather than a short `spiffe://<mesh>/<workload>` form.
+Replace `FLIGHT_CONTROL_SPIFFE_ID` with the actual SPIFFE ID emitted by your `MeshIdentity` template. On the Kubernetes best-practice path, that is usually a ServiceAccount-based identity rather than a short `spiffe://<mesh>/<workload>` form.
 
 {:.info}
 > To allow communication between broad security zones (for example, `zone: dmz` to `zone: internal`), the security architect uses a `Dataplane` selector with `labels:` at the top level. See [Target workloads and services](/mesh/target-workloads-and-services/).

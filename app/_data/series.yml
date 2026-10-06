@@ -47,6 +47,9 @@ mesh-get-started-universal:
 mesh-scoped-zone-proxy:
   title: Deploy and configure mesh-scoped zone proxies
   url: /mesh/zone-proxies/
+mesh-kong-air-scenario:
+  title: "{{ site.mesh_product_name }} scenarios: the Kong Air journey"
+  url: /mesh/scenarios/
 mcp-conversion-2-0:
   title: Map a RESTful API to MCP tools and observe MCP traffic
   url: /ai-gateway/map-api-to-mcp-tools/

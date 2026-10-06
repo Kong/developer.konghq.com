@@ -13,6 +13,9 @@ works_on:
   - konnect
 min_version:
   mesh: '3.0'
+series:
+  id: mesh-kong-air-scenario
+  position: 3
 faqs:
   - q: "Why does the Service need `appProtocol: http`?"
     a: |
@@ -209,7 +212,7 @@ spec:
 
 ## Authorize check-in-api to call passenger-portal
 
-The mesh-wide `MeshTLS` from [Get started with your first policy](/mesh/get-started-with-your-first-policy/) enforces strict mTLS and default-deny on every workload, including `passenger-portal`. That guide only authorized `flight-control` to call `check-in-api`, so grant `check-in-api` access to `passenger-portal` too:
+The mesh-wide `MeshTLS` from [Create a security policy](/mesh/create-a-security-policy/) enforces strict mTLS and default-deny on every workload, including `passenger-portal`. That guide only authorized `flight-control` to call `check-in-api`, so grant `check-in-api` access to `passenger-portal` too:
 
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1

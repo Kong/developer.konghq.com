@@ -54,12 +54,21 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Get started with your first policy
+              title: Install {{site.mesh_product_name}} and deploy Kong Air
+              description: |
+                Create the mesh, connect a Kubernetes zone, and deploy the Kong Air demo apps.
+              cta:
+                text: Read
+                url: /mesh/install-kong-mesh-and-deploy-kong-air/
+      - blocks:
+          - type: card
+            config:
+              title: Create a security policy
               description: |
                 Workload identity with `MeshIdentity`, strict mTLS, and your first default-deny authorization.
               cta:
                 text: Read
-                url: /mesh/get-started-with-your-first-policy/
+                url: /mesh/create-a-security-policy/
       - blocks:
           - type: card
             config:
@@ -103,6 +112,15 @@ rows:
       sub_text: See how Kong Air gains visibility into every flight-critical request and protects passenger data.
     column_count: 3
     columns:
+      - blocks:
+          - type: card
+            config:
+              title: Deploy an OpenTelemetry collector
+              description: |
+                Run the collector and the backends that receive metrics, traces, and logs.
+              cta:
+                text: Read
+                url: /mesh/deploy-an-opentelemetry-collector/
       - blocks:
           - type: card
             config:
@@ -201,10 +219,19 @@ rows:
             config:
               title: Prepare the mesh for production
               description: |
-                Bound outbound config with `reachableBackends`, and the 3.0 defaults to set deliberately.
+                Declare what each workload calls with `reachableBackends`, then turn on restricted outbound.
               cta:
                 text: Read
                 url: /mesh/prepare-the-mesh-for-production/
+      - blocks:
+          - type: card
+            config:
+              title: Production readiness checklist
+              description: |
+                The 3.0 defaults to set deliberately, and the control plane settings that shape configuration at scale.
+              cta:
+                text: Read
+                url: /mesh/production-readiness-checklist/
 
   - header:
       type: h2

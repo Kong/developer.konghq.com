@@ -13,6 +13,9 @@ works_on:
   - konnect
 min_version:
   mesh: '3.0'
+series:
+  id: mesh-kong-air-scenario
+  position: 12
 tldr:
   q: How do I test my microservices for resilience?
   a: |
@@ -22,9 +25,6 @@ tldr:
     3. **Validate Defenses** like `MeshRetry` and `MeshCircuitBreaker` before they are needed in production.
 prereqs:
   inline:
-    - title: Kong Air demo deployment
-      content: |
-        A running {{site.mesh_product_name}} deployment with the Kong Air demo apps in `kong-air-mesh`. See [Get started with your first policy](/mesh/get-started-with-your-first-policy/).
     - title: A permitted request path
       content: |
         `MeshFaultInjection` faults requests that reach the destination, so you need a call that already succeeds. The Kong Air `MeshTrafficPermission` allows `flight-control` to call `check-in-api`, so every example here faults `check-in-api` and drives it from `flight-control`. If you fault a destination the caller is not authorized to reach, you get a `403 Forbidden` from `MeshTrafficPermission` and never see the injected fault.
@@ -38,8 +38,8 @@ cleanup:
     - title: Remove the Kong Air foundation
       include_content: md/mesh/v3/cleanup/kong-air-foundation
 next_steps:
-  - text: "Explore by role"
-    url: "/mesh/persona/"
+  - text: "Prepare the mesh for production"
+    url: "/mesh/prepare-the-mesh-for-production/"
 related_resources:
   - text: MeshFaultInjection
     url: /mesh/policies/meshfaultinjection/

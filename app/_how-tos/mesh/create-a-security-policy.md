@@ -1,11 +1,13 @@
 ---
-title: Get started with your first policy
+title: Create a security policy
 description: A hands-on guide to applying your first security policy with {{site.mesh_product_name}}, enabling mTLS and enforcing zero-trust traffic permissions.
 content_type: how_to
-permalink: /mesh/get-started-with-your-first-policy/
+permalink: /mesh/create-a-security-policy/
 breadcrumbs:
   - /mesh/
   - /mesh/scenarios/
+tools:
+  - kongctl
 products:
   - mesh
 works_on:
@@ -15,6 +17,9 @@ tags:
   - mtls
 min_version:
   mesh: '3.0'
+series:
+  id: mesh-kong-air-scenario
+  position: 2
 tldr:
   q: How do I secure my services with {{site.mesh_product_name}}?
   a: |
@@ -22,18 +27,6 @@ tldr:
     1. Issue SPIFFE/X.509 workload certificates with `MeshIdentity`.
     2. Use `MeshTLS` to require those identities and reject unencrypted or unauthenticated traffic.
     3. Authorize traffic explicitly by creating `MeshTrafficPermission` policies for your services.
-prereqs:
-  inline:
-    - title: A {{site.konnect_short_name}} account
-      include_content: prereqs/products/konnect-account-only
-    - title: A running Kubernetes cluster
-      include_content: md/mesh/v3/prereqs/kubernetes-cluster
-    - title: kongctl
-      include_content: md/mesh/v3/prereqs/kongctl
-    - title: Create the mesh and connect a Kubernetes zone
-      include_content: md/mesh/v3/prereqs/konnect-zone
-    - title: Deploy Kong Air
-      include_content: md/mesh/v3/prereqs/kong-air-quickstart
 related_resources:
   - text: Issue identity with MeshIdentity
     url: /mesh/issue-identity-with-meshidentity/
