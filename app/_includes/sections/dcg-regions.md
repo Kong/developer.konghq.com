@@ -60,7 +60,7 @@ rows:
       * `cac1-az1`
       * `cac1-az2`
       * `cac1-az4`
-  - region: "Canada West - Calgary (`ca-west-1`)"
+  - region: "Canada West (`ca-west-1`)"
     az: |
       * `caw1-az1`
       * `caw1-az2`
