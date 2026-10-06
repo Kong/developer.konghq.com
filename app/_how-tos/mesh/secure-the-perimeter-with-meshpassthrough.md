@@ -16,7 +16,7 @@ min_version:
 tldr:
   q: How do I control traffic to services outside the mesh?
   a: |
-    By default, {{site.mesh_product_name}} allows all outbound traffic. Use **MeshPassthrough** to:
+    On a control plane that allows outbound traffic by default, use **MeshPassthrough** to:
     1. **Restrict access** by setting `passthroughMode: None`.
     2. **Allowlist destinations** by matching specific domains (for example, `*.google.com`).
     3. **Enable visibility** by managing the mesh perimeter explicitly.
@@ -50,9 +50,11 @@ related_resources:
 
 ## The open mesh and the secure mesh
 
-### Open mesh (default)
+### Open mesh
 
 Sidecars allow all traffic to any external destination. This is handled by the Envoy "Original Destination" cluster.
+
+This is the state the Kong Air mesh starts in, because its control plane sets `defaults.restrictOutbound` to `false`. That same setting governs the default passthrough cluster: with it on, which is the {{site.mesh_product_name}} 3.0 default, a proxy with no matching `MeshPassthrough` policy does not get the passthrough cluster at all, and external traffic is already closed. Check the setting on your own control plane before assuming which of these two states you are starting from. [Prepare the mesh for production](/mesh/prepare-the-mesh-for-production/) covers turning it on.
 *   Risk: If a workload is compromised, it can exfiltrate data to any server on the internet.
 *   Visibility: No centralized logging or control over what external services are being consumed.
 

@@ -5,7 +5,8 @@ The `MeshIdentity` sets `spiffeID.trustDomain` explicitly to `kong-air-mesh.zone
 ```sh
 helm repo add kong-mesh https://kong.github.io/kong-mesh-charts
 helm repo update
-helm upgrade --install --create-namespace --namespace kong-mesh-system kong-mesh kong-mesh/kong-mesh
+helm upgrade --install --create-namespace --namespace kong-mesh-system kong-mesh kong-mesh/kong-mesh \
+  --set kuma.controlPlane.envVars.KUMA_DEFAULTS_RESTRICT_OUTBOUND="false"
 kubectl wait -n kong-mesh-system --for=condition=ready pod --selector=app=kong-mesh-control-plane --timeout=5m
 sleep 10
 
