@@ -55,8 +55,10 @@ A `Mesh` is a global resource, so you create it on the {{site.konnect_short_name
        kdsGlobalAddress: $CONTROL_PLANE_URL
        konnect:
          cpId: $CONTROL_PLANE_ID
+       envVars:
+         KUMA_DEFAULTS_RESTRICT_OUTBOUND: "false"
        secrets:
-         - Env: KMESH_MULTIZONE_ZONE_KDS_AUTH_CP_TOKEN_INLINE
+         - Env: KUMA_MULTIZONE_ZONE_KDS_AUTH_TOKEN_INLINE
            Secret: cp-token
            Key: token
      meshes:
@@ -67,6 +69,8 @@ A `Mesh` is a global resource, so you create it on the {{site.konnect_short_name
            enabled: true
    EOF
    ```
+
+   `KUMA_DEFAULTS_RESTRICT_OUTBOUND` is set to `false` so that the mesh starts open. In {{site.mesh_product_name}} 3.0 this setting defaults to `true`, which means a proxy reaches only the destinations its workload declares in `reachableBackends`, and reaches nothing at all until it declares something. Leaving it on from the first command would require every scenario to carry outbound declarations before it could teach anything else. [Prepare the mesh for production](/mesh/prepare-the-mesh-for-production/) writes those declarations and turns the setting back on, which is the state a production mesh should run in.
 
 1. Install {{site.mesh_product_name}}:
 

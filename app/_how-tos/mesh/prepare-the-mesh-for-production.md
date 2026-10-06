@@ -62,8 +62,10 @@ By default the control plane assumes any workload might call any destination in 
 
 In {{site.mesh_product_name}} 3.0 the control plane setting `defaults.restrictOutbound` defaults to `true`, and a data plane proxy that declares no `reachableBackends` receives no outbound clusters at all. It cannot reach any service through the proxy.
 
+The Kong Air control plane in this collection was installed with that setting turned off, so that every scenario up to this point could teach one idea without also requiring an outbound declaration for it. This guide reverses that. You declare what each workload calls, then turn the setting on, which is the order a running mesh has to follow if it is not to drop traffic in between.
+
 {:.warning}
-> Setting `defaults.restrictOutbound` to `false` restores the pre-3.0 behavior, where every proxy can reach every destination. Treat that as a step to help onboard workloads, not as the default.
+> `defaults.restrictOutbound` set to `false` is the pre-3.0 behavior, where every proxy can reach every destination and receives configuration for all of them. Treat it as a position to migrate off, not a setting to leave alone.
 
 ## Discover what each workload calls
 
@@ -199,6 +201,29 @@ The Kong Air call graph is small enough to write out in full. `passenger-portal`
 `kind` accepts `MeshService`, `MeshMultiZoneService`, and `MeshExternalService`, so a declaration covers in-zone services, multi-zone destinations, and external dependencies in one place. See [Concepts](/mesh/concepts/) for how those three resources differ.
 
 `labels: {}` selects every backend of that kind. The empty map is required rather than optional, because an omitted `labels` field and an empty one are indistinguishable once the ref is stored, so the control plane rejects a ref that omits it. Reaching for `labels: {}` to get a workload moving gives back most of the benefit of declaring anything, so prefer it as a short-lived diagnostic over a committed configuration.
+
+### Turn on restricted outbound
+
+The three declarations are in place, so the mesh can now be closed without taking anything with it. Declaring first and closing second is the order to follow on a real mesh: closing first would drop every call that has not yet been declared.
+
+1. Set `KUMA_DEFAULTS_RESTRICT_OUTBOUND` to `true` on the zone control plane:
+
+   ```sh
+   helm upgrade kong-mesh kong-mesh/kong-mesh \
+     --namespace kong-mesh-system --reuse-values \
+     --set kuma.controlPlane.envVars.KUMA_DEFAULTS_RESTRICT_OUTBOUND="true"
+   kubectl wait -n kong-mesh-system --for=condition=ready pod --selector=app=kong-mesh-control-plane --timeout=90s
+   ```
+
+   The control plane restarts and regenerates every proxy's configuration. The data plane proxies themselves do not restart, and they pick up the new configuration on their next xDS refresh, which the section [The xDS refresh interval](#the-xds-refresh-interval) covers.
+
+1. Confirm the control plane is running with outbound restricted:
+
+   ```sh
+   kubectl get pods -n kong-mesh-system -l app=kong-mesh-control-plane
+   ```
+
+   A control plane running with the setting off logs a warning at startup naming `KUMA_DEFAULTS_RESTRICT_OUTBOUND`. Once it is on, that warning is absent.
 
 ### Confirm the declaration reached the control plane
 
