@@ -63,6 +63,7 @@ sections:
       - path: /ai-gateway/entities/ai-agent/
       - path: /ai-gateway/entities/ai-mcp-server/
       - path: /ai-gateway/entities/ai-policy/
+      - path: /ai-gateway/entities/ai-custom-policy/
       - path: /ai-gateway/entities/ai-consumer/
       - path: /ai-gateway/entities/ai-consumer-group/
       - path: /ai-gateway/entities/ai-vault/
