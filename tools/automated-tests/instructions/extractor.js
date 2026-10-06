@@ -1,7 +1,7 @@
 import { chromium } from "playwright";
 import fs from "fs/promises";
 import path from "path";
-import yaml from "js-yaml";
+import { dump } from "js-yaml";
 
 class NonFirstSeriesPageError extends Error {}
 
@@ -283,7 +283,7 @@ async function writeInstructionsToFile(url, config, platform, product, instructi
   const instructionsDir = path.dirname(instructionsFile);
   await fs.mkdir(instructionsDir, { recursive: true });
 
-  await fs.writeFile(instructionsFile, yaml.dump(instructions), "utf-8");
+  await fs.writeFile(instructionsFile, dump(instructions), "utf-8");
 
   return instructionsFile;
 }

@@ -402,6 +402,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.13.0.11": [
+    {
+      "message": "Fixed an issue where disabling `verify_signature` gave no warning, even though it also skips signature verification for bearer tokens from clients. The plugin now logs a warning when `verify_signature` is `false` and `auth_methods` includes `bearer`. It logs a notice instead when `bearer` is not enabled.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Added support for session binding (IP, scheme, and/or User-Agent header).\n",
@@ -628,6 +635,13 @@
     },
     {
       "message": "The `ignore_signature` option now logs a warning when it is set,\nbecause it turns off JWS signature verification for the listed grants.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.19": [
+    {
+      "message": "Fixed an issue where disabling `verify_signature` gave no warning, even though it also skips signature verification for bearer tokens from clients. The plugin now logs a warning when `verify_signature` is `false` and `auth_methods` includes `bearer`. It logs a notice instead when `bearer` is not enabled.",
       "type": "bugfix",
       "scope": "Plugin"
     }

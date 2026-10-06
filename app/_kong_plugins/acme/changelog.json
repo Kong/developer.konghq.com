@@ -30,6 +30,20 @@
       "scope": "Plugin"
     }
   ],
+  "3.13.0.11": [
+    {
+      "message": "Fixed an issue where an expired `fail_backoff` key would keep blocking certificate issuance. Retries are now rejected only while the backoff timestamp is still in the future.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.19": [
+    {
+      "message": "Fixed an issue where an expired `fail_backoff` key would keep blocking certificate issuance. Retries are now rejected only while the backoff timestamp is still in the future.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.8.0.0": [
     {
       "message": "Fixed an issue of DP reporting that deprecated config fields are used when configuration from CP is pushed",

@@ -94,7 +94,8 @@
             "cohere",
             "gemini",
             "huggingface",
-            "openai"
+            "openai",
+            "typesafe"
           ],
           "description": "LLM input and output format and schema to use",
           "default": "openai"

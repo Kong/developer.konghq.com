@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect AI Gateway
-  version: 2.1.3
+  version: 2.2.1
   description: The API for configuring AI Gateways in Konnect.
   x-extensions-note: |
     Entities and properties may be annotated with `x-min-runtime-version`, the
@@ -18,8 +18,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@967ef5d7063968ff669a94e5574ba15cb8fe23d0
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/967ef5d7063968ff669a94e5574ba15cb8fe23d0'
+  x-oas-source: kong/platform-api@2b3a8091e5f0207f040be6777d628952c8d97a26
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/2b3a8091e5f0207f040be6777d628952c8d97a26'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -1014,6 +1014,121 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
       tags:
         - AI Gateway Policies
+  '/ai-gateways/{gatewayId}/custom-policies':
+    parameters:
+      - $ref: '#/components/parameters/AIGatewayId'
+    get:
+      operationId: list-ai-gateway-custom-policies
+      summary: List AI Gateway Custom Policies
+      description: Returns a list of custom policies registered for the AI Gateway.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageAfter'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListAIGatewayCustomPoliciesResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      tags:
+        - AI Gateway Custom Policies
+    post:
+      operationId: create-ai-gateway-custom-policy
+      summary: Create an AI Gateway Custom Policy
+      description: Registers a new custom policy for the AI Gateway.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAIGatewayCustomPolicyRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateAIGatewayCustomPolicyResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      tags:
+        - AI Gateway Custom Policies
+  '/ai-gateways/{gatewayId}/custom-policies/{customPolicyIdOrName}':
+    parameters:
+      - $ref: '#/components/parameters/AIGatewayId'
+      - $ref: '#/components/parameters/AIGatewayCustomPolicyIdOrName'
+    get:
+      operationId: get-ai-gateway-custom-policy
+      summary: Get an AI Gateway Custom Policy
+      description: Returns the details of a specific AI Gateway custom policy.
+      responses:
+        '200':
+          $ref: '#/components/responses/GetAIGatewayCustomPolicyResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      tags:
+        - AI Gateway Custom Policies
+    put:
+      operationId: update-ai-gateway-custom-policy
+      summary: Update an AI Gateway Custom Policy
+      description: Updates the configuration of an existing AI Gateway custom policy.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAIGatewayCustomPolicyRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/UpdateAIGatewayCustomPolicyResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      tags:
+        - AI Gateway Custom Policies
+    delete:
+      operationId: delete-ai-gateway-custom-policy
+      summary: Delete an AI Gateway Custom Policy
+      description: Removes a specific AI Gateway custom policy.
+      responses:
+        '204':
+          description: Custom policy deleted successfully.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      tags:
+        - AI Gateway Custom Policies
   '/ai-gateways/{gatewayId}/models':
     parameters:
       - $ref: '#/components/parameters/AIGatewayId'
@@ -2536,6 +2651,20 @@ components:
           summary: The id of the entity.
       schema:
         $ref: '#/components/schemas/AIGatewayEntityIdentifier'
+    AIGatewayCustomPolicyIdOrName:
+      name: customPolicyIdOrName
+      in: path
+      required: true
+      description: The unique ID or name of the AI Gateway custom policy.
+      examples:
+        name:
+          value: my-entity-name
+          summary: The name of the entity.
+        id:
+          value: bf138ba2-c9b1-4229-b268-04d9d8a6410b
+          summary: The id of the entity.
+      schema:
+        $ref: '#/components/schemas/AIGatewayEntityIdentifier'
     AIGatewayDataPlaneCertificateId:
       name: certificateId
       in: path
@@ -2737,6 +2866,8 @@ components:
         Data planes older than this version still connect for topology visibility.
 
         When not specified, the latest generally available runtime version is used.
+
+        When runtime_auto_upgrade is enabled (the default), this value is raised automatically to track the minimum runtime version reported across connected data planes, so any value set here may be superseded as the fleet upgrades.
       type: string
       example: '2.0'
       pattern: ^\d+\.\d+$
@@ -2747,11 +2878,13 @@ components:
         It may be lowered only when no configuration already stored uses a feature that requires a runtime version above the requested one. Otherwise the request is rejected, naming the entities and fields that stand in the way so that they can be removed or downgraded first.
 
         When not specified, the minimum runtime version is left unchanged.
+
+        When runtime_auto_upgrade is enabled (the default), this value is raised automatically to track the minimum runtime version reported across connected data planes, so any value set here may be superseded as the fleet upgrades.
       type: string
       example: '2.0'
       pattern: ^\d+\.\d+$
     AIGatewayRuntimeAutoUpgrade:
-      description: Whether the control plane should automatically raise min_runtime_version as connected data planes report a newer AI Gateway runtime version.
+      description: Whether the control plane should automatically raise min_runtime_version to match the DP fleet's minimum runtime version (the lowest AI Gateway runtime version reported across all connected data planes) as that value increases.
       type: boolean
       default: true
     CreateAIGatewayRequest:
@@ -3405,6 +3538,10 @@ components:
           description: An optional description of the certificate.
           type: string
           maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/PublicLabels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
       additionalProperties: false
       required:
         - cert
@@ -3424,6 +3561,10 @@ components:
           description: An optional description of the certificate.
           type: string
           maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/PublicLabels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
         id:
           $ref: '#/components/schemas/UUID'
         created_at:
@@ -3513,6 +3654,8 @@ components:
           description: The version of the configuration applied by the node.
           type: string
           readOnly: true
+        config_sync:
+          $ref: '#/components/schemas/AIGatewayDataPlaneNodeConfigSync'
         errors:
           description: Validation or configuration errors reported by the data plane node.
           type: array
@@ -3540,6 +3683,40 @@ components:
         - created_at
         - updated_at
         - compatibility_status
+    AIGatewayDataPlaneNodeConfigSync:
+      type: object
+      properties:
+        state:
+          description: Config sync state.
+          type: string
+          enum:
+            - STATE_UNSPECIFIED
+            - STATE_IN_SYNC
+            - STATE_PENDING
+            - STATE_RESILIENCY
+        version_id:
+          description: The version ID of the configuration currently applied by the node.
+          type: string
+        resiliency:
+          $ref: '#/components/schemas/AIGatewayDataPlaneNodeResiliency'
+      additionalProperties: false
+    AIGatewayDataPlaneNodeResiliency:
+      description: Present when the control plane is serving the node's last-known-good configuration because the current configuration could not be applied.
+      type: object
+      properties:
+        fallback_config_version:
+          description: The configuration version of the fallback config in use.
+          type: string
+        activated_at:
+          description: The timestamp when the resiliency state was activated.
+          type: integer
+        latest_config_errors:
+          description: The list of errors encountered when applying the latest configuration.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayDataPlaneNodeError'
+      additionalProperties: false
+      readOnly: true
     AIGatewayDataPlaneNodeError:
       type: object
       properties:
@@ -3723,7 +3900,10 @@ components:
               - audio/translation
               - video
               - rerank
-          minItems: 1
+              - decisions
+            x-enum-min-runtime-version:
+              decisions: '2.2'
+            description: '**`decisions` requires a minimum runtime version of `2.2`**.'
       required:
         - display_name
         - name
@@ -3733,7 +3913,7 @@ components:
         - config
         - capabilities
     AIGatewayModelAPI:
-      description: Configuration for proxying asynchronous requests/responses to/from an AI Gateway model using the files and batches APIs.
+      description: 'Configuration for proxying asynchronous requests/responses to/from an AI Gateway model using the files, batches, and skills APIs.'
       type: object
       properties:
         display_name:
@@ -3788,6 +3968,10 @@ components:
             enum:
               - batches
               - files
+              - skills
+            x-enum-min-runtime-version:
+              skills: '2.2'
+            description: '**`skills` requires a minimum runtime version of `2.2`**.'
       required:
         - display_name
         - name
@@ -5035,7 +5219,12 @@ components:
       type: object
       properties:
         type:
-          description: The format type.
+          description: |-
+            The format type.
+
+            **`passthrough` requires a minimum runtime version of `2.2`**.
+
+            **`typesafe` requires a minimum runtime version of `2.2`**.
           type: string
           example: openai
           enum:
@@ -5045,6 +5234,11 @@ components:
             - gemini
             - huggingface
             - openai
+            - passthrough
+            - typesafe
+          x-enum-min-runtime-version:
+            passthrough: '2.2'
+            typesafe: '2.2'
       additionalProperties: false
     AIGatewayTarget:
       description: A target instance a model entry routes requests to.
@@ -5104,6 +5298,7 @@ components:
           vllm: '#/components/schemas/AIGatewayTargetVllmConfig'
           xai: '#/components/schemas/AIGatewayTargetXaiConfig'
           sagemaker: '#/components/schemas/AIGatewayTargetSagemakerConfig'
+          typesafe: '#/components/schemas/AIGatewayTargetTypesafeConfig'
       oneOf:
         - $ref: '#/components/schemas/AIGatewayTargetAnthropicConfig'
         - $ref: '#/components/schemas/AIGatewayTargetAzureConfig'
@@ -5124,6 +5319,7 @@ components:
         - $ref: '#/components/schemas/AIGatewayTargetVllmConfig'
         - $ref: '#/components/schemas/AIGatewayTargetXaiConfig'
         - $ref: '#/components/schemas/AIGatewayTargetSagemakerConfig'
+        - $ref: '#/components/schemas/AIGatewayTargetTypesafeConfig'
     AIGatewayCacheWriteCost:
       type: object
       properties:
@@ -7045,6 +7241,32 @@ components:
               type: string
       required:
         - type
+    AIGatewayTargetTypesafeConfig:
+      description: |-
+        Typesafe-specific configuration for a model.
+
+        **Requires a minimum runtime version of `2.2`**.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - typesafe
+          x-terraform-transform-const: true
+        input_cost:
+          description: Cost per 1M input tokens for billing and cost tracking.
+          type: number
+        output_cost:
+          description: Cost per 1M output tokens for billing and cost tracking.
+          type: number
+        upstream_url:
+          description: The upstream URL for the model endpoint.
+          type: string
+          format: uri
+      required:
+        - type
+      title: AIGatewayTargetTypesafeConfig
+      x-min-runtime-version: '2.2'
     GCPModelConfig:
       description: Configuration for a model hosted on Google Cloud Project.
       type: object
@@ -8856,6 +9078,276 @@ components:
         - id
         - created_at
         - updated_at
+    CreateAIGatewayCustomPolicyInstalledRequest:
+      type: object
+      properties:
+        name:
+          description: 'A user-defined unique identifier for this custom policy, used as a stable human-readable reference. This value is immutable after creation.'
+          example: my-installed-custom-policy
+          allOf:
+            - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
+        type:
+          description: An installed Kong plugin used as a custom policy.
+          type: string
+          enum:
+            - installed
+          x-terraform-transform-const: true
+        display_name:
+          description: The display name for this custom policy.
+          type: string
+          example: Custom Policy - Installed plugin
+          maxLength: 256
+          minLength: 1
+        schema:
+          description: 'The Lua schema definition for the custom policy, equivalent to a Kong plugin''s `schema.lua`.'
+          type: string
+          example: <lua_schema>
+        labels:
+          $ref: '#/components/schemas/PublicLabels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+      additionalProperties: false
+      required:
+        - name
+        - type
+        - display_name
+        - schema
+    CreateAIGatewayCustomPolicyStreamingRequest:
+      type: object
+      properties:
+        name:
+          description: 'A user-defined unique identifier for this custom policy, used as a stable human-readable reference. This value is immutable after creation.'
+          example: my-streaming-custom-policy
+          allOf:
+            - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
+        type:
+          description: A streaming Kong plugin used as a custom policy.
+          type: string
+          enum:
+            - streaming
+          x-terraform-transform-const: true
+        display_name:
+          description: The display name for this custom policy.
+          type: string
+          example: Custom Policy Streaming Plugin
+          maxLength: 256
+          minLength: 1
+        schema:
+          description: 'The Lua schema definition for the custom policy, equivalent to a Kong plugin''s `schema.lua`.'
+          type: string
+          example: <lua_schema>
+        handler:
+          description: 'The Lua handler implementation for the custom policy, equivalent to a Kong plugin''s `handler.lua`.'
+          type: string
+          example: <lua_handler>
+        labels:
+          $ref: '#/components/schemas/PublicLabels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+      additionalProperties: false
+      required:
+        - name
+        - type
+        - display_name
+        - schema
+        - handler
+    CreateAIGatewayCustomPolicyRequest:
+      description: Request payload to register a new AI Gateway custom policy.
+      type: object
+      discriminator:
+        propertyName: type
+        mapping:
+          installed: '#/components/schemas/CreateAIGatewayCustomPolicyInstalledRequest'
+          streaming: '#/components/schemas/CreateAIGatewayCustomPolicyStreamingRequest'
+      oneOf:
+        - $ref: '#/components/schemas/CreateAIGatewayCustomPolicyInstalledRequest'
+        - $ref: '#/components/schemas/CreateAIGatewayCustomPolicyStreamingRequest'
+    UpdateAIGatewayCustomPolicyInstalledRequest:
+      type: object
+      properties:
+        name:
+          description: 'A user-defined unique identifier for this custom policy, used as a stable human-readable reference. This value is immutable after creation.'
+          example: my-installed-custom-policy
+          allOf:
+            - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
+        type:
+          description: An installed Kong plugin used as a custom policy.
+          type: string
+          enum:
+            - installed
+          x-terraform-transform-const: true
+        display_name:
+          description: The display name for this custom policy.
+          type: string
+          example: Custom Policy - Installed plugin
+          maxLength: 256
+          minLength: 1
+        schema:
+          description: 'The Lua schema definition for the custom policy, equivalent to a Kong plugin''s `schema.lua`.'
+          type: string
+          example: <lua_schema>
+        labels:
+          $ref: '#/components/schemas/PublicLabels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+      additionalProperties: false
+      required:
+        - name
+        - type
+        - display_name
+        - schema
+    UpdateAIGatewayCustomPolicyStreamingRequest:
+      type: object
+      properties:
+        name:
+          description: 'A user-defined unique identifier for this custom policy, used as a stable human-readable reference. This value is immutable after creation.'
+          example: my-streaming-custom-policy
+          allOf:
+            - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
+        type:
+          description: A streaming Kong plugin used as a custom policy.
+          type: string
+          enum:
+            - streaming
+          x-terraform-transform-const: true
+        display_name:
+          description: The display name for this custom policy.
+          type: string
+          example: Custom Policy Streaming Plugin
+          maxLength: 256
+          minLength: 1
+        schema:
+          description: 'The Lua schema definition for the custom policy, equivalent to a Kong plugin''s `schema.lua`.'
+          type: string
+          example: <lua_schema>
+        handler:
+          description: 'The Lua handler implementation for the custom policy, equivalent to a Kong plugin''s `handler.lua`.'
+          type: string
+          example: <lua_handler>
+        labels:
+          $ref: '#/components/schemas/PublicLabels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+      additionalProperties: false
+      required:
+        - name
+        - type
+        - display_name
+        - schema
+        - handler
+    UpdateAIGatewayCustomPolicyRequest:
+      description: Request payload to update an existing AI Gateway custom policy.
+      type: object
+      discriminator:
+        propertyName: type
+        mapping:
+          installed: '#/components/schemas/UpdateAIGatewayCustomPolicyInstalledRequest'
+          streaming: '#/components/schemas/UpdateAIGatewayCustomPolicyStreamingRequest'
+      oneOf:
+        - $ref: '#/components/schemas/UpdateAIGatewayCustomPolicyInstalledRequest'
+        - $ref: '#/components/schemas/UpdateAIGatewayCustomPolicyStreamingRequest'
+    AIGatewayCustomPolicyInstalled:
+      type: object
+      properties:
+        name:
+          description: 'A user-defined unique identifier for this custom policy, used as a stable human-readable reference. This value is immutable after creation.'
+          example: my-installed-custom-policy
+          allOf:
+            - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
+        type:
+          description: An installed Kong plugin used as a custom policy.
+          type: string
+          enum:
+            - installed
+          x-terraform-transform-const: true
+        display_name:
+          description: The display name for this custom policy.
+          type: string
+          example: Custom Policy - Installed plugin
+          maxLength: 256
+          minLength: 1
+        schema:
+          description: 'The Lua schema definition for the custom policy, equivalent to a Kong plugin''s `schema.lua`.'
+          type: string
+          example: <lua_schema>
+        labels:
+          $ref: '#/components/schemas/PublicLabels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+        id:
+          $ref: '#/components/schemas/UUID'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      additionalProperties: false
+      required:
+        - name
+        - type
+        - display_name
+        - schema
+        - id
+        - created_at
+        - updated_at
+    AIGatewayCustomPolicyStreaming:
+      type: object
+      properties:
+        name:
+          description: 'A user-defined unique identifier for this custom policy, used as a stable human-readable reference. This value is immutable after creation.'
+          example: my-streaming-custom-policy
+          allOf:
+            - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
+        type:
+          description: A streaming Kong plugin used as a custom policy.
+          type: string
+          enum:
+            - streaming
+          x-terraform-transform-const: true
+        display_name:
+          description: The display name for this custom policy.
+          type: string
+          example: Custom Policy Streaming Plugin
+          maxLength: 256
+          minLength: 1
+        schema:
+          description: 'The Lua schema definition for the custom policy, equivalent to a Kong plugin''s `schema.lua`.'
+          type: string
+          example: <lua_schema>
+        handler:
+          description: 'The Lua handler implementation for the custom policy, equivalent to a Kong plugin''s `handler.lua`.'
+          type: string
+          example: <lua_handler>
+        labels:
+          $ref: '#/components/schemas/PublicLabels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+        id:
+          $ref: '#/components/schemas/UUID'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      additionalProperties: false
+      required:
+        - name
+        - type
+        - display_name
+        - schema
+        - handler
+        - id
+        - created_at
+        - updated_at
+    AIGatewayCustomPolicy:
+      description: An AI Gateway custom policy.
+      type: object
+      discriminator:
+        propertyName: type
+        mapping:
+          installed: '#/components/schemas/AIGatewayCustomPolicyInstalled'
+          streaming: '#/components/schemas/AIGatewayCustomPolicyStreaming'
+      oneOf:
+        - $ref: '#/components/schemas/AIGatewayCustomPolicyInstalled'
+        - $ref: '#/components/schemas/AIGatewayCustomPolicyStreaming'
     CreateAIGatewayAgentRequest:
       type: object
       properties:
@@ -12860,6 +13352,48 @@ components:
         - display_name
         - name
         - config
+    AIGatewayModelProviderTypesafe:
+      description: |-
+        Configuration for an upstream model provider.
+
+        **Requires a minimum runtime version of `2.2`**.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - typesafe
+          x-terraform-transform-const: true
+        display_name:
+          description: The display name for this model provider instance.
+          type: string
+          example: Azure AI SE
+          maxLength: 256
+          minLength: 1
+        name:
+          description: 'A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation.'
+          example: azure-ai-se
+          allOf:
+            - $ref: '#/components/schemas/AIGatewayEntityIdentifier'
+        labels:
+          $ref: '#/components/schemas/PublicLabels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
+        config:
+          description: Configuration for the model provider.
+          type: object
+          additionalProperties: false
+          properties:
+            auth:
+              $ref: '#/components/schemas/AIGatewayModelProviderConfigAuthBasic'
+          required:
+            - auth
+      required:
+        - type
+        - display_name
+        - name
+        - config
+      x-min-runtime-version: '2.2'
     AIGatewayModelProviderConfigAuthBasic:
       description: |
         Basic auth config for an upstream model provider.
@@ -13461,7 +13995,7 @@ components:
       description: 'The secret value. Once stored, this value cannot be retrieved.'
       type: string
       example: my-secret-value
-      maxLength: 5120
+      maxLength: 8192
       writeOnly: true
     CreateAIGatewayConfigStoreSecretRequest:
       type: object
@@ -13519,6 +14053,7 @@ components:
           vllm: '#/components/schemas/AIGatewayModelProviderVllm'
           xai: '#/components/schemas/AIGatewayModelProviderXai'
           sagemaker: '#/components/schemas/AIGatewayModelProviderSagemaker'
+          typesafe: '#/components/schemas/AIGatewayModelProviderTypesafe'
       oneOf:
         - $ref: '#/components/schemas/AIGatewayModelProviderAnthropic'
         - $ref: '#/components/schemas/AIGatewayModelProviderAzure'
@@ -13539,6 +14074,7 @@ components:
         - $ref: '#/components/schemas/AIGatewayModelProviderVllm'
         - $ref: '#/components/schemas/AIGatewayModelProviderXai'
         - $ref: '#/components/schemas/AIGatewayModelProviderSagemaker'
+        - $ref: '#/components/schemas/AIGatewayModelProviderTypesafe'
     UpdateAIGatewayModelProviderRequest:
       discriminator:
         propertyName: type
@@ -13562,6 +14098,7 @@ components:
           vllm: '#/components/schemas/AIGatewayModelProviderVllm'
           xai: '#/components/schemas/AIGatewayModelProviderXai'
           sagemaker: '#/components/schemas/AIGatewayModelProviderSagemaker'
+          typesafe: '#/components/schemas/AIGatewayModelProviderTypesafe'
       oneOf:
         - $ref: '#/components/schemas/AIGatewayModelProviderAnthropic'
         - $ref: '#/components/schemas/AIGatewayModelProviderAzure'
@@ -13582,6 +14119,7 @@ components:
         - $ref: '#/components/schemas/AIGatewayModelProviderVllm'
         - $ref: '#/components/schemas/AIGatewayModelProviderXai'
         - $ref: '#/components/schemas/AIGatewayModelProviderSagemaker'
+        - $ref: '#/components/schemas/AIGatewayModelProviderTypesafe'
     AIGatewayModelProvider:
       type: object
       properties:
@@ -13613,6 +14151,7 @@ components:
           vllm: '#/components/schemas/AIGatewayModelProviderVllm'
           xai: '#/components/schemas/AIGatewayModelProviderXai'
           sagemaker: '#/components/schemas/AIGatewayModelProviderSagemaker'
+          typesafe: '#/components/schemas/AIGatewayModelProviderTypesafe'
       oneOf:
         - $ref: '#/components/schemas/AIGatewayModelProviderAnthropic'
         - $ref: '#/components/schemas/AIGatewayModelProviderAzure'
@@ -13633,6 +14172,7 @@ components:
         - $ref: '#/components/schemas/AIGatewayModelProviderVllm'
         - $ref: '#/components/schemas/AIGatewayModelProviderXai'
         - $ref: '#/components/schemas/AIGatewayModelProviderSagemaker'
+        - $ref: '#/components/schemas/AIGatewayModelProviderTypesafe'
       required:
         - id
         - created_at
@@ -14573,6 +15113,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 401
+          enum:
+            - 401
           readOnly: true
         title:
           description: |
@@ -14620,6 +15162,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 403
+          enum:
+            - 403
           readOnly: true
         title:
           description: |
@@ -14911,6 +15455,8 @@ components:
             The HTTP status code of the error. Useful when passing the response
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
+          enum:
+            - 400
           readOnly: true
         title:
           description: |
@@ -14957,6 +15503,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 409
+          enum:
+            - 409
           readOnly: true
         title:
           description: |
@@ -15004,6 +15552,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 404
+          enum:
+            - 404
           readOnly: true
         title:
           description: |
@@ -15513,6 +16063,40 @@ components:
             required:
               - data
               - meta
+    CreateAIGatewayCustomPolicyResponse:
+      description: Custom policy created successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AIGatewayCustomPolicy'
+    GetAIGatewayCustomPolicyResponse:
+      description: A successful response returning the AI Gateway Custom Policy.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AIGatewayCustomPolicy'
+    UpdateAIGatewayCustomPolicyResponse:
+      description: Custom policy updated successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AIGatewayCustomPolicy'
+    ListAIGatewayCustomPoliciesResponse:
+      description: A successful response listing AI Gateway Custom Policies.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AIGatewayCustomPolicy'
+              meta:
+                $ref: '#/components/schemas/CursorMeta'
+            required:
+              - data
+              - meta
     ListAIGatewayMCPServersResponse:
       description: A paginated list of MCP Servers.
       content:
@@ -15942,6 +16526,8 @@ tags:
     description: 'Models that define routing, capabilities, and backend targets for the AI Gateway.'
   - name: AI Gateway Policies
     description: 'Policies that control security, rate-limiting, and guardrail behavior for the AI Gateway.'
+  - name: AI Gateway Custom Policies
+    description: Custom policies that let you bring your own Lua plugin schema and handler to the AI Gateway.
   - name: AI Gateway MCP Servers
     description: MCP Servers that expose tools for AI Gateway integrations.
   - name: AI Gateway Model Providers

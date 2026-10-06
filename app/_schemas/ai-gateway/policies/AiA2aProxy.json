@@ -25,11 +25,6 @@
         "logging": {
           "type": "object",
           "properties": {
-            "log_statistics": {
-              "type": "boolean",
-              "description": "If enabled, adds A2A metrics to Kong log policy(s) output.",
-              "default": false
-            },
             "log_payloads": {
               "type": "boolean",
               "description": "If enabled, logs request/response bodies to Kong log policy(s) output. Requires log_statistics to be enabled.",
@@ -39,6 +34,11 @@
               "type": "integer",
               "description": "Maximum size in bytes for logged request/response payloads. Payloads exceeding this size will be truncated.",
               "default": 1048576
+            },
+            "log_statistics": {
+              "type": "boolean",
+              "description": "If enabled, adds A2A metrics to Kong log policy(s) output.",
+              "default": false
             }
           }
         },
@@ -57,14 +57,6 @@
             "aws_iam": {
               "type": "object",
               "properties": {
-                "aws_region": {
-                  "type": "string",
-                  "description": "If using AWS providers (Bedrock) you can override the `AWS_REGION` environment variable by setting this option."
-                },
-                "assume_role_arn": {
-                  "type": "string",
-                  "description": "If using AWS providers (Bedrock) you can assume a different role after authentication with the current IAM context is successful."
-                },
                 "role_session_name": {
                   "type": "string",
                   "description": "If using AWS providers (Bedrock), set the identifier of the assumed role session."
@@ -76,8 +68,8 @@
                 "aws_access_key_id": {
                   "type": "string",
                   "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_ACCESS_KEY_ID environment variable for this policy instance.",
-                  "x-encrypted": true,
-                  "x-referenceable": true
+                  "x-referenceable": true,
+                  "x-encrypted": true
                 },
                 "aws_secret_access_key": {
                   "type": "string",
@@ -96,6 +88,14 @@
                   "description": "If the target AWS service supports Bearer token auth, you can set this token. This will disable request signing and also will override the AWS_BEARER_TOKEN_BEDROCK environment variable. It will also replace/ignore all settings pertaining to AWS IAM access keys and assumed-roles.",
                   "x-referenceable": true,
                   "x-encrypted": true
+                },
+                "aws_region": {
+                  "type": "string",
+                  "description": "If using AWS providers (Bedrock) you can override the `AWS_REGION` environment variable by setting this option."
+                },
+                "assume_role_arn": {
+                  "type": "string",
+                  "description": "If using AWS providers (Bedrock) you can assume a different role after authentication with the current IAM context is successful."
                 }
               },
               "description": "Common AWS authentication options."
@@ -111,25 +111,6 @@
         "proxy_config": {
           "type": "object",
           "properties": {
-            "https_proxy_port": {
-              "type": "integer",
-              "maximum": 65535,
-              "minimum": 0,
-              "description": "An integer representing a port number between 0 and 65535, inclusive."
-            },
-            "proxy_scheme": {
-              "type": "string",
-              "enum": [
-                "http"
-              ],
-              "description": "The proxy scheme to use when connecting. Only `http` is supported.",
-              "default": "http"
-            },
-            "auth_username": {
-              "type": "string",
-              "description": "The username to authenticate with, if the forward proxy is protected by basic authentication.",
-              "x-referenceable": true
-            },
             "auth_password": {
               "type": "string",
               "description": "The password to authenticate with, if the forward proxy is protected by basic authentication.",
@@ -153,6 +134,25 @@
             "https_proxy_host": {
               "type": "string",
               "description": "A string representing a host name, such as example.com."
+            },
+            "https_proxy_port": {
+              "type": "integer",
+              "maximum": 65535,
+              "minimum": 0,
+              "description": "An integer representing a port number between 0 and 65535, inclusive."
+            },
+            "proxy_scheme": {
+              "type": "string",
+              "enum": [
+                "http"
+              ],
+              "description": "The proxy scheme to use when connecting. Only `http` is supported.",
+              "default": "http"
+            },
+            "auth_username": {
+              "type": "string",
+              "description": "The username to authenticate with, if the forward proxy is protected by basic authentication.",
+              "x-referenceable": true
             }
           }
         }

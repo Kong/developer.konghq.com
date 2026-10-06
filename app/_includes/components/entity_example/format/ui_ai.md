@@ -66,11 +66,11 @@ The following creates a new model. Suggested values are shown in backticks.
 1. Select an {{site.ai_gateway}}.
 1. Navigate to **Models**.
 1. Click **New model**.
-1. In **General information**, toggle **Enabled**, enter a **Display name** (for example: `{{ include.presenter.data['display_name'] }}`), and select a **Type**, either **Model** for generative and embeddings requests, or **API** for files and batch operations.
+1. In **General information**, toggle **Enabled**, enter a **Display name** (for example: `{{ include.presenter.data['display_name'] }}`), and select a **Type**, either **Model** for generative and embeddings requests, or **API** for files, batch, and skills operations.
 1. Optional. Enter a **Model alias** if you plan to route by request body instead of base path or hostname.
 1. In **Route**, enter a **Base path** to determine how the {{site.ai_gateway}} is accessed. Don't include capability-specific paths such as `/chat/completions`, those are set in the Capabilities section.
 1. In **Target models**, select a **Provider**. If you selected **Model** as the type, also select a **Target model**. Add additional targets to route requests across multiple providers.
-1. In **Capabilities**, select which AI capabilities this model supports. For **Model** type, options include Chat completions, Embeddings, Image generations, and others. For **API** type, options are Batches and Files.
+1. In **Capabilities**, select which AI capabilities this model supports. For **Model** type, options include Chat completions, Embeddings, Image generations, and others. For **API** type, options are Batches, Files, and Skills.
 1. Optional. In **Advanced configuration**, adjust settings such as max request body size, response streaming, and payload logging. The **Return model name header** option is available only for **Model** type.
 1. Click **Create**.
 {% when 'agent' %}

@@ -22,35 +22,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "http_proxy_host": {
-          "type": "string",
-          "description": "A string representing a host name, such as example.com."
-        },
-        "https_verify": {
-          "type": "boolean",
-          "description": "Whether the server certificate will be verified according to the CA certificates specified in lua_ssl_trusted_certificate.",
-          "default": true
-        },
-        "x_headers": {
-          "type": "string",
-          "enum": [
-            "append",
-            "delete",
-            "transparent"
-          ],
-          "description": "Determines how to handle headers when forwarding the request.",
-          "default": "append"
-        },
-        "http_proxy_port": {
-          "type": "integer",
-          "maximum": 65535,
-          "minimum": 0,
-          "description": "An integer representing a port number between 0 and 65535, inclusive."
-        },
-        "https_proxy_host": {
-          "type": "string",
-          "description": "A string representing a host name, such as example.com."
-        },
         "https_proxy_port": {
           "type": "integer",
           "maximum": 65535,
@@ -70,11 +41,40 @@
           "description": "The username to authenticate with, if the forward proxy is protected\nby basic authentication.",
           "x-referenceable": true
         },
+        "https_verify": {
+          "type": "boolean",
+          "description": "Whether the server certificate will be verified according to the CA certificates specified in lua_ssl_trusted_certificate.",
+          "default": true
+        },
+        "http_proxy_host": {
+          "type": "string",
+          "description": "A string representing a host name, such as example.com."
+        },
+        "http_proxy_port": {
+          "type": "integer",
+          "maximum": 65535,
+          "minimum": 0,
+          "description": "An integer representing a port number between 0 and 65535, inclusive."
+        },
         "auth_password": {
           "type": "string",
           "description": "The password to authenticate with, if the forward proxy is protected\nby basic authentication.",
           "x-referenceable": true,
           "x-encrypted": true
+        },
+        "x_headers": {
+          "type": "string",
+          "enum": [
+            "append",
+            "delete",
+            "transparent"
+          ],
+          "description": "Determines how to handle headers when forwarding the request.",
+          "default": "append"
+        },
+        "https_proxy_host": {
+          "type": "string",
+          "description": "A string representing a host name, such as example.com."
         }
       }
     },

@@ -29,34 +29,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "ws_client_frame": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "default": []
-        },
-        "ws_upstream_frame": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "default": []
-        },
-        "certificate": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "default": []
-        },
-        "access": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "default": []
-        },
         "header_filter": {
           "type": "array",
           "items": {
@@ -71,14 +43,14 @@
           },
           "default": []
         },
-        "ws_handshake": {
+        "ws_close": {
           "type": "array",
           "items": {
             "type": "string"
           },
           "default": []
         },
-        "ws_close": {
+        "certificate": {
           "type": "array",
           "items": {
             "type": "string"
@@ -93,6 +65,34 @@
           "default": []
         },
         "log": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "ws_handshake": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "ws_client_frame": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "ws_upstream_frame": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "access": {
           "type": "array",
           "items": {
             "type": "string"

@@ -18,3 +18,5 @@ If the `kong-addr` you use is fixed, you can set the `DECK_KONG_ADDR` variable i
 alias deck='docker run --rm -v .:/files -w /files -e DECK_KONG_ADDR=http://host.docker.internal:8001 kong/deck'
 deck gateway sync  my_deck_file.yaml
 ```
+
+The official image is distroless, so it has no shell or package manager. If you need a shell inside the container, see [Build a non-distroless decK Docker image](/deck/build-non-distroless-docker-image/).

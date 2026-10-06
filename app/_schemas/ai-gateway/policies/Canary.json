@@ -22,9 +22,20 @@
     "config": {
       "type": "object",
       "properties": {
-        "hash_header": {
-          "type": "string",
-          "description": "A string representing an HTTP header name."
+        "start": {
+          "type": "number",
+          "description": "Future time in seconds since epoch, when the canary release will start. Ignored when `percentage` is set, or when using `allow` or `deny` in `hash`."
+        },
+        "duration": {
+          "type": "number",
+          "description": "The duration of the canary release in seconds.",
+          "default": 3600
+        },
+        "steps": {
+          "type": "number",
+          "minimum": 1,
+          "description": "The number of steps for the canary release.",
+          "default": 1000
         },
         "percentage": {
           "type": "number",
@@ -32,19 +43,24 @@
           "minimum": 0,
           "description": "The percentage of traffic to be routed to the canary release."
         },
+        "upstream_host": {
+          "type": "string",
+          "description": "A string representing a host name, such as example.com."
+        },
         "upstream_port": {
           "type": "integer",
           "maximum": 65535,
           "minimum": 0,
           "description": "An integer representing a port number between 0 and 65535, inclusive."
         },
+        "upstream_uri": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The URI of the upstream server to be used for the canary release."
+        },
         "canary_by_header_name": {
           "type": "string",
           "description": "A string representing an HTTP header name."
-        },
-        "start": {
-          "type": "number",
-          "description": "Future time in seconds since epoch, when the canary release will start. Ignored when `percentage` is set, or when using `allow` or `deny` in `hash`."
         },
         "hash": {
           "type": "string",
@@ -59,25 +75,9 @@
           "description": "Hash algorithm to be used for canary release.\n\n* `consumer`: The hash will be based on the consumer.\n* `ip`: The hash will be based on the client IP address.\n* `none`: No hash will be applied.\n* `allow`: Allows the specified groups to access the canary release.\n* `deny`: Denies the specified groups from accessing the canary release.\n* `header`: The hash will be based on the specified header value.",
           "default": "consumer"
         },
-        "duration": {
-          "type": "number",
-          "description": "The duration of the canary release in seconds.",
-          "default": 3600
-        },
-        "steps": {
-          "type": "number",
-          "minimum": 1,
-          "description": "The number of steps for the canary release.",
-          "default": 1000
-        },
-        "upstream_host": {
+        "hash_header": {
           "type": "string",
-          "description": "A string representing a host name, such as example.com."
-        },
-        "upstream_uri": {
-          "type": "string",
-          "minLength": 1,
-          "description": "The URI of the upstream server to be used for the canary release."
+          "description": "A string representing an HTTP header name."
         },
         "upstream_fallback": {
           "type": "boolean",

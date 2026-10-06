@@ -43,6 +43,7 @@ sections:
       - title: Streaming
         description: Learn how AI proxy streaming works.
         url: /ai-gateway/streaming/
+      - path: /ai-gateway/passthrough/
       - title: "{{site.ai_gateway}} resource sizing guidelines"
         description: Review {{site.ai_gateway}} recommended resource allocation sizing guidelines for {{site.ai_gateway}} based on configuration and traffic patterns.
         url: /ai-gateway/resource-sizing-guidelines-ai/
