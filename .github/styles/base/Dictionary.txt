@@ -78,6 +78,7 @@ backporting
 backports
 backreference
 backreferences
+Bingbot
 wget
 meshtrust
 sectionName
@@ -305,6 +306,7 @@ globbing
 gluu
 gojira
 Golang
+Googlebot
 googleSearch
 goroutine
 goroutines
