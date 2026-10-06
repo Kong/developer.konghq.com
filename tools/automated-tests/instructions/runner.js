@@ -1,5 +1,5 @@
 import fs from "fs/promises";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 import debug from "debug";
 import { processPrereqs } from "./prereqs.js";
 import { processCleanup } from "./cleanup.js";
@@ -228,7 +228,7 @@ export async function runInstructionsFile(file, runtimeConfig, container) {
   const start = Date.now();
   log(`Running file: ${file}`);
   const fileContent = await fs.readFile(file, "utf8");
-  const instructions = yaml.load(fileContent);
+  const instructions = load(fileContent);
   const { status, assertions, name } = await runInstructions(
     instructions,
     runtimeConfig,
