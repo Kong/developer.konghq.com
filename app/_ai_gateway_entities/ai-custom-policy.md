@@ -134,6 +134,7 @@ This handler adds an `X-Custom-Policy: enabled` header to responses for requests
 
 ### Create a streaming AI Custom Policy
 
+<!-- vale off -->
 {% entity_example %}
 type: custom_policy
 data:
@@ -150,6 +151,7 @@ variables:
     value: $LUA_HANDLER
     description: Your plugin handler.
 {% endentity_example %}
+<!-- vale on -->
 
 ### Create an installed AI Custom Policy
 
