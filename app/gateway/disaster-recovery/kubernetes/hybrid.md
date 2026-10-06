@@ -49,7 +49,7 @@ Set these variables:
 
 Use PostgreSQL clients compatible with the source server. Supply database credentials through a protected PostgreSQL password file and retain the TLS settings required by your database. The commands assume the standard PostgreSQL port; supply `--port` if yours differs.
 
-Before the failure, create a Service and Route named `dr-check` in the default Workspace that serve a known upstream through `/dr-check`. Record a successful response and an authentication rejection if the Route is protected.
+Before the failure, create a Service and Route named `dr-check` in the default Workspace that serve a known upstream through `/dr-check`. Record a successful response and an authentication rejection if the Route is protected. New Routes accept only HTTPS unless you set `protocols`, so the requests in this guide use `https://`.
 
 ## Save the database and deployment files
 
@@ -89,7 +89,7 @@ helm pull kong/kong --version "$GATEWAY_CHART_VERSION" \
   --destination recovery/hybrid
 ```
 
-Also preserve the `kong-cluster-cert` certificate and private key as `tls.crt` and `tls.key`, the license as `license.json`, and any database Secret, custom plugins, registry credentials, or externally referenced secrets. If Keyring is enabled, include its recovery private key as `keyring-recovery.pem` and confirm that recovery was configured before this backup.
+Also preserve the `kong-cluster-cert` certificate and private key as `tls.crt` and `tls.key`, the license as `license.json`, and any database Secret, custom plugins, registry credentials, or externally referenced secrets. If Keyring is enabled, include its recovery private key as `keyring-recovery.pem` and the Secret that mounts the public key named by `keyring_recovery_public_key`. Confirm that recovery was configured before this backup.
 
 Keep all of these files in protected storage outside the original environment. Record the exact Gateway image; recovery must not silently select a newer image.
 
@@ -106,18 +106,18 @@ pg_restore --host="$RECOVERY_PG_HOST" --username=kong --dbname=kong \
 
 Expect the command to exit successfully without restore errors. This restores the schema and data together. Do not bootstrap Kong into the empty database before this restore. If it fails partway through, recreate an empty recovery database before retrying; do not accept a partial restore. See the [PostgreSQL restore reference](https://www.postgresql.org/docs/current/app-pgrestore.html).
 
-In a copy of `values-cp.yaml`, set `env.pg_host` to the recovery database endpoint and verify the database name, role, password or Secret reference, and TLS settings. Keep the saved Gateway image unchanged.
-
-Disable migration jobs for this same-version restore:
+Create an override file that points the control plane at the recovery database and disables migration jobs for this same-version restore:
 
 ```yaml
+env:
+  pg_host: <RECOVERY_PG_HOST>
 migrations:
   init: false
   preUpgrade: false
   postUpgrade: false
 ```
 
-Save this override as `recovery/hybrid/restore-values.yaml`. Verify that the saved chart supports these settings. The [Kong chart migration template](https://github.com/Kong/charts/blob/main/charts/kong/templates/migrations.yaml) uses `migrations.init` to control the install-time bootstrap job.
+Replace `<RECOVERY_PG_HOST>` with the recovery database endpoint and save the file as `recovery/hybrid/restore-values.yaml`. Leave `values-cp.yaml` unchanged; values in this override take precedence. If the database name, role, password or Secret reference, or TLS settings also differ, override them here too. Keep the saved Gateway image unchanged. Verify that the saved chart supports these settings. The [Kong chart migration template](https://github.com/Kong/charts/blob/main/charts/kong/templates/migrations.yaml) uses `migrations.init` to control the install-time bootstrap job.
 
 ## Restore credentials and the control plane
 
@@ -141,7 +141,7 @@ kubectl --context "$RECOVERY_CONTEXT" -n kong create secret generic kong-enterpr
   --from-file=license=recovery/hybrid/license.json
 ```
 
-Restore any other Secrets referenced by the saved values before installing. Deploy the control plane:
+Restore any other Secrets referenced by the saved values before installing, including the Keyring recovery public key Secret. A missing Secret volume keeps the pod from starting. Deploy the control plane:
 
 ```bash
 helm install kong-cp "recovery/hybrid/kong-${GATEWAY_CHART_VERSION}.tgz" \
@@ -169,6 +169,8 @@ curl --fail-with-body -H "Kong-Admin-Token: $KONG_ADMIN_TOKEN" \
 Expect the saved Route, including its ID and `/dr-check` path. For a different Workspace, use that Workspace's Admin API path. The local HTTP port forward follows the installation example; use your deployment's private TLS endpoint if HTTP is disabled.
 
 ### Recover Keyring, if enabled
+
+The restored database contains the encrypted Keyring material, but the new control plane starts with an empty Keyring. Until you recover it, Admin API reads of encrypted entities fail with HTTP `500`.
 
 Submit the recovery private key:
 
@@ -210,12 +212,12 @@ kubectl --context "$RECOVERY_CONTEXT" -n kong get service kong-dp-kong-proxy
 Set `RECOVERY_ADDRESS` to the external address and request the saved Route:
 
 ```bash
-curl --fail-with-body "http://${RECOVERY_ADDRESS}/dr-check"
+curl --fail-with-body --insecure "https://${RECOVERY_ADDRESS}/dr-check"
 ```
 
-Expect the same application result recorded before the backup. Adapt this request to the Route's hostname, TLS, and authentication requirements. A `404` indicates that the expected Route is not loaded or matched; inspect control plane synchronization before moving traffic.
+Expect the same application result recorded before the backup. `--insecure` is only for this direct-address check, because the replacement proxy presents its default self-signed certificate unless you configured your own. Adapt this request to the Route's hostname, TLS, and authentication requirements. A `404` indicates that the expected Route is not loaded or matched; inspect control plane synchronization before moving traffic. A `426` means the Route accepts only HTTPS.
 
-Add a temporary `/dr-check-recovered` path to the Route through your normal configuration workflow. Confirm that it works on the replacement data plane, then remove it. This verifies that the recovered control plane can distribute new configuration.
+Next, verify that the recovered control plane can distribute new configuration. Choose a temporary path that the Route doesn't already match, such as `/dr-verify`. Route paths are prefixes, so `/dr-check` already matches `/dr-check-recovered`, and a request to that path succeeds before any change. Confirm that `/dr-verify` returns `404`, add it to the Route through your normal configuration workflow, and confirm that it returns the application response. Then remove it and confirm that it returns `404` again.
 
 ## Move traffic and fail back
 

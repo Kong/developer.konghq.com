@@ -75,6 +75,8 @@ helm pull kong/kong-operator --version "$OPERATOR_CHART_VERSION" \
   --destination recovery/operator
 ```
 
+The recommended source for these manifests is a Git repository deployed through CD or GitOps; see [Manage configuration as code](/gateway/disaster-recovery/kubernetes/prepare/#manage-configuration-as-code). Record the revision you will restore. If they aren't in a repository, [export them from the running cluster](#export-gateway-resources-without-a-repository).
+
 Copy these desired manifests from the deployment repository into the recovery directory:
 
 | File | Resources |
@@ -89,6 +91,45 @@ Copy these desired manifests from the deployment repository into the recovery di
 Use authored manifests without old UIDs, owner references, or `.status`. The generated DataPlane, Deployment, and Service are outputs of reconciliation; the operator will recreate them.
 
 The example uses the chart-managed CA and recreates all workloads that use it. If your Helm values reference an external CA, an issuer, registry credentials, or a license Secret, add those dependencies and their restoration commands to the recovery set. Restore them before installing the chart. An old workload that survives elsewhere will not automatically trust a new CA.
+
+### Export Gateway resources without a repository
+
+Use this fallback only if the manifests aren't in source control. It captures the cluster's current state, including changes that were applied by hand. Save the Gateway API CRD bundle and application manifests from their release or source, and export only the resources you authored, not the generated DataPlane, Deployment, or Service.
+
+Export the namespaced resources into the files the restore uses:
+
+```bash
+kubectl --context "$PRIMARY_CONTEXT" -n kong get gatewayconfiguration \
+  -o yaml > recovery/operator/gateway-configuration.yaml
+kubectl --context "$PRIMARY_CONTEXT" -n kong get gateway \
+  -o yaml > recovery/operator/gateway.yaml
+kubectl --context "$PRIMARY_CONTEXT" -n kong get httproute \
+  -o yaml > recovery/operator/routes.yaml
+```
+
+Add any Kong resources that the routes reference to `routes.yaml`. Export the cluster-scoped GatewayClass separately:
+
+```bash
+kubectl --context "$PRIMARY_CONTEXT" get gatewayclass kong \
+  -o yaml > recovery/operator/gateway-class.yaml
+```
+
+Remove the fields that Kubernetes and the operator generate for the original objects, including the operator's cleanup finalizers on the Gateway. With [`yq`](https://github.com/mikefarah/yq) installed, run:
+
+```bash
+STRIP='del(.status) | del(.metadata.uid, .metadata.resourceVersion,
+  .metadata.creationTimestamp, .metadata.generation, .metadata.managedFields,
+  .metadata.finalizers, .metadata.ownerReferences,
+  .metadata.annotations."kubectl.kubernetes.io/last-applied-configuration")'
+for f in gateway-configuration gateway routes; do
+  yq -i ".items[] |= ($STRIP)" "recovery/operator/$f.yaml"
+done
+yq -i "$STRIP" recovery/operator/gateway-class.yaml
+```
+
+Review the files, then commit them to a repository so that the next recovery starts from source control.
+
+### Record the baseline
 
 Record the original response from `/echo` and the Gateway's address before the drill.
 

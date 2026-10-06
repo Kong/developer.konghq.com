@@ -59,7 +59,7 @@ Perform both the direct-address request and the request through the normal clien
 
 Repeat the baseline authentication checks. Valid credentials should succeed, and missing or invalid credentials should still fail with the expected status. Record the observed response rather than treating any HTTP response as success.
 
-Each walkthrough adds and removes a temporary route path. Complete that step to verify configuration updates, then save the final desired configuration in the managed repository.
+Each walkthrough adds and removes a temporary route path. Complete that step to verify configuration updates, then save the final desired configuration in the managed repository. The path must fail before the change and after its removal; a path that an existing route already matches proves nothing.
 
 ## Measure recovery time and data loss
 

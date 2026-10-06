@@ -40,6 +40,25 @@ Prepare a recovery set that you can use without accessing the original Kubernete
 
 Start with one of these scenarios. A successful cluster replacement does not demonstrate recovery during a Konnect outage or simultaneous loss of the application database.
 
+## Manage configuration as code
+
+On Kubernetes, the recommended approach is to keep all configuration in source control and deploy it through a continuous delivery (CD) pipeline or a GitOps controller such as Argo CD or Flux. Recovery then becomes a deployment: point the pipeline at the replacement cluster and apply the revision that was running before the failure. That revision is your recovery point.
+
+Keep these in the repository:
+
+* Helm chart versions and values files, or the CD application definitions that reference them.
+* CRD bundles, including Gateway API CRDs, at the versions you run.
+* Gateway API resources, Ingresses, and Kong configuration resources such as KongPlugins.
+* Gateway entities for {{site.konnect_short_name}} and self-managed hybrid control planes, as declarative configuration such as decK files, Terraform, or Operator manifests.
+
+Don't commit Secrets in plaintext. Keep certificates, keys, tokens, and licenses in an external secret store and reference them from the repository, for example with External Secrets Operator or Sealed Secrets. The recovery cluster needs access to that store, and any decryption keys must survive the loss of the original cluster.
+
+Configure CD to apply resources in dependency order: CRDs, then controllers, then the configuration that uses them. The walkthroughs use explicit `helm` and `kubectl` commands so that you can check each step. With CD, follow the same sequence by syncing each application against the recovery cluster.
+
+A repository doesn't hold everything. The hybrid walkthrough still needs a database backup for entities created outside the repository and for Keyring material. {{site.konnect_short_name}} assigns entity IDs remotely, so record them. For Operator-managed {{site.konnect_short_name}} entities, pause automated sync during recovery, because a sync can apply manifests before stale ownership is released.
+
+If your configuration isn't in source control yet, the KIC and Operator walkthroughs include a fallback that exports routing resources from the running cluster. Treat it as a stopgap and move that configuration into a repository.
+
 ## Assemble the recovery set
 
 Each walkthrough uses a directory under `recovery/`. Assemble it while the original deployment is working, then store it outside that environment.

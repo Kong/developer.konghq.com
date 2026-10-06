@@ -71,6 +71,8 @@ helm pull kong/ingress --version "$KIC_CHART_VERSION" \
   --destination recovery/kic
 ```
 
+The recommended source for the remaining files is a Git repository deployed through CD or GitOps; see [Manage configuration as code](/gateway/disaster-recovery/kubernetes/prepare/#manage-configuration-as-code). Record the revision you will restore. If your routing resources aren't in a repository, [export them from the running cluster](#export-routing-resources-without-a-repository).
+
 Complete this recovery set using your deployment repository and secret store:
 
 | File | Contents |
@@ -111,6 +113,33 @@ spec:
 Supply a certificate valid for `echo.example.com`; a private test CA is sufficient for a drill. Create `echo-tls` in the original cluster using the same Secret creation command used during recovery, with `PRIMARY_CONTEXT` in place of `RECOVERY_CONTEXT`.
 
 Keep the complete set in protected storage outside the failed cluster. Helm values and private keys can contain secrets. Include additional Secrets, custom plugin artifacts, and cluster-scoped resources such as KongLicense if your installation uses them.
+
+### Export routing resources without a repository
+
+Use this fallback only if the routing resources aren't in source control. It captures the cluster's current state, including changes that were applied by hand.
+
+Export the Ingress and Kong resources from the original namespace. Add every other kind your deployment uses, such as `kongconsumers` or `kongupstreampolicies`:
+
+```bash
+kubectl --context "$PRIMARY_CONTEXT" -n kong get ingress,kongplugins \
+  -o yaml > recovery/kic/routing.yaml
+```
+
+Export cluster-scoped resources such as KongClusterPlugin with a separate command without `-n`. Don't add `secrets` to the export, because it writes credentials and private keys into a plain file. Restore those from your secret store.
+
+Remove the fields that Kubernetes generates for the original objects. With [`yq`](https://github.com/mikefarah/yq) installed, run:
+
+```bash
+yq -i '.items[] |= (del(.status) | del(.metadata.uid, .metadata.resourceVersion,
+  .metadata.creationTimestamp, .metadata.generation, .metadata.managedFields,
+  .metadata.finalizers, .metadata.ownerReferences,
+  .metadata.annotations."kubectl.kubernetes.io/last-applied-configuration"))' \
+  recovery/kic/routing.yaml
+```
+
+Review the file, then commit it to a repository so that the next recovery starts from source control.
+
+### Record the baseline
 
 Before the drill, perform the request in [Test the recovered route](#test-the-recovered-route) against the original load balancer. Record the HTTP status and echo response.
 

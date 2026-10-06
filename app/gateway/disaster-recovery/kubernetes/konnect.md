@@ -176,9 +176,9 @@ Verify that its status reports the original remote ID. Mirroring the control pla
 ### Release stale ownership for one entity
 
 {:.warning}
-> Before changing ownership tags, ensure the original operator cannot resume reconciliation. Pause its GitOps application and stop or isolate the original controller if it survives. Two controllers must not manage the same remote entity.
+> Before changing ownership tags, ensure the original operator cannot resume reconciliation. Pause its GitOps application and stop or isolate the original controller if it survives. Revoking the Konnect token it uses isolates it; deleting its token Secret does not, because Operator holds that Secret with a finalizer while resources reference it. Two controllers must not manage the same remote entity.
 
-A new Kubernetes object has a new UID. Operator rejects adoption when the remote entity still carries another object's `k8s-uid` tag, even when its configuration matches.
+A new Kubernetes object has a new UID. Operator rejects adoption when the remote entity still carries another object's `k8s-uid` tag, even when its configuration matches. The KongService reports `Adopted` as `False` with reason `UIDConflict`, and Operator does not create a duplicate.
 
 Fetch the surviving Service by its recorded ID:
 
@@ -190,24 +190,24 @@ curl --fail-with-body -H "Authorization: Bearer $KONNECT_TOKEN" \
 
 Inspect the response and compare its ID, configuration, and tags with the inventory. Set `OLD_SERVICE_UID_TAG` to the exact tag belonging to the lost object, including the `k8s-uid:` prefix. Do not remove a tag belonging to a different or active owner.
 
-With `jq` installed, prepare a tags-only update that removes that single tag and retains all others:
+The entity endpoint accepts `PUT` but not `PATCH`, and `PUT` replaces the whole entity. With `jq` installed, prepare a copy of the complete saved Service that removes that single tag and retains every other field and tag:
 
 ```bash
 jq --arg old "$OLD_SERVICE_UID_TAG" \
-  '{tags: [.tags[] | select(. != $old)]}' \
-  recovery/konnect/service.json > recovery/konnect/service-tags.json
+  'del(.created_at, .updated_at) | .tags |= map(select(. != $old))' \
+  recovery/konnect/service.json > recovery/konnect/service-update.json
 ```
 
-Review `service-tags.json`, then apply the update:
+Compare `service-update.json` with `service.json` and confirm that the only difference is the removed tag, then apply the update:
 
 ```bash
-curl --fail-with-body --request PATCH \
+curl --fail-with-body --request PUT \
   -H "Authorization: Bearer $KONNECT_TOKEN" -H "Content-Type: application/json" \
-  --data @recovery/konnect/service-tags.json \
+  --data @recovery/konnect/service-update.json \
   "$KONNECT_API_URL/v2/control-planes/$CONTROL_PLANE_ID/core-entities/services/$SERVICE_ID"
 ```
 
-Do this only for a verified stale owner. Repeat the same single-entity process for the Route using `routes/$ROUTE_ID`, its own saved response and tags file, and its own original UID tag. Do not remove every Kubernetes tag or edit unrelated entities.
+Do this only for a verified stale owner. Repeat the same single-entity process for the Route using `routes/$ROUTE_ID`, its own saved response and update file, and its own original UID tag. Do not remove every Kubernetes tag or edit unrelated entities.
 
 ### Adopt the Service, then the Route
 
@@ -237,11 +237,11 @@ Expect successful reconciliation and `status.konnect.id` equal to `SERVICE_ID`. 
 
 Add the same adoption block to the saved KongRoute, using `ROUTE_ID` and retaining the Service reference. Apply that file only after the Service has reconciled, then verify the Route's remote ID and conditions. See [entity adoption](/operator/konnect/crd/adoption/gateway/) for resource-specific fields and restrictions.
 
-Retrieve the Service and Route through the API again. Confirm their IDs and relationship are unchanged, their configuration is correct, and subsequent reconciliation does not produce duplicate entities. Put the recovery manifests into the managed repository before resuming synchronization.
+Retrieve the Service and Route through the API again. Confirm their IDs and relationship are unchanged, their configuration is correct, and subsequent reconciliation does not produce duplicate entities. Adoption in `match` mode doesn't write a `k8s-uid` tag for the new object; Operator adds it the next time it updates the entity. Put the recovery manifests into the managed repository before resuming synchronization.
 
 ## Verify configuration updates and move traffic
 
-Through the tool that now owns the Route, add a temporary `/dr-check-recovered` path. Request that path through the replacement data plane and expect the same application response, then remove the temporary path. For Operator, update the adopted KongRoute manifest.
+Choose a temporary path that the Route doesn't already match, such as `/dr-verify`. Route paths are prefixes, so `/dr-check` already matches `/dr-check-recovered`. Request `/dr-verify` through the replacement data plane and expect `404`. Through the tool that now owns the Route, add the temporary path, request it again, and expect the same application response. Then remove the path and confirm that it returns `404`. For Operator, update the adopted KongRoute manifest.
 
 Update the application's DNS record or load balancer target to the replacement proxy address. Repeat the application's baseline requests through the normal client endpoint and record traffic recovery.
 

@@ -36,6 +36,8 @@ rows:
                   text: |
                     High availability helps a deployment continue operating through component failures. Disaster recovery restores service when the failure exceeds that deployment's capacity to recover in place.
 
+                    The recommended way to make Kubernetes deployments recoverable is to keep all configuration in source control and deploy it through CD or GitOps. Recovery then means applying a known revision to a replacement cluster. See [Manage configuration as code](/gateway/disaster-recovery/kubernetes/prepare/#manage-configuration-as-code).
+
                     For {{site.base_gateway}}, traffic recovery and configuration recovery can happen at different times. A surviving data plane can continue using its existing configuration while its control plane is unavailable. A replacement data plane still needs configuration, credentials, and access to application dependencies before it can serve requests.
 
                     These guides cover customer-managed Kubernetes infrastructure. You operate the recovery environment, backups, secrets, and traffic routing. With {{site.konnect_short_name}}, Kong operates the hosted control plane; you recover your Kubernetes data planes and their access to it.
