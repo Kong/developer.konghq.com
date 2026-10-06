@@ -19,6 +19,7 @@ import { stopContainer, removeContainer } from "./docker-helper.js";
 import {
   instructionFileFromConfig,
   groupInstructionFilesByDeploymentModelAndProduct,
+  selectRunnableGroups,
 } from "./instructions-file.js";
 import "@dotenvx/dotenvx/config";
 
@@ -139,23 +140,36 @@ async function runFile(instructionFile, runtimeConfig, container, { reset }) {
     const filesByDeploymentModelAndProduct =
       await groupInstructionFilesByDeploymentModelAndProduct(files);
 
-    for (const [deploymentModel, instructionFilesByProduct] of Object.entries(
+    const runnableGroups = selectRunnableGroups(
       filesByDeploymentModelAndProduct,
-    )) {
-      if (
-        process.env.DEPLOYMENT_MODEL &&
-        process.env.DEPLOYMENT_MODEL !== deploymentModel
-      ) {
-        continue;
-      }
+      products,
+      process.env.DEPLOYMENT_MODEL,
+    );
 
+    if (Object.keys(runnableGroups).length === 0) {
+      const filters = `PRODUCTS=${process.env.PRODUCTS}, DEPLOYMENT_MODEL=${process.env.DEPLOYMENT_MODEL || "all"}`;
+      console.error(`No instruction files match the active filters: ${filters}.`);
+      console.error("Run `npm run generate-instruction-files` to (re)generate instruction files, then try again.");
+      results.push({
+        file: "filters",
+        name: "Instruction-file selection",
+        status: "failed",
+        message: `No instruction files match the active filters: ${filters}.`,
+        assertions: [`No instruction files match the active filters: ${filters}.`],
+        duration: 0,
+      });
+      await logResults(results, start, Date.now(), products, {
+        includeGlobalSkips,
+      });
+      process.exit(1);
+    }
+
+    for (const [deploymentModel, instructionFilesByProduct] of Object.entries(
+      runnableGroups,
+    )) {
       for (const [product, instructionFiles] of Object.entries(
         instructionFilesByProduct,
       )) {
-        if (!products.includes(product)) {
-          continue;
-        }
-
         productTestConfig = testsConfig.products[product] || {};
 
         const runtimeConfig = await getRuntimeConfig(deploymentModel, product);
