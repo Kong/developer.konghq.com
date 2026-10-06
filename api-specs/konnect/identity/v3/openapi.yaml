@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect Identity
-  version: 3.6.2
+  version: 3.6.5
   description: The management API for Kong Konnect Identity resources.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@71eb5f9b874a36c530766e00e19ed197d3399d4d
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/71eb5f9b874a36c530766e00e19ed197d3399d4d'
+  x-oas-source: kong/platform-api@6ac3843042a0512e779e0eb7c660c21e1d8f7f6f
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6ac3843042a0512e779e0eb7c660c21e1d8f7f6f'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -4928,6 +4928,22 @@ components:
                         required:
                           - name
                           - description
+                      viewer:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          name:
+                            type: string
+                            enum:
+                              - Viewer
+                          description:
+                            type: string
+                            example: This role grants read access to the Audit log configuration.
+                            enum:
+                              - This role grants read access to the Audit log configuration.
+                        required:
+                          - name
+                          - description
                 required:
                   - name
                   - roles
@@ -5271,6 +5287,9 @@ components:
                     admin:
                       name: Admin
                       description: This role grants full write access to the Audit log configuration.
+                    viewer:
+                      name: Viewer
+                      description: This role grants read access to the Audit log configuration.
                 identity:
                   name: Identity
                   roles:

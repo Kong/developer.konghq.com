@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect API Catalog
-  version: 3.6.5
+  version: 3.6.6
   description: 'Konnect API Catalog is the API for creating and managing APIs in the Konnect Catalog and publishing APIs to Developer Portals. Use this API to create API entities, attach versioned specs, manage relationships with catalog services, and publish APIs to Developer Portals. This supersedes API Products v2 for new integrations.'
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@71eb5f9b874a36c530766e00e19ed197d3399d4d
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/71eb5f9b874a36c530766e00e19ed197d3399d4d'
+  x-oas-source: kong/platform-api@035f741b4e2797e1495faba05f7fbab88103f903
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/035f741b4e2797e1495faba05f7fbab88103f903'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -1777,22 +1777,7 @@ components:
       required: false
       in: query
       schema:
-        type: object
-        properties:
-          status:
-            $ref: '#/components/schemas/StringFieldFilter'
-          portal_id:
-            $ref: '#/components/schemas/UuidFieldFilter'
-          portal_name:
-            $ref: '#/components/schemas/StringFieldFilter'
-          application_id:
-            $ref: '#/components/schemas/UuidFieldFilter'
-          application_name:
-            $ref: '#/components/schemas/StringFieldFilter'
-          application_owner_type:
-            $ref: '#/components/schemas/StringFieldFilter'
-          application_owner_id:
-            $ref: '#/components/schemas/UuidFieldFilter'
+        $ref: '#/components/schemas/ApiRegistrationFilterParameters'
       style: deepObject
     ApiSort:
       name: sort
@@ -2900,6 +2885,24 @@ components:
         updated_at:
           $ref: '#/components/schemas/DateTimeFieldFilter'
       title: API Package Operations Filter Parameters
+    ApiRegistrationFilterParameters:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/StringFieldFilter'
+        portal_id:
+          $ref: '#/components/schemas/UuidFieldFilter'
+        portal_name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        application_id:
+          $ref: '#/components/schemas/UuidFieldFilter'
+        application_name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        application_owner_type:
+          $ref: '#/components/schemas/StringFieldFilter'
+        application_owner_id:
+          $ref: '#/components/schemas/UuidFieldFilter'
+      title: API Registration Filter Parameters
     ApiDocumentFilterParameters:
       type: object
       properties:

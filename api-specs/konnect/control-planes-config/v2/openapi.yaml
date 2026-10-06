@@ -14,8 +14,8 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
   version: 3.15.0
-  x-oas-source: kong/platform-api@6f3c10e525e05f898decbd9a8fa388070a1e4334
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6f3c10e525e05f898decbd9a8fa388070a1e4334'
+  x-oas-source: kong/platform-api@d9a3616ec0b898923aa973d2d25d10e1a5e5297e
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/d9a3616ec0b898923aa973d2d25d10e1a5e5297e'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -326,8 +326,8 @@ paths:
       summary: List all config stores for a control plane
       parameters:
         - $ref: '#/components/parameters/controlPlaneId'
-        - $ref: '#/components/parameters/PageSize'
-        - $ref: '#/components/parameters/PageAfter'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
       responses:
         '200':
           $ref: '#/components/responses/ListConfigStoresResponse'
@@ -485,8 +485,8 @@ paths:
       summary: List Config Store Secrets
       description: Returns a collection of all secrets for a Config Store.
       parameters:
-        - $ref: '#/components/parameters/PageSize'
-        - $ref: '#/components/parameters/PageAfter'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
       responses:
         '200':
           $ref: '#/components/responses/ListConfigStoreSecretsResponse'
@@ -9513,43 +9513,6 @@ components:
           example: Conflict
           readOnly: true
       title: Error
-    CursorMetaPage:
-      type: object
-      properties:
-        first:
-          description: URI to the first page
-          type: string
-          format: path
-        last:
-          description: URI to the last page
-          type: string
-          format: path
-        next:
-          description: URI to the next page
-          type: string
-          format: path
-          nullable: true
-        previous:
-          description: URI to the previous page
-          type: string
-          format: path
-          nullable: true
-        size:
-          description: Requested page size
-          type: number
-          example: 10
-      required:
-        - size
-        - next
-        - previous
-    CursorMeta:
-      description: Pagination metadata.
-      type: object
-      properties:
-        page:
-          $ref: '#/components/schemas/CursorMetaPage'
-      required:
-        - page
     CreatedAt:
       description: An ISO-8601 timestamp representation of entity creation date.
       type: string
@@ -10121,15 +10084,16 @@ components:
           schema:
             type: object
             properties:
-              meta:
-                $ref: '#/components/schemas/CursorMeta'
               data:
                 type: array
                 items:
                   $ref: '#/components/schemas/ConfigStore'
+              next:
+                $ref: '#/components/schemas/PaginationNextResponse'
+              offset:
+                $ref: '#/components/schemas/PaginationOffsetResponse'
             required:
               - data
-              - meta
             title: ListConfigStoresResponse
           examples:
             Config Stores:
@@ -10139,11 +10103,6 @@ components:
                     name: Config Store
                     created_at: '2023-01-01T00:00:00.000Z'
                     updated_at: '2023-01-01T00:00:00.000Z'
-                meta:
-                  page:
-                    size: 1
-                    previous: null
-                    next: '/config-stores?page[after]=dXVpZC01'
     ListConfigStoreSecretsResponse:
       description: List of Config Store Secrets
       content:
@@ -10151,15 +10110,16 @@ components:
           schema:
             type: object
             properties:
-              meta:
-                $ref: '#/components/schemas/CursorMeta'
               data:
                 type: array
                 items:
                   $ref: '#/components/schemas/ConfigStoreSecret'
+              next:
+                $ref: '#/components/schemas/PaginationNextResponse'
+              offset:
+                $ref: '#/components/schemas/PaginationOffsetResponse'
             required:
               - data
-              - meta
             title: ListConfigStoreSecretsResponse
           examples:
             Config Store Secrets:
@@ -10168,11 +10128,6 @@ components:
                   - key: ConfigStoreSecretKey
                     created_at: '2023-01-01T00:00:00.000Z'
                     updated_at: '2023-01-01T00:00:00.000Z'
-                meta:
-                  page:
-                    size: 1
-                    previous: null
-                    next: '/config-stores/e7a4f6c0-5777-4a37-bcb9-2d37d3b362ee/secrets?page[after]=dXVpZC01'
     ConfigStoreResponse:
       description: Config Store
       content:
