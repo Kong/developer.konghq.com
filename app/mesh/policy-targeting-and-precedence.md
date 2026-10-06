@@ -12,7 +12,7 @@ works_on:
   - on-prem
   - konnect
 next_steps:
-  - text: "Resource scoping"
+  - text: "Reference: Resource scoping"
     url: "/mesh/resource-scoping/"
 related_resources:
   - text: Introduction to policies

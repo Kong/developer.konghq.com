@@ -40,7 +40,7 @@ cleanup:
     - title: Remove the Kong Air foundation
       include_content: md/mesh/v3/cleanup/kong-air-foundation
 next_steps:
-  - text: "Target workloads and services"
+  - text: "How-to: Target workloads and services"
     url: "/mesh/target-workloads-and-services/"
 related_resources:
   - text: MeshHTTPRoute

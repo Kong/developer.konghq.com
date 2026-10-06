@@ -38,7 +38,7 @@ cleanup:
     - title: Remove the Kong Air foundation
       include_content: md/mesh/v3/cleanup/kong-air-foundation
 next_steps:
-  - text: "Validate resilience with fault injection"
+  - text: "How-to: Validate resilience with fault injection"
     url: "/mesh/validate-resilience-with-fault-injection/"
 related_resources:
   - text: MeshExternalService

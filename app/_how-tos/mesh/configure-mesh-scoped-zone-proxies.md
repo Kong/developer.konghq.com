@@ -28,7 +28,7 @@ cleanup:
     - title: Remove the Kong Air foundation
       include_content: md/mesh/v3/cleanup/kong-air-foundation
 next_steps:
-  - text: "Secure the perimeter with MeshPassthrough"
+  - text: "How-to: Secure the perimeter with MeshPassthrough"
     url: "/mesh/secure-the-perimeter-with-meshpassthrough/"
 related_resources:
   - text: Deploy mesh-scoped zone proxies

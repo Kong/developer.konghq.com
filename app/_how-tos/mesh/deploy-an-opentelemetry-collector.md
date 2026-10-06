@@ -41,8 +41,8 @@ related_resources:
     url: /mesh/policies/meshaccesslog/
 
 next_steps:
-  - text: Observe mesh traffic in practice
-    url: /mesh/observe-mesh-traffic-in-practice/
+  - text: "How-to: Observe mesh traffic in practice"
+    url: "/mesh/observe-mesh-traffic-in-practice/"
 
 tldr:
   q: How do I deploy an OpenTelemetry collector for {{site.mesh_product_name}}?

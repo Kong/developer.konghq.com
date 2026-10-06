@@ -12,7 +12,7 @@ works_on:
   - on-prem
   - konnect
 next_steps:
-  - text: "Architecture overview"
+  - text: "Reference: Architecture overview"
     url: "/mesh/architecture-overview/"
 related_resources:
   - text: Service meshes
