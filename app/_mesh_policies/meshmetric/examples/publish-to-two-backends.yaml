@@ -1,0 +1,28 @@
+title: 'Expose for Prometheus and push to a collector'
+
+description: 'More than one backend is accepted, so the same metrics can be scraped and pushed at the same time.'
+
+weight: 500
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshMetric
+  name: backend-two-backends
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    default:
+      backends:
+        - type: Prometheus
+          prometheus:
+            port: 5670
+        - type: OpenTelemetry
+          openTelemetry:
+            backendRef:
+              kind: MeshOpenTelemetryBackend
+              labels:
+                kuma.io/display-name: otel-collector

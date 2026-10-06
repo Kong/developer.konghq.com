@@ -6,13 +6,16 @@ module Jekyll
   module PolicyYaml
     module Transforms
       # Rewrites a MeshService `backendRef` (under a route's `backendRefs` or
-      # `requestMirror.backendRef`) into its Kubernetes/Universal, legacy/current shape.
+      # `requestMirror.backendRef`) into its Kubernetes/Universal, legacy/current
+      # shape. Only applies to name-based refs: a labels-based ref is already
+      # in its final shape in every style.
       class BackendRefTransform < Base
         def initialize
           super(Condition.any(
-            Condition.all(Condition.path(%w[spec to rules default backendRefs]), Condition.kind('MeshService')),
+            Condition.all(Condition.path(%w[spec to rules default backendRefs]), Condition.kind('MeshService'),
+                          Condition.field('name')),
             Condition.all(Condition.path(%w[spec to rules default filters requestMirror backendRef]),
-                          Condition.kind('MeshService'))
+                          Condition.kind('MeshService'), Condition.field('name'))
           ))
         end
 

@@ -1,0 +1,47 @@
+title: 'Add a cluster and route to it'
+
+description: 'Add a static cluster, then add a virtual host on an existing route configuration that sends traffic to it.'
+
+weight: 600
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshProxyPatch
+  name: backend-extra-cluster
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    default:
+      appendModifications:
+        - cluster:
+            operation: Add
+            value: |
+              name: extra-cluster
+              connectTimeout: 5s
+              type: STATIC
+              loadAssignment:
+                clusterName: extra-cluster
+                endpoints:
+                  - lbEndpoints:
+                      - endpoint:
+                          address:
+                            socketAddress:
+                              address: 127.0.0.1
+                              portValue: 8080
+        - virtualHost:
+            operation: Add
+            match:
+              routeConfigurationName: outbound:extra
+            value: |
+              name: extra
+              domains:
+                - extra.local
+              routes:
+                - match:
+                    prefix: /
+                  route:
+                    cluster: extra-cluster

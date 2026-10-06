@@ -1,0 +1,32 @@
+title: 'Trim the published metrics'
+
+description: 'Start from the Basic profile, drop a family of Envoy cluster metrics, and add back the request counters. Include takes precedence over exclude.'
+
+weight: 800
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshMetric
+  name: backend-metric-profile
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    default:
+      sidecar:
+        profiles:
+          appendProfiles:
+            - name: Basic
+          exclude:
+            - type: Prefix
+              match: envoy_cluster_
+          include:
+            - type: Contains
+              match: upstream_rq
+      backends:
+        - type: Prometheus
+          prometheus:
+            port: 5670

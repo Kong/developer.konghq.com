@@ -1,0 +1,28 @@
+title: 'Fail requests instead of sending them to unhealthy endpoints'
+
+description: 'Set failTrafficOnPanic so a cluster in panic mode rejects requests rather than routing them to endpoints already known to be failing.'
+
+weight: 600
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshHealthCheck
+  name: web-to-backend-panic
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: web
+    to:
+      - targetRef:
+          kind: MeshService
+          labels:
+            kuma.io/display-name: backend
+        default:
+          interval: 10s
+          timeout: 2s
+          failTrafficOnPanic: true
+          http:
+            path: /health

@@ -1,0 +1,25 @@
+title: 'Limit HTTP traffic through a zone proxy'
+
+description: 'Apply local HTTP rate limits to the selected zone-proxy listener. Replace the labels with those on your zone-proxy Dataplane and sectionName with the listener name from spec.networking.listeners. Each HTTP route has its own bucket; traffic handled as TCP is not limited by this example.'
+
+weight: 500
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshRateLimit
+  name: zone-proxy-rate-limit
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: zone-proxy
+      sectionName: zone-egress
+    rules:
+      - default:
+          local:
+            http:
+              requestRate:
+                num: 1000
+                interval: 1s

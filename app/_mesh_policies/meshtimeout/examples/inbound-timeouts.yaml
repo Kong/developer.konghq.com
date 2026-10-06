@@ -1,0 +1,23 @@
+title: 'Set timeouts for requests a service receives'
+
+description: 'Use MeshTimeout rules to set the timeouts a proxy applies to inbound traffic, rather than to the traffic it sends.'
+
+weight: 800
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshTimeout
+  name: backend-inbound
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    rules:
+      - default:
+          connectionTimeout: 10s
+          idleTimeout: 2h
+          http:
+            requestTimeout: 30s

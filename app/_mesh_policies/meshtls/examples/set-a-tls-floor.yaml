@@ -1,0 +1,20 @@
+title: 'Set a minimum TLS version'
+
+description: 'Refuse anything below TLS 1.2 while leaving the upper bound to Envoy, by setting min and leaving max as TLSAuto.'
+
+weight: 600
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshTLS
+  name: tls12-floor
+  mesh: default
+  spec:
+    targetRef:
+      kind: Mesh
+    rules:
+      - default:
+          tlsVersion:
+            min: TLS12
+            max: TLSAuto

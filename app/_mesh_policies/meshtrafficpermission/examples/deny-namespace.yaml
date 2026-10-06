@@ -1,0 +1,25 @@
+title: 'Exclude a namespace from a broader allow'
+
+description: 'Allow clients in the trust domain except for workloads in one namespace. Deny is evaluated before the broader allow.'
+
+weight: 800
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshTrafficPermission
+  name: deny-malicious-ns
+  mesh: default
+  spec:
+    targetRef:
+      kind: Mesh
+    rules:
+      - default:
+          deny:
+            - spiffeID:
+                type: Prefix
+                value: spiffe://default.default.mesh.local/ns/malicious/
+          allow:
+            - spiffeID:
+                type: Prefix
+                value: spiffe://default.default.mesh.local/
