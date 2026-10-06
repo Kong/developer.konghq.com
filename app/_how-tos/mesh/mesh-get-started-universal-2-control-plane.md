@@ -43,7 +43,7 @@ docker run \
 ```
 
 The control plane defaults to `mode: zone` with an in-memory store, which is what a single-node
-demo wants. Everything is lost when the container stops — see
+demo wants. Everything is lost when the container stops; see
 [Deploy a Universal control plane](/mesh/universal-control-plane/) for the PostgreSQL
 configuration a real deployment needs.
 
@@ -67,7 +67,7 @@ The GUI is now at <http://127.0.0.1:25681/gui>.
 ## Point kongctl at it
 
 `kongctl` reaches a self-managed control plane through `--control-plane-url`, which takes
-precedence over any Konnect configuration:
+precedence over any {{site.konnect_short_name}} configuration:
 
 ```sh
 export KONG_MESH_CP=http://127.0.0.1:25681
@@ -121,7 +121,7 @@ No proxies yet. The next two pages add them.
 ## What is not running yet
 
 Nothing issues identities. `Mesh.mtls` was removed in 3.0, so a mesh gets mTLS from a
-[MeshIdentity](/mesh/policies/meshidentity/) or not at all — and without one, proxies serve and
+[MeshIdentity](/mesh/policies/meshidentity/) or not at all. Without one, proxies serve and
 accept plaintext, and `MeshTLS` and `MeshTrafficPermission` do not apply to them.
 
 That is deliberate for now: the first two workloads connect without mTLS so you can see traffic

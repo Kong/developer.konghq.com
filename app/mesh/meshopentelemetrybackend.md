@@ -18,7 +18,7 @@ related_resources:
     url: /mesh/policies/meshtrace/
   - text: MeshAccessLog policy
     url: /mesh/policies/meshaccesslog/
-  - text: Migrate policies to {{site.mesh_product_name}} 3
+  - text: Migrate policies to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-policies-to-3/
 ---
 
@@ -148,7 +148,7 @@ rows:
   - field: "`protocol`"
     value: "`grpc`, the default, or `http`."
   - field: "`env`"
-    value: "How OpenTelemetry environment variables on the sidecar combine with the fields above. See [Environment variables](#environment-variables)."
+    value: "How OpenTelemetry environment variables on the sidecar combine with the other fields in this table. See [Environment variables](#environment-variables)."
 {% endtable %}
 
 `endpoint.path` has three constraints, each rejected on apply: it must not be set when the
@@ -159,13 +159,13 @@ protocol is `grpc` (`must not be set when protocol is grpc`), it must begin with
 ## Combine backend fields with environment variables
 
 `kuma-dp` reads `OTEL_EXPORTER_OTLP_*` variables at startup and merges them with this
-resource's fields. Values that carry secrets — headers, client keys, certificates — stay local
+resource's fields. Values that carry secrets (headers, client keys, certificates) stay local
 to `kuma-dp`: at bootstrap it reports only which variable *keys* are present to the control
 plane, never their values.
 
 The shared variables are `OTEL_EXPORTER_OTLP_ENDPOINT`, `_PROTOCOL`, `_HEADERS`, `_INSECURE`,
 `_TIMEOUT`, `_COMPRESSION`, `_CERTIFICATE`, `_CLIENT_KEY` and `_CLIENT_CERTIFICATE`. Each also
-has a per-signal form — `OTEL_EXPORTER_OTLP_TRACES_*`, `_METRICS_*` and `_LOGS_*` — which
+has a per-signal form (`OTEL_EXPORTER_OTLP_TRACES_*`, `_METRICS_*` and `_LOGS_*`) which
 overrides the shared value for that signal.
 
 For each field, the first available source wins. By default, the proxy resolves configuration
@@ -266,7 +266,7 @@ OpenTelemetry SDK defaults.
 
 The blocked reasons divide in two. `EnvDisabledByPolicy` and `SignalOverridesDisallowed` are
 soft: the control plane ignored some environment input and export still works.
-`RequiredEnvMissing` and `MultipleBackendsForSignal` are hard — they stop export and move the
+`RequiredEnvMissing` and `MultipleBackendsForSignal` are hard: they stop export and move the
 state out of `ready`.
 
 A `state: missing` means a policy asked for the signal and the merge produced no endpoint. A

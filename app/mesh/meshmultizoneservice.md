@@ -30,7 +30,7 @@ It is the destination kind that cross-zone failover attaches to:
 targeting a `MeshMultiZoneService`, because the failover order is a statement about zones and
 this is the resource that spans them.
 
-It is not a policy — there is no `targetRef`, the resource is the destination — and it is created
+It is not a policy: there is no `targetRef`, and the resource is the destination itself. It is created
 on the **global** control plane only, then synced out to zones. A zone control plane attached to
 a global one rejects it:
 
@@ -75,14 +75,14 @@ exposed across a subset of them.
 > A display name is not unique across namespaces. `kuma.io/display-name: backend` matches every
 > `MeshService` called `backend` in every namespace of every zone, including an unrelated
 > service that happens to share the name. The aggregate then load balances across all of them,
-> and requests that land on the unintended one usually fail authorization rather than
-> erroring visibly. Add `k8s.kuma.io/namespace` on Kubernetes to pin the aggregate to one
+> and requests that land on the unintended one usually fail authorization instead of
+> returning a visible error. Add `k8s.kuma.io/namespace` on Kubernetes to pin the aggregate to one
 > namespace, and read the `MeshServicesMatched` condition to confirm the count is what you
 > expect.
 
 ## Ports
 
-`spec.ports[]` lists the ports the aggregate exposes, and at least one is required — an empty
+`spec.ports[]` lists the ports the aggregate exposes, and at least one is required: an empty
 list is rejected with `in body should have at least 1 items`. Each takes a `port`, an optional
 `name`, and an `appProtocol` that defaults to `tcp`.
 
@@ -132,5 +132,5 @@ prefers the local zone, and `crossZone.failover` sets the order the others are t
 A zone that has no ready endpoints at all drops out on its own: its `MeshService` moves to
 `Unavailable` and the aggregate stops using it, with no health-checking policy involved.
 [MeshHealthCheck](/mesh/policies/meshhealthcheck/) and
-[MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/) cover the other case — endpoints that
+[MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/) cover the other case: endpoints that
 are present and reachable but answering badly, which nothing else detects.

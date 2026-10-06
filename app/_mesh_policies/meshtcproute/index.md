@@ -9,7 +9,7 @@ icon: meshtcproute.png
 related_resources:
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
-- text: Migrate policies to {{site.mesh_product_name}} 3
+- text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshtcproute"
 - text: MeshHTTPRoute policy
   url: "/mesh/policies/meshhttproute/"
@@ -33,7 +33,7 @@ the destination used by the proxy; it does not change the address the client app
 This policy applies to proxies labeled `app: frontend` and sends a tenth of their connections
 to `backend` to a second destination:
 
-Both `backend` and `backend-next` must already exist as MeshServices, with the labels below
+Both `backend` and `backend-next` must already exist as MeshServices, with the following labels
 and service port 8080. The new backend must accept the same application protocol. For mTLS
 traffic, its permissions must allow the original caller's identity.
 

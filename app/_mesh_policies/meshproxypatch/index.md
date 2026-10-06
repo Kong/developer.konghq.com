@@ -9,7 +9,7 @@ icon: meshproxypatch.png
 related_resources:
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
-- text: Migrate policies to {{site.mesh_product_name}} 3
+- text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshproxypatch"
 - text: MeshCircuitBreaker policy
   url: "/mesh/policies/meshcircuitbreaker/"
@@ -111,14 +111,14 @@ resource type. Defining two in one entry is rejected with
 
 Within that, an entry carries:
 
-- `operation` — what to do, from the set that resource type accepts.
-- `match` — which generated resources to act on. Omitted, an operation that takes a match
+- `operation`: what to do, from the set that resource type accepts.
+- `match`: which generated resources to act on. Omitted, an operation that takes a match
   applies to every resource of that type.
-- `value` or `jsonPatches` — what to apply. `Add` takes `value`; `Patch` takes exactly one of
+- `value` or `jsonPatches`: what to apply. `Add` takes `value`; `Patch` takes exactly one of
   the two; `Remove` takes neither.
 
 `value` is a native Envoy resource in YAML, parsed against the real Envoy proto. A value whose
-type or enum is wrong is rejected on apply, naming the reason — `bad Duration: time: invalid
+type or enum is wrong is rejected on apply, naming the reason, for example `bad Duration: time: invalid
 duration "not-a-duration"`, or `unknown value "NOT_A_REAL_TYPE" for enum
 envoy.config.cluster.v3.Cluster.DiscoveryType`.
 
@@ -209,7 +209,7 @@ modification matching on either origin acts on what an earlier one added.
 `Patch` takes either a partial Envoy resource in `value`, or a list of
 [JSON Patch](https://jsonpatch.com/) operations in `jsonPatches`. Giving both is rejected.
 
-`jsonPatches` entries take `op` — `add`, `remove`, `replace`, `move` or `copy` — a `path`, a
+`jsonPatches` entries take `op` (`add`, `remove`, `replace`, `move` or `copy`), a `path`, a
 `value` for `add` and `replace`, and a `from` for `move` and `copy`:
 
 The following example demonstrates JSON Patch syntax. For an ordinary stream idle timeout,

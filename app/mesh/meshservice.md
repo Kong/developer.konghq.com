@@ -17,7 +17,7 @@ related_resources:
     url: /mesh/meshmultizoneservice/
   - text: MeshExternalService
     url: /mesh/meshexternalservice/
-  - text: Migrate policies to {{site.mesh_product_name}} 3
+  - text: Migrate policies to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-policies-to-3/
 ---
 
@@ -25,7 +25,7 @@ related_resources:
 and which identities it presents. It is the resource a policy names as a destination, in
 `spec.to[].targetRef` and in a route's `backendRefs`.
 
-It is not a policy. There is no `targetRef` — a `MeshService` *is* the target — and on Kubernetes
+It is not a policy. There is no `targetRef` (a `MeshService` *is* the target), and on Kubernetes
 you do not write one at all.
 
 ## Where MeshServices come from
@@ -42,7 +42,7 @@ Mesh Service is read only on this control plane and cannot be created or updated
 
 {:.warning}
 > A **zone** control plane does not protect it. It accepts a hand-written `MeshService`, and it
-> accepts edits to a generated one — the change is stored and is **not** reconciled back from
+> accepts edits to a generated one: the change is stored and is **not** reconciled back from
 > the `Service`. Editing a generated `MeshService` therefore breaks routing to that service
 > until you undo it: changing a port on one made every request to it fail, and the resource
 > stayed changed. Treat these as control-plane output and leave them alone.
@@ -147,7 +147,7 @@ same pass that certifies the destination would drop every request sent before th
 inbound TLS chain arrived, so the status holds at `Pending` for one interval to give the
 destination that time. The next pass promotes it to `Ready`.
 
-A status stuck at `Pending` across many intervals is therefore not the handover in progress —
+A status stuck at `Pending` across many intervals is therefore not the handover in progress:
 look at whether the destination's proxies are actually being issued certificates by a
 [MeshIdentity](/mesh/policies/meshidentity/).
 

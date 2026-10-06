@@ -1,6 +1,6 @@
 ---
 title: Bring external traffic into the mesh
-description: Connect an API gateway to Mesh 3, route external requests to mesh services, and apply identity and policies on the gateway-to-backend connection.
+description: Connect an API gateway to {{site.mesh_product_name}} 3.x, route external requests to mesh services, and apply identity and policies on the gateway-to-backend connection.
 content_type: reference
 layout: reference
 products:
@@ -12,7 +12,7 @@ tags:
   - routing
   - security
 related_resources:
-  - text: Kong Operator Gateway API support
+  - text: "{{site.operator_product_name}} Gateway API support"
     url: /operator/dataplanes/gateway-api/
   - text: Mesh-scoped zone proxies
     url: /mesh/mesh-scoped-zone-proxies/
@@ -211,7 +211,7 @@ The annotation name remains `ingress.kubernetes.io/service-upstream`; it is supp
 {{site.operator_product_name}}. The per-Service setting keeps the change scoped to one backend.
 
 This ClusterIP configuration is for Services backed by Pods. An ExternalName Service has no
-ClusterIP; use the mesh hostname alias described below for a MeshMultiZoneService.
+ClusterIP; use the mesh hostname alias described in [Use a MeshMultiZoneService as a Gateway API backend](#use-a-meshmultizoneservice-as-a-gateway-api-backend).
 
 For cross-zone backends, configure the gateway to use the hostname published for the intended
 [MeshMultiZoneService](/mesh/meshmultizoneservice/) or remote
@@ -313,7 +313,7 @@ aggregate's VIP and port, it uses the normal MeshMultiZoneService connection con
   proxy authenticates the gateway and evaluates its MeshTrafficPermission rules.
 
 Allow the gateway's actual SPIFFE ID on the backend proxies in every zone that can receive
-traffic, using the permission pattern below. Do not attach the permission to the ExternalName
+traffic, using the permission pattern shown in [Allow the gateway to call the backend](#allow-the-gateway-to-call-the-backend). Do not attach the permission to the ExternalName
 Service or try to match the gateway by the alias name. If gateway identities include a zone
 in their trust domain or path, allow each intended gateway identity rather than assuming they
 are identical across zones.

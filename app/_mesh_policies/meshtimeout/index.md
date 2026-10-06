@@ -9,7 +9,7 @@ icon: meshtimeout.png
 related_resources:
 - text: How policies select traffic
   url: "/mesh/policy-targeting/"
-- text: Migrate policies to {{site.mesh_product_name}} 3
+- text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshtimeout"
 - text: MeshRetry policy
   url: "/mesh/policies/meshretry/"
@@ -20,7 +20,7 @@ related_resources:
 `MeshTimeout` sets how long a proxy waits before giving up: on establishing a connection, on
 an idle connection, and on a response arriving.
 
-A mesh already has timeouts. Every proxy starts with the values below, so a policy of your
+A mesh already has timeouts. Every proxy starts with [the following values](#the-defaults-a-mesh-starts-with), so a policy of your
 own changes those values rather than introducing timeouts where there were none.
 
 Choose the side that owns the limit: `to` controls waits by a caller proxy, while `rules`
@@ -119,7 +119,7 @@ out as two `MeshTimeout` policies, one for inbound and one for outbound, both ta
 policy.
 
 {:.info}
-> A mesh created by a Konnect control plane sets `skipCreatingInitialPolicies`, so
+> A mesh created by a {{site.konnect_short_name}} control plane sets `skipCreatingInitialPolicies`, so
 > `kubectl get meshtimeouts -A` returns nothing there. The defaults still apply: the proxy is
 > configured with them directly. Do not read an empty list as "no timeouts are set".
 
