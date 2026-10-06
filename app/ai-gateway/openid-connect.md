@@ -1,7 +1,9 @@
 ---
 title: "OpenID Connect authentication with {{site.ai_gateway}} 2.0"
-layout: reference
+layout: gateway_entity
 content_type: reference
+entities:
+  - ai-auth-strategy
 description: Learn how the OpenID Connect AI Auth Strategy authenticates AI Consumers in {{site.ai_gateway}} 2.0 and the OpenID Connect capabilities you can use.
 breadcrumbs:
   - /ai-gateway/
@@ -25,7 +27,7 @@ min_version:
 
 schema:
   api: konnect/ai-gateway
-  path: schemas/AIGatewayAuthStrategyOpenIDConnect
+  path: /schemas/AIGatewayAuthStrategyOpenIDConnect
 
 related_resources:
   - text: AI Auth Strategy entity
@@ -50,20 +52,20 @@ related_resources:
     url: /plugins/openid-connect/
 ---
 
-{{site.ai_gateway}} uses [AI Auth Strategies](/ai-gateway/entities/ai-auth-strategy/) to authenticate consumers and tools with [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), and [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/).
-Depending on how they are configured, AI Auth Strategies allow you to authenticate users and tools, attribute usage to [AI Consumers](/ai-gateway/entities/ai-consumer/), and deny unauthenticated requests.
+{{site.ai_gateway}} uses [AI Auth Strategies](/ai-gateway/entities/ai-auth-strategy/) to authenticate callers to [AI Models](/ai-gateway/entities/ai-model/), [AI Agents](/ai-gateway/entities/ai-agent/), and [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/).
+Depending on how you configure them, they can attribute usage to [AI Consumers](/ai-gateway/entities/ai-consumer/) and reject unauthenticated requests.
 
-AI Auth Strategies support both [key auth](/ai-gateway/entities/ai-auth-strategy/#api-key-authentication) and OpenID Connect authentication methods.
-When you use the OpenID Connect authentication method, you accept the JWT bearer tokens or OAuth 2.0 grants your AI Consumers already get from an OIDC-compliant identity provider (IdP) instead of issuing and rotating static API keys like you would with key auth.
+With the OpenID Connect AI Auth Strategy, {{site.ai_gateway}} accepts the JWT bearer tokens or OAuth 2.0 grants that your AI Consumers already get from an OIDC-compliant identity provider (IdP).
+You don't issue or rotate static API keys, as you would with [key auth](/ai-gateway/entities/ai-auth-strategy/#api-key-authentication).
 
-Use the OpenID Connect AI Auth Strategy when your AI Consumers already authenticate through an enterprise IdP and you want to accept the tokens they already have, rather than issuing separate keys.
-Use key auth instead when your AI Consumers are internal tools or scripts you control and you'd rather issue and rotate static API keys directly.
-An AI Model can use both at once, since a single AI Model's caller population is often mixed.
-For example, attach key auth for internal automation and OpenID Connect for user-facing applications on the same AI Model.
+Use OpenID Connect when your AI Consumers already authenticate through an enterprise IdP.
+Use key auth when your AI Consumers are internal tools or scripts that you control.
+An AI Model can use both at the same time, for example key auth for internal automation and OpenID Connect for user-facing applications.
 A request is authenticated if it satisfies either strategy.
+AI Agents and AI MCP Servers accept one AI Auth Strategy each.
 
-Internally, the OpenID Connect AI Auth Strategy's `config` object passes through to {{site.base_gateway}}'s [OpenID Connect plugin](/plugins/openid-connect/).
-{{site.ai_gateway}} documents a subset of the plugin's fields directly, and accepts the rest of the plugin's configuration through the same `config` object for advanced use cases.
+The strategy's `config` object passes through to {{site.base_gateway}}'s [OpenID Connect plugin](/plugins/openid-connect/).
+{{site.ai_gateway}} documents a subset of the plugin's fields in the schema and accepts the rest for advanced use cases.
 
 ## How it works
 
@@ -116,7 +118,8 @@ If several AI Models reference the same OpenID Connect AI Auth Strategy, every c
 ## Discovery cache
 
 When you configure `config.issuer` in the OIDC plugin, {{site.ai_gateway}} automatically retrieves the provider’s discovery metadata. 
-The OIDC plugin stores the metadata as a discovery cache object and uses the cache to avoid repeated fetches. This cache includes the discovery document endpoints, JWKS keys, and the token endpoint. 
+When you configure `config.issuer` in the OIDC Auth Strategy, {{site.ai_gateway}} automatically retrieves the provider’s discovery metadata.
+The OIDC Auth Strategy stores the metadata as a discovery cache object and uses the cache to avoid repeated fetches. This cache includes the discovery document endpoints, JWKS keys, and the token endpoint.
 
 {{site.ai_gateway}} uses the discovery cache whenever validation needs issuer metadata. The cache behaves in the following way:
 - Discovery data is stored in the **{{site.ai_gateway}} database** when using DB mode, or in **worker memory** when using DB‑less mode.  
@@ -781,12 +784,12 @@ You can use mTLS client authentication with the following IdP endpoints and corr
 
 * `token`
   * [Authorization Code Flow](#authorization-code-flow)
-  * [Password Grant](#password-grant-workflow)
-  * [Refresh Token Grant](#refresh-token-grant-workflow)
+  * [Password Grant](#password-grant)
+  * [Refresh Token Grant](#refresh-token-grant)
 * `introspection`
-  * [Introspection Authentication flow](#introspection-authentication-flow)
+  * [Introspection Authentication flow](#introspection-authentication)
 * `revocation`
-  * [Session Authentication](#session-auth-workflow)
+  * [Session Authentication](#session-authentication)
 
 For all these endpoints and for the flows supported, the auth strategy uses mTLS client authentication as the authentication method when communicating with the IdP, for example, to fetch the token from the token endpoint.
 
@@ -977,13 +980,13 @@ You can implement this in one of the following ways:
 {{ site.ai_gateway }} validates incoming tokens against the appropriate public keys and forwards them to the backend as-is.
 This works best when token formats are consistent across IdPs.
 
-* **Token exchange** {% new_in 3.14 %}: Configure the OIDC auth strategy to swap incoming tokens for a canonical token from one trusted issuer using [`config.token_exchange`](./#schema--config-token-exchange).
+* **Token exchange**: Configure the OIDC auth strategy to swap incoming tokens for a canonical token from one trusted issuer using [`config.token_exchange`](./#schema--config-token-exchange).
 The backend always receives tokens from a single issuer regardless of which IdP the client used.
 This works best when backends must trust one issuer, or when you need to normalize scopes and claims across IdPs.
 
 {% comment %}
 NOT SUPPORTED CURRENTLY
-### Protected resource metadata {% new_in 3.16 %}
+### Protected resource metadata
 
 Some clients, including MCP (Model Context Protocol) clients that follow the [MCP authorization specification](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization), need to know which authorization server protects an API before they can request a token.
 
@@ -1116,7 +1119,7 @@ Before triggering the exchange, the OIDC auth strategy performs the following ch
   * The issuer (`iss` claim) matches a configured trusted issuer (`subject_token_issuers`).
   * The token is not expired (`exp` claim).
   * The token is not used before its time (`nbf` claim).
-  * {% new_in 3.15 %} If [`verify_signature`](./#schema--config-token-exchange-subject-token-issuers-verify-signature) is enabled for the issuer, {{ site.ai_gateway }} cryptographically verifies the token signature before sending the exchange request to the IdP.
+  * If [`verify_signature`](./#schema--config-token-exchange-subject-token-issuers-verify-signature) is enabled for the issuer, {{ site.ai_gateway }} cryptographically verifies the token signature before sending the exchange request to the IdP.
 1. If the `subject_token_issuer` and `target_issuer` are different, token exchange is triggered.
 1. If the `subject_token_issuer` and `target_issuer` are the same, the configured conditions are evaluated to determine whether to trigger token exchange.
 1. {{ site.ai_gateway }} uses its client credentials to trigger the exchange.
@@ -1154,7 +1157,7 @@ Set this when the issuer doesn't publish a discovery document or when you want t
 
 {% comment %}
 NOT SUPPORTED CURRENTLY
-#### Actor tokens {% new_in 3.16 %}
+#### Actor tokens
 
 An actor token represents the identity of the party acting on behalf of the subject in a token exchange, as defined by [RFC 8693](https://www.rfc-editor.org/rfc/rfc8693#name-actor-token-and-actor-toke).
 This is useful for delegation scenarios, such as an AI agent or backend service that needs to identify itself separately from the user (the subject) it's acting for.
