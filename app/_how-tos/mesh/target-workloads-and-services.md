@@ -29,7 +29,7 @@ cleanup:
     - title: Remove the Kong Air foundation
       include_content: md/mesh/v3/cleanup/kong-air-foundation
 next_steps:
-  - text: "Deploy an OpenTelemetry collector"
+  - text: "How-to: Deploy an OpenTelemetry collector"
     url: "/mesh/deploy-an-opentelemetry-collector/"
 related_resources:
   - text: MeshService

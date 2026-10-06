@@ -35,7 +35,7 @@ cleanup:
     - title: Remove the Kong Air foundation
       include_content: md/mesh/v3/cleanup/kong-air-foundation
 next_steps:
-  - text: "Manage external services with MeshExternalService"
+  - text: "How-to: Manage external services with MeshExternalService"
     url: "/mesh/manage-external-services-with-meshexternalservice/"
 related_resources:
   - text: MeshPassthrough

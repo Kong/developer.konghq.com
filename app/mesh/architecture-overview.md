@@ -11,7 +11,7 @@ products:
 works_on:
   - konnect
 next_steps:
-  - text: "Install {{site.mesh_product_name}} and deploy Kong Air"
+  - text: "How-to: Install {{site.mesh_product_name}} and deploy Kong Air"
     url: "/mesh/install-kong-mesh-and-deploy-kong-air/"
 related_resources:
   - text: Multi-zone architecture

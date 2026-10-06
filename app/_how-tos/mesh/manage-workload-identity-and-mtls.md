@@ -26,7 +26,7 @@ cleanup:
     - title: Remove the Kong Air foundation
       include_content: md/mesh/v3/cleanup/kong-air-foundation
 next_steps:
-  - text: "Integrate an external CA"
+  - text: "How-to: Integrate an external CA"
     url: "/mesh/integrate-an-external-ca/"
 related_resources:
   - text: MeshIdentity reference

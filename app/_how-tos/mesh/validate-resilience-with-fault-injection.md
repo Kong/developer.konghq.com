@@ -38,7 +38,7 @@ cleanup:
     - title: Remove the Kong Air foundation
       include_content: md/mesh/v3/cleanup/kong-air-foundation
 next_steps:
-  - text: "Prepare the mesh for production"
+  - text: "How-to: Prepare the mesh for production"
     url: "/mesh/prepare-the-mesh-for-production/"
 related_resources:
   - text: MeshFaultInjection

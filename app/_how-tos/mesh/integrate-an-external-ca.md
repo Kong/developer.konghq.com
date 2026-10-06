@@ -109,8 +109,10 @@ faqs:
 
       This is reference material: it needs an AWS Private CA deployment outside the cluster, so adapt the ARN and credentials to your own environment rather than running this example as-is.
 next_steps:
-  - text: "Multi-zone architecture"
+  - text: "Reference: Multi-zone architecture"
     url: "/mesh/multi-zone-architecture/"
+  - text: "How-to: Configure mesh-scoped zone proxies"
+    url: "/mesh/configure-mesh-scoped-zone-proxies/"
 related_resources:
   - text: Manage workload identity and mTLS
     url: /mesh/manage-workload-identity-and-mtls/

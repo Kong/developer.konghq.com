@@ -35,8 +35,10 @@ related_resources:
   - text: Manage workload identity and mTLS
     url: /mesh/manage-workload-identity-and-mtls/
 next_steps:
-  - text: "Policy targeting and precedence"
+  - text: "Reference: Policy targeting and precedence"
     url: "/mesh/policy-targeting-and-precedence/"
+  - text: "How-to: Split traffic with MeshService resources"
+    url: "/mesh/split-traffic-with-meshservice-resources/"
 ---
 
 This scenario starts with one connected Kubernetes zone. Use `kubectl` to manage its workloads and zone-local policies.

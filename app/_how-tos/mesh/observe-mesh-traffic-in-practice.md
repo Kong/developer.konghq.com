@@ -46,7 +46,7 @@ faqs:
 
       The sidecar picks up the change within seconds. The six files total around 450 KB, comfortably inside the 1 MiB limit on a single ConfigMap.
 next_steps:
-  - text: "Manage workload identity and mTLS"
+  - text: "How-to: Manage workload identity and mTLS"
     url: "/mesh/manage-workload-identity-and-mtls/"
 related_resources:
   - text: Deploy an OpenTelemetry collector

@@ -14,7 +14,7 @@ works_on:
 min_version:
   mesh: '3.0'
 next_steps:
-  - text: "Configure mesh-scoped zone proxies"
+  - text: "How-to: Configure mesh-scoped zone proxies"
     url: "/mesh/configure-mesh-scoped-zone-proxies/"
 related_resources:
   - text: Resource scoping

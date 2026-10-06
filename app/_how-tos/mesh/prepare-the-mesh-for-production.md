@@ -44,8 +44,8 @@ cleanup:
     - title: Remove the Kong Air foundation
       include_content: md/mesh/v3/cleanup/kong-air-foundation
 next_steps:
-  - text: "Explore by role"
-    url: "/mesh/persona/"
+  - text: "Reference: Production readiness checklist"
+    url: "/mesh/production-readiness-checklist/"
 related_resources:
   - text: Production readiness checklist
     url: /mesh/production-readiness-checklist/

@@ -12,7 +12,7 @@ works_on:
   - on-prem
   - konnect
 next_steps:
-  - text: "Split traffic with MeshService resources"
+  - text: "How-to: Split traffic with MeshService resources"
     url: "/mesh/split-traffic-with-meshservice-resources/"
 related_resources:
   - text: Multi-zone architecture

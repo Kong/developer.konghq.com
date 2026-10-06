@@ -55,8 +55,8 @@ related_resources:
   - text: Resource scoping
     url: /mesh/resource-scoping/
 next_steps:
-  - text: Create a security policy
-    url: /mesh/create-a-security-policy/
+  - text: "How-to: Create a security policy"
+    url: "/mesh/create-a-security-policy/"
 ---
 
 Every Kong Air scenario runs against the same foundation: a `kong-air-mesh` mesh on a {{site.konnect_short_name}}-hosted global control plane, one connected Kubernetes zone named `zone1`, and three demo applications. This guide builds that foundation.
