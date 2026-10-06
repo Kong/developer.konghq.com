@@ -1,13 +1,5 @@
 Your global control plane is hosted in {{site.konnect_short_name}}, so you can't reach it with `kubectl`. Global resources, including the `Mesh` itself, are created with [kongctl](/kongctl/), which requires {{site.mesh_product_name}} 3.0 or later.
 
-1. Install kongctl. On macOS:
-
-   ```sh
-   brew install --formula kong/kongctl/kongctl
-   ```
-
-   For Linux, Windows, Docker, and mise, see the install instructions on the [kongctl](/kongctl/) page.
-
 1. Authenticate to {{site.konnect_short_name}} using the browser-based device flow:
 
    ```sh
