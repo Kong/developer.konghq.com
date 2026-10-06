@@ -93,6 +93,14 @@ RSpec.describe Jekyll::Drops::Prereqs do
       end
 
       context 'when render_works_on? is true' do
+        context 'when skip_product is true' do
+          let(:page_data) do
+            super().merge('prereqs' => { 'skip_product' => true }, 'products' => ['operator'])
+          end
+
+          it { expect(drop.konnect_auth_only?).to be(false) }
+        end
+
         context 'when products include gateway' do
           let(:page_data) { super().merge('products' => ['gateway']) }
 
@@ -117,6 +125,42 @@ RSpec.describe Jekyll::Drops::Prereqs do
       let(:page_data) { super().merge('works_on' => ['on-prem']) }
 
       it { expect(drop.konnect_auth_only?).to be(false) }
+    end
+  end
+
+  describe '#test_markers_only?' do
+    context 'when skip_product is true, the product is operator, and the output is html' do
+      let(:page_data) do
+        super().merge('prereqs' => { 'skip_product' => true }, 'products' => ['operator'])
+      end
+
+      it { expect(drop.test_markers_only?).to be(true) }
+    end
+
+    context 'when skip_product is false' do
+      let(:page_data) { super().merge('products' => ['operator']) }
+
+      it { expect(drop.test_markers_only?).to be(false) }
+    end
+
+    context 'when the output format is markdown' do
+      let(:page_data) do
+        super().merge(
+          'prereqs' => { 'skip_product' => true },
+          'products' => ['operator'],
+          'output_format' => 'markdown'
+        )
+      end
+
+      it { expect(drop.test_markers_only?).to be(false) }
+    end
+
+    context 'when the products do not include operator' do
+      let(:page_data) do
+        super().merge('prereqs' => { 'skip_product' => true }, 'products' => ['gateway'])
+      end
+
+      it { expect(drop.test_markers_only?).to be(false) }
     end
   end
 
