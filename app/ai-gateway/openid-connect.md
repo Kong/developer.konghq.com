@@ -117,23 +117,13 @@ If several AI Models reference the same OpenID Connect AI Auth Strategy, every c
 
 ## Discovery cache
 
-When you configure `config.issuer` in the OIDC plugin, {{site.ai_gateway}} automatically retrieves the provider’s discovery metadata. 
 When you configure `config.issuer` in the OIDC Auth Strategy, {{site.ai_gateway}} automatically retrieves the provider’s discovery metadata.
 The OIDC Auth Strategy stores the metadata as a discovery cache object and uses the cache to avoid repeated fetches. This cache includes the discovery document endpoints, JWKS keys, and the token endpoint.
 
 {{site.ai_gateway}} uses the discovery cache whenever validation needs issuer metadata. The cache behaves in the following way:
-- Discovery data is stored in the **{{site.ai_gateway}} database** when using DB mode, or in **worker memory** when using DB‑less mode.  
-- The cache TTL (time-to-live) is managed by `config.cache_ttl`, which is set to 3600 seconds by default. You can also clear it manually using the relevant [DELETE endpoints in the Admin API](/plugins/openid-connect/api/#/operations/deleteAllDiscoveryCache/).  
+- The cache TTL (time-to-live) is managed by `config.cache_ttl`, which is set to 3600 seconds by default.
 - If a request requires discovery information that isn't in the cache, the plugin attempts to “rediscover” it using the value in `config.issuer`. After a rediscovery occurs, no further rediscovery attempts are made until the time period defined in `config.rediscovery_lifetime` has elapsed, which helps avoid excessive requests to the identity provider.  
 - If a JWT can't be validated due to missing discovery data, and a rediscovery request returns a non‑2xx status code, the plugin falls back to using any sufficient discovery information that remains in the cache.
-
-### Manually clear discovery cache
-
-To manually clear discovery cache entries, you can use the Admin API DELETE endpoints for the OpenID Connect plugin. These endpoints let you:
-* Delete a JWKS
-* Delete all caches or a specific cache
-
-Refer to the [OIDC API reference](/plugins/openid-connect/api/) for details.
 
 ## Supported flows and grants
 
@@ -814,31 +804,31 @@ rows:
       As a result, it obtains a `request_uri` value.
       The client uses this value in a call to the authorization endpoint as a reference to obtain the authorization request payload data.
       <br><br>
-      Use [`config.pushed_authorization_request_endpoint`](./#schema--config-pushed-authorization-request-endpoint) to enable PAR.
+      Use [`config.pushed_authorization_request_endpoint`](/plugins/openid-connect/reference/#schema--config-pushed-authorization-request-endpoint) to enable PAR.
   - spec: "JWT-secured authorization requests (JAR)"
     description:
       With JAR enabled, when sending requests to the authorization endpoint, {{site.ai_gateway}} provides request parameters in a JSON Web Token (JWT) instead of using a query string.
       This allows for request data to be signed with JSON Web Signature (JWS).
       <br><br>
-      Use [`config.require_signed_request_object`](./#schema--config-require-signed-request-object) to enable JAR.
+      Use [`config.require_signed_request_object`](/plugins/openid-connect/reference/#schema--config-require-signed-request-object) to enable JAR.
   - spec: "JWT-secured authorization response mode (JARM)"
     description: |
       With JARM enabled, {{site.ai_gateway}} requests the authorization server to return the authorization response parameters encoded in a JWT, which allows the response data to be signed with JSON Web Signature (JWS).
       <br><br>
-      Set [`config.response_mode`](./#schema--config-response-mode) to any of the following values: `query.jwt`, `form_post.jwt`, `fragment.jwt`, `jwt` to enable JARM.
+      Set [`config.response_mode`](/plugins/openid-connect/reference/#schema--config-response-mode) to any of the following values: `query.jwt`, `form_post.jwt`, `fragment.jwt`, `jwt` to enable JARM.
   - spec: "Certificate-bound access tokens"
     description: |
       Certificate-bound access tokens allow binding tokens to clients.
       This guarantees the authenticity of the token by verifying whether the sender is authorized to use the token for accessing protected resources.
       <br><br>
-      Set [`config.proof_of_possession_mtls`](./#schema--config-proof-of-possession-mtls) to `strict` and [`config.client_id`](./#schema--config-client-id) to a client bound to a client certificate to enable cert-bound access tokens.
+      Set [`config.proof_of_possession_mtls`](/plugins/openid-connect/reference/#schema--config-proof-of-possession-mtls) to `strict` and [`config.client_id`](#schema-aigateway-auth-strategy-open-idconnect-config-config-client-id) to a client bound to a client certificate to enable cert-bound access tokens.
   - spec: "Mutual TLS (mTLS) client authentication with certificate-bound access tokens"
     description: |
       When mTLS client authentication is enabled, {{site.ai_gateway}} establishes mTLS connections with the IdP using the configured X.509 certificate as client credentials.
       <br><br>
       If the authorization server is configured to bind the client certificate with the issued access token, {{site.ai_gateway}} can validate the access token using mTLS proof of possession.
       <br><br>
-      Set [`config.client_auth`](./#schema--config-client-auth) to `tls_client_auth` and provide a certificate at [`config.tls_client_auth_cert_id`](./#schema--config-tls-client-auth-cert-id) to enable mTLS auth.
+      Set [`config.client_auth`](#schema-aigateway-auth-strategy-open-idconnect-config-config-client-auth) to `tls_client_auth` and provide a certificate at [`config.tls_client_auth_cert_id`](/plugins/openid-connect/reference/#schema--config-tls-client-auth-cert-id) to enable mTLS auth.
   - spec: "Demonstrating proof-of-possession (DPoP)"
     description: |
       Demonstrating Proof of Possession (DPoP) is an application-level mechanism for proving the sender's ownership of OAuth access and refresh tokens.
@@ -847,7 +837,7 @@ rows:
       <br><br>
       When DPoP is enabled, {{site.ai_gateway}} validates the DPoP header in the request to ensure that the sender is authorized to use the access token.
       <br><br>
-      Set [`config.proof_of_possession_dpop`](./#schema--config-proof-of-possession-dpop) to `strict` to enable DPoP.
+      Set [`config.proof_of_possession_dpop`](/plugins/openid-connect/reference/#schema--config-proof-of-possession-dpop) to `strict` to enable DPoP.
 {% endtable %}
 
 #### Certificate-bound access tokens
@@ -867,12 +857,12 @@ Certificate-bound access tokens are supported by the following auth methods:
 
 Session authentication is only compatible with certificate-bound access tokens when used along with one of the other supported authentication methods:
 
-* When [`config.proof_of_possession_auth_methods_validation`](./#schema--config-proof-of-possession-auth-methods-validation) is set to `false` and other non-compatible methods are enabled, and a valid session is found, {{ site.ai_gateway }} only performs the proof of possession validation if the session was originally created using one of the compatible methods.
-* If you configure multiple OpenID Connect auth strategy instances with the `session` auth method, configure a different [`config.session_secret`](./#schema--config-session-secret) value on each for additional security. This avoids sessions being shared across auth strategy instances and possibly bypassing the proof of possession validation.
+* When [`config.proof_of_possession_auth_methods_validation`](/plugins/openid-connect/reference/#schema--config-proof-of-possession-auth-methods-validation) is set to `false` and other non-compatible methods are enabled, and a valid session is found, {{ site.ai_gateway }} only performs the proof of possession validation if the session was originally created using one of the compatible methods.
+* If you configure multiple OpenID Connect auth strategy instances with the `session` auth method, configure a different [`config.session_secret`](/plugins/openid-connect/reference/#schema--config-session-secret) value on each for additional security. This avoids sessions being shared across auth strategy instances and possibly bypassing the proof of possession validation.
 
 To enable certificate-bound access tokens:
 * Ensure that the IdP you're using is set up to generate OAuth 2.0 mutual TLS certificate-bound access tokens.
-* Use [`config.proof_of_possession_mtls`](./#schema--config-proof-of-possession-mtls) to verify that the supplied access token belongs to the client, by checking its binding with the client certificate provided in the request.
+* Use [`config.proof_of_possession_mtls`](/plugins/openid-connect/reference/#schema--config-proof-of-possession-mtls) to verify that the supplied access token belongs to the client, by checking its binding with the client certificate provided in the request.
 
 The following is an example cert-bound access token config:
 {% entity_examples %}
@@ -942,11 +932,11 @@ DPoP is compatible with the following authentication methods:
 * [Introspection authentication](#introspection-authentication)
 * [Session authentication](#session-authentication)
 
-Session authentication is only compatible with DPoP when used along with one of the other supported authentication methods. If you configure multiple OpenID Connect auth strategy instances with the `session` authentication method, configure a different [`config.session_secret`](./#schema--config-session-secret) value on each for additional security. This avoids sessions being shared across auth strategy instances and possibly bypassing the proof of possession validation.
+Session authentication is only compatible with DPoP when used along with one of the other supported authentication methods. If you configure multiple OpenID Connect auth strategy instances with the `session` authentication method, configure a different [`config.session_secret`](/plugins/openid-connect/reference/#schema--config-session-secret) value on each for additional security. This avoids sessions being shared across auth strategy instances and possibly bypassing the proof of possession validation.
 
 To enable DPoP:
 * Ensure that the IdP you're using has DPoP enabled.
-* Use [`config.proof_of_possession_dpop`](./#schema--config-proof-of-possession-dpop) to verify that the supplied access token is bound to the client, by checking its association with the JWT provided in the request.
+* Use [`config.proof_of_possession_dpop`](/plugins/openid-connect/reference/#schema--config-proof-of-possession-dpop) to verify that the supplied access token is bound to the client, by checking its association with the JWT provided in the request.
 
 The following is an example DPoP config:
 {% entity_examples %}
@@ -976,11 +966,11 @@ If your APIs serve clients that authenticate with different identity providers, 
 
 You can implement this in one of the following ways:
 
-* **Trusted issuers registry**: Configure the OIDC auth strategy with a list of trusted issuers and their JWKS endpoints using [`config.issuers_allowed`](./#schema--config-issuers-allowed) and [`config.extra_jwks_uris`](./#schema--config-extra-jwks-uris).
+* **Trusted issuers registry**: Configure the OIDC auth strategy with a list of trusted issuers and their JWKS endpoints using [`config.issuers_allowed`](/plugins/openid-connect/reference/#schema--config-issuers-allowed) and [`config.extra_jwks_uris`](/plugins/openid-connect/reference/#schema--config-extra-jwks-uris).
 {{ site.ai_gateway }} validates incoming tokens against the appropriate public keys and forwards them to the backend as-is.
 This works best when token formats are consistent across IdPs.
 
-* **Token exchange**: Configure the OIDC auth strategy to swap incoming tokens for a canonical token from one trusted issuer using [`config.token_exchange`](./#schema--config-token-exchange).
+* **Token exchange**: Configure the OIDC auth strategy to swap incoming tokens for a canonical token from one trusted issuer using [`config.token_exchange`](/plugins/openid-connect/reference/#schema--config-token-exchange).
 The backend always receives tokens from a single issuer regardless of which IdP the client used.
 This works best when backends must trust one issuer, or when you need to normalize scopes and claims across IdPs.
 
@@ -992,23 +982,22 @@ Some clients, including MCP (Model Context Protocol) clients that follow the [MC
 
 [RFC 9728](https://www.rfc-editor.org/rfc/rfc9728) (OAuth 2.0 Protected Resource Metadata) solves this by letting a resource server advertise itself, including which authorization servers protect it and what scopes it supports, at a well-known URI that clients can discover automatically.
 
-When you configure [`config.protected_resource_metadata`](./#schema--config-protected-resource-metadata), the OIDC auth strategy:
+When you configure [`config.protected_resource_metadata`](/plugins/openid-connect/reference/#schema--config-protected-resource-metadata), the OIDC auth strategy:
 * Serves an RFC 9728 metadata document at a well-known URI, with no authentication required.
 * Rejects a request with no bearer token with a `401 Unauthorized` response instead of `403 Forbidden`, and adds a `resource_metadata` attribute, and optionally a `scope` attribute, to its `WWW-Authenticate` header, so clients that receive a challenge can locate the metadata document.
 
 {:.info}
 > Configuring this setting only advertises protected resource metadata and adds it to unauthorized responses.
 It doesn't change how the OIDC auth strategy authenticates requests, and the authorization server URLs you configure here aren't validated against `config.issuer`.
-{% endcomment %}
 
 #### Well-known metadata endpoint
 
-By default, the OIDC auth strategy derives the metadata document's path from [`config.protected_resource_metadata.resource`](./#schema--config-protected-resource-metadata-resource) by appending `/.well-known/oauth-protected-resource` to its path component. For example:
+By default, the OIDC auth strategy derives the metadata document's path from [`config.protected_resource_metadata.resource`](/plugins/openid-connect/reference/#schema--config-protected-resource-metadata-resource) by appending `/.well-known/oauth-protected-resource` to its path component. For example:
 
 * `resource`: `https://api.example.com/mcp`
 * Metadata document served at: `https://api.example.com/mcp/.well-known/oauth-protected-resource`
 
-To serve the document at a different path, set [`config.protected_resource_metadata.metadata_endpoint`](./#schema--config-protected-resource-metadata-metadata-endpoint).
+To serve the document at a different path, set [`config.protected_resource_metadata.metadata_endpoint`](/plugins/openid-connect/reference/#schema--config-protected-resource-metadata-metadata-endpoint).
 
 {{ site.ai_gateway }} intercepts requests to this path before any authentication logic runs:
 * `GET` requests receive a `200` response with the metadata document as a JSON body (`Content-Type: application/json`, `Cache-Control: no-store`).
@@ -1039,7 +1028,7 @@ If MCP or browser-based clients need to fetch the metadata document cross-origin
 #### WWW-Authenticate header
 
 When a request is rejected with a `401 Unauthorized` response, the OIDC auth strategy adds a `resource_metadata` attribute to the `WWW-Authenticate` header, pointing to the well-known metadata endpoint.
-If [`config.protected_resource_metadata.scopes_supported`](./#schema--config-protected-resource-metadata-scopes-supported) is set, the header also includes a `scope` attribute listing the supported scopes.
+If [`config.protected_resource_metadata.scopes_supported`](/plugins/openid-connect/reference/#schema--config-protected-resource-metadata-scopes-supported) is set, the header also includes a `scope` attribute listing the supported scopes.
 This only applies to `401` responses.
 
 For example, a request without a bearer token:
@@ -1057,6 +1046,7 @@ WWW-Authenticate: Bearer realm="idp.example.com", resource_metadata="https://api
 {"message":"Unauthorized"}
 ```
 {:.no-copy-code}
+{% endcomment %}
 
 ### Token exchange
 
@@ -1119,7 +1109,6 @@ Before triggering the exchange, the OIDC auth strategy performs the following ch
   * The issuer (`iss` claim) matches a configured trusted issuer (`subject_token_issuers`).
   * The token is not expired (`exp` claim).
   * The token is not used before its time (`nbf` claim).
-  * If [`verify_signature`](./#schema--config-token-exchange-subject-token-issuers-verify-signature) is enabled for the issuer, {{ site.ai_gateway }} cryptographically verifies the token signature before sending the exchange request to the IdP.
 1. If the `subject_token_issuer` and `target_issuer` are different, token exchange is triggered.
 1. If the `subject_token_issuer` and `target_issuer` are the same, the configured conditions are evaluated to determine whether to trigger token exchange.
 1. {{ site.ai_gateway }} uses its client credentials to trigger the exchange.
@@ -1138,7 +1127,38 @@ The token exchange flow uses the following terms:
 * **Conditions**: Conditions under which to trigger token exchange.
 Conditions look for the presence or absence of two claims: `scopes` and `audience`.
 
-#### Subject token signature verification {% new_in 3.15 %}
+The following is an example token exchange config, which exchanges tokens issued by `https://keycloak.example.com` for a token from the AI Auth Strategy's own issuer, `https://dev-123456.okta.com`, before proxying the request upstream:
+{% entity_examples %}
+ai_gateway_auth_strategies:
+  - ref: token-exchange-auth
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    display_name: Token Exchange Auth
+    name: token-exchange-auth
+    type: openid-connect
+    config:
+      issuer: https://dev-123456.okta.com
+      client_id:
+      - my-client-id
+      client_secret:
+      - !secret {source: !env 'CLIENT_SECRET'}
+      client_auth:
+      - client_secret_post
+      auth_methods:
+      - bearer
+      token_exchange:
+        subject_token_issuers:
+        - issuer: https://keycloak.example.com
+        request:
+          empty_audience: false
+          scopes:
+          empty_scopes: false
+          audience:
+      cache_tokens_salt: token-exchange-auth-cache-salt
+{% endentity_examples %}
+
+{% comment %}
+NOT SUPPORTED CURRENTLY
+#### Subject token signature verification
 
 By default, {{ site.ai_gateway }} validates the `iss`, `exp`, and `nbf` claims of an incoming subject token but doesn't verify its cryptographic signature before sending the exchange request to the IdP.
 The IdP performs its own signature check, so validation happens eventually.
@@ -1146,14 +1166,15 @@ The IdP performs its own signature check, so validation happens eventually.
 Enabling signature verification in {{ site.ai_gateway }} adds an earlier check that rejects tokens with invalid signatures before they reach the IdP.
 This reduces unnecessary round-trips to the IdP and keeps {{ site.ai_gateway }}'s security posture consistent with other authentication flows.
 
-You can configure this setting per issuer on each entry in [`config.token_exchange.subject_token_issuers`](./#schema--config-token-exchange-subject-token-issuers):
+You can configure this setting per issuer on each entry in [`config.token_exchange.subject_token_issuers`](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers):
 
-* [`config.token_exchange.subject_token_issuers[].verify_signature`](./#schema--config-token-exchange-subject-token-issuers-verify-signature): Set to `true` to enable signature verification for that issuer.
+* [`config.token_exchange.subject_token_issuers[].verify_signature`](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers-verify-signature): Set to `true` to enable signature verification for that issuer.
 Defaults to `false` for backward compatibility.
 We recommend enabling this for all subject token issuers to prevent tokens with invalid signatures from consuming IdP resources.
-* [`config.token_exchange.subject_token_issuers[].jwks_uri`](./#schema--config-token-exchange-subject-token-issuers-jwks-uri): An optional explicit JWKS endpoint for fetching the signing keys for this issuer.
+* [`config.token_exchange.subject_token_issuers[].jwks_uri`](/plugins/openid-connect/reference/#schema--config-token-exchange-subject-token-issuers-jwks-uri): An optional explicit JWKS endpoint for fetching the signing keys for this issuer.
 If not set, {{ site.ai_gateway }} resolves the JWKS URI from OIDC discovery using the issuer URL.
 Set this when the issuer doesn't publish a discovery document or when you want to pin to a specific key endpoint.
+{% endcomment %}
 
 {% comment %}
 NOT SUPPORTED CURRENTLY
@@ -1163,9 +1184,9 @@ An actor token represents the identity of the party acting on behalf of the subj
 This is useful for delegation scenarios, such as an AI agent or backend service that needs to identify itself separately from the user (the subject) it's acting for.
 Some identity providers require an actor token to be present for certain token exchange grants.
 
-Configure [`config.token_exchange.request.actor_token`](./#schema--config-token-exchange-request-actor-token) to include an actor token in the exchange request.
+Configure [`config.token_exchange.request.actor_token`](/plugins/openid-connect/reference/#schema--config-token-exchange-request-actor-token) to include an actor token in the exchange request.
 
-Use [`config.token_exchange.request.actor_token.type`](./#schema--config-token-exchange-request-actor-token-type) to set the token type identifier sent as `actor_token_type`.
+Use [`config.token_exchange.request.actor_token.type`](/plugins/openid-connect/reference/#schema--config-token-exchange-request-actor-token-type) to set the token type identifier sent as `actor_token_type`.
 This defaults to `urn:ietf:params:oauth:token-type:access_token`.
 {% endcomment %}
 
@@ -1179,8 +1200,8 @@ This defaults to `urn:ietf:params:oauth:token-type:access_token`.
 
 `config.client_id` and `config.client_secret` are array fields on the OpenID Connect AI Auth Strategy schema, and behave the same way as on the plugin.
 
-You can configure the OIDC auth strategy ([`config.client_id`](./#schema--config-client-id)) and
-client secrets ([`config.client_secret`](./#schema--config-client-secret)), where the ID and client pairs correspond based on their locations in the array.
+You can configure the OIDC auth strategy ([`config.client_id`](#schema-aigateway-auth-strategy-open-idconnect-config-config-client-id)) and
+client secrets ([`config.client_secret`](#schema-aigateway-auth-strategy-open-idconnect-config-config-client-secret)), where the ID and client pairs correspond based on their locations in the array.
 
 For example:
 
@@ -1209,7 +1230,7 @@ curl -X GET "http://localhost:8000?client_id=2"
 ```
 
 {{ site.ai_gateway }} will look for the client ID in the following locations, in order of precedence:
-1. If [`config.client_arg`](./#schema--config-client-arg) is set, {{ site.ai_gateway }} checks for that value in the following order: in the request header, URI argument, and body.
+1. If [`config.client_arg`](/plugins/openid-connect/reference/#schema--config-client-arg) is set, {{ site.ai_gateway }} checks for that value in the following order: in the request header, URI argument, and body.
 1. If `config.client_arg` is not set, {{ site.ai_gateway }} checks for a `client_id` in the following order: in the request header, URI argument, and body.
 1. If no client is found in either of those places, {{ site.ai_gateway }} uses the first client ID and client secret pair.
 
