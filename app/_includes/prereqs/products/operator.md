@@ -12,6 +12,7 @@ metadata:
 rawLicenseString: '$(cat ./license.json)'
 " | kubectl apply -f -
 ```
+{: data-test-prereq="block" }
 {%- endcapture -%}
 {%- capture cert-manager -%}
 {% include k8s/cert-manager.md %}
@@ -26,6 +27,9 @@ rawLicenseString: '$(cat ./license.json)'
 {%- if prereqs.operator.rapid -%}
 {%- assign chart_version = chart_version | default: site.data.products.operator.rapid.chart -%}
 {%- endif -%}
+{% unless page.output_format == 'markdown' %}
+<div data-test-setup="operator" class="hidden"></div>
+{% endunless %}
 {% capture details_content %}
 {% if prereqs.operator.rapid %}
 {% include operator/rapid-release.md %}
@@ -37,6 +41,7 @@ rawLicenseString: '$(cat ./license.json)'
    helm repo add kong https://charts.konghq.com
    helm repo update
    ```
+   {: data-test-prereq="block" }
 
 1. Install {{ site.operator_product_name }} using Helm:
 
@@ -66,6 +71,7 @@ rawLicenseString: '$(cat ./license.json)'
        --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}{% if extra_set %} \{% for param in extra_set %}
        --set {{ param }}{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
      ```
+     {: data-test-prereq="block" }
    indent: 3
    {% endon_prem %}
    {% endif %}
@@ -101,6 +107,7 @@ rawLicenseString: '$(cat ./license.json)'
        --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}{% if extra_set %} \{% for param in extra_set %}
        --set {{ param }}{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
      ```
+     {: data-test-prereq="block" }
    indent: 3
    {% endon_prem %}
    {% endif %}
