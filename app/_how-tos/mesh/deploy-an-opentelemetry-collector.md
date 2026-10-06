@@ -7,6 +7,7 @@ permalink: /mesh/deploy-an-opentelemetry-collector/
 
 breadcrumbs:
   - /mesh/
+  - /mesh/scenarios/
 
 products:
   - mesh
@@ -17,6 +18,10 @@ works_on:
 
 min_version:
   mesh: '3.0'
+
+series:
+  id: mesh-kong-air-scenario
+  position: 5
 
 tags:
   - observability
@@ -51,7 +56,7 @@ faqs:
     a: |
       Walk back through these checks:
 
-      - Does the policy's `backendRef` resolve? `kubectl get meshtrace <name> -n {{site.mesh_namespace}} -o jsonpath='{.status.conditions}'` reports `AllBackendRefsResolved` when it does. A `backendRef` that matches nothing leaves the policy accepted and silently exports nothing.
+      - Does the policy's `backendRef` resolve? `kubectl get meshtrace all-traces -n {{site.mesh_namespace}} -o jsonpath='{.status.conditions}'` reports `AllBackendRefsResolved` when it does. A `backendRef` that matches nothing leaves the policy accepted and silently exports nothing.
       - Did you apply the policy to the right `Mesh`? On a zone control plane connected to a global control plane, every resource in `{{site.mesh_namespace}}` also needs the `kuma.io/origin: zone` label.
       - Is the collector listening where `kuma-dp` is dialing? With an empty `MeshOpenTelemetryBackend` spec, `kuma-dp` dials the node IP on port 4317, which needs `hostPort: 4317` on the collector container.
       - Is the collector Pod running without a sidecar? A collector that receives telemetry through its own sidecar is a circular dependency.
@@ -106,7 +111,17 @@ faqs:
       EOF
       ```
 
-      Then set `endpoint.address` on the `MeshOpenTelemetryBackend` to `otel-collector.mesh-observability`, as described in [Name a collector other than the node-local one](#name-a-collector-other-than-the-node-local-one).
+      Then name the Service in the `MeshOpenTelemetryBackend` spec:
+
+      ```yaml
+      spec:
+        endpoint:
+          address: otel-collector.mesh-observability
+          port: 4317
+        protocol: grpc
+      ```
+
+      The same `endpoint.address` works for a collector outside the cluster. `protocol` accepts `grpc` or `http` and defaults to `grpc`. `endpoint.path` is a base path prefix for HTTP endpoints only, and the control plane appends the signal suffixes (`/v1/traces`, `/v1/metrics`, `/v1/logs`) itself. Setting a non-empty `path` with `protocol: grpc` fails validation.
   - q: Can one collector serve several meshes?
     a: |
       Yes. The collector is an ordinary workload outside the mesh, so nothing about it is mesh-scoped. `MeshOpenTelemetryBackend` is, though: it carries a `kuma.io/mesh` label and lives in `{{site.mesh_namespace}}`, so each mesh needs its own resource pointing at the same collector.
@@ -118,104 +133,141 @@ faqs:
       ```
 
       Delete the old resource and apply it again under the new mesh, as the message says.
+  - q: Can Envoy export telemetry to the collector directly, as it did before 3.0?
+    a: |
+      No. `runtime.kubernetes.injector.otelPipeEnabled` and `KUMA_DATAPLANE_RUNTIME_OTEL_PIPE_ENABLED` used to make Envoy export directly. Both settings are removed in 3.0, and the control plane and `kuma-dp` ignore them.
+  - q: Why is my `MeshAccessLog` rejected after I change its attributes?
+    a: |
+      `MeshAccessLog` validates `openTelemetry.attributes[].key` against a strict grammar. A key must start with a lowercase letter, use only lowercase letters, digits, `_`, or `.`, avoid consecutive delimiters, end with a letter or digit, and must not use the reserved `otel.` prefix. Placeholders such as `%KUMA_MESH%` are allowed in values but not in keys.
 
 prereqs:
   inline:
-    - title: Kong Air demo deployment
-      content: |
-        A running {{site.mesh_product_name}} deployment with the Kong Air demo apps in `kong-air-production`. See [Get started with your first policy](/mesh/get-started-with-your-first-policy/).
     - title: Helm
       include_content: prereqs/helm
     - title: Tempo
       content: |
-        Install [Grafana Tempo](https://grafana.com/docs/tempo/latest/setup/helm-chart/) as the trace backend. The collector configuration in this guide pushes traces to `tempo.mesh-observability:4317`:
+        Install [Grafana Tempo](https://grafana.com/docs/tempo/latest/setup/helm-chart/) as the trace backend. The collector configuration in this guide pushes traces to `tempo.mesh-observability:4317`.
 
-        ```sh
-        helm repo add grafana https://grafana.github.io/helm-charts
-        helm repo update
+        1. Add the Grafana Helm repository:
 
-        cat > values-tempo.yaml <<'EOF'
-        tempo:
-          receivers:
-            otlp:
-              protocols:
-                grpc:
-                  endpoint: 0.0.0.0:4317
-                http:
-                  endpoint: 0.0.0.0:4318
-        EOF
+           ```sh
+           helm repo add grafana https://grafana.github.io/helm-charts
+           helm repo update
+           ```
 
-        helm install tempo grafana/tempo \
-          --namespace mesh-observability --create-namespace \
-          -f values-tempo.yaml
+        1. Create the Tempo values file:
 
-        kubectl wait -n mesh-observability --for=condition=ready pod \
-          -l app.kubernetes.io/name=tempo --timeout=120s
-        ```
+           ```sh
+           cat > values-tempo.yaml <<'EOF'
+           tempo:
+             receivers:
+               otlp:
+                 protocols:
+                   grpc:
+                     endpoint: 0.0.0.0:4317
+                   http:
+                     endpoint: 0.0.0.0:4318
+           EOF
+           ```
+
+        1. Install Tempo:
+
+           ```sh
+           helm install tempo grafana/tempo \
+             --namespace mesh-observability --create-namespace \
+             -f values-tempo.yaml
+           ```
+
+        1. Wait for Tempo to be ready:
+
+           ```sh
+           kubectl wait -n mesh-observability --for=condition=ready pod \
+             -l app.kubernetes.io/name=tempo --timeout=120s
+           ```
       icon_url: /assets/icons/third-party/grafana.svg
     - title: Loki
       content: |
-        Install [Grafana Loki](https://grafana.com/docs/loki/latest/setup/install/helm/) as the log backend. The collector configuration in this guide pushes logs to `http://loki.mesh-observability:3100/otlp`:
+        Install [Grafana Loki](https://grafana.com/docs/loki/latest/setup/install/helm/) as the log backend. The collector configuration in this guide pushes logs to `http://loki.mesh-observability:3100/otlp`.
 
-        ```sh
-        helm repo add grafana https://grafana.github.io/helm-charts
-        helm repo update
+        1. Add the Grafana Helm repository, if you haven't already:
 
-        cat > values-loki.yaml <<'EOF'
-        deploymentMode: SingleBinary
-        loki:
-          auth_enabled: false
-          commonConfig:
-            replication_factor: 1
-          storage:
-            type: filesystem
-          schemaConfig:
-            configs:
-              - from: '2024-01-01'
-                store: tsdb
-                object_store: filesystem
-                schema: v13
-                index:
-                  prefix: loki_index_
-                  period: 24h
-        singleBinary:
-          replicas: 1
-        read:
-          replicas: 0
-        write:
-          replicas: 0
-        backend:
-          replicas: 0
-        chunksCache:
-          enabled: false
-        resultsCache:
-          enabled: false
-        EOF
+           ```sh
+           helm repo add grafana https://grafana.github.io/helm-charts
+           helm repo update
+           ```
 
-        helm install loki grafana/loki \
-          --namespace mesh-observability --create-namespace \
-          -f values-loki.yaml
-        ```
+        1. Create the Loki values file:
+
+           ```sh
+           cat > values-loki.yaml <<'EOF'
+           deploymentMode: SingleBinary
+           loki:
+             auth_enabled: false
+             commonConfig:
+               replication_factor: 1
+             storage:
+               type: filesystem
+             schemaConfig:
+               configs:
+                 - from: '2024-01-01'
+                   store: tsdb
+                   object_store: filesystem
+                   schema: v13
+                   index:
+                     prefix: loki_index_
+                     period: 24h
+           singleBinary:
+             replicas: 1
+           read:
+             replicas: 0
+           write:
+             replicas: 0
+           backend:
+             replicas: 0
+           chunksCache:
+             enabled: false
+           resultsCache:
+             enabled: false
+           EOF
+           ```
+
+        1. Install Loki:
+
+           ```sh
+           helm install loki grafana/loki \
+             --namespace mesh-observability --create-namespace \
+             -f values-loki.yaml
+           ```
       icon_url: /assets/icons/third-party/grafana.svg
     - title: Prometheus
       content: |
-        Install [Prometheus](https://prometheus.io/docs/prometheus/latest/installation/) with a scrape job for the collector's `/metrics` endpoint at `otel-collector.mesh-observability:8889`:
+        Install [Prometheus](https://prometheus.io/docs/prometheus/latest/installation/) with a scrape job for the collector's `/metrics` endpoint at `otel-collector.mesh-observability:8889`.
 
-        ```sh
-        helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-        helm repo update
+        1. Add the Prometheus community Helm repository:
 
-        cat > values-prometheus.yaml <<'EOF'
-        extraScrapeConfigs: |
-          - job_name: otel-collector
-            static_configs:
-              - targets: ['otel-collector.mesh-observability:8889']
-        EOF
+           ```sh
+           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+           helm repo update
+           ```
 
-        helm install prometheus prometheus-community/prometheus \
-          --namespace mesh-observability --create-namespace \
-          -f values-prometheus.yaml
-        ```
+        1. Create the Prometheus values file:
+
+           ```sh
+           cat > values-prometheus.yaml <<'EOF'
+           extraScrapeConfigs: |
+             - job_name: otel-collector
+               static_configs:
+                 - targets: ['otel-collector.mesh-observability:8889']
+           EOF
+           ```
+
+        1. Install Prometheus:
+
+           ```sh
+           helm install prometheus prometheus-community/prometheus \
+             --namespace mesh-observability --create-namespace \
+             -f values-prometheus.yaml
+           ```
 
         [Observe mesh traffic in practice](/mesh/observe-mesh-traffic-in-practice/#prometheus-scrape-jobs) covers the scrape jobs for proxy and control plane metrics.
       icon_url: /assets/icons/prometheus.svg
@@ -230,10 +282,9 @@ This guide deploys an OpenTelemetry collector as a per-node Kubernetes `DaemonSe
 
 ## How telemetry reaches the collector
 
-In {{site.mesh_product_name}} 3.0, the proxy does not export to the collector itself. Envoy writes each signal to a Unix socket in the pod, and `kuma-dp` reads from that socket and forwards to the collector over OTLP. Two things follow from that, and both change how you reason about reachability:
+In {{site.mesh_product_name}} 3.0, the proxy does not export to the collector itself. Envoy writes each signal to a Unix socket in the pod, and `kuma-dp` reads from that socket and forwards to the collector over OTLP.
 
-- **The export bypasses the transparent proxy.** `kuma-dp` runs as its own user, and the transparent proxy rules return traffic owned by that user rather than redirecting it. Telemetry never enters an Envoy outbound listener, so passthrough mode, `MeshPassthrough`, `MeshExternalService`, and `reachableBackends` have no bearing on whether the collector is reachable. A collector outside the mesh needs no mesh configuration at all.
-- **There is no way to turn the pipe off.** `runtime.kubernetes.injector.otelPipeEnabled` and `KUMA_DATAPLANE_RUNTIME_OTEL_PIPE_ENABLED` used to make Envoy export directly. Both settings are removed in 3.0, and the control plane and `kuma-dp` ignore them.
+That export bypasses the transparent proxy. `kuma-dp` runs as its own user, and the transparent proxy rules return traffic owned by that user rather than redirecting it. Telemetry never enters an Envoy outbound listener, so passthrough mode, `MeshPassthrough`, `MeshExternalService`, and `reachableBackends` have no bearing on whether the collector is reachable. A collector outside the mesh needs no mesh configuration at all.
 
 {% mermaid %}
 flowchart LR
@@ -246,10 +297,15 @@ flowchart LR
 
 ## Deploy the collector
 
-1. Create a namespace for the collector and keep it out of the mesh:
+1. Create a namespace for the collector:
 
    ```sh
    kubectl create namespace mesh-observability --dry-run=client -o yaml | kubectl apply -f -
+   ```
+
+1. Keep the namespace out of the mesh:
+
+   ```sh
    kubectl label namespace mesh-observability kuma.io/sidecar-injection=disabled --overwrite
    ```
 
@@ -391,7 +447,7 @@ flowchart LR
    EOF
    ```
 
-   `hostPort: 4317` publishes the collector on each node's own IP, which is what makes the node-local default in the next section work. The Service is what Prometheus scrapes on port 8889, and it also gives you a cluster-wide address if you decide to name the collector explicitly instead.
+   `hostPort: 4317` publishes the collector on each node's own IP, which is what makes the node-local default in [Name the collector with MeshOpenTelemetryBackend](#name-the-collector-with-meshopentelemetrybackend) work. The Service is what Prometheus scrapes on port 8889, and it also gives you a cluster-wide address if you decide to name the collector explicitly instead.
 
    {:.warning}
    > A `hostPort` binds the port on every node that runs a collector Pod, so nothing else on those nodes can use 4317 or 4318. The hop is node-local and does not fail over: while a node's collector Pod is restarting, that node's telemetry is dropped rather than sent elsewhere.
@@ -426,22 +482,7 @@ EOF
 
 An empty spec is the node-local default. The control plane defaults the port to 4317 and leaves the address unset, and `kuma-dp` resolves it at runtime from the `HOST_IP` environment variable the injector sets from the Pod's node IP, falling back to `127.0.0.1`. Combined with the `hostPort` on the DaemonSet, every proxy reaches the collector on its own node without a cluster-wide hop.
 
-{:.info}
-> `MeshOpenTelemetryBackend` can only be created in the system namespace (`{{site.mesh_namespace}}`). A zone control plane connected to a global control plane requires every resource created there to carry `kuma.io/origin: zone`, and rejects it otherwise. See [Resource scoping](/mesh/resource-scoping/).
-
-### Name a collector other than the node-local one
-
-Set `endpoint.address` when the collector is not on the node, for example when you run it as a Deployment or when it lives outside the cluster:
-
-```yaml
-spec:
-  endpoint:
-    address: otel-collector.mesh-observability
-    port: 4317
-  protocol: grpc
-```
-
-`protocol` accepts `grpc` or `http` and defaults to `grpc`. `endpoint.path` is a base path prefix for HTTP endpoints only, and the control plane appends the signal suffixes (`/v1/traces`, `/v1/metrics`, `/v1/logs`) itself. Setting a non-empty `path` with `protocol: grpc` fails validation.
+To run the collector somewhere other than on each node, see the FAQ on running it as a Deployment.
 
 ## Point the policies at the backend
 
@@ -527,9 +568,6 @@ EOF
 {:.info}
 > The `MeshTrace` policy samples 100% of traces so you see something during testing. Drop the rate to single digits in production.
 
-{:.warning}
-> `MeshAccessLog` validates `openTelemetry.attributes[].key` against a strict grammar. A key must start with a lowercase letter, use only lowercase letters, digits, `_`, or `.`, avoid consecutive delimiters, end with a letter or digit, and must not use the reserved `otel.` prefix. Placeholders such as `%KUMA_MESH%` are allowed in values but not in keys.
-
 ### Confirm every backendRef resolved
 
 A `backendRef` that matches no `MeshOpenTelemetryBackend` leaves the policy accepted and exports nothing, without reporting an error on the policy itself. Check the status condition on each one:
@@ -549,23 +587,13 @@ all-access-logs	AllBackendRefsResolved
 ```
 {:.no-copy-code}
 
-## Verify the collector
-
-1. Check that the collector is receiving telemetry:
-
-   ```sh
-   kubectl logs -n mesh-observability -l app=otel-collector --tail=20
-   ```
-
-   With the `debug` exporter at `verbosity: basic`, each batch shows up as one line per signal. Metrics flow continuously from Envoy stats, so `Metrics` lines appear within a refresh interval or two.
+## Validate
 
 1. List the collector Pods with their node assignments, and confirm there is one per node:
 
    ```sh
    kubectl get pod -n mesh-observability -o wide -l app=otel-collector
    ```
-
-## Generate traffic and validate
 
 1. Send a request that the Kong Air `MeshTrafficPermission` allows:
 
@@ -587,6 +615,6 @@ all-access-logs	AllBackendRefsResolved
    kubectl logs -n mesh-observability -l app=otel-collector --tail=40 | grep -E 'Traces|Metrics|Logs'
    ```
 
-   `Traces` and `Logs` lines appear alongside `Metrics`. If `Metrics` appears but one of the others is missing, the corresponding `MeshTrace` or `MeshAccessLog` policy is not matching, so check its `targetRef` and its `BackendRefsResolved` condition.
+   With the `debug` exporter at `verbosity: basic`, each batch shows up as one line per signal. `Traces` and `Logs` lines appear alongside `Metrics`, which flow continuously from Envoy stats. If `Metrics` appears but one of the others is missing, the corresponding `MeshTrace` or `MeshAccessLog` policy is not matching, so check its `targetRef` and its `BackendRefsResolved` condition.
 
 With telemetry arriving, [Observe mesh traffic in practice](/mesh/observe-mesh-traffic-in-practice/) covers the Prometheus scrape jobs, the Grafana dashboards, and the policy configuration for reading it back.

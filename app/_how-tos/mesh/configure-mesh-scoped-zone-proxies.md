@@ -6,11 +6,16 @@ description: Give each mesh its own dedicated zone ingress and egress, with per-
 breadcrumbs:
   - /mesh/
   - /mesh/scenarios/
+tools:
+  - kongctl
 products:
   - mesh
 works_on:
   - on-prem
   - konnect
+series:
+  id: mesh-kong-air-scenario
+  position: 9
 tldr:
   q: How do I give one mesh its own identity, policies, and observability on cross-zone traffic?
   a: |
@@ -18,13 +23,6 @@ tldr:
     1. Deploy a dedicated ingress and egress pair for it (see [Deploy mesh-scoped zone proxies](/mesh/zone-proxies/)).
     2. Target the proxies with mesh-scoped policy using the `kuma.io/listener-zoneingress` / `kuma.io/listener-zoneegress` labels.
     3. Cross-zone traffic now carries the mesh's own SPIFFE identity, honors its policies, and reports its own metrics.
-prereqs:
-  inline:
-    - title: Kong Air demo deployment
-      content: |
-        A running {{site.mesh_product_name}} deployment with the Kong Air demo apps in `kong-air-mesh`. See [Get started with your first policy](/mesh/get-started-with-your-first-policy/).
-    - title: kongctl
-      include_content: md/mesh/v3/prereqs/kongctl
 cleanup:
   inline:
     - title: Remove the Kong Air foundation
@@ -66,9 +64,24 @@ rows:
 
 Each mesh-scoped proxy is a `Dataplane` inside the mesh, the same resource kind used for application sidecars. Policies can therefore select a zone proxy by its labels and listener role.
 
-## Give your mesh its own zone proxies
+## Confirm the Helm values that gave your mesh its own zone proxies
 
-Add a `meshes:` entry to each zone control plane's Helm values, name the mesh, and enable its `ingress` and `egress`. This gives `kong-air-mesh` its own ingress and egress Deployment, each with its own Service and ServiceAccount. For the Helm values and upgrade commands, see [Deploy mesh-scoped zone proxies](/mesh/zone-proxies/).
+`kong-air-mesh` already has its own zone proxies. [Install {{site.mesh_product_name}} and deploy Kong Air](/mesh/install-kong-mesh-and-deploy-kong-air/) installs the zone control plane with a `meshes:` entry that names `kong-air-mesh` and enables its `ingress` and `egress`:
+
+```yaml
+kuma:
+  controlPlane:
+    # ...
+  meshes:
+    - name: kong-air-mesh
+      ingress:
+        enabled: true
+      egress:
+        enabled: true
+```
+{:.no-copy-code}
+
+That entry is what gives `kong-air-mesh` its own ingress and egress Deployment, each with its own Service and ServiceAccount. To give a different, self-managed zone control plane the same mesh-scoped proxies, add the same `meshes:` entry to its Helm values and upgrade the release. See [Deploy mesh-scoped zone proxies](/mesh/zone-proxies/) for the full Helm walkthrough.
 
 ## Confirm the proxies belong to your mesh
 
@@ -171,7 +184,6 @@ spec:
     kind: Dataplane
     labels:
       kuma.io/listener-zoneingress: enabled
-    sectionName: "10001"
   default:
     sidecar:
       includeUnused: false
@@ -182,7 +194,7 @@ spec:
           path: /metrics
 ```
 
-The same selector shape works for `MeshTimeout`, `MeshAccessLog`, and `MeshRateLimit`. Omit `sectionName` to cover every listener on the proxy.
+`MeshTimeout`, `MeshAccessLog`, and `MeshRateLimit` use the same selector shape, and also accept a `sectionName` to target one specific listener by name instead of every listener on the proxy.
 
 ## Govern what leaves through the egress
 
@@ -215,3 +227,37 @@ spec:
 
 An entry allows a connection only when the caller's SPIFFE ID and the destination SNI both match. For how to derive each value, see [Manage external services with MeshExternalService](/mesh/manage-external-services-with-meshexternalservice/).
 
+## Validate
+
+1. Confirm the mesh-scoped ingress and egress pods for `kong-air-mesh` are `Running`:
+
+   ```sh
+   kubectl get pods -n kong-mesh-system -l "kuma.io/mesh=kong-air-mesh"
+   ```
+
+   Expected output, both pods `2/2` and `Running`. Each zone proxy pod runs the proxy container alongside a `kuma-sidecar`:
+
+   ```text
+   NAME                                               READY   STATUS    RESTARTS   AGE
+   kong-mesh-kong-air-mesh-egress-5d8f7c9b6d-p4x2q    2/2     Running   0          2m
+   kong-mesh-kong-air-mesh-ingress-77499bbc58-kkssn   2/2     Running   0          2m
+   ```
+   {:.no-copy-code}
+
+1. Confirm each proxy is attributed to the right mesh and has the role you expect:
+
+   ```sh
+   kubectl get pods -n kong-mesh-system -l kuma.io/mesh=kong-air-mesh \
+     -o custom-columns='NAME:.metadata.name,MESH:.metadata.labels.kuma\.io/mesh,TYPE:.metadata.labels.k8s\.kuma\.io/zone-proxy-type'
+   ```
+
+   Expected output, one ingress and one egress for the mesh:
+
+   ```text
+   NAME                                               MESH            TYPE
+   kong-mesh-kong-air-mesh-egress-5d8f7c9b6d-p4x2q    kong-air-mesh   egress
+   kong-mesh-kong-air-mesh-ingress-77499bbc58-kkssn   kong-air-mesh   ingress
+   ```
+   {:.no-copy-code}
+
+Together, these confirm the mesh-scoped proxies are healthy and that each one is bound to `kong-air-mesh` by its `kuma.io/mesh` label.

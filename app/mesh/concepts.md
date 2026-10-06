@@ -107,7 +107,7 @@ Transparent proxy is the interception mechanism that redirects a workload's inbo
 
 ### reachableBackends
 
-`reachableBackends` is the list of destinations a data plane proxy declares its workload calls, set through the `kuma.io/reachable-backends` pod annotation on Kubernetes. Each ref selects backends by `kind` and `labels`. The control plane generates outbound configuration only for the declared destinations, and in 3.0 a proxy that declares none reaches nothing, because restricted outbound is on by default. See [Prepare the mesh for production](/mesh/prepare-the-mesh-for-production/).
+`reachableBackends` is the list of destinations a data plane proxy declares its workload calls, set through the `kuma.io/reachable-backends` pod annotation on Kubernetes. Each ref selects backends by `kind` and `labels`. `kind` accepts `MeshService`, `MeshMultiZoneService`, and `MeshExternalService`, so one declaration covers in-zone services, multi-zone destinations, and external dependencies. `labels: {}` selects every backend of that kind. The empty map is required, because an omitted `labels` field and an empty one are indistinguishable once the ref is stored, so the control plane rejects a ref that omits it. Use `labels: {}` only as a short-lived diagnostic, because it gives back most of the benefit of declaring anything. The control plane generates outbound configuration only for the declared destinations, and in 3.0 a proxy that declares none reaches nothing, because restricted outbound is on by default. See [Prepare the mesh for production](/mesh/prepare-the-mesh-for-production/).
 
 ### Zone ingress and zone egress
 

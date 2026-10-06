@@ -38,7 +38,7 @@ flowchart LR
   CI -.-> WX
 {% endmermaid %}
 
-The dashed arrow to `weather-api` is an external SaaS, the developer reaches it through a `MeshExternalService` that the operator has configured. See the [Meet Kong Air section](/mesh/introduction/#meet-kong-air) for the full picture.
+The dashed arrow to `weather-api` is an external SaaS, the developer reaches it through a `MeshExternalService` that the operator has configured. See the [Kong Air section](/mesh/introduction/#kong-air) for the full picture.
 
 ## Service discovery and consuming services the developer doesn't own
 

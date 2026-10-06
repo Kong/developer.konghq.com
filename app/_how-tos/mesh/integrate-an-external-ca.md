@@ -6,30 +6,108 @@ description: Move beyond the built-in CA. Learn how to integrate {{site.mesh_pro
 breadcrumbs:
   - /mesh/
   - /mesh/scenarios/
+tools:
+  - kongctl
 products:
   - mesh
 works_on:
   - on-prem
   - konnect
+series:
+  id: mesh-kong-air-scenario
+  position: 8
 tldr:
   q: How do I integrate my mesh with an enterprise certificate authority?
   a: |
     Root your mesh identity in an external CA through `MeshIdentity`, in one of two ways:
     1. Bundled provider: you supply the CA cert and key, and {{site.mesh_product_name}} signs from it.
     2. Extension providers: {{site.mesh_product_name}} delegates signing to cert-manager, HashiCorp Vault, or AWS Private CA, so the CA key never leaves that system.
-prereqs:
-  inline:
-    - title: Kong Air demo deployment
-      content: |
-        A running {{site.mesh_product_name}} deployment with the Kong Air demo apps in `kong-air-mesh`. See [Get started with your first policy](/mesh/get-started-with-your-first-policy/).
-    - title: kongctl
-      include_content: md/mesh/v3/prereqs/kongctl
 cleanup:
   inline:
     - title: Remove the external CA configuration
       include_content: md/mesh/v3/cleanup/external-ca
     - title: Remove the Kong Air foundation
       include_content: md/mesh/v3/cleanup/kong-air-foundation
+faqs:
+  - q: How do I delegate signing to HashiCorp Vault instead?
+    a: |
+      Delegates signing to a Vault PKI secrets engine. {{site.mesh_product_name}} authenticates to Vault and requests a certificate on each rotation. Vault returns the issuing CA along with the signed certificate, so the provider builds the `MeshTrust` without a `caCert` field:
+
+      ```yaml
+      apiVersion: kuma.io/v1alpha1
+      kind: MeshIdentity
+      metadata:
+        name: vault-identity
+        namespace: {{site.mesh_namespace}}
+        labels:
+          kuma.io/mesh: kong-air-mesh
+          kuma.io/origin: zone
+      spec:
+        selector:
+          dataplane:
+            matchLabels:
+              kuma.io/mesh: kong-air-mesh
+              app: flight-control
+        spiffeID:
+          trustDomain: internal.kongair.com
+          path: /ns/{% raw %}{{ .Namespace }}{% endraw %}/sa/{% raw %}{{ .ServiceAccount }}{% endraw %}
+        provider:
+          type: Extension
+          extension:
+            name: vault
+            config:
+              connection:
+                type: Server
+                server:
+                  address: https://vault.example.com
+                  auth:
+                    type: Token           # Token, TLS, or AWS
+                    token:
+                      type: Secret
+                      secretRef:
+                        kind: Secret
+                        name: kong-air-vault-token
+              pki:
+                mount: kong-mesh-pki-kong-air-mesh   # Vault PKI secrets engine mount path
+                role: dataplanes                     # Vault PKI role that issues workload certs
+      ```
+
+      The Vault token is read from a {{site.mesh_product_name}} Secret in the system namespace, the same `system.kuma.io/secret` format used for the `Bundled` CA material. `auth.type` accepts `Token`, `TLS` for client certificate authentication, and `AWS` for IAM or EC2 authentication. There is no Kubernetes auth method.
+
+      This is reference material: unlike the cert-manager walkthrough, it needs a Vault deployment outside the cluster, so adapt the connection and PKI values to your own environment rather than running this example as-is.
+  - q: How do I delegate signing to AWS Private CA instead?
+    a: |
+      Delegates signing to AWS Private Certificate Authority (ACM PCA). Like Vault, ACM PCA returns the CA chain with each issued certificate, so no `caCert` field is needed:
+
+      ```yaml
+      apiVersion: kuma.io/v1alpha1
+      kind: MeshIdentity
+      metadata:
+        name: acm-pca-identity
+        namespace: {{site.mesh_namespace}}
+        labels:
+          kuma.io/mesh: kong-air-mesh
+          kuma.io/origin: zone
+      spec:
+        selector:
+          dataplane:
+            matchLabels:
+              kuma.io/mesh: kong-air-mesh
+              app: flight-control
+        spiffeID:
+          trustDomain: internal.kongair.com
+          path: /ns/{% raw %}{{ .Namespace }}{% endraw %}/sa/{% raw %}{{ .ServiceAccount }}{% endraw %}
+        provider:
+          type: Extension
+          extension:
+            name: acmpca
+            config:
+              arn: arn:aws:acm-pca:us-east-1:123456789012:certificate-authority/example
+      ```
+
+      The AWS region is parsed from the ARN, so there is no separate `region` field. Credentials come from the control plane's ambient AWS configuration (IRSA, instance profile, or environment), or from an optional `credentials` block in the same config.
+
+      This is reference material: it needs an AWS Private CA deployment outside the cluster, so adapt the ARN and credentials to your own environment rather than running this example as-is.
 next_steps:
   - text: "Multi-zone architecture"
     url: "/mesh/multi-zone-architecture/"
@@ -402,85 +480,8 @@ Prerequisites: cert-manager installed with a `ClusterIssuer` or `Issuer` for the
      --control-plane-name "$MESH_CP" --mesh kong-air-mesh -o yaml
    ```
 
-### HashiCorp Vault
-
-Delegates signing to a Vault PKI secrets engine. {{site.mesh_product_name}} authenticates to Vault and requests a certificate on each rotation. Vault returns the issuing CA along with the signed certificate, so the provider builds the `MeshTrust` without a `caCert` field:
-
-```yaml
-apiVersion: kuma.io/v1alpha1
-kind: MeshIdentity
-metadata:
-  name: vault-identity
-  namespace: {{site.mesh_namespace}}
-  labels:
-    kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: zone
-spec:
-  selector:
-    dataplane:
-      matchLabels:
-        kuma.io/mesh: kong-air-mesh
-        app: flight-control
-  spiffeID:
-    trustDomain: internal.kongair.com
-    path: /ns/{% raw %}{{ .Namespace }}{% endraw %}/sa/{% raw %}{{ .ServiceAccount }}{% endraw %}
-  provider:
-    type: Extension
-    extension:
-      name: vault
-      config:
-        connection:
-          type: Server
-          server:
-            address: https://vault.example.com
-            auth:
-              type: Token           # Token, TLS, or AWS
-              token:
-                type: Secret
-                secretRef:
-                  kind: Secret
-                  name: kong-air-vault-token
-        pki:
-          mount: kong-mesh-pki-kong-air-mesh   # Vault PKI secrets engine mount path
-          role: dataplanes                     # Vault PKI role that issues workload certs
-```
-
-The Vault token is read from a {{site.mesh_product_name}} Secret in the system namespace, the same `system.kuma.io/secret` format used for the `Bundled` CA material. `auth.type` accepts `Token`, `TLS` for client certificate authentication, and `AWS` for IAM or EC2 authentication. There is no Kubernetes auth method.
-
-### AWS Private CA
-
-Delegates signing to AWS Private Certificate Authority (ACM PCA). Like Vault, ACM PCA returns the CA chain with each issued certificate, so no `caCert` field is needed:
-
-```yaml
-apiVersion: kuma.io/v1alpha1
-kind: MeshIdentity
-metadata:
-  name: acm-pca-identity
-  namespace: {{site.mesh_namespace}}
-  labels:
-    kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: zone
-spec:
-  selector:
-    dataplane:
-      matchLabels:
-        kuma.io/mesh: kong-air-mesh
-        app: flight-control
-  spiffeID:
-    trustDomain: internal.kongair.com
-    path: /ns/{% raw %}{{ .Namespace }}{% endraw %}/sa/{% raw %}{{ .ServiceAccount }}{% endraw %}
-  provider:
-    type: Extension
-    extension:
-      name: acmpca
-      config:
-        arn: arn:aws:acm-pca:us-east-1:123456789012:certificate-authority/example
-```
-
-The AWS region is parsed from the ARN, so there is no separate `region` field. Credentials come from the control plane's ambient AWS configuration (IRSA, instance profile, or environment), or from an optional `credentials` block in the same config.
-
 {:.info}
-> Every extension provider honors the same `spiffeID.path` and `trustDomain` fields. Only `extension.name` and the provider-specific `extension.config` keys change, so Kong Air can switch from cert-manager to Vault by editing two fields, without touching any application or policy config.
+> Every extension provider honors the same `spiffeID.path` and `trustDomain` fields. Only `extension.name` and the provider-specific `extension.config` keys change, so Kong Air can switch from cert-manager to Vault by editing two fields, without touching any application or policy config. For the HashiCorp Vault and AWS Private CA provider configs, see the FAQ.
 
 ## Validate
 

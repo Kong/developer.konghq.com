@@ -11,6 +11,9 @@ products:
 works_on:
   - on-prem
   - konnect
+series:
+  id: mesh-kong-air-scenario
+  position: 6
 tldr:
   q: How do I gain visibility into my service mesh?
   a: |
@@ -18,17 +21,30 @@ tldr:
     1. Collect Metrics via Prometheus and visualize with Grafana.
     2. Capture Traces for service-to-service calls using OpenTelemetry.
     3. Gather Logs for all mesh traffic with structured logging backends.
-prereqs:
-  inline:
-    - title: Kong Air demo deployment
-      content: |
-        A running {{site.mesh_product_name}} deployment with the Kong Air demo apps in `kong-air-mesh`. See [Get started with your first policy](/mesh/get-started-with-your-first-policy/).
 cleanup:
   inline:
     - title: Remove the telemetry policies
       include_content: md/mesh/v3/cleanup/observability
     - title: Remove the Kong Air foundation
       include_content: md/mesh/v3/cleanup/kong-air-foundation
+faqs:
+  - q: How do I auto-provision the dashboards instead of importing them manually?
+    a: |
+      If you run `kube-prometheus-stack`, its Grafana sidecar watches for ConfigMaps labeled `grafana_dashboard: "1"` and provisions every key in them as its own dashboard. From the directory holding the six downloaded `.json` files, create one ConfigMap for all of them, then label it:
+
+      ```bash
+      kubectl create configmap kuma-dashboards -n mesh-observability \
+        --from-file=kuma-control-plane.json \
+        --from-file=kuma-mesh.json \
+        --from-file=kuma-service-health.json \
+        --from-file=kuma-service-debug.json \
+        --from-file=kuma-zone-ingress.json \
+        --from-file=kuma-zone-egress.json
+
+      kubectl label configmap kuma-dashboards grafana_dashboard=1 -n mesh-observability
+      ```
+
+      The sidecar picks up the change within seconds. The six files total around 450 KB, comfortably inside the 1 MiB limit on a single ConfigMap.
 next_steps:
   - text: "Manage workload identity and mTLS"
     url: "/mesh/manage-workload-identity-and-mtls/"
@@ -280,7 +296,7 @@ Capture structured request logs from every sidecar:
    ```
    {:.no-copy-code}
 
-   The `403` is expected, and it is what makes this step worth running. The `MeshTrafficPermission` from [Get started with your first policy](/mesh/get-started-with-your-first-policy/) admits only `flight-control` into `check-in-api`, so `wget` reports `server returned error: HTTP/1.1 403 Forbidden` and the sidecar records the refusal. Access logs capture denied requests as well as permitted ones, which is what makes them useful for audit.
+   The `403` is expected, and it is what makes this step worth running. The `MeshTrafficPermission` from [Create a security policy](/mesh/create-a-security-policy/) admits only `flight-control` into `check-in-api`, so `wget` reports `server returned error: HTTP/1.1 403 Forbidden` and the sidecar records the refusal. Access logs capture denied requests as well as permitted ones, which is what makes them useful for audit.
 
    The `source` and `destination` values are the workloads' `kuma.io/workload` labels. Read the log on the calling workload's sidecar, since the file backend writes on the proxy that originates the request. The sidecar creates `/tmp/access.log` at startup, so a workload that has sent no outbound traffic has an empty file rather than a missing one.
 
@@ -322,34 +338,14 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-### Getting the dashboards
+### Import the dashboards
 
-You can also download individual dashboards directly from the [Kuma GitHub repository](https://github.com/kumahq/kuma/tree/master/dashboards/grafana).
-
-### Option A, manual import (any Grafana)
+Download the six dashboards from the [Kuma GitHub repository](https://github.com/kumahq/kuma/tree/master/dashboards/grafana), then import each one:
 
 1. Open Grafana → **Dashboards** → **New** → **Import**.
 2. Click **Upload JSON file** and select one of the six `.json` files.
 3. Choose your Prometheus data source, then click **Import**.
 4. Repeat for each dashboard.
-
-### Option B, ConfigMap auto-provisioning (kube-prometheus-stack)
-
-`kube-prometheus-stack` includes a Grafana sidecar that watches for ConfigMaps labeled `grafana_dashboard: "1"`. From the directory holding the six downloaded `.json` files, create one ConfigMap for all of them, then label it:
-
-```bash
-kubectl create configmap kuma-dashboards -n mesh-observability \
-  --from-file=kuma-control-plane.json \
-  --from-file=kuma-mesh.json \
-  --from-file=kuma-service-health.json \
-  --from-file=kuma-service-debug.json \
-  --from-file=kuma-zone-ingress.json \
-  --from-file=kuma-zone-egress.json
-
-kubectl label configmap kuma-dashboards grafana_dashboard=1 -n mesh-observability
-```
-
-The sidecar provisions every key in the ConfigMap as its own dashboard, and picks up the change within seconds. The six files total around 450 KB, comfortably inside the 1 MiB limit on a single ConfigMap.
 
 ## Prometheus scrape jobs
 
@@ -386,7 +382,7 @@ Only the Control Plane dashboard filters on the `job` label, because `kuma-cp` m
 
 ## Validate
 
-1. Generate a request from `flight-control` to `check-in-api` (already permitted by the `MeshTrafficPermission` from [Get started with your first policy](/mesh/get-started-with-your-first-policy/)):
+1. Generate a request from `flight-control` to `check-in-api` (already permitted by the `MeshTrafficPermission` from [Create a security policy](/mesh/create-a-security-policy/)):
 
    ```sh
    kubectl exec -n kong-air-production deploy/flight-control -- wget -q -T 5 -O- http://check-in-api.kong-air-production.svc.cluster.local:8080/
