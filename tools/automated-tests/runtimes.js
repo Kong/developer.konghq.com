@@ -1,6 +1,6 @@
 import debug from "debug";
 import fs from "fs/promises";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 import { executeCommand, fetchImage, setEnvVariable } from "./docker-helper.js";
 import path from "path";
 import { dirname } from "path";
@@ -20,7 +20,7 @@ async function konnectRegion() {
 
 export async function getRuntimeConfig(deploymentModel, product) {
   const fileContent = await fs.readFile(`./config/runtimes.yaml`, "utf8");
-  const configs = yaml.load(fileContent);
+  const configs = load(fileContent);
   const imageName = `automated-tests`;
 
   if (!configs[deploymentModel]) {
