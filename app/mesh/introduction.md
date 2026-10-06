@@ -28,7 +28,7 @@ For more details, see the [Architecture overview](/mesh/architecture-overview/).
 
 ## Kong Air
 
-Throughout these [scenarios](/mesh/scenarios/), we follow the journey of Kong Air, a global airline modernizing its flight-critical infrastructure. Their applications span Kubernetes (passenger-facing services), VMs (legacy booking systems), and SaaS dependencies (weather feeds and external certificate authorities). The platform team is migrating this fragmented landscape into a single, multi-zone {{site.mesh_product_name}} deployment.
+These [scenarios](/mesh/scenarios/) follow the journey of Kong Air, a global airline modernizing its flight-critical infrastructure. Their applications span Kubernetes (passenger-facing services), VMs (legacy booking systems), and SaaS dependencies (weather feeds and external certificate authorities). The platform team is migrating this fragmented landscape into a single, multi-zone {{site.mesh_product_name}} deployment.
 
 The Kong Air mesh is named `kong-air-mesh`. {{site.mesh_product_name}} ships with a `default` mesh out of the box, but in production you'll typically run a named mesh per environment or business unit. Every YAML example in these scenarios targets `kong-air-mesh` explicitly, the pattern you'll need in any real deployment.
 
@@ -68,7 +68,7 @@ Solid arrows are intra-mesh traffic. Dashed arrows are traffic to external depen
 
 ### Personas
 
-The scenarios reference three personas. Each owns a different slice of Kong Air:
+The scenarios reference three personas. Each owns a different part of Kong Air:
 
 <!-- vale off -->
 {% table %}
@@ -157,6 +157,7 @@ The Kong Air modernization is divided into four stages. We recommend following t
 2. [Observability and security](/mesh/scenarios/#phase-2-observability--security): Gain visibility into every flight-critical request and protect passenger data.
 3. [Global mesh operations](/mesh/scenarios/#phase-3-global-mesh-operations): Connect cloud regions and legacy data centers into a single mesh.
 4. [Expert operations](/mesh/scenarios/#phase-4-expert-operations): Control the perimeter, manage external services, and validate resilience with fault injection.
+5. [Production readiness](/mesh/scenarios/#phase-5-production-readiness): Harden the mesh and bound the configuration each proxy receives before it carries real traffic.
 
 ## Technical foundation
 
