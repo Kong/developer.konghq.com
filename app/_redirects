@@ -408,7 +408,7 @@
 /ai-gateway/policies/mtls-auth/            /plugins/mtls-auth/            301
 /ai-gateway/policies/oauth2/               /plugins/oauth2/               301
 /ai-gateway/policies/oauth2-introspection/ /plugins/oauth2-introspection/ 301
-/ai-gateway/policies/openid-connect/       /plugins/openid-connect/       301
+/ai-gateway/policies/openid-connect/       /ai-gateway/openid-connect/       301
 /ai-gateway/policies/saml/                 /plugins/saml/                 301
 /ai-gateway/policies/session/              /plugins/session/              301
 /ai-gateway/policies/upstream-oauth/       /plugins/upstream-oauth/       301
