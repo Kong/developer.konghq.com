@@ -88,6 +88,33 @@ kong-konnect: https://global.mcp.konghq.com/ (HTTP) - ✓ Connected
 
 ## Visual Studio Code
 
+{% navtabs 'vscode' %}
+{% navtab "Browser-based authentication" %}
+
+1. Open Visual Studio Code
+1. Open the Command Palette (`Cmd+Shift+P` on Mac, `Ctrl+Shift+P` on Windows/Linux)
+1. Type "MCP" and select **MCP: Open User Configuration**
+1. Add the {{site.konnect_product_name}} server configuration:
+
+    ```json
+    {
+      "servers": {
+        "kong-konnect": {
+          "type": "http",
+          "url": "https://global.mcp.konghq.com/"
+        }
+      }
+    }
+    ```
+
+1. Save the configuration file
+1. Start the server: Open the Command Palette, enter **MCP: List Servers** > **kong-konnect** > **Start Server**.
+1. When prompted, open the authentication link. In the browser window, sign in to {{site.konnect_product_name}} and authorize access
+1. In the `mcp.json` settings file you should see that the server is running and that the tools are available
+
+{% endnavtab %}
+{% navtab "Personal Access Token" %}
+
 1. Open Visual Studio Code
 1. Open the Command Palette (`Cmd+Shift+P` on Mac, `Ctrl+Shift+P` on Windows/Linux)
 1. Type "MCP" and select **MCP: Open User Configuration**
@@ -124,6 +151,9 @@ kong-konnect: https://global.mcp.konghq.com/ (HTTP) - ✓ Connected
 
 {:.info}
 > VS Code securely stores your PAT after the first prompt. The value is not visible in the configuration file.
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Cursor
 
