@@ -29,6 +29,8 @@ related_resources:
     url: /ai-gateway/entities/ai-agent/
   - text: AI MCP Server entity
     url: /ai-gateway/entities/ai-mcp-server/
+  - text: AI Custom Policy entity
+    url: /ai-gateway/entities/ai-custom-policy/
 
 faqs:
   - q: Are AI Policies shared across multiple entities?
