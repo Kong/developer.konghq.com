@@ -202,6 +202,26 @@ data:
 Updates replace the whole definition, so send every required field:
 
 {% navtabs "update-ai-custom-policy" %}
+{% navtab "Konnect API" %}
+
+Send a `PUT` request to the `/v1/ai-gateways/{aiGatewayId}/custom-policies/{name|id}` endpoint:
+
+{% konnect_api_request %}
+url: /v1/ai-gateways/$AI_GATEWAY_ID/custom-policies/my-streaming-custom-policy
+status_code: 200
+method: PUT
+headers:
+  - 'Content-Type: application/json'
+  - 'Accept: application/json, application/problem+json'
+body:
+  name: my-streaming-custom-policy
+  type: streaming
+  display_name: Custom Policy - Streaming plugin (updated)
+  schema: $LUA_SCHEMA
+  handler: $LUA_HANDLER
+{% endkonnect_api_request %}
+
+{% endnavtab %}
 {% navtab "kongctl" %}
 
 Edit the AI Custom Policy in your declarative configuration and apply it:
@@ -224,26 +244,6 @@ variables:
     value: $LUA_HANDLER
     description: Your plugin handler.
 {% endentity_example %}
-
-{% endnavtab %}
-{% navtab "Konnect API" %}
-
-Send a `PUT` request to the `/v1/ai-gateways/{aiGatewayId}/custom-policies/{name|id}` endpoint:
-
-{% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/custom-policies/my-streaming-custom-policy
-status_code: 200
-method: PUT
-headers:
-  - 'Content-Type: application/json'
-  - 'Accept: application/json, application/problem+json'
-body:
-  name: my-streaming-custom-policy
-  type: streaming
-  display_name: Custom Policy - Streaming plugin (updated)
-  schema: $LUA_SCHEMA
-  handler: $LUA_HANDLER
-{% endkonnect_api_request %}
 
 {% endnavtab %}
 {% endnavtabs %}
