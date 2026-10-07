@@ -41,15 +41,15 @@ kuma:
       # if you want to access the API server using the HTTP port, change the following switch to "true"
       KUMA_API_SERVER_HTTP_ENABLED: "false"
 
-    secrets:
+    zoneToken:
       # (action): please prepare the content of this secret before installing Kong Mesh
-      # the CP token is only required when installing a zone CP that is connecting to a global CP
-      # to obtain this CP token, please generate it using the `kumactl` connecting to the global CP
+      # the zone token is only required when installing a zone CP that is connecting to a global CP
+      # to obtain this zone token, please generate it using the `kumactl` connecting to the global CP
       # kumactl generate zone-token --zone <zone-name> --scope cp --valid-for 43920h > $TOKEN_FLIE
       # kubectl create  -n kong-mesh-system secret generic kong-mesh-global-cp-token --from-file token=$TOKEN_FLIE
-      - Secret: kong-mesh-global-cp-token
-        Key: token
-        Env: KUMA_MULTIZONE_ZONE_KDS_AUTH_TOKEN_INLINE
+      # the secret is mounted as a file, so a rotated token is picked up without restarting the CP
+      secretName: kong-mesh-global-cp-token
+      key: token
 
     # please tune the resource allocation according to your actual mesh size and traffic load after Kong Mesh is installed.
     # try to make the resource limits identical to requests to make components are assigned as a QoS class of Guaranteed
@@ -126,42 +126,4 @@ kuma:
               averageUtilization: 50
 
     podDisruptionBudget:
-      enabled: true
-
-ratelimit:
-  # -- Whether Ratelimit Service should be deployed
-  enabled: false
-  replicas: 2
-  autoscaling:
-    enabled: true
-    minReplicas: 2
-    maxReplicas: 5
-    metrics:
-      - type: Resource
-        resource:
-          name: cpu
-          target:
-            type: Utilization
-            averageUtilization: 80
-
-  # please tune the resource allocation according to your actual mesh size and traffic load after Kong Mesh is installed.
-  # try to make the resource limits identical to requests to make components are assigned as a QoS class of Guaranteed
-  resources:
-    requests:
-      cpu: 500m
-      memory: 512Mi
-    limits:
-      cpu: 500m
-      memory: 512Mi
-
-  secrets:
-    # (action): please prepare the content of this secret before installing Kong Mesh
-    # the value should be set according to your redis server configuration
-    # it is only required when the ratelimit component is enabled
-    - Secret: ratelimit-redis-auth
-      Key: redis-pass
-      Env: REDIS_AUTH
-global:
-  ratelimit:
-    servertls:
       enabled: true
