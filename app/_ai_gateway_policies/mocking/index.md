@@ -22,7 +22,7 @@ related_resources:
     url: /ai-gateway/policies/ai-rate-limiting-advanced/
 faqs:
   - q: Does a mocked response still count against my AI Model Provider bill?
-    a: No. The Mocking Policy answers the request before {{site.ai_gateway}} calls the AI Model Provider, so no upstream request is made and no tokens are spent.
+    a: No. {{site.ai_gateway}} answers from your API specification and never contacts the AI Model Provider, so there are no tokens to bill.
   - q: Can I mock a streaming response?
     a: |
       No. Even if the client sets `stream: true`, the Mocking Policy returns the whole example from your API specification in a single response instead of streaming it in pieces.
