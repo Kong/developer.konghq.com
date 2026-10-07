@@ -76,6 +76,72 @@ rows:
     limitation: "Embedding outputs cannot be inspected."
 {% endtable %}
 
+## Rejection modes
+
+When the Policy blocks a request or response, what the caller receives depends on the rejection mode.
+
+{% include_cached md/ai-gateway/v2/guardrail-rejection-modes.md name=page.name checks_responses=true %}
+
+In `none` mode, the response body is the plain message set in [`config.request_failure_message`](/ai-gateway/policies/ai-lakera-guard/reference/#schema--config-request-failure-message) for requests or [`config.response_failure_message`](/ai-gateway/policies/ai-lakera-guard/reference/#schema--config-response-failure-message) for responses, for example:
+
+```json
+{
+  "message": "Request was filtered by Lakera Guard",
+  "error": true
+}
+```
+
+In `verbose` mode, `detail` contains the detector results that Lakera Guard returned for the content, and `reason` is the type of the detector that matched. For example, a prompt injection attempt returns the following response:
+
+```json
+{
+  "error": {
+    "type": "guardrail_rejected",
+    "plugin": "ai-lakera-guard",
+    "reason": "prompt_attack",
+    "code": "GUARDRAIL_BLOCKED",
+    "detail": [
+      {
+        "project_id": "project-lakera-default",
+        "policy_id": "policy-lakera-default",
+        "detector_id": "prompt_attack",
+        "detector_type": "prompt_attack",
+        "detected": true,
+        "result": "l1_confident",
+        "message_id": 0
+      }
+    ]
+  }
+}
+```
+
+To return this response, set `config.rejection_mode` to `verbose`:
+
+{% entity_example %}
+type: policy
+data:
+  display_name: AI Lakera Guard - Verbose Rejection
+  name: ai-lakera-guard
+  type: ai-lakera-guard
+  config:
+    api_key: ${lakera_api_key}
+    rejection_mode: verbose
+variables:
+  lakera_api_key:
+    value: $LAKERA_API_KEY
+    description: Your Lakera Guard API key.
+formats:
+  - konnect-api
+  - kongctl
+{% endentity_example %}
+
+{:.info}
+> The Policy inspects streamed responses one buffered segment at a time. Content that Lakera Guard only recognizes across several segments, such as a sentence split between two frames, might not be blocked while streaming.
+
+## Detect without blocking
+
+{% include_cached md/ai-gateway/v2/guardrail-continue-on-detection.md name=page.name logs_detection=true %}
+
 ## Logging
 
 You can use the [logging capabilities](/ai-gateway/ai-audit-log-reference/) of the AI Lakera Guard Policy to monitor the inspection process and understand the detected violations. For the full list of log fields, see the [{{site.ai_gateway}} audit log reference](/ai-gateway/ai-audit-log-reference/#ai-lakera-guard-logs).

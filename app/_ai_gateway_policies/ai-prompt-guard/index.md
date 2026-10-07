@@ -33,10 +33,70 @@ You can use a combination of `allow` and `deny` rules to preserve integrity and 
 The AI Prompt Guard Policy matches lists of regular expressions to requests routed through the {{site.ai_gateway}}.
 
 The matching behavior is as follows:
-* If any `deny` expressions are set, and the request matches any regex pattern in the `deny` list, the caller receives a 400 Bad Request response.
-* If any `allow` expressions are set, but the request matches none of the allowed expressions, the caller also receives a 400 Bad Request response.
+* If any `deny` expressions are set, and the request matches any regex pattern in the `deny` list, the request is blocked.
+* If any `allow` expressions are set, but the request matches none of the allowed expressions, the request is also blocked.
 * If any `allow` expressions are set, and the request matches one of the `allow` expressions, the request passes through to the LLM.
-* If there are both `deny` and `allow` expressions set, the `deny` condition takes precedence over `allow`. Any request that matches an entry in the `deny` list will return a 400 response, even if it also matches an expression in the `allow` list. If the request does not match an expression in the `deny` list, then it must match an expression in the `allow` list to be passed through to the LLM.
+* If there are both `deny` and `allow` expressions set, the `deny` condition takes precedence over `allow`. Any request that matches an entry in the `deny` list is blocked, even if it also matches an expression in the `allow` list. If the request does not match an expression in the `deny` list, then it must match an expression in the `allow` list to be passed through to the LLM.
+
+## Rejection modes
+
+When the Policy blocks a request, the response depends on the rejection mode.
+
+{% include_cached md/ai-gateway/v2/guardrail-rejection-modes.md name=page.name request_only=true %}
+
+For example, a request that matches a `deny_patterns` entry returns the following response in `verbose` mode. The `detail.matched_pattern` field contains the pattern that matched:
+
+```json
+{
+  "error": {
+    "type": "guardrail_rejected",
+    "plugin": "ai-prompt-guard",
+    "reason": "prompt pattern is blocked",
+    "code": "GUARDRAIL_BLOCKED",
+    "detail": {
+      "matched_pattern": "(?i)ignore previous instructions"
+    }
+  }
+}
+```
+
+When a request fails to match any `allow_patterns` entry, the `detail` field is omitted.
+
+To return this response, set `config.rejection_mode` to `verbose`:
+
+{% entity_example %}
+type: policy
+data:
+  display_name: AI Prompt Guard - Verbose Rejection
+  name: ai-prompt-guard
+  type: ai-prompt-guard
+  config:
+    deny_patterns:
+    - (?i)ignore previous instructions
+    rejection_mode: verbose
+formats:
+  - konnect-api
+  - kongctl
+{% endentity_example %}
+
+## Detect without blocking
+
+{% include_cached md/ai-gateway/v2/guardrail-continue-on-detection.md name=page.name %}
+
+{% entity_example %}
+type: policy
+data:
+  display_name: AI Prompt Guard - Detection Only
+  name: ai-prompt-guard
+  type: ai-prompt-guard
+  config:
+    deny_patterns:
+    - (?i)ignore previous instructions
+    continue_on_detection: true
+formats:
+  - konnect-api
+  - kongctl
+{% endentity_example %}
 
 ## Best practices
 
