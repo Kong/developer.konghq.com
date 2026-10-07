@@ -357,6 +357,24 @@ To limit which teams or applications can call an AI Model, use the [`access.acls
 
 To control how consumers authenticate before their access is evaluated, configure the [`access.auth_strategies`](#schema-aigateway-model-access-identity-providers) array with one or more [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) references. Each AI Model supports one `key-auth` auth strategy and one [`openid-connect`](/ai-gateway/openid-connect/) auth strategy simultaneously.
 
+### CEL-based ACLs {% new_in 2.2 %}
+
+Instead of a static list of names, the [`access.acls`](#schema-aigateway-model-access) object also accepts `allow_when` or `deny_when`: an array of [CEL](https://cel.dev/) boolean expressions between 1 and 1024 characters each, evaluated against the authenticated AI Consumer and the request using the same field vocabulary as [plugin conditions](/gateway/plugins/conditions/). Configure exactly one of `allow`, `deny`, `allow_when`, or `deny_when` per `access.acls` object.
+
+```yaml
+access:
+  acls:
+    allow_when:
+      - 'consumer_group.names != null && "internal-teams" in consumer_group.names'
+      - 'consumer.username == "alice"'
+```
+
+{{site.konnect_short_name}} compiles and type-checks each expression when you create or update the AI Model. An entry that doesn't compile or doesn't evaluate to a boolean is rejected with HTTP 400, with the error naming the offending entry (for example, `access.acls.allow_when[0]`).
+
+At runtime, entries are evaluated in order with OR semantics. With `allow_when`, the request is allowed when any entry evaluates to true, and an entry that fails to evaluate denies the request with HTTP 403. With `deny_when`, the request is denied when any entry evaluates to true, and an entry that fails to evaluate fails closed with HTTP 500. When `allow_when` or `deny_when` is in effect, group-header-related fields are ignored and the `X-Consumer-Groups` header isn't sent upstream.
+
+CEL-based ACLs require {{site.ai_gateway}} 2.2 or later and {{site.base_gateway}} 3.16 or later data planes. Older data planes skip the configuration and report the skip in their compatibility status.
+
 ## Attach AI Policies
 
 Attach an AI Policy to an AI Model to add security, observability, governance, rate limiting, and cost optimization to all requests through that model. For example, you can add guardrails ([AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/), [AI Lakera Guard](/ai-gateway/policies/ai-lakera-guard/)), enable [logging and metrics](/ai-gateway/policies/?category=logging), audit and [compliance controls](/ai-gateway/policies/ai-sanitizer/), cache responses, or [rate-limit](/ai-gateway/policies/ai-rate-limiting-advanced/) LLM traffic.
