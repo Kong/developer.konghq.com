@@ -177,11 +177,13 @@ For example, in ACL, `allow_when` and `deny_when` are treated differently:
 
 See [Dynamic allow and deny rules](/plugins/acl/#dynamic-allow-and-deny-rules) in the ACL plugin documentation for details.
 
+In {{site.konnect_short_name}}, the control plane validates the ACL plugin's `allow_when` and `deny_when` expressions at write time and rejects invalid configurations with a `400 Bad Request` that names the offending entry, instead of letting the error surface later as a data plane sync failure. See [{{site.konnect_short_name}} control plane validation](/plugins/acl/#konnect-control-plane-validation) in the ACL plugin documentation.
+
 ## Limitations
 
 * Expressible fields and direct CEL fields are only supported in the HTTP subsystem. They can't be used with stream (TCP, TLS, UDP) Routes.
 * In [hybrid mode](/gateway/hybrid-mode/), if the control plane is running {{site.base_gateway}} 3.16 or later and a data plane is running an earlier version, that data plane won't understand expressible fields or direct CEL fields. 
   * For an expressible field, {{site.base_gateway}} strips the plugin's expressions for that data plane, and the plugin falls back to its static config value. 
-  * For a direct CEL field, there's no static value to fall back to, so {{site.base_gateway}} doesn't sync the plugin's config to that data plane at all. For example, an older data plane won't receive an ACL plugin instance configured with `allow_when` or `deny_when` until it's upgraded.
+  * For a direct CEL field, there's no static value to fall back to, so {{site.base_gateway}} doesn't sync the plugin's config to that data plane at all. For example, an older data plane won't receive an ACL plugin instance configured with `allow_when` or `deny_when` until it's upgraded. In {{site.konnect_short_name}}, the skipped configuration is surfaced in the data plane node's [compatibility status](/gateway/data-plane-version-compatibility/#compatibility-status).
 * Only fields the plugin's schema marks as expressible can have an `expressions` entry. The plugin's schema lists these fields under its `expressions` key. Setting `expressions` for any other field is rejected at configuration time.
 * An expressible field's expression must resolve to a type compatible with that field's own Kong type (for example, a `number` field requires a CEL `double`, `int`, `uint`, or `dyn` result).
