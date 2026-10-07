@@ -433,8 +433,8 @@ config:
 {% elsif include.redis_group == "oidc" %}
 ```yaml
 config:
-  cluster_cache_strategy: redis
-  cluster_cache_redis:
+  session_storage: redis
+  redis:
     cluster_nodes:
     - ip: $CLUSTER_ADDRESS
       port: 6379
