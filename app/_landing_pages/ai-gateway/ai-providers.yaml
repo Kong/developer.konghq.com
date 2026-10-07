@@ -134,6 +134,13 @@ rows:
       - blocks:
         - type: icon_card
           config:
+            title: Baseten
+            icon: /assets/icons/baseten.svg
+            cta:
+              url: /ai-gateway/ai-providers/baseten/
+      - blocks:
+        - type: icon_card
+          config:
             title: Cerebras
             icon: /assets/icons/cerebras.svg
             cta:
