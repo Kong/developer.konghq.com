@@ -39,6 +39,7 @@ Run the following command to create a self-signed certificate:
 ```sh
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=example.localdomain.dev"
 ```
+{: data-test-step="block" }
 
 ## Create a Secret
 
@@ -60,9 +61,10 @@ metadata:
     konghq.com/secret: 'true'
 type: kubernetes.io/tls
 data:
-  tls.crt: "$(cat tls.crt | base64)"
-  tls.key: "$(cat tls.key | base64)"" | kubectl apply -f - 
+  tls.crt: "$(cat tls.crt | base64 | tr -d '\n')"
+  tls.key: "$(cat tls.key | base64 | tr -d '\n')"" | kubectl apply -f - 
 ```
+{: data-test-step="block" }
 
 ## Create a ReferenceGrant and a KongReferenceGrant
 
@@ -100,6 +102,7 @@ spec:
     - group: core
       kind: Secret' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Configure the Gateway
 
@@ -162,6 +165,7 @@ spec:
             name: example-tls-secret
             namespace: secret-ns' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Create a Service and a Route
 
@@ -169,6 +173,7 @@ spec:
    ```bash
    kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n kong
    ```
+   {: data-test-step="block" }
 
 1. Deploy a sample `HTTPRoute` to verify that TLS termination is working:
 
@@ -190,23 +195,35 @@ spec:
                type: PathPrefix
                value: /echo
          backendRefs:
-           - name: echo
-             kind: Service
-             port: 1027' | kubectl apply -f - 
+            - name: echo
+              kind: Service
+              port: 1027' | kubectl apply -f - 
    ```
+   {: data-test-step="block" }
 
 ## Validate
 
+1. Wait for the `Gateway` to get an address:
+    
+    ```bash
+    kubectl wait gateway/kong-gateway -n kong \
+      --for=jsonpath='{.status.addresses[0].value}' \
+      --timeout=5m
+    ```
+    {: data-test-step="block" }
+
 1. Get the Gateway's external IP:
    
-   ```bash
-   export PROXY_IP=$(kubectl get gateway kong-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
-   ```
+    ```bash
+    export PROXY_IP=$(kubectl get gateway kong-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
+    ```
+    {: data-test-step="block" }
 
 1.  Test the connection:
 
     ```bash
     curl -ivk --resolve example.localdomain.dev:443:$PROXY_IP https://example.localdomain.dev/echo
     ```
+    {: data-test-step="block" }
 
     You should get TLS handshake and a 200 response.

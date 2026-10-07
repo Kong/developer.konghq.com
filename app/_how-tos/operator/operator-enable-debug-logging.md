@@ -66,6 +66,7 @@ env:
   zap_time_encoding: iso8601
 EOF
 ```
+{: data-test-step="block" }
 
 For more details about these options, see [{{ site.operator_product_name }} configuration options](/operator/reference/configuration-options/#flags).
 
@@ -92,15 +93,29 @@ content: |
     --set image.tag={{ site.data.operator_latest.release }} \
     -f values.yaml
   ```
+  {: data-test-step="block" }
 {% endon_prem %}
 
 ## Validate
 
-Use the following command to display the {{ site.operator_product_name }} logs:
+Wait for the rollout to complete:
 
 ```bash
-kubectl logs -n kong-system deployment/kong-operator-kong-operator-controller-manager -f
+kubectl -n kong-system rollout status deployment/kong-operator-kong-operator-controller-manager --timeout=120s
 ```
+{: data-test-step="block" }
+
+Check that the {{ site.operator_product_name }} logs contain the `DEBUG` level:
+
+<!--vale off-->
+{% validation custom-command %}
+command: |
+  timeout 90 bash -c 'until kubectl logs -n kong-system deployment/kong-operator-kong-operator-controller-manager | grep -m 1 DEBUG; do sleep 5; done'
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
+<!--vale on-->
 
 You should see logs with the `DEBUG` level.
 

@@ -18,11 +18,12 @@ products:
 works_on:
   - konnect
   - on-prem
- 
+
 tldr:
   q: How do I deploy a sidecar container for {{ site.base_gateway }} with {{ site.operator_product_name }}?
   a: Use PodTemplateSpec to customize the spec and specify an additional container in `spec.containers`.
 
+automated_tests: false
 ---
 
 ## Deploy Sidecar
