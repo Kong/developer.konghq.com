@@ -50,6 +50,7 @@ config:
   policy: local
 ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Apply the plugin to the HTTPRoute
 
@@ -84,6 +85,7 @@ spec:
         - name: echo
           port: 1027' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 {% endnavtab %}
 
 {% navtab "Annnotation (legacy)" %}
@@ -111,6 +113,7 @@ spec:
         - name: echo
           port: 1027' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 This method is consistent with the [{{site.kic_product_name}}](/kubernetes-ingress-controller/) behavior.
 
@@ -119,14 +122,24 @@ This method is consistent with the [{{site.kic_product_name}}](/kubernetes-ingre
 
 ## Validate
 
+1.  Wait for the `Gateway` to get an address:
+    ```bash
+    kubectl wait gateway/kong -n kong \
+      --for=jsonpath='{.status.addresses[0].value}' \
+      --timeout=5m
+    ```
+    {: data-test-step="block" }
+
 1.  Get the proxy IP address:
     ```bash
     export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
     ```
+    {: data-test-step="block" }
 
 1.  Send multiple requests to the `/echo` endpoint:
     ```bash
     for i in {1..6}; do curl -s http://$PROXY_IP/echo; done
     ```
+    {: data-test-step="block" }
 
    You should receive a `429 Too Many Requests` status code with the last request.

@@ -5,6 +5,7 @@ content: |
   ```sh
   kubectl create namespace kong
   ```
+  {: data-test-prereq="block" }
 {% endon_prem %}
 
 Create the `GatewayConfiguration`, `GatewayClass`, and `Gateway` resources with basic configuration:
@@ -49,3 +50,4 @@ spec:
       port: 80
       protocol: HTTP' | kubectl apply -f -
 ```
+{: data-test-prereq="block" }

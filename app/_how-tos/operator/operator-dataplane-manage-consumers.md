@@ -41,6 +41,7 @@ Run the following command to create a sample echo Service:
 ```bash
 kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n kong
 ```
+{: data-test-step="block" }
 
 ## Configure the Key Authentication plugin
 
@@ -59,6 +60,7 @@ config:
   - apikey
 ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Create the HTTPRoute
 
@@ -89,6 +91,7 @@ spec:
         - name: echo
           port: 1027' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Create a Secret
 
@@ -108,6 +111,7 @@ stringData:
   key: secret-api-key
 ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 For more information on how {{site.operator_product_name}} handles Secrets, please refer to the [Secrets reference](/operator/reference/secrets)
 
@@ -131,6 +135,7 @@ content: |
   - test-user-apikey
   ' | kubectl apply -f -
   ```
+  {: data-test-step="block" }
 {% endon_prem %}
 
 {% konnect %}
@@ -162,17 +167,28 @@ content: |
 
 ## Validate
 
+1. Wait for the `Gateway` to get an address:
+
+   ```bash
+   kubectl wait gateway/kong -n kong \
+     --for=jsonpath='{.status.addresses[0].value}' \
+     --timeout=5m
+   ```
+   {: data-test-step="block" }
+
 1. Get the Gateway's external IP:
    
    ```bash
    export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
    ```
+   {: data-test-step="block" }
 
 1. Try to access the Route without a key:
 
    ```bash
    curl -i http://$PROXY_IP/echo
    ```
+   {: data-test-step="block" }
 
    You should receive a `401 Unauthorized` response.
 
@@ -181,5 +197,6 @@ content: |
    ```bash
    curl -i -H "apikey: secret-api-key" http://$PROXY_IP/echo
    ```
+   {: data-test-step="block" }
 
    You should receive a `200 OK` response from the echo service.

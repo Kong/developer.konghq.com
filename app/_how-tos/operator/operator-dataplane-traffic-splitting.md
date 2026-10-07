@@ -108,6 +108,7 @@ spec:
           value: "v2"
 ' | kubectl apply -f - -n kong
 ```
+{: data-test-step="block" }
 
 ## Create a weighted HTTPRoute
 
@@ -137,17 +138,28 @@ spec:
       port: 80
       weight: 50' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 {:.info}
 > Weights are relative. If you have two backends with weights 50 and 50, traffic is split 50/50. If weights are 90 and 10, traffic is split 90/10.
 
 ## Validate
 
+1. Wait for the `Gateway` to get an address:
+
+   ```bash
+   kubectl wait gateway/kong -n kong \
+     --for=jsonpath='{.status.addresses[0].value}' \
+     --timeout=5m
+   ```
+   {: data-test-step="block" }
+
 1. Get the Gateway's external IP:
    
    ```bash
    export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
    ```
+   {: data-test-step="block" }
 
 
 1. Send multiple requests to the Route:
@@ -155,6 +167,7 @@ spec:
    ```bash
    for i in {1..10}; do curl -s http://$PROXY_IP/echo; done
    ```
+   {: data-test-step="block" }
 
    You should see an even split between v1 and v2:
 

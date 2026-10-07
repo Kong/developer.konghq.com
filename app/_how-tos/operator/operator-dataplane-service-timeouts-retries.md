@@ -56,6 +56,7 @@ kubectl annotate service httpbin -n kong \
   konghq.com/write-timeout="5000" \
   konghq.com/retries="3"
 ```
+{: data-test-step="block" }
 
 The annotations have the following effects:
 
@@ -86,17 +87,28 @@ All timeout values are in milliseconds.
 
 ## Validate
 
+1. Wait for the `Gateway` to get an address:
+
+   ```bash
+   kubectl wait gateway/kong -n kong \
+     --for=jsonpath='{.status.addresses[0].value}' \
+     --timeout=5m
+   ```
+   {: data-test-step="block" }
+
 1. Get the Gateway's external IP address:
 
    ```bash
    export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
    ```
+   {: data-test-step="block" }
 
 1. Send a request that completes within the read timeout. The `/delay/1` endpoint waits 1 second before responding:
 
    ```bash
    curl -s -o /dev/null -w "%{http_code}" $PROXY_IP/httpbin/delay/1
    ```
+   {: data-test-step="block" }
 
    The response code should be `200`.
 
@@ -105,5 +117,6 @@ All timeout values are in milliseconds.
    ```bash
    curl -s -o /dev/null -w "%{http_code}" $PROXY_IP/httpbin/delay/10
    ```
+   {: data-test-step="block" }
 
    The response code should be `504`, indicating that the upstream did not respond within the configured `read-timeout`.
