@@ -120,6 +120,14 @@ on-prem:
         - k3d cluster delete operator-test
         - k3d cluster create --k3s-arg "--disable=traefik@server:*" operator-test --wait
         - kubectl config use-context k3d-operator-test
+        # The upgrade how-to upgrades an existing installation: every test
+        # starts from a running operator, which is what the page's "An existing
+        # Kong Operator installation" prereq states. The default chart tag is
+        # fine: the page's --install upgrade stays safe to run on top of it.
+        - helm repo add kong https://charts.konghq.com
+        - helm repo update
+        - helm upgrade --install kong-operator kong/kong-operator -n kong-system --create-namespace
+        - kubectl -n kong-system wait --for=condition=Available=true --timeout=300s deployment/kong-operator-kong-operator-controller-manager
 
   kic:
     setup:

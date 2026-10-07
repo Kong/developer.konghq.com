@@ -122,3 +122,16 @@ RUN ARCH=$(dpkg --print-architecture) && \
     echo "$CHECKSUM  regctl" | sha256sum -c - && \
     install -o root -g root -m 0755 regctl /usr/local/bin/regctl && \
     rm regctl
+
+# Install kustomize v5.8.2 (pinned + checksum verified, for the operator upgrade how-to's CRD step)
+RUN ARCH=$(dpkg --print-architecture) && \
+    case "$ARCH" in \
+      amd64) CHECKSUM="06af0a202c2b831207d0173f9c9cdb1b30abceca0747cb3fbb72792d26055c95" ;; \
+      arm64) CHECKSUM="0991957191951cb7dddd142403b5bb98a1fcd6378ba0079dddc1e2c309080a7f" ;; \
+      *) echo "Unsupported architecture: $ARCH" && exit 1 ;; \
+    esac && \
+    curl -fsSL -o kustomize.tar.gz "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.8.2/kustomize_v5.8.2_linux_${ARCH}.tar.gz" && \
+    echo "$CHECKSUM  kustomize.tar.gz" | sha256sum -c - && \
+    tar -xzf kustomize.tar.gz kustomize && \
+    install -o root -g root -m 0755 kustomize /usr/local/bin/kustomize && \
+    rm -rf kustomize kustomize.tar.gz
