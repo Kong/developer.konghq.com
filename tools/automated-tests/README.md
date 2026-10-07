@@ -82,6 +82,10 @@ Next, it spins up a headless browser and visits the corresponding URL for each `
   * `data-test-step='block'`: indicates that the extractor can copy the associated code snippet and paste it in the instructions file as a bash command.
   * `data-test-step=json`: When the value is a json object, it represents the configuration of a `validation` step, which the test will treat as an assertion.
 
+For products configured with `extractInstructionsAs: block` in `config/tests.yaml` (`kic`, `operator`), every `data-test-step` element, including rendered validation blocks, is copied as a plain bash command instead of a JSON assertion.
+
+How-to series are extracted as one instruction file: the extractor starts at the series' first page and follows the `data-test-series-next` links, appending every continuation page's steps in series order. Continuation pages therefore carry their own step markers but no instruction file of their own.
+
 After extracting the information, it generates an instruction file at `<url-path>/<deployment-model>/<product>.yaml` (e.g. `how-to/my-guide/on-prem/gateway.yaml`, `how-to/my-guide/konnect/gateway.yaml`) and stores them in `instructionsDir`.
 
 ### How to run it
@@ -158,6 +162,8 @@ By default, it will run all the instruction files, but it also supports running 
 `DEPLOYMENT_MODEL='on-prem' PRODUCTS='operator' npm run run-tests`
 
 Operator how-tos are testable on-prem only: the generator extracts operator pages into `on-prem/operator.yaml` instruction files, and the `on-prem.operator` runtime installs the operator from the documented commands into a fresh k3d cluster and writes the license from `KONG_LICENSE_DATA` to `license.json` for the documented `KongLicense` apply. Konnect is not yet supported: a `konnect/operator.yaml` file is generated for how-tos that also work on Konnect, but running it fails fast with an `Unsupported product` error until a `konnect.operator` runtime is added.
+
+Each operator instruction file executes its page's documented steps against the runtime-provided cluster. Because operator extracts instructions as blocks, validation blocks run as plain commands: an expected non-2xx response (for example a 404 isolation check) must be documented as a `custom-command`, since a `request-check`'s copied curl always fails on non-2xx responses.
 
 #### Run unreleased gateway version
 
