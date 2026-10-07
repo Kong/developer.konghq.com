@@ -71,11 +71,12 @@ sequenceDiagram
 
 ## Rejection modes
 
-When the Policy blocks a request or response, what the caller receives depends on the rejection mode.
+The {{page.name}} Policy responds to a blocked request or response according to its rejection mode.
 
 {% include_cached md/ai-gateway/v2/guardrail-rejection-modes.md name=page.name %}
 
-For example, a request that breaches a category threshold returns the following response in `verbose` mode. The `detail.categories` field lists each breached category with its detected `severity` and the configured `threshold`:
+For example, a request that breaches a category threshold returns the following response in `verbose` mode.
+The `detail.categories` field lists each breached category with its detected `severity` and the configured `threshold`:
 
 ```json
 {
@@ -98,7 +99,7 @@ For example, a request that breaches a category threshold returns the following 
 }
 ```
 
-To return this response, set `config.rejection_mode` to `verbose`:
+To return this response, set [`config.rejection_mode`](/ai-gateway/policies/ai-azure-content-safety/reference/#schema--config-rejection-mode) to `verbose`:
 
 {% entity_example %}
 type: policy

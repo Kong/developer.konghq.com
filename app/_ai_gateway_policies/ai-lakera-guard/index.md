@@ -78,11 +78,12 @@ rows:
 
 ## Rejection modes
 
-When the Policy blocks a request or response, what the caller receives depends on the rejection mode.
+The {{page.name}} Policy responds to a blocked request or response according to its rejection mode.
 
 {% include_cached md/ai-gateway/v2/guardrail-rejection-modes.md name=page.name checks_responses=true %}
 
-In `none` mode, the response body is the plain message set in [`config.request_failure_message`](/ai-gateway/policies/ai-lakera-guard/reference/#schema--config-request-failure-message) for requests or [`config.response_failure_message`](/ai-gateway/policies/ai-lakera-guard/reference/#schema--config-response-failure-message) for responses, for example:
+In `none` mode, the response body is the plain message set in [`config.request_failure_message`](/ai-gateway/policies/ai-lakera-guard/reference/#schema--config-request-failure-message) for requests or [`config.response_failure_message`](/ai-gateway/policies/ai-lakera-guard/reference/#schema--config-response-failure-message) for responses.
+The following response is the body for a request blocked in `none` mode:
 
 ```json
 {
@@ -91,7 +92,8 @@ In `none` mode, the response body is the plain message set in [`config.request_f
 }
 ```
 
-In `verbose` mode, `detail` contains the detector results that Lakera Guard returned for the content, and `reason` is the type of the detector that matched. For example, a prompt injection attempt returns the following response:
+In `verbose` mode, `detail` contains the detector results that Lakera Guard returned for the content, and `reason` is the type of the detector that matched.
+For example, a prompt injection attempt returns the following response:
 
 ```json
 {
@@ -115,7 +117,7 @@ In `verbose` mode, `detail` contains the detector results that Lakera Guard retu
 }
 ```
 
-To return this response, set `config.rejection_mode` to `verbose`:
+To return this response, set [`config.rejection_mode`](/ai-gateway/policies/ai-lakera-guard/reference/#schema--config-rejection-mode) to `verbose`:
 
 {% entity_example %}
 type: policy
@@ -136,7 +138,8 @@ formats:
 {% endentity_example %}
 
 {:.info}
-> The Policy inspects streamed responses one buffered segment at a time. Content that Lakera Guard only recognizes across several segments, such as a sentence split between two frames, might not be blocked while streaming.
+> The Policy inspects streamed responses one buffered segment at a time.
+> Content that Lakera Guard only recognizes across several segments, such as a sentence split between two frames, might not be blocked while streaming.
 
 ## Detect without blocking
 
