@@ -69,6 +69,7 @@ The `DataPlaneMetricsExtension` allows {{ site.operator_product_name }} to monit
         latency: true
     ' | kubectl apply -f -
     ```
+    {: data-test-step="block" }
 
 1. Create a `GatewayConfiguration` that uses it:
 
@@ -86,6 +87,7 @@ The `DataPlaneMetricsExtension` allows {{ site.operator_product_name }} to monit
         name: kong
     ' | kubectl apply -f -
     ```
+    {: data-test-step="block" }
 
 1. Patch the `GatewayClass` to use the config:
 
@@ -103,6 +105,7 @@ The `DataPlaneMetricsExtension` allows {{ site.operator_product_name }} to monit
         }
     ]'
     ```
+    {: data-test-step="block" }
 
 You can integrate {{ site.operator_product_name }} with [Datadog Metrics](https://docs.datadoghq.com/metrics/) to use {{ site.base_gateway }} latency metrics to autoscale workloads based on their metrics.
 
@@ -133,40 +136,45 @@ You can integrate {{ site.operator_product_name }} with [Datadog Metrics](https:
      containers:
        agent:
          env:
-         - name: DD_HOSTNAME
-           valueFrom:
-             fieldRef:
-               fieldPath: spec.nodeName
-   ' > values.yaml
-   ```
+          - name: DD_HOSTNAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+    ' > values.yaml
+    ```
+    {: data-test-step="block" }
 
 1. Install [Datadog's helm chart](https://github.com/DataDog/helm-charts/tree/main/charts/datadog):
 
-   ```bash
-   helm repo add datadog https://helm.datadoghq.com
-   helm repo update
-   helm install -n default datadog -f values.yaml --set datadog.apiKey=${DD_API_KEY} --set datadog.appKey=${DD_APP_KEY} --set datadog.site=${DD_SITE} datadog/datadog
-   ```
+    ```bash
+    helm repo add datadog https://helm.datadoghq.com
+    helm repo update
+    helm install -n default datadog -f values.yaml --set datadog.apiKey=${DD_API_KEY} --set datadog.appKey=${DD_APP_KEY} --set datadog.site=${DD_SITE} datadog/datadog
+    ```
+    {: data-test-step="block" }
 
 1. Wait for the `DatadogMetric` CRD to be established before continuing:
 
-   ```bash
-   kubectl wait --for=condition=Established crd/datadogmetrics.datadoghq.com --timeout=120s
-   ```
+    ```bash
+    kubectl wait --for=condition=Established crd/datadogmetrics.datadoghq.com --timeout=120s
+    ```
+    {: data-test-step="block" }
 
 ## Send traffic
 
-To trigger autoscaling, run the following command in a new terminal window. This will cause the underlying deployment to sleep for 100ms on each request and thus increase the average response time to that value.
+To trigger autoscaling, run the following command. This will cause the underlying deployment to sleep for 100ms on each request and thus increase the average response time to that value. The loop sends 50 requests, which builds up enough latency data to trigger scaling.
 
 ```bash
-while curl -k "http://$(kubectl get gateway kong -o custom-columns='name:.status.addresses[0].value' --no-headers -n kong)/command/shell?cmd=sleep%200.1" ; do sleep 1; done
+for _ in {1..50}; do
+  curl -k "http://$(kubectl get gateway kong -o custom-columns='name:.status.addresses[0].value' --no-headers -n kong)/command/shell?cmd=sleep%200.1"
+  sleep 1
+done
 ```
-
-Keep this running while you move on to the next steps.
+{: data-test-step="block" }
 
 ## Annotate {{ site.operator_product_name }} with Datadog checks config
 
-In a new terminal window, add the following annotation on {{ site.operator_product_name }}'s Pod to tell Datadog how to scrape {{ site.operator_product_name }}'s metrics:
+Add the following annotation on {{ site.operator_product_name }}'s Pod to tell Datadog how to scrape {{ site.operator_product_name }}'s metrics:
 
 ```bash
 POD_NAME=$(kubectl get pods -n kong-system -l control-plane=controller-manager -o custom-columns='name:.metadata.name' --no-headers)
@@ -187,6 +195,7 @@ kubectl annotate -n kong-system pod $POD_NAME \
     }
   }'
 ```
+{: data-test-step="block" }
 
 After applying the above you should see `avg:autoscaling.kong_upstream_latency_ms{service:command}` metrics in your Datadog Metrics explorer.
 
@@ -207,6 +216,7 @@ metadata:
 spec:
   query: autoscaling.kong_upstream_latency_ms{service:command} ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 {:.info}
 > **Note:** The Datadog Cluster Agent only starts refreshing a `DatadogMetric`'s status once it's referenced by a `HorizontalPodAutoscaler`. Its `ACTIVE`/`VALID`/`VALUE` fields will stay empty until you create the HPA in the next section.
@@ -257,15 +267,17 @@ The `command-kong-upstream-latency-ms-avg` `DatadogMetric` from the `kong` names
          target:
            type: Value
            value: 40 ' | kubectl apply -f -
-   ```
+    ```
+    {: data-test-step="block" }
 
 1. Once the HPA is created, wait for `DatadogMetric` to become active and valid:
 
-   ```bash
-   kubectl wait --for=jsonpath='{.status.conditions[?(@.type=="Active")].status}'=True -n kong datadogmetric/command-kong-upstream-latency-ms-avg --timeout=120s
-   kubectl wait --for=jsonpath='{.status.conditions[?(@.type=="Valid")].status}'=True -n kong datadogmetric/command-kong-upstream-latency-ms-avg --timeout=120s
-   kubectl get -n kong datadogmetric command-kong-upstream-latency-ms-avg
-   ```
+    ```bash
+    kubectl wait --for=jsonpath='{.status.conditions[?(@.type=="Active")].status}'=True -n kong datadogmetric/command-kong-upstream-latency-ms-avg --timeout=120s
+    kubectl wait --for=jsonpath='{.status.conditions[?(@.type=="Valid")].status}'=True -n kong datadogmetric/command-kong-upstream-latency-ms-avg --timeout=120s
+    kubectl get -n kong datadogmetric command-kong-upstream-latency-ms-avg
+    ```
+    {: data-test-step="block" }
    
    You should get the following result:
    
@@ -280,9 +292,10 @@ The `command-kong-upstream-latency-ms-avg` `DatadogMetric` from the `kong` names
 
 1. Run the following command to get the `command-kong-upstream-latency-ms-avg` metric via the Kubernetes External Metrics API:
 
-   ```bash
-   kubectl get --raw "/apis/external.metrics.k8s.io/v1beta1/namespaces/kong/datadogmetric@kong:command-kong-upstream-latency-ms-avg" | jq
-   ```
+    ```bash
+    kubectl get --raw "/apis/external.metrics.k8s.io/v1beta1/namespaces/kong/datadogmetric@kong:command-kong-upstream-latency-ms-avg" | jq
+    ```
+    {: data-test-step="block" }
 
    You should get the following result:
 
@@ -309,9 +322,10 @@ The `command-kong-upstream-latency-ms-avg` `DatadogMetric` from the `kong` names
 
 1. Check for `SuccessfulRescale` events:
 
-   ```bash
-   kubectl get events -n kong --field-selector involvedObject.name=command,involvedObject.kind=HorizontalPodAutoscaler,reason=SuccessfulRescale --sort-by='.lastTimestamp'
-   ```
+    ```bash
+    kubectl get events -n kong --field-selector involvedObject.name=command,involvedObject.kind=HorizontalPodAutoscaler,reason=SuccessfulRescale --sort-by='.lastTimestamp'
+    ```
+    {: data-test-step="block" }
 
    The result should look like this:
 

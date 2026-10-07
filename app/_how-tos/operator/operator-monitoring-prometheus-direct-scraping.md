@@ -53,6 +53,7 @@ config:
   latency_metrics: true
   status_code_metrics: true' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Apply the plugin globally
 
@@ -98,6 +99,7 @@ spec:
     port: 80
     protocol: HTTP' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 {% endnavtab %}
 {% endnavtabs %}
 
@@ -105,17 +107,33 @@ spec:
 
 You can verify that metrics are being collected by port-forwarding to the data plane Pod:
 
+1. Wait for the `Gateway` to get an address:
+
+   ```sh
+   kubectl wait gateway/kong -n kong \
+     --for=jsonpath='{.status.addresses[0].value}' \
+     --timeout=300s
+   ```
+   {: data-test-step="block" }
+
 1. Get the data plane Pod name:
+
    ```bash
    POD_NAME=$(kubectl get pods -n kong -o jsonpath='{.items[0].metadata.name}')
    ```
+   {: data-test-step="block" }
 
-1. Port forward the metrics port:
+1. Port forward the metrics port. Run the port-forward in the background so that the next command can use it:
+
    ```sh
-   kubectl port-forward $POD_NAME 8100:8100 -n kong
+   kubectl port-forward $POD_NAME 8100:8100 -n kong >/dev/null 2>&1 &
    ```
+   {: data-test-step="block" }
 
 1. Access the metrics:
-   ```bash
-   curl http://localhost:8100/metrics | grep kong_
+
+   ```sh
+   timeout 120 bash -c 'until curl -s http://localhost:8100/metrics | grep -q kong_; do sleep 5; done'
+   curl -s http://localhost:8100/metrics | grep -m1 kong_
    ```
+   {: data-test-step="block" }
