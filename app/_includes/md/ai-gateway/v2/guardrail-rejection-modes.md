@@ -34,6 +34,7 @@ In `verbose` mode, the response always has the status code `403` and the error c
 * `detail`: Additional context about the match. This field is only present when the Policy has details to report.
 
 {% if include.checks_responses %}
+
 ### Streaming responses
 
 When a guardrail blocks a streaming response, the final chunk of the stream has `finish_reason` set to `blocked_by_guard`. The chunks that the guardrail already evaluated and sent are not recalled, so the HTTP status code of the response remains `200`. The `rejection_mode` setting changes what the chunk reports:
@@ -41,6 +42,6 @@ When a guardrail blocks a streaming response, the final chunk of the stream has 
 * `none`: The `delta.content` field contains the block message.
 * `stealth`: The `delta.content` field contains the message `request forbidden`.
 * `verbose`: The `delta.content` field contains the block reason, and `choices[0]` also includes a `guardrail_result` object with the same fields as the verbose response.
-{% elsif include.request_only %}
+{% else %}
 The {{include.name}} Policy evaluates the request before it reaches the LLM, so a blocked request returns the same error response whether or not the request sets `stream` to `true`.
 {% endif %}
