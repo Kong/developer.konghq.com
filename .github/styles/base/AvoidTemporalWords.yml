@@ -1,0 +1,14 @@
+extends: existence
+message: "Avoid time-relative wording ('%s'). Docs go stale. Use 'after' or 'when' for sequence, and state the version or condition instead of what is current."
+level: suggestion
+nonword: true
+ignorecase: false
+scope: text
+tokens:
+  # Not flagged: UI state such as "the currently selected request".
+  - '\b[Cc]urrently\b(?!\s+(?:selected|active|open|viewed|viewing|displayed|focused|loaded|logged|signed|running|used|configured|enabled|applied|set|defined|stored|cached)\b)'
+  - '\b[Tt]oday,'
+  - '\b[Tt]oday you (?:can|cannot|can''t|must|need|have to)\b'
+  - '\b[Aa]s of today\b'
+  # Sentence-initial "Once" meaning "after". Does not match "run it once", "only once", "at once".
+  - '(?:^|[.!?:]\s+)Once (?:the|you|your|it|they|a|an|all|this|that|these|those|we|Kong|Konnect|Insomnia|decK|kongctl)\b'

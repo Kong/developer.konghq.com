@@ -1,0 +1,8 @@
+extends: existence
+message: "Use 'Click the **{tab name}** tab.' for tabs (see docs/ui-steps-standards.md). Found '%s'."
+level: suggestion
+nonword: true
+ignorecase: true
+scope: raw
+tokens:
+  - '\b(?:select|choose|open|go to|switch to|navigate to) the \*\*[^*\n]+\*\* tab\b'
