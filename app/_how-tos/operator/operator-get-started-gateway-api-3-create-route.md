@@ -42,6 +42,7 @@ In order to route a request using {{ site.base_gateway }} we need a Service runn
 ```bash
 kubectl apply -f {{site.links.web}}/manifests/kic/echo-service.yaml -n kong
 ```
+{: data-test-step="block" }
 
 ## Create an HTTPRoute
 
@@ -69,6 +70,7 @@ spec:
           port: 1027
 ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 The results should look like this:
 
@@ -78,16 +80,28 @@ httproute.gateway.networking.k8s.io/echo created
 
 ## Test your Backend
 
-Run `kubectl get gateway kong -n default` to get the IP address for the gateway and set that as the value for the variable `PROXY_IP`.
+1. Wait for the `Gateway` to get an address:
 
-```bash
-export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
-```
+   ```bash
+   kubectl wait gateway/kong -n kong \
+     --for=jsonpath='{.status.addresses[0].value}' \
+     --timeout=5m
+   ```
+   {: data-test-step="block" }
+
+1. Run `kubectl get gateway kong -n kong` to get the IP address for the gateway and set that as the value for the variable `PROXY_IP`.
+
+   ```bash
+   export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
+   ```
+   {: data-test-step="block" }
 
 Test your Service:
 {% validation request-check %}
 url: /echo
 status_code: 200
+count: 6
+sleep: 5
 on_prem_url: $PROXY_IP
 konnect_url: $PROXY_IP
 display_headers: true

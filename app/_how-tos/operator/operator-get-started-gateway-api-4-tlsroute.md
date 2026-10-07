@@ -103,6 +103,14 @@ kubectl patch -n kong --type=json deployment echo -p='[
     }
 ]'
 ```
+{: data-test-step="block" }
+
+Wait for the patched Deployment to roll out:
+
+```bash
+kubectl rollout status deployment/echo -n kong --timeout=60s
+```
+{: data-test-step="block" }
 
 ## Route TCP traffic with TLS
 
@@ -130,6 +138,7 @@ spec:
       tls:
         mode: Passthrough' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 Next, create a `TLSRoute`:
 
@@ -151,31 +160,52 @@ spec:
         port: 1030
 " | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 This configuration instructs {{ site.base_gateway }} to forward all traffic it receives on port `9443` to the `echo` Service on port `1030`.
 
 ## Validate your configuration
+
+Wait for the `Gateway` to be ready. The listener change re-provisions the data plane, and the `Gateway` gets its address back once the new data plane deployment is running:
+
+```bash
+kubectl wait gateway/kong -n kong \
+  --for=condition=DataPlaneReady=True \
+  --timeout=5m
+kubectl wait gateway/kong -n kong \
+  --for=jsonpath='{.status.addresses[0].value}' \
+  --timeout=5m
+```
+{: data-test-step="block" }
 
 Export the Gateway's external address:
 
 ```bash
 export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
 ```
+{: data-test-step="block" }
 
 You can now access the `echo` Service on port `9443` with SNI `tls9443.kong.example`.
 
 In real-world usage, you would create a DNS record for `tls9443.kong.example` pointing to your proxy Service's public IP address, which causes TLS clients to add an SNI automatically. For this demo, add it manually using the OpenSSL CLI:
 
 ```bash
-echo "hello" | openssl s_client -connect $PROXY_IP:9443 -servername tls9443.kong.example -quiet 2>/dev/null
+for _ in {1..18}; do
+  response=$(echo "hello" | openssl s_client -connect $PROXY_IP:9443 -servername tls9443.kong.example -quiet 2>/dev/null)
+  echo "$response" | grep -q hello && break
+  sleep 5
+done
+echo "$response"
+echo "$response" | grep hello
 ```
+{: data-test-step="block" }
 
-The results should look like this:
+The listener change re-provisions the data plane deployment, and the route needs a few more seconds to program after it, so the loop retries until the response contains the text you sent. The `echo` prints the full response, and the final `grep` confirms it. The results should look like this:
 
 ```text
 Welcome, you are connected to node kind-control-plane.
 Running on Pod echo-5f44d4c6f9-krnhk.
-In namespace default.
+In namespace kong.
 With IP address 10.244.0.26.
 hello
 ```
@@ -198,6 +228,7 @@ The following sections walk through a second `TLSRoute` on a new listener (port 
 ```bash
 kubectl label secret tls9444.kong.example -n kong konghq.com/secret="true"
 ```
+{: data-test-step="block" }
 
 For more information about how {{ site.operator_product_name }} handles secrets, see the [Secrets reference](/operator/reference/secrets/).
 
@@ -234,6 +265,7 @@ spec:
             kind: Secret
             name: tls9444.kong.example' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ### Create a TLSRoute for the Terminate listener
 
@@ -257,15 +289,44 @@ spec:
         port: 1025
 " | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ### Validate the Terminate listener
+
+Wait for the `Gateway` to be ready. The listener change re-provisions the data plane, and the `Gateway` gets its address back once the new data plane deployment is running:
+
+```bash
+kubectl wait gateway/kong -n kong \
+  --for=condition=DataPlaneReady=True \
+  --timeout=5m
+kubectl wait gateway/kong -n kong \
+  --for=jsonpath='{.status.addresses[0].value}' \
+  --timeout=5m
+```
+{: data-test-step="block" }
 
 Reuse the `$PROXY_IP` you exported earlier and connect to the new listener:
 
 ```bash
-echo "hello" | openssl s_client -connect $PROXY_IP:9444 -servername tls9444.kong.example -quiet 2>/dev/null
+for _ in {1..18}; do
+  response=$(echo "hello" | openssl s_client -connect $PROXY_IP:9444 -servername tls9444.kong.example -quiet 2>/dev/null)
+  echo "$response" | grep -q hello && break
+  sleep 5
+done
+echo "$response"
+echo "$response" | grep hello
 ```
+{: data-test-step="block" }
 
-You should see similar output as previously shown in the example using `Passthrough` TLS mode.
+As with the Passthrough listener, the loop retries until the response contains the text you sent. The results should look like this:
+
+```text
+Welcome, you are connected to node kind-control-plane.
+Running on Pod echo-5f44d4c6f9-krnhk.
+In namespace kong.
+With IP address 10.244.0.26.
+hello
+```
+{:.no-copy-code}
 
 Unlike the Passthrough case, the TLS handshake terminates at {{ site.base_gateway }}: the certificate presented to the client is the one stored in the labeled Secret, not a certificate served by the `echo` backend. You can confirm this by dropping the `-quiet` flag and inspecting the `subject=` line in the openssl output — it should match `CN=tls9444.kong.example`.
