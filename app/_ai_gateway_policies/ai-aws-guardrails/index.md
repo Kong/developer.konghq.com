@@ -36,6 +36,89 @@ The AI AWS Guardrails Policy includes a configurable [`response_buffer_size`](/a
 
 For response and request inspection, the Policy by default guards input only. You can change this behavior with the [`guarding_mode`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-guarding-mode) field, which supports `INPUT`, `OUTPUT`, or `BOTH`. To control which parts of the conversation are sent for content evaluation, use the [`text_source`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-text-source) field. Set it to `concatenate_user_content` to inspect only `user` input, or `concatenate_all_content` to include the full exchange, including system and assistant messages.
 
+## Rejection modes
+
+When the Policy blocks a request or response, what the caller receives depends on the rejection mode.
+
+{% include_cached md/ai-gateway/v2/guardrail-rejection-modes.md name=page.name %}
+
+In `none` mode, the error message is the blocked message that you configured for the guardrail in AWS, for example:
+
+```json
+{
+  "error": {
+    "message": "Blocked by AWS guardrail (input)"
+  }
+}
+```
+
+In `verbose` mode, `reason` is the same blocked message, and `detail` is the list of assessments that AWS Bedrock Guardrails returned for the content. The assessments depend on which guardrail policies matched. For example, a request that contains a word from a custom word filter returns the following response:
+
+```json
+{
+  "error": {
+    "type": "guardrail_rejected",
+    "plugin": "ai-aws-guardrails",
+    "reason": "Blocked by AWS guardrail (input)",
+    "code": "GUARDRAIL_BLOCKED",
+    "detail": [
+      {
+        "appliedGuardrailDetails": {
+          "guardrailId": "dlk3bhgw5pms",
+          "guardrailVersion": "DRAFT",
+          "guardrailArn": "arn:aws:bedrock:us-east-1:123456789012:guardrail/dlk3bhgw5pms",
+          "guardrailOrigin": ["REQUEST"],
+          "guardrailOwnership": "SELF"
+        },
+        "wordPolicy": {
+          "customWords": [
+            {
+              "match": "bananaphone",
+              "action": "BLOCKED",
+              "detected": true
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
+{:.warning}
+> In `verbose` mode, the `detail` field includes the guardrail ARN, which contains your AWS account ID, along with the matched content. Only use `verbose` mode for clients that you trust with this information.
+
+To return this response, set `config.rejection_mode` to `verbose`:
+
+{% entity_example %}
+type: policy
+data:
+  display_name: AI AWS Guardrails - Verbose Rejection
+  name: ai-aws-guardrails
+  type: ai-aws-guardrails
+  config:
+    aws_region: us-east-1
+    guardrails_id: YOUR_GUARDRAIL_ID
+    guardrails_version: DRAFT
+    aws_access_key_id: ${aws_access_key_id}
+    aws_secret_access_key: ${aws_secret_access_key}
+    rejection_mode: verbose
+variables:
+  aws_access_key_id:
+    value: $AWS_ACCESS_KEY_ID
+    description: The AWS access key ID of an IAM identity with the `bedrock:ApplyGuardrail` permission.
+  aws_secret_access_key:
+    value: $AWS_SECRET_ACCESS_KEY
+    description: The AWS secret access key of the IAM identity.
+formats:
+  - konnect-api
+  - kongctl
+{% endentity_example %}
+
+## Detect without blocking
+
+{% include_cached md/ai-gateway/v2/guardrail-continue-on-detection.md name=page.name logs_detection=true %}
+
 ## Format
 
 This Policy works with all of the AI Model entity's [`model.capabilities` settings](/ai-gateway/entities/ai-model/#capabilities).
