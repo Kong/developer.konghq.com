@@ -563,6 +563,24 @@ For modes that support server-level ACL configuration (`conversion-listener`, `l
 
 When `access.acl_attribute_type` is `consumer`, you can gate access by individual [AI Consumers](/ai-gateway/entities/ai-consumer/) (using username, UUID, or custom ID) or by [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) membership. This flexibility lets you define rules at the right level: deny a specific user, allow a tier-based group, or mix both in the same ACL. The runtime checks the authenticated AI Consumer's identity and group memberships against your `allow` and `deny` lists.
 
+### CEL-based ACLs {% new_in 2.2 %}
+
+Instead of a static list of names, the server-level [`access.acls`](#schema-aigateway-mcpserver-access-acls) object also accepts `allow_when` or `deny_when`: an array of [CEL](https://cel.dev/) boolean expressions between 1 and 1024 characters each, evaluated against the authenticated AI Consumer and the request using the same field vocabulary as [plugin conditions](/gateway/plugins/conditions/). Configure exactly one of `allow`, `deny`, `allow_when`, or `deny_when` per `access.acls` object.
+
+```yaml
+access:
+  acls:
+    allow_when:
+      - 'consumer_group.names != null && "internal-teams" in consumer_group.names'
+      - 'consumer.username == "alice"'
+```
+
+{{site.konnect_short_name}} compiles and type-checks each expression when you create or update the AI MCP Server. An entry that doesn't compile or doesn't evaluate to a boolean is rejected with HTTP 400, with the error naming the offending entry (for example, `access.acls.allow_when[0]`).
+
+At runtime, entries are evaluated in order with OR semantics. With `allow_when`, the request is allowed when any entry evaluates to true, and an entry that fails to evaluate denies the request with HTTP 403. With `deny_when`, the request is denied when any entry evaluates to true, and an entry that fails to evaluate fails closed with HTTP 500. When `allow_when` or `deny_when` is in effect, group-header-related fields are ignored and the `X-Consumer-Groups` header isn't sent upstream.
+
+CEL-based ACLs require {{site.ai_gateway}} 2.2 or later and {{site.base_gateway}} 3.16 or later data planes. Older data planes skip the configuration and report the skip in their compatibility status.
+
 ### How default and per-tool ACLs work
 
 The runtime evaluates access using a two-tier system:
