@@ -58,12 +58,14 @@ Scale the `echo` Deployment to three replicas so there are multiple Pods to rout
 ```bash
 kubectl scale deployment echo -n kong --replicas=3
 ```
+{: data-test-step="block" }
 
 Wait for all Pods to be ready:
 
 ```bash
 kubectl rollout status deployment echo -n kong
 ```
+{: data-test-step="block" }
 
 ## Create a KongUpstreamPolicy
 
@@ -83,6 +85,7 @@ spec:
   hashOnFallback:
     input: ip' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 With this policy, requests that carry the same `x-session-id` header value are always forwarded to the same upstream Pod. When the header is absent, {{site.base_gateway}} falls back to hashing on the client IP.
 
@@ -94,14 +97,32 @@ Attach the `KongUpstreamPolicy` to the `echo` Service:
 kubectl annotate service echo -n kong \
   konghq.com/upstream-policy="session-affinity"
 ```
+{: data-test-step="block" }
 
 ## Validate
+
+1. Wait for the `Gateway` to get an address:
+
+   ```bash
+   kubectl wait gateway/kong -n kong \
+     --for=jsonpath='{.status.addresses[0].value}' \
+     --timeout=5m
+   ```
+   {: data-test-step="block" }
 
 1. Get the Gateway's external IP address:
 
    ```bash
    export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
    ```
+   {: data-test-step="block" }
+
+1. Wait for the `HTTPRoute` to be programmed:
+
+   ```bash
+   kubectl wait --for=jsonpath='{.status.parents[0].conditions[?(@.type=="Programmed")].status}'=True httproute/echo-route -n kong --timeout=300s
+   ```
+   {: data-test-step="block" }
 
 1. Send several requests with the same `x-session-id` header value and observe that all responses come from the same Pod:
 
@@ -110,6 +131,7 @@ kubectl annotate service echo -n kong \
      curl -s -H "x-session-id: user-alice" $PROXY_IP/echo | grep "Running on Pod"
    done
    ```
+   {: data-test-step="block" }
 
    All five responses should report the same Pod name:
 
@@ -129,5 +151,6 @@ kubectl annotate service echo -n kong \
      curl -s -H "x-session-id: user-bob" $PROXY_IP/echo | grep "Running on Pod"
    done
    ```
+   {: data-test-step="block" }
 
    Requests for `user-bob` consistently hit a different Pod than requests for `user-alice`.
