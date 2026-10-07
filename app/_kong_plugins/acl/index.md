@@ -78,18 +78,6 @@ When `allow_when` or `deny_when` is configured:
 * `hide_groups_header`, `include_consumer_groups`, and `always_use_authenticated_groups` are all ignored.
 * The `X-Consumer-Groups` header isn't sent to the upstream service, since there's no matched group list to report.
 
-### {{site.konnect_short_name}} control plane validation
-
-The {{site.konnect_short_name}} control plane supports `allow_when` and `deny_when` end to end: it accepts, validates, stores, and returns these fields on ACL plugin instances.
-
-Each expression is compiled and type-checked when you write the configuration, before the control plane stores it. An expression must return a boolean, and its identifiers and functions must resolve against the same request context available to [plugin conditions](/gateway/plugins/conditions/) (the authenticated Consumer, Principal, HTTP request attributes, and Consumer Groups). The control plane also enforces the plugin schema constraints: exactly one of `allow`, `deny`, `allow_when`, or `deny_when` per plugin instance, and each expression must be between 1 and 1024 characters.
-
-An invalid configuration is rejected with a `400 Bad Request` response that names the offending entry, such as `config.allow_when[0]` or `config.deny_when[1]`, and identifies the failure: a parse error, a non-boolean result type, an unknown identifier or function, or a conflicting policy field. Without write-time validation, an invalid expression is only caught later as a data plane sync failure.
-
-This validation applies to every write path through the {{site.konnect_short_name}} API, including [decK](/deck/) and [Terraform](/terraform/). Both tools work with no changes and surface the same `400` errors during sync, plan, or apply.
-
-An ACL plugin instance configured with `allow_when` or `deny_when` requires data planes running {{site.base_gateway}} 3.16 or later (or {{site.ai_gateway_name}} 2.2 or later). The plugin configuration doesn't sync to older data planes, and the skip is surfaced in each data plane node's [compatibility status](/gateway/data-plane-version-compatibility/#compatibility-status) in {{site.konnect_short_name}}. A silently dropped ACL policy would fail open, so check the compatibility status of your data plane nodes after configuring dynamic rules.
-
 For example plugin configurations, see [Allow by Principal metadata](/plugins/acl/examples/allow-when-principal-metadata/) and [Deny by Principal metadata](/plugins/acl/examples/deny-when-principal-metadata/).
 
 For general information on this class of CEL-driven plugin config, see [Dynamic plugin config with CEL](/gateway/plugins/expressible-fields/).
