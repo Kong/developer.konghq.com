@@ -56,6 +56,7 @@ prereqs:
    kubectl apply -f {{site.links.web}}/manifests/kic/echo-service.yaml -n kong-gw-public
    kubectl apply -f {{site.links.web}}/manifests/kic/echo-service.yaml -n kong-gw-private
    ```
+   {: data-test-step="block" }
 
 1. Wait for both deployments to be ready:
 
@@ -63,6 +64,7 @@ prereqs:
    kubectl rollout status deployment/echo -n kong-gw-public --timeout=60s
    kubectl rollout status deployment/echo -n kong-gw-private --timeout=60s
    ```
+   {: data-test-step="block" }
 
 ## Create an HTTPRoute for the public gateway
 
@@ -90,6 +92,7 @@ spec:
       port: 1027
 ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Create two HTTPRoutes for the private gateway
 
@@ -136,6 +139,7 @@ spec:
       port: 1027
 ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Validate
 
@@ -145,15 +149,22 @@ spec:
    export PUBLIC_GW_IP=$(kubectl get gateway gw-public -n kong-gw-public \
      -o jsonpath='{.status.addresses[0].value}')
    echo $PUBLIC_GW_IP
+   ```
+   {: data-test-step="block" }
+
+   ```bash
    export PRIVATE_GW_IP=$(kubectl get gateway gw-private -n kong-gw-private \
      -o jsonpath='{.status.addresses[0].value}')
    echo $PRIVATE_GW_IP
    ```
+   {: data-test-step="block" }
 
 {% capture check_1 %}
 {% validation request-check %}
 url: /echo
 status_code: 200
+count: 6
+sleep: 5
 on_prem_url: $PUBLIC_GW_IP
 konnect_url: $PUBLIC_GW_IP
 {% endvalidation %}
@@ -163,6 +174,8 @@ konnect_url: $PUBLIC_GW_IP
 {% validation request-check %}
 url: /echo
 status_code: 200
+count: 6
+sleep: 5
 on_prem_url: $PRIVATE_GW_IP:8080
 konnect_url: $PRIVATE_GW_IP:8080
 {% endvalidation %}
@@ -172,17 +185,20 @@ konnect_url: $PRIVATE_GW_IP:8080
 {% validation request-check %}
 url: /private
 status_code: 200
+count: 6
+sleep: 5
 on_prem_url: $PRIVATE_GW_IP:8080
 konnect_url: $PRIVATE_GW_IP:8080
 {% endvalidation %}
 {% endcapture %}
 
 {% capture check_4 %}
-{% validation request-check %}
-url: /private
-status_code: 200
-on_prem_url: $PUBLIC_GW_IP
-konnect_url: $PUBLIC_GW_IP
+{% validation custom-command %}
+command: |
+  curl -s -o /dev/null -w '%{http_code}' "$PUBLIC_GW_IP/private"
+expected:
+  stdout: "404"
+  return_code: 0
 {% endvalidation %}
 {% endcapture %}
 
