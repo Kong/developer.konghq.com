@@ -23,8 +23,14 @@ works_on:
   - on-prem
 
 prereqs:
-  kubernetes:
-    gateway_api: true
+  inline:
+    - title: Create the kong namespace
+      position: before
+      content: |
+        ```bash
+        kubectl create namespace kong
+        ```
+        {: data-test-prereq="block" }
   entities:
     services:
       - echo-service
@@ -131,12 +137,14 @@ content: |
      image: kong/plugin-example:1.0.0
    ' | kubectl apply -f -
    ```
+   {: data-test-step="block" }
 
    Verify that the plugin is fetched and available by examining the status of the `KongPluginInstallation` resource:
 
    ```bash
    kubectl get kongplugininstallations.gateway-operator.konghq.com -o jsonpath-as-json='{.items[*].status}'
    ```
+   {: data-test-step="block" }
 
    The output should look like this:
 
@@ -163,7 +171,7 @@ content: |
    {:.info}
     > The `KongPluginInstallation` resource creates a `ConfigMap` with the plugin content. Additional `ConfigMap`s are created when a plugin is referenced by other resources. The operator automatically manages the lifecycle of all these `ConfigMap`s.
 
-1. Make the plugin available in a `Gateway` resource by referencing it in the `spec.dataPlaneOptions.spec.pluginsToInstall` field of the `GatewayConfiguration` resource. Plugins can be referenced across namespaces without any additional configuration.
+1. Make the plugin available in a `Gateway` resource by referencing it in the `spec.dataPlaneOptions.spec.pluginsToInstall` field of the `GatewayConfiguration` resource, and create a `Gateway` that uses the configured class. Plugins can be referenced across namespaces without any additional configuration.
 
    ```yaml
    echo '
@@ -195,8 +203,24 @@ content: |
         kind: GatewayConfiguration
         name: kong
         namespace: default
+   ---
+   apiVersion: gateway.networking.k8s.io/v1
+   kind: Gateway
+   metadata:
+     name: kong
+     namespace: kong
+   spec:
+     gatewayClassName: kong
+     listeners:
+     - name: proxy
+       port: 80
+       protocol: HTTP
+       allowedRoutes:
+         namespaces:
+           from: All
    ' | kubectl apply -f -
    ```
+   {: data-test-step="block" }
 
 1. Deploy an example service and expose it by configuring `HTTPRoute` with the custom plugin:
 
@@ -223,12 +247,30 @@ content: |
 
 ## Validate your configuration
 
-Ensure that everything is up and running and make a request to the service.
+Ensure that everything is up and running, get the `Gateway` address, and make a request to the service.
+
+1. Wait for the `Gateway` to get an address:
+
+   ```bash
+   kubectl wait gateway/kong -n kong \
+     --for=jsonpath='{.status.addresses[0].value}' \
+     --timeout=5m
+   ```
+   {: data-test-step="block" }
+
+1. Get the `Gateway` address:
+
+   ```bash
+   export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
+   ```
+   {: data-test-step="block" }
 
 <!--vale off-->
 {% validation request-check %}
 url: '/echo'
 status_code: 200
+count: 6
+sleep: 5
 expected_headers:
   - "myheader: my-first-plugin"
 on_prem_url: $PROXY_IP
