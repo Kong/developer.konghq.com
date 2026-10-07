@@ -3,6 +3,8 @@ import fs from "fs/promises";
 import path from "path";
 import { dump } from "js-yaml";
 
+import { prependProxyIpExport } from "./proxy-ip.js";
+
 class NonFirstSeriesPageError extends Error {}
 
 async function copyFromClipboard(page) {
@@ -193,7 +195,7 @@ async function extractSetup(page) {
   return instructions;
 }
 
-async function extractSteps(page, config) {
+async function extractSteps(page, config, product) {
   const instructions = [];
   const steps = await page.locator("[data-test-step]").all();
 
@@ -214,10 +216,7 @@ async function extractSteps(page, config) {
 
         let copiedText = await copyFromClipboard(page);
 
-        // Make curl requests work for KIC
-        if (copiedText.includes("curl") && copiedText.includes("$PROXY_IP")) {
-          copiedText = "export PROXY_IP=$(kubectl get svc --namespace kong kong-gateway-proxy -o jsonpath='{range .status.loadBalancer.ingress[0]}{@.ip}{@.hostname}{end}')\n" + copiedText;
-        }
+        copiedText = prependProxyIpExport(copiedText, product);
 
         instructions.push(copiedText);
       } else {
@@ -362,7 +361,7 @@ export async function extractInstructionsFromURL(uri, config, context) {
       const setup = await extractSetup(page);
       const product = deriveProduct(setup, products);
       const prereqs = await extractPrereqs(page, platform);
-      const steps = await extractSteps(page, productConfig);
+      const steps = await extractSteps(page, productConfig, product);
       const cleanup = await extractCleanup(page);
 
       while ((await page.locator("[data-test-series-next]").count()) > 0) {
@@ -378,7 +377,7 @@ export async function extractInstructionsFromURL(uri, config, context) {
         // series' setup/product/version come from the first page only.
         const continuationPrereqs = await extractPrereqs(page, platform);
         steps.push(...continuationPrereqs.blocks);
-        steps.push(...(await extractSteps(page, productConfig)));
+        steps.push(...(await extractSteps(page, productConfig, product)));
         cleanup.push(...(await extractCleanup(page)));
       }
 
