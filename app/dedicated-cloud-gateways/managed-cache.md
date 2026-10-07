@@ -118,8 +118,7 @@ rows:
       <br>
       `small` handles a 1,000 RPS baseline cleanly.
       <br>
-      {:.warning}
-      > Vector search isn't supported on `micro` and `small` instances.
+      Note: Vector search isn't supported on `micro` and `small` instances.
   - profile: Standard enterprise
     entities: "≤1,000 × ≤100 × 3 windows"
     rps: "≤10,000"
