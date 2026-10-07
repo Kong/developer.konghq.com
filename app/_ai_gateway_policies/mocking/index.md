@@ -25,12 +25,12 @@ faqs:
     a: No. The Mocking Policy answers the request before {{site.ai_gateway}} calls the AI Model Provider, so no upstream request is made and no tokens are spent.
   - q: Can I mock a streaming response?
     a: |
-      No. A request with `stream: true` still receives the single non-streaming response from the spec, not server-sent events. The response `Content-Type` is the media type from the spec that best matches the request's `Accept` header.
+      No. Even if the client sets `stream: true`, the Mocking Policy returns the whole example from your API specification in a single response instead of streaming it in pieces.
 
       If the client sends `Accept: text/event-stream` and the spec only defines `application/json`, no media type matches and the Policy returns a `404` with the message `No examples exist in API specification for this resource matching Accept Header (text/event-stream)`.
 ---
 
-The Mocking Policy allows you to provide mock endpoints to test APIs in development against your existing services and supports both Swagger 2.0 and OpenAPI 3.0. When it matches an incoming request against a path and method in the provided [`api_specification`](/ai-gateway/policies/mocking/reference/#schema--config-api-specification), it returns response examples and {{site.ai_gateway}} never contacts the upstream [AI Model Provider](/ai-gateway/entities/ai-model-provider/).
+The Mocking Policy allows you to provide mock endpoints to test APIs in development against your existing services. You provide an [`api_specification`](/ai-gateway/policies/mocking/reference/#schema--config-api-specification) with either Swagger 2.0 or OpenAPI 3.0. When the Mocking Policy matches an incoming request against a path and method defined in the spec, it returns response examples. When using the Mocking Policy, {{site.ai_gateway}} never contacts the upstream [AI Model Provider](/ai-gateway/entities/ai-model-provider/).
 
 The Policy lets you test an {{site.ai_gateway}}'s configuration against realistic responses without spending tokens. You can attach the Policy to an [AI Model](/ai-gateway/entities/ai-model/) and give it an API specification describing that AI Model's route, for example `POST /v1/chat/completions` with a provider-shaped response example. The Policy matches the full request path, so the spec path must include the AI Model's route path. You can also attach the Policy to an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), an [AI Agent](/ai-gateway/entities/ai-agent/), or an [AI Consumer](/ai-gateway/entities/ai-consumer/), or apply it globally.
 
