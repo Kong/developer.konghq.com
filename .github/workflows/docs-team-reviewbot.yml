@@ -1,0 +1,98 @@
+name: docs-team-reviewbot
+
+# Advisory AI review of docs PRs. Posts inline comments only. It never approves
+# and never requests changes, and it is not a required check.
+#
+# Off by default: set the repo variable REVIEWBOT_ENABLED to 'true' to turn it on.
+# Dry run by default: it posts nothing until REVIEWBOT_DRY_RUN is set to 'false'.
+# Dry runs still write the run log artifact.
+#
+# Required once enabled:
+#   secrets.ANTHROPIC_API_KEY
+#   vars.GH_APP_REVIEWBOT_ID and secrets.GH_APP_REVIEWBOT_SECRET (a GitHub App with
+#   only pull_requests: write, used to post comments)
+# Optional repo variables: REVIEWBOT_MODEL, REVIEWBOT_EFFORT.
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, synchronize]
+    paths:
+      - "app/**/*.md"
+      - "app/_landing_pages/**"
+      - "app/_kong_plugins/*/examples/**"
+
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+
+permissions:
+  contents: read
+
+jobs:
+  review:
+    name: Review
+    # Fork PRs get no secrets, so they are skipped. Drafts are skipped.
+    if: >-
+      vars.REVIEWBOT_ENABLED == 'true' &&
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      !contains(github.event.pull_request.labels.*.name, 'ci:skip:reviewbot')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@351661ca32ac09a36dc5ee2d536e3128f2a3c8ed # v2.22.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        working-directory: tools/docs-team-reviewbot
+        run: npm ci --ignore-scripts
+
+      - name: Create comment-only GitHub App token
+        id: app-token
+        if: vars.REVIEWBOT_DRY_RUN == 'false'
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859
+        with:
+          app-id: ${{ vars.GH_APP_REVIEWBOT_ID }}
+          private-key: ${{ secrets.GH_APP_REVIEWBOT_SECRET }}
+          owner: Kong
+          repositories: developer.konghq.com
+          permission-pull-requests: write
+
+      - name: Run docs-team-reviewbot
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          REVIEWBOT_MODEL: ${{ vars.REVIEWBOT_MODEL }}
+          REVIEWBOT_EFFORT: ${{ vars.REVIEWBOT_EFFORT }}
+          GITHUB_TOKEN: ${{ github.token }}
+          POST_TOKEN: ${{ steps.app-token.outputs.token }}
+          DRY_RUN: ${{ vars.REVIEWBOT_DRY_RUN != 'false' }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          OUT_DIR: ${{ runner.temp }}/reviewbot-out
+        run: node tools/docs-team-reviewbot/run.mjs
+
+      - name: Upload run log
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: reviewbot-run-log-pr-${{ github.event.pull_request.number }}
+          path: ${{ runner.temp }}/reviewbot-out/run-log.json
+          retention-days: 90
+          if-no-files-found: ignore
