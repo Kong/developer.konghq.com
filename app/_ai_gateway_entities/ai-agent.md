@@ -92,6 +92,16 @@ faqs:
       signs each proxied request using static IAM credentials, environment auto-detection, or an assumed role. This
       is separate from [`access.auth_strategies`](#schema-aigateway-agent-access), which authenticates inbound
       clients rather than outbound requests to the upstream agent. See [Upstream authentication](#upstream-authentication).
+
+  - q: How do I connect to an upstream agent that requires mTLS or serves a certificate from a private CA?
+    a: |
+      Reference an [AI Certificate](/ai-gateway/entities/ai-certificate/) by name in
+      [`config.certificates`](#schema-aigateway-agent-config-certificates) to present a client
+      certificate during the TLS handshake with the upstream, and reference one or more
+      [AI CA Certificates](/ai-gateway/entities/ai-ca-certificate/) by name in
+      [`config.ca_certificates`](#schema-aigateway-agent-config-ca-certificates) to verify the
+      upstream's certificate against a private or internal CA. Both fields apply to `a2a` and `http`
+      Agents and require a minimum runtime version of 2.3. See [Upstream TLS](#upstream-tls).
 ---
 
 ## What is an AI Agent?
@@ -372,6 +382,38 @@ config:
 ```
 
 `config.upstream` is available regardless of the AI Agent's [`type`](#schema-aigateway-agent-type); it applies to `a2a` and `http` Agents alike.
+
+## Upstream TLS {% new_in 2.3 %}
+
+Every AI Agent generates an underlying {{site.base_gateway}} Service that proxies requests to the upstream agent endpoint in [`config.url`](#schema-aigateway-agent-config-url). Two optional `config` fields control how that Service handles TLS with the upstream:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Description
+    key: description
+rows:
+  - field: "[`config.certificates`](#schema-aigateway-agent-config-certificates)"
+    description: |
+      A single [AI Certificate](/ai-gateway/entities/ai-certificate/), referenced by name, that the generated Service presents as its client certificate during the TLS handshake with the upstream. Use this when the upstream requires mutual TLS (mTLS). The array accepts at most one entry, and the referenced AI Certificate must include a private key. If unset, no client certificate is presented to the upstream.
+  - field: "[`config.ca_certificates`](#schema-aigateway-agent-config-ca-certificates)"
+    description: |
+      One or more [AI CA Certificates](/ai-gateway/entities/ai-ca-certificate/), referenced by name, that build the trust store the generated Service uses to verify the upstream's TLS certificate. Use this when the upstream serves a certificate signed by a private or internal CA. If unset, the data plane's default trust store is used.
+{% endtable %}
+<!-- vale on -->
+
+Both fields reference entities on the same {{site.ai_gateway}} instance by their immutable `name`, and referencing a name that doesn't exist is rejected with an `HTTP 400` error. They apply to both `a2a` and `http` AI Agents and require a minimum runtime version of 2.3.
+
+```yaml
+config:
+  url: https://booking-agent.internal.kongair.com
+  certificates:
+    - agent-client-cert
+  ca_certificates:
+    - kongair-internal-root-ca
+```
 
 ## Attach AI Policies
 
