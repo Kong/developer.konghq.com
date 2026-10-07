@@ -38,11 +38,12 @@ For response and request inspection, the Policy by default guards input only. Yo
 
 ## Rejection modes
 
-When the Policy blocks a request or response, what the caller receives depends on the rejection mode.
+The {{page.name}} Policy responds to a blocked request or response according to its rejection mode.
 
 {% include_cached md/ai-gateway/v2/guardrail-rejection-modes.md name=page.name %}
 
-In `none` mode, the error message is the blocked message that you configured for the guardrail in AWS, for example:
+In `none` mode, the error message is the blocked message that you configured for the guardrail in AWS.
+The following response is the body for a request blocked in `none` mode:
 
 ```json
 {
@@ -52,7 +53,9 @@ In `none` mode, the error message is the blocked message that you configured for
 }
 ```
 
-In `verbose` mode, `reason` is the same blocked message, and `detail` is the list of assessments that AWS Bedrock Guardrails returned for the content. The assessments depend on which guardrail policies matched. For example, a request that contains a word from a custom word filter returns the following response:
+In `verbose` mode, `reason` is the same blocked message, and `detail` is the list of assessments that AWS Bedrock Guardrails returned for the content.
+The assessments depend on which filters in your AWS guardrail matched.
+For example, a request that contains a word from a custom word filter returns the following response:
 
 ```json
 {
@@ -86,9 +89,10 @@ In `verbose` mode, `reason` is the same blocked message, and `detail` is the lis
 ```
 
 {:.warning}
-> In `verbose` mode, the `detail` field includes the guardrail ARN, which contains your AWS account ID, along with the matched content. Only use `verbose` mode for clients that you trust with this information.
+> In `verbose` mode, the `detail` field includes the guardrail ARN, which contains your AWS account ID, along with the matched content.
+> Only use `verbose` mode for clients that you trust with this information.
 
-To return this response, set `config.rejection_mode` to `verbose`:
+To return this response, set [`config.rejection_mode`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-rejection-mode) to `verbose`:
 
 {% entity_example %}
 type: policy

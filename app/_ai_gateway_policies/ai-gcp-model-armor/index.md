@@ -92,11 +92,12 @@ The AI GCP Model Armor Policy inspects requests and responses using GCP Model Ar
 
 ## Rejection modes
 
-When the Policy blocks a request or response, what the caller receives depends on the rejection mode.
+The {{page.name}} Policy responds to a blocked request or response according to its rejection mode.
 
 {% include_cached md/ai-gateway/v2/guardrail-rejection-modes.md name=page.name checks_responses=true %}
 
-In `none` mode, the response body is the plain message set in [`config.request_failure_message`](/ai-gateway/policies/ai-gcp-model-armor/reference/#schema--config-request-failure-message) for requests or [`config.response_failure_message`](/ai-gateway/policies/ai-gcp-model-armor/reference/#schema--config-response-failure-message) for responses, for example:
+In `none` mode, the response body is the plain message set in [`config.request_failure_message`](/ai-gateway/policies/ai-gcp-model-armor/reference/#schema--config-request-failure-message) for requests or [`config.response_failure_message`](/ai-gateway/policies/ai-gcp-model-armor/reference/#schema--config-response-failure-message) for responses.
+The following response is the body for a request blocked in `none` mode:
 
 ```json
 {
@@ -105,7 +106,8 @@ In `none` mode, the response body is the plain message set in [`config.request_f
 }
 ```
 
-In `verbose` mode, `reason` is the type of the Model Armor filter that matched, and `detail` lists the filter results that GCP Model Armor returned. For example, a prompt injection attempt returns the following response:
+In `verbose` mode, `reason` is the type of the Model Armor filter that matched, and `detail` lists the filter results that GCP Model Armor returned.
+For example, a prompt injection attempt returns the following response:
 
 ```json
 {
@@ -124,7 +126,7 @@ In `verbose` mode, `reason` is the type of the Model Armor filter that matched, 
 }
 ```
 
-To return this response, set `config.rejection_mode` to `verbose`:
+To return this response, set [`config.rejection_mode`](/ai-gateway/policies/ai-gcp-model-armor/reference/#schema--config-rejection-mode) to `verbose`:
 
 {% entity_example %}
 type: policy

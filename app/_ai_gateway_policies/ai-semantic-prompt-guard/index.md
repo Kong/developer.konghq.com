@@ -57,11 +57,13 @@ The matching behavior is as follows:
 
 ## Rejection modes
 
-When the Policy blocks a request, the response depends on the rejection mode. In the default `none` mode, the response is a `400` with the message `bad request`, which doesn't reveal that a guardrail is in use.
+The {{page.name}} Policy responds to a blocked request according to its rejection mode.
+In the default `none` mode, the response is a `400` with the message `bad request`, which hides that a guardrail is in use.
 
 {% include_cached md/ai-gateway/v2/guardrail-rejection-modes.md name=page.name request_only=true %}
 
-For example, a request that matches a `deny` prompt returns the following response in `verbose` mode. The `detail` field contains the prompt that matched and its `score`, which is the distance between the request and that prompt (a lower score means a closer match):
+For example, a request that matches a `deny` prompt returns the following response in `verbose` mode.
+The `detail` field contains the prompt that matched and its `score`, which is the distance between the request and that prompt (a lower score means a closer match):
 
 ```json
 {

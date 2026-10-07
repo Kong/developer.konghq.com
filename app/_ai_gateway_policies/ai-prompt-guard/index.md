@@ -40,11 +40,12 @@ The matching behavior is as follows:
 
 ## Rejection modes
 
-When the Policy blocks a request, the response depends on the rejection mode.
+The {{page.name}} Policy responds to a blocked request according to its rejection mode.
 
 {% include_cached md/ai-gateway/v2/guardrail-rejection-modes.md name=page.name request_only=true %}
 
-For example, a request that matches a `deny_patterns` entry returns the following response in `verbose` mode. The `detail.matched_pattern` field contains the pattern that matched:
+For example, a request that matches a `deny_patterns` entry returns the following response in `verbose` mode.
+The `detail.matched_pattern` field contains the pattern that matched:
 
 ```json
 {
@@ -62,7 +63,7 @@ For example, a request that matches a `deny_patterns` entry returns the followin
 
 When a request fails to match any `allow_patterns` entry, the `detail` field is omitted.
 
-To return this response, set `config.rejection_mode` to `verbose`:
+To return this response, set [`config.rejection_mode`](/ai-gateway/policies/ai-prompt-guard/reference/#schema--config-rejection-mode) to `verbose`:
 
 {% entity_example %}
 type: policy
