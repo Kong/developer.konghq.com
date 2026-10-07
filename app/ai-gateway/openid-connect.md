@@ -132,13 +132,13 @@ Configure which flows are active with `config.auth_methods`.
 {{site.ai_gateway}} searches for credentials in the following order of precedence:
 
 1. [Session authentication](#session-authentication)
-2. [JWT access token authentication](#jwt-access-token-authentication-bearer) (`bearer`)
-4. [Introspection authentication](#introspection-authentication)
-5. [User info authentication](#user-info-authentication)
-6. [Refresh token grant](#refresh-token-grant)
-7. [Password grant](#password-grant)
-8. [Client credentials grant](#client-credentials-grant)
-9. [Authorization code flow](#authorization-code-flow)
+1. [JWT access token authentication](#jwt-access-token-authentication-bearer) (`bearer`)
+1. [Introspection authentication](#introspection-authentication)
+1. [User info authentication](#user-info-authentication)
+1. [Refresh token grant](#refresh-token-grant)
+1. [Password grant](#password-grant)
+1. [Client credentials grant](#client-credentials-grant)
+1. [Authorization code flow](#authorization-code-flow)
 
 {{site.ai_gateway}} stops at the first match in that order.
 This precedence order is the same one {{site.ai_gateway}}'s OpenID Connect plugin uses, since the same plugin engine runs underneath the AI Auth Strategy, and it's fixed: it can't be reconfigured.
@@ -690,7 +690,6 @@ The pair can be any of:
 * `config.audience_claim` and `config.audience_required`
 * `config.groups_claim` and `config.groups_required`
 * `config.roles_claim` and `config.roles_required`
-* `config.consumer_groups_claim`
 
 In each parameter pair, the `*_claim` parameter points to a source, and the `*_required` parameter defines a set of claims values to check against.
 
@@ -759,6 +758,8 @@ The `config.*_required` parameters (for example, `config.groups_required`) are a
   ```
 
 This runs independently of `access.acls`, which authorizes an already-resolved AI Consumer identity against a specific entity.
+
+If a claims check fails, the request goes to the anonymous AI Consumer like any other failed authentication, and the caller receives `401 Unauthorized`.
 
 ## Client authentication
 
@@ -1055,7 +1056,7 @@ The RFC defines a protocol approach to support scenarios where a client can exch
 This is particularly useful in complex environments like microservices or cross-domain federations.
 
 {:.info}
-> **Note**: Only access tokens can be exchanged with the OIDC auth strategy.
+> **Note**: Only access tokens can be exchanged with the OIDC auth strategy. Token exchange isn't supported on AI MCP Servers that set `access.metadata`.
 
 #### Why use token exchange?
 
@@ -1192,7 +1193,14 @@ This defaults to `urn:ietf:params:oauth:token-type:access_token`.
 
 ### Using cloud authentication with Redis
 
-{% include_cached /md/ai-gateway/v2/redis-cloud-auth.md %}
+If you set `config.session_storage` to `redis` to store sessions for the [session](#session-authentication) or [authorization code](#authorization-code-flow) flow, you can authenticate to Redis with a cloud provider. This allows you to rotate credentials without relying on static passwords.
+
+The following providers are supported:
+* AWS ElastiCache
+* Azure Managed Redis
+* {{ site.google_cloud }} Memorystore (with or without Valkey)
+
+Each provider also supports an instance and cluster configuration.
 
 {% include_cached /md/ai-gateway/v2/redis-cloud-providers.md redis_group="oidc" %}
 

@@ -68,8 +68,8 @@ config:
 {% elsif include.redis_group == "oidc" %}
 ```yaml
 config:
-  cluster_cache_strategy: redis
-  cluster_cache_redis:
+  session_storage: redis
+  redis:
     host: $INSTANCE_ADDRESS
     username: $INSTANCE_USERNAME
     port: 6379
@@ -156,8 +156,8 @@ config:
 {% elsif include.redis_group == "oidc" %}
 ```yaml
 config:
-  cluster_cache_strategy: redis
-  cluster_cache_redis:
+  session_storage: redis
+  redis:
     cluster_nodes:
     - ip: $CLUSTER_ADDRESS
       port: 6379
@@ -240,8 +240,8 @@ config:
 {% elsif include.redis_group == "oidc" %}
 ```yaml
 config:
-  cluster_cache_strategy: redis
-  cluster_cache_redis:
+  session_storage: redis
+  redis:
     host: $INSTANCE_ADDRESS
     username: $INSTANCE_USERNAME
     port: 10000
@@ -304,8 +304,8 @@ config:
 {% elsif include.redis_group == "oidc" %}
 ```yaml
 config:
-  cluster_cache_strategy: redis
-  cluster_cache_redis:
+  session_storage: redis
+  redis:
     cluster_nodes:
     - ip: $CLUSTER_ADDRESS
       port: 10000
@@ -380,8 +380,8 @@ config:
 {% elsif include.redis_group == "oidc" %}
 ```yaml
 config:
-  cluster_cache_strategy: redis
-  cluster_cache_redis:
+  session_storage: redis
+  redis:
     host: $INSTANCE_ADDRESS
     port: 6379
     cloud_authentication:
