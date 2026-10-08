@@ -88,6 +88,48 @@ AI Policies are managed through:
 
 For configuration examples and step-by-step setup instructions, see [Set up a global AI Policy](#set-up-a-global-ai-policy).
 
+## How AI Policies run
+
+When a request reaches {{site.ai_gateway}}, it processes the request in the following order:
+
+1. The [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) authenticates the caller. AI Policies don't perform authentication.
+1. {{site.ai_gateway}} identifies the AI Consumer and its AI Consumer Groups.
+1. {{site.ai_gateway}} selects the AI Model, AI Agent, or AI MCP Server.
+1. {{site.ai_gateway}} collects the AI Policies that apply to the request, based on [scope](#ai-policy-scopes), and resolves any [scope conflicts](#scope-precedence).
+1. {{site.ai_gateway}} runs the AI Policies in [priority](#ai-policy-priority) order. Before each AI Policy runs, {{site.ai_gateway}} evaluates its [condition](#conditional-ai-policy-execution), and skips the AI Policy if the condition doesn't match.
+
+The following diagram shows where AI Policies fit in the request pipeline:
+
+{% mermaid %}
+sequenceDiagram
+    actor Client
+    participant AIGW as {{site.ai_gateway}}
+    participant Auth as AI Auth Strategy
+    participant Policy as AI Policy
+    participant Entity as AI Model, AI Agent,<br/>or AI MCP Server
+
+    Client->>AIGW: Request
+    AIGW->>Auth: Authenticate the caller
+    Auth-->>AIGW: AI Consumer and AI Consumer Groups
+    AIGW->>AIGW: Select the entity
+    AIGW->>AIGW: Collect AI Policies by scope<br/>and resolve conflicts
+    loop Each AI Policy, in priority order
+        AIGW->>AIGW: Evaluate the condition
+        alt No condition, or the condition matches
+            AIGW->>Policy: Run
+            Policy-->>AIGW: Result
+        else The condition doesn't match
+            AIGW->>AIGW: Skip the AI Policy
+        end
+    end
+    AIGW->>Entity: Proxy the request
+    Entity-->>AIGW: Response
+    AIGW-->>Client: Response
+{% endmermaid %}
+
+Because authentication happens first, AI Policies scoped to an AI Consumer or AI Consumer Group only apply to authenticated requests.
+An AI Policy runs at most once per request.
+
 ## AI Policy scopes
 
 An AI Policy applies wherever you attach it.
@@ -119,6 +161,17 @@ From most to least specific, the order is:
 
 For example, if a global AI Rate Limiting Advanced AI Policy and one scoped to an AI Model both apply to a request, only the Model-scoped AI Policy runs.
 Requests to other Models still use the global AI Policy.
+
+{:.info}
+> **Precedence for AI Consumer Groups**
+>
+> An AI Consumer can belong to several AI Consumer Groups, and more than one of those groups can have an AI Policy of the same type.
+> In that case, only one of those AI Policies runs.
+> {{site.ai_gateway}} sorts the AI Consumer's groups by name and uses the AI Policy from the first group in that order that has one.
+> For example, if an AI Consumer is in the groups `alpha` and `beta`, and both have an AI Prompt Guard AI Policy, only the AI Policy on `alpha` runs.
+> The order in which you add the AI Consumer to the groups doesn't change the result.
+>
+> The specific rules that govern this behavior are not defined and are subject to change in future releases.
 
 Attach at most one AI Policy of a given type to the same entity.
 For details, see [the FAQ](#faqs).
