@@ -36,6 +36,37 @@ RSpec.describe 'sections/prerequisites.html' do
       )
       expect(html).to have_no_css('#prerequisites')
     end
+
+    it 'renders no visible accordion content, including the Kong Konnect item' do
+      expect(html).to have_no_css('.prerequisites .accordion-item')
+      expect(rendered).not_to include('Kong Konnect')
+    end
+  end
+
+  context 'a how-to that skips the product include but declares operator konnect auth' do
+    let(:page_data) do
+      {
+        'prereqs' => { 'skip_product' => true, 'operator' => { 'konnect' => { 'auth' => true } } },
+        'tools' => [],
+        'products' => ['operator'],
+        'works_on' => ['konnect'],
+        'output_format' => 'html'
+      }
+    end
+
+    it 'renders the visible Prerequisites section with the Kong Konnect item' do
+      expect(html).to have_css('#prerequisites')
+      expect(html).to have_css('.prerequisites .accordion-item', text: 'Kong Konnect')
+      expect(html).to have_css(
+        '.prerequisites > [data-deployment-topology="konnect"][data-test-setup="operator"]'
+      )
+    end
+
+    it 'renders the auth creation accordion item' do
+      expect(html).to have_css(
+        '.prerequisites .accordion-item', text: 'Create a KonnectAPIAuthConfiguration resource'
+      )
+    end
   end
 
   context 'a how-to with visible prereqs' do

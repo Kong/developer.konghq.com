@@ -207,6 +207,26 @@ RSpec.describe 'prereqs component output parity' do
     end
   end
 
+  context 'an operator page that skips the product include but declares konnect auth' do
+    let(:page_data) do
+      {
+        'prereqs' => { 'skip_product' => true, 'operator' => { 'konnect' => { 'auth' => true } } },
+        'tools' => [],
+        'products' => ['operator'],
+        'works_on' => ['konnect']
+      }
+    end
+
+    it 'renders the Kong Konnect item in both output formats' do
+      aggregate_failures do
+        %w[html markdown].each do |format|
+          output = render_component(format, page_data)
+          expect(output).to include('Kong Konnect')
+        end
+      end
+    end
+  end
+
   context 'an operator page without a Gateway API prerequisite' do
     let(:page_data) do
       {
