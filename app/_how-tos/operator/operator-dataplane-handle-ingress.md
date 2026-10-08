@@ -105,7 +105,7 @@ kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n
 
 ## Create the Ingress
 
-Create an `Ingress` resource that points to the echo service and specify the `spec.ingressClass` configured in the [`ControlPlane` resource](#create-the-controlplane) in the `spec;ingressClassName` field:
+Create an `Ingress` resource that points to the echo service and specify the `spec.ingressClass` configured in the [`ControlPlane` resource](#create-the-controlplane) in the `spec.ingressClassName` field:
 
 ```yaml
 echo '
