@@ -38,7 +38,11 @@ module Jekyll
       end
 
       def konnect_auth_only?
-        return false if prereqs['skip_product']
+        # The Kong Konnect item belongs to the visible Prerequisites section,
+        # so it renders only when some other prereq makes that section render:
+        # a skip_product page whose prereqs are only the hidden test markers
+        # renders no visible content at all.
+        return false if prereqs['skip_product'] && !any?
 
         @page.data['works_on']&.include?('konnect') && render_works_on? &&
           !(@page.data['products']&.include?('gateway') || @page.data['products']&.include?('ai-gateway'))

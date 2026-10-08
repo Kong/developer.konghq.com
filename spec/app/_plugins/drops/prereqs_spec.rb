@@ -93,12 +93,23 @@ RSpec.describe Jekyll::Drops::Prereqs do
       end
 
       context 'when render_works_on? is true' do
-        context 'when skip_product is true' do
+        context 'when skip_product is true and no other prereq renders a section' do
           let(:page_data) do
             super().merge('prereqs' => { 'skip_product' => true }, 'products' => ['operator'])
           end
 
           it { expect(drop.konnect_auth_only?).to be(false) }
+        end
+
+        context 'when skip_product is true and another prereq renders the section' do
+          let(:page_data) do
+            super().merge(
+              'prereqs' => { 'skip_product' => true, 'operator' => { 'konnect' => { 'auth' => true } } },
+              'products' => ['operator']
+            )
+          end
+
+          it { expect(drop.konnect_auth_only?).to be(true) }
         end
 
         context 'when products include gateway' do
