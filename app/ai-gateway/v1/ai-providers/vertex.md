@@ -99,36 +99,6 @@ variables:
 > - [AI Proxy examples](/plugins/ai-proxy/examples/)
 > - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)
 
-<!-- TODO(AI-174): Confirm the {{site.base_gateway}} version that ships the AI Gateway 2.3 Gemini changes in AI Proxy and AI Proxy Advanced. The `new_in 3.17` tags on this page are placeholders. -->
-
-### Derived API endpoint
-
-{% new_in 3.17 %} `model.options.gemini.api_endpoint` is optional. When it's unset, {{site.ai_gateway}} derives the Vertex AI hostname from `model.options.gemini.location_id`: `{location_id}-aiplatform.googleapis.com`, or `aiplatform.googleapis.com` when `location_id` is `global`. Set `api_endpoint` explicitly to use a different hostname, such as a Private Service Connect endpoint. An explicit value always takes precedence over the derived one.
-
-<!-- TODO(AI-174 OQ5): Confirm the derivation rule for `global` and for non-standard regions. -->
-
-### Select Gemini or Vertex AI
-
-{% new_in 3.17 %} Gemini and Vertex AI both use `model.provider: gemini`. {{site.ai_gateway}} decides where to send each request by checking the following, in order:
-
-1. **Inbound request path.** A Vertex AI path that contains `projects/{project_id}/locations/{location}` routes to Vertex AI. A Gemini API path, such as `/v1beta/models/{model_name}:generateContent`, routes to the Gemini API.
-1. **Credential type.** If the path doesn't identify a target, an API key (`auth.param_name` or `auth.header_name`) routes to the Gemini API, and GCP credentials (`auth.gcp_use_service_account`) route to Vertex AI.
-
-If you set Vertex AI fields (`project_id`, `location_id`, `api_endpoint`, or `endpoint_id`) outside `model.options.gemini`, {{site.ai_gateway}} reads them as if they were set in `model.options.gemini`.
-
-<!-- TODO(AI-174 OQ1): Confirm precedence when the request path and credential type disagree, and when either conflicts with explicitly configured `model.options.gemini` fields. Confirm the exact locations of "misplaced" Vertex fields that get relocated (AI-106) and list them here. -->
-
-## Vertex AI Predict endpoints
-
-{% new_in 3.17 %} To call a Model Garden model that you've deployed to a Vertex AI endpoint, such as TranslateGemma, set `model.options.gemini.endpoint_id` to the endpoint ID along with `project_id` and `location_id`. {{site.ai_gateway}} sends the request to the Vertex AI [`predict` method](https://cloud.google.com/vertex-ai/docs/reference/rest/v1/projects.locations.endpoints/predict) at `/v1/projects/{project_id}/locations/{location}/endpoints/{endpoint_id}:predict`. The publisher model form, `/v1/projects/{project_id}/locations/{location}/publishers/{publisher}/models/{model_name}:predict`, is also supported.
-
-{{site.ai_gateway}} forwards the `instances` and `parameters` in the request body to Vertex AI unchanged, so the body must match the input schema of the deployed model.
-
-<!-- TODO(AI-174 OQ4): Confirm the `route_type` for Predict (a new value, or `preserve` with path detection) and add an `entity_example` for TranslateGemma using that route type. -->
-<!-- TODO(AI-174 OQ2): State which analytics, cost tracking, and guardrail plugins apply to Predict traffic. -->
-
-For thought signature handling on the OpenAI-compatible route, see [Gemini provider](/ai-gateway/v1/ai-providers/gemini/#thought-signatures-on-the-openai-compatible-route).
-
 ## Authentication with GCP IAM
 
 Using {{ provider.name }} requires credentials from Google Cloud Platform (GCP).
