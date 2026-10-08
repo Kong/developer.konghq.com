@@ -11,7 +11,7 @@ metadata:
 spec:
   type: token
   token: '$KONNECT_TOKEN'
-  serverURL: us.api.konghq.com
+  serverURL: us.api.{{ site.konnect_domain }}
 {% endkonnect_crd %}
 {% endcapture %}
 <!-- vale on -->
