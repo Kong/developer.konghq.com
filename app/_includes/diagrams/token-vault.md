@@ -17,7 +17,7 @@ gw-->>cc: 401 www-authenticate → resource metadata pointing at Okta
 rect rgb(235,242,235)
 Note over cc,okta: Standard user authentication against the corp IdP
 cc->>okta: Browser OAuth flow
-okta-->>cc: access token (iss = Okta, sub = Lucas)
+okta-->>cc: access token (iss = Okta, sub = user)
 end
 
 
@@ -26,23 +26,23 @@ cc->>gw: Retry tool call, presenting the Okta subject token
 
 rect rgb(245,240,235)
 Note over gw,vault: Token exchange — vault verifies the subject token itself
-gw->>vault: POST /{dir}/vault/token<br/>client_id=gateway-123, client_auth=mtls,<br/>grant_type=token-exchange, subject_token={okta-token},<br/>audience={provider_id}, scope=repo
+gw->>vault: POST /{dir}/v2/vault/token (mTLS)<br/>client_id={control-plane-id},<br/>grant_type=token-exchange, subject_token={okta-token},<br/>resource={provider name or ID}
 vault->>okta: (cached) GET /jwks.json
-vault->>vault: Verify signature + issuer against directory's vault_trusted_idps config
-vault->>vault: Extract (iss, sub) from the verified token
+vault->>vault: Verify signature + issuer against the directory's trusted IdP
+vault->>vault: Resolve (iss, sub) to a principal (JIT-provisioned if new)
 
 
-alt No credential for (provider_id, iss, sub)
-vault-->>gw: 401 { error: invalid_grant, enrollment_url }
+alt No credential for (provider, principal)
+vault-->>gw: 400 { error: x_kong_enrollment_required, x_kong_enrollment_url }
 gw-->>cc: Surface enrollment_url (MCP elicitation)
 cc-->>user: "Connect your GitHub account: {enrollment_url}"
 user->>gh: Open enrollment_url → OAuth consent
 gh-->>vault: GET /callback?code&state
 vault->>gh: Exchange code at GitHub's token endpoint
-vault->>vault: Store credential keyed by (provider_id, iss, sub)
+vault->>vault: Store encrypted credential keyed by (provider, principal)
 user->>cc: Retry original request
 cc->>gw: Retry tool call
-gw->>vault: POST /{dir}/vault/token (same as above)
+gw->>vault: POST /{dir}/v2/vault/token (same as above)
 end
 
 
