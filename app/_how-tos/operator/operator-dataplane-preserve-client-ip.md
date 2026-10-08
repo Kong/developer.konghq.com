@@ -52,6 +52,7 @@ spec:
           externalTrafficPolicy: Local
           type: LoadBalancer' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ### Configure the Gateway
 
@@ -83,14 +84,25 @@ spec:
     protocol: HTTP
     port: 80' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Validate
+
+1. Wait for the Gateway to get an address. The operator creates the generated Service with it:
+
+    ```bash
+    kubectl wait gateway/kong-external-traffic -n kong \
+      --for=jsonpath='{.status.addresses[0].value}' \
+      --timeout=5m
+    ```
+    {: data-test-step="block" }
 
 1.  Check the generated Service for the `externalTrafficPolicy` setting:
 
     ```bash
     kubectl get service -n kong -l gateway-operator.konghq.com/dataplane-service-type=ingress -o jsonpath='{.items[0].spec.externalTrafficPolicy}'
     ```
+    {: data-test-step="block" }
 
-    The output should be `Local`.
+    The output should be `Local`. 
 

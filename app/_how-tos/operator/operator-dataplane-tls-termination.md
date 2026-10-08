@@ -42,6 +42,7 @@ Configuring TLS termination at the Gateway level allows {{ site.operator_product
    ```sh
    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=demo.example.com"
    ```
+   {: data-test-step="block" }
 
 1. Create a Kubernetes secret containing the certificate and key:   
    ```sh
@@ -52,9 +53,10 @@ Configuring TLS termination at the Gateway level allows {{ site.operator_product
      namespace: kong
    type: kubernetes.io/tls
    data:
-     tls.crt: "$(cat tls.crt | base64)"
-     tls.key: "$(cat tls.key | base64)"" | kubectl apply -f - 
+     tls.crt: "$(cat tls.crt | base64 | tr -d '\n')"
+     tls.key: "$(cat tls.key | base64 | tr -d '\n')"" | kubectl apply -f - 
    ```
+   {: data-test-step="block" }
 
 ## Configure the Gateway
 
@@ -113,6 +115,7 @@ spec:
             kind: Secret
             name: my-certificate' | kubectl apply -f - 
 ```
+{: data-test-step="block" }
 
 ## Label the Secret
 
@@ -121,6 +124,7 @@ spec:
 ```bash
 kubectl label secret my-certificate -n kong konghq.com/secret="true"
 ```
+{: data-test-step="block" }
 
 For more information about how {{ site.operator_product_name }} handles secrets, see the [Secrets reference](/operator/reference/secrets).
 
@@ -132,6 +136,7 @@ Run the following command to create a sample echo Service:
 ```bash
 kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n kong
 ```
+{: data-test-step="block" }
 
 ## Create a Route
 
@@ -157,8 +162,9 @@ spec:
       backendRefs:
         - name: echo
           kind: Service
-          port: 1027' | kubectl apply -f - 
+          port: 1027' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Validate
 
@@ -167,17 +173,29 @@ spec:
     ```bash
     kubectl get gateway kong-tls-gateway -n kong -o jsonpath='{.status.listeners}'
     ```
+    {: data-test-step="block" }
+
+1. Wait for the Gateway to get an address:
+
+    ```bash
+    kubectl wait gateway/kong-tls-gateway -n kong \
+      --for=jsonpath='{.status.addresses[0].value}' \
+      --timeout=5m
+    ```
+    {: data-test-step="block" }
 
 1. Get the Gateway's external IP:
-   
-   ```bash
-   export PROXY_IP=$(kubectl get gateway kong-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
-   ```
+
+    ```bash
+    export PROXY_IP=$(kubectl get gateway kong-tls-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
+    ```
+    {: data-test-step="block" }
 
 1.  Test the connection:
 
     ```bash
-    curl -ivk --resolve example.localdomain.dev:443:$PROXY_IP https://example.localdomain.dev/echo
+    curl -ivk --resolve demo.example.com:443:$PROXY_IP https://demo.example.com/echo
     ```
+    {: data-test-step="block" data-test-retry-count="6" }
 
     You should get TLS handshake and a 200 response.
