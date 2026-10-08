@@ -513,10 +513,27 @@ For details on enabling this and how {{site.dev_portal}} settings affect what an
 
 When you upload a spec for your API to {{site.dev_portal}}, you can use the **Try it!** feature to allow developers to try your API right from {{site.dev_portal}}. **Try it!** enables developers to add their authentication credentials, path parameters, and request body from the spec renderer in {{site.dev_portal}} and send the live request with their configuration.
 
-The **Try it!** feature is enabled by default for published APIs. You can disable it by sending a PATCH request to the [`/v3/portals/{portalId}/customization` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-customization). 
+The **Try it!** feature is enabled by default for published APIs. You can disable it for the entire {{site.dev_portal}} by sending a PATCH request to the [`/v3/portals/{portalId}/customization` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-customization). If the {{site.dev_portal}}-wide setting is disabled, **Try it!** is unavailable for every API published to that {{site.dev_portal}}, even if an individual API publication is configured to allow it.
 
+If **Try it!** is enabled for the {{site.dev_portal}}, you can also disable it for a specific API publication, or restrict which developers can use it, without changing the {{site.dev_portal}}-wide setting.
 
-You may need to enable the CORS plugin for this feature to work. Use the table below to determine the appropriate CORS configuration based on the Routes associated with your APIs:
+To configure **Try it!** on a per-API basis, do the following:
+
+1. In the {{site.konnect_short_name}} sidebar, click **Dev Portal > Portals**.
+1. Click your {{site.dev_portal}}.
+1. Click the **Published APIs** tab.
+1. Find the API, click its action menu, and click **Edit publication**.
+1. Click **Advanced settings** to expand it.
+1. Select or deselect the **Enable the ability to send test requests in Portal** checkbox to turn **Try it!** on or off for this API.
+1. From the **Who can send test request** dropdown menu, select who can send test requests for this API:
+    * **All**: Anybody can send test requests.
+    * **Authenticated**: Only authenticated {{site.dev_portal}} developers can see and send test requests.
+    * **Registered**: Only developers with at least one application registered with this API can send test requests.
+1. Click **Save**.
+
+#### CORS configuration for Try it!
+
+You may need to enable the CORS plugin for **Try it!** to work. Use the following table to determine the appropriate CORS configuration based on the Routes associated with your APIs:
 
 {% feature_table %} 
 item_title: Use case
