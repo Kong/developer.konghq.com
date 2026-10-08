@@ -105,22 +105,4 @@ variables:
 > - [AI Proxy examples](/plugins/ai-proxy/examples/)
 > - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)
 
-<!-- TODO(AI-174): Confirm the {{site.base_gateway}} version that ships the AI Gateway 2.3 Gemini changes in AI Proxy and AI Proxy Advanced. The `new_in 3.17` tags on this page are placeholders. -->
-
-## Thought signatures on the OpenAI-compatible route
-
-{% new_in 3.17 %} Gemini thinking models attach an opaque `thoughtSignature` to response parts, and expect it back on the matching part in the next turn to keep reasoning context across multi-turn conversations and function calls. When you use an OpenAI-compatible `route_type` such as `llm/v1/chat` with `model.provider: gemini`, {{site.ai_gateway}} captures each `thoughtSignature` from the Gemini or Vertex AI response, returns it to the client in the OpenAI-compatible response, and re-attaches it to the matching part when it translates the next request.
-
-To keep signatures intact, send the assistant message from the previous response back unchanged in the conversation history, including any tool calls. {{site.ai_gateway}} doesn't inspect or modify signature contents and doesn't log them at default log levels.
-
-<!-- TODO(AI-174 OQ3): Document where the signature sits in the OpenAI-compatible payload, add a request/response example, and state whether streaming responses are supported. -->
-<!-- TODO(AI-174 OQ6): Confirm which route types carry signatures (`llm/v1/chat` and `llm/v1/responses` are expected). -->
-
-## Gemini Interactions API
-
-{% new_in 3.17 %} {{site.ai_gateway}} forwards requests for the [Gemini Interactions API](https://ai.google.dev/gemini-api/docs/interactions) to Gemini without translating the request or response body. The plugin's `auth` settings still authenticate the upstream request. The Interactions API is available only in the native Gemini format; {{site.ai_gateway}} doesn't translate it to or from the OpenAI or Anthropic formats.
-
-<!-- TODO(AI-174 OQ4): Confirm the `route_type` for the Interactions API (a new value, or `preserve` with path detection) and add an `entity_example`. -->
-<!-- TODO(AI-174 OQ2): State which analytics, cost tracking, and guardrail plugins apply to Interactions API traffic. -->
-
 {% include plugins/ai-proxy/providers/how-tos.md %}
