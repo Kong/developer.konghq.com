@@ -91,6 +91,8 @@ related_resources:
 
 Integrating {{ site.operator_product_name }} with [cert-manager](https://cert-manager.io/) allows you to automatically provision and rotate TLS certificates for your Gateway listeners. This integration follows the standard Kubernetes Gateway API pattern.
 
+{% include /k8s/kong-namespace.md %}
+
 When you annotate a `Gateway` resource with a cert-manager issuer, cert-manager automatically creates a `Certificate` and a corresponding `Secret` containing the TLS key pair. The Operator then configures the managed data planes to use this secret for TLS termination.
 
 Renewals are handled the same way. When cert-manager writes a new key pair to the Secret, {{ site.operator_product_name }} reconciles it and the data planes start serving the new certificate without a reload and without a pod restart. For more information, see [When certificates are loaded and reloaded](/gateway/ssl-certificates/#when-certificates-are-loaded-and-reloaded).
@@ -132,6 +134,7 @@ content: |
               - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
                 name: proxy' | kubectl apply -f -
   ```
+  {: data-test-step="block" }
 indent: 3
 {% endkonnect %}
 
@@ -153,6 +156,7 @@ content: |
               - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
                 name: proxy' | kubectl apply -f -
   ```
+  {: data-test-step="block" }
 indent: 3
 {% endon_prem %}
 
@@ -209,6 +213,7 @@ indent: 3
        labels:
          konghq.com/secret: "true"' | kubectl apply -f -
    ```
+   {: data-test-step="block" }
 
 ## Create an echo Service
 
@@ -217,12 +222,14 @@ indent: 3
    ```bash
    kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n kong
    ```
+   {: data-test-step="block" }
 
 1. Wait for it to be ready:
 
    ```bash
    kubectl wait --for=condition=ready pod -l app=echo -n kong --timeout=120s
    ```
+   {: data-test-step="block" }
 
 ## Create a Route
 
@@ -248,6 +255,7 @@ spec:
           kind: Service
           port: 1027' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Validate
 
@@ -259,12 +267,14 @@ Confirm that the certificate is provisioned and served, then that a renewal reac
    kubectl get certificate -n kong
    kubectl get secret example-tls-secret -n kong
    ```
+   {: data-test-step="block" }
 
 1. Wait for the Gateway to be programmed, so that it has an address to connect to:
 
    ```bash
    kubectl wait --for=condition=Programmed gateway/kong-gateway -n kong --timeout=180s
    ```
+   {: data-test-step="block" }
 
 1. Get the Gateway's external IP:
 
@@ -272,12 +282,14 @@ Confirm that the certificate is provisioned and served, then that a renewal reac
    export PROXY_IP=$(kubectl get gateway kong-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
    echo $PROXY_IP
    ```
+   {: data-test-step="block" }
 
 1. Test the connection:
 
    ```bash
    curl -ivk --resolve example.localdomain.dev:443:$PROXY_IP https://example.localdomain.dev/echo
    ```
+   {: data-test-step="block" }
 
    You should get a TLS handshake and a 200 response.
 
@@ -287,6 +299,7 @@ Confirm that the certificate is provisioned and served, then that a renewal reac
    echo "" | openssl s_client -connect $PROXY_IP:443 -servername example.localdomain.dev 2>/dev/null \
      | openssl x509 -noout -serial -dates -ext subjectAltName
    ```
+   {: data-test-step="block" }
 
    The output should look like this:
 
@@ -304,6 +317,7 @@ Confirm that the certificate is provisioned and served, then that a renewal reac
    ```bash
    kubectl get pods -n kong
    ```
+   {: data-test-step="block" }
 
 1. Force cert-manager to issue a new certificate ahead of schedule by deleting the Secret. cert-manager detects that the `Certificate` no longer has a valid Secret and reissues it immediately:
 
@@ -311,6 +325,7 @@ Confirm that the certificate is provisioned and served, then that a renewal reac
    kubectl delete secret example-tls-secret -n kong
    kubectl wait --for=condition=Ready certificate/example-tls-certificate -n kong --timeout=90s
    ```
+   {: data-test-step="block" }
 
 1. Query the proxy again. The serial number and the validity dates should have changed:
 
@@ -318,12 +333,14 @@ Confirm that the certificate is provisioned and served, then that a renewal reac
    echo "" | openssl s_client -connect $PROXY_IP:443 -servername example.localdomain.dev 2>/dev/null \
      | openssl x509 -noout -serial -dates -ext subjectAltName
    ```
+   {: data-test-step="block" }
 
 1. Confirm that no data plane pod restarted:
 
    ```bash
    kubectl get pods -n kong
    ```
+   {: data-test-step="block" }
 
    The value of the `RESTARTS` column should still be `0`.
 
@@ -332,5 +349,6 @@ Confirm that the certificate is provisioned and served, then that a renewal reac
    ```bash
    curl -sk --resolve example.localdomain.dev:443:$PROXY_IP https://example.localdomain.dev/echo -o /dev/null -w "%{http_code}\n"
    ```
+   {: data-test-step="block" }
 
    The response should be `200`.
