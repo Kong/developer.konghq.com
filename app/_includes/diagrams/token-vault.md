@@ -1,3 +1,4 @@
+<!--vale off-->
 {% mermaid %}
 sequenceDiagram
 autonumber
@@ -55,3 +56,4 @@ gh-->>gw: Open pull requests
 gw-->>cc: Result
 cc-->>user: "Here are your open pull requests…"
 {% endmermaid %}
+<!--vale on-->
