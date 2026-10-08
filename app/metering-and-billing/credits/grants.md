@@ -67,11 +67,11 @@ The credits are available as soon as the grant takes effect.
 They don't wait for the invoice to be paid.
 The credit amount and the purchase amount are related but not necessarily identical.
 
-For example, if a customer receives 100 credits with a per-unit cost of 0.50 USD, the invoice amount is 50 USD.
+For example, if a customer receives 100 credits with a cost basis of 0.50 USD per credit, the invoice amount is 50 USD.
 
 ```text
 credit amount:       100 credits
-per-unit cost:      0.50 USD
+cost basis rate:    0.50 USD
 purchase amount:   50.00 USD
 ```
 {:.no-copy-code}
@@ -167,7 +167,7 @@ For details on how feature restrictions affect balance and transaction queries, 
 ## Purchase and tax context
 
 Purchase terms describe how the credits are funded.
-They define the purchase currency and the per-unit cost used to calculate the purchase amount.
+They define the purchase currency and the cost basis used to calculate the purchase amount.
 
 The purchase currency must be a fiat currency.
 For a paid fiat-currency grant, it must be the same as the grant currency.

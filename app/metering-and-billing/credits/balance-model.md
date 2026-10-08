@@ -42,7 +42,7 @@ A credit balance read returns three values:
 
 * **Settled balance** is the balance from committed ledger movements. It is the durable record of what has happened.
 * **Live balance** starts from the settled balance and accounts for open charges that may still consume credits.
-* **Pending balance** is credit that has been granted but doesn't count toward the settled balance yet, such as a grant with a future effective time.
+* **Pending balance** is the total of granted credits that don't count toward the settled balance yet, such as grants with a future effective time. It's a sum of grants, not a spendable balance.
 
 ## Settled balance
 
@@ -56,7 +56,8 @@ Settled balance comes from committed credit movements. If a customer receives 10
 ```
 {:.no-copy-code}
 
-If you query a balance at a timestamp, {{site.metering_and_billing}} includes movements visible at or before that timestamp, because a settled balance references a point in time.
+If you query a balance at a timestamp, {{site.metering_and_billing}} includes the movements booked at or before that timestamp, because a settled balance references a point in time.
+The booking time is when a movement takes effect on the balance, which isn't always when it's recorded.
 Future movements, including future expiration, don't affect an earlier balance.
 
 Example:
@@ -87,7 +88,11 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-Settled balance is the right model for audit and history: the same timestamp always reflects the same visible ledger state.
+Movements can be booked with a time in the past.
+For example, usage-based consumption is booked at the end of the service period, but it's recorded later, after late usage for that period has been collected.
+So if you query the same past timestamp again later, the settled balance can be different. This is expected: the balance reflects every movement booked at or before that time, including movements recorded since your earlier query.
+
+Settled balance is the right model for audit and history, because every change to it is a recorded movement.
 
 The settled balance can be negative.
 This happens when `credit_only` usage exceeds the available credits, as described in [Negative balances](/metering-and-billing/credits/consumption-and-expiration/#negative-balances).
@@ -122,15 +127,19 @@ This distinction matters when you display balances:
 
 ## Pending balance
 
-The pending balance is credit that has been granted but doesn't count toward the settled balance yet.
+The pending balance is the total amount of granted credits that don't count toward the settled balance yet.
+It's a sum of grants in a pending state, not a balance you can spend, and it respects the same filters as the rest of the balance read, such as a feature filter.
 This includes grants that aren't written to the ledger yet, and grants written to the ledger with a future booked time, such as a grant with a future effective time.
 When a pending grant takes effect, its amount moves into the settled balance.
 
 ## Currency
 
 Credit balances are currency-specific. 
-For example, a USD grant increases the customer's USD credit balance, while a EUR charge consumes from the customer's EUR credit balance.
-Balances can be held in fiat currencies or in [custom currencies](/metering-and-billing/currencies/).
+A customer's fiat credits are held in the customer's currency, for example USD, and the customer can also hold balances in [custom currencies](/metering-and-billing/currencies/).
+A USD grant increases the customer's USD credit balance, and a charge in a custom currency consumes from the balance in that custom currency.
+
+Charges are only ever in the customer's currency or in a custom currency, because a subscription's invoice currency must match the customer's currency.
+The API accepts a grant in another fiat currency, but no charge can consume it.
 
 One case crosses currencies: when a `credit_then_invoice` charge in a custom currency isn't fully covered, the remainder is converted into the invoice's fiat currency, and the customer's credits in that fiat currency can cover part of it.
 
