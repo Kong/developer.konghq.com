@@ -38,7 +38,7 @@ dataplane:
   spec:
     containers:
       - name: proxy
-        image: 'kong/kong-gateway:3.9'
+        image: 'kong/kong-gateway:3.10'
 {% endoperator_podtemplatespec_example %}
 <!--vale on-->
 
@@ -53,6 +53,6 @@ name_selector: |
   .items[].metadata.name | select(contains("dataplane-example"))
 path: |
   .spec.containers[] | select(.name == "proxy") | .image
-expected: "kong/kong-gateway:3.9"
+expected: "kong/kong-gateway:3.10"
 {% endvalidation %}
 <!--vale on-->
