@@ -201,6 +201,12 @@ async function extractSteps(page, config, product) {
   const steps = await page.locator("[data-test-step]").all();
 
   for (const elem of steps) {
+    // Blocks inside the FAQ section are examples for readers, not test steps:
+    // their variables are absent from the test environment.
+    if (await elem.evaluate((el) => el.closest("#faqs") !== null)) {
+      continue;
+    }
+
     await revealHiddenTabPanel(elem);
     if (await elem.isVisible()) {
       let step;
