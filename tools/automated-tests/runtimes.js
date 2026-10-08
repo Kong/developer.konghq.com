@@ -119,16 +119,23 @@ export async function runtimeEnvironment(runtimeConfig) {
   return environment;
 }
 
+export function licenseRequired(deploymentModel, product) {
+  return !(deploymentModel === "konnect" && product === "operator");
+}
+
 export async function setupRuntime(runtimeConfig, docker) {
   const { deploymentModel, product } = runtimeConfig;
   await fetchImage(docker, runtimeConfig.imageName, log);
 
   const environment = await runtimeEnvironment(runtimeConfig);
-  // Add gateway license
-  if (!process.env.KONG_LICENSE_DATA) {
-    throw new Error("Missing env variable KONG_LICENSE_DATA");
+  // Add gateway license. Konnect operator runs only install the operator,
+  // which talks to Konnect with a token, so no license is needed there.
+  if (licenseRequired(deploymentModel, product)) {
+    if (!process.env.KONG_LICENSE_DATA) {
+      throw new Error("Missing env variable KONG_LICENSE_DATA");
+    }
+    environment["KONG_LICENSE_DATA"] = process.env.KONG_LICENSE_DATA;
   }
-  environment["KONG_LICENSE_DATA"] = process.env.KONG_LICENSE_DATA;
 
   if (runtimeConfig.version) {
     log(`Setting up ${deploymentModel}/${product} version: ${runtimeConfig.version}...`);
