@@ -931,6 +931,39 @@ The base URL is `{{ provider.url_patterns.first }}`.{% if has_capability_path %}
 {{site.ai_gateway}} uses this URL automatically. You only need to configure a URL if you're using a self-hosted or {{ provider.name }}-compatible endpoint, in which case set the `upstream_url` option in your [AI Model](/ai-gateway/entities/ai-model/) configuration.
 {% endif %}
 
+{% assign general_limitations = provider.limitations.general %}
+{% assign compare_general_limitations = compare_provider.limitations.general %}
+{% if general_limitations.size > 0 or compare_general_limitations.size > 0 %}
+
+## {{ provider.name }} limitations
+
+{{ provider.name }} has the following limitations in {{site.ai_gateway}}:
+
+{% if compare_provider %}
+**{{ include.variant_label }}:**
+
+{% for limitation in general_limitations %}
+- {{ limitation }}
+{% endfor %}
+{% if general_limitations.size == 0 or general_limitations == nil %}
+- None.
+{% endif %}
+
+**{{ include.compare_variant_label }}:**
+
+{% for limitation in compare_general_limitations %}
+- {{ limitation }}
+{% endfor %}
+{% if compare_general_limitations.size == 0 or compare_general_limitations == nil %}
+- None.
+{% endif %}
+{% else %}
+{% for limitation in general_limitations %}
+- {{ limitation }}
+{% endfor %}
+{% endif %}
+{% endif %}
+
 {% else %}
 Provider "{{ include.provider_name }}" not found.
 {% endif %}

@@ -395,6 +395,9 @@ providers:
         model_example: ''
         min_version: ''
     limitations:
+      general:
+        - "The Baseten provider proxies chat completions only. It doesn't support Baseten's Anthropic-compatible `/v1/messages` endpoint, embeddings, or the `/predict` and async inference APIs."
+        - "You can't set Baseten-specific request parameters, such as `continuous_usage_stats` and `grammar`, in the [AI Model](/ai-gateway/entities/ai-model/) configuration."
       provider_specific: []
       statistics_logging: []
 
