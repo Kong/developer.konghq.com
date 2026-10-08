@@ -152,7 +152,7 @@ The directory is also the vault's encryption boundary. After enabling the vault 
 
 ## Trusted IdP
 
-The trusted IdP is what tells the Token Vault whose tokens to trust. A {{site.identity}} admin configures a trusted IdP (such as Okta) on the directory using the `issuer_url`, and optionally a `jwks_uri` ({{site.identity}} can automatically discover the `jwks_uri` from the IdP). Each directory supports one trusted IdP, and the Token Vault only accepts its tokens when `vault_access_enabled` is set to `true`.
+The trusted IdP is what tells the Token Vault whose tokens to trust. A {{site.identity}} admin configures a trusted IdP (such as Okta) on the directory using the `issuer_url`, and optionally a `jwks_uri` ({{site.identity}} can automatically discover the `jwks_uri` from the IdP). Each directory supports one trusted IdP, and the Token Vault only accepts its tokens when `vault_access_enabled` is set to `true`. The trusted IdP can be your corporate IdP, or the {{site.identity}} authorization server, for example when clients authenticate with an Identity Assertion JWT Authorization Grant (ID-JAG) issued by your corporate IdP.
 
 The Token Vault acts as a verifier, not a caller. It never asks the IdP about a user directly. Instead, when it receives a token, it:
 
@@ -268,10 +268,6 @@ A credential's value never comes back through APIs. While read endpoints return 
 
 ### Auditing
 
-<!--
-FLAG: sliver main emits no audit log events for the vault (only internal metrics and traces).
-Compliance audit records (JTBD-56, via Konnect audit logs / SIEM) are M1 scope. Confirm with eng/PM.
--->
 
 Every credential lookup gets logged and emits a structured record covering successful outcomes (like credential releases or required enrollments). The audit trail captures the full pattern of who's asking for what. The following table lists what's logged and what isn't:
 
@@ -355,41 +351,6 @@ For providers that support dynamic client registration (DCR), such as `atlassian
 For a shared authorization code provider, an admin enrolls once on behalf of the directory. Send a `POST` request to the `/v2/directories/{directoryId}/vault/providers/{providerId}/credentials` endpoint without a `secret`. The Token Vault creates a `pending` credential and returns an `enrollment_url`. Open that URL and complete the provider's OAuth consent: the credential becomes `active` and the Token Vault releases it to any authorized caller.
 
 Each `GET` on the credential returns a fresh `enrollment_url`, so you can re-enroll the shared account at any time.
-
-## ID-JAG and Enterprise Managed Authorization
-
-When an agent needs access to a third-party service (like GitHub), a human clicks through an OAuth consent screen once, and the Token Vault handles everything from there. However, there is a more automated way for corporate IdPs (like Okta) to directly vouch for an agent's access, skipping the manual consent step. The workflows you can implement depend on two factors:
-
-* **Enterprise Managed Authorization (EMA):** Decides not only who the user is, but what they're allowed to access. Also called **Cross App Access (XAA)** in Okta. 
-* **Identity Assertion JWT Authorization Grant (ID-JAG):** A short-lived token, minted by whichever component in the chain supports ID-JAG, that grants a specific user access to specific resources.
-
-How the Token Vault gets involved depends on which component of the authorization workflow (the IdP, the agent, the provider's authorization server) accepts ID-JAG. The following table presents possible combinations: 
-
-<!--vale off-->
-{% table %}
-columns:
-  - title: Corporate IdP
-    key: idp
-  - title: MCP client/Agent
-    key: client
-  - title: Provider's authorization server
-    key: provider
-  - title: Setup
-    key: setup
-  - title: Token Vault involved?
-    key: vault
-rows:
-  - idp: "Supports ID-JAG"
-    client: "Supports ID-JAG"
-    provider: "Doesn't support ID-JAG"
-    setup: |
-      * **{{site.identity}}'s authorization server:** ID-JAG consumer.
-      * **Client**:
-        1. Exchanges its IdP token for an ID-JAG scoped to {{site.identity}}.
-        1. Redeems it for a normal access token.
-    vault: "No (bypassed)"
-{% endtable %}
-<!--vale on-->
 
 
 ## Set up the Token Vault
@@ -531,10 +492,6 @@ body:
 
 For OAuth providers, register the Token Vault callback URL (`https://vault.<konnect-host>/v2/callback`) in the third-party app that issued the client ID and secret.
 
-<!--
-Confirm the exact public callback host per region with eng before publishing (code: https://vault.<host>/v2/callback).
--->
-
 
 To disable a provider without deleting it, for example as a kill switch, send a `PATCH` request to `/v2/directories/{directoryId}/vault/providers/{providerId}` with `enabled: false`. A `PUT` on the same endpoint also sets `enabled` to `false` if you omit it.
 
@@ -557,13 +514,6 @@ method: GET
 ### Enable credential injection on a route
 
 TBD?
-<!-- Configure AI MCP Proxy to exchange the caller's token for the stored credential and inject it. -->
-<!--
-Per the M0 scope doc, the AI MCP Proxy token vault support and the AI Gateway MCP resource API
-(platform-api#3450, TPS-4614) are in dogfood, and the UI is blocked. The Token Vault Credential Manager
-self-service page (enroll/unenroll, published at <gateway>/tvcm/<auth-strategy>, plugin `token-vault-connectors`, JTBD-48)
-isn't documented yet either. 
--->
 
 ### Store a static secret
 
