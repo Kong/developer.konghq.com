@@ -27,6 +27,7 @@ module Jekyll
       config = add_defaults(config)
 
       should_create_namespace = config.delete('create_namespace')
+      section = config.delete('section')
 
       # Process YAML for the code block
       config = config.to_yaml.delete_prefix("---\n").chomp.gsub(/version: '(.*)'/, 'version: "\1"')
@@ -34,6 +35,7 @@ module Jekyll
       context.stack do
         context['config'] = config
         context['should_create_namespace'] = should_create_namespace
+        context['section'] = section
         ComponentTemplates.fetch('konnect_crd', @page['output_format'], base: 'app/_includes').render(context)
       end
     rescue Psych::SyntaxError => e
