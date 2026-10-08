@@ -98,7 +98,7 @@ overview: |
   LLM quotas are measured in tokens, not request counts, so HTTP 429 often arrives after
   the budget is already gone. [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/)
   writes remaining and limit headers, but it has no built-in 80% notify field. A post-function
-  Policy reads those headers on the {{site.konnect_product_name}} data plane and POSTs
+  Policy reads those headers on the {{site.konnect_product_name}} data plane and sends a POST request to
   `DECK_WEBHOOK_URL` at 80% used. By the end you have a `/ai-rate-limit-alerts` chat endpoint
   that still returns 200 at 80%, notifies an external channel, and only returns 429 after the
   quota is exhausted.
@@ -123,7 +123,7 @@ for LLM traffic:
 
 Kong already writes `X-AI-RateLimit-Remaining-*` and `X-AI-RateLimit-Limit-*` after a chat
 returns. A [post-function](/ai-gateway/policies/post-function/) AI Policy reads those headers after the
-response body finishes and computes `(limit - remaining) / limit`. At 80% it POSTs
+response body finishes and computes `(limit - remaining) / limit`. At 80% it sends a POST request to
 `DECK_WEBHOOK_URL` with `resty.http` via `ngx.timer.at`. Without post-function there is no 80% signal.
 
 <!-- vale off -->
@@ -161,7 +161,7 @@ rows:
   - component: ai-rate-limiting-advanced Policy
     responsibility: Counts `total_tokens` per Consumer, sets remaining and limit headers, returns 429 when the window is empty.
   - component: post-function Policy
-    responsibility: Computes 80% from those headers and POSTs the webhook to `DECK_WEBHOOK_URL`.
+    responsibility: Computes 80% from those headers and sends a POST request to the webhook at `DECK_WEBHOOK_URL`.
   - component: AI Model + Provider
     responsibility: Injects the OpenAI credential and proxies `/ai-rate-limit-alerts`.
 {% endtable %}
@@ -227,7 +227,7 @@ Use `strategy: redis` when more than one data plane shares the counter.
 The [post-function](/ai-gateway/policies/post-function/) Policy runs in `body_filter` (`eof`). It scans
 `X-AI-RateLimit-Remaining-*` and `X-AI-RateLimit-Limit-*` (suffixes vary by mode)
 after `total_tokens` headers exist. At 80% used it schedules `resty.http` with
-`ngx.timer.at` (`cosockets` are not available in filter phases) and POSTs `DECK_WEBHOOK_URL`.
+`ngx.timer.at` (`cosockets` are not available in filter phases) and sends a POST request to `DECK_WEBHOOK_URL`.
 
 **`threshold = 80`** is percent used. **`dict:add(..., 1, 60)`** snoozes repeat alerts for 60 seconds.
 `resty.http` needs `KONG_UNTRUSTED_LUA=on`. The data plane also needs
@@ -638,7 +638,7 @@ for used/limit at or above 80%, then for HTTP 429.
 
 1. **Key Auth** mapped `apikey: demo-api-key` to the demo Consumer.
 2. **AI Rate Limiting Advanced** counted `total_tokens` and updated remaining/limit headers.
-3. **Post-function** POSTed once at 80%. Further chats in the same 60 seconds are snoozed.
+3. **Post-function** sent one POST request at 80%. Further chats in the same 60 seconds are snoozed.
 4. **429** arrived only after the window was empty. The caller still received 200 at 80%.
 
 ### Explore in Konnect
