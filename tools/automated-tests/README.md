@@ -161,9 +161,22 @@ By default, it will run all the instruction files, but it also supports running 
 
 `DEPLOYMENT_MODEL='on-prem' PRODUCTS='operator' npm run run-tests`
 
-Operator how-tos are testable on-prem only: the generator extracts operator pages into `on-prem/operator.yaml` instruction files, and the `on-prem.operator` runtime installs the operator from the documented commands into a fresh k3d cluster and writes the license from `KONG_LICENSE_DATA` to `license.json` for the documented `KongLicense` apply. Konnect is not yet supported: a `konnect/operator.yaml` file is generated for how-tos that also work on Konnect, but running it fails fast with an `Unsupported product` error until a `konnect.operator` runtime is added.
+Operator how-tos are testable on-prem and on Konnect: the generator extracts operator pages into `on-prem/operator.yaml` and `konnect/operator.yaml` instruction files. The `on-prem.operator` runtime installs the operator from the documented commands into a fresh k3d cluster and writes the license from `KONG_LICENSE_DATA` to `license.json` for the documented `KongLicense` apply.
 
 Each operator instruction file executes its page's documented steps against the runtime-provided cluster. Because operator extracts instructions as blocks, validation blocks run as plain commands: an expected non-2xx response (for example a 404 isolation check) must be documented as a `custom-command`, since a `request-check`'s copied curl always fails on non-2xx responses.
+
+#### Run konnect operator tests
+
+`DEPLOYMENT_MODEL='konnect' PRODUCTS='operator' npm run run-tests`
+
+The `konnect.operator` runtime deletes every control plane in the Konnect org the token belongs to, creates a fresh k3d cluster, and installs Kong Operator with the Konnect controller enabled (`ENABLE_CONTROLLER_KONNECT=true`). The test steps apply the pages' `KonnectAPIAuthConfiguration` and custom resources, which the operator reconciles against that org.
+
+Requirements and behavior:
+
+* `TESTS_KONNECT_TOKEN` must be exported: it is the Konnect token the operator authenticates with.
+* No license is needed: konnect operator runs skip the `KONG_LICENSE_DATA` check.
+* Reset and cleanup delete **every control plane in the token's org** through the Konnect API, so the token must belong to a dedicated docs test org, never a shared one.
+* Pages that need a real AWS account (cloud-gateway network, cloud-gateway configuration, transit gateway) are recorded as expected failures in `config/expected_failures.yaml`.
 
 #### Run unreleased gateway version
 
