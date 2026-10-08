@@ -82,7 +82,7 @@ Next, it spins up a headless browser and visits the corresponding URL for each `
   * `data-test-step='block'`: indicates that the extractor can copy the associated code snippet and paste it in the instructions file as a bash command.
   * `data-test-step=json`: When the value is a json object, it represents the configuration of a `validation` step, which the test will treat as an assertion.
 
-For products configured with `extractInstructionsAs: block` in `config/tests.yaml` (`kic`, `operator`), every `data-test-step` element, including rendered validation blocks, is copied as a plain bash command instead of a JSON assertion.
+For products configured with `extractInstructionsAs: block` in `config/tests.yaml` (`kic`, `operator`), every `data-test-step` element, including rendered validation blocks, is copied as a plain bash command instead of a JSON assertion. A block fence can also carry `data-test-retry-count`: the extracted command becomes a structured step that the runner repeats with exponential backoff (5s initial delay doubling per attempt, capped at 30s), so readers see a single command while the test waits out asynchronous provisioning.
 
 How-to series are extracted as one instruction file: the extractor starts at the series' first page and follows the `data-test-series-next` links, appending every continuation page's steps in series order. Continuation pages therefore carry their own step markers but no instruction file of their own.
 

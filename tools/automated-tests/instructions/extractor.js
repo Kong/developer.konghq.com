@@ -4,6 +4,7 @@ import path from "path";
 import { dump } from "js-yaml";
 
 import { prependProxyIpExport } from "./proxy-ip.js";
+import { parseRetryCount } from "./retry.js";
 
 class NonFirstSeriesPageError extends Error {}
 
@@ -218,7 +219,20 @@ async function extractSteps(page, config, product) {
 
         copiedText = prependProxyIpExport(copiedText, product);
 
-        instructions.push(copiedText);
+        const retryCount = await elem.getAttribute("data-test-retry-count");
+        const retry = parseRetryCount(retryCount);
+        if (retry !== null) {
+          // The runner (retry.js) repeats the command with exponential
+          // backoff, so readers see only the plain fence on the page.
+          instructions.push({ command: copiedText, retry_count: retry });
+        } else if (retryCount !== null) {
+          console.error(
+            `Warning: invalid data-test-retry-count "${retryCount}" on a step; extracting it without retries.`,
+          );
+          instructions.push(copiedText);
+        } else {
+          instructions.push(copiedText);
+        }
       } else {
         // validation-type step
         const parsedInstruction = JSON.parse(step);
