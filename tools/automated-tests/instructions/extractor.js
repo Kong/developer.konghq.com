@@ -85,8 +85,13 @@ async function extractPrereqs(page, platform) {
   for (const i in prerequisites) {
     const prereq = prerequisites[i];
     if (await prereq.isVisible()) {
-      const trigger = await prereq.locator(".accordion-trigger");
-      if (i >= 1) {
+      const trigger = prereq.locator(".accordion-trigger");
+      // Only click items that are actually closed. The children of the
+      // prereqs container include hidden test-marker divs, so the first
+      // *accordion* item can sit at any container index: clicking its
+      // trigger by index alone would toggle the default-open item closed.
+      const expanded = await prereq.getAttribute("aria-expanded");
+      if (i >= 1 && expanded !== "true") {
         await trigger.click();
       }
       await revealAccordionPanels(prereq);
