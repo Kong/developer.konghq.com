@@ -1,0 +1,15 @@
+---
+name: KSAI
+
+permissions: {}
+
+on:  # yamllint disable-line rule:truthy
+  workflow_dispatch: {}
+
+jobs:
+  ksai:
+    name: run
+    uses: Kong/ksai-public/.github/workflows/ksai.yml@ab6f06919ddf7b7e28bd25ff0b403e70caf80534  # v5.0.0-rc.72
+    permissions:
+      contents: read   # checked out by every command; a push uses the token CP mints
+      id-token: write  # mint the GitHub OIDC token for federation
