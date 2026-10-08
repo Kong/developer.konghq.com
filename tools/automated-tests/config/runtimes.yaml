@@ -235,3 +235,38 @@ konnect:
           - sleep 5
           - curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway -n automated-tests-event-gateway-quickstart -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG | tail -1 >> /env-vars.sh
           - sleep 5
+
+  operator:
+    setup:
+      commands:
+        - helm repo add kong https://charts.konghq.com
+        - helm repo update
+    cleanup:
+      commands:
+        # Deleting the cluster alone would orphan the Konnect-side control
+        # planes (the operator's finalizers die with the cluster), so every
+        # control plane in the token's org is deleted through the API first.
+        - &delete-control-planes |
+          PAGE=1
+          while :; do
+            RESPONSE=$(curl -s --max-time 60 -X GET "https://us.api.${KONNECT_DOMAIN:-konghq.com}/v2/control-planes?page[number]=$PAGE&page[size]=100" -H "Authorization: Bearer $KONNECT_TOKEN")
+            # Break on any response that yields no control plane ids: an empty
+            # page (end of pagination) or any failure (empty body, non-JSON
+            # error page, auth error). Never key the loop on meta pagination
+            # fields: a parse failure would empty them and loop forever.
+            IDS=$(printf '%s' "$RESPONSE" | jq -r '.data[]?.id' 2>/dev/null)
+            [ -z "$IDS" ] && break
+            for CONTROL_PLANE_ID in $IDS; do
+              curl -s --max-time 60 -X DELETE "https://us.api.${KONNECT_DOMAIN:-konghq.com}/v2/control-planes/$CONTROL_PLANE_ID" -H "Authorization: Bearer $KONNECT_TOKEN"
+            done
+            PAGE=$((PAGE+1))
+          done
+        - k3d cluster delete operator-konnect-test
+    reset:
+      commands:
+        - *delete-control-planes
+        - k3d cluster delete operator-konnect-test
+        - k3d cluster create --k3s-arg "--disable=traefik@server:*" operator-konnect-test --wait
+        - kubectl config use-context k3d-operator-konnect-test
+        - helm upgrade --install kong-operator kong/kong-operator -n kong-system --create-namespace --set env.ENABLE_CONTROLLER_KONNECT=true
+        - kubectl -n kong-system wait --for=condition=Available=true --timeout=300s deployment/kong-operator-kong-operator-controller-manager
