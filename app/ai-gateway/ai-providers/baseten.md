@@ -134,32 +134,6 @@ targets:
 
 The same API key authenticates to both Model APIs and dedicated deployments in your Baseten workspace, so one AI Model Provider can serve both kinds of target.
 
-## Send a request
-
-Clients call the AI Model's route with an OpenAI-compatible chat completions request. The `generate` capability appends `/chat/completions` to the route path, so for the Model APIs example, send requests to `/baseten/chat/completions` and set `model` to the AI Model's `name`:
-
 <!-- TODO(reviewer): confirm the default model selector matches the AI Model name (`deepseek-v4-pro`) rather than the slash-containing target name. -->
 
-<!-- vale off -->
-{% validation request-check %}
-url: /baseten/chat/completions
-status_code: 200
-method: POST
-headers:
-  - 'Accept: application/json'
-  - 'Content-Type: application/json'
-body:
-  model: deepseek-v4-pro
-  messages:
-    - role: user
-      content: "Summarize the benefits of an AI gateway in one sentence."
-{% endvalidation %}
-<!-- vale on -->
-
-To stream the response, add `"stream": true` to the request body.
-
-## Limitations
-
-* {{ provider.name }}'s Anthropic-compatible `/v1/messages` endpoint, embeddings, and the `/predict` and async inference APIs aren't available through the `baseten` provider.
-* Baseten-specific request parameters, such as `continuous_usage_stats` and `grammar`, aren't AI Model or target configuration fields.
 <!-- TODO(reviewer): confirm whether clients can pass Baseten-specific body fields and the `x-session-affinity` header through unchanged (AI-192 OQ6), and document it here if so. -->
