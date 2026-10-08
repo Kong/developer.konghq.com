@@ -55,9 +55,9 @@ faqs:
 ---
 
 
-{% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="Amazon Bedrock" %}
+{% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="Amazon Bedrock" compare_provider_name="Amazon Bedrock Mantle" variant_label="Bedrock Runtime" compare_variant_label="Bedrock Mantle" %}
 
-{% include md/ai-gateway/v2/native-routes.md providers=site.data.ai-gateway.v2.providers provider_name="Amazon Bedrock" %}
+{% include md/ai-gateway/v2/native-routes.md providers=site.data.ai-gateway.v2.providers provider_name="Amazon Bedrock" compare_provider_name="Amazon Bedrock Mantle" variant_label="Bedrock Runtime" compare_variant_label="Bedrock Mantle" %}
 
 ## Configure {{ provider.name }}
 
@@ -97,32 +97,18 @@ You can also use {{ provider.name }} with AWS credentials by setting `auth` to `
 * **`sts_endpoint_url`** (optional): Custom STS endpoint for role assumption. Defaults to `https://sts.amazonaws.com`.
 * **`batch_role_arn`** (optional): Separate role ARN for Bedrock batch API calls.
 
-## Choose a Bedrock endpoint {% new_in 2.3 %}
+## Authentication with an Amazon Bedrock API key
 
-Amazon Bedrock serves inference from two endpoints. Set `endpoint_type` in the target `config` of an [AI Model](/ai-gateway/entities/ai-model/) to choose which one {{site.ai_gateway}} sends requests to:
+To authenticate with an Amazon Bedrock API key instead of AWS credentials, set `config.auth.type` to `basic` with an `Authorization` header whose value is `Bearer BEDROCK_API_KEY`.
+Replace `BEDROCK_API_KEY` with your Amazon Bedrock API key.
 
-<!--vale off-->
-{% table %}
-columns:
-  - title: "`endpoint_type`"
-    key: type
-  - title: Upstream host
-    key: host
-  - title: Supported AI Model formats
-    key: formats
-rows:
-  - type: "`runtime` (default)"
-    host: "`https://bedrock-runtime.{region}.amazonaws.com`"
-    formats: "All formats, including `bedrock`. {{site.ai_gateway}} translates OpenAI and Anthropic requests to the Bedrock Converse or InvokeModel APIs."
-  - type: "`mantle`"
-    host: "`https://bedrock-mantle.{region}.api.aws`"
-    formats: "OpenAI Chat Completions, OpenAI Responses, and Anthropic Messages. {{site.ai_gateway}} forwards the request body without translating it and rewrites only the host, path, and authentication headers."
-{% endtable %}
-<!--vale on-->
+Both authentication methods work with the `runtime` and `mantle` endpoints.
 
-Use `mantle` when your clients already speak the OpenAI or Anthropic APIs and you want Bedrock Mantle to handle them natively, for example to run the OpenAI Codex CLI against models on Bedrock. Keep `runtime` for Bedrock-native clients, for the Bedrock-specific APIs such as Rerank, async invoke, and batch, and for any model that has no Mantle support.
+## Choose a Bedrock endpoint
 
-The Mantle endpoint has no Converse or InvokeModel API, so {{site.konnect_short_name}} rejects a target with `endpoint_type: mantle` if its AI Model declares a format with `type: bedrock`. Use the `openai` or `anthropic` format on AI Models with Mantle targets.
+{{site.ai_gateway}} can send requests to either of the two Amazon Bedrock inference endpoints, Runtime (the default) or Mantle, depending on the `endpoint_type` in the target `config` of an [AI Model](/ai-gateway/entities/ai-model/).
+Use `mantle` when your clients already send OpenAI or Anthropic API requests and you want Bedrock Mantle to handle them natively, for example, to run the OpenAI Codex CLI against models on Bedrock.
+Keep `runtime` for Bedrock-native clients, for the Bedrock-specific APIs such as Rerank, async invoke, and batch, and for any model that has no Mantle support.
 
 {% comment %}
 TODO(reviewer, AI-123): Confirm the exact AI Model format and capability combinations that map to Mantle
@@ -130,11 +116,6 @@ TODO(reviewer, AI-123): Confirm the exact AI Model format and capability combina
 Mantle supports embeddings or any other capability. Also confirm the list of Bedrock-specific APIs that stay
 Runtime-only.
 {% endcomment %}
-
-Both endpoints accept the authentication types an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) of type `bedrock` supports:
-
-* **AWS SigV4:** Set `config.auth.type` to `aws`, as described in [Authentication with AWS](#authentication-with-aws). This works the same way for both endpoints.
-* **Bearer token:** Set `config.auth.type` to `basic` with an `Authorization` header whose value is `Bearer <BEDROCK_API_KEY>`, using an Amazon Bedrock API key.
 
 The following AI Model sends OpenAI Chat Completions requests to Bedrock Mantle:
 
@@ -163,13 +144,16 @@ variables:
 
 For a complete walkthrough, see [Route OpenAI traffic to Amazon Bedrock Mantle](/ai-gateway/route-openai-traffic-to-bedrock-mantle/).
 
-## Connect through a VPC endpoint {% new_in 2.3 %}
+## Connect through a VPC endpoint
 
-If your data plane nodes reach Amazon Bedrock over AWS PrivateLink, set `vpc_endpoint` in the target `config` to the hostname of your interface VPC endpoint. {{site.ai_gateway}} sends requests to that host and keeps everything else the same as for the public endpoint:
+To connect to Amazon Bedrock through a VPC endpoint over AWS PrivateLink, set `vpc_endpoint` in the target `config` to the hostname of your interface VPC endpoint.
+{{site.ai_gateway}} then sends requests to that host.
+The rest of the request behaves as it does with the public endpoint:
 
 * {{site.ai_gateway}} still builds the Bedrock path for each operation, including streaming (`invoke-with-response-stream`) and async invoke.
-* SigV4 signs requests for the real Bedrock service and the configured `region`, not for the VPC endpoint hostname.
-* If the VPC endpoint is unreachable, the request fails. {{site.ai_gateway}} doesn't fall back to the public endpoint.
+* SigV4 signs requests for the Bedrock service and the configured `region`, not for the VPC endpoint hostname.
+* If the VPC endpoint is unreachable, the request fails.
+  {{site.ai_gateway}} doesn't fall back to the public endpoint.
 
 `vpc_endpoint` is available on chat and invoke targets and on the embeddings model configuration in [`config.balancer.embeddings`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-embeddings).
 
@@ -196,7 +180,9 @@ variables:
     description: "The DNS name of your Bedrock Runtime interface VPC endpoint, for example `vpce-0123456789abcdef0-abcdefgh.bedrock-runtime.us-east-1.vpce.amazonaws.com`."
 {% endentity_example %}
 
-`vpc_endpoint` overrides only the host. If you also set `upstream_url` on the same target, `upstream_url` takes precedence and {{site.ai_gateway}} ignores `vpc_endpoint`. Use `upstream_url` only when you need to override the full URL, because it also replaces the path that {{site.ai_gateway}} builds for each Bedrock operation.
+`vpc_endpoint` overrides only the host.
+If you also set `upstream_url` on the same target, `upstream_url` takes precedence and {{site.ai_gateway}} ignores `vpc_endpoint`.
+Use `upstream_url` only when you need to override the full URL, because it also replaces the path that {{site.ai_gateway}} builds for each Bedrock operation.
 
 {% comment %}
 TODO(reviewer, AI-125):

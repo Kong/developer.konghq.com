@@ -41,7 +41,7 @@ providers:
         model_example: 'n/a'
         min_version: '2.0'
         note:
-          content: 'Amazon Bedrock does not have a dedicated files API. File storage uses Google Cloud Storage, similar to AWS S3.'
+          content: 'Amazon Bedrock does not have a dedicated files API. Batch input and output files are stored in Amazon S3 and referenced by S3 URI.'
       image:
         supported: true
         streaming: false
@@ -105,6 +105,23 @@ providers:
       provider_specific: []
       statistics_logging:
         - 'Statistics logging is not available for image generation or editing APIs for Amazon Bedrock'
+
+  - name: Amazon Bedrock Mantle
+    url_patterns:
+      - 'https://bedrock-mantle.{region}.api.aws'
+    min_version: '2.3'
+    variant_trigger: 'set `endpoint_type: mantle` in the target `config` of your AI Model'
+    capabilities:
+      generate:
+        supported: true
+        streaming: true
+        upstream_path: 'Forwards OpenAI Chat Completions, OpenAI Responses, and Anthropic Messages requests without translation'
+        model_example: '[Use a model ID that Amazon Bedrock serves through the Mantle endpoint](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html)'
+        min_version: '2.3'
+    limitations:
+      provider_specific:
+        - 'Mantle has no Converse or InvokeModel API, so Konnect rejects a target with `endpoint_type: mantle` if its AI Model declares a format with `type: bedrock`. Use the `openai` or `anthropic` format instead.'
+      statistics_logging: []
 
   - name: Anthropic
     url_patterns:
@@ -688,7 +705,7 @@ providers:
     url_patterns:
       - 'https://aiplatform.googleapis.com/'
     min_version: '2.0'
-    variant_trigger: 'Setting `config.gcp_environment` (with `api_endpoint`, `location_id`, and `project_id`) on the AI Model''s target.'
+    variant_trigger: 'set `config.gcp_environment` (with `api_endpoint`, `location_id`, and `project_id`) on the AI Model''s target'
     capabilities:
       generate:
         supported: true
@@ -715,7 +732,7 @@ providers:
         model_example: 'n/a'
         min_version: '2.0'
         note:
-          content: 'Gemini Enterprise does not have a dedicated Files API. File storage uses Google Cloud Storage, similar to AWS S3.'
+          content: 'Gemini Enterprise does not have a dedicated Files API. File storage uses Google Cloud Storage, similar to Amazon S3.'
       batches:
         supported: true
         streaming: false
