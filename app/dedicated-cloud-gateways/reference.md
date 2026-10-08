@@ -535,6 +535,128 @@ If you are using Dedicated Cloud Gateways and your upstream services are hosted 
 ### GCP VPC Peering
 If you are using Dedicated Cloud Gateways and your upstream services are hosted in GCP, VPC Network Peering is the preferred method for most users. For more information and a guide on how to attach your Dedicated Cloud Gateway, see the [GCP VPC Peering](/dedicated-cloud-gateways/gcp-vpc-peering/) documentation.
 
+## {{site.ai_gateway}} 2.0 on Dedicated Cloud Gateways 
+
+{% include_cached badges/stage.html beta=true %}
+
+[{{site.ai_gateway}}](/ai-gateway/) on Dedicated Cloud Gateways gives you a fully managed, single-tenant {{site.ai_gateway}} 2.0 deployment.
+Kong hosts the control plane and data planes for you, including scaling, upgrades, and high availability, so you don't have to run and maintain your own {{site.ai_gateway}} data planes.
+
+In addition, {{site.ai_gateway}} on Dedicated Cloud Gateways supports a fully [managed cache for Redis](/dedicated-cloud-gateways/managed-cache/) so you don't have to host Redis infrastructure.
+You can use this with any {{site.ai_gateway}} Policy that uses Redis.
+
+### {{site.ai_gateway}} and {{site.base_gateway}} Cloud Gateways
+
+If you want both {{site.base_gateway}} and {{site.ai_gateway}} to run in a Dedicated Cloud Gateway, you must use separate Dedicated Cloud Gateway control planes for them, instead of combining both on a single control plane.
+Sharing networks is best practice.
+
+### Configure an {{site.ai_gateway}} control plane
+
+<!--vale off-->
+{% navtabs "configure-ai-gateway" %}
+{% navtab "UI" %}
+<!--vale on-->
+1. In {{site.konnect_short_name}}, click **{{site.ai_gateway}}** in the sidebar.
+1. Click **New {{site.ai_gateway}}**.
+1. Select **Dedicated Cloud**.
+1. Enter a **Display name** for your control plane.
+1. For the Node configuration, select the **Provider** and **Region** for your data plane.
+
+   Network range and CIDR block requirements are the same as for a standard Dedicated Cloud Gateway.
+   See [CIDR size requirements](/dedicated-cloud-gateways/reference/#cidr-size-requirements) and [Network architecture](/dedicated-cloud-gateways/network-architecture/).
+1. Under **API access**, choose **Public** or **Private**.
+1. Click **Create**.
+<!--vale off-->
+{% endnavtab %}
+{% navtab "API" %}
+<!--vale on-->
+1. Create an {{site.ai_gateway}} control plane by sending a `POST` request to the [`/ai-gateways` endpoint](/api/konnect/ai-gateway/#/operations/create-ai-gateway), setting `deployment_type` to `managed`:
+<!--vale off-->
+{% capture request %}
+{% konnect_api_request %}
+url: /v1/ai-gateways
+method: POST
+region: us
+status_code: 201
+body:
+  name: ai-gateway-dcgw
+  display_name: AI Gateway Dedicated Cloud
+  deployment_type: managed
+capture:
+  - variable: AI_GATEWAY_ID
+    jq: ".id"
+{% endkonnect_api_request %}
+{% endcapture %}
+{{ request | indent: 3 }}
+1. Create a Dedicated Cloud Gateway configuration for the {{site.ai_gateway}} control plane by sending a `PUT` request to the [`/cloud-gateways/configurations` endpoint](/api/konnect/cloud-gateways/#/operations/create-configuration):
+<!--vale off-->
+{% capture request %}
+{% konnect_api_request %}
+url: /v2/cloud-gateways/configurations
+method: PUT
+status_code: 200
+region: global
+body:
+  control_plane_id: $AI_GATEWAY_ID
+  control_plane_geo: us
+  type: ai
+  kind: dedicated.v0
+  api_access: private
+  dataplane_groups:
+    - provider: aws
+      region: us-east-2
+      cloud_gateway_network_id: $CLOUD_GATEWAY_NETWORK_ID
+{% endkonnect_api_request %}
+{% endcapture %}
+{{ request | indent: 3 }}
+   
+   Network range and CIDR block requirements are the same as for a standard Dedicated Cloud Gateway.
+   See [CIDR size requirements](/dedicated-cloud-gateways/reference/#cidr-size-requirements) and [Network architecture](/dedicated-cloud-gateways/network-architecture/).
+{% endnavtab %}
+{% endnavtabs %}
+<!--vale on-->
+
+Private networking and private DNS work the same way for {{site.ai_gateway}} control planes as they do for standard Dedicated Cloud Gateways.
+See the following for instructions:
+* [AWS VPC peering](/dedicated-cloud-gateways/aws-vpc-peering/)
+* [Transit Gateways](/dedicated-cloud-gateways/transit-gateways/)
+* [Set up an AWS resource endpoint connection](/dedicated-cloud-gateways/aws-resource-endpoints/)
+* [Private hosted zones](/dedicated-cloud-gateways/private-hosted-zones/)
+* [Outbound DNS resolver](/dedicated-cloud-gateways/outbound-dns-resolver/)
+
+### {{site.ai_gateway}} 2.0 managed cache
+
+To configure a {{site.ai_gateway}} 2.0 managed cache, do the following:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/cloud-gateways/add-ons
+method: POST
+region: global
+status_code: 201
+body:
+  name: managed-cache
+  owner:
+    kind: control-plane
+    control_plane_id: $AI_GATEWAY_ID
+    control_plane_geo: us
+    type: ai
+  config:
+    kind: managed-cache.v0
+    capacity_config:
+      kind: tiered
+      tier: micro
+{% endkonnect_api_request %}
+<!--vale on-->
+
+### Limitations
+
+Keep the following limitations in mind when using {{site.ai_gateway}} on Dedicated Cloud Gateways:
+
+* {{site.ai_gateway}} 2.0 on Dedicated Cloud Gateways currently only supports AWS.
+* [{{site.ai_gateway}} 2.0 managed caches](/dedicated-cloud-gateways/managed-cache/) can only be created, updated, and deleted using the [Cloud Gateways API](/api/konnect/cloud-gateways/). 
+* If you're using a managed cache, you'll need to manually input the Redis info into {{site.ai_gateway}} 2.0 Policies.
+
 ## Custom plugins
 
 With Dedicated Cloud Gateways, {{site.konnect_short_name}} can stream [custom plugins](/custom-plugins/) from the Control Plane to the Data Plane. This means that the Control Plane becomes a single source of truth for plugin versions. You only need to upload a plugin once, to the Control Plane, and {{site.konnect_short_name}} handles distributing the plugin code to all Data Planes in that Control Plane. 
