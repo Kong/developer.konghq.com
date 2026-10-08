@@ -257,7 +257,7 @@ The control plane and data plane versions must match exactly, including patch an
 
 ### Upload the policy code
 
-Create a [`schema.lua` file](https://github.com/kong-partner-solutions/nvidia-switchyard-plugin/blob/main/kong-plugin/kong/plugins/ai-routing-provider/schema.lua) that defines the policy's configuration fields:
+Create a `schema.lua` file that defines the policy's configuration fields:
 ```sh
 cat <<'LUA_EOF' > schema.lua
 -- Copyright 2024-2026 Kong Inc.
@@ -514,7 +514,7 @@ LUA_EOF
 ```
 {:.collapsible}
 
-Create a [`handler.lua` file](https://github.com/kong-partner-solutions/nvidia-switchyard-plugin/blob/main/kong-plugin/kong/plugins/ai-routing-provider/handler.lua):
+Create a `handler.lua` file:
 
 ```sh
 cat <<'LUA_EOF' > handler.lua
@@ -1421,7 +1421,7 @@ ai_gateway_models:
 Make sure to replace the following placeholders with your own values:
 
 * `AI_GATEWAY_ID`: The `id` of your {{site.ai_gateway}}.
-* `PROVIDER_NAME`: The `name` of an [AI Model Provider](/ai-gateway/entities/ai-provider/) on this {{site.ai_gateway}}.
+* `PROVIDER_NAME`: The `name` of an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) on this {{site.ai_gateway}}.
 
 Each target needs its own AI Model on this {{site.ai_gateway}}, on the same route path, with no routing policy (`policies: []`).
 Bind the target fields as follows:
