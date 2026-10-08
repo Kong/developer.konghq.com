@@ -35,7 +35,7 @@ prereqs:
   skip_product: true
   skip_tool: true
   inline:
-    - title: Kong Konnect
+    - title: "{{site.konnect_product_name}}"
       content: |
         This tutorial uses {{site.konnect_product_name}}. You will provision a recipe-scoped {{site.ai_gateway}} and local Data Plane via the [quickstart script](https://get.konghq.com/ai).
 
@@ -296,7 +296,7 @@ ai_gateway_models:
 **Provider credentials.** Kong holds the OpenAI credential on the AI Model Provider and injects it upstream. Clients only hold the Consumer API key.
 
 {:.info}
-> In production, store credentials in [Kong Vaults](/gateway/latest/kong-enterprise/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. Kong supports HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the Konnect Config Store.
+> In production, store credentials in [Kong Vaults](/gateway/entities/vault/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. Kong supports HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the Konnect Config Store.
 
 ## Apply the Kong configuration
 

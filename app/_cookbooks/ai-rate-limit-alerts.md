@@ -35,9 +35,9 @@ prereqs:
   skip_product: true
   skip_tool: true
   inline:
-    - title: Kong Konnect
+    - title: "{{site.konnect_product_name}}"
       content: |
-        This tutorial uses {{site.konnect_product_name}}. The {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) provisions a recipe-scoped AI Gateway and local Data Plane. The runnable demo sends alerts with a [post-function](/ai-gateway/policies/post-function/) Policy to `DECK_WEBHOOK_URL`.
+        This tutorial uses {{site.konnect_product_name}}. The {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) provisions a recipe-scoped {{site.ai_gateway}} and local Data Plane. The runnable demo sends alerts with a [post-function](/ai-gateway/policies/post-function/) Policy to `DECK_WEBHOOK_URL`.
 
         1. Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
         1. Export your token. The same token is reused later for kongctl commands:
@@ -239,7 +239,7 @@ The AI Model injects the OpenAI key through its Provider and proxies the chat on
 `/ai-rate-limit-alerts`.
 
 {:.info}
-> In production, store credentials in [Kong Vaults](/gateway/latest/kong-enterprise/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables.
+> In production, store credentials in [Kong Vaults](/gateway/entities/vault/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables.
 
 Do not send secrets, prompts, or full messages in the webhook body.
 

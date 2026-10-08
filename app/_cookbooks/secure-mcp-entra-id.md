@@ -36,9 +36,9 @@ prereqs:
   skip_product: true
   skip_tool: true
   inline:
-    - title: Kong Konnect
+    - title: "{{site.konnect_product_name}}"
       content: |
-        This tutorial uses {{site.konnect_product_name}}. The {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) provisions a recipe-scoped AI Gateway and local Data Plane.
+        This tutorial uses {{site.konnect_product_name}}. The {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) provisions a recipe-scoped {{site.ai_gateway}} and local Data Plane.
 
         1. Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
         1. Export your token. The same token is reused later for kongctl commands:
@@ -307,7 +307,7 @@ prereqs:
         {% endnavtabs %}
     - title: Dify (optional)
       content: |
-        [Dify](https://docs.dify.ai/en/use-dify/build/mcp) is one MCP client used in Try it out. Any client that registers a remote HTTP MCP server, runs OAuth, and imports tools can follow the same Entra path. This recipe was tested with Dify Community **1.11**, **1.12**, and **1.13**.
+        [Dify](https://docs.dify.ai/en/cloud/use-dify/workspace/tools#mcp) is one MCP client used in Try it out. Any client that registers a remote HTTP MCP server, runs OAuth, and imports tools can follow the same Entra path. This recipe was tested with Dify Community **1.11**, **1.12**, and **1.13**.
 
         1. Run self-hosted Dify so the console is at `http://localhost:8088` (or set `DECK_DIFY_ORIGIN` to that origin).
         1. From the MCP client, Kong is `http://gateway.example.com:8000`, not `http://localhost:8000`. Point `gateway.example.com` at the data plane (for example in `/etc/hosts`).
@@ -785,7 +785,7 @@ A browser MCP client should open **Entra sign-in** when it requests `mcp.tools`.
 
 ### Connect Dify (interactive `mcp.tools`)
 
-[Dify MCP](https://docs.dify.ai/en/use-dify/build/mcp) registers a remote HTTP MCP server, then authorizes if the server requires OAuth. Entra has no DCR endpoint, so turn **Dynamic Client Registration** off and paste the Entra Client ID and secret.
+[Dify MCP](https://docs.dify.ai/en/cloud/use-dify/workspace/tools#mcp) registers a remote HTTP MCP server, then authorizes if the server requires OAuth. Entra has no DCR endpoint, so turn **Dynamic Client Registration** off and paste the Entra Client ID and secret.
 
 Use the hostname the MCP client uses to reach the Gateway. This recipe uses `gateway.example.com`:
 
