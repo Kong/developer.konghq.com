@@ -680,9 +680,9 @@ rows:
 {% endtable %}
 {% if provider.capabilities.batches.note.content %}<sup>{{ batches_note_num }}</sup> {% if compare_provider %}**{{ include.variant_label }}:** {% endif %}{{ provider.capabilities.batches.note.content }}{% endif %}
 {% if compare_provider.capabilities.batches.note.content %}<sup>{{ compare_batches_note_num }}</sup> **{{ include.compare_variant_label }}:** {{ compare_provider.capabilities.batches.note.content }}{% endif %}
+
 {:.warning}
-> Batches are configured on a separate AI Model with `type: "api"`, distinct from regular models that handle synchronous capabilities like generate and embeddings.
-> Create a dedicated AI Model exclusively for batches and files, as each model must be either a regular model or an API model, not both.
+> Batch jobs run on an AI Model with [`type: "api"`](/ai-gateway/entities/ai-model/#schema-aigateway-model-type). Regular models handle synchronous capabilities like generate and embeddings, so a model that serves batches can't serve those capabilities.
 {%- endif -%}
 
 {% if has_files %}
@@ -738,8 +738,7 @@ rows:
 {% if compare_provider.capabilities.files.note.content %}<sup>{{ compare_files_note_num }}</sup> **{{ include.compare_variant_label }}:** {{ compare_provider.capabilities.files.note.content }}{% endif %}
 
 {:.warning}
-> Batches are configured on a separate AI Model with [`type: "api"`](/ai-gateway/entities/ai-model/#schema-aigateway-model-type), distinct from regular models that handle synchronous capabilities like generate and embeddings.
-> Create a dedicated AI Model exclusively for batches and files, as each model must be either a regular model or an API model, not both.
+> Files are managed through an AI Model with [`type: "api"`](/ai-gateway/entities/ai-model/#schema-aigateway-model-type), the same type that serves batches. Create one dedicated AI Model for batches and files, and keep generate and embeddings on a separate regular model, because each model is either a regular model or an API model, not both.
 {%- endif -%}
 
 {% if has_skills %}
@@ -902,7 +901,7 @@ rows:
 {% endtable %}
 {% if provider.capabilities.decisions.note.content %}<sup>{{ decisions_note_num }}</sup> {% if compare_provider %}**{{ include.variant_label }}:** {% endif %}{{ provider.capabilities.decisions.note.content }}{% endif %}
 {% if compare_provider.capabilities.decisions.note.content %}<sup>{{ compare_decisions_note_num }}</sup> **{{ include.compare_variant_label }}:** {{ compare_provider.capabilities.decisions.note.content }}{% endif %}
-{%- endif -%}
+{%- endif %}
 
 ## {{ provider.name }} base URL
 
@@ -916,9 +915,9 @@ rows:
 {% if compare_provider %}
 By default, {{site.ai_gateway}} routes {{ provider.name }} requests to {{ include.variant_label }} at `{{ provider.url_patterns.first }}`.{% if has_capability_path %} The `{capability_path}` is determined by the AI capability.{% endif %}
 
-{{ compare_provider.variant_trigger }} This switches routing to {{ include.compare_variant_label }} at `{{ compare_provider.url_patterns.first }}`.
+To route requests to {{ include.compare_variant_label }}, {{ compare_provider.variant_trigger }}. {{site.ai_gateway}} then sends them to `{{ compare_provider.url_patterns.first }}`.
 
-{{site.ai_gateway}} uses the correct URL automatically based on this configuration. You only need to set `upstream_url` in your [AI Model](/ai-gateway/entities/ai-model/) configuration if you're using a self-hosted or {{ provider.name }}-compatible endpoint instead.
+You don't need to set the URL yourself. You only need to set `upstream_url` in your [AI Model](/ai-gateway/entities/ai-model/) configuration if you're using a self-hosted or {{ provider.name }}-compatible endpoint instead.
 {% else %}
 {% if provider.url_is_variable %}
 The base URL is <code>{{ provider.url_patterns.first }}</code>.{% if has_capability_path %} The `{capability_path}` is determined by the AI capability.{% endif %}
