@@ -137,15 +137,37 @@ spec:
    ```bash
    kubectl get controlplane,dataplane,ingress -n kong
    ```
+   {: data-test-step="block" }
+
+1. Wait for the `DataPlane` to be ready:
+
+   ```bash
+   kubectl wait dataplane/kong-ingress-dp -n kong \
+     --for=condition=Ready \
+     --timeout=5m
+   ```
+   {: data-test-step="block" }
+
+1. Wait for the `DataPlane` service to get an external IP:
+
+   ```bash
+   kubectl wait svc -n kong \
+     -l gateway-operator.konghq.com/dataplane-service-type=ingress \
+     --for=jsonpath='{.status.loadBalancer.ingress[0].ip}' \
+     --timeout=5m
+   ```
+   {: data-test-step="block" }
 
 1. Get the external IP of the `DataPlane` service:
 
    ```bash
-   export PROXY_IP=$(kubectl get svc -n kong -l app=kong-ingress-dp,gateway-operator.konghq.com/dataplane-service-type=ingress -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}')
+   export PROXY_IP=$(kubectl get svc -n kong -l gateway-operator.konghq.com/dataplane-service-type=ingress -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}')
    ```
+   {: data-test-step="block" }
 
 1. Send a request to the Ingress:
 
    ```sh
    curl -i http://$PROXY_IP/
    ```
+   {: data-test-step="block" data-test-retry-count="6" }

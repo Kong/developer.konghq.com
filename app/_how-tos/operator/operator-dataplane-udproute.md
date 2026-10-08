@@ -78,6 +78,7 @@ spec:
       port: 80
       protocol: HTTP' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Deploy a UDP backend
 
@@ -86,6 +87,7 @@ Install the `tftp` Service, a small TFTP test server that listens over UDP:
 ```bash
 kubectl apply -f {{site.links.web}}/manifests/kic/udp-service.yaml -n kong
 ```
+{: data-test-step="block" }
 
 ## Route UDP traffic
 
@@ -112,7 +114,8 @@ kubectl apply -f {{site.links.web}}/manifests/kic/udp-service.yaml -n kong
          allowedRoutes:
            namespaces:
              from: All' | kubectl apply -f -
-   ```
+    ```
+    {: data-test-step="block" }
 
 1. Create a `UDPRoute`:
 
@@ -132,6 +135,7 @@ kubectl apply -f {{site.links.web}}/manifests/kic/udp-service.yaml -n kong
              port: 9999
    " | kubectl apply -f -
    ```
+   {: data-test-step="block" }
 
 This configuration instructs {{ site.base_gateway }} to forward UDP traffic it receives on port `9999` to the `tftp` Service on port `9999`.
 
@@ -139,24 +143,36 @@ This configuration instructs {{ site.base_gateway }} to forward UDP traffic it r
 
 1. Wait for the Gateway to be programmed:
 
-   ```bash
-   kubectl wait gateway/kong-udp-gateway -n kong \
-     --for=condition=Programmed=True \
-     --timeout=5m
-   ```
+    ```bash
+    kubectl wait gateway/kong-udp-gateway -n kong \
+      --for=condition=Programmed=True \
+      --timeout=5m
+    ```
+    {: data-test-step="block" }
+
+1. Wait for the Gateway to get an address after the listener change:
+
+    ```bash
+    kubectl wait gateway/kong-udp-gateway -n kong \
+      --for=jsonpath='{.status.addresses[0].value}' \
+      --timeout=5m
+    ```
+    {: data-test-step="block" }
 
 1. Get the Gateway's external IP:
 
-   ```bash
-   export PROXY_IP=$(kubectl get gateway kong-udp-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
-   echo $PROXY_IP
-   ```
+    ```bash
+    export PROXY_IP=$(kubectl get gateway kong-udp-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
+    echo $PROXY_IP
+    ```
+    {: data-test-step="block" }
 
 1. Send a TFTP request through the proxy:
 
-   ```bash
-   curl -s tftp://$PROXY_IP:9999/hello
-   ```
+    ```bash
+    curl -s tftp://$PROXY_IP:9999/hello
+    ```
+    {: data-test-step="block" data-test-retry-count="6" }
 
    The results should look like this:
 

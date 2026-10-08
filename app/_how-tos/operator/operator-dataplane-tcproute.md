@@ -87,6 +87,7 @@ spec:
       port: 80
       protocol: HTTP' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Deploy a TCP backend
 
@@ -95,6 +96,7 @@ Install the `echo` Service, which accepts plain TCP connections on port `1025` a
 ```bash
 kubectl apply -f {{site.links.web}}/manifests/kic/echo-service.yaml -n kong
 ```
+{: data-test-step="block" }
 
 ## Route TCP traffic
 
@@ -118,7 +120,8 @@ kubectl apply -f {{site.links.web}}/manifests/kic/echo-service.yaml -n kong
        - name: stream9000
          port: 9000
          protocol: TCP' | kubectl apply -f -
-   ```
+    ```
+    {: data-test-step="block" }
 
 1. Create a `TCPRoute`:
 
@@ -138,6 +141,7 @@ kubectl apply -f {{site.links.web}}/manifests/kic/echo-service.yaml -n kong
              port: 1025
    " | kubectl apply -f -
    ```
+   {: data-test-step="block" }
 
 This configuration instructs {{ site.base_gateway }} to forward all traffic it receives on port `9000` to the `echo` Service on port `1025`.
 
@@ -145,24 +149,36 @@ This configuration instructs {{ site.base_gateway }} to forward all traffic it r
 
 1. Wait for the Gateway to be programmed:
 
-   ```bash
-   kubectl wait gateway/kong-tcp-gateway -n kong \
-     --for=condition=Programmed=True \
-     --timeout=5m
-   ```
+    ```bash
+    kubectl wait gateway/kong-tcp-gateway -n kong \
+      --for=condition=Programmed=True \
+      --timeout=5m
+    ```
+    {: data-test-step="block" }
+
+1. Wait for the Gateway to get an address after the listener change:
+
+    ```bash
+    kubectl wait gateway/kong-tcp-gateway -n kong \
+      --for=jsonpath='{.status.addresses[0].value}' \
+      --timeout=5m
+    ```
+    {: data-test-step="block" }
 
 1. Get the Gateway's external IP:
 
-   ```bash
-   export PROXY_IP=$(kubectl get gateway kong-tcp-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
-   echo $PROXY_IP
-   ```
+    ```bash
+    export PROXY_IP=$(kubectl get gateway kong-tcp-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
+    echo $PROXY_IP
+    ```
+    {: data-test-step="block" }
 
 1. Test the Route using `telnet`:
 
-   ```bash
-   telnet -e '^X' $PROXY_IP 9000
-   ```
+    ```bash
+    telnet -e '^X' $PROXY_IP 9000
+    ```
+    {: data-test-step="block" data-test-retry-count="6" }
 
    {:.info}
    > The `-e '^X'` flag allows you to chose an escape key to exit telnet.

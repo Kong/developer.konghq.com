@@ -81,6 +81,7 @@ spec:
       port: 80
       protocol: HTTP' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Deploy a gRPC backend
 
@@ -89,6 +90,7 @@ Install the `grpcbin` Service, which implements a simple gRPC test API:
 ```bash
 kubectl apply -f {{site.links.web}}/manifests/kic/grpcbin-service.yaml -n kong
 ```
+{: data-test-step="block" }
 
 ## Annotate the Kubernetes Service
 
@@ -97,6 +99,7 @@ kubectl apply -f {{site.links.web}}/manifests/kic/grpcbin-service.yaml -n kong
 ```bash
 kubectl annotate service -n kong grpcbin 'konghq.com/protocol=grpcs'
 ```
+{: data-test-step="block" }
 
 ## Generate a TLS certificate
 
@@ -107,6 +110,7 @@ kubectl annotate service -n kong grpcbin 'konghq.com/protocol=grpcs'
    ```bash
    kubectl label secret example.com -n kong konghq.com/secret="true"
    ```
+   {: data-test-step="block" }
 
 ## Route gRPC traffic
 
@@ -136,7 +140,8 @@ kubectl annotate service -n kong grpcbin 'konghq.com/protocol=grpcs'
              - group: ""
                kind: Secret
                name: example.com' | kubectl apply -f -
-   ```
+    ```
+    {: data-test-step="block" }
    
 1. Create a `GRPCRoute`:
    
@@ -156,8 +161,9 @@ kubectl annotate service -n kong grpcbin 'konghq.com/protocol=grpcs'
        - backendRefs:
            - name: grpcbin
              port: 9001
-   ' | kubectl apply -f -
-   ```
+    ' | kubectl apply -f -
+    ```
+    {: data-test-step="block" }
 
 This configuration instructs {{ site.base_gateway }} to forward gRPC requests for `example.com` on port `443` to the `grpcbin` Service on port `9001`.
 
@@ -165,26 +171,38 @@ This configuration instructs {{ site.base_gateway }} to forward gRPC requests fo
 
 1. Wait for the Gateway to be programmed:
 
-   ```bash
-   kubectl wait gateway/kong-grpc-gateway -n kong \
-     --for=condition=Programmed=True \
-     --timeout=5m
-   ```
+    ```bash
+    kubectl wait gateway/kong-grpc-gateway -n kong \
+      --for=condition=Programmed=True \
+      --timeout=5m
+    ```
+    {: data-test-step="block" }
+
+1. Wait for the Gateway to get an address after the listener change:
+
+    ```bash
+    kubectl wait gateway/kong-grpc-gateway -n kong \
+      --for=jsonpath='{.status.addresses[0].value}' \
+      --timeout=5m
+    ```
+    {: data-test-step="block" }
 
 1. Get the Gateway's external IP:
 
-   ```bash
-   export PROXY_IP=$(kubectl get gateway kong-grpc-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
-   echo $PROXY_IP
-   ```
+    ```bash
+    export PROXY_IP=$(kubectl get gateway kong-grpc-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
+    echo $PROXY_IP
+    ```
+    {: data-test-step="block" }
 
 1. Call the `grpcbin` test service through the proxy:
 
-   ```bash
-   grpcurl -insecure -authority example.com \
-     -d '{"greeting": "Kong"}' \
-     $PROXY_IP:443 hello.HelloService.SayHello
-   ```
+    ```bash
+    grpcurl -insecure -authority example.com \
+      -d '{"greeting": "Kong"}' \
+      $PROXY_IP:443 hello.HelloService.SayHello
+    ```
+    {: data-test-step="block" data-test-retry-count="6" }
 
    The results should look like this:
 
