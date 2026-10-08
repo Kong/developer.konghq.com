@@ -4,7 +4,7 @@ require 'kramdown'
 
 # Config fixtures below are adapted from real {% validation request-check %} blocks in
 # app/_how-tos/**/*.md, to make sure the curl commands we generate for real docs
-# are syntactically valid bash. A few (mtls, form_data, body_cmd, output, expected_headers)
+# are syntactically valid bash. A few (mtls, form_data, body_cmd, output)
 # have zero real-doc usage anywhere in the repo, so those fixtures are synthetic, built
 # directly from the snippet.md logic, to get full branch coverage.
 RSpec.describe 'how-tos/validations/request-check/snippet.md' do
@@ -715,7 +715,7 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
     end
   end
 
-  context 'expected_headers, a pluralized list (synthetic — no real doc uses expected_headers)' do
+  context 'expected_headers, a pluralized list' do
     let(:template) do
       <<~'LIQUID'
         {% validation request-check %}
