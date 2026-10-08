@@ -109,3 +109,81 @@ rows:
 
 While the reference is unresolved, {{site.operator_product_name}} doesn't push the `KongVault` to
 {{site.konnect_short_name}}, so that a Vault is never created with a missing or wrong Config Store ID.
+
+### `DeletionBlocked` on `KonnectConfigStore` {% new_in 2.4 %}
+
+A `KonnectConfigStore` that still holds secrets isn't deleted from {{site.konnect_short_name}}. It stays in
+`Terminating` and reports `Programmed=False` with reason `DeletionBlocked`:
+
+```sh
+kubectl get konnectconfigstore <name> -n <namespace> -o jsonpath-as-json="{.status.conditions[?(@.type=='Programmed')]}"
+```
+
+{{site.operator_product_name}} retries periodically, and the deletion proceeds once you remove the secrets from the
+Config Store in {{site.konnect_short_name}}. For more information, see
+[lifecycle and deletion](/operator/konnect/config-store/#lifecycle-and-deletion).
+
+### `KonnectConfigStoreSync` conditions {% new_in 2.4 %}
+
+A `KonnectConfigStoreSync` always reports four conditions:
+
+* `ConfigStoreRefValid`: whether the referenced `KonnectConfigStore` exists, is programmed, and is allowed by a
+  `KongReferenceGrant` if it's in another namespace.
+* `SecretRefValid`: whether the referenced Secret exists and is allowed by a `KongReferenceGrant` if it's in another
+  namespace. A Secret without the `konghq.com/secret: "true"` label is reported as `NotFound`.
+* `PairValid`: whether the certificate and key in the Secret form a valid pair. It's always `NotApplicable` in `Split`
+  mode.
+* `Synced`: whether every entry is up to date in the Config Store.
+
+To check why a sync isn't `Synced`:
+
+```sh
+kubectl get konnectconfigstoresync <name> -n <namespace> -o jsonpath-as-json="{.status.conditions[?(@.type=='Synced')]}"
+```
+
+{% table %}
+columns:
+  - title: Reason
+    key: reason
+  - title: Meaning
+    key: meaning
+rows:
+  - reason: "`AllEntriesUpToDate`"
+    meaning: |
+      Every entry is synced. The condition status is `True`.
+  - reason: "`WaitingForConfigStore`"
+    meaning: |
+      The referenced `KonnectConfigStore` doesn't exist, isn't programmed yet, or isn't allowed by a `KongReferenceGrant`.
+      Check the `ConfigStoreRefValid` condition.
+  - reason: "`SecretRefInvalid`"
+    meaning: |
+      The referenced Secret is missing, isn't allowed by a `KongReferenceGrant`, or lacks a mapped field. Check the
+      `SecretRefValid` condition. The entries already in the Config Store are kept.
+  - reason: "`PairMismatch`"
+    meaning: |
+      The certificate or key is malformed, or they don't match. Nothing is written until the Secret holds a valid pair.
+  - reason: "`ValueTooLarge`"
+    meaning: |
+      An entry value exceeds 5120 bytes. In `Combined` mode, the limit applies to the JSON object that holds both PEM
+      values.
+  - reason: "`KeyTooLong`"
+    meaning: |
+      A store key exceeds 512 bytes. This can happen with a derived key built from a long namespace, name, or `Split`
+      field name. Use shorter names, or set an explicit, shorter store key in a new `KonnectConfigStoreSync`, because
+      store keys are immutable once set.
+  - reason: "`KeyConflict`"
+    meaning: |
+      Another entry or another `KonnectConfigStoreSync` uses the same store key in the same Config Store. The oldest
+      sync keeps the key. Use a different store key.
+  - reason: "`PushFailed`"
+    meaning: |
+      The {{site.konnect_short_name}} API request failed. The condition message contains the error.
+  - reason: "`EntryInUse`"
+    meaning: |
+      The sync is being deleted with `deletionPolicy: Delete`, but a `KongCertificate` still references one of its
+      entries. Remove the reference, or set `deletionPolicy: Orphan` to keep the entries.
+  - reason: "`ConfigStoreDeletionBlocked`"
+    meaning: |
+      The referenced `KonnectConfigStore` is being deleted, so the sync doesn't write or delete entries. Remove the
+      secrets from the Config Store in {{site.konnect_short_name}} to let the deletion proceed.
+{% endtable %}
