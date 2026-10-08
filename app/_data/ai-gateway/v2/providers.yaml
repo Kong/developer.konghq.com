@@ -7,7 +7,7 @@ providers:
       generate:
         supported: true
         streaming: true
-        upstream_path: "Uses the `Converse` and `ConverseStream` APIs. When a client sends an Anthropic-format request to an Anthropic Claude model, {{site.ai_gateway}} sends it to `InvokeModel` or `InvokeModelWithResponseStream` instead, because the request is already in Claude's native format."
+        upstream_path: 'Uses the `Converse` and `ConverseStream` API'
         model_example: '[Use the model name for the specific LLM provider](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html)'
         min_version: '2.0'
       completions:
