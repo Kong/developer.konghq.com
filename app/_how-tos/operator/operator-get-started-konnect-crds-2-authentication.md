@@ -62,7 +62,7 @@ metadata:
 spec:
   type: token
   token: '$KONNECT_TOKEN'
-  serverURL: us.api.konghq.com
+  serverURL: us.api.{{ site.konnect_domain }}
 {% endkonnect_crd %}
 <!-- vale on -->
 
@@ -90,7 +90,7 @@ spec:
   type: secretRef
   secretRef:
     name: konnect-api-auth-secret
-  serverURL: us.api.konghq.com
+  serverURL: us.api.{{ site.konnect_domain }}
 {% endkonnect_crd %}
 <!-- vale on -->
 

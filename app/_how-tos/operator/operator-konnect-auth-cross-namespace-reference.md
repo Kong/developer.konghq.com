@@ -52,7 +52,7 @@ metadata:
 spec:
   type: token
   token: '"$KONNECT_TOKEN"'
-  serverURL: us.api.konghq.com' | kubectl apply -f -
+  serverURL: us.api.{{ site.konnect_domain }}' | kubectl apply -f -
 ```
 
 ## Create the KongReferenceGrant
