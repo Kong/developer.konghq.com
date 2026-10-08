@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect AI Gateway
-  version: 2.2.3
+  version: 2.2.5
   description: The API for configuring AI Gateways in Konnect.
   x-extensions-note: |
     Entities and properties may be annotated with `x-min-runtime-version`, the
@@ -18,8 +18,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@e58c7f8db05e38787ac96dd84bd29cda3509a43c
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e58c7f8db05e38787ac96dd84bd29cda3509a43c'
+  x-oas-source: kong/platform-api@13cfba73fc84ad83d15a7a0e48898507f2677b72
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/13cfba73fc84ad83d15a7a0e48898507f2677b72'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -4179,11 +4179,10 @@ components:
           minLength: 1
         path_param:
           description: |
-            The name of the regex capture group beginning with "~", which is defined in the route path for routing.
+            The name of the regex capture group defined in the route path for routing.
           type: string
-          example: ~model_name
+          example: model_name
           minLength: 1
-          pattern: ^~.+$
         values:
           description: |
             Optional model aliases. When omitted, the model name is used.

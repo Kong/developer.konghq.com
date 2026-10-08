@@ -19,13 +19,13 @@ info:
 
     Authenticate with a Konnect personal access token or system account token. The base URL is
     `https://global.api.konghq.com/v2` for all regions.
-  version: 2.4.0
+  version: 2.5.0
   title: Konnect Cloud Gateways
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@71eb5f9b874a36c530766e00e19ed197d3399d4d
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/71eb5f9b874a36c530766e00e19ed197d3399d4d'
+  x-oas-source: kong/platform-api@4b68cac5017ea941aa4edb3e82ebb719f5674678
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/4b68cac5017ea941aa4edb3e82ebb719f5674678'
 servers:
   - url: 'https://global.api.konghq.com/v2'
     description: Base URL for the global region
@@ -72,9 +72,11 @@ paths:
         groups to match. Any network referenced in the request that is currently `offline` automatically transitions
         to `initializing`.
 
-        Use `kind: dedicated.v0` (default) for dedicated Cloud Gateways — `version`, `cloud_gateway_network_id`, and
-        `autoscale` are required. Use `kind: serverless.v1` for serverless Cloud Gateways — those three fields must
-        be omitted.
+        For a `Dedicated API gateway`, use kind: dedicated.v0 and type: api (both defaults); version,
+        cloud_gateway_network_id, and autoscale are required. For a `Dedicated AI gateway`, use
+        kind: dedicated.v0 and type: ai; cloud_gateway_network_id is required, while version, autoscale,
+        and environment must be omitted. For a `Serverless gateway`, use kind: serverless.v1; version,
+        cloud_gateway_network_id, and autoscale must be omitted.
       requestBody:
         required: true
         content:
@@ -86,6 +88,8 @@ paths:
                 $ref: '#/components/examples/DedicatedSingleRegionConfigurationExample'
               DedicatedMultiRegionConfigurationExample:
                 $ref: '#/components/examples/DedicatedMultiRegionConfigurationExample'
+              DedicatedAiConfigurationExample:
+                $ref: '#/components/examples/DedicatedAiConfigurationExample'
               ServerlessConfigurationExample:
                 $ref: '#/components/examples/ServerlessConfigurationExample'
       responses:
@@ -632,6 +636,8 @@ paths:
             examples:
               CreateCustomDomainExample:
                 $ref: '#/components/examples/CreateCustomDomainExample'
+              CreateDedicatedAiCustomDomainExample:
+                $ref: '#/components/examples/CreateDedicatedAiCustomDomainExample'
       responses:
         '201':
           $ref: '#/components/responses/CreateCustomDomainResponse'
@@ -846,6 +852,8 @@ paths:
             examples:
               control-plane-owner:
                 $ref: '#/components/examples/CreateAddOnControlPlaneOwnerExample'
+              dedicated-ai-control-plane-owner:
+                $ref: '#/components/examples/CreateAddOnDedicatedAiControlPlaneOwnerExample'
               control-plane-group-owner:
                 $ref: '#/components/examples/CreateAddOnControlPlaneGroupOwnerExample'
       responses:
@@ -1325,7 +1333,9 @@ components:
         - sg
       title: Control-Plane Geo
     GatewayVersion:
-      description: 'Supported gateway version. For serverless.v1 kind of cloud gateways, this field should be omitted.'
+      description: |
+        Supported gateway version. For `serverless.v1` cloud gateways and dedicated AI gateways
+        (`kind: dedicated.v0` and `type: ai`), this field should be omitted.
       type: string
       example: '3.10'
       title: Gateway Version
@@ -1348,10 +1358,13 @@ components:
         Controls how data planes in a configuration are exposed. Supported values:
         - `private` — data planes are accessible only within the VPC network; no public internet exposure
         - `public` — data planes are accessible from the public internet
-        - `private+public` — equivalent to `public`; data planes are accessible from the public internet (default)
+        - `private+public` — equivalent to `public`; data planes are accessible from the public internet
+
+        Dedicated AI gateways (`kind: dedicated.v0` and `type: ai`) support only private or
+        public; the default is `public`. The private+public value is not supported for dedicated
+        AI gateways. For other gateway types, the default is `private+public`.
       type: string
       example: private+public
-      default: private+public
       enum:
         - private
         - public
@@ -1551,11 +1564,14 @@ components:
         - serverless_v1_providers
       title: Availability Document
     ConfigurationDataPlaneGroupAutoscale:
+      description: |
+        Autoscaling configuration for a data-plane group. For dedicated AI gateways
+        (`kind: dedicated.v0` and `type: ai`) and serverless.v1 kind gateways, this field should be omitted.
       oneOf:
         - $ref: '#/components/schemas/ConfigurationDataPlaneGroupAutoscaleStatic'
         - $ref: '#/components/schemas/ConfigurationDataPlaneGroupAutoscaleAutopilot'
     ConfigurationDataPlaneGroupAutoscaleStatic:
-      description: 'Object that describes the static autoscaling strategy. Deprecated in favor of the autopilot autoscaling strategy. Static autoscaling will be removed in a future version. For serverless.v1 kind of cloud gateways, this field should be omitted.'
+      description: Object that describes the static autoscaling strategy. Deprecated in favor of the autopilot autoscaling strategy. Static autoscaling will be removed in a future version.
       type: object
       properties:
         kind:
@@ -1576,7 +1592,7 @@ components:
         - requested_instances
       title: Configuration Autoscale Static
     ConfigurationDataPlaneGroupAutoscaleAutopilot:
-      description: 'Object that describes the autopilot autoscaling strategy. For serverless.v1 kind of cloud gateways, this field should be omitted.'
+      description: Object that describes the autopilot autoscaling strategy.
       type: object
       properties:
         kind:
@@ -1599,13 +1615,17 @@ components:
         - base_rps
       title: Configuration Autoscale Autopilot
     ConfigurationDataPlaneGroupEnvironment:
-      description: Array of environment variables to set for a data-plane group.
+      description: |
+        Array of environment variables to set for a data-plane group. For dedicated AI gateways
+        (`kind: dedicated.v0` and `type: ai`), this field should be omitted.
       type: array
       items:
         $ref: '#/components/schemas/ConfigurationDataPlaneGroupEnvironmentField'
       title: Configuration Data-Plane Group Environment
     ConfigurationDataPlaneGroupEnvironmentField:
-      description: Environment variable name and value to set for a data-plane group.
+      description: |
+        Environment variable name and value to set for a data-plane group. For dedicated AI gateways
+        (`kind: dedicated.v0` and `type: ai`), this field should be omitted.
       type: object
       properties:
         name:
@@ -1746,6 +1766,33 @@ components:
         - dedicated.v0
         - serverless.v1
       title: ConfigurationKind
+    ConfigurationType:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Type of Cloud Gateway: `api` for an API Gateway or `ai` for an AI Gateway.
+        Applies only to dedicated Cloud Gateways. Defaults to `api` when omitted.
+      type: string
+      default: api
+      enum:
+        - api
+        - ai
+      title: ConfigurationType
+    CustomDomainType:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Type of gateway the custom domain belongs to: `api` for an API Gateway or
+        `ai` for an AI Gateway. Applies only to dedicated custom domains. Defaults to `api`
+        when omitted.
+      type: string
+      default: api
+      enum:
+        - api
+        - ai
+      title: CustomDomainType
     CustomDomainKind:
       description: |-
         **Pre-release Feature**
@@ -1784,6 +1831,8 @@ components:
           format: set
         kind:
           $ref: '#/components/schemas/ConfigurationKind'
+        type:
+          $ref: '#/components/schemas/ConfigurationType'
         entity_version:
           description: |
             Positive, monotonically increasing version integer, to serialize configuration changes.
@@ -3493,6 +3542,8 @@ components:
           readOnly: true
         kind:
           $ref: '#/components/schemas/CustomDomainKind'
+        type:
+          $ref: '#/components/schemas/CustomDomainType'
       required:
         - id
         - control_plane_id
@@ -3528,8 +3579,9 @@ components:
       description: |
         Describes the desired state of a control plane's Cloud Gateway deployment. Submitting
         this request replaces the current configuration; Kong reconciles running data plane groups
-        to match. Use `kind: dedicated.v0` for Dedicated Cloud Gateways or `kind: serverless.v1`
-        for Serverless — the required fields differ by kind.
+        to match. `Dedicated API gateways` require version, cloud_gateway_network_id, and autoscale.
+        `Dedicated AI gateways` require cloud_gateway_network_id; version, autoscale, and environment
+        must be omitted. `Serverless gateways` omit version, cloud_gateway_network_id, and autoscale.
       type: object
       properties:
         control_plane_id:
@@ -3546,6 +3598,8 @@ components:
           format: set
         kind:
           $ref: '#/components/schemas/ConfigurationKind'
+        type:
+          $ref: '#/components/schemas/ConfigurationType'
         api_access:
           $ref: '#/components/schemas/ApiAccess'
       additionalProperties: false
@@ -3566,6 +3620,8 @@ components:
           $ref: '#/components/schemas/CustomDomainName'
         kind:
           $ref: '#/components/schemas/CustomDomainKind'
+        type:
+          $ref: '#/components/schemas/CustomDomainType'
       additionalProperties: false
       required:
         - control_plane_id
@@ -3924,6 +3980,19 @@ components:
         - $ref: '#/components/schemas/ControlPlaneAddOnOwner'
         - $ref: '#/components/schemas/ControlPlaneGroupAddOnOwner'
       title: AddOnOwner
+    ControlPlaneAddOnOwnerType:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Type of gateway that owns the add-on: `api` for an API Gateway or `ai` for an
+        AI Gateway. Defaults to `api` when omitted.
+      type: string
+      default: api
+      enum:
+        - api
+        - ai
+      title: ControlPlaneAddOnOwnerType
     ControlPlaneAddOnOwner:
       description: Control Plane is the owner for the add-on.
       type: object
@@ -3934,6 +4003,8 @@ components:
           enum:
             - control-plane
           x-terraform-transform-const: true
+        type:
+          $ref: '#/components/schemas/ControlPlaneAddOnOwnerType'
         control_plane_id:
           description: ID of the control-plane that owns this add-on.
           type: string
@@ -5103,6 +5174,18 @@ components:
             autoscale:
               kind: autopilot
               base_rps: 100
+    DedicatedAiConfigurationExample:
+      summary: Dedicated AI Cloud Gateway
+      value:
+        control_plane_id: 0949471e-b759-45ba-87ab-ee63fb781388
+        control_plane_geo: us
+        kind: dedicated.v0
+        type: ai
+        api_access: public
+        dataplane_groups:
+          - provider: aws
+            region: us-east-2
+            cloud_gateway_network_id: 36ae63d3-efd1-4bec-b246-62aa5d3f5695
     ServerlessConfigurationExample:
       summary: Serverless Cloud Gateway
       value:
@@ -5380,6 +5463,20 @@ components:
           capacity_config:
             kind: tiered
             tier: small
+    CreateAddOnDedicatedAiControlPlaneOwnerExample:
+      summary: Create a managed cache add-on for a dedicated AI gateway
+      value:
+        name: my-ai-cache-add-on
+        owner:
+          kind: control-plane
+          type: ai
+          control_plane_id: 123e4567-e89b-12d3-a456-426614174000
+          control_plane_geo: us
+        config:
+          kind: managed-cache.v0
+          capacity_config:
+            kind: tiered
+            tier: small
     CreateAddOnControlPlaneGroupOwnerExample:
       summary: Create a managed cache add-on owned by a control plane group
       value:
@@ -5559,6 +5656,14 @@ components:
         control_plane_id: 5f4e3d2c-1b0a-4e6f-8c7d-9e0f1a2b3c4d
         control_plane_geo: us
         domain: api.example.com
+    CreateDedicatedAiCustomDomainExample:
+      summary: Register a custom domain for a dedicated AI gateway
+      value:
+        control_plane_id: 5f4e3d2c-1b0a-4e6f-8c7d-9e0f1a2b3c4d
+        control_plane_geo: us
+        domain: ai.example.com
+        kind: dedicated.v0
+        type: ai
     UpdateAddOnManagedCacheTierExample:
       summary: Update managed cache add-on tier
       value:
