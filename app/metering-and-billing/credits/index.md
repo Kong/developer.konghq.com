@@ -43,9 +43,9 @@ Credits are customer-specific value that can be used to pay for charges.
 They are useful for prepaid plans, promotional balances, migration credits, enterprise commitments, or any workflow where a customer consumes a balance before paying by invoice.
 
 A credit balance is always tied to a customer and a currency.
-For example, a customer can have a USD credit balance and an EUR credit balance.
+A customer's fiat credits are held in the customer's currency, for example USD.
+A customer can also hold balances in [custom currencies](/metering-and-billing/currencies/), such as tokens, API calls, or compute units you define for your organization.
 Charges consume credits from the matching currency balance.
-Balances can be held in fiat currencies or in [custom currencies](/metering-and-billing/currencies/), such as tokens, API calls, or compute units you define for your organization.
 
 The purchase that funds a grant always settles in a fiat currency, even when the granted balance is in a custom currency.
 {{site.metering_and_billing}} converts custom-currency charges on a fiat invoice through the currency's cost basis.
@@ -60,7 +60,7 @@ The credit system works as follows:
 * **Credit grants** add credits to a customer balance.
 A grant can be promotional, funded through a {{site.metering_and_billing}} invoice, or funded externally.
 * **Balances** show how much credit the customer has.
-There is a settled balance from committed ledger movements, a live balance that also accounts for open charges, and a pending balance for granted credits that haven't taken effect yet.
+There is a settled balance from committed ledger movements, a live balance that also accounts for open charges, and a pending amount: the total of granted credits that haven't taken effect yet.
 * **Charges** consume credits.
 The settlement mode on the plan controls whether credits are applied before invoicing or whether charges are settled only against credits.
 * **Transaction history** explains balance changes.
@@ -82,7 +82,7 @@ columns:
     key: reference
 rows:
   - term: "**Credit**"
-    definition: "A customer-specific monetary value that can be applied to charges to reduce the amount charged on an invoice."
+    definition: "A customer-specific value that settles charges. Depending on the settlement mode, credits settle charges on their own, or are applied first and any remainder is invoiced."
     reference: "[Credit grants](/metering-and-billing/credits/grants/)"
   - term: "**Grant**"
     definition: "The object that adds credits to a customer balance."
@@ -97,7 +97,7 @@ rows:
     definition: "A pessimistic balance of available credits. The settled balance minus the impact of open (in-flight) charges that have not yet been finalized."
     reference: "[Credit balance model](/metering-and-billing/credits/balance-model/)"
   - term: "**Pending balance**"
-    definition: "Credits that have been granted but don't count toward the settled balance yet, such as a grant with a future effective time."
+    definition: "The total of granted credits that don't count toward the settled balance yet, such as grants with a future effective time. A sum of pending grants, after any filters, not a spendable balance."
     reference: "[Credit balance model](/metering-and-billing/credits/balance-model/)"
   - term: "**Movement**"
     definition: "A record of a credit change. Movements are immutable: when something changes, a new movement is recorded instead of rewriting the old one. The balance is derived from the sum of all movements."

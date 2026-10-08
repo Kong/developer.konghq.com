@@ -82,14 +82,14 @@ flowchart LR
 
 1. Create a credit grant for the customer with the invoice funding method.
 1. Set the granted credit amount and currency.
-1. Set purchase terms, including the purchase currency and per-unit cost.
+1. Set purchase terms, including the purchase currency and cost basis.
 1. Let the invoice lifecycle handle payment authorization and settlement.
 1. Show the customer their credit grant and credit balance.
 
 The credits are available as soon as the grant takes effect, without waiting for the invoice to be paid.
 
 The credit amount and the invoice amount are different values.
-A customer might receive 1,000 credits but pay a negotiated amount based on the per-unit cost.
+A customer might receive 1,000 credits but pay a negotiated amount based on the cost basis.
 
 ## Record externally funded credits
 
