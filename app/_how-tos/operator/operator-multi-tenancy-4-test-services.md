@@ -143,6 +143,15 @@ spec:
 
 ## Validate
 
+Wait for the routes to be programmed. Route conditions are nested in `status.parents`, so the wait uses a jsonpath instead of a condition:
+
+```bash
+kubectl wait --for=jsonpath='{.status.parents[0].conditions[?(@.type=="Programmed")].status}'=True httproute/echo -n kong-gw-public --timeout=300s
+kubectl wait --for=jsonpath='{.status.parents[0].conditions[?(@.type=="Programmed")].status}'=True httproute/echo -n kong-gw-private --timeout=300s
+kubectl wait --for=jsonpath='{.status.parents[0].conditions[?(@.type=="Programmed")].status}'=True httproute/private-only -n kong-gw-private --timeout=300s
+```
+{: data-test-step="block" }
+
 1. Get the external IP address for each gateway:
 
    ```bash
@@ -163,8 +172,6 @@ spec:
 {% validation request-check %}
 url: /echo
 status_code: 200
-count: 6
-sleep: 5
 on_prem_url: $PUBLIC_GW_IP
 konnect_url: $PUBLIC_GW_IP
 {% endvalidation %}
@@ -174,8 +181,6 @@ konnect_url: $PUBLIC_GW_IP
 {% validation request-check %}
 url: /echo
 status_code: 200
-count: 6
-sleep: 5
 on_prem_url: $PRIVATE_GW_IP:8080
 konnect_url: $PRIVATE_GW_IP:8080
 {% endvalidation %}
@@ -185,8 +190,6 @@ konnect_url: $PRIVATE_GW_IP:8080
 {% validation request-check %}
 url: /private
 status_code: 200
-count: 6
-sleep: 5
 on_prem_url: $PRIVATE_GW_IP:8080
 konnect_url: $PRIVATE_GW_IP:8080
 {% endvalidation %}

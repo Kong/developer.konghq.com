@@ -190,17 +190,13 @@ You can now access the `echo` Service on port `9443` with SNI `tls9443.kong.exam
 In real-world usage, you would create a DNS record for `tls9443.kong.example` pointing to your proxy Service's public IP address, which causes TLS clients to add an SNI automatically. For this demo, add it manually using the OpenSSL CLI:
 
 ```bash
-for _ in {1..18}; do
-  response=$(echo "hello" | openssl s_client -connect $PROXY_IP:9443 -servername tls9443.kong.example -quiet 2>/dev/null)
-  echo "$response" | grep -q hello && break
-  sleep 5
-done
+response=$(echo "hello" | openssl s_client -connect $PROXY_IP:9443 -servername tls9443.kong.example -quiet 2>/dev/null)
 echo "$response"
 echo "$response" | grep hello
 ```
-{: data-test-step="block" }
+{: data-test-step="block" data-test-retry-count="6" }
 
-The listener change re-provisions the data plane deployment, and the route needs a few more seconds to program after it, so the loop retries until the response contains the text you sent. The `echo` prints the full response, and the final `grep` confirms it. The results should look like this:
+The `echo` prints the full response, and the `grep` confirms that the response contains the text you sent. The results should look like this:
 
 ```text
 Welcome, you are connected to node kind-control-plane.
@@ -308,17 +304,13 @@ kubectl wait gateway/kong -n kong \
 Reuse the `$PROXY_IP` you exported earlier and connect to the new listener:
 
 ```bash
-for _ in {1..18}; do
-  response=$(echo "hello" | openssl s_client -connect $PROXY_IP:9444 -servername tls9444.kong.example -quiet 2>/dev/null)
-  echo "$response" | grep -q hello && break
-  sleep 5
-done
+response=$(echo "hello" | openssl s_client -connect $PROXY_IP:9444 -servername tls9444.kong.example -quiet 2>/dev/null)
 echo "$response"
 echo "$response" | grep hello
 ```
-{: data-test-step="block" }
+{: data-test-step="block" data-test-retry-count="6" }
 
-As with the Passthrough listener, the loop retries until the response contains the text you sent. The results should look like this:
+The results should look like this:
 
 ```text
 Welcome, you are connected to node kind-control-plane.
