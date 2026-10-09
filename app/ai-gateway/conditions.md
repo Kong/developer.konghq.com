@@ -46,7 +46,7 @@ For the condition `http.headers.x_tier == "premium"`:
 * A request with `x-tier: free`, any other value, or no `x-tier` header doesn't match, so {{site.ai_gateway}} skips the AI Policy.
 
 In the expression, write header names in lowercase with underscores in place of hyphens, so `x-tier` becomes `x_tier`.
-{{site.ai_gateway}} rejects an expression that uses a hyphen, such as `http.headers.x-tier`, when you save the AI Policy. <!-- [LIVE] -->
+{{site.ai_gateway}} rejects an expression that uses a hyphen, such as `http.headers.x-tier`, when you save the AI Policy.
 
 <!-- TODO: add a UI-aware paragraph and a tabbed API/UI/kongctl example once we confirm where (or whether) condition is exposed in Konnect. -->
 
@@ -57,7 +57,7 @@ For each AI Policy that has a `condition` set, {{site.ai_gateway}} evaluates the
 
 Unlike scopes, which determine which AI Policies can apply to a request, conditions are evaluated per request, per AI Policy.
 
-A false condition skips the AI Policy in every phase, not only the one that evaluates the expression. <!-- TODO: confirm the rewrite and certificate phases with engineering if the page needs to mention them. -->
+When a condition evaluates to `false`, {{site.ai_gateway}} skips the AI Policy in every phase of the request. <!-- TODO: confirm the rewrite and certificate phases with engineering if the page needs to mention them. -->
 
 {{site.ai_gateway}} evaluates a condition after it applies scope precedence.
 When AI Policies of the same type apply at more than one scope, only the most specific one is considered, and its condition then decides whether it runs.
@@ -65,13 +65,13 @@ If that condition is `false`, the AI Policy is skipped and the less specific AI 
 
 ## Performance considerations
 
-<!-- [BASE] Adapt after confirming. -->
-Conditions are evaluated per request for each conditioned AI Policy, so they cost more than scopes, which are resolved once.
+{{site.ai_gateway}} evaluates a condition on every request for each conditioned AI Policy.
+Scopes need only a configuration lookup, so a condition adds more work to each request.
 Where possible, use scopes to control which AI Policies apply, and use conditions for request-level decisions.
 
 When you use conditions, keep the following in mind:
 
-* An AI Policy's configuration is always loaded, even if its condition evaluates to `false`.
+* {{site.ai_gateway}} loads an AI Policy's configuration, including its secret references, even when its condition evaluates to `false`.
 * Complex compound expressions with many fields are more expensive to evaluate than simple single-field expressions.
 
 ## Limitations
@@ -81,7 +81,7 @@ When you use conditions, keep the following in mind:
 * A condition can be up to 1024 characters long. {{site.ai_gateway}} rejects longer expressions when you save the AI Policy with `maximum string length is 1024`.
 * Conditions require {{site.ai_gateway}} 2.1 or later.
 
-<!-- TODO: confirm whether any AI Policy type doesn't support conditions. Base Gateway excludes Pre-Function, Post-Function, and the WebSocket plugins. [LIVE] 2.2.0: post-function accepts a condition on save and honors it at runtime. pre-function accepts a condition on save, but a pre-function policy never ran in the test setup even without a condition (no header, no log marker, no data plane error), so its condition behavior is unknown; that looks like a separate problem and should be raised with engineering. websocket-validator, websocket-size-limit, and AI Custom Policy are untested. -->
+<!-- TODO: confirm whether any AI Policy type doesn't support conditions. Base Gateway excludes Pre-Function, Post-Function, and the WebSocket plugins. -->
 
 ## Condition expressions reference
 
@@ -264,7 +264,7 @@ rows:
   - field: "`consumer.id`, `consumer.username`, `consumer.custom_id`, `consumer.tags`"
     behavior: |
       Return `null` when the request isn't authenticated.
-      For an authenticated AI Consumer, `consumer.id` is the AI Consumer's ID, `consumer.username` is its name, and `consumer.custom_id` is its custom ID.
+      For an authenticated AI Consumer, `consumer.id` is the AI Consumer's ID, `consumer.username` is its `name`, and `consumer.custom_id` is its custom ID.
       `consumer.tags` contains the AI Consumer's labels as `key:value` strings, and is `null` when the AI Consumer has no labels.
   - field: "`consumer_group.names`, `consumer_group.ids`"
     behavior: |
@@ -272,8 +272,8 @@ rows:
       For an authenticated AI Consumer that belongs to AI Consumer Groups, return the names and IDs of those groups.
   - field: "`principal.id`, `principal.metadata`"
     behavior: |
-      Return `null` when the request isn't authenticated, and when the AI Auth Strategy doesn't use Principal mapping.
-      For a request authenticated through an AI Auth Strategy with Kong Identity Principal mapping (`config.principals`), `principal.id` is the Principal's ID and `principal.metadata` is its metadata map.
+      When the request is authenticated through an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) with {{site.identity}} [Principal](/identity/principals/) mapping (`config.principals`), `principal.id` is the Principal's ID and `principal.metadata` is its metadata map.
+      In all other cases, both fields are `null`.
 
   - field: "`kong.ctx.shared`"
     behavior: |
