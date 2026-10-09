@@ -173,6 +173,7 @@ spec:
     - group: konnect.konghq.com
       kind: KonnectGatewayControlPlane' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Create a `KongVault` backed by the Config Store
 
@@ -227,6 +228,7 @@ Generate a self-signed certificate and key to work with:
 ```sh
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=example.localdomain.dev"
 ```
+{: data-test-step="block" }
 
 ## Write the private key into the Config Store
 
@@ -237,17 +239,29 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt
    {{site.konnect_short_name}} UI:
 
    ```sh
+   kubectl wait -n kong konnectgatewaycontrolplanes.konnect.konghq.com/gateway-control-plane --for=condition=Programmed --timeout=300s
+   kubectl wait -n kong konnectconfigstores.konnect.konghq.com/cert-keys --for=condition=Programmed --timeout=300s
+   ```
+   {: data-test-step="block" }
+
+1. Fetch the {{site.konnect_short_name}} IDs of the control plane and of the Config Store that {{site.operator_product_name}}
+   created. The Config Store ID is published on the `KonnectConfigStore` status, so you don't have to look it up in the
+   {{site.konnect_short_name}} UI:
+
+   ```sh
    export CONTROL_PLANE_ID=$(kubectl get -n kong konnectgatewaycontrolplanes.konnect.konghq.com gateway-control-plane -o jsonpath='{.status.id}')
    echo $CONTROL_PLANE_ID
    export CONFIG_STORE_ID=$(kubectl get -n kong konnectconfigstores.konnect.konghq.com cert-keys -o jsonpath='{.status.id}')
    echo $CONFIG_STORE_ID
    ```
+   {: data-test-step="block" }
 
 1. Build the request body, using `jq` to embed the PEM file as a JSON string:
 
    ```sh
    jq -n --arg key example-tls-key --rawfile value tls.key '{key: $key, value: $value}' > secret.json
    ```
+   {: data-test-step="block" }
 
 1. Store the private key as a secret entry in the Config Store:
 {% capture command %}
@@ -305,6 +319,7 @@ spec:
 $(sed 's/^/    /' tls.crt)
   key: '{vault://certvault/example-tls-key}'" | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 <!-- vale off -->
 {% validation kubernetes-resource %}

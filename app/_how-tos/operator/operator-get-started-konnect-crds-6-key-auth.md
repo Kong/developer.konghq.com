@@ -97,6 +97,7 @@ Keys are stored as Kubernetes `Secrets` and Consumers are managed with the `Kong
       key: hello_world
    ' | kubectl apply -f -
    ```
+   {: data-test-step="block" }
 
 1. Create a new Consumer and attach the credential:
 

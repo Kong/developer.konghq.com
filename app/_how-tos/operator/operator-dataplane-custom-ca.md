@@ -49,16 +49,18 @@ To ensure that the correct certificate has been used, fetch the Data Plane certi
 
 Fetch the Control Plane ID:
 
- ```bash
+```bash
+kubectl wait -n kong konnectgatewaycontrolplanes.konnect.konghq.com/gateway-control-plane --for=condition=Programmed --timeout=300s
 CONTROL_PLANE_ID=$(kubectl get -n kong konnectgatewaycontrolplanes.konnect.konghq.com gateway-control-plane -o yaml | yq .status.id)
 ```
+{: data-test-step="block" }
 
 Fetch the client certificate:
 
 <!--vale off-->
 {% konnect_api_request %}
 url: /v2/control-planes/$CONTROL_PLANE_ID/dp-client-certificates
-status_code: 2010
+status_code: 200
 method: GET
 capture:
   - variable: DP_CERT
@@ -71,7 +73,7 @@ To validate that the correct CA certificate has been used, you can `diff` the lo
 <!--vale off-->
 {% validation custom-command %}
 command: |
-  echo $DP_CERT > dp.crt
+  echo "$DP_CERT" > dp.crt
   diff -u tls.crt dp.crt
 expected:
   return_code: 0

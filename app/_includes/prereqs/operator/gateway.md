@@ -8,6 +8,16 @@ content: |
   {: data-test-prereq="block" }
 {% endon_prem %}
 
+{% konnect %}
+content: |
+  Create the `kong` namespace:
+
+  ```sh
+  kubectl create namespace kong --dry-run=client -o yaml | kubectl apply -f -
+  ```
+  {: data-test-prereq="block" }
+{% endkonnect %}
+
 Create the `GatewayConfiguration`, `GatewayClass`, and `Gateway` resources with basic configuration:
 
 ```sh

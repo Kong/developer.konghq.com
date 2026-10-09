@@ -83,6 +83,7 @@ content: |
     --set env.ENABLE_CONTROLLER_KONNECT=true \
     -f values.yaml
   ```
+  {: data-test-step="block" }
 {% endkonnect %}
 
 {% on_prem %}
