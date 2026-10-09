@@ -3,6 +3,7 @@
 {% assign plugin_config_example = include.plugin_config_example -%}
 {%- assign targets = plugin_config_example.targets -%}
 {%- assign formats = plugin_config_example.formats -%}
+{%- assign heading_level = 5 -%}
 {%- for example in plugin_config_example.examples -%}
 {%- assign target = example.target.key -%}
 {%- assign formatted_examples = example.formatted_examples -%}

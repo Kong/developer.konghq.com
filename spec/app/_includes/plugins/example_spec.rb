@@ -26,16 +26,22 @@ RSpec.describe 'plugins/example.md' do
     )
   end
 
-  def render_example_page(example_slug)
+  def render_example_page(example_slug, output_format: 'html')
     file = plugin.example_files.detect { |f| File.basename(f, File.extname(f)) == example_slug }
     page = Jekyll::PluginPages::Pages::Example.new(plugin:, file:)
 
-    rendered = render_liquid(page.content, page: page.data)
+    rendered = render_liquid(page.content, page: page.data.merge('output_format' => output_format))
+    return rendered if output_format == 'markdown'
+
     Capybara::Node::Simple.new(Kramdown::Document.new(rendered, input: 'GFM').to_html)
   end
 
   def heading_ids(html)
     html.all('h2,h3').map { |heading| heading[:id] }
+  end
+
+  def markdown_headings(markdown)
+    markdown.scan(/^\#{1,6} .+$/)
   end
 
   shared_examples 'a page with an ordered credential section' do
@@ -78,6 +84,22 @@ RSpec.describe 'plugins/example.md' do
     it 'renders no credential section' do
       expect(heading_ids(html)).not_to include('create-a-consumer-and-credential')
       expect(heading_ids(html)).to include('set-up-the-plugin')
+    end
+  end
+
+  context 'when the page renders in markdown output' do
+    let(:rendered) { render_example_page('enable-fixture-auth-route', output_format: 'markdown') }
+
+    it 'renders the target heading at h4 and the Terraform and KIC format headings at h5' do
+      expect(markdown_headings(rendered)).to include('#### Route', '##### Terraform', '##### KIC')
+    end
+
+    it 'renders the Terraform prerequisite details heading at h6' do
+      expect(markdown_headings(rendered)).to include('###### **Prerequisite:** Configure your Personal Access Token')
+    end
+
+    it 'renders the KIC Gateway API and Ingress tab headings at h6' do
+      expect(markdown_headings(rendered)).to include('###### Gateway API', '###### Ingress')
     end
   end
 end

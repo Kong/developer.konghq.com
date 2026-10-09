@@ -1,0 +1,14 @@
+title: 'Enable Fixture Auth on a Route'
+description: 'Enables the Fixture Auth plugin on a Route.'
+weight: 200
+
+targets:
+  - route
+
+config:
+  key_names:
+  - apikey
+
+tools:
+  - kic
+  - terraform

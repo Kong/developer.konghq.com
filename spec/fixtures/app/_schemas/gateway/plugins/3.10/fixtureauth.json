@@ -4,6 +4,15 @@
       "items": {
         "enum": ["http", "https"]
       }
+    },
+    "route": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
     }
   }
 }
