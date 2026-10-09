@@ -20,6 +20,7 @@ config:
   issuers_allowed:
     - issuer-url-for-example-host1
     - issuer-url-for-example-host2
+  cache_tokens_salt: ${salt-token}
 
 variables:
   issuer:
@@ -31,6 +32,11 @@ variables:
     value: $JWKS_ENDPOINT
     description: |
       The URL of the JWKS endpoint to use instead of the `jwks_uri` returned by the internal discovery mechanism. 
+  salt-token:
+    value: $TOKEN_SALT
+    description: |
+      A random string that decK requires (v1.59 and later) so session credentials aren't regenerated on every sync. This parameter is optional for other formats.
+      For example, generate one with `openssl rand -base64 16`.
 
 tools:
   - deck
