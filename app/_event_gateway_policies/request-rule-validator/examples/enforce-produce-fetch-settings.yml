@@ -1,0 +1,59 @@
+title: Enforce producer and consumer settings
+
+description: Require durable writes and transactional ID naming for producers, and limit how consumers fetch records.
+
+extended_description: |
+  This Request Rule Validator policy enforces client settings on `Produce` and `Fetch` requests.
+
+  In this example, for `produce` requests:
+  * Producers must set `acks` to `all` (`-1`), so that every in-sync replica stores a record before the broker acknowledges it.
+  * If a producer uses transactions, its transactional ID must start with `team-a.`.
+
+  For `fetch` requests:
+  * Consumers must use the `read_committed` isolation level, so that they don't read records from aborted transactions.
+  * Consumers must wait at least 100 ms for data (`fetch.max.wait.ms`), so that they can't poll the broker in a tight loop.
+  * A fetch response can be at most 50 MiB (`fetch.max.bytes`).
+
+  The default fetch settings of most Kafka clients match these limits: consumers wait 500 ms for data and fetch at most 50 MiB.
+  Most clients use `read_uncommitted` by default, so consumers must set `isolation.level=read_committed` explicitly.
+  A consumer that breaks a `fetch` rule doesn't receive any records. For example, the Java consumer stops with `IllegalStateException: Unexpected error code 44`.
+
+  When a request doesn't match a rule, {{site.event_gateway_short}} rejects the full request with the Kafka `POLICY_VIOLATION` error code.
+  The `Produce` and `Fetch` responses don't carry an error message, so clients only receive the error code, not the rule description.
+
+  {:.warning}
+  > A producer with `acks=0` doesn't wait for a response. If {{site.event_gateway_short}} rejects its records, the producer doesn't receive an error, and the records are lost.
+
+weight: 880
+
+name: produce_fetch_settings_policy
+type: request_rule_validator
+config:
+  requests:
+    - type: produce
+      rules:
+        - description: "Producers must use acks=all"
+          rule: '{{context.produce.acks == -1}}'
+          action: reject
+        - description: "Transactional ID must start with \"team-a.\""
+          rule: '{{dyn(context.produce.transactional_id) == null || context.produce.transactional_id.startsWith("team-a.")}}'
+          action: reject
+    - type: fetch
+      rules:
+        - description: "Consumers must use the read_committed isolation level"
+          rule: '{{context.fetch.isolation_level == "read_committed"}}'
+          action: reject
+        - description: "Consumers must wait at least 100 ms for data"
+          rule: '{{context.fetch.max_wait_ms >= 100}}'
+          action: reject
+        - description: "Fetch responses can be at most 50 MiB"
+          rule: '{{context.fetch.max_bytes <= 52428800}}'
+          action: reject
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
+
+min_version:
+  event-gateway: '1.3'
