@@ -114,10 +114,12 @@ You also need to export the proxy URL to verify the migration at the end of this
 
 ```sh
 export KONG_PROXY_URL='https://localhost:8443'
+```
 
 ### List the existing Consumers
 
 List your existing [Consumers](/gateway/entities/consumer/):
+
 ```sh
 curl -s $KONG_ADMIN_API/consumers | jq
 ```
