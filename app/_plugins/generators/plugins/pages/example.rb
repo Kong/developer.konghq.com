@@ -2,6 +2,7 @@
 
 require 'yaml'
 require_relative '../../../file_cache'
+require_relative '../../../drops/plugin_credential_example'
 
 module Jekyll
   module PluginPages
@@ -27,7 +28,8 @@ module Jekyll
               'min_version' => example.min_version,
               'content_type' => 'plugin_example',
               'example_title' => example_config['title'],
-              'description' => example_config['description']
+              'description' => example_config['description'],
+              'credential_example' => credential_example
             )
         end
 
@@ -43,6 +45,20 @@ module Jekyll
 
         def example_config
           @example_config ||= YAML.load(File.read(file))
+        end
+
+        def credential_example
+          return nil unless credential_definition && example.consumer_credential?
+
+          @credential_example ||= Drops::PluginCredentialExample.new(
+            plugin_name: @plugin.name,
+            example_formats: example.formats,
+            definition: credential_definition
+          )
+        end
+
+        def credential_definition
+          @credential_definition ||= site.data.dig('plugins', 'credentials', @plugin.slug)
         end
       end
     end
