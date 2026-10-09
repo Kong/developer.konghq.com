@@ -5,12 +5,14 @@ description: Convert a client's JSON records to Protobuf using an inline schema,
 extended_description: |
   Convert JSON records produced by a client to Protobuf before {{site.event_gateway_short}} writes them to the backend cluster.
 
-  This example embeds the target Protobuf schema directly in the policy using `inline`, where it:
+  This example embeds the target Protobuf schema directly in the policy using `inline`. It:
+
   * Sets `message_name` to the fully qualified message to serialize the record value as
-  * Prefixes the converted record with a reference to the schema using `confluent_format`, 
+  * Prefixes the converted record with a reference to the schema using `confluent_format`, so any Confluent-compatible consumer can deserialize it
+
   so any Confluent-compatible consumer can deserialize it
 
-  This change is irreversible. Use the produce phase when every downstream consumer of the topic reads Protobuf.
+   The original JSON isn't stored in the backend cluster, so use the produce phase only when every downstream consumer of the topic reads Protobuf.
 
 weight: 900
 
