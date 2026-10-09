@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect Identity
-  version: 3.6.2
+  version: 3.7.1
   description: The management API for Kong Konnect Identity resources.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@71eb5f9b874a36c530766e00e19ed197d3399d4d
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/71eb5f9b874a36c530766e00e19ed197d3399d4d'
+  x-oas-source: kong/platform-api@4769a359bf9b23ea0a7d56bff0cac5be07462720
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/4769a359bf9b23ea0a7d56bff0cac5be07462720'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -550,7 +550,7 @@ paths:
           style: deepObject
       responses:
         '200':
-          $ref: '#/components/responses/UserCollection'
+          $ref: '#/components/responses/TeamUserMembershipCollection'
         '400':
           $ref: '#/components/responses/IdentityBadRequest'
         '404':
@@ -882,7 +882,7 @@ paths:
           style: deepObject
       responses:
         '200':
-          $ref: '#/components/responses/TeamCollection'
+          $ref: '#/components/responses/UserTeamMembershipCollection'
         '404':
           $ref: '#/components/responses/IdentityNotFound'
       tags:
@@ -1968,6 +1968,65 @@ components:
           format: date-time
           example: '2022-10-08T17:00:00.52Z'
           readOnly: true
+      example:
+        id: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+        email: user@email.com
+        full_name: Test User
+        preferred_name: test
+        active: true
+        inferred_region: us
+        created_at: '2022-02-07T17:46:57.52Z'
+        updated_at: '2022-10-08T17:00:00.52Z'
+      title: User
+    UserCollectionItem:
+      description: 'A user as returned when listing users, including the account type used to register.'
+      type: object
+      properties:
+        id:
+          description: The User ID.
+          type: string
+          format: uuid
+          example: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+          readOnly: true
+        email:
+          description: The email registered to the user.
+          type: string
+          format: email
+          example: user@email.com
+          maxLength: 250
+        full_name:
+          description: The User's full name.
+          type: string
+          example: Jane Doe
+          maxLength: 250
+          pattern: '^[\w \W]+$'
+        preferred_name:
+          description: The User's preferred name.
+          type: string
+          example: Jane
+          maxLength: 250
+        active:
+          description: Returns True if a user has verified their email address.
+          type: boolean
+          default: true
+          readOnly: true
+        inferred_region:
+          description: The Konnect region closest to the user's IP address. This property might only be set for users on signup through Konnect’s build-in native authentication.
+          type: string
+          example: us
+          readOnly: true
+        created_at:
+          description: The time stamp for the date the account was registered.
+          type: string
+          format: date-time
+          example: '2022-02-07T17:46:57.52Z'
+          readOnly: true
+        updated_at:
+          description: A Unix timestamp representation of the most recent change to the User account.
+          type: string
+          format: date-time
+          example: '2022-10-08T17:00:00.52Z'
+          readOnly: true
         account_type:
           description: The authorization strategy used to register the user.
           type: string
@@ -1988,6 +2047,22 @@ components:
         updated_at: '2022-10-08T17:00:00.52Z'
         account_type: google
       title: User
+    TeamUserMembership:
+      description: 'A user''s membership in a team, including the group claim that granted the membership.'
+      allOf:
+        - $ref: '#/components/schemas/User'
+        - type: object
+          example:
+            claim_name:
+              - GroupClaimA
+              - GroupClaimB
+          properties:
+            claim_name:
+              description: An array of group claim names that gave this user membership to the team.
+              type: array
+              items:
+                type: string
+      title: TeamUserMembership
     Team:
       description: The team object contains information about a group of users.
       type: object
@@ -2049,6 +2124,22 @@ components:
             - labels
             - created_at
             - updated_at
+    UserTeamMembership:
+      description: 'A team that a user belongs to, including the group claim that granted the membership.'
+      allOf:
+        - $ref: '#/components/schemas/TeamResponse'
+        - type: object
+          example:
+            claim_name:
+              - GroupClaimA
+              - GroupClaimB
+          properties:
+            claim_name:
+              description: An array of group claim names that gave this user membership to the team.
+              type: array
+              items:
+                type: string
+      title: UserTeamMembership
     TeamMapping:
       description: A team assignment is a mapping of an IdP group to a Konnect Team.
       type: object
@@ -3253,6 +3344,43 @@ components:
             created_at: '2022-08-17T17:46:57.52Z'
             updated_at: '2022-10-03T17:00:00.00Z'
             account_type: google
+    team-user-membership-collection-example:
+      value:
+        meta:
+          page:
+            number: 1
+            size: 10
+            total: 10
+        data:
+          - id: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+            email: james.woods@email.com
+            full_name: James Woods
+            preferred_name: Jimmy
+            active: true
+            created_at: '2022-08-17T17:46:57.52Z'
+            updated_at: '2022-10-03T17:00:00.00Z'
+            claim_name:
+              - GroupClaimA
+              - GroupClaimB
+    user-team-membership-collection-example:
+      value:
+        meta:
+          page:
+            number: 1
+            size: 1
+            total: 10
+        data:
+          - id: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+            name: IDM - Developers
+            description: The developers for the IDM API.
+            system_team: false
+            labels:
+              env: test
+            created_at: '2022-02-07T17:46:57.52Z'
+            updated_at: '2022-09-25T13:00:00.00Z'
+            claim_name:
+              - GroupClaimA
+              - GroupClaimB
     Get-User-Response:
       value:
         id: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
@@ -4137,11 +4265,28 @@ components:
               data:
                 type: array
                 items:
-                  $ref: '#/components/schemas/User'
+                  $ref: '#/components/schemas/UserCollectionItem'
             title: User Collection Response
           examples:
             User Collection Response:
               $ref: '#/components/examples/user-collection-response-example'
+    TeamUserMembershipCollection:
+      description: A paginated list response for a collection of users belonging to a team.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamUserMembership'
+            title: Team User Membership Collection Response
+          examples:
+            Team User Membership Collection:
+              $ref: '#/components/examples/team-user-membership-collection-example'
     TeamSingle:
       description: A response including a single team.
       content:
@@ -4182,6 +4327,23 @@ components:
                       env: test
                     created_at: '2022-02-07T17:46:57.52Z'
                     updated_at: '2022-09-25T13:00:00.00Z'
+    UserTeamMembershipCollection:
+      description: A paginated list response for a collection of teams that a user belongs to.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserTeamMembership'
+            title: User Team Membership Collection Response
+          examples:
+            User Team Membership Collection:
+              $ref: '#/components/examples/user-team-membership-collection-example'
     TeamCollectionResponse:
       description: A paginated list response for a collection of teams.
       content:
@@ -4928,6 +5090,22 @@ components:
                         required:
                           - name
                           - description
+                      viewer:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          name:
+                            type: string
+                            enum:
+                              - Viewer
+                          description:
+                            type: string
+                            example: This role grants read access to the Audit log configuration.
+                            enum:
+                              - This role grants read access to the Audit log configuration.
+                        required:
+                          - name
+                          - description
                 required:
                   - name
                   - roles
@@ -5271,6 +5449,9 @@ components:
                     admin:
                       name: Admin
                       description: This role grants full write access to the Audit log configuration.
+                    viewer:
+                      name: Viewer
+                      description: This role grants read access to the Audit log configuration.
                 identity:
                   name: Identity
                   roles:

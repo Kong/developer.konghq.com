@@ -14,14 +14,14 @@
 import { readFileSync, existsSync, readdirSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(SCRIPT_DIR, "../..");
 const VERSION_DIR = /^v\d+$/i;
 
 function defaultBaseUrl() {
-  const testsConfig = yaml.load(
+  const testsConfig = load(
     readFileSync(join(SCRIPT_DIR, "config/tests.yaml"), "utf8"),
   );
   return testsConfig.baseUrl;
@@ -44,7 +44,7 @@ function parseFrontmatter(content) {
   const m = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!m) return {};
   try {
-    return yaml.load(m[1]) ?? {};
+    return load(m[1]) ?? {};
   } catch {
     return {};
   }

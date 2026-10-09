@@ -1,7 +1,6 @@
 ---
 title: "Correctness guarantees"
 content_type: reference
-beta: true
 description: "{{site.konnect_short_name}} {{site.metering_and_billing}} keeps credit balances correct through a double-entry ledger, immutable movements, and deterministic consumption order."
 layout: reference
 products:
@@ -55,6 +54,7 @@ When credits move into or out of a customer balance, {{site.metering_and_billing
 
 At a high level, the credit ledger contains customer accounts and business accounts:
 
+<!-- vale off -->
 {% mermaid %}
 flowchart LR
   subgraph Customer["Customer accounts"]
@@ -75,6 +75,7 @@ flowchart LR
   FBO --> BRK
   WASH --> REC
 {% endmermaid %}
+<!-- vale on -->
 
 The customer credit balance is the customer-facing account. 
 Receivable and accrued accounts exist so {{site.metering_and_billing}} can represent payment state, consumed usage, and recognition separately. 

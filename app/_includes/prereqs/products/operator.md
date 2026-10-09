@@ -22,7 +22,14 @@ rawLicenseString: '$(cat ./license.json)'
 {%- assign keg_install = include.keg_install | default: include["keg-install"] -%}
 {%- assign extra_set = include.set | default: prereqs.operator.set -%}
 {%- assign skip_cert_manager = include.skip_cert_manager | default: prereqs.operator.skip_cert_manager -%}
+{%- assign chart_version = include.chart_version -%}
+{%- if prereqs.operator.rapid -%}
+{%- assign chart_version = chart_version | default: site.data.products.operator.rapid.chart -%}
+{%- endif -%}
 {% capture details_content %}
+{% if prereqs.operator.rapid %}
+{% include operator/rapid-release.md %}
+{% endif %}
 
 1. Add the Kong Helm charts:
 
@@ -68,8 +75,8 @@ rawLicenseString: '$(cat ./license.json)'
    content: |
      ```bash
      helm upgrade --install kong-operator kong/kong-operator -n kong-system \
-       --create-namespace \{% if include.chart_version %}
-       --version {{ include.chart_version }}{% if include.devel %} \
+       --create-namespace \{% if chart_version %}
+       --version {{ chart_version }}{% if include.devel %} \
        --devel{% endif %} \{% else %}
        --set image.tag={{ site.data.operator_latest.release }} \{% endif %}
        --set env.ENABLE_CONTROLLER_KONNECT=true{% if keg_install %} \
@@ -86,8 +93,8 @@ rawLicenseString: '$(cat ./license.json)'
    content: |
      ```bash
      helm upgrade --install kong-operator kong/kong-operator -n kong-system \
-       --create-namespace \{% if include.chart_version %}
-       --version {{ include.chart_version }}{% if include.devel %} \
+       --create-namespace \{% if chart_version %}
+       --version {{ chart_version }}{% if include.devel %} \
        --devel{% endif %} \{% else %}
        --set image.tag={{ site.data.operator_latest.release }} \{% endif %}{% if keg_install %} \
        --set env.ENABLE_CONTROLLER_KEGDATAPLANE=true{% endif %}{% if page.prereqs.operator.controllers %} \{% for controller in page.prereqs.operator.controllers %}

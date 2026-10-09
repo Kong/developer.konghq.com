@@ -47,6 +47,8 @@ The package uses the OpenSSL FIPS Provider 3.1.2 to provide FIPS 140-3 validated
 
 {:.info}
 > **Note**: If you are looking for instructions on using the FIPS 140-2 package, see [FIPS 140-2 compliance in {{site.base_gateway}}](/gateway/fips-140-2-support/).
+> NIST moved FIPS 140-2 module validations to the Historical List on 22 September 2026.
+> New {{site.base_gateway}} builds publish FIPS 140-3 packages and images only.
 
 ## Configure FIPS
 

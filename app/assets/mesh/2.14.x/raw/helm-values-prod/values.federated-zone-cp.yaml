@@ -37,7 +37,7 @@ kuma:
     kdsGlobalAddress: ""
 
     envVars:
-      KMESH_MULTIZONE_GLOBAL_KDS_AUTH_TYPE: cpToken
+      KUMA_MULTIZONE_GLOBAL_KDS_AUTH_TYPE: zoneToken
       # if you want to access the API server using the HTTP port, change the following switch to "true"
       KUMA_API_SERVER_HTTP_ENABLED: "false"
 
@@ -49,7 +49,7 @@ kuma:
       # kubectl create  -n kong-mesh-system secret generic kong-mesh-global-cp-token --from-file token=$TOKEN_FLIE
       - Secret: kong-mesh-global-cp-token
         Key: token
-        Env: KMESH_MULTIZONE_ZONE_KDS_AUTH_CP_TOKEN_INLINE
+        Env: KUMA_MULTIZONE_ZONE_KDS_AUTH_TOKEN_INLINE
 
     # please tune the resource allocation according to your actual mesh size and traffic load after Kong Mesh is installed.
     # try to make the resource limits identical to requests to make components are assigned as a QoS class of Guaranteed

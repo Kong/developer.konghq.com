@@ -509,6 +509,11 @@ defaults:
   createMeshRoutingResources: false # ENV: KUMA_DEFAULTS_CREATE_MESH_ROUTING_RESOURCES
   # If true, it skips creating default hostname generators
   skipHostnameGenerators: false # ENV: KUMA_DEFAULTS_SKIP_HOSTNAME_GENERATORS
+  # If true, a data plane proxy without reachableBackends reaches no destination in the mesh,
+  # and one without MeshPassthrough gets no outbound passthrough, which lowers control plane and
+  # proxy CPU and memory usage in large meshes. A matched MeshPassthrough always wins over this setting.
+  # Unset means false.
+  restrictOutbound: null # ENV: KUMA_DEFAULTS_RESTRICT_OUTBOUND
 # Metrics configuration
 metrics:
   dataplane:
@@ -991,6 +996,8 @@ kmesh:
     configurationRefreshInterval: 1s # ENV: KMESH_OPA_CONFIGURATION_REFRESH_INTERVAL
     # Backoff that is executed when Control Plane is sending the response that was previously rejected by OPA
     nackBackoff: 5s # ENV: KMESH_OPA_CONFIGURATION_NACK_BACKOFF
+  # Deprecated: use multizone.global.kds.auth and multizone.zone.kds.auth, set with KUMA_MULTIZONE_GLOBAL_KDS_AUTH_* and KUMA_MULTIZONE_ZONE_KDS_AUTH_*.
+  # They use the names of Kong Mesh 3.0, where the settings below are removed. "cpToken" is "zoneToken" there, cpTokenInline/cpTokenPath are tokenInline/tokenPath.
   multizone:
     global:
       kds:

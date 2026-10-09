@@ -27,6 +27,10 @@ related_resources:
     url: /ai-gateway/entities/
   - text: AI Policy entity
     url: /ai-gateway/entities/ai-policy/
+  - text: AI Auth Strategy entity
+    url: /ai-gateway/entities/ai-auth-strategy/
+  - text: OpenID Connect authentication with {{site.ai_gateway}} 2.0
+    url: /ai-gateway/openid-connect/
   - text: AI Consumer Group entity
     url: /ai-gateway/entities/ai-consumer-group/
   - text: Kong MCP traffic gateway
@@ -534,13 +538,13 @@ This way, AI Consumers only interact with tools appropriate to their role, while
 >
 > To use ACLs with `listener` mode:
 > 1. Reference an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) in [`access.auth_strategies`](#schema-aigateway-mcpserver-access) so requests resolve to an authenticated AI Consumer.
-> 1. Set ACL fields directly on the listener: [`access.acl_attribute_type`](#schema-aigateway-mcpserver-access-acl-attribute-type), [`access.access_token_claim_field`](#schema-aigateway-mcpserver-access-access-token-claim-field) (when using `oauth_access_token`), [`access.acls`](#schema-aigateway-mcpserver-access-acls) for server-level fallback rules, [`access.default_tool_acls`](#schema-aigateway-mcpserver-access-default-tool-acls) for the default tool ACL, and per-tool [`tools[].access.acls`](#schema-aigateway-mcpserver-tools-access) for tool-specific overrides.
+> 1. Set ACL fields directly on the listener: [`access.acl_attribute_type`](#schema-aigateway-mcpserver-access-acl-attribute-type), [`access.access_token_claim_field`](#schema-aigateway-mcpserver-access-access-token-claim-field) (when using `oauth_access_token`), [`access.acls`](#schema-aigateway-mcpserver-access-acls) and [`access.default_tool_acls`](#schema-aigateway-mcpserver-access-default-tool-acls) for the default tool ACL, and per-tool [`tools[].access.acls`](#schema-aigateway-mcpserver-tools-access) for tool-specific overrides.
 > 1. Configure [AI Consumers](/ai-gateway/entities/ai-consumer/) and [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) to match the `allow` and `deny` entries.
 >
 > ACL behavior:
 >
-> - `access.default_tool_acls` applies to all tools by default.
-> - If `access.default_tool_acls` isn't set, the listener falls back to the top-level `access.acls`.
+> - `access.acls` and `access.default_tool_acls` are combined into a single default ACL that applies to all tools. The `allow` and `deny` lists from both fields are merged. Neither field is a fallback for the other.
+> - `access.acls` doesn't gate the server as a whole. {{site.ai_gateway}} doesn't apply it to the `initialize` handshake, and it isn't a separate check that runs before tool-level rules. It only affects tool discovery (`tools/list`) and tool invocation (`tools/call`).
 > - A tool's own `acls` fully overrides the default ACL for that tool.
 > - [`sources`](#schema-aigateway-mcpserver-sources) is used for tool aggregation, not for inheriting ACLs from other AI MCP Servers.
 
@@ -549,7 +553,7 @@ This way, AI Consumers only interact with tools appropriate to their role, while
 For modes that support server-level ACL configuration (`conversion-listener`, `listener`, `passthrough-listener`, `upstream-server`), two attribute types determine what the AI MCP Server evaluates ACL rules against:
 
 1. **`consumer`** (default). Evaluates against the resolved AI Consumer identity.
-1. **`oauth_access_token`**. Evaluates against a claim extracted from the OAuth access token. Set [`access.access_token_claim_field`](#schema-aigateway-mcpserver-access-access-token-claim-field) to a jq filter (for example, `.user.email` for a nested claim). The token is validated by the `openid-connect` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) referenced in [`access.auth_strategies`](#schema-aigateway-mcpserver-access) — on this server if it accepts MCP traffic directly (`conversion-listener`, `listener`, `passthrough-listener`), or on the `listener` that aggregates it if this is a `conversion-only` or `upstream-server` AI MCP Server. If [`access.metadata`](#schema-aigateway-mcpserver-access-metadata) is also set, validation happens through the generated AI MCP OAuth2 Policy configuration instead; see [Protected resource metadata](#protected-resource-metadata).
+1. **`oauth_access_token`**. Evaluates against a claim extracted from the OAuth access token. Set [`access.access_token_claim_field`](#schema-aigateway-mcpserver-access-access-token-claim-field) to a jq filter (for example, `.user.email` for a nested claim). The token is validated by the [`openid-connect` AI Auth Strategy](/ai-gateway/openid-connect/) referenced in [`access.auth_strategies`](#schema-aigateway-mcpserver-access) — on this server if it accepts MCP traffic directly (`conversion-listener`, `listener`, `passthrough-listener`), or on the `listener` that aggregates it if this is a `conversion-only` or `upstream-server` AI MCP Server. If [`access.metadata`](#schema-aigateway-mcpserver-access-metadata) is also set, validation happens through the generated AI MCP OAuth2 Policy configuration instead; see [Protected resource metadata](#protected-resource-metadata).
 
    When evaluating a scope-based ACL rule against a `2026-07-28` client, {{site.ai_gateway}} matches on scope hierarchy: a broader scope granted to the token satisfies a rule naming a narrower one. Earlier protocol revisions keep exact-match comparison between the granted scope and the rule.
 
@@ -571,9 +575,9 @@ columns:
   - title: Description
     key: description
 rows:
-  - field: "`access.default_tool_acls`"
+  - field: "`access.acls` and `access.default_tool_acls`"
     description: |
-      Baseline rules that apply to all tools unless overridden.
+      Baseline rules that apply to all tools unless overridden. {{site.ai_gateway}} merges the `allow` and `deny` lists from both fields into one default ACL.
   - field: "`tools[].access.acls`"
     description: |
       When configured, these rules replace the default ACL for that specific tool. The per-tool ACL doesn't inherit or merge with `access.default_tool_acls`. It is an all-or-nothing override.
@@ -581,10 +585,10 @@ rows:
 <!-- vale on -->
 
 {:.info}
-> If a tool defines its own ACL, the runtime ignores `access.default_tool_acls` for that tool:
+> If a tool defines its own ACL, the runtime ignores the default ACL (`access.acls` and `access.default_tool_acls`) for that tool:
 >
 > - Tools with no ACL configuration inherit the default rules (both `allow` and `deny` lists).
-> - Tools with an ACL must explicitly list all allowed subjects (even if they were already in `access.default_tool_acls`).
+> - Tools with an ACL must explicitly list all allowed subjects (even if they were already in the default ACL).
 
 ### ACL evaluation logic
 

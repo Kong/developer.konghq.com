@@ -1,7 +1,6 @@
 ---
 title: "Credit grants"
 content_type: reference
-beta: true
 description: "Learn how credit grants work in {{site.konnect_short_name}} {{site.metering_and_billing}}: funding methods, priority, and expiration."
 layout: reference
 products:
