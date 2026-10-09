@@ -40,6 +40,20 @@ prereqs:
         ```bash
         export KONNECT_CONTROL_PLANE_ID='YOUR CONTROL PLANE ID'
         ```
+
+        If you don't have a control plane yet, create one with the {{ site.konnect_short_name }} API and save its ID to the variable:
+
+        {% konnect_api_request %}
+        section: prereqs
+        url: /v2/control-planes
+        status_code: 201
+        method: POST
+        body:
+            name: mirror-source-control-plane
+        capture:
+          - variable: KONNECT_CONTROL_PLANE_ID
+            jq: ".id"
+        {% endkonnect_api_request %}
       icon_url: /assets/icons/self-hosted.svg
 
 next_steps:
