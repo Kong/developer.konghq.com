@@ -70,7 +70,7 @@ faqs:
       You can find this URI in your Okta developer account, under **Security** > **API**.
   - q: When are group membership changes synced from my IdP?
     a: |
-      Group memberships are synced when a user logs in. Because the session TTL is 168 hours, changes are synced at the next login or when the current session expires, within 168 hours. Instant updates are not available because {{site.konnect_short_name}} does not yet support back-channel logout.
+      Group memberships are synced when a user logs in. Users will be asked to sign in again if session is in-active for 24 hours, or after 7 days, even when maximum lifetime of the session expires. Signing in again also refreshes your group memberships. Instant updates are not available because {{site.konnect_short_name}} does not yet support back-channel logout.
   - q: How do I debug my integration with Okta?
     a: |
       The Okta console provides a [Token Preview feature](https://help.okta.com/en-us/content/topics/security/api-config-test.htm) which will be useful in 
