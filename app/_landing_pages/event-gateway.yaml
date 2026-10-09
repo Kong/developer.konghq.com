@@ -286,8 +286,9 @@ rows:
                         [Encrypt Fields policy](/event-gateway/policies/encrypt-fields/), [Decrypt Fields policy](/event-gateway/policies/decrypt-fields/)
                       guide: |
                         [Encrypt and decrypt Kafka messages](/event-gateway/encrypt-kafka-messages-with-event-gateway/),
-                         [encrypt and decrypt Kafka message fields](/event-gateway/encrypt-kafka-message-fields-with-event-gateway/)
-                        or [encrypt and decrypt Kafka message fields dynamically](/event-gateway/encrypt-kafka-message-fields-dynamic/)
+                         [encrypt and decrypt Kafka message fields](/event-gateway/encrypt-kafka-message-fields-with-event-gateway/),
+                        [encrypt and decrypt Kafka message fields dynamically](/event-gateway/encrypt-kafka-message-fields-dynamic/)
+                        or [encrypt fields selected by schema registry tags](/event-gateway/encrypt-kafka-message-fields-from-schema/)
                     - outcome: |
                         Let consumers work with real production topics while personal data stays hidden from them
                       feature: |

@@ -30,6 +30,8 @@ related_resources:
     url: /event-gateway/encrypt-kafka-message-fields-with-event-gateway/
   - text: Encrypt and decrypt Kafka message fields dynamically with {{site.event_gateway}}
     url: /event-gateway/encrypt-kafka-message-fields-dynamic/
+  - text: Encrypt Kafka message fields selected by schema registry tags with {{site.event_gateway}}
+    url: /event-gateway/encrypt-kafka-message-fields-from-schema/
 
 phases:
   - consume
@@ -72,6 +74,10 @@ rows:
 
   - use_case: "[Example: Decrypt a message field using a dynamic list of field paths](/event-gateway/policies/decrypt-fields/examples/decrypt-with-dynamic-paths/)"
     description: Decrypt a message field using a dynamic list of field paths
+
+  - use_case: "[Tutorial: Decrypt fields selected by schema registry tags](/event-gateway/encrypt-kafka-message-fields-from-schema/)"
+    description: |
+      Decrypt the fields that carry a `PII` tag in a Confluent Schema Registry, so that consumers get plaintext records.
 
 
 {% endtable %}

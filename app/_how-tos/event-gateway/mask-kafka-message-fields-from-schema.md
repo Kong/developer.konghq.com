@@ -58,6 +58,8 @@ related_resources:
     url: /event-gateway/entities/schema-registry/
   - text: Validate Avro messages with Confluent Schema Registry
     url: /event-gateway/validate-avro-messages-with-schema-registry/
+  - text: Encrypt Kafka message fields selected by schema registry tags
+    url: /event-gateway/encrypt-kafka-message-fields-from-schema/
 ---
 
 ## Overview
