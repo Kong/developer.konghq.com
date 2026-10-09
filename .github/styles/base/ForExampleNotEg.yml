@@ -1,0 +1,9 @@
+extends: existence
+message: "Use 'for example,' instead of '%s'."
+level: warning
+nonword: true
+ignorecase: true
+scope: text
+tokens:
+  - '\be\.g\.'
+  - '\(such as\b'

@@ -1,0 +1,11 @@
+extends: existence
+message: "Avoid dashes as sentence punctuation ('%s'). Rewrite as two sentences, or use a comma, colon, semicolon, or parentheses."
+level: warning
+nonword: true
+scope: text
+tokens:
+  # Em dash between text (a lone em dash in a table cell is not flagged).
+  - '[^\s|]+\s?—\s?[^\s|]+'
+  - '[^\s|]*\s—\s[^\s|]+'
+  # Spaced en dash. Numeric ranges like 1–5 have no spaces and are not flagged.
+  - '[^\s|]+\s–\s[^\s|]+'
