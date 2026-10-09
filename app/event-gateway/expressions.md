@@ -284,6 +284,24 @@ rows:
     example: |
       `record.value.schema.metadata.properties["owner"] == "team-orders"`
   - variable: |
+      `record.value.schema.metadata.properties` {% new_in 1.3 %}
+    type: "`map<string, string>`"
+    description: |
+      Confluent schema-registry `metadata.properties`. Present as an empty map whenever `record.value.schema` is present, even when the registry omits the properties.
+    availability: |
+      * `condition` field in Produce and Consume policies used as children of Schema Validation
+    example: |
+      `record.value.schema.metadata.properties['owner'] == 'payments-team'`
+  - variable: |
+      `record.value.schema.metadata.tags` {% new_in 1.3 %}
+    type: "`map<string, list<string>>`"
+    description: |
+      Confluent schema-registry `metadata.tags`, keyed by tag. Each value is the list of schema paths (for example `io.confluent.field.<name>`) that carry that tag. Present as an empty map whenever `record.value.schema` is present, even when the registry omits the tags.
+    availability: |
+      * `condition` field in Produce and Consume policies used as children of Schema Validation
+    example: |
+      `'PII' in record.value.schema.metadata.tags && 'io.confluent.field.ssn' in record.value.schema.metadata.tags['PII']`
+  - variable: |
       `record.key.schema.*` {% new_in 1.2 %}
     type: |
       Same shape as `record.value.schema.*`
@@ -456,6 +474,18 @@ Compute a dynamic list of fields to encrypt, based on the principal's identity:
 context.auth.principal.name == "external-partner" ? ["personal.ssn", "personal.name"] : []
 ```
 
+Apply a policy only when the record's schema is tagged as `PII` in the Confluent schema registry {% new_in 1.3 %}:
+
+```sh
+'PII' in record.value.schema.metadata.tags
+```
+
+Apply a policy only to schemas owned by the `payments-team`, based on a schema registry property {% new_in 1.3 %}:
+
+```sh
+'owner' in record.value.schema.metadata.properties && record.value.schema.metadata.properties['owner'] == 'payments-team'
+```
+
 ## Migrating from the legacy JavaScript-style syntax
 
 {{site.event_gateway_short}} originally shipped with an expression language based on a subset of JavaScript, and has now moved to CEL.
@@ -595,222 +625,3 @@ rows:
 * `substring`: Returns the part of this string from the start index up to and excluding the end index.
 * `match`: Retrieves the result of matching this string against an [RE2 regular expression](https://github.com/google/re2/wiki/syntax) string.
 * `length`: Returns the number of characters in the string.
-<<<<<<< HEAD
-
-### Supported fields
-
-Depending on where an expression is authored the fields available in the context vary.
-In this section we state for each area how the context varies.
-The source of truth for these is the `x-expression` field in
-the [API specification](/api/konnect/event-gateway/v1/).
-
-{% table %}
-columns:
-  - title: Variable
-    key: variable
-  - title: Type
-    key: type
-  - title: Description
-    key: description
-  - title: Availability
-    key: availability
-  - title: Example
-    key: example
-rows:
-  - variable: "`context.auth.type`"
-    type: "`string`"
-    description: |
-      The type of authentication used
-    availability: |
-      * `condition` field in Cluster, Produce, and Consume policies
-      * `resource_names` field in ACL policies
-    example: |
-      `context.auth.type == 'anonymous'`
-  - variable: "`context.auth.principal.name`"
-    type: "`string`"
-    description: |
-      The name of the principal for this connection
-    availability: |
-      * `condition` field in Cluster, Produce, and Consume policies
-      * `resource_names` field in ACL policies
-    example: |
-      `context.auth.principal.name == 'user1'`
-  - variable: |
-      `context.auth.token.claims` {% new_in 1.1 %}
-    type: "`map<string, any>`"
-    description: |
-      Only populated for `sasl_oauth_bearer` authentication. Contains all claims from the JWT token. Claims can be strings, numbers, booleans, arrays, or nested JSON objects.
-    availability: |
-      * `condition` field in Cluster, Produce, and Consume policies
-      * `resource_names` field in ACL policies
-    example: |
-      `'test-claim' in context.auth.token.claims`
-  - variable: "`context.topic.name`"
-    type: "`string`"
-    description: |
-      The name of the topic of the record
-    availability: |
-      * `condition` field in Produce and Consume policies
-    example: |
-      `context.topic.name == 'my-ns.my-topic'`
-  - variable: "`record.headers`"
-    type: "`map<string, string>`"
-    description: |
-      The headers of the record
-    availability: |
-      * `condition` field in Produce and Consume policies
-    example: |
-      `record.headers['skip-record'] == 'true'`
-  - variable: "`record.value.content`"
-    type: "`map<string, string>`"
-    description: |
-      The value of the record. Deep fields can be accessed using json object notation
-    availability: |
-      * `condition` field in Produce and Consume policies used as children of Schema Validation
-    example: |
-      `record.value.content['sub.other'] == 3`
-  - variable: "`record.value.validated`"
-    type: "`boolean`"
-    description: |
-      Whether record validation succeeded or not
-    availability: |
-      * `condition` field in Produce and Consume policies used as children of Schema Validation
-    example: |
-      `record.value.validated == true`
-  - variable: |
-      `record.value.schema.id` {% new_in 1.2 %}
-    type: "`uint`"
-    description: |
-      Registry-assigned schema ID. Populated when the record value is validated by a Confluent schema registry.
-    availability: |
-      * `condition` field in Produce and Consume policies used as children of Schema Validation
-    example: |
-      `record.value.schema.id == 42`
-  - variable: |
-      `record.value.schema.version` {% new_in 1.2 %}
-    type: "`uint`"
-    description: |
-      Registry-assigned schema version, when returned by the registry.
-    availability: |
-      * `condition` field in Produce and Consume policies used as children of Schema Validation
-    example: |
-      `record.value.schema.version == 3`
-  - variable: |
-      `record.value.schema.format` {% new_in 1.2 %}
-    type: "`string`"
-    description: |
-      `"avro"` or `"json"`.
-    availability: |
-      * `condition` field in Produce and Consume policies used as children of Schema Validation
-    example: |
-      `record.value.schema.format == 'avro'`
-  - variable: |
-      `record.value.schema.avro.name` {% new_in 1.2 %}
-    type: "`string`"
-    description: |
-      Avro record name (Avro only).
-    availability: |
-      * `condition` field in Produce and Consume policies used as children of Schema Validation
-    example: |
-      `record.value.schema.avro.name == 'User'`
-  - variable: |
-      `record.value.schema.avro.namespace` {% new_in 1.2 %}
-    type: "`string`"
-    description: |
-      Avro record namespace (Avro only, when declared on the schema).
-    availability: |
-      * `condition` field in Produce and Consume policies used as children of Schema Validation
-    example: |
-      `record.value.schema.avro.namespace == 'com.example'`
-  - variable: |
-      `record.value.schema.json.title` {% new_in 1.2 %}
-    type: "`string`"
-    description: |
-      JSON Schema `title` (JSON only, when declared on the schema).
-    availability: |
-      * `condition` field in Produce and Consume policies used as children of Schema Validation
-    example: |
-      `record.value.schema.json.title == 'Order'`
-  - variable: |
-      `record.value.schema.json.id` {% new_in 1.2 %}
-    type: "`string`"
-    description: |
-      JSON Schema `$id` (JSON only, when declared on the schema).
-    availability: |
-      * `condition` field in Produce and Consume policies used as children of Schema Validation
-    example: |
-      `record.value.schema.json.id == 'https://example.com/schemas/order.json'`
-  - variable: |
-      `record.value.schema.metadata.properties` {% new_in 1.3 %}
-    type: "`map<string, string>`"
-    description: |
-      Confluent schema-registry `metadata.properties`. Present as an empty map whenever `record.value.schema` is present, even when the registry omits the properties.
-    availability: |
-      * `condition` field in Produce and Consume policies used as children of Schema Validation
-    example: |
-      `record.value.schema.metadata.properties['owner'] == 'payments-team'`
-  - variable: |
-      `record.value.schema.metadata.tags` {% new_in 1.3 %}
-    type: "`map<string, list<string>>`"
-    description: |
-      Confluent schema-registry `metadata.tags`, keyed by tag. Each value is the list of schema paths (for example `io.confluent.field.<name>`) that carry that tag. Present as an empty map whenever `record.value.schema` is present, even when the registry omits the tags.
-    availability: |
-      * `condition` field in Produce and Consume policies used as children of Schema Validation
-    example: |
-      `'PII' in record.value.schema.metadata.tags && 'io.confluent.field.ssn' in record.value.schema.metadata.tags['PII']`
-  - variable: |
-      `record.key.schema.*` {% new_in 1.2 %}
-    type: |
-      same as `record.value.schema.*`
-    description: |
-      Same shape as `record.value.schema.*`, populated when the record key has `schema_validation` configured. Sub-fields are absent when not applicable; use `has()` to test presence.
-    availability: |
-      * `condition` field in Produce and Consume policies used as children of Schema Validation
-    example: |
-      `record.key.schema.format == 'json' && record.key.schema.json.title == 'UserKey'`
-{% endtable %}
-
-#### Legacy example expressions
-
-Don't apply a policy if a record has a `x-restricted=true` header and user is not admin:
-
-```sh
-context.topic.name == 'filterdemo' && record.headers['x-restricted'] == 'true' && context.auth.principal.name != 'admin'
-```
-
-Apply a policy only for `user1` and `user2`:
-```sh
-context.auth.principal.name == 'user1' || context.auth.principal.name == 'user2'
-```
-
-Apply a policy only for topics that start with `my-prefix`:
-
-```sh
-context.topic.name.startsWith('my-prefix')
-```
-
-Apply a policy if a header is present regardless of the value:
-
-```sh
-'x-optional-header' in record.headers
-```
-
-Apply a policy if the topic is `filterdemo` and that the record content has a field `foo` equal to `bar` and a sub field `sub.other` equal to 3.
-
-```sh
-context.topic.name == 'filterdemo' && record.value.content['foo'] == 'bar' || record.value.content['sub.other'] == 3
-```
-
-Apply a policy only when the record's schema is tagged as `PII` in the Confluent schema registry {% new_in 1.3 %}:
-
-```sh
-'PII' in record.value.schema.metadata.tags
-```
-
-Apply a policy only to schemas owned by the `payments-team`, based on a schema registry property {% new_in 1.3 %}:
-
-```sh
-'owner' in record.value.schema.metadata.properties && record.value.schema.metadata.properties['owner'] == 'payments-team'
-```
-=======
->>>>>>> af0e6c692 (copyedit and remove legacy examples)
