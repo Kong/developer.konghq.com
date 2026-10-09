@@ -178,7 +178,7 @@ rows:
       `record.value.schema.format` {% new_in 1.2 %}
     type: "`string`"
     description: |
-      `"avro"` or `"json"`.
+      `"avro"`, `"json"`, or `"protobuf"` {% new_in 1.3 %}.
     availability: |
       * `condition` field in Produce and Consume policies used as children of Schema Validation
     example: |
@@ -219,6 +219,15 @@ rows:
       * `condition` field in Produce and Consume policies used as children of Schema Validation
     example: |
       `record.value.schema.json.id == 'https://example.com/schemas/order.json'`
+  - variable: |
+      `record.value.schema.protobuf.message_name` {% new_in 1.3 %}
+    type: "`string`"
+    description: |
+      Fully qualified Protobuf message name (Protobuf only).
+    availability: |
+      * `condition` field in Produce and Consume policies used as children of Schema Validation
+    example: |
+      `record.value.schema.protobuf.message_name == 'example.User'`
   - variable: |
       `record.value.schema.metadata.properties` {% new_in 1.3 %}
     type: "`map<string, string>`"
