@@ -95,16 +95,16 @@ rows:
   - auth: |
       SASL/AWS IAM {% new_in 1.3 %}
     description: |
-      Authenticates to Amazon MSK using [AWS IAM](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_sigv.html), on top of the `SASL_OAUTHBEARER` mechanism.
-      <br><br>
-      {{site.event_gateway_short}} signs a request using AWS SigV4 and passes it as a bearer token. Credentials are obtained from the [default AWS credential provider chain](https://docs.aws.amazon.com/sdk-for-rust/latest/dg/credproviders.html#credproviders-default-credentials-provider-chain), or by assuming an IAM role using those credentials.
+      Connect to AWS MSK using AWS IAM. Credentials are obtained from the [default AWS credential provider chain](https://docs.aws.amazon.com/sdk-for-rust/latest/dg/credproviders.html#credproviders-default-credentials-provider-chain), or by assuming an IAM role using those credentials.
+      See [Authenticate Event Gateway connections to Kafka using AWS IAM](/event-gateway/configure-aws-iam-backend-cluster-auth/).
     credential: |
-      `passthrough`
+      `terminate`
 {% endtable %}
 
 Depending on what your Kafka cluster supports, you'll need to configure authentication on the associated virtual cluster:
 * If your Kafka cluster only accepts SASL/PLAIN or SASL/SCRAM credentials, use [`passthrough` or `terminate` mediation](/event-gateway/entities/virtual-cluster/#credential-mediation) on the virtual cluster.
 * If your backend Kafka cluster supports SASL/OAUTHBEARER natively, use [`passthrough` or `validate_forward` mediation](/event-gateway/entities/virtual-cluster/#credential-mediation) on the virtual cluster.
+* If your backend Kafka cluster requires AWS IAM authentication, use [`terminate` mediation](/event-gateway/entities/virtual-cluster/#credential-mediation) on the virtual cluster, since clients can't supply AWS credentials directly.
 
 ## Set up a backend cluster
 
