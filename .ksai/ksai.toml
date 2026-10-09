@@ -15,3 +15,49 @@ paths = [
   "!api-specs/**",
 ]
 source_files = ["review-rules/no-copy-code.md"]
+
+[[review.packs]]
+name = "Core"
+paths = [
+  "app/**/*.md",
+  "!app/_references/**",
+  "!app/_changelogs/**",
+  "!app/_schemas/gateway/plugins/**",
+  "!app/_includes/deck/help/**",
+  "!app/_includes/kongctl/help/**",
+  "!app/_api/**",
+  "!api-specs/**",
+]
+source_files = ["review-rules/core.md"]
+
+[[review.packs]]
+name = "How-tos"
+paths = ["app/_how-tos/**/*.md"]
+source_files = ["review-rules/how-to.md", "/docs/ui-steps-standards.md"]
+
+[[review.packs]]
+name = "Plugins and references"
+paths = [
+  "app/_kong_plugins/**/*.md",
+  "app/_kong_plugins/*/examples/*.yaml",
+  "app/_gateway_entities/**/*.md",
+  "app/_ai_gateway_policies/**/*.md",
+  "app/_ai_gateway_entities/**/*.md",
+]
+source_files = ["review-rules/plugin-reference.md"]
+
+[[review.packs]]
+name = "AI Gateway"
+paths = [
+  "app/ai-gateway/**/*.md",
+  "app/_ai_gateway_policies/**/*.md",
+  "app/_ai_gateway_entities/**/*.md",
+  "app/_how-tos/ai-gateway/**/*.md",
+  "app/_landing_pages/ai-gateway/**/*.yaml",
+]
+source_files = ["review-rules/ai-gateway.md"]
+
+[[review.packs]]
+name = "Landing pages"
+paths = ["app/_landing_pages/**/*.yaml"]
+source_files = ["review-rules/landing-pages.md"]
