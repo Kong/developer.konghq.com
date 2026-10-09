@@ -416,19 +416,73 @@ async function requestCheck(validationName, config, runtimeConfig, container) {
     await sleep(config.sleep);
   }
   const statusCode = config.status_code ?? 200;
-  return validateRequest(
+  let responseBody;
+  const assertions = await validateRequest(
     validationName,
     config,
     runtimeConfig,
     container,
     [
-      (response) => ({
-        assert: response.status === statusCode,
-        message: `Expected: request ${config.url} to have status code ${statusCode}, got: ${response.status}.`,
-      }),
+      (response, body) => {
+        responseBody = body;
+        return {
+          assert: response.status === statusCode,
+          message: `Expected: request ${config.url} to have status code ${statusCode}, got: ${response.status}.`,
+        };
+      },
     ],
     statusCode,
   );
+  if (config.capture) {
+    assertions.push(
+      ...(await persistCapturedVariables(config.capture, config.url, responseBody, container)),
+    );
+  }
+  return assertions;
+}
+
+// `capture` entries ({variable, jq}) on a konnect-api-request validation
+// persist response fields as container env vars, so later steps can reference
+// them ($CONTROL_PLANE_ID, $SERVICE_ID, ...). The value is stored through the
+// /env-vars.sh _BASE64 line format owned by instructions/export-assignment.js:
+// multi-line values (certificates) survive, and decoded entries win over any
+// earlier plain entry for the same name.
+async function persistCapturedVariables(captures, url, body, container) {
+  const assertions = [];
+  // The response body arrives parsed for JSON responses; re-serialize so the
+  // container-side jq sees the same document.
+  const bodyText = typeof body === "string" ? body : JSON.stringify(body ?? "");
+  const bodyB64 = Buffer.from(bodyText).toString("base64");
+
+  for (const capture of captures) {
+    if (!capture.variable || !capture.jq) {
+      throw new ValidationError(
+        `Expected: capture entry to have 'variable' and 'jq', got: ${JSON.stringify(capture)}.`,
+        assertions,
+      );
+    }
+    const jqResult = await executeCommand(
+      container,
+      `printf '%s' '${bodyB64}' | base64 -d | jq -r '${capture.jq}'`,
+    );
+    const value = jqResult.output.trim();
+
+    if (!value || value === "null") {
+      const message = `Expected: capture ${capture.variable} to produce a value with jq '${capture.jq}', got: empty.`;
+      assertions.push(message);
+      throw new ValidationError(message, assertions);
+    }
+
+    const base64Value = Buffer.from(value).toString("base64");
+    await executeCommand(
+      container,
+      `echo 'export ${capture.variable}_BASE64="${base64Value}"' >> /env-vars.sh`,
+    );
+    assertions.push(
+      `Captured ${capture.variable} from ${url} with jq '${capture.jq}'.`,
+    );
+  }
+  return assertions;
 }
 
 async function unauthorizedCheck(
