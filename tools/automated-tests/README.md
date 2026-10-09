@@ -174,9 +174,9 @@ The `konnect.operator` runtime deletes every control plane in the Konnect org th
 Requirements and behavior:
 
 * `TESTS_KONNECT_TOKEN` must be exported: it is the Konnect token the operator authenticates with.
-* No license is needed: konnect operator runs skip the `KONG_LICENSE_DATA` check.
+* `KONG_LICENSE_DATA` must be exported: the pages' Gateways deploy enterprise data planes (`kong/kong-gateway`), which run read-only without a license, so the runtime applies the license as a `KongLicense` CR in every reset (the konnect pages never apply one themselves).
 * Reset and cleanup delete **every control plane in the token's org** through the Konnect API, so the token must belong to a dedicated docs test org, never a shared one.
-* Pages that need a real AWS account (cloud-gateway network, cloud-gateway configuration, transit gateway) are recorded as expected failures in `config/expected_failures.yaml`.
+* The transit gateway how-to creates real AWS resources (an EC2 transit gateway and a RAM resource share). It needs `TESTS_AWS_REGION`, `TESTS_AWS_ACCESS_KEY_ID`, and `TESTS_AWS_SECRET_ACCESS_KEY` exported, and it deletes the resources it creates in its cleanup.
 
 #### Run unreleased gateway version
 
