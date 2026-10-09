@@ -99,6 +99,8 @@ rows:
       Validates messages against the [Confluent schema registry](https://docs.confluent.io/platform/current/schema-registry/index.html).
 
       To use a Confluent schema registry for validation, first [create a schema registry resource](/event-gateway/entities/schema-registry/), then reference it in this policy.
+
+      {{site.event_gateway_short}} finds the schema using [the Confluent wire format](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/index.html#wire-format).
   - validation: "`json`"
     description: |
       Simple JSON parsing without a schema.
