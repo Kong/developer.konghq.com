@@ -404,7 +404,12 @@ Cost decorations aren't part of the plugin's `config` schema. They're a separate
 To access these endpoints, [enable the plugin](/plugins/graphql-rate-limiting-advanced/examples/) first.
 The GraphQL cost management endpoints will appear once the plugin has been enabled.
 
-### Create a cost decoration with the Admin API
+### Create and manage cost decorations
+
+You can manage cost decorations using any of the following tools:
+
+{% navtabs "Cost decorations" %}
+{% navtab "Admin API" %}
 
 Use the [`/graphql-rate-limiting-advanced/costs`](/plugins/graphql-rate-limiting-advanced/api/#/operations/create-graphql-rate-limiting-advanced-cost) endpoint to create a cost decoration that applies globally, or [`/services/{service}/graphql-rate-limiting-advanced/costs`](/plugins/graphql-rate-limiting-advanced/api/#/operations/create-graphql-rate-limiting-advanced-cost-with-service) to scope it to a specific Gateway Service.
 
@@ -421,10 +426,32 @@ curl -i -X POST http://localhost:8001/services/example-service/graphql-rate-limi
   }'
 ```
 
-{:.info}
-> In Konnect, the top-level (workspace-wide) `/graphql-rate-limiting-advanced/costs` endpoint only supports listing and retrieving cost decorations. Creating, updating, and deleting a cost decoration requires the Service-scoped endpoint.
+{% endnavtab %}
+{% navtab "Konnect API" %}
 
-### Manage cost decorations with decK
+Use the [{{site.konnect_short_name}} control plane config API](/api/konnect/control-planes-config/) to manage cost decorations in {{site.konnect_short_name}}. Send a request to the `/v2/control-planes/{controlPlaneId}/core-entities/services/{ServiceId}/graphql-rate-limiting-advanced/costs` endpoint to scope the cost decoration to a specific Gateway Service.
+
+For example, to set the `Query.allPeople` decoration used in the [default strategy example](#default-strategy):
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/services/example-service/graphql-rate-limiting-advanced/costs
+status_code: 201
+method: POST
+body:
+    type_path: "Query.allPeople"
+    mul_arguments:
+      - first
+    mul_constant: 1
+    add_constant: 1
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{:.info}
+> In {{site.konnect_short_name}}, the top-level `/v2/control-planes/{controlPlaneId}/core-entities/graphql-rate-limiting-advanced/costs` endpoint only supports listing and retrieving cost decorations. Creating, updating, and deleting a cost decoration requires the Service-scoped endpoint.
+
+{% endnavtab %}
+{% navtab "decK" %}
 
 Starting with decK v1.59.0, you can manage cost decorations declaratively using the `graphql_ratelimiting_cost_decorations` custom entity, instead of calling the Admin API directly.
 
@@ -448,7 +475,8 @@ Apply it with `deck gateway sync` or `deck gateway apply`:
 deck gateway sync
 ```
 
-### Manage cost decorations in Kubernetes
+{% endnavtab %}
+{% navtab "Kubernetes" %}
 
 The Kubernetes Ingress Controller (KIC) supports cost decorations through the generic [`KongCustomEntity`](/kubernetes-ingress-controller/faq/custom-entities/) custom resource, using the same `graphql_ratelimiting_cost_decorations` type. Reference the `KongPlugin` resource that has the GraphQL Rate Limiting Advanced plugin attached to it, so the decoration is scoped to the same Gateway Service or Route as the plugin:
 
@@ -472,3 +500,6 @@ spec:
     mul_constant: 1
     add_constant: 1
 ```
+
+{% endnavtab %}
+{% endnavtabs %}
