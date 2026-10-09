@@ -73,8 +73,10 @@ export KONNECT_CONTROL_PLANE_ID="YOUR KONNECT CONTROL PLANE ID"
 ```
 
 Run the following command:
+
 <!-- vale off -->
-{% konnect_crd %}
+```bash
+echo '
 kind: KonnectGatewayControlPlane
 apiVersion: konnect.konghq.com/{{ site.operator_konnectgatewaycontrolplane_api_version }}
 metadata:
@@ -88,8 +90,9 @@ spec:
     source: Mirror
     mirror:
       konnect:
-        id: '$KONNECT_CONTROL_PLANE_ID'
-{% endkonnect_crd %}
+        id: "'$KONNECT_CONTROL_PLANE_ID'"
+' | kubectl apply -f -
+```
 <!-- vale on -->
 
 This resource links your cluster to a specific control plane instance in {{site.konnect_short_name}} using the credentials provided in `konnect-api-auth`.
@@ -150,6 +153,7 @@ spec:
             initialDelaySeconds: 1
             periodSeconds: 1' | kubectl apply -f - 
 ```
+{: data-test-step="block" }
 
 ## Validation
 

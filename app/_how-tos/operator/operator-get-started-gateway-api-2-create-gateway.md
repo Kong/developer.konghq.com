@@ -77,6 +77,7 @@ content: |
             - name: proxy
               image: kong/kong-gateway:{{ site.data.gateway_latest.release }}' | kubectl apply -f -
   ```
+  {: data-test-step="block" }
 
   ### Existing {{site.konnect_short_name}} control plane
 

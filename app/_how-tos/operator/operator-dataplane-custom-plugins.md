@@ -28,7 +28,7 @@ prereqs:
       position: before
       content: |
         ```bash
-        kubectl create namespace kong
+        kubectl create namespace kong --dry-run=client -o yaml | kubectl apply -f -
         ```
         {: data-test-prereq="block" }
   entities:
