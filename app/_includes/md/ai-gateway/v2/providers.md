@@ -413,9 +413,9 @@ rows:
 {% if compare_provider.capabilities[cap].supported %}{% assign cap_supported_compare = true %}{% endif %}
 {% if cap_supported or cap_supported_compare %}
 {% case cap %}
-{% when 'audio_speech' %}{% assign cap_short = "speech" %}{% assign cap_path_template = "`/audio/speech`" %}
-{% when 'audio_transcription' %}{% assign cap_short = "transcription" %}{% assign cap_path_template = "`/audio/transcriptions`" %}
-{% when 'audio_translation' %}{% assign cap_short = "translation" %}{% assign cap_path_template = "`/audio/translations`" %}
+{% when 'audio_speech' %}{% assign cap_short = "audio/speech" %}{% assign cap_path_template = "`/audio/speech`" %}
+{% when 'audio_transcription' %}{% assign cap_short = "audio/transcription" %}{% assign cap_path_template = "`/audio/transcriptions`" %}
+{% when 'audio_translation' %}{% assign cap_short = "audio/translation" %}{% assign cap_path_template = "`/audio/translations`" %}
 {% endcase %}
 {% if compare_provider %}
 {% if cap_supported and cap_supported_compare %}
