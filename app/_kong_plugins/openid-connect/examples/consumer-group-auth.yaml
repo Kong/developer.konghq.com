@@ -32,9 +32,9 @@ variables:
       The issuer authentication URL for your IdP. 
       For example, if you're using Keycloak as your IdP, the issuer URL looks like this: `http://localhost:8080/realms/example-realm`
   salt-token:
-    value: $DECK_TOKEN_SALT
+    value: $TOKEN_SALT
     description: |
-      A random string that decK requires (v1.59 and later) so session credentials aren't regenerated on every sync.
+      A random string that decK requires (v1.59 and later) so session credentials aren't regenerated on every sync. This parameter is optional for other formats.
       For example, generate one with `openssl rand -base64 16`.
 
 tools:
