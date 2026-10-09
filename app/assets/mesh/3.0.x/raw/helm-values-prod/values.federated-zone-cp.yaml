@@ -10,20 +10,13 @@ kuma:
         # it contains the keys "tls.crt" and "tls.key", and the content items should be in "PEM" format
         # more details on preparing certificates: https://docs.konghq.com/mesh/latest/production/secure-deployment/certificates/
         secretName: kong-mesh-apiserver-tls
-        kdsZoneClient:
-          # (action): please prepare the content of this secret before installing Kong Mesh
-          # the certificate can be extracted from the trusted global CP server
-          # it should contain the key "ca.crt", and the content certificate should be in "PEM" format
-          # more details on certificates verifying: https://docs.konghq.com/mesh/latest/production/secure-deployment/certificates/#control-plane-to-control-plane-multizone
-          secretName: kong-mesh-kds-global-ca
-          skipVerify: false
-
-    apiServer:
-      corsAllowedDomains:
-        # change these values you want to access the control plane API server or Mesh GUI from a custom domain
-        - https://localhost:5682
-        # if you want to access the API server using the HTTP port, add the following line
-        # - http://localhost:5681
+      kdsZoneClient:
+        # (action): please prepare the content of this secret before installing Kong Mesh
+        # the certificate can be extracted from the trusted global CP server
+        # it should contain the key "ca.crt", and the content certificate should be in "PEM" format
+        # more details on certificates verifying: https://docs.konghq.com/mesh/latest/production/secure-deployment/certificates/#control-plane-to-control-plane-multizone
+        secretName: kong-mesh-kds-global-ca
+        skipVerify: false
 
     defaults:
       # change these values if you want to open the admin access rights of control plane API server to more groups
@@ -37,7 +30,9 @@ kuma:
     kdsGlobalAddress: ""
 
     envVars:
-      KUMA_MULTIZONE_GLOBAL_KDS_AUTH_TYPE: zoneToken
+      # restrict which origins may call the control plane API server or Mesh GUI
+      # comma-separated; add http://localhost:5681 if HTTP access is enabled
+      KUMA_API_SERVER_CORS_ALLOWED_DOMAINS: https://localhost:5682
       # if you want to access the API server using the HTTP port, change the following switch to "true"
       KUMA_API_SERVER_HTTP_ENABLED: "false"
 
@@ -45,8 +40,8 @@ kuma:
       # (action): please prepare the content of this secret before installing Kong Mesh
       # the zone token is only required when installing a zone CP that is connecting to a global CP
       # to obtain this zone token, please generate it using the `kumactl` connecting to the global CP
-      # kumactl generate zone-token --zone <zone-name> --scope cp --valid-for 43920h > $TOKEN_FLIE
-      # kubectl create  -n kong-mesh-system secret generic kong-mesh-global-cp-token --from-file token=$TOKEN_FLIE
+      # kumactl generate zone-token --zone <zone-name> --scope cp --valid-for 43920h > $TOKEN_FILE
+      # kubectl create  -n kong-mesh-system secret generic kong-mesh-global-cp-token --from-file token=$TOKEN_FILE
       # the secret is mounted as a file, so a rotated token is picked up without restarting the CP
       secretName: kong-mesh-global-cp-token
       key: token
@@ -94,36 +89,3 @@ kuma:
       limits:
         cpu: 100m
         memory: 100Mi
-
-  ingress:
-    # -- If true, it deploys Ingress for cross cluster communication
-    enabled: false
-    # please tune the resource allocation according to your actual mesh size and traffic load after Kong Mesh is installed.
-    # try to make the resource limits identical to requests to make components are assigned as a QoS class of Guaranteed
-    resources:
-      requests:
-        cpu: 1000m
-        memory: 1024Mi
-      limits:
-        cpu: 1000m
-        memory: 1024Mi
-
-    replicas: 2
-    autoscaling:
-      enabled: true
-      metrics:
-        - type: Resource
-          resource:
-            name: cpu
-            target:
-              type: Utilization
-              averageUtilization: 50
-        - type: Resource
-          resource:
-            name: memory
-            target:
-              type: Utilization
-              averageUtilization: 50
-
-    podDisruptionBudget:
-      enabled: true
