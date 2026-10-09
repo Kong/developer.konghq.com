@@ -60,6 +60,41 @@ RSpec.describe Jekyll::KonnectCrd do
     it 'strips the section key from the emitted YAML' do
       expect(rendered).not_to include('section')
     end
+
+    context 'with create_namespace and section combined' do
+      let(:template) do
+        <<~'LIQUID'
+          {% konnect_crd %}
+          create_namespace: kong
+          section: prereqs
+          kind: KonnectAPIAuthConfiguration
+          metadata:
+            name: konnect-api-auth
+            namespace: kong
+          spec:
+            type: token
+            token: '$KONNECT_TOKEN'
+          {% endkonnect_crd %}
+        LIQUID
+      end
+
+      it 'renders the prereq wrapper and keeps the namespace-creation command' do
+        expect(html).to have_css('div[data-deployment-topology="konnect"][data-test-prereq="block"]')
+        expect(html).not_to have_css('div[data-test-step]')
+        expect(html).to have_content('kubectl create namespace kong')
+      end
+
+      it 'strips the section key from the emitted YAML' do
+        expect(rendered).not_to include('section')
+      end
+
+      it 'renders markdown output identical to the same block without section: prereqs' do
+        markdown_page = { 'output_format' => 'markdown', 'path' => 'test.md', 'works_on' => works_on }
+        without_section = template.gsub("section: prereqs\n", '')
+        expect(render_liquid(template, page: markdown_page))
+          .to eq(render_liquid(without_section, page: markdown_page))
+      end
+    end
   end
 
   describe 'markdown output_format' do
