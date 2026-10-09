@@ -3,7 +3,7 @@ import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
 import {
-  parseExportAssignment,
+  parseExportAssignments,
   buildPersistCommand,
   base64EnvLine,
 } from "./instructions/export-assignment.js";
@@ -149,12 +149,12 @@ export async function executeCommand(container, cmd, displayCmd = cmd) {
 // cleanup, tests.yaml before/after) keep calling executeCommand directly, so
 // their behavior is unchanged.
 export async function executeDocCommand(container, cmd, exec = executeCommand) {
-  const name = parseExportAssignment(cmd);
-  if (!name) {
+  const names = parseExportAssignments(cmd);
+  if (names.length === 0) {
     return exec(container, cmd);
   }
   // Report failures against the original doc command, not the wrapped script.
-  return exec(container, buildPersistCommand(cmd, name), cmd);
+  return exec(container, buildPersistCommand(cmd, names), cmd);
 }
 
 export async function stopContainer(container) {
