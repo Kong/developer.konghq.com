@@ -8,7 +8,7 @@ columns:
   - title: Description
     key: description
 rows:
-  - header: X-Gql-Query-Cost
+  - header: "`X-Gql-Query-Cost`"
     description: The calculated cost of the GraphQL query in the request.
   - header: "`X-RateLimit-Limit-<window>`"
     description: The allowed limit for the matching [`config.window_size`](./reference/#schema--config-window_size) value, for example, `X-RateLimit-Limit-Minute`.
