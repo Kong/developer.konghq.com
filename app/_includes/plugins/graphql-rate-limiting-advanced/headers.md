@@ -45,4 +45,5 @@ If any of the rate limit windows are exceeded, the plugin returns an `HTTP/1.1 4
 ```
 
 {:.info}
-> These headers appear on successful responses and on `403` and `429` error responses. They do not appear when the plugin rejects the request before it calculates the query cost, for example when the GraphQL query is missing or invalid, or when upstream schema introspection fails (`400` responses).
+> These headers appear on successful responses and on `403` and `429` error responses. 
+> They don't appear when the plugin rejects the request before it calculates the query cost, for example when the GraphQL query is missing or invalid, or when upstream schema introspection fails (`400` responses).
