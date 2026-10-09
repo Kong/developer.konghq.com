@@ -6,8 +6,7 @@ extended_description: |
   Convert Protobuf records to JSON for the client that consumes them. 
   The record in the backend cluster doesn't change, so systems that read Protobuf directly from the cluster keep their access to the original format.
 
-  This example uses `reference` to look up the Protobuf source schema in a [schema registry](/event-gateway/entities/schema-registry/),
-  where it:
+    This example uses `reference` to look up the Protobuf source schema in a [schema registry](/event-gateway/entities/schema-registry/). It:
   * Computes the subject from the topic name
   * Always uses the latest version of the schema
   * Sets `message_name` to the fully qualified message that the record value was serialized as
