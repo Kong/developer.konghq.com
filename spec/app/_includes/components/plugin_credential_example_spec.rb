@@ -52,6 +52,6 @@ RSpec.describe 'components/plugin_credential_example.html' do
   end
 
   it 'gives the container its own anchored heading' do
-    expect(html).to have_css('h2 a[href="#create-a-consumer-and-credential"]')
+    expect(html).to have_css('h3 a[href="#create-a-consumer-and-credential"]')
   end
 end

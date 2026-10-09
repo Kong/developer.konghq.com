@@ -7,14 +7,14 @@
 {%- endif -%}
 
 {% unless page.example.requirements == empty %}
-## Prerequisites
+### Prerequisites
 
 {% for requirement in page.example.requirements %}
 * {{ requirement | liquify }}
 {%- endfor -%}
 {%- endunless -%}
 {% unless page.example.variables == empty %}
-## Environment variables
+### Environment variables
 
 {% for variable in page.example.variables %}
 * `{{ variable.value }}` {%- if variable.description -%}: {{variable.description | liquify }}{% endif%}

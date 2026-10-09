@@ -35,7 +35,7 @@ RSpec.describe 'plugins/example.md' do
   end
 
   def heading_ids(html)
-    html.all('h2').map { |heading| heading[:id] }
+    html.all('h2,h3').map { |heading| heading[:id] }
   end
 
   shared_examples 'a page with an ordered credential section' do
@@ -47,7 +47,7 @@ RSpec.describe 'plugins/example.md' do
     end
 
     it 'renders the credential section heading with its own anchor' do
-      expect(html).to have_css('h2#create-a-consumer-and-credential a[href="#create-a-consumer-and-credential"]')
+      expect(html).to have_css('h3#create-a-consumer-and-credential a[href="#create-a-consumer-and-credential"]')
     end
   end
 
