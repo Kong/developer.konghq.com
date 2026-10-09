@@ -119,23 +119,21 @@ export async function runtimeEnvironment(runtimeConfig) {
   return environment;
 }
 
-export function licenseRequired(deploymentModel, product) {
-  return !(deploymentModel === "konnect" && product === "operator");
-}
-
 export async function setupRuntime(runtimeConfig, docker) {
   const { deploymentModel, product } = runtimeConfig;
   await fetchImage(docker, runtimeConfig.imageName, log);
 
   const environment = await runtimeEnvironment(runtimeConfig);
-  // Add gateway license. Konnect operator runs only install the operator,
-  // which talks to Konnect with a token, so no license is needed there.
-  if (licenseRequired(deploymentModel, product)) {
-    if (!process.env.KONG_LICENSE_DATA) {
-      throw new Error("Missing env variable KONG_LICENSE_DATA");
-    }
-    environment["KONG_LICENSE_DATA"] = process.env.KONG_LICENSE_DATA;
+  // Add the gateway license. Every runtime needs it, including konnect
+  // operator runs: the how-tos deploy enterprise gateway data planes
+  // (kong/kong-gateway), and Kong Gateway 3.16+ runs read-only without a
+  // license, rejecting config pushes with 403, so the pages' Gateways never
+  // program. The konnect.operator reset also applies the license as a
+  // KongLicense CR because the konnect pages never do it themselves.
+  if (!process.env.KONG_LICENSE_DATA) {
+    throw new Error("Missing env variable KONG_LICENSE_DATA");
   }
+  environment["KONG_LICENSE_DATA"] = process.env.KONG_LICENSE_DATA;
 
   if (runtimeConfig.version) {
     log(`Setting up ${deploymentModel}/${product} version: ${runtimeConfig.version}...`);
