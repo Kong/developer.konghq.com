@@ -22,7 +22,7 @@ config:
       - name: describe_configs
       - name: read
       - name: write
-    resource_names: '[context.auth.token.claims.topic_prefix + "*"]'
+    resource_names: '{{context.auth.token.claims.topic_prefix + "*"}}'
 tools:
   - konnect-api
   - terraform

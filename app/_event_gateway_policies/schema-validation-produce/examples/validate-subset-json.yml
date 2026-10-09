@@ -7,7 +7,7 @@ weight: 900
 name: validate-all-topics
 type: schema_validation
 condition: >
-  context.topic.name.startsWith("my_prefix")
+  {{context.topic.name.startsWith("my_prefix")}}
 config:
   type: json
   value_validation_action: reject

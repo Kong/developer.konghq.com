@@ -229,7 +229,7 @@ body:
   type: modify_headers
   name: classify_internal_logs
   parent_policy_id: $SCHEMA_VALIDATION_POLICY_ID
-  condition: "record.value.content[\"level\"] == \"debug\" || record.value.content[\"level\"] == \"trace\""
+  condition: '{% raw %}{{record.value.content["level"] == "debug" || record.value.content["level"] == "trace"}}{% endraw %}'
   config:
     actions:
       - op: set
@@ -250,7 +250,7 @@ method: POST
 body:
   type: skip_record
   name: filter_internal_logs
-  condition: "record.headers[\"x-internal\"] == \"true\" && context.auth.principal.name != \"sre_user\""
+  condition: '{% raw %}{{record.headers["x-internal"] == "true" && context.auth.principal.name != "sre_user"}}{% endraw %}'
 {% endkonnect_api_request %}
 <!--vale on-->
 

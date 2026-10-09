@@ -253,9 +253,13 @@ By writing conditions using expressions, you can access dynamic configuration fr
 
 For example, you can create a condition that selects all topics that end with the suffix `my_suffix`:
 
+{% raw %}
+
 ```json
-"condition": "context.topic.name.endsWith('my_suffix')"
+"condition": "{{context.topic.name.endsWith('my_suffix')}}"
 ```
+
+{% endraw %}
 
 See the [expressions reference](/event-gateway/expressions/) for more information.
 
