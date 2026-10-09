@@ -70,6 +70,9 @@ rows:
   - use_case: "[Example: Convert records for a specific topic to Avro](/event-gateway/policies/record-transcode-produce/examples/convert-topic-to-avro-on-condition/)"
     description: |
       Use a `condition` to convert records produced to a single topic to Avro, and leave records on other topics unchanged.
+  - use_case: "[Tutorial: Produce Kafka records as Avro](/event-gateway/produce-kafka-records-as-avro-with-event-gateway/)"
+    description: |
+      Let a producer send plain JSON, and store records as Avro in the backend cluster using a Confluent Schema Registry.
 {% endtable %}
 <!--vale on-->
 
