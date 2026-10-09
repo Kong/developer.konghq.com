@@ -1,4 +1,5 @@
 {%- assign drop = include.credential_example -%}
+{%- assign heading_level = 4 -%}
 ### Create a Consumer and credential
 
 {% for formatted_example in drop.formatted_examples -%}{%- assign format = formatted_example.format %}
