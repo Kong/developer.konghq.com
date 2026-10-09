@@ -104,7 +104,7 @@ Replace `BEDROCK_API_KEY` with your Amazon Bedrock API key.
 
 Both authentication methods work with the `runtime` and `mantle` endpoints.
 
-## Choose a Bedrock endpoint
+## Choose a Bedrock endpoint {% new_in 2.3 %}
 
 {{site.ai_gateway}} can send requests to either of the two Amazon Bedrock inference endpoints, Runtime (the default) or Mantle, depending on the `endpoint_type` in the target `config` of an [AI Model](/ai-gateway/entities/ai-model/).
 Use `mantle` when your clients already send OpenAI or Anthropic API requests and you want Bedrock Mantle to handle them natively, for example, to run the OpenAI Codex CLI against models on Bedrock.
@@ -144,7 +144,7 @@ variables:
 
 For a complete walkthrough, see [Route OpenAI traffic to Amazon Bedrock Mantle](/ai-gateway/route-openai-traffic-to-bedrock-mantle/).
 
-## Connect through a VPC endpoint
+## Connect through a VPC endpoint {% new_in 2.3 %}
 
 To connect to Amazon Bedrock through a VPC endpoint over AWS PrivateLink, set `vpc_endpoint` in the target `config` to the hostname of your interface VPC endpoint.
 {{site.ai_gateway}} then sends requests to that host.
