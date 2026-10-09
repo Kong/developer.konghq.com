@@ -90,13 +90,14 @@ For configuration examples and step-by-step setup instructions, see [Set up a gl
 
 ## How AI Policies run
 
-When a request reaches {{site.ai_gateway}}, it processes the request in the following order:
+{{site.ai_gateway}} processes each request in the following order:
 
 1. The [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) authenticates the caller. AI Policies don't perform authentication.
 1. {{site.ai_gateway}} identifies the AI Consumer and its AI Consumer Groups.
 1. {{site.ai_gateway}} selects the AI Model, AI Agent, or AI MCP Server.
 1. {{site.ai_gateway}} collects the AI Policies that apply to the request, based on [scope](#ai-policy-scopes), and resolves any [scope conflicts](#scope-precedence).
-1. {{site.ai_gateway}} runs the AI Policies in [priority](#ai-policy-priority) order. Before each AI Policy runs, {{site.ai_gateway}} evaluates its [condition](#conditional-ai-policy-execution), and skips the AI Policy if the condition doesn't match.
+1. {{site.ai_gateway}} runs the AI Policies in [priority](#ai-policy-priority) order.
+1. Before each AI Policy runs, {{site.ai_gateway}} evaluates its [condition](#conditional-ai-policy-execution) and skips the AI Policy if the condition doesn't match.
 
 The following diagram shows where AI Policies fit in the request pipeline:
 
@@ -127,7 +128,7 @@ sequenceDiagram
     AIGW-->>Client: Response
 {% endmermaid %}
 
-Because authentication happens first, AI Policies scoped to an AI Consumer or AI Consumer Group only apply to authenticated requests.
+AI Policies scoped to an AI Consumer or AI Consumer Group apply only to authenticated requests, because authentication runs first.
 An AI Policy runs at most once per request.
 
 ## AI Policy scopes
@@ -171,7 +172,7 @@ Requests to other Models still use the global AI Policy.
 > For example, if an AI Consumer is in the groups `alpha` and `beta`, and both have an AI Prompt Guard AI Policy, only the AI Policy on `alpha` runs.
 > The order in which you add the AI Consumer to the groups doesn't change the result.
 >
-> The specific rules that govern this behavior are not defined and are subject to change in future releases.
+> {{site.ai_gateway}} doesn't guarantee this order, and it can change in a future release.
 
 Attach at most one AI Policy of a given type to the same entity.
 For details, see [the FAQ](#faqs).
@@ -196,7 +197,7 @@ The following table lists the priority of every built-in AI Policy type, from hi
 ## Conditional AI Policy execution
 
 An AI Policy has a `condition` field that determines whether the AI Policy runs for a given request.
-Write the condition as a CEL (Common Expression Language) expression.
+Write the condition as a [CEL (Common Expression Language)](/ai-gateway/expressions/) expression.
 When a request comes in, {{site.ai_gateway}} evaluates the condition.
 If it matches, the AI Policy runs.
 If it doesn't match, the AI Policy is skipped for that request.
@@ -210,11 +211,11 @@ condition: 'http.headers.x_tier == "premium"'
 In the expression, write header names with underscores in place of hyphens, so `x-tier` becomes `x_tier`.
 {{site.ai_gateway}} validates the expression when you save the AI Policy and rejects an invalid one.
 
-With this condition:
+For the condition `http.headers.x_tier == "premium"`:
 * A request with the header `x-tier: premium` matches, so the AI Policy runs.
 * A request with `x-tier: free`, any other value, or no `x-tier` header doesn't match. {{site.ai_gateway}} skips the AI Policy and processes the request as if the AI Policy weren't attached.
 
-For the full expression syntax, see the [CEL reference](/gateway/plugins/expressions/).
+For the full expression syntax, see [AI Policy conditions](/ai-gateway/expressions/).
 
 ## Protocols
 
@@ -223,7 +224,7 @@ An AI Policy scoped to an AI Model, AI Agent, or AI MCP Server runs on the proto
 A global AI Policy runs only on HTTP and HTTPS traffic.
 
 On a WebSocket route, an AI Policy scoped to an AI Model runs only if its type supports the `ws` and `wss` protocols.
-Otherwise, it's skipped for that route.
+Otherwise, {{site.ai_gateway}} skips the AI Policy for that route.
 
 ## Set up a global AI Policy
 
