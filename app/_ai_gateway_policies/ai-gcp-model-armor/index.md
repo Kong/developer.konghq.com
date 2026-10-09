@@ -82,13 +82,77 @@ The AI GCP Model Armor Policy inspects requests and responses using GCP Model Ar
 1. GCP Model Armor evaluates the provided content against the configured `template_id`.
 2. The AI GCP Model Armor Policy interprets the `sanitizationResult` from GCP.
 3. If a violation is detected (for example, hatred, sexually explicit content, harassment, or jailbreak attempts), the request or response is blocked.
-4. Blocked traffic results in a `400 Bad Request` response with the configured `request_failure_message` or `response_failure_message`.
+4. Blocked traffic returns the response for the configured [rejection mode](#rejection-modes). By default, the response is a `400 Bad Request` with the configured `request_failure_message` or `response_failure_message`.
 5. If `reveal_failure_categories` is enabled, the response also lists the categories that triggered blocking.
 
 {:.info}
 > When configuring `template_id` in the AI GCP Model Armor Policy, ensure that it aligns with the content safety policies and categories defined in your GCP Model Armor service.
 >
 > Review whether your organization requires custom categories or additional policy definitions, and integrate them into the selected template to match compliance and safety requirements.
+
+## Rejection modes
+
+The {{page.name}} Policy responds to a blocked request or response according to its rejection mode.
+
+{% include_cached md/ai-gateway/v2/guardrail-rejection-modes.md name=page.name checks_responses=true %}
+
+In `none` mode, the response body is the plain message set in [`config.request_failure_message`](/ai-gateway/policies/ai-gcp-model-armor/reference/#schema--config-request-failure-message) for requests or [`config.response_failure_message`](/ai-gateway/policies/ai-gcp-model-armor/reference/#schema--config-response-failure-message) for responses.
+The following response is the body for a request blocked in `none` mode:
+
+```json
+{
+  "message": "Request was filtered by GCP Model Armor",
+  "error": true
+}
+```
+
+In `verbose` mode, `reason` is the type of the Model Armor filter that matched, and `detail` lists the filter results that GCP Model Armor returned.
+For example, a prompt injection attempt returns the following response:
+
+```json
+{
+  "error": {
+    "type": "guardrail_rejected",
+    "plugin": "ai-gcp-model-armor",
+    "reason": "pi_and_jailbreak.piAndJailbreakFilterResult",
+    "code": "GUARDRAIL_BLOCKED",
+    "detail": [
+      {
+        "checkType": "pi_and_jailbreak.piAndJailbreakFilterResult",
+        "confidenceLevel": "MEDIUM_AND_ABOVE"
+      }
+    ]
+  }
+}
+```
+
+To return this response, set [`config.rejection_mode`](/ai-gateway/policies/ai-gcp-model-armor/reference/#schema--config-rejection-mode) to `verbose`:
+
+{% entity_example %}
+type: policy
+data:
+  display_name: AI GCP Model Armor - Verbose Rejection
+  name: ai-gcp-model-armor
+  type: ai-gcp-model-armor
+  config:
+    project_id: YOUR_PROJECT_ID
+    location_id: us-central1
+    template_id: YOUR_TEMPLATE_ID
+    gcp_use_service_account: true
+    gcp_service_account_json: ${gcp_service_account_json}
+    rejection_mode: verbose
+variables:
+  gcp_service_account_json:
+    value: $GCP_SERVICE_ACCOUNT_JSON
+    description: The JSON key of a GCP service account with access to the Model Armor template.
+formats:
+  - konnect-api
+  - kongctl
+{% endentity_example %}
+
+## Detect without blocking
+
+{% include_cached md/ai-gateway/v2/guardrail-continue-on-detection.md name=page.name logs_detection=true %}
 
 ## Best practices
 
@@ -139,5 +203,5 @@ To log the raw content of blocked requests and responses, enable [`config.log_bl
 
 * Only chat prompts and chat responses are inspected; embeddings and other modalities are not checked.
 * Inspects one chat message or one response body at a time. Combining multiple messages reduces accuracy.
-* For SSE streaming, unsafe content may appear briefly before termination with `"stop_reason: blocked by content safety"`.
+* For SSE streaming, the Policy inspects the response in segments, so unsafe content can reach the client before the Policy blocks the stream. A violation that only appears across several segments might not be blocked.
 * Only one `template_id` can be configured per AI Policy.

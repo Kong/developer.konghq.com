@@ -50,10 +50,39 @@ You can use a combination of `allow` and `deny` rules to maintain integrity and 
 By default, the Policy only evaluates the latest message from the `user` role. To also match earlier turns in a multi-turn conversation, set [`config.rules.match_all_conversation_history`](/ai-gateway/policies/ai-semantic-prompt-guard/reference/#schema--config-rules-match-all-conversation-history) to `true`. To also match messages from roles other than `user`, set [`config.rules.match_all_roles`](/ai-gateway/policies/ai-semantic-prompt-guard/reference/#schema--config-rules-match-all-roles) to `true`.
 
 The matching behavior is as follows:
-* If any `deny` prompts are set and the request matches a prompt in the `deny` list, the caller receives a 403 response.
-* If any `allow` prompts are set, but the request matches none of the allowed prompts, the caller also receives a 403 response.
+* If any `deny` prompts are set and the request matches a prompt in the `deny` list, the request is blocked.
+* If any `allow` prompts are set, but the request matches none of the allowed prompts, the request is also blocked.
 * If any `allow` prompts are set and the request matches one of the `allow` prompts, the request passes through to the LLM.
-* If there are both `deny` and `allow` prompts set, the `deny` condition takes precedence over `allow`. Any request that matches a prompt in the `deny` list will return a 403 response, even if it also matches a prompt in the `allow` list. If the request doesn't match a prompt in the `deny` list, then it must match a prompt in the `allow` list to be passed through to the LLM.
+* If there are both `deny` and `allow` prompts set, the `deny` condition takes precedence over `allow`. Any request that matches a prompt in the `deny` list is blocked, even if it also matches a prompt in the `allow` list. If the request doesn't match a prompt in the `deny` list, then it must match a prompt in the `allow` list to be passed through to the LLM.
+
+## Rejection modes
+
+The {{page.name}} Policy responds to a blocked request according to its rejection mode.
+In the default `none` mode, the response is a `400` with the message `bad request`, which hides that a guardrail is in use.
+
+{% include_cached md/ai-gateway/v2/guardrail-rejection-modes.md name=page.name request_only=true %}
+
+For example, a request that matches a `deny` prompt returns the following response in `verbose` mode.
+The `detail` field contains the prompt that matched and its `score`, which is the distance between the request and that prompt (a lower score means a closer match):
+
+```json
+{
+  "error": {
+    "type": "guardrail_rejected",
+    "plugin": "ai-semantic-prompt-guard",
+    "reason": "prompt pattern is blocked",
+    "code": "GUARDRAIL_BLOCKED",
+    "detail": {
+      "matched_prompt": "How do I pick a lock?",
+      "score": 0.12
+    }
+  }
+}
+```
+
+## Detect without blocking
+
+{% include_cached md/ai-gateway/v2/guardrail-continue-on-detection.md name=page.name %}
 
 ## Vector databases
 
