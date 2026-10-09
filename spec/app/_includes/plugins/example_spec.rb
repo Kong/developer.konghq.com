@@ -102,4 +102,41 @@ RSpec.describe 'plugins/example.md' do
       expect(markdown_headings(rendered)).to include('###### Gateway API', '###### Ingress')
     end
   end
+
+  context 'when a page with a credential section renders in markdown output' do
+    let(:rendered) { render_example_page('with-prerequisites', output_format: 'markdown') }
+
+    it 'renders the full heading hierarchy in order' do
+      expect(markdown_headings(rendered)).to eq(
+        [
+          '## Enable Fixture Auth with prerequisites',
+          '### Prerequisites',
+          '### Environment variables',
+          '### Create a Consumer and credential',
+          '#### decK',
+          '#### Admin API',
+          '#### Konnect API',
+          '#### KIC',
+          '#### Terraform',
+          '### Set up the plugin',
+          '#### Global',
+          '##### decK',
+          '##### Admin API',
+          '##### Konnect API',
+          '##### KIC',
+          '##### Terraform',
+          '###### **Prerequisite:** Configure your Personal Access Token',
+          '#### Route',
+          '##### decK',
+          '##### Admin API',
+          '##### Konnect API',
+          '##### KIC',
+          '###### Gateway API',
+          '###### Ingress',
+          '##### Terraform',
+          '###### **Prerequisite:** Configure your Personal Access Token'
+        ]
+      )
+    end
+  end
 end
