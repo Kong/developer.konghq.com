@@ -266,59 +266,6 @@ The Token Vault stores each credential in its own row, and binds the encrypted c
 
 A credential's value never comes back through APIs. While read endpoints return metadata (IDs, timestamps, status), they never return the actual token or key value.
 
-### Auditing
-
-
-Every credential lookup gets logged and emits a structured record covering successful outcomes (like credential releases or required enrollments). The audit trail captures the full pattern of who's asking for what. The following table lists what's logged and what isn't:
-
-<!--vale off-->
-{% feature_table %}
-item_title: Audit record field
-columns:
-  - title: Description
-    key: description
-  - title: Included in audit record
-    key: logged
-features:
-  - title: "`directory`"
-    description: Which organization's directory the credential request belongs to.
-    logged: true
-  - title: "`provider`"
-    description: Which third-party service the credential was requested for (for example, GitHub or Slack).
-    logged: true
-  - title: "secret type"
-    description: The kind of secret involved (for example, OAuth token or static secret).
-    logged: true
-  - title: "credential type"
-    description: Whether the credential is user-scoped or shared.
-    logged: true
-  - title: "calling gateway"
-    description: Which {{site.ai_gateway_name}} instance made the request.
-    logged: true
-  - title: "subject"
-    description: The identity the request was made on behalf of.
-    logged: true
-  - title: "decision"
-    description: The outcome of the request — credential released, or enrollment required.
-    logged: true
-  - title: "secret values"
-    description: The actual contents of any stored credential.
-    logged: false
-  - title: "released tokens"
-    description: The token handed to {{site.ai_gateway_name}} for the outbound call.
-    logged: false
-  - title: "client secrets"
-    description: OAuth client secrets configured on a provider.
-    logged: false
-  - title: "refresh tokens"
-    description: Tokens used to renew an expired access token.
-    logged: false
-  - title: "OAuth codes"
-    description: Authorization codes exchanged during enrollment.
-    logged: false
-{% endfeature_table %}
-<!--vale on-->
-
 ### OAuth-based credential lifecycle
 
 A credential moves through the following stages, depending on the action a user performs:
