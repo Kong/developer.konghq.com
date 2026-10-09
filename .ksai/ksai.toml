@@ -1,0 +1,7 @@
+#:schema https://ksai.kongcloud.io/schemas/ksai/v1/ksai.toml.json
+version = 1
+
+[[review.packs]]
+name = "Output blocks"
+paths = ["app/**/*.md", "!app/_references/**", "!app/_changelogs/**", "!app/_api/**", "!app/_support/**"]
+source_files = ["review-rules/no-copy-code.md"]
