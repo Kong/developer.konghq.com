@@ -1,26 +1,26 @@
 ```ansi
 Usage:
-  kongctl get ai-gateway auth-strategies [auth-strategy-id|auth-strategy-name] [flags]
+  kongctl list ai-gateway custom-policies [custom-policy-id|custom-policy-name] [flags]
+
+Maturity:
+  beta
+  Requires an AI Gateway backend with custom-policy support enabled.
 
 Aliases:
-  auth-strategies, auth-strategy
+  custom-policies, custom-policy
 
 Examples:
-  # List auth strategies for an AI Gateway by ID
-  kongctl get ai-gateways auth-strategies --gateway-id <gateway-id>
-  # List auth strategies for an AI Gateway by display name
-  kongctl get ai-gateways auth-strategies --gateway-name "Customer Support Gateway"
-  # Get an auth strategy by ID or name
-  kongctl get ai-gateways auth-strategies --gateway-name "Customer Support Gateway" support-key-auth
-  # Get an auth strategy by flag
-  kongctl get ai-gateways auth-strategies --gateway-id <gateway-id> --auth-strategy-name support-key-auth
+  # List Custom Policies for an AI Gateway by display name
+  kongctl get ai-gateway custom-policies --gateway-name "Customer Support Gateway"
+  # List Custom Policies for an AI Gateway by ID
+  kongctl get ai-gateway custom-policies --gateway-id <gateway-id>
+  # Get a Custom Policy by name
+  kongctl get ai-gateway custom-policies --gateway-name "Customer Support Gateway" mask-sensitive-data
+  # Get a Custom Policy by ID
+  kongctl get ai-gateway custom-policies --gateway-id <gateway-id> --custom-policy-id <policy-id>
 
 
 Flags:
-      --auth-strategy-id string     The ID of the AI Gateway Auth Strategy to retrieve.
-                                    - Config path: [ konnect.ai-gateway.auth-strategy.id ]
-      --auth-strategy-name string   The name of the AI Gateway Auth Strategy to retrieve.
-                                    - Config path: [ konnect.ai-gateway.auth-strategy.name ]
       --base-url string             Base URL for Konnect API requests.
                                     - Config path: [ konnect.base-url ]
                                     - Default   : [ https://us.api.konghq.com ]
@@ -33,11 +33,15 @@ Flags:
       --config-file string          Path to the configuration file to load.
                                     - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
                                     - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
+      --custom-policy-id string     The ID of the AI Gateway Custom Policy to retrieve.
+                                    - Config path: [ konnect.ai-gateway.custom-policy.id ]
+      --custom-policy-name string   The name of the AI Gateway Custom Policy to retrieve.
+                                    - Config path: [ konnect.ai-gateway.custom-policy.name ]
       --gateway-id string           The ID of the AI Gateway that owns the resource.
                                     - Config path: [ konnect.ai-gateway.id ]
       --gateway-name string         The name or display_name of the AI Gateway that owns the resource.
                                     - Config path: [ konnect.ai-gateway.name ]
-  -h, --help                        help for auth-strategies
+  -h, --help                        help for custom-policies
       --jq string                   Filter JSON responses using jq expressions (powered by gojq for full jq compatibility)
       --jq-color string             Controls colorized output for jq filter results.
                                     - Config path: [ jq.color.enabled ]
