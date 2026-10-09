@@ -5,7 +5,7 @@ nonword: true
 scope: text
 tokens:
   # Em dash between text (a lone em dash in a table cell is not flagged).
-  - '[^\s|]\s?—\s?[^\s|]'
-  - '\s—\s[^\s|]'
+  - '[^\s|]+\s?—\s?[^\s|]+'
+  - '[^\s|]*\s—\s[^\s|]+'
   # Spaced en dash. Numeric ranges like 1–5 have no spaces and are not flagged.
-  - '[^\s|]\s–\s[^\s|]'
+  - '[^\s|]+\s–\s[^\s|]+'

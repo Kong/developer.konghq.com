@@ -1,7 +1,0 @@
-extends: existence
-message: "'%s' looks like a heading written as bold text. Use a real Markdown heading (###) so it appears in the page outline and sidenav, or make it part of a sentence."
-level: suggestion
-nonword: true
-scope: raw
-tokens:
-  - '(?m)^ {0,3}\*\*[^*\n]+\*\*:?[ \t]*$'

@@ -1,5 +1,5 @@
 extends: existence
-message: "Use 'for example,' instead of '%s', for instance '(for example, ...)'."
+message: "Use 'for example,' instead of '%s'."
 level: warning
 nonword: true
 ignorecase: true
