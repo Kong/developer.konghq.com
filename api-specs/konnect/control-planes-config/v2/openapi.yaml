@@ -14,8 +14,8 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
   version: 3.15.0
-  x-oas-source: kong/platform-api@d9a3616ec0b898923aa973d2d25d10e1a5e5297e
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/d9a3616ec0b898923aa973d2d25d10e1a5e5297e'
+  x-oas-source: kong/platform-api@d7b9ccb84985c54cae166bcfb0bec23f78751ec8
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/d7b9ccb84985c54cae166bcfb0bec23f78751ec8'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -3617,7 +3617,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Service'
+              $ref: '#/components/schemas/ServiceRequest'
       responses:
         '201':
           description: Successfully created Service
@@ -3673,7 +3673,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Service'
+              $ref: '#/components/schemas/ServiceRequest'
       responses:
         '200':
           description: Successfully upserted Service
@@ -8397,6 +8397,173 @@ components:
       additionalProperties: false
       required:
         - host
+    ServiceRequest:
+      description: 'Service entities, as the name implies, are abstractions of each of your own upstream services. Examples of Services would be a data transformation microservice, a billing API, etc. The main attribute of a Service is its URL (where Kong should proxy traffic to), which can be set as a single string or by specifying its `protocol`, `host`, `port` and `path` individually. Services are associated to Routes (a Service can have many Routes associated with it). Routes are entry-points in Kong and define rules to match client requests. Once a Route is matched, Kong proxies the request to its associated Service. See the [Proxy Reference][proxy-reference] for a detailed explanation of how Kong proxies traffic.'
+      example:
+        host: example.internal
+        id: 49fd316e-c457-481c-9fc7-8079153e4f3c
+        name: example-service
+        path: /
+        port: 80
+        protocol: http
+      allOf:
+        - additionalProperties: false
+          properties:
+            ca_certificates:
+              description: 'Array of `CA Certificate` object UUIDs that are used to build the trust store while verifying upstream server''s TLS certificate. If set to `null` when Nginx default is respected. If default CA list in Nginx are not specified and TLS verification is enabled, then handshake with upstream server will always fail (because no CA are trusted).'
+              type: array
+              items:
+                type: string
+              nullable: true
+            client_certificate:
+              description: Certificate to be used as client certificate while TLS handshaking to the upstream server.
+              type: object
+              nullable: true
+              properties:
+                id:
+                  type: string
+              x-foreign: true
+            connect_timeout:
+              description: The timeout in milliseconds for establishing a connection to the upstream server.
+              type: integer
+              default: 60000
+              maximum: 2147483646
+              minimum: 1
+              nullable: true
+            created_at:
+              description: Unix epoch when the resource was created.
+              type: integer
+              nullable: true
+            description:
+              description: 'User-defined entity description. Konnect only field, not synced to the Gateway.'
+              type: string
+              nullable: true
+            enabled:
+              description: 'Whether the Service is active. If set to `false`, the proxy behavior will be as if any routes attached to it do not exist (404). Default: `true`.'
+              type: boolean
+              default: true
+              nullable: true
+            host:
+              description: The host of the upstream server. Note that the host value is case sensitive.
+              type: string
+            id:
+              description: A string representing a UUID (universally unique identifier).
+              type: string
+              minLength: 1
+              nullable: true
+            managed_by:
+              description: |-
+                Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).
+
+                Keys must be 1–63 characters long and start with an alphanumeric character.
+              type: object
+              additionalProperties:
+                maxLength: 63
+                minLength: 1
+                pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+                type: string
+              maxProperties: 5
+            name:
+              description: The Service name.
+              type: string
+              nullable: true
+            path:
+              description: The path to be used in requests to the upstream server.
+              type: string
+              nullable: true
+            port:
+              description: The upstream server port.
+              type: integer
+              default: 80
+              maximum: 65535
+              minimum: 0
+              nullable: true
+            protocol:
+              description: The protocol used to communicate with the upstream.
+              type: string
+              default: http
+              enum:
+                - grpc
+                - grpcs
+                - http
+                - https
+                - tcp
+                - tls
+                - tls_passthrough
+                - udp
+                - ws
+                - wss
+              nullable: true
+            read_timeout:
+              description: The timeout in milliseconds between two successive read operations for transmitting a request to the upstream server.
+              type: integer
+              default: 60000
+              maximum: 2147483646
+              minimum: 1
+              nullable: true
+            retries:
+              description: The number of retries to execute upon failure to proxy.
+              type: integer
+              default: 5
+              maximum: 32767
+              minimum: 0
+              nullable: true
+            tags:
+              description: An optional set of strings associated with the Service for grouping and filtering.
+              type: array
+              items:
+                description: A string representing a tag.
+                type: string
+              nullable: true
+            tls_sans:
+              description: Additional Subject Alternative Names that can be matched on Upstream server's TLS certificate (in addition to `host`).
+              type: object
+              nullable: true
+              properties:
+                dnsnames:
+                  description: A dnsName for TLS verification.
+                  type: array
+                  items:
+                    description: A string representing an SNI (server name indication) value for TLS.
+                    type: string
+                uris:
+                  description: An URI for TLS verification.
+                  type: array
+                  items:
+                    description: 'A string representing a URL, such as https://example.com/path/to/resource?q=search.'
+                    type: string
+            tls_verify:
+              description: 'Whether to enable verification of upstream server TLS certificate. If set to `null`, then the Nginx default is respected.'
+              type: boolean
+              nullable: true
+            tls_verify_depth:
+              description: 'Maximum depth of chain while verifying Upstream server''s TLS certificate. If set to `null`, then the Nginx default is respected.'
+              type: integer
+              maximum: 64
+              minimum: 0
+              nullable: true
+            updated_at:
+              description: Unix epoch when the resource was last updated.
+              type: integer
+              nullable: true
+            url:
+              description: 'Helper field to set `protocol`, `host`, `port` and `path` using a URL. This field is write-only and is not returned in responses.'
+              type: string
+              nullable: true
+              writeOnly: true
+            write_timeout:
+              description: The timeout in milliseconds between two successive write operations for transmitting a request to the upstream server.
+              type: integer
+              default: 60000
+              maximum: 2147483646
+              minimum: 1
+              nullable: true
+          type: object
+        - anyOf:
+            - required:
+                - host
+            - required:
+                - url
     Target:
       description: 'A target is an ip address/hostname with a port that identifies an instance of a backend service. Every upstream can have many targets, and the targets can be dynamically added, modified, or deleted. Changes take effect on the fly. To disable a target, post a new one with `weight=0`; alternatively, use the `DELETE` convenience method to accomplish the same. The current target object definition is the one with the latest `created_at`.'
       type: object
