@@ -398,16 +398,15 @@ curl -s -X PATCH "$KONG_ADMIN_API/plugins/$OIDC_PLUGIN_ID" \
 ```
 {% endnavtab %}
 {% endnavtabs %}
-{% endnavtab %}
 
 Verify the OIDC plugin is active:
 
 ```sh
-echo "$OIDC_PLUGIN" | jq -c '{name, enabled, issuer: .config.issuer}'
+curl -s "$KONG_ADMIN_API/services/$SERVICE/plugins" | jq -c '.data[] | select(.name=="openid-connect") | {name, enabled, issuer: .config.issuer}'
 ```
 
-The value for`enabled` should be `true`.
-
+The value for `enabled` should be `true`.
+{% endnavtab %}
 {% navtab "Attach to all Services" %}
 
 Attach or update the OIDC plugin on every Service:
