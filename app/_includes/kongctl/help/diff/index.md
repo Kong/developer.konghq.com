@@ -24,11 +24,13 @@ Flags:
       --base-url string                   Base URL for Konnect API requests.
                                           - Config path: [ konnect.base-url ]
                                           - Default   : [ https://us.api.konghq.com ]
+      --color string                      Colorize text diffs (auto|always|never) (default "auto")
       --color-theme string                Configures the CLI UI/theme (prompt, tables, TUI elements).
                                           - Config path: [ color-theme ]
                                           - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
                                           - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
       --config-file string                Path to the configuration file to load.
+                                          - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
                                           - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
   -f, --filename strings                  File, directory, URL, or '-' to use to create the resource (can specify multiple)
       --full-content                      Display full content for large fields instead of summary

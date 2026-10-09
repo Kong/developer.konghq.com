@@ -30,6 +30,7 @@ Flags:
       --columns stringArray                   Select text columns as HEADER=.field (repeatable or comma-separated).
                                               Supports nested fields, quoted keys, array indexes, and string slices.
       --config-file string                    Path to the configuration file to load.
+                                              - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
                                               - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
       --data-plane-certificate-id string      The ID of the AI Gateway data plane certificate to retrieve.
                                               - Config path: [ konnect.ai-gateway.data-plane-certificate.id ]
