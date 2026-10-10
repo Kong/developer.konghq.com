@@ -16,6 +16,8 @@ tags:
 related_resources:
   - text: "Credit balance model"
     url: /metering-and-billing/credits/balance-model/
+  - text: "Currencies"
+    url: /metering-and-billing/currencies/
   - text: "Credit grants"
     url: /metering-and-billing/credits/grants/
   - text: "Credit consumption and expiration"
@@ -43,6 +45,10 @@ They are useful for prepaid plans, promotional balances, migration credits, ente
 A credit balance is always tied to a customer and a currency.
 For example, a customer can have a USD credit balance and an EUR credit balance.
 Charges consume credits from the matching currency balance.
+Balances can be held in fiat currencies or in [custom currencies](/metering-and-billing/currencies/), such as credits or tokens you define for your organization.
+
+The purchase that funds a grant always settles in a fiat currency, even when the granted balance is in a custom currency.
+Custom-currency charges on a fiat invoice are converted through the currency's cost basis.
 
 For an end-to-end tutorial on setting up prepaid credits, see [Get started with prepaid credits](/how-to/get-started-with-prepaid-credits/).
 
