@@ -1,0 +1,98 @@
+metadata:
+  title: "Disaster recovery for {{site.base_gateway}} on Kubernetes"
+  content_type: landing_page
+  description: "Prepare, recover, and test Kong Gateway deployments on Kubernetes with KIC, Kong Operator, or a Konnect control plane."
+  breadcrumbs:
+    - /gateway/
+  products:
+    - gateway
+    - kic
+    - operator
+    - konnect
+  works_on:
+    - on-prem
+    - konnect
+  tags:
+    - kubernetes
+    - backup
+    - restore
+    - failover
+
+rows:
+  - header:
+      type: h1
+      text: "Disaster recovery for {{site.base_gateway}} on Kubernetes"
+      sub_text: |
+        Save your recovery files, rebuild a lost Kubernetes deployment, and verify traffic and configuration updates with a recovery walkthrough.
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Plan for traffic and configuration recovery"
+              blocks:
+                - type: text
+                  text: |
+                    High availability helps a deployment continue operating through component failures. Disaster recovery restores service when the failure exceeds that deployment's capacity to recover in place.
+
+                    The recommended way to make Kubernetes deployments recoverable is to keep all configuration in source control and deploy it through CD or GitOps. Recovery then means applying a known revision to a replacement cluster. See [Manage configuration as code](/gateway/disaster-recovery/kubernetes/prepare/#manage-configuration-as-code).
+
+                    For {{site.base_gateway}}, traffic recovery and configuration recovery can happen at different times. A surviving data plane can continue using its existing configuration while its control plane is unavailable. A replacement data plane still needs configuration, credentials, and access to application dependencies before it can serve requests.
+
+                    These guides cover customer-managed Kubernetes infrastructure. You operate the recovery environment, backups, secrets, and traffic routing. With {{site.konnect_short_name}}, Kong operates the hosted control plane; you recover your Kubernetes data planes and their access to it.
+
+  - header:
+      type: h2
+      text: "Choose your recovery guide"
+    columns:
+      - blocks:
+          - type: table
+            config:
+              columns:
+                - title: Where is Gateway configuration managed?
+                  key: configuration
+                - title: Recovery guide
+                  key: guide
+              rows:
+                - configuration: "A surviving {{site.konnect_short_name}} hybrid control plane, including Services and Routes managed by {{site.operator_product_name}}"
+                  guide: "[Recover Konnect-managed data planes](/gateway/disaster-recovery/kubernetes/konnect/)"
+                - configuration: "A self-managed hybrid control plane backed by PostgreSQL"
+                  guide: "[Recover a self-managed hybrid deployment](/gateway/disaster-recovery/kubernetes/hybrid/)"
+                - configuration: "Standalone {{site.kic_product_name}} reading Kubernetes routing resources for a DB-less gateway"
+                  guide: "[Recover a deployment managed by KIC](/kubernetes-ingress-controller/disaster-recovery/)"
+                - configuration: "An embedded controller in {{site.operator_product_name}} managing a local Gateway deployment"
+                  guide: "[Recover a deployment managed by Kong Operator](/operator/dataplanes/disaster-recovery/)"
+
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: Prepare your recovery environment
+              description: |
+                Define recovery objectives, inventory configuration and secrets, and prepare capacity and traffic failover before an incident.
+              cta:
+                url: /gateway/disaster-recovery/kubernetes/prepare/
+      - blocks:
+          - type: card
+            config:
+              title: Test recovery and failback
+              description: |
+                Exercise the procedure for your deployment, measure recovery, and record the changes needed before the next drill.
+              cta:
+                url: /gateway/disaster-recovery/kubernetes/test/
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "What these guides cover"
+              blocks:
+                - type: text
+                  text: |
+                    Each walkthrough defines a starting deployment, the files to save, the restore commands, and the expected application response. Run it against a separate recovery cluster before adapting it to your production deployment. Provisioning that cluster and changing external DNS or load balancer targets use your infrastructure provider's tools.
+
+                    The Konnect walkthrough uses Helm-managed data planes and a surviving control plane. Recovery during a Konnect outage, cross-geo failover, and recovery of Operator-generated Konnect Gateways need separate exercises.
+
+                    This collection does not cover traditional database-backed gateways, manually configured DB-less gateways, Kong-managed cloud data planes, or recovery of an entire {{site.konnect_short_name}} organization. For other backup methods, see [Back up and restore Kong Gateway](/gateway/upgrade/backup-and-restore/). For Kong Mesh, see [Mesh disaster recovery](/mesh/disaster-recovery/).
