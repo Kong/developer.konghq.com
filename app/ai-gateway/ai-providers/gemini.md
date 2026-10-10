@@ -137,8 +137,38 @@ ai_gateway_models:
     policies: []
 {% endentity_examples %}
 
-{:.info}
-> `targets[].config.gcp_environment` requires `api_endpoint`, `location_id`, and `project_id` together. Without it, this same provider would route to Gemini Standard instead.
+`targets[].config.gcp_environment` requires `location_id` and `project_id`. {% new_in 2.3 %} `api_endpoint` is optional. When it's unset, {{site.ai_gateway}} derives the Vertex AI hostname from `location_id`:
+
+{% table %}
+columns:
+  - title: "`location_id`"
+    key: location
+  - title: Derived `api_endpoint`
+    key: endpoint
+rows:
+  - location: "`global`"
+    endpoint: "`aiplatform.googleapis.com`"
+  - location: "Any other value, for example `us-east5`"
+    endpoint: "`{location_id}-aiplatform.googleapis.com`, for example `us-east5-aiplatform.googleapis.com`"
+{% endtable %}
+
+Set `api_endpoint` explicitly to use a different hostname, such as a Private Service Connect endpoint. An explicit value always takes precedence over the derived one.
+In {{site.ai_gateway}} 2.2 and earlier, `api_endpoint` is required.
+
+<!-- TODO(AI-174 OQ5): Confirm the derivation rule for `global` and for non-standard regions (for example, multi-region locations such as `us` or `eu`) before publishing. -->
+<!-- TODO(AI-174 OQ7): Confirm the minimum data plane version and what the control plane does (block or warn) when `api_endpoint` is omitted for older data planes, then document it here. -->
+
+## Select Gemini Standard or Gemini Enterprise
+
+{% new_in 2.3 %} Gemini Standard and Gemini Enterprise use the same `gemini` provider type.
+{{site.ai_gateway}} selects the variant for each request by checking the following, in order:
+
+1. **Inbound request path.** A Vertex AI path that contains `projects/{project_id}/locations/{location}` routes to Gemini Enterprise. A Gemini API path, such as `/v1beta/models/{model_name}:generateContent`, routes to Gemini Standard.
+1. **Credential type.** If the path doesn't identify a variant, an API key routes to Gemini Standard, and [GCP service account or OAuth credentials](#authentication-with-gcp-iam) route to Gemini Enterprise.
+
+Existing configurations that set `config.gcp_environment` on the target keep routing to Gemini Enterprise.
+
+<!-- TODO(AI-174 OQ1): Confirm precedence when the request path and credential type disagree, and when either conflicts with an explicit `config.gcp_environment`. The "Gemini Enterprise" section says `auth.type: gcp` alone doesn't select Gemini Enterprise; reconcile that sentence with the credential-type fallback once engineering confirms the behavior. Also confirm where `project_id` and `location_id` come from when the credential type selects Gemini Enterprise without `gcp_environment`. -->
 
 ## Authentication with GCP IAM
 
@@ -210,3 +240,41 @@ variables:
     value: $AWS_ASSUME_ROLE_ARN
     description: The ARN of the AWS IAM role to assume for the Workload Identity Federation token exchange.
 {% endentity_example %}
+
+## Thought signatures on the OpenAI-compatible route
+
+{% new_in 2.3 %} A thought signature is an opaque `thoughtSignature` value that Gemini thinking models attach to response parts.
+The model needs the signature on the matching part of the next request to keep reasoning context across multi-turn conversations and function calls.
+When an AI Model uses the `openai` format with a Gemini target, {{site.ai_gateway}} captures each `thoughtSignature` from the Gemini response and returns it to the client in the OpenAI-compatible response.
+When {{site.ai_gateway}} translates the next request back to Gemini, it re-attaches the signature to the matching part.
+
+To keep signatures intact, send the assistant message from the previous response back unchanged in the conversation history, including any tool calls.
+{{site.ai_gateway}} doesn't inspect or modify signature contents and doesn't log them at default log levels.
+
+<!-- TODO(AI-174 OQ3): Document where the signature sits in the OpenAI-compatible payload (an extra field or encoded in an existing field), add a short request/response example, and state whether streaming responses are supported. -->
+<!-- TODO(AI-174 OQ6): Confirm which capabilities carry signatures (chat completions and Responses are expected). -->
+
+## Gemini Interactions API
+
+{% new_in 2.3 %} {{site.ai_gateway}} forwards requests for the [Gemini Interactions API](https://ai.google.dev/gemini-api/docs/interactions) to Gemini Standard without translating the request or response body.
+{{site.ai_gateway}} still authenticates to Gemini with the credentials in the AI Model Provider, and AI Consumer authentication, rate limiting, and logging apply as they do for other Gemini traffic.
+
+{{site.ai_gateway}} supports the Interactions API only in the native Gemini format.
+It doesn't translate requests to or from the OpenAI or Anthropic formats.
+
+<!-- TODO(AI-174 OQ4): Document how an AI Model exposes the Interactions API (a `gemini` format route, a new capability, or the `passthrough` format with path detection) and add a kongctl example plus a sample request. -->
+<!-- TODO(AI-174 OQ2): List which Policies (guardrails, semantic caching, and so on) and which token and cost analytics apply to Interactions API traffic. Until then, see the passthrough FAQ on Policy compatibility: /ai-gateway/passthrough/ -->
+
+## Vertex AI predict endpoints
+
+{% new_in 2.3 %} Gemini Enterprise supports the Vertex AI [`predict` method](https://cloud.google.com/vertex-ai/docs/reference/rest/v1/projects.locations.endpoints/predict) for Model Garden models that you deploy to your own Vertex AI endpoint, such as TranslateGemma.
+{{site.ai_gateway}} proxies both forms of the request:
+
+* Deployed endpoint: `/v1/projects/{project_id}/locations/{location}/endpoints/{endpoint_id}:predict`
+* Publisher model: `/v1/projects/{project_id}/locations/{location}/publishers/{publisher}/models/{model_name}:predict`
+
+{{site.ai_gateway}} forwards the `instances` and `parameters` in the request body to Vertex AI unchanged.
+The body must match the input schema of the deployed model.
+
+<!-- TODO(AI-174 OQ4): platform-api#3664 doesn't add an `endpoint_id` field to `GCPModelConfig`. Confirm how an AI Model targets a deployed endpoint (endpoint ID taken from the inbound path, a new target field, or `upstream_url`) and whether a new capability or format is needed, then add a kongctl example for TranslateGemma. -->
+<!-- TODO(AI-174 OQ2): State which token and cost analytics and which Policies apply to Predict traffic. -->
