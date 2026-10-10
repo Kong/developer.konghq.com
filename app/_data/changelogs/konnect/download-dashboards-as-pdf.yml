@@ -1,0 +1,8 @@
+title: "Download dashboards as PDF"
+date: 2026-07-31
+content: |
+  You can now download any dashboard as a PDF directly from the dashboard menu.
+  The exported PDF is print-friendly and contains a link back to the live dashboard,
+  making it easy to share insights with stakeholders, upstream teams, or leadership
+  who do not have a Konnect account.
+url: https://releases.konghq.com/en/download-dashboards-as-pdf-Nq9NwICE

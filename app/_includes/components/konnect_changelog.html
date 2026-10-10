@@ -1,0 +1,11 @@
+{% for entry in changelog.entries %}
+<h3 id="{{ entry.title | slugify }}">{{ entry.title }}</h3>
+<p class="text-sm"><strong>{{ entry.date | date: "%B %-d, %Y" }}</strong></p>
+
+{{ entry.content | markdownify }}
+
+{% if entry.url %}
+<p><a href="{{ entry.url }}">Learn more</a></p>
+{% endif %}
+
+{% endfor %}
