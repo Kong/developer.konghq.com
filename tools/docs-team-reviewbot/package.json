@@ -1,0 +1,16 @@
+{
+  "name": "docs-team-reviewbot",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Advisory-only AI reviewer for docs PRs. Posts inline comments, never approves.",
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "0.131.0"
+  }
+}
