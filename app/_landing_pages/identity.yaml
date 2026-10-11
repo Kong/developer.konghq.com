@@ -212,6 +212,17 @@ rows:
               - text: "{{site.identity}} API reference"
                 url: /api/konnect/kong-identity/v1/#/
                 align: end
+      - blocks:
+        - type: card
+          config:
+            title: Migrate from the OAuth 2.0 plugin
+            description: |
+              Move existing OAuth 2.0 plugin clients to {{site.identity}} and validate the issued tokens with the OIDC plugin.
+            icon: /assets/icons/migrate.svg
+            ctas:
+              - text: Migrate from the OAuth 2.0 plugin to {{site.identity}}
+                url: /identity/migrate-oauth-to-identity/
+                align: end
 
   - header:
       type: h2

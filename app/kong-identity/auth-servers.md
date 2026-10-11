@@ -30,6 +30,8 @@ related_resources:
     url: /how-to/kong-identity-dcr/
   - text: Set up Kong Event Gateway with {{site.identity}} OAuth
     url: /how-to/event-gateway/kong-identity-oauth/
+  - text: Migrate from the OAuth 2.0 plugin to {{site.identity}}
+    url: /identity/migrate-oauth-to-identity/
 
 description: |
   {{site.identity}} enables you to use {{site.konnect_short_name}} to generate, authenticate and authorize API access. {{site.identity}} implements the OAuth2.0 standard with OpenID Connect for authentication and authorization. 
