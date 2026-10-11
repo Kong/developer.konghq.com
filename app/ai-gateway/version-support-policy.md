@@ -66,13 +66,23 @@ Kong aims to release a new **minor version approximately every 4 weeks**.
 
 Minor versions contain features and bug fixes and are usually backwards compatible within their major version sequence.
 
-We support the **two most recent minor versions** of {{site.ai_gateway_name}}.
 
-### Patch release
+### Rolling and stable releases
 
-Patches are cumulative ("rolled-up"), meaning that a release such as `2.1.3` includes fixes from `2.1.2`, `2.1.1`, and `2.1.0`.
+To support both rapid innovation and stability, Kong offers two support tracks:
 
-Due to the frequent iteration of the {{site.ai_gateway_name}} and the fast pace of the AI ecosystem generally, Kong does not provide a long-term support (LTS) version of the {{site.ai_gateway_name}}.
+- **Rolling**: receive fixes for P0 bugs, but no new features, until the next minor version ships. Only the latest minor is supported at any given time.
+- **Stable**: supported for 6 months. Supported stable releases receive fixes for P0 and P1 bugs, but no new features. {{site.ai_gateway}} aims to designate a new stable release once per quarter, which means 2 stable releases are generally maintained at any point in time.
+
+A stable release is a specific minor version that Kong designates as stable at the time it is declared. It follows the same {MAJOR}.{MINOR}.{PATCH} versioning scheme as rolling releases.
+
+Patches are cumulative or "rolled-up", meaning that a release such as 2.1.3 includes fixes from 2.1.2, 2.1.1, and 2.1.0.
+
+#### Sunset support
+
+After the support period ends, Kong provides limited support for 1 month on rolling releases and 3 months on stable releases to help customers upgrade to a fully supported version of {{site.ai_gateway}}.
+
+Kong will not provide patches for software covered by this sunset period. If there is an issue that requires a patch during this period, the customer will need to upgrade to a newer {{site.ai_gateway}} covered by active support.
 
 ## Bug fix guidelines
 
