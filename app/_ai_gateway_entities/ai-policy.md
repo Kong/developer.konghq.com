@@ -215,8 +215,6 @@ For the condition `http.headers.x_tier == "premium"`:
 * A request with the header `x-tier: premium` matches, so the AI Policy runs.
 * A request with `x-tier: free`, any other value, or no `x-tier` header doesn't match. {{site.ai_gateway}} skips the AI Policy and processes the request as if the AI Policy weren't attached.
 
-For the full expression syntax, see [AI Policy conditions](/ai-gateway/expressions/).
-
 ## Protocols
 
 An AI Policy takes its protocols from the entity it's attached to.
