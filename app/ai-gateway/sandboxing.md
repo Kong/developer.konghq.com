@@ -147,7 +147,7 @@ What happens to an AI Policy with custom Lua depends on when {{site.ai_gateway}}
 * The [Pre-Function](/ai-gateway/policies/pre-function/) and [Post-Function](/ai-gateway/policies/post-function/) AI Policies sync normally, and a request that triggers one fails.
   The data plane logs the message `loading of untrusted Lua code disabled because 'untrusted_lua' config option is set to 'off'`.
 * AI Policies that check their Lua code when the data plane loads the configuration make the data plane reject the entire configuration.
-  [Exit Transformer](/ai-gateway/policies/exit-transformer/) (`functions`) and [File Log](/ai-gateway/policies/file-log/) (`custom_fields_by_lua`) behave this way.
+  [Exit Transformer](/ai-gateway/policies/exit-transformer/) ([`functions`](/ai-gateway/policies/exit-transformer/reference/#schema--config-functions)) and [File Log](/ai-gateway/policies/file-log/) ([`custom_fields_by_lua`](/ai-gateway/policies/file-log/reference/#schema--config-custom-fields-by-lua)) behave this way.
   The data plane logs `Error parsing function: loading of untrusted Lua code disabled because 'untrusted_lua' config option is set to 'off'`.
   The node then applies no configuration changes until you remove the AI Policy.
 
@@ -1070,16 +1070,16 @@ The generated Routes and Services have no tags.
 
 An [AI Consumer](/ai-gateway/entities/ai-consumer/) becomes a {{site.base_gateway}} Consumer with the AI Consumer's name as its `username`.
 For an authenticated AI Consumer, `kong.client.get_consumer` returns a table with `id` and `username`.
-The table includes `custom_id` and `tags` when the AI Consumer sets them.
+The table includes [`custom_id`](/ai-gateway/entities/ai-consumer/#schema-aigateway-consumer-custom-id) and `tags` when the AI Consumer sets them.
 The `tags` list contains the AI Consumer's labels as `key:value` strings.
 `kong.client.get_consumer_groups` returns a table of the [AI Consumer Groups](/ai-gateway/entities/ai-consumer-group/) that the AI Consumer belongs to, and each entry has a `name`.
 It returns `nil` when the AI Consumer has no groups.
 
 An `oauth` AI Consumer behaves the same way.
-{{site.ai_gateway}} matches the token claim in `config.consumer_claims` to the AI Consumer's `custom_id`.
+{{site.ai_gateway}} matches the token claim in [`config.consumer_claims`](/ai-gateway/entities/ai-auth-strategy/#schema-aigateway-auth-strategy-open-idconnect-config-config-consumer-claims) to the AI Consumer's `custom_id`.
 `kong.client.get_consumer` then returns that AI Consumer's `id`, `username`, `custom_id`, and `tags`.
 
-When you enable {{site.identity}} [Principal](/identity/principals/) mapping (`config.principals`) on an `openid-connect` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/), set `config.consumer_optional` to `true` if the Principal has no linked AI Consumer.
+When you enable {{site.identity}} [Principal](/identity/principals/) mapping ([`config.principals`](/ai-gateway/entities/ai-auth-strategy/#schema-aigateway-auth-strategy-open-idconnect-config-config-principals)) on an `openid-connect` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/), set [`config.consumer_optional`](/ai-gateway/entities/ai-auth-strategy/#schema-aigateway-auth-strategy-open-idconnect-config-config-consumer-optional) to `true` if the Principal has no linked AI Consumer.
 Otherwise, {{site.ai_gateway}} rejects the request with a `401`, even when the Principal matches.
 When the Principal has no linked AI Consumer, `kong.client.get_consumer` returns `nil`.
 
@@ -1125,7 +1125,7 @@ If several global Pre-Function AI Policies exist, only the one with the highest 
 An Exit Transformer AI Policy rewrites responses that other AI Policies send, including authentication `401` responses and responses that a Pre-Function or Post-Function returns with `kong.response.exit`.
 Each function receives the status code, the body, and the headers, and returns the new values.
 By default, it doesn't rewrite responses that {{site.ai_gateway}} sends for unknown conditions, such as the `404` for a request that matches no Route.
-Set `handle_unknown` and `handle_unexpected` to `true` to rewrite those too.
+Set [`handle_unknown`](/ai-gateway/policies/exit-transformer/reference/#schema--config-handle-unknown) and [`handle_unexpected`](/ai-gateway/policies/exit-transformer/reference/#schema--config-handle-unexpected) to `true` to rewrite those too.
 <!-- TODO: verified live on 2.2.0 as a global AI Policy under strict mode. With the default flags it rewrote a plugin exit and an auth 401 but not a no-Route 404. With both flags true it also rewrote the 404. A Model-scoped Exit Transformer did not rewrite a Model-scoped request-termination 403 in testing, like the Model-scoped Pre-Function. Confirm with engineering. -->
 
 ### Conditions
