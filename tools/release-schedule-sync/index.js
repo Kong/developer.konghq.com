@@ -17,7 +17,8 @@ const DATE_FIELD = process.env.DATE_FIELD || "Release date";
 const DRY_RUN = process.argv.includes("--dry-run") || process.env.DRY_RUN === "1";
 
 const MILESTONE_URL = `https://github.com/${OWNER}/${REPO}/milestone`;
-const MILESTONE_LINK = new RegExp(`${MILESTONE_URL}/(\\d+)`);
+const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const MILESTONE_LINK = new RegExp(`${escapeRegExp(MILESTONE_URL)}/(\\d+)`);
 
 function getToken() {
   if (process.env.GH_TOKEN) return process.env.GH_TOKEN;
