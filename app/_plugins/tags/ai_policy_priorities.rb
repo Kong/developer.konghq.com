@@ -37,7 +37,7 @@ module Jekyll
     end
 
     def priorities
-      @priorities ||= @site.data.dig('plugins', 'priorities', latest_release.number.gsub('.', ''))
+      @priorities ||= @site.data.dig('plugins', 'priorities', latest_release.number.gsub('.', '')) || {}
     end
 
     def latest_release
