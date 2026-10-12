@@ -1,11 +1,6 @@
 name: Sync Release Schedule
 on:
   workflow_dispatch:
-    inputs:
-      dry_run:
-        description: Print changes without applying them
-        type: boolean
-        default: true
   schedule:
     - cron: "0 6 * * *"
   milestone:
@@ -46,7 +41,6 @@ jobs:
       - name: Sync Release Schedule view
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          DRY_RUN: ${{ inputs.dry_run && '1' || '0' }}
         run: |
           cd tools/release-schedule-sync
           node index.js

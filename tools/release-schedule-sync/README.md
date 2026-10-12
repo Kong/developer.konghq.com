@@ -27,7 +27,7 @@ The [`sync-release-schedule`](../../.github/workflows/sync-release-schedule.yml)
 
 * When a milestone is created, edited, opened, closed, or deleted.
 * Once a day at 06:00 UTC, to catch anything missed.
-* On demand from the **Actions** tab. Manual runs are a dry run by default. Clear the **dry_run** checkbox to apply changes.
+* On demand from the **Actions** tab.
 
 Milestone and scheduled triggers only run from the default branch, so changes to the workflow take effect after they're merged to `main`.
 
