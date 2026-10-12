@@ -7,7 +7,7 @@ This file is the handoff for iterating on the game. It records the owner's inten
 ## Status
 
 - Work-in-progress on branch `feat/arcade-easter-egg`, local only. Not pushed, no PR.
-- Positioned as a proof of concept that could later ship to production behind a flag. Shipping needs a brand/legal look at the AI story, logo use, and careers link, plus a `make build` run (never done yet).
+- Target: ship live to everyone on merge to `main`. No feature flag and no brand/legal sign-off needed (owner decision). Rolling back means reverting the merge. A `make build` run is still outstanding.
 - The owner playtests in their own browser and reports how it feels; tuning is driven by that feedback.
 
 ## Intent
@@ -36,6 +36,24 @@ These were chosen by the owner, often after trying the alternative. Change them 
 - Win: enable every terminal → corruption clears, agents vanish, a flashing EXIT door opens a little further down the page → reach it.
 - Lose: corruption reaches `LOSE_RATIO`, all lives gone, or a terminal stays cut off for `CUTOFF_GRACE` seconds (a red countdown warns first and clears if a path reopens).
 - Winning stores the best time in `localStorage` key `kong-docs-arcade` and shows a pixel star beside the header logo (tooltip with time, links to Kong careers). The win screen shows time and best time, and C opens careers. Clear it with `localStorage.removeItem("kong-docs-arcade")`.
+
+### Accessibility
+
+- Starting the game announces "Docs arcade started. Press Escape twice to exit." through a visually hidden `aria-live` region.
+- Before play starts (rain and the Y/N prompt) a single Esc exits; Esc twice only applies once a run is in progress.
+- With `prefers-reduced-motion`, flashing states (corrupted ledges, invulnerability blink, exit door) are drawn steady instead of flickering.
+- Touch and mobile are out of scope: the trigger needs a keyboard, so touch users never reach the game.
+
+### Analytics
+
+Minimal Segment events through `window.analytics?.track(...)` with the site's consent context, so nothing is sent when Segment is absent or blocked. No user-identifying properties.
+
+| Event | When | Properties |
+|---|---|---|
+| `Arcade Started` | Code typed | |
+| `Arcade Played` | Y pressed at the prompt | |
+| `Arcade Ended` | Run ends or player quits | `outcome` (`won`/`lost`/`quit`), `reason`, `seconds` |
+| `Arcade Careers Clicked` | C on the win screen or the header star | `source` |
 
 ### Level
 
@@ -138,5 +156,7 @@ Checks worth re-running after level or pacing changes, on a spread of pages (`/g
 
 - AI Prompt Guard is only marginally stronger than the default shield; the owner may want it to stand out more.
 - Corruption starts near the top of the page, close to the first terminal on short pages, so an idle player can get that terminal cut off quickly.
-- Not yet tried: mobile/touch controls, music, a pause key, hub and landing page layouts beyond the policies hub.
-- Before production: flag gating, `make build`, and removing or keeping the dev-only `window.__arcade` handle (already gated by `import.meta.env.DEV`).
+- Not yet tried: music, a pause key, hub and landing page layouts beyond the policies hub.
+- Before production: `make build` (confirm the game stays a lazy chunk). The dev-only `window.__arcade` handle is gated by `import.meta.env.DEV`, so production builds don't expose it.
+- Planned after the production pass: split `game.js` (player and agents into their own modules).
+- No JS unit test runner for now (owner decision: no new dependency). Testing is the browser checklist in [Testing](#testing) plus the owner's playtests.
