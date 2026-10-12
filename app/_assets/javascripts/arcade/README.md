@@ -102,6 +102,7 @@ The HUD lists each plugin with its effect and a live countdown while a timed eff
 | `render.js` | Canvas drawing: world, HUD, minimap, keybar, toasts, banners, rain, prompt |
 | `sprites.js` | Pixel art strings and the Kong mark rasteriser |
 | `audio.js` | Synthesised sound effects |
+| `analytics.js` | `track()`: Segment events, no-op without Segment; logged to the console in dev |
 
 Concepts that carry the design:
 

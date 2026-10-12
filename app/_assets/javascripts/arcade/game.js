@@ -1,3 +1,4 @@
+import { track } from "./analytics";
 import { Sfx } from "./audio";
 import { CAREERS_URL, formatTime, recordWin } from "./trophy";
 import { makeSprites } from "./sprites";
@@ -160,6 +161,7 @@ class Game {
     // frame() checks this too: exit() can run mid-frame, after the current
     // frame's callback has already fired, so cancelling it isn't enough.
     this.exited = true;
+    if (this.state === "playing") this.trackEnd("quit");
     cancelAnimationFrame(this.raf);
     window.removeEventListener("keydown", this.onKeyDown, true);
     window.removeEventListener("keyup", this.onKeyUp, true);
@@ -206,7 +208,10 @@ class Game {
       return;
     }
     if (code === "KeyM" && !event.repeat) this.sfx?.toggleMute();
-    if (code === "KeyC" && this.state === "won" && !event.repeat) window.open(CAREERS_URL, "_blank", "noopener");
+    if (code === "KeyC" && this.state === "won" && !event.repeat) {
+      track("Arcade Careers Clicked", { source: "win-screen" });
+      window.open(CAREERS_URL, "_blank", "noopener");
+    }
     if (!event.repeat) this.pressed.add(code);
     this.held.add(code);
   }
@@ -358,6 +363,7 @@ class Game {
     } else if (this.state === "prompt") {
       const done = this.typed >= this.promptLength;
       if (done && (this.pressed.has("KeyY") || this.pressed.has("Enter"))) {
+        track("Arcade Played");
         this.beginPlay();
       } else if (done && this.pressed.has("KeyN")) {
         this.exit();
@@ -417,6 +423,7 @@ class Game {
     if (this.exitDoor) {
       if (this.atExit()) {
         this.bestTime = recordWin(this.runTime);
+        this.trackEnd("won");
         this.sfx?.win();
         this.burst(player.x + player.w / 2, player.y, "#ccff00", 60);
         this.setState("won");
@@ -494,8 +501,13 @@ class Game {
 
   lose(reason, detail) {
     this.loseReason = { reason, detail };
+    this.trackEnd("lost", reason);
     this.sfx?.lose();
     this.setState("lost");
+  }
+
+  trackEnd(outcome, reason = null) {
+    track("Arcade Ended", { outcome, reason, seconds: Math.round(this.runTime) });
   }
 
   updatePlayer(dt) {

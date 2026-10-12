@@ -2,6 +2,8 @@
 // logo and, once the arcade has been beaten, a pixel star beside it that
 // links to Kong careers and shows the best time.
 
+import { track } from "./analytics";
+
 const STORAGE_KEY = "kong-docs-arcade";
 const STAR_CLASS = "arcade-star";
 const STAR = ["...G...", "...G...", "GGGGGGG", ".GGGGG.", "..GGG..", ".GG.GG.", "GG...GG"];
@@ -76,6 +78,7 @@ function renderStar(best) {
       star.innerHTML = starSvg();
       logo.after(star);
       attachTooltip(star, (tooltip) => (tooltip.textContent = star.dataset.label));
+      star.addEventListener("click", () => track("Arcade Careers Clicked", { source: "header-star" }));
     }
     star.dataset.label = label;
     star.setAttribute("aria-label", label);
