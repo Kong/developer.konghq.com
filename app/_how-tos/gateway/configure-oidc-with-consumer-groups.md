@@ -118,7 +118,7 @@ url: /anything
 method: GET
 status_code: 403
 headers:
- - 'Authorization: Basic {{ "kong:$CLIENT_SECRET" | base64 }}'
+  - 'Authorization: Basic {{ "kong:$CLIENT_SECRET" | base64 }}'
 display_headers: true
 {% endvalidation %}
 
