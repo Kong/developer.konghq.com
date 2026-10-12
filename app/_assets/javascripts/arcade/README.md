@@ -7,7 +7,7 @@ This file is the handoff for iterating on the game. It records the owner's inten
 ## Status
 
 - Work-in-progress on branch `feat/arcade-easter-egg`, local only. Not pushed, no PR.
-- Target: ship live to everyone on merge to `main`. No feature flag and no brand/legal sign-off needed (owner decision). Rolling back means reverting the merge. A `make build` run is still outstanding.
+- Target: ship live to everyone on merge to `main`. No feature flag and no brand/legal sign-off needed (owner decision). Rolling back means reverting the merge.
 - The owner playtests in their own browser and reports how it feels; tuning is driven by that feedback.
 
 ## Intent
@@ -160,6 +160,6 @@ Checks worth re-running after level or pacing changes, on a spread of pages (`/g
 - AI Prompt Guard is only marginally stronger than the default shield; the owner may want it to stand out more.
 - Corruption starts near the top of the page, close to the first terminal on short pages, so an idle player can get that terminal cut off quickly.
 - Not yet tried: music, a pause key, hub and landing page layouts beyond the policies hub.
-- Before production: `make build` (confirm the game stays a lazy chunk). The dev-only `window.__arcade` handle is gated by `import.meta.env.DEV`, so production builds don't expose it.
+- Production Vite build verified: the game is its own lazy chunk (about 15 kB gzipped), the main bundle only gains the trigger, trophy and analytics helper, and `window.__arcade` is stripped. A full `make build` (Jekyll) hasn't been run locally because it writes to the `dist/` the dev server serves; the Netlify preview build covers it.
 - Planned after the production pass: split `game.js` (player and agents into their own modules).
 - No JS unit test runner for now (owner decision: no new dependency). Testing is the browser checklist in [Testing](#testing) plus the owner's playtests.
