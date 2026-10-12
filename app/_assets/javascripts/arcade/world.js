@@ -27,7 +27,7 @@ const INFECT_DISTANCE = 14;
 export const LEDGE_HEIGHT = 20;
 export const LOSE_RATIO = 0.6;
 export const SHIELD = { radius: 280, seconds: 20 };
-export const FIREWALL = { radius: 450, seconds: 35 };
+export const FIREWALL = { radius: 450, seconds: 12 };
 // Generous estimates of what a double jump can clear. Used to decide when a
 // terminal has been cut off for good.
 export const UP_REACH = 250;
@@ -36,7 +36,7 @@ const FALL_WINDOW = 800;
 
 export const PLUGINS = [
   { name: "Rate Limiting", effect: "throttle", summary: "Slows corruption", text: "Corruption throttled" },
-  { name: "AI Prompt Guard", effect: "firewall", summary: "Big shield, 35s", text: "Firewall up: wide shield for 35s" },
+  { name: "AI Prompt Guard", effect: "firewall", summary: "Wide shield, 12s", text: "Firewall up: wide shield for 12s" },
   { name: "OpenID Connect", effect: "deauth", summary: "Destroys agents", text: "Rogue agents de-authenticated" },
   {
     name: "AI Semantic Prompt Guard",

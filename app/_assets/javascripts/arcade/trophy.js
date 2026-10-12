@@ -3,7 +3,6 @@
 // links to Kong careers and shows the best time.
 
 const STORAGE_KEY = "kong-docs-arcade";
-const HINT = "This game is very #immersive#...";
 const STAR_CLASS = "arcade-star";
 const STAR = ["...G...", "...G...", "GGGGGGG", ".GGGGG.", "..GGG..", ".GG.GG.", "GG...GG"];
 
@@ -27,15 +26,22 @@ function headerLogos() {
   return [...document.querySelectorAll("#header-nav a[href='/']")];
 }
 
+// The clue on the header logo, with "immersive" in bold.
+function renderHint(tooltip) {
+  const word = document.createElement("strong");
+  word.textContent = "immersive";
+  tooltip.replaceChildren("This game is very ## ", word, " ##...");
+}
+
 // Reuses the site's shared #tooltip element. The site's own [data-tooltip]
 // binding only covers elements present at page load and is switched off on
 // touch-capable devices, which includes touchscreen laptops used with a mouse.
-function attachTooltip(el, getText) {
+function attachTooltip(el, render) {
   const tooltip = document.getElementById("tooltip");
   if (!tooltip) return;
 
   el.addEventListener("mouseenter", () => {
-    tooltip.textContent = getText();
+    render(tooltip);
     tooltip.classList.remove("hidden");
     const rect = el.getBoundingClientRect();
     const tip = tooltip.getBoundingClientRect();
@@ -69,7 +75,7 @@ function renderStar(best) {
       star.className = `${STAR_CLASS} inline-flex items-center no-icon`;
       star.innerHTML = starSvg();
       logo.after(star);
-      attachTooltip(star, () => star.dataset.label);
+      attachTooltip(star, (tooltip) => (tooltip.textContent = star.dataset.label));
     }
     star.dataset.label = label;
     star.setAttribute("aria-label", label);
@@ -90,7 +96,7 @@ export function recordWin(seconds) {
 }
 
 export function initTrophy() {
-  headerLogos().forEach((logo) => attachTooltip(logo, () => HINT));
+  headerLogos().forEach((logo) => attachTooltip(logo, renderHint));
   const record = readRecord();
   if (record?.best) renderStar(record.best);
 }
