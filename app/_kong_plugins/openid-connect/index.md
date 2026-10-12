@@ -134,7 +134,7 @@ When you configure `config.issuer` in the OIDC plugin, {{site.base_gateway}} aut
 - The cache TTL (time-to-live) is managed by the {{site.base_gateway}} [`db_cache_ttl`](/gateway/configuration/#db-cache-ttl) configuration setting. The default value is `0`, which means that cached entries never expire. Entries are invalidated when their configuration changes. When you use DB-less mode, the cache also doesn't expire; it is invalidated when the configuration is synced. To clear the discovery cache manually, use the [DELETE endpoints in the Admin API](/plugins/openid-connect/api/#/operations/deleteAllDiscoveryCache/).  
 
    {:.info}
-   > **Note:** The plugin parameter `config.cache_ttl` only applies to the plugin's token caching, not to the discovery cache.
+   > **Note:** The plugin parameter `config.cache_ttl` applies to the plugin's own caches, such as token caching, not to the discovery cache.
 - If a request requires discovery information that isn't in the cache, the plugin attempts to “rediscover” it using the value in `config.issuer`. After a rediscovery occurs, no further rediscovery attempts are made until the time period defined in `config.rediscovery_lifetime` has elapsed, which helps avoid excessive requests to the identity provider.  
 - If a JWT can't be validated due to missing discovery data, and a rediscovery request returns a non‑2xx status code, the plugin falls back to using any sufficient discovery information that remains in the cache.
 
