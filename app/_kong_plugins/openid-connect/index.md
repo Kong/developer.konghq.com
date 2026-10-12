@@ -734,8 +734,8 @@ Afterwards, the rest of the OpenID Connect plugin flow continues on the exchange
 
 If the exchange fails, {{site.base_gateway}} rejects the request with `401 Unauthorized` (`WWW-Authenticate: Bearer error="invalid_token"`).
 This applies whether the token endpoint refuses the exchange or is unavailable, so clients see the same response in both cases.
-The data plane logs the token endpoint's status (`invalid status code received from the token endpoint (<status>)`).
-If the token endpoint doesn't answer, the client waits at least [`config.timeout`](/plugins/openid-connect/reference/#schema--config-timeout) before receiving the `401`.
+The data plane logs the token endpoint's status (`invalid status code received from the token endpoint (<status>)`), or `failed to get from node cache: timeout` if the token endpoint doesn't answer.
+If the token endpoint doesn't answer, the plugin sends the token request twice, so the client waits about twice [`config.timeout`](/plugins/openid-connect/reference/#schema--config-timeout) before receiving the `401`.
 
 Depending on the use case, {{site.base_gateway}} can exchange the token either with the same authorization server that issued the initial subject token, or exchange tokens between different authorization servers.
 
