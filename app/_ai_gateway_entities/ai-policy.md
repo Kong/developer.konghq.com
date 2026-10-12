@@ -146,7 +146,7 @@ The available scopes are:
 To apply an identical configuration in multiple places, create an entity-scoped AI Policy and reference it in each entity's configuration.
 
 Not every AI Policy type supports every scope.
-For example, an ACL AI Policy can only be global, and AI NVIDIA NeMo Guardrail can only be scoped to an AI Model.
+For example, an ACL AI Policy doesn't support AI Consumer or AI Consumer Group scopes.
 {{site.ai_gateway}} rejects the request with an error when you attach an AI Policy at a scope its type doesn't support.
 
 ### Scope precedence
