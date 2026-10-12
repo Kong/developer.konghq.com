@@ -75,6 +75,7 @@ groups:
           - path: /operator/dataplanes/how-to/set-timeouts-and-retries/
           - path: /operator/dataplanes/how-to/set-host-header/
           - path: /operator/dataplanes/how-to/configure-upstream-policy/
+          - path: /operator/dataplanes/how-to/redirect-http-to-https/
           - path: /operator/dataplanes/how-to/upgrade-operator/
       - title: Observability
         items:
@@ -87,6 +88,7 @@ groups:
           - path: /operator/dataplanes/reference/autoscale-gateway/
           - path: /operator/dataplanes/reference/autoscale-workloads/
           - path: /operator/dataplanes/reference/service-annotations/
+          - path: /operator/dataplanes/reference/route-annotations/
       - title: Upgrading
         items:
           - path: /operator/migrate/migrate-1.6.x-2.0.0/
