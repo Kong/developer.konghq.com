@@ -35,7 +35,10 @@ const CORRUPTED_CLASS = "arcade-corrupted";
 const INFECT_DISTANCE = 14;
 
 export const LEDGE_HEIGHT = 20;
-export const LOSE_RATIO = 0.6;
+export const LOSE_RATIO = 0.7;
+// Spread speed is tuned so a page reaches this share in the target time; the
+// gap up to LOSE_RATIO is the player's extra margin.
+const PACE_RATIO = 0.6;
 export const SHIELD = { radius: 150, seconds: 5 };
 export const FIREWALL = { radius: 200, seconds: 5 };
 // Generous estimates of what a double jump can clear. Used to decide when a
@@ -185,7 +188,7 @@ export class World {
     // pages: roughly the run time from top to bottom, plus slack.
     const pageHeight = document.documentElement.scrollHeight;
     const loseSeconds = Math.max(30, pageHeight / 330 + 12);
-    this.spreadInterval = loseSeconds / Math.max(1, this.corruptible().length * LOSE_RATIO);
+    this.spreadInterval = loseSeconds / Math.max(1, this.corruptible().length * PACE_RATIO);
   }
 
   // Fisher-Yates with the page's seeded generator.

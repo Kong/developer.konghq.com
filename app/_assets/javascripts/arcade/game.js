@@ -17,7 +17,7 @@ const COYOTE_TIME = 0.1;
 const JUMP_BUFFER = 0.12;
 const DROP_TIME = 0.25;
 const FAST_FALL_DELAY = 0.2;
-const PATCH_SECONDS = 1.5;
+const PATCH_SECONDS = 1;
 const PATCH_REACH = 48;
 const RAIN_SECONDS = 2.8;
 const TYPE_SECONDS = 0.025;
@@ -644,7 +644,7 @@ class Game {
       }
     }
 
-    const speed = (45 + intensity * 90) * (this.effects.slowOrbs > 0 ? BOT_SLOWDOWN : 1);
+    const speed = (45 + intensity * 65) * (this.effects.slowOrbs > 0 ? BOT_SLOWDOWN : 1);
     this.orbs = this.orbs.filter((orb) => {
       orb.life -= dt;
       const dx = px - orb.x;
