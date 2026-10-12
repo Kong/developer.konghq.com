@@ -2,7 +2,7 @@
 // world positions are drawn at (x - scrollX, y - scrollY).
 
 import { BRICK, CYAN, INK, LIME, MOSS, PALE, RED, SILVER, WHITE } from "./constants";
-import { LEDGE_HEIGHT, SHIELD } from "./world";
+import { LEDGE_HEIGHT, LOSE_RATIO, SHIELD } from "./world";
 
 const GLYPHS =
   "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン01{}<>/=";
@@ -257,7 +257,7 @@ function panel(ctx, x, y, w, h, border = LIME) {
   ctx.strokeRect(x + 1, y + 1, w - 2, h - 2);
 }
 
-export function drawHud(ctx, game, loseRatio) {
+export function drawHud(ctx, game) {
   const { world, sprites } = game;
   const ratio = world.corruptionRatio();
   const width = 320;
@@ -288,7 +288,7 @@ export function drawHud(ctx, game, loseRatio) {
   ctx.fillStyle = "#330a12";
   ctx.fillRect(barX, y + 74, barWidth, 14);
   ctx.fillStyle = RED;
-  ctx.fillRect(barX, y + 74, Math.min(1, ratio / loseRatio) * barWidth, 14);
+  ctx.fillRect(barX, y + 74, Math.min(1, ratio / LOSE_RATIO) * barWidth, 14);
   ctx.fillStyle = WHITE;
   ctx.fillRect(barX + barWidth - 1, y + 72, 2, 18);
 

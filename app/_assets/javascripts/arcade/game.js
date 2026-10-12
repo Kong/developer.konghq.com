@@ -3,7 +3,7 @@ import { Sfx } from "./audio";
 import { CAREERS_URL, formatTime, recordWin } from "./trophy";
 import { makeSprites } from "./sprites";
 import { World, LOSE_RATIO } from "./world";
-import { LIME, RED } from "./constants";
+import { LIME, RED, clamp } from "./constants";
 import { Agents } from "./agents";
 import { Input, keyCode } from "./input";
 import { Particles } from "./particles";
@@ -187,7 +187,7 @@ class Game {
     event.preventDefault();
     if (this.state !== "playing") return;
     const pageHeight = document.documentElement.scrollHeight;
-    this.lookOffset = Math.max(-pageHeight, Math.min(pageHeight, this.lookOffset + event.deltaY));
+    this.lookOffset = clamp(this.lookOffset + event.deltaY, -pageHeight, pageHeight);
     this.lookReturning = false;
   }
 
@@ -526,12 +526,12 @@ class Game {
 
     const maxScroll = document.documentElement.scrollHeight - this.height;
     const centre = this.player.y + this.player.h / 2 - this.height * 0.5;
-    const base = Math.max(0, Math.min(maxScroll, centre));
+    const base = clamp(centre, 0, maxScroll);
     // Don't let the offset build up past the page edges.
-    this.lookOffset = Math.max(-base, Math.min(maxScroll - base, this.lookOffset));
+    this.lookOffset = clamp(this.lookOffset, -base, maxScroll - base);
     const target = base + this.lookOffset;
     this.camera += (target - this.camera) * Math.min(1, dt * 6);
-    this.camera = Math.max(0, Math.min(maxScroll, this.camera));
+    this.camera = clamp(this.camera, 0, maxScroll);
   }
 
   // --- render ------------------------------------------------------------
@@ -558,7 +558,7 @@ class Game {
     }
 
     drawWorld(ctx, this, time);
-    const hudBottom = drawHud(ctx, this, LOSE_RATIO);
+    const hudBottom = drawHud(ctx, this);
     drawMinimap(ctx, this, hudBottom + 16, time);
     drawKeybar(ctx, width, height, this.exitArmed(), time);
     if (this.currentToast && this.state === "playing") drawToast(ctx, width, this.currentToast);

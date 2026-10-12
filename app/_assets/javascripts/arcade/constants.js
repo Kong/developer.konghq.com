@@ -1,5 +1,5 @@
-// Values shared by more than one arcade module. Tuning knobs that only one
-// module uses stay at the top of that module.
+// Values and helpers shared by more than one arcade module. Tuning knobs
+// that only one module uses stay at the top of that module.
 
 export const LIME = "#ccff00"; // Kong lime
 export const LIME_DARK = "#5c8a00";
@@ -13,3 +13,7 @@ export const WHITE = "#ffffff";
 
 // Ledges are drawn as bricks, and their width snaps to whole bricks.
 export const BRICK = 28;
+
+export function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}

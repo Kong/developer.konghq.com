@@ -3,7 +3,7 @@
 // and more often as the corruption spreads, and corrupt the ledges they pass
 // through.
 
-import { RED } from "./constants";
+import { RED, clamp } from "./constants";
 import { LOSE_RATIO } from "./world";
 
 const RADIUS = 8;
@@ -12,6 +12,7 @@ const SPAWN_RANGE = 900;
 // Agents spawn at least this far away so the player sees them coming.
 const SPAWN_MIN = 300;
 const SPAWN_SECONDS = [4, 1.8]; // calm page → nearly lost
+const SPEED = [45, 110]; // calm page → nearly lost
 // No spawning for this long at the start of a run.
 const GRACE = 6;
 const INFECT_COOLDOWN = 2;
@@ -43,7 +44,7 @@ export class Agents {
       const source = world.nearestCorrupted(px, py, SPAWN_RANGE, SPAWN_MIN);
       if (source) {
         this.orbs.push({
-          x: Math.max(source.x, Math.min(source.x + source.w, px)),
+          x: clamp(px, source.x, source.x + source.w),
           y: source.y,
           vx: 0,
           vy: 0,
@@ -57,7 +58,8 @@ export class Agents {
       }
     }
 
-    const speed = (45 + intensity * 65) * speedFactor;
+    const [slow, fast] = SPEED;
+    const speed = (slow + (fast - slow) * intensity) * speedFactor;
     this.orbs = this.orbs.filter((orb) => {
       orb.life -= dt;
       const dx = px - orb.x;

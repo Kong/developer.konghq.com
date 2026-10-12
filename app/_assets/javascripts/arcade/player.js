@@ -2,7 +2,7 @@
 // one-way ledges, and getting knocked back by agents. Positions are document
 // coordinates; `ground` is the ledge (or the floor) being stood on.
 
-import { LIME, LIME_DARK } from "./constants";
+import { LIME, LIME_DARK, clamp } from "./constants";
 
 const GRAVITY = 2000;
 const JUMP_VELOCITY = 720;
@@ -59,7 +59,7 @@ export class Player {
 
     if (direction) {
       this.vx += direction * accel * dt;
-      this.vx = Math.max(-RUN_SPEED, Math.min(RUN_SPEED, this.vx));
+      this.vx = clamp(this.vx, -RUN_SPEED, RUN_SPEED);
       this.facing = direction;
     } else {
       const slow = accel * dt;
@@ -103,7 +103,7 @@ export class Player {
 
     this.vy = Math.min(MAX_FALL, this.vy + GRAVITY * dt);
     const prevBottom = this.y + this.h;
-    this.x = Math.max(0, Math.min(document.documentElement.scrollWidth - this.w, this.x + this.vx * dt));
+    this.x = clamp(this.x + this.vx * dt, 0, document.documentElement.scrollWidth - this.w);
     this.y += this.vy * dt;
 
     // Keep standing only while still over the ledge.

@@ -5,7 +5,7 @@
 // page. Code blocks host terminals and the footer is the floor. All
 // coordinates are document coordinates.
 
-import { BRICK } from "./constants";
+import { BRICK, clamp } from "./constants";
 import { PLUGINS } from "./plugins";
 
 const BLOCK_SELECTOR =
@@ -44,18 +44,14 @@ const PACE_RATIO = 0.6;
 export const SHIELD = { radius: 150, seconds: 5 };
 // Generous estimates of what a double jump can clear. Used to decide when a
 // terminal has been cut off for good.
-export const UP_REACH = 250;
-export const SIDE_REACH = 340;
+const UP_REACH = 250;
+const SIDE_REACH = 340;
 const FALL_WINDOW = 800;
 
 function isVisible(el) {
   const rect = el.getBoundingClientRect();
   if (rect.width < 40 || rect.height < 2) return false;
   return el.checkVisibility ? el.checkVisibility({ visibilityProperty: true }) : true;
-}
-
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
 }
 
 // Same page, same level: seed the generator from the URL path.
@@ -68,6 +64,15 @@ function seededRandom(text) {
     t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
+}
+
+// Fisher-Yates, in place.
+function shuffle(items, random = Math.random) {
+  for (let i = items.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [items[i], items[j]] = [items[j], items[i]];
+  }
+  return items;
 }
 
 function horizontalGap(a, b) {
@@ -99,6 +104,8 @@ export class World {
     this.root = root;
     this.random = seededRandom(window.location.pathname);
     this.blocks = [];
+    // Blocks corruption can take: everything but terminals. Fixed once built.
+    this.corruptibleBlocks = [];
     this.segments = [];
     this.terminals = [];
     this.floor = null;
@@ -151,13 +158,14 @@ export class World {
 
     const terminalBlocks = this.pickTerminalBlocks(this.blocks);
     terminalBlocks.forEach((block) => (block.terminal = true));
+    this.corruptibleBlocks = this.blocks.filter((b) => !b.terminal);
     this.build(this.blocks, terminalBlocks);
 
     this.segments.sort((a, b) => a.y - b.y || a.x - b.x);
     this.segments.forEach((segment, index) => (segment.index = index));
 
     // Shuffle the plugins per page so short pages still get a mix.
-    const plugins = this.shuffle([...PLUGINS]);
+    const plugins = shuffle([...PLUGINS], this.random);
     this.terminals = this.segments
       .filter((segment) => segment.terminal)
       .map((segment, i) => ({ segment, plugin: plugins[i], patched: false, progress: 0 }));
@@ -167,15 +175,6 @@ export class World {
     const pageHeight = document.documentElement.scrollHeight;
     const loseSeconds = Math.max(30, pageHeight / 330 + 12);
     this.spreadInterval = loseSeconds / Math.max(1, this.corruptible().length * PACE_RATIO);
-  }
-
-  // Fisher-Yates with the page's seeded generator.
-  shuffle(items) {
-    for (let i = items.length - 1; i > 0; i--) {
-      const j = Math.floor(this.random() * (i + 1));
-      [items[i], items[j]] = [items[j], items[i]];
-    }
-    return items;
   }
 
   // Spread terminals evenly down the page: one target height per terminal,
@@ -359,7 +358,7 @@ export class World {
   }
 
   corruptible() {
-    return this.blocks.filter((b) => !b.terminal);
+    return this.corruptibleBlocks;
   }
 
   corruptionRatio() {
@@ -512,7 +511,7 @@ export class World {
 
   // Cleanse a random share of all corrupted blocks.
   rollback(share) {
-    const corrupted = this.blocks.filter((b) => b.corrupted).sort(() => Math.random() - 0.5);
+    const corrupted = shuffle(this.blocks.filter((b) => b.corrupted));
     corrupted.slice(0, Math.ceil(corrupted.length * share)).forEach((b) => this.cleanse(b));
   }
 
