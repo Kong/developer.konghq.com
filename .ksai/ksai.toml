@@ -40,6 +40,7 @@ name = "Plugins and references"
 paths = [
   "app/_kong_plugins/**/*.md",
   "app/_kong_plugins/*/examples/*.yaml",
+  "app/_kong_plugins/*/examples/*.yml",
   "app/_gateway_entities/**/*.md",
   "app/_ai_gateway_policies/**/*.md",
   "app/_ai_gateway_entities/**/*.md",
