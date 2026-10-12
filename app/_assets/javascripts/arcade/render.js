@@ -225,11 +225,12 @@ export function drawWorld(ctx, game, time) {
   });
   ctx.globalAlpha = 1;
 
-  // Blink while invulnerable after a hit.
+  // Blink while invulnerable after a hit (translucent with reduced motion).
   if (player.invulnerable > 0 && Math.floor(time * 12) % 2) {
     ctx.restore();
     return;
   }
+  if (player.invulnerable > 0 && game.reducedMotion) ctx.globalAlpha = 0.5;
 
   // Walk cycle on the ground, squash and stretch around the feet, and a
   // little waddle while running.
@@ -247,6 +248,7 @@ export function drawWorld(ctx, game, time) {
   ctx.scale(player.facing * (2 - player.squash), player.squash);
   ctx.drawImage(frame, -frame.width / 2, -frame.height + game.scale);
   ctx.restore();
+  ctx.globalAlpha = 1;
   ctx.restore();
 }
 
@@ -314,7 +316,7 @@ export function drawHud(ctx, game, loseRatio) {
 
 // A strip down the right edge showing the whole page: corruption in red,
 // terminals, the current view and the player.
-export function drawMinimap(ctx, game, top) {
+export function drawMinimap(ctx, game, top, time) {
   const { world, player } = game;
   const pageHeight = document.documentElement.scrollHeight;
   const x = window.innerWidth - MINIMAP_WIDTH - 16;
@@ -337,12 +339,12 @@ export function drawMinimap(ctx, game, top) {
   world.terminals.forEach((terminal) => {
     ctx.fillStyle = INK;
     ctx.fillRect(x - 2, toY(terminal.segment.y) - 4, MINIMAP_WIDTH + 4, 8);
-    const cutOff = game.cutOff?.terminal === terminal && Math.floor(performance.now() / 200) % 2;
+    const cutOff = game.cutOff?.terminal === terminal && Math.floor(time * 5) % 2;
     ctx.fillStyle = terminal.patched ? LIME : cutOff ? "#ffffff" : "#ff8a9c";
     ctx.fillRect(x, toY(terminal.segment.y) - 2, MINIMAP_WIDTH, 4);
   });
 
-  if (game.exitDoor && Math.floor(performance.now() / 250) % 2) {
+  if (game.exitDoor && Math.floor(time * 4) % 2 === 0) {
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(x - 3, toY(game.exitDoor.y) - 5, MINIMAP_WIDTH + 6, 10);
   }

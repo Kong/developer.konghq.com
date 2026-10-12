@@ -118,6 +118,14 @@ class Game {
     });
     document.body.appendChild(this.canvas);
     this.ctx = this.canvas.getContext("2d");
+
+    // The canvas is invisible to screen readers, so say what happened and how
+    // to get out. Text is set after insertion so it gets announced.
+    this.announcer = document.createElement("div");
+    this.announcer.className = "sr-only";
+    this.announcer.setAttribute("role", "status");
+    document.body.appendChild(this.announcer);
+    setTimeout(() => (this.announcer.textContent = "Docs arcade started. Press Escape twice to exit."), 100);
     this.onResize();
 
     window.addEventListener("keydown", this.onKeyDown, true);
@@ -161,6 +169,7 @@ class Game {
     window.removeEventListener("blur", this.onBlur);
     this.world?.reset();
     this.canvas.remove();
+    this.announcer.remove();
     this.style.remove();
     document.documentElement.classList.remove("arcade-playing");
     window.scrollTo({ left: this.initialScroll.x, top: this.initialScroll.y, behavior: "instant" });
@@ -190,8 +199,9 @@ class Game {
     const code = keyCode(event);
     if (code === "Escape") {
       if (event.repeat) return;
-      // Esc twice returns to the docs, so a stray press doesn't end a run.
-      if (this.state === "empty" || this.exitArmed()) return this.exit();
+      // Before a run starts one Esc exits; during a run it takes two, so a
+      // stray press doesn't end it.
+      if (["rain", "prompt", "empty"].includes(this.state) || this.exitArmed()) return this.exit();
       this.lastEscape = this.time;
       return;
     }
@@ -764,14 +774,16 @@ class Game {
 
   render(dt) {
     const { ctx, width, height } = this;
+    // Reduced motion freezes the animation clock, so nothing flashes or
+    // flickers. Movement and physics are unaffected.
+    const time = this.reducedMotion ? 0 : this.time;
 
     if (this.state === "rain") {
-      this.rain.draw(ctx, width, height, dt, this.time);
+      this.rain.draw(ctx, width, height, dt, time);
       return;
     }
     if (this.state === "prompt") {
-      drawPrompt(ctx, width, height, this.promptLines, Math.floor(this.typed), this.time);
-      if (this.exitArmed()) drawKeybar(ctx, width, height, true, this.time);
+      drawPrompt(ctx, width, height, this.promptLines, Math.floor(this.typed), time);
       return;
     }
 
@@ -781,10 +793,10 @@ class Game {
       return;
     }
 
-    drawWorld(ctx, this, this.time);
+    drawWorld(ctx, this, time);
     const hudBottom = drawHud(ctx, this, LOSE_RATIO);
-    drawMinimap(ctx, this, hudBottom + 16);
-    drawKeybar(ctx, width, height, this.exitArmed(), this.time);
+    drawMinimap(ctx, this, hudBottom + 16, time);
+    drawKeybar(ctx, width, height, this.exitArmed(), time);
     if (this.currentToast && this.state === "playing") drawToast(ctx, width, this.currentToast);
 
     if (this.fade > 0) {
