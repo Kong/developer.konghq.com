@@ -1,7 +1,7 @@
 import { Sfx } from "./audio";
 import { makeSprites } from "./sprites";
 import { World, LOSE_RATIO } from "./world";
-import { Rain, drawPrompt, drawWorld, drawHud, drawKeybar, drawToast, drawBanner } from "./render";
+import { Rain, drawPrompt, drawWorld, drawHud, drawMinimap, drawKeybar, drawToast, drawBanner } from "./render";
 
 const SCALE = 3;
 const STEP = 1 / 120;
@@ -25,9 +25,16 @@ const EXIT_WINDOW = 1.5;
 const LIVES = 3;
 const INVULNERABLE_SECONDS = 1.5;
 const ORB_RADIUS = 8;
-const ORB_START_RATIO = 0.1;
-const ORB_LIFETIME = 25;
+const ORB_LIFETIME = 10;
 const ORB_SPAWN_RANGE = 900;
+const ORB_SPAWN_SECONDS = [3, 1.2]; // calm page → nearly lost
+const ORB_GRACE = 4;
+// Every enabled terminal shortens orb life and slows spawning a little.
+const TERMINAL_ORB_LIFE = 0.85;
+const TERMINAL_ORB_SPAWN = 1.15;
+const WALK_FRAME_PIXELS = 14;
+const LOOK_SECONDS = 2;
+const LOOK_RETURN = 4;
 const REACH_CHECK_SECONDS = 0.5;
 const TOAST_SECONDS = 3;
 
@@ -79,7 +86,7 @@ class Game {
 
     this.onKeyDown = this.onKeyDown.bind(this);
     this.onKeyUp = this.onKeyUp.bind(this);
-    this.onWheel = (event) => event.preventDefault();
+    this.onWheel = this.onWheel.bind(this);
     this.onResize = this.onResize.bind(this);
     this.onBlur = () => this.held.clear();
     this.frame = this.frame.bind(this);
@@ -183,6 +190,16 @@ class Game {
     this.held.delete(keyCode(event));
   }
 
+  // The wheel pans the camera to look around the page instead of scrolling
+  // it; the camera drifts back to the player afterwards.
+  onWheel(event) {
+    event.preventDefault();
+    if (this.state !== "playing") return;
+    const pageHeight = document.documentElement.scrollHeight;
+    this.lookOffset = Math.max(-pageHeight, Math.min(pageHeight, this.lookOffset + event.deltaY));
+    this.lookTime = LOOK_SECONDS;
+  }
+
   isHeld(action) {
     return KEYS[action].some((code) => this.held.has(code));
   }
@@ -239,15 +256,19 @@ class Game {
       dropTime: 0,
       downTime: 0,
       invulnerable: 0,
+      walkPhase: 0,
     };
+    this.lookOffset = 0;
+    this.lookTime = 0;
     this.camera = Math.max(0, this.player.y - this.height * 0.4);
     this.lives = LIVES;
     this.particles = [];
     this.orbs = [];
     this.orbTimer = 0;
-    this.orbPause = 0;
+    this.orbPause = ORB_GRACE;
     this.orbSpeedMultiplier = 1;
     this.orbSpawnMultiplier = 1;
+    this.orbLifetime = ORB_LIFETIME;
     this.eye = null;
     this.spreadDelay = SPREAD_DELAY;
     this.reachTimer = REACH_CHECK_SECONDS;
@@ -324,7 +345,7 @@ class Game {
 
     this.spreadDelay -= dt;
     if (this.spreadDelay <= 0) {
-      if (!world.lastInfected) world.seed(3);
+      if (!world.lastInfected) world.seed();
       if (world.spread(dt)) this.sfx?.corrupt();
     }
 
@@ -387,6 +408,7 @@ class Game {
     player.invulnerable -= dt;
     player.downTime = this.isHeld("down") ? player.downTime + dt : 0;
     player.squash += (1 - player.squash) * Math.min(1, dt * 12);
+    if (player.ground) player.walkPhase += (Math.abs(player.vx) * dt) / WALK_FRAME_PIXELS;
     if (player.ground) player.airJumps = AIR_JUMPS;
 
     // A double jump lets the player climb back over tall gaps.
@@ -484,6 +506,8 @@ class Game {
     const { world } = this;
     const { plugin } = terminal;
     world.patch(terminal, plugin.effect === "firewall" ? 700 : undefined);
+    this.orbLifetime *= TERMINAL_ORB_LIFE;
+    this.orbSpawnMultiplier *= TERMINAL_ORB_SPAWN;
 
     if (plugin.effect === "throttle") {
       world.spreadMultiplier *= 1.6;
@@ -506,9 +530,9 @@ class Game {
     this.toast(`${plugin.name.toUpperCase()} ENABLED`, plugin.text);
   }
 
-  // Agents are red orbs that drift after the player. They spawn from the
-  // corrupted ledge nearest the player, and grow faster and more numerous as
-  // the corruption spreads.
+  // Agents are red orbs that drift after the player and expire after a while.
+  // They spawn from the corrupted block nearest the player, and come faster
+  // and more often as the corruption spreads.
   updateOrbs(dt) {
     const { world, player } = this;
     const ratio = world.corruptionRatio();
@@ -518,19 +542,20 @@ class Game {
 
     this.orbPause -= dt;
     this.orbTimer -= dt;
-    const maxOrbs = 2 + Math.floor(ratio * 15);
-    if (ratio >= ORB_START_RATIO && this.orbPause <= 0 && this.orbTimer <= 0 && this.orbs.length < maxOrbs) {
+    const maxOrbs = 3 + Math.floor(ratio * 15);
+    if (this.orbPause <= 0 && this.orbTimer <= 0 && this.orbs.length < maxOrbs) {
       const source = world.nearestCorrupted(px, py, ORB_SPAWN_RANGE);
       if (source) {
         this.orbs.push({
-          x: source.x + source.w / 2,
-          y: source.y - 16,
+          x: Math.max(source.x, Math.min(source.x + source.w, px + (Math.random() - 0.5) * 300)),
+          y: source.y,
           vx: 0,
           vy: 0,
-          life: ORB_LIFETIME,
+          life: this.orbLifetime,
           seed: Math.random() * 10,
         });
-        this.orbTimer = (7 - 4.5 * intensity) * this.orbSpawnMultiplier;
+        const [calm, frantic] = ORB_SPAWN_SECONDS;
+        this.orbTimer = (calm - (calm - frantic) * intensity) * this.orbSpawnMultiplier;
         this.sfx?.orb();
       }
     }
@@ -568,8 +593,17 @@ class Game {
   }
 
   updateCamera(dt) {
+    // Moving snaps the view back to the player; otherwise it drifts back once
+    // the player stops looking around.
+    const moving = this.isHeld("left") || this.isHeld("right") || this.wasPressed("jump") || this.isHeld("down");
+    this.lookTime = moving ? 0 : this.lookTime - dt;
+    if (this.lookTime <= 0) this.lookOffset *= 1 - Math.min(1, dt * LOOK_RETURN);
+
     const maxScroll = document.documentElement.scrollHeight - this.height;
-    const target = this.player.y + this.player.h / 2 - this.height * 0.5;
+    const base = this.player.y + this.player.h / 2 - this.height * 0.5;
+    // Don't let the offset build up past the page edges.
+    this.lookOffset = Math.max(-base, Math.min(maxScroll - base, this.lookOffset));
+    const target = base + this.lookOffset;
     this.camera += (target - this.camera) * Math.min(1, dt * 6);
     this.camera = Math.max(0, Math.min(maxScroll, this.camera));
     window.scrollTo({ left: 0, top: this.camera, behavior: "instant" });
@@ -624,7 +658,8 @@ class Game {
     }
 
     drawWorld(ctx, this, this.time);
-    drawHud(ctx, this, LOSE_RATIO);
+    const hudBottom = drawHud(ctx, this, LOSE_RATIO);
+    drawMinimap(ctx, this, hudBottom + 16);
     drawKeybar(ctx, width, height, this.exitArmed(), this.time);
     if (this.currentToast && this.state === "playing") drawToast(ctx, width, this.currentToast);
 

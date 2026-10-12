@@ -1,6 +1,8 @@
 // Drawing helpers. The canvas is a fixed overlay the size of the viewport, so
 // world positions are drawn at (x - scrollX, y - scrollY).
 
+import { LEDGE_HEIGHT } from "./world";
+
 const GLYPHS =
   "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン01{}<>/=";
 const FONT = 'ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace';
@@ -9,8 +11,8 @@ const PALE = "#eaffb0";
 const RED = "#ff2b4f";
 const INK = "#0b0f0a";
 const HEADER_OFFSET = 64;
-const LEDGE_HEIGHT = 12;
-const BRICK = 24;
+const BRICK = 28;
+const MINIMAP_WIDTH = 14;
 
 // Stable pseudo-random value so glitch glyphs change a few times a second
 // instead of every frame.
@@ -92,16 +94,20 @@ function drawLedge(ctx, segment, x, y, tick) {
 
   const body = segment.terminal ? "#3b4350" : "#2f4a00";
   const shade = segment.terminal ? "#262c35" : "#1a2a00";
+  const half = LEDGE_HEIGHT / 2;
   ctx.fillStyle = INK;
   ctx.fillRect(x - 2, y - 2, w + 4, LEDGE_HEIGHT + 4);
   ctx.fillStyle = body;
   ctx.fillRect(x, y, w, LEDGE_HEIGHT);
   ctx.fillStyle = segment.protected ? PALE : LIME;
-  ctx.fillRect(x, y, w, 3);
+  ctx.fillRect(x, y, w, 4);
   ctx.fillStyle = shade;
-  ctx.fillRect(x, y + LEDGE_HEIGHT - 3, w, 3);
+  ctx.fillRect(x, y + LEDGE_HEIGHT - 4, w, 4);
+  // Two rows of staggered bricks.
   ctx.fillStyle = INK;
-  for (let dx = BRICK; dx < w - 4; dx += BRICK) ctx.fillRect(x + dx, y + 3, 2, LEDGE_HEIGHT - 6);
+  ctx.fillRect(x, y + half, w, 2);
+  for (let dx = BRICK; dx < w - 4; dx += BRICK) ctx.fillRect(x + dx, y + 4, 2, half - 4);
+  for (let dx = BRICK / 2; dx < w - 4; dx += BRICK) ctx.fillRect(x + dx, y + half + 2, 2, half - 6);
 }
 
 function drawLabel(ctx, text, centreX, y, color) {
@@ -128,6 +134,24 @@ export function drawWorld(ctx, game, time) {
   ctx.beginPath();
   ctx.rect(0, HEADER_OFFSET, window.innerWidth, height - HEADER_OFFSET);
   ctx.clip();
+
+  // Corrupted docs: a red wash and drifting glyphs over each block.
+  ctx.font = `14px ${FONT}`;
+  world.blocks.forEach((block) => {
+    if (!block.corrupted || !visible(block.y, block.h + 40)) return;
+    const x = block.x - sx;
+    const y = block.y - sy;
+    ctx.fillStyle = "rgba(255, 43, 79, 0.07)";
+    ctx.fillRect(x, y, block.w, block.h);
+    ctx.fillStyle = RED;
+    for (let i = 0; i < 2; i++) {
+      ctx.fillText(
+        glyph(block.index + i, tick),
+        x + hash(block.index * 3 + i, tick) * (block.w - 14),
+        y + 14 + hash(i, block.index) * Math.max(0, block.h - 14)
+      );
+    }
+  });
 
   world.segments.forEach((segment) => {
     if (visible(segment.y)) drawLedge(ctx, segment, segment.x - sx, segment.y - sy, tick);
@@ -160,6 +184,7 @@ export function drawWorld(ctx, game, time) {
   }
 
   game.orbs.forEach((orb) => {
+    ctx.globalAlpha = Math.min(1, orb.life / 1.5);
     const pulse = 10 + Math.sin(time * 8 + orb.seed) * 3;
     ctx.fillStyle = "rgba(255, 43, 79, 0.25)";
     ctx.beginPath();
@@ -167,6 +192,7 @@ export function drawWorld(ctx, game, time) {
     ctx.fill();
     ctx.drawImage(sprites.orb, orb.x - sx - sprites.orb.width / 2, orb.y - sy - sprites.orb.height / 2);
   });
+  ctx.globalAlpha = 1;
 
   game.particles.forEach((p) => {
     ctx.globalAlpha = Math.max(0, p.life / p.maxLife);
@@ -181,13 +207,18 @@ export function drawWorld(ctx, game, time) {
     return;
   }
 
-  // Squash and stretch around the feet; lean into the run.
-  const frame = sprites.player;
+  // Walk cycle on the ground, squash and stretch around the feet, and a
+  // little waddle while running.
+  const walking = player.ground && Math.abs(player.vx) > 20;
+  const frames = sprites.player.walk;
+  const frame = walking ? frames[Math.floor(player.walkPhase) % frames.length] : sprites.player.idle;
   const footX = player.x + player.w / 2 - sx;
   const footY = player.y + player.h - sy;
   const lean = player.ground ? (player.vx / 280) * 0.12 : 0;
+  const waddle = walking ? Math.sin(player.walkPhase * (Math.PI / 2)) * 0.06 : 0;
   ctx.save();
   ctx.translate(footX, footY);
+  ctx.rotate(waddle);
   ctx.transform(1, 0, -lean * player.facing, 1, 0, 0);
   ctx.scale(player.facing * (2 - player.squash), player.squash);
   ctx.drawImage(frame, -frame.width / 2, -frame.height + game.scale);
@@ -243,12 +274,51 @@ export function drawHud(ctx, game, loseRatio) {
     ctx.fillStyle = terminal.patched ? LIME : "#8a9099";
     ctx.fillText(`${terminal.patched ? "[✓]" : "[ ]"} ${terminal.plugin.name.toUpperCase()}`, x + 14, y + 116 + i * 18);
   });
+  return y + height;
+}
+
+// A strip down the right edge showing the whole page: corruption in red,
+// terminals, the current view and the player.
+export function drawMinimap(ctx, game, top) {
+  const { world, player } = game;
+  const pageHeight = document.documentElement.scrollHeight;
+  const x = window.innerWidth - MINIMAP_WIDTH - 16;
+  const bottom = window.innerHeight - 60;
+  const height = bottom - top;
+  if (height < 80) return;
+  const toY = (y) => top + (y / pageHeight) * height;
+
+  panel(ctx, x - 3, top - 3, MINIMAP_WIDTH + 6, height + 6);
+  ctx.fillStyle = RED;
+  world.blocks.forEach((block) => {
+    if (block.corrupted) ctx.fillRect(x, toY(block.y), MINIMAP_WIDTH, Math.max(2, (block.h / pageHeight) * height));
+  });
+
+  const view = window.scrollY;
+  ctx.strokeStyle = PALE;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(x - 1.5, toY(view), MINIMAP_WIDTH + 3, (window.innerHeight / pageHeight) * height);
+
+  world.terminals.forEach((terminal) => {
+    ctx.fillStyle = INK;
+    ctx.fillRect(x - 2, toY(terminal.segment.y) - 4, MINIMAP_WIDTH + 4, 8);
+    ctx.fillStyle = terminal.patched ? LIME : "#ff8a9c";
+    ctx.fillRect(x, toY(terminal.segment.y) - 2, MINIMAP_WIDTH, 4);
+  });
+
+  const py = toY(player.y + player.h / 2);
+  ctx.fillStyle = LIME;
+  ctx.beginPath();
+  ctx.moveTo(x - 4, py);
+  ctx.lineTo(x - 12, py - 6);
+  ctx.lineTo(x - 12, py + 6);
+  ctx.fill();
 }
 
 export function drawKeybar(ctx, width, height, exitArmed, time) {
   const text = exitArmed
     ? "PRESS ESC AGAIN TO RETURN TO THE DOCS"
-    : "←→ MOVE   SPACE JUMP (×2)   ↓ DROP · HOLD TO FALL   HOLD E ENABLE PLUGIN   M MUTE   ESC ×2 EXIT";
+    : "←→ MOVE   SPACE JUMP (×2)   ↓ DROP · HOLD TO FALL   HOLD E ENABLE PLUGIN   WHEEL LOOK   M MUTE   ESC ×2 EXIT";
   ctx.font = `bold 12px ${FONT}`;
   const barWidth = Math.min(width - 32, ctx.measureText(text).width + 40);
   const x = (width - barWidth) / 2;

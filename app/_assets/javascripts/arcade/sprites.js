@@ -39,14 +39,32 @@ const EYE = [
   "..RRRRR..",
 ];
 
-function logoRows(height, { eye = false } = {}) {
-  const width = Math.round((height * LOGO_WIDTH) / LOGO_HEIGHT);
+// The mark is four shapes: foot, torso, head and arm. Walk frames nudge each
+// shape (in viewBox units) so the arm and foot swing while the body bobs.
+const FOOT = 0;
+const TORSO = 1;
+const HEAD = 2;
+const ARM = 3;
+const WALK_CYCLE = [
+  { [FOOT]: [4, -2], [ARM]: [-4, 0], [TORSO]: [0, -1.5], [HEAD]: [0, -1.5] },
+  { [ARM]: [0, -1] },
+  { [FOOT]: [-4, 0], [ARM]: [3, -3], [TORSO]: [0, -1.5], [HEAD]: [0, -1.5] },
+  { [FOOT]: [0, -1] },
+];
+
+function logoRows(height, { eye = false, offsets = {}, pad = 0 } = {}) {
+  const inner = Math.round((height * LOGO_WIDTH) / LOGO_HEIGHT);
+  const width = inner + pad * 2;
+  const unit = height / LOGO_HEIGHT;
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
   const ctx = canvas.getContext("2d");
-  ctx.scale(width / LOGO_WIDTH, height / LOGO_HEIGHT);
-  LOGO_PATHS.forEach((d) => ctx.fill(new Path2D(d)));
+  LOGO_PATHS.forEach((d, i) => {
+    const [dx, dy] = offsets[i] || [0, 0];
+    ctx.setTransform(unit, 0, 0, unit, pad + dx * unit, dy * unit);
+    ctx.fill(new Path2D(d));
+  });
   const alpha = ctx.getImageData(0, 0, width, height).data;
 
   const rows = [];
@@ -57,8 +75,9 @@ function logoRows(height, { eye = false } = {}) {
   }
 
   if (eye) {
-    const ex = Math.round((LOGO_EYE.x * width) / LOGO_WIDTH);
-    const ey = Math.round((LOGO_EYE.y * height) / LOGO_HEIGHT);
+    const [hx, hy] = offsets[HEAD] || [0, 0];
+    const ex = pad + Math.round((LOGO_EYE.x + hx) * unit);
+    const ey = Math.round((LOGO_EYE.y + hy) * unit);
     rows[ey] = rows[ey].slice(0, ex) + "K" + rows[ey].slice(ex + 1);
   }
   return rows;
@@ -123,7 +142,10 @@ function rasterise(rows, scale, palette = {}) {
 export function makeSprites(scale) {
   const terminal = terminalRows(logoRows(9));
   return {
-    player: rasterise(logoRows(14, { eye: true }), scale),
+    player: {
+      idle: rasterise(logoRows(14, { eye: true, pad: 2 }), scale),
+      walk: WALK_CYCLE.map((offsets) => rasterise(logoRows(14, { eye: true, pad: 2, offsets }), scale)),
+    },
     terminal: {
       broken: [
         rasterise(terminal, scale, { S: "#2a000c", X: "#ff2b4f" }),
