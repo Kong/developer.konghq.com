@@ -17,7 +17,17 @@ const BRICK = 28;
 const MAX_TERMINALS = 5;
 const MIN_TERMINALS = 3;
 const TERMINAL_SPACING = 700;
-const SEED_BLOCKS = 4;
+// Corruption starts in a share of the page's blocks, so small pages don't
+// begin most of the way to losing.
+const SEED_SHARE = 0.08;
+const SEED_BLOCKS = [1, 4];
+// Site chrome is never part of the level, even on pages without <main>.
+const CHROME = "header, nav, footer, [role='navigation'], [role='banner'], [role='contentinfo']";
+// Keep the rightmost lane and its labels clear of the minimap.
+const RIGHT_MARGIN = 100;
+// The corruption meter counts at least this many blocks, so on tiny pages a
+// single block isn't a big chunk of the way to losing.
+const MIN_METER_BLOCKS = 16;
 // How far corruption can tunnel past shielded blocks and terminals.
 const SPREAD_REACH = 6;
 const CORRUPTED_CLASS = "arcade-corrupted";
@@ -31,7 +41,7 @@ export const FIREWALL = { radius: 200, seconds: 5 };
 // Generous estimates of what a double jump can clear. Used to decide when a
 // terminal has been cut off for good.
 export const UP_REACH = 250;
-export const SIDE_REACH = 260;
+export const SIDE_REACH = 340;
 const FALL_WINDOW = 800;
 
 export const PLUGINS = [
@@ -120,7 +130,9 @@ export class World {
   // --- generation ----------------------------------------------------------
 
   collectBlocks() {
-    const candidates = [...this.root.querySelectorAll(BLOCK_SELECTOR)].filter(isVisible);
+    const candidates = [...this.root.querySelectorAll(BLOCK_SELECTOR)].filter(
+      (el) => !el.closest(CHROME) && isVisible(el)
+    );
     const rects = new Map(candidates.map((el) => [el, el.getBoundingClientRect()]));
 
     // A wrapper whose top edge matches one of its children (table/first row,
@@ -151,9 +163,9 @@ export class World {
   }
 
   collect() {
-    this.measureColumn();
     this.makeFloor();
     this.blocks = this.collectBlocks();
+    this.measureColumn();
     if (this.blocks.length < 5) return;
 
     const terminalBlocks = this.pickTerminalBlocks(this.blocks);
@@ -311,15 +323,21 @@ export class World {
     return segment;
   }
 
+  // The play column is the part of the root the blocks actually cover, which
+  // matters on pages that fall back to <body> as the root.
   measureColumn() {
     const rect = this.root.getBoundingClientRect();
-    this.left = Math.max(0, rect.left) + window.scrollX;
-    this.right = rect.right + window.scrollX;
+    let left = Math.max(0, rect.left) + window.scrollX;
+    let right = rect.right + window.scrollX;
+    if (this.blocks.length) {
+      left = Math.max(left, Math.min(...this.blocks.map((b) => b.x)));
+      right = Math.min(right, Math.max(...this.blocks.map((b) => b.x + b.w)));
+    }
+    this.left = left;
+    this.right = Math.min(right, window.scrollX + window.innerWidth - RIGHT_MARGIN);
   }
 
   layout() {
-    this.measureColumn();
-    this.laneWidth = (this.right - this.left) / this.laneCount;
     this.blocks.forEach((block) => {
       const rect = block.el.getBoundingClientRect();
       block.x = rect.left + window.scrollX;
@@ -327,6 +345,8 @@ export class World {
       block.w = rect.width;
       block.h = rect.height;
     });
+    this.measureColumn();
+    this.laneWidth = (this.right - this.left) / this.laneCount;
     this.segments.forEach((segment) => {
       segment.y = this.anchorTop(segment.block) + segment.dy;
       segment.x = this.laneX(segment.lane);
@@ -355,7 +375,7 @@ export class World {
   corruptionRatio() {
     const pool = this.corruptible();
     if (!pool.length) return 0;
-    return pool.filter((b) => b.corrupted).length / pool.length;
+    return pool.filter((b) => b.corrupted).length / Math.max(pool.length, MIN_METER_BLOCKS);
   }
 
   lost() {
@@ -388,13 +408,14 @@ export class World {
     return this.terminals.find((t) => !t.patched && !seen.has(t.segment));
   }
 
-  nearestCorrupted(x, y, maxDistance) {
+  // The nearest corrupted block between minDistance and maxDistance away.
+  nearestCorrupted(x, y, maxDistance, minDistance = 0) {
     let best = null;
     let bestDistance = maxDistance;
     this.blocks.forEach((block) => {
       if (!block.corrupted) return;
       const distance = Math.hypot(clamp(x, block.x, block.x + block.w) - x, block.y - y);
-      if (distance < bestDistance) {
+      if (distance >= minDistance && distance < bestDistance) {
         best = block;
         bestDistance = distance;
       }
@@ -417,9 +438,11 @@ export class World {
   }
 
   seed() {
-    this.corruptible()
+    const pool = this.corruptible();
+    const count = clamp(Math.round(pool.length * SEED_SHARE), ...SEED_BLOCKS);
+    pool
       .filter((b) => b.index > 1)
-      .slice(0, SEED_BLOCKS)
+      .slice(0, count)
       .forEach((b) => this.infect(b));
   }
 

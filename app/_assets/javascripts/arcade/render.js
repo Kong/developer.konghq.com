@@ -337,7 +337,8 @@ export function drawMinimap(ctx, game, top) {
   world.terminals.forEach((terminal) => {
     ctx.fillStyle = INK;
     ctx.fillRect(x - 2, toY(terminal.segment.y) - 4, MINIMAP_WIDTH + 4, 8);
-    ctx.fillStyle = terminal.patched ? LIME : "#ff8a9c";
+    const cutOff = game.cutOff?.terminal === terminal && Math.floor(performance.now() / 200) % 2;
+    ctx.fillStyle = terminal.patched ? LIME : cutOff ? "#ffffff" : "#ff8a9c";
     ctx.fillRect(x, toY(terminal.segment.y) - 2, MINIMAP_WIDTH, 4);
   });
 

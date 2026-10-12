@@ -24,13 +24,17 @@ const TYPE_SECONDS = 0.025;
 const SPREAD_DELAY = 3;
 const EXIT_WINDOW = 1.5;
 const LIVES = 3;
-const INVULNERABLE_SECONDS = 1.5;
+const INVULNERABLE_SECONDS = 2.5;
 const ORB_RADIUS = 8;
 const ORB_LIFETIME = 10;
 const ORB_SPAWN_RANGE = 900;
-const ORB_SPAWN_SECONDS = [3, 1.2]; // calm page → nearly lost
-const ORB_GRACE = 4;
+// Orbs spawn at least this far away so the player sees them coming.
+const ORB_SPAWN_MIN = 300;
+const ORB_SPAWN_SECONDS = [4, 1.8]; // calm page → nearly lost
+const ORB_GRACE = 6;
 const ORB_INFECT_COOLDOWN = 2;
+// Pages with fewer blocks than this get proportionally longer orb cooldowns.
+const ORB_INFECT_BLOCKS = 40;
 // Plugin effects.
 const EFFECT_SECONDS = 10;
 const DEAUTH_PAUSE = 5;
@@ -41,6 +45,8 @@ const BUDGET_SPAWN = 1.5;
 const WALK_FRAME_PIXELS = 14;
 const LOOK_RETURN = 6;
 const REACH_CHECK_SECONDS = 0.5;
+// How long a terminal can stay cut off before the run is lost.
+const CUTOFF_GRACE = 8;
 const TOAST_SECONDS = 3;
 
 const STYLE = `
@@ -278,6 +284,7 @@ class Game {
     this.eye = null;
     this.spreadDelay = SPREAD_DELAY;
     this.reachTimer = REACH_CHECK_SECONDS;
+    this.cutOff = null;
     this.fade = 1;
     this.loseReason = null;
     this.toast("MISSION", `Enable all ${this.world.terminals.length} Kong plugins to govern the rogue AI`);
@@ -376,12 +383,7 @@ class Game {
     this.updateCamera(dt);
     if (this.state !== "playing") return;
 
-    this.reachTimer -= dt;
-    if (this.reachTimer <= 0 && player.ground) {
-      this.reachTimer = REACH_CHECK_SECONDS;
-      const cutOff = world.unreachableTerminal(player.ground);
-      if (cutOff) return this.lose("cutoff", cutOff.plugin.name);
-    }
+    if (this.updateCutOff(dt)) return;
 
     if (this.exitDoor) {
       if (this.atExit()) {
@@ -420,6 +422,37 @@ class Game {
     const { player, exitDoor: exit } = this;
     const centre = player.x + player.w / 2;
     return player.ground === exit.ground && centre > exit.x && centre < exit.x + exit.width;
+  }
+
+  // A terminal the player can no longer reach starts a countdown with a
+  // warning; the run is only lost if it's still cut off when time runs out.
+  // Returns true if the run was lost.
+  updateCutOff(dt) {
+    const { world, player } = this;
+    this.reachTimer -= dt;
+    if (this.reachTimer <= 0 && player.ground) {
+      this.reachTimer = REACH_CHECK_SECONDS;
+      const terminal = world.unreachableTerminal(player.ground);
+      if (!terminal) {
+        if (this.cutOff) this.toast("PATH RESTORED", `${this.cutOff.terminal.plugin.name} is reachable again`);
+        this.cutOff = null;
+      } else if (this.cutOff?.terminal !== terminal) {
+        this.cutOff = { terminal, time: CUTOFF_GRACE };
+      }
+    }
+    if (!this.cutOff) return false;
+
+    this.cutOff.time -= dt;
+    const name = this.cutOff.terminal.plugin.name.toUpperCase();
+    this.currentToast = {
+      title: `${name} CUT OFF`,
+      text: `Corruption blocks every route to it. Clear a path in ${Math.ceil(Math.max(0, this.cutOff.time))}s`,
+      color: "red",
+      time: 1,
+    };
+    if (this.cutOff.time > 0) return false;
+    this.lose("cutoff", this.cutOff.terminal.plugin.name);
+    return true;
   }
 
   lose(reason, detail) {
@@ -591,12 +624,12 @@ class Game {
 
     this.orbPause -= dt;
     this.orbTimer -= dt;
-    const maxOrbs = 3 + Math.floor(ratio * 15);
+    const maxOrbs = 2 + Math.floor(ratio * 10);
     if (this.orbPause <= 0 && this.orbTimer <= 0 && this.orbs.length < maxOrbs) {
-      const source = world.nearestCorrupted(px, py, ORB_SPAWN_RANGE);
+      const source = world.nearestCorrupted(px, py, ORB_SPAWN_RANGE, ORB_SPAWN_MIN);
       if (source) {
         this.orbs.push({
-          x: Math.max(source.x, Math.min(source.x + source.w, px + (Math.random() - 0.5) * 300)),
+          x: Math.max(source.x, Math.min(source.x + source.w, px)),
           y: source.y,
           vx: 0,
           vy: 0,
@@ -626,7 +659,7 @@ class Game {
       // Agents corrupt the ledges they drift through.
       orb.infectCooldown -= dt;
       if (orb.infectCooldown <= 0 && world.infectAt(orb.x, orb.y)) {
-        orb.infectCooldown = ORB_INFECT_COOLDOWN;
+        orb.infectCooldown = ORB_INFECT_COOLDOWN * Math.max(1, ORB_INFECT_BLOCKS / world.corruptible().length);
         this.sfx?.corrupt();
         this.burst(orb.x, orb.y, "#ff2b4f", 8);
       }
