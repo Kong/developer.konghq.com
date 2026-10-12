@@ -301,11 +301,14 @@ export function drawHud(ctx, game, loseRatio) {
     ctx.fillText(`${terminal.patched ? "[✓]" : "[ ]"} ${terminal.plugin.name.toUpperCase()}`, x + 14, rowY);
     ctx.font = `11px ${FONT}`;
     ctx.fillStyle = terminal.patched ? "#7a9a2a" : "#8a9099";
-    ctx.fillText(`    ${terminal.plugin.summary}`, x + 14, rowY + 14);
+    const remaining = game.effectTime(terminal.plugin.effect);
+    const active = terminal.patched && remaining > 0 && remaining !== Infinity;
+    if (active) ctx.fillStyle = "#7ff9ff";
+    ctx.fillText(`    ${terminal.plugin.summary}${active ? ` · ${Math.ceil(remaining)}s left` : ""}`, x + 14, rowY + 14);
   });
   ctx.font = `11px ${FONT}`;
   ctx.fillStyle = "#7ff9ff";
-  ctx.fillText("Every plugin also shields nearby ledges", x + 14, y + height - 12);
+  ctx.fillText("Every plugin shields nearby ledges for 5s", x + 14, y + height - 12);
   return y + height;
 }
 

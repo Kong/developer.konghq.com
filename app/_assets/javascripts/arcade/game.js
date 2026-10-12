@@ -31,9 +31,13 @@ const ORB_SPAWN_RANGE = 900;
 const ORB_SPAWN_SECONDS = [3, 1.2]; // calm page → nearly lost
 const ORB_GRACE = 4;
 const ORB_INFECT_COOLDOWN = 2;
-// Every enabled terminal shortens orb life and slows spawning a little.
-const TERMINAL_ORB_LIFE = 0.85;
-const TERMINAL_ORB_SPAWN = 1.15;
+// Plugin effects.
+const EFFECT_SECONDS = 10;
+const DEAUTH_PAUSE = 5;
+const ROLLBACK_SHARE = 0.2;
+const BOT_SLOWDOWN = 0.5;
+const BUDGET_SPREAD = 1.6;
+const BUDGET_SPAWN = 1.5;
 const WALK_FRAME_PIXELS = 14;
 const LOOK_RETURN = 6;
 const REACH_CHECK_SECONDS = 0.5;
@@ -269,9 +273,8 @@ class Game {
     this.orbs = [];
     this.orbTimer = 0;
     this.orbPause = ORB_GRACE;
-    this.orbSpeedMultiplier = 1;
-    this.orbSpawnMultiplier = 1;
-    this.orbLifetime = ORB_LIFETIME;
+    // Seconds left on the timed plugin effects.
+    this.effects = { slowOrbs: 0, budget: 0 };
     this.eye = null;
     this.spreadDelay = SPREAD_DELAY;
     this.reachTimer = REACH_CHECK_SECONDS;
@@ -344,6 +347,8 @@ class Game {
     this.fade = Math.max(0, this.fade - dt * 2);
     this.runTime += dt;
     world.tick(dt);
+    Object.keys(this.effects).forEach((key) => (this.effects[key] = Math.max(0, this.effects[key] - dt)));
+    if (!this.exitDoor) world.spreadMultiplier = this.effects.budget > 0 ? BUDGET_SPREAD : 1;
 
     this.updatePlayer(dt);
     this.updateTerminals(dt);
@@ -541,28 +546,37 @@ class Game {
     const { world } = this;
     const { plugin } = terminal;
     world.patch(terminal, plugin.effect === "firewall" ? FIREWALL : undefined);
-    this.orbLifetime *= TERMINAL_ORB_LIFE;
-    this.orbSpawnMultiplier *= TERMINAL_ORB_SPAWN;
 
-    if (plugin.effect === "throttle") {
-      world.spreadMultiplier *= 1.6;
-    } else if (plugin.effect === "deauth") {
-      this.orbs.forEach((orb) => this.burst(orb.x, orb.y, "#ff2b4f", 10));
-      this.orbs = [];
-      this.orbPause = 12;
+    if (plugin.effect === "deauth") {
+      this.deauthenticate();
     } else if (plugin.effect === "rollback") {
-      world.rollback(0.35);
-    } else if (plugin.effect === "slowOrbs") {
-      this.orbSpeedMultiplier *= 0.5;
-    } else if (plugin.effect === "budget") {
-      world.spreadMultiplier *= 1.6;
-      this.orbSpawnMultiplier *= 1.5;
+      world.rollback(ROLLBACK_SHARE);
+    } else if (plugin.effect === "slowOrbs" || plugin.effect === "budget") {
+      this.effects[plugin.effect] = EFFECT_SECONDS;
     }
 
     this.sfx?.patched();
     const pos = this.terminalPosition(terminal);
     this.burst(pos.x + pos.width / 2, pos.y, "#ccff00", 40);
     this.toast(`${plugin.name.toUpperCase()} ENABLED`, `${plugin.text} · nearby ledges shielded`);
+  }
+
+  // Destroys the half of the agents nearest the player and briefly stops new
+  // ones spawning.
+  deauthenticate() {
+    const { player } = this;
+    const distance = (orb) => Math.hypot(orb.x - player.x - player.w / 2, orb.y - player.y - player.h / 2);
+    const nearest = [...this.orbs].sort((a, b) => distance(a) - distance(b));
+    const destroyed = new Set(nearest.slice(0, Math.ceil(nearest.length / 2)));
+    destroyed.forEach((orb) => this.burst(orb.x, orb.y, "#ff2b4f", 10));
+    this.orbs = this.orbs.filter((orb) => !destroyed.has(orb));
+    this.orbPause = Math.max(this.orbPause, DEAUTH_PAUSE);
+  }
+
+  // Seconds left on a plugin's timed effect, for the HUD.
+  effectTime(effect) {
+    if (effect === "deauth") return Math.max(0, this.orbPause);
+    return this.effects?.[effect] || 0;
   }
 
   // Agents are red orbs that drift after the player and expire after a while.
@@ -586,17 +600,18 @@ class Game {
           y: source.y,
           vx: 0,
           vy: 0,
-          life: this.orbLifetime,
+          life: ORB_LIFETIME,
           infectCooldown: ORB_INFECT_COOLDOWN,
           seed: Math.random() * 10,
         });
         const [calm, frantic] = ORB_SPAWN_SECONDS;
-        this.orbTimer = (calm - (calm - frantic) * intensity) * this.orbSpawnMultiplier;
+        const spawnMultiplier = this.effects.budget > 0 ? BUDGET_SPAWN : 1;
+        this.orbTimer = (calm - (calm - frantic) * intensity) * spawnMultiplier;
         this.sfx?.orb();
       }
     }
 
-    const speed = (45 + intensity * 90) * this.orbSpeedMultiplier;
+    const speed = (45 + intensity * 90) * (this.effects.slowOrbs > 0 ? BOT_SLOWDOWN : 1);
     this.orbs = this.orbs.filter((orb) => {
       orb.life -= dt;
       const dx = px - orb.x;

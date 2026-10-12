@@ -14,7 +14,7 @@ const LANE_WIDTH = 220;
 const LANE_COUNT = [3, 5];
 const LANE_PADDING = 40;
 const BRICK = 28;
-const MAX_TERMINALS = 6;
+const MAX_TERMINALS = 5;
 const MIN_TERMINALS = 3;
 const TERMINAL_SPACING = 700;
 const SEED_BLOCKS = 4;
@@ -26,8 +26,8 @@ const INFECT_DISTANCE = 14;
 
 export const LEDGE_HEIGHT = 20;
 export const LOSE_RATIO = 0.6;
-export const SHIELD = { radius: 280, seconds: 20 };
-export const FIREWALL = { radius: 450, seconds: 12 };
+export const SHIELD = { radius: 150, seconds: 5 };
+export const FIREWALL = { radius: 200, seconds: 5 };
 // Generous estimates of what a double jump can clear. Used to decide when a
 // terminal has been cut off for good.
 export const UP_REACH = 250;
@@ -35,21 +35,25 @@ export const SIDE_REACH = 260;
 const FALL_WINDOW = 800;
 
 export const PLUGINS = [
-  { name: "Rate Limiting", effect: "throttle", summary: "Slows corruption", text: "Corruption throttled" },
-  { name: "AI Prompt Guard", effect: "firewall", summary: "Wide shield, 12s", text: "Firewall up: wide shield for 12s" },
-  { name: "OpenID Connect", effect: "deauth", summary: "Destroys agents", text: "Rogue agents de-authenticated" },
+  { name: "AI Prompt Guard", effect: "firewall", summary: "Wider shield", text: "Firewall up: wider area shielded" },
+  {
+    name: "OpenID Connect",
+    effect: "deauth",
+    summary: "Destroys half the agents",
+    text: "Nearest agents de-authenticated",
+  },
   {
     name: "AI Semantic Prompt Guard",
     effect: "rollback",
-    summary: "Reverses corruption",
-    text: "Semantic rollback: a third of the corruption reversed",
+    summary: "Reverses some corruption",
+    text: "Semantic rollback: a fifth of the corruption reversed",
   },
-  { name: "Bot Detection", effect: "slowOrbs", summary: "Slows agents", text: "Bots detected: agents slowed" },
+  { name: "Bot Detection", effect: "slowOrbs", summary: "Slows agents", text: "Bots detected: agents slowed for 10s" },
   {
     name: "AI Rate Limiting Advanced",
     effect: "budget",
     summary: "Slows corruption + agents",
-    text: "Token budget enforced",
+    text: "Token budget enforced for 10s",
   },
 ];
 
@@ -159,15 +163,26 @@ export class World {
     this.segments.sort((a, b) => a.y - b.y || a.x - b.x);
     this.segments.forEach((segment, index) => (segment.index = index));
 
+    // Shuffle the plugins per page so short pages still get a mix.
+    const plugins = this.shuffle([...PLUGINS]);
     this.terminals = this.segments
       .filter((segment) => segment.terminal)
-      .map((segment, i) => ({ segment, plugin: PLUGINS[i], patched: false, progress: 0 }));
+      .map((segment, i) => ({ segment, plugin: plugins[i], patched: false, progress: 0 }));
 
     // Give the player enough time to physically reach every terminal on long
     // pages: roughly the run time from top to bottom, plus slack.
     const pageHeight = document.documentElement.scrollHeight;
     const loseSeconds = Math.max(30, pageHeight / 330 + 12);
     this.spreadInterval = loseSeconds / Math.max(1, this.corruptible().length * LOSE_RATIO);
+  }
+
+  // Fisher-Yates with the page's seeded generator.
+  shuffle(items) {
+    for (let i = items.length - 1; i > 0; i--) {
+      const j = Math.floor(this.random() * (i + 1));
+      [items[i], items[j]] = [items[j], items[i]];
+    }
+    return items;
   }
 
   // Spread terminals evenly down the page: one target height per terminal,
