@@ -10,7 +10,7 @@ UI steps follow `docs/ui-steps-standards.md`: one action per step, location befo
 - Button: Click **X**.
 - Dropdown: From the **X** dropdown menu, select "value".
 - Icon: Click the X icon.
-
+- Tab: Click the **Tab name** tab.
 Do not move a label between bold and backticks. One-sentence inline UI summaries in an FAQ, table or prose are allowed.
 
 ## Runnable API examples

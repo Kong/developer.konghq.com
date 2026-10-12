@@ -8,7 +8,7 @@ In `entity_examples` blocks and `app/_kong_plugins/*/examples/*.yaml`, check the
 - repeats the version (`min_version` already renders it),
 - capitalizes a generic noun (control plane, data plane, plugin, header),
 - spells an acronym only by its letters on first use,
-- names an entity without linking it.
+- names an entity for the first time without linking it.
 
 Not a violation: variable descriptions that already read as sentences.
 
