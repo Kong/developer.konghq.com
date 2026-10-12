@@ -148,6 +148,10 @@ class Game {
   }
 
   exit() {
+    if (this.exited) return;
+    // frame() checks this too: exit() can run mid-frame, after the current
+    // frame's callback has already fired, so cancelling it isn't enough.
+    this.exited = true;
     cancelAnimationFrame(this.raf);
     window.removeEventListener("keydown", this.onKeyDown, true);
     window.removeEventListener("keyup", this.onKeyUp, true);
@@ -233,7 +237,19 @@ class Game {
     this.canvas.style.height = `${this.height}px`;
     this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     this.ctx.imageSmoothingEnabled = false;
-    this.world?.layout();
+    if (!this.world) return;
+
+    // Ledges move and resize with the page, so carry the player and the exit
+    // door along with the ledge they stand on.
+    const { player } = this;
+    const ground = player?.ground;
+    const along = ground && (player.x - ground.x) / ground.w;
+    this.world.layout();
+    if (ground) {
+      player.x = ground.x + along * ground.w;
+      player.y = ground.y - player.h;
+    }
+    if (this.exitDoor) this.placeDoor(this.exitDoor.ground, this.exitDoor.ground.floor ? this.exitDoor.x : null);
   }
 
   // --- game setup --------------------------------------------------------
@@ -307,12 +323,15 @@ class Game {
     this.stateTime += dt;
 
     this.accumulator += dt;
-    while (this.accumulator >= STEP) {
+    while (this.accumulator >= STEP && !this.exited) {
       this.update(STEP);
       this.pressed.clear();
       this.accumulator -= STEP;
     }
+    if (this.exited) return;
 
+    // Scroll once per frame, not once per physics step.
+    if (this.state === "playing") window.scrollTo({ left: 0, top: this.camera, behavior: "instant" });
     this.render(dt);
     this.raf = requestAnimationFrame(this.frame);
   }
@@ -409,13 +428,21 @@ class Game {
     this.orbs = [];
     this.orbPause = Infinity;
 
-    const width = this.sprites.door[0].width;
     const ledge = world.exitLedge(player.y);
-    const ground = ledge || world.floor;
-    const x = ledge ? ledge.x + (ledge.w - width) / 2 : player.x;
-    this.exitDoor = { ground, x, y: ground.y - this.sprites.door[0].height + SCALE, width };
+    this.placeDoor(ledge || world.floor, ledge ? null : player.x);
     this.sfx?.win();
     this.toast("EXIT UNLOCKED", "Every plugin enabled. Reach the door further down.");
+  }
+
+  // Centred on a ledge, or at `x` on the floor.
+  placeDoor(ground, x = null) {
+    const { width, height } = this.sprites.door[0];
+    this.exitDoor = {
+      ground,
+      x: x ?? ground.x + (ground.w - width) / 2,
+      y: ground.y - height + SCALE,
+      width,
+    };
   }
 
   atExit() {
@@ -704,7 +731,6 @@ class Game {
     const target = base + this.lookOffset;
     this.camera += (target - this.camera) * Math.min(1, dt * 6);
     this.camera = Math.max(0, Math.min(maxScroll, this.camera));
-    window.scrollTo({ left: 0, top: this.camera, behavior: "instant" });
   }
 
   burst(x, y, color, count) {

@@ -231,8 +231,7 @@ export class World {
   build(blocks, terminalBlocks) {
     const width = this.right - this.left;
     this.laneCount = clamp(Math.floor(width / LANE_WIDTH), ...LANE_COUNT);
-    this.laneWidth = width / this.laneCount;
-    this.ledgeWidth = Math.max(BRICK * 3, Math.floor((this.laneWidth - LANE_PADDING) / BRICK) * BRICK);
+    this.sizeLanes();
     this.direction = 1;
 
     const terminalTops = [...terminalBlocks].map((b) => b.y);
@@ -260,6 +259,13 @@ export class World {
 
     // Keep stepping down to the floor so the player can always climb back up.
     this.fillDown(prev, blocks[blocks.length - 1], this.floor.y);
+  }
+
+  // Lane and ledge widths for the current column. The lane count is fixed at
+  // build time because segments store their lane index.
+  sizeLanes() {
+    this.laneWidth = (this.right - this.left) / this.laneCount;
+    this.ledgeWidth = Math.max(BRICK * 3, Math.floor((this.laneWidth - LANE_PADDING) / BRICK) * BRICK);
   }
 
   nextLane(lane) {
@@ -349,10 +355,11 @@ export class World {
       block.h = rect.height;
     });
     this.measureColumn();
-    this.laneWidth = (this.right - this.left) / this.laneCount;
+    this.sizeLanes();
     this.segments.forEach((segment) => {
       segment.y = this.anchorTop(segment.block) + segment.dy;
       segment.x = this.laneX(segment.lane);
+      segment.w = this.ledgeWidth;
     });
     this.makeFloor();
   }
@@ -361,7 +368,9 @@ export class World {
     const footer = document.querySelector("footer");
     const pageHeight = document.documentElement.scrollHeight;
     const y = footer ? footer.getBoundingClientRect().top + window.scrollY : pageHeight - 4;
-    this.floor = { x: 0, y, w: document.documentElement.scrollWidth, floor: true };
+    // Updated in place so references to the floor (the player's ground, the
+    // exit door's) stay valid across a resize.
+    this.floor = Object.assign(this.floor || {}, { x: 0, y, w: document.documentElement.scrollWidth, floor: true });
   }
 
   // --- queries -------------------------------------------------------------
