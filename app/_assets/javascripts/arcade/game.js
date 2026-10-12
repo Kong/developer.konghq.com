@@ -330,9 +330,11 @@ class Game {
     player.update(dt, this.input, world);
     this.updateTerminals(dt);
 
+    // Corruption seeds itself once the delay runs out: at the start of a run,
+    // and again if plugins ever clear the whole page (see enable()).
     this.spreadDelay -= dt;
-    if (this.spreadDelay <= 0) {
-      if (!world.lastInfected) world.seed();
+    if (this.spreadDelay <= 0 && !this.exitDoor) {
+      if (!world.anyCorrupted()) world.seed();
       if (world.spread(dt)) this.sfx?.corrupt();
     }
 
@@ -481,6 +483,9 @@ class Game {
     this.world.patch(terminal, plugin.shield);
     if (plugin.seconds) this.effects.set(plugin, plugin.seconds);
     plugin.enable?.(this);
+    // A clean page gets the same breather as the start of a run, then the AI
+    // comes back. Without this a small page could stay clean for good.
+    if (!this.world.anyCorrupted()) this.spreadDelay = SPREAD_DELAY;
 
     this.sfx?.patched();
     const pos = this.terminalPosition(terminal);

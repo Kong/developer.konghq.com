@@ -368,6 +368,10 @@ export class World {
     return this.corruptibleBlocks;
   }
 
+  anyCorrupted() {
+    return this.blocks.some((b) => b.corrupted);
+  }
+
   corruptionRatio() {
     const pool = this.corruptible();
     if (!pool.length) return 0;
@@ -426,11 +430,12 @@ export class World {
     });
   }
 
+  // Starts corruption near the top of the page, skipping shielded blocks.
   seed() {
     const pool = this.corruptible();
     const count = clamp(Math.round(pool.length * SEED_SHARE), ...SEED_BLOCKS);
     pool
-      .filter((b) => b.index > 1)
+      .filter((b) => b.index > 1 && b.shield <= 0)
       .slice(0, count)
       .forEach((b) => this.infect(b));
   }
