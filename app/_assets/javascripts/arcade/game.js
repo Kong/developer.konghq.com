@@ -1,6 +1,6 @@
 import { Sfx } from "./audio";
 import { makeSprites } from "./sprites";
-import { World, LOSE_RATIO } from "./world";
+import { World, LOSE_RATIO, FIREWALL } from "./world";
 import { Rain, drawPrompt, drawWorld, drawHud, drawMinimap, drawKeybar, drawToast, drawBanner } from "./render";
 
 const SCALE = 3;
@@ -33,8 +33,7 @@ const ORB_GRACE = 4;
 const TERMINAL_ORB_LIFE = 0.85;
 const TERMINAL_ORB_SPAWN = 1.15;
 const WALK_FRAME_PIXELS = 14;
-const LOOK_SECONDS = 2;
-const LOOK_RETURN = 4;
+const LOOK_RETURN = 6;
 const REACH_CHECK_SECONDS = 0.5;
 const TOAST_SECONDS = 3;
 
@@ -191,13 +190,13 @@ class Game {
   }
 
   // The wheel pans the camera to look around the page instead of scrolling
-  // it; the camera drifts back to the player afterwards.
+  // it. The view stays put until the player moves again.
   onWheel(event) {
     event.preventDefault();
     if (this.state !== "playing") return;
     const pageHeight = document.documentElement.scrollHeight;
     this.lookOffset = Math.max(-pageHeight, Math.min(pageHeight, this.lookOffset + event.deltaY));
-    this.lookTime = LOOK_SECONDS;
+    this.lookReturning = false;
   }
 
   isHeld(action) {
@@ -259,7 +258,8 @@ class Game {
       walkPhase: 0,
     };
     this.lookOffset = 0;
-    this.lookTime = 0;
+    this.lookReturning = false;
+    this.exitDoor = null;
     this.camera = Math.max(0, this.player.y - this.height * 0.4);
     this.lives = LIVES;
     this.particles = [];
@@ -339,6 +339,7 @@ class Game {
   updatePlaying(dt) {
     const { world, player } = this;
     this.fade = Math.max(0, this.fade - dt * 2);
+    world.tick(dt);
 
     this.updatePlayer(dt);
     this.updateTerminals(dt);
@@ -373,13 +374,42 @@ class Game {
       if (cutOff) return this.lose("cutoff", cutOff.plugin.name);
     }
 
-    if (world.won()) {
-      this.sfx?.win();
-      this.burst(player.x + player.w / 2, player.y, "#ccff00", 60);
-      this.setState("won");
+    if (this.exitDoor) {
+      if (this.atExit()) {
+        this.sfx?.win();
+        this.burst(player.x + player.w / 2, player.y, "#ccff00", 60);
+        this.setState("won");
+      }
+    } else if (world.allPatched()) {
+      this.unlockExit();
     } else if (world.lost()) {
       this.lose("corrupted");
     }
+  }
+
+  // With every plugin enabled the AI is governed: corruption clears, the
+  // agents fizzle out, and an exit door opens a little further down.
+  unlockExit() {
+    const { world, player } = this;
+    world.cleanseAll();
+    world.spreadMultiplier = Infinity;
+    this.orbs.forEach((orb) => this.burst(orb.x, orb.y, "#ff2b4f", 10));
+    this.orbs = [];
+    this.orbPause = Infinity;
+
+    const width = this.sprites.door[0].width;
+    const ledge = world.exitLedge(player.y);
+    const ground = ledge || world.floor;
+    const x = ledge ? ledge.x + (ledge.w - width) / 2 : player.x;
+    this.exitDoor = { ground, x, y: ground.y - this.sprites.door[0].height + SCALE, width };
+    this.sfx?.win();
+    this.toast("EXIT UNLOCKED", "Every plugin enabled. Reach the door further down.");
+  }
+
+  atExit() {
+    const { player, exitDoor: exit } = this;
+    const centre = player.x + player.w / 2;
+    return player.ground === exit.ground && centre > exit.x && centre < exit.x + exit.width;
   }
 
   lose(reason, detail) {
@@ -505,7 +535,7 @@ class Game {
   enable(terminal) {
     const { world } = this;
     const { plugin } = terminal;
-    world.patch(terminal, plugin.effect === "firewall" ? 700 : undefined);
+    world.patch(terminal, plugin.effect === "firewall" ? FIREWALL : undefined);
     this.orbLifetime *= TERMINAL_ORB_LIFE;
     this.orbSpawnMultiplier *= TERMINAL_ORB_SPAWN;
 
@@ -593,11 +623,16 @@ class Game {
   }
 
   updateCamera(dt) {
-    // Moving snaps the view back to the player; otherwise it drifts back once
-    // the player stops looking around.
-    const moving = this.isHeld("left") || this.isHeld("right") || this.wasPressed("jump") || this.isHeld("down");
-    this.lookTime = moving ? 0 : this.lookTime - dt;
-    if (this.lookTime <= 0) this.lookOffset *= 1 - Math.min(1, dt * LOOK_RETURN);
+    // Moving, jumping or using a terminal brings the view back to the player.
+    const acting = ["left", "right", "jump", "down", "use"].some((action) => this.isHeld(action) || this.wasPressed(action));
+    if (acting) this.lookReturning = true;
+    if (this.lookReturning) {
+      this.lookOffset *= 1 - Math.min(1, dt * LOOK_RETURN);
+      if (Math.abs(this.lookOffset) < 1) {
+        this.lookOffset = 0;
+        this.lookReturning = false;
+      }
+    }
 
     const maxScroll = document.documentElement.scrollHeight - this.height;
     const base = this.player.y + this.player.h / 2 - this.height * 0.5;

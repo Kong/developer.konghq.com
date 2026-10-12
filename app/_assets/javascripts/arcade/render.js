@@ -99,7 +99,7 @@ function drawLedge(ctx, segment, x, y, tick) {
   ctx.fillRect(x - 2, y - 2, w + 4, LEDGE_HEIGHT + 4);
   ctx.fillStyle = body;
   ctx.fillRect(x, y, w, LEDGE_HEIGHT);
-  ctx.fillStyle = segment.protected ? PALE : LIME;
+  ctx.fillStyle = LIME;
   ctx.fillRect(x, y, w, 4);
   ctx.fillStyle = shade;
   ctx.fillRect(x, y + LEDGE_HEIGHT - 4, w, 4);
@@ -108,6 +108,18 @@ function drawLedge(ctx, segment, x, y, tick) {
   ctx.fillRect(x, y + half, w, 2);
   for (let dx = BRICK; dx < w - 4; dx += BRICK) ctx.fillRect(x + dx, y + 4, 2, half - 4);
   for (let dx = BRICK / 2; dx < w - 4; dx += BRICK) ctx.fillRect(x + dx, y + half + 2, 2, half - 6);
+}
+
+// A shielded ledge carries a pulsing force field that flickers out in its
+// last few seconds.
+function drawShield(ctx, segment, x, y, time) {
+  if (segment.shield <= 0 || segment.corrupted) return;
+  if (segment.shield < 3 && Math.floor(time * 8) % 2) return;
+  ctx.globalAlpha = 0.35 + 0.2 * Math.sin(time * 6);
+  ctx.strokeStyle = "#7ff9ff";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(x - 5, y - 6, segment.w + 10, LEDGE_HEIGHT + 11);
+  ctx.globalAlpha = 1;
 }
 
 function drawLabel(ctx, text, centreX, y, color) {
@@ -154,8 +166,17 @@ export function drawWorld(ctx, game, time) {
   });
 
   world.segments.forEach((segment) => {
-    if (visible(segment.y)) drawLedge(ctx, segment, segment.x - sx, segment.y - sy, tick);
+    if (!visible(segment.y)) return;
+    drawLedge(ctx, segment, segment.x - sx, segment.y - sy, tick);
+    drawShield(ctx, segment, segment.x - sx, segment.y - sy, time);
   });
+
+  if (game.exitDoor && visible(game.exitDoor.y, 120)) {
+    const door = game.exitDoor;
+    const sprite = sprites.door[Math.floor(time * 4) % 2];
+    ctx.drawImage(sprite, door.x - sx, door.y - sy);
+    drawLabel(ctx, "EXIT", door.x - sx + sprite.width / 2, door.y - sy - 10, LIME);
+  }
 
   world.terminals.forEach((terminal) => {
     const pos = game.terminalPosition(terminal);
@@ -305,6 +326,11 @@ export function drawMinimap(ctx, game, top) {
     ctx.fillStyle = terminal.patched ? LIME : "#ff8a9c";
     ctx.fillRect(x, toY(terminal.segment.y) - 2, MINIMAP_WIDTH, 4);
   });
+
+  if (game.exitDoor && Math.floor(performance.now() / 250) % 2) {
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(x - 3, toY(game.exitDoor.y) - 5, MINIMAP_WIDTH + 6, 10);
+  }
 
   const py = toY(player.y + player.h / 2);
   ctx.fillStyle = LIME;

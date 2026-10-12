@@ -1,28 +1,31 @@
 // The level is generated from the current docs page. Corruption spreads
 // through the page's blocks (paragraphs, rows, headings); a sparse set of
 // chunky one-way ledges is anchored to those blocks and collapses when its
-// block is corrupted. Code blocks host terminals and the footer is the floor.
-// All coordinates are document coordinates.
+// block is corrupted. Ledges sit in evenly spaced lanes and zigzag down the
+// page. Code blocks host terminals and the footer is the floor. All
+// coordinates are document coordinates.
 
 const BLOCK_SELECTOR =
   "h1, h2, h3, h4, h5, h6, p, li, tr, pre, img, .mermaid, blockquote, figure, hr, .code-block, table";
 const SAME_TOP = 8;
 const MIN_GAP = 110;
 const MAX_GAP = 160;
-const LEDGE_WIDTH = [180, 320];
-const FILLER_WIDTH = [110, 160];
-const HOP = [130, 240];
-const TERMINAL_WIDTH = 220;
-const TWIN_CHANCE = 0.12;
+const LANE_WIDTH = 220;
+const LANE_COUNT = [3, 5];
+const LANE_PADDING = 40;
+const BRICK = 28;
 const MAX_TERMINALS = 6;
 const MIN_TERMINALS = 3;
-const PROTECT_RADIUS = 350;
 const SEED_BLOCKS = 3;
+// How far corruption can tunnel past shielded blocks and terminals.
+const SPREAD_REACH = 6;
 const CORRUPTED_CLASS = "arcade-corrupted";
 const PATCHED_CLASS = "arcade-patched";
 
 export const LEDGE_HEIGHT = 20;
 export const LOSE_RATIO = 0.6;
+export const SHIELD = { radius: 280, seconds: 20 };
+export const FIREWALL = { radius: 450, seconds: 35 };
 // Generous estimates of what a double jump can clear. Used to decide when a
 // terminal has been cut off for good.
 export const UP_REACH = 250;
@@ -31,7 +34,7 @@ const FALL_WINDOW = 800;
 
 export const PLUGINS = [
   { name: "Rate Limiting", effect: "throttle", text: "Corruption throttled" },
-  { name: "AI Prompt Guard", effect: "firewall", text: "Firewall up: wide area shielded" },
+  { name: "AI Prompt Guard", effect: "firewall", text: "Firewall up: wider shield for longer" },
   { name: "OpenID Connect", effect: "deauth", text: "Rogue agents de-authenticated" },
   { name: "AI Semantic Prompt Guard", effect: "rollback", text: "Semantic rollback: corruption reversed" },
   { name: "Bot Detection", effect: "slowOrbs", text: "Bots detected: agents slowed" },
@@ -124,7 +127,7 @@ export class World {
           h: rect.height,
           terminal: false,
           corrupted: false,
-          protected: false,
+          shield: 0,
         };
       })
       .sort((a, b) => a.y - b.y || a.x - b.x)
@@ -167,10 +170,17 @@ export class World {
     return chosen;
   }
 
+  // Ledges step one lane at a time, sweeping left and right across the
+  // column. Terminals always sit in the rightmost lane.
   build(blocks, terminalBlocks) {
+    const width = this.right - this.left;
+    this.laneCount = clamp(Math.floor(width / LANE_WIDTH), ...LANE_COUNT);
+    this.laneWidth = width / this.laneCount;
+    this.ledgeWidth = Math.max(BRICK * 3, Math.floor((this.laneWidth - LANE_PADDING) / BRICK) * BRICK);
+    this.direction = 1;
+
     const terminalTops = [...terminalBlocks].map((b) => b.y);
-    const first = blocks[0];
-    let prev = this.addSegment(first, first.x, Math.min(260, first.w), 0, "ledge");
+    let prev = this.addSegment(blocks[0], 0, 0, "ledge");
 
     for (const block of blocks.slice(1)) {
       const isTerminal = terminalBlocks.has(block);
@@ -180,23 +190,25 @@ export class World {
         if (terminalTops.some((top) => top > block.y && top - block.y < MIN_GAP)) continue;
       }
 
-      prev = this.fillDown(prev, block, block.y - LEDGE_HEIGHT);
+      prev = this.fillDown(prev, block, this.anchorTop(block));
 
       if (isTerminal) {
-        const width = Math.min(TERMINAL_WIDTH, block.w);
-        const x = Math.min(block.x + block.w, this.right) - width;
-        prev = this.bridge(prev, x, width, block, 0);
-        prev = this.addSegment(block, x, width, 0, "terminal");
+        const lane = this.laneCount - 1;
+        prev = this.walkToLane(prev, block, lane);
+        prev = this.addSegment(block, lane, 0, "terminal");
+        this.direction = -1;
       } else {
-        const lo = Math.max(this.left, block.x);
-        const hi = Math.min(this.right, block.x + block.w);
-        prev = this.hop(prev, block, 0, LEDGE_WIDTH, lo, hi, "ledge");
-        if (this.random() < TWIN_CHANCE) this.twin(prev, block, lo, hi);
+        prev = this.addSegment(block, this.nextLane(prev.lane), 0, "ledge");
       }
     }
 
     // Keep stepping down to the floor so the player can always climb back up.
     this.fillDown(prev, blocks[blocks.length - 1], this.floor.y);
+  }
+
+  nextLane(lane) {
+    if (lane + this.direction < 0 || lane + this.direction >= this.laneCount) this.direction = -this.direction;
+    return lane + this.direction;
   }
 
   // Floating ledges between `prev` and `targetY`, so no step is taller than a
@@ -207,7 +219,22 @@ export class World {
     const steps = Math.ceil(gap / MAX_GAP);
     for (let step = 1; step < steps; step++) {
       const y = baseY + (gap * step) / steps;
-      prev = this.hop(prev, block, y - this.anchorTop(block), FILLER_WIDTH, this.left, this.right, "filler");
+      prev = this.addSegment(block, this.nextLane(prev.lane), y - this.anchorTop(block), "filler");
+    }
+    return prev;
+  }
+
+  // Step lane by lane towards `lane`, spreading the steps between `prev` and
+  // the block's row.
+  walkToLane(prev, block, lane) {
+    const steps = Math.abs(lane - prev.lane) - 1;
+    if (steps <= 0) return prev;
+    const baseY = prev.y;
+    const gap = this.anchorTop(block) - baseY;
+    const towards = Math.sign(lane - prev.lane);
+    for (let step = 1; step <= steps; step++) {
+      const y = baseY + (gap * step) / (steps + 1);
+      prev = this.addSegment(block, prev.lane + towards, y - this.anchorTop(block), "filler");
     }
     return prev;
   }
@@ -216,66 +243,27 @@ export class World {
     return block.y - LEDGE_HEIGHT;
   }
 
-  // Place a ledge a short hop left or right of the previous one.
-  hop(prev, block, dy, [minWidth, maxWidth], lo, hi, kind) {
-    const width = Math.min(hi - lo, minWidth + this.random() * (maxWidth - minWidth));
-    const prevCentre = prev.x + prev.w / 2;
-    const distance = HOP[0] + this.random() * (HOP[1] - HOP[0]);
-    let direction = this.random() < 0.5 ? -1 : 1;
-    let centre = prevCentre + direction * distance;
-    if (centre - width / 2 < lo || centre + width / 2 > hi) {
-      direction = -direction;
-      centre = prevCentre + direction * distance;
-    }
-    const x = clamp(centre - width / 2, lo, hi - width);
-    prev = this.bridge(prev, x, width, block, dy);
-    return this.addSegment(block, x, width, dy, kind);
-  }
-
-  // Add stepping stones when the next ledge is out of horizontal reach.
-  bridge(prev, x, width, block, dy) {
-    const target = { x, w: width };
-    const targetY = this.anchorTop(block) + dy;
-    for (let guard = 0; guard < 6 && horizontalGap(prev, target) > SIDE_REACH * 0.8; guard++) {
-      const fillerWidth = FILLER_WIDTH[0];
-      const towards = x > prev.x ? 1 : -1;
-      const fx = towards > 0 ? prev.x + prev.w + SIDE_REACH * 0.5 : prev.x - SIDE_REACH * 0.5 - fillerWidth;
-      const fy = prev.y + (targetY - prev.y) / 2;
-      const filler = clamp(fx, this.left, this.right - fillerWidth);
-      prev = this.addSegment(block, filler, fillerWidth, fy - this.anchorTop(block), "filler");
-    }
-    return prev;
-  }
-
-  // Occasionally add a second ledge on the same row, on the other side.
-  twin(ledge, block, lo, hi) {
-    const width = LEDGE_WIDTH[0];
-    const spacing = 120 + this.random() * 100;
-    const leftX = ledge.x - spacing - width;
-    const rightX = ledge.x + ledge.w + spacing;
-    if (rightX + width <= hi) this.addSegment(block, rightX, width, 0, "ledge");
-    else if (leftX >= lo) this.addSegment(block, leftX, width, 0, "ledge");
+  laneX(lane) {
+    return this.left + lane * this.laneWidth + (this.laneWidth - this.ledgeWidth) / 2;
   }
 
   // A ledge sits on top of its anchor block, so its collision line is
   // LEDGE_HEIGHT above the block's top edge (plus any offset for fillers).
-  addSegment(block, x, w, dy, kind) {
+  addSegment(block, lane, dy, kind) {
     const segment = {
       block,
       kind,
-      // Positions are stored relative to the anchor block and column so the
-      // level survives a resize.
-      fx: (x - this.left) / Math.max(1, this.right - this.left),
+      lane,
       dy,
-      x,
+      x: this.laneX(lane),
       y: this.anchorTop(block) + dy,
-      w,
+      w: this.ledgeWidth,
       terminal: kind === "terminal",
       get corrupted() {
         return !this.terminal && this.block.corrupted;
       },
-      get protected() {
-        return this.block.protected;
+      get shield() {
+        return this.block.shield;
       },
     };
     this.segments.push(segment);
@@ -290,6 +278,7 @@ export class World {
 
   layout() {
     this.measureColumn();
+    this.laneWidth = (this.right - this.left) / this.laneCount;
     this.blocks.forEach((block) => {
       const rect = block.el.getBoundingClientRect();
       block.x = rect.left + window.scrollX;
@@ -299,7 +288,7 @@ export class World {
     });
     this.segments.forEach((segment) => {
       segment.y = this.anchorTop(segment.block) + segment.dy;
-      segment.x = clamp(this.left + segment.fx * (this.right - this.left), this.left, this.right - segment.w);
+      segment.x = this.laneX(segment.lane);
     });
     this.makeFloor();
   }
@@ -332,7 +321,7 @@ export class World {
     return this.corruptionRatio() >= LOSE_RATIO;
   }
 
-  won() {
+  allPatched() {
     return this.terminals.length > 0 && this.terminals.every((t) => t.patched);
   }
 
@@ -372,7 +361,19 @@ export class World {
     return best;
   }
 
+  // A plain ledge a comfortable distance below `y`, for the exit door.
+  exitLedge(y) {
+    const below = this.segments.filter((s) => !s.terminal && s.y > y + 200);
+    return below.find((s) => s.y > y + 350) || below[below.length - 1] || null;
+  }
+
   // --- corruption ----------------------------------------------------------
+
+  tick(dt) {
+    this.blocks.forEach((block) => {
+      if (block.shield > 0) block.shield = Math.max(0, block.shield - dt);
+    });
+  }
 
   seed() {
     this.corruptible()
@@ -392,8 +393,24 @@ export class World {
     block.el.classList.remove(CORRUPTED_CLASS);
   }
 
-  // Corruption spreads down the page: each step a random corrupted block
-  // infects one of its nearest neighbours in reading order. Returns the newly
+  cleanseAll() {
+    this.blocks.forEach((b) => b.corrupted && this.cleanse(b));
+  }
+
+  // The first block corruption can take in one direction from `source`. It
+  // tunnels underneath shielded blocks and terminals without infecting them.
+  frontier(source, direction) {
+    for (let step = 1; step <= SPREAD_REACH; step++) {
+      const block = this.blocks[source.index + direction * step];
+      if (!block) return null;
+      if (block.terminal || block.shield > 0 || block.corrupted) continue;
+      return block;
+    }
+    return null;
+  }
+
+  // Corruption spreads along the page: each step a random corrupted block
+  // infects the nearest clean block above or below it. Returns the newly
   // infected block, if any.
   spread(dt) {
     this.spreadTimer += dt;
@@ -401,13 +418,11 @@ export class World {
     this.spreadTimer = 0;
 
     const corrupted = this.blocks.filter((b) => b.corrupted);
-    for (let attempt = 0; attempt < 8 && corrupted.length; attempt++) {
+    for (let attempt = 0; attempt < 12 && corrupted.length; attempt++) {
       const source = corrupted[Math.floor(Math.random() * corrupted.length)];
-      const neighbours = [-2, -1, 1, 2]
-        .map((offset) => this.blocks[source.index + offset])
-        .filter((b) => b && !b.terminal && !b.corrupted && !b.protected);
-      if (neighbours.length) {
-        const target = neighbours[Math.floor(Math.random() * neighbours.length)];
+      const targets = [this.frontier(source, 1), this.frontier(source, -1)].filter(Boolean);
+      if (targets.length) {
+        const target = targets[Math.floor(Math.random() * targets.length)];
         this.infect(target);
         return target;
       }
@@ -415,14 +430,14 @@ export class World {
     return null;
   }
 
-  // Patching a terminal cleans and shields everything near it.
-  patch(terminal, radius = PROTECT_RADIUS) {
+  // Patching a terminal cleans the area around it and shields it for a while.
+  patch(terminal, { radius, seconds } = SHIELD) {
     terminal.patched = true;
     terminal.segment.block.el.classList.add(PATCHED_CLASS);
     const centre = terminal.segment.y;
     this.blocks.forEach((block) => {
       if (Math.abs(block.y - centre) > radius) return;
-      block.protected = true;
+      block.shield = Math.max(block.shield, seconds);
       if (block.corrupted) this.cleanse(block);
     });
   }

@@ -27,6 +27,27 @@ const LOGO_EYE = { x: 25, y: 5.5 };
 
 const ORB = ["..RRR..", ".RRRRR.", "RRWRRRR", "RRRRRRR", "RRRRRRR", ".RRRRR.", "..RRR.."];
 
+// An open doorway with a down arrow (W) on a dark interior (K).
+const DOOR = [
+  "..GGGGGGGGGG..",
+  ".GGKKKKKKKKGG.",
+  "GGKKKKKKKKKKGG",
+  "GKKKKKWWKKKKKG",
+  "GKKKKKWWKKKKKG",
+  "GKKKKKWWKKKKKG",
+  "GKKKKKWWKKKKKG",
+  "GKKKWWWWWWKKKG",
+  "GKKKKWWWWKKKKG",
+  "GKKKKKWWKKKKKG",
+  "GKKKKKKKKKKKKG",
+  "GKKKKKKKKKKKKG",
+  "GKKKKKKKKKKKKG",
+  "GKKKKKKKKKKKKG",
+  "GKKKKKKKKKKKKG",
+  "GKKKKKKKKKKKKG",
+  "GGGGGGGGGGGGGG",
+];
+
 const HEART = [".RR.RR.", "RRRRRRR", "RRRRRRR", ".RRRRR.", "..RRR..", "...R..."];
 
 const EYE = [
@@ -154,6 +175,7 @@ export function makeSprites(scale) {
       ok: rasterise(terminal, scale, { S: "#0f2a00", X: "#ccff00" }),
     },
     eye: rasterise(EYE, scale),
+    door: [rasterise(DOOR, scale), rasterise(DOOR, scale, { G: "#ffffff", K: "#2f4a00", W: "#ccff00" })],
     orb: rasterise(ORB, 2),
     heart: rasterise(HEART, 2),
     heartEmpty: rasterise(HEART, 2, { R: "#3a3f47" }),
