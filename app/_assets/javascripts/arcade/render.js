@@ -204,7 +204,7 @@ export function drawWorld(ctx, game, time) {
     ctx.drawImage(sprites.eye, game.eye.x - sx, game.eye.y - sy + Math.sin(time * 3) * 4);
   }
 
-  game.orbs.forEach((orb) => {
+  game.agents.orbs.forEach((orb) => {
     ctx.globalAlpha = Math.min(1, orb.life / 1.5);
     const pulse = 10 + Math.sin(time * 8 + orb.seed) * 3;
     ctx.fillStyle = "rgba(255, 43, 79, 0.25)";
@@ -215,7 +215,7 @@ export function drawWorld(ctx, game, time) {
   });
   ctx.globalAlpha = 1;
 
-  game.particles.forEach((p) => {
+  game.particles.items.forEach((p) => {
     ctx.globalAlpha = Math.max(0, p.life / p.maxLife);
     ctx.fillStyle = p.color;
     ctx.fillRect(p.x - sx, p.y - sy, 3, 3);

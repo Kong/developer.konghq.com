@@ -3,22 +3,15 @@ import { Sfx } from "./audio";
 import { CAREERS_URL, formatTime, recordWin } from "./trophy";
 import { makeSprites } from "./sprites";
 import { World, LOSE_RATIO } from "./world";
-import { LIME, LIME_DARK, RED } from "./constants";
+import { LIME, RED } from "./constants";
+import { Agents } from "./agents";
+import { Input, keyCode } from "./input";
+import { Particles } from "./particles";
+import { Player, RUN_SPEED } from "./player";
 import { Rain, drawPrompt, drawWorld, drawHud, drawMinimap, drawKeybar, drawToast, drawBanner } from "./render";
 
 const SCALE = 3;
 const STEP = 1 / 120;
-const GRAVITY = 2000;
-const JUMP_VELOCITY = 720;
-const MAX_FALL = 900;
-const RUN_SPEED = 280;
-const GROUND_ACCEL = 2600;
-const AIR_ACCEL = 1600;
-const AIR_JUMPS = 1;
-const COYOTE_TIME = 0.1;
-const JUMP_BUFFER = 0.12;
-const DROP_TIME = 0.25;
-const FAST_FALL_DELAY = 0.2;
 const PATCH_SECONDS = 1;
 const PATCH_REACH = 48;
 const RAIN_SECONDS = 2.8;
@@ -26,18 +19,6 @@ const TYPE_SECONDS = 0.025;
 const SPREAD_DELAY = 3;
 const EXIT_WINDOW = 1.5;
 const LIVES = 3;
-const INVULNERABLE_SECONDS = 2.5;
-const ORB_RADIUS = 8;
-const ORB_LIFETIME = 10;
-const ORB_SPAWN_RANGE = 900;
-// Orbs spawn at least this far away so the player sees them coming.
-const ORB_SPAWN_MIN = 300;
-const ORB_SPAWN_SECONDS = [4, 1.8]; // calm page → nearly lost
-const ORB_GRACE = 6;
-const ORB_INFECT_COOLDOWN = 2;
-// Pages with fewer blocks than this get proportionally longer orb cooldowns.
-const ORB_INFECT_BLOCKS = 40;
-const WALK_FRAME_PIXELS = 14;
 const LOOK_RETURN = 6;
 const REACH_CHECK_SECONDS = 0.5;
 // How long a terminal can stay cut off before the run is lost.
@@ -49,33 +30,14 @@ const STYLE = `
   html.arcade-playing, html.arcade-playing body { overscroll-behavior: none; user-select: none; }
 `;
 
-const KEYS = {
-  left: ["ArrowLeft", "KeyA"],
-  right: ["ArrowRight", "KeyD"],
-  jump: ["Space", "ArrowUp", "KeyW"],
-  down: ["ArrowDown", "KeyS"],
-  use: ["KeyE"],
-};
-
-// Physical key code, falling back to the key value for synthetic or virtual
-// keyboards that leave event.code empty.
-function keyCode(event) {
-  if (event.code) return event.code;
-  if (event.key === " ") return "Space";
-  if (/^[a-z]$/i.test(event.key)) return `Key${event.key.toUpperCase()}`;
-  return event.key;
-}
-
 class Game {
   constructor(onExit) {
     this.onExit = onExit;
     this.state = "rain";
     this.stateTime = 0;
     this.time = 0;
-    this.held = new Set();
-    this.pressed = new Set();
-    this.particles = [];
-    this.orbs = [];
+    this.input = new Input();
+    this.particles = new Particles();
     this.sprites = makeSprites(SCALE);
     this.scale = SCALE;
     this.runSpeed = RUN_SPEED;
@@ -89,12 +51,17 @@ class Game {
     } catch {
       this.sfx = null;
     }
+    // What the player and agents use to make noise and sparks.
+    this.fx = {
+      sound: (name) => this.sfx?.[name](),
+      burst: (...args) => this.particles.burst(...args),
+    };
 
     this.onKeyDown = this.onKeyDown.bind(this);
     this.onKeyUp = this.onKeyUp.bind(this);
     this.onWheel = this.onWheel.bind(this);
     this.onResize = this.onResize.bind(this);
-    this.onBlur = () => this.held.clear();
+    this.onBlur = () => this.input.releaseAll();
     this.frame = this.frame.bind(this);
   }
 
@@ -207,12 +174,11 @@ class Game {
       track("Arcade Careers Clicked", { source: "win-screen" });
       window.open(CAREERS_URL, "_blank", "noopener,noreferrer");
     }
-    if (!event.repeat) this.pressed.add(code);
-    this.held.add(code);
+    this.input.press(code, event.repeat);
   }
 
   onKeyUp(event) {
-    this.held.delete(keyCode(event));
+    this.input.release(keyCode(event));
   }
 
   // The wheel pans the camera to look around the page instead of scrolling
@@ -223,14 +189,6 @@ class Game {
     const pageHeight = document.documentElement.scrollHeight;
     this.lookOffset = Math.max(-pageHeight, Math.min(pageHeight, this.lookOffset + event.deltaY));
     this.lookReturning = false;
-  }
-
-  isHeld(action) {
-    return KEYS[action].some((code) => this.held.has(code));
-  }
-
-  wasPressed(action) {
-    return KEYS[action].some((code) => this.pressed.has(code));
   }
 
   exitArmed() {
@@ -275,36 +233,15 @@ class Game {
       return;
     }
 
-    const spawn = this.world.segments[0];
-    this.player = {
-      x: spawn.x + 24,
-      y: spawn.y - 40,
-      w: 34,
-      h: 40,
-      vx: 0,
-      vy: 0,
-      facing: 1,
-      squash: 1,
-      ground: spawn,
-      coyote: 0,
-      jumpBuffer: 0,
-      airJumps: AIR_JUMPS,
-      dropFrom: null,
-      dropTime: 0,
-      downTime: 0,
-      invulnerable: 0,
-      walkPhase: 0,
-    };
+    this.player = new Player(this.world.segments[0], this.fx);
     this.lookOffset = 0;
     this.lookReturning = false;
     this.exitDoor = null;
     this.runTime = 0;
     this.camera = Math.max(0, this.player.y - this.height * 0.4);
     this.lives = LIVES;
-    this.particles = [];
-    this.orbs = [];
-    this.orbTimer = 0;
-    this.orbPause = ORB_GRACE;
+    this.particles = new Particles();
+    this.agents = new Agents(this.fx);
     // Seconds left on each running timed plugin effect, keyed by plugin.
     this.effects = new Map();
     this.eye = null;
@@ -335,7 +272,7 @@ class Game {
     this.accumulator += dt;
     while (this.accumulator >= STEP && !this.exited) {
       this.update(STEP);
-      this.pressed.clear();
+      this.input.endStep();
       this.accumulator -= STEP;
     }
     if (this.exited) return;
@@ -347,7 +284,7 @@ class Game {
   }
 
   update(dt) {
-    const anyKey = this.pressed.size > 0;
+    const anyKey = this.input.anyPressed();
     if (this.currentToast) {
       this.currentToast.time -= dt;
       if (this.currentToast.time <= 0) this.currentToast = null;
@@ -357,10 +294,10 @@ class Game {
       if (anyKey || this.stateTime > RAIN_SECONDS) this.setState("prompt");
     } else if (this.state === "prompt") {
       const done = this.typed >= this.promptLength;
-      if (done && (this.pressed.has("KeyY") || this.pressed.has("Enter"))) {
+      if (done && (this.input.pressed.has("KeyY") || this.input.pressed.has("Enter"))) {
         track("Arcade Played");
         this.beginPlay();
-      } else if (done && this.pressed.has("KeyN")) {
+      } else if (done && this.input.pressed.has("KeyN")) {
         this.exit();
       } else if (!done && anyKey) {
         this.typed = this.promptLength;
@@ -372,8 +309,8 @@ class Game {
     } else if (this.state === "playing") {
       this.updatePlaying(dt);
     } else if (this.state === "won" || this.state === "lost") {
-      if (this.pressed.has("KeyR")) this.beginPlay();
-      this.updateParticles(dt);
+      if (this.input.pressed.has("KeyR")) this.beginPlay();
+      this.particles.update(dt);
     } else if (this.state === "empty") {
       if (anyKey) this.exit();
     }
@@ -390,7 +327,7 @@ class Game {
     });
     if (!this.exitDoor) world.spreadMultiplier = this.modifier("spreadInterval");
 
-    this.updatePlayer(dt);
+    player.update(dt, this.input, world);
     this.updateTerminals(dt);
 
     this.spreadDelay -= dt;
@@ -411,8 +348,14 @@ class Game {
       this.eye.y += (target.y - this.eye.y) * Math.min(1, dt * 3);
     }
 
-    this.updateOrbs(dt);
-    this.updateParticles(dt);
+    this.agents.update(dt, {
+      world,
+      player,
+      speed: this.modifier("orbSpeed"),
+      spawnInterval: this.modifier("spawnInterval"),
+      onHit: (orb) => this.hurt(orb),
+    });
+    this.particles.update(dt);
     this.updateCamera(dt);
     if (this.state !== "playing") return;
 
@@ -423,7 +366,7 @@ class Game {
         this.bestTime = recordWin(this.runTime);
         this.trackEnd("won");
         this.sfx?.win();
-        this.burst(player.x + player.w / 2, player.y, LIME, 60);
+        this.particles.burst(player.centreX, player.y, LIME, 60);
         this.setState("won");
       }
     } else if (world.allPatched()) {
@@ -439,9 +382,7 @@ class Game {
     const { world, player } = this;
     world.cleanseAll();
     world.spreadMultiplier = Infinity;
-    this.orbs.forEach((orb) => this.burst(orb.x, orb.y, RED, 10));
-    this.orbs = [];
-    this.orbPause = Infinity;
+    this.agents.clear();
 
     const ledge = world.exitLedge(player.y);
     this.placeDoor(ledge || world.floor, ledge ? null : player.x);
@@ -462,7 +403,7 @@ class Game {
 
   atExit() {
     const { player, exitDoor: exit } = this;
-    const centre = player.x + player.w / 2;
+    const centre = player.centreX;
     return player.ground === exit.ground && centre > exit.x && centre < exit.x + exit.width;
   }
 
@@ -508,105 +449,18 @@ class Game {
     track("Arcade Ended", { outcome, reason, seconds: Math.round(this.runTime) });
   }
 
-  updatePlayer(dt) {
-    const player = this.player;
-    const direction = (this.isHeld("right") ? 1 : 0) - (this.isHeld("left") ? 1 : 0);
-    const accel = player.ground ? GROUND_ACCEL : AIR_ACCEL;
-
-    if (direction) {
-      player.vx += direction * accel * dt;
-      player.vx = Math.max(-RUN_SPEED, Math.min(RUN_SPEED, player.vx));
-      player.facing = direction;
-    } else {
-      const slow = accel * dt;
-      player.vx = Math.abs(player.vx) <= slow ? 0 : player.vx - Math.sign(player.vx) * slow;
-    }
-
-    player.coyote = player.ground ? COYOTE_TIME : player.coyote - dt;
-    player.jumpBuffer = this.wasPressed("jump") ? JUMP_BUFFER : player.jumpBuffer - dt;
-    player.dropTime -= dt;
-    player.invulnerable -= dt;
-    player.downTime = this.isHeld("down") ? player.downTime + dt : 0;
-    player.squash += (1 - player.squash) * Math.min(1, dt * 12);
-    if (player.ground) player.walkPhase += (Math.abs(player.vx) * dt) / WALK_FRAME_PIXELS;
-    if (player.ground) player.airJumps = AIR_JUMPS;
-
-    // A double jump lets the player climb back over tall gaps.
-    const canJump = player.coyote > 0 || player.airJumps > 0;
-    if (player.jumpBuffer > 0 && canJump) {
-      if (player.coyote <= 0) {
-        player.airJumps -= 1;
-        this.burst(player.x + player.w / 2, player.y + player.h, LIME, 8);
-      }
-      player.vy = -JUMP_VELOCITY;
-      player.ground = null;
-      player.coyote = 0;
-      player.jumpBuffer = 0;
-      player.squash = 1.25;
-      this.sfx?.jump();
-    }
-    // Releasing jump early cuts the arc short for finer control.
-    if (!this.isHeld("jump") && player.vy < -JUMP_VELOCITY / 2) player.vy = -JUMP_VELOCITY / 2;
-
-    // Tap down to drop through one ledge; hold it to keep falling.
-    const fastFall = player.downTime >= FAST_FALL_DELAY;
-    if ((this.wasPressed("down") || fastFall) && player.ground && !player.ground.floor) {
-      player.dropFrom = player.ground;
-      player.dropTime = DROP_TIME;
-      player.ground = null;
-      if (this.wasPressed("down")) this.sfx?.drop();
-    }
-
-    player.vy = Math.min(MAX_FALL, player.vy + GRAVITY * dt);
-    const prevBottom = player.y + player.h;
-    player.x = Math.max(0, Math.min(document.documentElement.scrollWidth - player.w, player.x + player.vx * dt));
-    player.y += player.vy * dt;
-
-    // Keep standing only while still over the ledge.
-    if (player.ground && !this.overlapsX(player, player.ground)) player.ground = null;
-
-    if (player.ground) {
-      player.y = player.ground.y - player.h;
-      player.vy = 0;
-      return;
-    }
-
-    const bottom = player.y + player.h;
-    if (player.vy < 0) return;
-    for (const platform of this.world.solids()) {
-      if (platform === player.dropFrom && player.dropTime > 0) continue;
-      if (fastFall && !platform.floor) continue;
-      if (prevBottom <= platform.y + 1 && bottom >= platform.y && this.overlapsX(player, platform)) {
-        const impact = player.vy;
-        player.y = platform.y - player.h;
-        player.vy = 0;
-        player.ground = platform;
-        if (impact > 500) {
-          player.squash = 0.7;
-          this.sfx?.land();
-          this.burst(player.x + player.w / 2, platform.y, LIME_DARK, 6);
-        }
-        break;
-      }
-    }
-  }
-
-  overlapsX(player, platform) {
-    return player.x + player.w > platform.x + 4 && player.x < platform.x + platform.w - 4;
-  }
-
   nearbyTerminal() {
     const player = this.player;
     if (!player?.ground) return null;
     return this.world.terminals.find((terminal) => {
       if (terminal.patched || terminal.segment !== player.ground) return false;
       const pos = this.terminalPosition(terminal);
-      return Math.abs(player.x + player.w / 2 - (pos.x + pos.width / 2)) < PATCH_REACH;
+      return Math.abs(player.centreX - (pos.x + pos.width / 2)) < PATCH_REACH;
     });
   }
 
   updateTerminals(dt) {
-    const active = this.isHeld("use") ? this.nearbyTerminal() : null;
+    const active = this.input.isHeld("use") ? this.nearbyTerminal() : null;
     this.world.terminals.forEach((terminal) => {
       if (terminal.patched) return;
       if (terminal === active) {
@@ -630,20 +484,8 @@ class Game {
 
     this.sfx?.patched();
     const pos = this.terminalPosition(terminal);
-    this.burst(pos.x + pos.width / 2, pos.y, LIME, 40);
+    this.particles.burst(pos.x + pos.width / 2, pos.y, LIME, 40);
     this.toast(`${plugin.name.toUpperCase()} ENABLED`, `${plugin.text} · nearby ledges shielded`);
-  }
-
-  // Destroys the half of the agents nearest the player and stops new ones
-  // spawning for `pause` seconds.
-  deauthenticate(pause) {
-    const { player } = this;
-    const distance = (orb) => Math.hypot(orb.x - player.x - player.w / 2, orb.y - player.y - player.h / 2);
-    const nearest = [...this.orbs].sort((a, b) => distance(a) - distance(b));
-    const destroyed = new Set(nearest.slice(0, Math.ceil(nearest.length / 2)));
-    destroyed.forEach((orb) => this.burst(orb.x, orb.y, RED, 10));
-    this.orbs = this.orbs.filter((orb) => !destroyed.has(orb));
-    this.orbPause = Math.max(this.orbPause, pause);
   }
 
   // The product of a named modifier across running plugin effects, so
@@ -659,80 +501,20 @@ class Game {
     return plugin.remaining?.(this) ?? this.effects?.get(plugin) ?? 0;
   }
 
-  // Agents are red orbs that drift after the player and expire after a while.
-  // They spawn from the corrupted block nearest the player, and come faster
-  // and more often as the corruption spreads.
-  updateOrbs(dt) {
-    const { world, player } = this;
-    const ratio = world.corruptionRatio();
-    const intensity = Math.min(1, ratio / LOSE_RATIO);
-    const px = player.x + player.w / 2;
-    const py = player.y + player.h / 2;
-
-    this.orbPause -= dt;
-    this.orbTimer -= dt;
-    const maxOrbs = 2 + Math.floor(ratio * 10);
-    if (this.orbPause <= 0 && this.orbTimer <= 0 && this.orbs.length < maxOrbs) {
-      const source = world.nearestCorrupted(px, py, ORB_SPAWN_RANGE, ORB_SPAWN_MIN);
-      if (source) {
-        this.orbs.push({
-          x: Math.max(source.x, Math.min(source.x + source.w, px)),
-          y: source.y,
-          vx: 0,
-          vy: 0,
-          life: ORB_LIFETIME,
-          infectCooldown: ORB_INFECT_COOLDOWN,
-          seed: Math.random() * 10,
-        });
-        const [calm, frantic] = ORB_SPAWN_SECONDS;
-        this.orbTimer = (calm - (calm - frantic) * intensity) * this.modifier("spawnInterval");
-        this.sfx?.orb();
-      }
-    }
-
-    const speed = (45 + intensity * 65) * this.modifier("orbSpeed");
-    this.orbs = this.orbs.filter((orb) => {
-      orb.life -= dt;
-      const dx = px - orb.x;
-      const dy = py - orb.y;
-      const distance = Math.hypot(dx, dy) || 1;
-      const steer = Math.min(1, dt * 1.5);
-      orb.vx += ((dx / distance) * speed - orb.vx) * steer;
-      orb.vy += ((dy / distance) * speed - orb.vy) * steer;
-      orb.x += orb.vx * dt;
-      orb.y += orb.vy * dt;
-
-      // Agents corrupt the ledges they drift through.
-      orb.infectCooldown -= dt;
-      if (orb.infectCooldown <= 0 && world.infectAt(orb.x, orb.y)) {
-        orb.infectCooldown = ORB_INFECT_COOLDOWN * Math.max(1, ORB_INFECT_BLOCKS / world.corruptible().length);
-        this.sfx?.corrupt();
-        this.burst(orb.x, orb.y, RED, 8);
-      }
-
-      if (this.state === "playing" && player.invulnerable <= 0 && distance < ORB_RADIUS + player.w / 2 - 4) {
-        this.hurt(orb);
-        return false;
-      }
-      return orb.life > 0;
-    });
-  }
-
   hurt(orb) {
-    const player = this.player;
     this.lives -= 1;
-    player.invulnerable = INVULNERABLE_SECONDS;
-    player.vx = Math.sign(player.x + player.w / 2 - orb.x || 1) * 320;
-    player.vy = -420;
-    player.ground = null;
+    this.player.knockback(orb.x);
     this.sfx?.hit();
-    this.burst(orb.x, orb.y, RED, 20);
+    this.particles.burst(orb.x, orb.y, RED, 20);
     if (this.lives <= 0) this.lose("caught");
   }
 
   updateCamera(dt) {
     // Moving, jumping or using a terminal brings the view back to the player.
-    const acting = ["left", "right", "jump", "down", "use"].some((action) => this.isHeld(action) || this.wasPressed(action));
+    const { input } = this;
+    const acting = ["left", "right", "jump", "down", "use"].some(
+      (action) => input.isHeld(action) || input.wasPressed(action)
+    );
     if (acting) this.lookReturning = true;
     if (this.lookReturning) {
       this.lookOffset *= 1 - Math.min(1, dt * LOOK_RETURN);
@@ -750,33 +532,6 @@ class Game {
     const target = base + this.lookOffset;
     this.camera += (target - this.camera) * Math.min(1, dt * 6);
     this.camera = Math.max(0, Math.min(maxScroll, this.camera));
-  }
-
-  burst(x, y, color, count) {
-    for (let i = 0; i < count; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const speed = 80 + Math.random() * 220;
-      const life = 0.4 + Math.random() * 0.5;
-      this.particles.push({
-        x,
-        y,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed - 120,
-        life,
-        maxLife: life,
-        color,
-      });
-    }
-  }
-
-  updateParticles(dt) {
-    this.particles = this.particles.filter((p) => {
-      p.life -= dt;
-      p.vy += GRAVITY * 0.4 * dt;
-      p.x += p.vx * dt;
-      p.y += p.vy * dt;
-      return p.life > 0;
-    });
   }
 
   // --- render ------------------------------------------------------------

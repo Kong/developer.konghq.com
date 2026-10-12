@@ -21,8 +21,8 @@ export const PLUGINS = [
     name: "OpenID Connect",
     summary: "Destroys half the agents",
     text: "Nearest agents de-authenticated",
-    enable: (game) => game.deauthenticate(DEAUTH_PAUSE),
-    remaining: (game) => Math.max(0, game.orbPause),
+    enable: (game) => game.agents.deauthenticate(game.player, DEAUTH_PAUSE),
+    remaining: (game) => Math.max(0, game.agents.pause),
   },
   {
     name: "AI Semantic Prompt Guard",

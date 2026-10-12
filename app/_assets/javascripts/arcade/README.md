@@ -97,7 +97,11 @@ The HUD lists each plugin with its effect and a live countdown while a timed eff
 |---|---|
 | `../arcade.js` | Trigger: listens for `0451`, lazy-loads `game.js`, calls `initTrophy()` |
 | `trophy.js` | Logo hint tooltip, completion star, best-time storage, `CAREERS_URL` |
-| `game.js` | State machine (`rain` → `prompt` → `playing` → `won`/`lost`), input, physics, camera, agents, plugin effects, cut-off countdown, teardown |
+| `game.js` | State machine (`rain` → `prompt` → `playing` → `won`/`lost`), lifecycle and teardown, camera, terminals and plugin effects, cut-off countdown, win/lose |
+| `player.js` | Player physics: run, jump, double jump, drop-through, knockback |
+| `agents.js` | Agent spawning, steering, ledge infection, hits, de-authentication |
+| `input.js` | Key map and held/pressed state for the fixed-step loop |
+| `particles.js` | Spark bursts |
 | `world.js` | Level generation from the DOM, corruption, shields, reachability check |
 | `plugins.js` | `PLUGINS` registry: text, shield, timed modifiers, instant effects |
 | `constants.js` | Values shared across modules: palette, `BRICK` |
@@ -105,6 +109,8 @@ The HUD lists each plugin with its effect and a live countdown while a timed eff
 | `sprites.js` | Pixel art strings and the Kong mark rasteriser |
 | `audio.js` | Synthesised sound effects |
 | `analytics.js` | `track()`: Segment events, no-op without Segment; logged to the console in dev |
+
+Modules depend one way: `game.js` owns the player, agents, input and particles, and hands them only what they need (the world, the player, and an `fx` object for sounds and sparks), never the game itself. Plugins are the exception: their `enable(game)` hooks get the game.
 
 Concepts that carry the design:
 
@@ -127,7 +133,7 @@ Concepts that carry the design:
 
 The dev server runs on `http://localhost:8888` (see the repo `CLAUDE.md`). Use the `agent-browser` skill with a named session at 1440×900.
 
-In dev, the running game is `window.__arcade`, so state can be read and driven directly (`__arcade.world`, `__arcade.player`, `__arcade.enable(terminal)`, `__arcade.spreadDelay = 1e9` to freeze corruption, `__arcade.player.invulnerable = 1e9`). Wrap `agent-browser eval` code in an IIFE, because eval shares a global scope across calls. `agent-browser keydown` sends an empty `event.code`; the game falls back to `event.key` for that reason.
+In dev, the running game is `window.__arcade`, so state can be read and driven directly (`__arcade.world`, `__arcade.player`, `__arcade.agents.orbs`, `__arcade.enable(terminal)`, `__arcade.spreadDelay = 1e9` to freeze corruption, `__arcade.player.invulnerable = 1e9`). Wrap `agent-browser eval` code in an IIFE, because eval shares a global scope across calls. `agent-browser keydown` sends an empty `event.code`; the game falls back to `event.key` for that reason.
 
 Boot helper (open a page, type the code, skip the intro, start):
 
@@ -161,5 +167,4 @@ Checks worth re-running after level or pacing changes, on a spread of pages (`/g
 - Corruption starts near the top of the page, close to the first terminal on short pages, so an idle player can get that terminal cut off quickly.
 - Not yet tried: music, a pause key, hub and landing page layouts beyond the policies hub.
 - Production Vite build verified: the game is its own lazy chunk (about 15 kB gzipped), the main bundle only gains the trigger, trophy and analytics helper, and `window.__arcade` is stripped. A full `make build` (Jekyll) hasn't been run locally because it writes to the `dist/` the dev server serves; the Netlify preview build covers it.
-- Planned after the production pass: split `game.js` (player and agents into their own modules).
 - No JS unit test runner for now (owner decision: no new dependency). Testing is the browser checklist in [Testing](#testing) plus the owner's playtests.
