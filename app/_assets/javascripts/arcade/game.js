@@ -1,4 +1,5 @@
 import { Sfx } from "./audio";
+import { CAREERS_URL, formatTime, recordWin } from "./trophy";
 import { makeSprites } from "./sprites";
 import { World, LOSE_RATIO, FIREWALL } from "./world";
 import { Rain, drawPrompt, drawWorld, drawHud, drawMinimap, drawKeybar, drawToast, drawBanner } from "./render";
@@ -181,6 +182,7 @@ class Game {
       return;
     }
     if (code === "KeyM" && !event.repeat) this.sfx?.toggleMute();
+    if (code === "KeyC" && this.state === "won" && !event.repeat) window.open(CAREERS_URL, "_blank", "noopener");
     if (!event.repeat) this.pressed.add(code);
     this.held.add(code);
   }
@@ -260,6 +262,7 @@ class Game {
     this.lookOffset = 0;
     this.lookReturning = false;
     this.exitDoor = null;
+    this.runTime = 0;
     this.camera = Math.max(0, this.player.y - this.height * 0.4);
     this.lives = LIVES;
     this.particles = [];
@@ -339,6 +342,7 @@ class Game {
   updatePlaying(dt) {
     const { world, player } = this;
     this.fade = Math.max(0, this.fade - dt * 2);
+    this.runTime += dt;
     world.tick(dt);
 
     this.updatePlayer(dt);
@@ -376,6 +380,7 @@ class Game {
 
     if (this.exitDoor) {
       if (this.atExit()) {
+        this.bestTime = recordWin(this.runTime);
         this.sfx?.win();
         this.burst(player.x + player.w / 2, player.y, "#ccff00", 60);
         this.setState("won");
@@ -705,7 +710,9 @@ class Game {
     if (this.state === "won") {
       drawBanner(ctx, width, height, "AI GOVERNED", [
         "Every Kong plugin enabled. The agent is contained.",
-        "R RETRY  ·  ESC ×2 EXIT",
+        `TIME ${formatTime(this.runTime)}  ·  BEST ${formatTime(this.bestTime)}`,
+        "Good at governing AI? Kong is hiring.",
+        "C CAREERS  ·  R RETRY  ·  ESC ×2 EXIT",
       ]);
     } else if (this.state === "lost") {
       drawBanner(ctx, width, height, ...this.loseBanner(), "red");

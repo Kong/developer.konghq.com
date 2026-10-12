@@ -16,7 +16,8 @@ const LANE_PADDING = 40;
 const BRICK = 28;
 const MAX_TERMINALS = 6;
 const MIN_TERMINALS = 3;
-const SEED_BLOCKS = 3;
+const TERMINAL_SPACING = 700;
+const SEED_BLOCKS = 4;
 // How far corruption can tunnel past shielded blocks and terminals.
 const SPREAD_REACH = 6;
 const CORRUPTED_CLASS = "arcade-corrupted";
@@ -154,19 +155,33 @@ export class World {
     // Give the player enough time to physically reach every terminal on long
     // pages: roughly the run time from top to bottom, plus slack.
     const pageHeight = document.documentElement.scrollHeight;
-    const loseSeconds = Math.max(45, (pageHeight / 280) * 1.3 + 20);
+    const loseSeconds = Math.max(35, pageHeight / 280 + 15);
     this.spreadInterval = loseSeconds / Math.max(1, this.corruptible().length * LOSE_RATIO);
   }
 
+  // Spread terminals evenly down the page: one target height per terminal,
+  // filled by the nearest code block, else the nearest heading.
   pickTerminalBlocks(blocks) {
-    let pool = blocks.filter((b) => b.el.matches("pre:not(.mermaid)"));
-    if (pool.length < MIN_TERMINALS) pool = pool.concat(blocks.filter((b) => b.el.matches("h2, h3")));
-    // Skip the first blocks so the player doesn't spawn on a terminal.
-    pool = pool.filter((b) => b.index > 1).sort((a, b) => a.y - b.y);
+    const eligible = blocks.filter((b) => b.index > 1);
+    const code = eligible.filter((b) => b.el.matches("pre:not(.mermaid)"));
+    const headings = eligible.filter((b) => b.el.matches("h2, h3"));
+    if (!eligible.length) return new Set();
 
-    const count = Math.min(MAX_TERMINALS, pool.length);
+    const top = eligible[0].y;
+    const span = eligible[eligible.length - 1].y - top;
+    const count = Math.min(clamp(Math.round(span / TERMINAL_SPACING), MIN_TERMINALS, MAX_TERMINALS), eligible.length);
+    const spacing = span / count;
     const chosen = new Set();
-    for (let i = 0; i < count; i++) chosen.add(pool[Math.floor((i * pool.length) / count)]);
+    const nearest = (pool, y) =>
+      pool
+        .filter((b) => !chosen.has(b) && Math.abs(b.y - y) < spacing / 2)
+        .sort((a, b) => Math.abs(a.y - y) - Math.abs(b.y - y))[0];
+
+    for (let i = 0; i < count; i++) {
+      const target = top + spacing * (i + 0.5);
+      const block = nearest(code, target) || nearest(headings, target) || nearest(eligible, target);
+      if (block) chosen.add(block);
+    }
     return chosen;
   }
 

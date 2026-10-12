@@ -1,10 +1,14 @@
 // Hidden arcade game. Typing the code loads the game chunk on demand, so
-// regular page views only pay for this listener.
+// regular page views only pay for this listener and the header trophy.
+import { initTrophy } from "./arcade/trophy";
+
 const CODE = "0451";
 const EDITABLE = "input, textarea, select, [contenteditable]:not([contenteditable='false'])";
 
 let buffer = "";
 let active = false;
+
+initTrophy();
 
 document.addEventListener("keydown", (event) => {
   if (active || event.repeat || event.metaKey || event.ctrlKey || event.altKey) return;
