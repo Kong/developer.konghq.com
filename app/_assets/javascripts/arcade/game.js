@@ -1,7 +1,7 @@
 import { Sfx } from "./audio";
 import { makeSprites } from "./sprites";
-import { World } from "./world";
-import { Rain, drawPrompt, drawWorld, drawHud, drawBanner } from "./render";
+import { World, LOSE_RATIO } from "./world";
+import { Rain, drawPrompt, drawWorld, drawHud, drawKeybar, drawToast, drawBanner } from "./render";
 
 const SCALE = 3;
 const STEP = 1 / 120;
@@ -15,12 +15,21 @@ const AIR_JUMPS = 1;
 const COYOTE_TIME = 0.1;
 const JUMP_BUFFER = 0.12;
 const DROP_TIME = 0.25;
+const FAST_FALL_DELAY = 0.2;
 const PATCH_SECONDS = 1.5;
-const PATCH_REACH = 40;
+const PATCH_REACH = 48;
 const RAIN_SECONDS = 2.8;
-const TYPE_SECONDS = 0.03;
+const TYPE_SECONDS = 0.025;
 const SPREAD_DELAY = 3;
-const HINT_SECONDS = 8;
+const EXIT_WINDOW = 1.5;
+const LIVES = 3;
+const INVULNERABLE_SECONDS = 1.5;
+const ORB_RADIUS = 8;
+const ORB_START_RATIO = 0.1;
+const ORB_LIFETIME = 25;
+const ORB_SPAWN_RANGE = 900;
+const REACH_CHECK_SECONDS = 0.5;
+const TOAST_SECONDS = 3;
 
 const STYLE = `
   .arcade-corrupted { filter: hue-rotate(250deg) saturate(2.5) blur(0.6px); opacity: 0.5; transition: filter 0.3s, opacity 0.3s; }
@@ -33,6 +42,7 @@ const KEYS = {
   right: ["ArrowRight", "KeyD"],
   jump: ["Space", "ArrowUp", "KeyW"],
   down: ["ArrowDown", "KeyS"],
+  use: ["KeyE"],
 };
 
 // Physical key code, falling back to the key value for synthetic or virtual
@@ -53,8 +63,11 @@ class Game {
     this.held = new Set();
     this.pressed = new Set();
     this.particles = [];
+    this.orbs = [];
     this.sprites = makeSprites(SCALE);
     this.scale = SCALE;
+    this.maxLives = LIVES;
+    this.lastEscape = -Infinity;
     this.initialScroll = { x: window.scrollX, y: window.scrollY };
     this.reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -100,8 +113,11 @@ class Game {
     this.rain = new Rain(window.innerWidth, window.innerHeight);
     this.promptLines = [
       "> INTRUSION DETECTED",
-      `> ROGUE AGENT LOOSE IN ${window.location.pathname}`,
+      `> ROGUE AI AGENT LOOSE IN ${window.location.pathname}`,
       "> IT IS REWRITING THE DOCS.",
+      "",
+      "> MISSION: REACH EVERY TERMINAL AND ENABLE ITS KONG PLUGIN.",
+      `> GOVERN THE AI BEFORE IT CORRUPTS ${LOSE_RATIO * 100}% OF THIS PAGE.`,
       "",
       "> SHALL WE PLAY A GAME? [Y/N]",
     ];
@@ -136,6 +152,10 @@ class Game {
     this.stateTime = 0;
   }
 
+  toast(title, text, color) {
+    this.currentToast = { title, text, color, time: TOAST_SECONDS };
+  }
+
   // --- input -------------------------------------------------------------
 
   onKeyDown(event) {
@@ -147,8 +167,14 @@ class Game {
     this.sfx?.resume();
 
     const code = keyCode(event);
-    if (code === "Escape") return this.exit();
-    if (code === "KeyM") this.sfx?.toggleMute();
+    if (code === "Escape") {
+      if (event.repeat) return;
+      // Esc twice returns to the docs, so a stray press doesn't end a run.
+      if (this.state === "empty" || this.exitArmed()) return this.exit();
+      this.lastEscape = this.time;
+      return;
+    }
+    if (code === "KeyM" && !event.repeat) this.sfx?.toggleMute();
     if (!event.repeat) this.pressed.add(code);
     this.held.add(code);
   }
@@ -163,6 +189,10 @@ class Game {
 
   wasPressed(action) {
     return KEYS[action].some((code) => this.pressed.has(code));
+  }
+
+  exitArmed() {
+    return this.time - this.lastEscape < EXIT_WINDOW;
   }
 
   onResize() {
@@ -186,42 +216,52 @@ class Game {
     this.world.collect();
     document.documentElement.classList.add("arcade-playing");
 
-    if (this.world.platforms.length < 5 || this.world.terminals.length === 0) {
+    if (this.world.segments.length < 5 || this.world.terminals.length === 0) {
       this.setState("empty");
       return;
     }
 
-    const spawn = this.world.platforms[0];
+    const spawn = this.world.segments[0];
     this.player = {
       x: spawn.x + 24,
-      y: spawn.y - 36,
-      w: 24,
-      h: 36,
+      y: spawn.y - 40,
+      w: 34,
+      h: 40,
       vx: 0,
       vy: 0,
       facing: 1,
+      squash: 1,
       ground: spawn,
       coyote: 0,
       jumpBuffer: 0,
       airJumps: AIR_JUMPS,
       dropFrom: null,
       dropTime: 0,
+      downTime: 0,
+      invulnerable: 0,
     };
     this.camera = Math.max(0, this.player.y - this.height * 0.4);
+    this.lives = LIVES;
     this.particles = [];
+    this.orbs = [];
+    this.orbTimer = 0;
+    this.orbPause = 0;
+    this.orbSpeedMultiplier = 1;
+    this.orbSpawnMultiplier = 1;
     this.eye = null;
     this.spreadDelay = SPREAD_DELAY;
-    this.hintTime = HINT_SECONDS;
+    this.reachTimer = REACH_CHECK_SECONDS;
     this.fade = 1;
+    this.loseReason = null;
+    this.toast("MISSION", `Enable all ${this.world.terminals.length} Kong plugins to govern the rogue AI`);
     this.sfx?.start();
     this.setState("playing");
   }
 
   terminalPosition(terminal) {
-    const p = terminal.platform;
-    const width = this.sprites.terminal.ok.width;
-    const height = this.sprites.terminal.ok.height;
-    return { x: Math.max(p.x, p.x + p.w - width - 24), y: p.y - height + SCALE, width };
+    const segment = terminal.segment;
+    const { width, height } = this.sprites.terminal.ok;
+    return { x: segment.x + segment.w - width - 16, y: segment.y - height + SCALE, width };
   }
 
   // --- update ------------------------------------------------------------
@@ -245,6 +285,10 @@ class Game {
 
   update(dt) {
     const anyKey = this.pressed.size > 0;
+    if (this.currentToast) {
+      this.currentToast.time -= dt;
+      if (this.currentToast.time <= 0) this.currentToast = null;
+    }
 
     if (this.state === "rain") {
       if (anyKey || this.stateTime > RAIN_SECONDS) this.setState("prompt");
@@ -274,7 +318,6 @@ class Game {
   updatePlaying(dt) {
     const { world, player } = this;
     this.fade = Math.max(0, this.fade - dt * 2);
-    this.hintTime -= dt;
 
     this.updatePlayer(dt);
     this.updateTerminals(dt);
@@ -285,7 +328,7 @@ class Game {
       if (world.spread(dt)) this.sfx?.corrupt();
     }
 
-    // If the floor under the player just got corrupted, they fall.
+    // If the ledge under the player just got corrupted, they fall.
     if (player.ground && !player.ground.floor && player.ground.corrupted && !player.ground.terminal) {
       player.ground = null;
     }
@@ -297,17 +340,31 @@ class Game {
       this.eye.y += (target.y - this.eye.y) * Math.min(1, dt * 3);
     }
 
+    this.updateOrbs(dt);
     this.updateParticles(dt);
     this.updateCamera(dt);
+    if (this.state !== "playing") return;
+
+    this.reachTimer -= dt;
+    if (this.reachTimer <= 0 && player.ground) {
+      this.reachTimer = REACH_CHECK_SECONDS;
+      const cutOff = world.unreachableTerminal(player.ground);
+      if (cutOff) return this.lose("cutoff", cutOff.plugin.name);
+    }
 
     if (world.won()) {
       this.sfx?.win();
       this.burst(player.x + player.w / 2, player.y, "#ccff00", 60);
       this.setState("won");
     } else if (world.lost()) {
-      this.sfx?.lose();
-      this.setState("lost");
+      this.lose("corrupted");
     }
+  }
+
+  lose(reason, detail) {
+    this.loseReason = { reason, detail };
+    this.sfx?.lose();
+    this.setState("lost");
   }
 
   updatePlayer(dt) {
@@ -327,11 +384,12 @@ class Game {
     player.coyote = player.ground ? COYOTE_TIME : player.coyote - dt;
     player.jumpBuffer = this.wasPressed("jump") ? JUMP_BUFFER : player.jumpBuffer - dt;
     player.dropTime -= dt;
-
+    player.invulnerable -= dt;
+    player.downTime = this.isHeld("down") ? player.downTime + dt : 0;
+    player.squash += (1 - player.squash) * Math.min(1, dt * 12);
     if (player.ground) player.airJumps = AIR_JUMPS;
 
-    // A double jump lets the player climb back over tall paragraphs and code
-    // blocks that a single jump can't clear.
+    // A double jump lets the player climb back over tall gaps.
     const canJump = player.coyote > 0 || player.airJumps > 0;
     if (player.jumpBuffer > 0 && canJump) {
       if (player.coyote <= 0) {
@@ -342,17 +400,19 @@ class Game {
       player.ground = null;
       player.coyote = 0;
       player.jumpBuffer = 0;
+      player.squash = 1.25;
       this.sfx?.jump();
     }
     // Releasing jump early cuts the arc short for finer control.
     if (!this.isHeld("jump") && player.vy < -JUMP_VELOCITY / 2) player.vy = -JUMP_VELOCITY / 2;
 
-    // Down drops through the current ledge, unless standing at a terminal.
-    if (this.wasPressed("down") && player.ground && !player.ground.floor && !this.nearbyTerminal()) {
+    // Tap down to drop through one ledge; hold it to keep falling.
+    const fastFall = player.downTime >= FAST_FALL_DELAY;
+    if ((this.wasPressed("down") || fastFall) && player.ground && !player.ground.floor) {
       player.dropFrom = player.ground;
       player.dropTime = DROP_TIME;
       player.ground = null;
-      this.sfx?.drop();
+      if (this.wasPressed("down")) this.sfx?.drop();
     }
 
     player.vy = Math.min(MAX_FALL, player.vy + GRAVITY * dt);
@@ -373,12 +433,14 @@ class Game {
     if (player.vy < 0) return;
     for (const platform of this.world.solids()) {
       if (platform === player.dropFrom && player.dropTime > 0) continue;
+      if (fastFall && !platform.floor) continue;
       if (prevBottom <= platform.y + 1 && bottom >= platform.y && this.overlapsX(player, platform)) {
         const impact = player.vy;
         player.y = platform.y - player.h;
         player.vy = 0;
         player.ground = platform;
         if (impact > 500) {
+          player.squash = 0.7;
           this.sfx?.land();
           this.burst(player.x + player.w / 2, platform.y, "#5c8a00", 6);
         }
@@ -393,32 +455,116 @@ class Game {
 
   nearbyTerminal() {
     const player = this.player;
-    if (!player.ground) return null;
+    if (!player?.ground) return null;
     return this.world.terminals.find((terminal) => {
-      if (terminal.patched || terminal.platform !== player.ground) return false;
+      if (terminal.patched || terminal.segment !== player.ground) return false;
       const pos = this.terminalPosition(terminal);
       return Math.abs(player.x + player.w / 2 - (pos.x + pos.width / 2)) < PATCH_REACH;
     });
   }
 
   updateTerminals(dt) {
-    const active = this.isHeld("down") ? this.nearbyTerminal() : null;
+    const active = this.isHeld("use") ? this.nearbyTerminal() : null;
     this.world.terminals.forEach((terminal) => {
       if (terminal.patched) return;
       if (terminal === active) {
         const before = Math.floor(terminal.progress * 10);
         terminal.progress += dt / PATCH_SECONDS;
         if (Math.floor(terminal.progress * 10) > before) this.sfx?.patchTick();
-        if (terminal.progress >= 1) {
-          this.world.patch(terminal);
-          this.sfx?.patched();
-          const pos = this.terminalPosition(terminal);
-          this.burst(pos.x + pos.width / 2, pos.y, "#ccff00", 40);
-        }
+        if (terminal.progress >= 1) this.enable(terminal);
       } else {
         terminal.progress = Math.max(0, terminal.progress - dt);
       }
     });
+  }
+
+  // Every plugin cleans the area around its terminal, then applies its own
+  // effect to the corruption or the agents.
+  enable(terminal) {
+    const { world } = this;
+    const { plugin } = terminal;
+    world.patch(terminal, plugin.effect === "firewall" ? 700 : undefined);
+
+    if (plugin.effect === "throttle") {
+      world.spreadMultiplier *= 1.6;
+    } else if (plugin.effect === "deauth") {
+      this.orbs.forEach((orb) => this.burst(orb.x, orb.y, "#ff2b4f", 10));
+      this.orbs = [];
+      this.orbPause = 12;
+    } else if (plugin.effect === "rollback") {
+      world.rollback(0.35);
+    } else if (plugin.effect === "slowOrbs") {
+      this.orbSpeedMultiplier *= 0.5;
+    } else if (plugin.effect === "budget") {
+      world.spreadMultiplier *= 1.6;
+      this.orbSpawnMultiplier *= 1.5;
+    }
+
+    this.sfx?.patched();
+    const pos = this.terminalPosition(terminal);
+    this.burst(pos.x + pos.width / 2, pos.y, "#ccff00", 40);
+    this.toast(`${plugin.name.toUpperCase()} ENABLED`, plugin.text);
+  }
+
+  // Agents are red orbs that drift after the player. They spawn from the
+  // corrupted ledge nearest the player, and grow faster and more numerous as
+  // the corruption spreads.
+  updateOrbs(dt) {
+    const { world, player } = this;
+    const ratio = world.corruptionRatio();
+    const intensity = Math.min(1, ratio / LOSE_RATIO);
+    const px = player.x + player.w / 2;
+    const py = player.y + player.h / 2;
+
+    this.orbPause -= dt;
+    this.orbTimer -= dt;
+    const maxOrbs = 2 + Math.floor(ratio * 15);
+    if (ratio >= ORB_START_RATIO && this.orbPause <= 0 && this.orbTimer <= 0 && this.orbs.length < maxOrbs) {
+      const source = world.nearestCorrupted(px, py, ORB_SPAWN_RANGE);
+      if (source) {
+        this.orbs.push({
+          x: source.x + source.w / 2,
+          y: source.y - 16,
+          vx: 0,
+          vy: 0,
+          life: ORB_LIFETIME,
+          seed: Math.random() * 10,
+        });
+        this.orbTimer = (7 - 4.5 * intensity) * this.orbSpawnMultiplier;
+        this.sfx?.orb();
+      }
+    }
+
+    const speed = (45 + intensity * 90) * this.orbSpeedMultiplier;
+    this.orbs = this.orbs.filter((orb) => {
+      orb.life -= dt;
+      const dx = px - orb.x;
+      const dy = py - orb.y;
+      const distance = Math.hypot(dx, dy) || 1;
+      const steer = Math.min(1, dt * 1.5);
+      orb.vx += ((dx / distance) * speed - orb.vx) * steer;
+      orb.vy += ((dy / distance) * speed - orb.vy) * steer;
+      orb.x += orb.vx * dt;
+      orb.y += orb.vy * dt;
+
+      if (this.state === "playing" && player.invulnerable <= 0 && distance < ORB_RADIUS + player.w / 2 - 4) {
+        this.hurt(orb);
+        return false;
+      }
+      return orb.life > 0;
+    });
+  }
+
+  hurt(orb) {
+    const player = this.player;
+    this.lives -= 1;
+    player.invulnerable = INVULNERABLE_SECONDS;
+    player.vx = Math.sign(player.x + player.w / 2 - orb.x || 1) * 320;
+    player.vy = -420;
+    player.ground = null;
+    this.sfx?.hit();
+    this.burst(orb.x, orb.y, "#ff2b4f", 20);
+    if (this.lives <= 0) this.lose("caught");
   }
 
   updateCamera(dt) {
@@ -467,6 +613,7 @@ class Game {
     }
     if (this.state === "prompt") {
       drawPrompt(ctx, width, height, this.promptLines, Math.floor(this.typed), this.time);
+      if (this.exitArmed()) drawKeybar(ctx, width, height, true, this.time);
       return;
     }
 
@@ -477,24 +624,32 @@ class Game {
     }
 
     drawWorld(ctx, this, this.time);
-    drawHud(ctx, this, this.time);
+    drawHud(ctx, this, LOSE_RATIO);
+    drawKeybar(ctx, width, height, this.exitArmed(), this.time);
+    if (this.currentToast && this.state === "playing") drawToast(ctx, width, this.currentToast);
 
     if (this.fade > 0) {
       ctx.fillStyle = `rgba(0, 0, 0, ${this.fade})`;
       ctx.fillRect(0, 0, width, height);
     }
     if (this.state === "won") {
-      drawBanner(ctx, width, height, "AI CONTAINED", ["Every terminal patched. Governance restored.", "R RETRY  ·  ESC EXIT"]);
+      drawBanner(ctx, width, height, "AI GOVERNED", [
+        "Every Kong plugin enabled. The agent is contained.",
+        "R RETRY  ·  ESC ×2 EXIT",
+      ]);
     } else if (this.state === "lost") {
-      drawBanner(
-        ctx,
-        width,
-        height,
-        "DOCS COMPROMISED",
-        ["The agent rewrote 60% of this page.", "R RETRY  ·  ESC EXIT"],
-        "red"
-      );
+      drawBanner(ctx, width, height, ...this.loseBanner(), "red");
     }
+  }
+
+  loseBanner() {
+    const retry = "R RETRY  ·  ESC ×2 EXIT";
+    const { reason, detail } = this.loseReason;
+    if (reason === "cutoff") {
+      return ["TERMINAL CUT OFF", [`The corruption sealed off ${detail}.`, "It can't be reached any more.", retry]];
+    }
+    if (reason === "caught") return ["AGENT CAUGHT YOU", ["The rogue agents took your last life.", retry]];
+    return ["DOCS COMPROMISED", [`The agent rewrote ${LOSE_RATIO * 100}% of this page.`, retry]];
   }
 }
 

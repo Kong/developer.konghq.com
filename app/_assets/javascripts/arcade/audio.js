@@ -89,6 +89,15 @@ export class Sfx {
     this.noise({ dur: 0.05, freq: 2500 + Math.random() * 2000, q: 8, vol: 0.12 });
   }
 
+  orb() {
+    this.tone({ freq: 160, to: 90, dur: 0.25, type: "sawtooth", vol: 0.15 });
+  }
+
+  hit() {
+    this.noise({ dur: 0.2, freq: 600, q: 0.7, vol: 0.4 });
+    this.tone({ freq: 440, to: 110, dur: 0.3, type: "square", vol: 0.3 });
+  }
+
   start() {
     this.arpeggio([262, 392, 523, 784], 0.09, "triangle", 0.4);
   }

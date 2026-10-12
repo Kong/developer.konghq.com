@@ -5,8 +5,12 @@ const GLYPHS =
   "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン01{}<>/=";
 const FONT = 'ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace';
 const LIME = "#ccff00";
+const PALE = "#eaffb0";
 const RED = "#ff2b4f";
+const INK = "#0b0f0a";
 const HEADER_OFFSET = 64;
+const LEDGE_HEIGHT = 12;
+const BRICK = 24;
 
 // Stable pseudo-random value so glitch glyphs change a few times a second
 // instead of every frame.
@@ -36,7 +40,7 @@ export class Rain {
       column.y += column.speed * dt;
       if (column.y > height + 200) column.y = -Math.random() * 300;
       const row = Math.floor(column.y / this.size);
-      ctx.fillStyle = "#eaffb0";
+      ctx.fillStyle = PALE;
       ctx.fillText(glyph(i, row + Math.floor(time * 10)), i * this.size, row * this.size);
       ctx.fillStyle = LIME;
       ctx.fillText(glyph(row, i), i * this.size, (row - 1) * this.size);
@@ -52,7 +56,7 @@ export function drawPrompt(ctx, width, height, lines, chars, time) {
   ctx.shadowColor = LIME;
   ctx.shadowBlur = 8;
 
-  const left = Math.max(32, width / 2 - 320);
+  const left = Math.max(32, width / 2 - 380);
   let top = height / 2 - lines.length * 16;
   let remaining = chars;
   lines.forEach((line) => {
@@ -67,56 +71,86 @@ export function drawPrompt(ctx, width, height, lines, chars, time) {
   ctx.shadowBlur = 0;
 }
 
-function inView(rect, scrollY, height) {
-  return rect.y + rect.h > scrollY && rect.y < scrollY + height;
+function drawLedge(ctx, segment, x, y, tick) {
+  const { w } = segment;
+  if (segment.corrupted && !segment.terminal) {
+    // Corrupted ledges flicker and are no longer solid.
+    ctx.globalAlpha = 0.3 + 0.3 * hash(segment.index, tick);
+    ctx.fillStyle = "#3a0010";
+    ctx.fillRect(x, y, w, LEDGE_HEIGHT);
+    ctx.fillStyle = RED;
+    for (let dx = 0; dx < w; dx += 12) {
+      if (hash(segment.index + dx, tick) > 0.4) ctx.fillRect(x + dx, y, 6, 3);
+    }
+    ctx.globalAlpha = 1;
+    ctx.font = `14px ${FONT}`;
+    for (let i = 0; i < 2; i++) {
+      ctx.fillText(glyph(segment.index + i, tick), x + hash(segment.index * 3 + i, tick) * (w - 14), y - 4);
+    }
+    return;
+  }
+
+  const body = segment.terminal ? "#3b4350" : "#2f4a00";
+  const shade = segment.terminal ? "#262c35" : "#1a2a00";
+  ctx.fillStyle = INK;
+  ctx.fillRect(x - 2, y - 2, w + 4, LEDGE_HEIGHT + 4);
+  ctx.fillStyle = body;
+  ctx.fillRect(x, y, w, LEDGE_HEIGHT);
+  ctx.fillStyle = segment.protected ? PALE : LIME;
+  ctx.fillRect(x, y, w, 3);
+  ctx.fillStyle = shade;
+  ctx.fillRect(x, y + LEDGE_HEIGHT - 3, w, 3);
+  ctx.fillStyle = INK;
+  for (let dx = BRICK; dx < w - 4; dx += BRICK) ctx.fillRect(x + dx, y + 3, 2, LEDGE_HEIGHT - 6);
+}
+
+function drawLabel(ctx, text, centreX, y, color) {
+  ctx.font = `bold 11px ${FONT}`;
+  const width = ctx.measureText(text).width + 12;
+  ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
+  ctx.fillRect(centreX - width / 2, y - 14, width, 18);
+  ctx.fillStyle = color;
+  ctx.textAlign = "center";
+  ctx.fillText(text, centreX, y);
+  ctx.textAlign = "left";
 }
 
 export function drawWorld(ctx, game, time) {
-  const { world, sprites, player, scale } = game;
+  const { world, sprites, player } = game;
   const sx = window.scrollX;
   const sy = window.scrollY;
   const height = window.innerHeight;
-  const dark = document.documentElement.classList.contains("dark");
   const tick = Math.floor(time * 8);
+  const visible = (y, margin = 80) => y > sy - margin && y < sy + height + margin;
 
-  // Platform hints: a faint ledge on solids, red static on corrupted blocks.
-  world.platforms.forEach((p) => {
-    if (!inView(p, sy, height)) return;
-    const x = p.x - sx;
-    const y = p.y - sy;
-    if (p.corrupted && !p.terminal) {
-      ctx.fillStyle = "rgba(255, 43, 79, 0.08)";
-      ctx.fillRect(x, y, p.w, p.h);
-      ctx.fillStyle = RED;
-      for (let dx = 0; dx < p.w; dx += 12) {
-        if (hash(p.index + dx, tick) > 0.45) ctx.fillRect(x + dx, y, 6, 2);
-      }
-      ctx.font = `14px ${FONT}`;
-      for (let i = 0; i < 3; i++) {
-        const r = hash(p.index * 3 + i, tick);
-        ctx.fillText(glyph(p.index + i, tick), x + r * (p.w - 14), y + 14 + hash(i, p.index) * Math.max(0, p.h - 14));
-      }
-    } else {
-      ctx.fillStyle = p.protected
-        ? "rgba(204, 255, 0, 0.55)"
-        : dark
-          ? "rgba(204, 255, 0, 0.22)"
-          : "rgba(70, 110, 0, 0.35)";
-      ctx.fillRect(x, y, p.w, 2);
-    }
+  // Keep the level out from under the sticky site header.
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(0, HEADER_OFFSET, window.innerWidth, height - HEADER_OFFSET);
+  ctx.clip();
+
+  world.segments.forEach((segment) => {
+    if (visible(segment.y)) drawLedge(ctx, segment, segment.x - sx, segment.y - sy, tick);
   });
 
   world.terminals.forEach((terminal) => {
     const pos = game.terminalPosition(terminal);
-    if (pos.y + 60 < sy || pos.y > sy + height) return;
+    if (!visible(pos.y, 120)) return;
     const sprite = terminal.patched ? sprites.terminal.ok : sprites.terminal.broken[tick % 2];
-    ctx.drawImage(sprite, pos.x - sx, pos.y - sy);
+    const x = pos.x - sx;
+    const y = pos.y - sy;
+    ctx.drawImage(sprite, x, y);
+
+    const label = terminal.patched ? `✓ ${terminal.plugin.name}` : terminal.plugin.name;
+    drawLabel(ctx, label.toUpperCase(), x + sprite.width / 2, y - 10, terminal.patched ? LIME : RED);
 
     if (!terminal.patched && terminal.progress > 0) {
       ctx.fillStyle = "#000";
-      ctx.fillRect(pos.x - sx - 4, pos.y - sy - 14, sprite.width + 8, 8);
+      ctx.fillRect(x - 4, y - 36, sprite.width + 8, 8);
       ctx.fillStyle = LIME;
-      ctx.fillRect(pos.x - sx - 2, pos.y - sy - 12, (sprite.width + 4) * terminal.progress, 4);
+      ctx.fillRect(x - 2, y - 34, (sprite.width + 4) * terminal.progress, 4);
+    } else if (!terminal.patched && game.nearbyTerminal() === terminal) {
+      drawLabel(ctx, "HOLD E", x + sprite.width / 2, y - 34, PALE);
     }
   });
 
@@ -125,84 +159,143 @@ export function drawWorld(ctx, game, time) {
     ctx.drawImage(sprites.eye, game.eye.x - sx, game.eye.y - sy + Math.sin(time * 3) * 4);
   }
 
+  game.orbs.forEach((orb) => {
+    const pulse = 10 + Math.sin(time * 8 + orb.seed) * 3;
+    ctx.fillStyle = "rgba(255, 43, 79, 0.25)";
+    ctx.beginPath();
+    ctx.arc(orb.x - sx, orb.y - sy, pulse, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.drawImage(sprites.orb, orb.x - sx - sprites.orb.width / 2, orb.y - sy - sprites.orb.height / 2);
+  });
+
   game.particles.forEach((p) => {
     ctx.globalAlpha = Math.max(0, p.life / p.maxLife);
     ctx.fillStyle = p.color;
-    ctx.fillRect(p.x - sx, p.y - sy, scale, scale);
+    ctx.fillRect(p.x - sx, p.y - sy, 3, 3);
   });
   ctx.globalAlpha = 1;
 
-  const frame = !player.ground
-    ? sprites.player.jump
-    : Math.abs(player.vx) > 20
-      ? sprites.player.run[Math.floor(time * 10) % 2]
-      : sprites.player.idle;
-  const drawX = player.x + player.w / 2 - frame.width / 2 - sx;
-  const drawY = player.y + player.h - frame.height + scale - sy;
-  ctx.save();
-  if (player.facing < 0) {
-    ctx.translate(drawX + frame.width, drawY);
-    ctx.scale(-1, 1);
-    ctx.drawImage(frame, 0, 0);
-  } else {
-    ctx.drawImage(frame, drawX, drawY);
+  // Blink while invulnerable after a hit.
+  if (player.invulnerable > 0 && Math.floor(time * 12) % 2) {
+    ctx.restore();
+    return;
   }
+
+  // Squash and stretch around the feet; lean into the run.
+  const frame = sprites.player;
+  const footX = player.x + player.w / 2 - sx;
+  const footY = player.y + player.h - sy;
+  const lean = player.ground ? (player.vx / 280) * 0.12 : 0;
+  ctx.save();
+  ctx.translate(footX, footY);
+  ctx.transform(1, 0, -lean * player.facing, 1, 0, 0);
+  ctx.scale(player.facing * (2 - player.squash), player.squash);
+  ctx.drawImage(frame, -frame.width / 2, -frame.height + game.scale);
+  ctx.restore();
   ctx.restore();
 }
 
-function panel(ctx, x, y, w, h) {
-  ctx.fillStyle = "rgba(0, 0, 0, 0.82)";
+function panel(ctx, x, y, w, h, border = LIME) {
+  ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
   ctx.fillRect(x, y, w, h);
-  ctx.strokeStyle = LIME;
+  ctx.strokeStyle = border;
   ctx.lineWidth = 2;
   ctx.strokeRect(x + 1, y + 1, w - 2, h - 2);
 }
 
-export function drawHud(ctx, game, time) {
+export function drawHud(ctx, game, loseRatio) {
   const { world, sprites } = game;
   const ratio = world.corruptionRatio();
-  const patched = world.terminals.filter((t) => t.patched).length;
-  // Top right sits over the sidebar, away from the content column.
-  const x = window.innerWidth - 316;
+  const width = 320;
+  const x = window.innerWidth - width - 16;
   const y = HEADER_OFFSET + 12;
+  const height = 104 + world.terminals.length * 18;
+  panel(ctx, x, y, width, height);
 
-  panel(ctx, x, y, 300, game.hintTime > 0 ? 112 : 72);
-  ctx.font = `bold 14px ${FONT}`;
-  ctx.fillStyle = LIME;
-  ctx.fillText(`TERMINALS ${patched}/${world.terminals.length}`, x + 14, y + 24);
-  ctx.fillText(game.sfx?.muted ? "MUTED" : "", x + 230, y + 24);
+  ctx.font = `bold 12px ${FONT}`;
+  ctx.fillStyle = PALE;
+  ctx.fillText("MISSION: ENABLE EVERY KONG PLUGIN", x + 14, y + 22);
+  ctx.fillText("TO GOVERN THE ROGUE AI", x + 14, y + 38);
 
-  ctx.drawImage(sprites.eye, x + 12, y + 36, sprites.eye.width * 0.6, sprites.eye.height * 0.6);
-  ctx.fillStyle = RED;
-  ctx.fillText(`${Math.round(ratio * 100)}%`, x + 44, y + 54);
-  const barX = x + 96;
-  ctx.fillStyle = "#330a12";
-  ctx.fillRect(barX, y + 42, 186, 14);
-  ctx.fillStyle = RED;
-  ctx.fillRect(barX, y + 42, Math.min(1, ratio / 0.6) * 186, 14);
-  ctx.fillStyle = "#fff";
-  ctx.fillRect(barX + 185, y + 40, 2, 18);
-
-  if (game.hintTime > 0) {
-    ctx.font = `12px ${FONT}`;
-    ctx.fillStyle = Math.floor(time * 2) % 2 ? "#eaffb0" : LIME;
-    ctx.fillText("←→ MOVE  SPACE JUMP  ↓ PATCH/DROP", x + 14, y + 80);
-    ctx.fillText("M MUTE  ESC QUIT", x + 14, y + 98);
+  for (let i = 0; i < game.maxLives; i++) {
+    ctx.drawImage(i < game.lives ? sprites.heart : sprites.heartEmpty, x + 14 + i * 22, y + 48);
   }
+  if (game.sfx?.muted) {
+    ctx.fillStyle = "#8a9099";
+    ctx.fillText("MUTED", x + width - 60, y + 60);
+  }
+
+  ctx.drawImage(sprites.eye, x + 12, y + 70, sprites.eye.width * 0.6, sprites.eye.height * 0.6);
+  ctx.font = `bold 14px ${FONT}`;
+  ctx.fillStyle = RED;
+  ctx.fillText(`${Math.round(ratio * 100)}%`, x + 44, y + 86);
+  const barX = x + 96;
+  const barWidth = width - 112;
+  ctx.fillStyle = "#330a12";
+  ctx.fillRect(barX, y + 74, barWidth, 14);
+  ctx.fillStyle = RED;
+  ctx.fillRect(barX, y + 74, Math.min(1, ratio / loseRatio) * barWidth, 14);
+  ctx.fillStyle = "#fff";
+  ctx.fillRect(barX + barWidth - 1, y + 72, 2, 18);
+
+  ctx.font = `12px ${FONT}`;
+  world.terminals.forEach((terminal, i) => {
+    ctx.fillStyle = terminal.patched ? LIME : "#8a9099";
+    ctx.fillText(`${terminal.patched ? "[✓]" : "[ ]"} ${terminal.plugin.name.toUpperCase()}`, x + 14, y + 116 + i * 18);
+  });
+}
+
+export function drawKeybar(ctx, width, height, exitArmed, time) {
+  const text = exitArmed
+    ? "PRESS ESC AGAIN TO RETURN TO THE DOCS"
+    : "←→ MOVE   SPACE JUMP (×2)   ↓ DROP · HOLD TO FALL   HOLD E ENABLE PLUGIN   M MUTE   ESC ×2 EXIT";
+  ctx.font = `bold 12px ${FONT}`;
+  const barWidth = Math.min(width - 32, ctx.measureText(text).width + 40);
+  const x = (width - barWidth) / 2;
+  const y = height - 44;
+  panel(ctx, x, y, barWidth, 32, exitArmed ? RED : LIME);
+  ctx.fillStyle = exitArmed && Math.floor(time * 4) % 2 ? RED : PALE;
+  ctx.textAlign = "center";
+  ctx.fillText(text, width / 2, y + 20);
+  ctx.textAlign = "left";
+}
+
+export function drawToast(ctx, width, toast) {
+  const alpha = Math.min(1, toast.time * 2);
+  ctx.globalAlpha = alpha;
+  ctx.font = `bold 18px ${FONT}`;
+  const titleWidth = ctx.measureText(toast.title).width;
+  ctx.font = `14px ${FONT}`;
+  const textWidth = ctx.measureText(toast.text).width;
+  const w = Math.max(titleWidth, textWidth) + 48;
+  const x = (width - w) / 2;
+  const y = HEADER_OFFSET + 24;
+  panel(ctx, x, y, w, 64, toast.color === "red" ? RED : LIME);
+  ctx.textAlign = "center";
+  ctx.font = `bold 18px ${FONT}`;
+  ctx.fillStyle = toast.color === "red" ? RED : LIME;
+  ctx.fillText(toast.title, width / 2, y + 26);
+  ctx.font = `14px ${FONT}`;
+  ctx.fillStyle = PALE;
+  ctx.fillText(toast.text, width / 2, y + 48);
+  ctx.textAlign = "left";
+  ctx.globalAlpha = 1;
 }
 
 export function drawBanner(ctx, width, height, title, lines, color) {
-  const w = Math.min(560, width - 32);
+  ctx.font = `15px ${FONT}`;
+  const longest = Math.max(...lines.map((line) => ctx.measureText(line).width));
+  const w = Math.min(Math.max(560, longest + 64), width - 32);
   const h = 72 + lines.length * 28;
   const x = (width - w) / 2;
   const y = (height - h) / 2;
-  panel(ctx, x, y, w, h);
+  panel(ctx, x, y, w, h, color === "red" ? RED : LIME);
   ctx.textAlign = "center";
   ctx.font = `bold 28px ${FONT}`;
   ctx.fillStyle = color === "red" ? RED : LIME;
   ctx.fillText(title, width / 2, y + 44);
   ctx.font = `15px ${FONT}`;
-  ctx.fillStyle = "#eaffb0";
+  ctx.fillStyle = PALE;
   lines.forEach((line, i) => ctx.fillText(line, width / 2, y + 80 + i * 28));
   ctx.textAlign = "left";
 }

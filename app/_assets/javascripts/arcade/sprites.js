@@ -14,94 +14,20 @@ const PALETTE = {
 
 const OUTLINE = "#0b0f0a";
 
-const PLAYER_HEAD = [
-  "...GGGG...",
-  "..GGGGGG..",
-  "..GGKWKW..",
-  "..GGGGGG..",
+// The Kong mark from the site header (viewBox units), pixelated at runtime.
+const LOGO_PATHS = [
+  "M11.6089 27.3795L12.4877 26.2563H18.9908L22.3805 30.5448L21.7779 31.9998H13.3916L13.5925 30.5448L11.6089 27.3795Z",
+  "M13.5923 12.7572L16.7324 7.38525H20.3915L36.7927 26.25L35.5211 32.0002H28.4883L28.9295 30.3861L13.5923 12.7572Z",
+  "M17.397 6.36383L18.9005 3.6105L23.4112 0L31.14 6.00018L30.1377 7.0132L31.483 8.85741V10.8315L27.6317 13.9485L21.1691 6.36383H17.397Z",
+  "M5.45639 18.3602H7.49931L12.8264 13.9478L19.8861 22.0707L17.8949 25.029H11.3783L6.87867 30.695L5.84429 31.9987H0V25.0541L5.45639 18.3602Z",
 ];
+const LOGO_WIDTH = 37;
+const LOGO_HEIGHT = 32;
+const LOGO_EYE = { x: 25, y: 5.5 };
 
-const PLAYER = {
-  idle: [
-    ...PLAYER_HEAD,
-    "...GGGG...",
-    "..DDDDDD..",
-    ".DDDDDDDD.",
-    ".G.DDDD.G.",
-    "...DDDD...",
-    "...D..D...",
-    "...D..D...",
-    "..GG..GG..",
-  ],
-  run1: [
-    ...PLAYER_HEAD,
-    "...GGGG...",
-    "..DDDDDD..",
-    ".DDDDDDDG.",
-    "G..DDDD...",
-    "...DDDD...",
-    "..D....D..",
-    ".D......D.",
-    "GG.....GG.",
-  ],
-  run2: [
-    ...PLAYER_HEAD,
-    "...GGGG...",
-    "..DDDDDD..",
-    ".GDDDDDDD.",
-    "...DDDD..G",
-    "...DDDD...",
-    "....DD....",
-    "....D.D...",
-    "...GG.GG..",
-  ],
-  jump: [
-    ...PLAYER_HEAD,
-    "G..GGGG..G",
-    "GDDDDDDDDG",
-    "..DDDDDD..",
-    "...DDDD...",
-    "...DDDD...",
-    "..D....D..",
-    ".GG....GG.",
-    "..........",
-  ],
-};
+const ORB = ["..RRR..", ".RRRRR.", "RRWRRRR", "RRRRRRR", "RRRRRRR", ".RRRRR.", "..RRR.."];
 
-// S = screen, X = screen glyph. Colours are swapped per terminal state.
-const TERMINAL_BROKEN = [
-  "KKKKKKKKKKKK",
-  "KMMMMMMMMMMK",
-  "KMSSSSXSSSMK",
-  "KMSSSSXSSSMK",
-  "KMSSSSXSSSMK",
-  "KMSSSSSSSSMK",
-  "KMSSSSXSSSMK",
-  "KMMMMMMMMMMK",
-  "KKKKKKKKKKKK",
-  "....KMMK....",
-  "...KMMMMK...",
-  "KKKKKKKKKKKK",
-  "KMLMLMLMLMMK",
-  "KKKKKKKKKKKK",
-];
-
-const TERMINAL_OK = [
-  "KKKKKKKKKKKK",
-  "KMMMMMMMMMMK",
-  "KMSSSSSSSSMK",
-  "KMSSSSSSXSMK",
-  "KMSXSSSXSSMK",
-  "KMSSXSXSSSMK",
-  "KMSSSXSSSSMK",
-  "KMMMMMMMMMMK",
-  "KKKKKKKKKKKK",
-  "....KMMK....",
-  "...KMMMMK...",
-  "KKKKKKKKKKKK",
-  "KMLMLMLMLMMK",
-  "KKKKKKKKKKKK",
-];
+const HEART = [".RR.RR.", "RRRRRRR", "RRRRRRR", ".RRRRR.", "..RRR..", "...R..."];
 
 const EYE = [
   "..RRRRR..",
@@ -112,6 +38,54 @@ const EYE = [
   ".R.....R.",
   "..RRRRR..",
 ];
+
+function logoRows(height, { eye = false } = {}) {
+  const width = Math.round((height * LOGO_WIDTH) / LOGO_HEIGHT);
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(width / LOGO_WIDTH, height / LOGO_HEIGHT);
+  LOGO_PATHS.forEach((d) => ctx.fill(new Path2D(d)));
+  const alpha = ctx.getImageData(0, 0, width, height).data;
+
+  const rows = [];
+  for (let y = 0; y < height; y++) {
+    let row = "";
+    for (let x = 0; x < width; x++) row += alpha[(y * width + x) * 4 + 3] > 100 ? "G" : ".";
+    rows.push(row);
+  }
+
+  if (eye) {
+    const ex = Math.round((LOGO_EYE.x * width) / LOGO_WIDTH);
+    const ey = Math.round((LOGO_EYE.y * height) / LOGO_HEIGHT);
+    rows[ey] = rows[ey].slice(0, ex) + "K" + rows[ey].slice(ex + 1);
+  }
+  return rows;
+}
+
+// A monitor on a stand with the Kong mark stamped on the screen (X pixels).
+function terminalRows(logo) {
+  const width = 20;
+  const screenHeight = 11;
+  const screenWidth = width - 4;
+  const rows = ["K".repeat(width), `K${"M".repeat(width - 2)}K`];
+  for (let i = 0; i < screenHeight; i++) rows.push(`KM${"S".repeat(screenWidth)}MK`);
+  rows.push(`K${"M".repeat(width - 2)}K`, "K".repeat(width));
+  rows.push("........KMMK........", ".......KMMMMK.......");
+  rows.push("K".repeat(width), "KMLMLMLMLMLMLMLMLMMK", "K".repeat(width));
+
+  const top = 2 + Math.floor((screenHeight - logo.length) / 2);
+  const left = 2 + Math.floor((screenWidth - logo[0].length) / 2);
+  logo.forEach((logoRow, y) => {
+    const chars = [...rows[top + y]];
+    [...logoRow].forEach((char, x) => {
+      if (char !== ".") chars[left + x] = "X";
+    });
+    rows[top + y] = chars.join("");
+  });
+  return rows;
+}
 
 function rasterise(rows, scale, palette = {}) {
   const colors = { ...PALETTE, ...palette };
@@ -147,19 +121,19 @@ function rasterise(rows, scale, palette = {}) {
 }
 
 export function makeSprites(scale) {
+  const terminal = terminalRows(logoRows(9));
   return {
-    player: {
-      idle: rasterise(PLAYER.idle, scale),
-      run: [rasterise(PLAYER.run1, scale), rasterise(PLAYER.run2, scale)],
-      jump: rasterise(PLAYER.jump, scale),
-    },
+    player: rasterise(logoRows(14, { eye: true }), scale),
     terminal: {
       broken: [
-        rasterise(TERMINAL_BROKEN, scale, { S: "#3a0010", X: "#ff2b4f" }),
-        rasterise(TERMINAL_BROKEN, scale, { S: "#24000a", X: "#7a1022" }),
+        rasterise(terminal, scale, { S: "#2a000c", X: "#ff2b4f" }),
+        rasterise(terminal, scale, { S: "#1a0008", X: "#7a1022" }),
       ],
-      ok: rasterise(TERMINAL_OK, scale, { S: "#ccff00", X: "#0b0f0a" }),
+      ok: rasterise(terminal, scale, { S: "#0f2a00", X: "#ccff00" }),
     },
     eye: rasterise(EYE, scale),
+    orb: rasterise(ORB, 2),
+    heart: rasterise(HEART, 2),
+    heartEmpty: rasterise(HEART, 2, { R: "#3a3f47" }),
   };
 }
