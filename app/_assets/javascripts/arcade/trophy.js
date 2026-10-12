@@ -4,7 +4,7 @@
 
 const STORAGE_KEY = "kong-docs-arcade";
 const HINT = "This game is very #immersive#...";
-const STAR_ID = "arcade-star";
+const STAR_CLASS = "arcade-star";
 const STAR = ["...G...", "...G...", "GGGGGGG", ".GGGGG.", "..GGG..", ".GG.GG.", "GG...GG"];
 
 export const CAREERS_URL = "https://konghq.com/company/careers";
@@ -22,15 +22,17 @@ function readRecord() {
   }
 }
 
-function headerLogo() {
-  return document.querySelector("#header-nav a[href='/']");
+// The header has separate desktop and mobile logo links.
+function headerLogos() {
+  return [...document.querySelectorAll("#header-nav a[href='/']")];
 }
 
-// Mirrors the site's [data-tooltip] behaviour, which only binds elements
-// present at page load; the star can appear later.
+// Reuses the site's shared #tooltip element. The site's own [data-tooltip]
+// binding only covers elements present at page load and is switched off on
+// touch-capable devices, which includes touchscreen laptops used with a mouse.
 function attachTooltip(el, getText) {
   const tooltip = document.getElementById("tooltip");
-  if (!tooltip || "ontouchstart" in window || navigator.maxTouchPoints > 0) return;
+  if (!tooltip) return;
 
   el.addEventListener("mouseenter", () => {
     tooltip.textContent = getText();
@@ -56,23 +58,22 @@ function starSvg() {
 }
 
 function renderStar(best) {
-  const logo = headerLogo();
-  if (!logo) return;
-
-  let star = document.getElementById(STAR_ID);
-  if (!star) {
-    star = document.createElement("a");
-    star.id = STAR_ID;
-    star.href = CAREERS_URL;
-    star.target = "_blank";
-    star.rel = "noopener";
-    star.className = "inline-flex items-center no-icon";
-    star.innerHTML = starSvg();
-    logo.after(star);
-    attachTooltip(star, () => star.dataset.label);
-  }
-  star.dataset.label = `You beat the Kong docs game in ${formatTime(best)}. Kong is hiring!`;
-  star.setAttribute("aria-label", star.dataset.label);
+  const label = `You beat the Kong docs game in ${formatTime(best)}. Kong is hiring!`;
+  headerLogos().forEach((logo) => {
+    let star = logo.nextElementSibling;
+    if (!star?.classList.contains(STAR_CLASS)) {
+      star = document.createElement("a");
+      star.href = CAREERS_URL;
+      star.target = "_blank";
+      star.rel = "noopener";
+      star.className = `${STAR_CLASS} inline-flex items-center no-icon`;
+      star.innerHTML = starSvg();
+      logo.after(star);
+      attachTooltip(star, () => star.dataset.label);
+    }
+    star.dataset.label = label;
+    star.setAttribute("aria-label", label);
+  });
 }
 
 // Saves the run and returns the best time so far.
@@ -89,9 +90,7 @@ export function recordWin(seconds) {
 }
 
 export function initTrophy() {
-  const logo = headerLogo();
-  if (!logo) return;
-  attachTooltip(logo, () => HINT);
+  headerLogos().forEach((logo) => attachTooltip(logo, () => HINT));
   const record = readRecord();
   if (record?.best) renderStar(record.best);
 }
