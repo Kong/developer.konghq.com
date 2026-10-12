@@ -186,16 +186,19 @@ export function drawWorld(ctx, game, time) {
     const y = pos.y - sy;
     ctx.drawImage(sprite, x, y);
 
+    // Plugin name with its effect underneath.
+    const centre = x + sprite.width / 2;
     const label = terminal.patched ? `✓ ${terminal.plugin.name}` : terminal.plugin.name;
-    drawLabel(ctx, label.toUpperCase(), x + sprite.width / 2, y - 10, terminal.patched ? LIME : RED);
+    drawLabel(ctx, label.toUpperCase(), centre, y - 30, terminal.patched ? LIME : RED);
+    drawLabel(ctx, terminal.plugin.summary.toUpperCase(), centre, y - 10, PALE);
 
     if (!terminal.patched && terminal.progress > 0) {
       ctx.fillStyle = "#000";
-      ctx.fillRect(x - 4, y - 36, sprite.width + 8, 8);
+      ctx.fillRect(x - 4, y - 56, sprite.width + 8, 8);
       ctx.fillStyle = LIME;
-      ctx.fillRect(x - 2, y - 34, (sprite.width + 4) * terminal.progress, 4);
+      ctx.fillRect(x - 2, y - 54, (sprite.width + 4) * terminal.progress, 4);
     } else if (!terminal.patched && game.nearbyTerminal() === terminal) {
-      drawLabel(ctx, "HOLD E", x + sprite.width / 2, y - 34, PALE);
+      drawLabel(ctx, "HOLD E", centre, y - 54, LIME);
     }
   });
 
@@ -261,7 +264,7 @@ export function drawHud(ctx, game, loseRatio) {
   const width = 320;
   const x = window.innerWidth - width - 16;
   const y = HEADER_OFFSET + 12;
-  const height = 104 + world.terminals.length * 18;
+  const height = 128 + world.terminals.length * 32;
   panel(ctx, x, y, width, height);
 
   ctx.font = `bold 12px ${FONT}`;
@@ -290,11 +293,19 @@ export function drawHud(ctx, game, loseRatio) {
   ctx.fillStyle = "#fff";
   ctx.fillRect(barX + barWidth - 1, y + 72, 2, 18);
 
-  ctx.font = `12px ${FONT}`;
+  // Each plugin with what it does.
   world.terminals.forEach((terminal, i) => {
-    ctx.fillStyle = terminal.patched ? LIME : "#8a9099";
-    ctx.fillText(`${terminal.patched ? "[✓]" : "[ ]"} ${terminal.plugin.name.toUpperCase()}`, x + 14, y + 116 + i * 18);
+    const rowY = y + 116 + i * 32;
+    ctx.font = `bold 12px ${FONT}`;
+    ctx.fillStyle = terminal.patched ? LIME : "#c9d1d9";
+    ctx.fillText(`${terminal.patched ? "[✓]" : "[ ]"} ${terminal.plugin.name.toUpperCase()}`, x + 14, rowY);
+    ctx.font = `11px ${FONT}`;
+    ctx.fillStyle = terminal.patched ? "#7a9a2a" : "#8a9099";
+    ctx.fillText(`    ${terminal.plugin.summary}`, x + 14, rowY + 14);
   });
+  ctx.font = `11px ${FONT}`;
+  ctx.fillStyle = "#7ff9ff";
+  ctx.fillText("Every plugin also shields nearby ledges", x + 14, y + height - 12);
   return y + height;
 }
 

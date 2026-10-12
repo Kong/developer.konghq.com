@@ -30,6 +30,7 @@ const ORB_LIFETIME = 10;
 const ORB_SPAWN_RANGE = 900;
 const ORB_SPAWN_SECONDS = [3, 1.2]; // calm page → nearly lost
 const ORB_GRACE = 4;
+const ORB_INFECT_COOLDOWN = 2;
 // Every enabled terminal shortens orb life and slows spawning a little.
 const TERMINAL_ORB_LIFE = 0.85;
 const TERMINAL_ORB_SPAWN = 1.15;
@@ -40,7 +41,6 @@ const TOAST_SECONDS = 3;
 
 const STYLE = `
   .arcade-corrupted { filter: hue-rotate(250deg) saturate(2.5) blur(0.6px); opacity: 0.5; transition: filter 0.3s, opacity 0.3s; }
-  .arcade-patched { outline: 2px solid #ccff00; outline-offset: 2px; }
   html.arcade-playing, html.arcade-playing body { overscroll-behavior: none; user-select: none; }
 `;
 
@@ -562,7 +562,7 @@ class Game {
     this.sfx?.patched();
     const pos = this.terminalPosition(terminal);
     this.burst(pos.x + pos.width / 2, pos.y, "#ccff00", 40);
-    this.toast(`${plugin.name.toUpperCase()} ENABLED`, plugin.text);
+    this.toast(`${plugin.name.toUpperCase()} ENABLED`, `${plugin.text} · nearby ledges shielded`);
   }
 
   // Agents are red orbs that drift after the player and expire after a while.
@@ -587,6 +587,7 @@ class Game {
           vx: 0,
           vy: 0,
           life: this.orbLifetime,
+          infectCooldown: ORB_INFECT_COOLDOWN,
           seed: Math.random() * 10,
         });
         const [calm, frantic] = ORB_SPAWN_SECONDS;
@@ -606,6 +607,14 @@ class Game {
       orb.vy += ((dy / distance) * speed - orb.vy) * steer;
       orb.x += orb.vx * dt;
       orb.y += orb.vy * dt;
+
+      // Agents corrupt the ledges they drift through.
+      orb.infectCooldown -= dt;
+      if (orb.infectCooldown <= 0 && world.infectAt(orb.x, orb.y)) {
+        orb.infectCooldown = ORB_INFECT_COOLDOWN;
+        this.sfx?.corrupt();
+        this.burst(orb.x, orb.y, "#ff2b4f", 8);
+      }
 
       if (this.state === "playing" && player.invulnerable <= 0 && distance < ORB_RADIUS + player.w / 2 - 4) {
         this.hurt(orb);
@@ -640,7 +649,8 @@ class Game {
     }
 
     const maxScroll = document.documentElement.scrollHeight - this.height;
-    const base = this.player.y + this.player.h / 2 - this.height * 0.5;
+    const centre = this.player.y + this.player.h / 2 - this.height * 0.5;
+    const base = Math.max(0, Math.min(maxScroll, centre));
     // Don't let the offset build up past the page edges.
     this.lookOffset = Math.max(-base, Math.min(maxScroll - base, this.lookOffset));
     const target = base + this.lookOffset;

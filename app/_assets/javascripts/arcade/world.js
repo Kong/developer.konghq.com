@@ -21,7 +21,8 @@ const SEED_BLOCKS = 4;
 // How far corruption can tunnel past shielded blocks and terminals.
 const SPREAD_REACH = 6;
 const CORRUPTED_CLASS = "arcade-corrupted";
-const PATCHED_CLASS = "arcade-patched";
+// How close an agent has to pass to a ledge to corrupt it.
+const INFECT_DISTANCE = 14;
 
 export const LEDGE_HEIGHT = 20;
 export const LOSE_RATIO = 0.6;
@@ -34,12 +35,22 @@ export const SIDE_REACH = 260;
 const FALL_WINDOW = 800;
 
 export const PLUGINS = [
-  { name: "Rate Limiting", effect: "throttle", text: "Corruption throttled" },
-  { name: "AI Prompt Guard", effect: "firewall", text: "Firewall up: wider shield for longer" },
-  { name: "OpenID Connect", effect: "deauth", text: "Rogue agents de-authenticated" },
-  { name: "AI Semantic Prompt Guard", effect: "rollback", text: "Semantic rollback: corruption reversed" },
-  { name: "Bot Detection", effect: "slowOrbs", text: "Bots detected: agents slowed" },
-  { name: "AI Rate Limiting Advanced", effect: "budget", text: "Token budget enforced" },
+  { name: "Rate Limiting", effect: "throttle", summary: "Slows corruption", text: "Corruption throttled" },
+  { name: "AI Prompt Guard", effect: "firewall", summary: "Big shield, 35s", text: "Firewall up: wide shield for 35s" },
+  { name: "OpenID Connect", effect: "deauth", summary: "Destroys agents", text: "Rogue agents de-authenticated" },
+  {
+    name: "AI Semantic Prompt Guard",
+    effect: "rollback",
+    summary: "Reverses corruption",
+    text: "Semantic rollback: a third of the corruption reversed",
+  },
+  { name: "Bot Detection", effect: "slowOrbs", summary: "Slows agents", text: "Bots detected: agents slowed" },
+  {
+    name: "AI Rate Limiting Advanced",
+    effect: "budget",
+    summary: "Slows corruption + agents",
+    text: "Token budget enforced",
+  },
 ];
 
 function isVisible(el) {
@@ -155,7 +166,7 @@ export class World {
     // Give the player enough time to physically reach every terminal on long
     // pages: roughly the run time from top to bottom, plus slack.
     const pageHeight = document.documentElement.scrollHeight;
-    const loseSeconds = Math.max(35, pageHeight / 280 + 15);
+    const loseSeconds = Math.max(30, pageHeight / 330 + 12);
     this.spreadInterval = loseSeconds / Math.max(1, this.corruptible().length * LOSE_RATIO);
   }
 
@@ -448,13 +459,27 @@ export class World {
   // Patching a terminal cleans the area around it and shields it for a while.
   patch(terminal, { radius, seconds } = SHIELD) {
     terminal.patched = true;
-    terminal.segment.block.el.classList.add(PATCHED_CLASS);
     const centre = terminal.segment.y;
     this.blocks.forEach((block) => {
       if (Math.abs(block.y - centre) > radius) return;
       block.shield = Math.max(block.shield, seconds);
       if (block.corrupted) this.cleanse(block);
     });
+  }
+
+  // An agent passing through a clean, unshielded ledge corrupts its block.
+  // Returns the infected block, if any.
+  infectAt(x, y) {
+    const start = lowerBound(this.segments, y - INFECT_DISTANCE);
+    for (let i = start; i < this.segments.length && this.segments[i].y <= y + INFECT_DISTANCE; i++) {
+      const segment = this.segments[i];
+      const { block } = segment;
+      if (segment.terminal || block.corrupted || block.shield > 0) continue;
+      if (x < segment.x || x > segment.x + segment.w) continue;
+      this.infect(block);
+      return block;
+    }
+    return null;
   }
 
   // Cleanse a random share of all corrupted blocks.
@@ -464,6 +489,6 @@ export class World {
   }
 
   reset() {
-    this.blocks.forEach((b) => b.el.classList.remove(CORRUPTED_CLASS, PATCHED_CLASS));
+    this.blocks.forEach((b) => b.el.classList.remove(CORRUPTED_CLASS));
   }
 }
