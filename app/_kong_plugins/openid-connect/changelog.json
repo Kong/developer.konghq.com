@@ -86,6 +86,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.16.0.1": [
+    {
+      "message": "Fixed an issue where a callback with an invalid JARM response returned a 500 error; the plugin now rejects such callbacks with a 401 authentication failure.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.15.0.0": [
     {
       "message": "Added `proof_of_possession_mtls_from_header` for mTLS PoP validation via HTTP header when TLS is pre-terminated by downstream.",
