@@ -565,7 +565,14 @@ When `access.acl_attribute_type` is `consumer`, you can gate access by individua
 
 ### CEL-based ACLs {% new_in 2.2 %}
 
-Instead of a static list of names, the server-level [`access.acls`](#schema-aigateway-mcpserver-access-acls) object also accepts `allow_when` or `deny_when`: an array of [CEL](https://cel.dev/) boolean expressions between 1 and 1024 characters each, evaluated against the authenticated AI Consumer and the request using the same field vocabulary as [plugin conditions](/gateway/plugins/conditions/). Configure exactly one of `allow`, `deny`, `allow_when`, or `deny_when` per `access.acls` object.
+CEL-based ACLs control access with [CEL](https://cel.dev/) boolean expressions instead of a static list of names.
+Use them when access depends on Consumer attributes or request context, not only on fixed names.
+To use them, set `allow_when` or `deny_when` on the server-level [`access.acls`](#schema-aigateway-mcpserver-access-acls) object.
+Each field is an array of expressions, 1 to 1024 characters each.
+The expressions are evaluated against the authenticated AI Consumer and the request, and use the same field vocabulary as [plugin conditions](/gateway/plugins/conditions/).
+Configure exactly one of `allow`, `deny`, `allow_when`, or `deny_when` per `access.acls` object.
+
+The following example allows requests from AI Consumers in the `internal-teams` AI Consumer Group, and from the AI Consumer `alice`:
 
 ```yaml
 access:
@@ -575,11 +582,21 @@ access:
       - 'consumer.username == "alice"'
 ```
 
-{{site.konnect_short_name}} compiles and type-checks each expression when you create or update the AI MCP Server. An entry that doesn't compile or doesn't evaluate to a boolean is rejected with HTTP 400, with the error naming the offending entry (for example, `access.acls.allow_when[0]`).
+{{site.konnect_short_name}} compiles and type-checks each expression when you create or update the AI MCP Server.
+{{site.konnect_short_name}} rejects an entry that doesn't compile or doesn't evaluate to a boolean with HTTP 400.
+The error names the offending entry, for example `access.acls.allow_when[0]`.
 
-At runtime, entries are evaluated in order with OR semantics. With `allow_when`, the request is allowed when any entry evaluates to true, and an entry that fails to evaluate denies the request with HTTP 403. With `deny_when`, the request is denied when any entry evaluates to true, and an entry that fails to evaluate fails closed with HTTP 500. When `allow_when` or `deny_when` is in effect, group-header-related fields are ignored and the `X-Consumer-Groups` header isn't sent upstream.
+At runtime, entries are evaluated in order with OR semantics.
+When you set `allow_when`, the request is allowed if any entry evaluates to true.
+If an entry fails to evaluate, the request is denied with HTTP 403.
+When you set `deny_when`, the request is denied if any entry evaluates to true.
+If an entry fails to evaluate, the request fails closed with HTTP 500.
 
-CEL-based ACLs require {{site.ai_gateway}} 2.2 or later and {{site.base_gateway}} 3.16 or later data planes. Older data planes skip the configuration and report the skip in their compatibility status.
+When you set `allow_when` or `deny_when`, {{site.ai_gateway}} ignores `include_consumer_groups`.
+It also doesn't send the `X-Consumer-Groups` and `X-Authenticated-Groups` headers upstream.
+
+CEL-based ACLs need {{site.base_gateway}} 3.16 or later data planes.
+Data planes on earlier versions report the skipped configuration in their compatibility status.
 
 ### How default and per-tool ACLs work
 
