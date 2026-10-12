@@ -31,7 +31,7 @@ prereqs:
 tldr:
   q: How do I redirect HTTP requests to HTTPS with {{ site.operator_product_name }}?
   a: |
-    Attach an `HTTPRoute` to both an `HTTP` and an `HTTPS` listener, and annotate it with `konghq.com/https-redirect-status-code: "301"`. {{ site.base_gateway }} answers plain HTTP requests with a redirect to the HTTPS URL.
+    Attach an `HTTPRoute` to the `HTTPS` listener only, and annotate it with `konghq.com/https-redirect-status-code: "301"`. {{ site.base_gateway }} answers plain HTTP requests that match the Route with a redirect to the HTTPS URL.
 
 related_resources:
   - text: Route annotations reference
@@ -40,10 +40,10 @@ related_resources:
     url: /operator/dataplanes/how-to/tls-termination/
 ---
 
-By default, when a Route accepts both HTTP and HTTPS, {{site.base_gateway}} answers plain HTTP requests with a `426 Upgrade Required` status code. Use the `konghq.com/https-redirect-status-code` annotation to return a redirect status code such as `301` instead.
+By default, when a Route accepts only HTTPS, {{site.base_gateway}} answers plain HTTP requests that match the Route with a `426 Upgrade Required` status code. Use the `konghq.com/https-redirect-status-code` annotation to return a redirect status code such as `301` instead.
 
 {% include k8s/kong-namespace.md %}
-{: data-depoloyment-topology="on-prem"}
+{: data-deployment-topology="on-prem"}
 
 ## Create a certificate
 
@@ -123,7 +123,7 @@ spec:
    kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n kong
    ```
 
-1. Create an `HTTPRoute` that isn't bound to a specific listener, so it attaches to both listeners. Add the `konghq.com/https-redirect-status-code` annotation:
+1. Create an `HTTPRoute` bound to the `https` listener only. Add the `konghq.com/https-redirect-status-code` annotation:
 
    ```sh
    echo '
@@ -137,6 +137,7 @@ spec:
    spec:
      parentRefs:
        - name: kong
+         sectionName: https
      hostnames:
        - demo.example.com
      rules:

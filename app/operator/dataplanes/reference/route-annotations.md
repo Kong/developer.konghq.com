@@ -159,7 +159,7 @@ konghq.com/response-buffering: "false"
 
 ## konghq.com/https-redirect-status-code
 
-Sets the HTTP status code that {{site.base_gateway}} returns when a client sends a plain HTTP request to a route that only accepts HTTPS requests for that path. The route must be attached to both an `HTTP` and an `HTTPS` listener for the redirect to apply.
+Sets the HTTP status code that {{site.base_gateway}} returns when a client sends a plain HTTP request that matches a Route that only accepts HTTPS. Attach the route to an `HTTPS` listener only, for example with `sectionName` in `parentRefs`, for the redirect to apply.
 
 Accepted values: `"301"`, `"302"`, `"307"`, `"308"`, `"426"`. If the annotation isn't set, {{site.base_gateway}} uses its default, which is `426`.
 
