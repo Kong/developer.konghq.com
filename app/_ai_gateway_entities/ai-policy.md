@@ -197,7 +197,7 @@ The following table lists the priority of every built-in AI Policy type, from hi
 ## Conditional AI Policy execution
 
 An AI Policy has a `condition` field that determines whether the AI Policy runs for a given request.
-Write the condition as a [CEL (Common Expression Language)](/ai-gateway/expressions/) expression.
+Write the condition as a [CEL (Common Expression Language)](/gateway/plugins/expressions/) expression.
 When a request comes in, {{site.ai_gateway}} evaluates the condition.
 If it matches, the AI Policy runs.
 If it doesn't match, the AI Policy is skipped for that request.
