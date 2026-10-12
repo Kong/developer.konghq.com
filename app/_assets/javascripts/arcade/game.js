@@ -8,7 +8,7 @@ import { Agents } from "./agents";
 import { Input, keyCode } from "./input";
 import { Particles } from "./particles";
 import { Player, RUN_SPEED } from "./player";
-import { Rain, drawPrompt, drawWorld, drawHud, drawMinimap, drawKeybar, drawToast, drawBanner } from "./render";
+import { Rain, drawPrompt, drawBackdrop, drawWorld, drawHud, drawMinimap, drawKeybar, drawToast, drawBanner } from "./render";
 
 const SCALE = 3;
 const STEP = 1 / 120;
@@ -78,6 +78,7 @@ class Game {
       zIndex: "2147483000",
       pointerEvents: "none",
       imageRendering: "pixelated",
+      backdropFilter: "grayscale(1)",
     });
     document.body.appendChild(this.canvas);
     this.ctx = this.canvas.getContext("2d");
@@ -170,6 +171,7 @@ class Game {
       return;
     }
     if (code === "KeyM" && !event.repeat) this.sfx?.toggleMute();
+    if (code === "KeyP" && !event.repeat && this.state === "playing") this.paused = !this.paused;
     if (code === "KeyC" && this.state === "won" && !event.repeat) {
       track("Arcade Careers Clicked", { source: "win-screen" });
       window.open(CAREERS_URL, "_blank", "noopener,noreferrer");
@@ -185,7 +187,7 @@ class Game {
   // it. The view stays put until the player moves again.
   onWheel(event) {
     event.preventDefault();
-    if (this.state !== "playing") return;
+    if (this.state !== "playing" || this.paused) return;
     const pageHeight = document.documentElement.scrollHeight;
     this.lookOffset = clamp(this.lookOffset + event.deltaY, -pageHeight, pageHeight);
     this.lookReturning = false;
@@ -236,6 +238,7 @@ class Game {
     this.player = new Player(this.world.segments[0], this.fx);
     this.lookOffset = 0;
     this.lookReturning = false;
+    this.paused = false;
     this.exitDoor = null;
     this.runTime = 0;
     this.camera = Math.max(0, this.player.y - this.height * 0.4);
@@ -284,6 +287,9 @@ class Game {
   }
 
   update(dt) {
+    // Paused freezes the run: no world, agents, timers or toasts. Keys that
+    // still work while paused (P, M, Esc) are handled in onKeyDown.
+    if (this.paused) return;
     const anyKey = this.input.anyPressed();
     if (this.currentToast) {
       this.currentToast.time -= dt;
@@ -562,10 +568,16 @@ class Game {
       return;
     }
 
+    drawBackdrop(ctx, width, height);
     drawWorld(ctx, this, time);
+    if (this.paused) {
+      drawHud(ctx, this, { centred: true });
+      drawKeybar(ctx, width, height, { exitArmed: this.exitArmed(), paused: true }, time);
+      return;
+    }
     const hudBottom = drawHud(ctx, this);
     drawMinimap(ctx, this, hudBottom + 16, time);
-    drawKeybar(ctx, width, height, this.exitArmed(), time);
+    drawKeybar(ctx, width, height, { exitArmed: this.exitArmed() }, time);
     if (this.currentToast && this.state === "playing") drawToast(ctx, width, this.currentToast);
 
     if (this.fade > 0) {

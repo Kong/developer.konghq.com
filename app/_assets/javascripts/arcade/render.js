@@ -10,6 +10,8 @@ const FONT = 'ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace';
 // Height of the site's sticky header, kept clear of the level and the HUD.
 const HEADER_OFFSET = 64;
 const MINIMAP_WIDTH = 14;
+// How far the page behind the game is washed out, per site theme.
+const BACKDROP = { dark: "rgba(0, 0, 0, 0.55)", light: "rgba(255, 255, 255, 0.6)" };
 
 // Stable pseudo-random value so glitch glyphs change a few times a second
 // instead of every frame.
@@ -130,6 +132,13 @@ function drawLabel(ctx, text, centreX, y, color) {
   ctx.textAlign = "left";
 }
 
+// Pushes the docs back so the game reads first. The canvas greyscales the page
+// behind it (backdrop-filter, set in Game.start); this washes it out too.
+export function drawBackdrop(ctx, width, height) {
+  ctx.fillStyle = document.documentElement.classList.contains("dark") ? BACKDROP.dark : BACKDROP.light;
+  ctx.fillRect(0, 0, width, height);
+}
+
 export function drawWorld(ctx, game, time) {
   const { world, sprites, player } = game;
   const sx = window.scrollX;
@@ -150,7 +159,7 @@ export function drawWorld(ctx, game, time) {
     if (!block.corrupted || !visible(block.y, block.h + 40)) return;
     const x = block.x - sx;
     const y = block.y - sy;
-    ctx.fillStyle = "rgba(255, 43, 79, 0.07)";
+    ctx.fillStyle = "rgba(255, 43, 79, 0.15)";
     ctx.fillRect(x, y, block.w, block.h);
     ctx.fillStyle = RED;
     for (let i = 0; i < 2; i++) {
@@ -206,7 +215,7 @@ export function drawWorld(ctx, game, time) {
 
   game.agents.orbs.forEach((orb) => {
     ctx.globalAlpha = Math.min(1, orb.life / 1.5);
-    const pulse = 10 + Math.sin(time * 8 + orb.seed) * 3;
+    const pulse = 15 + Math.sin(time * 8 + orb.seed) * 4;
     ctx.fillStyle = "rgba(255, 43, 79, 0.25)";
     ctx.beginPath();
     ctx.arc(orb.x - sx, orb.y - sy, pulse, 0, Math.PI * 2);
@@ -229,11 +238,14 @@ export function drawWorld(ctx, game, time) {
   }
   if (player.invulnerable > 0 && game.reducedMotion) ctx.globalAlpha = 0.5;
 
-  // Walk cycle on the ground, squash and stretch around the feet, and a
+  // Walk cycle on the ground, a flailing pose when falling, squash and
+  // stretch around the feet, and a
   // little waddle while running.
   const walking = player.ground && Math.abs(player.vx) > 20;
-  const frames = sprites.player.walk;
-  const frame = walking ? frames[Math.floor(player.walkPhase) % frames.length] : sprites.player.idle;
+  const { walk, fall, idle } = sprites.player;
+  let frame = idle;
+  if (walking) frame = walk[Math.floor(player.walkPhase) % walk.length];
+  else if (player.falling) frame = fall[Math.floor(time * 8) % fall.length];
   const footX = player.x + player.w / 2 - sx;
   const footY = player.y + player.h - sy;
   const lean = player.ground ? (player.vx / game.runSpeed) * 0.12 : 0;
@@ -257,13 +269,21 @@ function panel(ctx, x, y, w, h, border = LIME) {
   ctx.strokeRect(x + 1, y + 1, w - 2, h - 2);
 }
 
-export function drawHud(ctx, game) {
+// The status box, top right during play or centred (with a title) when paused.
+export function drawHud(ctx, game, { centred = false } = {}) {
   const { world, sprites } = game;
   const ratio = world.corruptionRatio();
   const width = 320;
-  const x = window.innerWidth - width - 16;
-  const y = HEADER_OFFSET + 12;
   const height = 128 + world.terminals.length * 32;
+  const x = centred ? (window.innerWidth - width) / 2 : window.innerWidth - width - 16;
+  const y = centred ? (window.innerHeight - height) / 2 : HEADER_OFFSET + 12;
+  if (centred) {
+    ctx.font = `bold 28px ${FONT}`;
+    ctx.fillStyle = LIME;
+    ctx.textAlign = "center";
+    ctx.fillText("PAUSED", x + width / 2, y - 18);
+    ctx.textAlign = "left";
+  }
   panel(ctx, x, y, width, height);
 
   ctx.font = `bold 12px ${FONT}`;
@@ -355,10 +375,13 @@ export function drawMinimap(ctx, game, top, time) {
   ctx.fill();
 }
 
-export function drawKeybar(ctx, width, height, exitArmed, time) {
-  const text = exitArmed
-    ? "PRESS ESC AGAIN TO RETURN TO THE DOCS"
-    : "←→ MOVE   SPACE JUMP (×2)   ↓ DROP · HOLD TO FALL   HOLD E ENABLE PLUGIN   WHEEL LOOK   M MUTE   ESC ×2 EXIT";
+const CONTROLS =
+  "←→ MOVE   SPACE JUMP (×2)   ↓ DROP · HOLD TO FALL   HOLD E ENABLE PLUGIN   WHEEL LOOK   P PAUSE   M MUTE   ESC ×2 EXIT";
+
+export function drawKeybar(ctx, width, height, { exitArmed = false, paused = false } = {}, time) {
+  let text = CONTROLS;
+  if (paused) text = "PRESS P TO UNPAUSE";
+  if (exitArmed) text = "PRESS ESC AGAIN TO RETURN TO THE DOCS";
   ctx.font = `bold 12px ${FONT}`;
   const barWidth = Math.min(width - 32, ctx.measureText(text).width + 40);
   const x = (width - barWidth) / 2;

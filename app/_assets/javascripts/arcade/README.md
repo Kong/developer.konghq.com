@@ -32,7 +32,8 @@ These were chosen by the owner, often after trying the alternative. Change them 
 ### Flow
 
 - `0451` anywhere except form fields → Matrix rain (any key skips) → WarGames-style "SHALL WE PLAY A GAME? [Y/N]" with the mission → play.
-- Controls: arrows/WASD move, Space jump with one double jump, ↓ drops through a ledge (hold to keep falling), hold E at a terminal to enable its plugin, mouse wheel looks around, M mutes, Esc twice exits. A keybar at the bottom lists them.
+- Controls: arrows/WASD move, Space jump with one double jump, ↓ drops through a ledge (hold to keep falling), hold E at a terminal to enable its plugin, mouse wheel looks around, P pauses, M mutes, Esc twice exits. A keybar at the bottom lists them.
+- Pause (P, mid-run only) freezes everything: corruption, agents, effect timers, toasts and the run clock. The status box moves to the centre under a PAUSED title and the keybar reads "PRESS P TO UNPAUSE". M and Esc twice still work while paused.
 - Win: enable every terminal → corruption clears, agents vanish, a flashing EXIT door opens a little further down the page → reach it.
 - Lose: corruption reaches `LOSE_RATIO`, all lives gone, or a terminal stays cut off for `CUTOFF_GRACE` seconds (a red countdown warns first and clears if a path reopens).
 - Winning stores the best time in `localStorage` key `kong-docs-arcade` and shows a pixel star beside the header logo (tooltip with time, links to Kong careers). The win screen shows time and best time, and C opens careers. Clear it with `localStorage.removeItem("kong-docs-arcade")`.
@@ -87,7 +88,8 @@ The HUD lists each plugin with its effect and a live countdown while a timed eff
 
 ### Look and sound
 
-- Player: the real Kong mark (paths copied from the header SVG), pixelated at runtime, with a walk cycle built by nudging its four shapes, squash-and-stretch on jumps, and a waddle. The owner liked the squash in particular.
+- Player: the real Kong mark (paths copied from the header SVG), pixelated at runtime, with a walk cycle built by nudging its four shapes, squash-and-stretch on jumps, a waddle, and a flailing arms-up pose with a slight stretch while falling (`FALL_POSES`, `FALL_SPEED`). The owner liked the squash in particular.
+- The page behind the game is greyscaled (`backdrop-filter` on the canvas) and washed out per theme (`BACKDROP` in `render.js`), so the game reads first: lime is the player, ledges and plugins; red is corruption (15% wash on corrupted docs) and agents. Agents are drawn at 3× (their hit radius is unchanged, slightly forgiving).
 - Terminals: monitors with the Kong mark on screen. Sprites are strings in `sprites.js`, outlined so they read on light and dark themes.
 - Sound: every effect is synthesised with Web Audio (`audio.js`), no files. The owner liked it as is.
 

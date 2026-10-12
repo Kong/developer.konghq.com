@@ -75,6 +75,12 @@ const WALK_CYCLE = [
   { [FOOT]: [0, -1] },
 ];
 
+// Falling: arms up, alternating to flail; the foot trails.
+const FALL_POSES = [
+  { [ARM]: [-1, -4], [FOOT]: [-2, -1], [HEAD]: [0, -1] },
+  { [ARM]: [2, -5], [FOOT]: [1, -2], [HEAD]: [0, -1] },
+];
+
 function logoRows(height, { eye = false, offsets = {}, pad = 0 } = {}) {
   const inner = Math.round((height * LOGO_WIDTH) / LOGO_HEIGHT);
   const width = inner + pad * 2;
@@ -168,6 +174,7 @@ export function makeSprites(scale) {
     player: {
       idle: rasterise(logoRows(14, { eye: true, pad: 2 }), scale),
       walk: WALK_CYCLE.map((offsets) => rasterise(logoRows(14, { eye: true, pad: 2, offsets }), scale)),
+      fall: FALL_POSES.map((offsets) => rasterise(logoRows(14, { eye: true, pad: 2, offsets }), scale)),
     },
     terminal: {
       broken: [
@@ -178,7 +185,7 @@ export function makeSprites(scale) {
     },
     eye: rasterise(EYE, scale),
     door: [rasterise(DOOR, scale), rasterise(DOOR, scale, { G: WHITE, K: MOSS, W: LIME })],
-    orb: rasterise(ORB, 2),
+    orb: rasterise(ORB, 3),
     heart: rasterise(HEART, 2),
     heartEmpty: rasterise(HEART, 2, { R: "#3a3f47" }),
   };

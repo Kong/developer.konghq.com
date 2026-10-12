@@ -17,6 +17,9 @@ const DROP_TIME = 0.25;
 const FAST_FALL_DELAY = 0.2;
 const WALK_FRAME_PIXELS = 14;
 const INVULNERABLE_SECONDS = 2.5;
+// Falling faster than this stretches the player and shows the falling pose.
+export const FALL_SPEED = 250;
+const FALL_STRETCH = 1.1;
 
 export class Player {
   // `fx` plays sounds and particle bursts: { sound(name), burst(x, y, color, count) }.
@@ -49,6 +52,10 @@ export class Player {
     return this.y + this.h / 2;
   }
 
+  get falling() {
+    return !this.ground && this.vy > FALL_SPEED;
+  }
+
   overlapsX(platform) {
     return this.x + this.w > platform.x + 4 && this.x < platform.x + platform.w - 4;
   }
@@ -71,7 +78,8 @@ export class Player {
     this.dropTime -= dt;
     this.invulnerable -= dt;
     this.downTime = input.isHeld("down") ? this.downTime + dt : 0;
-    this.squash += (1 - this.squash) * Math.min(1, dt * 12);
+    const stretch = this.falling ? FALL_STRETCH : 1;
+    this.squash += (stretch - this.squash) * Math.min(1, dt * 12);
     if (this.ground) this.walkPhase += (Math.abs(this.vx) * dt) / WALK_FRAME_PIXELS;
     if (this.ground) this.airJumps = AIR_JUMPS;
 
