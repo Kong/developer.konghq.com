@@ -59,7 +59,7 @@ Minimal Segment events through `window.analytics?.track(...)` with the site's co
 
 - Ledges are chunky brick platforms in evenly spaced lanes, zigzagging one lane per step. Sparse on purpose: the owner rejected "a ledge on every block" (too many, too thin) and random placement (messy, overlapping).
 - Ledges are one-way: solid from above, jump up through them.
-- Terminals are spaced evenly by page height (3 to 5 by page length), preferring code blocks, then headings. They sit in the rightmost lane, labelled with the plugin name and its effect.
+- Terminals are spaced evenly by page height (3 to 5 by page length), preferring code blocks, then headings. They alternate between the leftmost and rightmost lanes, starting on a side picked by the page's seed (owner asked for more variety than all-right), labelled with the plugin name and its effect.
 - The camera follows the player; the wheel pans and the view stays put until a move, jump, drop, or use key.
 - A minimap down the right edge shows corruption, terminals, the view, the player, and the exit door.
 

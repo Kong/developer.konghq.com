@@ -25,7 +25,7 @@ const SEED_SHARE = 0.08;
 const SEED_BLOCKS = [1, 4];
 // Site chrome is never part of the level, even on pages without <main>.
 const CHROME = "header, nav, footer, [role='navigation'], [role='banner'], [role='contentinfo']";
-// Keep the rightmost lane and its labels clear of the minimap.
+// Keep the right lane and its terminal labels clear of the minimap.
 const RIGHT_MARGIN = 100;
 // The corruption meter counts at least this many blocks, so on tiny pages a
 // single block isn't a big chunk of the way to losing.
@@ -204,12 +204,14 @@ export class World {
   }
 
   // Ledges step one lane at a time, sweeping left and right across the
-  // column. Terminals always sit in the rightmost lane.
+  // column. Terminals alternate between the outer lanes, starting on a side
+  // picked by the page's seed, so the route keeps crossing the page.
   build(blocks, terminalBlocks) {
     const width = this.right - this.left;
     this.laneCount = clamp(Math.floor(width / LANE_WIDTH), ...LANE_COUNT);
     this.sizeLanes();
     this.direction = 1;
+    let rightSide = this.random() < 0.5;
 
     const terminalTops = [...terminalBlocks].map((b) => b.y);
     let prev = this.addSegment(blocks[0], 0, 0, "ledge");
@@ -225,10 +227,12 @@ export class World {
       prev = this.fillDown(prev, block, this.anchorTop(block));
 
       if (isTerminal) {
-        const lane = this.laneCount - 1;
+        const lane = rightSide ? this.laneCount - 1 : 0;
         prev = this.walkToLane(prev, block, lane);
         prev = this.addSegment(block, lane, 0, "terminal");
-        this.direction = -1;
+        // Head back across the page, towards the next terminal's side.
+        this.direction = rightSide ? -1 : 1;
+        rightSide = !rightSide;
       } else {
         prev = this.addSegment(block, this.nextLane(prev.lane), 0, "ledge");
       }
