@@ -2,7 +2,8 @@ import { track } from "./analytics";
 import { Sfx } from "./audio";
 import { CAREERS_URL, formatTime, recordWin } from "./trophy";
 import { makeSprites } from "./sprites";
-import { World, LOSE_RATIO, FIREWALL } from "./world";
+import { World, LOSE_RATIO } from "./world";
+import { LIME, LIME_DARK, RED } from "./constants";
 import { Rain, drawPrompt, drawWorld, drawHud, drawMinimap, drawKeybar, drawToast, drawBanner } from "./render";
 
 const SCALE = 3;
@@ -36,13 +37,6 @@ const ORB_GRACE = 6;
 const ORB_INFECT_COOLDOWN = 2;
 // Pages with fewer blocks than this get proportionally longer orb cooldowns.
 const ORB_INFECT_BLOCKS = 40;
-// Plugin effects.
-const EFFECT_SECONDS = 10;
-const DEAUTH_PAUSE = 5;
-const ROLLBACK_SHARE = 0.2;
-const BOT_SLOWDOWN = 0.5;
-const BUDGET_SPREAD = 1.6;
-const BUDGET_SPAWN = 1.5;
 const WALK_FRAME_PIXELS = 14;
 const LOOK_RETURN = 6;
 const REACH_CHECK_SECONDS = 0.5;
@@ -84,6 +78,7 @@ class Game {
     this.orbs = [];
     this.sprites = makeSprites(SCALE);
     this.scale = SCALE;
+    this.runSpeed = RUN_SPEED;
     this.maxLives = LIVES;
     this.lastEscape = -Infinity;
     this.initialScroll = { x: window.scrollX, y: window.scrollY };
@@ -310,8 +305,8 @@ class Game {
     this.orbs = [];
     this.orbTimer = 0;
     this.orbPause = ORB_GRACE;
-    // Seconds left on the timed plugin effects.
-    this.effects = { slowOrbs: 0, budget: 0 };
+    // Seconds left on each running timed plugin effect, keyed by plugin.
+    this.effects = new Map();
     this.eye = null;
     this.spreadDelay = SPREAD_DELAY;
     this.reachTimer = REACH_CHECK_SECONDS;
@@ -389,8 +384,11 @@ class Game {
     this.fade = Math.max(0, this.fade - dt * 2);
     this.runTime += dt;
     world.tick(dt);
-    Object.keys(this.effects).forEach((key) => (this.effects[key] = Math.max(0, this.effects[key] - dt)));
-    if (!this.exitDoor) world.spreadMultiplier = this.effects.budget > 0 ? BUDGET_SPREAD : 1;
+    this.effects.forEach((seconds, plugin) => {
+      if (seconds <= dt) this.effects.delete(plugin);
+      else this.effects.set(plugin, seconds - dt);
+    });
+    if (!this.exitDoor) world.spreadMultiplier = this.modifier("spreadInterval");
 
     this.updatePlayer(dt);
     this.updateTerminals(dt);
@@ -425,7 +423,7 @@ class Game {
         this.bestTime = recordWin(this.runTime);
         this.trackEnd("won");
         this.sfx?.win();
-        this.burst(player.x + player.w / 2, player.y, "#ccff00", 60);
+        this.burst(player.x + player.w / 2, player.y, LIME, 60);
         this.setState("won");
       }
     } else if (world.allPatched()) {
@@ -441,7 +439,7 @@ class Game {
     const { world, player } = this;
     world.cleanseAll();
     world.spreadMultiplier = Infinity;
-    this.orbs.forEach((orb) => this.burst(orb.x, orb.y, "#ff2b4f", 10));
+    this.orbs.forEach((orb) => this.burst(orb.x, orb.y, RED, 10));
     this.orbs = [];
     this.orbPause = Infinity;
 
@@ -538,7 +536,7 @@ class Game {
     if (player.jumpBuffer > 0 && canJump) {
       if (player.coyote <= 0) {
         player.airJumps -= 1;
-        this.burst(player.x + player.w / 2, player.y + player.h, "#ccff00", 8);
+        this.burst(player.x + player.w / 2, player.y + player.h, LIME, 8);
       }
       player.vy = -JUMP_VELOCITY;
       player.ground = null;
@@ -586,7 +584,7 @@ class Game {
         if (impact > 500) {
           player.squash = 0.7;
           this.sfx?.land();
-          this.burst(player.x + player.w / 2, platform.y, "#5c8a00", 6);
+          this.burst(player.x + player.w / 2, platform.y, LIME_DARK, 6);
         }
         break;
       }
@@ -623,42 +621,42 @@ class Game {
   }
 
   // Every plugin cleans the area around its terminal, then applies its own
-  // effect to the corruption or the agents.
+  // effect (see plugins.js).
   enable(terminal) {
-    const { world } = this;
     const { plugin } = terminal;
-    world.patch(terminal, plugin.effect === "firewall" ? FIREWALL : undefined);
-
-    if (plugin.effect === "deauth") {
-      this.deauthenticate();
-    } else if (plugin.effect === "rollback") {
-      world.rollback(ROLLBACK_SHARE);
-    } else if (plugin.effect === "slowOrbs" || plugin.effect === "budget") {
-      this.effects[plugin.effect] = EFFECT_SECONDS;
-    }
+    this.world.patch(terminal, plugin.shield);
+    if (plugin.seconds) this.effects.set(plugin, plugin.seconds);
+    plugin.enable?.(this);
 
     this.sfx?.patched();
     const pos = this.terminalPosition(terminal);
-    this.burst(pos.x + pos.width / 2, pos.y, "#ccff00", 40);
+    this.burst(pos.x + pos.width / 2, pos.y, LIME, 40);
     this.toast(`${plugin.name.toUpperCase()} ENABLED`, `${plugin.text} · nearby ledges shielded`);
   }
 
-  // Destroys the half of the agents nearest the player and briefly stops new
-  // ones spawning.
-  deauthenticate() {
+  // Destroys the half of the agents nearest the player and stops new ones
+  // spawning for `pause` seconds.
+  deauthenticate(pause) {
     const { player } = this;
     const distance = (orb) => Math.hypot(orb.x - player.x - player.w / 2, orb.y - player.y - player.h / 2);
     const nearest = [...this.orbs].sort((a, b) => distance(a) - distance(b));
     const destroyed = new Set(nearest.slice(0, Math.ceil(nearest.length / 2)));
-    destroyed.forEach((orb) => this.burst(orb.x, orb.y, "#ff2b4f", 10));
+    destroyed.forEach((orb) => this.burst(orb.x, orb.y, RED, 10));
     this.orbs = this.orbs.filter((orb) => !destroyed.has(orb));
-    this.orbPause = Math.max(this.orbPause, DEAUTH_PAUSE);
+    this.orbPause = Math.max(this.orbPause, pause);
   }
 
-  // Seconds left on a plugin's timed effect, for the HUD.
-  effectTime(effect) {
-    if (effect === "deauth") return Math.max(0, this.orbPause);
-    return this.effects?.[effect] || 0;
+  // The product of a named modifier across running plugin effects, so
+  // overlapping effects stack. 1 when none applies.
+  modifier(name) {
+    let value = 1;
+    this.effects.forEach((_, plugin) => (value *= plugin.modifiers?.[name] ?? 1));
+    return value;
+  }
+
+  // Seconds left on a plugin's effect, for the HUD.
+  effectTime(plugin) {
+    return plugin.remaining?.(this) ?? this.effects?.get(plugin) ?? 0;
   }
 
   // Agents are red orbs that drift after the player and expire after a while.
@@ -687,13 +685,12 @@ class Game {
           seed: Math.random() * 10,
         });
         const [calm, frantic] = ORB_SPAWN_SECONDS;
-        const spawnMultiplier = this.effects.budget > 0 ? BUDGET_SPAWN : 1;
-        this.orbTimer = (calm - (calm - frantic) * intensity) * spawnMultiplier;
+        this.orbTimer = (calm - (calm - frantic) * intensity) * this.modifier("spawnInterval");
         this.sfx?.orb();
       }
     }
 
-    const speed = (45 + intensity * 65) * (this.effects.slowOrbs > 0 ? BOT_SLOWDOWN : 1);
+    const speed = (45 + intensity * 65) * this.modifier("orbSpeed");
     this.orbs = this.orbs.filter((orb) => {
       orb.life -= dt;
       const dx = px - orb.x;
@@ -710,7 +707,7 @@ class Game {
       if (orb.infectCooldown <= 0 && world.infectAt(orb.x, orb.y)) {
         orb.infectCooldown = ORB_INFECT_COOLDOWN * Math.max(1, ORB_INFECT_BLOCKS / world.corruptible().length);
         this.sfx?.corrupt();
-        this.burst(orb.x, orb.y, "#ff2b4f", 8);
+        this.burst(orb.x, orb.y, RED, 8);
       }
 
       if (this.state === "playing" && player.invulnerable <= 0 && distance < ORB_RADIUS + player.w / 2 - 4) {
@@ -729,7 +726,7 @@ class Game {
     player.vy = -420;
     player.ground = null;
     this.sfx?.hit();
-    this.burst(orb.x, orb.y, "#ff2b4f", 20);
+    this.burst(orb.x, orb.y, RED, 20);
     if (this.lives <= 0) this.lose("caught");
   }
 

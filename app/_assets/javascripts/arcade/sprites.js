@@ -2,17 +2,19 @@
 // Sprites are rasterised once into offscreen canvases with a 1px dark outline
 // so they read on both the light and dark themes.
 
+import { INK, LIME, LIME_DARK, MOSS, RED, SILVER, WHITE } from "./constants";
+
 const PALETTE = {
-  G: "#ccff00", // Kong lime
-  D: "#5c8a00",
-  K: "#0b0f0a",
-  W: "#ffffff",
+  G: LIME,
+  D: LIME_DARK,
+  K: INK,
+  W: WHITE,
   M: "#5b6470",
-  L: "#c9d1d9",
-  R: "#ff2b4f",
+  L: SILVER,
+  R: RED,
 };
 
-const OUTLINE = "#0b0f0a";
+const OUTLINE = INK;
 
 // The Kong mark from the site header (viewBox units), pixelated at runtime.
 const LOGO_PATHS = [
@@ -169,13 +171,13 @@ export function makeSprites(scale) {
     },
     terminal: {
       broken: [
-        rasterise(terminal, scale, { S: "#2a000c", X: "#ff2b4f" }),
+        rasterise(terminal, scale, { S: "#2a000c", X: RED }),
         rasterise(terminal, scale, { S: "#1a0008", X: "#7a1022" }),
       ],
-      ok: rasterise(terminal, scale, { S: "#0f2a00", X: "#ccff00" }),
+      ok: rasterise(terminal, scale, { S: "#0f2a00", X: LIME }),
     },
     eye: rasterise(EYE, scale),
-    door: [rasterise(DOOR, scale), rasterise(DOOR, scale, { G: "#ffffff", K: "#2f4a00", W: "#ccff00" })],
+    door: [rasterise(DOOR, scale), rasterise(DOOR, scale, { G: WHITE, K: MOSS, W: LIME })],
     orb: rasterise(ORB, 2),
     heart: rasterise(HEART, 2),
     heartEmpty: rasterise(HEART, 2, { R: "#3a3f47" }),

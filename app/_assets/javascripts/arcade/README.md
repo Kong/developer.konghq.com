@@ -71,13 +71,13 @@ Minimal Segment events through `window.analytics?.track(...)` with the site's co
 
 ### Plugins
 
-Five plugins (Rate Limiting was removed), shuffled per page with the page's seed so short pages get a mix. Definitions live in `PLUGINS` (`world.js`); effects in `enable()` (`game.js`).
+Five plugins (Rate Limiting was removed), shuffled per page with the page's seed so short pages get a mix. Each plugin is one entry in `PLUGINS` (`plugins.js`): its text, an optional wider `shield`, a timed effect (`seconds` plus `modifiers` that multiply game values while it runs, read through `Game.modifier()`), or an instant `enable(game)`. A new timed plugin needs no change to `game.js`.
 
 Every terminal also clears corruption near it and shields that area briefly (`SHIELD`). The owner deliberately removed any permanent "every terminal makes agents weaker" effect: the game was too easy with it.
 
 | Plugin | Effect (owner-specified) |
 |---|---|
-| AI Prompt Guard | A wider shield (`FIREWALL`), same short duration |
+| AI Prompt Guard | A wider shield (its `shield`), same short duration |
 | OpenID Connect | Destroys the half of the agents nearest the player, pauses spawning briefly |
 | AI Semantic Prompt Guard | Reverses a share of all corruption (`ROLLBACK_SHARE`) |
 | Bot Detection | Agents move at half speed for `EFFECT_SECONDS` |
@@ -98,7 +98,9 @@ The HUD lists each plugin with its effect and a live countdown while a timed eff
 | `../arcade.js` | Trigger: listens for `0451`, lazy-loads `game.js`, calls `initTrophy()` |
 | `trophy.js` | Logo hint tooltip, completion star, best-time storage, `CAREERS_URL` |
 | `game.js` | State machine (`rain` → `prompt` → `playing` → `won`/`lost`), input, physics, camera, agents, plugin effects, cut-off countdown, teardown |
-| `world.js` | Level generation from the DOM, corruption, shields, reachability check, `PLUGINS` |
+| `world.js` | Level generation from the DOM, corruption, shields, reachability check |
+| `plugins.js` | `PLUGINS` registry: text, shield, timed modifiers, instant effects |
+| `constants.js` | Values shared across modules: palette, `BRICK` |
 | `render.js` | Canvas drawing: world, HUD, minimap, keybar, toasts, banners, rain, prompt |
 | `sprites.js` | Pixel art strings and the Kong mark rasteriser |
 | `audio.js` | Synthesised sound effects |
@@ -110,7 +112,7 @@ Concepts that carry the design:
 - All positions are document coordinates. The canvas is a fixed, pointer-events-none overlay drawn at `(x - scrollX, y - scrollY)`.
 - Physics runs at a fixed 120 Hz step, decoupled from the frame rate.
 - Level layout is seeded from `location.pathname`, so a page always builds the same level.
-- The tuning knobs are the named constants at the top of `game.js` and `world.js`.
+- The tuning knobs are the named constants at the top of `game.js`, `world.js` and `plugins.js`.
 
 ## Gotchas
 

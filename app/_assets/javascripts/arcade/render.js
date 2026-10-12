@@ -1,17 +1,14 @@
 // Drawing helpers. The canvas is a fixed overlay the size of the viewport, so
 // world positions are drawn at (x - scrollX, y - scrollY).
 
-import { LEDGE_HEIGHT } from "./world";
+import { BRICK, CYAN, INK, LIME, MOSS, PALE, RED, SILVER, WHITE } from "./constants";
+import { LEDGE_HEIGHT, SHIELD } from "./world";
 
 const GLYPHS =
   "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン01{}<>/=";
 const FONT = 'ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace';
-const LIME = "#ccff00";
-const PALE = "#eaffb0";
-const RED = "#ff2b4f";
-const INK = "#0b0f0a";
+// Height of the site's sticky header, kept clear of the level and the HUD.
 const HEADER_OFFSET = 64;
-const BRICK = 28;
 const MINIMAP_WIDTH = 14;
 
 // Stable pseudo-random value so glitch glyphs change a few times a second
@@ -92,7 +89,7 @@ function drawLedge(ctx, segment, x, y, tick) {
     return;
   }
 
-  const body = segment.terminal ? "#3b4350" : "#2f4a00";
+  const body = segment.terminal ? "#3b4350" : MOSS;
   const shade = segment.terminal ? "#262c35" : "#1a2a00";
   const half = LEDGE_HEIGHT / 2;
   ctx.fillStyle = INK;
@@ -116,7 +113,7 @@ function drawShield(ctx, segment, x, y, time) {
   if (segment.shield <= 0 || segment.corrupted) return;
   if (segment.shield < 3 && Math.floor(time * 8) % 2) return;
   ctx.globalAlpha = 0.35 + 0.2 * Math.sin(time * 6);
-  ctx.strokeStyle = "#7ff9ff";
+  ctx.strokeStyle = CYAN;
   ctx.lineWidth = 2;
   ctx.strokeRect(x - 5, y - 6, segment.w + 10, LEDGE_HEIGHT + 11);
   ctx.globalAlpha = 1;
@@ -239,7 +236,7 @@ export function drawWorld(ctx, game, time) {
   const frame = walking ? frames[Math.floor(player.walkPhase) % frames.length] : sprites.player.idle;
   const footX = player.x + player.w / 2 - sx;
   const footY = player.y + player.h - sy;
-  const lean = player.ground ? (player.vx / 280) * 0.12 : 0;
+  const lean = player.ground ? (player.vx / game.runSpeed) * 0.12 : 0;
   const waddle = walking ? Math.sin(player.walkPhase * (Math.PI / 2)) * 0.06 : 0;
   ctx.save();
   ctx.translate(footX, footY);
@@ -292,25 +289,25 @@ export function drawHud(ctx, game, loseRatio) {
   ctx.fillRect(barX, y + 74, barWidth, 14);
   ctx.fillStyle = RED;
   ctx.fillRect(barX, y + 74, Math.min(1, ratio / loseRatio) * barWidth, 14);
-  ctx.fillStyle = "#fff";
+  ctx.fillStyle = WHITE;
   ctx.fillRect(barX + barWidth - 1, y + 72, 2, 18);
 
   // Each plugin with what it does.
   world.terminals.forEach((terminal, i) => {
     const rowY = y + 116 + i * 32;
     ctx.font = `bold 12px ${FONT}`;
-    ctx.fillStyle = terminal.patched ? LIME : "#c9d1d9";
+    ctx.fillStyle = terminal.patched ? LIME : SILVER;
     ctx.fillText(`${terminal.patched ? "[✓]" : "[ ]"} ${terminal.plugin.name.toUpperCase()}`, x + 14, rowY);
     ctx.font = `11px ${FONT}`;
     ctx.fillStyle = terminal.patched ? "#7a9a2a" : "#8a9099";
-    const remaining = game.effectTime(terminal.plugin.effect);
+    const remaining = game.effectTime(terminal.plugin);
     const active = terminal.patched && remaining > 0 && remaining !== Infinity;
-    if (active) ctx.fillStyle = "#7ff9ff";
+    if (active) ctx.fillStyle = CYAN;
     ctx.fillText(`    ${terminal.plugin.summary}${active ? ` · ${Math.ceil(remaining)}s left` : ""}`, x + 14, rowY + 14);
   });
   ctx.font = `11px ${FONT}`;
-  ctx.fillStyle = "#7ff9ff";
-  ctx.fillText("Every plugin shields nearby ledges for 5s", x + 14, y + height - 12);
+  ctx.fillStyle = CYAN;
+  ctx.fillText(`Every plugin shields nearby ledges for ${SHIELD.seconds}s`, x + 14, y + height - 12);
   return y + height;
 }
 
@@ -340,12 +337,12 @@ export function drawMinimap(ctx, game, top, time) {
     ctx.fillStyle = INK;
     ctx.fillRect(x - 2, toY(terminal.segment.y) - 4, MINIMAP_WIDTH + 4, 8);
     const cutOff = game.cutOff?.terminal === terminal && Math.floor(time * 5) % 2;
-    ctx.fillStyle = terminal.patched ? LIME : cutOff ? "#ffffff" : "#ff8a9c";
+    ctx.fillStyle = terminal.patched ? LIME : cutOff ? WHITE : "#ff8a9c";
     ctx.fillRect(x, toY(terminal.segment.y) - 2, MINIMAP_WIDTH, 4);
   });
 
   if (game.exitDoor && Math.floor(time * 4) % 2 === 0) {
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = WHITE;
     ctx.fillRect(x - 3, toY(game.exitDoor.y) - 5, MINIMAP_WIDTH + 6, 10);
   }
 

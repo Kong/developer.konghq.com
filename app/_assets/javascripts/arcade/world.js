@@ -5,6 +5,9 @@
 // page. Code blocks host terminals and the footer is the floor. All
 // coordinates are document coordinates.
 
+import { BRICK } from "./constants";
+import { PLUGINS } from "./plugins";
+
 const BLOCK_SELECTOR =
   "h1, h2, h3, h4, h5, h6, p, li, tr, pre, img, .mermaid, blockquote, figure, hr, .code-block, table";
 const SAME_TOP = 8;
@@ -13,7 +16,6 @@ const MAX_GAP = 160;
 const LANE_WIDTH = 220;
 const LANE_COUNT = [3, 5];
 const LANE_PADDING = 40;
-const BRICK = 28;
 const MAX_TERMINALS = 5;
 const MIN_TERMINALS = 3;
 const TERMINAL_SPACING = 700;
@@ -40,35 +42,11 @@ export const LOSE_RATIO = 0.7;
 // gap up to LOSE_RATIO is the player's extra margin.
 const PACE_RATIO = 0.6;
 export const SHIELD = { radius: 150, seconds: 5 };
-export const FIREWALL = { radius: 200, seconds: 5 };
 // Generous estimates of what a double jump can clear. Used to decide when a
 // terminal has been cut off for good.
 export const UP_REACH = 250;
 export const SIDE_REACH = 340;
 const FALL_WINDOW = 800;
-
-export const PLUGINS = [
-  { name: "AI Prompt Guard", effect: "firewall", summary: "Wider shield", text: "Firewall up: wider area shielded" },
-  {
-    name: "OpenID Connect",
-    effect: "deauth",
-    summary: "Destroys half the agents",
-    text: "Nearest agents de-authenticated",
-  },
-  {
-    name: "AI Semantic Prompt Guard",
-    effect: "rollback",
-    summary: "Reverses some corruption",
-    text: "Semantic rollback: a fifth of the corruption reversed",
-  },
-  { name: "Bot Detection", effect: "slowOrbs", summary: "Slows agents", text: "Bots detected: agents slowed for 10s" },
-  {
-    name: "AI Rate Limiting Advanced",
-    effect: "budget",
-    summary: "Slows corruption + agents",
-    text: "Token budget enforced for 10s",
-  },
-];
 
 function isVisible(el) {
   const rect = el.getBoundingClientRect();
