@@ -1,5 +1,6 @@
 // Hidden arcade game. Typing the code loads the game chunk on demand, so
 // regular page views only pay for this listener and the header trophy.
+// Design notes and handoff: docs/arcade.md.
 import { initTrophy } from "./arcade/trophy";
 import { track } from "./arcade/analytics";
 

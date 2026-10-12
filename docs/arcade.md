@@ -12,7 +12,7 @@ This file is the handoff for iterating on the game. It records the owner's inten
 
 ## Intent
 
-- **Delight first, cheap for everyone else.** Regular page views load only the trigger and the header trophy (`../arcade.js`, `trophy.js`). The game is a lazy chunk loaded on the code.
+- **Delight first, cheap for everyone else.** Regular page views load only the trigger and the header trophy (`arcade.js`, `arcade/trophy.js`). The game is a lazy chunk loaded on the code.
 - **The page is the level.** Nothing is hand-authored per page; every docs page must produce a playable level, including hub pages without `<main>`.
 - **The story is Kong's.** You are the gateway: each terminal is a real Kong plugin whose effect fits its purpose (Bot Detection slows bots, OpenID Connect de-authenticates agents). The mission text says so in the prompt, the opening toast, and the HUD.
 - **Leave no trace.** Esc twice restores the page exactly: no stray classes, scroll position restored, canvas removed.
@@ -95,9 +95,11 @@ The HUD lists each plugin with its effect and a live countdown while a timed eff
 
 ## Code map
 
+The game lives in `app/_assets/javascripts/arcade/`; the trigger is one level up at `app/_assets/javascripts/arcade.js`.
+
 | File | Owns |
 |---|---|
-| `../arcade.js` | Trigger: listens for `0451`, lazy-loads `game.js`, calls `initTrophy()` |
+| `../arcade.js` (trigger) | Trigger: listens for `0451`, lazy-loads `game.js`, calls `initTrophy()` |
 | `trophy.js` | Logo hint tooltip, completion star, best-time storage, `CAREERS_URL` |
 | `game.js` | State machine (`rain` → `prompt` → `playing` → `won`/`lost`), lifecycle and teardown, camera, terminals and plugin effects, cut-off countdown, win/lose |
 | `player.js` | Player physics: run, jump, double jump, drop-through, knockback |
