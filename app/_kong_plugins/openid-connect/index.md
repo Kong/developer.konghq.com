@@ -90,8 +90,7 @@ faqs:
       You can verify tokens issued by multiple IdP using the [`extra_jwks_uris`](/plugins/openid-connect/reference/#schema--config-extra-jwks-uris) configuration option, with the following considerations:
 
       * Since the plugin only accepts a single issuer, any `iss` claim verification will fail for tokens that come from a different IdP than the one that was used in the issuer configuration option. Add all issuers as they appear in the `iss` claims of your tokens to the [`config.issuers_allowed`](/plugins/openid-connect/reference/#schema--config-issuers-allowed) setting.
-      * If you make any changes to the `extra_jwks_uris` value, you have to clear the second level DB cache for the change to become effective.
-      See [Delete a Discovery Cache Object](/plugins/openid-connect/api/#/operations/deleteDiscoveryCache).
+      * If you change the `extra_jwks_uris` value, the plugin fetches the discovery data for the new value on the next request; you don't need to clear the cache manually. To remove the old cache entries immediately, use the [Delete a Discovery Cache Object](/plugins/openid-connect/api/#/operations/deleteDiscoveryCache) endpoint.
 
       See the [Extra JWKs](/plugins/openid-connect/examples/extra-jwks/) configuration example for more detail.
   - q: How do I enable the Proof Key for Code Exchange (PKCE) extension to the authorization code flow in the OIDC plugin?
