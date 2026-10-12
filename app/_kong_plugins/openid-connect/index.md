@@ -131,7 +131,7 @@ When you configure `config.issuer` in the OIDC plugin, {{site.base_gateway}} aut
 
 {{site.base_gateway}} uses the discovery cache whenever validation needs issuer metadata. The cache behaves in the following way:
 - Discovery data is stored in the **{{site.base_gateway}} database** when using DB mode, or in **worker memory** when using DB‑less mode.  
-- The cache TTL (time-to-live) is managed by the {{site.base_gateway}} [`db_cache_ttl`](/gateway/configuration/#db-cache-ttl) configuration setting. The default value is `0`, which means that cached entries never expire. Entries are invalidated when their configuration changes, or when you clear them manually. When you use DB-less mode, the cache also doesn't expire; it is invalidated when the configuration is synced or when you clear it manually. You can also clear the discovery cache manually using the relevant [DELETE endpoints in the Admin API](/plugins/openid-connect/api/#/operations/deleteAllDiscoveryCache/).  
+- The cache TTL (time-to-live) is managed by the {{site.base_gateway}} [`db_cache_ttl`](/gateway/configuration/#db-cache-ttl) configuration setting. The default value is `0`, which means that cached entries never expire. Entries are invalidated when their configuration changes. When you use DB-less mode, the cache also doesn't expire; it is invalidated when the configuration is synced. To clear the discovery cache manually, use the [DELETE endpoints in the Admin API](/plugins/openid-connect/api/#/operations/deleteAllDiscoveryCache/).  
 
    {:.info}
    > **Note:** The plugin parameter `config.cache_ttl` only applies to the plugin's token caching, not to the discovery cache.
