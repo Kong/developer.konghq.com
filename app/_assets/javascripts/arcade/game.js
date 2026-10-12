@@ -205,7 +205,7 @@ class Game {
     if (code === "KeyM" && !event.repeat) this.sfx?.toggleMute();
     if (code === "KeyC" && this.state === "won" && !event.repeat) {
       track("Arcade Careers Clicked", { source: "win-screen" });
-      window.open(CAREERS_URL, "_blank", "noopener");
+      window.open(CAREERS_URL, "_blank", "noopener,noreferrer");
     }
     if (!event.repeat) this.pressed.add(code);
     this.held.add(code);

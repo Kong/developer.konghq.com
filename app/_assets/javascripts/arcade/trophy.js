@@ -15,9 +15,12 @@ export function formatTime(seconds) {
   return `${Math.floor(whole / 60)}:${String(whole % 60).padStart(2, "0")}`;
 }
 
+// The stored record, or null if it's missing or malformed (storage is
+// user-editable, so only a positive finite best time counts).
 function readRecord() {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY));
+    const record = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    return Number.isFinite(record?.best) && record.best > 0 ? record : null;
   } catch {
     return null;
   }
@@ -73,7 +76,7 @@ function renderStar(best) {
       star = document.createElement("a");
       star.href = CAREERS_URL;
       star.target = "_blank";
-      star.rel = "noopener";
+      star.rel = "noopener noreferrer";
       star.className = `${STAR_CLASS} inline-flex items-center no-icon`;
       star.innerHTML = starSvg();
       logo.after(star);
