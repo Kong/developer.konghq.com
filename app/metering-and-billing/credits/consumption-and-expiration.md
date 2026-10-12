@@ -187,12 +187,11 @@ Grant C is untouched because its priority value is higher.
 
 Charges consume credits when they're booked, not as usage events arrive:
 
-* **Usage-based charges** book their consumption at the end of the service period, after late usage for that period has been collected.
+* **Usage-based charges** book their consumption as the usage is recognized, which can be after the usage occurred.
 * **Flat-fee charges** book their consumption at the start of the service period when paid in advance, and at the end when paid in arrears.
 
 Until a charge is booked, its expected consumption shows up only in the live balance, not in the settled balance or transaction history.
 Credit that expires before a charge is booked isn't available to that charge.
-For example, credit that expires in the middle of a service period can't cover usage from that period.
 
 ## Credit expiration
 

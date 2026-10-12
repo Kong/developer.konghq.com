@@ -118,7 +118,7 @@ A `funded` movement is recorded in the customer's transaction history and their 
 
 After the grant is issued, the customer's available balance reflects the new credits.
 Because this customer is on a `credit_only` plan, metered usage automatically deducts from this balance.
-Usage charges are booked at the end of each service period, so `consumed` movements appear then.
+`consumed` movements appear when usage charges are booked, not as each usage event arrives.
 Before that, the **Live balance** on the **Credits** tab already reflects the expected consumption.
 
 1. On the customer's page, click the **Credits** tab.

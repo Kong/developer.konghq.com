@@ -89,8 +89,8 @@ rows:
 <!--vale on-->
 
 Movements can be booked with a time in the past.
-For example, usage-based consumption is booked at the end of the service period, but it's recorded later, after late usage for that period has been collected.
-So if you query the same past timestamp again later, the settled balance can be different. This is expected: the balance reflects every movement booked at or before that time, including movements recorded since your earlier query.
+For example, usage-based consumption can be recorded after the usage it covers, once late usage events have been collected.
+If you query the same past timestamp again later, the settled balance can be different. This is expected: the balance reflects every movement booked at or before that time, including movements recorded since your earlier query.
 
 Settled balance is the right model for audit and history, because every change to it is a recorded movement.
 
