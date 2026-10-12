@@ -123,7 +123,7 @@ Concepts that carry the design:
 ## Gotchas
 
 - **`PACE_RATIO` vs `LOSE_RATIO`.** Spread speed is tuned so a page reaches `PACE_RATIO` in a target time. `LOSE_RATIO` is higher, and the gap is the player's margin. Raising `LOSE_RATIO` alone used to make corruption spread faster and cancel the change.
-- **Small pages.** Percent-based rules break on pages with few blocks. The corruption meter divides by at least `MIN_METER_BLOCKS`, seeds scale with page size, and orb infection cooldown grows on small pages.
+- **Small pages.** Percent-based rules break on pages with few blocks. The corruption meter divides by at least `MIN_METER_BLOCKS`, seeds scale with page size, and orb infection cooldown grows on small pages. The pace has a floor (`MIN_PACE_SECONDS`, lowered from 30 to 20 because `/ai-gateway/policies/?category=serverless` felt dead), and if every corrupted block in range is closer than `SPAWN_MIN`, agents spawn from the furthest one instead of not at all.
 - **Pages without `<main>`.** The root falls back to `<body>`; anything inside `CHROME` (header, nav, footer) is excluded, and the play column is sized to the blocks. Without that, the player spawned inside the sticky header.
 - **The site tooltip binds once.** The site's `[data-tooltip]` script only binds elements present at load and skips touch-capable devices (including touchscreen laptops with a mouse). `trophy.js` reuses the shared `#tooltip` element with its own handlers instead.
 - **External link icon.** Site CSS adds an icon to off-site links; the star uses the existing `no-icon` class.

@@ -47,6 +47,9 @@ export const SHIELD = { radius: 150, seconds: 5 };
 const UP_REACH = 250;
 const SIDE_REACH = 340;
 const FALL_WINDOW = 800;
+// Every page gets at least this long to reach PACE_RATIO, so short pages
+// still have a chase but don't spread at a crawl.
+const MIN_PACE_SECONDS = 20;
 
 function isVisible(el) {
   const rect = el.getBoundingClientRect();
@@ -173,8 +176,8 @@ export class World {
     // Give the player enough time to physically reach every terminal on long
     // pages: roughly the run time from top to bottom, plus slack.
     const pageHeight = document.documentElement.scrollHeight;
-    const loseSeconds = Math.max(30, pageHeight / 330 + 12);
-    this.spreadInterval = loseSeconds / Math.max(1, this.corruptible().length * PACE_RATIO);
+    const paceSeconds = Math.max(MIN_PACE_SECONDS, pageHeight / 330 + 12);
+    this.spreadInterval = paceSeconds / Math.max(1, this.corruptible().length * PACE_RATIO);
   }
 
   // Spread terminals evenly down the page: one target height per terminal,
@@ -401,19 +404,12 @@ export class World {
     return this.terminals.find((t) => !t.patched && !seen.has(t.segment));
   }
 
-  // The nearest corrupted block between minDistance and maxDistance away.
-  nearestCorrupted(x, y, maxDistance, minDistance = 0) {
-    let best = null;
-    let bestDistance = maxDistance;
-    this.blocks.forEach((block) => {
-      if (!block.corrupted) return;
-      const distance = Math.hypot(clamp(x, block.x, block.x + block.w) - x, block.y - y);
-      if (distance >= minDistance && distance < bestDistance) {
-        best = block;
-        bestDistance = distance;
-      }
-    });
-    return best;
+  // Corrupted blocks within maxDistance of a point, with their distances.
+  corruptedNear(x, y, maxDistance) {
+    return this.blocks
+      .filter((block) => block.corrupted)
+      .map((block) => ({ block, distance: Math.hypot(clamp(x, block.x, block.x + block.w) - x, block.y - y) }))
+      .filter(({ distance }) => distance < maxDistance);
   }
 
   // A plain ledge a comfortable distance below `y`, for the exit door.

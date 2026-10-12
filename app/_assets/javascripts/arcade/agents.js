@@ -19,6 +19,15 @@ const INFECT_COOLDOWN = 2;
 // Pages with fewer blocks than this get proportionally longer cooldowns.
 const INFECT_BLOCKS = 40;
 
+// The nearest corrupted block at least SPAWN_MIN away. If all corruption in
+// range is closer than that (common on short pages), the furthest one, so
+// agents still come.
+function spawnSource(candidates) {
+  if (!candidates.length) return null;
+  const byDistance = candidates.sort((a, b) => a.distance - b.distance);
+  return (byDistance.find(({ distance }) => distance >= SPAWN_MIN) ?? byDistance[byDistance.length - 1]).block;
+}
+
 export class Agents {
   // `fx` plays sounds and particle bursts: { sound(name), burst(x, y, color, count) }.
   constructor(fx) {
@@ -41,7 +50,7 @@ export class Agents {
     this.timer -= dt;
     const maxOrbs = 2 + Math.floor(ratio * 10);
     if (this.pause <= 0 && this.timer <= 0 && this.orbs.length < maxOrbs) {
-      const source = world.nearestCorrupted(px, py, SPAWN_RANGE, SPAWN_MIN);
+      const source = spawnSource(world.corruptedNear(px, py, SPAWN_RANGE));
       if (source) {
         this.orbs.push({
           x: clamp(px, source.x, source.x + source.w),
