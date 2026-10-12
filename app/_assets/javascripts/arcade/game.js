@@ -8,7 +8,7 @@ import { Agents } from "./agents";
 import { Input, keyCode } from "./input";
 import { Particles } from "./particles";
 import { Player, RUN_SPEED } from "./player";
-import { Rain, drawPrompt, drawBackdrop, drawWorld, drawHud, drawMinimap, drawKeybar, drawToast, drawBanner } from "./render";
+import { Rain, hudRight, drawPrompt, drawBackdrop, drawWorld, drawHud, drawMinimap, drawKeybar, drawToast, drawBanner } from "./render";
 
 const SCALE = 3;
 const STEP = 1 / 120;
@@ -217,6 +217,7 @@ class Game {
     this.canvas.style.height = `${this.height}px`;
     this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     this.ctx.imageSmoothingEnabled = false;
+    this.hudRight = hudRight();
     if (!this.world) return;
 
     // Ledges move and resize with the page, so carry the player and the exit

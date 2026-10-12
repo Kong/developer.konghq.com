@@ -1,7 +1,7 @@
 // Drawing helpers. The canvas is a fixed overlay the size of the viewport, so
 // world positions are drawn at (x - scrollX, y - scrollY).
 
-import { BRICK, CYAN, INK, LIME, MOSS, PALE, RED, SILVER, WHITE } from "./constants";
+import { BRICK, CYAN, INK, LIME, MOSS, PALE, RED, SILVER, WHITE, clamp } from "./constants";
 import { LEDGE_HEIGHT, LOSE_RATIO, SHIELD } from "./world";
 
 const GLYPHS =
@@ -10,6 +10,9 @@ const FONT = 'ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace';
 // Height of the site's sticky header, kept clear of the level and the HUD.
 const HEADER_OFFSET = 64;
 const MINIMAP_WIDTH = 14;
+const HUD_WIDTH = 320;
+// Gap between the page's content grid and the HUD when it sits in the gutter.
+const HUD_GAP = 24;
 // How far the page behind the game is washed out, per site theme.
 const BACKDROP = { dark: "rgba(0, 0, 0, 0.55)", light: "rgba(255, 255, 255, 0.6)" };
 
@@ -130,6 +133,16 @@ function drawLabel(ctx, text, centreX, y, color) {
   ctx.textAlign = "center";
   ctx.fillText(text, centreX, y);
   ctx.textAlign = "left";
+}
+
+// Right edge (viewport x) for the HUD and minimap. They hug the window edge,
+// but on wide screens they move into the right gutter next to the page grid
+// so they stay near the action. Reads layout, so call it on resize only.
+export function hudRight() {
+  const edge = window.innerWidth - Math.round(clamp(window.innerWidth * 0.015, 16, 32));
+  // The header's inner container spans the page grid on every page.
+  const grid = document.querySelector("#header-nav > *")?.getBoundingClientRect();
+  return grid ? Math.min(edge, grid.right + HUD_GAP + HUD_WIDTH) : edge;
 }
 
 // Pushes the docs back so the game reads first. The canvas greyscales the page
@@ -273,9 +286,9 @@ function panel(ctx, x, y, w, h, border = LIME) {
 export function drawHud(ctx, game, { centred = false } = {}) {
   const { world, sprites } = game;
   const ratio = world.corruptionRatio();
-  const width = 320;
+  const width = HUD_WIDTH;
   const height = 128 + world.terminals.length * 32;
-  const x = centred ? (window.innerWidth - width) / 2 : window.innerWidth - width - 16;
+  const x = centred ? (window.innerWidth - width) / 2 : game.hudRight - width;
   const y = centred ? (window.innerHeight - height) / 2 : HEADER_OFFSET + 12;
   if (centred) {
     ctx.font = `bold 28px ${FONT}`;
@@ -336,7 +349,7 @@ export function drawHud(ctx, game, { centred = false } = {}) {
 export function drawMinimap(ctx, game, top, time) {
   const { world, player } = game;
   const pageHeight = document.documentElement.scrollHeight;
-  const x = window.innerWidth - MINIMAP_WIDTH - 16;
+  const x = game.hudRight - MINIMAP_WIDTH;
   const bottom = window.innerHeight - 60;
   const height = bottom - top;
   if (height < 80) return;
