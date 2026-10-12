@@ -58,6 +58,7 @@ sections:
       - path: /deck/file/validate/
       - path: /deck/file/lint/
       - path: /deck/file/ai2kong/
+      - path: /deck/file/kong2ai/
       - path: /deck/file/openapi2kong/
       - path: /deck/file/openapi2mcp/
       - path: /deck/file/kong2kic/
