@@ -2048,7 +2048,7 @@ releases:
 
   - release: "3.16"
     latest: true
-    ee-version: "3.16.0.0"
+    ee-version: "3.16.0.1"
     eol: 2027-09-15
     distributions:
       - amazonlinux2023:
@@ -2281,6 +2281,7 @@ marketplaces:
   - Google Cloud Marketplace
 
 release_dates:
+  '3.16.0.1': 2026/10/12
   '3.13.0.11': 2026/09/28
   '3.10.0.19': 2026/09/28
   '3.14.0.15': 2026/09/17

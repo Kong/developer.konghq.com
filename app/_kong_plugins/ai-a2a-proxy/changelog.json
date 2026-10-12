@@ -1,4 +1,16 @@
 {
+  "3.16.0.1": [
+    {
+      "message": "Added A2A v1.0 wire-format support alongside v0.3.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "now rewrites the URL for all `supportedInterfaces` in the agent card.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.15.0.0": [
     {
       "message": "Reassembled SSE `data:` events that span multiple `body_filter`\nchunks and dropped oversized events safely, preventing `sse_last_event` type\nerrors that crashed the request on large agent responses.",
