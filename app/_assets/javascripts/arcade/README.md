@@ -6,7 +6,7 @@ This file is the handoff for iterating on the game. It records the owner's inten
 
 ## Status
 
-- Work-in-progress on branch `feat/arcade-easter-egg`, local only. Not pushed, no PR.
+- In review as [PR #7542](https://github.com/Kong/developer.konghq.com/pull/7542) from branch `feat/arcade-easter-egg`.
 - Target: ship live to everyone on merge to `main`. No feature flag and no brand/legal sign-off needed (owner decision). Rolling back means reverting the merge.
 - The owner playtests in their own browser and reports how it feels; tuning is driven by that feedback.
 

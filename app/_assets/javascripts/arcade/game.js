@@ -60,8 +60,16 @@ class Game {
     this.onKeyDown = this.onKeyDown.bind(this);
     this.onKeyUp = this.onKeyUp.bind(this);
     this.onWheel = this.onWheel.bind(this);
+    // Touch only needs to stop the page scrolling; it has no deltaY to look with.
+    this.onTouchMove = (event) => event.preventDefault();
     this.onResize = this.onResize.bind(this);
-    this.onBlur = () => this.input.releaseAll();
+    // Leaving the window or tab pauses a run, so the AI doesn't win while
+    // the player is away. Keys released elsewhere never send keyup here.
+    this.onBlur = () => {
+      this.input.releaseAll();
+      if (this.state === "playing") this.paused = true;
+    };
+    this.onVisibilityChange = () => document.hidden && this.onBlur();
     this.frame = this.frame.bind(this);
   }
 
@@ -95,9 +103,10 @@ class Game {
     window.addEventListener("keydown", this.onKeyDown, true);
     window.addEventListener("keyup", this.onKeyUp, true);
     window.addEventListener("wheel", this.onWheel, { passive: false });
-    window.addEventListener("touchmove", this.onWheel, { passive: false });
+    window.addEventListener("touchmove", this.onTouchMove, { passive: false });
     window.addEventListener("resize", this.onResize);
     window.addEventListener("blur", this.onBlur);
+    document.addEventListener("visibilitychange", this.onVisibilityChange);
 
     this.rain = new Rain(window.innerWidth, window.innerHeight);
     this.promptLines = [
@@ -129,9 +138,10 @@ class Game {
     window.removeEventListener("keydown", this.onKeyDown, true);
     window.removeEventListener("keyup", this.onKeyUp, true);
     window.removeEventListener("wheel", this.onWheel);
-    window.removeEventListener("touchmove", this.onWheel);
+    window.removeEventListener("touchmove", this.onTouchMove);
     window.removeEventListener("resize", this.onResize);
     window.removeEventListener("blur", this.onBlur);
+    document.removeEventListener("visibilitychange", this.onVisibilityChange);
     this.world?.reset();
     this.canvas.remove();
     this.announcer.remove();
