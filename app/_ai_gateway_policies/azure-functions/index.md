@@ -84,7 +84,7 @@ For details about how scopes work, see [AI Policy scopes](/ai-gateway/entities/a
   {{site.ai_gateway}} doesn't send the request to the provider.
 * **{{site.ai_gateway}} changes the request body first:** Before the policy runs, {{site.ai_gateway}} processes the request for the AI Model.
   For example, the `model` field in the body becomes the provider model name configured on the target, so the function receives that value instead of the AI Model name.
-* **Scope:** Attach the policy to an AI Model, AI Agent, or AI MCP Server.
+* **Scope:** Attach the policy to an AI Model, AI Agent, AI MCP Server, or AI Consumer.
   The policy doesn't support [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) scope.
 
 {:.warning}
