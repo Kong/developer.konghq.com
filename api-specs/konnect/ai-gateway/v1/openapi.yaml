@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect AI Gateway
-  version: 2.2.7
+  version: 2.2.9
   description: The API for configuring AI Gateways in Konnect.
   x-extensions-note: |
     Entities and properties may be annotated with `x-min-runtime-version`, the
@@ -18,8 +18,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@175471279c0aafd6528099bd99e003fde4b9a584
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/175471279c0aafd6528099bd99e003fde4b9a584'
+  x-oas-source: kong/platform-api@80e088321c82f23d3ffa3c0014d0860787f614ed
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/80e088321c82f23d3ffa3c0014d0860787f614ed'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -7503,11 +7503,55 @@ components:
           - consumer-group-1
       required:
         - deny
+    AIGatewayAllowWhenACL:
+      type: object
+      properties:
+        allow_when:
+          description: |-
+            Allow the request if it matches any of these CEL boolean expressions evaluated against the request context (consumer, principal, HTTP attributes, consumer groups, etc.). Exactly one of `allow`, `deny`, `allow_when`, or `deny_when` must be specified.
+
+            **Requires a minimum runtime version of `2.2`**.
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 1024
+            x-expression:
+              type: boolean
+          x-min-runtime-version: '2.2'
+      example:
+        allow_when:
+          - has(principal.metadata.tier) && principal.metadata.tier == 'partner'
+      required:
+        - allow_when
+    AIGatewayDenyWhenACL:
+      type: object
+      properties:
+        deny_when:
+          description: |-
+            Deny the request if it matches any of these CEL boolean expressions evaluated against the request context (consumer, principal, HTTP attributes, consumer groups, etc.). Exactly one of `allow`, `deny`, `allow_when`, or `deny_when` must be specified.
+
+            **Requires a minimum runtime version of `2.2`**.
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 1024
+            x-expression:
+              type: boolean
+          x-min-runtime-version: '2.2'
+      example:
+        deny_when:
+          - has(principal.metadata.status) && principal.metadata.status == 'suspended'
+      required:
+        - deny_when
     AIGatewayACLS:
-      description: Access control rules. Configure exactly one of `allow` or `deny`.
+      description: 'Access control rules. Configure exactly one of `allow`, `deny`, `allow_when`, or `deny_when`.'
       oneOf:
         - $ref: '#/components/schemas/AIGatewayAllowACL'
         - $ref: '#/components/schemas/AIGatewayDenyACL'
+        - $ref: '#/components/schemas/AIGatewayAllowWhenACL'
+        - $ref: '#/components/schemas/AIGatewayDenyWhenACL'
     AIGatewayAgentAccess:
       description: Access control configuration for an agent.
       type: object
@@ -15484,6 +15528,7 @@ components:
       type: string
       enum:
         - required
+        - unique
         - is_array
         - is_base64
         - is_boolean
@@ -15499,6 +15544,7 @@ components:
         - unknown_property
         - missing_reference
         - is_label
+        - key_invalid
         - matches_regex
         - invalid
         - is_supported_network_availability_zone_list
@@ -15595,6 +15641,68 @@ components:
         - reason
         - rule
         - maximum
+    InvalidParameterMinimumTime:
+      type: object
+      properties:
+        field:
+          type: string
+          example: to
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - min_time
+          nullable: false
+          readOnly: true
+        minimum:
+          type: string
+          format: date-time
+          example: '2026-10-01T00:00:00Z'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: 'must be no earlier than 2026-10-01T00:00:00Z'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - minimum
+    InvalidParameterMaximumTime:
+      type: object
+      properties:
+        field:
+          type: string
+          example: to
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - max_time
+          nullable: false
+          readOnly: true
+        maximum:
+          type: string
+          format: date-time
+          example: '2026-10-31T23:59:59Z'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: 'must be no later than 2026-10-31T23:59:59Z'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - maximum
     InvalidParameterChoiceItem:
       type: object
       properties:
@@ -15672,6 +15780,8 @@ components:
           - $ref: '#/components/schemas/InvalidParameterStandard'
           - $ref: '#/components/schemas/InvalidParameterMinimumLength'
           - $ref: '#/components/schemas/InvalidParameterMaximumLength'
+          - $ref: '#/components/schemas/InvalidParameterMinimumTime'
+          - $ref: '#/components/schemas/InvalidParameterMaximumTime'
           - $ref: '#/components/schemas/InvalidParameterChoiceItem'
           - $ref: '#/components/schemas/InvalidParameterDependentItem'
       minItems: 1
