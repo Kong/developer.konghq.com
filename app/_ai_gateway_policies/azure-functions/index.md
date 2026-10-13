@@ -80,7 +80,7 @@ The entity provides the route that clients call, and the policy answers the requ
 For details about how scopes work, see [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes).
 
 * **The upstream receives no traffic:** The policy answers the request itself.
-  An AI Model still requires an [AI Model Provider](/ai-gateway/entities/ai-provider/) target, and clients must still send the `model` field that the AI Model route matches on.
+  An AI Model still requires an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) target, and clients must still send the `model` field that the AI Model route matches on.
   {{site.ai_gateway}} doesn't send the request to the provider.
 * **{{site.ai_gateway}} changes the request body first:** Before the policy runs, {{site.ai_gateway}} processes the request for the AI Model.
   For example, the `model` field in the body becomes the provider model name configured on the target, so the function receives that value instead of the AI Model name.
