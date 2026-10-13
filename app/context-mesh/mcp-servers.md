@@ -95,11 +95,11 @@ You can update these fields at any time to change a {{site.context_mesh}} source
 
 ## {{site.context_mesh}} MCP servers
 
-{{site.context_mesh}} MCP servers are the compositon layer you create to bundle different sources together and deploy them as a single Code Mode MCP server. This becomes the source of truth for your agents after you deploy them on a {{site.konnect}} Control Plane.
+{{site.context_mesh}} MCP servers are the composition layer you create to bundle different sources together and deploy them as a single Code Mode MCP server. This becomes the source of truth for your agents after you deploy them on a {{site.konnect}} Control Plane.
 
-Each {{site.context_mesh}} MCP server inherits the capibilities listed in each one of its sources as follows:
+Each {{site.context_mesh}} MCP server inherits the capabilities listed in each one of its sources as follows:
 
-* **API sources:** each operation in the OpenAPI spec (a path and a method, for example `/flight` and `GET`) becomes a capabiliy. {{site.context_mesh}} automatically turns API operations into MCP tools. It does this by translating each API operation into Python code that creates an MCP tool that your agents can call. Fore example, an API source's `GET /flights` operation becomes a `listFlights` tool.
+* **API sources:** each operation in the OpenAPI spec (a path and a method, for example `/flight` and `GET`) becomes a capability. {{site.context_mesh}} automatically turns API operations into MCP tools. It does this by translating each API operation into Python code that creates an MCP tool that your agents can call. Fore example, an API source's `GET /flights` operation becomes a `listFlights` tool.
 * **MCP server sources:** {{site.context_mesh}} inherits whatever tools the remote MCP server already exposes. {{site.context_mesh}} doesn't define the tools, it only proxies them.
 
 When you create a {{site.context_mesh}} MCP server, you configure it with the following parameters:
@@ -171,7 +171,7 @@ rows:
 
 {% endtable %}
 
-## Auth
+## Auth = change title and add warning
 
 {{site.context_mesh}} sources can contain an authentication layer with custom headers. When an agent calls a tool though a {{site.context_mesh}} MCP server, that call turns into a network request: an HTTP call to an API, or a proxied call to a remote MCP server. Custom headers are a set of key-value pairs that work as follows:
 
@@ -185,7 +185,7 @@ Custom headers on {{site.context_mesh}} sources have these properties:
 * They apply identically to both source types: API sources and MCP server sources both support them, with the same shape.
 * They're optional.
 
-## Deployments
+## Deployments= update
 
 To run the {{site.context_mesh}} MCP server, you deploy it on a {{site.konnect}} Control Plane.
 You can deploy a {{site.context_mesh}} MCP server in two modes:
@@ -258,9 +258,16 @@ body:
   display_name: Flights API
   name: flights-api
   description: Flight search and booking operations
-  base_url: https://api.example.com
-  headers:
-    Authorization: Bearer $API_TOKEN
+  labels: {}
+  type: api
+  source:
+    type: api_catalog
+    config:
+      api_id: $API_ID
+      api_version_id: $API_VERSION_ID
+      base_url: https://api.example.com
+      headers:
+        Authorization: Bearer $API_TOKEN
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -286,6 +293,7 @@ body:
   display_name: Travel Assistant
   name: travel-assistant
   description: Flight and booking context for travel agents
+  labels: {}
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -347,7 +355,7 @@ body:
 {% endnavtab %}
 {% endnavtabs %}
 
-### Check the deployment status
+### Check the deployment status = remove and use pods checks
 
 {% navtabs "check-status" %}
 {% navtab "API" %}
@@ -362,10 +370,79 @@ method: GET
 {% endkonnect_api_request %}
 <!--vale on-->
 
-To review the Python code {{site.context_mesh}} generates for the MCP server, send a `GET` request to `/v1/context-interfaces/{interfaceId}/code`.
+To review the Python code {{site.context_mesh}} generates for the MCP server, send a `GET` request to `/v1/mcp-cp/{controlPlaneId}/mcp-servers/{interfaceId}/code`.
 
 {% endnavtab %}
 {% navtab "UI" %}
 
 {% endnavtab %}
 {% endnavtabs %}
+
+### Block capabilities
+
+You block capabilities on a source mapping, not on the source itself. To get the mapping ID, send a `GET` request to `/v1/context-interfaces/{interfaceId}/context-source-mappings`.
+
+{% navtabs "block-capabilities" %}
+{% navtab "API source" %}
+
+Send a `POST` request to the `/v1/context-interfaces/{interfaceId}/context-source-mappings/{mappingId}/capability-controls` endpoint. Each operation is a path and the methods to block on that path:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/context-interfaces/$INTERFACE_ID/context-source-mappings/$MAPPING_ID/capability-controls
+status_code: 201
+method: POST
+body:
+  type: api
+  deny:
+    operations:
+      - path: /flights
+        methods:
+          - PUT
+          - DELETE
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{% endnavtab %}
+{% navtab "MCP server source" %}
+
+Send a `POST` request to the `/v1/context-interfaces/{interfaceId}/context-source-mappings/{mappingId}/capability-controls` endpoint. You must include `tools`, `resources`, and `prompts`. Use an empty array for any you don't want to block:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/context-interfaces/$INTERFACE_ID/context-source-mappings/$MAPPING_ID/capability-controls
+status_code: 201
+method: POST
+body:
+  type: mcp_server
+  deny:
+    tools:
+      - listFlights
+    resources:
+      - flight-schedule.json
+    prompts: []
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{% endnavtab %}
+{% endnavtabs %}
+
+To change blocked capabilities later, send a `PATCH` request to the same endpoint with the `type` and the `deny` keys you want to change:
+* Omitted keys keep their existing value.
+* An empty array clears that capability.
+* A non-empty array replaces the existing list.
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/context-interfaces/$INTERFACE_ID/context-source-mappings/$MAPPING_ID/capability-controls
+status_code: 200
+method: PATCH
+body:
+  type: mcp_server
+  deny:
+    prompts:
+      - summarize-booking
+{% endkonnect_api_request %}
+<!--vale on-->
+
+To see the current blocked capabilities, send a `GET` request to the same endpoint.
