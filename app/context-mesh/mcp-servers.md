@@ -86,7 +86,7 @@ features:
     required: false
   - title: "Custom headers"
     description: |
-      Extra HTTP headers injected onto every request that Context Mesh formards to the source's backing service, for auth and identification.
+      Extra HTTP headers injected onto every request that Context Mesh forwards to the source's backing service, for auth and identification.
     required: false
 
 {% endfeature_table %}
@@ -95,11 +95,11 @@ You can update these fields at any time to change a {{site.context_mesh}} source
 
 ## {{site.context_mesh}} MCP servers
 
-{{site.context_mesh}} MCP servers are the composion layer you create to bundle different sources together and deploy deploy them as a single Code Mode MCP server. This becomes the source of truth for your agents after you deploy them on a {{site.konnect}} Control Plane.
+{{site.context_mesh}} MCP servers are the compositon layer you create to bundle different sources together and deploy them as a single Code Mode MCP server. This becomes the source of truth for your agents after you deploy them on a {{site.konnect}} Control Plane.
 
-Each {{site.context_mesh}} MCP server inherits the capabilities listed in each one of its sources as follows:
+Each {{site.context_mesh}} MCP server inherits the capibilities listed in each one of its sources as follows:
 
-* **API sources:** each operation in the OpenAPI spec (a path and a method, for example `/flight` and `GET`) becomes a capabiliy. {{site.context_mesh}} automatically turns API operations into MCP tools. It does this by translatinf each API opeartion into Python code that creates an MCP tool that your agents can call. Fore example, an API source's `GET /flights` operation becomes a `listFlights` tool.
+* **API sources:** each operation in the OpenAPI spec (a path and a method, for example `/flight` and `GET`) becomes a capabiliy. {{site.context_mesh}} automatically turns API operations into MCP tools. It does this by translating each API operation into Python code that creates an MCP tool that your agents can call. Fore example, an API source's `GET /flights` operation becomes a `listFlights` tool.
 * **MCP server sources:** {{site.context_mesh}} inherits whatever tools the remote MCP server already exposes. {{site.context_mesh}} doesn't define the tools, it only proxies them.
 
 When you create a {{site.context_mesh}} MCP server, you configure it with the following parameters:
@@ -173,7 +173,7 @@ rows:
 
 ## Auth
 
-{{site.context_mesh}} sources can contain an authetication layer with custom headers. When an agent calls a tool though a {{site.context_mesh}} MCP server, that call turns into a network request: an HTTP call to an API, or a proxied call to a remote MCP server. Custom headers are a set of key-value pairs that work as follows:
+{{site.context_mesh}} sources can contain an authentication layer with custom headers. When an agent calls a tool though a {{site.context_mesh}} MCP server, that call turns into a network request: an HTTP call to an API, or a proxied call to a remote MCP server. Custom headers are a set of key-value pairs that work as follows:
 
 1. You configure the custom headers once on the {{site.context_mesh}} source.
 1. {{site.context_mesh}} attach the custom headers to every request, without the agent ever knowing they exist.
