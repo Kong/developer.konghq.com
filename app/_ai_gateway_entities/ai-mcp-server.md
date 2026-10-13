@@ -570,7 +570,8 @@ Use them when access depends on Consumer attributes or request context, not only
 To use them, set `allow_when` or `deny_when` on the server-level [`access.acls`](#schema-aigateway-mcpserver-access-acls) object.
 Each field is an array of expressions, 1 to 1024 characters each.
 The expressions are evaluated against the authenticated AI Consumer and the request, and use the same field vocabulary as [plugin conditions](/gateway/plugins/conditions/).
-Configure exactly one of `allow`, `deny`, `allow_when`, or `deny_when` per `access.acls` object.
+`allow_when` and `deny_when` are mutually exclusive with `allow` and `deny`.
+For AI MCP Servers, you can set `allow` and `deny` together, as described in [ACL evaluation logic](#acl-evaluation-logic).
 
 The following example allows requests from AI Consumers in the `internal-teams` AI Consumer Group, and from the AI Consumer `alice`:
 
