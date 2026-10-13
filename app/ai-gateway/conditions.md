@@ -429,6 +429,7 @@ When the data plane log level is `debug`, {{site.ai_gateway}} logs the result of
 [debug] plugins_iterator.lua:712 plugin condition not matched for plugin 'mocking' (ID: dae2e503-2d0d-5b2f-8790-2c899f50ecc6): skipped
 [error] plugins_iterator.lua:702 error evaluating plugin condition for plugin 'mocking' (ID: a888c3dc-1e54-59e7-b828-aee297268be6): Key not found in map : "foo"
 ```
+{:.no-copy-code}
 
 The plugin name and ID refer to the plugin that {{site.ai_gateway}} generates from the AI Policy, not to the AI Policy itself.
 The error line is logged at `error` level, so it appears at any log level.
