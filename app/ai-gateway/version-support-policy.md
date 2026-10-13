@@ -97,6 +97,7 @@ Kong supports the following versions of {{site.ai_gateway_name}}:
 
 {{site.ai_gateway_name}} 2.2 supports the following deployment targets until 2027-03-30, unless otherwise noted by an earlier OS vendor end of life (EOL) date.
 
+<!--vale off-->
 {% table %}
 columns:
   - title: OS
@@ -126,12 +127,14 @@ rows:
     fips: true
     eol: "2027-03-30"
 {% endtable %}
+<!--vale on-->
 {% endnavtab %}
 {% navtab "2.1" %}
 {{site.ai_gateway_name}} 2.1 was released on 2026-09-24.
 
 {{site.ai_gateway_name}} 2.1 supports the following deployment targets until 2026-10-24, unless otherwise noted by an earlier OS vendor end of life (EOL) date.
 
+<!--vale off-->
 {% table %}
 columns:
   - title: OS
@@ -161,6 +164,7 @@ rows:
     fips: true
     eol: "2026-10-24"
 {% endtable %}
+<!--vale on-->
 {% endnavtab %}
 {% endnavtabs %}
 
@@ -174,6 +178,7 @@ rows:
 
 The following versions of {{site.ai_gateway_name}} have reached the end of full support:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Version
@@ -190,6 +195,7 @@ rows:
     eol: "2026-09-30"
     sunset: "2026-10-31"
 {% endtable %}
+<!--vale on-->
 
 ## Bug fix guidelines
 
