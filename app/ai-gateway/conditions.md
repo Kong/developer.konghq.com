@@ -57,7 +57,7 @@ For each AI Policy that has a `condition` set, {{site.ai_gateway}} evaluates the
 
 Unlike scopes, which determine which AI Policies can apply to a request, conditions are evaluated per request, per AI Policy.
 
-When a condition evaluates to `false`, {{site.ai_gateway}} skips the AI Policy in every phase of the request. <!-- TODO: confirm the rewrite and certificate phases with engineering if the page needs to mention them. -->
+When a condition evaluates to `false`, {{site.ai_gateway}} skips the AI Policy in every phase of the request.
 
 {{site.ai_gateway}} evaluates a condition after it applies scope precedence.
 When AI Policies of the same type apply at more than one scope, only the most specific one is considered, and its condition then decides whether it runs.
@@ -80,8 +80,6 @@ When you use conditions, keep the following in mind:
 * A condition must evaluate to a boolean. {{site.ai_gateway}} rejects any other result when you save the AI Policy.
 * A condition can be up to 1024 characters long. {{site.ai_gateway}} rejects longer expressions when you save the AI Policy with `maximum string length is 1024`.
 * Conditions require {{site.ai_gateway}} 2.1 or later.
-
-<!-- TODO: confirm whether any AI Policy type doesn't support conditions. Base Gateway excludes Pre-Function, Post-Function, and the WebSocket plugins. -->
 
 ## Condition expressions reference
 
