@@ -57,10 +57,10 @@ rows:
     legacy: |
       Walks plugins from highest to lowest priority. Before placing a plugin, it places everything that plugin depends on, however low that chain sits in the priority list.
     priority_preserving: |
-      Repeats one step until every plugin has run: run the highest-priority plugin whose `after` requirements are already met.
+      Places each configured plugin next to the plugin it references, then keeps the remaining plugins in priority order.
   - item: "`before` and `after`"
     legacy: |
-      Build the same dependency. Writing the rule on either plugin gives the same order."
+      Build the same dependency. Writing the rule on either plugin gives the same order.
     priority_preserving: |
       Move different plugins. `A before B` moves `A`, and `B after A` moves `B`.
   - item: Plugins that move
@@ -73,7 +73,7 @@ rows:
     priority_preserving: "Names the plugins on the cycle."
 {% endtable %}
 
-Upgrading {{site.base_gateway}} doesn't change the algorithm, so your current `access` phase order stays the same until you [switch algorithms](#switching-algorithms).
+Upgrading {{site.base_gateway}} doesn't change the algorithm, so your current `access` phase order stays the same until you [migrate to `priority_preserving`](#migrate-from-legacy-to-priority-preserving).
 
 ## Example
 
@@ -180,7 +180,7 @@ rows:
 When several rules interact, `priority_preserving` places each plugin next to its anchor without searching for the order that disturbs the fewest unconfigured plugins.
 
 For example, let's look at Key Auth, LDAP Auth, Header Cert Auth, and Response Transformer in priority order. 
-If you set Header Cert Auth `before` Response Transformer and Response Transformer `before` Key Auth, the resulting order looks this:
+If you set Header Cert Auth `before` Response Transformer and Response Transformer `before` Key Auth, the resulting order looks like this:
   1. Header Cert Auth
   1. Response Transformer
   1. Key Auth
@@ -216,7 +216,6 @@ With `legacy`, the message is:
 
 ```
 There is a circular dependency in the graph. It is not possible to derive a topological sort.
-```
 
 With `priority_preserving`, the error message also lists the plugins that form the circular dependency.
 
