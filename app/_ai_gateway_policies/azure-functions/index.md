@@ -6,7 +6,11 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+tools:
+  - konnect-api
+  - kongctl
 description: Invoke and manage Azure functions from {{site.ai_gateway_name}}
+
 tags:
   - serverless
   - azure
@@ -66,6 +70,7 @@ data:
     apikey: $AZURE_API_KEY
 formats:
   - konnect-api
+  - kongctl
 {% endentity_example %}
 
 ## Use the policy in {{site.ai_gateway}}
