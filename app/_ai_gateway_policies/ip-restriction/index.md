@@ -68,10 +68,12 @@ Apply the IP Restriction Policy globally to restrict all {{site.ai_gateway}} tra
 For details about how scopes work, see [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes).
 
 {:.warning}
-> **AI Model scope:** **Do not** rely on an IP Restriction Policy attached to an AI Model to block clients.
-> In {{site.ai_gateway}} 2.2.0, an AI Model doesn't enforce `deny` rules from an attached IP Restriction Policy.
-> To restrict access to a Model, apply the policy globally or restrict access in front of {{site.ai_gateway}}.
-
+> **AI Model scope:** Do not attach an IP Restriction Policy to an AI Model to block clients.
+>
+> The AI Policy runs before {{site.ai_gateway}} identifies the Model for the request, so its Model scope never matches and {{site.ai_gateway}} skips the policy without logging anything.
+>
+> The control plane still accepts the configuration, so the request succeeds and the restriction isn't applied.
+> As a temporary workaround, apply the policy globally and use a [`condition`](/ai-gateway/entities/ai-policy/#conditional-ai-policy-execution) to run it only where you need it.
 
 ## How is the IP address determined?
 
