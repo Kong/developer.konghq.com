@@ -153,14 +153,14 @@ For example, an ACL AI Policy doesn't support AI Consumer or AI Consumer Group s
 
 Scope precedence determines which AI Policy runs when AI Policies of the same type apply to a request at more than one scope.
 Only the most specific AI Policy runs.
-From most to least specific, the order is:
+From most to least specific scope, the order is:
 
 1. AI Consumer
 1. AI Consumer Group
 1. AI Model, AI Agent, or AI MCP Server
 1. Global
 
-For example, if a global AI Rate Limiting Advanced AI Policy and one scoped to an AI Model both apply to a request, only the Model-scoped AI Policy runs.
+For example, if a global AI Rate Limiting Advanced Policy and one scoped to an AI Model both apply to a request, only the Model-scoped AI Policy runs.
 Requests to other Models still use the global AI Policy.
 
 {:.info}
@@ -169,7 +169,7 @@ Requests to other Models still use the global AI Policy.
 > An AI Consumer can belong to several AI Consumer Groups, and more than one of those groups can have an AI Policy of the same type.
 > In that case, only one of those AI Policies runs.
 > {{site.ai_gateway}} sorts the AI Consumer's groups by name and uses the AI Policy from the first group in that order that has one.
-> For example, if an AI Consumer is in the groups `alpha` and `beta`, and both have an AI Prompt Guard AI Policy, only the AI Policy on `alpha` runs.
+> For example, if an AI Consumer is in the groups `alpha` and `beta`, and both have an AI Prompt Guard Policy, only the AI Policy on `alpha` runs.
 > The order in which you add the AI Consumer to the groups doesn't change the result.
 >
 > {{site.ai_gateway}} doesn't guarantee this order, and it can change in a future release.
@@ -191,8 +191,6 @@ The following table lists the priority of every built-in AI Policy type, from hi
 
 {% ai_policy_priorities %}
 
-{:.info}
-> These values apply to the current {{site.ai_gateway}} release and can change in a future release.
 
 ## Conditional AI Policy execution
 
@@ -213,7 +211,7 @@ In the expression, write header names with underscores in place of hyphens, so `
 
 For the condition `http.headers.x_tier == "premium"`:
 * A request with the header `x-tier: premium` matches, so the AI Policy runs.
-* A request with `x-tier: free`, any other value, or no `x-tier` header doesn't match. {{site.ai_gateway}} skips the AI Policy and processes the request as if the AI Policy weren't attached.
+* A request with `x-tier: free`, any other value, or no `x-tier` header doesn't match. {{site.ai_gateway}} skips the AI Policy and processes the request without applying the AI Policy.
 
 ## Protocols
 
@@ -228,7 +226,7 @@ Otherwise, {{site.ai_gateway}} skips the AI Policy for that route.
 
 An AI Policy specifies a `type` (like AI Sanitizer or AI Rate Limiting Advanced) and a `config` block that configures that behavior. {{site.ai_gateway}} applies the AI Policy at the scope you choose: globally across all traffic, or scoped to the entities where it is referenced.
 
-The following example creates a global AI PII Sanitizer AI Policy that runs for every {{site.ai_gateway}} Route. It anonymizes high-risk PII categories (email, phone, SSN, and credit cards) along with custom patterns for sensitive tokens like AWS API keys and GitHub tokens.
+The following example creates a global AI PII Sanitizer Policy that runs for every {{site.ai_gateway}} Route. It anonymizes high-risk PII categories (email, phone, SSN, and credit cards) along with custom patterns for sensitive tokens like AWS API keys and GitHub tokens.
 
 {:.info}
 > This AI Policy connects to an AI PII Anonymizer service at `host`/`port` (`sanitizer-service.internal:8080` in this example) to perform the actual sanitization. Substitute the address of your own running instance. See [AI PII Anonymizer service](/ai-gateway/policies/ai-sanitizer/#ai-pii-anonymizer-service) for image access and setup instructions.
