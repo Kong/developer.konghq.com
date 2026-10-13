@@ -52,6 +52,7 @@ sections:
         url: /ai-gateway/ai-clis/
       - path: /ai-gateway/forward-proxy/
       - path: /ai-gateway/semantic-similarity/
+      - path: /ai-gateway/conditions/
       - path: /ai-gateway/changelog/
       - path: /ai-gateway/version-support-policy/
 
