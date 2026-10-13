@@ -132,6 +132,8 @@ targets:
       upstream_url: https://model-<MODEL_ID>.api.baseten.co/environments/production/sync/v1/chat/completions
 ```
 
+If your deployment exposes an API that the `generate` capability doesn't cover, you can use the [passthrough format](/ai-gateway/passthrough/) instead. Set `formats[].type` to `passthrough` on the AI Model. Passthrough requires {{site.ai_gateway}} 2.2 or later.
+
 The same API key authenticates to both Model APIs and dedicated deployments in your Baseten workspace, so one AI Model Provider can serve both kinds of target.
 
 <!-- TODO(reviewer): confirm the default model selector matches the AI Model name (`deepseek-v4-pro`) rather than the slash-containing target name. -->
