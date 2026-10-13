@@ -76,7 +76,7 @@ When you use conditions, keep the following in mind:
 
 ## Limitations
 
-* Conditions apply to HTTP and HTTPS traffic only. <!-- TODO: confirm WebSocket behavior. -->
+* Conditions apply to HTTP, HTTPS, and WebSocket (`ws` and `wss`) traffic. They aren't supported on stream (TCP, TLS, and UDP) routes.
 * A condition must evaluate to a boolean. {{site.ai_gateway}} rejects any other result when you save the AI Policy.
 * A condition can be up to 1024 characters long. {{site.ai_gateway}} rejects longer expressions when you save the AI Policy with `maximum string length is 1024`.
 * Conditions require {{site.ai_gateway}} 2.1 or later.
