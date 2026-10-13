@@ -216,6 +216,8 @@ With `legacy`, the message is:
 
 ```
 There is a circular dependency in the graph. It is not possible to derive a topological sort.
+```
+{:.no-copy-code}
 
 With `priority_preserving`, the error message also lists the plugins that form the circular dependency.
 
