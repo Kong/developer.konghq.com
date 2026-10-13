@@ -34,7 +34,7 @@ These were chosen by the owner, often after trying the alternative. Change them 
 - `0451` anywhere except form fields → Matrix rain (any key skips) → WarGames-style "SHALL WE PLAY A GAME? [Y/N]" with the mission → play.
 - Controls: arrows/WASD move, Space jump with one double jump, ↓ drops through a ledge (hold to keep falling), hold E at a terminal to enable its plugin, mouse wheel looks around, P pauses, M mutes, Esc twice exits. A keybar at the bottom lists them.
 - Pause (P, mid-run only) freezes everything: corruption, agents, effect timers, toasts and the run clock. The status box moves to the centre under a PAUSED title and the keybar reads "PRESS P TO UNPAUSE". M and Esc twice still work while paused.
-- Win: enable every terminal → corruption clears, agents vanish, a flashing EXIT door opens a little further down the page → reach it.
+- Win: enable every terminal → corruption clears, agents vanish, a flashing EXIT door opens a little further down the page → reach it. Touching the door records the run, then a small Italian flag rises up a pole beside it (`FLAG_SECONDS`, then `FLAG_HOLD`) before the win screen.
 - Lose: corruption reaches `LOSE_RATIO`, all lives gone, or a terminal stays cut off for `CUTOFF_GRACE` seconds (a red countdown warns first and clears if a path reopens).
 - Winning stores the best time in `localStorage` key `kong-docs-arcade` and shows a pixel star beside the header logo (tooltip with time, links to Kong careers). The win screen shows time and best time, and C opens careers. Clear it with `localStorage.removeItem("kong-docs-arcade")`.
 

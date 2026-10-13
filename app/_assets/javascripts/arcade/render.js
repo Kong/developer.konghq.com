@@ -195,6 +195,7 @@ export function drawWorld(ctx, game, time) {
     const sprite = sprites.door[Math.floor(time * 4) % 2];
     ctx.drawImage(sprite, door.x - sx, door.y - sy);
     drawLabel(ctx, "EXIT", door.x - sx + sprite.width / 2, door.y - sy - 10, LIME);
+    if (game.flag) drawFlag(ctx, game, sx, sy, time);
   }
 
   world.terminals.forEach((terminal) => {
@@ -272,6 +273,26 @@ export function drawWorld(ctx, game, time) {
   ctx.restore();
   ctx.globalAlpha = 1;
   ctx.restore();
+}
+
+// A pole beside the exit door with the flag eased up it.
+function drawFlag(ctx, game, sx, sy, time) {
+  const { sprites, exitDoor: door, flag } = game;
+  const top = game.flagPole();
+  const bottom = door.ground.y;
+  const x = top.x - sx;
+  ctx.fillStyle = INK;
+  ctx.fillRect(x - 3, top.y - sy - 3, 6, bottom - top.y + 3);
+  ctx.fillStyle = SILVER;
+  ctx.fillRect(x - 1, top.y - sy - 1, 2, bottom - top.y + 1);
+  ctx.fillStyle = LIME;
+  ctx.fillRect(x - 3, top.y - sy - 6, 6, 5);
+
+  const sprite = sprites.flag[Math.floor(time * 6) % 2];
+  const eased = 1 - (1 - Math.min(1, flag.progress)) ** 3;
+  const lowest = bottom - sprite.height - 4;
+  const y = lowest + (top.y - lowest) * eased;
+  ctx.drawImage(sprite, x + 1, y - sy);
 }
 
 function panel(ctx, x, y, w, h, border = LIME) {

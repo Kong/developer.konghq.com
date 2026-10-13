@@ -24,6 +24,9 @@ const REACH_CHECK_SECONDS = 0.5;
 // How long a terminal can stay cut off before the run is lost.
 const CUTOFF_GRACE = 8;
 const TOAST_SECONDS = 3;
+// Reaching the exit raises a flag before the win screen.
+const FLAG_SECONDS = 1.2;
+const FLAG_HOLD = 0.6;
 
 const STYLE = `
   .arcade-corrupted { filter: hue-rotate(250deg) saturate(2.5) blur(0.6px); opacity: 0.5; transition: filter 0.3s, opacity 0.3s; }
@@ -251,6 +254,7 @@ class Game {
     this.lookReturning = false;
     this.paused = false;
     this.exitDoor = null;
+    this.flag = null;
     this.runTime = 0;
     this.camera = Math.max(0, this.player.y - this.height * 0.4);
     this.lives = LIVES;
@@ -325,6 +329,8 @@ class Game {
       }
     } else if (this.state === "playing") {
       this.updatePlaying(dt);
+    } else if (this.state === "finishing") {
+      this.updateFlag(dt);
     } else if (this.state === "won" || this.state === "lost") {
       if (this.input.pressed.has("KeyR")) this.beginPlay();
       this.particles.update(dt);
@@ -384,9 +390,9 @@ class Game {
       if (this.atExit()) {
         this.bestTime = recordWin(this.runTime);
         this.trackEnd("won");
-        this.sfx?.win();
-        this.particles.burst(player.centreX, player.y, LIME, 60);
-        this.setState("won");
+        this.sfx?.flag();
+        this.flag = { progress: 0 };
+        this.setState("finishing");
       }
     } else if (world.allPatched()) {
       this.unlockExit();
@@ -407,6 +413,27 @@ class Game {
     this.placeDoor(ledge || world.floor, ledge ? null : player.x);
     this.sfx?.win();
     this.toast("EXIT UNLOCKED", "Every plugin enabled. Reach the door further down.");
+  }
+
+  // The flag climbs the pole beside the exit, then holds a moment before the
+  // win screen. The run is already recorded when the player touches the door.
+  updateFlag(dt) {
+    const flag = this.flag;
+    const wasRaised = flag.progress >= 1;
+    flag.progress += dt / FLAG_SECONDS;
+    if (flag.progress >= 1 && !wasRaised) {
+      this.sfx?.win();
+      const { x, y } = this.flagPole();
+      this.particles.burst(x, y, LIME, 60);
+    }
+    this.particles.update(dt);
+    if (flag.progress >= 1 + FLAG_HOLD / FLAG_SECONDS) this.setState("won");
+  }
+
+  // Top of the flag pole, beside the exit door.
+  flagPole() {
+    const door = this.exitDoor;
+    return { x: door.x + door.width + 6, y: door.y - 100 };
   }
 
   // Centred on a ledge, or at `x` on the floor.

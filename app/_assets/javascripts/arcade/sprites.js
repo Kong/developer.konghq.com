@@ -50,6 +50,16 @@ const DOOR = [
   "GGGGGGGGGGGGGG",
 ];
 
+// The Italian tricolour, green (V), white (W) and red (T), with the middle
+// band dipped a pixel in the waving frame.
+function flagRows(wave) {
+  const blank = ".".repeat(12);
+  const rows = [blank, ...Array(8).fill("VVVVWWWWTTTT"), blank];
+  if (!wave) return rows;
+  return rows.map((_, y) => rows[y].slice(0, 4) + (rows[y - 1] ?? blank).slice(4, 8) + rows[y].slice(8));
+}
+const FLAG_COLORS = { V: "#009246", T: "#ce2b37" };
+
 const HEART = [".RR.RR.", "RRRRRRR", "RRRRRRR", ".RRRRR.", "..RRR..", "...R..."];
 
 const EYE = [
@@ -185,6 +195,7 @@ export function makeSprites(scale) {
     },
     eye: rasterise(EYE, scale),
     door: [rasterise(DOOR, scale), rasterise(DOOR, scale, { G: WHITE, K: MOSS, W: LIME })],
+    flag: [false, true].map((wave) => rasterise(flagRows(wave), scale, FLAG_COLORS)),
     orb: rasterise(ORB, 3),
     heart: rasterise(HEART, 2),
     heartEmpty: rasterise(HEART, 2, { R: "#3a3f47" }),

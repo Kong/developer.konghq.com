@@ -102,6 +102,10 @@ export class Sfx {
     this.arpeggio([262, 392, 523, 784], 0.09, "triangle", 0.4);
   }
 
+  flag() {
+    this.tone({ freq: 330, to: 990, dur: 1.2, type: "triangle", vol: 0.25 });
+  }
+
   win() {
     this.arpeggio([523, 659, 784, 1047, 784, 1047, 1319], 0.1);
   }
