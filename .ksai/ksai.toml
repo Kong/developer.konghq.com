@@ -15,3 +15,20 @@ paths = [
   "!api-specs/**",
 ]
 source_files = ["review-rules/no-copy-code.md"]
+
+[[review.packs]]
+name = "Redirects on page removal"
+paths = [
+  "app/_redirects",
+  "app/**/*.md",
+  "app/_landing_pages/**/*.yaml",
+  "app/_indices/**/*.yaml",
+  "!app/_references/**",
+  "!app/_changelogs/**",
+  "!app/_schemas/gateway/plugins/**",
+  "!app/_includes/deck/help/**",
+  "!app/_includes/kongctl/help/**",
+  "!app/_api/**",
+  "!api-specs/**",
+]
+source_files = ["review-rules/redirects-on-removal.md"]
