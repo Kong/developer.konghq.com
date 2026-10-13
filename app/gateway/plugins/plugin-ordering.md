@@ -32,14 +32,14 @@ related_resources:
 Every {{site.base_gateway}} plugin has a static [priority](/gateway/entities/plugin/#plugin-priority) that decides the order that plugins run in.
 [Dynamic plugin ordering](/gateway/entities/plugin/#dynamic-plugin-ordering) lets you override that order by adding an `ordering` rule to a plugin, so that it runs `before` or `after` another plugin.
 
-The [`plugin_ordering_algorithm` setting](/gateway/configuration/#plugin-ordering-algorithm) in `kong.conf` selects how {{site.base_gateway}} resolves those rules.
-This reference helps you predict the order and decide which algorithm to use.
+The [`plugin_ordering_algorithm` setting](/gateway/configuration/#plugin-ordering-algorithm) in `kong.conf` tells {{site.base_gateway}} how to resolve the plugin ordering rules.
+Use this reference to help you predict the order and decide which algorithm to use.
 
 {:.warning}
 > Dynamic ordering only affects the `access` phase.
 > All other phases (`header_filter`, `body_filter`, `response`, and `log`) always run in static priority order.
 
-## Algorithms
+## Algorithm comparison
 
 The available algorithms are `legacy` and `priority_preserving`, with `legacy` as default.
 
@@ -53,29 +53,30 @@ columns:
       `priority_preserving` {% new_in 3.16 %}
     key: priority_preserving
 rows:
-  - item: How the order is built
+  - item: "[How is the order determined?](#ordering-behavior)"
     legacy: |
-      Walks plugins from highest to lowest priority. Before placing a plugin, it places everything that plugin depends on, however low that chain sits in the priority list.
+      Places plugins from highest to lowest priority. 
+      Before placing a plugin, it places everything that plugin depends on, however low that chain sits in the priority list.
     priority_preserving: |
       Places each configured plugin next to the plugin it references, then keeps the remaining plugins in priority order.
-  - item: "`before` and `after`"
+  - item: "[Should I use `before` or `after`?](#choosing-between-before-and-after)"
     legacy: |
-      Build the same dependency. Writing the rule on either plugin gives the same order.
+      Both `before` and `after` build the same dependency. 
+      Writing the rule on either plugin gives the same order.
     priority_preserving: |
-      Move different plugins. `A before B` moves `A`, and `B after A` moves `B`.
-  - item: Plugins that move
+      The algorithm will move different plugins depending on where you put the setting. 
+      `A before B` moves `A`, and `B after A` moves `B`.
+  - item: "[Which plugins move?](#plugins-with-the-same-priority)"
     legacy: |
-      The plugin you configure, plus any plugin that sits between it and its dependencies in priority order.
+      The plugin you configure moves, plus any plugin that sits between it and its dependencies in priority order.
     priority_preserving: |
-      The plugin you configure. Unconfigured plugins keep their order relative to each other.
-  - item: Circular rule error
-    legacy: "Generic message that doesn't name the plugins."
-    priority_preserving: "Names the plugins on the cycle."
+      The plugin you configure moves. 
+      Unconfigured plugins keep their orders relative to each other.
 {% endtable %}
 
 Upgrading {{site.base_gateway}} doesn't change the algorithm, so your current `access` phase order stays the same until you [migrate to `priority_preserving`](#migrate-from-legacy-to-priority-preserving).
 
-## Example
+### Rule resolution example
 
 Consider the following plugins, which have static priorities and one ordering rule:
 
@@ -125,9 +126,9 @@ rows:
 {% endtable %}
 
 In both results, `pre-function` runs after `opentelemetry`.
-The difference is in the other plugins.
-Under `legacy`, `request-callout` moves from second to last, even though it has no rule.
-Under `priority_preserving`, it only moves up one position to make room for `pre-function`.
+The difference is in the other plugins:
+* Under `legacy`, `request-callout` moves from second to last, even though it has no rule.
+* Under `priority_preserving`, `request-callout` only moves up one position to make room for `pre-function`.
 
 ## Ordering behavior
 
