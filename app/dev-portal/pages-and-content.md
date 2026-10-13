@@ -122,6 +122,20 @@ about         ← URL: "/about"
 ```
 {:.no-copy-code}
 
+### Page layouts
+
+Instead of starting from a blank page, you can build a page from a pre-built layout. Set the layout in the page's front matter with the `layout` property. A page that omits `layout`, or names one that doesn't exist, uses `custom`.
+
+The following layouts are available:
+
+* `custom` (default): No built-in chrome. You build the whole page yourself, including sidebars and header. Use this for a landing page or anything the other layouts don't fit. Because `custom` doesn't render a title or description from front matter, give the page its own heading in the body.
+* `guide`: Contains navigation, content, and a table of contents. Use this for long-form documentation where readers browse sibling pages and jump to a section.
+* `reference`: Contains navigation and content. Use this for shorter conceptual pages.
+* `wide`: Contains navigation and content, but the contents space has a wider column. Use this for content that needs more horizontal room, like a wide table or a generated API reference.
+* `center`: A single centered column, without sidebars. Use this for release notes or articles.
+
+For information about how to customize a layout's sidebars and header, or configure page navigation, see the [Markdown Components reference](https://portaldocs.konghq.com/).
+
 ### Page visibility and publishing
 
 You can choose to make a page public or private and publish or unpublish it. To control page visibility and publishing, click a page in the Portal Editor and click the menu at the top right.
