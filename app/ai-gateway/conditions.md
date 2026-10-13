@@ -399,7 +399,7 @@ rows:
 
 ## Validation
 
-{{site.ai_gateway}} validates the condition when you save the AI Policy and rejects it with a `400` error in these cases: <!-- [LIVE] -->
+{{site.ai_gateway}} validates the condition when you save the AI Policy and rejects it with a `400` error in these cases:
 
 * **Syntax error:** the expression isn't valid CEL, for example `http.headers.x_tier ====`.
 * **Unsupported variable:** the expression uses a variable that isn't in the supported list, for example `http.request.headers.x_tier`.
