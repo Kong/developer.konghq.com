@@ -102,7 +102,7 @@ data:
   type: ai-aws-guardrails
   config:
     aws_region: us-east-1
-    guardrails_id: YOUR_GUARDRAIL_ID
+    guardrails_id: ${guardrails_id}
     guardrails_version: DRAFT
     aws_access_key_id: ${aws_access_key_id}
     aws_secret_access_key: ${aws_secret_access_key}
