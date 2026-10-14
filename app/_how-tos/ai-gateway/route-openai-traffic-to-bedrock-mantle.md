@@ -63,7 +63,7 @@ TODO(reviewer, AI-123):
 
 ## Create an AI Model Provider
 
-Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) of type `bedrock` that stores your AWS credentials. The same provider works for Bedrock Runtime and Bedrock Mantle targets:
+Create a `bedrock` type [AI Model Provider](/ai-gateway/entities/ai-model-provider/) that stores your AWS credentials. The same provider works for Bedrock Runtime and Bedrock Mantle targets:
 
 {% entity_examples %}
 ai_gateway_model_providers:

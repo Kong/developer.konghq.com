@@ -108,7 +108,7 @@ Both authentication methods work with the `runtime` and `mantle` endpoints.
 
 {{site.ai_gateway}} can send requests to either of the two Amazon Bedrock inference endpoints, Runtime (the default) or Mantle, depending on the `endpoint_type` in the target `config` of an [AI Model](/ai-gateway/entities/ai-model/).
 Use `mantle` when your clients already send OpenAI or Anthropic API requests and you want Bedrock Mantle to handle them natively, for example, to run the OpenAI Codex CLI against models on Bedrock.
-Keep `runtime` for Bedrock-native clients, for the Bedrock-specific APIs such as Rerank, async invoke, and batch, and for any model that has no Mantle support.
+Keep `runtime` for Bedrock-native clients, for the Bedrock-specific APIs such as Rerank, async invoke, and batch, and for any model that doesn't support Mantle.
 
 {% comment %}
 TODO(reviewer, AI-123): Confirm the exact AI Model format and capability combinations that map to Mantle

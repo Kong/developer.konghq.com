@@ -65,7 +65,8 @@ TODO(reviewer, AI-125):
 
 ## Create an AI Model Provider
 
-Create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) of type `bedrock` that stores your AWS credentials:
+You can configure {{site.ai_gateway}} to send Amazon Bedrock traffic from {{site.ai_gateway}} through an AWS PrivateLink interface VPC endpoint while keeping Bedrock paths, streaming, and SigV4 signing intact.
+Create a `bedrock` type [AI Model Provider](/ai-gateway/entities/ai-model-provider/) that stores your AWS credentials:
 
 {% entity_examples %}
 ai_gateway_model_providers:
