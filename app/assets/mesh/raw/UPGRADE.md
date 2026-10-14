@@ -143,6 +143,14 @@ Kuma 3.0 narrowed a policy's top-level `targetRef` to `Mesh` and `Dataplane`; th
 
 **Action required:** Audit your `AccessRole` resources for `when[].targetRef.kind` values other than `Mesh` and `Dataplane` — `MeshService` is the common one — and rewrite them, usually as `kind: Dataplane` selecting the same proxies by label. After upgrading, an `AccessRole` still carrying such a qualifier is rejected with `value '<Kind>' is not supported`, so fix them before you upgrade or the role cannot be applied.
 
+### Legacy policy types and qualifiers removed from `AccessRole` and `AccessAudit`
+
+Kuma 3.0 removed the legacy policies (`TrafficPermission`, `TrafficRoute`, `TrafficLog`, `TrafficTrace`, `HealthCheck`, `CircuitBreaker`, `FaultInjection`, `Retry`, `Timeout`, `RateLimit`, `ProxyTemplate`). The `sources`, `destinations` and `selectors` qualifiers on `AccessRole` only matched those policies, so they are removed too.
+
+An `AccessRole` listing a removed type in `types` is rejected with `unknown types`, an `AccessAudit` with `invalid resource type`. A `when` entry that only sets `sources`, `destinations` or `selectors` is rejected with `qualifier cannot be empty`; next to other fields those keys are ignored. Roles already stored keep loading: the removed qualifiers read as empty, never grant access to `Mesh*` policies, and access to other resources is unchanged because it never consulted them.
+
+**Action required:** Replace removed types with their `Mesh*` equivalents and rewrite `sources`/`destinations`/`selectors` qualifiers as `targetRef` qualifiers, usually `kind: Dataplane` selecting the same proxies by label. A stored role that still carries a removed qualifier reads back with an empty `when` entry (`{}`); drop that entry before re-applying the role.
+
 ### `MeshGlobalRateLimit` policy removed
 
 The `MeshGlobalRateLimit` policy and all of its control-plane support have been removed, along with the rate-limit service deployment shipped by the Helm chart (`ratelimit.*` and `global.ratelimit.*` values, the `KMESH_GLOBAL_RATE_LIMIT_*` env vars and the `kmesh.globalRateLimit` control-plane config).
