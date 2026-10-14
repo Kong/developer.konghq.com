@@ -55,11 +55,11 @@ faqs:
       However, {{site.context_mesh}} stores custom headers unencrypted, so you can't use them for credentials such as API keys, bearer tokens, or passwords.
 ---
 
-{{site.context_mesh}} lets you turn enterprise assets (such as MCP servers and APIs) into context that AI agents can call. It works by composing those assets, which {{site.context_mesh}} calls [sources](/context-mesh/sources/), into a single deployable Code Mode MCP server. You can also attach [skills](/context-mesh/skills/) to the server to give agents reusable instructions alongside the tools.
+{{site.context_mesh}} lets you turn enterprise assets (such as MCP servers and APIs) into context that AI agents can call. It works by composing those assets, also called [sources](/context-mesh/sources/), into a single deployable Code Mode MCP server. You can attach [skills](/context-mesh/skills/) to the server to give agents reusable instructions alongside the tools.
 
 ## {{site.context_mesh}} MCP servers
 
-{{site.context_mesh}} MCP servers are the composition layer you create to bundle different sources together and deploy them as a single Code Mode MCP server. This becomes the source of truth for your agents after you deploy them on a {{site.konnect}} Control Plane.
+{{site.context_mesh}} MCP servers are the result of bundling different sources together and deploying them as a single Code Mode MCP server. This becomes the source of truth for your agents after you deploy them on a {{site.konnect}} Control Plane.
 
 Each {{site.context_mesh}} MCP server inherits the capabilities listed in each one of its sources as follows:
 
@@ -75,7 +75,6 @@ columns:
     key: description
   - title: Required
     key: required
-    key: edit
 features:
   - title: "Sources"
     description: "[{{site.context_mesh}} sources](/context-mesh/sources/) you've previously added."
@@ -92,11 +91,49 @@ features:
     required: false
   - title: "Labels"
     description: Key-value tags for filtering/searching across {{site.konnect}}. In the API, send `{}` if you don't want to add any labels.
-    required: true
+    required: Only with the API
 
 {% endfeature_table %}
 
 You can deploy the {{site.context_mesh}} MCP server at creation or later.
+
+## Blocked capabilities
+
+By default, a {{site.context_mesh}} MCP server inherits everything a [source](/context-mesh/sources/) can do. For example, if an API source contains 20 operations, the {{site.context_mesh}} MCP server that uses it gives the agent access to the 20 operations. The same applies to all the tools a remote MCP server source exposes.
+
+**Blocked capabilities** let you restrict specific paths, methods, and tools without changing the source itself. They block source items on one {{site.context_mesh}} MCP server, so agents can't access the blocked items through that server. Other MCP servers that use the same source aren't affected.
+
+What you can block depends on the type of source the {{site.context_mesh}} MCP server uses:
+
+{% table %}
+columns:
+  - title: Source type
+    key: source
+  - title: What you can block
+    key: item
+  - title: Examples
+    key: examples
+rows:
+  - source: "**API sources**"
+    item: |
+      * Paths
+      * Methods
+    examples: |
+      * `/flights`
+      * `PUT`
+  - source: "**MCP server sources**"
+    item: |
+      * Tools
+      * Resources
+      * Prompts
+    examples: |
+      * `listFlights`
+      * `flight-schedule.json`
+      * `summarize-booking`
+
+{% endtable %}
+
+You block sources capabilities on the MCP server, not on the source itself.
 
 ## Deployments
 
@@ -122,9 +159,6 @@ rows:
 
 {% endtable %}
 
-{:.warning}
-> Advanced mode is in [Tech Preview](/stages-of-software-availability/#tech-preview) and should not be used in a production environment.
-
 You can deploy the same {{site.context_mesh}} MCP server to more than one control plane at once.
 
 The MCP server reports a status so you can tell whether it's up and working:
@@ -149,7 +183,7 @@ rows:
 
 {% endtable %}
 
-You can see this status in the {{site.konnect_short_name}} UI. To check the deployment outside the UI, check the MCP server pod in your cluster instead. {{site.operator_product_name}} runs each {{site.context_mesh}} MCP server as a deployment with the `mcpserver-` prefix. To confirm the pod is running, replace `NAMESPACE` with your namespace and run the following command with kubectl:
+You can see this status in the {{site.konnect_short_name}} UI. To check the deployment outside the UI, check the MCP server pod in your cluster instead. {{site.operator_product_name}} runs each {{site.context_mesh}} MCP server as a deployment with the `mcpserver-` prefix. To confirm the pod is running, replace `NAMESPACE` with your namespace and run the following command with [kubectl](https://kubernetes.io/docs/reference/kubectl/):
 
 ```sh
 kubectl get pods -n NAMESPACE | grep mcpserver
@@ -162,6 +196,8 @@ mcpserver-test-45675cb3-764b4d6d6c-q2gnp   1/1     Running   0   57m
 ```
 
 If the pod stays in `Pending` or `CrashLoopBackOff`, check its logs with `kubectl logs -n NAMESPACE POD_NAME`.
+
+To review the Python code {{site.context_mesh}} generates for the MCP server, send a `GET` request to the [`/v1/mcp-cp/{controlPlaneId}/mcp-servers/{interfaceId}/code` endpoint](/api/konnect/context-interfaces/v1/#/operations/get-mcp-server-code).
 
 For the full deployment flow, see [Deploy an MCP server with {{site.context_mesh}} and {{site.operator_product_name}}](/context-mesh/get-started/).
 
@@ -225,91 +261,9 @@ body:
 {% endnavtab %}
 {% endnavtabs %}
 
-### Deploy the MCP server
+### Set up blocked capabilities
 
-Deploy the MCP server by mapping it to a control plane.
-
-{% navtabs "deploy-mcp-server" %}
-{% navtab "API" %}
-
-Send a `POST` request to the [`/v1/context-interfaces/{interfaceId}/control-plane-mappings` endpoint](/api/konnect/context-interfaces/v1/#/operations/create-context-interface-control-plane-mapping):
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/context-interfaces/$INTERFACE_ID/control-plane-mappings
-status_code: 201
-method: POST
-body:
-  control_plane_id: $CONTROL_PLANE_ID
-{% endkonnect_api_request %}
-<!--vale on-->
-
-{% endnavtab %}
-{% navtab "UI" %}
-
-{% endnavtab %}
-{% endnavtabs %}
-
-### Check the deployment status
-
-{% navtabs "check-status" %}
-{% navtab "API" %}
-
-Send a `GET` request to the `/v1/context-interfaces/{interfaceId}/status` endpoint:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/context-interfaces/$INTERFACE_ID/status
-status_code: 200
-method: GET
-{% endkonnect_api_request %}
-<!--vale on-->
-
-To review the Python code {{site.context_mesh}} generates for the MCP server, send a `GET` request to the [`/v1/mcp-cp/{controlPlaneId}/mcp-servers/{interfaceId}/code` endpoint](/api/konnect/context-interfaces/v1/#/operations/get-mcp-server-code).
-
-{% endnavtab %}
-{% navtab "UI" %}
-
-{% endnavtab %}
-{% endnavtabs %}
-
-### Block capabilities
-
-By default, a {{site.context_mesh}} MCP server inherits everything a [source](/context-mesh/sources/) can do. For example, if an API source contains 20 operations, the {{site.context_mesh}} MCP server that uses it gives the agent access to the 20 operations. The same applies to all the tools a remote MCP server source exposes.
-
-**Blocked capabilities** let you restrict specific paths, methods, and tools without changing the source itself. They block source items on one {{site.context_mesh}} MCP server, so agents can't access the blocked items through that server. Other MCP servers that use the same source aren't affected.
-
-What you can block depends on the type of source the {{site.context_mesh}} MCP server uses:
-
-{% table %}
-columns:
-  - title: Source type
-    key: source
-  - title: What you can block
-    key: item
-  - title: Examples
-    key: examples
-rows:
-  - source: "**API sources**"
-    item: |
-      * Paths
-      * Methods
-    examples: |
-      * `/flights`
-      * `PUT`
-  - source: "**MCP server sources**"
-    item: |
-      * Tools
-      * Resources
-      * Prompts
-    examples: |
-      * `listFlights`
-      * `flight-schedule.json`
-      * `summarize-booking`
-
-{% endtable %}
-
-You block capabilities on a source mapping, not on the source itself. To get the mapping ID, send a `GET` request to the [`/v1/context-interfaces/{interfaceId}/context-source-mappings` endpoint](/api/konnect/context-interfaces/v1/#/operations/list-context-interface-source-mappings).
+ To get the mapping ID, send a `GET` request to the [`/v1/context-interfaces/{interfaceId}/context-source-mappings` endpoint](/api/konnect/context-interfaces/v1/#/operations/list-context-interface-source-mappings).
 
 {% navtabs "block-capabilities" %}
 {% navtab "API source" %}
@@ -375,3 +329,29 @@ body:
 <!--vale on-->
 
 To see the current blocked capabilities, send a `GET` request to the [same endpoint](/api/konnect/context-interfaces/v1/#/operations/get-context-interfaces-source-mapping-capability-controls).
+
+### Deploy the MCP server
+
+Deploy the MCP server by mapping it to a control plane.
+
+{% navtabs "deploy-mcp-server" %}
+{% navtab "API" %}
+
+Send a `POST` request to the [`/v1/context-interfaces/{interfaceId}/control-plane-mappings` endpoint](/api/konnect/context-interfaces/v1/#/operations/create-context-interface-control-plane-mapping):
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/context-interfaces/$INTERFACE_ID/control-plane-mappings
+status_code: 201
+method: POST
+body:
+  control_plane_id: $CONTROL_PLANE_ID
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{% endnavtab %}
+{% navtab "UI" %}
+
+{% endnavtab %}
+{% endnavtabs %}
+
