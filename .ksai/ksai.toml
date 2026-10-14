@@ -31,6 +31,22 @@ paths = [
 source_files = ["review-rules/core.md"]
 
 [[review.packs]]
+name = "Information overload"
+paths = [
+  "app/**/*.md",
+  "!app/_how-tos/**",
+  "!app/_kong_plugins/**",
+  "!app/_references/**",
+  "!app/_changelogs/**",
+  "!app/_schemas/gateway/plugins/**",
+  "!app/_includes/deck/help/**",
+  "!app/_includes/kongctl/help/**",
+  "!app/_api/**",
+  "!api-specs/**",
+]
+source_files = ["review-rules/overload.md"]
+
+[[review.packs]]
 name = "How-tos"
 paths = ["app/_how-tos/**/*.md"]
 source_files = ["review-rules/how-to.md", "/docs/ui-steps-standards.md"]
