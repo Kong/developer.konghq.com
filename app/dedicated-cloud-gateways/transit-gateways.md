@@ -116,6 +116,7 @@ rows:
 To accept the Transit Gateway attachment in AWS, do the following:
 
 1. In the AWS Console, go to **VPC > Transit Gateway Attachments**.
+1. Wait for an attachment request from the Konnect AWS Account ID.
 1. If you have more than one pending attachment request, look up each network's Kong-side AWS VPC ID so you can match it to the correct request in the AWS console. You can find the network ID by clicking **Networks** in the {{site.konnect_short_name}} sidebar:
 
    {% capture network_vpc_id %}
@@ -131,7 +132,6 @@ To accept the Transit Gateway attachment in AWS, do the following:
    {{ network_vpc_id | indent }}
 
    Match the value in `provider_metadata.vpc_id` against the VPC ID shown for each pending attachment request in the AWS console.
-1. Wait for an attachment request from the Konnect AWS Account ID.
 1. Accept the request.
 
 Ensure that each AWS VPC requiring traffic forwarding has its own Transit Gateway attachment.
