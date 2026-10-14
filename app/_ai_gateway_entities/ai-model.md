@@ -360,7 +360,7 @@ To control how consumers authenticate before their access is evaluated, configur
 {:.info}
 > All AI Models in a {{site.ai_gateway}} exposed on the same base path that use OIDC authentication must reference the same `openid-connect` AI Auth Strategy.
 >
-> Using different OIDC providers across AI Models in the same {{site.ai_gateway}} is not supported. For more information, see [OIDC token authentication](/ai-gateway/entities/ai-auth-strategy/#oidc-token-authentication).
+> For more information, see [OIDC token authentication](/ai-gateway/entities/ai-auth-strategy/#oidc-token-authentication).
 
 ## Attach AI Policies
 
