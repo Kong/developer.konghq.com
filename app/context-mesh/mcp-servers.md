@@ -4,7 +4,8 @@ content_type: reference
 layout: reference
 beta: true
 
-description: "Reference for {{site.context_mesh}} MCP servers, including how REST APIs are exposed as Code Mode MCP servers and how those servers are deployed and configured."
+permalink: /context-mesh/mcp-servers/
+description: "Reference for {{site.context_mesh}} MCP servers, including how REST APIs are exposed as Code Mode MCP servers, and how you deploy and configure those servers."
 
 products:
     - context-mesh
@@ -27,6 +28,10 @@ search_aliases:
 related_resources:
   - text: "{{site.context_mesh}}"
     url: /context-mesh/
+  - text: "{{site.context_mesh}} sources"
+    url: /context-mesh/sources/
+  - text: "{{site.context_mesh}} skills"
+    url: /context-mesh/skills/
   - text: "Deploy an MCP server with {{site.context_mesh}} and {{site.operator_product_name}}"
     url: /context-mesh/get-started/
   - text: "{{site.context_mesh}} API reference"
@@ -44,68 +49,13 @@ faqs:
       [Code Mode](https://blog.cloudflare.com/code-mode/) is a configuration that exposes an API as a single SDK-like interface instead of one tool per operation.
       The agent writes short code snippets against that interface rather than choosing between many similar tools, and only the final result returns to the context window.
       This lets an agent work with a large API surface without flooding the model's context. {{site.context_mesh}} generates all of its MCP servers in Code Mode.
-  - q: Does a source stay in sync with the {{site.konnect_catalog}}?
-    a: |
-      No. When you add a source from the {{site.konnect_short_name}} {{site.konnect_catalog}}, {{site.context_mesh}} creates a forked copy of the item.
-      There is no sync between {{site.context_mesh}} and the {{site.konnect_catalog}}.
-  - q: Can I change a source's type or definition after I create it?
-    a: |
-      No. You can't change a source's type, for example changing an API into an MCP server, and you can't update the spec or the MCP server endpoint.
-      To update a source, create a new source and delete the outdated one.
-  - q: Can I add new tools to an MCP server source from {{site.context_mesh}}?
-    a: |
-      No. {{site.context_mesh}} inherits the tools that an MCP server source already exposes.
-      You can't define additional tools on the source from {{site.context_mesh}}, only proxy them.
   - q: Can I add auth to a {{site.context_mesh}} MCP server?
     a: |
-      Not on the MCP server itself. You can set custom headers on a source, and {{site.context_mesh}} attaches them to every request it sends to that source's backing service.
+      Not on the MCP server itself. You can set [custom headers on a source](/context-mesh/sources/#custom-headers), and {{site.context_mesh}} attaches them to every request it sends to that source's backing service.
       However, {{site.context_mesh}} stores custom headers unencrypted, so you can't use them for credentials such as API keys, bearer tokens, or passwords.
 ---
 
-{{site.context_mesh}} lets you turn enterprise assets (such as MCP servers and APIs) into context that AI agents can call. It works by composing those assets into a single deployable Code Mode MCP server.
-
-## Sources
-
-Sources are the individual assets you add to {{site.context_mesh}} to compose create a deployable  MCP server. There are two types of sources:
-
-- **API sources:** Import it from the {{site.konnect}} [**Catalog**](/catalog/), or upload a spec file. 
-- **MCP server sources:** Add the URL to the configuration.
-
-You have to add sources to {{site.context_mesh}} before creating an MCP server. Once you've added sources, you can combine and reuse them to create different contexts. You can configure each source with the following fields:
-
-{% feature_table %}
-item_title: Field
-columns:
-  - title: Description
-    key: description
-  - title: Required
-    key: required
-features:
-  - title: "Display name"
-    description: Source name in the UI.
-    required: true
-  - title: "Name"
-    description: |
-      Machine name. Must be unique within the org. Auto-populated from the **Display name**.
-    required: true
-  - title: "Description"
-    description: Auto-populated from the {{site.konnect}} Catalog description or API spec where possible.
-    required: false
-  - title: "Labels"
-    description: Key-value tags for filtering/searching across {{site.konnect}}. In the API, send `{}` if you don't want to add any labels.
-    required: true
-  - title: "Base URL"
-    description: |
-      Overrides whatever base URL is (or isn't) defined in the OpenAPI spec.
-    required: false
-  - title: "Custom headers"
-    description: |
-      Extra HTTP headers injected onto every request that {{site.context_mesh}} forwards to the source's backing service, for example to identify the caller. Stored unencrypted, so don't use them for secrets or sensitive information.
-    required: false
-
-{% endfeature_table %}
-
-You can update these fields at any time to change a {{site.context_mesh}} source's configuration.
+{{site.context_mesh}} lets you turn enterprise assets (such as MCP servers and APIs) into context that AI agents can call. It works by composing those assets, which {{site.context_mesh}} calls [sources](/context-mesh/sources/), into a single deployable Code Mode MCP server. You can also attach [skills](/context-mesh/skills/) to the server to give agents reusable instructions alongside the tools.
 
 ## {{site.context_mesh}} MCP servers
 
@@ -113,7 +63,7 @@ You can update these fields at any time to change a {{site.context_mesh}} source
 
 Each {{site.context_mesh}} MCP server inherits the capabilities listed in each one of its sources as follows:
 
-* **API sources:** each operation in the OpenAPI spec (a path and a method, for example `/flight` and `GET`) becomes a capability. {{site.context_mesh}} automatically turns API operations into MCP tools. It does this by translating each API operation into Python code that creates an MCP tool that your agents can call. Fore example, an API source's `GET /flights` operation becomes a `listFlights` tool.
+* **API sources:** each operation in the OpenAPI spec (a path and a method, for example `/flight` and `GET`) becomes a capability. {{site.context_mesh}} automatically turns API operations into MCP tools. It does this by translating each API operation into Python code that creates an MCP tool that your agents can call. For example, an API source's `GET /flights` operation becomes a `listFlights` tool.
 * **MCP server sources:** {{site.context_mesh}} inherits whatever tools the remote MCP server already exposes. {{site.context_mesh}} doesn't define the tools, it only proxies them.
 
 When you create a {{site.context_mesh}} MCP server, you configure it with the following parameters:
@@ -128,7 +78,7 @@ columns:
     key: edit
 features:
   - title: "Sources"
-    description: {{site.context_mesh}} sources you've previously added.
+    description: "[{{site.context_mesh}} sources](/context-mesh/sources/) you've previously added."
     required: true
   - title: "Display name"
     description: MCP server's name in the UI.
@@ -147,59 +97,6 @@ features:
 {% endfeature_table %}
 
 You can deploy the {{site.context_mesh}} MCP server at creation or later.
-
-## Blocked capabilities
-
-By default, {{site.context_mesh}} inherits everything a source can do. For example, if an API source contains 20 operations, the {{site.context_mesh}} MCP server that uses it gives the agent access to the 20 operations. The same applies to all the tools a remote MCP server source exposes.
-
-{{site.context_mesh}} MCP servers lets you restrict specific paths, methods, and tools, without changing the source itself, using **blocked capabilities**. This feature blocks source items on a specific {{site.context_mesh}} MCP server. This tells the {{site.context_mesh}} MCP server to let agents access the designated items. You configure this at the {{site.context_mesh}} MCP server level, on each source listed in its configuration.
-
-What you can block depends on the type of source the {{site.context_mesh}} MCP server uses:
-
-{% table %}
-columns:
-  - title: Source type
-    key: source
-  - title: What you can block
-    key: item
-  - title: Examples
-    key: examples
-rows:
-  - source: "**API sources**"
-    item: |
-      * Paths
-      * Methods
-    examples: |
-      * `/flights`
-      * `PUT`
-  - source: "**MCP server sources**"
-    item: |
-      * Tools
-      * Resources
-      * Prompts
-    examples: |
-      * `listFlights`
-      * `flight-schedule.json`
-      * `summarize-booking`
-
-{% endtable %}
-
-## Custom headers
-
-When an agent calls a tool through a {{site.context_mesh}} MCP server, that call turns into a network request: an HTTP call to an API, or a proxied call to a remote MCP server. Custom headers let you add the same HTTP headers to every one of those requests, for example to identify the caller or route the request on the backing service. They work as follows:
-
-1. You configure the custom headers once on the {{site.context_mesh}} source.
-1. {{site.context_mesh}} attaches the custom headers to every request it sends to that source's backing service. The agent never sees them.
-
-{:.warning}
-> {{site.context_mesh}} stores custom headers unencrypted. Don't use them for secrets or sensitive information, such as API keys, bearer tokens, or passwords.
-
-Custom headers on {{site.context_mesh}} sources have these properties:
-
-* You set them per source, not per {{site.context_mesh}} MCP server. If three {{site.context_mesh}} MCP servers use the same source, all three send the same headers. There's no {{site.context_mesh}} MCP server override for this.
-* They're plain-text key-value pairs. The schema is: `headers: { additionalProperties: string }`.
-* They work the same way for both source types. API sources and MCP server sources both support them, with the same shape.
-* They're optional.
 
 ## Deployments
 
@@ -252,7 +149,7 @@ rows:
 
 {% endtable %}
 
-You can see this status in the {{site.konnect_short_name}} UI. To check the deployment outside the UI, check the MCP server pod in your cluster instead. {{site.operator_product_name}} runs each {{site.context_mesh}} MCP server as a deployment with the `mcpserver-` prefix. To confirm the pod is running, replace `NAMESPACE` with your namespae and run the following command with kubectl:
+You can see this status in the {{site.konnect_short_name}} UI. To check the deployment outside the UI, check the MCP server pod in your cluster instead. {{site.operator_product_name}} runs each {{site.context_mesh}} MCP server as a deployment with the `mcpserver-` prefix. To confirm the pod is running, replace `NAMESPACE` with your namespace and run the following command with kubectl:
 
 ```sh
 kubectl get pods -n NAMESPACE | grep mcpserver
@@ -270,128 +167,10 @@ For the full deployment flow, see [Deploy an MCP server with {{site.context_mesh
 
 ## Set up a {{site.context_mesh}} MCP server
 
-Setting up a {{site.context_mesh}} MCP server is a multi-step process. You create the sources first, then the MCP server, then map each source to it. Deploying to a control plane is the final step.
+Setting up a {{site.context_mesh}} MCP server is a multi-step process. [Add your sources](/context-mesh/sources/#add-a-source) first, then create the MCP server and map each source to it. Deploying to a control plane is the final step. To give agents reusable instructions, you can also [add a skill](/context-mesh/skills/#add-a-skill).
 
 {:.info}
 > The [{{site.context_mesh}} API](/api/konnect/context-interfaces/v1/) uses `/v1/context-interfaces` for {{site.context_mesh}} MCP servers. Wherever the endpoints refer to a context interface, that is a {{site.context_mesh}} MCP server.
-
-### Create a source
-
-Repeat this step for each source you want the MCP server to expose. You can create a source from an API spec file or from a remote MCP server. To use an API from the {{site.konnect_catalog}} instead, see [Import a source from the Catalog](#import-a-source-from-the-catalog).
-
-#### Upload an API spec
-
-{% navtabs "upload-api-spec" %}
-{% navtab "API" %}
-
-The `spec` field takes the contents of your OpenAPI spec, in JSON or YAML, as a single string. Build the request body from your spec file with `jq`, replacing `openapi.yaml` with the path to your spec:
-
-```sh
-jq -n --rawfile spec openapi.yaml '{
-  "name": "flights-api",
-  "display_name": "Flights API",
-  "description": "Flight search and booking operations",Display name
-  "labels": {},
-  "type": "api",
-  "source": {
-    "type": "raw",
-    "config": {
-      "spec": $spec,
-      "base_url": "https://api.example.com",
-      "headers": {"X-Client-Name": "travel-assistant"}
-    }
-  }
-}' > source.json
-```
-
-Send a `POST` request to the [`/v1/context-sources` endpoint](/api/konnect/context-interfaces/v1/#/operations/create-context-source) with the request body:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/context-sources
-status_code: 201
-method: POST
-body_cmd: $(cat source.json)
-{% endkonnect_api_request %}
-<!--vale on-->
-
-`base_url` and `headers` are optional. If you omit `base_url`, {{site.context_mesh}} uses the server URL defined in the spec.
-
-{% endnavtab %}
-{% navtab "UI" %}
-
-{% endnavtab %}
-{% endnavtabs %}
-
-#### Add a remote MCP server
-
-{% navtabs "add-mcp-server" %}
-{% navtab "API" %}
-
-Send a `POST` request to the [`/v1/context-sources` endpoint](/api/konnect/context-interfaces/v1/#/operations/create-context-source) with the URL of the remote MCP server:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/context-sources
-status_code: 201
-method: POST
-body:
-  display_name: Flights MCP
-  name: flights-mcp
-  description: Flight status tools from the flights team MCP server
-  labels: {}
-  type: mcp_server
-  source:
-    type: remote_mcp_server
-    config:
-      url: https://mcp.example.com/mcp
-      headers:
-        X-Client-Name: travel-assistant
-{% endkonnect_api_request %}
-<!--vale on-->
-
-The `url` must include the protocol (`http` or `https`) and can't contain query parameters or fragments. The `headers` field is required for MCP server sources. If you don't need custom headers, set it to `{}`.
-
-{% endnavtab %}
-{% navtab "UI" %}
-
-{% endnavtab %}
-{% endnavtabs %}
-
-### Import a source from the Catalog
-
-{% navtabs "import-source" %}
-{% navtab "API" %}
-
-Send a `POST` request to the [`/v1/context-sources` endpoint](/api/konnect/context-interfaces/v1/#/operations/create-context-source):
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/context-sources
-status_code: 201
-method: POST
-body:
-  display_name: Flights API
-  name: flights-api
-  description: Flight search and booking operations
-  labels: {}
-  type: api
-  source:
-    type: api_catalog
-    config:
-      api_id: $API_ID
-      api_version_id: $API_VERSION_ID
-      base_url: https://api.example.com
-      headers:
-        X-Client-Name: travel-assistant
-{% endkonnect_api_request %}
-<!--vale on-->
-
-{% endnavtab %}
-{% navtab "UI" %}
-
-{% endnavtab %}
-{% endnavtabs %}
 
 ### Create the MCP server
 
@@ -471,7 +250,7 @@ body:
 {% endnavtab %}
 {% endnavtabs %}
 
-### Check the deployment status = remove and use pods checks
+### Check the deployment status
 
 {% navtabs "check-status" %}
 {% navtab "API" %}
@@ -495,6 +274,40 @@ To review the Python code {{site.context_mesh}} generates for the MCP server, se
 {% endnavtabs %}
 
 ### Block capabilities
+
+By default, a {{site.context_mesh}} MCP server inherits everything a [source](/context-mesh/sources/) can do. For example, if an API source contains 20 operations, the {{site.context_mesh}} MCP server that uses it gives the agent access to the 20 operations. The same applies to all the tools a remote MCP server source exposes.
+
+**Blocked capabilities** let you restrict specific paths, methods, and tools without changing the source itself. They block source items on one {{site.context_mesh}} MCP server, so agents can't access the blocked items through that server. Other MCP servers that use the same source aren't affected.
+
+What you can block depends on the type of source the {{site.context_mesh}} MCP server uses:
+
+{% table %}
+columns:
+  - title: Source type
+    key: source
+  - title: What you can block
+    key: item
+  - title: Examples
+    key: examples
+rows:
+  - source: "**API sources**"
+    item: |
+      * Paths
+      * Methods
+    examples: |
+      * `/flights`
+      * `PUT`
+  - source: "**MCP server sources**"
+    item: |
+      * Tools
+      * Resources
+      * Prompts
+    examples: |
+      * `listFlights`
+      * `flight-schedule.json`
+      * `summarize-booking`
+
+{% endtable %}
 
 You block capabilities on a source mapping, not on the source itself. To get the mapping ID, send a `GET` request to the [`/v1/context-interfaces/{interfaceId}/context-source-mappings` endpoint](/api/konnect/context-interfaces/v1/#/operations/list-context-interface-source-mappings).
 
