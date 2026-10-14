@@ -257,6 +257,9 @@ In {{site.ai_gateway}} running on {{site.base_gateway}}, a model is an [AI Proxy
 In {{site.ai_gateway}} version 2.x, that single plugin becomes two entities: an [AI Model Provider](/ai-gateway/entities/ai-model-provider) that holds the upstream connection and credentials, and an [AI Model](/ai-gateway/entities/ai-model/) that holds routing, capabilities, format, load balancing, and one or more `targets` that each reference an AI Model Provider.
 This allows you to reuse AI Model Providers in multiple AI Models.
 
+{:.warning}
+> AI Proxy Advanced plugins using `route_type: preserve` are not migrated automatically. You must manually create a new AI Model with the `passthrough` format. For more information, see [Migrate from the `preserve` route type](/ai-gateway/passthrough/#migrate-from-the-preserve-route-type).
+
 ##### Converted configuration files
 
 The following `deck` snippet defines a chat model that load balances across two OpenAI models using round-robin:

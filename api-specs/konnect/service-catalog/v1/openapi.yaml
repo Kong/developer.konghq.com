@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@9c7686a9d1631951a45739cfab8ac570b6e0d06f
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9c7686a9d1631951a45739cfab8ac570b6e0d06f'
+  x-oas-source: kong/platform-api@c490b3e79979400ce6f13039add29f45cfdb0b34
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c490b3e79979400ce6f13039add29f45cfdb0b34'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -4825,6 +4825,7 @@ components:
       type: string
       enum:
         - required
+        - unique
         - is_array
         - is_base64
         - is_boolean
@@ -4840,6 +4841,7 @@ components:
         - unknown_property
         - missing_reference
         - is_label
+        - key_invalid
         - matches_regex
         - invalid
         - is_supported_network_availability_zone_list
@@ -4936,6 +4938,68 @@ components:
         - reason
         - rule
         - maximum
+    InvalidParameterMinimumTime:
+      type: object
+      properties:
+        field:
+          type: string
+          example: to
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - min_time
+          nullable: false
+          readOnly: true
+        minimum:
+          type: string
+          format: date-time
+          example: '2026-10-01T00:00:00Z'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: 'must be no earlier than 2026-10-01T00:00:00Z'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - minimum
+    InvalidParameterMaximumTime:
+      type: object
+      properties:
+        field:
+          type: string
+          example: to
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - max_time
+          nullable: false
+          readOnly: true
+        maximum:
+          type: string
+          format: date-time
+          example: '2026-10-31T23:59:59Z'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: 'must be no later than 2026-10-31T23:59:59Z'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - maximum
     InvalidParameterChoiceItem:
       type: object
       properties:
@@ -5013,6 +5077,8 @@ components:
           - $ref: '#/components/schemas/InvalidParameterStandard'
           - $ref: '#/components/schemas/InvalidParameterMinimumLength'
           - $ref: '#/components/schemas/InvalidParameterMaximumLength'
+          - $ref: '#/components/schemas/InvalidParameterMinimumTime'
+          - $ref: '#/components/schemas/InvalidParameterMaximumTime'
           - $ref: '#/components/schemas/InvalidParameterChoiceItem'
           - $ref: '#/components/schemas/InvalidParameterDependentItem'
       minItems: 1
@@ -5027,6 +5093,8 @@ components:
             The HTTP status code of the error. Useful when passing the response
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
+          enum:
+            - 400
           readOnly: true
         title:
           description: |
@@ -5073,6 +5141,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 401
+          enum:
+            - 401
           readOnly: true
         title:
           description: |
@@ -5120,6 +5190,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 403
+          enum:
+            - 403
           readOnly: true
         title:
           description: |
@@ -5167,6 +5239,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 404
+          enum:
+            - 404
           readOnly: true
         title:
           description: |
@@ -5233,6 +5307,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 409
+          enum:
+            - 409
           readOnly: true
         title:
           description: |

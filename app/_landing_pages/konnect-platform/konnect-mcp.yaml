@@ -144,6 +144,25 @@ rows:
                     The {{site.konnect_product_name}} MCP Server is available at a single global endpoint, regardless of which {{site.konnect_product_name}} region your resources are deployed in:
 
                     `https://global.mcp.konghq.com/`
+
+                    The following regional endpoints are also available:
+
+          - type: table
+            config:
+              columns:
+                - title: Region
+                  key: region
+                - title: Server URL
+                  key: url
+              rows:
+                - region: United States (US)
+                  url: "`https://us.mcp.konghq.com/`"
+                - region: Europe (EU)
+                  url: "`https://eu.mcp.konghq.com/`"
+                - region: Australia (AU)
+                  url: "`https://au.mcp.konghq.com/`"
+                - region: India (IN)
+                  url: "`https://in.mcp.konghq.com/`"
         - blocks:
           - type: structured_text
             config:

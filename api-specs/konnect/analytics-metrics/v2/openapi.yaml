@@ -16,12 +16,12 @@ info:
     - For queries that use the time dimension, the granularity of the result may be coarser than requested. The finest allowed granularity depends on the query's time range: data farther in the past may have coarser granularity. The exact result granularity will be reported in the response `meta.granularity_ms` field.
     - Queries must complete within 10 seconds. If a query takes longer than 10 seconds, a 408 will be returned. In this case, it is suggested to add more filters, and/or reduce the time range.
     - This endpoint is rate limited to 10 requests per minute per user.
-  version: 4.3.0
+  version: 4.4.0
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@9c7686a9d1631951a45739cfab8ac570b6e0d06f
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9c7686a9d1631951a45739cfab8ac570b6e0d06f'
+  x-oas-source: kong/platform-api@71eb5f9b874a36c530766e00e19ed197d3399d4d
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/71eb5f9b874a36c530766e00e19ed197d3399d4d'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -139,6 +139,10 @@ components:
           items:
             type: string
             enum:
+              - ai_gateway
+              - ai_gateway_consumer
+              - ai_gateway_consumer_group
+              - ai_gateway_data_plane_node
               - api
               - api_package
               - api_product
@@ -146,6 +150,7 @@ components:
               - application
               - cache_status
               - consumer
+              - consumer_group
               - control_plane
               - control_plane_group
               - country_code
@@ -212,8 +217,10 @@ components:
             type: string
             enum:
               - total_tokens
+              - total_tokens_per_minute
               - prompt_tokens
               - completion_tokens
+              - cached_tokens
               - ai_request_count
               - cost
               - error_rate
@@ -222,6 +229,8 @@ components:
               - llm_latency_average
               - llm_embeddings_tokens
               - llm_embeddings_cost
+              - time_to_first_token_average
+              - time_per_token_average
           default:
             - ai_request_count
           maxItems: 3
@@ -235,7 +244,15 @@ components:
               - control_plane_group
               - gateway_service
               - consumer
+              - ai_gateway
+              - ai_gateway_consumer
+              - ai_gateway_consumer_group
+              - ai_gateway_data_plane_node
+              - ai_gateway_mcp_server
+              - ai_gateway_model
+              - ai_gateway_agent
               - application
+              - cache_status
               - oidc_credential
               - route
               - ai_provider
@@ -343,6 +360,12 @@ components:
               - a2a_error
               - a2a_method
               - a2a_task_id
+              - ai_gateway
+              - ai_gateway_agent
+              - ai_gateway_consumer
+              - ai_gateway_consumer_group
+              - ai_gateway_data_plane_node
+              - ai_gateway_mcp_server
               - api
               - api_package
               - api_product
@@ -350,6 +373,7 @@ components:
               - application
               - cache_status
               - consumer
+              - consumer_group
               - control_plane
               - control_plane_group
               - country_code
@@ -849,6 +873,150 @@ components:
       enum:
         - empty
         - not_empty
+    MetricsAiGatewayFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results.
+              type: array
+              items:
+                $ref: '#/components/schemas/UnscopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_gateway
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_gateway
+          required:
+            - operator
+            - field
+      title: Filter by ai_gateway
+    MetricsAiGatewayConsumerFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results.
+              type: array
+              items:
+                $ref: '#/components/schemas/UnscopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_gateway_consumer
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_gateway_consumer
+          required:
+            - operator
+            - field
+      title: Filter by ai_gateway_consumer
+    MetricsAiGatewayConsumerGroupFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results.
+              type: array
+              items:
+                $ref: '#/components/schemas/UnscopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_gateway_consumer_group
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_gateway_consumer_group
+          required:
+            - operator
+            - field
+      title: Filter by ai_gateway_consumer_group
+    MetricsAiGatewayDataPlaneNodeFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results.
+              type: array
+              items:
+                $ref: '#/components/schemas/UnscopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_gateway_data_plane_node
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_gateway_data_plane_node
+          required:
+            - operator
+            - field
+      title: Filter by ai_gateway_data_plane_node
     MetricsApiFilterByField:
       oneOf:
         - title: Multiselect filters
@@ -1104,6 +1272,42 @@ components:
             - operator
             - field
       title: Filter by consumer
+    MetricsConsumerGroupFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results. Because gateway IDs are only unique within a given control plane, the filter values must be of the form `control_plane_id:field_id` or `control_plane_group_id:field_id` for data plane nodes within a control plane group.
+              type: array
+              items:
+                $ref: '#/components/schemas/ScopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - consumer_group
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - consumer_group
+          required:
+            - operator
+            - field
+      title: Filter by consumer_group
     MetricsControlPlaneFilterByField:
       oneOf:
         - title: Multiselect filters
@@ -1693,6 +1897,10 @@ components:
         discriminator:
           propertyName: field
           mapping:
+            ai_gateway: '#/components/schemas/MetricsAiGatewayFilterByField'
+            ai_gateway_consumer: '#/components/schemas/MetricsAiGatewayConsumerFilterByField'
+            ai_gateway_consumer_group: '#/components/schemas/MetricsAiGatewayConsumerGroupFilterByField'
+            ai_gateway_data_plane_node: '#/components/schemas/MetricsAiGatewayDataPlaneNodeFilterByField'
             api: '#/components/schemas/MetricsApiFilterByField'
             api_package: '#/components/schemas/MetricsApiPackageFilterByField'
             api_product: '#/components/schemas/MetricsApiProductFilterByField'
@@ -1700,6 +1908,7 @@ components:
             application: '#/components/schemas/MetricsApplicationFilterByField'
             cache_status: '#/components/schemas/MetricsCacheStatusFilterByField'
             consumer: '#/components/schemas/MetricsConsumerFilterByField'
+            consumer_group: '#/components/schemas/MetricsConsumerGroupFilterByField'
             control_plane: '#/components/schemas/MetricsControlPlaneFilterByField'
             control_plane_group: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
             country_code: '#/components/schemas/MetricsCountryCodeFilterByField'
@@ -1717,6 +1926,10 @@ components:
             upstream_status_code: '#/components/schemas/MetricsUpstreamStatusCodeFilterByField'
             upstream_status_code_grouped: '#/components/schemas/MetricsUpstreamStatusCodeGroupedFilterByField'
         oneOf:
+          - $ref: '#/components/schemas/MetricsAiGatewayFilterByField'
+          - $ref: '#/components/schemas/MetricsAiGatewayConsumerFilterByField'
+          - $ref: '#/components/schemas/MetricsAiGatewayConsumerGroupFilterByField'
+          - $ref: '#/components/schemas/MetricsAiGatewayDataPlaneNodeFilterByField'
           - $ref: '#/components/schemas/MetricsApiFilterByField'
           - $ref: '#/components/schemas/MetricsApiPackageFilterByField'
           - $ref: '#/components/schemas/MetricsApiProductFilterByField'
@@ -1724,6 +1937,7 @@ components:
           - $ref: '#/components/schemas/MetricsApplicationFilterByField'
           - $ref: '#/components/schemas/MetricsCacheStatusFilterByField'
           - $ref: '#/components/schemas/MetricsConsumerFilterByField'
+          - $ref: '#/components/schemas/MetricsConsumerGroupFilterByField'
           - $ref: '#/components/schemas/MetricsControlPlaneFilterByField'
           - $ref: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
           - $ref: '#/components/schemas/MetricsCountryCodeFilterByField'
@@ -1838,6 +2052,114 @@ components:
       oneOf:
         - $ref: '#/components/schemas/MetricsRelativeTimeRangeDtoV2'
         - $ref: '#/components/schemas/MetricsAbsoluteTimeRangeDtoV2'
+    MetricsAiGatewayAgentFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results.
+              type: array
+              items:
+                $ref: '#/components/schemas/UnscopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_gateway_agent
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_gateway_agent
+          required:
+            - operator
+            - field
+      title: Filter by ai_gateway_agent
+    MetricsAiGatewayMcpServerFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results.
+              type: array
+              items:
+                $ref: '#/components/schemas/UnscopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_gateway_mcp_server
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_gateway_mcp_server
+          required:
+            - operator
+            - field
+      title: Filter by ai_gateway_mcp_server
+    MetricsAiGatewayModelFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results.
+              type: array
+              items:
+                $ref: '#/components/schemas/UnscopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_gateway_model
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_gateway_model
+          required:
+            - operator
+            - field
+      title: Filter by ai_gateway_model
     MetricsAiPluginFilterByField:
       oneOf:
         - title: Multiselect filters
@@ -2097,11 +2419,19 @@ components:
         discriminator:
           propertyName: field
           mapping:
+            ai_gateway: '#/components/schemas/MetricsAiGatewayFilterByField'
+            ai_gateway_agent: '#/components/schemas/MetricsAiGatewayAgentFilterByField'
+            ai_gateway_consumer: '#/components/schemas/MetricsAiGatewayConsumerFilterByField'
+            ai_gateway_consumer_group: '#/components/schemas/MetricsAiGatewayConsumerGroupFilterByField'
+            ai_gateway_data_plane_node: '#/components/schemas/MetricsAiGatewayDataPlaneNodeFilterByField'
+            ai_gateway_mcp_server: '#/components/schemas/MetricsAiGatewayMcpServerFilterByField'
+            ai_gateway_model: '#/components/schemas/MetricsAiGatewayModelFilterByField'
             ai_plugin: '#/components/schemas/MetricsAiPluginFilterByField'
             ai_provider: '#/components/schemas/MetricsAiProviderFilterByField'
             ai_request_model: '#/components/schemas/MetricsAiRequestModelFilterByField'
             ai_response_model: '#/components/schemas/MetricsAiResponseModelFilterByField'
             application: '#/components/schemas/MetricsApplicationFilterByField'
+            cache_status: '#/components/schemas/MetricsCacheStatusFilterByField'
             consumer: '#/components/schemas/MetricsConsumerFilterByField'
             control_plane: '#/components/schemas/MetricsControlPlaneFilterByField'
             control_plane_group: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
@@ -2116,11 +2446,19 @@ components:
             status_code: '#/components/schemas/MetricsStatusCodeFilterByField'
             status_code_grouped: '#/components/schemas/MetricsStatusCodeGroupedFilterByField'
         oneOf:
+          - $ref: '#/components/schemas/MetricsAiGatewayFilterByField'
+          - $ref: '#/components/schemas/MetricsAiGatewayAgentFilterByField'
+          - $ref: '#/components/schemas/MetricsAiGatewayConsumerFilterByField'
+          - $ref: '#/components/schemas/MetricsAiGatewayConsumerGroupFilterByField'
+          - $ref: '#/components/schemas/MetricsAiGatewayDataPlaneNodeFilterByField'
+          - $ref: '#/components/schemas/MetricsAiGatewayMcpServerFilterByField'
+          - $ref: '#/components/schemas/MetricsAiGatewayModelFilterByField'
           - $ref: '#/components/schemas/MetricsAiPluginFilterByField'
           - $ref: '#/components/schemas/MetricsAiProviderFilterByField'
           - $ref: '#/components/schemas/MetricsAiRequestModelFilterByField'
           - $ref: '#/components/schemas/MetricsAiResponseModelFilterByField'
           - $ref: '#/components/schemas/MetricsApplicationFilterByField'
+          - $ref: '#/components/schemas/MetricsCacheStatusFilterByField'
           - $ref: '#/components/schemas/MetricsConsumerFilterByField'
           - $ref: '#/components/schemas/MetricsControlPlaneFilterByField'
           - $ref: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
@@ -2433,6 +2771,12 @@ components:
             a2a_error: '#/components/schemas/MetricsA2aErrorFilterByField'
             a2a_method: '#/components/schemas/MetricsA2aMethodFilterByField'
             a2a_task_id: '#/components/schemas/MetricsA2aTaskIdFilterByField'
+            ai_gateway: '#/components/schemas/MetricsAiGatewayFilterByField'
+            ai_gateway_agent: '#/components/schemas/MetricsAiGatewayAgentFilterByField'
+            ai_gateway_consumer: '#/components/schemas/MetricsAiGatewayConsumerFilterByField'
+            ai_gateway_consumer_group: '#/components/schemas/MetricsAiGatewayConsumerGroupFilterByField'
+            ai_gateway_data_plane_node: '#/components/schemas/MetricsAiGatewayDataPlaneNodeFilterByField'
+            ai_gateway_mcp_server: '#/components/schemas/MetricsAiGatewayMcpServerFilterByField'
             api: '#/components/schemas/MetricsApiFilterByField'
             api_package: '#/components/schemas/MetricsApiPackageFilterByField'
             api_product: '#/components/schemas/MetricsApiProductFilterByField'
@@ -2440,6 +2784,7 @@ components:
             application: '#/components/schemas/MetricsApplicationFilterByField'
             cache_status: '#/components/schemas/MetricsCacheStatusFilterByField'
             consumer: '#/components/schemas/MetricsConsumerFilterByField'
+            consumer_group: '#/components/schemas/MetricsConsumerGroupFilterByField'
             control_plane: '#/components/schemas/MetricsControlPlaneFilterByField'
             control_plane_group: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
             country_code: '#/components/schemas/MetricsCountryCodeFilterByField'
@@ -2465,6 +2810,12 @@ components:
           - $ref: '#/components/schemas/MetricsA2aErrorFilterByField'
           - $ref: '#/components/schemas/MetricsA2aMethodFilterByField'
           - $ref: '#/components/schemas/MetricsA2aTaskIdFilterByField'
+          - $ref: '#/components/schemas/MetricsAiGatewayFilterByField'
+          - $ref: '#/components/schemas/MetricsAiGatewayAgentFilterByField'
+          - $ref: '#/components/schemas/MetricsAiGatewayConsumerFilterByField'
+          - $ref: '#/components/schemas/MetricsAiGatewayConsumerGroupFilterByField'
+          - $ref: '#/components/schemas/MetricsAiGatewayDataPlaneNodeFilterByField'
+          - $ref: '#/components/schemas/MetricsAiGatewayMcpServerFilterByField'
           - $ref: '#/components/schemas/MetricsApiFilterByField'
           - $ref: '#/components/schemas/MetricsApiPackageFilterByField'
           - $ref: '#/components/schemas/MetricsApiProductFilterByField'
@@ -2472,6 +2823,7 @@ components:
           - $ref: '#/components/schemas/MetricsApplicationFilterByField'
           - $ref: '#/components/schemas/MetricsCacheStatusFilterByField'
           - $ref: '#/components/schemas/MetricsConsumerFilterByField'
+          - $ref: '#/components/schemas/MetricsConsumerGroupFilterByField'
           - $ref: '#/components/schemas/MetricsControlPlaneFilterByField'
           - $ref: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
           - $ref: '#/components/schemas/MetricsCountryCodeFilterByField'
@@ -2702,6 +3054,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 401
+          enum:
+            - 401
           readOnly: true
         title:
           description: |
@@ -2749,6 +3103,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 403
+          enum:
+            - 403
           readOnly: true
         title:
           description: |

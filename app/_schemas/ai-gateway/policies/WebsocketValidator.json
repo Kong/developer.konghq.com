@@ -21,7 +21,7 @@
         "client": {
           "type": "object",
           "properties": {
-            "binary": {
+            "text": {
               "type": "object",
               "properties": {
                 "schema": {
@@ -41,7 +41,7 @@
                 "type"
               ]
             },
-            "text": {
+            "binary": {
               "type": "object",
               "properties": {
                 "type": {

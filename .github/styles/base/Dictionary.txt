@@ -78,6 +78,7 @@ backporting
 backports
 backreference
 backreferences
+Bingbot
 wget
 meshtrust
 sectionName
@@ -192,6 +193,7 @@ db_import
 db-ip
 dbless
 dcr
+debounce
 DECK_
 deck_files
 declaratively
@@ -304,6 +306,7 @@ globbing
 gluu
 gojira
 Golang
+Googlebot
 googleSearch
 goroutine
 goroutines
@@ -501,6 +504,7 @@ M_Link
 M_Resource
 maglev
 major_version
+malforming
 managedfields
 matchers
 max_args
@@ -661,6 +665,7 @@ proxy_listen
 proxy_ssl
 proxying
 public_key
+pushable
 Qdrant
 qubit
 querystring
@@ -698,6 +703,8 @@ reportingComponent
 reportingInstance
 requery
 requeue
+requeued
+requeues
 requeuing
 request_counts
 requestable
@@ -745,6 +752,7 @@ Scriptable
 SDKs
 search_by_username
 secret_id
+semver
 sequenceDiagram
 serializer
 serverless
@@ -755,6 +763,7 @@ service_name
 shm
 show_in_api
 Sigstore
+sign_in
 skyflow
 slas
 Slowloris
@@ -814,6 +823,7 @@ supports_konnect
 svg
 svgs
 swaggerhub
+switchyard
 syscall
 syslog
 systemd
@@ -900,6 +910,7 @@ unicode
 unix
 unlinking
 unmanaged
+unmarshal
 unmarshalled
 unnamespaced
 unnormalized
@@ -1058,3 +1069,33 @@ server_version_num
 unredact
 userinfo
 xyz
+consumer_groups
+workspaceable
+bodyless
+ngx_brotli
+decompressor
+lua_ssl_trusted_certificate
+customEnv
+pre
+mkdir
+volumeMounts
+inlining
+overridable
+maxdbs
+init_worker_by_lua
+sasl
+jwt_secret
+Strigo
+emerg
+subrequest
+walkthroughs
+unsynchronized
+musl
+buildx
+containerd
+rootfs
+semver
+unmarshall
+malforming
+Dify
+tokenizer

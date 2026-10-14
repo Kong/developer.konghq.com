@@ -22,32 +22,17 @@
     "config": {
       "type": "object",
       "properties": {
-        "prompt": {
-          "type": "string",
-          "description": "Use this prompt to tune the LLM system/assistant message for the incoming proxy request (from the client), and what you are expecting in return."
-        },
-        "transformation_extract_pattern": {
-          "type": "string",
-          "description": "Defines the regular expression that must match to indicate a successful AI transformation at the request phase. The first match will be set as the outgoing body. If the AI service's response doesn't match this pattern, it is marked as a failure."
-        },
-        "http_timeout": {
-          "type": "integer",
-          "description": "Timeout in milliseconds for the AI upstream service.",
-          "default": 60000
-        },
-        "https_verify": {
-          "type": "boolean",
-          "description": "Verify the TLS certificate of the AI upstream service.",
-          "default": true
-        },
-        "max_request_body_size": {
-          "type": "integer",
-          "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
-          "default": 8388608
-        },
         "proxy_config": {
           "type": "object",
           "properties": {
+            "no_proxy": {
+              "type": "string",
+              "description": "Comma-separated list of hosts that should not be proxied."
+            },
+            "http_proxy_host": {
+              "type": "string",
+              "description": "A string representing a host name, such as example.com."
+            },
             "http_proxy_port": {
               "type": "integer",
               "maximum": 65535,
@@ -82,14 +67,6 @@
               "description": "The password to authenticate with, if the forward proxy is protected by basic authentication.",
               "x-referenceable": true,
               "x-encrypted": true
-            },
-            "no_proxy": {
-              "type": "string",
-              "description": "Comma-separated list of hosts that should not be proxied."
-            },
-            "http_proxy_host": {
-              "type": "string",
-              "description": "A string representing a host name, such as example.com."
             }
           }
         },
@@ -111,6 +88,8 @@
                 "llm/v1/embeddings",
                 "llm/v1/files",
                 "llm/v1/responses",
+                "llm/v1/skills",
+                "passthrough",
                 "realtime/v1/realtime",
                 "video/v1/videos/generations"
               ],
@@ -119,11 +98,24 @@
             "auth": {
               "type": "object",
               "properties": {
-                "aws_secret_access_key": {
+                "aws_access_key_id": {
                   "type": "string",
-                  "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_SECRET_ACCESS_KEY environment variable for this policy instance.",
+                  "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_ACCESS_KEY_ID environment variable for this policy instance.",
                   "x-referenceable": true,
                   "x-encrypted": true
+                },
+                "header_name": {
+                  "type": "string",
+                  "description": "If AI model requires authentication via Authorization or API key header, specify its name here.",
+                  "x-referenceable": true
+                },
+                "param_location": {
+                  "type": "string",
+                  "enum": [
+                    "body",
+                    "query"
+                  ],
+                  "description": "Specify whether the 'param_name' and 'param_value' options go in a query string, or the POST form/JSON body."
                 },
                 "aws_session_token": {
                   "type": "string",
@@ -131,10 +123,44 @@
                   "x-referenceable": true,
                   "x-encrypted": true
                 },
+                "gcp_workload_identity_federation_source": {
+                  "type": "string",
+                  "enum": [
+                    "aws_iam",
+                    "off"
+                  ],
+                  "description": "Set this if you are using an GCP provider (Gemini) and you are authenticating using Workload Identity Federation. This is the source identity provider/system."
+                },
+                "gcp_workload_identity_federation_auth_json": {
+                  "type": "string",
+                  "description": "Set this if you are using an GCP provider (Gemini) and you are authenticating using Workload Identity Federation. This is the JSON string configuration for the federation operation. If unset, Kong will attempt to read the file path from the `GOOGLE_APPLICATION_CREDENTIALS` environment variable, which should subsequently point to a Workfload Identity auth JSON file.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
                 "header_value": {
                   "type": "string",
                   "description": "Specify the full auth header value for 'header_name', for example 'Bearer key' or just 'key'.",
-                  "x-encrypted": true,
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "gcp_use_service_account": {
+                  "type": "boolean",
+                  "description": "Use service account auth for GCP-based providers and models.",
+                  "default": false
+                },
+                "gcp_metadata_url": {
+                  "type": "string",
+                  "description": "Custom metadata URL for GCP authentication. Useful for restricted network environments or custom GCP endpoints. If null, Kong will use the default Google metadata endpoint.",
+                  "x-referenceable": true
+                },
+                "allow_override": {
+                  "type": "boolean",
+                  "description": "If enabled, the authorization header or parameter can be overridden in the request by the value configured in the policy.",
+                  "default": false
+                },
+                "param_name": {
+                  "type": "string",
+                  "description": "If AI model requires authentication via query parameter, specify its name here.",
                   "x-referenceable": true
                 },
                 "param_value": {
@@ -142,21 +168,6 @@
                   "description": "Specify the full parameter value for 'param_name'.",
                   "x-referenceable": true,
                   "x-encrypted": true
-                },
-                "azure_use_managed_identity": {
-                  "type": "boolean",
-                  "description": "Set true to use the Azure Cloud Managed Identity (or user-assigned identity) to authenticate with Azure-provider models.",
-                  "default": false
-                },
-                "gcp_oauth_token_url": {
-                  "type": "string",
-                  "description": "Custom OAuth token URL for GCP authentication. Useful for restricted network environments or custom GCP endpoints. If null, Kong will use the default Google OAuth token endpoint.",
-                  "x-referenceable": true
-                },
-                "header_name": {
-                  "type": "string",
-                  "description": "If AI model requires authentication via Authorization or API key header, specify its name here.",
-                  "x-referenceable": true
                 },
                 "azure_client_id": {
                   "type": "string",
@@ -174,57 +185,25 @@
                   "description": "If azure_use_managed_identity is set to true, and you need to use a different user-assigned identity for this LLM instance, set the tenant ID.",
                   "x-referenceable": true
                 },
-                "gcp_metadata_url": {
+                "gcp_oauth_token_url": {
                   "type": "string",
-                  "description": "Custom metadata URL for GCP authentication. Useful for restricted network environments or custom GCP endpoints. If null, Kong will use the default Google metadata endpoint.",
+                  "description": "Custom OAuth token URL for GCP authentication. Useful for restricted network environments or custom GCP endpoints. If null, Kong will use the default Google OAuth token endpoint.",
                   "x-referenceable": true
                 },
-                "aws_access_key_id": {
+                "aws_secret_access_key": {
                   "type": "string",
-                  "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_ACCESS_KEY_ID environment variable for this policy instance.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "allow_override": {
-                  "type": "boolean",
-                  "description": "If enabled, the authorization header or parameter can be overridden in the request by the value configured in the policy.",
-                  "default": false
-                },
-                "gcp_workload_identity_federation_source": {
-                  "type": "string",
-                  "enum": [
-                    "aws_iam",
-                    "off"
-                  ],
-                  "description": "Set this if you are using an GCP provider (Gemini) and you are authenticating using Workload Identity Federation. This is the source identity provider/system."
-                },
-                "param_name": {
-                  "type": "string",
-                  "description": "If AI model requires authentication via query parameter, specify its name here.",
+                  "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_SECRET_ACCESS_KEY environment variable for this policy instance.",
+                  "x-encrypted": true,
                   "x-referenceable": true
                 },
-                "param_location": {
-                  "type": "string",
-                  "enum": [
-                    "body",
-                    "query"
-                  ],
-                  "description": "Specify whether the 'param_name' and 'param_value' options go in a query string, or the POST form/JSON body."
-                },
-                "gcp_use_service_account": {
+                "azure_use_managed_identity": {
                   "type": "boolean",
-                  "description": "Use service account auth for GCP-based providers and models.",
+                  "description": "Set true to use the Azure Cloud Managed Identity (or user-assigned identity) to authenticate with Azure-provider models.",
                   "default": false
                 },
                 "gcp_service_account_json": {
                   "type": "string",
                   "description": "Set this field to the full JSON of the GCP service account to authenticate, if required. If null (and gcp_use_service_account is true), Kong will attempt to read from environment variable `GCP_SERVICE_ACCOUNT`.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "gcp_workload_identity_federation_auth_json": {
-                  "type": "string",
-                  "description": "Set this if you are using an GCP provider (Gemini) and you are authenticating using Workload Identity Federation. This is the JSON string configuration for the federation operation. If unset, Kong will attempt to read the file path from the `GOOGLE_APPLICATION_CREDENTIALS` environment variable, which should subsequently point to a Workfload Identity auth JSON file.",
                   "x-referenceable": true,
                   "x-encrypted": true
                 }
@@ -252,6 +231,7 @@
                     "ollama",
                     "openai",
                     "sagemaker",
+                    "typesafe",
                     "vercel",
                     "vllm",
                     "xai"
@@ -269,6 +249,11 @@
                 "options": {
                   "type": "object",
                   "properties": {
+                    "azure_foundry_domain": {
+                      "type": "string",
+                      "description": "Domain for Azure Foundry hosted models.",
+                      "default": "services.ai.azure.com"
+                    },
                     "azure_foundry_path_prefix": {
                       "type": "string",
                       "enum": [
@@ -278,44 +263,47 @@
                       "description": "Path prefix for Azure Foundry hosted models.",
                       "default": "/openai/v1"
                     },
-                    "embeddings_dimensions": {
-                      "type": "integer",
-                      "description": "If using embeddings models, set the number of dimensions to generate."
-                    },
-                    "gemini": {
+                    "bedrock": {
                       "type": "object",
                       "properties": {
-                        "endpoint_id": {
+                        "batch_bucket_prefix": {
                           "type": "string",
-                          "description": "If running Gemini on Vertex Model Garden, specify the endpoint ID."
+                          "description": "S3 URI prefix (s3://bucket/prefix/) where Bedrock will get input files from and store results to for native batch API."
                         },
-                        "api_endpoint": {
+                        "aws_assume_role_arn": {
                           "type": "string",
-                          "description": "If running Gemini on Vertex, specify the regional API endpoint (hostname only)."
+                          "description": "If using AWS providers (Bedrock) you can assume a different role after authentication with the current IAM context is successful."
                         },
-                        "project_id": {
-                          "type": "string",
-                          "description": "If running Gemini on Vertex, specify the project ID."
-                        },
-                        "location_id": {
-                          "type": "string",
-                          "description": "If running Gemini on Vertex, specify the location ID."
-                        }
-                      }
-                    },
-                    "dashscope": {
-                      "type": "object",
-                      "properties": {
-                        "international": {
+                        "embeddings_normalize": {
                           "type": "boolean",
-                          "description": "Two Dashscope endpoints are available, and the international endpoint will be used when this is set to `true`.\nIt is recommended to set this to `true` when using international version of dashscope.\n",
-                          "default": true
+                          "description": "If using AWS providers (Bedrock), set to true to normalize the embeddings.",
+                          "default": false
+                        },
+                        "video_output_s3_uri": {
+                          "type": "string",
+                          "description": "S3 URI (s3://bucket/prefix) where Bedrock will store generated video files. Required for video generation."
+                        },
+                        "batch_role_arn": {
+                          "type": "string",
+                          "description": "AWS role arn used for calling batch API. Try to get the value from request if ommited."
+                        },
+                        "aws_region": {
+                          "type": "string",
+                          "description": "If using AWS providers (Bedrock) you can override the `AWS_REGION` environment variable by setting this option."
+                        },
+                        "aws_role_session_name": {
+                          "type": "string",
+                          "description": "If using AWS providers (Bedrock), set the identifier of the assumed role session."
+                        },
+                        "aws_sts_endpoint_url": {
+                          "type": "string",
+                          "description": "If using AWS providers (Bedrock), override the STS endpoint URL when assuming a different role."
+                        },
+                        "performance_config_latency": {
+                          "type": "string",
+                          "description": "Force the client's performance configuration 'latency' for all requests. Leave empty to let the consumer select the performance configuration."
                         }
                       }
-                    },
-                    "cache_write_cost": {
-                      "type": "number",
-                      "description": "Defines the cost per 1M cache-write prompt tokens."
                     },
                     "cohere": {
                       "type": "object",
@@ -347,147 +335,38 @@
                         }
                       }
                     },
-                    "kimi": {
+                    "sagemaker": {
                       "type": "object",
                       "properties": {
-                        "international": {
-                          "type": "boolean",
-                          "description": "Two Kimi/Moonshot AI endpoints are available: `api.moonshot.cn` (mainland China) and\n`api.moonshot.ai` (international, default). Set this to `false` to use the mainland China endpoint.\n",
-                          "default": true
-                        }
-                      }
-                    },
-                    "azure_foundry_resource": {
-                      "type": "string",
-                      "description": "Resource name for Azure Foundry hosted models."
-                    },
-                    "llama2_format": {
-                      "type": "string",
-                      "enum": [
-                        "ollama",
-                        "openai",
-                        "raw"
-                      ],
-                      "description": "If using llama2 provider, select the upstream message format."
-                    },
-                    "input_cost": {
-                      "type": "number",
-                      "description": "Defines the cost per 1M tokens in your prompt."
-                    },
-                    "upstream_url": {
-                      "type": "string",
-                      "description": "Manually specify or override the full URL to the AI operation endpoints, when calling (self-)hosted models, or for running via a private endpoint. Variable substitution is supported. Warning: if variable substitution is used, please verify that the client is from a trusted source to prevent injection."
-                    },
-                    "huggingface": {
-                      "type": "object",
-                      "properties": {
-                        "use_cache": {
-                          "type": "boolean",
-                          "description": "Use the cache layer on the inference API"
-                        },
-                        "wait_for_model": {
-                          "type": "boolean",
-                          "description": "Wait for the model if it is not ready"
-                        }
-                      }
-                    },
-                    "azure_service": {
-                      "type": "string",
-                      "enum": [
-                        "azure-foundry",
-                        "azure-openai"
-                      ],
-                      "description": "Service type for Azure provider models.",
-                      "default": "azure-openai"
-                    },
-                    "azure_instance": {
-                      "type": "string",
-                      "description": "Instance name for Azure OpenAI hosted models."
-                    },
-                    "azure_deployment_id": {
-                      "type": "string",
-                      "description": "Deployment ID for Azure OpenAI instances."
-                    },
-                    "max_tokens": {
-                      "type": "integer",
-                      "description": "Defines the max_tokens, if using chat or completion models."
-                    },
-                    "cache_read_cost": {
-                      "type": "number",
-                      "description": "Defines the cost per 1M cache-read (cached) prompt tokens."
-                    },
-                    "service_tier_factor": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "factor": {
-                            "type": "number"
-                          },
-                          "tier": {
-                            "type": "string",
-                            "minLength": 1,
-                            "description": "A word matched case-insensitively as a substring of the vendor's reported service tier (e.g. 'priority', 'flex', or 'throughput' for Gemini/Vertex's PROVISIONED_THROUGHPUT). If several entries match, the longest (most specific) wins; array order doesn't matter. Configure 'priority' will also match 'fast' (whole word) as OpenAI returns either 'priority' or 'fast' for priority service tier."
-                          }
-                        },
-                        "required": [
-                          "factor",
-                          "tier"
-                        ]
-                      },
-                      "description": "Multiplier applied to the whole request for a service tier. No need to configure a standard/default tier, as the default factor is 1.0 if none of the tier is matched."
-                    },
-                    "temperature": {
-                      "type": "number",
-                      "maximum": 5,
-                      "minimum": 0,
-                      "description": "Defines the matching temperature, if using chat or completion models."
-                    },
-                    "bedrock": {
-                      "type": "object",
-                      "properties": {
-                        "aws_role_session_name": {
+                        "target_model": {
                           "type": "string",
-                          "description": "If using AWS providers (Bedrock), set the identifier of the assumed role session."
+                          "description": "Sets the X-Amzn-SageMaker-Target-Model header for multi-model endpoints."
                         },
-                        "aws_sts_endpoint_url": {
+                        "target_variant": {
                           "type": "string",
-                          "description": "If using AWS providers (Bedrock), override the STS endpoint URL when assuming a different role."
+                          "description": "Sets the X-Amzn-SageMaker-Target-Variant header for A/B variant testing."
                         },
-                        "embeddings_normalize": {
-                          "type": "boolean",
-                          "description": "If using AWS providers (Bedrock), set to true to normalize the embeddings.",
-                          "default": false
-                        },
-                        "video_output_s3_uri": {
+                        "target_container_hostname": {
                           "type": "string",
-                          "description": "S3 URI (s3://bucket/prefix) where Bedrock will store generated video files. Required for video generation."
-                        },
-                        "batch_bucket_prefix": {
-                          "type": "string",
-                          "description": "S3 URI prefix (s3://bucket/prefix/) where Bedrock will get input files from and store results to for native batch API."
+                          "description": "Sets the X-Amzn-SageMaker-Target-Container-Hostname header for multi-container endpoints."
                         },
                         "aws_region": {
                           "type": "string",
-                          "description": "If using AWS providers (Bedrock) you can override the `AWS_REGION` environment variable by setting this option."
+                          "description": "Override the `AWS_REGION` environment variable for SageMaker requests."
                         },
                         "aws_assume_role_arn": {
                           "type": "string",
-                          "description": "If using AWS providers (Bedrock) you can assume a different role after authentication with the current IAM context is successful."
+                          "description": "Assume a different IAM role after authentication."
                         },
-                        "performance_config_latency": {
+                        "aws_role_session_name": {
                           "type": "string",
-                          "description": "Force the client's performance configuration 'latency' for all requests. Leave empty to let the consumer select the performance configuration."
+                          "description": "Identifier for the assumed role session."
                         },
-                        "batch_role_arn": {
+                        "aws_sts_endpoint_url": {
                           "type": "string",
-                          "description": "AWS role arn used for calling batch API. Try to get the value from request if ommited."
+                          "description": "Override the STS endpoint URL when assuming a different role."
                         }
                       }
-                    },
-                    "output_cost": {
-                      "type": "number",
-                      "description": "Defines the cost per 1M tokens in the output of the AI."
                     },
                     "output_cost_list": {
                       "type": "array",
@@ -514,19 +393,13 @@
                       },
                       "description": "Per-modality override of `output_cost`, in cost per 1M output tokens. Set it for models that price each modality separately."
                     },
-                    "cache_read_cost_list": {
+                    "cache_write_cost_list": {
                       "type": "array",
                       "items": {
                         "type": "object",
                         "properties": {
-                          "modal": {
-                            "type": "string",
-                            "enum": [
-                              "audio",
-                              "image",
-                              "text",
-                              "video"
-                            ]
+                          "ttl": {
+                            "type": "string"
                           },
                           "cost": {
                             "type": "number"
@@ -534,16 +407,20 @@
                         },
                         "required": [
                           "cost",
-                          "modal"
+                          "ttl"
                         ]
                       },
-                      "description": "Per-modality override of `cache_read_cost`, in cost per 1M cache-read prompt tokens. Set it for models that price each modality separately."
+                      "description": "Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this if the upstream provider charges differently for different cache TTLs, as Anthropic does for 5m and 1h TTLs."
                     },
-                    "top_k": {
-                      "type": "integer",
-                      "maximum": 500,
+                    "top_p": {
+                      "type": "number",
+                      "maximum": 1,
                       "minimum": 0,
-                      "description": "Defines the top-k most likely tokens, if supported."
+                      "description": "Defines the top-p probability mass, if supported."
+                    },
+                    "anthropic_version": {
+                      "type": "string",
+                      "description": "Defines the schema/API version, if using Anthropic provider."
                     },
                     "mistral_format": {
                       "type": "string",
@@ -553,14 +430,59 @@
                       ],
                       "description": "If using mistral provider, select the upstream message format."
                     },
-                    "databricks": {
+                    "dashscope": {
                       "type": "object",
                       "properties": {
-                        "workspace_instance_id": {
-                          "type": "string",
-                          "description": "Workspace Instance ID ('dbc-xxx-yyy') for Databricks model serving."
+                        "international": {
+                          "type": "boolean",
+                          "description": "Two Dashscope endpoints are available, and the international endpoint will be used when this is set to `true`.\nIt is recommended to set this to `true` when using international version of dashscope.\n",
+                          "default": true
                         }
                       }
+                    },
+                    "output_cost": {
+                      "type": "number",
+                      "description": "Defines the cost per 1M tokens in the output of the AI."
+                    },
+                    "kimi": {
+                      "type": "object",
+                      "properties": {
+                        "international": {
+                          "type": "boolean",
+                          "description": "Two Kimi/Moonshot AI endpoints are available: `api.moonshot.cn` (mainland China) and\n`api.moonshot.ai` (international, default). Set this to `false` to use the mainland China endpoint.\n",
+                          "default": true
+                        }
+                      }
+                    },
+                    "azure_api_version": {
+                      "type": "string",
+                      "description": "'api-version' for Azure OpenAI instances.",
+                      "default": "2023-05-15"
+                    },
+                    "gemini": {
+                      "type": "object",
+                      "properties": {
+                        "api_endpoint": {
+                          "type": "string",
+                          "description": "If running Gemini on Vertex, specify the regional API endpoint (hostname only)."
+                        },
+                        "project_id": {
+                          "type": "string",
+                          "description": "If running Gemini on Vertex, specify the project ID."
+                        },
+                        "location_id": {
+                          "type": "string",
+                          "description": "If running Gemini on Vertex, specify the location ID."
+                        },
+                        "endpoint_id": {
+                          "type": "string",
+                          "description": "If running Gemini on Vertex Model Garden, specify the endpoint ID."
+                        }
+                      }
+                    },
+                    "input_cost": {
+                      "type": "number",
+                      "description": "Defines the cost per 1M tokens in your prompt."
                     },
                     "input_cost_list": {
                       "type": "array",
@@ -587,68 +509,106 @@
                       },
                       "description": "Per-modality override of `input_cost`, in cost per 1M prompt tokens. Set it for models that price each modality separately."
                     },
-                    "top_p": {
+                    "temperature": {
                       "type": "number",
-                      "maximum": 1,
+                      "maximum": 5,
                       "minimum": 0,
-                      "description": "Defines the top-p probability mass, if supported."
+                      "description": "Defines the matching temperature, if using chat or completion models."
                     },
-                    "azure_api_version": {
+                    "top_k": {
+                      "type": "integer",
+                      "maximum": 500,
+                      "minimum": 0,
+                      "description": "Defines the top-k most likely tokens, if supported."
+                    },
+                    "llama2_format": {
                       "type": "string",
-                      "description": "'api-version' for Azure OpenAI instances.",
-                      "default": "2023-05-15"
+                      "enum": [
+                        "ollama",
+                        "openai",
+                        "raw"
+                      ],
+                      "description": "If using llama2 provider, select the upstream message format."
                     },
-                    "sagemaker": {
+                    "huggingface": {
                       "type": "object",
                       "properties": {
-                        "aws_assume_role_arn": {
-                          "type": "string",
-                          "description": "Assume a different IAM role after authentication."
+                        "wait_for_model": {
+                          "type": "boolean",
+                          "description": "Wait for the model if it is not ready"
                         },
-                        "aws_role_session_name": {
-                          "type": "string",
-                          "description": "Identifier for the assumed role session."
-                        },
-                        "aws_sts_endpoint_url": {
-                          "type": "string",
-                          "description": "Override the STS endpoint URL when assuming a different role."
-                        },
-                        "target_model": {
-                          "type": "string",
-                          "description": "Sets the X-Amzn-SageMaker-Target-Model header for multi-model endpoints."
-                        },
-                        "target_variant": {
-                          "type": "string",
-                          "description": "Sets the X-Amzn-SageMaker-Target-Variant header for A/B variant testing."
-                        },
-                        "target_container_hostname": {
-                          "type": "string",
-                          "description": "Sets the X-Amzn-SageMaker-Target-Container-Hostname header for multi-container endpoints."
-                        },
-                        "aws_region": {
-                          "type": "string",
-                          "description": "Override the `AWS_REGION` environment variable for SageMaker requests."
+                        "use_cache": {
+                          "type": "boolean",
+                          "description": "Use the cache layer on the inference API"
                         }
                       }
                     },
-                    "cache_write_cost_list": {
+                    "cache_read_cost": {
+                      "type": "number",
+                      "description": "Defines the cost per 1M cache-read (cached) prompt tokens."
+                    },
+                    "service_tier_factor": {
                       "type": "array",
                       "items": {
                         "type": "object",
                         "properties": {
+                          "tier": {
+                            "type": "string",
+                            "minLength": 1,
+                            "description": "A word matched case-insensitively as a substring of the vendor's reported service tier (e.g. 'priority', 'flex', or 'throughput' for Gemini/Vertex's PROVISIONED_THROUGHPUT). If several entries match, the longest (most specific) wins; array order doesn't matter. Configure 'priority' will also match 'fast' (whole word) as OpenAI returns either 'priority' or 'fast' for priority service tier."
+                          },
+                          "factor": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "factor",
+                          "tier"
+                        ]
+                      },
+                      "description": "Multiplier applied to the whole request for a service tier. No need to configure a standard/default tier, as the default factor is 1.0 if none of the tier is matched."
+                    },
+                    "azure_service": {
+                      "type": "string",
+                      "enum": [
+                        "azure-foundry",
+                        "azure-openai"
+                      ],
+                      "description": "Service type for Azure provider models.",
+                      "default": "azure-openai"
+                    },
+                    "azure_deployment_id": {
+                      "type": "string",
+                      "description": "Deployment ID for Azure OpenAI instances."
+                    },
+                    "upstream_url": {
+                      "type": "string",
+                      "description": "Manually specify or override the full URL to the AI operation endpoints, when calling (self-)hosted models, or for running via a private endpoint. Variable substitution is supported. Warning: if variable substitution is used, please verify that the client is from a trusted source to prevent injection."
+                    },
+                    "cache_read_cost_list": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "modal": {
+                            "type": "string",
+                            "enum": [
+                              "audio",
+                              "image",
+                              "text",
+                              "video"
+                            ]
+                          },
                           "cost": {
                             "type": "number"
-                          },
-                          "ttl": {
-                            "type": "string"
                           }
                         },
                         "required": [
                           "cost",
-                          "ttl"
+                          "modal"
                         ]
                       },
-                      "description": "Per-cache-TTL cache-write pricing; overrides cache_write_cost per TTL. Configure this if the upstream provider charges differently for different cache TTLs, as Anthropic does for 5m and 1h TTLs."
+                      "description": "Per-modality override of `cache_read_cost`, in cost per 1M cache-read prompt tokens. Set it for models that price each modality separately."
                     },
                     "context_window_factor": {
                       "type": "array",
@@ -673,14 +633,34 @@
                       },
                       "description": "Above an input-token threshold, scale input/output pricing with the corresponding factor."
                     },
-                    "anthropic_version": {
+                    "azure_foundry_resource": {
                       "type": "string",
-                      "description": "Defines the schema/API version, if using Anthropic provider."
+                      "description": "Resource name for Azure Foundry hosted models."
                     },
-                    "azure_foundry_domain": {
+                    "embeddings_dimensions": {
+                      "type": "integer",
+                      "description": "If using embeddings models, set the number of dimensions to generate."
+                    },
+                    "max_tokens": {
+                      "type": "integer",
+                      "description": "Defines the max_tokens, if using chat or completion models."
+                    },
+                    "cache_write_cost": {
+                      "type": "number",
+                      "description": "Defines the cost per 1M cache-write prompt tokens."
+                    },
+                    "azure_instance": {
                       "type": "string",
-                      "description": "Domain for Azure Foundry hosted models.",
-                      "default": "services.ai.azure.com"
+                      "description": "Instance name for Azure OpenAI hosted models."
+                    },
+                    "databricks": {
+                      "type": "object",
+                      "properties": {
+                        "workspace_instance_id": {
+                          "type": "string",
+                          "description": "Workspace Instance ID ('dbc-xxx-yyy') for Databricks model serving."
+                        }
+                      }
                     }
                   },
                   "description": "Key/value settings for the model"
@@ -702,6 +682,15 @@
                   "type": "boolean",
                   "description": "If enabled, will log the request and response body into the Kong log policy(s) output.Furthermore if Opentelemetry instrumentation is enabled the traces will contain this data as well.",
                   "default": false
+                },
+                "opentelemetry_attribute_keys_format": {
+                  "type": "string",
+                  "enum": [
+                    "openinference",
+                    "openllmetry"
+                  ],
+                  "description": "Sets the keys standard to be used for OpenTelemetry trace attributes and metrics.",
+                  "default": "openllmetry"
                 }
               }
             },
@@ -728,6 +717,29 @@
             "model",
             "route_type"
           ]
+        },
+        "prompt": {
+          "type": "string",
+          "description": "Use this prompt to tune the LLM system/assistant message for the incoming proxy request (from the client), and what you are expecting in return."
+        },
+        "transformation_extract_pattern": {
+          "type": "string",
+          "description": "Defines the regular expression that must match to indicate a successful AI transformation at the request phase. The first match will be set as the outgoing body. If the AI service's response doesn't match this pattern, it is marked as a failure."
+        },
+        "http_timeout": {
+          "type": "integer",
+          "description": "Timeout in milliseconds for the AI upstream service.",
+          "default": 60000
+        },
+        "https_verify": {
+          "type": "boolean",
+          "description": "Verify the TLS certificate of the AI upstream service.",
+          "default": true
+        },
+        "max_request_body_size": {
+          "type": "integer",
+          "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
+          "default": 8388608
         }
       },
       "required": [

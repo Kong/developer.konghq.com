@@ -6,21 +6,26 @@
         "clientid": {
           "type": "string",
           "description": "The `clientid` to access the Azure resources. If provided, it is injected as the `x-functions-clientid` header.",
-          "x-encrypted": true,
-          "x-referenceable": true
+          "x-referenceable": true,
+          "x-encrypted": true
         },
         "appname": {
           "type": "string",
           "description": "The Azure app name."
         },
+        "functionname": {
+          "type": "string",
+          "description": "Name of the Azure function to invoke."
+        },
+        "hostdomain": {
+          "type": "string",
+          "description": "The domain where the function resides.",
+          "default": "azurewebsites.net"
+        },
         "routeprefix": {
           "type": "string",
           "description": "Route prefix to use.",
           "default": "api"
-        },
-        "functionname": {
-          "type": "string",
-          "description": "Name of the Azure function to invoke."
         },
         "timeout": {
           "type": "number",
@@ -47,11 +52,6 @@
           "description": "The apikey to access the Azure resources. If provided, it is injected as the `x-functions-key` header.",
           "x-referenceable": true,
           "x-encrypted": true
-        },
-        "hostdomain": {
-          "type": "string",
-          "description": "The domain where the function resides.",
-          "default": "azurewebsites.net"
         }
       },
       "required": [

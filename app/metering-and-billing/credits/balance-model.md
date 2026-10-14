@@ -1,7 +1,6 @@
 ---
 title: "Credit balance model"
 content_type: reference
-beta: true
 description: "Understand the two credit balance types in {{site.konnect_short_name}} {{site.metering_and_billing}}: settled and pending."
 layout: reference
 products:

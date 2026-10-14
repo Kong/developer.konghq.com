@@ -3,14 +3,14 @@ import { existsSync, writeFileSync } from "fs";
 import { glob } from "tinyglobby";
 import matter from "gray-matter";
 import path from "path";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 import semver from "semver";
 import minimist from "minimist";
 
 const PLUGIN_DOCS = "improved plugin documentation";
 
 const file = await fs.readFile("./config/mappings.yaml", "utf8");
-const mappings = yaml.load(file);
+const mappings = load(file);
 
 function findPluginMapping(plugin) {
   return Object.entries(mappings)

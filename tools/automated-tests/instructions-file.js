@@ -2,7 +2,7 @@ import fs from "fs/promises";
 import { glob } from "tinyglobby";
 import matter from "gray-matter";
 import path from "path";
-import yaml from "js-yaml";
+import { dump } from "js-yaml";
 
 function fileToUrl(file) {
   return file.replace("../../app/_how-tos/", "").replace(".md", "/");
@@ -94,7 +94,7 @@ export async function testeableUrlsFromFiles(config, files, { explicit = false }
       }
     }
   }
-  await fs.writeFile(".automated-tests", yaml.dump(skipped), "utf-8");
+  await fs.writeFile(".automated-tests", dump(skipped), "utf-8");
 
   return howTosUrls;
 }

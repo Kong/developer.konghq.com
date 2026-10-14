@@ -1,0 +1,15 @@
+extends: existence
+message: "Avoid positional references like '%s'. Content gets reordered, so use 'the following' for content that comes next, or link to the section by name."
+level: warning
+nonword: true
+ignorecase: true
+scope: text
+tokens:
+  # "the table below", "the example above", "the YAML below"
+  - '\b(?:the|this|that|these|those|following|preceding)\s+(?:\w+\s+){0,2}(?:table|tables|list|lists|example|examples|section|sections|diagram|code|command|commands|config|configuration|snippet|snippets|step|steps|figure|image|screenshot|output|response|yaml|json|schema|procedure|paragraph|page|text)\s+(?:above|below)\b'
+  # "as shown below", "listed below", "described above", "see above", "see below"
+  - '\b(?:shown|described|listed|mentioned|noted|outlined|defined|detailed|explained|provided|specified|discussed|referenced|documented|illustrated|demonstrated|displayed|covered|see|refer to)\s+(?:above|below)\b(?!\s+(?:the|a|an|\d)\b)'
+  # "the above example", "the below steps"
+  - '\bthe\s+(?:above|below)(?:-|\s+)(?:mentioned|listed|described|noted|shown|example|examples|table|list|steps?|section|code|command|config\w*|output|diagram|snippet|yaml|json)\b'
+  # "in the next section", "in the previous section"
+  - '\b(?:next|previous|preceding|prior)\s+sections?\b'

@@ -36,10 +36,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "anonymous": {
-          "type": "string",
-          "description": "An optional string (Consumer UUID or username) value to use as an \"anonymous\" consumer if authentication fails. If empty (default null), the request will fail with an authentication failure `4xx`. Please note that this value must refer to the Consumer `id` or `username` attribute, and **not** its `custom_id`."
-        },
         "hide_credentials": {
           "type": "boolean",
           "description": "An optional boolean value telling the policy to show or hide the credential from the upstream service. If `true`, the policy will strip the credential from the request (i.e. the `Authorization` header) before proxying it.",
@@ -87,6 +83,11 @@
             "redis": {
               "type": "object",
               "properties": {
+                "host": {
+                  "type": "string",
+                  "description": "A string representing a host name, such as example.com.",
+                  "x-referenceable": true
+                },
                 "port": {
                   "type": "integer",
                   "maximum": 65535,
@@ -95,9 +96,31 @@
                   "default": 6379,
                   "x-referenceable": true
                 },
+                "timeout": {
+                  "type": "integer",
+                  "maximum": 2147483646,
+                  "minimum": 0,
+                  "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+                  "default": 2000
+                },
                 "username": {
                   "type": "string",
                   "description": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.",
+                  "x-referenceable": true
+                },
+                "ssl": {
+                  "type": "boolean",
+                  "description": "If set to true, uses SSL to connect to Redis.",
+                  "default": false
+                },
+                "ssl_verify": {
+                  "type": "boolean",
+                  "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
+                  "default": true
+                },
+                "server_name": {
+                  "type": "string",
+                  "description": "A string representing an SNI (server name indication) value for TLS.",
                   "x-referenceable": true
                 },
                 "password": {
@@ -119,31 +142,15 @@
                       "description": "Auth providers to be used to authenticate to a Cloud Provider's Redis instance.",
                       "x-referenceable": true
                     },
-                    "aws_region": {
+                    "aws_secret_access_key": {
                       "type": "string",
-                      "description": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`.",
-                      "x-referenceable": true
-                    },
-                    "aws_is_serverless": {
-                      "type": "boolean",
-                      "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
-                      "default": true
-                    },
-                    "aws_access_key_id": {
-                      "type": "string",
-                      "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.",
+                      "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.",
                       "x-referenceable": true,
                       "x-encrypted": true
                     },
                     "aws_assume_role_arn": {
                       "type": "string",
                       "description": "The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens.",
-                      "x-encrypted": true,
-                      "x-referenceable": true
-                    },
-                    "aws_role_session_name": {
-                      "type": "string",
-                      "description": "The session name for the temporary credentials when assuming the IAM role.",
                       "x-referenceable": true,
                       "x-encrypted": true
                     },
@@ -164,9 +171,25 @@
                       "description": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`.",
                       "x-referenceable": true
                     },
-                    "aws_secret_access_key": {
+                    "aws_region": {
                       "type": "string",
-                      "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.",
+                      "description": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`.",
+                      "x-referenceable": true
+                    },
+                    "aws_is_serverless": {
+                      "type": "boolean",
+                      "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
+                      "default": true
+                    },
+                    "aws_access_key_id": {
+                      "type": "string",
+                      "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.",
+                      "x-referenceable": true,
+                      "x-encrypted": true
+                    },
+                    "aws_role_session_name": {
+                      "type": "string",
+                      "description": "The session name for the temporary credentials when assuming the IAM role.",
                       "x-referenceable": true,
                       "x-encrypted": true
                     },
@@ -189,38 +212,15 @@
                   "type": "integer",
                   "description": "Database to use for the Redis connection when using the `redis` strategy",
                   "default": 0
-                },
-                "server_name": {
-                  "type": "string",
-                  "description": "A string representing an SNI (server name indication) value for TLS.",
-                  "x-referenceable": true
-                },
-                "host": {
-                  "type": "string",
-                  "description": "A string representing a host name, such as example.com.",
-                  "x-referenceable": true
-                },
-                "timeout": {
-                  "type": "integer",
-                  "maximum": 2147483646,
-                  "minimum": 0,
-                  "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
-                  "default": 2000
-                },
-                "ssl": {
-                  "type": "boolean",
-                  "description": "If set to true, uses SSL to connect to Redis.",
-                  "default": false
-                },
-                "ssl_verify": {
-                  "type": "boolean",
-                  "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
-                  "default": true
                 }
               },
               "description": "Redis configuration"
             }
           }
+        },
+        "anonymous": {
+          "type": "string",
+          "description": "An optional string (Consumer UUID or username) value to use as an \"anonymous\" consumer if authentication fails. If empty (default null), the request will fail with an authentication failure `4xx`. Please note that this value must refer to the Consumer `id` or `username` attribute, and **not** its `custom_id`."
         }
       }
     },

@@ -29,6 +29,8 @@ related_resources:
     url: /ai-gateway/entities/ai-policy/
   - text: AI Auth Strategy entity
     url: /ai-gateway/entities/ai-auth-strategy/
+  - text: OpenID Connect authentication with {{site.ai_gateway}} 2.0
+    url: /ai-gateway/openid-connect/
   - text: AI Consumer Group entity
     url: /ai-gateway/entities/ai-consumer-group/
   - text: A2A protocol specification

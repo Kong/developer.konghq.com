@@ -1,4 +1,4 @@
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 import fs from "fs/promises";
 import minimist from "minimist";
 import { generateInstructionFiles } from "./instructions/extractor.js";
@@ -10,7 +10,7 @@ import { collectUrls } from "./collect-urls.mjs";
   try {
     const args = minimist(process.argv.slice(2));
     const fileContent = await fs.readFile("./config/tests.yaml", "utf8");
-    const testsConfig = yaml.load(fileContent);
+    const testsConfig = load(fileContent);
     let urlsToTest;
     let howToFiles;
     let haltOnSeriesError = true;

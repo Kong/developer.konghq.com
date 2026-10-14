@@ -1,5 +1,6 @@
 plugin_mappings:
     "ai-ratelimit-advanced": "ai-rate-limiting-advanced"
+    "ais": "ai-plugins"
     "JWT Signer": "jwt-signer"
     "ai-semantic-caching": "ai-semantic-cache"
     "ldap-auth-adv": "ldap-auth-advanced"

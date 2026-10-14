@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect Control Planes Configuration for Event Gateways
-  version: 1.3.2
+  version: 1.3.7
   description: |
     The API for configuring Event Gateways in Konnect.
   x-extensions-note: |
@@ -23,8 +23,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@9c7686a9d1631951a45739cfab8ac570b6e0d06f
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9c7686a9d1631951a45739cfab8ac570b6e0d06f'
+  x-oas-source: kong/platform-api@c490b3e79979400ce6f13039add29f45cfdb0b34
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c490b3e79979400ce6f13039add29f45cfdb0b34'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -6327,53 +6327,12 @@ components:
           $ref: '#/components/schemas/CursorMetaPage'
       required:
         - page
-    BaseError:
-      description: standard error
-      type: object
-      properties:
-        status:
-          description: |
-            The HTTP status code of the error. Useful when passing the response
-            body to child properties in a frontend UI. Must be returned as an integer.
-          type: integer
-          readOnly: true
-        title:
-          description: |
-            A short, human-readable summary of the problem. It should not
-            change between occurences of a problem, except for localization.
-            Should be provided as "Sentence case" for direct use in the UI.
-          type: string
-          readOnly: true
-        type:
-          description: The error type.
-          type: string
-          readOnly: true
-        instance:
-          description: |
-            Used to return the correlation ID back to the user, in the format
-            kong:trace:<correlation_id>. This helps us find the relevant logs
-            when a customer reports an issue.
-          type: string
-          readOnly: true
-        detail:
-          description: |
-            A human readable explanation specific to this occurence of the problem.
-            This field may contain request/entity data to help the user understand
-            what went wrong. Enclose variable values in square brackets. Should be
-            provided as "Sentence case" for direct use in the UI.
-          type: string
-          readOnly: true
-      required:
-        - status
-        - title
-        - instance
-        - detail
-      title: Error
     InvalidRules:
       description: invalid parameters rules
       type: string
       enum:
         - required
+        - unique
         - is_array
         - is_base64
         - is_boolean
@@ -6389,6 +6348,7 @@ components:
         - unknown_property
         - missing_reference
         - is_label
+        - key_invalid
         - matches_regex
         - invalid
         - is_supported_network_availability_zone_list
@@ -6485,6 +6445,68 @@ components:
         - reason
         - rule
         - maximum
+    InvalidParameterMinimumTime:
+      type: object
+      properties:
+        field:
+          type: string
+          example: to
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - min_time
+          nullable: false
+          readOnly: true
+        minimum:
+          type: string
+          format: date-time
+          example: '2026-10-01T00:00:00Z'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: 'must be no earlier than 2026-10-01T00:00:00Z'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - minimum
+    InvalidParameterMaximumTime:
+      type: object
+      properties:
+        field:
+          type: string
+          example: to
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - max_time
+          nullable: false
+          readOnly: true
+        maximum:
+          type: string
+          format: date-time
+          example: '2026-10-31T23:59:59Z'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: 'must be no later than 2026-10-31T23:59:59Z'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - maximum
     InvalidParameterChoiceItem:
       type: object
       properties:
@@ -6562,6 +6584,8 @@ components:
           - $ref: '#/components/schemas/InvalidParameterStandard'
           - $ref: '#/components/schemas/InvalidParameterMinimumLength'
           - $ref: '#/components/schemas/InvalidParameterMaximumLength'
+          - $ref: '#/components/schemas/InvalidParameterMinimumTime'
+          - $ref: '#/components/schemas/InvalidParameterMaximumTime'
           - $ref: '#/components/schemas/InvalidParameterChoiceItem'
           - $ref: '#/components/schemas/InvalidParameterDependentItem'
       minItems: 1
@@ -6576,6 +6600,8 @@ components:
             The HTTP status code of the error. Useful when passing the response
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
+          enum:
+            - 400
           readOnly: true
         title:
           description: |
@@ -6622,6 +6648,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 401
+          enum:
+            - 401
           readOnly: true
         title:
           description: |
@@ -6669,6 +6697,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 403
+          enum:
+            - 403
           readOnly: true
         title:
           description: |
@@ -6699,6 +6729,96 @@ components:
             provided as "Sentence case" for direct use in the UI.
           type: string
           example: Forbidden
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
+    InternalError:
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          example: 500
+          enum:
+            - 500
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
+    NotAvailableError:
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          example: 503
+          enum:
+            - 503
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
           readOnly: true
       required:
         - status
@@ -6778,6 +6898,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 404
+          enum:
+            - 404
           readOnly: true
         title:
           description: |
@@ -6825,6 +6947,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 409
+          enum:
+            - 409
           readOnly: true
         title:
           description: |
@@ -7683,13 +7807,13 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/BaseError'
+            $ref: '#/components/schemas/InternalError'
     NotAvailable:
       description: Service not available
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/BaseError'
+            $ref: '#/components/schemas/NotAvailableError'
     NotFound:
       description: Not Found
       content:

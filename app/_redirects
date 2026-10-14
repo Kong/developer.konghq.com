@@ -408,7 +408,7 @@
 /ai-gateway/policies/mtls-auth/            /plugins/mtls-auth/            301
 /ai-gateway/policies/oauth2/               /plugins/oauth2/               301
 /ai-gateway/policies/oauth2-introspection/ /plugins/oauth2-introspection/ 301
-/ai-gateway/policies/openid-connect/       /plugins/openid-connect/       301
+/ai-gateway/policies/openid-connect/       /ai-gateway/openid-connect/       301
 /ai-gateway/policies/saml/                 /plugins/saml/                 301
 /ai-gateway/policies/session/              /plugins/session/              301
 /ai-gateway/policies/upstream-oauth/       /plugins/upstream-oauth/       301
@@ -531,6 +531,9 @@
 
 # AI Auth Strategy rename
 /ai-gateway/entities/ai-identity-provider/ /ai-gateway/entities/ai-auth-strategy/ 301
+
+# Custom policies reference page moved to the AI Custom Policy entity page
+/ai-gateway/custom-policies/ /ai-gateway/entities/ai-custom-policy/ 301
 
 # Insomnia 13.3: documents and collections merged into API Collections
 /insomnia/documents/ /insomnia/collections/ 301

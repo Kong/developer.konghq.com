@@ -31,7 +31,11 @@ works_on:
 ---
 
 {:.warning}
-> For FIPS 140-3, see [FIPS 140-3 compliance in {{site.base_gateway}}](/gateway/fips-support/). FIPS 140-2 support will be deprecated in a future release.
+> For FIPS 140-3, see [FIPS 140-3 compliance in {{site.base_gateway}}](/gateway/fips-support/).
+> NIST moved FIPS 140-2 module validations to the Historical List on 22 September 2026.
+> New {{site.base_gateway}} builds no longer publish FIPS 140-2 packages or images.
+> Existing FIPS 140-2 packages for previously released versions remain available.
+> Migrate new deployments to the FIPS 140-3 package.
 
 The Federal Information Processing Standard (FIPS) 140-2 is a federal standard defined by the National Institute of Standards and Technology. It specifies the security requirements that must be satisfied by a cryptographic module. The FIPS {{site.base_gateway}} package is FIPS 140-2 compliant. Compliance means that {{site.base_gateway}} only uses FIPS 140-2 approved algorithms while running in FIPS mode, but the product has not been submitted to a NIST testing lab for validation.
 

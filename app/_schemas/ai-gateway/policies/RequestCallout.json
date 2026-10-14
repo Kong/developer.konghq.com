@@ -27,53 +27,6 @@
           "items": {
             "type": "object",
             "properties": {
-              "response": {
-                "type": "object",
-                "properties": {
-                  "headers": {
-                    "type": "object",
-                    "properties": {
-                      "store": {
-                        "type": "boolean",
-                        "description": "If `false`, skips storing the callout response headers into kong.ctx.shared.callouts.<name>.response.headers.",
-                        "default": true
-                      }
-                    },
-                    "description": "Callout response header customizations."
-                  },
-                  "body": {
-                    "type": "object",
-                    "properties": {
-                      "store": {
-                        "type": "boolean",
-                        "description": "If `false`, skips storing the callout response body into kong.ctx.shared.callouts.<name>.response.body.",
-                        "default": true
-                      },
-                      "decode": {
-                        "type": "boolean",
-                        "description": "If `true`, decodes the response body before storing into the context. Only JSON is supported.",
-                        "default": false
-                      }
-                    }
-                  },
-                  "by_lua": {
-                    "type": "string",
-                    "description": "Lua code that executes after the callout response is received, before caching takes place. Can produce side effects. Standard Lua sandboxing restrictions apply."
-                  }
-                },
-                "description": "Configurations of callout response handling."
-              },
-              "cache": {
-                "type": "object",
-                "properties": {
-                  "bypass": {
-                    "type": "boolean",
-                    "description": "If `true`, skips caching the callout response.",
-                    "default": false
-                  }
-                },
-                "description": "Callout caching configuration."
-              },
               "name": {
                 "type": "string",
                 "description": "A string identifier for a callout. A callout object is referenceable via its name in the `kong.ctx.shared.callouts.<name>`"
@@ -89,9 +42,78 @@
               "request": {
                 "type": "object",
                 "properties": {
+                  "http_opts": {
+                    "type": "object",
+                    "properties": {
+                      "timeouts": {
+                        "type": "object",
+                        "properties": {
+                          "write": {
+                            "type": "integer",
+                            "maximum": 2147483646,
+                            "minimum": 0,
+                            "description": "The socket write timeout."
+                          },
+                          "read": {
+                            "type": "integer",
+                            "maximum": 2147483646,
+                            "minimum": 0,
+                            "description": "The socket read timeout. "
+                          },
+                          "connect": {
+                            "type": "integer",
+                            "maximum": 2147483646,
+                            "minimum": 0,
+                            "description": "The socket connect timeout."
+                          }
+                        },
+                        "description": "Socket timeouts in milliseconds. All or none must be set."
+                      },
+                      "proxy": {
+                        "type": "object",
+                        "properties": {
+                          "auth_password": {
+                            "type": "string",
+                            "description": "The password to authenticate with, if the forward proxy is protected by basic authentication.",
+                            "x-referenceable": true,
+                            "x-encrypted": true
+                          },
+                          "https_proxy": {
+                            "type": "string",
+                            "description": "The HTTPS proxy URL. This proxy server will be used for HTTPS requests."
+                          },
+                          "http_proxy": {
+                            "type": "string",
+                            "description": "The HTTP proxy URL. This proxy server will be used for HTTP requests."
+                          },
+                          "auth_username": {
+                            "type": "string",
+                            "description": "The username to authenticate with, if the forward proxy is protected by basic authentication.",
+                            "x-referenceable": true
+                          }
+                        },
+                        "description": "Proxy settings."
+                      },
+                      "ssl_verify": {
+                        "type": "boolean",
+                        "description": "If set to `true`, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your callout API. You may also need to configure `lua_ssl_verify_depth` accordingly.",
+                        "default": true
+                      },
+                      "ssl_server_name": {
+                        "type": "string",
+                        "description": "The SNI used in the callout request. Defaults to host if omitted."
+                      }
+                    },
+                    "description": "HTTP connection parameters."
+                  },
                   "query": {
                     "type": "object",
                     "properties": {
+                      "forward": {
+                        "type": "boolean",
+                        "description": "If `true`, forwards the incoming request's query params to the callout request. ",
+                        "default": false
+                      },
                       "custom": {
                         "type": "object",
                         "additionalProperties": {
@@ -99,11 +121,6 @@
                           "x-referenceable": true
                         },
                         "description": "The custom query params to be added in the callout HTTP request. Values can contain Lua expressions in the form `$(some_lua_expression)`. The syntax is based on `request-transformer-advanced` templates."
-                      },
-                      "forward": {
-                        "type": "boolean",
-                        "description": "If `true`, forwards the incoming request's query params to the callout request. ",
-                        "default": false
                       }
                     },
                     "description": "Callout request query param customizations."
@@ -111,6 +128,11 @@
                   "headers": {
                     "type": "object",
                     "properties": {
+                      "forward": {
+                        "type": "boolean",
+                        "description": "If `true`, forwards the incoming request's headers to the callout request. ",
+                        "default": false
+                      },
                       "custom": {
                         "type": "object",
                         "additionalProperties": {
@@ -118,11 +140,6 @@
                           "x-referenceable": true
                         },
                         "description": "The custom headers to be added in the callout HTTP request. Values can contain Lua expressions in the form `$(some_lua_expression)`. The syntax is based on `request-transformer-advanced` templates."
-                      },
-                      "forward": {
-                        "type": "boolean",
-                        "description": "If `true`, forwards the incoming request's headers to the callout request. ",
-                        "default": false
                       }
                     },
                     "description": "Callout request header customizations."
@@ -130,6 +147,11 @@
                   "body": {
                     "type": "object",
                     "properties": {
+                      "forward": {
+                        "type": "boolean",
+                        "description": "If `true`, forwards the incoming request's body to the callout request.",
+                        "default": false
+                      },
                       "decode": {
                         "type": "boolean",
                         "description": "If `true`, decodes the request's body and make it available for customizations. Only JSON content type is supported.",
@@ -142,11 +164,6 @@
                           "x-referenceable": true
                         },
                         "description": "The custom body fields to be added to the callout HTTP request. Values can contain Lua expressions in the form $(some_lua_expression). The syntax is based on `request-transformer-advanced` templates."
-                      },
-                      "forward": {
-                        "type": "boolean",
-                        "description": "If `true`, forwards the incoming request's body to the callout request.",
-                        "default": false
                       }
                     },
                     "description": "Callout request body customizations."
@@ -203,76 +220,59 @@
                     "type": "string",
                     "description": "The HTTP method that will be requested.",
                     "default": "GET"
-                  },
-                  "http_opts": {
-                    "type": "object",
-                    "properties": {
-                      "ssl_verify": {
-                        "type": "boolean",
-                        "description": "If set to `true`, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your callout API. You may also need to configure `lua_ssl_verify_depth` accordingly.",
-                        "default": true
-                      },
-                      "ssl_server_name": {
-                        "type": "string",
-                        "description": "The SNI used in the callout request. Defaults to host if omitted."
-                      },
-                      "timeouts": {
-                        "type": "object",
-                        "properties": {
-                          "connect": {
-                            "type": "integer",
-                            "maximum": 2147483646,
-                            "minimum": 0,
-                            "description": "The socket connect timeout."
-                          },
-                          "write": {
-                            "type": "integer",
-                            "maximum": 2147483646,
-                            "minimum": 0,
-                            "description": "The socket write timeout."
-                          },
-                          "read": {
-                            "type": "integer",
-                            "maximum": 2147483646,
-                            "minimum": 0,
-                            "description": "The socket read timeout. "
-                          }
-                        },
-                        "description": "Socket timeouts in milliseconds. All or none must be set."
-                      },
-                      "proxy": {
-                        "type": "object",
-                        "properties": {
-                          "auth_username": {
-                            "type": "string",
-                            "description": "The username to authenticate with, if the forward proxy is protected by basic authentication.",
-                            "x-referenceable": true
-                          },
-                          "auth_password": {
-                            "type": "string",
-                            "description": "The password to authenticate with, if the forward proxy is protected by basic authentication.",
-                            "x-referenceable": true,
-                            "x-encrypted": true
-                          },
-                          "https_proxy": {
-                            "type": "string",
-                            "description": "The HTTPS proxy URL. This proxy server will be used for HTTPS requests."
-                          },
-                          "http_proxy": {
-                            "type": "string",
-                            "description": "The HTTP proxy URL. This proxy server will be used for HTTP requests."
-                          }
-                        },
-                        "description": "Proxy settings."
-                      }
-                    },
-                    "description": "HTTP connection parameters."
                   }
                 },
                 "required": [
                   "url"
                 ],
                 "description": "The customizations for the callout request."
+              },
+              "response": {
+                "type": "object",
+                "properties": {
+                  "headers": {
+                    "type": "object",
+                    "properties": {
+                      "store": {
+                        "type": "boolean",
+                        "description": "If `false`, skips storing the callout response headers into kong.ctx.shared.callouts.<name>.response.headers.",
+                        "default": true
+                      }
+                    },
+                    "description": "Callout response header customizations."
+                  },
+                  "body": {
+                    "type": "object",
+                    "properties": {
+                      "store": {
+                        "type": "boolean",
+                        "description": "If `false`, skips storing the callout response body into kong.ctx.shared.callouts.<name>.response.body.",
+                        "default": true
+                      },
+                      "decode": {
+                        "type": "boolean",
+                        "description": "If `true`, decodes the response body before storing into the context. Only JSON is supported.",
+                        "default": false
+                      }
+                    }
+                  },
+                  "by_lua": {
+                    "type": "string",
+                    "description": "Lua code that executes after the callout response is received, before caching takes place. Can produce side effects. Standard Lua sandboxing restrictions apply."
+                  }
+                },
+                "description": "Configurations of callout response handling."
+              },
+              "cache": {
+                "type": "object",
+                "properties": {
+                  "bypass": {
+                    "type": "boolean",
+                    "description": "If `true`, skips caching the callout response.",
+                    "default": false
+                  }
+                },
+                "description": "Callout caching configuration."
               }
             },
             "required": [
@@ -285,6 +285,11 @@
         "cache": {
           "type": "object",
           "properties": {
+            "cache_ttl": {
+              "type": "integer",
+              "description": "TTL in seconds of cache entities.",
+              "default": 300
+            },
             "strategy": {
               "type": "string",
               "enum": [
@@ -308,6 +313,11 @@
             "redis": {
               "type": "object",
               "properties": {
+                "connection_is_proxied": {
+                  "type": "boolean",
+                  "description": "If the connection to Redis is proxied (e.g. Envoy), set it `true`. Set the `host` and `port` to point to the proxy address.",
+                  "default": false
+                },
                 "port": {
                   "type": "integer",
                   "maximum": 65535,
@@ -316,17 +326,84 @@
                   "default": 6379,
                   "x-referenceable": true
                 },
-                "sentinel_password": {
-                  "type": "string",
-                  "description": "Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels.",
-                  "x-encrypted": true,
-                  "x-referenceable": true
-                },
-                "keepalive_backlog": {
-                  "type": "integer",
-                  "maximum": 2147483646,
-                  "minimum": 0,
-                  "description": "Limits the total number of opened connections for a pool. If the connection pool is full, connection queues above the limit go into the backlog queue. If the backlog queue is full, subsequent connect operations fail and return `nil`. Queued operations (subject to set timeouts) resume once the number of connections in the pool is less than `keepalive_pool_size`. If latency is high or throughput is low, try increasing this value. Empirically, this value is larger than `keepalive_pool_size`."
+                "cloud_authentication": {
+                  "type": "object",
+                  "properties": {
+                    "aws_cache_name": {
+                      "type": "string",
+                      "description": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`.",
+                      "x-referenceable": true
+                    },
+                    "aws_region": {
+                      "type": "string",
+                      "description": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`.",
+                      "x-referenceable": true
+                    },
+                    "aws_access_key_id": {
+                      "type": "string",
+                      "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.",
+                      "x-referenceable": true,
+                      "x-encrypted": true
+                    },
+                    "aws_secret_access_key": {
+                      "type": "string",
+                      "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.",
+                      "x-referenceable": true,
+                      "x-encrypted": true
+                    },
+                    "aws_role_session_name": {
+                      "type": "string",
+                      "description": "The session name for the temporary credentials when assuming the IAM role.",
+                      "x-referenceable": true,
+                      "x-encrypted": true
+                    },
+                    "gcp_service_account_json": {
+                      "type": "string",
+                      "description": "GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`.",
+                      "x-referenceable": true,
+                      "x-encrypted": true
+                    },
+                    "azure_client_id": {
+                      "type": "string",
+                      "description": "Azure Client ID to be used for authentication when `auth_provider` is set to `azure`.",
+                      "x-referenceable": true,
+                      "x-encrypted": true
+                    },
+                    "aws_is_serverless": {
+                      "type": "boolean",
+                      "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
+                      "default": true
+                    },
+                    "aws_assume_role_arn": {
+                      "type": "string",
+                      "description": "The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens.",
+                      "x-referenceable": true,
+                      "x-encrypted": true
+                    },
+                    "azure_client_secret": {
+                      "type": "string",
+                      "description": "Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`.",
+                      "x-referenceable": true,
+                      "x-encrypted": true
+                    },
+                    "azure_tenant_id": {
+                      "type": "string",
+                      "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`.",
+                      "x-referenceable": true,
+                      "x-encrypted": true
+                    },
+                    "auth_provider": {
+                      "type": "string",
+                      "enum": [
+                        "aws",
+                        "azure",
+                        "gcp"
+                      ],
+                      "description": "Auth providers to be used to authenticate to a Cloud Provider's Redis instance.",
+                      "x-referenceable": true
+                    }
+                  },
+                  "description": "Cloud auth related configs for connecting to a Cloud Provider's Redis instance."
                 },
                 "sentinel_role": {
                   "type": "string",
@@ -336,45 +413,6 @@
                     "slave"
                   ],
                   "description": "Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel."
-                },
-                "cluster_nodes": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "ip": {
-                        "type": "string",
-                        "description": "A string representing a host name, such as example.com.",
-                        "default": "127.0.0.1"
-                      },
-                      "port": {
-                        "type": "integer",
-                        "maximum": 65535,
-                        "minimum": 0,
-                        "description": "An integer representing a port number between 0 and 65535, inclusive.",
-                        "default": 6379
-                      }
-                    }
-                  },
-                  "minLength": 1,
-                  "description": "Cluster addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Cluster. The minimum length of the array is 1 element."
-                },
-                "host": {
-                  "type": "string",
-                  "description": "A string representing a host name, such as example.com.",
-                  "default": "127.0.0.1",
-                  "x-referenceable": true
-                },
-                "send_timeout": {
-                  "type": "integer",
-                  "maximum": 2147483646,
-                  "minimum": 0,
-                  "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
-                  "default": 2000
-                },
-                "sentinel_master": {
-                  "type": "string",
-                  "description": "Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel."
                 },
                 "sentinel_nodes": {
                   "type": "array",
@@ -398,15 +436,32 @@
                   "minLength": 1,
                   "description": "Sentinel node addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Sentinel. The minimum length of the array is 1 element."
                 },
+                "cluster_nodes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "ip": {
+                        "type": "string",
+                        "description": "A string representing a host name, such as example.com.",
+                        "default": "127.0.0.1"
+                      },
+                      "port": {
+                        "type": "integer",
+                        "maximum": 65535,
+                        "minimum": 0,
+                        "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                        "default": 6379
+                      }
+                    }
+                  },
+                  "minLength": 1,
+                  "description": "Cluster addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Cluster. The minimum length of the array is 1 element."
+                },
                 "ssl_verify": {
                   "type": "boolean",
                   "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
                   "default": true
-                },
-                "connection_is_proxied": {
-                  "type": "boolean",
-                  "description": "If the connection to Redis is proxied (e.g. Envoy), set it `true`. Set the `host` and `port` to point to the proxy address.",
-                  "default": false
                 },
                 "connect_timeout": {
                   "type": "integer",
@@ -415,15 +470,38 @@
                   "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
                   "default": 2000
                 },
+                "username": {
+                  "type": "string",
+                  "description": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.",
+                  "x-referenceable": true
+                },
                 "password": {
                   "type": "string",
                   "description": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.",
-                  "x-encrypted": true,
-                  "x-referenceable": true
+                  "x-referenceable": true,
+                  "x-encrypted": true
                 },
-                "sentinel_username": {
+                "database": {
+                  "type": "integer",
+                  "description": "Database to use for the Redis connection when using the `redis` strategy",
+                  "default": 0
+                },
+                "keepalive_pool_size": {
+                  "type": "integer",
+                  "maximum": 2147483646,
+                  "minimum": 1,
+                  "description": "The size limit for every cosocket connection pool associated with every remote server, per worker process. If neither `keepalive_pool_size` nor `keepalive_backlog` is specified, no pool is created. If `keepalive_pool_size` isn't specified but `keepalive_backlog` is specified, then the pool uses the default value. Try to increase (e.g. 512) this value if latency is high or throughput is low.",
+                  "default": 256
+                },
+                "keepalive_backlog": {
+                  "type": "integer",
+                  "maximum": 2147483646,
+                  "minimum": 0,
+                  "description": "Limits the total number of opened connections for a pool. If the connection pool is full, connection queues above the limit go into the backlog queue. If the backlog queue is full, subsequent connect operations fail and return `nil`. Queued operations (subject to set timeouts) resume once the number of connections in the pool is less than `keepalive_pool_size`. If latency is high or throughput is low, try increasing this value. Empirically, this value is larger than `keepalive_pool_size`."
+                },
+                "server_name": {
                   "type": "string",
-                  "description": "Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+.",
+                  "description": "A string representing an SNI (server name indication) value for TLS.",
                   "x-referenceable": true
                 },
                 "cluster_max_redirections": {
@@ -438,118 +516,40 @@
                   "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
                   "default": 2000
                 },
-                "username": {
+                "sentinel_username": {
                   "type": "string",
-                  "description": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.",
+                  "description": "Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+.",
                   "x-referenceable": true
                 },
-                "cloud_authentication": {
-                  "type": "object",
-                  "properties": {
-                    "gcp_service_account_json": {
-                      "type": "string",
-                      "description": "GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`.",
-                      "x-referenceable": true,
-                      "x-encrypted": true
-                    },
-                    "azure_client_id": {
-                      "type": "string",
-                      "description": "Azure Client ID to be used for authentication when `auth_provider` is set to `azure`.",
-                      "x-referenceable": true,
-                      "x-encrypted": true
-                    },
-                    "auth_provider": {
-                      "type": "string",
-                      "enum": [
-                        "aws",
-                        "azure",
-                        "gcp"
-                      ],
-                      "description": "Auth providers to be used to authenticate to a Cloud Provider's Redis instance.",
-                      "x-referenceable": true
-                    },
-                    "aws_access_key_id": {
-                      "type": "string",
-                      "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.",
-                      "x-referenceable": true,
-                      "x-encrypted": true
-                    },
-                    "aws_assume_role_arn": {
-                      "type": "string",
-                      "description": "The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens.",
-                      "x-referenceable": true,
-                      "x-encrypted": true
-                    },
-                    "azure_client_secret": {
-                      "type": "string",
-                      "description": "Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`.",
-                      "x-referenceable": true,
-                      "x-encrypted": true
-                    },
-                    "azure_tenant_id": {
-                      "type": "string",
-                      "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`.",
-                      "x-encrypted": true,
-                      "x-referenceable": true
-                    },
-                    "aws_cache_name": {
-                      "type": "string",
-                      "description": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`.",
-                      "x-referenceable": true
-                    },
-                    "aws_region": {
-                      "type": "string",
-                      "description": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`.",
-                      "x-referenceable": true
-                    },
-                    "aws_is_serverless": {
-                      "type": "boolean",
-                      "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
-                      "default": true
-                    },
-                    "aws_secret_access_key": {
-                      "type": "string",
-                      "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.",
-                      "x-referenceable": true,
-                      "x-encrypted": true
-                    },
-                    "aws_role_session_name": {
-                      "type": "string",
-                      "description": "The session name for the temporary credentials when assuming the IAM role.",
-                      "x-referenceable": true,
-                      "x-encrypted": true
-                    }
-                  },
-                  "description": "Cloud auth related configs for connecting to a Cloud Provider's Redis instance."
-                },
-                "database": {
-                  "type": "integer",
-                  "description": "Database to use for the Redis connection when using the `redis` strategy",
-                  "default": 0
-                },
-                "keepalive_pool_size": {
-                  "type": "integer",
-                  "maximum": 2147483646,
-                  "minimum": 1,
-                  "description": "The size limit for every cosocket connection pool associated with every remote server, per worker process. If neither `keepalive_pool_size` nor `keepalive_backlog` is specified, no pool is created. If `keepalive_pool_size` isn't specified but `keepalive_backlog` is specified, then the pool uses the default value. Try to increase (e.g. 512) this value if latency is high or throughput is low.",
-                  "default": 256
+                "sentinel_master": {
+                  "type": "string",
+                  "description": "Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel."
                 },
                 "ssl": {
                   "type": "boolean",
                   "description": "If set to true, uses SSL to connect to Redis.",
                   "default": false
                 },
-                "server_name": {
+                "host": {
                   "type": "string",
-                  "description": "A string representing an SNI (server name indication) value for TLS.",
+                  "description": "A string representing a host name, such as example.com.",
+                  "default": "127.0.0.1",
                   "x-referenceable": true
+                },
+                "send_timeout": {
+                  "type": "integer",
+                  "maximum": 2147483646,
+                  "minimum": 0,
+                  "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+                  "default": 2000
+                },
+                "sentinel_password": {
+                  "type": "string",
+                  "description": "Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
                 }
               }
-            },
-            "cache_ttl": {
-              "type": "integer",
-              "description": "TTL in seconds of cache entities.",
-              "default": 300
             }
           },
           "description": "Policy global caching configuration."
@@ -557,17 +557,28 @@
         "upstream": {
           "type": "object",
           "properties": {
-            "body": {
+            "headers": {
               "type": "object",
               "properties": {
+                "forward": {
+                  "type": "boolean",
+                  "description": "If `false`, does not forward request headers to upstream request.",
+                  "default": true
+                },
                 "custom": {
                   "type": "object",
                   "additionalProperties": {
                     "type": "string",
                     "x-referenceable": true
                   },
-                  "description": "The custom body fields to be added in the upstream request body. Values can contain Lua expressions in the form $(some_lua_expression). The syntax is based on `request-transformer-advanced` templates."
-                },
+                  "description": "The custom headers to be added in the upstream HTTP request. Values can contain Lua expressions in the form $(some_lua_expression). The syntax is based on `request-transformer-advanced` templates."
+                }
+              },
+              "description": "Callout request header customizations."
+            },
+            "body": {
+              "type": "object",
+              "properties": {
                 "forward": {
                   "type": "boolean",
                   "description": "If `false`, skips forwarding the incoming request's body to the upstream request.",
@@ -577,6 +588,14 @@
                   "type": "boolean",
                   "description": "If `true`, decodes the request's body to make it available for upstream by_lua customizations. Only JSON content type is supported.",
                   "default": true
+                },
+                "custom": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string",
+                    "x-referenceable": true
+                  },
+                  "description": "The custom body fields to be added in the upstream request body. Values can contain Lua expressions in the form $(some_lua_expression). The syntax is based on `request-transformer-advanced` templates."
                 }
               },
               "description": "Callout request body customizations."
@@ -603,25 +622,6 @@
                 }
               },
               "description": "Upstream request query param customizations."
-            },
-            "headers": {
-              "type": "object",
-              "properties": {
-                "forward": {
-                  "type": "boolean",
-                  "description": "If `false`, does not forward request headers to upstream request.",
-                  "default": true
-                },
-                "custom": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "type": "string",
-                    "x-referenceable": true
-                  },
-                  "description": "The custom headers to be added in the upstream HTTP request. Values can contain Lua expressions in the form $(some_lua_expression). The syntax is based on `request-transformer-advanced` templates."
-                }
-              },
-              "description": "Callout request header customizations."
             }
           },
           "description": "Customizations to the upstream request."
@@ -630,6 +630,16 @@
       "required": [
         "callouts"
       ]
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     },
     "consumer": {
       "type": "object",
@@ -660,16 +670,6 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
-    },
-    "service": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
     }
   },
   "required": [

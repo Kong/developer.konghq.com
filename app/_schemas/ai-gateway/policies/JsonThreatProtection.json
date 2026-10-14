@@ -22,24 +22,31 @@
     "config": {
       "type": "object",
       "properties": {
-        "max_container_depth": {
+        "max_array_element_count": {
           "type": "integer",
           "maximum": 2147483648,
           "minimum": -1,
-          "description": "Max nested depth of objects and arrays. -1 means unlimited.",
+          "description": "Max number of elements in an array. -1 means unlimited.",
           "default": -1
+        },
+        "allow_duplicate_object_entry_name": {
+          "type": "boolean",
+          "description": "Allow or disallow duplicate object entry name.",
+          "default": true
         },
         "allow_non_json_requests": {
           "type": "boolean",
           "description": "Allow non-json requests to bypass the rules",
           "default": false
         },
-        "error_status_code": {
-          "type": "integer",
-          "maximum": 499,
-          "minimum": 400,
-          "description": "The response status code when validation fails.",
-          "default": 400
+        "enforcement_mode": {
+          "type": "string",
+          "enum": [
+            "block",
+            "log_only"
+          ],
+          "description": "Enforcement mode of the security policy.",
+          "default": "block"
         },
         "error_message": {
           "type": "string",
@@ -53,25 +60,11 @@
           "description": "Max size of the request body. -1 means unlimited.",
           "default": 8192
         },
-        "max_object_entry_count": {
-          "type": "integer",
-          "maximum": 2147483648,
-          "minimum": -1,
-          "description": "Max number of entries in an object. -1 means unlimited.",
-          "default": -1
-        },
         "max_object_entry_name_length": {
           "type": "integer",
           "maximum": 2147483648,
           "minimum": -1,
           "description": "Max string length of object name. -1 means unlimited.",
-          "default": -1
-        },
-        "max_array_element_count": {
-          "type": "integer",
-          "maximum": 2147483648,
-          "minimum": -1,
-          "description": "Max number of elements in an array. -1 means unlimited.",
           "default": -1
         },
         "max_string_value_length": {
@@ -81,19 +74,26 @@
           "description": "Max string value length. -1 means unlimited.",
           "default": -1
         },
-        "allow_duplicate_object_entry_name": {
-          "type": "boolean",
-          "description": "Allow or disallow duplicate object entry name.",
-          "default": true
+        "error_status_code": {
+          "type": "integer",
+          "maximum": 499,
+          "minimum": 400,
+          "description": "The response status code when validation fails.",
+          "default": 400
         },
-        "enforcement_mode": {
-          "type": "string",
-          "enum": [
-            "block",
-            "log_only"
-          ],
-          "description": "Enforcement mode of the security policy.",
-          "default": "block"
+        "max_container_depth": {
+          "type": "integer",
+          "maximum": 2147483648,
+          "minimum": -1,
+          "description": "Max nested depth of objects and arrays. -1 means unlimited.",
+          "default": -1
+        },
+        "max_object_entry_count": {
+          "type": "integer",
+          "maximum": 2147483648,
+          "minimum": -1,
+          "description": "Max number of entries in an object. -1 means unlimited.",
+          "default": -1
         }
       }
     },
