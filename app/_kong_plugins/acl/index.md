@@ -69,7 +69,7 @@ config:
     - "principal.metadata != null && has(principal.metadata.tier) && principal.metadata.tier == \"partner\""
 ```
 
-The `principal.metadata != null` check guards against Principals that have no metadata. For more information, see [null handling](/gateway/plugins/expressions/#null-handling) in the CEL expressions reference.
+The `principal.metadata != null` check prevents an evaluation error when the request has no Principal metadata, including when no Principal is authenticated. For more information, see [null handling](/gateway/plugins/expressions/#null-handling) in the CEL expressions reference.
 
 Each entry in `allow_when` or `deny_when` is evaluated in order, with OR semantics:
 
