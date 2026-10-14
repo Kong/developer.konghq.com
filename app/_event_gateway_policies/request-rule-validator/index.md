@@ -139,11 +139,11 @@ Avoid including sensitive details, like internal system names or other rules you
 
 ## Observability
 
-The Request Rule Validator policy logs each rule evaluation:
-* Passed rules are logged on the `trace` level.
-* Rule violations are logged on the `debug` level.
+The Request Rule Validator policy logs each rule evaluation at a different level:
+* Passed rules are logged at the `trace` level.
+* Rule violations are logged at the `debug` level.
 
-By default, {{site.event_gateway_short}} logs on the `info` level, so it hides these logs.
+By default, {{site.event_gateway_short}} logs at the `info` level, which excludes these logs.
 Kafka usually has high traffic, and logging every evaluation could overwhelm the logging system.
 To show rule evaluations without raising the level for the whole gateway, set the `debug` level for the policy module only:
 

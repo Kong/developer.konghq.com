@@ -129,11 +129,11 @@ Only interpolate identity values into `resource_names` patterns when those value
 
 ## Observability
 
-The ACL policy logs each decision:
-* Allowed requests are logged on the `trace` level.
-* Denied requests are logged on the `debug` level.
+The ACL policy logs each decision type at a different level:
+* Allowed requests are logged at the `trace` level.
+* Denied requests are logged at the `debug` level.
 
-By default, {{site.event_gateway_short}} logs on the `info` level, so it hides these logs.
+By default, {{site.event_gateway_short}} logs at the `info` level, which excludes these logs.
 Kafka usually has high traffic, and logging every decision could overwhelm the logging system.
 To show ACL decisions without raising the level for the whole gateway, set the `debug` level for the ACL module only:
 
