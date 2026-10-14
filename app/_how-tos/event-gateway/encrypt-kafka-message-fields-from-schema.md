@@ -1,5 +1,5 @@
 ---
-title: Encrypt Kafka message fields selected by schema registry tags with {{site.event_gateway}}
+title: Encrypt Kafka message fields selected by schema registry tags with {{site.event_gateway_short}}
 content_type: how_to
 breadcrumbs:
   - /event-gateway/
@@ -24,6 +24,8 @@ description: "Encrypt fields tagged in a Confluent Schema Registry, so encryptio
 tldr:
   q: How can I encrypt Kafka message fields based on tags stored in a schema registry?
   a: |
+    To encrypt Kafka message fields based on tags stored in a schema registry, you'll need to:
+
     1. Register an Avro schema in a Confluent Schema Registry and tag the sensitive fields.
     1. Create a static key.
     1. Create a Schema Validation produce policy with a nested Encrypt Fields policy that computes the fields to encrypt from the schema tags.
@@ -69,9 +71,9 @@ related_resources:
 
 In this guide, you'll learn how to encrypt fields of Kafka messages based on tags stored in a Confluent Schema Registry.
 
-Instead of listing field paths in the policies, you tag the sensitive fields in the schema itself. The {{site.event_gateway_short}} reads
+Instead of listing field paths in the policies, you tag the sensitive fields in the schema itself. {{site.event_gateway_short}} reads
 the tags of each record's schema, encrypts every tagged field before the record reaches Kafka, and decrypts the same fields
-for consumers. When the schema evolves and a new field gets tagged, the {{site.event_gateway_short}} encrypts it without any policy change.
+for consumers. When the schema evolves and a new field gets tagged, {{site.event_gateway_short}} encrypts it without any policy change.
 
 We'll use a `customers` topic that holds customer records with personal data. Producers and consumers that connect through
 the virtual cluster work with plaintext records, while the broker only stores the tagged fields in encrypted form.
@@ -255,11 +257,12 @@ render_output: false
 {% endvalidation %}
 <!--vale on-->
 
-The subject name `customers-value` follows Confluent's default [TopicNameStrategy](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/index.html#subject-name-strategy), which uses the pattern `<topic>-value`.
-
-Each key of `tags` is a field path in the record, and each value lists the tags carried by that field.
+In this configuration:
+* The subject name `customers-value` follows Confluent's default [TopicNameStrategy](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/index.html#subject-name-strategy), which uses the pattern `<topic>-value`.
+* Each key of `tags` is a field path in the record, and each value lists the tags carried by that field.
 Use the same path that the field has in the message, for example `profile.ssn` for a field nested under `profile`.
-The {{site.event_gateway_short}} passes the tag keys through as-is, so a key that doesn't match a field path in the record is never encrypted.
+
+{{site.event_gateway_short}} passes the tag keys through as-is, so a key that doesn't match a field path in the record is never encrypted.
 
 ## Encrypt tagged fields on produce
 
@@ -291,9 +294,9 @@ capture:
 <!--vale on-->
 
 The `failure_mode: reject` setting rejects a batch with a record that can't be decoded or doesn't conform to the schema.
-A record the {{site.event_gateway_short}} can't parse also can't be encrypted, so it must not reach the broker.
+A record that {{site.event_gateway_short}} can't parse also can't be encrypted, so it must not reach the broker.
 
-Create the [Encrypt Fields policy](/event-gateway/policies/encrypt-fields/) nested under the Schema Validation policy.
+Nest the [Encrypt Fields policy](/event-gateway/policies/encrypt-fields/) under the Schema Validation policy.
 Instead of static paths, the `paths` field holds an expression that reads the `PII` tag from the record's schema metadata
 and returns the tagged field paths:
 
@@ -317,12 +320,13 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-`record.value.schema.metadata.tags` is a map from tag name to the field paths carrying that tag.
+In this configuration:
+* `record.value.schema.metadata.tags` is a map from tag name to the field paths carrying that tag.
 It's populated by the parent Schema Validation policy, so the expression returns `["name", "email", "ssn"]` for
-records that use the registered schema. The policy encrypts all returned paths with `my-key`.
-The untagged `city` field is stored in plaintext.
-
-The policy uses `failure_mode: reject`, so a record the policy can't encrypt never reaches the broker in plaintext.
+records that use the registered schema. 
+* The `encryption_key` tells the policy to encrypt all returned paths with `my-key`. 
+   The `city` field from the schema isn't tagged as `PII`, so it's stored in plaintext.
+* `failure_mode: reject` means that any record the policy can't encrypt never reaches the broker in plaintext.
 
 ## Decrypt tagged fields on consume
 
