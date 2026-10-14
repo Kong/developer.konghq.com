@@ -259,6 +259,13 @@ A zone proxy (zone ingress/egress) is now just a `Dataplane` with zone proxy lis
 {:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
+### System namespace is labeled on every Helm upgrade
+
+The Helm hook that labels the system namespace with `kuma.io/sidecar-injection: "false"` now runs on `pre-upgrade` as well as `pre-install`.
+Before, a release recovered with `helm upgrade` after a failed first install could leave the namespace unlabeled, so policy admission webhooks didn't select it.
+The hook's `ServiceAccount`, `ClusterRole` and `ClusterRoleBinding` are now also created during upgrades and deleted once the hook finishes.
+Set `patchSystemNamespace: false` to keep managing the label yourself.
+
 ### `MeshMetric` `ActiveMTLSBackend` requires a client certificate
 
 The `ActiveMTLSBackend` TLS mode of a `MeshMetric` Prometheus backend now secures the endpoint with the workload identity of the dataplane. A scraper from a different address, also one on the same node, must send a client certificate that the mesh trusts. The certificate must contain a SPIFFE ID and chain to the CA bundle of that trust domain. With the bundled identity, the bundles come from `MeshTrust`. With SPIRE, they are all the bundles that the SPIRE agent serves, federated bundles included. Scrapes from the dataplane address or from a loopback address stay plaintext. A dataplane without a workload identity accepts only these local scrapes.
@@ -788,6 +795,19 @@ rules:
 
 Put it on the route itself when the other policies targeting that route should also cover the unmatched traffic, or on a second `MeshHTTPRoute` when they should not.
 
+### A `MeshHTTPRoute` match without a path ranks as `PathPrefix /`
+
+A match that sets only `headers`, `method`, or `queryParams` is now ordered as if it had `path: { type: PathPrefix, value: / }`, which is what the Gateway API assumes. Before, any match with a path ranked above it. Two orderings change without any change to your resources:
+
+- A pathless match next to an explicit `PathPrefix /` match now ties on path, so the method, header count, and query param count decide. A header-only rule (for example a canary on `x-canary: true`) next to a `PathPrefix /` catch-all used to be shadowed by the catch-all and never matched; it now receives the requests that carry the header.
+- A pathless match now ranks above a `RegularExpression` match. With a rule on `/api/.*` and a rule matching only the header `x-debug`, a request to `/api/foo` with `x-debug` used to go to the regex rule and now goes to the header rule.
+
+Exact matches and `PathPrefix` matches longer than `/` still rank above a pathless match. Routes converted from Gateway API `HTTPRoute`s are unaffected, because their matches always carry a path.
+
+**Action required**
+
+Review `MeshHTTPRoute`s that combine pathless matches with a `PathPrefix /` or `RegularExpression` match. If a pathless rule should only apply under a `RegularExpression` path, add that path to the rule. The catch-all from the previous section is safe to add to a route that has header-only rules: it no longer shadows them.
+
 ### RBAC: control plane now reads Gateway API `GRPCRoute`s
 
 The Helm-installed control plane `ClusterRole` now grants `get`, `list`, and
@@ -801,6 +821,25 @@ configuration.
 If you manage the control plane RBAC outside of Helm (for example via GitOps or
 manual manifests), add the same `grpcroutes` read permissions to the control
 plane `ClusterRole`.
+
+### RBAC: control plane no longer manages Gateway API routes
+
+The Helm-installed `-control-plane-workloads` `ClusterRole` and the namespaced
+`-control-plane` `Role` no longer grant `create`, `delete`, `get`, `list`,
+`patch`, `update`, or `watch` on `gateway.networking.k8s.io` `grpcroutes` and
+`httproutes`. Those were leftovers from the removed built-in Gateway; the
+control plane now only reads routes through the `-control-plane` `ClusterRole`
+and patches their `grpcroutes/status` and `httproutes/status` subresources,
+which stay granted.
+
+**Action required**
+
+If you manage the control plane RBAC outside of Helm and relied on the
+`-control-plane-workloads` role for Gateway API route permissions, grant
+`get`, `list`, and `watch` on `grpcroutes` and `httproutes` and `patch` on
+their `status` subresources to the control plane identity. Without the read
+permissions the control plane fails to start its route caches and blocks
+before serving.
 
 ### `MeshLoadBalancingStrategy` cross-zone settings now require a `MeshMultiZoneService` `to` target
 
@@ -3046,21 +3085,18 @@ The `experimental.sidecarContainers` opt-out (Helm value and `KUMA_EXPERIMENTAL_
 
 None for Kubernetes 1.29+, which is already below Kuma's own minimum tested/supported Kubernetes version. If you were relying on `sidecarContainers: false` to opt out, that is no longer possible; remove the setting from your Helm values or environment.
 
-### DNS server domain must not start with a dot
+### Unused control plane DNS configuration removed
 
-The control plane now rejects a DNS server domain configuration that begins with a `.` (e.g., `.mesh`). Previously such a value was silently accepted and produced broken hostname generation.
+The remaining `dnsServer` control plane configuration has been removed:
 
-**Action required:**
+- `dnsServer.domain` (`KUMA_DNS_SERVER_DOMAIN`).
+- `dnsServer.serviceVipPort` (`KUMA_DNS_SERVER_SERVICE_VIP_PORT`).
 
-If you have `KUMA_DNS_SERVER_DOMAIN` or `dnsServer.domain` set to a value starting with `.`, remove the leading dot:
+These settings are unused by the 3.0 service discovery implementation. Removing them does not change DNS records or service ports. Use `HostnameGenerator` templates to customize generated service hostnames.
 
-```yaml
-# kuma-cp config
-dnsServer:
-  domain: mesh   # was: .mesh
-```
+**Action required**
 
-Or via environment variable: `KUMA_DNS_SERVER_DOMAIN=mesh`
+Remove the `dnsServer` section from your control plane configuration and the environment variables above when upgrading to 3.0.
 
 ### HostnameGenerator templates that produce invalid DNS names now fail explicitly
 
