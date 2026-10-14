@@ -23,6 +23,8 @@ You can use this AI Policy to allow or block specific prompts, words, phrases, o
 
 It does this by scanning all chat messages where the role is `user` for the specific expressions set.
 
+This means the Policy only evaluates the `messages[].content` field of the request body against the `allow` and `deny` rules. Other parts of the request body, such as `model` or other parameters, are not scanned.
+
 You can use a combination of `allow` and `deny` rules to preserve integrity and compliance when serving an LLM model using {{site.ai_gateway}}.
 
 * **For `llm/v1/chat` type models**: You can optionally configure the Policy to ignore existing chat history, wherein it will only scan the trailing `user` message.
