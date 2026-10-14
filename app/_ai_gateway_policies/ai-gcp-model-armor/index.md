@@ -135,9 +135,9 @@ data:
   name: ai-gcp-model-armor
   type: ai-gcp-model-armor
   config:
-    project_id: YOUR_PROJECT_ID
+    project_id: ${project_id}
     location_id: us-central1
-    template_id: YOUR_TEMPLATE_ID
+    template_id: ${template_id}
     gcp_use_service_account: true
     gcp_service_account_json: ${gcp_service_account_json}
     rejection_mode: verbose
@@ -145,6 +145,12 @@ variables:
   gcp_service_account_json:
     value: $GCP_SERVICE_ACCOUNT_JSON
     description: The JSON key of a GCP service account with access to the Model Armor template.
+  project_id:
+    value: $PROJECT_ID
+    description: Your GCP project ID.
+  template_id:
+    value: $TEMPLATE_ID
+    description: Your template ID.
 formats:
   - konnect-api
   - kongctl

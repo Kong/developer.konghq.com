@@ -114,6 +114,9 @@ variables:
   aws_secret_access_key:
     value: $AWS_SECRET_ACCESS_KEY
     description: The AWS secret access key of the IAM identity.
+  guardrails_id:
+    value: $GUARDRAILS_ID
+    description: Your Guardrails ID.
 formats:
   - konnect-api
   - kongctl
