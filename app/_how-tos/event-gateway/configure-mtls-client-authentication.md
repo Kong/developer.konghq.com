@@ -223,7 +223,7 @@ columns:
 rows:
   - field: "`context.certificate.subject`"
     type: "map"
-    description: "Subject distinguished name as a map. Access individual attributes like `context.certificate.subject['CN']` (Common Name) or `context.certificate.subject['O']` (Organization)."
+    description: "Subject distinguished name as a map. Access individual attributes like `context.certificate.subject[\"CN\"]` (Common Name) or `context.certificate.subject[\"O\"]` (Organization)."
   - field: "`context.certificate.issuer`"
     type: "map"
     description: "Issuer distinguished name as a map, same format as `subject`."
@@ -241,7 +241,7 @@ rows:
 
 If `principal_mapping` is omitted, the principal defaults to the full subject distinguished name (for example, `CN=producer-client, O=Kong Demo, C=EU`).
 
-This guide uses `context.certificate.subject['CN']` to extract only the Common Name, so the principal becomes `producer-client`.
+This guide uses {% raw %}`{{context.certificate.subject["CN"]}}`{% endraw %} to extract only the Common Name, so the principal becomes `producer-client`.
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -257,7 +257,7 @@ body:
         key: $SERVER_KEY
     client_authentication:
       mode: required
-      principal_mapping: context.certificate.subject["CN"]
+      principal_mapping: '{% raw %}{{context.certificate.subject["CN"]}}{% endraw %}'
       tls_trust_bundles:
         - id: $BUNDLE_ID
 {% endkonnect_api_request %}
@@ -327,7 +327,7 @@ method: POST
 body:
   type: acls
   name: producer_acl
-  condition: context.auth.principal.name == "producer-client"
+  condition: '{% raw %}{{context.auth.principal.name == "producer-client"}}{% endraw %}'
   config:
     rules:
     - resource_type: topic
@@ -353,7 +353,7 @@ method: POST
 body:
   type: acls
   name: consumer_acl
-  condition: context.auth.principal.name == "consumer-client"
+  condition: '{% raw %}{{context.auth.principal.name == "consumer-client"}}{% endraw %}'
   config:
     rules:
     - resource_type: topic
