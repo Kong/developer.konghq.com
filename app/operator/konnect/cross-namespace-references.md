@@ -308,6 +308,73 @@ removed after the `KongVault` has been programmed, subsequent updates stop, but 
 The denial is reported on `ConfigStoreRefValid` rather than on `ResolvedRefs`, which the control plane reference already
 uses for this resource.
 
+## Config Store sync configuration {% new_in 2.4 %}
+
+A `KonnectConfigStoreSync` can reference a `KonnectConfigStore` and a Secret in other namespaces by setting
+`spec.configStoreRef.namespace` and `spec.secretRef.namespace`:
+
+```yaml
+apiVersion: konnect.konghq.com/v1alpha1
+kind: KonnectConfigStoreSync
+metadata:
+  name: example-tls
+  namespace: apps
+spec:
+  configStoreRef:
+    name: cert-keys
+    namespace: kong
+  secretRef:
+    name: example-tls
+    namespace: certs
+  mode: Combined
+  combined: {}
+```
+
+Each referenced namespace must allow the reference with a `KongReferenceGrant`. For the `KonnectConfigStore`:
+
+```yaml
+apiVersion: configuration.konghq.com/{{ site.operator_kongreferencegrant_api_version }}
+kind: KongReferenceGrant
+metadata:
+  name: allow-configstoresync-to-config-store
+  namespace: kong
+spec:
+  from:
+    - group: konnect.konghq.com
+      kind: KonnectConfigStoreSync
+      namespace: apps
+  to:
+    - group: konnect.konghq.com
+      kind: KonnectConfigStore
+      # Optionally specify a specific KonnectConfigStore name to allow
+      # only this specific resource to be referenced.
+      # name: cert-keys
+```
+
+For the Secret:
+
+```yaml
+apiVersion: configuration.konghq.com/{{ site.operator_kongreferencegrant_api_version }}
+kind: KongReferenceGrant
+metadata:
+  name: allow-configstoresync-to-secret
+  namespace: certs
+spec:
+  from:
+    - group: konnect.konghq.com
+      kind: KonnectConfigStoreSync
+      namespace: apps
+  to:
+    - group: core
+      kind: Secret
+      # Optionally specify a specific Secret name to allow
+      # only this specific resource to be referenced.
+      # name: example-tls
+```
+
+Without a valid grant, the `KonnectConfigStoreSync` reports `ConfigStoreRefValid=False` with reason `RefNotPermitted`
+or `SecretRefValid=False` with reason `NotAllowed`, and doesn't write to the Config Store.
+
 ## Troubleshooting
 
 If you're having issues with cross namespace references, you can always check your
