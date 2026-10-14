@@ -15,7 +15,6 @@ How does search work in {{site.dev_portal}}, and how do I turn on semantic searc
   how often someone can call my API."
 
 Both modes run as a single search, scoped to your {{site.dev_portal}}.
-Semantic search doesn't replace keyword matching, it's blended with it.
 
 To enable semantic search, do the following:
 
