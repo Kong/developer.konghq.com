@@ -64,7 +64,7 @@ If you need an exception inside an allowed range, use both lists.
 
 ## Scopes
 
-Apply the IP Restriction Policy globally to restrict all {{site.ai_gateway}} traffic on the data plane, or attach it to an AI Agent or AI MCP Server to restrict access to that entity only.
+Apply the IP Restriction Policy globally to restrict all {{site.ai_gateway}} traffic on the data plane, or attach it to an AI Agent, an AI MCP Server, an AI Consumer, or an AI Consumer Group to restrict access to that entity only.
 For details about how scopes work, see [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes).
 
 {:.warning}
