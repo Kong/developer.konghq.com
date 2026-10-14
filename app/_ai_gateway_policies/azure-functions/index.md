@@ -79,7 +79,7 @@ The Azure Functions Policy attaches to an [AI Model](/ai-gateway/entities/ai-mod
 The entity provides the route that clients call, and the policy answers the request.
 For details about how scopes work, see [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes).
 
-* **The upstream receives no traffic:** The policy answers the request itself.
+* **The upstream doesn't receives traffic:** The policy answers the request itself.
   An AI Model still requires an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) target, and clients must still send the `model` field that the AI Model route matches on.
   {{site.ai_gateway}} doesn't send the request to the provider.
 * **{{site.ai_gateway}} changes the request body first:** Before the policy runs, {{site.ai_gateway}} processes the request for the AI Model.
@@ -89,7 +89,7 @@ For details about how scopes work, see [AI Policy scopes](/ai-gateway/entities/a
 
 {:.warning}
 > Don't apply the Azure Functions Policy globally.
-> A global policy answers every request on the data plane, so no other AI Model, AI Agent, or AI MCP Server receives traffic.
+> A global policy answers every request on the data plane, so AI Models, AI Agents, or AI MCP Servers don't receive traffic.
 
 ## Configuration notes
 
