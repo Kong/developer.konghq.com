@@ -200,15 +200,15 @@ body:
       - type: create_topics
         rules:
           - description: Topic names must start with the team prefix team-a.
-            rule: topic.name.startsWith("team-a.")
+            rule: context.topic.name.startsWith("team-a.")
             action: reject
           - description: Topics can have at most 5 partitions
-            rule: topic.num_partitions <= 5
+            rule: context.topic.num_partitions <= 5
             action: reject
       - type: produce
         rules:
           - description: Producers must require acknowledgements from all in-sync replicas
-            rule: produce.acks == -1
+            rule: context.produce.acks == -1
             action: reject
 extract_body:
   - name: id
@@ -223,9 +223,9 @@ In this configuration:
 * Each rule is a boolean expression that describes the valid state of a request. The action runs when the expression
 evaluates to `false`. An expression that can't be evaluated, for example because a value has an unexpected format,
 also counts as `false`.
-* `topic.name.startsWith("team-a.")` and `topic.num_partitions <= 5` are evaluated against each topic in a
+* `context.topic.name.startsWith("team-a.")` and `context.topic.num_partitions <= 5` are evaluated against each topic in a
 `CreateTopics` request. A single request can create several topics, and each topic is checked independently.
-* `produce.acks == -1` is evaluated against every `Produce` request. The value `-1` means the producer waits for
+* `context.produce.acks == -1` is evaluated against every `Produce` request. The value `-1` means the producer waits for
 acknowledgements from all in-sync replicas.
 * `action: reject` fails the request with the `POLICY_VIOLATION` error code. The alternative is `passthrough`, which
 lets the request continue and only logs the violation. Use `passthrough` to test a rule before you start enforcing it.
