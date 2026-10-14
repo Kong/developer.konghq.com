@@ -22,7 +22,7 @@ Post at most one finding per rule per PR. List repeats in the same comment.
 
 ## Raise as a question, never a suggestion
 
-- Whether to split a long step, reorder a section, or move a limitation under its own heading, when the order clearly fights the reader's sequence.
+- Whether to split a long step, reorder a section, or move a limitation under its own heading, when the order clearly fights the reader's sequence. Whole-page length on concept and reference pages is covered by `overload.md`; do not raise it here.
 - A new option, field or step says what it does but not why. Write a suggestion only if the page or a linked reference states the reason.
 - A step or block looks wrong for a platform in `works_on` (for example, an on-prem command on a Konnect-only page).
 
