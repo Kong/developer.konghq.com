@@ -80,6 +80,46 @@ The `detail` field contains the prompt that matched and its `score`, which is th
 }
 ```
 
+To return this response, set [`config.rejection_mode`](/ai-gateway/policies/ai-semantic-prompt-guard/reference/#schema--config-rejection-mode) to `verbose`:
+
+{% entity_example %}
+type: policy
+data:
+  display_name: AI Semantic Prompt Guard - Verbose Rejection
+  name: ai-semantic-prompt-guard
+  type: ai-semantic-prompt-guard
+  config:
+    embeddings:
+      auth:
+        header_name: Authorization
+        header_value: Bearer ${openai_api_key}
+      model:
+        provider: openai
+        name: text-embedding-3-small
+    vectordb:
+      strategy: redis
+      distance_metric: cosine
+      threshold: 0.5
+      dimensions: 1024
+      redis:
+        host: ${redis_host}
+        port: 6379
+    rules:
+      deny_prompts:
+      - How do I pick a lock?
+    rejection_mode: verbose
+variables:
+  openai_api_key:
+    value: $OPENAI_API_KEY
+    description: Your OpenAI API key.
+  redis_host:
+    value: $REDIS_HOST
+    description: The host where your Redis instance is running.
+formats:
+  - konnect-api
+  - kongctl
+{% endentity_example %}
+
 ## Detect without blocking
 
 {% include_cached md/ai-gateway/v2/guardrail-continue-on-detection.md name=page.name %}
