@@ -50,7 +50,7 @@ min_version:
 The ACL (access control list) plugin allows you to restrict [Consumer](/gateway/entities/consumer/) access to a [Gateway Service](/gateway/entities/service/) or [Route](/gateway/entities/route/). You do this by configuring **either** an allow list or a deny list with certain Consumers or [Consumer Groups](/gateway/entities/consumer-group/).
 
 This plugin uses authenticated Consumers to identify who can and can't access the Service or Route. Because of this, you must also configure an [authentication plugin](/plugins/?category=authentication)
-(such as [Basic Authentication](/plugins/basic-auth/), [Key Authentication](/plugins/key-auth/),
+(for example, [Basic Authentication](/plugins/basic-auth/), [Key Authentication](/plugins/key-auth/),
 [OAuth 2.0](/plugins/oauth2/) or [OpenID Connect](/plugins/openid-connect/)) on the Service or Route **before** configuring the ACL plugin.
 
 ## Upstream Consumer Groups header
@@ -66,8 +66,10 @@ Instead of an allow or deny list of group names, you can use [`allow_when`](/plu
 ```yaml
 config:
   allow_when:
-    - "has(principal.metadata.tier) && principal.metadata.tier == \"partner\""
+    - "principal.metadata != null && has(principal.metadata.tier) && principal.metadata.tier == \"partner\""
 ```
+
+The `principal.metadata != null` check guards against Principals that have no metadata. For more information, see [null handling](/gateway/plugins/expressions/#null-handling) in the CEL expressions reference.
 
 Each entry in `allow_when` or `deny_when` is evaluated in order, with OR semantics:
 
