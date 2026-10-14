@@ -16,7 +16,7 @@ extended_description: |
     If the request uses a manual replica assignment, the partition count and replication factor are `-1`, so the rules check `context.topic.assignments` instead.
   * `create_partitions`: Prevents clients from growing a topic past 50 partitions.
   * `alter_configs`: This request replaces the full configuration of a topic, so it must include `retention.ms` with the required value.
-    Otherwise, `retention.ms` would go back to the broker default.
+    Otherwise, `retention.ms` goes back to the broker default.
   * `incremental_alter_configs`: Clients can change `retention.ms` only with the `SET` operation and the required value.
     This rule also prevents clients from deleting `retention.ms`.
 

@@ -18,7 +18,7 @@ extended_description: |
   Most clients use `read_uncommitted` by default, so consumers must set `isolation.level=read_committed` explicitly.
   A consumer that breaks a `fetch` rule doesn't receive any records. For example, the Java consumer stops with `IllegalStateException: Unexpected error code 44`.
 
-  When a request doesn't match a rule, {{site.event_gateway_short}} rejects the full request with the Kafka `POLICY_VIOLATION` error code.
+  When a request doesn't match a rule, {{site.event_gateway_short}} rejects the entire request with the Kafka `POLICY_VIOLATION` error code.
   The `Produce` and `Fetch` responses don't carry an error message, so clients only receive the error code, not the rule description.
 
   {:.warning}
