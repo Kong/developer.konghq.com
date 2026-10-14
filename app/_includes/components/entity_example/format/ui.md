@@ -131,9 +131,9 @@ This will create a new Workspace, and from here you can start managing entities 
 
 The following creates a new Workspace in {{site.konnect_short_name}}:
 
-1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
+1. In the {{site.konnect_short_name}} sidebar, click **API Gateway > Control planes**.
 1. Select your API Gateway.
-1. In the **API Gateway** sidebar, click **Workspaces**.
+1. Click the **Workspaces** tab.
 1. Click **New workspace**.
 1. In the **Workspace name** field, enter a name for your Workspace.
 1. Click **Create**.
