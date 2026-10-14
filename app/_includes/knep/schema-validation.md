@@ -100,7 +100,7 @@ rows:
       <br><br>
       Supported schema formats:
       * Avro
-      * JSON
+      * JSON Schema
       * Protobuf {% new_in 1.3 %}
 
       <br>
