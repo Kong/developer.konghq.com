@@ -24,6 +24,7 @@ description: "Let producers send plain JSON, and store their records as Avro in 
 tldr:
   q: How can producers send JSON while records are stored as Avro?
   a: |
+    To let producers send plain JSON while storing records as Avro in the backend cluster, you need to:
     1. Create a Schema Validation policy (produce phase) to parse a producer's JSON records.
     1. Nest a Record Transcode Produce policy that converts the parsed record to Avro using a Confluent Schema Registry.
 
@@ -253,18 +254,18 @@ body:
       schema_registry:
         name: local-schema-registry
       subject: context.topic.name + "-value"
-      version: "'latest'"
+      version: '"latest"'
     schema_ref_destination:
       type: confluent_format
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Converting to Avro requires a `schema_source`, because Avro needs a schema to serialize the record value.
-`subject` and `version` are expressions, so `context.topic.name + '-value'` resolves to `orders-value` for records produced to the `orders` topic, and `'latest'` always resolves to the newest registered version.
-`schema_ref_destination: confluent_format` prefixes the converted record with a reference to the schema, so any Confluent-compatible consumer of the topic can deserialize it.
-
-Both policies use `failure_mode: reject`, so a batch that holds a record either policy can't process is never written to the backend cluster.
-The alternatives are `passthrough` and `mark`.
+In this configuration:
+* `schema_source`: Required to convert to Avro, because Avro needs a schema to serialize the record value.
+* `subject`: An expression that selects the subject. In this example, `context.topic.name + '-value'` resolves to `orders-value` for records produced to the `orders` topic.
+* `version`: An expression that selects the schema version. In this example, `'latest'` resolves to the newest registered version.
+* `schema_ref_destination: confluent_format`: Prefixes the converted record with a reference to the schema, so any Confluent-compatible consumer of the topic can deserialize it.
+* `failure_mode: reject`: Used by both the Schema Validation policy and the nested Record Transcode Produce policy. If either policy fails to process a record, the whole batch is rejected and never written to the backend cluster. The alternatives are `passthrough` and `mark`.
 
 ## Configure kafkactl
 
