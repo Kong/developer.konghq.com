@@ -167,6 +167,17 @@ body_cmd: $(cat source.json)
 {% endnavtab %}
 {% navtab "UI" %}
 
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.context_mesh}}**.
+1. In the {{site.context_mesh}} sidebar, click **Sources**.
+1. Click **New source**.
+1. Select **API**. 
+1. Click the **Upload new** tab.
+1. Click **Select File**, then select your local OpenAPI spec file.
+1. In the **Display name** field, enter `Flights API`. The **Name** field autofills from it.
+1. Optional: In the **Description** field, enter a description for the source.
+1. Optional: In the **Base URL** field, enter `https://api.example.com`. If you leave it empty, {{site.context_mesh}} uses the server URL defined in the spec.
+1. Click **Add Source**.
+
 {% endnavtab %}
 {% endnavtabs %}
 
@@ -202,6 +213,15 @@ The `url` must include the protocol (`http` or `https`) and can't contain query 
 {% endnavtab %}
 {% navtab "UI" %}
 
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.context_mesh}}**.
+1. In the {{site.context_mesh}} sidebar, click **Sources**.
+1. Click **New source**.
+1. Select **MCP Server**.
+1. In the **Display name** field, enter the name of the remote MCP server. The **Name** field autofills from it.
+1. Optional: In the **Description** field, enter a description for the source.
+1. In **Configuration**, under **Upstream URL**, enter the remote MCP server URL. The URL must include `http` or `https` and can't contain query parameters or fragments.
+1. Click **Add MCP server**.
+
 {% endnavtab %}
 {% endnavtabs %}
 
@@ -236,6 +256,11 @@ body:
 
 {% endnavtab %}
 {% navtab "UI" %}
+
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.context_mesh}}**.
+1. In the {{site.context_mesh}} sidebar, click **Sources**.
+1. Click **New source**.
+1. In the **Import from Catalog** tab, select the Catalog APIs to include as sources.
 
 {% endnavtab %}
 {% endnavtabs %}

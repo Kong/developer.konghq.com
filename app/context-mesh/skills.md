@@ -175,13 +175,7 @@ If the MCP server isn't deployed to a control plane yet, no deployment happens. 
 
 Add a skill to give agents reusable instructions on the MCP server. You can add a skill before or after you deploy the server. If the server is already deployed, adding the skill automatically triggers a new deployment. See [Skill changes and deployments](#skill-changes-and-deployments).
 
-{:.info}
-> The [{{site.context_mesh}} API](/api/konnect/context-interfaces/v1/) uses `/v1/context-interfaces` for {{site.context_mesh}} MCP servers. Wherever the endpoints refer to a context interface, that is a {{site.context_mesh}} MCP server.
-
-{% navtabs "add-skill" %}
-{% navtab "API" %}
-
-First, write the skill in a `SKILL.md` file. The `name` in the frontmatter must match the `name` you send in the request:
+Write the skill in a `SKILL.md` file. The `name` in the frontmatter must match the `name` you send in the request or input in the UI. {{site.context_mesh}} only uses the content, so the local file name doesn't matter. The following example shows a valid skill:
 
 ```markdown
 ---
@@ -214,6 +208,11 @@ jq -n --rawfile contents SKILL.md '{
   }
 }' > skill.json
 ```
+{:.info}
+> The [{{site.context_mesh}} API](/api/konnect/context-interfaces/v1/) uses `/v1/context-interfaces` for {{site.context_mesh}} MCP servers. Wherever the endpoints refer to a context interface, that is a {{site.context_mesh}} MCP server.
+
+{% navtabs "add-skill" %}
+{% navtab "API" %}
 
 Send a `POST` request to the [`/v1/context-interfaces/{interfaceId}/skills` endpoint](/api/konnect/context-interfaces/v1/#/operations/create-context-interface-skill) with the request body:
 
@@ -231,6 +230,14 @@ If the frontmatter is invalid, or its `name` doesn't match the skill's `name`, t
 {% endnavtab %}
 {% navtab "UI" %}
 
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.context_mesh}}**.
+1. In the {{site.context_mesh}} sidebar, click **MCP Servers**.
+1. Click your MCP server.
+1. In **Capabilities**, click the **Skills** tab.
+1. Click **Add skill**.
+1. In the **Display name** field, enter the name of your skills file.
+1. Upload the file from your computer.
+1. Click **Add skill**.
 {% endnavtab %}
 {% endnavtabs %}
 

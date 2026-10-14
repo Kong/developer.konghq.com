@@ -210,6 +210,8 @@ Setting up a {{site.context_mesh}} MCP server is a multi-step process. [Add your
 
 ### Create the MCP server
 
+To create a {{site.context_mesh}} MCP server, you need to [add sources](/context-mesh/sources/#add-a-source) to {{site.context_mesh}} first.
+
 {% navtabs "create-mcp-server" %}
 {% navtab "API" %}
 
@@ -231,6 +233,12 @@ body:
 {% endnavtab %}
 {% navtab "UI" %}
 
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.context_mesh}}**.
+1. In the {{site.context_mesh}} sidebar, click **MCP Servers**.
+1. Click **New MCP server**.
+1. In **Add a source**, select as many sources as the context needs.
+1. In **MCP server details**, add a **Display name**. The **Name** autofills from it.
+1. In **Deploy your MCP server**, select the **API Gateway** control plane on which to deploy, or click **Skip for now**. 
 {% endnavtab %}
 {% endnavtabs %}
 
@@ -257,6 +265,14 @@ body:
 
 {% endnavtab %}
 {% navtab "UI" %}
+
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.context_mesh}}**.
+1. In the {{site.context_mesh}} sidebar, click **MCP Servers**.
+1. Click your MCP server.
+1. Click the **Sources** tab.
+1. Click **Add sources**.
+1. Select the checkbox for each source to add.
+1. Click **Add sources**.
 
 {% endnavtab %}
 {% endnavtabs %}
@@ -315,6 +331,21 @@ To change blocked capabilities later, send a `PATCH` request to the [same endpoi
 * An empty array clears that capability.
 * A non-empty array replaces the existing list.
 
+### Block capabilities from the UI
+
+To set up blocked capabilities from the UI:
+
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.context_mesh}}**.
+1. In the {{site.context_mesh}} sidebar, click **MCP Servers**.
+1. Click your MCP server.
+1. Click the **Sources** tab.
+1. In the source list, click a source: an sidebar dialog opens.
+1. In **Blocked capabilities**, click **Edit**.
+1. In the **Add to blocklist field**, add the API path, or the MCP tools, resources or prompts you want to block.
+1. Select the call method or the tool type.
+1. Click **Add**.
+1. Clisk **Save changes**. 
+
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/context-interfaces/$INTERFACE_ID/context-source-mappings/$MAPPING_ID/capability-controls
@@ -332,7 +363,7 @@ To see the current blocked capabilities, send a `GET` request to the [same endpo
 
 ### Deploy the MCP server
 
-Deploy the MCP server by mapping it to a control plane.
+Deploy the MCP server by mapping it to a control plane that has Kong Operator installed on it.
 
 {% navtabs "deploy-mcp-server" %}
 {% navtab "API" %}
@@ -351,6 +382,15 @@ body:
 
 {% endnavtab %}
 {% navtab "UI" %}
+
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.context_mesh}}**.
+1. In the {{site.context_mesh}} sidebar, click **MCP Servers**.
+1. Click your MCP server.
+1. Click **Deploy**.
+1. From the **Control plane** dropdown menu, select a control plane that is managed by Kong Operator.
+1. Select the **Basic** deployment mode.
+1. Click **Deploy and finish**.
+1. Wait until the MCP server status turns into **Healthy**.
 
 {% endnavtab %}
 {% endnavtabs %}
