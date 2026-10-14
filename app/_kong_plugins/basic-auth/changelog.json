@@ -37,6 +37,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.16": [
+    {
+      "message": "`brute_force_protection` now rate-limits each `Proxy-Authorization` and `Authorization` credential independently.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added brute force protection with exponential backoff for failed login attempts.",
