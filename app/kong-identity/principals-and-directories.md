@@ -172,11 +172,9 @@ For example, a Request Termination plugin can block access only when `principal.
 
 A group is a named set of principals in a directory.
 Groups let you manage access for a set of principals in one place: instead of writing one access rule per principal, or relying on every principal carrying the right metadata value, you add principals to a group and reference the group in your rules.
-When a principal joins or leaves, you update the group's membership and the rules stay the same.
+When a principal joins or leaves a group, you update the group's membership and the rules stay the same.
 
-Membership is static. 
-You add and remove each member explicitly, and a principal must already exist in the directory before you can add it to a group.
-A principal that's created the first time it authenticates isn't a member of any group until you add it.
+Group membership is manual: you add and remove each member explicitly, and a principal must already exist in the directory before you can add it to a group. A principal you just created isn't a member of any group until you add it.
 
 Group names must be unique within a directory and can only contain letters and numbers, with no spaces.
 
@@ -196,10 +194,40 @@ rows:
   - type: "Group"
     api: "`group`"
     description: "The default type. A set of principals that you reference in access rules."
-  - type: "Organizational unit"
-    api: "`org_unit`"
+  - type: "Team"
+    api: "`team`"
     description: "A node in your organization chart, such as a department or a team. Its members are principals of type `user`."
 {% endtable %}
+
+### Group credentials
+
+A group can have an API key, so a request authenticated with that key is identified as the group instead of as one individual.
+Create the key the same way you create a principal's API key, using the group's ID as the principal ID. 
+See [Key auth](#key-auth).
+
+Groups can't have other credentials or identities. {{site.identity}} rejects basic auth credentials, and OIDC, Consumer, auth server client, and custom identities on a group.
+
+### Group permissions
+
+Access to groups and group memberships is controlled by {{site.konnect_short_name}} roles. 
+There are separate permissions for groups and for group memberships, each with create, list, read, edit, and delete.
+
+The following table describes the predefined roles that apply to groups:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Role
+    key: role
+  - title: Description
+    key: description
+rows:
+  - role: "`PrincipalAdmin`"
+    description: "All group and group membership permissions: create, list, read, edit, and delete."
+  - role: "`PrincipalViewer`"
+    description: "Read-only group and group membership permissions: list and read."
+{% endtable %}
+<!--vale on-->
 
 ## Controlling {{site.base_gateway}} plugin execution based on principals
 
