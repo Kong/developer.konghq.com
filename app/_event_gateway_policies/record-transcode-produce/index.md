@@ -120,7 +120,7 @@ columns:
 rows:
   - type: "`reference`"
     description: |
-      Looks up an existing schema in a [schema registry](/event-gateway/entities/schema-registry/) using a `subject` and `version` that you compute with an expression. For example, `subject: ${context.topic.name + '-value'}` and `version: ${'latest'}`.
+      Looks up an existing schema in a [schema registry](/event-gateway/entities/schema-registry/) using a `subject` and `version` that you compute with an expression. For example, `subject: context.topic.name + '-value'` and `version: "'latest'"`.
   - type: "`inline`"
     description: |
       Embeds the raw schema text (for example, an Avro JSON schema) directly in the policy configuration.

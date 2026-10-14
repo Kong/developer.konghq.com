@@ -252,8 +252,8 @@ body:
       type: reference
       schema_registry:
         name: local-schema-registry
-      subject: context.topic.name + '-value'
-      version: 'latest'
+      subject: context.topic.name + "-value"
+      version: "'latest'"
     schema_ref_destination:
       type: confluent_format
 {% endkonnect_api_request %}
