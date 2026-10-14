@@ -148,7 +148,7 @@ tool pages for more information.
 
 {{site.base_gateway}} Workspaces provide a way to share runtime infrastructure across isolated configurations.
 With {{site.konnect_short_name}}, this is achieved using
-[control plane groups](/gateway/control-plane-groups/). control planes can be added to
+[control plane groups](/gateway/control-plane-groups/). Control planes can be added to
 and removed from control plane groups, and you can set them up to mirror your existing multi-tenant Workspace configuration.
 
 With control plane groups set up, you can connect Data Plane instances to each group, creating
