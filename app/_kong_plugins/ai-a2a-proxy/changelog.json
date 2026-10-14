@@ -24,5 +24,12 @@
       "type": "feature",
       "scope": "Plugin"
     }
+  ],
+  "3.14.0.16": [
+    {
+      "message": "Added A2A v1.0 wire-format support alongside v0.3.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
   ]
 }

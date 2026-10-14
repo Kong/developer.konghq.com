@@ -13,6 +13,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.16": [
+    {
+      "message": "Fixed an issue where the plugin router did not refresh after an incremental sync update on a Data Plane, leaving routes stale until the next full config push.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Fixed an issue where the degraphql handle type Boolean was not being assigned correctly in the degraphql router.",
