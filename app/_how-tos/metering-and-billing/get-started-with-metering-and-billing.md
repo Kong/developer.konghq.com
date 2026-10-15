@@ -132,6 +132,7 @@ In this section, you'll create an Premium Plan plan that charges customers $1 pe
 1. Click the **Plans** tab.
 1. Click **Create Plan**.
 1. In the **Name** field, enter `Premium Plan`.
+1. In the **Currency** field, keep the default `USD`.
 1. From the **Billing cadence** dropdown menu, select "1 month".
 1. Click **Save**.
 1. Click **Add Rate Card**.
