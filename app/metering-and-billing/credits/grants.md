@@ -134,6 +134,7 @@ C is not touched because its priority value is higher.
 
 A grant takes effect at its `effective_at` time, which defaults to the time you create it.
 Until then, its credits count toward the customer's pending balance, not the settled balance.
+If the customer has a negative balance, the part of the grant that repays it is booked when you create the grant, as described in [Negative balances](/metering-and-billing/credits/consumption-and-expiration/#negative-balances).
 
 ## Expiration
 
