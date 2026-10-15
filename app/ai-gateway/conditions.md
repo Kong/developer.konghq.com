@@ -31,7 +31,7 @@ Common use cases for conditions include:
 * Apply an AI Policy to only part of your traffic, such as callers who send a specific header or query parameter.
 * Skip a global AI Policy for specific paths or hosts without removing it or duplicating it on individual entities.
 * Enforce an AI Policy only for specific HTTP methods.
-* Make one AI Policy's execution depend on a value that a higher-priority [Pre-Function Policy](/ai-gateway/policies/pre-function/) sets in `kong.ctx.shared`.
+* Make one AI Policy's execution depend on a value that a higher-priority AI Policy set.
 
 ## Write a condition
 
@@ -277,7 +277,6 @@ rows:
     behavior: |
       Always a map. Accessing a missing key causes a runtime error.
       Check for the key with `has()` first. See [Null handling](#null-handling).
-      A [Pre-Function Policy](/ai-gateway/policies/pre-function/) can set keys in this map for the conditions of lower-priority AI Policies to read.
 {% endtable %}
 <!--vale on-->
 
