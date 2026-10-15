@@ -138,7 +138,7 @@ The Policy doesn't use request headers to separate cached responses, so a cached
 {:.warning}
 > If you require cache isolation, for example between users, teams, or tenants, don't configure the AI Semantic Cache Policy globally.
 >
-> Configure it on the respective Consumers or Consumer Groups instead, so each one gets its own cache scope.
+> Configure it on the respective [AI Consumer](/ai-gateway/entities/ai-consumer/) or [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) instead, so each one gets its own cache scope.
 
 {:.info}
 > As most AI services always send `no-cache` in the response headers, setting [`cache_control`](./reference/#schema--config-cache-control) to `true` will always result in a cache bypass. Only consider setting `no-cache` if you are using self-hosted services and have control over the response Cache Control headers.
