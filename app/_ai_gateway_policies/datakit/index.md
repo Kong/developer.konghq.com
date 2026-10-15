@@ -26,16 +26,29 @@ related_resources:
 faqs:
   - q: Why does the AI Model Provider reject my rewritten request with `Unrecognized request arguments supplied`?
     a: |
-      The node that writes to `service_request.body` is receiving the whole `request` object instead of the AI request body. Connect `request.body` rather than `request`, as in `inputs: {req: request.body}`. The `request` node outputs `body`, `headers`, `query`, `path`, `raw_path`, `port`, `method`, `scheme`, and `version`, and an implicit connection copies all of them. The AI Model Provider then receives these fields as part of the chat completion body and returns a `400`.
+      A Datakit node that writes to `service_request.body` is receiving the whole `request` object instead of the AI request body.
+      Connect `request.body` rather than `request`, as in `inputs: {req: request.body}`.
+      The `request` node outputs `body`, `headers`, `query`, `path`, `raw_path`, `port`, `method`, `scheme`, and `version`, and an implicit connection copies all of them.
+      The AI Model Provider then receives these fields as part of the chat completion body and returns a `400`.
   - q: Can I declare a node with `type` set to `request`, `response`, `service_request`, or `service_response`?
-    a: No. These are implicit nodes. You can't declare them under `nodes`, and a configuration that tries is rejected with `unknown node type`. Reference them by name in the `input`, `inputs`, `output`, or `outputs` of your own nodes, for example `request.body` or `service_response.body`.
+    a: |
+      No. In a Datakit Policy, `request`, `response`, `service_request`, and `service_response` are implicit nodes.
+      You can't declare them under `nodes`, and a configuration that tries is rejected with `unknown node type`.
+      Reference them by name in the `input`, `inputs`, `output`, or `outputs` of your own nodes, for example `request.body` or `service_response.body`.
   - q: How do I see why a Datakit node failed?
-    a: By default the client gets a generic `500` and the error is written to the data plane error log. Set `config.debug` to `true` on a non-production Policy to return the failing node and the error in the response, or send the `X-DataKit-Debug-Trace` header for a full execution report. See [Debugging](#debugging).
+    a: |
+      By default, a failing Datakit node returns a generic `500` to the client and writes the error to the data plane error log.
+      To return the failing node and the error in the response, set `config.debug` to `true` on a non-production Policy.
+      To get a full execution report, also send the `X-DataKit-Debug-Trace` header.
+      See [Debugging](#debugging).
 ---
 
-The Datakit Policy is a workflow engine for {{site.ai_gateway}}. It sends requests to external APIs, then uses the response data to rewrite the request before it reaches the [AI Model Provider](/ai-gateway/entities/ai-model-provider/), rewrite the response before it reaches the client, or answer the client directly.
+The Datakit Policy is a workflow engine for {{site.ai_gateway}}.
+It sends requests to external APIs, then uses the response data to rewrite the request before it reaches the [AI Model Provider](/ai-gateway/entities/ai-model-provider/), rewrite the response before it reaches the client, or answer the client directly.
 
-A Datakit workflow is a graph of nodes. Each node reads data from the AI request, the AI Model Provider's response, or another node, and passes its result on. A workflow can:
+A Datakit workflow is a graph of nodes.
+Each node takes input from the AI request, the AI Model Provider's response, or another node, and produces output for other nodes.
+A workflow can:
 
 * Make calls to third-party APIs
 * Transform or combine API responses
@@ -80,11 +93,16 @@ rows:
 
 ## Configure Datakit
 
-A Datakit Policy keeps its workflow in [`config.nodes`](./reference/#schema--config-nodes). Create the Policy, then add it to the `policies` array of the entity that it applies to, such as an [AI Model](/ai-gateway/entities/ai-model/). Whenever a request to that entity matches, {{site.ai_gateway}} runs the workflow.
+A Datakit Policy stores its workflow in [`config.nodes`](./reference/#schema--config-nodes).
+Create the Policy, then add it to the `policies` array of the entity that it applies to, such as an [AI Model](/ai-gateway/entities/ai-model/).
+When a request uses that entity, {{site.ai_gateway}} runs the workflow.
 
 ### Rewrite the AI request and response
 
-The `request` node outputs the AI request body that the client sent. The `service_request` node takes the body that {{site.ai_gateway}} sends to the AI Model Provider. In the same way, the `service_response` node outputs the AI Model Provider's response and the `response` node takes the body that the client receives.
+A Datakit Policy rewrites the AI request and response through four implicit nodes.
+The `request` node outputs the AI request body that the client sent.
+The `service_request` node takes the body that {{site.ai_gateway}} sends to the AI Model Provider.
+On the way back, the `service_response` node outputs the AI Model Provider's response, and the `response` node takes the body that the client receives.
 
 The following Policy prepends a system message to every request and adds a field to every response:
 
@@ -120,14 +138,19 @@ In this example:
 * The `INJECT` node reads `request.body`, prepends the system message, and writes the result to `service_request.body`.
 * The `EDIT` node reads `service_response.body`, adds `datakit_touched: true`, and writes the result to `response.body`.
 
-With this Policy attached to an AI Model that targets OpenAI, a request that asks for the capital of France gets the answer `PINEAPPLE`. The response also includes `"datakit_touched": true`, next to the usual `choices` and `usage` fields.
+With this Policy attached to an AI Model that targets OpenAI, a request that asks for the capital of France gets the answer `PINEAPPLE`.
+The response also includes `"datakit_touched": true`, next to the usual `choices` and `usage` fields.
 
 {:.warning}
-> Connect `request.body`, not `request`, to a node that writes to `service_request.body`. The `request` node outputs the body together with `headers`, `query`, `path`, `raw_path`, `port`, `method`, `scheme`, and `version`. If you connect all of it, {{site.ai_gateway}} forwards these fields to the AI Model Provider as part of the chat completion body, and the AI Model Provider rejects the request with a `400` such as `Unrecognized request arguments supplied: body, headers, method, path, port, query, raw_path, scheme, version`.
+> Connect `request.body`, not `request`, to a node that writes to `service_request.body`.
+> The `request` node outputs the body together with `headers`, `query`, `path`, `raw_path`, `port`, `method`, `scheme`, and `version`.
+> If you connect all of it, {{site.ai_gateway}} forwards these fields to the AI Model Provider as part of the chat completion body.
+> The AI Model Provider then rejects the request with a `400`, for example `Unrecognized request arguments supplied: body, headers, method, path, port, query, raw_path, scheme, version`.
 
 ### Combine two APIs into one response
 
-An `exit` node returns directly to the client. {{site.ai_gateway}} doesn't contact the AI Model Provider.
+A Datakit Policy combines two APIs into one response with `call`, `jq`, and `exit` nodes.
+An `exit` node returns directly to the client, so {{site.ai_gateway}} doesn't contact the AI Model Provider.
 
 The following Policy calls two external APIs, combines the responses with `jq`, and returns the result:
 
@@ -166,7 +189,7 @@ formats:
   - konnect-api
 {% endentity_example %}
 
-A request to the AI Model returns the following:
+A request to an AI Model with this Policy attached returns the combined response, and {{site.ai_gateway}} doesn't contact the AI Model Provider:
 
 ```json
 {"author":"Yours Truly","uuid":"8cd4c8d0-b287-4452-a2ec-aa9e1b05af6a"}
@@ -1250,7 +1273,7 @@ Field-level output connections are not supported, even if the output data has kn
 
 #### Requiring non-nil property values
 
-You can require the result of any operation in a property node to contain a real value by setting `non_nil: true`.
+You can require the result of any operation in a property node to contain a non-null value by setting `non_nil: true`.
 When set to `true`:
 
 * `get` operations trigger an error instead of sending `nil`/`null` as output
@@ -1872,7 +1895,8 @@ Set [`resources.cache.strategy`](./reference/#schema--config-resources-cache-str
 
 <!-- TODO: confirm the memory strategy's shared dictionary settings and whether Redis partials apply on AI Gateway 2.x. -->
 
-Cached entries are stored for the `ttl` set on the `cache` node. After the entry expires, the next request fetches and stores the data again.
+Cached entries are stored for the `ttl` set on the `cache` node.
+After the entry expires, the next request fetches and stores the data again.
 
 #### Using cloud authentication with Redis
 
