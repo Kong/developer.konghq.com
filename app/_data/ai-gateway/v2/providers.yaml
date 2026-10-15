@@ -688,7 +688,7 @@ providers:
     url_patterns:
       - 'https://aiplatform.googleapis.com/'
     min_version: '2.0'
-    variant_trigger: 'Setting `config.gcp_environment` (with `api_endpoint`, `location_id`, and `project_id`) on the AI Model''s target.'
+    variant_trigger: 'Setting `config.gcp_environment` (with `location_id` and `project_id`) on the AI Model''s target. In 2.3 and later, the variant can also be detected from the request; see [Select Gemini Standard or Gemini Enterprise](#select-gemini-standard-or-gemini-enterprise).'
     capabilities:
       generate:
         supported: true
