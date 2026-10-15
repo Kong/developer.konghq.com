@@ -98,9 +98,9 @@ rows:
 
 ### Choose an invocation type
 
-Use `RequestResponse` when the client needs the function's result.
-Use `Event` to run the function asynchronously and return without its result.
-Use `DryRun` to validate the call and the caller's permissions without running the function.
+Set [`config.invocation_type`](/ai-gateway/policies/aws-lambda/reference/#schema--config-invocation-type) to `RequestResponse` when the client needs the function's result.
+Set it to `Event` to run the function asynchronously and return without its result.
+Set it to `DryRun` to validate the call and the caller's permissions without running the function.
 
 ## AWS authentication
 
