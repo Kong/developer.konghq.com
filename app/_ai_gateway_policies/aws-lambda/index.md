@@ -121,7 +121,7 @@ The data plane makes an HTTPS request to the AWS STS API with the configured or 
 The policy then invokes the Lambda function with the temporary credentials of the assumed role.
 
 Store `config.aws_key`, `config.aws_secret`, and `config.aws_assume_role_arn` as secret references to an [AI Vault](/ai-gateway/entities/ai-vault/).
-Konnect returns a literal value in API responses as plain text.
+If you set a literal value instead, Konnect returns it as plain text in API responses.
 
 ## AWS region
 
