@@ -123,7 +123,7 @@ docker compose up -d
 
 ## Verify SASL authentication
 
-Verify SASL from a separate container, not from inside the `kafka` container, so the check uses the same network path as the data plane:
+Run the SASL check from a separate container so it uses the same network path as the data plane:
 
 ```sh
 cat <<'EOF' > client.properties
@@ -140,7 +140,7 @@ docker run --rm \
     --command-config /tmp/client.properties
 ```
 
-The output is a list of broker API versions that ends in `)`. It includes `SaslHandshake(17)` and `SaslAuthenticate(36)`, and no `SaslAuthenticationException`.
+The output lists the broker API versions, including `SaslHandshake(17)` and `SaslAuthenticate(36)`, without a `SaslAuthenticationException`.
 
 ## Create the Kafka topic
 
@@ -159,9 +159,11 @@ kafkactl -C kafkactl.yaml --context direct create topic kong-upstream
 
 ## Create a Kafka Upstream Policy and an AI Agent
 
-Create a [Kafka Upstream Policy](/ai-gateway/policies/kafka-upstream/) and attach it to an [AI Agent](/ai-gateway/entities/ai-agent/) that supplies the Route. The Policy terminates the request after publishing it to Kafka, so the Agent's `config.url` is never reached.
+Create a [Kafka Upstream Policy](/ai-gateway/policies/kafka-upstream/) and attach it to an [AI Agent](/ai-gateway/entities/ai-agent/) that supplies the Route.
+The Policy terminates the request after publishing it to Kafka, so the Agent never forwards the request to its `config.url`.
 
-This example sets `security.ssl` to `false` to simplify testing.
+This example sets `security.ssl` to `false` so the test setup doesn't need certificates.
+We don't recommend this in production because the traffic isn't encrypted.
 
 ```sh
 cat <<'EOF' > kafka-upstream.yaml
@@ -221,9 +223,10 @@ kongctl sync -f kafka-upstream.yaml --pat "$KONNECT_TOKEN"
 
 ## Validate
 
-Wait a few seconds for the data plane to pick up the new configuration. Requests sent before it does return `404`.
+Wait a few seconds for the data plane to pick up the new configuration.
+Requests sent before the data plane picks up the configuration return `404`.
 
-1. Send a request with a JSON body:
+1. Send a `POST` request with a JSON body to the Agent's Route:
 
    ```sh
    curl -i -X POST "$KONNECT_PROXY_URL/upstream-test" \
@@ -231,7 +234,8 @@ Wait a few seconds for the data plane to pick up the new configuration. Requests
      -d '{"hello":"world"}'
    ```
 
-   The Policy terminates the request, so the response is a `200` with an acknowledgement, not a response from `config.url`. A `502` means the Policy didn't engage and the request went to the unused upstream port.
+   The Policy terminates the request, so the response is a `200` with an acknowledgement from the Policy instead of a response from `config.url`.
+   A `502` means the Policy didn't engage, so the Agent forwarded the request to the unused upstream port.
 
 1. Read the message back from the topic:
 
