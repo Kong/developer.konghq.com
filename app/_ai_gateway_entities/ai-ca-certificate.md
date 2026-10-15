@@ -43,14 +43,12 @@ faqs:
       authority, carries no private key, and is used to verify the certificate a client or an
       upstream server presents. An AI Certificate is an identity the data plane uses itself: it carries a private key and is
       presented to complete a TLS handshake.
-  - q: Can MCP Servers and Agents use an AI CA Certificate to verify their upstreams?
+  - q: Can AI MCP Servers and AI Agents use an AI CA Certificate to verify their upstreams?
     a: |
-      Yes. From {{site.ai_gateway}} 2.3 onward, an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/)
-      or [AI Agent](/ai-gateway/entities/ai-agent/) can reference one or more AI CA Certificates by
-      name in its `config.ca_certificates` field. The data plane builds a trust store from them to
-      verify the upstream's TLS certificate, which supports upstreams serving certificates signed by
-      a private or internal CA. When `config.ca_certificates` is unset, the data plane's default
-      trust store is used.
+      Yes.
+      From {{site.ai_gateway}} 2.3 onward, an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) or [AI Agent](/ai-gateway/entities/ai-agent/) can reference one or more AI CA Certificates by name in its `config.ca_certificates` field.
+      The data plane builds a trust store from them to verify the upstream's TLS certificate, which supports upstreams serving certificates signed by a private or internal CA.
+      When `config.ca_certificates` is unset, the data plane uses its default trust store.
 ---
 
 ## What is an AI CA Certificate

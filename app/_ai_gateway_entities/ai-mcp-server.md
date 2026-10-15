@@ -108,13 +108,10 @@ faqs:
 
   - q: How do I connect to an upstream that requires mTLS or serves a certificate from a private CA?
     a: |
-      Reference an [AI Certificate](/ai-gateway/entities/ai-certificate/) by name in
-      [`config.certificates`](#schema-aigateway-mcpserver-config-certificates) to present a client
-      certificate during the TLS handshake with the upstream, and reference one or more
-      [AI CA Certificates](/ai-gateway/entities/ai-ca-certificate/) by name in
-      [`config.ca_certificates`](#schema-aigateway-mcpserver-config-ca-certificates) to verify the
-      upstream's certificate against a private or internal CA. Both fields require a minimum runtime
-      version of 2.3. See [Upstream TLS](#upstream-tls).
+      Reference an [AI Certificate](/ai-gateway/entities/ai-certificate/) by name in [`config.certificates`](#schema-aigateway-mcpserver-config-certificates) to present a client certificate during the TLS handshake with the upstream.
+      Reference one or more [AI CA Certificates](/ai-gateway/entities/ai-ca-certificate/) by name in [`config.ca_certificates`](#schema-aigateway-mcpserver-config-ca-certificates) to verify the upstream's certificate against a private or internal CA.
+      Both fields require a minimum runtime version of 2.3.
+      See [Upstream TLS](#upstream-tls).
 ---
 
 ## What is an AI MCP Server?
@@ -537,7 +534,8 @@ config:
 
 ## Upstream TLS {% new_in 2.3 %}
 
-Every AI MCP Server generates an underlying {{site.base_gateway}} Service that proxies requests to the upstream service in [`config.url`](#schema-aigateway-mcpserver-config-url). Two optional `config` fields control how that Service handles TLS with the upstream:
+Every AI MCP Server generates an underlying {{site.base_gateway}} Service that proxies requests to the upstream service in [`config.url`](#schema-aigateway-mcpserver-config-url).
+Two optional `config` fields control how that Service handles TLS with the upstream:
 
 <!-- vale off -->
 {% table %}
@@ -549,14 +547,24 @@ columns:
 rows:
   - field: "[`config.certificates`](#schema-aigateway-mcpserver-config-certificates)"
     description: |
-      A single [AI Certificate](/ai-gateway/entities/ai-certificate/), referenced by name, that the generated Service presents as its client certificate during the TLS handshake with the upstream. Use this when the upstream requires mutual TLS (mTLS). The array accepts at most one entry, and the referenced AI Certificate must include a private key. If unset, no client certificate is presented to the upstream.
+      A single [AI Certificate](/ai-gateway/entities/ai-certificate/), referenced by name, that the generated Service presents as its client certificate during the TLS handshake with the upstream.
+      Use this when the upstream requires mutual TLS (mTLS).
+      The `certificates` array accepts one entry, and the referenced AI Certificate must include a private key.
+      When the field is unset, the generated Service doesn't present a client certificate to the upstream.
   - field: "[`config.ca_certificates`](#schema-aigateway-mcpserver-config-ca-certificates)"
     description: |
-      One or more [AI CA Certificates](/ai-gateway/entities/ai-ca-certificate/), referenced by name, that build the trust store the generated Service uses to verify the upstream's TLS certificate. Use this when the upstream serves a certificate signed by a private or internal CA. If unset, the data plane's default trust store is used.
+      One or more [AI CA Certificates](/ai-gateway/entities/ai-ca-certificate/), referenced by name, that build the trust store the generated Service uses to verify the upstream's TLS certificate.
+      Use this when the upstream serves a certificate signed by a private or internal CA.
+      When the field is unset, the generated Service uses the data plane's default trust store.
 {% endtable %}
 <!-- vale on -->
 
-Both fields reference entities on the same {{site.ai_gateway}} instance by their immutable `name`, and referencing a name that doesn't exist is rejected with an `HTTP 400` error. They apply to every mode that proxies to an upstream service: `conversion-only`, `conversion-listener`, `passthrough-listener`, and `upstream-server`. A `listener` AI MCP Server has no upstream of its own, since it only aggregates tools from other AI MCP Servers, so these fields aren't available in that mode. Both fields require a minimum runtime version of 2.3.
+Both fields reference entities on the same {{site.ai_gateway}} instance by their immutable `name`.
+If a referenced name doesn't exist, the API returns an `HTTP 400` error.
+Both fields apply to every mode that proxies to an upstream service: `conversion-only`, `conversion-listener`, `passthrough-listener`, and `upstream-server`.
+In `listener` mode, the AI MCP Server aggregates tools from other AI MCP Servers and doesn't proxy to an upstream, so these fields don't apply.
+
+The following example presents a client certificate and verifies the upstream against a private CA:
 
 ```yaml
 config:
