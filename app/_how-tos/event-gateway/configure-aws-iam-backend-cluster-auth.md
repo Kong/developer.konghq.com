@@ -286,11 +286,10 @@ expected:
 render_output: false
 {% endvalidation %}
 <!--vale on-->
-
+If {{site.event_gateway_short}} authenticated to Amazon MSK using AWS IAM and forwarded the metadata request, you will see the topic listed:
 ```shell
 TOPIC                    PARTITIONS     REPLICATION FACTOR
 test-topic               1              1
 ```
 {:.no-copy-code}
 
-{{site.event_gateway_short}} authenticated to Amazon MSK using AWS IAM and forwarded the metadata request successfully.
