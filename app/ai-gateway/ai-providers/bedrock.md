@@ -110,11 +110,14 @@ Both authentication methods work with the `runtime` and `mantle` endpoints.
 Use `mantle` when your clients already send OpenAI or Anthropic API requests and you want Bedrock Mantle to handle them natively, for example, to run the OpenAI Codex CLI against models on Bedrock.
 Keep `runtime` for Bedrock-native clients, for the Bedrock-specific APIs such as Rerank, async invoke, and batch, and for any model that doesn't support Mantle.
 
+Mantle supports only chat and Responses requests, in the `openai` or `anthropic` format. For embeddings, the `bedrock` format, and Bedrock-specific APIs such as Rerank, async invoke, and batch, use `runtime`.
+
+For Anthropic requests, {{site.ai_gateway}} sets the `anthropic-version` header to `2023-06-01` unless the client sends one. It also sets `max_tokens` to `1024` when neither the client nor the model options set it.
+If you set `upstream_url` on a Mantle target, {{site.ai_gateway}} keeps that URL's path.
+
 {% comment %}
-TODO(reviewer, AI-123): Confirm the exact AI Model format and capability combinations that map to Mantle
-(for example, `openai` + `generate` for Chat Completions and `openai` + `agentic` for Responses), and whether
-Mantle supports embeddings or any other capability. Also confirm the list of Bedrock-specific APIs that stay
-Runtime-only.
+TODO(reviewer, AI-123): Confirm the exact AI Model format and capability combination that maps to Responses
+(for example, `openai` + `agentic`).
 {% endcomment %}
 
 The following AI Model sends OpenAI Chat Completions requests to Bedrock Mantle:

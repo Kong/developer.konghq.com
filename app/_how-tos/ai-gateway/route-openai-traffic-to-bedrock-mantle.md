@@ -33,7 +33,7 @@ tags:
 
 tldr:
   q: How do I send OpenAI-format requests to Amazon Bedrock Mantle through {{site.ai_gateway}}?
-  a: Create an AI Model Provider of type `bedrock` with your AWS credentials, then create an AI Model with the `openai` format and a Bedrock target that sets `endpoint_type` to `mantle`. {{site.ai_gateway}} forwards OpenAI requests to `bedrock-mantle.{region}.api.aws` as-is and signs them with SigV4.
+  a: Create an AI Model Provider of type `bedrock` with your AWS credentials, then create an AI Model with the `openai` format and a Bedrock target that sets `endpoint_type` to `mantle`. {{site.ai_gateway}} sends OpenAI requests to `bedrock-mantle.{region}.api.aws` in OpenAI format, without translating them to Bedrock Converse, and signs them with SigV4.
 
 prereqs:
   inline:
@@ -116,7 +116,7 @@ ai_gateway_models:
 The AI Model uses the following settings:
 
 * `formats: [type: openai]`: Accepts OpenAI Chat Completions requests. A Mantle target can't be paired with the `bedrock` format, because Mantle has no Converse or InvokeModel API, and {{site.konnect_short_name}} rejects that configuration.
-* `targets[].config.endpoint_type: mantle`: Sends requests to `https://bedrock-mantle.{region}.api.aws` instead of the default Bedrock Runtime endpoint. {{site.ai_gateway}} forwards the request body as-is and rewrites only the host, path, and authentication headers.
+* `targets[].config.endpoint_type: mantle`: Sends requests to `https://bedrock-mantle.{region}.api.aws` instead of the default Bedrock Runtime endpoint. {{site.ai_gateway}} keeps the OpenAI request format instead of translating it to Bedrock Converse, and changes only the host, path, and authentication headers.
 * `config.route.model`: Lets clients send the alias `my-mantle-model` in the `model` field instead of the upstream model ID.
 
 ## Validate
