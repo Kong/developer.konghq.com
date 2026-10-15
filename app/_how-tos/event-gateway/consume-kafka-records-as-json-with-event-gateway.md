@@ -35,7 +35,7 @@ prereqs:
     - title: Install kafkactl
       position: before
       include_content: knep/kafkactl
-    - title: Start a local Kafka cluster
+    - title: Start a local Kafka cluster and schema registry
       position: before
       include_content: knep/docker-compose-start
 

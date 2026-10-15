@@ -70,6 +70,9 @@ rows:
   - use_case: "[Example: Convert records for a specific topic to Avro](/event-gateway/policies/record-transcode-produce/examples/convert-topic-to-avro-on-condition/)"
     description: |
       Use a `condition` to convert records produced to a single topic to Avro, and leave records on other topics unchanged.
+  - use_case: "[Tutorial: Produce Kafka records as Avro](/event-gateway/produce-kafka-records-as-avro-with-event-gateway/)"
+    description: |
+      Let a producer send plain JSON, and store records as Avro in the backend cluster using a Confluent Schema Registry.
 {% endtable %}
 <!--vale on-->
 
@@ -117,7 +120,7 @@ columns:
 rows:
   - type: "`reference`"
     description: |
-      Looks up an existing schema in a [schema registry](/event-gateway/entities/schema-registry/) using a `subject` and `version` that you compute with an expression. For example, `subject: ${context.topic.name + '-value'}` and `version: ${'latest'}`.
+      Looks up an existing schema in a [schema registry](/event-gateway/entities/schema-registry/) using a `subject` and `version` that you compute with an expression. For example, `subject: context.topic.name + '-value'` and `version: "'latest'"`.
   - type: "`inline`"
     description: |
       Embeds the raw schema text (for example, an Avro JSON schema) directly in the policy configuration.
