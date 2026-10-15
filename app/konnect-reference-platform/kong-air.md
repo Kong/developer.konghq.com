@@ -36,12 +36,34 @@ Gateway aggregate.
 
 Two service teams own four active repositories:
 
-| Team | Repository | Authorization | Development control plane |
-| --- | --- | --- | --- |
-| `customer-data` | [bookings](https://github.com/KongAirlines/bookings) | Key Auth and ACE | `customer-data-dev` |
-| `customer-data` | [customer](https://github.com/KongAirlines/customer) | Key Auth and ACE | `customer-data-dev` |
-| `flight-data` | [destinations](https://github.com/KongAirlines/destinations) | Anonymous | `flight-data-dev` |
-| `flight-data` | [flights](https://github.com/KongAirlines/flights) | Anonymous | `flight-data-dev` |
+{% table %}
+columns:
+  - title: Team
+    key: team
+  - title: Repository
+    key: repository
+  - title: Authorization
+    key: authorization
+  - title: Development control plane
+    key: control_plane
+rows:
+  - team: "`customer-data`"
+    repository: "[bookings](https://github.com/KongAirlines/bookings)"
+    authorization: Key Auth and ACE
+    control_plane: "`customer-data-dev`"
+  - team: "`customer-data`"
+    repository: "[customer](https://github.com/KongAirlines/customer)"
+    authorization: Key Auth and ACE
+    control_plane: "`customer-data-dev`"
+  - team: "`flight-data`"
+    repository: "[destinations](https://github.com/KongAirlines/destinations)"
+    authorization: Anonymous
+    control_plane: "`flight-data-dev`"
+  - team: "`flight-data`"
+    repository: "[flights](https://github.com/KongAirlines/flights)"
+    authorization: Anonymous
+    control_plane: "`flight-data-dev`"
+{% endtable %}
 
 ## What a service repository owns
 
