@@ -1071,8 +1071,14 @@ The {{site.base_gateway}} sandboxing reference lists the following as available 
   In {{site.ai_gateway}}, `kong.router` is `nil` in strict mode and available only in lax mode.
 * `kong.configuration`:
   It is `nil` in strict mode and available in lax mode.
-* `kong.client.get_principal` and `kong.client.get_identity_realm_source`:
+* `kong.client.get_principal`, `kong.client.get_identity_realm_source`, and `kong.client.set_identity_realm_source`:
+  All three are `nil` in strict mode.
+* `kong.request.get_id` and `kong.request.get_raw_forwarded_path`:
   Both are `nil` in strict mode.
+* `kong.table.new`:
+  It is `nil` in strict mode. The standard `table.new` function is available.
+
+Code that calls one of these functions in strict mode fails when a request runs it, not when {{site.ai_gateway}} saves the AI Policy.
 
 To read the {{site.identity}} Principal of a request, use a [condition](/ai-gateway/conditions/) with the `principal.id` field instead.
 
