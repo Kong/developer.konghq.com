@@ -150,7 +150,7 @@ columns:
     key: default
   - title: Estimated peak with `max_bytes` of 256 MiB
     key: capped
-  - title: Minutes until the default queue reaches 4 GiB
+  - title: Minutes until the estimated peak reaches 4 GiB
     key: minutes
 rows:
   - size: 70 KiB
