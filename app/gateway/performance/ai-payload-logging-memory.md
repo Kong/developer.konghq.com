@@ -320,7 +320,7 @@ columns:
     key: tradeoff
 rows:
   - setting: |
-      `config.logging.log_payloads` in AI Proxy, or `config.targets[].logging.log_payloads` in AI Proxy Advanced
+      [`config.logging.log_payloads`](/plugins/ai-proxy/reference/#schema--config-logging-log-payloads) in AI Proxy, or [`config.targets[].logging.log_payloads`](/plugins/ai-proxy-advanced/reference/#schema--config-targets-logging-log-payloads) in AI Proxy Advanced
     default: "`false`"
     effect: "Disabling payload logging reduced peak worker memory by 82% in a single-outage test."
     tradeoff: "Prompts and responses no longer appear in logs."
