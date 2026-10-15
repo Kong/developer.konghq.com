@@ -591,6 +591,21 @@ In addition to declaring `authorizationCode` in the spec, you must also do the f
 * The flow's `authorizationUrl` and `tokenUrl` must be absolute `https` URLs.
 * **Try it!** must be enabled for {{site.dev_portal}} and the API.
 
+For example, you would configure the `authorizationCode` flow in your published API spec like this:
+
+```yaml
+components:
+  securitySchemes:
+    MyIdP:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://idp.example.com/oauth2/authorize
+          tokenUrl: https://idp.example.com/oauth2/token
+          scopes:
+            read: Read access
+```
+
 This will display a sign-in panel (with client ID, scopes, and an **Authorize** button) for that scheme instead of a plain access token field. 
 Developers click **Authorize**, sign in to the identity provider (IdP) in a popup, and Try It uses the resulting access token for requests.
 
@@ -600,14 +615,13 @@ It's independent of [developer self-service and app registration](/dev-portal/se
 To support this for your API, set up your IdP like the following:
 
 1. **Create a public client.** Register a single-page application (SPA), or any public client type, that uses the authorization code grant, PKCE with the `S256` method, and no client secret. The exchange happens in the developer's browser, which cannot hold a secret.
-2. **Register the redirect URI.** Register your {{site.dev_portal}} redirect URI, including `https` and without a trailing slash, once for the default {{site.dev_portal}} domain and once for each custom domain the {{site.dev_portal}} is served on:
+1. **Register the redirect URI.** Register your {{site.dev_portal}} redirect URI, including `https` and without a trailing slash, once for the default {{site.dev_portal}} domain and once for each custom domain the {{site.dev_portal}} is served on:
 
-  ```
-  https://<your-portal-domain>/_spec-renderer/oauth/try-it-callback
-  ```
-
-3. **Allow CORS on the token endpoint.** After sign-in, the developer's browser calls your token endpoint directly to exchange the code for a token. The token endpoint must answer the CORS preflight (`OPTIONS`) request, so allow your {{site.dev_portal}}'s origin (`Access-Control-Allow-Origin: https://<your-portal-domain>`) for each {{site.dev_portal}} domain, and allow the `POST` method and the `Content-Type` header.
-4. **Allow the scopes your spec declares.** Allow the client to request the scopes listed in the security scheme.
+   ```
+   https://<your-portal-domain>/_oauth/spec-renderer/try-it-callback.client.vue
+   ```
+1. **Allow CORS on the token endpoint.** After sign-in, the developer's browser calls your token endpoint directly to exchange the code for a token. The token endpoint must answer the CORS preflight (`OPTIONS`) request, so allow your {{site.dev_portal}}'s origin (`Access-Control-Allow-Origin: https://<your-portal-domain>`) for each {{site.dev_portal}} domain, and allow the `POST` method and the `Content-Type` header.
+1. **Allow the scopes your spec declares.** Allow the client to request the scopes listed in the security scheme.
 
 {:.info}
 > **Configuration for common identity providers:**
@@ -619,6 +633,8 @@ The access token is kept in memory only and it's lost when the page reloads.
 When the token expires, developers must click **Authorize** again to refresh the token.
 
 ##### Troubleshooting
+
+Use the following table to help you troubleshoot errors when configuring the `authorizationCode` flow in a published API spec:
 
 {% table %}
 columns:
