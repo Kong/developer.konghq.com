@@ -73,6 +73,9 @@ It also supports stream data (TCP, TLS, and UDP).
 
 {% include_cached /plugins/queues.md name=page.name %}
 
+When the AI Proxy plugins log request and response payloads, queue entries can be large.
+To estimate and bound the memory that the queue uses, see [Size memory for AI payload logging](/gateway/performance/ai-payload-logging-memory/).
+
 {:.warning}
 > [`config.retry_count`](./reference/#schema--config-retry-count) is deprecated and has no effect in {{site.base_gateway}} 3.3 or later.
 > It will be removed in 4.0. Configure

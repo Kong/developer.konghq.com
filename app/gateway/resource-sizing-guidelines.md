@@ -28,6 +28,8 @@ related_resources:
     url: /gateway/traditional-mode/#about-kong-gateway-clusters
   - text: "Tuning {{site.base_gateway}} for large payloads"
     url: /gateway/performance/large-payloads/
+  - text: Size memory for AI payload logging
+    url: /gateway/performance/ai-payload-logging-memory/
 ---
 
 {{site.base_gateway}} is designed to handle large volumes of request
@@ -270,6 +272,8 @@ The `queue.max_entries` plugin configuration parameter determines how many entri
 The default value of 10,000 for `queue.max_entries` should provide for enough buffering in many installations while keeping 
 the maximum memory usage of queues at reasonable levels. 
 Once this limit is reached, the oldest entry is removed when a new entry is queued.
+The limit counts entries, not bytes, so it doesn't bound memory when entries are large, such as log entries that contain AI request and response payloads.
+For sizing guidance in that case, see [Size memory for AI payload logging](/gateway/performance/ai-payload-logging-memory/).
 
 For larger configurations, we recommend experimentally determining
 the memory requirements of queues by running {{site.base_gateway}} in
