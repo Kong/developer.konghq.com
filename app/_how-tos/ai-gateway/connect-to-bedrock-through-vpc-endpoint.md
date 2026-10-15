@@ -41,7 +41,7 @@ prereqs:
       content: |
         1. Create an interface VPC endpoint for the Bedrock Runtime service (`com.amazonaws.<region>.bedrock-runtime`) in the VPC where your data plane nodes run. See [Use interface VPC endpoints (AWS PrivateLink)](https://docs.aws.amazon.com/bedrock/latest/userguide/vpc-interface-endpoints.html) in the AWS documentation.
         1. Make sure your data plane nodes can resolve the endpoint's DNS name and reach it on port 443.
-        1. Make sure your IAM user or role has `bedrock:InvokeModel` and `bedrock:InvokeModelWithResponseStream` permissions, and that the VPC endpoint policy allows them.
+        1. Make sure your IAM user or role has `bedrock:Converse` and `bedrock:ConverseStream` permissions, and that the VPC endpoint policy allows them.
         1. Export your AWS credentials, region, and the endpoint DNS name:
            ```bash
            export AWS_ACCESS_KEY_ID='YOUR_AWS_ACCESS_KEY_ID'

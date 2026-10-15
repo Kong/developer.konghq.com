@@ -79,7 +79,7 @@ ai_gateway_model_providers:
         secret_access_key: !secret {source: !env AWS_SECRET_ACCESS_KEY}
 {% endentity_examples %}
 
-To authenticate with an Amazon Bedrock API key instead of SigV4, set `config.auth.type` to `basic` with an `Authorization` header whose value is `Bearer <BEDROCK_API_KEY>`.
+To authenticate with an Amazon Bedrock API key instead of SigV4, set [`config.auth.type`](/ai-gateway/entities/ai-model-provider/#schema-aigateway-model-provider-config-auth) to `basic` and add an `Authorization` header with the value `Bearer <BEDROCK_API_KEY>` in `config.auth.headers`.
 
 ## Create an AI Model with a Mantle target
 
