@@ -50,11 +50,9 @@ following operations with a pinned decK version:
 1. `deck file openapi2kong` converts the selected OpenAPI document.
 2. `deck file patch` adds `_info.select_tags` and makes shared-control-plane
    health Routes service-specific.
-3. Protected services use `deck file add-plugins` to attach service-scoped ACE
-   with `match_policy: required`.
-4. `deck file add-tags` ensures Services, Routes, and plugins carry environment,
-   team, owner, and service-stage tags.
-5. `deck file validate` checks each result before it is committed.
+3. `deck file add-tags` ensures Services, Routes, and service-scoped plugins
+   carry environment, team, owner, and service-stage tags.
+4. `deck file validate` checks each result before it is committed.
 
 Development files select a unique service-stage tag so sibling repositories can
 apply to a shared team control plane. Production files select the common
@@ -143,8 +141,9 @@ v1 does not define deletion reconciliation.
 ## Authentication flow
 
 Bookings and Customer Information publish with separate platform-owned
-development and production Key Auth strategies. Their decK files install ACE on
-the Gateway Service. Because the Catalog API links to a control plane, ACE uses
-the OpenAPI operations for application access decisions independently from the
-Gateway Route layout. Destinations and Flights publish without auth strategies
-and have no ACE plugin.
+development and production Key Auth strategies. The Platform repository
+installs ACE globally on every control plane with `match_policy: required`.
+Because every Catalog API links to a control plane, ACE uses each OpenAPI
+document's operations for access decisions independently from the Gateway Route
+layout. Destinations and Flights publish without auth strategies, so their
+matched operations remain anonymous.

@@ -79,9 +79,10 @@ script edit.
 
 The Platform Team provisions one development control plane per service team and
 grants that team's repository identities access. Each service repository owns
-its Gateway Service, Routes, and service-scoped plugins. Unique names and tags
-let sibling repositories share a control plane without a central development
-configuration repository.
+its Gateway Service, Routes, and service-scoped plugins. The Platform Team owns
+shared control-plane policy such as global ACE. Unique names and tags let
+sibling repositories share a control plane without conflicting with each
+other or with platform-owned state.
 
 ## Who owns production Gateway configuration?
 
@@ -92,11 +93,13 @@ remains service-owned and is applied after the Gateway change.
 
 ## Why are Bookings and Customer Information protected differently?
 
-Their publications select a Key Auth application auth strategy and their
-Gateway Services run Access Control Enforcement (ACE) with
-`match_policy: required`. Their Catalog APIs link to a control plane, enabling
-ACE to enforce application access at the OpenAPI operation level. Destinations
-and Flights are anonymous examples and use neither an auth strategy nor ACE.
+Their publications select a Key Auth application auth strategy. The Platform
+Team installs Access Control Enforcement (ACE) globally with
+`match_policy: required`, and every Catalog API links to its control plane.
+ACE therefore recognizes operations from all four OpenAPI documents, but only
+Bookings and Customer Information require application credentials.
+Destinations and Flights remain anonymous because their publications do not
+select an auth strategy.
 
 ## Why not link protected APIs directly to a Gateway Service?
 
