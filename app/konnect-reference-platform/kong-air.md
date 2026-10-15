@@ -119,9 +119,9 @@ format that generates another desired-state format:
 ## Tooling dependencies
 
 The manifests intentionally exercise federated external lookup and
-control-plane API implementations. This provides a practical test bed for
-kongctl declarative support. Use kongctl 1.14.0 or later when applying the
-example.
+control-plane API implementations. The workflows install the latest stable
+kongctl release so the example provides a practical test bed for current
+declarative support and surfaces compatibility regressions.
 
 See [APIOps workflows](/konnect-reference-platform/apiops/) for the complete
 development and production sequence.

@@ -28,8 +28,9 @@ prereqs:
         applies to other CI/CD systems.
     - title: Supported command-line tools
       content: |
-        Install [kongctl](/kongctl/) and [decK](/deck/). Pin reviewed versions
-        in CI and use the same versions for local generation.
+        Install [kongctl](/kongctl/) and [decK](/deck/). The example tracks the
+        latest stable kongctl release in CI so compatibility regressions are
+        visible, while generation uses a reviewed decK version.
 automated_tests: false
 ---
 
