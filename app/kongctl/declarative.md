@@ -423,7 +423,7 @@ portals:
 kongctl provides some default behavior depending on how metadata fields
 are specified or omitted. The following tables summarize the behavior.
 
-#### `namespace` field behavior
+#### Namespace field behavior
 
 | File Default | Resource Value | Final Result | Notes                        |
 |--------------|----------------|--------------|------------------------------|
@@ -435,7 +435,7 @@ are specified or omitted. The following tables summarize the behavior.
 | "team-b"     | "" (empty)     | ERROR        | Empty namespace not allowed  |
 | "" (empty)   | Any value      | ERROR        | Empty default not allowed    |
 
-#### `protected` field behavior
+#### Protected field behavior
 
 | File Default | Resource Value | Final Result | Notes              |
 |--------------|----------------|--------------|-------------------|
