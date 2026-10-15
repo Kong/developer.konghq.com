@@ -584,7 +584,7 @@ features:
     cors: "[Enable Try it in {{site.dev_portal}} for requests with any header](/plugins/cors/examples/try-it-headers/)"
 {% endfeature_table %}
 
-#### Sign in with OAuth2 in Try It
+#### Sign in with OAuth2 in Try it!
 
 You can allow developers to use **Try it!** with their IdP credentials by declaring an OAuth2 security scheme with an `authorizationCode` flow in a published API spec.
 In addition to declaring `authorizationCode` in the spec, you must also do the following:
