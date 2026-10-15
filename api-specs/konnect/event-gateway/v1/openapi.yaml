@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect Control Planes Configuration for Event Gateways
-  version: 1.3.7
+  version: 1.3.8
   description: |
     The API for configuring Event Gateways in Konnect.
   x-extensions-note: |
@@ -23,8 +23,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@c490b3e79979400ce6f13039add29f45cfdb0b34
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c490b3e79979400ce6f13039add29f45cfdb0b34'
+  x-oas-source: kong/platform-api@6740ca4a544db970f788cc1d67eb6bb7d8ba63a0
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6740ca4a544db970f788cc1d67eb6bb7d8ba63a0'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -47,7 +47,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageAfter'
-        - $ref: '#/components/parameters/EventGatewayCommonFilter'
+        - $ref: '#/components/parameters/EventGatewaysFilter'
       responses:
         '200':
           $ref: '#/components/responses/ListEventGatewaysResponse'
@@ -1888,6 +1888,22 @@ components:
       in: query
       name: filter
       description: Filter policies returned in the response.
+      required: false
+      style: deepObject
+    EventGatewaysFilter:
+      schema:
+        type: object
+        properties:
+          name:
+            $ref: '#/components/schemas/StringFieldContainsFilter'
+          labels:
+            $ref: '#/components/schemas/LabelsFieldFilter'
+      in: query
+      name: filter
+      description: |
+        Filter event gateways returned in the response.
+
+        Filtering by `labels` is currently in beta and is subject to change.
       required: false
       style: deepObject
     gatewayId:
@@ -6839,6 +6855,66 @@ components:
       x-examples:
         example-1:
           contains: some-value
+    StringFieldEqualsFilter:
+      description: Filters on the given string field value by exact match.
+      properties:
+        eq:
+          type: string
+      title: StringFieldEqualsFilter
+      x-examples:
+        example-1: equals-some-value
+        example-2:
+          eq: some-value
+    StringFieldFilter:
+      oneOf:
+        - title: Filter by operator
+          description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`, `contains`, `ocontains`'
+          x-examples:
+            example-1:
+              contains: some-value
+              ocontains: 'this-value,or-that-value'
+              oeq: 'some-value,some-other-value'
+              neq: not-this-value
+            example-2:
+              eq: some-value
+          properties:
+            eq:
+              description: The field exactly matches the provided value.
+              type: string
+              example: '?filter[field_name_here][eq]=foo'
+            contains:
+              description: The field contains the provided value.
+              type: string
+              example: '?filter[field_name_here][contains]=foo'
+            ocontains:
+              description: The field contains any of the provided values.
+              type: string
+              example: '?filter[field_name_here][ocontains]=foo,bar'
+            oeq:
+              description: The field matches any of the provided values.
+              type: string
+              example: '?filter[field_name_here][oeq]=foo,bar'
+            neq:
+              description: The field does not match the provided value.
+              type: string
+              example: '?filter[field_name_here][neq]=bar'
+          type: object
+          additionalProperties: false
+        - title: Filter by exact string match
+          type: string
+          description: The field exactly matches the provided value.
+          example: '?filter[title]=foo'
+    LabelsFieldFilter:
+      allOf:
+        - title: LabelsFieldFilter
+          description: |
+            Filters on the resource's `labels` field. Filters must use dot-notation to identify
+            the label key that will be used to filter the results. For example:
+              - `filter[labels.owner]`
+              - `filter[labels.owner][neq]=kong`
+              - `filter[labels.env]=dev`
+              - `filter[labels.env][ocontains]=dev,test`
+        - $ref: '#/components/schemas/StringFieldFilter'
     GatewayName:
       description: The name of the Gateway.
       type: string
@@ -7046,16 +7122,6 @@ components:
           title: Labels
       additionalProperties: false
       title: PatchGatewayRequest
-    StringFieldEqualsFilter:
-      description: Filters on the given string field value by exact match.
-      properties:
-        eq:
-          type: string
-      title: StringFieldEqualsFilter
-      x-examples:
-        example-1: equals-some-value
-        example-2:
-          eq: some-value
     CreatedAt:
       description: An ISO-8601 timestamp representation of entity creation date.
       type: string
