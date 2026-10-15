@@ -33,14 +33,12 @@ tools:
 
 prereqs:
   inline:
-    - title: Docker, kafkactl, and jq
-      content: |
-        This tutorial requires the following tools:
-
-        * [Docker](https://docs.docker.com/get-docker/), to run a local Kafka broker
-        * [kafkactl](https://github.com/deviceinsight/kafkactl?tab=readme-ov-file#installation), to create topics and produce messages
-        * [jq](https://jqlang.org/download/), to format the HTTP responses
+    - title: kafkactl
+      include_content: md/ai-gateway/v2/prereqs/kafkactl
       icon_url: /assets/icons/kafka.svg
+    - title: jq
+      include_content: md/ai-gateway/v2/prereqs/jq
+      icon_url: /assets/icons/code.svg
 
 related_resources:
   - text: Kafka Consume Policy
