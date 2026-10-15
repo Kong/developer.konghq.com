@@ -86,7 +86,9 @@ variables:
 
 ### Gemini Enterprise
 
-Gemini Enterprise requires GCP credentials instead of an API key. The provider only handles authentication; `auth.type: gcp` by itself doesn't select Gemini Enterprise, since Gemini Standard can use the same GCP auth. What actually routes to Gemini Enterprise is `config.gcp_environment` on the AI Model's target that attaches to this provider.
+Gemini Enterprise requires GCP credentials instead of an API key. In {{site.ai_gateway}} 2.2 or earlier, the provider only handles authentication; `auth.type: gcp` by itself doesn't select Gemini Enterprise, since Gemini Standard can use the same GCP auth. What actually routes to Gemini Enterprise is `config.gcp_environment` on the AI Model's target that attaches to this provider.
+
+In {{site.ai_gateway}} 2.3 or later, `auth.type: gcp` will [select Gemini Enterprise](#select-gemini-standard-or-gemini-enterprise). 
 
 Create the provider to store your GCP credentials:
 
@@ -163,10 +165,10 @@ In {{site.ai_gateway}} 2.2 and earlier, `api_endpoint` is required.
 {% new_in 2.3 %} Gemini Standard and Gemini Enterprise use the same `gemini` provider type.
 {{site.ai_gateway}} selects the variant for each request by checking the following, in order:
 
+1. Existing configurations that set `config.gcp_environment` on the target keep routing to Gemini Enterprise.
 1. **Inbound request path.** A Vertex AI path that contains `projects/{project_id}/locations/{location}` routes to Gemini Enterprise. A Gemini API path, such as `/v1beta/models/{model_name}:generateContent`, routes to Gemini Standard.
 1. **Credential type.** If the path doesn't identify a variant, an API key routes to Gemini Standard, and [GCP service account or OAuth credentials](#authentication-with-gcp-iam) route to Gemini Enterprise.
 
-Existing configurations that set `config.gcp_environment` on the target keep routing to Gemini Enterprise.
 
 <!-- TODO(AI-174 OQ1): Confirm precedence when the request path and credential type disagree, and when either conflicts with an explicit `config.gcp_environment`. The "Gemini Enterprise" section says `auth.type: gcp` alone doesn't select Gemini Enterprise; reconcile that sentence with the credential-type fallback once engineering confirms the behavior. Also confirm where `project_id` and `location_id` come from when the credential type selects Gemini Enterprise without `gcp_environment`. -->
 
