@@ -939,15 +939,29 @@ policy configuration, and conflicting union branches, require an explicit
 that cannot be inferred also require `type`; inference does not duplicate
 policy schemas or select an arbitrary union branch.
 
-| Type | Conversion |
-| --- | --- |
-| `string` | Preserve raw environment text, including whitespace and quotes |
-| `boolean` | Parse a YAML boolean (`true` or `false`, also title/upper case) |
-| `integer` | Parse a whole number; fractional values are errors |
-| `number` | Parse a finite decimal number, including exponent notation |
-| `null` | Parse a YAML null value |
-| `array` | Parse a YAML/JSON sequence with typed nested values |
-| `object` | Parse a YAML/JSON mapping with string keys and typed values |
+{% table %}
+columns:
+  - title: Type
+    key: type
+  - title: Conversion
+    key: conversion
+rows:
+  - type: "`string`"
+    conversion: Preserve raw environment text, including whitespace and quotes
+  - type: "`boolean`"
+    conversion: |
+      Parse a YAML boolean (`true` or `false`, also title/upper case)
+  - type: "`integer`"
+    conversion: Parse a whole number; fractional values are errors
+  - type: "`number`"
+    conversion: Parse a finite decimal number, including exponent notation
+  - type: "`null`"
+    conversion: Parse a YAML null value
+  - type: "`array`"
+    conversion: Parse a YAML/JSON sequence with typed nested values
+  - type: "`object`"
+    conversion: Parse a YAML/JSON mapping with string keys and typed values
+{% endtable %}
 
 Quote the enum name in `type: "null"`; an unquoted YAML null is not a
 string option. An explicit type must match a known destination; `integer`
@@ -959,7 +973,8 @@ For a string destination, an environment value of `42`, `true`, or
 to preserve that text. Inside parsed objects and arrays, quote strings that
 resemble numbers, booleans, or null.
 
-For example, an AI Gateway rate-limiting policy's dynamic `config` can use:
+For example, an {{site.ai_gateway}} rate-limiting policy's dynamic `config`
+can use:
 
 ```yaml
 config:
@@ -975,9 +990,10 @@ instead use `!env {var: AUTO_APPROVE, store: true}` without a type option.
 
 Extraction parses the source as YAML/JSON before selecting an existing
 dot-separated mapping path. The selected value may be any supported type
-and must match the inferred or explicit type; extraction does not stringify
-booleans, numbers, null, arrays, or objects. Array-index extraction is not
-supported. Missing paths and traversal through scalar/null values fail.
+and must match the inferred or explicit type; extraction does not convert
+booleans, numbers, null, arrays, or objects to strings. Array-index
+extraction is not supported. Missing paths and traversal through scalar/null
+values fail.
 
 #### Parsing and serialization boundaries
 
@@ -1020,8 +1036,17 @@ For a manifest containing the stored description declaration above:
 
 ```bash
 DESCRIPTION="Approved description" kongctl plan -f config.yaml > plan.json
+```
+
+Apply the saved plan after changing the environment value:
+
+```bash
 DESCRIPTION="Changed description" kongctl apply --plan plan.json --auto-approve
-# Alternatively, execute without the original variable:
+```
+
+Alternatively, apply the saved plan without the original variable:
+
+```bash
 env -u DESCRIPTION kongctl apply --plan plan.json --auto-approve
 ```
 
