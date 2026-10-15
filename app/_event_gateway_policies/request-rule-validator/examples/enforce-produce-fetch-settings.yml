@@ -43,7 +43,7 @@ config:
         - description: "Consumers must use the read_committed isolation level"
           rule: '{{context.fetch.isolation_level == "read_committed"}}'
           action: reject
-        - description: "fetch.max.wait.ms must be at least 100"
+        - description: "fetch.max.wait.ms must be at least 100 ms"
           rule: '{{context.fetch.max_wait_ms >= 100}}'
           action: reject
         - description: "Fetch responses can be at most 50 MiB"
