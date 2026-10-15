@@ -59,8 +59,6 @@ Other AI Policies also use the sandbox when their configuration contains Lua exp
 * **Custom log fields**: logging AI Policies such as [File Log](/ai-gateway/policies/file-log/) and [OpenTelemetry](/ai-gateway/policies/opentelemetry/).
 * **Message functions**: the Kafka, Confluent, and Solace AI Policies.
 
-<!-- TODO: the full set, from the kong-ee aigw-master plugins that require the sandbox module and the AI Policy types that the control plane offers: ai-custom-guardrail, request-transformer, route-transformer-advanced, response-transformer-advanced, request-callout, file-log, http-log, loggly, syslog, tcp-log, udp-log, solace-log, opentelemetry, confluent, confluent-consume, kafka-consume, kafka-log, kafka-upstream, solace-consume, solace-upstream. Only ai-custom-guardrail, request-transformer, file-log, and the function AI Policies were tested live. The exact Lua fields of kafka-log and kafka-upstream were not inspected. -->
-
 {{site.ai_gateway}} also uses a Pre-Function AI Policy internally.
 When you create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) of type `conversion-only`, {{site.ai_gateway}} generates a Pre-Function that rejects requests that don't arrive through the internal listener connection.
 This generated AI Policy runs in the sandbox like any other Pre-Function.
@@ -144,19 +142,52 @@ If you don't need custom Lua code, set `untrusted_lua=off`.
 The data plane node still starts and runs AI Policies that don't use the sandbox.
 What happens to an AI Policy with custom Lua depends on when {{site.ai_gateway}} checks its code:
 
-* The [Pre-Function](/ai-gateway/policies/pre-function/) and [Post-Function](/ai-gateway/policies/post-function/) AI Policies sync normally, and a request that triggers one fails.
-  The data plane logs the message `loading of untrusted Lua code disabled because 'untrusted_lua' config option is set to 'off'`.
-* AI Policies that check their Lua code when the data plane loads the configuration make the data plane reject the entire configuration.
-  [Exit Transformer](/ai-gateway/policies/exit-transformer/) ([`functions`](/ai-gateway/policies/exit-transformer/reference/#schema--config-functions)) and [File Log](/ai-gateway/policies/file-log/) ([`custom_fields_by_lua`](/ai-gateway/policies/file-log/reference/#schema--config-custom-fields-by-lua)) behave this way.
-  The data plane logs `Error parsing function: loading of untrusted Lua code disabled because 'untrusted_lua' config option is set to 'off'`.
+* **At request time**: The AI Policy syncs normally, and a request that triggers it fails.
+  The data plane logs `loading of untrusted Lua code disabled because 'untrusted_lua' config option is set to 'off'`.
+* **When the data plane loads the configuration**: The data plane rejects the entire configuration and logs `Error parsing function: loading of untrusted Lua code disabled because 'untrusted_lua' config option is set to 'off'`.
   The node then applies no configuration changes until you remove the AI Policy.
 
-Before you set `off`, check which of your AI Policies depend on the sandbox.
-Setting `off` affects the following:
+Before you set `off`, check which of your AI Policies depend on the sandbox:
 
-* The Pre-Function, Post-Function, and Exit Transformer AI Policies.
-* AI Policies that evaluate Lua templates or expressions, such as [AI Custom Guardrail](/ai-gateway/policies/ai-custom-guardrail/) and [Request Transformer](/ai-gateway/policies/request-transformer/).
-* The Pre-Function that {{site.ai_gateway}} generates for `conversion-only` AI MCP Servers.
+<!--vale off-->
+{% table %}
+columns:
+  - title: AI Policy
+    key: policy
+  - title: Lua code in
+    key: field
+  - title: Effect with `untrusted_lua=off`
+    key: effect
+rows:
+  - policy: "[Pre-Function](/ai-gateway/policies/pre-function/) and [Post-Function](/ai-gateway/policies/post-function/)"
+    field: "The phase fields, such as `config.access`"
+    effect: "Requests that trigger the AI Policy fail."
+  - policy: "[AI Custom Guardrail](/ai-gateway/policies/ai-custom-guardrail/)"
+    field: "`$(...)` templates in `config.request` and `config.response`"
+    effect: |
+      Every request that triggers the AI Policy fails, even when the configuration has no `$(...)` expression.
+  - policy: "[Request Transformer](/ai-gateway/policies/request-transformer/)"
+    field: "`$(...)` templates, such as in `config.add.headers`"
+    effect: "Requests that trigger the AI Policy fail."
+  - policy: "[Exit Transformer](/ai-gateway/policies/exit-transformer/)"
+    field: "[`functions`](/ai-gateway/policies/exit-transformer/reference/#schema--config-functions)"
+    effect: "The data plane rejects the entire configuration."
+  - policy: "[Response Transformer Advanced](/ai-gateway/policies/response-transformer-advanced/)"
+    field: "`transform.functions`"
+    effect: "The data plane rejects the entire configuration."
+  - policy: "[File Log](/ai-gateway/policies/file-log/), [HTTP Log](/ai-gateway/policies/http-log/), [Loggly](/ai-gateway/policies/loggly/), [Syslog](/ai-gateway/policies/syslog/), [TCP Log](/ai-gateway/policies/tcp-log/), and [UDP Log](/ai-gateway/policies/udp-log/)"
+    field: "[`custom_fields_by_lua`](/ai-gateway/policies/file-log/reference/#schema--config-custom-fields-by-lua)"
+    effect: "The data plane rejects the entire configuration."
+  - policy: "[OpenTelemetry](/ai-gateway/policies/opentelemetry/)"
+    field: "`access_logs.custom_attributes_by_lua`"
+    effect: "The data plane rejects the entire configuration."
+  - policy: "[Confluent](/ai-gateway/policies/confluent/), [Confluent Consume](/ai-gateway/policies/confluent-consume/), and [Kafka Consume](/ai-gateway/policies/kafka-consume/)"
+    field: "`message_by_lua_functions`"
+    effect: "The data plane rejects the entire configuration."
+{% endtable %}
+<!--vale on-->
+
+{{site.ai_gateway}} also generates a Pre-Function for each `conversion-only` AI MCP Server, which `off` affects as described in the following paragraphs.
 
 With `untrusted_lua=off`, tool calls through a `listener` AI MCP Server that aggregates a `conversion-only` server fail with `request failed: closed`, because the generated Pre-Function can't run.
 A direct request to the `conversion-only` server's route returns an empty reply instead of a `404`.
@@ -164,7 +195,6 @@ The `listener` itself still answers MCP requests such as `initialize`.
 
 An AI Custom Guardrail fails on every request, even when its configuration uses a plain string for `request.url` and no `$(...)` expression.
 The request returns a `500` error with the message `failed to sanitize request: failed to invoke custom guardrail service: failed to render url: failed to render by template: loading of untrusted Lua code disabled because 'untrusted_lua' config option is set to 'off'`.
-<!-- TODO: verified live on 2.2.0 on a second data plane with a Model-scoped Post-Function, a conversion-only AI MCP Server behind a listener, and a Model-scoped AI Custom Guardrail (INPUT mode, static url, $(content) in the body, $(true) as the block expression). Under strict the same guardrail rendered its templates and blocked the request. A Model-scoped Request Transformer with the template `$(1 + 1)` set a header to 2 under strict and returned a 500 error under off. A Model-scoped File Log with custom_fields_by_lua wrote its custom field under strict, and a File Log or a global Exit Transformer made the off node reject the whole configuration, so every new route returned 404 until they were removed. Not tested: the other AI Policies with Lua fields, such as OpenTelemetry custom_attributes_by_lua, the other logging AI Policies, and the messaging AI Policies. -->
 
 Because the sandbox applies per data plane node, a configuration that works on one node can fail on a node where `untrusted_lua` is `off`.
 
@@ -182,7 +212,6 @@ For example, in strict mode:
 
 The following lists show what strict mode allows in {{site.ai_gateway}} 2.2.
 They differ from the {{site.base_gateway}} sandboxing reference as described in [Differences in the allowlists](#differences-in-the-allowlists).
-<!-- TODO: these lists were generated from kong-ee aigw-master (commit 64c616d2b9) and checked against a 2.2.0 data plane for kong.router, kong.configuration, kong.client.get_principal, and kong.log. Regenerate them when the sandbox changes. -->
 
 ### Environment in strict mode
 
@@ -1047,8 +1076,6 @@ The {{site.base_gateway}} sandboxing reference lists the following as available 
 
 To read the {{site.identity}} Principal of a request, use a [condition](/ai-gateway/conditions/) with the `principal.id` field instead.
 
-<!-- TODO: kong.router and kong.configuration are nil in strict on a 2.2.0 data plane. In kong-ee, kong.router is in lax only in every tag from aigw-2.0.0 through aigw-master. kong.configuration and kong.client.get_principal were checked only on 2.2.0 and aigw-master. Confirm with engineering whether the base Gateway reference or the runtime is the source of truth. -->
-
 ### Generated Routes and Services
 
 {{site.ai_gateway}} [generates Routes and Services](/ai-gateway/configure-on-prem/#how-entities-translate-to-kong-gateway-configuration) from your AI entities.
@@ -1064,7 +1091,6 @@ The generated names depend on the type of entity:
   `kong.router.get_route` returns a Route with the entity name followed by `-route`, such as `my-agent` and `my-agent-route`.
 
 The generated Routes and Services have no tags.
-<!-- TODO: verified live on 2.2.0 in lax mode with an OpenAI AI Model, an http AI Agent, an a2a AI Agent, a listener AI MCP Server, and a conversion-only AI MCP Server. Not tested: other providers, and the conversion-listener, passthrough-listener, and upstream-server AI MCP Server types. -->
 
 ### Consumers
 
@@ -1086,7 +1112,6 @@ When the Principal has no linked AI Consumer, `kong.client.get_consumer` returns
 A [Pre-Function](/ai-gateway/policies/pre-function/) runs before authentication, so `kong.client.get_consumer` returns `nil` there.
 A [Post-Function](/ai-gateway/policies/post-function/) runs after authentication, so use a Post-Function to read the Consumer.
 A request without a valid key fails authentication, and the AI Policy doesn't run.
-<!-- TODO: verified live on 2.2.0 with an api-key AI Consumer and a Model-scoped Post-Function. A global Pre-Function that calls get_consumer with a valid key got nil, and it ran before the authentication check. custom_id, labels as tags, and AI Consumer Group names were verified live with an api-key AI Consumer. OAuth AI Consumers were verified live with a Kong Identity auth server and client_credentials token (sub equals the client ID). Principal mapping was verified live with a Kong Identity directory, a Principal, and an auth_server_client identity: the `principal.id != null` condition matched, kong.client.get_principal and get_identity_realm_source were nil in the sandbox, and the request returned 401 until consumer_optional was true. Not verified: Principal metadata, the match_consumer path with a control_plane_consumer identity, and Principals through other identity providers. -->
 
 ### Shared state
 
@@ -1108,17 +1133,11 @@ See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes).
 > {{site.konnect_short_name}} accepts a Pre-Function or Post-Function AI Policy attached to an AI Consumer or an AI Consumer Group, but the data plane rejects the configuration with `in 'consumer': value must be null` or `in 'consumer_group': value must be null`.
 > The data plane then applies no further configuration changes until you remove the AI Policy from the AI Consumer or AI Consumer Group.
 
-<!-- TODO: verified live on 2.2.0: a Pre-Function and a Post-Function attached to an AI Consumer and to an AI Consumer Group were accepted by the control plane (201), and the data plane rejected the whole configuration, which blocked all later changes until the AI Policies were deleted. The Exit Transformer schema requires consumer_group to be null but allows consumer, and Exit Transformer at AI Consumer scope was not tested. Raise with engineering: the control plane lists consumers and consumer-groups as available scopes for pre-function and post-function and does not validate them. -->
-
 An AI Policy scoped to an AI Model runs only when the `model` field of the request body names that AI Model.
 A request that names a different model, such as the provider's own model name, doesn't run the AI Policy.
 
 If several global Pre-Function AI Policies exist, only the one with the highest ID takes effect.
 {{site.ai_gateway}} ignores the others without reporting an error.
-
-<!-- TODO: on 2.2.0, Model-scoped AI Policies whose plugin priority is above ai-model-selector (957) never ran: Pre-Function (1000000), Exit Transformer (9999), and ip-restriction (3000, so its deny rule was not enforced). Model-scoped AI Policies below 957 ran: Post-Function (-1000), request-termination (2), and rate-limiting (910). Global Pre-Function ran. A Pre-Function scoped to an http AI Agent and one scoped to a listener AI MCP Server also ran, so the problem looks specific to AI Model scope. The pattern is consistent with Model-scoped plugins only running after ai-model-selector picks the Model. Confirm with engineering whether this is a bug or a documented limitation before publishing. -->
-<!-- TODO: if this is a bug, any Model-scoped AI Policy with a high priority silently does not apply, which includes security Policies such as ip-restriction. Raise it with engineering before this page publishes. -->
-<!-- TODO: verified live on 2.2.0 with up to five global Pre-Function AI Policies: the one with the highest ID took effect in three of three trials, and deleting it made the next highest take over. Confirm with engineering that this is intended, and whether the same applies to other AI Policy types and to other scopes. -->
 
 ### Exit Transformer
 
@@ -1126,14 +1145,12 @@ An Exit Transformer AI Policy rewrites responses that other AI Policies send, in
 Each function receives the status code, the body, and the headers, and returns the new values.
 By default, it doesn't rewrite responses that {{site.ai_gateway}} sends for unknown conditions, such as the `404` for a request that matches no Route.
 Set [`handle_unknown`](/ai-gateway/policies/exit-transformer/reference/#schema--config-handle-unknown) and [`handle_unexpected`](/ai-gateway/policies/exit-transformer/reference/#schema--config-handle-unexpected) to `true` to rewrite those too.
-<!-- TODO: verified live on 2.2.0 as a global AI Policy under strict mode. With the default flags it rewrote a plugin exit and an auth 401 but not a no-Route 404. With both flags true it also rewrote the 404. A Model-scoped Exit Transformer did not rewrite a Model-scoped request-termination 403 in testing, like the Model-scoped Pre-Function. Confirm with engineering. -->
 
 ### Conditions
 
 Unlike the {{site.base_gateway}} Pre-Function and Post-Function plugins, the {{site.ai_gateway}} Pre-Function and Post-Function AI Policies support the `condition` field.
 When the condition evaluates to `false`, {{site.ai_gateway}} skips the AI Policy.
 See [AI Policy conditions](/ai-gateway/conditions/).
-<!-- TODO: verified live on 2.2.0 for a global Pre-Function and a Model-scoped Post-Function: with `condition: 'http.headers.x_test == "go"'` the AI Policy ran with the header and was skipped without it. The {{site.base_gateway}} docs list both as unsupported. Confirm the {{site.ai_gateway}} behavior with engineering, then update the TODO in /ai-gateway/conditions/. -->
 
 ## Examples
 
@@ -1252,8 +1269,6 @@ data:
 formats:
   - kongctl
 {% endentity_example %}
-
-<!-- TODO: the "Check sandbox restrictions" Lua ran on 2.2.0 as a global Pre-Function. The Post-Function version uses the same sandbox but was not run. -->
 
 ## Allowlist changes
 
