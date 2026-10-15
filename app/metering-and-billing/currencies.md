@@ -189,9 +189,9 @@ rows:
     who: "You, when you create the plan"
     notes: |
       Read-only after the plan exists. Can be a fiat or a custom currency.
-      A fiat-currency plan holds only that one fiat currency, though individual rate cards can override it to a custom currency.
-      A custom-currency plan holds no fiat currency at all, and its subscriptions are invoiced in the customer's currency.
-      With `credit_then_invoice` settlement, the custom currency needs a cost basis that's active against the customer's currency when the subscription starts, so its cost bases determine which customers can subscribe.
+      A fiat-currency plan contains only that one fiat currency, though individual rate cards can override it to a custom currency.
+      A custom-currency plan contains no fiat currency at all, and its subscriptions are invoiced in the customer's currency.
+      With [`credit_then_invoice`](/metering-and-billing/credits/#settlement-modes) settlement, the custom currency needs a cost basis that's active against the customer's currency when the subscription starts, so its cost bases determine which customers can subscribe.
   - entity: "Add-on"
     who: "You, when you create the add-on"
     notes: |
