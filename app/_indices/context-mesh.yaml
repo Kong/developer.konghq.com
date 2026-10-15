@@ -5,6 +5,11 @@ sections:
     items:
       - path: /context-mesh/
       - path:  /context-mesh/get-started/
+  - title: Reference
+    items:
+      - path: /context-mesh/sources/
+      - path: /context-mesh/mcp-servers/
+      - path: /context-mesh/skills/
   - title: How-tos
     items:
       - type: how-to
