@@ -19,6 +19,8 @@ related_resources:
     url: /event-gateway/entities/virtual-cluster/
   - text: Policies
     url: /event-gateway/entities/policy/
+  - text: Get started with {{site.event_gateway}}
+    url: /event-gateway/get-started/
 
 api_specs:
   - konnect/event-gateway

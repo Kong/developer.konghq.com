@@ -28,6 +28,8 @@ related_resources:
     url: /event-gateway/entities/virtual-cluster/
   - text: Policies
     url: /event-gateway/entities/policy/
+  - text: Produce Kafka records as Avro with {{site.event_gateway}}
+    url: /event-gateway/produce-kafka-records-as-avro-with-event-gateway/
 
 phases:
   - produce
