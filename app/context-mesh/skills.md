@@ -162,7 +162,7 @@ rows:
 
 Creating, updating, or deleting a skill automatically triggers a new deployment of the MCP server. You don't need to restart or redeploy the server yourself. {{site.operator_product_name}} picks up the change and redeploys the MCP server on its control plane with the current set of skills.
 
-If the MCP server isn't deployed to a control plane yet, no deployment happens. {{site.operator_product_name}} includes the skills the first time you [deploy the MCP server](/context-mesh/mcp-servers/#deploy-the-mcp-server).
+If you haven't deployed the the MCP server yet, no deployment happens. {{site.operator_product_name}} includes the skills the first time you [deploy the MCP server](/context-mesh/mcp-servers/#deploy-the-mcp-server).
 
 ## How agents use skills
 
@@ -173,11 +173,11 @@ If the MCP server isn't deployed to a control plane yet, no deployment happens. 
 1. The client decides when and how to bring that content into the agent's context.
 
 {:.warning}
-> The client application is responsible for all three steps. If your MCP client doesn't support reading resources, the skills exist on the server but are never surfaced to the agent.
+> The client application is responsible for all three steps. If your MCP client doesn't support reading resources, the skills exist on the server, but your agent can't use them.
 
 ## Add a skill
 
-Add a skill to give agents reusable instructions on the MCP server. You can add a skill before or after you deploy the server. If the server is already deployed, adding the skill automatically triggers a new deployment. See [Skill changes and deployments](#skill-changes-and-deployments).
+Add a skill to give agents reusable instructions on the MCP server. You can add a skill before or after you deploy the server. If you've already deployed the server, adding the skill automatically triggers a new deployment. See [Skill changes and deployments](#skill-changes-and-deployments).
 
 Write the skill in a `SKILL.md` file. The `name` in the frontmatter becomes the name of the skill, so you don't send it separately. {{site.context_mesh}} only uses the content, so the local file name doesn't matter. The following example shows a valid skill:
 
@@ -268,8 +268,40 @@ rows:
   - action: "View skill content"
     endpoint: "`GET` [Get Skill Contents](/api/konnect/context-interfaces/v1/#/operations/get-context-interface-skill-contents)"
     notes: "Returns a short-lived presigned URL for the `SKILL.md` file."
+  - action: "Update a skill"
+    endpoint: "`PATCH` [Update a Skill](/api/konnect/context-interfaces/v1/#/operations/patch-context-interface-skill)"
+    notes: "If you send `source`, it replaces the existing source and the content is validated again. The skill name changes to the `name` in the new frontmatter, and the update fails with a `409` error if another skill on the MCP server already uses that name. You can't change the source `type`."
   - action: "Delete a skill"
     endpoint: "`DELETE` [Delete a Skill](/api/konnect/context-interfaces/v1/#/operations/delete-context-interface-skill)"
     notes: "Deletes the skill and its content."
 
 {% endtable %}
+
+The get, view content, update, and delete endpoints use the ID of the skill. These requests also use the `INTERFACE_ID` environment variable, which holds the ID of your MCP server. To get it, see [Get the MCP and source IDs](/context-mesh/mcp-servers/#get-the-mcp-and-source-ids).
+
+To get the skill ID, send a `GET` request to the [List Skills](/api/konnect/context-interfaces/v1/#/operations/list-context-interface-skills) endpoint. Find your skill in the response and copy its `id`:
+
+```sh
+curl -X GET "https://us.api.konghq.com/v1/context-interfaces/$INTERFACE_ID/skills" \
+     --no-progress-meter --fail-with-body \
+     -H "Authorization: Bearer $KONNECT_TOKEN" \
+     | jq '.data[] | {display_name, name, id}'
+```
+
+Export the ID as an environment variable, replacing `YOUR_SKILL_ID` with the `id` you copied:
+
+```sh
+export SKILL_ID='YOUR_SKILL_ID'
+```
+
+For example, to change a skill's display name without changing its content, send a `PATCH` request:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/context-interfaces/$INTERFACE_ID/skills/$SKILL_ID
+status_code: 200
+method: PATCH
+body:
+  display_name: Flight Booking Guide
+{% endkonnect_api_request %}
+<!--vale on-->

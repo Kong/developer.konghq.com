@@ -2,7 +2,6 @@
 title: "{{site.context_mesh}} MCP servers"
 content_type: reference
 layout: reference
-beta: true
 
 permalink: /context-mesh/mcp-servers/
 description: "Reference for {{site.context_mesh}} MCP servers, including how REST APIs are exposed as Code Mode MCP servers, and how you deploy and configure those servers."
@@ -40,6 +39,10 @@ related_resources:
     url: /catalog/
   - text: "{{site.operator_product_name}}"
     url: /operator/
+  - text: "Install {{site.operator_product_name}}"
+    url: /operator/get-started/konnect-crds/install/
+  - text: "{{site.operator_product_name}} version support policy"
+    url: /operator/support-policy/
   - text: "Stages of software availability"
     url: /stages-of-software-availability/
 
@@ -57,7 +60,7 @@ faqs:
 
 {{site.context_mesh}} lets you turn enterprise assets (such as MCP servers and APIs) into context that AI agents can call. It works by composing those assets, also called [sources](/context-mesh/sources/), into a single deployable Code Mode MCP server. You can attach [skills](/context-mesh/skills/) to the server to give agents reusable instructions alongside the tools.
 
-## {{site.context_mesh}} MCP servers
+## What are {{site.context_mesh}} MCP servers
 
 {{site.context_mesh}} MCP servers are the result of bundling different sources together and deploying them as a single Code Mode MCP server. This becomes the source of truth for your agents after you deploy them on a {{site.konnect}} Control Plane.
 
@@ -138,7 +141,7 @@ You block capabilities on the MCP server, not on the source itself.
 ## Deployments
 
 To run the {{site.context_mesh}} MCP server, you deploy it on a {{site.konnect}} Control Plane.
-You can deploy a {{site.context_mesh}} MCP server in two modes:
+You can deploy a {{site.context_mesh}} MCP server in two modes. Both modes require {{site.operator_product_name}} on the control plane. To install it, see [Install {{site.operator_product_name}}](/operator/get-started/konnect-crds/install/).
 
 {% table %}
 columns:
@@ -153,7 +156,8 @@ rows:
       1. It generates the server code from the sources.
       1. It runs the code in containers.
       1. It sets up the {{site.base_gateway}} [Routes](/gateway/entities/route/) and [Services](/gateway/entities/service/) needed to receive traffic.
-  - mode: "**Advanced** ([Tech Preview](/stages-of-software-availability/#tech-preview))"
+  - mode: |
+      **Advanced** {% assign tp = site.data.stages.tech_preview %}{% include badge.html url=tp.url text=tp.text css_class="bg-semantic-yellow-secondary text-semantic-yellow-primary" %}
     description: |
       You control the deployment directly with [{{site.operator_product_name}}](/operator/) custom resources instead of using the {{site.konnect_short_name}} defaults.
 
@@ -409,7 +413,10 @@ To set up blocked capabilities from the UI:
 
 ### Deploy the MCP server
 
-Deploy the MCP server by mapping it to a control plane that has {{site.operator_product_name}} installed on it.
+Deploy the MCP server by mapping it to an existing control plane that has {{site.operator_product_name}} installed on it. To install it, see [Install {{site.operator_product_name}}](/operator/get-started/konnect-crds/install/).
+
+{:.info}
+> {{site.operator_product_name}} must run with the {{site.konnect_short_name}} controller enabled (`ENABLE_CONTROLLER_KONNECT=true`) and the `mcp-server` feature gate (`FEATURE_GATES=mcp-server`) to run a {{site.context_mesh}} MCP server. For the full Helm command, see [Install {{site.operator_product_name}}](/context-mesh/get-started/#install-kong-operator) in the get-started guide. For the feature gates option, see the [configuration options](/operator/reference/configuration-options/).
 
 {% navtabs "deploy-mcp-server" %}
 {% navtab "API" %}
