@@ -31,7 +31,7 @@ Common use cases for conditions include:
 * Apply an AI Policy to only part of your traffic, such as callers who send a specific header or query parameter.
 * Skip a global AI Policy for specific paths or hosts without removing it or duplicating it on individual entities.
 * Enforce an AI Policy only for specific HTTP methods.
-* Make one AI Policy's execution depend on a value that a higher-priority AI Policy set. <!-- TODO: verify kong.ctx.shared works across AI Policies. -->
+* Make one AI Policy's execution depend on a value that a higher-priority [Pre-Function Policy](/ai-gateway/policies/pre-function/) sets in `kong.ctx.shared`.
 
 ## Write a condition
 
@@ -41,14 +41,19 @@ The following condition runs an AI Policy only when the request includes the hea
 condition: 'http.headers.x_tier == "premium"'
 ```
 
+In the {{site.konnect_short_name}} UI, enter the expression in the **Execution condition** field, in the **General information** step of the AI Policy form:
+
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.ai_gateway}}**.
+1. Click the **Policies** tab.
+1. Click **New policy**.
+1. In the **Execution condition** field, enter `http.headers.x_tier == "premium"`.
+
 For the condition `http.headers.x_tier == "premium"`:
 * A request with the header `x-tier: premium` matches, so the AI Policy runs.
 * A request with `x-tier: free`, any other value, or no `x-tier` header doesn't match, so {{site.ai_gateway}} skips the AI Policy.
 
 In the expression, write header names in lowercase with underscores in place of hyphens, so `x-tier` becomes `x_tier`.
 {{site.ai_gateway}} rejects an expression that uses a hyphen, such as `http.headers.x-tier`, when you save the AI Policy.
-
-<!-- TODO: add a UI-aware paragraph and a tabbed API/UI/kongctl example once we confirm where (or whether) condition is exposed in Konnect. -->
 
 ## How it works
 
@@ -76,7 +81,7 @@ When you use conditions, keep the following in mind:
 
 ## Limitations
 
-* Conditions apply to HTTP, HTTPS, and WebSocket (`ws` and `wss`) traffic. They aren't supported on stream (TCP, TLS, and UDP) routes.
+* Conditions apply to HTTP, HTTPS, and WebSocket (`ws` and `wss`) traffic. They aren't supported on stream (TCP, TLS, and UDP) traffic.
 * A condition must evaluate to a boolean. {{site.ai_gateway}} rejects any other result when you save the AI Policy.
 * A condition can be up to 1024 characters long. {{site.ai_gateway}} rejects longer expressions when you save the AI Policy with `maximum string length is 1024`.
 * Conditions require {{site.ai_gateway}} 2.1 or later.
@@ -154,6 +159,7 @@ rows:
 ### Available fields
 
 AI Policy conditions support HTTP request fields and context fields.
+For fields that you shouldn't use in AI Policy conditions, see [Fields to avoid](#fields-to-avoid).
 
 #### HTTP request fields
 
@@ -253,12 +259,6 @@ columns:
   - title: Behavior for an AI Policy
     key: behavior
 rows:
-  - field: "`route.id`, `route.name`, `service.id`, `service.name`"
-    behavior: |
-      Return non-null values that refer to the Route and Service that {{site.ai_gateway}} generates for your AI Model, AI Agent, or AI MCP Server. See [How entities translate to {{site.base_gateway}} configuration](/ai-gateway/configure-on-prem/#how-entities-translate-to-kong-gateway-configuration).
-      The generated names don't match your entity names, so don't compare these fields to them.
-  - field: "`route.tags`, `service.tags`"
-    behavior: "Return `null`."
   - field: "`consumer.id`, `consumer.username`, `consumer.custom_id`, `consumer.tags`"
     behavior: |
       Return `null` when the request isn't authenticated.
@@ -277,18 +277,20 @@ rows:
     behavior: |
       Always a map. Accessing a missing key causes a runtime error.
       Check for the key with `has()` first. See [Null handling](#null-handling).
-      <!-- TODO: decide whether to document this field at all, since AI Gateway users don't set kong.ctx.shared directly. -->
+      A [Pre-Function Policy](/ai-gateway/policies/pre-function/) can set keys in this map for the conditions of lower-priority AI Policies to read.
 {% endtable %}
 <!--vale on-->
 
 {:.info}
 > The `consumer.*`, `consumer_group.*`, and `principal.*` fields are populated only after an authentication step has identified the caller.
 
-#### Plugin state fields
+#### Fields to avoid
 
+Don't use `route.*`, `service.*`, or `plugins.*` fields in AI Policy conditions.
+{{site.ai_gateway}} [generates](/ai-gateway/configure-on-prem/#how-entities-translate-to-kong-gateway-configuration) a Route, a Service, and plugins from your AI entities and AI Policies.
+These fields describe the generated resources.
+Their names and IDs differ from your AI entity names and aren't part of the {{site.ai_gateway}} interface.
 The `plugins.<name>.is_matched`, `plugins.<name>.priority`, and `plugins.<name>.access_has_executed` fields describe {{site.base_gateway}} plugins.
-{{site.ai_gateway}} [generates plugins](/ai-gateway/configure-on-prem/#how-entities-translate-to-kong-gateway-configuration) from your AI entities and AI Policies, so these fields depend on generated plugin names that aren't part of the {{site.ai_gateway}} interface.
-Don't use `plugins.*` fields in AI Policy conditions.
 
 ### Null handling
 
@@ -300,7 +302,7 @@ The following fields return `null` when a value isn't set:
 * `http.headers_list.*`
 * `http.queries_list.*`
 * `net.tls.sni`
-* `consumer.*`, `consumer_group.*`, `principal.*`, `route.tags`, `service.tags`
+* `consumer.*`, `consumer_group.*`, `principal.*`
 
 Compare these fields directly with `null`:
 
@@ -362,7 +364,6 @@ rows:
 > Regular expression matches succeed if they match a substring of the argument.
 > Use explicit anchors (`^` and `$`) to force full-string matching.
 > For example, `http.path.matches("^/api/v[0-9]+$")` matches `/api/v1` but not `/other/api/v1`.
-<!-- TODO: confirm the regex engine for AI Gateway. The base Gateway page cites both RE2 and Rust regex. -->
 
 ### Types
 
@@ -443,4 +444,3 @@ If you already use [plugin conditions](/gateway/plugins/conditions/) in {{site.b
 * `route.*` and `service.*` refer to generated resources, not your AI entities.
 * Don't use `plugins.*` fields. They reference plugins by name, and {{site.ai_gateway}} generates those plugins with names you don't control.
 
-<!-- TODO: add a short "Migrate from plugin conditions" note? The converter (ai-deck-converter) copies `condition` through unchanged, so an expression that works on a plugin works on the generated AI Policy only if it avoids default() and plugins.*. Confirm with the team before publishing. -->
