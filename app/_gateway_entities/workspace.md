@@ -8,6 +8,7 @@ description: Workspaces provide a way to segment {{site.base_gateway}} entities.
 
 tools:
     - admin-api
+    - konnect-api
 
 schema:
     api: gateway/admin-ee
@@ -33,10 +34,6 @@ faqs:
       The SSL handshake takes place before receiving an HTTP request when the Workspace is unknown.
       * [RBAC](/gateway/entities/rbac/) entities - Users, Roles, Admins, Groups - exist outside of a Workspace. However, you must assign Workspace-specific Roles for any User, Admin, or Group to access entities in a specific Workspace.
       * Other Workspaces can't exist within a Workspace.
-  - q: Can I use Workspaces in Konnect?
-    a: |
-      No. Instead, {{site.konnect_short_name}} offers the more powerful Control Planes and Control Plane Groups to manage entities within an API ecosystem.
-
   - q: Can a Workspace share a name with another Workspace?
     a: |
       Two Workspaces can't share the same name. However, Workspace names are case sensitive - for example, “Payments” and “payments” are not equal and would be accepted as two different Workspaces. 
@@ -52,9 +49,11 @@ faqs:
 
 api_specs:
     - gateway/admin-ee
+    - konnect/control-planes-config
 
 works_on:
   - on-prem
+  - konnect
 
 tags:
   - rbac
@@ -64,7 +63,7 @@ tags:
 
 Workspaces are a way of namespacing {{site.base_gateway}} entities so they can be managed independently. Workspaces work in combination with [RBAC](/gateway/entities/rbac/) to create isolated environments for teams to operate independently of each other. Workspaces can't share entities, like Services, between them, and only Workspace Admins with the correct permissions, in the Workspace, can manage them. 
 
-Workspaces support multi-tenancy by isolating {{site.base_gateway}} configuration objects. When paired with RBAC, {{site.base_gateway}} administrators can effectively create tenants within the control plane. The Workspace administrators have segregated and secure access to only their portion of the {{site.base_gateway}} configuration in Kong Manager, the Admin API, and the declarative configuration tool decK.
+Workspaces support multi-tenancy by isolating {{site.base_gateway}} configuration objects. When paired with RBAC, {{site.base_gateway}} administrators can effectively create tenants within the control plane. The Workspace administrators have segregated and secure access to only their portion of the {{site.base_gateway}} configuration in Kong Manager, {{site.konnect_short_name}} UI and API, the Admin API, and the declarative configuration tool decK.
 
 <!--vale off -->
 
@@ -99,9 +98,14 @@ flowchart LR
 
 Routing rules are configured at the Data Plane level. The Data Plane routes client traffic based on the configuration applied across all Workspaces. Configuring entities related to routing, such as [Gateway Services](/gateway/entities/service/) and [Routes](/gateway/entities/route/), alter the client traffic routing behavior of the Data Plane, but {{site.base_gateway}} will always attempt to ensure that routing rules don't contain conflicts. 
 
-To route traffic to the appropriate Workspace, {{site.base_gateway}} uses a conflict detection algorithm.
 
-When a Service or Route is **created** or **modified**, the {{site.base_gateway}} Router checks for the existence of that object before allowing the operation to proceed in this order:
+How traffic is routed to the appropriate Workspace varies depending on if you're using {{site.base_gateway}} or {{site.konnect_short_name}}:
+* **{{site.base_gateway}}:** Uses a [conflict detection algorithm](#collision-settings-for-kong-gateway).
+* **{{site.konnect_short_name}}:** Uses exact-match collision detection by using path, method, host, and SNI.
+
+#### Collision settings for {{site.base_gateway}}
+
+For {{site.base_gateway}} Workspaces, when a Service or Route is **created** or **modified**, the {{site.base_gateway}} Router checks for the existence of that object before allowing the operation to proceed in this order:
 
 1. If the Service or Route created is unique across all Workspaces, the new entity is created. 
 1. If an existing Service or Route object in the current Workspace has the same routing rules as the one being created or modified, the operation proceeds. 
@@ -125,7 +129,12 @@ config:
 
 ## Roles, groups, and permissions
 
-Because Workspaces allow users to control {{site.base_gateway}} entities in isolation, users must have the correct permissions to configure a particular Workspace. To do so, users need either the built-in Super Admin or Admin role.
+Because Workspaces allow users to control entities in isolation, users must have the correct permissions to configure a particular Workspace.
+Role requirements differ between {{site.base_gateway}} and {{site.konnect_short_name}}.
+
+### {{site.base_gateway}}
+
+{{site.base_gateway}} users need either the built-in Super Admin or Admin role to configure Workspaces.
 
 The following table details which Workspace permissions each built-in role has:
 <!-- vale off -->
@@ -161,6 +170,23 @@ To allow a user with a custom role to create Workspaces, use the [Admin API to g
 
 For more information, see [Roles and permissions](/gateway/entities/rbac/).
 
+### {{site.konnect_short_name}}
+
+{{site.konnect_short_name}} splits Workspace permissions into control plane roles and Workspace roles.
+A control plane role, like Admin, applies to the control plane's `default` Workspace and every named Workspace on it, including ones created later.
+A Workspace role, like Workspace Admin, applies only to the Workspaces it's assigned on.
+
+Creating a Workspace requires the Admin role on the parent control plane, or the Workspace Creator role.
+Whoever creates a Workspace becomes its Workspace Admin.
+
+To manage entities inside an existing Workspace, a user needs the Workspace Admin role on that Workspace, or a control plane role that applies to it.
+Workspace roles are additive with control plane roles: assigning a Workspace role never reduces the access a user already has from a control plane role.
+
+See [{{site.konnect_short_name}} teams and roles](/konnect-platform/teams-and-roles/#workspaces) for the full list of Workspace roles.
+
+## {{site.konnect_short_name}} Workspace limitations
+
+{% include_cached /gateway/konnect-workspaces-limitations.md %}
 
 ## Manage Workspaces with decK 
 
@@ -170,10 +196,11 @@ The following decK flags must be used when interfacing with Workspaces using dec
 
 To manage all Workspaces at once, use the `--all-workspaces` flag with decK:
 
+{% navtabs "manage multiple workspaces" %}
+{% navtab "Self-managed" %}
 ```sh
 deck gateway dump --all-workspaces
 ```
-This will dump your configuration into individual yaml files with the specific Workspace name including `default`. 
 
 You can set a Workspace specifically within a decK file like this: 
 
@@ -183,17 +210,49 @@ _workspace: default
 services:
 - name: example_service
 ```
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}}" %}
+```sh
+deck gateway dump --konnect-control-plane-name quickstart --all-workspaces
+```
+{% endnavtab %}
+{% endnavtabs %}
+
+This will dump your configuration into individual yaml files with the specific Workspace name including `default`. 
+
 ### Deploy Workspace-specific config 
 
 decK configurations must be deployed on a per-Workspace basis, individually. This is achieved using the `--workspace` flag: 
 
+{% navtabs "deploy workspace specific config" %}
+{% navtab "Self-managed" %}
 ```sh
 deck gateway sync default.yaml --workspace default
 ```
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}}" %}
+```sh
+deck gateway sync default.yaml --konnect-control-plane-name quickstart --workspace default
+```
+{% endnavtab %}
+{% endnavtabs %}
 
 ### Delete a Workspace configuration
 
 decK can't delete Workspaces. However, using `deck gateway reset` in combination with the `--workspace` or `--all-workspaces` flags forces decK to delete the entire configuration inside the Workspace, but not the Workspace itself.
+
+{% navtabs "delete a workspace configuration" %}
+{% navtab "Self-managed" %}
+```sh
+deck gateway reset --workspace default
+```
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}}" %}
+```sh
+deck gateway reset --konnect-control-plane-name quickstart --workspace default
+```
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Set up a Workspace
 

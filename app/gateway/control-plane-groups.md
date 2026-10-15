@@ -124,6 +124,12 @@ In this diagram:
 * The control plane group also contains control plane Purple, which is managed by a central platform team.
 * The central platform team manages global plugin configuration in control plane Purple, which is added to any configuration that teams Blue and Green provide.
 
+{:.info}
+> **{{site.konnect_short_name}} Workspaces:** If you want to isolate configuration for separate teams on one data plane without a control plane per team, consider using {{site.konnect_short_name}} [Workspaces](/gateway/entities/workspace/) instead.
+> A control plane group combines configuration from multiple standard control planes.
+> Workspaces isolate teams within a single control plane instead.
+> A control plane can't be both Workspace-enabled and a member of a control plane group.
+
 ## How do I create a control plane group?
 
 In {{site.konnect_short_name}}, control plane groups can be created using the [Control Planes API](/api/konnect/control-planes/).
