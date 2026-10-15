@@ -1,0 +1,32 @@
+title: Decrypt records in a topic with both encrypted and unencrypted records
+
+description: Use a condition to decrypt only the encrypted records in a topic.
+
+extended_description: |
+  Use a condition to decrypt only records that the Encrypt policy encrypted.
+
+  If a topic contains both encrypted and unencrypted records (for example - Encrypt policy was enabled after the fact that topic has some data) - the Decrypt policy fails on unencrypted records because it cannot find a key reference in the `kong/enc` header.
+  To prevent this, add a condition that runs the policy only on records that carry the `kong/enc` header.
+  The [Encrypt policy](/event-gateway/policies/encrypt/) adds this header to every record that it encrypts.
+
+requirements:
+  - "A topic that contains both encrypted and unencrypted records."
+  - "A [static key](/event-gateway/entities/static-key/)."
+
+weight: 900
+
+name: decrypt-encrypted-records-only
+type: decrypt
+condition: >
+  'kong/enc' in record.headers
+config:
+  failure_mode: error
+  part_of_record:
+    - value
+  key_sources:
+    - type: static
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
