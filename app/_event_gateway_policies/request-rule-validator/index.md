@@ -39,6 +39,8 @@ related_resources:
     url: /event-gateway/entities/policy/
   - text: Expressions reference
     url: /event-gateway/expressions/
+  - text: Enforce rules on Kafka requests with {{site.event_gateway}}
+    url: /event-gateway/enforce-kafka-request-rules/
 ---
 
 The Request Rule Validator policy validates the content of Kafka requests against a list of rules you define. 
