@@ -35,24 +35,10 @@ tools:
 prereqs:
   inline:
     - title: kafkactl
-      content: |
-        This tutorial uses [kafkactl](https://github.com/deviceinsight/kafkactl) to create a topic and read log entries from it. Install it with Homebrew:
-
-        ```sh
-        brew install kafkactl
-        ```
-
-        For other platforms, see the [kafkactl installation instructions](https://github.com/deviceinsight/kafkactl?tab=readme-ov-file#installation).
+      include_content: md/ai-gateway/v2/prereqs/kafkactl
       icon_url: /assets/icons/kafka.svg
     - title: jq
-      content: |
-        This tutorial uses [jq](https://jqlang.org/) to format the consumed log entries. Install it with Homebrew:
-
-        ```sh
-        brew install jq
-        ```
-
-        For other platforms, see the [jq download page](https://jqlang.org/download/).
+      include_content: md/ai-gateway/v2/prereqs/jq
       icon_url: /assets/icons/code.svg
 
 related_resources:
