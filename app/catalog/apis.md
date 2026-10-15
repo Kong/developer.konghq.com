@@ -531,6 +531,27 @@ To configure **Try it!** on a per-API basis, do the following:
     * **Registered**: Only developers with at least one application registered with this API can send test requests.
 1. Click **Save**.
 
+When using OAuth2 flows, some IdPs may require including additional parameters for token requests. You can include the `x-kong-client-credentials-config` property in `oauth2` type `securitySchemes` to allow users to input specific values for predefined parameters. 
+
+For example, this configuration allows spec renderer users to specify a custom audience value that is specific to their request:
+
+```yaml
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      x-kong-client-credentials-config:
+        extraTokenRequestParameters:
+          - name: audience
+            label: Audience
+            description: The audience of the authorization server to scope tokens to
+            omitIfEmpty: true
+            required: true
+      flows:
+        clientCredentials:
+          tokenUrl: 'https://example.com/oauth/token'
+```
+
 #### CORS configuration for Try it!
 
 You may need to enable the CORS plugin for **Try it!** to work. Use the following table to determine the appropriate CORS configuration based on the Routes associated with your APIs:
@@ -615,27 +636,6 @@ rows:
   - symptom: "The popup shows \"This window lost its connection to the page that opened it\""
     cause: The popup lost its link to the {{site.dev_portal}} page, so it can't pass the result back. Close it and click **Authorize** again. If it keeps happening, contact support.
 {% endtable %}
-
-When using OAuth2 flows, some IdPs may require including additional parameters for token requests. You can include the `x-kong-client-credentials-config` property in `oauth2` type `securitySchemes` to allow users to input specific values for predefined parameters.
-
-For example, this configuration allows spec renderer users to specify a custom audience value that is specific to their request:
-
-```yaml
-components:
-  securitySchemes:
-    oauth2:
-      type: oauth2
-      x-kong-client-credentials-config:
-        extraTokenRequestParameters:
-          - name: audience
-            label: Audience
-            description: The audience of the authorization server to scope tokens to
-            omitIfEmpty: true
-            required: true
-      flows:
-        clientCredentials:
-          tokenUrl: 'https://example.com/oauth/token'
-```
 
 #### Spec renderer feature support
 
