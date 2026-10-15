@@ -127,7 +127,7 @@ formats:
       target:          '/upstreams/{upstream}/targets/'
       upstream:        '/upstreams/'
       vault:           '/vaults/'
-      workspace:      '/workspaces/'
+      workspace:       '/workspaces/'
       certificate:     '/certificates/'
       ca_certificate:  '/ca_certificates/'
       sni:             '/snis/'
