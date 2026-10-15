@@ -214,7 +214,7 @@ jq -n --rawfile contents SKILL.md '{
 {% navtabs "add-skill" %}
 {% navtab "API" %}
 
-Send a `POST` request to the [`/v1/context-interfaces/{interfaceId}/skills` endpoint](/api/konnect/context-interfaces/v1/#/operations/create-context-interface-skill) with the request body:
+Send a `POST` request to the [Create a Skill](/api/konnect/context-interfaces/v1/#/operations/create-context-interface-skill) endpoint with the request body:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -255,19 +255,19 @@ columns:
     key: notes
 rows:
   - action: "List skills"
-    endpoint: "`GET` [`/v1/context-interfaces/{interfaceId}/skills`](/api/konnect/context-interfaces/v1/#/operations/list-context-interface-skills)"
+    endpoint: "`GET` [List Skills](/api/konnect/context-interfaces/v1/#/operations/list-context-interface-skills)"
     notes: "Returns the skills attached to the MCP server."
   - action: "Get a skill"
-    endpoint: "`GET` [`/v1/context-interfaces/{interfaceId}/skills/{skillId}`](/api/konnect/context-interfaces/v1/#/operations/get-context-interface-skill)"
+    endpoint: "`GET` [Get a Skill](/api/konnect/context-interfaces/v1/#/operations/get-context-interface-skill)"
     notes: "The response includes the parsed `frontmatter`, the `status`, and the `validation_message` if the skill is invalid. It never includes the skill content."
   - action: "View skill content"
-    endpoint: "`GET` [`/v1/context-interfaces/{interfaceId}/skills/{skillId}/contents`](/api/konnect/context-interfaces/v1/#/operations/get-context-interface-skill-contents)"
+    endpoint: "`GET` [Get Skill Contents](/api/konnect/context-interfaces/v1/#/operations/get-context-interface-skill-contents)"
     notes: "Returns a short-lived presigned URL for the `SKILL.md` file."
   - action: "Update a skill"
-    endpoint: "`PATCH` [`/v1/context-interfaces/{interfaceId}/skills/{skillId}`](/api/konnect/context-interfaces/v1/#/operations/patch-context-interface-skill)"
+    endpoint: "`PATCH` [Update a Skill](/api/konnect/context-interfaces/v1/#/operations/patch-context-interface-skill)"
     notes: "If you send `source`, it replaces the existing source and the content is validated again. You can't change the source `type`."
   - action: "Delete a skill"
-    endpoint: "`DELETE` [`/v1/context-interfaces/{interfaceId}/skills/{skillId}`](/api/konnect/context-interfaces/v1/#/operations/delete-context-interface-skill)"
+    endpoint: "`DELETE` [Delete a Skill](/api/konnect/context-interfaces/v1/#/operations/delete-context-interface-skill)"
     notes: "Deletes the skill and its content."
 
 {% endtable %}

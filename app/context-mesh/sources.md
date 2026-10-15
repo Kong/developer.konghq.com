@@ -153,7 +153,7 @@ jq -n --rawfile spec openapi.yaml '{
 }' > source.json
 ```
 
-Send a `POST` request to the [`/v1/context-sources` endpoint](/api/konnect/context-interfaces/v1/#/operations/create-context-source) with the request body:
+Send a `POST` request to the [Create a Context Source](/api/konnect/context-interfaces/v1/#/operations/create-context-source) endpoint with the request body:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -188,7 +188,7 @@ body_cmd: $(cat source.json)
 {% navtabs "add-mcp-server" %}
 {% navtab "API" %}
 
-Send a `POST` request to the [`/v1/context-sources` endpoint](/api/konnect/context-interfaces/v1/#/operations/create-context-source) with the URL of the remote MCP server:
+Send a `POST` request to the [Create a Context Source](/api/konnect/context-interfaces/v1/#/operations/create-context-source) endpoint with the URL of the remote MCP server:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -234,7 +234,7 @@ The `url` must include the protocol (`http` or `https`) and can't contain query 
 
 To import an API from the {{site.konnect_catalog}}, you need the API ID and the ID of the API version to use. The {{site.konnect_short_name}} UI doesn't display the version ID, so get both IDs from the API:
 
-1. Send a `GET` request to the [`/v3/apis` endpoint](/api/konnect/api-builder/v3/#/operations/list-apis) to list the APIs in your {{site.konnect_catalog}}. Find your API in the response and copy its `id`:
+1. Send a `GET` request to the [List APIs](/api/konnect/api-builder/v3/#/operations/list-apis) endpoint to list the APIs in your {{site.konnect_catalog}}. Find your API in the response and copy its `id`:
 
    ```sh
    curl -X GET "https://us.api.konghq.com/v3/apis" \
@@ -249,7 +249,7 @@ To import an API from the {{site.konnect_catalog}}, you need the API ID and the 
    export API_ID='YOUR_API_ID'
    ```
 
-1. Send a `GET` request to the [`/v3/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/list-api-versions) to get the versions of that API. The command saves the ID of the first version returned as the `API_VERSION_ID` environment variable:
+1. Send a `GET` request to the [List API Versions](/api/konnect/api-builder/v3/#/operations/list-api-versions) endpoint to get the versions of that API. The command saves the ID of the first version returned as the `API_VERSION_ID` environment variable:
 
    <!--vale off-->
    {% konnect_api_request %}
@@ -263,7 +263,7 @@ To import an API from the {{site.konnect_catalog}}, you need the API ID and the 
    {% endkonnect_api_request %}
    <!--vale on-->
 
-1. Send a `POST` request to the [`/v1/context-sources` endpoint](/api/konnect/context-interfaces/v1/#/operations/create-context-source) with the captured IDs:
+1. Send a `POST` request to the [Create a Context Source](/api/konnect/context-interfaces/v1/#/operations/create-context-source) endpoint with the captured IDs:
 
    <!--vale off-->
    {% konnect_api_request %}

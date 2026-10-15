@@ -197,7 +197,7 @@ mcpserver-test-45675cb3-764b4d6d6c-q2gnp   1/1     Running   0   57m
 
 If the pod stays in `Pending` or `CrashLoopBackOff`, check its logs with `kubectl logs -n NAMESPACE POD_NAME`.
 
-To review the Python code {{site.context_mesh}} generates for the MCP server, send a `GET` request to the [`/v1/mcp-cp/{controlPlaneId}/mcp-servers/{interfaceId}/code` endpoint](/api/konnect/context-interfaces/v1/#/operations/get-mcp-server-code).
+To review the Python code {{site.context_mesh}} generates for the MCP server, send a `GET` request to the [Get generated Python code for the MCP Server](/api/konnect/context-interfaces/v1/#/operations/get-mcp-server-code) endpoint.
 
 For the full deployment flow, see [Deploy an MCP server with {{site.context_mesh}} and {{site.operator_product_name}}](/context-mesh/get-started/).
 
@@ -215,7 +215,7 @@ To create a {{site.context_mesh}} MCP server, you need to [add sources](/context
 {% navtabs "create-mcp-server" %}
 {% navtab "API" %}
 
-Send a `POST` request to the [`/v1/context-interfaces` endpoint](/api/konnect/context-interfaces/v1/#/operations/create-context-interface):
+Send a `POST` request to the [Create a Context Interface](/api/konnect/context-interfaces/v1/#/operations/create-context-interface) endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -247,7 +247,7 @@ body:
 {% navtabs "map-sources" %}
 {% navtab "API" %}
 
-Send a `POST` request to the [`/v1/context-interfaces/{interfaceId}/context-source-mappings` endpoint](/api/konnect/context-interfaces/v1/#/operations/create-context-interface-source-mapping) for each source:
+Send a `POST` request to the [Create Context Interface Source Mapping](/api/konnect/context-interfaces/v1/#/operations/create-context-interface-source-mapping) endpoint for each source:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -260,7 +260,7 @@ body:
 <!--vale on-->
 
 {:.info}
-> To block capabilities on a mapping, send a `POST` request to the [`/v1/context-interfaces/{interfaceId}/context-source-mappings/{mappingId}/capability-controls` endpoint](/api/konnect/context-interfaces/v1/#/operations/create-context-interfaces-source-mapping-capability-controls).
+> To block capabilities on a mapping, send a `POST` request to the [Create Interface-Source Capability Controls](/api/konnect/context-interfaces/v1/#/operations/create-context-interfaces-source-mapping-capability-controls) endpoint.
 > Use `PATCH` on the same endpoint to change them later. Omitted deny keys keep their existing value, an empty array clears a capability, and a non-empty array replaces it.
 
 {% endnavtab %}
@@ -279,12 +279,12 @@ body:
 
 ### Set up blocked capabilities
 
- To get the mapping ID, send a `GET` request to the [`/v1/context-interfaces/{interfaceId}/context-source-mappings` endpoint](/api/konnect/context-interfaces/v1/#/operations/list-context-interface-source-mappings).
+ To get the mapping ID, send a `GET` request to the [List Context Interface Source Mappings](/api/konnect/context-interfaces/v1/#/operations/list-context-interface-source-mappings) endpoint.
 
 {% navtabs "block-capabilities" %}
 {% navtab "API source" %}
 
-Send a `POST` request to the [`/v1/context-interfaces/{interfaceId}/context-source-mappings/{mappingId}/capability-controls` endpoint](/api/konnect/context-interfaces/v1/#/operations/create-context-interfaces-source-mapping-capability-controls). Each operation is a path and the methods to block on that path:
+Send a `POST` request to the [Create Interface-Source Capability Controls](/api/konnect/context-interfaces/v1/#/operations/create-context-interfaces-source-mapping-capability-controls) endpoint. Each operation is a path and the methods to block on that path:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -305,7 +305,7 @@ body:
 {% endnavtab %}
 {% navtab "MCP server source" %}
 
-Send a `POST` request to the [`/v1/context-interfaces/{interfaceId}/context-source-mappings/{mappingId}/capability-controls` endpoint](/api/konnect/context-interfaces/v1/#/operations/create-context-interfaces-source-mapping-capability-controls). You must include `tools`, `resources`, and `prompts`. Use an empty array for any you don't want to block:
+Send a `POST` request to the [Create Interface-Source Capability Controls](/api/konnect/context-interfaces/v1/#/operations/create-context-interfaces-source-mapping-capability-controls) endpoint. You must include `tools`, `resources`, and `prompts`. Use an empty array for any you don't want to block:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -326,7 +326,7 @@ body:
 {% endnavtab %}
 {% endnavtabs %}
 
-To change blocked capabilities later, send a `PATCH` request to the [same endpoint](/api/konnect/context-interfaces/v1/#/operations/patch-context-interfaces-source-mapping-capability-controls) with the `type` and the `deny` keys you want to change:
+To change blocked capabilities later, send a `PATCH` request to the [Update Interface-Source Capability Controls](/api/konnect/context-interfaces/v1/#/operations/patch-context-interfaces-source-mapping-capability-controls) endpoint with the `type` and the `deny` keys you want to change:
 * Omitted keys keep their existing value.
 * An empty array clears that capability.
 * A non-empty array replaces the existing list.
@@ -359,7 +359,7 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-To see the current blocked capabilities, send a `GET` request to the [same endpoint](/api/konnect/context-interfaces/v1/#/operations/get-context-interfaces-source-mapping-capability-controls).
+To see the current blocked capabilities, send a `GET` request to the [Get Interface-Source Capability Controls](/api/konnect/context-interfaces/v1/#/operations/get-context-interfaces-source-mapping-capability-controls) endpoint.
 
 ### Deploy the MCP server
 
@@ -368,7 +368,7 @@ Deploy the MCP server by mapping it to a control plane that has Kong Operator in
 {% navtabs "deploy-mcp-server" %}
 {% navtab "API" %}
 
-Send a `POST` request to the [`/v1/context-interfaces/{interfaceId}/control-plane-mappings` endpoint](/api/konnect/context-interfaces/v1/#/operations/create-context-interface-control-plane-mapping):
+Send a `POST` request to the [Create Context Interface CP Mapping](/api/konnect/context-interfaces/v1/#/operations/create-context-interface-control-plane-mapping) endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
