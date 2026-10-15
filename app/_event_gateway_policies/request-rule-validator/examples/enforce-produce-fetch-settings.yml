@@ -11,10 +11,10 @@ extended_description: |
 
   For `fetch` requests:
   * Consumers must use the `read_committed` isolation level, so that they don't read records from aborted transactions.
-  * Consumers must wait at least 100 ms for data (`fetch.max.wait.ms`), so that they can't poll the broker in a tight loop.
+  * Consumers must set `fetch.max.wait.ms` to at least 100 ms, so that the broker can hold a fetch until data is available instead of returning empty responses in a tight loop.
   * A fetch response can be at most 50 MiB (`fetch.max.bytes`).
 
-  The default fetch settings of most Kafka clients match these limits: consumers wait 500 ms for data and fetch at most 50 MiB.
+  The default fetch settings of most Kafka clients match these limits: consumers set `fetch.max.wait.ms` to 500 ms and fetch at most 50 MiB.
   Most clients use `read_uncommitted` by default, so consumers must set `isolation.level=read_committed` explicitly.
   A consumer that breaks a `fetch` rule doesn't receive any records. For example, the Java consumer stops with `IllegalStateException: Unexpected error code 44`.
 
@@ -43,7 +43,7 @@ config:
         - description: "Consumers must use the read_committed isolation level"
           rule: '{{context.fetch.isolation_level == "read_committed"}}'
           action: reject
-        - description: "Consumers must wait at least 100 ms for data"
+        - description: "fetch.max.wait.ms must be at least 100"
           rule: '{{context.fetch.max_wait_ms >= 100}}'
           action: reject
         - description: "Fetch responses can be at most 50 MiB"
