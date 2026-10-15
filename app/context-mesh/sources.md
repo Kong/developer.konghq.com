@@ -126,6 +126,8 @@ Repeat these steps for each source you want an MCP server to expose. You can cre
 {:.info}
 > The [{{site.context_mesh}} API](/api/konnect/context-interfaces/v1/) calls sources `context-sources`, so the endpoints use `/v1/context-sources`.
 
+The following examples use [Kong Air](https://github.com/KongAirlines/routes/blob/main/openapi.yaml) as an example. Replace the fields with your own values.
+
 ### Upload an API spec
 
 {% navtabs "upload-api-spec" %}
@@ -225,34 +227,66 @@ The `url` must include the protocol (`http` or `https`) and can't contain query 
 {% endnavtab %}
 {% endnavtabs %}
 
-### Import a source from the Catalog
+### Import an API from the Catalog
 
 {% navtabs "import-source" %}
 {% navtab "API" %}
 
-Send a `POST` request to the [`/v1/context-sources` endpoint](/api/konnect/context-interfaces/v1/#/operations/create-context-source):
+To import an API from the {{site.konnect_catalog}}, you need the API ID and the ID of the API version to use. The {{site.konnect_short_name}} UI doesn't display the version ID, so get both IDs from the API:
 
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/context-sources
-status_code: 201
-method: POST
-body:
-  display_name: Flights API
-  name: flights-api
-  description: Flight search and booking operations
-  labels: {}
-  type: api
-  source:
-    type: api_catalog
-    config:
-      api_id: $API_ID
-      api_version_id: $API_VERSION_ID
-      base_url: https://api.example.com
-      headers:
-        X-Client-Name: travel-assistant
-{% endkonnect_api_request %}
-<!--vale on-->
+1. Send a `GET` request to the [`/v3/apis` endpoint](/api/konnect/api-builder/v3/#/operations/list-apis) to list the APIs in your {{site.konnect_catalog}}. Find your API in the response and copy its `id`:
+
+   ```sh
+   curl -X GET "https://us.api.konghq.com/v3/apis" \
+        --no-progress-meter --fail-with-body \
+        -H "Authorization: Bearer $KONNECT_TOKEN" \
+        | jq '.data[] | {id, name}'
+   ```
+
+   Export the ID as an environment variable, replacing `YOUR_API_ID` with the `id` you copied:
+
+   ```sh
+   export API_ID='YOUR_API_ID'
+   ```
+
+1. Send a `GET` request to the [`/v3/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/list-api-versions) to get the versions of that API. The command saves the ID of the first version returned as the `API_VERSION_ID` environment variable:
+
+   <!--vale off-->
+   {% konnect_api_request %}
+   url: /v3/apis/$API_ID/versions
+   status_code: 200
+   method: GET
+   indent: 3
+   capture:
+     - variable: API_VERSION_ID
+       jq: ".data[0].id"
+   {% endkonnect_api_request %}
+   <!--vale on-->
+
+1. Send a `POST` request to the [`/v1/context-sources` endpoint](/api/konnect/context-interfaces/v1/#/operations/create-context-source) with the captured IDs:
+
+   <!--vale off-->
+   {% konnect_api_request %}
+   url: /v1/context-sources
+   status_code: 201
+   method: POST
+   indent: 3
+   body:
+     display_name: Flights API
+     name: flights-api
+     description: Flight search and booking operations
+     labels: {}
+     type: api
+     source:
+       type: api_catalog
+       config:
+         api_id: $API_ID
+         api_version_id: $API_VERSION_ID
+         base_url: https://api.example.com
+         headers:
+           X-Client-Name: travel-assistant
+   {% endkonnect_api_request %}
+   <!--vale on-->
 
 {% endnavtab %}
 {% navtab "UI" %}
