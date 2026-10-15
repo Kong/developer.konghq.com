@@ -86,7 +86,7 @@ features:
     required: false
   - title: "Labels"
     description: Key-value tags for filtering/searching across {{site.konnect}}. In the API, send `{}` if you don't want to add any labels.
-    required: true
+    required: Only with the API
   - title: "Base URL"
     description: |
       Overrides whatever base URL is (or isn't) defined in the OpenAPI spec.

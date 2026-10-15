@@ -90,7 +90,7 @@ features:
   - title: "Name"
     description: |
       Machine name. {{site.context_mesh}} sets it from the `name` in the `SKILL.md` Frontmatter, so you don't enter it. It must be unique within the MCP server.
-    required: "Set from the frontmatter"
+    required: true
   - title: "Description"
     description: A description of the skill, up to 1,024 characters.
     required: true
@@ -100,7 +100,7 @@ features:
     required: true
   - title: "Labels"
     description: Key-value tags for filtering/searching across {{site.konnect}}. In the API, send `{}` if you don't want to add any labels.
-    required: true
+    required: Only with the API
 
 {% endfeature_table %}
 
