@@ -179,7 +179,7 @@ capture:
 
 ### Assume an IAM role instead
 
-If you need {{site.event_gateway_short}} to assume a role before connecting, for example to access an MSK cluster in another AWS account, use `assume_role` instead:
+If you need {{site.event_gateway_short}} to assume a role before connecting, for example to access an MSK cluster in another AWS account, use `sasl_aws_iam.type: assume_role` instead:
 
 ```json
 {
