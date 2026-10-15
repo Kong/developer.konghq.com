@@ -421,9 +421,10 @@ by the operator's semver:
   and `--cert-expiration-margin`. Manually provisioned certificates use
   immutable owned Secret snapshots so in-place issuer renewal cannot reach
   Pods before Konnect accepts the new certificate. The source Secret remains
-  externally managed, and status references the snapshot. Deleting a current
-  Manual snapshot creates a replacement and preserves the original mount
-  until consumers migrate, without removing the unchanged Konnect registration.
+  externally managed, and status references the snapshot. When the current
+  Manual snapshot is deleted, the operator creates a replacement and keeps
+  the original mount until consumers migrate, without removing the
+  unchanged Konnect registration.
   The extension remains unready until its current certificate is programmed.
   [#5982](https://github.com/Kong/kong-operator/pull/5982)
   [#6028](https://github.com/Kong/kong-operator/pull/6028)
