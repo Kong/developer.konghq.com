@@ -101,59 +101,6 @@ The following are the general steps for setting up IAM in {{site.konnect_short_n
 {{site.konnect_short_name}} also supports Workspaces within a control plane, so you can
 preserve your existing Workspace structure when migrating.
 
-### Example Workspace migration
-
-The following provides an example of migrating a multi-Workspace self-managed setup to
-{{site.konnect_short_name}}. These steps illustrate the general approach rather than a complete
-step-by-step guide. The examples use [decK](/deck/) and well-known CLI tools for
-querying APIs and manipulating text output. See the [jq](https://jqlang.github.io/jq/) and [yq](https://github.com/mikefarah/yq)
-tool pages for more information.
-
-1. Query the [Admin API](/api/gateway/admin-ee/) of your self-managed installation to get
-   a list of Workspaces using the [`/workspaces` endpoint](/api/gateway/admin-ee/#/operations/list-workspace).
-   The response includes a `name` field for each Workspace.
-
-   {:.info}
-   > The `default` Workspace in your self-managed deployment maps to the `default` Workspace in your {{site.konnect_short_name}} control plane. Neither can be deleted.
-
-1. Dump your self-managed configuration into per-Workspace files:
-
-   ```sh
-   deck gateway dump --all-workspaces
-   ```
-
-   This produces one YAML file per Workspace, each with a `_workspace:` header.
-
-1. Set your decK environment variables:
-
-   ```sh
-   export DECK_KONNECT_TOKEN="kpat_..."
-   export DECK_KONNECT_ADDR="https://us.api.konghq.com"
-   ```
-
-1. Sync each file to your {{site.konnect_short_name}} control plane. If a Workspace doesn't exist yet,
-   decK creates it automatically:
-
-   ```sh
-   deck gateway sync default.yaml \
-     --konnect-control-plane-name my-control-plane \
-     --workspace default
-   ```
-
-   Repeat for each Workspace.
-
-1. Log in to the [{{site.konnect_short_name}} UI](https://cloud.konghq.com/gateway-manager/) and validate that your Workspaces and entities migrated correctly.
-
-## Multi-tenancy
-
-{{site.base_gateway}} Workspaces provide a way to share runtime infrastructure across isolated configurations.
-With {{site.konnect_short_name}}, this is achieved using
-[control plane groups](/gateway/control-plane-groups/). Control planes can be added to
-and removed from control plane groups, and you can set them up to mirror your existing multi-tenant Workspace configuration.
-
-With control plane groups set up, you can connect Data Plane instances to each group, creating
-a shared Data Plane infrastructure among the constituent control planes.
-
 ## Plugin migration
 
 {{site.konnect_short_name}} supports the majority of [plugins](/plugins/) available to {{site.base_gateway}}. Since {{site.konnect_short_name}} runs in hybrid mode, this limits support for plugins that require direct access
@@ -192,37 +139,45 @@ using [decK](/deck/gateway/konnect-configuration/), the declarative management t
 configurations.
 
 The general process for migrating the configuration involves "dumping" your existing  self-managed configuration
-to a local file, modifying the configuration slightly to remove any Workspace-specific metadata,
-and then synchronizing the configuration to your desired control plane in {{site.konnect_short_name}}.
+to a local file, and then synchronizing the configuration to your desired control plane in {{site.konnect_short_name}}.
+The following provides an example of migrating a multi-Workspace self-managed setup to
+{{site.konnect_short_name}}. These steps illustrate the general approach rather than a complete
+step-by-step guide. 
 
-For example, if you have three Workspaces (`default`, `inventory`, and `sales`), use decK to dump the configuration of each Workspace to a local file:
+1. Query the [Admin API](/api/gateway/admin-ee/) of your self-managed installation to get
+   a list of Workspaces using the [`/workspaces` endpoint](/api/gateway/admin-ee/#/operations/list-workspace).
+   The response includes a `name` field for each Workspace.
 
-```sh
-deck gateway dump --workspace default --output-file default.yaml
-deck gateway dump --workspace inventory --output-file inventory.yaml
-deck gateway dump --workspace sales --output-file sales.yaml
-```
+   {:.info}
+   > The `default` Workspace in your self-managed deployment maps to the `default` Workspace in your {{site.konnect_short_name}} control plane. Neither can be deleted.
 
-When using `deck` to dump the configuration, the output file will include the Workspace name in the configuration. 
-You need to remove the `_workspace` key before uploading the configuration to {{site.konnect_short_name}}.
-To remove the key, you can use the `yq` tool:
+1. Dump your self-managed configuration into per-Workspace files:
 
-```sh
-yq -i 'del(._workspace)' default.yaml
-yq -i 'del(._workspace)' inventory.yaml
-yq -i 'del(._workspace)' sales.yaml
-```
+   ```sh
+   deck gateway dump --all-workspaces
+   ```
 
-Synchronize the configuration to the control planes using decK configured with the
-proper control plane name and the {{site.konnect_short_name}} access token:
+   This produces one YAML file per Workspace, each with a `_workspace:` header.
 
-```sh
-deck gateway sync --konnect-token "$KONNECT_PAT" --konnect-control-plane-name default default.yaml
-deck gateway sync --konnect-token "$KONNECT_PAT" --konnect-control-plane-name inventory inventory.yaml
-deck gateway sync --konnect-token "$KONNECT_PAT" --konnect-control-plane-name sales sales.yaml
-```
+1. Set your decK environment variables:
 
-In this example, replace `$KONNECT_PAT` with your {{site.konnect_short_name}} PAT or specify your PAT as an environment variable.
+   ```sh
+   export DECK_KONNECT_TOKEN="kpat_..."
+   export DECK_KONNECT_ADDR="https://us.api.konghq.com"
+   ```
+
+1. Sync each file to your {{site.konnect_short_name}} control plane. If a Workspace doesn't exist yet,
+   decK creates it automatically:
+
+   ```sh
+   deck gateway sync default.yaml \
+     --konnect-control-plane-name my-control-plane \
+     --workspace default
+   ```
+
+   Repeat for each Workspace.
+
+1. Log in to the [{{site.konnect_short_name}} UI](https://cloud.konghq.com/gateway-manager/) and validate that your Workspaces and entities migrated correctly.
 
 In addition to decK, {{site.konnect_short_name}} provides
 other tools that could be used for migrating your configuration. Each tool requires a different process. See their documentation for more information:

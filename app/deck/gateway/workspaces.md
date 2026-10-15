@@ -7,6 +7,7 @@ layout: reference
 
 works_on:
   - on-prem
+  - konnect
 
 tools:
   - deck
@@ -22,18 +23,24 @@ related_resources:
 
 decK is Workspace-aware, meaning it can interact with multiple Workspaces.
 
-{:.info}
-> Workspaces are a {{ site.ee_product_name }} concept, and are not applicable to {{ site.konnect_short_name }}.
-
 ## Manage one Workspace at a time
 
 To manage the configuration of a specific Workspace, use the `--workspace` flag with [`deck gateway sync`](/deck/gateway/sync/), [`deck gateway diff`](/deck/gateway/diff/), [`deck gateway dump`](/deck/gateway/dump/), or [`deck gateway reset`](/deck/gateway/reset/).
 
 For example, to export the configuration of the Workspace `my-workspace`:
 
+{% navtabs "manage one workspace" %}
+{% navtab "Self-managed" %}
 ```sh
 deck gateway dump --workspace my-workspace
 ```
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}}" %}
+```sh
+deck gateway dump --workspace my-workspace --konnect-control-plane-name $YOUR_CP_NAME
+```
+{% endnavtab %}
+{% endnavtabs %}
 
 If you don't specify a `--workspace` flag, decK uses the `default` Workspace.
 
@@ -52,11 +59,20 @@ services:
 
 ## Manage multiple Workspaces
 
-You can manage the configurations of all Workspaces in {{site.ee_product_name}} with the `--all-workspaces` flag:
+You can manage the configurations of all Workspaces with the `--all-workspaces` flag:
 
+{% navtabs "manage multiple workspaces" %}
+{% navtab "Self-managed" %}
 ```sh
 deck gateway dump --all-workspaces
 ```
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}}" %}
+```sh
+deck gateway dump --all-workspaces --konnect-control-plane-name $YOUR_CP_NAME
+```
+{% endnavtab %}
+{% endnavtabs %}
 
 This creates one configuration file per Workspace.
 
@@ -65,10 +81,15 @@ This creates one configuration file per Workspace.
 
 However, since a `workspace` is an isolated unit of configuration, decK doesn't allow the deployment of multiple Workspaces at a time. Therefore, each Workspace configuration file must be deployed individually:
 
+{% navtabs "deploy workspace specific config" %}
+{% navtab "Self-managed" %}
 ```sh
 deck gateway sync workspace1.yaml --workspace workspace1
 ```
-
+{% endnavtab %}
+{% navtab "{{site.konnect_short_name}}" %}
 ```sh
-deck gateway sync workspace2.yaml --workspace workspace2
+deck gateway sync workspace1.yaml --workspace workspace1 --konnect-control-plane-name $YOUR_CP_NAME
 ```
+{% endnavtab %}
+{% endnavtabs %}
