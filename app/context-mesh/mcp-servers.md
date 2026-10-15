@@ -58,7 +58,7 @@ faqs:
       However, {{site.context_mesh}} stores custom headers unencrypted, so you can't use them for credentials such as API keys, bearer tokens, or passwords.
 ---
 
-{{site.context_mesh}} lets you turn enterprise assets (such as MCP servers and APIs) into context that AI agents can call. It works by composing those assets, also called [sources](/context-mesh/sources/), into a single deployable Code Mode MCP server. You can attach [skills](/context-mesh/skills/) to the server to give agents reusable instructions alongside the tools.
+{{site.context_mesh}} lets you turn enterprise assets (like MCP servers and APIs) into context that AI agents can call. It works by composing those assets, also called [sources](/context-mesh/sources/), into a single deployable Code Mode MCP server. You can attach [skills](/context-mesh/skills/) to the server to give agents reusable instructions alongside the tools.
 
 ## What are {{site.context_mesh}} MCP servers
 
@@ -242,7 +242,7 @@ body:
 1. In the {{site.context_mesh}} sidebar, click **MCP Servers**.
 1. Click **New MCP server**.
 1. In **Add a source**, select as many sources as the context needs.
-1. In **MCP server details**, add a **Display name**. The **Name** autofills from it.
+1. In **MCP server details**, add a **Display name**. The **Name** value auto-fills from it.
 1. In **Deploy your MCP server**, select the **API Gateway** control plane on which to deploy, or click **Skip for now**.
 {% endnavtab %}
 {% endnavtabs %}
