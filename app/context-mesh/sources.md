@@ -55,7 +55,7 @@ faqs:
       You can't define additional tools on the source from {{site.context_mesh}}, only proxy them.
 ---
 
-Sources are the individual assets you add to {{site.context_mesh}} before you create an MCP server. They are the APIs and remote MCP servers that agents end up calling. After you add a source, you can combine them into a single [{{site.context_mesh}} MCP servers](/context-mesh/mcp-servers/).
+Sources are the individual assets you add to {{site.context_mesh}} before you create an MCP server. They are the APIs and remote MCP servers that agents end up calling. After you add a source, you can combine them into a single [{{site.context_mesh}} MCP server](/context-mesh/mcp-servers/).
 
 ## Source types
 
@@ -100,7 +100,7 @@ features:
 
 You can update these fields at any time to change a {{site.context_mesh}} source's configuration.
 
-By default, a {{site.context_mesh}} MCP server inherits everything a source can do. To restrict specific paths, methods, or tools without changing the source, see [Block capabilities](/context-mesh/mcp-servers/#block-capabilities).
+By default, a {{site.context_mesh}} MCP server inherits everything a source can do. To restrict specific paths, methods, or tools without changing the source, see [Blocked capabilities](/context-mesh/mcp-servers/#blocked-capabilities).
 
 ## Custom headers
 
@@ -121,7 +121,7 @@ Custom headers on {{site.context_mesh}} sources have these properties:
 
 ## Add a source
 
-Repeat these steps for each source you want an MCP server to expose. You can create a source from an API spec file or from a remote MCP server. To use an API from the {{site.konnect_catalog}} instead, see [Import a source from the Catalog](#import-a-source-from-the-catalog).
+Repeat these steps for each source you want an MCP server to expose. You can create a source from an API spec file or from a remote MCP server. To use an API from the {{site.konnect_catalog}} instead, see [Import an API from the Catalog](#import-an-api-from-the-catalog).
 
 {:.info}
 > The [{{site.context_mesh}} API](/api/konnect/context-interfaces/v1/) calls sources `context-sources`, so the endpoints use `/v1/context-sources`.
@@ -172,7 +172,7 @@ body_cmd: $(cat source.json)
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.context_mesh}}**.
 1. In the {{site.context_mesh}} sidebar, click **Sources**.
 1. Click **New source**.
-1. Select **API**. 
+1. Select **API**.
 1. Click the **Upload new** tab.
 1. Click **Select File**, then select your local OpenAPI spec file.
 1. In the **Display name** field, enter `Flights API`. The **Name** field autofills from it.
@@ -263,7 +263,7 @@ To import an API from the {{site.konnect_catalog}}, you need the API ID and the 
    {% endkonnect_api_request %}
    <!--vale on-->
 
-1. Send a `POST` request to the [Create a Context Source](/api/konnect/context-interfaces/v1/#/operations/create-context-source) endpoint with the captured IDs:
+1. Send a `POST` request to the [Create a Context Source](/api/konnect/context-interfaces/v1/#/operations/create-context-source) endpoint with the IDs:
 
    <!--vale off-->
    {% konnect_api_request %}

@@ -84,7 +84,7 @@ features:
     required: true
   - title: "Name"
     description: |
-      Machine name. Must be unique within the org. Auto-populated from the **Display name.
+      Machine name. Must be unique within the org. Auto-populated from the **Display name**.
     required: true
   - title: "Description"
     description: The {{site.context_mesh}} MCP server description.
@@ -133,7 +133,7 @@ rows:
 
 {% endtable %}
 
-You block sources capabilities on the MCP server, not on the source itself.
+You block capabilities on the MCP server, not on the source itself.
 
 ## Deployments
 
@@ -194,6 +194,7 @@ A healthy MCP server shows `1/1` ready with the `Running` status. For example:
 ```text
 mcpserver-test-45675cb3-764b4d6d6c-q2gnp   1/1     Running   0   57m
 ```
+{:.no-copy-code}
 
 If the pod stays in `Pending` or `CrashLoopBackOff`, check its logs with `kubectl logs -n NAMESPACE POD_NAME`.
 
@@ -238,16 +239,50 @@ body:
 1. Click **New MCP server**.
 1. In **Add a source**, select as many sources as the context needs.
 1. In **MCP server details**, add a **Display name**. The **Name** autofills from it.
-1. In **Deploy your MCP server**, select the **API Gateway** control plane on which to deploy, or click **Skip for now**. 
+1. In **Deploy your MCP server**, select the **API Gateway** control plane on which to deploy, or click **Skip for now**.
 {% endnavtab %}
 {% endnavtabs %}
+
+### Get the MCP and source IDs
+
+Mapping sources, deploying the MCP server, and adding skills all use the ID of the MCP server. Mapping sources also uses the ID of the source. Get both IDs from the API:
+
+1. Send a `GET` request to the [List all Context Interfaces](/api/konnect/context-interfaces/v1/#/operations/list-context-interfaces) endpoint to list your MCP servers. Find your MCP server in the response and copy its `id`:
+
+   ```sh
+   curl -X GET "https://us.api.konghq.com/v1/context-interfaces" \
+        --no-progress-meter --fail-with-body \
+        -H "Authorization: Bearer $KONNECT_TOKEN" \
+        | jq '.data[] | {display_name, name, id}'
+   ```
+
+   Export the ID as an environment variable, replacing `YOUR_INTERFACE_ID` with the `id` you copied:
+
+   ```sh
+   export INTERFACE_ID='YOUR_INTERFACE_ID'
+   ```
+
+1. Send a `GET` request to the [List Context Sources](/api/konnect/context-interfaces/v1/#/operations/list-context-sources) endpoint to list your sources. Find your source in the response and copy its `id`:
+
+   ```sh
+   curl -X GET "https://us.api.konghq.com/v1/context-sources" \
+        --no-progress-meter --fail-with-body \
+        -H "Authorization: Bearer $KONNECT_TOKEN" \
+        | jq '.data[] | {display_name, name, id}'
+   ```
+
+   Export the ID as an environment variable, replacing `YOUR_SOURCE_ID` with the `id` you copied:
+
+   ```sh
+   export SOURCE_ID='YOUR_SOURCE_ID'
+   ```
 
 ### Map the sources to the MCP server
 
 {% navtabs "map-sources" %}
 {% navtab "API" %}
 
-Send a `POST` request to the [Create Context Interface Source Mapping](/api/konnect/context-interfaces/v1/#/operations/create-context-interface-source-mapping) endpoint for each source:
+Send a `POST` request to the [Create Context Interface Source Mapping](/api/konnect/context-interfaces/v1/#/operations/create-context-interface-source-mapping) endpoint for each source. This request uses the `INTERFACE_ID` and `SOURCE_ID` environment variables. To get them, see [Get the MCP and source IDs](#get-the-mcp-and-source-ids):
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -279,7 +314,18 @@ body:
 
 ### Set up blocked capabilities
 
- To get the mapping ID, send a `GET` request to the [List Context Interface Source Mappings](/api/konnect/context-interfaces/v1/#/operations/list-context-interface-source-mappings) endpoint.
+You block capabilities on a source mapping, so you need the ID of the mapping between the MCP server and the source. Send a `GET` request to the [List Context Interface Source Mappings](/api/konnect/context-interfaces/v1/#/operations/list-context-interface-source-mappings) endpoint to list the sources mapped to the MCP server. The command saves the ID of the mapping for the source whose ID is in the `SOURCE_ID` environment variable as the `MAPPING_ID` environment variable:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/context-interfaces/$INTERFACE_ID/context-source-mappings
+status_code: 200
+method: GET
+capture:
+  - variable: MAPPING_ID
+    jq: '.data[] | select(.context_source_id == \"$SOURCE_ID\") | .id'
+{% endkonnect_api_request %}
+<!--vale on-->
 
 {% navtabs "block-capabilities" %}
 {% navtab "API source" %}
@@ -331,21 +377,6 @@ To change blocked capabilities later, send a `PATCH` request to the [Update Inte
 * An empty array clears that capability.
 * A non-empty array replaces the existing list.
 
-### Block capabilities from the UI
-
-To set up blocked capabilities from the UI:
-
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.context_mesh}}**.
-1. In the {{site.context_mesh}} sidebar, click **MCP Servers**.
-1. Click your MCP server.
-1. Click the **Sources** tab.
-1. In the source list, click a source: an sidebar dialog opens.
-1. In **Blocked capabilities**, click **Edit**.
-1. In the **Add to blocklist field**, add the API path, or the MCP tools, resources or prompts you want to block.
-1. Select the call method or the tool type.
-1. Click **Add**.
-1. Clisk **Save changes**. 
-
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/context-interfaces/$INTERFACE_ID/context-source-mappings/$MAPPING_ID/capability-controls
@@ -361,12 +392,46 @@ body:
 
 To see the current blocked capabilities, send a `GET` request to the [Get Interface-Source Capability Controls](/api/konnect/context-interfaces/v1/#/operations/get-context-interfaces-source-mapping-capability-controls) endpoint.
 
+### Block capabilities from the UI
+
+To set up blocked capabilities from the UI:
+
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.context_mesh}}**.
+1. In the {{site.context_mesh}} sidebar, click **MCP Servers**.
+1. Click your MCP server.
+1. Click the **Sources** tab.
+1. In the source list, click a source: a sidebar dialog opens.
+1. In **Blocked capabilities**, click **Edit**.
+1. In the **Add to blocklist** field, add the API path, or the MCP tools, resources, or prompts you want to block.
+1. Select the call method or the tool type.
+1. Click **Add**.
+1. Click **Save changes**.
+
 ### Deploy the MCP server
 
-Deploy the MCP server by mapping it to a control plane that has Kong Operator installed on it.
+Deploy the MCP server by mapping it to a control plane that has {{site.operator_product_name}} installed on it.
 
 {% navtabs "deploy-mcp-server" %}
 {% navtab "API" %}
+
+This section uses the following environment variables:
+* `INTERFACE_ID`: the ID of your MCP server. To get it, see [Get the MCP and source IDs](#get-the-mcp-and-source-ids).
+* The ID of a control plane managed by {{site.operator_product_name}}.
+
+Send a `GET` request to the [List Control Planes](/api/konnect/control-planes/v2/#/operations/list-control-planes) endpoint. If any of your control planes is managed by {{site.operator_product_name}}, this request returns it:
+
+```sh
+curl -X GET "https://us.api.konghq.com/v2/control-planes?labels=k8s-uid" \
+     --no-progress-meter --fail-with-body \
+     -H "Authorization: Bearer $KONNECT_TOKEN" \
+     | jq '.data[] | {name, id}'
+```
+
+Select a control plane in the response and copy its `id`. Export the ID as an environment variable, replacing `YOUR_CONTROL_PLANE_ID` with the `id` you copied:
+
+```sh
+export CONTROL_PLANE_ID='YOUR_CONTROL_PLANE_ID'
+```
 
 Send a `POST` request to the [Create Context Interface CP Mapping](/api/konnect/context-interfaces/v1/#/operations/create-context-interface-control-plane-mapping) endpoint:
 
@@ -387,10 +452,10 @@ body:
 1. In the {{site.context_mesh}} sidebar, click **MCP Servers**.
 1. Click your MCP server.
 1. Click **Deploy**.
-1. From the **Control plane** dropdown menu, select a control plane that is managed by Kong Operator.
+1. From the **Control plane** dropdown menu, select a control plane that is managed by {{site.operator_product_name}}.
 1. Select the **Basic** deployment mode.
 1. Click **Deploy and finish**.
-1. Wait until the MCP server status turns into **Healthy**.
+1. Wait until the MCP server status is **Healthy**.
 
 {% endnavtab %}
 {% endnavtabs %}

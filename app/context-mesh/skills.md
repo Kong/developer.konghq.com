@@ -192,6 +192,12 @@ Use this skill when a user asks to find or book a flight.
 1. Confirm the passenger details before booking.
 ```
 
+{:.info}
+> The [{{site.context_mesh}} API](/api/konnect/context-interfaces/v1/) uses `/v1/context-interfaces` for {{site.context_mesh}} MCP servers. Wherever the endpoints refer to a context interface, that is a {{site.context_mesh}} MCP server.
+
+{% navtabs "add-skill" %}
+{% navtab "API" %}
+
 The `contents` field takes the full contents of the `SKILL.md` file as a single string. Build the request body from your file with `jq`:
 
 ```sh
@@ -208,11 +214,8 @@ jq -n --rawfile contents SKILL.md '{
   }
 }' > skill.json
 ```
-{:.info}
-> The [{{site.context_mesh}} API](/api/konnect/context-interfaces/v1/) uses `/v1/context-interfaces` for {{site.context_mesh}} MCP servers. Wherever the endpoints refer to a context interface, that is a {{site.context_mesh}} MCP server.
 
-{% navtabs "add-skill" %}
-{% navtab "API" %}
+This request uses the `INTERFACE_ID` environment variable, which holds the ID of your MCP server. To get it, see [Get the MCP and source IDs](/context-mesh/mcp-servers/#get-the-mcp-and-source-ids).
 
 Send a `POST` request to the [Create a Skill](/api/konnect/context-interfaces/v1/#/operations/create-context-interface-skill) endpoint with the request body:
 
@@ -238,6 +241,7 @@ If the frontmatter is invalid, or its `name` doesn't match the skill's `name`, t
 1. In the **Display name** field, enter the name of your skills file.
 1. Upload the file from your computer.
 1. Click **Add skill**.
+
 {% endnavtab %}
 {% endnavtabs %}
 
