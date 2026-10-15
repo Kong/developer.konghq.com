@@ -95,7 +95,8 @@ Subscriptions link customers to a pricing model and track their usage against ra
 1. On the customer's details page, click the **Subscriptions** tab.
 1. Click **New Subscription**.
 1. In **Subscribed Plan**, select the credits-only plan you created.
-1. In **Start subscription**, select **Immediately**, or select **At a specific date** and set the **Start date**.
+1. From the **Start subscription** dropdown menu, select “Immediately” or “At a specific date”.
+1. If you selected “At a specific date”, in the **Start date** field, enter the date and time the subscription starts.
 1. Keep the **Settlement mode** that the form fills in from the plan.
 1. Click **Start Subscription**.
 
