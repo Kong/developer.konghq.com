@@ -115,18 +115,16 @@ konnect/dev.yaml
 konnect/prod.yaml
 gateway/dev/kong.yaml
 gateway/prod/kong.yaml
-gateway/plugins/ace.yaml
 scripts/generate-gateway.sh
 scripts/prepare-release.sh
 scripts/validate-api-releases.sh
 .github/workflows/release-api.yaml
 ```
 
-Only protected APIs need the ACE input. Keep `openapi.yaml` on the next beta
-version and keep stable contracts in `openapi/versions/`. Set the production
-API's top-level `version` in `konnect/prod.yaml` to the stable release that
-production generation and Catalog apply must use. Never replace an older
-release input.
+Keep `openapi.yaml` on the next beta version and keep stable contracts in
+`openapi/versions/`. Set the production API's top-level `version` in
+`konnect/prod.yaml` to the stable release that production generation and
+Catalog apply must use. Never replace an older release input.
 
 ## Generate tagged Gateway state
 
@@ -135,25 +133,35 @@ and IDs, adds `_info.select_tags`, and adds environment, team, owner, and
 service-stage tags to every entity. If sibling APIs expose the same operational
 path, such as `/health`, make their Gateway Routes unambiguous.
 
-For protected APIs, add service-scoped ACE outside the OpenAPI document:
+In the platform repository, define ACE as global control-plane state outside
+the service OpenAPI documents:
 
 ```yaml
-_format_version: "1.0"
-add-plugins:
-  - selectors:
-      - $.services[*]
-    plugins:
-      - name: ace
-        config:
-          match_policy: required
+_format_version: "3.0"
+_info:
+  select_tags:
+    - scope-platform-ace-dev
+plugins:
+  - name: ace
+    config:
+      match_policy: required
+    tags:
+      - env-dev
+      - owner-platform
+      - scope-platform-ace-dev
 ```
 
-Run `deck file add-plugins`, then tag the plugin and validate the final state.
-Commit the generated files. Pull-request CI must regenerate them without
-credentials and fail if `git diff` reports drift. It should also require a beta
-root version, validate every stable file against its filename and production
-manifest declaration, and reject modification or deletion of releases already
-present on the target branch.
+Apply one global ACE instance to each control plane before creating Catalog
+control-plane implementations. With `match_policy: required`, every request
+must match an operation from an API published through that control plane.
+Protected publications select an application auth strategy; public
+publications omit it and remain anonymous.
+
+Commit the generated service files. Pull-request CI must regenerate them
+without credentials and fail if `git diff` reports drift. It should also
+require a beta root version, validate every stable file against its filename
+and production manifest declaration, and reject modification or deletion of
+releases already present on the target branch.
 
 ## Automate release preparation
 
