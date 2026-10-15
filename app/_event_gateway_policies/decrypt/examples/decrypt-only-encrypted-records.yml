@@ -5,7 +5,9 @@ description: Use a condition to decrypt only the encrypted records in a topic.
 extended_description: |
   Use a condition to decrypt only records that the Encrypt policy encrypted.
 
-  If a topic contains both encrypted and unencrypted records (for example - Encrypt policy was enabled after the fact that topic has some data) - the Decrypt policy fails on unencrypted records because it cannot find a key reference in the `kong/enc` header.
+  If a topic contains both encrypted and unencrypted records, the Decrypt policy fails on unencrypted records because it can't find a key reference in the `kong/enc` header.
+  
+  For example, this happens when you enable the Encrypt policy after the topic already contains records.
   To prevent this, add a condition that runs the policy only on records that carry the `kong/enc` header.
   The [Encrypt policy](/event-gateway/policies/encrypt/) adds this header to every record that it encrypts.
 

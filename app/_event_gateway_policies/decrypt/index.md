@@ -85,7 +85,7 @@ This policy runs during the [consume phase](/event-gateway/entities/policy/#phas
 
 ## Decrypt a topic with encrypted and unencrypted records
 
-If a topic contains both encrypted and unencrypted records, the Decrypt policy fails on unencrypted records because it cannot find a key reference in the `kong/enc` header.
+If a topic contains both encrypted and unencrypted records, the Decrypt policy fails on unencrypted records because it can't find a key reference in the `kong/enc` header.
 
 To prevent this, add a [condition](/event-gateway/entities/policy/#conditions) that runs the policy only on records that carry the `kong/enc` header.
 The [Encrypt policy](/event-gateway/policies/encrypt/) adds this header to every record that it encrypts:
