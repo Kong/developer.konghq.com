@@ -89,7 +89,7 @@ features:
     required: true
   - title: "Name"
     description: |
-      Machine name. {{site.context_mesh}} sets it from the `name` in the `SKILL.md` frontmatter, so you don't enter it. It must be unique within the MCP server.
+      Machine name. {{site.context_mesh}} sets it from the `name` in the `SKILL.md` Frontmatter, so you don't enter it. It must be unique within the MCP server.
     required: "Set from the frontmatter"
   - title: "Description"
     description: A description of the skill, up to 1,024 characters.
@@ -104,9 +104,9 @@ features:
 
 {% endfeature_table %}
 
-### SKILL.md frontmatter
+### SKILL.md Frontmatter
 
-The `SKILL.md` content must begin with a YAML frontmatter block. {{site.context_mesh}} validates the frontmatter when you create or update the skill, and rejects content that doesn't meet these rules:
+The `SKILL.md` content must begin with a YAML Frontmatter block. {{site.context_mesh}} validates the Frontmatter when you create or update the skill, and rejects content that doesn't meet these rules:
 
 {% table %}
 columns:
@@ -162,7 +162,7 @@ rows:
 
 Creating, updating, or deleting a skill automatically triggers a new deployment of the MCP server. You don't need to restart or redeploy the server yourself. {{site.operator_product_name}} picks up the change and redeploys the MCP server on its control plane with the current set of skills.
 
-If you haven't deployed the the MCP server yet, no deployment happens. {{site.operator_product_name}} includes the skills the first time you [deploy the MCP server](/context-mesh/mcp-servers/#deploy-the-mcp-server).
+If you haven't deployed the MCP server yet, no deployment happens. {{site.operator_product_name}} includes the skills the first time you [deploy the MCP server](/context-mesh/mcp-servers/#deploy-the-mcp-server).
 
 ## How agents use skills
 
@@ -179,7 +179,7 @@ If you haven't deployed the the MCP server yet, no deployment happens. {{site.op
 
 Add a skill to give agents reusable instructions on the MCP server. You can add a skill before or after you deploy the server. If you've already deployed the server, adding the skill automatically triggers a new deployment. See [Skill changes and deployments](#skill-changes-and-deployments).
 
-Write the skill in a `SKILL.md` file. The `name` in the frontmatter becomes the name of the skill, so you don't send it separately. {{site.context_mesh}} only uses the content, so the local file name doesn't matter. The following example shows a valid skill:
+Write the skill in a `SKILL.md` file. The `name` in the frontmatter becomes the name of the skill, so you don't send it separately. {{site.context_mesh}} only uses the content, so the local file's name doesn't matter. The following example shows a valid skill:
 
 ```markdown
 ---
