@@ -94,26 +94,26 @@ columns:
   - title: Ordering rule
     key: ordering
 rows:
-  - plugin: "`pre-function`"
+  - plugin: "Pre-Function"
     priority: 1000000
     ordering: "`after: [opentelemetry]`"
-  - plugin: "`request-callout`"
+  - plugin: "Request Callout"
     priority: 812
     ordering: None
-  - plugin: "`opentelemetry`"
+  - plugin: "OpenTelemetry"
     priority: 14
     ordering: None
 {% endtable %}
 
-By priority alone, the order is `pre-function`, `request-callout`, `opentelemetry`.
+By priority alone, the order is Pre-Function, Request Callout, OpenTelemetry.
 
-Under `priority_preserving`, `pre-function` has the highest priority but must wait for `opentelemetry`:
+Under `priority_preserving`, Pre-Function has the highest priority but must wait for OpenTelemetry:
 
-1. `request-callout` (812) and `opentelemetry` (14) are ready. `request-callout` runs first.
-1. `opentelemetry` is the only plugin that's ready, so it runs next.
-1. `pre-function` is now ready and runs last.
+1. Request Callout (812) and OpenTelemetry (14) are ready. Request Callout runs first.
+1. OpenTelemetry is the only plugin that's ready, so it runs next.
+1. Pre-Function is now ready and runs last.
 
-Under `legacy`, the walk reaches `pre-function` first and places its dependency, `opentelemetry`, before it. `request-callout` is placed last.
+Under `legacy`, the walk reaches Pre-Function first and places its dependency, OpenTelemetry, before it. Request Callout is placed last.
 
 The following table shows the result for each algorithm:
 
@@ -125,15 +125,21 @@ columns:
     key: order
 rows:
   - algorithm: "`legacy`"
-    order: "`opentelemetry`, `pre-function`, `request-callout`"
+    order: |
+      1. OpenTelemetry
+      1. Pre-Function
+      1. Request Callout
   - algorithm: "`priority_preserving`"
-    order: "`request-callout`, `opentelemetry`, `pre-function`"
+    order: |
+      1. Request Callout
+      1. OpenTelemetry
+      1. Pre-Function
 {% endtable %}
 
-In both results, `pre-function` runs after `opentelemetry`.
+In both results, Pre-Function runs after OpenTelemetry.
 The difference is in the other plugins:
-* Under `legacy`, `request-callout` moves from second to last, even though it has no rule.
-* Under `priority_preserving`, `request-callout` only moves up one position to make room for `pre-function`.
+* Under `legacy`, Request Callout moves from second to last, even though it has no rule.
+* Under `priority_preserving`, Request Callout only moves up one position to make room for Pre-Function.
 
 ## Ordering behavior
 
@@ -230,9 +236,9 @@ With `priority_preserving`, the error message also lists the plugins that form t
 
 ## Migrate from legacy to priority_preserving
 
-The `plugin_ordering_algorithm` defaults to `legacy`, so upgrading {{site.base_gateway}} doesn't change your current `access` phase order.
+The `plugin_ordering_algorithm` setting defaults to `legacy`, so upgrading {{site.base_gateway}} doesn't change your current `access` phase order.
 
-To migrate to `priority_preserving`, follow these steps:
+Migrating from `legacy` to `priority_preserving` takes the following steps:
 
 1. Set `plugin_ordering_algorithm = priority_preserving` in `kong.conf`, or set the `KONG_PLUGIN_ORDERING_ALGORITHM` environment variable, on every data plane.
   
