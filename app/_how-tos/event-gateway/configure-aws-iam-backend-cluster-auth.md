@@ -72,6 +72,7 @@ automated_tests: false
 
 In this guide you'll configure {{site.event_gateway_short}} to connect to an [Amazon MSK](https://aws.amazon.com/msk/) cluster using AWS Identity and Access Management (IAM) credentials.
 
+<!-- vale off -->
 {% mermaid %}
 flowchart LR
     C[Kafka Client]
@@ -82,11 +83,10 @@ flowchart LR
         L["IAM :9098"]
     end
     C -->|anonymous| VC
-<!-- vale off -->
     VC -->|AWS IAM| L
-<!-- vale on -->
-{% endmermaid %}
 
+{% endmermaid %}
+<!-- vale on -->
 ## Create an {{site.event_gateway_short}} control plane and data plane
 
 Run the [quickstart script](https://get.konghq.com/event-gateway) to provision a local data plane and configure your environment:
