@@ -72,9 +72,21 @@ kongctl apply -f konnect/foundations.yaml \
 
 ## Bootstrap repository identities
 
-Create one Konnect system account per service repository. Issue a token for each
-account and store it as a protected repository secret. Account and token
-creation are manual boundaries; do not store tokens in declarative files.
+Create a dedicated Platform automation system account manually, grant it
+Organization Admin access, and store its token as `KONNECT_TOKEN` in a
+protected production environment in the platform repository. This identity
+applies the shared foundations and production Gateway aggregate.
+
+Use a second platform manifest to declare one Konnect system account per
+service repository and assign each account to its service team. Apply this file
+after the foundations exist so the accounts inherit the role set owned by the
+Platform Team. Account declarations and memberships remain platform desired
+state.
+
+After the accounts exist, issue a token for each one and store it as
+`KONNECT_TOKEN` in that service repository's development and protected
+production environments. Token issuance and secret placement are manual
+boundaries; do not store tokens in declarative files.
 
 Grant each service team:
 
@@ -82,9 +94,6 @@ Grant each service team:
 - Gateway write access only to its team's development control plane; and
 - read access needed to resolve shared Portals, auth strategies, and the
   production control plane.
-
-Use a second platform manifest to assign each existing repository account to
-its service team so the account inherits that role set.
 
 Do not grant service identities production Gateway write access. KongAirlines
 starts with broad organization-level API roles for simplicity and a scoped
@@ -206,10 +215,11 @@ version.
 
 The platform production manifest attaches all promoted files to the production
 control plane in one `_deck` block. Platform review and merge run one aggregate
-apply:
+apply from a protected production environment:
 
 ```sh
-kongctl apply -f konnect/production-gateway.yaml --base-dir .
+kongctl apply -f konnect/production-gateway.yaml --base-dir . \
+  --require-namespace platform
 ```
 
 Do not edit promoted files in the platform repository. Return required changes
@@ -234,3 +244,21 @@ publishes its production Catalog state.
 The initial architecture is apply-only. Removing YAML from Git does not delete
 the remote resource. Treat removals as separately designed and reviewed
 operations until your organization has an ownership-safe pruning process.
+
+## Validate the delivery boundaries
+
+After implementing the workflows, verify the ownership model with one service
+before onboarding the others:
+
+1. Apply the platform foundations and confirm that the shared control planes,
+   Portals, auth strategies, teams, and repository system accounts exist.
+2. Merge a service change and confirm that its development workflow updates
+   only that service's Catalog and tagged Gateway state.
+3. Prepare and merge a release, then confirm that automation opens a platform
+   promotion PR containing the exact production Gateway artifact and its
+   provenance.
+4. Approve the platform production job and confirm that the aggregate Gateway
+   configuration is applied before approving the service's production Catalog
+   job.
+5. For a protected API, register an application in the Portal and confirm that
+   its credential can access only the operations granted through ACE.

@@ -114,12 +114,14 @@ designed and demonstrated.
 
 ## How are credentials bootstrapped?
 
-Create one Konnect system account and token per service repository, assign its
-team membership through the platform desired state, and store the token in a
-protected GitHub secret. The service team owns the shared roles inherited by
-its repository accounts. Token creation and secret placement are human
-bootstrap steps. Production promotion uses a separate GitHub credential that
-can open a PR in the platform repository and is never exposed to fork jobs.
+Create the Platform automation identity and its token manually. Platform
+desired state then creates one Konnect system account per service repository
+and assigns its team membership. The Platform Team owns the shared roles that
+repository accounts inherit. Issuing each service account token and storing it
+in the repository's development and protected production environments are
+human bootstrap steps. Production promotion uses a separate GitHub credential
+that can open a PR in the platform repository and is never exposed to fork
+jobs.
 
 ## What if an apply fails immediately after an RBAC change?
 
