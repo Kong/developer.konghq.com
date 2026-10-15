@@ -29,8 +29,9 @@ related_resources:
     url: /gateway/entities/plugin/#dynamic-plugin-ordering
 ---
 
-Every {{site.base_gateway}} plugin has a static [priority](/gateway/entities/plugin/#plugin-priority) that decides the order that plugins run in.
-[Dynamic plugin ordering](/gateway/entities/plugin/#dynamic-plugin-ordering) lets you override that order by adding an `ordering` rule to a plugin, so that it runs `before` or `after` another plugin.
+When a plugin must run before or after another plugin regardless of their priorities, use [dynamic plugin ordering](/gateway/entities/plugin/#dynamic-plugin-ordering).
+By default, each plugin's static [priority](/gateway/entities/plugin/#plugin-priority) decides the order that plugins run in.
+Adding an `ordering` rule to a plugin overrides that order so it runs `before` or `after` another plugin.
 
 The [`plugin_ordering_algorithm` setting](/gateway/configuration/#plugin-ordering-algorithm) in `kong.conf` tells {{site.base_gateway}} how to resolve the plugin ordering rules.
 Use this reference to help you predict the order and decide which algorithm to use.
@@ -56,23 +57,27 @@ rows:
   - item: "[How is the order determined?](#ordering-behavior)"
     legacy: |
       Places plugins from highest to lowest priority. 
-      Before placing a plugin, it places everything that plugin depends on, however low that chain sits in the priority list.
+      Before it places a plugin, it places everything that plugin depends on, even if that chain sits low in the priority list.
     priority_preserving: |
       Places each configured plugin next to the plugin it references, then keeps the remaining plugins in priority order.
   - item: "[Should I use `before` or `after`?](#choosing-between-before-and-after)"
     legacy: |
-      Both `before` and `after` build the same dependency. 
+      Both `before` and `after` create the same dependency. 
       Writing the rule on either plugin gives the same order.
     priority_preserving: |
-      The algorithm will move different plugins depending on where you put the setting. 
+      `priority_preserving` moves a different plugin depending on which plugin carries the rule.
       `A before B` moves `A`, and `B after A` moves `B`.
   - item: "[Which plugins move?](#plugins-with-the-same-priority)"
     legacy: |
       The plugin you configure moves, plus any plugin that sits between it and its dependencies in priority order.
     priority_preserving: |
       The plugin you configure moves. 
-      Unconfigured plugins keep their orders relative to each other.
+      Unconfigured plugins keep their relative order.
 {% endtable %}
+{:.success}
+> **Tip**: Use `priority_preserving` if you want plugins without an ordering rule to keep their relative order.
+> <br><br>
+> Keep `legacy` if your existing configuration already depends on its order.
 
 Upgrading {{site.base_gateway}} doesn't change the algorithm, so your current `access` phase order stays the same until you [migrate to `priority_preserving`](#migrate-from-legacy-to-priority-preserving).
 
@@ -140,7 +145,7 @@ With `legacy`, `A before: [B]` and `B after: [A]` record the same dependency, so
 
 With `priority_preserving`, the plugin carrying the rule is the one that moves, so the same relationship can produce different orders depending on where you write it.
 
-For example, let's take four plugins in priority order: Key Auth (1250), LDAP Auth (1200), Header Cert Auth (1009), and Response Transformer (800).
+The following example uses four plugins, listed in priority order: Key Auth (1250), LDAP Auth (1200), Header Cert Auth (1009), and Response Transformer (800).
 Here's how the order changes depending on the algorithm you use:
 
 {% table %}
@@ -180,7 +185,7 @@ rows:
 
 When several rules interact, `priority_preserving` places each plugin next to its anchor without searching for the order that disturbs the fewest unconfigured plugins.
 
-For example, let's look at Key Auth, LDAP Auth, Header Cert Auth, and Response Transformer in priority order. 
+The following example uses Key Auth, LDAP Auth, Header Cert Auth, and Response Transformer, listed in priority order.
 If you set Header Cert Auth `before` Response Transformer and Response Transformer `before` Key Auth, the resulting order looks like this:
   1. Header Cert Auth
   1. Response Transformer
@@ -190,9 +195,10 @@ If you set Header Cert Auth `before` Response Transformer and Response Transform
 LDAP Auth has no rule but drops from second to last.
 The two rules only fix the relative order of Header Cert Auth, Response Transformer, and Key Auth, so LDAP Auth can run in any position and still satisfy them.
 For example, running LDAP Auth first is also valid.
-`priority_preserving` doesn't search for such an order, so it can move an unconfigured plugin further than necessary.
+`priority_preserving` places each plugin next to its anchor, so it can move an unconfigured plugin further than necessary.
 
 To keep a plugin in place, add a rule to that plugin.
+In this case, setting `before: [header-cert-auth]` on LDAP Auth makes LDAP Auth run before the other three plugins.
 In this case, LDAP Auth with `before: [header-cert-auth]` makes it run before the other three plugins.
 
 ### Plugins with the same priority
@@ -206,7 +212,7 @@ See [cloned plugins](/gateway/entities/plugin/#cloning-plugins) for details.
 
 Dynamic ordering runs for each request.
 A plugin scoped to a Route, Service, or Consumer only takes part in ordering for requests that match its scope.
-A scoped plugin that doesn't match the request can still be the target of another plugin's `before` or `after` rule, but it doesn't contribute rules and doesn't run.
+A scoped plugin that doesn't match the request can still be the target of another plugin's `before` or `after` rule. It doesn't run, and its own `ordering` rules don't apply.
 This means the order can differ between request paths.
 
 ### Circular rules
