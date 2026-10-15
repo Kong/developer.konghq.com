@@ -61,18 +61,18 @@ When a condition evaluates to `false`, {{site.ai_gateway}} skips the AI Policy i
 
 {{site.ai_gateway}} evaluates a condition after it applies scope precedence.
 When AI Policies of the same type apply at more than one scope, only the most specific one is considered, and its condition then decides whether it runs.
-If that condition is `false`, the AI Policy is skipped and the less specific AI Policy of the same type doesn't run in its place.
+If that condition is `false`, {{site.ai_gateway}} skips the AI Policy and doesn't fall back to a less specific AI Policy of the same type.
 
 ## Performance considerations
 
 {{site.ai_gateway}} evaluates a condition on every request for each conditioned AI Policy.
-Scopes need only a configuration lookup, so a condition adds more work to each request.
+Scopes need only a configuration lookup, so conditions add more work to each request.
 Where possible, use scopes to control which AI Policies apply, and use conditions for request-level decisions.
 
 When you use conditions, keep the following in mind:
 
 * {{site.ai_gateway}} loads an AI Policy's configuration, including its secret references, even when its condition evaluates to `false`.
-* Complex compound expressions with many fields are more expensive to evaluate than simple single-field expressions.
+* Complex compound expressions with many fields are more expensive to evaluate than simple expressions with a single field.
 
 ## Limitations
 
@@ -255,7 +255,7 @@ columns:
 rows:
   - field: "`route.id`, `route.name`, `service.id`, `service.name`"
     behavior: |
-      Return non-null values, but they refer to the Route and Service that {{site.ai_gateway}} generates, not to your AI Model, AI Agent, or AI MCP Server. See [How entities translate to {{site.base_gateway}} configuration](/ai-gateway/configure-on-prem/#how-entities-translate-to-kong-gateway-configuration).
+      Return non-null values that refer to the Route and Service that {{site.ai_gateway}} generates for your AI Model, AI Agent, or AI MCP Server. See [How entities translate to {{site.base_gateway}} configuration](/ai-gateway/configure-on-prem/#how-entities-translate-to-kong-gateway-configuration).
       The generated names don't match your entity names, so don't compare these fields to them.
   - field: "`route.tags`, `service.tags`"
     behavior: "Return `null`."
@@ -401,18 +401,17 @@ rows:
 
 {{site.ai_gateway}} validates the condition when you save the AI Policy and rejects it with a `400` error in these cases:
 
-* **Syntax error:** the expression isn't valid CEL, for example `http.headers.x_tier ====`.
-* **Unsupported variable:** the expression uses a variable that isn't in the supported list, for example `http.request.headers.x_tier`.
-* **Unsupported function or operation:** the expression uses a function or operation that isn't available, for example `default()`, `size()`, or indexing a list with `[0]`.
-* **Non-boolean result:** the expression doesn't evaluate to `true` or `false`, for example `http.path` on its own.
+* **Syntax error:** The expression isn't valid CEL, for example `http.headers.x_tier ====`.
+* **Unsupported variable:** The expression uses a variable that isn't in the supported list, for example `http.request.headers.x_tier`.
+* **Unsupported function or operation:** The expression uses a function or operation that isn't available, for example `default()`, `size()`, or indexing a list with `[0]`.
+* **Non-boolean result:** The expression doesn't evaluate to `true` or `false`, for example `http.path` on its own.
 
 ## Debugging
 
 ### Runtime errors
 
-If an expression fails while {{site.ai_gateway}} processes a request, the data plane returns a `500` error to the client with the message `An unexpected error occurred while evaluating a plugin condition`.
-The message names the generated plugin and its ID, not the AI Policy name.
-
+If an expression fails while {{site.ai_gateway}} is processing a request, the data plane returns a `500` error to the client with the message `An unexpected error occurred while evaluating a plugin condition`.
+The message names the generated {{site.base_gateway}} plugin and its ID, not the originating AI Policy name.
 For example, `kong.ctx.shared.foo == "x"` fails when the `foo` key isn't set.
 To avoid the error, check that the key exists first:
 
