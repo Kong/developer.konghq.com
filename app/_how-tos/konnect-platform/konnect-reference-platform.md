@@ -77,16 +77,15 @@ Organization Admin access, and store its token as `KONNECT_TOKEN` in a
 protected production environment in the platform repository. This identity
 applies the shared foundations and production Gateway aggregate.
 
-Use a second platform manifest to declare one Konnect system account per
-service repository and assign each account to its service team. Apply this file
-after the foundations exist so the accounts inherit the role set owned by the
-Platform Team. Account declarations and memberships remain platform desired
-state.
+Create one Konnect system account per service repository manually. Use a second
+platform manifest to assign each existing account to its service team. Apply
+this file after the foundations exist so the accounts inherit the role set
+owned by the Platform Team. Team membership remains platform desired state.
 
-After the accounts exist, issue a token for each one and store it as
-`KONNECT_TOKEN` in that service repository's development and protected
-production environments. Token issuance and secret placement are manual
-boundaries; do not store tokens in declarative files.
+Issue a token for each account and store it as `KONNECT_TOKEN` in that service
+repository's development and protected production environments. Account and
+token creation and secret placement are manual boundaries; do not store tokens
+in declarative files.
 
 Grant each service team:
 
