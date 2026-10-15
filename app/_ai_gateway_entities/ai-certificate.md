@@ -67,13 +67,12 @@ faqs:
       never returned by a read. Keep your own copy of any key you register, or store it in an
       [AI Vault](/ai-gateway/entities/ai-vault/) and register a reference to it instead of the literal value.
 
-  - q: Can MCP Servers and Agents present an AI Certificate to their upstreams?
+  - q: Can AI MCP Servers and AI Agents present an AI Certificate to their upstreams?
     a: |
-      Yes. From {{site.ai_gateway}} 2.3 onward, an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/)
-      or [AI Agent](/ai-gateway/entities/ai-agent/) can reference an AI Certificate by name in its
-      `config.certificates` field. The data plane presents it as the client certificate during the TLS
-      handshake with the upstream, which supports upstreams that require mutual TLS (mTLS). The
-      referenced AI Certificate must include a private key.
+      Yes.
+      From {{site.ai_gateway}} 2.3 onward, an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) or [AI Agent](/ai-gateway/entities/ai-agent/) can reference an AI Certificate by name in its `config.certificates` field.
+      The data plane presents the AI Certificate as the client certificate during the TLS handshake with the upstream, which supports upstreams that require mutual TLS (mTLS).
+      The referenced AI Certificate must include a private key.
 ---
 
 ## What is an AI Certificate?
