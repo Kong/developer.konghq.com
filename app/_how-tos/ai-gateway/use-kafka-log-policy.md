@@ -59,8 +59,15 @@ cleanup:
   inline:
     - title: Stop the Kafka broker and the HTTP upstream
       content: |
+        Stop the Kafka broker:
+
         ```sh
         docker compose down
+        ```
+
+        Remove the nginx container:
+
+        ```sh
         docker rm -f log-upstream
         ```
     - title: Clean up {{site.ai_gateway}} resources
@@ -127,7 +134,7 @@ docker compose up -d
 
 ## Verify SASL authentication
 
-Verify SASL from a separate container, not from inside the `kafka` container, so the check uses the same network path as the data plane:
+Run the SASL check from a separate container so it uses the same network path as the data plane:
 
 ```sh
 cat <<'EOF' > client.properties
@@ -144,7 +151,7 @@ docker run --rm \
     --command-config /tmp/client.properties
 ```
 
-The output is a list of broker API versions that ends in `)`. It includes `SaslHandshake(17)` and `SaslAuthenticate(36)`, and no `SaslAuthenticationException`.
+The output lists the broker API versions, including `SaslHandshake(17)` and `SaslAuthenticate(36)`, without a `SaslAuthenticationException`.
 
 ## Create the Kafka log topic
 
@@ -163,13 +170,14 @@ kafkactl -C kafkactl.yaml --context direct create topic kong-log
 
 ## Start an HTTP upstream
 
-The AI Agent needs a real HTTP upstream. Start an nginx container:
+The AI Agent needs an HTTP upstream to proxy requests to.
+Start an nginx container to serve that role:
 
 ```sh
 docker run -d --name log-upstream -p 8080:80 nginx:alpine
 ```
 
-Confirm that it's serving:
+Confirm that nginx responds on port `8080`:
 
 ```sh
 curl -i http://localhost:8080
@@ -177,9 +185,11 @@ curl -i http://localhost:8080
 
 ## Create a Kafka Log Policy and an AI Agent
 
-Create a global [Kafka Log Policy](/ai-gateway/policies/kafka-log/), which logs every request, and an [AI Agent](/ai-gateway/entities/ai-agent/) that supplies a Route to send requests through. The Agent's `config.url` points at the nginx container, so proxied requests return a `200`.
+Create a global [Kafka Log Policy](/ai-gateway/policies/kafka-log/), which logs every request, and an [AI Agent](/ai-gateway/entities/ai-agent/) that supplies a Route to send requests through.
+The Agent's `config.url` points at the nginx container, so proxied requests return a `200`.
 
-This example sets `security.ssl` to `false` to simplify testing.
+This example sets `security.ssl` to `false` so the test setup doesn't need certificates.
+We don't recommend this in production because the traffic isn't encrypted.
 
 ```sh
 cat <<'EOF' > kafka-log.yaml
@@ -234,24 +244,35 @@ kongctl sync -f kafka-log.yaml --pat "$KONNECT_TOKEN"
 
 ## Validate
 
-Unlike the Kafka Consume Policy, this Policy produces to Kafka. Send requests first, then read the topic.
+Unlike the Kafka Consume Policy, the Kafka Log Policy publishes to Kafka.
+Send requests first, then read the topic.
 
-1. Wait a few seconds for the data plane to pick up the new configuration. Requests sent before it does return `404`. Then generate a few log entries:
+1. Wait a few seconds for the data plane to pick up the new configuration.
+   Requests sent before the data plane picks up the configuration return `404`.
+   Then send a `GET` request to the Agent's Route to generate a log entry:
 
    ```sh
    curl -s -o /dev/null "$KONNECT_PROXY_URL/log-test"
+   ```
+
+1. Send a `POST` request with a JSON body to generate a second log entry:
+
+   ```sh
    curl -s -o /dev/null -X POST "$KONNECT_PROXY_URL/log-test" \
      -H 'Content-Type: application/json' \
      -d '{"hello":"world"}'
    ```
 
-1. Read the log entries from the topic. `config.producer_async` defaults to `true`, so allow a second or two before the entries appear:
+1. Read the log entries from the topic.
+   Because `config.producer_async` defaults to `true`, entries can take a second or two to appear:
 
    ```sh
    kafkactl -C kafkactl.yaml --context direct consume kong-log --from-beginning --exit | jq .
    ```
 
-   The `GET` is logged with `response.status: 200`. The `POST` is logged with `405`, because nginx rejects a `POST` to a static file. The Policy logs both, because it logs regardless of the response status.
+   The `GET` is logged with `response.status: 200`.
+   The `POST` is logged with `405`, because nginx rejects a `POST` to a static file.
+   The Policy logs both requests regardless of the response status.
 
    The following is a trimmed log entry:
 
