@@ -125,7 +125,7 @@ docker compose up -d
 
 ## Verify SASL authentication
 
-Verify SASL from a separate container, not from inside the `kafka` container, so the check uses the same network path as the data plane:
+Run the SASL check from a separate container so it uses the same network path as the data plane:
 
 ```sh
 cat <<'EOF' > client.properties
@@ -142,7 +142,7 @@ docker run --rm \
     --command-config /tmp/client.properties
 ```
 
-The output is a list of broker API versions that ends in `)`. It includes `SaslHandshake(17)` and `SaslAuthenticate(36)`, and no `SaslAuthenticationException`.
+The output lists the broker API versions, including `SaslHandshake(17)` and `SaslAuthenticate(36)`, without a `SaslAuthenticationException`.
 
 ## Create the Kafka topics
 
@@ -157,6 +157,11 @@ contexts:
 EOF
 
 kafkactl -C kafkactl.yaml --context direct create topic ai-events
+```
+
+Create the second topic:
+
+```sh
 kafkactl -C kafkactl.yaml --context direct create topic ai-audit
 ```
 
@@ -164,7 +169,8 @@ kafkactl -C kafkactl.yaml --context direct create topic ai-audit
 
 Create a [Kafka Consume Policy](/ai-gateway/policies/kafka-consume/) and attach it to an [AI Agent](/ai-gateway/entities/ai-agent/) that supplies the Route the Policy serves from.
 
-This example sets `security.ssl` to `false` to simplify testing.
+This example sets `security.ssl` to `false` so the test setup doesn't need certificates.
+We don't recommend this in production because the traffic isn't encrypted.
 
 ```sh
 cat <<'EOF' > kafka-consume.yaml
@@ -226,17 +232,24 @@ kongctl sync -f kafka-consume.yaml --pat "$KONNECT_TOKEN"
 
 The Policy uses `auto_offset_reset: latest`, so the consumer starts at the end of each topic and only returns messages produced after it starts consuming. Prime the consumer first, then produce messages.
 
-1. Send a first request to start the consumer. Wait a few seconds after `kongctl sync` for the data plane to pick up the new configuration, otherwise the request returns `404`. The topics are empty:
+1. Send a first request to start the consumer.
+   Requests sent before the data plane picks up the new configuration return `404`, so wait a few seconds after `kongctl sync`.
+   The response contains no records yet:
 
    ```sh
    curl -s "$KONNECT_PROXY_URL/kafka" | jq .
    ```
 
-1. Produce a message to each topic:
+1. Produce a message to the `ai-events` topic:
 
    ```sh
    kafkactl -C kafkactl.yaml --context direct produce ai-events --value='{"event":"prompt_received","model":"gpt-4o"}'
-   kafkactl -C kafkactl.yaml --context direct produce ai-audit  --value='{"actor":"user","action":"policy_applied"}'
+   ```
+
+1. Produce a message to the `ai-audit` topic:
+
+   ```sh
+   kafkactl -C kafkactl.yaml --context direct produce ai-audit --value='{"actor":"user","action":"policy_applied"}'
    ```
 
 1. Send a second request to read the messages:
@@ -245,7 +258,7 @@ The Policy uses `auto_offset_reset: latest`, so the consumer starts at the end o
    curl -s "$KONNECT_PROXY_URL/kafka" | jq .
    ```
 
-   The response is keyed by topic name, then by partition:
+   The response groups records by topic name, then by partition:
 
    ```json
    {
