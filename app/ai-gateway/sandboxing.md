@@ -210,7 +210,7 @@ For example, in strict mode:
 * `io.open`, `os.execute`, and `ngx.socket.tcp` aren't available.
 * `require("cjson")` works.
 
-The following lists show what strict mode allows in {{site.ai_gateway}} 2.2.
+The following lists show what strict mode allows.
 They differ from the {{site.base_gateway}} sandboxing reference as described in [Differences in the allowlists](#differences-in-the-allowlists).
 
 ### Environment in strict mode
