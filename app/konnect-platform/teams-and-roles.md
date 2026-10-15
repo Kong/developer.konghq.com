@@ -849,44 +849,55 @@ rows:
     description: "Can read and write every resource. Includes billing apps, billing profiles, and notifications."
     permissions: |
       * Create, list, read, query, update, and delete every resource.
-  - role: "`Metering Admin`"
+  - role: "`Meter Admin`"
     description: "Can write any metering resources (includes meters and events)."
-    permissions: |
-      * List, read, and query meters.
-      * List events.
-  - role: "`Metering Viewer`"
     permissions: |
       * Create, list, read, query, update, and delete meters.
       * List and ingest events.
+  - role: "`Metering Viewer`"
     description: "Can read any metering resources (includes meters and events)."
+    permissions: |
+      * List, read, and query meters.
+      * List events.
   - role: "`Product Catalog Admin`"
     description: "Can write any Product Catalog resources (includes plans, features, and rate cards)."
     permissions: |
       * Create, list, read, and delete features.
       * Create, list, read, update, delete, publish, and archive plans.
       * Create, list, read, update, delete, publish, and archive add-ons.
+      * List and read currencies and their cost bases.
   - role: "`Product Catalog Viewer`"
     description: "Can read any Product Catalog resources (includes plans, features, and rate cards)."
     permissions: |
       * List and read features.
       * List and read plans.
       * List and read add-ons.
+      * List and read currencies and their cost bases.
   - role: "`Billing Admin`"
-    description: "Can read and write customer, subscription, entitlement, and invoice resources."
+    description: "Can read and write customer, subscription, entitlement, invoice, credit, and currency resources."
     permissions: |
       * Create, list, read, update, delete, and migrate subscriptions and their add-ons.
+      * Read plans.
       * Create, list, read, update, and delete customers.
       * Create, list, read, update, delete, and trigger events on invoices.
       * Create, list, read, update, and delete billing profiles.
       * Create, list, read, update, and delete entitlements.
+      * Create, list, read, and void credit grants.
+      * Read credit balances and list credit transactions.
+      * Create, list, and read custom currencies.
+      * Create and list cost bases.
   - role: "`Billing Viewer`"
-    description: "Can read customer, subscription, entitlement, and invoice resources."
+    description: "Can read customer, subscription, entitlement, invoice, credit, and currency resources."
     permissions: |
       * Read and list subscriptions and their add-ons.
+      * Read plans.
       * Read and list customers.
       * Read and list and trigger events on invoices.
       * Read and list billing profiles.
       * Read and list entitlements.
+      * Read and list credit grants.
+      * Read credit balances and list credit transactions.
+      * Read and list currencies and their cost bases.
 {% endtable %}
 <!--vale on-->
 
