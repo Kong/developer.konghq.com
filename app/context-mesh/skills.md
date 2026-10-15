@@ -55,6 +55,10 @@ faqs:
   - q: Are skills versioned, or can I import them from GitHub or the {{site.konnect_catalog}}?
     a: |
       No. You create skills manually by submitting the `SKILL.md` content, and there is no version history. To change a skill, update it.
+  - q: Why does creating a skill fail with a `400` or `409` error?
+    a: |
+      A `400` error means the request is invalid. Either the `SKILL.md` frontmatter is invalid, or the request includes a `name` field. {{site.context_mesh}} takes the skill name from the `name` in the frontmatter, so don't send it separately.
+      A `409` error means the MCP server already has a skill with the same name in its frontmatter. Skill names must be unique within an MCP server.
 ---
 
 A skill is a single `SKILL.md` file, written in the [Agent Skills format](https://agentskills.io/specification), that you attach to a [{{site.context_mesh}} MCP server](/context-mesh/mcp-servers/). It packages task-specific instructions and reference material that an agent can pull in on demand. Unlike a tool, a skill doesn't call an API. It's read-only text served over MCP, and {{site.context_mesh}} never executes it.
@@ -85,8 +89,8 @@ features:
     required: true
   - title: "Name"
     description: |
-      Machine name. Must be unique within the MCP server, use only lowercase letters, numbers, and hyphens, and be at most 64 characters. It must match the `name` in the `SKILL.md` frontmatter.
-    required: true
+      Machine name. {{site.context_mesh}} sets it from the `name` in the `SKILL.md` frontmatter, so you don't enter it. It must be unique within the MCP server.
+    required: "Set from the frontmatter"
   - title: "Description"
     description: A description of the skill, up to 1,024 characters.
     required: true
@@ -115,7 +119,7 @@ columns:
 rows:
   - field: "`name`"
     required: "Yes"
-    rules: Lowercase letters, numbers, and hyphens only. Maximum 64 characters. Must match the skill's **Name**.
+    rules: Lowercase letters, numbers, and hyphens only. Maximum 64 characters. Becomes the skill's **Name**, which must be unique within the MCP server.
   - field: "`description`"
     required: "Yes"
     rules: Non-empty. Maximum 1,024 characters.
@@ -175,7 +179,7 @@ If the MCP server isn't deployed to a control plane yet, no deployment happens. 
 
 Add a skill to give agents reusable instructions on the MCP server. You can add a skill before or after you deploy the server. If the server is already deployed, adding the skill automatically triggers a new deployment. See [Skill changes and deployments](#skill-changes-and-deployments).
 
-Write the skill in a `SKILL.md` file. The `name` in the frontmatter must match the `name` you send in the request or input in the UI. {{site.context_mesh}} only uses the content, so the local file name doesn't matter. The following example shows a valid skill:
+Write the skill in a `SKILL.md` file. The `name` in the frontmatter becomes the name of the skill, so you don't send it separately. {{site.context_mesh}} only uses the content, so the local file name doesn't matter. The following example shows a valid skill:
 
 ```markdown
 ---
@@ -198,11 +202,10 @@ Use this skill when a user asks to find or book a flight.
 {% navtabs "add-skill" %}
 {% navtab "API" %}
 
-The `contents` field takes the full contents of the `SKILL.md` file as a single string. Build the request body from your file with `jq`:
+The `contents` field takes the full contents of your skill file as a single string. Build the request body from your file with `jq`, replacing `SKILL.md` with the path to your skill file:
 
 ```sh
 jq -n --rawfile contents SKILL.md '{
-  "name": "flight-booking",
   "display_name": "Flight Booking",
   "description": "Search, compare, and book flights with the Travel Assistant tools",
   "labels": {},
@@ -227,8 +230,6 @@ method: POST
 body_cmd: $(cat skill.json)
 {% endkonnect_api_request %}
 <!--vale on-->
-
-If the frontmatter is invalid, or its `name` doesn't match the skill's `name`, the request fails with a `400` error. If the MCP server already has a skill with the same name, it fails with a `409` error.
 
 {% endnavtab %}
 {% navtab "UI" %}
@@ -267,23 +268,8 @@ rows:
   - action: "View skill content"
     endpoint: "`GET` [Get Skill Contents](/api/konnect/context-interfaces/v1/#/operations/get-context-interface-skill-contents)"
     notes: "Returns a short-lived presigned URL for the `SKILL.md` file."
-  - action: "Update a skill"
-    endpoint: "`PATCH` [Update a Skill](/api/konnect/context-interfaces/v1/#/operations/patch-context-interface-skill)"
-    notes: "If you send `source`, it replaces the existing source and the content is validated again. You can't change the source `type`."
   - action: "Delete a skill"
     endpoint: "`DELETE` [Delete a Skill](/api/konnect/context-interfaces/v1/#/operations/delete-context-interface-skill)"
     notes: "Deletes the skill and its content."
 
 {% endtable %}
-
-For example, to change a skill's display name without changing its content, send a `PATCH` request:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/context-interfaces/$INTERFACE_ID/skills/$SKILL_ID
-status_code: 200
-method: PATCH
-body:
-  display_name: Flight Booking Guide
-{% endkonnect_api_request %}
-<!--vale on-->
