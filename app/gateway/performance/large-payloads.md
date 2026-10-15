@@ -21,6 +21,8 @@ description: "How {{site.base_gateway}} buffers request and response bodies, and
 related_resources:
   - text: "Optimize {{site.base_gateway}} performance"
     url: /gateway/performance/optimize/
+  - text: Size memory for AI payload logging
+    url: /gateway/performance/ai-payload-logging-memory/
   - text: Resource sizing guidelines
     url: /gateway/resource-sizing-guidelines/
   - text: "{{site.base_gateway}} configuration reference"
