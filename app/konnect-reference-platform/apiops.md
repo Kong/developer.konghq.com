@@ -70,7 +70,7 @@ boundaries, then uses the repository GitHub App to commit the files to a
 same-repository branch. The App commit triggers validation again; when the
 files match, no further commit is made. Fork code never receives a Konnect or
 repository-write credential. The workflow maintains one PR comment with the
-changed inputs and exact generated Gateway diffs, updating it after every
+changed inputs and generated Gateway diff summaries, updating it after every
 validated change rather than replacing the PR author's description.
 
 Generated files are automation-owned. Teams represent additional Gateway
