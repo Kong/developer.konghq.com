@@ -209,7 +209,7 @@ Groups can't have other credentials or identities. {{site.identity}} rejects bas
 
 ### Group permissions
 
-Access to groups and group memberships is controlled by {{site.konnect_short_name}} roles. 
+[{{site.konnect_short_name}} roles](/konnect-platform/teams-and-roles/#principals) control access to groups and group memberships . 
 There are separate permissions for groups and for group memberships, each with create, list, read, edit, and delete.
 
 The following table describes the predefined roles that apply to groups:
