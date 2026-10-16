@@ -173,9 +173,9 @@ the OpenAPI conversion as reviewed generator or patch inputs rather than
 editing generated output. Validation must also require a beta root version,
 validate stable files against their filenames and production declaration, and
 reject modification or deletion of releases already present on the target
-branch. Fork PRs do not receive the write credential; contributors can commit
-generated output themselves or a maintainer can move the change to a trusted
-same-repository branch.
+branch. Pull requests from forks do not receive the write credential;
+contributors can commit generated output themselves or a maintainer can move
+the change to a trusted same-repository branch.
 
 ## Automate release preparation
 
