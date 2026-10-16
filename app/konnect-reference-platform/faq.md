@@ -118,7 +118,10 @@ The next `kongctl sync` reconciles the removal. Konnect resources are scoped by
 the owning namespace. Gateway resources are scoped by decK select tags: each
 development service has a unique tag, while the Platform Team synchronizes the
 complete `env-prod` aggregate. Review deletions through the same pull-request
-and protected-environment controls as creates and updates.
+and protected-environment controls as creates and updates. Catalog API versions
+are the exception: service workflows add them with a separate `kongctl apply`
+manifest and omit the collection from sync, preserving append-only version
+history.
 
 ## How are credentials bootstrapped?
 

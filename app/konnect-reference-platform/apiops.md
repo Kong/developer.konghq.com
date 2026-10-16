@@ -66,6 +66,10 @@ readiness, and liveness checks.
 Advance the development contract's `info.version` whenever its contents
 change. Konnect treats the version as the Catalog API version identity, and
 ACE prevents removing operations by modifying the current version in place.
+Treat development API versions as append-only: put the current version in a
+separate `konnect/dev-versions.yaml` manifest and deliver it with `kongctl
+apply`. Omit the `versions` collection from the synchronized `dev.yaml` so
+older versions are not interpreted as stale and deleted.
 
 Pull-request validation generates and validates both files without Konnect
 credentials and uploads them as an artifact. A trusted workflow that never
@@ -105,14 +109,25 @@ After a service change reaches `main`, the repository runs:
 ```sh
 ./scripts/generate-gateway.sh
 git diff --exit-code -- gateway/dev/kong.yaml gateway/prod/kong.yaml
+kongctl apply -f konnect/dev-versions.yaml --base-dir . \
+  --require-namespace <service>
+# ACE-protected APIs only, until kongctl #2510 is resolved:
+./scripts/transition-ace-api-version.sh "<development-api-name>"
 kongctl sync -f konnect/dev.yaml --base-dir . \
   --require-namespace <service>
 ```
 
+For protected APIs, the transition helper verifies that the additive apply created the child
+version, then selects it using the Konnect API's explicit `force=true`
+behavior. This is a temporary sequencing workaround for
+[kongctl #2510](https://github.com/Kong/kongctl/issues/2510); remove it when
+kongctl can declaratively order and authorize ACE-protected transitions.
+
 The manifest uses `_external` and `!lookup` to resolve the Platform Team-owned
 development control plane and Portal. `_deck` makes kongctl run one decK synchronization
-for that service's tagged Gateway state. The same kongctl operation manages the
-service-owned private Catalog API and its control-plane implementation.
+for that service's tagged Gateway state. The final sync manages the
+service-owned private Catalog API, its publication, its control-plane
+implementation, and tagged Gateway state without deleting API version history.
 
 Each repository uses a dedicated Konnect system account token. kongctl
 namespaces define declarative ownership; Konnect RBAC defines what that identity
