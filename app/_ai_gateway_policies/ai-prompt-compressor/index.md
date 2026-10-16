@@ -305,6 +305,98 @@ A `503` response indicating a compression timeout is retried automatically befor
 - No MCP tool-response compression: only the LLM request path is supported.
 - Only requests with a `messages` or `input` conversation array are sent to Headroom. Other formats are forwarded uncompressed.
 
+## Prompt compression metrics {% new_in 2.3 %}
+
+<!-- TODO: Source is the draft PRD for AI-229 / AG-1959 (state: awaiting team review). Verify every metric, dimension, and header name below against Konnect Explorer and a 2.3 data plane before merging. No API spec exists for this change. -->
+
+When a request passes through the AI Prompt Compressor Policy, {{site.ai_gateway}} reports the compression result to [Konnect Analytics](/observability/explorer/). You can use these metrics to measure how many tokens compression saves and how long it takes.
+
+Compression metrics are reported with the existing {{site.ai_gateway}} dimensions, so you can scope them by `ai_gateway`, `ai_gateway_data_plane_node`, and `control_plane`. The Policy configuration doesn't change, and the compression log entry (`compress_items`) stays as it is.
+
+The metrics carry token and message counts only. They never include the original or compressed text, even if `log_text_data` is enabled.
+
+### Analytics metrics
+
+The following metrics are available in Explorer:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Metric
+    key: metric
+  - title: Type
+    key: type
+  - title: Description
+    key: description
+rows:
+  - metric: "`compression_saved_tokens`"
+    type: Count
+    description: Number of tokens saved, summed over the compressed messages.
+  - metric: "`compression_original_tokens`"
+    type: Count
+    description: Number of tokens before compression.
+  - metric: "`compression_compressed_tokens`"
+    type: Count
+    description: Number of tokens after compression.
+  - metric: "`compression_message_count`"
+    type: Count
+    description: Number of compressed messages per request.
+  - metric: "`compression_duration_average`"
+    type: Latency
+    description: Average time the compressor took, in milliseconds.
+{% endtable %}
+<!-- vale on -->
+
+### Analytics dimensions
+
+You can group and filter the compression metrics by the following dimensions:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Dimension
+    key: dimension
+  - title: Values
+    key: values
+  - title: Description
+    key: description
+rows:
+  - dimension: "`compressor_provider`"
+    values: "`kong`, `headroom`"
+    description: The compression provider that handled the request.
+  - dimension: "`compression_type`"
+    values: "`rate`, `target_token`"
+    description: The compression method used. Available for the `kong` provider only.
+{% endtable %}
+<!-- vale on -->
+
+The two providers report compression at different granularity. The `kong` provider reports one result for each compressed message. Headroom reports one result for the whole request. The metrics sum the results for each request, so they mean the same thing for both providers.
+
+### Response headers
+
+<!-- TODO: Header names and values are not final. PRD open question 2 asks whether to use these three headers or one compact header, and it blocks the header ticket. Confirm with Giovanni Fiordeponti / Greg Peranich before merging, and confirm the headers are also set on streaming responses. -->
+
+When compression runs, the Policy adds the following headers to the response, so the caller can read what compression saved:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Header
+    key: header
+  - title: Value
+    key: value
+rows:
+  - header: "`X-Kong-Prompt-Compression-Saved-Tokens`"
+    value: Number of tokens saved.
+  - header: "`X-Kong-Prompt-Compression-Messages`"
+    value: Number of compressed messages.
+  - header: "`X-Kong-Prompt-Compression-Duration`"
+    value: Time the compressor took, in milliseconds.
+{% endtable %}
+<!-- vale on -->
+
+<!-- TODO: PRD open questions 3 to 6 (saved-token counter vs. request count, single source for compression_saved_tokens, org-level counter, feature flag) may change which metrics are visible or how they behave. Re-check before merging. Not in scope per PRD: per-message rows, compression ratio metric, cost savings in money, UI change. -->
+
 ## Forward proxy support
 
 {% include md/ai-gateway/v2/forward-proxy.md %}
