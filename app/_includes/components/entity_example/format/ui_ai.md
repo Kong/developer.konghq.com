@@ -4,10 +4,12 @@
 The following creates a new AI Model Provider. Suggested values are shown in backticks:
 
 1. In {{site.konnect_short_name}}, navigate to **Models** in the sidebar, then select **Providers**.
+1. Use the **Gateway** selector at the top of the list to choose a gateway.
 1. Click **New provider**.
-1. In **Add a provider account**, select the provider (for example: `{{ include.presenter.data['type'] }}`) and click **Continue**.
-1. In the **Connect** form for that provider, enter the account details and credentials. Use `{{ include.presenter.data['display_name'] }}` as the account name.
-1. Click **Connect**, then click **Done**.
+1. In **Provider**, select a provider (for example: `{{ include.presenter.data['type'] }}`).
+1. In **Account details**, enter an **Account name** (for example: `{{ include.presenter.data['display_name'] }}`).
+1. In **Authentication**, enter a **Credential name** and the credential for the selected provider, such as an **API key**.
+1. Click **Add provider**.
 {% when 'auth-strategy' %}
 The following creates a new AI Auth Strategy. Suggested values are shown in backticks:
 
@@ -60,20 +62,21 @@ To add consumers to the group, select the group in the **Consumer groups** field
 The following creates a new model. Suggested values are shown in backticks.
 
 1. In {{site.konnect_short_name}}, navigate to **Models** in the sidebar, then select **Models**.
-1. Click **New model**.
-1. Choose a provider.
-1. Choose a provider account, or select **New account** to connect one.
-1. Select the model you want to add. Use **Search models** to filter the list, then click **Continue**.
-1. Enter a **Name** (the name callers send) and a **Display name** (for example: `{{ include.presenter.data['display_name'] }}`).
-1. Optional. Add **Labels**, choose **Endpoints**, add **Aliases**, set **Reasoning effort**, or set an **Upstream override**.
+1. Use the **Gateway** selector at the top of the list to choose a gateway.
+1. Click **New model**, then select **Model** for generative and embeddings requests, or **Provider API** for files and batch operations.
+1. In **General information**, enter a **Display name** (for example: `{{ include.presenter.data['display_name'] }}`).
+1. In **Target models**, select a **Provider**. If you selected **Model**, also select a **Target model**. Click **Add target model** to route requests across multiple providers.
+1. In **Capabilities**, select which AI capabilities this model supports. For **Model**, options include **Generate**, **Embeddings**, and **Image generation**. For **Provider API**, options include **Batch** and **Files**.
+1. In **Routing**, under **Route matching**, select **Base path** and enter a path to determine how the {{site.ai_gateway}} is accessed. Don't include capability-specific paths such as `/chat/completions`. Click **Add route rule** to add more rules.
+1. Optional. Under **Model matching**, enter a **Model alias** if you plan to route by request body instead of base path or hostname.
+1. Optional. In **Authentication and access**, configure **Auth strategies** and **Access control**.
+1. Optional. In **Advanced configuration**, adjust settings such as **Max request body size**, **Response streaming**, and **Log payloads**.
 1. Click **Add model**.
-
-The model is deployed to the default gateway. To change its routing, authentication, or advanced settings, open the model from the list.
 {% when 'agent' %}
 The following creates a new agent. Suggested values are shown in backticks.
 
 1. In {{site.konnect_short_name}}, navigate to **Agents** in the sidebar.
-1. Use the gateway selector at the top of the list to choose a gateway.
+1. Use the **Gateway** selector at the top of the list to choose a gateway.
 1. Click **New agent**.
 1. In **General information**, enter a **Display name** (for example: `{{ include.presenter.data['display_name'] }}`) and select a **Type** (for example: `A2A (agent-to-agent)`).
 1. Optional. Toggle **Log payloads** if you want request and response bodies logged.
@@ -86,7 +89,7 @@ The following creates a new agent. Suggested values are shown in backticks.
 The following creates a new AI MCP Server. Suggested values are shown in backticks:
 
 1. In {{site.konnect_short_name}}, navigate to **MCP Servers** in the sidebar.
-1. Use the gateway selector at the top of the list to choose a gateway.
+1. Use the **Gateway** selector at the top of the list to choose a gateway.
 1. Click **New MCP server**.
 1. In **General information**, enter a **Display name** (for example: `{{ include.presenter.data['display_name'] }}`).
 1. In **Configuration**, select a **Type** (for example: `Passthrough listener`) and enter an **Upstream URL** (for example: `https://mcp.internal.example.com`).
