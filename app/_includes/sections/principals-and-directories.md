@@ -3,6 +3,7 @@
 * **Principal:** Represents an external client, workload, or human authenticating to a {{site.base_gateway}} (not a {{site.konnect_short_name}} user or {{site.dev_portal}} developer).
 * **Directory:** Regional collection of principals. 
   Each {{site.konnect_short_name}} organization can provision up to one directory per region by default.
+* **Group:** Named set of principals in a directory. You manage membership in one place, and access rules reference the group instead of each principal.
 
 Principals work with:
 * {{site.base_gateway}} in {{site.konnect_short_name}}: Principals can authenticate an entity for API traffic (using API keys or basic auth usernames and passwords), or can provide metadata about an entity already authenticated through another mechanism (such as OAuth).

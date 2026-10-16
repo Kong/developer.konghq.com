@@ -71,6 +71,8 @@ rows:
     description: "Define a principal once and use it for {{site.base_gateway}}, {{site.event_gateway_short}}, and {{site.dev_portal}} without manually synchronizing identities."
   - usecase: "Drive gateway behavior with metadata"
     description: "Scope conditional plugin execution by attributes that the principal carries, such as business unit or tier."
+  - usecase: "Manage access for a set of principals"
+    description: "Add principals to a [group](#groups) and reference the group in access rules, so that adding or removing a member doesn't require editing the rules."
 {% endtable %}
 <!--vale on-->
 
@@ -165,6 +167,67 @@ Metadata is a set of key-value pairs associated with a principal. {{site.identit
 
 You can use metadata to configure how a gateway behaves when that principal is authenticated to it.
 For example, a Request Termination plugin can block access only when `principal.metadata.business_unit == "payments"`.
+
+## Groups
+
+A group is a named set of principals in a directory.
+Groups let you manage access for a set of principals in one place: instead of writing one access rule per principal, or relying on every principal carrying the right metadata value, you add principals to a group and reference the group in your rules.
+When a principal joins or leaves a group, you update the group's membership and the rules stay the same.
+
+Group membership is manual: you add and remove each member explicitly, and a principal must already exist in the directory before you can add it to a group. A principal you just created isn't a member of any group until you add it.
+
+Group names must be unique within a directory and can only contain letters and numbers, with no spaces.
+
+### Group types
+
+You set a group's type when you create it, and you can't change it afterwards.
+
+{% table %}
+columns:
+  - title: Type
+    key: type
+  - title: API value
+    key: api
+  - title: Description
+    key: description
+rows:
+  - type: "Group"
+    api: "`group`"
+    description: "The default type. A set of principals that you reference in access rules."
+  - type: "Team"
+    api: "`team`"
+    description: "A node in your organization chart, such as a department or a team. Its members are principals of type `user`."
+{% endtable %}
+
+### Group credentials
+
+A group can have an API key, so a request authenticated with that key is identified as the group instead of as one individual.
+Create the key the same way you create a principal's API key, using the group's ID as the principal ID. 
+See [Key auth](#key-auth).
+
+Groups can't have other credentials or identities. {{site.identity}} rejects basic auth credentials, and OIDC, Consumer, auth server client, and custom identities on a group.
+
+### Group permissions
+
+[{{site.konnect_short_name}} roles](/konnect-platform/teams-and-roles/#principals) control access to groups and group memberships . 
+There are separate permissions for groups and for group memberships, each with create, list, read, edit, and delete.
+
+The following table describes the predefined roles that apply to groups:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Role
+    key: role
+  - title: Description
+    key: description
+rows:
+  - role: "`PrincipalAdmin`"
+    description: "All group and group membership permissions: create, list, read, edit, and delete."
+  - role: "`PrincipalViewer`"
+    description: "Read-only group and group membership permissions: list and read."
+{% endtable %}
+<!--vale on-->
 
 ## Controlling {{site.base_gateway}} plugin execution based on principals
 
@@ -313,6 +376,43 @@ body:
 
 {% endnavtab %}
 {% endnavtabs %}
+
+## Create a group and add members
+
+Before you add members to a group, the principals must [exist in the directory](#configure-a-principal).
+
+Create the group by sending a `POST` request to the `/v2/directories/{directoryId}/groups` endpoint. 
+If you omit `type`, {{site.identity}} creates a group of type `group`:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/groups
+status_code: 201
+method: POST
+body:
+  name: PlatformEngineers
+  description: Members of the platform engineering team
+  type: group
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Then, add a principal to the group by sending a `POST` request to the `/v2/directories/{directoryId}/groups/{groupId}/membership` endpoint:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/groups/$GROUP_ID/membership
+status_code: 201
+method: POST
+body:
+  member:
+    id: $PRINCIPAL_ID
+    type: principal
+{% endkonnect_api_request %}
+<!--vale on-->
+
+The response contains a membership entry ID. 
+To remove the principal from the group, send a `DELETE` request to the `/v2/directories/{directoryId}/groups/{groupId}/membership/{groupMembershipId}` endpoint with that ID.
+To list the members of a group, send a `GET` request to the `/v2/directories/{directoryId}/groups/{groupId}/membership` endpoint.
 
 ## Configure credentials and identities
 
@@ -564,7 +664,7 @@ body:
 
 ## Principal limitations
 
-The following are default limits for principals and directories:
+The following are default limits for principals, groups, and directories:
 
 * 1 directory per region.
   Contact Kong Support if you need more than one directory.
@@ -578,3 +678,7 @@ The following are default limits for principals and directories:
 * OIDC identity issuer and claim combinations must be unique within a directory
 * Limit of 100 authentication or principal lookup requests per second per directory, not counting cached requests
 * At most, you can map one Consumer per control plane to a principal. You can map multiple Consumers if they are in different control planes.
+* 10,000 groups per directory
+* 10,000 members per group
+* 200 groups per principal
+* Group names must be unique within a directory
