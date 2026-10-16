@@ -57,8 +57,10 @@ rows:
                   * **Traffic stays on Kong**: Because each MCP server runs on a {{site.konnect_short_name}} control plane, agent calls to your APIs pass through Kong and can be governed with the plugins you already use.
                   * **Reusable instructions**: Attach [skills](/context-mesh/skills/) to an MCP server to give agents task-specific instructions alongside the tools.
 
-  - columns:
-      - blocks:
+  - column_count: 5
+    columns:
+      - col_span: 3
+        blocks:
         - type: structured_text
           config:
             header:
@@ -66,14 +68,11 @@ rows:
             blocks:
               - type: text
                 text: |
-                  {{site.context_mesh}} generates MCP servers in [Code Mode](https://blog.cloudflare.com/code-mode/), a configuration that exposes an API as a single SDK-like interface rather than one tool per operation.
+                  {{site.context_mesh}} generates MCP servers in [Code Mode](https://gofastmcp.com/servers/transforms/code-mode). Instead of loading every tool definition into the agent's context, the server gives the agent a few meta-tools to search for the operations it needs and to run code that calls them.
 
-                  A common pattern for MCP servers generated from an OpenAPI spec is to map each API operation to a separate tool. For an API with dozens or hundreds of endpoints, the agent's tool list grows past what the model can reason about, and tool selection degrades.
-
-                  A Code Mode server exposes the API as a programmatic interface that the agent calls by writing short code snippets against it. The agent works at the SDK level instead of picking between many similar tools. This scales to large API surfaces without flooding the model's context, and lets an agent use your API without prior training on it.
-
-                  Code Mode eliminates intermediate tool invocations by allowing agents to write and execute API calls as code. Instead of streaming every operation through the model, Code Mode returns only the final result to the context window. This reduces token consumption by **~99%** (from ~120,000 tokens to ~1,200 tokens) while maintaining full observability of the workflow.
-      - blocks:
+                  Only the final result returns to the model, so agents can work with large APIs without flooding the context window. For details, see [How agents use a Code Mode MCP server](/context-mesh/mcp-servers/#how-agents-use-a-code-mode-mcp-server).
+      - col_span: 2
+        blocks:
         - type: image
           config:
             url: /assets/images/context-mesh/context-mesh-terminal.svg
@@ -208,7 +207,33 @@ rows:
             blocks:
               - type: text
                 text: |
-                  {{site.context_mesh}} MCP servers can only be linked to and proxied with {{site.base_gateway}} control planes that have [{{site.operator_product_name}}](/operator/get-started/konnect-crds/install/) installed.
+                  {{site.context_mesh}} has the following limitations:
+
+                  {% table %}
+                  columns:
+                    - title: Feature
+                      key: feature
+                    - title: Limitation
+                      key: limitation
+                    - title: Details
+                      key: details
+                  rows:
+                    - feature: "**Deployment**"
+                      limitation: "Requires {{site.operator_product_name}}, and advanced mode is in Tech Preview"
+                      details: |
+                        MCP servers can only be deployed to {{site.base_gateway}} control planes that have [{{site.operator_product_name}}](/operator/get-started/konnect-crds/install/) installed, in both [deployment modes](/context-mesh/mcp-servers/#deployments).
+
+                        Advanced mode is in [Tech Preview](/stages-of-software-availability/#tech-preview) and shouldn't be used in production.
+                    - feature: "**[Sources](/context-mesh/sources/)**"
+                      limitation: "Fixed after creation"
+                      details: "You can't change a source's type, spec, or MCP server URL. To update one, create a new source and delete the old one. Sources imported from the {{site.konnect_catalog}} are a forked copy and don't stay in sync."
+                    - feature: "**[Custom headers](/context-mesh/sources/#custom-headers)**"
+                      limitation: "Not encrypted"
+                      details: "{{site.context_mesh}} stores custom headers unencrypted, so don't use them for API keys, tokens, or passwords."
+                    - feature: "**[Skills](/context-mesh/skills/)**"
+                      limitation: "Single file, one MCP server"
+                      details: "A skill is one `SKILL.md` file that belongs to a single MCP server. {{site.context_mesh}} doesn't support supporting files or skill versions."
+                  {% endtable %}
   
   - header:
       text: "Frequently asked questions"
