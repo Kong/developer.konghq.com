@@ -267,8 +267,15 @@ synchronization from a protected production environment:
 
 ```sh
 kongctl sync -f konnect/production-gateway.yaml --base-dir . \
-  --require-namespace platform
+  --auto-approve
 ```
+
+The manifest still declares the `platform` namespace. Until
+[kongctl #2503](https://github.com/Kong/kongctl/pull/2503) is available in a
+release, omit `--require-namespace` for this external-control-plane `_deck`
+operation because kongctl 1.20.2 loses the file-level namespace default during
+planning. Restore the guard after upgrading to a release that contains the
+fix.
 
 Do not edit promoted files in the platform repository. Return required changes
 to the owning service and promote a new artifact.
