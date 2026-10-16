@@ -67,7 +67,7 @@ faqs:
 Each {{site.context_mesh}} MCP server inherits the capabilities listed in each one of its sources as follows:
 
 * **API sources:** each operation in the OpenAPI spec (a path and a method, for example `/flight` and `GET`) becomes a capability. {{site.context_mesh}} generates Python code that registers each API operation as an MCP tool. For example, an API source's `GET /flights` operation becomes a `listFlights` tool.
-* **MCP server sources:** {{site.context_mesh}} inherits whatever tools the remote MCP server already exposes. {{site.context_mesh}} doesn't define the tools, it only proxies them. Agents reach the proxied tools the same way as the API tools.
+* **MCP server sources:** {{site.context_mesh}} inherits the tools the remote MCP server already exposes and proxies them. You can't define additional tools on the source from {{site.context_mesh}}.
 
 ### How agents use a Code Mode MCP server
 
