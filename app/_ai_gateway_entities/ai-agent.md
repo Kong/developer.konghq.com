@@ -342,6 +342,10 @@ For per-request authentication and identity validation, reference an [AI Auth St
 
 An AI Agent currently accepts up to one AI Auth Strategy reference. ACLs are evaluated only after the AI Consumer's identity is resolved through this authentication step.
 
+### CEL-based ACLs {% new_in 2.2 %}
+
+{% include md/ai-gateway/v2/cel-acls.md entity="AI Agent" anchor="#schema-aigateway-agent-access" %}
+
 ## Upstream authentication
 
 Access control and AI Auth Strategies govern who can reach the AI Agent. Separately, [`config.upstream.auth`](#schema-aigateway-agent-config-upstream) controls how {{site.ai_gateway}} authenticates itself to the upstream agent. By default, {{site.ai_gateway}} proxies requests without adding credentials.
