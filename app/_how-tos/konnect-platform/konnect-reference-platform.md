@@ -63,11 +63,11 @@ In the platform repository, create a direct kongctl manifest containing:
 
 The KongAirlines example is
 [`konnect/foundations.yaml`](https://github.com/KongAirlines/platform/blob/main/konnect/foundations.yaml).
-Give every managed root a `kongctl.namespace` through file defaults, then apply
+Give every managed root a `kongctl.namespace` through file defaults, then synchronize
 with the exact namespace:
 
 ```sh
-kongctl apply -f konnect/foundations.yaml \
+kongctl sync -f konnect/foundations.yaml \
   --require-namespace platform
 ```
 
@@ -76,10 +76,10 @@ kongctl apply -f konnect/foundations.yaml \
 Create a dedicated Platform automation system account manually, grant it
 Organization Admin access, and store its token as `KONNECT_TOKEN` in a
 protected production environment in the platform repository. This identity
-applies the shared foundations and production Gateway aggregate.
+synchronizes the shared foundations and production Gateway aggregate.
 
 Create one Konnect system account per service repository manually. Use a second
-platform manifest to assign each existing account to its service team. Apply
+platform manifest to assign each existing account to its service team. Synchronize
 this file after the foundations exist so the accounts inherit the role set
 owned by the Platform Team. Team membership remains platform desired state.
 
@@ -101,7 +101,7 @@ development `Deployer` role. If `Deployer` cannot apply the required Service,
 Route, and plugin entities, use the supported granular Gateway roles before
 falling back to control-plane Admin.
 
-Apply the access file after foundations exist. If role propagation causes the
+Synchronize the access file after foundations exist. If role propagation causes the
 first service run to fail, rerun it after propagation completes.
 
 ## Structure a service repository
@@ -113,8 +113,6 @@ openapi.yaml
 openapi/versions/<version>.yaml
 konnect/dev.yaml
 konnect/prod.yaml
-gateway/dev/kong.yaml
-gateway/prod/kong.yaml
 scripts/generate-gateway.sh
 scripts/prepare-release.sh
 scripts/validate-api-releases.sh
@@ -124,14 +122,15 @@ scripts/validate-api-releases.sh
 Keep `openapi.yaml` on the next beta version and keep stable contracts in
 `openapi/versions/`. Set the production API's top-level `version` in
 `konnect/prod.yaml` to the stable release that production generation and
-Catalog apply must use. Never replace an older release input.
+Catalog synchronization must use. Never replace an older release input.
 
-## Generate tagged Gateway state
+## Generate tagged Gateway state in CI
 
 Create a repository script that runs `deck file openapi2kong` with stable names
 and IDs, adds `_info.select_tags`, and adds environment, team, owner, and
-service-stage tags to every entity. If sibling APIs expose the same operational
-path, such as `/health`, make their Gateway Routes unambiguous.
+service-stage tags to every entity. Treat the OpenAPI document as the
+client-facing contract; exclude internal health, readiness, and liveness
+operations that clients can't reach through the Gateway.
 
 In the platform repository, define ACE as global control-plane state outside
 the service OpenAPI documents:
@@ -157,11 +156,11 @@ must match an operation from an API published through that control plane.
 Protected publications select an application auth strategy; public
 publications omit it and remain anonymous.
 
-Commit the generated service files. Pull-request CI must regenerate them
-without credentials and fail if `git diff` reports drift. It should also
-require a beta root version, validate every stable file against its filename
-and production manifest declaration, and reject modification or deletion of
-releases already present on the target branch.
+Do not require service developers to generate or commit decK output.
+Pull-request CI generates both stages without credentials, validates the
+results, requires a beta root version, validates every stable file against its
+filename and production manifest declaration, and rejects modification or
+deletion of releases already present on the target branch.
 
 ## Automate release preparation
 
@@ -173,11 +172,11 @@ the next development version. It should run a repository script that:
 3. creates the stable snapshot and adds it to the production manifest;
 4. updates the production API's top-level current version;
 5. advances the root contract to the next `-beta.1` version; and
-6. regenerates and validates development and production Gateway files.
+6. generates and validates development and production Gateway state in CI.
 
 Have the workflow open a service PR rather than commit to `main`. This keeps
-the release, next development contract, Catalog selector, and generated
-artifacts in one review. Use a trusted GitHub credential that can push the
+the release, next development contract, and Catalog selector in one review.
+Use a trusted GitHub credential that can push the
 release branch and open the service PR so the resulting event triggers normal
 pull-request validation; the default GitHub Actions token does not do so.
 
@@ -188,8 +187,8 @@ Create a development kongctl manifest that:
 - declares the development API, current version, and root OpenAPI spec;
 - resolves the development Portal and team control plane with `!lookup` or an
   `_external` declaration;
-- attaches `gateway/dev/kong.yaml` to the external control plane through
-  `_deck`;
+- attaches the CI-generated `gateway/dev/kong.yaml` to the external control
+  plane through `_deck`;
 - creates a control-plane API implementation; and
 - publishes privately.
 
@@ -199,66 +198,73 @@ name in `auth_strategy_ids`. Public APIs omit the field.
 Create a production manifest with a separate API that uses retained release
 specs, resolves the production Portal and control plane, publishes publicly,
 and declares a control-plane implementation. Do not attach `_deck`; production
-Gateway state belongs to the Platform Team.
+Gateway state belongs to the Platform Team. Give the production Catalog API a
+separate `<service>-prod` namespace because development and production are
+synchronized by independently approved workflows.
 
-## Apply development state
+## Synchronize development state
 
-On a merge to `main`, run `kongctl apply` with the repository's Konnect token:
+On a merge to `main`, generate Gateway state from the root OpenAPI document,
+then run `kongctl sync` with the repository's Konnect token:
 
 ```sh
-kongctl apply -f konnect/dev.yaml --base-dir . \
+./scripts/generate-gateway.sh
+kongctl sync -f konnect/dev.yaml --base-dir . \
   --require-namespace <service>
 ```
 
-This applies only that service's tagged Gateway state and service-owned Catalog
-resources. Keep credentialed deployment jobs separate from untrusted pull
-request validation.
+This reconciles creates, updates, and deletions for that service's tagged
+Gateway state and namespaced Catalog resources. Keep credentialed deployment
+jobs separate from untrusted pull-request validation.
 
 ## Govern production Gateway changes
 
-After a service release is merged, use a trusted workflow to open a PR in the
-platform repository with an exact copy of `gateway/prod/kong.yaml`. Record the
-source repository, source commit, SHA-256 checksum, decK version, and kongctl
-version.
+After a service release is merged, use a trusted workflow to generate the
+production candidate from the selected stable OpenAPI document and open a PR
+in the platform repository with an exact copy. Record the source repository,
+source commit, SHA-256 checksum, decK version, and kongctl version.
 
 The platform production manifest attaches all promoted files to the production
 control plane in one `_deck` block. Platform review and merge run one aggregate
-apply from a protected production environment:
+synchronization from a protected production environment:
 
 ```sh
-kongctl apply -f konnect/production-gateway.yaml --base-dir . \
+kongctl sync -f konnect/production-gateway.yaml --base-dir . \
   --require-namespace platform
 ```
 
 Do not edit promoted files in the platform repository. Return required changes
 to the owning service and promote a new artifact.
 
-## Apply production Catalog state
+## Synchronize production Catalog state
 
-After the production Gateway apply succeeds, manually dispatch the service's
+After the production Gateway synchronization succeeds, manually dispatch the service's
 production Catalog workflow from the exact promoted commit. Protect the job
 with a production GitHub Environment and run:
 
 ```sh
-kongctl apply -f konnect/prod.yaml --base-dir . \
-  --require-namespace <service>
+kongctl sync -f konnect/prod.yaml --base-dir . \
+  --require-namespace <service>-prod
 ```
 
 This ordering ensures the governed runtime change exists before the service
 publishes its production Catalog state.
 
-## Understand v1 removal behavior
+## Scope deletion safely
 
-The initial architecture is apply-only. Removing YAML from Git does not delete
-the remote resource. Treat removals as separately designed and reviewed
-operations until your organization has an ownership-safe pruning process.
+`kongctl sync` reconciles removals as well as creates and updates. Require the
+owning kongctl namespace on every run. For shared control planes, give every
+generated decK file a unique `_info.select_tags` value and apply matching tags
+to every owned entity. The platform production aggregate uses one shared
+`env-prod` selection because it synchronizes all reviewed service candidates
+together. Review deletion plans with the same care as additions.
 
 ## Validate the delivery boundaries
 
 After implementing the workflows, verify the ownership model with one service
 before onboarding the others:
 
-1. Apply the platform foundations and confirm that the shared control planes,
+1. Synchronize the platform foundations and confirm that the shared control planes,
    Portals, auth strategies, teams, and repository system accounts exist.
 2. Merge a service change and confirm that its development workflow updates
    only that service's Catalog and tagged Gateway state.
@@ -266,7 +272,7 @@ before onboarding the others:
    promotion PR containing the exact production Gateway artifact and its
    provenance.
 4. Approve the platform production job and confirm that the aggregate Gateway
-   configuration is applied before approving the service's production Catalog
+   configuration is synchronized before approving the service's production Catalog
    job.
 5. For a protected API, register an application in the Portal and confirm that
    its credential can access only the operations granted through ACE.

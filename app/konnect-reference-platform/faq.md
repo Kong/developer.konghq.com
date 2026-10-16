@@ -29,10 +29,10 @@ Platform CLI, operator, installer, or generated registry.
 
 ## What is the source of truth?
 
-The owning repository's OpenAPI documents, kongctl manifests, and decK files.
-The decK files are generated deterministically from OpenAPI plus explicit
-plugin inputs and committed for review. No additional declarative format sits
-above kongctl and decK.
+The owning repository's OpenAPI documents and kongctl manifests. Service decK
+state is generated deterministically in CI from OpenAPI plus explicit plugin
+inputs. The reviewed production copy is retained in the platform repository.
+No additional declarative format sits above kongctl and decK.
 
 ## Why do service repositories manage Konnect directly?
 
@@ -52,7 +52,9 @@ implementations, publications, and development Gateway state.
 
 No. A namespace records which declarative owner participates in planning and
 helps constrain reconciliation. Konnect roles determine whether an identity is
-authorized to read or mutate a resource. Use both.
+authorized to read or mutate a resource. Use both. Service repositories use a
+service namespace for development and `<service>-prod` for production because
+those Catalog stages are synchronized independently.
 
 ## How are development and production represented?
 
@@ -71,9 +73,9 @@ generally available and supported declaratively.
 The root `openapi.yaml` represents the next beta. A manually dispatched release
 workflow opens a service PR that creates an immutable stable file under
 `openapi/versions/`, selects it as the production API's current version in
-`konnect/prod.yaml`, advances the root to the next beta, and regenerates Gateway
-state. Generation reads the production selector, so releasing never requires a
-script edit.
+`konnect/prod.yaml`, and advances the root to the next beta. CI generates and
+validates Gateway state from those inputs, so releasing never requires a script
+edit or a developer-generated decK commit.
 
 ## Who owns development Gateway configuration?
 
@@ -89,7 +91,7 @@ other or with platform-owned state.
 The Platform Team. A Service Team generates the candidate, but a promotion PR
 moves an exact copy into the platform repository for governance. Only the
 platform automation identity writes production Gateway state. Catalog state
-remains service-owned and is applied after the Gateway change.
+remains service-owned and is synchronized after the Gateway change.
 
 ## Why are Bookings and Customer Information protected differently?
 
@@ -110,10 +112,11 @@ decK. This also supports API composition and packaging scenarios.
 
 ## What happens when a resource is removed from a manifest?
 
-Nothing automatically in v1. All workflows use `kongctl apply`, so omission is
-not a deletion request. Use an explicit, reviewed additive correction. Sync,
-pruning, and deletion procedures are deferred until ownership-safe behavior is
-designed and demonstrated.
+The next `kongctl sync` reconciles the removal. Konnect resources are scoped by
+the owning namespace. Gateway resources are scoped by decK select tags: each
+development service has a unique tag, while the Platform Team synchronizes the
+complete `env-prod` aggregate. Review deletions through the same pull-request
+and protected-environment controls as creates and updates.
 
 ## How are credentials bootstrapped?
 
@@ -126,10 +129,10 @@ environments are human bootstrap steps. Production promotion uses a separate
 GitHub credential that can open a PR in the platform repository and is never
 exposed to fork jobs.
 
-## What if an apply fails immediately after an RBAC change?
+## What if a synchronization fails immediately after an RBAC change?
 
 Konnect role propagation can be eventually consistent. For the initial model,
-rerun the failed apply after propagation completes. Do not compensate by adding
+rerun the failed synchronization after propagation completes. Do not compensate by adding
 a second orchestration layer.
 
 ## Is an AI assistant skill available?
