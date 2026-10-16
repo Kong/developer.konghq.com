@@ -29,10 +29,12 @@ Platform CLI, operator, installer, or generated registry.
 
 ## What is the source of truth?
 
-The owning repository's OpenAPI documents and kongctl manifests. Service decK
-state is generated deterministically in CI from OpenAPI plus explicit plugin
-inputs. The reviewed production copy is retained in the platform repository.
-No additional declarative format sits above kongctl and decK.
+The owning repository's OpenAPI documents, kongctl manifests, and committed
+CI-generated decK state. OpenAPI plus explicit transformation inputs are the
+human-authored source; the materialized decK files record the exact Gateway
+configuration reviewed and applied. The reviewed production copy is retained
+in the platform repository. No additional declarative format sits above
+kongctl and decK.
 
 ## Why do service repositories manage Konnect directly?
 
@@ -73,8 +75,8 @@ generally available and supported declaratively.
 The root `openapi.yaml` represents the next beta. A manually dispatched release
 workflow opens a service PR that creates an immutable stable file under
 `openapi/versions/`, selects it as the production API's current version in
-`konnect/prod.yaml`, and advances the root to the next beta. CI generates and
-validates Gateway state from those inputs, so releasing never requires a script
+`konnect/prod.yaml`, and advances the root to the next beta. CI materializes
+and validates Gateway state in that PR, so releasing never requires a script
 edit or a developer-generated decK commit.
 
 ## Who owns development Gateway configuration?

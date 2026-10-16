@@ -29,7 +29,8 @@ There are no environment branches and no separate service registry.
 
 - OpenAPI documents describe API contracts.
 - kongctl manifests describe Konnect Catalog and shared platform resources.
-- CI-generated decK manifests describe {{site.base_gateway}} runtime entities.
+- Committed, CI-generated decK manifests describe {{site.base_gateway}}
+  runtime entities and record the exact reviewed deployment state.
 - `main` contains separate development and production resources and files.
 
 In a service repository, the root `openapi.yaml` is always a beta development
@@ -54,7 +55,7 @@ following operations with a pinned decK version:
 2. `deck file patch` adds `_info.select_tags` for ownership-safe synchronization.
 3. `deck file add-tags` ensures Services, Routes, and service-scoped plugins
    carry environment, team, owner, and service-stage tags.
-4. `deck file validate` checks each ephemeral result before delivery.
+4. `deck file validate` checks each materialized result before delivery.
 
 Development files select a unique service-stage tag so sibling repositories can
 synchronize safely against a shared team control plane. Production files select
@@ -63,10 +64,18 @@ Public OpenAPI contracts exclude internal operational endpoints such as health,
 readiness, and liveness checks.
 
 Pull-request validation generates and validates both files without Konnect
-credentials. It also verifies the development beta, production
-selector, retained version declarations, spec filenames, and release
-immutability. Contributor code in an untrusted fork never receives a Konnect
-token or platform-promotion credential.
+credentials and uploads them as an artifact. A trusted workflow that never
+executes PR-controlled code verifies the current PR head and artifact
+boundaries, then uses the repository GitHub App to commit the files to a
+same-repository branch. The App commit triggers validation again; when the
+files match, no further commit is made. Fork code never receives a Konnect or
+repository-write credential.
+
+Generated files are automation-owned. Teams represent additional Gateway
+behavior as reviewed generator or patch inputs, allowing reviewers to inspect
+both the intent and resulting Gateway diff. Validation also verifies the
+development beta, production selector, retained version declarations, spec
+filenames, and release immutability.
 
 ## Prepare a release
 
@@ -78,7 +87,7 @@ version to release and the next version to develop. If `openapi.yaml` is
 2. retains all prior versions and sets the production API's current version to
    `0.2.0` in `konnect/prod.yaml`;
 3. advances the root document to `0.3.0-beta.1`; and
-4. lets CI generate and validate both Gateway stages from their selected inputs.
+4. materializes and validates both Gateway stages in the release PR.
 
 The workflow refuses to overwrite an existing release. Humans review and merge
 its PR; automation does not write release state directly to `main`.
@@ -89,6 +98,7 @@ After a service change reaches `main`, the repository runs:
 
 ```sh
 ./scripts/generate-gateway.sh
+git diff --exit-code -- gateway/dev/kong.yaml gateway/prod/kong.yaml
 kongctl sync -f konnect/dev.yaml --base-dir . \
   --require-namespace <service>
 ```
@@ -110,8 +120,8 @@ Production uses an explicit ownership boundary:
 
 1. The release workflow opens a service PR containing the stable contract,
    next development beta, and updated production selector.
-2. After that PR merges, a trusted workflow generates the exact candidate into
-   `KongAirlines/platform` and opens a PR.
+2. After that PR merges, a trusted workflow copies the exact reviewed candidate
+   into `KongAirlines/platform` and opens a PR.
 3. The platform PR records the source repository, commit, SHA-256 checksum,
    decK version, and kongctl version.
 4. The Platform Team reviews and merges the Gateway change.

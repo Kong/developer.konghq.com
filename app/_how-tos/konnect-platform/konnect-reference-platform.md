@@ -113,9 +113,12 @@ openapi.yaml
 openapi/versions/<version>.yaml
 konnect/dev.yaml
 konnect/prod.yaml
+gateway/dev/kong.yaml
+gateway/prod/kong.yaml
 scripts/generate-gateway.sh
 scripts/prepare-release.sh
 scripts/validate-api-releases.sh
+.github/workflows/materialize-gateway.yaml
 .github/workflows/release-api.yaml
 ```
 
@@ -156,11 +159,23 @@ must match an operation from an API published through that control plane.
 Protected publications select an application auth strategy; public
 publications omit it and remain anonymous.
 
-Do not require service developers to generate or commit decK output.
-Pull-request CI generates both stages without credentials, validates the
-results, requires a beta root version, validates every stable file against its
-filename and production manifest declaration, and rejects modification or
-deletion of releases already present on the target branch.
+Do not require service developers to generate decK output manually.
+Credential-free pull-request CI generates and validates both stages, then
+uploads only the two generated files. A separate trusted workflow verifies the
+artifact came from the current head of a same-repository PR, validates its file
+boundaries, and commits it back to that branch. The resulting PR contains the
+actual Gateway state reviewers are approving. A second validation run proves
+that committed state matches deterministic generation and prevents a commit
+loop.
+
+Keep generated files automation-owned. Express intentional differences from
+the OpenAPI conversion as reviewed generator or patch inputs rather than
+editing generated output. Validation must also require a beta root version,
+validate stable files against their filenames and production declaration, and
+reject modification or deletion of releases already present on the target
+branch. Fork PRs do not receive the write credential; contributors can commit
+generated output themselves or a maintainer can move the change to a trusted
+same-repository branch.
 
 ## Automate release preparation
 
@@ -172,7 +187,8 @@ the next development version. It should run a repository script that:
 3. creates the stable snapshot and adds it to the production manifest;
 4. updates the production API's top-level current version;
 5. advances the root contract to the next `-beta.1` version; and
-6. generates and validates development and production Gateway state in CI.
+6. materializes and validates development and production Gateway state in the
+   release PR.
 
 Have the workflow open a service PR rather than commit to `main`. This keeps
 the release, next development contract, and Catalog selector in one review.
@@ -187,7 +203,7 @@ Create a development kongctl manifest that:
 - declares the development API, current version, and root OpenAPI spec;
 - resolves the development Portal and team control plane with `!lookup` or an
   `_external` declaration;
-- attaches the CI-generated `gateway/dev/kong.yaml` to the external control
+- attaches the committed, CI-generated `gateway/dev/kong.yaml` to the external control
   plane through `_deck`;
 - creates a control-plane API implementation; and
 - publishes privately.
@@ -204,11 +220,12 @@ synchronized by independently approved workflows.
 
 ## Synchronize development state
 
-On a merge to `main`, generate Gateway state from the root OpenAPI document,
+On a merge to `main`, regenerate only to prove the reviewed files are current,
 then run `kongctl sync` with the repository's Konnect token:
 
 ```sh
 ./scripts/generate-gateway.sh
+git diff --exit-code -- gateway/dev/kong.yaml gateway/prod/kong.yaml
 kongctl sync -f konnect/dev.yaml --base-dir . \
   --require-namespace <service>
 ```
@@ -219,10 +236,10 @@ jobs separate from untrusted pull-request validation.
 
 ## Govern production Gateway changes
 
-After a service release is merged, use a trusted workflow to generate the
-production candidate from the selected stable OpenAPI document and open a PR
-in the platform repository with an exact copy. Record the source repository,
-source commit, SHA-256 checksum, decK version, and kongctl version.
+After a service release is merged, use a trusted workflow to copy the reviewed
+`gateway/prod/kong.yaml` into a PR in the platform repository. Do not
+regenerate it after service review. Record the source repository, source
+commit, SHA-256 checksum, decK version, and kongctl version.
 
 The platform production manifest attaches all promoted files to the production
 control plane in one `_deck` block. Platform review and merge run one aggregate

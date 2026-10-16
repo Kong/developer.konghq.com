@@ -118,11 +118,13 @@ rows:
                 - type: text
                   text: |
                     `deck file openapi2kong` generates Gateway Services and
-                    Routes in CI. Ephemeral development artifacts carry
-                    environment, team, owner, and service-stage tags. The root OpenAPI
-                    document is the next beta; a release workflow opens a PR
-                    that retains a stable contract, selects it for production,
-                    and advances development to the next beta.
+                    Routes in credential-free CI. A trusted follow-on workflow
+                    commits the validated development and production artifacts
+                    to the service PR, exposing the exact Gateway diff for
+                    review. The artifacts carry environment, team, owner, and
+                    service-stage tags. The root OpenAPI document is the next
+                    beta; a release workflow retains a stable contract, selects
+                    it for production, and advances development to the next beta.
 
                     A merge to a service repository synchronizes that service's
                     development Catalog and Gateway state. Production Gateway
@@ -139,7 +141,8 @@ rows:
               diagram: |
                 flowchart TD
                   PR[Service or release pull request] --> Validate[Generate and validate]
-                  Validate --> Main[Merge to main]
+                  Validate --> Materialize[Commit reviewed Gateway state]
+                  Materialize --> Main[Merge to main]
                   Main --> DevApply[Service-owned development sync]
                   Main --> Promote[Open platform promotion PR]
                   Promote --> Review[Platform review]
@@ -189,7 +192,7 @@ rows:
               - q: Is this a bootstrapping tool?
                 a: No. It is maintained architecture guidance and a public implementation to read, copy, and adapt.
               - q: What is the source of truth?
-                a: Human-authored kongctl manifests and OpenAPI documents, with decK state generated in CI and reviewed in the production platform repository. There is no registry.
+                a: Human-authored kongctl manifests and OpenAPI documents plus committed, CI-generated decK state containing the exact reviewed Gateway configuration. There is no registry.
               - q: How are development and production separated?
                 a: Both live on main as distinct Konnect resources and files. Development is service-synchronized; production Gateway state is platform-reviewed.
               - q: Is an AI assistant skill available?
