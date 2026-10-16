@@ -53,8 +53,9 @@ rows:
                 text: |
                   {{site.context_mesh}} is designed to make enterprise APIs and MCP servers usable by AI agents without adding integration complexity to your teams.
 
-                  * **One agent, many sources**: Aggregate sources (OpenAPI specs, existing MCP servers) into a single source of truth for agents.
+                  * **One agent, many sources**: Aggregate [sources](/context-mesh/sources/) (OpenAPI specs, existing MCP servers) into a single source of truth for agents.
                   * **Traffic stays on Kong**: Because each MCP server runs on a {{site.konnect_short_name}} control plane, agent calls to your APIs pass through Kong and can be governed with the plugins you already use.
+                  * **Reusable instructions**: Attach [skills](/context-mesh/skills/) to an MCP server to give agents task-specific instructions alongside the tools.
 
   - columns:
       - blocks:
@@ -96,6 +97,41 @@ rows:
               url: "/context-mesh/get-started/"
 
   - header:
+      text: "Explore {{site.context_mesh}}"
+      type: h2
+      description: |
+        Learn how sources, MCP servers, and skills work together.
+    column_count: 3
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Sources
+            description: |
+              Add the APIs and remote MCP servers that agents call, and configure base URLs and custom headers.
+            cta:
+              text: "Learn about sources"
+              url: "/context-mesh/sources/"
+      - blocks:
+        - type: card
+          config:
+            title: MCP servers
+            description: |
+              Combine sources into a Code Mode MCP server, block capabilities, and deploy it to a control plane.
+            cta:
+              text: "Learn about MCP servers"
+              url: "/context-mesh/mcp-servers/"
+      - blocks:
+        - type: card
+          config:
+            title: Skills
+            description: |
+              Attach a `SKILL.md` file to an MCP server to give agents reusable instructions.
+            cta:
+              text: "Learn about skills"
+              url: "/context-mesh/skills/"
+
+  - header:
       text: "Common usage patterns"
       type: h2
       description: |
@@ -112,9 +148,9 @@ rows:
                     * Compose multiple APIs
                     * Combine APIs with existing MCP servers
                     
-                    You must manually add MCP servers using their upstream URL. You cannot use {{site.ai_gateway}} MCP servers.
+                    You manually [add MCP servers as sources](/context-mesh/sources/#add-a-remote-mcp-server) using their upstream URL.
                     
-                    If you're adding one or many APIs to your Code Mode MCP server, you can either upload a OpenAPI Specification (OAS) v3.0 file for each API or add them directly from APIs that you already have in [Catalog](/catalog).                     
+                    If you're adding one or many APIs to your Code Mode MCP server, you can either [upload an OpenAPI Specification (OAS) v3.0 file](/context-mesh/sources/#upload-an-api-spec) for each API or [add them directly from APIs](/context-mesh/sources/#import-an-api-from-the-catalog) that you already have in [Catalog](/catalog).                     
 
   - columns:
       - blocks:
@@ -125,8 +161,9 @@ rows:
             blocks:
               - type: text
                 text: |
-                  To deploy a {{site.context_mesh}} MCP server, configure its source APIs and MCP servers, then create the MCP server and map it to a {{site.base_gateway}} control plane.
-                  When you create it, you choose how [{{site.operator_product_name}}](/operator/) manages the underlying Kubernetes workload. Basic mode uses its preconfigured defaults, and advanced mode hands the deployment over to you:
+                  To deploy a {{site.context_mesh}} MCP server, add its [source APIs and MCP servers](/context-mesh/sources/), then [create the MCP server and map it](/context-mesh/mcp-servers/#set-up-a-context-mesh-mcp-server) to a {{site.base_gateway}} control plane.
+
+                  Both deployment modes require [{{site.operator_product_name}}](/operator/get-started/konnect-crds/install/) on the control plane. When you create the MCP server, you choose how {{site.operator_product_name}} manages the underlying Kubernetes workload. Basic mode uses its preconfigured defaults, and advanced mode hands the deployment over to you:
 
                   {% feature_table %}
                   item_title: Capability
@@ -157,10 +194,10 @@ rows:
 
                   You can switch an existing MCP server between basic and advanced mode.
 
-                  Either way, {{site.base_gateway}} creates a [Gateway Service](/gateway/entities/service/) entity for your MCP server, named something like `mcpserver-98dd0356`.
+                  Either way, {{site.base_gateway}} creates a [Gateway Service](/gateway/entities/service/) entity for your MCP server, for example `mcpserver-98dd0356`.
                   This lets you apply [plugins](/plugins/) and other governing strategies to your {{site.context_mesh}} MCP server.
 
-                  For an end-to-end walkthrough, see [Deploy an MCP server with {{site.context_mesh}} and {{site.operator_product_name}}](/context-mesh/get-started/).
+                  For the deployment modes and statuses, see [{{site.context_mesh}} MCP servers](/context-mesh/mcp-servers/#deployments). For an end-to-end walkthrough, see [Deploy an MCP server with {{site.context_mesh}} and {{site.operator_product_name}}](/context-mesh/get-started/).
                                   
   - columns:
       - blocks:
@@ -171,7 +208,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  {{site.context_mesh}} MCP servers can only be linked to and proxied with {{site.base_gateway}} control planes that were provisioned with [{{site.operator_product_name}}](/operator/).
+                  {{site.context_mesh}} MCP servers can only be linked to and proxied with {{site.base_gateway}} control planes that have [{{site.operator_product_name}}](/operator/get-started/konnect-crds/install/) installed.
   
   - header:
       text: "Frequently asked questions"
@@ -189,4 +226,4 @@ rows:
                 In short: {{site.ai_gateway}} MCP Servers are built for fine-grained control over one endpoint. {{site.context_mesh}} is built for assembling different sources quickly, as a Code Mode MCP server.
             - q: What type of source can I use with {{site.context_mesh}}?
               a: |
-                {{site.context_mesh}} supports two source types: REST APIs, added as OpenAPI specifications, and existing MCP servers. You can mix both in the same {{site.context_mesh}} MCP server.
+                {{site.context_mesh}} supports two [source types](/context-mesh/sources/#source-types): REST APIs, added as OpenAPI specifications, and existing MCP servers. You can mix both in the same {{site.context_mesh}} MCP server.
