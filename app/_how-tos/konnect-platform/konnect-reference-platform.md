@@ -224,18 +224,28 @@ synchronized by independently approved workflows.
 ## Synchronize development state
 
 On a merge to `main`, regenerate only to prove the reviewed files are current,
-then run `kongctl sync` with the repository's Konnect token:
+add the new API version, select it, and then synchronize the remaining state
+with the repository's Konnect token:
 
 ```sh
 ./scripts/generate-gateway.sh
 git diff --exit-code -- gateway/dev/kong.yaml gateway/prod/kong.yaml
+kongctl apply -f konnect/dev-versions.yaml --base-dir . \
+  --require-namespace <service>
+# ACE-protected APIs only, until kongctl #2510 is resolved:
+./scripts/transition-ace-api-version.sh "<development-api-name>"
 kongctl sync -f konnect/dev.yaml --base-dir . \
   --require-namespace <service>
 ```
 
-This reconciles creates, updates, and deletions for that service's tagged
-Gateway state and namespaced Catalog resources. Keep credentialed deployment
-jobs separate from untrusted pull-request validation.
+Treat Catalog API versions as append-only. The apply manifest contains only
+the version being added, while the sync manifest omits `versions` so it cannot
+delete prior versions. For protected APIs, the transition helper is a temporary workaround for
+[kongctl #2510](https://github.com/Kong/kongctl/issues/2510): it selects the
+already-created version with the Konnect API's explicit `force=true` behavior.
+The final sync reconciles creates, updates, and deletions for the service's
+other namespaced Catalog resources and tagged Gateway state. Keep credentialed
+deployment jobs separate from untrusted pull-request validation.
 
 ## Govern production Gateway changes
 
