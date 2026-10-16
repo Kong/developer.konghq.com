@@ -74,6 +74,8 @@ openapi.yaml
 openapi/versions/0.1.0.yaml
 konnect/dev.yaml
 konnect/prod.yaml
+gateway/dev/kong.yaml
+gateway/prod/kong.yaml
 scripts/generate-gateway.sh
 scripts/prepare-release.sh
 scripts/validate-api-releases.sh
@@ -92,8 +94,9 @@ cannot synchronize production Gateway state.
 The manually dispatched release workflow takes a stable release version and
 the next development version. It opens a service PR that snapshots the current
 beta, advances the root contract to the next `-beta.1`, updates the production
-selector. CI generates and validates both Gateway stages, while also preventing released
-specifications from being changed or removed.
+selector, and materializes both Gateway stages in the PR. CI prevents released
+specifications from being changed or removed and verifies that committed
+Gateway state matches deterministic generation.
 
 The platform repository installs ACE globally on each control plane with
 `match_policy: required`. Bookings and Customer Information publications select
@@ -115,7 +118,7 @@ format that generates another desired-state format:
 - `konnect/production-gateway.yaml` resolves one production control plane and
   synchronizes platform policy and four promoted decK files in one `_deck`
   operation.
-- `gateway/prod/` contains exact CI-generated service artifacts. Platform changes
+- `gateway/prod/` contains exact reviewed service artifacts. Platform changes
   go back to the service repository and are promoted again.
 
 ## Tooling dependencies
