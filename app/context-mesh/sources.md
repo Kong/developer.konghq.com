@@ -2,7 +2,6 @@
 title: "{{site.context_mesh}} sources"
 content_type: reference
 layout: reference
-beta: true
 
 permalink: /context-mesh/sources/
 description: "Reference for {{site.context_mesh}} sources, the APIs and remote MCP servers you add to compose Code Mode MCP servers, including their configuration fields, custom headers, and how to add them."
