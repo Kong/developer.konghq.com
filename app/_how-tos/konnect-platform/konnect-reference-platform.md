@@ -101,8 +101,8 @@ development `Deployer` role. If `Deployer` cannot apply the required Service,
 Route, and plugin entities, use the supported granular Gateway roles before
 falling back to control-plane Admin.
 
-Synchronize the access file after foundations exist. If role propagation causes the
-first service run to fail, rerun it after propagation completes.
+If role propagation causes the first service run to fail, rerun it after
+propagation completes.
 
 ## Structure a service repository
 
@@ -135,8 +135,8 @@ service-stage tags to every entity. Treat the OpenAPI document as the
 client-facing contract; exclude internal health, readiness, and liveness
 operations that clients can't reach through the Gateway.
 
-In the platform repository, define ACE as global control-plane state outside
-the service OpenAPI documents:
+In the platform repository, define [ACE](/plugins/ace/) as global control-plane
+state outside the service OpenAPI documents:
 
 ```yaml
 _format_version: "3.0"
