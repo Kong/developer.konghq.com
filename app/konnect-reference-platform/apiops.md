@@ -65,7 +65,8 @@ readiness, and liveness checks.
 
 Advance the development contract's `info.version` whenever its contents
 change. Konnect treats the version as the Catalog API version identity, and
-ACE prevents removing operations by modifying the current version in place.
+[ACE](/plugins/ace/) prevents removing operations by modifying the current
+version in place.
 Treat development API versions as append-only: put the current version in a
 separate `konnect/dev-versions.yaml` manifest and deliver it with `kongctl
 apply`. Omit the `versions` collection from the synchronized `dev.yaml` so

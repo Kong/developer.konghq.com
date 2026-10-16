@@ -84,7 +84,8 @@ edit or a developer-generated decK commit.
 The Platform Team provisions one development control plane per service team and
 grants that team's repository identities access. Each service repository owns
 its Gateway Service, Routes, and service-scoped plugins. The Platform Team owns
-shared control-plane policy such as global ACE. Unique names and tags let
+shared control-plane policy such as global [ACE](/plugins/ace/). Unique names
+and tags let
 sibling repositories share a control plane without conflicting with each
 other or with platform-owned state.
 

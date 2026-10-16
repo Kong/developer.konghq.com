@@ -49,11 +49,11 @@ columns:
 rows:
   - team: "`customer-data`"
     repository: "[bookings](https://github.com/KongAirlines/bookings)"
-    authorization: Key Auth and ACE
+    authorization: Key Auth and [ACE](/plugins/ace/)
     control_plane: "`customer-data-dev`"
   - team: "`customer-data`"
     repository: "[customer](https://github.com/KongAirlines/customer)"
-    authorization: Key Auth and ACE
+    authorization: Key Auth and [ACE](/plugins/ace/)
     control_plane: "`customer-data-dev`"
   - team: "`flight-data`"
     repository: "[destinations](https://github.com/KongAirlines/destinations)"

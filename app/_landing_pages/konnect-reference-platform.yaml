@@ -101,7 +101,7 @@ rows:
                     **Gateway and Portal authorization**
 
                     Protected APIs use a platform-owned Key Auth strategy and a
-                    global Access Control Enforcement plugin with
+                    global [Access Control Enforcement plugin](/plugins/ace/) with
                     `match_policy: required`. Public APIs remain anonymous.
                     Catalog APIs link to control planes so ACE can enforce
                     OpenAPI operation-level registrations independently from
