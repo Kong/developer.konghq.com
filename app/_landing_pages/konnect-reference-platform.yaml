@@ -73,7 +73,7 @@ rows:
                     The Platform Team declares organization teams, repository
                     identity access, Developer Portals, application auth
                     strategies, and all control planes. It reviews exact
-                    service-generated production Gateway artifacts and applies
+                    CI-generated production Gateway artifacts and synchronizes
                     them together to one production control plane.
 
                     **Service Teams**
@@ -101,7 +101,7 @@ rows:
                     **Gateway and Portal authorization**
 
                     Protected APIs use a platform-owned Key Auth strategy and a
-                    service-scoped Access Control Enforcement plugin with
+                    global Access Control Enforcement plugin with
                     `match_policy: required`. Public APIs remain anonymous.
                     Catalog APIs link to control planes so ACE can enforce
                     OpenAPI operation-level registrations independently from
@@ -118,23 +118,21 @@ rows:
                 - type: text
                   text: |
                     `deck file openapi2kong` generates Gateway Services and
-                    Routes. Protected services add ACE with
-                    `deck file add-plugins`. Committed artifacts carry
-                    environment, team, owner, and service-stage tags; CI
-                    regenerates them and rejects drift. The root OpenAPI
+                    Routes in CI. Ephemeral development artifacts carry
+                    environment, team, owner, and service-stage tags. The root OpenAPI
                     document is the next beta; a release workflow opens a PR
                     that retains a stable contract, selects it for production,
                     and advances development to the next beta.
 
-                    Merges to a service repository apply that service's
+                    A merge to a service repository synchronizes that service's
                     development Catalog and Gateway state. Production Gateway
                     candidates cross the ownership boundary through a PR to the
                     platform repository. After platform review and the aggregate
-                    Gateway apply, the service team manually applies production
+                    Gateway synchronization, the service team manually synchronizes production
                     Catalog state from the exact promoted commit.
 
-                    The initial model is apply-only. Omitted resources are not
-                    deleted; removal and pruning are intentionally deferred.
+                    Namespaces and decK select tags scope synchronization so
+                    creates, updates, and deletions remain with the owning team.
       - blocks:
           - type: mermaid
             config:
@@ -142,11 +140,11 @@ rows:
                 flowchart TD
                   PR[Service or release pull request] --> Validate[Generate and validate]
                   Validate --> Main[Merge to main]
-                  Main --> DevApply[Service-owned development apply]
+                  Main --> DevApply[Service-owned development sync]
                   Main --> Promote[Open platform promotion PR]
                   Promote --> Review[Platform review]
-                  Review --> Gateway[Aggregate production Gateway apply]
-                  Gateway --> Catalog[Approved production Catalog apply]
+                  Review --> Gateway[Aggregate production Gateway sync]
+                  Gateway --> Catalog[Approved production Catalog sync]
 
   - header:
       type: h2
@@ -191,9 +189,9 @@ rows:
               - q: Is this a bootstrapping tool?
                 a: No. It is maintained architecture guidance and a public implementation to read, copy, and adapt.
               - q: What is the source of truth?
-                a: Human-authored kongctl manifests, OpenAPI documents, and generated decK files in the owning repository. There is no registry.
+                a: Human-authored kongctl manifests and OpenAPI documents, with decK state generated in CI and reviewed in the production platform repository. There is no registry.
               - q: How are development and production separated?
-                a: Both live on main as distinct Konnect resources and files. Development is service-applied; production Gateway state is platform-reviewed.
+                a: Both live on main as distinct Konnect resources and files. Development is service-synchronized; production Gateway state is platform-reviewed.
               - q: Is an AI assistant skill available?
                 a: The optional `konnect-reference-platform` skill is published in the Kong AI Marketplace. The documentation and example remain usable without it.
           - type: structured_text
