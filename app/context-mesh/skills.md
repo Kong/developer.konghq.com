@@ -94,7 +94,7 @@ features:
     required: true
   - title: "Name"
     description: |
-      Machine name. {{site.context_mesh}} sets it from the `name` in the `SKILL.md` Frontmatter, so you don't enter it. It must be unique within the MCP server.
+      Machine name. {{site.context_mesh}} sets it from the `name` in the `SKILL.md` frontmatter, so you don't enter it. It must be unique within the MCP server.
     required: true
   - title: "Description"
     description: A description of the skill, up to 1,024 characters.
@@ -109,9 +109,9 @@ features:
 
 {% endfeature_table %}
 
-### SKILL.md Frontmatter
+### SKILL.md frontmatter
 
-The `SKILL.md` content must begin with a YAML Frontmatter block. {{site.context_mesh}} validates the Frontmatter when you create or update the skill, and rejects content that doesn't meet these rules:
+The `SKILL.md` content must begin with a YAML frontmatter block. {{site.context_mesh}} validates the frontmatter when you create or update the skill, and rejects content that doesn't meet these rules:
 
 {% table %}
 columns:
