@@ -105,6 +105,13 @@ faqs:
       clients, and from [`config.server.tools_list_auth`](#schema-aigateway-mcpserver-config-server-tools-list-auth),
       which only authenticates the one-time fetch of an `upstream-server`'s tool list. See
       [Upstream authentication](#upstream-authentication).
+
+  - q: How do I connect to an upstream that requires mTLS or serves a certificate from a private CA?
+    a: |
+      Reference an [AI Certificate](/ai-gateway/entities/ai-certificate/) by name in [`config.certificates`](#schema-aigateway-mcpserver-config-certificates) to present a client certificate during the TLS handshake with the upstream.
+      Reference one or more [AI CA Certificates](/ai-gateway/entities/ai-ca-certificate/) by name in [`config.ca_certificates`](#schema-aigateway-mcpserver-config-ca-certificates) to verify the upstream's certificate against a private or internal CA.
+      Both fields require a minimum runtime version of 2.3.
+      See [Upstream TLS](#upstream-tls).
 ---
 
 ## What is an AI MCP Server?
@@ -523,6 +530,26 @@ config:
       region: us-east-1
       assume_role_arn: arn:aws:iam::123456789012:role/mcp-tool-access
       role_session_name: kong-ai-gateway
+```
+
+## Upstream TLS {% new_in 2.3 %}
+
+{% include md/ai-gateway/v2/upstream-tls.md name='AI MCP Server' schema_prefix='schema-aigateway-mcpserver-config' %}
+
+Both fields reference entities on the same {{site.ai_gateway}} instance by their immutable `name`.
+If a referenced name doesn't exist, the API returns an `HTTP 400` error.
+Both fields apply to every mode that proxies to an upstream service: `conversion-only`, `conversion-listener`, `passthrough-listener`, and `upstream-server`.
+In `listener` mode, the AI MCP Server aggregates tools from other AI MCP Servers and doesn't proxy to an upstream, so these fields don't apply.
+
+The following example presents a client certificate and verifies the upstream against a private CA:
+
+```yaml
+config:
+  url: https://mcp.internal.kongair.com
+  certificates:
+    - mcp-client-cert
+  ca_certificates:
+    - kongair-internal-root-ca
 ```
 
 ## ACL tool control
