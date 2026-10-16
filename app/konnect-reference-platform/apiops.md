@@ -111,17 +111,19 @@ After a service change reaches `main`, the repository runs:
 git diff --exit-code -- gateway/dev/kong.yaml gateway/prod/kong.yaml
 kongctl apply -f konnect/dev-versions.yaml --base-dir . \
   --auto-approve
-# ACE-protected APIs only, until kongctl #2510 is resolved:
+# APIs linked to an ACE-enabled control plane, until kongctl #2510 is resolved:
 ./scripts/transition-ace-api-version.sh "<development-api-name>"
 kongctl sync -f konnect/dev.yaml --base-dir . \
   --require-namespace <service>
 ```
 
-For protected APIs, the transition helper verifies that the additive apply created the child
-version, then selects it using the Konnect API's explicit `force=true`
-behavior. This is a temporary sequencing workaround for
+For APIs linked to an ACE-enabled control plane, the transition helper verifies
+that the additive apply created the child version, then selects it using the
+Konnect API's explicit `force=true` behavior. This includes public APIs that do
+not select an application-auth strategy because their control-plane
+implementations remain governed by ACE. This is a temporary workaround for
 [kongctl #2510](https://github.com/Kong/kongctl/issues/2510); remove it when
-kongctl can declaratively order and authorize ACE-protected transitions.
+kongctl can declaratively order and authorize ACE-governed transitions.
 The additive apply temporarily omits `--require-namespace` because kongctl
 1.20.2 loses namespace defaults for external-only sources. Restore the guard
 after [kongctl #2503](https://github.com/Kong/kongctl/pull/2503) is released;
