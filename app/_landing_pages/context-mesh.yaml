@@ -194,7 +194,7 @@ rows:
 
                   You can switch an existing MCP server between basic and advanced mode.
 
-                  Either way, {{site.base_gateway}} creates a [Gateway Service](/gateway/entities/service/) entity for your MCP server, named something like `mcpserver-98dd0356`.
+                  Either way, {{site.base_gateway}} creates a [Gateway Service](/gateway/entities/service/) entity for your MCP server, for example `mcpserver-98dd0356`.
                   This lets you apply [plugins](/plugins/) and other governing strategies to your {{site.context_mesh}} MCP server.
 
                   For the deployment modes and statuses, see [{{site.context_mesh}} MCP servers](/context-mesh/mcp-servers/#deployments). For an end-to-end walkthrough, see [Deploy an MCP server with {{site.context_mesh}} and {{site.operator_product_name}}](/context-mesh/get-started/).

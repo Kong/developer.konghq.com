@@ -65,6 +65,11 @@ A skill is a single `SKILL.md` file, written in the [Agent Skills format](https:
 
 For example, a Travel Assistant MCP server exposes tools like `listFlights`. A skill on that server can describe the steps an agent should follow to search, compare, and book a flight using those tools.
 
+{:.success}
+> Use a skill when an agent needs a multi-step procedure for combining the server's tools, such as the order in which to call them or what to confirm with the user.
+>
+> If an agent only needs to call an operation, the source's tools already cover it, and you don't need a skill.
+
 Skills have the following properties:
 
 * A skill belongs to exactly one {{site.context_mesh}} MCP server and can't be shared with other servers. The skill name must be unique within its MCP server.
@@ -166,7 +171,7 @@ If you haven't deployed the MCP server yet, no deployment happens. {{site.operat
 
 ## How agents use skills
 
-{{site.context_mesh}} makes skills available on the MCP server, but it doesn't push them into an agent's context. Skills don't appear in the server's list of tools. Instead, the MCP client discovers and reads them as MCP resources:
+{{site.context_mesh}} serves skills on the MCP server as MCP resources, and the MCP client discovers and reads them. Skills don't appear in the server's list of tools, and {{site.context_mesh}} doesn't add them to an agent's context. The client does that in the following steps:
 
 1. The client calls `resources/list` and finds each skill as `skill://SKILL_NAME/SKILL.md`.
 1. The client calls `resources/read` on a skill entry to get the raw markdown.
@@ -239,7 +244,7 @@ body_cmd: $(cat skill.json)
 1. Click your MCP server.
 1. In **Capabilities**, click the **Skills** tab.
 1. Click **Add skill**.
-1. In the **Display name** field, enter the name of your skills file.
+1. In the **Display name** field, enter a name for the skill.
 1. Upload the file from your computer.
 1. Click **Add skill**.
 

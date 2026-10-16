@@ -58,11 +58,11 @@ faqs:
       However, {{site.context_mesh}} stores custom headers unencrypted, so you can't use them for credentials such as API keys, bearer tokens, or passwords.
 ---
 
-{{site.context_mesh}} lets you turn enterprise assets (like MCP servers and APIs) into context that AI agents can call. It works by composing those assets, also called [sources](/context-mesh/sources/), into a single deployable Code Mode MCP server. You can attach [skills](/context-mesh/skills/) to the server to give agents reusable instructions alongside the tools.
+{{site.context_mesh}} lets you turn enterprise assets (like MCP servers and APIs) into context that AI agents can call. It works by composing those assets, also called [sources](/context-mesh/sources/), into a single deployable [Code Mode](https://blog.cloudflare.com/code-mode/) MCP server.r. You can attach [skills](/context-mesh/skills/) to the server to give agents reusable instructions alongside the tools.
 
 ## What are {{site.context_mesh}} MCP servers
 
-{{site.context_mesh}} MCP servers are the result of bundling different sources together and deploying them as a single Code Mode MCP server. This becomes the source of truth for your agents after you deploy them on a {{site.konnect}} Control Plane.
+{{site.context_mesh}} MCP servers are the result of bundling different sources together and deploying them as a single Code Mode MCP server. This becomes the source of truth for your agents after you deploy them on a {{site.konnect}} [control plane](/gateway/control-plane-groups/).
 
 Each {{site.context_mesh}} MCP server inherits the capabilities listed in each one of its sources as follows:
 
@@ -160,7 +160,6 @@ rows:
 
 {% endtable %}
 
-You block capabilities on the MCP server, not on the source itself.
 
 ## Deployments
 
@@ -186,7 +185,10 @@ rows:
       You control the deployment directly with [{{site.operator_product_name}}](/operator/) custom resources instead of using the {{site.konnect_short_name}} defaults.
 
 {% endtable %}
-
+{:.success}
+> Use Basic mode unless you need to control the Kubernetes workload.
+>
+> Use Advanced mode when you need to set the replica count, CPU and memory resources, or custom labels and annotations on the deployment.
 You can deploy the same {{site.context_mesh}} MCP server to more than one control plane at once.
 
 The MCP server reports a status so you can tell whether it's up and working:
@@ -239,7 +241,6 @@ Setting up a {{site.context_mesh}} MCP server is a multi-step process. [Add your
 
 ### Create the MCP server
 
-To create a {{site.context_mesh}} MCP server, you need to [add sources](/context-mesh/sources/#add-a-source) to {{site.context_mesh}} first.
 
 {% navtabs "create-mcp-server" %}
 {% navtab "API" %}
@@ -324,7 +325,6 @@ body:
 
 {:.info}
 > To block capabilities on a mapping, send a `POST` request to the [Create Interface-Source Capability Controls](/api/konnect/context-interfaces/v1/#/operations/create-context-interfaces-source-mapping-capability-controls) endpoint.
-> Use `PATCH` on the same endpoint to change them later. Omitted deny keys keep their existing value, an empty array clears a capability, and a non-empty array replaces it.
 
 {% endnavtab %}
 {% navtab "UI" %}
@@ -428,7 +428,7 @@ To set up blocked capabilities from the UI:
 1. In the {{site.context_mesh}} sidebar, click **MCP Servers**.
 1. Click your MCP server.
 1. Click the **Sources** tab.
-1. In the source list, click a source: a sidebar dialog opens.
+1. In the source list, click a source. A sidebar dialog opens.
 1. In **Blocked capabilities**, click **Edit**.
 1. In the **Add to blocklist** field, add the API path, or the MCP tools, resources, or prompts you want to block.
 1. Select the call method or the tool type.

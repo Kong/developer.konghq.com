@@ -64,7 +64,7 @@ There are two types of sources you can add to {{site.context_mesh}}:
 - **API sources:** Import an API from the {{site.konnect}} [**Catalog**](/catalog/), or upload an OpenAPI spec file.
 - **MCP server sources:** Add the URL of an existing remote MCP server.
 
-Add sources to {{site.context_mesh}} before creating an MCP server. After adding sources, you can combine and reuse them to create different contexts. You can configure each source with the following fields:
+You can configure each source with the following fields:
 
 {% feature_table %}
 item_title: Field
@@ -89,7 +89,7 @@ features:
     required: Only with the API
   - title: "Base URL"
     description: |
-      Overrides whatever base URL is (or isn't) defined in the OpenAPI spec.
+      Overrides the base URL defined in the OpenAPI spec.
     required: false
   - title: "Custom headers"
     description: |
@@ -117,7 +117,7 @@ Custom headers on {{site.context_mesh}} sources have these properties:
 * You set them per source, not per {{site.context_mesh}} MCP server. If three {{site.context_mesh}} MCP servers use the same source, all three send the same headers. There's no {{site.context_mesh}} MCP server override for this.
 * They're plain-text key-value pairs. The schema is: `headers: { additionalProperties: string }`.
 * They work the same way for both source types. API sources and MCP server sources both support them, with the same shape.
-* They're optional.
+* They're optional: The MCP server sources require the `headers` field in API calls, but accept an empty string. 
 
 ## Add a source
 
