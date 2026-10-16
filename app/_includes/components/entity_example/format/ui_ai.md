@@ -19,8 +19,11 @@ The following creates a new AI Auth Strategy. Suggested values are shown in back
 1. Click **New auth strategy**.
 1. In **General information**, enter a **Display name** (for example: `{{ include.presenter.data['display_name'] }}`).
 1. In **Type**, select either **Key authentication** or **OpenID Connect**.
-1. If you selected **Key authentication**, enter the **Key names** and select where the key is checked: **Key in header**, **Key in query**, or **Key in body**. Optionally, select a **Credential owner**.
-1. If you selected **OpenID Connect**, select a **Credential owner**. For an external auth server, enter an **Issuer**, **Client ID**, and **Client secret**. To change the claim used to match requests to a consumer, select **Show additional settings** and set the **Token claim**.
+1. If you selected **Key authentication**, enter the **Key name** and select where the key is checked: **Key in header**, **Key in query**, or **Key in body**. Select whether consumers or Kong Identity own the credentials.
+1. If you selected **OpenID Connect**, in the **Common** tab, select **Kong Identity** or **External auth server** as the credential owner.
+   - For **Kong Identity**, select an **Authorization server** and a **Client**, and enter the **Client secret**.
+   - For **External auth server**, enter a **Client ID**, **Client secret**, and **Issuer**.
+   - To change the claim used to match requests to a consumer, turn on **Use identity lookup** and set the **Token claim**.
 1. Click **Create**.
 {% when 'policy' %}
 The following creates a new AI Policy. Suggested values are shown in backticks:
@@ -29,7 +32,7 @@ The following creates a new AI Policy. Suggested values are shown in backticks:
 1. Select a gateway.
 1. In the **Configuration** tab, select **Policies**.
 1. Click **New policy**.
-1. In the policy catalog, find the policy you want (for example: `{{ include.presenter.data['type'] }}`) and click **Configure**.
+1. In the policy catalog, use **Search policies** or the category list to find the policy you want (for example: `{{ include.presenter.data['type'] }}`), then select it.
 1. In **General information**, toggle **Enabled** and enter a **Display name** (for example: `{{ include.presenter.data['display_name'] }}`).
 1. In **Scope**, set **Applies to** to **Scoped** and click **Add entities**, or to **Global**.
 1. Configure the policy fields.
@@ -44,7 +47,7 @@ The following creates a new AI Consumer. Suggested values are shown in backticks
 1. In **Consumer type**, select **Key** or **OAuth** (for example: `{{ include.presenter.data['type'] }}`).
 1. In **General information**, enter a **Display name** (for example: `{{ include.presenter.data['display_name'] }}`) and **Custom ID** (for example: `{{ include.presenter.data['custom_id'] }}`). The **Custom ID** is required for **OAuth** consumers.
 1. Optional. Select one or more **Consumer groups**.
-1. If you selected **Key**, optionally configure the **First key** section: enter a **Display name** for the key, enter a **Key** or click **Generate**, and set a **TTL**.
+1. If you selected **Key**, optionally configure the **First key** section: enter a **Display name** for the key, then enter a **Key** or click **Generate**.
 1. If you selected **OAuth**, authentication for this consumer type is handled by an OpenID Connect policy matched to the consumer's **Custom ID**, not by a key.
 1. Click **Create**.
 {% when 'consumer_group' %}
@@ -70,8 +73,10 @@ The following creates a new model. Suggested values are shown in backticks.
 1. In **Routing**, under **Route matching**, select **Base path** and enter a path to determine how the {{site.ai_gateway}} is accessed. Don't include capability-specific paths such as `/chat/completions`. Click **Add route rule** to add more rules.
 1. Optional. Under **Model matching**, enter a **Model alias** if you plan to route by request body instead of base path or hostname.
 1. Optional. In **Authentication and access**, configure **Auth strategies** and **Access control**.
-1. Optional. In **Advanced configuration**, adjust settings such as **Max request body size**, **Response streaming**, and **Log payloads**.
+1. Optional. In **Advanced configuration**, adjust additional settings.
 1. Click **Add model**.
+
+If you selected **Provider API**, the form has **General information**, **Provider**, **Capabilities** (**Batch** and **Files**), **Routing**, **Authentication and access**, and **Advanced configuration** sections, and the final button is **Add provider API**.
 {% when 'agent' %}
 The following creates a new agent. Suggested values are shown in backticks.
 
@@ -81,9 +86,10 @@ The following creates a new agent. Suggested values are shown in backticks.
 1. In **General information**, enter a **Display name** (for example: `{{ include.presenter.data['display_name'] }}`) and select a **Type** (for example: `A2A (agent-to-agent)`).
 1. Optional. Toggle **Log payloads** if you want request and response bodies logged.
 1. In **Configuration**, enter a **URL** for the upstream connection (for example: `https://booking-agent.internal.example.com`).
-1. Optional. Adjust **Max request body size**. The default is `8388608`.
+1. Optional. In **Configuration**, expand **Proxy settings** to set proxy hosts and credentials, or turn on **Authenticate to the upstream service with AWS IAM (SigV4)** under **Upstream authentication**.
 1. In **Route**, select **Base path** and enter a path (for example: `/`). Click **Add route rule** to add additional routing rules.
 1. Optional. Expand **Advanced fields** for further route configuration.
+1. Optional. In **Authentication and access**, select an **Auth strategy** and configure **Access control**.
 1. Click **Create**.
 {% when 'mcp_server' %}
 The following creates a new AI MCP Server. Suggested values are shown in backticks:
@@ -95,10 +101,10 @@ The following creates a new AI MCP Server. Suggested values are shown in backtic
 1. In **Configuration**, select a **Type** (for example: `Passthrough listener`) and enter an **Upstream URL** (for example: `https://mcp.internal.example.com`).
 1. Optional. In **Logging**, toggle **Log payloads** or **Log audits**.
 1. **Forward client headers** is enabled by default. Disable it if you don't want client headers passed upstream.
-1. Optional. Expand **Advanced fields** to adjust **Max request body size** (default `8388608`) or **Timeout** (default `10000`). For the **Passthrough listener** type, this section also includes **Proxy** settings.
+1. Optional. In **Configuration**, expand **Advanced fields** for additional settings.
 1. In **Route**, select **Base path** and enter a path (for example: `/`). Click **Add route rule** to add additional routing rules, or expand **Advanced fields** for further route configuration.
 1. In **Tools**, click **Add tool** to allow or deny access to specific upstream tools. If no tools are added, requests are proxied to the upstream MCP server without restriction.
-1. In **Authentication and access**, select an **Auth strategy** under **Inbound authentication**. Under **Access control**, select what to evaluate tool ACLs against in **Evaluate tool ACLs against** (for example: `Consumer group`), then add **Server ACLs** or **Tool ACLs** rules.
+1. In **Authentication and access**, select an **Auth strategy** under **Inbound authentication**. Under **Access control**, turn on **Restrict access with an ACL** to set **Server ACLs**. For **Tool ACLs**, choose what to evaluate in **Evaluate tool ACLs against** (for example: `Consumer group`) and click **Add rule**.
 1. Click **Create MCP server**.
 {% when 'vault' %}
 The following creates a new AI Vault. Suggested values are shown in backticks:
