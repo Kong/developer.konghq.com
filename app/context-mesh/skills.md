@@ -272,7 +272,7 @@ rows:
     notes: "The response includes the parsed `frontmatter`, the `status`, and the `validation_message` if the skill is invalid. It never includes the skill content."
   - action: "View skill content"
     endpoint: "`GET` [Get Skill Contents](/api/konnect/context-interfaces/v1/#/operations/get-context-interface-skill-contents)"
-    notes: "Returns a short-lived presigned URL for the `SKILL.md` file."
+    notes: "Returns a short-lived short-lived URL for the `SKILL.md` file."
   - action: "Update a skill"
     endpoint: "`PATCH` [Update a Skill](/api/konnect/context-interfaces/v1/#/operations/patch-context-interface-skill)"
     notes: "If you send `source`, it replaces the existing source and the content is validated again. The skill name changes to the `name` in the new frontmatter, and the update fails with a `409` error if another skill on the MCP server already uses that name. You can't change the source `type`."
