@@ -341,7 +341,7 @@ providers:
         model_example: 'deepseek-ai/DeepSeek-V4-Pro-0813'
         min_version: '2.3'
         note:
-          content: 'Model APIs use the org-qualified model slug as the target `name`. For a dedicated deployment, set the target `upstream_url` to the deployment endpoint. See the [Baseten provider page](/ai-gateway/ai-providers/baseten/).'
+          content: 'Model APIs use the org-qualified model slug as the target `name`. For a dedicated deployment, set the target `upstream_url` to the deployment endpoint.'
       completions:
         supported: false
         streaming: false
