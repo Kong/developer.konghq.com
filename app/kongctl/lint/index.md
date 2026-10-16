@@ -19,9 +19,89 @@ related_resources:
     url: /kongctl/declarative/
   - text: Get started with kongctl
     url: /kongctl/get-started/
+  - text: deck file lint
+    url: /deck/file/lint/
+  - text: vacuum linting rules
+    url: https://quobix.com/vacuum/rules/
+
+tags:
+  - declarative-config
+  - linting
 ---
 
-Lint configuration.
+`kongctl lint` validates one or more configuration files against a ruleset. Linting is powered by [vacuum](https://quobix.com/vacuum/), so rulesets use the same Spectral-compatible format as [`deck file lint`](/deck/file/lint/).
+
+There are a few key concepts to understand for linting with kongctl:
+
+- **Rules** define selectors, functions and the failure severity to apply to the provided file.
+- **Selectors** define a filter to apply to the input file which selects the objects to validate. Selectors are specified in the `given` keyword on a Rule. Selectors are expressed using JSONPath syntax.
+- **Functions** accept the filtered values and perform a validation returning information when there are violations.
+- **Rulesets** are collections of Rules.
+
+For a complete list of available rules, see the [vacuum](https://quobix.com/vacuum/rules/) documentation.
+
+## kongctl lint example
+
+APIs in a kongctl declarative configuration file are defined in the `apis` block. To make sure every API is documented, you may want to validate that each one has a `description`.
+
+Here is a sample ruleset file containing a single Rule that accomplishes this:
+
+```yaml
+rules:
+  api-description-defined:
+    description: "APIs must have a description"
+    given: $.apis[*]
+    severity: error
+    then:
+      field: description
+      function: truthy
+```
+
+The [JSONPath](http://jsonpath.com/) selector specified in `given` selects every API under the `apis` key from the incoming file. For each of those objects, the `truthy` function checks that the `description` field is set.
+
+Assume you have the following declarative configuration file (`kong.yaml`):
+
+```yaml
+apis:
+  - ref: tasks-api
+    name: Task API
+```
+
+Validating this configuration against the example ruleset, stored in `ruleset.yaml`, results in the following violation:
+
+```bash
+kongctl lint -f kong.yaml -r ruleset.yaml
+```
+
+```
+Linting Violations: 1
+Failures: 1
+
+kong.yaml:1:1: [error] APIs must have a description: `description` must be set
+```
+{:.no-copy-code}
+
+Adding a `description` to the API resolves this violation:
+
+```yaml
+apis:
+  - ref: tasks-api
+    name: Task API
+    description: Create and track tasks
+```
+
+```bash
+kongctl lint -f kong.yaml -r ruleset.yaml; echo $?
+```
+
+Result:
+
+```
+0
+```
+{:.no-copy-code}
+
+When violations at or above the `--fail-severity` level are found, the command returns a non-zero exit code. You can use this to stop a CI/CD pipeline before a problematic configuration is applied. To lint multiple files, pass a directory to `-f` and use `-R` to process it recursively.
 
 ## Command usage
 
