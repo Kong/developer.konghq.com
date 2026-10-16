@@ -415,7 +415,8 @@ providers:
     limitations:
       general:
         - "The Baseten provider proxies chat completions only. It doesn't support Baseten's Anthropic-compatible `/v1/messages` endpoint, embeddings, or the `/predict` and async inference APIs."
-        - "You can't set Baseten-specific request parameters, such as `continuous_usage_stats` and `grammar`, in the [AI Model](/ai-gateway/entities/ai-model/) configuration."
+        - "Baseten rejects some OpenAI request parameters. `audio`, `modalities`, `prediction`, `web_search_options`, and `n` greater than 1 return a 400 error, `service_tier` returns a 500 error, and the deprecated `function_call` and `functions` return a 501 error."
+        - "Baseten accepts but ignores `logprobs`, `top_logprobs`, `user`, `store`, `metadata`, `verbosity`, `safety_identifier`, and the explicit prompt cache controls. Baseten caches prompts automatically."
       provider_specific: []
       statistics_logging: []
 
