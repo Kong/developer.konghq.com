@@ -295,7 +295,7 @@ rows:
                 MCP server access is enabled by default for all organizations. Organization admins can disable this from [**AI Settings**](https://cloud.konghq.com/global/organization/settings/ai-settings), after which no user will be able to access the MCP server.
             - q: Is any of my data sent to an LLM provider when using the MCP server?
               a: |
-                If you have [KAi enabled](https://cloud.konghq.com/global/organization/labs/kai), an additional `KnowledgeBase` tool will be available via the MCP server. This tool creates embeddings from your query and uses a re-ranking model to improve documentation search results. These models are both hosted on AWS Bedrock and no training is performed on your data.
+                If you have [KAi enabled](https://cloud.konghq.com/global/organization/settings/ai-settings), an additional `KnowledgeBase` tool will be available via the MCP server. This tool creates embeddings from your query and uses a re-ranking model to improve documentation search results. These models are both hosted on AWS Bedrock and no training is performed on your data.
             - q: How does user access control work for MCP tools?
               a: |
                 Access to MCP tools is based on the permission levels of the user whose PAT / SPAT is used for authentication.
