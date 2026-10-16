@@ -164,6 +164,12 @@ rows:
                     * **Main menu**: Main menus are a flat list of links that will be added to the header of every page in your {{site.dev_portal}}. These titles and links will be spaced evenly horizontally. You can also add external links to all {{site.dev_portal}} menu items either using the {{site.konnect_short_name}} UI or the [`/portals/{portalId}/customization` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-customization).
                     * **Footer menu sections**: Footer menus allow you to create a set of columns with links for global navigation. Select **Footer Sections Menu** from the dropdown list to begin creating your menus. Footer sections create vertical columns across the bottom of every page, with the logo from [Appearance](#appearance) on the left side. We recommend creating your desired footer sections before creating footer menu items. Footer menu items are links to any URL you prefer, with a title to be displayed. Items must specify a footer menu section.
                     * **Footer bottom menu**: Footer bottom menu is a flat list of links that will be added to the bottom of every page. Footer bottom menus are placed below footer menu sections.
+                    * **Sidebar navigation**: The sidebar navigation menu is a vertical list of links that displays on the left side of the page. 
+                      You can configure this in the **Sidebar Navigation** section of the Portal Editor or using the [`/portals/{portalId}/customization/navigations` endpoint](/api/konnect/portal-management/).
+                      Whether a sidebar menu is displayed depends on the [page layout](/dev-portal/pages-and-content/#page-layouts).
+                      You can choose to have one sidebar menu for all pages by only adding a single `/` navigation entry with links in the group, or split your sidebar menu into different sections (for example, `/getting-started` and `/guides`).
+                      You can also omit a sidebar menu for a section, which is useful for content like release notes. 
+                      Individual links can be restricted to signed-in developers, and you can also add external links.
       - blocks:
           - type: image
             config:
