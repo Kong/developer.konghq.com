@@ -49,8 +49,8 @@ related_resources:
 faqs:
   - q: What is a Code Mode MCP server?
     a: |
-      [Code Mode](https://blog.cloudflare.com/code-mode/) is a configuration that exposes an API as a single SDK-like interface instead of one tool per operation.
-      The agent writes short code snippets against that interface rather than choosing between many similar tools, and only the final result returns to the context window.
+      In [Code Mode](https://gofastmcp.com/servers/transforms/code-mode), the MCP server doesn't list its tools to the agent. Instead, the agent sees a few meta-tools: `search`, `get_schemas`, and `list_tools` to find the tools it needs, and `execute` to run short Python code in a sandbox that calls those tools.
+      The agent chains the calls in code, and only the final result returns to the context window.
       This lets an agent work with a large API surface without flooding the model's context. {{site.context_mesh}} generates all of its MCP servers in Code Mode.
   - q: Can I add auth to a {{site.context_mesh}} MCP server?
     a: |
@@ -66,8 +66,32 @@ faqs:
 
 Each {{site.context_mesh}} MCP server inherits the capabilities listed in each one of its sources as follows:
 
-* **API sources:** each operation in the OpenAPI spec (a path and a method, for example `/flight` and `GET`) becomes a capability. {{site.context_mesh}} automatically turns API operations into MCP tools. It does this by translating each API operation into Python code that creates an MCP tool that your agents can call. For example, an API source's `GET /flights` operation becomes a `listFlights` tool.
-* **MCP server sources:** {{site.context_mesh}} inherits whatever tools the remote MCP server already exposes. {{site.context_mesh}} doesn't define the tools, it only proxies them.
+* **API sources:** each operation in the OpenAPI spec (a path and a method, for example `/flight` and `GET`) becomes a capability. {{site.context_mesh}} generates Python code that registers each API operation as an MCP tool. For example, an API source's `GET /flights` operation becomes a `listFlights` tool.
+* **MCP server sources:** {{site.context_mesh}} inherits whatever tools the remote MCP server already exposes. {{site.context_mesh}} doesn't define the tools, it only proxies them. Agents reach the proxied tools the same way as the API tools.
+
+### How agents use a Code Mode MCP server
+
+{{site.context_mesh}} generates every MCP server in Code Mode. The tools from your sources exist on the server, but the server doesn't list them to the agent. Instead of calling these tools directly, agents find them with the Code Mode meta-tools and call them from code. The agent sees the following meta-tools:
+
+{% table %}
+columns:
+  - title: Meta-tool
+    key: tool
+  - title: What it does
+    key: description
+rows:
+  - tool: "`list_tools`"
+    description: Returns the full catalog of tools from all sources at once.
+  - tool: "`search`"
+    description: Finds tools by keyword or natural-language query.
+  - tool: "`get_schemas`"
+    description: Returns the parameters of specific tools.
+  - tool: "`execute`"
+    description: Runs Python code written by the agent in a sandbox. Inside the sandbox, the code calls the tools from your sources and chains their results.
+
+{% endtable %}
+
+To complete a task, the agent discovers the tools it needs, then writes one script that calls them with `execute`. Only the final result of the script returns to the model's context window, instead of every intermediate response. The sandbox limits how long the code can run and how much memory it can use.
 
 When you create a {{site.context_mesh}} MCP server, you configure it with the following parameters:
 
