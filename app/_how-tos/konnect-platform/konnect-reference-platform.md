@@ -232,7 +232,7 @@ with the repository's Konnect token:
 git diff --exit-code -- gateway/dev/kong.yaml gateway/prod/kong.yaml
 kongctl apply -f konnect/dev-versions.yaml --base-dir . \
   --auto-approve
-# ACE-protected APIs only, until kongctl #2510 is resolved:
+# APIs linked to an ACE-enabled control plane, until kongctl #2510 is resolved:
 ./scripts/transition-ace-api-version.sh "<development-api-name>"
 kongctl sync -f konnect/dev.yaml --base-dir . \
   --require-namespace <service>
@@ -240,9 +240,12 @@ kongctl sync -f konnect/dev.yaml --base-dir . \
 
 Treat Catalog API versions as append-only. The apply manifest contains only
 the version being added, while the sync manifest omits `versions` so it cannot
-delete prior versions. For protected APIs, the transition helper is a temporary workaround for
+delete prior versions. For APIs linked to an ACE-enabled control plane, the
+transition helper is a temporary workaround for
 [kongctl #2510](https://github.com/Kong/kongctl/issues/2510): it selects the
 already-created version with the Konnect API's explicit `force=true` behavior.
+This includes public APIs without an application-auth strategy because their
+control-plane implementations are still governed by global ACE policy.
 The additive apply temporarily omits `--require-namespace` because kongctl
 1.20.2 loses namespace defaults for external-only sources. Restore the guard
 after [kongctl #2503](https://github.com/Kong/kongctl/pull/2503) is released;
