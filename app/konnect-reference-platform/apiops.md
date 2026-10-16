@@ -110,7 +110,7 @@ After a service change reaches `main`, the repository runs:
 ./scripts/generate-gateway.sh
 git diff --exit-code -- gateway/dev/kong.yaml gateway/prod/kong.yaml
 kongctl apply -f konnect/dev-versions.yaml --base-dir . \
-  --require-namespace <service>
+  --auto-approve
 # ACE-protected APIs only, until kongctl #2510 is resolved:
 ./scripts/transition-ace-api-version.sh "<development-api-name>"
 kongctl sync -f konnect/dev.yaml --base-dir . \
@@ -122,6 +122,10 @@ version, then selects it using the Konnect API's explicit `force=true`
 behavior. This is a temporary sequencing workaround for
 [kongctl #2510](https://github.com/Kong/kongctl/issues/2510); remove it when
 kongctl can declaratively order and authorize ACE-protected transitions.
+The additive apply temporarily omits `--require-namespace` because kongctl
+1.20.2 loses namespace defaults for external-only sources. Restore the guard
+after [kongctl #2503](https://github.com/Kong/kongctl/pull/2503) is released;
+the manifest continues to declare its service namespace.
 
 The manifest uses `_external` and `!lookup` to resolve the Platform Team-owned
 development control plane and Portal. `_deck` makes kongctl run one decK synchronization
