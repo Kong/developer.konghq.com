@@ -97,9 +97,15 @@ rows:
   - validation: "`confluent_schema_registry`" 
     description: |
       Validates messages against the [Confluent schema registry](https://docs.confluent.io/platform/current/schema-registry/index.html).
+      <br><br>
+      Supported schema formats:
+      * Avro
+      * JSON Schema
+      * Protobuf {% new_in 1.3 %}
 
+      <br>
       To use a Confluent schema registry for validation, first [create a schema registry resource](/event-gateway/entities/schema-registry/), then reference it in this policy.
-
+      <br><br>
       {{site.event_gateway_short}} finds the schema using [the Confluent wire format](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/index.html#wire-format).
   - validation: "`json`"
     description: |
