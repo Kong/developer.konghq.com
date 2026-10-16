@@ -166,7 +166,9 @@ artifact came from the current head of a same-repository PR, validates its file
 boundaries, and commits it back to that branch. The resulting PR contains the
 actual Gateway state reviewers are approving. A second validation run proves
 that committed state matches deterministic generation and prevents a commit
-loop.
+loop. The trusted workflow also maintains a PR comment that summarizes the
+changed inputs and expands to show the generated development and production
+Gateway diffs.
 
 Keep generated files automation-owned. Express intentional differences from
 the OpenAPI conversion as reviewed generator or patch inputs rather than
