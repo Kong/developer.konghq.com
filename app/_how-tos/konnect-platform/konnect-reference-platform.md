@@ -173,7 +173,8 @@ Gateway diffs.
 Keep generated files automation-owned. Express intentional differences from
 the OpenAPI conversion as reviewed generator or patch inputs rather than
 editing generated output. Validation must also require a beta root version,
-validate stable files against their filenames and production declaration, and
+require `info.version` to advance whenever that contract changes, validate
+stable files against their filenames and production declaration, and
 reject modification or deletion of releases already present on the target
 branch. Pull requests from forks do not receive the write credential;
 contributors can commit generated output themselves or a maintainer can move

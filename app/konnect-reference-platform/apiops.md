@@ -63,6 +63,10 @@ the common `env-prod` tag and are synchronized together by the Platform Team.
 Public OpenAPI contracts exclude internal operational endpoints such as health,
 readiness, and liveness checks.
 
+Advance the development contract's `info.version` whenever its contents
+change. Konnect treats the version as the Catalog API version identity, and
+ACE prevents removing operations by modifying the current version in place.
+
 Pull-request validation generates and validates both files without Konnect
 credentials and uploads them as an artifact. A trusted workflow that never
 executes PR-controlled code verifies the current PR head and artifact
