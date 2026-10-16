@@ -608,6 +608,9 @@ components:
 
 This will display a sign-in panel (with client ID, scopes, and an **Authorize** button) for that scheme instead of a plain access token field. 
 Developers click **Authorize**, sign in to the identity provider (IdP) in a popup, and Try It uses the resulting access token for requests.
+Developers can get the client ID in a few different ways:
+* **APIs that use {{site.base_gateway}}:** Developers can get a client ID from app registration with [DCR](/dev-portal/dynamic-client-registration/).
+* **APIs that use an external gateway:** Since other gateways can have a different flow, you must give developers the client ID (for example, a public client ID that you can add to your API specs).
 
 This sign-in uses the [authorization code flow with PKCE](https://www.rfc-editor.org/rfc/rfc9700#section-2.1.1) (S256), so client secrets aren't involved. 
 It's independent of [developer self-service and app registration](/dev-portal/self-service/) and of [{{site.dev_portal}} SSO](/dev-portal/sso/): it authenticates a single Try It request against the IdP named in the spec's security scheme, not the developer's {{site.dev_portal}} account.
