@@ -98,13 +98,18 @@ remains service-owned and is synchronized after the Gateway change.
 
 ## Why are Bookings and Customer Information protected differently?
 
-Their publications select a Key Auth application auth strategy. The Platform
-Team installs Access Control Enforcement (ACE) globally with
-`match_policy: required`, and every Catalog API links to its control plane.
-ACE therefore recognizes operations from all four OpenAPI documents, but only
-Bookings and Customer Information require application credentials.
-Destinations and Flights remain anonymous because their publications do not
-select an auth strategy.
+Their generated Gateway Services enable the JWT plugin. The Platform Team owns
+the shared Consumers and asymmetric verification credentials, while each
+service team owns where JWT authentication applies. A valid token selects a
+Consumer through its `iss` claim, and Gateway supplies the authenticated
+Consumer username to the upstream service. Destinations and Flights don't
+enable an authentication plugin and remain credential-free.
+
+ACE is a separate layer. It is installed globally with `match_policy:
+required`, and every Catalog API links to its control plane, so requests must
+match published OpenAPI operations. None of these publications selects a Dev
+Portal application authentication strategy; callers therefore don't need an
+application registration or API key in addition to the JWT.
 
 ## Why not link protected APIs directly to a Gateway Service?
 

@@ -49,11 +49,11 @@ columns:
 rows:
   - team: "`customer-data`"
     repository: "[bookings](https://github.com/KongAirlines/bookings)"
-    authorization: Key Auth and [ACE](/plugins/ace/)
+    authorization: JWT and [ACE](/plugins/ace/)
     control_plane: "`customer-data-dev`"
   - team: "`customer-data`"
     repository: "[customer](https://github.com/KongAirlines/customer)"
-    authorization: Key Auth and [ACE](/plugins/ace/)
+    authorization: JWT and [ACE](/plugins/ace/)
     control_plane: "`customer-data-dev`"
   - team: "`flight-data`"
     repository: "[destinations](https://github.com/KongAirlines/destinations)"
@@ -98,23 +98,29 @@ selector, and materializes both Gateway stages in the PR. CI prevents released
 specifications from being changed or removed and verifies that committed
 Gateway state matches deterministic generation.
 
-The platform repository installs ACE globally on each control plane with
-`match_policy: required`. Bookings and Customer Information publications select
-the platform-owned Key Auth strategy, so their matched OpenAPI operations
-require application credentials. Destinations and Flights publish operations
-without an auth strategy and remain anonymous.
+The platform repository owns shared Consumers and RS256 verification
+credentials. Bookings and Customer Information add the JWT plugin to their
+generated Gateway Services, while Destinations and Flights remain
+credential-free. The protected upstream applications trust the
+Gateway-supplied `X-Consumer-Username`; the JWT plugin replaces a client-supplied
+value after authenticating the Consumer.
+
+ACE is installed globally on each control plane with `match_policy: required`
+to limit traffic to operations represented by published Catalog APIs. The four
+publications omit application authentication strategies, so ACE doesn't add a
+Dev Portal application registration or API key requirement.
 
 ## What the platform repository owns
 
 The platform repository contains direct kongctl manifests, not a registry or a
 format that generates another desired-state format:
 
-- `konnect/foundations.yaml` declares teams, control planes, Portals, and Key
-  Auth strategies.
+- `konnect/foundations.yaml` declares teams, control planes, and Portals.
 - `konnect/access.yaml` assigns roles to existing repository automation
   identities.
 - `konnect/development-gateway.yaml` installs shared control-plane policy,
-  including global ACE, on both development control planes.
+  including global ACE and the relevant JWT Consumers, on the development
+  control planes.
 - `konnect/production-gateway.yaml` resolves one production control plane and
   synchronizes platform policy and four promoted decK files in one `_deck`
   operation.
