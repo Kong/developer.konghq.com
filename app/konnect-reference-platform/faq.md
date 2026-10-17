@@ -132,8 +132,10 @@ assigns each existing account to its service team. The Platform Team owns the
 shared roles that repository accounts inherit. Issuing each service account
 token and storing it in the repository's development and protected production
 environments are human bootstrap steps. Production promotion uses a separate
-GitHub credential that can open a PR in the platform repository and is never
-exposed to fork jobs.
+GitHub App credential that can open a PR in the platform repository and
+dispatch the owning service's protected production Catalog workflow after the
+Gateway synchronization succeeds. It is never exposed to fork jobs and does
+not receive a service's Konnect token.
 
 ## What if a synchronization fails immediately after an RBAC change?
 
