@@ -282,17 +282,23 @@ to the owning service and promote a new artifact.
 
 ## Synchronize production Catalog state
 
-After the production Gateway synchronization succeeds, manually dispatch the service's
-production Catalog workflow from the exact promoted commit. Protect the job
-with a production GitHub Environment and run:
+After the production Gateway synchronization succeeds, have the platform
+workflow read each changed provenance file and dispatch the owning service's
+production Catalog workflow with the exact promoted commit. Use a narrowly
+scoped GitHub App token for the cross-repository dispatch. Keep the service job
+behind its own production GitHub Environment so the Service Team approves the
+Catalog publication using its repository's Konnect identity:
 
 ```sh
 kongctl sync -f konnect/prod.yaml --base-dir . \
   --require-namespace <service>-prod
 ```
 
-This ordering ensures the governed runtime change exists before the service
-publishes its production Catalog state.
+The service workflow verifies that it checked out the requested commit before
+running kongctl. This ordering ensures the governed runtime change exists
+before the service publishes its production Catalog state. Keep manual
+workflow dispatch available as an explicit recovery path, not the normal
+release process.
 
 ## Scope deletion safely
 

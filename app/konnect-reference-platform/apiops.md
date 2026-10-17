@@ -155,9 +155,11 @@ Production uses an explicit ownership boundary:
 4. The Platform Team reviews and merges the Gateway change.
 5. The platform workflow synchronizes all four production files in one kongctl
    `_deck` operation against `kongairlines-prod`.
-6. The Service Team manually dispatches its production Catalog synchronization from the
-   exact promoted service commit.
-7. A protected GitHub Environment supplies production approval.
+6. After the Gateway synchronization succeeds, the platform workflow reads
+   the changed provenance and dispatches the owning service's production
+   Catalog workflow with the exact promoted commit.
+7. The Service Team approves its protected GitHub Environment, and the
+   service-owned identity synchronizes the Catalog state.
 
 <!--vale off -->
 {% mermaid %}
@@ -170,6 +172,7 @@ sequenceDiagram
   S->>P: Open promotion PR with provenance
   P->>P: Platform review
   P->>G: Aggregate kongctl sync with _deck
+  P->>S: Dispatch Catalog sync from provenance
   S->>C: Approved kongctl sync from promoted commit
 {% endmermaid %}
 <!--vale on -->
