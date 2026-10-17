@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.13.1
+  version: 3.13.2
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@91ba31c86ac34b36853b6b8dd5dfc1e078bf0275
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/91ba31c86ac34b36853b6b8dd5dfc1e078bf0275'
+  x-oas-source: kong/platform-api@0851fba0315bab03a4877ade8b37175dbfc7b4f6
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/0851fba0315bab03a4877ade8b37175dbfc7b4f6'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -7664,17 +7664,115 @@ components:
             - $ref: '#/components/schemas/OIDCIdentityProviderConfig'
             - $ref: '#/components/schemas/PortalSAMLIdentityProviderConfig'
       title: Portal Identity Provider
+    UpdateIdentityProviderEnabled:
+      description: |
+        Indicates whether the identity provider is enabled.
+        Only one identity provider can be active at a time, such as SAML or OIDC.
+        When omitted, the current value is left unchanged.
+      type: boolean
+      example: true
+      title: Identity Provider Enabled Property
+    UpdateOIDCIdentityProviderClaimMappings:
+      description: |
+        Defines the mappings between OpenID Connect (OIDC) claims and local claims used by your application for
+        authentication. Only the provided mappings are updated and provided values cannot be empty.
+      type: object
+      properties:
+        name:
+          description: The claim mapping for the user's name.
+          type: string
+          example: name
+          minLength: 1
+          pattern: \S
+        email:
+          description: The claim mapping for the user's email address.
+          type: string
+          example: email
+          minLength: 1
+          pattern: \S
+        groups:
+          description: The claim mapping for the user's group membership information.
+          type: string
+          example: groups
+          minLength: 1
+          pattern: \S
+      additionalProperties: false
+      title: Update OIDC Claim Mappings
+    UpdateOIDCIdentityProviderConfig:
+      description: |
+        The properties of an OIDC identity provider to update. Only the provided properties are updated. When
+        provided, `scopes` must include `openid`.
+      type: object
+      properties:
+        issuer_url:
+          description: The issuer URI of the identity provider. This is the URL where the provider's metadata can be obtained.
+          type: string
+          example: 'https://konghq.okta.com/oauth2/default'
+          minLength: 1
+          pattern: '^https?://\S+$'
+        client_id:
+          description: The client ID assigned to your application by the identity provider.
+          type: string
+          example: YOUR_CLIENT_ID
+          minLength: 1
+          pattern: \S
+        client_secret:
+          description: The Client Secret assigned to your application by the identity provider.
+          type: string
+          example: YOUR_CLIENT_SECRET
+          minLength: 1
+          pattern: \S
+          writeOnly: true
+        scopes:
+          description: The scopes requested by your application when authenticating with the identity provider. Must include `openid`.
+          type: array
+          items:
+            type: string
+          example:
+            - openid
+            - email
+            - profile
+          minItems: 1
+        claim_mappings:
+          $ref: '#/components/schemas/UpdateOIDCIdentityProviderClaimMappings'
+      additionalProperties: false
+      minProperties: 1
+      title: Update OIDC Identity Provider Config
+    UpdateSAMLIdentityProviderConfig:
+      description: |
+        The properties of a SAML identity provider to update. Exactly one of `idp_metadata_url` or
+        `idp_metadata_xml` must be provided.
+      type: object
+      properties:
+        idp_metadata_url:
+          description: The identity provider's metadata URL where the identity provider's metadata can be obtained.
+          type: string
+          example: 'https://mocksaml.com/api/saml/metadata'
+          minLength: 1
+          pattern: '^https?://\S+$'
+        idp_metadata_xml:
+          description: |
+            The identity provider's SAML metadata. If the identity provider supports a metadata URL, you can use the `idp_metadata_url` field instead.
+          type: string
+          minLength: 1
+      additionalProperties: false
+      maxProperties: 1
+      minProperties: 1
+      title: Update SAML Identity Provider Config
     PortalUpdateIdentityProvider:
       description: The identity provider that contains configuration data for updating an authentication integration.
       type: object
       properties:
         enabled:
-          $ref: '#/components/schemas/IdentityProviderEnabled'
+          $ref: '#/components/schemas/UpdateIdentityProviderEnabled'
         config:
           type: object
+          minProperties: 1
           oneOf:
-            - $ref: '#/components/schemas/OIDCIdentityProviderConfig'
-            - $ref: '#/components/schemas/PortalSAMLIdentityProviderConfig'
+            - $ref: '#/components/schemas/UpdateOIDCIdentityProviderConfig'
+            - $ref: '#/components/schemas/UpdateSAMLIdentityProviderConfig'
+      additionalProperties: false
+      minProperties: 1
       title: Portal Identity Provider
     CursorMetaPage:
       type: object
