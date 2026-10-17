@@ -185,10 +185,16 @@ the declarative owner.
 
 ## Authentication flow
 
-Bookings and Customer Information publish with separate platform-owned
-development and production Key Auth strategies. The Platform repository
-installs ACE globally on every control plane with `match_policy: required`.
-Because every Catalog API links to a control plane, ACE uses each OpenAPI
-document's operations for access decisions independently from the Gateway Route
-layout. Destinations and Flights publish without auth strategies, so their
-matched operations remain anonymous.
+Bookings and Customer Information declare bearer authentication in their
+OpenAPI contracts and add the JWT plugin to their generated Gateway Services.
+The Platform repository owns the Consumers and RS256 verification credentials;
+the authenticated Consumer username is forwarded to the upstream service.
+Destinations and Flights have no authentication plugin and remain
+credential-free.
+
+Separately, the Platform repository installs ACE globally on every control
+plane with `match_policy: required`. Because every Catalog API links to a
+control plane, ACE limits traffic to operations represented by published
+OpenAPI contracts independently from the Gateway Route layout. None of the four
+publications selects an application authentication strategy, so ACE doesn't
+add a Dev Portal application credential requirement.

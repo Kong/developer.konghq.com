@@ -156,8 +156,37 @@ plugins:
 Apply one global ACE instance to each control plane before creating Catalog
 control-plane implementations. With `match_policy: required`, every request
 must match an operation from an API published through that control plane.
-Protected publications select an application auth strategy; public
-publications omit it and remain anonymous.
+ACE does not replace ordinary Gateway authentication. In this example, no API
+publication selects a Dev Portal application auth strategy: Flights and
+Destinations are credential-free, while Bookings and Customer Information are
+protected by service-scoped JWT plugins.
+
+Keep the shared JWT Consumers and verification credentials in platform-owned
+decK state. Use asymmetric signing so only public keys enter Git; keep private
+keys in a secret manager. The JWT credential `key` is the value clients place
+in `iss`. Configure each protected service during generation with a JWT plugin
+that accepts bearer tokens from the `Authorization` header and verifies `exp`:
+
+```yaml
+_format_version: "1.0"
+add-plugins:
+  - selectors:
+      - $..services[*]
+    plugins:
+      - name: jwt
+        config:
+          claims_to_verify:
+            - exp
+          header_names:
+            - authorization
+          key_claim_name: iss
+          uri_param_names: []
+```
+
+After validation, {{site.base_gateway}} replaces any client-supplied
+`X-Consumer-Username` header with the authenticated Consumer username before
+proxying. Upstream services can trust that identity only when they aren't
+directly reachable by untrusted clients.
 
 Do not require service developers to generate decK output manually.
 Credential-free pull-request CI generates and validates both stages, then
@@ -211,8 +240,10 @@ Create a development kongctl manifest that:
 - creates a control-plane API implementation; and
 - publishes privately.
 
-For protected APIs, resolve the platform-owned development auth strategy by
-name in `auth_strategy_ids`. Public APIs omit the field.
+Do not set `auth_strategy_ids` merely to describe a Gateway JWT policy. That
+field enables Dev Portal application credentials and would impose a second,
+unrelated client authentication requirement. All four example publications
+omit it.
 
 Create a production manifest with a separate API that uses retained release
 specs, resolves the production Portal and control plane, publishes publicly,
@@ -315,7 +346,7 @@ After implementing the workflows, verify the ownership model with one service
 before onboarding the others:
 
 1. Synchronize the platform foundations and confirm that the shared control planes,
-   Portals, auth strategies, teams, and repository system accounts exist.
+   Portals, JWT Consumers, teams, and repository system accounts exist.
 2. Merge a service change and confirm that its development workflow updates
    only that service's Catalog and tagged Gateway state.
 3. Prepare and merge a release, then confirm that automation opens a platform
@@ -324,5 +355,7 @@ before onboarding the others:
 4. Approve the platform production job and confirm that the aggregate Gateway
    configuration is synchronized before approving the service's production Catalog
    job.
-5. For a protected API, register an application in the Portal and confirm that
-   its credential can access only the operations granted through ACE.
+5. Through a running Gateway, confirm that Flights and Destinations work
+   without credentials; Bookings and Customer Information reject missing or
+   invalid JWTs; valid JWTs select the expected Consumer identity; and a forged
+   `X-Consumer-Username` header can't replace that identity.
