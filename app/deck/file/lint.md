@@ -27,12 +27,7 @@ tags:
 
 `deck file lint` is a flexible JSON/YAML linter that allows you to build rules to validate any file in these formats.
 
-There are a few key concepts to understand for linting with decK:
-
-- **Rules** define selectors, functions and the failure severity to apply to the provided file.
-- **Selectors** define a filter to apply to the input file which selects the objects to validate. Selectors are specified in the given keyword on a Rule. Selectors are expressed using JSONPath syntax.
-- **Functions** accept the filtered values and perform a validation returning information when there are violations.
-- **Rulesets** are collections of Rules.
+{% include linting/key-concepts.md tool="decK" %}
 
 For a complete list of available rules, see the [vacuum](https://quobix.com/vacuum/rules/) documentation.
 
