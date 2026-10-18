@@ -2,6 +2,10 @@ description: |
   Enable the plugin and associate it with a Vault object.
 extended_description: |
   Enable the plugin and associate it with a Vault object.
+  
+  {:.warning}
+  > **Important:** The Vault object is not the same as a [Vault entity](/gateway/entities/vault/). The Vault object is used only by the Vault Auth plugin. The Vault entity is a standalone entity in {{site.base_gateway}} for managing secrets.
+  
   For a full how-to guide, see [Enable authentication with Vault in {{site.base_gateway}}](/how-to/enable-vault-authentication/).
 
 title: Enable Vault authentication
@@ -10,7 +14,8 @@ weight: 900
 
 requirements:
 - A [HashiCorp Vault](https://developer.hashicorp.com/vault/tutorials/get-started/install-binary#install-vault)
-- A [Vault](/plugins/vault-auth/api/) object
+- A [Vault](/plugins/vault-auth/api/) object.
+- A [Consumer](/gateway/entities/consumer/) with a username and password
 
 config:
   vault: 

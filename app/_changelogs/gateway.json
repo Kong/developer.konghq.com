@@ -28552,5 +28552,327 @@
         "scope": "Plugin"
       }
     ]
+  },
+  "3.16.0.1": {
+    "kong-aigw": [
+      {
+        "message": "**ai-a2a-proxy**: Added A2A v1.0 wire-format support alongside v0.3.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-a2a-proxy**: now rewrites the URL for all `supportedInterfaces` in the agent card.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added prompt cache control mappings across OpenAI, Anthropic, and Amazon Bedrock chat formats.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where request bodies were re-encoded\nwith a non-deterministic JSON key order; content-neutral transforms now\nforward the client's original request bytes.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where xAI reasoning tokens were not folded when visible completion tokens exceeded reasoning tokens.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where gen_ai.request.max_tokens attribute was missing from OpenTelemetry spans.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where the consistent-hashing balancer routed requests with the same hash_on_header value to different targets when multiple workers were running.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "Bumped lua-resty-jq from 0.2.0 to 0.2.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped lua-resty-simdjson from 1.3.0 to 1.3.1 (updates simdjson to 4.6.11).",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**Balancer**: Fixed an issue where a plugin could not override the upstream\ntarget when the Gateway Service `host` was a literal IP address. The balancer\nkept the IP that it derived from the Service, so the request went to the\nService host and the override was silently lost. This affected\n`kong.service.set_target` and every plugin that replaces\n`ngx.ctx.balancer_data.host`, for example `route-transformer-advanced` and\n`canary`.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**basic-auth**: `brute_force_protection` is now enforced for principal-based\n(Kong Identity) authentication, matching the existing behavior for local\ncredentials.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**basic-auth**: `brute_force_protection` now rate-limits each `Proxy-Authorization` and `Authorization` credential independently.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**degraphql**: Fixed an issue where the plugin router did not refresh after an incremental sync update on a Data Plane, leaving routes stale until the next full config push.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where a malformed JSON document could corrupt the shared JSON\ndecoder of a worker. Later requests that decoded valid JSON on the same worker\nthen failed until the node restarted. The JWT plugin returned\n`Bad token; invalid JWT payload` for known-good tokens.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where `dnf upgrade kong-enterprise-edition` could not resolve an\nupgrade on RPM systems. The FIPS packages declared an unversioned\n`Obsoletes: kong-enterprise-edition`, so an installed non-FIPS package had two\nmutually conflicting successors and dnf reported \"cannot install the best update\ncandidate\". The RPM packages now obsolete the other Enterprise variants only\nbelow the version being built. This also keeps\n`dnf install kong-enterprise-edition-fips` on the FIPS artifact. Debian and\nAlpine packages do not change.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where Kong Gateway in DB-less mode could fail to detect configuration changes during reconfiguration, leaving the router or plugins iterator stale.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where Kong tiny clustering payload sizes were logged for every message. It now only logs when the payload size exceeds `30%` of the configured `cluster_max_payload` limit.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where sync validation rejected valid configurations when a referenced entity was in a non-default workspace.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where the control plane sent incremental sync v2 notifications to a data plane that had fallen back to legacy sync v1, logging a misleading error.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where the Data Plane router rebuild could falsely abort with a concurrent-change error when the router spanned more than one page, leaving routes stale until the next config push.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where the `SameSite` attribute of the `Set-Cookie` header was incorrectly set to `Same-Site` by session-affinity (sticky-session) balancing.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed issues where upstream lookup failures interrupted balancer initialization and incomplete rebuilds left stale targets after a configuration rollback.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**graphql-rate-limiting-advanced**: Fixed an issue where `pass_all_downstream_headers` forwarded stale `Content-Length`, `Content-Encoding`, and `Transfer-Encoding` headers, breaking schema introspection.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**graphql-rate-limiting-advanced**: Fixed an issue where a longer fixed window was incorrectly marked as exhausted if a shorter window denied a request.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where OpenAPI 3.1.x parameter patterns using ECMA-262 `\\uXXXX` Unicode escapes failed to match correctly, because PCRE does not support that escape syntax.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opa**: Fixed an issue where Kong Gateway did not send an SNI to the OPA server. It now sends `opa_host` as the SNI when that is a hostname; with `ssl_verify = true`, the certificate must include `opa_host`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where a callback with an invalid JARM response returned a 500 error; the plugin now rejects such callbacks with a 401 authentication failure.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Fixed an issue where the `kong.shared_dict.size` metric reused the same datapoint timestamp across exports, causing monitoring systems to treat the series as stale.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**rate-limiting-advanced**: Fixed an issue where a longer fixed window was incorrectly marked as exhausted if a shorter window denied a request.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**RBAC**: Fixed an issue where a temporary database outage during an RBAC\nuser's group lookup cached a wrong value, breaking every later Admin API\nrequest from that user.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**service-protection**: Fixed an issue where a longer fixed window was incorrectly marked as exhausted if a shorter window denied a request.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Improved performance when `untrusted_lua` is set to `sandbox`. Previously, Kong rebuilt the Lua environment, including a module reload, on every compile of a sandboxed function.",
+        "type": "performance",
+        "scope": "Core"
+      }
+    ]
+  },
+  "3.14.0.16": {
+    "kong-aigw": [
+      {
+        "message": "**ai-a2a-proxy**: Added A2A v1.0 wire-format support alongside v0.3.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added prompt cache control mappings across OpenAI, Anthropic, and Amazon Bedrock chat formats.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where the `gen_ai.request.max_tokens` attribute was missing from OpenTelemetry spans.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where the consistent-hashing balancer routed requests with the same `hash_on_header` value to different targets when multiple workers were running.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "Bumped lua-resty-jq from 0.2.0 to 0.2.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped lua-resty-simdjson from 1.2.0 to 1.3.1 (updates simdjson to 4.6.11).",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**ACME**: Fixed an issue where an expired `fail_backoff` key would keep blocking certificate issuance. Retries are now rejected only while the backoff timestamp is still in the future.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Balancer**: Fixed an issue where a plugin could not override the upstream\ntarget when the Gateway Service `host` was a literal IP address. The balancer\nkept the IP that it derived from the Service, so the request went to the\nService host and the override was silently lost. This affected\n`kong.service.set_target` and every plugin that replaces\n`ngx.ctx.balancer_data.host`, for example `route-transformer-advanced` and\n`canary`.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**basic-auth**: `brute_force_protection` now rate-limits each `Proxy-Authorization` and `Authorization` credential independently.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Clustering**: Fixed an issue where slow response handling in data planes could prevent a recovery connection with the control plane.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**degraphql**: Fixed an issue where the plugin router did not refresh after an incremental sync update on a Data Plane, leaving routes stale until the next full config push.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where a malformed JSON document could corrupt the shared JSON\ndecoder of a worker. Later requests that decoded valid JSON on the same worker\nthen failed until the node restarted. The JWT plugin returned\n`Bad token; invalid JWT payload` for known-good tokens.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where `dnf upgrade kong-enterprise-edition` could not resolve an\nupgrade on RPM systems. The FIPS packages declared an unversioned\n`Obsoletes: kong-enterprise-edition`, so an installed non-FIPS package had two\nmutually conflicting successors and dnf reported \"cannot install the best update\ncandidate\". The RPM packages now obsolete the other Enterprise variants only\nbelow the version being built. This also keeps\n`dnf install kong-enterprise-edition-fips` on the FIPS artifact. Debian packages do not change.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where Kong Gateway in DB-less mode could fail to detect configuration changes during reconfiguration, leaving the router or plugins iterator stale.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where Kong tiny clustering payload sizes were logged for every message. It now only logs when the payload size exceeds `30%` of the configured `cluster_max_payload` limit.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where sync validation rejected valid configurations when a referenced entity was in a non-default workspace.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where the control plane sent incremental sync v2 notifications to a data plane that had fallen back to legacy sync v1, logging a misleading error.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where the Data Plane router rebuild could falsely abort with a concurrent-change error when the router spanned more than one page, leaving routes stale until the next config push.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where the `SameSite` attribute of the `Set-Cookie` header was incorrectly set to `Same-Site` by session-affinity (sticky-session) balancing.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed issues where upstream lookup failures interrupted balancer initialization and incomplete rebuilds left stale targets after a configuration rollback.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**graphql-rate-limiting-advanced**: Fixed an issue where `pass_all_downstream_headers` forwarded stale `Content-Length`, `Content-Encoding`, and `Transfer-Encoding` headers, breaking schema introspection.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**graphql-rate-limiting-advanced**: Fixed an issue where a longer fixed window was incorrectly marked as exhausted if a shorter window denied a request.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opa**: Fixed an issue where Kong Gateway did not send an SNI to the OPA server. It now sends `opa_host` as the SNI when that is a hostname; with `ssl_verify = true`, the certificate must include `opa_host`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where a callback with an invalid JARM response returned a 500 error; the plugin now rejects such callbacks with a 401 authentication failure.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Fixed an issue where a WebSocket handshake that never opened a connection drove `kong.websocket.server.active_connections` negative, reported a false duration and was not counted.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Fixed an issue where the description of `kong.websocket.handshake.error.count` was ambiguous. It now states that the metric counts only protocol validation failures.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Fixed an issue where the `kong.shared_dict.size` metric reused the same datapoint timestamp across exports, causing monitoring systems to treat the series as stale.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**rate-limiting-advanced**: Fixed an issue where a longer fixed window was incorrectly marked as exhausted if a shorter window denied a request.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**RBAC**: Fixed an issue where a temporary database outage during an RBAC\nuser's group lookup cached a wrong value, breaking every later Admin API\nrequest from that user.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**service-protection**: Fixed an issue where a longer fixed window was incorrectly marked as exhausted if a shorter window denied a request.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ]
   }
 }
