@@ -131,6 +131,15 @@ The Policy respects cache control headers to determine if requests and responses
 * `private`: Ensures the response is not cached by shared caches
 * `max-age` and `s-maxage`: Sets the maximum age of the cached response. This causes the vector database to drop and delete the cached response message after expiration, so it’s never seen again.
 
+The Policy doesn't support any other headers that influence caching, such as the `Authorization` header. This is a deviation from the HTTP caching specification (RFC 9111), where shared caches must not serve a response to a request with an `Authorization` header unless the response explicitly allows it.
+
+The Policy doesn't use request headers to separate cached responses, so a cached response can be served to any request that matches it, regardless of who sent the original request.
+
+{:.warning}
+> If you require cache isolation, for example between users, teams, or tenants, don't configure the AI Semantic Cache Policy globally.
+>
+> Configure it on the respective [AI Consumer](/ai-gateway/entities/ai-consumer/) or [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) instead, so each one gets its own cache scope.
+
 {:.info}
 > As most AI services always send `no-cache` in the response headers, setting [`cache_control`](./reference/#schema--config-cache-control) to `true` will always result in a cache bypass. Only consider setting `no-cache` if you are using self-hosted services and have control over the response Cache Control headers.
 

@@ -6,10 +6,6 @@ title: 'Enforce headers, body validation, and HMAC digest algorithms'
 
 weight: 900
 
-requirements: 
- - You have created a [Consumer with HMAC credentials](/plugins/hmac-auth/#consumer-authentication)
-
-
 config:
   enforce_headers:
   - date 

@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@71eb5f9b874a36c530766e00e19ed197d3399d4d
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/71eb5f9b874a36c530766e00e19ed197d3399d4d'
+  x-oas-source: kong/platform-api@c490b3e79979400ce6f13039add29f45cfdb0b34
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c490b3e79979400ce6f13039add29f45cfdb0b34'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -4825,6 +4825,7 @@ components:
       type: string
       enum:
         - required
+        - unique
         - is_array
         - is_base64
         - is_boolean
@@ -4840,6 +4841,7 @@ components:
         - unknown_property
         - missing_reference
         - is_label
+        - key_invalid
         - matches_regex
         - invalid
         - is_supported_network_availability_zone_list
@@ -4936,6 +4938,68 @@ components:
         - reason
         - rule
         - maximum
+    InvalidParameterMinimumTime:
+      type: object
+      properties:
+        field:
+          type: string
+          example: to
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - min_time
+          nullable: false
+          readOnly: true
+        minimum:
+          type: string
+          format: date-time
+          example: '2026-10-01T00:00:00Z'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: 'must be no earlier than 2026-10-01T00:00:00Z'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - minimum
+    InvalidParameterMaximumTime:
+      type: object
+      properties:
+        field:
+          type: string
+          example: to
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - max_time
+          nullable: false
+          readOnly: true
+        maximum:
+          type: string
+          format: date-time
+          example: '2026-10-31T23:59:59Z'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: 'must be no later than 2026-10-31T23:59:59Z'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - maximum
     InvalidParameterChoiceItem:
       type: object
       properties:
@@ -5013,6 +5077,8 @@ components:
           - $ref: '#/components/schemas/InvalidParameterStandard'
           - $ref: '#/components/schemas/InvalidParameterMinimumLength'
           - $ref: '#/components/schemas/InvalidParameterMaximumLength'
+          - $ref: '#/components/schemas/InvalidParameterMinimumTime'
+          - $ref: '#/components/schemas/InvalidParameterMaximumTime'
           - $ref: '#/components/schemas/InvalidParameterChoiceItem'
           - $ref: '#/components/schemas/InvalidParameterDependentItem'
       minItems: 1

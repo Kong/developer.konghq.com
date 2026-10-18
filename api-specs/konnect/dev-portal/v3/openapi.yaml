@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal API
-  version: 3.4.0
+  version: 3.4.1
   description: Portal API
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@6ef1a79d12c953193f25d932d691f17134264254
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6ef1a79d12c953193f25d932d691f17134264254'
+  x-oas-source: kong/platform-api@91ba31c86ac34b36853b6b8dd5dfc1e078bf0275
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/91ba31c86ac34b36853b6b8dd5dfc1e078bf0275'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -2219,6 +2219,34 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AuthStrategy'
+        spec_renderer:
+          description: Customization for the API specification renderer in the developer portal.
+          type: object
+          additionalProperties: false
+          nullable: true
+          properties:
+            try_it_ui:
+              description: Enable in-browser testing for this API. All linked gateways must have the CORS plugin configured.
+              type: boolean
+              nullable: true
+            try_it_ui_audience:
+              description: |
+                The audience for the Try It UI feature.
+
+                `all` means that the Try It UI will be available to all users, including unauthenticated users.
+
+                `authenticated` means that the Try It UI will only be available to authenticated users.
+
+                `registered` means that the Try It UI will only be available to users who have registered for the API.
+              type: string
+              enum:
+                - all
+                - authenticated
+                - registered
+              nullable: true
+          required:
+            - try_it_ui
+            - try_it_ui_audience
         form_name:
           description: |
             Kebab-case slug of the published `api_registration` form linked to this API.
@@ -2303,6 +2331,7 @@ components:
         - slug
         - specifications
         - attributes
+        - spec_renderer
       title: Api
     ApiListPage:
       type: object
@@ -2709,6 +2738,20 @@ components:
       oneOf:
         - $ref: '#/components/schemas/AuthStrategyKeyAuth'
         - $ref: '#/components/schemas/AuthStrategyClientCredentials'
+    TryItUIAudience:
+      description: |
+        The audience for the Try It UI feature.
+
+        `all` means that the Try It UI will be available to all users, including unauthenticated users.
+
+        `authenticated` means that the Try It UI will only be available to authenticated users.
+
+        `registered` means that the Try It UI will only be available to users who have registered for the API.
+      type: string
+      enum:
+        - all
+        - authenticated
+        - registered
     ApiSpecType:
       description: |
         The type of specification being stored. This allows us to render the specification correctly.
@@ -2724,6 +2767,7 @@ components:
       type: string
       enum:
         - required
+        - unique
         - is_array
         - is_base64
         - is_boolean
@@ -2739,6 +2783,7 @@ components:
         - unknown_property
         - missing_reference
         - is_label
+        - key_invalid
         - matches_regex
         - invalid
         - is_supported_network_availability_zone_list
@@ -2835,6 +2880,68 @@ components:
         - reason
         - rule
         - maximum
+    InvalidParameterMinimumTime:
+      type: object
+      properties:
+        field:
+          type: string
+          example: to
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - min_time
+          nullable: false
+          readOnly: true
+        minimum:
+          type: string
+          format: date-time
+          example: '2026-10-01T00:00:00Z'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: 'must be no earlier than 2026-10-01T00:00:00Z'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - minimum
+    InvalidParameterMaximumTime:
+      type: object
+      properties:
+        field:
+          type: string
+          example: to
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - max_time
+          nullable: false
+          readOnly: true
+        maximum:
+          type: string
+          format: date-time
+          example: '2026-10-31T23:59:59Z'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: 'must be no later than 2026-10-31T23:59:59Z'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - maximum
     InvalidParameterChoiceItem:
       type: object
       properties:
@@ -2912,6 +3019,8 @@ components:
           - $ref: '#/components/schemas/InvalidParameterStandard'
           - $ref: '#/components/schemas/InvalidParameterMinimumLength'
           - $ref: '#/components/schemas/InvalidParameterMaximumLength'
+          - $ref: '#/components/schemas/InvalidParameterMinimumTime'
+          - $ref: '#/components/schemas/InvalidParameterMaximumTime'
           - $ref: '#/components/schemas/InvalidParameterChoiceItem'
           - $ref: '#/components/schemas/InvalidParameterDependentItem'
       minItems: 1
@@ -5117,7 +5226,7 @@ components:
           additionalProperties: false
           properties:
             name:
-              description: 'The theme name to apply to this portal. Supported names are ''ocean'' and ''glacier''. If another name is provided or this property is omitted, the portal uses the default ''ocean'' theme.'
+              description: 'The theme name to apply to this portal. Supported names are ''ocean'', ''mesa'', and ''grove''. If another name is provided or this property is omitted, the portal uses the default ''ocean'' theme.'
               type: string
               default: ocean
               nullable: false
@@ -5195,6 +5304,10 @@ components:
               description: Let users define a custom server URL for endpoints. This will be used to generate code snippets and to test the API. The URL is client-side only and is not saved.
               type: boolean
               default: true
+            try_it_ui_audience:
+              allOf:
+                - $ref: '#/components/schemas/TryItUIAudience'
+                - default: all
           title: PortalCustomizationSpecRenderer
         robots:
           type: string
