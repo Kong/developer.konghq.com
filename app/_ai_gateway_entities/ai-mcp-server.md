@@ -87,8 +87,8 @@ faqs:
       Server's [`access.auth_strategies`](#schema-aigateway-mcpserver-access) array, the same
       way you would for an [AI Model](/ai-gateway/entities/ai-model/#access-control) or
       [AI Agent](/ai-gateway/entities/ai-agent/#access-control). This is supported for `conversion-listener`,
-      `listener`, and `passthrough-listener` modes. An AI MCP Server accepts up to one AI Identity
-      Provider reference. The AI MCP Server has its own top-level authentication mechanism, so attaching an
+      `listener`, and `passthrough-listener` modes. An AI MCP Server accepts up to one AI Auth Strategy
+      reference. The AI MCP Server has its own top-level authentication mechanism, so attaching an
       authentication AI Policy directly to its `policies` field isn't supported.
 
   - q: Can I attach a rate-limiting policy to an AI MCP Server?
