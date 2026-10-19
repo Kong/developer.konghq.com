@@ -1,4 +1,4 @@
-By default, {{include.name}} connects to its upstream (the server at [`config.url`](#{{include.schema_prefix}}-url)) over TLS without presenting a client certificate, and trusts only the certificate authorities (CAs) in the data plane's default trust store.
+When {{include.name}} connects to an upstream (the server at [`config.url`](#{{include.schema_prefix}}-url)), it does so over TLS by default, without presenting a client certificate, and trusts only the certificate authorities (CAs) in the data plane's default trust store.
 Use the following fields in `config` when your upstream needs something different:
 
 <!-- vale off -->
