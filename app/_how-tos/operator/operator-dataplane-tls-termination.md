@@ -34,17 +34,18 @@ prereqs:
 Configuring TLS termination at the Gateway level allows {{ site.operator_product_name }} to manage SSL/TLS certificates and decrypt incoming traffic before it reaches your services. This guide shows how to set up an HTTPS listener using the standard Kubernetes Gateway API.
 
 {% include k8s/kong-namespace.md %}
-{: data-deployment-topology="on-prem"}
 
 ## Create a certificate
 
 1. Create a self-signed certificate:
+
    ```sh
    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=demo.example.com"
    ```
    {: data-test-step="block" }
 
 1. Create a Kubernetes secret containing the certificate and key:   
+
    ```sh
    echo "apiVersion: v1
    kind: Secret

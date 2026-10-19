@@ -264,8 +264,8 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt
    {: data-test-step="block" }
 
 1. Store the private key as a secret entry in the Config Store:
-{% capture command %}
-<!--vale off-->
+
+   <!--vale off-->
 {% konnect_api_request %}
 url: /v2/control-planes/$CONTROL_PLANE_ID/config-stores/$CONFIG_STORE_ID/secrets
 status_code: 201
@@ -274,8 +274,6 @@ body_cmd: $(cat secret.json)
 indent: 3
 {% endkonnect_api_request %}
 <!--vale on-->
-{% endcapture %}
-{{command | indent}}
 
 {% capture delete %}
 1. Delete the local copies of the key once it's stored:

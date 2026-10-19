@@ -123,6 +123,7 @@ This method is consistent with the [{{site.kic_product_name}}](/kubernetes-ingre
 ## Validate
 
 1.  Wait for the `Gateway` to get an address:
+
     ```bash
     kubectl wait gateway/kong -n kong \
       --for=jsonpath='{.status.addresses[0].value}' \
@@ -131,12 +132,14 @@ This method is consistent with the [{{site.kic_product_name}}](/kubernetes-ingre
     {: data-test-step="block" }
 
 1.  Get the proxy IP address:
+
     ```bash
     export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
     ```
     {: data-test-step="block" }
 
 1.  Send multiple requests to the `/echo` endpoint:
+
     ```bash
     for i in {1..6}; do curl -s http://$PROXY_IP/echo; done
     ```
