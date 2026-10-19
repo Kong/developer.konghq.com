@@ -1,6 +1,6 @@
 title: 'Mirror a fraction of requests to another destination'
 
-description: 'Copy 30% of matched requests to a second destination with a RequestMirror filter, while the originals continue to backend.'
+description: 'Route only requests carrying the mirror-this-request: true header, and copy 30% of them to a second destination with a RequestMirror filter while the originals continue to backend. Other requests from this client to backend match no rule and receive a 404.'
 
 weight: 600
 

@@ -1,6 +1,6 @@
 ---
 title: Mesh HTTP Route
-name: MeshHttpRoutes
+name: MeshHTTPRoutes
 products:
 - mesh
 description: Match HTTP requests on path, method, headers or query parameters, then modify, redirect or split them across destinations.
@@ -17,27 +17,30 @@ related_resources:
   url: "/mesh/policies/meshretry/"
 ---
 
-`MeshHTTPRoute` matches HTTP requests leaving a proxy and decides what happens to them: which
-destination they reach, how the traffic is split across several destinations, and what is
-rewritten on the way. Matching and precedence follow the
+The `MeshHTTPRoute` policy matches HTTP requests leaving a proxy and decides what happens to
+them:
+
+* Which destination they reach
+* How traffic is split across several destinations
+* What's rewritten on the way
+
+Matching and precedence follow the
 [Gateway API `HTTPRoute` specification](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.HTTPRouteRule).
 
-A route is also a target other policies can attach to. `MeshRetry`, `MeshTimeout` and
-`MeshAccessLog` accept `to[].targetRef.kind: MeshHTTPRoute`, which applies them to the requests
-one route matches rather than to everything sent to a destination.
+Other policies can also target a route: `MeshRetry`, `MeshTimeout`, `MeshAccessLog`, and
+`MeshLoadBalancingStrategy` accept `to[].targetRef.kind: MeshHTTPRoute`, which applies them
+only to the requests that route matches.
 
-Without an applicable HTTP route, requests use normal destination routing. Once a route applies,
-requests that match none of the effective rules receive `404`. Include a catch-all rule when
-other paths must continue to work.
+Without a route, requests use normal destination routing. Once a route applies, requests
+that match none of its rules return a `404`, so include a catch-all rule when other paths must
+keep working.
 
 ## Route two paths to different destinations
 
-This policy applies to proxies labeled `app: frontend` and splits requests to `backend` by
-path prefix:
-
-The application continues to call `backend`; its proxy chooses between the `orders` and
-`backend` MeshServices. Both resources must exist with the following labels and expose an
-HTTP-capable service port 8080. Destination permissions must allow the caller to reach both.
+The following example makes proxies labeled `app: frontend` split requests to `backend` by
+path prefix. The application still calls `backend`, and its proxy chooses between the
+`orders` and `backend` `MeshServices`. Both must exist with these labels, expose an HTTP
+service port 8080, and allow the caller to reach them:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -78,52 +81,41 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-The first rule sends `/orders` and every path below it to the `orders` service. The second is
-the catch-all: it sends every other path to `backend`. Both destinations use port 8080. The
-order in the YAML does not decide which rule wins; `/orders` is more specific than `/`.
+The first rule sends `/orders` and every path under it to `orders`. The second is a
+catch-all that sends every other path to `backend`.
 
-- `targetRef` identifies the client proxies that perform the routing.
-- `to[].targetRef` identifies the destination the application originally called.
-- `matches` identifies requests within that traffic.
-- `backendRefs` identifies where the selected requests are forwarded.
+What each field does:
 
-Matching a path does not rewrite it. A request for `/orders/123` still arrives as
-`/orders/123` at the orders application unless you add a URL rewrite.
+* `targetRef` selects the client proxies that do the routing: `Mesh`, or `Dataplane` with
+  `labels`. The default is `kind: Mesh`.
+* `to[].targetRef` selects the destination the application called: `MeshService`,
+  `MeshExternalService`, or `MeshMultiZoneService`. `Mesh` isn't accepted, so a route always
+  names a destination. To limit the rules to one port, set `sectionName` to a value from
+  `MeshService.spec.ports[].name`. Otherwise, they apply to every HTTP port of the service.
+* `matches` selects requests within the traffic.
+* `backendRefs` sets where the selected requests go. Its `port` takes the numeric port from
+  `MeshService.spec.ports[].port`.
 
-## Where this policy applies
-
-`spec.targetRef` selects the client proxies whose outbound requests are routed, and accepts
-`Mesh` or `Dataplane` with `labels`. Leaving it out is the same as `kind: Mesh`.
-
-`spec.to[].targetRef` names the destination whose traffic the rules apply to, and accepts
-`MeshService`, `MeshExternalService` and `MeshMultiZoneService`. `Mesh` is not accepted here,
-so a route always names a destination. Add `sectionName` to confine the rules to one named
-port of a `MeshService`; without it they apply to every HTTP port that service exposes.
-
-Use the value from `MeshService.spec.ports[].name` for `sectionName`.
-`backendRefs[].port` instead takes the numeric service port from `spec.ports[].port`.
+Matching a path doesn't rewrite it. A request for `/orders/123` still arrives as
+`/orders/123` unless you add a URL rewrite.
 
 {:.warning}
 > `kuma.io/display-name` identifies a `MeshService` only within one namespace, and the same
-> name usually also exists in every other zone. A `backendRefs` entry that selects on the
-> display name alone resolves only when the route is in the same namespace as the service.
-> From anywhere else, including `{{site.mesh_namespace}}`, it matches nothing and the proxy
-> answers matching requests with an empty `500` rather than reporting an error on the
-> resource. Add `k8s.kuma.io/namespace` to the selector whenever the route and the service
-> are in different namespaces.
-Verify the service's `appProtocol` identifies HTTP, HTTP/2, or gRPC; the proxy cannot apply
-HTTP request matches to traffic configured as opaque TCP.
+> name usually exists in every other zone. A `backendRefs` entry that selects on the display
+> name alone resolves only when the route is in the same namespace as the service. From
+> anywhere else, including `{{site.mesh_namespace}}`, it matches nothing, and the proxy
+> answers matching requests with an empty `500` instead of reporting an error on the
+> resource. Add `k8s.kuma.io/namespace` to the selector when the route and the service are in
+> different namespaces.
 
-`spec.to[].hostnames` is present in the schema but not implemented. Setting it is rejected with
-`must not be defined`.
-
-For the selectors a policy can carry, see [How policies select traffic](/mesh/policy-targeting/).
+The service's `appProtocol` must be HTTP, HTTP/2, or gRPC. The proxy can't apply HTTP matches
+to traffic configured as opaque TCP.
 
 ## Rule structure
 
 `MeshHTTPRoute` nests `default` one level deeper than other outbound policies. A `to` entry
-holds `rules`, and each rule pairs a set of `matches` with the `default` configuration for the
-requests they match:
+holds `rules`, and each rule pairs `matches` with the `default` configuration for the requests
+they match:
 
 ```yaml
 spec:
@@ -136,17 +128,17 @@ spec:
             backendRefs: [...]  # where to send them
 ```
 
-Every rule needs at least one entry in `matches`.
+Every rule needs at least one entry in `matches`. `spec.to[].hostnames` is in the schema but
+isn't implemented, and setting it is rejected.
 
 ## Matching a request
 
-A match may constrain any combination of the following four fields, and all of the constraints in
-one match entry must hold. Several entries in `matches` are alternatives: the rule applies if
-any one of them matches.
+All the constraints in one match entry must hold. Separate entries in `matches` are
+alternatives, so the rule applies if any one of them matches. For example, `method: GET` and a
+`/orders` path prefix in the same entry select GET requests under `/orders`. In separate
+entries, they select all GET requests and all requests under `/orders`.
 
-For example, putting `method: GET` and a `/orders` path prefix in the same match selects
-GET requests under that path. Putting them in separate match entries selects all GET requests
-as well as requests using any method under `/orders`.
+A match accepts any combination of the following fields:
 
 {% table %}
 columns:
@@ -156,47 +148,50 @@ columns:
     key: matches
 rows:
   - field: "`path`"
-    matches: "`type` is `Exact`, `PathPrefix` or `RegularExpression`, with the pattern in `value`. `Exact` and `PathPrefix` values must be absolute, and a `PathPrefix` other than `/` must not end in a slash."
+    matches: "`type` (`Exact`, `PathPrefix`, or `RegularExpression`) with the pattern in `value`. `Exact` and `PathPrefix` values must be absolute, and a `PathPrefix` other than `/` can't end in a slash."
   - field: "`method`"
-    matches: "One of `CONNECT`, `DELETE`, `GET`, `HEAD`, `OPTIONS`, `PATCH`, `POST`, `PUT`, `TRACE`."
+    matches: "One of `CONNECT`, `DELETE`, `GET`, `HEAD`, `OPTIONS`, `PATCH`, `POST`, `PUT`, or `TRACE`."
   - field: "`headers`"
-    matches: "A list of header matches. `type` is `Exact` (the default), `Prefix`, `RegularExpression`, `Present` or `Absent`. `Present` and `Absent` take no `value`."
+    matches: "A list of header matches. `type` can be `Exact` (default), `Prefix`, `RegularExpression`, `Present`, or `Absent`. `Present` and `Absent` take no `value`."
   - field: "`queryParams`"
-    matches: "A list of `name` and `value` pairs, with `type` `Exact` or `RegularExpression`. Multiple entries must all match, and a name may appear only once."
+    matches: "A list of `name` and `value` pairs, with `type` `Exact` or `RegularExpression`. All entries must match, and each name can appear only once."
 {% endtable %}
 
-A `PathPrefix` matches on whole path segments. The prefix `/api` matches `/api` and `/api/v1`,
-and does not match `/apiary`.
+A `PathPrefix` matches whole path segments. The prefix `/api` matches `/api` and `/api/v1`,
+but not `/apiary`.
 
-## Which rule wins
+## Rule precedence
 
-Rules are ordered by specificity rather than by the order they are written in, following the
-Gateway API precedence rules. The first of these that distinguishes two rules decides:
+Rules are ordered by specificity, not by the order they're written in, following the Gateway
+API precedence rules. The following criteria is used to define precedence, in this order:
 
 1. A rule with a `path` match beats one without.
 2. `Exact` beats `PathPrefix`, which beats `RegularExpression`.
 3. Between prefixes, or between regular expressions, the longer `value` wins.
 4. A rule with a `method` match beats one without.
-5. More `headers` matches wins.
-6. More `queryParams` matches wins.
+5. A rule with more `headers` matches wins.
+6. A rule with more `queryParams` matches wins.
 
-Regular-expression ordering by length is {{site.mesh_product_name}} behavior; length does
-not necessarily indicate a more restrictive expression. Avoid overlapping expressions whose
-intended priority depends on regex semantics.
+Ordering regular expressions by length is {{site.mesh_product_name}} behavior, and a longer
+expression isn't necessarily more restrictive. Avoid overlapping expressions whose priority
+depends on regex semantics.
 
-## An unmatched request gets a 404
+## Unmatched requests
 
-Once any `MeshHTTPRoute` applies to a destination, a request that matches none of its rules is
-answered with `404`. It is not passed through to the destination.
+Once any `MeshHTTPRoute` applies to a destination, a request that matches none of its rules
+gets a `404` and isn't passed to the destination. This covers:
 
-This affects paths no rule mentions, and it covers every HTTP port of the destination when the
-`to[].targetRef` names a `MeshService` without a `sectionName`. Ports whose protocol is not HTTP
-based are unaffected, as is a destination with no `MeshHTTPRoute` at all. On a gRPC destination
-the `404` reaches the client as `UNIMPLEMENTED`.
+* Paths that no rule mentions.
+* Every HTTP port of the destination, when `to[].targetRef` names a `MeshService` without a
+  `sectionName`.
 
-A route written only so another policy can attach to it is the case to check. A route matching
-`/api`, added so a `MeshTimeout` can target it, answers `404` on every other path of that
-destination. To keep unmatched traffic flowing, add a catch-all rule:
+Non-HTTP ports and destinations with no `MeshHTTPRoute` aren't affected. On a gRPC
+destination, the client sees the `404` as `UNIMPLEMENTED`.
+
+Watch for routes written only so another policy can target them. For example, a route
+matching `/api`, added so a `MeshTimeout` can target it, returns `404` on every other path of
+that destination. The following example adds a catch-all rule that keeps unmatched traffic
+flowing:
 
 ```yaml
 rules:
@@ -212,13 +207,13 @@ rules:
           port: 8080
 ```
 
-Put the catch-all on the route itself when the policies targeting that route should also cover
-the unmatched traffic, and on a second `MeshHTTPRoute` when they should not.
+Put the catch-all on the same route if the policies targeting that route should also cover
+unmatched traffic. Otherwise, put it on a second `MeshHTTPRoute`.
 
 ## Filters
 
-`default.filters` is a list of modifications applied to matched requests. Each entry sets
-`type` and the matching configuration object.
+`default.filters` lists changes applied to matched requests. Each entry sets `type` and the
+matching configuration object. `filters` accepts the following types:
 
 {% table %}
 columns:
@@ -228,44 +223,69 @@ columns:
     key: effect
 rows:
   - type: "`RequestHeaderModifier`"
-    effect: "Sets, adds or removes request headers through `set`, `add` and `remove`. At least one of the three is required, and a header name may appear only once across all three."
+    effect: "Sets, adds, or removes request headers with `set`, `add`, and `remove`. At least one is required, and a header name can appear only once across all three."
   - type: "`ResponseHeaderModifier`"
-    effect: "The same three operations, applied to the response."
+    effect: "Sets, adds, or removes response headers with `set`, `add`, and `remove`. At least one is required, and a header name can appear only once across all three."
   - type: "`RequestRedirect`"
-    effect: "Answers with a redirect instead of forwarding. Takes `scheme` (`http` or `https`), `hostname`, `port`, `path`, and `statusCode`, one of `301`, `302`, `303`, `307`, `308`, defaulting to `302`."
+    effect: "Tells the client to make another request, instead of forwarding. Takes `scheme` (`http` or `https`), `hostname`, `port`, `path`, and `statusCode` (`301`, `302`, `303`, `307`, or `308`, default `302`)."
   - type: "`URLRewrite`"
-    effect: "Rewrites `hostname` and `path` before forwarding."
+    effect: "Rewrites `hostname` and `path` before forwarding, without involving the client. `urlRewrite.hostToBackendHostname` isn't implemented, and setting it is rejected."
   - type: "`RequestMirror`"
-    effect: "Copies requests to a second destination named by `backendRef`, and discards its responses. `percentage` controls how many are copied, and defaults to all of them."
+    effect: "Copies requests to a second destination in `backendRef` and discards its responses. `percentage` sets how many are copied, and defaults to all."
 {% endtable %}
 
-A `path` under `RequestRedirect` or `URLRewrite` is either `type: ReplaceFullPath` with
-`replaceFullPath`, or `type: ReplacePrefixMatch` with `replacePrefixMatch`.
-`ReplacePrefixMatch` is accepted only when every entry in the rule's `matches` uses a
-`PathPrefix` path, since there is otherwise no prefix to replace.
+A `backendRefs` entry can also have its own filters, but only `RequestHeaderModifier`.
 
-`urlRewrite.hostToBackendHostname` is present in the schema but not implemented, and setting
-it is rejected.
+A mirror receives real requests, so it can perform writes or other side effects even though
+its response is ignored. Use a mirror destination that's prepared for copies of production
+traffic.
 
-Filters may also be attached to an individual entry in `backendRefs`, where only
-`RequestHeaderModifier` is accepted.
+`RequestRedirect` and `URLRewrite` can also change the path. Set `path.type` to one of the
+following values, and put the new path in the field with the same name:
 
-A redirect tells the client to make another request; a rewrite changes the request the proxy
-forwards without asking the client to redirect. Mirroring sends an additional request, so the
-mirror destination may perform writes or other side effects even though its response is ignored.
-Use a mirror destination prepared to receive copies of production traffic.
+{% table %}
+columns:
+  - title: "`path.type`"
+    key: type
+  - title: Effect
+    key: effect
+rows:
+  - type: "`ReplaceFullPath`"
+    effect: "Replaces the whole path with the `replaceFullPath` value."
+  - type: "`ReplacePrefixMatch`"
+    effect: "Replaces only the part of the path that the `PathPrefix` match matched, and keeps the rest. The rule is rejected if any of its `matches` entries isn't a `PathPrefix` path match."
+{% endtable %}
+
+For example, the following filter forwards `/api/users` as `/v2/users`:
+
+```yaml
+rules:
+  - matches:
+      - path:
+          type: PathPrefix
+          value: /api
+    default:
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /v2
+```
 
 ## Splitting traffic across destinations
 
-`default.backendRefs` is a list of destinations, each with a `weight`. A request is assigned to
-one of them in proportion to its weight against the total, with `weight` defaulting to 1.
-`kind` accepts `MeshService`, `MeshExternalService` and `MeshMultiZoneService`, selected by
-`labels`, and `port` names the destination port. `MeshMultiZoneService` requires `port`.
+`default.backendRefs` lists destinations, each with a `weight` that defaults to 1. A request
+goes to one of them in proportion to its weight. Each entry takes the following fields:
 
-Omitting `backendRefs` sends matched requests to the destination in the `to` entry, so a rule
-that only sets filters does not need to repeat it.
+* `kind`: `MeshService`, `MeshExternalService`, or `MeshMultiZoneService`, selected by
+  `labels`.
+* `port`: the destination port. Required for `MeshMultiZoneService`.
 
-How an unusable `backendRefs` list behaves:
+Without `backendRefs`, matched requests go to the destination in the `to` entry, so a rule
+that only sets filters doesn't need to repeat it.
+
+An unusable `backendRefs` list behaves as follows:
 
 {% table %}
 columns:
@@ -274,57 +294,66 @@ columns:
   - title: Response
     key: response
 rows:
-  - situation: "None of the entries resolve to an existing resource, or all of them name a port the destination does not have."
-    response: "`500` for every request the rule matches. Traffic is not passed through to the destination."
-  - situation: "Some entries resolve and some do not."
-    response: "The unresolved share of the weight answers `500`. The rest is split across the entries that resolved."
+  - situation: "No entry resolves to an existing resource, or every entry names a port the destination doesn't have."
+    response: "`500` for every request the rule matches. Traffic isn't passed to the destination."
+  - situation: "Some entries resolve and some don't."
+    response: "`500` for the unresolved share of the weight. The rest is split across the entries that resolved."
   - situation: "Every entry has weight `0`."
     response: "`503`, treated as no available backend."
 {% endtable %}
 
-A reference that has not resolved yet behaves the same as one that never will, so a route
-pointing at a `MeshService` that KDS has not synced into the zone fails its requests until the
-reference resolves. A rule carrying a `RequestRedirect` filter still redirects, since it
-answers without an upstream.
+A reference that hasn't resolved yet behaves like one that never will. For example, a route
+pointing at a `MeshService` that KDS hasn't synced into the zone fails its requests until the
+reference resolves. A rule with a `RequestRedirect` filter still redirects, because it doesn't
+need an upstream.
 
-## Merging routes that target the same proxy
+## Overlapping policies
 
-Where several `MeshHTTPRoute` policies apply to the same proxy and the same destination, their
-rules are merged. `rules` is treated as a map keyed on `matches`, so two rules with identical
-`matches` have their `default` blocks merged, and rules with different `matches` are kept
-side by side. The order the policies merge in is decided by their top-level `targetRef`, as
-described in [How policies select traffic](/mesh/policy-targeting/).
+When several `MeshHTTPRoute` policies apply to the same proxy and destination, their rules are
+merged, keyed on `matches`:
 
-For example, a mesh-wide `/orders` rule and a client-specific `/payments` rule both remain
-available to that client. A narrower policy does not discard every rule from the broader policy.
-If both policies use identical matches, the narrower policy can change that match's backend
-configuration. Request specificity then selects among the resulting rules.
+* Rules with identical `matches` have their `default` blocks merged, and the narrower policy
+  can change that match's backend configuration.
+* Rules with different `matches` are kept side by side.
 
-## Interaction with MeshTCPRoute
+The merge order depends on each policy's top-level `targetRef`. For more information, see
+[How policies select traffic](/mesh/policy-targeting/). For example, a mesh-wide `/orders`
+rule and a client-specific `/payments` rule both apply to that client, and request
+specificity then picks among them.
 
-Where a proxy is matched by both a `MeshHTTPRoute` and a
-[`MeshTCPRoute`](/mesh/policies/meshtcproute/) for the same destination, the
-`MeshHTTPRoute` takes effect and the `MeshTCPRoute` is ignored.
+When a proxy matches both a `MeshHTTPRoute` and a
+[`MeshTCPRoute`](/mesh/policies/meshtcproute/) for the same destination, the `MeshHTTPRoute`
+takes effect and the `MeshTCPRoute` is ignored.
 
-## Validate HTTP routing
+## Validating HTTP routing
 
-Send one request whose path matches each rule, and one that should be unmatched if your route
-does not include a catch-all. Confirm that each matched request reaches the expected backend,
-and that an unmatched request returns `404` rather than reaching the destination.
+1. Send one request that matches each rule, and confirm that it reaches the expected backend.
+   Confirm the receiving application through its logs or a response that identifies it.
+1. If the route has no catch-all, send a request that matches no rule, and confirm that it
+   returns `404`.
+1. If the route splits traffic by weight, send enough requests to confirm the distribution.
+1. If a request returns `500` or `503`, check `backendRefs`: the destination might not
+   resolve, the named port might not exist, or all weights might be zero.
 
-When a route splits traffic by weight, send enough requests to observe the distribution. A
-small sample does not prove the configured ratio. If a request returns `500` or `503`, inspect
-the `backendRefs` first: the destination may not resolve, the named port may not exist, or all
-weights may be zero.
+For the example in [Route two paths to different destinations](#route-two-paths-to-different-destinations),
+confirm that `/orders` and `/orders/123` reach `orders` with their paths unchanged, and that
+`/health` reaches `backend`.
 
-For the first example, check `/orders`, `/orders/123`, and `/health`. The first two
-should reach orders with their paths unchanged, while `/health` should reach backend.
-Confirm the receiving application through its logs or a response that identifies the backend.
-
-| Unexpected result | Check |
-| --- | --- |
-| An unlisted path returns 404 | Add a catch-all if that path should retain normal routing. |
-| The backend receives an unexpected path | Matching selects the route; only URLRewrite changes the forwarded path. |
-| A fraction of requests returns 500 | Check whether a weighted backend reference fails to resolve in the client's zone. |
-| A backend resolves but requests fail | Check healthy endpoints, protocol compatibility, and destination permissions. |
-| A narrower policy does not remove an old route | Rules with different matches coexist; review the effective matches from all applicable policies. |
+{% table %}
+columns:
+  - title: Unexpected result
+    key: unexpected
+  - title: Check
+    key: check
+rows:
+  - unexpected: "An unlisted path returns 404"
+    check: "Add a catch-all if that path should keep normal routing."
+  - unexpected: "The backend receives an unexpected path"
+    check: "Matching doesn't change the path. Only `URLRewrite` does."
+  - unexpected: "A fraction of requests returns 500"
+    check: "Whether a weighted backend reference fails to resolve in the client's zone."
+  - unexpected: "A backend resolves but requests fail"
+    check: "Healthy endpoints, protocol compatibility, and destination permissions."
+  - unexpected: "A narrower policy doesn't remove an old route"
+    check: "Rules with different matches coexist. Review the effective matches from all applicable policies."
+{% endtable %}

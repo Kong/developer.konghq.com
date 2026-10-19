@@ -17,25 +17,26 @@ related_resources:
   url: "/mesh/policies/meshhealthcheck/"
 ---
 
-`MeshLoadBalancingStrategy` decides which of a destination's endpoints a client's request goes
-to. It covers three separate choices: the algorithm that picks between endpoints, the request
-property a consistent-hashing algorithm hashes on, and how strongly a client prefers endpoints
-close to it.
+The `MeshLoadBalancingStrategy` policy decides which of a destination's endpoints a client's
+request goes to. It controls three things:
 
-The caller's proxy makes this choice independently; there is no central scheduler sharing
-load measurements between clients. Routing chooses the destination service first, then
-load balancing chooses an endpoint within that destination. This policy does not set the
-traffic split between services in a [MeshHTTPRoute](/mesh/policies/meshhttproute/).
+* With `loadBalancer`, it sets the algorithm that picks an endpoint.
+* With `hashPolicies`, it sets the request property that a consistent-hashing algorithm hashes
+  on.
+* With `localityAwareness`, it sets how strongly a client prefers endpoints close to it.
 
-Without a configured `loadBalancer`, the generated cluster keeps its existing algorithm.
-Set the algorithm explicitly when your application depends on a particular selection
-strategy. Omitting `hashPolicies` does not establish session affinity.
+Each caller's proxy makes this choice on its own, with no central scheduler sharing load data.
+Routing picks the destination service first, then load balancing picks an endpoint in it. To
+split traffic between services, use [MeshHTTPRoute](/mesh/policies/meshhttproute/) instead.
+
+Without a `loadBalancer`, the cluster keeps its existing algorithm, so set one explicitly if
+your application depends on it. Without `hashPolicies`, there's no session affinity.
 
 ## Pin requests to an endpoint by header
 
-This policy applies to proxies labeled `app: frontend` and uses the `x-user` header to
-choose a `backend` endpoint. The destination must exist as a `MeshService`, and the caller's
-proxy must handle the traffic as HTTP so that it can read the header:
+The following example makes `frontend` proxies pick a `backend` endpoint by hashing the
+`x-user` header. The destination must exist as a `MeshService`, and the caller's proxy must
+handle the traffic as HTTP to read the header:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -62,51 +63,22 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-`targetRef` selects the `frontend` proxies making the requests, and `to[].targetRef` selects the
-`backend` destination. `RingHash` chooses an endpoint by hashing `x-user`, so requests carrying
-the same header value stay on the same healthy endpoint while the endpoint set is stable.
+What each field does:
 
-This is affinity, not durable session storage. Scaling, endpoint health, locality, or
-configuration changes can move requests to another endpoint. Different clients can also
-have different eligible endpoint sets. Keep session state recoverable when that happens.
-If `x-user` is absent, this example produces no hash key and does not pin the request.
-
-## Where this policy applies
-
-`spec.targetRef` selects the client proxies whose outbound requests are balanced, and accepts
-`Mesh` or `Dataplane` with `labels`. This is a client-side policy: the endpoint choice is made
-by the caller's proxy, so it is configured there.
-
-`spec.to[].targetRef` names the destination, and accepts `Mesh`, `MeshService`,
-`MeshExternalService`, `MeshMultiZoneService` and `MeshHTTPRoute`.
-
-For a service with multiple ports, set `to[].targetRef.sectionName` to the relevant port's
-`name` in that service's `spec.ports[]`. This selects the destination port, not an inbound
-on the caller. For a `MeshHTTPRoute`, a section selects a named route rule.
-
-The algorithm can select endpoints for TCP connections, but `hashPolicies` on this policy
-are installed on HTTP routes. `type: Connection` is an HTTP hash input based on source IP;
-it does not enable source-IP hashing for arbitrary TCP traffic. An established TCP
-connection stays with its selected endpoint rather than being rebalanced for each message.
-
-Two of those kinds are constrained:
-
-- With `kind: MeshHTTPRoute`, only `hashPolicies` is accepted. `loadBalancer` and
-  `localityAwareness` are rejected with
-  `field is not allowed when targetRef.kind is MeshHTTPRoute, only hashPolicies is supported`.
-  Hashing is a per-request decision, so it can be set per route; the algorithm and the locality
-  preference belong to the destination's cluster, which a route does not own.
-- `localityAwareness.crossZone` is accepted only with `kind: MeshMultiZoneService`. See
-  [MeshMultiZoneService](/mesh/meshmultizoneservice/). On any
-  other kind it is rejected with
-  `crossZone is only supported when targetRef.kind is MeshMultiZoneService`.
-
-For the selectors a policy can carry, see [How policies select traffic](/mesh/policy-targeting/).
+* `targetRef` selects the `frontend` proxies that make the requests, because the caller's proxy
+  picks the endpoint. It accepts `Mesh`, or `Dataplane` with `labels`.
+* `to[].targetRef` selects the `backend` destination. It accepts `Mesh`, `MeshService`,
+  `MeshExternalService`, `MeshMultiZoneService`, and `MeshHTTPRoute`. For a service with
+  several ports, set `sectionName` to the port's `name` in the service's `spec.ports[]`. This
+  selects the destination port, not an inbound on the caller. For a `MeshHTTPRoute`,
+  `sectionName` selects a named route rule.
+* `RingHash` with the `x-user` hash policy keeps requests with the same header value on the
+  same healthy endpoint while the endpoint set is stable. This is affinity, not durable session storage. Scaling, endpoint health, locality, or configuration changes can move requests to another endpoint, and different clients can see different endpoints, so keep session state recoverable. Requests without `x-user` aren't pinned.
 
 ## Load balancing algorithms
 
-`loadBalancer.type` chooses the algorithm, and the object named after it carries that
-algorithm's settings.
+`loadBalancer.type` sets the algorithm, and the object named after it holds that algorithm's
+settings:
 
 {% table %}
 columns:
@@ -121,30 +93,34 @@ rows:
     how: "Each endpoint in turn."
     settings: "None."
   - type: "`LeastRequest`"
-    how: "With equal endpoint weights, compares randomly selected endpoints and chooses the least busy. With unequal weights, adjusts weighted selection using active request counts."
-    settings: "`choiceCount`, how many to compare, at least 2 and 2 by default. `activeRequestBias` scales how much an endpoint's in-flight requests reduce its weight, 0 or greater."
+    how: "Compares randomly chosen endpoints and picks the least busy. With unequal endpoint weights, it adjusts weighted selection by active request counts."
+    settings: |
+      * `choiceCount`: how many endpoints to compare, at least 2, and 2 by default.
+      * `activeRequestBias`: how much in-flight requests reduce an endpoint's weight, 0 or greater.
   - type: "`RingHash`"
-    how: "Hashes a request property and walks a ring of endpoint hashes to the nearest one, so the same property reaches the same endpoint."
-    settings: "`hashFunction`, `XXHash` or `MurmurHash2`. `minRingSize` and `maxRingSize`, between 1 and 8000000, defaulting to 1024 and 8000000."
+    how: "Hashes a request property and picks the nearest endpoint on a hash ring, so the same property reaches the same endpoint."
+    settings: |
+      * `hashFunction`: `XXHash` or `MurmurHash2`.
+      * `minRingSize`: 1 to 8000000, and 1024 by default.
+      * `maxRingSize`: 1 to 8000000, and 8000000 by default.
   - type: "`Random`"
-    how: "An endpoint at random. With no health checking in place this spreads load better than round robin, because it does not favour whichever endpoint follows a failed one."
+    how: "A random endpoint. Without health checks, this spreads load better than round robin, because it doesn't favor the endpoint after a failed one."
     settings: "None."
   - type: "`Maglev`"
-    how: "Consistent hashing using a fixed-size lookup table. It generally builds and looks up faster than a large ring, but can move more keys when endpoints change."
-    settings: "`tableSize`, a prime number up to 5000011, 65537 by default."
+    how: "Consistent hashing with a fixed-size lookup table. It's generally faster than a large ring, but can move more keys when endpoints change."
+    settings: "`tableSize`: a prime number up to 5000011, and 65537 by default."
 {% endtable %}
 
-`RingHash` and `Maglev` need `hashPolicies` to hash on. Without one they have no key, and
-requests are not pinned to anything.
+`RingHash` and `Maglev` need `hashPolicies`. Without them, requests aren't pinned.
 
-Use `LeastRequest` when HTTP requests have different processing times; use a hashing
-algorithm when affinity matters. A heavily used hash key can concentrate load on one
-endpoint, so hashing does not guarantee even request counts. For algorithm tradeoffs, see
+Use `LeastRequest` when HTTP requests take different amounts of time, and a hashing algorithm
+when affinity matters. A popular hash key can concentrate load on one endpoint, so hashing
+doesn't guarantee even load. For more information, see
 [Envoy load balancers](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/upstream/load_balancing/load_balancers).
 
 ## Hash policies
 
-`hashPolicies` is a list of request properties to hash, evaluated in order.
+`hashPolicies` lists the request properties to hash, in order. It accepts the following types:
 
 {% table %}
 columns:
@@ -154,62 +130,54 @@ columns:
     key: what
 rows:
   - type: "`Header`"
-    what: "`header.name`, a request header."
+    what: "A request header, set in `header.name`."
   - type: "`Cookie`"
-    what: "`cookie.name`. With `ttl` set, a client that arrives without the cookie is given one, which pins it for subsequent requests. `cookie.path` must be an absolute path."
+    what: "A cookie, set in `cookie.name`. With `ttl` set, a client without the cookie gets one, which pins its next requests. `cookie.path` must be an absolute path."
   - type: "`Connection`"
     what: "The client's source IP, with `connection.sourceIP: true`."
   - type: "`QueryParameter`"
-    what: "`queryParameter.name`, a URL query parameter. Names are case sensitive."
+    what: "A URL query parameter, set in `queryParameter.name`. Names are case sensitive."
   - type: "`FilterState`"
-    what: "`filterState.key`, an `Envoy::Hashable` object another filter put in the per-request state."
+    what: "An `Envoy::Hashable` object that another filter stored in the request state, set in `filterState.key`."
 {% endtable %}
 
-A property that is absent from a request produces no hash, and the next policy in the list is
-tried. `terminal: true` stops the list once a hash exists, which saves evaluating the rest.
+A property missing from the request produces no hash, and the next entry is tried. Entries that
+produce a hash are combined, unless one sets `terminal: true`, which stops the list once a hash
+exists. For example, to use a cookie only when a header is missing, put a terminal header entry
+first and the cookie entry second.
 
-Without `terminal: true`, properties that produce hashes contribute to a combined hash;
-the list is not automatically a sequence of fallback choices. For example, put a terminal
-header policy first and a cookie policy second to use the cookie only when the header is
-absent. Both the chosen algorithm and a usable hash input are needed for affinity.
+Source-IP hashing uses the address the proxy sees, not a user identity or a forwarded-for
+header, so callers sharing an address share a hash key. Cookie hashing requires the client to
+return the cookie.
 
-Source-IP hashing uses the address seen by the proxy, not a user identity or an arbitrary
-forwarded-for header. Callers sharing an address can therefore share a hash key. Cookie
-hashing requires the client to retain and return the cookie.
+The algorithm also applies to TCP connections, but `hashPolicies` only apply to HTTP routes.
+`type: Connection` hashes the source IP of HTTP requests, not of arbitrary TCP traffic. An
+established TCP connection stays on its endpoint.
 
-## When policies overlap
-
-More specific destination configuration overrides conflicting fields from a broader
-configuration; omitted fields can remain inherited. Lists such as `hashPolicies`,
-`affinityTags`, and `failover` are replaced rather than appended.
-
-For example, a mesh-wide rule can choose `RingHash`, while a rule for `backend` supplies
-the `x-user` hash policy. Backend traffic uses both settings. A still more specific HTTP
-route can replace the hash list with a cookie hash, but cannot change the cluster's
-algorithm. Conversely, changing the algorithm to `RoundRobin` makes an inherited hash
-policy ineffective for affinity. See [policy targeting](/mesh/policy-targeting/) for the
-full precedence rules.
+With `to[].targetRef.kind: MeshHTTPRoute`, only `hashPolicies` is accepted. `loadBalancer` and
+`localityAwareness` are rejected, because they belong to the destination's cluster, which a
+route doesn't own.
 
 ## Locality awareness
 
-Locality awareness is on unless it is turned off, so a client prefers endpoints in its own zone
-and uses lower-priority remote endpoints as the local priority loses healthy capacity.
-This is based on endpoint availability, not a measurement of spare CPU or request latency.
-`localityAwareness.disabled: true` removes this automatic local-zone preference.
+Locality awareness is on by default. A client prefers endpoints in its own zone, and moves to
+lower-priority remote endpoints as local ones lose healthy capacity. This is based on endpoint
+availability, not CPU or latency. To turn off the local-zone preference, set
+`localityAwareness.disabled: true`.
 
-`localZone` and `crossZone` take effect regardless of `disabled`, since each describes
-explicit grouping. To distribute across zones without locality grouping, also remove any
-inherited `localZone` and `crossZone` configuration rather than setting `disabled` alone.
+`localZone` and `crossZone` still apply when `disabled` is set. To spread traffic across zones
+without locality grouping, also remove any inherited `localZone` and `crossZone`
+configuration.
 
 ### Priorities inside a zone
 
-`localZone.affinityTags` groups local endpoints by values they share with the caller. For
-each key, the control plane reads the selected caller Dataplane's label value and compares
-it with endpoint metadata. An endpoint joins the first matching group. These groups share
-traffic by weight at the same priority; they are not tried one after another on failure.
+`localZone.affinityTags` groups local endpoints by label values they share with the caller. For
+each key, the control plane compares the caller Dataplane's label value with endpoint
+metadata. An endpoint joins the first group it matches. Groups share traffic by weight at the
+same priority, instead of being tried in order on failure.
 
-Place this fragment under a destination's `to[].default`. It prefers endpoints on the same
-host as the caller, then endpoints in the same infrastructure zone:
+The following example prefers endpoints on the caller's host, then endpoints in the same
+infrastructure zone. Place it under a destination's `to[].default`:
 
 ```yaml
 localityAwareness:
@@ -219,30 +187,28 @@ localityAwareness:
       - key: topology.kubernetes.io/zone
 ```
 
-`weight` sets each group's relative share. Without explicit weights, the generated weights
-decrease tenfold down the list: with two tags they are 90 and 9, with unmatched local
-endpoints retaining a fallback group weight of 1. These are relative weights, not fixed
-percentages when groups are absent or unhealthy. Weights are all-or-nothing:
-setting some and not others is rejected with `all or none affinity tags should have weight`.
+`weight` sets each group's relative share. Without weights, they decrease tenfold down the
+list: with two tags they're 90 and 9, and unmatched local endpoints get 1. These are relative
+weights, not fixed percentages. Set weights on all groups or none, because partial weights are
+rejected.
 
-Check both sides: the caller Dataplane must carry the label, and destination endpoint
-metadata must carry the corresponding value. Endpoint metadata can come from resource
-labels or inbound tags. A key missing from the caller creates no affinity group. A key
-present on the caller but on no endpoint attracts no traffic. Node labels are not useful
-here unless they are also available in the workload's Dataplane labels and endpoint metadata.
+The caller Dataplane must carry the label, and destination endpoint metadata must carry a
+matching value. Endpoint metadata comes from resource labels or inbound tags. A key missing
+from the caller creates no group, and a key that no endpoint has gets no traffic. Node labels
+only work if they're also in the workload's Dataplane labels and endpoint metadata.
 
-Adding explicit locality groups rebuilds the endpoint priorities. Include an appropriate
-`crossZone.failover` list on a `MeshMultiZoneService` if remote endpoints must remain
-eligible; a local-only grouping does not automatically preserve remote fallback.
+Explicit locality groups rebuild endpoint priorities and don't keep remote fallback. If remote
+endpoints must stay eligible, add a `crossZone.failover` list on a `MeshMultiZoneService`.
 
 ### Falling back to other zones
 
-`crossZone.failover` is a list of rules in priority order, naming which zones a client may
-reach once its local endpoints are not enough. It applies only to a
-`MeshMultiZoneService` destination.
+`crossZone.failover` lists, in priority order, the zones a client can reach when its local
+endpoints aren't enough. It's only accepted when `to[].targetRef.kind` is
+[MeshMultiZoneService](/mesh/meshmultizoneservice/).
 
-This fragment belongs under `to[].default` for a `MeshMultiZoneService`. Replace the zone
-names with the mesh zones where that service has endpoints:
+The following example lets clients in `us-1` and `us-2` fail over to those zones first, then
+lets every client fail over to `eu-1`. Place it under `to[].default` for a
+`MeshMultiZoneService`, and replace the zone names with zones where the service has endpoints:
 
 ```yaml
 localityAwareness:
@@ -260,8 +226,8 @@ localityAwareness:
       percentage: 50
 ```
 
-`from.zones` limits a rule to clients in those zones, and applies to every zone when omitted.
-`to.type` says which zones the rule sends traffic to:
+`from.zones` limits a rule to clients in those zones. Without it, the rule applies to every
+zone. `to.type` selects the zones a rule sends traffic to:
 
 {% table %}
 columns:
@@ -271,58 +237,72 @@ columns:
     key: zones
 rows:
   - type: "`Only`"
-    zones: "Those named in `to.zones`, which must not be empty."
+    zones: "The zones in `to.zones`, which can't be empty."
   - type: "`AnyExcept`"
-    zones: "Every available zone except those named in `to.zones`, which must not be empty."
+    zones: "Every available zone except those in `to.zones`, which can't be empty."
   - type: "`Any`"
     zones: "Every available zone. `to.zones` must be empty."
   - type: "`None`"
     zones: "No zone. `to.zones` must be empty."
 {% endtable %}
 
-A remote zone that no applicable rule selects receives no traffic. Local endpoints retain
-the highest priority independently of this list. A remote zone named by several applicable
-rules takes the first matching priority. `None` contributes no remote endpoints; it does
-not cancel zones selected by another rule.
+A remote zone that no rule selects gets no traffic. Local endpoints always have the highest
+priority. A zone named by several rules gets the first matching priority. `None` adds no
+remote endpoints, but doesn't cancel zones that another rule selects.
 
-`failoverThreshold.percentage` controls when a priority's healthy capacity is insufficient
-and traffic starts moving to the next priority. The default is `50`: with ten endpoints
-still present in the priority, fewer than five healthy endpoints starts spillover.
-This is not an all-at-once switch; traffic can be shared between priorities during degradation.
+`failoverThreshold.percentage` sets when a priority has too little healthy capacity and traffic
+starts moving to the next one. It defaults to `50`: with ten endpoints in a priority, spillover
+starts when fewer than five are healthy. Traffic can be shared between priorities during
+degradation, instead of switching all at once.
 
 {:.warning}
-> The current v3 implementation rounds the threshold when converting it to Envoy's
-> `overprovisioning_factor`. For example, `70` generates a factor of `100`, not a precise
-> 70% threshold. Do not rely on an exact custom percentage without checking the generated
-> `overprovisioning_factor` and testing failover. `0` uses the default factor rather than
-> disabling failover.
+> The effective threshold can only be 100 divided by a whole number: 100%, 50%, 33.3%, 25%,
+> 20%, and so on. Any other value is rounded up to the next one of these, so spillover starts
+> earlier than the value you set. For example, `30` behaves like 33.3%, and any value above
+> `50`, such as `70`, behaves like 100%: spillover starts as soon as one endpoint in the
+> priority is unhealthy. `0` is rejected.
 
-Deciding which endpoints are live is the job of
-[MeshHealthCheck](/mesh/policies/meshhealthcheck/) or
+Endpoint health comes from [MeshHealthCheck](/mesh/policies/meshhealthcheck/) or
 [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/) outlier detection. Service discovery
-can also remove endpoints. Removal is different from marking an existing endpoint unhealthy:
-it changes the endpoint set against which capacity is calculated. Test the failure mode
-you expect in production rather than assuming scale-down and failed health checks behave identically.
+can also remove endpoints, which changes the endpoint set that capacity is calculated against,
+unlike marking an endpoint unhealthy. Test the failure you expect in production, because
+scale-down and failed health checks can behave differently.
 
-## Validate endpoint selection
+## Overlapping policies
 
-1. Use a destination with multiple endpoints and a response or access log identifying the
-   serving instance. Confirm that the caller proxy has the intended algorithm and hash
-   policy in its generated cluster and HTTP route configuration.
-1. Send repeated requests from the same caller with the same hash input and confirm that
-   they reach the same endpoint while eligibility and configuration remain stable.
-1. Change the header, cookie, query parameter, or source IP used by the hash policy and confirm
-   that the request can select a different endpoint.
-1. Repeat without the hash input to verify the fallback behavior. Test many different keys;
-   two different keys can legitimately select the same endpoint.
+A more specific policy overrides the fields it sets, and inherits the fields it omits. Lists
+such as `hashPolicies`, `affinityTags`, and `failover` are replaced, not appended.
+
+For example, a mesh-wide rule can choose `RingHash` while a `backend` rule adds the `x-user`
+hash policy, and backend traffic uses both. A more specific HTTP route can replace the hash list
+with a cookie hash, but can't change the algorithm. Switching the algorithm to `RoundRobin`
+makes an inherited hash policy useless for affinity. For more information, see
+[How policies select traffic](/mesh/policy-targeting/).
+
+## Validating endpoint selection
+
+1. Use a destination with several endpoints, and a response or access log that identifies the
+   serving instance. Confirm that the caller proxy's cluster and HTTP route configuration have
+   the intended algorithm and hash policy.
+1. Send repeated requests with the same hash input, and confirm that they reach the same
+   endpoint.
+1. Change the hash input (header, cookie, query parameter, or source IP), and confirm that
+   requests can reach a different endpoint.
+1. Send requests without the hash input to check the fallback behavior. Test many keys, because
+   two keys can select the same endpoint.
 1. Remove one endpoint and measure how many keys move. Consistent hashing reduces disruption,
-   but does not guarantee that only keys previously assigned to the removed endpoint move.
-1. For locality awareness, identify the zone serving the response, make the local endpoint set
-   unhealthy, and confirm that traffic follows the configured failover priority.
-1. Confirm that a remote zone omitted from every applicable `crossZone.failover` rule receives
-   no traffic. Check each caller zone separately because `from.zones` changes the rules that apply.
+   but keys that weren't on the removed endpoint can move too.
+1. For locality awareness, identify the zone serving the response, make the local endpoints
+   unhealthy, and confirm that traffic follows the failover priority.
+1. Confirm that a remote zone missing from every applicable `crossZone.failover` rule gets no
+   traffic. Check each caller zone separately, because `from.zones` changes which rules apply.
 
-If affinity fails, first check that the traffic is parsed as HTTP, the hash input is
-present, and the effective cluster uses `RingHash` or `Maglev`. If locality fails, compare
-the caller's labels with endpoint metadata and inspect endpoint priorities and health.
-Use fresh TCP connections when testing TCP distribution; an existing connection does not move.
+If affinity fails, check the following:
+
+* The traffic is handled as HTTP.
+* The hash input is present.
+* The effective cluster uses `RingHash` or `Maglev`.
+
+If locality fails, compare the caller's labels with endpoint metadata, and inspect endpoint
+priorities and health. When testing TCP distribution, use new connections, because an existing
+connection doesn't move.

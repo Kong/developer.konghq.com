@@ -1,6 +1,6 @@
 title: 'Add a header to matched requests'
 
-description: 'Use a RequestHeaderModifier filter to set a header on requests to one path, leaving the destination unchanged.'
+description: 'Use a RequestHeaderModifier filter to set a header on every request to backend, leaving the destination unchanged.'
 
 weight: 700
 

@@ -17,19 +17,18 @@ related_resources:
   url: "/mesh/policies/meshtimeout/"
 ---
 
-`MeshFaultInjection` makes a destination proxy reject HTTP requests, delay forwarding them,
-or slow down their responses. Use it to test how callers handle failures without changing
-the destination application.
+The `MeshFaultInjection` policy makes a destination proxy reject HTTP requests, delay them,
+or slow down their responses. Use this policy to test how callers handle failures without
+changing the destination application. For example, check that:
 
-Use it to check that a caller's [MeshRetry](/mesh/policies/meshretry/) rules fire on the
-statuses you expect, that its [MeshTimeout](/mesh/policies/meshtimeout/) values are shorter
-than an injected delay, and that
-[MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/) outlier detection ejects endpoints
-that return repeated errors when configured to do so.
+* A caller's [MeshRetry](/mesh/policies/meshretry/) rules fire on the statuses you expect.
+* Its [MeshTimeout](/mesh/policies/meshtimeout/) values are shorter than an injected delay.
+* [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/) outlier detection ejects endpoints
+  that return repeated errors.
 
-Without a matching fault-injection rule, this policy introduces no faults. It does not
-simulate a process crash or a network outage: the destination proxy must still be running
-and receiving the test traffic.
+Requests that no fault-injection rule matches get no faults. The policy doesn't simulate a
+process crash or a network outage, so the destination proxy must still be running and
+receiving the test traffic.
 
 {:.warning}
 > Faults affect real requests. Start with a test destination or a specific caller, record
@@ -38,7 +37,7 @@ and receiving the test traffic.
 
 ## Fail a proportion of requests
 
-This policy applies to proxies labeled `app: backend`, and returns 503 to a tenth of the
+The following example makes proxies labeled `app: backend` return 503 to a tenth of the
 requests they receive:
 
 {% policy_yaml namespace=kong-mesh-demo %}
@@ -60,44 +59,38 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-`targetRef` selects the `backend` proxies that manufacture the fault. The rule has no client
-matcher, so it considers every request those proxies receive. `percentage: 10` selects roughly
-one request in ten, and `httpStatus: 503` is returned without sending that request to the
-application.
+What each field does:
 
-## Where this policy applies
+* `targetRef` selects the destination proxies that inject the fault, not the callers you're
+  testing: `Mesh`, or `Dataplane` with `labels`.
+* `rules` holds the faults and optional caller matches. This rule has no caller match, so it
+  applies to every request the proxies receive.
+* `abort` returns `httpStatus: 503` to about one request in ten, without sending it to the
+  application.
 
-`spec.targetRef` selects the proxies that receive traffic and inject faults. It accepts
-`Mesh` or `Dataplane`; use `Dataplane` with `labels` to select a specific destination.
-`spec.rules[]` contains the faults and optional caller matches. The policy belongs on the
-destination, not on the caller whose resilience you are testing.
+{:.warning}
+> Don't use `spec.to[]`. {{site.mesh_product_name}} still accepts it when `spec.targetRef.kind`
+> is `Mesh`, but the proxy ignores it and applies faults only from `rules`. To convert an
+> existing `to` policy, see
+> [Migrate policies to {{site.mesh_product_name}} 3.x](/mesh/migrate-policies-to-3/#meshfaultinjection).
 
-To affect one inbound, set `targetRef.sectionName` to its `name` in the destination
-Dataplane's `spec.networking.inbound[]`. For an unnamed inbound, use its port as a string,
-such as `"8080"`. Without `sectionName`, the policy covers the selected proxy's eligible
-inbounds. Zone-proxy listeners can also use `rules`; select their listener name with
-`sectionName`.
+## Listeners and protocols
+
+To apply the policy to one inbound, set `spec.networking.inbound[].targetRef.sectionName` to the inbound's `name` in the destination `Dataplane`, or to its port as a string if it
+doesn't have a name. Without `sectionName`, the policy covers all eligible inbounds. Zone-proxy
+listeners can also use `rules` with `sectionName` set to the listener name.
 
 Faults require an HTTP, HTTP/2, or gRPC listener. They have no effect on traffic handled as
-plain TCP, even if the application sends HTTP over that connection. Check the destination's
-declared inbound protocol before testing. See
+plain TCP, even if the application sends HTTP over it. For more information, see
 [Universal inbound protocols](/mesh/migrate-policies-to-3/#universal-inbounds-must-declare-their-protocol).
-
-**`spec.to[]` is accepted only when `spec.targetRef.kind` is `Mesh`.** With
-`kind: Dataplane`, defining `to` at all is rejected with `spec.to: must not be defined`.
-Where it is allowed, `to[].targetRef` accepts `kind: Mesh` and nothing else.
-
-The v3 proxy implementation applies faults from `rules`, not `to`. When migrating an
-existing `to` policy, select the receiving Dataplane and move the fault configuration into
-`rules[].default`. Verify the intended listener before starting the experiment.
-
-For the selectors a policy can carry, see [How policies select traffic](/mesh/policy-targeting/).
 
 ## The three faults
 
-A rule holds a list of faults under `http`, and each entry may set any combination of
-`abort`, `delay` and `responseBandwidth`. Every fault takes a `percentage`, in the range 0.0
-to 100.0. A fractional value has to be quoted, as `"2.5"`.
+A rule holds a list of faults under `http`, and each entry can set any combination of
+`abort`, `delay`, and `responseBandwidth`. Every fault takes a `percentage` from 0.0 to
+100.0. You must wrap fractional values in quotes, for example: `"2.5"`.
+
+`http` accepts the following faults:
 
 {% table %}
 columns:
@@ -109,21 +102,23 @@ columns:
     key: fields
 rows:
   - fault: "`abort`"
-    effect: "The request is not delivered, and the proxy answers with the status given."
-    fields: "`httpStatus`, in the range 100 to 599, and `percentage`."
+    effect: "The proxy answers with the given status and doesn't deliver the request."
+    fields: "`httpStatus` (100 to 599) and `percentage`."
   - fault: "`delay`"
-    effect: "The proxy waits before forwarding the request. Application processing takes additional time."
-    fields: "`value`, a duration, and `percentage`."
+    effect: "The proxy waits before forwarding the request, on top of the application's processing time."
+    fields: "`value` (a duration with a unit, such as `500ms`, `5s`, or `1m30s`) and `percentage`."
   - fault: "`responseBandwidth`"
     effect: "The proxy limits the transfer rate of each selected response, not the destination's total bandwidth."
-    fields: "`limit`, measured in `Gbps`, `Mbps`, `kbps` or `bps`, and `percentage`."
+    fields: "`limit` (in `Gbps`, `Mbps`, `kbps`, or `bps`) and `percentage`."
 {% endtable %}
 
 ## Percentages compound down the list
 
-Entries in one `http` list execute in the order written. An abort stops the request, so later
-entries only see requests that earlier entries did not abort. For example, place this list
-under `rules[].default`:
+Entries in one `http` list run in order. An abort stops the request, so later entries only
+see requests that weren't aborted. A delay doesn't stop the request, so it can still hit a
+later delay or abort.
+
+The following example aborts about 85% of requests, when placed under `rules[].default`:
 
 ```yaml
 http:
@@ -135,29 +130,26 @@ http:
       percentage: 50
 ```
 
-Approximately 70% of requests get a 500. Of the remaining 30%, half get a 503: about 15% of
-all requests. The other 15% reach the application, assuming no other faults or failures.
+About 70% of requests get a 500. Half of the remaining 30% get a 503, which is about 15% of
+all requests. The other 15% reach the application. Moving a fault to the front of the list
+changes how many requests the later ones see.
 
-Ordering matters for the same reason: moving a low-percentage fault to the front changes how
-many requests the later ones see. A delay does not by itself remove a request from the list:
-after waiting, the request can encounter another delay or an abort.
+## Overlapping policies
 
-## When fault-injection rules overlap
+Matching rules add their faults together. A narrower rule doesn't replace a broader rule's
+faults. For example, if one rule delays all callers and another aborts requests from
+`frontend`, frontend requests are eligible for both. A request that's aborted doesn't reach
+the faults after it.
 
-Matching rules contribute faults; a narrower rule does not replace a broader rule's fault
-list. For example, if one rule delays all callers and another aborts requests from
-`frontend`, frontend requests are eligible for both. Requests aborted before reaching a
-later fault do not experience that later fault.
-
-Setting a fault's percentage to `0` disables that fault only. It does not exempt the caller
-from faults in another matching rule or policy. To stop an experiment for a caller, remove
-or narrow every fault rule that includes that caller. Avoid overlapping experiments when
-you need to attribute a result to one fault.
+Setting a fault's `percentage` to `0` disables only that fault, not faults in other matching
+rules or policies. To stop an experiment for a caller, remove or narrow every rule that
+includes it. To attribute a result to one fault, don't overlap experiments.
 
 ## Delay requests from one workload identity
 
-A rule matching on `spiffeID` injects faults only for requests from those clients, which
-keeps a test from affecting every caller of a shared destination:
+A rule that matches `spiffeID` injects faults only for requests from those clients, so other
+callers of a shared destination aren't affected. The following example delays half of the
+requests from the `frontend` service account by 5 seconds:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -182,40 +174,53 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-Copy the complete SPIFFE URI from the frontend workload's certificate into
-`rules[].matches[].spiffeID.value`. The example assumes the default Kubernetes identity path;
-a custom [MeshIdentity](/mesh/policies/meshidentity/) template can change both the trust
-domain and path. This service-account identity can be shared by several frontend replicas,
-so the match does not select a single process.
+Copy the full SPIFFE URI from the frontend workload's certificate into
+`rules[].matches[].spiffeID.value`. The example uses the default Kubernetes identity path. A
+custom [MeshIdentity](/mesh/policies/meshidentity/) template can change the trust domain and
+path. Several frontend replicas can share this service-account identity, so the match doesn't
+select a single process.
 
-The destination must authenticate that identity through mesh mTLS. Plaintext traffic has no
-certificate identity to match. This rule does not grant access: the caller must also be
-allowed by [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/).
+The destination must authenticate the identity through mesh mTLS, because plaintext traffic
+has no identity to match. The rule doesn't grant access: the caller must also be allowed by
+[MeshTrafficPermission](/mesh/policies/meshtrafficpermission/).
 
-## Validate the injected failure
+## Validating the injected failure
 
-1. Confirm that the caller can reach the destination before applying the policy. Record the
-   normal status and latency, and check for other fault-injection policies selecting the same traffic.
-1. Send enough requests to observe the configured percentage; a small sample does not prove
-   the distribution. Count attempts received by the destination proxy, not only completed
-   application calls: client retries are new attempts and can hide injected failures.
-1. For `abort`, confirm that the client receives the configured status and that the application
-   did not receive those requests.
-1. For `delay`, measure client-observed latency and compare it with `delay.value` and any
-   applicable `MeshTimeout`.
-1. For `responseBandwidth`, measure the response transfer rate with a response large enough for
-   the limit to be visible.
-1. When a rule matches `spiffeID`, repeat the request from a client that does not match and
-   confirm that this rule does not inject a fault.
-1. Remove the test policy and repeat the baseline requests. If faults remain, check for
-   another matching policy before concluding that the application is failing.
+1. Before applying the policy, confirm that the caller can reach the destination, record the
+   normal status and latency, and check for other fault-injection policies on the same traffic.
+1. Send enough requests to observe the configured percentage. Count attempts at the destination
+   proxy, not only completed calls, because client retries can hide injected failures.
+1. For `abort`, confirm that the client gets the configured status and the application doesn't
+   receive those requests.
+1. For `delay`, confirm that client-observed latency matches `delay.value` and any applicable
+   `MeshTimeout`.
+1. For `responseBandwidth`, confirm the transfer rate with a response large enough to show the
+   limit.
+1. If a rule matches `spiffeID`, confirm that a client that doesn't match gets no fault from it.
+1. Remove the test policy and confirm that the baseline requests succeed again. If faults
+   remain, check for another matching policy.
 
-For evidence from the destination proxy, inspect the Envoy counters ending in
-`fault.aborts_injected`, `fault.delays_injected`, and `fault.response_rl_injected`.
-These distinguish faults selected by the proxy from application errors. See
+To tell injected faults from application errors, inspect the destination proxy's Envoy
+counters ending in:
+
+* `fault.aborts_injected`
+* `fault.delays_injected`
+* `fault.response_rl_injected`
+
+For more information, see
 [Envoy fault-injection statistics](https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/fault_filter#statistics).
 
-If a delay is not visible, check the inbound protocol, caller identity, and effective fault
-configuration. A caller timeout shorter than the delay produces a timeout instead of a
-successful response with extra latency. If aborts appear in proxy counters but not in the
-caller's final status, inspect its retry policy and attempt count.
+{% table %}
+columns:
+  - title: Unexpected result
+    key: unexpected
+  - title: Check
+    key: check
+rows:
+  - unexpected: "No delay is visible"
+    check: "The inbound protocol, the caller identity, and the effective fault configuration."
+  - unexpected: "The caller gets a timeout instead of a slow response"
+    check: "The caller's timeout is shorter than the delay."
+  - unexpected: "Aborts appear in proxy counters but not in the caller's final status"
+    check: "The caller's retry policy and attempt count."
+{% endtable %}

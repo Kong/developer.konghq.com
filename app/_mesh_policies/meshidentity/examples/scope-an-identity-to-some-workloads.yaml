@@ -1,6 +1,6 @@
 title: 'Give a subset of workloads their own identity'
 
-description: 'A narrower selector wins over a mesh-wide one, so these proxies are issued from this identity instead. Their trust domain changes with it, so publish a MeshTrust for it before applying.'
+description: 'A narrower selector wins over a mesh-wide one, so these proxies are issued from this CA instead. Make sure peers trust this CA before applying.'
 
 weight: 600
 

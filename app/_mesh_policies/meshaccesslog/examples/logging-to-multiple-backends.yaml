@@ -1,4 +1,4 @@
-title: 'Logging to multiple backends'
+title: 'Log to multiple backends'
 
 tools:
   - kubernetes
