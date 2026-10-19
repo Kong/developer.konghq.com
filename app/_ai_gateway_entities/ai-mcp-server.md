@@ -108,9 +108,8 @@ faqs:
 
   - q: How do I connect to an upstream that requires mTLS or serves a certificate from a private CA?
     a: |
-      Reference an [AI Certificate](/ai-gateway/entities/ai-certificate/) by name in [`config.certificates`](#schema-aigateway-mcpserver-config-certificates) to present a client certificate during the TLS handshake with the upstream.
-      Reference one or more [AI CA Certificates](/ai-gateway/entities/ai-ca-certificate/) by name in [`config.ca_certificates`](#schema-aigateway-mcpserver-config-ca-certificates) to verify the upstream's certificate against a private or internal CA.
-      Both fields require a minimum runtime version of 2.3.
+      Set [`config.certificates`](#schema-aigateway-mcpserver-config-certificates) for mTLS, or [`config.ca_certificates`](#schema-aigateway-mcpserver-config-ca-certificates) for a private CA.
+      Both fields require {{site.ai_gateway}} 2.3 or later.
       See [Upstream TLS](#upstream-tls).
 ---
 
@@ -536,12 +535,10 @@ config:
 
 {% include md/ai-gateway/v2/upstream-tls.md name='AI MCP Server' schema_prefix='schema-aigateway-mcpserver-config' %}
 
-Both fields reference entities on the same {{site.ai_gateway}} instance by their immutable `name`.
-If a referenced name doesn't exist, the API returns an `HTTP 400` error.
-Both fields apply to every mode that proxies to an upstream service: `conversion-only`, `conversion-listener`, `passthrough-listener`, and `upstream-server`.
-In `listener` mode, the AI MCP Server aggregates tools from other AI MCP Servers and doesn't proxy to an upstream, so these fields don't apply.
+These fields work in every [server mode](#server-modes) that connects to an upstream: `conversion-only`, `conversion-listener`, `passthrough-listener`, and `upstream-server`.
+They have no effect in `listener` mode, because a listener only aggregates tools from other AI MCP Servers and doesn't connect to an upstream itself.
 
-The following example presents a client certificate and verifies the upstream against a private CA:
+In the following example, the AI MCP Server presents the `mcp-client-cert` certificate to the upstream and verifies the upstream against the `kongair-internal-root-ca` CA:
 
 ```yaml
 config:

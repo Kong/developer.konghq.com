@@ -95,9 +95,8 @@ faqs:
 
   - q: How do I connect to an upstream agent that requires mTLS or serves a certificate from a private CA?
     a: |
-      Reference an [AI Certificate](/ai-gateway/entities/ai-certificate/) by name in [`config.certificates`](#schema-aigateway-agent-config-certificates) to present a client certificate during the TLS handshake with the upstream.
-      Reference one or more [AI CA Certificates](/ai-gateway/entities/ai-ca-certificate/) by name in [`config.ca_certificates`](#schema-aigateway-agent-config-ca-certificates) to verify the upstream's certificate against a private or internal CA.
-      Both fields apply to `a2a` and `http` AI Agents and require a minimum runtime version of 2.3.
+      Set [`config.certificates`](#schema-aigateway-agent-config-certificates) for mTLS, or [`config.ca_certificates`](#schema-aigateway-agent-config-ca-certificates) for a private CA.
+      Both fields apply to `a2a` and `http` AI Agents and require {{site.ai_gateway}} 2.3 or later.
       See [Upstream TLS](#upstream-tls).
 ---
 
@@ -388,11 +387,9 @@ config:
 
 {% include md/ai-gateway/v2/upstream-tls.md name='AI Agent' schema_prefix='schema-aigateway-agent-config' %}
 
-Both fields reference entities on the same {{site.ai_gateway}} instance by their immutable `name`.
-If a referenced name doesn't exist, the API returns an `HTTP 400` error.
-Both fields apply to `a2a` and `http` AI Agents.
+These fields apply to both `a2a` and `http` AI Agents.
 
-The following example presents a client certificate and verifies the upstream against a private CA:
+In the following example, the AI Agent presents the `agent-client-cert` certificate to the upstream and verifies the upstream against the `kongair-internal-root-ca` CA:
 
 ```yaml
 config:
