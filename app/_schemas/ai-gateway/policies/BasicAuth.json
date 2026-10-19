@@ -36,11 +36,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "hide_credentials": {
-          "type": "boolean",
-          "description": "An optional boolean value telling the policy to show or hide the credential from the upstream service. If `true`, the policy will strip the credential from the request (i.e. the `Authorization` header) before proxying it.",
-          "default": true
-        },
         "realm": {
           "type": "string",
           "description": "When authentication fails the policy sends `WWW-Authenticate` header with `realm` attribute value.",
@@ -83,19 +78,6 @@
             "redis": {
               "type": "object",
               "properties": {
-                "host": {
-                  "type": "string",
-                  "description": "A string representing a host name, such as example.com.",
-                  "x-referenceable": true
-                },
-                "port": {
-                  "type": "integer",
-                  "maximum": 65535,
-                  "minimum": 0,
-                  "description": "An integer representing a port number between 0 and 65535, inclusive.",
-                  "default": 6379,
-                  "x-referenceable": true
-                },
                 "timeout": {
                   "type": "integer",
                   "maximum": 2147483646,
@@ -108,19 +90,27 @@
                   "description": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.",
                   "x-referenceable": true
                 },
+                "database": {
+                  "type": "integer",
+                  "description": "Database to use for the Redis connection when using the `redis` strategy",
+                  "default": 0
+                },
                 "ssl": {
                   "type": "boolean",
                   "description": "If set to true, uses SSL to connect to Redis.",
                   "default": false
                 },
-                "ssl_verify": {
-                  "type": "boolean",
-                  "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
-                  "default": true
-                },
                 "server_name": {
                   "type": "string",
                   "description": "A string representing an SNI (server name indication) value for TLS.",
+                  "x-referenceable": true
+                },
+                "port": {
+                  "type": "integer",
+                  "maximum": 65535,
+                  "minimum": 0,
+                  "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                  "default": 6379,
                   "x-referenceable": true
                 },
                 "password": {
@@ -132,31 +122,9 @@
                 "cloud_authentication": {
                   "type": "object",
                   "properties": {
-                    "auth_provider": {
-                      "type": "string",
-                      "enum": [
-                        "aws",
-                        "azure",
-                        "gcp"
-                      ],
-                      "description": "Auth providers to be used to authenticate to a Cloud Provider's Redis instance.",
-                      "x-referenceable": true
-                    },
-                    "aws_secret_access_key": {
-                      "type": "string",
-                      "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.",
-                      "x-referenceable": true,
-                      "x-encrypted": true
-                    },
                     "aws_assume_role_arn": {
                       "type": "string",
                       "description": "The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens.",
-                      "x-referenceable": true,
-                      "x-encrypted": true
-                    },
-                    "gcp_service_account_json": {
-                      "type": "string",
-                      "description": "GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`.",
                       "x-referenceable": true,
                       "x-encrypted": true
                     },
@@ -166,9 +134,55 @@
                       "x-referenceable": true,
                       "x-encrypted": true
                     },
+                    "azure_client_secret": {
+                      "type": "string",
+                      "description": "Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`.",
+                      "x-referenceable": true,
+                      "x-encrypted": true
+                    },
                     "aws_cache_name": {
                       "type": "string",
                       "description": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`.",
+                      "x-referenceable": true
+                    },
+                    "aws_access_key_id": {
+                      "type": "string",
+                      "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.",
+                      "x-referenceable": true,
+                      "x-encrypted": true
+                    },
+                    "aws_secret_access_key": {
+                      "type": "string",
+                      "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.",
+                      "x-referenceable": true,
+                      "x-encrypted": true
+                    },
+                    "aws_role_session_name": {
+                      "type": "string",
+                      "description": "The session name for the temporary credentials when assuming the IAM role.",
+                      "x-referenceable": true,
+                      "x-encrypted": true
+                    },
+                    "gcp_service_account_json": {
+                      "type": "string",
+                      "description": "GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`.",
+                      "x-referenceable": true,
+                      "x-encrypted": true
+                    },
+                    "azure_tenant_id": {
+                      "type": "string",
+                      "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`.",
+                      "x-referenceable": true,
+                      "x-encrypted": true
+                    },
+                    "auth_provider": {
+                      "type": "string",
+                      "enum": [
+                        "aws",
+                        "azure",
+                        "gcp"
+                      ],
+                      "description": "Auth providers to be used to authenticate to a Cloud Provider's Redis instance.",
                       "x-referenceable": true
                     },
                     "aws_region": {
@@ -180,38 +194,19 @@
                       "type": "boolean",
                       "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
                       "default": true
-                    },
-                    "aws_access_key_id": {
-                      "type": "string",
-                      "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.",
-                      "x-referenceable": true,
-                      "x-encrypted": true
-                    },
-                    "aws_role_session_name": {
-                      "type": "string",
-                      "description": "The session name for the temporary credentials when assuming the IAM role.",
-                      "x-referenceable": true,
-                      "x-encrypted": true
-                    },
-                    "azure_client_secret": {
-                      "type": "string",
-                      "description": "Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`.",
-                      "x-referenceable": true,
-                      "x-encrypted": true
-                    },
-                    "azure_tenant_id": {
-                      "type": "string",
-                      "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`.",
-                      "x-referenceable": true,
-                      "x-encrypted": true
                     }
                   },
                   "description": "Cloud auth related configs for connecting to a Cloud Provider's Redis instance."
                 },
-                "database": {
-                  "type": "integer",
-                  "description": "Database to use for the Redis connection when using the `redis` strategy",
-                  "default": 0
+                "ssl_verify": {
+                  "type": "boolean",
+                  "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
+                  "default": true
+                },
+                "host": {
+                  "type": "string",
+                  "description": "A string representing a host name, such as example.com.",
+                  "x-referenceable": true
                 }
               },
               "description": "Redis configuration"
@@ -221,6 +216,11 @@
         "anonymous": {
           "type": "string",
           "description": "An optional string (Consumer UUID or username) value to use as an \"anonymous\" consumer if authentication fails. If empty (default null), the request will fail with an authentication failure `4xx`. Please note that this value must refer to the Consumer `id` or `username` attribute, and **not** its `custom_id`."
+        },
+        "hide_credentials": {
+          "type": "boolean",
+          "description": "An optional boolean value telling the policy to show or hide the credential from the upstream service. If `true`, the policy will strip the credential from the request (i.e. the `Authorization` header) before proxying it.",
+          "default": true
         }
       }
     },

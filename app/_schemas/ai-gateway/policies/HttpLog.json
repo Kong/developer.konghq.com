@@ -1,13 +1,34 @@
 {
   "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "tcp",
+          "tls",
+          "tls_passthrough",
+          "udp",
+          "ws",
+          "wss"
+        ],
+        "description": "A string representing a protocol, such as HTTP or HTTPS."
+      },
+      "description": "A set of strings representing protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
     "config": {
       "type": "object",
       "properties": {
-        "keepalive": {
-          "type": "number",
-          "description": "An optional value in milliseconds that defines how long an idle connection will live before being closed.",
-          "default": 60000
-        },
         "queue": {
           "type": "object",
           "properties": {
@@ -73,12 +94,6 @@
           },
           "description": "Lua code as a key-value map"
         },
-        "http_endpoint": {
-          "type": "string",
-          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
-          "x-referenceable": true,
-          "x-encrypted": true
-        },
         "method": {
           "type": "string",
           "enum": [
@@ -103,6 +118,29 @@
           "description": "An optional timeout in milliseconds when sending data to the upstream server.",
           "default": 10000
         },
+        "keepalive": {
+          "type": "number",
+          "description": "An optional value in milliseconds that defines how long an idle connection will live before being closed.",
+          "default": 60000
+        },
+        "headers": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "An optional table of headers included in the HTTP message to the upstream server. Values are indexed by header name, and each header name accepts a single string."
+        },
+        "http_endpoint": {
+          "type": "string",
+          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+          "x-referenceable": true,
+          "x-encrypted": true
+        },
+        "ssl_verify": {
+          "type": "boolean",
+          "description": "When using TLS, this option enables verification of the certificate presented by the server.",
+          "default": true
+        },
         "retry_count": {
           "type": "integer",
           "description": "Number of times to retry when sending data to the upstream server."
@@ -114,48 +152,10 @@
         "flush_timeout": {
           "type": "number",
           "description": "Optional time in seconds. If `queue_size` > 1, this is the max idle time before sending a log with less than `queue_size` records."
-        },
-        "headers": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "An optional table of headers included in the HTTP message to the upstream server. Values are indexed by header name, and each header name accepts a single string."
-        },
-        "ssl_verify": {
-          "type": "boolean",
-          "description": "When using TLS, this option enables verification of the certificate presented by the server.",
-          "default": true
         }
       },
       "required": [
         "http_endpoint"
-      ]
-    },
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https",
-          "tcp",
-          "tls",
-          "tls_passthrough",
-          "udp",
-          "ws",
-          "wss"
-        ],
-        "description": "A string representing a protocol, such as HTTP or HTTPS."
-      },
-      "description": "A set of strings representing protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
       ]
     },
     "consumer": {

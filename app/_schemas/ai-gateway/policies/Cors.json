@@ -1,41 +1,24 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1,
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ]
-      },
-      "description": "A set of strings representing HTTP protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
+        "private_network": {
+          "type": "boolean",
+          "description": "Flag to determine whether the `Access-Control-Allow-Private-Network` header should be sent with `true` as the value.",
+          "default": false
+        },
+        "preflight_continue": {
+          "type": "boolean",
+          "description": "A boolean value that instructs the policy to proxy the `OPTIONS` preflight request to the Upstream service.",
+          "default": false
+        },
         "origins": {
           "type": "array",
           "items": {
             "type": "string"
           },
           "description": "List of allowed domains for the `Access-Control-Allow-Origin` header. If you want to allow all origins, add `*` as a single value to this configuration field. The accepted values can either be flat strings or PCRE regexes. NOTE: If you don't specify any allowed domains, all origins are allowed."
-        },
-        "headers": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Value for the `Access-Control-Allow-Headers` header."
         },
         "exposed_headers": {
           "type": "array",
@@ -77,27 +60,44 @@
           "type": "number",
           "description": "Indicates how long the results of the preflight request can be cached, in `seconds`."
         },
-        "private_network": {
+        "allow_origin_absent": {
           "type": "boolean",
-          "description": "Flag to determine whether the `Access-Control-Allow-Private-Network` header should be sent with `true` as the value.",
-          "default": false
+          "description": "A boolean value that skip cors response headers when origin header of request is empty",
+          "default": true
         },
-        "preflight_continue": {
-          "type": "boolean",
-          "description": "A boolean value that instructs the policy to proxy the `OPTIONS` preflight request to the Upstream service.",
-          "default": false
+        "headers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Value for the `Access-Control-Allow-Headers` header."
         },
         "credentials": {
           "type": "boolean",
           "description": "Flag to determine whether the `Access-Control-Allow-Credentials` header should be sent with `true` as the value.",
           "default": false
-        },
-        "allow_origin_absent": {
-          "type": "boolean",
-          "description": "A boolean value that skip cors response headers when origin header of request is empty",
-          "default": true
         }
       }
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
     },
     "route": {
       "type": "object",

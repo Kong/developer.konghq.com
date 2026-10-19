@@ -22,6 +22,9 @@
     "config": {
       "type": "object",
       "properties": {
+        "path": {
+          "type": "string"
+        },
         "port": {
           "type": "string"
         },
@@ -31,9 +34,6 @@
         "escape_path": {
           "type": "boolean",
           "default": false
-        },
-        "path": {
-          "type": "string"
         }
       }
     },

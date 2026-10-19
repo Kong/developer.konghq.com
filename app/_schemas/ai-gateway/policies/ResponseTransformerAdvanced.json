@@ -70,6 +70,13 @@
         "replace": {
           "type": "object",
           "properties": {
+            "headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
             "if_status": {
               "type": "array",
               "items": {
@@ -97,13 +104,6 @@
                   "number",
                   "string"
                 ]
-              },
-              "default": []
-            },
-            "headers": {
-              "type": "array",
-              "items": {
-                "type": "string"
               },
               "default": []
             }
