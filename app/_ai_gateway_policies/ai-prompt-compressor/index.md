@@ -370,7 +370,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-The two providers report compression at different granularity. The `kong` provider reports one result for each compressed message. Headroom reports one result for the whole request. The metrics sum the results for each request, so they mean the same thing for both providers.
+The two providers report compression at different granularity. The `kong` provider reports one result for each compressed message. [Headroom](#headroom-compressor-service) reports one result for the whole request. The metrics sum the results for each request, so they mean the same thing for both providers.
 
 ### Saved token counter
 

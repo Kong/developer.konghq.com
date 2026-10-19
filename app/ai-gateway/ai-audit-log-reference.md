@@ -474,7 +474,9 @@ rows:
 
 ### AI Prompt Compressor logs 
 
-When the [AI Prompt Compressor Policy](/ai-gateway/policies/ai-prompt-compressor/) is enabled, additional logs record token counts before and after compression, compression ratios, and metadata about the compression method and model used.
+When the [AI Prompt Compressor Policy](/ai-gateway/policies/ai-prompt-compressor/) is enabled, additional logs record token counts before and after compression, the number of compressed messages, the compression time, and metadata about the compression method and model used.
+
+The following fields summarize the compression for the whole request {% new_in 2.3 %}:
 
 {% table %}
 columns:
@@ -483,21 +485,46 @@ columns:
   - title: Description
     key: description
 rows:
+  - property: "`ai.compressor.provider`"
+    description: The compression provider, `kong` or `headroom`.
   - property: "`ai.compressor.original_token_count`"
-    description: The original number of tokens before compression.
+    description: The total number of tokens before compression.
   - property: "`ai.compressor.compress_token_count`"
-    description: The number of tokens after compression.
+    description: The total number of tokens after compression.
   - property: "`ai.compressor.save_token_count`"
-    description: The number of tokens saved by compression (original minus compressed).
-  - property: "`ai.compressor.compress_value`"
-    description: The compression ratio applied.
+    description: The total number of tokens saved by compression (original minus compressed).
+  - property: "`ai.compressor.compressed_message_count`"
+    description: The number of compressed messages.
+  - property: "`ai.compressor.duration`"
+    description: The time the compressor took, in milliseconds.
   - property: "`ai.compressor.compress_type`"
+    description: The type or method of compression used. Not set when the provider is `headroom`.
+{% endtable %}
+
+The `ai.compressor.compress_items` array holds one entry for each compressed message. The `headroom` provider reports one entry for the whole request. For more information, see [Headroom compressor service](/ai-gateway/policies/ai-prompt-compressor/#headroom-compressor-service) and [Compress agent traffic with Headroom using {{site.operator_product_name}}](/operator/konnect/how-to/ai-gateway-headroom/).
+
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: "`original_token_count`"
+    description: The original number of tokens before compression.
+  - property: "`compress_token_count`"
+    description: The number of tokens after compression.
+  - property: "`save_token_count`"
+    description: The number of tokens saved by compression (original minus compressed).
+  - property: "`compress_value`"
+    description: The compression ratio applied.
+  - property: "`compress_type`"
     description: The type or method of compression used.
-  - property: "`ai.compressor.compressor_model`"
+  - property: "`compressor_model`"
     description: The model used to perform the compression.
-  - property: "`ai.compressor.msg_id`"
+  - property: "`msg_id`"
     description: The identifier of the message that was compressed.
-  - property: "`ai.compressor.information`"
+  - property: "`information`"
     description: A summary or message describing the result of compression.
 {% endtable %}
 
@@ -740,14 +767,25 @@ The following example shows a structured {{site.ai_gateway}} log entry:
       }
     },
     "compressor": {
+      "provider": "kong",
       "original_token_count": 845,
       "compress_token_count": 485,
       "save_token_count": 360,
-      "compress_value": 0.5,
+      "compressed_message_count": 1,
+      "duration": 120,
       "compress_type": "rate",
-      "compressor_model": "microsoft/llmlingua-2-bert-base-multilingual-cased-meetingbank",
-      "msg_id": 1,
-      "information": "Compression was performed and saved 360 tokens"
+      "compress_items": [
+        {
+          "original_token_count": 845,
+          "compress_token_count": 485,
+          "save_token_count": 360,
+          "compress_value": 0.5,
+          "compress_type": "rate",
+          "compressor_model": "microsoft/llmlingua-2-bert-base-multilingual-cased-meetingbank",
+          "msg_id": 1,
+          "information": "Compression was performed and saved 360 tokens"
+        }
+      ]
     },
     "sanitizer": {
       "pii_identified": 3,
