@@ -4,27 +4,39 @@
 import { initTrophy } from "./arcade/trophy";
 import { track } from "./arcade/analytics";
 
-const CODE = "0451";
+const CODES = [
+  ["0", "4", "5", "1"],
+  ["arrowup", "arrowup", "arrowdown", "arrowdown", "arrowleft", "arrowright", "arrowleft", "arrowright", "b", "a", " "],
+];
+// The whole code must be typed within this window, measured from its first key.
+const WINDOW_MS = 10000;
+const MAX_LENGTH = Math.max(...CODES.map((code) => code.length));
 const EDITABLE = "input, textarea, select, [contenteditable]:not([contenteditable='false'])";
 
-let buffer = "";
+let keys = [];
 let active = false;
 
 initTrophy();
+
+function matches(code) {
+  const typed = keys.slice(-code.length);
+  return (
+    typed.length === code.length &&
+    typed.every(({ key }, i) => key === code[i]) &&
+    typed[typed.length - 1].time - typed[0].time <= WINDOW_MS
+  );
+}
 
 document.addEventListener("keydown", (event) => {
   if (active || event.repeat || event.metaKey || event.ctrlKey || event.altKey) return;
   if (event.target instanceof Element && event.target.closest(EDITABLE)) return;
 
-  if (!/^[0-9]$/.test(event.key)) {
-    buffer = "";
-    return;
-  }
+  if (event.key === "Shift") return;
 
-  buffer = (buffer + event.key).slice(-CODE.length);
-  if (buffer !== CODE) return;
+  keys = [...keys, { key: event.key.toLowerCase(), time: event.timeStamp }].slice(-MAX_LENGTH);
+  if (!CODES.some(matches)) return;
 
-  buffer = "";
+  keys = [];
   active = true;
   track("Arcade Started");
   import("./arcade/game.js")
