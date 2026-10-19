@@ -37,6 +37,8 @@ related_resources:
     url: /mcp/
   - text: MCP version support
     url: /ai-gateway/mcp-version-support/
+  - text: AI MCP Sanitizer Policy
+    url: /ai-gateway/policies/ai-mcp-sanitizer/
   - text: Model Context Protocol specification
     url: https://modelcontextprotocol.io/
   - text: Map a RESTful API to MCP tools
