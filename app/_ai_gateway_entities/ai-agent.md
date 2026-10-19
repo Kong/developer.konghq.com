@@ -340,7 +340,7 @@ To restrict which AI Consumers or teams can reach a specific agent, use ACLs. Th
 
 For per-request authentication and identity validation, reference an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) in the [`access.auth_strategies`](#schema-aigateway-agent-access) array, the same way you would for an [AI Model](/ai-gateway/entities/ai-model/#access-control). The AI Agent has its own top-level authentication mechanism: you configure the authentication through AI Auth Strategies. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes) for details.
 
-An AI Agent currently accepts up to one AI Auth Strategy reference. ACLs are evaluated only after the AI Consumer's identity is resolved through this authentication step.
+An AI Agent accepts up to one AI Auth Strategy reference. ACLs are evaluated only after the AI Consumer's identity is resolved through this authentication step.
 
 ### CEL-based ACLs {% new_in 2.2 %}
 
