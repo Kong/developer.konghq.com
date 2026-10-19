@@ -1,7 +1,10 @@
 ---
+title: 'AI MCP Sanitizer'
+name: 'AI MCP Sanitizer'
+publisher: kong-inc
 description: 'Detect and redact personally identifiable information (PII) in MCP tool call arguments and results.'
 min_version:
-  ai-gateway: '2.0' # TODO: confirm. Aha AI-46 targets the 2.3 GA release (2026-10-29) as Tech Preview.
+  ai-gateway: '2.0'
 works_on:
   - konnect
 products:
@@ -26,7 +29,6 @@ related_resources:
     url: /ai-gateway/mcp-version-support/
   - text: Model Context Protocol specification
     url: https://modelcontextprotocol.io/
-published: false
 ---
 
 <!-- TODO: Drafted from kong-ee PR #23501 (draft), Aha AI-46, and the MCP PII sanitizer PRD and design doc. No Konnect API spec was available. Confirm every field name, default, scope, and error behavior against the spec, then remove `published: false`. The Aha description and PRD still describe the earlier `mcp-pii-sanitizer` design (`sanitization_mode`, per-leaf calls). PR #23501 is the source for this page. -->
