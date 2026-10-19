@@ -604,7 +604,7 @@ body:
    
    Network range and CIDR block requirements are the same as for a standard Dedicated Cloud Gateway.
    See [CIDR size requirements](/dedicated-cloud-gateways/reference/#cidr-size-requirements) and [Network architecture](/dedicated-cloud-gateways/network-architecture/).
-   This example is for an AWS Dedicated Cloud Gateway, but Azure is also supported.
+   This example is for an AWS Dedicated Cloud Gateway, but Azure is also supported. For Azure, set `provider: azure` and use an Azure region.
 {% endnavtab %}
 {% endnavtabs %}
 <!--vale on-->
