@@ -112,7 +112,7 @@ rows:
     fields: "`limit` (in `Gbps`, `Mbps`, `kbps`, or `bps`) and `percentage`."
 {% endtable %}
 
-## Percentages compound down the list
+## Fault order
 
 Entries in one `http` list run in order. An abort stops the request, so later entries only
 see requests that weren't aborted. A delay doesn't stop the request, so it can still hit a
