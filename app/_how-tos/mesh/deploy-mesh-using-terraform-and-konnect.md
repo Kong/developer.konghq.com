@@ -22,8 +22,8 @@ tags:
 tldr:
   q: How do I start a {{site.mesh_product_name}} 3.x deployment with Terraform and {{site.konnect_short_name}}?
   a: Use the konnect-beta provider with version = "v3" to create the global control
-    plane. Provision zone credentials with the API, install the zone with Helm, and
-    configure the demo mesh with kongctl.
+    plane. Provision zone credentials with the API, install the zone with Helm, create
+    the demo mesh with kongctl, and apply its traffic permission to the zone with kubectl.
 prereqs:
   inline:
     - title: Terraform
@@ -44,9 +44,10 @@ cleanup:
   inline:
     - title: Remove the zone and destroy the control plane
       content: |
-        Remove the test workloads and the zone installed by Helm before destroying its global control plane:
+        Remove the zone traffic permission, the test workloads, and the zone installed by Helm before destroying its global control plane:
 
         ```sh
+        kubectl delete meshtrafficpermission client-to-server --namespace kong-mesh-system
         kubectl delete namespace kong-mesh-demo
         helm uninstall kong-mesh --namespace kong-mesh-system
         cd "$MESH_TERRAFORM_DIR"
@@ -63,9 +64,10 @@ min_version:
 ---
 
 This guide uses Terraform to create a **new {{site.mesh_product_name}} 3.x global control plane** in {{site.konnect_short_name}}. It then
-uses the {{site.konnect_short_name}} API for zone credentials, Helm to install a Kubernetes zone, and `kongctl`
-to configure and test a secured mesh. Terraform owns only the global control plane in this
-example; the remaining resources have explicit setup and cleanup steps.
+uses the {{site.konnect_short_name}} API for zone credentials, Helm to install a Kubernetes zone, `kongctl`
+to create the mesh on the global control plane, and `kubectl` to apply its traffic permission
+to the zone. Terraform owns only the global control plane in this example; the remaining
+resources have explicit setup and cleanup steps.
 
 Unlike the 2.x example, it does not configure `Mesh.mtls`, an allow-all `from` policy, or shared
 zone ingress and egress. Workload security uses `MeshIdentity` and identity-based permissions.

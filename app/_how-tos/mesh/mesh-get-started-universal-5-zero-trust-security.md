@@ -26,6 +26,8 @@ related_resources:
     url: /mesh/policies/meshtrafficpermission/
   - text: MeshTLS
     url: /mesh/policies/meshtls/
+  - text: Bring external traffic into the mesh
+    url: /mesh/application-ingress/
 cleanup:
   inline:
     - title: Remove the demo containers and network
@@ -35,6 +37,8 @@ cleanup:
         docker network rm kong-mesh-demo
         rm -rf "$KONG_MESH_DEMO_TMP"
         ```
+min_version:
+  mesh: '3.0'
 ---
 
 So far both workloads talk to each other with nothing stopping them, and nothing encrypting
@@ -93,7 +97,7 @@ bundle was created alongside it:
 kongctl get mesh meshtrusts --control-plane-url "$KONG_MESH_CP"
 ```
 
-## Traffic is now denied
+## Confirm that traffic is denied
 
 Try the demo application again:
 
@@ -143,7 +147,7 @@ defaults to `/workload/{workload}`, so `demo-app` becomes
 > `allow`, so a deny-all can never be re-opened. Write the allows; traffic matching nothing is
 > denied anyway.
 
-## Check it landed
+## Inspect the applied policy
 
 ```sh
 kongctl get mesh inspect dataplane kv --control-plane-url "$KONG_MESH_CP"
@@ -153,6 +157,7 @@ kongctl get mesh inspect dataplane kv --control-plane-url "$KONG_MESH_CP"
 PORT  KIND                   ORIGINS
 main  MeshTrafficPermission  kri_mtp_default___allow-demo-app-to-kv_
 ```
+{:.no-copy-code}
 
 That is the control plane's own view, per port, after matching, not a read-back of what you
 applied. And from the other direction, the proxies a policy matches:
@@ -162,30 +167,22 @@ kongctl get mesh inspect meshtrafficpermission allow-demo-app-to-kv \
   --control-plane-url "$KONG_MESH_CP"
 ```
 
-## Verify
+To let traffic from outside the mesh reach the demo application, see
+[Bring external traffic into the mesh](/mesh/application-ingress/).
 
-The demo application can reach the key/value store again, because its identity is allowed:
+## Validate
+
+Send the request from inside the demo application's container, so the application calls the
+key/value store through its sidecar:
 
 ```sh
-curl http://127.0.0.1:25050/api/v1/items/hello
+docker exec kong-mesh-demo-app curl -s http://127.0.0.1:5050/api/v1/items/hello
 ```
 
-This still fails from your host, and should: `curl` presents no mesh identity, and the inbound
-is `Strict`. Traffic between the two workloads is now encrypted and authorized; traffic from
-outside is not admitted at all.
+The response returns the `hello` item you stored when you added the demo application, with the
+value `mesh`. The application reached `kv` over mTLS, and the `kv` proxy admitted it because
+`demo-app`'s SPIFFE ID is allowed.
 
-## Letting external traffic in
-
-External traffic reaches a mesh through a gateway, and in
-{{site.mesh_product_name}} 3.x that means a **delegated** gateway: a gateway you run yourself, with
-`kuma-dp` beside it, as an ordinary `Dataplane`.
-
-The built-in gateway is removed. `MeshGateway`, `MeshGatewayRoute`, `MeshGatewayInstance` and
-`MeshGatewayConfig` no longer exist, not as resources and not as CRDs, and `MeshGateway` is no
-longer a valid `targetRef.kind` for any policy. The `kuma.io/gateway` marking is gone too.
-
-What made a gateway special was that {{site.mesh_product_name}} did not proxy the traffic it
-terminates, and that now comes from keeping its listen ports out of inbound redirection with the
-`traffic.kuma.io/exclude-inbound-ports` annotation. Everything else about it is an ordinary
-proxy: it gets a `Dataplane`, a token, an identity from the same `MeshIdentity`, and it is
-allowed through `MeshTrafficPermission` like any other caller.
+The same request from your host, `curl http://127.0.0.1:25050/api/v1/items/hello`, still fails:
+`curl` presents no mesh identity, and the inbound is `Strict`. Traffic between the two workloads
+is encrypted and authorized; traffic from outside isn't admitted at all.

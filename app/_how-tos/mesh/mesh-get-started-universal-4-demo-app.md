@@ -24,6 +24,8 @@ related_resources:
     url: /mesh/universal-data-plane/
   - text: "{{site.mesh_product_name}} CLI"
     url: /mesh/cli/
+min_version:
+  mesh: '3.0'
 ---
 
 The second workload is an application that reads and writes the key/value store. Adding it is
@@ -63,12 +65,13 @@ docker exec --detach kong-mesh-demo-app \
     --dataplane-var name=demo-app \
     --dataplane-var address=172.18.78.3 \
     --dataplane-var port=5050 \
+    --dataplane-var protocol=http \
     --dataplane-token-file /demo/token-demo-app \
     --transparent-proxy \
     --transparent-proxy-config /demo/transparent-proxy.yaml
 ```
 
-## How it finds the key/value store
+## Understand service discovery
 
 The application was told to reach `kv` at a hostname, not an address. Two pieces make that work,
 and both came from the previous page:
@@ -126,6 +129,7 @@ MESH     NAME      STATUS
 default  demo-app  Online
 default  kv        Online
 ```
+{:.no-copy-code}
 
 ## See what applies to a proxy
 
@@ -137,7 +141,3 @@ kongctl get mesh inspect dataplane demo-app --control-plane-url "$KONG_MESH_CP"
 ```
 
 Nothing is listed yet, because no policy targets these workloads. The next page changes that.
-
-## Next
-
-[Introduce zero-trust security](/mesh/get-started/universal/zero-trust-security/).

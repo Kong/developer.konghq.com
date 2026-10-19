@@ -1,6 +1,6 @@
 ---
 title: Install {{site.mesh_product_name}}
-description: "Install the {{site.mesh_product_name}} binaries and kongctl, and prepare the network and files the rest of the series uses."
+description: "Install the {{site.mesh_product_name}} binaries and prepare the network and files the rest of the series uses."
 content_type: how_to
 permalink: /mesh/get-started/universal/install/
 breadcrumbs:
@@ -18,12 +18,14 @@ series:
   position: 1
 tldr:
   q: What do I need before running {{site.mesh_product_name}} on Universal?
-  a: Install the {{site.mesh_product_name}} binaries and `kongctl`, create a Docker network the containers share, and write the `Dataplane` template and transparent proxy config the later steps reuse.
+  a: Install the {{site.mesh_product_name}} binaries, create a Docker network the containers share, and write the `Dataplane` template and transparent proxy config the later steps reuse.
 related_resources:
   - text: "{{site.mesh_product_name}} on Universal"
     url: /mesh/universal/
   - text: "{{site.mesh_product_name}} CLI"
     url: /mesh/cli/
+tools:
+  - kongctl
 prereqs:
   inline:
     - title: A container runtime
@@ -33,10 +35,12 @@ prereqs:
     - title: curl
       content: |
         Used to download the {{site.mesh_product_name}} binaries.
+min_version:
+  mesh: '3.0'
 ---
 
 This series runs {{site.mesh_product_name}} on Universal from nothing to a two-service mesh with
-mTLS and a gateway, entirely in containers on one machine. Each step builds on the last.
+mTLS and traffic permissions, entirely in containers on one machine. Each step builds on the last.
 
 Universal here means what it means in production: there is no Kubernetes API server to derive
 anything from, so you declare each proxy yourself. Where Kubernetes would infer ports, protocols
@@ -55,16 +59,9 @@ curl -L https://developer.konghq.com/mesh/installer.sh | VERSION={{page.latest_r
 sudo mv kong-mesh-*/bin/* /usr/local/bin/
 ```
 
-## Install kongctl
-
-`kongctl` is the CLI for {{site.mesh_product_name}} 3.x, and replaces `kumactl`. Install it and
-confirm it runs:
-
-```sh
-kongctl version
-```
-
-See [{{site.mesh_product_name}} CLI](/mesh/cli/) for the full command surface.
+The series manages resources with `kongctl`, the CLI that replaces `kumactl` in
+{{site.mesh_product_name}} 3.x. See [{{site.mesh_product_name}} CLI](/mesh/cli/) for the full
+command surface.
 
 ## Create a working directory
 
@@ -84,8 +81,12 @@ The control plane and the two workloads need to reach each other by address:
 ```sh
 docker network create \
   --subnet 172.18.78.0/24 \
+  --gateway 172.18.78.254 \
   kong-mesh-demo
 ```
+
+`--gateway` moves the network's gateway to `172.18.78.254`. Without it, Docker takes
+`172.18.78.1`, the address the control plane runs on.
 
 ## Write the Dataplane template
 
@@ -106,7 +107,7 @@ networking:
   inbound:
     - port: {{ port }}
       name: main
-      protocol: http
+      protocol: {{ protocol }}
 EOF
 ```
 {% endraw %}
@@ -129,7 +130,7 @@ rows:
   - field: "`labels.app`"
     why: "An ordinary label. This is what policies select on, now that inbounds carry no tags."
   - field: "`networking.inbound[].protocol`"
-    why: "Sets the port's protocol. Leave it out and the port is treated as TCP, silently losing every L7 policy."
+    why: "Sets the port's protocol. The template takes it from the `protocol` variable: the key/value store passes `tcp` because Redis isn't HTTP, and the demo app passes `http`. Leave it out and the port is treated as TCP, silently losing every L7 policy."
 {% endtable %}
 
 ## Write the transparent proxy config
@@ -147,7 +148,3 @@ EOF
 
 `kuma-dp` installs the iptables rules from this file when it starts with
 `--transparent-proxy-config`.
-
-## Next
-
-[Set up the control plane](/mesh/get-started/universal/control-plane/).

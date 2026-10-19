@@ -28,7 +28,7 @@ rows:
                     With {{site.mesh_product_name}} 3.x, workload identity, trust, and traffic permission have separate responsibilities. This makes it explicit who a workload is, which certificate issuers are trusted, and which connections are allowed.
           - type: text
             config: |
-              [Get started with {{site.mesh_product_name}}](#get-started-with-kong-mesh), [plan a 2.x migration](#already-running-kong-mesh-2-x), or [browse all policies](/mesh/policies/).
+              [Get started with {{site.mesh_product_name}}](#get-started-with-kong-mesh), [plan a 2.x migration](/mesh/upgrade/#upgrade-from-2-x-to-3-x), or [browse all policies](/mesh/policies/).
 
       - blocks:
           - type: image
@@ -121,7 +121,7 @@ rows:
                   text: |
                     Manage {{site.mesh_product_name}} resources through the interface that fits your workflow:
 
-                    - [Mesh Manager](https://cloud.konghq.com/mesh-manager): Create and manage {{site.mesh_product_name}} control planes in {{site.konnect_short_name}}.
+                    - [Service Mesh](https://cloud.konghq.com/mesh-manager): Create and manage {{site.mesh_product_name}} control planes in {{site.konnect_short_name}}.
                     - [Mesh Control Plane API](/api/konnect/mesh-control-planes/): Automate control plane management through the {{site.konnect_short_name}} API.
                     - [kongctl](/mesh/cli/): Inspect and configure {{site.mesh_product_name}} 3.x resources from the command line.
 

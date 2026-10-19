@@ -5,17 +5,13 @@ app/_how-tos/mesh/v2/configure-inbound-traffic-rules-api.md:
   status: pending
   canonical_url:
 app/_how-tos/mesh/v2/configure-mesh-global-control-plane-on-kubernetes-with-konnect-api.md:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-api/
 app/_how-tos/mesh/v2/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui.md:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui/
 app/_how-tos/mesh/v2/configure-mesh-global-control-plane-on-universal-with-konnect-api.md:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/configure-mesh-global-control-plane-on-universal-with-konnect-api/
 app/_how-tos/mesh/v2/configure-mesh-global-control-plane-on-universal-with-konnect-ui.md:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/configure-mesh-global-control-plane-on-universal-with-konnect-ui/
 app/_how-tos/mesh/v2/deploy-an-opentelemetry-collector.md:
   status: pending
   canonical_url:
@@ -23,14 +19,12 @@ app/_how-tos/mesh/v2/deploy-mesh-on-kubernetes.md:
   status: pending
   canonical_url:
 app/_how-tos/mesh/v2/deploy-mesh-scoped-zone-proxies.md:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/zone-proxies/
 app/_how-tos/mesh/v2/deploy-mesh-self-managed.md:
   status: pending
   canonical_url:
 app/_how-tos/mesh/v2/deploy-mesh-using-terraform-and-konnect.md:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/deploy-mesh-using-terraform-and-konnect/
 app/_how-tos/mesh/v2/deploy-multi-zone-global-control-plane-universal-docker.md:
   status: pending
   canonical_url:
@@ -52,20 +46,15 @@ app/_how-tos/mesh/v2/kubernetes.md:
   status: pending
   canonical_url:
 app/_how-tos/mesh/v2/mesh-get-started-universal-1-install.md:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/get-started/universal/install/
 app/_how-tos/mesh/v2/mesh-get-started-universal-2-control-plane.md:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/get-started/universal/control-plane/
 app/_how-tos/mesh/v2/mesh-get-started-universal-3-kv.md:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/get-started/universal/kv/
 app/_how-tos/mesh/v2/mesh-get-started-universal-4-demo-app.md:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/get-started/universal/demo-app/
 app/_how-tos/mesh/v2/mesh-get-started-universal-5-zero-trust-security.md:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/get-started/universal/zero-trust-security/
 app/_how-tos/mesh/v2/migrate-self-managed-zone-to-konnect.md:
   status: pending
   canonical_url:
@@ -190,7 +179,7 @@ app/_mesh_policies/v2/meshloadbalancingstrategy/examples/load-balancing-http-tra
 app/_mesh_policies/v2/meshloadbalancingstrategy/examples/prioritize-traffic-to-data-planes.yaml:
   canonical_url: /mesh/policies/meshloadbalancingstrategy/examples/fail-over-between-regions/
 app/_mesh_policies/v2/meshloadbalancingstrategy/examples/route-equally.yaml:
-  canonical_url: /mesh/policies/meshloadbalancingstrategy/examples/prefer-nearby-endpoints/
+  canonical_url: /mesh/policies/meshloadbalancingstrategy/
 app/_mesh_policies/v2/meshloadbalancingstrategy/index.md:
   canonical_url: /mesh/policies/meshloadbalancingstrategy/
 app/_mesh_policies/v2/meshloadbalancingstrategy/reference.md:
@@ -419,8 +408,7 @@ app/mesh/v2/mesh-multi-tenancy.md:
   status: pending
   canonical_url:
 app/mesh/v2/mesh-multizone-service-deployment.md:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/meshmultizoneservice/
 app/mesh/v2/mesh.md:
   status: pending
   canonical_url:
@@ -454,8 +442,7 @@ app/mesh/v2/performance-tuning.md:
   status: pending
   canonical_url:
 app/mesh/v2/policies-introduction.md:
-  status: pending
-  canonical_url:
+  canonical_url: /mesh/policy-targeting/
 app/mesh/v2/production-usage-values.md:
   status: pending
   canonical_url:

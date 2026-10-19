@@ -24,6 +24,8 @@ related_resources:
     url: /mesh/universal-control-plane/
   - text: "{{site.mesh_product_name}} CLI"
     url: /mesh/cli/
+min_version:
+  mesh: '3.0'
 ---
 
 ## Start the control plane
@@ -115,10 +117,11 @@ kongctl get mesh meshes --control-plane-url "$KONG_MESH_CP"
 NAME     DATAPLANES
 default  0/0 online
 ```
+{:.no-copy-code}
 
 No proxies yet. The next two pages add them.
 
-## What is not running yet
+## Review what isn't running yet
 
 Nothing issues identities. `Mesh.mtls` was removed in 3.0, so a mesh gets mTLS from a
 [MeshIdentity](/mesh/policies/meshidentity/) or not at all. Without one, proxies serve and
@@ -127,7 +130,3 @@ accept plaintext, and `MeshTLS` and `MeshTrafficPermission` do not apply to them
 That is deliberate for now: the first two workloads connect without mTLS so you can see traffic
 flowing, and
 [the last page](/mesh/get-started/universal/zero-trust-security/) turns it on.
-
-## Next
-
-[Set up the key/value store](/mesh/get-started/universal/kv/).

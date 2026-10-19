@@ -51,7 +51,7 @@ Download the {{site.mesh_product_name}} 3.x release approved for your {{site.kon
 instead of relying on the installer's default:
 
 ```sh
-export MESH_VERSION='REPLACE_WITH_MESH_3_RELEASE_VERSION'
+export MESH_VERSION='{{page.latest_release.version}}'
 curl --fail -L https://developer.konghq.com/mesh/installer.sh | VERSION="$MESH_VERSION" sh
 printf '%s' "$CONTROL_PLANE_TOKEN" > cp-token
 chmod 600 cp-token

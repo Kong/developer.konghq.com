@@ -8,8 +8,8 @@ breadcrumbs:
 related_resources:
   - text: 'Mesh-scoped zone proxies reference'
     url: '/mesh/mesh-scoped-zone-proxies/'
-  - text: 'Multi-zone deployment'
-    url: '/mesh/mesh-multizone-service-deployment/'
+  - text: 'MeshMultiZoneService'
+    url: '/mesh/meshmultizoneservice/'
 
 min_version:
   mesh: '2.14'

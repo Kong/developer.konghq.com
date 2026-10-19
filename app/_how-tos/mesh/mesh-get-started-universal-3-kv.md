@@ -24,6 +24,8 @@ related_resources:
     url: /mesh/universal-data-plane/
   - text: MeshService
     url: /mesh/meshservice/
+min_version:
+  mesh: '3.0'
 ---
 
 The first workload is a Redis instance the demo app will read and write. Adding it shows the
@@ -75,6 +77,7 @@ docker exec --detach kong-mesh-demo-kv \
     --dataplane-var name=kv \
     --dataplane-var address=172.18.78.2 \
     --dataplane-var port=6379 \
+    --dataplane-var protocol=tcp \
     --dataplane-token-file /demo/token-kv \
     --transparent-proxy \
     --transparent-proxy-config /demo/transparent-proxy.yaml
@@ -86,7 +89,8 @@ docker exec --detach kong-mesh-demo-kv \
 > `kuma-dp` the CA with `--ca-cert-file` instead.
 
 `--dataplane-file` applies the `Dataplane` as the proxy starts, so there is no separate step.
-The three `--dataplane-var` flags fill the template's placeholders.
+The four `--dataplane-var` flags fill the template's placeholders. `protocol=tcp` declares the
+Redis port as TCP, since Redis doesn't speak HTTP.
 
 ## Check that it connected
 
@@ -98,6 +102,7 @@ kongctl get mesh dataplanes --control-plane-url "$KONG_MESH_CP"
 MESH     NAME  TAGS  ADDRESS      AGE
 default  kv          172.18.78.2  10s
 ```
+{:.no-copy-code}
 
 And that the control plane considers it online:
 
@@ -109,8 +114,9 @@ kongctl get mesh inspect dataplanes --control-plane-url "$KONG_MESH_CP"
 MESH     NAME  STATUS
 default  kv    Online
 ```
+{:.no-copy-code}
 
-## The MeshService appears on its own
+## Inspect the generated MeshService
 
 You wrote no `MeshService`, and one exists:
 
@@ -122,6 +128,7 @@ kongctl get mesh meshservices --control-plane-url "$KONG_MESH_CP"
 MESH     NAME  AGE
 default  kv    5s
 ```
+{:.no-copy-code}
 
 The control plane generated it from the `kuma.io/workload: kv` label on the `Dataplane`, with
 one port per inbound. It re-checks every two seconds, and removes a generated `MeshService` an
@@ -139,7 +146,3 @@ kongctl get mesh meshservices kv -o yaml --control-plane-url "$KONG_MESH_CP"
 
 The selector matches on the workload label, the port carries the `protocol` you set on the
 inbound, and the status reports a VIP the demo app will reach it on.
-
-## Next
-
-[Set up the demo application](/mesh/get-started/universal/demo-app/).

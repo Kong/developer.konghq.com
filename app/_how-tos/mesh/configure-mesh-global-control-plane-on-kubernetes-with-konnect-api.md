@@ -17,7 +17,7 @@ tools:
 tags:
 - service-mesh
 tldr:
-  q: How do I connect a kubernetes zone to {{site.konnect_short_name}} for {{site.mesh_product_name}} 3.x?
+  q: How do I connect a Kubernetes zone to {{site.konnect_short_name}} for {{site.mesh_product_name}} 3.x?
   a: Create a new global control plane running v3, deploy a 3.x zone control plane
     with its {{site.konnect_short_name}} credentials, and verify that the zone connects. Then configure
     MeshIdentity and MeshTrafficPermission and test an application request.
@@ -43,9 +43,10 @@ cleanup:
   inline:
     - title: Remove the Kubernetes zone
       content: |
-        Delete the test namespace and uninstall the zone release:
+        Delete the zone traffic permission and the test namespace, then uninstall the zone release:
 
         ```sh
+        kubectl delete meshtrafficpermission client-to-server --namespace kong-mesh-system
         kubectl delete namespace kong-mesh-demo
         helm uninstall kong-mesh --namespace kong-mesh-system
         ```
