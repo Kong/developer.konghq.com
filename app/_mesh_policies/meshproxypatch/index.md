@@ -15,19 +15,17 @@ related_resources:
   url: "/mesh/policies/meshcircuitbreaker/"
 ---
 
-`MeshProxyPatch` edits the Envoy configuration {{site.mesh_product_name}} generates for a proxy.
-It adds, patches and removes clusters, listeners, filters and virtual hosts directly, which
-covers the Envoy features no policy exposes.
+The `MeshProxyPatch` policy edits the Envoy configuration {{site.mesh_product_name}} generates
+for a proxy. It adds, patches, and removes clusters, listeners, filters, and virtual hosts
+directly, to cover Envoy features that no policy exposes.
 
-It runs last, after every other policy, so a modification sees the configuration everything else
-produced and has the final say over any field it sets. That also means it is coupled to the
-configuration {{site.mesh_product_name}} happens to generate: a patch matching a listener by
-name or a filter by position can stop matching after an upgrade changes how that configuration
-is built, and nothing reports it beyond the patch no longer taking effect.
+This policy runs after every other policy, so it sees their output and has the final say over
+any field it sets. It's also tied to how {{site.mesh_product_name}} generates configuration. A
+patch that matches a listener by name or a filter by position can stop matching after an
+upgrade, and nothing reports it.
 
-Use a dedicated policy whenever one exposes the behavior you need. Without a matching
-`MeshProxyPatch`, the proxy receives the configuration produced by the other policies
-without these additional modifications.
+Use a dedicated policy whenever one exposes the behavior you need. Proxies that no
+`MeshProxyPatch` selects get the configuration the other policies produce, unchanged.
 
 {:.warning}
 > A patch can remove routing or security filters, overwrite a generated resource, or
@@ -37,8 +35,8 @@ without these additional modifications.
 
 ## Add a Lua filter to outbound requests
 
-This policy applies to proxies labeled `app: backend` and inserts a Lua filter before the
-router filter on their outbound HTTP traffic:
+The following example inserts a Lua filter before the router filter on outbound HTTP traffic
+from proxies labeled `app: backend`:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -68,68 +66,47 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-`targetRef` limits the patch to `backend` proxies. `match.name` identifies the existing Envoy
-router filter, and `origin: outbound` limits the match to outbound HTTP filter chains.
-`AddBefore` inserts the Lua filter immediately before that router, so every matching outbound
-HTTP request receives the `x-header: test` header before it is forwarded.
+What each field does:
 
-This example affects requests sent by `backend`, not requests arriving at its application.
-It requires outbound traffic that the proxy parses as HTTP; TCP or opaque TLS has no HTTP
-router filter to match. The header is for demonstration, not an authenticated identity.
+* `targetRef` selects the proxies to patch: `Mesh`, or `Dataplane` with `labels`.
+* `match.name` identifies the Envoy router filter, and `origin: outbound` limits the match to
+  outbound HTTP filter chains.
+* `AddBefore` inserts the Lua filter right before the router, so every matching outbound HTTP
+  request gets the `x-header: test` header.
 
-## Where this policy applies
+The policy has no `to` or `rules`, everything sits under `default.appendModifications`.
 
-`spec.targetRef` selects the proxies whose configuration is patched, and accepts `Mesh` or
-`Dataplane` with `labels`. There is no `to` or `rules`: the policy describes edits to one
-proxy's configuration, so everything sits under `default.appendModifications`.
+The example affects requests that `backend` sends, not requests arriving at its application.
+It only works on outbound traffic the proxy parses as HTTP, because TCP and opaque TLS have no
+HTTP router filter. The header is for demonstration and isn't an authenticated identity.
 
-For the selectors a policy can carry, see [How policies select traffic](/mesh/policy-targeting/).
+## Modification structure
 
-Use the modification's `match.listenerName` or resource `match.name` to narrow the actual
-Envoy object being edited. Read the current generated name instead of constructing it
-from a service name. Listener tags, where supported, refer to metadata on the generated
-listener, not automatically to every label on the selected Dataplane.
+`appendModifications` needs at least one entry. Each entry names exactly one Envoy resource
+type, and carries the following fields:
 
-## How multiple modifications combine
-
-Modifications run in list order, and each sees the result of earlier modifications.
-Applicable policies append their `appendModifications` lists; a narrower policy does not
-replace a broader patch list. The merged order follows policy precedence, not the time
-you last edited a resource.
-
-For example, one modification can add a cluster and a later modification can patch it.
-If an earlier modification removes the filter a later `AddBefore` names, that later
-insertion has no match. Two additions can also produce duplicate filters rather than
-one overriding the other. Keep dependent modifications together and inspect the merged
-result when several policies select the same proxy.
-
-## What a modification looks like
-
-`appendModifications` must contain at least one entry, and each entry names exactly one Envoy
-resource type. Defining two in one entry is rejected with
-`exactly one modification can be defined at a time`.
-
-Within that, an entry carries:
-
-- `operation`: what to do, from the set that resource type accepts.
-- `match`: which generated resources to act on. Omitted, an operation that takes a match
+- `operation`: what to do, from the operations that resource type accepts.
+- `match`: which generated resources to act on. Without it, an operation that takes a match
   applies to every resource of that type.
-- `value` or `jsonPatches`: what to apply. `Add` takes `value`; `Patch` takes exactly one of
-  the two; `Remove` takes neither.
+- `value` or `jsonPatches`: what to apply. `Add` takes `value`, `Patch` takes exactly one of
+  the two, and `Remove` takes neither.
 
-`value` is a native Envoy resource in YAML, parsed against the real Envoy proto. A value whose
-type or enum is wrong is rejected on apply, naming the reason, for example `bad Duration: time: invalid
-duration "not-a-duration"`, or `unknown value "NOT_A_REAL_TYPE" for enum
-envoy.config.cluster.v3.Cluster.DiscoveryType`.
+To narrow the Envoy object being edited, use `match.listenerName` or `match.name`. Read the
+current generated name instead of building it from a service name. Where supported, listener
+tags refer to metadata on the generated listener, not to every label on the selected Dataplane.
+
+`value` is a native Envoy resource in YAML, parsed against the Envoy proto. A wrong type or
+enum value is rejected.
 
 {:.warning}
-> An unrecognized field name is **accepted and dropped**. The parser allows unknown fields, so a
-> misspelled key passes validation, is stored in the policy exactly as written, and then does
-> nothing to the generated configuration. Reading the policy back shows the field still there.
-> Check a new modification against the proxy's `/config_dump` rather than against the stored
-> policy.
+> An unrecognized field name is accepted and dropped. A misspelled key passes validation, is
+> stored in the policy as written, and then does nothing to the generated configuration.
+> Check a new modification against the proxy's `/config_dump`, not against the stored policy.
 
 ## Resource types and their operations
+
+Each resource type accepts the following operations and `match` fields. Any other operation is
+rejected.
 
 {% table %}
 columns:
@@ -157,23 +134,20 @@ rows:
     match: "`name`, `origin`, `listenerName`, `listenerTags`"
 {% endtable %}
 
-An operation outside a resource type's set is rejected, and the error names the ones it accepts.
+Some operations have extra requirements:
 
-`Add` on a cluster or listener takes no `match`, since there is nothing yet to match. It
-replaces any existing resource of the same name rather than failing.
+* `Add` on a cluster or listener takes no `match`. It replaces any existing resource with the
+  same name.
+* `Add` on a virtual host takes a `match` with `routeConfigurationName`, but not `match.name`.
+* `AddBefore` and `AddAfter` need `match.name` to say which filter to sit next to. If that
+  filter isn't present, nothing is added.
+* `Patch` on a filter needs `match.name`.
 
-`AddBefore` and `AddAfter` need `match.name` to say which filter to sit next to, and are
-rejected with `must be defined. You need to pick a filter before which this one will be added`
-when it is missing. A filter naming one that is not present is not added at all. `Patch` on a
-filter needs `match.name` as well.
+## Match on configuration origin
 
-`Add` on a virtual host takes a `match` for `routeConfigurationName`, since a virtual host
-belongs to a route configuration, but `match.name` must not be defined.
-
-## Match on where configuration came from
-
-Every generated resource carries an `origin`, naming the component that produced it, which is
-how a modification reaches one kind of configuration without naming individual resources.
+Every generated resource carries an `origin` that names the component that produced it. Use it
+to target one kind of configuration without naming individual resources. `origin` accepts the
+following values:
 
 {% table %}
 columns:
@@ -187,7 +161,7 @@ rows:
   - origin: "`outbound`"
     what: "Listeners and clusters for traffic the proxy sends."
   - origin: "`transparent`"
-    what: "The passthrough listeners and clusters transparent proxying adds."
+    what: "The passthrough listeners and clusters that transparent proxying adds."
   - origin: "`direct-access`"
     what: "Resources for direct access to other proxies."
   - origin: "`admin`"
@@ -197,25 +171,36 @@ rows:
   - origin: "`ingress`, `egress`"
     what: "Cross-zone listeners and clusters."
   - origin: "`meshaccesslog`, `mesh-trace`, `open-telemetry`, `meshpassthrough`"
-    what: "Resources added by `MeshAccessLog`, `MeshTrace`, `MeshMetric` and `MeshPassthrough`."
+    what: "Resources added by `MeshAccessLog`, `MeshTrace`, `MeshMetric`, and `MeshPassthrough`."
+  - origin: "`proxy-template-modifications`"
+    what: "Clusters added by a `MeshProxyPatch`."
+  - origin: "`mesh-proxy-patch`"
+    what: "Listeners added by a `MeshProxyPatch`."
 {% endtable %}
 
-Resources this policy adds itself carry an origin too, and it differs by type: an added cluster
-is marked `proxy-template-modifications`, and an added listener `mesh-proxy-patch`. A later
-modification matching on either origin acts on what an earlier one added.
+A later modification can match on `proxy-template-modifications` or `mesh-proxy-patch` to act
+on what an earlier one added.
 
 ## Patch with a value or with JSON patches
 
 `Patch` takes either a partial Envoy resource in `value`, or a list of
-[JSON Patch](https://jsonpatch.com/) operations in `jsonPatches`. Giving both is rejected.
+[JSON Patch](https://jsonpatch.com/) operations in `jsonPatches`, but not both. Each
+`jsonPatches` entry takes:
 
-`jsonPatches` entries take `op` (`add`, `remove`, `replace`, `move` or `copy`), a `path`, a
-`value` for `add` and `replace`, and a `from` for `move` and `copy`:
+* `op`: `add`, `remove`, `replace`, `move`, or `copy`
+* `path`: the field to change
+* `value`: for `add` and `replace`
+* `from`: for `move` and `copy`
 
-The following example demonstrates JSON Patch syntax. For an ordinary stream idle timeout,
-prefer [MeshTimeout](/mesh/policies/meshtimeout/) instead of patching Envoy directly.
-Before using `replace`, confirm that the field exists on every matched filter; replacing
-an absent path fails when the patch is applied to generated configuration.
+For a filter modification, paths start inside the filter's decoded `typedConfig`. For a
+cluster, listener, or virtual host, paths start at the resource's root. Use JSON Patch to
+replace a list instead of appending to it, and check array indexes against the generated
+resource. Before using `replace`, confirm that the field exists on every matched filter,
+because replacing a missing path fails.
+
+The following example sets the stream idle timeout on inbound HTTP connection managers to show
+the JSON Patch syntax. The path is `/streamIdleTimeout`, not `/typedConfig/streamIdleTimeout`.
+For a real stream idle timeout, use [MeshTimeout](/mesh/policies/meshtimeout/) instead:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -241,55 +226,68 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-For a filter modification, JSON paths start inside the filter's decoded `typedConfig`.
-That is why the path is `/streamIdleTimeout`, not `/typedConfig/streamIdleTimeout`.
-For a cluster, listener, or virtual host modification, paths start at that resource's root.
-Use JSON Patch when you need to replace a list rather than append to it, and check array
-indexes against the actual generated resource.
+## Value merging on Patch
 
-## How a value merges on Patch
+A `value` is merged into the matched resource instead of replacing it. The merge handles the
+following kinds of field differently:
 
-A `value` is merged into the matched resource rather than replacing it, and the merge treats
-three kinds of field differently:
+- Repeated fields: appended, not replaced. Patching a list of filters adds to it.
+- Durations: replaced. Patching `connectTimeout` sets it.
+- Circuit breaker thresholds and `perHostThresholds`: merged by routing priority. Every
+  generated cluster already has a `DEFAULT`-priority threshold, and Envoy honors only the first
+  threshold for a priority, so the patch merges into the existing one. A `value` that lists one
+  priority twice keeps the first entry.
 
-- A repeated field is **appended** to what the resource already has, not replaced. Patching a
-  list of filters adds to it.
-- A duration is **replaced**, so patching `connectTimeout` sets it rather than combining it.
-- Circuit breaker thresholds are keyed by routing priority instead of appended. Every generated
-  cluster already carries a `DEFAULT`-priority threshold, and Envoy honors only the first
-  threshold for a priority, so appending a second would leave the patch as dead configuration.
-  A patch merges into the threshold of the same priority, and a `value` listing one priority
-  twice keeps the first entry. `per_host_thresholds` behaves the same way.
+As a result, a `MeshProxyPatch` and a [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/)
+on the same cluster combine instead of conflicting. The patch wins the fields it names, and
+the policy keeps the rest.
 
-That last behavior means a `MeshProxyPatch` and a
-[MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/) on one cluster combine rather than
-conflict: the patch wins the fields it names, and the policy keeps the rest.
+## Overlapping policies
 
-## Validate the generated configuration
+Modifications run in list order, and each one sees the result of the previous ones. Policies
+that apply to the same proxy append their `appendModifications` lists, so a narrower policy
+doesn't replace a broader one. The merged order follows policy precedence, not edit time.
 
-Read the selected proxy's Envoy `/config_dump` and confirm that the intended resource was
-changed. For the first example, find `envoy.filters.http.lua` immediately before
-`envoy.filters.http.router` on an outbound filter chain. Then send a request through that proxy
-and confirm that the destination receives `x-header: test`.
+This means:
 
-Repeat the configuration check after upgrading {{site.mesh_product_name}}. A
-`MeshProxyPatch` can remain valid and stored while matching no generated resource, so successful
-resource validation alone does not prove that the patch still applies.
+* One modification can add a cluster and a later one can patch it.
+* If one modification removes the filter a later `AddBefore` names, the insertion has no match.
+* Two additions can produce duplicate filters instead of one overriding the other.
 
-Check three separate outcomes:
+Keep dependent modifications together, and inspect the merged result when several policies
+select the same proxy.
 
-1. The policy is accepted by the control plane.
-1. Configuration generation succeeds and Envoy accepts the update. Inspect control-plane
-   patch errors and proxy configuration-rejection messages if the active configuration stays unchanged.
-1. The active `/config_dump` contains the intended change and test traffic demonstrates it.
+## Validating the generated configuration
 
-Use the proxy's locally accessible admin interface to retrieve `/config_dump`; do not expose
-the admin listener publicly. Compare only the intended resources with your saved baseline.
-If no change appears and there is no error, check the exact resource name, origin, and
-whether another modification removed the match. If a list contains duplicates, check for
-overlapping policies and value-merge append behavior.
+1. Confirm that the control plane accepts the policy.
+1. Confirm that configuration generation succeeds and Envoy accepts the update. If the active
+   configuration doesn't change, check the control plane for patch errors and the proxy for
+   configuration-rejection messages.
+1. Read the proxy's `/config_dump` and confirm that it contains the change. For the first
+   example, look for `envoy.filters.http.lua` right before `envoy.filters.http.router` on an
+   outbound filter chain.
+1. Send test traffic and confirm the effect. For the first example, the destination receives
+   `x-header: test`.
+1. Repeat the `/config_dump` check after each {{site.mesh_product_name}} upgrade. A stored,
+   valid patch can stop matching any generated resource.
 
-To roll back, remove or narrow the patch policy and verify the regenerated active
-configuration. This restores the result of the policies that still apply, not necessarily
-the exact configuration captured before other policy changes. There is no need to add
-an inverse patch for every field unless another patch must remain in place.
+Retrieve `/config_dump` from the proxy's local admin interface. Don't expose the admin listener
+publicly. Compare only the intended resources with your saved baseline.
+
+{% table %}
+columns:
+  - title: Unexpected result
+    key: unexpected
+  - title: Check
+    key: check
+rows:
+  - unexpected: "No change and no error"
+    check: "The exact resource name, the origin, and whether another modification removed the match."
+  - unexpected: "A list contains duplicates"
+    check: "Overlapping policies and the append behavior of `value` merges."
+{% endtable %}
+
+To roll back, remove or narrow the patch policy and check the regenerated configuration. This
+restores what the remaining policies produce, which isn't necessarily the configuration you
+saved before other policy changes. You don't need an inverse patch unless another patch must
+stay in place.
