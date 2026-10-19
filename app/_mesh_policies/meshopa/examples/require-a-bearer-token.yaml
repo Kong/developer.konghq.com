@@ -1,6 +1,6 @@
 title: 'Require a bearer token'
 
-description: 'Reject any request without an Authorization bearer header, with an inline rego policy compiled when the resource is applied.'
+description: 'Reject any request without an Authorization bearer header, with an inline Rego policy compiled when the resource is applied.'
 
 weight: 900
 
@@ -12,7 +12,9 @@ config:
   mesh: default
   spec:
     targetRef:
-      kind: Mesh
+      kind: Dataplane
+      labels:
+        app: backend
     default:
       appendPolicies:
         - rego:

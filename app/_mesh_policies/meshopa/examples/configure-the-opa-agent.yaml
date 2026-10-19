@@ -12,7 +12,9 @@ config:
   mesh: default
   spec:
     targetRef:
-      kind: Mesh
+      kind: Dataplane
+      labels:
+        app: backend
     default:
       agentConfig:
         type: InsecureInline
@@ -25,5 +27,5 @@ config:
             type: InsecureInline
             insecureInline:
               value: |
-                package envoy.authz
+                package diagnostics.allow_all
                 default allow = true

@@ -3,7 +3,7 @@ title: Mesh OPA
 name: MeshOPAs
 products:
 - mesh
-description: Authorize requests with Open Policy Agent, using rego policies evaluated by an agent beside each proxy.
+description: Authorize requests with Open Policy Agent, using Rego policies evaluated by an agent beside each proxy.
 content_type: plugin
 tier: enterprise
 icon: policy.svg
@@ -16,33 +16,34 @@ related_resources:
   url: "/mesh/policies/meshtrafficpermission/"
 ---
 
-`MeshOPA` authorizes requests with [Open Policy Agent](https://www.openpolicyagent.org/). The
-proxy asks an OPA agent running beside it whether to allow each request, and the agent decides
-by evaluating rego policies against the request's attributes.
+The `MeshOPA` policy authorizes requests with [Open Policy Agent](https://www.openpolicyagent.org/).
+The proxy asks an OPA agent running beside it whether to allow each request, and the agent
+evaluates Rego policies against the request's attributes.
 
-This is a different question from the one
-[MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) answers. That decides whether one
-workload may talk to another, from the identity in the TLS handshake. `MeshOPA` decides per
-request, with the method, path, headers and optionally the body available to the policy, so it
-covers rules that depend on what is being asked rather than only on who is asking.
+[MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) decides whether one workload can
+talk to another, based on the identity in the TLS handshake. `MeshOPA` decides per request,
+using the method, path, headers, and optionally the body, so it can enforce rules based on what's
+being asked, not only on who's asking.
 
-The check runs on the destination's inbound HTTP traffic, including HTTP/2 and gRPC
-handled as HTTP. It does not inspect arbitrary TCP messages or application-encrypted
-traffic that the proxy cannot decrypt. An OPA allow does not override a denial from
-`MeshTrafficPermission`; traffic must pass all applicable authorization checks.
+The check runs on the destination's inbound HTTP traffic, including HTTP/2 and gRPC. It doesn't
+inspect plain TCP traffic or traffic the proxy can't decrypt. An OPA allow doesn't override a
+`MeshTrafficPermission` deny: traffic must pass every authorization check.
 
-Without a matching `MeshOPA`, this policy adds no OPA authorization check. Before relying
-on a policy, confirm that the data-plane process has its embedded OPA agent enabled and
-that the inbound listener contains `envoy.filters.http.ext_authz`. The data-plane option
-`--opa-enabled` defaults to `true`, but can be disabled. A disabled agent that never
-advertises an authorization port is different from an installed check whose agent fails:
-`onAgentFailure: Deny` does not install a missing check.
+Proxies that no `MeshOPA` selects get no OPA check. Before relying on a policy, confirm the
+following:
+
+* The data plane has its embedded OPA agent enabled. The `--opa-enabled` option defaults to
+  `true`, but can be turned off.
+* The inbound listener contains `envoy.filters.http.ext_authz`.
+
+If the agent is disabled, no check is installed, and `onAgentFailure: Deny` doesn't change that.
+It only applies when an installed check's agent fails.
 
 ## Allow requests carrying a bearer token
 
-This demonstration selects destination proxies labeled `app: backend` and checks the shape
-of the authorization header. It is not token validation. Test it on a non-production
-workload whose caller already passes the required traffic permissions:
+The following example makes proxies labeled `app: backend` deny requests unless their
+`authorization` header starts with `Bearer `. Test it on a non-production workload whose caller
+already passes the required traffic permissions:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -72,41 +73,39 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-`targetRef` selects the backend proxies that enforce the check. The inline rego sets the default
-decision to deny, then allows a request when its `authorization` header starts with `Bearer `.
-This example checks only the header shape; it does not validate a signature, expiry, audience,
-or any other token claim. A production policy must implement the token checks your application
-requires.
+`targetRef` selects the backend proxies that enforce the check: `Mesh`, or `Dataplane` with
+`labels`. Everything else goes under `default`. There's no `to` or `rules`, because the proxy
+handling the request makes the decision.
 
-## Where this policy applies
+The example only checks the header shape. It doesn't validate the token's signature, expiry,
+audience, or other claims, so a production policy must implement the checks your application
+needs.
 
-`spec.targetRef` selects the proxies whose requests are authorized, and accepts `Mesh` or
-`Dataplane` with `labels`. Everything else sits under `default`: the decision belongs to the
-proxy handling the request, so there is no `to` or `rules`.
+## Overlapping policies
 
-For the selectors a policy can carry, see [How policies select traffic](/mesh/policy-targeting/).
+When several MeshOPA policies apply to the same proxy, their `appendPolicies` lists are
+combined. A workload-specific policy adds its entries to the mesh-wide ones instead of
+replacing them.
 
-## How policy decisions combine
+A request is allowed only if every combined entry allows it: each entry's Rego package must set
+`allow` to true and must not set `deny` to true. If a package doesn't define `allow`, or sets it
+to false, the request is denied. Entries with `ignoreDecision: true` are left out of this check.
 
-Applicable `appendPolicies` lists accumulate; a workload-specific list does not replace
-the mesh-wide list. For each entry participating in the decision, the generated combined
-policy requires its package's `allow` to be true and its `deny` not to be true. All such
-checks must pass. A missing or false `allow` therefore cannot authorize a request.
+For example, a mesh-wide token check and a backend-specific method check both apply to backend
+requests, and adding an allow-all policy for backend doesn't override the token check. Use
+separate Rego packages for independent checks, because modules in the same package share rules
+and data.
 
-For example, a mesh-wide token check and a backend-specific method check both apply to
-backend requests. Adding an allow-all policy for backend does not override the token
-check. Use distinct Rego packages for independent checks: modules in the same package
-share rules and data rather than becoming isolated decisions.
+Conflicting `authConfig` fields and the selected `agentConfig` follow policy precedence, so
+review the combined configuration before changing failure behavior for some workloads. To remove
+an inherited check, change the broader policy's scope or content. An empty `appendPolicies` list
+in a narrower policy doesn't remove it.
 
-Conflicting `authConfig` fields and the selected `agentConfig` follow policy precedence.
-Review the combined configuration before changing failure behavior for a subset of
-workloads. To remove one inherited authorization requirement, change the broader policy's
-scope or content; an empty narrower `appendPolicies` list does not subtract it.
+## Provide Rego and agent configuration
 
-## Providing rego and agent configuration
-
-`appendPolicies[].rego` and `agentConfig` both take a **secure data source**: a `type`
-discriminator naming where the data comes from, and a field of the same name carrying it.
+`appendPolicies[].rego` and `agentConfig` both take a secure data source: a `type` that says
+where the data comes from, and a field of the same name that holds it. `type` accepts the
+following values:
 
 {% table %}
 columns:
@@ -116,35 +115,32 @@ columns:
     key: what
 rows:
   - type: "`Secret`"
-    what: "`secretRef: {kind: Secret, name: SECRET_NAME}`, a secret resolved by the control plane in the policy's mesh."
+    what: "A secret in the policy's mesh, resolved by the control plane. Set it with `secretRef: {kind: Secret, name: SECRET_NAME}`."
   - type: "`File`"
-    what: "`file.path`, a file readable by the control plane, not a path in the application or sidecar container."
+    what: "A file the control plane can read, set with `file.path`. It isn't a path in the application or sidecar container."
   - type: "`EnvVar`"
-    what: "`envVar.name`, an environment variable available to the control-plane process."
+    what: "An environment variable of the control plane process, set with `envVar.name`."
   - type: "`InsecureInline`"
-    what: "`insecureInline.value`, the content written in the policy as plain text."
+    what: "Plain text in the policy, set with `insecureInline.value`."
 {% endtable %}
 
-`InsecureInline` is named for what it is: the content is stored in the policy and readable by
-anyone who can read it. A rego policy is usually fine there, while an `agentConfig` carrying a
-bearer token for a management server belongs in a `Secret`.
+Inline content is readable by anyone who can read the policy. Inline Rego is usually fine, but
+put an `agentConfig` that carries a management server token in a `Secret`.
 
-An inline rego policy is **compiled when the resource is applied**, so a syntax error is
-rejected at write time with the OPA parse error attached: `policy is not valid: ...
-rego_parse_error: unexpected eof token`. A policy supplied through `Secret`, `File` or `EnvVar`
-is not compiled during that resource-write validation. The control plane resolves the
-source and compiles the combined modules when generating the agent configuration, so
-missing sources or incompatible modules can fail at that later stage. Successful resource
-creation alone does not prove that the agent received a working policy.
+Inline Rego is compiled when the resource is applied, so a syntax error is rejected with the
+OPA parse error. Rego from `Secret`, `File`, or `EnvVar` is only compiled later, when the control
+plane generates the agent configuration, so missing sources or incompatible modules fail then.
+A successfully created resource doesn't prove that the agent has a working policy.
 
-`appendPolicies[].ignoreDecision` keeps a policy loaded on the agent while leaving its verdict
-out of the generated authorization decision. This can support shared helper modules, but
-does not automatically evaluate an independent ignored rule or record its hypothetical
-verdict. Test new rules explicitly before treating them as validated shadow checks.
+`appendPolicies[].ignoreDecision` keeps a policy loaded on the agent, but leaves its result out
+of the decision. This is useful for shared helper modules. It doesn't evaluate an ignored rule
+on its own or record what it would have decided, so test new rules explicitly instead of
+treating them as shadow checks.
 
-## Configuring the request check
+## Configure the request check
 
-`default.authConfig` covers the exchange between the proxy and the agent.
+`default.authConfig` controls the exchange between the proxy and the agent, and accepts the
+following fields:
 
 {% table %}
 columns:
@@ -154,24 +150,25 @@ columns:
     key: what
 rows:
   - field: "`onAgentFailure`"
-    what: "`Allow` or `Deny`, and `Deny` by default. What to do when the proxy cannot reach the agent or the policy fails to execute."
+    what: "What to do when the proxy can't reach the agent or the policy fails to run: `Allow` or `Deny`. Defaults to `Deny`, which rejects requests instead of passing them through unauthorized."
   - field: "`statusOnError`"
-    what: "The HTTP status returned when the proxy cannot reach the agent. Between 100 and 599, or 0 to leave it to Envoy."
+    what: "The HTTP status returned when the proxy can't reach the agent, from 100 to 599. `0` leaves it to Envoy."
   - field: "`timeout`"
-    what: "How long the proxy waits for a single decision from the agent. Defaults to 500ms; 0 also uses that default."
+    what: "How long the proxy waits for one decision. Defaults to 500ms, and `0` also uses the default."
   - field: "`requestBody.maxSize`"
-    what: "How much of the request body to send to the agent. Bodies over the limit are truncated and marked with `x-envoy-auth-partial-body: true`. Unset, no body is sent."
+    what: "How much of the request body to send to the agent. Larger bodies are truncated and marked with `x-envoy-auth-partial-body: true`. If unset or `0`, no body is sent."
   - field: "`requestBody.sendRawBody`"
-    what: "Send the body as raw bytes rather than UTF-8 encoded."
+    what: "Sends the body as raw bytes instead of UTF-8. Defaults to `false`. Setting it to `true` without a `maxSize` above `0` is rejected."
 {% endtable %}
 
-`onAgentFailure` is the field that decides how the mesh behaves when OPA is unavailable. The
-default of `Deny` fails closed: requests are rejected rather than passed through unauthorized.
+`Allow` only applies to agent communication or execution failures, not to a deny decision.
+Likewise, `statusOnError` only sets the error response, not the deny response from a working
+agent. Keep the timeout within the caller's overall request budget, because authorization adds
+latency before the application sees the request.
 
-`Allow` applies to an agent communication or execution failure, not to an explicit deny
-decision. `statusOnError` similarly controls error responses, not the normal deny response
-from a working agent. Choose the decision timeout within the caller's overall request
-budget: waiting longer for authorization adds latency before application processing begins.
+The following example sends up to 8192 bytes of the request body to the agent, and reads its
+Rego from a secret. Before applying it, create `backend-authz-policy` in the policy's mesh, with
+a Rego module that defines `allow`:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -200,30 +197,23 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-Create `backend-authz-policy` in the policy's mesh before applying this example, with a
-Rego module defining the required `allow` decision. Confirm that the control plane can
-resolve it and that the agent loads the generated configuration.
+Confirm that the control plane can resolve the secret and that the agent loads the generated
+configuration.
 
-Body buffering sends at most `maxSize` bytes to OPA. A larger request is not automatically
-denied: the authorization input can be partial. If a decision requires the complete body,
-make the policy reject partial input rather than authorizing from an incomplete document.
-Also test empty and malformed bodies. Sending raw bytes changes the input representation;
-it does not guarantee a parsed JSON body. See the
-[OPA request-input reference](https://www.openpolicyagent.org/docs/envoy/primer#input-document).
+A request larger than `maxSize` isn't denied automatically: OPA gets partial input. If a
+decision needs the full body, make the policy reject partial input. Also test empty and
+malformed bodies. Sending raw bytes changes the input format, but doesn't guarantee a parsed
+JSON body. For more information, see the
+[OPA request input reference](https://www.openpolicyagent.org/docs/envoy/primer#input-document).
 
-{:.warning}
-> Setting `requestBody` without `sendRawBody` currently fails inside the control plane's
-> validator rather than returning a validation error. Set `sendRawBody` explicitly whenever
-> `requestBody` is present, and set `maxSize` to a non-zero value, until that is fixed.
+## Configure the OPA agent
 
-## Agent configuration
+`default.agentConfig` is the OPA agent's own bootstrap configuration, in OPA's format. Use it to
+point the agent at a bundle server or a decision log sink.
 
-`default.agentConfig` is the OPA agent's own bootstrap configuration, in the format OPA expects,
-which is how the agent is pointed at a bundle server or a decision log sink:
-
-The following is a diagnostic example, not a production authorization policy: its Rego
-allows every request that reaches the OPA check. Use it only on test workloads, or retain
-your real authorization modules when adding decision logging.
+The following example enables console decision logs. Its Rego allows every request that reaches
+the OPA check, so only use it on test workloads, or keep your real authorization modules when
+adding decision logging:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -232,7 +222,9 @@ mesh: default
 name: opa-decision-logs
 spec:
   targetRef:
-    kind: Mesh
+    kind: Dataplane
+    labels:
+      app: backend
   default:
     agentConfig:
       type: InsecureInline
@@ -245,39 +237,46 @@ spec:
           type: InsecureInline
           insecureInline:
             value: |
-              package envoy.authz
+              package diagnostics.allow_all
               default allow = true
 ```
 {% endpolicy_yaml %}
 
-Decision logs can contain request input, including headers and body data. Restrict access
-to them and configure appropriate masking before sending them to shared log storage.
-Do not place bundle-server credentials directly in an inline `agentConfig`.
+Decision logs can contain request input, including headers and body data. Restrict access to
+them, and set up masking before sending them to shared log storage. Don't put bundle server
+credentials in an inline `agentConfig`.
 
-## Validate the authorization decision
+## Validating the authorization decision
 
-For the first example, send the same request without an `Authorization` header and with
-`Authorization: Bearer test`. The request without the header should be rejected; the request
-with it should pass this example's OPA check. Whether the allowed request succeeds afterward
-still depends on the destination and any other authorization policy.
+1. For the first example, send one request without an `Authorization` header and one with
+   `Authorization: Bearer test`. Confirm that the first is rejected and the second passes the
+   OPA check. Whether it then succeeds depends on the destination and other authorization
+   policies.
+1. On an isolated workload with the authorization filter already installed, stop or disconnect
+   the OPA agent and repeat the request. With the default `onAgentFailure: Deny`, confirm that
+   the request is rejected. If you set `onAgentFailure: Allow`, document that fail-open choice
+   and test it deliberately. Disabling OPA before startup isn't an equivalent test.
+1. For body-based decisions, send requests smaller and larger than `maxSize`.
+1. For overlapping policies, send a request that passes each check alone but fails one of the
+   combined requirements.
+1. When the test ends, remove diagnostic allow-all policies and restore your logging and failure
+   settings.
 
-Then stop or disconnect the OPA agent and repeat the request. With the default
-`onAgentFailure: Deny`, the request must be rejected. If you set `onAgentFailure: Allow`,
-document that fail-open decision and test it deliberately.
+If the result is unexpected, check the following:
 
-Perform the agent-failure test on an isolated workload with the authorization filter
-already installed. Disabling OPA before startup is not an equivalent test.
-
-If the result is unexpected, distinguish these cases:
-
-| Observation | Check |
-| --- | --- |
-| Requests bypass the expected check | Confirm destination selection, HTTP protocol handling, agent enablement, and the active `envoy.filters.http.ext_authz` filter. |
-| Every request is denied | Inspect the combined modules and decision input; every participating package needs a true `allow` and no true `deny`. Also check traffic permissions separately. |
-| The configured error status appears | Inspect agent availability, evaluation errors, and the decision timeout rather than assuming Rego deliberately denied the request. |
-| A policy is stored but not active | Inspect control-plane source-loading and compilation errors, then verify the configuration actually loaded by the agent. |
-
-For body-based decisions, include requests below and above `maxSize`. For overlapping
-policies, test a request that passes each check individually but fails one of the combined
-requirements. Remove diagnostic allow-all policies and restore the intended logging and
-failure settings when the test ends.
+{% table %}
+columns:
+  - title: Observation
+    key: observation
+  - title: Check
+    key: check
+rows:
+  - observation: "Requests bypass the expected check"
+    check: "Destination selection, HTTP handling, whether the agent is enabled, and whether `envoy.filters.http.ext_authz` is active."
+  - observation: "Every request is denied"
+    check: "Inspect the combined modules and the decision input. Every participating package needs a true `allow` and no true `deny`. Review traffic permissions separately."
+  - observation: "The configured error status appears"
+    check: "Agent availability, evaluation errors, and the decision timeout. Rego didn't necessarily deny the request."
+  - observation: "A policy is stored but not active"
+    check: "Source loading and compilation errors on the control plane, then the configuration the agent actually loaded."
+{% endtable %}
