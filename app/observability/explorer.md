@@ -2,12 +2,13 @@
 title: "{{site.observability}} Explorer"
 content_type: reference
 layout: reference
-description: | 
-    Explorer is an intuitive web-based interface that displays API, LLM, platform, and managed cache usage data gathered by {{site.konnect_short_name}} Analytics. You can use this tool to promptly diagnose performance issues, monitor LLM token consumption and costs, or capture essential usage metrics. 
+description: |
+    Explorer is an intuitive web-based interface that displays API, LLM, platform, and managed cache usage data gathered by {{site.konnect_short_name}} Analytics. You can use this tool to promptly diagnose performance issues, monitor LLM token consumption and costs, or capture essential usage metrics.
 breadcrumbs:
   - /observability/
 products:
     - gateway
+    - ai-gateway
     - observability
 tags:
   - analytics
@@ -51,11 +52,11 @@ faqs:
        Charts in {{site.konnect_short_name}} Analytics include interactive options to help you investigate data:
        - **Hover** over a chart to see a tooltip with exact values.
        - **Left-click** to pin the tooltip. This lets you scroll through long lists or drag the tooltip to a different spot.
-       - **Click and drag** across the chart to highlight a time range. When you release, choose one of the following actions: 
+       - **Click and drag** across the chart to highlight a time range. When you release, choose one of the following actions:
             - **View requests**: Opens **Analytics > API Requests** with a filtered list of matching calls.
             - **Explore**: Opens Explorer with the same filters and highlighted time window, so you can add group-bys and extra filters.
             - **Zoom**: Focuses the chart on the selected time range.
-       
+
        From the chart settings, you can do the following:
        - Open Explorer with the chart’s current filters and time range, by selecting **Explore**.
        - Download the chart view by selecting **Export CSV**. The file includes the current filters and time window.
@@ -71,11 +72,11 @@ faqs:
   - q: |
       When I filter platform usage metrics by dimension, why is environment, team, or region always empty?
     a: |
-      You must [label](/konnect-platform/konnect-labels/) and [tag](/gateway/tags/) entities with `env`, `team`, or `region` for these to display. 
-      For example, if you label your control plane with `env:production`, it will display when you select "Environment" from the dimensions filter. 
+      You must [label](/konnect-platform/konnect-labels/) and [tag](/gateway/tags/) entities with `env`, `team`, or `region` for these to display.
+      For example, if you label your control plane with `env:production`, it will display when you select "Environment" from the dimensions filter.
 
-      Keep in mind that you must label sub-entities, they do not inherit labels. 
-      For example, labeling your control plane with `region:us` **will not** label your Gateway Services and Routes with `region:us`, they must be labeled individually. 
+      Keep in mind that you must label sub-entities, they do not inherit labels.
+      For example, labeling your control plane with `region:us` **will not** label your Gateway Services and Routes with `region:us`, they must be labeled individually.
 
 related_resources:
   - text: "{{site.konnect_short_name}} {{site.observability}}"
@@ -93,22 +94,22 @@ The Explorer interface displays API, LLM, platform, and managed cache usage data
 
 The Analytics Explorer also lets you save the output as a custom report.
 
-To use this feature, navigate to the [Explorer dashboard](https://cloud.konghq.com/analytics/explorer) and switch between API usage, LLM usage, platform usage, and managed cache usage using the dataset dropdown. 
+To use this feature, navigate to the [Explorer dashboard](https://cloud.konghq.com/analytics/explorer) and switch between API usage, LLM usage, platform usage, and managed cache usage using the dataset dropdown.
 Metrics and groupings will dynamically adjust based on the selected dataset.
 
 ## Enabling data ingestion
 
-Manage data ingestion from any **Control Plane Dashboard** using the **Advanced Analytics** toggle. 
+Manage data ingestion from any **Control Plane Dashboard** using the **Advanced Analytics** toggle.
 This toggle lets you enable or disable data collection for your API traffic per Control Plane.
 
 **Modes:**
 - **On:** Both basic and advanced analytics data is collected, allowing in-depth insights and reporting.
-- **Off:** Advanced analytics collection stops, but basic API metrics remain available for API Gateway in {{site.konnect_short_name}}, 
-and can still be used for custom reports. 
+- **Off:** Advanced analytics collection stops, but basic API metrics remain available for API Gateway in {{site.konnect_short_name}},
+and can still be used for custom reports.
 
 ## Metrics
 
-Traffic metrics provide insight into which of your services are being used and how they are responding. 
+Traffic metrics provide insight into which of your services are being used and how they are responding.
 Within a single report, you have the flexibility to choose one or multiple metrics from the same category.
 
 {% navtabs "metrics" %}
@@ -169,12 +170,12 @@ rows:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "LLM usage" %}
-{{site.observability}} allows you to monitor and optimize your LLM usage by providing detailed insights into objects such as token consumption, costs, and latency. 
+{{site.observability}} allows you to monitor and optimize your LLM usage by providing detailed insights into objects such as token consumption, costs, and latency.
 
 With LLM usage reporting, you can:
 
-* Track token consumption: Monitor the number of tokens processed by the different LLM models you have configured. 
-* Understand costs: Gain visibility into the costs associated with your LLM providers. 
+* Track token consumption: Monitor the number of tokens processed by the different LLM models you have configured.
+* Understand costs: Gain visibility into the costs associated with your LLM providers.
 * Measure latency: Analyze the latency involved in processing LLM requests.
 
 The following table shows which LLM usage metrics you can view:
@@ -244,25 +245,32 @@ rows:
     description: "Cost savings from cache."
   - attribute: "Compression Saved Tokens"
     unit: "Count"
-    description: "{% new_in 2.3 %} Number of tokens saved by the [AI Prompt Compressor Policy](/ai-gateway/policies/ai-prompt-compressor/#prompt-compression-metrics), summed over the compressed messages."
+    description: |
+      {% new_in 2.3 %} Number of tokens saved by the [AI Prompt Compressor Policy](/ai-gateway/policies/ai-prompt-compressor/#prompt-compression-metrics), summed over the compressed messages.
   - attribute: "Compression Original Tokens"
     unit: "Count"
-    description: "{% new_in 2.3 %} Number of tokens before compression."
+    description: |
+      {% new_in 2.3 %} Number of tokens before compression.
   - attribute: "Compression Compressed Tokens"
     unit: "Count"
-    description: "{% new_in 2.3 %} Number of tokens after compression."
+    description: |
+      {% new_in 2.3 %} Number of tokens after compression.
   - attribute: "Compression Message Count"
     unit: "Count"
-    description: "{% new_in 2.3 %} Number of compressed messages per request."
+    description: |
+      {% new_in 2.3 %} Number of compressed messages per request.
   - attribute: "Compression Duration"
     unit: "Latency"
-    description: "{% new_in 2.3 %} Average time the compressor took, in milliseconds."
+    description: |
+      {% new_in 2.3 %} Average time the compressor took, in milliseconds.
   - attribute: "Compressor Provider"
     unit: "String"
-    description: "{% new_in 2.3 %} Compression provider that handled the request. Possible values: `kong` or `headroom`."
+    description: |
+      {% new_in 2.3 %} Compression provider that handled the request. Possible values: `kong` or `headroom`.
   - attribute: "Compression Type"
     unit: "String"
-    description: "{% new_in 2.3 %} Compression method used. Possible values: `rate` or `target_token`. Available for the `kong` provider only."
+    description: |
+      {% new_in 2.3 %} Compression method used. Possible values: `rate` or `target_token`. Available for the `kong` provider only.
 {% endtable %}
 <!-- TODO: The attribute display names above are derived from the metric names in the AI-229 draft PRD (compression_saved_tokens, compressor_provider, and so on). Confirm the exact labels shown in Explorer. -->
 <!--vale on-->
@@ -305,7 +313,7 @@ rows:
   - metric: "Plugin count"
     category: "Count"
     description: |
-      Number of plugins in your control plane. 
+      Number of plugins in your control plane.
       These can also be filtered by plugin scope and name.
   - metric: "Consumer count"
     category: "Count"
@@ -400,7 +408,7 @@ rows:
 
 ## System-defined groups
 
-`Empty` is an optional, system-defined group that indicates that API calls don't have an entity like [Consumers](/gateway/entities/consumer/) or [Routes](/gateway/entities/route), selected for grouping. `Empty` allows you to group API calls that don't match specific groupings so you can gain more comprehensive insights. You can filter by `Is Empty` or `Is Not Empty`. 
+`Empty` is an optional, system-defined group that indicates that API calls don't have an entity like [Consumers](/gateway/entities/consumer/) or [Routes](/gateway/entities/route), selected for grouping. `Empty` allows you to group API calls that don't match specific groupings so you can gain more comprehensive insights. You can filter by `Is Empty` or `Is Not Empty`.
 
 Some common use cases for `Empty` include:
 * Identifying the number of API calls that don't match a Route.
@@ -408,17 +416,17 @@ Some common use cases for `Empty` include:
 
 ## View platform usage metrics by environment, team, and region
 
-Filtering platform usage metrics in Explorer by environment, teams, and regions will show you information such as how many control planes are in each region or how many Gateway Services belong to each team. 
+Filtering platform usage metrics in Explorer by environment, teams, and regions will show you information such as how many control planes are in each region or how many Gateway Services belong to each team.
 This uses the following [labels](/konnect-platform/konnect-labels/) and [tags](/gateway/tags/) to map an entity to a dimension:
 * `env`
 * `team`
 * `region`
 
-For example, if you label your control plane with `env:production`, it will display when you select "Environment" from the dimensions filter. 
+For example, if you label your control plane with `env:production`, it will display when you select "Environment" from the dimensions filter.
 
 {:.warning}
-> **Labeling sub-entities:** Keep in mind that you must label sub-entities, they do not inherit labels. 
+> **Labeling sub-entities:** Keep in mind that you must label sub-entities, they do not inherit labels.
 > For example, labeling your control plane with `region:us` **will not** label your Gateway Services and Routes with `region:us`, they must be labeled individually.
 
-To filter metrics by environment, team, and region, navigate to **{{site.observability}} > Explorer** in the sidebar. 
-Filter by an entity and in the dimension filter, select if you want to filter by environment, team, or region. 
+To filter metrics by environment, team, and region, navigate to **{{site.observability}} > Explorer** in the sidebar.
+Filter by an entity and in the dimension filter, select if you want to filter by environment, team, or region.
