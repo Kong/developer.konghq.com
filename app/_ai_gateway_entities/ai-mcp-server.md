@@ -563,6 +563,10 @@ For modes that support server-level ACL configuration (`conversion-listener`, `l
 
 When `access.acl_attribute_type` is `consumer`, you can gate access by individual [AI Consumers](/ai-gateway/entities/ai-consumer/) (using username, UUID, or custom ID) or by [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) membership. This flexibility lets you define rules at the right level: deny a specific user, allow a tier-based group, or mix both in the same ACL. The runtime checks the authenticated AI Consumer's identity and group memberships against your `allow` and `deny` lists.
 
+### CEL-based ACLs {% new_in 2.2 %}
+
+{% include md/ai-gateway/v2/cel-acls.md entity="AI MCP Server" anchor="#schema-aigateway-mcpserver-access-acls" scope="server-level " allow_and_deny_together=true %}
+
 ### How default and per-tool ACLs work
 
 The runtime evaluates access using a two-tier system:
