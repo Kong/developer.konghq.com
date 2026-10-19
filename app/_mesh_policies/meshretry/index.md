@@ -17,31 +17,29 @@ related_resources:
   url: "/mesh/policies/meshcircuitbreaker/"
 ---
 
-`MeshRetry` makes a client proxy try a failed request again, instead of returning the failure
-to the caller. It applies to the client side of a connection, so the policy is written from
-the perspective of the proxy making the request.
+The `MeshRetry` policy makes a client proxy try a failed request again, instead of returning
+the failure to the caller. It's configured from the side of the proxy making the request.
 
-Use it to absorb transient failures: a destination restarting, a connection reset mid-flight,
+Use this policy to absorb short failures, such as a destination restarting, a connection reset,
 or a rate limit that clears in a second or two.
 
-A newly created mesh usually includes a mesh-wide retry policy, in which case a narrower
-policy changes that behavior for selected traffic rather than introducing retries for the
-first time. Some meshes are created without it. See
-[the initial defaults](#defaults-and-disabling-retries).
+Most new meshes include a mesh-wide retry policy, so a narrower policy changes existing retry
+behavior for selected traffic. Some meshes are created without it. For more information, see
+[Defaults and disabling retries](#defaults-and-disabling-retries).
 
 {:.warning}
 > Retries multiply load on a struggling destination. Pair a retry policy with
 > [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/), and set `perTryTimeout` so a slow
 > destination cannot hold a retried request open for the whole route timeout.
 
-A failed response does not prove that the destination did no work. Retrying a payment or another
-write can repeat its side effects. Use retries for operations that are safe to repeat, or require
-an application-level idempotency mechanism that recognizes repeated operations.
+A failed response doesn't prove that the destination didn't do anything. Retrying a payment or another
+write can repeat its side effects. Only retry operations that are safe to repeat, or use an
+application-level idempotency mechanism.
 
 ## Retry HTTP requests to a destination
 
-This policy applies to proxies labeled `app: frontend`, and governs the requests they make
-to the `backend` service:
+The following example makes proxies labeled `app: frontend` retry failed requests to `backend`
+up to three times:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -70,69 +68,60 @@ spec:
 
 What each field does:
 
-* `targetRef` selects **which proxies retry**. These are clients, not the destination.
-* `to[].targetRef` selects **which destination** the retries apply to.
-* `default` carries the configuration, under `http`, `grpc`, or `tcp`. At least one of the
-  three is required.
+* `targetRef` selects the client proxies that retry: `Mesh`, or `Dataplane` with `labels`.
+* `to[].targetRef` selects the destination the retries apply to: `Mesh`, `MeshService`,
+  `MeshExternalService`, `MeshMultiZoneService`, or `MeshHTTPRoute`. A `MeshHTTPRoute` limits
+  retries to the requests that route matches.
+* `default` holds the configuration under `http`, `grpc`, `tcp`, or a combination of them. At
+  least one is required.
 
-`numRetries: 3` permits up to four attempts, including the original request.
-`perTryTimeout: 2s` limits an attempt, while
-[MeshTimeout](/mesh/policies/meshtimeout/) sets the overall HTTP response deadline.
-The proxy stops when the request succeeds, retries are exhausted, or the overall deadline
-expires. Three retries are a maximum, not a promise that all three will run.
+The policy has no `rules`, because the caller decides whether to retry.
 
-The per-attempt timer applies before the proxy starts sending the response to the caller.
-It is not a lifetime limit for a response that has already started streaming. Use
-`MeshTimeout` stream limits for that case. See
+`numRetries: 3` allows up to four attempts, including the original request. `perTryTimeout: 2s`
+limits each attempt, and [MeshTimeout](/mesh/policies/meshtimeout/) sets the overall HTTP
+response deadline. The proxy stops when the request succeeds, the retries run out, or the
+overall deadline expires, so all three retries might not run.
+
+The per-attempt timer only runs until the proxy starts sending the response to the caller. It
+doesn't limit a response that's already streaming, so use `MeshTimeout` stream limits for that.
+For more information, see
 [Envoy's timeout behavior](https://www.envoyproxy.io/docs/envoy/latest/faq/configuration/timeouts).
-
-## Where this policy applies
-
-`spec.targetRef` selects which proxies retry, and these are the callers: `Mesh`, or
-`Dataplane` with `labels`. `spec.to[].targetRef` selects the destination the retries apply
-to, and accepts `Mesh`, `MeshService`, `MeshExternalService`, `MeshMultiZoneService` or
-`MeshHTTPRoute`.
-
-There is no `rules` array. A retry is a decision the caller makes, so it is configured
-outbound only.
-
-Targeting a `MeshHTTPRoute` retries only the requests that route matches, which scopes a
-retry to one path rather than a whole service. For the selectors a policy can carry, see
-[How policies select traffic](/mesh/policy-targeting/).
 
 ## Defaults and disabling retries
 
-The initial policy is named `mesh-retry-all-<mesh>`, so `mesh-retry-all-default` on the
-`default` mesh. It sets HTTP and gRPC `numRetries: 5`, `perTryTimeout: 16s`, and backoff from
-25ms to 250ms. TCP uses `maxConnectAttempt: 5`.
+The initial policy is named `mesh-retry-all-<mesh>`, such as `mesh-retry-all-default` on the
+`default` mesh. It sets the following defaults:
 
-{:.info}
-> Unlike [MeshTimeout](/mesh/policies/meshtimeout/), retry defaults live only in that policy.
-> A mesh created with `skipCreatingInitialPolicies`, which includes a mesh created by a
-> {{site.konnect_short_name}} control plane, has no `MeshRetry` and therefore no retries at all: the generated
-> route carries no retry policy and each request is attempted once. On such a mesh your first
-> `MeshRetry` does introduce retries for the first time.
+* HTTP and gRPC: `numRetries: 5`, `perTryTimeout: 16s`, and backoff from 25ms to 250ms.
+* HTTP conditions: gateway errors, connection failures, and refused streams.
+* TCP: `maxConnectAttempt: 5`.
 
-The initial HTTP conditions cover gateway errors, connection failures, and refused streams.
-If no effective HTTP retry configuration supplies `numRetries`, Envoy's retry count is one.
-If `retryOn` is omitted or empty in an effective HTTP configuration, the generated conditions
-are `GatewayError`, `ConnectFailure`, and `RefusedStream`; an empty list does not disable retries.
+Unlike [MeshTimeout](/mesh/policies/meshtimeout/), retry defaults only exist in that policy. A
+mesh created with `skipCreatingInitialPolicies`, including a mesh created by a
+{{site.konnect_short_name}} control plane, has no `MeshRetry` and attempts each request once.
+On such a mesh, your first `MeshRetry` introduces retries.
 
-Set `http.numRetries: 0` or `grpc.numRetries: 0` to disable the corresponding policy-generated
-retries. TCP counts total connection attempts, so `tcp.maxConnectAttempt: 1` permits only
-the initial attempt.
+When an effective HTTP configuration leaves out a field, the following values apply:
 
-More specific policies override fields they set and inherit other fields from broader policies.
-For example, changing only HTTP `numRetries` to 2 retains a broader policy's per-attempt timeout.
-A supplied `retryOn` list replaces the broader list. Removing the narrower policy restores the
-broader behavior, including retries previously disabled by that override.
+* No `numRetries`: Envoy retries once.
+* No `retryOn`, or an empty list: the conditions are `GatewayError`, `ConnectFailure`, and
+  `RefusedStream`. An empty list doesn't disable retries.
 
-## Choose what to retry on
+To disable retries, set the following:
 
-`retryOn` lists failures that can trigger a retry. HTTP method entries are different: they restrict which
-requests are eligible to retry.
+* HTTP: `http.numRetries: 0`.
+* gRPC: `grpc.numRetries: 0`.
+* TCP: `tcp.maxConnectAttempt: 1`. TCP counts total connection attempts, so this allows only
+  the first one.
+
+## Retry conditions
+
+`retryOn` lists the failures that can trigger a retry. HTTP method entries are the exception:
+they restrict which requests can be retried.
 
 ### HTTP
+
+HTTP `retryOn` accepts the following values:
 
 {% table %}
 columns:
@@ -142,42 +131,50 @@ columns:
     key: when
 rows:
   - value: "`5xx`"
-    when: "The destination answers with any 5xx, or does not answer at all. Includes `ConnectFailure` and `RefusedStream`."
+    when: "The destination returns any 5xx, or doesn't answer. Includes `ConnectFailure` and `RefusedStream`."
   - value: "`GatewayError`"
-    when: "The destination answers 502, 503, or 504."
+    when: "The destination returns 502, 503, or 504."
   - value: "`Reset`"
-    when: "The destination does not answer at all: disconnect, reset, or read timeout."
+    when: "The destination doesn't answer: disconnect, reset, or read timeout."
   - value: "`Retriable4xx`"
-    when: "The destination answers 409, which is the only 4xx this condition covers."
+    when: "The destination returns 409. No other 4xx is covered."
   - value: "`ConnectFailure`"
-    when: "The connection to the destination failed, including connect timeout."
+    when: "The connection to the destination fails, including a connect timeout."
   - value: "`EnvoyRatelimited`"
-    when: "The `x-envoy-ratelimited` header is present."
+    when: "The response has the `x-envoy-ratelimited` header."
   - value: "`RefusedStream`"
-    when: "The destination reset the stream with `REFUSED_STREAM`."
+    when: "The destination resets the stream with `REFUSED_STREAM`."
   - value: "`Http3PostConnectFailure`"
-    when: "An HTTP/3 request failed after connecting."
+    when: "An HTTP/3 request fails after connecting."
   - value: "`HttpMethodGet` and other methods"
-    when: "Restricts retry eligibility to the named method; it is not itself a failure condition. Pair `HttpMethodGet` with a condition such as `5xx` to retry only failed GET requests."
+    when: "Never on its own. It limits retries to that method, so pair it with a condition. For example, `HttpMethodGet` with `5xx` retries only failed GET requests."
   - value: "A status code"
-    when: "Any numeric HTTP status code, such as `500` or `429`."
+    when: "The destination returns that HTTP status code, such as `500` or `429`."
 {% endtable %}
 
 {:.warning}
-> `5xx` is lower case. `5XX` is rejected as `unknown item '5XX'`, even though it appears as
+> `5xx` is lowercase. `5XX` is rejected, even though it appears as
 > the example value in the CRD and the OpenAPI schema. Every other named condition is
 > upper camel case.
 
 ### gRPC
 
-`Canceled`, `DeadlineExceeded`, `Internal`, `ResourceExhausted`, and `Unavailable`. These
-match the gRPC status in the response headers, and unlike the HTTP list they are a closed
-set: no other value is accepted.
+gRPC `retryOn` accepts only the following values, which match the gRPC status in the response
+headers:
+
+* `Canceled`
+* `DeadlineExceeded`
+* `Internal`
+* `ResourceExhausted`
+* `Unavailable`
 
 ### TCP
 
-TCP has no conditions. `maxConnectAttempt` is the whole configuration, and a connection is
-retried when it fails to establish:
+TCP has no conditions. A connection is retried when it fails to open, and `maxConnectAttempt`
+is the only setting. It counts total attempts, not retries after the first one. It doesn't
+replay application messages after an open connection breaks.
+
+The following example allows up to five connection attempts from `frontend` to `backend`:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -200,14 +197,16 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-`maxConnectAttempt: 5` permits five TCP connection attempts in total, not five retries
-after the first attempt. It does not replay application messages after an established connection
-breaks.
-
 ## Control the interval between retries
 
-Retries back off exponentially. `baseInterval` defaults to `25ms`, and `maxInterval` defaults
-to ten times whichever `baseInterval` is in effect. An interval under 1ms is rounded up.
+Retries back off exponentially. `backOff` accepts the following fields:
+
+* `baseInterval`: defaults to `25ms`.
+* `maxInterval`: defaults to ten times the effective `baseInterval`.
+
+An interval under 1ms is rounded up.
+
+The following example starts the backoff at 100ms and caps it at 5s:
 
 ```yaml
 http:
@@ -217,12 +216,26 @@ http:
     maxInterval: 5s
 ```
 
-### Back off by what the destination asks for
+### Rate-limited backoff
 
-When a destination answers a rate limit with a header saying when to come back,
-`rateLimitedBackOff` uses that instead of the exponential schedule. Headers are tried in
-order and matched case-insensitively; the first one that parses is used, and if none parse
-the exponential backoff applies:
+When a destination answers a rate limit with a header that says when to try again,
+`rateLimitedBackOff` uses that instead of the exponential backoff. It accepts the following
+fields:
+
+* `resetHeaders`: headers to read, tried in order and matched case-insensitively. The first one
+  that parses is used. Each header's `format` is either `Seconds` for a number of seconds to
+  wait, or `UnixTimestamp` for a point in time.
+* `maxInterval`: the longest wait to accept, `300s` by default. A header asking for a longer
+  wait is skipped instead of shortened, and the next header is tried.
+
+If no header qualifies, the exponential backoff applies. Envoy also adds jitter, so the actual
+delay varies. For more information, see
+[Envoy's rate-limit backoff behavior](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#config-route-v3-retrypolicy-ratelimitedretrybackoff).
+
+The header only sets the wait after the response qualifies for a retry. The following example
+retries only responses with `x-envoy-ratelimited`, so a plain `429` with only `Retry-After`
+isn't retried. If your backend signals rate limiting with `429`, add the quoted status-code
+condition `"429"`:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -254,22 +267,10 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-`format` is `Seconds` for a number of seconds to wait, or `UnixTimestamp` for a point in
-time. `maxInterval` defaults to `300s`. A header asking for a longer wait is discarded;
-the proxy tries the next configured header, then falls back to exponential backoff if none
-qualifies. It does not shorten the requested wait to the maximum. Envoy also adds jitter,
-so the actual delay is not a fixed schedule. See
-[Envoy's rate-limit backoff behavior](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#config-route-v3-retrypolicy-ratelimitedretrybackoff).
-
-The header controls the wait only after the response qualifies for a retry. This example
-requires `x-envoy-ratelimited`; a plain `429` with only `Retry-After` will not satisfy that
-condition. Use the quoted status-code condition `"429"` when that is how your backend signals
-rate limiting.
-
 ## Retry somewhere else
 
-By default a retry may go back to the host that just failed. `hostSelection` changes which
-hosts are eligible:
+By default, a retry can go back to the host that just failed. `hostSelection` accepts the
+following predicates to change which hosts are eligible:
 
 {% table %}
 columns:
@@ -279,49 +280,58 @@ columns:
     key: effect
 rows:
   - predicate: "`OmitPreviousHosts`"
-    effect: "Skip hosts already tried for this request."
+    effect: "Skips hosts already tried for this request."
   - predicate: "`OmitHostsWithTags`"
-    effect: "Skip hosts carrying the given tags. `tags` is required with this predicate."
+    effect: "Skips hosts with the given `tags`, which are required."
   - predicate: "`OmitPreviousPriorities`"
-    effect: "Skip priorities already tried. `updateFrequency` sets how often priority load is recalculated, and defaults to 2."
+    effect: "Skips priorities already tried. `updateFrequency` sets how often priority load is recalculated, and defaults to 2."
 {% endtable %}
 
-`hostSelectionMaxAttempts` caps how many times host selection is retried before the policy
-gives up and uses the last host it selected. It defaults to one reattempt.
+`hostSelectionMaxAttempts` caps how many times host selection is retried before the proxy uses
+the last host it selected. It defaults to one reattempt.
 
-Host selection chooses another endpoint of the routed backend. It does not automatically
-fail over to a different MeshService. To observe a change of endpoint, the backend needs
-multiple eligible endpoints.
+Host selection picks another endpoint of the same backend. It doesn't fail over to a different
+MeshService, and it needs several eligible endpoints to make a difference.
 
 ## Filter which requests are eligible
 
-`retriableRequestHeaders` restricts retries to requests with matching headers. It does not
-trigger a retry by itself: the response or connection failure must also satisfy `retryOn`.
+`retriableRequestHeaders` limits retries to requests with matching headers. It doesn't trigger a
+retry by itself: the failure must also match `retryOn`.
 
-`retriableResponseHeaders` describes response headers that can trigger retries, but Envoy
-only uses these matchers when its `retriable-headers` retry condition is enabled. The current
-v3 policy implementation supplies the matchers without enabling that condition. Do not rely
-on this field alone to retry a response; use a supported `retryOn` condition and verify the
-generated configuration before depending on header-triggered retries. See
-[Envoy's retry policy reference](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#config-route-v3-retrypolicy).
+## Overlapping policies
 
-## Validate retry behavior
+A more specific policy overrides the fields it sets and inherits the rest from broader
+policies. For example, changing only HTTP `numRetries` to 2 keeps a broader policy's
+per-attempt timeout. A `retryOn` list replaces the broader list instead of adding to it.
+Removing the narrower policy restores the broader behavior, including retries the narrower
+policy disabled.
 
-Test with a destination that can fail in a controlled way, and observe both the client response
-and the number of attempts received by the destination. For the first example, one original
-request can produce up to four attempts: the first attempt plus `numRetries: 3`.
+## Validating retry behavior
 
-Check a slow failure separately. `perTryTimeout: 2s` limits each attempt, but the route's
-overall request timeout can end the operation before every retry runs. If attempts exceed the
-expected count, check for retries in the application or another proxy as well as in this policy.
+1. Disable retries in the application, so you measure only the proxy. For example, three
+   application attempts through a proxy that allows three attempts per call can produce up to
+   nine backend attempts.
+1. Make the destination fail in a controlled way, and count the attempts it receives. For the
+   first example, one request produces up to four attempts.
+1. Confirm the response the client gets after the retries run out.
+1. Test a slow failure separately, and confirm whether the overall request timeout ends the
+   request before every retry runs.
 
-For example, an application making three attempts through a proxy that permits three attempts
-per application call can produce up to nine backend attempts. Test with application retries
-disabled first so the proxy's behavior can be measured separately.
-
-| Unexpected result | Check |
-| --- | --- |
-| A slow request is never retried | Compare the per-attempt timeout with the overall request deadline. The deadline may expire first. |
-| A 429 is not retried | Match `"429"` explicitly or confirm that the configured response-header condition is present. |
-| A retry reaches the same endpoint | Check host-selection settings and the number of eligible endpoints. |
-| Retries continue after deleting your policy | Check the initial mesh-wide policy and retry logic in the application. |
+{% table %}
+columns:
+  - title: Unexpected result
+    key: unexpected
+  - title: Check
+    key: check
+rows:
+  - unexpected: "More attempts than expected"
+    check: "Retries in the application or in another proxy."
+  - unexpected: "A slow request is never retried"
+    check: "Compare the per-attempt timeout with the overall request deadline, which may expire first."
+  - unexpected: "A 429 isn't retried"
+    check: "Match `\"429\"` explicitly, or confirm that the response has the header your condition requires."
+  - unexpected: "A retry reaches the same endpoint"
+    check: "`hostSelection` and the number of eligible endpoints."
+  - unexpected: "Retries continue after deleting your policy"
+    check: "The initial mesh-wide policy and the application's retry logic."
+{% endtable %}
