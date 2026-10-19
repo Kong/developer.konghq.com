@@ -128,8 +128,7 @@ spec:
             backendRefs: [...]  # where to send them
 ```
 
-Every rule needs at least one entry in `matches`. `spec.to[].hostnames` is in the schema but
-isn't implemented, and setting it is rejected.
+Every rule needs at least one entry in `matches`.
 
 ## Matching a request
 
@@ -229,7 +228,7 @@ rows:
   - type: "`RequestRedirect`"
     effect: "Tells the client to make another request, instead of forwarding. Takes `scheme` (`http` or `https`), `hostname`, `port`, `path`, and `statusCode` (`301`, `302`, `303`, `307`, or `308`, default `302`)."
   - type: "`URLRewrite`"
-    effect: "Rewrites `hostname` and `path` before forwarding, without involving the client. `urlRewrite.hostToBackendHostname` isn't implemented, and setting it is rejected."
+    effect: "Rewrites `hostname` and `path` before forwarding, without involving the client."
   - type: "`RequestMirror`"
     effect: "Copies requests to a second destination in `backendRef` and discards its responses. `percentage` sets how many are copied, and defaults to all."
 {% endtable %}

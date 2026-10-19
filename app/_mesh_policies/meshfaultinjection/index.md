@@ -68,12 +68,6 @@ What each field does:
 * `abort` returns `httpStatus: 503` to about one request in ten, without sending it to the
   application.
 
-{:.warning}
-> Don't use `spec.to[]`. {{site.mesh_product_name}} still accepts it when `spec.targetRef.kind`
-> is `Mesh`, but the proxy ignores it and applies faults only from `rules`. To convert an
-> existing `to` policy, see
-> [Migrate policies to {{site.mesh_product_name}} 3.x](/mesh/migrate-policies-to-3/#meshfaultinjection).
-
 ## Listeners and protocols
 
 To apply the policy to one inbound, set `spec.networking.inbound[].targetRef.sectionName` to the inbound's `name` in the destination `Dataplane`, or to its port as a string if it

@@ -17,25 +17,28 @@ related_resources:
   url: "/mesh/policies/meshfaultinjection/"
 ---
 
-`MeshRateLimit` limits incoming HTTP requests or new TCP connections at the destination
-proxy. When the applicable limit has no capacity left, the proxy rejects the request or
-connection before it reaches the application.
+The `MeshRateLimit` policy limits incoming traffic at the destination proxy:
 
-The limit is enforced by each proxy against its own traffic, using Envoy's
+* With `local.http`, it limits HTTP requests.
+* With `local.tcp`, it limits new TCP connections.
+
+When a limit has no capacity left, the proxy rejects the request or connection before it
+reaches the application.
+
+Each proxy enforces the limit on its own traffic, using Envoy's
 [token bucket](https://www.envoyproxy.io/docs/envoy/latest/api-v3/type/v3/token_bucket.proto).
-It does not maintain a shared quota across a service's replicas. Adding replicas adds
-capacity; uneven traffic can exhaust one proxy's allowance while another has capacity left.
-Size the limit for an individual instance, not for the deployment's total traffic.
+Replicas don't share a quota, so adding replicas adds capacity, and uneven traffic can use up
+one proxy's allowance while another still has some. Size the limit for one instance, not for
+the whole deployment.
 
-Without a matching configured limit, this policy does not restrict the rate. Rate is also
-different from concurrency: use [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/)
-to limit work that is active at the same time. A slow application can accumulate concurrent
-requests even when its incoming request rate stays below the limit.
+Proxies that no `MeshRateLimit` selects aren't rate limited. Rate also isn't concurrency: a
+slow application can pile up concurrent requests while staying under the rate limit. To limit
+concurrent work, use [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/).
 
 ## Limit requests to a destination
 
-This policy applies to proxies labeled `app: backend`. For each selected inbound route, it
-allows a burst of five requests and replenishes that allowance at five requests per ten seconds:
+The following example allows each inbound route on proxies labeled `app: backend` a burst of
+five requests, refilled at five requests per ten seconds:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -57,68 +60,54 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-`targetRef` selects the `backend` proxies that count and reject requests. The rule has no
-caller match, so all callers using the same inbound route share its bucket on each proxy.
-The bucket starts full and holds at most five tokens. Each accepted request consumes one;
-a request arriving when the bucket is empty receives `429 Too Many Requests` by default.
+What each field does:
 
-This is a burst allowance with replenishment, not a promise that every ten-second window
-contains at most five successful requests. Requests arriving over time can consume newly
-available tokens. Unused capacity does not accumulate beyond five tokens.
+* `targetRef` selects the `backend` proxies that count and reject requests.
+* `rules` has no caller match, so all callers on the same inbound route share one bucket on
+  each proxy.
+* `requestRate` sets the bucket size and refill rate. The bucket starts full with five tokens,
+  each accepted request uses one, and a request that arrives when it's empty gets
+  `429 Too Many Requests` by default.
 
-HTTP buckets belong to individual generated routes on each proxy. Different inbounds and
-client-specific routes do not share one service-wide bucket. In particular, a new client
-connection does not reset an HTTP route's allowance.
+This is a burst allowance with refill, not a cap of five successful requests per ten-second
+window. Requests spread over time can use newly refilled tokens, and unused capacity never
+grows beyond five tokens.
 
-## Where this policy applies
+Each generated route on each proxy has its own HTTP bucket. Different inbounds and
+client-specific routes don't share a service-wide bucket, and a new client connection doesn't
+reset a route's allowance.
 
-A rate limit belongs to the proxy doing the accepting, so this is an inbound policy, configured
-on the proxy being protected rather than on its clients.
+## Target selection
 
-Which field carries the configuration depends on what `spec.targetRef` selects, and the two
-combinations do not overlap:
+A rate limit is an inbound policy: configure it on the proxy being protected, not on its
+clients. Set `spec.targetRef.kind` to `Dataplane` and put the limits in `rules`. Use `labels` to
+select the protected proxies, or omit `labels` to select every proxy in the policy's scope.
 
-{% table %}
-columns:
-  - title: "`spec.targetRef.kind`"
-    key: kind
-  - title: Configuration goes in
-    key: field
-  - title: What it limits
-    key: limits
-rows:
-  - kind: "`Dataplane`, with `labels`"
-    field: "`rules`. Defining `to` is rejected with `spec.to: must not be defined`."
-    limits: "Traffic arriving at the selected proxies. Omit `labels` to select every proxy [the policy reaches](/mesh/policy-targeting/#where-a-policy-applies)."
-  - kind: "`Mesh`"
-    field: "`to`, whose `targetRef` accepts `kind: Mesh` and nothing else. Defining `rules` is rejected with `spec.rules: must not be defined`."
-    limits: "The API accepts this form, but the v3 proxy implementation applies limits from rules, not to. Migrate to the Dataplane/rules form."
-{% endtable %}
+To limit a whole zone, use `kind: Dataplane` with no `labels`, and create the policy in
+`{{site.mesh_namespace}}`. In an application namespace, the policy only applies to the proxies
+in that namespace. To cover every zone, create the policy on the global control plane. For
+more information, see [Where a policy applies](/mesh/policy-targeting/#where-a-policy-applies).
 
-Setting both `to` and `rules` is rejected with
-`field 'to' must be empty when 'rules' is defined`, and setting neither with
-`at least one of 'to' or 'rules' has to be defined`.
+To limit one inbound, set `targetRef.sectionName` to one of the following:
 
-A zone-wide inbound limit is therefore written as `kind: Dataplane` with no `labels`, not as
-`kind: Mesh`, and it has to be created in `{{site.mesh_namespace}}`. The same policy in an
-application namespace reaches only that namespace, and covering every zone requires the
-global control plane.
+* The inbound's `name` in the destination Dataplane's `spec.networking.inbound[]`.
+* The inbound's port as a string, such as `"8080"`, if it doesn't have a name.
+* On a zone proxy, the listener's `name` in `spec.networking.listeners[]`.
 
-To limit one inbound, set `targetRef.sectionName` to its `name` in the destination
-Dataplane's `spec.networking.inbound[]`. If it has no name, use its port as a string, such
-as `"8080"`. On a zone proxy, use the listener's `name` from
-`spec.networking.listeners[]`. Without `sectionName`, eligible listeners on the selected
-proxies are covered; they do not share a single bucket.
-
-For the selectors a policy can carry, see [How policies select traffic](/mesh/policy-targeting/).
+Without `sectionName`, the policy covers all eligible listeners on the selected proxies, each
+with its own bucket.
 
 ## HTTP limits
 
-`local.http.requestRate` sets the cap: `num` requests per `interval`. `num` must be greater
-than 0 and `interval` greater than 50ms.
+`local.http.requestRate` sets the limit: `num` requests per `interval`. `num` must be greater
+than 0, and `interval` greater than 50ms.
 
-`local.http.onRateLimit` decides what a rejected request receives. Without it the proxy answers
-`429 Too Many Requests`.
+`local.http.onRateLimit` sets the response a rejected request gets. It only customizes the
+rejection, so it needs a `requestRate` in the same rule or inherited from a broader one. Without
+`onRateLimit`, the proxy returns `429 Too Many Requests`.
+
+The following example returns `503` with an `x-kuma-rate-limited: true` header when the limit
+is reached:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -146,39 +135,46 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-Use an HTTP error status such as `429` or `503`. Although the policy validator accepts a
-positive `status`, Envoy uses `429` when the configured status is below `400`.
-`headers.set` replaces a header already on the response and `headers.add` appends to it,
-each taking up to 16 entries. Header names are lower case only. See the
-[Envoy response-status behavior](https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/http/local_ratelimit/v3/local_rate_limit.proto#extensions-filters-http-local-ratelimit-v3-localratelimit).
+`onRateLimit` accepts the following fields:
 
-Returning `503` can trigger a caller's retry policy, increasing attempts while the
-destination is already rejecting work. Keep the default `429` unless the client requires
-another status, and test the client's retry and backoff behavior.
+* `status`: an HTTP error status such as `429` or `503`. The validator accepts any positive
+  value, but Envoy uses `429` for anything below `400`. For more information, see
+  [Envoy's local rate limit reference](https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/http/local_ratelimit/v3/local_rate_limit.proto#extensions-filters-http-local-ratelimit-v3-localratelimit).
+* `headers.set`: replaces a header already on the response. Up to 16 entries.
+* `headers.add`: appends to a header. Up to 16 entries.
 
-`onRateLimit` only customizes a rejection. It does not create a limit without an effective
-`requestRate`, either in the same rule or inherited from a broader configuration.
+Header names must be lowercase.
+
+A `503` can trigger the caller's retry policy and add more attempts while the destination is
+already rejecting work. Keep the default `429` unless the client needs another status, and
+test the client's retry and backoff behavior.
 
 ## TCP limits
 
-`local.tcp.connectionRate` caps new connections rather than requests, with the same `num` and
-`interval` fields. It applies to any inbound, including one carrying HTTP traffic, where it
-limits how often clients may connect rather than what they may send over an established
-connection.
+`local.tcp.connectionRate` limits new connections instead of requests, with the same `num` and
+`interval` fields. It applies to any inbound, including HTTP ones, where it limits how often
+clients connect, not what they send on an open connection.
 
-When the connection bucket is empty, the proxy closes the new connection; it cannot return
-an HTTP rate-limit response at this stage. Existing connections remain open. A long-lived
-connection can carry many requests, so a connection-rate limit is not a request-rate limit
-or a cap on the total number of open connections.
+When the bucket is empty, the proxy closes the new connection without an HTTP response.
+Existing connections stay open. Because a long-lived connection can carry many requests, a
+connection-rate limit isn't a request-rate limit or a cap on open connections.
 
-An inbound served as plain TCP has no HTTP filters, so `local.http` has no effect there. See
-[Universal inbounds must declare their protocol](/mesh/migrate-policies-to-3/#universal-inbounds-must-declare-their-protocol)
-for the case where an inbound is served as TCP unintentionally.
+An inbound served as plain TCP has no HTTP filters, so `local.http` has no effect there. For
+more information, see
+[Universal inbounds must declare their protocol](/mesh/migrate-policies-to-3/#universal-inbounds-must-declare-their-protocol).
 
 ## Give one workload identity a separate request limit
 
-`rules[].matches` narrows a rule to requests from particular clients, matched on `spiffeID`
-(`Exact` or `Prefix`) or `sni` (`Exact` only). A rule with no `matches` applies to every client.
+`rules[].matches` narrows a rule to requests from particular clients. Each `matches` entry
+needs `spiffeID`, `sni`, or both:
+
+* `spiffeID`: `Exact` or `Prefix`. `type` is required.
+* `sni`: `Exact` only.
+
+A rule with no `matches` applies to every client.
+
+The following example gives the `batch` service account its own limit of 10 requests per second,
+and every other caller a shared limit of 1000 requests per second:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -210,53 +206,47 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-Each `matches` entry needs at least one of `spiffeID` or `sni`, and a `spiffeID` must set
-`type`.
+Batch requests don't use the fallback bucket, so this is a separate allowance, not a share
+of the 1000-request total. On each destination proxy, all replicas presenting the batch identity
+share one bucket per route. A `Prefix` match also gives the whole matched group one bucket per
+route and proxy, not one bucket per identity.
 
-On each destination proxy, requests matching the batch identity use the 10-per-second
-bucket. Other callers use the shared 1000-per-second bucket. Batch requests do not also
-consume the fallback bucket: this is a separate allowance, not a 10-request share of a
-1000-request total.
+Copy the full SPIFFE URI from the batch workload's certificate into
+`rules[].matches[].spiffeID.value`. A custom [MeshIdentity](/mesh/policies/meshidentity/)
+template can change both the trust domain and the path in the example. The caller must use
+mesh mTLS, because plaintext traffic has no SPIFFE identity to match. Rate limiting doesn't
+grant access, so [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) must also allow
+the caller.
 
-All replicas presenting the same batch identity share that matching route's bucket on a
-given destination proxy. A `Prefix` match similarly gives the matched group one allowance
-per route and proxy; it does not create a new bucket for every identity in that group.
+A rule that matches on `spiffeID` can't use `local.tcp`, because the client identity comes from
+the TLS handshake, which a connection-level limit counts instead of inspecting. Limit connections in a rule
+without a `spiffeID` match, and limit one client's requests with `local.http`.
 
-Copy the complete SPIFFE URI from the batch workload's certificate into
-`rules[].matches[].spiffeID.value`. Do not assume either the example's trust domain or its
-Kubernetes path: a custom [MeshIdentity](/mesh/policies/meshidentity/) template can change
-both. The destination must authenticate the caller through mesh mTLS; plaintext traffic
-has no SPIFFE identity to match. Rate limiting does not grant access, so the caller must
-also be allowed by [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/).
+## Overlapping HTTP limits
 
-A rule that matches on `spiffeID` cannot carry `local.tcp`, and doing so is rejected with
-`can't be specified when matches contain spiffeID because this field cannot be conditioned on
-source identity`. The client's identity comes out of the TLS handshake, which a connection-level
-limit is counting rather than inspecting. Limit connections with a rule that has no `spiffeID`
-match, and limit an individual client's requests with `local.http`.
+The catch-all rule supplies the base settings, and a matching identity rule can override them.
+The most specific match wins:
 
-## How overlapping HTTP limits combine
+* `Exact` identity matches win over `Prefix` matches.
+* Within either type, a match that also specifies SNI is more specific.
+* Among prefixes with the same SNI condition, the longer prefix wins.
 
-The catch-all configuration supplies the base settings. A matching identity rule can
-override those settings: `Exact` identity matches take precedence over `Prefix` matches.
-Within either match type, a match that also specifies SNI is more specific. Among prefixes
-with the same SNI condition, a longer matching prefix takes precedence over a shorter one.
-Settings omitted by the more specific
-configuration can be inherited; limits are not added together or reduced to the smallest value.
+The more specific rule inherits any setting it leaves out. Limits aren't added together or
+reduced to the smallest value. For example, if a catch-all rule sets `requestRate` and a custom
+response header, an exact batch-identity rule that only changes `requestRate` keeps that header.
 
-For example, a catch-all rule can set `requestRate` and a custom response header. An exact
-batch-identity rule that changes only `requestRate` uses its own rate and keeps the response
-header. If the broader configuration sets `disabled: true`, set `disabled: false` explicitly
-when enabling a narrower limit; setting a new rate alone does not clear the inherited flag.
+If the broader configuration sets `disabled: true`, set `disabled: false` explicitly on the
+narrower limit. A new rate alone doesn't clear the inherited flag.
 
-If separate policies configure the same traffic, policy precedence resolves conflicting
-fields. Avoid relying on resource creation order; see
-[How policies select traffic](/mesh/policy-targeting/) for policy roles and tie-breakers.
+When separate policies configure the same traffic, policy precedence resolves conflicting
+fields, not creation order. For more information, see
+[How policies select traffic](/mesh/policy-targeting/).
 
 ## Turn a limit off for part of the traffic
 
-`disabled: true` on `local.http` or `local.tcp` removes the limit that a broader policy set,
-which is how one client or one inbound is exempted without narrowing the original policy.
+To exempt one client or one inbound without narrowing the original policy, set
+`disabled: true` on `local.http` or `local.tcp`. The following example turns off the HTTP limit
+for every service account in the `observability` namespace:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -280,33 +270,40 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-Replace the prefix with the shared beginning of the monitoring workloads' actual SPIFFE
-IDs. Keep the trailing `/` so that `observability` does not also match namespace names such
-as `observability-test`. With the default Kubernetes path, this exempts every service
-account in the `observability` namespace, not just one monitoring workload.
+Replace the prefix with the start of your monitoring workloads' actual SPIFFE IDs. Keep the
+`/sa` suffix so the prefix doesn't also match namespaces such as `observability-test`. The value
+must be a valid SPIFFE ID, so it can't end in `/`.
 
-The exception disables HTTP rate limiting only. It does not bypass a separate TCP limit,
-traffic permissions, or an even more specific HTTP rule that enables a limit again.
+The exception only turns off HTTP rate limiting. It doesn't bypass a TCP limit, traffic
+permissions, or a more specific HTTP rule that turns a limit back on.
 
-## Validate the rate limit
+## Validating the rate limit
 
-1. Confirm normal connectivity before applying the policy. Keep the test on one destination
-   replica and inbound so load balancing does not spread requests across independent buckets.
-1. Send requests below the configured rate and confirm that they reach the application.
-1. Send a burst that exhausts the bucket and confirm that the proxy returns the configured
-   status and headers without sending the rejected requests to the application. Check
-   `x-envoy-ratelimited` to help distinguish proxy rejections from application-generated errors.
-1. Pause traffic for at least the configured interval, then confirm that requests succeed again.
-1. Repeat the test against each destination replica. The limit is local to each proxy, not
-   shared across the deployment.
+1. Confirm normal connectivity before applying the policy. Test against one destination
+   replica and inbound, so load balancing doesn't spread requests across separate buckets.
+1. Send requests under the limit and confirm that they reach the application.
+1. Send a burst that empties the bucket, and confirm that the proxy returns the configured
+   status and headers without forwarding the rejected requests. The `x-envoy-ratelimited`
+   header helps tell proxy rejections apart from application errors.
+1. Pause for at least the configured interval, and confirm that requests succeed again.
+1. Repeat against each destination replica, because each proxy has its own limit.
 1. For a client-specific HTTP rule, send the same traffic from a non-matching SPIFFE ID and
-   confirm that it uses the fallback rule. Without a fallback limit, unmatched callers are
-   not rate-limited by this policy.
-1. For TCP, open fresh connections to test exhaustion. Reusing a connection cannot test a
+   confirm that it uses the fallback rule. Without a fallback rule, unmatched callers aren't
+   rate limited by this policy.
+1. For TCP, open new connections to test the limit. Reusing a connection doesn't test a
    connection-rate limit.
 
-If requests exceed the rate you expected, check how many destination replicas, inbounds,
-and matched routes the test uses, and account for the initial burst allowance. If no HTTP
-requests are rejected, check the inbound protocol and any inherited `disabled` setting.
-Count client retry attempts as requests too; a final successful call can conceal earlier
-rate-limit rejections.
+{% table %}
+columns:
+  - title: Unexpected result
+    key: unexpected
+  - title: Check
+    key: check
+rows:
+  - unexpected: "More requests succeed than expected"
+    check: "Count the destination replicas, inbounds, and matched routes in the test, and account for the initial burst."
+  - unexpected: "No HTTP requests are rejected"
+    check: "The inbound protocol and any inherited `disabled` setting."
+  - unexpected: "The client reports success but the limit was hit"
+    check: "Count client retries as requests. A final successful call can hide previous rate-limit rejections."
+{% endtable %}

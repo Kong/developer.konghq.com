@@ -127,17 +127,17 @@ rows:
     main: "Move `healthyPanicThreshold` to `MeshCircuitBreaker`."
     risk: "The removed field is silently ignored."
   - policy: "[MeshRetry](#meshretry)"
-    main: "Apply shared selector changes and lowercase header names."
-    risk: "The policy is rejected on apply."
+    main: "Apply shared selector changes, lowercase header names, and replace `retriableResponseHeaders`."
+    risk: "The policy is rejected on apply, or response headers don't trigger retries."
   - policy: "[MeshTimeout](#meshtimeout)"
     main: "Apply the shared selector, inbound-rule, route, and protocol changes."
     risk: "Timeouts disappear from some traffic paths."
   - policy: "[MeshFaultInjection](#meshfaultinjection)"
-    main: "Rewrite inbound rules and separate gateway `to` behavior."
-    risk: "Faults are rejected or run on the wrong side of traffic."
+    main: "Move every fault from `to` into inbound `rules`."
+    risk: "Faults are rejected, or a policy using `to` injects nothing."
   - policy: "[MeshRateLimit](#meshratelimit)"
-    main: "Split `to` and `rules`, separate TCP and identity matches, and check intervals."
-    risk: "Limits are rejected or no longer cover intended traffic."
+    main: "Move every limit from `to` into `rules`, separate TCP and identity matches, and check intervals."
+    risk: "Limits are rejected, or a policy using `to` limits nothing."
   - policy: "[MeshAccessLog](#meshaccesslog)"
     main: "Move mesh logging into a policy and use a shared OpenTelemetry backend."
     risk: "Access logs stop without an error."
@@ -777,11 +777,19 @@ Header names carry a lower-case-only pattern. A 2.x policy naming `Retry-After` 
 `resetHeaders[0].name in body should match '^[a-z0-9!#$%&'*+\-.^_\x60|~]+$'`. Write `retry-after`. HTTP
 header names are case insensitive on the wire, so the matching is unaffected.
 
+### Don't rely on `retriableResponseHeaders`
+
+`retriableResponseHeaders` is accepted and passed to Envoy, but Envoy only uses these matchers
+with its `retriable-headers` retry condition, which `retryOn` can't set. A policy that relied on
+a response header to trigger retries doesn't retry on it. Use a `retryOn` condition instead,
+such as a status code, and check the generated configuration. For more information, see
+[Envoy's retry policy reference](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/route/v3/route_components.proto#config-route-v3-retrypolicy).
+
 ## MeshRateLimit
 
 Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [the `from` to `rules` move](#the-from-array-is-replaced-by-rules) and [the Universal inbound protocol change](#universal-inbounds-must-declare-their-protocol).
 
-### Split a policy that limited both inbound and gateway traffic
+### Move every limit into `rules`
 
 `to` and `rules` are now mutually exclusive, and which one a policy may use is decided by its
 top-level `targetRef`:
@@ -793,9 +801,9 @@ top-level `targetRef`:
 
 Setting both is rejected with `field 'to' must be empty when 'rules' is defined`.
 
-A 2.x policy that carried both therefore becomes two policies. A mesh-wide inbound limit is
-written as `kind: Dataplane` with no `labels`, which selects every proxy in the mesh;
-`kind: Mesh` with `rules` is rejected.
+The proxy applies limits only from `rules`. A `kind: Mesh` policy with `to` is accepted, but
+limits nothing. Rewrite its limits as `rules` on a `kind: Dataplane` policy. For a mesh-wide
+inbound limit, use `kind: Dataplane` with no `labels`, which selects every proxy in the mesh.
 
 ### Move TCP limits off rules that match a client
 
@@ -1240,19 +1248,19 @@ for where it goes and what happens if it is left behind.
 
 Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [the `from` to `rules` move](#the-from-array-is-replaced-by-rules), [the Universal inbound protocol change](#universal-inbounds-must-declare-their-protocol) and [the legacy policies going inert](#legacy-policies-no-longer-generate-configuration).
 
-### `to` is accepted only with a Mesh `targetRef`
+### Move every fault into `rules`
 
 `spec.to` is accepted only when `spec.targetRef.kind` is `Mesh`, and then `to[].targetRef`
 accepts `kind: Mesh` and nothing else. With `kind: Dataplane`, defining `to` at all is rejected
 with `spec.to: must not be defined`.
 
-A fault is produced by the proxy answering the request, so it is configured on that proxy's
-inbound side. A gateway has no inbound side to configure, which is the case the `to` form
-covers.
+The proxy applies faults only from `rules`, so a policy accepted with `to` injects no faults.
+A fault is produced by the proxy answering the request, so configure it on that proxy's inbound
+side:
 
-A `MeshGateway`-targeted 2.x policy that used `to` therefore has nowhere to go as a
-`Dataplane`: keep `kind: Mesh` and narrow the destination in `to[].targetRef`, or drop `to` and
-configure the faults inbound.
+1. Select the receiving proxies with `kind: Dataplane` and `labels`.
+1. Move each `to[].default` into `rules[].default`.
+1. To keep a fault limited to some callers, add `rules[].matches` with their `spiffeID`.
 
 ## Validate the migrated policies
 
