@@ -105,6 +105,12 @@ faqs:
       clients, and from [`config.server.tools_list_auth`](#schema-aigateway-mcpserver-config-server-tools-list-auth),
       which only authenticates the one-time fetch of an `upstream-server`'s tool list. See
       [Upstream authentication](#upstream-authentication).
+
+  - q: How do I connect to an upstream that requires mTLS or serves a certificate from a private CA?
+    a: |
+      Set [`config.certificates`](#schema-aigateway-mcpserver-config-certificates) for mTLS, or [`config.ca_certificates`](#schema-aigateway-mcpserver-config-ca-certificates) for a private CA.
+      Both fields require {{site.ai_gateway}} 2.3 or later.
+      See [Upstream TLS](#upstream-tls).
 ---
 
 ## What is an AI MCP Server?
@@ -523,6 +529,24 @@ config:
       region: us-east-1
       assume_role_arn: arn:aws:iam::123456789012:role/mcp-tool-access
       role_session_name: kong-ai-gateway
+```
+
+## Upstream TLS {% new_in 2.3 %}
+
+{% include md/ai-gateway/v2/upstream-tls.md name='AI MCP Server' schema_prefix='schema-aigateway-mcpserver-config' %}
+
+These fields work in every [server mode](#server-modes) that connects to an upstream: `conversion-only`, `conversion-listener`, `passthrough-listener`, and `upstream-server`.
+They have no effect in `listener` mode, because a listener only aggregates tools from other AI MCP Servers and doesn't connect to an upstream itself.
+
+In the following example, the AI MCP Server presents the `mcp-client-cert` certificate to the upstream and verifies the upstream against the `kongair-internal-root-ca` CA:
+
+```yaml
+config:
+  url: https://mcp.internal.kongair.com
+  certificates:
+    - mcp-client-cert
+  ca_certificates:
+    - kongair-internal-root-ca
 ```
 
 ## ACL tool control

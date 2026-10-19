@@ -92,6 +92,12 @@ faqs:
       signs each proxied request using static IAM credentials, environment auto-detection, or an assumed role. This
       is separate from [`access.auth_strategies`](#schema-aigateway-agent-access), which authenticates inbound
       clients rather than outbound requests to the upstream agent. See [Upstream authentication](#upstream-authentication).
+
+  - q: How do I connect to an upstream agent that requires mTLS or serves a certificate from a private CA?
+    a: |
+      Set [`config.certificates`](#schema-aigateway-agent-config-certificates) for mTLS, or [`config.ca_certificates`](#schema-aigateway-agent-config-ca-certificates) for a private CA.
+      Both fields apply to `a2a` and `http` AI Agents and require {{site.ai_gateway}} 2.3 or later.
+      See [Upstream TLS](#upstream-tls).
 ---
 
 ## What is an AI Agent?
@@ -376,6 +382,23 @@ config:
 ```
 
 `config.upstream` is available regardless of the AI Agent's [`type`](#schema-aigateway-agent-type); it applies to `a2a` and `http` Agents alike.
+
+## Upstream TLS {% new_in 2.3 %}
+
+{% include md/ai-gateway/v2/upstream-tls.md name='AI Agent' schema_prefix='schema-aigateway-agent-config' %}
+
+These fields apply to both `a2a` and `http` AI Agents.
+
+In the following example, the AI Agent presents the `agent-client-cert` certificate to the upstream and verifies the upstream against the `kongair-internal-root-ca` CA:
+
+```yaml
+config:
+  url: https://booking-agent.internal.kongair.com
+  certificates:
+    - agent-client-cert
+  ca_certificates:
+    - kongair-internal-root-ca
+```
 
 ## Attach AI Policies
 
