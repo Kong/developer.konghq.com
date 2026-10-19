@@ -22,26 +22,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "logging": {
-          "type": "object",
-          "properties": {
-            "log_payloads": {
-              "type": "boolean",
-              "description": "If enabled, logs request/response bodies to Kong log policy(s) output. Requires log_statistics to be enabled.",
-              "default": false
-            },
-            "max_payload_size": {
-              "type": "integer",
-              "description": "Maximum size in bytes for logged request/response payloads. Payloads exceeding this size will be truncated.",
-              "default": 1048576
-            },
-            "log_statistics": {
-              "type": "boolean",
-              "description": "If enabled, adds A2A metrics to Kong log policy(s) output.",
-              "default": false
-            }
-          }
-        },
         "auth": {
           "type": "object",
           "properties": {
@@ -57,26 +37,6 @@
             "aws_iam": {
               "type": "object",
               "properties": {
-                "role_session_name": {
-                  "type": "string",
-                  "description": "If using AWS providers (Bedrock), set the identifier of the assumed role session."
-                },
-                "sts_endpoint_url": {
-                  "type": "string",
-                  "description": "If using AWS providers (Bedrock), override the STS endpoint URL when assuming a different role."
-                },
-                "aws_access_key_id": {
-                  "type": "string",
-                  "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_ACCESS_KEY_ID environment variable for this policy instance.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "aws_secret_access_key": {
-                  "type": "string",
-                  "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_SECRET_ACCESS_KEY environment variable for this policy instance.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
                 "aws_session_token": {
                   "type": "string",
                   "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_SESSION_TOKEN environment variable for this policy instance.",
@@ -96,6 +56,26 @@
                 "assume_role_arn": {
                   "type": "string",
                   "description": "If using AWS providers (Bedrock) you can assume a different role after authentication with the current IAM context is successful."
+                },
+                "role_session_name": {
+                  "type": "string",
+                  "description": "If using AWS providers (Bedrock), set the identifier of the assumed role session."
+                },
+                "sts_endpoint_url": {
+                  "type": "string",
+                  "description": "If using AWS providers (Bedrock), override the STS endpoint URL when assuming a different role."
+                },
+                "aws_access_key_id": {
+                  "type": "string",
+                  "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_ACCESS_KEY_ID environment variable for this policy instance.",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                },
+                "aws_secret_access_key": {
+                  "type": "string",
+                  "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_SECRET_ACCESS_KEY environment variable for this policy instance.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
                 }
               },
               "description": "Common AWS authentication options."
@@ -111,26 +91,6 @@
         "proxy_config": {
           "type": "object",
           "properties": {
-            "auth_password": {
-              "type": "string",
-              "description": "The password to authenticate with, if the forward proxy is protected by basic authentication.",
-              "x-referenceable": true,
-              "x-encrypted": true
-            },
-            "no_proxy": {
-              "type": "string",
-              "description": "Comma-separated list of hosts that should not be proxied."
-            },
-            "http_proxy_host": {
-              "type": "string",
-              "description": "A string representing a host name, such as example.com."
-            },
-            "http_proxy_port": {
-              "type": "integer",
-              "maximum": 65535,
-              "minimum": 0,
-              "description": "An integer representing a port number between 0 and 65535, inclusive."
-            },
             "https_proxy_host": {
               "type": "string",
               "description": "A string representing a host name, such as example.com."
@@ -153,6 +113,46 @@
               "type": "string",
               "description": "The username to authenticate with, if the forward proxy is protected by basic authentication.",
               "x-referenceable": true
+            },
+            "auth_password": {
+              "type": "string",
+              "description": "The password to authenticate with, if the forward proxy is protected by basic authentication.",
+              "x-referenceable": true,
+              "x-encrypted": true
+            },
+            "no_proxy": {
+              "type": "string",
+              "description": "Comma-separated list of hosts that should not be proxied."
+            },
+            "http_proxy_host": {
+              "type": "string",
+              "description": "A string representing a host name, such as example.com."
+            },
+            "http_proxy_port": {
+              "type": "integer",
+              "maximum": 65535,
+              "minimum": 0,
+              "description": "An integer representing a port number between 0 and 65535, inclusive."
+            }
+          }
+        },
+        "logging": {
+          "type": "object",
+          "properties": {
+            "log_statistics": {
+              "type": "boolean",
+              "description": "If enabled, adds A2A metrics to Kong log policy(s) output.",
+              "default": false
+            },
+            "log_payloads": {
+              "type": "boolean",
+              "description": "If enabled, logs request/response bodies to Kong log policy(s) output. Requires log_statistics to be enabled.",
+              "default": false
+            },
+            "max_payload_size": {
+              "type": "integer",
+              "description": "Maximum size in bytes for logged request/response payloads. Payloads exceeding this size will be truncated.",
+              "default": 1048576
             }
           }
         }

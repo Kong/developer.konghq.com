@@ -29,14 +29,28 @@
     "config": {
       "type": "object",
       "properties": {
-        "keepalive": {
+        "ssl_verify": {
+          "type": "boolean",
+          "description": "Verify the TLS certificate presented by the ingest endpoint.",
+          "default": true
+        },
+        "timeout": {
           "type": "number",
-          "description": "How long in milliseconds an idle connection to the ingest endpoint is kept open before being closed.",
-          "default": 60000
+          "description": "Maximum time in milliseconds to wait for a response from the ingest endpoint.",
+          "default": 10000
         },
         "queue": {
           "type": "object",
           "properties": {
+            "concurrency_limit": {
+              "type": "integer",
+              "enum": [
+                -1,
+                1
+              ],
+              "description": "The number of of queue delivery timers. -1 indicates unlimited.",
+              "default": 1
+            },
             "max_batch_size": {
               "type": "integer",
               "maximum": 1000000,
@@ -80,27 +94,29 @@
               "minimum": 0.001,
               "description": "Maximum time in seconds between retries, caps exponential backoff.",
               "default": 60
-            },
-            "concurrency_limit": {
-              "type": "integer",
-              "enum": [
-                -1,
-                1
-              ],
-              "description": "The number of of queue delivery timers. -1 indicates unlimited.",
-              "default": 1
             }
           }
         },
-        "meter_api_requests": {
+        "meter_ai_token_usage": {
           "type": "boolean",
-          "description": "Emit a usage event for each API Gateway request.",
+          "description": "Emit events for LLM input and output tokens on AI Gateway requests.",
           "default": true
         },
-        "ssl_verify": {
-          "type": "boolean",
-          "description": "Verify the TLS certificate presented by the ingest endpoint.",
-          "default": true
+        "ingest_endpoint": {
+          "type": "string",
+          "description": "The HTTP endpoint where usage events are sent.",
+          "x-referenceable": true
+        },
+        "api_token": {
+          "type": "string",
+          "description": "Bearer token for authenticating with the ingest endpoint.",
+          "x-referenceable": true,
+          "x-encrypted": true
+        },
+        "keepalive": {
+          "type": "number",
+          "description": "How long in milliseconds an idle connection to the ingest endpoint is kept open before being closed.",
+          "default": 60000
         },
         "attributes": {
           "type": "array",
@@ -153,32 +169,26 @@
           },
           "description": "The subject identifies who gets billed for each request. Choose where the policy should look for the customer identifier."
         },
-        "meter_ai_token_usage": {
+        "meter_api_requests": {
           "type": "boolean",
-          "description": "Emit events for LLM input and output tokens on AI Gateway requests.",
+          "description": "Emit a usage event for each API Gateway request.",
           "default": true
-        },
-        "ingest_endpoint": {
-          "type": "string",
-          "description": "The HTTP endpoint where usage events are sent.",
-          "x-referenceable": true
-        },
-        "api_token": {
-          "type": "string",
-          "description": "Bearer token for authenticating with the ingest endpoint.",
-          "x-encrypted": true,
-          "x-referenceable": true
-        },
-        "timeout": {
-          "type": "number",
-          "description": "Maximum time in milliseconds to wait for a response from the ingest endpoint.",
-          "default": 10000
         }
       },
       "required": [
         "api_token",
         "ingest_endpoint"
       ]
+    },
+    "consumer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
     },
     "route": {
       "type": "object",
@@ -199,16 +209,6 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
-    },
-    "consumer": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
     }
   },
   "required": [

@@ -1,24 +1,5 @@
 {
   "properties": {
-    "config": {
-      "type": "object",
-      "properties": {
-        "secret_v1": {
-          "type": "string",
-          "description": "Webhook secret",
-          "x-referenceable": true,
-          "x-encrypted": true
-        },
-        "tolerance_second": {
-          "type": "integer",
-          "description": "Tolerance of the webhook timestamp in seconds. If the webhook timestamp is older than this number of seconds, it will be rejected with a '400' response.",
-          "default": 300
-        }
-      },
-      "required": [
-        "secret_v1"
-      ]
-    },
     "protocols": {
       "type": "array",
       "items": {
@@ -36,6 +17,25 @@
         "grpcs",
         "http",
         "https"
+      ]
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "secret_v1": {
+          "type": "string",
+          "description": "Webhook secret",
+          "x-referenceable": true,
+          "x-encrypted": true
+        },
+        "tolerance_second": {
+          "type": "integer",
+          "description": "Tolerance of the webhook timestamp in seconds. If the webhook timestamp is older than this number of seconds, it will be rejected with a '400' response.",
+          "default": 300
+        }
+      },
+      "required": [
+        "secret_v1"
       ]
     },
     "consumer_group": {

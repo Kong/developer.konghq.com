@@ -22,11 +22,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "header_name": {
-          "type": "string",
-          "description": "The HTTP header name to use for the correlation ID.",
-          "default": "Kong-Request-ID"
-        },
         "generator": {
           "type": "string",
           "enum": [
@@ -41,18 +36,13 @@
           "type": "boolean",
           "description": "Whether to echo the header back to downstream (the client).",
           "default": false
+        },
+        "header_name": {
+          "type": "string",
+          "description": "The HTTP header name to use for the correlation ID.",
+          "default": "Kong-Request-ID"
         }
       }
-    },
-    "route": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
     },
     "service": {
       "type": "object",
@@ -73,6 +63,16 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
+    },
+    "route": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
     }
   }
 }

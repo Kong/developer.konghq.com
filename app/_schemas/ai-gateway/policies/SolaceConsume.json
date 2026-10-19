@@ -22,36 +22,53 @@
     "config": {
       "type": "object",
       "properties": {
+        "polling": {
+          "type": "object",
+          "properties": {
+            "timeout": {
+              "type": "integer",
+              "maximum": 300000,
+              "minimum": 0,
+              "description": "Polling timeout in milliseconds. When set to `0`, the polling works like short-polling and waits at maximum the Flow `wait_timeout` amount of time for the new messages (short-polling). When set to larger than `0`, the connection is kept open and only closed after the timeout or in case messages appear earlier (long-polling).",
+              "default": 0
+            }
+          },
+          "description": "The `POLLING` mode related configuration settings."
+        },
+        "websocket": {
+          "type": "object",
+          "properties": {
+            "timeout": {
+              "type": "integer",
+              "maximum": 60000,
+              "minimum": 1,
+              "description": "Specifies the network timeout threshold in milliseconds.",
+              "default": 1000
+            },
+            "max_recv_len": {
+              "type": "integer",
+              "description": "Specifies the maximal length of payload allowed when receiving WebSocket frames.",
+              "default": 65536
+            },
+            "max_send_len": {
+              "type": "integer",
+              "description": "Specifies the maximal length of payload allowed when sending WebSocket frames.",
+              "default": 65536
+            }
+          },
+          "description": "The `WEBSOCKET` mode related configuration settings."
+        },
         "session": {
           "type": "object",
           "properties": {
-            "generate_send_timestamps": {
-              "type": "boolean",
-              "description": "When enabled, a send timestamp is automatically included (if not already present) in the Solace-defined fields for each message sent.",
-              "default": true
-            },
-            "generate_sender_id": {
-              "type": "boolean",
-              "description": "When enabled, a sender id is automatically included (if not already present) in the Solace-defined fields for each message sent.",
-              "default": true
+            "host": {
+              "type": "string",
+              "description": "The IPv4 or IPv6 address or host name to connect to (see: https://docs.solace.com/API-Developer-Online-Ref-Documentation/c/index.html#host-entry).",
+              "x-referenceable": true
             },
             "authentication": {
               "type": "object",
               "properties": {
-                "username": {
-                  "type": "string",
-                  "maxLength": 189,
-                  "description": "The username used with `BASIC` authentication scheme when connecting to an event broker.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "password": {
-                  "type": "string",
-                  "maxLength": 128,
-                  "description": "The password used with `BASIC` authentication scheme when connecting to an event broker.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
                 "basic_auth_header": {
                   "type": "string",
                   "description": "Specifies the header that contains Basic Authentication credentials for the `BASIC` authentication scheme when connecting to an event broker. This header takes precedence over the `username` and `password` fields."
@@ -85,9 +102,38 @@
                   ],
                   "description": "The client authentication scheme used when connection to an event broker.",
                   "default": "BASIC"
+                },
+                "username": {
+                  "type": "string",
+                  "maxLength": 189,
+                  "description": "The username used with `BASIC` authentication scheme when connecting to an event broker.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "password": {
+                  "type": "string",
+                  "maxLength": 128,
+                  "description": "The password used with `BASIC` authentication scheme when connecting to an event broker.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
                 }
               },
               "description": "Session authentication related configuration."
+            },
+            "generate_send_timestamps": {
+              "type": "boolean",
+              "description": "When enabled, a send timestamp is automatically included (if not already present) in the Solace-defined fields for each message sent.",
+              "default": true
+            },
+            "generate_sequence_number": {
+              "type": "boolean",
+              "description": "When enabled, a sequence number is automatically included (if not already present) in the Solace-defined fields for each message sent.",
+              "default": true
+            },
+            "vpn_name": {
+              "type": "string",
+              "maxLength": 32,
+              "description": "The name of the Message VPN to attempt to join when connecting to an event broker."
             },
             "connect_timeout": {
               "type": "integer",
@@ -101,9 +147,19 @@
               "description": "Indicates whether the API should validate server certificates with the trusted certificates.",
               "default": true
             },
-            "generate_sequence_number": {
+            "calculate_message_expiry": {
               "type": "boolean",
-              "description": "When enabled, a sequence number is automatically included (if not already present) in the Solace-defined fields for each message sent.",
+              "description": "If this property is true and time-to-live has a positive value in a message, the expiration time is calculated when the message is sent or received",
+              "default": true
+            },
+            "generate_rcv_timestamps": {
+              "type": "boolean",
+              "description": "When enabled, a receive timestamp is recorded for each message.",
+              "default": true
+            },
+            "generate_sender_id": {
+              "type": "boolean",
+              "description": "When enabled, a sender id is automatically included (if not already present) in the Solace-defined fields for each message sent.",
               "default": true
             },
             "properties": {
@@ -114,26 +170,6 @@
                 "x-lua-required": true
               },
               "description": "Additional Solace session properties (each setting needs to have `SESSION_` prefix)."
-            },
-            "host": {
-              "type": "string",
-              "description": "The IPv4 or IPv6 address or host name to connect to (see: https://docs.solace.com/API-Developer-Online-Ref-Documentation/c/index.html#host-entry).",
-              "x-referenceable": true
-            },
-            "vpn_name": {
-              "type": "string",
-              "maxLength": 32,
-              "description": "The name of the Message VPN to attempt to join when connecting to an event broker."
-            },
-            "calculate_message_expiry": {
-              "type": "boolean",
-              "description": "If this property is true and time-to-live has a positive value in a message, the expiration time is calculated when the message is sent or received",
-              "default": true
-            },
-            "generate_rcv_timestamps": {
-              "type": "boolean",
-              "description": "When enabled, a receive timestamp is recorded for each message.",
-              "default": true
             }
           },
           "required": [
@@ -144,32 +180,6 @@
         "flow": {
           "type": "object",
           "properties": {
-            "max_unacked_messages": {
-              "type": "integer",
-              "description": "This property controls the maximum number of messages that may be unacknowledged on the Flow.",
-              "default": -1
-            },
-            "window_size": {
-              "type": "integer",
-              "maximum": 255,
-              "minimum": 1,
-              "description": "The Guaranteed message window size for the Flow.",
-              "default": 255
-            },
-            "wait_timeout": {
-              "type": "integer",
-              "maximum": 5000,
-              "minimum": 1,
-              "description": "Specifies in milliseconds how long to wait for messages to appear on each poll before giving up or retrying.",
-              "default": 50
-            },
-            "functions": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "The Lua functions that manipulates the message being received from Solace. The `message` variable can be used to access the current message content, and the function can return a new content."
-            },
             "properties": {
               "type": "object",
               "additionalProperties": {
@@ -215,6 +225,32 @@
               ],
               "description": "Controls how acknowledgments are generated for received Guaranteed messages. When set to `AUTO`, the messages are positively acknowledged upon receiving them. When set to 'CLIENT', the messages are positively or negatively acknowledged by Kong regarding to client delivery status.",
               "default": "CLIENT"
+            },
+            "max_unacked_messages": {
+              "type": "integer",
+              "description": "This property controls the maximum number of messages that may be unacknowledged on the Flow.",
+              "default": -1
+            },
+            "window_size": {
+              "type": "integer",
+              "maximum": 255,
+              "minimum": 1,
+              "description": "The Guaranteed message window size for the Flow.",
+              "default": 255
+            },
+            "wait_timeout": {
+              "type": "integer",
+              "maximum": 5000,
+              "minimum": 1,
+              "description": "Specifies in milliseconds how long to wait for messages to appear on each poll before giving up or retrying.",
+              "default": 50
+            },
+            "functions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "The Lua functions that manipulates the message being received from Solace. The `message` variable can be used to access the current message content, and the function can return a new content."
             }
           },
           "required": [
@@ -232,42 +268,6 @@
           ],
           "description": "The mode of operation for the policy. The `AUTO` determines the mode automatically from the client request.",
           "default": "POLLING"
-        },
-        "polling": {
-          "type": "object",
-          "properties": {
-            "timeout": {
-              "type": "integer",
-              "maximum": 300000,
-              "minimum": 0,
-              "description": "Polling timeout in milliseconds. When set to `0`, the polling works like short-polling and waits at maximum the Flow `wait_timeout` amount of time for the new messages (short-polling). When set to larger than `0`, the connection is kept open and only closed after the timeout or in case messages appear earlier (long-polling).",
-              "default": 0
-            }
-          },
-          "description": "The `POLLING` mode related configuration settings."
-        },
-        "websocket": {
-          "type": "object",
-          "properties": {
-            "max_recv_len": {
-              "type": "integer",
-              "description": "Specifies the maximal length of payload allowed when receiving WebSocket frames.",
-              "default": 65536
-            },
-            "max_send_len": {
-              "type": "integer",
-              "description": "Specifies the maximal length of payload allowed when sending WebSocket frames.",
-              "default": 65536
-            },
-            "timeout": {
-              "type": "integer",
-              "maximum": 60000,
-              "minimum": 1,
-              "description": "Specifies the network timeout threshold in milliseconds.",
-              "default": 1000
-            }
-          },
-          "description": "The `WEBSOCKET` mode related configuration settings."
         }
       },
       "required": [
