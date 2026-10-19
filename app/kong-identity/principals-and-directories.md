@@ -174,7 +174,16 @@ A group is a named set of principals in a directory.
 Groups let you manage access for a set of principals in one place: instead of writing one access rule per principal, or relying on every principal carrying the right metadata value, you add principals to a group and reference the group in your rules.
 When a principal joins or leaves a group, you update the group's membership and the rules stay the same.
 
-Group membership is manual: you add and remove each member explicitly, and a principal must already exist in the directory before you can add it to a group. A principal you just created isn't a member of any group until you add it.
+{{site.identity}} doesn't enforce access itself.
+It identifies the authenticated principal and the groups it belongs to, and the gateway's access rules decide what that principal can reach.
+
+Group membership works in the following ways:
+
+* **Manual membership:** You add and remove each member explicitly, and a principal must already exist in the directory before you can add it to a group. A principal you just created isn't a member of any group until you add it.
+ * **Automatic mapping from an IdP:** When you enable the [Token Vault](/identity/token-vault/) on a directory, {{site.identity}} can provision principals from a trusted IdP and add them to groups based on the group names your IdP sends in its tokens. If a group doesn't exist yet, {{site.identity}} creates it.
+
+
+{{site.identity}} resolves group membership live and doesn't cache it. A membership change applies the next time the gateway authenticates the principal with {{site.identity}}.
 
 Group names must be unique within a directory and can only contain letters and numbers, with no spaces.
 
@@ -205,7 +214,7 @@ A group can have an API key, so a request authenticated with that key is identif
 Create the key the same way you create a principal's API key, using the group's ID as the principal ID. 
 See [Key auth](#key-auth).
 
-Groups can't have other credentials or identities. {{site.identity}} rejects basic auth credentials, and OIDC, Consumer, auth server client, and custom identities on a group.
+Groups can't have other credentials or identities. {{site.identity}} rejects basic auth credentials, and OIDC, Consumer, and auth server client.
 
 ### Group permissions
 
