@@ -1,6 +1,6 @@
 ---
 title: "Check readiness for {{site.mesh_product_name}} 3.x"
-description: "Audit a running {{site.mesh_product_name}} 2.x deployment for changes required before upgrading to version 3."
+description: "Audit a running {{site.mesh_product_name}} 2.x deployment for changes required before upgrading to {{site.mesh_product_name}} 3.x."
 content_type: reference
 layout: reference
 products:
@@ -39,12 +39,12 @@ coverage gaps and you have completed its manual checks.
 The checker audits the control plane API for:
 
 - Control planes and data plane proxies that are not on versions compatible with the upgrade.
-- Legacy policies, services, gateways, zone proxies, and other resources removed in version 3.
+- Legacy policies, services, gateways, zone proxies, and other resources removed in 3.x.
 - `Mesh` settings replaced by MeshIdentity, MeshTrust, MeshMetric, MeshTrace, MeshAccessLog, and
   other resources.
-- Policy target references, directions, and fields that version 3 removes or interprets differently.
+- Policy target references, directions, and fields that 3.x removes or interprets differently.
 - Control plane settings that must change before the upgrade.
-- Resource names that do not meet the naming requirements in version 3.
+- Resource names that do not meet the naming requirements in 3.x.
 
 The report also lists checks that cannot be completed through the control plane API. Treat those
 items as part of the migration, even when the automated findings are clear.
@@ -104,10 +104,10 @@ the complete flag reference.
 
 ## Choose the control plane to audit
 
-- **Multi-zone:** Connect to the Global control plane. A Global audit checks its connected Zone
+- **Multi-zone:** Connect to the global control plane. A global audit checks its connected zone
   control plane versions and the zone configuration reported through insights, so use one report
   as the estate-wide starting point.
-- **Single-zone:** Connect directly to the Zone control plane.
+- **Single-zone:** Connect directly to the zone control plane.
 - **One mesh:** Add `--mesh MESH_NAME` when investigating a mesh. Do not use a mesh-scoped report
   as the final estate-wide gate.
 
@@ -115,20 +115,28 @@ The checker reads `GET /config` to assess important control plane settings. In
 {{site.mesh_product_name}}, that endpoint is protected by RBAC, so use a token that can read it.
 Without the token, the checker records a coverage gap and returns an inconclusive result.
 
+Export the control plane API address and a token that can read `GET /config`. Replace
+`YOUR_TOKEN` with your token:
+
+```sh
+export KUMA_CONTROL_PLANE_URL='http://localhost:5681'
+export KUMA_TOKEN='YOUR_TOKEN'
+```
+
 ## Run the audit
 
 If the Kubernetes control plane API is not already reachable, forward its API port in one
 terminal:
 
 ```sh
-kubectl -n kuma-system port-forward svc/kuma-control-plane 5681:5681
+kubectl -n {{site.mesh_namespace}} port-forward svc/{{site.mesh_cp_name}} 5681:5681
 ```
 
 In another terminal, create the report:
 
 ```sh
 kuma3-preflight \
-  --address http://localhost:5681 \
+  --address "$KUMA_CONTROL_PLANE_URL" \
   --token "$KUMA_TOKEN" \
   --output mesh-3-readiness.html
 ```
@@ -149,24 +157,53 @@ could be configured. An audit without this option does not check for that filter
 
 The command's exit code describes the audit result:
 
-| Exit code | Meaning | Next action |
-| --- | --- | --- |
-| `0` | No automated blocker or coverage gap was found. | Complete the report's manual checks and validate traffic. |
-| `1` | The checker found one or more upgrade blockers. | Resolve every blocker, then rerun the checker. |
-| `2` | The audit could not run. | Fix the connection, authentication, address, or other operational error. |
-| `3` | The audit is incomplete. | Resolve every coverage gap, then rerun the checker. |
+{% table %}
+columns:
+  - title: Exit code
+    key: exit
+  - title: Meaning
+    key: meaning
+  - title: Next action
+    key: next
+rows:
+  - exit: "`0`"
+    meaning: "No automated blocker or coverage gap was found."
+    next: "Complete the report's manual checks and validate traffic."
+  - exit: "`1`"
+    meaning: "The checker found one or more upgrade blockers."
+    next: "Resolve every blocker, then rerun the checker."
+  - exit: "`2`"
+    meaning: "The audit could not run."
+    next: "Fix the connection, authentication, address, or other operational error."
+  - exit: "`3`"
+    meaning: "The audit is incomplete."
+    next: "Resolve every coverage gap, then rerun the checker."
+{% endtable %}
 
 Use the finding type to continue the migration:
 
-| Finding | Continue with |
-| --- | --- |
-| Unsupported control plane or data plane version | [Upgrade {{site.mesh_product_name}}](/mesh/upgrade/) and the [version-specific upgrade notes](/mesh/version-specific-upgrade-notes/) |
-| `Mesh.mtls`, identity, trust, or identity-based permission | [Migrate mesh mTLS to MeshIdentity](/mesh/migrate-mtls-to-meshidentity/) |
-| `ZoneIngress`, `ZoneEgress`, or legacy zone routing | [Migrate zone proxies to {{site.mesh_product_name}} 3.x](/mesh/migrate-zone-proxies-to-3/) |
-| Legacy policy or incompatible policy field | [Migrate policies to {{site.mesh_product_name}} 3.x](/mesh/migrate-policies-to-3/) |
-| `ExternalService` | [MeshExternalService](/mesh/meshexternalservice/) and the [zone-proxy migration](/mesh/migrate-zone-proxies-to-3/) |
-| Legacy gateway resource | [Application ingress](/mesh/application-ingress/) |
-| Legacy service discovery or service selection | [MeshService](/mesh/meshservice/) |
+{% table %}
+columns:
+  - title: Finding
+    key: finding
+  - title: Continue with
+    key: continue
+rows:
+  - finding: "Unsupported control plane or data plane version"
+    continue: "[Upgrade {{site.mesh_product_name}}](/mesh/upgrade/) and the [version-specific upgrade notes](/mesh/version-specific-upgrade-notes/)"
+  - finding: "`Mesh.mtls`, identity, trust, or identity-based permission"
+    continue: "[Migrate mesh mTLS to MeshIdentity](/mesh/migrate-mtls-to-meshidentity/)"
+  - finding: "`ZoneIngress`, `ZoneEgress`, or legacy zone routing"
+    continue: "[Migrate zone proxies to {{site.mesh_product_name}} 3.x](/mesh/migrate-zone-proxies-to-3/)"
+  - finding: "Legacy policy or incompatible policy field"
+    continue: "[Migrate policies to {{site.mesh_product_name}} 3.x](/mesh/migrate-policies-to-3/)"
+  - finding: "`ExternalService`"
+    continue: "[MeshExternalService](/mesh/meshexternalservice/) and the [zone-proxy migration](/mesh/migrate-zone-proxies-to-3/)"
+  - finding: "Legacy gateway resource"
+    continue: "[Application ingress](/mesh/application-ingress/)"
+  - finding: "Legacy service discovery or service selection"
+    continue: "[MeshService](/mesh/meshservice/)"
+{% endtable %}
 
 One finding can require changes from more than one guide. For example, replacing `Mesh.mtls`
 also requires identity-based MeshTrafficPermission rules, while MeshExternalService clients need
@@ -185,7 +222,7 @@ still running the latest supported 2.14 patch. Before upgrading the first zone, 
 
 Keep the final HTML report with the exported 2.x configuration and the deployment's migration
 record. The checker audits a 2.x control plane; use the product validation steps after each control
-plane upgrade rather than rerunning the preflight tool against version 3.
+plane upgrade rather than rerunning the preflight tool against 3.x.
 
 ## Generate a report in CI
 

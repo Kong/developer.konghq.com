@@ -166,3 +166,7 @@ carries per-generator status, which is where to look when an expected hostname w
 `spec.extension` hands configuration to a named extension, and in its presence `endpoints` and
 `tls` are no longer required: the extension validates its own configuration instead. An
 extension with an empty `type` is rejected.
+
+## Schema
+
+{% json_schema MeshExternalServices %}

@@ -76,7 +76,7 @@ rows:
     config: "`konnect.mesh.mesh`"
   - flag: "`--all-meshes`"
     what: "Read mesh-scoped resources across every mesh. Ignored for global types."
-    config: "—"
+    config: "None"
 {% endtable %}
 
 Setting the control plane in configuration once is what makes the following examples readable; every
@@ -198,8 +198,11 @@ connection error naming the admin port when the proxy is.
 kongctl dump mesh > mesh.yaml
 
 # apply it to another control plane
-kongctl create mesh -f mesh.yaml --control-plane-id <other>
+kongctl create mesh -f mesh.yaml --control-plane-id $TARGET_CP_ID
 ```
+
+`$TARGET_CP_ID` is the ID of the control plane that receives the export, as listed by
+`kongctl get mesh control-planes`.
 
 `dump mesh` writes resources in the same shape `create mesh` reads, so an export can be applied
 straight back. `--profile` selects how much to export:
@@ -237,7 +240,8 @@ kongctl create mesh zone-token --zone zone-1 --valid-for 720h > token
 ```
 
 Both write the token to stdout with no trailing newline, so the output can be redirected
-straight into the file `kuma-dp` reads.
+straight into the file that `kuma-dp` (dataplane token) or the zone control plane (zone token)
+reads.
 
 Bind a dataplane token as narrowly as the deployment allows (`--name`, `--workload`, or
 `--tag`) rather than to the mesh alone. A token bound only to a mesh authenticates any proxy in
@@ -282,7 +286,7 @@ kongctl get mesh meshservices --all-meshes -o json \
 `--columns` picks the fields a text table shows, as `HEADER=.field`, which covers the cases where
 a table is wanted but the default columns are not the interesting ones.
 
-## Differences from kumactl
+## Differences from `kumactl`
 
 {% table %}
 columns:
@@ -313,14 +317,16 @@ Beyond the command names:
 
 - **Resource types come from the control plane.** `kumactl` carried a compiled-in list, so a
   newer policy needed a newer CLI. `kongctl` reads what the control plane serves.
-- **Installation is not a CLI job.** `kumactl install control-plane` has no counterpart under
-  `kongctl mesh`; install {{site.mesh_product_name}} with Helm. (`kongctl install` exists, but
+- **Installation is not a CLI job.** `kumactl install control-plane` has no `kongctl`
+  counterpart; install {{site.mesh_product_name}} with Helm. (`kongctl install` exists, but
   it installs `kongctl`'s own features, not a control plane.)
 - **`kumactl apply -v` variables are gone.** Templating a resource before applying it is a job
   for whatever produces the YAML.
 
-Read-only behaviour is unchanged in substance: on Kubernetes the control plane generates some
-resources and refuses writes to them, as [MeshService](/mesh/meshservice/) does.
+Read-only behavior is unchanged in substance: the global control plane refuses writes to
+resources that zones generate, such as [MeshService](/mesh/meshservice/), and `kongctl` rejects
+the write before sending the request. A zone control plane accepts the write but doesn't
+reconcile it back from its source.
 
 ## Getting help
 

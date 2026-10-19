@@ -17,7 +17,7 @@ related_resources:
     url: /mesh/meshservice/
   - text: MeshLoadBalancingStrategy policy
     url: /mesh/policies/meshloadbalancingstrategy/
-  - text: Migrate policies to {{site.mesh_product_name}} 3
+  - text: Migrate policies to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-policies-to-3/
 ---
 
@@ -38,9 +38,6 @@ a global one rejects it:
 Operation not allowed. Kong Mesh resources like MeshMultiZoneService can be updated or
 deleted only from the GLOBAL control plane and not from a ZONE control plane.
 ```
-
-It is the only mesh resource with that restriction: every other policy and resource a zone
-receives can also be written locally on that zone.
 
 ## Aggregate a service across zones
 
@@ -129,8 +126,10 @@ out without any change here.
 How traffic is distributed across the zones that remain is
 [MeshLoadBalancingStrategy](/mesh/policies/meshloadbalancingstrategy/)'s job: locality awareness
 prefers the local zone, and `crossZone.failover` sets the order the others are tried in.
-A zone that has no ready endpoints at all drops out on its own: its `MeshService` moves to
-`Unavailable` and the aggregate stops using it, with no health-checking policy involved.
 [MeshHealthCheck](/mesh/policies/meshhealthcheck/) and
 [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/) cover the other case: endpoints that
 are present and reachable but answering badly, which nothing else detects.
+
+## Schema
+
+{% json_schema MeshMultiZoneServices %}

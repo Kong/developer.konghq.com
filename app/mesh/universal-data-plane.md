@@ -70,7 +70,8 @@ immutable image that templates the file at boot.
 `labels` on the `Dataplane` are the only identity a policy can select on. There are no
 per-inbound tags any more.
 
-Two labels do more than the rest:
+`kuma.io/workload` does more than any other label, and your own labels are what selectors
+match on:
 
 {% table %}
 columns:
@@ -216,7 +217,7 @@ networking:
 ```
 
 An inbound the proxy considers unhealthy is excluded from endpoint discovery, so traffic stops
-being sent to it. An inbound with no `health` block at all is treated as healthy.
+being sent to it. An inbound with no `serviceProbe` and no reported `health` is treated as healthy.
 
 ## Zone proxies
 
@@ -257,7 +258,7 @@ kongctl create mesh dataplane-token --workload backend --valid-for 24h
 ```
 
 A token bound only to a mesh authenticates **any** proxy in that mesh, which makes it worth
-avoiding wherever instances can be named or labelled. `--tag` binds to tag values, and
+avoiding wherever instances can be named or labeled. `--tag` binds to tag values, and
 `--valid-for` bounds the lifetime.
 
 The token goes to `kuma-dp` as `--dataplane-token-file`. `kongctl` writes it with no trailing

@@ -47,7 +47,7 @@ rows:
 validation at startup otherwise, and the Helm chart fails at template time.
 
 {:.warning}
-> A Global control plane cannot run on Kubernetes. `mode: global` is rejected with
+> A global control plane cannot run on Kubernetes. `mode: global` is rejected with
 > `environment: kubernetes`, and rejected again with `store.type: kubernetes`. It must run
 > `environment: universal` against a non-Kubernetes store (PostgreSQL in any real deployment),
 > even if the `kuma-cp` process itself is deployed onto a Kubernetes cluster. Zone control
@@ -198,7 +198,7 @@ rows:
     controls: "The VIP range for `MeshExternalService`. `242.0.0.0/8` by default."
 {% endtable %}
 
-Neither generator runs on a Global control plane, or against a Kubernetes store.
+Neither generator runs on a global control plane, or against a Kubernetes store.
 
 ## Issuing identities
 

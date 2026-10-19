@@ -34,7 +34,7 @@ On Kubernetes the control plane generates a `MeshService` from each `Service`. C
 `Service` instead of the generated resource; the ports and protocols follow from it.
 
 `MeshService` is read-only on the **global** control plane, since zones are what produce it.
-Writing one there through kongctl is refused before the request is sent:
+Writing one there through `kongctl` is refused before the request is sent:
 
 ```
 Mesh Service is read only on this control plane and cannot be created or updated
@@ -44,10 +44,14 @@ Mesh Service is read only on this control plane and cannot be created or updated
 > A **zone** control plane does not protect it. It accepts a hand-written `MeshService`, and it
 > accepts edits to a generated one: the change is stored and is **not** reconciled back from
 > the `Service`. Editing a generated `MeshService` therefore breaks routing to that service
-> until you undo it: changing a port on one made every request to it fail, and the resource
-> stayed changed. Treat these as control-plane output and leave them alone.
+> until you undo it. For example, changing a port makes every request to the service fail, and
+> the change persists. Treat these as control-plane output and leave them alone.
 
-On Universal you author them, selecting proxies with `spec.selector`.
+On Universal the zone control plane generates a `MeshService` for each distinct
+`kuma.io/workload` label value on a `Dataplane`, with a port per inbound. Set the label on the
+`Dataplane` and the `MeshService` follows; see
+[What the control plane still does for you](/mesh/universal/#what-the-control-plane-still-does-for-you).
+You write one by hand, selecting proxies with `spec.selector`, only if you turn generation off.
 
 Either way, reading a `MeshService` is how you find out what a policy will resolve to. Its
 `status` reports the VIP, the hostnames, how many proxies are backing it and whether mTLS is

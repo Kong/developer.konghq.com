@@ -29,9 +29,9 @@ Two situations call for it, and only one of them is a choice:
 
 - **Workloads that are not on Kubernetes.** A VM fleet or an ECS service joins the mesh through
   a Universal data plane proxy, and policies target it the same way they target a Pod.
-- **The Global control plane, in every multi-zone deployment.** As of 3.0, a Kubernetes-native
-  Global control plane is not supported. `kuma-cp` rejects `mode: global` with
-  `environment: kubernetes`, and rejects it with `store.type: kubernetes` as well. A Global
+- **The global control plane, in every multi-zone deployment.** As of 3.0, a Kubernetes-native
+  global control plane is not supported. `kuma-cp` rejects `mode: global` with
+  `environment: kubernetes`, and rejects it with `store.type: kubernetes` as well. A global
   control plane runs `environment: universal` against a non-Kubernetes store, even when the
   process itself happens to be deployed on Kubernetes. Zone control planes on Kubernetes are
   unaffected.
@@ -114,9 +114,9 @@ has no `MeshService` for policies or routes to target.
 Set `KUMA_MESH_SERVICE_GENERATION_INTERVAL` to `0` to turn generation off and manage
 `MeshService` resources by hand. The control plane logs
 `MeshService generator is disabled, MeshServices must be managed manually` when you do. Neither
-generator runs on a Global control plane, or against a Kubernetes store.
+generator runs on a global control plane, or against a Kubernetes store.
 
-## Three things that changed in 3.0 and only bite on Universal
+## Changes in 3.0 that only affect Universal
 
 Each of these is silent: the resource still applies, and the traffic behaves differently.
 
@@ -142,9 +142,10 @@ Each of these is silent: the resource still applies, and the traffic behaves dif
 > `MeshRateLimit`'s HTTP limits, HTTP access log fields, and HTTP-aware routing. Nothing rejects
 > the `Dataplane`.
 
-A fourth applies to `MeshService` resources you wrote by hand:
-`spec.selector.dataplaneTags` is removed, and an un-migrated selector is dropped on read, leaving
-the service matching nothing and reporting `Unavailable`. Use `dataplaneLabels`.
+{:.warning}
+> **`MeshService` selectors lose `dataplaneTags`.** On a `MeshService` you wrote by hand,
+> `spec.selector.dataplaneTags` is removed, and an un-migrated selector is dropped on read,
+> leaving the service matching nothing and reporting `Unavailable`. Use `dataplaneLabels`.
 
 See [Migrate policies to {{site.mesh_product_name}} 3.x](/mesh/migrate-policies-to-3/) for the
 changes that apply to every environment.

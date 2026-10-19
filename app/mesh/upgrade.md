@@ -28,9 +28,9 @@ min_version:
 
 ## Upgrade from 2.x to 3.x
 
-Version 3.x removes legacy policy APIs, mesh-wide mTLS configuration, and shared ZoneIngress and
-ZoneEgress resources. Prepare those resources and traffic paths while the deployment is still on
-2.14; this is more than a control plane and data plane rollout.
+Version 3.x removes legacy policy APIs, mesh-wide mTLS configuration, and shared `ZoneIngress`
+and `ZoneEgress` resources. Prepare those resources and traffic paths while the deployment is
+still on 2.14; this is more than a control plane and data plane rollout.
 
 1. [Run the {{site.mesh_product_name}} 3.x readiness checker](/mesh/check-upgrade-readiness/) against the current 2.x
    deployment and save the report.

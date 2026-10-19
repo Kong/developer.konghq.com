@@ -32,9 +32,9 @@ and policy model. This page covers the order of migration, when traffic switches
 to verify before removing the old proxies.
 
 {:.warning}
-> Migrate before upgrading a zone control plane to v3. The v3 control plane does not serve
+> Migrate before upgrading a zone control plane to 3.x. The 3.x control plane does not serve
 > legacy standalone proxy types. An old proxy can lose service when it reconnects, even if
-> it was running before the upgrade. A v3 Helm upgrade also removes the legacy proxy
+> it was running before the upgrade. A 3.x Helm upgrade also removes the legacy proxy
 > resources owned by that release because their templates no longer exist.
 
 ## Choose the transition release
@@ -44,9 +44,8 @@ complete estate. Its report identifies legacy ZoneIngress and ZoneEgress resourc
 `Mesh` settings, and version or control plane configuration that blocks the upgrade. Save the
 report as the baseline for the migration.
 
-Mesh-scoped zone proxies were introduced in 2.14. First bring the deployment to a supported
-2.14.x release that includes the new deployment and policy functionality, following the
-upgrade instructions for that release. Verify compatibility for the global control plane,
+Mesh-scoped zone proxies were introduced in 2.14. First bring the deployment to the latest
+supported 2.14 patch, following the upgrade instructions for that release. Verify compatibility for the global control plane,
 all affected zones and data plane versions before starting the traffic migration.
 
 Do not treat the presence of the new API alone as proof that every required migration fix is
@@ -56,18 +55,30 @@ upgrade sequence.
 
 In the 2.14 transition environment, mesh-scoped listener generation requires
 `Mesh.spec.meshServices.mode: Exclusive`. Complete the move to resource-based services and
-check their discovery before enabling that mode. In v3, the field is removed and the new
-service model is unconditional; do not carry this setting forward as a v3 prerequisite.
+check their discovery before enabling that mode. In 3.x, the field is removed and the new
+service model is unconditional; do not carry this setting forward as a 3.x prerequisite.
 
 ## Understand when traffic switches
 
 Deploying the replacements can change live traffic while legacy proxies are still running.
 There is no separate promotion step that waits for you to delete the old resources.
 
-| Path in the transition environment | What selects the new proxy | What to prepare first |
-| --- | --- | --- |
-| Remote `MeshService` traffic into a zone | A usable `MeshZoneAddress` for that mesh and zone takes precedence over the legacy ingress address. | Reachable ingress address, working listeners, destination discovery and workload permissions. |
-| External-service traffic through egress | Ready mesh-scoped egress listener instances take precedence over the legacy egress pool. The pools are not mixed. | Egress identity and trust, external destinations, explicit permissions and capacity. |
+{% table %}
+columns:
+  - title: Path in the transition environment
+    key: path
+  - title: What selects the new proxy
+    key: what
+  - title: What to prepare first
+    key: first
+rows:
+  - path: "Remote `MeshService` traffic into a zone"
+    what: "A usable `MeshZoneAddress` for that mesh and zone takes precedence over the legacy ingress address."
+    first: "Reachable ingress address, working listeners, destination discovery and workload permissions."
+  - path: "External-service traffic through egress"
+    what: "Ready mesh-scoped egress listener instances take precedence over the legacy egress pool. The pools are not mixed."
+    first: "Egress identity and trust, external destinations, explicit permissions and capacity."
+{% endtable %}
 
 These are discovery choices, not a weighted canary between old and new proxies. Start with a
 test mesh or a limited production mesh and zone. Existing connections can remain on the old
@@ -118,8 +129,8 @@ Keep permission enforcement for cross-zone workload traffic on the destination w
 proxy. The new ingress forwards workload mTLS without terminating it; assigning ingress an
 identity does not make it authenticate the original caller.
 
-Prepare the policy form supported by your transition release. Coordinate any later v3 schema
-rewrites with the [policy migration guide](/mesh/migrate-policies-to-3/); do not assume a v3
+Prepare the policy form supported by your transition release. Coordinate any later 3.x schema
+rewrites with the [policy migration guide](/mesh/migrate-policies-to-3/); do not assume a 3.x
 manifest is accepted unchanged by every 2.x version.
 
 ## 3. Deploy replacements while retaining the legacy proxies
@@ -189,8 +200,52 @@ For each migrated mesh and zone:
    legacy deployment before removing it.
 
 Pause the rollout if configuration is rejected, expected traffic fails, or denied traffic is
-unexpectedly allowed. Investigate on the transition release rather than upgrading to v3 to
+unexpectedly allowed. Investigate on the transition release rather than upgrading to 3.x to
 try to resolve the failure.
+
+## 5. Remove legacy configuration, then upgrade to 3.x
+
+After all affected meshes pass validation, retire the legacy deployments through the tool that
+owns them. Review the planned removals before applying a Helm or GitOps change.
+
+{% table %}
+columns:
+  - title: Legacy configuration
+    key: legacy
+  - title: Replacement or action
+    key: replacement
+rows:
+  - legacy: "`kuma.ingress` and `kuma.egress` Helm blocks"
+    replacement: "Use `kuma.meshes[].ingress` and `kuma.meshes[].egress`. Remove the old blocks before the 3.x chart upgrade."
+  - legacy: "`--proxy-type=ingress` or `--proxy-type=egress`"
+    replacement: "Run an ordinary Dataplane with zone listeners. Remove the corresponding proxy-type environment override."
+  - legacy: "Zone-proxy tokens and `dpServer.authn.zoneProxy` settings"
+    replacement: "Use the data plane authentication model. Kubernetes uses the configured service account authentication; Universal commonly uses dataplane tokens."
+  - legacy: "`Mesh.routing.defaultForbidMeshExternalServiceAccess`"
+    replacement: "Express external access with `MeshTrafficPermission`; the toggle is removed in 3.x."
+  - legacy: "`Mesh.routing.zoneEgress`"
+    replacement: "Remove for 3.x. Do not use the old switch to disable or roll back the new topology."
+  - legacy: "Standalone zone-proxy inspection endpoints and commands"
+    replacement: "Inspect the replacement as a Dataplane, using `/meshes/{mesh}/dataplanes/{name}/{xds,stats,clusters}`."
+  - legacy: "Universal `runtime.universal.zoneResourceCleanupAge`"
+    replacement: "Review `runtime.universal.dataplaneCleanupAge`, which now also governs zone proxies and defaults to 72 hours."
+{% endtable %}
+
+Do not copy every old Helm field under the new mesh entry. Several legacy options, including
+`drainTime`, custom probes and `service.nodePort`, have no same-named per-mesh equivalent.
+Review the target chart's values; drain and probe behavior now follows the sidecar injection
+configuration. The unrelated `controlPlane.ingress` settings still configure access to the
+control plane API and GUI, not cross-zone traffic.
+
+Before the first zone upgrade, rerun the
+[{{site.mesh_product_name}} 3.x readiness checker](/mesh/check-upgrade-readiness/) while all control planes are still on
+the latest supported 2.14 patch. Resolve every remaining legacy zone-proxy finding and coverage
+gap. The report cannot verify addresses, firewall rules, capacity, or live traffic, so it does not
+replace the checks in this guide.
+
+Proceed with the supported 3.x upgrade sequence only after traffic no longer depends on
+standalone zone proxies. Repeat the traffic checks after each zone upgrade and update
+dashboards that still query legacy proxy resources or insight endpoints.
 
 {:.warning}
 > **Restart the zone proxies after upgrading a zone control plane.** A zone-proxy Pod keeps
@@ -198,7 +253,7 @@ try to resolve the failure.
 > running the previous `kuma-dp`. {{site.mesh_product_name}} 3.x removed state-of-the-world xDS,
 > and a proxy whose bootstrap still requests it never receives configuration at all:
 >
-> ```
+> ```text
 > StreamAggregatedResources gRPC config stream closed: 12, unsupported
 > SOTW/state-of-the-world xDS StreamAggregatedResources; restart the proxy with a
 > delta-capable bootstrap to use Delta ADS
@@ -207,43 +262,13 @@ try to resolve the failure.
 > The Pod stays `Running` and `Ready` while this repeats, and its listeners keep whatever
 > they last held, so the failure surfaces only as cross-zone requests returning `503`.
 > Restart the ingress and egress Deployments, then confirm the new Pods run the expected
-> image and that the SOTW gRPC config stream error has stopped:
+> image and that the SOTW gRPC config stream error has stopped. Replace `default` with the mesh
+> name:
 >
 > ```sh
 > kubectl -n {{site.mesh_namespace}} rollout restart deploy/kong-mesh-default-ingress deploy/kong-mesh-default-egress
 > kubectl -n {{site.mesh_namespace}} logs deploy/kong-mesh-default-ingress -c kuma-sidecar | grep SOTW
 > ```
-
-## 5. Remove legacy configuration, then upgrade to v3
-
-After all affected meshes pass validation, retire the legacy deployments through the tool that
-owns them. Review the planned removals before applying a Helm or GitOps change.
-
-| Legacy configuration | Replacement or action |
-| --- | --- |
-| `kuma.ingress` and `kuma.egress` Helm blocks | Use `kuma.meshes[].ingress` and `kuma.meshes[].egress`. Remove the old blocks before the v3 chart upgrade. |
-| `--proxy-type=ingress` or `--proxy-type=egress` | Run an ordinary Dataplane with zone listeners. Remove the corresponding proxy-type environment override. |
-| Zone-proxy tokens and `dpServer.authn.zoneProxy` settings | Use the data plane authentication model. Kubernetes uses the configured service account authentication; Universal commonly uses dataplane tokens. |
-| `Mesh.routing.defaultForbidMeshExternalServiceAccess` | Express external access with `MeshTrafficPermission`; the toggle is removed in v3. |
-| `Mesh.routing.zoneEgress` | Remove for v3. Do not use the old switch to disable or roll back the new topology. |
-| Standalone zone-proxy inspection endpoints and commands | Inspect the replacement as a Dataplane, using `/meshes/{mesh}/dataplanes/{name}/{xds,stats,clusters}`. |
-| Universal `runtime.universal.zoneResourceCleanupAge` | Review `runtime.universal.dataplaneCleanupAge`, which now also governs zone proxies and defaults to 72 hours. |
-
-Do not copy every old Helm field under the new mesh entry. Several legacy options, including
-`drainTime`, custom probes and `service.nodePort`, have no same-named per-mesh equivalent.
-Review the target chart's values; drain and probe behavior now follows the sidecar injection
-configuration. The unrelated `controlPlane.ingress` settings still configure access to the
-control plane API and GUI, not cross-zone traffic.
-
-Proceed with the supported v3 upgrade sequence only after traffic no longer depends on
-standalone zone proxies. Repeat the traffic checks after each zone upgrade and update
-dashboards that still query legacy proxy resources or insight endpoints.
-
-Before the first zone upgrade, rerun the
-[{{site.mesh_product_name}} 3.x readiness checker](/mesh/check-upgrade-readiness/) while all control planes are still on
-the latest supported 2.14 patch. Resolve every remaining legacy zone-proxy finding and coverage
-gap. The report cannot verify addresses, firewall rules, capacity, or live traffic, so it does not
-replace the checks in this guide.
 
 ## Roll back while both models are supported
 
@@ -263,6 +288,6 @@ Leaving another ready replacement instance can keep traffic on the new path.
 Restore and verify the earlier traffic behavior, including trust and permissions. Endpoint
 changes do not move established connections instantly; plan for draining or reconnection.
 
-Once a zone control plane runs v3, restarting a legacy proxy is not a rollback strategy.
-Any return to v2 requires the product's supported control plane and data recovery procedure,
+Once a zone control plane runs 3.x, restarting a legacy proxy is not a rollback strategy.
+Any return to 2.x requires the product's supported control plane and data recovery procedure,
 not just restoration of the old Deployment.

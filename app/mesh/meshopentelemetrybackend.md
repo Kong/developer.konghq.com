@@ -148,7 +148,7 @@ rows:
   - field: "`protocol`"
     value: "`grpc`, the default, or `http`."
   - field: "`env`"
-    value: "How OpenTelemetry environment variables on the sidecar combine with the other fields in this table. See [Environment variables](#environment-variables)."
+    value: "How OpenTelemetry environment variables on the sidecar combine with the other fields in this table. See [Combine backend fields with environment variables](#combine-backend-fields-with-environment-variables)."
 {% endtable %}
 
 `endpoint.path` has three constraints, each rejected on apply: it must not be set when the
@@ -222,7 +222,7 @@ to the local collector in each zone.
 On Kubernetes, inspect the backend in the system namespace:
 
 ```sh
-kubectl get meshopentelemetrybackend otel-collector -n kong-mesh-system -o yaml
+kubectl get meshopentelemetrybackend otel-collector -n {{site.mesh_namespace}} -o yaml
 ```
 
 `status.conditions` contains `type: ReferencedByPolicies`. A reason of `Referenced` confirms
@@ -235,8 +235,11 @@ The control plane writes per-backend, per-signal status to each proxy's `Datapla
 `status.openTelemetry`:
 
 ```sh
-kubectl get dataplaneinsight $DATAPLANE_NAME -o yaml
+kubectl get dataplaneinsight $DATAPLANE_NAME -n $NAMESPACE -o yaml
 ```
+
+`$DATAPLANE_NAME` is the name of the proxy's `Dataplane`, which on Kubernetes is the Pod name,
+and `$NAMESPACE` is the namespace the Pod runs in.
 
 {% table %}
 columns:

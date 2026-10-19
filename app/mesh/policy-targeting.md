@@ -83,7 +83,7 @@ A policy cannot mix producer and consumer items. One that names a single destina
 > created on a zone control plane stays in that zone. Only the global control plane, or a
 > producer policy, reaches every zone.
 
-On a Zone control plane, a policy created in `{{site.mesh_namespace}}` must also carry the
+On a zone control plane, a policy created in `{{site.mesh_namespace}}` must also carry the
 label `kuma.io/origin: zone`. Without it, admission rejects the policy:
 
 ```
@@ -122,7 +122,7 @@ the selected proxy.
 {:.warning}
 > `MeshSubset`, `MeshService` and `MeshServiceSubset` are rejected here in
 > {{site.mesh_product_name}} 3.x. A policy still using one fails validation, including when a
-> Global control plane replicates it to an upgraded Zone, so it can silently stop syncing.
+> global control plane replicates it to an upgraded zone, so it can silently stop syncing.
 
 ### `spec.to[].targetRef`
 
