@@ -127,14 +127,14 @@ It's configured separately, as described in [{{site.dev_portal}} navigation](/de
 
 ### Page layouts
 
-Instead of starting from a blank page, you can build a page from a pre-built layout. Set the layout in the page's front matter with the `layout` property. A page that omits `layout`, or names one that doesn't exist, uses `custom`.
+Instead of manually constructing the page content container with components, you can use a `layout` that offers a built-in arrangement of a page's regions. Set the layout in the page's front matter with the `layout` property. A page that omits `layout`, or names one that doesn't exist, uses `custom`.
 
 The following layouts are available:
 
 * `custom` (default): No built-in chrome. You build the whole page yourself, including sidebars and header. Use this for a landing page or anything the other layouts don't fit. Because `custom` doesn't render a title or description from front matter, give the page its own heading in the body.
-* `guide`: Contains [sidebar navigation](/dev-portal/customizations/dev-portal-customizations/#dev-portal-navigation), content, and a table of contents. Use this for long-form documentation where readers browse sibling pages and jump to a section.
-* `reference`: Contains [sidebar navigation](/dev-portal/customizations/dev-portal-customizations/#dev-portal-navigation) and content. Use this for shorter conceptual pages.
-* `wide`: Contains [sidebar navigation](/dev-portal/customizations/dev-portal-customizations/#dev-portal-navigation) and content, but the contents space has a wider column. Use this for content that needs more horizontal room, like a wide table or a generated API reference.
+* `guide`: Contains [sidebar navigation](/dev-portal/customizations/dev-portal-customizations/#dev-portal-navigation) on the left, content, and a table of contents on the right. Use this for long-form documentation where readers browse sibling pages and jump to a section.
+* `reference`: Contains [sidebar navigation](/dev-portal/customizations/dev-portal-customizations/#dev-portal-navigation) on the left, and centered content. Use this for shorter conceptual pages.
+* `wide`: Contains [sidebar navigation](/dev-portal/customizations/dev-portal-customizations/#dev-portal-navigation) on the left and content, but the contents space has a wider column. Use this for content that needs more horizontal room, like a wide table or a generated API reference.
 * `center`: A single centered column, without sidebars. Use this for release notes or articles.
 
 On `guide`, `reference`, `wide`, and `center`, the page header is built from front matter you're already writing: `title` and `description` render in the header, and an optional `tagline` property renders as a short label above the title.
