@@ -242,7 +242,29 @@ rows:
   - attribute: "Cost Savings"
     unit: "Cost"
     description: "Cost savings from cache."
+  - attribute: "Compression Saved Tokens"
+    unit: "Count"
+    description: "{% new_in 2.3 %} Number of tokens saved by the [AI Prompt Compressor Policy](/ai-gateway/policies/ai-prompt-compressor/#prompt-compression-metrics), summed over the compressed messages."
+  - attribute: "Compression Original Tokens"
+    unit: "Count"
+    description: "{% new_in 2.3 %} Number of tokens before compression."
+  - attribute: "Compression Compressed Tokens"
+    unit: "Count"
+    description: "{% new_in 2.3 %} Number of tokens after compression."
+  - attribute: "Compression Message Count"
+    unit: "Count"
+    description: "{% new_in 2.3 %} Number of compressed messages per request."
+  - attribute: "Compression Duration"
+    unit: "Latency"
+    description: "{% new_in 2.3 %} Average time the compressor took, in milliseconds."
+  - attribute: "Compressor Provider"
+    unit: "String"
+    description: "{% new_in 2.3 %} Compression provider that handled the request. Possible values: `kong` or `headroom`."
+  - attribute: "Compression Type"
+    unit: "String"
+    description: "{% new_in 2.3 %} Compression method used. Possible values: `rate` or `target_token`. Available for the `kong` provider only."
 {% endtable %}
+<!-- TODO: The attribute display names above are derived from the metric names in the AI-229 draft PRD (compression_saved_tokens, compressor_provider, and so on). Confirm the exact labels shown in Explorer. -->
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Platform usage" %}
