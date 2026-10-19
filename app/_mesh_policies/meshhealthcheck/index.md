@@ -188,12 +188,6 @@ accepts connections, not that the application works.
 
 The destination must implement the gRPC health-check service.
 
-## Overlapping policies
-
-A narrower policy inherits the settings it omits. For example, overriding only `interval` keeps
-the broader policy's HTTP path and thresholds. To stop an inherited HTTP check, set
-`http.disabled: true`, then check whether an inherited `tcp` block enables TCP fallback.
-
 ## Observe probe failures
 
 To log health-check events, set the following fields under `default`:
@@ -204,6 +198,12 @@ To log health-check events, set the following fields under `default`:
 
 On Kubernetes, read the client Pod's `kuma-sidecar` logs. The events describe probes sent by
 that client, not by the destination proxy.
+
+## Overlapping policies
+
+A narrower policy inherits the settings it omits. For example, overriding only `interval` keeps
+the broader policy's HTTP path and thresholds. To stop an inherited HTTP check, set
+`http.disabled: true`, then check whether an inherited `tcp` block enables TCP fallback.
 
 ## Validating endpoint health
 

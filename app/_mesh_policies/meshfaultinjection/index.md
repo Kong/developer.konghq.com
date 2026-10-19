@@ -134,17 +134,6 @@ About 70% of requests get a 500. Half of the remaining 30% get a 503, which is a
 all requests. The other 15% reach the application. Moving a fault to the front of the list
 changes how many requests the later ones see.
 
-## Overlapping policies
-
-Matching rules add their faults together. A narrower rule doesn't replace a broader rule's
-faults. For example, if one rule delays all callers and another aborts requests from
-`frontend`, frontend requests are eligible for both. A request that's aborted doesn't reach
-the faults after it.
-
-Setting a fault's `percentage` to `0` disables only that fault, not faults in other matching
-rules or policies. To stop an experiment for a caller, remove or narrow every rule that
-includes it. To attribute a result to one fault, don't overlap experiments.
-
 ## Delay requests from one workload identity
 
 A rule that matches `spiffeID` injects faults only for requests from those clients, so other
@@ -183,6 +172,17 @@ select a single process.
 The destination must authenticate the identity through mesh mTLS, because plaintext traffic
 has no identity to match. The rule doesn't grant access: the caller must also be allowed by
 [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/).
+
+## Overlapping policies
+
+Matching rules add their faults together. A narrower rule doesn't replace a broader rule's
+faults. For example, if one rule delays all callers and another aborts requests from
+`frontend`, frontend requests are eligible for both. A request that's aborted doesn't reach
+the faults after it.
+
+Setting a fault's `percentage` to `0` disables only that fault, not faults in other matching
+rules or policies. To stop an experiment for a caller, remove or narrow every rule that
+includes it. To attribute a result to one fault, don't overlap experiments.
 
 ## Validating the injected failure
 

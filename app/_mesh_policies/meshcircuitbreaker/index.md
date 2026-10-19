@@ -95,13 +95,6 @@ The initial mesh-wide policy sets `maxConnections`, `maxPendingRequests`, and `m
 1024, and `maxRetries` to 3, with no outlier detection. If you skip the initial policy,
 Envoy's own limits still apply.
 
-## Overlapping policies
-
-A narrower policy overrides only the fields it sets. For example, setting only
-`maxConnections: 100` for web-to-backend traffic keeps the broader request and retry limits.
-To turn off inherited outlier detection, set `outlierDetection.disabled: true`. Leaving the
-block out of the narrower policy doesn't remove it.
-
 ## Eject failing endpoints
 
 `outlierDetection` temporarily removes failing endpoints from a proxy's healthy pool.
@@ -218,6 +211,13 @@ a single catch-all entry.
 Inbound limits apply to the connections between the destination proxy and its local
 application, not across every replica. To limit one named inbound on a proxy with several
 ports, set `targetRef.sectionName`.
+
+## Overlapping policies
+
+A narrower policy overrides only the fields it sets. For example, setting only
+`maxConnections: 100` for web-to-backend traffic keeps the broader request and retry limits.
+To turn off inherited outlier detection, set `outlierDetection.disabled: true`. Leaving the
+block out of the narrower policy doesn't remove it.
 
 ## Validating the circuit breaker
 

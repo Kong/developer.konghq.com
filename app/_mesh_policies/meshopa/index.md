@@ -81,26 +81,6 @@ The example only checks the header shape. It doesn't validate the token's signat
 audience, or other claims, so a production policy must implement the checks your application
 needs.
 
-## Overlapping policies
-
-When several MeshOPA policies apply to the same proxy, their `appendPolicies` lists are
-combined. A workload-specific policy adds its entries to the mesh-wide ones instead of
-replacing them.
-
-A request is allowed only if every combined entry allows it: each entry's Rego package must set
-`allow` to true and must not set `deny` to true. If a package doesn't define `allow`, or sets it
-to false, the request is denied. Entries with `ignoreDecision: true` are left out of this check.
-
-For example, a mesh-wide token check and a backend-specific method check both apply to backend
-requests, and adding an allow-all policy for backend doesn't override the token check. Use
-separate Rego packages for independent checks, because modules in the same package share rules
-and data.
-
-Conflicting `authConfig` fields and the selected `agentConfig` follow policy precedence, so
-review the combined configuration before changing failure behavior for some workloads. To remove
-an inherited check, change the broader policy's scope or content. An empty `appendPolicies` list
-in a narrower policy doesn't remove it.
-
 ## Provide Rego and agent configuration
 
 `appendPolicies[].rego` and `agentConfig` both take a secure data source: a `type` that says
@@ -245,6 +225,26 @@ spec:
 Decision logs can contain request input, including headers and body data. Restrict access to
 them, and set up masking before sending them to shared log storage. Don't put bundle server
 credentials in an inline `agentConfig`.
+
+## Overlapping policies
+
+When several MeshOPA policies apply to the same proxy, their `appendPolicies` lists are
+combined. A workload-specific policy adds its entries to the mesh-wide ones instead of
+replacing them.
+
+A request is allowed only if every combined entry allows it: each entry's Rego package must set
+`allow` to true and must not set `deny` to true. If a package doesn't define `allow`, or sets it
+to false, the request is denied. Entries with `ignoreDecision: true` are left out of this check.
+
+For example, a mesh-wide token check and a backend-specific method check both apply to backend
+requests, and adding an allow-all policy for backend doesn't override the token check. Use
+separate Rego packages for independent checks, because modules in the same package share rules
+and data.
+
+Conflicting `authConfig` fields and the selected `agentConfig` follow policy precedence, so
+review the combined configuration before changing failure behavior for some workloads. To remove
+an inherited check, change the broader policy's scope or content. An empty `appendPolicies` list
+in a narrower policy doesn't remove it.
 
 ## Validating the authorization decision
 

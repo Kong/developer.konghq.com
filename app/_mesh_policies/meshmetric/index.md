@@ -82,20 +82,6 @@ discovery or a scrape target for port `5670` and path `/metrics` on each selecte
 Don't also scrape the application directly into the same pipeline, unless you want duplicate
 series under different target labels.
 
-## Overlapping policies
-
-When a mesh-wide policy and a more specific `Dataplane` policy both match a proxy, the
-`Dataplane` policy wins for the fields it sets, and inherits the rest. Lists such as
-`applications` and `backends` are replaced, not appended. For example, an OpenTelemetry-only
-`backends` list in the narrower policy removes the mesh-wide Prometheus endpoint for those
-proxies, so include both backends if you need both.
-
-To stop the selected proxies from publishing metrics while keeping the mesh-wide policy for
-every other proxy, set `backends: []` in the narrower policy.
-
-`sidecar.profiles.appendProfiles` is the exception: profiles accumulate across policies, so
-adding `None` can't remove an inherited `Basic` or `All` profile.
-
 ## Sidecar metrics
 
 `default.sidecar.profiles` builds the set of Envoy metrics to publish from one or more base
@@ -278,6 +264,20 @@ spec:
 `MeshOpenTelemetryBackend` resources match the labels, the oldest wins, so use labels that
 identify one resource. If no backend matches, the export is skipped. There's no default
 collector.
+
+## Overlapping policies
+
+When a mesh-wide policy and a more specific `Dataplane` policy both match a proxy, the
+`Dataplane` policy wins for the fields it sets, and inherits the rest. Lists such as
+`applications` and `backends` are replaced, not appended. For example, an OpenTelemetry-only
+`backends` list in the narrower policy removes the mesh-wide Prometheus endpoint for those
+proxies, so include both backends if you need both.
+
+To stop the selected proxies from publishing metrics while keeping the mesh-wide policy for
+every other proxy, set `backends: []` in the narrower policy.
+
+`sidecar.profiles.appendProfiles` is the exception: profiles accumulate across policies, so
+adding `None` can't remove an inherited `Basic` or `All` profile.
 
 ## Validating collection and export
 
