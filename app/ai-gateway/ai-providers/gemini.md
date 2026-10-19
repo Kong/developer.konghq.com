@@ -190,7 +190,7 @@ Instead of a static service account key, you can configure the GCP provider to o
 
 To use Workload Identity Federation, set `auth.type` to `gcp` and add a `workload_identity_federation` object:
 
-* **`source`** (required): The identity provider used to obtain temporary GCP credentials. Currently, only `aws_iam` is supported.
+* **`source`** (required): The identity provider used to obtain temporary GCP credentials. Only `aws_iam` is supported.
 * **`auth_json`** (optional): JSON configuration for the Workload Identity Federation token exchange, Google's `external_account` credential config (audience, token URL, credential source, and optional service account impersonation URL). If not set, Kong falls back to the file path in the `GOOGLE_APPLICATION_CREDENTIALS` environment variable.
 
 When `source` is `aws_iam`, provide AWS IAM credentials under `aws` to identify the AWS principal used in the token exchange, or omit them to fall back to the default AWS credentials provider chain (EC2 instance profiles, environment variables, and so on):

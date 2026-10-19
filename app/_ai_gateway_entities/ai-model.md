@@ -111,7 +111,7 @@ At request time, the AI Model mediates traffic between clients and upstream AI P
 1. Translates between the request and response format chosen for the AI Model and the upstream AI Provider's native format.
 1. Resolves upstream connection coordinates (protocol, host, port, path, HTTP method) from the selected target and its [AI Model Provider](/ai-gateway/entities/ai-model-provider/), unless the target is a self-hosted model.
 1. Authenticates to the upstream LLM service using credentials stored on the [AI Model Provider](/ai-gateway/entities/ai-model-provider/) entity.
-1. Decorates the upstream request with per-target configuration (such as temperature or token-limit overrides) declared on [`targets[].config`](#schema-aigateway-model-targets).
+1. Decorates the upstream request with per-target configuration (for example, temperature or token-limit overrides) declared on [`targets[].config`](#schema-aigateway-model-targets).
 1. Records usage statistics (tokens, cost, latency) for attached log AI Policies, and optionally the full request and response when payload logging is enabled.
 1. Fulfills requests to self-hosted models using the supported native format transformations.
 
@@ -347,7 +347,7 @@ By default, applications or services making requests to the AI Model endpoint mu
 * [`header_param`](#schema-aigateway-model-config-route-model): matches a value in the request headers, indexed by header name.
 * [`path_param`](#schema-aigateway-model-config-route-model): matches a value present in the request path, indexed by path parameter name.
 
-Each strategy pairs with a [`values`](#schema-aigateway-model-config-route-model) array (currently limited to one value) listing the alias that routes to this AI Model. When a routing rule is set, clients can send the alias value (in the body, a header, or the path, depending on the strategy chosen) instead of the upstream model name. This is useful when you want to decouple your client API from upstream provider changes. For example, you could expose an alias like `production-chat-model` while swapping the underlying upstream model from `gpt-4o` to `claude-3-sonnet` without your clients noticing.
+Each strategy pairs with a [`values`](#schema-aigateway-model-config-route-model) array (limited to one value) listing the alias that routes to this AI Model. When a routing rule is set, clients can send the alias value (in the body, a header, or the path, depending on the strategy chosen) instead of the upstream model name. This is useful when you want to decouple your client API from upstream provider changes. For example, you could expose an alias like `production-chat-model` while swapping the underlying upstream model from `gpt-4o` to `claude-3-sonnet` without your clients noticing.
 
 When [`config.route.model`](#schema-aigateway-model-config-route-model) isn't set, {{site.ai_gateway}} creates a default model selector using the AI Model's name and format.
 
