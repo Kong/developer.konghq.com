@@ -36,36 +36,63 @@ related_resources:
     url: /gateway/sandboxing/
 ---
 
-Some {{site.ai_gateway}} [AI Policies](/ai-gateway/entities/ai-policy/) run Lua code that you write in the AI Policy configuration.
+Some {{site.ai_gateway}} [AI Policies](/ai-gateway/entities/ai-policy/) let you run Lua code to change requests and responses, read the authenticated [AI Consumer](/ai-gateway/entities/ai-consumer/), or share values between AI Policies.
 Anyone who can create or edit one of these AI Policies can run code on your data planes, so sandboxing limits what that code can do.
 Sandboxing restricts the available environment and the set of modules that the code can load.
 All Lua (or LuaJIT) language features remain available.
 
-The `untrusted_lua` data plane setting controls which restrictions apply.
-Each data plane node reads this setting from its own `kong.conf` file.
+The [`untrusted_lua`](/ai-gateway/configuration/#untrusted-lua) data plane setting controls which restrictions apply.
+Each data plane node reads this setting from its own [`kong.conf`](/ai-gateway/configuration/) file.
 The setting applies to every AI Policy on that node.
 
 ## What the sandbox applies to
 
 The following AI Policies run Lua code that you provide in their configuration:
 
-* [Pre-Function](/ai-gateway/policies/pre-function/)
-* [Post-Function](/ai-gateway/policies/post-function/)
-* [Exit Transformer](/ai-gateway/policies/exit-transformer/)
+<!--vale off-->
+{% table %}
+columns:
+  - title: AI Policy
+    key: policy
+  - title: Runs
+    key: runs
+  - title: What you can do with it
+    key: use
+rows:
+  - policy: "[Pre-Function](/ai-gateway/policies/pre-function/)"
+    runs: "Before the other AI Policies in each phase, and before authentication."
+    use: |
+      Change a request or answer it early.
+      For example, add a header to the request that {{site.ai_gateway}} sends to the upstream.
+  - policy: "[Post-Function](/ai-gateway/policies/post-function/)"
+    runs: "After the other AI Policies in each phase, and after authentication."
+    use: |
+      Read the authenticated Consumer, or change a response.
+      For example, add or remove response headers.
+  - policy: "[Exit Transformer](/ai-gateway/policies/exit-transformer/)"
+    runs: "When an AI Policy or {{site.ai_gateway}} returns a response early."
+    use: |
+      Rewrite the status code, body, and headers of that response, such as the `401` from authentication.
+      The Exit Transformer rewrites a response that reports no matching Route only when [`handle_unknown`](/ai-gateway/policies/exit-transformer/reference/#schema--config-handle-unknown) is `true`.
+{% endtable %}
+<!--vale on-->
 
 Other AI Policies also use the sandbox when their configuration contains Lua expressions, functions, or templates:
 
-* **Templates and expressions**: [AI Custom Guardrail](/ai-gateway/policies/ai-custom-guardrail/), [Request Transformer](/ai-gateway/policies/request-transformer/), and similar transformer AI Policies.
+* **Templates, expressions, and functions**: [AI Custom Guardrail](/ai-gateway/policies/ai-custom-guardrail/), [Request Transformer](/ai-gateway/policies/request-transformer/), [Route Transformer Advanced](/ai-gateway/policies/route-transformer-advanced/), [Response Transformer Advanced](/ai-gateway/policies/response-transformer-advanced/), and [Request Callout](/ai-gateway/policies/request-callout/).
 * **Custom log fields**: logging AI Policies such as [File Log](/ai-gateway/policies/file-log/) and [OpenTelemetry](/ai-gateway/policies/opentelemetry/).
-* **Message functions**: the Kafka, Confluent, and Solace AI Policies.
+* **Message functions**: messaging AI Policies such as [Confluent](/ai-gateway/policies/confluent/), [Confluent Consume](/ai-gateway/policies/confluent-consume/), and [Kafka Consume](/ai-gateway/policies/kafka-consume/).
 
-{{site.ai_gateway}} also uses a Pre-Function AI Policy internally.
-When you create an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) of type `conversion-only`, {{site.ai_gateway}} generates a Pre-Function that rejects requests that don't arrive through the internal listener connection.
-This generated AI Policy runs in the sandbox like any other Pre-Function.
+{{site.ai_gateway}} also generates a Pre-Function for each [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) of type `conversion-only`.
+A `conversion-only` server exposes its tools only through the `listener` AI MCP Servers that name it in `config.sources`.
+The generated Pre-Function returns a `404` to any request that doesn't arrive through the internal connection that the listener uses.
+You don't create this Pre-Function, and it runs in the sandbox like any other Pre-Function.
+If you set `untrusted_lua` to `off`, it can't run, and tool calls through the listener fail.
+See [Disable custom code execution](#disable-custom-code-execution).
 
 ## Sandbox modes
 
-Set `untrusted_lua` to one of the following values:
+The `untrusted_lua` setting accepts the following sandbox modes:
 
 <!--vale off-->
 {% table %}
@@ -83,7 +110,7 @@ rows:
   - mode: "`strict`"
     description: |
       The default.
-      An allowlist-based environment with limited access to the Lua standard library, the Kong PDK, and Nginx APIs.
+      An allowlist-based environment with limited access to the Lua standard library, the [Kong PDK](/gateway/pdk/reference/), and Nginx APIs.
       All file I/O and network I/O is disallowed.
       See [Strict mode](#strict-mode).
   - mode: "`lax`"
@@ -104,8 +131,11 @@ rows:
 
 {:.warning}
 > LuaJIT is not a secure sandbox for running malicious code.
+>
 > The sandbox prevents trivial attacks and accidental changes to global state.
+>
 > Use access controls alongside the sandbox, because it does not replace them.
+>
 > Anyone who can create or edit an AI Policy that runs custom Lua can execute code on your data planes, so limit who can create these AI Policies.
 
 ## Choose a sandbox mode
@@ -116,8 +146,8 @@ Choose another mode only when you need what it provides:
 * **`lax`**: Use it when the Lua code in an AI Policy has to make network calls or use vaults, the cache, or read-only configuration.
   Lax mode adds all of these to strict mode.
 * **`off`**: Use it when your organization doesn't allow custom Lua code.
-  Setting `off` also stops the AI Policies that depend on the sandbox.
-  See [Disable custom code execution](#disable-custom-code-execution).
+  Setting `off` also stops the AI Policies that depend on the sandbox, and some of them make the data plane reject the entire configuration.
+  Check the table in [Disable custom code execution](#disable-custom-code-execution) before you set it.
 * **`sandbox` and `on`**: We don't recommend either.
   The `sandbox` mode is deprecated, and `on` removes all restrictions.
 
@@ -160,7 +190,7 @@ columns:
     key: effect
 rows:
   - policy: "[Pre-Function](/ai-gateway/policies/pre-function/) and [Post-Function](/ai-gateway/policies/post-function/)"
-    field: "The phase fields, such as `config.access`"
+    field: "The [phase](/gateway/entities/plugin/#plugin-contexts) fields, such as `config.access`"
     effect: "Requests that trigger the AI Policy fail."
   - policy: "[AI Custom Guardrail](/ai-gateway/policies/ai-custom-guardrail/)"
     field: "`$(...)` templates in `config.request` and `config.response`"
@@ -187,7 +217,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-{{site.ai_gateway}} also generates a Pre-Function for each `conversion-only` AI MCP Server, which `off` affects as described in the following paragraphs.
+`off` also affects the Pre-Function that {{site.ai_gateway}} generates for each `conversion-only` AI MCP Server, as described in the following paragraphs.
 
 With `untrusted_lua=off`, tool calls through a `listener` AI MCP Server that aggregates a `conversion-only` server fail with `request failed: closed`, because the generated Pre-Function can't run.
 A direct request to the `conversion-only` server's route returns an empty reply instead of a `404`.
@@ -745,7 +775,7 @@ It also adds `kong.router.get_route`, `kong.router.get_service`, and `kong.confi
 
 ### Environment in lax mode
 
-Lax mode includes everything in strict mode, plus the following:
+Lax mode adds the following to the strict mode environment:
 
 #### Kong cache PDK
 
@@ -936,7 +966,7 @@ kong.configuration[*]
 
 ### Available modules in lax mode
 
-Lax mode includes every module in strict mode, plus the following:
+Lax mode adds the following modules to the strict mode modules:
 
 #### Redis libraries
 
@@ -1076,11 +1106,12 @@ The {{site.base_gateway}} sandboxing reference lists the following as available 
 * `kong.request.get_id` and `kong.request.get_raw_forwarded_path`:
   Both are `nil` in strict mode.
 * `kong.table.new`:
-  It is `nil` in strict mode. The standard `table.new` function is available.
+  It is `nil` in strict mode.
+  The standard `table.new` function is available.
 
-Code that calls one of these functions in strict mode fails when a request runs it, not when {{site.ai_gateway}} saves the AI Policy.
+{{site.ai_gateway}} saves an AI Policy that calls one of these functions in strict mode without an error, and the call fails when a request runs it.
 
-To read the {{site.identity}} Principal of a request, use a [condition](/ai-gateway/conditions/) with the `principal.id` field instead.
+To read the {{site.identity}} [Principal](/identity/principals/) of a request, use a [condition](/ai-gateway/conditions/) with the `principal.id` field instead.
 
 ### Generated Routes and Services
 
@@ -1111,7 +1142,7 @@ An `oauth` AI Consumer behaves the same way.
 {{site.ai_gateway}} matches the token claim in [`config.consumer_claims`](/ai-gateway/entities/ai-auth-strategy/#schema-aigateway-auth-strategy-open-idconnect-config-config-consumer-claims) to the AI Consumer's `custom_id`.
 `kong.client.get_consumer` then returns that AI Consumer's `id`, `username`, `custom_id`, and `tags`.
 
-When you enable {{site.identity}} [Principal](/identity/principals/) mapping ([`config.principals`](/ai-gateway/entities/ai-auth-strategy/#schema-aigateway-auth-strategy-open-idconnect-config-config-principals)) on an `openid-connect` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/), set [`config.consumer_optional`](/ai-gateway/entities/ai-auth-strategy/#schema-aigateway-auth-strategy-open-idconnect-config-config-consumer-optional) to `true` if the Principal has no linked AI Consumer.
+When you enable {{site.identity}} Principal mapping ([`config.principals`](/ai-gateway/entities/ai-auth-strategy/#schema-aigateway-auth-strategy-open-idconnect-config-config-principals)) on an `openid-connect` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/), set [`config.consumer_optional`](/ai-gateway/entities/ai-auth-strategy/#schema-aigateway-auth-strategy-open-idconnect-config-config-consumer-optional) to `true` if the Principal has no linked AI Consumer.
 Otherwise, {{site.ai_gateway}} rejects the request with a `401`, even when the Principal matches.
 When the Principal has no linked AI Consumer, `kong.client.get_consumer` returns `nil`.
 
@@ -1121,13 +1152,26 @@ A request without a valid key fails authentication, and the AI Policy doesn't ru
 
 ### Shared state
 
-The `kong.ctx.shared` table is shared by the AI Policies that run during a request.
+The AI Policies that run during a request share the `kong.ctx.shared` table.
 A global Pre-Function can write a value that a Post-Function scoped to an AI Model reads in the same request.
 
 ### AI Policy configuration
 
-The {{site.ai_gateway}} Pre-Function and Post-Function AI Policies accept only the per-phase fields: `certificate`, `rewrite`, `access`, `header_filter`, `body_filter`, `log`, and the WebSocket phases `ws_handshake`, `ws_client_frame`, `ws_upstream_frame`, and `ws_close`.
-They don't accept the deprecated `config.functions` field from the {{site.base_gateway}} Pre-Function plugin.
+The {{site.ai_gateway}} Pre-Function and Post-Function AI Policies accept only a field for each [phase](/gateway/entities/plugin/#plugin-contexts):
+
+* `certificate`
+* `rewrite`
+* `access`
+* `header_filter`
+* `body_filter`
+* `log`
+* `ws_handshake`
+* `ws_client_frame`
+* `ws_upstream_frame`
+* `ws_close`
+
+The last four fields run in the WebSocket phases.
+The Pre-Function and Post-Function AI Policies don't accept the deprecated `config.functions` field from the {{site.base_gateway}} Pre-Function plugin.
 The [Exit Transformer](/ai-gateway/policies/exit-transformer/) AI Policy takes its code in `config.functions`, a list of functions.
 
 You can apply Pre-Function and Post-Function AI Policies to an AI Model, AI MCP Server, AI Agent, or globally.
