@@ -349,7 +349,7 @@ rows:
 
 ### Analytics dimensions
 
-You can group and filter the compression metrics by the following dimensions:
+You can also group and filter the compression metrics by these compression-specific dimensions:
 
 <!-- vale off -->
 {% table %}
