@@ -131,17 +131,20 @@ Instead of manually constructing the page content container with components, you
 
 The following layouts are available:
 
-* `custom` (default): No built-in chrome. You build the whole page yourself, including sidebars and header. Use this for a landing page or anything the other layouts don't fit. Because `custom` doesn't render a title or description from front matter, give the page its own heading in the body.
 * `guide`: Contains [sidebar navigation](/dev-portal/customizations/dev-portal-customizations/#dev-portal-navigation) on the left, content, and a table of contents on the right. Use this for long-form documentation where readers browse sibling pages and jump to a section.
 * `reference`: Contains [sidebar navigation](/dev-portal/customizations/dev-portal-customizations/#dev-portal-navigation) on the left, and centered content. Use this for shorter conceptual pages.
 * `wide`: Contains [sidebar navigation](/dev-portal/customizations/dev-portal-customizations/#dev-portal-navigation) on the left and content, but the contents space has a wider column. Use this for content that needs more horizontal room, like a wide table or a generated API reference.
 * `center`: A single centered column, without sidebars. Use this for release notes or articles.
+* `custom` (default): You must build the whole page yourself, including sidebars and header. Use this for a landing page or anything the other layouts don't fit. Because `custom` doesn't render a title or description from front matter, give the page its own heading in the body.
 
 On `guide`, `reference`, `wide`, and `center`, the page header is built from front matter you're already writing: `title` and `description` render in the header, and an optional `tagline` property renders as a short label above the title.
 
 Any section a layout renders (a sidebar or the header) can be replaced with a snippet using the `layout-options` front matter property. 
 
-For information about how to customize a layout's sidebars and header, or configure page navigation, see the [Markdown Components reference](https://portaldocs.konghq.com/).
+For information about how to customize a layout's sidebars and header, or configure page navigation, see the [Markdown Components reference](https://portaldocs.konghq.com/):
+* [Pages (including front matter)](https://portaldocs.konghq.com/pages/overview)
+* [Layouts](https://portaldocs.konghq.com/pages/layouts)
+* [Layout options](https://portaldocs.konghq.com/pages/layout-options)
 
 ### Page visibility and publishing
 

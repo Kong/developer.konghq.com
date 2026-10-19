@@ -157,7 +157,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    You can configure the main menu, footer, and footer bottom navigation menus in your {{site.dev_portal}}. 
+                    You can configure the main menu, footer, footer bottom, and sidebar navigation menus in your {{site.dev_portal}}. 
                     To configure navigation settings, navigate to your {{site.dev_portal}} in {{site.konnect_short_name}} and click **Portal Editor** in the sidebar. 
                     In the Portal Editor sidebar, click the menu tree icon.
 
@@ -166,7 +166,7 @@ rows:
                     * **Footer bottom menu**: Footer bottom menu is a flat list of links that will be added to the bottom of every page. Footer bottom menus are placed below footer menu sections.
                     * **Sidebar navigation**: The sidebar navigation menu is a grouped, vertical list of links that displays on the left side of the page. 
                       You can configure this in the **Sidebar Navigation** section of the Portal Editor or using the [`/portals/{portalId}/customization/navigations` endpoint](/api/konnect/portal-management/).
-                      Whether a sidebar menu is displayed depends on the [page layout](/dev-portal/pages-and-content/#page-layouts).
+                      You **must** select a [page layout](/dev-portal/pages-and-content/#page-layouts) that supports a sidebar menu, otherwise it won't render.
                       You can choose to have one sidebar menu for all pages by only adding a single `/` navigation entry with links in the group, or split your sidebar menu into different sections (for example, `/getting-started` and `/guides`).
                       You can also omit a sidebar menu for a section, which is useful for content like release notes. 
                       Individual links can be restricted to signed-in developers, and you can also add external links.
