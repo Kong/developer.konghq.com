@@ -1,6 +1,6 @@
 title: 'Split connections between two destinations'
 
-description: 'Weight two backendRefs 90 to 10 so a tenth of a client connections reach a second destination.'
+description: 'Weight two backendRefs 90 to 10 so a tenth of client connections reach a second destination.'
 
 weight: 900
 

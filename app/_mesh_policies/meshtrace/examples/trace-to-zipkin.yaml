@@ -1,6 +1,6 @@
 title: 'Export traces to Zipkin'
 
-description: 'Send spans from every proxy in the mesh to a Zipkin-compatible collector, such as Jaeger.'
+description: 'Send spans from every proxy in the mesh to a Zipkin-compatible collector, such as Jaeger, using 128-bit trace IDs.'
 
 weight: 900
 

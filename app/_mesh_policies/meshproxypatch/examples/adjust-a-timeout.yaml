@@ -1,6 +1,6 @@
-title: 'Change a timeout Envoy exposes but no policy does'
+title: 'Replace a field with a JSON patch'
 
-description: 'Replace streamIdleTimeout on the inbound HTTP connection manager with a JSON patch.'
+description: 'Replace streamIdleTimeout on the inbound HTTP connection manager with a JSON patch. For this timeout, prefer MeshTimeout, which exposes streamIdleTimeout directly.'
 
 weight: 800
 

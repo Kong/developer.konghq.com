@@ -1,6 +1,6 @@
 title: 'Route connections to an external service'
 
-description: 'Send a destination TCP connections to a MeshExternalService, so a dependency can be moved outside the mesh without changing the client.'
+description: 'Send TCP connections bound for a destination to a MeshExternalService, so a dependency can be moved outside the mesh without changing the client.'
 
 weight: 600
 

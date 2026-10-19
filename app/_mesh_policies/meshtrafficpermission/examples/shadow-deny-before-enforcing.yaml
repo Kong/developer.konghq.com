@@ -20,8 +20,8 @@ config:
           allowWithShadowDeny:
             - spiffeID:
                 type: Prefix
-                value: spiffe://default.default.mesh.local/ns/legacy/
+                value: spiffe://default.default.mesh.local/ns/legacy/sa
           allow:
             - spiffeID:
                 type: Prefix
-                value: spiffe://default.default.mesh.local/
+                value: spiffe://default.default.mesh.local

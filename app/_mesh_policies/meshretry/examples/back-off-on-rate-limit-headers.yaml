@@ -1,4 +1,4 @@
-title: 'Back off by what a rate limited destination asks for'
+title: 'Back off by what a rate-limited destination asks for'
 
 description: 'Use MeshRetry with rateLimitedBackOff to wait for the interval named in a Retry-After or X-RateLimit-Reset header instead of the exponential schedule.'
 

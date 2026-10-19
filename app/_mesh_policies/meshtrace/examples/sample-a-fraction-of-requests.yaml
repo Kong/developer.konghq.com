@@ -1,6 +1,6 @@
 title: 'Trace a fraction of requests'
 
-description: 'Keep client-requested traces at 100% while sampling only a tenth of a percent of ordinary traffic, to hold down trace volume on a busy mesh.'
+description: 'Keep client-requested traces at 100% while sampling only a tenth of a percent of ordinary traffic, to hold down trace volume on a busy mesh. Also tag each span with a fixed team name and the value of a request header.'
 
 weight: 600
 
