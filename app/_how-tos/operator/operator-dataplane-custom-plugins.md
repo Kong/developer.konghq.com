@@ -265,7 +265,8 @@ Ensure that everything is up and running, get the `Gateway` address, and make a 
    ```
    {: data-test-step="block" }
 
-<!--vale off-->
+1. Make a request to the service
+   <!--vale off-->
 {% validation request-check %}
 url: '/echo'
 status_code: 200
@@ -275,5 +276,6 @@ expected_headers:
   - "myheader: my-first-plugin"
 on_prem_url: $PROXY_IP
 konnect_url: $PROXY_IP
+indent: 3
 {% endvalidation %}
 <!--vale on-->

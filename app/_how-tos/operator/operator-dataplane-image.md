@@ -25,11 +25,11 @@ tldr:
 
 ---
 
+{% include k8s/kong-namespace.md %}
+
 ## Deploy a DataPlane
 
 The `DataPlane` image can be specified by providing a custom `image` value for the `proxy` container. This value is provided in the `PodTemplateSpec` field in either the `DataPlane` or the `GatewayConfiguration` resource.
-
-{% include k8s/kong-namespace.md %}
 
 <!--vale off-->
 {% operator_podtemplatespec_example %}

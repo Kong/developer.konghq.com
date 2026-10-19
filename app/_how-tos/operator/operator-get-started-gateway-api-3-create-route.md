@@ -96,7 +96,8 @@ httproute.gateway.networking.k8s.io/echo created
    ```
    {: data-test-step="block" }
 
-Test your Service:
+1. Test your Service:
+
 {% validation request-check %}
 url: /echo
 status_code: 200
@@ -105,13 +106,14 @@ sleep: 5
 on_prem_url: $PROXY_IP
 konnect_url: $PROXY_IP
 display_headers: true
+indent: 3
 {% endvalidation %}
 
-You should see the following message:
-
-```text
-Welcome, you are connected to node king.
-Running on Pod echo-965f7cf84-rm7wq.
-In namespace default.
-With IP address 192.168.194.10.
-```
+   You should see the following message:
+   
+   ```text
+   Welcome, you are connected to node king.
+   Running on Pod echo-965f7cf84-rm7wq.
+   In namespace default.
+   With IP address 192.168.194.10.
+   ```

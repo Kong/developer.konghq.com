@@ -131,12 +131,14 @@ Create a resource share to allow the AWS account associated with your {{site.kon
    {: data-test-step="block" }
 
 1. Use this command to create a resource share and save its output:
+
    ```sh
    aws ram create-resource-share --name transit-gateway-resource-share --resource-arns $TRANSIT_GATEWAY_ARN --principals $CLOUD_AWS_ACCOUNT_ID > resource-share.json
    ```
    {: data-test-step="block" }
 
 1. Export the resource share ARN to your environment:
+
    ```sh
    export RESOURCE_SHARE_ARN=$(jq -r '.resourceShare.resourceShareArn' resource-share.json)
    ```
@@ -172,6 +174,7 @@ spec:
 ## Accept the transit gateway attachment in AWS
 
 1. Fetch the list of transit gateway VPC attachments:
+
    ```sh
    aws ec2 describe-transit-gateway-vpc-attachments
    ```
@@ -191,4 +194,3 @@ kind: KonnectCloudGatewayTransitGateway
 name: konnect-aws-transit-gateway-1
 {% endvalidation %}
 <!-- vale on -->
-

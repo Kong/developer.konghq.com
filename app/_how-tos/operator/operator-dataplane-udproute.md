@@ -143,36 +143,36 @@ This configuration instructs {{ site.base_gateway }} to forward UDP traffic it r
 
 1. Wait for the Gateway to be programmed:
 
-    ```bash
-    kubectl wait gateway/kong-udp-gateway -n kong \
-      --for=condition=Programmed=True \
-      --timeout=5m
-    ```
-    {: data-test-step="block" }
+   ```bash
+   kubectl wait gateway/kong-udp-gateway -n kong \
+     --for=condition=Programmed=True \
+     --timeout=5m
+   ```
+   {: data-test-step="block" }
 
 1. Wait for the Gateway to get an address after the listener change:
 
-    ```bash
-    kubectl wait gateway/kong-udp-gateway -n kong \
-      --for=jsonpath='{.status.addresses[0].value}' \
-      --timeout=5m
-    ```
-    {: data-test-step="block" }
+   ```bash
+   kubectl wait gateway/kong-udp-gateway -n kong \
+     --for=jsonpath='{.status.addresses[0].value}' \
+     --timeout=5m
+   ```
+   {: data-test-step="block" }
 
 1. Get the Gateway's external IP:
 
-    ```bash
-    export PROXY_IP=$(kubectl get gateway kong-udp-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
-    echo $PROXY_IP
-    ```
-    {: data-test-step="block" }
+   ```bash
+   export PROXY_IP=$(kubectl get gateway kong-udp-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
+   echo $PROXY_IP
+   ```
+   {: data-test-step="block" }
 
 1. Send a TFTP request through the proxy:
 
-    ```bash
-    curl -s tftp://$PROXY_IP:9999/hello
-    ```
-    {: data-test-step="block" data-test-retry-count="6" }
+   ```bash
+   curl -s tftp://$PROXY_IP:9999/hello
+   ```
+   {: data-test-step="block" data-test-retry-count="6" }
 
    The results should look like this:
 

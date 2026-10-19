@@ -127,4 +127,4 @@ konnect_url: $PROXY_IP
 on_prem_url: $PROXY_IP
 {% endvalidation %}
 
-The request should be successful.
+   The request should be successful.

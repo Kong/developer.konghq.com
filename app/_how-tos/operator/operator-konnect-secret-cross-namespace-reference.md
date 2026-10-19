@@ -170,6 +170,7 @@ spec:
 ## Create a Service and a Route
 
 1. Run the following command to create a sample echo Service:
+
    ```bash
    kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n kong
    ```
@@ -205,19 +206,19 @@ spec:
 
 1. Wait for the `Gateway` to get an address:
     
-    ```bash
-    kubectl wait gateway/kong-gateway -n kong \
-      --for=jsonpath='{.status.addresses[0].value}' \
-      --timeout=5m
-    ```
-    {: data-test-step="block" }
+   ```bash
+   kubectl wait gateway/kong-gateway -n kong \
+     --for=jsonpath='{.status.addresses[0].value}' \
+     --timeout=5m
+   ```
+   {: data-test-step="block" }
 
 1. Get the Gateway's external IP:
    
-    ```bash
-    export PROXY_IP=$(kubectl get gateway kong-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
-    ```
-    {: data-test-step="block" }
+   ```bash
+   export PROXY_IP=$(kubectl get gateway kong-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
+   ```
+   {: data-test-step="block" }
 
 1.  Test the connection:
 
