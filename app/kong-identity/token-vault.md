@@ -458,9 +458,6 @@ method: GET
 
 {% endnavtabs %}
 
-### Enable credential injection on a route
-
-TBD?
 
 ### Store a static secret
 
