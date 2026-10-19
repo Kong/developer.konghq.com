@@ -73,20 +73,84 @@ columns:
     key: field
   - title: Notes
     key: notes
+  - title: Example value in the payload
+    key: example
 rows:
   - parameter: "[`config.forward_request_method`](/ai-gateway/policies/aws-lambda/reference/#schema--config-forward-request-method)"
     field: "`request_method`"
     notes: "The HTTP method of the request."
+    example: '`"request_method": "POST"`'
   - parameter: "[`config.forward_request_uri`](/ai-gateway/policies/aws-lambda/reference/#schema--config-forward-request-uri)"
     field: "`request_uri` and `request_uri_args`"
     notes: "The request path with its query string, and the parsed query arguments."
+    example: '`"request_uri": "/support/chat/completions?status=open"` and `"request_uri_args": {"status": "open"}`'
   - parameter: "[`config.forward_request_headers`](/ai-gateway/policies/aws-lambda/reference/#schema--config-forward-request-headers)"
     field: "`request_headers`"
     notes: "A map of the request headers."
+    example: '`"request_headers": {"content-type": "application/json"}`'
   - parameter: "[`config.forward_request_body`](/ai-gateway/policies/aws-lambda/reference/#schema--config-forward-request-body)"
     field: "`request_body` and `request_body_args`"
     notes: "The raw body and the parsed body arguments. When the content type is unknown and [`config.base64_encode_body`](/ai-gateway/policies/aws-lambda/reference/#schema--config-base64-encode-body) is `true`, the policy Base64-encodes `request_body` and adds `request_body_base64`."
+    example: '`"request_body_args": {"stream": false, "messages": [...]}`'
 {% endtable %}
+
+The following example sends the function the request method, the request URI, and the request body:
+
+{% entity_example %}
+type: policy
+data:
+  name: aws-lambda-structured-payload
+  display_name: Invoke AWS Lambda Function with a structured payload
+  type: aws-lambda
+  config:
+    aws_key: $AWS_KEY
+    aws_secret: $AWS_SECRET
+    aws_region: $AWS_REGION
+    function_name: $LAMBDA_FUNCTION
+    forward_request_method: true
+    forward_request_uri: true
+    forward_request_body: true
+formats:
+  - konnect-api
+  - kongctl
+{% endentity_example %}
+
+With this configuration, the policy is attached to an AI Model that has the route path `/support` and the model name `support-model`. A `POST` request to `/support/chat/completions?status=open` with the following body reaches the function as the payload that follows:
+
+```json
+{
+  "model": "support-model",
+  "messages": [
+    {
+      "role": "user",
+      "content": "order 42"
+    }
+  ]
+}
+```
+
+```json
+{
+  "request_method": "POST",
+  "request_uri": "/support/chat/completions?status=open",
+  "request_uri_args": {
+    "status": "open"
+  },
+  "request_body": "{\"messages\":[{\"content\":\"order 42\",\"role\":\"user\"}],\"stream\":false,\"model\":\"<provider-model-name>\"}",
+  "request_body_args": {
+    "stream": false,
+    "messages": [
+      {
+        "content": "order 42",
+        "role": "user"
+      }
+    ],
+    "model": "<provider-model-name>"
+  }
+}
+```
+
+The `model` field holds the provider model name from the AI Model target, not `support-model`, because {{site.ai_gateway}} rewrites the body before the policy runs. {{site.ai_gateway}} also adds `stream`. The payload has no `request_headers` field, because `config.forward_request_headers` isn't enabled.
 
 {:.success}
 > Set [`config.awsgateway_compatible`](/ai-gateway/policies/aws-lambda/reference/#schema--config-awsgateway-compatible) to `true` to send an Amazon API Gateway payload instead.
