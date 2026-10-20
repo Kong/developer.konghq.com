@@ -27,9 +27,14 @@ Anything under a `v1/` path — `app/_how-tos/ai-gateway/v1/`,
 behavior, and never assume its config shape (plugin fields, IDs, entity
 names) carries over unchanged to v2. It's migration source material only.
 
-v2 is Konnect-only (no on-prem data planes) and uses **Policies**, not
+v2 is Konnect-first (primarily documents the Konnect experience) and uses **Policies**, not
 **Plugins**, for anything AI-specific (AI Proxy / AI Proxy Advanced / AI A2A
 Proxy / AI MCP Proxy are the only exceptions — those stay plugins in v2 too).
+Self-hosted Gateway can
+also run that same 2.x config but is documented sparingly: install 2.x on-prem (`docker-compose.md`) and
+apply the entity file with `deck ai sync`, which converts 2.x entities to 3.x plugins
+under the hood. See `app/ai-gateway/configure-on-prem.md` for the conversion
+workflow and entity→plugin mapping.
 
 ## 2. Docs repo map
 

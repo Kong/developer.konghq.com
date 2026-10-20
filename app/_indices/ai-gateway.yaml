@@ -12,6 +12,9 @@ sections:
       - title: "Get started with {{site.ai_gateway}}"
         description: Set up your first {{site.ai_gateway}} instance and start proxying requests to LLM providers.
         url: /ai-gateway/get-started/
+      - title: "Install {{site.ai_gateway}} on-prem"
+        description: Install {{site.ai_gateway}} 2.x on self-managed {{site.base_gateway}} using Docker Compose.
+        url: /ai-gateway/install/docker/
       - path: /ai-gateway/architecture/
       - title: "{{site.ai_gateway}} capabilities"
         description: Learn about the core capabilities of {{site.ai_gateway}}.

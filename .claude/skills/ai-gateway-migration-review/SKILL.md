@@ -56,7 +56,8 @@ Every v2 AI Gateway page must have this exact frontmatter shape for these fields
 products:
     - ai-gateway          # Only ai-gateway, no other products
 works_on:
-    - konnect             # Only konnect, no on-prem
+    - konnect             # Entities/Policies are always authored in Konnect
+    - on-prem             # Add this only for pages about consuming that config on self-hosted Gateway via deck ai sync/ai2kong (see configure-on-prem.md)
 tools:
     - kongctl             # Optional field. If it exists, must be only kongctl or only konnect-api
 min_version:
@@ -67,8 +68,8 @@ Prefer `kongctl` over `konnect-api` when both would work — it's what every rea
 
 Flag any deviation:
 - `products` containing anything other than `ai-gateway`
-- `works_on` containing `on-prem` or anything other than `konnect`
-- `tools` containing `deck`, `admin-api`, or a mix of `kongctl` and `konnect-api` on the same page
+- `works_on` containing anything other than `konnect` and `on-prem`. `konnect` alone is correct for pages about authoring entities/Policies (there's no on-prem UI or API for that). `on-prem` should only be added alongside `konnect` for pages about running that same 2.x config on self-hosted Gateway (install guides, `configure-on-prem.md`-style conversion content) — flag `on-prem` with `konnect` missing, since on-prem AIGW 2.x still starts from a Konnect-authored entity file.
+- `tools` containing `deck`, `admin-api`, or a mix of `kongctl` and `konnect-api` on the same page. Exception: on-prem-focused pages (`configure-on-prem.md`, `docker-compose.md`) legitimately use `deck` for the `ai2kong`/`ai sync`/`ai dump` conversion workflow — don't flag `deck` there.
 - Missing or wrong `min_version` (must be `ai-gateway: '2.0'`)
 
 #### `content_type` on AI Policy pages
@@ -136,9 +137,11 @@ This should be replaced with a corresponding AI Policy include (e.g. under `_inc
 
 Example codeblocks in how-to guides should use `{% konnect_api_request %}` rather than raw curl or deck commands where they're making API calls. Flag any `curl` commands or `deck` commands in example steps that should be `{% konnect_api_request %}` blocks.
 
-### Konnect-only deployments
+### On-prem deployments
 
-v2 AI Gateway is Konnect-only. Flag any references to on-premises deployments, self-hosted Kong Gateway, or any instructions that only apply to on-prem.
+v2 AI Gateway entities/Policies are always authored in Konnect, and the majority of content is treated as Konnect-first. However, a select few pages discuss running the same 2.x entity/Policy configuration on self-hosted Gateway via `deck ai sync` or `deck file ai2kong`. These are legitimate on-prem references and should not be flagged.
+
+On-prem deployments pass the 2.x entity/Policy configuration through `deck ai sync` or `deck file ai2kong` to convert it into a 3.x compatible format that can be applied to a self-hosted 2.x AI Gateway.
 
 ### Kong Gateway → AI Gateway
 
