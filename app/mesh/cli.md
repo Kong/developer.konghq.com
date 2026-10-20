@@ -45,8 +45,11 @@ kongctl login
 This runs a browser-based device authorization flow and stores a token. A Personal Access Token
 works instead, with `--pat` or the matching configuration entry, which is what CI usually uses.
 
-A self-managed control plane needs no login. Point `--control-plane-url` at its API instead, and
-that flag takes precedence over `--control-plane-id`.
+A self-managed control plane needs no login. Point `--control-plane-url` at its API instead,
+and pass a user token with `--control-plane-token` (plus `--ca-cert-file` for HTTPS). The
+{{site.mesh_product_name}} API enforces RBAC and treats only requests from the control plane
+host itself as admin, so without a token, a remote `kongctl` can't issue tokens or write
+resources.
 
 ## Choosing a control plane and a mesh
 
@@ -69,7 +72,7 @@ rows:
     what: "A {{site.konnect_short_name}} control plane by name."
     config: "`konnect.mesh.control-plane.name`"
   - flag: "`--control-plane-url`"
-    what: "A self-managed control plane by API URL. Takes precedence over `--control-plane-id`."
+    what: "A self-managed control plane by API URL."
     config: "`konnect.mesh.control-plane.url`"
   - flag: "`-m`, `--mesh`"
     what: "The mesh that mesh-scoped resources belong to. Defaults to `default`."
@@ -78,6 +81,9 @@ rows:
     what: "Read mesh-scoped resources across every mesh. Ignored for global types."
     config: "None"
 {% endtable %}
+
+Pass only one of `--control-plane-id`, `--control-plane-name` or `--control-plane-url`. When
+none is passed, the configured values are used in the order URL, ID, name.
 
 Setting the control plane in configuration once is what makes the following examples readable; every
 one of them would otherwise carry `--control-plane-id <id>`.
@@ -233,7 +239,7 @@ rows:
 
 ```sh
 # a token a dataplane uses to prove its identity
-kongctl create mesh dataplane-token --name backend-01 --valid-for 24h > token
+kongctl create mesh dataplane-token --name backend-01 --workload backend --valid-for 24h > token
 
 # a token for a zone control plane
 kongctl create mesh zone-token --zone zone-1 --valid-for 720h > token
@@ -244,8 +250,10 @@ straight into the file that `kuma-dp` (dataplane token) or the zone control plan
 reads.
 
 Bind a dataplane token as narrowly as the deployment allows (`--name`, `--workload`, or
-`--tag`) rather than to the mesh alone. A token bound only to a mesh authenticates any proxy in
-it.
+`--tag`) rather than to the mesh alone. Once a `MeshIdentity` derives identities from the
+`kuma.io/workload` label (the Universal default), a proxy carrying that label is rejected unless
+its token is bound with `--workload`; a token bound only by `--name`, or only to the mesh, no
+longer authenticates it.
 
 {% table %}
 columns:
@@ -259,7 +267,7 @@ rows:
   - flag: "`--workload`"
     what: "A workload label value the dataplane must carry."
   - flag: "`--tag`"
-    what: "Tag values the dataplane must carry. Repeatable; comma-separate multiple values for one tag."
+    what: "Label values the dataplane must carry. Repeatable; comma-separate multiple values for one label."
   - flag: "`--proxy-type`"
     what: "The proxy type, for example `dataplane`."
   - flag: "`--valid-for`"
@@ -280,7 +288,7 @@ quotes from string results:
 
 ```sh
 kongctl get mesh meshservices --all-meshes -o json \
-  --jq '.[] | select(.spec.state == "Unavailable") | .name' -r
+  --jq '.items[] | select(.spec.state == "Unavailable") | .name' -r
 ```
 
 `--columns` picks the fields a text table shows, as `HEADER=.field`, which covers the cases where
@@ -320,6 +328,10 @@ Beyond the command names:
 - **Installation is not a CLI job.** `kumactl install control-plane` has no `kongctl`
   counterpart; install {{site.mesh_product_name}} with Helm. (`kongctl install` exists, but
   it installs `kongctl`'s own features, not a control plane.)
+- **`kumactl` still installs the transparent proxy.** It ships in the
+  {{site.mesh_product_name}} archive, and on Universal hosts `kumactl install transparent-proxy`
+  is how the iptables rules are installed. See
+  [Deploy a Universal data plane proxy](/mesh/universal-data-plane/#transparent-proxying).
 - **`kumactl apply -v` variables are gone.** Templating a resource before applying it is a job
   for whatever produces the YAML.
 

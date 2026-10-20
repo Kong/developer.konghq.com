@@ -55,8 +55,11 @@ upgrade sequence.
 
 In the 2.14 transition environment, mesh-scoped listener generation requires
 `Mesh.spec.meshServices.mode: Exclusive`. Complete the move to resource-based services and
-check their discovery before enabling that mode. In 3.x, the field is removed and the new
-service model is unconditional; do not carry this setting forward as a 3.x prerequisite.
+check their discovery before enabling that mode. In 3.x the mode is always `Exclusive` and the
+field is deprecated. Set `meshServices.mode: Exclusive` on every mesh, including meshes that
+never set it, before upgrading the global control plane: 2.x zones treat a missing field as
+`Disabled`, and 3.x zones reject a mesh with any other mode. Drop the field from your manifests
+after the upgrade.
 
 ## Understand when traffic switches
 
@@ -244,8 +247,17 @@ gap. The report cannot verify addresses, firewall rules, capacity, or live traff
 replace the checks in this guide.
 
 Proceed with the supported 3.x upgrade sequence only after traffic no longer depends on
-standalone zone proxies. Repeat the traffic checks after each zone upgrade and update
-dashboards that still query legacy proxy resources or insight endpoints.
+standalone zone proxies: upgrade the global control plane first, then the zones. Repeat the
+traffic checks after each zone upgrade and update dashboards that still query legacy proxy
+resources or insight endpoints.
+
+{:.warning}
+> **Publish each zone's `MeshZoneAddress` as soon as that zone runs 3.x.** In 3.x, other zones
+> reach a zone's ingress only through its `MeshZoneAddress`, and the resource can't be created
+> before the zone control plane runs 3.x. Cross-zone `MeshService` and `MeshMultiZoneService`
+> traffic into the zone is down until the resource exists and has synced to the other zones.
+> On Kubernetes, the upgraded zone control plane creates it from the ingress Service; check that
+> it appears. On Universal, create it on the zone control plane immediately after the upgrade.
 
 {:.warning}
 > **Restart the zone proxies after upgrading a zone control plane.** A zone-proxy Pod keeps

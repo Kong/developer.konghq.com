@@ -18,7 +18,7 @@ series:
   position: 2
 tldr:
   q: How do I start the {{site.mesh_product_name}} control plane in Universal mode?
-  a: Run `kuma-cp` as a container in `zone` mode, then point `kongctl` at its API with `--control-plane-url`.
+  a: Run `kuma-cp` as a container in `zone` mode, read its admin token, then point `kongctl` at its API with `--control-plane-url` and `--control-plane-token`.
 related_resources:
   - text: Deploy a Universal control plane
     url: /mesh/universal-control-plane/
@@ -66,14 +66,38 @@ rows:
 
 The GUI is now at <http://127.0.0.1:25681/gui>.
 
+## Get the admin token
+
+The {{site.mesh_product_name}} API enforces RBAC. Only requests from the control plane's own
+host are treated as admin, and requests through the published port come from outside the
+container, so `kongctl` needs a token. The control plane creates an admin token at startup and
+stores it as the `admin-user-token` global secret. Read it from inside the container, where the
+request comes from localhost:
+
+```sh
+export KONG_MESH_ADMIN_TOKEN="$(
+  docker exec kong-mesh-demo-control-plane \
+    wget --quiet --output-document - \
+    http://127.0.0.1:5681/global-secrets/admin-user-token \
+    | sed -n 's/.*"data": *"\([^"]*\)".*/\1/p' \
+    | base64 --decode
+)"
+```
+
+`sed` extracts the secret's base64-encoded `data` field, which `base64` decodes into the token.
+If `KONG_MESH_ADMIN_TOKEN` is empty, the control plane is still starting: wait a few seconds and
+run the command again.
+
 ## Point kongctl at it
 
-`kongctl` reaches a self-managed control plane through `--control-plane-url`, which takes
-precedence over any {{site.konnect_short_name}} configuration:
+`kongctl` reaches a self-managed control plane through `--control-plane-url`, and authenticates
+with `--control-plane-token`:
 
 ```sh
 export KONG_MESH_CP=http://127.0.0.1:25681
-kongctl get mesh resource-types --control-plane-url "$KONG_MESH_CP"
+kongctl get mesh resource-types \
+  --control-plane-url "$KONG_MESH_CP" \
+  --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
 ```
 
 That lists every resource type this control plane serves. It is worth a look before going
@@ -99,18 +123,20 @@ EOF
 Then select that profile per command:
 
 ```sh
-kongctl get mesh resource-types --profile demo
+kongctl get mesh resource-types --profile demo --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
 ```
 
-The rest of this series writes `--control-plane-url "$KONG_MESH_CP"` explicitly, so it works
-either way.
+The rest of this series writes `--control-plane-url "$KONG_MESH_CP"` and
+`--control-plane-token "$KONG_MESH_ADMIN_TOKEN"` explicitly, so it works either way.
 
 ## Confirm the default mesh
 
 A control plane starts with a `default` mesh:
 
 ```sh
-kongctl get mesh meshes --control-plane-url "$KONG_MESH_CP"
+kongctl get mesh meshes \
+  --control-plane-url "$KONG_MESH_CP" \
+  --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
 ```
 
 ```

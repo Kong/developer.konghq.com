@@ -1,6 +1,6 @@
 ---
 title: Install {{site.mesh_product_name}}
-description: "Install the {{site.mesh_product_name}} binaries and prepare the network and files the rest of the series uses."
+description: "Prepare the network, the sidecar setup script, and the files the rest of the series uses."
 content_type: how_to
 permalink: /mesh/get-started/universal/install/
 breadcrumbs:
@@ -18,7 +18,7 @@ series:
   position: 1
 tldr:
   q: What do I need before running {{site.mesh_product_name}} on Universal?
-  a: Install the {{site.mesh_product_name}} binaries, create a Docker network the containers share, and write the `Dataplane` template and transparent proxy config the later steps reuse.
+  a: Create a Docker network the containers share, and write the sidecar setup script, the `Dataplane` template and the transparent proxy config the later steps reuse.
 related_resources:
   - text: "{{site.mesh_product_name}} on Universal"
     url: /mesh/universal/
@@ -34,7 +34,7 @@ prereqs:
         network.
     - title: curl
       content: |
-        Used to download the {{site.mesh_product_name}} binaries.
+        Used to call the demo application from your machine.
 min_version:
   mesh: '3.0'
 ---
@@ -42,36 +42,27 @@ min_version:
 This series runs {{site.mesh_product_name}} on Universal from nothing to a two-service mesh with
 mTLS and traffic permissions, entirely in containers on one machine. Each step builds on the last.
 
+The application is the [Kuma counter demo](https://github.com/kumahq/kuma-counter-demo), run as
+two services from the same image:
+
+- `demo-app`: a web application that increments a counter.
+- `kv`: a key/value store that keeps the counter's value.
+
 Universal here means what it means in production: there is no Kubernetes API server to derive
 anything from, so you declare each proxy yourself. Where Kubernetes would infer ports, protocols
 and identity from a Pod and a Service, you supply them.
 
-## Install the binaries
-
-{{site.mesh_product_name}} ships `kuma-cp` (the control plane), `kuma-dp` (the sidecar), and
-`envoy`. Install them on the host:
-
-```sh
-curl -L https://developer.konghq.com/mesh/installer.sh | VERSION={{page.latest_release.version}} sh -
-```
-
-```sh
-sudo mv kong-mesh-*/bin/* /usr/local/bin/
-```
-
-The series manages resources with `kongctl`, the CLI that replaces `kumactl` in
-{{site.mesh_product_name}} 3.x. See [{{site.mesh_product_name}} CLI](/mesh/cli/) for the full
-command surface.
-
 ## Create a working directory
 
-The series writes tokens and resources to a directory the containers share:
+The series writes tokens, resources and logs to a directory the containers share:
 
 ```sh
 export KONG_MESH_DEMO_TMP="$(mktemp -d)"
+chmod 755 "$KONG_MESH_DEMO_TMP"
 echo "$KONG_MESH_DEMO_TMP"
 ```
 
+`chmod` lets the unprivileged user that runs `kuma-dp` inside each container read the files.
 Keep that variable set; every later step uses it.
 
 ## Create the Docker network
@@ -87,6 +78,32 @@ docker network create \
 
 `--gateway` moves the network's gateway to `172.18.78.254`. Without it, Docker takes
 `172.18.78.1`, the address the control plane runs on.
+
+## Write the sidecar setup script
+
+On Universal the sidecar runs beside the workload, so each workload container needs the
+{{site.mesh_product_name}} binaries: `kuma-dp` (the sidecar), `envoy`, and `kumactl`, which
+installs the transparent proxy's iptables rules. Write a script the later steps run inside each
+container:
+
+```sh
+cat > "$KONG_MESH_DEMO_TMP/setup-sidecar.sh" <<'EOF'
+set -e
+apt-get update
+apt-get install --yes curl iptables
+cd /tmp
+curl -L https://developer.konghq.com/mesh/installer.sh | VERSION={{page.latest_release.version}} sh -
+mv kong-mesh-*/bin/* /usr/local/bin/
+useradd --uid 5678 --user-group kuma-dp
+EOF
+```
+
+The script installs `curl` and `iptables`, downloads the Linux binaries for the container's
+architecture, and creates the `kuma-dp` user (UID `5678`) that the sidecar runs as. The
+transparent proxy redirects every process's traffic to the sidecar except this user's.
+
+The series manages resources from your machine with `kongctl`. See
+[{{site.mesh_product_name}} CLI](/mesh/cli/) for the full command surface.
 
 ## Write the Dataplane template
 
@@ -107,16 +124,16 @@ networking:
   inbound:
     - port: {{ port }}
       name: main
-      protocol: {{ protocol }}
+      protocol: http
 EOF
 ```
 {% endraw %}
 
-`kuma-dp` substitutes each placeholder from a matching `--dataplane-var` flag, so one file serves
-every workload in the series.
+`kuma-dp` substitutes each placeholder from a matching `--dataplane-var` flag, so one file can
+serve many workloads.
 
-Three things in that file are worth understanding now, because they are the whole of what
-Universal asks of you:
+Three things in that file are worth understanding now, because they are most of what Universal
+asks of you:
 
 {% table %}
 columns:
@@ -130,21 +147,29 @@ rows:
   - field: "`labels.app`"
     why: "An ordinary label. This is what policies select on, now that inbounds carry no tags."
   - field: "`networking.inbound[].protocol`"
-    why: "Sets the port's protocol. The template takes it from the `protocol` variable: the key/value store passes `tcp` because Redis isn't HTTP, and the demo app passes `http`. Leave it out and the port is treated as TCP, silently losing every L7 policy."
+    why: "Sets the port's protocol. Both demo workloads serve HTTP. Leave it out and the port is treated as TCP, silently losing every L7 policy."
 {% endtable %}
+
+The template declares no destinations, which suits `kv`: it calls nothing. A transparent proxy
+reaches only the destinations listed in its `Dataplane`, so the demo app, which calls `kv`, gets
+its own `Dataplane` with that list in [step 4](/mesh/get-started/universal/demo-app/).
 
 ## Write the transparent proxy config
 
-Transparent proxying lets a workload call other services by name without declaring an outbound
-for each one:
+Transparent proxying intercepts a workload's traffic, so the workload calls other services by
+name without binding a local port for each one:
 
 ```sh
 cat > "$KONG_MESH_DEMO_TMP/transparent-proxy.yaml" <<'EOF'
+kumaDPUser: kuma-dp
 redirect:
   dns:
     enabled: true
 EOF
 ```
 
-`kuma-dp` installs the iptables rules from this file when it starts with
-`--transparent-proxy-config`.
+`kumactl install transparent-proxy --config-file` reads this file when it installs the iptables
+rules inside each container. `kumaDPUser` names the user whose traffic isn't redirected, and
+`redirect.dns.enabled` sends DNS lookups to the sidecar's DNS proxy so mesh hostnames resolve.
+`kuma-dp` gets the same file with `--transparent-proxy-config`, which tells the control plane
+how the rules are set up.

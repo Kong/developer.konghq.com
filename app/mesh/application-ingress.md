@@ -189,9 +189,10 @@ networking:
 
 Replace the address with the proxy's address. Configure data plane authentication, DNS and
 outbound interception as described in [Universal data plane proxies](/mesh/universal-data-plane/).
-Pass `--exclude-inbound-ports=8000,8443` to `kuma-dp`, or set
-`redirect.inbound.excludePorts` in its transparent proxy configuration, using the gateway's
-actual listening ports. Do not declare those excluded ports as Dataplane inbounds. Unlike
+Install the transparent proxy rules with
+`kumactl install transparent-proxy --exclude-inbound-ports 8000,8443`, or set
+`redirect.inbound.excludePorts` in the file passed with `--config`, using the gateway's actual
+listening ports. Do not declare those excluded ports as Dataplane inbounds. Unlike
 Kubernetes, you maintain that resource yourself. Retain any other inbounds that the mesh
 should serve, and verify the interception rules before exposing the gateway.
 

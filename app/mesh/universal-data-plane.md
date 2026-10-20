@@ -53,7 +53,7 @@ kongctl create mesh -f backend-01.yaml
 Then a token, and the process:
 
 ```sh
-kongctl create mesh dataplane-token --name backend-01 --valid-for 24h > /etc/kuma/token
+kongctl create mesh dataplane-token --name backend-01 --workload backend --valid-for 24h > /etc/kuma/token
 
 kuma-dp run \
   --cp-address https://control-plane.internal:5678 \
@@ -112,7 +112,7 @@ rows:
   - field: "`serviceAddress`"
     meaning: "The address traffic is forwarded to, if the application is not on `networking.address`."
   - field: "`state`"
-    meaning: "`Ready`, `NotReady`, or `Ignored` to keep the port out of policy targeting while still issuing the proxy a certificate for it."
+    meaning: "`Ready` or `NotReady`."
 {% endtable %}
 
 {:.warning}
@@ -127,9 +127,9 @@ if set, has to differ from every inbound and outbound port.
 
 ## Outbounds
 
-With transparent proxying on, you declare no outbounds: the proxy intercepts traffic and
-resolves destinations itself. Without it, each destination the workload calls needs an entry
-that binds a local port.
+With transparent proxying on, you list destinations in
+[`transparentProxying.reachableBackends`](#transparent-proxying) instead of binding ports.
+Without it, each destination the workload calls needs an entry that binds a local port.
 
 ```yaml
 networking:
@@ -150,8 +150,9 @@ The application then connects to `127.0.0.1:5432` and the proxy carries it to th
 
 `backendRef` is required: an outbound without one is rejected with `backendRef: must be
 defined`. `kind` is `MeshService`, `MeshExternalService` or `MeshMultiZoneService`, and the
-reference takes **either** `name` **or** `labels`, never both: `either 'name' or 'labels' should
-be specified`.
+reference takes `name` or `labels` (at least one; `labels` wins if both are set). With neither,
+it's rejected with `either 'name' or 'labels' should be specified`. `port` is required unless
+`kind` is `MeshExternalService`.
 
 {:.warning}
 > `networking.outbound[].tags` is removed. A stored `Dataplane` still carrying tags keeps being
@@ -160,27 +161,35 @@ be specified`.
 
 ## Transparent proxying
 
-Transparent proxying removes the need to declare outbounds, and is what makes a Universal proxy
-behave like a Kubernetes sidecar. It needs iptables rules on the host, which `kuma-dp` installs:
+Transparent proxying intercepts the workload's traffic, and is what makes a Universal proxy
+behave like a Kubernetes sidecar. It needs iptables rules on the host. `kuma-dp` doesn't install
+them: install them as root with `kumactl install transparent-proxy`, which excludes the user
+`kuma-dp` runs as (by default the user `kuma-dp` or UID `5678`, which must already exist), then
+start `kuma-dp` as that user with `--transparent-proxy`:
 
 ```sh
-kuma-dp run \
+sudo kumactl install transparent-proxy --kuma-dp-user kuma-dp
+
+sudo runuser -u kuma-dp -- kuma-dp run \
   --cp-address https://control-plane.internal:5678 \
   --dataplane-file backend-01.yaml \
   --dataplane-token-file /etc/kuma/token \
   --transparent-proxy
 ```
 
-`--transparent-proxy-config` takes a file, a comma-separated list of files, or `-` for stdin,
-and can be repeated (later values override earlier ones). That is how the redirect ports,
-excluded ranges and DNS settings are tuned.
+`kumactl install transparent-proxy --config-file` is where the redirect ports, excluded ranges
+and DNS redirection are tuned. If you change them, pass `kuma-dp` the same file with
+`--transparent-proxy-config`, so the control plane knows the redirect ports. It takes a file, a
+comma-separated list of files, or `-` for stdin, and can be repeated (later values override
+earlier ones).
 
-With transparent proxying on, `--dns-enabled` runs the embedded DNS proxy so the workload
-resolves mesh hostnames. Destinations are reached by name rather than by a local port.
+With transparent proxying on, the embedded DNS proxy (`--dns-enabled`, on by default) lets the
+workload resolve mesh hostnames. Destinations are reached by name rather than by a local port.
 
-`reachableBackends` narrows what the proxy is configured for. A proxy that only talks to two
-destinations does not need clusters for the whole mesh, and saying so cuts its configuration
-substantially:
+`reachableBackends` lists what the proxy can reach. Without it (and without outbounds), the
+proxy reaches nothing, unless the control plane sets `KUMA_DEFAULTS_RESTRICT_OUTBOUND=false`.
+Destinations outside the mesh are also dropped unless a `MeshExternalService` or a
+`MeshPassthrough` policy allows them.
 
 ```yaml
 networking:
@@ -188,14 +197,17 @@ networking:
     reachableBackends:
       refs:
         - kind: MeshService
-          name: postgres
+          labels:
+            kuma.io/display-name: postgres
           port: 5432
         - kind: MeshService
           labels:
             app: orders
 ```
 
-Each ref takes `name` or `labels`, and `namespace` requires `name`.
+Each ref takes `kind` and `labels`; select a destination by name with the
+`kuma.io/display-name` label. `port` is optional and requires `labels`. `name` and `namespace`
+are removed, and a stored ref that still uses them resolves to nothing.
 
 ## Readiness
 
@@ -250,16 +262,19 @@ A dataplane token proves which proxy is connecting. Bind it as narrowly as the d
 allows:
 
 ```sh
-# to one named proxy
-kongctl create mesh dataplane-token --name backend-01 --valid-for 24h
+# to one named proxy of a workload
+kongctl create mesh dataplane-token --name backend-01 --workload backend --valid-for 24h
 
 # to a workload, for an autoscaling group whose instance names vary
 kongctl create mesh dataplane-token --workload backend --valid-for 24h
 ```
 
-A token bound only to a mesh authenticates **any** proxy in that mesh, which makes it worth
-avoiding wherever instances can be named or labeled. `--tag` binds to tag values, and
-`--valid-for` bounds the lifetime.
+Once a `MeshIdentity` derives the proxy's identity from `kuma.io/workload` (the Universal
+default), the token must carry `--workload`. A token bound only by `--name` or only to the mesh
+is then rejected with `derives its identity from the workload, so it requires a workload-bound
+token`. Proxies that are already connected keep running until they reconnect, so bind tokens to
+the workload from the start. `--tag` matches the `Dataplane`'s `labels`, and `--valid-for`
+bounds the lifetime.
 
 The token goes to `kuma-dp` as `--dataplane-token-file`. `kongctl` writes it with no trailing
 newline so it can be redirected straight into that file.

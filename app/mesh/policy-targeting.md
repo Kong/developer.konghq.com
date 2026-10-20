@@ -45,7 +45,8 @@ Not every policy has all three. A policy states its own shape on its own page.
 On Kubernetes, the namespace a policy is created in restricts which proxies it can reach.
 `targetRef` narrows within that reach; it cannot widen it. The control plane works out the
 reach from the policy's shape and records it in the `kuma.io/policy-role` label, which it
-sets and overwrites itself.
+computes on every write. Leave the label out: a value that differs from the computed one is
+rejected.
 
 {% table %}
 columns:
@@ -62,7 +63,7 @@ rows:
   - policy: "Created in the system namespace, `{{site.mesh_namespace}}`, of a zone control plane"
     role: "`system`"
     reach: "Every proxy in **that zone**. It is not distributed to other zones."
-  - policy: "Created in an application namespace, every `to[]` item naming a single `MeshService` or `MeshHTTPRoute` by `kuma.io/display-name`"
+  - policy: "Created in an application namespace, every `to[]` item a `MeshService` or `MeshHTTPRoute` selected by exactly three labels: `kuma.io/display-name`, `k8s.kuma.io/namespace` set to the policy's own namespace, and `kuma.io/zone` set to the local zone"
     role: "`producer`"
     reach: "Every client of that destination, in any namespace and any zone."
   - policy: "Created in an application namespace, with `to[]` items that are not all of that form"
@@ -83,15 +84,31 @@ A policy cannot mix producer and consumer items. One that names a single destina
 > created on a zone control plane stays in that zone. Only the global control plane, or a
 > producer policy, reaches every zone.
 
-On a zone control plane, a policy created in `{{site.mesh_namespace}}` must also carry the
-label `kuma.io/origin: zone`. Without it, admission rejects the policy:
+A selector with only `kuma.io/display-name`, or with any extra label, makes the item a
+consumer item.
 
-```
-Operation not allowed. Applying policies on Zone CP on a system namespace requires
-'kuma.io/origin' label to be set to 'zone'.
-```
+A zone control plane sets the `kuma.io/origin: zone` label on the policies created there. You
+don't need to set it, and if you do, any value other than `zone` is rejected.
 
-Universal has no namespaces, so every policy there is `system` and reaches the whole mesh.
+Universal has no namespaces, so every policy there is `system`. A policy created on the global
+control plane reaches every zone, and one created on a zone control plane reaches only that
+zone.
+
+## Policy precedence
+
+When several policies of the same type apply to the same traffic, the control plane merges
+them in order of priority. A higher-priority policy overrides the fields it sets, and inherits
+the fields it leaves out. The following criteria decide the order, from lowest to highest
+priority, and each one applies only when the previous ones tie:
+
+1. Top-level `targetRef.kind`: `Mesh`, then `Dataplane`. An omitted `targetRef` counts as
+   `Mesh`.
+1. A `Dataplane` `targetRef` with `sectionName` ranks above one without.
+1. Origin: created on the global control plane, then created on a zone control plane.
+1. Role: `system`, then `producer`, `consumer`, and `workload-owner`.
+1. For outbound configuration, the `to[].targetRef.kind`: `Mesh`, then a destination kind
+   (a `MeshService` with `sectionName` ranks above one without), then `MeshHTTPRoute`.
+1. Name: the policy whose name comes first alphabetically has the highest priority.
 
 ## Why outbound names a destination and inbound matches an identity
 
@@ -136,7 +153,7 @@ columns:
     key: accepted
 rows:
   - kind: "`Mesh`"
-    accepted: "Every policy that has a `to` array."
+    accepted: "Every policy that has a `to` array, except `MeshHTTPRoute` and `MeshTCPRoute`, which must name a destination."
   - kind: "`MeshService`, `MeshExternalService`, `MeshMultiZoneService`"
     accepted: "Most policies with a `to` array."
   - kind: "`MeshHTTPRoute`"
@@ -144,10 +161,11 @@ rows:
 {% endtable %}
 
 `MeshRateLimit` and `MeshFaultInjection` are narrower still: they accept `kind: Mesh` only,
-and only when the top-level `targetRef` selects a gateway.
+and only when the top-level `targetRef` is `kind: Mesh` or omitted. With `kind: Dataplane`,
+`to` must be empty.
 
-`MeshSubset`, `MeshServiceSubset` and `MeshGateway` are rejected in `to[]` by every policy.
-`MeshServiceSubset` survives only as a route's `backendRefs[].kind`.
+`MeshSubset` and `MeshServiceSubset` are rejected in `to[]` by every policy, and
+`MeshServiceSubset` is also rejected in a route's `backendRefs[]`.
 
 ### `spec.rules[]`
 

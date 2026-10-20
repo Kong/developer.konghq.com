@@ -198,6 +198,11 @@ ready endpoints. It can use a load balancer address, a NodePort address, or an e
 external IP. A plain ClusterIP without an external address is not sufficient for publication.
 Inspect the generated value and check that it is reachable from the other zones.
 
+Clients in other zones get endpoints for this zone's `MeshService` destinations only when this
+zone has a `MeshZoneAddress` for the mesh and the mesh has at least one `MeshIdentity`. Without
+either, cross-zone requests to the zone fail; a missing address makes the control plane log
+`no MeshZoneAddress found for zone`.
+
 On Universal, publish a `MeshZoneAddress` on the zone control plane for the mesh. For example,
 if a load balancer forwards `ingress.zone-b.example.com:10001` to the `zone-ingress-01` `Dataplane`'s `ingress` listener:
 
@@ -232,7 +237,8 @@ kubectl get meshexternalservices -A
 
 A running egress Pod whose `Dataplane` shows a `ZoneEgress` listener still proves nothing:
 that listener is the requested configuration, not the generated one. Confirm the proxy
-received `self_zoneegress_dp_<port>` in its Envoy configuration.
+received `self_zoneegress_dp_<listener name>` in its Envoy configuration. With the chart
+defaults on Kubernetes, that is `self_zoneegress_dp_10002`.
 
 [MeshTrust](/mesh/policies/meshtrust/) supplies the trust needed to validate peer
 certificates. Trust establishes who the caller is; it does not grant access.

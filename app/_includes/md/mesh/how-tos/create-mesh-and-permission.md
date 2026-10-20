@@ -7,7 +7,8 @@ kongctl get mesh resource-types --control-plane-id "$CONTROL_PLANE_ID" --region 
 
 Create a new `konnect-demo` mesh and a demo identity provider on the **global** control plane.
 A mesh can only be created there, and an identity created on the global control plane reaches
-every zone, so all zones share one trust domain:
+every zone. Setting `trustDomain` explicitly gives all zones one trust domain; the default trust
+domain includes the zone name:
 
 ```sh
 cat <<'EOF' | kongctl create mesh -f - --control-plane-id "$CONTROL_PLANE_ID" --region "$KONNECT_REGION"
@@ -35,7 +36,8 @@ EOF
 `MeshIdentity` issues certificates and publishes their CA in `MeshTrust`. This example accepts
 a generated self-signed CA for the demo; review your production PKI requirements before reusing
 it. The identity's trust domain plus the Kubernetes namespace and ServiceAccount determine
-the caller ID.
+the caller ID. You can't change `spiffeID.trustDomain` or `spiffeID.path` after creation; to use
+a different trust domain, create a new `MeshIdentity` with a different name.
 
 Wait for the identity's readiness conditions and generated trust before deploying workloads:
 
@@ -54,9 +56,9 @@ kubectl get mesh konnect-demo
 ```
 
 Then allow the `client` ServiceAccount to call the `server` workload by applying a
-`MeshTrafficPermission` directly to the zone. A policy created on a zone control plane in
-`{{site.mesh_namespace}}` must carry the `kuma.io/origin: zone` label, and it applies to the
-whole zone:
+`MeshTrafficPermission` directly to the zone. A policy created in `{{site.mesh_namespace}}` on a
+zone control plane applies to the whole zone. The zone adds the `kuma.io/origin: zone` label if
+you omit it:
 
 ```sh
 cat <<'EOF' | kubectl apply -f -

@@ -32,10 +32,9 @@ kuma:
     kdsGlobalAddress: $CONTROL_PLANE_URL
     konnect:
       cpId: $CONTROL_PLANE_ID
-    secrets:
-      - Env: KMESH_MULTIZONE_ZONE_KDS_AUTH_CP_TOKEN_INLINE
-        Secret: cp-token
-        Key: token
+    zoneToken:
+      secretName: cp-token
+      key: token
 EOF
 helm upgrade --install kong-mesh kong-mesh/kong-mesh \
   --namespace kong-mesh-system --version "$MESH_CHART_VERSION" \
@@ -43,9 +42,9 @@ helm upgrade --install kong-mesh kong-mesh/kong-mesh \
 ```
 
 This installs a zone, not a Kubernetes-native global control plane. It does not enable the
-removed shared `kuma.ingress` or `kuma.egress` deployments. This single-zone test does not need
+removed shared `kuma.ingress` or `kuma.egress` deployments.{% unless include.zone_proxies %} This single-zone test does not need
 zone proxies; add [mesh-scoped zone proxies](/mesh/mesh-scoped-zone-proxies/) when connecting
-zones or using `MeshExternalService`.
+zones or using `MeshExternalService`.{% endunless %}
 {% else %}
 Download the {{site.mesh_product_name}} 3.x release approved for your {{site.konnect_short_name}} control plane. Set an explicit version
 instead of relying on the installer's default:
@@ -78,7 +77,7 @@ persistence and availability for production; see the [Universal control plane re
 Run the control plane in the foreground:
 
 ```sh
-KMESH_MULTIZONE_ZONE_KDS_AUTH_CP_TOKEN_PATH="$MESH_INSTALL_DIR/cp-token" \
+KUMA_MULTIZONE_ZONE_KDS_AUTH_TOKEN_PATH="$MESH_INSTALL_DIR/cp-token" \
   "$MESH_INSTALL_DIR/kong-mesh-$MESH_VERSION/bin/kuma-cp" run --config-file config.yaml
 ```
 

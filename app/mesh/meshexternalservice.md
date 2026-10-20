@@ -1,6 +1,6 @@
 ---
 title: MeshExternalService
-description: Reach a service outside the mesh as a first-class destination, with the sidecar originating TLS to it.
+description: Reach a service outside the mesh as a first-class destination through the zone egress, which can originate TLS to it.
 content_type: reference
 layout: reference
 products:
@@ -23,13 +23,26 @@ related_resources:
 
 `MeshExternalService` makes a destination outside the mesh into a resource the mesh understands.
 A policy can name it in `spec.to[].targetRef`, a route can send traffic to it in `backendRefs`,
-and the sidecar can originate TLS to it, so an external API or database is governed by the same
+and the mesh can originate TLS to it, so an external API or database is governed by the same
 timeouts, retries and circuit breakers as anything inside the mesh.
 
 It replaces the legacy `ExternalService` resource, which is removed in 3.0.
 
 It is not a policy: there is no `targetRef`, because the resource *is* the destination. On
 Kubernetes it is accepted only in the system namespace.
+
+Traffic to a `MeshExternalService` always goes through a [mesh-scoped zone egress](/mesh/mesh-scoped-zone-proxies/)
+in the client's zone. The client's sidecar sends the request to the egress over mesh mTLS, and
+the egress connects to the endpoints. This requires:
+
+* A zone egress for the mesh in the client's zone, selected by an initialized `MeshIdentity`.
+  Without one, the destination has no endpoints.
+* A `MeshIdentity` that selects the client proxies. A client without an identity gets no route
+  to the destination, and the request fails locally with a 503.
+* A [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) on the egress that allows the
+  caller. The egress denies a request when no allow rule matches.
+* The `MeshExternalService` in the client's `reachableBackends` (the `kuma.io/reachable-backends`
+  annotation on Kubernetes). A proxy gets no outbound for a destination it doesn't list.
 
 ## Reach an external API over TLS
 
@@ -62,7 +75,7 @@ Both deal with traffic leaving the mesh, and they are not alternatives.
 
 [MeshPassthrough](/mesh/policies/meshpassthrough/) lets a proxy reach an address the mesh knows
 nothing about, without giving it a name. Nothing can target that traffic: no policy applies to
-it, and the sidecar does not originate TLS.
+it, and the mesh does not originate TLS.
 
 A `MeshExternalService` gives the destination an identity in the mesh, a VIP and a hostname, so
 policies and routes can name it. Use it for the dependencies that matter enough to govern, and
@@ -91,7 +104,7 @@ rows:
 [MeshHTTPRoute](/mesh/policies/meshhttproute/) and the L7 parts of `MeshTimeout` and
 `MeshRetry` reach this destination.
 
-There is no `tls` protocol value here. Where the sidecar should originate TLS, set
+There is no `tls` protocol value here. Where the zone egress should originate TLS, set
 `protocol` to what the application speaks and turn on `spec.tls`; see [Originating TLS](#originating-tls).
 
 ## Endpoints
@@ -117,8 +130,9 @@ An address that is neither an IP nor a hostname is rejected with
 
 ## Originating TLS
 
-`spec.tls.enabled` makes the sidecar originate TLS to the endpoints, which is what lets an
-application speak plaintext to a destination that requires TLS.
+`spec.tls.enabled` makes the zone egress originate TLS to the endpoints, which is what lets an
+application speak plaintext to a destination that requires TLS. The client's sidecar sends the
+request to the egress over mesh mTLS.
 
 {% table %}
 columns:
@@ -134,7 +148,7 @@ rows:
   - field: "`verification.mode`"
     value: "`Secured`, the default, verifies both the CA and the SAN. `SkipSAN`, `SkipCA` and `SkipAll` each drop part or all of that."
   - field: "`verification.serverName`"
-    value: "Overrides the SNI the sidecar sends. Must be a valid DNS name."
+    value: "Overrides the SNI the egress sends. Must be a valid DNS name. Defaults to the first endpoint's address when it is a hostname."
   - field: "`verification.subjectAltNames`"
     value: "Names to verify in the certificate, each `Exact` or `Prefix`."
   - field: "`verification.caCert`"
@@ -146,13 +160,13 @@ rows:
 Defining `clientCert` without `clientKey` is rejected with
 `must be defined when clientCert is defined`, and the reverse likewise.
 
-The three data source fields accept `type: Secret` or `type: InsecureInline` only (not `File`
-or `EnvVar`), so the material is held by the control plane rather than read from the sidecar's
-filesystem.
+The three data source fields accept `type: Secret` or `type: InsecureInline` only. `File` and
+`EnvVar` are rejected because they would make the control plane read its own filesystem and
+environment. This applies even when `spec.extension` is set.
 
 {:.warning}
 > `verification.mode` is the field to be deliberate about. `SkipAll` and `SkipCA` mean the
-> sidecar will accept any certificate the endpoint presents, which removes the guarantee that
+> egress will accept any certificate the endpoint presents, which removes the guarantee that
 > TLS was there to provide. `SkipSAN` still checks that the certificate chains to a trusted CA.
 
 ## Status

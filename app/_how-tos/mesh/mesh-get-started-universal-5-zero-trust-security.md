@@ -57,7 +57,9 @@ proxies have no identity, serve plaintext, and neither `MeshTLS` nor `MeshTraffi
 applies to them.
 
 ```sh
-cat <<'EOF' | kongctl create mesh -f - --control-plane-url "$KONG_MESH_CP"
+cat <<'EOF' | kongctl create mesh -f - \
+  --control-plane-url "$KONG_MESH_CP" \
+  --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
 type: MeshIdentity
 mesh: default
 name: demo-identity
@@ -83,10 +85,17 @@ CA under `bundled.ca`.
 Setting `trustDomain` explicitly keeps the SPIFFE IDs predictable. Left out, it renders from
 `{% raw %}{{ .Mesh }}.{{ .Zone }}.mesh.local{% endraw %}`.
 
+From now on, each proxy's identity comes from its `kuma.io/workload` label, so the control plane
+accepts only dataplane tokens bound to that workload. The tokens from steps 3 and 4 were issued
+with `--workload`, so `kv` and `demo-app` keep reconnecting. A proxy with a token bound only by
+`--name` would be rejected the next time it connected.
+
 Check it initialized:
 
 ```sh
-kongctl get mesh meshidentities demo-identity -o yaml --control-plane-url "$KONG_MESH_CP"
+kongctl get mesh meshidentities demo-identity -o yaml \
+  --control-plane-url "$KONG_MESH_CP" \
+  --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
 ```
 
 `status.conditions` should report `Provider`, `MeshTrustCreated` and `Ready` as true, and
@@ -94,7 +103,9 @@ kongctl get mesh meshidentities demo-identity -o yaml --control-plane-url "$KONG
 bundle was created alongside it:
 
 ```sh
-kongctl get mesh meshtrusts --control-plane-url "$KONG_MESH_CP"
+kongctl get mesh meshtrusts \
+  --control-plane-url "$KONG_MESH_CP" \
+  --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
 ```
 
 ## Confirm that traffic is denied
@@ -102,7 +113,7 @@ kongctl get mesh meshtrusts --control-plane-url "$KONG_MESH_CP"
 Try the demo application again:
 
 ```sh
-curl http://127.0.0.1:25050/api/v1/items/hello
+curl -XPOST http://127.0.0.1:25050/api/counter
 ```
 
 It fails. Two things changed at once:
@@ -119,7 +130,9 @@ That is zero trust arriving: nothing is permitted until you say so.
 A permission names the caller by the identity it presents, not by a tag it sets:
 
 ```sh
-cat <<'EOF' | kongctl create mesh -f - --control-plane-url "$KONG_MESH_CP"
+cat <<'EOF' | kongctl create mesh -f - \
+  --control-plane-url "$KONG_MESH_CP" \
+  --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
 type: MeshTrafficPermission
 mesh: default
 name: allow-demo-app-to-kv
@@ -150,7 +163,9 @@ defaults to `/workload/{workload}`, so `demo-app` becomes
 ## Inspect the applied policy
 
 ```sh
-kongctl get mesh inspect dataplane kv --control-plane-url "$KONG_MESH_CP"
+kongctl get mesh inspect dataplane kv \
+  --control-plane-url "$KONG_MESH_CP" \
+  --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
 ```
 
 ```
@@ -164,7 +179,8 @@ applied. And from the other direction, the proxies a policy matches:
 
 ```sh
 kongctl get mesh inspect meshtrafficpermission allow-demo-app-to-kv \
-  --control-plane-url "$KONG_MESH_CP"
+  --control-plane-url "$KONG_MESH_CP" \
+  --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
 ```
 
 To let traffic from outside the mesh reach the demo application, see
@@ -176,13 +192,13 @@ Send the request from inside the demo application's container, so the applicatio
 key/value store through its sidecar:
 
 ```sh
-docker exec kong-mesh-demo-app curl -s http://127.0.0.1:5050/api/v1/items/hello
+docker exec kong-mesh-demo-app curl -s -XPOST http://127.0.0.1:5050/api/counter
 ```
 
-The response returns the `hello` item you stored when you added the demo application, with the
-value `mesh`. The application reached `kv` over mTLS, and the `kv` proxy admitted it because
-`demo-app`'s SPIFFE ID is allowed.
+The response returns the incremented counter and the `local-demo-zone` zone name, for example
+`{"counter":2,"zone":"local-demo-zone"}`. The application reached `kv` over mTLS, and the `kv`
+proxy admitted it because `demo-app`'s SPIFFE ID is allowed.
 
-The same request from your host, `curl http://127.0.0.1:25050/api/v1/items/hello`, still fails:
+The same request from your host, `curl -XPOST http://127.0.0.1:25050/api/counter`, still fails:
 `curl` presents no mesh identity, and the inbound is `Strict`. Traffic between the two workloads
 is encrypted and authorized; traffic from outside isn't admitted at all.

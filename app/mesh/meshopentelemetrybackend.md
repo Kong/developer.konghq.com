@@ -146,7 +146,7 @@ rows:
   - field: "`endpoint.path`"
     value: "A base path prefix for HTTP endpoints, to which the control plane appends `/v1/traces`, `/v1/metrics` or `/v1/logs`. Accepted only with `protocol: http`."
   - field: "`protocol`"
-    value: "`grpc`, the default, or `http`."
+    value: "`grpc`, the default, or `http`. With `protocol: http` and `endpoint.port: 443`, `kuma-dp` exports over HTTPS automatically."
   - field: "`env`"
     value: "How OpenTelemetry environment variables on the sidecar combine with the other fields in this table. See [Combine backend fields with environment variables](#combine-backend-fields-with-environment-variables)."
 {% endtable %}
@@ -259,22 +259,26 @@ rows:
   - field: "`overrideKinds`"
     meaning: "The OTLP fields where a per-signal variable overrode the shared one."
   - field: "`missingFields`"
-    meaning: "Fields the merge could not produce."
+    meaning: "Required fields that the environment variables didn't supply. Set only with `env.mode: Required`."
   - field: "`blockedReasons`"
     meaning: "`EnvDisabledByPolicy`, `RequiredEnvMissing`, `SignalOverridesDisallowed` or `MultipleBackendsForSignal`."
 {% endtable %}
 
-A signal reaches `ready` once the merge produces an `endpoint`; the remaining fields fall back to
-OpenTelemetry SDK defaults.
+The state comes from `blockedReasons` and `missingFields` only, not from whether a collector
+answers. A signal is `ready` when it has no hard blocked reason and no missing fields, even if
+nothing listens at the resolved endpoint. Fields that neither this resource nor the
+environment set fall back to OpenTelemetry SDK defaults.
 
 The blocked reasons divide in two. `EnvDisabledByPolicy` and `SignalOverridesDisallowed` are
 soft: the control plane ignored some environment input and export still works.
 `RequiredEnvMissing` and `MultipleBackendsForSignal` are hard: they stop export and move the
 state out of `ready`.
 
-A `state: missing` means a policy asked for the signal and the merge produced no endpoint. A
-`backendRef` whose labels match no backend is the common cause, followed by an empty spec on a
-proxy where `HOST_IP` resolves to no collector.
+`state: missing` appears only with `env.mode: Required`, when the environment variables don't
+supply the required fields (`RequiredEnvMissing`). A `backendRef` whose labels match no backend
+produces no entry for that backend in `status.openTelemetry` at all, so check the
+[`ReferencedByPolicies` condition](#check-that-the-backend-is-referenced) and the policy's
+labels instead.
 
 ## Schema
 

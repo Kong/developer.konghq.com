@@ -126,7 +126,13 @@ receives. Read the trust domain from the caller's certificate.
 [MeshTrust](/mesh/policies/meshtrust/) publishes that domain and its CA certificates so peers
 can verify the identity. Trusting an identity doesn't grant access.
 
-For zone egress destinations, use the [SNI matcher](#authorize-zone-proxy-traffic).
+With the default MeshIdentity template, the trust domain is `<mesh>.<zone>.mesh.local`, so each
+zone has its own. To allow callers from several zones, add a `spiffeID` match for each zone's
+trust domain. For more information, see
+[MeshIdentity in multi-zone meshes](/mesh/policies/meshidentity/#multi-zone-meshes).
+
+To control which external destinations callers reach through zone egress, use the
+[SNI matcher](#authorize-zone-proxy-traffic).
 
 ## Overlapping permissions
 
@@ -305,17 +311,44 @@ spec:
 
 ### Authorize zone proxy traffic
 
-`MeshTrafficPermission` applies to a mesh-scoped zone proxy like any other `Dataplane`. Select
-the proxy role and zone with `targetRef.labels`, and the listener with `targetRef.sectionName`.
+`MeshTrafficPermission` applies to the zone egress listeners of a mesh-scoped zone proxy. It has
+no effect on zone ingress listeners, which pass TLS through without terminating it. Select the
+proxy role and zone with `targetRef.labels`, and the listener with `targetRef.sectionName`.
 
 `sectionName` matches the listener's `name` in `Dataplane.networking.listeners[]`. A listener
-without a `name` uses its port number, so a Helm install with default ports uses `10001` for
-zone ingress and `10002` for zone egress. Read the listener names instead of assuming the
-defaults:
+without a `name` uses its port number, so a Helm install with default ports uses `10002` for
+zone egress. Read the listener names instead of assuming the defaults:
 
 ```sh
 kubectl get dataplanes.kuma.io ZONE_PROXY_DATAPLANE -n kong-mesh-system -o jsonpath='{.spec.networking.listeners}'
 ```
+
+Zone egress is default-deny. When the zone proxy has a workload identity and no
+`MeshTrafficPermission` selects its egress listener, every connection through zone egress is
+denied. Zone egress terminates the caller's mTLS connection, so `spiffeID` matchers identify the
+caller there, as they do on an inbound. The following example lets every workload in the trust
+domain use zone egress:
+
+{% policy_yaml namespace=kong-mesh-system %}
+```yaml
+type: MeshTrafficPermission
+name: allow-mesh-through-zone-egress
+mesh: default
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      kuma.io/listener-zoneegress: enabled
+      kuma.io/zone: zone-1
+    sectionName: "10002"
+  rules:
+    - default:
+        allow:
+          - spiffeID:
+              type: Prefix
+              value: spiffe://default.default.mesh.local
+```
+{% endpolicy_yaml %}
 
 On zone egress, `sni` matches the destination name in the TLS handshake. It identifies the
 requested destination, not the caller. It accepts only `type: Exact`, and the value must be a
@@ -349,7 +382,8 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-This `deny` is an exception to applicable `allow` entries. It doesn't allow anything by itself.
+This `deny` is an exception to applicable `allow` entries, such as the one in
+`allow-mesh-through-zone-egress`. It doesn't allow anything by itself.
 
 ## Validating authorization
 

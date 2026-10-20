@@ -1,6 +1,6 @@
 title: 'Give a subset of workloads their own identity'
 
-description: 'A narrower selector wins over a mesh-wide one, so these proxies are issued from this CA instead. Make sure peers trust this CA before applying.'
+description: 'A narrower selector wins over a mesh-wide one, so these proxies are issued from this CA instead. Make sure peers trust this CA before applying. A self-signed root CA also needs insecureAllowSelfSigned: true.'
 
 weight: 600
 

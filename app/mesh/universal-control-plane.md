@@ -79,14 +79,19 @@ store:
     host: postgres.internal
     port: 5432
     user: kuma
-    password: ${POSTGRES_PASSWORD}
     dbName: kuma
     tls:
       mode: verifyCa
+      caPath: /etc/kuma/postgres-ca.pem
 ```
 
+`verifyCa` and `verifyFull` need `caPath`; without it, startup fails with `CAPath cannot be
+empty`.
+
 Every field has a `KUMA_STORE_POSTGRES_*` equivalent: `KUMA_STORE_POSTGRES_HOST`,
-`_PORT`, `_USER`, `_PASSWORD`, `_DB_NAME`, which is usually how the password is supplied.
+`_PORT`, `_USER`, `_PASSWORD`, `_DB_NAME`. Supply the password with
+`KUMA_STORE_POSTGRES_PASSWORD`: the config file doesn't expand environment variables, so a
+value like `${POSTGRES_PASSWORD}` is used literally.
 
 ## A single zone
 
@@ -105,11 +110,17 @@ store:
 ```
 
 ```sh
+kuma-cp migrate up --config-file kuma-cp.yaml
 kuma-cp run --config-file kuma-cp.yaml
 ```
 
+Run `kuma-cp migrate up` against a new or upgraded PostgreSQL database before starting the
+control plane. Otherwise it refuses to start with `database is not migrated`.
+
 The control plane exposes the API on 5681 and the data plane server on 5678. Proxies connect to
-the second; `kongctl` and the GUI talk to the first.
+the second; `kongctl` and the GUI talk to the first. The API enforces RBAC, and only requests
+from the control plane host itself are treated as admin: from anywhere else, pass a user token
+with `kongctl`'s `--control-plane-token`.
 
 ## Joining a zone to a global control plane
 
@@ -165,7 +176,7 @@ On Universal that means every proxy (including the zone proxies that carry cross
 presents a **dataplane token**:
 
 ```sh
-kongctl create mesh dataplane-token --name backend-01 --valid-for 24h > /etc/kuma/token
+kongctl create mesh dataplane-token --name backend-01 --workload backend --valid-for 24h > /etc/kuma/token
 ```
 
 Zone tokens are no longer accepted by the data plane server. If you previously relied on

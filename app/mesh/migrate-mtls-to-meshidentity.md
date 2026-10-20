@@ -292,13 +292,13 @@ rows:
     after: "`Bundled` with `ca`"
     migration: "Reference the existing certificate and private-key Secrets where possible."
   - before: "`acmpca`"
-    after: "`ACMPCA`"
+    after: "`Extension` with `extension.name: acmpca`"
     migration: "Move the backend settings to the matching enterprise provider."
   - before: "`certmanager`"
-    after: "`CertManager`"
+    after: "`Extension` with `extension.name: certmanager` (Kubernetes only)"
     migration: "Move the issuer settings to the matching enterprise provider."
   - before: "`vault`"
-    after: "`Vault`"
+    after: "`Extension` with `extension.name: vault`"
     migration: "Move the Vault settings to the matching enterprise provider."
 {% endtable %}
 
@@ -411,8 +411,10 @@ spec:
 ```
 
 Set `insecureAllowSelfSigned: true` only when the supplied certificate is self-signed and you
-have accepted that trust model. The certificate and private key must exist before the identity
-is created.
+have accepted that trust model. Without it, a self-signed CA fails with `Provider=False`. The
+certificate and private key must exist before the identity is created. The CA certificate must
+also have the `CA:TRUE` basic constraint and the `keyCertSign` key usage, and must not have the
+`keyAgreement` key usage.
 
 ## Validate the canary
 
@@ -430,9 +432,12 @@ Do not expand the selector until all of these checks pass:
 1. Traffic succeeds in both directions between the canary and a workload still using the legacy
    mesh identity.
 
-In a multi-zone deployment, perform the trust and mixed-identity traffic checks across zone
-boundaries too. The migration is not ready to expand until every zone has received the new
-`MeshTrust`.
+In a multi-zone deployment, each zone generates its own `MeshTrust`, and it isn't distributed
+to other zones. Each zone's generated `MeshTrust` syncs to the global control plane. Create a
+copy of each one on the global control plane, with the same `trustDomain` and `caBundles`, so
+that every zone receives it. Then perform the trust and mixed-identity traffic checks across zone
+boundaries too. The migration is not ready to expand until every zone trusts the other zones'
+`MeshTrust` CAs.
 
 ## Expand the identity to the whole mesh
 
@@ -479,7 +484,8 @@ the readiness checker before the first 3.x zone upgrade.
 ## Completion criteria
 
 - Every workload is selected by an issuing `MeshIdentity`.
-- Every issuing identity is ready and its required `MeshTrust` is available in every zone.
+- Every issuing identity is ready, and every zone has a `MeshTrust` for each zone's trust domain
+  and CA.
 - `MeshTrafficPermission` rules authorize the intended SPIFFE IDs.
 - `MeshTLS` preserves any required permissive behavior.
 - `MeshExternalService` clients use working mesh-scoped zone egress, with identity, trust and

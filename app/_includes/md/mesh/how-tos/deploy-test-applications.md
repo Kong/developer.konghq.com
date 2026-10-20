@@ -1,5 +1,8 @@
 The namespace labels select the mesh and enable sidecar injection. The server is a simple HTTP
 destination. The client runs `curl` and has a dedicated ServiceAccount so its identity is explicit.
+A data plane proxy only gets outbounds for the destinations it declares, so the client lists
+the `server` MeshService in its `kuma.io/reachable-backends` annotation. Without it, the client
+can't reach `server` at all, whatever the traffic permissions allow.
 
 ```sh
 cat <<'EOF' | kubectl apply -f -
@@ -65,6 +68,13 @@ spec:
     metadata:
       labels:
         app: client
+      annotations:
+        kuma.io/reachable-backends: |
+          refs:
+          - kind: MeshService
+            labels:
+              kuma.io/display-name: server
+              k8s.kuma.io/namespace: kong-mesh-demo
     spec:
       serviceAccountName: client
       containers:

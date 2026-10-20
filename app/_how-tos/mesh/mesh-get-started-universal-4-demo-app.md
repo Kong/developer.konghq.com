@@ -18,7 +18,7 @@ series:
   position: 4
 tldr:
   q: How does one Universal workload reach another?
-  a: With transparent proxying on, it dials the other workload's generated hostname and the sidecar routes it. Without it, declare an outbound with a `backendRef`.
+  a: With transparent proxying on, list the destination in the caller's `reachableBackends`, and the caller dials its generated hostname while the sidecar routes it. Without transparent proxying, declare an outbound with a `backendRef`.
 related_resources:
   - text: Deploy a Universal data plane proxy
     url: /mesh/universal-data-plane/
@@ -28,15 +28,17 @@ min_version:
   mesh: '3.0'
 ---
 
-The second workload is an application that reads and writes the key/value store. Adding it is
-the same three steps, and then the interesting part: how it finds `kv`.
+The second workload is the demo application, which reads and writes the key/value store. Adding
+it is the same steps, plus the interesting part: how it finds `kv`.
 
 ## Issue a token and start the container
 
 ```sh
 kongctl create mesh dataplane-token \
   --control-plane-url "$KONG_MESH_CP" \
+  --control-plane-token "$KONG_MESH_ADMIN_TOKEN" \
   --name demo-app \
+  --workload demo-app \
   --valid-for 24h > "$KONG_MESH_DEMO_TMP/token-demo-app"
 ```
 
@@ -49,40 +51,87 @@ docker run \
   --ip 172.18.78.3 \
   --publish 25050:5050 \
   --volume "$KONG_MESH_DEMO_TMP:/demo" \
-  --cap-add NET_ADMIN \
-  --env KV_ADDRESS=kv.svc.mesh.local:6379 \
-  kong/kuma-demo:latest
+  --env KV_URL=http://kv.svc.mesh.local:5050 \
+  --env APP_VERSION=v1 \
+  ghcr.io/kumahq/kuma-counter-demo:debian-slim
 ```
+
+`KV_URL` tells the application to reach the store at `kv.svc.mesh.local`, the hostname the
+control plane generated for the `kv` `MeshService`.
+
+## Install the sidecar binaries and the transparent proxy
+
+```sh
+docker exec kong-mesh-demo-app sh /demo/setup-sidecar.sh
+```
+
+```sh
+docker exec --privileged kong-mesh-demo-app \
+  kumactl install transparent-proxy \
+    --config-file /demo/transparent-proxy.yaml
+```
+
+## Write the demo app's Dataplane
+
+The template from [step 1](/mesh/get-started/universal/install/) declares no destinations, and a
+transparent proxy reaches only what its `Dataplane` lists in `reachableBackends`. With none
+listed, the proxy reaches nothing. So `demo-app` gets its own `Dataplane`, which names `kv`:
+
+```sh
+cat > "$KONG_MESH_DEMO_TMP/dataplane-demo-app.yaml" <<'EOF'
+type: Dataplane
+mesh: default
+name: demo-app
+labels:
+  kuma.io/workload: demo-app
+  app: demo-app
+networking:
+  address: 172.18.78.3
+  inbound:
+    - port: 5050
+      name: main
+      protocol: http
+  transparentProxying:
+    reachableBackends:
+      refs:
+        - kind: MeshService
+          labels:
+            kuma.io/display-name: kv
+EOF
+```
+
+Each ref selects destinations by `kind` and `labels`. `kuma.io/display-name` is the label the
+control plane puts on a generated `MeshService` with its name.
 
 ## Start the sidecar
 
 ```sh
-docker exec --detach kong-mesh-demo-app \
-  kuma-dp run \
+docker exec --detach kong-mesh-demo-app sh -c '
+  runuser -u kuma-dp -- kuma-dp run \
     --cp-address https://control-plane:5678 \
     --skip-verify \
-    --dataplane-file /demo/dataplane.yaml \
-    --dataplane-var name=demo-app \
-    --dataplane-var address=172.18.78.3 \
-    --dataplane-var port=5050 \
-    --dataplane-var protocol=http \
+    --dataplane-file /demo/dataplane-demo-app.yaml \
     --dataplane-token-file /demo/token-demo-app \
-    --transparent-proxy \
-    --transparent-proxy-config /demo/transparent-proxy.yaml
+    --transparent-proxy-config /demo/transparent-proxy.yaml \
+    > /demo/logs-demo-app.log 2>&1'
 ```
 
 ## Understand service discovery
 
-The application was told to reach `kv` at a hostname, not an address. Two pieces make that work,
-and both came from the previous page:
+The application was told to reach `kv` at a hostname, not an address. Three pieces make that
+work:
 
-- The control plane **generated a `MeshService`** named `kv` and allocated it a VIP and a
-  hostname.
+- The control plane **generated a `MeshService`** named `kv` on the previous page, and allocated
+  it a VIP and the `kv.svc.mesh.local` hostname.
+- The `demo-app` `Dataplane` **lists `kv` in `reachableBackends`**, so the control plane
+  configures the proxy with an outbound for it.
 - `kuma-dp` is running with **transparent proxying and the embedded DNS proxy**, so the
   application's DNS lookups resolve mesh hostnames and its outbound traffic is intercepted.
 
-Nothing in the `Dataplane` for `demo-app` mentions `kv`. That is what transparent proxying buys:
-the workload dials a name and the sidecar does the rest.
+The application code doesn't change: it dials a name and the sidecar does the rest. What
+Universal asks of you is the `reachableBackends` list. The control plane can drop that
+requirement mesh-wide with `KUMA_DEFAULTS_RESTRICT_OUTBOUND=false`, at the cost of configuring
+every proxy for every destination.
 
 ### Without transparent proxying
 
@@ -97,31 +146,40 @@ networking:
       name: main
       protocol: http
   outbound:
-    - port: 6379
+    - port: 10001
       backendRef:
         kind: MeshService
         name: kv
-        port: 6379
+        port: 5050
 ```
 
-The application then connects to `127.0.0.1:6379`. `backendRef` is required: an outbound
-without one is rejected with `backendRef: must be defined`. It takes either `name` or
-`labels`, never both.
+The application then connects to `127.0.0.1:10001`. `backendRef` is required: an outbound
+without one is rejected with `backendRef: must be defined`. It needs `name` or `labels`.
 
 ## Verify it works
 
-```sh
-curl -XPOST http://127.0.0.1:25050/api/v1/items \
-  --header 'Content-Type: application/json' \
-  --data '{"key":"hello","value":"mesh"}'
+Increment the counter through the published port:
 
-curl http://127.0.0.1:25050/api/v1/items/hello
+```sh
+curl -XPOST http://127.0.0.1:25050/api/counter
 ```
+
+The response looks like this:
+
+```json
+{"counter":1,"zone":"local-demo-zone"}
+```
+{:.no-copy-code}
+
+The application stored the counter in `kv` and read back the zone name you set on the previous
+page. You can also open <http://127.0.0.1:25050> in a browser and increment the counter there.
 
 Both workloads are now in the mesh:
 
 ```sh
-kongctl get mesh inspect dataplanes --control-plane-url "$KONG_MESH_CP"
+kongctl get mesh inspect dataplanes \
+  --control-plane-url "$KONG_MESH_CP" \
+  --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
 ```
 
 ```
@@ -137,7 +195,9 @@ default  kv        Online
 landed where you meant it to:
 
 ```sh
-kongctl get mesh inspect dataplane demo-app --control-plane-url "$KONG_MESH_CP"
+kongctl get mesh inspect dataplane demo-app \
+  --control-plane-url "$KONG_MESH_CP" \
+  --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
 ```
 
 Nothing is listed yet, because no policy targets these workloads. The next page changes that.

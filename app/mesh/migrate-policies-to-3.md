@@ -33,17 +33,20 @@ Use it alongside the [{{site.mesh_product_name}} upgrade guide](/mesh/upgrade/) 
 plane, data plane, and deployment changes outside the policy APIs.
 
 {:.warning}
-> Complete these policy changes before upgrading a zone. A policy already stored in the control
-> plane is not validated again. A resource carrying a removed field can keep working in its current
+> Complete these policy changes before upgrading any control plane. A policy already stored in
+> the control plane is not validated again. A resource carrying a removed field can keep working in its current
 > zone, then fail to sync into a zone after that zone is upgraded.
 
-The guide calls out four kinds of change:
+The guide calls out four kinds of changes:
 
 - **Rejected on apply.** The control plane returns a validation error, so the policy cannot be
   written until it is fixed. These announce themselves.
-- **Accepted and ignored.** A removed field is pruned by CRD validation on Kubernetes or
-  discarded during deserialization on Universal. The resource applies, but the setting does
-  nothing.
+- **Accepted and ignored on Kubernetes.** `kubectl apply` prunes a removed field and prints a
+  warning. The resource applies, but the setting does nothing. On Universal, which is where the
+  global control plane runs in 3.x, the API and `kumactl apply` reject the resource with
+  `<field>: unknown field` instead. A resource already stored with the field keeps loading, and
+  the field is ignored. `Mesh` and `Dataplane` have no generated schema, so removed fields on
+  them are ignored on every platform.
 - **Accepted with different behavior.** The same configuration remains valid, but routing,
   precedence, defaults, or generated proxy configuration changes.
 - **Resource removed or inert.** The old object may remain stored, but the control plane no
@@ -58,7 +61,7 @@ Follow this order so later policy rewrites build on identities and resources tha
 
 1. **Run the readiness checker, then export the current state.**
    [Create a {{site.mesh_product_name}} 3.x readiness report](/mesh/check-upgrade-readiness/) and save every `Mesh`,
-   policy, legacy policy, and observability backend from the Global and Zone control planes.
+   policy, legacy policy, and observability backend from the global and zone control planes.
    Include resources that are normally generated or managed through GitOps, not only resources
    applied by hand. Use the report to identify which sections of this guide apply.
 1. **Stage workload identity first.** Follow
@@ -75,11 +78,12 @@ Follow this order so later policy rewrites build on identities and resources tha
    Retry, timeout, access-log, and load-balancing policies can all depend on those routes.
 1. **Apply the policy-specific rewrites.** Use the [policy migration index](#policy-migration-index)
    to open only the sections relevant to resources in your deployment.
-1. **Read every changed resource back.** Confirm that Kubernetes CRD pruning or Universal
-   deserialization did not remove a field that carried the intended behavior. Pay particular
+1. **Read every changed resource back.** Confirm that Kubernetes CRD pruning did not remove a
+   field that carried the intended behavior. Pay particular
    attention to a `Dataplane` `targetRef` that comes back without `labels`.
 1. **Validate a representative traffic path.** Check identity, authorization, routing,
-   resilience, and telemetry on a non-production zone before upgrading the remaining zones. Use
+   resilience, and telemetry on the first upgraded non-production zone before upgrading the
+   remaining zones. Use
    [Validate the migrated policies](#validate-the-migrated-policies) as the final gate.
 
 ## Policy migration index
@@ -109,8 +113,8 @@ rows:
     main: "Preserve permissive mode explicitly and rewrite `from` as `rules`."
     risk: "Plaintext is unexpectedly allowed or rejected."
   - policy: "[MeshPassthrough](#meshpassthrough)"
-    main: "Replace `Mesh` settings, review domain and port scope, and resolve filter-chain collisions."
-    risk: "External traffic becomes broader or stops working."
+    main: "Allow external destinations explicitly, add a port to exact domain matches, and resolve filter-chain collisions."
+    risk: "External traffic stops working."
   - policy: "[MeshHTTPRoute](#meshhttproute)"
     main: "Rewrite selectors and backend refs; add intentional catch-all behavior."
     risk: "Requests return `404`, `500`, or `503`."
@@ -125,7 +129,7 @@ rows:
     risk: "Endpoint ejection uses an unintended threshold."
   - policy: "[MeshHealthCheck](#meshhealthcheck)"
     main: "Move `healthyPanicThreshold` to `MeshCircuitBreaker`."
-    risk: "The removed field is silently ignored."
+    risk: "The removed field is silently pruned on Kubernetes."
   - policy: "[MeshRetry](#meshretry)"
     main: "Apply shared selector changes, lowercase header names, and replace `retriableResponseHeaders`."
     risk: "The policy is rejected on apply, or response headers don't trigger retries."
@@ -142,8 +146,8 @@ rows:
     main: "Move mesh logging into a policy and use a shared OpenTelemetry backend."
     risk: "Access logs stop without an error."
   - policy: "[MeshMetric](#meshmetric)"
-    main: "Move OpenTelemetry endpoints, replace removed TLS behavior, and migrate Kubernetes discovery from MADS."
-    risk: "Metrics stop or are exposed without TLS."
+    main: "Move OpenTelemetry endpoints, prepare scrapers for `ActiveMTLSBackend`, and migrate Kubernetes discovery from MADS."
+    risk: "Metrics stop or remote scrapes are refused."
   - policy: "[MeshTrace](#meshtrace)"
     main: "Move OpenTelemetry endpoints into `MeshOpenTelemetryBackend`."
     risk: "Trace export is skipped."
@@ -188,24 +192,38 @@ A `MeshGateway` selector also becomes `kind: Dataplane`. The built-in gateway is
 delegated gateway is an ordinary `Dataplane` as far as the control plane is concerned.
 
 {:.warning}
-> `kind: Dataplane` selects proxies by `labels` only, and a reference carrying `name` or
-> `namespace` instead is **accepted**. Those fields are not in the schema, so they are dropped,
-> and what remains is a bare `kind: Dataplane`: every proxy in the mesh. A policy written for
+> `kind: Dataplane` selects proxies by `labels` only. On Kubernetes, a reference carrying `name`
+> or `namespace` instead is accepted. Those fields are not in the schema, so they are pruned,
+> and what remains is a bare `kind: Dataplane`, which selects every proxy in the mesh. On Universal the policy
+> is rejected with `spec.targetRef.name: unknown field`. A policy written for
 > one destination silently becomes a policy that applies to all of them. Read the policy back
 > after rewriting one: a stored `targetRef` with a `kind` and no `labels` covers the whole mesh.
 
-`spec.to[].targetRef` narrows too, and the accepted kinds differ per policy. See
-[How policies select traffic](/mesh/policy-targeting/) for the full set, and the policy's own
-page for its `to`.
+### References select resources by labels
 
-### Real resources are selected by labels
+A reference to a specific resource, such as a `Dataplane` or a `MeshService`, selects it by
+`labels`. `name` and `namespace` are no longer fields of a reference. Each field accepts a
+different set of kinds:
 
-`Dataplane`, `MeshService`, `MeshExternalService`, `MeshMultiZoneService` and `MeshHTTPRoute`
-are selected by `labels` only, in `spec.targetRef`, `spec.to[].targetRef` and `backendRefs[]`
-alike. `name` and `namespace` select nothing.
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Accepted kinds
+    key: kinds
+rows:
+  - field: "`spec.targetRef`"
+    kinds: "`Mesh`, `Dataplane`"
+  - field: "`spec.to[].targetRef`"
+    kinds: "`Mesh`, `MeshService`, `MeshExternalService`, `MeshMultiZoneService`, `MeshHTTPRoute`. Each policy accepts a subset; see its own page."
+  - field: "`backendRefs[]`"
+    kinds: "`MeshService`, `MeshExternalService`, `MeshMultiZoneService`"
+{% endtable %}
 
-Unlike `kind: Dataplane`, the four real-resource kinds require `labels`, so a reference
-missing them is rejected with `labels: must be set when kind is MeshService`.
+In `spec.to[].targetRef`, every kind except `Mesh` requires `labels`, and a reference without
+them is rejected with `labels: must be set when kind is MeshService`. A `backendRef` without
+`labels` is accepted but resolves to nothing, so check it as described in
+[Check that every `backendRef` resolves](#check-that-every-backendref-resolves).
 
 ```yaml
 # 2.x
@@ -228,41 +246,33 @@ to:
 
 `sectionName` is unchanged and still names a `MeshService` port or a `Dataplane` inbound.
 
-### Two schema defaults are no longer stored
-
-A linter fix removed two declared defaults from the API. Neither changes behavior, and neither
-needs action:
-
-- Header matches on `MeshHTTPRoute` and `MeshRetry` no longer declare a default of `Exact` for
-  `type`. An omitted `type` is still matched as `Exact`.
-- Backend refs on `MeshHTTPRoute` and `MeshTCPRoute` no longer declare a default of `1` for
-  `weight`. An omitted `weight` still counts as `1` when the route is resolved.
-
-The only visible difference is that a resource omitting either field no longer comes back from
-the API with the value filled in, which matters to anything comparing a stored resource against
-what it applied.
+See [How policies select traffic](/mesh/policy-targeting/) for how each kind is matched.
 
 ### The `from` array is replaced by `rules`
 
 Inbound configuration moves from `spec.from`, which matched clients by a `targetRef`, to
-`spec.rules`, which match them by the identity they present. What happens to a policy that
-still sets `from` depends on the policy:
+`spec.rules`, which match them by the identity they present. On Universal, the API and
+`kumactl apply` reject any policy that still sets `from` with `spec.from: unknown field`. On
+Kubernetes, `kubectl apply` prunes `from`, and what happens next depends on the policy:
 
 {% table %}
 columns:
   - title: Policy
     key: policy
-  - title: A stored `from`
+  - title: "`from` alongside `to` or `rules`"
     key: stored
   - title: When `from` was the only field
     key: only
 rows:
   - policy: "`MeshTrafficPermission`"
-    stored: "Rejected."
+    stored: "Accepted. The policy applies with its `rules` only."
     only: "Rejected with `spec (): policy must define rules`."
-  - policy: "`MeshAccessLog`, `MeshCircuitBreaker`, `MeshTimeout`, `MeshFaultInjection`, `MeshRateLimit`"
+  - policy: "`MeshAccessLog`, `MeshCircuitBreaker`, `MeshTimeout`, `MeshRateLimit`"
     stored: "Accepted and dropped. The policy applies and its inbound configuration is gone."
     only: "Rejected with `spec (): at least one of 'to' or 'rules' has to be defined`."
+  - policy: "`MeshFaultInjection`, [`MeshTLS`](#meshtls)"
+    stored: "Accepted and dropped. The policy applies and its inbound configuration is gone."
+    only: "Accepted with an empty spec. The policy applies and configures nothing."
 {% endtable %}
 
 A `from` entry targeting `kind: Mesh`, meaning every client, becomes a single rule with no
@@ -295,6 +305,9 @@ rules:
           value: spiffe://default.default.mesh.local/ns/kong-mesh-demo/sa/frontend
     default: {...}
 ```
+
+`MeshCircuitBreaker` and `MeshTLS` rules have no `matches`, so a rule applies to every client of
+the selected inbound, and a per-client `from` on those policies has no 3.x equivalent.
 
 A client is now named by the identity it presents rather than by the tags it sets, so a client
 that could previously be matched by declaring a tag no longer can. `MeshRetry`,
@@ -364,11 +377,13 @@ the `Service` port.
 Set `networking.inbound[].protocol` explicitly on every Universal `Dataplane` that declared its
 protocol only through the tag.
 
-### Legacy policies no longer generate configuration
+### Legacy policy types are removed
 
-`TrafficPermission`, `TrafficRoute`, `TrafficLog`, `Timeout`, `Retry`, `FaultInjection` and
-`VirtualOutbound` are no longer consumed when generating Envoy configuration. The resources are
-still accepted and stored in this release, so nothing breaks on apply, but they have no effect.
+The legacy policy types `TrafficPermission`, `TrafficRoute`, `TrafficLog`, `TrafficTrace`,
+`HealthCheck`, `CircuitBreaker`, `Retry`, `Timeout`, `RateLimit`, `FaultInjection`,
+`VirtualOutbound` and `ProxyTemplate` are removed. The control plane no longer serves, syncs or
+accepts them, their CRDs are no longer installed, and stored resources are not migrated.
+Migrate each one to its `Mesh*` replacement and delete the old resources before upgrading.
 
 For access control this fails closed: an inbound that relied on a `TrafficPermission` grant with
 no equivalent `MeshTrafficPermission` now defaults to deny. Every mTLS inbound still gets an
@@ -419,7 +434,7 @@ either route policy. Name the destination directly.
 
 ## MeshTrafficPermission
 
-Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [the `from` to `rules` move](#the-from-array-is-replaced-by-rules) and [the legacy policies going inert](#legacy-policies-no-longer-generate-configuration).
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [the `from` to `rules` move](#the-from-array-is-replaced-by-rules) and [the legacy policy removal](#legacy-policy-types-are-removed).
 
 This migration can take traffic away. `from` matched clients by the tags they carried, and
 `rules` match them by the identity they present, so a mesh whose proxies have no workload
@@ -475,6 +490,10 @@ spec:
 `action: Allow` becomes an entry in `allow`, `action: Deny` an entry in `deny`, and
 `action: AllowWithShadowDeny` an entry in `allowWithShadowDeny`.
 
+Every entry in `allow`, `deny` and `allowWithShadowDeny` must set `spiffeID`, `sni`, or both. An
+empty match object, which 2.14 accepted, is rejected with
+`must specify at least one of 'spiffeID' or 'sni'`. Fix stored policies on 2.14 before upgrading.
+
 ### Delete the mesh-wide deny
 
 In 2.x the last matching rule won, so the documented pattern was a deny-all followed by
@@ -499,14 +518,14 @@ rows:
   - setting: "`KUMA_MESH_TRAFFIC_PERMISSION_DISABLE_CLIQUES_ALGORITHM`"
     replacement: "Nothing. Rule generation always uses the cliques-based grouping algorithm."
   - setting: "`experimental.autoReachableServices` / `KUMA_EXPERIMENTAL_AUTO_REACHABLE_SERVICES`"
-    replacement: "The control plane no longer derives a proxy's reachable services from its `MeshTrafficPermission` policies. To trim the outbound clusters a proxy receives, set reachable backends on the `Dataplane` using the `kuma.io/reachable-backends` annotation on Kubernetes. Access control itself is unaffected: traffic that no policy permits is still denied at the proxy, it is only no longer pruned from the configuration."
+    replacement: "Nothing derives reachable services any more. A data plane proxy without `reachableBackends` (the `kuma.io/reachable-backends` annotation on Kubernetes) gets no outbounds at all, unless `KUMA_DEFAULTS_RESTRICT_OUTBOUND` is set to `false`. Define reachable backends on every proxy before upgrading."
   - setting: "`defaults.createMeshRoutingResources` / `KUMA_DEFAULTS_CREATE_MESH_ROUTING_RESOURCES`"
     replacement: "Nothing. A new `Mesh` gets no default `TrafficPermission` or `TrafficRoute`."
 {% endtable %}
 
 ## MeshAccessLog
 
-Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#real-resources-are-selected-by-labels), [the `from` to `rules` move](#the-from-array-is-replaced-by-rules), [the `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404), [the Universal inbound protocol change](#universal-inbounds-must-declare-their-protocol) and [the legacy policies going inert](#legacy-policies-no-longer-generate-configuration).
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#references-select-resources-by-labels), [the `from` to `rules` move](#the-from-array-is-replaced-by-rules), [the `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404), [the Universal inbound protocol change](#universal-inbounds-must-declare-their-protocol) and [the legacy policy removal](#legacy-policy-types-are-removed).
 
 ### Point OpenTelemetry backends at a MeshOpenTelemetryBackend
 
@@ -553,7 +572,7 @@ error. Express the same backends as a `MeshAccessLog` targeting `kind: Mesh`.
 
 ## MeshCircuitBreaker
 
-Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#real-resources-are-selected-by-labels) and [the `from` to `rules` move](#the-from-array-is-replaced-by-rules).
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#references-select-resources-by-labels) and [the `from` to `rules` move](#the-from-array-is-replaced-by-rules).
 
 ### Bring `healthyPanicThreshold` over from MeshHealthCheck
 
@@ -562,9 +581,10 @@ The field was removed from `MeshHealthCheck.to[].default` and now lives at
 describe the health of the same endpoints, so the setting belongs with the one that ejects them.
 
 {:.warning}
-> An un-migrated `healthyPanicThreshold` is dropped, not rejected. The `MeshHealthCheck`
-> carrying one still applies successfully, and the affected cluster falls back to Envoy's
-> default panic threshold of 50%.
+> On Kubernetes, an un-migrated `healthyPanicThreshold` is pruned, not rejected. The
+> `MeshHealthCheck` carrying one still applies successfully, and the affected cluster falls back
+> to Envoy's default panic threshold of 50%. On Universal the policy is rejected with an
+> `unknown field` error for `healthyPanicThreshold`.
 
 ```yaml
 # 2.x, on MeshHealthCheck
@@ -608,7 +628,7 @@ Circuit breaking applies to a whole destination rather than to individual routes
 
 ## MeshHTTPRoute
 
-Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#real-resources-are-selected-by-labels), [the two dropped schema defaults](#two-schema-defaults-are-no-longer-stored), [the `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404), [MeshServiceSubset backend refs](#meshservicesubset-is-no-longer-a-backendref-kind) and [naming a destination rather than the mesh](#a-route-names-a-destination-not-the-mesh).
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#references-select-resources-by-labels), [the `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404), [MeshServiceSubset backend refs](#meshservicesubset-is-no-longer-a-backendref-kind) and [naming a destination rather than the mesh](#a-route-names-a-destination-not-the-mesh).
 
 The `404` for an unmatched request is the change to plan for, and it is covered under
 [A request matching no MeshHTTPRoute rule gets a 404](#a-request-matching-no-meshhttproute-rule-gets-a-404).
@@ -631,12 +651,12 @@ A rule whose `backendRefs` all have weight `0` answers `503`, and a rule carryin
 ### Remove fields that are present in the schema but unimplemented
 
 `to[].hostnames` and `urlRewrite.hostToBackendHostname` remain present in the schema but are not
-implemented. Remove either field before migrating; setting one is rejected with
-`must not be defined`.
+implemented. Remove either field before migrating: setting `hostnames` is rejected with
+`must not be defined`, and `hostToBackendHostname: true` with `must not be set`.
 
 ## MeshTCPRoute
 
-Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#real-resources-are-selected-by-labels), [the two dropped schema defaults](#two-schema-defaults-are-no-longer-stored), [MeshServiceSubset backend refs](#meshservicesubset-is-no-longer-a-backendref-kind), [naming a destination rather than the mesh](#a-route-names-a-destination-not-the-mesh) and [the legacy policies going inert](#legacy-policies-no-longer-generate-configuration).
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#references-select-resources-by-labels), [MeshServiceSubset backend refs](#meshservicesubset-is-no-longer-a-backendref-kind), [naming a destination rather than the mesh](#a-route-names-a-destination-not-the-mesh) and [the legacy policy removal](#legacy-policy-types-are-removed).
 
 ### `backendRefs` is now required
 
@@ -673,14 +693,13 @@ Create a `MeshIdentity` for every mesh that had mTLS through `Mesh.mtls`, before
 
 ### Stage changes to the trust domain and workload path
 
-The API accepts changes to `spiffeID.trustDomain` and `spiffeID.path`, but existing
-certificates, peer trust, and permissions can still depend on the old values. Treat a
-template change as an identity migration, not an ordinary text edit.
+`spiffeID.trustDomain` and `spiffeID.path` are immutable: an update that changes either is
+rejected with `is immutable, cannot be changed from ...`. Treat a new trust domain or path as an
+identity migration, not an ordinary text edit.
 
-The default trust-domain template includes the zone name. Changing that name changes
-the rendered domain, and the control plane updates the generated
-`MeshTrust.spec.trustDomain`. `MeshIdentity` status contains conditions, not a pinned
-trust domain. Read the workload certificate's SPIFFE URI to verify its actual identity.
+The control plane renders the trust domain once and records it in `status.trustDomain`, so a
+template that includes the zone name does not change when the zone is renamed. Read the
+workload certificate's SPIFFE URI to verify its actual identity.
 
 For a staged transition, create a second `MeshIdentity` under a different name, publish
 the required trust, and allow both old and new caller identities in destination
@@ -708,7 +727,7 @@ dataplane tags.
 
 ## MeshLoadBalancingStrategy
 
-Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#real-resources-are-selected-by-labels) and [the `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404).
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#references-select-resources-by-labels) and [the `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404).
 
 ### Move hash policies out of the load balancer
 
@@ -716,8 +735,9 @@ Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kind
 `to[].default.hashPolicies` is the only place for them.
 
 {:.warning}
-> The nested field is dropped, not rejected. A policy still setting it is accepted, and reading
-> it back shows an empty `ringHash: {}`. The algorithm stays as configured but has nothing left
+> On Kubernetes the nested field is pruned, not rejected. A policy still setting it is accepted,
+> and reading it back shows an empty `ringHash: {}`. On Universal the policy is rejected with an
+> `unknown field` error for `hashPolicies`. The algorithm stays as configured but has nothing left
 > to hash, so requests that were pinned to an endpoint stop being pinned and spread across the
 > destination instead.
 
@@ -768,7 +788,7 @@ connections between zones, and no restriction on the top-level `targetRef` becau
 
 ## MeshRetry
 
-Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#real-resources-are-selected-by-labels), [the two dropped schema defaults](#two-schema-defaults-are-no-longer-stored), [the `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404) and [the legacy policies going inert](#legacy-policies-no-longer-generate-configuration).
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [labels-only selection](#references-select-resources-by-labels), [the `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404) and [the legacy policy removal](#legacy-policy-types-are-removed).
 
 ### Lower-case every header name
 
@@ -776,6 +796,12 @@ Header names carry a lower-case-only pattern. A 2.x policy naming `Retry-After` 
 `rateLimitedBackOff.resetHeaders` is rejected with
 `resetHeaders[0].name in body should match '^[a-z0-9!#$%&'*+\-.^_\x60|~]+$'`. Write `retry-after`. HTTP
 header names are case insensitive on the wire, so the matching is unaffected.
+
+### Add a MeshRetry to new meshes that need retries
+
+A new `Mesh` no longer comes with the default `mesh-retry-all-<mesh>` policy, so it does not
+retry requests until you apply a `MeshRetry`. Existing meshes keep the default policies they
+already have.
 
 ### Don't rely on `retriableResponseHeaders`
 
@@ -850,16 +876,21 @@ The export path change under
 [OpenTelemetry backends now always export through kuma-dp](#opentelemetry-backends-now-always-export-through-kuma-dp)
 applies here too.
 
-### Replace a Prometheus TLS mode of `ActiveMTLSBackend`
+### Prepare scrapers for `ActiveMTLSBackend`
+
+`prometheus.tls.mode: ActiveMTLSBackend` now secures the metrics endpoint with the workload
+identity of the data plane proxy. A remote scraper must present a client certificate with a
+SPIFFE ID that chains to a trust bundle the mesh trusts, such as a `MeshTrust` bundle. Scrapes
+from the proxy's own address or from loopback stay plaintext over `http`. A proxy without a
+workload identity accepts only these local scrapes.
 
 {:.warning}
-> `prometheus.tls.mode: ActiveMTLSBackend` is still accepted by the schema and no longer does
-> anything. The sidecar applies TLS to its metrics endpoint only when the mode is `ProvidedTLS`
-> and the certificate paths are set, so a policy carrying `ActiveMTLSBackend` applies
-> successfully and serves metrics in plaintext. Nothing reports it.
+> In 2.x this mode produced a plaintext endpoint. After the upgrade, a remote scraper without a
+> trusted client certificate is refused, so its metrics stop.
 
-The mode took its certificates from the mesh CA backend, which 3.x removes. Supply a certificate
-and key to the sidecar and switch to `ProvidedTLS`:
+Before upgrading, give each remote scraper such a certificate, or change the mode. `Disabled`
+keeps a plaintext endpoint, and `ProvidedTLS` serves TLS with a certificate and key you supply
+to the sidecar:
 
 ```yaml
 backends:
@@ -870,8 +901,8 @@ backends:
         mode: ProvidedTLS
 ```
 
-The paths go to the sidecar as `KUMA_DATAPLANE_RUNTIME_METRICS_CERT_PATH` and
-`KUMA_DATAPLANE_RUNTIME_METRICS_KEY_PATH`.
+With `ProvidedTLS`, the paths go to the sidecar as `KUMA_DATAPLANE_RUNTIME_METRICS_CERT_PATH`
+and `KUMA_DATAPLANE_RUNTIME_METRICS_KEY_PATH`.
 
 ### Move off MADS on Kubernetes
 
@@ -941,14 +972,15 @@ compilation errors after applying; resource acceptance alone does not prove the 
 
 `spec.targetRef.kind` accepts `Mesh` and `Dataplane` only. `MeshService` is rejected with
 `in body should be one of [Mesh Dataplane]`, in the CRD enum as well as in the control plane, so
-a policy keeping it fails to sync from a Global control plane into an upgraded Zone.
+a policy keeping it fails to sync from a global control plane into an upgraded Zone.
 
 {:.warning}
-> `spec.targetRef.name`, `namespace` and `mesh` are removed, and are **pruned rather than
-> rejected**, by the API server on the next write on Kubernetes, and on load on Universal. A
-> `MeshOPA` that used `name` to scope itself to one service therefore widens to every proxy
-> matching `kind`, and its rego starts evaluating requests it never saw before. Nothing reports
-> it.
+> `spec.targetRef.name`, `namespace` and `mesh` are removed. On Kubernetes they are **pruned
+> rather than rejected** by the API server on the next write, and a policy already stored with
+> them ignores them on either platform. A `MeshOPA` that used `name` to scope itself to one service therefore widens to every
+> proxy matching `kind`, and its rego starts evaluating requests it never saw before. Nothing
+> reports it. On Universal, a write that still sets them is rejected with
+> `spec.targetRef.name: unknown field`.
 
 ```yaml
 # 2.x
@@ -976,55 +1008,67 @@ the old resources before upgrading.
 The OPA integration has also used the same dynamic configuration mechanism as DNS and
 `MeshMetric` since 2.13, which only ever worked with `MeshOPA`.
 
+`kuma-dp` no longer loads an OPA agent configuration from a file. The `--opa-config-path` flag
+and the `KMESH_OPA_CONFIG_PATH` and `KMESH_OPA_EXPERIMENTAL_USE_DYNAMIC_CONFIG` environment
+variables are removed, and `kuma-dp` fails to start if the flag is still set. Move the file's
+contents into `spec.default.agentConfig` on a `MeshOPA` before upgrading.
+
 ## MeshPassthrough
 
 Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed).
 
-### Replace a Mesh that disabled passthrough
+### Allow external destinations explicitly
 
 `Mesh.spec.networking.outbound.passthrough` is removed. A `Mesh` still setting it applies
 successfully and the field is ignored.
 
 {:.warning}
-> After the upgrade the control plane behaves as if `passthrough` was `true`, its previous
-> default. A `Mesh` that set it to `false` therefore stops blocking traffic out of the mesh, and
-> nothing reports the change.
+> A data plane proxy using a transparent proxy that no `MeshPassthrough` selects now drops
+> traffic to destinations outside the mesh, as if `passthroughMode: None` applied to it. A mesh
+> that relied on the old default of `passthrough: true` loses passthrough, and nothing reports
+> the change. A mesh that set it to `false` keeps blocking.
 
-Replace it before upgrading with a policy that says the same thing:
+Before upgrading, allow the external destinations your workloads use with a
+`MeshExternalService` or a `MeshPassthrough` (`passthroughMode: Matched` with `appendMatch`, or
+`passthroughMode: All`). Setting `KUMA_DEFAULTS_RESTRICT_OUTBOUND` to `false` on the control
+plane restores the previous allow-all behavior.
 
 ```yaml
 type: MeshPassthrough
 mesh: default
-name: no-passthrough
+name: allow-external
 spec:
   targetRef:
     kind: Mesh
   default:
-    passthroughMode: None
+    passthroughMode: Matched
+    appendMatch:
+      - type: Domain
+        value: api.example.com
+        port: 443
+        protocol: tls
 ```
 
-### Review the address and port scope of domain matches
+### Add a port to every exact domain match
 
-Both exact and wildcard `Domain` matches use the original destination address. The
-sidecar checks TLS SNI or HTTP authority and forwards to the address the application
-dialed. It does not independently resolve an exact domain and pin traffic to that address.
+A `Domain` match that is not a wildcard now requires `port`. The sidecar resolves the domain
+itself and connects to the resolved address, so the destination no longer depends on the
+address the client dialed. A match without a port is rejected with
+`port must be defined for a domain, the sidecar resolves the domain to pin the destination`.
 
-A client can dial a different address while presenting an allowed name. Use IP or CIDR
-restrictions, registered external destinations, and network controls when the address
-must be constrained. Separate allowlist entries are alternatives: adding an IP entry
-does not restrict a domain entry.
-
-Specify ports explicitly to keep allowances narrow. The following is a scope reduction,
-not a mandatory 3.x syntax conversion:
+{:.warning}
+> A policy stored before the upgrade with an exact `Domain` match and no port is not rejected,
+> but that match stops applying. When it was the only match in the policy, the sidecar rejects all
+> passthrough traffic until you add the port.
 
 ```yaml
-# All destination ports
+# 2.x
 appendMatch:
   - type: Domain
     value: api.example.com
     protocol: tls
 
-# Only port 443
+# 3.x
 appendMatch:
   - type: Domain
     value: api.example.com
@@ -1032,9 +1076,16 @@ appendMatch:
     protocol: tls
 ```
 
-Duplicate the entry to allow one domain on several explicit ports. HTTP-family wildcard
-domains require a port; TLS domain matches can omit it, which allows all destination ports.
-Test allowed and unlisted ports as well as allowed and unlisted names. See
+Duplicate the entry to allow one domain on several ports, and make sure the sidecar can resolve
+the domain: a domain it cannot resolve has no endpoint, so its traffic fails.
+
+A wildcard `Domain`, such as `*.example.com`, has no address to resolve. Its traffic still goes
+to the address the client dialed, and the match only restricts the TLS SNI or HTTP `Host`, so a
+client can dial a different address while presenting an allowed name. Use IP or CIDR
+restrictions, registered external destinations, and network controls when the address must be
+constrained. HTTP-family wildcard domains require a port; TLS wildcard domains can omit it,
+which allows all destination ports. Test allowed and unlisted ports as well as allowed and
+unlisted names. See
 [MeshPassthrough](/mesh/policies/meshpassthrough/) for matching and security boundaries.
 
 ### Resolve matches that describe the same filter chain
@@ -1158,11 +1209,11 @@ without a policy.
 `spec.from` is removed, and `spec.rules` is the only place for inbound TLS configuration.
 
 {:.warning}
-> `MeshTLS` has no check that the remaining spec configures anything, so a policy whose only
-> field was `from` is **accepted**, not rejected, unlike the other policies that lost `from`.
-> It applies with an empty spec, and reading it back shows nothing but the `targetRef`. Since an
-> inbound with no policy is `Strict`, a `from` that was there to allow plaintext silently stops
-> allowing it.
+> `MeshTLS` has no check that the remaining spec configures anything, so on Kubernetes a policy
+> whose only field was `from` is **accepted**, not rejected, unlike most other policies that lost
+> `from`. It applies with an empty spec, and reading it back shows nothing but the `targetRef`.
+> Since an inbound with no policy is `Strict`, a `from` that was there to allow plaintext
+> silently stops allowing it. On Universal the policy is rejected with `spec.from: unknown field`.
 
 ```yaml
 # 2.x
@@ -1224,19 +1275,25 @@ and the export path change under
 [OpenTelemetry backends now always export through kuma-dp](#opentelemetry-backends-now-always-export-through-kuma-dp)
 applies here too.
 
+### Move `Mesh.spec.tracing` into a policy
+
+`Mesh.spec.tracing` is removed. A `Mesh` still setting it applies successfully and the field is
+ignored, so mesh-wide tracing stops without an error. Express the same backends as a
+`MeshTrace` before upgrading.
+
 ## MeshTimeout
 
 `MeshTimeout` has no policy-specific field changes. It is still affected by
 [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed),
-[labels-only selection](#real-resources-are-selected-by-labels),
+[labels-only selection](#references-select-resources-by-labels),
 [the `from` to `rules` move](#the-from-array-is-replaced-by-rules),
 [the `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404),
 [the Universal inbound protocol change](#universal-inbounds-must-declare-their-protocol), and
-[legacy policies becoming inert](#legacy-policies-no-longer-generate-configuration).
+[the legacy policy removal](#legacy-policy-types-are-removed).
 
 ## MeshHealthCheck
 
-Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed) and [labels-only selection](#real-resources-are-selected-by-labels).
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed) and [labels-only selection](#references-select-resources-by-labels).
 
 ### Move `healthyPanicThreshold` to MeshCircuitBreaker
 
@@ -1246,7 +1303,7 @@ for where it goes and what happens if it is left behind.
 
 ## MeshFaultInjection
 
-Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [the `from` to `rules` move](#the-from-array-is-replaced-by-rules), [the Universal inbound protocol change](#universal-inbounds-must-declare-their-protocol) and [the legacy policies going inert](#legacy-policies-no-longer-generate-configuration).
+Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed), [the `from` to `rules` move](#the-from-array-is-replaced-by-rules), [the Universal inbound protocol change](#universal-inbounds-must-declare-their-protocol) and [the legacy policy removal](#legacy-policy-types-are-removed).
 
 ### Move every fault into `rules`
 
@@ -1261,6 +1318,9 @@ side:
 1. Select the receiving proxies with `kind: Dataplane` and `labels`.
 1. Move each `to[].default` into `rules[].default`.
 1. To keep a fault limited to some callers, add `rules[].matches` with their `spiffeID`.
+
+On Kubernetes, a `MeshFaultInjection` whose only field was `from` is accepted with an empty spec
+and injects nothing. See [The `from` array is replaced by `rules`](#the-from-array-is-replaced-by-rules).
 
 ## Validate the migrated policies
 
@@ -1288,8 +1348,8 @@ by checking the behavior each policy is intended to produce.
    coverage gaps and its manual checks are complete. A clean report complements the behavioral
    checks in [Validate the migrated policies](#validate-the-migrated-policies); it does not
    replace them.
-8. Upgrade a non-production zone first, repeat these checks, and then proceed with the remaining
-   zones.
+8. Upgrade the global control plane first, then a non-production zone. Repeat these checks
+   there, and then proceed with the remaining zones.
 
 The migration is complete when the stored resources match the intended 3.x configuration, the
 proxies receive valid configuration, and both the expected success and failure paths behave as

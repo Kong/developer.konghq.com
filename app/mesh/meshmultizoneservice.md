@@ -83,8 +83,12 @@ exposed across a subset of them.
 list is rejected with `in body should have at least 1 items`. Each takes a `port`, an optional
 `name`, and an `appProtocol` that defaults to `tcp`.
 
-The ports are the aggregate's own, drawn from the selected services. They have to line up with
-what those services expose for traffic to arrive.
+The ports are the aggregate's own, drawn from the selected services. Each entry is matched to a
+port of each selected `MeshService` by name, not by number: the entry's `name` (or its `port` as
+a string when `name` is unset) must equal a `MeshService` port's name or port number. A
+`MeshService` with no matching port contributes no endpoints for that entry. On Kubernetes, a
+generated `MeshService` port takes the `Service` port's name, or its number when the port is
+unnamed, so `name: http` in the example matches only services whose port is named `http`.
 
 A `MeshMultiZoneService` referenced in a route's `backendRefs` **requires a `port`** on the
 reference, unlike a `MeshService`, where it can be inferred. Omitting it is rejected with
@@ -118,10 +122,17 @@ resource name.
 
 ## Which zones receive traffic
 
-A matched `MeshService` is used only while its own `spec.state` is `Available`, which it is when
-at least one of its endpoints is healthy. That state is what the aggregate consults when
-deciding whether a zone can take traffic, so a zone whose service has no healthy endpoints drops
-out without any change here.
+A matched `MeshService` from another zone is used only while its `spec.state` is `Available`,
+which it is when at least one of its endpoints is healthy. That state is what the aggregate
+consults when deciding whether a remote zone can take traffic, so a zone whose service has no
+healthy endpoints drops out without any change here. The local zone's service is always used,
+since it only contributes endpoints that exist.
+
+Reaching another zone also requires a `MeshIdentity` in the mesh and a `MeshZoneAddress` for the
+destination zone; without them, remote services contribute no endpoints. See
+[Mesh-scoped zone proxies](/mesh/mesh-scoped-zone-proxies/#make-ingress-reachable-from-other-zones).
+A client also needs the `MeshMultiZoneService` in its `reachableBackends` (the
+`kuma.io/reachable-backends` annotation on Kubernetes), or it gets no outbound for it.
 
 How traffic is distributed across the zones that remain is
 [MeshLoadBalancingStrategy](/mesh/policies/meshloadbalancingstrategy/)'s job: locality awareness

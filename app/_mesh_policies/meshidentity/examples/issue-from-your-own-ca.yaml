@@ -1,6 +1,6 @@
 title: 'Issue from a CA you supply'
 
-description: 'Point the bundled provider at a certificate and key held as secrets, and cap the lifetime of issued leaf certificates.'
+description: 'Point the bundled provider at an intermediate CA certificate and key held as secrets, and cap the lifetime of issued leaf certificates. A self-signed root CA also needs insecureAllowSelfSigned: true.'
 
 weight: 800
 

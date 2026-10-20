@@ -82,8 +82,9 @@ What each field does:
   [Multi-zone meshes](#multi-zone-meshes).
 * `type: Bundled` keeps the CA in the control plane.
 * `autogenerate.enabled: true` creates the CA.
-* `insecureAllowSelfSigned: true` allows the generated self-signed CA. It doesn't disable
-  certificate verification: peers verify certificates against the CA published in `MeshTrust`.
+* `insecureAllowSelfSigned: true` allows the generated self-signed CA, and is required with
+  `autogenerate`. It doesn't disable certificate verification: peers verify certificates against
+  the CA published in `MeshTrust`.
 * `meshTrustCreation: Enabled` publishes the CA in a `MeshTrust`, so peers can verify the
   identities it issues.
 
@@ -93,7 +94,19 @@ To use certificates from your existing PKI, see [Use your own CA](#use-your-own-
 
 An identity created on a zone control plane covers only that zone. Neither the identity nor its
 `MeshTrust` is distributed to other zones. In a multi-zone mesh, create the identity on the
-global control plane so every zone receives it and shares one CA.
+global control plane so every zone receives the same configuration.
+
+Each zone still initializes the identity separately. With `autogenerate`, each zone generates
+its own CA and publishes it in a `MeshTrust` in that zone. With the default trust domain
+template, each zone also issues in its own trust domain. A generated `MeshTrust` syncs to the
+global control plane, but isn't sent to other zones, so by default proxies don't trust
+certificates issued in another zone.
+
+For cross-zone mTLS, read each zone's generated `MeshTrust` on the global control plane, and
+create a `MeshTrust` with the same `trustDomain` and `caBundles` on the global control plane,
+which distributes it to every zone. If a zone's CA changes, update its copy too. Also allow the
+other zones' trust domains in [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/)
+rules.
 
 {:.warning}
 > A zone with no applicable `MeshIdentity` has no workload certificates, so its proxies get no
@@ -132,7 +145,7 @@ rows:
   - type: "`Spire`"
     what: "A SPIRE agent on the node, reached over its socket. `spire.agent.timeout` limits the connection time, and defaults to 1s."
   - type: "`Extension`"
-    what: "A named extension provider, set with `extension.name` and a freeform `extension.config`."
+    what: "An enterprise CA, set with `extension.name` and an `extension.config` validated for that provider. `extension.name` accepts `acmpca`, `vault`, or `certmanager` (Kubernetes only)."
 {% endtable %}
 
 ### Use your own CA
@@ -142,9 +155,14 @@ private key, each as a secure data source. Both are required, and `ca` can't be 
 `autogenerate.enabled: true`. A `Bundled` provider with neither `autogenerate` nor `ca` is
 rejected.
 
-The following example reads the CA from the `mesh-ca-cert` and `mesh-ca-key` secrets, and
-issues leaf certificates that last 24 hours. Create both secrets before applying it. They hold
-signing credentials, not a workload's certificate and key:
+The CA certificate must have the `CA:TRUE` basic constraint and the `keyCertSign` key usage, and
+must not have the `keyAgreement` key usage. A self-signed root CA also needs
+`insecureAllowSelfSigned: true`. Otherwise, the identity reports `Provider: False` and issues
+no certificates.
+
+The following example reads an intermediate CA from the `mesh-ca-cert` and `mesh-ca-key`
+secrets, and issues leaf certificates that last 24 hours. Create both secrets before applying
+it. They hold signing credentials, not a workload's certificate and key:
 
 {% policy_yaml %}
 ```yaml
@@ -239,16 +257,15 @@ string. A template that doesn't parse is rejected on apply, with the Go template
 
 ### Change an identity without losing access
 
-Changing the trust domain or path template changes the identities workloads receive. The API
-accepts the change, but existing traffic keeps working only if certificates, peer trust, and
-authorization rules all agree during the transition.
+`spec.spiffeID.trustDomain` and `spec.spiffeID.path` are immutable. The API rejects an update
+that changes either one.
 
-The default trust-domain template includes the zone name, so renaming a zone changes the
-domain. The control plane updates the generated `MeshTrust.spec.trustDomain` to match. The
-domain isn't pinned in `MeshIdentity` status.
+The control plane renders the trust domain once, when it first initializes the identity, and
+records it in `status.trustDomain`. Later changes to template inputs, such as renaming a zone,
+don't change the domain that the identity issues in or that its `MeshTrust` publishes.
 
-To change identities safely, create a second `MeshIdentity` with a different name, so the old
-issuer and its trust material stay in place while you move workloads:
+To change identities, create a second `MeshIdentity` with a different name, so the old issuer
+and its trust material stay in place while you move workloads:
 
 1. Configure the new identity, and make sure receiving proxies trust its CA.
 1. Update destination `MeshTrafficPermission` rules to allow both the old and new caller IDs.

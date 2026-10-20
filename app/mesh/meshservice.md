@@ -25,6 +25,10 @@ related_resources:
 and which identities it presents. It is the resource a policy names as a destination, in
 `spec.to[].targetRef` and in a route's `backendRefs`.
 
+A client proxy reaches a `MeshService` only if it lists it in `reachableBackends` (the
+`kuma.io/reachable-backends` annotation on Kubernetes). A proxy without `reachableBackends` gets
+no outbounds at all.
+
 It is not a policy. There is no `targetRef` (a `MeshService` *is* the target), and on Kubernetes
 you do not write one at all.
 
