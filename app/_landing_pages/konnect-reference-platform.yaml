@@ -100,13 +100,12 @@ rows:
 
                     **Gateway and Portal authorization**
 
-                    Bookings and Customer Information use service-scoped JWT
-                    plugins with platform-owned Consumers and verification
-                    credentials. Flights and Destinations require no runtime
-                    credential. A global [Access Control Enforcement
-                    plugin](/plugins/ace/) with `match_policy: required`
-                    separately limits traffic to published Catalog operations;
-                    these APIs do not use Dev Portal application credentials.
+                    Bookings and Customer Information require API keys from
+                    approved Dev Portal application registrations. Flights and
+                    Destinations remain anonymous. Global [Access Control
+                    Enforcement](/plugins/ace/) and service-owned access guards
+                    enforce this policy. Protected services isolate synthetic
+                    customer and bookings data by application ID.
 
   - header:
       type: h2

@@ -98,18 +98,20 @@ remains service-owned and is synchronized after the Gateway change.
 
 ## Why are Bookings and Customer Information protected differently?
 
-Their generated Gateway Services enable the JWT plugin. The Platform Team owns
-the shared Consumers and asymmetric verification credentials, while each
-service team owns where JWT authentication applies. A valid token selects a
-Consumer through its `iss` claim, and Gateway supplies the authenticated
-Consumer username to the upstream service. Destinations and Flights don't
-enable an authentication plugin and remain credential-free.
+Bookings and Customer select a platform-owned Key Auth strategy in their
+Portal publications. A developer creates an application, registers for API
+access, obtains approval, and generates an API key through Dev Portal.
 
-ACE is a separate layer. It is installed globally with `match_policy:
-required`, and every Catalog API links to its control plane, so requests must
-match published OpenAPI operations. None of these publications selects a Dev
-Portal application authentication strategy; callers therefore don't need an
-application registration or API key in addition to the JWT.
+Global ACE handles application authorization and allows anonymous fallback.
+A post-function on protected Services rejects anonymous requests and forwards
+the authenticated application ID to the upstream in `X-KongAir-Account-ID`.
+Flights and Destinations do not install that protected-Service guard and
+remain anonymous. For a single Service with mixed access, apply the guard to
+the protected Routes.
+
+The application ID selects an isolated synthetic customer and bookings
+account. It is not a passenger login or the developer's Portal login.
+Application credentials stay outside Git; the account survives key rotation.
 
 ## Why not link protected APIs directly to a Gateway Service?
 

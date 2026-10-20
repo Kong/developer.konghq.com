@@ -185,16 +185,22 @@ the declarative owner.
 
 ## Authentication flow
 
-Bookings and Customer Information declare bearer authentication in their
-OpenAPI contracts and add the JWT plugin to their generated Gateway Services.
-The Platform repository owns the Consumers and RS256 verification credentials;
-the authenticated Consumer username is forwarded to the upstream service.
-Destinations and Flights have no authentication plugin and remain
-credential-free.
+Bookings and Customer Information declare an API key in `X-API-Key` in their
+OpenAPI contracts. Their publications select the stage's platform-owned Key
+Auth application strategy. Developers register applications through Dev
+Portal and obtain keys after approval.
 
-Separately, the Platform repository installs ACE globally on every control
-plane with `match_policy: required`. Because every Catalog API links to a
-control plane, ACE limits traffic to operations represented by published
-OpenAPI contracts independently from the Gateway Route layout. None of the four
-publications selects an application authentication strategy, so ACE doesn't
-add a Dev Portal application credential requirement.
+The Platform repository installs global ACE with `match_policy: required`
+and an anonymous Consumer. Service-owned post-functions run after ACE and
+reject anonymous access to protected Services. They forward ACE's application
+ID as `X-KongAir-Account-ID`, replacing supplied identity headers and removing
+the API key upstream. Flights and Destinations remain anonymous.
+
+Each registered application receives its own synthetic demo account. Customer
+data is deterministic, and every booking read or mutation is scoped to the
+same application ID. This avoids a manual application-to-passenger mapping.
+For mixed access within one Service, scope the guard to protected Routes.
+
+Test public access, invalid credentials, unapproved application registrations,
+header replacement, account isolation, and key rotation through a running
+Gateway before merging the documentation.
