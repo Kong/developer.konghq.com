@@ -234,9 +234,7 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt
 
 {% navtabs "store-certificate-key" %}
 {% navtab "{{site.konnect_short_name}} API" %}
-1. Fetch the {{site.konnect_short_name}} IDs of the control plane and of the Config Store that {{site.operator_product_name}}
-   created. The Config Store ID is published on the `KonnectConfigStore` status, so you don't have to look it up in the
-   {{site.konnect_short_name}} UI:
+1. Wait for the `KonnectGatewayControlPlane` and the `KonnectConfigStore` to be programmed:
 
    ```sh
    kubectl wait -n kong konnectgatewaycontrolplanes.konnect.konghq.com/gateway-control-plane --for=condition=Programmed --timeout=300s
