@@ -57,6 +57,10 @@ RSpec.describe Jekyll::KonnectCrd do
       expect(html).not_to have_css('div[data-test-step]')
     end
 
+    it 'does not render a data-test-cleanup attribute' do
+      expect(html).not_to have_css('div[data-deployment-topology="konnect"][data-test-cleanup]')
+    end
+
     it 'strips the section key from the emitted YAML' do
       expect(rendered).not_to include('section')
     end
@@ -94,6 +98,30 @@ RSpec.describe Jekyll::KonnectCrd do
         expect(render_liquid(template, page: markdown_page))
           .to eq(render_liquid(without_section, page: markdown_page))
       end
+    end
+  end
+
+  describe 'html output with section: cleanup' do
+    let(:template) do
+      <<~LIQUID
+        {% konnect_crd %}
+        kind: KonnectAPIAuthConfiguration
+        metadata:
+          name: konnect-api-auth
+          namespace: kong
+        section: cleanup
+        {% endkonnect_crd %}
+      LIQUID
+    end
+
+    it 'renders a data-test-cleanup wrapper' do
+      expect(html).to have_css('div[data-deployment-topology="konnect"][data-test-cleanup="block"]')
+      expect(html).not_to have_css('div[data-test-step]')
+      expect(html).not_to have_css('div[data-deployment-topology="konnect"][data-test-prereq]')
+    end
+
+    it 'strips the section key from the emitted YAML' do
+      expect(rendered).not_to include('section')
     end
   end
 
