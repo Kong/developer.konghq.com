@@ -98,6 +98,23 @@ RSpec.describe Jekyll::Validation do
         expect { rendered }.to raise_error(ArgumentError, /prereq/)
       end
     end
+
+    context 'when section is an unrecognized value' do
+      let(:template) do
+        <<~LIQUID
+          {% validation custom-command %}
+          command: kong version
+          expected:
+            return_code: 0
+          section: prereq
+          {% endvalidation %}
+        LIQUID
+      end
+
+      it 'raises ArgumentError naming the rejected value' do
+        expect { rendered }.to raise_error(ArgumentError, /prereq/)
+      end
+    end
   end
 
   context 'when command or expected is missing' do
