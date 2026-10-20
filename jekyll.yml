@@ -94,7 +94,7 @@ defaults:
       breadcrumbs:
         - "/support/"
   - scope:
-      path: "_support/security"
+      path: "_support/security/"
       type: "support"
     values:
       layout: "security_advisory"
