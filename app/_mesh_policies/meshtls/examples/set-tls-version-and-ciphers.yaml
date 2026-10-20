@@ -4,8 +4,6 @@ description: 'Restrict mesh connections to TLS 1.2 and one ECDSA cipher suite. B
 
 weight: 700
 
-namespace: kong-mesh-demo
-
 config:
   type: MeshTLS
   name: set-version-and-ciphers

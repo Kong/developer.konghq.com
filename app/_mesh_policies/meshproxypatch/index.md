@@ -139,6 +139,9 @@ Some operations have extra requirements:
 * `Add` on a cluster or listener takes no `match`. It replaces any existing resource with the
   same name.
 * `Add` on a virtual host takes a `match` with `routeConfigurationName`, but not `match.name`.
+  An outbound route configuration is named after the KRI of the destination port, in the form
+  `kri_msvc_<mesh>_<zone>_<namespace>_<service>_<port>`, where `<port>` is the port's name, or
+  its number when it has no name.
 * `AddBefore` and `AddAfter` need `match.name` to say which filter to sit next to. If that
   filter isn't present, nothing is added.
 * `Patch` on a filter needs `match.name`.

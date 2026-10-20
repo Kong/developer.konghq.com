@@ -78,6 +78,9 @@ cipher.
 Although they're set under `rules`, the mesh-wide version and cipher settings also apply to
 outbound mesh TLS connections. They don't apply to TLS connections to external services.
 
+On Kubernetes, create mesh-wide policies in the `{{site.mesh_namespace}}` namespace. A policy in
+an application namespace only affects proxies in that namespace.
+
 ## Modes
 
 `mode` accepts the following values:
@@ -109,7 +112,7 @@ A `min` higher than `max` is rejected. `TLSAuto` isn't compared, so it never cau
 
 The following example requires TLS 1.3 on both ends of mesh connections:
 
-{% policy_yaml namespace=kong-mesh-demo %}
+{% policy_yaml %}
 ```yaml
 type: MeshTLS
 mesh: default

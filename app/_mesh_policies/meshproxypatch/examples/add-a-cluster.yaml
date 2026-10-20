@@ -1,6 +1,6 @@
 title: 'Add a cluster and route to it'
 
-description: 'Add a static cluster, then add a virtual host on an existing route configuration that sends traffic to it.'
+description: 'Add a static cluster, then add a virtual host that sends traffic to it on the route configuration of an existing HTTP outbound. Outbound route configurations are named by the KRI of the destination port, so copy the exact name from the proxy config dump.'
 
 weight: 600
 
@@ -35,7 +35,7 @@ config:
         - virtualHost:
             operation: Add
             match:
-              routeConfigurationName: outbound:extra
+              routeConfigurationName: kri_msvc_default_zone-1_kong-mesh-demo_orders_http
             value: |
               name: extra
               domains:

@@ -1,6 +1,6 @@
 title: 'Allow one domain on two ports'
 
-description: 'Allow the same domain name on two explicit ports. Domain matches check SNI or HTTP authority and forward to the address the application dialed; they do not pin that address through DNS resolution.'
+description: 'Allow the same domain name on two explicit ports. The sidecar resolves the domain itself and connects on each listed port.'
 
 weight: 600
 

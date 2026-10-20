@@ -137,7 +137,8 @@ endpoint count. For more information, see
 [Envoy's outlier detection reference](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/cluster/v3/outlier_detection.proto).
 
 `outlierDetection` requires at least one detector. To turn the block off without deleting it,
-set `disabled: true`.
+set `disabled: true`. The block still needs a detector while disabled, but the detector is
+ignored.
 
 ### Detectors
 
@@ -180,7 +181,8 @@ detectors can't tell the two apart.
 If too few healthy endpoints remain, Envoy enters panic mode and sends traffic to all
 endpoints, including ejected ones, instead of failing requests. `healthyPanicThreshold` sets
 the percentage of healthy endpoints below which this happens, and defaults to 50%. Set it to
-`0` to disable panic mode.
+`0` to disable panic mode. `healthyPanicThreshold` is only applied while outlier detection is
+enabled. When it's disabled, the 50% default applies.
 
 ## Cap incoming connections
 
@@ -215,8 +217,9 @@ ports, set `targetRef.sectionName`.
 
 A narrower policy overrides only the fields it sets. For example, setting only
 `maxConnections: 100` for web-to-backend traffic keeps the broader request and retry limits.
-To turn off inherited outlier detection, set `outlierDetection.disabled: true`. Leaving the
-block out of the narrower policy doesn't remove it.
+To turn off inherited outlier detection, set `outlierDetection.disabled: true`. The block still
+needs a `detectors` entry, for example `detectors: {totalFailures: {consecutive: 5}}`, which is
+ignored while disabled. Leaving the block out of the narrower policy doesn't remove it.
 
 ## Validating the circuit breaker
 

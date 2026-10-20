@@ -57,7 +57,7 @@ What each field does:
 * `targetRef` selects which proxies log. `kind: Mesh` means every proxy in the policy's own
   namespace. If the policy is created in `{{site.mesh_namespace}}`, it applies to the whole
   zone. To log every zone, create the policy on the global control plane. For more
-  information, see [Scopes](/mesh/policy-targeting/#scopes).
+  information, see [Where a policy applies](/mesh/policy-targeting/#where-a-policy-applies).
 * `rules` describes what to do with inbound traffic at those proxies. One entry with no
   filter logs everything.
 * `backends` sets where the records go.
@@ -135,7 +135,10 @@ backends:
 ```
 
 Attribute values and the body accept the same placeholders as a log format, but attribute
-keys must be static names. If several `MeshOpenTelemetryBackend` resources match the labels,
+keys must be static names: lowercase letters and digits, separated by single `.` or `_`
+characters, starting with a letter (for example, `http.request_id`). Keys can't contain
+placeholders or start with the reserved `otel.` prefix, so the control plane rejects keys
+such as `request-id`, `Service.Version`, or `%KUMA_ZONE%`. If several `MeshOpenTelemetryBackend` resources match the labels,
 the oldest one wins.
 
 ## Record format
@@ -210,17 +213,18 @@ rows:
   - command: "`%KUMA_DESTINATION_SERVICE%`"
     description: "Name of the `service` that is the `destination` of traffic."
   - command: "`%KUMA_SOURCE_ADDRESS%`"
-    description: "Address of the `Dataplane` that is the `source` of traffic, including the port."
+    description: "Address of the logging proxy's `Dataplane`, with port `0`."
   - command: "`%KUMA_SOURCE_ADDRESS_WITHOUT_PORT%`"
-    description: "Address of the `Dataplane` that is the `source` of traffic."
+    description: "Address of the logging proxy's `Dataplane`."
   - command: "`%KUMA_TRAFFIC_DIRECTION%`"
     description: "Direction of the traffic: `INBOUND`, `OUTBOUND`, or `UNSPECIFIED`."
 {% endtable %}
 <!-- vale on -->
 
 On inbound records, `%KUMA_SOURCE_SERVICE%` is `unknown`, even when an mTLS caller has an
-identity. To record the peer certificate's SPIFFE URI, add `%DOWNSTREAM_PEER_URI_SAN%` to the
-format. To restrict which callers are logged, use a
+identity, and `%KUMA_SOURCE_ADDRESS%` and `%KUMA_SOURCE_ADDRESS_WITHOUT_PORT%` hold the
+receiving proxy's own address. To record the caller, add `%DOWNSTREAM_REMOTE_ADDRESS%` or the
+peer certificate's SPIFFE URI, `%DOWNSTREAM_PEER_URI_SAN%`, to the format. To restrict which callers are logged, use a
 [`spiffeID` match](#match-on-client-identity-or-sni).
 
 On TCP traffic, HTTP-only operators such as `%REQ(X?Y):Z%` become `-` in a plain record and

@@ -90,7 +90,7 @@ spec:
             backendRefs: [...]
 ```
 
-Each `to` entry accepts exactly one rule, and that rule needs a non-empty `backendRefs` list.
+Each `to` entry accepts at most one rule, and that rule needs a non-empty `backendRefs` list.
 
 `spec.to[]` needs at least one entry. `to[].targetRef` accepts `MeshService`,
 `MeshExternalService`, and `MeshMultiZoneService`, but not `Mesh`, so a route always names a
@@ -106,7 +106,8 @@ the following fields:
 
 * `kind`: `MeshService`, `MeshExternalService`, or `MeshMultiZoneService`.
 * `labels`: selects the destination.
-* `port`: the destination port. Required for `MeshMultiZoneService`.
+* `port`: the destination port. Required for `MeshMultiZoneService`, and for a `MeshService`
+  with more than one port. Without it, the entry doesn't resolve.
 * `weight`: the entry's share of connections, relative to the total. Defaults to 1.
 
 A reference that doesn't resolve is dropped from the list. For example, if `backend-next`

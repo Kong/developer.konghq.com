@@ -25,7 +25,10 @@ This policy doesn't cover all traffic leaving the mesh. A destination represente
 `passthroughMode: None` doesn't block it. Use `MeshExternalService` when a destination needs a
 stable mesh name, a VIP, or its own policies.
 
-Proxies that no `MeshPassthrough` selects allow passthrough to every external destination.
+Proxies that no `MeshPassthrough` selects reject traffic to unknown external destinations, as
+if `passthroughMode: None` applied. To allow every unknown destination by default instead, set
+`KUMA_DEFAULTS_RESTRICT_OUTBOUND=false` on the control plane. That setting also lets proxies
+without `reachableBackends` reach every mesh destination.
 
 The policy needs transparent proxying. A proxy without it, or one that binds its outbounds
 directly, skips the policy and gets a policy warning.
@@ -65,7 +68,7 @@ spec:
 What each field does:
 
 - `targetRef` selects the proxies the policy applies to: `Mesh`, or `Dataplane` with `labels`.
-  `kind: Mesh` means every proxy in the policy's own namespace. If the policy is created in
+  `sectionName` isn't supported. `kind: Mesh` means every proxy in the policy's own namespace. If the policy is created in
   `{{site.mesh_namespace}}`, it applies to the whole zone. To cover every zone, create the
   policy on the global control plane. For more information, see
   [Where a policy applies](/mesh/policy-targeting/#where-a-policy-applies).
@@ -98,8 +101,8 @@ rows:
     what: "No unknown destination. Known mesh destinations are unaffected. `appendMatch` has no effect."
 {% endtable %}
 
-A policy that leaves out the mode uses `Matched`, but having no policy at all leaves
-passthrough open. Creating an empty policy can therefore block traffic that used to work.
+A policy that leaves out the mode uses `Matched`. With no policy at all, passthrough is closed
+unless the control plane sets `KUMA_DEFAULTS_RESTRICT_OUTBOUND=false`.
 
 ## Describe a destination
 
@@ -117,7 +120,7 @@ rows:
   - field: "`value`"
     value: "The domain name, IP address, or CIDR range. A CIDR is normalized before comparison, so `10.0.0.1/24` and `10.0.0.0/24` are the same range."
   - field: "`port`"
-    value: "The destination port, from 1 to 65535. Required for HTTP-family wildcard domains and for `protocol: mysql`. When left out, the match covers all ports not matched more specifically. Set it for a narrow allowlist."
+    value: "The destination port, from 1 to 65535. Required for every non-wildcard `Domain`, for wildcard domains with `http`, `http2`, or `grpc`, and for `protocol: mysql`. When left out on an IP, CIDR, or wildcard domain, the match covers all ports not matched more specifically. Set it for a narrow allowlist."
   - field: "`protocol`"
     value: "`tcp` (default), `tls`, `http`, `http2`, `grpc`, or `mysql`. `tcp` and `mysql` can't be used with `type: Domain`, because they carry no name to match on."
 {% endtable %}
@@ -135,22 +138,21 @@ can't use a domain allowance.
 
 ## Domain matches
 
-An exact or wildcard `Domain` checks the TLS SNI or HTTP authority against the configured name.
-The sidecar then forwards to the address the application dialed. It doesn't resolve the name
-itself or pin the connection to that address.
+An exact `Domain` matches the TLS SNI or HTTP authority. The sidecar then resolves the domain
+itself and connects to the resolved address on `port`, whatever address the application dialed.
+A wildcard `Domain` can't be resolved, so it forwards to the address the application dialed.
 
 To allow the same domain on more than one port, add one entry per port.
 
 {:.warning}
-> A client can dial a different address while presenting an allowed SNI or HTTP authority.
-> An exact domain narrows the allowed name, but does not prevent this. When the destination
-> address must be constrained, use IP or CIDR restrictions, a registered external destination,
+> With a wildcard domain, a client can dial any address while presenting a matching SNI or HTTP
+> authority. When the destination address must be constrained, use IP or CIDR restrictions, a registered external destination,
 > and network controls. Separate `appendMatch` entries are alternatives, not an AND condition:
 > adding an IP entry does not restrict a domain entry.
 
 ### Wildcard domains
 
-A wildcard such as `*.example.com` allows a set of names instead of one. Like an exact domain,
+A wildcard such as `*.example.com` allows a set of names instead of one. Unlike an exact domain,
 it restricts only the SNI or HTTP authority, so a workload can dial any address and present a
 matching name. Prefer exact domains, or IP and CIDR matches when you know the addresses.
 
@@ -186,6 +188,8 @@ chain are rejected. That happens when they use the same port, or both use no por
   host bits set, or another form of the same IPv6 address
 - `tcp` and `mysql` on the same address, which produce the same TCP proxy chain
 
+Two entries with the same `value`, `port`, and `protocol` are also rejected.
+
 Matches that produce distinct chains are fine, such as `tls` and `http` on one port, or `http`
 on an IP and `grpc` on a domain. Several `http` domains on the same port are also fine, because
 they become separate routes in one chain.
@@ -216,7 +220,8 @@ All policies that apply to a proxy combine into one configuration:
 
 You can't deny or remove an inherited `appendMatch` entry, and an empty list on a narrower
 policy doesn't clear it. To drop one inherited destination, change which workloads get the
-broader allowlist. Removing the last applicable policy restores unrestricted passthrough.
+broader allowlist. Removing the last applicable policy closes passthrough again, unless
+`KUMA_DEFAULTS_RESTRICT_OUTBOUND` is `false`.
 
 ## Validating external access
 
@@ -229,9 +234,10 @@ broader allowlist. Removing the last applicable policy restores unrestricted pas
    `MeshExternalService`, because known destinations don't test passthrough.
 1. Repeat with an unlisted port on a listed address. Use new connections after each policy
    change, so an existing connection doesn't hide the result.
-1. For a `Domain`, confirm that the application connects to the intended server and sends the
-   expected SNI or HTTP authority.
-1. For exact and wildcard domains, confirm that allowing any address with a matching SNI or
+1. For a `Domain`, confirm that the application sends the expected SNI or HTTP authority. For
+   an exact domain, the sidecar resolves the name, so confirm that it resolves from the sidecar
+   to the intended server.
+1. For wildcard domains, confirm that allowing any address with a matching SNI or
    `Host` value is an acceptable security boundary.
 
 A rejected connection doesn't always return an HTTP response:
@@ -251,5 +257,5 @@ rows:
   - unexpected: "An unlisted destination is reachable"
     check: "A known mesh destination, excluded interception, an inherited `All` mode, or another policy adding an entry."
   - unexpected: "An allowed destination fails"
-    check: "Its port, protocol, SNI or HTTP authority, the application's DNS resolution, and dropped-match warnings."
+    check: "Its port, protocol, SNI or HTTP authority, DNS resolution (from the sidecar for an exact domain), and dropped-match warnings."
 {% endtable %}

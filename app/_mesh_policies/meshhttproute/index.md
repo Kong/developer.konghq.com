@@ -164,7 +164,9 @@ but not `/apiary`.
 Rules are ordered by specificity, not by the order they're written in, following the Gateway
 API precedence rules. The following criteria is used to define precedence, in this order:
 
-1. A rule with a `path` match beats one without.
+1. A match without `path` is treated as `PathPrefix /`. It ties with an explicit `PathPrefix /`
+   catch-all, so the later criteria decide, and it ranks below `Exact` and longer prefixes but
+   above every `RegularExpression` match.
 2. `Exact` beats `PathPrefix`, which beats `RegularExpression`.
 3. Between prefixes, or between regular expressions, the longer `value` wins.
 4. A rule with a `method` match beats one without.
@@ -279,7 +281,8 @@ goes to one of them in proportion to its weight. Each entry takes the following 
 
 * `kind`: `MeshService`, `MeshExternalService`, or `MeshMultiZoneService`, selected by
   `labels`.
-* `port`: the destination port. Required for `MeshMultiZoneService`.
+* `port`: the destination port. Required for `MeshMultiZoneService`, and for a `MeshService`
+  with more than one port. Without it, the entry doesn't resolve.
 
 Without `backendRefs`, matched requests go to the destination in the `to` entry, so a rule
 that only sets filters doesn't need to repeat it.
@@ -316,7 +319,7 @@ merged, keyed on `matches`:
 * Rules with different `matches` are kept side by side.
 
 The merge order depends on each policy's top-level `targetRef`. For more information, see
-[How policies select traffic](/mesh/policy-targeting/). For example, a mesh-wide `/orders`
+[Policy precedence](/mesh/policy-targeting/#policy-precedence). For example, a mesh-wide `/orders`
 rule and a client-specific `/payments` rule both apply to that client, and request
 specificity then picks among them.
 

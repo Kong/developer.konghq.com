@@ -77,8 +77,9 @@ policies. For more information, see
 
 `sectionName` selects a different side of the connection depending on where you set it:
 
-* `targetRef.sectionName`: an inbound of the selected Dataplane.
-* `to[].targetRef.sectionName`: a port in `MeshService.spec.ports[]`.
+* `targetRef.sectionName`: an inbound of the selected Dataplane. It's only accepted in a policy
+  that uses `rules`, so a policy with `to` can't set it.
+* `to[].targetRef.sectionName`: a port of the destination `MeshService` or `MeshMultiZoneService`.
 
 ## Timeout fields
 
@@ -102,10 +103,13 @@ rows:
   - field: "`http.maxStreamDuration`"
     governs: "Maximum lifetime of a stream, regardless of activity. Use it to recycle long-lived streams."
   - field: "`http.maxConnectionDuration`"
-    governs: "Time after which a connection is drained and closed. A connection with active streams is force-closed 5 seconds after draining starts."
+    governs: "Time after which a connection to the destination stops accepting new streams and closes once its active streams finish."
   - field: "`http.requestHeadersTimeout`"
     governs: "Time to receive request headers, from their first byte to their last."
 {% endtable %}
+
+An `http` block must set at least one field other than `requestHeadersTimeout`. A block with
+only `requestHeadersTimeout` is rejected, so pair it with another `http` timeout.
 
 Stream limits also apply to HTTP/1.1. Idle limits measure inactivity, so they don't cap a
 stream that keeps sending data.

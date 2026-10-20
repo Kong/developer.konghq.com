@@ -70,8 +70,9 @@ What each field does:
 
 ## Listeners and protocols
 
-To apply the policy to one inbound, set `spec.networking.inbound[].targetRef.sectionName` to the inbound's `name` in the destination `Dataplane`, or to its port as a string if it
-doesn't have a name. Without `sectionName`, the policy covers all eligible inbounds. Zone-proxy
+To apply the policy to one inbound, set the policy's `spec.targetRef.sectionName` to the
+inbound's `name` from the destination Dataplane's `spec.networking.inbound[]`, or to its port as
+a string if it doesn't have a name. Without `sectionName`, the policy covers all eligible inbounds. Zone-proxy
 listeners can also use `rules` with `sectionName` set to the listener name.
 
 Faults require an HTTP, HTTP/2, or gRPC listener. They have no effect on traffic handled as
@@ -103,7 +104,7 @@ rows:
     fields: "`value` (a duration with a unit, such as `500ms`, `5s`, or `1m30s`) and `percentage`."
   - fault: "`responseBandwidth`"
     effect: "The proxy limits the transfer rate of each selected response, not the destination's total bandwidth."
-    fields: "`limit` (in `Gbps`, `Mbps`, `kbps`, or `bps`) and `percentage`."
+    fields: "`limit` (a whole number in `Gbps`, `Mbps`, or `kbps`, such as `50kbps`) and `percentage`."
 {% endtable %}
 
 ## Fault order

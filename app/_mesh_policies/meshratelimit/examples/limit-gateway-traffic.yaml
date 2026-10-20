@@ -1,10 +1,8 @@
 title: 'Limit HTTP traffic through a zone proxy'
 
-description: 'Apply local HTTP rate limits to the selected zone-proxy listener. Replace the labels with those on your zone-proxy Dataplane and sectionName with the listener name from spec.networking.listeners. Each HTTP route has its own bucket; traffic handled as TCP is not limited by this example.'
+description: 'Apply local HTTP rate limits to the zone egress listener of the zone proxies in zone-1. A Helm install with default ports names that listener "10002"; check the listener names in spec.networking.listeners of your zone-proxy Dataplane. Each HTTP route has its own bucket; traffic handled as TCP is not limited by this example.'
 
 weight: 500
-
-namespace: kong-mesh-demo
 
 config:
   type: MeshRateLimit
@@ -14,8 +12,9 @@ config:
     targetRef:
       kind: Dataplane
       labels:
-        app: zone-proxy
-      sectionName: zone-egress
+        kuma.io/listener-zoneegress: enabled
+        kuma.io/zone: zone-1
+      sectionName: "10002"
     rules:
       - default:
           local:

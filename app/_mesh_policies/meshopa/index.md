@@ -74,7 +74,8 @@ spec:
 {% endpolicy_yaml %}
 
 `targetRef` selects the backend proxies that enforce the check: `Mesh`, or `Dataplane` with
-`labels`. Everything else goes under `default`. There's no `to` or `rules`, because the proxy
+`labels`. `sectionName` isn't supported, so the check applies to every inbound of the selected
+proxies. Everything else goes under `default`. There's no `to` or `rules`, because the proxy
 handling the request makes the decision.
 
 The example only checks the header shape. It doesn't validate the token's signature, expiry,
@@ -84,8 +85,8 @@ needs.
 ## Provide Rego and agent configuration
 
 `appendPolicies[].rego` and `agentConfig` both take a secure data source: a `type` that says
-where the data comes from, and a field of the same name that holds it. `type` accepts the
-following values:
+where the data comes from, and a matching field that holds it (`secretRef`, `file`, `envVar`,
+or `insecureInline`). `type` accepts the following values:
 
 {% table %}
 columns:
@@ -97,7 +98,7 @@ rows:
   - type: "`Secret`"
     what: "A secret in the policy's mesh, resolved by the control plane. Set it with `secretRef: {kind: Secret, name: SECRET_NAME}`."
   - type: "`File`"
-    what: "A file the control plane can read, set with `file.path`. It isn't a path in the application or sidecar container."
+    what: "A file the control plane can read, set with `file.path`. It isn't a path in the application or sidecar container. The path must be absolute and can't contain `..`; a violation fails when the control plane generates the configuration, not when the policy is applied."
   - type: "`EnvVar`"
     what: "An environment variable of the control plane process, set with `envVar.name`."
   - type: "`InsecureInline`"
@@ -189,7 +190,9 @@ JSON body. For more information, see the
 ## Configure the OPA agent
 
 `default.agentConfig` is the OPA agent's own bootstrap configuration, in OPA's format. Use it to
-point the agent at a bundle server or a decision log sink.
+point the agent at a bundle server or a decision log sink. Overrides passed to `kuma-dp` with
+`--opa-set` (`KMESH_OPA_CONFIG_OVERRIDES`) are applied on top of the configuration generated from
+`agentConfig`.
 
 The following example enables console decision logs. Its Rego allows every request that reaches
 the OPA check, so only use it on test workloads, or keep your real authorization modules when

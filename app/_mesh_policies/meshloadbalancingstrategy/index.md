@@ -70,8 +70,8 @@ What each field does:
 * `to[].targetRef` selects the `backend` destination. It accepts `Mesh`, `MeshService`,
   `MeshExternalService`, `MeshMultiZoneService`, and `MeshHTTPRoute`. For a service with
   several ports, set `sectionName` to the port's `name` in the service's `spec.ports[]`. This
-  selects the destination port, not an inbound on the caller. For a `MeshHTTPRoute`,
-  `sectionName` selects a named route rule.
+  selects the destination port, not an inbound on the caller. `sectionName` isn't accepted with
+  `MeshHTTPRoute`.
 * `RingHash` with the `x-user` hash policy keeps requests with the same header value on the
   same healthy endpoint while the endpoint set is stable. This is affinity, not durable session storage. Scaling, endpoint health, locality, or configuration changes can move requests to another endpoint, and different clients can see different endpoints, so keep session state recoverable. Requests without `x-user` aren't pinned.
 
@@ -277,7 +277,7 @@ For example, a mesh-wide rule can choose `RingHash` while a `backend` rule adds 
 hash policy, and backend traffic uses both. A more specific HTTP route can replace the hash list
 with a cookie hash, but can't change the algorithm. Switching the algorithm to `RoundRobin`
 makes an inherited hash policy useless for affinity. For more information, see
-[How policies select traffic](/mesh/policy-targeting/).
+[Policy precedence](/mesh/policy-targeting/#policy-precedence).
 
 ## Validating endpoint selection
 

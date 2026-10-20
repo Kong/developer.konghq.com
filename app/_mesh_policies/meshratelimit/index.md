@@ -82,6 +82,8 @@ reset a route's allowance.
 A rate limit is an inbound policy: configure it on the proxy being protected, not on its
 clients. Set `spec.targetRef.kind` to `Dataplane` and put the limits in `rules`. Use `labels` to
 select the protected proxies, or omit `labels` to select every proxy in the policy's scope.
+`kind: Mesh`, or an omitted `targetRef`, isn't accepted with `rules`: the policy is rejected with
+`spec.rules: must not be defined`.
 
 To limit a whole zone, use `kind: Dataplane` with no `labels`, and create the policy in
 `{{site.mesh_namespace}}`. In an application namespace, the policy only applies to the proxies
@@ -138,7 +140,8 @@ spec:
 `onRateLimit` accepts the following fields:
 
 * `status`: an HTTP error status such as `429` or `503`. The validator accepts any positive
-  value, but Envoy uses `429` for anything below `400`. For more information, see
+  value, but a value below `400` produces a deprecation warning on apply, and Envoy uses `429`
+  for it. For more information, see
   [Envoy's local rate limit reference](https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/http/local_ratelimit/v3/local_rate_limit.proto#extensions-filters-http-local-ratelimit-v3-localratelimit).
 * `headers.set`: replaces a header already on the response. Up to 16 entries.
 * `headers.add`: appends to a header. Up to 16 entries.
@@ -240,7 +243,7 @@ narrower limit. A new rate alone doesn't clear the inherited flag.
 
 When separate policies configure the same traffic, policy precedence resolves conflicting
 fields, not creation order. For more information, see
-[How policies select traffic](/mesh/policy-targeting/).
+[Policy precedence](/mesh/policy-targeting/#policy-precedence).
 
 ## Turn a limit off for part of the traffic
 

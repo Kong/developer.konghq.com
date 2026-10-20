@@ -67,9 +67,8 @@ The example omits `sampling`, so every eligible request is sampled. Spans add ex
 and storage, and can contain URLs and other request metadata. Test on a limited workload before
 you sample 100% of a busy mesh, then set a production rate based on the resulting volume.
 
-A selected proxy can emit inbound and outbound spans. On inbound and zone-proxy listeners,
-`targetRef.sectionName` selects the listener's `name` from the Dataplane, or its port as a
-string for an unnamed inbound. `sectionName` doesn't select a destination for outbound tracing.
+A selected proxy can emit inbound and outbound spans. `targetRef` doesn't accept
+`sectionName`, so a policy applies to every HTTP listener of the selected proxies.
 
 Tracing works only where the proxy parses HTTP, including HTTP/2 and gRPC. It can't create
 spans for plain TCP, or for application-encrypted traffic that it forwards without decrypting.

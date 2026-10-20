@@ -177,9 +177,9 @@ rows:
   - field: "`path`"
     value: "The path to scrape. Defaults to `/metrics`."
   - field: "`address`"
-    value: "The address to scrape, if the application isn't on localhost."
+    value: "The address to scrape. Defaults to the data plane's address (on Kubernetes, the Pod IP). Set it to `127.0.0.1` if the application listens only on localhost."
   - field: "`name`"
-    value: "A name used to label the application's metrics."
+    value: "A name that identifies this application in `kuma-dp` logs."
 {% endtable %}
 
 `applications` is ignored on a zone-proxy-only `Dataplane`, which has no application to scrape.
@@ -216,6 +216,8 @@ rows:
     what: "Plaintext. This is the default."
   - mode: "`ProvidedTLS`"
     what: "TLS, with a certificate and key that you supply to the sidecar through `KUMA_DATAPLANE_RUNTIME_METRICS_CERT_PATH` and `KUMA_DATAPLANE_RUNTIME_METRICS_KEY_PATH`."
+  - mode: "`ActiveMTLSBackend`"
+    what: "mTLS with the data plane's workload identity. A remote scraper must use `https` and present a client certificate that the mesh trusts, with a SPIFFE ID. Scrapes from the data plane's own address or a loopback address stay plaintext `http`. Without a workload identity, the endpoint accepts only these local scrapes."
 {% endtable %}
 
 `ProvidedTLS` also falls back to plaintext if either certificate path is missing from the proxy

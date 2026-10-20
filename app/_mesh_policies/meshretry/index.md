@@ -138,9 +138,9 @@ rows:
   - value: "`Http3PostConnectFailure`"
     when: "An HTTP/3 request fails after connecting."
   - value: "`HttpMethodGet` and other methods"
-    when: "Never on its own. It limits retries to that method, so pair it with a condition. For example, `HttpMethodGet` with `5xx` retries only failed GET requests."
+    when: "Limits retries to that method. Without a named condition in the list, the default conditions (`GatewayError`, `ConnectFailure`, `RefusedStream`) apply. For example, `HttpMethodGet` with `5xx` retries only failed GET requests."
   - value: "A status code"
-    when: "The destination returns that HTTP status code, such as `500` or `429`."
+    when: "The destination returns that HTTP status code, such as `500` or `429`. If the list has no named condition, the default conditions also apply."
 {% endtable %}
 
 {:.warning}
@@ -213,7 +213,7 @@ When a destination answers a rate limit with a header that says when to try agai
 `rateLimitedBackOff` uses that instead of the exponential backoff. It accepts the following
 fields:
 
-* `resetHeaders`: headers to read, tried in order and matched case-insensitively. The first one
+* `resetHeaders` (required): headers to read, tried in order and matched case-insensitively. The first one
   that parses is used. Each header's `format` is either `Seconds` for a number of seconds to
   wait, or `UnixTimestamp` for a point in time.
 * `maxInterval`: the longest wait to accept, `300s` by default. A header asking for a longer
@@ -279,7 +279,8 @@ rows:
 {% endtable %}
 
 `hostSelectionMaxAttempts` caps how many times host selection is retried before the proxy uses
-the last host it selected. It defaults to one reattempt.
+the last host it selected. It defaults to one reattempt. An `http` block that sets only
+`hostSelectionMaxAttempts` is rejected, so set it alongside another `http` field.
 
 Host selection picks another endpoint of the same backend. It doesn't fail over to a different
 MeshService, and it needs several eligible endpoints to make a difference.

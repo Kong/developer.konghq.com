@@ -4,8 +4,6 @@ description: 'Refuse anything below TLS 1.2 while leaving the upper bound to Env
 
 weight: 600
 
-namespace: kong-mesh-demo
-
 config:
   type: MeshTLS
   name: tls12-floor
