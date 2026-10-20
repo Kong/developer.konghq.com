@@ -23,8 +23,7 @@ the failure to the caller. It's configured from the side of the proxy making the
 Use this policy to absorb short failures, such as a destination restarting, a connection reset,
 or a rate limit that clears in a second or two.
 
-Most new meshes include a mesh-wide retry policy, so a narrower policy changes existing retry
-behavior for selected traffic. Some meshes are created without it. For more information, see
+A new mesh doesn't retry requests until you apply a `MeshRetry`. For more information, see
 [Defaults and disabling retries](#defaults-and-disabling-retries).
 
 {:.warning}
@@ -89,17 +88,9 @@ For more information, see
 
 ## Defaults and disabling retries
 
-The initial policy is named `mesh-retry-all-<mesh>`, such as `mesh-retry-all-default` on the
-`default` mesh. It sets the following defaults:
-
-* HTTP and gRPC: `numRetries: 5`, `perTryTimeout: 16s`, and backoff from 25ms to 250ms.
-* HTTP conditions: gateway errors, connection failures, and refused streams.
-* TCP: `maxConnectAttempt: 5`.
-
-Unlike [MeshTimeout](/mesh/policies/meshtimeout/), retry defaults only exist in that policy. A
-mesh created with `skipCreatingInitialPolicies`, including a mesh created by a
-{{site.konnect_short_name}} control plane, has no `MeshRetry` and attempts each request once.
-On such a mesh, your first `MeshRetry` introduces retries.
+A new mesh has no `MeshRetry`, so a proxy attempts each request once. Unlike
+[MeshTimeout](/mesh/policies/meshtimeout/), retries have no built-in defaults, so your first
+`MeshRetry` introduces retries.
 
 When an effective HTTP configuration leaves out a field, the following values apply:
 
@@ -333,5 +324,5 @@ rows:
   - unexpected: "A retry reaches the same endpoint"
     check: "`hostSelection` and the number of eligible endpoints."
   - unexpected: "Retries continue after deleting your policy"
-    check: "The initial mesh-wide policy and the application's retry logic."
+    check: "Other `MeshRetry` policies that select the same traffic, and the application's retry logic."
 {% endtable %}

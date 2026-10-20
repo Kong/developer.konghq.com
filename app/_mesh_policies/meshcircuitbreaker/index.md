@@ -91,9 +91,8 @@ rows:
     caps: "Connection pools per cluster. Only relevant when a cluster creates many pools."
 {% endtable %}
 
-The initial mesh-wide policy sets `maxConnections`, `maxPendingRequests`, and `maxRequests` to
-1024, and `maxRetries` to 3, with no outlier detection. If you skip the initial policy,
-Envoy's own limits still apply.
+A new mesh has no `MeshCircuitBreaker`, so Envoy's own limits apply: `maxConnections`,
+`maxPendingRequests`, and `maxRequests` of 1024, `maxRetries` of 3, and no outlier detection.
 
 ## Eject failing endpoints
 
