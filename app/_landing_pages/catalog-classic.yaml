@@ -82,7 +82,7 @@ rows:
                 Discover and connect MCP servers to {{site.konnect_short_name}} {{site.konnect_catalog}}.
               icon: /assets/icons/mcp.svg
               cta:
-                text: Enable in {{site.konnect_short_name}} Labs.
+                text: Learn more
                 url: /catalog/mcp-registry/
   - header:
       type: h2
