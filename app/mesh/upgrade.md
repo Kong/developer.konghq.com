@@ -34,9 +34,29 @@ still on 2.14; this is more than a control plane and data plane rollout.
 
 1. [Run the {{site.mesh_product_name}} 3.x readiness checker](/mesh/check-upgrade-readiness/) against the current 2.x
    deployment and save the report.
-1. Bring every control plane and data plane proxy to the latest supported 2.14 patch. Follow the
+1. Bring every control plane and data plane proxy to the latest supported 2.14 patch. Only
+   2.14.x is compatible with 3.0.x, so you can't upgrade to 3.0 from 2.13 or earlier. Follow the
    [version-specific upgrade notes](/mesh/version-specific-upgrade-notes/) for every intermediate
    release in the upgrade path.
+1. Prepare the control planes while they are still on 2.14:
+   * If your global control plane runs on Kubernetes, move it to Universal, backed by PostgreSQL.
+     3.x rejects a global control plane with `environment=kubernetes` or
+     `store.type=kubernetes`, and the Helm chart fails to render one. Zone control planes on
+     Kubernetes are unaffected.
+   * For a zero-downtime upgrade, set `KUMA_EXPERIMENTAL_DELTA_XDS=true` on every control plane,
+     then restart every `kuma-dp` (roll the workloads on Kubernetes). Delta xDS is the only xDS
+     protocol in 3.x, and a proxy still using state-of-the-world xDS can't connect until it
+     restarts.
+   * Set `meshServices.mode: Exclusive` on every `Mesh`, including meshes that never set the
+     field, before upgrading the global control plane.
+   * Rename the `standalone` control plane mode to `zone`. 3.x no longer accepts `standalone`.
+   * Replace the removed `KMESH_MULTIZONE_*_KDS_AUTH_*` environment variables with their
+     `KUMA_MULTIZONE_*_KDS_AUTH_*` equivalents. A 3.x control plane refuses to start while one
+     of them is set, and its error names the variable to use instead. For example,
+     `KMESH_MULTIZONE_GLOBAL_KDS_AUTH_TYPE=cpToken` becomes
+     `KUMA_MULTIZONE_GLOBAL_KDS_AUTH_TYPE=zoneToken`, and
+     `KMESH_MULTIZONE_ZONE_KDS_AUTH_CP_TOKEN_PATH` becomes
+     `KUMA_MULTIZONE_ZONE_KDS_AUTH_TOKEN_PATH`.
 1. Resolve the report using the migration guides for
    [mTLS and MeshIdentity](/mesh/migrate-mtls-to-meshidentity/),
    [mesh-scoped zone proxies](/mesh/migrate-zone-proxies-to-3/), and
@@ -44,8 +64,8 @@ still on 2.14; this is more than a control plane and data plane rollout.
    in which live traffic changes.
 1. Rerun the readiness checker against the complete estate. Resolve every blocker and coverage
    gap, complete its manual checks, and validate representative traffic.
-1. Upgrade a non-production zone first. Repeat the product and traffic checks before proceeding
-   through the remaining zones.
+1. Upgrade the global control plane first, then a non-production zone. Repeat the product and
+   traffic checks before proceeding through the remaining zones.
 
 Do not use the normal rolling-upgrade sequence described in [Single-zone](#single-zone) and [Multi-zone](#multi-zone) as a substitute for the 2.x-to-3.x migration.
 The readiness report identifies configuration visible through the control plane API; the migration
