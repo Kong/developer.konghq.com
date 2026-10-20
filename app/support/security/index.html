@@ -13,22 +13,27 @@ breadcrumbs:
     <span class="leading-7">Security advisories for Kong products, including affected and fixed versions.</span>
   </div>
   {% if advisories.size > 0 %}
-  <table>
-    <thead>
-      <tr><th>Advisory</th><th>Severity</th><th>Published</th><th>Fixed versions</th></tr>
-    </thead>
-    <tbody>
-      {% for item in advisories %}
-      {% assign adv = item.advisory %}{% include support/advisory_severity.html advisory=adv %}
-      <tr>
-        <td><a href="{{ item.url }}">{{ item.title }}</a></td>
-        <td>{{ advisory_severity | capitalize }}</td>
-        <td>{{ item.advisory.published }}</td>
-        <td>{{ item.advisory.fixed_versions | join: ", " }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  {% table %}
+columns:
+  - title: Advisory
+    key: advisory
+  - title: Severity
+    key: severity
+  - title: Published
+    key: published
+  - title: Fixed versions
+    key: fixed
+rows:
+{%- for item in advisories %}
+{%- assign adv = item.advisory %}
+{%- include support/advisory_severity.html advisory=adv %}
+{%- capture link %}[{{ item.title }}]({{ item.url }}){% endcapture %}
+  - advisory: {{ link | jsonify }}
+    severity: {{ advisory_severity | capitalize | jsonify }}
+    published: {{ adv.published | jsonify }}
+    fixed: {{ adv.fixed_versions | join: ", " | jsonify }}
+{%- endfor %}
+  {% endtable %}
   {% else %}
   <p>No advisories have been published yet.</p>
   {% endif %}
