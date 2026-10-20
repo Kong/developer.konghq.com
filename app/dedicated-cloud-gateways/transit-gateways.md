@@ -67,7 +67,7 @@ Create and share the [Transit Gateway in AWS](https://docs.aws.amazon.com/vpc/la
 {:.warning}
 > **RAM share requirements:**
 > * The same Transit Gateway can be used in multiple networks, but they must be shared by different RAM shares.
-> * Create a separate RAM share for each shared resource (do not include multiple resources in a single RAM share).
+> * Create a separate RAM share for each shared resource. **Do not** include multiple resources in a single RAM share.
 
 ## {{site.konnect_short_name}} configuration for Transit Gateway peering
 
@@ -117,7 +117,7 @@ To accept the Transit Gateway attachment in AWS, do the following:
 
 1. In the AWS Console, go to **VPC > Transit Gateway Attachments**.
 1. Wait for an attachment request from the Konnect AWS Account ID.
-1. If you have more than one pending attachment request, look up each network's Kong-side AWS VPC ID so you can match it to the correct request in the AWS console. You can find the network ID by clicking **Networks** in the {{site.konnect_short_name}} sidebar:
+1. If you have more than one pending attachment request, look up each network's Kong-side AWS VPC ID. You can find the network ID by clicking **Networks** in the {{site.konnect_short_name}} sidebar:
 
    {% capture network_vpc_id %}
    <!--vale off-->
