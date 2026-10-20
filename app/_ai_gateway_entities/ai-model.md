@@ -184,6 +184,20 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
+### Expose all capabilities
+
+To expose every capability that the AI Model's [`type`](#schema-aigateway-model-type) and providers support, set `capabilities` to `["*"]`. You don't have to list each capability, and new capabilities that a later release adds are included automatically.
+
+* A `model` type AI Model exposes all `model` capabilities except `batches` and `files`.
+* An `api` type AI Model exposes only `batches` and `files`. The `skills` capability is never selected by `*` and must be listed explicitly.
+* Capabilities that the provider doesn't support, or that the data plane version doesn't support, are left out.
+* If you list other values next to `*`, they are ignored.
+
+An empty or absent `capabilities` list still exposes no capabilities. You must set `*` explicitly.
+
+{:.warning}
+> A wildcard AI Model can create many routes. For example, an AI Model with `capabilities: ["*"]` and `formats: [{type: "*"}]` on an OpenAI provider creates approximately 25 routes. These routes use every path under the AI Model's base path, and they can conflict with an AI MCP Server or AI Agent that uses the same path.
+
 ## Request and response formats
 
 By default, AI Models expose all endpoints using OpenAI-compatible format. {{site.ai_gateway}} provides a single, standardized interface across all providers, so you can swap providers (OpenAI, Anthropic, self-hosted, etc.) without changing client code or integration logic.
@@ -230,6 +244,41 @@ rows:
 <!-- vale on -->
 
 When a native format is set, only the corresponding provider is supported with its specific APIs.
+
+### Expose all formats {% new_in 2.3 %}
+
+To accept every API format, set `formats` to `[{type: "*"}]`. Combined with `capabilities: ["*"]`, the AI Model listens on every {{site.ai_gateway}} endpoint:
+
+```yaml
+capabilities: ["*"]
+formats:
+  - type: "*"
+```
+
+The `*` format has the following behavior:
+
+* It selects every format in the preceding table except `passthrough`, which can't be combined with other formats. Formats that the data plane version doesn't support are left out. For example, `typesafe` is selected only from {{site.ai_gateway}} 2.2.
+* If you list other formats next to `*`, they are ignored.
+* An absent or empty `formats` list still defaults to `openai`.
+* Your provider must support the formats that `*` selects. A provider might not support every format.
+
+### Use multiple formats {% new_in 2.3 %}
+
+An AI Model can list more than one format. It then exposes the capabilities of each format, so clients can call the same AI Model with different API shapes. For example, the following AI Model serves all capabilities for both the `openai` and `cohere` formats:
+
+```yaml
+capabilities: ["*"]
+formats:
+  - type: openai
+  - type: cohere
+```
+
+If you set explicit capabilities, a capability that no listed format serves is rejected. A capability that only some of the listed formats serve is exposed for those formats only.
+
+When two formats serve the same path, for example `realtime` on `/realtime` for `openai` and `gemini`, the AI Model keeps the endpoint of the `openai` format. If you list formats and capabilities explicitly, you get a routing conflict warning for the endpoint that is left out.
+
+<!-- TODO: Confirm Konnect UI behavior once KM-3398 ships and add UI steps/notes. -->
+<!-- TODO: Confirm `*` is accepted by the control plane API spec and what `realtime` does when auth can't protect it (RFC: left out with a warning under `*`, error if explicit). -->
 
 ### Passthrough {% new_in 2.2 %}
 
