@@ -44,4 +44,7 @@ advisory:
 The layout adds the CVE table above this text, and the info box (severity, dates,
 affected and fixed versions, install and upgrade links) and the Contact section.
 Don't add a TL;DR or a Contact section.
+
+To generate an advisory from a draft, run the `new-security-advisory` Claude Code skill
+(.claude/skills/new-security-advisory/SKILL.md).
 {% endcomment %}

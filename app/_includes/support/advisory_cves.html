@@ -1,14 +1,16 @@
-<table>
-  <thead>
-    <tr><th>CVE</th><th>Description</th><th>Severity</th></tr>
-  </thead>
-  <tbody>
-    {% for cve in include.advisory.cves %}
-    <tr>
-      <td>{{ cve.id }}</td>
-      <td>{{ cve.summary }}</td>
-      <td>{{ cve.severity | capitalize }}{% if cve.cvss_score %} (CVSS{% if cve.cvss_version %} {{ cve.cvss_version }}{% endif %}: {{ cve.cvss_score }}){% endif %}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+{% table %}
+columns:
+  - title: CVE
+    key: cve
+  - title: Description
+    key: description
+  - title: Severity
+    key: severity
+rows:
+{%- for cve in include.advisory.cves %}
+{%- capture severity %}{{ cve.severity | capitalize }}{% if cve.cvss_score %} (CVSS{% if cve.cvss_version %} {{ cve.cvss_version }}{% endif %}: {{ cve.cvss_score }}){% endif %}{% endcapture %}
+  - cve: {{ cve.id | jsonify }}
+    description: {{ cve.summary | jsonify }}
+    severity: {{ severity | jsonify }}
+{%- endfor %}
+{% endtable %}
