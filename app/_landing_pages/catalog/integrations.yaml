@@ -239,11 +239,8 @@ rows:
           - type: card
             config:
               title: Custom integrations
-              description: "When enabled, you can build your own integration to connect tools in {{site.konnect_catalog}}. This feature is in {{site.konnect_short_name}} Labs."
+              description: "You can build your own integration to connect tools in {{site.konnect_catalog}}. Contact Kong to have this feature enabled for your organization."
               icon: /assets/icons/widgets.svg
-              ctas:
-                - text: Enable custom integrations
-                  url: "https://cloud.konghq.com/global/organization/labs/KHCP-17835-servicehub-custom-integrations"
   
   - header:
       text: "Frequently asked questions"
@@ -254,6 +251,5 @@ rows:
           config:
             - q: I want to integrate a tool with {{site.konnect_catalog}} that isn't listed, can I create a custom integration?
               a: |
-                Yes, you can enable {{site.konnect_catalog}} custom integrations in {{site.konnect_short_name}} Labs. 
-                Lab features are experimental and aren't guaranteed to be generally available in the future.
+                Yes. Contact Kong to have {{site.konnect_catalog}} custom integrations enabled for your organization.
       

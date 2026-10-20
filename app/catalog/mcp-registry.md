@@ -25,7 +25,7 @@ related_resources:
 faqs:
     - q: Is the MCP Registry feature GA?
       a: |
-        No, MCP Registries in {{site.konnect_catalog}} is only available in Tech Preview via {{site.konnect_short_name}} Labs.
+        No, MCP Registries in {{site.konnect_catalog}} is only available in Tech Preview. Contact Kong to have this feature enabled for your organization.
 
         This feature is built on top of Anthropic’s MCP Registry API specification, which is still rapidly evolving. Because the underlying standard continues to change, we cannot responsibly commit to GA timelines or long-term stability guarantees at this time.
 
@@ -53,14 +53,9 @@ This feature is built on top of the MCP Registry API specification defined by {{
 
 ## Enable MCP Registries in {{site.konnect_catalog}}
 
-MCP Registries in {{site.konnect_catalog}} are currently available in tech preview via {{site.konnect_short_name}} Labs.
+MCP Registries in {{site.konnect_catalog}} are available in tech preview. Contact Kong to have this feature enabled for your organization.
 
-1. In {{site.konnect_short_name}}, click your organization dropdown and select "Manage organizations".
-1. Click the **Labs** tab.
-1. Click **Catalog - MCP Registry**.
-1. Click **Enable feature**.
-
-You can access MCP Registries by doing the following:
+Once enabled, you can access MCP Registries by doing the following:
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. Click the **MCP registries** tab.
