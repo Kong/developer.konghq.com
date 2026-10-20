@@ -1,0 +1,9 @@
+{%- comment -%}Sets `advisory_severity` to the highest severity across advisory.cves for the given `advisory`.{%- endcomment -%}
+{%- assign advisory_severity = "low" -%}
+{%- assign severity_rank = "low,medium,high,critical" | split: "," -%}
+{%- assign best = 0 -%}
+{%- for cve in include.advisory.cves -%}
+  {%- for level in severity_rank -%}
+    {%- if level == cve.severity and forloop.index > best -%}{%- assign best = forloop.index -%}{%- assign advisory_severity = level -%}{%- endif -%}
+  {%- endfor -%}
+{%- endfor -%}
