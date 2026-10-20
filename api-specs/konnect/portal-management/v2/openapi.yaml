@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@4c20e3e36bfc3639cfcd2ea43e943eb9ebb83506
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/4c20e3e36bfc3639cfcd2ea43e943eb9ebb83506'
+  x-oas-source: kong/platform-api@8c1997aa3d903dd7f2fb2080c2094f21fdf66094
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8c1997aa3d903dd7f2fb2080c2094f21fdf66094'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -5426,7 +5426,7 @@ components:
           example: groups
           default: groups
       title: OIDC Claim Mappings
-    OIDCIdentityProviderConfig:
+    PortalOIDCIdentityProviderConfig:
       description: The identity provider that contains configuration data for the OIDC authentication integration.
       type: object
       properties:
@@ -5500,7 +5500,7 @@ components:
         config:
           type: object
           oneOf:
-            - $ref: '#/components/schemas/OIDCIdentityProviderConfig'
+            - $ref: '#/components/schemas/PortalOIDCIdentityProviderConfig'
             - $ref: '#/components/schemas/PortalSAMLIdentityProviderConfig'
         created_at:
           $ref: '#/components/schemas/CreatedAt'
@@ -5518,7 +5518,7 @@ components:
         config:
           type: object
           oneOf:
-            - $ref: '#/components/schemas/OIDCIdentityProviderConfig'
+            - $ref: '#/components/schemas/PortalOIDCIdentityProviderConfig'
             - $ref: '#/components/schemas/PortalSAMLIdentityProviderConfig'
       title: Portal Identity Provider
     UpdateIdentityProviderEnabled:

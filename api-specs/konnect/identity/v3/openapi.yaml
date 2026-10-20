@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect Identity
-  version: 3.8.0
+  version: 3.9.0
   description: The management API for Kong Konnect Identity resources.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@0851fba0315bab03a4877ade8b37175dbfc7b4f6
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/0851fba0315bab03a4877ade8b37175dbfc7b4f6'
+  x-oas-source: kong/platform-api@f5512a429138071b0f4422847ccf7012bc4f7e17
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/f5512a429138071b0f4422847ccf7012bc4f7e17'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
