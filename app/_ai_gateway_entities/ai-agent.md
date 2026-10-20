@@ -96,7 +96,7 @@ faqs:
   - q: How do I connect to an upstream agent that requires mTLS or serves a certificate from a private CA?
     a: |
       Set [`config.certificates`](#schema-aigateway-agent-config-certificates) for mTLS, or [`config.ca_certificates`](#schema-aigateway-agent-config-ca-certificates) for a private CA.
-      Both fields apply to `a2a` and `http` AI Agents and require {{site.ai_gateway}} 2.3 or later.
+      Both fields apply to `a2a` and `http` AI Agents.
       See [Upstream TLS](#upstream-tls).
 ---
 
@@ -348,7 +348,7 @@ For per-request authentication and identity validation, reference an [AI Auth St
 
 An AI Agent accepts up to one AI Auth Strategy reference. ACLs are evaluated only after the AI Consumer's identity is resolved through this authentication step.
 
-### CEL-based ACLs {% new_in 2.2 %}
+### CEL-based ACLs
 
 {% include md/ai-gateway/v2/cel-acls.md entity="AI Agent" anchor="#schema-aigateway-agent-access" %}
 
@@ -383,7 +383,7 @@ config:
 
 `config.upstream` is available regardless of the AI Agent's [`type`](#schema-aigateway-agent-type); it applies to `a2a` and `http` Agents alike.
 
-## Upstream TLS {% new_in 2.3 %}
+## Upstream TLS
 
 {% include md/ai-gateway/v2/upstream-tls.md name='AI Agent' schema_prefix='schema-aigateway-agent-config' %}
 

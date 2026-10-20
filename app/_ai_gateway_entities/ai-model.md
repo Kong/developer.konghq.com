@@ -245,7 +245,7 @@ rows:
 
 When a native format is set, only the corresponding provider is supported with its specific APIs.
 
-### Expose all formats {% new_in 2.3 %}
+### Expose all formats
 
 To accept every API format, set `formats` to `[{type: "*"}]`. Combined with `capabilities: ["*"]`, the AI Model listens on every {{site.ai_gateway}} endpoint:
 
@@ -262,7 +262,7 @@ The `*` format has the following behavior:
 * An absent or empty `formats` list still defaults to `openai`.
 * Your provider must support the formats that `*` selects. A provider might not support every format.
 
-### Use multiple formats {% new_in 2.3 %}
+### Use multiple formats
 
 An AI Model can list more than one format. It then exposes the capabilities of each format, so clients can call the same AI Model with different API shapes. For example, the following AI Model serves all capabilities for both the `openai` and `cohere` formats:
 
@@ -411,7 +411,7 @@ To control how consumers authenticate before their access is evaluated, configur
 >
 > For more information, see [OIDC token authentication](/ai-gateway/entities/ai-auth-strategy/#oidc-token-authentication).
 
-### CEL-based ACLs {% new_in 2.2 %}
+### CEL-based ACLs
 
 {% include md/ai-gateway/v2/cel-acls.md entity="AI Model" anchor="#schema-aigateway-model-access" %}
 

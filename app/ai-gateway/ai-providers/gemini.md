@@ -88,7 +88,7 @@ variables:
 
 Gemini Enterprise requires GCP credentials instead of an API key. In {{site.ai_gateway}} 2.2 or earlier, the provider only handles authentication; `auth.type: gcp` by itself doesn't select Gemini Enterprise, since Gemini Standard can use the same GCP auth. What actually routes to Gemini Enterprise is `config.gcp_environment` on the AI Model's target that attaches to this provider.
 
-In {{site.ai_gateway}} 2.3 or later, `auth.type: gcp` will [select Gemini Enterprise](#select-gemini-standard-or-gemini-enterprise). 
+In later versions, `auth.type: gcp` will [select Gemini Enterprise](#select-gemini-standard-or-gemini-enterprise). 
 
 Create the provider to store your GCP credentials:
 
@@ -139,7 +139,7 @@ ai_gateway_models:
     policies: []
 {% endentity_examples %}
 
-`targets[].config.gcp_environment` requires `location_id` and `project_id`. {% new_in 2.3 %} `api_endpoint` is optional. When it's unset, {{site.ai_gateway}} derives the Vertex AI hostname from `location_id`:
+`targets[].config.gcp_environment` requires `location_id` and `project_id`. `api_endpoint` is optional. When it's unset, {{site.ai_gateway}} derives the Vertex AI hostname from `location_id`:
 
 {% table %}
 columns:
@@ -162,7 +162,7 @@ In {{site.ai_gateway}} 2.2 and earlier, `api_endpoint` is required.
 
 ## Select Gemini Standard or Gemini Enterprise
 
-{% new_in 2.3 %} Gemini Standard and Gemini Enterprise use the same `gemini` provider type.
+Gemini Standard and Gemini Enterprise use the same `gemini` provider type.
 {{site.ai_gateway}} selects the variant for each request by checking the following, in order:
 
 1. Existing configurations that set `config.gcp_environment` on the target keep routing to Gemini Enterprise.
@@ -245,7 +245,7 @@ variables:
 
 ## Thought signatures on the OpenAI-compatible route
 
-{% new_in 2.3 %} A thought signature is an opaque `thoughtSignature` value that Gemini thinking models attach to response parts.
+A thought signature is an opaque `thoughtSignature` value that Gemini thinking models attach to response parts.
 The model needs the signature on the matching part of the next request to keep reasoning context across multi-turn conversations and function calls.
 When an AI Model uses the `openai` format with a Gemini target, {{site.ai_gateway}} captures each `thoughtSignature` from the Gemini response and returns it to the client in the OpenAI-compatible response.
 When {{site.ai_gateway}} translates the next request back to Gemini, it re-attaches the signature to the matching part.
@@ -258,7 +258,7 @@ To keep signatures intact, send the assistant message from the previous response
 
 ## Gemini Interactions API
 
-{% new_in 2.3 %} {{site.ai_gateway}} forwards requests for the [Gemini Interactions API](https://ai.google.dev/gemini-api/docs/interactions) to Gemini Standard without translating the request or response body.
+{{site.ai_gateway}} forwards requests for the [Gemini Interactions API](https://ai.google.dev/gemini-api/docs/interactions) to Gemini Standard without translating the request or response body.
 {{site.ai_gateway}} still authenticates to Gemini with the credentials in the AI Model Provider, and AI Consumer authentication, rate limiting, and logging apply as they do for other Gemini traffic.
 
 {{site.ai_gateway}} supports the Interactions API only in the native Gemini format.
@@ -269,7 +269,7 @@ It doesn't translate requests to or from the OpenAI or Anthropic formats.
 
 ## Vertex AI predict endpoints
 
-{% new_in 2.3 %} Gemini Enterprise supports the Vertex AI [`predict` method](https://cloud.google.com/vertex-ai/docs/reference/rest/v1/projects.locations.endpoints/predict) for Model Garden models that you deploy to your own Vertex AI endpoint, such as TranslateGemma.
+Gemini Enterprise supports the Vertex AI [`predict` method](https://cloud.google.com/vertex-ai/docs/reference/rest/v1/projects.locations.endpoints/predict) for Model Garden models that you deploy to your own Vertex AI endpoint, such as TranslateGemma.
 {{site.ai_gateway}} proxies both forms of the request:
 
 * Deployed endpoint: `/v1/projects/{project_id}/locations/{location}/endpoints/{endpoint_id}:predict`

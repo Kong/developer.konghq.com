@@ -70,7 +70,6 @@ faqs:
   - q: Can AI MCP Servers and AI Agents present an AI Certificate to their upstreams?
     a: |
       Yes.
-      Yes, in {{site.ai_gateway}} 2.3 and later.
       Reference the AI Certificate by name in the `config.certificates` field of an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/#upstream-tls) or [AI Agent](/ai-gateway/entities/ai-agent/#upstream-tls).
       The AI MCP Server or AI Agent then presents it as its client certificate, which lets it connect to upstreams that require mutual TLS (mTLS).
       The AI Certificate must include a private key.
