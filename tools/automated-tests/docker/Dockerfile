@@ -50,54 +50,103 @@ RUN npm install -g @qwen-code/qwen-code
 RUN npm install -g @google/gemini-cli
 RUN go install github.com/deviceinsight/kafkactl/v5@latest
 
-# Install kubectl v1.35.2 (pinned)
+# Install kubectl v1.35.2 (pinned + checksum verified)
 RUN ARCH=$(dpkg --print-architecture) && \
+    case "$ARCH" in \
+      amd64) CHECKSUM="924eb50779153f20cb668117d141440b95df2f325a64452d78dff9469145e277" ;; \
+      arm64) CHECKSUM="cd859449f54ad2cb05b491c490c13bb836cdd0886ae013c0aed3dd67ff747467" ;; \
+      *) echo "Unsupported architecture: $ARCH" && exit 1 ;; \
+    esac && \
     curl -fsSL -o kubectl "https://dl.k8s.io/release/v1.35.2/bin/linux/${ARCH}/kubectl" && \
+    echo "$CHECKSUM  kubectl" | sha256sum -c - && \
     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
     rm kubectl
 
-# Install helm v4.1.1 (pinned)
+# Install helm v4.1.1 (pinned + checksum verified)
 RUN ARCH=$(dpkg --print-architecture) && \
+    case "$ARCH" in \
+      amd64) CHECKSUM="5d4c7623283e6dfb1971957f4b755468ab64917066a8567dd50464af298f4031" ;; \
+      arm64) CHECKSUM="02a5fb7742469d2d132e24cb7c3f52885894043576588c6788b6813297629edd" ;; \
+      *) echo "Unsupported architecture: $ARCH" && exit 1 ;; \
+    esac && \
     curl -fsSL -o helm.tar.gz "https://get.helm.sh/helm-v4.1.1-linux-${ARCH}.tar.gz" && \
+    echo "$CHECKSUM  helm.tar.gz" | sha256sum -c - && \
     tar -xzf helm.tar.gz linux-${ARCH}/helm && \
     install -o root -g root -m 0755 linux-${ARCH}/helm /usr/local/bin/helm && \
     rm -rf helm.tar.gz linux-${ARCH}
 
-# Install k3d v5.8.3 (pinned)
+# Install k3d v5.8.3 (pinned + checksum verified)
 RUN ARCH=$(dpkg --print-architecture) && \
+    case "$ARCH" in \
+      amd64) CHECKSUM="dbaa79a76ace7f4ca230a1ff41dc7d8a5036a8ad0309e9c54f9bf3836dbe853e" ;; \
+      arm64) CHECKSUM="0b8110f2229631af7402fb828259330985918b08fefd38b7f1b788a1c8687216" ;; \
+      *) echo "Unsupported architecture: $ARCH" && exit 1 ;; \
+    esac && \
     curl -fsSL -o k3d "https://github.com/k3d-io/k3d/releases/download/v5.8.3/k3d-linux-${ARCH}" && \
+    echo "$CHECKSUM  k3d" | sha256sum -c - && \
     install -o root -g root -m 0755 k3d /usr/local/bin/k3d && \
     rm k3d
 
-# Install yq v4.52.4 (pinned, for kubernetes-resource-property validation)
+# Install yq v4.52.4 (pinned + checksum verified, for kubernetes-resource-property validation)
 RUN ARCH=$(dpkg --print-architecture) && \
+    case "$ARCH" in \
+      amd64) CHECKSUM="0c4d965ea944b64b8fddaf7f27779ee3034e5693263786506ccd1c120f184e8c" ;; \
+      arm64) CHECKSUM="4c2cc022a129be5cc1187959bb4b09bebc7fb543c5837b93001c68f97ce39a5d" ;; \
+      *) echo "Unsupported architecture: $ARCH" && exit 1 ;; \
+    esac && \
     curl -fsSL -o yq "https://github.com/mikefarah/yq/releases/download/v4.52.4/yq_linux_${ARCH}" && \
+    echo "$CHECKSUM  yq" | sha256sum -c - && \
     install -o root -g root -m 0755 yq /usr/local/bin/yq && \
     rm yq
 
-# Install cosign v2.6.5 (pinned, for verify-image-signatures-and-attestations tests)
+# Install cosign v2.6.5 (pinned + checksum verified, for verify-image-signatures-and-attestations tests)
 RUN ARCH=$(dpkg --print-architecture) && \
+    case "$ARCH" in \
+      amd64) CHECKSUM="c3b4f5410e608af03a5eb0aaac84a4313d8da131248e08ff1759ac70c79d1644" ;; \
+      arm64) CHECKSUM="426193b4c5da4d4d643e822f48fe0cc8a476ca1782a272704831f5a0cef716d7" ;; \
+      *) echo "Unsupported architecture: $ARCH" && exit 1 ;; \
+    esac && \
     curl -fsSL -o cosign "https://github.com/sigstore/cosign/releases/download/v2.6.5/cosign-linux-${ARCH}" && \
+    echo "$CHECKSUM  cosign" | sha256sum -c - && \
     install -o root -g root -m 0755 cosign /usr/local/bin/cosign && \
     rm cosign
 
-# Install regctl v0.11.7 (pinned, for verify-image-signatures-and-attestations tests)
+# Install regctl v0.11.7 (pinned + checksum verified, for verify-image-signatures-and-attestations tests)
 RUN ARCH=$(dpkg --print-architecture) && \
+    case "$ARCH" in \
+      amd64) CHECKSUM="3737fbbdd791e04e7a831640b681f3397a376498e80e2ad9b1b2d27296f239bc" ;; \
+      arm64) CHECKSUM="9f349bab5c407ac04f3dabf99c7c7a6b0f9e9723c23f2775380e804d02c6dbb9" ;; \
+      *) echo "Unsupported architecture: $ARCH" && exit 1 ;; \
+    esac && \
     curl -fsSL -o regctl "https://github.com/regclient/regclient/releases/download/v0.11.7/regctl-linux-${ARCH}" && \
+    echo "$CHECKSUM  regctl" | sha256sum -c - && \
     install -o root -g root -m 0755 regctl /usr/local/bin/regctl && \
     rm regctl
 
-# Install kustomize v5.8.2 (pinned, for the operator upgrade how-to's CRD step)
+# Install kustomize v5.8.2 (pinned + checksum verified, for the operator upgrade how-to's CRD step)
 RUN ARCH=$(dpkg --print-architecture) && \
+    case "$ARCH" in \
+      amd64) CHECKSUM="06af0a202c2b831207d0173f9c9cdb1b30abceca0747cb3fbb72792d26055c95" ;; \
+      arm64) CHECKSUM="0991957191951cb7dddd142403b5bb98a1fcd6378ba0079dddc1e2c309080a7f" ;; \
+      *) echo "Unsupported architecture: $ARCH" && exit 1 ;; \
+    esac && \
     curl -fsSL -o kustomize.tar.gz "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.8.2/kustomize_v5.8.2_linux_${ARCH}.tar.gz" && \
+    echo "$CHECKSUM  kustomize.tar.gz" | sha256sum -c - && \
     tar -xzf kustomize.tar.gz kustomize && \
     install -o root -g root -m 0755 kustomize /usr/local/bin/kustomize && \
     rm -rf kustomize kustomize.tar.gz
 
-# Install grpcurl v1.9.4 (pinned, for the GRPCRoute how-to)
+# Install grpcurl v1.9.4 (pinned + checksum verified, for the GRPCRoute how-to).
+# The release publishes the amd64 binary as `x86_64`, so the asset name is mapped
+# separately from dpkg's architecture name.
 RUN ARCH=$(dpkg --print-architecture) && \
-    [ "$ARCH" = "amd64" ] || [ "$ARCH" = "arm64" ] || { echo "Unsupported architecture: $ARCH" && exit 1; } && \
-    curl -fsSL -o grpcurl.tar.gz "https://github.com/fullstorydev/grpcurl/releases/download/v1.9.4/grpcurl_1.9.4_linux_${ARCH}.tar.gz" && \
+    case "$ARCH" in \
+      amd64) ASSET="x86_64"; CHECKSUM="97e13d58d2733a0e62cd2571d1d5f0c02823f0d25282f08bddedf1ad9c5d1736" ;; \
+      arm64) ASSET="arm64"; CHECKSUM="ad66227d90631da5428b4a5ccf28d63846f0f15649d8b2367df044a59edbb617" ;; \
+      *) echo "Unsupported architecture: $ARCH" && exit 1 ;; \
+    esac && \
+    curl -fsSL -o grpcurl.tar.gz "https://github.com/fullstorydev/grpcurl/releases/download/v1.9.4/grpcurl_1.9.4_linux_${ASSET}.tar.gz" && \
+    echo "$CHECKSUM  grpcurl.tar.gz" | sha256sum -c - && \
     tar -xzf grpcurl.tar.gz grpcurl && \
     install -o root -g root -m 0755 grpcurl /usr/local/bin/grpcurl && \
     rm -rf grpcurl grpcurl.tar.gz
