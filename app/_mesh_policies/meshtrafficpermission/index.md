@@ -16,46 +16,45 @@ related_resources:
   url: "/mesh/policy-targeting/"
 - text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshtrafficpermission"
-- text: MeshIdentity policy
+- text: MeshIdentity resource
   url: "/mesh/policies/meshidentity/"
 - text: Migrate mesh mTLS to MeshIdentity
   url: "/mesh/migrate-mtls-to-meshidentity/"
 ---
 
-`MeshTrafficPermission` controls which workloads can connect to a destination workload.
-The destination's proxy checks the caller's identity against the policy's allow and deny rules.
+The `MeshTrafficPermission` policy controls which workloads can connect to a destination
+workload. It has two parts:
 
-`spec.targetRef` selects the destination proxies that enforce the policy. The entries under
-`spec.rules[].default` identify the callers to allow or deny. For workload-to-workload traffic,
-the caller is identified by its SPIFFE ID: a URI carried in its mTLS certificate. Client IP
-addresses and client data plane tags do not determine access.
+* `spec.targetRef` selects the destination proxies that enforce the policy.
+* `spec.rules[].default` lists the callers to allow or deny.
+
+The destination's proxy identifies each caller by the SPIFFE ID in its mTLS certificate.
+Client IP addresses and client data plane tags don't affect access.
 
 ## Before you configure permissions
 
 [MeshIdentity](/mesh/policies/meshidentity/) gives workloads their identities and certificates.
-Both the caller and destination need identities for an mTLS connection. Define the required
-permissions before, or at the same time as, enabling identity on the destination.
+Both the caller and the destination need an identity for an mTLS connection. Define the
+permissions first, or at the same time as enabling identity on the destination.
 
-Authorization on these mTLS connections is default-deny. If no applicable permission allows
-the caller, the destination proxy denies access. You do not need a deny-all policy.
+Authorization on mTLS connections is default-deny. If no applicable permission allows a
+caller, the destination proxy denies it, so you don't need a deny-all policy.
 
 These rules apply only to mTLS connections. A destination without a workload identity has no
-mTLS listener for this policy to protect. If [MeshTLS](/mesh/policies/meshtls/) permits plaintext
-connections, those connections bypass `MeshTrafficPermission` checks. Use `Strict` mode when
-the destination must accept only authenticated, authorized traffic.
+mTLS listener to protect. If [MeshTLS](/mesh/policies/meshtls/) permits plaintext, plaintext
+connections bypass `MeshTrafficPermission`. Use `Strict` mode when the destination must accept
+only authenticated, authorized traffic.
 
 ## Allow a namespace to reach one workload
 
-This example allows callers in the `storefront` namespace to reach destination proxies labeled
-`app: orders`. It assumes the default Kubernetes identity path.
+Replace `default.default.mesh.local` in the examples on this page with the trust domain in the
+caller's issued certificate. The trust domain is the part between `spiffe://` and the next
+`/`. For a Bundled issuer with automatic trust creation, `MeshTrust.spec.trustDomain` publishes
+that value. For example, with `payments.eu.mesh.local`, set
+`rules[].default.allow[].spiffeID.value` to `spiffe://payments.eu.mesh.local/ns/storefront/sa`.
 
-Before applying it, replace `default.default.mesh.local` with the trust domain in the **caller's**
-issued certificate. For a Bundled issuer with automatic trust creation, the corresponding
-`MeshTrust.spec.trustDomain` publishes that value. The trust domain is the part between
-`spiffe://` and the next `/`. For example, if that field contains `payments.eu.mesh.local`,
-set `rules[].default.allow[].spiffeID.value` to
-`spiffe://payments.eu.mesh.local/ns/storefront/sa`. Use that same domain when adapting the
-later examples.
+The following example allows callers in the `storefront` namespace to reach destination
+proxies labeled `app: orders`, using the default Kubernetes identity path:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -76,88 +75,88 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-Read the policy from the destination back to the caller:
+What each field does:
 
-- `targetRef` selects the `orders` data plane proxies that enforce the policy.
-- `rules[].default.allow` contains the client identities those proxies accept.
-- `Prefix` matches identities starting with the supplied string. With the default Kubernetes
-  path, ending it at `/ns/storefront/sa` covers every service account in `storefront` in that
-  trust domain, and nothing in a namespace that merely starts with that name.
-- Other clients are denied unless another applicable policy allows them. A matching deny
-  still takes precedence.
+* `targetRef` selects the `orders` proxies that enforce the policy.
+* `rules[].default.allow` lists the caller identities those proxies accept. Other callers are
+  denied unless another applicable policy allows them, and a matching deny still wins.
+* `Prefix` matches identities that start with the value. Ending it at `/ns/storefront/sa`
+  covers only the service accounts in `storefront`.
 
-`Prefix` is a plain string comparison against the caller's SPIFFE ID, not a Kubernetes
-namespace selector. A prefix ending at `/ns/storefront` therefore also matches
-`/ns/storefront-test/sa/client`, because the second string starts with the first.
-
-The value must still be a syntactically valid SPIFFE ID, so a trailing `/` cannot be used to
-close that gap. The control plane rejects it:
-
-```
-spec.rules[0].allow[0].spiffeID: must be a valid Spiffe ID: path cannot have a trailing slash
-```
-
-To match a namespace and nothing that merely starts with its name, extend the prefix through
-the next path separator, `spiffe://default.default.mesh.local/ns/storefront/sa`, or name each
+`Prefix` is a plain string comparison, not a namespace selector. A prefix ending at
+`/ns/storefront` also matches `/ns/storefront-test/sa/client`. The value must be a valid SPIFFE
+ID, so it can't end in `/`. To match one namespace only, end the prefix at `/sa`, or name each
 caller with `type: Exact`.
 
-There is no `to` array. Access control is enforced inbound at the destination.
+The policy has no `to` array, because access control is enforced inbound at the destination.
 
 ## Match caller identities
 
-Use `spiffeID.type: Exact` for one complete identity, or `Prefix` for identities that share
-the same beginning.
+Use `spiffeID.type: Exact` for one complete identity, or `Prefix` for identities with the same
+beginning. The following matchers are common:
 
-| Match | Example value | Callers covered |
-| --- | --- | --- |
-| Exact service account | `spiffe://default.default.mesh.local/ns/storefront/sa/frontend` | All workloads using this identity, not just one replica. |
-| Namespace prefix | `spiffe://default.default.mesh.local/ns/storefront/sa` | Every service account in this namespace and trust domain, using the default Kubernetes path. Stopping the prefix at `/ns/storefront` would also match `storefront-test`. |
-| Trust-domain prefix | `spiffe://default.default.mesh.local` | Every identity in this trust domain. Written without a trailing `/`, which the control plane rejects. |
+{% table %}
+columns:
+  - title: Match
+    key: match
+  - title: Example value
+    key: example
+  - title: Callers covered
+    key: callers
+rows:
+  - match: "Exact service account"
+    example: "`spiffe://default.default.mesh.local/ns/storefront/sa/frontend`"
+    callers: "Every workload using this identity, not one replica."
+  - match: "Namespace prefix"
+    example: "`spiffe://default.default.mesh.local/ns/storefront/sa`"
+    callers: "Every service account in the namespace, with the default Kubernetes path. A prefix ending at `/ns/storefront` would also match `storefront-test`."
+  - match: "Trust-domain prefix"
+    example: "`spiffe://default.default.mesh.local`"
+    callers: "Every identity in the trust domain. A trailing `/` isn't a valid SPIFFE ID."
+{% endtable %}
 
-The default Kubernetes identity path is `/ns/<namespace>/sa/<service-account>`. On Universal,
-the default is `/workload/<workload>`. An exact Universal matcher could therefore use
-`spiffe://default.default.mesh.local/workload/frontend`.
+By default, identity paths use the following formats:
 
-`MeshIdentity.spec.spiffeID.path` can customize these paths. If it is set, match the path the
-caller actually receives. Read the trust domain from the caller's certificate. The corresponding
-[MeshTrust](/mesh/policies/meshtrust/) publishes that domain in `spec.trustDomain` and its CA
-certificates so peers can verify the identity. Trusting an
-identity does not itself grant access.
+* `/ns/<namespace>/sa/<service-account>` on Kubernetes
+* `/workload/<workload>` on Universal, for example
+  `spiffe://default.default.mesh.local/workload/frontend`
 
-For zone-egress destinations, use the separate [SNI matcher](#authorize-zone-proxy-traffic).
+If `MeshIdentity.spec.spiffeID.path` customizes the path, match the path the caller actually
+receives. Read the trust domain from the caller's certificate.
+[MeshTrust](/mesh/policies/meshtrust/) publishes that domain and its CA certificates so peers
+can verify the identity. Trusting an identity doesn't grant access.
 
-## How permissions combine
+For zone egress destinations, use the [SNI matcher](#authorize-zone-proxy-traffic).
 
-For the protected mTLS traffic, the effective authorization decision follows these rules:
+## Overlapping permissions
 
-1. A request matching any `deny` matcher is **denied**.
-1. Otherwise, a request matching any `allow` or `allowWithShadowDeny` matcher is **allowed**.
-1. A request matching nothing is **denied**.
+For mTLS traffic, the proxy decides authorization in the following order:
 
-Every `deny` across every policy that applies to the proxy is evaluated before any `allow`,
-so a `deny` cannot be overridden by a later or narrower `allow`. YAML list order does not
-change this result.
+1. A request matching any `deny` is denied.
+1. Otherwise, a request matching any `allow` or `allowWithShadowDeny` is allowed.
+1. A request matching nothing is denied.
 
-Allow entries also contribute across applicable policies. Suppose a mesh-wide policy allows
-`storefront` and a second policy allows `payments` to reach `orders`. Both groups can reach
-`orders`: the second policy adds access; it does not restrict access to `payments`. If a third
-policy denies `storefront` on `orders`, only `payments` remains allowed there.
+Every `deny` in every applicable policy is evaluated before any `allow`, so a narrower `allow`
+can't override a `deny`. YAML list order doesn't matter.
 
-Only policies covering the destination and its selected inbound or listener contribute to
-that decision. A deny scoped to an admin port does not deny access on other ports.
+Allows add up across policies. If one policy allows `storefront` and another allows
+`payments` to reach `orders`, both can reach it. If a third policy denies `storefront` on
+`orders`, only `payments` remains allowed.
+
+Only policies that cover the destination and its selected inbound or listener count. A deny on
+an admin port doesn't deny access on other ports.
 
 {:.warning}
-> **Do not write a mesh-wide deny-all and then allow services back in.** That pattern comes
-> from {{site.mesh_product_name}} 2.x, where the last matching rule won, and it does not
-> work here: a blanket `deny` matches every client and no later `allow` can re-open it.
+> Don't write a mesh-wide deny-all and then allow services back in. A blanket `deny` matches
+> every client, and no `allow` can re-open it.
 >
 > Protected mTLS connections are already denied unless explicitly allowed. Start with the
 > `allow` entries you need, and add `deny` entries for exceptions to broader allows.
 
 ## Exclude clients from a broader allow
 
-A `deny` is useful as an exception to an `allow`. In this example, the destination accepts
-clients from the trust domain except for the `legacy` namespace and one service account:
+Use a `deny` as an exception to an `allow`. The following example accepts every client in the
+trust domain except the `legacy` namespace and one service account:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -185,15 +184,16 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-The two `deny` entries are evaluated first. The broader `allow` then admits every other client
-from the trust domain. A policy containing only the `deny` entries would not open access for
-anyone; unmatched traffic is already denied.
+The `deny` entries are evaluated first, and the `allow` admits everyone else. A policy with only
+the `deny` entries wouldn't open access to anyone.
 
 ## Observe a deny before enforcing it
 
-`allowWithShadowDeny` allows a matching client but also records a shadow-deny decision. Combine
-it with the allow rule the destination already uses to observe the effect of moving one group
-into `deny`:
+`allowWithShadowDeny` allows a matching client and records a shadow-deny decision. Unless an
+enforced `deny` matches, it grants access, so adding it for a blocked group opens access.
+
+The following example observes the effect of denying `legacy`, which the broader allow already
+covers:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -218,11 +218,7 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-`allowWithShadowDeny` grants access as well as recording a proposed denial, unless an enforced
-`deny` matches. Adding it for a previously blocked group can therefore open access. Here,
-`legacy` is already covered by the broader allow.
-
-For HTTP traffic, add this format to the destination's
+To record the decision for HTTP traffic, add the following format to the destination's
 [MeshAccessLog](/mesh/policies/meshaccesslog/) File backend:
 
 ```yaml
@@ -231,52 +227,61 @@ format:
   plain: 'client=%DOWNSTREAM_PEER_URI_SAN% shadow=%DYNAMIC_METADATA(envoy.filters.http.rbac:shadow_engine_result)% policy=%DYNAMIC_METADATA(envoy.filters.http.rbac:shadow_effective_policy_id)%'
 ```
 
-Send requests from `legacy` and inspect the destination's log. The `shadow` field reports
-`denied`, and `policy` identifies the matching `MeshTrafficPermission` by its resource
-identifier. These are [Envoy RBAC metadata fields](https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/rbac_filter).
-For TCP listeners, use `envoy.filters.network.rbac` in the two metadata operators.
+For TCP listeners, use `envoy.filters.network.rbac` in the two metadata operators. For more
+information, see [Envoy RBAC metadata fields](https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/rbac_filter).
 
-Inspect the policy identifier as well as the decision. The current shadow matcher also reports
-`denied` with policy `default` when no shadow entry matches. A `shadow_denied` counter alone
-therefore does not tell you how many callers matched your proposed restriction.
+Send requests from `legacy` and check the destination's log. The `shadow` field reports
+`denied`, and `policy` identifies the matching `MeshTrafficPermission`.
 
-When the identified traffic is safe to block, move its matcher from `allowWithShadowDeny` to
-`deny` and keep the existing allow entries.
+Check `policy` as well as `shadow`. When no shadow entry matches, the log still reports
+`denied`, with policy `default`. A `shadow_denied` counter alone doesn't tell you how many
+callers matched.
+
+When the traffic is safe to block, move its matcher from `allowWithShadowDeny` to `deny` and
+keep the existing allow entries.
 
 ## Scope authorization to destinations
 
-`targetRef` controls where the authorization rules are enforced:
+`targetRef` controls where the rules are enforced:
 
-| Target | Effect |
-| --- | --- |
-| `kind: Mesh` | Enforce the rules on every identified workload the policy reaches. |
-| `kind: Dataplane` with `labels` | Enforce the rules only on matching destination proxies. |
-| `kind: Dataplane` with `labels` and `sectionName` | Enforce the rules only on one named inbound of those proxies. |
-
-Omitting `targetRef` has the same effect as `kind: Mesh`.
+{% table %}
+columns:
+  - title: Target
+    key: target
+  - title: Effect
+    key: effect
+rows:
+  - target: "`kind: Mesh`, or no `targetRef`"
+    effect: "Every identified workload the policy reaches."
+  - target: "`kind: Dataplane` with `labels`"
+    effect: "Matching destination proxies only."
+  - target: "`kind: Dataplane` with `labels` and `sectionName`"
+    effect: "One named inbound of those proxies only."
+{% endtable %}
 
 {:.warning}
 > `MeshTrafficPermission` has no `to` array, so a policy created in an application namespace
-> is always `workload-owner` scoped: `kind: Mesh` reaches every proxy **in that namespace**,
+> is always `workload-owner` scoped: `kind: Mesh` reaches every proxy in that namespace,
 > not the whole mesh. To authorize across namespaces in one zone, create the policy in
-> `{{site.mesh_namespace}}` with the label `kuma.io/origin: zone`; to authorize across zones,
-> create it on the global control plane. See
+> `{{site.mesh_namespace}}` with the label `kuma.io/origin: zone`. To authorize across zones,
+> create it on the global control plane. For more information, see
 > [Where a policy applies](/mesh/policy-targeting/#where-a-policy-applies).
 
 ### Narrow authorization to one port
 
-`targetRef.sectionName` applies the rules to a single named inbound of the selected proxy,
-leaving its other ports alone. Read `spec.networking.inbound[]` from the destination's
-Kubernetes `Dataplane` resource:
+`targetRef.sectionName` applies the rules to one named inbound and leaves the other ports
+alone. To find the inbound names, read `spec.networking.inbound[]` from the destination's
+`Dataplane`:
 
 ```sh
 kubectl get dataplanes.kuma.io DESTINATION_DATAPLANE -n DESTINATION_NAMESPACE -o jsonpath='{.spec.networking.inbound}'
 ```
 
-Copy the intended inbound's `name` into `targetRef.sectionName`. If it has no name, use its
-`port` as a quoted string, such as `"8080"`. The following example assumes an inbound named
-`backend-admin-api`. It denies `observability` access on that inbound even when another
-applicable policy allows that namespace.
+Copy the inbound's `name` into `targetRef.sectionName`. If it has no name, use its `port` as a
+quoted string, such as `"8080"`.
+
+The following example denies `observability` on the `backend-admin-api` inbound, even when
+another policy allows that namespace:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -300,28 +305,28 @@ spec:
 
 ### Authorize zone proxy traffic
 
-`MeshTrafficPermission` applies to a mesh-scoped zone proxy like any other `Dataplane`.
-Select the proxy role and zone with `targetRef.labels`, and the listener with
-`targetRef.sectionName`.
+`MeshTrafficPermission` applies to a mesh-scoped zone proxy like any other `Dataplane`. Select
+the proxy role and zone with `targetRef.labels`, and the listener with `targetRef.sectionName`.
 
-`sectionName` matches the listener's `name` in
-`Dataplane.networking.listeners[]`. A listener with no `name` set takes its port number as
-its name, so on a Helm install with default ports that means `10001` for zone ingress and
-`10002` for zone egress. Read the listener names from the `Dataplane` rather than assuming
-the defaults:
+`sectionName` matches the listener's `name` in `Dataplane.networking.listeners[]`. A listener
+without a `name` uses its port number, so a Helm install with default ports uses `10001` for
+zone ingress and `10002` for zone egress. Read the listener names instead of assuming the
+defaults:
 
 ```sh
 kubectl get dataplanes.kuma.io ZONE_PROXY_DATAPLANE -n kong-mesh-system -o jsonpath='{.spec.networking.listeners}'
 ```
 
-On zone egress, `sni` matches the destination name sent in the TLS handshake. SNI identifies
-the requested destination, not the authenticated caller. It accepts only `type: Exact`, and
-the value must be a DNS subdomain.
+On zone egress, `sni` matches the destination name in the TLS handshake. It identifies the
+requested destination, not the caller. It accepts only `type: Exact`, and the value must be a
+DNS subdomain.
 
-To find the value, inspect the zone-egress proxy's Envoy `/config_dump`. Find the filter chain
-for the external service and read `filter_chain_match.server_names`. Copy the corresponding
-server name into `rules[].default.deny[].sni.value`. The value in the following example is
-that internal routing name; it is not the external service's public hostname.
+To find the value, inspect the zone egress proxy's Envoy `/config_dump`, find the filter chain
+for the external service, and copy its `filter_chain_match.server_names` value into
+`rules[].default.deny[].sni.value`. This is an internal routing name, not the external
+service's public hostname.
+
+The following example denies traffic to one external service through zone egress:
 
 {% policy_yaml namespace=kong-mesh-system %}
 ```yaml
@@ -344,41 +349,46 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-This `deny` is an exception to any applicable `allow` entries. It does not allow other
-destinations by itself; unmatched traffic remains denied.
+This `deny` is an exception to applicable `allow` entries. It doesn't allow anything by itself.
 
-## Verify and troubleshoot authorization
+## Validating authorization
 
-Test from both an allowed caller and a caller that should be denied, using new connections.
+Test from an allowed caller and a caller that should be denied, using new connections:
 
 1. Confirm that the destination has an identity and that the test uses mTLS.
-1. Confirm that `targetRef` selects the destination proxy and, when set, the intended
+1. Confirm that `targetRef` selects the destination proxy and, if set, the intended
    `sectionName`.
-1. Inspect the caller's certificate through its Envoy admin `/certs` endpoint. Find the SPIFFE
-   URI in the workload certificate's subject alternative names and compare it with the
-   policy's `Exact` or `Prefix` value.
-1. Send the same request from both callers. The allowed caller should reach the application;
-   the denied caller should not. Check the destination proxy's logs to establish why it failed.
+1. Check the caller's certificate in its Envoy admin `/certs` endpoint. Confirm that the SPIFFE
+   URI in its subject alternative names matches the policy's `Exact` or `Prefix` value.
+1. Send the same request from both callers. Confirm that the allowed caller reaches the
+   application and the denied caller doesn't. If a request fails unexpectedly, check the
+   destination proxy's logs.
 
-For HTTP handled by the proxy's HTTP RBAC filter, authorization denial returns `403`.
-Include `%RESPONSE_CODE_DETAILS%` in the destination's access-log format to distinguish a
-proxy denial from an application-generated `403`. A value beginning with
-`rbac_access_denied_matched_policy` identifies an RBAC denial.
-See [Envoy's HTTP RBAC diagnostics](https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/rbac_filter).
+To tell a proxy denial from an application error, add the following to the destination's
+access-log format:
 
-For TCP, denial closes the connection. Include `%CONNECTION_TERMINATION_DETAILS%` in the
-access-log format to identify a network RBAC denial. See
-[Envoy's network RBAC diagnostics](https://www.envoyproxy.io/docs/envoy/latest/configuration/listeners/network_filters/rbac_filter).
+* HTTP: `%RESPONSE_CODE_DETAILS%`. A proxy denial returns `403`, and the value starts with
+  `rbac_access_denied_matched_policy`. For more information, see
+  [Envoy's HTTP RBAC diagnostics](https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/rbac_filter).
+* TCP: `%CONNECTION_TERMINATION_DETAILS%`. A denial closes the connection. For more
+  information, see [Envoy's network RBAC diagnostics](https://www.envoyproxy.io/docs/envoy/latest/configuration/listeners/network_filters/rbac_filter).
 
 If TLS fails before authorization, check the certificate, identity, and trust configuration
-first. Adding an allow entry cannot repair a failed TLS handshake.
+first. An allow entry can't fix a failed TLS handshake.
 
-| Unexpected result | Check |
-| --- | --- |
-| An intended caller is denied | Compare its complete issued identity with the matcher, then check for a deny in another applicable policy. |
-| An unintended caller is allowed | Check for broader allows, `allowWithShadowDeny` entries, and prefixes missing a path boundary. Confirm that the connection uses mTLS. |
-| A port-specific policy has no effect | Compare `sectionName` with the actual inbound name or, for an unnamed inbound, its port number. |
-| Every request appears shadow-denied | Inspect `shadow_effective_policy_id`. The fallback value `default` does not identify a match to your proposed restriction. |
-
-For more detail about destination selectors and inbound policy matching, see
-[How policies select traffic](/mesh/policy-targeting/).
+{% table %}
+columns:
+  - title: Unexpected result
+    key: unexpected
+  - title: Check
+    key: check
+rows:
+  - unexpected: "An intended caller is denied"
+    check: "Compare its full issued identity with the matcher, then look for a deny in another applicable policy."
+  - unexpected: "An unintended caller is allowed"
+    check: "Look for broader allows, `allowWithShadowDeny` entries, and prefixes without a path boundary. Confirm that the connection uses mTLS."
+  - unexpected: "A port-specific policy has no effect"
+    check: "Compare `sectionName` with the inbound name, or its port number if it has no name."
+  - unexpected: "Every request appears shadow-denied"
+    check: "`shadow_effective_policy_id`. The value `default` doesn't mean your restriction matched."
+{% endtable %}
