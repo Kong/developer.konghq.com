@@ -239,7 +239,9 @@ You can also configure {{site.konnect_short_name}} to use [customer-managed encr
 Debug session payload data is retained for up to 3 days, after which it is purged from {{site.konnect_short_name}}. When you include payload captures in a pin, the pinned copy follows the pin's retention period.
 
 ## Data Security with Customer-Managed Encryption Keys (CMEK)
-By default, logs are automatically encrypted using encryption keys that are owned and managed by {{site.konnect_short_name}}. However if you have a specific compliance and regulatory requirements related to the keys that protect your data, you can use the customer-managed encryption keys. This ensures that sensitive data are secured for each organization with their own key and nobody, including {{site.konnect_short_name}}, has access to that data. For more information about how to create and manage CMEK keys, see [Customer-Managed Encryption Keys (CMEK)](/konnect-platform/cmek/).
+By default, logs are automatically encrypted using encryption keys managed by {{site.konnect_short_name}}. If you have specific security or compliance requirements relating to encryption key management, you can use Customer-Managed Encryption Keys (CMEK). CMEK allows your organization to manage its own encryption key and control {{site.konnect_short_name}}'s ability to decrypt the data protected by that key.
+
+For more information about how to create and manage CMEK keys, see [Customer-Managed Encryption Keys (CMEK)](/konnect-platform/cmek/).
 
 ## Start your first debug session
 
