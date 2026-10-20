@@ -17,25 +17,23 @@ related_resources:
   url: "/mesh/policies/meshcircuitbreaker/"
 ---
 
-`MeshTCPRoute` changes where a client's connections to a destination go. It can point them at a
-different destination entirely, or spread them across several by weight.
+The `MeshTCPRoute` policy changes where a client's TCP connections to a destination go. It can
+send them to a different destination, or split them across several by weight.
 
-`MeshTCPRoute` does not inspect application requests for paths or headers. Use
-[MeshHTTPRoute](/mesh/policies/meshhttproute/) when routing depends on those HTTP fields.
-One `to` entry holds one rule, which applies to connections the selected client proxies
-open to that destination.
+`MeshTCPRoute` doesn't inspect paths or headers. To route on those, use
+[MeshHTTPRoute](/mesh/policies/meshhttproute/).
 
-Without an applicable route, connections use the destination's normal backend. A route changes
-the destination used by the proxy; it does not change the address the client application calls.
+Without a route, connections go to the destination's normal backend. A route changes where the
+proxy sends a connection, not the address the client application calls.
 
 ## Split connections between two destinations
 
-This policy applies to proxies labeled `app: frontend` and sends a tenth of their connections
-to `backend` to a second destination:
+The following example sends 10% of the connections that proxies labeled `app: frontend` open
+to `backend` to `backend-next`.
 
-Both `backend` and `backend-next` must already exist as MeshServices, with the following labels
-and service port 8080. The new backend must accept the same application protocol. For mTLS
-traffic, its permissions must allow the original caller's identity.
+`backend` and `backend-next` already exist as MeshServices with service port 8080 and the
+labels used in the example. `backend-next` accepts the same application protocol, and for
+mTLS traffic, its permissions allow the original caller's identity:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -68,35 +66,20 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-Read the policy from the client to the backends:
+What each field does:
 
-- `targetRef` selects the `frontend` proxies that make the connections.
-- `to[].targetRef` selects connections whose original destination is `backend`.
-- `backendRefs` replaces that destination with a 90/10 weighted split between `backend` and
+* `targetRef` selects the `frontend` proxies that open the connections. Leaving it out is the
+  same as `kind: Mesh`.
+* `to[].targetRef` selects connections whose original destination is `backend`.
+* `backendRefs` replaces that destination with a 90/10 split between `backend` and
   `backend-next`.
-- The weights apply to TCP connections, not to individual requests sent over a reused
-  connection.
 
-## Where this policy applies
-
-`spec.targetRef` selects the client proxies whose outbound connections are routed, and accepts
-`Mesh` or `Dataplane` with `labels`. Leaving it out is the same as `kind: Mesh`.
-
-`spec.to[]` names the destinations, and needs at least one entry. `to[].targetRef` accepts
-`MeshService`, `MeshExternalService` and `MeshMultiZoneService`. `Mesh` is not accepted, so a
-route always names a destination. Add `sectionName` to confine the route to one named port of a
-`MeshService`.
-
-Read the named port from `MeshService.spec.ports[].name` and put it in
-`to[].targetRef.sectionName`. The `backendRefs[].port` value is a numeric service port
-from `spec.ports[].port`, not a container port or the name used by `sectionName`.
-
-For the selectors a policy can carry, see [How policies select traffic](/mesh/policy-targeting/).
+The weights apply to connections, not to individual requests sent over a reused connection.
 
 ## Rule structure
 
 `MeshTCPRoute` nests `default` one level deeper than other outbound policies, inside `rules`,
-which mirrors the shape of `MeshHTTPRoute`:
+like `MeshHTTPRoute`:
 
 ```yaml
 spec:
@@ -107,67 +90,80 @@ spec:
             backendRefs: [...]
 ```
 
-A `to` entry accepts exactly one rule, since there is nothing to distinguish a second one by,
-and that rule must declare `backendRefs`. An empty or missing list is rejected with
-`backendRefs: must be defined`.
+Each `to` entry accepts exactly one rule, and that rule needs a non-empty `backendRefs` list.
 
-## Where connections go
+`spec.to[]` needs at least one entry. `to[].targetRef` accepts `MeshService`,
+`MeshExternalService`, and `MeshMultiZoneService`, but not `Mesh`, so a route always names a
+destination. To limit a route to one named port of a `MeshService`, set
+`to[].targetRef.sectionName` to a `MeshService.spec.ports[].name` value. `backendRefs[].port`
+is different: it takes the numeric service port from `spec.ports[].port`, not a container port
+or a port name.
 
-`backendRefs` is a list of destinations, each with a `weight`. A connection is assigned to one
-of them in proportion to its weight against the total, with `weight` defaulting to 1. `kind`
-accepts `MeshService`, `MeshExternalService` and `MeshMultiZoneService`, selected by `labels`,
-and `port` names the destination port. `MeshMultiZoneService` requires `port`.
+## Connection destinations
 
-A backend reference that does not resolve is omitted from the routing list. For example,
-if `backend-next` does not exist in the client proxy's zone, the resolved `backend` entry
-receives the connections instead of retaining only its original 90 percent share.
+Each connection goes to one `backendRefs` entry, in proportion to its weight. Each entry accepts
+the following fields:
 
-If no backend references resolve, this route generates no outbound listener for the destination.
-It cannot provide the intended route. Do not treat that condition as an intentional access-control
-mechanism; use traffic permissions to control access.
+* `kind`: `MeshService`, `MeshExternalService`, or `MeshMultiZoneService`.
+* `labels`: selects the destination.
+* `port`: the destination port. Required for `MeshMultiZoneService`.
+* `weight`: the entry's share of connections, relative to the total. Defaults to 1.
 
-Reference resolution is separate from endpoint health. A MeshService can resolve successfully
-while all of its workload endpoints are unavailable. Its routing weight does not automatically
-move to a different MeshService; connections assigned to it can fail. Use
-[MeshHealthCheck](/mesh/policies/meshhealthcheck/) and
+A reference that doesn't resolve is dropped from the list. For example, if `backend-next`
+doesn't exist in the client proxy's zone, `backend` gets 100% of the connections.
+
+If no references resolve, the route generates no outbound listener for the destination. Don't
+rely on this to block access. Use traffic permissions instead.
+
+A resolved reference isn't necessarily healthy. A MeshService can resolve while all its
+endpoints are down, and connections assigned to it then fail instead of moving to another
+backend. Use [MeshHealthCheck](/mesh/policies/meshhealthcheck/) and
 [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/) to manage endpoint health within a
-backend, and change the route weights when traffic must move between services.
+backend, and change the route weights to move traffic between services.
 
-## How overlapping routes combine
+## Overlapping routes
 
-Applicable policies contribute to one effective rule for each destination. A more specific
-policy's `backendRefs` list replaces the broader list; the weights are not added together.
-For example, a mesh-wide route splitting `backend` and `backend-next` 90/10 can be
-overridden for `app: test-client` by a route sending all connections to `backend-next`.
-Other clients keep the 90/10 split.
+For each destination, the applicable policies combine into one effective rule. A more specific
+policy's `backendRefs` list replaces the broader list, and weights aren't added together. For
+example, a mesh-wide route splitting `backend` and `backend-next` 90/10 can be overridden for
+`app: test-client` by a route that sends all connections to `backend-next`. Other clients keep
+the 90/10 split.
 
-Changing weights affects new connections. Existing connections remain attached to their
-selected backend, so long-lived sessions can delay the observed effect of a rollout.
+Weight changes affect only new connections. Existing connections stay on their backend, so
+long-lived sessions can delay a rollout.
 
 ## Precedence against MeshHTTPRoute
 
-Where a destination's protocol is HTTP based, `MeshHTTPRoute` owns its routing and a
-`MeshTCPRoute` naming the same destination has no effect. This holds whenever any
-`MeshHTTPRoute` targets that destination, whatever either route configures.
+If any `MeshHTTPRoute` targets an HTTP-based destination, it owns that destination's routing,
+and a `MeshTCPRoute` for the same destination has no effect.
 
-`MeshTCPRoute` governs routing for a destination whose protocol is `tcp`, and for an
-HTTP-based destination that no `MeshHTTPRoute` targets. The protocol comes from
-`networking.inbound[].protocol` on the destination's `Dataplane`, which on Kubernetes is
-derived from the `Service` port.
+`MeshTCPRoute` routes destinations with the `tcp` protocol, and HTTP-based destinations that no
+`MeshHTTPRoute` targets. The protocol comes from `networking.inbound[].protocol` on the
+destination's `Dataplane`. On Kubernetes, it's derived from the `Service` port.
 
-## Validate TCP routing
+## Validating TCP routing
 
-1. Open new connections from a proxy selected by `targetRef` to the destination selected by
-   `to[].targetRef`.
+1. Open new connections from a proxy that `targetRef` selects to the destination that
+   `to[].targetRef` selects.
 1. Confirm that each connection reaches one of the resolved `backendRefs`.
-1. Use enough independent connections to observe the configured weight distribution. Sending
-   many requests over one persistent connection does not test the split.
-1. Test reference resolution separately from endpoint health. A missing MeshService and an
-   existing MeshService with unavailable endpoints are different failure cases.
+1. Open enough separate connections to confirm the weight distribution. Many requests over one
+   connection don't test the split.
+1. Test a missing MeshService and a MeshService with unavailable endpoints separately, because
+   they fail differently.
 
-| Unexpected result | Check |
-| --- | --- |
-| All requests reach one backend | Open independent connections; requests sharing one TCP session share its backend. Check that both references resolve. |
-| A share of connections fails | Check endpoint health and permissions on the backend assigned that share. |
-| A TCP route has no effect on HTTP traffic | Check for a matching MeshHTTPRoute, which takes precedence for HTTP destinations. |
-| Only some clients use the new split | Compare their top-level policy selectors and effective backend lists. |
+{% table %}
+columns:
+  - title: Unexpected result
+    key: unexpected
+  - title: Check
+    key: check
+rows:
+  - unexpected: "All requests reach one backend"
+    check: "Open separate connections, because requests on one TCP connection share its backend. Confirm that both references resolve."
+  - unexpected: "A share of connections fails"
+    check: "Endpoint health and permissions on the backend that gets that share."
+  - unexpected: "A TCP route has no effect on HTTP traffic"
+    check: "A MeshHTTPRoute that targets the destination. It takes precedence."
+  - unexpected: "Only some clients use the new split"
+    check: "Compare their `targetRef` selectors and effective backend lists."
+{% endtable %}
