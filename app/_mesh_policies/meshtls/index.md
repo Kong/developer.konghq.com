@@ -11,32 +11,29 @@ related_resources:
   url: "/mesh/policy-targeting/"
 - text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshtls"
-- text: MeshIdentity policy
+- text: MeshIdentity resource
   url: "/mesh/policies/meshidentity/"
 - text: MeshTrafficPermission policy
   url: "/mesh/policies/meshtrafficpermission/"
 ---
 
-`MeshTLS` controls whether destination proxies accept plaintext alongside mTLS. It also sets
-the TLS versions and cipher suites used for mesh connections.
+The `MeshTLS` policy configures TLS on mesh connections:
+
+* With `mode`, it controls whether destination proxies accept plaintext alongside mTLS.
+* With `tlsVersion` and `tlsCiphers`, it sets the TLS versions and cipher suites for mesh
+  connections.
 
 [MeshIdentity](/mesh/policies/meshidentity/) supplies the workload identity and certificate.
-Without a workload identity, the proxy skips `MeshTLS`; setting `Strict` alone does not
-create certificates or enable mTLS.
+Without an identity, the proxy skips `MeshTLS`, so setting `Strict` alone doesn't enable mTLS.
+`MeshIdentity` has no TLS mode, version, or cipher settings, so the two don't overlap.
 
-Given an identity, an inbound is `Strict` unless a `MeshTLS` policy says otherwise, so plaintext
-is rejected by default. A policy is only needed to relax that, or to narrow the versions and
-ciphers below what Envoy would otherwise negotiate. A mesh that wants mTLS everywhere, with
-Envoy's defaults for version and cipher, needs no `MeshTLS` at all.
-
-`MeshIdentity` carries no TLS version, cipher or mode settings of its own, so the two do not
-overlap: one decides whether a workload has an identity and where it comes from, the other what
-the listener does with it.
+With an identity, inbounds default to `Strict` and reject plaintext. You only need a `MeshTLS`
+policy to accept plaintext, or to restrict versions and ciphers beyond Envoy's defaults.
 
 ## Accept plaintext while migrating a service
 
-This policy lets proxies labeled `app: legacy` serve both mTLS and plaintext on their
-inbounds, which keeps clients outside the mesh working while they are moved into the mesh:
+The following example lets proxies labeled `app: legacy` accept both mTLS and plaintext, so
+clients outside the mesh keep working while they move into it:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -54,65 +51,36 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-`targetRef` selects the `legacy` proxies whose inbound listeners change. `mode: Permissive`
-allows them to accept plaintext as well as mesh mTLS. It does not turn outbound mTLS off.
+What each field does:
+
+* `targetRef` selects the `legacy` proxies whose inbounds change. Leaving it out selects the
+  whole mesh. To change one inbound, set `targetRef.sectionName` to its `name` in the
+  Dataplane's `networking.inbound[]`. For an unnamed inbound, use its port as a string, such as
+  `"8080"`.
+* `mode: Permissive` lets those inbounds accept plaintext as well as mTLS. It doesn't turn off
+  outbound mTLS.
+
+Configuration goes in `spec.rules`. There's no `to`, because inbound TLS belongs to the proxy
+accepting the connection. `rules` takes no `matches` either: the handshake happens before
+there's a request to match, so a rule covers every client of the selected proxies.
 
 Plaintext connections bypass [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/)
-checks because they carry no authenticated workload identity. Limit this exception to the
-destinations that need it. Before restoring `Strict`, give the remaining callers identities,
-allow them in the destination's permissions, and verify their mTLS connections.
+checks, because they carry no workload identity. Limit `Permissive` to the destinations that
+need it. Before you restore `Strict`, give the remaining callers identities, allow them in the
+destination's permissions, and verify their mTLS connections.
 
-## Where this policy applies
+## Mesh-wide fields
 
-`spec.targetRef` selects the proxies whose inbounds are configured, and accepts `Mesh` or
-`Dataplane` with `labels`.
+`mode` is accepted with any `targetRef`. `tlsVersion` and `tlsCiphers` are accepted only with
+`kind: Mesh` and rejected on a `Dataplane`, because both peers must agree on a version and a
+cipher.
 
-Omitting `targetRef` selects the whole mesh. To limit a mode change to one inbound, set
-`targetRef.sectionName` to its `name` in the selected Dataplane's `networking.inbound[]`.
-For an unnamed inbound, use its port as a string, such as `"8080"`.
-
-Configuration goes in `spec.rules`. There is no `to`: TLS on an inbound is a property of the
-proxy accepting the connection, not of the client. `rules` also takes no `matches`: the
-handshake happens before there is a request to match on, so a rule covers every client of the
-selected proxies.
-
-Two of the three fields are restricted to a mesh-wide policy:
-
-{% table %}
-columns:
-  - title: Field
-    key: field
-  - title: Accepted on
-    key: where
-rows:
-  - field: "`mode`"
-    where: "Any `targetRef`."
-  - field: "`tlsVersion`"
-    where: "`kind: Mesh` only. On a `Dataplane` it is rejected with `tlsVersion can only be defined with top level targetRef kind: Mesh`."
-  - field: "`tlsCiphers`"
-    where: "`kind: Mesh` only, rejected the same way."
-{% endtable %}
-
-Both peers have to agree on a version and a cipher, so setting them per workload would mean
-one half of a connection permitting something the other half does not. Applying them mesh-wide
-keeps the two ends consistent.
-
-Although these fields are written under `rules`, the mesh-wide version and cipher settings
-also configure outbound mesh TLS connections. They do not configure TLS to external services.
-
-## How mode overrides work
-
-A more specific Dataplane policy can override the mode set by a mesh-wide policy. For example,
-with mesh-wide `Permissive` and a Dataplane policy setting `Strict` for `app: payments`,
-payments accepts only mTLS while the other destinations still accept plaintext.
-
-Removing a specific override exposes the broader policy again. Removing the payments policy
-in that example restores `Permissive`, not the built-in `Strict` default. Set `Strict`
-explicitly when a broader permissive policy must remain in place.
-
-For the selectors a policy can carry, see [How policies select traffic](/mesh/policy-targeting/).
+Although they're set under `rules`, the mesh-wide version and cipher settings also apply to
+outbound mesh TLS connections. They don't apply to TLS connections to external services.
 
 ## Modes
+
+`mode` accepts the following values:
 
 {% table %}
 columns:
@@ -122,24 +90,24 @@ columns:
     key: what
 rows:
   - mode: "`Strict`"
-    what: "mTLS only. The default, applied when no policy sets a mode."
+    what: "mTLS only. This is the default."
   - mode: "`Permissive`"
-    what: "Mesh mTLS or connections without mesh mTLS, including plaintext and application-managed TLS."
+    what: "Mesh mTLS, plaintext, and application-managed TLS."
 {% endtable %}
 
-`Permissive` changes how the destination accepts connections. It does not downgrade mesh mTLS
-sent by an identified caller. Application-managed TLS can also pass through to the application;
-its certificate and authorization checks are the application's responsibility.
-
-Only the mesh mTLS path provides the workload identity used by `MeshTrafficPermission`.
-Encryption provided by the application does not turn that connection into mesh-authenticated
-traffic.
+`Permissive` doesn't downgrade mTLS from an identified caller. Application-managed TLS passes
+through to the application, which handles its certificate and authorization checks. Only mesh
+mTLS provides the workload identity that `MeshTrafficPermission` uses.
 
 ## TLS versions
 
-`tlsVersion.min` and `tlsVersion.max` bound the versions a proxy will negotiate. Each accepts
-`TLS10`, `TLS11`, `TLS12`, `TLS13`, or `TLSAuto` to leave that end to Envoy, which is the
-default for both.
+`tlsVersion.min` and `tlsVersion.max` set the range of versions a proxy negotiates. Each
+accepts `TLS10`, `TLS11`, `TLS12`, `TLS13`, or `TLSAuto`. `TLSAuto`, the default, leaves that
+end to the Envoy version shipped with your installation.
+
+A `min` higher than `max` is rejected. `TLSAuto` isn't compared, so it never causes that error.
+
+The following example requires TLS 1.3 on both ends of mesh connections:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -157,58 +125,61 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-A `min` above `max` is rejected with `min version must be lower than max`. `TLSAuto` at either
-end is not compared, so it never triggers that.
-
-This example requires TLS 1.3 on both ends of mesh connections. Check peer compatibility before
-applying it across the mesh: a peer with no permitted version in common cannot complete the
-handshake. `TLSAuto` follows the Envoy version shipped with your installation, rather than
-fixing a particular minimum or maximum.
+Check peer compatibility before you apply it. Peers with no version in common can't complete
+the handshake.
 
 ## Ciphers
 
-`tlsCiphers` restricts the cipher suites a proxy offers, and accepts these six:
+`tlsCiphers` restricts the cipher suites a proxy offers. If it's unset, Envoy chooses. It
+accepts the following cipher suites, and rejects any other value:
+
+* `ECDHE-ECDSA-AES128-GCM-SHA256`
+* `ECDHE-ECDSA-AES256-GCM-SHA384`
+* `ECDHE-ECDSA-CHACHA20-POLY1305`
+* `ECDHE-RSA-AES128-GCM-SHA256`
+* `ECDHE-RSA-AES256-GCM-SHA384`
+* `ECDHE-RSA-CHACHA20-POLY1305`
+
+The list applies only to TLS 1.2 and older versions. Envoy doesn't allow TLS 1.3 cipher suites
+to be configured, so `tlsCiphers` has no effect on TLS 1.3 connections.
+
+## Overlapping policies
+
+A more specific `Dataplane` policy overrides the mode from a mesh-wide policy. For example,
+with a mesh-wide `Permissive` policy and a `Strict` policy for `app: payments`, only payments
+rejects plaintext.
+
+Removing the specific policy brings back the broader one. In that example, removing the
+payments policy restores `Permissive`, not the default `Strict`.
+
+## Validating the TLS boundary
+
+1. Confirm that every selected proxy has a `MeshIdentity`. Without one, the policy is skipped.
+1. For `Strict`, confirm that an mTLS connection succeeds and a plaintext connection is
+   rejected.
+1. For `Permissive`, confirm that both connections succeed, and that only the mTLS connection
+   carries a workload identity.
+1. For `tlsVersion`, confirm that a version inside the range succeeds and one outside it fails.
+1. For `tlsCiphers`, inspect the negotiated cipher and confirm that both peers share at least
+   one permitted suite.
+
+For the mTLS test, use a caller that `MeshTrafficPermission` allows, because the handshake can
+succeed while the request is still denied. For the plaintext test, use a caller without a mesh
+proxy, because a mesh caller can add mTLS even to an `http://` request.
 
 {% table %}
 columns:
-  - title: Cipher
-    key: cipher
+  - title: Unexpected result
+    key: unexpected
+  - title: Check
+    key: check
 rows:
-  - cipher: "`ECDHE-ECDSA-AES128-GCM-SHA256`"
-  - cipher: "`ECDHE-ECDSA-AES256-GCM-SHA384`"
-  - cipher: "`ECDHE-ECDSA-CHACHA20-POLY1305`"
-  - cipher: "`ECDHE-RSA-AES128-GCM-SHA256`"
-  - cipher: "`ECDHE-RSA-AES256-GCM-SHA384`"
-  - cipher: "`ECDHE-RSA-CHACHA20-POLY1305`"
+  - unexpected: "Plaintext still reaches a strict destination"
+    check: "Confirm that traffic goes through the selected proxy and that it has a workload identity. Look for other matching mode policies."
+  - unexpected: "mTLS connects but the request is denied"
+    check: "The destination's traffic permissions and the caller's SPIFFE ID."
+  - unexpected: "The handshake fails after a version or cipher change"
+    check: "Confirm that both peers share a TLS version, a permitted cipher, and a compatible certificate key type."
+  - unexpected: "Changing `tlsCiphers` has no effect"
+    check: "The negotiated version. The list doesn't apply to TLS 1.3."
 {% endtable %}
-
-Anything else is rejected, with the error listing the six. Leaving `tlsCiphers` unset leaves
-the choice to Envoy.
-
-The list applies to TLS 1.2 and below. TLS 1.3 has its own cipher suites, which Envoy does not
-allow to be configured, so restricting `tlsCiphers` while permitting TLS 1.3 constrains only the
-older versions.
-
-## Validate the TLS boundary
-
-1. Confirm that every selected proxy has a `MeshIdentity`. Without one, this policy is skipped.
-1. For `Strict`, connect with mTLS and confirm success, then connect without TLS and confirm
-   rejection.
-1. For `Permissive`, confirm that both connections succeed and that only the mTLS connection
-   carries a workload identity.
-1. When setting `tlsVersion`, test one permitted version and one version outside the configured
-   range.
-1. When setting `tlsCiphers`, inspect the negotiated cipher and confirm that both peers share at
-   least one permitted suite.
-
-Use an allowed mesh caller for the mTLS test. A TLS handshake can succeed while
-`MeshTrafficPermission` rejects the request afterward. For the plaintext test, use a caller
-without a mesh proxy; an identified mesh caller may add mTLS even when the application requests
-an `http://` URL.
-
-| Unexpected result | Check |
-| --- | --- |
-| Plaintext still reaches a supposedly strict destination | Confirm that traffic crosses the selected proxy and that its workload identity is available. Inspect other matching mode policies. |
-| mTLS connects but the request is denied | Check destination traffic permissions and the caller's SPIFFE ID. |
-| The handshake fails after a version or cipher change | Confirm a common TLS version, compatible certificate key type, and permitted cipher on both peers. |
-| Changing `tlsCiphers` has no effect | Check the negotiated version: this list does not control TLS 1.3 suites. |
