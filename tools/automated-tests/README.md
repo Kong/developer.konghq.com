@@ -169,7 +169,7 @@ Each operator instruction file executes its page's documented steps against the 
 
 `DEPLOYMENT_MODEL='konnect' PRODUCTS='operator' npm run run-tests`
 
-The `konnect.operator` runtime deletes every control plane in the Konnect org the token belongs to, creates a fresh k3d cluster, and installs Kong Operator with the Konnect controller enabled (`ENABLE_CONTROLLER_KONNECT=true`). The test steps apply the pages' `KonnectAPIAuthConfiguration` and custom resources, which the operator reconciles against that org.
+The `konnect.operator` runtime deletes every control plane in the Konnect org the token belongs to, creates a fresh k3d cluster, and installs the operator with the Konnect controller enabled (`ENABLE_CONTROLLER_KONNECT=true`). The test steps apply the pages' `KonnectAPIAuthConfiguration` and custom resources, which the operator reconciles against that org.
 
 Requirements and behavior:
 
