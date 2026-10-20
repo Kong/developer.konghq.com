@@ -203,6 +203,8 @@ rows:
     example: "Use [Rate Limiting](/ai-gateway/policies/rate-limiting/) or [Rate Limiting Advanced](/ai-gateway/policies/rate-limiting-advanced/) Policy to control MCP request volume per AI Consumer or AI Consumer Group."
   - use_case: "Track all MCP traffic and ACL decisions."
     example: "Enable request and response logging through [AI logging Policies](/ai-gateway/policies/?category=logging) and audit trails."
+  - use_case: "Protect sensitive data in tool calls"
+    example: "Use the [AI MCP Sanitizer](/ai-gateway/policies/ai-mcp-sanitizer/) Policy (tech preview) to redact PII in `tools/call` arguments and results. Targeting results [changes how some server types stream](/ai-gateway/policies/ai-mcp-sanitizer/#streaming-and-performance-trade-offs)."
   - use_case: "Traffic control"
     example: "Apply [Request Transformer](/ai-gateway/policies/request-transformer/) or [Response Transformer](/ai-gateway/policies/response-transformer/) Policy to modify MCP payloads, or use [ACLs](#acl-tool-control) for fine-grained tool access."
 {% endtable %}
@@ -764,7 +766,7 @@ features:
     description: Handling WebSocket and gRPC upstreams
     supported: false
   - title: "AI Guardrails"
-    description: Applying guardrails to MCP AI requests and responses
+    description: Applying content safety guardrails to MCP AI requests and responses. For PII, see the [AI MCP Sanitizer](/ai-gateway/policies/ai-mcp-sanitizer/) Policy.
     supported: false
 {% endfeature_table %}
 <!-- vale on -->

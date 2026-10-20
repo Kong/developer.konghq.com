@@ -33,7 +33,7 @@ related_resources:
 
 <!-- TODO: Drafted from kong-ee PR #23501 (draft), Aha AI-46, and the MCP PII sanitizer PRD and design doc. No Konnect API spec was available. Confirm every field name, default, scope, and error behavior against the spec, then remove `published: false`. The Aha description and PRD still describe the earlier `mcp-pii-sanitizer` design (`sanitization_mode`, per-leaf calls). PR #23501 is the source for this page. -->
 
-The AI MCP Sanitizer Policy detects and redacts personally identifiable information (PII) in [Model Context Protocol (MCP)](/mcp/) `tools/call` traffic on {{site.ai_gateway}}.
+The AI MCP Sanitizer Policy detects and redacts personally identifiable information (PII) in [Model Context Protocol (MCP)](/ai-gateway/mcp/) `tools/call` traffic on {{site.ai_gateway}}.
 It can sanitize the arguments an agent sends to a tool, the result a tool returns, or both.
 
 MCP tools often front systems of record such as CRMs, ticketing tools, and medical or financial databases, where arguments and results routinely carry PII.
@@ -80,6 +80,17 @@ Rewriting tool names and protocol fields would break tool dispatch, access contr
 Skipping binary content avoids sending large payloads to the PII service for no benefit.
 
 <!-- TODO: confirm the exact set of sanitized fields against the final PR and spec. -->
+
+## Choose what to sanitize
+
+Choose targets based on which direction of the tool call includes PII and whether you need streaming:
+
+* **Sanitize only `tool_arguments`** if your agents send user data to a third-party tool and you need to keep streaming.
+  This target doesn't hold responses or change how `conversion-listener` servers run, so the [streaming and single-pass changes](#streaming-and-performance-trade-offs) don't apply.
+* **Sanitize only `tool_results`** if your tools return records from a system of record, such as a CRM or a medical database, and you want to keep that data out of the LLM context.
+  {{site.ai_gateway}} forwards the arguments to the tool server unchanged.
+* **Sanitize both** if user data goes to the tool and the tool returns PII too.
+  The streaming and single-pass changes apply because `tool_results` is targeted.
 
 ## How it works
 
@@ -151,7 +162,8 @@ A configuration that targets only `tool_arguments` without recovery doesn't chan
 {{site.ai_gateway}} never buffers long-lived streams, such as `subscriptions/listen` and GET-initiated SSE.
 
 {:.warning}
-> Each sanitized call adds at least one round trip to the PII service. Load test the PII service with your largest and most deeply nested tool payloads before you enable the Policy in production.
+> Each sanitized call adds at least one round trip to the PII service.
+> Load test the PII service with your largest and most deeply nested tool payloads before you enable the Policy in production.
 <!-- TODO: confirm the call pattern. The PRD describes one call per string value. The design doc and PR describe batched calls. -->
 
 ## Block instead of redact
@@ -218,8 +230,10 @@ You run the PII service in your own environment.
 
 ## Configuration notes
 
-* `anonymize` must contain at least one value. The default is `all_and_credentials`.
-* If `anonymize` includes `custom`, you must set `custom_patterns`. Each pattern needs a `name`, a `regex`, and a `score` between 0 and 1.
+* `anonymize` must contain at least one value.
+  The default is `all_and_credentials`.
+* If `anonymize` includes `custom`, you must set `custom_patterns`.
+  Each pattern needs a `name`, a `regex`, and a `score` between 0 and 1.
 * `sanitize_targets` must contain at least one target.
 
 <!-- TODO: Add entity examples and the scope and attachment model for AI MCP Server once the spec is available. -->
