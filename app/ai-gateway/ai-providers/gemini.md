@@ -88,7 +88,7 @@ variables:
 
 Gemini Enterprise requires GCP credentials instead of an API key. In {{site.ai_gateway}} 2.2 or earlier, the provider only handles authentication; `auth.type: gcp` by itself doesn't select Gemini Enterprise, since Gemini Standard can use the same GCP auth. What actually routes to Gemini Enterprise is `config.gcp_environment` on the AI Model's target that attaches to this provider.
 
-In later versions, `auth.type: gcp` will [select Gemini Enterprise](#select-gemini-standard-or-gemini-enterprise). 
+`auth.type: gcp` also [selects Gemini Enterprise](#select-gemini-standard-or-gemini-enterprise) when the request path doesn't identify a variant.
 
 Create the provider to store your GCP credentials:
 
