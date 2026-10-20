@@ -141,10 +141,14 @@ EOF
 
 ## Start {{site.ai_gateway}}
 
-Set your Enterprise license in the `KONG_LICENSE_DATA` environment variable, then start the containers:
+Set your Enterprise license in the `KONG_LICENSE_DATA` environment variable:
 
 ```sh
-export KONG_LICENSE_DATA='<your_license_data>'
+export KONG_LICENSE_DATA='YOUR LICENSE DATA'
+```
+
+Then, start the containers:
+```sh
 docker compose up -d
 ```
 
@@ -159,3 +163,93 @@ status_code: 200
 {% endcontrol_plane_request %}
 
 This will return an `HTTP/1.1 200 OK` response.
+
+## Configure your on-prem {{site.ai_gateway}} 2.x
+
+For {{site.ai_gateway}} 2.x running on-prem, you'll use {{site.ai_gateway}} 2.x decK configuration files and `deck ai sync` to apply them.
+`deck ai sync` converts the {{site.ai_gateway}} 2.x AI entities and policies into compatible {{site.base_gateway}} 3.x configuration with plugins, Services, and Routes.
+
+You can convert any `kongctl` {{site.ai_gateway}} 2.x configuration to decK by removing the fields that only apply to a {{site.konnect_short_name}}-managed control plane:
+
+* Drop each entity's `ref` field.
+* Drop each entity's `ai_gateway: !lookup {id: ...}` field. On-prem, there's only one {{site.ai_gateway}}, so entities don't need to reference one by ID.
+* Rename the top-level entity collections from their `kongctl` names (`ai_gateway_model_providers`, `ai_gateway_models`, and so on) to their decK names (`model_providers`, `models`). See [Configure {{site.ai_gateway}} on-prem](/ai-gateway/configure-on-prem/) for the full set of entity names decK expects.
+* Add `protocols: [http, https]` under `config.route` on each AI Model. The {{site.ai_gateway}} entity schema defaults to both protocols, but that default isn't carried through by `deck ai sync`/`deck file ai2kong`'s conversion, so the generated Route ends up with {{site.base_gateway}}'s own https-only default instead.
+
+See [{{site.ai_gateway}} 2.x concepts](/ai-gateway/ai-gateway-v2-concepts/) for how the entity model maps to the underlying {{site.base_gateway}} primitives.
+
+For example, here's the [AI Model Provider and AI Model from the {{site.ai_gateway}} get started guide](/ai-gateway/get-started/) written as a decK configuration file instead of a `kongctl` one. Set the `DECK_OPENAI_API_KEY` environment variable to your OpenAI API key, then apply the file with `deck ai sync`:
+
+```sh
+export DECK_OPENAI_API_KEY='Bearer YOUR OPENAI API KEY'
+```
+
+{:.info}
+> This example substitutes `$DECK_OPENAI_API_KEY` directly into the YAML using the shell, instead of decK's own `{% raw %}${{ env "..." }}{% endraw %}` templating. That templating is the documented way to avoid hardcoding secrets (see [Managing sensitive data](/deck/gateway/sensitive-data/)), but it doesn't resolve when a {{site.ai_gateway}} 2.x entity file is applied with `deck ai sync`/`deck file ai2kong`: the literal, unresolved string ends up in the generated plugin config instead of the real key.
+
+<!-- vale off -->
+```sh
+cat <<EOF | deck ai sync --yes -
+model_providers:
+  - name: generic-openai
+    display_name: "generic-openai"
+    type: openai
+    config:
+      auth:
+        type: basic
+        headers:
+          - name: Authorization
+            value: $DECK_OPENAI_API_KEY
+
+models:
+  - name: my-gpt-4o
+    display_name: "my-gpt-4o"
+    type: model
+    capabilities:
+      - generate
+    formats:
+      - type: openai
+    policies: []
+    config:
+      route:
+        paths:
+          - /v1
+        protocols:
+          - http
+          - https
+        model:
+          body_param: model
+          values:
+            - my-gpt-4o
+    targets:
+      - name: gpt-4o
+        provider: generic-openai
+        config:
+          type: openai
+EOF
+```
+<!-- vale on -->
+
+{:.info}
+> This example omits `--kong-addr`, since it defaults to `http://localhost:8001`, which is already where this Docker Compose file exposes the Admin API. If your {{site.ai_gateway}} isn't reachable at that address, or needs authentication, see [Configuring on-prem authentication](/deck/gateway/configuration/).
+
+### Validate your configuration
+
+Send a chat request to verify your setup:
+
+```sh
+curl -X POST "http://localhost:8000/v1/chat/completions" \
+     --no-progress-meter --fail-with-body \
+     -H "Accept: application/json" \
+     -H "Content-Type: application/json" \
+     -H "Authorization: $DECK_OPENAI_API_KEY" \
+     --json '{
+       "messages": [
+         {
+           "role": "user",
+           "content": "Say this is a test!"
+         }
+       ],
+       "model": "my-gpt-4o"
+     }'
+```
