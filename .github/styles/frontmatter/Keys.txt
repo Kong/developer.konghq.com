@@ -55,3 +55,8 @@ toc_depth
 event-gateway
 schema_name
 reference_with_schema
+cves
+cvss_score
+cvss_version
+affected_versions
+fixed_versions
