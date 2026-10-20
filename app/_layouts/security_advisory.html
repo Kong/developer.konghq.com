@@ -1,0 +1,14 @@
+---
+layout: with_aside
+---
+
+{% contentfor info_box %}
+  {% include info_box/advisory.html %}
+{% endcontentfor %}
+
+{% include support/advisory_cves.html advisory=page.advisory %}
+
+{{ content }}
+
+{% capture contact %}{% include support/advisory_contact.md %}{% endcapture %}
+{{ contact | markdownify }}

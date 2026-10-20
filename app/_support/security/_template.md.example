@@ -1,0 +1,47 @@
+---
+title: "Security Advisory: CVE-0000-00000"
+content_type: support
+description: <One sentence: what is affected and what to do.>
+products:
+  - gateway
+works_on:
+  - on-prem
+  - konnect
+advisory:
+  published: "2026-01-01"
+  updated: "2026-01-01"          # optional
+  cves:
+    - id: CVE-0000-00000
+      severity: high             # critical | high | medium | low
+      cvss_score: 7.5            # optional
+      cvss_version: "4.0"        # optional
+      summary: <Short description of the vulnerability>
+  affected_versions:
+    - "3.x.x.x to 3.y.y.y"
+  fixed_versions:
+    - "3.y.y.z"
+---
+
+<Opening paragraph: what Kong has patched and which products are affected.>
+
+## CVE-0000-00000
+
+<What the vulnerability is, who is affected, and what an attacker needs in order to exploit it.>
+
+### Recommendation
+
+<What customers should do.>
+
+### Impacted products
+
+<Supported and unsupported versions.>
+
+## Patches
+
+<Table of impacted versions and the patch for each.>
+
+{% comment %}
+The layout adds the CVE table above this text, and the info box (severity, dates,
+affected and fixed versions, install and upgrade links) and the Contact section.
+Don't add a TL;DR or a Contact section.
+{% endcomment %}
