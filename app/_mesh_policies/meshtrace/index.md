@@ -17,25 +17,25 @@ related_resources:
   url: "/mesh/policies/meshmetric/"
 ---
 
-`MeshTrace` makes a proxy emit spans for sampled HTTP requests and send them to a tracing
-backend. A span records one part of a request's journey, including timing and outcome.
-When services propagate trace context, the backend can join spans from successive hops
-into an end-to-end trace.
+The `MeshTrace` policy makes a proxy emit spans for sampled HTTP requests and send them to a
+tracing backend. A span records one hop of a request, including its timing and outcome. When
+services propagate trace context, the backend joins the spans from each hop into one end-to-end
+trace.
 
-A proxy cannot tell which outbound request belongs to which inbound one, so the application has
-to carry trace context across its calls. Otherwise, you can receive spans for every service
-but see separate traces instead of one connected journey. Use application instrumentation
-with a propagation format compatible with the selected tracing provider. Proxy tracing
-does not create spans for database queries or other work inside the application.
+A proxy can't link an outbound request to the inbound request that caused it, so the
+application must carry trace context across its calls. Otherwise, you get spans for every
+service but separate traces. Use application instrumentation with a propagation format that
+your tracing provider supports. Proxy tracing doesn't create spans for database queries or
+other work inside the application.
 
-With no `MeshTrace` applying to a proxy, the proxy does not emit tracing spans.
+Proxies that no `MeshTrace` selects don't emit spans.
 
 ## Send traces to Zipkin
 
-This policy applies to every proxy in the mesh and exports to a Zipkin-compatible collector.
-The collector must already be running, reachable from the proxies, and accepting Zipkin v2
-spans on the URL shown. Replace that URL with your collector's ingestion endpoint, not its
-web interface:
+The following example sends spans to a Zipkin-compatible collector
+
+The collector is already running, reachable from the proxies, and accepting Zipkin v2
+spans. Replace the example URL with your collector's ingestion endpoint:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -53,62 +53,63 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-`targetRef.kind: Mesh` selects every proxy in the mesh. `backends` chooses the tracing provider,
-and `zipkin.url` is where each proxy sends its spans. Because the example omits `sampling`, every
-eligible request is sampled by default.
+What each field does:
 
-Start with a limited test workload before applying 100% sampling across a busy mesh.
-Tracing adds export traffic and backend storage, and spans can contain URLs and other
-request metadata. Select a production sampling rate after checking the resulting volume.
+* `targetRef` selects which proxies emit spans. `kind: Mesh` means every proxy in the policy's
+  own namespace. If the policy is created in `{{site.mesh_namespace}}`, the policy applies to
+  the whole zone. To trace every zone, create the policy on the global control plane. For more
+  information, see [Where a policy applies](/mesh/policy-targeting/#where-a-policy-applies).
+* `default` holds the rest of the configuration. There's no `to` or `rules`, because each span
+  describes one hop and comes from the proxy that handled it.
+* `backends` sets the tracing provider, and `zipkin.url` is where each proxy sends its spans.
 
-## Where this policy applies
+The example omits `sampling`, so every eligible request is sampled. Spans add export traffic
+and storage, and can contain URLs and other request metadata. Test on a limited workload before
+you sample 100% of a busy mesh, then set a production rate based on the resulting volume.
 
-`spec.targetRef` selects the proxies that emit spans, and accepts `Mesh` or `Dataplane` with
-`labels`. Everything else sits under `default`: there is no `to` or `rules`, because a span
-describes one hop and is emitted by the proxy handling it.
+A selected proxy can emit inbound and outbound spans. On inbound and zone-proxy listeners,
+`targetRef.sectionName` selects the listener's `name` from the Dataplane, or its port as a
+string for an unnamed inbound. `sectionName` doesn't select a destination for outbound tracing.
 
-Tracing applies where the proxy parses HTTP, including HTTP/2 and gRPC. It cannot create
-request spans from plain TCP or application-encrypted traffic that it forwards without
-decrypting. Check the declared inbound and service-port protocols if traffic is visible in
-metrics but not in traces.
-
-The selected proxy can emit inbound and outbound spans. On inbound and zone-proxy listeners,
-`targetRef.sectionName` selects the listener's `name` from the Dataplane resource; an unnamed
-inbound uses its port as a string. This is not a destination selector for outbound tracing.
-
-For the selectors a policy can carry, see [How policies select traffic](/mesh/policy-targeting/).
+Tracing works only where the proxy parses HTTP, including HTTP/2 and gRPC. It can't create
+spans for plain TCP, or for application-encrypted traffic that it forwards without decrypting.
+If traffic appears in metrics but not in traces, check the declared inbound and service-port
+protocols.
 
 ## Keep one trace across application calls
 
-For a request from `frontend` through `backend` to another service, backend must extract
-the incoming context and inject it into the outgoing request. Use the tracing library's
-propagator so that span relationships and sampling decisions remain consistent.
+For a request from `frontend` through `backend` to another service, `backend` must extract the
+incoming context and inject it into its outgoing request. Use your tracing library's
+propagator, so span relationships and sampling decisions stay consistent. Each provider uses
+the following context:
 
-| Provider | Context to propagate |
-| --- | --- |
-| Zipkin | B3 context: the `b3` header or the `x-b3-traceid`, `x-b3-spanid`, `x-b3-parentspanid`, `x-b3-sampled`, and `x-b3-flags` headers used by your instrumentation. |
-| OpenTelemetry | W3C context in `traceparent` and, when present, `tracestate`. |
-| Datadog | Datadog trace context, including `x-datadog-trace-id`, `x-datadog-parent-id`, and `x-datadog-sampling-priority`. |
+{% table %}
+columns:
+  - title: Provider
+    key: provider
+  - title: Context to propagate
+    key: context
+rows:
+  - provider: "Zipkin"
+    context: "B3: the `b3` header, or the `x-b3-traceid`, `x-b3-spanid`, `x-b3-parentspanid`, `x-b3-sampled`, and `x-b3-flags` headers."
+  - provider: "OpenTelemetry"
+    context: "W3C: `traceparent`, and `tracestate` when present."
+  - provider: "Datadog"
+    context: "Datadog headers, including `x-datadog-trace-id`, `x-datadog-parent-id`, and `x-datadog-sampling-priority`."
+{% endtable %}
 
-Also preserve `x-request-id` for request correlation. It is not a replacement for the
-provider's trace context. Do not assume forwarding B3 headers is sufficient for every
-backend. See [Envoy trace propagation](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/observability/tracing#trace-context-propagation)
+Also preserve `x-request-id` to correlate requests. Forwarding B3 headers isn't enough for every backend. For more information, see
+[Envoy trace propagation](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/observability/tracing#trace-context-propagation)
 and [W3C tracing headers](https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_conn_man/headers#traceparent).
 
 ## Backends
 
-`default.backends` takes **at most one** entry. Envoy accepts a single tracing provider per
-listener, so two would have no meaning; more than one is rejected with
-`must have zero or one backend defined`.
-
-To send the same spans to multiple storage systems, export to one collector and configure
-that collector to forward to the required systems. A second entry is not an option: the
-schema caps the list at one, and a policy listing two is rejected with
-`spec.default.backends: Too many: 2: must have at most 1 items`.
-
-The field itself is required. Omitting it is rejected with `spec.default.backends: must be
-defined`, while an empty list is accepted and covered under
+`default.backends` is required and takes at most one entry, because Envoy accepts one tracing
+provider per listener. To send spans to several systems, export to one collector and have it
+forward them. An empty list is accepted. For more information, see
 [Turn tracing off for part of the mesh](#turn-tracing-off-for-part-of-the-mesh).
+
+Each backend `type` accepts the following configuration:
 
 {% table %}
 columns:
@@ -118,23 +119,26 @@ columns:
     key: conf
 rows:
   - type: "`Zipkin`"
-    conf: "`url` of the collector, which must be a valid URL. `apiVersion` is `httpJson`, the default, or `httpProto`. `traceId128bit` emits 128-bit trace IDs, off by default. `sharedSpanContext` makes a client and server span share one context, on by default."
+    conf: |
+      * `url`: a valid collector URL
+      * `apiVersion`: `httpJson` (default) or `httpProto`
+      * `traceId128bit`: emits 128-bit trace IDs, off by default
+      * `sharedSpanContext`: client and server spans share one context, on by default
   - type: "`Datadog`"
-    conf: "`url` of the agent. `splitService` splits the reported service name by direction and destination, off by default."
+    conf: |
+      * `url`: the agent URL, with the `http` scheme, a port, and no path, query, fragment, user, or opaque part. For example, `https://agent:8126` and `http://agent:8126/traces` both fail validation
+      * `splitService`: splits the reported service name by direction and destination, off by default
   - type: "`OpenTelemetry`"
-    conf: "`backendRef`, naming a `MeshOpenTelemetryBackend` by labels."
+    conf: "`backendRef`: a `MeshOpenTelemetryBackend`, selected by labels."
 {% endtable %}
 
-A Datadog `url` is checked more narrowly than the others: the scheme must be `http`, a port is
-required, and a path, query, fragment, user or opaque part is rejected. `https://agent:8126`
-fails with `scheme must be http`, and `http://agent:8126/traces` with `path must not be
-defined`.
+An OpenTelemetry backend references a
+[MeshOpenTelemetryBackend](/mesh/meshopentelemetrybackend/) resource by labels. Create that
+resource first, with the collector endpoint, transport, and credentials, and with labels that
+match `backendRef.labels`. The
+collector needs a traces receiver and export pipeline.
 
-An OpenTelemetry backend is named indirectly, through a [MeshOpenTelemetryBackend](/mesh/meshopentelemetrybackend/) resource:
-
-Create that resource with the collector endpoint, transport, and credentials first. Its
-labels must match `backendRef.labels`; a Kubernetes Service called `otel-collector` is not
-enough by itself. Enable a traces receiver and export pipeline in the collector.
+The following example sends spans to the `otel-collector` backend:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -155,18 +159,17 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-Spans for an OpenTelemetry backend leave through `kuma-dp`: Envoy exports to a Unix socket and
-`kuma-dp` forwards to the collector. Where several `MeshOpenTelemetryBackend` resources match
-the labels, the oldest wins.
-
-Use labels that identify one intended backend. If the reference does not resolve, the
-proxy does not receive a usable OpenTelemetry tracing provider; it does not fall back to
-Zipkin or another collector. Inspect reference resolution before debugging network export.
+Envoy exports OpenTelemetry spans to a Unix socket, and `kuma-dp` forwards them to the
+collector. If several `MeshOpenTelemetryBackend` resources match the labels, the oldest wins,
+so use labels that identify one backend. If the reference doesn't resolve, the proxy gets no
+usable tracing provider and doesn't fall back to another collector. Check reference resolution
+before you debug network export.
 
 ## Sampling
 
-`default.sampling` decides how many requests produce a trace. All three fields take a
-percentage, as an integer or a decimal in quotes, between 0 and 100, and default to 100.
+`default.sampling` sets how many requests produce a trace. It accepts the following fields.
+Each takes a percentage from 0 to 100, as an integer or a quoted decimal, and defaults to 100.
+A value outside the range is rejected.
 
 {% table %}
 columns:
@@ -176,12 +179,14 @@ columns:
     key: what
 rows:
   - field: "`client`"
-    what: "Requests arriving with an `x-client-trace-id` header, which the client uses to ask for a trace."
+    what: "Requests with an `x-client-trace-id` header, which the client sends to ask for a trace."
   - field: "`random`"
-    what: "Requests picked at random, where the client neither asked for a trace nor forced one."
+    what: "Randomly picked requests that didn't ask for or force a trace."
   - field: "`overall`"
-    what: "The ceiling on `client` and `random` combined. A `client` of 100 with an `overall` of 1 still traces only 1% of the requests that asked for it."
+    what: "The ceiling on `client` and `random` combined. For example, `client: 100` with `overall: 1` traces only 1% of the requests that asked for it."
 {% endtable %}
+
+The following example traces every request that asks for a trace, and 0.1% of other requests:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -203,21 +208,18 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-A value outside the range is rejected with `must be between 0 and 100`.
-
-Here, `random: "0.1"` means 0.1%, not 10%. It reduces ordinary randomly selected traffic,
-while requests that explicitly ask for tracing can still pass the `client: 100` setting.
-Set an appropriate `overall` ceiling if those requests must also be limited. Sampling is
-a selection decision, not an exact quota over every small batch of requests; propagated
-context and provider sampling decisions also affect the traces you observe.
+Requests that ask for tracing still pass `client: 100`, so
+set `overall` if you need to limit them too. Sampling isn't an exact quota for every small
+batch of requests, and propagated context and provider sampling also affect which traces you
+see.
 
 ## Custom tags
 
 `default.tags` adds tags to every span, from a request header or a fixed string. Each entry
-takes a `name` and exactly one of `header` or `literal`; both together is rejected with
-`tag must have only one type defined: header, literal`.
+takes a `name` and either `header` or `literal`.
 
-Place this fragment under `default`, alongside the required `backends` list:
+The following example adds a fixed `team` tag and an `env` tag from the `x-env` header. Place
+it under `default`, next to the required `backends` list:
 
 ```yaml
 tags:
@@ -229,32 +231,21 @@ tags:
       default: unknown
 ```
 
-A `header` tag without a `default` is left off the span when the header is absent.
+A `header` tag without a `default` is left off the span when the header is missing.
 
-Use low-cardinality values such as team or environment. Do not copy authorization headers,
-session cookies, or other secrets into tags: exported tags are stored outside the request
-path and can be searchable by other users of the tracing backend.
+Use low-cardinality values, such as team or environment. Don't copy authorization headers,
+session cookies, or other secrets into tags. Exported tags are stored outside the request path,
+and other users of the tracing backend might be able to search them.
 
-The proxy also supplies `kuma.mesh`, `kuma.zone`, and, when available, `kuma.workload` tags.
-Defining a custom tag with one of those names replaces the automatically supplied value;
-avoid those names unless that override is intentional.
-
-## When policies overlap
-
-A more specific policy overrides conflicting fields from a broader policy. Object fields
-can inherit omitted values, but `backends` and `tags` lists replace the broader lists.
-Every policy must still provide `backends`, even when changing only sampling or tags.
-
-For example, a workload-specific policy with the same backend and `sampling.random: 1`
-can reduce random sampling while inheriting the broader `sampling.overall`. Supplying one
-custom tag in that policy replaces the entire broader custom-tag list; repeat every tag
-you need to retain.
+The proxy also adds `kuma.mesh`, `kuma.zone`, and, when available, `kuma.workload` tags. A
+custom tag with one of those names replaces the built-in value, so avoid those names unless you
+mean to override it.
 
 ## Turn tracing off for part of the mesh
 
-An empty `backends` list is accepted, and produces no tracing configuration at all. That is how
-a subset of proxies is exempted from a mesh-wide policy, since a more specific policy overrides
-the broader one:
+An empty `backends` list produces no tracing configuration. Because a more specific policy
+overrides a broader one, you can use it to exempt some proxies from a mesh-wide policy. The
+following example turns off tracing for proxies labeled `app: batch`:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -271,33 +262,48 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-`sampling` and `tags` alongside an empty `backends` are inert, since the proxy writes no tracing
-configuration for those listeners to carry them.
+`sampling` and `tags` have no effect with an empty `backends` list.
 
-This stops spans produced by those proxies only. It does not disable instrumentation in
-the application or spans emitted by other proxies along the request path. Removing this
-exception restores the broader policy; it does not leave tracing disabled.
+This stops spans from those proxies only. It doesn't turn off application instrumentation, or
+spans from other proxies on the request path. Removing the policy restores the broader one.
 
-## Validate trace export
+## Overlapping policies
 
-1. Verify ordinary connectivity, HTTP protocol handling, and collector readiness first.
-   Temporarily use 100% sampling on the test workloads to separate export failures from
-   sampling decisions.
-1. Send a request through at least two meshed services and record its trace ID from the
-   propagated context or instrumentation. A request ID can help correlate logs, but is
-   not necessarily the trace ID displayed by the backend.
-1. Find the trace in the configured backend and confirm that it contains a span for each proxy
-   hop.
-1. If the trace stops at one service, confirm that the application forwards the configured
-   trace headers to its outbound request.
-1. For sampling below 100%, send enough requests to observe the rate rather than relying on one
-   request.
-1. For OpenTelemetry, confirm that the referenced `MeshOpenTelemetryBackend` is resolved and
-   inspect `kuma-dp` exporter errors and the collector's received spans. A reachable collector
-   alone does not prove that its export pipeline stored the trace.
-1. Restore the intended sampling rate after the test.
+A more specific policy overrides conflicting fields from a broader one. Object fields can
+inherit omitted values, but `backends` and `tags` lists replace the broader lists. Every policy
+must still set `backends`, even if it only changes sampling or tags.
 
-If no spans arrive, check policy selection, the effective backend, HTTP handling, sampling,
-and export connectivity in that order. If spans arrive as disconnected traces, check context
-propagation at the service where the trace splits. If only internal application operations
-are missing, add application instrumentation rather than changing the proxy policy.
+For example, a workload policy with the same backend and `sampling.random: 1` lowers random
+sampling and inherits the broader `sampling.overall`. Adding one custom tag to that policy
+replaces the whole broader tag list, so repeat every tag you want to keep.
+
+## Validating trace export
+
+1. Check connectivity, HTTP protocol handling, and collector readiness. Temporarily set 100%
+   sampling on the test workloads, so sampling doesn't hide export failures.
+1. Send a request through at least two meshed services, and record its trace ID from the
+   propagated context or instrumentation. A request ID isn't necessarily the trace ID that the
+   backend shows.
+1. Find the trace in the backend, and confirm that it has a span for each proxy hop.
+1. If the trace stops at one service, confirm that the application forwards the trace headers
+   to its outbound request.
+1. For sampling below 100%, send enough requests to confirm the rate.
+1. For OpenTelemetry, confirm that the `MeshOpenTelemetryBackend` reference resolves, and check
+   `kuma-dp` exporter errors and the spans the collector received. A reachable collector
+   doesn't prove that its pipeline stored the trace.
+1. Restore the intended sampling rate.
+
+{% table %}
+columns:
+  - title: Unexpected result
+    key: unexpected
+  - title: Check
+    key: check
+rows:
+  - unexpected: "No spans arrive"
+    check: "Policy selection, the effective backend, HTTP handling, sampling, and export connectivity, in that order."
+  - unexpected: "Spans arrive as separate traces"
+    check: "Context propagation at the service where the trace splits."
+  - unexpected: "Spans for internal application operations are missing"
+    check: "Add application instrumentation. The proxy policy can't create those spans."
+{% endtable %}
