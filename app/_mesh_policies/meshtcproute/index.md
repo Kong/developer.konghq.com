@@ -31,7 +31,7 @@ proxy sends a connection, not the address the client application calls.
 The following example sends 10% of the connections that proxies labeled `app: frontend` open
 to `backend` to `backend-next`.
 
-`backend` and `backend-next` already exist as MeshServices with service port 8080 and the
+`backend` and `backend-next` already exist as `MeshService` resources with service port 8080 and the
 labels used in the example. `backend-next` accepts the same application protocol, and for
 mTLS traffic, its permissions allow the original caller's identity:
 
@@ -116,7 +116,7 @@ doesn't exist in the client proxy's zone, `backend` gets 100% of the connections
 If no references resolve, the route generates no outbound listener for the destination. Don't
 rely on this to block access. Use traffic permissions instead.
 
-A resolved reference isn't necessarily healthy. A MeshService can resolve while all its
+A resolved reference isn't necessarily healthy. A `MeshService` can resolve while all its
 endpoints are down, and connections assigned to it then fail instead of moving to another
 backend. Use [MeshHealthCheck](/mesh/policies/meshhealthcheck/) and
 [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/) to manage endpoint health within a
@@ -149,7 +149,7 @@ destination's `Dataplane`. On Kubernetes, it's derived from the `Service` port.
 1. Confirm that each connection reaches one of the resolved `backendRefs`.
 1. Open enough separate connections to confirm the weight distribution. Many requests over one
    connection don't test the split.
-1. Test a missing MeshService and a MeshService with unavailable endpoints separately, because
+1. Test a missing `MeshService` and a `MeshService` with unavailable endpoints separately, because
    they fail differently.
 
 {% table %}
@@ -164,7 +164,7 @@ rows:
   - unexpected: "A share of connections fails"
     check: "Endpoint health and permissions on the backend that gets that share."
   - unexpected: "A TCP route has no effect on HTTP traffic"
-    check: "A MeshHTTPRoute that targets the destination. It takes precedence."
+    check: "A `MeshHTTPRoute` that targets the destination. It takes precedence."
   - unexpected: "Only some clients use the new split"
     check: "Compare their `targetRef` selectors and effective backend lists."
 {% endtable %}

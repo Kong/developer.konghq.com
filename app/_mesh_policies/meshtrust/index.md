@@ -34,7 +34,7 @@ creates the `MeshTrust` for its own CA, which covers a single-zone mesh that iss
 identities, and a migration between two Bundled identities. Create one manually when you
 manage trust separately, for example to accept certificates from an external identity system.
 
-Like `MeshIdentity`, this isn't a policy. It has no `targetRef`, `to`, or `rules`, because a
+Like `MeshIdentity`, `MeshTrust` isn't a policy. It has no `targetRef`, `to`, or `rules`, because a
 trust domain is either trusted mesh-wide or it isn't. On Kubernetes, it's accepted only in the
 system namespace.
 

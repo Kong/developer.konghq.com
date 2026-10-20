@@ -32,10 +32,10 @@ Proxies that no `MeshTrace` selects don't emit spans.
 
 ## Send traces to Zipkin
 
-The following example sends spans to a Zipkin-compatible collector
+The following example sends spans to a Zipkin-compatible collector.
 
-The collector is already running, reachable from the proxies, and accepting Zipkin v2
-spans. Replace the example URL with your collector's ingestion endpoint:
+The example assumes that the collector is already running, reachable from the proxies, and
+accepting Zipkin v2 spans. Replace the example URL with your collector's ingestion endpoint:
 
 {% policy_yaml namespace=kong-mesh-demo %}
 ```yaml
@@ -263,7 +263,7 @@ spec:
 
 `sampling` and `tags` have no effect with an empty `backends` list.
 
-This stops spans from those proxies only. It doesn't turn off application instrumentation, or
+The policy stops spans from those proxies only. It doesn't turn off application instrumentation, or
 spans from other proxies on the request path. Removing the policy restores the broader one.
 
 ## Overlapping policies

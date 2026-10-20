@@ -69,7 +69,7 @@ to create the mesh on the global control plane, and `kubectl` to apply its traff
 to the zone. Terraform owns only the global control plane in this example; the remaining
 resources have explicit setup and cleanup steps.
 
-Unlike the 2.x example, it does not configure `Mesh.mtls`, an allow-all `from` policy, or shared
+Unlike the 2.x example, this guide does not configure `Mesh.mtls`, an allow-all `from` policy, or shared
 zone ingress and egress. Workload security uses `MeshIdentity` and identity-based permissions.
 
 ## Create the global control plane

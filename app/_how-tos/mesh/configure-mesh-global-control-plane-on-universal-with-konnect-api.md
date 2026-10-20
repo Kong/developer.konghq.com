@@ -18,7 +18,7 @@ tags:
 search_aliases:
 - quickstart
 tldr:
-  q: How do I connect a universal zone to {{site.konnect_short_name}} for {{site.mesh_product_name}} 3.x?
+  q: How do I connect a Universal zone to {{site.konnect_short_name}} for {{site.mesh_product_name}} 3.x?
   a: Create a new global control plane running v3, deploy a 3.x zone control plane
     with its {{site.konnect_short_name}} credentials, and verify that the zone connects.
 prereqs:

@@ -94,9 +94,9 @@ prereqs:
   inline:
     - title: Helm
       include_content: prereqs/helm
-    - title: minikube
+    - title: Docker, kubectl, and minikube
       content: |
-        This guide requires [minikube](https://minikube.sigs.k8s.io/docs/start/) with the Docker driver to run two local Kubernetes clusters, one for each zone.
+        This guide requires [Docker](https://docs.docker.com/get-docker/), [`kubectl`](https://kubernetes.io/docs/tasks/tools/), and [minikube](https://minikube.sigs.k8s.io/docs/start/) with the Docker driver to run two local Kubernetes clusters, one for each zone.
     - title: Network access
       content: |
         Confirm the minikube nodes have outbound access on port 443 to your regional {{site.konnect_short_name}} KDS endpoint, `$KONNECT_REGION.mesh.sync.konghq.com`.
@@ -396,8 +396,8 @@ Then switch with `kubectl config use-context $ZONE2_PROFILE` and run it again, s
 
 {% include md/mesh/how-tos/deploy-test-applications.md %}
 
-The client's `kuma.io/reachable-backends` annotation selects the `server` MeshService by its `kuma.io/display-name` and `k8s.kuma.io/namespace` labels.
-Those labels also match the `server` MeshService synced from the other zone, so the client gets an outbound for both.
+The client's `kuma.io/reachable-backends` annotation selects the `server` `MeshService` by its `kuma.io/display-name` and `k8s.kuma.io/namespace` labels.
+Those labels also match the `server` `MeshService` synced from the other zone, so the client gets an outbound for both.
 
 ## Verify cross-zone traffic
 

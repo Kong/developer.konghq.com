@@ -40,7 +40,7 @@ to verify before removing the old proxies.
 ## Choose the transition release
 
 Start by [running the {{site.mesh_product_name}} 3.x readiness checker](/mesh/check-upgrade-readiness/) against the
-complete estate. Its report identifies legacy ZoneIngress and ZoneEgress resources, related
+complete estate. Its report identifies legacy `ZoneIngress` and `ZoneEgress` resources, related
 `Mesh` settings, and version or control plane configuration that blocks the upgrade. Save the
 report as the baseline for the migration.
 
@@ -110,7 +110,7 @@ Prepare the identity and trust configuration described in the
 issuing identity, and prepare permissions for the clients that will connect to them.
 
 Do not complete the application identity rollout before deploying egress. Workloads using
-MeshExternalService need mesh-scoped zone egress when they switch to MeshIdentity. Deploy
+`MeshExternalService` need mesh-scoped zone egress when they switch to `MeshIdentity`. Deploy
 and validate the egress first, then switch a canary client and test its external-service calls
 before migrating the remaining clients.
 
@@ -118,8 +118,8 @@ Use `MeshExternalService` for external destinations served by the new egress. Le
 `ExternalService` configuration is not consumed by its listener generator. Verify the
 destination endpoints and upstream TLS settings rather than copying only the service name.
 
-Prepare policies that select the new Dataplanes, using the computed ingress or egress role
-labels and, where needed, a zone label and listener `sectionName`. See
+Prepare policies that select the new `Dataplane` resources, using the computed ingress or egress
+role labels and, where needed, a zone label and listener `sectionName`. See
 [selecting zone proxies](/mesh/mesh-scoped-zone-proxies/#select-the-proxy-then-select-its-traffic).
 
 For egress, apply explicit `MeshTrafficPermission` allows for the required callers and
@@ -178,10 +178,10 @@ or zone token.
 
 For ingress, publish the reachable address using `MeshZoneAddress` on the zone control
 plane only when the new proxy is ready for incoming traffic. For egress, a ready listener can
-enter discovery as soon as the Dataplane is available, so its identity and permissions must
+enter discovery as soon as the `Dataplane` is available, so its identity and permissions must
 already be prepared.
 
-The [zone-proxy reference](/mesh/mesh-scoped-zone-proxies/#universal) contains the Dataplane
+The [zone-proxy reference](/mesh/mesh-scoped-zone-proxies/#universal) contains the `Dataplane`
 and address examples. Keep the old processes, credentials and address configuration available
 for rollback during the transition.
 
@@ -189,8 +189,8 @@ for rollback during the transition.
 
 For each migrated mesh and zone:
 
-1. Inspect the replacement Dataplanes and confirm their role labels, mesh, listener names and
-   accepted Envoy configuration. An accepted resource or running Pod is not sufficient.
+1. Inspect the replacement `Dataplane` resources and confirm their role labels, mesh, listener
+   names and accepted Envoy configuration. An accepted resource or running Pod is not sufficient.
 1. Inspect the endpoints in a calling proxy. Confirm that cross-zone traffic uses the new
    ingress address and that external traffic uses the new egress instances.
 1. Send a fresh cross-zone request and verify the destination workload and zone. Confirm
@@ -221,7 +221,7 @@ rows:
   - legacy: "`kuma.ingress` and `kuma.egress` Helm blocks"
     replacement: "Use `kuma.meshes[].ingress` and `kuma.meshes[].egress`. Remove the old blocks before the 3.x chart upgrade."
   - legacy: "`--proxy-type=ingress` or `--proxy-type=egress`"
-    replacement: "Run an ordinary Dataplane with zone listeners. Remove the corresponding proxy-type environment override."
+    replacement: "Run an ordinary `Dataplane` with zone listeners. Remove the corresponding proxy-type environment override."
   - legacy: "Zone-proxy tokens and `dpServer.authn.zoneProxy` settings"
     replacement: "Use the data plane authentication model. Kubernetes uses the configured service account authentication; Universal commonly uses dataplane tokens."
   - legacy: "`Mesh.routing.defaultForbidMeshExternalServiceAccess`"
@@ -229,7 +229,7 @@ rows:
   - legacy: "`Mesh.routing.zoneEgress`"
     replacement: "Remove for 3.x. Do not use the old switch to disable or roll back the new topology."
   - legacy: "Standalone zone-proxy inspection endpoints and commands"
-    replacement: "Inspect the replacement as a Dataplane, using `/meshes/{mesh}/dataplanes/{name}/{xds,stats,clusters}`."
+    replacement: "Inspect the replacement as a `Dataplane`, using `/meshes/{mesh}/dataplanes/{name}/{xds,stats,clusters}`."
   - legacy: "Universal `runtime.universal.zoneResourceCleanupAge`"
     replacement: "Review `runtime.universal.dataplaneCleanupAge`, which now also governs zone proxies and defaults to 72 hours."
 {% endtable %}
@@ -253,7 +253,7 @@ resources or insight endpoints.
 
 {:.warning}
 > **Publish each zone's `MeshZoneAddress` as soon as that zone runs 3.x.** In 3.x, other zones
-> reach a zone's ingress only through its `MeshZoneAddress`, and the resource can't be created
+> reach a zone's ingress only through its `MeshZoneAddress`, and the resource cannot be created
 > before the zone control plane runs 3.x. Cross-zone `MeshService` and `MeshMultiZoneService`
 > traffic into the zone is down until the resource exists and has synced to the other zones.
 > On Kubernetes, the upgraded zone control plane creates it from the ingress Service; check that
@@ -302,4 +302,4 @@ changes do not move established connections instantly; plan for draining or reco
 
 Once a zone control plane runs 3.x, restarting a legacy proxy is not a rollback strategy.
 Any return to 2.x requires the product's supported control plane and data recovery procedure,
-not just restoration of the old Deployment.
+not only restoration of the old Deployment.

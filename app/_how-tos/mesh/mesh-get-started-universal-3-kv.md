@@ -9,6 +9,8 @@ products:
   - mesh
 works_on:
   - on-prem
+tools:
+  - kongctl
 tags:
   - get-started
   - universal-mode
@@ -69,7 +71,7 @@ Check that the store is listening on port `5050`:
 docker logs kong-mesh-demo-kv
 ```
 
-```
+```text
 time=2025-03-14T12:17:34.630Z level=INFO ... msg="server running" addr=:5050
 ```
 {:.no-copy-code}
@@ -112,7 +114,7 @@ docker exec --privileged kong-mesh-demo-kv \
 
 The last line of the output is:
 
-```
+```text
 # transparent proxy setup completed successfully
 ```
 {:.no-copy-code}
@@ -159,7 +161,7 @@ kongctl get mesh dataplanes \
   --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
 ```
 
-```
+```text
 MESH     NAME  TAGS  ADDRESS      AGE
 default  kv          172.18.78.2  10s
 ```
@@ -173,7 +175,7 @@ kongctl get mesh inspect dataplanes \
   --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
 ```
 
-```
+```text
 MESH     NAME  STATUS
 default  kv    Online
 ```
@@ -191,7 +193,7 @@ kongctl get mesh meshservices \
   --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
 ```
 
-```
+```text
 MESH     NAME  AGE
 default  kv    5s
 ```

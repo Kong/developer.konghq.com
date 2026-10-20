@@ -144,10 +144,10 @@ store:
     dbName: kuma
 ```
 
-The zone `name` is mandatory and has to be a valid RFC 1035 DNS label: lower-case letters,
+The zone `name` is mandatory and has to be a valid RFC 1035 DNS label: lowercase letters,
 digits and dashes, starting with a letter. It is not cosmetic: the name is stamped onto every
 resource the zone owns, appears in KRIs, and is what a
-[MeshMultiZoneService](/mesh/meshmultizoneservice/) selects zones by.
+[`MeshMultiZoneService`](/mesh/meshmultizoneservice/) selects zones by.
 
 `globalAddress` takes `grpc://` or `grpcs://`; anything else is rejected at startup. Use
 `grpcs` and give `kds.rootCaFile` the CA that signed the global control plane's certificate.
@@ -213,7 +213,7 @@ Neither generator runs on a global control plane, or against a Kubernetes store.
 
 ## Issuing identities
 
-A mesh issues workload identities through [MeshIdentity](/mesh/policies/meshidentity/), the same
+A mesh issues workload identities through [`MeshIdentity`](/mesh/policies/meshidentity/), the same
 on Universal as on Kubernetes. What differs is the default SPIFFE path: `/workload/{workload}`
 on Universal, against `/ns/{namespace}/sa/{service-account}` on Kubernetes. The workload name
 comes from the `kuma.io/workload` label on the `Dataplane`.

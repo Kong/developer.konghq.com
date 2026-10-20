@@ -31,7 +31,7 @@ Zone proxies carry traffic between zones or from a mesh to external services. In
 {{site.mesh_product_name}} 3.x, each zone proxy belongs to one mesh and is represented by a
 `Dataplane`. Its `networking.listeners` entries give it an ingress or egress role.
 
-This lets you select zone proxies with policies just as you select workload proxies. The
+Representing zone proxies as `Dataplane` resources lets you select them with policies just as you select workload proxies. The
 important difference is the traffic they handle: an ingress forwards an encrypted connection,
 while an egress can inspect traffic after terminating mesh mTLS. Selecting a zone proxy does
 not make every policy meaningful on both roles.
@@ -56,7 +56,7 @@ Mesh-scoped proxies bring those concerns together:
   and rollout, using the same `Dataplane` inspection and authentication model as workloads.
 
 The tradeoff is more infrastructure: separate meshes need separate proxy capacity and can
-need separate ingress load balancers. This provides a clearer configuration and operational
+need separate ingress load balancers. The mesh-scoped model provides a clearer configuration and operational
 boundary, not automatic network isolation or permission to access another mesh.
 
 Mesh-scoped proxies were introduced in 2.14; {{site.mesh_product_name}} 3.x removes support for the legacy standalone
@@ -392,7 +392,7 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-This records traffic; it does not allow traffic that permissions deny. To log selected callers
+This policy records traffic; it does not allow traffic that permissions deny. To log selected callers
 or destinations, add the `rules[].matches` described in
 [MeshAccessLog](/mesh/policies/meshaccesslog/). Choose a format that includes the peer identity
 and requested server name when you need an authorization audit trail.

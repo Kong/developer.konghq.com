@@ -124,7 +124,7 @@ rows:
 {% endtable %}
 
 Running the collector outside the mesh is the simpler choice. If it has to sit inside, use
-network controls to limit who can reach its OTLP port, since mesh authorization will not.
+network controls to limit who can reach its OTLP port, since mesh authorization doesn't.
 
 ## Configure the collector connection
 

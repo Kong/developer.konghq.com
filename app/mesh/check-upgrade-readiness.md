@@ -40,8 +40,8 @@ The checker audits the control plane API for:
 
 - Control planes and data plane proxies that are not on versions compatible with the upgrade.
 - Legacy policies, services, gateways, zone proxies, and other resources removed in 3.x.
-- `Mesh` settings replaced by MeshIdentity, MeshTrust, MeshMetric, MeshTrace, MeshAccessLog, and
-  other resources.
+- `Mesh` settings replaced by `MeshIdentity`, `MeshTrust`, `MeshMetric`, `MeshTrace`,
+  `MeshAccessLog`, and other resources.
 - Policy target references, directions, and fields that 3.x removes or interprets differently.
 - Control plane settings that must change before the upgrade.
 - Resource names that do not meet the naming requirements in 3.x.
@@ -211,8 +211,8 @@ rows:
 {% endtable %}
 
 One finding can require changes from more than one guide. For example, replacing `Mesh.mtls`
-also requires identity-based MeshTrafficPermission rules, while MeshExternalService clients need
-mesh-scoped zone egress before they switch to MeshIdentity.
+also requires identity-based `MeshTrafficPermission` rules, while `MeshExternalService` clients
+need mesh-scoped zone egress before they switch to `MeshIdentity`.
 
 ## Use the final report as an upgrade gate
 

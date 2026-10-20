@@ -25,7 +25,7 @@ related_resources:
 zones into a single destination. A client names it instead of a per-zone service, and reaches
 whichever zones are available.
 
-It is the destination kind that cross-zone failover attaches to:
+`MeshMultiZoneService` is the destination kind that cross-zone failover attaches to:
 `MeshLoadBalancingStrategy`'s `localityAwareness.crossZone` is accepted **only** on a `to` entry
 targeting a `MeshMultiZoneService`, because the failover order is a statement about zones and
 this is the resource that spans them.
@@ -34,10 +34,11 @@ It is not a policy: there is no `targetRef`, and the resource is the destination
 on the **global** control plane only, then synced out to zones. A zone control plane attached to
 a global one rejects it:
 
-```
+```text
 Operation not allowed. Kong Mesh resources like MeshMultiZoneService can be updated or
 deleted only from the GLOBAL control plane and not from a ZONE control plane.
 ```
+{:.no-copy-code}
 
 ## Aggregate a service across zones
 

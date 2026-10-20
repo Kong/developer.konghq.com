@@ -9,6 +9,8 @@ products:
   - mesh
 works_on:
   - on-prem
+tools:
+  - kongctl
 tags:
   - get-started
   - universal-mode
@@ -150,7 +152,8 @@ spec:
 EOF
 ```
 
-The SPIFFE ID follows from the `kuma.io/workload` label you set in step 1: on Universal the path
+The SPIFFE ID follows from the `kuma.io/workload` label on the `demo-app` `Dataplane` you wrote in
+[step 4](/mesh/get-started/universal/demo-app/): on Universal the path
 defaults to `/workload/{workload}`, so `demo-app` becomes
 `spiffe://default.mesh.local/workload/demo-app`.
 
@@ -168,7 +171,7 @@ kongctl get mesh inspect dataplane kv \
   --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
 ```
 
-```
+```text
 PORT  KIND                   ORIGINS
 main  MeshTrafficPermission  kri_mtp_default___allow-demo-app-to-kv_
 ```

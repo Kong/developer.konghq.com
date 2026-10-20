@@ -381,7 +381,7 @@ rows:
   - symptom: "TCP traffic has no record yet"
     check: "Close the test connection. The default connection log is written when it ends."
   - symptom: "Logs appear locally but not at the collector"
-    check: "The backend reference resolves, and that the collector accepts logs at its endpoint."
+    check: "Confirm that the backend reference resolves, and that the collector accepts logs at its endpoint."
   - symptom: "An identity-filtered rule produces nothing"
     check: "Compare the peer's issued SPIFFE URI with the matcher and confirm the connection uses mTLS."
   - symptom: "One request produces several records"

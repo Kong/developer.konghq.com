@@ -85,8 +85,8 @@ rows:
 Pass only one of `--control-plane-id`, `--control-plane-name` or `--control-plane-url`. When
 none is passed, the configured values are used in the order URL, ID, name.
 
-Setting the control plane in configuration once is what makes the following examples readable; every
-one of them would otherwise carry `--control-plane-id <id>`.
+Setting the control plane in configuration once is what makes the examples in this reference readable; every
+one of them would otherwise carry `--control-plane-id CONTROL_PLANE_ID`.
 
 To see what is available:
 
@@ -164,12 +164,13 @@ kongctl get mesh inspect zones
 actually lands. One applying to a proxy's inbound but not its outbounds is the case that is
 hard to see any other way:
 
-```
+```text
 PORT       KIND         ORIGINS
 admin-ssl  MeshTimeout  kri_mt_default___mesh-wide-timeout_
 proxy      MeshTimeout  kri_mt_default___mesh-wide-timeout_
 postgres   MeshTimeout  kri_mt_default___outbound-timeout_
 ```
+{:.no-copy-code}
 
 `--type` reaches the proxy's own Envoy configuration instead of the control plane's view:
 
@@ -315,8 +316,8 @@ rows:
     new: "`kongctl create mesh dataplane-token`"
   - old: "`kumactl inspect dataplane NAME`"
     new: "`kongctl get mesh inspect dataplane NAME`"
-  - old: "`kumactl inspect <policy> NAME`"
-    new: "`kongctl get mesh inspect <policy> NAME`"
+  - old: "`kumactl inspect POLICY_TYPE NAME`"
+    new: "`kongctl get mesh inspect POLICY_TYPE NAME`"
   - old: "`kumactl config control-planes add`"
     new: "`kongctl login`, or `--control-plane-url` for a self-managed control plane"
 {% endtable %}
@@ -330,7 +331,7 @@ Beyond the command names:
   it installs `kongctl`'s own features, not a control plane.)
 - **`kumactl` still installs the transparent proxy.** It ships in the
   {{site.mesh_product_name}} archive, and on Universal hosts `kumactl install transparent-proxy`
-  is how the iptables rules are installed. See
+  is how you install the iptables rules. See
   [Deploy a Universal data plane proxy](/mesh/universal-data-plane/#transparent-proxying).
 - **`kumactl apply -v` variables are gone.** Templating a resource before applying it is a job
   for whatever produces the YAML.

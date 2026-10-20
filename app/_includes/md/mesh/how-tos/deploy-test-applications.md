@@ -1,7 +1,7 @@
 The namespace labels select the mesh and enable sidecar injection. The server is a simple HTTP
 destination. The client runs `curl` and has a dedicated ServiceAccount so its identity is explicit.
 A data plane proxy only gets outbounds for the destinations it declares, so the client lists
-the `server` MeshService in its `kuma.io/reachable-backends` annotation. Without it, the client
+the `server` `MeshService` in its `kuma.io/reachable-backends` annotation. Without it, the client
 can't reach `server` at all, whatever the traffic permissions allow.
 
 ```sh

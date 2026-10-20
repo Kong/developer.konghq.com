@@ -71,7 +71,7 @@ External client → API gateway → gateway sidecar → backend sidecar → appl
 ```
 
 Incoming traffic on excluded ports reaches the API gateway directly, bypassing its mesh
-sidecar's inbound processing. Outgoing traffic from the gateway is intercepted by the sidecar and sent through
+sidecar's inbound processing. The sidecar intercepts outgoing traffic from the gateway and sends it through
 the mesh. If the chosen backend is in another zone, the mesh connection also passes through
 that zone's ingress.
 
@@ -144,7 +144,7 @@ as public listeners. If a controller is also injected, review its own listening 
 ### Keep public gateway Services out of mesh discovery
 
 Port exclusion and Service discovery are separate settings. Excluding a port removes its
-generated Dataplane inbound, but does not by itself prevent the Service from producing a
+generated `Dataplane` inbound, but does not by itself prevent the Service from producing a
 `MeshService`. Mesh clients can then discover a destination with no endpoints for that port.
 
 Add this annotation to each gateway Service that should remain outside mesh discovery.
@@ -157,7 +157,7 @@ metadata:
 ```
 
 The **Pod annotation** controls traffic interception. The **Service annotation** suppresses
-mesh inbounds derived from that Service and its generated MeshService; it does not disable
+mesh inbounds derived from that Service and its generated `MeshService`; it does not disable
 the Kubernetes Service or expose it publicly. Do not put `kuma.io/ignore` on the backend
 Services the gateway must reach through the mesh.
 
@@ -168,13 +168,13 @@ client still depends on that client's passthrough and network configuration.
 
 Roll out new Pods through the gateway's normal deployment process so the injector writes the
 updated transparent proxy configuration. Retain the gateway image, service account and
-routes. Inspect the new Dataplane: excluded ports must be absent from its inbounds, while
+routes. Inspect the new `Dataplane`: excluded ports must be absent from its inbounds, while
 ports intentionally left in the mesh should remain. A Pod injected by an older control plane
 does not gain the updated excluded-inbound behavior just from editing the Deployment template.
 
 ### Universal
 
-Use an ordinary Dataplane and direct the gateway process's outbound traffic through its
+Use an ordinary `Dataplane` and direct the gateway process's outbound traffic through its
 sidecar. No gateway label is required:
 
 ```yaml
@@ -192,7 +192,7 @@ outbound interception as described in [Universal data plane proxies](/mesh/unive
 Install the transparent proxy rules with
 `kumactl install transparent-proxy --exclude-inbound-ports 8000,8443`, or set
 `redirect.inbound.excludePorts` in the file passed with `--config`, using the gateway's actual
-listening ports. Do not declare those excluded ports as Dataplane inbounds. Unlike
+listening ports. Do not declare those excluded ports as `Dataplane` inbounds. Unlike
 Kubernetes, you maintain that resource yourself. Retain any other inbounds that the mesh
 should serve, and verify the interception rules before exposing the gateway.
 
@@ -236,7 +236,7 @@ Do not set the gateway's application upstream to the zone ingress's raw address:
 is part of mesh transport, not a replacement for the service destination.
 
 The gateway's public route and a [MeshHTTPRoute](/mesh/policies/meshhttproute/) have different
-jobs. The public route chooses where an external request goes. A MeshHTTPRoute on the gateway
+jobs. The public route chooses where an external request goes. A `MeshHTTPRoute` on the gateway
 sidecar can then change the mesh backend used for that outbound request. It does not configure
 the gateway's public hostname, certificate or listener.
 
@@ -318,16 +318,16 @@ inside outbound interception; do not exclude the backend port from outbound prox
 
 ### Keep multi-zone routing and authorization separate
 
-Using ExternalName does not bypass MeshIdentity. Once the gateway sidecar recognizes the
-aggregate's VIP and port, it uses the normal MeshMultiZoneService connection configuration:
+Using ExternalName does not bypass `MeshIdentity`. Once the gateway sidecar recognizes the
+aggregate's VIP and port, it uses the normal `MeshMultiZoneService` connection configuration:
 
-- The gateway sidecar presents its workload certificate. It needs a matching MeshIdentity
+- The gateway sidecar presents its workload certificate. It needs a matching `MeshIdentity`
   and the trust required to validate the destination.
 - The sidecar builds destination identity checks from the SPIFFE identities advertised in
-  `spec.identities` of the MeshServices selected by the aggregate. The alias's DNS name is
+  `spec.identities` of the `MeshService` resources selected by the aggregate. The alias's DNS name is
   not a workload identity and does not need to appear in a mesh certificate.
 - For a remote backend, zone ingress forwards the workload mTLS connection. The destination
-  proxy authenticates the gateway and evaluates its MeshTrafficPermission rules.
+  proxy authenticates the gateway and evaluates its `MeshTrafficPermission` rules.
 
 Allow the gateway's actual SPIFFE ID on the backend proxies in every zone that can receive
 traffic, using the permission pattern shown in [Allow the gateway to call the backend](#allow-the-gateway-to-call-the-backend). Do not attach the permission to the ExternalName
@@ -337,11 +337,11 @@ are identical across zones.
 
 For outbound policies, select the gateway with `spec.targetRef`, then use
 `spec.to[].targetRef.kind: MeshMultiZoneService` and labels from the aggregate itself. Do not
-use the Kubernetes alias name as a MeshService selector. Keep the aggregate's service
+use the Kubernetes alias name as a `MeshService` selector. Keep the aggregate's service
 selector narrow and verify its advertised identities and trust before granting access; DNS
 resolution alone is not evidence of authorization.
 
-Validate both layers: check the HTTPRoute's `Accepted` and `ResolvedRefs` conditions, resolve
+Validate both layers: check the `HTTPRoute`'s `Accepted` and `ResolvedRefs` conditions, resolve
 the mesh hostname from the gateway, and verify a request reaches an intended backend. Then
 exercise another eligible zone and a disallowed caller. A route can be accepted while DNS,
 cross-zone reachability, trust or permissions still prevent traffic.
@@ -351,11 +351,11 @@ cross-zone reachability, trust or permissions still prevent traffic.
 The backend authenticates the gateway sidecar's SPIFFE identity. It does not receive the
 external user's identity as the mesh TLS peer. Authenticate users and enforce public API
 authorization in the gateway or application; do not treat a forwarded header as a
-MeshTrafficPermission identity.
+`MeshTrafficPermission` identity.
 
 This example allows the gateway identity to call proxies labeled `app: payments`. Replace the
 SPIFFE URI with the URI in your gateway proxy's workload certificate and ensure the backend
-Dataplanes carry the selected label:
+`Dataplane` resources carry the selected label:
 
 {% policy_yaml %}
 ```yaml
@@ -387,7 +387,7 @@ and identity verification.
 
 ## Apply policies to gateway-to-backend traffic
 
-For outbound behavior, select the gateway Dataplane at the top level and the destination under
+For outbound behavior, select the gateway `Dataplane` at the top level and the destination under
 `to`. This policy gives the gateway sidecar two seconds to connect to `payments` and five
 seconds for an HTTP request:
 
@@ -414,7 +414,7 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-Replace the destination labels with those on your MeshService. These limits start on the
+Replace the destination labels with those on your `MeshService`. These limits start on the
 gateway-to-backend hop; they do not bound time already spent authenticating or processing a
 request in the API gateway. Coordinate them with the gateway's own timeout budget.
 
@@ -428,15 +428,15 @@ rows:
   - concern: "Public TLS, user authentication, public routes and per-consumer limits"
     configure: "In the API gateway. Public traffic bypasses the mesh sidecar's inbounds."
   - concern: "Mesh backend routing, retries, timeouts, load balancing and circuit breaking"
-    configure: "With outbound policies selecting the gateway Dataplane and destination."
+    configure: "With outbound policies selecting the gateway `Dataplane` and destination."
   - concern: "Which gateway workloads may call a backend"
-    configure: "With MeshTrafficPermission selecting the backend proxy and matching the gateway's identity."
+    configure: "With `MeshTrafficPermission` selecting the backend proxy and matching the gateway's identity."
   - concern: "Mesh-side access logs, metrics and traces"
     configure: "With observability policies selecting the gateway proxy. These supplement the gateway's public request logs."
 {% endtable %}
 
 Use labels you manage, such as `app: edge-gateway`, to select the gateway proxies; add a zone
-label when needed. A proxy-wide `targetRef` can select a Dataplane with no inbounds, so a
+label when needed. A proxy-wide `targetRef` can select a `Dataplane` with no inbounds, so a
 gateway does not need a special marker to receive outbound policies.
 
 Do not use `sectionName` to name an excluded public listener: that port is not a mesh inbound.
@@ -451,7 +451,7 @@ workloads, so user-specific rate limits and authorization still belong at the pu
 ## Update an existing 2.x gateway
 
 Keep the API gateway and sidecar architecture, but replace its special gateway configuration.
-It is not replaced by zone ingress.
+Zone ingress does not replace the API gateway.
 
 1. Inventory every listening port and Service on the gateway and any injected controller.
    Decide which ports accept traffic directly and which remain mesh-protected.
@@ -459,11 +459,11 @@ It is not replaced by zone ingress.
    `traffic.kuma.io/exclude-inbound-ports`. Add `kuma.io/ignore: "true"` to gateway Services
    that should not become mesh destinations. Roll out new Pods with the updated injector.
 1. On Universal, remove the `kuma.io/gateway` label and old `networking.gateway` block, set the
-   inbound port exclusions, and remove those ports from the Dataplane's declared inbounds.
+   inbound port exclusions, and remove those ports from the `Dataplane`'s declared inbounds.
 1. Replace policy selectors and locality keys that depend on `kuma.io/gateway` with labels
    you manage. Move any required custom tags from `networking.gateway.tags` to labels too.
 1. Update dashboards and inspection automation. These proxies now report as ordinary
-   Dataplanes: `MeshMetric` reports `sidecar` rather than `gateway` for `kuma.proxy_role`,
+   `Dataplane` resources: `MeshMetric` reports `sidecar` rather than `gateway` for `kuma.proxy_role`,
    gateway insight counters are removed, and gateway-specific inspection filters are gone.
 1. Verify public traffic, readiness probes, backend permissions and outbound policies before
    completing the rollout. Rehearse with the exact versions you plan to deploy.
@@ -481,14 +481,14 @@ routes and certificates, before upgrading.
 
 ## Verify the gateway and mesh separately
 
-1. Inspect the traffic-serving Pod and its Dataplane. Confirm the sidecar, mesh membership,
+1. Inspect the traffic-serving Pod and its `Dataplane`. Confirm the sidecar, mesh membership,
    port exclusions and labels used by policies. Excluded ports must not appear as inbounds.
-1. Check that ignored gateway Services have no generated MeshService. Confirm that intended
+1. Check that ignored gateway Services have no generated `MeshService`. Confirm that intended
    backend Services still have mesh destinations and endpoints.
 1. Confirm that the gateway has the expected public listener, certificate and route using its
    own configuration and logs.
 1. Inspect the gateway sidecar's active configuration. Confirm that the backend destination and
-   outbound policy settings exist and were accepted by Envoy.
+   outbound policy settings exist and that Envoy accepted them.
 1. Send a request through the public gateway and verify the backend response. Observe both the
    gateway's public request log and mesh-side telemetry to confirm the full path.
 1. Test a rejected external user at the API gateway and a disallowed workload at the backend.

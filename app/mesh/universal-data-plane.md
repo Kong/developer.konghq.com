@@ -68,7 +68,7 @@ immutable image that templates the file at boot.
 ## The labels are what policies see
 
 `labels` on the `Dataplane` are the only identity a policy can select on. There are no
-per-inbound tags any more.
+per-inbound tags anymore.
 
 `kuma.io/workload` does more than any other label, and your own labels are what selectors
 match on:

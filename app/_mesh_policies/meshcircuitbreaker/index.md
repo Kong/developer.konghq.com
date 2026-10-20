@@ -3,7 +3,7 @@ title: Mesh Circuit Breaker
 name: MeshCircuitBreakers
 products:
 - mesh
-description: Cap the connections a proxy will open to a destination, and eject failing endpoints from the load balancing pool.
+description: Cap the connections a proxy opens to a destination, and eject failing endpoints from the load balancing pool.
 content_type: plugin
 icon: meshcircuitbreaker.png
 related_resources:
@@ -32,7 +32,7 @@ observations.
 ## Cap connections to a destination
 
 The following example limits the connections that proxies labeled `app: web` open to
-`backend`. The limits are small to make testing easy, so size production limits for your
+`backend`. The limits are small to simplify testing, so size production limits for your
 expected concurrency:
 
 {% policy_yaml namespace=kong-mesh-demo %}

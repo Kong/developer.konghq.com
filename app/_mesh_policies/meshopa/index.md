@@ -231,7 +231,7 @@ credentials in an inline `agentConfig`.
 
 ## Overlapping policies
 
-When several MeshOPA policies apply to the same proxy, their `appendPolicies` lists are
+When several `MeshOPA` policies apply to the same proxy, their `appendPolicies` lists are
 combined. A workload-specific policy adds its entries to the mesh-wide ones instead of
 replacing them.
 

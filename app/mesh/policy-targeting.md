@@ -122,9 +122,10 @@ can assert any tag. So inbound matches on the SPIFFE ID that
 [MeshIdentity](/mesh/policies/meshidentity/) issued and mTLS proves, which the caller cannot
 forge.
 
-{{site.mesh_product_name}} 3.x removed the `from` array and `MeshServiceSubset` from
-[MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) for this reason: those
-selectors matched an inbound client on tags the client set itself.
+For this reason, {{site.mesh_product_name}} 3.x removes the `from` array, and with it client
+selection by `MeshServiceSubset`, from every policy: those selectors matched an inbound client
+on tags the client set itself. Inbound policies such as
+[MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) match clients in `rules` instead.
 
 ## What each field accepts
 

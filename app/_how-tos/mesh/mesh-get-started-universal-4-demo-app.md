@@ -9,6 +9,8 @@ products:
   - mesh
 works_on:
   - on-prem
+tools:
+  - kongctl
 tags:
   - get-started
   - universal-mode
@@ -182,7 +184,7 @@ kongctl get mesh inspect dataplanes \
   --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
 ```
 
-```
+```text
 MESH     NAME      STATUS
 default  demo-app  Online
 default  kv        Online

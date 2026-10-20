@@ -172,7 +172,7 @@ configuration.
 ### Priorities inside a zone
 
 `localZone.affinityTags` groups local endpoints by label values they share with the caller. For
-each key, the control plane compares the caller Dataplane's label value with endpoint
+each key, the control plane compares the caller `Dataplane`'s label value with endpoint
 metadata. An endpoint joins the first group it matches. Groups share traffic by weight at the
 same priority, instead of being tried in order on failure.
 
@@ -192,10 +192,10 @@ list: with two tags they're 90 and 9, and unmatched local endpoints get 1. These
 weights, not fixed percentages. Set weights on all groups or none, because partial weights are
 rejected.
 
-The caller Dataplane must carry the label, and destination endpoint metadata must carry a
+The caller `Dataplane` must carry the label, and destination endpoint metadata must carry a
 matching value. Endpoint metadata comes from resource labels or inbound tags. A key missing
 from the caller creates no group, and a key that no endpoint has gets no traffic. Node labels
-only work if they're also in the workload's Dataplane labels and endpoint metadata.
+only work if they're also in the workload's `Dataplane` labels and endpoint metadata.
 
 Explicit locality groups rebuild endpoint priorities and don't keep remote fallback. If remote
 endpoints must stay eligible, add a `crossZone.failover` list on a `MeshMultiZoneService`.

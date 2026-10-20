@@ -26,14 +26,14 @@ A policy can name it in `spec.to[].targetRef`, a route can send traffic to it in
 and the mesh can originate TLS to it, so an external API or database is governed by the same
 timeouts, retries and circuit breakers as anything inside the mesh.
 
-It replaces the legacy `ExternalService` resource, which is removed in 3.0.
+`MeshExternalService` replaces the legacy `ExternalService` resource, which is removed in 3.0.
 
-It is not a policy: there is no `targetRef`, because the resource *is* the destination. On
+The resource is not a policy: there is no `targetRef`, because it *is* the destination. On
 Kubernetes it is accepted only in the system namespace.
 
 Traffic to a `MeshExternalService` always goes through a [mesh-scoped zone egress](/mesh/mesh-scoped-zone-proxies/)
 in the client's zone. The client's sidecar sends the request to the egress over mesh mTLS, and
-the egress connects to the endpoints. This requires:
+the egress connects to the endpoints. This path requires the following:
 
 * A zone egress for the mesh in the client's zone, selected by an initialized `MeshIdentity`.
   Without one, the destination has no endpoints.
@@ -166,7 +166,7 @@ environment. This applies even when `spec.extension` is set.
 
 {:.warning}
 > `verification.mode` is the field to be deliberate about. `SkipAll` and `SkipCA` mean the
-> egress will accept any certificate the endpoint presents, which removes the guarantee that
+> egress accepts any certificate the endpoint presents, which removes the guarantee that
 > TLS was there to provide. `SkipSAN` still checks that the certificate chains to a trusted CA.
 
 ## Status

@@ -77,7 +77,7 @@ policies. For more information, see
 
 `sectionName` selects a different side of the connection depending on where you set it:
 
-* `targetRef.sectionName`: an inbound of the selected Dataplane. It's only accepted in a policy
+* `targetRef.sectionName`: an inbound of the selected `Dataplane`. It's only accepted in a policy
   that uses `rules`, so a policy with `to` can't set it.
 * `to[].targetRef.sectionName`: a port of the destination `MeshService` or `MeshMultiZoneService`.
 

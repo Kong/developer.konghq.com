@@ -283,7 +283,7 @@ the last host it selected. It defaults to one reattempt. An `http` block that se
 `hostSelectionMaxAttempts` is rejected, so set it alongside another `http` field.
 
 Host selection picks another endpoint of the same backend. It doesn't fail over to a different
-MeshService, and it needs several eligible endpoints to make a difference.
+`MeshService`, and it needs several eligible endpoints to make a difference.
 
 ## Filter which requests are eligible
 

@@ -73,13 +73,13 @@ guides cover the live traffic behavior that the report cannot verify.
 
 ## Compatibility between minor versions
 
-Starting with {{site.mesh_product_name}} 1.4.x, upgrades can be performed up to two minor versions. For example:
+Starting with {{site.mesh_product_name}} 1.4.x, you can upgrade up to two minor versions at a time. For example:
 * You can upgrade from `2.12.x` to `2.13.x`
 * You can upgrade from `2.11.x` to `2.13.x`
 * To upgrade from `2.9.x` to `2.13.x`, first upgrade from `2.9.x` to `2.11.x`, then from `2.11.x` to `2.13.x`.
 
 {:.warning}
-> Some versions have specific upgrade instructions. Make sure to read the [version specific upgrade notes](/mesh/version-specific-upgrade-notes/) for more information.
+> Some versions have specific upgrade instructions. Make sure to read the [version-specific upgrade notes](/mesh/version-specific-upgrade-notes/) for more information.
 
 {:.info}
 > To avoid control plane downtime when restarting on the new version, make sure you have more than one instance of the control plane in each zone.
@@ -99,15 +99,15 @@ Although control planes within a zone don't connect to each other, they share a 
 * You cannot read data written on control plane `2.13.x` with a control plane version `2.10.x` or lower. It may cause undefined behavior.
 
 
-{:warning}
-> Some feature flags may not provide backward compatibility. When this is the case, it's clearly documented in the [control plane configuration](/mesh/reference/kuma-cp/) and will be part of the `experimental` section.
+{:.warning}
+> Some feature flags may not provide backward compatibility. When this is the case, it is clearly documented in the [control plane configuration](/mesh/reference/kuma-cp/) and is part of the `experimental` section.
 >
-> To guarantee our compatibility policy, we will always wait at least two minor versions before making these features enabled by default.
+> To guarantee our compatibility policy, we always wait at least two minor versions before making these features enabled by default.
 
 ## Single-zone
 
 To upgrade {{site.mesh_product_name}} with a single-zone deployment, first upgrade the control plane, then upgrade data plane proxies.
-To upgrade data plane proxies on Kubernetes, rollout the new deployment to allow the injector to inject the newest sidecar.
+To upgrade data plane proxies on Kubernetes, roll out the new deployment to allow the injector to inject the newest sidecar.
 
 ## Multi-zone
 

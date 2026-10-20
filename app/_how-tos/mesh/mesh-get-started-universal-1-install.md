@@ -28,10 +28,10 @@ tools:
   - kongctl
 prereqs:
   inline:
-    - title: A container runtime
+    - title: Docker
       content: |
-        A container runtime that can run Linux containers and give them addresses on a user-defined
-        network.
+        This series runs every component as a container with [Docker](https://docs.docker.com/get-docker/).
+        Docker must be able to run Linux containers and give them addresses on a user-defined network.
     - title: curl
       content: |
         Used to call the demo application from your machine.

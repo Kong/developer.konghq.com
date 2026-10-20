@@ -54,7 +54,7 @@ rows:
     after: "`MeshTrafficPermission.rules[].default.allow[].spiffeID`"
 {% endtable %}
 
-This is not a field-for-field rewrite. Migrate the four responsibilities together while the
+The migration is not a field-for-field rewrite. Migrate the four responsibilities together while the
 control planes are still running 2.x.
 
 {:.warning}

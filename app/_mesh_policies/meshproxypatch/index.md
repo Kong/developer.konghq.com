@@ -93,7 +93,7 @@ type, and carries the following fields:
 
 To narrow the Envoy object being edited, use `match.listenerName` or `match.name`. Read the
 current generated name instead of building it from a service name. Where supported, listener
-tags refer to metadata on the generated listener, not to every label on the selected Dataplane.
+tags refer to metadata on the generated listener, not to every label on the selected `Dataplane`.
 
 `value` is a native Envoy resource in YAML, parsed against the Envoy proto. A wrong type or
 enum value is rejected.

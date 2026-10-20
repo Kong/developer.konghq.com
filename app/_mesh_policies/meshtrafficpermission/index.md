@@ -126,7 +126,7 @@ receives. Read the trust domain from the caller's certificate.
 [MeshTrust](/mesh/policies/meshtrust/) publishes that domain and its CA certificates so peers
 can verify the identity. Trusting an identity doesn't grant access.
 
-With the default MeshIdentity template, the trust domain is `<mesh>.<zone>.mesh.local`, so each
+With the default `MeshIdentity` template, the trust domain is `<mesh>.<zone>.mesh.local`, so each
 zone has its own. To allow callers from several zones, add a `spiffeID` match for each zone's
 trust domain. For more information, see
 [MeshIdentity in multi-zone meshes](/mesh/policies/meshidentity/#multi-zone-meshes).
@@ -153,7 +153,7 @@ Only policies that cover the destination and its selected inbound or listener co
 an admin port doesn't deny access on other ports.
 
 {:.warning}
-> Don't write a mesh-wide deny-all and then allow services back in. A blanket `deny` matches
+> Do not write a mesh-wide deny-all and then allow services back in. A blanket `deny` matches
 > every client, and no `allow` can re-open it.
 >
 > Protected mTLS connections are already denied unless explicitly allowed. Start with the

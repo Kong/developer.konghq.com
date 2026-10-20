@@ -29,7 +29,7 @@ A client proxy reaches a `MeshService` only if it lists it in `reachableBackends
 `kuma.io/reachable-backends` annotation on Kubernetes). A proxy without `reachableBackends` gets
 no outbounds at all.
 
-It is not a policy. There is no `targetRef` (a `MeshService` *is* the target), and on Kubernetes
+`MeshService` is not a policy. There is no `targetRef` (a `MeshService` *is* the target), and on Kubernetes
 you do not write one at all.
 
 ## Where MeshServices come from
@@ -40,9 +40,10 @@ On Kubernetes the control plane generates a `MeshService` from each `Service`. C
 `MeshService` is read-only on the **global** control plane, since zones are what produce it.
 Writing one there through `kongctl` is refused before the request is sent:
 
-```
+```text
 Mesh Service is read only on this control plane and cannot be created or updated
 ```
+{:.no-copy-code}
 
 {:.warning}
 > A **zone** control plane does not protect it. It accepts a hand-written `MeshService`, and it
@@ -57,7 +58,7 @@ On Universal the zone control plane generates a `MeshService` for each distinct
 [What the control plane still does for you](/mesh/universal/#what-the-control-plane-still-does-for-you).
 You write one by hand, selecting proxies with `spec.selector`, only if you turn generation off.
 
-Either way, reading a `MeshService` is how you find out what a policy will resolve to. Its
+Either way, reading a `MeshService` is how you find out what a policy resolves to. Its
 `status` reports the VIP, the hostnames, how many proxies are backing it and whether mTLS is
 ready.
 
@@ -161,5 +162,5 @@ look at whether the destination's proxies are actually being issued certificates
 
 ## Naming
 
-A `MeshService`'s name has to be an RFC 1035 label: lower-case letters, digits and dashes, starting with a letter. This is stricter than it was, because the name appears in generated hostnames and
+A `MeshService`'s name has to be an RFC 1035 label: lowercase letters, digits and dashes, starting with a letter. This is stricter than it was, because the name appears in generated hostnames and
 SNI values.

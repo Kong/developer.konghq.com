@@ -154,7 +154,7 @@ Each of these is silent: the resource still applies, and the traffic behaves dif
 > it. Select by name with the `kuma.io/display-name` label instead.
 
 {:.warning}
-> **`networking.advertisedAddress` is removed.** It's dropped when the `Dataplane` is read, and
+> **`networking.advertisedAddress` is removed.** It is dropped when the `Dataplane` is read, and
 > other proxies reach the workload on `networking.address`. A proxy behind NAT that relied on the
 > advertised address loses its inbound traffic.
 

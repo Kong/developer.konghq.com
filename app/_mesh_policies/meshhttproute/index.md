@@ -162,7 +162,7 @@ but not `/apiary`.
 ## Rule precedence
 
 Rules are ordered by specificity, not by the order they're written in, following the Gateway
-API precedence rules. The following criteria is used to define precedence, in this order:
+API precedence rules. The following criteria define precedence, in this order:
 
 1. A match without `path` is treated as `PathPrefix /`. It ties with an explicit `PathPrefix /`
    catch-all, so the later criteria decide, and it ranks below `Exact` and longer prefixes but

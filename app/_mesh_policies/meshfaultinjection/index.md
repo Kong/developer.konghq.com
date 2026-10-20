@@ -71,7 +71,7 @@ What each field does:
 ## Listeners and protocols
 
 To apply the policy to one inbound, set the policy's `spec.targetRef.sectionName` to the
-inbound's `name` from the destination Dataplane's `spec.networking.inbound[]`, or to its port as
+inbound's `name` from the destination `Dataplane`'s `spec.networking.inbound[]`, or to its port as
 a string if it doesn't have a name. Without `sectionName`, the policy covers all eligible inbounds. Zone-proxy
 listeners can also use `rules` with `sectionName` set to the listener name.
 

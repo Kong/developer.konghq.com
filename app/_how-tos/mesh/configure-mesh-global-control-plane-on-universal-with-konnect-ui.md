@@ -14,7 +14,7 @@ works_on:
 tags:
 - service-mesh
 tldr:
-  q: How do I connect a universal zone to {{site.konnect_short_name}} for {{site.mesh_product_name}} 3.x?
+  q: How do I connect a Universal zone to {{site.konnect_short_name}} for {{site.mesh_product_name}} 3.x?
   a: Create a new global control plane running v3, deploy a 3.x zone control plane
     with its {{site.konnect_short_name}} credentials, and verify that the zone connects.
 prereqs:
@@ -42,7 +42,7 @@ cleanup:
         Stop this guide's foreground control plane with **Ctrl+C**. Do not stop other `kuma-cp` processes on the host.
     - title: Delete the {{site.konnect_short_name}} control plane
       content: |
-        In {{site.konnect_short_name}}, delete only the `example-cp` control plane created for this test. This also removes its mesh configuration. Revoke the zone token if they remain. Review the files in `MESH_INSTALL_DIR` and remove the credentials when no longer needed.
+        In {{site.konnect_short_name}}, delete only the `example-cp` control plane created for this test. This also removes its mesh configuration. Revoke the zone token if it remains. Review the files in `MESH_INSTALL_DIR` and remove the credentials when no longer needed.
 min_version:
   mesh: '3.0'
 ---
@@ -61,17 +61,24 @@ This is a fresh installation, not an upgrade procedure. If the account does not 
 
 ## Create the global control plane
 
-In [Service Mesh](https://cloud.konghq.com/mesh-manager), create a new control plane named `example-cp` using the {{site.mesh_product_name}} 3.x creation option available to your organization. Copy its ID:
+1. In the {{site.konnect_short_name}} sidebar, click [**Service Mesh**](https://cloud.konghq.com/mesh-manager).
+1. Create a new control plane named `example-cp` using the {{site.mesh_product_name}} 3.x creation option available to your organization.
+1. Copy the control plane ID and export it:
 
-```sh
-export CONTROL_PLANE_ID='YOUR_CONTROL_PLANE_ID'
-```
+   ```sh
+   export CONTROL_PLANE_ID='YOUR_CONTROL_PLANE_ID'
+   ```
 
 The exact {{site.mesh_product_name}} 3.x version-selection UI still needs confirmation. If the UI does not offer a {{site.mesh_product_name}} 3.x creation path, use the [API installation guide](/mesh/configure-mesh-global-control-plane-on-universal-with-konnect-api/), which explicitly sets `version: v3`. Do not create a v2 control plane and assume the zone installer upgrades it.
 
 ## Add the zone
 
-Open the new control plane, choose **Create zone**, select **Universal**, and name it `zone-1`. Follow the generated credential and deployment instructions for a {{site.mesh_product_name}} 3.x zone.
+1. In the {{site.konnect_short_name}} sidebar, click [**Service Mesh**](https://cloud.konghq.com/mesh-manager).
+1. Click **example-cp**.
+1. Click **Create zone**.
+1. Select **Universal**.
+1. In the **Name** field, enter `zone-1`.
+1. Follow the generated credential and deployment instructions for a {{site.mesh_product_name}} 3.x zone.
 
 The wizard provisions a system account access token for the zone. Keep it separate from the personal token used to manage {{site.konnect_short_name}}. To use the explicit deployment example that follows, copy the generated zone token into:
 

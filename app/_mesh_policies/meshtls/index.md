@@ -55,7 +55,7 @@ What each field does:
 
 * `targetRef` selects the `legacy` proxies whose inbounds change. Leaving it out selects the
   whole mesh. To change one inbound, set `targetRef.sectionName` to its `name` in the
-  Dataplane's `networking.inbound[]`. For an unnamed inbound, use its port as a string, such as
+  `Dataplane`'s `networking.inbound[]`. For an unnamed inbound, use its port as a string, such as
   `"8080"`.
 * `mode: Permissive` lets those inbounds accept plaintext as well as mTLS. It doesn't turn off
   outbound mTLS.
