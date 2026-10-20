@@ -1,0 +1,38 @@
+{% assign advisory = page.advisory %}
+{% include support/advisory_severity.html advisory=advisory %}
+
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">Severity</div>
+  <div>{{ advisory_severity | capitalize }}</div>
+</div>
+
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">Published</div>
+  <div>{{ advisory.published }}{% if advisory.updated %} (updated {{ advisory.updated }}){% endif %}</div>
+</div>
+
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">Fixed versions</div>
+  <ul class="list-none p-0 m-0">
+    {% for version in advisory.fixed_versions %}<li>{{ version }}</li>{% endfor %}
+  </ul>
+</div>
+
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">Affected versions</div>
+  <ul class="list-none p-0 m-0">
+    {% for version in advisory.affected_versions %}<li>{{ version }}</li>{% endfor %}
+  </ul>
+</div>
+
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">Resources</div>
+  <div class="flex gap-1.5 flex-col">
+    <a href="/gateway/install/">Install Kong Gateway</a>
+    <a href="/gateway/upgrade/in-place/">Upgrade Kong Gateway</a>
+  </div>
+</div>
+
+{% if page.related_resources %}
+{% include info_box/sections/related_resources.html %}
+{% endif %}
