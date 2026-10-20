@@ -78,7 +78,7 @@ faqs:
     a: |
       Reference an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) by name or id in the AI Agent's
       [`access.auth_strategies`](#schema-aigateway-agent-access) array, the same field used on AI Models. An AI Agent
-      currently accepts up to one AI Auth Strategy reference. The AI Agent has its own top-level authentication
+      accepts up to one AI Auth Strategy reference. The AI Agent has its own top-level authentication
       mechanism, so attaching an authentication AI Policy directly to its `policies` field isn't supported.
 
   - q: How do I attach AI Policies to an AI Agent?
