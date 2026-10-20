@@ -157,9 +157,10 @@ rows:
       The value of the header is the reason for the failure.
 {% endtable %}
 
-The parent [Schema Validation Produce policy](/event-gateway/policies/schema-validation-produce/) must not use `passthrough` or `mark`.
+Set the parent [Schema Validation Produce policy](/event-gateway/policies/schema-validation-produce/)  to `reject` to use this policy.
+
+The parent policy must not use `passthrough` or `mark`.
 With these failure modes, the parent sends the record without parsing it. The Mask Fields Produce policy then never runs, and the cluster stores the fields unmasked.
-Set the parent policy to `reject`.
 
 ## Selecting fields from schema metadata
 

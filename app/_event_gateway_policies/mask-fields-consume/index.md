@@ -167,9 +167,10 @@ rows:
       The value of the header is the reason for the failure.
 {% endtable %}
 
-The parent [Schema Validation Consume policy](/event-gateway/policies/schema-validation-consume/) must not use `passthrough` or `mark`.
+Set the parent [Schema Validation Consume policy](/event-gateway/policies/schema-validation-consume/) to `skip` or `error` to use this policy.
+
+The parent policy must not use `passthrough` or `mark`.
 With these failure modes, the parent delivers the record without parsing it. The Mask Fields Consume policy then never runs, and the client receives the fields unmasked.
-Set the parent policy to `skip` or `error`.
 
 ## Selecting fields from schema metadata
 
