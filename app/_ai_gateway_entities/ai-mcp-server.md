@@ -127,7 +127,7 @@ Because MCP endpoints run directly on {{site.ai_gateway}}, you don't need to hos
 
 For more information, see [MCP version support](/ai-gateway/mcp-version-support/).
 
-### Configure protocol-revision behavior {% new_in 2.1 %}
+### Configure protocol-revision behavior
 
 The following `config.server` fields control protocol-revision behavior:
 

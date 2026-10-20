@@ -280,7 +280,7 @@ When two formats serve the same path, for example `realtime` on `/realtime` for 
 <!-- TODO: Confirm Konnect UI behavior once KM-3398 ships and add UI steps/notes. -->
 <!-- TODO: Confirm `*` is accepted by the control plane API spec and what `realtime` does when auth can't protect it (RFC: left out with a warning under `*`, error if explicit). -->
 
-### Passthrough {% new_in 2.2 %}
+### Passthrough
 
 If your upstream exposes a format {{site.ai_gateway}} doesn't recognize, set `formats[].type` to `passthrough`. Request and response bodies are forwarded byte-for-byte, without `Content-Type` enforcement or schema validation.
 
