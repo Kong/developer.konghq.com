@@ -612,6 +612,7 @@ body:
    
    Network range and CIDR block requirements are the same as for a standard Dedicated Cloud Gateway.
    See [CIDR size requirements](/dedicated-cloud-gateways/reference/#cidr-size-requirements) and [Network architecture](/dedicated-cloud-gateways/network-architecture/).
+   This example is for an AWS Dedicated Cloud Gateway, but Azure is also supported. For Azure, set `provider: azure` and use an Azure region.
 {% endnavtab %}
 {% endnavtabs %}
 <!--vale on-->
@@ -653,7 +654,7 @@ body:
 
 Keep the following limitations in mind when using {{site.ai_gateway}} on Dedicated Cloud Gateways:
 
-* {{site.ai_gateway}} 2.0 on Dedicated Cloud Gateways currently only supports AWS.
+* {{site.ai_gateway}} 2.0 on Dedicated Cloud Gateways currently only supports AWS and Azure.
 * [{{site.ai_gateway}} 2.0 managed caches](/dedicated-cloud-gateways/managed-cache/) can only be created, updated, and deleted using the [Cloud Gateways API](/api/konnect/cloud-gateways/). 
 * If you're using a managed cache, you'll need to manually input the Redis info into {{site.ai_gateway}} 2.0 Policies.
 
