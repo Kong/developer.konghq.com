@@ -1,9 +1,19 @@
-Set the KDS address for the same region as the global control plane:
+Set the KDS address for the same region as the global control plane, and create a working directory:
 
 ```sh
 export CONTROL_PLANE_URL="grpcs://$KONNECT_REGION.mesh.sync.konghq.com:443"
 export MESH_INSTALL_DIR=$(mktemp -d)
+```
+
+Change to the working directory:
+
+```sh
 cd "$MESH_INSTALL_DIR"
+```
+
+Make the files you create from now on readable only by you:
+
+```sh
 umask 077
 ```
 
@@ -11,12 +21,39 @@ umask 077
 Select an available {{site.mesh_product_name}} 3.x chart version approved for your {{site.konnect_short_name}} control plane. Helm chart
 versions and application versions are different: check the `APP VERSION` column for 3.x.
 
+Add the {{site.mesh_product_name}} Helm repository:
+
 ```sh
 helm repo add kong-mesh https://kong.github.io/kong-mesh-charts
+```
+
+Update the repository index:
+
+```sh
 helm repo update
+```
+
+List the available chart versions:
+
+```sh
 helm search repo kong-mesh/kong-mesh --versions --devel
+```
+
+Export the chart version you selected:
+
+```sh
 export MESH_CHART_VERSION='REPLACE_WITH_CHART_VERSION_FOR_MESH_3'
+```
+
+Create the zone namespace:
+
+```sh
 kubectl create namespace kong-mesh-system
+```
+
+Store the zone token in a Secret:
+
+```sh
 kubectl -n kong-mesh-system create secret generic cp-token \
   --from-literal=token="$CONTROL_PLANE_TOKEN"
 ```
@@ -36,6 +73,11 @@ kuma:
       secretName: cp-token
       key: token
 EOF
+```
+
+Install the zone control plane:
+
+```sh
 helm upgrade --install kong-mesh kong-mesh/kong-mesh \
   --namespace kong-mesh-system --version "$MESH_CHART_VERSION" \
   --values values.yaml --wait --timeout 5m
@@ -51,9 +93,29 @@ instead of relying on the installer's default:
 
 ```sh
 export MESH_VERSION='{{page.latest_release.version}}'
+```
+
+Download and run the installer:
+
+```sh
 curl --fail -L https://developer.konghq.com/mesh/installer.sh | VERSION="$MESH_VERSION" sh
+```
+
+Write the zone token to a file:
+
+```sh
 printf '%s' "$CONTROL_PLANE_TOKEN" > cp-token
+```
+
+Make the token file readable only by you:
+
+```sh
 chmod 600 cp-token
+```
+
+Create `config.yaml`:
+
+```sh
 cat <<EOF > config.yaml
 environment: universal
 mode: zone

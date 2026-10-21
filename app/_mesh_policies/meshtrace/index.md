@@ -56,7 +56,7 @@ spec:
 What each field does:
 
 * `targetRef` selects which proxies emit spans. `kind: Mesh` means every proxy in the policy's
-  own namespace. If the policy is created in `{{site.mesh_namespace}}`, the policy applies to
+  own namespace. If you create the policy in `{{site.mesh_namespace}}`, it applies to
   the whole zone. To trace every zone, create the policy on the global control plane. For more
   information, see [Policy scope](/mesh/policy-targeting/#policy-scope).
 * `default` holds the rest of the configuration. There's no `to` or `rules`, because each span

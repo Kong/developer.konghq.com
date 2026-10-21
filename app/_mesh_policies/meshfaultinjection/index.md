@@ -165,8 +165,8 @@ path. Several frontend replicas can share this service-account identity, so the 
 select a single process.
 
 The destination must authenticate the identity through mesh mTLS, because plaintext traffic
-has no identity to match. The rule doesn't grant access: the caller must also be allowed by
-[MeshTrafficPermission](/mesh/policies/meshtrafficpermission/).
+has no identity to match. The rule doesn't grant access:
+[MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) must also allow the caller.
 
 ## Overlapping policies
 

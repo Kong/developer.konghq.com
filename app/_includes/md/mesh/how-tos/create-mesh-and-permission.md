@@ -2,11 +2,16 @@ Install a [kongctl build with {{site.mesh_product_name}} 3.x support](/mesh/cli/
 
 ```sh
 kongctl login
+```
+
+Confirm that `kongctl` can reach the global control plane:
+
+```sh
 kongctl get mesh resource-types --control-plane-id "$CONTROL_PLANE_ID" --region "$KONNECT_REGION"
 ```
 
 Create a new `konnect-demo` mesh and a demo identity provider on the **global** control plane.
-A mesh can only be created there, and an identity created on the global control plane reaches
+You can only create a mesh there, and an identity created on the global control plane reaches
 every zone. Setting `trustDomain` explicitly gives all zones one trust domain; the default trust
 domain includes the zone name:
 
@@ -39,16 +44,22 @@ it. The identity's trust domain plus the Kubernetes namespace and ServiceAccount
 the caller ID. You can't change `spiffeID.trustDomain` or `spiffeID.path` after creation; to use
 a different trust domain, create a new `MeshIdentity` with a different name.
 
-Wait for the identity's readiness conditions and generated trust before deploying workloads:
+Wait for the identity's readiness conditions and generated trust before deploying workloads.
+Check the identity:
 
 ```sh
 kongctl get mesh meshidentities demo-identity --mesh konnect-demo -o yaml \
   --control-plane-id "$CONTROL_PLANE_ID" --region "$KONNECT_REGION"
+```
+
+Check the generated trust:
+
+```sh
 kongctl get mesh meshtrusts --mesh konnect-demo \
   --control-plane-id "$CONTROL_PLANE_ID" --region "$KONNECT_REGION"
 ```
 
-Most policies are managed at the zone level. Confirm that the new mesh has synced to the
+You manage most policies at the zone level. Confirm that the new mesh has synced to the
 Kubernetes zone:
 
 ```sh
@@ -84,4 +95,4 @@ spec:
 EOF
 ```
 
-Only that caller is allowed to reach proxies labeled `app: server`.
+Only that caller can reach proxies labeled `app: server`.

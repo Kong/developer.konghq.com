@@ -161,7 +161,7 @@ but not `/apiary`.
 
 ## Rule precedence
 
-Rules are ordered by specificity, not by the order they're written in, following the Gateway
+{{site.mesh_product_name}} orders rules by specificity, not by the order you write them in, following the Gateway
 API precedence rules. The following criteria define precedence, in this order:
 
 1. A match without `path` is treated as `PathPrefix /`. It ties with an explicit `PathPrefix /`
@@ -180,11 +180,11 @@ depends on regex semantics.
 ## Unmatched requests
 
 Once any `MeshHTTPRoute` applies to a destination, a request that matches none of its rules
-gets a `404` and isn't passed to the destination. This covers:
+gets a `404` and isn't passed to the destination. This behavior covers:
 
-* Paths that no rule mentions.
+* Paths that no rule mentions
 * Every HTTP port of the destination, when `to[].targetRef` names a `MeshService` without a
-  `sectionName`.
+  `sectionName`
 
 Non-HTTP ports and destinations with no `MeshHTTPRoute` aren't affected. On a gRPC
 destination, the client sees the `404` as `UNIMPLEMENTED`.

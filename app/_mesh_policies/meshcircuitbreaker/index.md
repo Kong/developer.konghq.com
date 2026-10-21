@@ -181,8 +181,8 @@ detectors can't tell the two apart.
 If too few healthy endpoints remain, Envoy enters panic mode and sends traffic to all
 endpoints, including ejected ones, instead of failing requests. `healthyPanicThreshold` sets
 the percentage of healthy endpoints below which this happens, and defaults to 50%. Set it to
-`0` to disable panic mode. `healthyPanicThreshold` is only applied while outlier detection is
-enabled. When it's disabled, the 50% default applies.
+`0` to disable panic mode. `healthyPanicThreshold` applies only while outlier detection is
+enabled. When outlier detection is disabled, the 50% default applies.
 
 ## Cap incoming connections
 

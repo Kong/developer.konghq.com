@@ -22,7 +22,7 @@ related_resources:
 ---
 
 A Universal control plane is `kuma-cp` running with `environment: universal` against a store
-that is not Kubernetes. This page covers choosing a mode and a store, and joining a zone to a
+that isn't Kubernetes. This page covers choosing a mode and a store, and joining a zone to a
 global control plane.
 
 For what Universal changes about running workloads, see
@@ -70,7 +70,7 @@ rows:
     use: "Only for a zone control plane running inside a cluster. Not valid for `mode: global`."
 {% endtable %}
 
-PostgreSQL is configured under `store.postgres`, or through the matching environment variables:
+Configure PostgreSQL under `store.postgres`, or through the matching environment variables:
 
 ```yaml
 store:
@@ -109,8 +109,15 @@ store:
     dbName: kuma
 ```
 
+Migrate the database:
+
 ```sh
 kuma-cp migrate up --config-file kuma-cp.yaml
+```
+
+Start the control plane:
+
+```sh
 kuma-cp run --config-file kuma-cp.yaml
 ```
 
@@ -118,8 +125,8 @@ Run `kuma-cp migrate up` against a new or upgraded PostgreSQL database before st
 control plane. Otherwise it refuses to start with `database is not migrated`.
 
 The control plane exposes the API on 5681 and the data plane server on 5678. Proxies connect to
-the second; `kongctl` and the GUI talk to the first. The API enforces RBAC, and only requests
-from the control plane host itself are treated as admin: from anywhere else, pass a user token
+the second; `kongctl` and the GUI talk to the first. The API enforces RBAC, and treats only requests
+from the control plane host itself as admin: from anywhere else, pass a user token
 with `kongctl`'s `--control-plane-token`.
 
 ## Joining a zone to a global control plane
@@ -145,11 +152,11 @@ store:
 ```
 
 The zone `name` is mandatory and has to be a valid RFC 1035 DNS label: lowercase letters,
-digits and dashes, starting with a letter. It is not cosmetic: the name is stamped onto every
+digits and dashes, starting with a letter. It isn't cosmetic: the name is stamped onto every
 resource the zone owns, appears in KRIs, and is what a
 [`MeshMultiZoneService`](/mesh/meshmultizoneservice/) selects zones by.
 
-`globalAddress` takes `grpc://` or `grpcs://`; anything else is rejected at startup. Use
+`globalAddress` takes `grpc://` or `grpcs://`; `kuma-cp` rejects anything else at startup. Use
 `grpcs` and give `kds.rootCaFile` the CA that signed the global control plane's certificate.
 
 The global control plane itself needs no zone block:
@@ -168,7 +175,7 @@ store:
 
 ## Proxy authentication
 
-`dpServer.authn.dpProxy.type` decides how the data plane server authenticates a proxy. It is set
+`dpServer.authn.dpProxy.type` decides how the data plane server authenticates a proxy. The control plane sets it
 from the environment automatically: `serviceAccountToken` on Kubernetes, `dpToken` on
 Universal.
 
@@ -179,7 +186,7 @@ presents a **dataplane token**:
 kongctl create mesh dataplane-token --name backend-01 --workload backend --valid-for 24h > /etc/kuma/token
 ```
 
-Zone tokens are no longer accepted by the data plane server. If you previously relied on
+The data plane server no longer accepts zone tokens. If you previously relied on
 `dpServer.authn.zoneProxy.type: none` to let zone proxies connect without one, they need a
 dataplane token now. `dpServer.authn.zoneProxy` no longer affects anything.
 
@@ -200,7 +207,7 @@ columns:
     key: controls
 rows:
   - setting: "`KUMA_MESH_SERVICE_GENERATION_INTERVAL`"
-    controls: "How often `MeshService` resources are reconciled from `Dataplane` labels. 2s by default; `0` disables generation and hands you the resources to manage."
+    controls: "How often the control plane reconciles `MeshService` resources from `Dataplane` labels. 2s by default; `0` disables generation and hands you the resources to manage."
   - setting: "`KUMA_MESH_SERVICE_DELETION_GRACE_PERIOD`"
     controls: "How long a generated `MeshService` survives after its last proxy disappears. 1h by default."
   - setting: "`KUMA_IPAM_MESH_SERVICE_CIDR`"

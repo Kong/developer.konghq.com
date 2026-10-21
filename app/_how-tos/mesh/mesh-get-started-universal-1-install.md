@@ -58,7 +58,17 @@ The series writes tokens, resources and logs to a directory the containers share
 
 ```sh
 export KONG_MESH_DEMO_TMP="$(mktemp -d)"
+```
+
+Make the directory readable by the containers:
+
+```sh
 chmod 755 "$KONG_MESH_DEMO_TMP"
+```
+
+Print the directory path:
+
+```sh
 echo "$KONG_MESH_DEMO_TMP"
 ```
 
@@ -107,7 +117,7 @@ The series manages resources from your machine with `kongctl`. See
 
 ## Write the Dataplane template
 
-On Universal a proxy is described by a `Dataplane` resource. Rather than writing one per
+On Universal, a `Dataplane` resource describes a proxy. Rather than writing one per
 workload by hand, write a template the later steps fill in:
 
 {% raw %}
@@ -143,7 +153,7 @@ columns:
     key: why
 rows:
   - field: "`labels.kuma.io/workload`"
-    why: "Names the workload. The control plane generates a `MeshService` per distinct value, and the proxy's SPIFFE ID is built from it. Without it, nothing is generated and no policy can target the workload."
+    why: "Names the workload. The control plane generates a `MeshService` per distinct value, and builds the proxy's SPIFFE ID from it. Without it, nothing is generated and no policy can target the workload."
   - field: "`labels.app`"
     why: "An ordinary label. This is what policies select on, now that inbounds carry no tags."
   - field: "`networking.inbound[].protocol`"

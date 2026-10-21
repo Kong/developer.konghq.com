@@ -120,7 +120,7 @@ docker exec --detach kong-mesh-demo-app sh -c '
 
 ## Understand service discovery
 
-The application was told to reach `kv` at a hostname, not an address. Three pieces make that
+You told the application to reach `kv` at a hostname, not an address. Three pieces make that
 work:
 
 - The control plane **generated a `MeshService`** named `kv` on the previous page, and allocated
@@ -128,7 +128,7 @@ work:
 - The `demo-app` `Dataplane` **lists `kv` in `reachableBackends`**, so the control plane
   configures the proxy with an outbound for it.
 - `kuma-dp` is running with **transparent proxying and the embedded DNS proxy**, so the
-  application's DNS lookups resolve mesh hostnames and its outbound traffic is intercepted.
+  application's DNS lookups resolve mesh hostnames and the sidecar intercepts its outbound traffic.
 
 The application code doesn't change: it dials a name and the sidecar does the rest. What
 Universal asks of you is the `reachableBackends` list. The control plane can drop that

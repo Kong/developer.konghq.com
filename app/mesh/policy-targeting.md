@@ -43,7 +43,7 @@ Not every policy has all three. A policy states its own shape on its own page.
 ## Policy scope
 
 On Kubernetes, the namespace a policy is created in restricts which proxies it can reach.
-`targetRef` narrows within that reach; it cannot widen it. The control plane works out the
+`targetRef` narrows within that reach; it can't widen it. The control plane works out the
 reach from the policy's shape and records it in the `kuma.io/policy-role` label, which it
 computes on every write. Leave the label out: a value that differs from the computed one is
 rejected.
@@ -62,11 +62,11 @@ rows:
     reach: "Every proxy in the mesh, in every zone."
   - policy: "Created in the system namespace, `{{site.mesh_namespace}}`, of a zone control plane"
     role: "`system`"
-    reach: "Every proxy in **that zone**. It is not distributed to other zones."
+    reach: "Every proxy in **that zone**. It isn't distributed to other zones."
   - policy: "Created in an application namespace, every `to[]` item a `MeshService` or `MeshHTTPRoute` selected by exactly three labels: `kuma.io/display-name`, `k8s.kuma.io/namespace` set to the policy's own namespace, and `kuma.io/zone` set to the local zone"
     role: "`producer`"
     reach: "Every client of that destination, in any namespace and any zone."
-  - policy: "Created in an application namespace, with `to[]` items that are not all of that form"
+  - policy: "Created in an application namespace, with `to[]` items that aren't all of that form"
     role: "`consumer`"
     reach: "Only proxies in the policy's own namespace."
   - policy: "Created in an application namespace, with no `to[]` at all"
@@ -74,7 +74,7 @@ rows:
     reach: "Only proxies in the policy's own namespace."
 {% endtable %}
 
-A policy cannot mix producer and consumer items. One that names a single destination in one
+A policy can't mix producer and consumer items. A policy that names a single destination in one
 `to[]` item and something broader in another is rejected on admission.
 
 {:.warning}
@@ -119,7 +119,7 @@ request to `backend`, so naming that service is both sufficient and natural:
 A **client** is remote and describes itself. If an inbound rule selected a caller by label or
 by service tag, it would be trusting the caller's own claim about what it is, and a workload
 can assert any tag. So inbound matches on the SPIFFE ID that
-[MeshIdentity](/mesh/policies/meshidentity/) issued and mTLS proves, which the caller cannot
+[MeshIdentity](/mesh/policies/meshidentity/) issued and mTLS proves, which the caller can't
 forge.
 
 For this reason, {{site.mesh_product_name}} 3.x removes the `from` array, and with it client
@@ -190,7 +190,7 @@ rows:
     type: "`Exact` only"
 {% endtable %}
 
-A match needs at least one of the two. A `Prefix` on a SPIFFE ID is how a group is addressed:
+A match needs at least one of the two. A `Prefix` on a SPIFFE ID is how you address a group:
 the ID is structured as `spiffe://<trust-domain>/ns/<namespace>/sa/<service-account>`, so a
 prefix ending at the namespace selects every workload in it.
 

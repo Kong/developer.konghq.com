@@ -29,8 +29,8 @@ A client proxy reaches a `MeshService` only if it lists it in `reachableBackends
 `kuma.io/reachable-backends` annotation on Kubernetes). A proxy without `reachableBackends` gets
 no outbounds at all.
 
-`MeshService` is not a policy. There is no `targetRef` (a `MeshService` *is* the target), and on Kubernetes
-you do not write one at all.
+`MeshService` isn't a policy. There is no `targetRef` (a `MeshService` *is* the target), and on Kubernetes
+you don't write one at all.
 
 ## MeshService sources
 
@@ -38,7 +38,7 @@ On Kubernetes the control plane generates a `MeshService` from each `Service`. C
 `Service` instead of the generated resource; the ports and protocols follow from it.
 
 `MeshService` is read-only on the **global** control plane, since zones are what produce it.
-Writing one there through `kongctl` is refused before the request is sent:
+`kongctl` refuses to write one there before it sends the request:
 
 ```text
 Mesh Service is read only on this control plane and cannot be created or updated
@@ -135,21 +135,21 @@ rows:
   - field: "`dataplaneProxies`"
     what: "`total`, `connected` and `healthy` counts for the proxies the selector matched."
   - field: "`hostnameGenerators`"
-    what: "Per-generator status, for diagnosing a hostname that was not produced."
+    what: "Per-generator status, for diagnosing a hostname that wasn't produced."
 {% endtable %}
 
 `spec.state` is `Available` when at least one endpoint is healthy and `Unavailable` otherwise.
 It matters beyond this resource: a [MeshMultiZoneService](/mesh/meshmultizoneservice/)
 aggregating this service uses the state to decide whether to send cross-zone traffic to it.
 
-`dataplaneProxies` is the first thing to read when a destination is not receiving traffic. A
+`dataplaneProxies` is the first thing to read when a destination isn't receiving traffic. A
 `total` of 0 means the selector matches nothing; a `healthy` of 0 with a non-zero `total` means
 the proxies are there and failing their health checks.
 
 ### Pending TLS status
 
 `tls.status: Pending` means every proxy backing the service has a certificate, but its clients
-have not been told to originate mTLS yet.
+haven't been told to originate mTLS yet.
 
 A proxy gets its identity independently of its destination's. Flipping clients to mTLS in the
 same pass that certifies the destination would drop every request sent before the destination's
@@ -157,10 +157,10 @@ inbound TLS chain arrived, so the status holds at `Pending` for one interval to 
 destination that time. The next pass promotes it to `Ready`.
 
 A status stuck at `Pending` across many intervals is therefore not the handover in progress:
-look at whether the destination's proxies are actually being issued certificates by a
-[MeshIdentity](/mesh/policies/meshidentity/).
+look at whether a [MeshIdentity](/mesh/policies/meshidentity/) is actually issuing certificates
+to the destination's proxies.
 
 ## Naming
 
-A `MeshService`'s name has to be an RFC 1035 label: lowercase letters, digits and dashes, starting with a letter. This is stricter than it was, because the name appears in generated hostnames and
+A `MeshService`'s name has to be an RFC 1035 label: lowercase letters, digits and dashes, starting with a letter. This requirement is stricter than it was, because the name appears in generated hostnames and
 SNI values.

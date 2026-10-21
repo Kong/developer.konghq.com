@@ -114,7 +114,7 @@ plane generates the agent configuration, so missing sources or incompatible modu
 A successfully created resource doesn't prove that the agent has a working policy.
 
 `appendPolicies[].ignoreDecision` keeps a policy loaded on the agent, but leaves its result out
-of the decision. This is useful for shared helper modules. It doesn't evaluate an ignored rule
+of the decision. `ignoreDecision` is useful for shared helper modules. It doesn't evaluate an ignored rule
 on its own or record what it would have decided, so test new rules explicitly instead of
 treating them as shadow checks.
 

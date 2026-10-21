@@ -1,5 +1,5 @@
 The zone uses a system account access token with the `Connector` role on this control plane.
-This authenticates configuration exchange with {{site.konnect_short_name}}; it does not issue workload identities.
+The token authenticates configuration exchange with {{site.konnect_short_name}}; it does not issue workload identities.
 
 Create a system account and export its `id` as `ACCOUNT_ID`:
 
@@ -8,6 +8,11 @@ export ACCOUNT_ID=$(curl --fail-with-body -sS -X POST https://global.api.konghq.
   -H "Authorization: Bearer $KONNECT_TOKEN" \
   -H 'Content-Type: application/json' \
   -d '{"name":"mesh-zone-1","description":"Connect zone-1","konnect_managed":false}' | jq -r .id)
+```
+
+Confirm that the variable contains the system account ID:
+
+```sh
 echo "$ACCOUNT_ID"
 ```
 

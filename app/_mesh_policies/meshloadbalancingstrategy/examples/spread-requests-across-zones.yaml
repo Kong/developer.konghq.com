@@ -1,6 +1,6 @@
 title: 'Remove the automatic local-zone preference'
 
-description: 'Remove the automatic preference for endpoints in the caller zone. Distribution still depends on the selected algorithm, endpoint weights, and health; this does not guarantee an equal share per zone. Remove any inherited localZone or crossZone grouping when using this configuration.'
+description: 'Remove the automatic preference for endpoints in the caller zone. Distribution still depends on the selected algorithm, endpoint weights, and health; this configuration does not guarantee an equal share per zone. Remove any inherited localZone or crossZone grouping when using this configuration.'
 
 weight: 700
 

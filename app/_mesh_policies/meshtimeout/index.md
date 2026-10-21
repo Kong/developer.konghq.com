@@ -255,7 +255,7 @@ http:
 1. Repeat from a proxy that the policy doesn't select, and confirm that its behavior is
    unchanged.
 1. For inbound rules with a `spiffeID` match, repeat from a matching and a non-matching
-   identity. This shows whether a rule didn't match or its value didn't take effect.
+   identity. Comparing the two shows whether a rule didn't match or its value didn't take effect.
 
 {% table %}
 columns:

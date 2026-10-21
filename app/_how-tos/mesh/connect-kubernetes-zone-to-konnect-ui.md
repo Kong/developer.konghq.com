@@ -42,18 +42,28 @@ cleanup:
   inline:
     - title: Remove the Kubernetes zone
       content: |
-        Delete the zone traffic permission and the test namespace, then uninstall the zone release:
+        Delete the zone traffic permission:
 
         ```sh
         kubectl delete meshtrafficpermission client-to-server --namespace kong-mesh-system
+        ```
+
+        Delete the test namespace:
+
+        ```sh
         kubectl delete namespace kong-mesh-demo
+        ```
+
+        Uninstall the zone release:
+
+        ```sh
         helm uninstall kong-mesh --namespace kong-mesh-system
         ```
 
         Delete the `cp-token` Secret and `kong-mesh-system` namespace only if they were created exclusively for this test.
     - title: Delete the {{site.konnect_short_name}} control plane
       content: |
-        In {{site.konnect_short_name}}, delete only the `example-cp` control plane created for this test. This also removes its mesh configuration. Revoke the zone token if it remains. Review the files in `MESH_INSTALL_DIR` and remove the credentials when no longer needed.
+        In {{site.konnect_short_name}}, delete only the `example-cp` control plane created for this test. Deleting the control plane also removes its mesh configuration. Revoke the zone token if it remains. Review the files in `MESH_INSTALL_DIR` and remove the credentials when no longer needed.
 min_version:
   mesh: '3.0'
 ---
@@ -68,7 +78,7 @@ Set the region where you will create the global control plane:
 export KONNECT_REGION='us'
 ```
 
-This is a fresh installation, not an upgrade procedure. If the account does not offer {{site.mesh_product_name}} 3.x, stop and confirm availability rather than deploying a 3.x zone against a v2 control plane.
+This is a fresh installation, not an upgrade procedure. If the account doesn't offer {{site.mesh_product_name}} 3.x, stop and confirm availability rather than deploying a 3.x zone against a v2 control plane.
 
 ## Create the global control plane
 
@@ -80,7 +90,7 @@ This is a fresh installation, not an upgrade procedure. If the account does not 
    export CONTROL_PLANE_ID='YOUR_CONTROL_PLANE_ID'
    ```
 
-The exact {{site.mesh_product_name}} 3.x version-selection UI still needs confirmation. If the UI does not offer a {{site.mesh_product_name}} 3.x creation path, use the [API installation guide](/mesh/connect-kubernetes-zone-to-konnect-api/), which explicitly sets `version: v3`. Do not create a v2 control plane and assume the zone installer upgrades it.
+The exact {{site.mesh_product_name}} 3.x version-selection UI still needs confirmation. If the UI doesn't offer a {{site.mesh_product_name}} 3.x creation path, use the [API installation guide](/mesh/connect-kubernetes-zone-to-konnect-api/), which explicitly sets `version: v3`. Don't create a v2 control plane and assume the zone installer upgrades it.
 
 ## Add the zone
 
@@ -97,7 +107,7 @@ The wizard provisions a system account access token for the zone. Keep it separa
 export CONTROL_PLANE_TOKEN='YOUR_GENERATED_ZONE_ACCESS_TOKEN'
 ```
 
-Deploy the zone only once: use either the generated {{site.mesh_product_name}} 3.x deployment instructions or the equivalent example that follows. Do not reuse generated 2.x values that enable shared `ingress` and `egress` deployments.
+Deploy the zone only once: use either the generated {{site.mesh_product_name}} 3.x deployment instructions or the equivalent example that follows. Don't reuse generated 2.x values that enable shared `ingress` and `egress` deployments.
 
 ## Check the global control plane version
 

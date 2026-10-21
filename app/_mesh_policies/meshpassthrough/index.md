@@ -68,7 +68,7 @@ spec:
 What each field does:
 
 - `targetRef` selects the proxies the policy applies to: `Mesh`, or `Dataplane` with `labels`.
-  `sectionName` isn't supported. `kind: Mesh` means every proxy in the policy's own namespace. If the policy is created in
+  `sectionName` isn't supported. `kind: Mesh` means every proxy in the policy's own namespace. If you create the policy in
   `{{site.mesh_namespace}}`, it applies to the whole zone. To cover every zone, create the
   policy on the global control plane. For more information, see
   [Policy scope](/mesh/policy-targeting/#policy-scope).
@@ -76,7 +76,7 @@ What each field does:
 - The `Domain` entry allows TLS traffic to `api.example.com:443`.
 - The `CIDR` entry allows TCP traffic to port `5432` anywhere in `10.42.0.0/16`.
 
-The policy has no `to` or `rules`, its whole configuration sits under `default`.
+The policy has no `to` or `rules`; its whole configuration sits under `default`.
 
 The `CIDR` entry allows every address in the range on that port. To allow only one database,
 use `type: IP` with one address. Before applying a mesh-wide allowlist, list the other unknown

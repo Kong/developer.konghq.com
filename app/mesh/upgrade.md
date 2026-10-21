@@ -30,7 +30,7 @@ min_version:
 
 Version 3.x removes legacy policy APIs, mesh-wide mTLS configuration, and shared `ZoneIngress`
 and `ZoneEgress` resources. Prepare those resources and traffic paths while the deployment is
-still on 2.14; this is more than a control plane and data plane rollout.
+still on 2.14; the upgrade is more than a control plane and data plane rollout.
 
 1. [Run the {{site.mesh_product_name}} 3.x readiness checker](/mesh/check-upgrade-readiness/) against the current 2.x
    deployment and save the report.
@@ -67,15 +67,15 @@ still on 2.14; this is more than a control plane and data plane rollout.
 1. Upgrade the global control plane first, then a non-production zone. Repeat the product and
    traffic checks before proceeding through the remaining zones.
 
-Do not use the normal rolling-upgrade sequence described in [Single-zone](#single-zone) and [Multi-zone](#multi-zone) as a substitute for the 2.x-to-3.x migration.
+Don't use the normal rolling-upgrade sequence described in [Single-zone](#single-zone) and [Multi-zone](#multi-zone) as a substitute for the 2.x-to-3.x migration.
 The readiness report identifies configuration visible through the control plane API; the migration
-guides cover the live traffic behavior that the report cannot verify.
+guides cover the live traffic behavior that the report can't verify.
 
 ## Compatibility between minor versions
 
 Starting with {{site.mesh_product_name}} 1.4.x, you can upgrade up to two minor versions at a time. For example:
-* You can upgrade from `2.12.x` to `2.13.x`
-* You can upgrade from `2.11.x` to `2.13.x`
+* You can upgrade from `2.12.x` to `2.13.x`.
+* You can upgrade from `2.11.x` to `2.13.x`.
 * To upgrade from `2.9.x` to `2.13.x`, first upgrade from `2.9.x` to `2.11.x`, then from `2.11.x` to `2.13.x`.
 
 {:.warning}
@@ -86,17 +86,17 @@ Starting with {{site.mesh_product_name}} 1.4.x, you can upgrade up to two minor 
 
 `kuma-dp` follows the same compatibility rules with `kuma-cp`. For example:
 * You can connect `kuma-dp` `2.11.x` to `kuma-cp` `2.13.x`.
-* You cannot connect `kuma-dp` `2.10.x` to `kuma-cp` `2.13.x`. It may cause undefined behavior.
+* You can't connect `kuma-dp` `2.10.x` to `kuma-cp` `2.13.x`. It may cause undefined behavior.
 
 The global control plane follows the same compatibility rules with zone control planes. For example:
 * You can connect zone control plane `2.11.x` to global control plane `2.13.x`.
-* You cannot connect zone control plane `2.10.x` to global control plane `2.13.x`. It may cause undefined behavior.
+* You can't connect zone control plane `2.10.x` to global control plane `2.13.x`. It may cause undefined behavior.
 
 Although control planes within a zone don't connect to each other, they share a common [store](/mesh/control-plane-configuration/#store) (usually Kubernetes or PostgreSQL). Compatibility of the storage layer also follows the minor version rules:
 * You can read any data written on control plane `2.11.x` with a control plane version `2.13.x`.
 * You can read any data written on control plane `2.13.x` with a control plane version `2.11.x`.
-* You cannot read data written on control plane `2.10.x` with a control plane version `2.13.x` or higher. It may cause undefined behavior.
-* You cannot read data written on control plane `2.13.x` with a control plane version `2.10.x` or lower. It may cause undefined behavior.
+* You can't read data written on control plane `2.10.x` with a control plane version `2.13.x` or higher. It may cause undefined behavior.
+* You can't read data written on control plane `2.13.x` with a control plane version `2.10.x` or lower. It may cause undefined behavior.
 
 
 {:.warning}

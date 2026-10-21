@@ -8,5 +8,10 @@ export CONTROL_PLANE_ID=$(curl --fail-with-body -sS -X POST \
   -H "Authorization: Bearer $KONNECT_TOKEN" \
   -H 'Content-Type: application/json' \
   -d '{"name":"example-cp","version":"v3"}' | jq -r .id)
+```
+
+Confirm that the variable contains the control plane ID:
+
+```sh
 echo "$CONTROL_PLANE_ID"
 ```

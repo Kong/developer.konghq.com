@@ -1,6 +1,6 @@
 title: 'Expose for Prometheus and push to a collector'
 
-description: 'More than one backend is accepted, so the same metrics can be scraped and pushed at the same time.'
+description: 'MeshMetric accepts more than one backend, so you can scrape and push the same metrics at the same time.'
 
 weight: 500
 

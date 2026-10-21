@@ -74,7 +74,7 @@ What each field does:
 * `AddBefore` inserts the Lua filter right before the router, so every matching outbound HTTP
   request gets the `x-header: test` header.
 
-The policy has no `to` or `rules`, everything sits under `default.appendModifications`.
+The policy has no `to` or `rules`; everything sits under `default.appendModifications`.
 
 The example affects requests that `backend` sends, not requests arriving at its application.
 It only works on outbound traffic the proxy parses as HTTP, because TCP and opaque TLS have no

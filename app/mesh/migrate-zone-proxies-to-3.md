@@ -40,7 +40,7 @@ to verify before removing the old proxies.
 ## Reasons for the mesh-scoped model
 
 The legacy `ZoneIngress` and `ZoneEgress` resources were shared across meshes in a zone.
-That made them different from workload proxies: they did not belong to the mesh whose
+Sharing made them different from workload proxies: they didn't belong to the mesh whose
 identity, permissions and observability policies operators wanted to apply.
 
 Mesh-scoped proxies bring those concerns together:
@@ -65,13 +65,13 @@ complete estate. Its report identifies legacy `ZoneIngress` and `ZoneEgress` res
 `Mesh` settings, and version or control plane configuration that blocks the upgrade. Save the
 report as the baseline for the migration.
 
-Mesh-scoped zone proxies were introduced in 2.14. First bring the deployment to the latest
+{{site.mesh_product_name}} 2.14 introduced mesh-scoped zone proxies. First bring the deployment to the latest
 supported 2.14 patch, following the upgrade instructions for that release. Verify compatibility for the global control plane,
 all affected zones and data plane versions before starting the traffic migration.
 
-Do not treat the presence of the new API alone as proof that every required migration fix is
+Don't treat the presence of the new API alone as proof that every required migration fix is
 available in your installed patch release. Rehearse the following sequence with the exact chart
-and images you plan to use. This guide does not replace the product's supported version
+and images you plan to use. This guide doesn't replace the product's supported version
 upgrade sequence.
 
 In the 2.14 transition environment, mesh-scoped listener generation requires
@@ -100,25 +100,25 @@ rows:
     what: "A usable `MeshZoneAddress` for that mesh and zone takes precedence over the legacy ingress address."
     first: "Reachable ingress address, working listeners, destination discovery and workload permissions."
   - path: "External-service traffic through egress"
-    what: "Ready mesh-scoped egress listener instances take precedence over the legacy egress pool. The pools are not mixed."
+    what: "Ready mesh-scoped egress listener instances take precedence over the legacy egress pool. The pools aren't mixed."
     first: "Egress identity and trust, external destinations, explicit permissions and capacity."
 {% endtable %}
 
 These are discovery choices, not a weighted canary between old and new proxies. Start with a
 test mesh or a limited production mesh and zone. Existing connections can remain on the old
 path while new connections use updated endpoints; allow for draining and test long-lived
-connections. Do not assume that coexistence guarantees a disruption-free migration.
+connections. Don't assume that coexistence guarantees a disruption-free migration.
 
 ## 1. Inventory every mesh the old proxies serve
 
 A shared legacy deployment may serve several meshes. Create a migration checklist for each
 mesh and zone before replacing it:
 
-- Ingress addresses, ports, load balancers, DNS records and firewall rules.
-- Cross-zone workload destinations and registered external services, including their protocols.
-- Identity issuers, trust bundles and required caller-to-destination permissions.
-- Proxy replica counts, resource limits, autoscaling, disruption budgets and placement rules.
-- Helm values or Universal startup configuration, authentication, dashboards and alerts.
+- Ingress addresses, ports, load balancers, DNS records and firewall rules
+- Cross-zone workload destinations and registered external services, including their protocols
+- Identity issuers, trust bundles and required caller-to-destination permissions
+- Proxy replica counts, resource limits, autoscaling, disruption budgets and placement rules
+- Helm values or Universal startup configuration, authentication, dashboards and alerts
 
 Save the current manifests and deployment configuration, including resources managed by
 GitOps. Record successful and intentionally denied requests as your baseline. Keep the legacy
@@ -128,15 +128,15 @@ deployment available until every mesh that depends on it has passed the migratio
 
 Prepare the identity and trust configuration described in the
 [MeshIdentity migration](/mesh/migrate-mtls-to-meshidentity/). Give the new egress proxies an
-issuing identity, and prepare permissions for the clients that will connect to them.
+issuing identity, and prepare permissions for the clients that connect to them.
 
-Do not complete the application identity rollout before deploying egress. Workloads using
+Don't complete the application identity rollout before deploying egress. Workloads using
 `MeshExternalService` need mesh-scoped zone egress when they switch to `MeshIdentity`. Deploy
 and validate the egress first, then switch a canary client and test its external-service calls
 before migrating the remaining clients.
 
-Use `MeshExternalService` for external destinations served by the new egress. Legacy
-`ExternalService` configuration is not consumed by its listener generator. Verify the
+Use `MeshExternalService` for external destinations served by the new egress. Its listener
+generator doesn't consume legacy `ExternalService` configuration. Verify the
 destination endpoints and upstream TLS settings rather than copying only the service name.
 
 Prepare policies that select the new `Dataplane` resources, using the computed ingress or egress
@@ -144,18 +144,18 @@ role labels and, where needed, a zone label and listener `sectionName`. See
 [selecting zone proxies](/mesh/mesh-scoped-zone-proxies/#proxy-and-traffic-selection).
 
 For egress, apply explicit `MeshTrafficPermission` allows for the required callers and
-destinations. Without a matching allow, traffic is denied. A legacy mesh-wide external-access
-toggle is not a replacement for these permissions. Review existing broad allows and denies
+destinations. Without a matching allow, egress denies traffic. A legacy mesh-wide external-access
+toggle isn't a replacement for these permissions. Review existing broad allows and denies
 too: they can make a narrow rule less restrictive than expected or prevent it from allowing
 traffic at all.
 
 Keep permission enforcement for cross-zone workload traffic on the destination workload
 proxy. The new ingress forwards workload mTLS without terminating it; assigning ingress an
-identity does not make it authenticate the original caller.
+identity doesn't make it authenticate the original caller.
 
 Prepare the policy form supported by your transition release. Coordinate any later 3.x schema
-rewrites with the [policy migration guide](/mesh/migrate-policies-to-3/); do not assume a 3.x
-manifest is accepted unchanged by every 2.x version.
+rewrites with the [policy migration guide](/mesh/migrate-policies-to-3/); don't assume every
+2.x version accepts a 3.x manifest unchanged.
 
 ## 3. Deploy replacements while retaining the legacy proxies
 
@@ -174,17 +174,17 @@ kuma:
         enabled: true
 ```
 
-This is a values fragment, not a replacement for the installation's full values file. Keep
+This snippet is a values fragment, not a replacement for the installation's full values file. Keep
 the control plane connection settings and other meshes. Add an entry for each mesh that
 needs proxies and carry over the capacity and availability settings that apply to it.
 
-Use distinct names and listening addresses for the replacements. Do not point an existing
+Use distinct names and listening addresses for the replacements. Don't point an existing
 load balancer at both models as a substitute for the control plane's discovery transition:
 the models can use different destination names and TLS identities.
 
 Check the ingress Service's published address before relying on it. New ingress publication
 uses `MeshZoneAddress`, derived from the Service and ready endpoints. Legacy Pod annotations
-for ingress public address and port do not configure that resource. Configure the Service's
+for ingress public address and port don't configure that resource. Configure the Service's
 load balancer, NodePort or external IP as appropriate for the network.
 
 Remember that publication can switch incoming traffic immediately. Prepare firewall rules,
@@ -193,14 +193,14 @@ DNS and backend reachability before the new address becomes discoverable.
 ### Universal
 
 Start a separate ordinary `kuma-dp` with a new `Dataplane` name and the required
-`networking.listeners`. Do not restart the legacy process in place as your first test.
+`networking.listeners`. Don't restart the legacy process in place as your first test.
 Use a dataplane token bound to the replacement proxy rather than a legacy ingress, egress
 or zone token.
 
 For ingress, publish the reachable address using `MeshZoneAddress` on the zone control
 plane only when the new proxy is ready for incoming traffic. For egress, a ready listener can
-enter discovery as soon as the `Dataplane` is available, so its identity and permissions must
-already be prepared.
+enter discovery as soon as the `Dataplane` is available, so you must prepare its identity and
+permissions beforehand.
 
 The [zone-proxy reference](/mesh/mesh-scoped-zone-proxies/#universal) contains the `Dataplane`
 and address examples. Keep the old processes, credentials and address configuration available
@@ -211,7 +211,7 @@ for rollback during the transition.
 For each migrated mesh and zone:
 
 1. Inspect the replacement `Dataplane` resources and confirm their role labels, mesh, listener
-   names and accepted Envoy configuration. An accepted resource or running Pod is not sufficient.
+   names and accepted Envoy configuration. An accepted resource or running Pod isn't sufficient.
 1. Inspect the endpoints in a calling proxy. Confirm that cross-zone traffic uses the new
    ingress address and that external traffic uses the new egress instances.
 1. Send a fresh cross-zone request and verify the destination workload and zone. Confirm
@@ -248,14 +248,14 @@ rows:
   - legacy: "`Mesh.routing.defaultForbidMeshExternalServiceAccess`"
     replacement: "Express external access with `MeshTrafficPermission`; the toggle is removed in 3.x."
   - legacy: "`Mesh.routing.zoneEgress`"
-    replacement: "Remove for 3.x. Do not use the old switch to disable or roll back the new topology."
+    replacement: "Remove for 3.x. Don't use the old switch to disable or roll back the new topology."
   - legacy: "Standalone zone-proxy inspection endpoints and commands"
     replacement: "Inspect the replacement as a `Dataplane`, using `/meshes/{mesh}/dataplanes/{name}/{xds,stats,clusters}`."
   - legacy: "Universal `runtime.universal.zoneResourceCleanupAge`"
     replacement: "Review `runtime.universal.dataplaneCleanupAge`, which now also governs zone proxies and defaults to 72 hours."
 {% endtable %}
 
-Do not copy every old Helm field under the new mesh entry. Several legacy options, including
+Don't copy every old Helm field under the new mesh entry. Several legacy options, including
 `drainTime`, custom probes and `service.nodePort`, have no same-named per-mesh equivalent.
 Review the target chart's values; drain and probe behavior now follows the sidecar injection
 configuration. The unrelated `controlPlane.ingress` settings still configure access to the
@@ -264,7 +264,7 @@ control plane API and GUI, not cross-zone traffic.
 Before the first zone upgrade, rerun the
 [{{site.mesh_product_name}} 3.x readiness checker](/mesh/check-upgrade-readiness/) while all control planes are still on
 the latest supported 2.14 patch. Resolve every remaining legacy zone-proxy finding and coverage
-gap. The report cannot verify addresses, firewall rules, capacity, or live traffic, so it does not
+gap. The report can't verify addresses, firewall rules, capacity, or live traffic, so it doesn't
 replace the checks in this guide.
 
 Proceed with the supported 3.x upgrade sequence only after traffic no longer depends on
@@ -300,6 +300,11 @@ resources or insight endpoints.
 >
 > ```sh
 > kubectl -n {{site.mesh_namespace}} rollout restart deploy/kong-mesh-default-ingress deploy/kong-mesh-default-egress
+> ```
+>
+> Then check the ingress proxy logs for the SOTW error:
+>
+> ```sh
 > kubectl -n {{site.mesh_namespace}} logs deploy/kong-mesh-default-ingress -c kuma-sidecar | grep SOTW
 > ```
 
@@ -319,8 +324,8 @@ plane falls back to the legacy pool only when it resolves no mesh-scoped egress 
 Leaving another ready replacement instance can keep traffic on the new path.
 
 Restore and verify the earlier traffic behavior, including trust and permissions. Endpoint
-changes do not move established connections instantly; plan for draining or reconnection.
+changes don't move established connections instantly; plan for draining or reconnection.
 
-Once a zone control plane runs 3.x, restarting a legacy proxy is not a rollback strategy.
+Once a zone control plane runs 3.x, restarting a legacy proxy isn't a rollback strategy.
 Any return to 2.x requires the product's supported control plane and data recovery procedure,
 not only restoration of the old Deployment.

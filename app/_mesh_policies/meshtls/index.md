@@ -157,7 +157,7 @@ payments policy restores `Permissive`, not the default `Strict`.
 
 ## Validating the TLS boundary
 
-1. Confirm that every selected proxy has a `MeshIdentity`. Without one, the policy is skipped.
+1. Confirm that every selected proxy has a `MeshIdentity`. Without one, the control plane skips the policy for that proxy.
 1. For `Strict`, confirm that an mTLS connection succeeds and a plaintext connection is
    rejected.
 1. For `Permissive`, confirm that both connections succeed, and that only the mTLS connection

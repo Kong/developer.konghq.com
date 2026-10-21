@@ -31,11 +31,11 @@ Use it to send several telemetry signals to the same collector, update a collect
 without editing every observability policy, or let each data plane resolve a node-local
 collector from its environment.
 
-It is not a policy. There is no `targetRef`: the resource describes a collector, and the
-policies referencing it decide which proxies send to it. On Kubernetes it is accepted only in
+It isn't a policy. There is no `targetRef`: the resource describes a collector, and the
+policies referencing it decide which proxies send to it. On Kubernetes, it's accepted only in
 the system namespace.
 
-Creating a backend does not enable telemetry by itself. At least one observability policy must
+Creating a backend doesn't enable telemetry by itself. At least one observability policy must
 reference it, and the policy's `targetRef` determines which proxies export the signal.
 
 ## Define a collector and reference it
@@ -56,14 +56,14 @@ spec:
 
 What each field does:
 
-* `mesh` scopes the backend to the `default` mesh. Policies in another mesh cannot reference it.
+* `mesh` scopes the backend to the `default` mesh. Policies in another mesh can't reference it.
 * `labels` gives policies a stable way to select this backend. In this example, the
   `kuma.io/display-name` label is `otel-collector`.
 * `endpoint` tells selected data plane proxies to connect to
   `otel-collector.observability:4317`.
 
-The backend uses gRPC because `protocol` is omitted. The resource does not select any data plane
-proxies and does not send anything until a policy references it.
+The backend uses gRPC because `protocol` is omitted. The resource doesn't select any data plane
+proxies and doesn't send anything until a policy references it.
 
 A policy then references it by labels:
 
@@ -88,7 +88,7 @@ spec:
 
 In the policy, `targetRef` selects **which proxies export traces**, while `backendRef` selects
 **which collector connection they use**. Updating the backend's endpoint changes the collector
-connection for every policy that references it; the policies do not need to change.
+connection for every policy that references it; the policies don't need to change.
 
 A `backendRef` carries `kind` and `labels`, and nothing else. `labels` is required, and an
 empty set is rejected. Where several backends match the labels, **the oldest by creation time
@@ -101,7 +101,7 @@ wins**, so labels that match more than one backend make the choice depend on cre
 
 ## Collector placement
 
-The proxy does not send OTLP through its own outbound listeners. `kuma-dp` runs a local
+The proxy doesn't send OTLP through its own outbound listeners. `kuma-dp` runs a local
 receiver on a Unix socket, Envoy writes to that socket, and `kuma-dp` exports to the address in
 this resource. That export leaves the sidecar's own process, which transparent proxying does
 not intercept, so it arrives at the collector as **plain gRPC with no mesh mTLS**.
@@ -120,7 +120,7 @@ rows:
   - where: "In the mesh, default `Strict`"
     result: "**Fails silently.** No telemetry arrives and `kuma-dp` logs `failed to upload metrics: ... error reading server preface: unexpected EOF`, because the collector's inbound rejects the unauthenticated connection."
   - where: "In the mesh, with [MeshTLS](/mesh/policies/meshtls/) `Permissive` on the collector"
-    result: "Works, at a cost: a `Permissive` inbound accepts unauthenticated plaintext from anything that can reach it, and [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) cannot apply to those connections."
+    result: "Works, at a cost: a `Permissive` inbound accepts unauthenticated plaintext from anything that can reach it, and [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) can't apply to those connections."
 {% endtable %}
 
 Running the collector outside the mesh is the simpler choice. If it has to sit inside, use
@@ -186,7 +186,7 @@ columns:
     key: values
 rows:
   - field: "`mode`"
-    values: "`Optional`, the default, uses environment variables when present and tolerates their absence. `Disabled` skips them entirely, leaving only this resource's fields and the built-in defaults. `Required` blocks the signal when the variables do not supply the missing fields, even where an explicit value or default could have filled them."
+    values: "`Optional`, the default, uses environment variables when present and tolerates their absence. `Disabled` skips them entirely, leaving only this resource's fields and the built-in defaults. `Required` blocks the signal when the variables don't supply the missing fields, even where an explicit value or default could have filled them."
   - field: "`precedence`"
     values: "`EnvFirst`, the default, lets environment variables win and this resource's fields fill the gaps. `ExplicitFirst` reverses that. Built-in defaults are the last fallback either way."
   - field: "`allowSignalOverrides`"
@@ -196,7 +196,7 @@ rows:
 `Required` is for making missing input fail loudly: the signal blocks, `RequiredEnvMissing`
 appears in the status, and the absence of exported data becomes something to alert on.
 
-Environment variable values are read only when `kuma-dp` restarts and re-bootstraps, and the
+`kuma-dp` reads environment variable values only when it restarts and re-bootstraps, and the
 status picks them up at the same time.
 
 ### One backend per signal per proxy
@@ -226,8 +226,8 @@ kubectl get meshopentelemetrybackend otel-collector -n {{site.mesh_namespace}} -
 ```
 
 `status.conditions` contains `type: ReferencedByPolicies`. A reason of `Referenced` confirms
-that at least one observability policy selects the backend. `NotReferenced` is not a runtime
-error, but it means the backend is not currently used.
+that at least one observability policy selects the backend. `NotReferenced` isn't a runtime
+error, but it means the backend isn't currently used.
 
 ## Verify signal export
 

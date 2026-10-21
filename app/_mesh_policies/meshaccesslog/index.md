@@ -180,7 +180,7 @@ backends:
             value: "%BYTES_RECEIVED%"
 ```
 
-That produces:
+That fragment produces:
 
 ```json
 {
@@ -197,7 +197,7 @@ You can use any of the [command operators supported by Envoy](https://www.envoyp
 <!-- vale off -->
 {% table %}
 columns:
-  - title: Command Operator
+  - title: Command operator
     key: command
   - title: Description
     key: description

@@ -34,9 +34,21 @@ cleanup:
   inline:
     - title: Remove the demo containers and network
       content: |
+        Remove the demo containers:
+
         ```sh
         docker rm --force kong-mesh-demo-app kong-mesh-demo-kv kong-mesh-demo-control-plane
+        ```
+
+        Remove the Docker network:
+
+        ```sh
         docker network rm kong-mesh-demo
+        ```
+
+        Remove the working directory:
+
+        ```sh
         rm -rf "$KONG_MESH_DEMO_TMP"
         ```
 min_version:
@@ -88,11 +100,11 @@ Setting `trustDomain` explicitly keeps the SPIFFE IDs predictable. Left out, it 
 `{% raw %}{{ .Mesh }}.{{ .Zone }}.mesh.local{% endraw %}`.
 
 From now on, each proxy's identity comes from its `kuma.io/workload` label, so the control plane
-accepts only dataplane tokens bound to that workload. The tokens from steps 3 and 4 were issued
-with `--workload`, so `kv` and `demo-app` keep reconnecting. A proxy with a token bound only by
-`--name` would be rejected the next time it connected.
+accepts only dataplane tokens bound to that workload. You issued the tokens in steps 3 and 4
+with `--workload`, so `kv` and `demo-app` keep reconnecting. The control plane would reject a proxy with a token bound only by
+`--name` the next time it connected.
 
-Check it initialized:
+Check that the identity initialized:
 
 ```sh
 kongctl get mesh meshidentities demo-identity -o yaml \
@@ -101,8 +113,8 @@ kongctl get mesh meshidentities demo-identity -o yaml \
 ```
 
 `status.conditions` should report `Provider`, `MeshTrustCreated` and `Ready` as true, and
-`status.trustDomain` shows the domain issuance is pinned to. A `MeshTrust` publishing the CA
-bundle was created alongside it:
+`status.trustDomain` shows the domain issuance is pinned to. The control plane also created a `MeshTrust` that publishes the CA
+bundle:
 
 ```sh
 kongctl get mesh meshtrusts \
@@ -123,7 +135,7 @@ It fails. Two things changed at once:
 - Proxies now have identities, so `MeshTrafficPermission` applies, and no permission exists,
   so nothing is allowed. {{site.mesh_product_name}} 3.x creates no default allow-all permission.
 - Inbounds are `Strict` unless a [MeshTLS](/mesh/policies/meshtls/) policy says otherwise, so
-  plaintext from outside the mesh is rejected. `curl` on your host is outside the mesh.
+  the proxies reject plaintext from outside the mesh. `curl` on your host is outside the mesh.
 
 That is zero trust arriving: nothing is permitted until you say so.
 

@@ -70,8 +70,8 @@ The GUI is now at <http://127.0.0.1:25681/gui>.
 
 ## Get the admin token
 
-The {{site.mesh_product_name}} API enforces RBAC. Only requests from the control plane's own
-host are treated as admin, and requests through the published port come from outside the
+The {{site.mesh_product_name}} API enforces RBAC. It treats only requests from the control plane's own
+host as admin, and requests through the published port come from outside the
 container, so `kongctl` needs a token. The control plane creates an admin token at startup and
 stores it as the `admin-user-token` global secret. Read it from inside the container, where the
 request comes from localhost:
@@ -93,24 +93,34 @@ run the command again.
 ## Point kongctl at it
 
 `kongctl` reaches a self-managed control plane through `--control-plane-url`, and authenticates
-with `--control-plane-token`:
+with `--control-plane-token`. Export the control plane URL:
 
 ```sh
 export KONG_MESH_CP=http://127.0.0.1:25681
+```
+
+Pass both flags to list the control plane's resource types:
+
+```sh
 kongctl get mesh resource-types \
   --control-plane-url "$KONG_MESH_CP" \
   --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
 ```
 
-That lists every resource type this control plane serves. It is worth a look before going
+The command lists every resource type this control plane serves. It is worth a look before going
 further: `kongctl` reads the list from the control plane rather than carrying its own, so this
 is the authoritative answer for the version you are running.
 
 To avoid repeating the flag, put it in `kongctl`'s config file, which lives at
-`$XDG_CONFIG_HOME/kongctl/config.yaml` and is keyed by profile:
+`$XDG_CONFIG_HOME/kongctl/config.yaml` and is keyed by profile. Create the config directory:
 
 ```sh
 mkdir -p "${XDG_CONFIG_HOME:-$HOME/.config}/kongctl"
+```
+
+Add a `demo` profile to the config file:
+
+```sh
 cat >> "${XDG_CONFIG_HOME:-$HOME/.config}/kongctl/config.yaml" <<EOF
 demo:
     output: text
@@ -153,7 +163,7 @@ No proxies yet. The next two pages add them.
 
 Nothing issues identities. `Mesh.mtls` was removed in 3.0, so a mesh gets mTLS from a
 [MeshIdentity](/mesh/policies/meshidentity/) or not at all. Without one, proxies serve and
-accept plaintext, and `MeshTLS` and `MeshTrafficPermission` do not apply to them.
+accept plaintext, and `MeshTLS` and `MeshTrafficPermission` don't apply to them.
 
 That is deliberate for now: the first two workloads connect without mTLS so you can see traffic
 flowing, and

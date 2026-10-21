@@ -1,6 +1,6 @@
 title: 'Disable a timeout'
 
-description: 'Set a timeout to 0 to disable it, rather than setting a very large value. This is how the default inbound request timeout is disabled.'
+description: 'Set a timeout to 0 to disable it, rather than setting a very large value. The default inbound request timeout is disabled the same way.'
 
 weight: 600
 

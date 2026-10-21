@@ -44,17 +44,21 @@ networking:
       protocol: http
 ```
 
-Applied with:
+Apply it with:
 
 ```sh
 kongctl create mesh -f backend-01.yaml
 ```
 
-Then a token, and the process:
+Then issue a token:
 
 ```sh
 kongctl create mesh dataplane-token --name backend-01 --workload backend --valid-for 24h > /etc/kuma/token
+```
 
+Start the process:
+
+```sh
 kuma-dp run \
   --cp-address https://control-plane.internal:5678 \
   --dataplane-file backend-01.yaml \
@@ -81,13 +85,13 @@ columns:
     key: effect
 rows:
   - label: "`kuma.io/workload`"
-    effect: "Names the workload this proxy belongs to. The control plane generates one `MeshService` per distinct value, and the SPIFFE ID defaults to `/workload/{value}`. Without it, no `MeshService` is generated and the workload has nothing for a policy or route to target."
+    effect: "Names the workload this proxy belongs to. The control plane generates one `MeshService` per distinct value, and the SPIFFE ID defaults to `/workload/{value}`. Without it, the control plane generates no `MeshService` and the workload has nothing for a policy or route to target."
   - label: "Your own labels"
     effect: "Anything else you set (`app`, `version`, `team`) is what `spec.targetRef.labels` and `MeshService.spec.selector.dataplaneLabels` match on."
 {% endtable %}
 
 `kuma.io/workload` has to be a valid RFC 1035 DNS label, since it becomes a `MeshService` name.
-A value with invalid characters is skipped, and the control plane logs
+The control plane skips a value with invalid characters and logs
 `couldn't generate MeshService from kuma.io/workload, contains invalid characters`.
 
 ## Inbounds
@@ -110,7 +114,7 @@ rows:
   - field: "`servicePort`"
     meaning: "Where traffic is forwarded, if it differs from `port`."
   - field: "`serviceAddress`"
-    meaning: "The address traffic is forwarded to, if the application is not on `networking.address`."
+    meaning: "The address traffic is forwarded to, if the application isn't on `networking.address`."
   - field: "`state`"
     meaning: "`Ready` or `NotReady`."
 {% endtable %}
@@ -148,10 +152,10 @@ networking:
 
 The application then connects to `127.0.0.1:5432` and the proxy carries it to the destination.
 
-`backendRef` is required: an outbound without one is rejected with `backendRef: must be
+`backendRef` is required: the control plane rejects an outbound without one with `backendRef: must be
 defined`. `kind` is `MeshService`, `MeshExternalService` or `MeshMultiZoneService`, and the
 reference takes `name` or `labels` (at least one; `labels` wins if both are set). With neither,
-it's rejected with `either 'name' or 'labels' should be specified`. `port` is required unless
+the control plane rejects it with `either 'name' or 'labels' should be specified`. `port` is required unless
 `kind` is `MeshExternalService`.
 
 {:.warning}
@@ -169,7 +173,11 @@ start `kuma-dp` as that user with `--transparent-proxy`:
 
 ```sh
 sudo kumactl install transparent-proxy --kuma-dp-user kuma-dp
+```
 
+Then start `kuma-dp` as that user:
+
+```sh
 sudo runuser -u kuma-dp -- kuma-dp run \
   --cp-address https://control-plane.internal:5678 \
   --dataplane-file backend-01.yaml \
@@ -177,18 +185,18 @@ sudo runuser -u kuma-dp -- kuma-dp run \
   --transparent-proxy
 ```
 
-`kumactl install transparent-proxy --config-file` is where the redirect ports, excluded ranges
-and DNS redirection are tuned. If you change them, pass `kuma-dp` the same file with
+`kumactl install transparent-proxy --config-file` is where you tune the redirect ports, excluded ranges
+and DNS redirection. If you change them, pass `kuma-dp` the same file with
 `--transparent-proxy-config`, so the control plane knows the redirect ports. It takes a file, a
 comma-separated list of files, or `-` for stdin, and can be repeated (later values override
 earlier ones).
 
 With transparent proxying on, the embedded DNS proxy (`--dns-enabled`, on by default) lets the
-workload resolve mesh hostnames. Destinations are reached by name rather than by a local port.
+workload resolve mesh hostnames. The workload reaches destinations by name rather than by a local port.
 
 `reachableBackends` lists what the proxy can reach. Without it (and without outbounds), the
 proxy reaches nothing, unless the control plane sets `KUMA_DEFAULTS_RESTRICT_OUTBOUND=false`.
-Destinations outside the mesh are also dropped unless a `MeshExternalService` or a
+The proxy also drops destinations outside the mesh unless a `MeshExternalService` or a
 `MeshPassthrough` policy allows them.
 
 ```yaml
@@ -228,13 +236,13 @@ networking:
         healthyThreshold: 1
 ```
 
-An inbound the proxy considers unhealthy is excluded from endpoint discovery, so traffic stops
-being sent to it. An inbound with no `serviceProbe` and no reported `health` is treated as healthy.
+The control plane excludes an inbound the proxy considers unhealthy from endpoint discovery, so traffic stops
+reaching it. An inbound with no `serviceProbe` and no reported `health` is treated as healthy.
 
 ## Zone proxies
 
-Cross-zone traffic is carried by an ordinary `Dataplane` that declares zone proxy listeners
-rather than by a separate proxy type. `kuma-dp run --proxy-type=ingress` exits with
+An ordinary `Dataplane` that declares zone proxy listeners carries cross-zone traffic, rather
+than a separate proxy type. `kuma-dp run --proxy-type=ingress` exits with
 `.ProxyType "ingress" is not supported`.
 
 ```yaml
@@ -250,28 +258,32 @@ networking:
       name: ingress
 ```
 
-`type` is `ZoneIngress` or `ZoneEgress`; anything else is rejected with `type must be
+`type` is `ZoneIngress` or `ZoneEgress`; the control plane rejects anything else with `type must be
 ZoneIngress or ZoneEgress`. Listeners can sit alongside inbounds on the same `Dataplane`.
 
-These proxies authenticate with a **dataplane token** like any other. Tokens issued as zone
-tokens are no longer accepted.
+These proxies authenticate with a **dataplane token** like any other. The data plane server no longer
+accepts tokens issued as zone tokens.
 
 ## Tokens
 
 A dataplane token proves which proxy is connecting. Bind it as narrowly as the deployment
 allows:
 
-```sh
-# to one named proxy of a workload
-kongctl create mesh dataplane-token --name backend-01 --workload backend --valid-for 24h
+Bind it to one named proxy of a workload:
 
-# to a workload, for an autoscaling group whose instance names vary
+```sh
+kongctl create mesh dataplane-token --name backend-01 --workload backend --valid-for 24h
+```
+
+Bind it to a workload, for an autoscaling group whose instance names vary:
+
+```sh
 kongctl create mesh dataplane-token --workload backend --valid-for 24h
 ```
 
 Once a `MeshIdentity` derives the proxy's identity from `kuma.io/workload` (the Universal
-default), the token must carry `--workload`. A token bound only by `--name` or only to the mesh
-is then rejected with `derives its identity from the workload, so it requires a workload-bound
+default), the token must carry `--workload`. The control plane then rejects a token bound only by `--name` or only to the mesh
+with `derives its identity from the workload, so it requires a workload-bound
 token`. Proxies that are already connected keep running until they reconnect, so bind tokens to
 the workload from the start. `--tag` matches the `Dataplane`'s `labels`, and `--valid-for`
 bounds the lifetime.

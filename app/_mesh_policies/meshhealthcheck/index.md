@@ -133,7 +133,7 @@ happens then:
 * Unset: traffic goes to all endpoints, including unhealthy ones.
 * `true`: every request fails, which keeps load off a destination that's already failing.
 
-The panic threshold itself is set on [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/).
+You set the panic threshold itself on [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/).
 
 ## Probes per protocol
 
@@ -173,9 +173,9 @@ rows:
 * `send`: a literal string to write.
 * `receive`: literal strings expected in the response, in order but not necessarily adjacent.
 
-Both are sent and compared as plain bytes.
+The proxy sends and compares both as plain bytes.
 
-Without `receive`, the probe only checks that a TCP connection opens. That proves the endpoint
+Without `receive`, the probe only checks that a TCP connection opens. A successful connection proves the endpoint
 accepts connections, not that the application works.
 
 ### gRPC

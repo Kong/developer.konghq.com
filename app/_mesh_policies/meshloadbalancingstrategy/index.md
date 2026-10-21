@@ -69,11 +69,11 @@ What each field does:
   picks the endpoint. It accepts `Mesh`, or `Dataplane` with `labels`.
 * `to[].targetRef` selects the `backend` destination. It accepts `Mesh`, `MeshService`,
   `MeshExternalService`, `MeshMultiZoneService`, and `MeshHTTPRoute`. For a service with
-  several ports, set `sectionName` to the port's `name` in the service's `spec.ports[]`. This
+  several ports, set `sectionName` to the port's `name` in the service's `spec.ports[]`. This setting
   selects the destination port, not an inbound on the caller. `sectionName` isn't accepted with
   `MeshHTTPRoute`.
 * `RingHash` with the `x-user` hash policy keeps requests with the same header value on the
-  same healthy endpoint while the endpoint set is stable. This is affinity, not durable session storage. Scaling, endpoint health, locality, or configuration changes can move requests to another endpoint, and different clients can see different endpoints, so keep session state recoverable. Requests without `x-user` aren't pinned.
+  same healthy endpoint while the endpoint set is stable. Hashing provides affinity, not durable session storage. Scaling, endpoint health, locality, or configuration changes can move requests to another endpoint, and different clients can see different endpoints, so keep session state recoverable. Requests without `x-user` aren't pinned.
 
 ## Load balancing algorithms
 
@@ -161,7 +161,7 @@ route doesn't own.
 ## Locality awareness
 
 Locality awareness is on by default. A client prefers endpoints in its own zone, and moves to
-lower-priority remote endpoints as local ones lose healthy capacity. This is based on endpoint
+lower-priority remote endpoints as local ones lose healthy capacity. The preference is based on endpoint
 availability, not CPU or latency. To turn off the local-zone preference, set
 `localityAwareness.disabled: true`.
 

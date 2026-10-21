@@ -82,6 +82,16 @@ spec:
           image: curlimages/curl:8.12.1
           command: ["sleep", "86400"]
 EOF
+```
+
+Wait for the server to roll out:
+
+```sh
 kubectl -n kong-mesh-demo rollout status deployment/server --timeout=180s
+```
+
+Wait for the client to roll out:
+
+```sh
 kubectl -n kong-mesh-demo rollout status deployment/client --timeout=180s
 ```

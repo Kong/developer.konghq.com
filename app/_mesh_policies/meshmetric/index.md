@@ -222,8 +222,8 @@ rows:
 
 `ProvidedTLS` also falls back to plaintext if either certificate path is missing from the proxy
 metadata. Mount the certificate and key where the data plane process can read them, set both
-environment variables, and check the HTTPS endpoint before relying on encryption. Prometheus
-isn't configured automatically, so configure it to trust the issuing CA and the certificate's
+environment variables, and check the HTTPS endpoint before relying on encryption. {{site.mesh_product_name}}
+doesn't configure Prometheus automatically, so configure it to trust the issuing CA and the certificate's
 server name.
 
 ### OpenTelemetry

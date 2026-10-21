@@ -92,9 +92,9 @@ more information, see [Policy scope](/mesh/policy-targeting/#policy-scope).
 
 To limit one inbound, set `targetRef.sectionName` to one of the following:
 
-* The inbound's `name` in the destination `Dataplane`'s `spec.networking.inbound[]`.
-* The inbound's port as a string, such as `"8080"`, if it doesn't have a name.
-* On a zone proxy, the listener's `name` in `spec.networking.listeners[]`.
+* The inbound's `name` in the destination `Dataplane`'s `spec.networking.inbound[]`
+* The inbound's port as a string, such as `"8080"`, if it doesn't have a name
+* On a zone proxy, the listener's `name` in `spec.networking.listeners[]`
 
 Without `sectionName`, the policy covers all eligible listeners on the selected proxies, each
 with its own bucket.

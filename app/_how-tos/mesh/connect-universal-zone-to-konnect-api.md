@@ -46,7 +46,7 @@ cleanup:
         Stop this guide's foreground control plane with **Ctrl+C**. Do not stop other `kuma-cp` processes on the host.
     - title: Delete the {{site.konnect_short_name}} control plane
       content: |
-        In {{site.konnect_short_name}}, delete only the `example-cp` control plane created for this test. This also removes its mesh configuration. Revoke the zone token and delete the system account created by this guide if they remain. Review the files in `MESH_INSTALL_DIR` and remove the credentials when no longer needed.
+        In {{site.konnect_short_name}}, delete only the `example-cp` control plane created for this test. Deleting the control plane also removes its mesh configuration. Revoke the zone token and delete the system account created by this guide if they remain. Review the files in `MESH_INSTALL_DIR` and remove the credentials when no longer needed.
 min_version:
   mesh: '3.0'
 ---
@@ -61,7 +61,7 @@ Set the region where you will create the global control plane:
 export KONNECT_REGION='us'
 ```
 
-This is a fresh installation, not an upgrade procedure. If the account does not offer {{site.mesh_product_name}} 3.x, stop and confirm availability rather than deploying a 3.x zone against a v2 control plane.
+This is a fresh installation, not an upgrade procedure. If the account doesn't offer {{site.mesh_product_name}} 3.x, stop and confirm availability rather than deploying a 3.x zone against a v2 control plane.
 
 ## Create a global control plane in {{site.konnect_short_name}}
 

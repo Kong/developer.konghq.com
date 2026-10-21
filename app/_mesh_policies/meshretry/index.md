@@ -18,7 +18,7 @@ related_resources:
 ---
 
 The `MeshRetry` policy makes a client proxy try a failed request again, instead of returning
-the failure to the caller. It's configured from the side of the proxy making the request.
+the failure to the caller. You configure it on the side of the proxy making the request.
 
 Use this policy to absorb short failures, such as a destination restarting, a connection reset,
 or a rate limit that clears in a second or two.

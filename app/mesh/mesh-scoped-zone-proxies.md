@@ -28,10 +28,10 @@ related_resources:
 ---
 
 Zone proxies carry traffic between zones or from a mesh to external services. In
-{{site.mesh_product_name}} 3.x, each zone proxy belongs to one mesh and is represented by a
-`Dataplane`. Its `networking.listeners` entries give it an ingress or egress role.
+{{site.mesh_product_name}} 3.x, each zone proxy belongs to one mesh, and a
+`Dataplane` resource represents it. Its `networking.listeners` entries give it an ingress or egress role.
 
-Representing zone proxies as `Dataplane` resources lets you select them with policies just as you select workload proxies. The
+Representing zone proxies as `Dataplane` resources lets you select them with policies the same way you select workload proxies. The
 important difference is the traffic they handle: an ingress forwards an encrypted connection,
 while an egress can inspect traffic after terminating mesh mTLS. Selecting a zone proxy does
 not make every policy meaningful on both roles.
@@ -43,7 +43,7 @@ Kubernetes environment to try these concepts.
 ## Traffic paths
 
 For public application requests, use an [API gateway with a mesh sidecar](/mesh/application-ingress/).
-Zone ingress carries connections from other mesh proxies; it does not replace a public API gateway.
+Zone ingress carries connections from other mesh proxies; it doesn't replace a public API gateway.
 
 {% table %}
 columns:
@@ -51,14 +51,14 @@ columns:
     key: role
   - title: Destination
     key: destination
-  - title: What the proxy does
+  - title: Proxy behavior
     key: what
-  - title: Where caller permissions are checked
+  - title: Caller permission enforcement
     key: where
 rows:
   - role: "Zone ingress"
     destination: "A service in the ingress's zone"
-    what: "Reads the destination name from TLS SNI and forwards the encrypted connection to a local workload proxy. It does not terminate workload mTLS."
+    what: "Reads the destination name from TLS Server Name Indication (SNI) and forwards the encrypted connection to a local workload proxy. It doesn't terminate workload mTLS."
     where: "On the destination workload proxy, which authenticates the original caller."
   - role: "Zone egress"
     destination: "A registered `MeshExternalService`"
@@ -68,35 +68,43 @@ rows:
 
 For a request to a workload in another zone, the path is:
 
-```text
-Client proxy in zone A → zone ingress in zone B → destination proxy in zone B
-```
-
-Workload mTLS runs between the client and destination proxies, through ingress.
+{% mermaid %}
+flowchart LR
+    subgraph A[Zone A]
+        C[Client proxy]
+    end
+    subgraph B[Zone B]
+        I[Zone ingress]
+        D[Destination proxy]
+    end
+    C --> I -->|"Forwarded without decrypting"| D
+    C -.->|"Workload mTLS, end to end"| D
+{% endmermaid %}
 
 For a registered external destination reached through egress, the path is:
 
-```text
-Client proxy → zone egress → external endpoint
-             mesh mTLS     separate connection, with TLS configured by MeshExternalService
-```
+{% mermaid %}
+flowchart LR
+    C[Client proxy] -->|"Mesh mTLS"| E[Zone egress]
+    E -->|"Separate connection, TLS configured by MeshExternalService"| X[External endpoint]
+{% endmermaid %}
 
-Zone egress is not an additional hop in the cross-zone workload path between a client proxy and a destination proxy through zone ingress. Nor is it
+Zone egress isn't an additional hop in the cross-zone workload path between a client proxy and a destination proxy through zone ingress, nor is it
 an automatic gateway for every address an application can dial. Unknown destinations and
-traffic outside interception are separate concerns; see
+traffic outside interception are separate concerns. For more information, see
 [MeshPassthrough](/mesh/policies/meshpassthrough/). Use network controls as well when you
 must prevent applications from bypassing an approved exit path.
 
-Deploying an ingress does not choose which remote service a client calls.
+Deploying an ingress doesn't choose which remote service a client calls.
 [MeshService](/mesh/meshservice/) and [MeshMultiZoneService](/mesh/meshmultizoneservice/)
 describe the destinations; routing and load-balancing policies on the client determine where
 its traffic goes. The ingress forwards the connection to the chosen service in its own zone.
 
 ## Deploy proxies for a mesh
 
-Create the mesh separately and connect each proxy to its zone control plane. A proxy cannot
+Create the mesh separately and connect each proxy to its zone control plane. A proxy can't
 register successfully until its mesh exists. Create identities and permissions before sending
-traffic: a running Pod alone does not mean the proxy can serve requests.
+traffic: a running Pod alone doesn't mean the proxy can serve requests.
 
 ### Kubernetes
 
@@ -117,12 +125,12 @@ kuma:
 
 Merge these settings into your existing zone values, including its global control plane
 connection settings. The `kuma` prefix is for the {{site.mesh_product_name}} Helm chart.
-The entry does not create the `Mesh` resource or grant traffic permissions.
+The entry doesn't create the `Mesh` resource or grant traffic permissions.
 
 Each enabled role gets its own Deployment and Service. The ingress Service defaults to
 `LoadBalancer` on port `10001`; egress defaults to `ClusterIP` on port `10002`. Both roles
 are disabled by default. Enable only ingress if the zone needs to receive cross-zone workload
-traffic but does not need this external-service egress path.
+traffic but doesn't need this external-service egress path.
 
 The chart uses sidecar injection to run the proxy. The control plane generates its
 `Dataplane` listeners from the zone-proxy deployment configuration. Inspect those generated
@@ -157,21 +165,21 @@ though a Kubernetes deployment using the {{site.mesh_product_name}} Helm chart r
 
 Use a dataplane token for control plane authentication, not a legacy zone-proxy token or
 `--proxy-type=ingress`. Registration credentials are separate from the workload certificate
-used for mesh mTLS. See [Universal data plane proxies](/mesh/universal-data-plane/) for
+used for mesh mTLS. See [Universal data plane](/mesh/universal-data-plane/) for
 startup and token configuration.
 
 ## Make ingress reachable from other zones
 
 The ingress listener address is where the proxy listens. The address clients in another zone
-can reach may instead belong to a load balancer or a Kubernetes node.
+can reach might instead belong to a load balancer or a Kubernetes node.
 
 `MeshZoneAddress` publishes that reachable ingress address in `spec.address` and its port
-in `spec.port`. It is shared through the global control plane so other zones can discover the
-ingress. It does not open a firewall, configure DNS, or make a private address reachable.
+in `spec.port`. The global control plane shares it so other zones can discover the
+ingress. It doesn't open a firewall, configure DNS, or make a private address reachable.
 
 On Kubernetes, the control plane maintains this resource from the ingress Service and its
 ready endpoints. It can use a load balancer address, a NodePort address, or an explicit Service
-external IP. A plain ClusterIP without an external address is not sufficient for publication.
+external IP. A plain ClusterIP without an external address isn't sufficient for publication.
 Inspect the generated value and check that it is reachable from the other zones.
 
 Clients in other zones get endpoints for this zone's `MeshService` destinations only when this
@@ -191,9 +199,9 @@ spec:
   port: 10001
 ```
 
-Keep this address aligned with the load balancer and the available ingress instances. Do not
+Keep this address aligned with the load balancer and the available ingress instances. Don't
 manually overwrite a Kubernetes controller-owned `MeshZoneAddress`; change the Service
-configuration it is derived from.
+configuration that the controller derives it from.
 
 ## Establish identity before allowing traffic
 
@@ -203,33 +211,38 @@ The egress listener requires a workload identity; without one, the control plane
 generating that listener.
 
 An egress listener also requires something to serve. Until a `MeshExternalService` exists in
-the mesh, the proxy is generated with no egress listener even when an identity covers it. The
-two causes produce the same symptom, so check both:
+the mesh, the control plane generates the proxy without an egress listener, even when an identity covers it. The
+two causes produce the same symptom, so check both. First, list the identities:
 
 ```sh
 kubectl get meshidentities -A
+```
+
+Then list the external services:
+
+```sh
 kubectl get meshexternalservices -A
 ```
 
-A running egress Pod whose `Dataplane` shows a `ZoneEgress` listener still proves nothing:
-that listener is the requested configuration, not the generated one. Confirm the proxy
+A `ZoneEgress` listener on a running egress Pod's `Dataplane` doesn't prove that the listener exists:
+the `Dataplane` shows the requested configuration, not the generated one. Confirm the proxy
 received `self_zoneegress_dp_<listener name>` in its Envoy configuration. With the chart
 defaults on Kubernetes, that is `self_zoneegress_dp_10002`.
 
 [MeshTrust](/mesh/policies/meshtrust/) supplies the trust needed to validate peer
-certificates. Trust establishes who the caller is; it does not grant access.
+certificates. Trust establishes who the caller is; it doesn't grant access.
 [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) grants that access.
-Egress connections are denied when no applicable allow rule matches.
+Egress denies connections when no applicable allow rule matches.
 
-Ingress does not terminate the workload TLS connection, so it cannot authenticate the caller's
+Ingress doesn't terminate the workload TLS connection, so it can't authenticate the caller's
 SPIFFE ID from that connection. Apply workload permissions to the destination proxy, not to
 ingress as a substitute. The destination sees the original caller's identity, not the ingress's
-identity. An identity assigned to the ingress does not change this forwarding behavior.
+identity. An identity assigned to the ingress doesn't change this forwarding behavior.
 
 ## Proxy and traffic selection
 
-The top-level `spec.targetRef` answers **which proxy enforces this policy**. Use
-`kind: Dataplane` with these computed resource labels:
+The top-level `spec.targetRef` selects the proxy that enforces the policy. Use
+`kind: Dataplane` with the following computed resource labels:
 
 {% table %}
 columns:
@@ -248,7 +261,7 @@ rows:
 
 These are `Dataplane` labels, not labels to copy onto the caller's application. A `Dataplane`
 with both listener types has both role labels. Selecting its egress label selects the proxy,
-not just the egress listener: use `targetRef.sectionName` to narrow listener-scoped policies.
+not only the egress listener: use `targetRef.sectionName` to narrow listener-scoped policies.
 
 On Kubernetes, inspect the resource on the zone control plane:
 
@@ -257,7 +270,7 @@ kubectl get dataplanes -A -l kuma.io/listener-zoneegress=enabled -o yaml
 ```
 
 Read `.spec.networking.listeners[].name` and use that value for `sectionName`. If the name
-is absent, use the listener's port as a quoted string, such as `"10002"`. Do not assume that
+is absent, use the listener's port as a quoted string, such as `"10002"`. Don't assume that
 every installation uses the same listener name.
 
 After selecting the proxy, the policy's own shape determines how you select traffic:
@@ -279,7 +292,7 @@ rows:
     important: "Ingress can log connection information, not encrypted HTTP requests or authenticated caller identities."
   - policy: "[MeshTimeout](/mesh/policies/meshtimeout/)"
     configuration: "`rules` for received traffic and the supported timeout settings."
-    important: "HTTP settings require an HTTP connection manager. Connection-level settings cannot vary by authenticated caller."
+    important: "HTTP settings require an HTTP connection manager. Connection-level settings can't vary by authenticated caller."
   - policy: "[MeshRateLimit](/mesh/policies/meshratelimit/), [MeshFaultInjection](/mesh/policies/meshfaultinjection/)"
     configuration: "`rules`, with traffic matches where supported."
     important: "HTTP request limits and faults require decoded HTTP traffic on egress, not encrypted HTTP passing through ingress."
@@ -288,17 +301,17 @@ rows:
     important: "These configure the proxy's connections to the destination, not the client's connection to the proxy."
   - policy: "[MeshMetric](/mesh/policies/meshmetric/)"
     configuration: "`default` configures collection and export for the selected proxy."
-    important: "Metrics configuration does not depend on decoding HTTP traffic."
+    important: "Metrics configuration doesn't depend on decoding HTTP traffic."
   - policy: "[MeshTrace](/mesh/policies/meshtrace/)"
     configuration: "`default` configures tracing; `sectionName` can narrow the listener."
-    important: "Trace spans require HTTP processing; ingress TLS passthrough does not produce HTTP spans."
+    important: "Trace spans require HTTP processing; ingress TLS passthrough doesn't produce HTTP spans."
   - policy: "[MeshProxyPatch](/mesh/policies/meshproxypatch/)"
     configuration: "`default.appendModifications` changes generated proxy configuration."
     important: "Prefer a dedicated policy when one supports the change. A patch can invalidate a listener."
 {% endtable %}
 
-This is not a promise that every workload policy applies to zone listeners. For example, use
-client-side [MeshRetry](/mesh/policies/meshretry/) to retry requests, and do not use
+Not every workload policy applies to zone listeners. For example, use
+client-side [MeshRetry](/mesh/policies/meshretry/) to retry requests, and don't use
 [MeshOPA](/mesh/policies/meshopa/) as an authorization layer on zone egress. Check the linked
 policy reference for supported protocols, fields and merge behavior.
 
@@ -332,9 +345,9 @@ spec:
 {% endpolicy_yaml %}
 
 The `spiffeID` and `sni` in this single entry must both match. The role and zone labels select
-the enforcing proxy; they do not identify the caller or external destination.
+the enforcing proxy; they don't identify the caller or external destination.
 
-The destination SNI is the internal name the client proxy sends to egress. It is not necessarily
+The destination SNI is the internal name the client proxy sends to egress. It isn't necessarily
 the external server's DNS name or its upstream TLS server name. Inspect the egress's active
 Envoy configuration and copy the appropriate
 `filter_chains[].filter_chain_match.server_names[]` value into `sni.value`. Identify the chain
@@ -368,20 +381,20 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-This policy records traffic; it does not allow traffic that permissions deny. To log selected callers
+This policy records traffic; it doesn't allow traffic that permissions deny. To log selected callers
 or destinations, add the `rules[].matches` described in
 [MeshAccessLog](/mesh/policies/meshaccesslog/). Choose a format that includes the peer identity
 and requested server name when you need an authorization audit trail.
 
 ## Account for policies that already apply
 
-A mesh-wide policy can include zone proxies. A narrower policy does not automatically erase
+A mesh-wide policy can include zone proxies. A narrower policy doesn't automatically erase
 the broader configuration: each policy type has its own merge rules.
 
-For permissions, any matching deny wins over allows. Do not add a blanket deny-all and expect
+For permissions, any matching deny wins over allows. Don't add a blanket deny-all and expect
 the [allow example](#allow-one-caller-to-one-external-destination) to reopen access. Conversely, an existing broad allow can continue granting
 traffic beyond this example's caller and destination. Review all applicable permissions before
-using a narrow allow as evidence that access is restricted.
+using a narrow allow as evidence that you restricted access.
 
 Rate limits are local to each proxy, not a shared allowance across replicas. Adding egress
 replicas can increase aggregate allowed traffic. Access-log configurations can overlap and
@@ -394,10 +407,10 @@ Check configuration and traffic separately:
 
 1. Inspect the zone proxy `Dataplane`. Confirm its mesh, role labels, zone and listener names.
 1. For ingress, inspect `MeshZoneAddress.spec.address` and `spec.port` and test reachability
-   from another zone. A published address is not proof that firewalls or load balancers allow it.
+   from another zone. A published address isn't proof that firewalls or load balancers allow it.
 1. Inspect the proxy's active Envoy configuration. Confirm that the expected listener and
-   destination chain exist and that Envoy accepted the configuration. A declared listener may
-   not be generated when it has no destinations; egress also needs an identity and endpoints.
+   destination chain exist and that Envoy accepted the configuration. The control plane might not
+   generate a declared listener when it has no destinations; egress also needs an identity and endpoints.
 1. Send a request through the intended path. For cross-zone traffic, confirm that the responding
    workload is in the remote zone. For egress, confirm that its logs or counters change.
 1. Test the restriction as well as the allowance: use a different caller and a different external
@@ -412,9 +425,9 @@ columns:
   - title: Check
     key: check
 rows:
-  - symptom: "Proxy cannot register"
+  - symptom: "Proxy can't register"
     check: "The mesh exists, the zone control plane is reachable, and the proxy has valid registration credentials."
-  - symptom: "No ingress address is published"
+  - symptom: "No published ingress address"
     check: "The ingress Service has a usable external address and ready endpoints. On Universal, also the zone's `MeshZoneAddress`."
   - symptom: "Egress Pod runs but its listener is absent"
     check: "A `MeshIdentity` selects the proxy, and there are external destinations with endpoints to serve."
@@ -426,6 +439,6 @@ rows:
     check: "Ingress forwards encrypted bytes. Put request-level behavior on a proxy that processes the HTTP request."
   - symptom: "Policy affects both roles on a combined `Dataplane`"
     check: "Role labels select a `Dataplane`. Narrow the relevant listener-scoped policy with `sectionName`."
-  - symptom: "Resource is accepted but traffic is unchanged"
+  - symptom: "Control plane accepts the resource but traffic doesn't change"
     check: "The policy selects the intended proxy, the relevant listener exists, and the selected protocol supports the requested behavior."
 {% endtable %}

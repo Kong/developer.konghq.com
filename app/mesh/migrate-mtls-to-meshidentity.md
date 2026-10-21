@@ -54,7 +54,7 @@ rows:
     after: "`MeshTrafficPermission.rules[].default.allow[].spiffeID`"
 {% endtable %}
 
-The migration is not a field-for-field rewrite. Migrate the four responsibilities together while the
+The migration isn't a field-for-field rewrite. Migrate the four responsibilities together while the
 control planes are still running 2.x.
 
 {:.warning}
@@ -85,7 +85,7 @@ Use this order for each mesh:
 1. On 2.x, finish the
    [migration to `meshServices.mode: Exclusive`](/mesh/v2/meshservice/#migration).
    `MeshIdentity` needs `MeshService` identities during the transition.
-1. Create a temporary, non-issuing `MeshIdentity` for the whole mesh. This publishes the
+1. Create a temporary, non-issuing `MeshIdentity` for the whole mesh. The temporary identity publishes the
    SPIFFE IDs that workloads will use later without replacing their current certificates.
 1. Rewrite `MeshTrafficPermission` to authorize those SPIFFE IDs. If the mesh is permissive,
    also create a `MeshTLS` policy that preserves that behavior.
@@ -128,19 +128,19 @@ spec:
 
 Record these values before changing anything:
 
-- The `enabledBackend` and its `type`.
-- Whether its `mode` is `STRICT` or `PERMISSIVE`.
-- The leaf certificate expiration under `dpCert.rotation.expiration`.
-- For a `provided` backend, the certificate and private-key Secret names.
-- Every `MeshTrafficPermission` that currently allows traffic into the mesh.
+- The `enabledBackend` and its `type`
+- Whether its `mode` is `STRICT` or `PERMISSIVE`
+- The leaf certificate expiration under `dpCert.rotation.expiration`
+- For a `provided` backend, the certificate and private-key Secret names
+- Every `MeshTrafficPermission` that currently allows traffic into the mesh
 
-Only the enabled backend issues certificates. Do not translate inactive backends unless they
+Only the enabled backend issues certificates. Don't translate inactive backends unless they
 represent a CA that the new mesh must continue to trust.
 
 ## Publish the future SPIFFE IDs
 
 Create a `MeshIdentity` with no `provider`. It calculates identities for
-`MeshService.spec.identities`, but does not issue certificates or replace the legacy mesh
+`MeshService.spec.identities`, but doesn't issue certificates or replace the legacy mesh
 identity.
 
 An empty `dataplane` selector covers every proxy:
@@ -187,7 +187,7 @@ temporary and issuing identities. Although the API accepts later template change
 changes can invalidate existing trust and permission assumptions. Keep the templates stable
 during this migration and plan any identity-format change as a separate transition.
 
-The temporary identity is expected to report `Ready=False` with the reason `PartiallyReady`.
+Expect the temporary identity to report `Ready=False` with the reason `PartiallyReady`.
 Its `SpiffeIDProvider` condition must be `True`; that condition confirms that it is publishing
 SPIFFE IDs without issuing certificates.
 
@@ -195,8 +195,8 @@ SPIFFE IDs without issuing certificates.
 
 Complete the
 [`MeshTrafficPermission` migration](/mesh/migrate-policies-to-3/#meshtrafficpermission)
-before selecting a workload with the issuing identity. A proxy using `MeshIdentity` is
-authorized through `rules[].default.allow[].spiffeID`; a legacy `from` rule does not authorize
+before selecting a workload with the issuing identity. `MeshTrafficPermission` authorizes a proxy that uses `MeshIdentity`
+through `rules[].default.allow[].spiffeID`; a legacy `from` rule doesn't authorize
 that new identity.
 
 Preserve the existing authorization boundary. For example, if workloads in one Kubernetes
@@ -239,11 +239,11 @@ spec:
         mode: Permissive
 ```
 
-A mesh already using `STRICT` does not need a `MeshTLS` policy to preserve its mode.
+A mesh already using `STRICT` doesn't need a `MeshTLS` policy to preserve its mode.
 
 ## Prepare egress before switching external-service clients
 
-Skip this step only if the mesh does not use `MeshExternalService`.
+Skip this step only if the mesh doesn't use `MeshExternalService`.
 
 With `MeshIdentity`, a client's proxy connects to mesh-scoped zone egress using mTLS, and
 egress connects to the external endpoint. `MeshExternalService` is still supported, but it
@@ -257,7 +257,7 @@ While still on the 2.14 transition release:
 1. Prepare an issuing `MeshIdentity` that selects the new egress proxies, without yet selecting
    the application workloads. Use the provider configuration in
    [Create the issuing identity](#create-the-issuing-identity) and a selector scoped to the
-   egress proxies. A provider-less identity alone cannot supply the
+   egress proxies. A provider-less identity alone can't supply the
    certificate that egress needs.
 1. Establish the required trust and apply `MeshTrafficPermission` rules on egress for the
    intended caller identities and external destinations. No matching allow means access is denied.
@@ -268,7 +268,7 @@ While still on the 2.14 transition release:
 1. Only then select a canary application workload with an issuing `MeshIdentity`. Verify its
    allowed and denied external-service calls before expanding the identity rollout.
 
-An existing legacy `ZoneEgress` does not satisfy this prerequisite. Check the replacement
+An existing legacy `ZoneEgress` doesn't satisfy this prerequisite. Check the replacement
 `Dataplane` and its `ZoneEgress` listener, not only whether an egress Deployment is running.
 Keep the egress proxies covered by an issuing identity throughout the workload migration.
 
@@ -308,7 +308,7 @@ that it creates a PEM-backed `MeshTrust`.
 
 The former `enabledBackend` becomes the identity selected by
 `spec.selector.dataplane.matchLabels`. If several identities match a proxy, the selector with
-the most labels wins; ties are resolved by identity name.
+the most labels wins; the identity name breaks ties.
 
 ### Replace a built-in CA
 
@@ -412,13 +412,13 @@ spec:
 
 Set `insecureAllowSelfSigned: true` only when the supplied certificate is self-signed and you
 have accepted that trust model. Without it, a self-signed CA fails with `Provider=False`. The
-certificate and private key must exist before the identity is created. The CA certificate must
+certificate and private key must exist before you create the identity. The CA certificate must
 also have the `CA:TRUE` basic constraint and the `keyCertSign` key usage, and must not have the
 `keyAgreement` key usage.
 
 ## Validate the canary
 
-Do not expand the selector until all of these checks pass:
+Don't expand the selector until all of these checks pass:
 
 1. The issuing `MeshIdentity` reports `Provider=True` and `Ready=True`. For a provider that
    generates `MeshTrust`, `MeshTrustCreated` is also `True`.
@@ -436,7 +436,7 @@ In a multi-zone deployment, each zone generates its own `MeshTrust`, and it isn'
 to other zones. Each zone's generated `MeshTrust` syncs to the global control plane. Create a
 copy of each one on the global control plane, with the same `trustDomain` and `caBundles`, so
 that every zone receives it. Then perform the trust and mixed-identity traffic checks across zone
-boundaries too. The migration is not ready to expand until every zone trusts the other zones'
+boundaries too. The migration isn't ready to expand until every zone trusts the other zones'
 `MeshTrust` CAs.
 
 ## Expand the identity to the whole mesh
@@ -453,7 +453,7 @@ Leave its name, provider, trust domain, and SPIFFE ID path unchanged. Wait for e
 proxy to report that this `MeshIdentity` issued its certificate.
 
 Proxies receive new identity material over the existing control plane connection; restarting
-all workloads at once is not the migration mechanism. Investigate any proxy that still reports
+all workloads at once isn't the migration mechanism. Investigate any proxy that still reports
 the legacy backend before continuing.
 
 ## Remove the legacy configuration
@@ -477,13 +477,13 @@ connected proxy once more. Then confirm the [completion criteria](#completion-cr
 the readiness checker before the first 3.x zone upgrade.
 
 {:.info}
-> The old `<mesh>.ca-builtin-*` Secrets are not deleted during the upgrade. Leave them in place
+> The upgrade doesn't delete the old `<mesh>.ca-builtin-*` Secrets. Leave them in place
 > until the migration and rollback window have closed, then remove them according to your
 > credential-retention process.
 
 ## Completion criteria
 
-- Every workload is selected by an issuing `MeshIdentity`.
+- An issuing `MeshIdentity` selects every workload.
 - Every issuing identity is ready, and every zone has a `MeshTrust` for each zone's trust domain
   and CA.
 - `MeshTrafficPermission` rules authorize the intended SPIFFE IDs.
@@ -497,5 +497,5 @@ the readiness checker before the first 3.x zone upgrade.
 After every mesh meets these conditions, rerun the
 [{{site.mesh_product_name}} 3.x readiness checker](/mesh/check-upgrade-readiness/) while the control planes are still on
 the latest supported 2.14 patch. Resolve any remaining blocker or coverage gap before upgrading a
-zone. The checker cannot prove that certificates work together or that traffic is correctly
+zone. The checker can't prove that certificates work together or that traffic is correctly
 allowed and denied, so retain this validation as a separate gate.

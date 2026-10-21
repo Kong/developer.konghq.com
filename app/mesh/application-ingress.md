@@ -34,13 +34,13 @@ makes to mesh backends.
 that the gateway handles directly from inbound interception. There is no special gateway label
 or proxy type. Other ports can remain part of the mesh.
 
-Port exclusions do not deploy an API gateway, expose a public address or create routes.
+Port exclusions don't deploy an API gateway, expose a public address or create routes.
 Configure those through your gateway's own deployment and routing tools.
 
 ## Choose application ingress or zone ingress
 
 Application ingress and [zone ingress](/mesh/mesh-scoped-zone-proxies/) solve different
-problems. A zone ingress is not a public API gateway.
+problems. A zone ingress isn't a public API gateway.
 
 {% table %}
 columns:
@@ -77,23 +77,23 @@ that zone's ingress.
 
 This page describes a gateway that processes the incoming request and opens a connection to
 the backend. If the gateway instead passes application TLS through unchanged, the mesh
-sidecar cannot inspect the encrypted HTTP request; HTTP routing, tracing and request-level
+sidecar can't inspect the encrypted HTTP request; HTTP routing, tracing and request-level
 policies require visible HTTP traffic.
 
 ## Connect the gateway to a mesh
 
 Before changing the gateway deployment, prepare:
 
-- A mesh and a working zone control plane.
-- A gateway deployment with its own public Service or load balancer and routes.
-- A registered backend destination with the correct port and protocol.
+- A mesh and a working zone control plane
+- A gateway deployment with its own public Service or load balancer and routes
+- A registered backend destination with the correct port and protocol
 - A `MeshIdentity` that selects the gateway proxy and the backend proxies, with the trust
-  needed for their mTLS connection.
-- A backend permission that allows the gateway's workload identity.
+  needed for their mTLS connection
+- A backend permission that allows the gateway's workload identity
 
 Inject the gateway's traffic-serving Pods, not just the controller that configures
 them. For example, injecting an ingress controller without injecting the gateway data plane
-does not put user requests through the mesh.
+doesn't put user requests through the mesh.
 
 ### Kubernetes
 
@@ -144,7 +144,7 @@ as public listeners. If a controller is also injected, review its own listening 
 ### Keep public gateway Services out of mesh discovery
 
 Port exclusion and Service discovery are separate settings. Excluding a port removes its
-generated `Dataplane` inbound, but does not by itself prevent the Service from producing a
+generated `Dataplane` inbound, but doesn't by itself prevent the Service from producing a
 `MeshService`. Mesh clients can then discover a destination with no endpoints for that port.
 
 Add this annotation to each gateway Service that should remain outside mesh discovery.
@@ -157,8 +157,8 @@ metadata:
 ```
 
 The **Pod annotation** controls traffic interception. The **Service annotation** suppresses
-mesh inbounds derived from that Service and its generated `MeshService`; it does not disable
-the Kubernetes Service or expose it publicly. Do not put `kuma.io/ignore` on the backend
+mesh inbounds derived from that Service and its generated `MeshService`; it doesn't disable
+the Kubernetes Service or expose it publicly. Don't put `kuma.io/ignore` on the backend
 Services the gateway must reach through the mesh.
 
 Ignoring a Service applies to the whole Service, not just one port. If the same Pod has ports
@@ -170,12 +170,12 @@ Roll out new Pods through the gateway's normal deployment process so the injecto
 updated transparent proxy configuration. Retain the gateway image, service account and
 routes. Inspect the new `Dataplane`: excluded ports must be absent from its inbounds, while
 ports intentionally left in the mesh should remain. A Pod injected by an older control plane
-does not gain the updated excluded-inbound behavior just from editing the Deployment template.
+doesn't gain the updated excluded-inbound behavior just from editing the Deployment template.
 
 ### Universal
 
 Use an ordinary `Dataplane` and direct the gateway process's outbound traffic through its
-sidecar. No gateway label is required:
+sidecar. You don't need a gateway label:
 
 ```yaml
 type: Dataplane
@@ -192,7 +192,7 @@ outbound interception as described in [Universal data plane proxies](/mesh/unive
 Install the transparent proxy rules with
 `kumactl install transparent-proxy --exclude-inbound-ports 8000,8443`, or set
 `redirect.inbound.excludePorts` in the file passed with `--config`, using the gateway's actual
-listening ports. Do not declare those excluded ports as `Dataplane` inbounds. Unlike
+listening ports. Don't declare those excluded ports as `Dataplane` inbounds. Unlike
 Kubernetes, you maintain that resource yourself. Retain any other inbounds that the mesh
 should serve, and verify the interception rules before exposing the gateway.
 
@@ -200,7 +200,7 @@ should serve, and verify the interception rules before exposing the gateway.
 
 Configure the gateway's upstream to use an address recognized by mesh service discovery.
 On Kubernetes, send traffic to the backend Service address rather than resolving and
-load-balancing directly across its Pod IPs. This lets the sidecar select endpoints and apply
+load-balancing directly across its Pod IPs. Using the Service address lets the sidecar select endpoints and apply
 the policies associated with the service.
 
 {{site.operator_product_name}} can configure the gateway to choose individual backend Pod
@@ -222,9 +222,9 @@ metadata:
 ```
 
 Put this on the **backend Service**, not on the gateway's public Service or Pod. It changes
-how the gateway connects to the backend; it does not grant access or enable mesh mTLS.
-The annotation name remains `ingress.kubernetes.io/service-upstream`; it is supported by
-{{site.operator_product_name}}. The per-Service setting keeps the change scoped to one backend.
+how the gateway connects to the backend; it doesn't grant access or enable mesh mTLS.
+The annotation name remains `ingress.kubernetes.io/service-upstream`, and
+{{site.operator_product_name}} supports it. The per-Service setting keeps the change scoped to one backend.
 
 This ClusterIP configuration is for Services backed by Pods. An ExternalName Service has no
 ClusterIP; use the mesh hostname alias described in [Use a MeshMultiZoneService as a Gateway API backend](#use-a-meshmultizoneservice-as-a-gateway-api-backend).
@@ -232,12 +232,12 @@ ClusterIP; use the mesh hostname alias described in [Use a MeshMultiZoneService 
 For cross-zone backends, configure the gateway to use the hostname published for the intended
 [MeshMultiZoneService](/mesh/meshmultizoneservice/) or remote
 [MeshService](/mesh/meshservice/). The gateway's mesh sidecar handles the cross-zone path.
-Do not set the gateway's application upstream to the zone ingress's raw address: that address
+Don't set the gateway's application upstream to the zone ingress's raw address: that address
 is part of mesh transport, not a replacement for the service destination.
 
 The gateway's public route and a [MeshHTTPRoute](/mesh/policies/meshhttproute/) have different
 jobs. The public route chooses where an external request goes. A `MeshHTTPRoute` on the gateway
-sidecar can then change the mesh backend used for that outbound request. It does not configure
+sidecar can then change the mesh backend used for that outbound request. It doesn't configure
 the gateway's public hostname, certificate or listener.
 
 ### Use a MeshMultiZoneService as a Gateway API backend
@@ -253,7 +253,7 @@ how the Operator manages the Gateway and its routes.
 First, inspect the `MeshMultiZoneService` as seen by the gateway's zone. Read a generated
 hostname from `status.addresses[].hostname` and its listening port from `spec.ports[].port`.
 Also check `status.meshServices` to confirm that the aggregate selects the intended services
-and zones. Do not construct a `.mesh` name from the resource name: hostname generation is
+and zones. Don't construct a `.mesh` name from the resource name: hostname generation is
 configurable.
 
 For example, if the published hostname is `payments.mesh` and the aggregate exposes HTTP on
@@ -275,8 +275,8 @@ spec:
       protocol: TCP
 ```
 
-ExternalName is a DNS alias: it does not create a proxy, a ClusterIP or a new mesh identity.
-It also does not make the destination a `MeshExternalService`; this is still an internal
+ExternalName is a DNS alias: it doesn't create a proxy, a ClusterIP or a new mesh identity.
+It also doesn't make the destination a `MeshExternalService`; this is still an internal
 multi-zone mesh destination. Unlike the ignored public gateway Service in
 [Keep public gateway Services out of mesh discovery](#keep-public-gateway-services-out-of-mesh-discovery),
 this Service exists to give the route a backend reference, not to expose the gateway's Pods.
@@ -307,39 +307,39 @@ spec:
 
 Here, `payments.example.com` is the public request hostname, `payments-multizone` is the
 Kubernetes alias, and `payments.mesh` is the mesh destination hostname. They serve different
-purposes. ExternalName does not rewrite the HTTP Host header or configure application TLS;
+purposes. ExternalName doesn't rewrite the HTTP Host header or configure application TLS;
 configure those separately in the gateway if the backend requires them.
 
 The gateway's DNS resolution must reach mesh DNS and resolve the generated hostname to the
 aggregate's VIP in that zone. Test resolution from the traffic-serving gateway Pod, using the
 resolver the gateway process actually uses. An unrelated Pod or a gateway configured to use
 a custom external resolver may not resolve the same name. Keep the connection to the VIP
-inside outbound interception; do not exclude the backend port from outbound proxying.
+inside outbound interception; don't exclude the backend port from outbound proxying.
 
 ### Keep multi-zone routing and authorization separate
 
-Using ExternalName does not bypass `MeshIdentity`. Once the gateway sidecar recognizes the
+Using ExternalName doesn't bypass `MeshIdentity`. Once the gateway sidecar recognizes the
 aggregate's VIP and port, it uses the normal `MeshMultiZoneService` connection configuration:
 
 - The gateway sidecar presents its workload certificate. It needs a matching `MeshIdentity`
   and the trust required to validate the destination.
 - The sidecar builds destination identity checks from the SPIFFE identities advertised in
   `spec.identities` of the `MeshService` resources selected by the aggregate. The alias's DNS name is
-  not a workload identity and does not need to appear in a mesh certificate.
+  not a workload identity and doesn't need to appear in a mesh certificate.
 - For a remote backend, zone ingress forwards the workload mTLS connection. The destination
   proxy authenticates the gateway and evaluates its `MeshTrafficPermission` rules.
 
 Allow the gateway's actual SPIFFE ID on the backend proxies in every zone that can receive
-traffic, using the permission pattern shown in [Allow the gateway to call the backend](#allow-the-gateway-to-call-the-backend). Do not attach the permission to the ExternalName
+traffic, using the permission pattern shown in [Allow the gateway to call the backend](#allow-the-gateway-to-call-the-backend). Don't attach the permission to the ExternalName
 Service or try to match the gateway by the alias name. If gateway identities include a zone
 in their trust domain or path, allow each intended gateway identity rather than assuming they
 are identical across zones.
 
 For outbound policies, select the gateway with `spec.targetRef`, then use
-`spec.to[].targetRef.kind: MeshMultiZoneService` and labels from the aggregate itself. Do not
+`spec.to[].targetRef.kind: MeshMultiZoneService` and labels from the aggregate itself. Don't
 use the Kubernetes alias name as a `MeshService` selector. Keep the aggregate's service
 selector narrow and verify its advertised identities and trust before granting access; DNS
-resolution alone is not evidence of authorization.
+resolution alone isn't evidence of authorization.
 
 Validate both layers: check the `HTTPRoute`'s `Accepted` and `ResolvedRefs` conditions, resolve
 the mesh hostname from the gateway, and verify a request reaches an intended backend. Then
@@ -348,9 +348,9 @@ cross-zone reachability, trust or permissions still prevent traffic.
 
 ## Allow the gateway to call the backend
 
-The backend authenticates the gateway sidecar's SPIFFE identity. It does not receive the
+The backend authenticates the gateway sidecar's SPIFFE identity. It doesn't receive the
 external user's identity as the mesh TLS peer. Authenticate users and enforce public API
-authorization in the gateway or application; do not treat a forwarded header as a
+authorization in the gateway or application; don't treat a forwarded header as a
 `MeshTrafficPermission` identity.
 
 This example allows the gateway identity to call proxies labeled `app: payments`. Replace the
@@ -378,7 +378,7 @@ spec:
 
 The top-level selector identifies the **backend proxies enforcing access**, not the gateway.
 The allow entry identifies the **gateway calling them**. A certificate with a different
-trust domain or workload path does not match this example's URI.
+trust domain or workload path doesn't match this example's URI.
 
 Without a matching allow, the backend denies mesh traffic. Review all applicable permissions:
 an existing broad allow can admit other callers, and any matching deny takes precedence over
@@ -415,7 +415,7 @@ spec:
 {% endpolicy_yaml %}
 
 Replace the destination labels with those on your `MeshService`. These limits start on the
-gateway-to-backend hop; they do not bound time already spent authenticating or processing a
+gateway-to-backend hop; they don't bound time already spent authenticating or processing a
 request in the API gateway. Coordinate them with the gateway's own timeout budget.
 
 {% table %}
@@ -437,13 +437,13 @@ rows:
 
 Use labels you manage, such as `app: edge-gateway`, to select the gateway proxies; add a zone
 label when needed. A proxy-wide `targetRef` can select a `Dataplane` with no inbounds, so a
-gateway does not need a special marker to receive outbound policies.
+gateway doesn't need a special marker to receive outbound policies.
 
-Do not use `sectionName` to name an excluded public listener: that port is not a mesh inbound.
+Don't use `sectionName` to name an excluded public listener: that port isn't a mesh inbound.
 For a proxy with no inbounds, use `kind: Mesh` or a matching `kind: Dataplane` selector without
 `sectionName` to configure proxy-wide behavior.
 
-Mesh-wide policies can already include gateway proxies. A narrower policy does not universally
+Mesh-wide policies can already include gateway proxies. A narrower policy doesn't universally
 replace them; consult each policy's merge behavior. Avoid uncoordinated retries at both the API
 gateway and sidecar, which can multiply backend attempts. Mesh permissions identify gateway
 workloads, so user-specific rate limits and authorization still belong at the public API layer.
@@ -451,13 +451,13 @@ workloads, so user-specific rate limits and authorization still belong at the pu
 ## Update an existing 2.x gateway
 
 Keep the API gateway and sidecar architecture, but replace its special gateway configuration.
-Zone ingress does not replace the API gateway.
+Zone ingress doesn't replace the API gateway.
 
 1. Inventory every listening port and Service on the gateway and any injected controller.
    Decide which ports accept traffic directly and which remain mesh-protected.
 1. Before or together with the 3.x upgrade, replace the `kuma.io/gateway` Pod annotation with
    `traffic.kuma.io/exclude-inbound-ports`. Add `kuma.io/ignore: "true"` to gateway Services
-   that should not become mesh destinations. Roll out new Pods with the updated injector.
+   that shouldn't become mesh destinations. Roll out new Pods with the updated injector.
 1. On Universal, remove the `kuma.io/gateway` label and old `networking.gateway` block, set the
    inbound port exclusions, and remove those ports from the `Dataplane`'s declared inbounds.
 1. Replace policy selectors and locality keys that depend on `kuma.io/gateway` with labels
@@ -474,7 +474,7 @@ Zone ingress does not replace the API gateway.
 > Also, stored gateway labels are removed on the next Dataplane write, so selectors that still
 > depend on them can stop matching later. Replace both the interception settings and selectors.
 
-For a former built-in gateway, this is not a complete deployment migration.
+For a former built-in gateway, this isn't a complete deployment migration.
 {{site.mesh_product_name}} 3.x no longer reconciles `MeshGatewayInstance` deployments. Replace
 that architecture with an independently managed gateway and sidecar, including its public
 routes and certificates, before upgrading.
@@ -492,7 +492,7 @@ routes and certificates, before upgrading.
 1. Send a request through the public gateway and verify the backend response. Observe both the
    gateway's public request log and mesh-side telemetry to confirm the full path.
 1. Test a rejected external user at the API gateway and a disallowed workload at the backend.
-   These test different security boundaries; success at one does not prove the other.
+   These test different security boundaries; success at one doesn't prove the other.
 
 {% table %}
 columns:
@@ -516,7 +516,7 @@ rows:
   - symptom: "Backend rejects the gateway connection"
     check: "Gateway certificate, backend trust and permissions matching the gateway's actual SPIFFE URI."
   - symptom: "HTTP policy has no effect"
-    check: "The gateway is not passing opaque application TLS to the sidecar, and the destination is configured with an HTTP protocol."
+    check: "The gateway isn't passing opaque application TLS to the sidecar, and the destination is configured with an HTTP protocol."
   - symptom: "Backend sees the same mesh identity for different users"
     check: "Expected: mesh mTLS identifies the gateway workload. Enforce and propagate end-user identity through a separately secured application mechanism."
   - symptom: "Request fails earlier than the mesh timeout"

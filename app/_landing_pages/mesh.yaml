@@ -25,7 +25,7 @@ rows:
 
                     A central control plane distributes configuration while application traffic remains on your network. In a multi-zone deployment, mesh-scoped zone proxies connect services across environments and provide a controlled path to external services.
 
-                    With {{site.mesh_product_name}} 3.x, workload identity, trust, and traffic permission have separate responsibilities. This makes it explicit who a workload is, which certificate issuers are trusted, and which connections are allowed.
+                    With {{site.mesh_product_name}} 3.x, workload identity, trust, and traffic permission have separate responsibilities. This separation makes it explicit who a workload is, which certificate issuers are trusted, and which connections are allowed.
           - type: text
             config: |
               [Get started with {{site.mesh_product_name}}](#get-started-with-kong-mesh), [plan a 2.x migration](/mesh/upgrade/#upgrade-from-2-x-to-3-x), or [browse all policies](/mesh/policies/).

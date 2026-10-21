@@ -28,8 +28,8 @@ timeouts, retries and circuit breakers as anything inside the mesh.
 
 `MeshExternalService` replaces the legacy `ExternalService` resource, which is removed in 3.0.
 
-The resource is not a policy: there is no `targetRef`, because it *is* the destination. On
-Kubernetes it is accepted only in the system namespace.
+The resource isn't a policy: there is no `targetRef`, because it *is* the destination. On
+Kubernetes, it's accepted only in the system namespace.
 
 Traffic to a `MeshExternalService` always goes through a [mesh-scoped zone egress](/mesh/mesh-scoped-zone-proxies/)
 in the client's zone. The client's sidecar sends the request to the egress over mesh mTLS, and
@@ -71,11 +71,11 @@ spec:
 
 ## MeshExternalService and MeshPassthrough
 
-Both deal with traffic leaving the mesh, and they are not alternatives.
+Both deal with traffic leaving the mesh, and they aren't alternatives.
 
 [MeshPassthrough](/mesh/policies/meshpassthrough/) lets a proxy reach an address the mesh knows
 nothing about, without giving it a name. Nothing can target that traffic: no policy applies to
-it, and the mesh does not originate TLS.
+it, and the mesh doesn't originate TLS.
 
 A `MeshExternalService` gives the destination an identity in the mesh, a VIP and a hostname, so
 policies and routes can name it. Use it for the dependencies that matter enough to govern, and
@@ -173,7 +173,7 @@ environment. This applies even when `spec.extension` is set.
 
 `status.vip.ip` is the address the generated hostname resolves to, and `status.addresses` lists
 the hostnames themselves with the generator that produced each. `status.hostnameGenerators`
-carries per-generator status, which is where to look when an expected hostname was not produced.
+carries per-generator status, which is where to look when an expected hostname wasn't produced.
 
 ## Extensions
 

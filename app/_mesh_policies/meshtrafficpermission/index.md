@@ -88,7 +88,7 @@ What each field does:
 ID, so it can't end in `/`. To match one namespace only, end the prefix at `/sa`, or name each
 caller with `type: Exact`.
 
-The policy has no `to` array, because access control is enforced inbound at the destination.
+The policy has no `to` array, because the destination proxy enforces access control inbound.
 
 ## Match caller identities
 
@@ -356,7 +356,7 @@ DNS subdomain.
 
 To find the value, inspect the zone egress proxy's Envoy `/config_dump`, find the filter chain
 for the external service, and copy its `filter_chain_match.server_names` value into
-`rules[].default.deny[].sni.value`. This is an internal routing name, not the external
+`rules[].default.deny[].sni.value`. The value is an internal routing name, not the external
 service's public hostname.
 
 The following example denies traffic to one external service through zone egress:

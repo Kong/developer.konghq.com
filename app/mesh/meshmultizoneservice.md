@@ -26,12 +26,12 @@ zones into a single destination. A client names it instead of a per-zone service
 whichever zones are available.
 
 `MeshMultiZoneService` is the destination kind that cross-zone failover attaches to:
-`MeshLoadBalancingStrategy`'s `localityAwareness.crossZone` is accepted **only** on a `to` entry
+`MeshLoadBalancingStrategy` accepts `localityAwareness.crossZone` **only** on a `to` entry
 targeting a `MeshMultiZoneService`, because the failover order is a statement about zones and
 this is the resource that spans them.
 
-It is not a policy: there is no `targetRef`, and the resource is the destination itself. It is created
-on the **global** control plane only, then synced out to zones. A zone control plane attached to
+It isn't a policy: there is no `targetRef`, and the resource is the destination itself. You create it
+on the **global** control plane only, which then syncs it out to zones. A zone control plane attached to
 a global one rejects it:
 
 ```text
@@ -66,8 +66,8 @@ usual selector is `kuma.io/display-name`, which matches the same service in ever
 synced `MeshService`'s resource name carries a zone-specific hash while its display name does
 not.
 
-Adding `kuma.io/zone` narrows the aggregate to particular zones, which is how a service is
-exposed across a subset of them.
+Adding `kuma.io/zone` narrows the aggregate to particular zones, which is how you
+expose a service across a subset of them.
 
 {:.warning}
 > A display name is not unique across namespaces. `kuma.io/display-name: backend` matches every
@@ -84,7 +84,7 @@ exposed across a subset of them.
 list is rejected with `in body should have at least 1 items`. Each takes a `port`, an optional
 `name`, and an `appProtocol` that defaults to `tcp`.
 
-The ports are the aggregate's own, drawn from the selected services. Each entry is matched to a
+The ports are the aggregate's own, drawn from the selected services. The control plane matches each entry to a
 port of each selected `MeshService` by name, not by number: the entry's `name` (or its `port` as
 a string when `name` is unset) must equal a `MeshService` port's name or port number. A
 `MeshService` with no matching port contributes no endpoints for that entry. On Kubernetes, a
@@ -92,7 +92,7 @@ generated `MeshService` port takes the `Service` port's name, or its number when
 unnamed, so `name: http` in the example matches only services whose port is named `http`.
 
 A `MeshMultiZoneService` referenced in a route's `backendRefs` **requires a `port`** on the
-reference, unlike a `MeshService`, where it can be inferred. Omitting it is rejected with
+reference, unlike a `MeshService`, where the control plane can infer it. Omitting it is rejected with
 `must be defined with kind MeshMultiZoneService`.
 
 ## Reading the status
@@ -105,7 +105,7 @@ columns:
     key: what
 rows:
   - field: "`meshServices`"
-    what: "Every matched `MeshService`, with its name, namespace, zone and mesh. This is the list to check first when traffic is not reaching a zone."
+    what: "Every matched `MeshService`, with its name, namespace, zone and mesh. This is the list to check first when traffic isn't reaching a zone."
   - field: "`vips`"
     what: "The virtual IPs assigned to the aggregate."
   - field: "`addresses`"

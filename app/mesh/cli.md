@@ -31,8 +31,8 @@ compiled-in list. A policy added in a newer {{site.mesh_product_name}} release i
 upgrading the CLI, and `kongctl get mesh resource-types` is the authoritative list for the
 control plane in front of you.
 
-{{site.mesh_product_name}} 3.0 or later is required. Earlier control planes serve a different
-API and are not supported.
+`kongctl` requires {{site.mesh_product_name}} 3.0 or later. Earlier control planes serve a different
+API and aren't supported.
 
 ## Authenticating
 
@@ -42,7 +42,7 @@ Against {{site.konnect_short_name}}, log in once:
 kongctl login
 ```
 
-This runs a browser-based device authorization flow and stores a token. A Personal Access Token
+`kongctl login` runs a browser-based device authorization flow and stores a token. A Personal Access Token
 works instead, with `--pat` or the matching configuration entry, which is what CI usually uses.
 
 A self-managed control plane needs no login. Point `--control-plane-url` at its API instead,
@@ -54,7 +54,7 @@ resources.
 ## Choosing a control plane and a mesh
 
 Every mesh command needs to know which control plane to talk to, and most need to know which
-mesh. Both can be given as flags or held in configuration.
+mesh. You can pass both as flags or hold them in configuration.
 
 {% table %}
 columns:
@@ -83,7 +83,7 @@ rows:
 {% endtable %}
 
 Pass only one of `--control-plane-id`, `--control-plane-name` or `--control-plane-url`. When
-none is passed, the configured values are used in the order URL, ID, name.
+you pass none, `kongctl` uses the configured values in the order URL, ID, name.
 
 Setting the control plane in configuration once is what makes the examples in this reference readable; every
 one of them would otherwise carry `--control-plane-id CONTROL_PLANE_ID`.
@@ -98,45 +98,69 @@ kongctl get mesh control-planes
 
 ### Listing and reading resources
 
+List every resource type this control plane serves:
+
 ```sh
-# every resource type this control plane serves
 kongctl get mesh resource-types
+```
 
-# all of one type, in the default mesh
+List all resources of one type, in the default mesh:
+
+```sh
 kongctl get mesh meshtimeouts
+```
 
-# one resource, as YAML
+Read one resource, as YAML:
+
+```sh
 kongctl get mesh meshtimeouts slow -o yaml
+```
 
-# across every mesh
+List resources across every mesh:
+
+```sh
 kongctl get mesh meshtrafficpermissions --all-meshes
 ```
 
-A type can be given as its plural name, its singular, or its short alias: `meshtrafficpermissions`,
+You can give a type as its plural name, its singular, or its short alias: `meshtrafficpermissions`,
 `meshtrafficpermission` and `mtp` all work, and matching is case-insensitive.
 `resource-types` lists the aliases.
 
 ### Applying resources
 
+Apply one file:
+
 ```sh
-# one file
 kongctl create mesh -f policy.yaml
+```
 
-# every resource in a directory
+Apply every resource in a directory:
+
+```sh
 kongctl create mesh -f ./policies
+```
 
-# from stdin
+Apply from stdin:
+
+```sh
 cat policy.yaml | kongctl create mesh -f -
 ```
 
-`create mesh` creates or updates, so re-applying a file is how a resource is edited. Each
+`create mesh` creates or updates, so re-applying a file is how you edit a resource. Each
 resource carries its own `type`, `name` and `mesh`, so one file or directory can span types and
 meshes.
 
 ### Deleting resources
 
+Delete a resource in the default mesh:
+
 ```sh
 kongctl delete mesh meshtrafficpermission allow-all
+```
+
+Delete a resource in another mesh with `-m`:
+
+```sh
 kongctl delete mesh meshtimeout slow -m prod
 ```
 
@@ -147,16 +171,33 @@ kongctl delete mesh meshtimeout slow -m prod
 `get mesh` reads resources back as they were written. `inspect` answers the questions only the
 control plane can, once matching and merging have run.
 
+Show which policies apply to a proxy, and on which of its ports:
+
 ```sh
-# which policies apply to a proxy, and on which of its ports
 kongctl get mesh inspect dataplane backend-01
+```
 
-# which proxies a policy matches
+Show which proxies a policy matches:
+
+```sh
 kongctl get mesh inspect meshtimeout slow
+```
 
-# overviews
+Get an overview of all data plane proxies:
+
+```sh
 kongctl get mesh inspect dataplanes
+```
+
+Get an overview of all meshes:
+
+```sh
 kongctl get mesh inspect meshes
+```
+
+Get an overview of all zones:
+
+```sh
 kongctl get mesh inspect zones
 ```
 
@@ -182,7 +223,7 @@ columns:
     key: what
 rows:
   - type: "`policies`"
-    what: "The policies the control plane matched to each port. The default, and the only one that does not need the proxy reachable."
+    what: "The policies the control plane matched to each port. The default, and the only one that doesn't need the proxy reachable."
   - type: "`stats`"
     what: "Envoy statistics."
   - type: "`clusters`"
@@ -194,17 +235,21 @@ rows:
 {% endtable %}
 
 Everything but `policies` is relayed from the proxy's Envoy admin interface verbatim, so it
-needs the zone connected to the control plane and the proxy reachable from the zone. A failure
-at either hop is reported as it arrives: `zone is offline` when the zone is down, and a
+needs the zone connected to the control plane and the proxy reachable from the zone. `kongctl` reports
+a failure at either hop as it arrives: `zone is offline` when the zone is down, and a
 connection error naming the admin port when the proxy is.
 
 ### Exporting a control plane
 
-```sh
-# what a new global control plane needs
-kongctl dump mesh > mesh.yaml
+Export what a new global control plane needs:
 
-# apply it to another control plane
+```sh
+kongctl dump mesh > mesh.yaml
+```
+
+Apply the export to another control plane:
+
+```sh
 kongctl create mesh -f mesh.yaml --control-plane-id $TARGET_CP_ID
 ```
 
@@ -238,11 +283,15 @@ rows:
 
 ### Issuing tokens
 
-```sh
-# a token a dataplane uses to prove its identity
-kongctl create mesh dataplane-token --name backend-01 --workload backend --valid-for 24h > token
+Issue a token a dataplane uses to prove its identity:
 
-# a token for a zone control plane
+```sh
+kongctl create mesh dataplane-token --name backend-01 --workload backend --valid-for 24h > token
+```
+
+Issue a token for a zone control plane:
+
+```sh
 kongctl create mesh zone-token --zone zone-1 --valid-for 720h > token
 ```
 
@@ -252,7 +301,7 @@ reads.
 
 Bind a dataplane token as narrowly as the deployment allows (`--name`, `--workload`, or
 `--tag`) rather than to the mesh alone. Once a `MeshIdentity` derives identities from the
-`kuma.io/workload` label (the Universal default), a proxy carrying that label is rejected unless
+`kuma.io/workload` label (the Universal default), the control plane rejects a proxy carrying that label unless
 its token is bound with `--workload`; a token bound only by `--name`, or only to the mesh, no
 longer authenticates it.
 
@@ -293,7 +342,7 @@ kongctl get mesh meshservices --all-meshes -o json \
 ```
 
 `--columns` picks the fields a text table shows, as `HEADER=.field`, which covers the cases where
-a table is wanted but the default columns are not the interesting ones.
+you want a table but the default columns aren't the interesting ones.
 
 ## Differences from `kumactl`
 
@@ -326,7 +375,7 @@ Beyond the command names:
 
 - **Resource types come from the control plane.** `kumactl` carried a compiled-in list, so a
   newer policy needed a newer CLI. `kongctl` reads what the control plane serves.
-- **Installation is not a CLI job.** `kumactl install control-plane` has no `kongctl`
+- **Installation isn't a CLI job.** `kumactl install control-plane` has no `kongctl`
   counterpart; install {{site.mesh_product_name}} with Helm. (`kongctl install` exists, but
   it installs `kongctl`'s own features, not a control plane.)
 - **`kumactl` still installs the transparent proxy.** It ships in the
@@ -343,10 +392,13 @@ reconcile it back from its source.
 
 ## Getting help
 
-Every command explains itself:
+Every command explains itself. For example:
 
 ```sh
 kongctl get mesh --help
+```
+
+```sh
 kongctl create mesh dataplane-token --help
 ```
 

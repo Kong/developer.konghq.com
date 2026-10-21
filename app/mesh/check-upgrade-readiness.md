@@ -26,7 +26,7 @@ Before upgrading to {{site.mesh_product_name}} 3.x, run the {{site.mesh_product_
 a self-contained HTML report that you can keep with your migration records.
 
 Run it early to establish the migration work, then run it again on the latest supported 2.14 patch
-after making the changes. Do not upgrade the first zone until the final report has no blockers or
+after making the changes. Don't upgrade the first zone until the final report has no blockers or
 coverage gaps and you have completed its manual checks.
 
 {:.warning}
@@ -38,15 +38,15 @@ coverage gaps and you have completed its manual checks.
 
 The checker audits the control plane API for:
 
-- Control planes and data plane proxies that are not on versions compatible with the upgrade.
-- Legacy policies, services, gateways, zone proxies, and other resources removed in 3.x.
+- Control planes and data plane proxies that aren't on versions compatible with the upgrade
+- Legacy policies, services, gateways, zone proxies, and other resources removed in 3.x
 - `Mesh` settings replaced by `MeshIdentity`, `MeshTrust`, `MeshMetric`, `MeshTrace`,
-  `MeshAccessLog`, and other resources.
-- Policy target references, directions, and fields that 3.x removes or interprets differently.
-- Control plane settings that must change before the upgrade.
-- Resource names that do not meet the naming requirements in 3.x.
+  `MeshAccessLog`, and other resources
+- Policy target references, directions, and fields that 3.x removes or interprets differently
+- Control plane settings that must change before the upgrade
+- Resource names that don't meet the naming requirements in 3.x
 
-The report also lists checks that cannot be completed through the control plane API. Treat those
+The report also lists checks that can't be completed through the control plane API. Treat those
 items as part of the migration, even when the automated findings are clear.
 
 ## Download the checker
@@ -108,7 +108,7 @@ the complete flag reference.
   control plane versions and the zone configuration reported through insights, so use one report
   as the estate-wide starting point.
 - **Single-zone:** Connect directly to the zone control plane.
-- **One mesh:** Add `--mesh MESH_NAME` when investigating a mesh. Do not use a mesh-scoped report
+- **One mesh:** Add `--mesh MESH_NAME` when investigating a mesh. Don't use a mesh-scoped report
   as the final estate-wide gate.
 
 The checker reads `GET /config` to assess important control plane settings. In
@@ -125,7 +125,7 @@ export KUMA_TOKEN='YOUR_TOKEN'
 
 ## Run the audit
 
-If the Kubernetes control plane API is not already reachable, forward its API port in one
+If the Kubernetes control plane API isn't already reachable, forward its API port in one
 terminal:
 
 ```sh
@@ -152,10 +152,10 @@ the machine running it can't reach GitHub, such as in an air-gapped environment,
 becomes a coverage gap and the report is inconclusive. Pass the latest 2.14 patch version with
 `--latest-version` instead.
 
-Inspection of data plane Envoy configuration is disabled by default because it requires an
-additional read for each proxy. If the deployment might use the legacy Envoy DNS filter, add
+By default, the checker doesn't inspect data plane Envoy configuration because inspection
+requires an additional read for each proxy. If the deployment might use the legacy Envoy DNS filter, add
 `--inspect-dataplanes NUMBER` and choose enough representative proxies to cover where that filter
-could be configured. An audit without this option does not check for that filter.
+could be configured. An audit without this option doesn't check for that filter.
 
 ## Interpret the result
 
@@ -175,7 +175,7 @@ columns:
     key: next
 rows:
   - status: "`clean`"
-    meaning: "No automated blocker or coverage gap was found."
+    meaning: "The checker found no automated blocker or coverage gap."
     next: "Complete the report's manual checks and validate traffic."
   - status: "`blockers`"
     meaning: "The checker found one or more upgrade blockers."

@@ -44,14 +44,41 @@ cleanup:
   inline:
     - title: Remove the zone and destroy the control plane
       content: |
-        Remove the zone traffic permission, the test workloads, and the zone installed by Helm before destroying its global control plane:
+        Remove the zone traffic permission, the test workloads, and the zone installed by Helm before destroying its global control plane.
+
+        Delete the zone traffic permission:
 
         ```sh
         kubectl delete meshtrafficpermission client-to-server --namespace kong-mesh-system
+        ```
+
+        Delete the test namespace:
+
+        ```sh
         kubectl delete namespace kong-mesh-demo
+        ```
+
+        Uninstall the zone release:
+
+        ```sh
         helm uninstall kong-mesh --namespace kong-mesh-system
+        ```
+
+        Change to the Terraform working directory:
+
+        ```sh
         cd "$MESH_TERRAFORM_DIR"
+        ```
+
+        Review the destroy plan:
+
+        ```sh
         terraform plan -destroy
+        ```
+
+        Destroy the global control plane:
+
+        ```sh
         terraform destroy
         ```
 
@@ -69,7 +96,7 @@ to create the mesh on the global control plane, and `kubectl` to apply its traff
 to the zone. Terraform owns only the global control plane in this example; the remaining
 resources have explicit setup and cleanup steps.
 
-Unlike the 2.x example, this guide does not configure `Mesh.mtls`, an allow-all `from` policy, or shared
+Unlike the 2.x example, this guide doesn't configure `Mesh.mtls`, an allow-all `from` policy, or shared
 zone ingress and egress. Workload security uses `MeshIdentity` and identity-based permissions.
 
 ## Create the global control plane
@@ -78,7 +105,17 @@ Create a dedicated working directory:
 
 ```sh
 export MESH_TERRAFORM_DIR=$(mktemp -d)
+```
+
+Change to the working directory:
+
+```sh
 cd "$MESH_TERRAFORM_DIR"
+```
+
+Set the region and pass your {{site.konnect_short_name}} credentials to Terraform:
+
+```sh
 export KONNECT_REGION='us'
 export TF_VAR_konnect_token="$KONNECT_TOKEN"
 export TF_VAR_region="$KONNECT_REGION"
@@ -123,19 +160,34 @@ output "control_plane_id" {
 ```
 
 The [provider's control plane resource](https://registry.terraform.io/providers/kong/konnect-beta/0.22.0/docs/resources/mesh_control_plane)
-defaults to `v2`. Keep `version = "v3"` explicit. This setting is not a substitute for the
+defaults to `v2`. Keep `version = "v3"` explicit. This setting isn't a substitute for the
 migration procedure when managing an existing control plane.
 
-Review the plan, then apply it:
+Initialize the working directory:
 
 ```sh
 terraform init
+```
+
+Review the plan:
+
+```sh
 terraform plan
+```
+
+Apply the plan:
+
+```sh
 terraform apply
+```
+
+Export the control plane ID from the Terraform output:
+
+```sh
 export CONTROL_PLANE_ID=$(terraform output -raw control_plane_id)
 ```
 
-Protect Terraform state and do not commit credentials. Keep this directory for later cleanup.
+Protect Terraform state and don't commit credentials. Keep this directory for later cleanup.
 
 ## Give the zone credentials to connect
 

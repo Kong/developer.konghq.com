@@ -126,8 +126,8 @@ backend, and change the route weights to move traffic between services.
 
 For each destination, the applicable policies combine into one effective rule. A more specific
 policy's `backendRefs` list replaces the broader list, and weights aren't added together. For
-example, a mesh-wide route splitting `backend` and `backend-next` 90/10 can be overridden for
-`app: test-client` by a route that sends all connections to `backend-next`. Other clients keep
+example, a route for `app: test-client` that sends all connections to `backend-next` overrides
+a mesh-wide route splitting `backend` and `backend-next` 90/10. Other clients keep
 the 90/10 split.
 
 Weight changes affect only new connections. Existing connections stay on their backend, so
