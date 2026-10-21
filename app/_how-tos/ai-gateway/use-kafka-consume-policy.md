@@ -196,6 +196,7 @@ ai_gateway_policies:
       mode: http-get
       message_deserializer: json
       auto_offset_reset: latest
+      enforce_latest_offset_reset: true
       authentication:
         strategy: sasl
         mechanism: PLAIN
