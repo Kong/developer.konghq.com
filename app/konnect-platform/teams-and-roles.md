@@ -381,7 +381,7 @@ rows:
 
 #### Principals
 
-The following table describes the predefined roles for [{{site.identity}} groups](/identity/principals/#groups) and group memberships:
+The following table describes the predefined roles for [{{site.identity}} groups](/identity/groups/) and group memberships:
 
 <!--vale off-->
 {% table %}
