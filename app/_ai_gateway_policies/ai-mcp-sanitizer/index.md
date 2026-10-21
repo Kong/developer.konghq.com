@@ -2,6 +2,7 @@
 title: 'AI MCP Sanitizer'
 name: 'AI MCP Sanitizer'
 publisher: kong-inc
+icon: ai-mcp-sanitizer.png
 description: 'Detect and redact personally identifiable information (PII) in MCP tool call arguments and results.'
 min_version:
   ai-gateway: '2.3'
