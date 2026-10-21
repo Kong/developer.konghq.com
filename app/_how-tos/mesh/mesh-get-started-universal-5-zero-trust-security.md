@@ -71,7 +71,7 @@ proxies have no identity, serve plaintext, and neither `MeshTLS` nor `MeshTraffi
 applies to them.
 
 ```sh
-cat <<'EOF' | kongctl create mesh -f - \
+cat <<'EOF' | kongctl apply mesh -f - \
   --control-plane-url "$KONG_MESH_CP" \
   --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
 type: MeshIdentity
@@ -144,7 +144,7 @@ That is zero trust arriving: nothing is permitted until you say so.
 A permission names the caller by the identity it presents, not by a tag it sets:
 
 ```sh
-cat <<'EOF' | kongctl create mesh -f - \
+cat <<'EOF' | kongctl apply mesh -f - \
   --control-plane-url "$KONG_MESH_CP" \
   --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
 type: MeshTrafficPermission

@@ -131,22 +131,22 @@ You can give a type as its plural name, its singular, or its short alias: `mesht
 Apply one file:
 
 ```sh
-kongctl create mesh -f policy.yaml
+kongctl apply mesh -f policy.yaml
 ```
 
 Apply every resource in a directory:
 
 ```sh
-kongctl create mesh -f ./policies
+kongctl apply mesh -f ./policies
 ```
 
 Apply from stdin:
 
 ```sh
-cat policy.yaml | kongctl create mesh -f -
+cat policy.yaml | kongctl apply mesh -f -
 ```
 
-`create mesh` creates or updates, so re-applying a file is how you edit a resource. Each
+`apply mesh` creates or replaces each resource, so re-applying a file is how you edit a resource. Each
 resource carries its own `type`, `name` and `mesh`, so one file or directory can span types and
 meshes.
 
@@ -250,13 +250,13 @@ kongctl dump mesh > mesh.yaml
 Apply the export to another control plane:
 
 ```sh
-kongctl create mesh -f mesh.yaml --control-plane-id $TARGET_CP_ID
+kongctl apply mesh -f mesh.yaml --control-plane-id $TARGET_CP_ID
 ```
 
 `$TARGET_CP_ID` is the ID of the control plane that receives the export, as listed by
 `kongctl get mesh control-planes`.
 
-`dump mesh` writes resources in the same shape `create mesh` reads, so an export can be applied
+`dump mesh` writes resources in the same shape `apply mesh` reads, so an export can be applied
 straight back. `--profile` selects how much to export:
 
 {% table %}
@@ -331,7 +331,7 @@ rows:
 `-o` selects the format: `text`, the default, or `json` or `yaml`.
 
 `text` is a summary table, useful for scanning. Read the whole resource with `-o yaml`, which is
-also what round-trips back through `create mesh`.
+also what round-trips back through `apply mesh`.
 
 For scripting, `--jq` filters JSON responses with a full jq expression, and `-r` strips the
 quotes from string results:
@@ -354,7 +354,7 @@ columns:
     key: new
 rows:
   - old: "`kumactl apply -f policy.yaml`"
-    new: "`kongctl create mesh -f policy.yaml`"
+    new: "`kongctl apply mesh -f policy.yaml`"
   - old: "`kumactl get meshtimeouts`"
     new: "`kongctl get mesh meshtimeouts`"
   - old: "`kumactl delete meshtimeout slow`"

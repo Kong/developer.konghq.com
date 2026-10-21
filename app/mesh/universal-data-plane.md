@@ -47,7 +47,7 @@ networking:
 Apply it with:
 
 ```sh
-kongctl create mesh -f backend-01.yaml
+kongctl apply mesh -f backend-01.yaml
 ```
 
 Then issue a token:
