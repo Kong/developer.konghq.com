@@ -37,12 +37,6 @@ rows:
             config: |
               [Sign up for {{site.konnect_short_name}}](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs&utm_content=ai-gateway) to configure {{site.ai_gateway}} using {{site.konnect_short_name}}.
 
-      - blocks:
-          - type: image
-            config:
-              url: /assets/images/gateway/ai-gateway-overview.svg
-              alt_text: Overview of AI gateway
-
   - header:
       type: h2
       text: "Get started with {{ site.ai_gateway }}"
@@ -68,6 +62,13 @@ rows:
               content: |
                 To set up {{site.ai_gateway}} using the {{site.konnect_short_name}} UI, sign in to your Konnect account at [cloud.konghq.com](https://cloud.konghq.com/),
                 then navigate to **{{site.ai_gateway}}** and click **New {{site.ai_gateway}}**.
+  - columns:
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/gateway/ai-gateway-overview.svg
+              alt_text: Overview of AI gateway
+
   - columns:
       - blocks:
         - type: card
