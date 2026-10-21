@@ -31,24 +31,52 @@ related_resources:
     url: https://modelcontextprotocol.io/
 ---
 
-<!-- TODO: Drafted from kong-ee PR #23501 (draft), Aha AI-46, and the MCP PII sanitizer PRD and design doc. No Konnect API spec was available. Confirm every field name, default, scope, and error behavior against the spec, then remove `published: false`. The Aha description and PRD still describe the earlier `mcp-pii-sanitizer` design (`sanitization_mode`, per-leaf calls). PR #23501 is the source for this page. -->
-
 The AI MCP Sanitizer Policy detects and redacts personally identifiable information (PII) in [Model Context Protocol (MCP)](/ai-gateway/mcp/) `tools/call` traffic on {{site.ai_gateway}}.
 It can sanitize the arguments an agent sends to a tool, the result a tool returns, or both.
 
-MCP tools often front systems of record such as CRMs, ticketing tools, and medical or financial databases, where arguments and results routinely carry PII.
-The [AI PII Sanitizer Policy](/ai-gateway/policies/ai-sanitizer/) can't protect this traffic, because it expects chat-completion bodies and not MCP's JSON-RPC `params` and `result` structures.
+MCP tools often front systems of record such as CRMs, ticketing tools, and medical or financial databases, where arguments and results routinely contain PII.
+The [AI PII Sanitizer Policy](/ai-gateway/policies/ai-sanitizer/) can't protect this traffic, because it only processes chat-completion bodies and not MCP's JSON-RPC `params` and `result` structures.
 The AI MCP Sanitizer Policy adds PII sanitization to MCP traffic proxied by an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/).
 
 The Policy uses the same PII service, PII categories, custom patterns, blocking, and recovery options as the AI PII Sanitizer Policy.
 If you already use that Policy, the connection and detection settings work the same way.
+
+## Use cases
+
+Use the AI MCP Sanitizer Policy in the following situations:
+
+{% table %}
+columns:
+  - title: Problem to solve
+    key: situation
+  - title: Typical scenario
+    key: example
+  - title: What to configure
+    key: config
+rows:
+  - situation: Customer data goes into a third-party tool.
+    example: "An agent puts a customer's Social Security number into the arguments of a CRM or ticketing tool call."
+    config: "Target `tool_arguments` so the tool server receives redacted values."
+  - situation: A system of record returns sensitive records.
+    example: "A tool returns a medical or financial record, and you don't want that record in the LLM context."
+    config: "Target `tool_results` so the agent receives a sanitized result."
+  - situation: A call must not proceed if it contains PII.
+    example: "A tool must never receive or return PII, and a redacted call isn't acceptable."
+    config: "Set [`block_if_detected`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-block-if-detected) to `true` to [reject the call](#block-instead-of-redact) instead of redacting it."
+  - situation: Your data includes identifiers that the built-in categories don't cover.
+    example: "Your systems use employee IDs in the format `EMP-123456`."
+    config: "Add [`custom_patterns`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-custom-patterns) with a regular expression for the identifier, and include `custom` in [`anonymize`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-anonymize)."
+  - situation: A tool must work with placeholders, but the agent needs the real values back.
+    example: "The tool returns a placeholder it received in the arguments."
+    config: "Set [`recover_redacted`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-recover-redacted) to `true` to [restore the original values](#recover-redacted-values) in the tool result."
+{% endtable %}
 
 ## What gets sanitized
 
 The Policy sanitizes the `tools/call` method only.
 It doesn't sanitize other MCP methods, such as `resources/read` or `prompts/get`.
 
-You choose what to sanitize with `sanitize_targets`.
+You choose what to sanitize with [`sanitize_targets`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-sanitize-targets).
 Each target names a location in the MCP protocol instead of an abstract direction:
 
 {% table %}
@@ -71,7 +99,7 @@ rows:
 You can enable either target, or both.
 The default is `tool_arguments`.
 
-{{site.ai_gateway}} sanitizes only the fields that carry user data:
+{{site.ai_gateway}} sanitizes only the fields that contain user data:
 
 * **Sanitized:** string values in the tool call arguments, `text` entries in `result.content[]`, and string values in `result.structuredContent`.
 * **Not sanitized:** the tool name, JSON-RPC envelope fields such as `jsonrpc` and `id`, `result.isError`, `result._meta`, and `result.content[]` entries of type `image`, `audio`, or `resource`.
@@ -79,14 +107,12 @@ The default is `tool_arguments`.
 Rewriting tool names and protocol fields would break tool dispatch, access control, and protocol negotiation.
 Skipping binary content avoids sending large payloads to the PII service for no benefit.
 
-<!-- TODO: confirm the exact set of sanitized fields against the final PR and spec. -->
-
 ## Choose what to sanitize
 
 Choose targets based on which direction of the tool call includes PII and whether you need streaming:
 
 * **Sanitize only `tool_arguments`** if your agents send user data to a third-party tool and you need to keep streaming.
-  This target doesn't hold responses or change how `conversion-listener` servers run, so the [streaming and single-pass changes](#streaming-and-performance-trade-offs) don't apply.
+  This target doesn't hold responses or change how [`conversion-listener`](/ai-gateway/entities/ai-mcp-server/#schema-aigateway-mcpserver-type) servers run, so the [streaming and single-pass changes](#streaming-and-performance-trade-offs) don't apply.
 * **Sanitize only `tool_results`** if your tools return records from a system of record, such as a CRM or a medical database, and you want to keep that data out of the LLM context.
   {{site.ai_gateway}} forwards the arguments to the tool server unchanged.
 * **Sanitize both** if user data goes to the tool and the tool returns PII too.
@@ -101,7 +127,9 @@ The AI MCP Sanitizer Policy sanitizes a `tools/call` request and its result in t
    {{site.ai_gateway}} rejects a request that fails either check before it calls the PII service.
 1. If `tool_arguments` is targeted, the Policy sends the argument text to the PII service and replaces each value with its sanitized version.
 1. {{site.ai_gateway}} forwards the sanitized request to the tool server.
-1. If `tool_results` is targeted, {{site.ai_gateway}} holds the complete result from the tool server, the Policy sends its text to the PII service, and {{site.ai_gateway}} returns the sanitized result to the agent.
+1. If `tool_results` is targeted, {{site.ai_gateway}} holds the complete result from the tool server.
+   The Policy sends the result text to the PII service.
+   {{site.ai_gateway}} then returns the sanitized result to the agent.
 
 {% mermaid %}
 sequenceDiagram
@@ -124,13 +152,11 @@ sequenceDiagram
 
 {:.info}
 > {{site.ai_gateway}} never sanitizes the authentication tools that it handles itself, because their arguments are credentials and not user PII.
-<!-- TODO: confirm the user-facing name of these tools -->
 
 ### Supported server types
 
-The Policy works with the `passthrough-listener`, `listener`, and `conversion-listener` AI MCP Server types.
+The Policy works with the [`passthrough-listener`](/ai-gateway/entities/ai-mcp-server/#schema-aigateway-mcpserver-type), [`listener`](/ai-gateway/entities/ai-mcp-server/#schema-aigateway-mcpserver-type), and [`conversion-listener`](/ai-gateway/entities/ai-mcp-server/#schema-aigateway-mcpserver-type) AI MCP Server types.
 It handles both JSON and SSE-framed responses, and re-frames sanitized SSE responses automatically.
-<!-- TODO: confirm behavior for `conversion-only` and `upstream-server` types -->
 
 ## Streaming and performance trade-offs
 
@@ -147,10 +173,10 @@ columns:
   - title: Effect
     key: effect
 rows:
-  - type: "`passthrough-listener`"
-    change: "{{site.ai_gateway}} holds a streamed `tools/call` response and releases it as one body."
+  - type: "[`passthrough-listener`](/ai-gateway/entities/ai-mcp-server/#schema-aigateway-mcpserver-type)"
+    change: "{{site.ai_gateway}} buffers a streamed `tools/call` response and sends it as one body."
     effect: "For an upstream that streams a response incrementally, time to first byte becomes time to last byte. An SSE response that contains one complete message isn't affected."
-  - type: "`conversion-listener`"
+  - type: "[`conversion-listener`](/ai-gateway/entities/ai-mcp-server/#schema-aigateway-mcpserver-type)"
     change: "{{site.ai_gateway}} disables single-pass conversion for converter tools that the AI MCP Server owns, and sends the call to the upstream as a separate request."
     effect: "Each call opens one additional outbound connection and doesn't use the load balancer, retries, upstream TLS or mTLS settings, the keepalive pool, or the configured timeouts."
 {% endtable %}
@@ -164,31 +190,27 @@ A configuration that targets only `tool_arguments` without recovery doesn't chan
 {:.warning}
 > Each sanitized call adds at least one round trip to the PII service.
 > Load test the PII service with your largest and most deeply nested tool payloads before you enable the Policy in production.
-<!-- TODO: confirm the call pattern. The PRD describes one call per string value. The design doc and PR describe batched calls. -->
 
 ## Block instead of redact
 
 When `block_if_detected` is `true` and the PII service finds sensitive data, {{site.ai_gateway}} rejects the call instead of redacting it:
 
-* For `tool_arguments`, the agent receives a JSON-RPC error and the request doesn't reach the tool server.
+* For `tool_arguments`, the agent receives a JSON-RPC error and {{site.ai_gateway}} doesn't send the request to the tool server.
 * For `tool_results`, {{site.ai_gateway}} replaces the result with a JSON-RPC error.
 
 The error uses the format and HTTP status that match the client's [MCP protocol revision](/ai-gateway/mcp-version-support/).
-<!-- TODO: confirm the error code and message -->
 
 ## Recover redacted values
 
-When `recover_redacted` is `true`, the tool server receives placeholders instead of the original values.
+When [`recover_redacted`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-recover-redacted) is `true`, the tool server receives placeholders instead of the original values.
 If the tool returns a placeholder in its result, {{site.ai_gateway}} restores the original value before it sends the result to the agent.
-
-<!-- TODO: PR #23501 shares its entity checks with ai-sanitizer, which rejects `recover_redacted: true` when the Policy sanitizes output. Confirm whether that rule applies to `tool_results`, and document the valid combinations. -->
+The `recover_redacted` setting is `true` by default.
 
 ## Error handling
 
-The AI MCP Sanitizer Policy uses `stop_on_error` to decide what happens when the PII service is unreachable, returns a non-200 response, or returns a malformed response.
-<!-- TODO: confirm the default (`true` in the PRD) and the behavior of each value for both targets -->
+The AI MCP Sanitizer Policy uses [`stop_on_error`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-stop-on-error) to decide what happens when the PII service is unreachable, returns a non-200 response, or returns a malformed response.
+The `stop_on_error` setting is `true` by default.
 When the service returns fewer entries than {{site.ai_gateway}} sent, the behavior is still being decided.
-<!-- TODO: design doc open question 2 -->
 
 ## Differences from the AI PII Sanitizer Policy
 
@@ -206,13 +228,10 @@ columns:
 rows:
   - setting: Targeting
     sanitizer: "`sanitization_mode`: `INPUT`, `OUTPUT`, or `BOTH`"
-    mcp: "`sanitize_targets`: `tool_arguments`, `tool_results`, or both"
+    mcp: "[`sanitize_targets`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-sanitize-targets): `tool_arguments`, `tool_results`, or both"
   - setting: "`allow_all_conversation_history`"
     sanitizer: Supported
     mcp: Not available. Conversation history is an LLM concept.
-  - setting: "`continue_on_detection`, `rejection_mode`"
-    sanitizer: Supported
-    mcp: Not available in the first release. <!-- TODO confirm -->
 {% endtable %}
 
 `INPUT`, `OUTPUT`, and `BOTH` are ambiguous on MCP traffic, because an AI MCP Server is both a server to the agent and a client of the tool server.
@@ -226,14 +245,24 @@ You run the PII service in your own environment.
 
 ## Logging and analytics
 
-<!-- TODO: PRD and design doc say sanitization counts (identified, sanitized, duration, items) are added to the MCP statistics when logging statistics is enabled, and that `skip_logging_sanitized_items` omits the item details. PR #23501 moves MCP logging into an `emit-mcp-log` filter. Confirm the field names and add a link to the audit log reference. -->
+When you enable `log_statistics` in the AI MCP Server's [`config.logging`](/ai-gateway/entities/ai-mcp-server/#schema-aigateway-mcpserver-config-logging), each logged RPC that the Policy processed includes a `sanitizer` object in the [`ai.mcp` log entry](/ai-gateway/ai-audit-log-reference/#ai-mcp-logs).
+{{site.ai_gateway}} adds the object to the same log entry as the rest of the request, so one request produces one entry.
+
+The `sanitizer` object has the following properties:
+
+{% include md/ai-gateway/v2/mcp-sanitizer-logs.md %}
+
+The `sanitized_items` entries include the original text, so the log contains the sensitive data.
+Set [`skip_logging_sanitized_items`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-skip-logging-sanitized-items) to `true` to omit `sanitized_items` and keep that data out of your logs.
+<!-- TODO: confirm the log field names against the spec. PR #23501 uses `sanitizer`, and the design doc uses `sanitization`. -->
 
 ## Configuration notes
 
-* `anonymize` must contain at least one value.
+* [`anonymize`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-anonymize) must contain at least one value.
   The default is `all_and_credentials`.
-* If `anonymize` includes `custom`, you must set `custom_patterns`.
-  Each pattern needs a `name`, a `regex`, and a `score` between 0 and 1.
-* `sanitize_targets` must contain at least one target.
+* If `anonymize` includes `custom`, you must set [`custom_patterns`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-custom-patterns).
+  Each pattern needs a `name` and a `regex`.
+  The optional `score` is a number between 0 and 1 and defaults to 0.5.
+* [`sanitize_targets`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-sanitize-targets) must contain at least one target.
+  The default is `tool_arguments`.
 
-<!-- TODO: Add entity examples and the scope and attachment model for AI MCP Server once the spec is available. -->
