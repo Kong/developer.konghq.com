@@ -57,13 +57,9 @@ spec:
 What each field does:
 
 * `mesh` scopes the backend to the `default` mesh. Policies in another mesh can't reference it.
-* `labels` gives policies a stable way to select this backend. In this example, the
-  `kuma.io/display-name` label is `otel-collector`.
+* `labels` gives policies a stable way to select this backend.
 * `endpoint` tells selected data plane proxies to connect to
   `otel-collector.observability:4317`.
-
-The backend uses gRPC because `protocol` is omitted. The resource doesn't select any data plane
-proxies and doesn't send anything until a policy references it.
 
 A policy then references it by labels:
 
@@ -86,25 +82,20 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-In the policy, `targetRef` selects **which proxies export traces**, while `backendRef` selects
-**which collector connection they use**. Updating the backend's endpoint changes the collector
+In the policy, `targetRef` selects which proxies export traces, while `backendRef` selects
+which collector connection they use. Updating the backend's endpoint changes the collector
 connection for every policy that references it; the policies don't need to change.
 
-A `backendRef` carries `kind` and `labels`, and nothing else. `labels` is required, and an
-empty set is rejected. Where several backends match the labels, **the oldest by creation time
-wins**, so labels that match more than one backend make the choice depend on creation order.
-
-{:.warning}
-> Use labels that identify one backend. If the labels match several backends, creating a newer
-> backend does not switch traffic to it because the oldest match continues to win. Give the new
-> backend a distinct label and update the referring policies when you want to move traffic.
+A `backendRef` carries only `kind` and `labels`. `labels` is required, and an
+empty set is rejected. When several backends match the labels, the oldest by creation time
+wins.
 
 ## Collector placement
 
 The proxy doesn't send OTLP through its own outbound listeners. `kuma-dp` runs a local
 receiver on a Unix socket, Envoy writes to that socket, and `kuma-dp` exports to the address in
-this resource. That export leaves the sidecar's own process, which transparent proxying does
-not intercept, so it arrives at the collector as **plain gRPC with no mesh mTLS**.
+this resource. That export leaves the sidecar's own process, which transparent proxying doesn't 
+intercept, so it arrives at the collector as plain gRPC with no mesh mTLS.
 
 That decides where a collector can run:
 
@@ -118,9 +109,9 @@ rows:
   - where: "Outside the mesh"
     result: "Works. The export is plaintext and nothing expects otherwise."
   - where: "In the mesh, default `Strict`"
-    result: "**Fails silently.** No telemetry arrives and `kuma-dp` logs `failed to upload metrics: ... error reading server preface: unexpected EOF`, because the collector's inbound rejects the unauthenticated connection."
+    result: "Fails silently. No telemetry arrives and `kuma-dp` logs `failed to upload metrics: ... error reading server preface: unexpected EOF`, because the collector's inbound rejects the unauthenticated connection."
   - where: "In the mesh, with [MeshTLS](/mesh/policies/meshtls/) `Permissive` on the collector"
-    result: "Works, at a cost: a `Permissive` inbound accepts unauthenticated plaintext from anything that can reach it, and [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) can't apply to those connections."
+    result: "Works, but a `Permissive` inbound accepts unauthenticated plaintext from anything that can reach it, and [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) can't apply to those connections."
 {% endtable %}
 
 Running the collector outside the mesh is the simpler choice. If it has to sit inside, use
@@ -144,28 +135,38 @@ rows:
   - field: "`endpoint.port`"
     value: "The collector's port, 1 to 65535. Defaults to 4317."
   - field: "`endpoint.path`"
-    value: "A base path prefix for HTTP endpoints, to which the control plane appends `/v1/traces`, `/v1/metrics` or `/v1/logs`. Accepted only with `protocol: http`."
+    value: |
+      A base path prefix for HTTP endpoints, to which the control plane appends `/v1/traces`, `/v1/metrics` or `/v1/logs`. Accepted only with `protocol: http`.
+
+      This field has three constraints: 
+      * It must not be set when the protocol is `grpc`
+      * It must begin with a slash
+      * It must carry no query or fragment
   - field: "`protocol`"
     value: "`grpc`, the default, or `http`. With `protocol: http` and `endpoint.port: 443`, `kuma-dp` exports over HTTPS automatically."
   - field: "`env`"
     value: "How OpenTelemetry environment variables on the sidecar combine with the other fields in this table. See [Combine backend fields with environment variables](#combine-backend-fields-with-environment-variables)."
 {% endtable %}
 
-`endpoint.path` has three constraints, each rejected on apply: it must not be set when the
-protocol is `grpc` (`must not be set when protocol is grpc`), it must begin with a slash
-(`must start with /`), and it must carry no query or fragment
-(`must not contain query or fragment`).
-
 ## Combine backend fields with environment variables
 
 `kuma-dp` reads `OTEL_EXPORTER_OTLP_*` variables at startup and merges them with this
 resource's fields. Values that carry secrets (headers, client keys, certificates) stay local
-to `kuma-dp`: at bootstrap it reports only which variable *keys* are present to the control
+to `kuma-dp`: at bootstrap it reports only which variable keys are present to the control
 plane, never their values.
 
-The shared variables are `OTEL_EXPORTER_OTLP_ENDPOINT`, `_PROTOCOL`, `_HEADERS`, `_INSECURE`,
-`_TIMEOUT`, `_COMPRESSION`, `_CERTIFICATE`, `_CLIENT_KEY` and `_CLIENT_CERTIFICATE`. Each also
-has a per-signal form (`OTEL_EXPORTER_OTLP_TRACES_*`, `_METRICS_*` and `_LOGS_*`) which
+The shared variables are:
+* `OTEL_EXPORTER_OTLP_ENDPOINT`
+* `_PROTOCOL`
+* `_HEADERS`
+* `_INSECURE`
+* `_TIMEOUT`
+* `_COMPRESSION`
+* `_CERTIFICATE`
+* `_CLIENT_KEY`
+* `_CLIENT_CERTIFICATE`. 
+
+Each also has a per-signal form (`OTEL_EXPORTER_OTLP_TRACES_*`, `_METRICS_*` and `_LOGS_*`) which
 overrides the shared value for that signal.
 
 For each field, the first available source wins. By default, the proxy resolves configuration
@@ -186,11 +187,18 @@ columns:
     key: values
 rows:
   - field: "`mode`"
-    values: "`Optional`, the default, uses environment variables when present and tolerates their absence. `Disabled` skips them entirely, leaving only this resource's fields and the built-in defaults. `Required` blocks the signal when the variables don't supply the missing fields, even where an explicit value or default could have filled them."
+    values: |
+      * `Optional`, the default, uses environment variables when present and tolerates their absence
+      * `Disabled` skips them entirely, leaving only this resource's fields and the built-in defaults
+      * `Required` blocks the signal when the variables don't supply the missing fields, even where an explicit value or default could have filled them
   - field: "`precedence`"
-    values: "`EnvFirst`, the default, lets environment variables win and this resource's fields fill the gaps. `ExplicitFirst` reverses that. Built-in defaults are the last fallback either way."
+    values: |
+      * `EnvFirst`, the default, lets environment variables win and this resource's fields fill the gaps
+      * `ExplicitFirst` reverses that, and built-in defaults are the last fallback either way
   - field: "`allowSignalOverrides`"
-    values: "`true`, the default, lets per-signal variables diverge from the shared ones. `false` ignores the per-signal variables and applies the shared values to every signal."
+    values: |
+      * `true`, the default, lets per-signal variables diverge from the shared ones
+      * `false` ignores the per-signal variables and applies the shared values to every signal
 {% endtable %}
 
 `Required` is for making missing input fail loudly: the signal blocks, `RequiredEnvMissing`
@@ -264,8 +272,8 @@ rows:
     meaning: "`EnvDisabledByPolicy`, `RequiredEnvMissing`, `SignalOverridesDisallowed` or `MultipleBackendsForSignal`."
 {% endtable %}
 
-The state comes from `blockedReasons` and `missingFields` only, not from whether a collector
-answers. A signal is `ready` when it has no hard blocked reason and no missing fields, even if
+The state comes from `blockedReasons` and `missingFields` only. 
+A signal is `ready` when it has no hard blocked reason and no missing fields, even if
 nothing listens at the resolved endpoint. Fields that neither this resource nor the
 environment set fall back to OpenTelemetry SDK defaults.
 
@@ -275,7 +283,7 @@ soft: the control plane ignored some environment input and export still works.
 state out of `ready`.
 
 `state: missing` appears only with `env.mode: Required`, when the environment variables don't
-supply the required fields (`RequiredEnvMissing`). A `backendRef` whose labels match no backend
+supply the required fields. A `backendRef` whose labels match no backend
 produces no entry for that backend in `status.openTelemetry` at all, so check the
 [`ReferencedByPolicies` condition](#verify-backend-references) and the policy's
 labels instead.
