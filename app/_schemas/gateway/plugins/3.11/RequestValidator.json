@@ -12,6 +12,11 @@
           },
           "type": "array"
         },
+        "array_length_compat": {
+          "default": true,
+          "description": "If true, `minLength`/`maxLength` also apply to arrays using item count. Compatibility option for legacy schemas that use these keywords instead of `minItems`/`maxItems`.",
+          "type": "boolean"
+        },
         "body_schema": {
           "description": "The request body schema specification. One of `body_schema` or `parameter_schema` must be specified.",
           "type": "string"

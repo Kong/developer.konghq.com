@@ -179,7 +179,11 @@
                     "type": "string"
                   },
                   "inputs": {
-                    "additionalProperties": true,
+                    "additionalProperties": {
+                      "maxLength": 255,
+                      "minLength": 1,
+                      "type": "string"
+                    },
                     "description": "filter input(s)",
                     "type": "object"
                   },
@@ -284,7 +288,11 @@
                     "type": "string"
                   },
                   "outputs": {
-                    "additionalProperties": true,
+                    "additionalProperties": {
+                      "maxLength": 255,
+                      "minLength": 1,
+                      "type": "string"
+                    },
                     "description": "Individual items from `.values`, referenced by key",
                     "type": "object"
                   },
@@ -296,8 +304,10 @@
                     "x-terraform-transform-const": true
                   },
                   "values": {
+                    "additionalProperties": true,
                     "description": "An object with string keys and freeform values",
-                    "type": "string"
+                    "type": "object",
+                    "x-speakeasy-type-override": "any"
                   }
                 },
                 "required": [
