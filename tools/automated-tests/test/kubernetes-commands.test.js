@@ -356,6 +356,27 @@ test("compareKubernetesResourceProperty passes a matching value", () => {
   assert.equal(check.pass, true);
 });
 
+test("compareKubernetesResourceProperty trims a block-scalar expected value", () => {
+  // A writer copying the `|` block-scalar habit from path/name_selector to
+  // expected would otherwise bake the trailing newline into the comparison
+  // target and never pass.
+  const check = compareKubernetesResourceProperty(
+    { expected: "kong/kong-gateway:3.10\n" },
+    "kong/kong-gateway:3.10\n",
+  );
+
+  assert.equal(check.pass, true);
+});
+
+test("compareKubernetesResourceProperty coerces a scalar expected value to string", () => {
+  const check = compareKubernetesResourceProperty(
+    { expected: 3 },
+    "3\n",
+  );
+
+  assert.equal(check.pass, true);
+});
+
 test("compareKubernetesResourceProperty fails a mismatch, showing expected and actual", () => {
   const check = compareKubernetesResourceProperty(
     { expected: "kong/kong-gateway:3.10" },

@@ -729,7 +729,10 @@ async function vaultSecret(validationName, config, runtimeConfig, container) {
 // construction, defaults, and comparisons live in kubernetes-commands.js.
 function requireKubernetesConfig(validationName, config, fields) {
   for (const field of fields) {
-    if (config[field] == null) {
+    // Falsy, not just null/undefined: an empty-string kind/name/path is a
+    // de-facto missing field and must fail fast here, not burn the retry
+    // budget on a kubectl error.
+    if (!config[field]) {
       logAndError(
         validationName,
         `Missing '${field}' in the validation config: ${JSON.stringify(config)}.`,
@@ -810,7 +813,7 @@ async function kubernetesResourceProperty(
   container,
 ) {
   requireKubernetesConfig(validationName, config, ["kind", "path"]);
-  if (config.name == null && config.name_selector == null) {
+  if (!config.name && !config.name_selector) {
     logAndError(
       validationName,
       `Missing 'name' or 'name_selector' in the validation config: ${JSON.stringify(config)}.`,
