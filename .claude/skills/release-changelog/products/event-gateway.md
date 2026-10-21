@@ -15,7 +15,6 @@ app/_event_gateway_policies/
 app/_how-tos/event-gateway/
 app/_references/event-gateway/
 app/_landing_pages/event-gateway.yaml
-app/_indices/event-gateway.yaml
 ```
 
 Also keep other pages that changed only if their frontmatter has `event-gateway` under `products` or `tags`, or the diff clearly adds Event Gateway content (e.g. `app/kongctl/supported-resources.md`, `app/gateway/plugins/expressions.md`). Files that only changed incidentally (shared how-to test tooling, other products' pages) are left out. Skip `app/_data/`, except the bootstrap schema (see Special pages).

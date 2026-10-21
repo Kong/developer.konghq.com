@@ -5,7 +5,7 @@
 
 ## Path filters
 
-Include everything under `app/` that passes the baseline exclusions, except paths owned by other profiles (`app/event-gateway/`, `app/_event_gateway_policies/`, `app/_how-tos/event-gateway/`, `app/_references/event-gateway/`).
+Include everything under `app/` that passes the baseline exclusions, except any path matched by the **Path filters** of another profile in `products/`.
 
 ## URL derivation (when `permalink` is missing)
 
@@ -17,7 +17,7 @@ Include everything under `app/` that passes the baseline exclusions, except path
 - `app/ai-gateway/foo.md` -> `/ai-gateway/foo/`
 - `app/mesh/foo.md` -> `/mesh/foo/`
 - `app/kic/foo.md` -> `/kic/foo/`
-- `app/_landing_pages/foo.yaml` -> read the `permalink` field inside the file
+- `app/_landing_pages/foo.yaml` -> `/foo/` (derived from the file path; the page declares no `permalink`)
 - `app/_references/foo.md` -> read the `permalink` field
 
 ## Grouping rules
