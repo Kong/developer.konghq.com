@@ -109,31 +109,52 @@ test("executeDocCommand wraps assignment commands for persistence", async () => 
   const cmd = 'export FOO="$(printf abc123)"';
   await executeDocCommand({}, cmd, stub);
   assert.equal(calls.length, 1);
+  assert.ok(
+    calls[0][0].startsWith("set -eo pipefail\n"),
+    "wrapped script must start with the errexit/pipefail guard",
+  );
   assert.match(calls[0][0], /FOO_BASE64/);
   assert.match(calls[0][0], />> \/env-vars\.sh/);
   assert.equal(calls[0][1], cmd, "failures must report the original doc command");
 });
 
-test("executeDocCommand passes plain commands through untouched", async () => {
+test("executeDocCommand guards plain commands with errexit and pipefail", async () => {
   const calls = [];
-  const stub = async (container, command) => {
-    calls.push(command);
+  const stub = async (container, command, displayCmd) => {
+    calls.push([command, displayCmd]);
     return { exitCode: 0, output: "" };
   };
   const cmd = "export GREETING=hello";
   await executeDocCommand({}, cmd, stub);
-  assert.deepEqual(calls, [cmd]);
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0][0], `set -eo pipefail\n${cmd}`);
+  assert.equal(calls[0][1], cmd, "failures must report the original doc command");
 });
 
-test("executeDocCommand passes non-assignment commands through untouched", async () => {
+test("executeDocCommand guards non-assignment commands with errexit and pipefail", async () => {
   const calls = [];
-  const stub = async (container, command) => {
-    calls.push(command);
+  const stub = async (container, command, displayCmd) => {
+    calls.push([command, displayCmd]);
     return { exitCode: 0, output: "" };
   };
   const cmd = "curl -s http://localhost:8000/routes";
   await executeDocCommand({}, cmd, stub);
-  assert.deepEqual(calls, [cmd]);
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0][0], `set -eo pipefail\n${cmd}`);
+  assert.equal(calls[0][1], cmd, "failures must report the original doc command");
+});
+
+test("executeDocCommand guards a multi-line command on the first line only", async () => {
+  const calls = [];
+  const stub = async (container, command, displayCmd) => {
+    calls.push([command, displayCmd]);
+    return { exitCode: 0, output: "" };
+  };
+  const cmd = "kubectl wait --for=condition=Valid gateway/kong --timeout=60s\necho $PROXY_IP";
+  await executeDocCommand({}, cmd, stub);
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0][0], `set -eo pipefail\n${cmd}`);
+  assert.equal(calls[0][1], cmd, "failures must report the original doc command");
 });
 
 test("parseExportAssignments returns every assignment line in a multi-assignment doc block", () => {
@@ -184,6 +205,10 @@ test("executeDocCommand wraps multi-assignment commands and reports the original
 export B=$(curl -s http://x/b)`;
   await executeDocCommand({}, cmd, stub);
   assert.equal(calls.length, 1);
+  assert.ok(
+    calls[0][0].startsWith("set -eo pipefail\n"),
+    "wrapped script must start with the errexit/pipefail guard",
+  );
   assert.match(calls[0][0], /A_BASE64/);
   assert.match(calls[0][0], /B_BASE64/);
   assert.equal(calls[0][1], cmd, "failures must report the original doc command");
