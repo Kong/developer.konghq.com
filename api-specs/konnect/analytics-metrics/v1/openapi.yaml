@@ -16,12 +16,12 @@ info:
     - For queries that use the time dimension, the granularity of the result may be coarser than requested. The finest allowed granularity depends on the query's time range: data farther in the past may have coarser granularity. The exact result granularity will be reported in the response `meta.granularity_ms` field.
     - Queries must complete within 10 seconds. If a query takes longer than 10 seconds, a 408 will be returned. In this case, it is suggested to add more filters, and/or reduce the time range.
     - This endpoint is rate limited to 10 requests per minute per user.
-  version: 4.1.1
+  version: 4.2.0
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@71eb5f9b874a36c530766e00e19ed197d3399d4d
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/71eb5f9b874a36c530766e00e19ed197d3399d4d'
+  x-oas-source: kong/platform-api@3c23421c7059945672ecca64a2b9c7dbfa8a1281
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/3c23421c7059945672ecca64a2b9c7dbfa8a1281'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -79,10 +79,12 @@ components:
           api_usage: '#/components/schemas/MetricsApiUsageQuery'
           llm_usage: '#/components/schemas/MetricsLLMUsageQuery'
           agentic_usage: '#/components/schemas/MetricsAgenticUsageQuery'
+          platform_usage: '#/components/schemas/MetricsPlatformUsageQuery'
       oneOf:
         - $ref: '#/components/schemas/MetricsApiUsageQuery'
         - $ref: '#/components/schemas/MetricsLLMUsageQuery'
         - $ref: '#/components/schemas/MetricsAgenticUsageQuery'
+        - $ref: '#/components/schemas/MetricsPlatformUsageQuery'
     MetricsApiUsageQuery:
       description: A query targeting the API usage analytics datasource.
       type: object
@@ -425,6 +427,82 @@ components:
           - request_count
       required:
         - metrics
+    MetricsPlatformUsageQuery:
+      description: A query targeting the platform usage analytics datasource.
+      type: object
+      properties:
+        datasource:
+          type: string
+          enum:
+            - platform_usage
+        metrics:
+          description: List of aggregated metrics to collect across the requested time span.
+          type: array
+          items:
+            type: string
+            enum:
+              - control_plane_count
+              - service_count
+              - route_count
+              - consumer_count
+              - plugin_count
+              - node_count
+          default:
+            - control_plane_count
+          maxItems: 3
+        dimensions:
+          description: List of attributes or entity types to group by.
+          type: array
+          items:
+            type: string
+            enum:
+              - time
+              - control_plane
+              - gateway_service
+              - realm
+              - route
+              - consumer
+              - plugin
+              - plugin_name
+              - plugin_scope
+              - data_plane_node_version
+              - env
+              - team
+              - region
+              - hostname
+          maxItems: 2
+        filters:
+          $ref: '#/components/schemas/MetricsPlatformFilters'
+        granularity:
+          $ref: '#/components/schemas/PlatformGranularity'
+        time_range:
+          $ref: '#/components/schemas/MetricsPlatformTimeRange'
+        limit:
+          description: Limits the number of distinct metric groups to return.
+          type: number
+          default: 50
+          maximum: 1000
+      example:
+        datasource: platform_usage
+        time_range:
+          type: relative
+          time_range: 30d
+          tz: EST
+        dimensions:
+          - time
+          - control_plane
+        filters:
+          - operator: in
+            field: control_plane
+            value:
+              - d5ac5d88-efed-4e10-9dfe-0b0a6646c219
+        granularity: daily
+        metrics:
+          - service_count
+          - route_count
+      required:
+        - datasource
+        - metrics
     MetricsResult:
       description: |
         A result with metrics grouped by the dimensions specified in the query, at a particular time
@@ -580,6 +658,18 @@ components:
           type: object
           additionalProperties:
             $ref: '#/components/schemas/DisplayEntry'
+        plugin:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DisplayEntry'
+        plugin_name:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DisplayEntry'
+        plugin_scope:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DisplayEntry'
         portal:
           type: object
           additionalProperties:
@@ -634,6 +724,27 @@ components:
       example:
         request_count: count
         response_latency_p99: ms
+    MetricsResponseWarning:
+      description: |
+        A non-fatal issue with how the request was interpreted, such as a requested value being coerced to a supported one.
+      type: object
+      properties:
+        code:
+          description: |
+            A machine-readable identifier for the warning.
+          type: string
+          readOnly: true
+        message:
+          description: |
+            A human-readable description of the warning.
+          type: string
+          readOnly: true
+      example:
+        code: TIME_COERCED
+        message: Platform usage data has been coerced up to a 24h granularity
+      required:
+        - code
+        - message
     MetricsResponseMeta:
       description: |
         Metadata about the query response. This includes the start and end times of the query, the granularity of the result, whether the result was truncated, the limit of the result, and the query_id.
@@ -687,6 +798,13 @@ components:
             An ID that can be used to reference the query.
           type: string
           readOnly: true
+        warnings:
+          description: |
+            Non-fatal issues with how the request was interpreted, such as a requested value being coerced to a supported one. Always present; an empty array when there are none.
+          type: array
+          items:
+            $ref: '#/components/schemas/MetricsResponseWarning'
+          readOnly: true
       example:
         start: '2024-01-16T18:00:00.000Z'
         end: '2024-01-16T18:16:40.000Z'
@@ -707,6 +825,7 @@ components:
         truncated: false
         limit: 50
         query_id: requested-query-id
+        warnings: []
       required:
         - start
         - end
@@ -716,6 +835,7 @@ components:
         - truncated
         - limit
         - query_id
+        - warnings
     MetricsResultV2:
       description: |
         The result of a metrics query. Contains the data and metadata about the query.
@@ -762,6 +882,7 @@ components:
           truncated: false
           limit: 50
           query_id: requested-query-id
+          warnings: []
       required:
         - data
         - meta
@@ -2751,6 +2872,137 @@ components:
           - $ref: '#/components/schemas/MetricsStatusCodeGroupedFilterByField'
           - $ref: '#/components/schemas/MetricsUpstreamStatusCodeFilterByField'
           - $ref: '#/components/schemas/MetricsUpstreamStatusCodeGroupedFilterByField'
+    PlatformFilterField:
+      description: The field to filter.
+      type: string
+      enum:
+        - control_plane
+        - data_plane_node_version
+        - env
+        - gateway_service
+        - hostname
+        - plugin
+        - plugin_name
+        - plugin_scope
+        - realm
+        - region
+        - route
+        - team
+    MetricsPlatformFilter:
+      description: A filter to apply to a platform usage query made through the Metrics API.
+      oneOf:
+        - type: object
+          properties:
+            field:
+              $ref: '#/components/schemas/PlatformFilterField'
+            operator:
+              type: string
+              enum:
+                - in
+                - not_in
+                - selector
+            value:
+              description: The values to filter by.
+              type: array
+              items:
+                type: string
+              minItems: 1
+          required:
+            - field
+            - operator
+            - value
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              $ref: '#/components/schemas/PlatformFilterField'
+          required:
+            - operator
+            - field
+      title: Filter by platform usage field
+    MetricsPlatformFilters:
+      description: A list of filters to apply to the query.
+      type: array
+      items:
+        $ref: '#/components/schemas/MetricsPlatformFilter'
+    PlatformGranularity:
+      description: |
+        Force time grouping into buckets of the specified duration. Only has an effect if "time" is in the "dimensions" list.
+
+        If granularity is not specified and "time" is in the dimensions list, a default will be chosen based on the time range requested.
+
+        Different relative times support different granularities:
+          - 24h                                          => daily
+          - 7d, current_week, previous_week              => daily, weekly
+          - 30d, current_month, previous_month           => daily, weekly, monthly
+          - 90d, 180d, 365d, current_quarter,
+            previous_quarter                             => daily, weekly, monthly
+
+        For absolute time ranges, daily will be used.
+
+        Granularity values:
+          - `daily`: Groups data into 24-hour buckets.
+          - `weekly`: Groups data into 7-day buckets.
+          - `monthly`: Groups data into calendar month buckets.
+      type: string
+      enum:
+        - daily
+        - weekly
+        - monthly
+    MetricsPlatformRelativeTimeRange:
+      description: A duration representing a relative-to-now span of time for platform queries made through the Metrics API.
+      type: object
+      properties:
+        tz:
+          type: string
+          default: Etc/UTC
+        type:
+          type: string
+          enum:
+            - relative
+        time_range:
+          description: |
+            Platform usage data is not available at sub-day granularity. A sub-day duration
+            (`15m`, `1h`, `6h`, `12h`) is accepted but silently coerced up to `24h` rather
+            than rejected.
+
+            The query time range is capped at 33 days (checked with a 1-day safety margin,
+            so effectively the last 32 days). `90d`, `180d`, `365d`, `current_quarter`, and
+            `previous_quarter` are valid for `/v4/explore/platform` but are not usable here
+            since they always (or almost always) exceed that cap.
+          type: string
+          default: 30d
+          enum:
+            - 15m
+            - 1h
+            - 6h
+            - 12h
+            - 24h
+            - 7d
+            - 30d
+            - current_week
+            - current_month
+            - previous_week
+            - previous_month
+      required:
+        - type
+        - time_range
+      title: Relative time range
+    MetricsPlatformTimeRange:
+      description: The time range to query for platform data through the Metrics API.
+      default:
+        type: relative
+        time_range: 30d
+      discriminator:
+        propertyName: type
+        mapping:
+          relative: '#/components/schemas/MetricsPlatformRelativeTimeRange'
+          absolute: '#/components/schemas/MetricsAbsoluteTimeRangeDtoV2'
+      oneOf:
+        - $ref: '#/components/schemas/MetricsPlatformRelativeTimeRange'
+        - $ref: '#/components/schemas/MetricsAbsoluteTimeRangeDtoV2'
     UnauthorizedError:
       description: standard error
       type: object
