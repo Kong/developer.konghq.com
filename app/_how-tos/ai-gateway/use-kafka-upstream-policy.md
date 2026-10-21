@@ -228,11 +228,16 @@ Requests sent before the data plane picks up the configuration return `404`.
 
 1. Send a `POST` request with a JSON body to the Agent's Route:
 
-   ```sh
-   curl -i -X POST "$KONNECT_PROXY_URL/upstream-test" \
-     -H 'Content-Type: application/json' \
-     -d '{"hello":"world"}'
-   ```
+   {% validation request-check %}
+   url: /upstream-test
+   status_code: 200
+   display_headers: true
+   method: POST
+   headers:
+     - 'Content-Type: application/json'
+   body:
+     hello: world
+   {% endvalidation %}
 
    The Policy terminates the request, so the response is a `200` with an acknowledgement from the Policy instead of a response from `config.url`.
    A `502` means the Policy didn't engage, so the Agent forwarded the request to the unused upstream port.
