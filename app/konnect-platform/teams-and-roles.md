@@ -607,7 +607,7 @@ rows:
     permissions: |
       * List and read control planes.
       * Create, read, edit, delete, and list Services
-      * Create, read, edit, delete, and list plugins and custom plugins.
+      * Create, read, edit, delete, and list plugins and custom plugins scoped to the Services this role can manage. See [Plugin permissions for scoped roles](#plugin-permissions-for-scoped-roles).
       * Create, read, edit, delete, and list Partials.
   - role: "`Key Admin`"
     description: "Full write access to administer keys."
@@ -624,7 +624,7 @@ rows:
     description: "This role grants full write access to administer routes."
     permissions: |
       * List and read control planes.
-      * Create, read, edit, delete, and list plugins and custom plugins.
+      * Create, read, edit, delete, and list plugins and custom plugins scoped to the Routes this role can manage. See [Plugin permissions for scoped roles](#plugin-permissions-for-scoped-roles).
       * Create, read, edit, delete, and list Routes.
       * Create, read, edit, delete, and list Partials.
   - role: "`Serverless Cluster Admin`"
@@ -660,6 +660,17 @@ rows:
       * Read and list control planes and all configurations within them.
 {% endtable %}
 <!--vale on-->
+
+##### Plugin permissions for scoped roles
+
+Scoped roles, such as Route Admin and Gateway Service Admin, can only manage plugins on the entities they can manage:
+
+* A Route Admin can configure plugins scoped to a Route.
+* A Gateway Service Admin can configure plugins scoped to a Gateway Service.
+* A plugin scoped to both a Gateway Service and a Route must be configured through the endpoint that matches its scope, for example `/routes/{routeId}/plugins`.
+* Global plugins apply to every entity in a control plane, so only the Plugin Admin and Admin roles can create, edit, or delete them.
+
+If a request returns a `403` when it configures a global plugin, assign the user or system account the Plugin Admin or Admin role for that control plane, or scope the plugin to the Gateway Services or Routes it needs to apply to.
 
 #### Dashboards
 
