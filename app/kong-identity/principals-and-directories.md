@@ -179,12 +179,12 @@ It identifies the authenticated principal and the groups it belongs to, and the 
 
 Group membership works in the following ways:
 
-* **Manual membership:** You add and remove each member explicitly, and a principal must already exist in the directory before you can add it to a group. A principal you just created isn't a member of any group until you add it.
+* **Manual membership:** You add and remove each member explicitly, and a principal must already exist in the directory before you can add it to a group.
  * **Automatic mapping from an IdP:** When you enable the [Token Vault](/identity/token-vault/) on a directory, {{site.identity}} can provision principals from a trusted IdP and add them to groups based on the group names your IdP sends in its tokens. If a group doesn't exist yet, {{site.identity}} creates it. Automatic mapping only adds principals to groups of type `group`.
 
 {{site.identity}} resolves group membership live and doesn't cache it. A membership change applies the next time the gateway authenticates the principal with {{site.identity}}.
 
-Group names must be unique within a directory and can only contain letters and numbers, with no spaces.
+Group names must be unique within a directory and can only contain letters and numbers, without spaces.
 
 ### Group types
 
@@ -241,7 +241,7 @@ Teams can't have an API key. Groups and teams can't have other credentials or id
 
 ### Group permissions
 
-[{{site.konnect_short_name}} roles](/konnect-platform/teams-and-roles/#principals) control access to groups and group memberships . 
+[{{site.konnect_short_name}} roles](/konnect-platform/teams-and-roles/#principals) control access to groups and group memberships.
 There are separate permissions for groups and for group memberships, each with create, list, read, edit, and delete.
 
 The following table describes the predefined roles that apply to groups:
