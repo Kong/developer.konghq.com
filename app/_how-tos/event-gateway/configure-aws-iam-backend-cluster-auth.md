@@ -89,10 +89,15 @@ flowchart LR
 <!-- vale on -->
 ## Create an {{site.event_gateway_short}} control plane and data plane
 
+For the purposes of tutorial, we assume you have an IAM user with permissions
+needed to access the cluster as described above and an access key (`AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY`).
+Adjust this to fit your production deployment.
+If you're running on EC2, for example, KEG handles calling IMDS to get credentials, as described above.
+
 Run the [quickstart script](https://get.konghq.com/event-gateway) to provision a local data plane and configure your environment:
 
 ```bash
-curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway
+curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -e AWS_ACCESS_KEY_ID=... -e AWS_SECRET_ACCESS_KEY=... -N kafka_event_gateway
 ```
 
 Copy the exported variable into your terminal:
