@@ -54,9 +54,6 @@ rows:
     after: "`MeshTrafficPermission.rules[].default.allow[].spiffeID`"
 {% endtable %}
 
-The migration isn't a field-for-field rewrite. Migrate the four responsibilities together while the
-control planes are still running 2.x.
-
 {:.warning}
 > Complete this migration for every proxy before upgrading a zone to 3.x. During the 2.x
 > transition, once the issuing identity publishes a `MeshTrust`, the control plane also adds the
@@ -70,7 +67,7 @@ control planes are still running 2.x.
 > If workloads use `MeshExternalService`, deploy mesh-scoped zone egress before switching
 > those workloads to an issuing `MeshIdentity`. Their external-service connections need the
 > new egress path; legacy zone egress or the previous direct path does not preserve that
-> connectivity after the identity switch. Prepare the egress identity, trust and permissions
+> connectivity after the identity switch. Prepare the egress identity, trust, and permissions
 > first, then validate external-service traffic with a canary workload.
 
 Use this order for each mesh:
@@ -105,7 +102,7 @@ Use this order for each mesh:
 
 ## Record the current mTLS behavior
 
-Start with the enabled backend, not every backend stored on the mesh:
+Start with the enabled backend:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -188,7 +185,7 @@ changes can invalidate existing trust and permission assumptions. Keep the templ
 during this migration and plan any identity-format change as a separate transition.
 
 Expect the temporary identity to report `Ready=False` with the reason `PartiallyReady`.
-Its `SpiffeIDProvider` condition must be `True`; that condition confirms that it is publishing
+Its `SpiffeIDProvider` condition must be `True`; that condition confirms that it's publishing
 SPIFFE IDs without issuing certificates.
 
 ## Preserve authorization and permissive TLS
@@ -269,7 +266,7 @@ While still on the 2.14 transition release:
    allowed and denied external-service calls before expanding the identity rollout.
 
 An existing legacy `ZoneEgress` doesn't satisfy this prerequisite. Check the replacement
-`Dataplane` and its `ZoneEgress` listener, not only whether an egress Deployment is running.
+`Dataplane` and its `ZoneEgress` listener.
 Keep the egress proxies covered by an issuing identity throughout the workload migration.
 
 ## Create the issuing identity
@@ -374,7 +371,7 @@ The control plane generates a new CA for this identity and creates the correspon
 
 {:.warning}
 > When you later give both the temporary and issuing identities an empty selector, their
-> specificity is equal and the alphabetically first name wins. The names in this guide make
+> specificity is equal and the name that comes first alphabetically wins. The names in this guide make
 > `default-identity` win over `migration-spiffe-ids`. If you use different names, confirm that
 > the issuing identity wins before expanding it to the whole mesh.
 
@@ -488,11 +485,11 @@ the readiness checker before the first 3.x zone upgrade.
   and CA.
 - `MeshTrafficPermission` rules authorize the intended SPIFFE IDs.
 - `MeshTLS` preserves any required permissive behavior.
-- `MeshExternalService` clients use working mesh-scoped zone egress, with identity, trust and
+- `MeshExternalService` clients use working mesh-scoped zone egress, with identity, trust, and
   permissions verified in every zone that needs external-service access.
 - No connected proxy reports a certificate from the legacy mesh CA backend.
 - The stored `Mesh` and the source-controlled manifest no longer contain `mtls`.
-- Allowed, denied, plaintext, cross-zone and external-service traffic behave as designed.
+- Allowed, denied, plaintext, cross-zone, and external-service traffic behave as designed.
 
 After every mesh meets these conditions, rerun the
 [{{site.mesh_product_name}} 3.x readiness checker](/mesh/check-upgrade-readiness/) while the control planes are still on
