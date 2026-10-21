@@ -5,13 +5,13 @@ app/_how-tos/mesh/v2/configure-inbound-traffic-rules-api.md:
   status: pending
   canonical_url:
 app/_how-tos/mesh/v2/configure-mesh-global-control-plane-on-kubernetes-with-konnect-api.md:
-  canonical_url: /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-api/
+  canonical_url: /mesh/connect-kubernetes-zone-to-konnect-api/
 app/_how-tos/mesh/v2/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui.md:
-  canonical_url: /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui/
+  canonical_url: /mesh/connect-kubernetes-zone-to-konnect-ui/
 app/_how-tos/mesh/v2/configure-mesh-global-control-plane-on-universal-with-konnect-api.md:
-  canonical_url: /mesh/configure-mesh-global-control-plane-on-universal-with-konnect-api/
+  canonical_url: /mesh/connect-universal-zone-to-konnect-api/
 app/_how-tos/mesh/v2/configure-mesh-global-control-plane-on-universal-with-konnect-ui.md:
-  canonical_url: /mesh/configure-mesh-global-control-plane-on-universal-with-konnect-ui/
+  canonical_url: /mesh/connect-universal-zone-to-konnect-ui/
 app/_how-tos/mesh/v2/deploy-an-opentelemetry-collector.md:
   status: pending
   canonical_url:

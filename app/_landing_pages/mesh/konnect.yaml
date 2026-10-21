@@ -32,9 +32,9 @@ rows:
               description: Deploy a zone control plane in your Kubernetes cluster and connect application Pods to the mesh.
               ctas:
                 - text: Set up with the {{site.konnect_short_name}} UI
-                  url: /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui/
+                  url: /mesh/connect-kubernetes-zone-to-konnect-ui/
                 - text: Set up with the API
-                  url: /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-api/
+                  url: /mesh/connect-kubernetes-zone-to-konnect-api/
                 - text: Set up with Terraform
                   url: /mesh/deploy-mesh-using-terraform-and-konnect/
       - blocks:
@@ -44,9 +44,9 @@ rows:
               description: Deploy a Universal zone control plane and run proxies alongside applications outside Kubernetes.
               ctas:
                 - text: Set up with the {{site.konnect_short_name}} UI
-                  url: /mesh/configure-mesh-global-control-plane-on-universal-with-konnect-ui/
+                  url: /mesh/connect-universal-zone-to-konnect-ui/
                 - text: Set up with the API
-                  url: /mesh/configure-mesh-global-control-plane-on-universal-with-konnect-api/
+                  url: /mesh/connect-universal-zone-to-konnect-api/
   - columns:
       - blocks:
           - type: text

@@ -1,5 +1,5 @@
 ---
-title: Bring external traffic into the mesh
+title: Application ingress
 description: Connect an API gateway to {{site.mesh_product_name}} 3.x, route external requests to mesh services, and apply identity and policies on the gateway-to-backend connection.
 content_type: reference
 layout: reference
@@ -18,7 +18,7 @@ related_resources:
     url: /mesh/mesh-scoped-zone-proxies/
   - text: MeshTrafficPermission policy
     url: /mesh/policies/meshtrafficpermission/
-  - text: How policies select traffic
+  - text: Policy targeting
     url: /mesh/policy-targeting/
   - text: MeshIdentity policy
     url: /mesh/policies/meshidentity/

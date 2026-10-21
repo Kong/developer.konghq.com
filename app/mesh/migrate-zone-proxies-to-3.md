@@ -12,7 +12,7 @@ tags:
   - upgrade
   - multi-zone
 related_resources:
-  - text: Check readiness for {{site.mesh_product_name}} 3.x
+  - text: Check upgrade readiness for {{site.mesh_product_name}} 3.x
     url: /mesh/check-upgrade-readiness/
   - text: Mesh-scoped zone proxies
     url: /mesh/mesh-scoped-zone-proxies/
@@ -36,6 +36,27 @@ to verify before removing the old proxies.
 > legacy standalone proxy types. An old proxy can lose service when it reconnects, even if
 > it was running before the upgrade. A 3.x Helm upgrade also removes the legacy proxy
 > resources owned by that release because their templates no longer exist.
+
+## Reasons for the mesh-scoped model
+
+The legacy `ZoneIngress` and `ZoneEgress` resources were shared across meshes in a zone.
+That made them different from workload proxies: they did not belong to the mesh whose
+identity, permissions and observability policies operators wanted to apply.
+
+Mesh-scoped proxies bring those concerns together:
+
+- **Identity belongs to the mesh.** Egress can receive a workload identity through
+  `MeshIdentity` and authenticate callers before forwarding external traffic.
+- **Policies target the proxy directly.** You select the `Dataplane` that enforces a permission,
+  records a log or applies a limit, instead of relying on separate zone-proxy configuration.
+- **Operations are scoped to a mesh.** Each mesh can have its own proxy capacity, telemetry
+  and rollout, using the same `Dataplane` inspection and authentication model as workloads.
+
+The tradeoff is more infrastructure: separate meshes need separate proxy capacity and can
+need separate ingress load balancers. The mesh-scoped model provides a clearer configuration and operational
+boundary, not automatic network isolation or permission to access another mesh.
+
+Because of this, the migration is a deployment and traffic migration, not just a resource rename.
 
 ## Choose the transition release
 
@@ -61,7 +82,7 @@ never set it, before upgrading the global control plane: 2.x zones treat a missi
 `Disabled`, and 3.x zones reject a mesh with any other mode. Drop the field from your manifests
 after the upgrade.
 
-## Understand when traffic switches
+## Traffic switchover
 
 Deploying the replacements can change live traffic while legacy proxies are still running.
 There is no separate promotion step that waits for you to delete the old resources.
@@ -120,7 +141,7 @@ destination endpoints and upstream TLS settings rather than copying only the ser
 
 Prepare policies that select the new `Dataplane` resources, using the computed ingress or egress
 role labels and, where needed, a zone label and listener `sectionName`. See
-[selecting zone proxies](/mesh/mesh-scoped-zone-proxies/#select-the-proxy-then-select-its-traffic).
+[selecting zone proxies](/mesh/mesh-scoped-zone-proxies/#proxy-and-traffic-selection).
 
 For egress, apply explicit `MeshTrafficPermission` allows for the required callers and
 destinations. Without a matching allow, traffic is denied. A legacy mesh-wide external-access
@@ -185,7 +206,7 @@ The [zone-proxy reference](/mesh/mesh-scoped-zone-proxies/#universal) contains t
 and address examples. Keep the old processes, credentials and address configuration available
 for rollback during the transition.
 
-## 4. Verify the new proxies carry traffic
+## 4. Verify traffic through the new proxies
 
 For each migrated mesh and zone:
 

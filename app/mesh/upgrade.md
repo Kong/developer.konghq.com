@@ -15,7 +15,7 @@ works_on:
   - on-prem
 
 related_resources:
-  - text: Check readiness for {{site.mesh_product_name}} 3.x
+  - text: Check upgrade readiness for {{site.mesh_product_name}} 3.x
     url: /mesh/check-upgrade-readiness/
   - text: Version-specific upgrade notes
     url: /mesh/version-specific-upgrade-notes/

@@ -12,11 +12,11 @@ tags:
   - upgrade
   - policy
 related_resources:
-  - text: Check readiness for {{site.mesh_product_name}} 3.x
+  - text: Check upgrade readiness for {{site.mesh_product_name}} 3.x
     url: /mesh/check-upgrade-readiness/
   - text: Migrate zone proxies to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-zone-proxies-to-3/
-  - text: How policies select traffic
+  - text: Policy targeting
     url: /mesh/policy-targeting/
   - text: Upgrade {{site.mesh_product_name}}
     url: /mesh/upgrade/
@@ -164,7 +164,7 @@ rows:
 
 ## Changes that affect every policy
 
-### Legacy `targetRef` kinds are removed
+### Removed legacy `targetRef` kinds
 
 `spec.targetRef.kind` accepts `Mesh` and `Dataplane`. `MeshSubset`, `MeshService`,
 `MeshServiceSubset` and `MeshGateway` are rejected with
@@ -199,7 +199,7 @@ delegated gateway is an ordinary `Dataplane` as far as the control plane is conc
 > one destination silently becomes a policy that applies to all of them. Read the policy back
 > after rewriting one: a stored `targetRef` with a `kind` and no `labels` covers the whole mesh.
 
-### References select resources by labels
+### Label-based references
 
 A reference to a specific resource, such as a `Dataplane` or a `MeshService`, selects it by
 `labels`. `name` and `namespace` are no longer fields of a reference. Each field accepts a
@@ -246,9 +246,9 @@ to:
 
 `sectionName` is unchanged and still names a `MeshService` port or a `Dataplane` inbound.
 
-See [How policies select traffic](/mesh/policy-targeting/) for how each kind is matched.
+See [Policy targeting](/mesh/policy-targeting/) for how each kind is matched.
 
-### The `from` array is replaced by `rules`
+### `rules` instead of `from`
 
 Inbound configuration moves from `spec.from`, which matched clients by a `targetRef`, to
 `spec.rules`, which match them by the identity they present. On Universal, the API and
@@ -313,7 +313,7 @@ A client is now named by the identity it presents rather than by the tags it set
 that could previously be matched by declaring a tag no longer can. `MeshRetry`,
 `MeshHealthCheck` and `MeshLoadBalancingStrategy` are unaffected.
 
-### A request matching no MeshHTTPRoute rule gets a 404
+### Response to unmatched MeshHTTPRoute requests
 
 A request matching none of a `MeshHTTPRoute`'s rules used to reach the destination as if the
 route did not exist. It now gets a `404`.
@@ -361,7 +361,7 @@ every path the catch-all matches, which can break slow requests such as file dow
 policy should only apply to the paths the route originally matched, put the catch-all rule in a
 separate `MeshHTTPRoute` instead.
 
-### Universal inbounds must declare their protocol
+### Required protocol on Universal inbounds
 
 An inbound's protocol is now read only from `networking.inbound[].protocol`. The
 `kuma.io/protocol` tag stays a regular tag that policies can match on, but it is no longer used
@@ -378,7 +378,7 @@ the `Service` port.
 Set `networking.inbound[].protocol` explicitly on every Universal `Dataplane` that declared its
 protocol only through the tag.
 
-### Legacy policy types are removed
+### Removed legacy policy types
 
 The legacy policy types `TrafficPermission`, `TrafficRoute`, `TrafficLog`, `TrafficTrace`,
 `HealthCheck`, `CircuitBreaker`, `Retry`, `Timeout`, `RateLimit`, `FaultInjection`,
@@ -395,7 +395,7 @@ route-all `TrafficRoute` when a `Mesh` is created.
 
 ## Changes that affect MeshHTTPRoute and MeshTCPRoute
 
-### MeshServiceSubset is no longer a `backendRef` kind
+### Removed MeshServiceSubset `backendRef` kind
 
 `backendRefs[]` accepts `MeshService`, `MeshExternalService` and `MeshMultiZoneService`, and
 `tags` is gone from the `backendRef` schema entirely. On `MeshHTTPRoute` this covers the
@@ -426,7 +426,7 @@ Selecting a subset of a destination's endpoints by tag has no replacement. Where
 traffic between tagged subsets of one service, that service has to become separate
 `MeshService` resources for the route to address.
 
-### A route names a destination, not the mesh
+### Route destinations
 
 `to[].targetRef` accepts `MeshService`, `MeshExternalService` and `MeshMultiZoneService`.
 `Mesh` is rejected with `value 'Mesh' is not supported`, so the 2.x gateway form (a
@@ -437,9 +437,9 @@ either route policy. Name the destination directly.
 
 Shared changes that apply here:
 
-- [The `targetRef` rewrite](#legacy-targetref-kinds-are-removed)
-- [The `from` to `rules` move](#the-from-array-is-replaced-by-rules)
-- [The legacy policy removal](#legacy-policy-types-are-removed)
+- [The `targetRef` rewrite](#removed-legacy-targetref-kinds)
+- [The `from` to `rules` move](#rules-instead-of-from)
+- [The legacy policy removal](#removed-legacy-policy-types)
 
 This migration can take traffic away. `from` matched clients by the tags they carried, and
 `rules` match them by the identity they present, so a mesh whose proxies have no workload
@@ -532,12 +532,12 @@ rows:
 
 Shared changes that apply here:
 
-- [The `targetRef` rewrite](#legacy-targetref-kinds-are-removed)
-- [Labels-only selection](#references-select-resources-by-labels)
-- [The `from` to `rules` move](#the-from-array-is-replaced-by-rules)
-- [The `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404)
-- [The Universal inbound protocol change](#universal-inbounds-must-declare-their-protocol)
-- [The legacy policy removal](#legacy-policy-types-are-removed)
+- [The `targetRef` rewrite](#removed-legacy-targetref-kinds)
+- [Labels-only selection](#label-based-references)
+- [The `from` to `rules` move](#rules-instead-of-from)
+- [The `404` for an unmatched route request](#response-to-unmatched-meshhttproute-requests)
+- [The Universal inbound protocol change](#required-protocol-on-universal-inbounds)
+- [The legacy policy removal](#removed-legacy-policy-types)
 
 ### Point OpenTelemetry backends at a MeshOpenTelemetryBackend
 
@@ -564,7 +564,7 @@ backends:
           kuma.io/display-name: otel-collector
 ```
 
-### OpenTelemetry backends now always export through kuma-dp
+### OpenTelemetry export through kuma-dp
 
 A `backendRef` pointing at a `MeshOpenTelemetryBackend` sends data through `kuma-dp`: Envoy
 exports to a Unix socket and `kuma-dp` forwards it to the collector. Two settings used to make
@@ -582,9 +582,9 @@ error. Express the same backends as a `MeshAccessLog` targeting `kind: Mesh`.
 
 Shared changes that apply here:
 
-- [The `targetRef` rewrite](#legacy-targetref-kinds-are-removed)
-- [Labels-only selection](#references-select-resources-by-labels)
-- [The `from` to `rules` move](#the-from-array-is-replaced-by-rules)
+- [The `targetRef` rewrite](#removed-legacy-targetref-kinds)
+- [Labels-only selection](#label-based-references)
+- [The `from` to `rules` move](#rules-instead-of-from)
 
 ### Bring `healthyPanicThreshold` over from MeshHealthCheck
 
@@ -632,7 +632,7 @@ Where a cluster is covered by both, `MeshProxyPatch` runs last and now wins the 
 and the policy keeps the rest. Remove patches written before this change that you no longer rely
 on, along with any workaround added because the patch appeared to do nothing.
 
-### `to[]` does not accept MeshHTTPRoute
+### No MeshHTTPRoute targets in `to[]`
 
 Circuit breaking applies to a whole destination rather than to individual routes, so
 `MeshCircuitBreaker` doesn't accept `kind: MeshHTTPRoute` in
@@ -642,14 +642,14 @@ Circuit breaking applies to a whole destination rather than to individual routes
 
 Shared changes that apply here:
 
-- [The `targetRef` rewrite](#legacy-targetref-kinds-are-removed)
-- [Labels-only selection](#references-select-resources-by-labels)
-- [The `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404)
-- [MeshServiceSubset backend refs](#meshservicesubset-is-no-longer-a-backendref-kind)
-- [Naming a destination rather than the mesh](#a-route-names-a-destination-not-the-mesh)
+- [The `targetRef` rewrite](#removed-legacy-targetref-kinds)
+- [Labels-only selection](#label-based-references)
+- [The `404` for an unmatched route request](#response-to-unmatched-meshhttproute-requests)
+- [MeshServiceSubset backend refs](#removed-meshservicesubset-backendref-kind)
+- [Naming a destination rather than the mesh](#route-destinations)
 
 The `404` for an unmatched request is the change to plan for, and it is covered under
-[A request matching no MeshHTTPRoute rule gets a 404](#a-request-matching-no-meshhttproute-rule-gets-a-404).
+[Response to unmatched MeshHTTPRoute requests](#response-to-unmatched-meshhttproute-requests).
 
 ### Check that every `backendRef` resolves
 
@@ -676,13 +676,13 @@ implemented. Remove either field before migrating: setting `hostnames` is reject
 
 Shared changes that apply here:
 
-- [The `targetRef` rewrite](#legacy-targetref-kinds-are-removed)
-- [Labels-only selection](#references-select-resources-by-labels)
-- [MeshServiceSubset backend refs](#meshservicesubset-is-no-longer-a-backendref-kind)
-- [Naming a destination rather than the mesh](#a-route-names-a-destination-not-the-mesh)
-- [The legacy policy removal](#legacy-policy-types-are-removed)
+- [The `targetRef` rewrite](#removed-legacy-targetref-kinds)
+- [Labels-only selection](#label-based-references)
+- [MeshServiceSubset backend refs](#removed-meshservicesubset-backendref-kind)
+- [Naming a destination rather than the mesh](#route-destinations)
+- [The legacy policy removal](#removed-legacy-policy-types)
 
-### `backendRefs` is now required
+### Required `backendRefs`
 
 A rule must declare `backendRefs`. An empty or missing list is rejected with
 `backendRefs: must be defined`. This differs from `MeshHTTPRoute`, where omitting the list
@@ -690,7 +690,7 @@ sends matched requests to the destination in the `to` entry.
 
 `to` needs at least one entry, and a `to` entry accepts at most one rule.
 
-### An unresolved `backendRef` costs the rule its destination
+### Unresolved `backendRef` entries
 
 A TCP proxy has no status code to answer with, so an unresolved reference is dropped from the
 split rather than answered with an error, and the rule loses that share of its connections.
@@ -752,9 +752,9 @@ its own identities doesn't need a `MeshTrust` written manually. Write one to tru
 
 Shared changes that apply here:
 
-- [The `targetRef` rewrite](#legacy-targetref-kinds-are-removed)
-- [Labels-only selection](#references-select-resources-by-labels)
-- [The `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404)
+- [The `targetRef` rewrite](#removed-legacy-targetref-kinds)
+- [Labels-only selection](#label-based-references)
+- [The `404` for an unmatched route request](#response-to-unmatched-meshhttproute-requests)
 
 ### Move hash policies out of the load balancer
 
@@ -813,14 +813,14 @@ The 2.x guidance about `MeshLoadBalancingStrategy` behind a zone egress no longe
 `ZoneEgress` and `ZoneIngress` are removed, so there is no shared L4 proxy holding long-lived
 connections between zones, and no restriction on the top-level `targetRef` because of one.
 
-## MeshRetry
+## MeshRetry 
 
 Shared changes that apply here:
 
-- [The `targetRef` rewrite](#legacy-targetref-kinds-are-removed)
-- [Labels-only selection](#references-select-resources-by-labels)
-- [The `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404)
-- [The legacy policy removal](#legacy-policy-types-are-removed)
+- [The `targetRef` rewrite](#removed-legacy-targetref-kinds)
+- [Labels-only selection](#label-based-references)
+- [The `404` for an unmatched route request](#response-to-unmatched-meshhttproute-requests)
+- [The legacy policy removal](#removed-legacy-policy-types)
 
 ### Lowercase every header name
 
@@ -847,9 +847,9 @@ such as a status code, and check the generated configuration. For more informati
 
 Shared changes that apply here:
 
-- [The `targetRef` rewrite](#legacy-targetref-kinds-are-removed)
-- [The `from` to `rules` move](#the-from-array-is-replaced-by-rules)
-- [The Universal inbound protocol change](#universal-inbounds-must-declare-their-protocol)
+- [The `targetRef` rewrite](#removed-legacy-targetref-kinds)
+- [The `from` to `rules` move](#rules-instead-of-from)
+- [The Universal inbound protocol change](#required-protocol-on-universal-inbounds)
 
 ### Move every limit into `rules`
 
@@ -877,14 +877,14 @@ A client's identity comes out of the TLS handshake, which a connection-level lim
 than inspects. Split such a rule: limit connections in a rule with no `spiffeID` match, and
 limit that client's requests with `local.http`.
 
-### Check every interval is above 50ms
+### Set every interval above 50ms
 
 `requestRate.interval` and `connectionRate.interval` must be greater than 50ms, and `num`
 greater than 0. A shorter interval is rejected with `must be greater than: 50ms`.
 
 ## MeshMetric
 
-Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed).
+Shared changes that apply here: [the `targetRef` rewrite](#removed-legacy-targetref-kinds).
 
 ### Point OpenTelemetry backends at a MeshOpenTelemetryBackend
 
@@ -909,7 +909,7 @@ backends:
 ```
 
 The export path change under
-[OpenTelemetry backends now always export through kuma-dp](#opentelemetry-backends-now-always-export-through-kuma-dp)
+[OpenTelemetry export through kuma-dp](#opentelemetry-export-through-kuma-dp)
 applies here too.
 
 ### Prepare scrapers for `ActiveMTLSBackend`
@@ -952,7 +952,7 @@ discovery against the endpoints this policy exposes instead.
 
 ## MeshOPA
 
-Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed).
+Shared changes that apply here: [the `targetRef` rewrite](#removed-legacy-targetref-kinds).
 
 ### Rewrite the agent config and rego as secure data sources
 
@@ -1051,7 +1051,7 @@ contents into `spec.default.agentConfig` on a `MeshOPA` before upgrading.
 
 ## MeshPassthrough
 
-Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed).
+Shared changes that apply here: [the `targetRef` rewrite](#removed-legacy-targetref-kinds).
 
 ### Allow external destinations explicitly
 
@@ -1178,7 +1178,7 @@ kubectl delete crd meshglobalratelimits.kuma.io
 
 ## MeshProxyPatch
 
-Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed).
+Shared changes that apply here: [the `targetRef` rewrite](#removed-legacy-targetref-kinds).
 
 ### Stop matching on the gateway origin
 
@@ -1209,7 +1209,7 @@ change described under
 
 ## MeshTLS
 
-Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed).
+Shared changes that apply here: [the `targetRef` rewrite](#removed-legacy-targetref-kinds).
 
 The following two changes are silent, and both can leave an inbound stricter or looser than intended.
 
@@ -1279,7 +1279,7 @@ kubectl get meshtls -A -o yaml | grep -B5 'from:'
 
 ## MeshTrace
 
-Shared changes that apply here: [the `targetRef` rewrite](#legacy-targetref-kinds-are-removed).
+Shared changes that apply here: [the `targetRef` rewrite](#removed-legacy-targetref-kinds).
 
 ### Point OpenTelemetry backends at a MeshOpenTelemetryBackend
 
@@ -1308,7 +1308,7 @@ not resolve and the backend is skipped. This is the same move `MeshAccessLog` ma
 under
 [Point OpenTelemetry backends at a MeshOpenTelemetryBackend](#point-opentelemetry-backends-at-a-meshopentelemetrybackend),
 and the export path change under
-[OpenTelemetry backends now always export through kuma-dp](#opentelemetry-backends-now-always-export-through-kuma-dp)
+[OpenTelemetry export through kuma-dp](#opentelemetry-export-through-kuma-dp)
 applies here too.
 
 ### Move `Mesh.spec.tracing` into a policy
@@ -1322,19 +1322,19 @@ ignored, so mesh-wide tracing stops without an error. Express the same backends 
 `MeshTimeout` has no policy-specific field changes. It is still affected by the following shared
 changes:
 
-- [The `targetRef` rewrite](#legacy-targetref-kinds-are-removed)
-- [Labels-only selection](#references-select-resources-by-labels)
-- [The `from` to `rules` move](#the-from-array-is-replaced-by-rules)
-- [The `404` for an unmatched route request](#a-request-matching-no-meshhttproute-rule-gets-a-404)
-- [The Universal inbound protocol change](#universal-inbounds-must-declare-their-protocol)
-- [The legacy policy removal](#legacy-policy-types-are-removed)
+- [The `targetRef` rewrite](#removed-legacy-targetref-kinds)
+- [Labels-only selection](#label-based-references)
+- [The `from` to `rules` move](#rules-instead-of-from)
+- [The `404` for an unmatched route request](#response-to-unmatched-meshhttproute-requests)
+- [The Universal inbound protocol change](#required-protocol-on-universal-inbounds)
+- [The legacy policy removal](#removed-legacy-policy-types)
 
 ## MeshHealthCheck
 
 Shared changes that apply here:
 
-- [The `targetRef` rewrite](#legacy-targetref-kinds-are-removed)
-- [Labels-only selection](#references-select-resources-by-labels)
+- [The `targetRef` rewrite](#removed-legacy-targetref-kinds)
+- [Labels-only selection](#label-based-references)
 
 ### Move `healthyPanicThreshold` to MeshCircuitBreaker
 
@@ -1346,10 +1346,10 @@ for where it goes and what happens if it is left behind.
 
 Shared changes that apply here:
 
-- [The `targetRef` rewrite](#legacy-targetref-kinds-are-removed)
-- [The `from` to `rules` move](#the-from-array-is-replaced-by-rules)
-- [The Universal inbound protocol change](#universal-inbounds-must-declare-their-protocol)
-- [The legacy policy removal](#legacy-policy-types-are-removed)
+- [The `targetRef` rewrite](#removed-legacy-targetref-kinds)
+- [The `from` to `rules` move](#rules-instead-of-from)
+- [The Universal inbound protocol change](#required-protocol-on-universal-inbounds)
+- [The legacy policy removal](#removed-legacy-policy-types)
 
 ### Move every fault into `rules`
 
@@ -1366,7 +1366,7 @@ side:
 1. To keep a fault limited to some callers, add `rules[].matches` with their `spiffeID`.
 
 On Kubernetes, a `MeshFaultInjection` whose only field was `from` is accepted with an empty spec
-and injects nothing. See [The `from` array is replaced by `rules`](#the-from-array-is-replaced-by-rules).
+and injects nothing. See [`rules` instead of `from`](#rules-instead-of-from).
 
 ## Validate the migrated policies
 

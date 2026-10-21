@@ -7,7 +7,7 @@ description: Set up access logs on every data plane proxy in a mesh.
 content_type: plugin
 icon: meshaccesslog.png
 related_resources:
-- text: How policies select traffic
+- text: Policy targeting
   url: "/mesh/policy-targeting/"
 - text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshaccesslog"
@@ -57,7 +57,7 @@ What each field does:
 * `targetRef` selects which proxies log. `kind: Mesh` means every proxy in the policy's own
   namespace. If the policy is created in `{{site.mesh_namespace}}`, it applies to the whole
   zone. To log every zone, create the policy on the global control plane. For more
-  information, see [Where a policy applies](/mesh/policy-targeting/#where-a-policy-applies).
+  information, see [Policy scope](/mesh/policy-targeting/#policy-scope).
 * `rules` describes what to do with inbound traffic at those proxies. One entry with no
   filter logs everything.
 * `backends` sets where the records go.

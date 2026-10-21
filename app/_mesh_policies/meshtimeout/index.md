@@ -7,7 +7,7 @@ description: Set how long a proxy waits when connecting to a destination, and wh
 content_type: plugin
 icon: meshtimeout.png
 related_resources:
-- text: How policies select traffic
+- text: Policy targeting
   url: "/mesh/policy-targeting/"
 - text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshtimeout"

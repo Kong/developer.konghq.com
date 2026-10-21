@@ -99,7 +99,7 @@ wins**, so labels that match more than one backend make the choice depend on cre
 > backend does not switch traffic to it because the oldest match continues to win. Give the new
 > backend a distinct label and update the referring policies when you want to move traffic.
 
-## Where to run the collector
+## Collector placement
 
 The proxy does not send OTLP through its own outbound listeners. `kuma-dp` runs a local
 receiver on a Unix socket, Envoy writes to that socket, and `kuma-dp` exports to the address in
@@ -217,7 +217,7 @@ matching zone with labels.
 Where every zone can use the same collector service name, one backend is enough and DNS resolves
 to the local collector in each zone.
 
-## Check that the backend is referenced
+## Verify backend references
 
 On Kubernetes, inspect the backend in the system namespace:
 
@@ -229,7 +229,7 @@ kubectl get meshopentelemetrybackend otel-collector -n {{site.mesh_namespace}} -
 that at least one observability policy selects the backend. `NotReferenced` is not a runtime
 error, but it means the backend is not currently used.
 
-## Check that a signal is exporting
+## Verify signal export
 
 The control plane writes per-backend, per-signal status to each proxy's `DataplaneInsight` under
 `status.openTelemetry`:
@@ -277,7 +277,7 @@ state out of `ready`.
 `state: missing` appears only with `env.mode: Required`, when the environment variables don't
 supply the required fields (`RequiredEnvMissing`). A `backendRef` whose labels match no backend
 produces no entry for that backend in `status.openTelemetry` at all, so check the
-[`ReferencedByPolicies` condition](#check-that-the-backend-is-referenced) and the policy's
+[`ReferencedByPolicies` condition](#verify-backend-references) and the policy's
 labels instead.
 
 ## Schema

@@ -11,7 +11,7 @@ related_resources:
   - text: 'MeshMultiZoneService'
     url: '/mesh/meshmultizoneservice/'
   - text: 'Connect a Kubernetes zone to {{site.konnect_short_name}} with the API'
-    url: '/mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-api/'
+    url: '/mesh/connect-kubernetes-zone-to-konnect-api/'
 
 min_version:
   mesh: '3.0'

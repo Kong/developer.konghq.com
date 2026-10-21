@@ -7,7 +7,7 @@ description: Export distributed traces for the requests a proxy handles, to Zipk
 content_type: plugin
 icon: meshtrace.png
 related_resources:
-- text: How policies select traffic
+- text: Policy targeting
   url: "/mesh/policy-targeting/"
 - text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshtrace"
@@ -58,7 +58,7 @@ What each field does:
 * `targetRef` selects which proxies emit spans. `kind: Mesh` means every proxy in the policy's
   own namespace. If the policy is created in `{{site.mesh_namespace}}`, the policy applies to
   the whole zone. To trace every zone, create the policy on the global control plane. For more
-  information, see [Where a policy applies](/mesh/policy-targeting/#where-a-policy-applies).
+  information, see [Policy scope](/mesh/policy-targeting/#policy-scope).
 * `default` holds the rest of the configuration. There's no `to` or `rules`, because each span
   describes one hop and comes from the proxy that handled it.
 * `backends` sets the tracing provider, and `zipkin.url` is where each proxy sends its spans.

@@ -11,13 +11,13 @@ tags:
   - service-mesh
   - multi-zone
 related_resources:
-  - text: Bring external traffic into the mesh
+  - text: Application ingress
     url: /mesh/application-ingress/
   - text: Migrate zone proxies to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-zone-proxies-to-3/
   - text: Deploy mesh-scoped zone proxies
     url: /mesh/zone-proxies/
-  - text: How policies select traffic
+  - text: Policy targeting
     url: /mesh/policy-targeting/
   - text: MeshTrafficPermission policy
     url: /mesh/policies/meshtrafficpermission/
@@ -40,31 +40,7 @@ Use this reference to choose where to deploy a proxy, where to enforce a policy,
 verify the result. The [deployment walkthrough](/mesh/zone-proxies/) provides a complete
 Kubernetes environment to try these concepts.
 
-## Why the model changed in {{site.mesh_product_name}} 3.x
-
-The legacy `ZoneIngress` and `ZoneEgress` resources were shared across meshes in a zone.
-That made them different from workload proxies: they did not belong to the mesh whose
-identity, permissions and observability policies operators wanted to apply.
-
-Mesh-scoped proxies bring those concerns together:
-
-- **Identity belongs to the mesh.** Egress can receive a workload identity through
-  `MeshIdentity` and authenticate callers before forwarding external traffic.
-- **Policies target the proxy directly.** You select the `Dataplane` that enforces a permission,
-  records a log or applies a limit, instead of relying on separate zone-proxy configuration.
-- **Operations are scoped to a mesh.** Each mesh can have its own proxy capacity, telemetry
-  and rollout, using the same `Dataplane` inspection and authentication model as workloads.
-
-The tradeoff is more infrastructure: separate meshes need separate proxy capacity and can
-need separate ingress load balancers. The mesh-scoped model provides a clearer configuration and operational
-boundary, not automatic network isolation or permission to access another mesh.
-
-Mesh-scoped proxies were introduced in 2.14; {{site.mesh_product_name}} 3.x removes support for the legacy standalone
-proxy types. Existing customers should [migrate zone proxies before upgrading their zone
-control planes](/mesh/migrate-zone-proxies-to-3/). This is a deployment and traffic migration,
-not just a resource rename.
-
-## Where traffic passes
+## Traffic paths
 
 For public application requests, use an [API gateway with a mesh sidecar](/mesh/application-ingress/).
 Zone ingress carries connections from other mesh proxies; it does not replace a public API gateway.
@@ -250,7 +226,7 @@ SPIFFE ID from that connection. Apply workload permissions to the destination pr
 ingress as a substitute. The destination sees the original caller's identity, not the ingress's
 identity. An identity assigned to the ingress does not change this forwarding behavior.
 
-## Select the proxy, then select its traffic
+## Proxy and traffic selection
 
 The top-level `spec.targetRef` answers **which proxy enforces this policy**. Use
 `kind: Dataplane` with these computed resource labels:

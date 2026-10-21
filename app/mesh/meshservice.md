@@ -11,7 +11,7 @@ tags:
   - service-mesh
   - traffic-control
 related_resources:
-  - text: How policies select traffic
+  - text: Policy targeting
     url: /mesh/policy-targeting/
   - text: MeshMultiZoneService
     url: /mesh/meshmultizoneservice/
@@ -32,7 +32,7 @@ no outbounds at all.
 `MeshService` is not a policy. There is no `targetRef` (a `MeshService` *is* the target), and on Kubernetes
 you do not write one at all.
 
-## Where MeshServices come from
+## MeshService sources
 
 On Kubernetes the control plane generates a `MeshService` from each `Service`. Change the
 `Service` instead of the generated resource; the ports and protocols follow from it.
@@ -55,7 +55,7 @@ Mesh Service is read only on this control plane and cannot be created or updated
 On Universal the zone control plane generates a `MeshService` for each distinct
 `kuma.io/workload` label value on a `Dataplane`, with a port per inbound. Set the label on the
 `Dataplane` and the `MeshService` follows; see
-[What the control plane still does for you](/mesh/universal/#what-the-control-plane-still-does-for-you).
+[Control plane automation](/mesh/universal/#control-plane-automation).
 You write one by hand, selecting proxies with `spec.selector`, only if you turn generation off.
 
 Either way, reading a `MeshService` is how you find out what a policy resolves to. Its
@@ -146,7 +146,7 @@ aggregating this service uses the state to decide whether to send cross-zone tra
 `total` of 0 means the selector matches nothing; a `healthy` of 0 with a non-zero `total` means
 the proxies are there and failing their health checks.
 
-### Why TLS status has a Pending state
+### Pending TLS status
 
 `tls.status: Pending` means every proxy backing the service has a certificate, but its clients
 have not been told to originate mTLS yet.

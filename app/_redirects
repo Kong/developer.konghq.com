@@ -124,11 +124,11 @@
 /mesh/federate-zone/    /mesh/federate-zone-control-plane-to-konnect/
 /mesh-manager/migrate-zone/  /mesh/migrate-self-managed-zone-to-konnect/
 /mesh/migrate-zone/ /mesh/migrate-self-managed-zone-to-konnect/
-/mesh-manager/service-mesh/  /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui/
-/mesh/konnect-global-control-plane/  /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui/
-/mesh/deploy-mesh-on-konnect/  /mesh/configure-mesh-global-control-plane-on-universal-with-konnect-api/
-/mesh/configure-mesh-global-control-plane-with-konnect-ui/  /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui/
-/mesh/configure-mesh-global-control-plane-with-konnect-api/  /mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-api/
+/mesh-manager/service-mesh/  /mesh/connect-kubernetes-zone-to-konnect-ui/
+/mesh/konnect-global-control-plane/  /mesh/connect-kubernetes-zone-to-konnect-ui/
+/mesh/deploy-mesh-on-konnect/  /mesh/connect-universal-zone-to-konnect-api/
+/mesh/configure-mesh-global-control-plane-with-konnect-ui/  /mesh/connect-kubernetes-zone-to-konnect-ui/
+/mesh/configure-mesh-global-control-plane-with-konnect-api/  /mesh/connect-kubernetes-zone-to-konnect-api/
 /mesh/deploy-with-terraform-konnect/    /mesh/deploy-mesh-using-terraform-and-konnect/
 /mesh-manager/ /mesh/
 /gateway-manager/aws-private-link/ /gateway/aws-private-link/
@@ -547,10 +547,10 @@
 /mesh/concepts/                                                            /mesh/v2/concepts/  301
 /mesh/configure-data-plane-proxy-membership/                               /mesh/v2/configure-data-plane-proxy-membership/  301
 /mesh/configure-inbound-traffic-rules-api/                                 /mesh/v2/configure-inbound-traffic-rules-api/  301
-/mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-api/  /mesh/v2/configure-mesh-global-control-plane-on-kubernetes-with-konnect-api/  301
-/mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui/   /mesh/v2/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui/  301
-/mesh/configure-mesh-global-control-plane-on-universal-with-konnect-api/   /mesh/v2/configure-mesh-global-control-plane-on-universal-with-konnect-api/  301
-/mesh/configure-mesh-global-control-plane-on-universal-with-konnect-ui/    /mesh/v2/configure-mesh-global-control-plane-on-universal-with-konnect-ui/  301
+/mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-api/  /mesh/connect-kubernetes-zone-to-konnect-api/  301
+/mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-ui/   /mesh/connect-kubernetes-zone-to-konnect-ui/  301
+/mesh/configure-mesh-global-control-plane-on-universal-with-konnect-api/   /mesh/connect-universal-zone-to-konnect-api/  301
+/mesh/configure-mesh-global-control-plane-on-universal-with-konnect-ui/    /mesh/connect-universal-zone-to-konnect-ui/  301
 /mesh/consumer-producer-policies/                                          /mesh/v2/consumer-producer-policies/  301
 /mesh/control-plane-configuration/                                         /mesh/v2/control-plane-configuration/  301
 /mesh/data-collection/                                                     /mesh/v2/data-collection/  301

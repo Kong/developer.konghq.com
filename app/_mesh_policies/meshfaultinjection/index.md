@@ -7,7 +7,7 @@ description: Inject failures, delays and bandwidth limits into traffic a proxy r
 content_type: plugin
 icon: meshfaultinjection.png
 related_resources:
-- text: How policies select traffic
+- text: Policy targeting
   url: "/mesh/policy-targeting/"
 - text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshfaultinjection"
@@ -77,7 +77,7 @@ listeners can also use `rules` with `sectionName` set to the listener name.
 
 Faults require an HTTP, HTTP/2, or gRPC listener. They have no effect on traffic handled as
 plain TCP, even if the application sends HTTP over it. For more information, see
-[Universal inbound protocols](/mesh/migrate-policies-to-3/#universal-inbounds-must-declare-their-protocol).
+[Universal inbound protocols](/mesh/migrate-policies-to-3/#required-protocol-on-universal-inbounds).
 
 ## The three faults
 

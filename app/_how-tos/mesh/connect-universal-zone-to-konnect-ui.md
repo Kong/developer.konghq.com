@@ -1,7 +1,7 @@
 ---
 title: Connect a Universal zone to {{site.konnect_short_name}} with the UI
 content_type: how_to
-permalink: "/mesh/configure-mesh-global-control-plane-on-universal-with-konnect-ui/"
+permalink: "/mesh/connect-universal-zone-to-konnect-ui/"
 breadcrumbs:
 - "/mesh/"
 - "/mesh/konnect/"
@@ -69,7 +69,7 @@ This is a fresh installation, not an upgrade procedure. If the account does not 
    export CONTROL_PLANE_ID='YOUR_CONTROL_PLANE_ID'
    ```
 
-The exact {{site.mesh_product_name}} 3.x version-selection UI still needs confirmation. If the UI does not offer a {{site.mesh_product_name}} 3.x creation path, use the [API installation guide](/mesh/configure-mesh-global-control-plane-on-universal-with-konnect-api/), which explicitly sets `version: v3`. Do not create a v2 control plane and assume the zone installer upgrades it.
+The exact {{site.mesh_product_name}} 3.x version-selection UI still needs confirmation. If the UI does not offer a {{site.mesh_product_name}} 3.x creation path, use the [API installation guide](/mesh/connect-universal-zone-to-konnect-api/), which explicitly sets `version: v3`. Do not create a v2 control plane and assume the zone installer upgrades it.
 
 ## Add the zone
 

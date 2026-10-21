@@ -1,5 +1,5 @@
 ---
-title: "Check readiness for {{site.mesh_product_name}} 3.x"
+title: "Check upgrade readiness for {{site.mesh_product_name}} 3.x"
 description: "Audit a running {{site.mesh_product_name}} 2.x deployment for changes required before upgrading to {{site.mesh_product_name}} 3.x."
 content_type: reference
 layout: reference
@@ -34,7 +34,7 @@ coverage gaps and you have completed its manual checks.
 > that DNS, firewalls, certificates, gateways, external systems, or application traffic behave as
 > intended. Complete the traffic validation in the relevant migration guides before upgrading.
 
-## What the checker finds
+## Audit scope
 
 The checker audits the control plane API for:
 

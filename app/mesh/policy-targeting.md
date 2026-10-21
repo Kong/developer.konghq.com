@@ -1,5 +1,5 @@
 ---
-title: "How {{site.mesh_product_name}} policies select traffic"
+title: Policy targeting
 description: "Understand the three selectors a policy carries, why outbound names a destination and inbound matches an identity, and which kinds each field accepts."
 content_type: reference
 layout: reference
@@ -40,7 +40,7 @@ rows:
 
 Not every policy has all three. A policy states its own shape on its own page.
 
-## Where a policy applies
+## Policy scope
 
 On Kubernetes, the namespace a policy is created in restricts which proxies it can reach.
 `targetRef` narrows within that reach; it cannot widen it. The control plane works out the
@@ -110,7 +110,7 @@ priority, and each one applies only when the previous ones tie:
    (a `MeshService` with `sectionName` ranks above one without), then `MeshHTTPRoute`.
 1. Name: the policy whose name comes first alphabetically has the highest priority.
 
-## Why outbound names a destination and inbound matches an identity
+## Outbound destinations and inbound identities
 
 A **destination** is something the proxy chooses to call. Your proxy decides to send a
 request to `backend`, so naming that service is both sufficient and natural:
@@ -127,7 +127,7 @@ selection by `MeshServiceSubset`, from every policy: those selectors matched an 
 on tags the client set itself. Inbound policies such as
 [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) match clients in `rules` instead.
 
-## What each field accepts
+## Accepted values by field
 
 ### `spec.targetRef`
 

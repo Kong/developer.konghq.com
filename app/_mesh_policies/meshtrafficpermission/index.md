@@ -12,7 +12,7 @@ tags:
 - authorization
 - security
 related_resources:
-- text: How policies select traffic
+- text: Policy targeting
   url: "/mesh/policy-targeting/"
 - text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshtrafficpermission"
@@ -31,7 +31,7 @@ workload. It has two parts:
 The destination's proxy identifies each caller by the SPIFFE ID in its mTLS certificate.
 Client IP addresses and client data plane tags don't affect access.
 
-## Before you configure permissions
+## Identity requirements
 
 [MeshIdentity](/mesh/policies/meshidentity/) gives workloads their identities and certificates.
 Both the caller and the destination need an identity for an mTLS connection. Define the
@@ -271,7 +271,7 @@ rows:
 > not the whole mesh. To authorize across namespaces in one zone, create the policy in
 > `{{site.mesh_namespace}}` with the label `kuma.io/origin: zone`. To authorize across zones,
 > create it on the global control plane. For more information, see
-> [Where a policy applies](/mesh/policy-targeting/#where-a-policy-applies).
+> [Policy scope](/mesh/policy-targeting/#policy-scope).
 
 ### Narrow authorization to one port
 

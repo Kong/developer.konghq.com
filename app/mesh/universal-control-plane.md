@@ -1,5 +1,5 @@
 ---
-title: Deploy a Universal control plane
+title: Universal control plane
 description: "Running kuma-cp outside Kubernetes: modes, stores, and joining a zone to a global control plane."
 content_type: reference
 layout: reference
@@ -13,7 +13,7 @@ tags:
 related_resources:
   - text: "{{site.mesh_product_name}} on Universal"
     url: /mesh/universal/
-  - text: Deploy a Universal data plane proxy
+  - text: Universal data plane
     url: /mesh/universal-data-plane/
   - text: "{{site.mesh_product_name}} CLI"
     url: /mesh/cli/
@@ -93,7 +93,7 @@ Every field has a `KUMA_STORE_POSTGRES_*` equivalent: `KUMA_STORE_POSTGRES_HOST`
 `KUMA_STORE_POSTGRES_PASSWORD`: the config file doesn't expand environment variables, so a
 value like `${POSTGRES_PASSWORD}` is used literally.
 
-## A single zone
+## Single-zone configuration
 
 The smallest useful configuration is a zone control plane with a store:
 
@@ -166,7 +166,7 @@ store:
     dbName: kuma
 ```
 
-## How proxies authenticate
+## Proxy authentication
 
 `dpServer.authn.dpProxy.type` decides how the data plane server authenticates a proxy. It is set
 from the environment automatically: `serviceAccountToken` on Kubernetes, `dpToken` on
@@ -183,10 +183,10 @@ Zone tokens are no longer accepted by the data plane server. If you previously r
 `dpServer.authn.zoneProxy.type: none` to let zone proxies connect without one, they need a
 dataplane token now. `dpServer.authn.zoneProxy` no longer affects anything.
 
-See [Deploy a Universal data plane proxy](/mesh/universal-data-plane/) for binding a token
+See [Universal data plane](/mesh/universal-data-plane/) for binding a token
 narrowly enough to be worth having.
 
-## What the control plane generates
+## Generated resources
 
 A zone control plane on a non-Kubernetes store generates `MeshService` and `Workload` resources
 from the `kuma.io/workload` label on each `Dataplane`, and allocates VIPs and hostnames for

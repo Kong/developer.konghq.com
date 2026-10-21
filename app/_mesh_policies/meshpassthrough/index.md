@@ -7,7 +7,7 @@ description: Control which destinations outside the mesh a proxy may reach, by d
 content_type: plugin
 icon: policy.svg
 related_resources:
-- text: How policies select traffic
+- text: Policy targeting
   url: "/mesh/policy-targeting/"
 - text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshpassthrough"
@@ -71,7 +71,7 @@ What each field does:
   `sectionName` isn't supported. `kind: Mesh` means every proxy in the policy's own namespace. If the policy is created in
   `{{site.mesh_namespace}}`, it applies to the whole zone. To cover every zone, create the
   policy on the global control plane. For more information, see
-  [Where a policy applies](/mesh/policy-targeting/#where-a-policy-applies).
+  [Policy scope](/mesh/policy-targeting/#policy-scope).
 - `passthroughMode: Matched` rejects destinations not listed in `appendMatch`.
 - The `Domain` entry allows TLS traffic to `api.example.com:443`.
 - The `CIDR` entry allows TCP traffic to port `5432` anywhere in `10.42.0.0/16`.

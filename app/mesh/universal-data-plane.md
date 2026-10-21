@@ -1,5 +1,5 @@
 ---
-title: Deploy a Universal data plane proxy
+title: Universal data plane
 description: "Running kuma-dp on a VM or container host: the Dataplane resource, tokens, transparent proxying, and health."
 content_type: reference
 layout: reference
@@ -13,7 +13,7 @@ tags:
 related_resources:
   - text: "{{site.mesh_product_name}} on Universal"
     url: /mesh/universal/
-  - text: Deploy a Universal control plane
+  - text: Universal control plane
     url: /mesh/universal-control-plane/
   - text: MeshService
     url: /mesh/meshservice/
@@ -25,7 +25,7 @@ On Universal a proxy is two things you provide: a `Dataplane` resource describin
 workload exposes and consumes, and a `kuma-dp` process running beside it. Kubernetes derives
 both from a Pod; here you declare them.
 
-## A minimal proxy
+## Minimal proxy configuration
 
 The `Dataplane` resource:
 
@@ -65,7 +65,7 @@ kuma-dp run \
 one. Applying it ahead of time suits configuration management; passing it inline suits an
 immutable image that templates the file at boot.
 
-## The labels are what policies see
+## Labels and policy selection
 
 `labels` on the `Dataplane` are the only identity a policy can select on. There are no
 per-inbound tags anymore.
@@ -279,7 +279,7 @@ bounds the lifetime.
 The token goes to `kuma-dp` as `--dataplane-token-file`. `kongctl` writes it with no trailing
 newline so it can be redirected straight into that file.
 
-## What you get without asking
+## Generated resources
 
 Once the `Dataplane` is applied and the proxy is connected, the zone control plane generates the
 `MeshService` for its `kuma.io/workload` value, allocates a VIP and hostname, and creates the

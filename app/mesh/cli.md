@@ -13,7 +13,7 @@ works_on:
   - on-prem
   - konnect
 related_resources:
-  - text: How policies select traffic
+  - text: Policy targeting
     url: /mesh/policy-targeting/
   - text: Migrate policies to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-policies-to-3/
@@ -332,7 +332,7 @@ Beyond the command names:
 - **`kumactl` still installs the transparent proxy.** It ships in the
   {{site.mesh_product_name}} archive, and on Universal hosts `kumactl install transparent-proxy`
   is how you install the iptables rules. See
-  [Deploy a Universal data plane proxy](/mesh/universal-data-plane/#transparent-proxying).
+  [Universal data plane](/mesh/universal-data-plane/#transparent-proxying).
 - **`kumactl apply -v` variables are gone.** Templating a resource before applying it is a job
   for whatever produces the YAML.
 

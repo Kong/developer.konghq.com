@@ -22,7 +22,7 @@ tldr:
   q: How do I add a Universal workload to the mesh?
   a: Issue a workload-bound dataplane token, install the transparent proxy, and start `kuma-dp` beside the workload with a `Dataplane` resource describing its ports. The control plane generates the `MeshService` from the `kuma.io/workload` label.
 related_resources:
-  - text: Deploy a Universal data plane proxy
+  - text: Universal data plane
     url: /mesh/universal-data-plane/
   - text: MeshService
     url: /mesh/meshservice/

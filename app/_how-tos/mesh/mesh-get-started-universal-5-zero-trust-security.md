@@ -28,7 +28,7 @@ related_resources:
     url: /mesh/policies/meshtrafficpermission/
   - text: MeshTLS
     url: /mesh/policies/meshtls/
-  - text: Bring external traffic into the mesh
+  - text: Application ingress
     url: /mesh/application-ingress/
 cleanup:
   inline:
@@ -187,7 +187,7 @@ kongctl get mesh inspect meshtrafficpermission allow-demo-app-to-kv \
 ```
 
 To let traffic from outside the mesh reach the demo application, see
-[Bring external traffic into the mesh](/mesh/application-ingress/).
+[Application ingress](/mesh/application-ingress/).
 
 ## Validate
 

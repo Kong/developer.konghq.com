@@ -11,7 +11,7 @@ tags:
   - service-mesh
   - traffic-control
 related_resources:
-  - text: How policies select traffic
+  - text: Policy targeting
     url: /mesh/policy-targeting/
   - text: MeshService
     url: /mesh/meshservice/
@@ -121,7 +121,7 @@ Where the labels look right, check that the per-zone `MeshService` resources hav
 global control plane, and that you are matching on `kuma.io/display-name` rather than the hashed
 resource name.
 
-## Which zones receive traffic
+## Zone eligibility
 
 A matched `MeshService` from another zone is used only while its `spec.state` is `Available`,
 which it is when at least one of its endpoints is healthy. That state is what the aggregate

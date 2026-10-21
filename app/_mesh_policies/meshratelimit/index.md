@@ -7,7 +7,7 @@ description: Cap how many requests or connections a proxy accepts in a given int
 content_type: plugin
 icon: meshratelimit.png
 related_resources:
-- text: How policies select traffic
+- text: Policy targeting
   url: "/mesh/policy-targeting/"
 - text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshratelimit"
@@ -88,7 +88,7 @@ select the protected proxies, or omit `labels` to select every proxy in the poli
 To limit a whole zone, use `kind: Dataplane` with no `labels`, and create the policy in
 `{{site.mesh_namespace}}`. In an application namespace, the policy only applies to the proxies
 in that namespace. To cover every zone, create the policy on the global control plane. For
-more information, see [Where a policy applies](/mesh/policy-targeting/#where-a-policy-applies).
+more information, see [Policy scope](/mesh/policy-targeting/#policy-scope).
 
 To limit one inbound, set `targetRef.sectionName` to one of the following:
 
@@ -164,7 +164,7 @@ connection-rate limit isn't a request-rate limit or a cap on open connections.
 
 An inbound served as plain TCP has no HTTP filters, so `local.http` has no effect there. For
 more information, see
-[Universal inbounds must declare their protocol](/mesh/migrate-policies-to-3/#universal-inbounds-must-declare-their-protocol).
+[Required protocol on Universal inbounds](/mesh/migrate-policies-to-3/#required-protocol-on-universal-inbounds).
 
 ## Give one workload identity a separate request limit
 

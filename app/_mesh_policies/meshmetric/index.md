@@ -7,7 +7,7 @@ description: Choose which sidecar and application metrics a proxy publishes, and
 content_type: plugin
 icon: meshmetric.png
 related_resources:
-- text: How policies select traffic
+- text: Policy targeting
   url: "/mesh/policy-targeting/"
 - text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshmetric"

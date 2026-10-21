@@ -22,7 +22,7 @@ tldr:
   q: How does one Universal workload reach another?
   a: With transparent proxying on, list the destination in the caller's `reachableBackends`, and the caller dials its generated hostname while the sidecar routes it. Without transparent proxying, declare an outbound with a `backendRef`.
 related_resources:
-  - text: Deploy a Universal data plane proxy
+  - text: Universal data plane
     url: /mesh/universal-data-plane/
   - text: "{{site.mesh_product_name}} CLI"
     url: /mesh/cli/

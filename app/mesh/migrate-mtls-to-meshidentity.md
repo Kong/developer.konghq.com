@@ -13,7 +13,7 @@ tags:
   - security
   - mtls
 related_resources:
-  - text: Check readiness for {{site.mesh_product_name}} 3.x
+  - text: Check upgrade readiness for {{site.mesh_product_name}} 3.x
     url: /mesh/check-upgrade-readiness/
   - text: Migrate zone proxies to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-zone-proxies-to-3/

@@ -11,7 +11,7 @@ tags:
   - service-mesh
   - traffic-control
 related_resources:
-  - text: How policies select traffic
+  - text: Policy targeting
     url: /mesh/policy-targeting/
   - text: MeshService
     url: /mesh/meshservice/
@@ -81,7 +81,7 @@ A `MeshExternalService` gives the destination an identity in the mesh, a VIP and
 policies and routes can name it. Use it for the dependencies that matter enough to govern, and
 `MeshPassthrough` for everything else.
 
-## How traffic is matched
+## Traffic matching
 
 `spec.match` describes the traffic that should be routed through this resource.
 

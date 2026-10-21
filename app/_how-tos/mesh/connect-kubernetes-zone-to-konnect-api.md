@@ -1,7 +1,7 @@
 ---
 title: Connect a Kubernetes zone to {{site.konnect_short_name}} with the API
 content_type: how_to
-permalink: "/mesh/configure-mesh-global-control-plane-on-kubernetes-with-konnect-api/"
+permalink: "/mesh/connect-kubernetes-zone-to-konnect-api/"
 breadcrumbs:
 - "/mesh/"
 - "/mesh/konnect/"

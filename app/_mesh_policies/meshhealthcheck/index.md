@@ -7,7 +7,7 @@ description: Probe a destination's endpoints and remove the ones that fail from 
 content_type: plugin
 icon: meshhealthcheck.png
 related_resources:
-- text: How policies select traffic
+- text: Policy targeting
   url: "/mesh/policy-targeting/"
 - text: Migrate policies to {{site.mesh_product_name}} 3.x
   url: "/mesh/migrate-policies-to-3/#meshhealthcheck"

@@ -22,7 +22,7 @@ tldr:
   q: How do I start the {{site.mesh_product_name}} control plane in Universal mode?
   a: Run `kuma-cp` as a container in `zone` mode, read its admin token, then point `kongctl` at its API with `--control-plane-url` and `--control-plane-token`.
 related_resources:
-  - text: Deploy a Universal control plane
+  - text: Universal control plane
     url: /mesh/universal-control-plane/
   - text: "{{site.mesh_product_name}} CLI"
     url: /mesh/cli/
@@ -48,7 +48,7 @@ docker run \
 
 The control plane defaults to `mode: zone` with an in-memory store, which is what a single-node
 demo wants. Everything is lost when the container stops; see
-[Deploy a Universal control plane](/mesh/universal-control-plane/) for the PostgreSQL
+[Universal control plane](/mesh/universal-control-plane/) for the PostgreSQL
 configuration a real deployment needs.
 
 Two ports matter:
