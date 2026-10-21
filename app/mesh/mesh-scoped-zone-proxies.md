@@ -180,7 +180,7 @@ ingress. It doesn't open a firewall, configure DNS, or make a private address re
 On Kubernetes, the control plane maintains this resource from the ingress Service and its
 ready endpoints. It can use a load balancer address, a NodePort address, or an explicit Service
 external IP. A plain ClusterIP without an external address isn't sufficient for publication.
-Inspect the generated value and check that it is reachable from the other zones.
+Inspect the generated value and check that it's reachable from the other zones.
 
 Clients in other zones get endpoints for this zone's `MeshService` destinations only when this
 zone has a `MeshZoneAddress` for the mesh and the mesh has at least one `MeshIdentity`. Without
@@ -350,8 +350,7 @@ the enforcing proxy; they don't identify the caller or external destination.
 The destination SNI is the internal name the client proxy sends to egress. It isn't necessarily
 the external server's DNS name or its upstream TLS server name. Inspect the egress's active
 Envoy configuration and copy the appropriate
-`filter_chains[].filter_chain_match.server_names[]` value into `sni.value`. Identify the chain
-for your `MeshExternalService`, rather than copying the first server name in the output.
+`filter_chains[].filter_chain_match.server_names[]` value for your `MeshExternalService` into `sni.value`.
 
 For the caller, `MeshTrust.spec.trustDomain` tells you the trust-domain part of the identity,
 but the certificate URI also includes the workload path. Matching the full URI avoids guessing
@@ -381,7 +380,7 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-This policy records traffic; it doesn't allow traffic that permissions deny. To log selected callers
+To log selected callers
 or destinations, add the `rules[].matches` described in
 [MeshAccessLog](/mesh/policies/meshaccesslog/). Choose a format that includes the peer identity
 and requested server name when you need an authorization audit trail.
@@ -428,11 +427,11 @@ rows:
   - symptom: "Proxy can't register"
     check: "The mesh exists, the zone control plane is reachable, and the proxy has valid registration credentials."
   - symptom: "No published ingress address"
-    check: "The ingress Service has a usable external address and ready endpoints. On Universal, also the zone's `MeshZoneAddress`."
+    check: "The ingress Service has a usable external address and ready endpoints. On Universal, also check the zone's `MeshZoneAddress`."
   - symptom: "Egress Pod runs but its listener is absent"
     check: "A `MeshIdentity` selects the proxy, and there are external destinations with endpoints to serve."
   - symptom: "TLS handshake fails"
-    check: "Caller and egress have certificates and compatible trust. For ingress traffic, the caller and destination workload instead."
+    check: "Caller and egress have certificates and compatible trust. For ingress traffic, check the caller and destination workload instead."
   - symptom: "Egress denies a request"
     check: "The actual caller URI and destination SNI match an allow, and no applicable deny matches."
   - symptom: "HTTP policy has no effect on ingress"
