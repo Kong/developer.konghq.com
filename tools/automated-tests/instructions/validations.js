@@ -15,6 +15,11 @@ import {
   executeCommand,
   getLiveEnv,
 } from "../docker-helper.js";
+import {
+  captureCommand,
+  captureDescription,
+  captureInputText,
+} from "./capture.js";
 
 const log = debug("tests:runner");
 const __filename = fileURLToPath(import.meta.url);
@@ -416,7 +421,7 @@ async function requestCheck(validationName, config, runtimeConfig, container) {
     await sleep(config.sleep);
   }
   const statusCode = config.status_code ?? 200;
-  let responseBody;
+  let responseText = "";
   const assertions = await validateRequest(
     validationName,
     config,
@@ -424,7 +429,17 @@ async function requestCheck(validationName, config, runtimeConfig, container) {
     container,
     [
       (response, body) => {
-        responseBody = body;
+        if (config.capture) {
+          responseText = captureInputText({
+            status: response.status,
+            headers: response.headers,
+            // The response body arrives parsed for JSON responses;
+            // re-serialize so the container-side shell pipeline sees the same
+            // document.
+            bodyText: typeof body === "string" ? body : JSON.stringify(body ?? ""),
+            displayHeaders: Boolean(config.display_headers),
+          });
+        }
         return {
           assert: response.status === statusCode,
           message: `Expected: request ${config.url} to have status code ${statusCode}, got: ${response.status}.`,
@@ -435,40 +450,38 @@ async function requestCheck(validationName, config, runtimeConfig, container) {
   );
   if (config.capture) {
     assertions.push(
-      ...(await persistCapturedVariables(config.capture, config.url, responseBody, container)),
+      ...(await persistCapturedVariables(config.capture, config.url, responseText, container)),
     );
   }
   return assertions;
 }
 
-// `capture` entries ({variable, jq}) on a konnect-api-request validation
-// persist response fields as container env vars, so later steps can reference
-// them ($CONTROL_PLANE_ID, $SERVICE_ID, ...). The value is stored through the
+// `capture` entries on a request validation persist response fields as
+// container env vars, so later steps can reference them ($CONTROL_PLANE_ID,
+// $SERVICE_ID, ...). Every form the page renders is honored (see
+// instructions/capture.js): a `jq` filter, a shell `command`, or the bare form
+// that keeps the whole response as the value. The value is stored through the
 // /env-vars.sh _BASE64 line format owned by instructions/export-assignment.js:
 // multi-line values (certificates) survive, and decoded entries win over any
 // earlier plain entry for the same name.
-async function persistCapturedVariables(captures, url, body, container) {
+async function persistCapturedVariables(captures, url, responseText, container) {
   const assertions = [];
-  // The response body arrives parsed for JSON responses; re-serialize so the
-  // container-side jq sees the same document.
-  const bodyText = typeof body === "string" ? body : JSON.stringify(body ?? "");
-  const bodyB64 = Buffer.from(bodyText).toString("base64");
 
   for (const capture of captures) {
-    if (!capture.variable || !capture.jq) {
+    if (!capture.variable) {
       throw new ValidationError(
-        `Expected: capture entry to have 'variable' and 'jq', got: ${JSON.stringify(capture)}.`,
+        `Expected: capture entry to have 'variable', got: ${JSON.stringify(capture)}.`,
         assertions,
       );
     }
-    const jqResult = await executeCommand(
+    const captureResult = await executeCommand(
       container,
-      `printf '%s' '${bodyB64}' | base64 -d | jq -r '${capture.jq}'`,
+      captureCommand(capture, responseText),
     );
-    const value = jqResult.output.trim();
+    const value = captureResult.output.trim();
 
     if (!value || value === "null") {
-      const message = `Expected: capture ${capture.variable} to produce a value with jq '${capture.jq}', got: empty.`;
+      const message = `Expected: capture ${capture.variable} to produce a value with ${captureDescription(capture)}, got: empty.`;
       assertions.push(message);
       throw new ValidationError(message, assertions);
     }
@@ -479,7 +492,7 @@ async function persistCapturedVariables(captures, url, body, container) {
       `echo 'export ${capture.variable}_BASE64="${base64Value}"' >> /env-vars.sh`,
     );
     assertions.push(
-      `Captured ${capture.variable} from ${url} with jq '${capture.jq}'.`,
+      `Captured ${capture.variable} from ${url} with ${captureDescription(capture)}.`,
     );
   }
   return assertions;
