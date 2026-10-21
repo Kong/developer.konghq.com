@@ -1,8 +1,7 @@
-The namespace labels select the mesh and enable sidecar injection. The server is a simple HTTP
-destination. The client runs `curl` and has a dedicated ServiceAccount so its identity is explicit.
-A data plane proxy only gets outbounds for the destinations it declares, so the client lists
-the `server` `MeshService` in its `kuma.io/reachable-backends` annotation. Without it, the client
-can't reach `server` at all, whatever the traffic permissions allow.
+Deploy an nginx `server` and a `curl` `client` into a namespace that joins the mesh. The client's
+own ServiceAccount gives it the identity that the traffic permission allows. The client also lists
+`server` as a reachable backend, because a proxy can only call the destinations it declares. For
+more information, see [MeshService](/mesh/meshservice/).
 
 1. Create the namespace, the client ServiceAccount, and the server and client workloads:
 
@@ -86,14 +85,9 @@ can't reach `server` at all, whatever the traffic permissions allow.
    EOF
    ```
 
-1. Wait for the server to roll out:
+1. Wait for the server and client to roll out:
 
    ```sh
    kubectl -n kong-mesh-demo rollout status deployment/server --timeout=180s
-   ```
-
-1. Wait for the client to roll out:
-
-   ```sh
    kubectl -n kong-mesh-demo rollout status deployment/client --timeout=180s
    ```
