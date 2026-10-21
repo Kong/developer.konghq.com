@@ -145,10 +145,11 @@ spec:
 
 ## Validate
 
-1. Wait for the `Gateway` to be programmed:
+1. Wait for the `Gateway` and the route to be programmed:
 
    ```bash
    kubectl wait --for=condition=Programmed gateway/kong -n kong --timeout=5m
+   kubectl wait --for=jsonpath='{.status.parents[0].conditions[?(@.type=="Programmed")].status}'=True httproute/canary-route -n kong --timeout=5m
    ```
    {: data-test-step="block" }
 
@@ -162,10 +163,15 @@ spec:
 
 1. Send multiple requests to the Route:
 
-   ```bash
-   for i in {1..10}; do curl -s http://$PROXY_IP/echo; done
-   ```
-   {: data-test-step="block" }
+{% validation custom-command %}
+command: |
+  for i in {1..10}; do curl -s http://$PROXY_IP/echo; done
+expected:
+  return_code: 0
+  message: 'Welcome, you are connected to node'
+render_output: false
+indent: 4
+{% endvalidation %}
 
    You should see an even split between v1 and v2:
 
@@ -191,4 +197,3 @@ spec:
    Welcome, you are connected to node v2.
    ```
    {:.no-copy-code}
-

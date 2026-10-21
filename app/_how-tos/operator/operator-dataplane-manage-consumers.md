@@ -183,18 +183,28 @@ content: |
 
 1. Try to access the Route without a key:
 
-   ```bash
-   curl -i http://$PROXY_IP/echo
-   ```
-   {: data-test-step="block" }
+{% validation request-check %}
+url: /echo
+status_code: 401
+on_prem_url: http://$PROXY_IP
+konnect_url: http://$PROXY_IP
+display_headers: true
+indent: 3
+{% endvalidation %}
 
    You should receive a `401 Unauthorized` response.
 
 2. Access the route with the API key in the `apikey` header:
 
-   ```bash
-   curl -i -H "apikey: secret-api-key" http://$PROXY_IP/echo
-   ```
-   {: data-test-step="block" }
+{% validation request-check %}
+url: /echo
+status_code: 200
+headers:
+  - 'apikey: secret-api-key'
+on_prem_url: http://$PROXY_IP
+konnect_url: http://$PROXY_IP
+display_headers: true
+indent: 3
+{% endvalidation %}
 
    You should receive a `200 OK` response from the echo service.

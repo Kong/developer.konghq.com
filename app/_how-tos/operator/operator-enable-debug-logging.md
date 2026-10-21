@@ -111,7 +111,7 @@ Check that the {{ site.operator_product_name }} logs contain the `DEBUG` level:
 <!--vale off-->
 {% validation custom-command %}
 command: |
-  timeout 90 bash -c 'until kubectl logs -n kong-system deployment/kong-operator-kong-operator-controller-manager | grep -m 1 DEBUG; do sleep 5; done'
+  kubectl logs -n kong-system deployment/kong-operator-kong-operator-controller-manager | grep -m 1 DEBUG
 expected:
   return_code: 0
 render_output: false
