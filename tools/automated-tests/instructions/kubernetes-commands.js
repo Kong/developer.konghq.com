@@ -118,7 +118,10 @@ export function normalizeKubernetesResourceConfig(config) {
 
 // Defaults: namespace `kong`. path and name_selector arrive from YAML block
 // scalars with a trailing newline; the snippet strips them (`| strip`), so
-// the normalizer trims.
+// the normalizer trims. expected gets the same treatment (a writer copying
+// the block-scalar habit from path to expected would otherwise bake the
+// trailing newline into the comparison target and never pass) plus a string
+// coercion for scalar YAML values (numbers, booleans).
 export function normalizeKubernetesResourcePropertyConfig(config) {
   return {
     kind: config.kind,
@@ -126,7 +129,10 @@ export function normalizeKubernetesResourcePropertyConfig(config) {
     nameSelector: config.name_selector?.trim(),
     path: config.path?.trim(),
     namespace: config.namespace ?? DEFAULT_NAMESPACE,
-    expected: config.expected,
+    expected:
+      config.expected === undefined
+        ? undefined
+        : String(config.expected).trim(),
   };
 }
 
