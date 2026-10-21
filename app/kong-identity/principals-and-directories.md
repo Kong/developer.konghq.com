@@ -234,6 +234,11 @@ rows:
 ### Group credentials
 
 A group of type `group` can have an API key. When a request uses that key, {{site.identity}} identifies the group, not one individual.
+
+Authenticate as a group when a set of principals shares one credential and no single principal owns the work, for example a CI job or a script that a whole team runs.
+You issue and revoke one key for the group, instead of one key for each member.
+Authenticate as an individual principal when you need to know who made each request, because a request that uses a group key doesn't identify which member sent it.
+
 Create the key the same way you create a principal's API key, using the group's ID as the principal ID. 
 See [Key auth](#key-auth).
 
