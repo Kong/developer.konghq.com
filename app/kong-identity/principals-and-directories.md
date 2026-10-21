@@ -180,8 +180,7 @@ It identifies the authenticated principal and the groups it belongs to, and the 
 Group membership works in the following ways:
 
 * **Manual membership:** You add and remove each member explicitly, and a principal must already exist in the directory before you can add it to a group. A principal you just created isn't a member of any group until you add it.
- * **Automatic mapping from an IdP:** When you enable the [Token Vault](/identity/token-vault/) on a directory, {{site.identity}} can provision principals from a trusted IdP and add them to groups based on the group names your IdP sends in its tokens. If a group doesn't exist yet, {{site.identity}} creates it.
-
+ * **Automatic mapping from an IdP:** When you enable the [Token Vault](/identity/token-vault/) on a directory, {{site.identity}} can provision principals from a trusted IdP and add them to groups based on the group names your IdP sends in its tokens. If a group doesn't exist yet, {{site.identity}} creates it. Automatic mapping only adds principals to groups of type `group`.
 
 {{site.identity}} resolves group membership live and doesn't cache it. A membership change applies the next time the gateway authenticates the principal with {{site.identity}}.
 
@@ -190,31 +189,55 @@ Group names must be unique within a directory and can only contain letters and n
 ### Group types
 
 You set a group's type when you create it, and you can't change it afterwards.
+Groups and teams share one namespace in a directory, so a group and a team can't have the same name.
+
+The following table compares the two types:
 
 {% table %}
 columns:
-  - title: Type
-    key: type
-  - title: API value
-    key: api
-  - title: Description
-    key: description
+  - title: Feature
+    key: feature
+  - title: Group
+    key: group
+  - title: Team
+    key: team
 rows:
-  - type: "Group"
-    api: "`group`"
-    description: "The default type. A set of principals that you reference in access rules."
-  - type: "Team"
-    api: "`team`"
-    description: "A node in your organization chart, such as a department or a team. Its members are principals of type `user`."
+  - feature: "API value"
+    group: "`group` (default)"
+    team: "`team`"
+  - feature: "Purpose"
+    group: "A set of principals that you reference in access rules."
+    team: "A node in your organization chart, such as a department or a team."
+  - feature: "Members"
+    group: "Principals of type `user` and `agent`, and principals with no type."
+    team: "Principals of type `user` and other teams."
+  - feature: "Nesting"
+    group: "A group can't contain other groups."
+    team: "A team can contain other teams."
+  - feature: "Owner"
+    group: "No"
+    team: "A team can have an owner, which is a principal of type `user` in the same directory. The owner can't be a member of the team, and you can't delete a user who owns a team."
+  - feature: "API key"
+    group: "Yes"
+    team: "No"
+  - feature: "Basic auth, OIDC, Consumer, and auth server client credentials"
+    group: "No"
+    team: "No"
+  - feature: "Automatic mapping from an IdP"
+    group: "Yes"
+    team: "No. If an IdP token names a team, {{site.identity}} skips it and doesn't add the principal."
+  - feature: "Deleting with members"
+    group: "Deleting a group also removes its memberships."
+    team: "You can't delete a team that has members."
 {% endtable %}
 
 ### Group credentials
 
-A group can have an API key, so a request authenticated with that key is identified as the group instead of as one individual.
+A group of type `group` can have an API key. When a request uses that key, {{site.identity}} identifies the group, not one individual.
 Create the key the same way you create a principal's API key, using the group's ID as the principal ID. 
 See [Key auth](#key-auth).
 
-Groups can't have other credentials or identities. {{site.identity}} rejects basic auth credentials, and OIDC, Consumer, and auth server client.
+Teams can't have an API key. Groups and teams can't have other credentials or identities. {{site.identity}} rejects basic auth credentials, and OIDC, Consumer, and auth server client.
 
 ### Group permissions
 
