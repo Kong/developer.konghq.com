@@ -239,27 +239,6 @@ See [Key auth](#key-auth).
 
 Teams can't have an API key. Groups and teams can't have other credentials or identities. {{site.identity}} rejects basic auth credentials, and OIDC, Consumer, and auth server client.
 
-### Group permissions
-
-[{{site.konnect_short_name}} roles](/konnect-platform/teams-and-roles/#principals) control access to groups and group memberships.
-There are separate permissions for groups and for group memberships, each with create, list, read, edit, and delete.
-
-The following table describes the predefined roles that apply to groups:
-
-<!--vale off-->
-{% table %}
-columns:
-  - title: Role
-    key: role
-  - title: Description
-    key: description
-rows:
-  - role: "`PrincipalAdmin`"
-    description: "All group and group membership permissions: create, list, read, edit, and delete."
-  - role: "`PrincipalViewer`"
-    description: "Read-only group and group membership permissions: list and read."
-{% endtable %}
-<!--vale on-->
 
 ## Controlling {{site.base_gateway}} plugin execution based on principals
 
