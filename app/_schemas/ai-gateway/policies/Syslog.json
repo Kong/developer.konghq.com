@@ -29,6 +29,34 @@
     "config": {
       "type": "object",
       "properties": {
+        "client_errors_severity": {
+          "type": "string",
+          "enum": [
+            "alert",
+            "crit",
+            "debug",
+            "emerg",
+            "err",
+            "info",
+            "notice",
+            "warning"
+          ],
+          "default": "info"
+        },
+        "server_errors_severity": {
+          "type": "string",
+          "enum": [
+            "alert",
+            "crit",
+            "debug",
+            "emerg",
+            "err",
+            "info",
+            "notice",
+            "warning"
+          ],
+          "default": "info"
+        },
         "custom_fields_by_lua": {
           "type": "object",
           "additionalProperties": {
@@ -78,34 +106,6 @@
           "default": "info"
         },
         "successful_severity": {
-          "type": "string",
-          "enum": [
-            "alert",
-            "crit",
-            "debug",
-            "emerg",
-            "err",
-            "info",
-            "notice",
-            "warning"
-          ],
-          "default": "info"
-        },
-        "client_errors_severity": {
-          "type": "string",
-          "enum": [
-            "alert",
-            "crit",
-            "debug",
-            "emerg",
-            "err",
-            "info",
-            "notice",
-            "warning"
-          ],
-          "default": "info"
-        },
-        "server_errors_severity": {
           "type": "string",
           "enum": [
             "alert",

@@ -1,29 +1,5 @@
 {
   "properties": {
-    "config": {
-      "type": "object",
-      "properties": {
-        "functions": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "handle_unknown": {
-          "type": "boolean",
-          "description": "Determines whether to handle unknown status codes by transforming their responses.",
-          "default": false
-        },
-        "handle_unexpected": {
-          "type": "boolean",
-          "description": "Determines whether to handle unexpected errors by transforming their responses.",
-          "default": false
-        }
-      },
-      "required": [
-        "functions"
-      ]
-    },
     "protocols": {
       "type": "array",
       "items": {
@@ -41,6 +17,30 @@
         "grpcs",
         "http",
         "https"
+      ]
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "handle_unexpected": {
+          "type": "boolean",
+          "description": "Determines whether to handle unexpected errors by transforming their responses.",
+          "default": false
+        },
+        "functions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "handle_unknown": {
+          "type": "boolean",
+          "description": "Determines whether to handle unknown status codes by transforming their responses.",
+          "default": false
+        }
+      },
+      "required": [
+        "functions"
       ]
     },
     "consumer": {

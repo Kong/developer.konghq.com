@@ -22,9 +22,62 @@
     "config": {
       "type": "object",
       "properties": {
+        "proxy_config": {
+          "type": "object",
+          "properties": {
+            "proxy_scheme": {
+              "type": "string",
+              "enum": [
+                "http"
+              ],
+              "description": "The proxy scheme to use when connecting. Only `http` is supported.",
+              "default": "http"
+            },
+            "auth_username": {
+              "type": "string",
+              "description": "The username to authenticate with, if the forward proxy is protected by basic authentication.",
+              "x-referenceable": true
+            },
+            "auth_password": {
+              "type": "string",
+              "description": "The password to authenticate with, if the forward proxy is protected by basic authentication.",
+              "x-referenceable": true,
+              "x-encrypted": true
+            },
+            "no_proxy": {
+              "type": "string",
+              "description": "Comma-separated list of hosts that should not be proxied."
+            },
+            "http_proxy_host": {
+              "type": "string",
+              "description": "A string representing a host name, such as example.com."
+            },
+            "http_proxy_port": {
+              "type": "integer",
+              "maximum": 65535,
+              "minimum": 0,
+              "description": "An integer representing a port number between 0 and 65535, inclusive."
+            },
+            "https_proxy_host": {
+              "type": "string",
+              "description": "A string representing a host name, such as example.com."
+            },
+            "https_proxy_port": {
+              "type": "integer",
+              "maximum": 65535,
+              "minimum": 0,
+              "description": "An integer representing a port number between 0 and 65535, inclusive."
+            }
+          }
+        },
         "logging": {
           "type": "object",
           "properties": {
+            "log_statistics": {
+              "type": "boolean",
+              "description": "If enabled, adds A2A metrics to Kong log policy(s) output.",
+              "default": false
+            },
             "log_payloads": {
               "type": "boolean",
               "description": "If enabled, logs request/response bodies to Kong log policy(s) output. Requires log_statistics to be enabled.",
@@ -34,11 +87,6 @@
               "type": "integer",
               "description": "Maximum size in bytes for logged request/response payloads. Payloads exceeding this size will be truncated.",
               "default": 1048576
-            },
-            "log_statistics": {
-              "type": "boolean",
-              "description": "If enabled, adds A2A metrics to Kong log policy(s) output.",
-              "default": false
             }
           }
         },
@@ -57,10 +105,6 @@
             "aws_iam": {
               "type": "object",
               "properties": {
-                "role_session_name": {
-                  "type": "string",
-                  "description": "If using AWS providers (Bedrock), set the identifier of the assumed role session."
-                },
                 "sts_endpoint_url": {
                   "type": "string",
                   "description": "If using AWS providers (Bedrock), override the STS endpoint URL when assuming a different role."
@@ -96,6 +140,10 @@
                 "assume_role_arn": {
                   "type": "string",
                   "description": "If using AWS providers (Bedrock) you can assume a different role after authentication with the current IAM context is successful."
+                },
+                "role_session_name": {
+                  "type": "string",
+                  "description": "If using AWS providers (Bedrock), set the identifier of the assumed role session."
                 }
               },
               "description": "Common AWS authentication options."
@@ -107,54 +155,6 @@
           "type": "integer",
           "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
           "default": 8388608
-        },
-        "proxy_config": {
-          "type": "object",
-          "properties": {
-            "auth_password": {
-              "type": "string",
-              "description": "The password to authenticate with, if the forward proxy is protected by basic authentication.",
-              "x-referenceable": true,
-              "x-encrypted": true
-            },
-            "no_proxy": {
-              "type": "string",
-              "description": "Comma-separated list of hosts that should not be proxied."
-            },
-            "http_proxy_host": {
-              "type": "string",
-              "description": "A string representing a host name, such as example.com."
-            },
-            "http_proxy_port": {
-              "type": "integer",
-              "maximum": 65535,
-              "minimum": 0,
-              "description": "An integer representing a port number between 0 and 65535, inclusive."
-            },
-            "https_proxy_host": {
-              "type": "string",
-              "description": "A string representing a host name, such as example.com."
-            },
-            "https_proxy_port": {
-              "type": "integer",
-              "maximum": 65535,
-              "minimum": 0,
-              "description": "An integer representing a port number between 0 and 65535, inclusive."
-            },
-            "proxy_scheme": {
-              "type": "string",
-              "enum": [
-                "http"
-              ],
-              "description": "The proxy scheme to use when connecting. Only `http` is supported.",
-              "default": "http"
-            },
-            "auth_username": {
-              "type": "string",
-              "description": "The username to authenticate with, if the forward proxy is protected by basic authentication.",
-              "x-referenceable": true
-            }
-          }
         }
       }
     },

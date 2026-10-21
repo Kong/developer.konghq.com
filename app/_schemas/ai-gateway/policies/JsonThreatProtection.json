@@ -1,53 +1,8 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ]
-      },
-      "description": "A set of strings representing HTTP protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
-        "max_array_element_count": {
-          "type": "integer",
-          "maximum": 2147483648,
-          "minimum": -1,
-          "description": "Max number of elements in an array. -1 means unlimited.",
-          "default": -1
-        },
-        "allow_duplicate_object_entry_name": {
-          "type": "boolean",
-          "description": "Allow or disallow duplicate object entry name.",
-          "default": true
-        },
-        "allow_non_json_requests": {
-          "type": "boolean",
-          "description": "Allow non-json requests to bypass the rules",
-          "default": false
-        },
-        "enforcement_mode": {
-          "type": "string",
-          "enum": [
-            "block",
-            "log_only"
-          ],
-          "description": "Enforcement mode of the security policy.",
-          "default": "block"
-        },
         "error_message": {
           "type": "string",
           "description": "The response message when validation fails",
@@ -94,8 +49,53 @@
           "minimum": -1,
           "description": "Max number of entries in an object. -1 means unlimited.",
           "default": -1
+        },
+        "max_array_element_count": {
+          "type": "integer",
+          "maximum": 2147483648,
+          "minimum": -1,
+          "description": "Max number of elements in an array. -1 means unlimited.",
+          "default": -1
+        },
+        "allow_duplicate_object_entry_name": {
+          "type": "boolean",
+          "description": "Allow or disallow duplicate object entry name.",
+          "default": true
+        },
+        "allow_non_json_requests": {
+          "type": "boolean",
+          "description": "Allow non-json requests to bypass the rules",
+          "default": false
+        },
+        "enforcement_mode": {
+          "type": "string",
+          "enum": [
+            "block",
+            "log_only"
+          ],
+          "description": "Enforcement mode of the security policy.",
+          "default": "block"
         }
       }
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
     },
     "route": {
       "type": "object",

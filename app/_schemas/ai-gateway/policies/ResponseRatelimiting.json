@@ -1,35 +1,34 @@
 {
   "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
     "config": {
       "type": "object",
       "properties": {
-        "policy": {
-          "type": "string",
-          "enum": [
-            "cluster",
-            "local",
-            "redis"
-          ],
-          "description": "The rate-limiting policies to use for retrieving and incrementing the limits.",
-          "default": "local"
-        },
-        "fault_tolerant": {
-          "type": "boolean",
-          "description": "A boolean value that determines if the requests should be proxied even if Kong has troubles connecting a third-party datastore. If `true`, requests will be proxied anyway, effectively disabling the rate-limiting function until the datastore is working again. If `false`, then the clients will see `500` errors.",
-          "default": true
-        },
         "redis": {
           "type": "object",
           "properties": {
-            "username": {
+            "host": {
               "type": "string",
-              "description": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.",
+              "description": "A string representing a host name, such as example.com.",
               "x-referenceable": true
-            },
-            "ssl": {
-              "type": "boolean",
-              "description": "If set to true, uses SSL to connect to Redis.",
-              "default": false
             },
             "port": {
               "type": "integer",
@@ -39,61 +38,18 @@
               "default": 6379,
               "x-referenceable": true
             },
-            "timeout": {
-              "type": "integer",
-              "maximum": 2147483646,
-              "minimum": 0,
-              "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
-              "default": 2000
-            },
-            "password": {
-              "type": "string",
-              "description": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.",
-              "x-referenceable": true,
-              "x-encrypted": true
-            },
             "cloud_authentication": {
               "type": "object",
               "properties": {
-                "aws_secret_access_key": {
-                  "type": "string",
-                  "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "aws_assume_role_arn": {
-                  "type": "string",
-                  "description": "The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
                 "gcp_service_account_json": {
                   "type": "string",
                   "description": "GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "aws_role_session_name": {
-                  "type": "string",
-                  "description": "The session name for the temporary credentials when assuming the IAM role.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
+                  "x-encrypted": true,
+                  "x-referenceable": true
                 },
                 "azure_client_id": {
                   "type": "string",
                   "description": "Azure Client ID to be used for authentication when `auth_provider` is set to `azure`.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "azure_client_secret": {
-                  "type": "string",
-                  "description": "Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "azure_tenant_id": {
-                  "type": "string",
-                  "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`.",
                   "x-referenceable": true,
                   "x-encrypted": true
                 },
@@ -112,21 +68,51 @@
                   "description": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`.",
                   "x-referenceable": true
                 },
-                "aws_region": {
-                  "type": "string",
-                  "description": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`.",
-                  "x-referenceable": true
-                },
                 "aws_is_serverless": {
                   "type": "boolean",
                   "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
                   "default": true
+                },
+                "aws_secret_access_key": {
+                  "type": "string",
+                  "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                },
+                "aws_role_session_name": {
+                  "type": "string",
+                  "description": "The session name for the temporary credentials when assuming the IAM role.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "azure_client_secret": {
+                  "type": "string",
+                  "description": "Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "azure_tenant_id": {
+                  "type": "string",
+                  "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "aws_region": {
+                  "type": "string",
+                  "description": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`.",
+                  "x-referenceable": true
                 },
                 "aws_access_key_id": {
                   "type": "string",
                   "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.",
                   "x-referenceable": true,
                   "x-encrypted": true
+                },
+                "aws_assume_role_arn": {
+                  "type": "string",
+                  "description": "The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens.",
+                  "x-encrypted": true,
+                  "x-referenceable": true
                 }
               },
               "description": "Cloud auth related configs for connecting to a Cloud Provider's Redis instance."
@@ -146,10 +132,28 @@
               "description": "A string representing an SNI (server name indication) value for TLS.",
               "x-referenceable": true
             },
-            "host": {
+            "timeout": {
+              "type": "integer",
+              "maximum": 2147483646,
+              "minimum": 0,
+              "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+              "default": 2000
+            },
+            "username": {
               "type": "string",
-              "description": "A string representing a host name, such as example.com.",
+              "description": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.",
               "x-referenceable": true
+            },
+            "password": {
+              "type": "string",
+              "description": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.",
+              "x-referenceable": true,
+              "x-encrypted": true
+            },
+            "ssl": {
+              "type": "boolean",
+              "description": "If set to true, uses SSL to connect to Redis.",
+              "default": false
             }
           },
           "description": "Redis configuration"
@@ -206,37 +210,23 @@
           ],
           "description": "The entity that will be used when aggregating the limits: `consumer`, `credential`, `ip`. If the `consumer` or the `credential` cannot be determined, the system will always fallback to `ip`.",
           "default": "consumer"
+        },
+        "policy": {
+          "type": "string",
+          "enum": [
+            "cluster",
+            "local",
+            "redis"
+          ],
+          "description": "The rate-limiting policies to use for retrieving and incrementing the limits.",
+          "default": "local"
+        },
+        "fault_tolerant": {
+          "type": "boolean",
+          "description": "A boolean value that determines if the requests should be proxied even if Kong has troubles connecting a third-party datastore. If `true`, requests will be proxied anyway, effectively disabling the rate-limiting function until the datastore is working again. If `false`, then the clients will see `500` errors.",
+          "default": true
         }
       }
-    },
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ]
-      },
-      "description": "A set of strings representing HTTP protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
-    "consumer": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
     },
     "route": {
       "type": "object",
@@ -257,6 +247,16 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
+    },
+    "consumer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
     }
   },
   "x-supported-partials": [

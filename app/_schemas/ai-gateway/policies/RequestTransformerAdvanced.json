@@ -1,13 +1,27 @@
 {
   "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
     "config": {
       "type": "object",
       "properties": {
-        "max_request_body_size": {
-          "type": "integer",
-          "description": "The maximum request body size, in bytes, that the policy reads to apply body transformations. Bodies larger than `client_body_buffer_size` are buffered by Nginx to a temporary file. `-1` (the default) disables reading such buffered bodies, so their body transformations are skipped to avoid the extra disk I/O. `0` means unlimited (still bounded by Nginx's `client_max_body_size`), and any positive value caps how much of the buffered body is read from the temporary file.",
-          "default": -1
-        },
         "allow": {
           "type": "object",
           "properties": {
@@ -19,9 +33,104 @@
             }
           }
         },
+        "max_request_body_size": {
+          "type": "integer",
+          "description": "The maximum request body size, in bytes, that the policy reads to apply body transformations. Bodies larger than `client_body_buffer_size` are buffered by Nginx to a temporary file. `-1` (the default) disables reading such buffered bodies, so their body transformations are skipped to avoid the extra disk I/O. `0` means unlimited (still bounded by Nginx's `client_max_body_size`), and any positive value caps how much of the buffered body is read from the temporary file.",
+          "default": -1
+        },
         "http_method": {
           "type": "string",
           "description": "A string representing an HTTP method, such as GET, POST, PUT, or DELETE. The string must contain only uppercase letters."
+        },
+        "replace": {
+          "type": "object",
+          "properties": {
+            "querystring": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "x-referenceable": true
+              },
+              "default": []
+            },
+            "json_types": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "boolean",
+                  "number",
+                  "string"
+                ]
+              },
+              "default": []
+            },
+            "uri": {
+              "type": "string"
+            },
+            "body": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "x-referenceable": true
+              },
+              "default": []
+            },
+            "headers": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "x-referenceable": true
+              },
+              "default": []
+            }
+          }
+        },
+        "add": {
+          "type": "object",
+          "properties": {
+            "body": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "x-referenceable": true
+              },
+              "default": []
+            },
+            "headers": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "x-referenceable": true
+              },
+              "default": []
+            },
+            "querystring": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "x-referenceable": true
+              },
+              "default": []
+            },
+            "json_types": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "boolean",
+                  "number",
+                  "string"
+                ]
+              },
+              "default": []
+            }
+          }
+        },
+        "dots_in_keys": {
+          "type": "boolean",
+          "description": "Specify whether dots (for example, `customers.info.phone`) should be treated as part of a property name or used to descend into nested JSON objects.",
+          "default": true
         },
         "remove": {
           "type": "object",
@@ -78,110 +187,9 @@
             }
           }
         },
-        "replace": {
-          "type": "object",
-          "properties": {
-            "body": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "x-referenceable": true
-              },
-              "default": []
-            },
-            "headers": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "x-referenceable": true
-              },
-              "default": []
-            },
-            "querystring": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "x-referenceable": true
-              },
-              "default": []
-            },
-            "json_types": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "boolean",
-                  "number",
-                  "string"
-                ]
-              },
-              "default": []
-            },
-            "uri": {
-              "type": "string"
-            }
-          }
-        },
-        "add": {
-          "type": "object",
-          "properties": {
-            "body": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "x-referenceable": true
-              },
-              "default": []
-            },
-            "headers": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "x-referenceable": true
-              },
-              "default": []
-            },
-            "querystring": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "x-referenceable": true
-              },
-              "default": []
-            },
-            "json_types": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "boolean",
-                  "number",
-                  "string"
-                ]
-              },
-              "default": []
-            }
-          }
-        },
         "append": {
           "type": "object",
           "properties": {
-            "body": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "x-referenceable": true
-              },
-              "default": []
-            },
-            "headers": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "x-referenceable": true
-              },
-              "default": []
-            },
             "querystring": {
               "type": "array",
               "items": {
@@ -201,34 +209,26 @@
                 ]
               },
               "default": []
+            },
+            "body": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "x-referenceable": true
+              },
+              "default": []
+            },
+            "headers": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "x-referenceable": true
+              },
+              "default": []
             }
           }
-        },
-        "dots_in_keys": {
-          "type": "boolean",
-          "description": "Specify whether dots (for example, `customers.info.phone`) should be treated as part of a property name or used to descend into nested JSON objects.",
-          "default": true
         }
       }
-    },
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ]
-      },
-      "description": "A set of strings representing HTTP protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
     },
     "consumer": {
       "type": "object",

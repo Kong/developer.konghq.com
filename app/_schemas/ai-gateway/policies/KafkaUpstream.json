@@ -22,20 +22,102 @@
     "config": {
       "type": "object",
       "properties": {
-        "producer_request_retries_max_attempts": {
+        "topic": {
+          "type": "string",
+          "description": "The default Kafka topic to publish to if the query parameter defined in the `topics_query_arg` does not exist in the request"
+        },
+        "forward_body": {
+          "type": "boolean",
+          "description": "Include the request body in the message. At least one of these must be true: `forward_method`, `forward_uri`, `forward_headers`, `forward_body`.",
+          "default": true
+        },
+        "message_by_lua_functions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The Lua functions that manipulates the message being sent to the Kafka topic."
+        },
+        "producer_async": {
+          "type": "boolean",
+          "description": "Flag to enable asynchronous mode.",
+          "default": true
+        },
+        "timeout": {
           "type": "integer",
-          "description": "Maximum number of retry attempts per single Produce request.",
-          "default": 10
+          "description": "Socket timeout in milliseconds.",
+          "default": 10000
+        },
+        "security": {
+          "type": "object",
+          "properties": {
+            "certificate_id": {
+              "type": "string",
+              "description": "UUID of certificate entity for mTLS authentication."
+            },
+            "ssl": {
+              "type": "boolean",
+              "description": "Enables TLS."
+            },
+            "ssl_verify": {
+              "type": "boolean",
+              "description": "When using TLS, this option enables verification of the certificate presented by the server.",
+              "default": true
+            }
+          }
+        },
+        "forward_headers": {
+          "type": "boolean",
+          "description": "Include the request headers in the message. At least one of these must be true: `forward_method`, `forward_uri`, `forward_headers`, `forward_body`.",
+          "default": false
+        },
+        "producer_request_acks": {
+          "type": "integer",
+          "enum": [
+            -1,
+            0,
+            1
+          ],
+          "description": "The number of acknowledgments the producer requires the leader to have received before considering a request complete. Allowed values: 0 for no acknowledgments; 1 for only the leader; and -1 for the full ISR (In-Sync Replica set).",
+          "default": 1
+        },
+        "producer_request_retries_backoff_timeout": {
+          "type": "integer",
+          "description": "Backoff interval between retry attempts in milliseconds.",
+          "default": 100
         },
         "producer_async_flush_timeout": {
           "type": "integer",
           "description": "Maximum time interval in milliseconds between buffer flushes in asynchronous mode.",
           "default": 1000
         },
-        "producer_async_buffering_limits_messages_in_memory": {
-          "type": "integer",
-          "description": "Maximum number of messages that can be buffered in memory in asynchronous mode.",
-          "default": 50000
+        "forward_method": {
+          "type": "boolean",
+          "description": "Include the request method in the message. At least one of these must be true: `forward_method`, `forward_uri`, `forward_headers`, `forward_body`.",
+          "default": false
+        },
+        "bootstrap_servers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "host": {
+                "type": "string",
+                "description": "A string representing a host name, such as example.com."
+              },
+              "port": {
+                "type": "integer",
+                "maximum": 65535,
+                "minimum": 0,
+                "description": "An integer representing a port number between 0 and 65535, inclusive."
+              }
+            },
+            "required": [
+              "host",
+              "port"
+            ]
+          },
+          "description": "Set of bootstrap brokers in a `{host: host, port: port}` list format."
         },
         "schema_registry": {
           "type": "object",
@@ -93,17 +175,9 @@
                     "oauth2": {
                       "type": "object",
                       "properties": {
-                        "token_headers": {
-                          "type": "object",
-                          "additionalProperties": {
-                            "type": "string",
-                            "x-referenceable": true
-                          },
-                          "description": "Extra headers to be passed in the token endpoint request."
-                        },
-                        "client_id": {
+                        "client_secret": {
                           "type": "string",
-                          "description": "The client ID for the application registration in the IdP.",
+                          "description": "The client secret for the application registration in the IdP.",
                           "x-referenceable": true,
                           "x-encrypted": true
                         },
@@ -123,13 +197,17 @@
                             "openid"
                           ]
                         },
-                        "audience": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
+                        "token_endpoint": {
+                          "type": "string",
+                          "description": "The token endpoint URI."
+                        },
+                        "token_headers": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string",
+                            "x-referenceable": true
                           },
-                          "description": "List of audiences passed to the IdP when obtaining a new token.",
-                          "default": []
+                          "description": "Extra headers to be passed in the token endpoint request."
                         },
                         "token_post_args": {
                           "type": "object",
@@ -148,9 +226,9 @@
                           "description": "The OAuth grant type to be used.",
                           "default": "client_credentials"
                         },
-                        "client_secret": {
+                        "client_id": {
                           "type": "string",
-                          "description": "The client secret for the application registration in the IdP.",
+                          "description": "The client ID for the application registration in the IdP.",
                           "x-referenceable": true,
                           "x-encrypted": true
                         },
@@ -160,9 +238,13 @@
                           "x-referenceable": true,
                           "x-encrypted": true
                         },
-                        "token_endpoint": {
-                          "type": "string",
-                          "description": "The token endpoint URI."
+                        "audience": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "List of audiences passed to the IdP when obtaining a new token.",
+                          "default": []
                         }
                       },
                       "required": [
@@ -172,15 +254,6 @@
                     "oauth2_client": {
                       "type": "object",
                       "properties": {
-                        "client_secret_jwt_alg": {
-                          "type": "string",
-                          "enum": [
-                            "HS256",
-                            "HS512"
-                          ],
-                          "description": "The algorithm to use with JWT when using `client_secret_jwt` authentication.",
-                          "default": "HS512"
-                        },
                         "http_proxy": {
                           "type": "string",
                           "description": "The proxy to use when making HTTP requests to the IdP."
@@ -189,13 +262,9 @@
                           "type": "string",
                           "description": "The `Proxy-Authorization` header value to be used with `http_proxy`."
                         },
-                        "https_proxy_authorization": {
+                        "https_proxy": {
                           "type": "string",
-                          "description": "The `Proxy-Authorization` header value to be used with `https_proxy`."
-                        },
-                        "no_proxy": {
-                          "type": "string",
-                          "description": "A comma-separated list of hosts that should not be proxied."
+                          "description": "The proxy to use when making HTTPS requests to the IdP."
                         },
                         "timeout": {
                           "type": "integer",
@@ -220,14 +289,27 @@
                           "description": "The authentication method used in client requests to the IdP. Supported values are: `client_secret_basic` to send `client_id` and `client_secret` in the `Authorization: Basic` header, `client_secret_post` to send `client_id` and `client_secret` as part of the request body, or `client_secret_jwt` to send a JWT signed with the `client_secret` using the client assertion as part of the body.",
                           "default": "client_secret_post"
                         },
+                        "client_secret_jwt_alg": {
+                          "type": "string",
+                          "enum": [
+                            "HS256",
+                            "HS512"
+                          ],
+                          "description": "The algorithm to use with JWT when using `client_secret_jwt` authentication.",
+                          "default": "HS512"
+                        },
                         "http_version": {
                           "type": "number",
                           "description": "The HTTP version used for requests made by this policy. Supported values: `1.1` for HTTP 1.1 and `1.0` for HTTP 1.0.",
                           "default": 1.1
                         },
-                        "https_proxy": {
+                        "https_proxy_authorization": {
                           "type": "string",
-                          "description": "The proxy to use when making HTTPS requests to the IdP."
+                          "description": "The `Proxy-Authorization` header value to be used with `https_proxy`."
+                        },
+                        "no_proxy": {
+                          "type": "string",
+                          "description": "A comma-separated list of hosts that should not be proxied."
                         },
                         "ssl_verify": {
                           "type": "boolean",
@@ -269,6 +351,10 @@
           },
           "description": "The plugin-global schema registry configuration. This can be overwritten by the topic configuration."
         },
+        "topics_query_arg": {
+          "type": "string",
+          "description": "The request query parameter name that contains the topics to publish to"
+        },
         "allowed_topics": {
           "type": "array",
           "items": {
@@ -280,35 +366,10 @@
           "type": "string",
           "description": "The request query parameter name that contains the Kafka message key. If specified, messages with the same key will be sent to the same Kafka partition, ensuring consistent ordering."
         },
-        "forward_method": {
-          "type": "boolean",
-          "description": "Include the request method in the message. At least one of these must be true: `forward_method`, `forward_uri`, `forward_headers`, `forward_body`.",
-          "default": false
-        },
-        "forward_uri": {
-          "type": "boolean",
-          "description": "Include the request URI and URI arguments (as in, query arguments) in the message. At least one of these must be true: `forward_method`, `forward_uri`, `forward_headers`, `forward_body`.",
-          "default": false
-        },
-        "producer_request_acks": {
+        "keepalive": {
           "type": "integer",
-          "enum": [
-            -1,
-            0,
-            1
-          ],
-          "description": "The number of acknowledgments the producer requires the leader to have received before considering a request complete. Allowed values: 0 for no acknowledgments; 1 for only the leader; and -1 for the full ISR (In-Sync Replica set).",
-          "default": 1
-        },
-        "producer_async": {
-          "type": "boolean",
-          "description": "Flag to enable asynchronous mode.",
-          "default": true
-        },
-        "timeout": {
-          "type": "integer",
-          "description": "Socket timeout in milliseconds.",
-          "default": 10000
+          "description": "Keepalive timeout in milliseconds.",
+          "default": 60000
         },
         "keepalive_enabled": {
           "type": "boolean",
@@ -351,30 +412,9 @@
             }
           }
         },
-        "forward_body": {
-          "type": "boolean",
-          "description": "Include the request body in the message. At least one of these must be true: `forward_method`, `forward_uri`, `forward_headers`, `forward_body`.",
-          "default": true
-        },
         "cluster_name": {
           "type": "string",
           "description": "An identifier for the Kafka cluster. By default, this field generates a random string. You can also set your own custom cluster identifier.  If more than one Kafka policy is configured without a `cluster_name` (that is, if the default autogenerated value is removed), these policies will use the same producer, and by extension, the same cluster. Logs will be sent to the leader of the cluster."
-        },
-        "producer_request_retries_backoff_timeout": {
-          "type": "integer",
-          "description": "Backoff interval between retry attempts in milliseconds.",
-          "default": 100
-        },
-        "topics_query_arg": {
-          "type": "string",
-          "description": "The request query parameter name that contains the topics to publish to"
-        },
-        "message_by_lua_functions": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "The Lua functions that manipulates the message being sent to the Kafka topic."
         },
         "producer_request_timeout": {
           "type": "integer",
@@ -391,59 +431,19 @@
           "description": "Maximum size of a Produce request in bytes.",
           "default": 1048576
         },
-        "bootstrap_servers": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "host": {
-                "type": "string",
-                "description": "A string representing a host name, such as example.com."
-              },
-              "port": {
-                "type": "integer",
-                "maximum": 65535,
-                "minimum": 0,
-                "description": "An integer representing a port number between 0 and 65535, inclusive."
-              }
-            },
-            "required": [
-              "host",
-              "port"
-            ]
-          },
-          "description": "Set of bootstrap brokers in a `{host: host, port: port}` list format."
-        },
-        "topic": {
-          "type": "string",
-          "description": "The default Kafka topic to publish to if the query parameter defined in the `topics_query_arg` does not exist in the request"
-        },
-        "keepalive": {
+        "producer_request_retries_max_attempts": {
           "type": "integer",
-          "description": "Keepalive timeout in milliseconds.",
-          "default": 60000
+          "description": "Maximum number of retry attempts per single Produce request.",
+          "default": 10
         },
-        "security": {
-          "type": "object",
-          "properties": {
-            "ssl": {
-              "type": "boolean",
-              "description": "Enables TLS."
-            },
-            "ssl_verify": {
-              "type": "boolean",
-              "description": "When using TLS, this option enables verification of the certificate presented by the server.",
-              "default": true
-            },
-            "certificate_id": {
-              "type": "string",
-              "description": "UUID of certificate entity for mTLS authentication."
-            }
-          }
+        "producer_async_buffering_limits_messages_in_memory": {
+          "type": "integer",
+          "description": "Maximum number of messages that can be buffered in memory in asynchronous mode.",
+          "default": 50000
         },
-        "forward_headers": {
+        "forward_uri": {
           "type": "boolean",
-          "description": "Include the request headers in the message. At least one of these must be true: `forward_method`, `forward_uri`, `forward_headers`, `forward_body`.",
+          "description": "Include the request URI and URI arguments (as in, query arguments) in the message. At least one of these must be true: `forward_method`, `forward_uri`, `forward_headers`, `forward_body`.",
           "default": false
         }
       },

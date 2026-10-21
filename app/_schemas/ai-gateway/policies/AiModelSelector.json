@@ -32,6 +32,11 @@
     "config": {
       "type": "object",
       "properties": {
+        "max_request_body_size": {
+          "type": "integer",
+          "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
+          "default": 8388608
+        },
         "sources": {
           "type": "array",
           "items": {
@@ -70,11 +75,6 @@
             }
           },
           "description": "A list of sources the policy reads the request model from. The model from the first source that yields a value is used."
-        },
-        "max_request_body_size": {
-          "type": "integer",
-          "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
-          "default": 8388608
         }
       }
     },

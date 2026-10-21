@@ -13,26 +13,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "key_in_header": {
-          "type": "boolean",
-          "description": "If enabled (default), the policy reads the request header and tries to find the key in it.",
-          "default": true
-        },
-        "key_in_query": {
-          "type": "boolean",
-          "description": "If enabled (default), the policy reads the query parameter in the request and tries to find the key in it.",
-          "default": true
-        },
-        "key_in_body": {
-          "type": "boolean",
-          "description": "If enabled, the policy reads the request body. Supported MIME types: `application/www-form-urlencoded`, `application/json`, and `multipart/form-data`.",
-          "default": false
-        },
-        "run_on_preflight": {
-          "type": "boolean",
-          "description": "A boolean value that indicates whether the policy should run (and try to authenticate) on `OPTIONS` preflight requests. If set to `false`, then `OPTIONS` requests are always allowed.",
-          "default": true
-        },
         "identity_realms": {
           "type": "array",
           "items": {
@@ -77,6 +57,26 @@
             }
           }
         },
+        "hide_credentials": {
+          "type": "boolean",
+          "description": "An optional boolean value telling the policy to show or hide the credential from the upstream service. If `true`, the policy strips the credential from the request.",
+          "default": true
+        },
+        "key_in_header": {
+          "type": "boolean",
+          "description": "If enabled (default), the policy reads the request header and tries to find the key in it.",
+          "default": true
+        },
+        "key_in_query": {
+          "type": "boolean",
+          "description": "If enabled (default), the policy reads the query parameter in the request and tries to find the key in it.",
+          "default": true
+        },
+        "run_on_preflight": {
+          "type": "boolean",
+          "description": "A boolean value that indicates whether the policy should run (and try to authenticate) on `OPTIONS` preflight requests. If set to `false`, then `OPTIONS` requests are always allowed.",
+          "default": true
+        },
         "key_names": {
           "type": "array",
           "items": {
@@ -88,14 +88,14 @@
             "apikey"
           ]
         },
-        "hide_credentials": {
-          "type": "boolean",
-          "description": "An optional boolean value telling the policy to show or hide the credential from the upstream service. If `true`, the policy strips the credential from the request.",
-          "default": true
-        },
         "anonymous": {
           "type": "string",
           "description": "An optional string (consumer UUID or username) value to use as an “anonymous” consumer if authentication fails. If empty (default null), the request will fail with an authentication failure `4xx`."
+        },
+        "key_in_body": {
+          "type": "boolean",
+          "description": "If enabled, the policy reads the request body. Supported MIME types: `application/www-form-urlencoded`, `application/json`, and `multipart/form-data`.",
+          "default": false
         },
         "realm": {
           "type": "string",

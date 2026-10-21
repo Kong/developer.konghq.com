@@ -1,13 +1,41 @@
 {
   "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "ws",
+          "wss"
+        ]
+      },
+      "description": "A list of the request protocols that will trigger this policy. The default value, as well as the possible values allowed on this field, may change depending on the policy type. For example, policies that only work in stream mode will only support tcp and tls.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https",
+        "ws",
+        "wss"
+      ]
+    },
+    "model": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "description": "Custom type for representing a foreign key with a null value allowed.",
+      "x-foreign": true
+    },
     "config": {
       "type": "object",
       "properties": {
-        "hide_credentials": {
-          "type": "boolean",
-          "description": "An optional boolean value telling the policy to show or hide the credential from the upstream service.",
-          "default": true
-        },
         "clock_skew": {
           "type": "number",
           "description": "Clock skew in seconds to prevent replay attacks.",
@@ -53,41 +81,13 @@
         "realm": {
           "type": "string",
           "description": "When authentication fails the policy sends `WWW-Authenticate` header with `realm` attribute value."
+        },
+        "hide_credentials": {
+          "type": "boolean",
+          "description": "An optional boolean value telling the policy to show or hide the credential from the upstream service.",
+          "default": true
         }
       }
-    },
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https",
-          "ws",
-          "wss"
-        ]
-      },
-      "description": "A list of the request protocols that will trigger this policy. The default value, as well as the possible values allowed on this field, may change depending on the policy type. For example, policies that only work in stream mode will only support tcp and tls.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https",
-        "ws",
-        "wss"
-      ]
-    },
-    "model": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "description": "Custom type for representing a foreign key with a null value allowed.",
-      "x-foreign": true
     },
     "route": {
       "type": "object",

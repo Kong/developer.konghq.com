@@ -24,13 +24,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "allow": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Arbitrary group names that are allowed to consume the service or route. Exactly one of `config.allow`, `config.deny`, `config.allow_when`, or `config.deny_when` must be specified."
-        },
         "deny": {
           "type": "array",
           "items": {
@@ -70,6 +63,13 @@
             "minLength": 1
           },
           "description": "Deny the request if it matches any of these CEL boolean expressions evaluated against the request context (consumer, principal, HTTP attributes, consumer groups, etc.). Exactly one of `config.allow`, `config.deny`, `config.allow_when`, or `config.deny_when` must be specified."
+        },
+        "allow": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Arbitrary group names that are allowed to consume the service or route. Exactly one of `config.allow`, `config.deny`, `config.allow_when`, or `config.deny_when` must be specified."
         }
       }
     },

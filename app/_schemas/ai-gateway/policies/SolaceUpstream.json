@@ -25,12 +25,78 @@
         "session": {
           "type": "object",
           "properties": {
-            "connect_timeout": {
-              "type": "integer",
-              "maximum": 100000,
-              "minimum": 100,
-              "description": "The timeout period (in milliseconds) for a connect operation to a given host (per host).",
-              "default": 3000
+            "generate_send_timestamps": {
+              "type": "boolean",
+              "description": "When enabled, a send timestamp is automatically included (if not already present) in the Solace-defined fields for each message sent.",
+              "default": true
+            },
+            "properties": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "x-referenceable": true,
+                "x-lua-required": true
+              },
+              "description": "Additional Solace session properties (each setting needs to have `SESSION_` prefix)."
+            },
+            "host": {
+              "type": "string",
+              "description": "The IPv4 or IPv6 address or host name to connect to (see: https://docs.solace.com/API-Developer-Online-Ref-Documentation/c/index.html#host-entry).",
+              "x-referenceable": true
+            },
+            "authentication": {
+              "type": "object",
+              "properties": {
+                "basic_auth_header": {
+                  "type": "string",
+                  "description": "Specifies the header that contains Basic Authentication credentials for the `BASIC` authentication scheme when connecting to an event broker. This header takes precedence over the `username` and `password` fields."
+                },
+                "access_token": {
+                  "type": "string",
+                  "description": "The OAuth2 access token used with `OAUTH2` authentication scheme when connecting to an event broker.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "access_token_header": {
+                  "type": "string",
+                  "description": "Specifies the header that contains access token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `access_token` field."
+                },
+                "id_token": {
+                  "type": "string",
+                  "description": "The OpenID Connect ID token used with `OAUTH2` authentication scheme when connecting to an event broker.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "id_token_header": {
+                  "type": "string",
+                  "description": "Specifies the header that contains id token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `id_token` field."
+                },
+                "scheme": {
+                  "type": "string",
+                  "enum": [
+                    "BASIC",
+                    "NONE",
+                    "OAUTH2"
+                  ],
+                  "description": "The client authentication scheme used when connection to an event broker.",
+                  "default": "BASIC"
+                },
+                "username": {
+                  "type": "string",
+                  "maxLength": 189,
+                  "description": "The username used with `BASIC` authentication scheme when connecting to an event broker.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
+                "password": {
+                  "type": "string",
+                  "maxLength": 128,
+                  "description": "The password used with `BASIC` authentication scheme when connecting to an event broker.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                }
+              },
+              "description": "Session authentication related configuration."
             },
             "ssl_validate_certificate": {
               "type": "boolean",
@@ -62,78 +128,12 @@
               "maxLength": 32,
               "description": "The name of the Message VPN to attempt to join when connecting to an event broker."
             },
-            "generate_send_timestamps": {
-              "type": "boolean",
-              "description": "When enabled, a send timestamp is automatically included (if not already present) in the Solace-defined fields for each message sent.",
-              "default": true
-            },
-            "properties": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "string",
-                "x-referenceable": true,
-                "x-lua-required": true
-              },
-              "description": "Additional Solace session properties (each setting needs to have `SESSION_` prefix)."
-            },
-            "host": {
-              "type": "string",
-              "description": "The IPv4 or IPv6 address or host name to connect to (see: https://docs.solace.com/API-Developer-Online-Ref-Documentation/c/index.html#host-entry).",
-              "x-referenceable": true
-            },
-            "authentication": {
-              "type": "object",
-              "properties": {
-                "access_token_header": {
-                  "type": "string",
-                  "description": "Specifies the header that contains access token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `access_token` field."
-                },
-                "id_token": {
-                  "type": "string",
-                  "description": "The OpenID Connect ID token used with `OAUTH2` authentication scheme when connecting to an event broker.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "id_token_header": {
-                  "type": "string",
-                  "description": "Specifies the header that contains id token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `id_token` field."
-                },
-                "scheme": {
-                  "type": "string",
-                  "enum": [
-                    "BASIC",
-                    "NONE",
-                    "OAUTH2"
-                  ],
-                  "description": "The client authentication scheme used when connection to an event broker.",
-                  "default": "BASIC"
-                },
-                "username": {
-                  "type": "string",
-                  "maxLength": 189,
-                  "description": "The username used with `BASIC` authentication scheme when connecting to an event broker.",
-                  "x-encrypted": true,
-                  "x-referenceable": true
-                },
-                "password": {
-                  "type": "string",
-                  "maxLength": 128,
-                  "description": "The password used with `BASIC` authentication scheme when connecting to an event broker.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "basic_auth_header": {
-                  "type": "string",
-                  "description": "Specifies the header that contains Basic Authentication credentials for the `BASIC` authentication scheme when connecting to an event broker. This header takes precedence over the `username` and `password` fields."
-                },
-                "access_token": {
-                  "type": "string",
-                  "description": "The OAuth2 access token used with `OAUTH2` authentication scheme when connecting to an event broker.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                }
-              },
-              "description": "Session authentication related configuration."
+            "connect_timeout": {
+              "type": "integer",
+              "maximum": 100000,
+              "minimum": 100,
+              "description": "The timeout period (in milliseconds) for a connect operation to a given host (per host).",
+              "default": 3000
             }
           },
           "required": [
@@ -144,28 +144,66 @@
         "message": {
           "type": "object",
           "properties": {
+            "forward_method": {
+              "type": "boolean",
+              "description": "Include the request method in the message.",
+              "default": false
+            },
+            "destinations": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "QUEUE",
+                      "TOPIC"
+                    ],
+                    "description": "The type of the destination.",
+                    "default": "QUEUE"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the destination. You can use $(uri_captures['<capture-identifier>']) in this field (replace `<capture-identifier>` with a real value, for example `$uri_captures[’queue’]` when the matched route has a path `~/(?<queue>[a-z]+)`)."
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              },
+              "minLength": 1,
+              "description": "The message destinations."
+            },
+            "dmq_eligible": {
+              "type": "boolean",
+              "description": "Sets the dead message queue (DMQ) eligible property on the message.",
+              "default": false
+            },
+            "ack_timeout": {
+              "type": "integer",
+              "maximum": 100000,
+              "minimum": 1,
+              "description": "When using a non-DIRECT guaranteed delivery mode, this property sets the message acknowledgement timeout in milliseconds (waiting time).",
+              "default": 2000
+            },
+            "tracing": {
+              "type": "boolean",
+              "description": "Enable or disable the tracing propagation. This is primarily used for distributed tracing and message correlation, especially in debugging or tracking message flows across multiple systems.",
+              "default": false
+            },
+            "forward_headers": {
+              "type": "boolean",
+              "description": "Include the request headers in the message.",
+              "default": false
+            },
             "content_encoding": {
               "type": "string",
               "description": "Sets the HTTP Content-Encoding applied to the Solace message payload (for example, gzip). If unset, the request Content-Encoding header is used when available."
             },
-            "functions": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "The Lua functions that manipulates (or generates) the message being sent to Solace. The `message` variable can be used to access the current message content, and the function can return a new content."
-            },
             "user_properties": {
               "type": "object",
               "properties": {
-                "predefined_properties": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "type": "string",
-                    "x-lua-required": true
-                  },
-                  "description": "Predefined user properties to set on every message (key = property name, value = property value)."
-                },
                 "headers": {
                   "type": "object",
                   "properties": {
@@ -193,22 +231,37 @@
                     }
                   },
                   "description": "Header settings for user properties (mapping, inclusion and exclusion)."
+                },
+                "predefined_properties": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string",
+                    "x-lua-required": true
+                  },
+                  "description": "Predefined user properties to set on every message (key = property name, value = property value)."
                 }
               },
               "description": "User defined properties to be included in the message. Separate static properties from header mappings."
             },
-            "ttl": {
-              "type": "integer",
-              "description": "Sets the time to live (TTL) in milliseconds for the message. Setting the time to live to zero disables the TTL for the message.",
-              "default": 0
-            },
-            "default_content": {
+            "delivery_mode": {
               "type": "string",
-              "description": "When not using `forward_method`, `forward_uri`, `forward_headers`, `forward_body` or `forward_body_raw_only`, this sets the message content."
+              "enum": [
+                "DIRECT",
+                "PERSISTENT"
+              ],
+              "description": "Sets the message delivery mode.",
+              "default": "DIRECT"
             },
-            "dmq_eligible": {
+            "priority": {
+              "type": "integer",
+              "maximum": 255,
+              "minimum": 0,
+              "description": "Sets the message priority.",
+              "default": 4
+            },
+            "forward_uri": {
               "type": "boolean",
-              "description": "Sets the dead message queue (DMQ) eligible property on the message.",
+              "description": "Include the request URI and the URI arguments (as in, query arguments) in the message.",
               "default": false
             },
             "forward_body": {
@@ -221,87 +274,34 @@
               "description": "Forward only the raw request body without wrapping it in a JSON payload or adding extra fields.",
               "default": false
             },
-            "destinations": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "The name of the destination. You can use $(uri_captures['<capture-identifier>']) in this field (replace `<capture-identifier>` with a real value, for example `$uri_captures[’queue’]` when the matched route has a path `~/(?<queue>[a-z]+)`)."
-                  },
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "QUEUE",
-                      "TOPIC"
-                    ],
-                    "description": "The type of the destination.",
-                    "default": "QUEUE"
-                  }
-                },
-                "required": [
-                  "name"
-                ]
-              },
-              "minLength": 1,
-              "description": "The message destinations."
-            },
-            "delivery_mode": {
-              "type": "string",
-              "enum": [
-                "DIRECT",
-                "PERSISTENT"
-              ],
-              "description": "Sets the message delivery mode.",
-              "default": "DIRECT"
-            },
             "sender_id": {
               "type": "string",
               "description": "Allows the application to set the content of the sender identifier."
             },
-            "priority": {
+            "ttl": {
               "type": "integer",
-              "maximum": 255,
-              "minimum": 0,
-              "description": "Sets the message priority.",
-              "default": 4
-            },
-            "tracing": {
-              "type": "boolean",
-              "description": "Enable or disable the tracing propagation. This is primarily used for distributed tracing and message correlation, especially in debugging or tracking message flows across multiple systems.",
-              "default": false
+              "description": "Sets the time to live (TTL) in milliseconds for the message. Setting the time to live to zero disables the TTL for the message.",
+              "default": 0
             },
             "tracing_sampled": {
               "type": "boolean",
               "description": "Forcibly turn on the tracing on all the messages for distributed tracing (tracing needs to be enabled as well).",
               "default": false
             },
-            "forward_method": {
-              "type": "boolean",
-              "description": "Include the request method in the message.",
-              "default": false
+            "default_content": {
+              "type": "string",
+              "description": "When not using `forward_method`, `forward_uri`, `forward_headers`, `forward_body` or `forward_body_raw_only`, this sets the message content."
             },
             "content_type": {
               "type": "string",
               "description": "Sets the HTTP Content-Type applied to the Solace message payload. If unset, the request Content-Type header is used when available."
             },
-            "ack_timeout": {
-              "type": "integer",
-              "maximum": 100000,
-              "minimum": 1,
-              "description": "When using a non-DIRECT guaranteed delivery mode, this property sets the message acknowledgement timeout in milliseconds (waiting time).",
-              "default": 2000
-            },
-            "forward_uri": {
-              "type": "boolean",
-              "description": "Include the request URI and the URI arguments (as in, query arguments) in the message.",
-              "default": false
-            },
-            "forward_headers": {
-              "type": "boolean",
-              "description": "Include the request headers in the message.",
-              "default": false
+            "functions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "The Lua functions that manipulates (or generates) the message being sent to Solace. The `message` variable can be used to access the current message content, and the function can return a new content."
             }
           },
           "required": [

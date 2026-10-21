@@ -1,25 +1,5 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1,
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ]
-      },
-      "description": "A set of strings representing HTTP protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
@@ -36,13 +16,6 @@
             "type": "string"
           },
           "description": "Value for the `Access-Control-Allow-Headers` header."
-        },
-        "exposed_headers": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Value for the `Access-Control-Expose-Headers` header. If not specified, no custom headers are exposed."
         },
         "methods": {
           "type": "array",
@@ -82,14 +55,21 @@
           "description": "Flag to determine whether the `Access-Control-Allow-Private-Network` header should be sent with `true` as the value.",
           "default": false
         },
-        "preflight_continue": {
-          "type": "boolean",
-          "description": "A boolean value that instructs the policy to proxy the `OPTIONS` preflight request to the Upstream service.",
-          "default": false
+        "exposed_headers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Value for the `Access-Control-Expose-Headers` header. If not specified, no custom headers are exposed."
         },
         "credentials": {
           "type": "boolean",
           "description": "Flag to determine whether the `Access-Control-Allow-Credentials` header should be sent with `true` as the value.",
+          "default": false
+        },
+        "preflight_continue": {
+          "type": "boolean",
+          "description": "A boolean value that instructs the policy to proxy the `OPTIONS` preflight request to the Upstream service.",
           "default": false
         },
         "allow_origin_absent": {
@@ -98,6 +78,26 @@
           "default": true
         }
       }
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
     },
     "route": {
       "type": "object",

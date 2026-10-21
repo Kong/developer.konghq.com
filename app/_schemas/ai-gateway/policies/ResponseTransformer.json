@@ -1,8 +1,65 @@
 {
   "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
     "config": {
       "type": "object",
       "properties": {
+        "remove": {
+          "type": "object",
+          "properties": {
+            "headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
+            "json": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            }
+          }
+        },
+        "rename": {
+          "type": "object",
+          "properties": {
+            "json": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
+            "headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            }
+          }
+        },
         "replace": {
           "type": "object",
           "properties": {
@@ -38,13 +95,6 @@
         "add": {
           "type": "object",
           "properties": {
-            "json": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
             "json_types": {
               "type": "array",
               "items": {
@@ -59,6 +109,13 @@
               "default": []
             },
             "headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
+            "json": {
               "type": "array",
               "items": {
                 "type": "string"
@@ -98,65 +155,8 @@
               "default": []
             }
           }
-        },
-        "remove": {
-          "type": "object",
-          "properties": {
-            "headers": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
-            "json": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            }
-          }
-        },
-        "rename": {
-          "type": "object",
-          "properties": {
-            "headers": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
-            "json": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            }
-          }
         }
       }
-    },
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ]
-      },
-      "description": "A set of strings representing HTTP protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
     },
     "route": {
       "type": "object",

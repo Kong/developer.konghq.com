@@ -29,45 +29,9 @@
     "config": {
       "type": "object",
       "properties": {
-        "replace": {
-          "type": "object",
-          "properties": {
-            "body": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
-            "headers": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
-            "querystring": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
-            "uri": {
-              "type": "string"
-            }
-          }
-        },
         "add": {
           "type": "object",
           "properties": {
-            "querystring": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
-            },
             "body": {
               "type": "array",
               "items": {
@@ -76,6 +40,13 @@
               "default": []
             },
             "headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
+            "querystring": {
               "type": "array",
               "items": {
                 "type": "string"
@@ -117,6 +88,32 @@
         "remove": {
           "type": "object",
           "properties": {
+            "querystring": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
+            "body": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
+            "headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            }
+          }
+        },
+        "rename": {
+          "type": "object",
+          "properties": {
             "body": {
               "type": "array",
               "items": {
@@ -140,9 +137,16 @@
             }
           }
         },
-        "rename": {
+        "replace": {
           "type": "object",
           "properties": {
+            "body": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
             "headers": {
               "type": "array",
               "items": {
@@ -157,16 +161,22 @@
               },
               "default": []
             },
-            "body": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": []
+            "uri": {
+              "type": "string"
             }
           }
         }
       }
+    },
+    "consumer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
     },
     "consumer_group": {
       "type": "object",
@@ -197,16 +207,6 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
-    },
-    "consumer": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
     }
   }
 }

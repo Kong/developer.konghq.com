@@ -22,47 +22,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "provider": {
-          "type": "string",
-          "enum": [
-            "headroom",
-            "kong"
-          ],
-          "description": "Which compression backend the policy talks to. 'kong' (default) is the Kong compressor service driven by 'compressor_type' and 'compression_ranges'; 'headroom' is a Headroom instance that decides the compression itself. Connection settings ('compressor_url', 'timeout', 'keepalive_timeout', 'stop_on_error', 'log_text_data', 'proxy_config') are shared by both. A field that does not apply to the selected provider is ignored, with a warning in the error log.",
-          "default": "kong"
-        },
-        "headroom": {
-          "type": "object",
-          "properties": {
-            "proxy_token": {
-              "type": "string",
-              "description": "HEADROOM_PROXY_TOKEN, sent both as `X-Headroom-Proxy-Token` and as `Authorization: Bearer`. Required unless `compressor_url` is a loopback address (localhost, 127.0.0.0/8, ::1). A wrong token surfaces as 401.",
-              "x-encrypted": true,
-              "x-referenceable": true
-            },
-            "ssl_verify": {
-              "type": "boolean",
-              "description": "Verify TLS certificate of the Headroom endpoint (for https endpoints).",
-              "default": true
-            },
-            "session_id_headers": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Names of request headers that identify the conversation. Every configured header present on the request goes into the session id, concatenated in order, so several ids narrow the session instead of replacing it. Use headers that stay stable across turns: one that rotates per request stops the cache from hitting, and a caller id (installation, machine) collapses that caller's conversations onto one session. An empty array derives the id from the content.",
-              "default": [
-                "session-id",
-                "thread-id",
-                "x-claude-code-agent-id",
-                "x-claude-code-session-id",
-                "x-session-id"
-              ]
-            }
-          },
-          "description": "Headroom-specific settings, read only when `provider` is `headroom`. Point the policy-wide `compressor_url` at the Headroom `/v1/compress` endpoint, and keep the policy-wide `timeout` above the Headroom-side turn lock plus compression timeout. Headroom keeps its sessions in memory on one process, so point Kong at a single instance and not at a load-balanced set.",
-          "default": {}
-        },
         "timeout": {
           "type": "number",
           "description": "Connection timeout with the compressor",
@@ -99,29 +58,6 @@
         "proxy_config": {
           "type": "object",
           "properties": {
-            "proxy_scheme": {
-              "type": "string",
-              "enum": [
-                "http"
-              ],
-              "description": "The proxy scheme to use when connecting. Only `http` is supported.",
-              "default": "http"
-            },
-            "auth_username": {
-              "type": "string",
-              "description": "The username to authenticate with, if the forward proxy is protected by basic authentication.",
-              "x-referenceable": true
-            },
-            "auth_password": {
-              "type": "string",
-              "description": "The password to authenticate with, if the forward proxy is protected by basic authentication.",
-              "x-referenceable": true,
-              "x-encrypted": true
-            },
-            "no_proxy": {
-              "type": "string",
-              "description": "Comma-separated list of hosts that should not be proxied."
-            },
             "http_proxy_host": {
               "type": "string",
               "description": "A string representing a host name, such as example.com."
@@ -141,6 +77,29 @@
               "maximum": 65535,
               "minimum": 0,
               "description": "An integer representing a port number between 0 and 65535, inclusive."
+            },
+            "proxy_scheme": {
+              "type": "string",
+              "enum": [
+                "http"
+              ],
+              "description": "The proxy scheme to use when connecting. Only `http` is supported.",
+              "default": "http"
+            },
+            "auth_username": {
+              "type": "string",
+              "description": "The username to authenticate with, if the forward proxy is protected by basic authentication.",
+              "x-referenceable": true
+            },
+            "auth_password": {
+              "type": "string",
+              "description": "The password to authenticate with, if the forward proxy is protected by basic authentication.",
+              "x-encrypted": true,
+              "x-referenceable": true
+            },
+            "no_proxy": {
+              "type": "string",
+              "description": "Comma-separated list of hosts that should not be proxied."
             }
           }
         },
@@ -181,6 +140,47 @@
           "type": "boolean",
           "description": "Log the text data",
           "default": false
+        },
+        "provider": {
+          "type": "string",
+          "enum": [
+            "headroom",
+            "kong"
+          ],
+          "description": "Which compression backend the policy talks to. 'kong' (default) is the Kong compressor service driven by 'compressor_type' and 'compression_ranges'; 'headroom' is a Headroom instance that decides the compression itself. Connection settings ('compressor_url', 'timeout', 'keepalive_timeout', 'stop_on_error', 'log_text_data', 'proxy_config') are shared by both. A field that does not apply to the selected provider is ignored, with a warning in the error log.",
+          "default": "kong"
+        },
+        "headroom": {
+          "type": "object",
+          "properties": {
+            "ssl_verify": {
+              "type": "boolean",
+              "description": "Verify TLS certificate of the Headroom endpoint (for https endpoints).",
+              "default": true
+            },
+            "session_id_headers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Names of request headers that identify the conversation. Every configured header present on the request goes into the session id, concatenated in order, so several ids narrow the session instead of replacing it. Use headers that stay stable across turns: one that rotates per request stops the cache from hitting, and a caller id (installation, machine) collapses that caller's conversations onto one session. An empty array derives the id from the content.",
+              "default": [
+                "session-id",
+                "thread-id",
+                "x-claude-code-agent-id",
+                "x-claude-code-session-id",
+                "x-session-id"
+              ]
+            },
+            "proxy_token": {
+              "type": "string",
+              "description": "HEADROOM_PROXY_TOKEN, sent both as `X-Headroom-Proxy-Token` and as `Authorization: Bearer`. Required unless `compressor_url` is a loopback address (localhost, 127.0.0.0/8, ::1). A wrong token surfaces as 401.",
+              "x-encrypted": true,
+              "x-referenceable": true
+            }
+          },
+          "description": "Headroom-specific settings, read only when `provider` is `headroom`. Point the policy-wide `compressor_url` at the Headroom `/v1/compress` endpoint, and keep the policy-wide `timeout` above the Headroom-side turn lock plus compression timeout. Headroom keeps its sessions in memory on one process, so point Kong at a single instance and not at a load-balanced set.",
+          "default": {}
         }
       }
     },
