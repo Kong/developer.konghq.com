@@ -38,10 +38,8 @@ Policy example `.yml` files have no frontmatter. Read `title` and `description` 
 
 Group by capability, not by file type. Group policies with their related how-tos and examples. Suggested groups (use only those that have content):
 
-- **Policies: Encryption and masking**: `encrypt-fields`, `decrypt-fields`, `mask-fields-*` and how-tos about encrypting or masking
-- **Policies: Schema and validation**: `schema-validation-*`, `request-rule-validator`, `record-transcode-*`
-- **Policies: Routing, headers, and filtering**: `modify-headers`, `skip-record`, `forward-to-virtual-cluster`
-- **Authentication and authorization**: `acl`, mTLS, SASL, Kong Identity, SNI routing, `tls-server` how-tos
+- **Policies, one group per category**: use the policy `categories` frontmatter value as the group heading, with the display name from `app/_data/event_gateway_policy_categories.yml` (Security, Traffic Control, Transformations, Data Quality). Each policy goes under its category. Examples go under their policy. Guides that centre on a policy go under that policy's category. Within a category, use a bold sub-heading per policy or policy family (e.g. **Mask Fields policies:**). Categories with no changes are omitted. Read `categories` from each policy `index.md`, do not guess.
+- **Authentication and authorization**: mTLS, SASL, Kong Identity, SNI routing how-tos (ACLs and `tls-server` are policies, so they go under their policy category)
 - **Expressions (CEL)**: `event-gateway/expressions.md` and expression-related examples
 - **Entities**: `event-gateway/entities/`
 - **Observability**: metrics reference, OpenTelemetry how-tos
