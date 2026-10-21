@@ -4,3 +4,4 @@ sections:
   - title: Overview
     items:
       - path: /ai-cost-management/
+      - path: /ai-cost-management/getting-started/
