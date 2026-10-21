@@ -84,6 +84,9 @@ platform:
           icon: /assets/icons/monochrome/security.svg
           url: /gateway/security/
           color: grey
+        - text: AI Cost Management
+          url: /ai-cost-management/
+          product: ai-cost-management
     - title: Discover APIs
       links:
         - text: Developer Portal

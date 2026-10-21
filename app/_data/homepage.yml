@@ -148,6 +148,16 @@ products_section:
               url: /how-to/?products=identity
             - text: All documentation
               url: /index/identity/
+        - title: "{{site.ai_cost_management}}"
+          icon: /assets/icons/ai-cost-management.svg
+          description: "Manage and optimize AI-related costs effectively."
+          links:
+            - text: "{{site.ai_cost_management}} overview"
+              url: /ai-cost-management/
+            - text: How-to guides
+              url: /how-to/?products=ai-cost-management
+            - text: All documentation
+              url: /index/ai-cost-management/
     - name: Connectivity
       items:
         - title: Kong Gateway
