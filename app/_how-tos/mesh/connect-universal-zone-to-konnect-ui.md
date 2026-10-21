@@ -39,7 +39,11 @@ cleanup:
   inline:
     - title: Stop the zone control plane
       content: |
-        Stop this guide's foreground control plane with **Ctrl+C**. Do not stop other `kuma-cp` processes on the host.
+        Stop the control plane this guide started:
+
+        ```sh
+        kill "$(cat "$MESH_INSTALL_DIR/kuma-cp.pid")"
+        ```
     - title: Delete the {{site.konnect_short_name}} control plane
       content: |
         In {{site.konnect_short_name}}, delete only the `example-cp` control plane created for this test. Deleting the control plane also removes its mesh configuration. Revoke the zone token if it remains. Review the files in `MESH_INSTALL_DIR` and remove the credentials when no longer needed.

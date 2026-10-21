@@ -4,45 +4,14 @@
    ```sh
    export CONTROL_PLANE_URL="grpcs://$KONNECT_REGION.mesh.sync.konghq.com:443"
    export MESH_INSTALL_DIR=$(mktemp -d)
-   ```
-
-1. Change to the working directory:
-
-   ```sh
    cd "$MESH_INSTALL_DIR"
-   ```
-
-1. Make the files you create from now on readable only by you:
-
-   ```sh
-   umask 077
    ```
 
 1. Add the {{site.mesh_product_name}} Helm repository:
 
    ```sh
    helm repo add kong-mesh https://kong.github.io/kong-mesh-charts
-   ```
-
-1. Update the repository index:
-
-   ```sh
    helm repo update
-   ```
-
-1. List the available chart versions:
-
-   ```sh
-   helm search repo kong-mesh/kong-mesh --versions --devel
-   ```
-
-   Select an available {{site.mesh_product_name}} 3.x chart version approved for your {{site.konnect_short_name}} control plane. Helm chart
-   versions and application versions are different: check the `APP VERSION` column for 3.x.
-
-1. Export the chart version you selected:
-
-   ```sh
-   export MESH_CHART_VERSION='REPLACE_WITH_CHART_VERSION_FOR_MESH_3'
    ```
 
 1. Create the zone namespace:
@@ -79,13 +48,11 @@
 
    ```sh
    helm upgrade --install kong-mesh kong-mesh/kong-mesh \
-     --namespace kong-mesh-system --version "$MESH_CHART_VERSION" \
+     --namespace kong-mesh-system --version "{{page.latest_release.version}}" \
      --values values.yaml --wait --timeout 5m
    ```
 
-   This installs a zone, not a Kubernetes-native global control plane. It does not enable the
-   removed shared `kuma.ingress` or `kuma.egress` deployments.{% unless include.zone_proxies %} This single-zone test does not need
-   zone proxies; add [mesh-scoped zone proxies](/mesh/mesh-scoped-zone-proxies/) when connecting
+   {% unless include.zone_proxies %} This single-zone test doesn't need zone proxies; add [mesh-scoped zone proxies](/mesh/mesh-scoped-zone-proxies/) when connecting
    zones or using `MeshExternalService`.{% endunless %}
 {% else %}
 1. Set the KDS address for the same region as the global control plane, and create a working directory:
@@ -93,43 +60,19 @@
    ```sh
    export CONTROL_PLANE_URL="grpcs://$KONNECT_REGION.mesh.sync.konghq.com:443"
    export MESH_INSTALL_DIR=$(mktemp -d)
-   ```
-
-1. Change to the working directory:
-
-   ```sh
    cd "$MESH_INSTALL_DIR"
-   ```
-
-1. Make the files you create from now on readable only by you:
-
-   ```sh
-   umask 077
-   ```
-
-1. Set the {{site.mesh_product_name}} 3.x release approved for your {{site.konnect_short_name}} control plane. Set an explicit version
-   instead of relying on the installer's default:
-
-   ```sh
-   export MESH_VERSION='{{page.latest_release.version}}'
    ```
 
 1. Download and run the installer:
 
    ```sh
-   curl --fail -L https://developer.konghq.com/mesh/installer.sh | VERSION="$MESH_VERSION" sh
+   curl --fail -L https://developer.konghq.com/mesh/installer.sh | VERSION="{{page.latest_release.version}}" sh
    ```
 
 1. Write the zone token to a file:
 
    ```sh
    printf '%s' "$CONTROL_PLANE_TOKEN" > cp-token
-   ```
-
-1. Make the token file readable only by you:
-
-   ```sh
-   chmod 600 cp-token
    ```
 
 1. Create `config.yaml`:
@@ -152,15 +95,23 @@
    EOF
    ```
 
-   The in-memory store is for this single-process evaluation only. Use PostgreSQL and plan
-   persistence and availability for production; see the [Universal control plane reference](/mesh/universal-control-plane/).
+   Use `store.type: memory` for testing purposes only. In a production environment, use PostgreSQL and plan
+   persistence and availability. For more information, see the [Universal control plane reference](/mesh/universal-control-plane/).
 
-1. Run the control plane in the foreground:
+1. Start the control plane in the background and write its output to `kuma-cp.log`:
 
    ```sh
    KUMA_MULTIZONE_ZONE_KDS_AUTH_TOKEN_PATH="$MESH_INSTALL_DIR/cp-token" \
-     "$MESH_INSTALL_DIR/kong-mesh-$MESH_VERSION/bin/kuma-cp" run --config-file config.yaml
+     nohup "$MESH_INSTALL_DIR/kong-mesh-$MESH_VERSION/bin/kuma-cp" run --config-file config.yaml \
+     > kuma-cp.log 2>&1 &
+   echo $! > kuma-cp.pid
    ```
 
-   Keep this terminal open. Use another terminal or the {{site.konnect_short_name}} UI to check the connection.
+1. Wait for the control plane to report that it's ready:
+
+   ```sh
+   curl --fail --silent --retry 30 --retry-delay 2 --retry-connrefused http://localhost:5680/ready
+   ```
+
+   If the command fails, check `kuma-cp.log` for the startup error.
 {% endif %}
