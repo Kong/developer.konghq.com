@@ -11,7 +11,7 @@ Creates a security advisory page at `app/_support/security/security-advisory-<cv
 
 Read these at run time. Don't copy them into your head from memory:
 
-- `app/_support/security/_template.md.example`: the body shape and frontmatter example.
+- `.claude/skills/new-security-advisory/template.md.example`: the body shape and frontmatter example.
 - `app/_data/schemas/frontmatter/support.json`: the `advisory` schema. If it disagrees with this skill, the schema wins; tell the user.
 - `.github/styles/base/Kongterms.yml`: required product-term substitutions.
 - `app/_support/security/security-advisory-cve-2025-15467-cve-2026-1642-cve-2026-1907.md`: a finished example.
