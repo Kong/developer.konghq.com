@@ -20,6 +20,8 @@ related_resources:
     url: /mesh/migrate-mtls-to-meshidentity/
   - text: Migrate policies to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-policies-to-3/
+  - text: Upgrade {{site.mesh_product_name}}
+    url: /mesh/upgrade/
 ---
 
 Replace legacy `ZoneIngress` and `ZoneEgress` proxies while your deployment still runs a
@@ -30,6 +32,8 @@ to one mesh.
 The [zone-proxy reference](/mesh/mesh-scoped-zone-proxies/) explains the new traffic paths
 and policy model. This page covers the order of migration, when traffic switches, and what
 to verify before removing the old proxies.
+
+For the full migration sequence, see [Upgrade from 2.x to 3.x](/mesh/upgrade/#upgrade-from-2x-to-3x).
 
 {:.warning}
 > Migrate before upgrading a zone control plane to 3.x. The 3.x control plane does not serve
@@ -45,7 +49,8 @@ identity, permissions and observability policies operators wanted to apply.
 
 Mesh-scoped proxies bring those concerns together:
 
-- **Identity belongs to the mesh.** Egress can receive a workload identity through
+- **Identity belongs to the mesh.** 
+  * Ian receive a workload identity through
   `MeshIdentity` and authenticate callers before forwarding external traffic.
 - **Policies target the proxy directly.** You select the `Dataplane` that enforces a permission,
   records a log or applies a limit, instead of relying on separate zone-proxy configuration.
@@ -69,16 +74,11 @@ report as the baseline for the migration.
 supported 2.14 patch, following the upgrade instructions for that release. Verify compatibility for the global control plane,
 all affected zones and data plane versions before starting the traffic migration.
 
-Don't treat the presence of the new API alone as proof that every required migration fix is
-available in your installed patch release. Rehearse the following sequence with the exact chart
-and images you plan to use. This guide doesn't replace the product's supported version
-upgrade sequence.
-
 In the 2.14 transition environment, mesh-scoped listener generation requires
 `Mesh.spec.meshServices.mode: Exclusive`. Complete the move to resource-based services and
 check their discovery before enabling that mode. In 3.x the mode is always `Exclusive` and the
 field is deprecated. Set `meshServices.mode: Exclusive` on every mesh, including meshes that
-never set it, before upgrading the global control plane: 2.x zones treat a missing field as
+never set it, before upgrading the global control plane. 2.x zones treat a missing field as
 `Disabled`, and 3.x zones reject a mesh with any other mode. Drop the field from your manifests
 after the upgrade.
 
@@ -98,18 +98,25 @@ columns:
 rows:
   - path: "Remote `MeshService` traffic into a zone"
     what: "A usable `MeshZoneAddress` for that mesh and zone takes precedence over the legacy ingress address."
-    first: "Reachable ingress address, working listeners, destination discovery and workload permissions."
+    first: |
+      * Reachable ingress address
+      * Working listeners
+      * Destination discovery
+      * Workload permissions
   - path: "External-service traffic through egress"
     what: "Ready mesh-scoped egress listener instances take precedence over the legacy egress pool. The pools aren't mixed."
-    first: "Egress identity and trust, external destinations, explicit permissions and capacity."
+    first: |
+      * Identity and trust
+      * External destinations
+      * Explicit permissions and capacity
 {% endtable %}
 
-These are discovery choices, not a weighted canary between old and new proxies. Start with a
+Start with a
 test mesh or a limited production mesh and zone. Existing connections can remain on the old
 path while new connections use updated endpoints; allow for draining and test long-lived
-connections. Don't assume that coexistence guarantees a disruption-free migration.
+connections.
 
-## 1. Inventory every mesh the old proxies serve
+## Step 1. Inventory every mesh the old proxies serve
 
 A shared legacy deployment may serve several meshes. Create a migration checklist for each
 mesh and zone before replacing it:
@@ -124,7 +131,7 @@ Save the current manifests and deployment configuration, including resources man
 GitOps. Record successful and intentionally denied requests as your baseline. Keep the legacy
 deployment available until every mesh that depends on it has passed the migration checks.
 
-## 2. Prepare identities, destinations and policies
+## Step 2. Prepare identities, destinations and policies
 
 Prepare the identity and trust configuration described in the
 [MeshIdentity migration](/mesh/migrate-mtls-to-meshidentity/). Give the new egress proxies an
@@ -140,8 +147,8 @@ generator doesn't consume legacy `ExternalService` configuration. Verify the
 destination endpoints and upstream TLS settings rather than copying only the service name.
 
 Prepare policies that select the new `Dataplane` resources, using the computed ingress or egress
-role labels and, where needed, a zone label and listener `sectionName`. See
-[selecting zone proxies](/mesh/mesh-scoped-zone-proxies/#proxy-and-traffic-selection).
+role labels and, where needed, a zone label and listener `sectionName`. For more information, see
+[Proxy and traffic selection](/mesh/mesh-scoped-zone-proxies/#proxy-and-traffic-selection).
 
 For egress, apply explicit `MeshTrafficPermission` allows for the required callers and
 destinations. Without a matching allow, egress denies traffic. A legacy mesh-wide external-access
@@ -154,10 +161,9 @@ proxy. The new ingress forwards workload mTLS without terminating it; assigning 
 identity doesn't make it authenticate the original caller.
 
 Prepare the policy form supported by your transition release. Coordinate any later 3.x schema
-rewrites with the [policy migration guide](/mesh/migrate-policies-to-3/); don't assume every
-2.x version accepts a 3.x manifest unchanged.
+rewrites with the [policy migration guide](/mesh/migrate-policies-to-3/).
 
-## 3. Deploy replacements while retaining the legacy proxies
+## Step 3. Deploy replacements while retaining the legacy proxies
 
 ### Kubernetes
 
@@ -174,9 +180,8 @@ kuma:
         enabled: true
 ```
 
-This snippet is a values fragment, not a replacement for the installation's full values file. Keep
-the control plane connection settings and other meshes. Add an entry for each mesh that
-needs proxies and carry over the capacity and availability settings that apply to it.
+Keep the control plane connection settings and other meshes, add an entry for each mesh that
+needs proxies, and carry over the capacity and availability settings that apply to it.
 
 Use distinct names and listening addresses for the replacements. Don't point an existing
 load balancer at both models as a substitute for the control plane's discovery transition:
@@ -206,7 +211,7 @@ The [zone-proxy reference](/mesh/mesh-scoped-zone-proxies/#universal) contains t
 and address examples. Keep the old processes, credentials and address configuration available
 for rollback during the transition.
 
-## 4. Verify traffic through the new proxies
+## Step 4. Verify traffic through the new proxies
 
 For each migrated mesh and zone:
 
@@ -217,7 +222,7 @@ For each migrated mesh and zone:
 1. Send a fresh cross-zone request and verify the destination workload and zone. Confirm
    that the replacement ingress's connection counters or logs change.
 1. Send an allowed external-service request and verify activity on the replacement egress.
-   Test a disallowed caller and destination as well as the successful case.
+   Test a disallowed caller and destination as well.
 1. Check TLS validation, upstream errors, latency and telemetry against the baseline. Exercise
    representative HTTP, gRPC and TCP traffic and reconnect long-lived clients where relevant.
 1. Allow the old connections to drain. Confirm that no other mesh still depends on the shared
@@ -227,7 +232,7 @@ Pause the rollout if configuration is rejected, expected traffic fails, or denie
 unexpectedly allowed. Investigate on the transition release rather than upgrading to 3.x to
 try to resolve the failure.
 
-## 5. Remove legacy configuration, then upgrade to 3.x
+## Step 5. Remove legacy configuration, then upgrade to 3.x
 
 After all affected meshes pass validation, retire the legacy deployments through the tool that
 owns them. Review the planned removals before applying a Helm or GitOps change.
@@ -281,8 +286,8 @@ resources or insight endpoints.
 > it appears. On Universal, create it on the zone control plane immediately after the upgrade.
 
 {:.warning}
-> **Restart the zone proxies after upgrading a zone control plane.** A zone-proxy Pod keeps
-> the data-plane image it was admitted with, so upgrading the control plane alone leaves it
+> **Restart the zone proxies after upgrading a zone control plane.** A zone proxy Pod keeps
+> the data plane image it was admitted with, so upgrading the control plane alone leaves it
 > running the previous `kuma-dp`. {{site.mesh_product_name}} 3.x removed state-of-the-world xDS,
 > and a proxy whose bootstrap still requests it never receives configuration at all:
 >
@@ -291,6 +296,7 @@ resources or insight endpoints.
 > SOTW/state-of-the-world xDS StreamAggregatedResources; restart the proxy with a
 > delta-capable bootstrap to use Delta ADS
 > ```
+> {:.no-copy-code}
 >
 > The Pod stays `Running` and `Ready` while this repeats, and its listeners keep whatever
 > they last held, so the failure surfaces only as cross-zone requests returning `503`.
