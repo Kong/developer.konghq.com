@@ -688,11 +688,9 @@ rows:
 
 ### AI MCP Sanitizer logs
 
-If you use the [AI MCP Sanitizer Policy](/ai-gateway/policies/ai-mcp-sanitizer/), {{site.ai_gateway}} logs include a `sanitizer` object on each logged RPC in the `ai.mcp` object. The object tracks the number of PII items identified and sanitized, the duration of sanitization, and metadata about each sanitized item. {{site.ai_gateway}} writes these fields when `log_statistics` is enabled in the AI MCP Server's [`config.logging`](/ai-gateway/entities/ai-mcp-server/#schema-aigateway-mcpserver-config-logging).
+If you use the [AI MCP Sanitizer Policy](/ai-gateway/policies/ai-mcp-sanitizer/), {{site.ai_gateway}} logs include sanitization details under the `ai.mcp` object.
 
 {% include md/ai-gateway/v2/mcp-sanitizer-logs.md %}
-
-The `sanitized_items` entries include the original text, so the log contains the sensitive data. Set [`skip_logging_sanitized_items`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-skip-logging-sanitized-items) to `true` to omit `sanitized_items`.
 
 ### AI A2A Proxy logs 
 

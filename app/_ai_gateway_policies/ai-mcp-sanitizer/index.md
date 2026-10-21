@@ -38,7 +38,7 @@ MCP tools often front systems of record such as CRMs, ticketing tools, and medic
 The [AI PII Sanitizer Policy](/ai-gateway/policies/ai-sanitizer/) can't protect this traffic, because it only processes chat-completion bodies and not MCP's JSON-RPC `params` and `result` structures.
 The AI MCP Sanitizer Policy adds PII sanitization to MCP traffic proxied by an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/).
 
-The Policy uses the same PII service, PII categories, custom patterns, blocking, and recovery options as the AI PII Sanitizer Policy.
+The Policy uses the same [PII service](#ai-pii-anonymizer-service), PII categories, custom patterns, blocking, and recovery options as the AI PII Sanitizer Policy.
 If you already use that Policy, the connection and detection settings work the same way.
 
 ## Use cases
@@ -109,10 +109,13 @@ Choose targets based on which direction of the tool call includes PII and whethe
 
 * **Sanitize only `tool_arguments`** if your agents send user data to a third-party tool and you need to keep streaming.
   This target doesn't hold responses or change how [`conversion-listener`](/ai-gateway/entities/ai-mcp-server/#schema-aigateway-mcpserver-type) servers run, so the [streaming and single-pass changes](#streaming-and-performance-trade-offs) don't apply.
+  Set `recover_redacted` to `false` as well, because enabling it also holds the result.
 * **Sanitize only `tool_results`** if your tools return records from a system of record, such as a CRM or a medical database, and you want to keep that data out of the LLM context.
   {{site.ai_gateway}} forwards the arguments to the tool server unchanged.
+  Set `recover_redacted` to `false`, because you can't use recovery when `tool_results` is a target.
 * **Sanitize both** if user data goes to the tool and the tool returns PII too.
   The streaming and single-pass changes apply because `tool_results` is targeted.
+  Set `recover_redacted` to `false`, because you can't use recovery when `tool_results` is a target.
 
 ## How it works
 
@@ -234,22 +237,15 @@ rows:
 >
 > `sanitize_targets` names the protocol location instead.
 
-## PII service
+## AI PII Anonymizer service
 
-For the PII service Docker images, the `anonymize` categories, redact modes, custom patterns, and HTTPS setup, see [AI PII Anonymizer service](/ai-gateway/policies/ai-sanitizer/#ai-pii-anonymizer-service).
-You run the PII service in your own environment.
+{% include /md/ai-gateway/v2/policies/pii-service.md policy_name="AI MCP Sanitizer" %}
 
 ## Logging and analytics
 
-When you enable `log_statistics` in the AI MCP Server's [`config.logging`](/ai-gateway/entities/ai-mcp-server/#schema-aigateway-mcpserver-config-logging), each logged RPC that the Policy processed includes a `sanitizer` object in the [`ai.mcp` log entry](/ai-gateway/ai-audit-log-reference/#ai-mcp-logs).
-{{site.ai_gateway}} adds the object to the same log entry as the rest of the request, so one request produces one entry.
-
-The `sanitizer` object has the following properties:
+The AI MCP Sanitizer Policy adds sanitization details to the MCP logs.
 
 {% include md/ai-gateway/v2/mcp-sanitizer-logs.md %}
-
-The `sanitized_items` entries include the original text, so the log contains the sensitive data.
-Set [`skip_logging_sanitized_items`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-skip-logging-sanitized-items) to `true` to omit `sanitized_items` and keep that data out of your logs.
 <!-- TODO: confirm the log field names against the spec. PR #23501 uses `sanitizer`, and the design doc uses `sanitization`. -->
 
 ## Configuration notes
