@@ -307,6 +307,8 @@ A `503` response indicating a compression timeout is retried automatically befor
 
 ## Prompt compression metrics
 
+<!-- TODO: Verify Explorer metric and dimension names in Konnect. Confirm headers are final (PRD Q2) and PRD Q3-6 outcomes. Confirm or drop the "aren't forwarded to the upstream" claim. Re-check kong-ee PR #23465 before merging. -->
+
 When a request passes through the AI Prompt Compressor Policy, {{site.ai_gateway}} reports the compression result to [Konnect Analytics](/observability/explorer/). You can use these metrics to measure how many tokens compression saves and how long it takes.
 
 Compression metrics are reported with the existing {{site.ai_gateway}} dimensions, so you can scope them by `ai_gateway`, `ai_gateway_data_plane_node`, and `control_plane`. The Policy configuration doesn't change, and the compression log entry (`compress_items`) keeps its fields and values.

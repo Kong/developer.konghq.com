@@ -272,6 +272,7 @@ rows:
     description: |
       Compression method used. Possible values: `rate` or `target_token`. Available for the `kong` provider only.
 {% endtable %}
+<!-- TODO: Verify compression attribute labels in Konnect Explorer. -->
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Platform usage" %}
