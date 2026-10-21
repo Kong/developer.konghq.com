@@ -200,7 +200,8 @@ rows:
   - use_case: "Secure MCP endpoints with AI Consumer identity or OAuth tokens"
     example: "Reference an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) (`key-auth` or `openid-connect`) in [`access.auth_strategies`](#schema-aigateway-mcpserver-access). Advertise [protected resource metadata](#protected-resource-metadata) through `access.metadata` so MCP clients can discover the authorization server."
   - use_case: "Rate limiting"
-    example: "Use [Rate Limiting](/ai-gateway/policies/rate-limiting/) or [Rate Limiting Advanced](/ai-gateway/policies/rate-limiting-advanced/) Policy to control MCP request volume per AI Consumer or AI Consumer Group."
+    example: "Set [`rate_limiting`](#rate-limiting) to cap requests per MCP method or tool.
+      Use [Rate Limiting](/ai-gateway/policies/rate-limiting/) or [Rate Limiting Advanced](/ai-gateway/policies/rate-limiting-advanced/) Policy to control MCP request volume per AI Consumer or AI Consumer Group."
   - use_case: "Track all MCP traffic and ACL decisions."
     example: "Enable request and response logging through [AI logging Policies](/ai-gateway/policies/?category=logging) and audit trails."
   - use_case: "Protect sensitive data in tool calls"
@@ -551,6 +552,62 @@ config:
   ca_certificates:
     - kongair-internal-root-ca
 ```
+
+## Rate limiting {% new_in 2.3 %}
+
+The AI MCP Server [`rate_limiting`](#schema-aigateway-mcpserver-rate-limiting) field caps how many requests the server accepts for a specific MCP method or [tool](#tools).
+For example, you can allow `tools/list` frequently but restrict an expensive `search_flights` tool to a few calls per second.
+
+The `rate_limiting` field is supported in `conversion-listener` and `passthrough-listener` modes.
+Other [server modes](#server-modes) reject it.
+
+Set a list of `limits`.
+Each entry in the list has the following fields:
+
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Description
+    key: description
+rows:
+  - field: "`method`"
+    description: "The MCP method the limit applies to, for example `tools/call`. Set either `method` or `tool`, not both."
+  - field: "`tool`"
+    description: "The name of the tool the limit applies to, for example `search_flights`. Set either `method` or `tool`, not both."
+  - field: "`limit`"
+    description: "The number of requests allowed per window. Must be between 1 and 2147483646."
+  - field: "`window_size`"
+    description: "The window size in seconds. Must be `1` (second), `60` (minute), `3600` (hour), or `86400` (day)."
+{% endtable %}
+
+Each limit must set exactly one of `method` or `tool`.
+Each combination of target and `window_size` can appear only once.
+You can set several windows for the same target, for example a per-hour and a per-day limit on one tool.
+If either rule is broken, the API returns a `400` error that points to the invalid entry, for example `rate_limiting.limits[1]`.
+
+Each {{site.ai_gateway}} data plane node keeps its own counters and enforces the limits independently.
+
+In the following example, the AI MCP Server allows 100 `tools/call` requests per minute.
+It also limits the `search_flights` tool to 10 requests per second and 1000 requests per day:
+
+```yaml
+rate_limiting:
+  limits:
+    - method: tools/call
+      limit: 100
+      window_size: 60
+    - tool: search_flights
+      limit: 10
+      window_size: 1
+    - tool: search_flights
+      limit: 1000
+      window_size: 86400
+```
+
+{:.info}
+> `rate_limiting` limits requests to the AI MCP Server as a whole.
+> To limit requests per AI Consumer or AI Consumer Group, attach a [Rate Limiting](/ai-gateway/policies/rate-limiting/) or [Rate Limiting Advanced](/ai-gateway/policies/rate-limiting-advanced/) Policy.
 
 ## ACL tool control
 
