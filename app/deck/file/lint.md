@@ -116,7 +116,7 @@ The command results in a `0` (Success) return code. In situations where violatio
 
 The following sections define some common linting patterns.
 
-### Ensure that configuration files contain `select_tags`
+### Ensure that configuration files contain select_tags
 
 [`select_tags`](/deck/gateway/tags/#select-tags) allows you to segment your configuration so that it can be managed as multiple, independent configurations.
 
