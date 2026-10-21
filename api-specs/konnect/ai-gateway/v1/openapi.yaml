@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect AI Gateway
-  version: 2.2.11
+  version: 2.2.19
   description: The API for configuring AI Gateways in Konnect.
   x-extensions-note: |
     Entities and properties may be annotated with `x-min-runtime-version`, the
@@ -18,8 +18,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@18a1ab4269a673db1091fe21541b07e029aa834f
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/18a1ab4269a673db1091fe21541b07e029aa834f'
+  x-oas-source: kong/platform-api@8531e46bd338268a084280368138a8f6ac362c90
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8531e46bd338268a084280368138a8f6ac362c90'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -5740,6 +5740,7 @@ components:
         video_output_s3_uri:
           description: S3 URI for storing video generation outputs.
           type: string
+      additionalProperties: false
       required:
         - type
     AIGatewayTargetCerebrasConfig:
@@ -13815,6 +13816,7 @@ components:
         batch_role_arn:
           description: AWS role arn to use when calling the batch API.
           type: string
+      additionalProperties: false
       required:
         - type
       title: AIGatewayModelProviderConfigAuthAWS
@@ -14209,6 +14211,10 @@ components:
           example: my-config-store
           allOf:
             - $ref: '#/components/schemas/AIGatewayConfigStoreName'
+        labels:
+          $ref: '#/components/schemas/PublicLabels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
       additionalProperties: false
       required:
         - name
@@ -14238,6 +14244,10 @@ components:
           example: my-config-store
           allOf:
             - $ref: '#/components/schemas/AIGatewayConfigStoreName'
+        labels:
+          $ref: '#/components/schemas/PublicLabels'
+        managed_by:
+          $ref: '#/components/schemas/ManagedBy'
         id:
           $ref: '#/components/schemas/UUID'
         created_at:
