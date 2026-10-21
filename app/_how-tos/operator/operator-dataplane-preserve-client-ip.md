@@ -97,10 +97,15 @@ spec:
 
 1.  Check the generated Service for the `externalTrafficPolicy` setting:
 
-    ```bash
-    kubectl get service -n kong -l gateway-operator.konghq.com/dataplane-service-type=ingress -o jsonpath='{.items[0].spec.externalTrafficPolicy}'
-    ```
-    {: data-test-step="block" }
+{% validation custom-command %}
+command: |
+  kubectl get service -n kong -l gateway-operator.konghq.com/dataplane-service-type=ingress -o jsonpath='{.items[0].spec.externalTrafficPolicy}'
+expected:
+  return_code: 0
+  message: Local
+render_output: false
+indent: 4
+{% endvalidation %}
 
     The output should be `Local`. 
 
