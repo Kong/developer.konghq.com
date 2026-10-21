@@ -178,12 +178,10 @@ This configuration instructs {{ site.base_gateway }} to forward gRPC requests fo
    ```
    {: data-test-step="block" }
 
-1. Wait for the Gateway to get an address after the listener change:
+1. Wait for the Gateway to be programmed after the listener change:
 
    ```bash
-   kubectl wait gateway/kong-grpc-gateway -n kong \
-     --for=jsonpath='{.status.addresses[0].value}' \
-     --timeout=5m
+   kubectl wait --for=condition=Programmed gateway/kong-grpc-gateway -n kong --timeout=5m
    ```
    {: data-test-step="block" }
 
@@ -197,12 +195,18 @@ This configuration instructs {{ site.base_gateway }} to forward gRPC requests fo
 
 1. Call the `grpcbin` test service through the proxy:
 
-   ```bash
+{% validation custom-command %}
+command: |
    grpcurl -insecure -authority example.com \
      -d '{"greeting": "Kong"}' \
      $PROXY_IP:443 hello.HelloService.SayHello
-   ```
-   {: data-test-step="block" data-test-retry-count="6" }
+expected:
+  return_code: 0
+  message: |
+    "reply": "hello Kong"
+render_output: false
+indent: 3
+{% endvalidation %}
 
    The results should look like this:
 

@@ -49,6 +49,8 @@ tldr:
     Build and push a plugin as a container image, then use a `KongPluginInstallation`
     to register it with the operator. Reference it in your `GatewayConfiguration` to
     make it available in Data Planes and configure its behavior using a `KongPlugin` resource.
+
+automated_tests: false
 ---
 
 ## Plugin distribution using an OCI registry
@@ -249,12 +251,10 @@ content: |
 
 Ensure that everything is up and running, get the `Gateway` address, and make a request to the service.
 
-1. Wait for the `Gateway` to get an address:
+1. Wait for the `Gateway` to be programmed:
 
    ```bash
-   kubectl wait gateway/kong -n kong \
-     --for=jsonpath='{.status.addresses[0].value}' \
-     --timeout=5m
+   kubectl wait --for=condition=Programmed gateway/kong -n kong --timeout=5m
    ```
    {: data-test-step="block" }
 

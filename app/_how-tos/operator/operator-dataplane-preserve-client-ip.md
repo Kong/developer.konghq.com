@@ -88,12 +88,10 @@ spec:
 
 ## Validate
 
-1. Wait for the Gateway to get an address. The operator creates the generated Service with it:
+1. Wait for the Gateway to be programmed. The operator creates the generated Service with it:
 
     ```bash
-    kubectl wait gateway/kong-external-traffic -n kong \
-      --for=jsonpath='{.status.addresses[0].value}' \
-      --timeout=5m
+    kubectl wait --for=condition=Programmed gateway/kong-external-traffic -n kong --timeout=5m
     ```
     {: data-test-step="block" }
 

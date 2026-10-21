@@ -172,9 +172,7 @@ Wait for the `Gateway` to be ready. The listener change re-provisions the data p
 kubectl wait gateway/kong -n kong \
   --for=condition=DataPlaneReady=True \
   --timeout=5m
-kubectl wait gateway/kong -n kong \
-  --for=jsonpath='{.status.addresses[0].value}' \
-  --timeout=5m
+kubectl wait --for=condition=Programmed gateway/kong -n kong --timeout=5m
 ```
 {: data-test-step="block" }
 
@@ -295,9 +293,7 @@ Wait for the `Gateway` to be ready. The listener change re-provisions the data p
 kubectl wait gateway/kong -n kong \
   --for=condition=DataPlaneReady=True \
   --timeout=5m
-kubectl wait gateway/kong -n kong \
-  --for=jsonpath='{.status.addresses[0].value}' \
-  --timeout=5m
+kubectl wait --for=condition=Programmed gateway/kong -n kong --timeout=5m
 ```
 {: data-test-step="block" }
 
