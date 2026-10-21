@@ -90,12 +90,12 @@ Deploy the zone only once: use either the generated {{site.mesh_product_name}} 3
 
 ## Check the global control plane version
 
-{% include md/mesh/how-tos/check-control-plane-version.md %}
+{% include md/mesh/v3/how-tos/check-control-plane-version.md %}
 
 ## Deploy the zone control plane
 
-{% include md/mesh/how-tos/deploy-zone-control-plane.md platform="universal" %}
+{% include md/mesh/v3/how-tos/deploy-zone-control-plane.md platform="universal" %}
 
 ## Verify the zone connection
 
-{% include md/mesh/how-tos/verify-zone-connection.md %}
+{% include md/mesh/v3/how-tos/verify-zone-connection.md %}

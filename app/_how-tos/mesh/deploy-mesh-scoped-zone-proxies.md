@@ -149,11 +149,11 @@ export KONNECT_REGION='us'
 
 ## Create a global control plane in {{site.konnect_short_name}}
 
-{% include md/mesh/how-tos/create-global-control-plane.md %}
+{% include md/mesh/v3/how-tos/create-global-control-plane.md %}
 
 ## Check the global control plane version
 
-{% include md/mesh/how-tos/check-control-plane-version.md %}
+{% include md/mesh/v3/how-tos/check-control-plane-version.md %}
 
 ## Start the zone clusters
 
@@ -204,9 +204,9 @@ export KONNECT_REGION='us'
 
 ## Connect zone-1
 
-{% include md/mesh/how-tos/give-zone-credentials.md %}
+{% include md/mesh/v3/how-tos/give-zone-credentials.md %}
 
-{% include md/mesh/how-tos/deploy-zone-control-plane.md platform="kubernetes" zone_proxies=true %}
+{% include md/mesh/v3/how-tos/deploy-zone-control-plane.md platform="kubernetes" zone_proxies=true %}
 
 ## Connect zone-2
 
@@ -281,13 +281,13 @@ Zone-2 gets its own system account and token, and its own values file with `zone
 
 ## Verify the zone connections
 
-{% include md/mesh/how-tos/verify-zone-connection.md %}
+{% include md/mesh/v3/how-tos/verify-zone-connection.md %}
 
 `zone-2` should also appear in the list with an **Online** status.
 
 ## Create a mesh and secure the test traffic
 
-{% include md/mesh/how-tos/create-mesh-and-permission.md %}
+{% include md/mesh/v3/how-tos/create-mesh-and-permission.md %}
 
 The permission you just applied covers zone-1 only.
 Apply the same permission in zone-2, where the `server` that the cross-zone request reaches runs:
@@ -441,7 +441,7 @@ For cross-zone mTLS to work, each zone must trust the other zone's CA.
 Run the following commands once in zone-1, which is the current context.
 Then switch with `kubectl config use-context $ZONE2_PROFILE` and run them again, so that both zones have a `client` and a `server`:
 
-{% include md/mesh/how-tos/deploy-test-applications.md %}
+{% include md/mesh/v3/how-tos/deploy-test-applications.md %}
 
 The client's `kuma.io/reachable-backends` annotation selects the `server` `MeshService` by its `kuma.io/display-name` and `k8s.kuma.io/namespace` labels.
 Those labels also match the `server` `MeshService` synced from the other zone, so the client gets an outbound for both.

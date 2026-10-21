@@ -65,20 +65,20 @@ This is a fresh installation, not an upgrade procedure. If the account doesn't o
 
 ## Create a global control plane in {{site.konnect_short_name}}
 
-{% include md/mesh/how-tos/create-global-control-plane.md %}
+{% include md/mesh/v3/how-tos/create-global-control-plane.md %}
 
 ## Give the zone credentials to connect
 
-{% include md/mesh/how-tos/give-zone-credentials.md %}
+{% include md/mesh/v3/how-tos/give-zone-credentials.md %}
 
 ## Check the global control plane version
 
-{% include md/mesh/how-tos/check-control-plane-version.md %}
+{% include md/mesh/v3/how-tos/check-control-plane-version.md %}
 
 ## Deploy the zone control plane
 
-{% include md/mesh/how-tos/deploy-zone-control-plane.md platform="universal" %}
+{% include md/mesh/v3/how-tos/deploy-zone-control-plane.md platform="universal" %}
 
 ## Verify the zone connection
 
-{% include md/mesh/how-tos/verify-zone-connection.md %}
+{% include md/mesh/v3/how-tos/verify-zone-connection.md %}

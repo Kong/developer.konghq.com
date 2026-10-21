@@ -111,24 +111,24 @@ Deploy the zone only once: use either the generated {{site.mesh_product_name}} 3
 
 ## Check the global control plane version
 
-{% include md/mesh/how-tos/check-control-plane-version.md %}
+{% include md/mesh/v3/how-tos/check-control-plane-version.md %}
 
 ## Deploy the zone control plane
 
-{% include md/mesh/how-tos/deploy-zone-control-plane.md platform="kubernetes" %}
+{% include md/mesh/v3/how-tos/deploy-zone-control-plane.md platform="kubernetes" %}
 
 ## Verify the zone connection
 
-{% include md/mesh/how-tos/verify-zone-connection.md %}
+{% include md/mesh/v3/how-tos/verify-zone-connection.md %}
 
 ## Create a mesh and secure the test traffic
 
-{% include md/mesh/how-tos/create-mesh-and-permission.md %}
+{% include md/mesh/v3/how-tos/create-mesh-and-permission.md %}
 
 ## Deploy the test applications
 
-{% include md/mesh/how-tos/deploy-test-applications.md %}
+{% include md/mesh/v3/how-tos/deploy-test-applications.md %}
 
 ## Verify an allowed and a denied call
 
-{% include md/mesh/how-tos/verify-allowed-and-denied-request.md %}
+{% include md/mesh/v3/how-tos/verify-allowed-and-denied-request.md %}
