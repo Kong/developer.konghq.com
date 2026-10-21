@@ -186,10 +186,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-## Headroom compressor service {% new_in 2.2 %}
-
-{:.warning}
-> This feature is in [Tech Preview](/stages-of-software-availability/#tech-preview) and should not be used in a production environment.
+## Headroom compressor service
 
 Before you use Headroom with the AI Prompt Compressor Policy, you need a Headroom instance accessible to your {{site.ai_gateway}}.
 
@@ -209,10 +206,6 @@ data:
   name: my-ai-prompt-compressor
   type: ai-prompt-compressor
   config:
-    compression_ranges:
-    - min_tokens: 20
-      max_tokens: 100
-      value: 0.8
     provider: headroom
     compressor_url: http://headroom-service:8787/v1/compress
     timeout: 45000
@@ -247,9 +240,18 @@ Headroom uses loopback-trust by default. It answers unauthenticated calls on `12
 
 ### Headroom prompt flow
 
-The AI Prompt Compressor Policy uses Headroom in a stateful mode and derives a session identifier for each conversation, based on the configured `config.headroom.session_id_headers`, an [AI Consumer](/ai-gateway/entities/ai-consumer/), or a `credential`. Headroom can recognize the turns it has already compressed for that conversation. Recognized turns are replayed unchanged instead of compressed again. This ensures the upstream LLM provider's cache hits on repeated turns. 
+The AI Prompt Compressor Policy uses Headroom in a stateful mode and derives a session identifier for each conversation, based on the configured `config.headroom.session_id_headers`, an [AI Consumer](/ai-gateway/entities/ai-consumer/), or a `credential`. Headroom can recognize the turns it has already compressed for that conversation. Recognized turns are replayed unchanged instead of compressed again. This ensures the upstream LLM provider's cache hits on repeated turns.
 
 If a session identifier isn't present, then every client that opens with the same prompt shares one session state on the Headroom side. If sessions collide, then only one will hit the upstream cache.
+
+Headroom compresses in one of two modes, set with `config.headroom.mode`. 
+The default, `lossy`, drops what Headroom deems redundant, without a way to recover it. 
+`ccr` ensures the original content is retrievable.
+If the model needs to retrieve it, {{site.ai_gateway}} resolves that retrieval against the provider on the model's behalf. 
+Use `lossy` unless something downstream of the model depends on exact tool output or conversation history that was compressed away, since `ccr` adds a round trip and has narrower provider support.
+
+{% navtabs "headroom-prompt-flow" %}
+{% navtab "Lossy" %}
 
 1. {{site.ai_gateway}} sends the user or agent's request to the AI Prompt Compressor.
 2. The AI Prompt Compressor builds a messages array from the whole conversation.
@@ -259,7 +261,7 @@ If a session identifier isn't present, then every client that opens with the sam
 
 If the call to Headroom fails, the AI Prompt Compressor rejects the request by default. For details, see [Failure behavior](#failure-handling).
 
-The following diagram illustrates how the AI Prompt Compressor Policy processes and compresses incoming prompts using Headroom:
+The following diagram illustrates how the AI Prompt Compressor Policy processes and compresses incoming prompts using Headroom in `lossy` mode:
 
 <!-- vale off -->
 {% mermaid %}
@@ -292,11 +294,55 @@ sequenceDiagram
 {% endmermaid %}
 <!-- vale on -->
 
+{% endnavtab %}
+{% navtab "Reversible (`ccr`)" %}
+
+Set `config.headroom.mode` to `ccr` when something downstream of the model needs to retrieve the content Headroom compressed away.
+In this mode, Headroom marks the content it compressed and adds a `headroom_retrieve` tool to the request instead of dropping that content. 
+If the model calls that tool, the AI Prompt Compressor Policy resolves the retrieval against the provider itself and returns only the final answer. 
+The client never sees the `headroom_retrieve` tool call.
+`ccr` requires Headroom v0.38.0 or later.
+
+`ccr` costs more than `lossy` compression in exchange for that reversibility.
+Each retrieval the model asks for is an extra round trip to the provider. That round trip is metered the same as any other provider call, in token analytics, cost, and rate limiting.
+
+
+The following diagram illustrates how the AI Prompt Compressor Policy resolves a retrieval in `ccr` mode:
+
+<!-- vale off -->
+{% mermaid %}
+sequenceDiagram
+    actor User as User/Agent
+    participant KongAICompressor as AI Prompt Compressor Policy
+    participant Headroom
+    participant LLM as LLM Provider
+
+    User->>KongAICompressor: Sends request
+    activate KongAICompressor
+    KongAICompressor->>Headroom: POST /v1/compress with messages and session ID
+    Headroom-->>KongAICompressor: Return compressed messages, headroom_retrieve tool, and metadata
+    KongAICompressor->>LLM: Send compressed messages and headroom_retrieve tool
+    LLM-->>KongAICompressor: Calls headroom_retrieve for a compressed turn
+
+    KongAICompressor->>LLM: Re-sends request with the original turn restored
+    LLM-->>KongAICompressor: Return final answer
+    KongAICompressor-->>User: Return final answer only
+    deactivate KongAICompressor
+{% endmermaid %}
+<!-- vale on -->
+
+Headroom's `HEADROOM_GATEWAY_TURN_TTL_SECONDS` setting (120 seconds by default) must be longer than the slowest provider response the route serves. If a retrieval takes longer than that, Headroom drops the turn, and the model's request for the original content fails with an error instead of returning it.
+
+{% endnavtab %}
+{% endnavtabs %}
+
 ### Failure handling
 
 By default, if the call to Headroom fails, times out, or returns an error, the Policy returns an HTTP `500` to the client rather than forwarding the request uncompressed.
 
 A `503` response indicating a compression timeout is retried automatically before the Policy gives up; every other non-`200` response (for example a `400` from a bad configuration, or a `401` from a missing or incorrect bearer token) fails immediately.
+
+A call to Headroom that reuses a pooled connection Headroom has already closed is sent again on a new connection instead of failing the request.
 
 ### Limitations
 
@@ -304,6 +350,10 @@ A `503` response indicating a compression timeout is retried automatically befor
 - Headroom sessions are held in memory on a single Headroom process. You must point every data plane node at its own sidecar, or all of them at one shared instance. Never point an {{site.ai_gateway}} data plane at a load-balanced set of Headroom instances, since a session's turns must all reach the same process.
 - No MCP tool-response compression: only the LLM request path is supported.
 - Only requests with a `messages` or `input` conversation array are sent to Headroom. Other formats are forwarded uncompressed.
+- A native Bedrock Converse request is skipped, with a warning, regardless of mode. Headroom can't read Converse's content blocks.
+- `ccr` mode doesn't support the OpenAI Responses API. A request in that format on a `ccr` route is compressed as `lossy` instead.
+- For a streaming client in `ccr` mode, the AI Prompt Compressor Policy returns HTTP `200` and sends ping events once the request is 5 seconds old, before the provider has answered. If the provider then returns an error, the client receives it as an SSE `error` event rather than an HTTP error status, which changes how the client should retry.
+- `ccr` only works where the AI Prompt Compressor Policy can read the provider's answer in the format Headroom compressed: Anthropic Messages requests to Claude (direct, or through Bedrock, Vertex, Azure, or Databricks), and OpenAI chat requests to OpenAI or Azure OpenAI. A request on a `ccr` route that doesn't match one of these is compressed `lossy` instead, with no extra configuration needed.
 
 ## Prompt compression metrics
 
