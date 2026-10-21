@@ -1,154 +1,139 @@
 ---
 name: release-changelog
-description: Use this skill when the user runs "/release-changelog", asks to "generate a release changelog", "write release PR description", "build preview links for release", or wants to summarize all docs changed in a release PR as a grouped list of links.
-version: 1.2.0
+description: Use this skill when the user runs "/release-changelog", asks to "generate a release changelog", "write release PR description", "build preview links for release", or wants to summarize all docs changed in a release PR as a grouped list of links. Supports Kong Gateway (default) and Event Gateway, and is extensible to other products.
+version: 2.0.0
 ---
 
 # Release Changelog Skill
 
-Generates a grouped, formatted changelog of new and updated docs for a Kong Gateway release. New docs are listed as-is; updated docs include a description of *what changed*, derived from the git diff. Saves to `docs/release-changelog/{VERSION}.md`.
+Generates a grouped, formatted changelog of new and updated docs for a product release. New docs are listed as-is. Updated docs include a description of *what changed*, derived from the git diff.
+
+The generic workflow lives in this file. Everything product-specific (path filters, URL rules, grouping, special pages, output filename) lives in a product profile under `products/`.
 
 ## Invocation
 
 ```
-/release-changelog <VERSION> [BASE_BRANCH]
+/release-changelog [PRODUCT] <VERSION> [BASE_BRANCH]
 ```
 
-- `VERSION` — release version number (e.g. `3.14`). Used as the filename when saving.
-- `BASE_BRANCH` — branch to diff from (default: `main`).
+- `PRODUCT`: product profile name. Optional. Defaults to `gateway`. Available profiles:
+  - `gateway`: Kong Gateway, see [products/gateway.md](products/gateway.md)
+  - `event-gateway`: Kong Event Gateway, see [products/event-gateway.md](products/event-gateway.md)
+- `VERSION`: release version number (e.g. `3.14`, `1.3`). Used in the output filename and heading.
+- `BASE_BRANCH`: branch to diff from. Defaults to `main`.
+
+Parsing: if the first argument matches a version number (digits and dots), treat it as `VERSION` and use `PRODUCT=gateway`. Otherwise the first argument is `PRODUCT`. If the user does not name a product, infer it from the current branch name (`event-gateway` in the branch means `event-gateway`) and say which profile you picked. If the product has no profile, tell the user and offer to create one (see "Adding a product").
 
 ## Step-by-Step Instructions
 
-### 1. Check current branch
+### 1. Load the product profile
+
+Read `products/{PRODUCT}.md`. It defines: path filters, URL derivation rules, grouping, special pages, auto-generated references, and the output filename. Use those values wherever the steps below say "per the profile".
+
+### 2. Check current branch
 
 Run:
 ```bash
 git branch --show-current
 ```
 
-If the branch name does not look like a release branch (e.g. `release/3.14`, `release-3.14`, `feat/3.14-docs`, or similar), warn the user:
+If the branch name does not look like a release branch for this product (e.g. `release/3.14`, `release/event-gateway-1.3`, `feat/3.14-docs`), warn the user:
 
-> Warning: current branch is `{branch}` — this may not be the release branch. The changelog will reflect all differences from `main` on this branch. Continue anyway or switch branches first.
+> Warning: current branch is `{branch}`. This may not be the release branch. The changelog will reflect all differences from `{BASE}` on this branch. Continue anyway or switch branches first.
 
 Then proceed.
 
-### 2. Get new vs updated files
+### 3. Get new vs updated files
 
-Run both of these. Capture both `.md` page files and `.yaml` example files, excluding `_includes` and `assets`:
+Diff against the merge base, not the tip of the base branch. Use the three-dot form so that docs merged to the base branch after this branch was cut do not show up as reverse changes:
 
 ```bash
+BASE=origin/main   # or origin/{BASE_BRANCH}
+
 # Newly added files
-git diff origin/main --name-only --diff-filter=A \
-  | grep '^app/' \
-  | grep -v '^app/_includes/' \
-  | grep -v '^app/assets/' \
-  | grep -E '\.(md|yaml)$'
+git diff $BASE...HEAD --name-only --diff-filter=A
 
 # Modified existing files
-git diff origin/main --name-only --diff-filter=M \
-  | grep '^app/' \
-  | grep -v '^app/_includes/' \
-  | grep -v '^app/assets/' \
-  | grep -E '\.(md|yaml)$'
+git diff $BASE...HEAD --name-only --diff-filter=M
 ```
 
-If the user specified a different base branch, replace `origin/main` accordingly.
+Pipe each through the path filters from the profile. All profiles share these baseline exclusions: drop `app/_includes/` and `app/assets/`, and keep only `.md`, `.yaml`, and `.yml` files under `app/`. Do not include tests, tooling, workflows, or Ruby plugin code even if they changed.
 
-If both return nothing, fall back to `git diff HEAD~1 --name-only` with the same filters.
+If both lists are empty, fall back to `git diff HEAD~1 --name-only` with the same filters.
 
-Keep the two lists separate — added files go under `## New docs`, modified files go under `## Updated docs`.
+Keep the two lists separate. Added files go under `## New docs`, modified files go under `## Updated docs`.
 
-### 3. For each MODIFIED file — read the diff to understand what changed
+Renamed files: run `git diff $BASE...HEAD --name-status -M` once. Treat a rename as an update to the new path, and mention the rename in the annotation.
+
+### 4. For each MODIFIED file, read the diff to understand what changed
 
 This is the most important step for updated files. For each modified page file, run:
 
 ```bash
-git diff origin/main -- <file>
+git diff $BASE...HEAD -- <file>
 ```
 
 From the diff output, extract:
-- **New headings**: lines matching `^\+#{1,4}\s+` — these are new sections added to the page
-- **Removed headings**: lines matching `^\-#{1,4}\s+` — sections removed
-- **Significant new content blocks**: large additions that indicate a new feature, example, or reference was documented
-- **Frontmatter changes**: if `title` changed, note the rename
+- **New headings**: lines matching `^\+#{1,4}\s+`. These are new sections added to the page.
+- **Removed headings**: lines matching `^\-#{1,4}\s+`. Sections removed.
+- **Significant new content blocks**: large additions that indicate a new feature, example, or reference was documented.
+- **Frontmatter changes**: if `title` changed, note the rename.
 
 Use this to write a short, specific annotation for the link, e.g.:
-- `— new section: Conditional plugin execution`
-- `— new section: AI Plugin Partials`
-- `— new examples: token exchange`
-- `— updated: supported algorithms list (SHA1 removed)`
-- `— new section: ACL evaluation logic`
+- `: new section: Conditional plugin execution`
+- `: new examples: token exchange`
+- `: updated: supported algorithms list (SHA1 removed)`
 
-**The annotation should describe the feature, not the file change.** "New section: Conditional plugin execution" is good. "File updated" is useless.
+**The annotation describes the feature, not the file change.** "New section: Conditional plugin execution" is good. "File updated" is useless.
 
-If the diff is large and adds multiple distinct things, list them:
-- `— new sections: Token Exchange, Consumer Claims`
+If the diff adds multiple distinct things, list them: `: new sections: Token Exchange, Consumer Claims`.
 
-If the diff is noise (e.g. only whitespace, formatting, or frontmatter version bumps), skip annotation or write `— minor updates`.
+If the diff is noise (whitespace, formatting, frontmatter version bumps), write `: minor updates`, or skip the entry entirely if it has no reader-visible effect.
 
-### 4. For ADDED files — no diff annotation needed
+### 5. For ADDED files, no diff annotation needed
 
-New files speak for themselves. List them with just the title and link, grouped by feature. Optionally add a one-line description from the frontmatter `description` field if it's useful context.
+New files speak for themselves. List them with just the title and link, grouped by feature. Optionally add a one-line description from the frontmatter `description` field if it adds useful context.
 
-### 5. Read metadata for each file
+### 6. Read metadata for each file
 
 **For `.md` page files**, read YAML frontmatter for:
-- `title` — link text
-- `permalink` — canonical URL path
-- `description` — optional context for new files
+- `title`: link text. Resolve Liquid variables such as `{{site.event_gateway}}` using the profile's product-name table.
+- `permalink`: canonical URL path
+- `description`: optional context for new files
 
-**For `.yaml` example files** (under `_kong_plugins/{plugin}/examples/`), read the top-level YAML fields directly (no frontmatter delimiters):
-- `title` — link text. If absent, derive from filename (replace hyphens with spaces, title-case)
-- URL is always derived from path: `app/_kong_plugins/{plugin}/examples/{name}.yaml` → `/plugins/{plugin}/examples/{name}/`
+**For example `.yaml`/`.yml` files**, read the top-level YAML fields directly (no frontmatter delimiters):
+- `title`: link text. If absent, derive from the filename (replace hyphens with spaces, title-case).
+- URL is derived from the path per the profile.
 
-If `permalink` is missing, derive from path:
-- `app/_how-tos/*/foo.md` → `/how-to/foo/`
-- `app/_kong_plugins/foo/index.md` → `/plugins/foo/`
-- `app/_kong_plugins/foo/examples/bar.md` → `/plugins/foo/examples/bar/`
-- `app/_gateway_entities/foo.md` → `/gateway/entities/foo/`
-- `app/gateway/foo.md` → `/gateway/foo/`
-- `app/ai-gateway/foo.md` → `/ai-gateway/foo/`
-- `app/mesh/foo.md` → `/mesh/foo/`
-- `app/kic/foo.md` → `/kic/foo/`
-- `app/_landing_pages/foo.yaml` → read `permalink` field inside the file
-- `app/_references/foo.md` → read `permalink` field
+If `permalink` is missing, derive the URL from the path using the profile's URL table. Always prefer an explicit `permalink` over a path-derived URL.
 
-### 6. Handle auto-generated reference files
+### 7. Handle auto-generated reference files
 
-Files under `app/_references/gateway/pdk/` or `app/_references/gateway/cli/` are auto-generated version bumps. Do not list them individually. Add a single line at the bottom of the output:
+Each profile lists auto-generated reference paths. Do not list those individually. Add a single line at the bottom of the output:
 
 ```
-_Auto-generated references updated: [Gateway CLI Reference](URL), [PDK Reference](URL)_
+_Auto-generated references updated: [Reference name](URL), [Reference name](URL)_
 ```
 
-### 7. Handle bulk include-driven changes
+### 8. Handle bulk include-driven changes
 
-If 5+ plugin `index.md` files were all modified and trace back to the same `_includes` partial change (e.g. all logging plugins changed when `log-custom-fields-by-lua.md` was modified), collapse them to a single inline list with a parenthetical note:
+If 5+ pages were all modified because of the same `_includes` partial change, collapse them into a single inline list with a parenthetical note:
 
 ```markdown
 **Logging plugins** (updated for custom log fields): [File Log](URL), [HTTP Log](URL), ...
 ```
 
-For other cases where a plugin index changed because of an include, still include the link but annotate with what the include change means to the reader, not the implementation detail.
+For smaller cases, still include the link but annotate with what the include change means to the reader, not the implementation detail.
 
-### 8. Construct live URLs
+### 9. Construct live URLs
 
 ```
 https://developer.konghq.com{permalink}
 ```
 
-### 9. Group the links
+### 10. Group the links
 
-Group by product/feature area. Use the feature or capability as the group name, not the file type.
-
-**Grouping rules:**
-- **AI Gateway** — `ai-gateway/` files, `_kong_plugins/ai-*/`, AI how-tos. Sub-group by feature (A2A, providers, guardrails, semantic, MCP, partials).
-- **Kong Gateway** — `gateway/` pages, entities, non-AI plugins, gateway how-tos
-- **OIDC plugin** — always under Kong Gateway, not AI Gateway. Files: `_kong_plugins/openid-connect/`, OIDC how-tos
-- **MCP** — MCP plugin docs and how-tos
-- **Observability** — `observability/` pages
-- **Konnect** — `catalog/`, Dev Portal, and Konnect-specific content
-- **Changes** — `gateway/breaking-changes*` always its own section at the end
+Group by feature area, using the grouping rules in the product profile. Use the feature or capability as the group name, not the file type.
 
 Nesting: if multiple files relate to the same feature, group under a named parent with sub-bullets:
 
@@ -158,14 +143,14 @@ Nesting: if multiple files relate to the same feature, group under a named paren
 * [How-to: Set up AI Proxy with Ollama](URL)
 ```
 
-### 10. Output format
+### 11. Output format
 
 ```markdown
-## New and updated docs for the [VERSION] release
+## New and updated docs for the {PRODUCT NAME} {VERSION} release
 
 ## New docs
 
-### [Product/Feature Area]
+### [Feature Area]
 
 **[Feature name]:**
 * [Link text](URL)
@@ -178,41 +163,43 @@ Nesting: if multiple files relate to the same feature, group under a named paren
 
 ## Updated docs
 
-### [Product/Feature Area]
+### [Feature Area]
 
 **[Feature name]:**
-* [Link text](URL) — new section: Feature Name
-* [Link text](URL) — updated: specific thing that changed
+* [Link text](URL): new section: Feature Name
+* [Link text](URL): updated: specific thing that changed
 
 ### [Another area]
-* [Link text](URL) — description of change
+* [Link text](URL): description of change
 
-_Auto-generated references updated: [Gateway CLI Reference](URL), [PDK Reference](URL)_
+_Auto-generated references updated: [Reference](URL)_
 
 ## Changes
 * [Breaking changes, deprecations, and known issues](URL)
 ```
 
 Rules:
-- `## New docs` — added files only
-- `## Updated docs` — modified files, each with a change annotation
-- `## Changes` — breaking changes page only, always last
-- Annotations use em dash: `— description`
-- Skip annotation only if the diff is pure noise (whitespace, version bumps)
+- `## New docs`: added files only.
+- `## Updated docs`: modified files, each with a change annotation.
+- `## Changes`: the product's breaking changes page, only if it changed, always last.
+- Do not use em dashes anywhere in the output, including in group headings. Write `### Event Gateway: Policies`. Annotations use a colon: `: description`.
+- Skip the annotation only if the diff is pure noise.
+- Omit any section that would be empty.
 
-### 11. Save the changelog
+### 12. Save the changelog
 
-Write output to `docs/release-changelog/{VERSION}.md`. Create the directory if needed.
+Write output to the path given by the profile (`docs/release-changelog/...`). Create the directory if needed.
 
-### 12. Handle missing context
+### 13. Handle missing context
 
 If the user pastes an existing PR description or list of PRs, use it to supplement grouping decisions and identify anchors to append to URLs.
 
+## Adding a product
+
+Copy [products/event-gateway.md](products/event-gateway.md) as a template, then fill in these sections: product name and Liquid variables, path filters, URL table, grouping rules, special pages, auto-generated references, output filename. Add the product to the list under "Invocation". To fill in the URL table, check real `permalink` values in the product's how-tos, references, and landing pages. Do not guess URL patterns.
+
 ## Notes
 
-- Always prefer frontmatter `permalink` over path-derived URLs
-- How-tos: `app/_how-tos/{product}/{name}.md` → `/how-to/{name}/` (product subdir is NOT in the URL)
-- Plugin examples: `app/_kong_plugins/{plugin}/examples/{name}.md` → `/plugins/{plugin}/examples/{name}/`
-- OIDC is a Kong Gateway plugin, not an AI Gateway plugin — always group it under Kong Gateway
-- Breaking changes go under `## Changes`, never under new or updated docs
-- Production base URL: `https://developer.konghq.com`
+- Always prefer frontmatter `permalink` over path-derived URLs.
+- Production base URL: `https://developer.konghq.com`.
+- Breaking changes go under `## Changes`, never under new or updated docs.
