@@ -176,10 +176,11 @@ spec:
     ```
     {: data-test-step="block" }
 
-1. Wait for the Gateway to be programmed:
+1. Wait for the Gateway and the route to be programmed:
 
     ```bash
     kubectl wait --for=condition=Programmed gateway/kong-tls-gateway -n kong --timeout=5m
+    kubectl wait --for=jsonpath='{.status.parents[0].conditions[?(@.type=="Programmed")].status}'=True httproute/echo-route -n kong --timeout=5m
     ```
     {: data-test-step="block" }
 
@@ -192,9 +193,14 @@ spec:
 
 1.  Test the connection:
 
-    ```bash
-    curl -ivk --resolve demo.example.com:443:$PROXY_IP https://demo.example.com/echo
-    ```
-    {: data-test-step="block" data-test-retry-count="6" }
+{% validation custom-command %}
+command: |
+  curl -ivk --resolve demo.example.com:443:$PROXY_IP https://demo.example.com/echo
+expected:
+  return_code: 0
+  message: 'HTTP/2 200'
+render_output: false
+indent: 4
+{% endvalidation %}
 
     You should get TLS handshake and a 200 response.

@@ -78,7 +78,7 @@ By default, {{site.base_gateway}} sets the `Host` header to the IP address of th
      }
    }
    ```
-{:.no-copy-code}
+   {:.no-copy-code}
 
 ## Annotate the Service
 

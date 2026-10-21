@@ -161,16 +161,20 @@ This configuration instructs {{ site.base_gateway }} to forward UDP traffic it r
 
    ```bash
    export PROXY_IP=$(kubectl get gateway kong-udp-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
-   echo $PROXY_IP
    ```
    {: data-test-step="block" }
 
 1. Send a TFTP request through the proxy:
 
-   ```bash
-   curl -s tftp://$PROXY_IP:9999/hello
-   ```
-   {: data-test-step="block" data-test-retry-count="6" }
+{% validation custom-command %}
+command: |
+  curl -s tftp://$PROXY_IP:9999/hello
+expected:
+  return_code: 0
+  message: 'Hostname:'
+render_output: false
+indent: 4
+{% endvalidation %}
 
    The results should look like this:
 

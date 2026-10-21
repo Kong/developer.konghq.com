@@ -103,18 +103,28 @@ All timeout values are in milliseconds.
 
 1. Send a request that completes within the read timeout. The `/delay/1` endpoint waits 1 second before responding:
 
-   ```bash
-   curl -s -o /dev/null -w "%{http_code}" $PROXY_IP/httpbin/delay/1
-   ```
-   {: data-test-step="block" }
+{% validation custom-command %}
+command: |
+  curl -s -o /dev/null -w "%{http_code}" $PROXY_IP/httpbin/delay/1
+expected:
+  return_code: 0
+  message: '200'
+render_output: false
+indent: 3
+{% endvalidation %}
 
    The response code should be `200`.
 
 1. Send a request that exceeds the read timeout. The `/delay/10` endpoint waits 10 seconds:
 
-   ```bash
-   curl -s -o /dev/null -w "%{http_code}" $PROXY_IP/httpbin/delay/10
-   ```
-   {: data-test-step="block" }
+{% validation custom-command %}
+command: |
+  curl -s -o /dev/null -w "%{http_code}" $PROXY_IP/httpbin/delay/10
+expected:
+  return_code: 0
+  message: '504'
+render_output: false
+indent: 3
+{% endvalidation %}
 
    The response code should be `504`, indicating that the upstream did not respond within the configured `read-timeout`.
