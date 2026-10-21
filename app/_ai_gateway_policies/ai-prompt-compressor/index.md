@@ -189,7 +189,7 @@ rows:
 ## Headroom compressor service {% new_in 2.2 %}
 
 {:.warning}
-> This feature is currently in [Tech Preview](/stages-of-software-availability/#tech-preview) and should not be used in a production environment.
+> This feature is in [Tech Preview](/stages-of-software-availability/#tech-preview) and should not be used in a production environment.
 
 Before you use Headroom with the AI Prompt Compressor Policy, you need a Headroom instance accessible to your {{site.ai_gateway}}.
 
@@ -305,9 +305,7 @@ A `503` response indicating a compression timeout is retried automatically befor
 - No MCP tool-response compression: only the LLM request path is supported.
 - Only requests with a `messages` or `input` conversation array are sent to Headroom. Other formats are forwarded uncompressed.
 
-## Prompt compression metrics {% new_in 2.3 %}
-
-<!-- TODO: Source is the draft PRD for AI-229 / AG-1959 and kong-ee PR #23465. The header names, log fields, and counter are verified against the PR. Verify every Explorer metric and dimension name below in Konnect Explorer before merging, since the PR defines only the ingest payload. -->
+## Prompt compression metrics
 
 When a request passes through the AI Prompt Compressor Policy, {{site.ai_gateway}} reports the compression result to [Konnect Analytics](/observability/explorer/). You can use these metrics to measure how many tokens compression saves and how long it takes.
 

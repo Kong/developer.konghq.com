@@ -49,7 +49,7 @@ Each {{site.ai_gateway}} Policy returns a set of tokens. Log entries include the
 {{site.ai_gateway}} logs capture detailed information about the request and response payloads, token usage, model details, latency, and cost metrics. They provide a comprehensive view of each AI interaction.
 
 {:.warning}
-> Logs and metrics for cost and token usage via the [OpenAI Files API](https://developers.openai.com/api/reference/resources/files/methods/list) are not currently supported.
+> Logs and metrics for cost and token usage via the [OpenAI Files API](https://developers.openai.com/api/reference/resources/files/methods/list) aren't supported.
 
 {% table %}
 columns:
@@ -83,14 +83,14 @@ rows:
   - property: "`ai.proxy.usage.input_tokens`"
     description: |
       The total number of input tokens (text + image + audio).
-      Used for non-text requests (e.g., image or audio generation).
+      Used for non-text requests (for example, image or audio generation).
   - property: "`ai.proxy.usage.input_tokens_details`"
     description: |
       A breakdown of input tokens by modality (`text_tokens`, `image_tokens`, `audio_tokens_count`).
   - property: "`ai.proxy.usage.output_tokens`"
     description: |
       The total number of output tokens (text + audio).
-      Used for non-text responses (e.g., image or audio generation).
+      Used for non-text responses (for example, image or audio generation).
   - property: "`ai.proxy.usage.output_tokens_details`"
     description: |
       A breakdown of output tokens by modality (`text_tokens`, `audio_tokens`).
@@ -476,7 +476,7 @@ rows:
 
 When the [AI Prompt Compressor Policy](/ai-gateway/policies/ai-prompt-compressor/) is enabled, additional logs record token counts before and after compression, the number of compressed messages, the compression time, and metadata about the compression method and model used.
 
-The following fields summarize the compression for the whole request {% new_in 2.3 %}:
+The following fields summarize the compression for the whole request:
 
 {% table %}
 columns:

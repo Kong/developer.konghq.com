@@ -34,7 +34,7 @@ works_on:
 
 In addition to LLM usage, {{site.ai_gateway}} can also log MCP server traffic. [MCP logging](/ai-gateway/entities/ai-mcp-server/#logging-and-audits) provides visibility into latency, response sizes, and error rates when AI Policies invoke external MCP tools and servers.
 
-{% new_in 2.3 %} If you use the [AI Prompt Compressor Policy](/ai-gateway/policies/ai-prompt-compressor/), compression results are also reported to Konnect Analytics. See [Prompt compression metrics](/ai-gateway/policies/ai-prompt-compressor/#prompt-compression-metrics) for the available metrics and response headers.
+If you use the [AI Prompt Compressor Policy](/ai-gateway/policies/ai-prompt-compressor/), compression results are also reported to Konnect Analytics. See [Prompt compression metrics](/ai-gateway/policies/ai-prompt-compressor/#prompt-compression-metrics) for the available metrics and response headers.
 
 Create a [Prometheus Policy](/ai-gateway/policies/prometheus/) to expose metrics in a [Prometheus](https://prometheus.io/docs/introduction/overview/) exposition format, which can be scraped by a Prometheus server.
 
