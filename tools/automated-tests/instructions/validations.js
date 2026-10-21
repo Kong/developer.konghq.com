@@ -32,6 +32,7 @@ import {
   checkKubernetesResourceCondition,
   compareKubernetesResourceProperty,
 } from "./kubernetes-commands.js";
+import { expectedHeaderChecks } from "./expected-headers.js";
 
 const log = debug("tests:runner");
 const __filename = fileURLToPath(import.meta.url);
@@ -430,12 +431,7 @@ async function rateLimit(validationName, config, runtimeConfig, container) {
           message: `Expected: request ${requestNumber} to have status code ${expectedStatus}, got: ${response.status}.`,
         }),
         ...(config.expected_headers
-          ? config.expected_headers.map((header) => (response) => ({
-              assert: response.headers.has(header),
-              message: `Expected: request ${requestNumber} to have header '${header}', got: '${response.headers.get(
-                header,
-              )}'.`,
-            }))
+          ? expectedHeaderChecks(config.expected_headers, `request ${requestNumber}`)
           : []),
         ...(requestNumber === config.iterations
           ? [
@@ -484,6 +480,7 @@ async function requestCheck(validationName, config, runtimeConfig, container) {
           message: `Expected: request ${config.url} to have status code ${statusCode}, got: ${response.status}.`,
         };
       },
+      ...expectedHeaderChecks(config.expected_headers, `request to ${config.url}`),
     ],
     statusCode,
   );
