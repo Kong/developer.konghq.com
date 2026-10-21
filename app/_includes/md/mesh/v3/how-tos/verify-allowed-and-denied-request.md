@@ -8,14 +8,16 @@
 
    ```sh
    kongctl get mesh meshservices --mesh konnect-demo \
-     --control-plane-id "$CONTROL_PLANE_ID" --region "$KONNECT_REGION"
+     --control-plane-id "$CONTROL_PLANE_ID" --region "$KONNECT_REGION" \
+     --pat "$KONNECT_TOKEN"
    ```
 
 1. Confirm the workload identities in the proxy inspection output:
 
    ```sh
    kongctl get mesh inspect dataplanes --mesh konnect-demo \
-     --control-plane-id "$CONTROL_PLANE_ID" --region "$KONNECT_REGION"
+     --control-plane-id "$CONTROL_PLANE_ID" --region "$KONNECT_REGION" \
+     --pat "$KONNECT_TOKEN"
    ```
 
 1. Send a request from the client to the server:
@@ -25,19 +27,13 @@
      curl --fail --max-time 10 http://server.kong-mesh-demo.svc.cluster.local/
    ```
 
-   Expect the nginx welcome page. The request originates in the meshed client, so it exercises
-   the client-to-server mesh connection rather than a port-forward that bypasses it.
+   You should get the nginx welcome page.
 
-1. For a negative check, change only the client's ServiceAccount to `default`:
+1. For a negative check, change the client's ServiceAccount to `default` and wait for the replacement Pod:
 
    ```sh
    kubectl -n kong-mesh-demo patch deployment client --type=merge \
      -p '{"spec":{"template":{"spec":{"serviceAccountName":"default"}}}}'
-   ```
-
-1. Wait for the replacement Pod:
-
-   ```sh
    kubectl -n kong-mesh-demo rollout status deployment/client --timeout=180s
    ```
 
@@ -48,20 +44,13 @@
      curl --fail --max-time 10 http://server.kong-mesh-demo.svc.cluster.local/
    ```
 
-   This caller's identity ends in `/sa/default`, which the permission does not allow. The request
-   must fail. Check the new caller identity and destination authorization diagnostics so an
-   unrelated connection failure is not mistaken for a successful permission test.
+   The request fails, because the permission doesn't allow the `/sa/default` identity.
 
-1. Restore the allowed identity:
+1. Restore the allowed identity and wait for the replacement Pod:
 
    ```sh
    kubectl -n kong-mesh-demo patch deployment client --type=merge \
      -p '{"spec":{"template":{"spec":{"serviceAccountName":"client"}}}}'
-   ```
-
-1. Wait for the replacement Pod:
-
-   ```sh
    kubectl -n kong-mesh-demo rollout status deployment/client --timeout=180s
    ```
 
@@ -72,6 +61,4 @@
      curl --fail --max-time 10 http://server.kong-mesh-demo.svc.cluster.local/
    ```
 
-Use the [MeshTrafficPermission reference](/mesh/policies/meshtrafficpermission/) if the observed
-result differs. Before adding cross-zone or external-service traffic, configure the appropriate
-[mesh-scoped zone proxies](/mesh/mesh-scoped-zone-proxies/).
+If the results differ, see the [MeshTrafficPermission reference](/mesh/policies/meshtrafficpermission/).

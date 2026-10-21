@@ -1,20 +1,16 @@
-1. Log in to your {{site.konnect_short_name}} organization with kongctl:
-
-   ```sh
-   kongctl login
-   ```
-
+{%- assign kubectl_context = '' -%}{%- if include.kube_context %}{% assign kubectl_context = ' --context ' | append: include.kube_context %}{% endif -%}
 1. Confirm that `kongctl` can reach the global control plane:
 
    ```sh
-   kongctl get mesh resource-types --control-plane-id "$CONTROL_PLANE_ID" --region "$KONNECT_REGION"
+   kongctl get mesh resource-types --control-plane-id "$CONTROL_PLANE_ID" --region "$KONNECT_REGION" \
+     --pat "$KONNECT_TOKEN"
    ```
 
 1. Create a new `konnect-demo` mesh and a demo identity provider on the global control plane:
 
    ```sh
    cat <<'EOF' | kongctl apply mesh -f - --control-plane-id "$CONTROL_PLANE_ID" \
-     --base-url "https://$KONNECT_REGION.api.konghq.com"
+     --base-url "https://$KONNECT_REGION.api.konghq.com" --pat "$KONNECT_TOKEN"
    type: Mesh
    name: konnect-demo
    ---
@@ -44,21 +40,23 @@
 
    ```sh
    kongctl get mesh meshidentities demo-identity --mesh konnect-demo -o yaml \
-     --control-plane-id "$CONTROL_PLANE_ID" --region "$KONNECT_REGION"
+     --control-plane-id "$CONTROL_PLANE_ID" --region "$KONNECT_REGION" \
+     --pat "$KONNECT_TOKEN"
    kongctl get mesh meshtrusts --mesh konnect-demo \
-     --control-plane-id "$CONTROL_PLANE_ID" --region "$KONNECT_REGION"
+     --control-plane-id "$CONTROL_PLANE_ID" --region "$KONNECT_REGION" \
+     --pat "$KONNECT_TOKEN"
    ```
 
 1. Confirm that the new mesh has synced to the Kubernetes zone:
 
    ```sh
-   kubectl get mesh konnect-demo
+   kubectl{{ kubectl_context }} get mesh konnect-demo
    ```
 
 1. Apply a [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) to the zone to allow the `client` ServiceAccount to call the `server` workload:
 
    ```sh
-   cat <<'EOF' | kubectl apply -f -
+   cat <<'EOF' | kubectl{{ kubectl_context }} apply -f -
    apiVersion: kuma.io/v1alpha1
    kind: MeshTrafficPermission
    metadata:

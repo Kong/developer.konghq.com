@@ -32,9 +32,6 @@ prereqs:
     - title: kubectl and Helm
       content: |
         A Kubernetes cluster and Helm.
-    - title: Network access
-      content: |
-        Confirm your zone's network allows outbound access on port 443 to its regional {{site.konnect_short_name}} KDS endpoint, `$KONNECT_REGION.mesh.sync.konghq.com`.
 related_resources:
 - text: Installation options
   url: "/mesh/konnect/"
@@ -44,8 +41,6 @@ cleanup:
   inline:
     - title: Remove the zone and destroy the control plane
       content: |
-        Remove the zone traffic permission, the test workloads, and the zone installed by Helm before destroying its global control plane.
-
         Delete the zone traffic permission:
 
         ```sh
@@ -64,6 +59,12 @@ cleanup:
         helm uninstall kong-mesh --namespace kong-mesh-system
         ```
 
+        Delete the zone namespace and the `cp-token` Secret in it:
+
+        ```sh
+        kubectl delete namespace kong-mesh-system
+        ```
+
         Change to the Terraform working directory:
 
         ```sh
@@ -76,40 +77,31 @@ cleanup:
         terraform plan -destroy
         ```
 
-        Destroy the global control plane:
+        Destroy the global control plane. This also removes its mesh configuration:
 
         ```sh
         terraform destroy
         ```
 
-        Destroying the global control plane also removes its mesh configuration, including resources
-        created with `kongctl`. Revoke the zone token and delete its system account through {{site.konnect_short_name}}.
-        Delete the `cp-token` Secret and `kong-mesh-system` namespace only if they were created solely
-        for this test. Remove local credential files after reviewing their contents and ownership.
+        Delete the `mesh-zone-1` system account:
+
+        ```sh
+        curl --fail-with-body -sS -X DELETE \
+          "https://global.api.konghq.com/v3/system-accounts/$ACCOUNT_ID" \
+          -H "Authorization: Bearer $KONNECT_TOKEN"
+        ```
 min_version:
   mesh: '3.0'
 ---
 
-This guide uses Terraform to create a **new {{site.mesh_product_name}} 3.x global control plane** in {{site.konnect_short_name}}. It then
-uses the {{site.konnect_short_name}} API for zone credentials, Helm to install a Kubernetes zone, `kongctl`
-to create the mesh on the global control plane, and `kubectl` to apply its traffic permission
-to the zone. Terraform owns only the global control plane in this example; the remaining
-resources have explicit setup and cleanup steps.
-
-Unlike the 2.x example, this guide doesn't configure `Mesh.mtls`, an allow-all `from` policy, or shared
-zone ingress and egress. Workload security uses `MeshIdentity` and identity-based permissions.
+This guide uses Terraform to create a {{site.mesh_product_name}} 3.x global control plane in {{site.konnect_short_name}}, then connects a Kubernetes zone and verifies identity-based traffic permissions.
 
 ## Create the global control plane
 
-Create a dedicated working directory:
+Create a working directory and change to it:
 
 ```sh
 export MESH_TERRAFORM_DIR=$(mktemp -d)
-```
-
-Change to the working directory:
-
-```sh
 cd "$MESH_TERRAFORM_DIR"
 ```
 
@@ -160,8 +152,7 @@ output "control_plane_id" {
 ```
 
 The [provider's control plane resource](https://registry.terraform.io/providers/kong/konnect-beta/0.22.0/docs/resources/mesh_control_plane)
-defaults to `v2`. Keep `version = "v3"` explicit. This setting isn't a substitute for the
-migration procedure when managing an existing control plane.
+defaults to `v2`, so set `version = "v3"` explicitly.
 
 Initialize the working directory:
 
@@ -193,10 +184,6 @@ Protect Terraform state and don't commit credentials. Keep this directory for la
 
 {% include md/mesh/v3/how-tos/give-zone-credentials.md %}
 
-## Check the global control plane version
-
-{% include md/mesh/v3/how-tos/check-control-plane-version.md %}
-
 ## Deploy the zone control plane
 
 {% include md/mesh/v3/how-tos/deploy-zone-control-plane.md platform="kubernetes" %}
@@ -213,6 +200,6 @@ Protect Terraform state and don't commit credentials. Keep this directory for la
 
 {% include md/mesh/v3/how-tos/deploy-test-applications.md %}
 
-## Verify an allowed and a denied call
+## Validate
 
 {% include md/mesh/v3/how-tos/verify-allowed-and-denied-request.md %}

@@ -1,18 +1,28 @@
-Create a **new** control plane. Do not use this procedure to upgrade an existing deployment.
-The API defaults to v2, so specify `version: v3` explicitly.
-
-1. Create the control plane and export the returned `id` as `CONTROL_PLANE_ID`:
+1. Set the region where you will create the global control plane:
 
    ```sh
-   export CONTROL_PLANE_ID=$(curl --fail-with-body -sS -X POST \
-     "https://$KONNECT_REGION.api.konghq.com/v1/mesh/control-planes" \
-     -H "Authorization: Bearer $KONNECT_TOKEN" \
-     -H 'Content-Type: application/json' \
-     -d '{"name":"example-cp","version":"v3"}' | jq -r .id)
+   export KONNECT_REGION='us'
    ```
 
-1. Confirm that the variable contains the control plane ID:
+1. Create a {{site.mesh_product_name}} v3 control plane in {{site.konnect_short_name}} and save its ID to your environment:
 
-   ```sh
-   echo "$CONTROL_PLANE_ID"
-   ```
+   <!--vale off-->
+   {% konnect_api_request %}
+   url: /v1/mesh/control-planes
+   region: $KONNECT_REGION
+   status_code: 201 
+   method: POST
+   headers:
+     - 'Content-Type: application/json'
+   body:
+     name: example-cp
+     version: v3
+   extract_body:
+     - name: id
+       variable: CONTROL_PLANE_ID
+   capture:
+     - variable: CONTROL_PLANE_ID
+       jq: ".id"
+   indent: 3
+   {% endkonnect_api_request %}
+   <!--vale on-->

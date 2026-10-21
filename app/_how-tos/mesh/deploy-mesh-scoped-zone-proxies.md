@@ -1,6 +1,6 @@
 ---
 title: 'Deploy mesh-scoped zone proxies'
-description: 'Deploy {{site.mesh_product_name}} zone ingress and zone egress with per-mesh Helm values in two Kubernetes zones connected to a {{site.konnect_short_name}} global control plane. Each entry in `kuma.meshes[]` creates the Deployment, Service, and Dataplane listeners for one mesh.'
+description: 'Deploy {{site.mesh_product_name}} zone ingress and zone egress with per-mesh Helm values in two Kubernetes zones connected to a {{site.konnect_short_name}} global control plane.'
 content_type: how_to
 permalink: /mesh/zone-proxies/
 breadcrumbs:
@@ -29,9 +29,6 @@ tools:
 tags:
   - service-mesh
 
-series:
-  id: mesh-scoped-zone-proxy
-  position: 1
 tldr:
   q: How do I deploy mesh-scoped zone ingress and zone egress with per-mesh Helm values?
   a: |
@@ -97,16 +94,21 @@ faqs:
       kubectl --context $ZONE1_PROFILE -n kong-mesh-system get dataplanes
       ```
 
+  - q: "What do I do if Docker Desktop fails with `failed complete: too many open files` while starting a minikube profile?"
+    a: |
+      Raise the inotify limits in the Docker Desktop VM:
+
+      ```sh
+      docker run --rm --privileged alpine \
+        sysctl -w fs.inotify.max_user_instances=8192 fs.inotify.max_user_watches=524288
+      ```
+
+      Then restart the affected profile.
+
 prereqs:
   inline:
     - title: Helm
       include_content: prereqs/helm
-    - title: Docker, kubectl, and minikube
-      content: |
-        This guide requires [Docker](https://docs.docker.com/get-docker/), [`kubectl`](https://kubernetes.io/docs/tasks/tools/), and [minikube](https://minikube.sigs.k8s.io/docs/start/) with the Docker driver to run two local Kubernetes clusters, one for each zone.
-    - title: Network access
-      content: |
-        Confirm the minikube nodes have outbound access on port 443 to your regional {{site.konnect_short_name}} KDS endpoint, `$KONNECT_REGION.mesh.sync.konghq.com`.
 
 cleanup:
   inline:
@@ -129,31 +131,38 @@ cleanup:
         ```sh
         docker network rm guide-mz-net
         ```
-    - title: Delete the {{site.konnect_short_name}} control plane
+    - title: Delete the {{site.konnect_short_name}} resources
       content: |
-        In {{site.konnect_short_name}}, delete the `example-cp` control plane created for this guide. Deleting the control plane also removes its mesh configuration. Revoke the zone tokens and delete the `mesh-zone-1` and `mesh-zone-2` system accounts. Review the files in `MESH_INSTALL_DIR` and remove the credentials when no longer needed.
+        Delete the `example-cp` control plane. This also removes its mesh configuration:
+
+        ```sh
+        curl --fail-with-body -sS -X DELETE \
+          "https://$KONNECT_REGION.api.konghq.com/v1/mesh/control-planes/$CONTROL_PLANE_ID" \
+          -H "Authorization: Bearer $KONNECT_TOKEN"
+        ```
+
+        Delete the `mesh-zone-1` system account:
+
+        ```sh
+        curl --fail-with-body -sS -X DELETE \
+          "https://global.api.konghq.com/v3/system-accounts/$ACCOUNT_ID" \
+          -H "Authorization: Bearer $KONNECT_TOKEN"
+        ```
+
+        Delete the `mesh-zone-2` system account:
+
+        ```sh
+        curl --fail-with-body -sS -X DELETE \
+          "https://global.api.konghq.com/v3/system-accounts/$ZONE2_ACCOUNT_ID" \
+          -H "Authorization: Bearer $KONNECT_TOKEN"
+        ```
 ---
 
-Zone ingresses and zone egresses are mesh-scoped.
-Declare them in your zone control plane values under `kuma.meshes[]`.
-Each entry creates a Deployment, Service, and Dataplane for that mesh, and the zone proxies carry per-mesh workload identities so policies can target them directly.
-
 This guide connects two Kubernetes zones to a {{site.konnect_short_name}}-managed global control plane, then deploys a zone ingress and zone egress in each zone through `kuma.meshes[]`.
-It uses the minikube Docker driver and one shared Docker bridge so the two zones can reach each other's zone ingress directly through `NodePort` Services.
-
-Set the region where you will create the global control plane:
-
-```sh
-export KONNECT_REGION='us'
-```
 
 ## Create a global control plane in {{site.konnect_short_name}}
 
 {% include md/mesh/v3/how-tos/create-global-control-plane.md %}
-
-## Check the global control plane version
-
-{% include md/mesh/v3/how-tos/check-control-plane-version.md %}
 
 ## Start the zone clusters
 
@@ -174,16 +183,6 @@ export KONNECT_REGION='us'
      docker network create --driver bridge --subnet 192.168.240.0/24 $MZ_NETWORK
    ```
 
-   {:.info}
-   > If Docker Desktop fails with `failed complete: too many open files` while starting a profile, run:
-   >
-   > ```sh
-   > docker run --rm --privileged alpine \
-   >   sysctl -w fs.inotify.max_user_instances=8192 fs.inotify.max_user_watches=524288
-   > ```
-   >
-   > Then restart the affected profile.
-
 1. Start the zone-1 minikube cluster on the shared Docker bridge:
 
    ```sh
@@ -196,131 +195,53 @@ export KONNECT_REGION='us'
    minikube start -p $ZONE2_PROFILE --driver=docker --network=$MZ_NETWORK --static-ip=$ZONE2_IP
    ```
 
-1. Point `kubectl` at zone-1. The following zone-1 steps use the current context:
-
-   ```sh
-   kubectl config use-context $ZONE1_PROFILE
-   ```
-
 ## Connect zone-1
 
 {% include md/mesh/v3/how-tos/give-zone-credentials.md %}
 
-{% include md/mesh/v3/how-tos/deploy-zone-control-plane.md platform="kubernetes" zone_proxies=true %}
+{% include md/mesh/v3/how-tos/deploy-zone-control-plane.md platform="kubernetes" kube_context="$ZONE1_PROFILE" zone_proxies=true %}
 
 ## Connect zone-2
 
-Zone-2 gets its own system account and token, and its own values file with `zone: zone-2`.
+{% include md/mesh/v3/how-tos/give-zone-credentials.md zone="zone-2" var_prefix="ZONE2_" %}
 
-1. Create the system account:
-
-   ```sh
-   export ZONE2_ACCOUNT_ID=$(curl --fail-with-body -sS -X POST https://global.api.konghq.com/v3/system-accounts \
-     -H "Authorization: Bearer $KONNECT_TOKEN" \
-     -H 'Content-Type: application/json' \
-     -d '{"name":"mesh-zone-2","description":"Connect zone-2","konnect_managed":false}' | jq -r .id)
-   ```
-
-1. Assign the account the `Connector` role:
-
-   ```sh
-   curl --fail-with-body -sS -X POST \
-     "https://global.api.konghq.com/v3/system-accounts/$ZONE2_ACCOUNT_ID/assigned-roles" \
-     -H "Authorization: Bearer $KONNECT_TOKEN" \
-     -H 'Content-Type: application/json' \
-     -d '{"role_name":"Connector","entity_type_name":"Mesh Control Planes","entity_id":"'"$CONTROL_PLANE_ID"'","entity_region":"'"$KONNECT_REGION"'"}'
-   ```
-
-1. Create the account's token:
-
-   ```sh
-   export ZONE2_CONTROL_PLANE_TOKEN=$(curl --fail-with-body -sS -X POST \
-     "https://global.api.konghq.com/v3/system-accounts/$ZONE2_ACCOUNT_ID/access-tokens" \
-     -H "Authorization: Bearer $KONNECT_TOKEN" \
-     -H 'Content-Type: application/json' \
-     -d '{"name":"zone-2","expires_at":"'"$TOKEN_EXPIRES_AT"'"}' | jq -r .token)
-   ```
-
-1. Create the system namespace in zone-2:
-
-   ```sh
-   kubectl --context $ZONE2_PROFILE create namespace kong-mesh-system
-   ```
-
-1. Store the token in zone-2:
-
-   ```sh
-   kubectl --context $ZONE2_PROFILE -n kong-mesh-system create secret generic cp-token \
-     --from-literal=token="$ZONE2_CONTROL_PLANE_TOKEN"
-   ```
-
-1. Create the values file for zone-2:
-
-   ```sh
-   cat <<EOF > zone-2-values.yaml
-   kuma:
-     controlPlane:
-       mode: zone
-       zone: zone-2
-       kdsGlobalAddress: $CONTROL_PLANE_URL
-       konnect:
-         cpId: $CONTROL_PLANE_ID
-       zoneToken:
-         secretName: cp-token
-         key: token
-   EOF
-   ```
-
-1. Install the zone control plane in zone-2:
-
-   ```sh
-   helm upgrade --install kong-mesh kong-mesh/kong-mesh --kube-context $ZONE2_PROFILE \
-     --namespace kong-mesh-system --version "$MESH_CHART_VERSION" \
-     --values zone-2-values.yaml --wait --timeout 5m
-   ```
+{% include md/mesh/v3/how-tos/deploy-zone-control-plane.md platform="kubernetes" zone="zone-2" var_prefix="ZONE2_" values_file="zone-2-values.yaml" kube_context="$ZONE2_PROFILE" additional_zone=true zone_proxies=true %}
 
 ## Verify the zone connections
 
-{% include md/mesh/v3/how-tos/verify-zone-connection.md %}
-
-`zone-2` should also appear in the list with an **Online** status.
+{% include md/mesh/v3/how-tos/verify-zone-connection.md zones="zone-1,zone-2" %}
 
 ## Create a mesh and secure the test traffic
 
-{% include md/mesh/v3/how-tos/create-mesh-and-permission.md %}
+{% include md/mesh/v3/how-tos/create-mesh-and-permission.md kube_context="$ZONE1_PROFILE" %}
 
-The permission you just applied covers zone-1 only.
-Apply the same permission in zone-2, where the `server` that the cross-zone request reaches runs:
+1. Apply the same permission in zone-2:
 
-```sh
-cat <<'EOF' | kubectl --context $ZONE2_PROFILE apply -f -
-apiVersion: kuma.io/v1alpha1
-kind: MeshTrafficPermission
-metadata:
-  name: client-to-server
-  namespace: {{site.mesh_namespace}}
-  labels:
-    kuma.io/mesh: konnect-demo
-    kuma.io/origin: zone
-spec:
-  targetRef:
-    kind: Dataplane
-    labels:
-      app: server
-  rules:
-    - default:
-        allow:
-          - spiffeID:
-              type: Exact
-              value: spiffe://konnect-demo.mesh.local/ns/kong-mesh-demo/sa/client
-EOF
-```
+   ```sh
+   cat <<'EOF' | kubectl --context $ZONE2_PROFILE apply -f -
+   apiVersion: kuma.io/v1alpha1
+   kind: MeshTrafficPermission
+   metadata:
+     name: client-to-server
+     namespace: {{site.mesh_namespace}}
+     labels:
+       kuma.io/mesh: konnect-demo
+       kuma.io/origin: zone
+   spec:
+     targetRef:
+       kind: Dataplane
+       labels:
+         app: server
+     rules:
+       - default:
+           allow:
+             - spiffeID:
+                 type: Exact
+                 value: spiffe://konnect-demo.mesh.local/ns/kong-mesh-demo/sa/client
+   EOF
+   ```
 
-## Deploy mesh-scoped zone proxies
-
-A `kuma.meshes[]` entry defines which mesh the zone proxies belong to.
-Each entry creates its own Deployment, Service, and ServiceAccount for the ingress and egress roles.
-The mesh must already exist: the chart doesn't create it.
+## Deploy zone proxies
 
 1. Create a values file that enables both roles for `konnect-demo`:
 
@@ -339,8 +260,7 @@ The mesh must already exist: the chart doesn't create it.
    ```
 
    Set the ingress Service type to `NodePort` so the other minikube cluster can reach it on the shared Docker network.
-   Kubernetes assigns the port automatically, and the zone control plane publishes the resulting `<node IP>:<nodePort>` address in a `MeshZoneAddress` for you.
-   Other zones use that address to reach this zone's ingress.
+   Kubernetes assigns the port automatically, and the zone control plane publishes the resulting `<node IP>:<nodePort>` address in a `MeshZoneAddress`. Other zones use that address to reach this zone's ingress.
 
    To deploy zone proxies for additional meshes, append more entries to `kuma.meshes`.
 
@@ -349,7 +269,7 @@ The mesh must already exist: the chart doesn't create it.
    ```sh
    for ctx in $ZONE1_PROFILE $ZONE2_PROFILE; do
      helm upgrade kong-mesh kong-mesh/kong-mesh --kube-context $ctx \
-       --namespace kong-mesh-system --version "$MESH_CHART_VERSION" \
+       --namespace kong-mesh-system --version "{{page.latest_release.version}}" \
        --reuse-values --values zone-proxies-values.yaml
    done
    ```
@@ -370,7 +290,7 @@ The mesh must already exist: the chart doesn't create it.
      -o custom-columns='ZONE:.metadata.labels.kuma\.io/zone,ADDRESS:.spec.address,PORT:.spec.port'
    ```
 
-   You should see one entry for `zone-1` at `${ZONE1_IP}` and one for `zone-2` at `${ZONE2_IP}`, each with its ingress `NodePort`.
+   You should see one entry for each zone, with its ingress `NodePort`.
 
 ## Propagate trust between zones
 
@@ -390,7 +310,6 @@ For cross-zone mTLS to work, each zone must trust the other zone's CA.
    ```
 
    The `kuma.io/origin=zone` selector returns the trust that the zone itself created.
-   Read both CAs before the next step: once you add the other zone's trust, the selector matches two resources.
 
 1. Add zone-1's CA to zone-2:
 
@@ -438,15 +357,21 @@ For cross-zone mTLS to work, each zone must trust the other zone's CA.
 
 ## Deploy the test applications
 
-Run the following commands once in zone-1, which is the current context.
-Then switch with `kubectl config use-context $ZONE2_PROFILE` and run them again, so that both zones have a `client` and a `server`:
+Both zones get a `client` and a `server`, starting with zone-1.
 
-{% include md/mesh/v3/how-tos/deploy-test-applications.md %}
+### Deploy the applications in zone-1
+
+{% include md/mesh/v3/how-tos/deploy-test-applications.md kube_context="$ZONE1_PROFILE" %}
+
+
+### Deploy the applications in zone-2
+
+{% include md/mesh/v3/how-tos/deploy-test-applications.md kube_context="$ZONE2_PROFILE" additional_zone=true %}
 
 The client's `kuma.io/reachable-backends` annotation selects the `server` `MeshService` by its `kuma.io/display-name` and `k8s.kuma.io/namespace` labels.
 Those labels also match the `server` `MeshService` synced from the other zone, so the client gets an outbound for both.
 
-## Verify cross-zone traffic
+## Validate
 
 1. From the `client` pod in zone-1, request the `server` in zone-2 using its cross-zone hostname:
 
@@ -455,22 +380,21 @@ Those labels also match the `server` `MeshService` synced from the other zone, s
      curl --fail --max-time 10 http://server.kong-mesh-demo.svc.zone-2.mesh.local/
    ```
 
-   Expect the nginx welcome page.
+   You should get the nginx welcome page.
    The request goes from the zone-1 sidecar straight to the zone-2 zone ingress, at the address in zone-2's `MeshZoneAddress`.
-   The ingress forwards it to the `server` pod there without terminating mTLS.
-   Cross-zone requests don't go through the zone egress: the egress only carries traffic to a [`MeshExternalService`](/mesh/meshexternalservice/), and since this guide doesn't define one, it has no listener yet.
 
    {:.info}
-   > If the request fails, check that zone-2 has a `MeshZoneAddress` with the expected `NodePort`, that both `MeshTrust` copies exist, and that the zone-2 `MeshTrafficPermission` is in place.
-   > The control plane builds remote `MeshService` endpoints only when the mesh has a `MeshIdentity` and the destination zone has a `MeshZoneAddress`.
-   > When the address is missing, the zone-1 control plane logs `no MeshZoneAddress found for zone`.
+   > If the request fails, check that:
+   > * zone-2 has a `MeshZoneAddress` with the expected `NodePort`
+   > * Both `MeshTrust` copies exist
+   > * The zone-2 `MeshTrafficPermission` is in place
 
 1. Confirm that the request went through the zone-2 ingress by reading its Envoy stats through the zone-2 control plane API.
-   Envoy's admin API isn't reachable over TCP in the proxy container, so use the control plane's inspect endpoint instead.
-   In a separate terminal, port-forward the zone-2 control plane API:
+   Port-forward the zone-2 control plane API in the background:
 
    ```sh
-   kubectl --context $ZONE2_PROFILE -n kong-mesh-system port-forward svc/kong-mesh-control-plane 5681:5681
+   kubectl --context $ZONE2_PROFILE -n kong-mesh-system port-forward svc/kong-mesh-control-plane 5681:5681 > /dev/null 2>&1 &
+   export PORT_FORWARD_PID=$!
    ```
 
 1. Look up the zone-2 ingress pod:
@@ -480,12 +404,33 @@ Those labels also match the `server` `MeshService` synced from the other zone, s
      -l app=kong-mesh-konnect-demo-ingress -o jsonpath='{.items[0].metadata.name}')
    ```
 
+1. Get the zone-2 admin token. The stats endpoint requires a user that can view stats:
+
+   ```sh
+   export ZONE2_ADMIN_TOKEN=$(kubectl --context $ZONE2_PROFILE -n kong-mesh-system get secret admin-user-token \
+     -o jsonpath='{.data.value}' | base64 -d)
+   ```
+
 1. Read the ingress pod's connection count for the `server` cluster:
 
    ```sh
-   curl -s "http://localhost:5681/meshes/konnect-demo/dataplanes/${INGRESS_POD}.kong-mesh-system/stats" | \
+   curl -sS --fail --retry 5 --retry-delay 1 --retry-connrefused \
+     -H "Authorization: Bearer $ZONE2_ADMIN_TOKEN" \
+     "http://localhost:5681/meshes/konnect-demo/dataplanes/${INGRESS_POD}.kong-mesh-system/stats" | \
      grep 'kong-mesh-demo_server_80.upstream_cx_total'
    ```
 
-   `upstream_cx_total` for the zone-2 `server` cluster on the ingress should be greater than zero.
+   You should see a count greater than zero for the zone-2 `server` cluster:
+
+   ```text
+   cluster.kri_msvc_konnect-demo_zone-2_kong-mesh-demo_server_80.upstream_cx_total: 1
+   ```
+   {:.no-copy-code}
+
    Run the cross-zone request again and the counter increases.
+
+1. Stop the port-forward:
+
+   ```sh
+   kill $PORT_FORWARD_PID
+   ```

@@ -1,12 +1,15 @@
+{%- assign kubectl_context = '' -%}{%- if include.kube_context %}{% assign kubectl_context = ' --context ' | append: include.kube_context %}{% endif -%}
+{% unless include.additional_zone %}
 Deploy an nginx `server` and a `curl` `client` into a namespace that joins the mesh. The client's
 own ServiceAccount gives it the identity that the traffic permission allows. The client also lists
 `server` as a reachable backend, because a proxy can only call the destinations it declares. For
 more information, see [MeshService](/mesh/meshservice/).
+{% endunless %}
 
 1. Create the namespace, the client ServiceAccount, and the server and client workloads:
 
    ```sh
-   cat <<'EOF' | kubectl apply -f -
+   cat <<'EOF' | kubectl{{ kubectl_context }} apply -f -
    apiVersion: v1
    kind: Namespace
    metadata:
@@ -84,10 +87,11 @@ more information, see [MeshService](/mesh/meshservice/).
              command: ["sleep", "86400"]
    EOF
    ```
+   {:.collapsible}
 
 1. Wait for the server and client to roll out:
 
    ```sh
-   kubectl -n kong-mesh-demo rollout status deployment/server --timeout=180s
-   kubectl -n kong-mesh-demo rollout status deployment/client --timeout=180s
+   kubectl{{ kubectl_context }} -n kong-mesh-demo rollout status deployment/server --timeout=180s
+   kubectl{{ kubectl_context }} -n kong-mesh-demo rollout status deployment/client --timeout=180s
    ```

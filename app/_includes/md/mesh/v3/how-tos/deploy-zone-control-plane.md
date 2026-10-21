@@ -1,4 +1,7 @@
+{%- assign kubectl_context = '' -%}{%- if include.kube_context %}{% assign kubectl_context = ' --context ' | append: include.kube_context %}{% endif -%}
+{%- assign helm_context = '' -%}{%- if include.kube_context %}{% assign helm_context = ' --kube-context ' | append: include.kube_context %}{% endif -%}
 {% if include.platform == 'kubernetes' %}
+{% unless include.additional_zone %}
 1. Set the KDS address for the same region as the global control plane, and create a working directory:
 
    ```sh
@@ -13,28 +16,29 @@
    helm repo add kong-mesh https://kong.github.io/kong-mesh-charts
    helm repo update
    ```
+{% endunless %}
 
 1. Create the zone namespace:
 
    ```sh
-   kubectl create namespace kong-mesh-system
+   kubectl{{ kubectl_context }} create namespace kong-mesh-system
    ```
 
 1. Store the zone token in a Secret:
 
    ```sh
-   kubectl -n kong-mesh-system create secret generic cp-token \
-     --from-literal=token="$CONTROL_PLANE_TOKEN"
+   kubectl{{ kubectl_context }} -n kong-mesh-system create secret generic cp-token \
+     --from-literal=token="${{ include.var_prefix }}CONTROL_PLANE_TOKEN"
    ```
 
-1. Create `values.yaml`:
+1. Create `{{ include.values_file | default: 'values.yaml' }}`:
 
    ```sh
-   cat <<EOF > values.yaml
+   cat <<EOF > {{ include.values_file | default: 'values.yaml' }}
    kuma:
      controlPlane:
        mode: zone
-       zone: zone-1
+       zone: {{ include.zone | default: 'zone-1' }}
        kdsGlobalAddress: $CONTROL_PLANE_URL
        konnect:
          cpId: $CONTROL_PLANE_ID
@@ -47,9 +51,9 @@
 1. Install the zone control plane:
 
    ```sh
-   helm upgrade --install kong-mesh kong-mesh/kong-mesh \
+   helm upgrade --install kong-mesh kong-mesh/kong-mesh{{ helm_context }} \
      --namespace kong-mesh-system --version "{{page.latest_release.version}}" \
-     --values values.yaml --wait --timeout 5m
+     --values {{ include.values_file | default: 'values.yaml' }} --wait --timeout 5m
    ```
 
    {% unless include.zone_proxies %} This single-zone test doesn't need zone proxies; add [mesh-scoped zone proxies](/mesh/mesh-scoped-zone-proxies/) when connecting
@@ -72,7 +76,7 @@
 1. Write the zone token to a file:
 
    ```sh
-   printf '%s' "$CONTROL_PLANE_TOKEN" > cp-token
+   printf '%s' "${{ include.var_prefix }}CONTROL_PLANE_TOKEN" > cp-token
    ```
 
 1. Create `config.yaml`:
@@ -85,7 +89,7 @@
      type: memory
    multizone:
      zone:
-       name: zone-1
+       name: {{ include.zone | default: 'zone-1' }}
        globalAddress: $CONTROL_PLANE_URL
    kmesh:
      multizone:

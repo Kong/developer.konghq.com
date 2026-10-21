@@ -1,42 +1,73 @@
 The zone uses a system account access token with the `Connector` role on this control plane.
-The token authenticates configuration exchange with {{site.konnect_short_name}}; it does not issue workload identities.
 
-1. Create a system account and export its `id` as `ACCOUNT_ID`:
+1. Create a system account and save its `id` as `{{ include.var_prefix }}ACCOUNT_ID`:
+
+   <!--vale off-->
+   {% konnect_api_request %}
+   url: /v3/system-accounts
+   region: global
+   status_code: 201
+   method: POST
+   headers:
+     - 'Content-Type: application/json'
+   body:
+     name: mesh-{{ include.zone | default: 'zone-1' }}
+     description: Connect {{ include.zone | default: 'zone-1' }}
+     konnect_managed: false
+   extract_body:
+     - name: id
+       variable: {{ include.var_prefix }}ACCOUNT_ID
+   capture:
+     - variable: {{ include.var_prefix }}ACCOUNT_ID
+       jq: ".id"
+   indent: 3
+   {% endkonnect_api_request %}
+   <!--vale on-->
+
+1. Assign the account the `Connector` role on the control plane:
+
+   <!--vale off-->
+   {% konnect_api_request %}
+   url: /v3/system-accounts/${{ include.var_prefix }}ACCOUNT_ID/assigned-roles
+   region: global
+   status_code: 201
+   method: POST
+   headers:
+     - 'Content-Type: application/json'
+   body:
+     role_name: Connector
+     entity_type_name: Mesh Control Planes
+     entity_id: $CONTROL_PLANE_ID
+     entity_region: $KONNECT_REGION
+   indent: 3
+   {% endkonnect_api_request %}
+   <!--vale on-->
+
+1. Set the token to expire in 30 days. Change the number of days if your organization's token policy requires a shorter lifetime:
 
    ```sh
-   export ACCOUNT_ID=$(curl --fail-with-body -sS -X POST https://global.api.konghq.com/v3/system-accounts \
-     -H "Authorization: Bearer $KONNECT_TOKEN" \
-     -H 'Content-Type: application/json' \
-     -d '{"name":"mesh-zone-1","description":"Connect zone-1","konnect_managed":false}' | jq -r .id)
+   export TOKEN_EXPIRES_AT=$(jq -nr 'now + 30*24*60*60 | todate')
    ```
 
-1. Confirm that the variable contains the system account ID:
+1. Create the token and save the returned `token` as `{{ include.var_prefix }}CONTROL_PLANE_TOKEN`:
 
-   ```sh
-   echo "$ACCOUNT_ID"
-   ```
-
-1. Assign the account its role:
-
-   ```sh
-   curl --fail-with-body -sS -X POST \
-     "https://global.api.konghq.com/v3/system-accounts/$ACCOUNT_ID/assigned-roles" \
-     -H "Authorization: Bearer $KONNECT_TOKEN" \
-     -H 'Content-Type: application/json' \
-     -d '{"role_name":"Connector","entity_type_name":"Mesh Control Planes","entity_id":"'"$CONTROL_PLANE_ID"'","entity_region":"'"$KONNECT_REGION"'"}'
-   ```
-
-1. Choose a future expiry allowed by your organization's token policy, then create the token and
-   export the returned `token` as `CONTROL_PLANE_TOKEN`:
-
-   ```sh
-   export TOKEN_EXPIRES_AT='REPLACE_WITH_FUTURE_RFC3339_TIMESTAMP'
-   export CONTROL_PLANE_TOKEN=$(curl --fail-with-body -sS -X POST \
-     "https://global.api.konghq.com/v3/system-accounts/$ACCOUNT_ID/access-tokens" \
-     -H "Authorization: Bearer $KONNECT_TOKEN" \
-     -H 'Content-Type: application/json' \
-     -d '{"name":"zone-1","expires_at":"'"$TOKEN_EXPIRES_AT"'"}' | jq -r .token)
-   ```
-
-   {{site.konnect_short_name}} returns the token only once. Store it securely and don't commit it to
-   source control.
+   <!--vale off-->
+   {% konnect_api_request %}
+   url: /v3/system-accounts/${{ include.var_prefix }}ACCOUNT_ID/access-tokens
+   region: global
+   status_code: 201
+   method: POST
+   headers:
+     - 'Content-Type: application/json'
+   body:
+     name: {{ include.zone | default: 'zone-1' }}
+     expires_at: $TOKEN_EXPIRES_AT
+   extract_body:
+     - name: token
+       variable: {{ include.var_prefix }}CONTROL_PLANE_TOKEN
+   capture:
+     - variable: {{ include.var_prefix }}CONTROL_PLANE_TOKEN
+       jq: ".token"
+   indent: 3
+   {% endkonnect_api_request %}
+   <!--vale on-->

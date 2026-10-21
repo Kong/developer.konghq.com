@@ -22,12 +22,8 @@ tldr:
     `MeshIdentity` and `MeshTrafficPermission` and test an application request.
 prereqs:
   inline:
-    - title: kubectl and Helm
-      content: |
-        A Kubernetes cluster, `kubectl`, and Helm. Use a fresh evaluation namespace and a {{site.mesh_product_name}} 3.x chart approved for your control plane.
-    - title: Network access
-      content: |
-        Confirm your zone's network allows outbound access on port 443 to your regional {{site.konnect_short_name}} KDS endpoint, `$KONNECT_REGION.mesh.sync.konghq.com`.
+    - title: Helm
+      include_content: prereqs/helm
 related_resources:
 - text: Installation options
   url: "/mesh/konnect/"
@@ -60,25 +56,33 @@ cleanup:
         helm uninstall kong-mesh --namespace kong-mesh-system
         ```
 
-        Delete the `cp-token` Secret and `kong-mesh-system` namespace only if they were created exclusively for this test.
-    - title: Delete the {{site.konnect_short_name}} control plane
+        Delete the zone namespace and the `cp-token` Secret in it:
+
+        ```sh
+        kubectl delete namespace kong-mesh-system
+        ```
+    - title: Delete the {{site.konnect_short_name}} resources
       content: |
-        In {{site.konnect_short_name}}, delete only the `example-cp` control plane created for this test. Deleting the control plane also removes its mesh configuration. Revoke the zone token if it remains. Review the files in `MESH_INSTALL_DIR` and remove the credentials when no longer needed.
+        Delete the `example-cp` control plane. This also removes its mesh configuration:
+
+        ```sh
+        curl --fail-with-body -sS -X DELETE \
+          "https://$KONNECT_REGION.api.konghq.com/v1/mesh/control-planes/$CONTROL_PLANE_ID" \
+          -H "Authorization: Bearer $KONNECT_TOKEN"
+        ```
+
+        In {{site.konnect_short_name}}, delete the system account that the zone wizard created for `zone-1`.
 min_version:
   mesh: '3.0'
 ---
 
-This guide creates a new {{site.konnect_short_name}}-managed global control plane and connects a Kubernetes zone. {{site.konnect_short_name}} runs the global control plane; you run the zone in your own environment.
-
-You will also configure workload identities and verify that one application can call another only with the permitted identity.
+This guide creates a {{site.konnect_short_name}}-managed global control plane, connects a Kubernetes zone, and verifies that one application can call another only with the permitted identity.
 
 Set the region where you will create the global control plane:
 
 ```sh
 export KONNECT_REGION='us'
 ```
-
-This is a fresh installation, not an upgrade procedure. If the account doesn't offer {{site.mesh_product_name}} 3.x, stop and confirm availability rather than deploying a 3.x zone against a v2 control plane.
 
 ## Create the global control plane
 
@@ -90,7 +94,7 @@ This is a fresh installation, not an upgrade procedure. If the account doesn't o
    export CONTROL_PLANE_ID='YOUR_CONTROL_PLANE_ID'
    ```
 
-The exact {{site.mesh_product_name}} 3.x version-selection UI still needs confirmation. If the UI doesn't offer a {{site.mesh_product_name}} 3.x creation path, use the [API installation guide](/mesh/connect-kubernetes-zone-to-konnect-api/), which explicitly sets `version: v3`. Don't create a v2 control plane and assume the zone installer upgrades it.
+If the UI doesn't offer a {{site.mesh_product_name}} 3.x control plane, use the [API guide](/mesh/connect-kubernetes-zone-to-konnect-api/) instead, which sets `version: v3`.
 
 ## Add the zone
 
@@ -101,17 +105,11 @@ The exact {{site.mesh_product_name}} 3.x version-selection UI still needs confir
 1. In the **Name** field, enter `zone-1`.
 1. Follow the generated credential and deployment instructions for a {{site.mesh_product_name}} 3.x zone.
 
-The wizard provisions a system account access token for the zone. Keep it separate from the personal token used to manage {{site.konnect_short_name}}. To use the explicit deployment example that follows, copy the generated zone token into:
+Copy the generated zone token:
 
 ```sh
 export CONTROL_PLANE_TOKEN='YOUR_GENERATED_ZONE_ACCESS_TOKEN'
 ```
-
-Deploy the zone only once: use either the generated {{site.mesh_product_name}} 3.x deployment instructions or the equivalent example that follows. Don't reuse generated 2.x values that enable shared `ingress` and `egress` deployments.
-
-## Check the global control plane version
-
-{% include md/mesh/v3/how-tos/check-control-plane-version.md %}
 
 ## Deploy the zone control plane
 
@@ -129,6 +127,6 @@ Deploy the zone only once: use either the generated {{site.mesh_product_name}} 3
 
 {% include md/mesh/v3/how-tos/deploy-test-applications.md %}
 
-## Verify an allowed and a denied call
+## Validate
 
 {% include md/mesh/v3/how-tos/verify-allowed-and-denied-request.md %}
