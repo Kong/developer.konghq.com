@@ -205,7 +205,7 @@ rows:
   - finding: "`ExternalService`"
     continue: "[MeshExternalService](/mesh/meshexternalservice/) and the [zone-proxy migration](/mesh/migrate-zone-proxies-to-3/)"
   - finding: "Legacy gateway resource"
-    continue: "[Application ingress](/mesh/application-ingress/)"
+    continue: "[Migrate gateways to {{site.mesh_product_name}} 3.x](/mesh/migrate-gateways-to-3/)"
   - finding: "Legacy service discovery or service selection"
     continue: "[MeshService](/mesh/meshservice/)"
 {% endtable %}

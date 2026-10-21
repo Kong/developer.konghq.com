@@ -59,7 +59,8 @@ still on 2.14; the upgrade is more than a control plane and data plane rollout.
      `KUMA_MULTIZONE_ZONE_KDS_AUTH_TOKEN_PATH`.
 1. Resolve the report using the migration guides for
    [mTLS and MeshIdentity](/mesh/migrate-mtls-to-meshidentity/),
-   [mesh-scoped zone proxies](/mesh/migrate-zone-proxies-to-3/), and
+   [mesh-scoped zone proxies](/mesh/migrate-zone-proxies-to-3/),
+   [gateways](/mesh/migrate-gateways-to-3/), and
    [policies](/mesh/migrate-policies-to-3/). The guides explain their dependencies and the order
    in which live traffic changes.
 1. Rerun the readiness checker against the complete estate. Resolve every blocker and coverage

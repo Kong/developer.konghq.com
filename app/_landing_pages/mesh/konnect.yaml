@@ -61,5 +61,5 @@ rows:
           - type: text
             config: |
               - **Run the control plane yourself:** Follow the [self-hosted {{site.mesh_product_name}} 3.x quickstart](/mesh/get-started/universal/install/).
-              - **Upgrade an existing 2.x mesh:** Review [identity and mTLS](/mesh/migrate-mtls-to-meshidentity/), [zone proxies](/mesh/migrate-zone-proxies-to-3/), and [policy migration](/mesh/migrate-policies-to-3/).
+              - **Upgrade an existing 2.x mesh:** Review [identity and mTLS](/mesh/migrate-mtls-to-meshidentity/), [zone proxies](/mesh/migrate-zone-proxies-to-3/), [gateways](/mesh/migrate-gateways-to-3/), and [policy migration](/mesh/migrate-policies-to-3/).
               - **Understand {{site.mesh_product_name}} 3.x before installing:** Explore the [core concepts](/mesh/#understand-how-kong-mesh-works).
