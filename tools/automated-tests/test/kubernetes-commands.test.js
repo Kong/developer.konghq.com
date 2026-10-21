@@ -62,6 +62,26 @@ test("buildKubernetesResourceCommand emits the jsonpath get for a minimal config
   assertValidBash(built);
 });
 
+test("buildKubernetesResourceCommand treats an empty namespace as omitted, like the Liquid default filter", () => {
+  // The snippet applies `namespace | default: "kong"`, and Liquid's default
+  // filter treats an empty string as absent: a page with `namespace: ""`
+  // renders `-n kong`, and the runner must build the same command.
+  const built = buildKubernetesResourceCommand({
+    kind: "DataPlane",
+    name: "dataplane-example",
+    namespace: "",
+  });
+
+  assert.equal(
+    built,
+    command(`
+      kubectl get -n 'kong' 'dataplane' 'dataplane-example'
+      -o=jsonpath='{.status.conditions[?(@.type=="Programmed")]}'
+    `),
+  );
+  assertValidBash(built);
+});
+
 test("buildKubernetesResourceCommand includes an explicit namespace", () => {
   const built = buildKubernetesResourceCommand({
     kind: "DataPlane",
@@ -207,6 +227,23 @@ test("buildKubernetesWaitForCommand defaults an httproute to the Programmed cond
   const built = buildKubernetesWaitForCommand({
     kind: "httproute",
     resource: "echo",
+  });
+
+  assert.equal(
+    built,
+    command(`
+      kubectl wait -n 'kong' --timeout='30s' 'httproute/echo'
+      --for='jsonpath={.status.parents[?(@.parentRef.name=="kong")].conditions[?(@.type=="Programmed")].status}=True'
+    `),
+  );
+  assertValidBash(built);
+});
+
+test("buildKubernetesWaitForCommand treats an empty timeout as omitted, like the Liquid default filter", () => {
+  const built = buildKubernetesWaitForCommand({
+    kind: "httproute",
+    resource: "echo",
+    timeout: "",
   });
 
   assert.equal(

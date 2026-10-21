@@ -102,15 +102,19 @@ export function buildKubernetesWaitForCommand(config) {
 }
 
 // Defaults: the site-level config spells the condition type `type` and the
-// expected status `status`; the snippet reads `conditionType`. observedGeneration
-// is asserted only when the config sets it (either spelling); so is reason.
+// expected status `status`; the snippet reads `conditionType`. String
+// defaults use ||, not ??: Liquid's `default:` filter (which the snippets
+// apply at render time) also treats an empty string as absent, so
+// `namespace: ""` renders `-n kong` on the page and must build the same
+// command here. observedGeneration is asserted only when the config sets it
+// (either spelling); so is reason.
 export function normalizeKubernetesResourceConfig(config) {
   return {
     kind: config.kind,
     name: config.name,
-    namespace: config.namespace ?? DEFAULT_NAMESPACE,
-    conditionType: config.conditionType ?? config.type ?? "Programmed",
-    expectedStatus: config.status ?? "True",
+    namespace: config.namespace || DEFAULT_NAMESPACE,
+    conditionType: config.conditionType || config.type || "Programmed",
+    expectedStatus: config.status || "True",
     observedGeneration: config.observedGeneration ?? config.generation,
     reason: config.reason,
   };
@@ -128,7 +132,7 @@ export function normalizeKubernetesResourcePropertyConfig(config) {
     name: config.name,
     nameSelector: config.name_selector?.trim(),
     path: config.path?.trim(),
-    namespace: config.namespace ?? DEFAULT_NAMESPACE,
+    namespace: config.namespace || DEFAULT_NAMESPACE,
     expected:
       config.expected === undefined
         ? undefined
@@ -145,13 +149,13 @@ export function normalizeKubernetesWaitForConfig(config) {
   return {
     kind: config.kind,
     resource: config.resource,
-    namespace: config.namespace ?? DEFAULT_NAMESPACE,
-    statusField: config.status_field ?? DEFAULT_WAIT_STATUS_FIELD,
+    namespace: config.namespace || DEFAULT_NAMESPACE,
+    statusField: config.status_field || DEFAULT_WAIT_STATUS_FIELD,
     statusType:
-      config.status_type ??
+      config.status_type ||
       (config.kind === "httproute" ? "Programmed" : "Accepted"),
-    expected: config.expected ?? "True",
-    timeout: config.timeout ?? "30s",
+    expected: config.expected || "True",
+    timeout: config.timeout || "30s",
   };
 }
 
