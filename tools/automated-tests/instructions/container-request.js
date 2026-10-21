@@ -27,8 +27,9 @@ const NULL_BODY_STATUSES = new Set([204, 205, 304]);
 
 // The command runs through `bash -c` (docker-helper.js executeCommand), so
 // every interpolated value is single-quoted with embedded quotes escaped
-// (' -> '\'').
-function shellQuote(value) {
+// (' -> '\''). Shared by every instructions/ module that builds shell
+// commands from interpolated config values.
+export function shellQuote(value) {
   return `'${String(value).replaceAll("'", `'\\''`)}'`;
 }
 
