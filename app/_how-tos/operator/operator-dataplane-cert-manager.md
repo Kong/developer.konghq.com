@@ -346,9 +346,14 @@ Confirm that the certificate is provisioned and served, then that a renewal reac
 
 1. Confirm that traffic was never interrupted:
 
-   ```bash
-   curl -sk --resolve example.localdomain.dev:443:$PROXY_IP https://example.localdomain.dev/echo -o /dev/null -w "%{http_code}\n"
-   ```
-   {: data-test-step="block" }
+{% validation custom-command %}
+command: |
+  curl -sk --resolve example.localdomain.dev:443:$PROXY_IP https://example.localdomain.dev/echo -o /dev/null -w "%{http_code}\n"
+expected:
+  return_code: 0
+message: 200
+render_output: false
+indent: 3
+{% endvalidation %}
 
    The response should be `200`.

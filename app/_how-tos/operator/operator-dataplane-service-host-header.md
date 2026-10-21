@@ -47,12 +47,10 @@ By default, {{site.base_gateway}} sets the `Host` header to the IP address of th
 
 ## Check the default behavior
 
-1. Wait for the `Gateway` to get an address:
+1. Wait for the `Gateway` to be programmed:
 
    ```bash
-   kubectl wait gateway/kong -n kong \
-     --for=jsonpath='{.status.addresses[0].value}' \
-     --timeout=5m
+   kubectl wait --for=condition=Programmed gateway/kong -n kong --timeout=5m
    ```
    {: data-test-step="block" }
 

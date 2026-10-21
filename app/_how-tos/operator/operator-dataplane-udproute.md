@@ -150,12 +150,10 @@ This configuration instructs {{ site.base_gateway }} to forward UDP traffic it r
    ```
    {: data-test-step="block" }
 
-1. Wait for the Gateway to get an address after the listener change:
+1. Wait for the Gateway to be programmed after the listener change:
 
    ```bash
-   kubectl wait gateway/kong-udp-gateway -n kong \
-     --for=jsonpath='{.status.addresses[0].value}' \
-     --timeout=5m
+   kubectl wait --for=condition=Programmed gateway/kong-udp-gateway -n kong --timeout=5m
    ```
    {: data-test-step="block" }
 

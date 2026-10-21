@@ -162,15 +162,31 @@ You can integrate {{ site.operator_product_name }} with [Datadog Metrics](https:
 
 ## Send traffic
 
-To trigger autoscaling, run the following command. This will cause the underlying deployment to sleep for 100ms on each request and thus increase the average response time to that value. The loop sends 50 requests, which builds up enough latency data to trigger scaling.
+To trigger autoscaling, complete the following steps:
 
-```bash
-for _ in {1..50}; do
-  curl -k "http://$(kubectl get gateway kong -o custom-columns='name:.status.addresses[0].value' --no-headers -n kong)/command/shell?cmd=sleep%200.1"
-  sleep 1
-done
-```
-{: data-test-step="block" }
+1. Wait for the `kong` `Gateway` to be programmed:
+
+   ```bash
+   kubectl wait --for=condition=Programmed gateway/kong -n kong --timeout=5m
+   ```
+   {: data-test-step="block" }
+
+1. Get the `Gateway` address and store it in `PROXY_IP`:
+
+   ```bash
+   export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
+   ```
+   {: data-test-step="block" }
+
+1. Send 50 requests that cause the underlying deployment to sleep for 100ms on each request, increasing the average response time to that value and building up enough latency data to trigger scaling:
+
+   ```bash
+   for _ in {1..50}; do
+     curl -k --retry 5 --retry-connrefused "http://$PROXY_IP/command/shell?cmd=sleep%200.1"
+     sleep 1
+   done
+   ```
+   {: data-test-step="block" }
 
 ## Annotate {{ site.operator_product_name }} with Datadog checks config
 

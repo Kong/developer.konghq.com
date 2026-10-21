@@ -204,12 +204,10 @@ spec:
 
 ## Validate
 
-1. Wait for the `Gateway` to get an address:
+1. Wait for the `Gateway` to be programmed:
     
    ```bash
-   kubectl wait gateway/kong-gateway -n kong \
-     --for=jsonpath='{.status.addresses[0].value}' \
-     --timeout=5m
+   kubectl wait --for=condition=Programmed gateway/kong-gateway -n kong --timeout=5m
    ```
    {: data-test-step="block" }
 

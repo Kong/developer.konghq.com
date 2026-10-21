@@ -107,12 +107,10 @@ spec:
 
 You can verify that metrics are being collected by port-forwarding to the data plane Pod:
 
-1. Wait for the `Gateway` to get an address:
+1. Wait for the `Gateway` to be programmed:
 
    ```sh
-   kubectl wait gateway/kong -n kong \
-     --for=jsonpath='{.status.addresses[0].value}' \
-     --timeout=300s
+   kubectl wait --for=condition=Programmed gateway/kong -n kong --timeout=300s
    ```
    {: data-test-step="block" }
 
