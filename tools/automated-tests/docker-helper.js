@@ -141,20 +141,28 @@ export async function executeCommand(container, cmd, displayCmd = cmd) {
   });
 }
 
-// Doc-sourced string commands (prereqs and steps). Commands that assign a
-// variable from a command substitution run in the throwaway exec, so the
-// variable would evaporate before the next step reads it. Wrap those so the
-// value is persisted to /env-vars.sh; the persistence contract lives in
-// instructions/export-assignment.js. Infra commands (runtime setup/reset/
-// cleanup, tests.yaml before/after) keep calling executeCommand directly, so
-// their behavior is unchanged.
+// Doc-sourced string commands (prereqs and steps). Every doc command runs
+// under errexit and pipefail (`set -eo pipefail` prepended as the first
+// line), so a failing middle command of a multi-line step or a failing left
+// side of a pipeline fails the whole step instead of being masked by the
+// last command's exit code. Failures still report the original doc command,
+// not the guarded script. Commands that assign a variable from a command
+// substitution run in the throwaway exec, so the variable would evaporate
+// before the next step reads it. Wrap those so the value is persisted to
+// /env-vars.sh; the persistence contract lives in
+// instructions/export-assignment.js (the guard line never matches the
+// assignment regex, so a failing assignment exits before anything is
+// persisted and its exit code propagates). Infra commands (runtime
+// setup/reset/cleanup, tests.yaml before/after) keep calling executeCommand
+// directly, so their behavior is unchanged.
 export async function executeDocCommand(container, cmd, exec = executeCommand) {
-  const names = parseExportAssignments(cmd);
+  const guarded = `set -eo pipefail\n${cmd}`;
+  const names = parseExportAssignments(guarded);
   if (names.length === 0) {
-    return exec(container, cmd);
+    return exec(container, guarded, cmd);
   }
   // Report failures against the original doc command, not the wrapped script.
-  return exec(container, buildPersistCommand(cmd, names), cmd);
+  return exec(container, buildPersistCommand(guarded, names), cmd);
 }
 
 export async function stopContainer(container) {

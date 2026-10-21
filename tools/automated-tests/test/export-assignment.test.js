@@ -9,6 +9,13 @@ import {
 
 import { executeDocCommand } from "../docker-helper.js";
 
+function recordingExec(calls) {
+  return async (container, command, displayCmd) => {
+    calls.push([command, displayCmd]);
+    return { exitCode: 0, output: "" };
+  };
+}
+
 test("detects export with quoted command substitution", () => {
   const cmd = `export CONSUMER_ID="$(kongctl get ai-gateway consumers \\
   --gateway-id "$AI_GATEWAY_ID" kong-air \\
@@ -102,12 +109,8 @@ test("wrapper bakes the computed value into the env file line", () => {
 
 test("executeDocCommand wraps assignment commands for persistence", async () => {
   const calls = [];
-  const stub = async (container, command, displayCmd) => {
-    calls.push([command, displayCmd]);
-    return { exitCode: 0, output: "" };
-  };
   const cmd = 'export FOO="$(printf abc123)"';
-  await executeDocCommand({}, cmd, stub);
+  await executeDocCommand({}, cmd, recordingExec(calls));
   assert.equal(calls.length, 1);
   assert.ok(
     calls[0][0].startsWith("set -eo pipefail\n"),
@@ -120,12 +123,8 @@ test("executeDocCommand wraps assignment commands for persistence", async () => 
 
 test("executeDocCommand guards plain commands with errexit and pipefail", async () => {
   const calls = [];
-  const stub = async (container, command, displayCmd) => {
-    calls.push([command, displayCmd]);
-    return { exitCode: 0, output: "" };
-  };
   const cmd = "export GREETING=hello";
-  await executeDocCommand({}, cmd, stub);
+  await executeDocCommand({}, cmd, recordingExec(calls));
   assert.equal(calls.length, 1);
   assert.equal(calls[0][0], `set -eo pipefail\n${cmd}`);
   assert.equal(calls[0][1], cmd, "failures must report the original doc command");
@@ -133,12 +132,8 @@ test("executeDocCommand guards plain commands with errexit and pipefail", async 
 
 test("executeDocCommand guards non-assignment commands with errexit and pipefail", async () => {
   const calls = [];
-  const stub = async (container, command, displayCmd) => {
-    calls.push([command, displayCmd]);
-    return { exitCode: 0, output: "" };
-  };
   const cmd = "curl -s http://localhost:8000/routes";
-  await executeDocCommand({}, cmd, stub);
+  await executeDocCommand({}, cmd, recordingExec(calls));
   assert.equal(calls.length, 1);
   assert.equal(calls[0][0], `set -eo pipefail\n${cmd}`);
   assert.equal(calls[0][1], cmd, "failures must report the original doc command");
@@ -146,12 +141,8 @@ test("executeDocCommand guards non-assignment commands with errexit and pipefail
 
 test("executeDocCommand guards a multi-line command on the first line only", async () => {
   const calls = [];
-  const stub = async (container, command, displayCmd) => {
-    calls.push([command, displayCmd]);
-    return { exitCode: 0, output: "" };
-  };
   const cmd = "kubectl wait --for=condition=Valid gateway/kong --timeout=60s\necho $PROXY_IP";
-  await executeDocCommand({}, cmd, stub);
+  await executeDocCommand({}, cmd, recordingExec(calls));
   assert.equal(calls.length, 1);
   assert.equal(calls[0][0], `set -eo pipefail\n${cmd}`);
   assert.equal(calls[0][1], cmd, "failures must report the original doc command");
@@ -197,13 +188,9 @@ export B=$(curl -s http://x/b)`;
 
 test("executeDocCommand wraps multi-assignment commands and reports the original", async () => {
   const calls = [];
-  const stub = async (container, command, displayCmd) => {
-    calls.push([command, displayCmd]);
-    return { exitCode: 0, output: "" };
-  };
   const cmd = `export A=$(curl -s http://x/a)
 export B=$(curl -s http://x/b)`;
-  await executeDocCommand({}, cmd, stub);
+  await executeDocCommand({}, cmd, recordingExec(calls));
   assert.equal(calls.length, 1);
   assert.ok(
     calls[0][0].startsWith("set -eo pipefail\n"),
