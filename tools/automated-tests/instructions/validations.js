@@ -25,6 +25,13 @@ import {
   isNetworkLevelError,
   parseCurlResponse,
 } from "./container-request.js";
+import {
+  buildKubernetesResourceCommand,
+  buildKubernetesResourcePropertyCommand,
+  buildKubernetesWaitForCommand,
+  checkKubernetesResourceCondition,
+  compareKubernetesResourceProperty,
+} from "./kubernetes-commands.js";
 
 const log = debug("tests:runner");
 const __filename = fileURLToPath(import.meta.url);
@@ -40,6 +47,11 @@ const cookieJars = {};
 const fetchInstances = {};
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// Bounded retry for container-executed assertions (customCommand and the
+// kubernetes-* assertion types): 7 attempts with 10s-35s backoff (~2 minutes
+// cumulative), tolerating reconciliation lag on freshly created resources.
+const RETRY_DELAYS = [10000, 15000, 20000, 25000, 30000, 35000];
 
 export class ValidationError extends Error {
   constructor(message, assertions) {
@@ -586,8 +598,7 @@ async function quickstart(config, runtimeConfig, container) {
 
 async function customCommand(validationName, config, runtimeConfig, container) {
   const returnCode = config.expected.return_code;
-  const retryDelays = [10000, 15000, 20000, 25000, 30000, 35000]; // delay before retry attempts
-  const maxRetries = retryDelays.length + 1;
+  const maxRetries = RETRY_DELAYS.length + 1;
 
   let result;
   for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -608,7 +619,7 @@ async function customCommand(validationName, config, runtimeConfig, container) {
     }
 
     if (attempt < maxRetries - 1) {
-      const backoffDelay = retryDelays[attempt];
+      const backoffDelay = RETRY_DELAYS[attempt];
       log(
         `Retry attempt ${
           attempt + 1
@@ -711,6 +722,142 @@ async function vaultSecret(validationName, config, runtimeConfig, container) {
   return [];
 }
 
+// The kubernetes-* validations are thin hooks: required-config checks (the
+// drop already validated them at render time, but a malformed step must fail
+// before any cluster command runs), then exec of the helper-built command and
+// delegation of the pass/fail decision to the helper's comparison. Command
+// construction, defaults, and comparisons live in kubernetes-commands.js.
+function requireKubernetesConfig(validationName, config, fields) {
+  for (const field of fields) {
+    if (config[field] == null) {
+      logAndError(
+        validationName,
+        `Missing '${field}' in the validation config: ${JSON.stringify(config)}.`,
+        [],
+      );
+    }
+  }
+}
+
+// The customCommand retry shape for the two assertion types: both read
+// freshly created resources whose reconciliation may lag. kubernetes-wait-for
+// does not use this: the wait itself is the retry mechanism, and kubectl's
+// --timeout governs it (an outer loop would only multiply the timeout).
+async function runKubernetesAssertion(container, command, evaluate) {
+  const maxRetries = RETRY_DELAYS.length + 1;
+  let result;
+  let check;
+
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      result = await executeCommand(container, command);
+    } catch (error) {
+      result = error;
+    }
+
+    check = evaluate(result.output);
+
+    if (check.pass) {
+      break;
+    }
+
+    if (attempt < maxRetries - 1) {
+      log(
+        `Retry attempt ${
+          attempt + 1
+        } - the kubernetes command did not pass yet (${check.message}), retrying in ${
+          RETRY_DELAYS[attempt]
+        }ms...`,
+      );
+      await sleep(RETRY_DELAYS[attempt]);
+    }
+  }
+
+  return { check, command, output: result.output };
+}
+
+// Throws the ValidationError carrying the structured message on final
+// failure; the assertions list keeps the check, the command, and the raw
+// output so the report shows all three.
+function reportKubernetesCheck(validationName, { check, command, output }) {
+  if (!check.pass) {
+    logAndError(validationName, check.message, [
+      check.message,
+      `Command: ${command}`,
+      `Output: ${output || "(empty)"}`,
+    ]);
+  }
+  return [check.message];
+}
+
+async function kubernetesResource(validationName, config, runtimeConfig, container) {
+  requireKubernetesConfig(validationName, config, ["kind", "name"]);
+
+  return reportKubernetesCheck(
+    validationName,
+    await runKubernetesAssertion(
+      container,
+      buildKubernetesResourceCommand(config),
+      (commandOutput) => checkKubernetesResourceCondition(config, commandOutput),
+    ),
+  );
+}
+
+async function kubernetesResourceProperty(
+  validationName,
+  config,
+  runtimeConfig,
+  container,
+) {
+  requireKubernetesConfig(validationName, config, ["kind", "path"]);
+  if (config.name == null && config.name_selector == null) {
+    logAndError(
+      validationName,
+      `Missing 'name' or 'name_selector' in the validation config: ${JSON.stringify(config)}.`,
+      [],
+    );
+  }
+
+  return reportKubernetesCheck(
+    validationName,
+    await runKubernetesAssertion(
+      container,
+      buildKubernetesResourcePropertyCommand(config),
+      (commandOutput) => compareKubernetesResourceProperty(config, commandOutput),
+    ),
+  );
+}
+
+async function kubernetesWaitFor(validationName, config, runtimeConfig, container) {
+  requireKubernetesConfig(validationName, config, ["kind", "resource"]);
+
+  const command = buildKubernetesWaitForCommand(config);
+  let result;
+  try {
+    result = await executeCommand(container, command);
+  } catch (error) {
+    result = error;
+  }
+
+  if (result.exitCode !== 0) {
+    // kubectl wait exits 0 once the condition is reached; anything else is
+    // the timeout (or an error), and its first output line is kubectl's own
+    // message naming the resource.
+    const kubectlError = (result.output || "").trim().split("\n")[0];
+    logAndError(
+      validationName,
+      `The kubectl wait failed or timed out: ${kubectlError || "(no output)"}`,
+      [
+        "Expected: the wait to complete within the configured timeout, got: " +
+          `exit code ${result.exitCode} (the condition was not reached).`,
+        `Command: ${command}`,
+        `Output: ${result.output || "(empty)"}`,
+      ],
+    );
+  }
+  return [];
+}
+
 export async function validate(container, validation, runtimeConfig) {
   let result;
   log(`   ${validation.name}`);
@@ -770,6 +917,30 @@ export async function validate(container, validation, runtimeConfig) {
       break;
     case "vault-secret":
       result = await vaultSecret(
+        validation.name,
+        validation.config,
+        runtimeConfig,
+        container,
+      );
+      break;
+    case "kubernetes-resource":
+      result = await kubernetesResource(
+        validation.name,
+        validation.config,
+        runtimeConfig,
+        container,
+      );
+      break;
+    case "kubernetes-resource-property":
+      result = await kubernetesResourceProperty(
+        validation.name,
+        validation.config,
+        runtimeConfig,
+        container,
+      );
+      break;
+    case "kubernetes-wait-for":
+      result = await kubernetesWaitFor(
         validation.name,
         validation.config,
         runtimeConfig,
