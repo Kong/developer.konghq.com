@@ -553,42 +553,28 @@ config:
     - kongair-internal-root-ca
 ```
 
-## Rate limiting {% new_in 2.3 %}
+## Rate limiting
 
-The AI MCP Server [`rate_limiting`](#schema-aigateway-mcpserver-rate-limiting) field caps how many requests the server accepts for a specific MCP method or [tool](#tools).
-For example, you can allow `tools/list` frequently but restrict an expensive `search_flights` tool to a few calls per second.
+Some MCP operations cost more than others.
+A single `tools/call` to a flight search tool can hit a metered upstream API, while `tools/list` is cheap.
+The AI MCP Server [`rate_limiting`](#schema-aigateway-mcpserver-rate-limiting) field lets you cap requests for a specific MCP method or [tool](#tools), so an expensive tool or a runaway client can't exhaust your upstream quota.
+
+Use `rate_limiting` in the following cases:
+
+- **Protect an expensive tool**: limit a single tool, such as `search_flights`, to a small number of calls per second, without slowing down the rest of the server.
+- **Cap overall tool usage**: limit all `tools/call` requests per minute, regardless of which tool the client calls.
+- **Layer short and long windows**: combine a per-second limit to absorb bursts with a per-day limit to control total usage for the same tool.
 
 The `rate_limiting` field is supported in `conversion-listener` and `passthrough-listener` modes.
 Other [server modes](#server-modes) reject it.
 
-Set a list of `limits`.
-Each entry in the list has the following fields:
-
-{% table %}
-columns:
-  - title: Field
-    key: field
-  - title: Description
-    key: description
-rows:
-  - field: "`method`"
-    description: "The MCP method the limit applies to, for example `tools/call`. Set either `method` or `tool`, not both."
-  - field: "`tool`"
-    description: "The name of the tool the limit applies to, for example `search_flights`. Set either `method` or `tool`, not both."
-  - field: "`limit`"
-    description: "The number of requests allowed per window. Must be between 1 and 2147483646."
-  - field: "`window_size`"
-    description: "The window size in seconds. Must be `1` (second), `60` (minute), `3600` (hour), or `86400` (day)."
-{% endtable %}
-
-Each limit must set exactly one of `method` or `tool`.
-Each combination of target and `window_size` can appear only once.
-You can set several windows for the same target, for example a per-hour and a per-day limit on one tool.
-If either rule is broken, the API returns a `400` error that points to the invalid entry, for example `rate_limiting.limits[1]`.
+Each limit targets either an MCP method or a tool name, never both, and sets a request count for a fixed window of one second, one minute, one hour, or one day.
+You can define several windows for the same target, but each combination of target and window can appear only once.
+If a limit breaks either rule, the API returns a `400` error that points to the invalid entry, for example `rate_limiting.limits[1]`.
 
 Each {{site.ai_gateway}} data plane node keeps its own counters and enforces the limits independently.
 
-In the following example, the AI MCP Server allows 100 `tools/call` requests per minute.
+In the following example, the AI MCP Server allows 100 `tools/call` requests per minute across all tools.
 It also limits the `search_flights` tool to 10 requests per second and 1000 requests per day:
 
 ```yaml
