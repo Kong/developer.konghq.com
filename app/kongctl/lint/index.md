@@ -39,7 +39,7 @@ For a complete list of available rules, see the [vacuum](https://quobix.com/vacu
 
 APIs in a kongctl declarative configuration file are defined in the `apis` block. To make sure every API is documented, you may want to validate that each one has a `description`.
 
-Here is a sample ruleset file containing a single Rule that accomplishes this:
+Here is a sample ruleset file containing a single rule that accomplishes this:
 
 ```yaml
 rules:
@@ -67,7 +67,7 @@ Validating this configuration against the example ruleset, stored in `ruleset.ya
 ```bash
 kongctl lint -f kong.yaml -r ruleset.yaml
 ```
-
+Result:
 ```
 Linting Violations: 1
 Failures: 1
@@ -84,7 +84,7 @@ apis:
     name: Task API
     description: Create and track tasks
 ```
-
+Run kongctl with the new ruleset:
 ```bash
 kongctl lint -f kong.yaml -r ruleset.yaml; echo $?
 ```
@@ -96,7 +96,9 @@ Result:
 ```
 {:.no-copy-code}
 
-When violations at or above the `--fail-severity` level are found, the command returns a non-zero exit code. You can use this to stop a CI/CD pipeline before a problematic configuration is applied. To lint multiple files, pass a directory to `-f` and use `-R` to process it recursively.
+When `kongctl lint` finds violations at or above the `--fail-severity` level, the command returns a non-zero exit code. 
+You can use this to stop a CI/CD pipeline before a problematic configuration is applied. 
+To lint multiple files, pass a directory to `-f` and use `-R` to process it recursively.
 
 ## Command usage
 
