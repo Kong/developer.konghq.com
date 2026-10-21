@@ -38,14 +38,10 @@ rows:
               [Sign up for {{site.konnect_short_name}}](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs&utm_content=ai-gateway) to configure {{site.ai_gateway}} using {{site.konnect_short_name}}.
 
       - blocks:
-          - type: text
-            config: |
-              <div>
-              <img src="/assets/images/gateway/ai-gateway-overview.svg" alt="Overview of AI gateway. Click to expand." style="cursor: zoom-in;" role="button" tabindex="0" onclick="this.nextElementSibling.showModal()" onkeydown="if (event.key === 'Enter') this.nextElementSibling.showModal()" />
-              <dialog style="padding: 0; border: 0; background: transparent; max-width: 95vw; max-height: 95vh;" onclick="this.close()">
-                <img src="/assets/images/gateway/ai-gateway-overview.svg" alt="Overview of AI gateway" style="display: block; max-width: 95vw; max-height: 95vh; cursor: zoom-out;" />
-              </dialog>
-              </div>
+          - type: expandable_image
+            config:
+              url: /assets/images/gateway/ai-gateway-overview.svg
+              alt_text: Overview of AI gateway
 
   - header:
       type: h2

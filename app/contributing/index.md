@@ -698,6 +698,22 @@ Displays an image on a landing page.
 ```
 <!--vale on-->
 
+### Expandable image
+
+Displays an image on a landing page. Clicking the image opens an enlarged version in a modal.
+Takes the same `config` as the image block.
+Use it for large diagrams that are hard to read at column width.
+
+<!--vale off-->
+```yaml
+- blocks:
+    - type: expandable_image
+      config:
+        url: /assets/images/gateway/ai-gateway-overview.svg
+        alt_text: Overview of {{ site.ai_gateway }}
+```
+<!--vale on-->
+
 ### Diagram
 
 Displays a Mermaid.js diagram on a landing page.
