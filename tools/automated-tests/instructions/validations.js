@@ -20,6 +20,11 @@ import {
   captureDescription,
   captureInputText,
 } from "./capture.js";
+import {
+  buildCurlCommand,
+  isNetworkLevelError,
+  parseCurlResponse,
+} from "./container-request.js";
 
 const log = debug("tests:runner");
 const __filename = fileURLToPath(import.meta.url);
@@ -212,13 +217,10 @@ async function executeRequest(
       if (options.body) console.log(`[debug] request body: ${options.body}`);
     }
 
+    const jar = config.cookie_jar || config.cookie;
     let response;
     try {
-      response = await fetchWithOptionalJar(
-        url,
-        options,
-        config.cookie_jar || config.cookie,
-      );
+      response = await fetchWithOptionalJar(url, options, jar);
     } catch (error) {
       const cause = error.cause
         ? ` (cause: ${error.cause.code || error.cause.message || error.cause})`
@@ -228,7 +230,28 @@ async function executeRequest(
         `[debug] fetch failed for ${options.method} ${url}${cause}`,
       );
       error.message = `${error.message} for ${options.method} ${url}${cause}`;
-      throw error;
+
+      // The host fetch cannot reach Docker-internal addresses (on macOS, an
+      // operator k3d bridge-network $PROXY_IP lives inside the Docker
+      // Desktop VM's network). Re-run the same request inside the test
+      // container, which shares the daemon's network namespace, and let the
+      // parsed response flow through the normal status/extract/retry logic.
+      // Classification and the curl/parse contracts live in
+      // container-request.js; cookie-jar and multipart requests keep the
+      // original error, since the fallback does not cover them.
+      if (!isNetworkLevelError(error) || jar || options.body instanceof FormData) {
+        throw error;
+      }
+
+      const fallbackCommand = buildCurlCommand(url, {
+        ...options,
+        insecure: config.insecure,
+      });
+      const fallbackMessage = `[fetch-fallback] ${options.method} ${url} is unreachable from the host; re-running inside the test container`;
+      log(fallbackMessage);
+      console.error(fallbackMessage);
+      const result = await executeCommand(container, fallbackCommand);
+      response = parseCurlResponse(result.output);
     }
     let body = {};
 
