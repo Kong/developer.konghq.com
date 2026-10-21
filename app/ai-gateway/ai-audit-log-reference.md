@@ -688,7 +688,7 @@ rows:
 
 ### AI MCP Sanitizer logs
 
-If you use the [AI MCP Sanitizer Policy](/ai-gateway/policies/ai-mcp-sanitizer/), {{site.ai_gateway}} logs include a `sanitizer` object on each logged RPC in the `ai.mcp` object. The object tracks the number of PII items identified and sanitized, the time taken to sanitize, and metadata about each sanitized item. {{site.ai_gateway}} writes these fields when `log_statistics` is enabled in the AI MCP Server's [`config.logging`](/ai-gateway/entities/ai-mcp-server/#schema-aigateway-mcpserver-config-logging).
+If you use the [AI MCP Sanitizer Policy](/ai-gateway/policies/ai-mcp-sanitizer/), {{site.ai_gateway}} logs include a `sanitizer` object on each logged RPC in the `ai.mcp` object. The object tracks the number of PII items identified and sanitized, the duration of sanitization, and metadata about each sanitized item. {{site.ai_gateway}} writes these fields when `log_statistics` is enabled in the AI MCP Server's [`config.logging`](/ai-gateway/entities/ai-mcp-server/#schema-aigateway-mcpserver-config-logging).
 
 {% include md/ai-gateway/v2/mcp-sanitizer-logs.md %}
 

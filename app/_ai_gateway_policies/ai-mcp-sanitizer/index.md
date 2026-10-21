@@ -4,7 +4,7 @@ name: 'AI MCP Sanitizer'
 publisher: kong-inc
 description: 'Detect and redact personally identifiable information (PII) in MCP tool call arguments and results.'
 min_version:
-  ai-gateway: '2.0'
+  ai-gateway: '2.3'
 works_on:
   - konnect
 products:
@@ -85,15 +85,11 @@ columns:
     key: target
   - title: Direction
     key: direction
-  - title: Use it to
-    key: use
 rows:
   - target: "`tool_arguments`"
     direction: "The `tools/call` request, from {{site.ai_gateway}} to the tool server"
-    use: Prevent a third-party tool from receiving user data.
   - target: "`tool_results`"
     direction: "The `tools/call` response, from the tool server through {{site.ai_gateway}} to the calling agent"
-    use: Prevent data from a system of record from appearing in the LLM context.
 {% endtable %}
 
 You can enable either target, or both.
@@ -181,7 +177,7 @@ rows:
     effect: "Each call opens one additional outbound connection and doesn't use the load balancer, retries, upstream TLS or mTLS settings, the keepalive pool, or the configured timeouts."
 {% endtable %}
 
-Enabling `recover_redacted` has the same effect, because {{site.ai_gateway}} must hold the result to restore placeholders in it.
+Enabling `recover_redacted` also requires {{site.ai_gateway}} to hold the result, so the same changes apply.
 
 These changes reverse when you remove `tool_results` from `sanitize_targets` and disable `recover_redacted`.
 A configuration that targets only `tool_arguments` without recovery doesn't change streaming or single-pass behavior.
@@ -210,7 +206,6 @@ The `recover_redacted` setting is `true` by default.
 
 The AI MCP Sanitizer Policy uses [`stop_on_error`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-stop-on-error) to decide what happens when the PII service is unreachable, returns a non-200 response, or returns a malformed response.
 The `stop_on_error` setting is `true` by default.
-When the service returns fewer entries than {{site.ai_gateway}} sent, the behavior is still being decided.
 
 ## Differences from the AI PII Sanitizer Policy
 
@@ -234,13 +229,14 @@ rows:
     mcp: Not available. Conversation history is an LLM concept.
 {% endtable %}
 
-`INPUT`, `OUTPUT`, and `BOTH` are ambiguous on MCP traffic, because an AI MCP Server is both a server to the agent and a client of the tool server.
-`sanitize_targets` names the protocol location instead.
+{:.info}
+> `INPUT`, `OUTPUT`, and `BOTH` are ambiguous on MCP traffic, because an AI MCP Server is both a server to the agent and a client of the tool server.
+>
+> `sanitize_targets` names the protocol location instead.
 
 ## PII service
 
-The AI MCP Sanitizer Policy uses the same external PII service as the AI PII Sanitizer Policy.
-For the Docker images, the `anonymize` categories, redact modes, custom patterns, and HTTPS setup, see [AI PII Anonymizer service](/ai-gateway/policies/ai-sanitizer/#ai-pii-anonymizer-service).
+For the PII service Docker images, the `anonymize` categories, redact modes, custom patterns, and HTTPS setup, see [AI PII Anonymizer service](/ai-gateway/policies/ai-sanitizer/#ai-pii-anonymizer-service).
 You run the PII service in your own environment.
 
 ## Logging and analytics
@@ -265,4 +261,3 @@ Set [`skip_logging_sanitized_items`](/ai-gateway/policies/ai-mcp-sanitizer/refer
   The optional `score` is a number between 0 and 1 and defaults to 0.5.
 * [`sanitize_targets`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-sanitize-targets) must contain at least one target.
   The default is `tool_arguments`.
-
