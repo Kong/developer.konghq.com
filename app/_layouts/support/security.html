@@ -1,0 +1,12 @@
+---
+layout: default
+---
+
+<div class="flex flex-col gap-6 w-full py-12">
+  <div class="flex flex-col gap-2">
+    <div class="flex items-center gap-3"><h1 class="font-extrabold text-[40px] leading-[60px]">{{page.title | liquify }}</h1>{% include components/llm_dropdown.html url=page.url %}</div>
+    <span class="leading-7">{{page.description | liquify}}</span>
+  </div>
+
+  {{ content }}
+</div>
