@@ -813,7 +813,7 @@ The 2.x guidance about `MeshLoadBalancingStrategy` behind a zone egress no longe
 `ZoneEgress` and `ZoneIngress` are removed, so there is no shared L4 proxy holding long-lived
 connections between zones, and no restriction on the top-level `targetRef` because of one.
 
-## MeshRetry 
+## MeshRetry
 
 Shared changes that apply here:
 
@@ -943,7 +943,7 @@ and `KUMA_DATAPLANE_RUNTIME_METRICS_KEY_PATH`.
 ### Move off MADS on Kubernetes
 
 The Monitoring Assignment Discovery Service server no longer starts on Kubernetes control
-planes, whatever `KUMA_MONITORING_ASSIGNMENT_SERVER_ENABLED` or `controlPlane.madsServer.enabled`
+planes, regardless of what `KUMA_MONITORING_ASSIGNMENT_SERVER_ENABLED` or `controlPlane.madsServer.enabled`
 are set to, and the Helm chart stops rendering the `mads-server` port 5676 there. It stays
 supported in Universal mode, including Universal on Kubernetes.
 
@@ -954,7 +954,7 @@ discovery against the endpoints this policy exposes instead.
 
 Shared changes that apply here: [the `targetRef` rewrite](#removed-legacy-targetref-kinds).
 
-### Rewrite the agent config and rego as secure data sources
+### Rewrite the agent config and Rego as secure data sources
 
 `agentConfig` and every `appendPolicies[].rego` move from the old flat `DataSource` type, which
 is removed from the API, to `SecureDataSource`. The old type had no discriminator and
@@ -978,7 +978,7 @@ rows:
 
 {:.warning}
 > `inline` was base64-encoded and `insecureInline.value` is plain text. Decode the old value
-> when rewriting it, or the agent is handed base64 where it expects rego.
+> when rewriting it, or the agent is handed base64 where it expects Rego.
 
 ```yaml
 # 2.x
@@ -999,7 +999,7 @@ rego:
 A policy in the old shape is rejected after upgrading, because the missing `type` discriminator
 is a validation violation: `rego.type (): in body is required`.
 
-An inline rego policy is compiled when the resource is applied, so the rewrite is checked at
+An inline Rego policy is compiled when the resource is applied, so the rewrite is checked at
 write time. The control plane resolves and compiles a module supplied through a `Secret`
 when generating agent configuration instead. Check source-loading and combined-module
 compilation errors after applying; resource acceptance alone doesn't prove the policy is active.
@@ -1011,10 +1011,10 @@ compilation errors after applying; resource acceptance alone doesn't prove the p
 a policy keeping it fails to sync from a global control plane into an upgraded zone.
 
 {:.warning}
-> `spec.targetRef.name`, `namespace` and `mesh` are removed. On Kubernetes they are **pruned
-> rather than rejected** by the API server on the next write, and a policy already stored with
+> `spec.targetRef.name`, `namespace` and `mesh` are removed. On Kubernetes they are pruned
+> rather than rejected by the API server on the next write, and a policy already stored with
 > them ignores them on either platform. A `MeshOPA` that used `name` to scope itself to one service therefore widens to every
-> proxy matching `kind`, and its rego starts evaluating requests it never saw before. Nothing
+> proxy matching `kind`, and its Rego starts evaluating requests it never saw before. Nothing
 > reports it. On Universal, a write that still sets them is rejected with
 > `spec.targetRef.name: unknown field`.
 
@@ -1170,7 +1170,7 @@ leftover resource becomes inert rather than rejected: it produces no Envoy or ra
 configuration, and nothing reports it.
 
 Helm doesn't delete CRDs, so `meshglobalratelimits.kuma.io` stays on an existing cluster until
-you remove it by hand:
+you remove it manually:
 
 ```sh
 kubectl delete crd meshglobalratelimits.kuma.io
@@ -1246,7 +1246,7 @@ without a policy.
 
 {:.warning}
 > `MeshTLS` has no check that the remaining spec configures anything, so on Kubernetes a policy
-> whose only field was `from` is **accepted**, not rejected, unlike most other policies that lost
+> whose only field was `from` is accepted, not rejected, unlike most other policies that lost
 > `from`. It applies with an empty spec, and reading it back shows nothing but the `targetRef`.
 > Since an inbound with no policy is `Strict`, a `from` that was there to allow plaintext
 > silently stops allowing it. On Universal the policy is rejected with `spec.from: unknown field`.
@@ -1366,7 +1366,7 @@ side:
 1. To keep a fault limited to some callers, add `rules[].matches` with their `spiffeID`.
 
 On Kubernetes, a `MeshFaultInjection` whose only field was `from` is accepted with an empty spec
-and injects nothing. See [`rules` instead of `from`](#rules-instead-of-from).
+and injects nothing. For more information, see [`rules` instead of `from`](#rules-instead-of-from).
 
 ## Validate the migrated policies
 
