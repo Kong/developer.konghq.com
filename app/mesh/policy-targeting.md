@@ -33,20 +33,19 @@ rows:
   - selector: "`spec.targetRef`"
     answers: "Which proxies the policy is installed on."
   - selector: "`spec.to[]`"
-    answers: "Which destination the configuration applies to, for traffic those proxies **send**."
+    answers: "Which destination the configuration applies to, for traffic those proxies send."
   - selector: "`spec.rules[]`"
-    answers: "Which client the configuration applies to, for traffic those proxies **receive**."
+    answers: "Which client the configuration applies to, for traffic those proxies receive."
 {% endtable %}
 
-Not every policy has all three. A policy states its own shape on its own page.
+Not every policy has all three. For more information, see [each policy's reference docs](/mesh/policies/).
 
 ## Policy scope
 
 On Kubernetes, the namespace a policy is created in restricts which proxies it can reach.
-`targetRef` narrows within that reach; it can't widen it. The control plane works out the
+`targetRef` narrows within that reach, it can't widen it. The control plane works out the
 reach from the policy's shape and records it in the `kuma.io/policy-role` label, which it
-computes on every write. Leave the label out: a value that differs from the computed one is
-rejected.
+computes on every write.
 
 {% table %}
 columns:
@@ -57,16 +56,20 @@ columns:
   - title: Reaches
     key: reach
 rows:
-  - policy: "Created on the **global** control plane"
+  - policy: "Created on the global control plane"
     role: "`system`"
     reach: "Every proxy in the mesh, in every zone."
   - policy: "Created in the system namespace, `{{site.mesh_namespace}}`, of a zone control plane"
     role: "`system`"
-    reach: "Every proxy in **that zone**. It isn't distributed to other zones."
-  - policy: "Created in an application namespace, every `to[]` item a `MeshService` or `MeshHTTPRoute` selected by exactly three labels: `kuma.io/display-name`, `k8s.kuma.io/namespace` set to the policy's own namespace, and `kuma.io/zone` set to the local zone"
+    reach: "Every proxy in that zone. It isn't distributed to other zones."
+  - policy: |
+      Created in an application namespace, where every `to[]` item selects one local destination. Each item is a `MeshService` or `MeshHTTPRoute` selected by these three labels and no others:
+      * `kuma.io/display-name`
+      * `k8s.kuma.io/namespace`, set to the policy's own namespace
+      * `kuma.io/zone`, set to the local zone
     role: "`producer`"
     reach: "Every client of that destination, in any namespace and any zone."
-  - policy: "Created in an application namespace, with `to[]` items that aren't all of that form"
+  - policy: "Created in an application namespace, with at least one `to[]` item selected any other way. For example, by `kuma.io/display-name` alone, or with `k8s.kuma.io/namespace` set to another namespace."
     role: "`consumer`"
     reach: "Only proxies in the policy's own namespace."
   - policy: "Created in an application namespace, with no `to[]` at all"
@@ -78,9 +81,9 @@ A policy can't mix producer and consumer items. A policy that names a single des
 `to[]` item and something broader in another is rejected on admission.
 
 {:.warning}
-> `targetRef.kind: Mesh` does not mean "the whole mesh" on its own. In a `consumer` or
-> `workload-owner` policy it means every proxy in that policy's namespace. Creating it in
-> `{{site.mesh_namespace}}` widens it to the whole **zone**, not the whole mesh: a policy
+> `targetRef.kind: Mesh` does not select the whole mesh on its own. In a `consumer` or
+> `workload-owner` policy it selects every proxy in that policy's namespace. Creating it in
+> `{{site.mesh_namespace}}` widens it to the whole zone, not the whole mesh: a policy
 > created on a zone control plane stays in that zone. Only the global control plane, or a
 > producer policy, reaches every zone.
 
@@ -90,7 +93,7 @@ consumer item.
 A zone control plane sets the `kuma.io/origin: zone` label on the policies created there. You
 don't need to set it, and if you do, any value other than `zone` is rejected.
 
-Universal has no namespaces, so every policy there is `system`. A policy created on the global
+Universal has no namespaces, so every policy is `system`. A policy created on the global
 control plane reaches every zone, and one created on a zone control plane reaches only that
 zone.
 
@@ -112,39 +115,25 @@ priority, and each one applies only when the previous ones tie:
 
 ## Outbound destinations and inbound identities
 
-A **destination** is something the proxy chooses to call. Your proxy decides to send a
-request to `backend`, so naming that service is both sufficient and natural:
-`kind: MeshService`.
+A destination is something the proxy chooses to call. Your proxy decides to send a
+request to `backend`, so naming that service is enough.
 
-A **client** is remote and describes itself. If an inbound rule selected a caller by label or
+A client is remote and describes itself. If an inbound rule selected a caller by label or
 by service tag, it would be trusting the caller's own claim about what it is, and a workload
 can assert any tag. So inbound matches on the SPIFFE ID that
 [MeshIdentity](/mesh/policies/meshidentity/) issued and mTLS proves, which the caller can't
 forge.
 
-For this reason, {{site.mesh_product_name}} 3.x removes the `from` array, and with it client
-selection by `MeshServiceSubset`, from every policy: those selectors matched an inbound client
-on tags the client set itself. Inbound policies such as
-[MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) match clients in `rules` instead.
-
 ## Accepted values by field
 
 ### `spec.targetRef`
 
-`Mesh` or `Dataplane`. Nothing else.
-
-Use `Mesh` to apply a policy across the mesh, or `Dataplane` with `labels` to narrow it to a
-set of proxies. `targetRef.sectionName` narrows further, to one named listener or inbound of
-the selected proxy.
-
-{:.warning}
-> `MeshSubset`, `MeshService` and `MeshServiceSubset` are rejected here in
-> {{site.mesh_product_name}} 3.x. A policy still using one fails validation, including when a
-> global control plane replicates it to an upgraded zone, so it can silently stop syncing.
+* `Mesh`: applies a policy across the mesh
+* `Dataplane`: with `labels`, narrows the policy to a set of proxies. `targetRef.sectionName` narrows further, to one named listener or inbound of the selected proxy.
 
 ### `spec.to[].targetRef`
 
-A narrower selector than the top level, and the accepted kinds vary by policy:
+`spec.to[].targetRef` is a narrower selector than the top level, and the accepted kinds vary by policy:
 
 {% table %}
 columns:
@@ -158,19 +147,14 @@ rows:
   - kind: "`MeshService`, `MeshExternalService`, `MeshMultiZoneService`"
     accepted: "Most policies with a `to` array."
   - kind: "`MeshHTTPRoute`"
-    accepted: "`MeshAccessLog`, `MeshLoadBalancingStrategy`, `MeshRetry` and `MeshTimeout` only. `MeshCircuitBreaker` rejects it, because circuit breaking applies to a whole destination rather than to one route."
+    accepted: "`MeshAccessLog`, `MeshLoadBalancingStrategy`, `MeshRetry` and `MeshTimeout` only."
 {% endtable %}
 
-`MeshRateLimit` and `MeshFaultInjection` are narrower still: they accept `kind: Mesh` only,
-and only when the top-level `targetRef` is `kind: Mesh` or omitted. With `kind: Dataplane`,
-`to` must be empty.
-
-`MeshSubset` and `MeshServiceSubset` are rejected in `to[]` by every policy, and
-`MeshServiceSubset` is also rejected in a route's `backendRefs[]`.
+`MeshRateLimit` and `MeshFaultInjection` are even narrower: they accept `kind: Mesh` only, and only when the top-level `targetRef` is `kind: Mesh` or omitted. With `kind: Dataplane`, `to` must be empty.
 
 ### `spec.rules[]`
 
-Where a policy supports inbound configuration, each rule may carry `matches`, and a match
+`spec.rules[]` defines where a policy supports inbound configuration. Each rule may carry `matches`, and a match
 selects on one of two fields:
 
 {% table %}
@@ -194,5 +178,4 @@ A match needs at least one of the two. A `Prefix` on a SPIFFE ID is how you addr
 the ID is structured as `spiffe://<trust-domain>/ns/<namespace>/sa/<service-account>`, so a
 prefix ending at the namespace selects every workload in it.
 
-Some policies accept `rules` without `matches`, applying to all inbound traffic. Where that
-is the case, the policy page says so.
+Some policies accept `rules` without `matches`, applying to all inbound traffic.
