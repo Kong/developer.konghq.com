@@ -257,7 +257,7 @@ formats:
 
 The `*` format has the following behavior:
 
-* It selects every format in the preceding table except `passthrough`, which can't be combined with other formats. Formats that the data plane version doesn't support are omitted. For example, `typesafe` is selected only if you're running {{site.ai_gateway}} 2.2.
+* It selects every format in the preceding table except `passthrough`, which can't be combined with other formats. Formats that the data plane version doesn't support are omitted. For example, `typesafe` is selected only if you're running {{site.ai_gateway}} 2.2 or later.
 * If you list other formats next to `*`, they are ignored.
 * An absent or empty `formats` list still defaults to `openai`.
 * Your provider must support the formats that `*` selects. A provider might not support every format.
@@ -273,7 +273,7 @@ formats:
   - type: cohere
 ```
 
-If you set explicit capabilities, a capability that isn't supported by a format is rejected. A capability that only some of the listed formats serve is exposed for those formats only.
+If you set explicit capabilities, a capability that no listed format supports is rejected. A capability that only some of the listed formats serve is exposed for those formats only.
 
 When two formats serve the same path, for example `realtime` on `/realtime` for `openai` and `gemini`, the AI Model keeps the endpoint of the `openai` format. If you list formats and capabilities explicitly, you get a routing conflict warning for the endpoint that is omitted.
 
