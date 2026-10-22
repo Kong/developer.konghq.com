@@ -1,5 +1,5 @@
 {%- assign summary='{{site.operator_product_name}} running' -%}
-{%- capture license_test_attr %}{% if include.raw %}data-test-step{% else %}data-test-prereq{% endif %}{%- endcapture -%}
+{%- capture test_attr %}{% if include.raw %}data-test-step{% else %}data-test-prereq{% endif %}{%- endcapture -%}
 {%- capture license %}
 ```sh
 echo "
@@ -10,7 +10,7 @@ metadata:
 rawLicenseString: '$(cat ./license.json)'
 " | kubectl apply -f -
 ```
-{: {{ license_test_attr }}="block" }
+{: {{ test_attr }}="block" }
 {%- endcapture -%}
 {%- capture cert-manager -%}
 {% include k8s/cert-manager.md %}
@@ -39,7 +39,7 @@ rawLicenseString: '$(cat ./license.json)'
    helm repo add kong https://charts.konghq.com
    helm repo update
    ```
-   {: data-test-prereq="block" }
+   {: {{ test_attr }}="block" }
 
 1. Install {{ site.operator_product_name }} using Helm:
 
@@ -69,7 +69,7 @@ rawLicenseString: '$(cat ./license.json)'
        --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}{% if extra_set %} \{% for param in extra_set %}
        --set {{ param }}{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
      ```
-     {: data-test-prereq="block" }
+     {: {{ test_attr }}="block" }
    indent: 3
    {% endon_prem %}
    {% endif %}
@@ -106,7 +106,7 @@ rawLicenseString: '$(cat ./license.json)'
        --set {{ param }}{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
        kubectl -n kong-system wait --for=condition=Available=true --timeout=300s deployment/kong-operator-kong-operator-controller-manager
      ```
-     {: data-test-prereq="block" }
+     {: {{ test_attr }}="block" }
    indent: 3
    {% endon_prem %}
    {% endif %}

@@ -66,6 +66,79 @@ RSpec.describe 'prereqs/products/operator.md' do
     end
   end
 
+  context 'embedded raw in the page body' do
+    let(:template) do
+      <<~'LIQUID'
+        {% include prereqs/products/operator.md raw=true v_maj=2 %}
+      LIQUID
+    end
+
+    # A raw include renders as page-body markdown that Jekyll converts to HTML
+    # later in the page pipeline, so these assertions run against the
+    # kramdown-converted output rather than the Liquid output.
+    def html
+      Capybara::Node::Simple.new(Kramdown::Document.new(rendered, input: 'GFM').to_html)
+    end
+
+    it 'marks the Helm repo fence as a step' do
+      expect(html).to have_css('.custom-code-block[data-test-step="block"]',
+                               text: 'helm repo add kong https://charts.konghq.com')
+    end
+
+    it 'marks the on-prem Helm install fence as a step' do
+      expect(html).to have_css('.custom-code-block[data-test-step="block"]',
+                               text: 'helm upgrade --install kong-operator kong/kong-operator')
+    end
+
+    it 'waits for the operator deployment to become ready in the install step' do
+      install = html.find('.custom-code-block[data-test-step="block"]',
+                          text: 'helm upgrade --install kong-operator kong/kong-operator')
+      expect(install.find('pre').text).to include(
+        'kubectl -n kong-system wait --for=condition=Available=true --timeout=300s ' \
+        'deployment/kong-operator-kong-operator-controller-manager'
+      )
+    end
+
+    it 'renders the install step as valid bash' do
+      install = html.find('.custom-code-block[data-test-step="block"]',
+                          text: 'helm upgrade --install kong-operator kong/kong-operator')
+      validate_bash_syntax!(install.find('pre').text)
+    end
+
+    it 'marks the on-prem KongLicense fence as a step' do
+      expect(html).to have_css('.custom-code-block[data-test-step="block"]', text: 'KongLicense')
+    end
+
+    it 'marks exactly three step fences' do
+      expect(html).to have_css('.custom-code-block[data-test-step="block"]', count: 3)
+    end
+
+    it 'marks no fence as a prerequisite' do
+      expect(html).to have_no_css('.custom-code-block[data-test-prereq]')
+    end
+  end
+
+  context 'embedded raw in the page body with the v1 chart' do
+    let(:template) do
+      <<~'LIQUID'
+        {% include prereqs/products/operator.md raw=true v_maj=1 %}
+      LIQUID
+    end
+
+    def html
+      Capybara::Node::Simple.new(Kramdown::Document.new(rendered, input: 'GFM').to_html)
+    end
+
+    it 'marks the on-prem Helm install fence as a step' do
+      expect(html).to have_css('.custom-code-block[data-test-step="block"]',
+                               text: 'helm upgrade --install kgo kong/gateway-operator')
+    end
+
+    it 'marks no fence as a prerequisite' do
+      expect(html).to have_no_css('.custom-code-block[data-test-prereq]')
+    end
+  end
+
   context 'extra Helm --set values' do
     let(:template) do
       <<~'LIQUID'
