@@ -19,6 +19,10 @@ related_resources:
     url: /kongctl/list/
   - text: kongctl declarative resource reference
     url: /kongctl/supported-resources/#ai-gateway
+  - text: kongctl adopt ai-gateway
+    url: /kongctl/adopt/ai-gateway/
+  - text: kongctl get ai-gateway
+    url: /kongctl/get/ai-gateway/
 ---
 
 Use the `list` verb with the `ai-gateway` command to list {{site.konnect_short_name}} {{site.ai_gateway}}s.
