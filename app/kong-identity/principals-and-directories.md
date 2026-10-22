@@ -189,7 +189,7 @@ Group names must be unique within a directory and can only contain letters and n
 ### Group types
 
 You set a group's type when you create it, and you can't change it afterwards.
-Groups and teams share one namespace in a directory, so a group and a team can't have the same name.
+A group and a team in the same directory can't have the same name.
 
 The following table compares the two types:
 
@@ -215,7 +215,7 @@ rows:
     group: "A group can't contain other groups."
     team: "A team can contain other teams."
   - feature: "Owner"
-    group: "No"
+    group: "No owner"
     team: "A team can have an owner, which is a principal of type `user` in the same directory. The owner can't be a member of the team, and you can't delete a user who owns a team."
   - feature: "API key"
     group: "Yes"
@@ -242,7 +242,7 @@ Authenticate as an individual principal when you need to know who made each requ
 Create the key the same way you create a principal's API key, using the group's ID as the principal ID. 
 See [Key auth](#key-auth).
 
-Teams can't have an API key. Groups and teams can't have other credentials or identities. {{site.identity}} rejects basic auth credentials, and OIDC, Consumer, and auth server client.
+Only groups can have an API key, not teams. Groups and teams can't have other credentials or identities. For groups and teams, {{site.identity}} rejects basic auth credentials, and OIDC, Consumer, and auth server client.
 
 
 ## Controlling {{site.base_gateway}} plugin execution based on principals
