@@ -1,7 +1,4 @@
 {%- assign summary='{{site.operator_product_name}} running' -%}
-{%- if page.prereqs.enterprise -%}
-{%- assign summary = summary | append:' (with an Enterprise license)' -%}
-{%- endif -%}
 {%- capture license_test_attr %}{% if include.raw %}data-test-step{% else %}data-test-prereq{% endif %}{%- endcapture -%}
 {%- capture license %}
 ```sh
@@ -118,21 +115,12 @@ rawLicenseString: '$(cat ./license.json)'
 {% unless skip_cert_manager %}{{cert-manager | indent: 3}}{% endunless %}
 {{cert | indent: 3}}
 {%- if page.works_on contains 'on-prem' -%}
-{%- if page.prereqs.enterprise -%}
 {% on_prem %}
 content: |
   Apply a `KongLicense`. This assumes that your license is available in `./license.json`
 
   {{license | indent: 2}}
 {% endon_prem %}
-{% else %}
-{% on_prem %}
-content: |
-  This tutorial doesn't require a license, but you can add one using `KongLicense`. This assumes that your license is available in `./license.json`.
-
-  {{license | indent: 2}}
-{% endon_prem %}
-{%- endif -%}
 {%- endif -%}
 {%- endcapture -%}
 

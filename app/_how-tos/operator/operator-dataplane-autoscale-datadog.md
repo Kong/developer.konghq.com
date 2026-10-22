@@ -23,7 +23,6 @@ works_on:
   - on-prem
 
 prereqs:
-  enterprise: true
   kubernetes:
     gateway_api: true
   entities:
