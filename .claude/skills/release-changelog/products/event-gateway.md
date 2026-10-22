@@ -39,7 +39,7 @@ Handle these before grouping. They are not placed by the grouping rules.
 
 - **Breaking changes**: `app/event-gateway/breaking-changes.md` goes under `## Changes`, only if it changed.
 - **Auto-generated references**: `app/_references/event-gateway/{VERSION}/headers.md` and `metrics.md` are auto-generated. On a new release they appear as new files. Do not list them individually.
-- **Configuration reference**: `app/_data/event-gateway-bootstrap-schema/{VERSION}.json` renders into `/event-gateway/configuration/`. Do not list the JSON file. If `app/event-gateway/configuration.md` itself was edited, list it under References with an annotation. Otherwise it appears only on the collapsed line.
+- **Configuration reference**: `app/_data/event-gateway-bootstrap-schema/{VERSION}.json` renders into `/event-gateway/configuration/`. Check for this file in the diff even though the baseline filter drops `.json`. Do not list the file itself. If `app/event-gateway/configuration.md` was also edited, list it under References with an annotation. Otherwise it appears only on the collapsed line.
 
 Collapse the auto-generated pages into one line at the bottom of the output:
 

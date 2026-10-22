@@ -63,7 +63,7 @@ If both lists are empty, fall back to `git diff HEAD~1 --name-only` with the sam
 
 Keep the two lists separate. Added files go under `## New docs`, modified files go under `## Updated docs`.
 
-Renamed files: run `git diff $BASE...HEAD --name-status -M` once. Treat a rename as an update to the new path, and mention the rename in the annotation.
+Renamed files appear in neither list above. Run `git diff $BASE...HEAD --name-status -M`, treat each rename as an update to the new path, and mention the rename in the annotation.
 
 ### 4. For each MODIFIED file, read the diff to understand what changed
 
@@ -88,7 +88,7 @@ Use this to write a short, specific annotation for the link, e.g.:
 
 If the diff adds multiple distinct things, list them: `: new sections: Token Exchange, Consumer Claims`.
 
-If the diff is noise (whitespace, formatting, frontmatter version bumps), write `: minor updates`, or skip the entry entirely if it has no reader-visible effect.
+If the diff is noise (whitespace, formatting, frontmatter version bumps) or has no reader-visible effect, skip the entry entirely.
 
 ### 5. For ADDED files, no diff annotation needed
 
@@ -202,4 +202,3 @@ Copy [products/event-gateway.md](products/event-gateway.md) as a template, then 
 
 - Always prefer frontmatter `permalink` over path-derived URLs.
 - Production base URL: `https://developer.konghq.com`.
-- Breaking changes go under `## Changes`, never under new or updated docs.
