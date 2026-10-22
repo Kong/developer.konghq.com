@@ -25,7 +25,6 @@ tldr:
   a: Annotate the backend Service with `konghq.com/protocol=grpcs`, add an `HTTPS` listener to your `Gateway`, then create a `GRPCRoute` resource. {{ site.operator_product_name }} converts the `GRPCRoute` into a {{ site.base_gateway }} [Service](/gateway/entities/service/) and [Route](/gateway/entities/route/).
 
 prereqs:
-  enterprise: true
   inline:
     - title: gRPCurl installed
       include_content: prereqs/grpcurl

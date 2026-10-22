@@ -25,9 +25,6 @@ tldr:
   q: How do I route UDP traffic with {{ site.operator_product_name }}?
   a: Add a `UDP` listener to your `Gateway`, then create a `UDPRoute` resource. {{ site.operator_product_name }} converts the `UDPRoute` into a {{ site.base_gateway }} [Service](/gateway/entities/service/) and [Route](/gateway/entities/route/).
 
-prereqs:
-  enterprise: true
-
 ---
 
 `UDPRoute` is a Kubernetes Gateway API resource for routing UDP traffic by port. This guide shows how to configure {{ site.operator_product_name }} to proxy UDP traffic to a backend Service.

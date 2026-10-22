@@ -28,7 +28,6 @@ prereqs:
     skip_cert_manager: true
     konnect:
       auth: true
-  enterprise: true
 
 
 works_on:
