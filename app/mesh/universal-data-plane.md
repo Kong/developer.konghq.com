@@ -21,9 +21,11 @@ related_resources:
     url: /mesh/cli/
 ---
 
-On Universal a proxy is two things you provide: a `Dataplane` resource describing what the
-workload exposes and consumes, and a `kuma-dp` process running beside it. Kubernetes derives
-both from a Pod; here you declare them.
+On Universal a proxy is made up of two pieces: 
+* A `Dataplane` resource describing what the workload exposes and consumes
+* A `kuma-dp` process running beside it
+
+Kubernetes derives both from a Pod. On Universal, you declare them.
 
 ## Minimal proxy configuration
 
@@ -71,11 +73,7 @@ immutable image that templates the file at boot.
 
 ## Labels and policy selection
 
-`labels` on the `Dataplane` are the only identity a policy can select on. There are no
-per-inbound tags anymore.
-
-`kuma.io/workload` does more than any other label, and your own labels are what selectors
-match on:
+`labels` on the `Dataplane` are the only identity a policy can select on:
 
 {% table %}
 columns:
@@ -85,14 +83,10 @@ columns:
     key: effect
 rows:
   - label: "`kuma.io/workload`"
-    effect: "Names the workload this proxy belongs to. The control plane generates one `MeshService` per distinct value, and the SPIFFE ID defaults to `/workload/{value}`. Without it, the control plane generates no `MeshService` and the workload has nothing for a policy or route to target."
+    effect: "Names the workload this proxy belongs to. The control plane generates one `MeshService` per distinct value, and the SPIFFE ID defaults to `/workload/{value}`. Without it, the control plane generates no `MeshService` and the workload has nothing for a policy or route to target. It must be a valid [RFC 1035 DNS label](https://www.rfc-editor.org/info/rfc1035/)."
   - label: "Your own labels"
     effect: "Anything else you set (`app`, `version`, `team`) is what `spec.targetRef.labels` and `MeshService.spec.selector.dataplaneLabels` match on."
 {% endtable %}
-
-`kuma.io/workload` has to be a valid RFC 1035 DNS label, since it becomes a `MeshService` name.
-The control plane skips a value with invalid characters and logs
-`couldn't generate MeshService from kuma.io/workload, contains invalid characters`.
 
 ## Inbounds
 
@@ -108,9 +102,19 @@ rows:
   - field: "`port`"
     meaning: "The port. With transparent proxying, the port the application listens on; without it, the port Envoy binds."
   - field: "`name`"
-    meaning: "Names the port, which is what a policy's `sectionName` refers to. Defaults to the port number as a string."
+    meaning: "The name of the port, which is what a policy's `sectionName` refers to. Defaults to the port number as a string."
   - field: "`protocol`"
-    meaning: "`tcp`, `http`, `http2` or `grpc`. **Set this.** See the following warning."
+    meaning: | 
+      `tcp`, `http`, `http2`, or `grpc`. 
+      
+      An inbound with no `protocol` is treated as unknown and served as plain TCP. It loses every L7 filter: 
+      * `MeshTimeout`'s HTTP timeouts
+      * `MeshFaultInjection` entirely
+      * `MeshRateLimit`'s HTTP limits
+      * HTTP access log fields
+      * HTTP-aware routing
+      
+      Nothing rejects the `Dataplane`, so the only sign is the policies quietly not applying.
   - field: "`servicePort`"
     meaning: "Where traffic is forwarded, if it differs from `port`."
   - field: "`serviceAddress`"
@@ -119,14 +123,7 @@ rows:
     meaning: "`Ready` or `NotReady`."
 {% endtable %}
 
-{:.warning}
-> An inbound with no `protocol` is treated as unknown and served as plain TCP. It loses every L7
-> filter: `MeshTimeout`'s HTTP timeouts, `MeshFaultInjection` entirely, `MeshRateLimit`'s HTTP
-> limits, HTTP access log fields, and HTTP-aware routing. The `kuma.io/protocol` tag used to fill
-> this in and no longer does. Nothing rejects the `Dataplane`, so the only sign is the policies
-> quietly not applying.
-
-`networking.address` must be a real address: not empty, not `0.0.0.0` or `::`. The admin port,
+`networking.address` must be a real address: not empty, and not `0.0.0.0` or `::`. The admin port,
 if set, has to differ from every inbound and outbound port.
 
 ## Outbounds
@@ -152,30 +149,23 @@ networking:
 
 The application then connects to `127.0.0.1:5432` and the proxy carries it to the destination.
 
-`backendRef` is required: the control plane rejects an outbound without one with `backendRef: must be
-defined`. `kind` is `MeshService`, `MeshExternalService` or `MeshMultiZoneService`, and the
-reference takes `name` or `labels` (at least one; `labels` wins if both are set). With neither,
-the control plane rejects it with `either 'name' or 'labels' should be specified`. `port` is required unless
+`backendRef` is required. `kind` can be `MeshService`, `MeshExternalService`, or `MeshMultiZoneService`, and the
+reference takes at least one of `name` or `labels`. If both are set, `labels` wins. `port` is required unless
 `kind` is `MeshExternalService`.
-
-{:.warning}
-> `networking.outbound[].tags` is removed. A stored `Dataplane` still carrying tags keeps being
-> served, the tags are discarded, and no outbound listener is generated, so the workload loses
-> connectivity to that destination with nothing reported. Rewrite these before upgrading.
 
 ## Transparent proxying
 
 Transparent proxying intercepts the workload's traffic, and is what makes a Universal proxy
-behave like a Kubernetes sidecar. It needs iptables rules on the host. `kuma-dp` doesn't install
-them: install them as root with `kumactl install transparent-proxy`, which excludes the user
-`kuma-dp` runs as (by default the user `kuma-dp` or UID `5678`, which must already exist), then
-start `kuma-dp` as that user with `--transparent-proxy`:
+behave like a Kubernetes sidecar. It needs iptables rules on the host. 
+
+Install them as root with `kumactl install transparent-proxy`, which excludes the user
+`kuma-dp` runs as (by default the user `kuma-dp` or UID `5678`, which must already exist):
 
 ```sh
 sudo kumactl install transparent-proxy --kuma-dp-user kuma-dp
 ```
 
-Then start `kuma-dp` as that user:
+Then start `kuma-dp` as that user with the `--transparent-proxy` flag:
 
 ```sh
 sudo runuser -u kuma-dp -- kuma-dp run \
@@ -185,11 +175,40 @@ sudo runuser -u kuma-dp -- kuma-dp run \
   --transparent-proxy
 ```
 
-`kumactl install transparent-proxy --config-file` is where you tune the redirect ports, excluded ranges
-and DNS redirection. If you change them, pass `kuma-dp` the same file with
-`--transparent-proxy-config`, so the control plane knows the redirect ports. It takes a file, a
-comma-separated list of files, or `-` for stdin, and can be repeated (later values override
-earlier ones).
+To customize the redirect ports, excluded ports, and DNS redirection, write them to a config file:
+
+```yaml
+kumaDPUser: kuma-dp
+redirect:
+  inbound:
+    port: 15006
+    excludePorts: [9901]
+  outbound:
+    port: 15001
+    excludePorts: [5432]
+  dns:
+    enabled: true
+```
+
+Pass the file to `kumactl install transparent-proxy` with `--config-file`:
+
+```sh
+sudo kumactl install transparent-proxy --config-file /etc/kuma/transparent-proxy.yaml
+```
+
+Then pass the same file to `kuma-dp` with `--transparent-proxy-config` in place of
+`--transparent-proxy`, so the control plane knows the redirect ports:
+
+```sh
+sudo runuser -u kuma-dp -- kuma-dp run \
+  --cp-address https://control-plane.internal:5678 \
+  --dataplane-file backend-01.yaml \
+  --dataplane-token-file /etc/kuma/token \
+  --transparent-proxy-config /etc/kuma/transparent-proxy.yaml
+```
+
+`--transparent-proxy-config` takes a file, a comma-separated list of files, or `-` for stdin,
+and can be repeated (later values override earlier ones).
 
 With transparent proxying on, the embedded DNS proxy (`--dns-enabled`, on by default) lets the
 workload resolve mesh hostnames. The workload reaches destinations by name rather than by a local port.
@@ -213,9 +232,8 @@ networking:
             app: orders
 ```
 
-Each ref takes `kind` and `labels`; select a destination by name with the
-`kuma.io/display-name` label. `port` is optional and requires `labels`. `name` and `namespace`
-are removed, and a stored ref that still uses them resolves to nothing.
+Each ref takes `kind` and `labels`. Select a destination by name with the
+`kuma.io/display-name` label. `port` is optional and requires `labels`.
 
 ## Readiness
 
@@ -241,9 +259,7 @@ reaching it. An inbound with no `serviceProbe` and no reported `health` is treat
 
 ## Zone proxies
 
-An ordinary `Dataplane` that declares zone proxy listeners carries cross-zone traffic, rather
-than a separate proxy type. `kuma-dp run --proxy-type=ingress` exits with
-`.ProxyType "ingress" is not supported`.
+An ordinary `Dataplane` that declares zone proxy listeners carries cross-zone traffic:
 
 ```yaml
 type: Dataplane
@@ -258,33 +274,30 @@ networking:
       name: ingress
 ```
 
-`type` is `ZoneIngress` or `ZoneEgress`; the control plane rejects anything else with `type must be
-ZoneIngress or ZoneEgress`. Listeners can sit alongside inbounds on the same `Dataplane`.
+`type` can be `ZoneIngress` or `ZoneEgress`. Listeners can sit alongside inbounds on the same `Dataplane`.
 
-These proxies authenticate with a **dataplane token** like any other. The data plane server no longer
-accepts tokens issued as zone tokens.
+These proxies authenticate with a data plane token.
 
 ## Tokens
 
-A dataplane token proves which proxy is connecting. Bind it as narrowly as the deployment
+A data plane token proves which proxy is connecting. Bind it as narrowly as the deployment
 allows:
 
-Bind it to one named proxy of a workload:
+* Bind it to one named proxy of a workload:
 
-```sh
-kongctl create mesh dataplane-token --name backend-01 --workload backend --valid-for 24h
-```
+  ```sh
+  kongctl create mesh dataplane-token --name backend-01 --workload backend --valid-for 24h
+  ```
 
-Bind it to a workload, for an autoscaling group whose instance names vary:
+* Bind it to a workload, for an autoscaling group whose instance names vary:
 
-```sh
-kongctl create mesh dataplane-token --workload backend --valid-for 24h
-```
+  ```sh
+  kongctl create mesh dataplane-token --workload backend --valid-for 24h
+  ```
 
-Once a `MeshIdentity` derives the proxy's identity from `kuma.io/workload` (the Universal
-default), the token must carry `--workload`. The control plane then rejects a token bound only by `--name` or only to the mesh
-with `derives its identity from the workload, so it requires a workload-bound
-token`. Proxies that are already connected keep running until they reconnect, so bind tokens to
+Once a `MeshIdentity` derives the proxy's identity from `kuma.io/workload`,
+the token must carry `--workload`. 
+Proxies that are already connected keep running until they reconnect, so bind tokens to
 the workload from the start. `--tag` matches the `Dataplane`'s `labels`, and `--valid-for`
 bounds the lifetime.
 
@@ -295,8 +308,5 @@ newline so it can be redirected straight into that file.
 
 Once the `Dataplane` is applied and the proxy is connected, the zone control plane generates the
 `MeshService` for its `kuma.io/workload` value, allocates a VIP and hostname, and creates the
-matching `Workload` resource (checked every two seconds by default).
-
-So the ongoing task on Universal is keeping `Dataplane` resources accurate. The rest follows
-from them. See [{{site.mesh_product_name}} on Universal](/mesh/universal/) for the full split of
-what you own against what Kubernetes would have handled.
+matching `Workload` resource (checked every two seconds by default). 
+Make sure to always keep the `Dataplane` resources accurate.
