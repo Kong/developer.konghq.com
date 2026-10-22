@@ -313,7 +313,7 @@ When a request passes through the AI Prompt Compressor Policy, {{site.ai_gateway
 
 Compression metrics are reported with the existing {{site.ai_gateway}} dimensions, so you can scope them by `ai_gateway`, `ai_gateway_data_plane_node`, and `control_plane`. The Policy configuration doesn't change, and the compression log entry (`compress_items`) keeps its fields and values.
 
-The new metrics carry token and message counts only. They never include the original or compressed text.
+Compression metrics contain token and message counts only. They never include the original or compressed text.
 
 ### Analytics metrics
 
@@ -374,7 +374,8 @@ The two providers report compression at different granularity. The `kong` provid
 
 ### Saved token counter
 
-{{site.ai_gateway}} also counts the tokens saved by compression for each provider and model, next to the AI request count. The count is only recorded for requests that save at least one token.
+{{site.ai_gateway}} also counts the tokens saved by compression for each provider and model, next to the AI request count.
+{{site.ai_gateway}} records the count only for requests that save at least one token.
 
 {:.info}
 > In a hybrid deployment, the control plane doesn't record the saved token count. Only the Konnect Analytics metrics report it.

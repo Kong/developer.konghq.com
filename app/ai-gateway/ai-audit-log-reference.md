@@ -511,7 +511,7 @@ columns:
     key: description
 rows:
   - property: "`original_token_count`"
-    description: The original number of tokens before compression.
+    description: The number of tokens before compression.
   - property: "`compress_token_count`"
     description: The number of tokens after compression.
   - property: "`save_token_count`"
