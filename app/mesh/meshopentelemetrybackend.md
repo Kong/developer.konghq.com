@@ -20,6 +20,8 @@ related_resources:
     url: /mesh/policies/meshaccesslog/
   - text: Migrate policies to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-policies-to-3/
+min_version:
+  mesh: '3.0'
 ---
 
 `MeshOpenTelemetryBackend` defines how data plane proxies connect to an OpenTelemetry collector.

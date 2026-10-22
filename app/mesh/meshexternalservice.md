@@ -19,6 +19,8 @@ related_resources:
     url: /mesh/policies/meshpassthrough/
   - text: Migrate policies to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-policies-to-3/
+min_version:
+  mesh: '3.0'
 ---
 
 `MeshExternalService` makes a destination outside the mesh into a resource the mesh understands.

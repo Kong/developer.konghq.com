@@ -19,6 +19,8 @@ related_resources:
     url: /mesh/migrate-zone-proxies-to-3/
   - text: Migrate policies to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-policies-to-3/
+min_version:
+  mesh: '3.0'
 ---
 
 Before upgrading to {{site.mesh_product_name}} 3.x, run the {{site.mesh_product_name}} 3.x readiness checker against your

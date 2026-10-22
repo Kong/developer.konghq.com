@@ -22,6 +22,8 @@ related_resources:
     url: /mesh/upgrade/
   - text: Version-specific upgrade notes
     url: /mesh/version-specific-upgrade-notes/
+min_version:
+  mesh: '3.0'
 ---
 
 This guide helps teams migrate policy configuration from {{site.mesh_product_name}} 2.x to 3.x.

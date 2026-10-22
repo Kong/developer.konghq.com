@@ -22,6 +22,8 @@ related_resources:
     url: /mesh/migrate-policies-to-3/
   - text: Upgrade {{site.mesh_product_name}}
     url: /mesh/upgrade/
+min_version:
+  mesh: '3.0'
 ---
 
 Replace legacy `ZoneIngress` and `ZoneEgress` proxies while your deployment still runs a

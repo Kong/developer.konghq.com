@@ -18,6 +18,8 @@ related_resources:
     url: /mesh/policies/meshidentity/
   - text: Mesh-scoped zone proxies
     url: /mesh/mesh-scoped-zone-proxies/
+min_version:
+  mesh: '3.0'
 ---
 
 A {{site.mesh_product_name}} policy carries up to three selectors. They answer different

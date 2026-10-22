@@ -19,6 +19,8 @@ related_resources:
     url: /mesh/meshservice/
   - text: "{{site.mesh_product_name}} CLI"
     url: /mesh/cli/
+min_version:
+  mesh: '3.0'
 ---
 
 On Universal a proxy is made up of two pieces: 

@@ -19,6 +19,8 @@ related_resources:
     url: /mesh/meshexternalservice/
   - text: Migrate policies to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-policies-to-3/
+min_version:
+  mesh: '3.0'
 ---
 
 `MeshService` represents one service in the mesh: which proxies back it, which ports it exposes,

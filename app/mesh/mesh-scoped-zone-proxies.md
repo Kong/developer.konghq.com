@@ -25,6 +25,8 @@ related_resources:
     url: /mesh/policies/meshidentity/
   - text: MeshMultiZoneService
     url: /mesh/meshmultizoneservice/
+min_version:
+  mesh: '3.0'
 ---
 
 Zone proxies carry traffic between zones or from a mesh to external services. In

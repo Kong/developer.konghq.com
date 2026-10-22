@@ -24,6 +24,8 @@ related_resources:
     url: /mesh/policies/meshidentity/
   - text: Migrate gateways to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-gateways-to-3/
+min_version:
+  mesh: '3.0'
 ---
 
 Application ingress is how requests from clients outside the mesh reach mesh services.

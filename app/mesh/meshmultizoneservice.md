@@ -19,6 +19,8 @@ related_resources:
     url: /mesh/policies/meshloadbalancingstrategy/
   - text: Migrate policies to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-policies-to-3/
+min_version:
+  mesh: '3.0'
 ---
 
 `MeshMultiZoneService` gathers the [MeshServices](/mesh/meshservice/) for one service across

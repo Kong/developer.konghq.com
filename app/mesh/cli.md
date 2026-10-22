@@ -19,6 +19,8 @@ related_resources:
     url: /mesh/migrate-policies-to-3/
   - text: MeshIdentity
     url: /mesh/policies/meshidentity/
+min_version:
+  mesh: '3.0'
 ---
 
 `kongctl` is the CLI for {{site.mesh_product_name}} 3.x, replacing `kumactl`. It talks to a

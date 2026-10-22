@@ -25,6 +25,8 @@ related_resources:
     url: /mesh/policies/meshtrust/
   - text: MeshTrafficPermission reference
     url: /mesh/policies/meshtrafficpermission/
+min_version:
+  mesh: '3.0'
 ---
 
 In {{site.mesh_product_name}} 2.x, the `mtls` block on a `Mesh` chooses a certificate

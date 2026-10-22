@@ -19,6 +19,8 @@ related_resources:
     url: /mesh/cli/
   - text: MeshIdentity
     url: /mesh/policies/meshidentity/
+min_version:
+  mesh: '3.0'
 ---
 
 A Universal control plane is `kuma-cp` running with `environment: universal` against a store

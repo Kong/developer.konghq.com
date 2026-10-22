@@ -26,6 +26,8 @@ next_steps:
     url: /mesh/universal-control-plane/
   - text: Learn about the Universal data plane
     url: /mesh/universal-data-plane/
+min_version:
+  mesh: '3.0'
 ---
 
 Universal mode runs {{site.mesh_product_name}} anywhere that isn't a Kubernetes cluster: virtual

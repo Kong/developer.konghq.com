@@ -19,6 +19,8 @@ related_resources:
     url: /mesh/migrate-policies-to-3/
   - text: Upgrade {{site.mesh_product_name}}
     url: /mesh/upgrade/
+min_version:
+  mesh: '3.0'
 ---
 
 {{site.mesh_product_name}} 2.x called an API gateway with a mesh sidecar a delegated gateway.
