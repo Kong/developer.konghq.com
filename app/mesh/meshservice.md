@@ -23,86 +23,54 @@ min_version:
   mesh: '3.0'
 ---
 
-`MeshService` represents one service in the mesh: which proxies back it, which ports it exposes,
-and which identities it presents. It is the resource a policy names as a destination, in
+`MeshService` represents one service in the mesh. It includes:
+
+* Which proxies back it
+* Which ports it exposes
+* Which identities it presents
+
+It's the resource a policy names as a destination, in
 `spec.to[].targetRef` and in a route's `backendRefs`.
 
 A client proxy reaches a `MeshService` only if it lists it in `reachableBackends` (the
 `kuma.io/reachable-backends` annotation on Kubernetes). A proxy without `reachableBackends` gets
 no outbounds at all.
 
-`MeshService` isn't a policy. There is no `targetRef` (a `MeshService` *is* the target), and on Kubernetes
-you don't write one at all.
-
 ## MeshService sources
 
 On Kubernetes the control plane generates a `MeshService` from each `Service`. Change the
 `Service` instead of the generated resource; the ports and protocols follow from it.
 
-`MeshService` is read-only on the **global** control plane, since zones are what produce it.
-`kongctl` refuses to write one there before it sends the request:
-
-```text
-Mesh Service is read only on this control plane and cannot be created or updated
-```
-{:.no-copy-code}
+`MeshService` is read-only on the global control plane, since zones are what produce it.
 
 {:.warning}
-> A **zone** control plane does not protect it. It accepts a hand-written `MeshService`, and it
-> accepts edits to a generated one: the change is stored and is **not** reconciled back from
+> A zone control plane accepts a hand-written `MeshService`, and it
+> accepts edits to a generated one. The change is stored and is not reconciled back from
 > the `Service`. Editing a generated `MeshService` therefore breaks routing to that service
 > until you undo it. For example, changing a port makes every request to the service fail, and
 > the change persists. Treat these as control-plane output and leave them alone.
 
 On Universal the zone control plane generates a `MeshService` for each distinct
-`kuma.io/workload` label value on a `Dataplane`, with a port per inbound. Set the label on the
-`Dataplane` and the `MeshService` follows; see
+`kuma.io/workload` label value on a `Dataplane`, with a port per inbound. For more information, see
 [Control plane automation](/mesh/universal/#control-plane-automation).
-You write one by hand, selecting proxies with `spec.selector`, only if you turn generation off.
-
-Either way, reading a `MeshService` is how you find out what a policy resolves to. Its
-`status` reports the VIP, the hostnames, how many proxies are backing it and whether mTLS is
-ready.
+You should only create one manually if you turn generation off.
 
 ## Selecting the proxies behind a service
 
-`spec.selector` takes exactly one of two forms, and setting both is rejected with
-`must specify only one of: dataplaneRef or dataplaneLabels`:
+`spec.selector` takes exactly one of two forms:
 
-{% table %}
-columns:
-  - title: Selector
-    key: selector
-  - title: Selects
-    key: what
-rows:
-  - selector: "`dataplaneLabels`"
-    what: "Every proxy whose labels match, through `matchLabels`."
-  - selector: "`dataplaneRef.name`"
-    what: "One named `Dataplane`."
-{% endtable %}
-
-{:.warning}
-> `spec.selector.dataplaneTags` was removed in 3.0. A `MeshService` carrying only that selector
-> is read back with an **empty selector and matches no proxies**, which makes the service
-> unavailable rather than producing an error. The control plane reports it as a deprecation:
-> `has no selector, so it matches no data plane proxies`. Migrate those to `dataplaneLabels`.
+* `dataplaneLabels`: Selects every proxy whose labels match, through `matchLabels`
+* `dataplaneRef.name`: Selects one named `Dataplane`.
 
 ## Ports
 
 `spec.ports[]` lists what the service exposes. Each entry takes a `port`, an optional `name`, an
 optional `targetPort`, and an `appProtocol` that defaults to `tcp`.
 
-`appProtocol` accepts `tcp`, `http`, `http2` and `grpc`; anything else is rejected. It decides
-more than it looks like it does:
+`appProtocol` accepts `tcp`, `http`, `http2` and `grpc`. An HTTP-based protocol makes [MeshHTTPRoute](/mesh/policies/meshhttproute/) apply to the port, and makes it take precedence over [MeshTCPRoute](/mesh/policies/meshtcproute/).
+`appProtocol` also gates the L7 filters on the port. `tcp` gets no HTTP access log fields, no `MeshTimeout` HTTP timeouts, and no `MeshFaultInjection`.
 
-- An HTTP-based protocol is what makes [MeshHTTPRoute](/mesh/policies/meshhttproute/) apply to
-  the port, and what makes it take precedence over
-  [MeshTCPRoute](/mesh/policies/meshtcproute/).
-- It gates the L7 filters on the port, so `tcp` means no HTTP access log fields, no
-  `MeshTimeout` HTTP timeouts, and no `MeshFaultInjection`.
-
-A port's `name` is what a policy's `sectionName` refers to, so naming ports is what lets a
+A port's `name` is what a policy's `sectionName` refers to, so naming ports lets a
 policy apply to one port of a service rather than all of them.
 
 ## Identities
@@ -114,12 +82,10 @@ and the ID as its `value`.
 Every [MeshIdentity](/mesh/policies/meshidentity/) matching those proxies contributes its ID, so
 during a trust domain migration the list carries both and peers accept either.
 
-{:.warning}
-> `type: ServiceTag` is no longer accepted. A persisted `ServiceTag` entry is rejected once the
-> updated schema is in place. Service-tag-based naming now falls back to the `kuma.io/service`
-> label or the resource name instead.
-
 ## Reading the status
+
+The control plane reports what it computes for a `MeshService` in the resource's `status`. The following table describes its
+fields:
 
 {% table %}
 columns:
@@ -141,7 +107,7 @@ rows:
 {% endtable %}
 
 `spec.state` is `Available` when at least one endpoint is healthy and `Unavailable` otherwise.
-It matters beyond this resource: a [MeshMultiZoneService](/mesh/meshmultizoneservice/)
+A [MeshMultiZoneService](/mesh/meshmultizoneservice/)
 aggregating this service uses the state to decide whether to send cross-zone traffic to it.
 
 `dataplaneProxies` is the first thing to read when a destination isn't receiving traffic. A
@@ -162,7 +128,6 @@ A status stuck at `Pending` across many intervals is therefore not the handover 
 look at whether a [MeshIdentity](/mesh/policies/meshidentity/) is actually issuing certificates
 to the destination's proxies.
 
-## Naming
+## Schema
 
-A `MeshService`'s name has to be an RFC 1035 label: lowercase letters, digits and dashes, starting with a letter. This requirement is stricter than it was, because the name appears in generated hostnames and
-SNI values.
+{% json_schema MeshServices %}
