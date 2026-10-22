@@ -120,14 +120,15 @@ on-prem:
         - k3d cluster delete operator-test
         - k3d cluster create --k3s-arg "--disable=traefik@server:*" operator-test --wait
         - kubectl config use-context k3d-operator-test
-        # The upgrade how-to upgrades an existing installation: every test
-        # starts from a running operator, which is what the page's "An existing
-        # Kong Operator installation" prereq states. The default chart tag is
-        # fine: the page's --install upgrade stays safe to run on top of it.
+        # Register the Helm repo only, never pre-install the operator:
+        # pre-installing creates kong-system, which breaks pages whose steps
+        # create that namespace themselves (the multi-tenancy series). Every
+        # tested page installs its own operator, either through the standard
+        # operator prereq include or in its own steps. The repo registration
+        # stays because some pages (e.g. enable-debug-logging) run
+        # `helm install` without adding the repo first.
         - helm repo add kong https://charts.konghq.com
         - helm repo update
-        - helm upgrade --install kong-operator kong/kong-operator -n kong-system --create-namespace
-        - kubectl -n kong-system wait --for=condition=Available=true --timeout=300s deployment/kong-operator-kong-operator-controller-manager
 
   kic:
     setup:
