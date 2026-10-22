@@ -65,7 +65,7 @@ Changelog for supported {{site.event_gateway}} versions.
 - **Producing with `acks=0` could misbehave when records were rejected**: Fixed an issue where the broker never replied to `acks=0` produce requests and could terminate the connection, which broke the proxy's request/response assumptions. The proxy now mirrors broker behavior for `acks=0`, including closing the connection when the broker would.
 - **Invalid encryption metadata header bytes were silently ignored**: Fixed an issue where when an existing `kong/enc` metadata header could not be decoded, the encryption policy silently dropped the previously applied keys. It now surfaces an error for the record instead.
 - **`encrypt_fields`/`decrypt_fields` policies could not use the `mark` failure mode**: Fixed an issue where these sub-policies used a restricted failure-mode schema. They now accept the standard produce/consume failure modes, including `mark`.
-- **Topic UUID in schema metadata namespaces was not resolved**: Fixed an issue where the namespace UUID was left unresolved.
+- Fixed an issue where the namespace UUID was left unresolved.
 
 
 ## 1.2.1
