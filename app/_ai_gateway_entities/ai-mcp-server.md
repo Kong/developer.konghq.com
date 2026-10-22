@@ -565,8 +565,9 @@ Use `rate_limiting` in the following cases:
 - **Cap overall tool usage**: limit all `tools/call` requests per minute, regardless of which tool the client calls.
 - **Layer short and long windows**: combine a per-second limit to absorb bursts with a per-day limit to control total usage for the same tool.
 
-The `rate_limiting` field is supported in `conversion-listener` and `passthrough-listener` modes.
-Other [server modes](#server-modes) reject it.
+{:.warning}
+> The `rate_limiting` field is supported only in `conversion-listener` and `passthrough-listener` modes.
+> Other [server modes](#server-modes) reject it.
 
 Each limit targets either an MCP method or a tool name, never both, and sets a request count for a fixed window of one second, one minute, one hour, or one day.
 You can define several windows for the same target, but each combination of target and window can appear only once.
