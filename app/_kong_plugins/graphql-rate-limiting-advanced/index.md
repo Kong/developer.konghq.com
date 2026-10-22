@@ -74,6 +74,57 @@ This is different from the cost strategy ([`config.cost_strategy`](/plugins/grap
 
 {% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 redis_group="strategy" %}
 
+## Headers sent to the client
+
+When this plugin is enabled, {{site.base_gateway}} sends some additional headers back to the client, indicating the cost of the GraphQL query and the state of the rate limiting policies in place:
+
+{% table %}
+columns:
+  - title: Header
+    key: header
+  - title: Description
+    key: description
+rows:
+  - header: "`X-Gql-Query-Cost`"
+    description: The calculated cost of the GraphQL query in the request.
+  - header: "`X-RateLimit-Limit-<window>`"
+    description: The allowed limit for the matching [`config.window_size`](/plugins/graphql-rate-limiting-advanced/reference/#schema--config-window_size) value, for example, `X-RateLimit-Limit-Minute`.
+  - header: "`X-RateLimit-Remaining-<window>`"
+    description: The number of requests still available for the matching [`config.window_size`](/plugins/graphql-rate-limiting-advanced/reference/#schema--config-window_size) value, for example, `X-RateLimit-Remaining-Minute`.
+{% endtable %}
+
+The `<window>` part of the header name is a human-readable name for these common window sizes, in seconds: `Second` (`1`), `Minute` (`60`), `Hour` (`3600`), `Day` (`86400`), `Month` (`2592000`), and `Year` (`31536000`). 
+For any other [`config.window_size`](/plugins/graphql-rate-limiting-advanced/reference/#schema--config-window_size) value, the plugin uses the raw number of seconds instead, for example, `X-RateLimit-Limit-120`.
+
+You can optionally hide the query cost, limit, and remaining headers with the [`config.hide_client_headers`](/plugins/graphql-rate-limiting-advanced/reference/#schema--config-hide_client_headers) option.
+
+If more than one window is set, the plugin returns multiple limit headers.
+For example:
+
+```plaintext
+X-Gql-Query-Cost: 5
+X-RateLimit-Limit-Minute: 100000
+X-RateLimit-Remaining-Minute: 99995
+X-RateLimit-Limit-Hour: 1000000
+X-RateLimit-Remaining-Hour: 999995
+```
+
+If the query cost exceeds [`config.max_cost`](/plugins/graphql-rate-limiting-advanced/reference/#schema--config-max_cost), the plugin returns an `HTTP/1.1 403` status code to the client with the following JSON body:
+
+```json
+{ "message": "API max cost limit exceeded" }
+```
+
+If any of the rate limit windows are exceeded, the plugin returns an `HTTP/1.1 429` status code to the client with the following JSON body:
+
+```json
+{ "message": "API rate limit exceeded" }
+```
+
+{:.info}
+> These headers appear on successful responses and on `403` and `429` error responses. 
+> They don't appear when the plugin rejects the request before it calculates the query cost, for example when the GraphQL query is missing or invalid, or when upstream schema introspection fails (`400` responses).
+
 ## Introspection endpoint
 
 The [introspection](https://graphql.org/learn/introspection/) endpoint is generated based on the [Gateway Service path](/gateway/entities/service/), so you must define a path in the Gateway Service itself, 
@@ -393,12 +444,113 @@ rows:
 
 ## Costs API endpoints
 
-
-The GraphQL Proxy Cache Advanced plugin exposes several [`/graphql-rate-limiting-advanced`](/plugins/graphql-rate-limiting-advanced/api/) endpoints for cost decoration through the Kong Admin API.
+The GraphQL Rate Limiting Advanced plugin exposes several [`/graphql-rate-limiting-advanced`](/plugins/graphql-rate-limiting-advanced/api/) endpoints for cost decoration through the Kong Admin API.
 
 You can use the Admin API to:
 * Create costs on Gateway Services or globally
 * Review, update, or delete existing costs
 
+Cost decorations aren't part of the plugin's `config` schema. They're a separate entity, similar to a Consumer or a Route, so they can be created, listed, updated, and deleted independently of the plugin configuration itself, using the Admin API, decK, or Kubernetes.
+
 To access these endpoints, [enable the plugin](/plugins/graphql-rate-limiting-advanced/examples/) first.
 The GraphQL cost management endpoints will appear once the plugin has been enabled.
+
+### Create and manage cost decorations
+
+You can manage cost decorations using any of the following tools:
+
+{% navtabs "Cost decorations" %}
+{% navtab "Admin API" %}
+
+Use the [`/graphql-rate-limiting-advanced/costs`](/plugins/graphql-rate-limiting-advanced/api/#/operations/create-graphql-rate-limiting-advanced-cost) endpoint to create a cost decoration that applies globally, or [`/services/{service}/graphql-rate-limiting-advanced/costs`](/plugins/graphql-rate-limiting-advanced/api/#/operations/create-graphql-rate-limiting-advanced-cost-with-service) to scope it to a specific Gateway Service.
+
+For example, to set the `Query.allPeople` decoration used in the [default strategy example](#default-strategy):
+
+```bash
+curl -i -X POST http://localhost:8001/services/example-service/graphql-rate-limiting-advanced/costs \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "type_path": "Query.allPeople",
+    "mul_arguments": ["first"],
+    "mul_constant": 1,
+    "add_constant": 1
+  }'
+```
+
+{% endnavtab %}
+{% navtab "Konnect API" %}
+
+Use the [{{site.konnect_short_name}} control plane config API](/api/konnect/control-planes-config/) to manage cost decorations in {{site.konnect_short_name}}. Send a request to the `/v2/control-planes/{controlPlaneId}/core-entities/services/{ServiceId}/graphql-rate-limiting-advanced/costs` endpoint to scope the cost decoration to a specific Gateway Service.
+
+For example, to set the `Query.allPeople` decoration used in the [default strategy example](#default-strategy):
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/services/example-service/graphql-rate-limiting-advanced/costs
+status_code: 201
+method: POST
+body:
+    type_path: "Query.allPeople"
+    mul_arguments:
+      - first
+    mul_constant: 1
+    add_constant: 1
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{:.info}
+> In {{site.konnect_short_name}}, the top-level `/v2/control-planes/{controlPlaneId}/core-entities/graphql-rate-limiting-advanced/costs` endpoint only supports listing and retrieving cost decorations. Creating, updating, and deleting a cost decoration requires the Service-scoped endpoint.
+
+{% endnavtab %}
+{% navtab "decK" %}
+
+Starting with decK v1.59.0, you can manage cost decorations declaratively using the `graphql_ratelimiting_cost_decorations` custom entity, instead of calling the Admin API directly.
+
+```yaml
+_format_version: "3.0"
+custom_entities:
+  - type: graphql_ratelimiting_cost_decorations
+    fields:
+      service:
+        name: example-service
+      type_path: "Query.allPeople"
+      mul_arguments:
+        - "first"
+      mul_constant: 1
+      add_constant: 1
+```
+
+Apply it with `deck gateway sync` or `deck gateway apply`:
+
+```sh
+deck gateway sync
+```
+
+{% endnavtab %}
+{% navtab "Kubernetes" %}
+
+The Kubernetes Ingress Controller (KIC) supports cost decorations through the generic [`KongCustomEntity`](/kubernetes-ingress-controller/faq/custom-entities/) custom resource, using the same `graphql_ratelimiting_cost_decorations` type. Reference the `KongPlugin` resource that has the GraphQL Rate Limiting Advanced plugin attached to it, so the decoration is scoped to the same Gateway Service or Route as the plugin:
+
+```yaml
+apiVersion: configuration.konghq.com/v1alpha1
+kind: KongCustomEntity
+metadata:
+  namespace: default
+  name: allpeople-cost-decoration
+spec:
+  controllerName: kong
+  type: graphql_ratelimiting_cost_decorations
+  parentRef:
+    group: "configuration.konghq.com"
+    kind: "KongPlugin"
+    name: "graphql-rate-limiting-advanced-example"
+  fields:
+    type_path: "Query.allPeople"
+    mul_arguments:
+      - "first"
+    mul_constant: 1
+    add_constant: 1
+```
+
+{% endnavtab %}
+{% endnavtabs %}

@@ -50,4 +50,6 @@ releases:
     version: "13.1.0"
   - release: "13.2"
     version: "13.2.0"
+  - release: "13.3"
+    version: "13.3.0"
     latest: true

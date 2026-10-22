@@ -5,8 +5,7 @@ extended_description: |
   You can verify tokens issued by multiple IdP using the [`extra_jwks_uris`](/plugins/openid-connect/reference/#schema--config-extra-jwks-uris) configuration option, with the following considerations:
 
   * Since the plugin only accepts a single issuer, any `iss` claim verification will fail for tokens that come from a different IdP than the one that was used in the issuer configuration option. Add all issuers as they appear in the `iss` claims of your tokens to the [`config.issuers_allowed`](/plugins/openid-connect/reference/#schema--config-issuers-allowed) setting.
-  * If you make any changes to the `extra_jwks_uris` value, you have to clear the second level DB cache for the change to become effective.
-  See [Delete a Discovery Cache Object](/plugins/openid-connect/api/#/operations/deleteDiscoveryCache).
+  * If you change the `extra_jwks_uris` value, the plugin fetches the discovery data for the new value on the next request; you don't need to clear the cache manually. To remove the old cache entries immediately, use the [Delete a Discovery Cache Object](/plugins/openid-connect/api/#/operations/deleteDiscoveryCache) endpoint.
 
   This example shows how to configure two different `extra_jwks_uris` to support token validation for two different IdPs.
 
@@ -32,6 +31,7 @@ config:
     - issuer-url-for-example-host2
   verify_signature: true
   verify_claims: false
+  cache_tokens_salt: ${salt-token}
 
 variables:
   issuer:
@@ -39,6 +39,11 @@ variables:
     description: |
       The issuer authentication URL for your IdP. 
       For example, if you're using Keycloak as your IdP, the issuer URL looks like this: `http://localhost:8080/realms/example-realm`
+  salt-token:
+    value: $TOKEN_SALT
+    description: |
+      A random string that decK requires (v1.59 and later) so session credentials aren't regenerated on every sync. This parameter is optional for other formats.
+      For example, generate one with `openssl rand -base64 16`.
 
 tools:
   - deck

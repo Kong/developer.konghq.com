@@ -14,8 +14,8 @@ tags:
 
 prereqs:
   inline:
-  - title: Create a design document
-    include_content: prereqs/design-document
+  - title: Create an API Collection with a spec
+    include_content: prereqs/api-collection
     icon_url: /assets/icons/file.svg
 
 tldr:

@@ -65,6 +65,14 @@ rows:
       - blocks:
           - type: card
             config:
+              title: AI Custom Policy
+              description: Run your own Lua plugin logic as an AI Policy type, streamed from {{site.konnect_short_name}} or installed on data planes.
+              cta:
+                text: AI Custom Policy entity
+                url: /ai-gateway/entities/ai-custom-policy/
+      - blocks:
+          - type: card
+            config:
               title: AI Consumer
               description: Manage downstream client authentication and access control to your AI APIs.
               cta:

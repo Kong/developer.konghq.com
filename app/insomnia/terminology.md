@@ -63,7 +63,7 @@ rows:
   - feature: Team
     description: "A team is a group of users who collaborate on shared Insomnia projects. Admins use teams to share API resources, apply RBAC rules to control permissions, and simplify access management. For more details, see [Insomnia teams](/insomnia/enterprise-user-management/#insomnia-teams)."
   - feature: Project
-    description: A project is a workspace that contains API collections, specifications, environments, and tests. Projects can be stored locally, synced with Insomnia Cloud, or connected to Git repositories. They help organize and share API workflows.
+    description: A project is a workspace that contains API Collections, specifications, environments, and mock servers. Projects can be stored locally, synced with Insomnia Cloud, or connected to Git repositories. They help organize and share API workflows.
   - feature: Organization
     description: "An organization is a container for projects, teams, and access management. Organizations centralize control by allowing collaborators to be invited, RBAC roles to be assigned, and SSO to be configured. For more details, see [Organizations](/insomnia/organizations/)."
   - feature: Domain
@@ -81,14 +81,15 @@ columns:
   - title: Description
     key: description
 rows:
-  - tool: Design Document
-    description: "A design document is a workspace that contains tools to design an API specification. You can write and edit a spec, generate a collection from the spec to send requests, and create test suites to run different types of tests against your API or API spec. For more details, see [Documents](/insomnia/documents/)."
-  - tool: Request collection
-    description: "A request collection is a workspace for sending requests. You can create new requests or import requests from an API spec, clipboard, or even from a Postman collection. Requests can be customized with environment variables, template tags, pre-request and after-response scripts. Requests can be run individually or as a series of requests to run together. For more details, see [Collections](/insomnia/collections/)."
+  - tool: API Collection
+    description: "An API Collection is a workspace for designing an API and sending requests to it. You can create new requests or import requests from an API spec, clipboard, or even from a Postman collection. Requests can be customized with environment variables, template tags, pre-request and after-response scripts. Requests can be run individually or as a series of requests to run together. Each API Collection can also hold one OpenAPI spec, which you write and preview in its **Spec** tab. For more details, see [API Collections](/insomnia/collections/)."
+  - tool: Design document
+    description: |
+      {% new_in 13.3 %} A design document was a separate workspace type for designing an API specification, used in Insomnia 13.2 and earlier. Documents and collections are merged into a single workspace type called an API Collection, and your existing documents open as API Collections. For more details, see [What happened to documents?](/insomnia/collections/#what-happened-to-documents).
   - tool: Mock server
     description: "A mock server is a self-hosted or cloud-hosted way to simulate an API endpoint. You can create a mock server and define endpoints manually, or generate them from existing responses. You can customize the response code, body, and headers. For more details, see [Mock servers](/insomnia/mock-servers/)."
   - tool: Scratch pad
-    description: "The Insomnia Scratch Pad is a local workspace that you can use to send requests. It doesn't require creating an Insomnia account. The Scratch Pad functions as a collection, and you have access to all collection features. For more details, see [Scratch Pad](/insomnia/storage/#scratch-pad)."
+    description: "The Insomnia Scratch Pad is a local workspace that you can use to send requests. It doesn't require creating an Insomnia account. The Scratch Pad functions as an API Collection, and you have access to all API Collection features, including a spec. For more details, see [Scratch Pad](/insomnia/storage/#scratch-pad)."
   - tool: Collection runner
     description: "The Collection Runner is a tool that allows you to send multiple requests in a specific order. You can also chain requests to reuse elements from a request or response in another one. For more details, see [Use the Collection Runner](/how-to/use-the-collection-runner/) and [Chain requests](/how-to/chain-requests/)."
 {% endtable %}

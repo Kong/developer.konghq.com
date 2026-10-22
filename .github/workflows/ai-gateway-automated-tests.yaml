@@ -9,6 +9,9 @@ on:
       konnect_domain:
         description: "Set to konghq.tech to run against .tech"
         required: false
+      konnect_event_gateway_min_version:
+        description: 'Minimum Konnect Event Gateway version for the get.konghq.com/ai quickstart (e.g. 2.2)'
+        required: false
   schedule:
     - cron: '0 0 * * MON'
 
@@ -29,10 +32,10 @@ jobs:
   run:
     runs-on: ubuntu-latest
     env:
-      KONNECT_DOMAIN: ${{ inputs.konnect_domain }}
+      KONNECT_DOMAIN: ${{ inputs.konnect_domain || 'konghq.com' }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
         with:
           egress-policy: audit
 
@@ -68,6 +71,12 @@ jobs:
       - name: Pre-pull AI Gateway quickstart dependencies
         run: docker pull ghcr.io/jqlang/jq:latest
 
+      - name: Set Event Gateway min version
+        if: ${{ inputs.konnect_event_gateway_min_version != '' }}
+        env:
+          MIN_VERSION: ${{ inputs.konnect_event_gateway_min_version }}
+        run: echo "KONNECT_EVENT_GATEWAY_MIN_VERSION=$MIN_VERSION" >> $GITHUB_ENV
+
       - name: Run tests
         working-directory: tools/automated-tests
         shell: bash
@@ -79,6 +88,7 @@ jobs:
           KONG_IMAGE_NAME: ${{ env.KONG_IMAGE_NAME }}
           KONNECT_DOMAIN: ${{ env.KONNECT_DOMAIN }}
           TESTS_KONNECT_TOKEN: ${{ inputs.konnect_domain != '' && secrets.KONNECT_TOKEN_TECH || secrets.KONNECT_TOKEN }}
+          TESTS_KONNECT_SPAT_TOKEN: ${{ inputs.konnect_domain != '' && secrets.KONNECT_TOKEN_TECH || secrets.KONNECT_TOKEN }}
           TESTS_OPENAI_AUTH_HEADER: ${{ secrets.OPENAI_AUTH_HEADER }}
           TESTS_OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           TESTS_CODEX_API_KEY: ${{ secrets.CODEX_API_KEY }}

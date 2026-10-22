@@ -145,10 +145,10 @@ module.exports.requestGroupActions = [
 
 ## Workspace actions
 
-Actions can be added to the collection or document settings dropdown by defining a workspace action plugin. These apply to both types of workspaces, Request Collections and Design Documents.
+Actions can be added to the API Collection settings dropdown by defining a workspace action plugin. These apply to every API Collection, whether or not it contains a spec.
 
 {:.info}
-> **Note**: "Workspace" is a name in our codebase that we use to refer to both documents and collections.
+> **Note**: "Workspace" is the name we use in our codebase for an API Collection. In Insomnia 13.2 and earlier, it referred to both documents and collections, which are now [merged into API Collections](/insomnia/collections/#what-happened-to-documents).
 
 ```ts
 interface WorkspaceAction {
@@ -166,7 +166,7 @@ module.exports.workspaceActions = Array<WorkspaceAction>;
 
 ### Workspace action examples
 
-Add a custom option to the document or collection dropdown menu that exports the current document or collection:
+Add a custom option to the API Collection dropdown menu that exports the current API Collection:
 ```ts
 const fs = require('fs');
 
@@ -187,7 +187,7 @@ module.exports.workspaceActions = [{
 
 ## Document actions
 
-Actions can be added to a dashboard card context menu for a document. This action does not work for collections.
+Actions can be added to a dashboard card context menu for an API Collection that contains a spec. The action receives that spec, so it isn't available on an API Collection with no spec.
 
 ```ts
 interface DocumentAction {

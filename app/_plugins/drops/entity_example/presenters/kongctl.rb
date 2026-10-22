@@ -27,6 +27,7 @@ module Jekyll
               'mcp_server' => 'mcp_servers',
               'auth-strategy' => 'auth_strategies',
               'policy' => 'policies',
+              'custom_policy' => 'custom_policies',
               'ca_certificate' => 'ca_certificates',
               'certificate' => 'certificates',
               'sni' => 'snis'

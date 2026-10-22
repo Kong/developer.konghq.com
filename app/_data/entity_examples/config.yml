@@ -142,6 +142,7 @@ formats:
     ai_endpoints:
       model:           '/models'
       policy:          '/policies'
+      custom_policy:   '/custom-policies'
       agent:           '/agents'
       mcp_server:      '/mcp-servers'
       provider:        '/providers'

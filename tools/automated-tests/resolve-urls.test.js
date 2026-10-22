@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import fs from "fs/promises";
 import os from "os";
 import path from "path";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 import matter from "gray-matter";
 import { resolveUrlsToTest } from "./resolve-urls.js";
 
@@ -153,7 +153,7 @@ test("the product run records its exclusions in the skip manifest", async () => 
   await resolveUrlsToTest({ product: "event-gateway" }, config, {
     repoRoot: tmpRoot,
   });
-  const manifest = yaml.load(await readManifest());
+  const manifest = load(await readManifest());
 
   assert.deepEqual(
     manifest.map((entry) => [entry.name, entry.message]).sort(),
@@ -183,7 +183,7 @@ test("the product run's manifest describes only that run", async () => {
   await resolveUrlsToTest({ product: "event-gateway" }, config, {
     repoRoot: tmpRoot,
   });
-  const manifest = yaml.load(await readManifest());
+  const manifest = load(await readManifest());
 
   assert.equal(
     manifest.some((entry) => entry.name.includes("/v1/")),

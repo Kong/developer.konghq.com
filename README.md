@@ -33,7 +33,7 @@ Building the entire docs site can take a while. To speed up build times, you can
 
 ## Generating specific pages locally
 
-You can generate specific pages by setting the PAGE_PATHS environment variable. This variable accepts a comma-separated list of paths. For example:
+You can generate specific pages by setting the `PAGE_PATHS` environment variable. This variable accepts a comma-separated list of paths. For example:
 
 ```sh
 PAGE_PATHS="/plugins/acme/,/gateway/entities/" make run

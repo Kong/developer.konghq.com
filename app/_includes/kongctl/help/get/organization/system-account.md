@@ -23,6 +23,7 @@ Flags:
       --columns stringArray     Select text columns as HEADER=.field (repeatable or comma-separated).
                                 Supports nested fields, quoted keys, array indexes, and string slices.
       --config-file string      Path to the configuration file to load.
+                                - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
   -h, --help                    help for system-account
       --jq string               Filter JSON responses using jq expressions (powered by gojq for full jq compatibility)

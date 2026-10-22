@@ -383,6 +383,27 @@
     ]
   },
   {
+    "id": "adc507b5-b6cf-495b-bd8e-51d62e493b37",
+    "title": "Konnect AI Cost Management",
+    "latestVersion": {
+      "name": "v1",
+      "id": "107dcfe6-0271-415a-ba05-533dd8e9ac89"
+    },
+    "description": "The AI Cost Management API reports an organization's AI usage and spend, and manages the budgets, notifications, and exports built on it.",
+    "documentCount": 0,
+    "versionCount": 1,
+    "versions": [
+      {
+        "id": "107dcfe6-0271-415a-ba05-533dd8e9ac89",
+        "created_at": "2026-10-21T16:21:45.528Z",
+        "updated_at": "2026-10-21T16:21:56.634Z",
+        "name": "v1",
+        "deprecated": false,
+        "registration_configs": []
+      }
+    ]
+  },
+  {
     "id": "5e0005b9-232b-4808-8bdf-9560d4596080",
     "title": "Konnect AI Gateway",
     "latestVersion": {
@@ -531,6 +552,27 @@
         "id": "3cebbe84-28ff-4c7b-a31f-d855975a14bd",
         "created_at": "2025-07-15T20:24:00.808Z",
         "updated_at": "2025-07-15T20:24:44.159Z",
+        "name": "v1",
+        "deprecated": false,
+        "registration_configs": []
+      }
+    ]
+  },
+  {
+    "id": "743fc945-306b-4f9f-a960-9d8d0c6567bb",
+    "title": "Konnect Context Mesh",
+    "latestVersion": {
+      "name": "v1",
+      "id": "fa29b8f1-fa25-479b-83ba-b72edaf65b1a"
+    },
+    "description": "The platform API for Konnect Context Mesh",
+    "documentCount": 0,
+    "versionCount": 1,
+    "versions": [
+      {
+        "id": "fa29b8f1-fa25-479b-83ba-b72edaf65b1a",
+        "created_at": "2026-09-24T15:23:16.222Z",
+        "updated_at": "2026-09-24T15:23:48.744Z",
         "name": "v1",
         "deprecated": false,
         "registration_configs": []

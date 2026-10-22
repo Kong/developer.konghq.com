@@ -69,6 +69,64 @@ sequenceDiagram
 > _Figure 1: Diagram showing the request and response flow with the AI Azure Content Safety Policy._
 {% endcomment %}
 
+## Rejection modes
+
+The {{page.name}} Policy responds to a blocked request or response according to its rejection mode.
+
+{% include_cached md/ai-gateway/v2/guardrail-rejection-modes.md name=page.name %}
+
+For example, a request that breaches a category threshold returns the following response in `verbose` mode.
+The `detail.categories` field lists each breached category with its detected `severity` and the configured `threshold`:
+
+```json
+{
+  "error": {
+    "type": "guardrail_rejected",
+    "plugin": "ai-azure-content-safety",
+    "reason": "breached category [Violence] at level 2",
+    "code": "GUARDRAIL_BLOCKED",
+    "detail": {
+      "categories": [
+        {
+          "category": "Violence",
+          "severity": 4,
+          "threshold": 2
+        }
+      ],
+      "blocklists": {}
+    }
+  }
+}
+```
+
+To return this response, set [`config.rejection_mode`](/ai-gateway/policies/ai-azure-content-safety/reference/#schema--config-rejection-mode) to `verbose`:
+
+{% entity_example %}
+type: policy
+data:
+  display_name: AI Azure Content Safety - Verbose Rejection
+  name: ai-azure-content-safety
+  type: ai-azure-content-safety
+  config:
+    content_safety_url: https://my-acs-instance.cognitiveservices.azure.com/contentsafety/text:analyze
+    content_safety_key: ${azure_content_safety_key}
+    categories:
+    - name: Violence
+      rejection_level: 2
+    rejection_mode: verbose
+variables:
+  azure_content_safety_key:
+    value: $AZURE_CONTENT_SAFETY_KEY
+    description: Your Azure Content Safety key.
+formats:
+  - konnect-api
+  - kongctl
+{% endentity_example %}
+
+## Detect without blocking
+
+{% include_cached md/ai-gateway/v2/guardrail-continue-on-detection.md name=page.name logs_detection=true %}
+
 ## TLS verification
 
 [`config.ssl_verify`](/ai-gateway/policies/ai-azure-content-safety/reference/#schema--config-ssl-verify) is enabled by default. The AI Azure Content Safety Policy verifies the TLS certificate when connecting to the Azure Content Safety service. To disable this, set `ssl_verify: false`.

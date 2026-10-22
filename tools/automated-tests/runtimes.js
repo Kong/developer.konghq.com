@@ -1,6 +1,6 @@
 import debug from "debug";
 import fs from "fs/promises";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 import { executeCommand, fetchImage, setEnvVariable } from "./docker-helper.js";
 import path from "path";
 import { dirname } from "path";
@@ -15,12 +15,12 @@ const PASSTHROUGH_VARIABLES = ["KONNECT_DOMAIN", "KONGCTL_DEFAULT_KONNECT_ENVIRO
 async function konnectRegion() {
   const filePath = path.resolve(__dirname, "../../app/_data/konnect_api_request.yml");
   const fileContent = await fs.readFile(filePath, "utf8");
-  return yaml.load(fileContent).region;
+  return load(fileContent).region;
 }
 
 export async function getRuntimeConfig(deploymentModel, product) {
   const fileContent = await fs.readFile(`./config/runtimes.yaml`, "utf8");
-  const configs = yaml.load(fileContent);
+  const configs = load(fileContent);
   const imageName = `automated-tests`;
 
   if (!configs[deploymentModel]) {

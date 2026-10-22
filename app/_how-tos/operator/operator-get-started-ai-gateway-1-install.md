@@ -19,7 +19,7 @@ products:
   - operator
 
 min_version:
-  operator: '2.3'
+  operator: '2.4'
   ai-gateway: '2.0'
 
 works_on:
@@ -74,7 +74,9 @@ kubectl create namespace kong
 
 ## Install {{site.operator_product_name}}
 
-{% include prereqs/products/operator.md raw=true v_maj=2 %}
+{% include operator/rapid-release.md %}
+
+{% include prereqs/products/operator.md raw=true v_maj=2 chart_version=site.data.products.operator.rapid.chart %}
 
 ## Verify {{ site.ai_gateway }} CRDs
 

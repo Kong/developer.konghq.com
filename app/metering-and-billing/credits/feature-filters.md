@@ -1,7 +1,6 @@
 ---
 title: "Feature filters"
 content_type: reference
-beta: true
 description: "Restrict credit grants to specific product features and query balances or transaction history scoped to a single feature."
 layout: reference
 products:

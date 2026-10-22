@@ -74,6 +74,8 @@ rows:
     dont: |
       Avoid generic pronouns.
       For example, don't say: "Once you have added *this*, ..."
+  - do: "Configure this *manually*."
+    dont: "Configure this *by hand*."
 {% endtable %}
 
 ### Active voice
@@ -166,7 +168,13 @@ rows:
     dont: Master branch
   - do: "Neutral pronouns (you, they/them)"
     dont: "Gendered pronouns (he/his, she/her)"
+  - do: "Team size"
+    dont: "Age"
 {% endtable %}
+
+Avoid example data that reads as unintentionally exclusionary or sensitive
+even when it isn't about pronouns or word choice — for example, don't
+default to "Age" as a generic numeric-field example.
 
 ### Recommendations
 
@@ -187,6 +195,46 @@ rows:
     dont: "**Kong recommends** using an access token."
   - do: "**We don't recommend** storing a password in plaintext **because it's not secure**."
     dont: "**It is recommended** that you use an access token."
+{% endtable %}
+
+### Avoid anthropomorphism
+
+Software doesn't have agency, motion, or intent. For example, don't say a value "fires,"
+"lands in," "reaches for," "carries," or "wins".
+These are examples, not a
+closed list, so watch for any verb implying travel, competition, or choice
+and stop to name the literal mechanism instead.
+
+{% table %}
+columns:
+  - title: "✅ Do use"
+    key: do
+  - title: "❌ Don't use"
+    key: dont
+rows:
+  - do: The plugin *sends* the request to the upstream.
+    dont: The request *fires* to the upstream.
+  - do: The higher-priority plugin *takes precedence*.
+    dont: The higher-priority plugin *wins*.
+  - do: The developer *is assigned to* the team.
+    dont: The developer *lands in* the team.
+{% endtable %}
+
+### Use-case framing
+
+Frame a use case by the problem it solves for the reader, not as a feature
+pitch. Marketing language does not belongs in reference, landing page, or
+how-to prose.
+
+{% table %}
+columns:
+  - title: "✅ Do use (pain-phrased)"
+    key: do
+  - title: "❌ Don't use (feature-phrased)"
+    key: dont
+rows:
+  - do: "If your team manages secrets across multiple environments, use a Vault backend so credentials aren't duplicated in each configuration."
+    dont: "Our Vault integration makes secret management effortless."
 {% endtable %}
 
 ## Grammar and syntax
@@ -330,6 +378,15 @@ If you're adding a placeholder inline in a sentence, enclose it in single backti
 
 For inline icons in prose or tables, use SVG files from the [`/app/assets/icons/`](https://github.com/Kong/developer.konghq.com/tree/main/app/assets/icons) directory. Browse the directory to find the icon you need, then reference it with a relative path.
 
+## Tool preference for steps
+
+For a product with a real API, default to API, CLI, or Terraform steps over
+UI steps — including prerequisites, and tabs on reference pages, not just the main body steps — because
+they're reproducible and easier to reuse. This isn't absolute: when a
+feature is genuinely UI-only, a UI-primary how-to is the right call. Don't
+silently default to API framing for a feature that doesn't have an API
+path.
+
 ## Documenting third-party tools
 
 When a how-to guide requires a third-party tool (such as an identity provider, cloud service, or external API) to be configured in a specific way to work with Kong, include complete setup instructions rather than linking out to third-party documentation and expecting readers to figure it out.
@@ -375,6 +432,11 @@ rows:
 
 Write descriptive link text that tells readers what they'll find when they click. Don't use vague phrases like "click here" or "read more".
 
+Don't use positional language ("the table below," "see above") to refer to
+other content on the page. Content gets reordered and stored in chunks, so these references go
+stale. Use "the following" for content that comes next, or link or name the
+section directly instead.
+
 {% table %}
 columns:
   - title: "✅ Do use"
@@ -386,6 +448,8 @@ rows:
     dont: "For more information, [click here](#)."
   - do: "Learn about [content best practices](#) in the Kong style guide."
     dont: "Learn about content best practices [here](#)."
+  - do: "Configure the setting from the [plugin example](#)."
+    dont: "Configure the setting from the section above."
 {% endtable %}
 
 <!--vale on-->

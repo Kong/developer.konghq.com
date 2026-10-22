@@ -22,25 +22,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "vary_query_params": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Relevant query parameters considered for the cache key. If undefined, all params are taken into consideration. By default, the max number of params accepted is 100. You can change this value via the `lua_max_post_args` in `kong.conf`."
-        },
-        "vary_headers": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Relevant headers considered for the cache key. If undefined, none of the headers are taken into consideration."
-        },
-        "bypass_on_err": {
-          "type": "boolean",
-          "description": "Unhandled errors while trying to retrieve a cache entry (such as redis down) are resolved with `Bypass`, with the request going upstream.",
-          "default": false
-        },
         "response_code": {
           "type": "array",
           "items": {
@@ -74,25 +55,15 @@
             "HEAD"
           ]
         },
-        "content_type": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Upstream response content types considered cacheable. The policy performs an **exact match** against each specified value; for example, if the upstream is expected to respond with a `application/json; charset=utf-8` content-type, the policy configuration must contain said value or a `Bypass` cache status is returned.",
-          "default": [
-            "application/json",
-            "text/plain"
-          ]
-        },
         "cache_ttl": {
           "type": "integer",
           "description": "TTL in seconds of cache entities.",
           "default": 300
         },
-        "storage_ttl": {
-          "type": "integer",
-          "description": "Number of seconds to keep resources in the storage backend. This value is independent of `cache_ttl` or resource TTLs defined by Cache-Control behaviors."
+        "cache_control": {
+          "type": "boolean",
+          "description": "When enabled, respect the Cache-Control behaviors defined in RFC7234.",
+          "default": false
         },
         "memory": {
           "type": "object",
@@ -104,33 +75,41 @@
             }
           }
         },
-        "response_headers": {
-          "type": "object",
-          "properties": {
-            "age": {
-              "type": "boolean",
-              "default": true
-            },
-            "X-Cache-Status": {
-              "type": "boolean",
-              "default": true
-            },
-            "X-Cache-Key": {
-              "type": "boolean",
-              "default": true
-            }
+        "vary_query_params": {
+          "type": "array",
+          "items": {
+            "type": "string"
           },
-          "description": "Caching related diagnostic headers that should be included in cached responses"
+          "description": "Relevant query parameters considered for the cache key. If undefined, all params are taken into consideration. By default, the max number of params accepted is 100. You can change this value via the `lua_max_post_args` in `kong.conf`."
         },
         "redis": {
           "type": "object",
           "properties": {
-            "port": {
+            "cluster_max_redirections": {
               "type": "integer",
-              "maximum": 65535,
+              "description": "Maximum retry attempts for redirection.",
+              "default": 5
+            },
+            "connection_is_proxied": {
+              "type": "boolean",
+              "description": "If the connection to Redis is proxied (e.g. Envoy), set it `true`. Set the `host` and `port` to point to the proxy address.",
+              "default": false
+            },
+            "send_timeout": {
+              "type": "integer",
+              "maximum": 2147483646,
               "minimum": 0,
-              "description": "An integer representing a port number between 0 and 65535, inclusive.",
-              "default": 6379,
+              "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+              "default": 2000
+            },
+            "username": {
+              "type": "string",
+              "description": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.",
+              "x-referenceable": true
+            },
+            "sentinel_username": {
+              "type": "string",
+              "description": "Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+.",
               "x-referenceable": true
             },
             "sentinel_password": {
@@ -147,15 +126,20 @@
                   "description": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`.",
                   "x-referenceable": true
                 },
-                "aws_secret_access_key": {
+                "aws_is_serverless": {
+                  "type": "boolean",
+                  "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
+                  "default": true
+                },
+                "aws_role_session_name": {
                   "type": "string",
-                  "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.",
+                  "description": "The session name for the temporary credentials when assuming the IAM role.",
                   "x-referenceable": true,
                   "x-encrypted": true
                 },
-                "azure_tenant_id": {
+                "gcp_service_account_json": {
                   "type": "string",
-                  "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`.",
+                  "description": "GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`.",
                   "x-referenceable": true,
                   "x-encrypted": true
                 },
@@ -169,10 +153,10 @@
                   "description": "Auth providers to be used to authenticate to a Cloud Provider's Redis instance.",
                   "x-referenceable": true
                 },
-                "aws_is_serverless": {
-                  "type": "boolean",
-                  "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
-                  "default": true
+                "aws_cache_name": {
+                  "type": "string",
+                  "description": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`.",
+                  "x-referenceable": true
                 },
                 "aws_access_key_id": {
                   "type": "string",
@@ -180,21 +164,15 @@
                   "x-referenceable": true,
                   "x-encrypted": true
                 },
+                "aws_secret_access_key": {
+                  "type": "string",
+                  "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
+                },
                 "aws_assume_role_arn": {
                   "type": "string",
                   "description": "The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "aws_role_session_name": {
-                  "type": "string",
-                  "description": "The session name for the temporary credentials when assuming the IAM role.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
-                },
-                "gcp_service_account_json": {
-                  "type": "string",
-                  "description": "GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`.",
                   "x-referenceable": true,
                   "x-encrypted": true
                 },
@@ -210,10 +188,11 @@
                   "x-referenceable": true,
                   "x-encrypted": true
                 },
-                "aws_cache_name": {
+                "azure_tenant_id": {
                   "type": "string",
-                  "description": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`.",
-                  "x-referenceable": true
+                  "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`.",
+                  "x-referenceable": true,
+                  "x-encrypted": true
                 }
               },
               "description": "Cloud auth related configs for connecting to a Cloud Provider's Redis instance."
@@ -223,27 +202,10 @@
               "description": "Database to use for the Redis connection when using the `redis` strategy",
               "default": 0
             },
-            "keepalive_backlog": {
-              "type": "integer",
-              "maximum": 2147483646,
-              "minimum": 0,
-              "description": "Limits the total number of opened connections for a pool. If the connection pool is full, connection queues above the limit go into the backlog queue. If the backlog queue is full, subsequent connect operations fail and return `nil`. Queued operations (subject to set timeouts) resume once the number of connections in the pool is less than `keepalive_pool_size`. If latency is high or throughput is low, try increasing this value. Empirically, this value is larger than `keepalive_pool_size`."
-            },
-            "sentinel_role": {
-              "type": "string",
-              "enum": [
-                "any",
-                "master",
-                "slave"
-              ],
-              "description": "Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel."
-            },
-            "connect_timeout": {
-              "type": "integer",
-              "maximum": 2147483646,
-              "minimum": 0,
-              "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
-              "default": 2000
+            "ssl": {
+              "type": "boolean",
+              "description": "If set to true, uses SSL to connect to Redis.",
+              "default": false
             },
             "read_timeout": {
               "type": "integer",
@@ -252,21 +214,11 @@
               "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
               "default": 2000
             },
-            "sentinel_username": {
-              "type": "string",
-              "description": "Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+.",
-              "x-referenceable": true
-            },
-            "keepalive_pool_size": {
+            "keepalive_backlog": {
               "type": "integer",
               "maximum": 2147483646,
-              "minimum": 1,
-              "description": "The size limit for every cosocket connection pool associated with every remote server, per worker process. If neither `keepalive_pool_size` nor `keepalive_backlog` is specified, no pool is created. If `keepalive_pool_size` isn't specified but `keepalive_backlog` is specified, then the pool uses the default value. Try to increase (e.g. 512) this value if latency is high or throughput is low.",
-              "default": 256
-            },
-            "sentinel_master": {
-              "type": "string",
-              "description": "Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel."
+              "minimum": 0,
+              "description": "Limits the total number of opened connections for a pool. If the connection pool is full, connection queues above the limit go into the backlog queue. If the backlog queue is full, subsequent connect operations fail and return `nil`. Queued operations (subject to set timeouts) resume once the number of connections in the pool is less than `keepalive_pool_size`. If latency is high or throughput is low, try increasing this value. Empirically, this value is larger than `keepalive_pool_size`."
             },
             "sentinel_nodes": {
               "type": "array",
@@ -295,27 +247,27 @@
               "items": {
                 "type": "object",
                 "properties": {
+                  "ip": {
+                    "type": "string",
+                    "description": "A string representing a host name, such as example.com.",
+                    "default": "127.0.0.1"
+                  },
                   "port": {
                     "type": "integer",
                     "maximum": 65535,
                     "minimum": 0,
                     "description": "An integer representing a port number between 0 and 65535, inclusive.",
                     "default": 6379
-                  },
-                  "ip": {
-                    "type": "string",
-                    "description": "A string representing a host name, such as example.com.",
-                    "default": "127.0.0.1"
                   }
                 }
               },
               "minLength": 1,
               "description": "Cluster addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Cluster. The minimum length of the array is 1 element."
             },
-            "ssl": {
-              "type": "boolean",
-              "description": "If set to true, uses SSL to connect to Redis.",
-              "default": false
+            "server_name": {
+              "type": "string",
+              "description": "A string representing an SNI (server name indication) value for TLS.",
+              "x-referenceable": true
             },
             "host": {
               "type": "string",
@@ -323,37 +275,45 @@
               "default": "127.0.0.1",
               "x-referenceable": true
             },
-            "password": {
-              "type": "string",
-              "description": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.",
-              "x-encrypted": true,
-              "x-referenceable": true
-            },
-            "server_name": {
-              "type": "string",
-              "description": "A string representing an SNI (server name indication) value for TLS.",
-              "x-referenceable": true
-            },
-            "cluster_max_redirections": {
-              "type": "integer",
-              "description": "Maximum retry attempts for redirection.",
-              "default": 5
-            },
-            "connection_is_proxied": {
-              "type": "boolean",
-              "description": "If the connection to Redis is proxied (e.g. Envoy), set it `true`. Set the `host` and `port` to point to the proxy address.",
-              "default": false
-            },
-            "send_timeout": {
+            "connect_timeout": {
               "type": "integer",
               "maximum": 2147483646,
               "minimum": 0,
               "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
               "default": 2000
             },
-            "username": {
+            "keepalive_pool_size": {
+              "type": "integer",
+              "maximum": 2147483646,
+              "minimum": 1,
+              "description": "The size limit for every cosocket connection pool associated with every remote server, per worker process. If neither `keepalive_pool_size` nor `keepalive_backlog` is specified, no pool is created. If `keepalive_pool_size` isn't specified but `keepalive_backlog` is specified, then the pool uses the default value. Try to increase (e.g. 512) this value if latency is high or throughput is low.",
+              "default": 256
+            },
+            "sentinel_master": {
               "type": "string",
-              "description": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.",
+              "description": "Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel."
+            },
+            "sentinel_role": {
+              "type": "string",
+              "enum": [
+                "any",
+                "master",
+                "slave"
+              ],
+              "description": "Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel."
+            },
+            "port": {
+              "type": "integer",
+              "maximum": 65535,
+              "minimum": 0,
+              "description": "An integer representing a port number between 0 and 65535, inclusive.",
+              "default": 6379,
+              "x-referenceable": true
+            },
+            "password": {
+              "type": "string",
+              "description": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.",
+              "x-encrypted": true,
               "x-referenceable": true
             },
             "ssl_verify": {
@@ -363,6 +323,22 @@
             }
           }
         },
+        "bypass_on_err": {
+          "type": "boolean",
+          "description": "Unhandled errors while trying to retrieve a cache entry (such as redis down) are resolved with `Bypass`, with the request going upstream.",
+          "default": false
+        },
+        "content_type": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Upstream response content types considered cacheable. The policy performs an **exact match** against each specified value; for example, if the upstream is expected to respond with a `application/json; charset=utf-8` content-type, the policy configuration must contain said value or a `Bypass` cache status is returned.",
+          "default": [
+            "application/json",
+            "text/plain"
+          ]
+        },
         "strategy": {
           "type": "string",
           "enum": [
@@ -371,15 +347,39 @@
           ],
           "description": "The backing data store in which to hold cache entities. Accepted values are: `memory` and `redis`."
         },
-        "cache_control": {
-          "type": "boolean",
-          "description": "When enabled, respect the Cache-Control behaviors defined in RFC7234.",
-          "default": false
-        },
         "ignore_uri_case": {
           "type": "boolean",
           "description": "Determines whether to treat URIs as case sensitive. By default, case sensitivity is enabled. If set to true, requests are cached while ignoring case sensitivity in the URI.",
           "default": false
+        },
+        "storage_ttl": {
+          "type": "integer",
+          "description": "Number of seconds to keep resources in the storage backend. This value is independent of `cache_ttl` or resource TTLs defined by Cache-Control behaviors."
+        },
+        "vary_headers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Relevant headers considered for the cache key. If undefined, none of the headers are taken into consideration."
+        },
+        "response_headers": {
+          "type": "object",
+          "properties": {
+            "age": {
+              "type": "boolean",
+              "default": true
+            },
+            "X-Cache-Status": {
+              "type": "boolean",
+              "default": true
+            },
+            "X-Cache-Key": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          "description": "Caching related diagnostic headers that should be included in cached responses"
         }
       },
       "required": [

@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect API Request Analytics
-  version: 2.2.0
+  version: 2.3.0
   description: The API to query detailed records for every API request proxied by Kong
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@9c7686a9d1631951a45739cfab8ac570b6e0d06f
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9c7686a9d1631951a45739cfab8ac570b6e0d06f'
+  x-oas-source: kong/platform-api@71eb5f9b874a36c530766e00e19ed197d3399d4d
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/71eb5f9b874a36c530766e00e19ed197d3399d4d'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -79,6 +79,10 @@ components:
               - $ref: '#/components/schemas/A2aErrorFilterByField'
               - $ref: '#/components/schemas/A2aMethodFilterByField'
               - $ref: '#/components/schemas/A2aTaskIdFilterByField'
+              - $ref: '#/components/schemas/AiGatewayFilterByField'
+              - $ref: '#/components/schemas/AiGatewayConsumerFilterByField'
+              - $ref: '#/components/schemas/AiGatewayConsumerGroupFilterByField'
+              - $ref: '#/components/schemas/AiGatewayDataPlaneNodeFilterByField'
               - $ref: '#/components/schemas/ApiFilterByField'
               - $ref: '#/components/schemas/ApiPackageFilterByField'
               - $ref: '#/components/schemas/ApiProductFilterByField'
@@ -88,6 +92,7 @@ components:
               - $ref: '#/components/schemas/CacheStatusFilterByField'
               - $ref: '#/components/schemas/ClientIpFilterByField'
               - $ref: '#/components/schemas/ConsumerFilterByField'
+              - $ref: '#/components/schemas/ConsumerGroupFilterByField'
               - $ref: '#/components/schemas/ControlPlaneFilterByField'
               - $ref: '#/components/schemas/ControlPlaneGroupFilterByField'
               - $ref: '#/components/schemas/CountryCodeFilterByField'
@@ -352,6 +357,22 @@ components:
                       description: 'Error message from the RPC call, if any.'
                       type: string
                       nullable: true
+          ai_gateway:
+            description: AI Gateway ID associated with the request.
+            type: string
+            nullable: true
+          ai_gateway_consumer:
+            description: AI Gateway Consumer ID associated with the request.
+            type: string
+            nullable: true
+          ai_gateway_consumer_group:
+            description: AI Gateway Consumer Group ID associated with the request.
+            type: string
+            nullable: true
+          ai_gateway_data_plane_node:
+            description: AI Gateway Data Plane Node ID associated with the request.
+            type: string
+            nullable: true
           api:
             description: API ID associated with the request.
             type: string
@@ -386,6 +407,10 @@ components:
             nullable: true
           consumer:
             description: 'Consumer ID associated with the request. In the format `control_plane_id:consumer_id`.'
+            type: string
+            nullable: true
+          consumer_group:
+            description: 'Consumer Group ID associated with the request. In the format `control_plane_id:consumer_group_id`.'
             type: string
             nullable: true
           control_plane:
@@ -698,6 +723,70 @@ components:
         - operator
         - value
       title: Single select filters
+    AiGatewayFilterByField:
+      allOf:
+        - type: object
+          properties:
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_gateway
+          required:
+            - field
+        - oneOf:
+            - $ref: '#/components/schemas/FilterMultiValueUUID'
+            - $ref: '#/components/schemas/FilterSingleValueUUID'
+            - $ref: '#/components/schemas/FilterEmpty'
+      title: Filter by ai_gateway
+    AiGatewayConsumerFilterByField:
+      allOf:
+        - type: object
+          properties:
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_gateway_consumer
+          required:
+            - field
+        - oneOf:
+            - $ref: '#/components/schemas/FilterMultiValueUUID'
+            - $ref: '#/components/schemas/FilterSingleValueUUID'
+            - $ref: '#/components/schemas/FilterEmpty'
+      title: Filter by ai_gateway_consumer
+    AiGatewayConsumerGroupFilterByField:
+      allOf:
+        - type: object
+          properties:
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_gateway_consumer_group
+          required:
+            - field
+        - oneOf:
+            - $ref: '#/components/schemas/FilterMultiValueUUID'
+            - $ref: '#/components/schemas/FilterSingleValueUUID'
+            - $ref: '#/components/schemas/FilterEmpty'
+      title: Filter by ai_gateway_consumer_group
+    AiGatewayDataPlaneNodeFilterByField:
+      allOf:
+        - type: object
+          properties:
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - ai_gateway_data_plane_node
+          required:
+            - field
+        - oneOf:
+            - $ref: '#/components/schemas/FilterMultiValueUUID'
+            - $ref: '#/components/schemas/FilterSingleValueUUID'
+            - $ref: '#/components/schemas/FilterEmpty'
+      title: Filter by ai_gateway_data_plane_node
     ApiFilterByField:
       allOf:
         - type: object
@@ -895,6 +984,22 @@ components:
             - $ref: '#/components/schemas/FilterSingleValueScopedUUID'
             - $ref: '#/components/schemas/FilterEmpty'
       title: Filter by consumer
+    ConsumerGroupFilterByField:
+      allOf:
+        - type: object
+          properties:
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - consumer_group
+          required:
+            - field
+        - oneOf:
+            - $ref: '#/components/schemas/FilterMultiValueScopedUUID'
+            - $ref: '#/components/schemas/FilterSingleValueScopedUUID'
+            - $ref: '#/components/schemas/FilterEmpty'
+      title: Filter by consumer_group
     ControlPlaneFilterByField:
       allOf:
         - type: object
@@ -1873,6 +1978,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 401
+          enum:
+            - 401
           readOnly: true
         title:
           description: |
@@ -1920,6 +2027,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 403
+          enum:
+            - 403
           readOnly: true
         title:
           description: |
@@ -2085,6 +2194,10 @@ components:
                   latency: 32
                   response_body_size: 239
                   error: null
+            ai_gateway: null
+            ai_gateway_consumer: null
+            ai_gateway_consumer_group: null
+            ai_gateway_data_plane_node: null
             api: null
             api_package: null
             api_product: 523468b1-2e74-4b58-b30e-6f904e99e4d0
@@ -2094,6 +2207,7 @@ components:
             cache_status: Hit
             client_ip: 131.174.120.249
             consumer: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:d69557ff-277c-4579-a821-4f8d158ae070'
+            consumer_group: null
             control_plane: d5ac5d88-efed-4e10-9dfe-0b0a6646c219
             control_plane_group: cafe2d4f-95ec-458c-8c88-62417018678d
             country_code: CN
@@ -2135,6 +2249,10 @@ components:
             upstream_uri: /graphql
           - request_start: '2020-02-02T01:00:01.050Z'
             a2a_info: null
+            ai_gateway: null
+            ai_gateway_consumer: null
+            ai_gateway_consumer_group: null
+            ai_gateway_data_plane_node: null
             api: null
             api_package: af4d23b1-d1cd-4fc3-8939-94fbfead746e
             api_product: b866c867-60e6-4258-adb3-e136cc26388b
@@ -2144,6 +2262,7 @@ components:
             cache_status: null
             client_ip: 131.174.120.249
             consumer: null
+            consumer_group: null
             control_plane: d5ac5d88-efed-4e10-9dfe-0b0a6646c219
             control_plane_group: null
             country_code: US

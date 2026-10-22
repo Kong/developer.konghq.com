@@ -120,7 +120,8 @@
 /plugins/request-callout/examples/dynamic-url/ /plugins/request-callout/examples/dynamic-url-via-lua-code/
 /gateway/plugin-development/  /custom-plugins/
 /gateway/plugin-development/*  /custom-plugins/
-/gateway/plugins/plugin-ordering/  /gateway/plugins/plugin-ordering-priority-preserving/
+/gateway/plugins/plugin-ordering-legacy/  /gateway/plugins/plugin-ordering/
+/gateway/plugins/plugin-ordering-priority-preserving/  /gateway/plugins/plugin-ordering/
 
 # Renames
 /mesh-manager/federate-zone/  /mesh/federate-zone-control-plane-to-konnect/
@@ -408,7 +409,7 @@
 /ai-gateway/policies/mtls-auth/            /plugins/mtls-auth/            301
 /ai-gateway/policies/oauth2/               /plugins/oauth2/               301
 /ai-gateway/policies/oauth2-introspection/ /plugins/oauth2-introspection/ 301
-/ai-gateway/policies/openid-connect/       /plugins/openid-connect/       301
+/ai-gateway/policies/openid-connect/       /ai-gateway/openid-connect/       301
 /ai-gateway/policies/saml/                 /plugins/saml/                 301
 /ai-gateway/policies/session/              /plugins/session/              301
 /ai-gateway/policies/upstream-oauth/       /plugins/upstream-oauth/       301
@@ -531,3 +532,12 @@
 
 # AI Auth Strategy rename
 /ai-gateway/entities/ai-identity-provider/ /ai-gateway/entities/ai-auth-strategy/ 301
+
+# Custom policies reference page moved to the AI Custom Policy entity page
+/ai-gateway/custom-policies/ /ai-gateway/entities/ai-custom-policy/ 301
+
+# Insomnia 13.3: documents and collections merged into API Collections
+/insomnia/documents/ /insomnia/collections/ 301
+/how-to/create-a-design-document/ /how-to/create-an-api-collection/ 301
+/how-to/import-an-api-spec-as-a-document/ /how-to/import-an-api-spec/ 301
+/how-to/generate-a-collection-from-a-design-document/ /how-to/generate-requests-from-an-api-spec/ 301

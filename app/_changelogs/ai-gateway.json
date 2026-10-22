@@ -2,7 +2,7 @@
   "2.0.0": {
     "kong-aigw": [
       {
-        "message": "**ais**: Dropped deprecated schema fields slated for removal in 4.0:\n`http_proxy_host`/`http_proxy_port`/`https_proxy_host`/`https_proxy_port` shorthands\nin `ai-llm-as-judge`, `ai-request-transformer`, `ai-response-transformer` (use\n`proxy_config` instead); `llm_format`, `max_request_body_size`, and\n`rules.max_request_body_size` in `ai-semantic-prompt-guard`; `llm_providers` and\n`llm_format` in `ai-rate-limiting-advanced` (`policies` is now required);\n`model.options.upstream_path` and the `preserve` route_type in the shared LLM\nschema (use `model.options.upstream_url` and a concrete `route_type` instead).",
+        "message": "**ai-plugins**: Dropped deprecated schema fields slated for removal in 4.0:\n`http_proxy_host`/`http_proxy_port`/`https_proxy_host`/`https_proxy_port` shorthands\nin `ai-llm-as-judge`, `ai-request-transformer`, `ai-response-transformer` (use\n`proxy_config` instead); `llm_format`, `max_request_body_size`, and\n`rules.max_request_body_size` in `ai-semantic-prompt-guard`; `llm_providers` and\n`llm_format` in `ai-rate-limiting-advanced` (`policies` is now required);\n`model.options.upstream_path` and the `preserve` route_type in the shared LLM\nschema (use `model.options.upstream_url` and a concrete `route_type` instead).",
         "type": "Breaking Change",
         "scope": "Plugin"
       },
@@ -62,7 +62,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**ais**: Added `proxy_config` support to route plugin HTTP requests through a\nforward proxy for ai-aws-guardrails, ai-azure-content-safety, ai-custom-guardrail,\nai-gcp-model-armor, ai-lakera-guard, ai-sanitizer, ai-prompt-compressor,\nai-rag-injector, ai-semantic-cache, ai-semantic-prompt-guard,\nai-semantic-response-guard, ai-request-transformer, ai-response-transformer,\nand ai-llm-as-judge. For ai-request-transformer, ai-response-transformer, and\nai-llm-as-judge, the existing top-level `http_proxy_host`/`http_proxy_port`/\n`https_proxy_host`/`https_proxy_port` fields are now deprecated in favor of\n`proxy_config` and will be removed in 4.0.",
+        "message": "**ai-plugins**: Added `proxy_config` support to route plugin HTTP requests through a\nforward proxy for ai-aws-guardrails, ai-azure-content-safety, ai-custom-guardrail,\nai-gcp-model-armor, ai-lakera-guard, ai-sanitizer, ai-prompt-compressor,\nai-rag-injector, ai-semantic-cache, ai-semantic-prompt-guard,\nai-semantic-response-guard, ai-request-transformer, ai-response-transformer,\nand ai-llm-as-judge. For ai-request-transformer, ai-response-transformer, and\nai-llm-as-judge, the existing top-level `http_proxy_host`/`http_proxy_port`/\n`https_proxy_host`/`https_proxy_port` fields are now deprecated in favor of\n`proxy_config` and will be removed in 4.0.",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -1436,6 +1436,365 @@
         "message": "Improved the configuration synchronization latency when incremental sync enabled under some circumstances.",
         "type": "performance",
         "scope": "Clustering"
+      }
+    ]
+  },
+  "2.2.0": {
+    "kong-aigw": [
+      {
+        "message": "**AI Gateway**: The FIPS artifact serves an explicit TLS 1.2 cipher list: four\nECDHE suites with AES-GCM. It replaces the OpenSSL FIPS alias, which resolves\nto 28 suites and also admits static RSA key transport and SSLv3-era suites. A\ndeployment moving from the retired `kong-ai-gateway-fips` package that relies\non one of the dropped suites must set `ssl_cipher_suite = custom` and\n`ssl_ciphers`. TLS 1.3 ciphersuites are unaffected; the global OpenSSL FIPS\nconfiguration sets those.",
+        "type": "Breaking Change",
+        "scope": "Core"
+      },
+      {
+        "message": "**AI Gateway**: The FIPS artifacts are renamed to state their certification\nlevel. The `kong-ai-gateway-fips` package becomes\n`kong-ai-gateway-fips-140-3` and the `<version>-<distro>-fips` image becomes\n`<version>-<distro>-fips-140-3`. The new package replaces the old one, so an\ninstalled FIPS deployment upgrades in place, but pinned package names and\nimage tags must be updated.",
+        "type": "Breaking Change",
+        "scope": "Core"
+      },
+      {
+        "message": "**openid-connect**: KONG_FIPS=on no longer generates default EdDSA JWKS keys. Use an RSA-PSS or NIST-curve ECDSA key instead.",
+        "type": "Breaking Change",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Bumped kong-pgmoon from 2.3.4.0 to 2.3.5.0, which fixes SCRAM channel\nbinding failing to connect to a PostgreSQL server whose certificate is\nsigned with SHA-512.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped lua-resty-jq from 0.2.0 to 0.2.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped lua-resty-simdjson from 1.2.0 to 1.3.1 (updates simdjson to 4.6.11).",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped OpenSSL FIPS provider from 3.0.9 to 3.1.2 for FIPS 140-3 validation",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Added a Distroless Docker image variant for Kong AI Gateway. The Distroless\nimage ships only the gateway binary and its runtime dependencies. It has no\nshell, no package manager and no general-purpose userland.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "Added a FIPS 140-3 variant of the Kong AI Gateway Distroless image, published\nas `<version>-distroless-fips-140-3` for amd64.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "Added a FIPS-compliant variant of the distroless image.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "Added a new Metrics PDK (`kong.metrics`) that enables custom plugins to define and record metrics, with initial support integrated into the `opentelemetry` plugin.",
+        "type": "feature",
+        "scope": "PDK"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Added PDK support for effective requests, original request metadata in `log`, and pre-finalization response status and headers in `body_filter`.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Added Token Vault support to resolve upstream credentials, allowing\nthe exchange and forwarding of short-lived credentials instead of static ones.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-plugins**: Introduced a new filter execution ordering system so that the shared filters in AI plugins could be re-ordered. This helps bring more flexibility to the execution.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-prompt-compressor**: Added a `headroom` compression provider, selected with the new\n`config.provider` field. This is the stateful Headroom mode: the sidecar keeps the\ncompressed conversation on its own side and indexes that state by `session_id`, which the\nplugin derives per conversation.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy**: Added support for TypeSafe.ai Jev decision models, either hosted on TypeSafe or a third-party (via custom upstream URL).",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "**AI Proxy**: Added the ability to choose whether to output OpenTelemetry span attributes and statistics  in OpenInference format, or the previous OpenLLMetry format.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added a `passthrough` route type that forwards the client's request path and body and the upstream response bytes unchanged, while still applying provider authentication.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added support for the OpenAI and Anthropic Skills API, with the client and the upstream provider using the same format (OpenAI-to-OpenAI, Anthropic-to-Anthropic).",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-rate-limiting-advanced**: Added `credential` and `service` match types to policies, so a policy can filter on or partition by the authenticated credential ID, and on the service ID or (with `key: name`) the service name.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Analytics**: Added the W3C trace context headers (`traceparent`, `tracestate`) and, for Bedrock, SageMaker, and Vertex AI (Gemini), the inference provider's region (`ai[].meta.provider_region`) to the request payload.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "Enabled TLS 1.3 for the FIPS cipher suite and configured FIPS builds to use AES-based TLS 1.3 ciphersuites.",
+        "type": "feature",
+        "scope": "Core"
+      },
+      {
+        "message": "**opentelemetry**: Added the `client_certificate` config option, so users can present a certificate entity as the mTLS client certificate when an OTLP endpoint uses HTTPS.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Required identical AI Gateway versions on control planes and data planes before\nallowing full or incremental configuration synchronization. Data planes with\nmissing versions or different patch or prerelease versions were rejected.",
+        "type": "feature",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**ACME**: Fixed an issue where an expired `fail_backoff` key would keep blocking certificate issuance. Retries are now rejected only while the backoff timestamp is still in the future.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-a2a-proxy**: Fixed an issue where `proxy_config` was not applied to the final A2A upstream request.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-a2a-proxy**: Rejected `auth.provider: token_vault` at config validation time, since this plugin only implements `aws_iam` auth.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Analytics**: Fixed an issue where `ai.model_id` were absent in Analytics",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-aws-guardrails**: Fixed handling of OpenAI-compatible multimodal requests with image content.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Gateway**: Fixed the RPM `Obsoletes` metadata of the AI Gateway packages.\n`kong-ai-gateway` and `kong-ai-gateway-fips-140-3` are parallel builds, not\nsuccessors of each other, so they now obsolete each other only below the\nversion being built. Without the bound an installed `kong-ai-gateway` had two\nmutually conflicting successors and `dnf upgrade` could not resolve an\nupgrade. The retired `kong-ai-gateway-fips` keeps a single unversioned\nsuccessor, `kong-ai-gateway-fips-140-3`, so an existing FIPS deployment\nupgrades in place. The deb packages do not change.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where setting `server.tag` in conversion-listener mode returned an empty tool list.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where modern MCP mirroring headers were forwarded to legacy upstream servers.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where plugins before ai-mcp-proxy were run twice in conversion-listener mode.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-prompt-compressor**: Fixed an issue where, on routes where the client and the upstream use the same format, the compressor sent the original request instead of the one modified by ai-sanitizer, masking guardrails, ai-rag-injector or ai-request-transformer.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Added prompt cache control mappings across OpenAI, Anthropic, and Amazon Bedrock chat formats.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed a path-duplication bug on Anthropic restful routes (`llm/v1/batches`, `llm/v1/skills`) when the model used a custom `upstream_url`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Gemini image generation misattributed modality tokens and omitted cache usage in responses and AI logs.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where gen_ai.request.max_tokens attribute was missing from OpenTelemetry and debug-session spans.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Anthropic-compatible streaming providers like Baseten reporting prompt usage only in `message_delta` lost prompt and cached tokens.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Anthropic `thinking.type = \"disabled\"` was overridden by `output_config.effort` during cross-format conversion, keeping reasoning enabled.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where an Anthropic `thinking` block (`adaptive`, `enabled`, or\n`disabled`) was always converted into a `reasoning_effort` request parameter and forwarded to the\ntarget model, even when that model did not support reasoning. OpenAI, Mistral, and Cohere targets\nwithout reasoning support now have the gateway-derived value omitted, while an explicit\n`reasoning_effort` sent by the client is still forwarded as before.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Bedrock and SageMaker assume-role credentials were not prewarmed and could trigger STS calls during balancer-phase retries.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where the consistent-hashing balancer routed requests with the same hash_on_header value to different targets when multiple workers were running.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where repeated cumulative usage in streaming responses inflated token counts.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where xAI reasoning tokens were not folded when visible completion tokens exceeded reasoning tokens.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Anthropic streaming responses and Bedrock native-format responses did not report web search and web fetch tool usage counts in observability metrics.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Anthropic `output_config.effort` was ignored during cross-format conversion (including Bedrock `additionalModelRequestFields`), and added support for preserving `max` effort.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-response-transformer**: Fixed an issue where a chained upstream's raw, provider-native response was sent to introspection and returned to clients unnormalized.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-sanitizer**: Fixed an issue where ai-sanitizer only sanitized the first Gemini response candidate, leaving additional candidates unsanitized when candidateCount was greater than one.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-sanitizer**: Fixed an issue where ai-sanitizer failed to sanitize Cohere requests that contained multimodal message content, such as image blocks alongside text.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Analytics**: splunk reports now carry `ai_a2a_reqs` and `ai_total_reqs` fields, counting A2A requests and all AI Gateway traffic (inference, MCP, and A2A) respectively.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Balancer**: Fixed an issue where a plugin could not override the upstream\ntarget when the Gateway Service `host` was a literal IP address. The balancer\nkept the IP that it derived from the Service, so the request went to the\nService host and the override was silently lost. This affected\n`kong.service.set_target` and every plugin that replaces\n`ngx.ctx.balancer_data.host`, for example `route-transformer-advanced` and\n`canary`.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**datakit**: Fixed an issue where the `exit` node sent a string body without a correct `Content-Type`. It now uses the content type that the source node declares, for example `application/xml` for `json_to_xml` output, and defaults to `application/octet-stream` in the request phase.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where a malformed JSON document could corrupt the shared JSON\ndecoder of a worker. Later requests that decoded valid JSON on the same worker\nthen failed until the node restarted. The JWT plugin returned\n`Bad token; invalid JWT payload` for known-good tokens.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where an in-flight request that completed after its\nupstream target became unavailable could restore the target to the\nlatency balancer and route subsequent requests to it.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where `custom_validator` in schema definitions forwarded the\nenclosing schema as a second argument. This changed the call signature and\ncould affect custom validators that declare more than one parameter. The\nsingle-argument call signature is restored.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where older data planes stopped receiving configuration updates when sync v2 was unavailable by restoring automatic sync v1 fallback.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where the `SameSite` attribute of the `Set-Cookie` header was incorrectly set to `Same-Site` by session-affinity (sticky-session) balancing.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**graphql-rate-limiting-advanced**: Fixed an issue where a longer fixed window was incorrectly marked as exhausted if a shorter window denied a request.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Hardened stale nginx PID detection to survive PID reuse. On Linux, `kong start`\nnow confirms a live PID actually belongs to nginx by reading `/proc/<pid>/cmdline`,\nso a reused PID from an ungraceful exit no longer blocks a restart.",
+        "type": "bugfix",
+        "scope": "CLI Command"
+      },
+      {
+        "message": "**jwt**: Fixed an issue where the plugin failed to decode standard Base64\nsecrets that contained `+` or `/` when `config.secret_is_base64` was enabled.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "On shell-free (distroless) images, the pluginserver query and start commands\nnow expand `$KONG_PREFIX` / `${KONG_PREFIX}` from the environment and fail fast\nwith a clear error on an unterminated quote or `${`, instead of passing the\nliteral `$KONG_PREFIX` to the pluginserver or building a best-effort argv.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**opa**: Fixed an issue where Kong Gateway did not send an SNI to the OPA server. It now sends `opa_host` as the SNI when that is a hostname; with `ssl_verify = true`, the certificate must include `opa_host`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where disabling `verify_signature` gave no warning, even though it also skips signature verification for bearer tokens from clients. The plugin now logs a warning when `verify_signature` is `false` and `auth_methods` includes `bearer`. It logs a notice instead when `bearer` is not enabled.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where a callback with an invalid JARM response returned a 500 error; the plugin now rejects such callbacks with a 401 authentication failure.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Fixed an issue where metrics were rarely (or never) exported on data planes whose configuration is rebuilt more frequently than the metrics `push_interval`. The periodic metrics push timer is no longer cancelled and recreated on every configuration rebuild, so its `push_interval` countdown is preserved.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**rate-limiting-advanced**: Fixed an issue where a longer fixed window was incorrectly marked as exhausted if a shorter window denied a request.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**request-callout**: Fixed an issue where a callout that failed and then succeeded\non retry still returned the earlier failed response. The plugin now returns the\nresponse from the successful retry.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**service-protection**: Fixed an issue where a longer fixed window was incorrectly marked as exhausted if a shorter window denied a request.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Cached Token Vault credential exchanges using Redis to reduce\nrepeated upstream credential exchanges per request.",
+        "type": "performance",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**oas-validation**: Improved plugin performance by removing unnecessary hash computation. Enabling the plugin now adds much less latency and CPU overhead to requests.",
+        "type": "performance",
+        "scope": "Plugin"
       }
     ]
   }

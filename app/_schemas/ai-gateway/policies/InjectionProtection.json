@@ -22,36 +22,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "custom_injections": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string",
-                "description": "A unique name for this injection."
-              },
-              "regex": {
-                "type": "string",
-                "description": "The regex to match against."
-              }
-            },
-            "required": [
-              "name",
-              "regex"
-            ]
-          },
-          "description": "Custom regexes to check for."
-        },
-        "enforcement_mode": {
-          "type": "string",
-          "enum": [
-            "block",
-            "log_only"
-          ],
-          "description": "Enforcement mode of the security policy.",
-          "default": "block"
-        },
         "error_status_code": {
           "type": "integer",
           "maximum": 499,
@@ -99,6 +69,36 @@
           "default": [
             "path_and_query"
           ]
+        },
+        "custom_injections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "A unique name for this injection."
+              },
+              "regex": {
+                "type": "string",
+                "description": "The regex to match against."
+              }
+            },
+            "required": [
+              "name",
+              "regex"
+            ]
+          },
+          "description": "Custom regexes to check for."
+        },
+        "enforcement_mode": {
+          "type": "string",
+          "enum": [
+            "block",
+            "log_only"
+          ],
+          "description": "Enforcement mode of the security policy.",
+          "default": "block"
         }
       }
     },

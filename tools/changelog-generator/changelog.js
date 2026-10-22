@@ -1,5 +1,5 @@
 import fs from "fs";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 import path from "path";
 import { globSync } from "tinyglobby";
 import mergeWith from "lodash.mergewith";
@@ -61,7 +61,7 @@ function generateChangelog(product) {
             .map((file) => "./" + path.join(versionPath, file));
 
           const entries = files.flatMap((f) =>
-            yaml.load(fs.readFileSync(f, "utf-8"))
+            load(fs.readFileSync(f, "utf-8"))
           );
           entries_by_version[version] = entries;
         }

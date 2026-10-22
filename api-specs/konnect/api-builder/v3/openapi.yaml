@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect API Catalog
-  version: 3.6.2
+  version: 3.6.11
   description: 'Konnect API Catalog is the API for creating and managing APIs in the Konnect Catalog and publishing APIs to Developer Portals. Use this API to create API entities, attach versioned specs, manage relationships with catalog services, and publish APIs to Developer Portals. This supersedes API Products v2 for new integrations.'
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@9c7686a9d1631951a45739cfab8ac570b6e0d06f
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9c7686a9d1631951a45739cfab8ac570b6e0d06f'
+  x-oas-source: kong/platform-api@c490b3e79979400ce6f13039add29f45cfdb0b34
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c490b3e79979400ce6f13039add29f45cfdb0b34'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -1777,22 +1777,7 @@ components:
       required: false
       in: query
       schema:
-        type: object
-        properties:
-          status:
-            $ref: '#/components/schemas/StringFieldFilter'
-          portal_id:
-            $ref: '#/components/schemas/UuidFieldFilter'
-          portal_name:
-            $ref: '#/components/schemas/StringFieldFilter'
-          application_id:
-            $ref: '#/components/schemas/UuidFieldFilter'
-          application_name:
-            $ref: '#/components/schemas/StringFieldFilter'
-          application_owner_type:
-            $ref: '#/components/schemas/StringFieldFilter'
-          application_owner_id:
-            $ref: '#/components/schemas/UuidFieldFilter'
+        $ref: '#/components/schemas/ApiRegistrationFilterParameters'
       style: deepObject
     ApiSort:
       name: sort
@@ -2382,6 +2367,31 @@ components:
       minItems: 1
       nullable: true
       title: API Publication Auth Strategy IDs
+    ApiPublicationSpecRenderer:
+      description: Customization settings for the API spec renderer in the portal.
+      type: object
+      properties:
+        try_it_ui:
+          description: Enable in-browser testing for your API. All linked gateways must have the CORS plugin configured.
+          type: boolean
+          nullable: true
+        try_it_ui_audience:
+          description: |
+            The audience for the Try It UI feature.
+
+            `all` means that the Try It UI will be available to all users, including unauthenticated users.
+
+            `authenticated` means that the Try It UI will only be available to authenticated users.
+
+            `registered` means that the Try It UI will only be available to users who have registered for the API.
+          type: string
+          enum:
+            - all
+            - authenticated
+            - registered
+          nullable: true
+      additionalProperties: false
+      title: ApiPublicationSpecRenderer
     ApiPublicationListItem:
       description: An API publication in a portal
       type: object
@@ -2406,6 +2416,35 @@ components:
           $ref: '#/components/schemas/ApiPublicationVisibility'
         auth_strategy_ids:
           $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
+        spec_renderer:
+          description: Customization settings for the API spec renderer in the portal.
+          type: object
+          additionalProperties: false
+          nullable: true
+          properties:
+            try_it_ui:
+              description: Enable in-browser testing for your API. All linked gateways must have the CORS plugin configured.
+              type: boolean
+              nullable: true
+            try_it_ui_audience:
+              description: |
+                The audience for the Try It UI feature.
+
+                `all` means that the Try It UI will be available to all users, including unauthenticated users.
+
+                `authenticated` means that the Try It UI will only be available to authenticated users.
+
+                `registered` means that the Try It UI will only be available to users who have registered for the API.
+              type: string
+              enum:
+                - all
+                - authenticated
+                - registered
+              nullable: true
+          required:
+            - try_it_ui
+            - try_it_ui_audience
+          title: ApiPublicationSpecRenderer
         form_id:
           description: |
             UUID of custom form associated with API publication, must be linked to given portal and have type of 'api_registration'
@@ -2433,6 +2472,7 @@ components:
         - auto_approve_registrations
         - entity_type
         - form_id
+        - spec_renderer
       title: API Publication List Item
     PublicationListItem:
       description: An API or API Package publication in a portal
@@ -2461,6 +2501,35 @@ components:
           $ref: '#/components/schemas/ApiPublicationVisibility'
         auth_strategy_ids:
           $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
+        spec_renderer:
+          description: Customization settings for the API spec renderer in the portal.
+          type: object
+          additionalProperties: false
+          nullable: true
+          properties:
+            try_it_ui:
+              description: Enable in-browser testing for your API. All linked gateways must have the CORS plugin configured.
+              type: boolean
+              nullable: true
+            try_it_ui_audience:
+              description: |
+                The audience for the Try It UI feature.
+
+                `all` means that the Try It UI will be available to all users, including unauthenticated users.
+
+                `authenticated` means that the Try It UI will only be available to authenticated users.
+
+                `registered` means that the Try It UI will only be available to users who have registered for the API.
+              type: string
+              enum:
+                - all
+                - authenticated
+                - registered
+              nullable: true
+          required:
+            - try_it_ui
+            - try_it_ui_audience
+          title: ApiPublicationSpecRenderer
         form_id:
           description: |
             UUID of portal form associated with API publication, must be linked to given portal and have type of 'api_registration'
@@ -2488,6 +2557,7 @@ components:
         - auto_approve_registrations
         - entity_type
         - form_id
+        - spec_renderer
       title: Publication List Item
     AutoApproveRegistrations:
       description: 'Whether the application registration auto approval on this portal for the api is enabled. If set to false, fallbacks on portal''s auto_approve_applications value.'
@@ -2503,6 +2573,8 @@ components:
           $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
         visibility:
           $ref: '#/components/schemas/ApiPublicationVisibility'
+        spec_renderer:
+          $ref: '#/components/schemas/ApiPublicationSpecRenderer'
         form_id:
           description: |
             UUID of portal form associated with API publication, must be linked to given portal and have type of 'api_registration'
@@ -2531,6 +2603,8 @@ components:
           $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
         visibility:
           $ref: '#/components/schemas/ApiPublicationVisibility'
+        spec_renderer:
+          $ref: '#/components/schemas/ApiPublicationSpecRenderer'
         form_id:
           description: |
             UUID of custom form associated with API publication, must be linked to given portal and have type of 'api_registration'
@@ -2900,6 +2974,24 @@ components:
         updated_at:
           $ref: '#/components/schemas/DateTimeFieldFilter'
       title: API Package Operations Filter Parameters
+    ApiRegistrationFilterParameters:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/StringFieldFilter'
+        portal_id:
+          $ref: '#/components/schemas/UuidFieldFilter'
+        portal_name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        application_id:
+          $ref: '#/components/schemas/UuidFieldFilter'
+        application_name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        application_owner_type:
+          $ref: '#/components/schemas/StringFieldFilter'
+        application_owner_id:
+          $ref: '#/components/schemas/UuidFieldFilter'
+      title: API Registration Filter Parameters
     ApiDocumentFilterParameters:
       type: object
       properties:
@@ -3501,6 +3593,7 @@ components:
       type: string
       enum:
         - required
+        - unique
         - is_array
         - is_base64
         - is_boolean
@@ -3516,6 +3609,7 @@ components:
         - unknown_property
         - missing_reference
         - is_label
+        - key_invalid
         - matches_regex
         - invalid
         - is_supported_network_availability_zone_list
@@ -3612,6 +3706,68 @@ components:
         - reason
         - rule
         - maximum
+    InvalidParameterMinimumTime:
+      type: object
+      properties:
+        field:
+          type: string
+          example: to
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - min_time
+          nullable: false
+          readOnly: true
+        minimum:
+          type: string
+          format: date-time
+          example: '2026-10-01T00:00:00Z'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: 'must be no earlier than 2026-10-01T00:00:00Z'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - minimum
+    InvalidParameterMaximumTime:
+      type: object
+      properties:
+        field:
+          type: string
+          example: to
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - max_time
+          nullable: false
+          readOnly: true
+        maximum:
+          type: string
+          format: date-time
+          example: '2026-10-31T23:59:59Z'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: 'must be no later than 2026-10-31T23:59:59Z'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - maximum
     InvalidParameterChoiceItem:
       type: object
       properties:
@@ -3689,6 +3845,8 @@ components:
           - $ref: '#/components/schemas/InvalidParameterStandard'
           - $ref: '#/components/schemas/InvalidParameterMinimumLength'
           - $ref: '#/components/schemas/InvalidParameterMaximumLength'
+          - $ref: '#/components/schemas/InvalidParameterMinimumTime'
+          - $ref: '#/components/schemas/InvalidParameterMaximumTime'
           - $ref: '#/components/schemas/InvalidParameterChoiceItem'
           - $ref: '#/components/schemas/InvalidParameterDependentItem'
       minItems: 1
@@ -3703,6 +3861,8 @@ components:
             The HTTP status code of the error. Useful when passing the response
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
+          enum:
+            - 400
           readOnly: true
         title:
           description: |
@@ -3749,6 +3909,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 401
+          enum:
+            - 401
           readOnly: true
         title:
           description: |
@@ -3796,6 +3958,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 403
+          enum:
+            - 403
           readOnly: true
         title:
           description: |
@@ -3843,6 +4007,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 404
+          enum:
+            - 404
           readOnly: true
         title:
           description: |
@@ -3956,6 +4122,8 @@ components:
             body to child properties in a frontend UI. Must be returned as an integer.
           type: integer
           example: 409
+          enum:
+            - 409
           readOnly: true
         title:
           description: |
@@ -5745,6 +5913,35 @@ components:
                 $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
               visibility:
                 $ref: '#/components/schemas/ApiPublicationVisibility'
+              spec_renderer:
+                description: Customization settings for the API spec renderer in the portal.
+                type: object
+                additionalProperties: false
+                nullable: true
+                properties:
+                  try_it_ui:
+                    description: Enable in-browser testing for your API. All linked gateways must have the CORS plugin configured.
+                    type: boolean
+                    nullable: true
+                  try_it_ui_audience:
+                    description: |
+                      The audience for the Try It UI feature.
+
+                      `all` means that the Try It UI will be available to all users, including unauthenticated users.
+
+                      `authenticated` means that the Try It UI will only be available to authenticated users.
+
+                      `registered` means that the Try It UI will only be available to users who have registered for the API.
+                    type: string
+                    enum:
+                      - all
+                      - authenticated
+                      - registered
+                    nullable: true
+                required:
+                  - try_it_ui
+                  - try_it_ui_audience
+                title: ApiPublicationSpecRenderer
               form_id:
                 description: |
                   UUID of portal form associated with API publication, must be linked to given portal and have type of 'api_registration'
@@ -5768,6 +5965,7 @@ components:
               - updated_at
               - auth_strategy_ids
               - form_id
+              - spec_renderer
             title: API Publication
     ListApiPublicationResponse:
       description: Paginated list of API publications
@@ -5819,6 +6017,35 @@ components:
                 $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
               visibility:
                 $ref: '#/components/schemas/ApiPublicationVisibility'
+              spec_renderer:
+                description: Customization settings for the API spec renderer in the portal.
+                type: object
+                additionalProperties: false
+                nullable: true
+                properties:
+                  try_it_ui:
+                    description: Enable in-browser testing for your API. All linked gateways must have the CORS plugin configured.
+                    type: boolean
+                    nullable: true
+                  try_it_ui_audience:
+                    description: |
+                      The audience for the Try It UI feature.
+
+                      `all` means that the Try It UI will be available to all users, including unauthenticated users.
+
+                      `authenticated` means that the Try It UI will only be available to authenticated users.
+
+                      `registered` means that the Try It UI will only be available to users who have registered for the API.
+                    type: string
+                    enum:
+                      - all
+                      - authenticated
+                      - registered
+                    nullable: true
+                required:
+                  - try_it_ui
+                  - try_it_ui_audience
+                title: ApiPublicationSpecRenderer
               form_id:
                 description: |
                   UUID of custom form associated with API publication, must be linked to given portal and have type of 'api_registration'

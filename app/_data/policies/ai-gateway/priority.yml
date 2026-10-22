@@ -1,0 +1,28 @@
+# Used by {% ai_policy_priorities %}.
+#
+# exclude: policy pages that are not valid AI Policy types. koko rejects them, and
+# authentication is configured through AI Auth Strategies instead.
+# overrides: priorities missing from app/_data/plugins/priorities/*.json
+# (value taken from PRIORITY in kong-ee).
+exclude:
+  - ace
+  - ai-mcp-oauth2
+  - basic-auth
+  - header-cert-auth
+  - hmac-auth
+  - jwt
+  - jwt-signer
+  - key-auth
+  - key-auth-enc
+  - ldap-auth
+  - ldap-auth-advanced
+  - mtls-auth
+  - oauth2
+  - oauth2-introspection
+  - openid-connect
+  - saml
+  - session
+  - upstream-oauth
+  - vault-auth
+overrides:
+  ai-nvidia-nemo-guardrail: 786

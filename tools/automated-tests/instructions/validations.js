@@ -8,7 +8,7 @@ import path from "path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 
 import {
   setEnvVariable,
@@ -20,7 +20,7 @@ const log = debug("tests:runner");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const testsConfig = yaml.load(fs.readFileSync("./config/tests.yaml", "utf-8"));
+const testsConfig = load(fs.readFileSync("./config/tests.yaml", "utf-8"));
 const skipEnvVariables = new Set(
   testsConfig.validations?.skip_env_variables ?? [],
 );

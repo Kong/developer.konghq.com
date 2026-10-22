@@ -21,6 +21,7 @@ Available Commands:
   consumer-groups         List or get Consumer Groups for a Konnect AI Gateway
   consumers               List or get Consumers for a Konnect AI Gateway
   credentials             List or get Consumer Credentials for a Konnect AI Gateway Consumer
+  custom-policies         List or get Custom Policies for a Konnect AI Gateway [beta]
   data-plane-certificates List or get data plane certificates for a Konnect AI Gateway
   mcp-servers             List or get MCP Servers for a Konnect AI Gateway
   model-providers         List or get model providers for a Konnect AI Gateway
@@ -42,6 +43,7 @@ Flags:
       --columns stringArray     Select text columns as HEADER=.field (repeatable or comma-separated).
                                 Supports nested fields, quoted keys, array indexes, and string slices.
       --config-file string      Path to the configuration file to load.
+                                - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
   -h, --help                    help for ai-gateway
       --jq string               Filter JSON responses using jq expressions (powered by gojq for full jq compatibility)

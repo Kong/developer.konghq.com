@@ -3,7 +3,6 @@ title: Get started with prepaid credits
 permalink: /how-to/get-started-with-prepaid-credits/
 description: Configure a credits-only billing plan, create a customer, start a subscription, and issue a prepaid credit grant in {{site.konnect_short_name}} {{site.metering_and_billing}}.
 content_type: how_to
-beta: true
 
 breadcrumbs:
   - /metering-and-billing/

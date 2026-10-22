@@ -1,5 +1,5 @@
 import fs from "fs/promises";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 import Dockerode from "dockerode";
 import minimist from "minimist";
 import { logResult, logResults, isFailureExpected } from "./reporting.js";
@@ -41,7 +41,7 @@ export async function loadConfig() {
   const configFile = "./config/tests.yaml";
 
   const fileContent = await fs.readFile(configFile, "utf8");
-  const config = yaml.load(fileContent);
+  const config = load(fileContent);
 
   return config;
 }
@@ -53,7 +53,7 @@ export async function loadConfig() {
 // ever starts, then boot it once for the rest of the batch as usual.
 async function usesStandaloneGateway(file) {
   const fileContent = await fs.readFile(file, "utf8");
-  const instructions = yaml.load(fileContent);
+  const instructions = load(fileContent);
   const { standaloneGateway } = await getSetupConfig(instructions.setup);
   return Boolean(standaloneGateway);
 }
@@ -77,7 +77,7 @@ async function partitionByStandaloneGateway(instructionFiles) {
 // the file declares no quickstart of its own.
 async function selfProvisions(file) {
   const fileContent = await fs.readFile(file, "utf8");
-  const instructions = yaml.load(fileContent);
+  const instructions = load(fileContent);
   const declarations = [
     ...(instructions.prereqs?.blocks || []),
     ...(instructions.steps || []),

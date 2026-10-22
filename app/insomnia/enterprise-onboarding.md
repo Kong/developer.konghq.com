@@ -19,12 +19,10 @@ related_resources:
   - text: Enterprise user management
     url: /insomnia/enterprise-user-management/
   - text: Migrate from scratch pad to Enterprise
-    url: /insomnia/migrate-from-scratch-pad-to-enterprise/
+    url: /insomnia/migrate-to-enterprise-from-scratchpad/
 
 next_steps:
-  - text: Documents
-    url: /insomnia/documents/
-  - text: Collections
+  - text: API Collections
     url: /insomnia/collections/
   - text: Environments
     url: /insomnia/environments/
@@ -226,4 +224,4 @@ Now that your Insomnia Enterprise instance is configured, you and your collabora
 * [Import and export reference for Insomnia](/insomnia/import-export/)
 * [Migrate collections and environments from Postman to Insomnia](/how-to/migrate-collections-and-envrionments-from-postman-to-insomnia/)
 * [Import content from Postman to multiple Insomnia projects](/how-to/import-content-from-postman-to-multiple-insomnia-projects/)
-* [Import an API specification as a design document in Insomnia](/how-to/import-an-api-spec-as-a-document/)
+* [Import an API specification into an API Collection in Insomnia](/how-to/import-an-api-spec/)
