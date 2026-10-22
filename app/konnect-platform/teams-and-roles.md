@@ -668,14 +668,8 @@ Scoped roles, such as Route Admin and Gateway Service Admin, can only manage plu
 * A Route Admin can configure plugins scoped to the Routes it can manage.
 * A Gateway Service Admin can configure plugins scoped to the Gateway Services it can manage.
 * A plugin scoped to both a Gateway Service and a Route needs permission on both. For example, a user who is Route Admin for the Route and Gateway Service Admin for the Gateway Service can configure it, but a user with only one of those roles can't.
-* Global plugins apply to every entity in a control plane, so only the Plugin Admin and Admin roles can create, edit, or delete them.
+* Global plugins apply to every entity in a control plane, so only the Plugin Admin, control plane Admin, and control plane Deployer roles can create, edit, or delete them.
 
-The endpoint doesn't change the result. A scoped plugin can be configured through its scoped endpoint, such as `/routes/{routeId}/plugins`, or through the root `/plugins` endpoint, as long as the user or system account has permission on every entity the plugin is scoped to.
-
-If a request to configure a plugin returns a `403`, either:
-
-* Give the user or system account permission on every entity the plugin is scoped to, or the Plugin Admin or Admin role for that control plane.
-* Scope the plugin only to the Gateway Services or Routes the role can manage. For a global plugin, this means scoping it to the Gateway Services or Routes it needs to apply to.
 
 #### Dashboards
 
