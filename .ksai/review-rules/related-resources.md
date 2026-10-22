@@ -4,7 +4,7 @@ Applies to entries added or changed in the frontmatter `related_resources` list,
 
 ## Always flag
 
-- **Self-link.** An entry's `url` points at the page itself, including a same-page `#anchor`. The page's URL is its frontmatter `permalink` when set, otherwise its path under `app/` (`index.md` maps to its directory, a trailing slash is ignored). Suggest deleting the entry.
+- **Self-link.** An entry's `url` points at the page itself, including a same-page `#anchor`. The page's URL is its frontmatter `permalink` when set. Otherwise use the route the build generates: `app/<dir>/index.md` is `/<dir>/`, `app/_how-tos/<path>.md` is `/how-to/<path>/`, `app/_gateway_entities/<path>.md` is `/gateway/entities/<path>/`, `app/_ai_gateway_entities/<path>.md` is `/ai-gateway/entities/<path>/`, `app/_support/<path>.md` is `/support/<path>/`, `app/_cookbooks/<path>.md` is `/cookbooks/<path>/`, `app/_kong_plugins/<name>/index.md` is `/plugins/<name>/`, `app/_ai_gateway_policies/<name>/index.md` is `/ai-gateway/policies/<name>/`, `app/_mesh_policies/<name>/index.md` is `/mesh/policies/<name>/`, `app/_event_gateway_policies/<name>/index.md` is `/event-gateway/policies/<name>/`, and `app/_landing_pages/<path>.yaml` is `/<path>/`. Ignore a trailing slash. If the page's route is not in this list, do not flag a self-link and do not guess. Suggest deleting the entry.
 - **Duplicate URL.** Two entries in the same list share a `url`, whatever the `text`. Suggest deleting the later one. Not a violation: the same page linked once under `next_steps` and once under `related_resources`.
 
 Post at most one finding per rule per PR. List every affected entry in the same comment.
