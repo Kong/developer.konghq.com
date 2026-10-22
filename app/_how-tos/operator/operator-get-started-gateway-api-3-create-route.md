@@ -96,22 +96,22 @@ httproute.gateway.networking.k8s.io/echo created
 
 1. Test your Service:
 
-{% validation request-check %}
-url: /echo
-status_code: 200
-count: 6
-sleep: 5
-on_prem_url: $PROXY_IP
-konnect_url: $PROXY_IP
-display_headers: true
-indent: 3
-{% endvalidation %}
+   {% validation custom-command %}
+   command: |
+     curl -i "http://$PROXY_IP/echo" \
+        --no-progress-meter --fail-with-body
+   expected:
+     return_code: 0
+     message: 'Welcome, you are connected to node'
+   render_output: false
+   indent: 3
+   {% endvalidation %}
 
    You should see the following message:
-   
+    
    ```text
-   Welcome, you are connected to node king.
-   Running on Pod echo-965f7cf84-rm7wq.
-   In namespace default.
-   With IP address 192.168.194.10.
+   Welcome, you are connected to node kind-control-plane.
+   Running on Pod echo-5f44d4c6f9-krnhk.
+   In namespace kong.
+   With IP address 10.244.0.26.
    ```
