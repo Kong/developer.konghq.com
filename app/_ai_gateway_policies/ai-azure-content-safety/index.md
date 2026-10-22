@@ -16,7 +16,7 @@ tags:
 
 The AI Azure Content Safety Policy allows administrators to enforce 
 introspection with the [Azure AI Content Safety](https://azure.microsoft.com/en-us/products/ai-services/ai-content-safety) service 
-for requests and responses handled by an [AI Model](/ai-gateway/entities/ai-model/). The Policy can be attached to an AI Model, AI Consumer, AI Consumer Group, or applied globally (see [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes)).
+for requests and responses handled by an [AI Model](/ai-gateway/entities/ai-model/). The Policy can be attached to an AI Model, [AI Consumer](/ai-gateway/entities/ai-consumer/), [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/), or applied globally (see [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes)).
 This Policy enables configurable thresholds for the different moderation categories 
 and you can specify an array set of pre-configured blocklist IDs from your Azure Content Safety instance.
 
