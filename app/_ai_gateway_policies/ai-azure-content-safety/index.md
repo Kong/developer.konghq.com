@@ -16,7 +16,7 @@ tags:
 
 The AI Azure Content Safety Policy allows administrators to enforce 
 introspection with the [Azure AI Content Safety](https://azure.microsoft.com/en-us/products/ai-services/ai-content-safety) service 
-for all requests and responses handled by the [AI Model](/ai-gateway/entities/ai-model/) entity.
+for requests and responses handled by an [AI Model](/ai-gateway/entities/ai-model/). The Policy can be attached to an AI Model, AI Consumer, AI Consumer Group, or applied globally (see [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes)).
 This Policy enables configurable thresholds for the different moderation categories 
 and you can specify an array set of pre-configured blocklist IDs from your Azure Content Safety instance.
 
@@ -33,41 +33,45 @@ Here's how it works if you apply it to both requests and responses:
 
 1. The AI Azure Content Safety Policy intercepts the request and sends the request body to the Azure AI Content Safety service.
    - The Azure AI Content Safety service analyzes the request against configured moderation categories and allows or blocks the request.
-1. If allowed, the request is forwarded upstream with the AI Model entity.
+1. If allowed, the request is forwarded upstream by the AI Model.
 1. On the way back, the Policy intercepts the response and sends the response body to the Azure AI Content Safety service.
    - The Azure AI Content Safety service analyzes the response against configured moderation categories and allows or blocks the response.
 1. If allowed, the response is forwarded to the client.
 
-{% comment %}
+The following diagram shows the request and response flow when the policy inspects both directions:
+
 <!--vale off-->
 {% mermaid %}
 sequenceDiagram
     autonumber
     participant Client
-    participant Gateway as {{site.ai_gateway}}
     participant Policy as AI Azure Content Safety Policy
-    participant Safety as Azure AI Content Safety service
-    participant AI as Upstream AI Service
+    participant Svc as Azure AI Content Safety service
+    participant Model as AI Model
+    participant LLM as Upstream LLM provider
 
-    Client->>Gateway: Send request
-    Gateway->>Policy: Route request
-    Policy->>Safety: Intercept & send request body
-    Safety->>Safety: Check against moderation <br>categories and blocklists
-    Safety->>Policy: Allow or block request
-    Policy->>Gateway: Forward allowed request
-    Gateway->>AI: Process allowed request
-    AI->>Gateway: Return AI response
-    Gateway->>Policy: Forward response
-    Policy->>Safety: Intercept & send response body
-    Safety->>Safety: Check against moderation <br>categories and blocklists
-    Safety->>Policy: Allow or block response
-    Policy->>Gateway: Forward allowed response
-    Gateway->>Client: Forward allowed response to client
+    Client->>Policy: Send request
+    Policy->>Svc: Send request body
+    Svc->>Policy: Return verdict
+    alt Request blocked
+        Policy->>Client: Return error, request is not sent upstream
+    else Request allowed
+        Policy->>Model: Forward request
+        Model->>LLM: Send request
+        LLM->>Model: Return response
+        Model->>Policy: Forward response
+        Policy->>Svc: Send response body
+        Svc->>Policy: Return verdict
+        alt Response blocked
+            Policy->>Client: Return error
+        else Response allowed
+            Policy->>Client: Return response
+        end
+    end
 {% endmermaid %}
 <!--vale on-->
 
-> _Figure 1: Diagram showing the request and response flow with the AI Azure Content Safety Policy._
-{% endcomment %}
+> _Figure 1: Request and response flow with the AI Azure Content Safety Policy._
 
 ## Rejection modes
 

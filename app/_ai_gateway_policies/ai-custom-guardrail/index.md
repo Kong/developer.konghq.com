@@ -14,7 +14,7 @@ tags:
   - safety
 ---
 
-The AI Custom Guardrail Policy enforces introspection on both inbound requests and outbound responses handled by the [AI Model](/ai-gateway/entities/ai-model/) entity. It can integrate with any HTTP-based guardrail service. This ensures all data exchanged between clients and upstream LLMs adheres to the configured security standards.
+The AI Custom Guardrail Policy enforces introspection on both inbound requests and outbound responses handled by an [AI Model](/ai-gateway/entities/ai-model/). The Policy can be attached to an AI Model, AI Consumer, AI Consumer Group, or applied globally (see [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes)). It can integrate with any HTTP-based guardrail service. This ensures all data exchanged between clients and upstream LLMs adheres to the configured security standards.
 
 ## How it works
 
@@ -27,37 +27,46 @@ Here's how it works if you apply it to both requests and responses:
 
 1. The AI Custom Guardrail Policy intercepts the request and sends the request body to the guardrail service.
    - The guardrail service analyzes the request against configured moderation categories and allows or blocks the request.
-1. If allowed, the request is forwarded upstream with the AI Model entity.
+1. If allowed, the request is forwarded upstream by the AI Model.
 1. On the way back, the Policy intercepts the response and sends the response body to the guardrail service.
    - The guardrail service analyzes the response against configured moderation categories and allows or blocks the response.
 1. If allowed, the response is forwarded to the client.
 
-{% comment %}
-<!-- vale off -->
+The following diagram shows the request and response flow when the policy inspects both directions:
+
+<!--vale off-->
 {% mermaid %}
 sequenceDiagram
-  autonumber
-  participant client as Client
-  participant custguardrail as AI Custom Guardrail Policy
-  participant guardrail as Guardrail service
-  participant proxy as AI Proxy/Advanced plugin
-  participant llm as Upstream AI service
+    autonumber
+    participant Client
+    participant Policy as AI Custom Guardrail Policy
+    participant Svc as Guardrail service
+    participant Model as AI Model
+    participant LLM as Upstream LLM provider
 
-  client->>custguardrail:Send request
-  custguardrail<<->>guardrail:Intercept & send request body
-  guardrail->>guardrail:Check against moderation <br>categories and blocklists
-  guardrail->>custguardrail: Allow or block request
-  custguardrail->>proxy: Forward allowed request
-  proxy->>llm: Process allowed request
-  llm->>proxy: Return AI response
-  proxy->>custguardrail: Forward response
-  custguardrail->>guardrail: Intercept & send response body
-  guardrail->>guardrail: Check against moderation <br>categories and blocklists
-  guardrail->>custguardrail: Allow or block response
-  custguardrail->>client: Forward allowed response
+    Client->>Policy: Send request
+    Policy->>Svc: Send request body
+    Svc->>Policy: Return verdict
+    alt Request blocked
+        Policy->>Client: Return error, request is not sent upstream
+    else Request allowed
+        Policy->>Model: Forward request
+        Model->>LLM: Send request
+        LLM->>Model: Return response
+        Model->>Policy: Forward response
+        Policy->>Svc: Send response body
+        Svc->>Policy: Return verdict
+        alt Response blocked
+            Policy->>Client: Return error
+        else Response allowed
+            Policy->>Policy: Mask content if configured
+            Policy->>Client: Return response
+        end
+    end
 {% endmermaid %}
-<!-- vale on -->
-{% endcomment %}
+<!--vale on-->
+
+> _Figure 1: Request and response flow with the AI Custom Guardrail Policy._
 
 ## Configuration
 
