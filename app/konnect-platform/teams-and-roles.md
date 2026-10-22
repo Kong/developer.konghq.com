@@ -377,6 +377,34 @@ rows:
     permissions: |
       * Read and list auth servers.
 {% endtable %}
+<!--vale on-->
+
+#### Principals
+
+The following table describes the predefined roles for [{{site.identity}} groups](/identity/principals/#groups) and group memberships:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Role
+    key: role
+  - title: Description
+    key: description
+  - title: CRUD permissions
+    key: permissions
+rows:
+  - role: "`PrincipalAdmin`"
+    description: Access to all read and write permissions related to groups and group memberships.
+    permissions: |
+      * Create, edit, delete, read, and list groups.
+      * Create, edit, delete, read, and list group memberships.
+  - role: "`PrincipalViewer`"
+    description: Access to all read permissions related to groups and group memberships.
+    permissions: |
+      * Read and list groups.
+      * Read and list group memberships.
+{% endtable %}
+<!--vale on-->
 
 #### APIs
 

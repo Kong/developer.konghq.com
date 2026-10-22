@@ -71,6 +71,8 @@ rows:
     description: "Define a principal once and use it for {{site.base_gateway}}, {{site.event_gateway_short}}, and {{site.dev_portal}} without manually synchronizing identities."
   - usecase: "Drive gateway behavior with metadata"
     description: "Scope conditional plugin execution by attributes that the principal carries, such as business unit or tier."
+  - usecase: "Manage access for a set of principals"
+    description: "Add principals to a [group](#groups) and reference the group in access rules, so that adding or removing a member doesn't require editing the rules."
 {% endtable %}
 <!--vale on-->
 
@@ -165,6 +167,83 @@ Metadata is a set of key-value pairs associated with a principal. {{site.identit
 
 You can use metadata to configure how a gateway behaves when that principal is authenticated to it.
 For example, a Request Termination plugin can block access only when `principal.metadata.business_unit == "payments"`.
+
+## Groups
+
+A group is a named set of principals in a directory.
+Groups let you manage access for a set of principals in one place: instead of writing one access rule per principal, or relying on every principal carrying the right metadata value, you add principals to a group and reference the group in your rules.
+When a principal joins or leaves a group, you update the group's membership and the rules stay the same.
+
+{{site.identity}} doesn't enforce access itself.
+It identifies the authenticated principal and the groups it belongs to, and the gateway's access rules decide what that principal can reach.
+
+Group membership works in the following ways:
+
+* **Manual membership:** You add and remove each member explicitly, and a principal must already exist in the directory before you can add it to a group.
+ * **Automatic mapping from an IdP:** When you enable the [Token Vault](/identity/token-vault/) on a directory, {{site.identity}} can provision principals from a trusted IdP and add them to groups based on the group names your IdP sends in its tokens. If a group doesn't exist yet, {{site.identity}} creates it. Automatic mapping only adds principals to groups of type `group`.
+
+{{site.identity}} resolves group membership live and doesn't cache it. A membership change applies the next time the gateway authenticates the principal with {{site.identity}}.
+
+Group names must be unique within a directory and can only contain letters and numbers, without spaces.
+
+### Group types
+
+You set a group's type when you create it, and you can't change it afterwards.
+A group and a team in the same directory can't have the same name.
+
+The following table compares the two types:
+
+{% table %}
+columns:
+  - title: Feature
+    key: feature
+  - title: Group
+    key: group
+  - title: Team
+    key: team
+rows:
+  - feature: "API value"
+    group: "`group` (default)"
+    team: "`team`"
+  - feature: "Purpose"
+    group: "A set of principals that you reference in access rules."
+    team: "A node in your organization chart, such as a department or a team."
+  - feature: "Members"
+    group: "Principals of type `user` and `agent`, and principals with no type."
+    team: "Principals of type `user` and other teams."
+  - feature: "Nesting"
+    group: "A group can't contain other groups."
+    team: "A team can contain other teams."
+  - feature: "Owner"
+    group: "No owner"
+    team: "A team can have an owner, which is a principal of type `user` in the same directory. The owner can't be a member of the team, and you can't delete a user who owns a team."
+  - feature: "API key"
+    group: "Yes"
+    team: "No"
+  - feature: "Basic auth, OIDC, Consumer, and auth server client credentials"
+    group: "No"
+    team: "No"
+  - feature: "Automatic mapping from an IdP"
+    group: "Yes"
+    team: "No. If an IdP token names a team, {{site.identity}} skips it and doesn't add the principal."
+  - feature: "Deleting with members"
+    group: "Deleting a group also removes its memberships."
+    team: "You can't delete a team that has members."
+{% endtable %}
+
+### Group credentials
+
+A group of type `group` can have an API key. When a request uses that key, {{site.identity}} identifies the group, not one individual.
+
+Authenticate as a group when a set of principals shares one credential and no single principal owns the work, for example a CI job or a script that a whole team runs.
+You issue and revoke one key for the group, instead of one key for each member.
+Authenticate as an individual principal when you need to know who made each request, because a request that uses a group key doesn't identify which member sent it.
+
+Create the key the same way you create a principal's API key, using the group's ID as the principal ID. 
+See [Key auth](#key-auth).
+
+Only groups can have an API key, not teams. Groups and teams can't have other credentials or identities. For groups and teams, {{site.identity}} rejects basic auth credentials, and OIDC, Consumer, and auth server client.
+
 
 ## Controlling {{site.base_gateway}} plugin execution based on principals
 
@@ -313,6 +392,43 @@ body:
 
 {% endnavtab %}
 {% endnavtabs %}
+
+## Create a group and add members
+
+Before you add members to a group, the principals must [exist in the directory](#configure-a-principal).
+
+Create the group by sending a `POST` request to the `/v2/directories/{directoryId}/groups` endpoint. 
+If you omit `type`, {{site.identity}} creates a group of type `group`:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/groups
+status_code: 201
+method: POST
+body:
+  name: PlatformEngineers
+  description: Members of the platform engineering team
+  type: group
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Then, add a principal to the group by sending a `POST` request to the `/v2/directories/{directoryId}/groups/{groupId}/membership` endpoint:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/groups/$GROUP_ID/membership
+status_code: 201
+method: POST
+body:
+  member:
+    id: $PRINCIPAL_ID
+    type: principal
+{% endkonnect_api_request %}
+<!--vale on-->
+
+The response contains a membership entry ID. 
+To remove the principal from the group, send a `DELETE` request to the `/v2/directories/{directoryId}/groups/{groupId}/membership/{groupMembershipId}` endpoint with that ID.
+To list the members of a group, send a `GET` request to the `/v2/directories/{directoryId}/groups/{groupId}/membership` endpoint.
 
 ## Configure credentials and identities
 
@@ -564,7 +680,7 @@ body:
 
 ## Principal limitations
 
-The following are default limits for principals and directories:
+The following are default limits for principals, groups, and directories:
 
 * 1 directory per region.
   Contact Kong Support if you need more than one directory.
@@ -578,3 +694,7 @@ The following are default limits for principals and directories:
 * OIDC identity issuer and claim combinations must be unique within a directory
 * Limit of 100 authentication or principal lookup requests per second per directory, not counting cached requests
 * At most, you can map one Consumer per control plane to a principal. You can map multiple Consumers if they are in different control planes.
+* 10,000 groups per directory
+* 10,000 members per group
+* 200 groups per principal
+* Group names must be unique within a directory
