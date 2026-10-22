@@ -766,7 +766,7 @@ features:
     description: Handling WebSocket and gRPC upstreams
     supported: false
   - title: "AI Guardrails"
-    description: Applying content safety guardrails to MCP AI requests and responses. For PII, see the [AI MCP Sanitizer](/ai-gateway/policies/ai-mcp-sanitizer/) Policy.
+    description: Applying content safety guardrails to MCP AI requests and responses. For PII protection, see the [AI MCP Sanitize Policy](/ai-gateway/policies/ai-mcp-sanitizer/).
     supported: false
 {% endfeature_table %}
 <!-- vale on -->

@@ -64,7 +64,7 @@ rows:
                     - An [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) (`key-auth` or `openid-connect`) to authenticate AI Consumers, optionally paired with [protected resource metadata](/ai-gateway/entities/ai-mcp-server/#protected-resource-metadata) for MCP-spec OAuth2.
                     - [AI metrics](/ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics) and [AI audit logs](/ai-gateway/ai-audit-log-reference/#ai-mcp-logs) to monitor MCP traffic.
                     - ACLs to enforce access controls for MCP tool usage.
-                    - The [AI MCP Sanitizer policy](/ai-gateway/policies/ai-mcp-sanitizer/) (tech preview) to detect and redact PII in tool call arguments and results.
+                    - The [AI MCP Sanitizer Policy](/ai-gateway/policies/ai-mcp-sanitizer/) (tech preview) to detect and redact PII in tool call arguments and results.
                     - The [Rate Limiting policy](/ai-gateway/policies/rate-limiting/) and other traffic control policies to govern usage.
 
   - columns:

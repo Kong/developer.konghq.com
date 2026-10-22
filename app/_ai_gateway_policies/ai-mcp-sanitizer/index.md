@@ -36,7 +36,7 @@ The AI MCP Sanitizer Policy detects and redacts personally identifiable informat
 It can sanitize the arguments an agent sends to a tool, the result a tool returns, or both.
 
 MCP tools often front systems of record such as CRMs, ticketing tools, and medical or financial databases, where arguments and results routinely contain PII.
-The [AI PII Sanitizer Policy](/ai-gateway/policies/ai-sanitizer/) can't protect this traffic, because it only processes chat-completion bodies and not MCP's JSON-RPC `params` and `result` structures.
+The [AI PII Sanitizer Policy](/ai-gateway/policies/ai-sanitizer/) processes only chat-completion bodies. MCP traffic uses JSON-RPC params and result structures, so the Policy can't protect it."
 The AI MCP Sanitizer Policy adds PII sanitization to MCP traffic proxied by an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/).
 
 The Policy uses the same [PII service](#ai-pii-anonymizer-service), PII categories, custom patterns, blocking, and recovery options as the AI PII Sanitizer Policy.
@@ -68,7 +68,7 @@ rows:
     example: "Your systems use employee IDs in the format `EMP-123456`."
     config: "Add [`custom_patterns`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-custom-patterns) with a regular expression for the identifier, and include `custom` in [`anonymize`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-anonymize)."
   - situation: A tool must work with placeholders, but the agent needs the real values back.
-    example: "The tool returns a placeholder it received in the arguments."
+    example: "The tool returns a placeholder it received in the arguments, and the agent needs the original value to continue."
     config: "Set [`recover_redacted`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-recover-redacted) to `true` to [restore the original values](#recover-redacted-values) in the tool result."
 {% endtable %}
 
@@ -116,7 +116,6 @@ Choose targets based on which direction of the tool call includes PII and whethe
   Set `recover_redacted` to `false`, because you can't use recovery when `tool_results` is a target.
 * **Sanitize both** if user data goes to the tool and the tool returns PII too.
   The streaming and single-pass changes apply because `tool_results` is targeted.
-  Set `recover_redacted` to `false`, because you can't use recovery when `tool_results` is a target.
 
 ## How it works
 
@@ -178,12 +177,12 @@ rows:
     effect: "For an upstream that streams a response incrementally, time to first byte becomes time to last byte. An SSE response that contains one complete message isn't affected."
   - type: "[`conversion-listener`](/ai-gateway/entities/ai-mcp-server/#schema-aigateway-mcpserver-type)"
     change: "{{site.ai_gateway}} disables single-pass conversion for converter tools that the AI MCP Server owns, and sends the call to the upstream as a separate request."
-    effect: "Each call opens one additional outbound connection and doesn't use the load balancer, retries, upstream TLS or mTLS settings, the keepalive pool, or the configured timeouts."
+    effect: "Each call opens one additional outbound connection. That connection doesn't use the load balancer, retries, upstream TLS or mTLS settings, the keepalive pool, or the configured timeouts."
 {% endtable %}
 
 Enabling `recover_redacted` also requires {{site.ai_gateway}} to hold the result, so the same changes apply.
 
-These changes reverse when you remove `tool_results` from `sanitize_targets` and disable `recover_redacted`.
+Removing `tool_results` from `sanitize_targets` and disabling `recover_redacted` restores the previous behavior.
 A configuration that targets only `tool_arguments` without recovery doesn't change streaming or single-pass behavior.
 {{site.ai_gateway}} never buffers long-lived streams, such as `subscriptions/listen` and GET-initiated SSE.
 
@@ -234,9 +233,7 @@ rows:
 {% endtable %}
 
 {:.info}
-> `INPUT`, `OUTPUT`, and `BOTH` are ambiguous on MCP traffic, because an AI MCP Server is both a server to the agent and a client of the tool server.
->
-> `sanitize_targets` names the protocol location instead.
+> `INPUT`, `OUTPUT`, and `BOTH` are ambiguous on MCP traffic, because an AI MCP Server is both a server to the agent and a client of the tool server.`sanitize_targets` names the protocol location instead.
 
 ## AI PII Anonymizer service
 
