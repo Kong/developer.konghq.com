@@ -121,6 +121,107 @@ To key counters on a combination of values, set [`config.compound_identifier`](.
 
 {% include md/ai-gateway/v2/policies/rate-limiting/limit-by-ip.md %}
 
+### AI Consumer counter key
+
+When [`config.identifier`](./reference/#schema--config-identifier) is `consumer`, use [`config.counter_key`](./reference/#schema--config-counter-key) to control which AI Consumer attribute keys the rate limit counter. By default, the counter is keyed by `consumer.id`. You can also key by `consumer.username` or `consumer.custom_id`.
+
+When you use `consumer.username` or `consumer.custom_id`, AI Consumers with identical attribute values contribute to the same rate limit counter, even if they were authenticated by different control planes. This enables consistent rate limiting across distributed deployments that share a Redis backend.
+
+`counter_key` also applies when using [`compound_identifier`](./reference/#schema--config-compound-identifier) with a Consumer segment, for example `["ip", "consumer"]`.
+
+{% entity_example %}
+type: policy
+data:
+  display_name: Rate Limiting Advanced - Consumer Username
+  name: rate-limiting-advanced-counter-key
+  type: rate-limiting-advanced
+  enabled: true
+  global: true
+  config:
+    identifier: consumer
+    counter_key: consumer.username
+    strategy: redis
+    redis:
+      host: ${redis_host}
+      port: 6379
+    sync_rate: 10
+    limit:
+      - 10
+    window_size:
+      - 60
+variables:
+  redis_host:
+    value: $REDIS_HOST
+    description: The host where your Redis instance is running.
+formats:
+  - kongctl
+  - konnect-api
+{% endentity_example %}
+
+This example rate limits AI Consumers with the same username to a single shared counter, regardless of which control plane processed the request.
+
+### Rate limit by Principal
+
+Set [`config.identifier`](./reference/#schema--config-identifier) to `principal` to rate limit based on the authenticated [Kong Identity Principal](/identity/principals/) instead of the AI Consumer, credential, IP address, or other supported identifiers. `principal` is also a valid segment in [`config.compound_identifier`](./reference/#schema--config-compound-identifier).
+
+{% entity_example %}
+type: policy
+data:
+  display_name: Rate Limiting Advanced - Principal
+  name: rate-limiting-advanced-principal
+  type: rate-limiting-advanced
+  enabled: true
+  global: true
+  config:
+    identifier: principal
+    limit:
+      - 10
+    window_size:
+      - 60
+formats:
+  - kongctl
+  - konnect-api
+{% endentity_example %}
+
+`principal` requires an AI Auth Strategy that populates the Principal, for example, the `openid-connect` AI Auth Strategy configured with [Kong Identity Principal mapping](/ai-gateway/entities/ai-auth-strategy/#principal-mapping).
+
+[`config.custom_key`](./reference/#schema--config-custom-key) overrides the computed rate limiting key with a literal string, regardless of `identifier` or `compound_identifier`. This is most useful in combination with [expressible config fields](#dynamic-configuration-with-cel), where `custom_key`'s value comes from a CEL expression instead of a fixed string.
+
+### Dynamic configuration with CEL
+
+`limit` and `custom_key` accept a CEL expression. If an expression is set, {{site.ai_gateway}} evaluates it on each request and uses the result as the field’s value, for example an attribute of the authenticated AI Consumer or Principal. If the expression fails to evaluate, {{site.ai_gateway}} uses the static value in `config`.
+
+Because `limit` is an array field (one value per configured window), its expression is also an array, with one expression per element, in the same order:
+
+{% entity_example %}
+type: policy
+data:
+  display_name: Rate Limiting Advanced - Principal Metadata
+  name: rate-limiting-advanced-principal-metadata
+  type: rate-limiting-advanced
+  enabled: true
+  global: true
+  config:
+    identifier: principal
+    custom_key: unknown-partner
+    limit:
+      - 10
+    window_size:
+      - 60
+    expressions:
+      custom_key: principal.metadata.partner_id
+      limit:
+        - principal.metadata.rate_limit
+formats:
+  - kongctl
+  - konnect-api
+{% endentity_example %}
+
+In this example, `custom_key` and `limit` are static fallback values used only if the corresponding CEL expression is unset, invalid, or fails to evaluate.
+
+{:.info}
+> **Note**: `window_size` is **not** expressible because it's unreliable. For the `cluster` and `redis` strategies, window sizes are registered for cross-node counter synchronization once, from the static config, when the Policy is configured. A per-request expression-driven window size would never be picked up by that registration.
+
 ## Headers sent to the client
 
 {% include md/ai-gateway/v2/policies/rate-limiting/headers.md sliding_window=true %}

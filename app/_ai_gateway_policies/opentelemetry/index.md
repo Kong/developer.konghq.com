@@ -64,6 +64,56 @@ You can add or override resource attributes by configuring the [`config.resource
 
 For all available metrics, see the [OpenTelemetry metrics reference](/ai-gateway/ai-otel-metrics/).
 
+### Add Principal attributes to metrics
+
+Set [`config.metrics.enable_principal_attribute`](./reference/#schema--config-metrics-enable-principal-attribute) to `true` to attach the authenticated [Kong Identity Principal](/identity/principals/)'s ID and display name to the `http.server.request.count`, `http.server.request.size`, and `http.server.response.size` metrics. You can enable this at the same time as AI Consumer attributes.
+
+In the following example:
+* [`config.metrics.enable_request_metrics`](./reference/#schema--config-metrics-enable-request-metrics) adds request count metrics. 
+* [`config.metrics.enable_bandwidth_metrics`](./reference/#schema--config-metrics-enable-bandwidth-metrics) adds request and response size metrics.
+* `enable_principal_attribute` attaches the Principal attributes to whichever of those metrics are enabled.
+
+{% entity_example %}
+type: policy
+data:
+  display_name: OpenTelemetry - Principal Metrics
+  name: opentelemetry
+  type: opentelemetry
+  config:
+    metrics:
+      endpoint: http://localhost:4318/v1/metrics
+      push_interval: 10
+      enable_request_metrics: true
+      enable_bandwidth_metrics: true
+      enable_principal_attribute: true
+formats:
+  - konnect-api
+  - kongctl
+{% endentity_example %}
+
+These attributes are added to the enabled metrics:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Metric attribute
+    key: attribute
+  - title: Config
+    key: config
+  - title: Description
+    key: description
+rows:
+  - attribute: "`kong.auth.principal.id`"
+    config: "[`enable_principal_attribute`](./reference/#schema--config-metrics-enable-principal-attribute)"
+    description: ID of the authenticated Principal managed by {{site.identity}}.
+  - attribute: "`kong.auth.principal.display_name`"
+    config: "[`enable_principal_attribute`](./reference/#schema--config-metrics-enable-principal-attribute)"
+    description: Display name of the authenticated Principal managed by {{site.identity}}.
+{% endtable %}
+<!--vale on-->
+
+If the request has no authenticated AI Consumer or Principal, the corresponding attribute is left empty on the exported metrics.
+
 
 ## Tracing
 
