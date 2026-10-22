@@ -109,6 +109,7 @@ cleanup:
 major_version:
   ai-gateway: 1
 
+automated_tests: false
 ---
 
 ## Configure the AI Proxy Advanced plugin
