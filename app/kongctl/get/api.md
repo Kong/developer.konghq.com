@@ -18,6 +18,10 @@ breadcrumbs:
 related_resources:
   - text: kongctl get commands
     url: /kongctl/get/
+  - text: kongctl adopt api
+    url: /kongctl/adopt/api/
+  - text: kongctl list api
+    url: /kongctl/list/api/
 ---
 
 Get API details.

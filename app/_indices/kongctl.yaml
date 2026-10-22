@@ -76,6 +76,10 @@ groups:
         items:
             - path: /kongctl/get/
             - path: /kongctl/get/*/**
+      - title: Inspect Resources
+        items:
+            - path: /kongctl/inspect/
+            - path: /kongctl/inspect/*/**
       - title: Install Assets
         items:
            - path: /kongctl/install/

@@ -1,9 +1,12 @@
 name: kongctl
 
 releases:
+  - release: "1.21"
+    version: "1.21.0"
+    latest: true
+    released: 2026-10-21
   - release: "1.20"
     version: "1.20.2"
-    latest: true
     released: 2026-10-05
   - release: "1.19"
     version: "1.19.0"
