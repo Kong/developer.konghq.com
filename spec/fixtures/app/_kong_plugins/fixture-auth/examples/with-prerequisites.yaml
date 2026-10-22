@@ -1,0 +1,23 @@
+title: 'Enable Fixture Auth with prerequisites'
+description: 'Enables the Fixture Auth plugin with setup steps.'
+weight: 90
+
+requirements:
+  - "A [Consumer](/gateway/entities/consumer/) with a username"
+
+variables:
+  redis_host:
+    value: $REDIS_HOST
+  redis_password:
+    value: $REDIS_PASSWORD
+
+config:
+  key_names:
+  - apikey
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

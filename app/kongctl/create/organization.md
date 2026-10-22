@@ -17,6 +17,14 @@ breadcrumbs:
 related_resources:
   - text: kongctl create commands
     url: /kongctl/create/
+  - text: kongctl adopt organization
+    url: /kongctl/adopt/organization/
+  - text: kongctl delete organization
+    url: /kongctl/delete/organization/
+  - text: kongctl get organization
+    url: /kongctl/get/organization/
+  - text: kongctl list organization
+    url: /kongctl/list/organization/
 ---
 
 kongctl provides tools for managing {{site.konnect_short_name}} organization resources.

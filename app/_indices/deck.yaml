@@ -22,6 +22,9 @@ sections:
       - title: Run decK using Docker
         description: Create an alias to run deck via Docker
         url: /deck/?tab=docker#install-deck
+      - path: /deck/build-non-distroless-docker-image/
+        title: Build a non-distroless decK Docker image
+        description: Add a shell and package manager to the distroless decK image by repackaging the official binaries onto Alpine
       - title: Use decK with GitHub Actions
         description: Use the kong/setup-deck action to run in CI/CD
         url: /deck/?tab=github-actins#install-deck

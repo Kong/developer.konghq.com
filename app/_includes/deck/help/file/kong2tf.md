@@ -7,6 +7,7 @@ Flags:
   -h, --help                                                                help for kong2tf
       --ignore-credential-changes                                           Enable flag to add a 'lifecycle' block to each consumer credential, that ignores any changes from local to remote state.
   -o, --output-file string                                                  Output file to write. Use - to write to stdout. (default "-")
+      --provider string                                                     Terraform provider to target. Allowed values: konnect, kong-gateway. (default "konnect")
   -s, --state string                                                        decK file to process. Use - to read from stdin. (default "-")
 
 ```

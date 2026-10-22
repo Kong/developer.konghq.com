@@ -54,9 +54,12 @@ related_resources:
 ---
 
 {:.warning}
-> **This page documents the beta version of plugin conditions available in {{site.base_gateway}} 3.14, which used ATC expression syntax.**
-> In 3.15, plugin expressions are generally available, but the expression language changed significantly from 3.14 to 3.15.
-> If you are using {{site.base_gateway}} 3.15 or later, see the [plugin conditions reference](/gateway/plugins/conditions/) for the current CEL-based syntax.
+> **This page documents the beta version of plugin conditions available in {{site.base_gateway}} 3.14, which uses ATC expression syntax.**
+> <br><br>
+> Plugin conditions are a beta feature in {{site.base_gateway}} 3.14, and should not be used in production deployments.
+> <br><br>
+> Plugin conditions are generally available in 3.15 and later, but they use CEL-based syntax, which differs significantly from the 3.14 syntax. 
+> For the GA version, see the [plugin conditions reference](/gateway/plugins/conditions/).
 
 Plugin conditions allow you to attach an optional `condition` expression to any plugin.
 When a request comes in, {{site.base_gateway}} evaluates the expression immediately before the plugin's `access` phase.

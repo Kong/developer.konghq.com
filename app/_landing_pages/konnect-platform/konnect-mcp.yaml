@@ -144,6 +144,25 @@ rows:
                     The {{site.konnect_product_name}} MCP Server is available at a single global endpoint, regardless of which {{site.konnect_product_name}} region your resources are deployed in:
 
                     `https://global.mcp.konghq.com/`
+
+                    The following regional endpoints are also available:
+
+          - type: table
+            config:
+              columns:
+                - title: Region
+                  key: region
+                - title: Server URL
+                  key: url
+              rows:
+                - region: United States (US)
+                  url: "`https://us.mcp.konghq.com/`"
+                - region: Europe (EU)
+                  url: "`https://eu.mcp.konghq.com/`"
+                - region: Australia (AU)
+                  url: "`https://au.mcp.konghq.com/`"
+                - region: India (IN)
+                  url: "`https://in.mcp.konghq.com/`"
         - blocks:
           - type: structured_text
             config:
@@ -276,7 +295,7 @@ rows:
                 MCP server access is enabled by default for all organizations. Organization admins can disable this from [**AI Settings**](https://cloud.konghq.com/global/organization/settings/ai-settings), after which no user will be able to access the MCP server.
             - q: Is any of my data sent to an LLM provider when using the MCP server?
               a: |
-                If you have [KAi enabled](https://cloud.konghq.com/global/organization/labs/kai), an additional `KnowledgeBase` tool will be available via the MCP server. This tool creates embeddings from your query and uses a re-ranking model to improve documentation search results. These models are both hosted on AWS Bedrock and no training is performed on your data.
+                If you have [KAi enabled](https://cloud.konghq.com/global/organization/settings/ai-settings), an additional `KnowledgeBase` tool will be available via the MCP server. This tool creates embeddings from your query and uses a re-ranking model to improve documentation search results. These models are both hosted on AWS Bedrock and no training is performed on your data.
             - q: How does user access control work for MCP tools?
               a: |
                 Access to MCP tools is based on the permission levels of the user whose PAT / SPAT is used for authentication.

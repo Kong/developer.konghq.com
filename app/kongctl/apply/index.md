@@ -61,6 +61,9 @@ rows:
   - command: |
       [kongctl apply konnect](/kongctl/apply/konnect/)
     description: "Apply configuration to {{site.konnect_short_name}}."
+  - command: |
+      [kongctl apply mesh](/kongctl/apply/mesh/)
+    description: "Apply resource documents to a {{site.mesh_product_name}} control plane."
 {% endtable %}
 
 ## Command usage

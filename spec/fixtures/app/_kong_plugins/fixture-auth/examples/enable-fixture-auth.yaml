@@ -1,0 +1,14 @@
+title: 'Enable Fixture Auth'
+description: 'Enables the Fixture Auth plugin.'
+weight: 100
+
+config:
+  key_names:
+  - apikey
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

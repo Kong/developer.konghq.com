@@ -65,6 +65,9 @@ rows:
   - use_case: "[Example: Decrypt using an AWS key source](/event-gateway/policies/decrypt/examples/decrypt-with-aws/)"
     description: Decrypt a message value using an AWS key source.
 
+  - use_case: "[Example: Decrypt records in a topic with both encrypted and unencrypted records](/event-gateway/policies/decrypt/examples/decrypt-only-encrypted-records/)"
+    description: Use a condition to decrypt only the encrypted records in a topic.
+
 {% endtable %}
 <!--vale on-->
 
@@ -80,3 +83,15 @@ This policy runs during the [consume phase](/event-gateway/entities/policy/#phas
 
 {% include_cached /knep/key-sources.md name=page.name %}
 
+## Decrypt a topic with encrypted and unencrypted records
+
+If a topic contains both encrypted and unencrypted records, the Decrypt policy fails on unencrypted records because it can't find a key reference in the `kong/enc` header.
+
+To prevent this, add a [condition](/event-gateway/entities/policy/#conditions) that runs the policy only on records that carry the `kong/enc` header.
+The [Encrypt policy](/event-gateway/policies/encrypt/) adds this header to every record that it encrypts:
+
+```json
+"condition": "'kong/enc' in record.headers"
+```
+
+For a full configuration, see [Example: Decrypt records in a topic with both encrypted and unencrypted records](/event-gateway/policies/decrypt/examples/decrypt-only-encrypted-records/).

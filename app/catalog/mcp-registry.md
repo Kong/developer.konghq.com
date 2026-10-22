@@ -25,7 +25,7 @@ related_resources:
 faqs:
     - q: Is the MCP Registry feature GA?
       a: |
-        No, MCP Registries in {{site.konnect_catalog}} is only available in Tech Preview via {{site.konnect_short_name}} Labs.
+        No, MCP Registries in {{site.konnect_catalog}} are only available in tech preview. Contact Kong to have this feature enabled for your organization.
 
         This feature is built on top of Anthropic’s MCP Registry API specification, which is still rapidly evolving. Because the underlying standard continues to change, we cannot responsibly commit to GA timelines or long-term stability guarantees at this time.
 
@@ -53,14 +53,9 @@ This feature is built on top of the MCP Registry API specification defined by {{
 
 ## Enable MCP Registries in {{site.konnect_catalog}}
 
-MCP Registries in {{site.konnect_catalog}} are currently available in tech preview via {{site.konnect_short_name}} Labs.
+MCP Registries in {{site.konnect_catalog}} are available in tech preview. Contact Kong to have this feature enabled for your organization.
 
-1. In {{site.konnect_short_name}}, click your organization dropdown and select "Manage organizations".
-1. Click the **Labs** tab.
-1. Click **Catalog - MCP Registry**.
-1. Click **Enable feature**.
-
-You can access MCP Registries by doing the following:
+Once enabled, you can access MCP Registries by doing the following:
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. Click the **MCP registries** tab.
@@ -70,8 +65,6 @@ You can access MCP Registries by doing the following:
 
 ## Create an MCP Registry
 
-{% navtabs "create-mcp-registry" %}
-{% navtab "{{site.konnect_short_name}} UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. From the **New** dropdown menu, select "MCP registry".
    
@@ -81,21 +74,6 @@ You can access MCP Registries by doing the following:
 1. In the **Name** field, enter a unique identifier for the registry, for example `production-registry`. This must be lowercase and alphanumeric, and can include hyphens.
 1. (Optional) In the **Description** field, describe the purpose of this registry.
 1. Click **Create**.
-{% endnavtab %}
-{% navtab "{{site.konnect_short_name}} API" %}
-Send a POST request to the `/mcp-registries` endpoint:
-
-```sh
-curl -X POST "https://klabs.us.api.konghq.com/v0/mcp-registries" \
-  -H "Authorization: Bearer $KONNECT_TOKEN" \
-  --json '{
-    "name": "internal-mcp-registry",
-    "display_name": "Internal MCP Registry",
-    "description": "Registry for MCP servers approved for internal AI agents"
-  }'
-```
-{% endnavtab %}
-{% endnavtabs %}
 
 ## Add an MCP server
 
@@ -105,8 +83,6 @@ An MCP server represents an agent-facing service definition. It describes:
 * Its version  
 * How agents can connect to it
 
-{% navtabs "publish-mcp-server" %}
-{% navtab "{{site.konnect_short_name}} UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. Click the **MCP registries** tab.
 1. Click your MCP registry.
@@ -142,37 +118,6 @@ An MCP server represents an agent-facing service definition. It describes:
    ```
    1. Click **Save**.
 1. Click **Publish**.
-{% endnavtab %}
-{% navtab "{{site.konnect_short_name}} API" %}
-To add an MCP server, send a POST request to the `/mcp-registries/{registryIdentifier}/v0.1/publish` endpoint:
-
-```sh
-curl -X POST "https://klabs.us.api.konghq.com/v0/mcp-registries/internal-mcp-registry/v0.1/publish" \
-  -H "Authorization: Bearer $KONNECT_TOKEN" \
-  --json '{
-    "name": "com.example/expense-reimbursement",
-    "description": "MCP server that allows agents to submit expense reports and check reimbursement status.",
-    "version": "1.0.0",
-    "packages": [
-      {
-        "registryType": "npm",
-        "identifier": "@example/expense-reimbursement-mcp",
-        "version": "1.0.0",
-        "transport": {
-          "type": "stdio"
-        }
-      }
-    ],
-    "remotes": [
-      {
-        "type": "streamable-http",
-        "url": "https://mcp.internal.example.com/expense"
-      }
-    ]
-  }'
-```
-{% endnavtab %}
-{% endnavtabs %}
 
 
 ## Packages and remotes
@@ -200,12 +145,7 @@ An MCP server can define multiple packages and multiple remotes simultaneously. 
 
 ## Access and authentication
 
-Registry endpoints assume a {{site.konnect_short_name}} authentication context. Only authenticated clients with appropriate [access tokens](/konnect-api/#konnect-api-authentication) can query the registry URL:
-
-```sh
-curl -X GET "https://klabs.us.api.konghq.com/v0/mcp-registries/internal-mcp-registry/v0.1/servers" \
-  -H "Authorization: Bearer $KONNECT_TOKEN"
-```
+Registry endpoints assume a {{site.konnect_short_name}} authentication context. Only authenticated clients with appropriate [access tokens](/konnect-api/#konnect-api-authentication) can query a registry.
 
 ## What’s next
 

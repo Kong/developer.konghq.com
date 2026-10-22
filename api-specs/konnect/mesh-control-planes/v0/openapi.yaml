@@ -549,7 +549,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshaccesslogs/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshAccessLog#get
+        terraform-resource: MeshAccessLog#read
         terraform-datasource: null
       operationId: getMeshAccessLog
       summary: Returns MeshAccessLog entity
@@ -637,7 +637,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshaccesslogs':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshAccessLogList#get
+        terraform-resource: MeshAccessLogList#read
         terraform-datasource: null
       operationId: getMeshAccessLogList
       summary: Returns a list of MeshAccessLog in the mesh.
@@ -687,7 +687,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshcircuitbreakers/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshCircuitBreaker#get
+        terraform-resource: MeshCircuitBreaker#read
         terraform-datasource: null
       operationId: getMeshCircuitBreaker
       summary: Returns MeshCircuitBreaker entity
@@ -775,7 +775,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshcircuitbreakers':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshCircuitBreakerList#get
+        terraform-resource: MeshCircuitBreakerList#read
         terraform-datasource: null
       operationId: getMeshCircuitBreakerList
       summary: Returns a list of MeshCircuitBreaker in the mesh.
@@ -825,7 +825,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshfaultinjections/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshFaultInjection#get
+        terraform-resource: MeshFaultInjection#read
         terraform-datasource: null
       operationId: getMeshFaultInjection
       summary: Returns MeshFaultInjection entity
@@ -913,7 +913,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshfaultinjections':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshFaultInjectionList#get
+        terraform-resource: MeshFaultInjectionList#read
         terraform-datasource: null
       operationId: getMeshFaultInjectionList
       summary: Returns a list of MeshFaultInjection in the mesh.
@@ -963,7 +963,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshhealthchecks/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshHealthCheck#get
+        terraform-resource: MeshHealthCheck#read
         terraform-datasource: null
       operationId: getMeshHealthCheck
       summary: Returns MeshHealthCheck entity
@@ -1051,7 +1051,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshhealthchecks':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshHealthCheckList#get
+        terraform-resource: MeshHealthCheckList#read
         terraform-datasource: null
       operationId: getMeshHealthCheckList
       summary: Returns a list of MeshHealthCheck in the mesh.
@@ -1101,7 +1101,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshhttproutes/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshHTTPRoute#get
+        terraform-resource: MeshHTTPRoute#read
         terraform-datasource: null
       operationId: getMeshHTTPRoute
       summary: Returns MeshHTTPRoute entity
@@ -1189,7 +1189,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshhttproutes':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshHTTPRouteList#get
+        terraform-resource: MeshHTTPRouteList#read
         terraform-datasource: null
       operationId: getMeshHTTPRouteList
       summary: Returns a list of MeshHTTPRoute in the mesh.
@@ -1239,7 +1239,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshloadbalancingstrategies/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshLoadBalancingStrategy#get
+        terraform-resource: MeshLoadBalancingStrategy#read
         terraform-datasource: null
       operationId: getMeshLoadBalancingStrategy
       summary: Returns MeshLoadBalancingStrategy entity
@@ -1327,7 +1327,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshloadbalancingstrategies':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshLoadBalancingStrategyList#get
+        terraform-resource: MeshLoadBalancingStrategyList#read
         terraform-datasource: null
       operationId: getMeshLoadBalancingStrategyList
       summary: Returns a list of MeshLoadBalancingStrategy in the mesh.
@@ -1377,7 +1377,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshmetrics/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshMetric#get
+        terraform-resource: MeshMetric#read
         terraform-datasource: null
       operationId: getMeshMetric
       summary: Returns MeshMetric entity
@@ -1465,7 +1465,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshmetrics':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshMetricList#get
+        terraform-resource: MeshMetricList#read
         terraform-datasource: null
       operationId: getMeshMetricList
       summary: Returns a list of MeshMetric in the mesh.
@@ -1515,7 +1515,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshpassthroughs/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshPassthrough#get
+        terraform-resource: MeshPassthrough#read
         terraform-datasource: null
       operationId: getMeshPassthrough
       summary: Returns MeshPassthrough entity
@@ -1603,7 +1603,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshpassthroughs':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshPassthroughList#get
+        terraform-resource: MeshPassthroughList#read
         terraform-datasource: null
       operationId: getMeshPassthroughList
       summary: Returns a list of MeshPassthrough in the mesh.
@@ -1653,7 +1653,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshproxypatches/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshProxyPatch#get
+        terraform-resource: MeshProxyPatch#read
         terraform-datasource: null
       operationId: getMeshProxyPatch
       summary: Returns MeshProxyPatch entity
@@ -1741,7 +1741,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshproxypatches':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshProxyPatchList#get
+        terraform-resource: MeshProxyPatchList#read
         terraform-datasource: null
       operationId: getMeshProxyPatchList
       summary: Returns a list of MeshProxyPatch in the mesh.
@@ -1791,7 +1791,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshratelimits/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshRateLimit#get
+        terraform-resource: MeshRateLimit#read
         terraform-datasource: null
       operationId: getMeshRateLimit
       summary: Returns MeshRateLimit entity
@@ -1879,7 +1879,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshratelimits':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshRateLimitList#get
+        terraform-resource: MeshRateLimitList#read
         terraform-datasource: null
       operationId: getMeshRateLimitList
       summary: Returns a list of MeshRateLimit in the mesh.
@@ -1929,7 +1929,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshretries/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshRetry#get
+        terraform-resource: MeshRetry#read
         terraform-datasource: null
       operationId: getMeshRetry
       summary: Returns MeshRetry entity
@@ -2017,7 +2017,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshretries':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshRetryList#get
+        terraform-resource: MeshRetryList#read
         terraform-datasource: null
       operationId: getMeshRetryList
       summary: Returns a list of MeshRetry in the mesh.
@@ -2067,7 +2067,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshtcproutes/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshTCPRoute#get
+        terraform-resource: MeshTCPRoute#read
         terraform-datasource: null
       operationId: getMeshTCPRoute
       summary: Returns MeshTCPRoute entity
@@ -2155,7 +2155,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshtcproutes':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshTCPRouteList#get
+        terraform-resource: MeshTCPRouteList#read
         terraform-datasource: null
       operationId: getMeshTCPRouteList
       summary: Returns a list of MeshTCPRoute in the mesh.
@@ -2205,7 +2205,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshtimeouts/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshTimeout#get
+        terraform-resource: MeshTimeout#read
         terraform-datasource: null
       operationId: getMeshTimeout
       summary: Returns MeshTimeout entity
@@ -2293,7 +2293,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshtimeouts':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshTimeoutList#get
+        terraform-resource: MeshTimeoutList#read
         terraform-datasource: null
       operationId: getMeshTimeoutList
       summary: Returns a list of MeshTimeout in the mesh.
@@ -2343,7 +2343,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshtlses/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshTLS#get
+        terraform-resource: MeshTLS#read
         terraform-datasource: null
       operationId: getMeshTLS
       summary: Returns MeshTLS entity
@@ -2431,7 +2431,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshtlses':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshTLSList#get
+        terraform-resource: MeshTLSList#read
         terraform-datasource: null
       operationId: getMeshTLSList
       summary: Returns a list of MeshTLS in the mesh.
@@ -2481,7 +2481,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshtraces/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshTrace#get
+        terraform-resource: MeshTrace#read
         terraform-datasource: null
       operationId: getMeshTrace
       summary: Returns MeshTrace entity
@@ -2569,7 +2569,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshtraces':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshTraceList#get
+        terraform-resource: MeshTraceList#read
         terraform-datasource: null
       operationId: getMeshTraceList
       summary: Returns a list of MeshTrace in the mesh.
@@ -2619,7 +2619,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshtrafficpermissions/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshTrafficPermission#get
+        terraform-resource: MeshTrafficPermission#read
         terraform-datasource: null
       operationId: getMeshTrafficPermission
       summary: Returns MeshTrafficPermission entity
@@ -2707,7 +2707,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshtrafficpermissions':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshTrafficPermissionList#get
+        terraform-resource: MeshTrafficPermissionList#read
         terraform-datasource: null
       operationId: getMeshTrafficPermissionList
       summary: Returns a list of MeshTrafficPermission in the mesh.
@@ -2927,7 +2927,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshList#get
+        terraform-resource: MeshList#read
         terraform-datasource: null
       operationId: getMeshList
       summary: Returns a list of Mesh in the mesh.
@@ -2991,7 +2991,7 @@ paths:
         - Mesh
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: Mesh#get
+        terraform-resource: Mesh#read
         terraform-datasource: null
       operationId: getMesh
       summary: Returns Mesh entity
@@ -3041,7 +3041,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshgateways':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshGatewayList#get
+        terraform-resource: MeshGatewayList#read
         terraform-datasource: null
       operationId: getMeshGatewayList
       summary: Returns a list of MeshGateway in the mesh.
@@ -3117,7 +3117,7 @@ paths:
         - MeshGateway
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshGateway#get
+        terraform-resource: MeshGateway#read
         terraform-datasource: null
       operationId: getMeshGateway
       summary: Returns MeshGateway entity
@@ -3179,7 +3179,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/secrets':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshSecretList#get
+        terraform-resource: MeshSecretList#read
         terraform-datasource: null
       operationId: getSecretList
       summary: Returns a list of Secret in the mesh.
@@ -3255,7 +3255,7 @@ paths:
         - Secret
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshSecret#get
+        terraform-resource: MeshSecret#read
         terraform-datasource: null
       operationId: getSecret
       summary: Returns Secret entity
@@ -3317,7 +3317,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/zoneegresses':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshZoneEgressList#get
+        terraform-resource: MeshZoneEgressList#read
         terraform-datasource: null
       operationId: getZoneEgressList
       summary: Returns a list of ZoneEgress in the mesh.
@@ -3381,7 +3381,7 @@ paths:
         - ZoneEgress
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshZoneEgress#get
+        terraform-resource: MeshZoneEgress#read
         terraform-datasource: null
       operationId: getZoneEgress
       summary: Returns ZoneEgress entity
@@ -3431,7 +3431,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/zoneingresses':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshZoneIngressList#get
+        terraform-resource: MeshZoneIngressList#read
         terraform-datasource: null
       operationId: getZoneIngressList
       summary: Returns a list of ZoneIngress in the mesh.
@@ -3495,7 +3495,7 @@ paths:
         - ZoneIngress
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshZoneIngress#get
+        terraform-resource: MeshZoneIngress#read
         terraform-datasource: null
       operationId: getZoneIngress
       summary: Returns ZoneIngress entity
@@ -3545,7 +3545,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/hostnamegenerators/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshHostnameGenerator#get
+        terraform-resource: MeshHostnameGenerator#read
         terraform-datasource: null
       operationId: getHostnameGenerator
       summary: Returns HostnameGenerator entity
@@ -3615,7 +3615,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/hostnamegenerators':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshHostnameGeneratorList#get
+        terraform-resource: MeshHostnameGeneratorList#read
         terraform-datasource: null
       operationId: getHostnameGeneratorList
       summary: Returns a list of HostnameGenerator in the mesh.
@@ -3659,7 +3659,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshexternalservices/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshExternalService#get
+        terraform-resource: MeshExternalService#read
         terraform-datasource: null
       operationId: getMeshExternalService
       summary: Returns MeshExternalService entity
@@ -3747,7 +3747,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshexternalservices':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshExternalServiceList#get
+        terraform-resource: MeshExternalServiceList#read
         terraform-datasource: null
       operationId: getMeshExternalServiceList
       summary: Returns a list of MeshExternalService in the mesh.
@@ -3797,7 +3797,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshidentities/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshIdentity#get
+        terraform-resource: MeshIdentity#read
         terraform-datasource: null
       operationId: getMeshIdentity
       summary: Returns MeshIdentity entity
@@ -3885,7 +3885,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshidentities':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshIdentityList#get
+        terraform-resource: MeshIdentityList#read
         terraform-datasource: null
       operationId: getMeshIdentityList
       summary: Returns a list of MeshIdentity in the mesh.
@@ -3935,7 +3935,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshmultizoneservices/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshMultiZoneService#get
+        terraform-resource: MeshMultiZoneService#read
         terraform-datasource: null
       operationId: getMeshMultiZoneService
       summary: Returns MeshMultiZoneService entity
@@ -4023,7 +4023,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshmultizoneservices':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshMultiZoneServiceList#get
+        terraform-resource: MeshMultiZoneServiceList#read
         terraform-datasource: null
       operationId: getMeshMultiZoneServiceList
       summary: Returns a list of MeshMultiZoneService in the mesh.
@@ -4073,7 +4073,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshopentelemetrybackends/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshOpenTelemetryBackend#get
+        terraform-resource: MeshOpenTelemetryBackend#read
         terraform-datasource: null
       operationId: getMeshOpenTelemetryBackend
       summary: Returns MeshOpenTelemetryBackend entity
@@ -4161,7 +4161,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshopentelemetrybackends':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshOpenTelemetryBackendList#get
+        terraform-resource: MeshOpenTelemetryBackendList#read
         terraform-datasource: null
       operationId: getMeshOpenTelemetryBackendList
       summary: Returns a list of MeshOpenTelemetryBackend in the mesh.
@@ -4211,7 +4211,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshservices/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshService#get
+        terraform-resource: MeshService#read
         terraform-datasource: null
       operationId: getMeshService
       summary: Returns MeshService entity
@@ -4299,7 +4299,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshservices':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshServiceList#get
+        terraform-resource: MeshServiceList#read
         terraform-datasource: null
       operationId: getMeshServiceList
       summary: Returns a list of MeshService in the mesh.
@@ -4349,7 +4349,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshtrusts/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshTrust#get
+        terraform-resource: MeshTrust#read
         terraform-datasource: null
       operationId: getMeshTrust
       summary: Returns MeshTrust entity
@@ -4437,7 +4437,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshtrusts':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshTrustList#get
+        terraform-resource: MeshTrustList#read
         terraform-datasource: null
       operationId: getMeshTrustList
       summary: Returns a list of MeshTrust in the mesh.
@@ -4487,7 +4487,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshzoneaddresses/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshZoneAddress#get
+        terraform-resource: MeshZoneAddress#read
         terraform-datasource: null
       operationId: getMeshZoneAddress
       summary: Returns MeshZoneAddress entity
@@ -4575,7 +4575,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshzoneaddresses':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshZoneAddressList#get
+        terraform-resource: MeshZoneAddressList#read
         terraform-datasource: null
       operationId: getMeshZoneAddressList
       summary: Returns a list of MeshZoneAddress in the mesh.
@@ -4625,7 +4625,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/workloads/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshWorkload#get
+        terraform-resource: MeshWorkload#read
         terraform-datasource: null
       operationId: getWorkload
       summary: Returns Workload entity
@@ -4713,7 +4713,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/workloads':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshWorkloadList#get
+        terraform-resource: MeshWorkloadList#read
         terraform-datasource: null
       operationId: getWorkloadList
       summary: Returns a list of Workload in the mesh.
@@ -4785,7 +4785,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshglobalratelimits/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshGlobalRateLimit#get
+        terraform-resource: MeshGlobalRateLimit#read
         terraform-datasource: null
       operationId: getMeshGlobalRateLimit
       summary: Returns MeshGlobalRateLimit entity
@@ -4873,7 +4873,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshglobalratelimits':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshGlobalRateLimitList#get
+        terraform-resource: MeshGlobalRateLimitList#read
         terraform-datasource: null
       operationId: getMeshGlobalRateLimitList
       summary: Returns a list of MeshGlobalRateLimit in the mesh.
@@ -4923,7 +4923,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshopas/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshOPA#get
+        terraform-resource: MeshOPA#read
         terraform-datasource: null
       operationId: getMeshOPA
       summary: Returns MeshOPA entity
@@ -5011,7 +5011,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/meshopas':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshOPAList#get
+        terraform-resource: MeshOPAList#read
         terraform-datasource: null
       operationId: getMeshOPAList
       summary: Returns a list of MeshOPA in the mesh.
@@ -5061,7 +5061,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/accessaudits':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshAccessAuditList#get
+        terraform-resource: MeshAccessAuditList#read
         terraform-datasource: null
       operationId: getAccessAuditList
       summary: Returns a list of AccessAudit in the mesh.
@@ -5125,7 +5125,7 @@ paths:
         - AccessAudit
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshAccessAudit#get
+        terraform-resource: MeshAccessAudit#read
         terraform-datasource: null
       operationId: getAccessAudit
       summary: Returns AccessAudit entity
@@ -5175,7 +5175,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/access-roles':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshAccessRoleList#get
+        terraform-resource: MeshAccessRoleList#read
         terraform-datasource: null
       operationId: getAccessRoleList
       summary: Returns a list of AccessRole in the mesh.
@@ -5239,7 +5239,7 @@ paths:
         - AccessRole
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshAccessRole#get
+        terraform-resource: MeshAccessRole#read
         terraform-datasource: null
       operationId: getAccessRole
       summary: Returns AccessRole entity
@@ -5289,7 +5289,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/access-role-bindings':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshAccessRoleBindingList#get
+        terraform-resource: MeshAccessRoleBindingList#read
         terraform-datasource: null
       operationId: getAccessRoleBindingList
       summary: Returns a list of AccessRoleBinding in the mesh.
@@ -5353,7 +5353,7 @@ paths:
         - AccessRoleBinding
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: MeshAccessRoleBinding#get
+        terraform-resource: MeshAccessRoleBinding#read
         terraform-datasource: null
       operationId: getAccessRoleBinding
       summary: Returns AccessRoleBinding entity
@@ -18595,17 +18595,52 @@ components:
                       type: object
                       properties:
                         inline:
-                          description: Data source is inline bytes.
+                          description: 'Inline is the legacy, base64-encoded form of `type: InsecureInline` with `insecureInline.value`, not read by 3.0.'
                           type: string
                           format: byte
                           x-speakeasy-param-computed: false
                         inlineString:
-                          description: Data source is inline string`
+                          description: 'InlineString is the legacy form of `type: InsecureInline` with `insecureInline.value`, not read by 3.0.'
                           type: string
                           x-speakeasy-param-computed: false
+                        insecureInline:
+                          description: 'InsecureInline is the data source value as plain text, used with `type: InsecureInline`.'
+                          type: object
+                          properties:
+                            value:
+                              type: string
+                              x-speakeasy-param-computed: false
+                          required:
+                            - value
+                          x-speakeasy-param-computed: false
                         secret:
-                          description: Data source is a secret with given Secret key.
+                          description: 'Secret is the legacy form of `type: Secret` with `secretRef`, not read by 3.0.'
                           type: string
+                          x-speakeasy-param-computed: false
+                        secretRef:
+                          description: 'SecretRef references a Secret, used with `type: Secret`.'
+                          type: object
+                          properties:
+                            kind:
+                              type: string
+                              enum:
+                                - Secret
+                              x-speakeasy-param-computed: false
+                            name:
+                              type: string
+                              x-speakeasy-param-computed: false
+                          required:
+                            - kind
+                            - name
+                          x-speakeasy-param-computed: false
+                        type:
+                          description: 'Type of the data source, one of `Secret` or `InsecureInline`.'
+                          type: string
+                          enum:
+                            - File
+                            - Secret
+                            - EnvVar
+                            - InsecureInline
                           x-speakeasy-param-computed: false
                       x-speakeasy-param-computed: false
                     clientCert:
@@ -18613,17 +18648,52 @@ components:
                       type: object
                       properties:
                         inline:
-                          description: Data source is inline bytes.
+                          description: 'Inline is the legacy, base64-encoded form of `type: InsecureInline` with `insecureInline.value`, not read by 3.0.'
                           type: string
                           format: byte
                           x-speakeasy-param-computed: false
                         inlineString:
-                          description: Data source is inline string`
+                          description: 'InlineString is the legacy form of `type: InsecureInline` with `insecureInline.value`, not read by 3.0.'
                           type: string
                           x-speakeasy-param-computed: false
+                        insecureInline:
+                          description: 'InsecureInline is the data source value as plain text, used with `type: InsecureInline`.'
+                          type: object
+                          properties:
+                            value:
+                              type: string
+                              x-speakeasy-param-computed: false
+                          required:
+                            - value
+                          x-speakeasy-param-computed: false
                         secret:
-                          description: Data source is a secret with given Secret key.
+                          description: 'Secret is the legacy form of `type: Secret` with `secretRef`, not read by 3.0.'
                           type: string
+                          x-speakeasy-param-computed: false
+                        secretRef:
+                          description: 'SecretRef references a Secret, used with `type: Secret`.'
+                          type: object
+                          properties:
+                            kind:
+                              type: string
+                              enum:
+                                - Secret
+                              x-speakeasy-param-computed: false
+                            name:
+                              type: string
+                              x-speakeasy-param-computed: false
+                          required:
+                            - kind
+                            - name
+                          x-speakeasy-param-computed: false
+                        type:
+                          description: 'Type of the data source, one of `Secret` or `InsecureInline`.'
+                          type: string
+                          enum:
+                            - File
+                            - Secret
+                            - EnvVar
+                            - InsecureInline
                           x-speakeasy-param-computed: false
                       x-speakeasy-param-computed: false
                     clientKey:
@@ -18631,17 +18701,52 @@ components:
                       type: object
                       properties:
                         inline:
-                          description: Data source is inline bytes.
+                          description: 'Inline is the legacy, base64-encoded form of `type: InsecureInline` with `insecureInline.value`, not read by 3.0.'
                           type: string
                           format: byte
                           x-speakeasy-param-computed: false
                         inlineString:
-                          description: Data source is inline string`
+                          description: 'InlineString is the legacy form of `type: InsecureInline` with `insecureInline.value`, not read by 3.0.'
                           type: string
                           x-speakeasy-param-computed: false
+                        insecureInline:
+                          description: 'InsecureInline is the data source value as plain text, used with `type: InsecureInline`.'
+                          type: object
+                          properties:
+                            value:
+                              type: string
+                              x-speakeasy-param-computed: false
+                          required:
+                            - value
+                          x-speakeasy-param-computed: false
                         secret:
-                          description: Data source is a secret with given Secret key.
+                          description: 'Secret is the legacy form of `type: Secret` with `secretRef`, not read by 3.0.'
                           type: string
+                          x-speakeasy-param-computed: false
+                        secretRef:
+                          description: 'SecretRef references a Secret, used with `type: Secret`.'
+                          type: object
+                          properties:
+                            kind:
+                              type: string
+                              enum:
+                                - Secret
+                              x-speakeasy-param-computed: false
+                            name:
+                              type: string
+                              x-speakeasy-param-computed: false
+                          required:
+                            - kind
+                            - name
+                          x-speakeasy-param-computed: false
+                        type:
+                          description: 'Type of the data source, one of `Secret` or `InsecureInline`.'
+                          type: string
+                          enum:
+                            - File
+                            - Secret
+                            - EnvVar
+                            - InsecureInline
                           x-speakeasy-param-computed: false
                       x-speakeasy-param-computed: false
                     mode:
@@ -21201,17 +21306,52 @@ components:
                   type: object
                   properties:
                     inline:
-                      description: Data source is inline bytes.
+                      description: 'Inline is the legacy, base64-encoded form of `type: InsecureInline` with `insecureInline.value`, not read by 3.0.'
                       type: string
                       format: byte
                       x-speakeasy-param-computed: false
                     inlineString:
-                      description: Data source is inline string`
+                      description: 'InlineString is the legacy form of `type: InsecureInline` with `insecureInline.value`, not read by 3.0.'
                       type: string
                       x-speakeasy-param-computed: false
+                    insecureInline:
+                      description: 'InsecureInline is the data source value as plain text, used with `type: InsecureInline`.'
+                      type: object
+                      properties:
+                        value:
+                          type: string
+                          x-speakeasy-param-computed: false
+                      required:
+                        - value
+                      x-speakeasy-param-computed: false
                     secret:
-                      description: Data source is a secret with given Secret key.
+                      description: 'Secret is the legacy form of `type: Secret` with `secretRef`, not read by 3.0.'
                       type: string
+                      x-speakeasy-param-computed: false
+                    secretRef:
+                      description: 'SecretRef references a Secret, used with `type: Secret`.'
+                      type: object
+                      properties:
+                        kind:
+                          type: string
+                          enum:
+                            - Secret
+                          x-speakeasy-param-computed: false
+                        name:
+                          type: string
+                          x-speakeasy-param-computed: false
+                      required:
+                        - kind
+                        - name
+                      x-speakeasy-param-computed: false
+                    type:
+                      description: 'Type of the data source, one of `Secret` or `InsecureInline`.'
+                      type: string
+                      enum:
+                        - File
+                        - Secret
+                        - EnvVar
+                        - InsecureInline
                       x-speakeasy-param-computed: false
                   x-speakeasy-param-computed: false
                 appendPolicies:
@@ -21224,21 +21364,56 @@ components:
                         type: boolean
                         x-speakeasy-param-computed: false
                       rego:
-                        description: 'OPA Policy written in Rego. Available values: secret, inline, inlineString.'
+                        description: OPA Policy written in Rego.
                         type: object
                         properties:
                           inline:
-                            description: Data source is inline bytes.
+                            description: 'Inline is the legacy, base64-encoded form of `type: InsecureInline` with `insecureInline.value`, not read by 3.0.'
                             type: string
                             format: byte
                             x-speakeasy-param-computed: false
                           inlineString:
-                            description: Data source is inline string`
+                            description: 'InlineString is the legacy form of `type: InsecureInline` with `insecureInline.value`, not read by 3.0.'
                             type: string
                             x-speakeasy-param-computed: false
+                          insecureInline:
+                            description: 'InsecureInline is the data source value as plain text, used with `type: InsecureInline`.'
+                            type: object
+                            properties:
+                              value:
+                                type: string
+                                x-speakeasy-param-computed: false
+                            required:
+                              - value
+                            x-speakeasy-param-computed: false
                           secret:
-                            description: Data source is a secret with given Secret key.
+                            description: 'Secret is the legacy form of `type: Secret` with `secretRef`, not read by 3.0.'
                             type: string
+                            x-speakeasy-param-computed: false
+                          secretRef:
+                            description: 'SecretRef references a Secret, used with `type: Secret`.'
+                            type: object
+                            properties:
+                              kind:
+                                type: string
+                                enum:
+                                  - Secret
+                                x-speakeasy-param-computed: false
+                              name:
+                                type: string
+                                x-speakeasy-param-computed: false
+                            required:
+                              - kind
+                              - name
+                            x-speakeasy-param-computed: false
+                          type:
+                            description: 'Type of the data source, one of `Secret` or `InsecureInline`.'
+                            type: string
+                            enum:
+                              - File
+                              - Secret
+                              - EnvVar
+                              - InsecureInline
                             x-speakeasy-param-computed: false
                         x-speakeasy-param-computed: false
                     required:
@@ -22192,6 +22367,7 @@ components:
       type: string
       enum:
         - required
+        - unique
         - is_array
         - is_base64
         - is_boolean
@@ -22207,6 +22383,7 @@ components:
         - unknown_property
         - missing_reference
         - is_label
+        - key_invalid
         - matches_regex
         - invalid
         - is_supported_network_availability_zone_list
@@ -22303,6 +22480,68 @@ components:
         - reason
         - rule
         - maximum
+    InvalidParameterMinimumTime:
+      type: object
+      properties:
+        field:
+          type: string
+          example: to
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - min_time
+          nullable: false
+          readOnly: true
+        minimum:
+          type: string
+          format: date-time
+          example: '2026-10-01T00:00:00Z'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: 'must be no earlier than 2026-10-01T00:00:00Z'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - minimum
+    InvalidParameterMaximumTime:
+      type: object
+      properties:
+        field:
+          type: string
+          example: to
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - max_time
+          nullable: false
+          readOnly: true
+        maximum:
+          type: string
+          format: date-time
+          example: '2026-10-31T23:59:59Z'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: 'must be no later than 2026-10-31T23:59:59Z'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - maximum
     InvalidParameterChoiceItem:
       type: object
       properties:
@@ -22380,6 +22619,8 @@ components:
           - $ref: '#/components/schemas/InvalidParameterStandard'
           - $ref: '#/components/schemas/InvalidParameterMinimumLength'
           - $ref: '#/components/schemas/InvalidParameterMaximumLength'
+          - $ref: '#/components/schemas/InvalidParameterMinimumTime'
+          - $ref: '#/components/schemas/InvalidParameterMaximumTime'
           - $ref: '#/components/schemas/InvalidParameterChoiceItem'
           - $ref: '#/components/schemas/InvalidParameterDependentItem'
       minItems: 1

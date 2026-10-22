@@ -11,6 +11,7 @@ Examples:
   kongctl get konnect gateway control-planes
 
 Available Commands:
+  mesh         Manage Kong Mesh control plane resources
   organization Get current organization information
   pat          Create a Konnect personal access token
   spat         Create a Konnect system account access token
@@ -25,6 +26,7 @@ Flags:
                                 - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
                                 - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
       --config-file string      Path to the configuration file to load.
+                                - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
   -h, --help                    help for konnect
       --jq string               Filter JSON responses using jq expressions (powered by gojq for full jq compatibility)

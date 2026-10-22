@@ -565,10 +565,11 @@ rows:
       * Read and list Cloud Gateway configurations.
       * Read and list custom domains.
   - role: "`Consumer Admin`"
-    description: "This role grants full write access to administer consumers."
+    description: "This role grants full write access to administer Consumers."
     permissions: |
       * List and read control planes.
       * Create, read, edit, delete, and list Consumers.
+      * Create, read, edit, delete, and list plugins and custom plugins scoped to the Consumers this role can manage. See [Plugin permissions for scoped roles](#plugin-permissions-for-scoped-roles).
       * Read and list Partials.
   - role: "`Creator`"
     description: "Creates a new Control Plane in an organization. The creator becomes the owner of the Control Plane they create."
@@ -607,7 +608,7 @@ rows:
     permissions: |
       * List and read control planes.
       * Create, read, edit, delete, and list Services
-      * Create, read, edit, delete, and list plugins and custom plugins.
+      * Create, read, edit, delete, and list plugins and custom plugins scoped to the Services this role can manage. See [Plugin permissions for scoped roles](#plugin-permissions-for-scoped-roles).
       * Create, read, edit, delete, and list Partials.
   - role: "`Key Admin`"
     description: "Full write access to administer keys."
@@ -624,7 +625,7 @@ rows:
     description: "This role grants full write access to administer routes."
     permissions: |
       * List and read control planes.
-      * Create, read, edit, delete, and list plugins and custom plugins.
+      * Create, read, edit, delete, and list plugins and custom plugins scoped to the Routes this role can manage. See [Plugin permissions for scoped roles](#plugin-permissions-for-scoped-roles).
       * Create, read, edit, delete, and list Routes.
       * Create, read, edit, delete, and list Partials.
   - role: "`Serverless Cluster Admin`"
@@ -660,6 +661,16 @@ rows:
       * Read and list control planes and all configurations within them.
 {% endtable %}
 <!--vale on-->
+
+##### Plugin permissions for scoped roles
+
+Scoped roles, such as Route Admin and Gateway Service Admin, can only manage plugins on the entities they can manage. To create, edit, or delete a plugin, the user or system account needs permission on every entity the plugin is scoped to:
+
+* A Route Admin can configure plugins scoped to the Routes it can manage.
+* A Gateway Service Admin can configure plugins scoped to the Gateway Services it can manage.
+* A plugin scoped to both a Gateway Service and a Route needs permission on both. For example, a user who is Route Admin for the Route and Gateway Service Admin for the Gateway Service can configure it, but a user with only one of those roles can't.
+* Global plugins apply to every entity in a control plane, so only the Plugin Admin, control plane Admin, and control plane Deployer roles can create, edit, or delete them.
+
 
 #### Dashboards
 
@@ -849,44 +860,55 @@ rows:
     description: "Can read and write every resource. Includes billing apps, billing profiles, and notifications."
     permissions: |
       * Create, list, read, query, update, and delete every resource.
-  - role: "`Metering Admin`"
+  - role: "`Meter Admin`"
     description: "Can write any metering resources (includes meters and events)."
-    permissions: |
-      * List, read, and query meters.
-      * List events.
-  - role: "`Metering Viewer`"
     permissions: |
       * Create, list, read, query, update, and delete meters.
       * List and ingest events.
+  - role: "`Metering Viewer`"
     description: "Can read any metering resources (includes meters and events)."
+    permissions: |
+      * List, read, and query meters.
+      * List events.
   - role: "`Product Catalog Admin`"
     description: "Can write any Product Catalog resources (includes plans, features, and rate cards)."
     permissions: |
       * Create, list, read, and delete features.
       * Create, list, read, update, delete, publish, and archive plans.
       * Create, list, read, update, delete, publish, and archive add-ons.
+      * List and read currencies and their cost bases.
   - role: "`Product Catalog Viewer`"
     description: "Can read any Product Catalog resources (includes plans, features, and rate cards)."
     permissions: |
       * List and read features.
       * List and read plans.
       * List and read add-ons.
+      * List and read currencies and their cost bases.
   - role: "`Billing Admin`"
-    description: "Can read and write customer, subscription, entitlement, and invoice resources."
+    description: "Can read and write customer, subscription, entitlement, invoice, credit, and currency resources."
     permissions: |
       * Create, list, read, update, delete, and migrate subscriptions and their add-ons.
+      * Read plans.
       * Create, list, read, update, and delete customers.
       * Create, list, read, update, delete, and trigger events on invoices.
       * Create, list, read, update, and delete billing profiles.
       * Create, list, read, update, and delete entitlements.
+      * Create, list, read, and void credit grants.
+      * Read credit balances and list credit transactions.
+      * Create, list, and read custom currencies.
+      * Create and list cost bases.
   - role: "`Billing Viewer`"
-    description: "Can read customer, subscription, entitlement, and invoice resources."
+    description: "Can read customer, subscription, entitlement, invoice, credit, and currency resources."
     permissions: |
       * Read and list subscriptions and their add-ons.
+      * Read plans.
       * Read and list customers.
       * Read and list and trigger events on invoices.
       * Read and list billing profiles.
       * Read and list entitlements.
+      * Read and list credit grants.
+      * Read credit balances and list credit transactions.
+      * Read and list currencies and their cost bases.
 {% endtable %}
 <!--vale on-->
 

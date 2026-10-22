@@ -18,6 +18,10 @@ breadcrumbs:
 related_resources:
   - text: kongctl adopt commands
     url: /kongctl/adopt/
+  - text: kongctl get dcr-provider
+    url: /kongctl/get/dcr-provider/
+  - text: kongctl list dcr-provider
+    url: /kongctl/list/dcr-provider/
 ---
 
 Apply the KONGCTL-namespace label to an existing {{site.konnect_short_name}} DCR provider that is not currently managed by kongctl.

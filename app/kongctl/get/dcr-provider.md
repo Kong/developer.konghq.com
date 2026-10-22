@@ -18,6 +18,10 @@ breadcrumbs:
 related_resources:
   - text: kongctl get commands
     url: /kongctl/get/
+  - text: kongctl adopt dcr-provider
+    url: /kongctl/adopt/dcr-provider/
+  - text: kongctl list dcr-provider
+    url: /kongctl/list/dcr-provider/
 ---
 
 Use the `get` verb with the `dcr-provider` command to query {{site.konnect_short_name}} Dynamic Client Registration providers.

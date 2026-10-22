@@ -140,13 +140,13 @@ The following creates a new Certificate with basic configuration:
   * In Kong Manager, open **Certificates** from the sidebar.
 1. Click **New certificate**.
 1. In the **Cert** field, enter the PEM-encoded public certificate:
-    ```
-    {{ include.presenter.data['cert'] }}
-    ```
+   ```
+   {{ include.presenter.data['cert'] | strip }}
+   ```
 1. In the **Key** field, enter the PEM-encoded private key:
-    ```
-    {{ include.presenter.data['key'] }}
-    ```
+   ```
+   {{ include.presenter.data['key'] | strip }}
+   ```
 1. Click **Save**.
 {% when 'ca_certificate' %}
 The following creates a new CA Certificate with basic configuration:
@@ -160,9 +160,9 @@ The following creates a new CA Certificate with basic configuration:
 1. Click the **CA certificates** tab.
 1. Click **New CA certificate**.
 1. In the **Cert** field, enter the PEM-encoded public certificate of the CA:
-    ```
-    {{ include.presenter.data['cert'] }}
-    ```
+   ```
+   {{ include.presenter.data['cert'] | strip }}
+   ```
 1. Click **Save**.
 {% when 'rbac' %}
 The following instructions create an RBAC user in Kong Manager. `kong.conf` must be configured to `ENFORCE_RBAC=on`.
@@ -181,17 +181,17 @@ The following creates a new JSON Web Key with basic configuration:
 1. Navigate to **Keys**.
 1. Click **New Key**.
 1. In the **Key ID** field, enter the key ID. It should match the `kid` field in the key:
-    ```
-    {{ include.presenter.data['kid'] }}
-    ```
+   ```
+   {{ include.presenter.data['kid'] }}
+   ```
 1. Enter a name for the Key:
-    ```
-    {{ include.presenter.data['name'] }}
-    ```
+   ```
+   {{ include.presenter.data['name'] }}
+   ```
 1. In the **JWK** field, enter the JSON Web Key:
-    ```
-    {{ include.presenter.data['jwk'] }}
-    ```
+   ```
+   {{ include.presenter.data['jwk'] }}
+   ```
 1. Click **Save**.
 {% when 'key-set' %}
 The following creates a new JSON Web Key Set with basic configuration:
@@ -205,9 +205,9 @@ The following creates a new JSON Web Key Set with basic configuration:
 1. Click the **Key sets** tab.
 1. Click **New key set**.
 1. Enter a name for the Key Set:
-    ```
-    {{ include.presenter.data['name'] }}
-    ```
+   ```
+   {{ include.presenter.data['name'] }}
+   ```
 1. Click **Save**.
 {% when 'group' %}
 The following instructions create a Group in Kong Manager. Groups are a function of RBAC, and require RBAC to be [enabled](/gateway/entities/rbac/#enable-rbac).

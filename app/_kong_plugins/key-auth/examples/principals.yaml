@@ -33,3 +33,5 @@ tools:
   - konnect-api
   - kic
   - terraform
+
+consumer_credential: false

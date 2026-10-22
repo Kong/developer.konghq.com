@@ -39,6 +39,7 @@ Examples:
 
 Available Commands:
   declarative Export resources as kongctl declarative configuration
+  mesh        Export Kong Mesh resources as YAML
   tf-import   Export resources as Terraform import blocks
 
 
@@ -48,6 +49,7 @@ Flags:
                                 - Examples   : [ auto, 3024_day, 3024_night, aardvark_blue, abernathy ]
                                 - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "auto")
       --config-file string      Path to the configuration file to load.
+                                - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
   -h, --help                    help for dump
       --log-file string         Write execution logs to the specified file instead of STDERR.

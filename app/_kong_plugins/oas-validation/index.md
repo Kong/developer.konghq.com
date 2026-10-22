@@ -42,20 +42,6 @@ search_aliases:
   - swagger
   - oas-validation
 
-faqs:
-  - q: How can I prevent the OAS Validation plugin from validating the ETag header with the If-Match header?
-    a: |
-      If a request contains the `If-Match` request header, the OAS Validation plugin follows [RFC 2616](https://www.ietf.org/rfc/rfc2616.txt) to validate the `Etag` response header.
-
-      If you don't want the plugin to validate the `Etag` with the `If-Match` request header,
-      send the `If-Match` header with a wildcard (`*`) to skip validation.
-
-      For example:
-      ```sh
-      curl http://localhost:8000/example-route \
-        -H 'If-Match:*'
-      ```
-
 related_resources:
   - text: Event Hooks
     url: /gateway/entities/event-hook/
@@ -63,7 +49,7 @@ related_resources:
 
 Validate HTTP requests and responses against an OpenAPI Specification.
 
-The plugin supports Swagger v2 and OpenAPI 3.0.x and 3.1.0 specifications with a JSON Schema validator that supports [Draft 2019-09](https://json-schema.org/specification-links#draft-2019-09-(formerly-known-as-draft-8)).
+The plugin supports Swagger v2 and OpenAPI 3.0.x and 3.1.0 specifications. It uses JSON Schema [Draft 4](https://json-schema.org/specification-links#draft-4) for Swagger 2.0 and OpenAPI 3.0.x, and JSON Schema [Draft 2020-12](https://json-schema.org/specification-links#2020-12) for OpenAPI 3.1.0. The JSON Schema version is not configurable.
 
 ## Supported OpenAPI 3.1.0 specification features
 

@@ -1,7 +1,7 @@
 {% mermaid %}
 sequenceDiagram
     participant C as Client<br>(e.g. mobile app)
-    participant K as API Gateway <br>with OIDC plugin
+    participant K as Gateway
     participant A as Authorization server<br>(e.g. Keycloak)
     participant U as Upstream<br>(backend service,<br>e.g. httpbin)
 

@@ -594,6 +594,8 @@
     "config.redis.username"
   ],
   "http-log": [
+    "config.headers",
+    "config.headers.additionalProperties",
     "config.http_endpoint"
   ],
   "jwt-signer": [
@@ -827,6 +829,8 @@
   ],
   "opentelemetry": [
     "config.access_logs.endpoint",
+    "config.headers",
+    "config.headers.additionalProperties",
     "config.logs_endpoint",
     "config.metrics.endpoint",
     "config.traces_endpoint"

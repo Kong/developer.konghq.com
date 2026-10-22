@@ -7,8 +7,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@71eb5f9b874a36c530766e00e19ed197d3399d4d
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/71eb5f9b874a36c530766e00e19ed197d3399d4d'
+  x-oas-source: kong/platform-api@3c23421c7059945672ecca64a2b9c7dbfa8a1281
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/3c23421c7059945672ecca64a2b9c7dbfa8a1281'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -3132,26 +3132,28 @@ components:
           - node_count
       default:
         - control_plane_count
+    PlatformFilterField:
+      description: The field to filter.
+      type: string
+      enum:
+        - control_plane
+        - data_plane_node_version
+        - env
+        - gateway_service
+        - hostname
+        - plugin
+        - plugin_name
+        - plugin_scope
+        - realm
+        - region
+        - route
+        - team
     PlatformFilter:
       description: A filter to apply to a platform usage query.
       type: object
       properties:
         field:
-          description: The field to filter.
-          type: string
-          enum:
-            - control_plane
-            - data_plane_node_version
-            - env
-            - gateway_service
-            - hostname
-            - plugin
-            - plugin_name
-            - plugin_scope
-            - realm
-            - region
-            - route
-            - team
+          $ref: '#/components/schemas/PlatformFilterField'
         operator:
           type: string
           enum:
@@ -3208,9 +3210,17 @@ components:
           enum:
             - relative
         time_range:
+          description: |
+            Platform usage data is not available at sub-day granularity. A sub-day duration
+            (`15m`, `1h`, `6h`, `12h`) is accepted but silently coerced up to `24h` rather
+            than rejected.
           type: string
           default: 30d
           enum:
+            - 15m
+            - 1h
+            - 6h
+            - 12h
             - 24h
             - 7d
             - 30d
@@ -3229,9 +3239,6 @@ components:
       title: Relative time range
     PlatformTimeRange:
       description: The time range to query for platform data.
-      default:
-        type: relative
-        time_range: 30d
       discriminator:
         propertyName: type
         mapping:

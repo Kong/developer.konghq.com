@@ -37,6 +37,7 @@ Available Commands:
   gateway       Manage Konnect Kong Gateway resources
   konnect       Manage Konnect resources
   me            Get current user information
+  mesh          Manage Kong Mesh control plane resources
   organization  Get current organization information
   pat           List or get Konnect personal access tokens
   portal        List or get Konnect portals
@@ -56,6 +57,7 @@ Flags:
       --columns stringArray     Select text columns as HEADER=.field (repeatable or comma-separated).
                                 Supports nested fields, quoted keys, array indexes, and string slices.
       --config-file string      Path to the configuration file to load.
+                                - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
   -h, --help                    help for get
       --jq string               Filter JSON responses using jq expressions (powered by gojq for full jq compatibility)
