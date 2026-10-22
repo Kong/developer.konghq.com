@@ -163,13 +163,17 @@ You can integrate {{ site.operator_product_name }} with [Datadog Metrics](https:
 
 To trigger autoscaling, complete the following steps:
 
-1. Wait for the `kong` `Gateway` and the `command` `HTTPRoute` to be programmed:
+1. Wait for the `kong` `Gateway` and the `command` `HTTPRoute` to be programmed and for the `Gateway` to receive an address:
 
    ```bash
    kubectl wait --for=condition=Programmed gateway/kong -n kong --timeout=5m
    kubectl wait --for=jsonpath='{.status.parents[0].conditions[?(@.type=="Programmed")].status}'=True httproute/command -n kong --timeout=5m
+   kubectl wait --for=jsonpath='{.status.addresses[0].value}' gateway/kong -n kong --timeout=5m
    ```
    {: data-test-step="block" }
+
+   {:.info}
+   > The `Gateway` can be `Programmed` before its address appears in `status.addresses`. Waiting for the address prevents storing an empty value in `PROXY_IP` in the next step.
 
 1. Get the `Gateway` address and store it in `PROXY_IP`:
 
