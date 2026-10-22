@@ -698,19 +698,17 @@ Displays an image on a landing page.
 ```
 <!--vale on-->
 
-### Expandable image
-
-Displays an image on a landing page. Clicking the image opens an enlarged version in a modal.
-Takes the same `config` as the image block.
+Set `expandable: true` in the config to let readers click the image to open an enlarged version in a modal.
 Use it for large diagrams that are hard to read at column width.
 
 <!--vale off-->
 ```yaml
 - blocks:
-    - type: expandable_image
+    - type: image
       config:
         url: /assets/images/gateway/ai-gateway-overview.svg
         alt_text: Overview of {{ site.ai_gateway }}
+        expandable: true
 ```
 <!--vale on-->
 

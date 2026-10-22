@@ -38,10 +38,11 @@ rows:
               [Sign up for {{site.konnect_short_name}}](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs&utm_content=ai-gateway) to configure {{site.ai_gateway}} using {{site.konnect_short_name}}.
 
       - blocks:
-          - type: expandable_image
+          - type: image
             config:
               url: /assets/images/gateway/ai-gateway-overview.svg
               alt_text: Overview of AI gateway
+              expandable: true
 
   - header:
       type: h2
