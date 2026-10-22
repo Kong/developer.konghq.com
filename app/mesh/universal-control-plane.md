@@ -25,10 +25,12 @@ A Universal control plane is `kuma-cp` running with `environment: universal` aga
 that isn't Kubernetes. This page covers choosing a mode and a store, and joining a zone to a
 global control plane.
 
-For what Universal changes about running workloads, see
+For more information about Universal mode, see
 [{{site.mesh_product_name}} on Universal](/mesh/universal/).
 
 ## Modes
+
+The following modes are available when deploying a Universal control plane:
 
 {% table %}
 columns:
@@ -43,23 +45,20 @@ rows:
     what: "A control plane that holds policy and federates it to zones over KDS. It serves no proxies of its own."
 {% endtable %}
 
-`standalone` is removed. It behaved identically to `zone`, so rename it: `kuma-cp` fails config
-validation at startup otherwise, and the Helm chart fails at template time.
-
-{:.warning}
-> A global control plane cannot run on Kubernetes. `mode: global` is rejected with
-> `environment: kubernetes`, and rejected again with `store.type: kubernetes`. It must run
-> `environment: universal` against a non-Kubernetes store (PostgreSQL in any real deployment),
-> even if the `kuma-cp` process itself is deployed onto a Kubernetes cluster. Zone control
-> planes on Kubernetes are unaffected.
+A global control plane cannot run on Kubernetes. `mode: global` is rejected with
+`environment: kubernetes`, and rejected again with `store.type: kubernetes`. It must run
+`environment: universal` against a non-Kubernetes store (PostgreSQL in any real deployment),
+even if the `kuma-cp` process itself is deployed onto a Kubernetes cluster.
 
 ## Stores
+
+The following store types are available when deploying a Universal control plane:
 
 {% table %}
 columns:
   - title: "`store.type`"
     key: type
-  - title: Use
+  - title: Use case
     key: use
 rows:
   - type: "`postgres`"
@@ -89,8 +88,8 @@ store:
 empty`.
 
 Every field has a `KUMA_STORE_POSTGRES_*` equivalent: `KUMA_STORE_POSTGRES_HOST`,
-`_PORT`, `_USER`, `_PASSWORD`, `_DB_NAME`. Supply the password with
-`KUMA_STORE_POSTGRES_PASSWORD`: the config file doesn't expand environment variables, so a
+`_PORT`, `_USER`, `_PASSWORD`, `_DB_NAME`. Provide the password with
+`KUMA_STORE_POSTGRES_PASSWORD`. The config file doesn't expand environment variables, so a
 value like `${POSTGRES_PASSWORD}` is used literally.
 
 ## Single-zone configuration
@@ -124,14 +123,14 @@ kuma-cp run --config-file kuma-cp.yaml
 Run `kuma-cp migrate up` against a new or upgraded PostgreSQL database before starting the
 control plane. Otherwise it refuses to start with `database is not migrated`.
 
-The control plane exposes the API on 5681 and the data plane server on 5678. Proxies connect to
-the second; `kongctl` and the GUI talk to the first. The API enforces RBAC, and treats only requests
-from the control plane host itself as admin: from anywhere else, pass a user token
+The control plane exposes the API on port 5681 and the data plane server on port 5678. Proxies connect to
+the second, and `kongctl` and the GUI use the first. The API enforces RBAC, and treats only requests
+from the control plane host itself as admin. From anywhere else, pass a user token
 with `kongctl`'s `--control-plane-token`.
 
 ## Joining a zone to a global control plane
 
-A zone joins by naming itself and pointing at the global control plane's KDS address:
+To join a zone, name it and point it at the global control plane's KDS address:
 
 ```yaml
 environment: universal
@@ -151,12 +150,11 @@ store:
     dbName: kuma
 ```
 
-The zone `name` is mandatory and has to be a valid RFC 1035 DNS label: lowercase letters,
-digits and dashes, starting with a letter. It isn't cosmetic: the name is stamped onto every
-resource the zone owns, appears in KRIs, and is what a
+The zone `name` is mandatory and has to be a valid [RFC 1035 DNS label](https://www.rfc-editor.org/info/rfc1035/). 
+The name appears in every resource the zone owns, in KRIs, and is what a
 [`MeshMultiZoneService`](/mesh/meshmultizoneservice/) selects zones by.
 
-`globalAddress` takes `grpc://` or `grpcs://`; `kuma-cp` rejects anything else at startup. Use
+`globalAddress` takes `grpc://` or `grpcs://`. Use
 `grpcs` and give `kds.rootCaFile` the CA that signed the global control plane's certificate.
 
 The global control plane itself needs no zone block:
@@ -179,19 +177,14 @@ store:
 from the environment automatically: `serviceAccountToken` on Kubernetes, `dpToken` on
 Universal.
 
-On Universal that means every proxy (including the zone proxies that carry cross-zone traffic)
-presents a **dataplane token**:
+On Universal that means every proxy, including the zone proxies that carry cross-zone traffic,
+presents a data plane token:
 
 ```sh
 kongctl create mesh dataplane-token --name backend-01 --workload backend --valid-for 24h > /etc/kuma/token
 ```
 
-The data plane server no longer accepts zone tokens. If you previously relied on
-`dpServer.authn.zoneProxy.type: none` to let zone proxies connect without one, they need a
-dataplane token now. `dpServer.authn.zoneProxy` no longer affects anything.
-
-See [Universal data plane](/mesh/universal-data-plane/) for binding a token
-narrowly enough to be worth having.
+For more information, see [Universal data plane](/mesh/universal-data-plane/).
 
 ## Generated resources
 
@@ -220,19 +213,17 @@ Neither generator runs on a global control plane, or against a Kubernetes store.
 
 ## Issuing identities
 
-A mesh issues workload identities through [`MeshIdentity`](/mesh/policies/meshidentity/), the same
-on Universal as on Kubernetes. What differs is the default SPIFFE path: `/workload/{workload}`
-on Universal, against `/ns/{namespace}/sa/{service-account}` on Kubernetes. The workload name
-comes from the `kuma.io/workload` label on the `Dataplane`.
+A mesh issues workload identities through [`MeshIdentity`](/mesh/policies/meshidentity/). 
+The difference between Universal and Kubernetes is the default SPIFFE path: 
+* `/workload/{workload}` on Universal,
+* `/ns/{namespace}/sa/{service-account}` on Kubernetes
 
-Without a `MeshIdentity`, proxies get no certificate and therefore no mTLS:
-`Mesh.mtls` is removed in 3.0 and is no longer an identity source.
+The workload name comes from the `kuma.io/workload` label on the `Dataplane`.
+
+Without a `MeshIdentity`, proxies get no certificate and therefore no mTLS.
 
 ## Monitoring
 
-MADS, the Monitoring Assignment Discovery Service Prometheus uses to discover proxies, runs
-**only** in Universal mode. It no longer starts on a Kubernetes control plane whatever
-`KUMA_MONITORING_ASSIGNMENT_SERVER_ENABLED` says, and `controlPlane.madsServer.enabled` applies
+The Monitoring Assignment Discovery Service (MADS) that Prometheus uses to discover proxies, runs
+only in Universal mode. `controlPlane.madsServer.enabled` applies
 only when `controlPlane.environment` is `universal`.
-
-So on Universal, MADS on port 5676 remains the way Prometheus finds proxies to scrape.
