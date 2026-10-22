@@ -63,10 +63,13 @@ By default, {{site.base_gateway}} sets the `Host` header to the IP address of th
 
 1. Send a request to the `/headers` endpoint, which returns all request headers received by the upstream service:
 
-   ```bash
-   curl -s $PROXY_IP/httpbin/headers
-   ```
-   {: data-test-step="block" }
+{% validation request-check %}
+url: /httpbin/headers
+status_code: 200
+on_prem_url: http://$PROXY_IP
+konnect_url: http://$PROXY_IP
+indent: 3
+{% endvalidation %}
 
    The response shows the headers the upstream received. The `Host` header will contain the Pod IP address assigned by {{site.base_gateway}}:
 
@@ -94,10 +97,14 @@ kubectl annotate service httpbin -n kong \
 
 Send the same request again:
 
-```bash
-curl -s $PROXY_IP/httpbin/headers
-```
-{: data-test-step="block" }
+{% validation custom-command %}
+command: |
+  curl -s $PROXY_IP/httpbin/headers
+expected:
+  return_code: 0
+  message: 'internal.example.com'
+render_output: false
+{% endvalidation %}
 
 The `Host` header in the upstream request now reflects the configured value:
 
