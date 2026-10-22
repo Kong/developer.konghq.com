@@ -68,7 +68,7 @@ Prefer `kongctl` over `konnect-api` when both would work — it's what every rea
 
 Flag any deviation:
 - `products` containing anything other than `ai-gateway`
-- `works_on` containing anything other than `konnect` and `on-prem`. `konnect` alone is correct for pages about authoring entities/Policies (there's no on-prem UI or API for that). `on-prem` should only be added alongside `konnect` for pages about running that same 2.x config on self-hosted Gateway (install guides, `configure-on-prem.md`-style conversion content) — flag `on-prem` with `konnect` missing, since on-prem AIGW 2.x still starts from a Konnect-authored entity file.
+- `works_on` containing anything other than `konnect` and `on-prem`. `konnect` alone is correct for pages about authoring entities/Policies (there's no on-prem UI or API for that). Pages about running that config on self-hosted Gateway set `on-prem` alone (`docker-compose.md`, `configure-on-prem.md`); add `konnect` only when the page also covers the Konnect workflow.
 - `tools` containing `deck`, `admin-api`, or a mix of `kongctl` and `konnect-api` on the same page. Exception: on-prem-focused pages (`configure-on-prem.md`, `docker-compose.md`) legitimately use `deck` for the `ai2kong`/`ai sync`/`ai dump` conversion workflow — don't flag `deck` there.
 - Missing or wrong `min_version` (must be `ai-gateway: '2.0'`)
 

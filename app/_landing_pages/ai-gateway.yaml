@@ -71,7 +71,7 @@ rows:
                 then navigate to **{{site.ai_gateway}}** and click **New {{site.ai_gateway}}**.
             - title: On-Prem
               content: |
-                See [Install {{site.ai_gateway}} 2.x on-prem using Docker Compose](/ai-gateway/install/docker/) for full setup instructions.
+                See [Install {{site.ai_gateway}} 2.x on-prem using Docker Compose](/ai-gateway/install/docker/).
   - columns:
       - blocks:
         - type: card
