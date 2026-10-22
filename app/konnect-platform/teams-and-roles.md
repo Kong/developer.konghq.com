@@ -565,10 +565,11 @@ rows:
       * Read and list Cloud Gateway configurations.
       * Read and list custom domains.
   - role: "`Consumer Admin`"
-    description: "This role grants full write access to administer consumers."
+    description: "This role grants full write access to administer Consumers."
     permissions: |
       * List and read control planes.
       * Create, read, edit, delete, and list Consumers.
+      * Create, read, edit, delete, and list plugins and custom plugins scoped to the Consumers this role can manage. See [Plugin permissions for scoped roles](#plugin-permissions-for-scoped-roles).
       * Read and list Partials.
   - role: "`Creator`"
     description: "Creates a new Control Plane in an organization. The creator becomes the owner of the Control Plane they create."
