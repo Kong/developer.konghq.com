@@ -17,7 +17,7 @@ breadcrumbs:
 min_version:
   gateway: '3.15'
 
-description: "Learn how {{site.identity}} directories group principals and groups by region, control which control planes can authenticate against them, and cache lookups."
+description: "Learn how {{site.identity}} directories group principals by region, control which control planes can authenticate against them, and cache lookups."
 
 related_resources:
   - text: "{{site.identity}} principals"
@@ -30,7 +30,7 @@ related_resources:
 
 {% include sections/principals-and-directories.md %}
 
-A directory is the organizational boundary for grouping [principals](/identity/principals/) and [groups](/identity/groups/) and managing their identities. 
+A directory is the organizational boundary for grouping [principals](/identity/principals/) and managing their identities. 
 Directories are region-specific, and each directory controls which control planes can make authentication requests to it.
 
 ## Control plane access
@@ -94,6 +94,5 @@ The following are default limits for directories:
 * 1 directory per region.
   Contact Kong Support if you need more than one directory.
 * 100,000 principals per directory. Contact Kong Support if you need higher limits.
-* 10,000 groups per directory. See [Group limitations](/identity/groups/#group-limitations) for other group limits.
 * Limit of 100 authentication or principal lookup requests per second per directory, not counting cached requests
 * Maximum of 32 allowed control planes per directory

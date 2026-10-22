@@ -45,8 +45,6 @@ faqs:
       Yes. Because the credentials and metadata for principals are stored in {{site.konnect_short_name}}, The first time a data plane receives a request with a particular credential or lookup key, it authenticates to {{site.konnect_short_name}} to retrieve it. This request always goes to the {{site.konnect_short_name}} region where you host the control plane. This first lookup adds latency that varies with network conditions. Kong caches principals and credentials locally for the next lookups.
   
 related_resources:
-  - text: "{{site.identity}} groups"
-    url: /identity/groups/
   - text: "{{site.identity}} directories"
     url: /identity/directories/
   - text: "{{site.identity}} auth servers"
@@ -75,8 +73,6 @@ rows:
     description: "Define a principal once and use it for {{site.base_gateway}}, {{site.event_gateway_short}}, and {{site.dev_portal}} without manually synchronizing identities."
   - usecase: "Drive gateway behavior with metadata"
     description: "Scope conditional plugin execution by attributes that the principal carries, such as business unit or tier."
-  - usecase: "Manage access for a set of principals"
-    description: "Add principals to a [group](/identity/groups/) and reference the group in access rules, so that adding or removing a member doesn't require editing the rules."
 {% endtable %}
 <!--vale on-->
 
@@ -545,7 +541,7 @@ body:
 
 ## Principal limitations
 
-The following are default limits for principals. For group limits, see [Group limitations](/identity/groups/#group-limitations). For directory limits, see [Directory limitations](/identity/directories/#directory-limitations).
+The following are default limits for principals. For directory limits, see [Directory limitations](/identity/directories/#directory-limitations).
 
 * 10 identities per principal
 * 5 of each credential type per principal

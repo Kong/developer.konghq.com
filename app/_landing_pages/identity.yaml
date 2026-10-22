@@ -157,17 +157,6 @@ rows:
               text: Learn about directories
               url: /identity/directories/
               align: end
-      - blocks:
-        - type: card
-          config:
-            title: Groups
-            description: |
-              Named sets of principals in a directory. Reference a group in access rules instead of each principal.
-            icon: /assets/icons/group.svg
-            cta:
-              text: Learn about groups
-              url: /identity/groups/
-              align: end
 
   - header:
       type: h2
