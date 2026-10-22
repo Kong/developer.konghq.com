@@ -2,6 +2,10 @@ name: Event Gateway Automated Tests
 on:
   workflow_dispatch:
     inputs:
+      event_gateway_image:
+        description: 'Docker Image for Tests'
+        required: true
+        default: 'kong-event-gateway:latest'
       konnect_domain:
         description: "Set to konghq.tech to run against .tech"
         required: false
@@ -58,6 +62,12 @@ jobs:
         with:
           op-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
 
+      - name: Set Event Gateway Image and Tag
+        run: |
+          INPUT_IMAGE="${{ inputs.event_gateway_image }}"
+          echo "KONG_IMAGE_NAME=${INPUT_IMAGE%:*}" >> $GITHUB_ENV
+          echo "KONG_IMAGE_TAG=${INPUT_IMAGE##*:}" >> $GITHUB_ENV
+
       - name: Set Event Gateway min version
         if: ${{ inputs.konnect_event_gateway_min_version != '' }}
         env:
@@ -71,6 +81,8 @@ jobs:
           KONG_LICENSE_DATA: ${{ steps.getLicense.outputs.license }}
           DEPLOYMENT_MODEL: konnect
           PRODUCTS: event-gateway
+          KONG_IMAGE_TAG: ${{ env.KONG_IMAGE_TAG }}
+          KONG_IMAGE_NAME: ${{ env.KONG_IMAGE_NAME }}
           KONNECT_DOMAIN: ${{ env.KONNECT_DOMAIN }}
           TESTS_KONNECT_TOKEN: ${{ inputs.konnect_domain != '' && secrets.KONNECT_TOKEN_TECH || secrets.KONNECT_TOKEN }}
         run: |
