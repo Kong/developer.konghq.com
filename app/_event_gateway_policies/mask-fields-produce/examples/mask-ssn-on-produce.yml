@@ -30,10 +30,9 @@ config:
         - match: "user.ssn"
       strategy:
         type: keep_chars
-        keep_chars:
-          first: 1
-          last: 2
-          phrase: "***"
+        first: 1
+        last: 2
+        phrase: "***"
 
 tools:
   - konnect-api
