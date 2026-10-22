@@ -142,7 +142,7 @@ metadata:
   namespace: kong-system
 spec:
   endpoints:
-  - port: https
+  - port: http
     scheme: http
     path: /metrics
     bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -164,7 +164,7 @@ kubectl port-forward service/prometheus-kube-prometheus-prometheus 9090:9090 -n 
 This can be verified by going to your Prometheus UI and querying:
 
 ```
-up{service=~"kgo-gateway-operator-metrics-service"}
+up{service=~"kong-operator-kong-operator-metrics"}
 ```
 
 {:.info}
@@ -217,15 +217,34 @@ helm upgrade --install --create-namespace -n prometheus --values values.yaml pro
 
 ## Send traffic
 
-To trigger autoscaling, run the following command. This will cause the underlying deployment to sleep for 100ms on each request and thus increase the average response time to that value. The loop sends 100 requests, which builds up enough latency data over the 60 seconds window that the metric uses.
+1. Wait for the `Gateway` and the `command` `HTTPRoute` to be programmed:
 
-```bash
-for _ in {1..100}; do
-  curl -k "http://$(kubectl get -n kong gateway kong -o custom-columns='name:.status.addresses[0].value' --no-headers)/command/shell?cmd=sleep%200.1"
-  sleep 1
-done
-```
-{: data-test-step="block" }
+   ```bash
+   kubectl wait --for=condition=Programmed gateway/kong -n kong --timeout=5m
+   kubectl wait --for=jsonpath='{.status.parents[0].conditions[?(@.type=="Programmed")].status}'=True httproute/command -n kong --timeout=5m
+   ```
+   {: data-test-step="block" }
+
+1. Get the `Gateway`'s external IP address:
+
+   ```bash
+   export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
+   ```
+   {: data-test-step="block" }
+
+1. To trigger autoscaling, run the following command. This will cause the underlying deployment to sleep for 100ms on each request and thus increase the average response time to that value. The loop sends 100 requests, which builds up enough latency data over the 60 seconds window that the metric uses:
+
+{% validation custom-command %}
+command: |
+  for _ in {1..100}; do
+    curl -k --no-progress-meter --fail-with-body "http://$PROXY_IP/command/shell?cmd=sleep%200.1"
+    sleep 1
+  done
+expected:
+  return_code: 0
+render_output: false
+indent: 3
+{% endvalidation %}
 
 ## Verify metrics are exposed in Kubernetes
 
@@ -327,10 +346,13 @@ spec:
 
 You can watch `SuccessfulRescale` events using the following `kubectl` command:
 
-```bash
-timeout 60 kubectl get events -n kong --field-selector involvedObject.name=command,involvedObject.kind=HorizontalPodAutoscaler -w | head -n 10
-```
-{: data-test-step="block" }
+{% validation custom-command %}
+command: |
+  timeout 60 kubectl get events -n kong --field-selector involvedObject.name=command,involvedObject.kind=HorizontalPodAutoscaler -w | grep -m1 SuccessfulRescale
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
 If everything went well we should see the `SuccessfulRescale` events:
 
