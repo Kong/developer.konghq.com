@@ -70,11 +70,11 @@ automated_tests: false
 
 ## Create a Principal
 
-A Policy's config can be computed per request from a [CEL expression](/ai-gateway/conditions/), for example, reading an attribute of the authenticated AI Consumer or Principal, instead of always using a fixed value.
+An AI Policy's config can be computed per request from a [CEL expression](/ai-gateway/conditions/), for example, reading an attribute of the authenticated AI Consumer or Principal, instead of always using a fixed value.
 In this guide, you'll create a [Principal](/identity/principals/) so that a custom limit can be applied to authenticated Principals.
 {% include /how-tos/steps/principal.md %}
 
-Set `rate_limit` and `partner_id` metadata on the Principal so the Policy's expressions have something to read:
+Set the `rate_limit` and `partner_id` metadata fields on the Principal so the Policy expressions can reference them:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -225,7 +225,7 @@ RateLimit-Limit: 20
 ```
 {:.no-copy-code}
 
-The limit is now `20` from `expressions.limit` instead of the static fallback value of `10` from `principal.metadata.rate_limit`.
+The limit is now `20`, which `expressions.limit` reads from the Principal's `rate_limit` metadata, instead of the static fallback value of `10` from `config.limit`.
 
 To see the static fallback take over, remove the Principal's `rate_limit` metadata:
 

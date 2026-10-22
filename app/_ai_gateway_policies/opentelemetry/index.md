@@ -66,7 +66,7 @@ For all available metrics, see the [OpenTelemetry metrics reference](/ai-gateway
 
 ### Add Principal attributes to metrics
 
-Set [`config.metrics.enable_principal_attribute`](./reference/#schema--config-metrics-enable-principal-attribute) to `true` to attach the authenticated [Kong Identity Principal](/identity/principals/)'s ID and display name to the `http.server.request.count`, `http.server.request.size`, and `http.server.response.size` metrics. You can enable this at the same time as Consumer attributes.
+Set [`config.metrics.enable_principal_attribute`](./reference/#schema--config-metrics-enable-principal-attribute) to `true` to attach the authenticated [Kong Identity Principal](/identity/principals/)'s ID and display name to the `http.server.request.count`, `http.server.request.size`, and `http.server.response.size` metrics. You can enable this at the same time as AI Consumer attributes.
 
 In the following example:
 * [`config.metrics.enable_request_metrics`](./reference/#schema--config-metrics-enable-request-metrics) adds request count metrics. 

@@ -121,7 +121,7 @@ To key counters on a combination of values, set [`config.compound_identifier`](.
 
 {% include md/ai-gateway/v2/policies/rate-limiting/limit-by-ip.md %}
 
-### Consumer counter key
+### AI Consumer counter key
 
 When [`config.identifier`](./reference/#schema--config-identifier) is `consumer`, use [`config.counter_key`](./reference/#schema--config-counter-key) to control which AI Consumer attribute keys the rate limit counter. By default, the counter is keyed by `consumer.id`. You can also key by `consumer.username` or `consumer.custom_id`.
 
@@ -189,7 +189,7 @@ formats:
 
 ### Dynamic configuration with CEL
 
-`limit` and `custom_key` are expressible config fields: instead of always using the static value in `config`, {{site.ai_gateway}} can compute the field's value per request from a CEL expression, for example, reading an attribute of the authenticated AI Consumer or Principal. If the expression is unset, invalid, or fails to evaluate, {{site.ai_gateway}} falls back to the field's static value in `config`.
+`limit` and `custom_key` accept a CEL expression. If an expression is set, {{site.ai_gateway}} evaluates it on each request and uses the result as the field’s value, for example an attribute of the authenticated AI Consumer or Principal. If the expression fails to evaluate, {{site.ai_gateway}} uses the static value in `config`.
 
 Because `limit` is an array field (one value per configured window), its expression is also an array, with one expression per element, in the same order:
 
