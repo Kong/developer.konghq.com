@@ -19,8 +19,41 @@ series:
   id: mesh-get-started-universal-3
   position: 4
 tldr:
-  q: How does one Universal workload reach another?
-  a: With transparent proxying on, list the destination in the caller's `reachableBackends`, and the caller dials its generated hostname while the sidecar routes it. Without transparent proxying, declare an outbound with a `backendRef`.
+  q: How does the demo app reach the key/value store?
+  a: Run the demo app with a sidecar and transparent proxying, and list `kv` in its `Dataplane`'s `reachableBackends`. The app then calls `kv.svc.mesh.local`, the hostname the control plane generated for the `kv` `MeshService`, and the sidecar resolves the name and routes the request.
+faqs:
+  - q: How does the demo app find `kv` by its hostname?
+    a: |
+      Three pieces make that workallow the demo app to reach `kv` by a hostname:
+
+      - The control plane generated a `MeshService` named `kv`, and allocated
+        a VIP and the `kv.svc.mesh.local` hostname.
+      - The `demo-app` `Dataplane` lists `kv` in `reachableBackends`, so the control plane
+        configures the proxy with an outbound for it.
+      - `kuma-dp` is running with transparent proxying and the embedded DNS proxy, so the
+        application's DNS lookups resolve mesh hostnames and the sidecar intercepts its outbound traffic.
+  - q: How does a workload reach another one without transparent proxying?
+    a: |
+      Without transparent proxying, the sidecar doesn't intercept outbound traffic, so each
+      destination needs an explicit outbound in the caller's `Dataplane` that binds a local port:
+
+      ```yaml
+      networking:
+        address: 172.18.78.3
+        inbound:
+          - port: 5050
+            name: main
+            protocol: http
+        outbound:
+          - port: 10001
+            backendRef:
+              kind: MeshService
+              name: kv
+              port: 5050
+      ```
+
+      The application then connects to `127.0.0.1:10001` instead of `kv.svc.mesh.local`.
+      `backendRef` is required and needs `name` or `labels`.
 related_resources:
   - text: Universal data plane
     url: /mesh/universal-data-plane/
@@ -30,20 +63,22 @@ min_version:
   mesh: '3.0'
 ---
 
-The second workload is the demo application, which reads and writes the key/value store. Adding
-it is the same steps, plus the interesting part: how it finds `kv`.
+## Start and configure the container 
 
-## Issue a token and start the container
+Follow the same steps as for the `kv` service to configure the container for the `demo-app` service.
 
-```sh
-kongctl create mesh dataplane-token \
-  --control-plane-url "$KONG_MESH_CP" \
-  --control-plane-token "$KONG_MESH_ADMIN_TOKEN" \
-  --name demo-app \
-  --workload demo-app \
-  --valid-for 24h > "$KONG_MESH_DEMO_TMP/token-demo-app"
-```
+1. Issue a data plane token:
 
+   ```sh
+   kongctl create mesh dataplane-token \
+     --control-plane-url "$KONG_MESH_CP" \
+     --control-plane-token "$KONG_MESH_ADMIN_TOKEN" \
+     --name demo-app \
+     --workload demo-app \
+     --valid-for 24h > "$KONG_MESH_DEMO_TMP/token-demo-app"
+   ```
+
+1. Start the container and include the `kv` URL:
 ```sh
 docker run \
   --detach \
@@ -58,26 +93,23 @@ docker run \
   ghcr.io/kumahq/kuma-counter-demo:debian-slim
 ```
 
-`KV_URL` tells the application to reach the store at `kv.svc.mesh.local`, the hostname the
-control plane generated for the `kv` `MeshService`.
+1. Install the sidecar binaries:
 
-## Install the sidecar binaries and the transparent proxy
+   ```sh
+   docker exec kong-mesh-demo-app sh /demo/setup-sidecar.sh
+   ```
 
-```sh
-docker exec kong-mesh-demo-app sh /demo/setup-sidecar.sh
-```
+1. Install the transparent proxy:
 
-```sh
-docker exec --privileged kong-mesh-demo-app \
-  kumactl install transparent-proxy \
-    --config-file /demo/transparent-proxy.yaml
-```
+   ```sh
+   docker exec --privileged kong-mesh-demo-app \
+     kumactl install transparent-proxy \
+       --config /demo/transparent-proxy.yaml
+   ```
 
 ## Write the demo app's Dataplane
 
-The template from [step 1](/mesh/get-started/universal/install/) declares no destinations, and a
-transparent proxy reaches only what its `Dataplane` lists in `reachableBackends`. With none
-listed, the proxy reaches nothing. So `demo-app` gets its own `Dataplane`, which names `kv`:
+Create the `Dataplane` resource for `demo-app`, with `kv` as a reachable backend:
 
 ```sh
 cat > "$KONG_MESH_DEMO_TMP/dataplane-demo-app.yaml" <<'EOF'
@@ -102,10 +134,9 @@ networking:
 EOF
 ```
 
-Each ref selects destinations by `kind` and `labels`. `kuma.io/display-name` is the label the
-control plane puts on a generated `MeshService` with its name.
-
 ## Start the sidecar
+
+Run `kuma-dp` to start the `demo-app` sidecar:
 
 ```sh
 docker exec --detach kong-mesh-demo-app sh -c '
@@ -118,88 +149,27 @@ docker exec --detach kong-mesh-demo-app sh -c '
     > /demo/logs-demo-app.log 2>&1'
 ```
 
-## Understand service discovery
+## Validate
 
-You told the application to reach `kv` at a hostname, not an address. Three pieces make that
-work:
+1. Increment the counter through the published port:
 
-- The control plane **generated a `MeshService`** named `kv` on the previous page, and allocated
-  it a VIP and the `kv.svc.mesh.local` hostname.
-- The `demo-app` `Dataplane` **lists `kv` in `reachableBackends`**, so the control plane
-  configures the proxy with an outbound for it.
-- `kuma-dp` is running with **transparent proxying and the embedded DNS proxy**, so the
-  application's DNS lookups resolve mesh hostnames and the sidecar intercepts its outbound traffic.
+   ```sh
+   curl -XPOST http://127.0.0.1:25050/api/counter
+   ```
 
-The application code doesn't change: it dials a name and the sidecar does the rest. What
-Universal asks of you is the `reachableBackends` list. The control plane can drop that
-requirement mesh-wide with `KUMA_DEFAULTS_RESTRICT_OUTBOUND=false`, at the cost of configuring
-every proxy for every destination.
+   The response looks like this:
 
-### Without transparent proxying
+   ```json
+   {"counter":1,"zone":"local-demo-zone"}
+   ```
+   {:.no-copy-code}
 
-Turn it off and the proxy no longer intercepts outbound traffic, so each destination needs an
-explicit outbound that binds a local port:
+   You can also open the app at <http://127.0.0.1:25050> and increment the counter there.
 
-```yaml
-networking:
-  address: 172.18.78.3
-  inbound:
-    - port: 5050
-      name: main
-      protocol: http
-  outbound:
-    - port: 10001
-      backendRef:
-        kind: MeshService
-        name: kv
-        port: 5050
-```
+1. Check that both workloads are now in the mesh:
 
-The application then connects to `127.0.0.1:10001`. `backendRef` is required: an outbound
-without one is rejected with `backendRef: must be defined`. It needs `name` or `labels`.
-
-## Verify it works
-
-Increment the counter through the published port:
-
-```sh
-curl -XPOST http://127.0.0.1:25050/api/counter
-```
-
-The response looks like this:
-
-```json
-{"counter":1,"zone":"local-demo-zone"}
-```
-{:.no-copy-code}
-
-The application stored the counter in `kv` and read back the zone name you set on the previous
-page. You can also open <http://127.0.0.1:25050> in a browser and increment the counter there.
-
-Both workloads are now in the mesh:
-
-```sh
-kongctl get mesh inspect dataplanes \
-  --control-plane-url "$KONG_MESH_CP" \
-  --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
-```
-
-```text
-MESH     NAME      STATUS
-default  demo-app  Online
-default  kv        Online
-```
-{:.no-copy-code}
-
-## See what applies to a proxy
-
-`inspect` answers what the control plane computed, per port, which is how you check a policy
-landed where you meant it to:
-
-```sh
-kongctl get mesh inspect dataplane demo-app \
-  --control-plane-url "$KONG_MESH_CP" \
-  --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
-```
-
-Nothing is listed yet, because no policy targets these workloads. The next page changes that.
+   ```sh
+   kongctl inspect mesh dataplanes \
+     --control-plane-url "$KONG_MESH_CP" \
+     --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
+   ```

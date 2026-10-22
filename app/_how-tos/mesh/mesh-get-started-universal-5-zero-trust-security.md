@@ -55,93 +55,84 @@ min_version:
   mesh: '3.0'
 ---
 
-So far both workloads talk to each other with nothing stopping them, and nothing encrypting
-them. This page fixes both.
-
-{:.warning}
-> This differs substantially from {{site.mesh_product_name}} 2.x. `Mesh.mtls` is removed, so mTLS
-> comes from a `MeshIdentity`. `MeshTrafficPermission`'s `from` array and `action` field are
-> removed, so permissions are expressed as `rules` matching the caller's SPIFFE ID. Following a
-> 2.x guide here will not work.
-
 ## Issue identities
 
 A workload gets a certificate from a [MeshIdentity](/mesh/policies/meshidentity/). Without one,
 proxies have no identity, serve plaintext, and neither `MeshTLS` nor `MeshTrafficPermission`
 applies to them.
 
-```sh
-cat <<'EOF' | kongctl apply mesh -f - \
-  --control-plane-url "$KONG_MESH_CP" \
-  --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
-type: MeshIdentity
-mesh: default
-name: demo-identity
-spec:
-  selector:
-    dataplane: {}
-  spiffeID:
-    trustDomain: default.mesh.local
-  provider:
-    type: Bundled
-    bundled:
-      autogenerate:
-        enabled: true
-      insecureAllowSelfSigned: true
-      meshTrustCreation: Enabled
-EOF
-```
+1. Create a `MeshIdentity` for every proxy in the mesh:
 
-`selector.dataplane: {}` matches every proxy in the mesh. `insecureAllowSelfSigned` accepts a CA
-the control plane generates itself, which suits a demo and nothing else: a real mesh supplies a
-CA under `bundled.ca`.
+   ```sh
+   cat <<'EOF' | kongctl apply mesh -f - \
+     --control-plane-url "$KONG_MESH_CP" \
+     --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
+   type: MeshIdentity
+   mesh: default
+   name: demo-identity
+   spec:
+     selector:
+       dataplane: {}
+     spiffeID:
+       trustDomain: default.mesh.local
+     provider:
+       type: Bundled
+       bundled:
+         autogenerate:
+           enabled: true
+         insecureAllowSelfSigned: true
+         meshTrustCreation: Enabled
+   EOF
+   ```
 
-Setting `trustDomain` explicitly keeps the SPIFFE IDs predictable. Left out, it renders from
-`{% raw %}{{ .Mesh }}.{{ .Zone }}.mesh.local{% endraw %}`.
+   In this example:
+   * `selector.dataplane: {}` matches every proxy in the mesh. 
+   * `insecureAllowSelfSigned` accepts a CA the control plane generates itself, for testing purposes. In a real mesh, provide a CA under `bundled.ca`.
+   * `trustDomain` explicitly keeps the SPIFFE IDs predictable. Left out, it's generated based on the following template: `{% raw %}{{ .Mesh }}.{{ .Zone }}.mesh.local{% endraw %}`.
 
-From now on, each proxy's identity comes from its `kuma.io/workload` label, so the control plane
-accepts only dataplane tokens bound to that workload. You issued the tokens in steps 3 and 4
-with `--workload`, so `kv` and `demo-app` keep reconnecting. The control plane would reject a proxy with a token bound only by
-`--name` the next time it connected.
+1. Check that the identity initialized:
 
-Check that the identity initialized:
+   ```sh
+   kongctl get mesh meshidentities demo-identity -o yaml \
+     --control-plane-url "$KONG_MESH_CP" \
+     --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
+   ```
 
-```sh
-kongctl get mesh meshidentities demo-identity -o yaml \
-  --control-plane-url "$KONG_MESH_CP" \
-  --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
-```
+   `status.conditions` should report `Provider`, `MeshTrustCreated` and `Ready` as true, and
+   `status.trustDomain` shows the domain issuance is pinned to.
 
-`status.conditions` should report `Provider`, `MeshTrustCreated` and `Ready` as true, and
-`status.trustDomain` shows the domain issuance is pinned to. The control plane also created a `MeshTrust` that publishes the CA
-bundle:
+1. Check the `MeshTrust` the control plane created to publish the CA bundle:
 
-```sh
-kongctl get mesh meshtrusts \
-  --control-plane-url "$KONG_MESH_CP" \
-  --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
-```
+   ```sh
+   kongctl get mesh meshtrusts \
+     --control-plane-url "$KONG_MESH_CP" \
+     --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
+   ```
 
 ## Confirm that traffic is denied
 
-Try the demo application again:
+1. Send a request from inside the demo application's container, so the application calls the
+   key/value store through its sidecar:
 
-```sh
-curl -XPOST http://127.0.0.1:25050/api/counter
-```
+   ```sh
+   docker exec kong-mesh-demo-app curl -s -XPOST http://127.0.0.1:5050/api/counter
+   ```
 
-It fails. Two things changed at once:
+   The request fails. Proxies now have identities, so `MeshTrafficPermission` applies, and no
+   permission exists yet, so the `kv` proxy rejects the call from `demo-app`.
 
-- Proxies now have identities, so `MeshTrafficPermission` applies, and no permission exists,
-  so nothing is allowed. {{site.mesh_product_name}} 3.x creates no default allow-all permission.
-- Inbounds are `Strict` unless a [MeshTLS](/mesh/policies/meshtls/) policy says otherwise, so
-  the proxies reject plaintext from outside the mesh. `curl` on your host is outside the mesh.
+1. Send the same request from your host, outside the mesh:
 
-That is zero trust arriving: nothing is permitted until you say so.
+   ```sh
+   curl -XPOST http://127.0.0.1:25050/api/counter
+   ```
+
+   This request also fails. Inbounds are `Strict` unless a [MeshTLS](/mesh/policies/meshtls/)
+   policy says otherwise, so the `demo-app` proxy rejects plaintext from outside the mesh.
 
 ## Allow the demo app to reach the key/value store
 
-A permission names the caller by the identity it presents, not by a tag it sets:
+Create a `MeshTrafficPermission` that allows traffic from `demo-app` to `kv`:
 
 ```sh
 cat <<'EOF' | kongctl apply mesh -f - \
@@ -164,56 +155,47 @@ spec:
 EOF
 ```
 
-The SPIFFE ID follows from the `kuma.io/workload` label on the `demo-app` `Dataplane` you wrote in
-[step 4](/mesh/get-started/universal/demo-app/): on Universal the path
-defaults to `/workload/{workload}`, so `demo-app` becomes
-`spiffe://default.mesh.local/workload/demo-app`.
-
-{:.warning}
-> In 2.x the documented idiom was a mesh-wide `Deny` followed by narrower `Allow` rules, because
-> the last matching rule won. Precedence is now fixed: every `deny` is evaluated before every
-> `allow`, so a deny-all can never be re-opened. Write the allows; traffic matching nothing is
-> denied anyway.
-
 ## Inspect the applied policy
 
-```sh
-kongctl get mesh inspect dataplane kv \
-  --control-plane-url "$KONG_MESH_CP" \
-  --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
-```
+1. Check that the `MeshTrafficPermission` policy applies to the `kv` proxy:
 
-```text
-PORT  KIND                   ORIGINS
-main  MeshTrafficPermission  kri_mtp_default___allow-demo-app-to-kv_
-```
-{:.no-copy-code}
+   ```sh
+   kongctl inspect mesh dataplane kv \
+     --control-plane-url "$KONG_MESH_CP" \
+     --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
+   ```
 
-That is the control plane's own view, per port, after matching, not a read-back of what you
-applied. And from the other direction, the proxies a policy matches:
+1. Check which proxies the policy matches:
 
-```sh
-kongctl get mesh inspect meshtrafficpermission allow-demo-app-to-kv \
-  --control-plane-url "$KONG_MESH_CP" \
-  --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
-```
+   ```sh
+   kongctl inspect mesh meshtrafficpermission allow-demo-app-to-kv \
+     --control-plane-url "$KONG_MESH_CP" \
+     --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
+   ```
 
 To let traffic from outside the mesh reach the demo application, see
 [Application ingress](/mesh/application-ingress/).
 
 ## Validate
 
-Send the request from inside the demo application's container, so the application calls the
-key/value store through its sidecar:
+1. Send the request from inside the demo application's container again:
 
-```sh
-docker exec kong-mesh-demo-app curl -s -XPOST http://127.0.0.1:5050/api/counter
-```
+   ```sh
+   docker exec kong-mesh-demo-app curl -s -XPOST http://127.0.0.1:5050/api/counter
+   ```
 
-The response returns the incremented counter and the `local-demo-zone` zone name, for example
-`{"counter":2,"zone":"local-demo-zone"}`. The application reached `kv` over mTLS, and the `kv`
-proxy admitted it because `demo-app`'s SPIFFE ID is allowed.
+   The response returns the incremented counter and the `local-demo-zone` zone name. The
+   application reached `kv` over mTLS, and the `kv` proxy admitted it because `demo-app`'s SPIFFE
+   ID is allowed.
 
-The same request from your host, `curl -XPOST http://127.0.0.1:25050/api/counter`, still fails:
-`curl` presents no mesh identity, and the inbound is `Strict`. Traffic between the two workloads
-is encrypted and authorized; traffic from outside isn't admitted at all.
+   {:.info}
+   > It can take a few seconds for the `MeshTrafficPermission` to be applied. If the request still fails, wait and try again.
+
+1. Send the same request from your host again:
+
+   ```sh
+   curl -XPOST http://127.0.0.1:25050/api/counter
+   ```
+
+   It still fails: `curl` presents no mesh identity, and the inbound is `Strict`. Traffic between
+   the two workloads is encrypted and authorized, and traffic from outside the mesh isn't admitted.

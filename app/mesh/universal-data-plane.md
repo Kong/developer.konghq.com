@@ -190,10 +190,10 @@ redirect:
     enabled: true
 ```
 
-Pass the file to `kumactl install transparent-proxy` with `--config-file`:
+Pass the file to `kumactl install transparent-proxy` with `--config`:
 
 ```sh
-sudo kumactl install transparent-proxy --config-file /etc/kuma/transparent-proxy.yaml
+sudo kumactl install transparent-proxy --config /etc/kuma/transparent-proxy.yaml
 ```
 
 Then pass the same file to `kuma-dp` with `--transparent-proxy-config` in place of

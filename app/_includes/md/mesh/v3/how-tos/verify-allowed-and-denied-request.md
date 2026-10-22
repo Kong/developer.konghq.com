@@ -15,7 +15,7 @@
 1. Confirm the workload identities in the proxy inspection output:
 
    ```sh
-   kongctl get mesh inspect dataplanes --mesh konnect-demo \
+   kongctl inspect mesh dataplanes --mesh konnect-demo \
      --control-plane-id "$CONTROL_PLANE_ID" --region "$KONNECT_REGION" \
      --pat "$KONNECT_TOKEN"
    ```

@@ -47,34 +47,23 @@ docker run \
 ```
 
 The control plane defaults to `mode: zone` with an in-memory store, which is what a single-node
-demo wants. Everything is lost when the container stops; see
-[Universal control plane](/mesh/universal-control-plane/) for the PostgreSQL
-configuration a real deployment needs.
+demo wants. In a real deployment, use PostgreSQL. For more information, see
+[Universal control plane](/mesh/universal-control-plane/).
 
-Two ports matter:
+Two ports are important:
+* 5681, which serves the HTTP API and the GUI. This is what `kongctl` uses.
+* 5678, which serves the data plane server where proxies connect.
 
-{% table %}
-columns:
-  - title: Port
-    key: port
-  - title: Serves
-    key: serves
-rows:
-  - port: "5681"
-    serves: "The HTTP API and the GUI. `kongctl` talks to this one."
-  - port: "5678"
-    serves: "The data plane server. Proxies connect here."
-{% endtable %}
-
-The GUI is now at <http://127.0.0.1:25681/gui>.
+You can reach the GUI at <http://127.0.0.1:25681/gui>.
 
 ## Get the admin token
 
 The {{site.mesh_product_name}} API enforces RBAC. It treats only requests from the control plane's own
 host as admin, and requests through the published port come from outside the
-container, so `kongctl` needs a token. The control plane creates an admin token at startup and
-stores it as the `admin-user-token` global secret. Read it from inside the container, where the
-request comes from localhost:
+container.
+
+This means `kongctl` needs a token. The control plane creates an admin token at startup and
+stores it as the `admin-user-token` global secret. Fetch it from inside the container:
 
 ```sh
 export KONG_MESH_ADMIN_TOKEN="$(
@@ -90,81 +79,33 @@ export KONG_MESH_ADMIN_TOKEN="$(
 If `KONG_MESH_ADMIN_TOKEN` is empty, the control plane is still starting: wait a few seconds and
 run the command again.
 
-## Point kongctl at it
+## Point kongctl at the control plane
 
 `kongctl` reaches a self-managed control plane through `--control-plane-url`, and authenticates
-with `--control-plane-token`. Export the control plane URL:
+with `--control-plane-token`. 
 
-```sh
-export KONG_MESH_CP=http://127.0.0.1:25681
-```
+1. Export the control plane URL:
 
-Pass both flags to list the control plane's resource types:
+   ```sh
+   export KONG_MESH_CP=http://127.0.0.1:25681
+   ```
 
-```sh
-kongctl get mesh resource-types \
-  --control-plane-url "$KONG_MESH_CP" \
-  --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
-```
+1. Pass both flags to list the control plane's resource types:
 
-The command lists every resource type this control plane serves. It is worth a look before going
-further: `kongctl` reads the list from the control plane rather than carrying its own, so this
-is the authoritative answer for the version you are running.
+   ```sh
+   kongctl get mesh resource-types \
+     --control-plane-url "$KONG_MESH_CP" \
+     --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
+   ```
 
-To avoid repeating the flag, put it in `kongctl`'s config file, which lives at
-`$XDG_CONFIG_HOME/kongctl/config.yaml` and is keyed by profile. Create the config directory:
-
-```sh
-mkdir -p "${XDG_CONFIG_HOME:-$HOME/.config}/kongctl"
-```
-
-Add a `demo` profile to the config file:
-
-```sh
-cat >> "${XDG_CONFIG_HOME:-$HOME/.config}/kongctl/config.yaml" <<EOF
-demo:
-    output: text
-    konnect:
-        mesh:
-            control-plane:
-                url: $KONG_MESH_CP
-            mesh: default
-EOF
-```
-
-Then select that profile per command:
-
-```sh
-kongctl get mesh resource-types --profile demo --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
-```
-
-The rest of this series writes `--control-plane-url "$KONG_MESH_CP"` and
-`--control-plane-token "$KONG_MESH_ADMIN_TOKEN"` explicitly, so it works either way.
+   The command lists every resource type this control plane serves.
 
 ## Confirm the default mesh
 
-A control plane starts with a `default` mesh:
+Check that the control plane includes the `default` mesh:
 
 ```sh
 kongctl get mesh meshes \
   --control-plane-url "$KONG_MESH_CP" \
   --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
 ```
-
-```text
-NAME     DATAPLANES
-default  0/0 online
-```
-{:.no-copy-code}
-
-No proxies yet. The next two pages add them.
-
-## Review what isn't running yet
-
-Nothing issues identities. `Mesh.mtls` was removed in 3.0, so a mesh gets mTLS from a
-[MeshIdentity](/mesh/policies/meshidentity/) or not at all. Without one, proxies serve and
-accept plaintext, and `MeshTLS` and `MeshTrafficPermission` don't apply to them.
-
-That is deliberate for now: the first two workloads connect without mTLS so you can see traffic
-flowing, and
-[the last page](/mesh/get-started/universal/zero-trust-security/) turns it on.

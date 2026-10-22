@@ -174,31 +174,31 @@ control plane can, once matching and merging have run.
 Show which policies apply to a proxy, and on which of its ports:
 
 ```sh
-kongctl get mesh inspect dataplane backend-01
+kongctl inspect mesh dataplane backend-01
 ```
 
 Show which proxies a policy matches:
 
 ```sh
-kongctl get mesh inspect meshtimeout slow
+kongctl inspect mesh meshtimeout slow
 ```
 
 Get an overview of all data plane proxies:
 
 ```sh
-kongctl get mesh inspect dataplanes
+kongctl inspect mesh dataplanes
 ```
 
 Get an overview of all meshes:
 
 ```sh
-kongctl get mesh inspect meshes
+kongctl inspect mesh meshes
 ```
 
 Get an overview of all zones:
 
 ```sh
-kongctl get mesh inspect zones
+kongctl inspect mesh zones
 ```
 
 `inspect dataplane` reports per port rather than per proxy, because that is where a policy
@@ -364,9 +364,9 @@ rows:
   - old: "`kumactl generate dataplane-token`"
     new: "`kongctl create mesh dataplane-token`"
   - old: "`kumactl inspect dataplane NAME`"
-    new: "`kongctl get mesh inspect dataplane NAME`"
+    new: "`kongctl inspect mesh dataplane NAME`"
   - old: "`kumactl inspect POLICY_TYPE NAME`"
-    new: "`kongctl get mesh inspect POLICY_TYPE NAME`"
+    new: "`kongctl inspect mesh POLICY_TYPE NAME`"
   - old: "`kumactl config control-planes add`"
     new: "`kongctl login`, or `--control-plane-url` for a self-managed control plane"
 {% endtable %}
