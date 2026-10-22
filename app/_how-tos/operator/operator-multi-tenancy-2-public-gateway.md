@@ -127,12 +127,12 @@ spec:
 
 1. This gateway's in-memory {{ site.kic_product_name_short }} is the first `ControlPlane` in the cluster, so it's the one that picks up the `KongLicense` you applied in the previous step. Confirm it reached the `Programmed` condition:
 
-    ```bash
-    kubectl wait --for=jsonpath='{.status.controllers[0].conditions[0].status}'=True \
+   ```bash
+   kubectl wait --for=jsonpath='{.status.controllers[0].conditions[?(@.type=="Programmed")].status}'=True \
      konglicense/kong-license --timeout=60s
-    ```
-    {: data-test-step="block" }
-   
+   ```
+   {: data-test-step="block" }
+
 
 ## Validate
 
