@@ -235,7 +235,7 @@ rows:
                 Only organization owners can enable or disable KAi for an organization. 
                 
                 * **Enterprise accounts:** KAi is always disabled by default for Enterprise accounts. 
-                Enterprise accounts can enable it by [enabling it in {{site.konnect_short_name}} Labs](https://cloud.konghq.com/global/organization/labs).
+                Enterprise accounts can enable it by [enabling it in {{site.konnect_short_name}} AI Settings](https://cloud.konghq.com/global/organization/settings/ai-settings).
             - q: Does KAi automatically modify {{site.konnect_short_name}} configuration when it finds an issue?
               a: |
                 No. KAi can make changes to your {{site.konnect_short_name}} configuration but will always ask for your confirmation before applying any changes.
@@ -248,7 +248,7 @@ rows:
             - q: Is there an additional cost to using KAi?
               a: |
                 Access to KAi is included in your existing Plus and Trial plans. 
-                Enterprise users should contact their Kong account manager or [enable it in {{site.konnect_short_name}} Labs](https://cloud.konghq.com/global/organization/labs).
+                Enterprise users should contact their Kong account manager or [enable it in {{site.konnect_short_name}} AI Settings](https://cloud.konghq.com/global/organization/settings/ai-settings).
             - q: Does KAi train on any of my data?
               a: No. Neither Kong nor any downstream LLMs that KAi uses train on user data.
             - q: Which models does KAi use?

@@ -173,6 +173,13 @@ rows:
             icon: /assets/icons/vllm.svg
             cta:
               url: /ai-gateway/ai-providers/vllm/
+      - blocks:
+        - type: icon_card
+          config:
+            title: TypeSafe AI
+            icon: /assets/icons/typesafe.svg
+            cta:
+              url: /ai-gateway/ai-providers/typesafe/
   - columns:
       - blocks:
           - type: structured_text

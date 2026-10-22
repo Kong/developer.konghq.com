@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect Identity
-  version: 3.7.1
+  version: 3.9.0
   description: The management API for Kong Konnect Identity resources.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@c490b3e79979400ce6f13039add29f45cfdb0b34
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c490b3e79979400ce6f13039add29f45cfdb0b34'
+  x-oas-source: kong/platform-api@f5512a429138071b0f4422847ccf7012bc4f7e17
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/f5512a429138071b0f4422847ccf7012bc4f7e17'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -1796,7 +1796,7 @@ components:
       type: object
       properties:
         enabled:
-          $ref: '#/components/schemas/IdentityProviderEnabled'
+          $ref: '#/components/schemas/UpdateIdentityProviderEnabled'
         login_path:
           $ref: '#/components/schemas/IdentityProviderLoginPath'
         config:
@@ -2053,11 +2053,11 @@ components:
         - $ref: '#/components/schemas/User'
         - type: object
           example:
-            claim_name:
+            claim_names:
               - GroupClaimA
               - GroupClaimB
           properties:
-            claim_name:
+            claim_names:
               description: An array of group claim names that gave this user membership to the team.
               type: array
               items:
@@ -2130,11 +2130,11 @@ components:
         - $ref: '#/components/schemas/TeamResponse'
         - type: object
           example:
-            claim_name:
+            claim_names:
               - GroupClaimA
               - GroupClaimB
           properties:
-            claim_name:
+            claim_names:
               description: An array of group claim names that gave this user membership to the team.
               type: array
               items:
@@ -2970,6 +2970,14 @@ components:
         - instance
         - detail
       title: Error
+    UpdateIdentityProviderEnabled:
+      description: |
+        Indicates whether the identity provider is enabled.
+        Only one identity provider can be active at a time, such as SAML or OIDC.
+        When omitted, the current value is left unchanged.
+      type: boolean
+      example: true
+      title: Identity Provider Enabled Property
     CursorMetaPage:
       type: object
       properties:
@@ -3425,7 +3433,7 @@ components:
             active: true
             created_at: '2022-08-17T17:46:57.52Z'
             updated_at: '2022-10-03T17:00:00.00Z'
-            claim_name:
+            claim_names:
               - GroupClaimA
               - GroupClaimB
     user-team-membership-collection-example:
@@ -3444,7 +3452,7 @@ components:
               env: test
             created_at: '2022-02-07T17:46:57.52Z'
             updated_at: '2022-09-25T13:00:00.00Z'
-            claim_name:
+            claim_names:
               - GroupClaimA
               - GroupClaimB
     Get-User-Response:

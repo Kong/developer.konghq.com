@@ -461,6 +461,7 @@ KongPlugin
 konnect
 KPI
 KPIs
+KRaft
 kscheme
 ksearch
 kubeconfig

@@ -23,7 +23,7 @@ input/instructions/ai-gateway/v1/how-to/use-semantic-load-balancing/on-prem/gate
 input/instructions/ai-gateway/v1/how-to/use-ai-aws-guardrails-plugin/on-prem/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 500."
 input/instructions/ai-gateway/v1/how-to/use-ai-rag-injector-plugin/on-prem/gateway.yaml: "Expected: request http://localhost:8001/ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk to have status code 200, got: 500."
 input/instructions/ai-gateway/v1/how-to/use-ai-gcp-model-armor-plugin/on-prem/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 400, got: 500."
-input/instructions/ai-gateway/v1/how-to/compare-llm-models-accuracy/on-prem/gateway.yaml: "Expected: request 1 to have status code 200, got: 401."
+input/instructions/ai-gateway/v1/how-to/compare-llm-models-accuracy/on-prem/gateway.yaml: "Expected: request 4 to have status code 200, got: 401."
 input/instructions/ai-gateway/v1/how-to/use-agno-with-ai-proxy/on-prem/gateway.yaml: "Expected: command to have return code 0, got: 1"
 input/instructions/ai-gateway/v1/how-to/use-langchain-with-ai-proxy/on-prem/gateway.yaml: "Expected: command to have return code 0, got: 1"
 input/instructions/ai-gateway/v1/how-to/azure-batches/on-prem/gateway.yaml: "Expected: request http://localhost:8000/files to have status code 201, got: 400."

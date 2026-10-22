@@ -116,9 +116,9 @@ Try accessing the `/` path again:
 
 {% validation request-check %}
 url: /
-status_code: 302
+status_code: 301
 display_headers: true
 {% endvalidation %} 
 
-This time, the request passes with a 302, and the request is redirected to the fallback Service URL. 
+This time, the request passes with a 301, and the request is redirected to the fallback Service URL. 
 You should see the header `Location: https://httpbun.com/` in the response.
