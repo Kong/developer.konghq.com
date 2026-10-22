@@ -131,6 +131,13 @@ cleanup:
         ```sh
         docker network rm guide-mz-net
         ```
+
+        Leave the zone working directory and delete it:
+
+        ```sh
+        cd "$(dirname "$MESH_INSTALL_DIR")"
+        rm -rf "$MESH_INSTALL_DIR"
+        ```
     - title: Delete the control plane
       include_content: cleanup/products/mesh/v3/control-plane-api
     - title: Delete the zone-1 system account

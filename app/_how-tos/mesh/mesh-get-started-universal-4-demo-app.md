@@ -75,7 +75,7 @@ Follow the same steps as for the `kv` service to configure the container for the
      --control-plane-token "$KONG_MESH_ADMIN_TOKEN" \
      --name demo-app \
      --workload demo-app \
-     --valid-for 24h > "$KONG_MESH_DEMO_TMP/token-demo-app"
+     --valid-for 24h > "$KONG_MESH_DEMO_DIR/token-demo-app"
    ```
 
 1. Start the container and include the `kv` URL:
@@ -87,7 +87,7 @@ docker run \
   --network kong-mesh-demo \
   --ip 172.18.78.3 \
   --publish 25050:5050 \
-  --volume "$KONG_MESH_DEMO_TMP:/demo" \
+  --volume "$KONG_MESH_DEMO_DIR:/demo" \
   --env KV_URL=http://kv.svc.mesh.local:5050 \
   --env APP_VERSION=v1 \
   ghcr.io/kumahq/kuma-counter-demo:debian-slim
@@ -112,7 +112,7 @@ docker run \
 Create the `Dataplane` resource for `demo-app`, with `kv` as a reachable backend:
 
 ```sh
-cat > "$KONG_MESH_DEMO_TMP/dataplane-demo-app.yaml" <<'EOF'
+cat > "$KONG_MESH_DEMO_DIR/dataplane-demo-app.yaml" <<'EOF'
 type: Dataplane
 mesh: default
 name: demo-app

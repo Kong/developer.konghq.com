@@ -49,7 +49,7 @@ cleanup:
         Remove the working directory:
 
         ```sh
-        rm -rf "$KONG_MESH_DEMO_TMP"
+        rm -rf "$KONG_MESH_DEMO_DIR"
         ```
 min_version:
   mesh: '3.0'

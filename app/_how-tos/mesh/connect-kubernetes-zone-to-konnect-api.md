@@ -37,6 +37,8 @@ cleanup:
   inline:
     - title: Remove the Kubernetes zone
       include_content: cleanup/products/mesh/v3/kubernetes-zone
+    - title: Delete the working directory
+      include_content: cleanup/products/mesh/v3/zone-working-directory
     - title: Delete the control plane
       include_content: cleanup/products/mesh/v3/control-plane-api
     - title: Delete the system account

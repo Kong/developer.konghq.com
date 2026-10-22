@@ -42,7 +42,7 @@ docker run \
   --network kong-mesh-demo \
   --ip 172.18.78.1 \
   --publish 25681:5681 \
-  --volume "$KONG_MESH_DEMO_TMP:/demo" \
+  --volume "$KONG_MESH_DEMO_DIR:/demo" \
   kong/kuma-cp:{{page.latest_release.version}} run
 ```
 

@@ -41,7 +41,7 @@ kongctl create mesh dataplane-token \
   --control-plane-token "$KONG_MESH_ADMIN_TOKEN" \
   --name kv \
   --workload kv \
-  --valid-for 24h > "$KONG_MESH_DEMO_TMP/token-kv"
+  --valid-for 24h > "$KONG_MESH_DEMO_DIR/token-kv"
 ```
 
 ## Start the container
@@ -55,7 +55,7 @@ kongctl create mesh dataplane-token \
      --hostname kv \
      --network kong-mesh-demo \
      --ip 172.18.78.2 \
-     --volume "$KONG_MESH_DEMO_TMP:/demo" \
+     --volume "$KONG_MESH_DEMO_DIR:/demo" \
      ghcr.io/kumahq/kuma-counter-demo:debian-slim
    ```
 
@@ -144,7 +144,7 @@ In this example:
 * `--dataplane-file` applies the `Dataplane` as the proxy starts
 * The three `--dataplane-var` flags fill the template's placeholders
 * `--transparent-proxy-config` turns on transparent proxying for this proxy and tells the control plane how the rules are set up
-* The sidecar's output goes to `$KONG_MESH_DEMO_TMP/logs-kv.log`.
+* The sidecar's output goes to `$KONG_MESH_DEMO_DIR/logs-kv.log`.
 
 ## Check that the sidecar is connected
 
@@ -163,7 +163,7 @@ In this example:
      --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
    ```
 
-   If `kv` doesn't appear, check `$KONG_MESH_DEMO_TMP/logs-kv.log` for the reason.
+   If `kv` doesn't appear, check `$KONG_MESH_DEMO_DIR/logs-kv.log` for the reason.
 
 ## Inspect the generated MeshService
 

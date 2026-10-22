@@ -46,9 +46,9 @@ For more information Universal, see [{{site.mesh_product_name}} on Universal](/m
 The series writes tokens, resources and logs to a directory the containers share:
 
 ```sh
-export KONG_MESH_DEMO_TMP="$(mktemp -d)"
-chmod 755 "$KONG_MESH_DEMO_TMP"
-echo "$KONG_MESH_DEMO_TMP"
+export KONG_MESH_DEMO_DIR="$PWD/kong-mesh-demo"
+mkdir -p "$KONG_MESH_DEMO_DIR"
+chmod 755 "$KONG_MESH_DEMO_DIR"
 ```
 
 `chmod` lets the unprivileged user that runs `kuma-dp` inside each container read the files.
@@ -75,7 +75,7 @@ On Universal the sidecar runs beside the workload, so each workload container ne
 Write the script that later steps will run inside each container:
 
 ```sh
-cat > "$KONG_MESH_DEMO_TMP/setup-sidecar.sh" <<'EOF'
+cat > "$KONG_MESH_DEMO_DIR/setup-sidecar.sh" <<'EOF'
 set -e
 apt-get update
 apt-get install --yes curl iptables
@@ -97,7 +97,7 @@ The `Dataplane` resource describes a proxy. Rather than writing one per workload
 
 {% raw %}
 ```sh
-cat > "$KONG_MESH_DEMO_TMP/dataplane.yaml" <<'EOF'
+cat > "$KONG_MESH_DEMO_DIR/dataplane.yaml" <<'EOF'
 type: Dataplane
 mesh: default
 name: {{ name }}
@@ -128,7 +128,7 @@ Transparent proxying intercepts a workload's traffic, so the workload calls othe
 name without binding a local port for each one:
 
 ```sh
-cat > "$KONG_MESH_DEMO_TMP/transparent-proxy.yaml" <<'EOF'
+cat > "$KONG_MESH_DEMO_DIR/transparent-proxy.yaml" <<'EOF'
 kumaDPUser: kuma-dp
 redirect:
   dns:

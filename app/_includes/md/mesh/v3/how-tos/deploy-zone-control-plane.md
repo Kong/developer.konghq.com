@@ -6,7 +6,8 @@
 
    ```sh
    export CONTROL_PLANE_URL="grpcs://$KONNECT_REGION.mesh.sync.konghq.com:443"
-   export MESH_INSTALL_DIR=$(mktemp -d)
+   export MESH_INSTALL_DIR="$PWD/kong-mesh-zone"
+   mkdir -p "$MESH_INSTALL_DIR"
    cd "$MESH_INSTALL_DIR"
    ```
 
@@ -63,7 +64,8 @@
 
    ```sh
    export CONTROL_PLANE_URL="grpcs://$KONNECT_REGION.mesh.sync.konghq.com:443"
-   export MESH_INSTALL_DIR=$(mktemp -d)
+   export MESH_INSTALL_DIR="$PWD/kong-mesh-zone"
+   mkdir -p "$MESH_INSTALL_DIR"
    cd "$MESH_INSTALL_DIR"
    ```
 
