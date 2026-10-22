@@ -35,7 +35,7 @@ Directories are region-specific, and each directory controls which control plane
 
 ## Control plane access
 
-Each directory controls which control planes can make authentication requests to it. You can either:
+You can either:
 
 * List the control planes that can authenticate against the directory in `allowed_control_planes`. You can specify a maximum of 32 control planes.
 * Set `allow_all_control_planes` to `true` to allow every control plane in your organization to make authentication requests. This overrides the `allowed_control_planes` list.
