@@ -2,6 +2,7 @@
 {%- if page.prereqs.enterprise -%}
 {%- assign summary = summary | append:' (with an Enterprise license)' -%}
 {%- endif -%}
+{%- capture license_test_attr %}{% if include.raw %}data-test-step{% else %}data-test-prereq{% endif %}{%- endcapture -%}
 {%- capture license %}
 ```sh
 echo "
@@ -12,7 +13,7 @@ metadata:
 rawLicenseString: '$(cat ./license.json)'
 " | kubectl apply -f -
 ```
-{: data-test-prereq="block" }
+{: {{ license_test_attr }}="block" }
 {%- endcapture -%}
 {%- capture cert-manager -%}
 {% include k8s/cert-manager.md %}
@@ -106,7 +107,7 @@ rawLicenseString: '$(cat ./license.json)'
        --set env.ENABLE_CONTROLLER_KEGDATAPLANE=true{% endif %}{% if page.prereqs.operator.controllers %} \{% for controller in page.prereqs.operator.controllers %}
        --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}{% if extra_set %} \{% for param in extra_set %}
        --set {{ param }}{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
-       kubectl -n kong-system wait --for=condition=Available=true --timeout=120s deployment/kong-operator-kong-operator-controller-manager
+       kubectl -n kong-system wait --for=condition=Available=true --timeout=300s deployment/kong-operator-kong-operator-controller-manager
      ```
      {: data-test-prereq="block" }
    indent: 3
