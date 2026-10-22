@@ -172,8 +172,8 @@ kubectl wait --for=jsonpath='{.status.parents[0].conditions[?(@.type=="Programme
 {% validation request-check %}
 url: /echo
 status_code: 200
-on_prem_url: $PUBLIC_GW_IP
-konnect_url: $PUBLIC_GW_IP
+on_prem_url: http://$PUBLIC_GW_IP
+konnect_url: http://$PUBLIC_GW_IP
 {% endvalidation %}
 {% endcapture %}
 
@@ -181,8 +181,8 @@ konnect_url: $PUBLIC_GW_IP
 {% validation request-check %}
 url: /echo
 status_code: 200
-on_prem_url: $PRIVATE_GW_IP:8080
-konnect_url: $PRIVATE_GW_IP:8080
+on_prem_url: http://$PRIVATE_GW_IP:8080
+konnect_url: http://$PRIVATE_GW_IP:8080
 {% endvalidation %}
 {% endcapture %}
 
@@ -190,8 +190,8 @@ konnect_url: $PRIVATE_GW_IP:8080
 {% validation request-check %}
 url: /private
 status_code: 200
-on_prem_url: $PRIVATE_GW_IP:8080
-konnect_url: $PRIVATE_GW_IP:8080
+on_prem_url: http://$PRIVATE_GW_IP:8080
+konnect_url: http://$PRIVATE_GW_IP:8080
 {% endvalidation %}
 {% endcapture %}
 
@@ -200,8 +200,9 @@ konnect_url: $PRIVATE_GW_IP:8080
 command: |
   curl -s -o /dev/null -w '%{http_code}' "$PUBLIC_GW_IP/private"
 expected:
-  stdout: "404"
+  message: "404"
   return_code: 0
+render_output: false
 {% endvalidation %}
 {% endcapture %}
 
