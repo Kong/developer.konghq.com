@@ -66,7 +66,7 @@ Teams don't hold keys. To give the people in a team something shared, such as a 
 ## Group types
 
 You set a group's type when you create it, and you can't change it afterwards.
-Groups and teams share one namespace in a directory, so a group and a team can't have the same name.
+A group and a team in the same directory can't have the same name.
 
 The following table compares the two types:
 
