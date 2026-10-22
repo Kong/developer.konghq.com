@@ -174,7 +174,6 @@ You can convert any `kongctl` {{site.ai_gateway}} 2.x configuration to decK by r
 * Drop each entity's `ref` field.
 * Drop each entity's `ai_gateway: !lookup {id: ...}` field. On-prem, there's only one {{site.ai_gateway}}, so entities don't need to reference one by ID.
 * Rename the top-level entity collections from their `kongctl` names (`ai_gateway_model_providers`, `ai_gateway_models`, and so on) to their decK names (`model_providers`, `models`). See [Configure {{site.ai_gateway}} on-prem](/ai-gateway/configure-on-prem/) for the full set of entity names decK expects.
-* Add `protocols: [http, https]` under `config.route` on each AI Model. The {{site.ai_gateway}} entity schema defaults to both protocols, but that default isn't carried through by `deck ai sync`/`deck file ai2kong`'s conversion, so the generated Route ends up with {{site.base_gateway}}'s own https-only default instead.
 
 See [{{site.ai_gateway}} 2.x concepts](/ai-gateway/ai-gateway-v2-concepts/) for how the entity model maps to the underlying {{site.base_gateway}} primitives.
 
