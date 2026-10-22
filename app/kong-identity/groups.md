@@ -161,8 +161,7 @@ To list the members of a group, send a `GET` request to the `/v2/directories/{di
 ## Add an API key to a group
 
 To create a key for a group, send a `POST` request to the `/v2/directories/{directoryId}/groups/{groupId}/api-keys` endpoint. 
-The key can be system-generated (`v1`) or imported with a custom secret (`imported`). The secret is only returned when the key is created. 
-For details about key types, see [Key auth](/identity/principals/#key-auth).
+The key can be system-generated (`v1`) or imported with a custom secret (`imported`). The secret is only returned when the key is created.
 
 <!--vale off-->
 {% konnect_api_request %}
