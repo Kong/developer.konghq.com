@@ -361,23 +361,6 @@ every path the catch-all matches, which can break slow requests such as file dow
 policy should only apply to the paths the route originally matched, put the catch-all rule in a
 separate `MeshHTTPRoute` instead.
 
-### Required protocol on Universal inbounds
-
-The control plane now reads an inbound's protocol only from `networking.inbound[].protocol`. The
-`kuma.io/protocol` tag stays a regular tag that policies can match on, but the control plane no
-longer uses it as a fallback when the field is unset. Kubernetes is unaffected, since the field is derived from
-the `Service` port.
-
-{:.warning}
-> An inbound with no `protocol` is treated as an unknown protocol and served as plain TCP, which
-> loses the L7 filters that depend on the protocol: the `http` timeouts in `MeshTimeout`,
-> `MeshFaultInjection` entirely, the HTTP limits in `MeshRateLimit`, HTTP access log fields, and
-> HTTP-aware routing. `MeshTimeout`'s `connectionTimeout` and `idleTimeout` sit outside `http`
-> and still apply. Nothing rejects the `Dataplane`, so the change is silent.
-
-Set `networking.inbound[].protocol` explicitly on every Universal `Dataplane` that declared its
-protocol only through the tag.
-
 ### Removed legacy policy types
 
 The legacy policy types `TrafficPermission`, `TrafficRoute`, `TrafficLog`, `TrafficTrace`,
@@ -392,6 +375,109 @@ RBAC filter.
 
 The control plane also no longer creates the default allow-all `TrafficPermission` and
 route-all `TrafficRoute` when a `Mesh` is created.
+
+## Changes that affect Universal resources
+
+On Universal, you declare the `Dataplane` and, if you've turned off generation, the `MeshService`
+resources that policies select. On Kubernetes the control plane derives both from Pods and
+Services, so these changes don't apply there. 
+
+{:.warning}
+> Each change is silent: the resource still applies,
+> and the traffic behaves differently. Rewrite every affected resource before upgrading.
+
+### Required protocol on Universal inbounds
+
+The control plane now reads an inbound's protocol only from `networking.inbound[].protocol`. The
+`kuma.io/protocol` tag stays a regular tag that policies can match on, but the control plane no
+longer uses it as a fallback when the field is unset. Kubernetes is unaffected, since the field is derived from
+the `Service` port.
+
+An inbound with no `protocol` is treated as an unknown protocol and served as plain TCP, which
+loses the L7 filters that depend on the protocol: 
+* The `http` timeouts in `MeshTimeout`
+* `MeshFaultInjection` entirely
+* The HTTP limits in `MeshRateLimit`
+* HTTP access log fields
+* HTTP-aware routing
+
+`MeshTimeout`'s `connectionTimeout` and `idleTimeout` sit outside `http`
+and still apply. Nothing rejects the `Dataplane`, so the change is silent.
+
+Set `networking.inbound[].protocol` explicitly on every Universal `Dataplane` that declared its
+protocol only through the tag.
+
+### Removed inbound `tags`
+
+`networking.inbound[].tags` no longer exists. The field is reserved in the schema and unknown
+fields are allowed when a `Dataplane` is read, so a `Dataplane` still carrying it applies without
+error and the tags are dropped. Any policy that matched on those tags stops matching, and nothing in the API reports it.
+
+Move the tags to the `Dataplane`'s top-level `labels`.
+
+### Outbounds defined by a `backendRef`
+
+`networking.outbound[].tags` is removed. An outbound is now defined by a `backendRef` naming a
+`MeshService`, `MeshExternalService` or `MeshMultiZoneService`:
+
+```yaml
+# 2.x
+outbound:
+  - port: 5432
+    tags:
+      kuma.io/service: postgres
+
+# 3.x
+outbound:
+  - port: 5432
+    backendRef:
+      kind: MeshService
+      name: postgres
+      port: 5432
+```
+
+A new `Dataplane` without a `backendRef` is rejected with `backendRef: must be defined`.
+
+A `Dataplane` already stored with outbound `tags` keeps being served. The tags are discarded and
+no outbound listener is generated, so the workload loses connectivity to that destination with
+nothing reported.
+
+### Label-based `reachableBackends` refs
+
+Each ref in `networking.transparentProxying.reachableBackends.refs[]` now selects by `kind` and
+`labels`. `name` and `namespace` are no longer fields of a ref. A stored ref that still uses `name` resolves to nothing, and the proxy gets no outbounds for it.
+
+To select a destination by name, use the `kuma.io/display-name` label:
+
+```yaml
+# 2.x
+reachableBackends:
+  refs:
+    - kind: MeshService
+      name: postgres
+
+# 3.x
+reachableBackends:
+  refs:
+    - kind: MeshService
+      labels:
+        kuma.io/display-name: postgres
+```
+
+### Removed `networking.advertisedAddress`
+
+`networking.advertisedAddress` is dropped when the `Dataplane` is read, and other proxies reach
+the workload on `networking.address`. A proxy behind NAT that relied on the advertised address loses its inbound traffic.
+
+Make sure `networking.address` is reachable from every other proxy that calls the workload.
+
+### Removed `MeshService` `dataplaneTags` selector
+
+On a `MeshService` you manage manually, `spec.selector.dataplaneTags` is removed. A `MeshService` that still carries only `dataplaneTags` is read back with an empty selector.
+It matches no proxies and reports `Unavailable`.
+
+Use `spec.selector.dataplaneLabels` instead. See [MeshService](/mesh/meshservice/) for the
+supported selectors.
 
 ## Changes that affect MeshHTTPRoute and MeshTCPRoute
 

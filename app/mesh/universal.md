@@ -19,38 +19,36 @@ related_resources:
     url: /mesh/meshservice/
   - text: Migrate policies to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-policies-to-3/
+  - text: Changes in {{site.mesh_product_name}} 3.x that affect Universal resources
+    url: /mesh/migrate-policies-to-3/#changes-that-affect-universal-resources
+next_steps:
+  - text: Learn about the Universal control plane
+    url: /mesh/universal-control-plane/
+  - text: Learn about the Universal data plane
+    url: /mesh/universal-data-plane/
 ---
 
 Universal mode runs {{site.mesh_product_name}} anywhere that isn't a Kubernetes cluster: virtual
-machines, ECS tasks, bare metal, or a mix. It is what brings workloads outside Kubernetes into
-the same mesh, under the same policies, as the ones inside it.
+machines, ECS tasks, bare metal, or a mix.
 
-Two situations call for it, and only one of them is a choice:
+Universal mode is used for two purposes:
 
-- **Workloads that aren't on Kubernetes.** A VM fleet or an ECS service joins the mesh through
-  a Universal data plane proxy, and policies target it the same way they target a Pod.
-- **The global control plane, in every multi-zone deployment.** As of 3.0, a Kubernetes-native
-  global control plane isn't supported. `kuma-cp` rejects `mode: global` with
-  `environment: kubernetes`, and rejects it with `store.type: kubernetes` as well. A global
+- Deploying a global control plane: Kubernetes-native
+  global control planes aren't supported. A global
   control plane runs `environment: universal` against a non-Kubernetes store, even when the
-  process itself happens to be deployed on Kubernetes. Zone control planes on Kubernetes are
-  unaffected.
+  process itself is deployed on Kubernetes.
+- Managing workloads that aren't on Kubernetes: A VM fleet or an ECS service joins the mesh through
+  a Universal data plane proxy, and policies target it the same way they target a Pod.
+
 
 ## Differences from Kubernetes
 
 On Kubernetes the control plane watches the API server and derives most of the mesh from what is
-already there. A Pod becomes a `Dataplane`. A `Service` becomes a `MeshService`. Ports and
+already there. A Pod becomes a `Dataplane` and a `Service` becomes a `MeshService`. Ports and
 protocols come from the `Service` definition. The injector adds the sidecar, wires transparent
 proxying, and hands the proxy a token.
 
-On Universal there is no API server to watch, so you have to declare those inputs. That is the
-whole of the difference: **the same model, with the inputs supplied by you rather than inferred
-from Kubernetes objects.**
-
-That doesn't mean you hand-maintain everything. The control plane still generates a good deal
-from what you declare, and the following table separates the two.
-
-## Responsibilities
+On Universal there is no API server to watch, so you have to declare those inputs.
 
 {% table %}
 columns:
@@ -63,31 +61,31 @@ columns:
 rows:
   - concern: "Registering a proxy"
     k8s: "The injector adds the sidecar to a Pod and the control plane creates the `Dataplane`."
-    universal: "**You run `kuma-dp` and supply the `Dataplane` resource**, either applied ahead of time or passed inline with `--dataplane-file`."
+    universal: "You run `kuma-dp` and supply the `Dataplane` resource, either applied ahead of time or passed inline with `--dataplane-file`."
   - concern: "Which ports a workload exposes"
     k8s: "Read from the `Service` and the Pod's container ports."
-    universal: "**You declare `networking.inbound[]`**, with a `port` and, where they differ, a `servicePort` and `serviceAddress`."
+    universal: "You declare `networking.inbound[]` with a `port`, and a `servicePort` and `serviceAddress` where they differ."
   - concern: "The protocol of a port"
     k8s: "Derived from the `Service` port's `appProtocol`."
-    universal: "**You set `networking.inbound[].protocol`.** Unset means TCP, and the port silently loses every L7 policy."
+    universal: "You set `networking.inbound[].protocol`. If unset, it defaults to TCP and the port silently loses every L7 policy."
   - concern: "Which destinations a proxy can reach"
     k8s: "The control plane generates outbounds."
-    universal: "**You declare `networking.outbound[]` with a `backendRef`**, or, with transparent proxying, list destinations in `networking.transparentProxying.reachableBackends`. With neither, the proxy reaches nothing unless the control plane sets `KUMA_DEFAULTS_RESTRICT_OUTBOUND=false`."
+    universal: "You declare `networking.outbound[]` with a `backendRef`, or, with transparent proxying, list destinations in `networking.transparentProxying.reachableBackends`. With neither, the proxy reaches nothing unless the control plane sets `KUMA_DEFAULTS_RESTRICT_OUTBOUND=false`."
   - concern: "Labels that policies select on"
     k8s: "Taken from Pod labels."
-    universal: "**You set them under the `Dataplane`'s top-level `labels`.**"
+    universal: "You set them under the `Dataplane`'s top-level `labels`."
   - concern: "The `MeshService` for a workload"
     k8s: "Generated from each `Service`, and read-only."
-    universal: "Generated by the control plane from the `kuma.io/workload` label; see [Control plane automation](#control-plane-automation). You own the label; it owns the resource."
+    universal: "Generated by the control plane from the `kuma.io/workload` label. For more information, see [Control plane automation](#control-plane-automation)."
   - concern: "Proxy authentication"
     k8s: "The proxy uses its Pod's ServiceAccount token."
-    universal: "**You issue a dataplane token** and pass it with `--dataplane-token-file`. Once a `MeshIdentity` issues workload-based identities, the token must be bound to the proxy's `kuma.io/workload` value (`--workload`)."
+    universal: "You issue a dataplane token and pass it with `--dataplane-token-file`. Once a `MeshIdentity` issues workload-based identities, the token must be bound to the proxy's `kuma.io/workload` value (`--workload`)."
   - concern: "Transparent proxying"
     k8s: "The injector configures it."
-    universal: "**You install the iptables rules** with `kumactl install transparent-proxy` (as root), then run `kuma-dp` as the user the rules exclude, with `--transparent-proxy`."
+    universal: "You install the iptables rules with `kumactl install transparent-proxy` (as root), then run `kuma-dp` as the user the rules exclude, with `--transparent-proxy`."
   - concern: "Readiness"
     k8s: "Taken from the Pod's readiness probe."
-    universal: "**You configure a service probe**, or report health from outside."
+    universal: "You configure a service probe, or report health from outside."
   - concern: "Workload identity"
     k8s: "SPIFFE path defaults to `/ns/{namespace}/sa/{service-account}`."
     universal: "SPIFFE path defaults to `/workload/{workload}`, which comes from the `kuma.io/workload` label."
@@ -95,85 +93,21 @@ rows:
 
 ## Control plane automation
 
-A Universal zone control plane isn't a passive store. Running against a non-Kubernetes store,
-in `zone` mode, it generates:
+A Universal zone control plane running against a non-Kubernetes store generates:
 
-- **`MeshService` resources**, one per distinct `kuma.io/workload` label value, with a port per
+- `MeshService` resources, one per distinct `kuma.io/workload` label value, with a port per
   inbound. It re-checks every 2 seconds by default
   (`KUMA_MESH_SERVICE_GENERATION_INTERVAL`), and removes a `MeshService` an hour after its last
-  proxy disappears (`KUMA_MESH_SERVICE_DELETION_GRACE_PERIOD`).
-- **`Workload` resources**, on the same basis.
-- **Virtual IPs and hostnames**, allocated from the IPAM ranges (`241.0.0.0/8` for
+  proxy disappears (`KUMA_MESH_SERVICE_DELETION_GRACE_PERIOD`). 
+  A `Dataplane` without that label generates nothing, and the workload has no `MeshService` for policies or routes to target.
+  Set `KUMA_MESH_SERVICE_GENERATION_INTERVAL` to `0` to turn generation off and manage `MeshService` resources by hand.
+- `Workload` resources, on the same basis.
+- Virtual IPs and hostnames, allocated from the IPAM ranges (`241.0.0.0/8` for
   `MeshService`, `242.0.0.0/8` for `MeshExternalService`), so a Universal workload reaches a
   destination by name rather than by address.
 
-So the practical rule for a workload is: **set `kuma.io/workload` on the `Dataplane`, and the
-`MeshService` follows.** A `Dataplane` without that label generates nothing, and the workload
-has no `MeshService` for policies or routes to target.
-
-Set `KUMA_MESH_SERVICE_GENERATION_INTERVAL` to `0` to turn generation off and manage
-`MeshService` resources by hand. The control plane logs
-`MeshService generator is disabled, MeshServices must be managed manually` when you do. Neither
-generator runs on a global control plane, or against a Kubernetes store.
-
-## Changes in 3.0 that only affect Universal
-
-Each of these changes is silent: the resource still applies, and the traffic behaves differently.
-
-{:.warning}
-> **Inbound `tags` are removed.** `networking.inbound[].tags` no longer exists. The field is
-> reserved in the schema and unknown fields are allowed when it is read, so a `Dataplane` still
-> carrying it applies without error and the tags are dropped. Any policy matching on those tags
-> stops matching, with nothing in the API to say so. Move them to the `Dataplane`'s top-level
-> `labels`.
-
-{:.warning}
-> **Outbounds need a `backendRef`.** `networking.outbound[].tags` is removed; an outbound is
-> defined by a `backendRef` naming a `MeshService`, `MeshExternalService` or
-> `MeshMultiZoneService`. A new `Dataplane` without one is rejected with
-> `backendRef: must be defined`, but a **stored** one carrying `tags` keeps being served, the
-> tags are discarded, and no outbound listener is generated, so the workload loses connectivity
-> to that destination.
-
-{:.warning}
-> **A port with no protocol is TCP.** `networking.inbound[].protocol` used to fall back to the
-> `kuma.io/protocol` tag. It no longer does. An inbound without the field is served as plain TCP
-> and loses the L7 filters: `MeshTimeout`'s HTTP timeouts, `MeshFaultInjection` entirely,
-> `MeshRateLimit`'s HTTP limits, HTTP access log fields, and HTTP-aware routing. Nothing rejects
-> the `Dataplane`.
-
-{:.warning}
-> **`MeshService` selectors lose `dataplaneTags`.** On a `MeshService` you wrote by hand,
-> `spec.selector.dataplaneTags` is removed, and an un-migrated selector is dropped on read,
-> leaving the service matching nothing and reporting `Unavailable`. Use `dataplaneLabels`.
-
-{:.warning}
-> **`reachableBackends` refs lose `name` and `namespace`.** Each ref in
-> `networking.transparentProxying.reachableBackends.refs[]` now selects by `kind` and `labels`.
-> A stored ref that still uses `name` resolves to nothing, and the proxy gets no outbounds for
-> it. Select by name with the `kuma.io/display-name` label instead.
-
-{:.warning}
-> **`networking.advertisedAddress` is removed.** It is dropped when the `Dataplane` is read, and
-> other proxies reach the workload on `networking.address`. A proxy behind NAT that relied on the
-> advertised address loses its inbound traffic.
-
-See [Migrate policies to {{site.mesh_product_name}} 3.x](/mesh/migrate-policies-to-3/) for the
-changes that apply to every environment.
-
 ## Zone proxies
-
-Standalone zone proxies are gone. `kuma-dp run --proxy-type=ingress|egress` exits with
-`.ProxyType "ingress" is not supported`, and `dataplane` is the only accepted value.
 
 A regular `Dataplane` that declares
 `networking.listeners` of type `ZoneIngress` or `ZoneEgress` serves cross-zone traffic. Those proxies authenticate the
-same way as any other: with a **dataplane token**, not a zone token. The data plane server no longer
-accepts tokens issued as zone tokens.
-
-## Next
-
-- [Universal control plane](/mesh/universal-control-plane/): modes, stores, and
-  joining a zone to a global.
-- [Universal data plane](/mesh/universal-data-plane/): the `Dataplane` resource,
-  tokens, and transparent proxying.
+same way as any other: with a dataplane token.
