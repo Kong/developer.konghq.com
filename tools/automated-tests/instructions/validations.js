@@ -238,10 +238,6 @@ async function executeRequest(
       const cause = error.cause
         ? ` (cause: ${error.cause.code || error.cause.message || error.cause})`
         : "";
-      log(`[debug] fetch failed for ${options.method} ${url}${cause}`);
-      console.error(
-        `[debug] fetch failed for ${options.method} ${url}${cause}`,
-      );
       error.message = `${error.message} for ${options.method} ${url}${cause}`;
 
       // The host fetch cannot reach Docker-internal addresses (on macOS, an
@@ -260,9 +256,6 @@ async function executeRequest(
         ...options,
         insecure: config.insecure,
       });
-      const fallbackMessage = `[fetch-fallback] ${options.method} ${url} is unreachable from the host; re-running inside the test container`;
-      log(fallbackMessage);
-      console.error(fallbackMessage);
       const result = await executeCommand(container, fallbackCommand);
       response = parseCurlResponse(result.output);
     }
