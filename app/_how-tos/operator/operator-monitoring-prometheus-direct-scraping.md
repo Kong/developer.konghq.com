@@ -130,8 +130,12 @@ You can verify that metrics are being collected by port-forwarding to the data p
 
 1. Access the metrics:
 
-   ```sh
-   timeout 120 bash -c 'until curl -s http://localhost:8100/metrics | grep -q kong_; do sleep 5; done'
-   curl -s http://localhost:8100/metrics | grep -m1 kong_
-   ```
-   {: data-test-step="block" }
+{% validation custom-command %}
+command: |
+  curl -s http://localhost:8100/metrics | grep -m1 kong_
+expected:
+  return_code: 0
+  message: 'kong_'
+render_output: false
+indent: 3
+{% endvalidation %}
