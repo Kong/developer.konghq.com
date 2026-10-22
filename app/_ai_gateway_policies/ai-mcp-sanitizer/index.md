@@ -208,7 +208,7 @@ The `recover_redacted` setting is `true` by default.
 ## Error handling
 
 The AI MCP Sanitizer Policy uses [`stop_on_error`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-stop-on-error) to decide what happens when the PII service is unreachable, returns a non-200 response, or returns a malformed response.
-The `stop_on_error` setting is `true` by default.
+When `stop_on_error` is `true`, {{site.ai_gateway}} fails the call. When it's `false`, the call continues without sanitization.
 
 ## Differences from the AI PII Sanitizer Policy
 
