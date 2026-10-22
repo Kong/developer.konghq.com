@@ -127,12 +127,7 @@ rows:
   - kind: "`Issuer`"
     apiVersion: "`cert-manager.io/v1`"
     scope: Namespaced
-    usage: Issue the TLS certificates when using cert-manager for webhook certificates
-
-  - kind: "`Lease`"
-    apiVersion: "`coordination.k8s.io/v1`"
-    scope: Namespaced
-    usage: Coordinate leader election between operator replicas{% endtable %}
+    usage: Issue the TLS certificates when using cert-manager for webhook certificates{% endtable %}
 <!--vale on-->
 
 ## Managing {{ site.operator_product_name }} resources
