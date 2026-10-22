@@ -220,9 +220,14 @@ spec:
 
 1.  Test the connection:
 
-    ```bash
-    curl -ivk --resolve example.localdomain.dev:443:$PROXY_IP https://example.localdomain.dev/echo
-    ```
-    {: data-test-step="block" }
+{% validation custom-command %}
+command: |
+  curl -ivk --resolve example.localdomain.dev:443:$PROXY_IP https://example.localdomain.dev/echo
+expected:
+  return_code: 0
+  message: 'Welcome, you are connected to node'
+render_output: false
+indent: 4
+{% endvalidation %}
 
     You should get TLS handshake and a 200 response.
