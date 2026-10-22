@@ -1,6 +1,7 @@
 ---
 name: release-changelog
-description: Use this skill when the user runs "/release-changelog", asks to "generate a release changelog", "write release PR description", "build preview links for release", or wants to summarize all docs changed in a release PR as a grouped list of links. Supports Kong Gateway (default) and Event Gateway, and is extensible to other products.
+description: |-
+  Use this skill whenever the user wants a list of the docs that changed in a product release: runs "/release-changelog", asks to "generate a release changelog", "write the release PR description", "build preview links for the release", "summarize what changed in the 1.3 or 3.16 release branch", or "what docs shipped in this release". Produces a grouped list of new and updated pages with live links and a description of what changed on each updated page. Supports Kong Gateway (default) and Event Gateway, and is extensible to other products. Use it even when the user does not name the skill, as long as the goal is a release docs summary.
 version: 2.0.0
 ---
 
@@ -39,7 +40,7 @@ git branch --show-current
 
 If the branch name does not look like a release branch for this product (e.g. `release/3.14`, `release/event-gateway-1.3`, `feat/3.14-docs`), warn the user:
 
-> Warning: current branch is `{branch}`. This may not be the release branch. The changelog will reflect all differences from `{BASE}` on this branch. Continue anyway or switch branches first.
+> Warning: current branch is `{branch}`. This may not be the release branch. The changelog will reflect all differences from `origin/{BASE_BRANCH}` on this branch. Continue anyway or switch branches first.
 
 Then proceed.
 
@@ -97,7 +98,7 @@ New files speak for themselves. List them with just the title and link, grouped 
 ### 6. Read metadata for each file
 
 **For `.md` page files**, read YAML frontmatter for:
-- `title`: link text. Resolve Liquid variables such as `{{site.event_gateway}}` using the profile's product-name table.
+- `title`: link text. Resolve Liquid variables such as `{{site.event_gateway}}` or `{{site.base_gateway}}` from the matching top-level keys in `jekyll.yml`.
 - `permalink`: canonical URL path
 - `description`: optional context for new files
 
@@ -109,7 +110,7 @@ If `permalink` is missing, derive the URL from the path using the profile's URL 
 
 ### 7. Handle auto-generated reference files
 
-Each profile lists auto-generated reference paths. Do not list those individually. Add a single line at the bottom of the output:
+Each profile lists its auto-generated reference paths under Special pages. Do not list those individually. Add a single line at the bottom of the output:
 
 ```
 _Auto-generated references updated: [Reference name](URL), [Reference name](URL)_
@@ -120,7 +121,7 @@ _Auto-generated references updated: [Reference name](URL), [Reference name](URL)
 If 5+ pages were all modified because of the same `_includes` partial change, collapse them into a single inline list with a parenthetical note:
 
 ```markdown
-**Logging plugins** (updated for custom log fields): [File Log](URL), [HTTP Log](URL), ...
+**Affected pages** (updated for the shared change): [Page A](URL), [Page B](URL), ...
 ```
 
 For smaller cases, still include the link but annotate with what the include change means to the reader, not the implementation detail.
@@ -196,9 +197,5 @@ If the user pastes an existing PR description or list of PRs, use it to suppleme
 
 ## Adding a product
 
-Copy [products/event-gateway.md](products/event-gateway.md) as a template, then fill in these sections: product name and Liquid variables, path filters, URL table, grouping rules, special pages, auto-generated references, output filename. Add the product to the list under "Invocation". To fill in the URL table, check real `permalink` values in the product's how-tos, references, and landing pages. Do not guess URL patterns.
+Copy [products/event-gateway.md](products/event-gateway.md) as a template, then fill in these sections: product name, path filters, URL table, special pages (including auto-generated references), grouping rules, output filename. Keep that section order so profiles stay comparable. Add the product to the list under "Invocation". To fill in the URL table, check real `permalink` values in the product's how-tos, references, and landing pages. Do not guess URL patterns.
 
-## Notes
-
-- Always prefer frontmatter `permalink` over path-derived URLs.
-- Production base URL: `https://developer.konghq.com`.

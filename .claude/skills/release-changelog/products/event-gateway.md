@@ -1,7 +1,6 @@
 # Profile: Kong Event Gateway (`event-gateway`)
 
 - Product name in headings: `Kong Event Gateway`
-- Liquid variables in titles: `{{site.event_gateway}}` = Kong Event Gateway, `{{site.event_gateway_short}}` = Event Gateway. Defined in `jekyll.yml` (`event_gateway`, `event_gateway_short`).
 - Output file: `docs/release-changelog/event-gateway/{VERSION}.md` (e.g. `event-gateway/1.3.md`)
 - Typical release branch: `release/event-gateway-{VERSION}`, diffed against `origin/main`.
 

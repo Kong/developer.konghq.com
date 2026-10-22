@@ -20,6 +20,19 @@ Include everything under `app/` that passes the baseline exclusions, except any 
 - `app/_landing_pages/foo.yaml` -> `/foo/` (derived from the file path; the page declares no `permalink`)
 - `app/_references/foo.md` -> read the `permalink` field
 
+## Special pages
+
+Handle these before grouping. They are not placed by the grouping rules.
+
+- **Breaking changes**: `gateway/breaking-changes*` goes under `## Changes`, always last.
+- **Auto-generated references**: files under `app/_references/gateway/pdk/` or `app/_references/gateway/cli/` are auto-generated version bumps. Do not list them individually. Collapse to:
+
+```
+_Auto-generated references updated: [Gateway CLI Reference](URL), [PDK Reference](URL)_
+```
+
+- **Bulk include changes**: when one `_includes` partial touches 5+ plugin pages (for example all logging plugins after a change to `log-custom-fields-by-lua.md`), collapse them into one line such as `**Logging plugins** (updated for custom log fields): [File Log](URL), [HTTP Log](URL), ...`.
+
 ## Grouping rules
 
 - **AI Gateway**: `ai-gateway/` files, `_kong_plugins/ai-*/`, AI how-tos. Sub-group by feature (A2A, providers, guardrails, semantic, MCP, partials).
@@ -28,15 +41,3 @@ Include everything under `app/` that passes the baseline exclusions, except any 
 - **MCP**: MCP plugin docs and how-tos.
 - **Observability**: `observability/` pages.
 - **Konnect**: `catalog/`, Dev Portal, and Konnect-specific content.
-
-## Special pages
-
-- Breaking changes: `gateway/breaking-changes*`. Always its own `## Changes` section at the end.
-
-## Auto-generated references
-
-Files under `app/_references/gateway/pdk/` or `app/_references/gateway/cli/` are auto-generated version bumps. Collapse to:
-
-```
-_Auto-generated references updated: [Gateway CLI Reference](URL), [PDK Reference](URL)_
-```
