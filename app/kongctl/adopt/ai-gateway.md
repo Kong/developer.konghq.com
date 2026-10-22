@@ -19,6 +19,10 @@ related_resources:
     url: /kongctl/adopt/
   - text: Declarative configuration with kongctl
     url: /kongctl/declarative/
+  - text: kongctl get ai-gateway
+    url: /kongctl/get/ai-gateway/
+  - text: kongctl list ai-gateway
+    url: /kongctl/list/ai-gateway/
 ---
 
 Apply the KONGCTL-namespace label to an existing {{site.konnect_short_name}} {{site.ai_gateway}} that is not currently managed by kongctl.

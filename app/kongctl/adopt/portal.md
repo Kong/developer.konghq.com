@@ -17,6 +17,10 @@ breadcrumbs:
 related_resources:
   - text: kongctl adopt commands
     url: /kongctl/adopt/
+  - text: kongctl get portal
+    url: /kongctl/get/portal/
+  - text: kongctl list portal
+    url: /kongctl/list/portal/
 ---
 
 Adopt existing Dev Portal configurations.
