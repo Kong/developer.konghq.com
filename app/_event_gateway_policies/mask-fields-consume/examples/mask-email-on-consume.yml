@@ -30,15 +30,13 @@ config:
         - match: "user.email"
       strategy:
         type: email
-        email:
-          local_part:
-            type: keep_chars
-            keep_chars:
-              first: 1
-              last: 0
-              phrase: "***"
-          domain:
-            type: keep_all
+        local_part:
+          type: keep_chars
+          first: 1
+          last: 0
+          phrase: "***"
+        domain:
+          type: keep_all
 
 tools:
   - konnect-api

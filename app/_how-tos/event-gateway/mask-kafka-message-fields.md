@@ -233,29 +233,25 @@ body:
           - match: customer.ssn
         strategy:
           type: keep_chars
-          keep_chars:
-            first: 0
-            last: 4
-            phrase: "***-**-"
+          first: 0
+          last: 4
+          phrase: "***-**-"
       - paths:
           - match: customer.email
         strategy:
           type: email
-          email:
-            local_part:
-              type: keep_chars
-              keep_chars:
-                first: 1
-                last: 0
-                phrase: "***"
-            domain:
-              type: keep_all
+          local_part:
+            type: keep_chars
+            first: 1
+            last: 0
+            phrase: "***"
+          domain:
+            type: keep_all
       - paths:
           - match: customer.name
         strategy:
           type: replace
-          replace:
-            phrase: REDACTED
+          phrase: REDACTED
 {% endkonnect_api_request %}
 <!--vale on-->
 

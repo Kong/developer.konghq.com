@@ -331,17 +331,17 @@ render_output: false
 {% endvalidation %}
 <!--vale on-->
 
-kafkactl prints `1 messages produced`, but that line is misleading. The produce request was rejected with the
-`POLICY_VIOLATION` error code, kafkactl exits with code 1, and the record never reaches the backend cluster:
+kafkactl reports that no message was produced and exits with code 1. The produce request was rejected with the
+`POLICY_VIOLATION` error code, so the record never reaches the backend cluster:
 
 ```shell
-1 messages produced
+0 messages produced
 Failed to produce message: kafka server: Request parameters do not satisfy the configured policy
 ```
 {:.no-copy-code}
 
 Unlike topic creation, the error doesn't contain the rule description, because the `Produce` response doesn't
-carry it. The record never reaches the backend cluster.
+carry it.
 
 ### Produce with full acknowledgement
 

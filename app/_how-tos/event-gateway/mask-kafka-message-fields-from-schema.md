@@ -285,8 +285,7 @@ body:
       - paths: 'record.value.schema.metadata.tags["PII"]'
         strategy:
           type: replace
-          replace:
-            phrase: REDACTED
+          phrase: REDACTED
 {% endkonnect_api_request %}
 <!--vale on-->
 
