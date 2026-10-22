@@ -52,7 +52,7 @@ Changelog for supported {{site.event_gateway}} versions.
   - [Record Transcode Produce policy reference](/event-gateway/policies/record-transcode-produce/)
   - [How-to: Consume Kafka records as JSON](/event-gateway/consume-kafka-records-as-json-with-event-gateway/)
   - [How-to: Produce Kafka records as Avro](/event-gateway/produce-kafka-records-as-avro-with-event-gateway/)
-- **AWS IAM authentication for backend clusters**: Virtual clusters can now authenticate to AWS MSK backend clusters using AWS IAM credentials, including assumed roles.
+- **AWS IAM authentication for backend clusters**: Backend clusters can now authenticate to AWS MSK using AWS IAM credentials, including assumed roles.
   - [Backend cluster reference: Authentication](/event-gateway/entities/backend-cluster/#authentication)
   - [How-to: Authenticate {{site.event_gateway}} connections to Kafka using AWS IAM](/event-gateway/configure-aws-iam-backend-cluster-auth/)
 - **Inline schemas and the `any` type in `schema_validation`**: You can now define validation schemas inline in the policy configuration instead of only referencing the Schema Registry, including references to other schemas, an `any` type that accepts any payload, and schema references supplied in record headers.
