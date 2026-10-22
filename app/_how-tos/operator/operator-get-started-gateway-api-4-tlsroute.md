@@ -187,20 +187,23 @@ You can now access the `echo` Service on port `9443` with SNI `tls9443.kong.exam
 
 In real-world usage, you would create a DNS record for `tls9443.kong.example` pointing to your proxy Service's public IP address, which causes TLS clients to add an SNI automatically. For this demo, add it manually using the OpenSSL CLI:
 
-```bash
-response=$(echo "hello" | openssl s_client -connect $PROXY_IP:9443 -servername tls9443.kong.example -quiet 2>/dev/null)
-echo "$response"
-echo "$response" | grep hello
-```
-{: data-test-step="block" data-test-retry-count="6" }
+{% validation custom-command %}
+command: |
+  echo "hello" | openssl s_client -connect $PROXY_IP:9443 -servername tls9443.kong.example -quiet 2>/dev/null
+expected:
+  return_code: 1
+  message: 'hello'
+render_output: false
+{% endvalidation %}
 
-The `echo` prints the full response, and the `grep` confirms that the response contains the text you sent. The results should look like this:
+The results should look like this:
 
 ```text
 Welcome, you are connected to node kind-control-plane.
 Running on Pod echo-5f44d4c6f9-krnhk.
 In namespace kong.
 With IP address 10.244.0.26.
+Through TLS connection.
 hello
 ```
 {:.no-copy-code}
@@ -299,22 +302,15 @@ kubectl wait --for=condition=Programmed gateway/kong -n kong --timeout=5m
 
 Reuse the `$PROXY_IP` you exported earlier and connect to the new listener:
 
-```bash
-response=$(echo "hello" | openssl s_client -connect $PROXY_IP:9444 -servername tls9444.kong.example -quiet 2>/dev/null)
-echo "$response"
-echo "$response" | grep hello
-```
-{: data-test-step="block" data-test-retry-count="6" }
+{% validation custom-command %}
+command: |
+  echo "hello" | openssl s_client -connect $PROXY_IP:9444 -servername tls9444.kong.example -quiet 2>/dev/null
+expected:
+  return_code: 0
+  message: 'hello'
+render_output: false
+{% endvalidation %}
 
-The results should look like this:
-
-```text
-Welcome, you are connected to node kind-control-plane.
-Running on Pod echo-5f44d4c6f9-krnhk.
-In namespace kong.
-With IP address 10.244.0.26.
-hello
-```
-{:.no-copy-code}
+You should see similar output as previously shown in the example using Passthrough TLS mode.
 
 Unlike the Passthrough case, the TLS handshake terminates at {{ site.base_gateway }}: the certificate presented to the client is the one stored in the labeled Secret, not a certificate served by the `echo` backend. You can confirm this by dropping the `-quiet` flag and inspecting the `subject=` line in the openssl output — it should match `CN=tls9444.kong.example`.
