@@ -35,60 +35,90 @@ related_resources:
     url: /ai-gateway/entities/ai-consumer/
 ---
 
-Intro
+Access management allows you to define who can use your organization's resources (like models or MCP servers) in {{site.ai_gateway}}.
 
 ## How access management works
 
-<!--
-Access management answers two questions: who is making a request, and what are they allowed to do with it.
-The "who" is a user or an agent. Groups let you give many of them the same rules at once. Identity providers are how Kong checks that someone is who they say they are.
-Credentials work in two directions. A virtual key is what a user or agent shows to get into {{site.ai_gateway}} (inbound). Token Vault holds the credentials the gateway shows to other services on a user's behalf (outbound).
-A virtual key has no rules of its own. It borrows the access rules, spend limits, and department of whoever holds it.
-Optional: a small table with holder, inbound credential, and outbound credential. Add a diagram only if asked. -->
+Access management uses Kong Identity features to answer two questions:
+
+* Who is making the request?
+* What are they allowed to do with it?
+
+You can give specific permissions to users individually or in bulk using [groups](/identity/groups/).
+
+<!-- TODO: scoped to the Dogfood and M1.0 jobs in the "Kong Identity & Token Vault: Jobs to Be Done for AI-X M1" sheet (10/19 priority). Teams, org chart import, spend limits, projects, agent management, user deactivation, key rotation, and access rules are M1.1 or later. Add them as they ship. -->
 
 ## Users
 
-<!--
-A user is a person. {{site.ai_gateway}} tracks the traffic that person sends to models and MCP servers, so it can apply access rules and spend limits to them.
-Users get into the system in one of three ways: an admin uploads a CSV of the org chart, an admin creates them by hand, or they are created automatically the first time they log in through OIDC.
-Once a user exists, they can hold virtual keys, belong to groups, and have a department and spend limits.
-Users can also look after their own account: see how much they have spent, create and revoke their own keys, and sign up for or revoke their own Token Vault credentials.
-Link to /identity/principals/ for more on how identities are stored. -->
+A user is a person that gets into the system in one of two ways:
+
+* An admin manually creates them.
+* {{site.identity}} creates them automatically the first time they log in through OIDC.
+
+Once a user exists, an admin can edit their details, add them to or remove them from groups, create virtual keys for them, or delete them. A user can also set their own virtual key.
+
+You can view all users in one searchable table. Search matches on name only. You can filter the table by team, source, and status, and show or hide columns such as metadata and labels.
+
+A user can have a cost center, which is a free-form string. {{site.ai_gateway}} doesn't keep a list of cost centers or validate the value.
+
+For more on how identities are stored, see [Principals and directories](/identity/principals/).
 
 ## Agents
 
-<!--
 An agent is the identity record for a piece of software that calls models or MCP servers. It might act for itself, or on behalf of users.
-Like a user, an agent has its own department and its own access rules. It also has its own credentials: an API key, an OIDC issuer and client, or both. It has administrators, and it can be linked to a Registry record.
-Warn readers that this is not the same thing as an AI Agent. An AI Agent is a gateway entity, the thing agents get called through. An agent here is the caller. Link to /ai-gateway/entities/ai-agent/.
-Do not say how agents get created until the Access Management team confirms whether admins create them or they come through Registry approval. -->
+
+An agent here is the caller. It's not the same thing as an [AI Agent](/ai-gateway/entities/ai-agent/), which is a {{site.ai_gateway}} entity that agents get called through.
+
+<!-- TODO: do not say how agents get created until the Access Management team confirms. Agent management is M1.1 or later, but the M1.0 key creation flow lets you pick an agent as the key holder. -->
 
 ## Groups
 
-<!--
-A group is a list of users or agents that share the same rules. Instead of setting access and spend limits on each member, you set them once on the group and every member gets them.
-Admins create groups by hand. A group cannot contain another group.
-A group can hold a virtual key.
-If no rule says a request is allowed, it is denied. When several rules apply to the same request: any explicit deny wins, otherwise any explicit allow wins, otherwise the request is denied.
-Mention Projects here only if the team confirms they belong on this page. -->
+A group is a list of users that share the same rules. Instead of setting rules on each member, you set them once on the group.
+
+Admins create groups by hand. A group can't contain another group.
+
+In the Konnect UI, you can:
+
+* View groups in a list.
+* Create a group with a name and description.
+* Add labels and metadata to a group.
+* Add users to a group, either from the groups screen or from a user.
+* Edit a group and view its details.
+* Delete a group.
+
+Groups don't have a cost center.
 
 ## Identity Providers
 
-<!--
-An identity provider is an outside service, such as Okta or Auth0 (or one you run yourself), that signs the tokens people and agents present. Kong trusts the ones you list here and uses them to check those tokens are genuine.
-When you set up outbound authentication in Token Vault, you pick from this same list.
-New users who log in for the first time are created through these issuers.
-Needs SME review: the sources have very little detail on this section. -->
+An identity provider is an outside service, such as Okta or Auth0, that signs the tokens people and agents present. Kong trusts the ones you list and uses them to check that those tokens are genuine.
+
+Token Vault needs at least one trusted identity provider to verify callers. You can add a provider, remove one you no longer want Token Vault to rely on, and review the table of trusted providers with their display names, issuer URLs, and linked identities.
+
+<!-- TODO: needs SME review. The sources have very little detail on this section. -->
 
 ## Token Vault
 
-<!--
-Summary then link to token vault page -->
+Token Vault stores credentials so that {{site.ai_gateway}} can call outside services on behalf of a caller. Setting it up involves:
+
+1. Adding at least one trusted [identity provider](#identity-providers).
+1. Generating a public encryption key for the vault and setting the private key reference on a gateway.
+1. Creating credential providers. A credential provider uses either OAuth or a static API key.
+
+When you set up an MCP server, you can choose a credential provider for outbound authentication as an alternative to pass-through. You can view the credentials stored in the vault from the provider and identity provider detail pages.
+
+<!-- TODO: link to the Token Vault page once it exists. -->
 
 ## Virtual Keys
 
-<!--
-A virtual key is an API key that lets a user, agent, group, or project call {{site.ai_gateway}}. Whoever holds the key is who the gateway treats the caller as.
-The key has no settings of its own. It uses the holder's access rules, spend limits, and department. If you need different limits, give the key to a different holder.
-Today a key has no scope, spend cap, or throughput limit of its own. The only action on an existing key is revoke. To rotate a key, create a new one and revoke the old one. The key value is shown once, when it is created.
-Logs and metrics show both the key that was used and its holder. -->
+A virtual key is an API key that lets a caller use {{site.ai_gateway}}. Whoever holds the key is who the gateway treats the caller as.
+
+<!-- TODO: confirm the supported holder types for M1.0. The sheet lists user, agent, group, or project, but project and agent management are M1.1 or later. -->
+
+You can create a key in two ways:
+
+* Have {{site.ai_gateway}} generate the key.
+* Set your own key value.
+
+In both cases, you set an expiry. When you create a key for someone else, you pick the holder, can filter the holder list by users or agents, and can add a new user or agent inline.
+
+The key list shows each key's holder, status, expiry, and creation date. You can revoke or delete a key. Rotating a key isn't supported yet. To rotate a key, create a new one and revoke the old one.
