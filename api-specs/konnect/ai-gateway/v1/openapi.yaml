@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect AI Gateway
-  version: 2.2.19
+  version: 2.2.20
   description: The API for configuring AI Gateways in Konnect.
   x-extensions-note: |
     Entities and properties may be annotated with `x-min-runtime-version`, the
@@ -18,8 +18,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@8531e46bd338268a084280368138a8f6ac362c90
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8531e46bd338268a084280368138a8f6ac362c90'
+  x-oas-source: kong/platform-api@5fe17c0533eb72a6958eba78860d48ed210dd9d3
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/5fe17c0533eb72a6958eba78860d48ed210dd9d3'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -13699,6 +13699,7 @@ components:
             additionalProperties: false
             required:
               - name
+              - location
             properties:
               name:
                 description: |
