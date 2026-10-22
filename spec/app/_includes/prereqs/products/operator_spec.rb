@@ -60,7 +60,7 @@ RSpec.describe 'prereqs/products/operator.md' do
       install = html.find('.custom-code-block[data-test-prereq="block"]',
                           text: 'helm upgrade --install kong-operator kong/kong-operator')
       expect(install.find('pre').text).to include(
-        'kubectl -n kong-system wait --for=condition=Available=true --timeout=120s ' \
+        'kubectl -n kong-system wait --for=condition=Available=true --timeout=300s ' \
         'deployment/kong-operator-kong-operator-controller-manager'
       )
     end
@@ -81,7 +81,7 @@ RSpec.describe 'prereqs/products/operator.md' do
           --create-namespace \
            --set image.tag= \
           --set global.webhooks.options.certManager.enabled=true
-          kubectl -n kong-system wait --for=condition=Available=true --timeout=120s deployment/kong-operator-kong-operator-controller-manager
+          kubectl -n kong-system wait --for=condition=Available=true --timeout=300s deployment/kong-operator-kong-operator-controller-manager
       CMD
     end
   end
