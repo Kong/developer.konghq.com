@@ -137,7 +137,7 @@ content: |
           spec:
             containers:
             - name: proxy
-              image: kong/kong-gateway:3.9' | kubectl apply -f -
+              image: kong/kong-gateway:{{ site.data.gateway_latest.release }}' | kubectl apply -f -
   ```
   {: data-test-step="block" }
 {% endon_prem %}
