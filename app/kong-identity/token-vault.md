@@ -136,7 +136,7 @@ Key facts:
 
 ### The {{site.ai_gateway}} role
 
-{{site.ai_gateway}} acts as a bridge between the user and the third-party service, as the sole runtime that calls the {{site.identity}} Token Vault. Agents and MCP clients never call the Token Vault directly. No matter which agent a user is running, the Token Vault only ever interacts with {{site.ai_gateway}}, never with the agent or the MCP server itself.
+{{site.ai_gateway}} acts as a bridge between the user and the third-party service.
 
 You attach policies to the {{site.ai_gateway}}, which is where you scope and enforce call behaviors. The Token Vault doesn't hold any policy, it only verifies whose token this is and hands back the matching credential if one exists. For example, in a workflow configured with Okta as the IdP, the {{site.ai_gateway}}:
 
