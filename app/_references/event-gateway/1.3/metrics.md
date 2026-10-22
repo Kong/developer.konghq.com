@@ -122,11 +122,71 @@ Number of active tasks currently tracked by the task tracker.
 
 _None._
 
+## `kong.dataplane.analytics.events`
+
+|Type|Unit|
+|:---|:---|
+|Counter|`{event}`|
+
+Analytics events handed to the pipeline.
+
+**Labels:**
+
+_None._
+
+## `kong.dataplane.analytics.messages.sent`
+
+|Type|Unit|
+|:---|:---|
+|Counter|`{message}`|
+
+Analytics batches written to the backend.
+
+**Labels:**
+
+_None._
+
+## `kong.dataplane.analytics.sent`
+
+|Type|Unit|
+|:---|:---|
+|Counter|`By`|
+
+Compressed analytics payload bytes written to the backend.
+
+**Labels:**
+
+_None._
+
+## `kong.dataplane.analytics.serializer.errors`
+
+|Type|Unit|
+|:---|:---|
+|Counter|`{event}`|
+
+Errors on the analytics serializer queue.
+
+**Labels:**
+
+_None._
+
+## `kong.dataplane.analytics.websocket.errors`
+
+|Type|Unit|
+|:---|:---|
+|Counter|`{error}`|
+
+Errors on an established analytics websocket.
+
+**Labels:**
+
+_None._
+
 ## `kong.dataplane.lifecycle.component.ready`
 
 |Type|Unit|
 |:---|:---|
-|Gauge|`1`|
+|Gauge|`{state}`|
 
 Is a specific component ready; the service being ready implies all components are ready.
 
@@ -138,7 +198,7 @@ Is a specific component ready; the service being ready implies all components ar
 
 |Type|Unit|
 |:---|:---|
-|Gauge|`1`|
+|Gauge|`{state}`|
 
 Is the service healthy.
 
@@ -150,7 +210,7 @@ _None._
 
 |Type|Unit|
 |:---|:---|
-|Gauge|`1`|
+|Gauge|`{state}`|
 
 Is the service ready.
 
@@ -321,25 +381,6 @@ The number of attempts to encrypt records. This includes both successful and fai
 - `kong.konnect.backend_cluster.name`: The Konnect backend cluster name
 - `kong.keg.component`: The component name
 
-## `kong.keg.kafka.kscheme.attempts`
-
-> **Deprecated.** Use `kong.keg.kafka.policy.invocations` instead.
-
-|Type|Unit|
-|:---|:---|
-|Counter|`{attempt}`|
-
-The number of attempts to run kscheme scripts. This includes both successful and failed calls
-
-**Labels:**
-
-- `kong.keg.result`: The result of the operation (success or failure) (one of `success`, `fail`)
-- `kong.konnect.virtual_cluster.id`: The Konnect virtual cluster identifier
-- `kong.konnect.virtual_cluster.name`: The Konnect virtual cluster name
-- `kong.konnect.backend_cluster.id`: The Konnect backend cluster identifier
-- `kong.konnect.backend_cluster.name`: The Konnect backend cluster name
-- `kong.keg.component`: The component name
-
 ## `kong.keg.kafka.metadata.update.duration`
 
 |Type|Unit|
@@ -377,7 +418,9 @@ The number of times the policy condition failed to execute due to an error.
 
 **Labels:**
 
-_None._
+- `kong.konnect.policy.id`: The Konnect policy identifier
+- `kong.konnect.policy.name`: The Konnect policy name
+- `kong.keg.component`: The component name
 
 ## `kong.keg.kafka.policy.invocation.duration`
 
@@ -635,7 +678,7 @@ Emitted (value=1) when a topic alias shadows a physical topic name.
 
 ## `kong.keg.konnect.analytics.bytes.sent`
 
-> **Deprecated.** Use `kong.keg.konnect.analytics.sent` instead: the standard unit `By` belongs in metric metadata, not in the name.
+> **Deprecated.** Use `kong.dataplane.analytics.sent` instead.
 
 |Type|Unit|
 |:---|:---|
@@ -649,6 +692,8 @@ _None._
 
 ## `kong.keg.konnect.analytics.messages.sent`
 
+> **Deprecated.** Use `kong.dataplane.analytics.messages.sent` instead.
+
 |Type|Unit|
 |:---|:---|
 |Counter|`{message}`|
@@ -660,6 +705,8 @@ Total number of analytics messages sent to the analytics endpoint.
 _None._
 
 ## `kong.keg.konnect.analytics.queue.dropped`
+
+> **Deprecated.** Use `otel.sdk.processor.log.processed` with attribute `error.type="queue_full"` instead.
 
 |Type|Unit|
 |:---|:---|
@@ -673,6 +720,8 @@ _None._
 
 ## `kong.keg.konnect.analytics.queue.events`
 
+> **Deprecated.** Use `kong.dataplane.analytics.events` instead.
+
 |Type|Unit|
 |:---|:---|
 |Counter|`{event}`|
@@ -685,6 +734,8 @@ _None._
 
 ## `kong.keg.konnect.analytics.sent`
 
+> **Deprecated.** Use `kong.dataplane.analytics.sent` instead.
+
 |Type|Unit|
 |:---|:---|
 |Counter|`By`|
@@ -696,6 +747,8 @@ Total bytes sent in binary websocket messages to the analytics endpoint.
 _None._
 
 ## `kong.keg.konnect.analytics.websocket.errors`
+
+> **Deprecated.** Use `kong.dataplane.analytics.websocket.errors` instead.
 
 |Type|Unit|
 |:---|:---|
@@ -729,7 +782,7 @@ The time sending and receiving the response to a request to the Konnect control 
 
 |Type|Unit|
 |:---|:---|
-|Gauge|`1`|
+|Gauge|`{state}`|
 
 Is a specific component ready; the service being ready implies all components are ready.
 
@@ -743,7 +796,7 @@ Is a specific component ready; the service being ready implies all components ar
 
 |Type|Unit|
 |:---|:---|
-|Gauge|`1`|
+|Gauge|`{state}`|
 
 Is the service healthy.
 
@@ -757,7 +810,7 @@ _None._
 
 |Type|Unit|
 |:---|:---|
-|Gauge|`1`|
+|Gauge|`{state}`|
 
 Is the service ready.
 
@@ -812,3 +865,66 @@ Counts the result of every request rule evaluation. Incremented once per evaluat
 - `kong.konnect.backend_cluster.id`: The Konnect backend cluster identifier
 - `kong.konnect.backend_cluster.name`: The Konnect backend cluster name
 - `kong.keg.component`: The component name
+
+## `kong.tokio.global_queue.depth`
+
+|Type|Unit|
+|:---|:---|
+|UpDownCounter|`{task}`|
+
+Tasks waiting in a Tokio runtime's global queue.
+
+**Labels:**
+
+- `kong.tokio.runtime`: The Tokio runtime the value belongs to: `main` for the dataplane's `#[tokio::main]` one, `otlp_export` for the OTLP exporters' one, or another runtime's own name.
+
+## `kong.tokio.task.count`
+
+|Type|Unit|
+|:---|:---|
+|UpDownCounter|`{task}`|
+
+Tasks alive in a Tokio runtime.
+
+**Labels:**
+
+- `kong.tokio.runtime`: The Tokio runtime the value belongs to: `main` for the dataplane's `#[tokio::main]` one, `otlp_export` for the OTLP exporters' one, or another runtime's own name.
+
+## `kong.tokio.worker.busy.time`
+
+|Type|Unit|
+|:---|:---|
+|Counter|`s`|
+
+Time a Tokio worker thread has spent processing work.
+
+**Labels:**
+
+- `kong.tokio.runtime`: The Tokio runtime the value belongs to: `main` for the dataplane's `#[tokio::main]` one, `otlp_export` for the OTLP exporters' one, or another runtime's own name.
+- `kong.tokio.worker`: Index of the worker thread within its Tokio runtime, an integer.
+
+## `kong.tokio.worker.count`
+
+|Type|Unit|
+|:---|:---|
+|UpDownCounter|`{thread}`|
+
+Worker threads of a Tokio runtime.
+
+**Labels:**
+
+- `kong.tokio.runtime`: The Tokio runtime the value belongs to: `main` for the dataplane's `#[tokio::main]` one, `otlp_export` for the OTLP exporters' one, or another runtime's own name.
+
+## `otel.sdk.processor.log.errors`
+
+> **Deprecated.** Use `otel.sdk.processor.log.processed` with attribute `error.type="queue_full"` instead.
+
+|Type|Unit|
+|:---|:---|
+|Counter|`{log_record}`|
+
+The number of log records dropped because the log processor's queue was full.
+
+**Labels:**
+
+_None._
