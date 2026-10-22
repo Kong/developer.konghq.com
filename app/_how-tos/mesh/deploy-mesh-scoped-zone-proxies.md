@@ -131,24 +131,12 @@ cleanup:
         ```sh
         docker network rm guide-mz-net
         ```
-    - title: Delete the {{site.konnect_short_name}} resources
+    - title: Delete the control plane
+      include_content: cleanup/products/mesh/v3/control-plane-api
+    - title: Delete the zone-1 system account
+      include_content: cleanup/products/mesh/v3/system-account-api
+    - title: Delete the zone-2 system account
       content: |
-        Delete the `example-cp` control plane. This also removes its mesh configuration:
-
-        ```sh
-        curl --fail-with-body -sS -X DELETE \
-          "https://$KONNECT_REGION.api.konghq.com/v1/mesh/control-planes/$CONTROL_PLANE_ID" \
-          -H "Authorization: Bearer $KONNECT_TOKEN"
-        ```
-
-        Delete the `mesh-zone-1` system account:
-
-        ```sh
-        curl --fail-with-body -sS -X DELETE \
-          "https://global.api.konghq.com/v3/system-accounts/$ACCOUNT_ID" \
-          -H "Authorization: Bearer $KONNECT_TOKEN"
-        ```
-
         Delete the `mesh-zone-2` system account:
 
         ```sh
@@ -209,7 +197,7 @@ This guide connects two Kubernetes zones to a {{site.konnect_short_name}}-manage
 
 ## Verify the zone connections
 
-{% include md/mesh/v3/how-tos/verify-zone-connection.md zones="zone-1,zone-2" %}
+{% include md/mesh/v3/how-tos/verify-zone-connection-kongctl.md zones="zone-1,zone-2" %}
 
 ## Create a mesh and secure the test traffic
 

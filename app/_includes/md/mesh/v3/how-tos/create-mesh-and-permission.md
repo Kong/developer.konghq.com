@@ -1,11 +1,4 @@
 {%- assign kubectl_context = '' -%}{%- if include.kube_context %}{% assign kubectl_context = ' --context ' | append: include.kube_context %}{% endif -%}
-1. Confirm that `kongctl` can reach the global control plane:
-
-   ```sh
-   kongctl get mesh resource-types --control-plane-id "$CONTROL_PLANE_ID" --region "$KONNECT_REGION" \
-     --pat "$KONNECT_TOKEN"
-   ```
-
 1. Create a new `konnect-demo` mesh and a demo identity provider on the global control plane:
 
    ```sh

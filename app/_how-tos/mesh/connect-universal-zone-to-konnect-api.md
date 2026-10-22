@@ -39,40 +39,17 @@ next_steps:
 cleanup:
   inline:
     - title: Stop the zone control plane
-      content: |
-        Stop the control plane this guide started:
-
-        ```sh
-        kill "$(cat "$MESH_INSTALL_DIR/kuma-cp.pid")"
-        ```
-    - title: Delete the {{site.konnect_short_name}} resources
-      content: |
-        Delete the `example-cp` control plane. This also removes its mesh configuration:
-
-        ```sh
-        curl --fail-with-body -sS -X DELETE \
-          "https://$KONNECT_REGION.api.konghq.com/v1/mesh/control-planes/$CONTROL_PLANE_ID" \
-          -H "Authorization: Bearer $KONNECT_TOKEN"
-        ```
-
-        Delete the `mesh-zone-1` system account:
-
-        ```sh
-        curl --fail-with-body -sS -X DELETE \
-          "https://global.api.konghq.com/v3/system-accounts/$ACCOUNT_ID" \
-          -H "Authorization: Bearer $KONNECT_TOKEN"
-        ```
+      include_content: cleanup/products/mesh/v3/universal-zone
+    - title: Delete the control plane
+      include_content: cleanup/products/mesh/v3/control-plane-api
+    - title: Delete the system account
+      include_content: cleanup/products/mesh/v3/system-account-api
 min_version:
   mesh: '3.0'
 ---
 
 This guide creates a {{site.konnect_short_name}}-managed global control plane and connects a Universal (VM or bare-metal) zone.
 
-Set the region where you will create the global control plane:
-
-```sh
-export KONNECT_REGION='us'
-```
 
 ## Create a global control plane in {{site.konnect_short_name}}
 
@@ -88,4 +65,4 @@ export KONNECT_REGION='us'
 
 ## Validate
 
-{% include md/mesh/v3/how-tos/verify-zone-connection.md %}
+{% include md/mesh/v3/how-tos/verify-zone-connection-kongctl.md %}

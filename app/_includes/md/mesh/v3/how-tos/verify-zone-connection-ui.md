@@ -20,5 +20,3 @@ If a zone is missing or not **Online**, check:
 * Outbound access to the KDS address
 * The control plane ID
 * The system account's `Connector` role and token
-
-In the logs, `Unauthenticated` means the KDS address or token is wrong, and `PermissionDenied` means the system account is missing the `Connector` role.
