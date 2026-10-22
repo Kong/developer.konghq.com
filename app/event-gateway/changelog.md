@@ -31,10 +31,10 @@ Changelog for supported {{site.event_gateway}} versions.
 **Release date**: 2026/10/26
 
 ### Breaking Changes
-- **Debug and profiling endpoints are disabled by default and moved to a dedicated listener**: `/debug/pprof/*` no longer share the health/metrics listener. Enable them with `KEG__RUNTIME__DEBUG_LISTENER_ADDRESS_PORT` (e.g. `0.0.0.0:8081`); the `KEG__ENABLE_DEBUG_ENDPOINTS` boolean is removed. This lets you firewall profiling endpoints apart from widely-scraped endpoints.
+- **Debug and profiling endpoints are disabled by default and moved to a dedicated listener**: `/debug/pprof/*` no longer share the health/metrics listener. Enable them with `KEG__RUNTIME__DEBUG_LISTENER_ADDRESS_PORT` (for example, `0.0.0.0:8081`); the `KEG__ENABLE_DEBUG_ENDPOINTS` boolean is removed. This lets you firewall profiling endpoints apart from widely-scraped endpoints.
 - **Lifecycle metrics renamed**: `kong.keg.lifecycle.*` metrics are now `kong.dataplane.lifecycle.*`, and the `kong.keg.component` label key is now `kong.dataplane.component`. Old names are still emitted as deprecated aliases during the migration window. Update dashboards and alerts.
 - **Kafka response error metrics renamed**: `kong.keg.kafka.response.received.errors` → `kong.keg.kafka.response.received_errors` and `kong.keg.kafka.response.sent.errors` → `kong.keg.kafka.response.sent_errors` (old names were ambiguous). Old names are still emitted as deprecated aliases.
-- **Konnect analytics metrics renamed**: The `kong.keg.konnect.analytics.*` series moved to `kong.dataplane.analytics.*` (e.g. `kong.dataplane.analytics.events`, `kong.dataplane.analytics.sent`). Old names are still emitted as deprecated aliases.
+- **Konnect analytics metrics renamed**: The `kong.keg.konnect.analytics.*` series moved to `kong.dataplane.analytics.*` (for example, `kong.dataplane.analytics.events`, `kong.dataplane.analytics.sent`). Old names are still emitted as deprecated aliases.
 - **`KEG__CONFIG_POLL_INTERVAL` removed**: the control plane/data plane protocol now uses long-polling, so the interval can no longer be configured.
 - **Deprecated metrics**: `kong.keg.konnect.request.duration` (use `http.client.request.duration` with the `kong.http.client.name` label), `kong.keg.konnect.analytics.queue.dropped` and `otel.sdk.processor.log.errors` (use `otel.sdk.processor.log.processed` with the `error.type="queue_full"` attribute).
 
@@ -62,10 +62,10 @@ Changelog for supported {{site.event_gateway}} versions.
   - [ACL policy reference](/event-gateway/policies/acl/)
 
 ### Bug Fixes
-- **Producing with `acks=0` could misbehave when records were rejected**: The broker never replies to `acks=0` Produce requests and may terminate the connection, which broke the proxy's request/response assumptions. The proxy now mirrors broker behavior for `acks=0`, including closing the connection when the broker would.
-- **Invalid encryption metadata header bytes were silently ignored**: When an existing `kong/enc` metadata header could not be decoded, the encryption policy silently dropped the previously applied keys. It now surfaces an error for the record instead.
-- **`encrypt_fields`/`decrypt_fields` policies could not use the `mark` failure mode**: These sub-policies used a restricted failure-mode schema. They now accept the standard produce/consume failure modes, including `mark`.
-- **Topic UUID in schema metadata namespaces was not resolved**: The namespace UUID was left unresolved.
+- **Producing with `acks=0` could misbehave when records were rejected**: Fixed an issue where the broker never replied to `acks=0` produce requests and could terminate the connection, which broke the proxy's request/response assumptions. The proxy now mirrors broker behavior for `acks=0`, including closing the connection when the broker would.
+- **Invalid encryption metadata header bytes were silently ignored**: Fixed an issue where when an existing `kong/enc` metadata header could not be decoded, the encryption policy silently dropped the previously applied keys. It now surfaces an error for the record instead.
+- **`encrypt_fields`/`decrypt_fields` policies could not use the `mark` failure mode**: Fixed an issue where these sub-policies used a restricted failure-mode schema. They now accept the standard produce/consume failure modes, including `mark`.
+- **Topic UUID in schema metadata namespaces was not resolved**: Fixed an issue where the namespace UUID was left unresolved.
 
 
 ## 1.2.1
@@ -190,7 +190,7 @@ are being rejected without overwhelming your logging pipeline.
 ### Fixes
 
 - **Expressions using the `in` operator failed to parse**: ACL expressions containing the `in` keyword were incorrectly parsed by a regex-based parser. Switched to AST-based parsing to handle all valid expression syntax.
-- **Cryptic validation errors when environment variables resolved to empty strings**: Setting an env var reference (e.g., for SASL credentials) to an empty value produced an unhelpful error like `virtual_clusters.demo[1].auth.password: length is lower than 1`. Empty
+- **Cryptic validation errors when environment variables resolved to empty strings**: Setting an env var reference (for example, for SASL credentials) to an empty value produced an unhelpful error like `virtual_clusters.demo[1].auth.password: length is lower than 1`. Empty
 values are now caught at resolution time with a clear error message.
 - **Analytics payloads were double-compressed**: Analytics data sent to Konnect was being compressed twice, causing the backend to fail to decode it. Also fixed the healthcheck ping interval (was 5s, now uses the configured value).
 - **ACL default policy had no name in observability data**: Metrics and logs for the built-in default ACL policy were missing a policy name, making it difficult to distinguish from other policies in dashboards. Default policies now use the `__internal` prefix.
