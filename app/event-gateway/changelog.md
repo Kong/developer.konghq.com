@@ -26,6 +26,48 @@ related_resources:
 
 Changelog for supported {{site.event_gateway}} versions.
 
+## 1.3.0
+
+**Release date**: 2026/10/26
+
+### Breaking Changes
+- **Debug and profiling endpoints are disabled by default and moved to a dedicated listener**: `/debug/pprof/*` no longer share the health/metrics listener. Enable them with `KEG__RUNTIME__DEBUG_LISTENER_ADDRESS_PORT` (e.g. `0.0.0.0:8081`); the `KEG__ENABLE_DEBUG_ENDPOINTS` boolean is removed. This lets you firewall profiling endpoints apart from widely-scraped endpoints.
+- **Lifecycle metrics renamed**: `kong.keg.lifecycle.*` metrics are now `kong.dataplane.lifecycle.*`, and the `kong.keg.component` label key is now `kong.dataplane.component`. Old names are still emitted as deprecated aliases during the migration window. Update dashboards and alerts.
+- **Kafka response error metrics renamed**: `kong.keg.kafka.response.received.errors` → `kong.keg.kafka.response.received_errors` and `kong.keg.kafka.response.sent.errors` → `kong.keg.kafka.response.sent_errors` (old names were ambiguous). Old names are still emitted as deprecated aliases.
+- **Konnect analytics metrics renamed**: The `kong.keg.konnect.analytics.*` series moved to `kong.dataplane.analytics.*` (e.g. `kong.dataplane.analytics.events`, `kong.dataplane.analytics.sent`). Old names are still emitted as deprecated aliases.
+- **`KEG__CONFIG_POLL_INTERVAL` removed**: the control plane/data plane protocol now uses long-polling, so the interval can no longer be configured.
+- **Deprecated metrics**: `kong.keg.konnect.request.duration` (use `http.client.request.duration` with the `kong.http.client.name` label), `kong.keg.konnect.analytics.queue.dropped` and `otel.sdk.processor.log.errors` (use `otel.sdk.processor.log.processed` with the `error.type="queue_full"` attribute).
+
+### Features
+- **Request Rule Validator**: A new policy that validates Kafka requests against configurable rules.
+  - [Request Rule Validator policy reference](/event-gateway/policies/request-rule-validator/)
+  - [How-to: Enforce rules on Kafka requests](/event-gateway/enforce-kafka-request-rules/)
+- **Field Masking**: A pair of new Mask Fields Consume and Produce policies that mask selected fields in record keys and values, so sensitive data can be redacted on produce or consume.
+  - [Mask Fields Consume policy reference](/event-gateway/policies/mask-fields-consume/)
+  - [Mask Fields Produce policy reference](/event-gateway/policies/mask-fields-produce/)
+  - [How-to: Mask sensitive fields in Kafka messages](/event-gateway/mask-kafka-message-fields/)
+  - [How-to: Mask Kafka message fields selected by schema registry tags](/event-gateway/mask-kafka-message-fields-from-schema/)
+- **Record transcoding**: A pair of new Record Transcode Consume and Produce policies that convert records between formats (for example Avro to JSON) using schemas from the Schema Registry, driven by CEL expressions that resolve schema IDs, subjects, and versions. They support inline schemas, schema references resolved by subject/version, and per-record schema selection via headers (with a configurable destination schema header name).
+  - [Record Transcode Consume policy reference](/event-gateway/policies/record-transcode-consume/)
+  - [Record Transcode Produce policy reference](/event-gateway/policies/record-transcode-produce/)
+  - [How-to: Consume Kafka records as JSON](/event-gateway/consume-kafka-records-as-json-with-event-gateway/)
+  - [How-to: Produce Kafka records as Avro](/event-gateway/produce-kafka-records-as-avro-with-event-gateway/)
+- **AWS IAM authentication for backend clusters**: Virtual clusters can now authenticate to AWS MSK backend clusters using AWS IAM credentials, including assumed roles.
+  - [Backend cluster reference: Authentication](/event-gateway/entities/backend-cluster/#authentication)
+  - [How-to: Authenticate {{site.event_gateway}} connections to Kafka using AWS IAM](/event-gateway/configure-aws-iam-backend-cluster-auth/)
+- **Inline schemas and the `any` type in `schema_validation`**: You can now define validation schemas inline in the policy configuration instead of only referencing the Schema Registry, including references to other schemas, an `any` type that accepts any payload, and schema references supplied in record headers.
+  - [Schema Validation Produce policy reference](/event-gateway/policies/schema-validation-produce/)
+  - [Schema Validation Consume policy reference](/event-gateway/policies/schema-validation-consume/)
+- **ACL policy supports IncrementalAlterConfigs**: Incremental topic configuration requests are now subject to ACL rules like other operations.
+  - [ACL policy reference](/event-gateway/policies/acl/)
+
+### Bug Fixes
+- **Producing with `acks=0` could misbehave when records were rejected**: The broker never replies to `acks=0` Produce requests and may terminate the connection, which broke the proxy's request/response assumptions. The proxy now mirrors broker behavior for `acks=0`, including closing the connection when the broker would.
+- **Invalid encryption metadata header bytes were silently ignored**: When an existing `kong/enc` metadata header could not be decoded, the encryption policy silently dropped the previously applied keys. It now surfaces an error for the record instead.
+- **`encrypt_fields`/`decrypt_fields` policies could not use the `mark` failure mode**: These sub-policies used a restricted failure-mode schema. They now accept the standard produce/consume failure modes, including `mark`.
+- **Topic UUID in schema metadata namespaces was not resolved**: The namespace UUID was left unresolved.
+
+
 ## 1.2.1
 
 **Release date**: 2026/08/04
