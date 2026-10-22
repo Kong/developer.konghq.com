@@ -678,7 +678,7 @@ body:
 
 {% include sections/principals-and-directories.md %}
 
-For more information, see the [Principals reference](/identity/principals/).
+For more information, see the [Principals](/identity/principals/) and [Directories](/identity/directories/) references.
 
 ## Create an auth server, claim, and client in {{site.identity}}
 
