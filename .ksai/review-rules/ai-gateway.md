@@ -10,3 +10,7 @@
 
 - Output-only blocks end with `{:.no-copy-code}` (see the output blocks rule).
 - A new capability sets `min_version` on the page or example.
+
+## Version markers
+
+- Do not add `{% new_in %}` badges to AI Gateway pages, and do not suggest them. This overrides the version marker rules in the Core and Plugins and references packs. Flag an existing `{% new_in %}` on a changed line as a finding and suggest removing it.
