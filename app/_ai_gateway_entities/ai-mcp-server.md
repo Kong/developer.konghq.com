@@ -569,11 +569,19 @@ Use `rate_limiting` in the following cases:
 > The `rate_limiting` field is supported only in `conversion-listener` and `passthrough-listener` modes.
 > Other [server modes](#server-modes) reject it.
 
-Each limit targets either an MCP method or a tool name, never both, and sets a request count for a fixed window of one second, one minute, one hour, or one day.
+Each limit targets either an MCP method or a tool name, never both, and sets a request count for a window of one second, one minute, one hour, or one day.
 You can define several windows for the same target, but each combination of target and window can appear only once.
-If a limit breaks either rule, the API returns a `400` error that points to the invalid entry, for example `rate_limiting.limits[1]`.
+If a limit breaks either rule, the {{site.konnect_short_name}} API rejects the AI MCP Server configuration with a `400` error that points to the invalid entry, for example `rate_limiting.limits[1]`.
+
+A request counts against every limit it matches.
+For example, a `tools/call` request for `search_flights` counts against both a `tools/call` limit and a `search_flights` limit.
+In a batch request, each message counts separately.
 
 Each {{site.ai_gateway}} data plane node keeps its own counters and enforces the limits independently.
+A client can send up to the configured limit to each node.
+
+When an MCP client's request exceeds a limit at runtime, the AI MCP Server rejects it with an HTTP `429` status and a JSON-RPC error with code `-32023`.
+The error echoes the request ID and includes the `limit` and `window_size` of the limit that was exceeded in its `data` field.
 
 In the following example, the AI MCP Server allows 100 `tools/call` requests per minute across all tools.
 It also limits the `search_flights` tool to 10 requests per second and 1000 requests per day:
@@ -593,7 +601,7 @@ rate_limiting:
 ```
 
 {:.info}
-> `rate_limiting` limits requests to the AI MCP Server as a whole.
+> `rate_limiting` applies to all requests that reach the AI MCP Server, regardless of the client.
 > To limit requests per AI Consumer or AI Consumer Group, attach a [Rate Limiting](/ai-gateway/policies/rate-limiting/) or [Rate Limiting Advanced](/ai-gateway/policies/rate-limiting-advanced/) Policy.
 
 ## ACL tool control
