@@ -169,12 +169,12 @@ Each operator instruction file executes its page's documented steps against the 
 
 `DEPLOYMENT_MODEL='konnect' PRODUCTS='operator' npm run run-tests`
 
-The `konnect.operator` runtime deletes every control plane in the Konnect org the token belongs to, creates a fresh k3d cluster, and installs the operator with the Konnect controller enabled (`ENABLE_CONTROLLER_KONNECT=true`). The test steps apply the pages' `KonnectAPIAuthConfiguration` and custom resources, which the operator reconciles against that org.
+The `konnect.operator` runtime deletes every control plane in the Konnect org the token belongs to and creates a fresh k3d cluster. It does not pre-install the operator: each konnect page installs it from its own documented Helm steps (extracted via the `prereqs/products/operator.md` include, which sets `ENABLE_CONTROLLER_KONNECT=true` and waits for the controller deployment to become available). The test steps then apply the pages' `KonnectAPIAuthConfiguration` and custom resources, which the operator reconciles against that org.
 
 Requirements and behavior:
 
 * `TESTS_KONNECT_TOKEN` must be exported: it is the Konnect token the operator authenticates with.
-* `KONG_LICENSE_DATA` must be exported: the pages' Gateways deploy enterprise data planes (`kong/kong-gateway`), which run read-only without a license, so the runtime applies the license as a `KongLicense` CR in every reset (the konnect pages never apply one themselves).
+* `KONG_LICENSE_DATA` is not required for konnect operator runs: konnect pages never apply a `KongLicense`.
 * Reset and cleanup delete **every control plane in the token's org** through the Konnect API, so the token must belong to a dedicated docs test org, never a shared one.
 * The transit gateway how-to creates real AWS resources (an EC2 transit gateway and a RAM resource share). It needs `TESTS_AWS_REGION`, `TESTS_AWS_ACCESS_KEY_ID`, and `TESTS_AWS_SECRET_ACCESS_KEY` exported, and it deletes the resources it creates in its cleanup.
 

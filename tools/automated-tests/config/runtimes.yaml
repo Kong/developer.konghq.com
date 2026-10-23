@@ -242,13 +242,6 @@ konnect:
       commands:
         - helm repo add kong https://charts.konghq.com
         - helm repo update
-        # The reset below applies the license as a KongLicense CR from
-        # ./license.json (see the on-prem KongLicense prereq for the shape).
-        # The konnect pages never apply a KongLicense themselves, but their
-        # Gateways deploy enterprise data planes (kong/kong-gateway), which
-        # run read-only without a license (config pushes get 403), so the
-        # runtime must license them.
-        - 'printf "%s" "$KONG_LICENSE_DATA" > ./license.json'
     cleanup:
       commands:
         # Deleting the cluster alone would orphan the Konnect-side control
@@ -279,20 +272,3 @@ konnect:
         - k3d cluster delete operator-konnect-test
         - k3d cluster create --k3s-arg "--disable=traefik@server:*" operator-konnect-test --wait
         - kubectl config use-context k3d-operator-konnect-test
-        # The plugin installation controller is off by default and the
-        # deploy-custom-plugins page needs it to reconcile KongPluginInstallation
-        # CRs; without it its DataPlane waits forever and the Gateway never
-        # programs. Pages that don't use plugin installations are unaffected.
-        - helm upgrade --install kong-operator kong/kong-operator -n kong-system --create-namespace --set env.ENABLE_CONTROLLER_KONNECT=true --set env.ENABLE_CONTROLLER_KONGPLUGININSTALLATION=true
-        - kubectl -n kong-system wait --for=condition=Available=true --timeout=300s deployment/kong-operator-kong-operator-controller-manager
-        # The konnect pages never apply a KongLicense themselves (the on-prem
-        # pages do, via the products/operator.md prereq), so the runtime
-        # licenses the enterprise data planes the pages deploy.
-        - |
-          echo "
-          apiVersion: configuration.konghq.com/v1alpha1
-          kind: KongLicense
-          metadata:
-           name: kong-license
-          rawLicenseString: '$(cat ./license.json)'
-          " | kubectl apply -f -
