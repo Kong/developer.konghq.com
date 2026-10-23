@@ -40,6 +40,7 @@ prereqs:
     - title: Provider Account ID
       include_content: /prereqs/provider-account-id
 
+automated_tests: false
 ---
 
 ## Create a `KonnectCloudGatewayNetwork`
