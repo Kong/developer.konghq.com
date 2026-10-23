@@ -116,7 +116,9 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-The `issuer_url` must match the `iss` claim of your IdP's tokens exactly. If you omit `jwks_uri`, {{site.identity}} discovers it from the issuer's `/.well-known/openid-configuration` document. For all the available parameters, see [Trusted IdP](/identity/token-vault/#trusted-idp).
+The `issuer_url` must match the `iss` claim of your IdP's tokens exactly. If you omit `jwks_uri`, {{site.identity}} discovers it from the issuer's `/.well-known/openid-configuration` document. 
+
+For all the available parameters, see [Trusted IdP](/identity/token-vault/#trusted-idp).
 
 Verify the configuration by sending a `GET` request to the same endpoint:
 
@@ -165,7 +167,8 @@ method: GET
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Check that the provider is enabled by sending a `GET` request to the provider endpoint, using the `PROVIDER_ID` captured when you added it. The response contains `"enabled": true`, `"template_name": "github"`, and `"credential_type": "user"`:
+Check that the provider is enabled by sending a `GET` request to the provider endpoint, using the `PROVIDER_ID` captured when you added it. 
+The response contains `"enabled": true`, `"template_name": "github"`, and `"credential_type": "user"`:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -175,9 +178,11 @@ method: GET
 {% endkonnect_api_request %}
 <!--vale on-->
 
-In the {{site.konnect_short_name}} UI, when you open your AI MCP Server and go to its **Upstream authentication** section. The `github-prod` provider appears in the list of Token Vault providers you can select.
+In the {{site.konnect_short_name}} UI, open your AI MCP Server and go to its **Upstream authentication** section. 
+The `github-prod` provider appears in the list of Token Vault providers you can select.
 
-Once the provider is selected, {{site.ai_gateway}} returns an enrollment URL to any caller who hasn't enrolled with it yet. For the full configuration, see [AI MCP Server upstream authentication with Token Vault](/ai-gateway/entities/ai-mcp-server/#token-vault).
+Once the provider is selected, {{site.ai_gateway}} returns an enrollment URL to any caller who hasn't enrolled with it yet. 
+For the full configuration, see [AI MCP Server upstream authentication with Token Vault](/ai-gateway/entities/ai-mcp-server/#token-vault).
 
 ## Next steps
 
