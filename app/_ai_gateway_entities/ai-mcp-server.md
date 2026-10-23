@@ -555,8 +555,6 @@ config:
 
 ## Rate limiting
 
-Some MCP operations cost more than others.
-A single `tools/call` to a flight search tool can hit a metered upstream API, while `tools/list` is cheap.
 The AI MCP Server [`rate_limiting`](#schema-aigateway-mcpserver-rate-limiting) field lets you cap requests for a specific MCP method or [tool](#tools), so an expensive tool or a runaway client can't exhaust your upstream quota.
 
 Use `rate_limiting` in the following cases:
