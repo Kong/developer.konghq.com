@@ -43,6 +43,9 @@ to validate messages against the [Confluent schema registry](https://docs.conflu
 * JSON Schema
 * Protobuf {% new_in 1.3 %}
 
+You can also set `schema_type` to `any` {% new_in 1.3 %} to accept records in any of the other supported formats instead of one fixed format.
+With `any`, the format is resolved for each record individually: values that carry a schema reference, in the [Confluent wire format](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/index.html#wire-format) or in a record header, are decoded using the registry, and any other value is parsed as JSON without a schema.
+
 ## Set up a schema registry
 
 {% entity_example %}
