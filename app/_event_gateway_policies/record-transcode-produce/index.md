@@ -121,11 +121,9 @@ With `any`, {{site.event_gateway_short}} resolves the format of each record indi
 * Values that carry a schema reference, in the [Confluent wire format](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/index.html#wire-format) or in a record header, are decoded using the registry.
 * Any other value is parsed as JSON without a schema, so it isn't validated against anything.
 
-Nest the transcode policy under the parent policy to normalize the mixed records into a single format:
-* Records that already match `output_format` are left unchanged.
-* Records in a different format are converted.
-
-For example, with `output_format: avro`, a client can produce JSON records and Avro records to the same topic, and the backend cluster only ever stores Avro.
+For example, with `output_format: avro`, a client can produce JSON records and Avro records to the same topic,
+transcode them to Avro
+and the backend cluster only ever stores Avro.
 
 ## Configuring the target schema
 
