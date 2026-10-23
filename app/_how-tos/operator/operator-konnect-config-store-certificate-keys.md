@@ -108,6 +108,26 @@ prereqs:
     konnect:
       auth: true
       control_plane: true
+
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `KonnectConfigStore` also deletes the Config Store in {{ site.konnect_short_name }} and every secret
+        in it, and deleting the `KonnectGatewayControlPlane` deletes the control plane. Delete the certificate and the
+        `KongVault` before the Config Store they reference:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found kongcertificate/cert-with-vault-key
+        kubectl delete --ignore-not-found kongvault/certvault
+        kubectl delete -n kong --ignore-not-found \
+          konnectconfigstore/cert-keys \
+          kongreferencegrant/allow-kongvault-to-konnect-resources \
+          konnectgatewaycontrolplane/gateway-control-plane \
+          konnectapiauthconfiguration/konnect-api-auth
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 A `KongCertificate` normally carries the private key as PEM material in `spec.key`, which means the key is stored in
