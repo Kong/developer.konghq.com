@@ -83,6 +83,28 @@ prereqs:
       include_content: /prereqs/operator/konnect_resources_adoption
     - title: Create the KonnectGatewayControlPlane resource
       include_content: /prereqs/operator/konnect_control_plane_reference
+
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting these resources removes them from your cluster. The control plane they reference was created directly in {{ site.konnect_short_name }} and isn't owned by {{ site.operator_product_name }}, so it stays in {{ site.konnect_short_name }}.
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          kongpluginbinding/plugin-binding-kongservice \
+          kongplugin/rate-limit \
+          kongroute/adopt-route \
+          kongservice/adopt-service \
+          konnectgatewaycontrolplane/gateway-control-plane \
+          konnectapiauthconfiguration/konnect-api-auth
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
+
+    - title: Clean up the {{ site.konnect_short_name }} control plane
+      include_content: cleanup/platform/konnect
+      icon_url: /assets/icons/gateway.svg
 ---
 
 ## Adopt a Gateway Service
