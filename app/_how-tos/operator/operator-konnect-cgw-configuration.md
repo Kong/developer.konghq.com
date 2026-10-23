@@ -37,7 +37,33 @@ prereqs:
     konnect:
       auth: true
       control_plane: true
+      network: true
 
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `KonnectCloudGatewayDataPlaneGroupConfiguration` removes the Data Plane group from {{ site.konnect_short_name }}. Deleting the `KonnectGatewayControlPlane` also deletes the control plane {{ site.operator_product_name }} created in {{ site.konnect_short_name }}:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          konnectcloudgatewaydataplanegroupconfiguration/konnect-cg-dpconf \
+          konnectcloudgatewaynetwork/konnect-network-1 \
+          konnectgatewaycontrolplane/gateway-control-plane \
+          konnectapiauthconfiguration/konnect-api-auth
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
+
+    - title: Delete the namespaces
+      content: |
+        ```bash
+        helm uninstall kong-operator -n kong-system
+        kubectl delete namespace kong kong-system
+        ```
+      icon_url: /assets/icons/kubernetes.svg
+
+automated_tests: false
 ---
 
 ## Create a `KonnectCloudGatewayDataPlaneGroupConfiguration`
@@ -79,9 +105,16 @@ spec:
 
 Since creating a Data Plane Group Configuration can take some time, you can monitor its status by checking the `dataplane_groups` field. Data Plane Group Configurations receive this field when they are successfully provisioned in Konnect.
 
-```
-kubectl get -n kong konnectcloudgatewaydataplanegroupconfiguration.konnect.konghq.com eu-west-1 -o=jsonpath='{.status.dataplane_groups}' | yq -p json
-```
+<!-- vale off -->
+{% validation custom-command %}
+command: |
+  kubectl get -n kong konnectcloudgatewaydataplanegroupconfiguration.konnect.konghq.com konnect-cg-dpconf -o=jsonpath='{.status.dataplane_groups}' | yq -p json
+expected:
+  return_code: 0
+  message: eu-west-1
+render_output: false
+{% endvalidation %}
+<!-- vale on -->
 
 ## Validation
 
