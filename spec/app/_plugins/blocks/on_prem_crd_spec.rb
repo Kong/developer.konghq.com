@@ -76,4 +76,21 @@ RSpec.describe Jekyll::OnPremCrd do
       expect(rendered).not_to include('indent')
     end
   end
+  describe 'with section: prereqs' do
+    let(:template) do
+      <<~'LIQUID'
+        {% on_prem_crd %}
+        section: prereqs
+        kind: GatewayConfiguration
+        metadata:
+          name: kong
+          namespace: kong
+        {% endon_prem_crd %}
+      LIQUID
+    end
+
+    it 'keeps the section key out of the emitted YAML' do
+      expect(rendered).not_to include('section')
+    end
+  end
 end
