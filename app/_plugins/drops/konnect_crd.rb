@@ -19,7 +19,7 @@ module Jekyll
       end
 
       def crd_yaml
-        @crd_yaml ||= @yaml.except('create_namespace', 'section').to_yaml
+        @crd_yaml ||= @yaml.except('create_namespace', 'section', 'indent').to_yaml
                            .delete_prefix("---\n").chomp
                            .gsub(/version: '(.*)'/, 'version: "\1"')
       end
