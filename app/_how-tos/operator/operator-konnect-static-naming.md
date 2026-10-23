@@ -33,6 +33,23 @@ prereqs:
   operator:
     konnect:
       auth: true
+
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `Gateway` also deletes the `KonnectGatewayControlPlane` that {{ site.operator_product_name }}
+        created for it, which removes the control plane from {{ site.konnect_short_name }}:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found gateway/hybrid kongconsumer/consumer1
+        kubectl delete -n kong --ignore-not-found konnectgatewaycontrolplane --all
+        kubectl delete -n kong --ignore-not-found gatewayconfiguration/hybrid
+        kubectl delete --ignore-not-found gatewayclass/hybrid
+        kubectl delete namespace --ignore-not-found kong
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 By default, {{ site.operator_product_name }} generates unique, dynamic names for `KonnectGatewayControlPlane` resources created from a `Gateway`. 
@@ -81,6 +98,7 @@ spec:
     name: hybrid
     namespace: kong ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Configure the Gateway with static naming
 
@@ -102,8 +120,29 @@ spec:
     protocol: HTTP
     port: 80' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Validate
+
+Check that the operator created the `KonnectGatewayControlPlane` and that it's Programmed:
+
+<!-- vale off -->
+{% validation kubernetes-resource %}
+kind: KonnectGatewayControlPlane
+name: hybrid
+{% endvalidation %}
+<!-- vale on -->
+
+The resource asks {{site.konnect_short_name}} for a control plane named `<namespace>_<gateway-name>`. Confirm the name it requests:
+
+<!-- vale off -->
+{% validation kubernetes-resource-property %}
+kind: KonnectGatewayControlPlane
+name: hybrid
+path: '.spec.createControlPlaneRequest.name'
+expected: kong_hybrid
+{% endvalidation %}
+<!-- vale on -->
 
 To validate, fetch a list of control planes in {{site.konnect_short_name}}:
 
@@ -133,3 +172,16 @@ spec:
     konnectNamespacedRef:
       name: hybrid' | kubectl apply -f -
 ```
+{: data-test-step="block" }
+
+Confirm that the `KongConsumer` resolved the reference to the generated resource:
+
+<!-- vale off -->
+{% validation kubernetes-resource-property %}
+kind: KongConsumer
+name: consumer1
+path: |
+  .status.conditions[] | select(.type == "ControlPlaneRefValid") | .status
+expected: "True"
+{% endvalidation %}
+<!-- vale on -->
