@@ -24,17 +24,34 @@ rows:
                     {{site.mesh_product_name}} adds a proxy alongside each application. These proxies discover destinations and enforce identity, access, routing, reliability, and observability policies where application traffic flows.
 
                     A central control plane distributes configuration while application traffic remains on your network. In a multi-zone deployment, mesh-scoped zone proxies connect services across environments and provide a controlled path to external services.
-
-                    With {{site.mesh_product_name}} 3.x, workload identity, trust, and traffic permission have separate responsibilities. This separation makes it explicit who a workload is, which certificate issuers are trusted, and which connections are allowed.
-          - type: text
-            config: |
-              [Get started with {{site.mesh_product_name}}](#get-started-with-kong-mesh), [plan a 2.x migration](/mesh/upgrade/#upgrade-from-2-x-to-3-x), or [browse all policies](/mesh/policies/).
-
       - blocks:
           - type: image
             config:
               url: /assets/images/mesh/mesh-v3-overview.svg
               alt_text: "{{site.mesh_product_name}} distributes configuration through zone control planes while application proxies enforce traffic policies across Kubernetes and VMs. Separate paths show cross-zone ingress, application ingress, and external-service egress."
+
+  - columns:
+      - blocks:
+          - type: icon_card
+            config:
+              title: Get started
+              icon: /assets/icons/rocket.svg
+              cta:
+                url: "#get-started-with-kong-mesh"
+      - blocks:
+          - type: icon_card
+            config:
+              title: Migrate from 2.x 
+              icon: /assets/icons/migrate.svg
+              cta:
+                url: /mesh/upgrade/#upgrade-from-2-x-to-3-x
+      - blocks:
+          - type: icon_card
+            config:
+              title: Browse all policies
+              icon: /assets/icons/mesh_policies/policy.svg
+              cta:
+                url: /mesh/policies/
 
   - header:
       type: h2
@@ -61,9 +78,6 @@ rows:
                   - **Try {{site.mesh_product_name}} 3.x locally:** Follow the [Universal quickstart](/mesh/get-started/universal/install/) to run a control plane and two application proxies in containers.
                   - **Plan a production deployment:** Use the [Universal control plane reference](/mesh/universal-control-plane/) to choose the mode, persistent store, and zone configuration.
                   - **Connect applications:** Follow the [Universal data plane reference](/mesh/universal-data-plane/) to register and authenticate application proxies.
-
-                  A self-hosted Kubernetes installation guide for {{site.mesh_product_name}} 3.x is not yet available. Do not use the 2.x installation procedure for a 3.x control plane.
-
   - columns:
       - blocks:
           - type: card
@@ -82,15 +96,6 @@ rows:
               icon: /assets/icons/mesh.svg
               cta:
                 url: /mesh/mesh-scoped-zone-proxies/
-                align: end
-      - blocks:
-          - type: card
-            config:
-              title: Migrate from {{site.mesh_product_name}} 2.x
-              description: Prepare identity, zone proxies, and policies in the required order before upgrading to {{site.mesh_product_name}} 3.x.
-              icon: /assets/icons/migrate.svg
-              cta:
-                url: /mesh/migrate-policies-to-3/
                 align: end
 
   - header:
@@ -162,7 +167,8 @@ rows:
             config:
               title: Bring external traffic into the mesh
               description: Connect an API gateway to mesh services and control what its workload identity can access. This is application ingress, not cross-zone ingress.
-              cta: {text: Configure application ingress, url: /mesh/application-ingress/}
+              ctas: 
+                - {text: Configure application ingress, url: /mesh/application-ingress/}
       - blocks:
           - type: card
             config:
@@ -200,19 +206,22 @@ rows:
             config:
               title: Services and destinations
               description: Give applications destinations they can reach within a zone, across zones, or outside the mesh. Choose the service resource that describes where the destination runs.
-              cta: {text: Understand service discovery, url: /mesh/meshservice/}
+              ctas: 
+                - {text: Understand service discovery, url: /mesh/meshservice/}
       - blocks:
           - type: card
             config:
               title: Policies and traffic decisions
               description: Select the proxies that enforce a policy, then the traffic it governs. Understand which decisions happen at the client or destination and how overlapping policies combine.
-              cta: {text: Understand policy targeting, url: /mesh/policy-targeting/}
+              ctas: 
+                - {text: Understand policy targeting, url: /mesh/policy-targeting/}
       - blocks:
           - type: card
             config:
               title: Proxies and zones
               description: Application proxies handle workload traffic. Mesh-scoped zone ingress carries connections between zones; mesh-scoped zone egress handles the path to external services.
-              cta: {text: Understand mesh-scoped zone proxies, url: /mesh/mesh-scoped-zone-proxies/}
+              ctas: 
+                - {text: Understand mesh-scoped zone proxies, url: /mesh/mesh-scoped-zone-proxies/}
 
   - header:
       type: h2
