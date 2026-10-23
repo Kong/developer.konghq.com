@@ -85,11 +85,15 @@ RSpec.describe Jekyll::Drops::KonnectCrd do
       expect(crd_yaml).to include('version: "3.9"')
     end
 
-    it 'carries neither the section nor the create_namespace key' do
-      with_both = yaml.merge('section' => 'prereqs', 'create_namespace' => 'kong')
-      crd_yaml = described_class.new(yaml: with_both, format: 'html').crd_yaml
+    it 'carries none of the section, create_namespace or indent keys' do
+      with_control_keys = yaml.merge(
+        'section' => 'prereqs',
+        'create_namespace' => 'kong',
+        'indent' => 3
+      )
+      crd_yaml = described_class.new(yaml: with_control_keys, format: 'html').crd_yaml
 
-      expect(YAML.safe_load(crd_yaml)).not_to include('section', 'create_namespace')
+      expect(YAML.safe_load(crd_yaml)).not_to include('section', 'create_namespace', 'indent')
     end
   end
 end
