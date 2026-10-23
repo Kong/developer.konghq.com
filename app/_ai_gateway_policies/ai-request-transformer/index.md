@@ -37,5 +37,5 @@ instructions for the incoming client request body.
 1. The {{site.ai_gateway}} creates a request to the LLM service using client's request body as the `user` message in the LLM chat request, and then sends it to the configured LLM service to be transformed.
 1. The LLM service returns a response `assistant` message, containing the transformed user message. This is subsequently set as the request body for the upstream LLM provider.
 1. The {{site.ai_gateway}} sends the transformed request to the upstream LLM provider.
-1. The the upstream LLM provider returns a response to {{site.ai_gateway}}.
+1. The upstream LLM provider returns a response to {{site.ai_gateway}}.
 2. The {{site.ai_gateway}} sends the response to the [AI Response Transformer policy](/ai-gateway/policies/ai-response-transformer/) (as in figure 1), or directly to the client.
