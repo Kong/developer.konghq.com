@@ -280,12 +280,12 @@ traffic checks after each zone upgrade and update dashboards that still query le
 resources or insight endpoints.
 
 {:.warning}
-> **Publish each zone's `MeshZoneAddress` as soon as that zone runs 3.x.** In 3.x, other zones
-> reach a zone's ingress only through its `MeshZoneAddress`, and the resource cannot be created
-> before the zone control plane runs 3.x. Cross-zone `MeshService` and `MeshMultiZoneService`
-> traffic into the zone is down until the resource exists and has synced to the other zones.
-> On Kubernetes, the upgraded zone control plane creates it from the ingress Service; check that
-> it appears. On Universal, create it on the zone control plane immediately after the upgrade.
+> Check that every zone has a `MeshZoneAddress` before you upgrade it. In 3.x, other zones
+> reach a zone's ingress only through its `MeshZoneAddress`. The fallback to the legacy ingress
+> address is removed, so cross-zone `MeshService` and `MeshMultiZoneService` traffic into a zone
+> without one stops after the upgrade. On Kubernetes, the zone control plane creates it from the
+> mesh-scoped ingress Service; check that it exists. On Universal, create it on the zone control
+> plane while the zone is still on 2.14, as described in [Step 3](#universal).
 
 {:.warning}
 > **Restart the zone proxies after upgrading a zone control plane.** A zone proxy Pod keeps

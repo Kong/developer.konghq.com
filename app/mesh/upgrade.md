@@ -68,6 +68,13 @@ still on 2.14; the upgrade is more than a control plane and data plane rollout.
 1. Upgrade the global control plane first, then a non-production zone. Repeat the product and
    traffic checks before proceeding through the remaining zones.
 
+   {:.warning}
+   > Cross-zone traffic from an upgraded zone to a 2.14 zone fails. Once a zone runs 3.x,
+   > its proxies address other zones' proxies with a new SNI that 2.14 zone proxies can't
+   > match. `MeshService`, `MeshExternalService`, and `MeshMultiZoneService` traffic from an
+   > upgraded zone to a zone still on 2.14 fails until that zone is upgraded too. Keep the time
+   > between zone upgrades short, and check which zones depend on each other before you start.
+
 Don't use the normal rolling-upgrade sequence described in [Single-zone](#single-zone) and [Multi-zone](#multi-zone) as a substitute for the 2.x-to-3.x migration.
 The readiness report identifies configuration visible through the control plane API; the migration
 guides cover the live traffic behavior that the report can't verify.
