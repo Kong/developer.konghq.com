@@ -27,6 +27,25 @@ related_resources:
 
 min_version:
   operator: '2.1'
+
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `Gateway` also deletes the `KonnectGatewayControlPlane` that {{ site.operator_product_name }}
+        created for it, which removes the control plane from {{ site.konnect_short_name }}:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found gateway/kong gatewayconfiguration/gateway-configuration
+        kubectl delete -n kong --ignore-not-found konnectgatewaycontrolplane --all
+        kubectl delete --ignore-not-found gatewayclass/gateway-class
+        kubectl delete -n auth --ignore-not-found \
+          kongreferencegrant/allow-kong-cp-to-auth \
+          konnectapiauthconfiguration/konnect-api-auth
+        kubectl delete namespace --ignore-not-found kong auth
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 {% include /operator/cross-namespace-ref.md %}
@@ -54,6 +73,7 @@ spec:
   token: '"$KONNECT_TOKEN"'
   serverURL: us.api.{{ site.konnect_domain }}' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Create the KongReferenceGrant
 
@@ -75,6 +95,7 @@ spec:
     - group: konnect.konghq.com
       kind: KonnectAPIAuthConfiguration' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Create the GatewayConfiguration
 
@@ -105,6 +126,7 @@ spec:
           - name: proxy
             image: kong/kong-gateway:{{ site.data.gateway_latest.release }}' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Create the Gateway
 
@@ -136,14 +158,18 @@ spec:
       port: 80
       protocol: HTTP' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Validate
 
-To validate, check that the `KonnectGatewayControlPlane` resource was automatically created:
+To validate, check that the operator created a `KonnectGatewayControlPlane` in the `kong` namespace and that it's
+Programmed:
 
 ```sh
 kubectl get konnectgatewaycontrolplane -n kong
+kubectl wait --for=condition=Programmed --all -n kong konnectgatewaycontrolplane --timeout=5m
 ```
+{: data-test-step="block" }
 
 {:.info}
 > By default, the generated `KonnectGatewayControlPlane` receives a dynamic name. Add the `gateway-operator.konghq.com/static-naming: "true"` annotation to your `Gateway` to give it the Gateway's name instead, and, in {{site.operator_product_name}} 2.3.2 and later, to name the control plane in {{site.konnect_short_name}} `<namespace>_<gateway-name>`. {{site.operator_product_name}} sets these names when it creates the resources and doesn't change them afterwards.
