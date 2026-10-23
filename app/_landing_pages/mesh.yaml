@@ -65,12 +65,7 @@ rows:
                 content: |
                   Use {{site.konnect_short_name}} to host and operate the global control plane. You run the zone control planes and application proxies in your own infrastructure.
 
-                  Choose the environment for your first zone:
-
-                  - **Kubernetes (recommended):** [Choose the {{site.konnect_short_name}} UI, API, or Terraform installation](/mesh/konnect/#where-will-your-zone-run).
-                  - **Virtual machines and bare metal:** [Choose the {{site.konnect_short_name}} UI or API installation](/mesh/konnect/#where-will-your-zone-run).
-
-                  Both paths create or connect to a {{site.mesh_product_name}} 3.x global control plane in {{site.konnect_short_name}} and deploy the zone control plane in your environment.
+                  Choose whether to run your first zone on Kubernetes (recommended) or Universal, then follow the [{{site.konnect_short_name}} installation instructions](/mesh/konnect/#where-will-your-zone-run).
               - title: Self-hosted
                 content: |
                   Run and operate the control plane and application proxies in your own infrastructure:
@@ -78,25 +73,6 @@ rows:
                   - **Try {{site.mesh_product_name}} 3.x locally:** Follow the [Universal quickstart](/mesh/get-started/universal/install/) to run a control plane and two application proxies in containers.
                   - **Plan a production deployment:** Use the [Universal control plane reference](/mesh/universal-control-plane/) to choose the mode, persistent store, and zone configuration.
                   - **Connect applications:** Follow the [Universal data plane reference](/mesh/universal-data-plane/) to register and authenticate application proxies.
-  - columns:
-      - blocks:
-          - type: card
-            config:
-              title: Secure service traffic
-              description: Issue workload identities, establish trust, and allow only the callers that should reach a destination.
-              icon: /assets/icons/mesh_policies/meshtrafficpermission.png
-              cta:
-                url: /mesh/policies/meshtrafficpermission/
-                align: end
-      - blocks:
-          - type: card
-            config:
-              title: Connect multiple zones
-              description: Deploy mesh-scoped zone proxies and make services available across Kubernetes and Universal zones.
-              icon: /assets/icons/mesh.svg
-              cta:
-                url: /mesh/mesh-scoped-zone-proxies/
-                align: end
 
   - header:
     columns:
@@ -139,14 +115,6 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Secure service communication
-              description: Issue workload identities, establish trust, and allow specific callers. Configure how destinations accept encrypted connections.
-              ctas:
-                - {text: Allow specific callers, url: /mesh/policies/meshtrafficpermission/}
-                - {text: Configure TLS, url: /mesh/policies/meshtls/}
-      - blocks:
-          - type: card
-            config:
               title: Route traffic and handle failures
               description: Choose destinations for requests and connections. Set timeouts, retry selected failures, and limit the impact of unhealthy destinations.
               ctas:
@@ -158,6 +126,24 @@ rows:
       - blocks:
           - type: card
             config:
+              title: Observe service traffic
+              description: Collect metrics, access logs, and traces. Choose which proxies report telemetry and where they export it.
+              ctas:
+                - {text: Metrics, url: /mesh/policies/meshmetric/}
+                - {text: Access logs, url: /mesh/policies/meshaccesslog/}
+                - {text: Traces, url: /mesh/policies/meshtrace/}
+                - {text: OpenTelemetry backends, url: /mesh/meshopentelemetrybackend/}
+      - blocks:
+          - type: card
+            config:
+              title: Secure service communication
+              description: Issue workload identities, establish trust, and allow specific callers. Configure how destinations accept encrypted connections.
+              ctas:
+                - {text: Allow specific callers, url: /mesh/policies/meshtrafficpermission/}
+                - {text: Configure TLS, url: /mesh/policies/meshtls/}
+      - blocks:
+          - type: card
+            config:
               title: Connect services across zones
               description: Make a service available across zones and understand the proxies carrying its traffic. Apply policies at the right point in the connection.
               ctas:
@@ -166,7 +152,7 @@ rows:
           - type: card
             config:
               title: Bring external traffic into the mesh
-              description: Connect an API gateway to mesh services and control what its workload identity can access. This is application ingress, not cross-zone ingress.
+              description: Connect an API gateway to mesh services and control what its workload identity can access.
               ctas: 
                 - {text: Configure application ingress, url: /mesh/application-ingress/}
       - blocks:
@@ -176,16 +162,6 @@ rows:
               description: Define external destinations and configure their path through mesh-scoped zone egress, including access permissions and destination TLS.
               ctas:
                 - {text: Configure an external service, url: /mesh/meshexternalservice/}
-      - blocks:
-          - type: card
-            config:
-              title: Observe service traffic
-              description: Collect metrics, access logs, and traces. Choose which proxies report telemetry and where they export it.
-              ctas:
-                - {text: Metrics, url: /mesh/policies/meshmetric/}
-                - {text: Access logs, url: /mesh/policies/meshaccesslog/}
-                - {text: Traces, url: /mesh/policies/meshtrace/}
-                - {text: OpenTelemetry backends, url: /mesh/meshopentelemetrybackend/}
 
   - header:
       type: h2
@@ -197,7 +173,7 @@ rows:
           - type: card
             config:
               title: Workload identity and trust
-              description: An identity tells a proxy who is calling. Trust determines which issuers it accepts. Traffic permissions decide whether that caller can connect.
+              description: An identity tells a proxy who is calling. Trust determines which issuers it accepts.
               ctas:
                 - {text: Issue identities with MeshIdentity, url: /mesh/policies/meshidentity/}
                 - {text: Establish trust with MeshTrust, url: /mesh/policies/meshtrust/}
@@ -225,26 +201,8 @@ rows:
 
   - header:
       type: h2
-      text: Key references
-    column_count: 2
-    columns:
-      - blocks:
-          - type: card
-            config:
-              title: Policy reference
-              description: Look up supported targets, defaults, configuration examples, and runtime behavior for every policy.
-              cta: {text: Browse all policies, url: /mesh/policies/}
-      - blocks:
-          - type: card
-            config:
-              title: Command-line reference
-              description: Use kongctl to authenticate, select a control plane and mesh, and inspect or configure resources.
-              cta: {text: "Use the {{site.mesh_product_name}} CLI", url: /mesh/cli/}
-
-  - header:
-      type: h2
       text: Operate and troubleshoot
-    column_count: 3
+    column_count: 2
     columns:
       - blocks:
           - type: card
@@ -261,17 +219,9 @@ rows:
               title: Verify traffic behavior
               description: Use the verification and troubleshooting sections in each reference to check identities, destinations, permissions, and proxy readiness.
               ctas:
-                - {text: Check traffic permissions, url: /mesh/policies/meshtrafficpermission/}
-                - {text: Check zone proxies, url: /mesh/mesh-scoped-zone-proxies/}
-                - {text: Check application ingress, url: /mesh/application-ingress/}
-      - blocks:
-          - type: card
-            config:
-              title: Run Universal deployments
-              description: Configure the control plane and application proxies you operate on virtual machines and bare metal.
-              ctas:
-                - {text: Control plane reference, url: /mesh/universal-control-plane/}
-                - {text: Data plane reference, url: /mesh/universal-data-plane/}
+                - {text: Check traffic permissions, url: /mesh/policies/meshtrafficpermission/#validating-authorization}
+                - {text: Check zone proxies, url: /mesh/mesh-scoped-zone-proxies/#verify-the-traffic-path-and-policy-effect}
+                - {text: Check application ingress, url: /mesh/application-ingress/#verify-the-gateway-and-mesh-separately}
 
   - header:
       type: h2
