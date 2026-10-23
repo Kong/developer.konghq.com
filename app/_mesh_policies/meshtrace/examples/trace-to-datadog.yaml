@@ -1,0 +1,21 @@
+title: 'Export traces to Datadog'
+
+description: 'Send spans to a Datadog agent, splitting the reported service name by traffic direction and destination.'
+
+weight: 800
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshTrace
+  name: datadog-tracing
+  mesh: default
+  spec:
+    targetRef:
+      kind: Mesh
+    default:
+      backends:
+        - type: Datadog
+          datadog:
+            url: http://datadog-agent.observability:8126
+            splitService: true

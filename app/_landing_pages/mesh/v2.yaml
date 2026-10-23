@@ -321,7 +321,7 @@ rows:
                 - text: View the version support policy 
                   url: /mesh/support-policy/
                 - text: View Kuma Mesh changelog 
-                  url: /mesh/v2/changelog/
+                  url: /mesh/changelog/
       - blocks:
           - type: card
             config:

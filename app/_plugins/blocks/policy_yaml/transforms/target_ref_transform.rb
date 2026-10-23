@@ -7,12 +7,14 @@ module Jekyll
     module Transforms
       # Rewrites a MeshService or MeshMultiZoneService `targetRef` under
       # `spec.to.targetRef` into its Kubernetes or Universal shape, legacy
-      # tag-based or MeshService-ref based.
+      # tag-based or MeshService-ref based. Only applies to name-based refs:
+      # a labels-based ref is already in its final shape in every style.
       class TargetRefTransform < Base
         def initialize
           super(Condition.all(
             Condition.path(%w[spec to targetRef]),
-            Condition.any(Condition.kind('MeshService'), Condition.kind('MeshMultiZoneService'))
+            Condition.any(Condition.kind('MeshService'), Condition.kind('MeshMultiZoneService')),
+            Condition.field('name')
           ))
         end
 
@@ -29,12 +31,10 @@ module Jekyll
         def kubernetes_ref(target_ref, legacy)
           return legacy_kubernetes_ref(target_ref) if legacy
 
-          {
-            'kind' => target_ref['kind'],
-            'name' => target_ref['name'],
-            'namespace' => target_ref['namespace'],
-            'sectionName' => target_ref['sectionName']
-          }
+          ref = { 'kind' => target_ref['kind'], 'name' => target_ref['name'] }
+          ref['namespace'] = target_ref['namespace'] if target_ref['namespace']
+          ref['sectionName'] = target_ref['sectionName'] if target_ref['sectionName']
+          ref
         end
 
         def legacy_kubernetes_ref(target_ref)
@@ -47,7 +47,9 @@ module Jekyll
         def universal_ref(target_ref, legacy)
           return { 'kind' => 'MeshService', 'name' => target_ref['name'] } if legacy
 
-          { 'kind' => target_ref['kind'], 'name' => target_ref['name'], 'sectionName' => target_ref['sectionName'] }
+          ref = { 'kind' => target_ref['kind'], 'name' => target_ref['name'] }
+          ref['sectionName'] = target_ref['sectionName'] if target_ref['sectionName']
+          ref
         end
       end
     end

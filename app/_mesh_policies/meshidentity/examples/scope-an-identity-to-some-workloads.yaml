@@ -1,0 +1,29 @@
+title: 'Give a subset of workloads their own identity'
+
+description: 'A narrower selector wins over a mesh-wide one, so these proxies are issued from this CA instead. Make sure peers trust this CA before applying. A self-signed root CA also needs insecureAllowSelfSigned: true.'
+
+weight: 600
+
+config:
+  type: MeshIdentity
+  name: payments-identity
+  mesh: default
+  spec:
+    selector:
+      dataplane:
+        matchLabels:
+          app: payments
+    provider:
+      type: Bundled
+      bundled:
+        ca:
+          certificate:
+            type: Secret
+            secretRef:
+              kind: Secret
+              name: payments-ca-cert
+          privateKey:
+            type: Secret
+            secretRef:
+              kind: Secret
+              name: payments-ca-key
