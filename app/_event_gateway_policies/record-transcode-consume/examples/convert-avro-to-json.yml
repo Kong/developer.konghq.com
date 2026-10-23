@@ -32,7 +32,7 @@ config:
     subject: ${context.topic.name + '-value'}
     version: ${'latest'}
     schema_ref_destination:
-      type: confluent_format
+      type: none
 
 tools:
   - konnect-api
