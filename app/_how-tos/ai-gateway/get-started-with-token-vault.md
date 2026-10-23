@@ -26,18 +26,31 @@ prereqs:
       icon_url: /assets/icons/identity.svg
     - title: Corporate IdP
       content: |
-        You need an IdP that issues signed JWTs, such as Okta, and its issuer URL.
+        You need admin access to an IdP that issues signed JWTs, such as Okta, and its issuer URL. Export them as follows:
+
+        ```sh
+        export ISSUER_URL='https://YOUR_OKTA_DOMAIN/oauth2/default'
+        export JWKS_URI='https://YOUR_OKTA_DOMAIN/oauth2/default/v1/keys'
+        ```
+      
       icon_url: /assets/icons/identity.svg
     - title: GitHub OAuth app
       content: |
-        [Create an OAuth app in GitHub](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app) and export its client ID and secret:
+        [Create an OAuth app in GitHub](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app).
+        
+        1. Set the following values:
+        
+        * **Homepage URL:** `https://cloud.konghq.com`
+        * **Redirect URI:** `https://vault.cloud.konghq.com/v2/callback`
+        
+        2. Export its client ID and secret:
 
         ```sh
         export GITHUB_CLIENT_ID='YOUR-CLIENT-ID'
         export GITHUB_CLIENT_SECRET='YOUR-CLIENT-SECRET'
         ```
 
-        You register the Token Vault callback URL in this app in a later step.
+        
       icon_url: /assets/icons/github.svg
 
 related_resources:
@@ -96,14 +109,14 @@ url: /v2/directories/$DIRECTORY_ID/trusted-idps
 status_code: 201
 method: POST
 body:
-  issuer_url: https://acme.okta.com/oauth2/default
-  jwks_uri: https://acme.okta.com/oauth2/default/v1/keys
+  issuer_url: $ISSUER_URL
+  jwks_uri: $JWKS_URI
   display_name: Okta
   vault_access_enabled: true
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Replace the `issuer_url` and `jwks_uri` with the values for your IdP. If you omit `jwks_uri`, {{site.identity}} discovers it from the issuer's `/.well-known/openid-configuration` document. For all the available parameters, see [Trusted IdP](/identity/token-vault/#trusted-idp).
+The `issuer_url` must match the `iss` claim of your IdP's tokens exactly. If you omit `jwks_uri`, {{site.identity}} discovers it from the issuer's `/.well-known/openid-configuration` document. For all the available parameters, see [Trusted IdP](/identity/token-vault/#trusted-idp).
 
 Verify the configuration by sending a `GET` request to the same endpoint:
 
@@ -132,35 +145,27 @@ body:
   scopes:
     - repo
     - read:user
+capture:
+  - variable: PROVIDER_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
-
-For OAuth providers, register the Token Vault callback URL (`https://vault.<konnect-host>/v2/callback`) in the GitHub OAuth app that issued the client ID and secret.
 
 ## Validate the setup
 
 Confirm that the Token Vault is ready to be used, for example, as an upstream authentication method for [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/).
 
-List the providers registered for the directory and capture the ID of the `github-prod` provider:
+List the providers registered for the directory. The response includes `github-prod`:
 
 <!--vale off-->
 {% konnect_api_request %}
 url: /v2/directories/$DIRECTORY_ID/vault/providers
 status_code: 200
 method: GET
-capture:
-  - variable: PROVIDER_ID
-    jq: ".data[] | select(.name == \"github-prod\") | .id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Print the captured value. If it returns an ID, the provider exists in the directory:
-
-```sh
-echo $PROVIDER_ID
-```
-
-Check that the provider is enabled by sending a `GET` request to the provider endpoint. The response contains `"enabled": true`, `"template_name": "github"`, and `"credential_type": "user"`:
+Check that the provider is enabled by sending a `GET` request to the provider endpoint, using the `PROVIDER_ID` captured when you added it. The response contains `"enabled": true`, `"template_name": "github"`, and `"credential_type": "user"`:
 
 <!--vale off-->
 {% konnect_api_request %}
