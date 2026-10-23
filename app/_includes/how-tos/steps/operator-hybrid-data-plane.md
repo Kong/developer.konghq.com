@@ -22,6 +22,7 @@ spec:
           image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
 ' | kubectl apply -f -
 ```
+{:data-test-step="block"}
 
 ## Check the Ready status
 
