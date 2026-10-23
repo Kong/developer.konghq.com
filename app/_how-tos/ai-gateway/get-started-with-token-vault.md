@@ -139,7 +139,7 @@ For OAuth providers, register the Token Vault callback URL (`https://vault.<konn
 
 ## Validate the setup
 
-Confirm that the Token Vault is ready to be used, for example, as an upstream authentication method for AI MCP Servers.
+Confirm that the Token Vault is ready to be used, for example, as an upstream authentication method for [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/).
 
 List the providers registered for the directory and capture the ID of the `github-prod` provider:
 
