@@ -69,6 +69,9 @@ rows:
               content: |
                 To set up {{site.ai_gateway}} using the {{site.konnect_short_name}} UI, sign in to your Konnect account at [cloud.konghq.com](https://cloud.konghq.com/),
                 then navigate to **{{site.ai_gateway}}** and click **New {{site.ai_gateway}}**.
+            - title: On-Prem
+              content: |
+                See [Install {{site.ai_gateway}} 2.x on-prem using Docker Compose](/ai-gateway/install/docker/).
   - columns:
       - blocks:
         - type: card
