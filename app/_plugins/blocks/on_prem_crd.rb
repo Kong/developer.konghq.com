@@ -27,15 +27,25 @@ module Jekyll
       config = add_defaults(config)
 
       should_create_namespace = config.delete('create_namespace')
+      indent_width = config.delete('indent')
 
       # Process YAML for the code block
       config = config.to_yaml.delete_prefix("---\n").chomp.gsub(/version: '(.*)'/, 'version: "\1"')
 
-      context.stack do
+      output = context.stack do
         context['config'] = config
         context['should_create_namespace'] = should_create_namespace
         ComponentTemplates.fetch('on_prem_crd', 'html', base: 'app/_includes').render(context)
       end
+
+      if indent_width
+        # If the config has an indent key, we need to indent the output
+        # by that many spaces.
+        indent = ' ' * indent_width.to_i
+        output = output.lines.map { |line| "#{indent}#{line}" }.join
+      end
+
+      output
     rescue Psych::SyntaxError => e
       message = <<~STRING
         On `#{@page['path']}`, the following {% on_prem_crd %} block contains a malformed yaml:
