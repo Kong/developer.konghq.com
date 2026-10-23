@@ -20,7 +20,7 @@ The security architect uses {{site.mesh_product_name}} to build a zero-trust mod
 ## Workload identity and strict mTLS
 
 The security architect's foundation is `MeshIdentity`.
-It gives every workload in the mesh a unique Secure Production Identity Framework for Everyone (SPIFFE) identity, carried in an X.509 certificate.
+It gives each workload that it selects a Secure Production Identity Framework for Everyone (SPIFFE) identity, carried in an X.509 certificate.
 Every other control, such as mTLS, traffic permissions, and audit, depends on that identity.
 
 When a proxy has an identity, it accepts only mTLS connections and rejects plaintext.
@@ -153,7 +153,7 @@ To keep the policy out of the `MeshOPA` resource, store it in a Secret instead. 
 
 * **Defense in depth**: A compromised or faulty service can't skip the passenger check, because the sidecar runs the check before the request reaches the service.
 * **One decision point**: The same Rego policy runs for every workload that the policy selects, so teams don't rebuild token validation in their own languages.
-* **Audit evidence**: The OPA decision logs record each allow and deny. Together with `MeshAccessLog`, they show the workload that connected and the passenger claim that the sidecar accepted.
+* **Audit evidence**: When the security architect turns on OPA decision logs in `agentConfig`, they record each allow and deny. Together with `MeshAccessLog`, they show the workload that connected and the passenger claim that the sidecar accepted.
 
 ### Egress control
 

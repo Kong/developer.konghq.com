@@ -61,13 +61,14 @@ These dependencies are AeroPay, Kong Air's payment provider, and the managed Pos
 A [`MeshExternalService`](/mesh/meshexternalservice/) turns each dependency into a named mesh destination:
 - Consistent naming: Workloads call a mesh-generated hostname instead of a hardcoded IP address or external URL.
 - Traffic control: `MeshRetry` retries failed calls to AeroPay without changes to application code.
-- Security: The zone egress originates TLS, so the application doesn't manage external certificates. See [Originating TLS](/mesh/meshexternalservice/#originating-tls).
+- Security: For an HTTPS service, the zone egress can originate TLS, so the application doesn't manage external certificates. See [Originating TLS](/mesh/meshexternalservice/#originating-tls).
 
 ## Set the naming standard
 
-On Kubernetes, {{site.mesh_product_name}} includes a default `HostnameGenerator`.
-The `HostnameGenerator` gives each zone-local `MeshExternalService` a generated hostname and a virtual IP.
-For the hostname format and the virtual IP range, see [MeshExternalService](/mesh/meshexternalservice/).
+A zone control plane creates a default `HostnameGenerator` named `local-mesh-external-service`.
+That `HostnameGenerator` gives each `MeshExternalService` created in the zone a hostname in the format `<name>.extsvc.mesh.local`.
+The control plane also assigns each `MeshExternalService` a virtual IP from `242.0.0.0/8`, and the generated hostname resolves to that virtual IP.
+For the `status` fields that record both, see [MeshExternalService](/mesh/meshexternalservice/#status).
 
 A custom naming scheme for Kong Air is an operator task.
 The operator customizes the `HostnameGenerator` once, so application teams don't redefine it in each scenario.
@@ -91,7 +92,7 @@ Define the instance as a `MeshExternalService` named `flight-db`, so that worklo
 > The `MeshTrafficPermission` and `MeshRetry` in this guide live in the same namespace.
 > See [Resource scoping](/mesh/resource-scoping/).
 
-The following `MeshExternalService` defines `flight-db` and turns on TLS to the database endpoint:
+The following `MeshExternalService` defines `flight-db` as a TCP destination on port 5432:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -109,19 +110,20 @@ spec:
   endpoints:
     - address: rds-instance-01.c7x2.us-east-1.rds.amazonaws.com
       port: 5432
-  tls:
-    enabled: true
-    verification:
-      mode: Secured
-      serverName: rds-instance-01.c7x2.us-east-1.rds.amazonaws.com
 ```
 
-Applications keep a simple configuration, and the zone egress encrypts the traffic to the managed database.
+`flight-db` doesn't turn on TLS origination.
+A PostgreSQL client starts TLS inside the PostgreSQL protocol: it sends an `SSLRequest` message first, and only then starts the TLS handshake.
+The zone egress can't take part in that exchange, so it forwards the TCP connection, and the `flight-control` database client negotiates TLS with RDS end to end.
+Configure the client with `sslmode=verify-full`, so it checks the RDS certificate.
+Use TLS origination for protocols that start TLS immediately, such as HTTPS, as in [Secure AeroPay](#secure-aeropay-https-with-tls-origination).
 
 ## Restrict database access by workload
 
 Defining `flight-db` doesn't give any workload access to it.
-The mesh-scoped zone egress denies all `MeshExternalService` traffic by default, so every call returns `403 Forbidden` until a policy allows the caller.
+The mesh-scoped zone egress denies all `MeshExternalService` traffic by default, until a policy allows the caller.
+For an HTTP destination, the zone egress answers with `403 Forbidden`.
+For a TCP destination like `flight-db`, the zone egress closes the connection.
 Kong Air wants one caller, `flight-control`.
 Create a `MeshTrafficPermission` on the zone egress that allows `flight-control` to reach `flight-db`:
 
@@ -156,7 +158,7 @@ The zone egress allows a connection only when both match, and it denies every ot
 
 ### Derive the SNI
 
-The SNI for a zone-local `MeshExternalService` uses the following format, where the last segment is the `match.port`:
+The SNI for a `MeshExternalService` created on a Kubernetes zone uses the following format, where the last segment is the `match.port`:
 
 ```
 sni.extsvc.<mesh>.<zone>.<namespace>.<name>.<port>
@@ -258,6 +260,37 @@ spec:
       serverName: api.aeropay.com
 ```
 
+### Allow passenger-portal to call AeroPay
+
+`passenger-portal` calls AeroPay to take payments.
+Like `flight-db`, `aeropay-api` is denied at the zone egress until a policy allows the caller.
+Create a `MeshTrafficPermission` on the zone egress that allows `passenger-portal` to reach `aeropay-api`.
+The SNI ends with `80`, the `match.port` of `aeropay-api`:
+
+```yaml
+apiVersion: kuma.io/v1alpha1
+kind: MeshTrafficPermission
+metadata:
+  name: aeropay-access
+  namespace: {{site.mesh_namespace}}
+  labels:
+    kuma.io/mesh: kong-air-mesh
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      kuma.io/listener-zoneegress: enabled
+  rules:
+    - default:
+        allow:
+          - spiffeID:
+              type: Exact
+              value: spiffe://kong-air-mesh.zone1.mesh.local/ns/kong-air-production/sa/passenger-portal
+            sni:
+              type: Exact
+              value: sni.extsvc.kong-air-mesh.zone1.{{site.mesh_namespace}}.aeropay-api.80
+```
+
 ## Add resiliency with MeshRetry
 
 `aeropay-api` is now a mesh destination, so developers can apply standard mesh policies to it.
@@ -345,5 +378,5 @@ spec:
    kubectl exec -n kong-air-production deploy/check-in-api -- wget -q -T 10 -O- http://aeropay-api.extsvc.mesh.local
    ```
 
-   Expected output: `403 Forbidden`. The connection reached the zone egress, and the zone egress denied it by default. To grant access, add an `allow` entry with the workload's SPIFFE ID and the AeroPay SNI.
+   Expected output: `403 Forbidden`. The connection reached the zone egress, and the zone egress denied it, because `aeropay-access` allows only `passenger-portal`. To grant access, add an `allow` entry with the workload's SPIFFE ID and the AeroPay SNI.
    {:.no-copy-code}

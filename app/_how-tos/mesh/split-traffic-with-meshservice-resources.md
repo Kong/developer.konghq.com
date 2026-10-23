@@ -181,7 +181,9 @@ meshservice.kuma.io/passenger-portal-v2
 ## Configure the weighted route
 
 Create a `MeshHTTPRoute` that splits traffic between `passenger-portal-v1` and `passenger-portal-v2`.
-The top-level `targetRef` is `Mesh`, so the split applies to every client that calls `passenger-portal`:
+The route lives in `kong-air-production` and selects `passenger-portal` by `kuma.io/display-name` alone, so it's a consumer policy.
+A consumer policy with a `Mesh` top-level `targetRef` applies to every client in its own namespace, which includes `check-in-api`.
+For details, see [Policy scope](/mesh/policy-targeting/#policy-scope):
 
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1
@@ -193,7 +195,7 @@ metadata:
     kuma.io/mesh: kong-air-mesh
 spec:
   targetRef:
-    kind: Mesh # Applies to every client that calls passenger-portal
+    kind: Mesh # Applies to every client in kong-air-production
   to:
     - targetRef:
         kind: MeshService

@@ -86,7 +86,7 @@ Lower the percentage after you trust the setup.
 > When several policies select the same destination, the proxy adds their faults as separate filters and runs them in sequence.
 > An abort that fires stops the request, so a delay from another policy never runs.
 > With one policy at a time, you can attribute each result to the policy you applied.
-> Wait a few seconds after each change for the new configuration to reach the proxy.
+> Wait up to 10 seconds after each change for the new configuration to reach the proxy.
 
 ### HTTP abort (error simulation)
 An HTTP abort makes the `check-in-api` sidecar return an HTTP status code for a percentage of requests, without forwarding them to the application.
@@ -95,7 +95,7 @@ For the `abort` fields, see [The three faults](/mesh/policies/meshfaultinjection
 {:.info}
 > The `targetRef` selects the `check-in-api` proxies, which inject the fault.
 > The `rules` block selects the callers by their Secure Production Identity Framework for Everyone (SPIFFE) IDs.
-> A `Prefix` match on the trust domain faults every caller, and an `Exact` match faults one caller.
+> A `Prefix` match on the trust domain faults every caller in that trust domain, and an `Exact` match faults one caller.
 
 Create a `MeshFaultInjection` that makes `check-in-api` return `503` to every caller in the trust domain:
 
@@ -237,7 +237,7 @@ The blast radius of a fault experiment is the set of requests that the fault aff
 Kong Air keeps the blast radius small with three controls, from broadest to narrowest:
 
 1. `targetRef` picks the destination proxies. Select a non-production workload, such as one with an `env: staging` label, to keep the experiment away from customer traffic.
-2. `matches` picks the callers, by `spiffeID` or by `sni`. Use `spiffeID` with `type: Exact` to fault requests from one workload identity.
+2. `matches` picks the callers by `spiffeID`. On the zone egress, `sni` picks one external destination instead. Use `spiffeID` with `type: Exact` to fault requests from one workload identity.
 3. `percentage` picks how often the fault fires. Start at `1` and raise it as your confidence grows.
 
 For how each selector works, see [Policy targeting](/mesh/policy-targeting/) and [`spec.rules[]`](/mesh/policy-targeting/#spec-rules).
@@ -284,15 +284,27 @@ Delete the policy before you move to the next check.
    {:.no-copy-code}
 
 1. Check that the response rate limit fires.
-   The sidecar forwards the request right away, but the body arrives slowly:
+   The `check-in-api` Pod name is only a few bytes, which arrives in well under a second even at 1 kbps.
+   So create a 10 KiB file in the `check-in-api` container, which serves it on `/manifest.bin`:
 
    ```sh
-   kubectl exec -n kong-air-production deploy/flight-control -- \
-     wget -q -T 60 -O- http://check-in-api.kong-air-production.svc.cluster.local:8080/
+   kubectl exec -n kong-air-production deploy/check-in-api -c check-in-api -- \
+     sh -c 'head -c 10240 /dev/urandom > /tmp/manifest.bin'
    ```
 
-   The command prints the same body as the baseline.
-   The body takes several seconds to arrive, even though it's only a few bytes.
+1. Download the file from `flight-control`, and print the time before and after the download:
+
+   ```sh
+   kubectl exec -n kong-air-production deploy/flight-control -- sh -c \
+     'date +%s; wget -q -T 60 -O /dev/null http://check-in-api.kong-air-production.svc.cluster.local:8080/manifest.bin; date +%s'
+   ```
+
+   The two timestamps are about 10 seconds apart, because the `check-in-api` sidecar sends the 10 KiB body at 1 KiB per second:
+
+   ```text
+   1792750000
+   1792750010
+   ```
    {:.no-copy-code}
 
 1. Delete the throttle policy, and check that the fault is gone:
@@ -306,5 +318,5 @@ Delete the policy before you move to the next check.
    The baseline behavior returns, and the command prints the pod name immediately.
    {:.no-copy-code}
 
-The control plane pushes policy changes to the proxies over xDS within a few seconds, without a restart.
+The control plane pushes policy changes to the proxies over xDS within about 10 seconds, without a restart.
 If a result still shows the effect of the policy you deleted, wait and run the command again.

@@ -99,7 +99,7 @@ Apply the following steps in order.
 Each step replaces the previous policy, so delete the old policy before you apply the next one.
 That way, only one `Mesh`-scoped `MeshPassthrough` policy is in force at a time.
 
-1. Record the starting point. Pick a destination that your cluster can resolve and reach, and confirm that `check-in-api` reaches it before any policy exists. Without this baseline, you can't tell a policy block from a DNS failure, because both fail silently with a non-zero exit status:
+1. Record the starting point. Pick a destination that your cluster can resolve and reach, and confirm that `check-in-api` reaches it before any policy exists. Without this baseline, you can't tell a policy block from a DNS failure, because both fail with a non-zero exit status:
 
    ```sh
    kubectl exec -n kong-air-production deploy/check-in-api -- wget -q -T 5 -O- http://www.google.com
@@ -149,7 +149,7 @@ That way, only one `Mesh`-scoped `MeshPassthrough` policy is in force at a time.
 
    Every Kong Air proxy in `kong-air-production` now reaches only the destinations that the mesh knows about. The sidecar drops traffic to any other destination.
 
-1. Reopen the destinations you decided to allow with a `selective-passthrough` policy. `appendMatch` accepts `Domain`, `IP`, and `CIDR` entries. Each entry takes an optional `port`, and a `protocol` that defaults to `tcp`:
+1. Reopen the destinations you decided to allow with a `selective-passthrough` policy. `appendMatch` accepts `Domain`, `IP`, and `CIDR` entries. Each entry takes an optional `port`, and a `protocol` that defaults to `tcp`. A `Domain` entry can't use `tcp` or `mysql`, so set its `protocol`. An exact domain always needs a `port`, because the sidecar resolves the domain itself and connects to that port. A wildcard domain needs a `port` with `http`, `http2`, or `grpc`:
 
    ```sh
    kubectl delete meshpassthrough secure-perimeter -n kong-air-production
@@ -195,7 +195,8 @@ That way, only one `Mesh`-scoped `MeshPassthrough` policy is in force at a time.
 `MeshPassthrough` and a mesh-scoped zone egress control different traffic.
 The sidecar enforces `MeshPassthrough` on traffic to destinations that the mesh doesn't model, and it connects to those destinations directly.
 A zone egress carries `MeshExternalService` traffic.
-On the zone egress, `MeshTrafficPermission` denies every call with `403 Forbidden` until a rule allows the caller to reach that destination.
+On the zone egress, `MeshTrafficPermission` denies every call until a rule allows the caller to reach that destination.
+An HTTP call gets `403 Forbidden`, and a TCP connection closes.
 The zone egress also isn't on the default cross-zone path, because a sidecar connects directly to the remote zone ingress.
 For both paths, see [Traffic paths](/mesh/mesh-scoped-zone-proxies/#traffic-paths).
 To send a dependency through the zone egress, model it as a `MeshExternalService`, as in [Manage external services with MeshExternalService](/mesh/manage-external-services-with-meshexternalservice/).
@@ -208,7 +209,7 @@ To send a dependency through the zone egress, model it as a `MeshExternalService
    kubectl exec -n kong-air-production deploy/check-in-api -- wget -q -T 5 -O- http://www.bing.com
    ```
 
-   Expected result: the command fails with a non-zero exit status and prints no response body. The sidecar has no filter chain for this destination, so it drops the connection without a response.
+   Expected result: the command fails with a non-zero exit status and prints no response body. The sidecar's port 80 filter chain has no route for `www.bing.com`, so the sidecar answers with `503 Service Unavailable`.
    {:.no-copy-code}
 
 1. Confirm that the `*.google.com` entry still allows traffic to that host on port 80:

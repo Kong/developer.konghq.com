@@ -71,7 +71,7 @@ It never connects to a data plane proxy.
 
 A zone control plane runs in one zone.
 It finds the local workloads, sends them Envoy configuration over xDS, and exchanges resources with the global control plane over KDS.
-If the global control plane is unreachable, the zone control plane keeps serving its last configuration to the local proxies.
+If the global control plane is unreachable, the zone control plane keeps the global resources that it last received and keeps configuring its local proxies.
 
 ## Data plane
 
@@ -84,7 +84,7 @@ A data plane proxy, or sidecar, is an Envoy instance that runs next to one appli
 It sends and receives the mesh traffic of that instance.
 The proxy connects to its zone control plane, which computes the configuration for that proxy.
 The `kuma-dp` binary starts and configures Envoy.
-On Kubernetes, sidecar injection adds `kuma-dp` to the Pod as an extra container.
+On Kubernetes, sidecar injection adds `kuma-dp` to the Pod as a native sidecar container.
 
 In the API, a `Dataplane` resource represents each proxy, and policies select proxies through it.
 
@@ -133,12 +133,13 @@ As a result, callers in the mesh keep using ordinary Kubernetes DNS names, such 
 `reachableBackends` lists the destinations that a workload calls.
 On Kubernetes, you set it with the `kuma.io/reachable-backends` Pod annotation.
 The control plane generates outbound configuration only for these destinations.
-By default, a proxy without `reachableBackends` reaches no destination.
+With the default `restrictOutbound` setting, a proxy without `reachableBackends` reaches no destination.
+The Kong Air control plane sets `restrictOutbound` to false, so its proxies reach every destination until the production scenario turns it on.
 
 Each entry selects destinations by `kind` and `labels`.
 `kind` accepts `MeshService`, `MeshMultiZoneService`, and `MeshExternalService`, so one list covers services in the zone, services in several zones, and external dependencies.
 `labels: {}` selects every destination of that kind.
-The control plane rejects an entry without `labels`.
+On Kubernetes, the control plane rejects an annotation entry without `labels`.
 
 For more information, see [Prepare the mesh for production](/mesh/prepare-the-mesh-for-production/).
 
@@ -146,7 +147,8 @@ For more information, see [Prepare the mesh for production](/mesh/prepare-the-me
 
 A zone ingress accepts traffic from other zones and forwards it to a local instance of the service.
 A zone egress sends traffic from its zone to external destinations, which `MeshExternalService` resources describe.
-Cross-zone traffic goes from the caller's sidecar directly to the remote zone ingress, unless you route it through a zone egress.
+Cross-zone traffic goes from the caller's sidecar directly to the remote zone ingress.
+It doesn't pass through a zone egress.
 
 Zone proxies are mesh-scoped: each one is an ordinary `Dataplane` resource in one mesh.
 The control plane adds the `kuma.io/listener-zoneingress: enabled` and `kuma.io/listener-zoneegress: enabled` labels to them, and policies select them with these labels.
@@ -156,6 +158,7 @@ For more information, see [Mesh-scoped zone proxies](/mesh/mesh-scoped-zone-prox
 
 A `MeshZoneAddress` publishes the address and port that other zones use to reach the zone ingress of one mesh.
 On Kubernetes, the zone control plane creates it from the zone ingress Service.
+On Universal, you create it on the zone control plane.
 For more information, see [Make ingress reachable from other zones](/mesh/mesh-scoped-zone-proxies/#make-ingress-reachable-from-other-zones).
 
 ## Control plane channels

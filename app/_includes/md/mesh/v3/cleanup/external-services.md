@@ -2,7 +2,7 @@ Delete the `MeshExternalService` resources and the policies that reference them:
 
 ```sh
 kubectl delete meshretry aeropay-retry-policy -n {{site.mesh_namespace}} --ignore-not-found
-kubectl delete meshtrafficpermission flight-db-access -n {{site.mesh_namespace}} --ignore-not-found
+kubectl delete meshtrafficpermission flight-db-access aeropay-access -n {{site.mesh_namespace}} --ignore-not-found
 kubectl delete meshexternalservice flight-db aeropay-api -n {{site.mesh_namespace}} --ignore-not-found
 ```
 

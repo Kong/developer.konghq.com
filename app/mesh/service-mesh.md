@@ -40,7 +40,7 @@ You can solve these problems in two ways:
 
 With the second approach, every replica of every service gets its own data plane proxy.
 When one proxy fails, the other replicas keep working.
-Each proxy also gets its own identity, so each replica of a service has an identity.
+Each proxy also presents a certificate with the identity of its workload, so the mesh can authenticate every replica.
 The proxies must be lightweight, because you run many of them.
 
 ## Why the proxies need a control plane

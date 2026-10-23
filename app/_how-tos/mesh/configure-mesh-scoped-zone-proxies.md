@@ -147,7 +147,7 @@ Each zone proxy is a `Dataplane` with the `kuma.io/mesh: kong-air-mesh` label.
 
    {:.info}
    > To target one listener, set `sectionName` to the listener `name`, here `"10001"`.
-   > For Helm-deployed proxies without named ports, the name defaults to the port number as a string: `"10001"` for zone ingress and `"10002"` for zone egress.
+   > The Helm chart leaves the zone proxy `Service` port unnamed, so the control plane names the listener after the `Service` port number: `"10001"` for zone ingress and `"10002"` for zone egress.
    >
    > A healthy listener has no `state` field.
    > The output omits `state` when it has its default value, `Ready`, so `state` appears only when the listener is `NotReady`.
@@ -175,12 +175,12 @@ Each zone proxy is a `Dataplane` with the `kuma.io/mesh: kong-air-mesh` label.
    ```
    {:.no-copy-code}
 
-   Each zone publishes its own `MeshZoneAddress` and receives the entries of the other zones, so `total` grows with the deployment.
-   The labels tell the entries apart.
-   `kuma.io/origin: zone` marks the entry that this zone published.
-   `kuma.io/origin: global` marks an entry synced from the zone named in `kuma.io/zone`.
+   Each zone control plane publishes its own `MeshZoneAddress`, and the global control plane syncs it to the other zones.
+   So `total` grows with the number of zones that run an ingress for `kong-air-mesh`.
+   The `kuma.io/zone` label names the zone that published each entry.
+   On a zone control plane, an entry synced from another zone carries `kuma.io/origin: global`.
 
-If you scale the zone ingress to zero, the control plane withdraws its `MeshZoneAddress`.
+If you scale the zone ingress to zero, the zone control plane deletes its `MeshZoneAddress`.
 Other zones then stop routing to an ingress that doesn't respond.
 
 ## Target the proxies with policy
@@ -261,7 +261,7 @@ For how to find each value, see [Manage external services with MeshExternalServi
    ```
 
    Both pods show `2/2` and `Running`.
-   Each zone proxy pod runs the proxy container next to a `kuma-sidecar` container:
+   Each zone proxy pod runs a `pause` placeholder container next to the injected `kuma-sidecar` container, which is the proxy:
 
    ```text
    NAME                                               READY   STATUS    RESTARTS   AGE

@@ -159,7 +159,7 @@ rows:
   - role: "[Security architect](/mesh/persona/security/)"
     focus: Zero trust
     capabilities: |
-      * Encryption: `MeshIdentity` gives every workload a certificate and turns on mutual TLS (mTLS), and the control plane rotates the certificates.
+      * Encryption: `MeshIdentity` gives each workload that it selects a certificate and turns on mutual TLS (mTLS), and the certificates rotate automatically.
       * Access control: `MeshTrafficPermission` allows each call explicitly, and the proxies deny everything else.
 {% endtable %}
 <!-- vale on -->

@@ -40,7 +40,7 @@ The operator uses these labels to select the zone proxies in a policy's `targetR
 
 Every zone runs a zone ingress.
 The zone ingress accepts mTLS traffic from other zones and forwards it to a local instance of the service.
-The zone control plane publishes the address of the zone ingress as a `MeshZoneAddress`, so other zones know where to connect.
+On Kubernetes, the zone control plane publishes the address of the zone ingress as a `MeshZoneAddress`, so other zones know where to connect.
 
 ### Zone egress
 
@@ -50,20 +50,21 @@ The operator deploys a zone egress, and every request to a `MeshExternalService`
 * **Compliance**: Only the zone egress needs a network path to the internet, not every sidecar.
 * **Auditing**: The operator audits external requests in one place.
 
-Cross-zone traffic between mesh services doesn't use the zone egress by default.
+Cross-zone traffic between mesh services doesn't use the zone egress.
 A caller's sidecar connects directly to the zone ingress of the other zone.
 For both paths, see [Traffic paths](/mesh/mesh-scoped-zone-proxies/#traffic-paths).
 
 The operator enables both proxies for each mesh in the `meshes:` list of the Helm values, not in the `Mesh` resource:
 
 ```yaml
-# One entry for each mesh that needs zone proxies
-meshes:
-  - name: kong-air-mesh
-    ingress:
-      enabled: true
-    egress:
-      enabled: true
+kuma:
+  # One entry for each mesh that needs zone proxies
+  meshes:
+    - name: kong-air-mesh
+      ingress:
+        enabled: true
+      egress:
+        enabled: true
 ```
 {:.no-copy-code}
 
@@ -98,7 +99,7 @@ For the full `MeshTrace` and `MeshAccessLog` configuration, see [Observe mesh tr
 
 ## How the operator monitors the mesh
 
-The operator monitors the mesh with the metrics that the control planes expose:
+The operator monitors the mesh with the following signals:
 
 * **Configuration delay**: how long a policy change takes to reach the sidecars
 * **Cross-zone latency**: the network performance between the US and EU zones

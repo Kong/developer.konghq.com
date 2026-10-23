@@ -88,11 +88,8 @@ For trust across zones, see [Multi-zone meshes](/mesh/policies/meshidentity/#mul
        path: /ns/{% raw %}{{ .Namespace }}{% endraw %}/sa/{% raw %}{{ .ServiceAccount }}{% endraw %}' | kubectl apply -f -
    ```
 
-1. Restart the Kong Air workloads, so each sidecar gets a certificate from `kong-air-identity`:
-
-   ```sh
-   kubectl rollout restart deployment -n kong-air-production
-   ```
+1. Wait up to 10 seconds.
+   The zone control plane sends each sidecar its certificate over xDS, so you don't need to restart the workloads.
 
 1. Check that each data plane proxy received its certificate from `kong-air-identity`:
 
@@ -102,7 +99,7 @@ For trust across zones, see [Multi-zone meshes](/mesh/policies/meshidentity/#mul
 
    The output shows one entry for each data plane proxy.
    The generated KRI changes from zone to zone, but every `issuedBackend` contains `kong-air-identity`.
-   An empty value means that the `MeshIdentity` selector doesn't match the workload.
+   A data plane proxy with no `issuedBackend` has no workload identity, for example because the `MeshIdentity` selector doesn't match the workload.
 
 The `kong-air-identity` resource gives every workload a Secure Production Identity Framework for Everyone (SPIFFE) ID.
 The ID path contains the workload's namespace and Kubernetes service account:
@@ -203,7 +200,7 @@ spec:
 ```
 
 {:.info}
-> * The control plane takes a few seconds to send a `MeshTrafficPermission` change to the data plane proxies.
+> * The control plane takes up to 10 seconds to send a `MeshTrafficPermission` change to the data plane proxies.
 >   If a request returns an unexpected result right after you apply a policy, wait and try again.
 > * The receiving proxy enforces `MeshTrafficPermission`, so `check-in-api` makes the decision.
 > * When permissions overlap, any matching `deny` wins over every `allow`.

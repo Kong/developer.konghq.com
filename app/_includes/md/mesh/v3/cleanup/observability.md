@@ -1,12 +1,11 @@
-1. Delete the telemetry policies and the backend they reference:
+1. Delete the zone egress `MeshMetric`, if you applied it:
 
    ```sh
-   kubectl delete meshaccesslog flight-audit-logs -n {{site.mesh_namespace}} --ignore-not-found
-   kubectl delete meshtrace flight-tracking -n {{site.mesh_namespace}} --ignore-not-found
-   kubectl delete meshmetric kong-air-metrics zone-egress-metrics -n {{site.mesh_namespace}} --ignore-not-found
-   kubectl delete meshopentelemetrybackend otel-collector -n {{site.mesh_namespace}} --ignore-not-found
+   kubectl delete meshmetric zone-egress-metrics -n {{site.mesh_namespace}} --ignore-not-found
    ```
 
+   This guide updated the `all-metrics`, `all-traces`, and `all-access-logs` policies from [Deploy an OpenTelemetry collector](/mesh/deploy-an-opentelemetry-collector/) instead of creating new ones.
+   To remove them, along with the `otel-collector` backend, follow that guide's cleanup steps.
    Without the `MeshMetric` policies, the sidecars stop exposing their Prometheus endpoints, and the dashboards go empty.
 
 1. If you provisioned the Grafana dashboards as ConfigMaps, delete them:

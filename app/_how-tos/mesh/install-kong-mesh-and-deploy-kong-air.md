@@ -84,7 +84,8 @@ You create the mesh on the global control plane with [kongctl](/kongctl/), then 
    EOF
    ```
 
-1. Export your {{site.konnect_short_name}} geographic region and the Kuma Discovery Service (KDS) address that the zone connects to:
+1. Export your {{site.konnect_short_name}} geographic region and the Kuma Discovery Service (KDS) address that the zone connects to.
+   The address uses `grpcs://`, because a zone control plane with a token refuses to start on a plaintext `grpc://` address:
 
    ```sh
    export KONNECT_REGION='us'
@@ -114,7 +115,7 @@ You create the mesh on the global control plane with [kongctl](/kongctl/), then 
    kubectl create namespace kong-mesh-system
    ```
 
-1. Store the zone token in a Kubernetes secret, so the zone control plane can read it at startup:
+1. Store the zone token in the `token` key of a Kubernetes secret named `cp-token`:
 
    ```sh
    kubectl create secret generic cp-token \
@@ -135,12 +136,11 @@ You create the mesh on the global control plane with [kongctl](/kongctl/), then 
        kdsGlobalAddress: $CONTROL_PLANE_URL
        konnect:
          cpId: $CONTROL_PLANE_ID
+       zoneToken:
+         secretName: cp-token
+         key: token
        envVars:
          KUMA_DEFAULTS_RESTRICT_OUTBOUND: "false"
-       secrets:
-         - Env: KUMA_MULTIZONE_ZONE_KDS_AUTH_TOKEN_INLINE
-           Secret: cp-token
-           Key: token
      meshes:
        - name: kong-air-mesh
          ingress:
@@ -149,6 +149,9 @@ You create the mesh on the global control plane with [kongctl](/kongctl/), then 
            enabled: true
    EOF
    ```
+
+   The `zoneToken` entry mounts the `cp-token` secret into the zone control plane as a file.
+   The zone control plane reads the token on every KDS connection, so it picks up a rotated token without a restart.
 
    The values file sets `KUMA_DEFAULTS_RESTRICT_OUTBOUND` to `false`, so the Kong Air mesh starts open on purpose.
    With this setting, sidecars can reach destinations that you haven't declared yet.
@@ -188,6 +191,8 @@ You create the mesh on the global control plane with [kongctl](/kongctl/), then 
 ## Deploy Kong Air
 
 1. Deploy the Kong Air demo applications: `passenger-portal`, `check-in-api`, and `flight-control`.
+   Each application is an nginx server that returns its Pod name on `/` and `ok` on `/health`.
+   The `/manifest.bin` location serves a file that [Validate resilience with fault injection](/mesh/validate-resilience-with-fault-injection/) creates to show a bandwidth limit.
    Each application runs in the `kong-air-production` namespace with its own service account.
    When you add a workload identity in [Create a security policy](/mesh/create-a-security-policy/), each workload gets its own Secure Production Identity Framework for Everyone (SPIFFE) ID:
 
@@ -235,6 +240,9 @@ You create the mesh on the global control plane with [kongctl](/kongctl/), then 
            location /health {
                add_header Content-Type text/plain;
                return 200 "ok\n";
+           }
+           location = /manifest.bin {
+               root /tmp;
            }
        }
    ---

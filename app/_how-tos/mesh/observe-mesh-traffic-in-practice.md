@@ -65,7 +65,8 @@ related_resources:
 
 Without a service mesh, each Kong Air service needs its own instrumentation library, and each library can use its own telemetry format.
 {{site.mesh_product_name}} collects telemetry at the sidecar instead, so every service produces metrics, traces, and logs in the same format without code changes.
-Every proxy in every zone tags its metrics with `mesh`, `zone`, `kuma_workload`, and `kuma_proxy_role`, so one Prometheus and Grafana stack covers the whole deployment.
+`MeshMetric` labels each proxy's metrics with `mesh`, `zone`, and `kuma_proxy_role`, and adds `kuma_workload` on sidecars.
+With these labels, one Prometheus and Grafana stack covers the whole deployment.
 
 ## Architecture
 
@@ -77,19 +78,26 @@ The control plane configures the sidecars but doesn't sit in the telemetry data 
 
 The Kong Air observability stack is Tempo, Loki, and Prometheus, with an OpenTelemetry collector in front of them.
 To install the stack, follow [Deploy an OpenTelemetry collector](/mesh/deploy-an-opentelemetry-collector/).
-When the stack runs, connect {{site.mesh_product_name}} to it with the `MeshMetric`, `MeshTrace`, and `MeshAccessLog` policies in the following sections.
+That guide creates the `otel-collector` `MeshOpenTelemetryBackend` and three policies, `all-metrics`, `all-traces`, and `all-access-logs`, that send every signal to the collector.
+
+This guide extends those three policies instead of creating new ones.
+When several policies of the same type select a proxy, the control plane merges them, and a `backends` list from one policy replaces the list from another.
+So if you create a second `MeshMetric` with its own backend, it overrides the first one, and one of the two backends stops receiving data.
+Each step in this guide applies a new version of an existing policy that keeps the collector backend and adds a second one.
+For the merge rules, see [Policy precedence](/mesh/policy-targeting/#policy-precedence).
 
 ## Metrics with `MeshMetric`
 
 `MeshMetric` makes each Kong Air sidecar expose its metrics, so Prometheus can scrape them:
 
-1. Create a `MeshMetric` that exposes metrics from every sidecar on port `5670`:
+1. Update the `all-metrics` policy so every sidecar also exposes its metrics on port `5670`.
+   The `OpenTelemetry` backend stays, so the collector keeps receiving metrics:
 
    ```bash
    echo 'apiVersion: kuma.io/v1alpha1
    kind: MeshMetric
    metadata:
-     name: kong-air-metrics
+     name: all-metrics
      namespace: {{site.mesh_namespace}}
      labels:
        kuma.io/mesh: kong-air-mesh
@@ -102,6 +110,13 @@ When the stack runs, connect {{site.mesh_product_name}} to it with the `MeshMetr
            appendProfiles:
              - name: Basic
        backends:
+         - type: OpenTelemetry
+           openTelemetry:
+             backendRef:
+               kind: MeshOpenTelemetryBackend
+               labels:
+                 kuma.io/display-name: otel-collector
+             refreshInterval: 30s
          - type: Prometheus
            prometheus:
              port: 5670
@@ -110,7 +125,14 @@ When the stack runs, connect {{site.mesh_product_name}} to it with the `MeshMetr
                mode: Disabled' | kubectl apply -f -
    ```
 
-1. After the `check-in-api` pod restarts, check its metrics endpoint:
+1. Restart the Kong Air workloads:
+
+   ```bash
+   kubectl rollout restart deployment -n kong-air-production
+   kubectl rollout status deployment -n kong-air-production --timeout=120s
+   ```
+
+1. Check the metrics endpoint of a `check-in-api` Pod:
 
    ```bash
    POD=$(kubectl get pod -n kong-air-production -l app=check-in-api -o jsonpath='{.items[0].metadata.name}')
@@ -126,7 +148,7 @@ When the stack runs, connect {{site.mesh_product_name}} to it with the `MeshMetr
 > For more information, see [Resource scoping](/mesh/resource-scoping/).
 >
 > `MeshMetric` opens port `5670` on each sidecar for Prometheus to scrape.
-> The sidecar binds the new port at startup, so you must restart the pod for the change to take effect.
+> This guide restarts the workloads after the change, so the new port is available on every Pod before you check it.
 >
 > Prometheus also needs a scrape config that targets the port.
 > For the scrape config, see [Prometheus scrape jobs](#prometheus-scrape-jobs).
@@ -166,33 +188,16 @@ spec:
 
 ## Tracing with `MeshTrace`
 
-`MeshTrace` makes each Kong Air sidecar send trace spans to an OTLP receiver.
-A `MeshTrace` OpenTelemetry backend references a `MeshOpenTelemetryBackend`, so you create the backend first:
+`MeshTrace` makes each Kong Air sidecar send trace spans to the collector, which forwards them to Tempo.
+A `MeshTrace` has at most one backend, so this step keeps the `otel-collector` backend and adds tags:
 
-1. Create a `MeshOpenTelemetryBackend` named `otel-collector` that points at the collector `Service`:
-
-   ```bash
-   echo 'apiVersion: kuma.io/v1alpha1
-   kind: MeshOpenTelemetryBackend
-   metadata:
-     name: otel-collector
-     namespace: {{site.mesh_namespace}}
-     labels:
-       kuma.io/mesh: kong-air-mesh
-   spec:
-     endpoint:
-       address: otel-collector.mesh-observability
-       port: 4317   # defaults to 4317 when omitted
-     protocol: grpc' | kubectl apply -f -
-   ```
-
-1. Create a `MeshTrace` that traces every request and adds two Kong Air tags to each span:
+1. Update the `all-traces` policy so each span carries two Kong Air tags:
 
    ```bash
    echo 'apiVersion: kuma.io/v1alpha1
    kind: MeshTrace
    metadata:
-     name: flight-tracking
+     name: all-traces
      namespace: {{site.mesh_namespace}}
      labels:
        kuma.io/mesh: kong-air-mesh
@@ -221,7 +226,7 @@ A `MeshTrace` OpenTelemetry backend references a `MeshOpenTelemetryBackend`, so 
 1. Port-forward to your trace backend, such as Tempo or Jaeger, and check that traces arrive:
 
    ```bash
-   kubectl port-forward -n mesh-observability svc/tempo-query-frontend 3200:3200
+   kubectl port-forward -n mesh-observability svc/tempo 3200:3200
    # Or for Jaeger: kubectl port-forward -n mesh-observability svc/jaeger-query 16686:80
    ```
 
@@ -229,13 +234,14 @@ A `MeshTrace` OpenTelemetry backend references a `MeshOpenTelemetryBackend`, so 
 
 `MeshAccessLog` makes each Kong Air sidecar write a structured record for each request it sends:
 
-1. Create a `MeshAccessLog` that writes JSON records to `/tmp/access.log` on each sidecar:
+1. Update the `all-access-logs` policy so each sidecar also writes JSON records to `/tmp/access.log`.
+   The `OpenTelemetry` backend stays, so the collector keeps receiving logs:
 
    ```bash
    echo 'apiVersion: kuma.io/v1alpha1
    kind: MeshAccessLog
    metadata:
-     name: flight-audit-logs
+     name: all-access-logs
      namespace: {{site.mesh_namespace}}
      labels:
        kuma.io/mesh: kong-air-mesh
@@ -247,6 +253,19 @@ A `MeshTrace` OpenTelemetry backend references a `MeshOpenTelemetryBackend`, so 
            kind: Mesh
          default:
            backends:
+             - type: OpenTelemetry
+               openTelemetry:
+                 backendRef:
+                   kind: MeshOpenTelemetryBackend
+                   labels:
+                     kuma.io/display-name: otel-collector
+                 attributes:
+                   - key: mesh
+                     value: "%KUMA_MESH%"
+                   - key: source
+                     value: "%KUMA_SOURCE_SERVICE%"
+                   - key: destination
+                     value: "%KUMA_DESTINATION_SERVICE%"
              - type: File
                file:
                  path: /tmp/access.log
@@ -286,9 +305,9 @@ A `MeshTrace` OpenTelemetry backend references a `MeshOpenTelemetryBackend`, so 
    So `wget` reports `server returned error: HTTP/1.1 403 Forbidden`, and the sidecar records the denied request.
    Access logs record denied requests as well as allowed ones, which makes them useful for audits.
 
-   The `source` and `destination` values are the workloads' `kuma.io/workload` labels.
+   The `source` value is the calling workload's `kuma.io/workload` label, and the `destination` value is the name of the destination `MeshService`.
    The file backend writes on the proxy that sends the request, so read the log on the calling workload's sidecar.
-   The sidecar creates `/tmp/access.log` at startup.
+   Envoy creates `/tmp/access.log` when the sidecar receives the `MeshAccessLog` configuration.
    A workload that hasn't sent outbound traffic has an empty file.
 
 {:.info}
@@ -343,35 +362,58 @@ Download the six dashboards from the [Kuma GitHub repository](https://github.com
 
 Two Prometheus scrape jobs cover the whole mesh:
 
-- `kuma-dataplanes` scrapes proxy metrics on port `5670`, and finds the pods with the Kubernetes pod role. The Helm chart runs mesh-scoped zone proxies with an injected sidecar, so this job covers zone ingress and zone egress as well as workload sidecars. It feeds the Mesh Drilldown, Workload Health, Workload Debug, Zone Ingress, and Zone Egress dashboards.
+- `kuma-dataplanes` scrapes proxy metrics on port `5670`, and finds the Pods with the Kubernetes pod role. The Helm chart runs mesh-scoped zone proxies with an injected sidecar, so this job covers zone ingress and zone egress as well as workload sidecars. It feeds the Mesh Drilldown, Workload Health, Workload Debug, Zone Ingress, and Zone Egress dashboards.
 - `kuma-control-plane` scrapes the control plane's own `/metrics` endpoint on port `5680`. It feeds the Control Plane dashboard.
 
-Add the `kuma-dataplanes` job under `prometheus.prometheusSpec.additionalScrapeConfigs`:
+[Deploy an OpenTelemetry collector](/mesh/deploy-an-opentelemetry-collector/) installed Prometheus with the `prometheus-community/prometheus` chart and one scrape job, `otel-collector`, in `extraScrapeConfigs`.
+`extraScrapeConfigs` is one string, so a new value replaces the old one.
+Add the two {{site.mesh_product_name}} jobs to Prometheus:
 
-```yaml
-- job_name: kuma-dataplanes
-  metrics_path: /metrics
-  kubernetes_sd_configs:
-    - role: pod
-  relabel_configs:
-    - source_labels: [__meta_kubernetes_pod_container_name]
-      regex: kuma-sidecar
-      action: keep
-    - source_labels: [__meta_kubernetes_pod_phase]
-      regex: Running
-      action: keep
-    - source_labels: [__address__]
-      regex: '(.+?)(:[0-9]+)?'
-      target_label: __address__
-      replacement: '${1}:5670'
-    - source_labels: [__meta_kubernetes_pod_name]
-      target_label: pod
-    - source_labels: [__meta_kubernetes_namespace]
-      target_label: namespace
-```
+1. Create a values file that keeps the `otel-collector` job and adds the two {{site.mesh_product_name}} jobs:
+
+   ```sh
+   cat > values-prometheus.yaml <<'EOF'
+   extraScrapeConfigs: |
+     - job_name: otel-collector
+       static_configs:
+         - targets: ['otel-collector.mesh-observability:8889']
+     - job_name: kuma-dataplanes
+       metrics_path: /metrics
+       kubernetes_sd_configs:
+         - role: pod
+       relabel_configs:
+         - source_labels: [__meta_kubernetes_pod_container_name]
+           regex: kuma-sidecar
+           action: keep
+         - source_labels: [__meta_kubernetes_pod_phase]
+           regex: Running
+           action: keep
+         - source_labels: [__address__]
+           regex: '(.+?)(:[0-9]+)?'
+           target_label: __address__
+           replacement: '${1}:5670'
+         - source_labels: [__meta_kubernetes_pod_name]
+           target_label: pod
+         - source_labels: [__meta_kubernetes_namespace]
+           target_label: namespace
+     - job_name: kuma-control-plane
+       metrics_path: /metrics
+       static_configs:
+         - targets: ['kong-mesh-control-plane.{{site.mesh_namespace}}:5680']
+   EOF
+   ```
+
+1. Upgrade the Prometheus release with the new values:
+
+   ```sh
+   helm upgrade prometheus prometheus-community/prometheus \
+     --namespace mesh-observability --reuse-values \
+     -f values-prometheus.yaml
+   ```
 
 Only the Control Plane dashboard filters on the `job` label, because `kuma-cp` metrics carry no proxy labels.
-Every proxy sample carries `mesh`, `zone`, `kuma_workload`, and `kuma_proxy_role` (`sidecar`, `gateway`, `zone-ingress`, or `zone-egress`).
+Every proxy sample carries `mesh`, `zone`, and `kuma_proxy_role` (`sidecar`, `zone-ingress`, `zone-egress`, or `zone-proxy` for a proxy with both zone listeners).
+Samples from a sidecar also carry `kuma_workload`.
 The other five dashboards select proxies by these labels, so they need no relabeling beyond `pod` and `namespace`.
 
 ## Validate

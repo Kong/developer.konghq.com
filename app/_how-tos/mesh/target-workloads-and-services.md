@@ -55,7 +55,7 @@ For the accepted values, see [`spec.targetRef`](/mesh/policy-targeting/#spec-tar
 
 ### Example: regional timeouts
 
-Kong Air gives every sidecar in `zone1` the same request timeout.
+Kong Air gives every sidecar in `zone1` a 30-second request timeout, which is longer than the 15-second default, because some `zone1` services call slow back-office systems.
 Create a `MeshTimeout` in the system namespace that selects these proxies by their computed `kuma.io/zone` label:
 
 ```bash
@@ -76,7 +76,7 @@ spec:
         kind: Mesh
       default:
         http:
-          requestTimeout: 15s' | kubectl apply -f -
+          requestTimeout: 30s' | kubectl apply -f -
 ```
 
 
@@ -96,8 +96,8 @@ For how the control plane generates them, see [MeshService sources](/mesh/meshse
 
 Check that a `Dataplane` label selector scopes a policy to only the intended workloads in `kong-air-production`.
 
-Sidecar proxies have no `Dataplane` object in the Kubernetes API.
-So `kubectl` can't show which proxies a selector matched.
+`kubectl get dataplanes` lists the `Dataplane` objects that the zone control plane creates for each pod.
+It doesn't show which proxies a policy selected, because the control plane computes that selection.
 Use [kongctl](/kongctl/) to ask the control plane instead.
 
 1. List the proxies that the control plane knows about, with the labels that a `targetRef` can select:
@@ -143,6 +143,7 @@ Use [kongctl](/kongctl/) to ask the control plane instead.
    {:.no-copy-code}
 
 1. Create a `MeshTimeout` that selects only `flight-control`, with the same `Dataplane` label selector as the [regional timeouts example](#example-regional-timeouts).
+   `flight-control` must fail fast, so the policy sets a 5-second request timeout.
    This policy targets one workload instead of a whole zone, so you create it in the application namespace:
 
    ```sh
@@ -163,7 +164,7 @@ Use [kongctl](/kongctl/) to ask the control plane instead.
            kind: Mesh
          default:
            http:
-             requestTimeout: 15s' | kubectl apply -f -
+             requestTimeout: 5s' | kubectl apply -f -
    ```
 
 1. Inspect the zone-wide policy to see which proxies it selected.
@@ -204,5 +205,5 @@ Use [kongctl](/kongctl/) to ask the control plane instead.
 `kongctl inspect mesh` reports the selection that the control plane computed.
 That makes it the reliable check for whether a selector matched the proxies you intended.
 Pod name suffixes differ in your cluster, and `kongctl` shortens long names to fit the column.
-The control plane takes a few seconds to push a policy to the proxies.
+The zone control plane takes a few seconds to sync a new policy to the global control plane that `kongctl` queries.
 If a result looks stale, run the command again.

@@ -43,7 +43,7 @@ Each zone control plane then sends proxy configuration to its local proxies over
 flowchart TD
     K["Global control plane<br/>global resources and central view"]
     Z1["Kubernetes zone control plane<br/>zone1"]
-    Z2["Universal zone control plane<br/>zone2"]
+    Z2["Kubernetes zone control plane<br/>zone2"]
     D1["Local workloads and proxies"]
     D2["Local workloads and proxies"]
 
@@ -103,7 +103,7 @@ rows:
     why: "Observability policies select the backend by its labels, so it's shared infrastructure for every team."
   - resource: "`MeshZoneAddress`"
     owner: "On Kubernetes, the zone control plane creates it from the zone ingress Service. On Universal, you create it on the zone control plane."
-    placement: "`{{site.mesh_namespace}}`."
+    placement: "The namespace of the zone ingress Service. When Helm deploys the zone ingress, that's `{{site.mesh_namespace}}`."
     why: "Only the zone knows the address where other zones reach its zone ingress. The zone control plane sends it to the global control plane, which sends it to the other zones."
 {% endtable %}
 <!-- vale on -->
@@ -153,7 +153,8 @@ On Kubernetes, you can create the following resource types only in `{{site.mesh_
 * `MeshOpenTelemetryBackend`
 * `HostnameGenerator`
 
-You can create policies, `MeshService`, `MeshMultiZoneService`, and `MeshZoneAddress` resources in an application namespace on a zone control plane.
+You can create policies, `MeshService`, and `MeshZoneAddress` resources in an application namespace on a zone control plane.
+A zone control plane that's connected to a global control plane rejects a `MeshMultiZoneService`, because only the global control plane can create one.
 
 A policy in an application namespace reaches only proxies in that namespace, unless it's a producer policy for a service in that namespace.
 Put a policy in `{{site.mesh_namespace}}` only when a platform operator needs it to reach the whole zone.

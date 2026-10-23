@@ -59,7 +59,7 @@ faqs:
 
       - Does each policy's `backendRef` resolve? The policy's `BackendRefsResolved` condition reports `AllBackendRefsResolved` when it does. A `backendRef` that matches nothing exports nothing.
       - Does the collector listen where `kuma-dp` sends? With an empty `MeshOpenTelemetryBackend` spec, `kuma-dp` sends to port 4317 on the node IP, so the collector container needs `hostPort: 4317`.
-      - Does the collector run outside the mesh? A collector with a sidecar rejects the plaintext export.
+      - Does the collector run outside the mesh? A collector with a sidecar and a workload identity rejects the plaintext export.
 
       For more checks, see [Verify backend references](/mesh/meshopentelemetrybackend/#verify-backend-references).
   - q: How do I run the collector as a Deployment instead?
@@ -316,7 +316,8 @@ flowchart LR
    ```
 
    The collector must run without a sidecar.
-   `kuma-dp` exports telemetry as plaintext, and a collector with a sidecar rejects these connections under the default `Strict` mTLS mode.
+   `kuma-dp` exports telemetry as plaintext.
+   A collector with a sidecar and a workload identity rejects these connections, because `MeshTLS` defaults to `Strict` mode on that sidecar.
 
 1. Create a `ConfigMap` with the collector configuration:
 

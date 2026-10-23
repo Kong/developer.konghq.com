@@ -18,3 +18,9 @@ Expected output:
 No resources found
 ```
 {:.no-copy-code}
+
+Delete the test file that the response rate limit check created in the `check-in-api` container:
+
+```sh
+kubectl exec -n kong-air-production deploy/check-in-api -c check-in-api -- rm -f /tmp/manifest.bin
+```

@@ -62,6 +62,9 @@ data:
             add_header Content-Type text/plain;
             return 200 "ok\n";
         }
+        location = /manifest.bin {
+            root /tmp;
+        }
     }
 ---
 apiVersion: apps/v1
@@ -243,8 +246,8 @@ spec:
     path: /ns/{% raw %}{{ .Namespace }}{% endraw %}/sa/{% raw %}{{ .ServiceAccount }}{% endraw %}
     trustDomain: kong-air-mesh.zone1.mesh.local
 EOF
-kubectl rollout restart deployment -n kong-air-production
-kubectl wait -n kong-air-production --for=condition=available --timeout=5m deployment --all
+# The sidecars receive their certificates over xDS, so wait instead of restarting
+sleep 10
 
 kubectl apply -f - <<'EOF'
 apiVersion: kuma.io/v1alpha1

@@ -1,6 +1,7 @@
 Remove only the resources for the provider you followed.
 
-1. Restore the `MeshTrafficPermission` to the default trust domain. Run this step first, so that `check-in-api` keeps accepting traffic when `flight-control` falls back to the mesh-wide identity:
+1. Restore the `MeshTrafficPermission` to the default trust domain, so that `check-in-api` accepts `flight-control` again once `flight-control` falls back to the mesh-wide identity.
+   Until you delete the external CA identity in the next steps, `check-in-api` denies `flight-control`:
 
    ```bash
    kubectl apply -f - <<'EOF'

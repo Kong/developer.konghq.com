@@ -91,15 +91,17 @@ flowchart LR
 KDS and xDS carry configuration only.
 The solid arrows show the application request, which never passes through a control plane.
 
-In the default path, the `check-in-api` sidecar in `zone1` connects directly to the zone ingress in `zone2`.
+The `check-in-api` sidecar in `zone1` connects directly to the zone ingress in `zone2`.
 The zone ingress then forwards the request to `flight-control`.
-If you also deploy a zone egress in `zone1`, the request passes through it before it reaches the zone ingress.
+A zone egress in `zone1` doesn't change this path, because it carries only traffic to `MeshExternalService` destinations.
 
 ## Mesh-scoped zone proxies
 
 Each zone runs a zone ingress for every mesh that receives traffic from other zones.
 A zone egress is optional.
-The zone ingress and zone egress belong to `kong-air-mesh`, so they get a workload identity from its `MeshIdentity` and report metrics for that mesh only.
+The zone ingress and zone egress belong to `kong-air-mesh`, so they report metrics for that mesh only.
+The zone egress needs a workload identity from a `MeshIdentity` of the mesh.
+The zone ingress doesn't, because it forwards the encrypted connection without decrypting it.
 
 You can apply policies to the zone proxies.
 The zone control plane adds the `kuma.io/listener-zoneingress: enabled` or `kuma.io/listener-zoneegress: enabled` label to each zone proxy, and a policy selects the zone proxies with that label in its `targetRef`.
@@ -115,13 +117,13 @@ For deployment, addressing, and policy details, see [Mesh-scoped zone proxies](/
 
 A cross-zone request succeeds only when three conditions are met:
 
-1. A `MeshIdentity` gives a workload identity to the application sidecars and the zone proxies.
+1. A `MeshIdentity` gives a workload identity to the application sidecars in both zones.
 1. Each zone trusts the certificate authority (CA) that signed the certificates of the other zone.
 1. A `MeshTrafficPermission` allows the SPIFFE ID of the caller from the other zone.
 
 Workload identity also controls routing.
-The zone control plane sends a caller the endpoints of a `MeshService` in another zone only when the caller has a workload identity.
-Without one, the request fails before authorization.
+The zone control plane sends a caller the endpoints of a `MeshService` in another zone only when the mesh has a `MeshIdentity` and the other zone has a `MeshZoneAddress`.
+A caller without its own workload identity can't open the mTLS connection to the remote zone ingress, so its request fails before authorization.
 
 In [Create a security policy](/mesh/create-a-security-policy/), each zone generates its own CA and its own trust domain.
 Each zone sends its generated `MeshTrust` to the global control plane, but not to the other zones.

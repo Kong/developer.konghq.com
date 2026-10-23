@@ -57,7 +57,7 @@ The developer uses the hostnames and doesn't manage the resources.
 ### Hostnames in the same zone
 
 The operator applies a custom `HostnameGenerator` for the mesh.
-It gives every `MeshService` a hostname such as `<service>.svc.kongair.mesh`.
+It gives each `MeshService` that its selector matches a hostname such as `<service>.svc.kongair.mesh`.
 Without a custom generator, a workload on Kubernetes calls a service in its own zone by its Kubernetes DNS name, which ends in `.svc.cluster.local`.
 The developer only needs to know the naming convention:
 
@@ -86,7 +86,7 @@ For how {{site.mesh_product_name}} names services, see [MeshService](/mesh/meshs
 {:.info}
 > On Kubernetes, the developer can also call another service in the cluster by its Kubernetes address, for example `check-in-api.kong-air-production.svc.cluster.local`.
 > The sidecar proxies that traffic like any other mesh traffic.
-> The `HostnameGenerator` name is stable and works the same way in every zone.
+> A hostname from the `HostnameGenerator` doesn't depend on Pod addresses, and it follows the same convention in every zone that has the generator.
 
 ### Services in other zones
 
@@ -120,7 +120,7 @@ See [Split traffic with MeshService resources](/mesh/split-traffic-with-meshserv
 ### Load balancing with `MeshLoadBalancingStrategy`
 
 The developer applies a `MeshLoadBalancingStrategy` to spread requests across the instances of a service.
-For example, a `LeastRequest` load balancer sends each request to the instance with the fewest active requests.
+For example, a `LeastRequest` load balancer compares a few random instances and sends each request to the one with the fewest active requests.
 See [MeshLoadBalancingStrategy](/mesh/policies/meshloadbalancingstrategy/).
 
 ### Rate limits with `MeshRateLimit`

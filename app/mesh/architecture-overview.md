@@ -64,7 +64,7 @@ rows:
     mesh: "One policy for each concern, and every policy uses the same `targetRef` structure. When you troubleshoot a production issue, you have fewer resource types that interact."
   - concern: Running across regions
     istio: "You choose and maintain a multi-cluster topology, such as multi-primary or primary-remote."
-    mesh: "A built-in global and zone model that syncs over KDS. To add a region, you add a zone control plane. If the global control plane goes offline, each zone control plane keeps serving its last configuration, so data plane traffic continues."
+    mesh: "A built-in global and zone model that syncs over KDS. To add a region, you add a zone control plane. If the global control plane goes offline, each zone control plane keeps the global resources that it last received and keeps configuring its proxies, so data plane traffic continues."
   - concern: Kubernetes and VMs together
     istio: "Designed for Kubernetes. VMs join through `WorkloadEntry` and `WorkloadGroup`."
     mesh: "Kubernetes and Universal (VMs and bare metal) use the same resources, so one team runs one mesh across both."
@@ -76,8 +76,8 @@ rows:
 The following diagrams show how the control planes are distributed, and how a request travels through a zone.
 Both diagrams use the same notation:
 
-- A solid arrow is data plane traffic, which the sidecars encrypt with mTLS.
-- A dashed arrow is a control plane channel: xDS, KDS, or the admin API.
+- A solid arrow is data plane traffic.
+- A dashed arrow is a control plane channel: xDS or KDS.
 
 ### How the control planes connect
 
@@ -89,18 +89,18 @@ The zone control plane also sends the resources that its zone creates, such as d
 flowchart TD
     GCP["Global control plane"]
     Z1CP["Zone control plane<br/>(Kubernetes, zone1)"]
-    Z2CP["Zone control plane<br/>(Universal VM, zone2)"]
+    Z2CP["Zone control plane<br/>(Kubernetes, zone2)"]
     DP1["Data plane proxies<br/>(Envoy sidecars)"]
     DP2["Data plane proxies<br/>(Envoy sidecars)"]
 
-    GCP -.->|KDS| Z1CP
-    GCP -.->|KDS| Z2CP
+    GCP <-.->|KDS| Z1CP
+    GCP <-.->|KDS| Z2CP
     Z1CP -.->|xDS| DP1
     Z2CP -.->|xDS| DP2
 {% endmermaid %}
 
 Every arrow in this diagram is a control plane channel, and no application traffic uses these links.
-If the global control plane goes offline, each zone control plane keeps serving its last configuration to its data plane proxies, and the mesh keeps working.
+If the global control plane goes offline, each zone control plane keeps the global resources that it last received and keeps configuring its data plane proxies, so the mesh keeps working.
 
 ### How a request travels between zones
 
@@ -123,9 +123,9 @@ flowchart LR
         end
         ZE_East["Zone egress<br/>(Dataplane)"]
     end
-    subgraph ZoneWest["zone2 (VMs)"]
+    subgraph ZoneWest["zone2 (Kubernetes)"]
         ZI_West["Zone ingress<br/>(Dataplane)"]
-        subgraph FCSvc["flight-control VM"]
+        subgraph FCSvc["flight-control pod"]
             FC_App["flight-control"]
             FC_Envoy["Envoy sidecar"]
         end
@@ -153,7 +153,8 @@ When `check-in-api` in `zone1` calls `flight-control` in `zone2`, the request ta
 
 1. `check-in-api` sends the request to its own Envoy sidecar over localhost.
 2. The sidecar finds `flight-control` in the configuration that the `zone1` control plane sent it. `flight-control` runs in another zone, so the sidecar sends the request to the zone ingress of `zone2`, at the address that `zone2` published as a `MeshZoneAddress`.
-3. The zone ingress uses its configuration from the `zone2` control plane to choose a healthy `flight-control` instance, and forwards the request.
+3. The zone ingress uses its configuration from the `zone2` control plane to choose a healthy `flight-control` instance.
+   It forwards the encrypted connection without decrypting it.
 4. The Envoy sidecar of `flight-control` receives the request.
 5. That sidecar forwards the request to the `flight-control` application over localhost.
 
