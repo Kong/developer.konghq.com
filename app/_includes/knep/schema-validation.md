@@ -101,7 +101,6 @@ rows:
       Supported schema formats:
       * Avro
       * JSON Schema
-      * Protobuf {% new_in 1.3 %}
 
       <br>
       To use a Confluent schema registry for validation, first [create a schema registry resource](/event-gateway/entities/schema-registry/), then reference it in this policy.
