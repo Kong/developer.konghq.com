@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect Control Planes Configuration for Event Gateways
-  version: 1.3.8
+  version: 1.3.13
   description: |
     The API for configuring Event Gateways in Konnect.
   x-extensions-note: |
@@ -23,8 +23,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@6740ca4a544db970f788cc1d67eb6bb7d8ba63a0
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6740ca4a544db970f788cc1d67eb6bb7d8ba63a0'
+  x-oas-source: kong/platform-api@b250e460fb5e0b09230d44d463b217d80f43c78b
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b250e460fb5e0b09230d44d463b217d80f43c78b'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -1898,6 +1898,7 @@ components:
             $ref: '#/components/schemas/StringFieldContainsFilter'
           labels:
             $ref: '#/components/schemas/LabelsFieldFilter'
+        x-go-type: 'map[string]any'
       in: query
       name: filter
       description: |
