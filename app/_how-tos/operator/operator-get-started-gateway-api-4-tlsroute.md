@@ -35,6 +35,28 @@ tldr:
 prereqs:
   skip_product: true
 
+cleanup:
+  inline:
+    - title: Delete the Gateway resources
+      content: |
+        Deleting the `Gateway` also deletes the `DataPlane` and the `KonnectGatewayControlPlane` that {{ site.operator_product_name }} created for it, which removes the control plane it created in {{ site.konnect_short_name }}:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found gateway/kong
+        kubectl delete -n kong --ignore-not-found gatewayconfiguration/kong-configuration
+        kubectl delete --ignore-not-found gatewayclass/kong
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/gateway.svg
+
+    - title: Delete the namespaces
+      content: |
+        ```bash
+        helm uninstall kong-operator -n kong-system
+        kubectl delete namespace kong kong-system
+        ```
+      icon_url: /assets/icons/kubernetes.svg
+
 next_steps:
   - text: Learn about Custom resource definitions (CRDs)
     url: /operator/reference/custom-resources/
@@ -187,6 +209,7 @@ You can now access the `echo` Service on port `9443` with SNI `tls9443.kong.exam
 
 In real-world usage, you would create a DNS record for `tls9443.kong.example` pointing to your proxy Service's public IP address, which causes TLS clients to add an SNI automatically. For this demo, add it manually using the OpenSSL CLI:
 
+<!--vale off-->
 {% validation custom-command %}
 command: |
   echo "hello" | openssl s_client -connect $PROXY_IP:9443 -servername tls9443.kong.example -quiet 2>/dev/null
@@ -195,6 +218,7 @@ expected:
   message: 'hello'
 render_output: false
 {% endvalidation %}
+<!--vale on-->
 
 The results should look like this:
 
@@ -302,6 +326,7 @@ kubectl wait --for=condition=Programmed gateway/kong -n kong --timeout=5m
 
 Reuse the `$PROXY_IP` you exported earlier and connect to the new listener:
 
+<!--vale off-->
 {% validation custom-command %}
 command: |
   echo "hello" | openssl s_client -connect $PROXY_IP:9444 -servername tls9444.kong.example -quiet 2>/dev/null
@@ -310,6 +335,7 @@ expected:
   message: 'hello'
 render_output: false
 {% endvalidation %}
+<!--vale on-->
 
 You should see similar output as previously shown in the example using Passthrough TLS mode.
 
