@@ -154,4 +154,46 @@ RSpec.describe Jekyll::KonnectCrd do
       expect(rendered).not_to include('data-test')
     end
   end
+
+  describe 'indent option' do
+    let(:template) do
+      <<~'LIQUID'
+        {% konnect_crd %}
+        indent: 3
+        kind: KonnectAPIAuthConfiguration
+        metadata:
+          name: konnect-api-auth
+          namespace: kong
+        {% endkonnect_crd %}
+      LIQUID
+    end
+
+    let(:markdown_page) do
+      { 'output_format' => 'markdown', 'path' => 'test.md', 'works_on' => works_on }
+    end
+
+    it 'prefixes every non-empty rendered line with the requested indentation' do
+      expect(rendered.lines.reject { |line| line.strip.empty? }).to all(start_with('   '))
+    end
+
+    it 'keeps the indent key out of the emitted YAML' do
+      expect(rendered).not_to include('indent')
+    end
+
+    it 'indents the emitted YAML the same way in the html and markdown formats' do
+      html_yaml = emitted_yaml(rendered)
+      markdown_yaml = emitted_yaml(render_liquid(template, page: markdown_page))
+
+      expect(markdown_yaml).to eq(html_yaml)
+      expect(html_yaml.lines).to all(start_with('   '))
+    end
+
+    def emitted_yaml(output)
+      lines = output.lines
+      start = lines.index { |line| line.strip == "echo '" }
+      finish = lines.index { |line| line.strip.start_with?("' | kubectl apply") }
+
+      lines[(start + 1)...finish].join
+    end
+  end
 end
