@@ -108,7 +108,7 @@ rows:
     without: |
       Wherever that specific connector/client stores it, scoped to that one product:
       * Its own database
-      * Its own encrypted config
+      Stored separately by each connector or client, for example in its own database or encrypted configuration, and scoped to that one product.
     with: |
       Centralized in the vault, scoped to the org's {{site.identity}} directory.
   - aspect: "**Who manages it**"
@@ -120,7 +120,7 @@ rows:
     without: |
       Not reusable. Claude's Slack connector token can't be used by Cursor or a custom agent. Each re-does its own OAuth consent.
     with: |
-      One enrollment, reusable by any agent that calls through {{site.ai_gateway_name}}.
+      One enrollment, reusable by any agent that calls through {{site.ai_gateway}}.
   - aspect: "**Revocation/audit**"
     without: |
       Depends entirely on that connector vendor's own tooling. May or may not be centrally visible.
@@ -129,10 +129,10 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-Key facts:
-* Only the {{site.ai_gateway_name}} can request credentials from the Token Vault, and that connection is locked down over mutual TLS (mTLS): both sides prove their identity with certificates.
-* Agents and MCP clients never call the Token Vault directly: if an agent needs a credential, it has to go through the {{site.ai_gateway_name}}.
-* The Token Vault never asks the corp IdP about a user. It only fetches the IdP's public keys (JWKS) to verify that:
+Basic facts:
+* Only the {{site.ai_gateway}} can request credentials from the Token Vault, and that connection is locked down over mutual TLS (mTLS): both sides prove their identity with certificates.
+* Agents and MCP clients never call the Token Vault directly: if an agent needs a credential, it has to go through the {{site.ai_gateway}}.
+* The Token Vault never asks the corporate IdP about a user. It only fetches the IdP's public keys (JWKS) to verify that:
   * The token's signature is valid.
   * The token was issued by the IdP that an admin set as trusted for that directory.
 
@@ -148,17 +148,18 @@ You attach policies to the {{site.ai_gateway}}, which is where you scope and enf
 
 ## Directory
 
-The [{{site.identity}} directory](/identity/principals/) is the tenant boundary that scopes everything else in the Token Vault. To use the Token Vault, you activate it in your directory with the `vault_enabled` flag.
+The [{{site.identity}} directory](/identity/principals/) is the tenant boundary that scopes identities and access in the Token Vault. To use the Token Vault, you activate it in your directory with the `vault_enabled` flag.
 
 The directory is also the vault's encryption boundary. After enabling the vault in your directory, {{site.identity}} generates an encryption key to protect the credentials you store under it. Your {{site.identity}} directory is the equivalent of your "organization account", and enabling the Token Vault gives that account a locked workspace, with everything in it (trusted IdPs, connected third-party services, whose tokens it stores) scoped to that organization.
 
 ## Trusted IdP
 
-The trusted IdP is what tells the Token Vault whose tokens to trust. A {{site.identity}} admin configures a trusted IdP (such as Okta) on the directory using the `issuer_url`, and optionally a `jwks_uri` ({{site.identity}} can automatically discover the `jwks_uri` from the IdP). Each directory supports one trusted IdP, and the Token Vault only accepts its tokens when `vault_access_enabled` is set to `true`. The trusted IdP can be your corporate IdP, or the {{site.identity}} authorization server, for example when clients authenticate with an Identity Assertion JWT Authorization Grant (ID-JAG) issued by your corporate IdP.
+The trusted IdP is what tells the Token Vault whose tokens to trust. A {{site.identity}} admin configures a trusted IdP (such as Okta) on the directory using the `issuer_url`, and optionally a `jwks_uri` ({{site.identity}} can automatically discover the `jwks_uri` from the IdP). 
+Each directory supports one trusted IdP, and the Token Vault only accepts its tokens when `vault_access_enabled` is set to `true`. The trusted IdP can be your corporate IdP, or the {{site.identity}} authorization server, for example when clients authenticate with an Identity Assertion JWT Authorization Grant (ID-JAG) issued by your corporate IdP.
 
 The Token Vault acts as a verifier, not a caller. It never asks the IdP about a user directly. Instead, when it receives a token, it:
 
-1. Checks that the token's signature matches the trusted IdP's published public keys, confirming the IdP actually issued it. Only asymmetric signing algorithms (RS, PS, and ES families) are accepted.
+1. Checks that the token's signature matches the trusted IdP's published public keys, and confirms the IdP actually issued it. Only asymmetric signing algorithms (RS, PS, and ES families) are accepted.
 1. Checks the token's expiry (`exp`) and not-before (`nbf`) claims.
 1. Reads the issuer (`iss`) and subject (`sub`) already embedded in the token, to determine who it was issued to.
 
@@ -205,7 +206,8 @@ rows:
 
 You connect third-party services by adding a provider to the {{site.identity}} Token Vault. This lets an organization centralize identities and shared connections in one place, instead of configuring each service separately in every agent or client.
 
-{{site.identity}} provides templates to bind external services. The template supplies the third-party service's secret type, default OAuth endpoints, default scopes, and credential placement. To list the templates and their defaults, send a `GET` request to `/v2/credential-provider-templates`. You create a provider by sending a `POST` request to the `/v2/directories/{directoryId}/vault/providers` endpoint with the following fields:
+{{site.identity}} provides templates to bind external services. The template supplies the third-party service's secret type, default OAuth endpoints, default scopes, and credential placement. 
+To list the templates and their defaults, send a `GET` request to `/v2/credential-provider-templates`. You create a provider by sending a `POST` request to the `/v2/directories/{directoryId}/vault/providers` endpoint with the following fields:
 
 * `template_name`: The provider template to bind, listed in the following table.
 * `name`: The custom name for this provider. Use it to tell apart several providers built from the same template. Must be unique in the directory, and match `^[a-zA-Z0-9_-]+$`.
@@ -261,7 +263,9 @@ rows:
 
 ## Credentials
 
-The {{site.identity}} Token Vault protects the credential, the actual secret (a token or a key) for connecting to a provider. The credential is encrypted at rest in the Token Vault. The encryption scope is the {{site.identity}} directory for which you enable the Token Vault. Each directory has its own Token Vault key, that it uses to encrypt secrets.
+The {{site.identity}} Token Vault protects the credential, the actual secret (a token or a key) for connecting to a provider. 
+The credential is encrypted at rest in the Token Vault. 
+The encryption scope is the {{site.identity}} directory for which you enable the Token Vault. Each directory has its own Token Vault key, that it uses to encrypt secrets.
 
 The credentials can be personal or shared across the organization. You define this with the `credential_type` field on the provider:
 
@@ -301,7 +305,8 @@ The Token Vault stores credentials using envelope encryption, with two layers:
 
 With envelope encryption, the vault key also encrypts each data key, providing a double layer of protection. If one secret gets leaked, the leak only impacts that specific secret, while the whole vault remains safe.
 
-The Token Vault stores each credential in its own row, and binds the encrypted credential to the row it belongs to. This ensures no credential can move between rows, and prevents row-based tampering, where someone could copy an encrypted credential from one row into another and have it decrypt in a row it doesn't belong to.
+The Token Vault stores each credential in its own row, and binds the encrypted credential to the row it belongs to. 
+This ensures no credential can move between rows, and prevents row-based tampering, where someone could copy an encrypted credential from one row into another and have it decrypt in a row it doesn't belong to.
 
 A credential's value never comes back through APIs. While read endpoints return metadata (IDs, timestamps, status), they never return the actual token or key value.
 
@@ -319,7 +324,9 @@ The Token Vault never exposes back the credentials to the API that created them:
 
 ## Credential enrollment
 
-Credential enrollment is a one-time process where a user grants {{site.identity}} permission to act on their behalf with a third-party service. This is when the Token Vault creates the credential for the first time.
+Credential enrollment is a one-time process where a user grants {{site.identity}} permission to act on their behalf with a third-party service. 
+During enrollment, the Token Vault creates the credential for the first time.
+
 
 When you configure a provider (for example, GitHub), the Token Vault registers it as a service it knows how to talk to. It doesn't mean any user has actually authorized anything yet, since there are still no credentials to hand back for the Token Vault. The enrollment process follows these steps:
 
@@ -328,7 +335,8 @@ When you configure a provider (for example, GitHub), the Token Vault registers i
 1. The Token Vault exchanges the authorization code for the third-party service's access token and refresh token. This exchange happens only between the Token Vault and the third-party service, not through the agent.
 1. The Token Vault writes a new credential row for the access token, encrypted with the directory's vault key and keyed to that combination of directory, provider, and user. This is the credential that the Token Vault releases to the {{site.ai_gateway}} on every future request.
 
-Enrollment happens once per user and per provider, not per organization. If a second user wants to use GitHub with an agent, they need to go through enrollment, and get their own credentials stored in the Token Vault. What is shared across the organization is the provider configuration (Client ID, scopes, endpoints).
+Enrollment happens once per user and per provider, not per organization.
+If a second user wants to use GitHub with an agent, they need to go through enrollment, and get their own credentials stored in the Token Vault. What is shared across the organization is the provider configuration (Client ID, scopes, endpoints).
 
 For providers that support dynamic client registration (DCR), such as `atlassian-rovo`, you don't need to create an app in the provider's console: the Token Vault registers the OAuth client with the provider at first use.
 
@@ -360,7 +368,7 @@ A `PUT` on the same endpoint also sets `enabled` to `false` if you omit it.
 
 ## Static secret
 
-A provider built on the `static_secret` template doesn't run an OAuth flow. The setup steps are the follwoing:
+A provider built on the `static_secret` template doesn't run an OAuth flow. The setup steps are the following:
 
 1. You generate the credential yourself in the third-party service, for example an API key or a personal acce.ss token.
 1. You store the credential on the provider.
@@ -444,7 +452,8 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-A shared provider can hold one default credential and any number of credentials with a `selector`. A second credential without a selector returns a `409`. To rotate the secret, update the existing credential instead of creating another one.
+A shared provider can hold one default credential and any number of credentials with a `selector`. 
+A second credential without a selector returns a `409`. To rotate the secret, update the existing credential instead of creating another one.
 
 ### Select a shared credential per principal
 
@@ -467,7 +476,8 @@ body:
 * `selector` is a CEL expression (up to 1,024 characters) evaluated against the calling principal. It can use `principal.id`, `principal.display_name`, `principal.groups` (group IDs, including nested groups), and `principal.metadata`.
 * `priority` is required with a selector, and not allowed without one. Each priority must be unique on the provider, otherwise the request returns a `409`.
 
-When the {{site.ai_gateway_name}} requests a credential, the Token Vault evaluates the selectors in ascending priority order and releases the first match. If no selector matches, it releases the default credential. If a selector fails to evaluate, the request fails instead of falling back to the next credential.
+When the {{site.ai_gateway_name}} requests a credential, the Token Vault evaluates the selectors in ascending priority order and releases the first match. 
+If no selector matches, it releases the default credential. If a selector fails to evaluate, the request fails instead of falling back to the next credential.
 
 ## Manage credentials
 
@@ -519,7 +529,7 @@ method: DELETE
 
 ## Limitations
 
-The Token Vault presents the following limitations:
+The following limitations apply to the Token Vault:
 
 * **Policy enforcement:** The Token Vault isn't a policy enforcement point, only {{site.ai_gateway_name}} can enforce policies. The Token Vault doesn't handle authorization logic.
 * **Customer-managed encryption key (BYOK):** Kong manages the encryption keys that protect stored credentials. You can't bring or control your own.
