@@ -40,6 +40,7 @@ prereqs:
           kubectl create namespace kong
           kubectl create namespace kafka
           ```
+          {: data-test-prereq="block" }
       icon_url: /assets/icons/kubernetes.svg
     - title: Kafka cluster
       position: before
@@ -52,6 +53,7 @@ prereqs:
              helm repo add bitnami https://charts.bitnami.com/bitnami
              helm repo update
              ```
+             {: data-test-prereq="block" }
 
           1. Write the Kafka configuration file:
 
@@ -75,6 +77,7 @@ prereqs:
                replicaCount: 0
              EOF
              ```
+             {: data-test-prereq="block" }
 
           1. Install Kafka:
 
@@ -84,6 +87,7 @@ prereqs:
                --version 32.4.3 \
                -f /tmp/kafka-values.yaml
              ```
+             {: data-test-prereq="block" }
 
           1. Wait for all Kafka brokers to be ready:
 
@@ -93,6 +97,7 @@ prereqs:
                --selector app.kubernetes.io/name=kafka \
                --timeout=5m
              ```
+             {: data-test-prereq="block" }
       icon_url: /assets/icons/kubernetes.svg
     - title: Confluent Schema Registry
       position: before
@@ -146,6 +151,7 @@ prereqs:
                    targetPort: 8081
              ' | kubectl apply -f -
              ```
+             {: data-test-prereq="block" }
 
           1. Wait for the registry to be ready:
 
@@ -155,6 +161,7 @@ prereqs:
                --selector app=schema-registry \
                --timeout=5m
              ```
+             {: data-test-prereq="block" }
       icon_url: /assets/icons/kubernetes.svg
     - title: "{{ site.event_gateway }} control plane, backend cluster, and virtual cluster"
       content: |
@@ -182,6 +189,7 @@ prereqs:
                --for=condition=Programmed=True \
                --timeout=10m
              ```
+             {: data-test-prereq="block" }
 
           1. Create the `EventGatewayBackendCluster` resource:
 
@@ -213,6 +221,7 @@ prereqs:
                --for=condition=Programmed=True \
                --timeout=10m
              ```
+             {: data-test-prereq="block" }
 
           1. Create the `EventGatewayVirtualCluster` resource:
 
@@ -243,6 +252,7 @@ prereqs:
                --for=condition=Programmed=True \
                --timeout=10m
              ```
+             {: data-test-prereq="block" }
       icon_url: /assets/icons/event.svg
 
 faqs:
@@ -345,6 +355,7 @@ The examples below use the `cp-event-1` control plane, `example-virtual-cluster`
            timeoutSeconds: 10
    ' | kubectl apply -f -
    ```
+   {: data-test-step="block" }
 
 1. Wait for the resource to be ready:
 
@@ -353,6 +364,7 @@ The examples below use the `cp-event-1` control plane, `example-virtual-cluster`
      --for=condition=Programmed=True \
      --timeout=10m
    ```
+   {: data-test-step="block" }
 
 ## Enforce schema validation on a virtual cluster
 
@@ -387,6 +399,7 @@ spec:
           valueValidationAction: mark
 ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 If your producers send plain JSON records without a wire-format schema ID, use the `json` mode instead. For more information, see the [FAQs](#how-do-i-validate-plain-json-records).
 
@@ -400,13 +413,22 @@ kubectl wait eventgatewayvirtualclusterconsumepolicy/example-schema-validation-c
   --for=condition=Programmed=True \
   --timeout=10m
 ```
+{: data-test-step="block" }
 
 ## Validate
 
-Check that the policy reconciled without errors:
+Check that the schema registry and the validation policy reconciled successfully:
 
-```bash
-kubectl describe eventgatewayvirtualclusterconsumepolicy/example-schema-validation-confluent -n kong
-```
+<!-- vale off -->
+{% validation kubernetes-resource %}
+kind: EventGatewaySchemaRegistry
+name: example-schema-registry
+{% endvalidation %}
+
+{% validation kubernetes-resource %}
+kind: EventGatewayVirtualClusterConsumePolicy
+name: example-schema-validation-confluent
+{% endvalidation %}
+<!-- vale on -->
 
 A `Programmed=True` condition confirms {{ site.event_gateway }} accepted the policy and is enforcing schema validation on the `example-virtual-cluster` virtual cluster. Records that fail validation are either marked with a `kong/server` header or skipped so they aren't delivered to the client, depending on whether you set `mark` or `skip` in `keyValidationAction` and `valueValidationAction`.
