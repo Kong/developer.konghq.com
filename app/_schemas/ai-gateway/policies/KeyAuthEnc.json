@@ -1,5 +1,28 @@
 {
   "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "ws",
+          "wss"
+        ]
+      },
+      "description": "A list of the request protocols that will trigger this policy. The default value, as well as the possible values allowed on this field, may change depending on the policy type. For example, policies that only work in stream mode will only support tcp and tls.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https",
+        "ws",
+        "wss"
+      ]
+    },
     "model": {
       "type": "object",
       "properties": {
@@ -13,6 +36,11 @@
     "config": {
       "type": "object",
       "properties": {
+        "key_in_body": {
+          "type": "boolean",
+          "description": "If enabled, the policy reads the request body (if said request has one and its MIME type is supported) and tries to find the key in it. Supported MIME types: `application/www-form-urlencoded`, `application/json`, and `multipart/form-data`.",
+          "default": false
+        },
         "run_on_preflight": {
           "type": "boolean",
           "description": "A boolean value that indicates whether the policy should run (and try to authenticate) on `OPTIONS` preflight requests. If set to `false`, then `OPTIONS` requests are always allowed.",
@@ -51,36 +79,8 @@
           "type": "boolean",
           "description": "If enabled (default), the policy reads the query parameter in the request and tries to find the key in it.",
           "default": true
-        },
-        "key_in_body": {
-          "type": "boolean",
-          "description": "If enabled, the policy reads the request body (if said request has one and its MIME type is supported) and tries to find the key in it. Supported MIME types: `application/www-form-urlencoded`, `application/json`, and `multipart/form-data`.",
-          "default": false
         }
       }
-    },
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https",
-          "ws",
-          "wss"
-        ]
-      },
-      "description": "A list of the request protocols that will trigger this policy. The default value, as well as the possible values allowed on this field, may change depending on the policy type. For example, policies that only work in stream mode will only support tcp and tls.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https",
-        "ws",
-        "wss"
-      ]
     },
     "route": {
       "type": "object",

@@ -92,6 +92,44 @@ Kong will not provide patches for software covered by this sunset period. If the
 Kong supports the following versions of {{site.ai_gateway_name}}:
 
 {% navtabs "ai-gateway-version" %}
+<!-- TODO: confirm 2.3 release date, EOL date, and release track (rolling/stable) before publishing -->
+{% navtab "2.3" %}
+{{site.ai_gateway_name}} 2.3 was released on <!-- TODO: release date -->.
+
+{{site.ai_gateway_name}} 2.3 supports the following deployment targets until <!-- TODO: EOL date -->, unless otherwise noted by an earlier OS vendor end of life (EOL) date.
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: OS
+    key: os
+  - title: Version
+    key: version
+  - title: ARM support
+    key: arm
+  - title: FIPS 140-3
+    key: fips
+  - title: EOL
+    key: eol
+rows:
+  - os: Ubuntu
+    version: "26.04"
+    arm: true
+    fips: true
+    eol: "<!-- TODO: EOL date -->"
+  - os: RHEL
+    version: "10.x"
+    arm: true
+    fips: true
+    eol: "<!-- TODO: EOL date -->"
+  - os: Distroless
+    version: "N/A"
+    arm: true
+    fips: true
+    eol: "<!-- TODO: EOL date -->"
+{% endtable %}
+<!--vale on-->
+{% endnavtab %}
 {% navtab "2.2 (stable)" %}
 {{site.ai_gateway_name}} 2.2 was released on 2026-09-30.
 

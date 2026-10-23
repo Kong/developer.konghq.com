@@ -31,6 +31,10 @@ related_resources:
     url: /ai-gateway/entities/ai-vault/
   - text: AI Data Plane Certificate entity
     url: /ai-gateway/entities/ai-data-plane-certificate/
+  - text: AI MCP Server entity
+    url: /ai-gateway/entities/ai-mcp-server/
+  - text: AI Agent entity
+    url: /ai-gateway/entities/ai-agent/
 faqs:
   - q: How is an AI Certificate different from a {{site.base_gateway}} Certificate?
     a: |
@@ -62,6 +66,13 @@ faqs:
       No. The `key` and `key_alt` fields are write-only. They're accepted on create and update, but
       never returned by a read. Keep your own copy of any key you register, or store it in an
       [AI Vault](/ai-gateway/entities/ai-vault/) and register a reference to it instead of the literal value.
+
+  - q: Can AI MCP Servers and AI Agents present an AI Certificate to their upstreams?
+    a: |
+      Yes.
+      Reference the AI Certificate by name in the `config.certificates` field of an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/#upstream-tls) or [AI Agent](/ai-gateway/entities/ai-agent/#upstream-tls).
+      The AI MCP Server or AI Agent then presents it as its client certificate, which lets it connect to upstreams that require mutual TLS (mTLS).
+      The AI Certificate must include a private key.
 ---
 
 ## What is an AI Certificate?

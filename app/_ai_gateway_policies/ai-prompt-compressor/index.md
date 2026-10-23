@@ -189,7 +189,7 @@ rows:
 ## Headroom compressor service {% new_in 2.2 %}
 
 {:.warning}
-> This feature is currently in [Tech Preview](/stages-of-software-availability/#tech-preview) and should not be used in a production environment.
+> This feature is in [Tech Preview](/stages-of-software-availability/#tech-preview) and should not be used in a production environment.
 
 Before you use Headroom with the AI Prompt Compressor Policy, you need a Headroom instance accessible to your {{site.ai_gateway}}.
 
@@ -304,6 +304,131 @@ A `503` response indicating a compression timeout is retried automatically befor
 - Headroom sessions are held in memory on a single Headroom process. You must point every data plane node at its own sidecar, or all of them at one shared instance. Never point an {{site.ai_gateway}} data plane at a load-balanced set of Headroom instances, since a session's turns must all reach the same process.
 - No MCP tool-response compression: only the LLM request path is supported.
 - Only requests with a `messages` or `input` conversation array are sent to Headroom. Other formats are forwarded uncompressed.
+
+## Prompt compression metrics
+
+<!-- TODO: Verify Explorer metric and dimension names in Konnect. Confirm headers are final (PRD Q2) and PRD Q3-6 outcomes. Confirm or drop the "aren't forwarded to the upstream" claim. Re-check kong-ee PR #23465 before merging. -->
+
+When a request passes through the AI Prompt Compressor Policy, {{site.ai_gateway}} reports the compression result to [Konnect Analytics](/observability/explorer/). You can use these metrics to measure how many tokens compression saves and how long it takes.
+
+Compression metrics are reported with the existing {{site.ai_gateway}} dimensions, so you can scope them by `ai_gateway`, `ai_gateway_data_plane_node`, and `control_plane`. The Policy configuration doesn't change, and the compression log entry (`compress_items`) keeps its fields and values.
+
+Compression metrics contain token and message counts only. They never include the original or compressed text.
+
+### Analytics metrics
+
+The following metrics are available in Explorer:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Metric
+    key: metric
+  - title: Type
+    key: type
+  - title: Description
+    key: description
+rows:
+  - metric: "`compression_saved_tokens`"
+    type: Count
+    description: Number of tokens saved, summed over the compressed messages.
+  - metric: "`compression_original_tokens`"
+    type: Count
+    description: Number of tokens before compression.
+  - metric: "`compression_compressed_tokens`"
+    type: Count
+    description: Number of tokens after compression.
+  - metric: "`compression_message_count`"
+    type: Count
+    description: Number of compressed messages per request.
+  - metric: "`compression_duration_average`"
+    type: Latency
+    description: Average time the compressor took, in milliseconds.
+{% endtable %}
+<!-- vale on -->
+
+### Analytics dimensions
+
+You can also group and filter the compression metrics by these compression-specific dimensions:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Dimension
+    key: dimension
+  - title: Values
+    key: values
+  - title: Description
+    key: description
+rows:
+  - dimension: "`compressor_provider`"
+    values: "`kong`, `headroom`"
+    description: The compression provider that handled the request.
+  - dimension: "`compression_type`"
+    values: "`rate`, `target_token`"
+    description: The compression method used. Available for the `kong` provider only. For `headroom`, the value is empty.
+{% endtable %}
+<!-- vale on -->
+
+The two providers report compression at different granularity. The `kong` provider reports one result for each compressed message. [Headroom](#headroom-compressor-service) reports one result for the whole request. The metrics sum the results for each request, so they mean the same thing for both providers.
+
+### Saved token counter
+
+{{site.ai_gateway}} also counts the tokens saved by compression for each provider and model, next to the AI request count.
+{{site.ai_gateway}} records the count only for requests that save at least one token.
+
+{:.info}
+> In a hybrid deployment, the control plane doesn't record the saved token count. Only the Konnect Analytics metrics report it.
+
+### Log fields
+
+The summary is also added to the `ai.compressor` entry of the log serializer, beside `compress_items`. Logging Policies such as HTTP Log and File Log include these fields:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Description
+    key: description
+rows:
+  - field: "`provider`"
+    description: The compression provider, `kong` or `headroom`.
+  - field: "`original_token_count`"
+    description: Number of tokens before compression.
+  - field: "`compress_token_count`"
+    description: Number of tokens after compression.
+  - field: "`save_token_count`"
+    description: Number of tokens saved.
+  - field: "`compressed_message_count`"
+    description: Number of compressed messages.
+  - field: "`duration`"
+    description: Time the compressor took, in milliseconds.
+  - field: "`compress_type`"
+    description: The compression method. Not set for `headroom`.
+{% endtable %}
+<!-- vale on -->
+
+### Response headers
+
+When compression runs, the Policy adds the following headers to plain and streamed responses, so the caller can read what compression saved. The headers aren't added when the request isn't compressed, and they aren't forwarded to the upstream:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Header
+    key: header
+  - title: Value
+    key: value
+rows:
+  - header: "`X-Kong-Prompt-Compression-Saved-Tokens`"
+    value: Number of tokens saved.
+  - header: "`X-Kong-Prompt-Compression-Messages`"
+    value: Number of compressed messages.
+  - header: "`X-Kong-Prompt-Compression-Duration`"
+    value: Time the compressor took, in milliseconds.
+{% endtable %}
+<!-- vale on -->
 
 ## Forward proxy support
 

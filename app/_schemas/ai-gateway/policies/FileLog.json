@@ -1,5 +1,29 @@
 {
   "properties": {
+    "config": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "The file path of the output log file. The policy creates the log file if it doesn't exist yet."
+        },
+        "reopen": {
+          "type": "boolean",
+          "description": "Determines whether the log file is closed and reopened on every request.",
+          "default": false
+        },
+        "custom_fields_by_lua": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Lua code as a key-value map"
+        }
+      },
+      "required": [
+        "path"
+      ]
+    },
     "protocols": {
       "type": "array",
       "items": {
@@ -24,30 +48,6 @@
         "grpcs",
         "http",
         "https"
-      ]
-    },
-    "config": {
-      "type": "object",
-      "properties": {
-        "path": {
-          "type": "string",
-          "description": "The file path of the output log file. The policy creates the log file if it doesn't exist yet."
-        },
-        "reopen": {
-          "type": "boolean",
-          "description": "Determines whether the log file is closed and reopened on every request.",
-          "default": false
-        },
-        "custom_fields_by_lua": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Lua code as a key-value map"
-        }
-      },
-      "required": [
-        "path"
       ]
     },
     "service": {

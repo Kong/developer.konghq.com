@@ -1,64 +1,5 @@
 {
   "properties": {
-    "config": {
-      "type": "object",
-      "properties": {
-        "clientid": {
-          "type": "string",
-          "description": "The `clientid` to access the Azure resources. If provided, it is injected as the `x-functions-clientid` header.",
-          "x-referenceable": true,
-          "x-encrypted": true
-        },
-        "appname": {
-          "type": "string",
-          "description": "The Azure app name."
-        },
-        "functionname": {
-          "type": "string",
-          "description": "Name of the Azure function to invoke."
-        },
-        "hostdomain": {
-          "type": "string",
-          "description": "The domain where the function resides.",
-          "default": "azurewebsites.net"
-        },
-        "routeprefix": {
-          "type": "string",
-          "description": "Route prefix to use.",
-          "default": "api"
-        },
-        "timeout": {
-          "type": "number",
-          "description": "Timeout in milliseconds before closing a connection to the Azure Functions server.",
-          "default": 600000
-        },
-        "keepalive": {
-          "type": "number",
-          "description": "Time in milliseconds during which an idle connection to the Azure Functions server lives before being closed.",
-          "default": 60000
-        },
-        "https": {
-          "type": "boolean",
-          "description": "Use of HTTPS to connect with the Azure Functions server.",
-          "default": true
-        },
-        "https_verify": {
-          "type": "boolean",
-          "description": "Set to `true` to authenticate the Azure Functions server.",
-          "default": true
-        },
-        "apikey": {
-          "type": "string",
-          "description": "The apikey to access the Azure resources. If provided, it is injected as the `x-functions-key` header.",
-          "x-referenceable": true,
-          "x-encrypted": true
-        }
-      },
-      "required": [
-        "appname",
-        "functionname"
-      ]
-    },
     "protocols": {
       "type": "array",
       "items": {
@@ -83,6 +24,65 @@
         "grpcs",
         "http",
         "https"
+      ]
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "timeout": {
+          "type": "number",
+          "description": "Timeout in milliseconds before closing a connection to the Azure Functions server.",
+          "default": 600000
+        },
+        "keepalive": {
+          "type": "number",
+          "description": "Time in milliseconds during which an idle connection to the Azure Functions server lives before being closed.",
+          "default": 60000
+        },
+        "https_verify": {
+          "type": "boolean",
+          "description": "Set to `true` to authenticate the Azure Functions server.",
+          "default": true
+        },
+        "clientid": {
+          "type": "string",
+          "description": "The `clientid` to access the Azure resources. If provided, it is injected as the `x-functions-clientid` header.",
+          "x-referenceable": true,
+          "x-encrypted": true
+        },
+        "appname": {
+          "type": "string",
+          "description": "The Azure app name."
+        },
+        "https": {
+          "type": "boolean",
+          "description": "Use of HTTPS to connect with the Azure Functions server.",
+          "default": true
+        },
+        "apikey": {
+          "type": "string",
+          "description": "The apikey to access the Azure resources. If provided, it is injected as the `x-functions-key` header.",
+          "x-encrypted": true,
+          "x-referenceable": true
+        },
+        "hostdomain": {
+          "type": "string",
+          "description": "The domain where the function resides.",
+          "default": "azurewebsites.net"
+        },
+        "routeprefix": {
+          "type": "string",
+          "description": "Route prefix to use.",
+          "default": "api"
+        },
+        "functionname": {
+          "type": "string",
+          "description": "Name of the Azure function to invoke."
+        }
+      },
+      "required": [
+        "appname",
+        "functionname"
       ]
     },
     "consumer": {

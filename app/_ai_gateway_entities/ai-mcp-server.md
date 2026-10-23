@@ -37,6 +37,8 @@ related_resources:
     url: /mcp/
   - text: MCP version support
     url: /ai-gateway/mcp-version-support/
+  - text: AI MCP Sanitizer Policy
+    url: /ai-gateway/policies/ai-mcp-sanitizer/
   - text: Model Context Protocol specification
     url: https://modelcontextprotocol.io/
   - text: Map a RESTful API to MCP tools
@@ -87,8 +89,8 @@ faqs:
       Server's [`access.auth_strategies`](#schema-aigateway-mcpserver-access) array, the same
       way you would for an [AI Model](/ai-gateway/entities/ai-model/#access-control) or
       [AI Agent](/ai-gateway/entities/ai-agent/#access-control). This is supported for `conversion-listener`,
-      `listener`, and `passthrough-listener` modes. An AI MCP Server currently accepts up to one AI Identity
-      Provider reference. The AI MCP Server has its own top-level authentication mechanism, so attaching an
+      `listener`, and `passthrough-listener` modes. An AI MCP Server accepts up to one AI Auth Strategy
+      reference. The AI MCP Server has its own top-level authentication mechanism, so attaching an
       authentication AI Policy directly to its `policies` field isn't supported.
 
   - q: Can I attach a rate-limiting policy to an AI MCP Server?
@@ -105,6 +107,11 @@ faqs:
       clients, and from [`config.server.tools_list_auth`](#schema-aigateway-mcpserver-config-server-tools-list-auth),
       which only authenticates the one-time fetch of an `upstream-server`'s tool list. See
       [Upstream authentication](#upstream-authentication).
+
+  - q: How do I connect to an upstream that requires mTLS or serves a certificate from a private CA?
+    a: |
+      Set [`config.certificates`](#schema-aigateway-mcpserver-config-certificates) for mTLS, or [`config.ca_certificates`](#schema-aigateway-mcpserver-config-ca-certificates) for a private CA.
+      See [Upstream TLS](#upstream-tls).
 ---
 
 ## What is an AI MCP Server?
@@ -114,7 +121,7 @@ Create an AI MCP Server to connect AI applications such as [Claude](https://clau
 Because MCP endpoints run directly on {{site.ai_gateway}}, you don't need to host and scale MCP infrastructure separately. The same authentication, rate limiting, and observability policies you apply to traditional API traffic automatically cover MCP traffic, giving you consistent governance across both HTTP and MCP clients.
 
 {:.warning}
-> **Note:** MCP traffic is API-level traffic, not LLM request/response flows. Authenticate MCP traffic through an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) referenced in [`access.auth_strategies`](#schema-aigateway-mcpserver-access), the same as AI Models and AI Agents. Standard API-level policies (rate limiting, logging) still apply to MCP traffic through the [`policies`](#schema-aigateway-mcpserver-policies) field. AI Policies that operate on LLM prompt/response flows (such as prompt guards or model routing) won't apply here.
+> **Note:** MCP traffic is API-level traffic, not LLM request/response flows. Authenticate MCP traffic through an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) referenced in [`access.auth_strategies`](#schema-aigateway-mcpserver-access), the same as AI Models and AI Agents. Standard API-level policies (rate limiting, logging) still apply to MCP traffic through the [`policies`](#schema-aigateway-mcpserver-policies) field. AI Policies that operate on LLM prompt/response flows, for example, prompt guards or model routing, won't apply here.
 
 ## MCP versions
 
@@ -122,7 +129,7 @@ Because MCP endpoints run directly on {{site.ai_gateway}}, you don't need to hos
 
 For more information, see [MCP version support](/ai-gateway/mcp-version-support/).
 
-### Configure protocol-revision behavior {% new_in 2.1 %}
+### Configure protocol-revision behavior
 
 The following `config.server` fields control protocol-revision behavior:
 
@@ -196,6 +203,8 @@ rows:
     example: "Use [Rate Limiting](/ai-gateway/policies/rate-limiting/) or [Rate Limiting Advanced](/ai-gateway/policies/rate-limiting-advanced/) Policy to control MCP request volume per AI Consumer or AI Consumer Group."
   - use_case: "Track all MCP traffic and ACL decisions."
     example: "Enable request and response logging through [AI logging Policies](/ai-gateway/policies/?category=logging) and audit trails."
+  - use_case: "Protect sensitive data in tool calls"
+    example: "Use the [AI MCP Sanitizer](/ai-gateway/policies/ai-mcp-sanitizer/) Policy (tech preview) to redact PII in `tools/call` arguments and results. Targeting results [changes how some server types stream](/ai-gateway/policies/ai-mcp-sanitizer/#streaming-and-performance-trade-offs)."
   - use_case: "Traffic control"
     example: "Apply [Request Transformer](/ai-gateway/policies/request-transformer/) or [Response Transformer](/ai-gateway/policies/response-transformer/) Policy to modify MCP payloads, or use [ACLs](#acl-tool-control) for fine-grained tool access."
 {% endtable %}
@@ -333,7 +342,7 @@ You can use a `listener` AI MCP Server to pull tools from multiple `upstream-ser
 
 3. **Tool caching**: Each `upstream-server` caches its tool list for the duration specified by [`config.tools_cache_ttl_seconds`](#schema-aigateway-mcpserver-config-tools-cache-ttl-seconds). Set to `0` to fetch fresh on every client request.
 
-4. **Tool name disambiguation**: If two upstreams expose tools with the same name, the listener prepends the service name to avoid collisions (e.g., `weather-service/get-forecast`). Disable this with [`config.server.preserve_upstream_tool_names`](#schema-aigateway-mcpserver-config-server-preserve-upstream-tool-names): true if you're sure names won't collide.
+4. **Tool name disambiguation**: If two upstreams expose tools with the same name, the listener prepends the service name to avoid collisions (for example, `weather-service/get-forecast`). Disable this with [`config.server.preserve_upstream_tool_names`](#schema-aigateway-mcpserver-config-server-preserve-upstream-tool-names): true if you're sure names won't collide.
 
 5. **Tool invocation**: When a client calls a tool, the listener routes the request to whichever upstream registered it. From the client's perspective, it's one call to one URL.
 
@@ -452,7 +461,7 @@ An MCP client such as [Claude Desktop](https://claude.ai/download), Cursor, or [
 
 ## Access control
 
-Once you expose tools through an AI MCP Server, anyone who can reach the endpoint can attempt to call them unless you gate access to known AI Consumers. To authenticate AI Consumers calling a `conversion-listener`, `listener`, or `passthrough-listener` AI MCP Server, reference an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) by name or ID in the [`access.auth_strategies`](#schema-aigateway-mcpserver-access) array. This is the same mechanism used by [AI Models](/ai-gateway/entities/ai-model/#access-control) and [AI Agents](/ai-gateway/entities/ai-agent/#access-control). An AI MCP Server currently accepts up to one AI Auth Strategy reference. The AI MCP Server has its own top-level authentication mechanism, so attaching an authentication AI Policy directly to its [`policies`](#schema-aigateway-mcpserver-policies) field isn't supported; authentication is configured exclusively through AI Auth Strategies. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes) for details.
+When you expose tools through an AI MCP Server, anyone who can reach the endpoint can attempt to call them unless you gate access to known AI Consumers. To authenticate AI Consumers calling a `conversion-listener`, `listener`, or `passthrough-listener` AI MCP Server, reference an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) by name or ID in the [`access.auth_strategies`](#schema-aigateway-mcpserver-access) array. This is the same mechanism used by [AI Models](/ai-gateway/entities/ai-model/#access-control) and [AI Agents](/ai-gateway/entities/ai-agent/#access-control). An AI MCP Server accepts up to one AI Auth Strategy reference. The AI MCP Server has its own top-level authentication mechanism, so attaching an authentication AI Policy directly to its [`policies`](#schema-aigateway-mcpserver-policies) field isn't supported; authentication is configured exclusively through AI Auth Strategies. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes) for details.
 
 `upstream-server` AI MCP Servers don't accept an `access.auth_strategies` reference. Configure [`config.server.tools_list_auth`](#schema-aigateway-mcpserver-config-server-tools-list-auth) instead to authenticate to the upstream when fetching its tool list; see [Tool-list authentication](#tool-list-authentication). `conversion-only` AI MCP Servers have no `access` field at all, since they never accept incoming MCP traffic directly.
 
@@ -525,6 +534,24 @@ config:
       role_session_name: kong-ai-gateway
 ```
 
+## Upstream TLS
+
+{% include md/ai-gateway/v2/upstream-tls.md name='AI MCP Server' schema_prefix='schema-aigateway-mcpserver-config' %}
+
+These fields work in every [server mode](#server-modes) that connects to an upstream: `conversion-only`, `conversion-listener`, `passthrough-listener`, and `upstream-server`.
+They have no effect in `listener` mode, because a listener only aggregates tools from other AI MCP Servers and doesn't connect to an upstream itself.
+
+In the following example, the AI MCP Server presents the `mcp-client-cert` certificate to the upstream and verifies the upstream against the `kongair-internal-root-ca` CA:
+
+```yaml
+config:
+  url: https://mcp.internal.kongair.com
+  certificates:
+    - mcp-client-cert
+  ca_certificates:
+    - kongair-internal-root-ca
+```
+
 ## ACL tool control
 
 When exposing MCP servers through {{site.ai_gateway}}, you may need granular control over which authenticated [AI Consumers](/ai-gateway/entities/ai-consumer/) can discover and invoke specific tools. The MCP Server's ACL feature lets you define access rules at both the default level (which applies to all tools) and per-tool level (for fine-grained exceptions).
@@ -553,7 +580,7 @@ This way, AI Consumers only interact with tools appropriate to their role, while
 For modes that support server-level ACL configuration (`conversion-listener`, `listener`, `passthrough-listener`, `upstream-server`), two attribute types determine what the AI MCP Server evaluates ACL rules against:
 
 1. **`consumer`** (default). Evaluates against the resolved AI Consumer identity.
-1. **`oauth_access_token`**. Evaluates against a claim extracted from the OAuth access token. Set [`access.access_token_claim_field`](#schema-aigateway-mcpserver-access-access-token-claim-field) to a jq filter (for example, `.user.email` for a nested claim). The token is validated by the [`openid-connect` AI Auth Strategy](/ai-gateway/openid-connect/) referenced in [`access.auth_strategies`](#schema-aigateway-mcpserver-access) — on this server if it accepts MCP traffic directly (`conversion-listener`, `listener`, `passthrough-listener`), or on the `listener` that aggregates it if this is a `conversion-only` or `upstream-server` AI MCP Server. If [`access.metadata`](#schema-aigateway-mcpserver-access-metadata) is also set, validation happens through the generated AI MCP OAuth2 Policy configuration instead; see [Protected resource metadata](#protected-resource-metadata).
+1. **`oauth_access_token`**. Evaluates against a claim extracted from the OAuth access token. Set [`access.access_token_claim_field`](#schema-aigateway-mcpserver-access-access-token-claim-field) to a jq filter (for example, `.user.email` for a nested claim). The token is validated by the [`openid-connect` AI Auth Strategy](/ai-gateway/openid-connect/) referenced in [`access.auth_strategies`](#schema-aigateway-mcpserver-access). The strategy goes on this server if it accepts MCP traffic directly (`conversion-listener`, `listener`, `passthrough-listener`), or on the `listener` that aggregates it if this is a `conversion-only` or `upstream-server` AI MCP Server. If [`access.metadata`](#schema-aigateway-mcpserver-access-metadata) is also set, validation happens through the generated AI MCP OAuth2 Policy configuration instead; see [Protected resource metadata](#protected-resource-metadata).
 
    When evaluating a scope-based ACL rule against a `2026-07-28` client, {{site.ai_gateway}} matches on scope hierarchy: a broader scope granted to the token satisfies a rule naming a narrower one. Earlier protocol revisions keep exact-match comparison between the granted scope and the rule.
 
@@ -562,6 +589,10 @@ For modes that support server-level ACL configuration (`conversion-listener`, `l
 ### Using AI Consumers and Groups in ACLs
 
 When `access.acl_attribute_type` is `consumer`, you can gate access by individual [AI Consumers](/ai-gateway/entities/ai-consumer/) (using username, UUID, or custom ID) or by [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/) membership. This flexibility lets you define rules at the right level: deny a specific user, allow a tier-based group, or mix both in the same ACL. The runtime checks the authenticated AI Consumer's identity and group memberships against your `allow` and `deny` lists.
+
+### CEL-based ACLs
+
+{% include md/ai-gateway/v2/cel-acls.md entity="AI MCP Server" anchor="#schema-aigateway-mcpserver-access-acls" scope="server-level " allow_and_deny_together=true %}
 
 ### How default and per-tool ACLs work
 
@@ -698,7 +729,7 @@ To monitor and troubleshoot MCP traffic, enable logging and audit trails through
 
 ## Scope of support
 
-The AI MCP Server runtime supports MCP operations and upstream interactions, while certain advanced features and non-HTTP protocols are not currently supported. The following table summarizes what is supported and what is outside the current scope.
+The AI MCP Server runtime supports MCP operations and upstream interactions, while certain advanced features and non-HTTP protocols are not supported. The following table summarizes what is supported and what is outside the supported scope.
 
 <!-- vale off -->
 {% feature_table %}
@@ -735,7 +766,7 @@ features:
     description: Handling WebSocket and gRPC upstreams
     supported: false
   - title: "AI Guardrails"
-    description: Applying guardrails to MCP AI requests and responses
+    description: Applying content safety guardrails to MCP AI requests and responses. For PII protection, see the [AI MCP Sanitize Policy](/ai-gateway/policies/ai-mcp-sanitizer/).
     supported: false
 {% endfeature_table %}
 <!-- vale on -->
