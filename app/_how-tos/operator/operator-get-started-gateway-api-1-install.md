@@ -53,31 +53,6 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 
 {% include prereqs/products/operator.md raw=true v_maj=2 %}
 
-### Install from an OCI registry
-
-To use the [OCI-format chart on Docker Hub](https://hub.docker.com/r/kong/kong-operator-chart) instead of the `charts.konghq.com` Helm repository, run the same command with the OCI chart reference. Set `nameOverride` so that the resources get the same names as with the chart from the Helm repository. Without it, the Deployment is named `kong-operator-kong-operator-chart-controller-manager`.
-
-{% konnect %}
-content: |
-  ```bash
-  helm upgrade --install kong-operator oci://registry-1.docker.io/kong/kong-operator-chart -n kong-system \
-    --create-namespace \
-    --set nameOverride=kong-operator \
-    --set image.tag={{ site.data.operator_latest.release }} \
-    --set env.ENABLE_CONTROLLER_KONNECT=true
-  ```
-{% endkonnect %}
-
-{% on_prem %}
-content: |
-  ```bash
-  helm upgrade --install kong-operator oci://registry-1.docker.io/kong/kong-operator-chart -n kong-system \
-    --create-namespace \
-    --set nameOverride=kong-operator \
-    --set image.tag={{ site.data.operator_latest.release }}
-  ```
-{% endon_prem %}
-
 ## Validate
 
 Wait for {{ site.operator_product_name }} to be ready
