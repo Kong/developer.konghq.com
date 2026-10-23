@@ -82,6 +82,7 @@ The `KonnectAIGateway` resource creates the {{ site.ai_gateway }} control plane 
          name: konnect-api-auth
    ' | kubectl apply -f -
    ```
+   {: data-test-step="block" }
 
 1. Wait for the resource to be ready:
 
@@ -90,6 +91,7 @@ The `KonnectAIGateway` resource creates the {{ site.ai_gateway }} control plane 
      --for=condition=Programmed=True \
      --timeout=10m
    ```
+   {: data-test-step="block" }
 
 ## Create an AI Model Provider
 
@@ -103,6 +105,7 @@ The `AIGatewayModelProvider` resource configures authentication and connection d
      -n kong
    kubectl label secret openai-credentials konghq.com/secret=true -n kong
    ```
+   {: data-test-step="block" }
 
 1. Create the `AIGatewayModelProvider` resource, referencing the Secret:
 
@@ -134,6 +137,7 @@ The `AIGatewayModelProvider` resource configures authentication and connection d
                      key: token
    ' | kubectl apply -f -
    ```
+   {: data-test-step="block" }
 
 1. Wait for the resource to be ready:
 
@@ -142,6 +146,7 @@ The `AIGatewayModelProvider` resource configures authentication and connection d
      --for=condition=Programmed=True \
      --timeout=10m
    ```
+   {: data-test-step="block" }
 
 ## Create an AI Model
 
@@ -185,6 +190,7 @@ The `AIGatewayModel` resource defines a Route and maps it to one or more provide
                  upstreamURL: https://api.openai.com/v1/chat/completions
    ' | kubectl apply -f -
    ```
+   {: data-test-step="block" }
 
 1. Wait for the resource to be ready:
 
@@ -193,6 +199,7 @@ The `AIGatewayModel` resource defines a Route and maps it to one or more provide
      --for=condition=Programmed=True \
      --timeout=10m
    ```
+   {: data-test-step="block" }
 
 ## Deploy the `AIGatewayDataPlane`
 
@@ -224,6 +231,7 @@ The `AIGatewayDataPlane` resource runs the {{ site.ai_gateway }} binary inside y
                targetPort: 8000
    ' | kubectl apply -f -
    ```
+   {: data-test-step="block" }
 
 1. Wait for the data plane to be ready:
 
@@ -232,6 +240,7 @@ The `AIGatewayDataPlane` resource runs the {{ site.ai_gateway }} binary inside y
      --for=condition=Ready=True \
      --timeout=10m
    ```
+   {: data-test-step="block" }
 
 ## Validate
 
@@ -242,16 +251,24 @@ export AIGW_HOST=$(kubectl get service my-ai-gateway-dp-ingress -n kong \
   -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo $AIGW_HOST
 ```
+{: data-test-step="block" }
 
 Send a request to the AI Model Route you configured:
 
-```bash
-curl -s http://$AIGW_HOST:8000/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "gpt-4o-mini",
-    "messages": [{"role": "user", "content": "Hello from Kong AI Gateway!"}]
-  }'
-```
+<!--vale off-->
+{% validation request-check %}
+konnect_url: http://$AIGW_HOST:8000
+url: /v1/chat/completions
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  model: gpt-4o-mini
+  messages:
+    - role: user
+      content: Hello from Kong AI Gateway!
+status_code: 200
+{% endvalidation %}
+<!--vale on-->
 
 You should receive a response from OpenAI routed through the {{ site.ai_gateway }} data plane.
