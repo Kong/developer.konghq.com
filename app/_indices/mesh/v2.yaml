@@ -14,7 +14,7 @@ sections:
         url: /mesh/v2/policies/
       - title: Mesh changelog
         description: Changelog for supported Kong Mesh versions.
-        url: /mesh/v2/changelog/
+        url: /mesh/changelog/
       - path: /mesh/v2/enterprise/
 
   - title: Install & Configure
@@ -63,7 +63,9 @@ sections:
 
   - title: Upgrade
     items:
-      - path: /mesh/v2/upgrade/
+      - title: "Upgrade {{site.mesh_product_name}}"
+        description: Compatibility rules, upgrade order, and considerations for single-zone and multi-zone deployments.
+        url: /mesh/upgrade/
       - path: /mesh/v2/version-specific-upgrade-notes/
       - path: /mesh/v2/migration-to-the-new-policies/
 
@@ -92,10 +94,10 @@ sections:
 
   - title: Built-in Gateways
     items:
-      - path: /how-to/set-up-a-built-in-mesh-gateway/
+      - path: /mesh/v2/how-to/set-up-a-built-in-mesh-gateway/
       - path: /mesh/v2/built-in-gateway/
       - path: /mesh/v2/gateway-routes/
-      - path: /how-to/set-up-a-built-in-kubernetes-gateway/
+      - path: /mesh/v2/how-to/set-up-a-built-in-kubernetes-gateway/
       - path: /mesh/v2/kubernetes-gateway-api/
 
   - title: Delegated Gateways
@@ -138,7 +140,9 @@ sections:
       - path: /mesh/v2/zone-egress/
       - path: /mesh/v2/zone-ingress/
       - path: /mesh/v2/cli/
-      - path: /mesh/v2/sbom/
+      - title: Software Bill of Materials
+        description: SBOMs for {{site.mesh_product_name}} binaries and Docker images.
+        url: /mesh/sbom/
       - path: /mesh/v2/reference/kuma-cp/
       - path: /mesh/v2/data-collection/
       - path: /mesh/v2/configure-data-plane-proxy-membership/
@@ -146,8 +150,12 @@ sections:
       - path: /mesh/v2/dns/
       - path: /mesh/v2/ipv6-support/
       - path: /mesh/v2/performance-tuning/
-      - path: /mesh/v2/vulnerability-patching-process/
-      - path: /mesh/v2/support-policy/
+      - title: "{{site.mesh_product_name}} vulnerability patching process"
+        description: How Kong patches vulnerabilities in {{site.mesh_product_name}} binaries, dependencies, and Docker images.
+        url: /mesh/vulnerability-patching-process/
+      - title: "{{site.mesh_product_name}} version support policy"
+        description: Lifecycle and version support guidelines for {{site.mesh_product_name}}.
+        url: /mesh/support-policy/
 
   - title: Hidden paths
     hidden: true

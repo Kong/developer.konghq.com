@@ -93,7 +93,7 @@ The global control plane follows the same compatibility rules with zone control 
 * You can connect zone control plane `2.11.x` to global control plane `2.13.x`.
 * You can't connect zone control plane `2.10.x` to global control plane `2.13.x`. It may cause undefined behavior.
 
-Although control planes within a zone don't connect to each other, they share a common [store](/mesh/control-plane-configuration/#store) (usually Kubernetes or PostgreSQL). Compatibility of the storage layer also follows the minor version rules:
+Although control planes within a zone don't connect to each other, they share a common [store](/mesh/universal-control-plane/#stores) (usually Kubernetes or PostgreSQL). Compatibility of the storage layer also follows the minor version rules:
 * You can read any data written on control plane `2.11.x` with a control plane version `2.13.x`.
 * You can read any data written on control plane `2.13.x` with a control plane version `2.11.x`.
 * You can't read data written on control plane `2.10.x` with a control plane version `2.13.x` or higher. It may cause undefined behavior.
@@ -101,7 +101,7 @@ Although control planes within a zone don't connect to each other, they share a 
 
 
 {:.warning}
-> Some feature flags may not provide backward compatibility. When this is the case, it is clearly documented in the [control plane configuration](/mesh/reference/kuma-cp/) and is part of the `experimental` section.
+> Some feature flags may not provide backward compatibility. When this is the case, it is clearly documented in the control plane configuration and is part of the `experimental` section.
 >
 > To guarantee our compatibility policy, we always wait at least two minor versions before making these features enabled by default.
 

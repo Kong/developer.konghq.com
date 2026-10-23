@@ -35,7 +35,7 @@ The [zone-proxy reference](/mesh/mesh-scoped-zone-proxies/) explains the new tra
 and policy model. This page covers the order of migration, when traffic switches, and what
 to verify before removing the old proxies.
 
-For the full migration sequence, see [Upgrade from 2.x to 3.x](/mesh/upgrade/#upgrade-from-2x-to-3x).
+For the full migration sequence, see [Upgrade from 2.x to 3.x](/mesh/upgrade/#upgrade-from-2-x-to-3-x).
 
 {:.warning}
 > Migrate before upgrading a zone control plane to 3.x. The 3.x control plane does not serve
