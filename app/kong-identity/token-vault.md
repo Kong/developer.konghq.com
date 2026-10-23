@@ -33,7 +33,7 @@ faqs:
 
 
 The {{site.identity}} Token Vault is a {{ site.konnect_short_name }} built-in credential broker. 
-It stores your users' credentials for third-party upstream services (such as GitHub, Slack, 
+It stores your users' credentials for third-party upstream services (for example, GitHub, Slack, 
 or Workday) and releases them to {{ site.ai_gateway_name }} so agents can call those protected 
 services on a user's behalf, without the agent ever holding the credential itself.
 
