@@ -18,6 +18,8 @@ api_specs:
     - konnect/kong-identity
 
 related_resources:
+  - text: Get started with the {{site.identity}} Token Vault
+    url: /how-to/get-started-with-token-vault/
   - text: "{{site.identity}} authorization servers, claims, scopes, and clients"
     url: /identity/auth-servers/
   - text: Principals and directories
@@ -162,6 +164,43 @@ The Token Vault acts as a verifier, not a caller. It never asks the IdP about a 
 
 Users don't need to exist in {{site.identity}} beforehand. When `jit_provisioning_enabled` is `true` (the default) and no [{{site.identity}} principal](/identity/principals/) matches the token's issuer and subject, the Token Vault creates one just in time. Per-user credentials are stored against that principal.
 
+To add a trusted IdP, send a `POST` request to the `/v2/directories/{directoryId}/trusted-idps` endpoint. Each directory supports one trusted IdP, so a second `POST` returns a `409`. The request accepts the following body parameters:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Parameter
+    key: param
+  - title: Required
+    key: required
+  - title: Description
+    key: description
+rows:
+  - param: "`issuer_url`"
+    required: Yes
+    description: |
+      The IdP's issuer URL. The Token Vault only trusts subject tokens whose `iss` claim matches this value.
+  - param: "`jwks_uri`"
+    required: No
+    description: |
+      Where the Token Vault fetches the IdP's public keys to verify token signatures. Must use `https`. If you omit it, {{site.identity}} discovers it from the issuer's `/.well-known/openid-configuration` document.
+  - param: "`display_name`"
+    required: No
+    description: |
+      A human-readable name for the IdP.
+  - param: "`vault_access_enabled`"
+    required: No
+    description: |
+      Whether the Token Vault accepts tokens from this IdP. Defaults to `false`: set it to `true` to use the IdP with the Token Vault.
+  - param: "`jit_provisioning_enabled`"
+    required: No
+    description: |
+      Whether {{site.identity}} creates a principal just in time for a token subject that doesn't match an existing principal. Defaults to `true`.
+{% endtable %}
+
+`PUT` on `/v2/directories/{directoryId}/trusted-idps/{trustedIdpId}` replaces the whole configuration, so omitted fields reset to their defaults. Use `PATCH` to change individual fields.
+<!--vale on-->
+
 ## Providers
 
 You connect third-party services by adding a provider to the {{site.identity}} Token Vault. This lets an organization centralize identities and shared connections in one place, instead of configuring each service separately in every agent or client.
@@ -291,179 +330,54 @@ When you configure a provider (for example, GitHub), the Token Vault registers i
 
 Enrollment happens once per user and per provider, not per organization. If a second user wants to use GitHub with an agent, they need to go through enrollment, and get their own credentials stored in the Token Vault. What is shared across the organization is the provider configuration (Client ID, scopes, endpoints).
 
-For providers that support dynamic client registration (DCR), such as `atlassian-rovo`, the Token Vault registers the OAuth client with the provider at first use, so you don't need to create an app in the provider's console.
+For providers that support dynamic client registration (DCR), such as `atlassian-rovo`, you don't need to create an app in the provider's console: the Token Vault registers the OAuth client with the provider at first use.
 
 ### Shared credential enrollment
 
-For a shared authorization code provider, an admin enrolls once on behalf of the directory. Send a `POST` request to the `/v2/directories/{directoryId}/vault/providers/{providerId}/credentials` endpoint without a `secret`. The Token Vault creates a `pending` credential and returns an `enrollment_url`. Open that URL and complete the provider's OAuth consent: the credential becomes `active` and the Token Vault releases it to any authorized caller.
+A shared credential means one credential for the whole directory, managed by an admin instead of per user. A shared authorization code provider is an OAuth provider with `credential_type` you set to `shared`. Authorization code providers default to `user`, so you must set `credential_type: shared` explicitly when you [add the provider](/how-to/get-started-with-token-vault/#add-a-provider).
 
-Each `GET` on the credential returns a fresh `enrollment_url`, so you can re-enroll the shared account at any time.
+Then, enroll the shared credential:
 
+1. An admin enrolls once on behalf of the directory: send a `POST` request to the `/v2/directories/{directoryId}/vault/providers/{providerId}/credentials` endpoint without a `secret`. The request fails if you send one.
+1. The Token Vault creates a `pending` credential and returns an `enrollment_url`.
+1. The admin opens that URL and completes the provider's OAuth consent.
+1. The credential becomes `active` and the Token Vault releases it to any authorized caller.
+
+To re-enroll the shared account at any time, send a `GET` request to the `/v2/directories/{directoryId}/vault/providers/{providerId}/credentials/{credentialId}` endpoint. Each `GET` by credential ID returns a fresh `enrollment_url`, whether the credential is `pending` or `active`. The list endpoint never returns the `enrollment_url`.
+
+To remove the shared credential, send a `DELETE` request to the same endpoint. The provider stays in place, but the Token Vault has nothing to release until an admin enrolls again.
 
 ## Set up the Token Vault
 
-The following section shows API calls to set up and start using the Token Vault.
+To enable the Token Vault on a directory:
 
-### Enable the vault on a directory
+1. Add a trusted IdP.
+1. Add your first provider (see [Get started with the {{site.identity}} Token Vault](/how-to/get-started-with-token-vault/)).
 
-{% navtabs "enable token vault" %}
-{% navtab "Activate the Token Vault" %}
-Send a `PATCH` request to the `/v2/directories/{directoryId}` endpoint with `vault_enabled` set to `true`:
-<!--vale off-->
-{% konnect_api_request %}
-url: /v2/directories/$DIRECTORY_ID
-status_code: 200
-method: PATCH
-body:
-  vault_enabled: true
-{% endkonnect_api_request %}
-<!--vale on-->
+To disable a provider without deleting it, for example as a kill switch, send a `PATCH` request to `/v2/directories/{directoryId}/vault/providers/{providerId}` with `enabled: false`.
 
+A `PUT` on the same endpoint also sets `enabled` to `false` if you omit it.
 
-`PATCH` is a partial update, so any field you omit keeps its current value. You only need to send `vault_enabled`.
-{% endnavtab %}
-{% navtab "Check if the Token Vault is enabled" %}
+## Static secret
 
-To confirm the vault is enabled, send a `GET` request to the same endpoint and read the `vault_enabled` field from the response:
+A provider built on the `static_secret` template doesn't run an OAuth flow. The setup steps are the follwoing:
 
-<!--vale off-->
-{% konnect_api_request %}
-url: /v2/directories/$DIRECTORY_ID
-status_code: 200
-method: GET
-capture:
-  - variable: VAULT_ENABLED
-    jq: ".vault_enabled"
-{% endkonnect_api_request %}
-<!--vale on-->
+1. You generate the credential yourself in the third-party service, for example an API key or a personal acce.ss token.
+1. You store the credential on the provider.
 
-Print the captured value. It returns `true` when the Token Vault is active on the directory:
-
-```sh
-echo $VAULT_ENABLED
-```
-{% endnavtab %}
-
-{% endnavtabs %}
-
-### Add a trusted IdP
-
-{% navtabs "configure trusted idp" %}
-{% navtab "Add a trusted IdP" %}
-Send a `POST` request to the `/v2/directories/{directoryId}/trusted-idps` endpoint. Each directory supports one trusted IdP, so a second `POST` returns a `409`:
-<!--vale off-->
-{% konnect_api_request %}
-url: /v2/directories/$DIRECTORY_ID/trusted-idps
-status_code: 201
-method: POST
-body:
-  issuer_url: https://acme.okta.com/oauth2/default
-  jwks_uri: https://acme.okta.com/oauth2/default/v1/keys
-  display_name: Okta
-  vault_access_enabled: true
-{% endkonnect_api_request %}
-<!--vale on-->
-
-The request accepts the following body parameters:
-
-<!--vale off-->
-{% table %}
-columns:
-  - title: Parameter
-    key: param
-  - title: Required
-    key: required
-  - title: Description
-    key: description
-rows:
-  - param: "`issuer_url`"
-    required: Yes
-    description: |
-      The IdP's issuer URL. The Token Vault only trusts subject tokens whose `iss` claim matches this value.
-  - param: "`jwks_uri`"
-    required: No
-    description: |
-      Where the Token Vault fetches the IdP's public keys to verify token signatures. Must use `https`. If you omit it, {{site.identity}} discovers it from the issuer's `/.well-known/openid-configuration` document.
-  - param: "`display_name`"
-    required: No
-    description: |
-      A human-readable name for the IdP.
-  - param: "`vault_access_enabled`"
-    required: No
-    description: |
-      Whether the Token Vault accepts tokens from this IdP. Defaults to `false`: set it to `true` to use the IdP with the Token Vault.
-  - param: "`jit_provisioning_enabled`"
-    required: No
-    description: |
-      Whether {{site.identity}} creates a principal just in time for a token subject that doesn't match an existing principal. Defaults to `true`.
-{% endtable %}
-
-`PUT` on `/v2/directories/{directoryId}/trusted-idps/{trustedIdpId}` replaces the whole configuration, so omitted fields reset to their defaults. Use `PATCH` to change individual fields.
-<!--vale on-->
-{% endnavtab %}
-{% navtab "Check configured trusted IdPs" %}
-
-To see which IdPs the Token Vault trusts for this directory, send a `GET` request to the same endpoint:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v2/directories/$DIRECTORY_ID/trusted-idps
-status_code: 200
-method: GET
-{% endkonnect_api_request %}
-<!--vale on-->
-{% endnavtab %}
-
-{% endnavtabs %}
-
-### Add a provider
-
-{% navtabs "register provider" %}
-{% navtab "Add a provider" %}
-Send a `POST` request to the `/v2/directories/{directoryId}/vault/providers` endpoint:
-<!--vale off-->
-{% konnect_api_request %}
-url: /v2/directories/$DIRECTORY_ID/vault/providers
-status_code: 201
-method: POST
-body:
-  template_name: github
-  name: github-prod
-  client_id: $GITHUB_CLIENT_ID
-  client_secret: $GITHUB_CLIENT_SECRET
-  scopes:
-    - repo
-    - read:user
-{% endkonnect_api_request %}
-<!--vale on-->
-
-For OAuth providers, register the Token Vault callback URL (`https://vault.<konnect-host>/v2/callback`) in the third-party app that issued the client ID and secret.
-
-
-To disable a provider without deleting it, for example as a kill switch, send a `PATCH` request to `/v2/directories/{directoryId}/vault/providers/{providerId}` with `enabled: false`. A `PUT` on the same endpoint also sets `enabled` to `false` if you omit it.
-
-{% endnavtab %}
-{% navtab "Check configured providers" %}
-
-To list the providers registered for this directory, send a `GET` request to the same endpoint:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v2/directories/$DIRECTORY_ID/vault/providers
-status_code: 200
-method: GET
-{% endkonnect_api_request %}
-<!--vale on-->
-{% endnavtab %}
-
-{% endnavtabs %}
+The static credential belongs to the directory instead of to an individual principal. A `static_secret` provider only accepts `credential_type` set to `shared`.
 
 
 ### Store a static secret
 
-A provider built on the `static_secret` template doesn't run an OAuth flow. You generate the credential yourself in the third-party service, for example an API key or a personal access token, then store it on the provider. The credential belongs to the directory instead of to an individual principal, so a `static_secret` provider only accepts `credential_type` set to `shared`, which is also the default.
+To store a static secret:
 
-Start by creating the provider. For `static_secret`, send only `template_name` and `name`, and optionally `credential_type` and `base_url`. {{site.identity}} rejects `client_id` and `client_secret` with a `400` for this template:
+1. Create the provider: For `static_secret`, send only:
+  * `template_name`
+  * `name`
+  * Optionally `credential_type` and `base_url`.
+  
+{{site.identity}} rejects `client_id` and `client_secret` with a `400` for this template:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -513,7 +427,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-Then store the credential on that provider by sending a `POST` request to the `/v2/directories/{directoryId}/vault/providers/{providerId}/credentials` endpoint. {{site.identity}} encrypts the value at rest and never returns it from any read endpoint:
+2. Store the credential on that provider by sending a `POST` request to the `/v2/directories/{directoryId}/vault/providers/{providerId}/credentials` endpoint. {{site.identity}} encrypts the value at rest and never returns it from any read endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -532,7 +446,7 @@ capture:
 
 A shared provider can hold one default credential and any number of credentials with a `selector`. A second credential without a selector returns a `409`. To rotate the secret, update the existing credential instead of creating another one.
 
-#### Select a shared credential per principal
+### Select a shared credential per principal
 
 To release different shared credentials to different callers, for example one API key per team, add a `selector` and a `priority` to the credential:
 
@@ -554,6 +468,8 @@ body:
 * `priority` is required with a selector, and not allowed without one. Each priority must be unique on the provider, otherwise the request returns a `409`.
 
 When the {{site.ai_gateway_name}} requests a credential, the Token Vault evaluates the selectors in ascending priority order and releases the first match. If no selector matches, it releases the default credential. If a selector fails to evaluate, the request fails instead of falling back to the next credential.
+
+## Manage credentials
 
 {% navtabs "manage static secret" %}
 {% navtab "Check stored credentials" %}
