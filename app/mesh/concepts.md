@@ -26,48 +26,67 @@ related_resources:
   - text: Policy targeting and precedence
     url: /mesh/policy-targeting-and-precedence/
 ---
+This page defines the terms that the {{site.mesh_product_name}} documentation and the Kong Air scenarios use.
+Each definition is short and links to the page that covers the subject in depth.
 
-This page defines the terminology used throughout the {{site.mesh_product_name}} documentation. Each definition is deliberately short and links to the guide that covers the subject in depth.
-
-For a conceptual introduction to what a service mesh is and the problems it solves, see [Service meshes](/mesh/service-mesh/).
+For what a service mesh is and the problems it solves, see [Service meshes](/mesh/service-mesh/).
 
 ## Mesh
 
-A mesh is the top-level resource that represents an isolated service mesh deployment. The mesh is the parent resource for all policies, services, and data planes, which gives it a separate domain of configuration and communication. Workloads in one mesh can't reach workloads in another mesh except through an explicitly configured external destination.
+A mesh is the top-level resource for one isolated service mesh.
+Every policy, service, and data plane proxy belongs to one mesh, so each mesh has its own configuration and traffic.
+A workload in one mesh can reach a workload in another mesh only through an external destination that you configure.
 
-On Kubernetes, a resource joins a mesh through the `kuma.io/mesh` label. For more information, see [Resource scoping](/mesh/resource-scoping/).
+On Kubernetes, a resource joins a mesh through the `kuma.io/mesh` label.
+For more information, see [Resource scoping](/mesh/resource-scoping/).
 
 ## Zone
 
-A zone is a deployment unit that represents a distinct infrastructure environment, typically a Kubernetes cluster, VPC, or data center. All data plane proxies within a zone must be able to reach each other directly. Every zone runs its own zone control plane, and each zone control plane attaches to one global control plane.
+A zone is one infrastructure environment, usually a Kubernetes cluster, a VPC, or a data center.
+All data plane proxies in a zone must be able to reach each other directly.
+Each zone runs its own zone control plane.
+In a multi-zone deployment, each zone control plane connects to one global control plane.
 
-A zone is either a Kubernetes zone or a Universal zone, depending on whether workloads run as pods or as processes on VMs and bare metal. Both use the same resource model.
+A zone is a Kubernetes zone or a Universal zone, depending on whether the workloads run as Pods or as processes on VMs and bare metal.
+Both kinds of zone use the same resources.
+For the differences, see [{{site.mesh_product_name}} on Universal](/mesh/universal/).
 
-For how zones discover each other's services and route traffic between them, see [Multi-zone architecture](/mesh/multi-zone-architecture/).
+For how zones find each other's services and route traffic between them, see [Multi-zone architecture](/mesh/multi-zone-architecture/).
 
 ## Control plane
 
-The control plane is the management layer of {{site.mesh_product_name}}. It computes the configuration each data plane proxy needs and pushes it out. The control plane doesn't sit on the path of application traffic, so an unavailable control plane doesn't by itself stop requests that are already configured.
+The control plane is the management layer of {{site.mesh_product_name}}.
+It computes the configuration that each data plane proxy needs and sends it to the proxy.
+The control plane doesn't carry application traffic, so when it's unavailable, the proxies keep handling requests with their last configuration.
 
 For more information, see [Architecture overview](/mesh/architecture-overview/#core-architecture).
 
 ### Global control plane
 
-The global control plane holds the central view of the deployment. It owns global resources, provides the inventory of meshes, zones, and workloads, and coordinates the zones. It never connects to a data plane proxy.
+The global control plane holds the central view of a multi-zone deployment.
+It stores global resources, keeps an inventory of meshes, zones, and workloads, and coordinates the zones.
+It never connects to a data plane proxy.
 
 ### Zone control plane
 
-A zone control plane runs inside one zone. It discovers the workloads running locally, serves them Envoy configuration over xDS, and exchanges supported resources with the global control plane over KDS. If the global control plane becomes unreachable, a zone control plane keeps serving its last known configuration to local proxies.
+A zone control plane runs in one zone.
+It finds the local workloads, sends them Envoy configuration over xDS, and exchanges resources with the global control plane over KDS.
+If the global control plane is unreachable, the zone control plane keeps serving its last configuration to the local proxies.
 
 ## Data plane
 
-The data plane handles traffic between services. In practice, the data plane is the set of data plane proxies, or sidecars, that run alongside the applications in your service mesh, plus the zone proxies that carry traffic across zone boundaries.
+The data plane carries the traffic between services.
+It's made of the data plane proxies (sidecars) that run next to the applications, and of the zone proxies that carry traffic between zones.
 
 ### Data plane proxy or sidecar
 
-The data plane proxy, or sidecar, is the instance of Envoy that runs alongside one application instance and sends and receives that instance's mesh traffic. The proxy connects to its zone control plane, which computes a configuration specific to it. {{site.mesh_product_name}} ships Envoy inside a binary called `kuma-dp`, and on Kubernetes, sidecar injection adds that binary to the pod as an extra container.
+A data plane proxy, or sidecar, is an Envoy instance that runs next to one application instance.
+It sends and receives the mesh traffic of that instance.
+The proxy connects to its zone control plane, which computes the configuration for that proxy.
+The `kuma-dp` binary starts and configures Envoy.
+On Kubernetes, sidecar injection adds `kuma-dp` to the Pod as an extra container.
 
-A `Dataplane` resource represents each proxy in the API, and it's what policies select when they target workloads.
+In the API, a `Dataplane` resource represents each proxy, and policies select proxies through it.
 
 <!-- vale off -->
 {% mermaid %}
@@ -95,117 +114,168 @@ Outbounds --> Servers
 
 #### Inbound
 
-An inbound is the part of the data plane proxy that receives traffic from clients for a specific port. A service usually groups the inbounds of several data planes.
+An inbound is the part of a data plane proxy that receives traffic from clients on one port.
+A service usually groups the inbounds of several data plane proxies.
 
 #### Outbound
 
-An outbound is the part of the data plane proxy that sends traffic to servers for a specific destination. Outbounds group multiple remote inbounds as endpoints.
+An outbound is the part of a data plane proxy that sends traffic to one destination.
+An outbound uses the inbounds of the destination's proxies as its endpoints.
 
 ### Transparent proxy
 
-Transparent proxy is the interception mechanism that redirects a workload's inbound and outbound traffic into its sidecar without any change to the application. On Kubernetes, sidecar injection sets it up automatically, which is why in-mesh callers keep using ordinary Kubernetes DNS names such as `check-in-api.kong-air-production.svc.cluster.local`.
+A transparent proxy redirects the inbound and outbound traffic of a workload into its sidecar, without any change to the application.
+On Kubernetes, sidecar injection sets it up.
+As a result, callers in the mesh keep using ordinary Kubernetes DNS names, such as `check-in-api.kong-air-production.svc.cluster.local`.
 
 ### reachableBackends
 
-`reachableBackends` is the list of destinations a data plane proxy declares its workload calls. On Kubernetes, you set it with the `kuma.io/reachable-backends` pod annotation. The control plane generates outbound configuration only for the declared destinations, and a proxy that declares none reaches nothing, because restricted outbound is on by default.
+`reachableBackends` lists the destinations that a workload calls.
+On Kubernetes, you set it with the `kuma.io/reachable-backends` Pod annotation.
+The control plane generates outbound configuration only for these destinations.
+By default, a proxy without `reachableBackends` reaches no destination.
 
-Each ref selects backends by `kind` and `labels`. `kind` accepts `MeshService`, `MeshMultiZoneService`, and `MeshExternalService`, so one declaration covers in-zone services, multi-zone destinations, and external dependencies.
-
-`labels: {}` selects every backend of that kind. The control plane rejects a ref that omits `labels`, because once it stores the ref, it can't tell an omitted field from an empty one. We recommend using `labels: {}` only as a short-lived diagnostic, because it gives back most of the benefit of declaring anything.
+Each entry selects destinations by `kind` and `labels`.
+`kind` accepts `MeshService`, `MeshMultiZoneService`, and `MeshExternalService`, so one list covers services in the zone, services in several zones, and external dependencies.
+`labels: {}` selects every destination of that kind.
+The control plane rejects an entry without `labels`.
 
 For more information, see [Prepare the mesh for production](/mesh/prepare-the-mesh-for-production/).
 
 ### Zone ingress and zone egress
 
-A zone ingress accepts traffic arriving from another zone and forwards it to a local instance. A zone egress is the outbound hop a zone can use for traffic leaving it, either to another zone or to an external destination.
+A zone ingress accepts traffic from other zones and forwards it to a local instance of the service.
+A zone egress sends traffic from its zone to external destinations, which `MeshExternalService` resources describe.
+Cross-zone traffic goes from the caller's sidecar directly to the remote zone ingress, unless you route it through a zone egress.
 
-These are mesh-scoped: each one is an ordinary `Dataplane` resource inside a single mesh rather than a deployment-wide proxy shared by every mesh. Policies select them with the computed labels `kuma.io/listener-zoneingress: enabled` and `kuma.io/listener-zoneegress: enabled`. For more information, see [Configure mesh-scoped zone proxies](/mesh/configure-mesh-scoped-zone-proxies/).
+Zone proxies are mesh-scoped: each one is an ordinary `Dataplane` resource in one mesh.
+The control plane adds the `kuma.io/listener-zoneingress: enabled` and `kuma.io/listener-zoneegress: enabled` labels to them, and policies select them with these labels.
+For more information, see [Mesh-scoped zone proxies](/mesh/mesh-scoped-zone-proxies/).
 
 ### MeshZoneAddress
 
-`MeshZoneAddress` is the resource a zone control plane publishes to advertise the address and port that other zones should dial to reach one mesh's zone ingress. It takes priority over the older deployment-wide `ZoneIngress` resource for any zone that publishes one. For more information, see [Multi-zone architecture](/mesh/multi-zone-architecture/).
+A `MeshZoneAddress` publishes the address and port that other zones use to reach the zone ingress of one mesh.
+On Kubernetes, the zone control plane creates it from the zone ingress Service.
+For more information, see [Make ingress reachable from other zones](/mesh/mesh-scoped-zone-proxies/#make-ingress-reachable-from-other-zones).
 
 ## Control plane channels
 
-Two protocols carry configuration. Neither carries application traffic.
+Two protocols carry configuration.
+Neither carries application traffic.
 
 ### xDS
 
-xDS is the Envoy discovery API family that a zone control plane uses to configure its local data plane proxies. Every routing decision, mTLS setting, and authorization rule a proxy enforces arrives over xDS.
+xDS is the family of Envoy discovery APIs.
+A zone control plane uses it to configure its local data plane proxies.
+Every routing decision, mTLS setting, and authorization rule that a proxy applies arrives over xDS.
 
 ### KDS
 
-KDS, the Kuma Discovery Service, is the channel between the global control plane and each zone control plane. Global resources flow down to the zones, and zone-origin resources such as discovered workloads and generated identity material flow up for visibility. KDS synchronization isn't symmetric: a resource that syncs up to the global control plane isn't necessarily installed in every other zone.
+The Kuma Discovery Service (KDS) connects the global control plane with each zone control plane.
+Global resources flow from the global control plane to the zones.
+Zone resources, such as discovered workloads and generated identity material, flow from the zones to the global control plane.
+A resource that a zone sends to the global control plane doesn't always reach the other zones.
+For example, a `MeshTrust` that a zone generates stays on the global control plane.
 
 ## Service model
 
-A service is a destination that callers address by hostname. {{site.mesh_product_name}} represents destinations with three resources.
+A service is a destination that callers reach by hostname.
+{{site.mesh_product_name}} describes destinations with three resources.
 
 ### MeshService
 
-`MeshService` represents a service inside the mesh. On Kubernetes, the control plane generates one for each `Service`, and the port's `appProtocol` becomes the port protocol on the generated resource, which is what makes HTTP-aware behavior such as `MeshHTTPRoute` apply. For more information, see [Split traffic with MeshService resources](/mesh/split-traffic-with-meshservice-resources/).
+A `MeshService` describes a service inside the mesh.
+On Kubernetes, the zone control plane generates one from each `Service`.
+The `appProtocol` of each port becomes the protocol of that port, which lets HTTP features such as `MeshHTTPRoute` apply.
+For more information, see [MeshService](/mesh/meshservice/).
 
 ### MeshMultiZoneService
 
-`MeshMultiZoneService` defines one stable destination backed by services that can run in several zones. The global control plane owns it, because it needs the service inventory from every zone. It resolves to a hostname of the form `NAME.mzsvc.mesh.local`. For more information, see [Multi-zone architecture](/mesh/multi-zone-architecture/).
+A `MeshMultiZoneService` defines one destination for a service that runs in several zones.
+You create it on the global control plane, because only the global control plane has the services of every zone.
+Callers reach it with a hostname of the form `NAME.mzsvc.mesh.local`.
+For more information, see [MeshMultiZoneService](/mesh/meshmultizoneservice/).
 
 ### MeshExternalService
 
-`MeshExternalService` represents a destination outside the mesh, such as a SaaS API or a managed database. The zone egress listener denies traffic to it by default, and callers address it through a generated hostname of the form `NAME.extsvc.mesh.local`. For more information, see [Manage external services with MeshExternalService](/mesh/manage-external-services-with-meshexternalservice/).
+A `MeshExternalService` describes a destination outside the mesh, such as a SaaS API or a managed database.
+Callers reach it with a hostname of the form `NAME.extsvc.mesh.local`, and the traffic leaves through the zone egress.
+The zone egress denies this traffic until a `MeshTrafficPermission` allows it.
+For more information, see [MeshExternalService](/mesh/meshexternalservice/).
 
 ### HostnameGenerator
 
-`HostnameGenerator` is the resource that decides what hostname a service resource gets. Default generators ship with the control plane. For example, `synced-kube-mesh-service` gives a service synced from another zone the zone-qualified hostname `{% raw %}{{ .DisplayName }}.{{ .Namespace }}.svc.{{ .Zone }}.mesh.local{% endraw %}`.
+A `HostnameGenerator` decides the hostname of each service resource.
+The control plane creates default generators.
+For example, `synced-kube-mesh-service` gives a Kubernetes service from another zone the hostname `{% raw %}{{ .DisplayName }}.{{ .Namespace }}.svc.{{ .Zone }}.mesh.local{% endraw %}`.
 
 ## Identity and trust
 
 ### Identity
 
-A workload's identity is the name encoded in the certificate its proxy presents. The receiving proxy treats an identity as valid only if the certificate is signed by a CA in a trust that the proxy accepts.
+A workload's identity is the name in the certificate that its proxy presents.
+The receiving proxy accepts the identity only if a certificate authority (CA) that it trusts signed the certificate.
 
-Workload identity is connection-scoped and lasts for the lifetime of the workload instance. It identifies the calling service, not the end user whose request that service is handling.
+A workload identity belongs to the connection and lasts as long as the workload instance.
+It identifies the calling service, not the end user whose request the service handles.
 
-### SPIFFE ID
+### SPIFFE ID (Secure Production Identity Framework for Everyone)
 
-A SPIFFE ID is the URI form that workload identity takes, carried in the X.509 certificate presented on the mTLS connection. On Kubernetes it encodes the trust domain, the namespace, and the workload's `ServiceAccount`:
+A SPIFFE ID is the URI form of a workload identity.
+The proxy presents it in the X.509 certificate of the mTLS connection.
+On Kubernetes, it contains the trust domain, the namespace, and the workload's `ServiceAccount`:
 
 ```text
 spiffe://kong-air-mesh.zone1.mesh.local/ns/kong-air-production/sa/flight-control
 ```
 {:.no-copy-code}
 
-`MeshTrafficPermission` authorizes callers by matching on their SPIFFE ID.
+`MeshTrafficPermission` allows or denies callers by their SPIFFE ID.
+For more information, see [SPIFFE ID](/mesh/policies/meshidentity/#spiffe-id).
 
 ### Trust domain
 
-A trust domain is the naming authority a SPIFFE ID belongs to, the part after `spiffe://`. When the built-in provider generates identity, the default template is `{% raw %}{{ .Mesh }}.{{ .Zone }}.mesh.local{% endraw %}`, so each zone gets its own trust domain and you must configure each zone to trust its peers explicitly.
+A trust domain is the part of a SPIFFE ID after `spiffe://`.
+By default, the trust domain is `{% raw %}{{ .Mesh }}.{{ .Zone }}.mesh.local{% endraw %}`, so each zone has its own trust domain.
+You then configure each zone to trust the other zones.
 
 ### Trust
 
-A trust defines which identities you accept as valid. The certificate authorities that issue those identities establish the trust. Each trust belongs to a trust domain, and a mesh can contain multiple trusts.
+A trust defines which identities a proxy accepts.
+The CAs that issue those identities establish the trust.
+Each trust belongs to one trust domain, and a mesh can have several trusts.
 
 ### MeshIdentity and MeshTrust
 
-`MeshIdentity` configures how workload certificates are issued, through the `Bundled`, `Spire`, or `Extension` provider. `MeshTrust` holds the public CA certificate for a trust domain, so it is the resource you copy between zones to let one zone verify another zone's workloads. For more information, see [Manage workload identity and mTLS](/mesh/manage-workload-identity-and-mtls/).
+A `MeshIdentity` configures how workloads get their certificates, with the `Bundled`, `Spire`, or `Extension` provider.
+A `MeshTrust` holds the public CA certificate of one trust domain.
+To let one zone verify the workloads of another zone, you copy the other zone's `MeshTrust`.
+For more information, see [MeshIdentity](/mesh/policies/meshidentity/) and [MeshTrust](/mesh/policies/meshtrust/).
 
 ### SNI
 
-SNI is the server name a proxy sends on the TLS connection, and {{site.mesh_product_name}} uses it to carry the intended destination. Policies that match on destination rather than caller match on `sni`. External service traffic uses the form `sni.extsvc.MESH.ZONE.NAMESPACE.NAME.PORT`.
+The server name indication (SNI) is the server name that a proxy sends when it opens a TLS connection.
+{{site.mesh_product_name}} uses it to carry the destination of the request.
+A `MeshTrafficPermission` on a zone egress matches the destination by its `sni`.
+For a `MeshExternalService` that you create on a Kubernetes zone, the SNI has the form `sni.extsvc.MESH.ZONE.NAMESPACE.NAME.PORT`.
+On a Universal zone, the SNI has no namespace, and for a resource from the global control plane, it has neither zone nor namespace.
 
 ## Resource
 
-A resource is an object you can create, manage, and interact with in {{site.mesh_product_name}}. Resources are the building blocks that define the behavior and state of your service mesh. Each resource is a type of API object with a specific purpose, and its state and configuration describe it.
+A resource is an object that you create and manage in {{site.mesh_product_name}}.
+Resources define the behavior and state of the service mesh.
+Each resource type is an API object with one purpose.
 
-You usually write a resource as YAML, in one of two formats:
+You usually write a resource in YAML, in one of two formats:
 
-- `Kubernetes`: The control plane runs on Kubernetes, and {{site.mesh_product_name}} resources are Kubernetes custom resources.
-- `Universal`: The control plane runs anywhere else, or you access resources through the {{site.mesh_product_name}} API.
+- **Kubernetes**: The resource is a Kubernetes custom resource, which you apply on a Kubernetes zone.
+- **Universal**: You apply the resource through the {{site.mesh_product_name}} API or `kongctl`, on a Universal zone or the global control plane.
 
-[Resource scoping](/mesh/resource-scoping/) covers which control plane owns a given resource, and which namespace it can live in on Kubernetes.
+For which control plane owns a resource, and which namespaces accept it on Kubernetes, see [Resource scoping](/mesh/resource-scoping/).
 
 ### Resource labels
 
-Labels carry the identity and provenance of a resource, and policies use them for targeting:
+The control plane uses labels to record where a resource comes from, and policies use labels to select resources:
 
 <!-- vale off -->
 {% table %}
@@ -216,46 +286,57 @@ columns:
     key: meaning
 rows:
   - label: "`kuma.io/mesh`"
-    meaning: "The mesh the resource belongs to."
+    meaning: "The mesh that the resource belongs to."
   - label: "`kuma.io/zone`"
-    meaning: "The zone where the control plane discovered or created the resource."
+    meaning: "The zone where the control plane found or created the resource."
   - label: "`kuma.io/origin`"
-    meaning: "`global` or `zone`, recording which control plane created the resource. A zone control plane connected to a global control plane requires `zone` on resources created locally."
+    meaning: "`global` or `zone`: the control plane that created the resource. The control plane sets it, and you don't need to."
   - label: "`kuma.io/policy-role`"
-    meaning: "`system`, `producer`, `consumer`, or `workload-owner`. The control plane uses it to break ties between policies of equal specificity."
+    meaning: "`system`, `producer`, `consumer`, or `workload-owner`. The control plane sets it. It decides which proxies a policy can reach, and which policy wins when several apply."
   - label: "`k8s.kuma.io/namespace`"
-    meaning: "The Kubernetes namespace the resource came from."
+    meaning: "The Kubernetes namespace that the resource came from."
 {% endtable %}
 <!-- vale on -->
 
 ### KRI
 
-A KRI, the {{site.mesh_product_name}} Resource Identifier, is the stable string that names one resource across the whole deployment. It has the form:
+A Kuma Resource Identifier (KRI) is a stable string that names one resource across the whole deployment.
+It has the following form:
 
 ```text
 kri_TYPE_MESH_ZONE_NAMESPACE_NAME_SECTION
 ```
 {:.no-copy-code}
 
-For example, the identity resource `kong-air-identity` in `kong-air-mesh` in `zone1` is:
+For example, the KRI of the `MeshIdentity` named `kong-air-identity`, in `kong-air-mesh` and `zone1`, is:
 
 ```text
 kri_mid_kong-air-mesh_zone1_kong-mesh-system_kong-air-identity_
 ```
 {:.no-copy-code}
 
-The trailing underscore is the empty `sectionName`. `TYPE` is a short name for the resource type, for example `dp` for `Dataplane`, `mid` for `MeshIdentity`, `mtrust` for `MeshTrust`, and `mza` for `MeshZoneAddress`. KRIs appear in control plane inspection output, which makes them the quickest way to confirm that a resource you created is the one a proxy is actually using.
+The trailing underscore is the empty `sectionName`.
+`TYPE` is a short name for the resource type, for example `dp` for `Dataplane`, `mid` for `MeshIdentity`, `mtrust` for `MeshTrust`, and `mza` for `MeshZoneAddress`.
+KRIs appear in the inspection output of the control plane, so you can use them to confirm that a proxy uses the resource that you created.
 
 ## Policy
 
-Policies are the resources that control the behavior and communication of applications running inside your service mesh. They cover traffic management, security, observability, and reliability. For the full catalog, see [Mesh policies](/mesh/policies/).
+Policies control how the applications in the mesh behave and communicate.
+They cover traffic management, security, observability, and reliability.
+For the full list, see [Mesh policies](/mesh/policies/).
 
 ### targetRef
 
-`targetRef` is the shared selector structure every policy uses to say what it applies to. A top-level `targetRef` picks the workloads the policy attaches to, and a `to[]` or `from[]` entry narrows the configuration to a specific destination or source. Policies express their settings through `default`, or through `rules[]` where the policy needs per-caller decisions.
+`targetRef` is the selector that every policy uses:
 
-When more than one policy matches the same proxy, specificity and then label-based tie-breakers decide which one wins. For more information, see [Policy targeting and precedence](/mesh/policy-targeting-and-precedence/) and [Target workloads and services](/mesh/target-workloads-and-services/).
+* The top-level `spec.targetRef` selects the proxies that receive the policy.
+* A `targetRef` in a `spec.to[]` entry selects a destination for the traffic that those proxies send.
+
+A policy that configures received traffic uses `spec.rules[]` instead, and each rule matches the callers.
+When several policies of the same type apply to the same proxy, the control plane merges them by priority.
+For more information, see [Policy targeting](/mesh/policy-targeting/) and [Policy targeting and precedence](/mesh/policy-targeting-and-precedence/).
 
 ### sectionName
 
-`sectionName` narrows a `targetRef` to one named part of the target rather than the whole resource, such as a single listener on a zone proxy or a single port on a service. It is also the last field of a KRI, which is why most KRIs end in an underscore.
+`sectionName` narrows a `targetRef` to one named part of the target, such as one listener of a zone proxy or one port of a service.
+It's also the last field of a KRI, which is why most KRIs end with an underscore.

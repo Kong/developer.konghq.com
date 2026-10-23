@@ -13,34 +13,51 @@ works_on:
   - on-prem
   - konnect
 ---
+The operator is a platform engineer at Kong Air.
+The operator runs the mesh as a shared platform for application teams, such as the [developer](/mesh/persona/developer/)'s team.
+The operator keeps the flight logistics platform available, observable, and fast in every region.
 
-The operator is a Platform Engineer at Kong Air. The operator's mission is to provide a "Service Mesh as a Service" to teams like the developer's. The operator manages the underlying infrastructure, ensuring that the Global Flight Logistics platform remains highly available, observable, and performant across multiple geographic regions.
+## How the operator runs the control planes
 
-## Global infrastructure control
+Kong Air runs one global control plane and one zone control plane in each zone:
 
-The operator manages a distributed architecture consisting of a global control plane and multiple zone control planes.
+* **Global control plane**: {{site.konnect_short_name}} hosts and operates it for Kong Air. A policy that the operator creates on the global control plane reaches every zone.
+* **Zone control plane**: The operator runs one in each zone, such as `zone1` and `zone2`. It sends configuration to the local sidecars over xDS. A policy that a team creates on a zone control plane stays in that zone, unless it's a producer policy.
 
-- Global CP: Acts as the single source of truth for all {{site.mesh_product_name}} policies. The operator applies configurations once at the global level, and they are automatically synchronized to all zones. The global control plane runs on Konnect and is managed by Kong on behalf of the customer.
-- Zone CP: Handles the actual distribution of xDS configuration to local sidecars in zones like `zone1` and `zone2`.
+For which control plane owns each resource, see [Resource scoping](/mesh/resource-scoping/).
+For how far each policy reaches, see [Policy scope](/mesh/policy-targeting/#policy-scope).
 
-## Multi-zone networking
+## How the operator connects zones
 
-For the "Global Flight Search" service to span continents, the operator configures specialized infrastructure proxies.
+Kong Air's flight search service runs in several regions, so traffic must cross zones.
+The operator deploys a zone ingress and a zone egress for `kong-air-mesh` in each zone.
+Each one is an ordinary `Dataplane` with a zone ingress or zone egress listener.
 
-A zone proxy is an ordinary `Dataplane` that carries zone ingress or zone egress listeners. The control plane computes the `kuma.io/listener-zoneingress` and `kuma.io/listener-zoneegress` labels on that `Dataplane`, which is how the operator selects it from policy.
+The control plane adds the `kuma.io/listener-zoneingress: enabled` or `kuma.io/listener-zoneegress: enabled` label to each zone proxy.
+The operator uses these labels to select the zone proxies in a policy's `targetRef`.
 
-### Entry points: zone ingress listeners
-The operator ensures that every zone has a proxy carrying zone ingress listeners. It accepts cross-zone mTLS traffic and routes it to a local instance. Service state reaches other zones through KDS synchronization between the control planes, and the reachable address is published as a `MeshZoneAddress`.
+### Zone ingress
 
-### Secure exits: zone egress listeners
-To satisfy strict aviation industry regulations, the operator routes outgoing traffic (to other zones or the internet) through a proxy carrying zone egress listeners.
-*   Centralized Compliance: Instead of every sidecar needing a path to the internet, only the zone egress needs it.
-*   Auditability: The operator has a single point to audit every request leaving the zone.
+Every zone runs a zone ingress.
+The zone ingress accepts mTLS traffic from other zones and forwards it to a local instance of the service.
+The zone control plane publishes the address of the zone ingress as a `MeshZoneAddress`, so other zones know where to connect.
 
-The operator provisions this pair per mesh through the Helm `meshes:` list rather than a field on the `Mesh` resource:
+### Zone egress
+
+Aviation regulations require Kong Air to control traffic to external services.
+The operator deploys a zone egress, and every request to a `MeshExternalService` leaves the zone through it:
+
+* **Compliance**: Only the zone egress needs a network path to the internet, not every sidecar.
+* **Auditing**: The operator audits external requests in one place.
+
+Cross-zone traffic between mesh services doesn't use the zone egress by default.
+A caller's sidecar connects directly to the zone ingress of the other zone.
+For both paths, see [Traffic paths](/mesh/mesh-scoped-zone-proxies/#traffic-paths).
+
+The operator enables both proxies for each mesh in the `meshes:` list of the Helm values, not in the `Mesh` resource:
 
 ```yaml
-# One entry per mesh that needs cross-zone connectivity
+# One entry for each mesh that needs zone proxies
 meshes:
   - name: kong-air-mesh
     ingress:
@@ -48,31 +65,49 @@ meshes:
     egress:
       enabled: true
 ```
+{:.no-copy-code}
 
-## High-availability gateway infrastructure
+## How the operator runs the gateway
 
-The operator runs a delegated gateway ({{site.base_gateway}}) to surface the developer's services to the outside world, scaling replicas for peak travel season. The gateway's proxies are marked with the `kuma.io/gateway` label, and a policy targets them as a `Dataplane` with a `labels:` selector, which is the label-selected targeting model used throughout these scenarios.
+The operator runs `booking-gateway`, a {{site.base_gateway}} deployment that exposes the developer's services to passengers.
+The operator adds replicas during peak travel season.
+The gateway joins the mesh through an ordinary sidecar.
+A policy selects the gateway proxies with a `Dataplane` `targetRef` and the gateway's own labels, such as `app: booking-gateway`.
+See [Application ingress](/mesh/application-ingress/).
 
-## Global observability policies
-The operator provides "Observability as a Service" so the developer doesn't have to worry about where the developer's logs and traces go.
+## How the operator provides observability
+
+The operator configures observability for the whole mesh, so application teams don't need to decide where their logs and traces go.
 
 ### Distributed tracing with `MeshTrace`
-The operator sets up end-to-end tracing across all zones, exporting spans via OTLP/gRPC to a global collector. The operator defines one `MeshOpenTelemetryBackend` and references it from every observability policy through a `backendRef`.
 
-### Log aggregation with `MeshAccessLog`
-To maintain a historical record of all flight search requests, the operator streams access logs to a central logging server through a `Tcp` backend. See [Observe mesh traffic in practice](/mesh/observe-mesh-traffic-in-practice/) for the full `MeshTrace` and `MeshAccessLog` configuration.
+The operator defines one `MeshOpenTelemetryBackend` for the OpenTelemetry collector.
+Every observability policy references it with a `backendRef`.
+The operator's `MeshTrace` policy then exports the spans of every zone to that collector.
+See [MeshOpenTelemetryBackend](/mesh/meshopentelemetrybackend/).
+
+### Access logs with `MeshAccessLog`
+
+To keep a record of every flight search request, the operator sends the access logs to a central logging server with a `Tcp` backend.
+For the full `MeshTrace` and `MeshAccessLog` configuration, see [Observe mesh traffic in practice](/mesh/observe-mesh-traffic-in-practice/).
 
 {:.info}
-> To scope a policy to a slice of the fleet (a whole zone, an environment, a region), the operator sets the top-level `targetRef` to `Dataplane` with a `labels:` selector, for example `kuma.io/zone: zone1` or `environment: production`. A top-level `targetRef` accepts only `Mesh` or `Dataplane`, so `Dataplane` with labels is how you scope to anything narrower than the whole mesh. See [Target workloads and services](/mesh/target-workloads-and-services/) for examples.
+> To apply a policy to part of the mesh, such as a zone, an environment, or a region, the operator uses a top-level `targetRef` of `kind: Dataplane` with `labels`, for example `kuma.io/zone: zone1` or `environment: production`.
+> The top-level `targetRef` accepts only `Mesh` or `Dataplane`, so labels are how the operator selects anything narrower than the whole mesh.
+> See [Target workloads and services](/mesh/target-workloads-and-services/).
 
-## Operational health and lifecycle
+## How the operator monitors the mesh
 
-The operator monitors the health of the mesh using the control plane's built-in metrics. The operator tracks:
-- CP-to-DP Latency: How quickly policy changes reach the developer's sidecars.
-- Cross-Zone Latency: The performance of the network between US and EU zones.
-- Resource Utilization: Ensuring the zone ingress and zone egress proxies have sufficient CPU/RAM.
+The operator monitors the mesh with the metrics that the control planes expose:
 
-The operator also owns how much configuration the control plane has to generate in the first place. Bounding each proxy to the destinations its workload actually calls, with `reachableBackends`, is what keeps generation and propagation flat as Kong Air's service count grows. See [Prepare the mesh for production](/mesh/prepare-the-mesh-for-production/).
+* **Configuration delay**: how long a policy change takes to reach the sidecars
+* **Cross-zone latency**: the network performance between the US and EU zones
+* **Resource use**: the CPU and memory of the zone ingress and zone egress proxies
 
-## The operator's result
-By operating the control plane, zone proxies, gateways, and observability stack centrally, the operator gives the developer's and the security architect's teams a consistent platform to build on, they configure behavior through policy without managing the underlying networking themselves.
+The operator also limits how much configuration the control plane generates.
+With `reachableBackends`, each proxy receives configuration only for the destinations its workload calls.
+The amount of configuration then stays stable as Kong Air adds services.
+See [Prepare the mesh for production](/mesh/prepare-the-mesh-for-production/).
+
+The operator runs the control planes, zone proxies, gateway, and observability stack.
+The developer's and the security architect's teams configure behavior with policies and don't manage the network themselves.

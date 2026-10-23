@@ -22,15 +22,27 @@ related_resources:
   - text: Resource scoping
     url: /mesh/resource-scoping/
 ---
-{{site.mesh_product_name}} is an enterprise-grade service mesh that provides a unified control plane to manage services across Kubernetes, VMs, and bare metal. Its policy-driven model works the same regardless of the underlying infrastructure, and focuses on day-2 operations: running, upgrading, and managing the mesh in production, across regions and mixed infrastructure. 
+{{site.mesh_product_name}} is an enterprise service mesh.
+It gives you one control plane to manage services on Kubernetes, VMs, and bare metal.
+Its policies work the same way on every platform.
+{{site.mesh_product_name}} focuses on day-2 operations: running, upgrading, and managing the mesh in production, across regions and mixed infrastructure.
 
-For more details, see the [Architecture overview](/mesh/architecture-overview/).
+For more information, see [Architecture overview](/mesh/architecture-overview/).
 
 ## Kong Air
 
-These [scenarios](/mesh/scenarios/) follow the journey of Kong Air, a global airline modernizing its flight-critical infrastructure. Their applications span Kubernetes (passenger-facing services), VMs (legacy booking systems), and SaaS dependencies (weather feeds and external certificate authorities). The platform team is migrating this fragmented landscape into a single, multi-zone {{site.mesh_product_name}} deployment.
+The [{{site.mesh_product_name}} scenarios](/mesh/scenarios/) follow Kong Air, a fictional global airline that modernizes its flight systems.
+Kong Air's applications run in three places:
 
-The Kong Air mesh is named `kong-air-mesh`. {{site.mesh_product_name}} ships with a `default` mesh out of the box, but in production you'll typically run a named mesh per environment or business unit. Every YAML example in these scenarios targets `kong-air-mesh` explicitly, the pattern you'll need in any real deployment.
+* Kubernetes, for the services that passengers use
+* VMs, for the older booking systems
+* SaaS providers, for the weather feed and the external certificate authority
+
+The Kong Air platform team moves these applications into one multi-zone {{site.mesh_product_name}} deployment.
+
+The Kong Air mesh is named `kong-air-mesh`.
+A self-managed control plane creates a mesh named `default`, but production deployments usually run one named mesh for each environment or business unit.
+Every YAML example in the scenarios names `kong-air-mesh`, as you do in a production deployment.
 
 ### Service landscape
 
@@ -64,11 +76,14 @@ graph LR
   FC_W -.-> DB
 {% endmermaid %}
 
-Solid arrows are intra-mesh traffic. Dashed arrows are traffic to external dependencies modelled as `MeshExternalService`. The vault is shown for context; it integrates with the control plane, not data plane traffic.
+Solid arrows show traffic inside the mesh.
+Dashed arrows show traffic to external dependencies, which the scenarios describe as `MeshExternalService` resources.
+HashiCorp Vault works with the control plane to sign workload certificates, so it carries no application traffic.
 
 ### Personas
 
-The scenarios reference three personas. Each owns a different part of Kong Air:
+The scenarios refer to three roles.
+Each role owns a different part of Kong Air:
 
 <!-- vale off -->
 {% table %}
@@ -116,7 +131,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-Delivering these capabilities as a standardized, built-in layer means teams configure networking behavior through policies rather than implementing it in each service.
+Because the mesh provides these features as a shared layer, teams configure network behavior with policies instead of building it into each service.
 
 ## Benefits by role
 
@@ -127,47 +142,50 @@ columns:
     key: role
   - title: Focus area
     key: focus
-  - title: Key capabilities
+  - title: Key features
     key: capabilities
 rows:
   - role: "[Developer](/mesh/persona/developer/)"
     focus: Resilience and routing
     capabilities: |
-      * Traffic routing: Manage traffic flows like canary releases or A/B testing via `MeshHTTPRoute` without code changes.
-      * Resilience: Protect apps from cascading failures with `MeshRetry`, `MeshTimeout`, and `MeshFaultInjection`.
+      * Traffic routing: `MeshHTTPRoute` sends traffic to canary releases or A/B tests without code changes.
+      * Resilience: `MeshRetry`, `MeshTimeout`, and `MeshFaultInjection` protect applications from cascading failures.
   - role: "[Operator](/mesh/persona/operator/)"
-    focus: Scalability and stability
+    focus: Scale and stability
     capabilities: |
-      * Self-healing: Automatically detect and remove unhealthy instances with `MeshHealthCheck` and `MeshCircuitBreaker`.
-      * Observability: Gain instant visibility with `MeshMetric` and consistent telemetry across all clusters.
-      * Traffic strategy: Optimize distribution with `MeshLoadBalancingStrategy`, including locality-aware routing.
+      * Health checks: `MeshHealthCheck` and `MeshCircuitBreaker` find unhealthy instances and stop sending them traffic.
+      * Observability: `MeshMetric` provides the same telemetry in every cluster.
+      * Load balancing: `MeshLoadBalancingStrategy` spreads traffic and prefers instances in the same zone.
   - role: "[Security architect](/mesh/persona/security/)"
     focus: Zero trust
     capabilities: |
-      * Encryption: Enable Mutual TLS (mTLS) automatically with `MeshTLS`, including handled certificate rotation.
-      * Access control: Authorize traffic explicitly with `MeshTrafficPermission` to enforce a "deny-all" security posture.
+      * Encryption: `MeshIdentity` gives every workload a certificate and turns on mutual TLS (mTLS), and the control plane rotates the certificates.
+      * Access control: `MeshTrafficPermission` allows each call explicitly, and the proxies deny everything else.
 {% endtable %}
 <!-- vale on -->
 
 ## Scenario roadmap
 
-The Kong Air modernization is divided into four stages. We recommend following them in order to build a complete, zero-trust global network:
+The Kong Air scenarios have five phases.
+We recommend that you follow them in order, because each phase builds on the resources of the previous one:
 
-1. [Fundamentals](/mesh/scenarios/#phase-1-fundamentals): Understand the architecture, secure your first services, and master policy targeting.
-2. [Observability and security](/mesh/scenarios/#phase-2-observability--security): Gain visibility into every flight-critical request and protect passenger data.
-3. [Global mesh operations](/mesh/scenarios/#phase-3-global-mesh-operations): Connect cloud regions and legacy data centers into a single mesh.
-4. [Expert operations](/mesh/scenarios/#phase-4-expert-operations): Control the perimeter, manage external services, and validate resilience with fault injection.
-5. [Production readiness](/mesh/scenarios/#phase-5-production-readiness): Harden the mesh and bound the configuration each proxy receives before it carries real traffic.
+1. [Fundamentals](/mesh/scenarios/#phase-1-fundamentals): Learn the architecture, secure your first services, and select proxies with policies.
+2. [Observability and security](/mesh/scenarios/#phase-2-observability-and-security): See every flight-critical request and protect passenger data.
+3. [Global mesh operations](/mesh/scenarios/#phase-3-global-mesh-operations): Connect cloud regions and data centers into one mesh.
+4. [Expert operations](/mesh/scenarios/#phase-4-expert-operations): Control outbound traffic, manage external services, and test resilience with fault injection.
+5. [Production readiness](/mesh/scenarios/#phase-5-production-readiness): Harden the mesh and limit the configuration that each proxy receives before it carries production traffic.
 
-## Technical foundation
+## What you need to know first
 
-These scenarios assume familiarity with the core service mesh building blocks: 
-* The control plane that manages mesh state and policy
-* The data plane sidecar that enforces it
-* The Kuma Discovery Service (KDS) that syncs a global CP with its zone CPs. 
+The scenarios assume that you know the main parts of a service mesh:
 
-For more information about what a service mesh is and the problems it solves, see [Service meshes](/mesh/service-mesh/). 
-For component definitions and the terminology used throughout these scenarios (xDS, SPIFFE ID, SNI, KRI, and more), see [Concepts](/mesh/concepts/).
+* The control plane, which stores the mesh state and policies
+* The data plane sidecar, which applies the policies to traffic
+* The Kuma Discovery Service (KDS), which syncs the global control plane with the zone control planes
+
+For what a service mesh is and the problems it solves, see [Service meshes](/mesh/service-mesh/).
+For the terms in the scenarios, such as xDS, SPIFFE ID, SNI, and KRI, see [Concepts](/mesh/concepts/).
 
 {:.info}
-> Because {{site.mesh_product_name}} scales across clouds and data centers, knowing where each resource is applied (global vs zone CP, system namespace) matters. The [Resource scoping](/mesh/resource-scoping/) guide covers this in depth.
+> {{site.mesh_product_name}} runs across clouds and data centers, so you need to know where to apply each resource: on the global control plane, on a zone control plane, or in the system namespace.
+> For the rules, see [Resource scoping](/mesh/resource-scoping/).

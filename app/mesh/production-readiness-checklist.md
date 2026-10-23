@@ -21,54 +21,51 @@ related_resources:
   - text: Multi-zone architecture
     url: /mesh/multi-zone-architecture/
 ---
+Before a {{site.mesh_product_name}} mesh carries production traffic, review two groups of settings.
+The first group controls how much configuration the control plane generates and how fast it reaches the proxies.
+The second group lists 3.x defaults that block traffic until you configure them.
 
-Before a {{site.mesh_product_name}} 3.0 mesh carries production traffic, check the control plane settings that decide how much configuration it generates and how fast that configuration propagates, then work through the defaults that 3.0 closes rather than leaves open.
+## Settings that affect configuration at scale
 
-## Controls that shape configuration at scale
+`reachableBackends` has the largest effect, because the amount of configuration for each proxy grows with the number of services.
+To declare it, see [Prepare the mesh for production](/mesh/prepare-the-mesh-for-production/).
+The following settings decide how much work the control plane does and how quickly proxies receive its output.
 
-`reachableBackends` is the largest lever, because it is the one that scales with the service count. See [Prepare the mesh for production](/mesh/prepare-the-mesh-for-production/) to declare it. Three other controls decide how much work the control plane does and how quickly its output arrives.
+### xDS refresh interval
 
-### The xDS refresh interval
+Every 10 seconds, the control plane regenerates the configuration of each connected proxy.
+The `xdsServer.dataplaneConfigurationRefreshInterval` setting (`KUMA_XDS_SERVER_DATAPLANE_CONFIGURATION_REFRESH_INTERVAL`) sets this interval.
 
-The control plane regenerates the xDS configuration of every connected proxy on `xdsServer.dataplaneConfigurationRefreshInterval` (`KUMA_XDS_SERVER_DATAPLANE_CONFIGURATION_REFRESH_INTERVAL`), which defaults to `10s` in 3.0 instead of the previous `1s`. Regenerating every proxy every second kept the control plane busy and scaled poorly with the number of proxies.
+Changes to meshes, policies, and services take up to ten seconds to reach the proxies.
+Changes to trust bundles also take up to ten seconds.
+During a CA rotation, keep the old CA in place for at least one refresh interval after you add the new one.
+Otherwise, proxies that haven't refreshed yet fail mTLS.
+See [Integrate an external CA](/mesh/integrate-an-external-ca/).
 
-Changes to meshes, policies, and services now take up to ten seconds to reach proxies. So do trust bundles, which has one consequence worth planning for: a CA rotation must leave the old CA in place for at least one refresh interval after the new one is added, or proxies that have not yet refreshed fail mTLS. See [Integrate an external CA](/mesh/integrate-an-external-ca/). If a deployment genuinely needs faster propagation, lower the interval deliberately and budget the control plane CPU for it.
+If a deployment needs faster propagation, you can lower the interval.
+A shorter interval uses more control plane CPU, so plan for it.
 
 ### KDS synchronization between zones
 
-In a multi-zone deployment the global and zone control planes exchange resources over KDS, and the event-based watchdog defaults changed in 3.0:
+In a multi-zone deployment, the global control plane and the zone control planes exchange resources over KDS.
+Each control plane sends changes as they happen, grouped over a `flushInterval` of `5s`.
+Every minute (`fullResyncInterval: 1m`), it also sends a full resync, which recovers any change that the event path missed.
+The `delayFullResync: true` setting delays the first full resync by a random time, so zones don't all resync at once.
 
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Setting
-    key: setting
-  - title: Before
-    key: before
-  - title: "3.0"
-    key: after
-rows:
-  - setting: "`flushInterval`"
-    before: "`1s`"
-    after: "`5s`"
-  - setting: "`fullResyncInterval`"
-    before: "`1s`"
-    after: "`1m`"
-  - setting: "`delayFullResync`"
-    before: "`false`"
-    after: "`true`"
-{% endtable %}
-<!-- vale on -->
-
-These apply to both `multizone.global.kds.eventBasedWatchdog` and `multizone.zone.kds.eventBasedWatchdog`. At `1s` every connected zone rebuilt and re-hashed its entire snapshot every second and shipped an identical one. Changes still travel on the event path, coalesced over `flushInterval`, and a change missed on that path is repaired by the next full resync rather than within a second. See [Multi-zone architecture](/mesh/multi-zone-architecture/).
+These settings apply to both `multizone.global.kds.eventBasedWatchdog` and `multizone.zone.kds.eventBasedWatchdog`.
+See [Multi-zone architecture](/mesh/multi-zone-architecture/).
 
 ### Policy target breadth
 
-A policy with a top-level `targetRef` of `kind: Mesh` has to be evaluated for every proxy in the mesh. Selecting the workloads a policy is actually meant to affect keeps that work proportional to the policy's real scope, and makes the policy easier to reason about when several of them overlap. See [Policy targeting and precedence](/mesh/policy-targeting-and-precedence/) and [Target workloads and services](/mesh/target-workloads-and-services/).
+The control plane evaluates a policy with a top-level `targetRef` of `kind: Mesh` for every proxy in the mesh.
+Select only the workloads that the policy must affect.
+A narrow selection keeps the work in proportion to what the policy does, and makes overlapping policies easier to understand.
+See [Policy targeting and precedence](/mesh/policy-targeting-and-precedence/) and [Target workloads and services](/mesh/target-workloads-and-services/).
 
-## Defaults to set deliberately
+## Defaults to configure before production
 
-The following items are things {{site.mesh_product_name}} 3.0 expects you to decide rather than inherit. Each one is covered in full by the scenario it links to.
+{{site.mesh_product_name}} 3.x expects you to decide the following items instead of relying on a default.
+Each item links to the scenario that covers it.
 
 <!-- vale off -->
 {% table %}
@@ -81,31 +78,31 @@ columns:
     key: where
 rows:
   - area: "Outbound to the internet"
-    action: "Outbound passthrough defaults to `None`, so a transparent proxy that no `MeshPassthrough` selects drops traffic to anything outside the mesh. Allow the destinations your workloads use."
+    action: "A transparent proxy that no `MeshPassthrough` selects drops traffic to destinations outside the mesh. Allow the destinations that your workloads use."
     where: "[Secure the perimeter with MeshPassthrough](/mesh/secure-the-perimeter-with-meshpassthrough/)"
   - area: "Retries"
-    action: "A new mesh gets no default policies. Timeouts and circuit breakers keep the values the control plane writes anyway, but a mesh without a `MeshRetry` does not retry at all. Apply one."
+    action: "A new mesh has no default policies. The control plane still applies default timeouts and circuit breaker limits, but a mesh without a `MeshRetry` doesn't retry. Apply a `MeshRetry`."
     where: "[Validate resilience with fault injection](/mesh/validate-resilience-with-fault-injection/)"
   - area: "Inbound ports"
-    action: "Strict inbound ports can no longer be turned off. A sidecar with transparent proxy and a workload identity accepts traffic only on the ports of its inbounds, so declare every port the workload receives on."
+    action: "You can't turn off strict inbound ports. A sidecar with a transparent proxy and a workload identity accepts traffic only on the ports of its inbounds, so declare every port that the workload receives traffic on."
     where: "[Concepts](/mesh/concepts/#inbound)"
   - area: "Identity"
-    action: "Replace the autogenerated per-zone CA with one you control, so trust distribution and rotation belong to your identity platform rather than to a manual zone-to-zone operation."
+    action: "Replace the autogenerated CA of each zone with a CA you control. Your identity platform then distributes and rotates trust, instead of you copying it between zones."
     where: "[Integrate an external CA](/mesh/integrate-an-external-ca/)"
   - area: "Authorization"
-    action: "Run `MeshTLS` in `Strict` mode and keep `MeshTrafficPermission` default-deny, so an undeclared call path fails at authorization as well as at resolution."
+    action: "Run `MeshTLS` in `Strict` mode and keep `MeshTrafficPermission` default-deny. A call path that you didn't declare then fails at authorization as well as at resolution."
     where: "[Manage workload identity and mTLS](/mesh/manage-workload-identity-and-mtls/)"
   - area: "External services"
-    action: "A `MeshExternalService` cluster requires a `MeshIdentity`. Confirm one matches the proxies that call it before the dependency is load bearing."
+    action: "A client proxy gets a cluster for a `MeshExternalService` only when it has a workload identity. Make sure that a `MeshIdentity` matches the proxies that call the external service."
     where: "[Manage external services with MeshExternalService](/mesh/manage-external-services-with-meshexternalservice/)"
   - area: "Cross-zone load balancing"
-    action: "`MeshLoadBalancingStrategy` accepts `localityAwareness.crossZone` only on a `to` entry targeting a `MeshMultiZoneService`. The same block on a `Mesh`, `MeshService`, or `MeshExternalService` target is rejected."
+    action: "`MeshLoadBalancingStrategy` accepts `localityAwareness.crossZone` only in a `to` entry that targets a `MeshMultiZoneService`. The control plane rejects it on a `Mesh`, `MeshService`, or `MeshExternalService` target."
     where: "[Multi-zone architecture](/mesh/multi-zone-architecture/)"
   - area: "Naming"
-    action: "Names of `Mesh`, `Zone`, `MeshService`, `MeshExternalService`, and `MeshMultiZoneService` must be RFC 1035 labels, because `HostnameGenerator` renders them into DNS hostnames. Non-conforming names are rejected rather than warned about."
+    action: "Names of `Mesh`, `Zone`, `MeshService`, `MeshExternalService`, and `MeshMultiZoneService` resources must be RFC 1035 labels, because `HostnameGenerator` uses them in DNS hostnames. The control plane rejects names that don't conform."
     where: "[Resource scoping](/mesh/resource-scoping/)"
   - area: "Observability"
-    action: "Wire `MeshMetric`, `MeshTrace`, and `MeshAccessLog` to backends that share labels for mesh, zone, workload, and service, so one query spans every zone."
+    action: "Send `MeshMetric`, `MeshTrace`, and `MeshAccessLog` data to backends that share labels for mesh, zone, workload, and service, so that one query covers every zone."
     where: "[Observe mesh traffic in practice](/mesh/observe-mesh-traffic-in-practice/)"
 {% endtable %}
 <!-- vale on -->

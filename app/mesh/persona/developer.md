@@ -13,8 +13,14 @@ works_on:
   - on-prem
   - konnect
 ---
+The developer is a senior software engineer on the Passenger Experience team at Kong Air.
+The developer owns the services that passengers interact with:
 
-The developer is a Senior Software Engineer at Kong Air, on the Passenger Experience team. The developer owns the services that the airline's passengers see and interact with, `passenger-portal` (the booking and check-in UI) and `check-in-api` (the back-end that processes seat assignments and boarding passes). The developer does not own the operational core (`flight-control`), the ingress gateway (`booking-gateway`), or the underlying databases (`flight-db`); those belong to other teams. The developer's job is to make these services fast, resilient, and observable while consuming everyone else's services safely.
+* `passenger-portal`: the booking and check-in UI
+* `check-in-api`: the back end that assigns seats and issues boarding passes
+
+Other teams own the operational core (`flight-control`), the ingress gateway (`booking-gateway`), and the databases (`flight-db`).
+The developer's job is to make their own services fast, resilient, and observable, and to call the services of other teams safely.
 
 ### What the developer owns at Kong Air
 
@@ -38,15 +44,22 @@ flowchart LR
   CI -.-> WX
 {% endmermaid %}
 
-The dashed arrow to `weather-api` is an external SaaS, the developer reaches it through a `MeshExternalService` that the operator has configured. See the [Kong Air section](/mesh/introduction/#kong-air) for the full picture.
+The dashed arrow points to `weather-api`, an external SaaS service.
+The developer reaches it through a `MeshExternalService` that the operator configured.
+For the full picture, see [Kong Air](/mesh/introduction/#kong-air).
 
-## Service discovery and consuming services the developer doesn't own
+## How the developer finds the services of other teams
 
-The developer's services need predictable hostnames for the things they call. Both the in-zone DNS naming (via `HostnameGenerator`) and the cross-zone abstraction (via `MeshMultiZoneService`) are typically set up by the operator, they're cluster-wide concerns that live in the system namespace and apply to every service. The developer's job is to use them.
+The developer's services need predictable hostnames for the services they call.
+The [operator](/mesh/persona/operator/) sets up these hostnames for the whole mesh, with resources in the system namespace.
+The developer uses the hostnames and doesn't manage the resources.
 
-### The developer's view of in-zone DNS
+### Hostnames in the same zone
 
-The operator has applied a custom `HostnameGenerator` for the mesh (Kong Air's own naming scheme, the built-in default for zone-local services is `.svc.cluster.local` on Kubernetes). It generates a DNS name like `<service>.svc.kongair.mesh` for every `MeshService`. The developer just needs to know the convention:
+The operator applies a custom `HostnameGenerator` for the mesh.
+It gives every `MeshService` a hostname such as `<service>.svc.kongair.mesh`.
+Without a custom generator, a workload on Kubernetes calls a service in its own zone by its Kubernetes DNS name, which ends in `.svc.cluster.local`.
+The developer only needs to know the naming convention:
 
 <!-- vale off -->
 {% table %}
@@ -67,65 +80,93 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-The `HostnameGenerator` resource itself is applied by the operator and lives in the system namespace. See [Multi-zone architecture](/mesh/multi-zone-architecture/) for how the naming scheme is configured.
+The operator applies the `HostnameGenerator` resource in the system namespace.
+For how {{site.mesh_product_name}} names services, see [MeshService](/mesh/meshservice/).
 
 {:.info}
-> On Kubernetes, the developer can call other in-cluster services directly by their Kubernetes service address (for example, `check-in-api.kong-air-production.svc.cluster.local`), the mesh transparently proxies that traffic. The HostnameGenerator just gives the developer a stable, mesh-native name that works the same in every zone.
+> On Kubernetes, the developer can also call another service in the cluster by its Kubernetes address, for example `check-in-api.kong-air-production.svc.cluster.local`.
+> The sidecar proxies that traffic like any other mesh traffic.
+> The `HostnameGenerator` name is stable and works the same way in every zone.
 
-### The developer's view of cross-zone services
+### Services in other zones
 
-When `passenger-portal` (running in zone1) needs to call `flight-control` (which may be in zone1 or zone2), the operator has defined a `MeshMultiZoneService` that aggregates both zones into one logical service. The developer calls a single hostname and the mesh handles locality and failover. The `MeshMultiZoneService` is applied by the operator, see [Multi-zone architecture](/mesh/multi-zone-architecture/) for how it is defined.
+`passenger-portal` runs in `zone1` and calls `flight-control`, which can run in `zone1` or `zone2`.
+The operator applies a `MeshMultiZoneService` that combines the `flight-control` services of both zones into one destination.
+The developer calls one hostname, and the mesh picks the zone and fails over when a zone is unavailable.
+For how the operator defines it, see [MeshMultiZoneService](/mesh/meshmultizoneservice/).
 
 ### External services
 
-For the SaaS weather feed, the operator has registered a `MeshExternalService`, which the developer's `check-in-api` calls by its mesh-generated name like any other in-mesh service. The `MeshExternalService` is applied by the operator, see [Manage external services with MeshExternalService](/mesh/manage-external-services-with-meshexternalservice/) for how it is registered.
+The operator registers the SaaS weather feed as a `MeshExternalService`.
+`check-in-api` calls it by its mesh hostname, like any service in the mesh.
+For how the operator registers it, see [Manage external services with MeshExternalService](/mesh/manage-external-services-with-meshexternalservice/).
 
-## Traffic management
+## How the developer controls traffic
 
-The developer needs full control over how requests land on these services.
+The developer controls how requests reach their services with three policies.
 
 ### Canary routing with `MeshHTTPRoute`
-Launching v2 of the passenger portal? The developer shifts a percentage of traffic to the new version with a `MeshHTTPRoute` to verify its performance before a full rollout. See [Split traffic with MeshService resources](/mesh/split-traffic-with-meshservice-resources/) for weighted canary routing.
 
-{:.warning}
-> The traffic hierarchy: routing versus load balancing.
+To release a new version of `passenger-portal`, the developer applies a `MeshHTTPRoute` that sends a percentage of the traffic to the new version.
+The developer then checks its performance before sending all traffic to it.
+See [Split traffic with MeshService resources](/mesh/split-traffic-with-meshservice-resources/).
+
+{:.info}
+> A route and a load balancer make different decisions:
 >
-> It is easy to confuse `weight` in a route with load balancing, but they happen at different layers:
-> 1. Selection (the route): `MeshHTTPRoute` uses `weight` to decide which subset (`v1` or `v2`) the request belongs to.
-> 2. Distribution (the strategy): Once a subset is chosen, `MeshLoadBalancingStrategy` decides which specific instance (Pod) within that subset receives the traffic.
+> 1. `MeshHTTPRoute` uses `weight` to choose the destination, `v1` or `v2`, for each request.
+> 2. `MeshLoadBalancingStrategy` then chooses the instance (Pod) of that destination that receives the request.
 
-### Advanced load balancing
-To ensure fair distribution across the backend instances, the developer configures a `MeshLoadBalancingStrategy` (for example, a `LeastRequest` load balancer that sends traffic to the least busy instance). See [MeshLoadBalancingStrategy](/mesh/policies/meshloadbalancingstrategy/) for the policy fields.
+### Load balancing with `MeshLoadBalancingStrategy`
 
-### Safety with `MeshRateLimit`
-To prevent a misbehaving client from overwhelming the check-in service during peak boarding times, the developer applies a `MeshRateLimit` to the `check-in-api` proxies (an inbound policy, so the top-level `targetRef` selects the receiving workloads and `rules` configures the limit). See [MeshRateLimit](/mesh/policies/meshratelimit/) for the policy fields.
+The developer applies a `MeshLoadBalancingStrategy` to spread requests across the instances of a service.
+For example, a `LeastRequest` load balancer sends each request to the instance with the fewest active requests.
+See [MeshLoadBalancingStrategy](/mesh/policies/meshloadbalancingstrategy/).
 
-## Deep resilience
+### Rate limits with `MeshRateLimit`
 
-The developer knows that failure is inevitable. The developer builds multiple layers of defense, then proves they work with fault injection. See [Validate resilience with fault injection](/mesh/validate-resilience-with-fault-injection/) for how these policies are exercised together.
+During peak boarding times, a misbehaving client can overload `check-in-api`.
+To prevent this, the developer applies a `MeshRateLimit` to the `check-in-api` proxies.
+The policy limits the requests that these proxies receive, so its top-level `targetRef` selects `check-in-api`, and its `rules` set the limit.
+See [MeshRateLimit](/mesh/policies/meshratelimit/).
 
-### Active health checks (`MeshHealthCheck`)
-The mesh actively pings the developer's services to ensure they are ready to receive traffic. See [MeshHealthCheck](/mesh/policies/meshhealthcheck/) for the policy fields.
+## How the developer makes services resilient
 
-### Passive health checks (`MeshCircuitBreaker`)
-If a specific instance of `check-in-api` starts returning 500s unexpectedly, the circuit breaker temporarily ejects it. See [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/) for the policy fields.
+Failures happen, so the developer adds several layers of protection.
+The developer then tests them with fault injection.
+See [Validate resilience with fault injection](/mesh/validate-resilience-with-fault-injection/).
 
-### Self-healing with `MeshRetry`
-Transient network blips should not reach the passenger, so the developer configures automatic retries. See [MeshRetry](/mesh/policies/meshretry/) for the policy fields.
+### Active health checks with `MeshHealthCheck`
 
-## Observability
+With `MeshHealthCheck`, the sidecars of the calling services send health check requests to each instance of the developer's services.
+The sidecars stop sending traffic to an instance that fails the checks.
+See [MeshHealthCheck](/mesh/policies/meshhealthcheck/).
 
-The developer needs to see what is happening inside the code. The developer uses `MeshMetric` to aggregate both sidecar metrics and custom application metrics (like `checkins_per_second`). See [Observe mesh traffic in practice](/mesh/observe-mesh-traffic-in-practice/) for how metrics, traces, and logs are collected across Kong Air.
+### Passive health checks with `MeshCircuitBreaker`
 
-## Gateway integration
+With `MeshCircuitBreaker`, the calling sidecars watch the responses from each instance.
+If one instance of `check-in-api` returns errors, the sidecars stop sending it traffic for a time.
+See [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/).
 
-Finally, booking-gateway ({{site.base_gateway}}, owned by the operator) is the entry point into the developer's services. The developer doesn't operate the gateway itself, but just makes sure these services play well with it:
+### Retries with `MeshRetry`
 
-*   Ingress: {{site.base_gateway}} terminates external HTTPS and forwards into the mesh. Passengers hit the gateway; the gateway routes to `passenger-portal`.
-*   Claims: It validates the passenger's JWT and passes the resulting claims on as request headers, so the developer's services can tell which passenger is calling. The mesh identity on that connection stays the gateway's, so the developer's services authorize the gateway with `MeshTrafficPermission` and read the passenger from the headers. See [Security architect](/mesh/persona/security/) for what makes those headers trustworthy.
+A new mesh doesn't retry failed requests.
+The developer applies a `MeshRetry`, so the sidecars retry short network failures before a passenger sees an error.
+See [MeshRetry](/mesh/policies/meshretry/).
 
-The gateway itself is the operator's responsibility, see the [Operator](/mesh/persona/operator/) for how the gateway is wired into the mesh.
+## How the developer observes services
 
----
+The developer uses `MeshMetric` to collect both the sidecar metrics and the metrics that the application exposes, such as `checkins_per_second`.
+See [Observe mesh traffic in practice](/mesh/observe-mesh-traffic-in-practice/).
 
-By mastering these policies, the developer has turned Kong Air into a resilient, high-scale digital airline. The developer spends less time worrying about the network and more time building features that get passengers where they need to go.
+## How the developer works with the gateway
+
+`booking-gateway` runs {{site.base_gateway}} and is the entry point to the developer's services.
+The operator runs the gateway, and the developer makes sure that their services work with it:
+
+* **Ingress**: {{site.base_gateway}} terminates the external HTTPS connection and routes the request to `passenger-portal` in the mesh.
+* **Passenger identity**: {{site.base_gateway}} validates the passenger's JWT and sends the claims to the services as request headers. The mesh identity of the connection is still the gateway's. So the developer's services allow the gateway with a `MeshTrafficPermission`, and read the passenger from the headers. For what makes those headers trustworthy, see [Security architect](/mesh/persona/security/).
+
+For how a gateway connects to the mesh, see [Application ingress](/mesh/application-ingress/) and [Operator](/mesh/persona/operator/).
+
+With these policies, the developer spends less time on the network and more time on features for passengers.

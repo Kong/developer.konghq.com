@@ -24,19 +24,30 @@ related_resources:
   - text: Mesh policies
     url: /mesh/policies/
 ---
+A service mesh is a pattern for connecting the services that make up an application.
+Teams often use it with microservices, but it works for any architecture and on any platform, such as virtual machines (VMs) and containers.
 
-A service mesh is a technology pattern that provides a way to implement modern networking and connectivity among the different services that make up an application. While it's commonly used in the context of microservices, it can be used to improve connectivity in every architecture and on every platform, such as VMs and containers.
+## Why services need a mesh
 
-When a service wants to communicate with another service over the network, like a monolith talking to a database or a microservice talking to another microservice, by default the connectivity among them is unreliable. The network can be slow, unsecure by default, and those network requests are not logged anywhere in case you need to debug an error.
+Services call each other over the network.
+For example, a monolith calls a database, or one microservice calls another.
+Without help, these calls are unreliable: the network can be slow, the traffic isn't encrypted, and nothing logs the requests when you need to debug an error.
 
-In order to implement some of these functionalities, you have two options:
+You can solve these problems in two ways:
 
-* You can extend your applications yourself to address these concerns. Over time, this creates technical debt and more code to maintain in addition to the business logic that your application delivers to the end-user. It also creates fragmentation and security issues as more teams try to address the same concerns on different technology stacks.
-* You can delegate the network management to something else that does it for you. For example, an out-of-process proxy that runs on the same underlying host. This proxy is called a [data plane proxy](/mesh/concepts/#data-plane-proxy-or-sidecar), or sidecar.
+* **In each application**: Each team adds retries, encryption, and logging to its own code. Over time, this adds code to maintain beside the business logic. Teams also solve the same problems differently on different technology stacks, which creates gaps in security.
+* **In a proxy next to each application**: A separate process on the same host handles the network for the application. This process is a [data plane proxy](/mesh/concepts/#data-plane-proxy-or-sidecar), also called a sidecar.
 
-In the latter scenario, when delegating network management to another process, you have a data plane proxy for each replica of every service. This is required so you can tolerate a failure to one of the proxies without affecting other replicas, and also because you can assign an identity to each proxy and therefore to each replica of your services. It's also important that the data plane proxy is very lightweight since you'll have many instances running.
+With the second approach, every replica of every service gets its own data plane proxy.
+When one proxy fails, the other replicas keep working.
+Each proxy also gets its own identity, so each replica of a service has an identity.
+The proxies must be lightweight, because you run many of them.
 
-While having data plane proxies deployed alongside your services helps with the network concerns already described, managing so many data plane proxies can become challenging. When you want to update your network policies, you don't want to manually reconfigure each one of them. You need a source of truth that can collect all of your configuration, segmented by service or other properties, and then push the configuration to the individual data plane proxies whenever required. This component is called the [control plane](/mesh/architecture-overview/#core-architecture). It controls the proxies and, unlike the proxies, it doesn't sit on the execution path of the service traffic.
+## Why the proxies need a control plane
+
+You don't want to manually reconfigure every proxy when a network policy changes.
+A [control plane](/mesh/architecture-overview/#core-architecture) stores the configuration and sends it to each proxy that needs it.
+The control plane manages the proxies, but it doesn't carry service traffic.
 
 {% mermaid %}
 flowchart TB
@@ -61,15 +72,26 @@ flowchart TB
     CP <---> DP1 & DP2
 {% endmermaid %}
 
-You'll have many proxies connected to the control plane in order to always propagate the latest configuration, while simultaneously processing the service-to-service traffic among your infrastructure.
-{{site.mesh_product_name}} includes a control plane (shipped in a `kuma-cp` binary) and Envoy as a data plane proxy (shipped as an `envoy` binary).
-You don't need to learn to use Envoy to use {{site.mesh_product_name}}, because {{site.mesh_product_name}} abstracts away that complexity by bundling Envoy into another binary called `kuma-dp`. Under the hood, `kuma-dp` invokes the `envoy` binary.
-On Kubernetes you never start `kuma-dp` yourself: the control plane injects it into the pod as a sidecar container when the workload's namespace is labeled for injection.
+Many proxies connect to the control plane to receive the latest configuration, and they carry the traffic between your services.
 
-## How {{site.mesh_product_name}} implements this
+{{site.mesh_product_name}} includes a control plane, `kuma-cp`, and uses Envoy as the data plane proxy.
+You don't need to learn Envoy.
+The `kuma-dp` binary starts and configures Envoy for you.
+On Kubernetes, you don't start `kuma-dp` yourself.
+When a namespace is labeled for injection, the zone control plane adds `kuma-dp` to each new Pod as a sidecar container.
 
-{{site.mesh_product_name}} splits the control plane in two. A global control plane holds the central view of your meshes and resources, and each environment where workloads run (a Kubernetes cluster, a VPC, or a data center) runs its own zone control plane. The zone control plane discovers local workloads and serves them Envoy configuration over xDS, while exchanging supported resources with the global control plane over the Kuma Discovery Service (KDS). For more information, see [Architecture overview](/mesh/architecture-overview/).
+## How {{site.mesh_product_name}} implements a service mesh
 
-Neither control plane sits on the traffic path. When a request has to leave its zone, it travels through mesh-scoped zone proxies, which are ordinary data plane proxies carrying a zone ingress or zone egress listener. For more information, see [Multi-zone architecture](/mesh/multi-zone-architecture/).
+{{site.mesh_product_name}} can split the control plane in two:
 
-For the vocabulary used across the {{site.mesh_product_name}} documentation, including xDS, KDS, SPIFFE IDs, and the service and policy resources, see [Concepts](/mesh/concepts/).
+* **Global control plane**: It stores the central view of your meshes and resources.
+* **Zone control plane**: Each environment where workloads run, such as a Kubernetes cluster, a VPC, or a data center, runs one. It finds the local workloads and sends them Envoy configuration over xDS. It exchanges resources with the global control plane over the Kuma Discovery Service (KDS).
+
+For more information, see [Architecture overview](/mesh/architecture-overview/).
+
+Neither control plane carries traffic.
+When a request goes to a service in another zone, the caller's sidecar sends it to the zone ingress of that zone.
+A zone ingress is a data plane proxy with a zone ingress listener.
+For more information, see [Multi-zone architecture](/mesh/multi-zone-architecture/).
+
+For the terms used in the {{site.mesh_product_name}} documentation, such as xDS, KDS, SPIFFE IDs, and the service and policy resources, see [Concepts](/mesh/concepts/).

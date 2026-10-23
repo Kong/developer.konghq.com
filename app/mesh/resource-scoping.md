@@ -2,7 +2,7 @@
 title: Resource scoping
 content_type: reference
 layout: reference
-description: Understand which {{site.mesh_product_name}} resources belong to the global control plane, which can be created in a zone, and where zone-origin resources live on Kubernetes.
+description: Learn which control plane owns each {{site.mesh_product_name}} resource in the Kong Air scenarios, where you create it, and where zone resources live on Kubernetes.
 breadcrumbs:
   - /mesh/
   - /mesh/scenarios/
@@ -11,31 +11,39 @@ products:
 works_on:
   - on-prem
   - konnect
+min_version:
+  mesh: '3.0'
 next_steps:
   - text: "How-to: Split traffic with MeshService resources"
     url: "/mesh/split-traffic-with-meshservice-resources/"
 related_resources:
   - text: Multi-zone architecture
     url: /mesh/multi-zone-architecture/
-  - text: Policy targeting and precedence
-    url: /mesh/policy-targeting-and-precedence/
+  - text: Policy targeting
+    url: /mesh/policy-targeting/
 ---
 
-Each Kubernetes or Universal zone runs its own zone control plane and connects to the global control plane over the Kuma Discovery Service (KDS).
+A multi-zone {{site.mesh_product_name}} deployment has one global control plane and one zone control plane in each zone.
+Each zone control plane connects to the global control plane over the Kuma Discovery Service (KDS), a two-way synchronization channel.
+The control plane where a resource is first stored owns that resource.
+You change the resource only on that control plane.
 
-Where you create a resource determines who owns it:
+Resources reach the mesh in three ways:
 
-* Create global resources through the global control plane. It distributes them to the zones that need them.
-* Create zone-origin resources through the local zone control plane. On Kubernetes, the examples in these scenarios use `kubectl`.
-* Workload resources, such as generated `Dataplane` and `MeshService` objects, originate in the zone where the workload runs and sync towards the global control plane when required.
+* **Global resources**: You create them on the global control plane. The global control plane sends a copy to each zone.
+* **Zone resources**: You create them on a zone control plane. In the Kubernetes zones of these scenarios, you create them with `kubectl`.
+* **Workload resources**: The zone control plane creates a `Dataplane` for each proxy and a `MeshService` for each service in its zone. The zone control plane sends them to the global control plane, and the global control plane sends each `MeshService` to the other zones.
 
-## How configuration moves
+## How configuration moves between control planes
+
+The global control plane and the zone control planes exchange resources over KDS.
+Each zone control plane then sends proxy configuration to its local proxies over xDS, the Envoy configuration protocol.
 
 {% mermaid %}
 flowchart TD
     K["Global control plane<br/>global resources and central view"]
-    Z1["Kubernetes zone CP<br/>zone1"]
-    Z2["Universal zone CP<br/>zone2"]
+    Z1["Kubernetes zone control plane<br/>zone1"]
+    Z2["Universal zone control plane<br/>zone2"]
     D1["Local workloads and proxies"]
     D2["Local workloads and proxies"]
 
@@ -45,82 +53,99 @@ flowchart TD
     Z2 -->|xDS| D2
 {% endmermaid %}
 
-KDS is bidirectional, but that does not make every resource writable everywhere. Each resource type declares whether it can originate globally, in a zone, or in either place. A resource synced into a zone is a read-only copy; update it at its point of origin.
+KDS works in both directions, but each resource type syncs only in the directions that {{site.mesh_product_name}} allows for it.
+A copy that a control plane receives over KDS is read-only.
+To change the resource, update it on the control plane that owns it.
 
-## Resource ownership
+## Resource ownership in the Kong Air scenarios
+
+The following table shows where you create each resource that the scenarios use, and where it lives on Kubernetes:
 
 <!-- vale off -->
 {% table %}
 columns:
   - title: Resource
     key: resource
-  - title: Create it in
+  - title: Who creates it
     key: owner
-  - title: Kubernetes placement
+  - title: Location on Kubernetes
     key: placement
   - title: Why
     key: why
 rows:
   - resource: "`Mesh`"
-    owner: "Global control plane"
-    placement: "The synced Kubernetes copy is cluster-scoped; it has no namespace."
-    why: "Defines the mesh boundary. Identity, mTLS, and other behavior are configured by separate resources and policies."
+    owner: "You, on the global control plane."
+    placement: "The zone copy is cluster-scoped and has no namespace."
+    why: "The `Mesh` defines the mesh boundary for every zone. Identity, mTLS, and traffic behavior come from separate resources and policies."
   - resource: "`MeshMultiZoneService`"
-    owner: "Global control plane"
-    placement: "Synced copies appear in the zone system namespace."
-    why: "Only the global control plane has the service information needed to assemble a destination spanning multiple zones."
+    owner: "You, on the global control plane."
+    placement: "The zone copy is in `{{site.mesh_namespace}}`."
+    why: "Only the global control plane has the services of every zone, which it needs to combine them into one destination."
   - resource: "`MeshIdentity` and `MeshTrust`"
-    owner: "Global or zone control plane"
-    placement: "On Kubernetes they can only be created in `{{site.mesh_namespace}}`."
-    why: "Create them globally for shared identity configuration, or in a zone when the issuer and trust are deliberately local to that zone."
+    owner: "You, on the global control plane or on a zone control plane."
+    placement: "Only in `{{site.mesh_namespace}}`."
+    why: "Create them on the global control plane to share one identity configuration. Create them on a zone control plane when the issuer and trust belong to that zone only."
   - resource: "Mesh-wide policy, for example `MeshTLS`"
-    owner: "Global or zone control plane"
-    placement: "Use `{{site.mesh_namespace}}` for a zone-origin policy that governs the whole mesh."
-    why: "A global policy gives every zone the same baseline. A zone-origin policy is useful for a local scenario or a deliberate zone override."
+    owner: "You, on the global control plane or on a zone control plane."
+    placement: "On a zone, `{{site.mesh_namespace}}`."
+    why: "A policy on the global control plane gives every zone the same baseline. A policy in the zone system namespace applies to the whole zone."
   - resource: "Workload policy, for example `MeshTimeout`"
-    owner: "Global or zone control plane"
-    placement: "Usually the workload namespace when the policy only governs workloads in that namespace."
-    why: "Namespace placement keeps application-owned policy within the application team's scope."
+    owner: "You, on the zone control plane where the workloads run."
+    placement: "Usually the namespace of the workloads that the policy governs."
+    why: "A policy in an application namespace stays within the scope of the application team that owns that namespace."
   - resource: "`MeshExternalService`"
-    owner: "Global or zone control plane"
-    placement: "On Kubernetes it can only be created in `{{site.mesh_namespace}}`."
-    why: "Create it globally for a dependency shared by zones, or in one zone when its endpoints and reachability are local to that zone."
+    owner: "You, on the global control plane or on a zone control plane."
+    placement: "Only in `{{site.mesh_namespace}}`."
+    why: "Create it on the global control plane for a dependency that every zone uses. Create it on a zone control plane when only that zone can reach the endpoints."
   - resource: "`MeshOpenTelemetryBackend`"
-    owner: "Global or zone control plane"
-    placement: "On Kubernetes it can only be created in `{{site.mesh_namespace}}`."
-    why: "Observability policies reference it by label, so it is shared infrastructure rather than application-owned configuration."
+    owner: "You, on the global control plane or on a zone control plane."
+    placement: "Only in `{{site.mesh_namespace}}`."
+    why: "Observability policies select the backend by its labels, so it's shared infrastructure for every team."
   - resource: "`MeshZoneAddress`"
-    owner: "Zone control plane"
-    placement: "Any namespace. It syncs to the global control plane and on to the other zones."
-    why: "Only the zone knows the address its own zone ingress publishes for cross-zone traffic."
+    owner: "On Kubernetes, the zone control plane creates it from the zone ingress Service. On Universal, you create it on the zone control plane."
+    placement: "`{{site.mesh_namespace}}`."
+    why: "Only the zone knows the address where other zones reach its zone ingress. The zone control plane sends it to the global control plane, which sends it to the other zones."
 {% endtable %}
 <!-- vale on -->
 
+For more about each workload resource, see [MeshService](/mesh/meshservice/) and [Mesh-scoped zone proxies](/mesh/mesh-scoped-zone-proxies/).
+
 ## Global resources
 
-Create the `Mesh` through the global control plane before deploying workloads into it. Create resources such as `MeshMultiZoneService` there, then wait for their read-only copies to sync to the connected zones. On Kubernetes, a synced copy of a namespaced resource lands in `{{site.mesh_namespace}}`.
+Create the `Mesh` on the global control plane before you deploy workloads into it.
+Also create global resources such as `MeshMultiZoneService` there.
+The global control plane then sends a read-only copy to each connected zone.
+On Kubernetes, a zone stores the copy of a namespaced resource in `{{site.mesh_namespace}}`.
 
-Once a zone is connected to a global control plane, it can no longer create a global resource for itself. Applying a `Mesh` with `kubectl` against that zone is rejected by the admission webhook. A standalone control plane, which has no global and zone split, is the exception: there, `kubectl apply` of a `Mesh` is the normal way to create one.
+A zone control plane that's connected to a global control plane can't create a global resource.
+For example, if you apply a `Mesh` with `kubectl` on that zone, the admission webhook rejects it.
+A zone control plane that isn't connected to a global control plane accepts a `Mesh`, because it has no global control plane to receive one from.
 
-## Zone-origin resources on Kubernetes
+## Zone resources on Kubernetes
 
-These scenarios use zone-origin policy for the early, single-zone exercises so every command can be run against the connected Kubernetes cluster. A zone-origin resource in the system namespace carries two labels:
+The early Kong Air scenarios use a single zone, so you create most resources on that zone with `kubectl`.
+A zone resource in the system namespace needs the `kuma.io/mesh` label, because the scenarios use `kong-air-mesh` instead of the `default` mesh:
 
 ```yaml
 metadata:
   namespace: {{site.mesh_namespace}}
   labels:
     kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: zone
 ```
+{:.no-copy-code}
 
-The `kuma.io/origin` line is required there. On a Kubernetes zone connected to a global control plane, every resource created in `{{site.mesh_namespace}}` must carry `kuma.io/origin: zone`, whatever its kind, and the zone control plane rejects it otherwise. A resource in an application namespace does not need it, and a standalone control plane, which has no global and zone split, does not check it at all. Setting the label is valid in all three cases, which is why the examples in these scenarios always include it on system-namespace resources.
+The zone control plane adds the other ownership labels when it stores the resource:
 
-The control plane computes the remaining ownership labels when it stores the resource. Anything you create in a zone is given `kuma.io/zone` set to that zone's name, and a policy is also given `kuma.io/policy-role`. Don't copy these out of a synced object into new YAML. A `kuma.io/origin` value you write in an application namespace stays on the Kubernetes object but has no effect, because the control plane computes its own value when it reads the resource. A `kuma.io/zone` value naming a different zone is rejected outright.
+* `kuma.io/origin: zone`, because you created the resource on a zone control plane
+* `kuma.io/zone`, set to the name of the zone
+* `kuma.io/policy-role`, on a policy, which decides which proxies the policy can reach
 
-### Where a resource can live
+Don't copy these labels from a synced resource into new YAML.
+If you set one of these labels to a value that differs from the value the control plane computes, the control plane rejects the resource.
 
-On Kubernetes, some resource types can only be created in `{{site.mesh_namespace}}`, whichever control plane creates them:
+### Namespaces that each resource type accepts
+
+On Kubernetes, you can create the following resource types only in `{{site.mesh_namespace}}`:
 
 * `MeshIdentity`
 * `MeshTrust`
@@ -128,22 +153,27 @@ On Kubernetes, some resource types can only be created in `{{site.mesh_namespace
 * `MeshOpenTelemetryBackend`
 * `HostnameGenerator`
 
-Every policy, along with `MeshService`, `MeshMultiZoneService`, and `MeshZoneAddress`, can live in an application namespace instead, as long as a zone control plane owns it. A global control plane accepts no namespace other than `{{site.mesh_namespace}}`, for any kind, and rejects a resource created there with `kuma.io/origin: zone`.
+You can create policies, `MeshService`, `MeshMultiZoneService`, and `MeshZoneAddress` resources in an application namespace on a zone control plane.
 
-Policies created in an application namespace are already local to that namespace. The control plane labels them `consumer` or `workload-owner`, and a policy with either role selects only proxies in its own namespace. Put a policy in the system namespace only when a platform operator intentionally needs mesh-wide or cross-namespace scope, which gives it the `system` role. See [Policy targeting and precedence](/mesh/policy-targeting-and-precedence/) for how the role affects which policy wins.
+A policy in an application namespace reaches only proxies in that namespace, unless it's a producer policy for a service in that namespace.
+Put a policy in `{{site.mesh_namespace}}` only when a platform operator needs it to reach the whole zone.
+For the full rules, see [Policy scope](/mesh/policy-targeting/#policy-scope).
 
 ## Universal zones
 
-Universal zones do not have Kubernetes namespaces. Point kongctl at the control plane that owns the resource and apply the Universal form there:
+Universal zones don't have namespaces, so every policy that you create there reaches the whole zone.
+To create a resource, run `kongctl` against the control plane that owns it:
 
 ```sh
 kongctl apply mesh -f mesh-traffic-permission.yaml --control-plane-name "$MESH_CP"
 ```
 
-Before changing a resource, read its `kuma.io/origin` label:
+Before you change a resource, read its `kuma.io/origin` label to find the control plane that owns it:
 
 ```sh
 kongctl get mesh meshtrafficpermissions --control-plane-name "$MESH_CP" --mesh kong-air-mesh -o yaml
 ```
 
-Update a global resource through the global control plane and a zone-origin resource through the zone that owns it. For a self-managed control plane, pass `--control-plane-url` with its API address in place of `--control-plane-name`.
+Update a resource with `kuma.io/origin: global` on the global control plane, and a resource with `kuma.io/origin: zone` on the zone that owns it.
+For a self-managed control plane, replace `--control-plane-name` with `--control-plane-url` and the address of its API.
+For more `kongctl` options, see [{{site.mesh_product_name}} CLI](/mesh/cli/).
