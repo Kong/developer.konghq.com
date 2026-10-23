@@ -2,7 +2,7 @@
 title: Manage external services with MeshExternalService
 content_type: how_to
 permalink: /mesh/manage-external-services-with-meshexternalservice/
-description: Learn how to manage external dependencies like APIs and databases as first-class mesh citizens, enabling observability, resiliency, and dedicated DNS.
+description: Model external dependencies like APIs and databases as MeshExternalService resources, so the mesh gives them stable hostnames, access control, TLS origination, and retries.
 breadcrumbs:
   - /mesh/
   - /mesh/scenarios/
@@ -19,18 +19,23 @@ series:
 tldr:
   q: How do I manage specific external services as part of my mesh?
   a: |
-    Use **MeshExternalService** to:
-    1. **Assign dedicated DNS**: Give external APIs stable internal names (for example `aeropay-api.extsvc.mesh.local`).
-    2. **Enable Observability**: Get metrics and logs for outbound calls just like internal services.
-    3. **Apply Resiliency**: Use `MeshRetry`, `MeshTimeout`, and related mesh policies to configure retries and timeouts for external dependencies.
+    Create a **MeshExternalService** for each external dependency to:
+    1. **Assign a stable hostname**: Workloads call external APIs through internal names (for example, `aeropay-api.extsvc.mesh.local`).
+    2. **Get observability**: Collect metrics and logs for outbound calls, as you do for internal services.
+    3. **Apply resiliency**: Configure retries and timeouts for external dependencies with `MeshRetry`, `MeshTimeout`, and related mesh policies.
 prereqs:
   inline:
     - title: Mesh-scoped zone egress
       content: |
-        A mesh-scoped zone egress for `kong-air-mesh`. [Install {{site.mesh_product_name}} and deploy Kong Air](/mesh/install-kong-mesh-and-deploy-kong-air/) already deploys one, through the same Helm `meshes:` entry that creates the zone proxy `Deployment` and the `Service` the control plane reads the listener address and port from. See [Configure mesh-scoped zone proxies](/mesh/configure-mesh-scoped-zone-proxies/) to confirm it's running, or to add the same `meshes:` entry to a different zone control plane. A deployment without its `Service` registers as an ordinary `Dataplane` and never becomes a zone egress.
+        A mesh-scoped zone egress for `kong-air-mesh`.
+        [Install {{site.mesh_product_name}} and deploy Kong Air](/mesh/install-kong-mesh-and-deploy-kong-air/) deploys one through the Helm `meshes:` entry.
+        That entry creates the zone proxy `Deployment`, and the `Service` that the control plane reads the listener address and port from.
+        A zone proxy deployment without its `Service` registers as an ordinary `Dataplane` and never becomes a zone egress.
+        To confirm that the zone egress runs, or to add the same `meshes:` entry to another zone control plane, see [Configure mesh-scoped zone proxies](/mesh/configure-mesh-scoped-zone-proxies/).
     - title: Workload identity
       content: |
-        A `MeshIdentity` whose selector covers the zone proxies in `{{site.mesh_namespace}}` as well as the application workloads. See [Manage workload identity and mTLS](/mesh/manage-workload-identity-and-mtls/).
+        A `MeshIdentity` whose selector covers the zone proxies in `{{site.mesh_namespace}}` and the application workloads.
+        See [Manage workload identity and mTLS](/mesh/manage-workload-identity-and-mtls/).
 cleanup:
   inline:
     - title: Remove the external service definitions
@@ -51,30 +56,42 @@ related_resources:
 
 ## Why MeshExternalService?
 
-In the previous scenario, we secured the perimeter using `MeshPassthrough`. However, for critical dependencies like AeroPay (Kong Air's payment provider) or the core RDS Database, we need more than just an "allowlist."
-
-We want these dependencies to feel like internal services:
-- Consistent naming: No more hardcoded IP addresses or external URLs.
-- Traffic control: The ability to retry failed calls to AeroPay without changing application code.
-- Security: TLS origination at the sidecar, so the application doesn't need to manage external certificates.
+Kong Air's critical dependencies need more than the allowlist from [Secure the perimeter with MeshPassthrough](/mesh/secure-the-perimeter-with-meshpassthrough/).
+These dependencies are AeroPay, Kong Air's payment provider, and the managed PostgreSQL database for flight data.
+A [`MeshExternalService`](/mesh/meshexternalservice/) turns each dependency into a named mesh destination:
+- Consistent naming: Workloads call a mesh-generated hostname instead of a hardcoded IP address or external URL.
+- Traffic control: `MeshRetry` retries failed calls to AeroPay without changes to application code.
+- Security: The zone egress originates TLS, so the application doesn't manage external certificates. See [Originating TLS](/mesh/meshexternalservice/#originating-tls).
 
 ## Set the naming standard
 
-On Kubernetes, {{site.mesh_product_name}} ships with a default `HostnameGenerator` that assigns each zone-local `MeshExternalService` a generated hostname and a virtual IP. For the hostname format, the VIP CIDR, and how sidecar TLS origination works, see [MeshExternalService](/mesh/meshexternalservice/).
+On Kubernetes, {{site.mesh_product_name}} includes a default `HostnameGenerator`.
+The `HostnameGenerator` gives each zone-local `MeshExternalService` a generated hostname and a virtual IP.
+For the hostname format and the virtual IP range, see [MeshExternalService](/mesh/meshexternalservice/).
 
-If Kong Air wants a custom naming scheme, that is an operator-level customization of `HostnameGenerator`, not something each application team should redefine in every scenario.
+A custom naming scheme for Kong Air is an operator task.
+The operator customizes the `HostnameGenerator` once, so application teams don't redefine it in each scenario.
 
 ## How the traffic leaves the mesh
 
-When workloads have an identity from `MeshIdentity`, a sidecar does not dial an external endpoint itself. It routes `MeshExternalService` traffic to the mesh-scoped zone egress that belongs to the same mesh, and the egress makes the outbound call. That extra hop is what gives the mesh one enforcement point for every external dependency.
-
+`MeshExternalService` traffic always goes through the mesh-scoped zone egress in the caller's zone.
+The caller's sidecar sends the request to the zone egress over mesh mTLS, and the zone egress connects to the external endpoint.
+That path gives Kong Air one enforcement point for every external dependency.
+A caller's sidecar gets a cluster for a `MeshExternalService` only when the caller has a workload identity.
+Without a workload identity, the caller gets no cluster, and its requests fail with `503`.
+For the full path, see [Traffic paths](/mesh/mesh-scoped-zone-proxies/#traffic-paths).
 
 ## Define the RDS database
 
-Kong Air uses a managed PostgreSQL instance for flight data. By defining it as a `MeshExternalService`, the application can reach it through a mesh-generated hostname instead of hardcoding the AWS endpoint directly.
+Kong Air uses a managed PostgreSQL instance for flight data.
+Define the instance as a `MeshExternalService` named `flight-db`, so that workloads reach it through a mesh-generated hostname instead of the hardcoded AWS endpoint.
 
 {:.info}
-> On Kubernetes, `MeshExternalService` can only be created in the system namespace (`{{site.mesh_namespace}}`). A zone control plane connected to a global control plane requires every resource created in that namespace to carry `kuma.io/origin: zone`, and rejects it otherwise, which applies to the `MeshTrafficPermission` and `MeshRetry` in this guide as well. In an application namespace the control plane computes the label for you. See [Resource scoping](/mesh/resource-scoping/).
+> On Kubernetes, you can create a `MeshExternalService` only in the system namespace, `{{site.mesh_namespace}}`.
+> The `MeshTrafficPermission` and `MeshRetry` in this guide live in the same namespace.
+> See [Resource scoping](/mesh/resource-scoping/).
+
+The following `MeshExternalService` defines `flight-db` and turns on TLS to the database endpoint:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -84,7 +101,6 @@ metadata:
   namespace: {{site.mesh_namespace}}
   labels:
     kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: zone
 spec:
   match:
     type: HostnameGenerator
@@ -100,11 +116,14 @@ spec:
       serverName: rds-instance-01.c7x2.us-east-1.rds.amazonaws.com
 ```
 
-This keeps the application configuration simple while still aiming for encrypted traffic between the sidecar and the managed database.
+Applications keep a simple configuration, and the zone egress encrypts the traffic to the managed database.
 
 ## Restrict database access by workload
 
-Defining `flight-db` does not grant anyone access to it. The mesh-scoped zone egress `Dataplane` is deny-all by default for `MeshExternalService` traffic, so every call returns `403 Forbidden` until a policy names the caller. Kong Air wants exactly one caller, `flight-control`, so grant access per workload with `MeshTrafficPermission`:
+Defining `flight-db` doesn't give any workload access to it.
+The mesh-scoped zone egress denies all `MeshExternalService` traffic by default, so every call returns `403 Forbidden` until a policy allows the caller.
+Kong Air wants one caller, `flight-control`.
+Create a `MeshTrafficPermission` on the zone egress that allows `flight-control` to reach `flight-db`:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -114,7 +133,6 @@ metadata:
   namespace: {{site.mesh_namespace}}
   labels:
     kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: zone
 spec:
   targetRef:
     kind: Dataplane
@@ -131,23 +149,26 @@ spec:
               value: sni.extsvc.kong-air-mesh.zone1.{{site.mesh_namespace}}.flight-db.5432
 ```
 
-Each `allow` entry pairs a source identity (the workload SPIFFE ID from mTLS) with a destination (the external service SNI). A connection is allowed only when both match, any unmatched connection is dropped.
+Each `allow` entry pairs a caller with a destination.
+The caller is the workload's Secure Production Identity Framework for Everyone (SPIFFE) ID, which mTLS proves.
+The destination is the external service's Server Name Indication (SNI).
+The zone egress allows a connection only when both match, and it denies every other connection.
 
 ### Derive the SNI
 
-The SNI for a zone-local `MeshExternalService` follows this deterministic format:
+The SNI for a zone-local `MeshExternalService` uses the following format, where the last segment is the `match.port`:
 
 ```
 sni.extsvc.<mesh>.<zone>.<namespace>.<name>.<port>
 ```
 
-The final segment is the listener's section name, which for a `MeshExternalService` is its `match.port`. Substitute the values directly from the resource metadata. For `flight-db` created in zone `zone1`:
+For `flight-db` in zone `zone1`, the SNI is:
 
 ```
 sni.extsvc.kong-air-mesh.zone1.{{site.mesh_namespace}}.flight-db.5432
 ```
 
-To look up the zone name at runtime:
+Read the zone name from the zone egress `Dataplane`:
 
 ```bash
 kubectl get dataplanes.kuma.io -n {{site.mesh_namespace}} \
@@ -163,27 +184,29 @@ zone1
 {:.no-copy-code}
 
 {:.info}
-> Use the fully qualified `dataplanes.kuma.io`. If the {{site.gateway_operator_product_name}} is installed in the same cluster, the short name `dataplane` resolves to `dataplanes.gateway-operator.konghq.com` instead and the command returns nothing.
+> Use the fully qualified name `dataplanes.kuma.io`. If {{site.gateway_operator_product_name}} runs in the same cluster, the short name `dataplane` resolves to `dataplanes.gateway-operator.konghq.com`, and the command returns nothing.
+
+For how to find the SNI on any zone egress, see [Authorize zone proxy traffic](/mesh/policies/meshtrafficpermission/#authorize-zone-proxy-traffic).
 
 ### Derive the SPIFFE ID
 
-{{site.mesh_product_name}} issues SPIFFE IDs with the format:
+{{site.mesh_product_name}} issues SPIFFE IDs in the following format:
 
 ```
 spiffe://<trust-domain>/ns/<namespace>/sa/<service-account>
 ```
 
-The trust domain comes from the `MeshIdentity` that issued the certificate. When the built-in backend generates it, the default format is `<mesh>.<zone>.mesh.local`. For `flight-control` in zone `zone1`, running in the `kong-air-production` namespace with the `flight-control` Kubernetes service account, the SPIFFE ID is:
+For `flight-control`, which runs in the `kong-air-production` namespace with the `flight-control` service account in zone `zone1`, the SPIFFE ID is:
 
 ```
 spiffe://kong-air-mesh.zone1.mesh.local/ns/kong-air-production/sa/flight-control
 ```
 
-Read the resolved trust domain from the `MeshTrust` that the identity generates. `MeshIdentity` does not publish it in its own status:
+Read the trust domain from the status of the `kong-air-identity` `MeshIdentity`:
 
 ```bash
-kubectl get meshtrust kong-air-identity -n {{site.mesh_namespace}} \
-  -o jsonpath='{.spec.trustDomain}{"\n"}'
+kubectl get meshidentity kong-air-identity -n {{site.mesh_namespace}} \
+  -o jsonpath='{.status.trustDomain}{"\n"}'
 ```
 
 Expected output:
@@ -193,15 +216,24 @@ kong-air-mesh.zone1.mesh.local
 ```
 {:.no-copy-code}
 
+For the trust domain and path templates, see [SPIFFE ID](/mesh/policies/meshidentity/#spiffe-id).
+
 {:.info}
-> Multiple workloads, multiple rules. Add more entries under `rules[0].default.allow` to grant additional workloads access to the same or different external services. To allow a workload to reach any external service through zone egress, omit the `sni` field from that entry.
+> To give more workloads access to the same or other external services, add entries under `rules[0].default.allow`.
+> To let a workload reach any external service through the zone egress, leave out the `sni` field from its entry.
 
 ## Secure AeroPay (HTTPS with TLS origination)
 
-For the AeroPay API, the security architect wants to ensure all traffic is encrypted, but does not want developers managing third-party CA bundles in application code. `MeshExternalService` is the resource intended to handle TLS origination at the sidecar.
+Kong Air's security architect wants all traffic to AeroPay encrypted, without developers managing third-party CA bundles in application code.
+The `aeropay-api` `MeshExternalService` turns on TLS origination, so the zone egress opens the TLS connection to `api.aeropay.com`.
+See [Originating TLS](/mesh/meshexternalservice/#originating-tls).
 
 {:.info}
-> If Kong Air wants developers to call the service with plain HTTP inside the mesh, the internal match port should be an HTTP port such as `80`, while the upstream endpoint can still be `443`. The mesh-generated hostname will still come from the `HostnameGenerator`.
+> Developers call `aeropay-api` over plain HTTP inside the mesh, so `match.port` is an HTTP port, `80`.
+> The upstream endpoint stays on port `443`.
+> The `HostnameGenerator` still generates the hostname.
+
+Define `aeropay-api` with TLS origination to `api.aeropay.com`:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -211,7 +243,6 @@ metadata:
   namespace: {{site.mesh_namespace}}
   labels:
     kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: zone
 spec:
   match:
     type: HostnameGenerator
@@ -229,7 +260,11 @@ spec:
 
 ## Add resiliency with MeshRetry
 
-Because AeroPay is now a first-class citizen, the developer can apply standard mesh policies to it. If AeroPay is momentarily slow or returns a 5xx error, the mesh can automatically retry. Retries are configured with the `MeshRetry` policy, `MeshHTTPRoute` filters cover header rewrites, redirects, and mirroring, but not retries.
+`aeropay-api` is now a mesh destination, so developers can apply standard mesh policies to it.
+When AeroPay is slow for a moment or returns a 5xx error, the caller's sidecar can retry the call.
+Configure retries with the `MeshRetry` policy, because `MeshHTTPRoute` filters don't configure retries.
+
+Create a `MeshRetry` that retries calls from `passenger-portal` to `aeropay-api` up to three times:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -239,7 +274,6 @@ metadata:
   namespace: {{site.mesh_namespace}}
   labels:
     kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: zone
 spec:
   targetRef:
     kind: Dataplane
@@ -260,28 +294,24 @@ spec:
 ```
 
 {:.info}
-> A top-level `spec.targetRef` accepts only `Mesh` or `Dataplane`, so `MeshRetry` attaches to the clients whose retry behavior it configures, and names the destination in the `to[]` list. Destinations are selected by `labels`, not by `name`. It cannot target a `MeshHTTPRoute` (a route).
+> A top-level `spec.targetRef` accepts only `Mesh` or `Dataplane`.
+> So `MeshRetry` selects the clients whose retries it configures, and names the destination in the `to[]` list.
+> The `to[]` entry selects the destination by its `kuma.io/display-name` label.
+> See [Accepted values by field](/mesh/policy-targeting/#accepted-values-by-field).
 
 {:.info}
-> Pair this with `MeshCircuitBreaker` to stop the mesh from hammering an external service that is already struggling, and `MeshTimeout` to bound the total time spent retrying.
-
-## Summary
-
-By using `MeshExternalService`, Kong Air has achieved:
-1. Explicit outbound inventory: External dependencies are represented as named resources instead of unmanaged passthrough destinations.
-2. Stable internal naming: Developers use mesh-generated names such as `aeropay-api.extsvc.mesh.local`.
-3. Access control at the egress: `MeshTrafficPermission` on the zone egress Dataplane restricts which workloads can reach each external service, paired with the deny-all default in mesh-scoped zone proxies.
-4. Centralized policy control: Retries, timeouts, and TLS settings live in mesh policy rather than scattered application config.
+> Pair `MeshRetry` with `MeshCircuitBreaker`, so the mesh stops sending requests to an external service that's already failing.
+> Add `MeshTimeout` to limit the total time spent on retries.
 
 ## Validate
 
-1. Confirm both `MeshExternalService` resources were accepted and given a mesh-generated hostname:
+1. Confirm that the control plane accepted both `MeshExternalService` resources and gave each one a mesh-generated hostname:
 
    ```sh
    kubectl get meshexternalservice -n {{site.mesh_namespace}}
    ```
 
-   Expected output, the `HOSTNAME` column confirms each external dependency got a stable internal name:
+   Expected output, where the `HOSTNAME` column shows the stable internal name of each external dependency:
 
    ```text
    NAME          HOSTNAME
@@ -290,7 +320,7 @@ By using `MeshExternalService`, Kong Air has achieved:
    ```
    {:.no-copy-code}
 
-1. Confirm a mesh-scoped zone egress is carrying `kong-air-mesh`. Everything else in this scenario depends on it, and an empty result is the cause of a `503` that DNS cannot explain:
+1. Confirm that a mesh-scoped zone egress serves `kong-air-mesh`. Every step in this guide depends on the zone egress. When this command returns nothing, the missing zone egress causes any `503` that DNS doesn't explain:
 
    ```sh
    kubectl get dataplanes.kuma.io -n {{site.mesh_namespace}} \
@@ -300,20 +330,20 @@ By using `MeshExternalService`, Kong Air has achieved:
    Expected output: one `Dataplane`, named after the zone egress pod.
    {:.no-copy-code}
 
-1. Confirm `flight-control`, the workload authorized by `flight-db-access`, can resolve the generated hostname to its mesh-assigned virtual IP:
+1. Confirm that `flight-control`, the workload that `flight-db-access` allows, resolves the generated hostname to its mesh-assigned virtual IP:
 
    ```sh
    kubectl exec -n kong-air-production deploy/flight-control -- nslookup flight-db.extsvc.mesh.local
    ```
 
-   Expected output: the hostname resolves to an address in the `MeshExternalService` VIP range, confirming `flight-db` is reachable through its generated name rather than the raw RDS endpoint.
+   Expected output: the hostname resolves to an address in the `MeshExternalService` virtual IP range. `flight-control` addresses `flight-db` by its generated name instead of the raw RDS endpoint.
    {:.no-copy-code}
 
-1. Confirm the permission is doing the work. Call the AeroPay hostname from a workload no `allow` entry names, and the zone egress rejects it:
+1. Confirm that the permission controls access. Call the AeroPay hostname from `check-in-api`, which no `allow` entry names:
 
    ```sh
    kubectl exec -n kong-air-production deploy/check-in-api -- wget -q -T 10 -O- http://aeropay-api.extsvc.mesh.local
    ```
 
-   Expected output: `403 Forbidden`. The connection reached the zone egress and was denied there, which is the deny-all default doing its job. Grant access by adding an `allow` entry for that workload's SPIFFE ID and the AeroPay SNI.
+   Expected output: `403 Forbidden`. The connection reached the zone egress, and the zone egress denied it by default. To grant access, add an `allow` entry with the workload's SPIFFE ID and the AeroPay SNI.
    {:.no-copy-code}

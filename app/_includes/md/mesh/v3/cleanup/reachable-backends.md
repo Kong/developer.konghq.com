@@ -1,4 +1,6 @@
-Turn restricted outbound back off first, so that removing the declarations reopens the call paths rather than closing them permanently:
+Turn off restricted outbound first.
+When restricted outbound is off, removing the declarations reopens the call paths.
+When it's on, removing them closes the call paths:
 
 ```sh
 helm upgrade kong-mesh kong-mesh/kong-mesh \
@@ -13,9 +15,10 @@ kubectl wait -n kong-mesh-system --for=condition=ready pod \
   --selector=app=kong-mesh-control-plane --timeout=90s
 ```
 
-This returns the control plane to the state the rest of the collection expects.
+The control plane is now back in the state that the rest of the collection expects.
 
-Then remove the `kuma.io/reachable-backends` annotation from the three Kong Air deployments. Leaving the declarations in place keeps each proxy bounded to the destinations listed here, which closes the call paths the later guides depend on:
+Remove the `kuma.io/reachable-backends` annotation from the three Kong Air deployments.
+If you leave the declarations in place, each proxy stays limited to the destinations listed here, and the call paths that later guides depend on stay closed:
 
 ```sh
 kubectl patch deployment passenger-portal check-in-api flight-control -n kong-air-production \
@@ -28,14 +31,14 @@ Wait for the pods to roll out:
 kubectl rollout status deployment -n kong-air-production --timeout=120s
 ```
 
-Confirm no declaration is left:
+Confirm that no declaration remains:
 
 ```sh
 kubectl get pods -n kong-air-production \
   -o jsonpath='{range .items[*]}{.metadata.labels.app}{"\t"}{.metadata.annotations.kuma\.io/reachable-backends}{"\n"}{end}'
 ```
 
-Each workload is listed with an empty value:
+The output lists each workload with an empty value:
 
 ```text
 check-in-api
@@ -44,4 +47,5 @@ passenger-portal
 ```
 {:.no-copy-code}
 
-Order matters here. On a control plane where `defaults.restrictOutbound` is still enabled, removing the annotation does not reopen those paths, because a proxy that declares nothing reaches nothing. On a running mesh, declare the destinations each workload needs rather than removing the annotation, unless you are tearing the whole scenario down.
+On a running mesh, declare the destinations each workload needs instead of removing the annotation.
+Remove the annotation only when you tear down the whole scenario.

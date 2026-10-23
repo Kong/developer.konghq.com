@@ -2,7 +2,7 @@
 title: Secure the perimeter with MeshPassthrough
 content_type: how_to
 permalink: /mesh/secure-the-perimeter-with-meshpassthrough/
-description: Learn how to control outbound traffic to external services using the MeshPassthrough policy, moving from an open mesh to a zero-trust perimeter.
+description: Use the MeshPassthrough policy to control outbound traffic to destinations outside the mesh, and move the Kong Air mesh from open outbound access to an allowlist.
 breadcrumbs:
   - /mesh/
   - /mesh/scenarios/
@@ -19,15 +19,17 @@ series:
 tldr:
   q: How do I control traffic to services outside the mesh?
   a: |
-    On a control plane that allows outbound traffic by default, use **MeshPassthrough** to:
-    1. **Restrict access** by setting `passthroughMode: None`.
-    2. **Allowlist destinations** by matching specific domains (for example, `*.google.com`).
-    3. **Enable visibility** by managing the mesh perimeter explicitly.
+    On a control plane that sets `restrictOutbound` to `false`, apply a **MeshPassthrough** policy to:
+    1. **Block unknown destinations** with `passthroughMode: None`.
+    2. **Allow specific destinations** with `passthroughMode: Matched` and `appendMatch` entries (for example, `*.google.com` on port 80).
+    3. **Keep one auditable record** of the external destinations your workloads can reach.
 prereqs:
   inline:
     - title: Transparent proxy
       content: |
-        `MeshPassthrough` only applies to sidecars running with transparent proxy, which is the default for the Kubernetes sidecar injector. The control plane records a policy warning and skips the proxy otherwise.
+        `MeshPassthrough` applies only to sidecars that run with transparent proxying.
+        The Kubernetes sidecar injector turns on transparent proxying by default.
+        For a proxy without it, the control plane skips the policy and records a warning.
 cleanup:
   inline:
     - title: Remove the passthrough policies
@@ -42,8 +44,8 @@ related_resources:
     url: /mesh/policies/meshpassthrough/
   - text: MeshTrafficPermission
     url: /mesh/policies/meshtrafficpermission/
-  - text: Policy targeting and precedence
-    url: /mesh/policy-targeting-and-precedence/
+  - text: Policy targeting
+    url: /mesh/policy-targeting/
   - text: Prepare the mesh for production
     url: /mesh/prepare-the-mesh-for-production/
 ---
@@ -52,65 +54,52 @@ related_resources:
 
 ### Open mesh
 
-Sidecars allow all traffic to any external destination. This is handled by the Envoy "Original Destination" cluster.
+In an open mesh, a sidecar forwards traffic to any external destination.
+Envoy sends that traffic through its "Original Destination" cluster, which connects to the address the application dialed.
 
-This is the state the Kong Air mesh starts in, because its control plane sets `defaults.restrictOutbound` to `false`. That same setting governs the default passthrough cluster: with it on, which is the {{site.mesh_product_name}} 3.0 default, a proxy with no matching `MeshPassthrough` policy does not get the passthrough cluster at all, and external traffic is already closed. Check the setting on your own control plane before assuming which of these two states you are starting from. [Prepare the mesh for production](/mesh/prepare-the-mesh-for-production/) covers turning it on.
-*   Risk: If a workload is compromised, it can exfiltrate data to any server on the internet.
-*   Visibility: No centralized logging or control over what external services are being consumed.
+The Kong Air mesh starts open because the Kong Air control plane sets `restrictOutbound` to `false`.
+With that setting, a proxy that no `MeshPassthrough` policy selects forwards traffic to any destination.
+{{site.mesh_product_name}} 3.0 defaults `restrictOutbound` to `true`.
+With the default, a proxy that no `MeshPassthrough` policy selects drops that traffic instead.
+Check the setting on your own control plane to know which state you start from.
+[Prepare the mesh for production](/mesh/prepare-the-mesh-for-production/) turns the setting on for Kong Air.
+
+An open mesh has the following weaknesses:
+*   Risk: If an attacker compromises a workload, the workload can send data to any server on the internet.
+*   Visibility: Nothing records or controls which external services your workloads call.
 
 ### Secure mesh (zero-trust)
 
-Using `MeshPassthrough`, you explicitly define which outbound destinations are allowed.
-*   Benefit: Policy-driven control and an explicit allowlist for traffic leaving the mesh.
-*   Auditability: A single, declarative record of which external destinations workloads may reach, useful evidence for controls like PCI, HIPAA, or SOC 2.
+In a secure mesh, you use `MeshPassthrough` to list the outbound destinations that workloads can reach.
+*   Benefit: A policy controls the traffic that leaves the mesh, through an explicit allowlist.
+*   Auditability: One declarative record lists the external destinations that workloads can reach. That record is useful evidence for controls like PCI, HIPAA, or SOC 2.
 
-`MeshPassthrough` governs the destinations a sidecar can reach that are not modelled in the mesh. It is the control for the long tail of outbound calls. Once a destination is important enough to name, model it as a `MeshExternalService` instead, which is the subject of the next scenario.
+`MeshPassthrough` controls the destinations that a sidecar can reach but that the mesh doesn't model as services.
+Use it for the long tail of outbound calls.
+When a destination matters enough to name, model it as a `MeshExternalService` instead, as in [Manage external services with MeshExternalService](/mesh/manage-external-services-with-meshexternalservice/).
 
 ## How MeshPassthrough decides
 
-A `MeshPassthrough` policy carries a single `passthroughMode`:
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Mode
-    key: mode
-  - title: Effect
-    key: effect
-  - title: Does `appendMatch` apply?
-    key: append
-rows:
-  - mode: "`All`"
-    effect: "Every unmatched outbound destination is reachable. This is the open mesh."
-    append: "No"
-  - mode: "`None`"
-    effect: "No unmatched outbound destination is reachable."
-    append: "No"
-  - mode: "`Matched`"
-    effect: "Only the destinations listed in `appendMatch` are reachable."
-    append: "Yes"
-{% endtable %}
-<!-- vale on -->
-
-Two defaults are easy to confuse, and they point in opposite directions:
-
-* With **no** `MeshPassthrough` policy at all, the `Mesh` controls passthrough through `networking.outbound.passthrough`, which is `true` when unset. Outbound traffic is open.
-* With a `MeshPassthrough` policy whose `passthroughMode` is **omitted**, the policy defaults to `Matched`. A `Matched` policy with no `appendMatch` entries reaches nothing, so omitting the field is a deny, not a no-op.
+A `MeshPassthrough` policy sets what a sidecar does with traffic to unknown destinations through its `passthroughMode` field.
+In this guide, you move Kong Air from `All` (every unknown destination passes) to `None` (no unknown destination passes), then to `Matched` (only the destinations in `appendMatch` pass).
+A policy that leaves out `passthroughMode` uses `Matched`, so a policy without `appendMatch` entries blocks every unknown destination.
+For the full behavior of each mode, see [MeshPassthrough modes](/mesh/policies/meshpassthrough/#modes).
 
 ### Where the policy lives
 
-The examples in this guide create policies in `kong-air-production`, the application namespace. The control plane computes `kuma.io/policy-role: workload-owner` for a single-item policy in an application namespace, and that role restricts the policy to proxies in the same namespace. `targetRef.kind: Mesh` therefore means "every Kong Air proxy in this namespace", which is what an application team should be able to set for itself.
-
-To set a perimeter for the whole mesh, including workloads in other namespaces, create the policy in `{{site.mesh_namespace}}` instead, where it computes to the `system` role and carries no namespace restriction. On a zone control plane connected to a global control plane, a policy in the system namespace must also carry `kuma.io/origin: zone`. See [Resource scoping](/mesh/resource-scoping/).
-
-{:.info}
-> Interaction with mesh-scoped zone egress. A mesh-scoped zone egress is **deny-all** by default for `MeshExternalService` traffic. Every `MeshExternalService` filter chain ends in a deny, so a call returns `403 Forbidden` until a `MeshTrafficPermission` names both the caller's SPIFFE ID and the destination SNI. `MeshPassthrough` is the control for everything that is not modelled as an external service. See [Manage external services with MeshExternalService](/mesh/manage-external-services-with-meshexternalservice/).
+The examples in this guide create policies in `kong-air-production`, the application namespace.
+In an application namespace, a `MeshPassthrough` policy reaches only the proxies in that namespace.
+`targetRef.kind: Mesh` therefore selects every Kong Air proxy in `kong-air-production`, so an application team can set its own perimeter.
+To set one perimeter for every namespace in the zone, create the policy in `{{site.mesh_namespace}}` instead.
+For how the namespace sets a policy's reach, see [Policy scope](/mesh/policy-targeting/#policy-scope).
 
 ## Move the mesh from open to allowlisted
 
-Each step replaces the previous one. Apply them in order, deleting the policy you are moving on from, so that exactly one `Mesh`-scoped `MeshPassthrough` policy is in force at a time.
+Apply the following steps in order.
+Each step replaces the previous policy, so delete the old policy before you apply the next one.
+That way, only one `Mesh`-scoped `MeshPassthrough` policy is in force at a time.
 
-1. Record the starting point. Pick a destination your cluster can resolve and reach, and confirm it works before any policy exists. Without this baseline you cannot tell a policy block apart from a DNS failure, because both produce a silent non-zero exit:
+1. Record the starting point. Pick a destination that your cluster can resolve and reach, and confirm that `check-in-api` reaches it before any policy exists. Without this baseline, you can't tell a policy block from a DNS failure, because both fail silently with a non-zero exit status:
 
    ```sh
    kubectl exec -n kong-air-production deploy/check-in-api -- wget -q -T 5 -O- http://www.google.com
@@ -119,7 +108,7 @@ Each step replaces the previous one. Apply them in order, deleting the policy yo
    Expected result: the command prints the response body.
    {:.no-copy-code}
 
-1. Make the open posture explicit. `passthroughMode: All` states the behavior the mesh already has, which is useful as a declared baseline that an audit can read:
+1. Make the open posture explicit with an `allow-all-passthrough` policy. `passthroughMode: All` states the behavior that the mesh already has, so an audit can read it as a declared baseline:
 
    ```sh
    kubectl apply -f - <<'EOF'
@@ -138,7 +127,7 @@ Each step replaces the previous one. Apply them in order, deleting the policy yo
    EOF
    ```
 
-1. Close the perimeter. Delete the open policy first, otherwise it keeps winning on name order and nothing changes:
+1. Close the perimeter with a `secure-perimeter` policy that sets `passthroughMode: None`. Delete `allow-all-passthrough` first. Otherwise, `allow-all-passthrough` keeps winning on name order, and nothing changes:
 
    ```sh
    kubectl delete meshpassthrough allow-all-passthrough -n kong-air-production
@@ -158,9 +147,9 @@ Each step replaces the previous one. Apply them in order, deleting the policy yo
    EOF
    ```
 
-   Every Kong Air proxy in `kong-air-production` now reaches only the destinations the mesh knows about. Traffic to anything else is dropped at the sidecar.
+   Every Kong Air proxy in `kong-air-production` now reaches only the destinations that the mesh knows about. The sidecar drops traffic to any other destination.
 
-1. Reopen the destinations you have decided to allow. `appendMatch` accepts `Domain`, `IP`, and `CIDR` entries, each with an optional `port` and a `protocol` that defaults to `tcp`:
+1. Reopen the destinations you decided to allow with a `selective-passthrough` policy. `appendMatch` accepts `Domain`, `IP`, and `CIDR` entries. Each entry takes an optional `port`, and a `protocol` that defaults to `tcp`:
 
    ```sh
    kubectl delete meshpassthrough secure-perimeter -n kong-air-production
@@ -193,30 +182,36 @@ Each step replaces the previous one. Apply them in order, deleting the policy yo
    EOF
    ```
 
-   A match is a destination, a port, and a protocol together. `*.google.com` on port 80 over HTTP does not allow the same host on port 443, so an application that upgrades to HTTPS needs its own entry. For the validation rules on wildcards, ports, and protocols, see [MeshPassthrough](/mesh/policies/meshpassthrough/).
+   A match combines a destination, a port, and a protocol. The `*.google.com` entry on port 80 over HTTP doesn't allow the same host on port 443, so an application that upgrades to HTTPS needs its own entry. For the validation rules on wildcards, ports, and protocols, see [MeshPassthrough](/mesh/policies/meshpassthrough/).
 
 {:.info}
-> Use `MeshPassthrough` at the `Mesh` level to set a security baseline, then use a `Dataplane` selector to grant exceptions to the workloads that need broader access. A `Dataplane` selector is more specific than `Mesh`, so the exception wins for the proxies it matches and leaves the baseline in place for everything else.
+> Use a `Mesh`-level `MeshPassthrough` policy to set a security baseline, then use a `Dataplane` selector to grant exceptions to the workloads that need broader access.
+> A `Dataplane` selector is more specific than `Mesh`, so the exception wins for the proxies it matches.
+> The baseline stays in place for every other proxy.
+> See [Policy precedence](/mesh/policy-targeting/#policy-precedence).
 
 ## Interaction with egress gateways
 
-For a perimeter you can audit centrally, combine `MeshPassthrough` with a zone egress.
-
-1. Direct mode: the sidecar calls the external destination itself, and `MeshPassthrough` is enforced in the sidecar.
-1. Egress mode: outbound traffic is routed to the zone egress. Traffic to a `MeshExternalService` leaves through that proxy and is governed there with `MeshTrafficPermission`, which denies it until a rule allows the caller. Passthrough traffic, which by definition has no `MeshExternalService`, is still decided by `MeshPassthrough` at the sidecar.
+`MeshPassthrough` and a mesh-scoped zone egress control different traffic.
+The sidecar enforces `MeshPassthrough` on traffic to destinations that the mesh doesn't model, and it connects to those destinations directly.
+A zone egress carries `MeshExternalService` traffic.
+On the zone egress, `MeshTrafficPermission` denies every call with `403 Forbidden` until a rule allows the caller to reach that destination.
+The zone egress also isn't on the default cross-zone path, because a sidecar connects directly to the remote zone ingress.
+For both paths, see [Traffic paths](/mesh/mesh-scoped-zone-proxies/#traffic-paths).
+To send a dependency through the zone egress, model it as a `MeshExternalService`, as in [Manage external services with MeshExternalService](/mesh/manage-external-services-with-meshexternalservice/).
 
 ## Validate
 
-1. Confirm a destination outside the allowlist is blocked. Use a host that succeeded in the baseline step, so a failure now can only come from the policy:
+1. Confirm that the policy blocks a destination outside the allowlist. Use a host that your cluster can resolve and reach, so that only the policy can cause a failure:
 
    ```sh
    kubectl exec -n kong-air-production deploy/check-in-api -- wget -q -T 5 -O- http://www.bing.com
    ```
 
-   Expected result: the command fails with a non-zero exit status and prints no response body. The sidecar has no filter chain for this destination, so the connection is dropped rather than refused.
+   Expected result: the command fails with a non-zero exit status and prints no response body. The sidecar has no filter chain for this destination, so it drops the connection without a response.
    {:.no-copy-code}
 
-1. Confirm the allowlist entry still works:
+1. Confirm that the `*.google.com` entry still allows traffic to that host on port 80:
 
    ```sh
    kubectl exec -n kong-air-production deploy/check-in-api -- wget -q -T 5 -O- http://www.google.com
@@ -225,13 +220,14 @@ For a perimeter you can audit centrally, combine `MeshPassthrough` with a zone e
    Expected result: the command prints the response body.
    {:.no-copy-code}
 
-1. Confirm the match is port-specific and protocol-specific. The same host on port 443 is not covered by the port 80 entry:
+1. Confirm that each match applies to one port and one protocol. The port 80 entry doesn't cover the same host on port 443:
 
    ```sh
    kubectl exec -n kong-air-production deploy/check-in-api -- wget -q -T 5 -O- https://www.google.com
    ```
 
-   Expected result: the command fails. Add a second `appendMatch` entry for port 443 with `protocol: tls` if the workload needs HTTPS to this host.
+   Expected result: the command fails. If the workload needs HTTPS to this host, add a second `appendMatch` entry for port 443 with `protocol: tls`.
    {:.no-copy-code}
 
-Policies reach the proxies over xDS within a few seconds and need no restart. If a result looks stale, wait and run the command again.
+The control plane sends policies to the proxies over xDS within a few seconds, and the proxies don't need a restart.
+If a result looks stale, wait and run the command again.

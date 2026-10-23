@@ -1,4 +1,6 @@
-Your global control plane is hosted in {{site.konnect_short_name}}, so you can't reach it with `kubectl`. Global resources, including the `Mesh` itself, are created with [kongctl](/kongctl/), which requires {{site.mesh_product_name}} 3.0 or later.
+{{site.konnect_short_name}} hosts your global control plane, so you can't reach it with `kubectl`.
+You create global resources, including the `Mesh`, with [kongctl](/kongctl/).
+kongctl supports {{site.mesh_product_name}} 3.0 and later.
 
 1. Authenticate to {{site.konnect_short_name}} using the browser-based device flow:
 
@@ -6,7 +8,7 @@ Your global control plane is hosted in {{site.konnect_short_name}}, so you can't
    kongctl login
    ```
 
-   kongctl prints a URL. Open it, authorize the CLI, and return to your terminal. See [Authentication with kongctl](/kongctl/authentication/).
+   kongctl prints a URL. Open the URL, authorize the CLI, and return to your terminal. See [Authentication with kongctl](/kongctl/authentication/).
 
 1. List the {{site.mesh_product_name}} control planes your account can reach:
 
@@ -14,9 +16,9 @@ Your global control plane is hosted in {{site.konnect_short_name}}, so you can't
    kongctl get mesh control-planes
    ```
 
-   Each row reports a name, an identifier, and the {{site.konnect_short_name}} API line the control plane is reached on. Only control planes on the `v3` line run {{site.mesh_product_name}} 3.
+   Each row shows a name, an identifier, and the {{site.konnect_short_name}} API line that serves the control plane. Only control planes on the `v3` line run {{site.mesh_product_name}} 3.
 
-1. Export the name of the control plane you want to use, so the rest of this guide can address it:
+1. Export the name of the control plane you want to use, so that later commands can reference it:
 
    ```sh
    export MESH_CP='YOUR CONTROL PLANE NAME'

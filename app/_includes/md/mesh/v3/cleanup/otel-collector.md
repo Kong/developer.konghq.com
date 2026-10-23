@@ -8,7 +8,7 @@
      meshopentelemetrybackend/otel-collector
    ```
 
-   Delete the policies before the collector. A policy left pointing at a backend that no longer exists keeps its `backendRef` unresolved and exports nothing, which looks like a broken collector rather than a removed one.
+   Delete the policies before the collector. A policy that points at a deleted backend keeps its `backendRef` unresolved and exports nothing. That state looks like a broken collector instead of a removed one.
 
 1. Delete the collector and its configuration:
 

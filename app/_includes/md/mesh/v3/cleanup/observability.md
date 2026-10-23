@@ -7,7 +7,7 @@
    kubectl delete meshopentelemetrybackend otel-collector -n {{site.mesh_namespace}} --ignore-not-found
    ```
 
-   With the `MeshMetric` policies gone, the sidecars stop exposing their Prometheus endpoints, so the dashboards go empty.
+   Without the `MeshMetric` policies, the sidecars stop exposing their Prometheus endpoints, and the dashboards go empty.
 
 1. If you provisioned the Grafana dashboards as ConfigMaps, delete them:
 
@@ -15,4 +15,4 @@
    kubectl delete configmap -n mesh-observability -l grafana_dashboard=1
    ```
 
-1. To remove the observability stack itself, follow the teardown steps in [Deploy an OpenTelemetry collector](/mesh/deploy-an-opentelemetry-collector/). It was installed outside this guide, and other workloads may be reporting into it.
+1. To remove the observability stack, follow the teardown steps in [Deploy an OpenTelemetry collector](/mesh/deploy-an-opentelemetry-collector/). That guide installed the stack, and other workloads can report into it.

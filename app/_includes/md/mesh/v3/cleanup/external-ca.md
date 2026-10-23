@@ -1,6 +1,6 @@
 Remove only the resources for the provider you followed.
 
-1. Restore the `MeshTrafficPermission` to the default trust domain. Do this first, so `check-in-api` keeps accepting traffic once `flight-control` falls back to the mesh-wide identity:
+1. Restore the `MeshTrafficPermission` to the default trust domain. Run this step first, so that `check-in-api` keeps accepting traffic when `flight-control` falls back to the mesh-wide identity:
 
    ```bash
    kubectl apply -f - <<'EOF'
@@ -11,7 +11,6 @@ Remove only the resources for the provider you followed.
      namespace: {{site.mesh_namespace}}
      labels:
        kuma.io/mesh: kong-air-mesh
-       kuma.io/origin: zone
    spec:
      targetRef:
        kind: Dataplane
@@ -26,7 +25,7 @@ Remove only the resources for the provider you followed.
    EOF
    ```
 
-1. If you followed the `Bundled` provider, delete the identity and the CA material you handed it:
+1. If you followed the `Bundled` provider, delete the identity and the CA material you gave it:
 
    ```sh
    kubectl delete meshidentity flight-operations-id -n {{site.mesh_namespace}} --ignore-not-found
@@ -50,9 +49,10 @@ Remove only the resources for the provider you followed.
    ```
 
    {:.info}
-   > Generated `MeshTrust` resources are owned by the `Mesh`, not by the `MeshIdentity`, so they are not garbage collected when you delete the identity. Delete them explicitly, otherwise the mesh keeps trusting a CA that no longer issues anything.
+   > The `Mesh` owns the generated `MeshTrust` resources, so Kubernetes doesn't garbage-collect them when you delete the `MeshIdentity`.
+   > Delete them explicitly. Otherwise, the mesh keeps trusting a CA that no longer issues certificates.
 
-1. Confirm the workloads fell back to the mesh-wide identity. This happens over xDS within a few seconds, with no restart:
+1. Confirm that the workloads fell back to the mesh-wide identity. The control plane sends the change over xDS within a few seconds, and the workloads don't restart:
 
    ```sh
    FLIGHT_POD=$(kubectl get pod -n kong-air-production -l app=flight-control -o jsonpath='{.items[0].metadata.name}')
@@ -66,7 +66,7 @@ Remove only the resources for the provider you followed.
    ```
    {:.no-copy-code}
 
-1. If you installed cert-manager only for this guide, remove it. Skip this if anything else in the cluster uses it:
+1. If you installed cert-manager only for this guide, remove it. Skip this step if anything else in the cluster uses cert-manager:
 
    ```sh
    kubectl delete -f https://github.com/cert-manager/cert-manager/releases/download/v1.16.3/cert-manager.yaml

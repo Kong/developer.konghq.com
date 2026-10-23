@@ -49,20 +49,23 @@ tldr:
   a: |
     Run an OpenTelemetry collector as a per-node Kubernetes `DaemonSet` that receives metrics, traces, and access logs over OTLP and forwards them to your backends.
 
-    Then create a `MeshOpenTelemetryBackend` to name that collector, and point `MeshMetric`, `MeshTrace`, and `MeshAccessLog` at it with a `backendRef`. In {{site.mesh_product_name}} 3.0 a `backendRef` is the only way to configure an OpenTelemetry backend on those policies.
+    Then create a `MeshOpenTelemetryBackend` that names the collector, and reference it from `MeshMetric`, `MeshTrace`, and `MeshAccessLog` with a `backendRef`.
+    In {{site.mesh_product_name}} 3.0, a `backendRef` is the only way to set an OpenTelemetry backend on these policies.
 
 faqs:
-  - q: What should I check if no telemetry reaches the collector?
+  - q: What do I check if no telemetry reaches the OpenTelemetry collector?
     a: |
-      Walk back through these checks:
+      When no telemetry reaches the OpenTelemetry collector, check the following:
 
-      - Does the policy's `backendRef` resolve? `kubectl get meshtrace all-traces -n {{site.mesh_namespace}} -o jsonpath='{.status.conditions}'` reports `AllBackendRefsResolved` when it does. A `backendRef` that matches nothing leaves the policy accepted and silently exports nothing.
-      - Did you apply the policy to the right `Mesh`? On a zone control plane connected to a global control plane, every resource in `{{site.mesh_namespace}}` also needs the `kuma.io/origin: zone` label.
-      - Is the collector listening where `kuma-dp` is dialing? With an empty `MeshOpenTelemetryBackend` spec, `kuma-dp` dials the node IP on port 4317, which needs `hostPort: 4317` on the collector container.
-      - Is the collector Pod running without a sidecar? A collector that receives telemetry through its own sidecar is a circular dependency.
+      - Does each policy's `backendRef` resolve? The policy's `BackendRefsResolved` condition reports `AllBackendRefsResolved` when it does. A `backendRef` that matches nothing exports nothing.
+      - Does the collector listen where `kuma-dp` sends? With an empty `MeshOpenTelemetryBackend` spec, `kuma-dp` sends to port 4317 on the node IP, so the collector container needs `hostPort: 4317`.
+      - Does the collector run outside the mesh? A collector with a sidecar rejects the plaintext export.
+
+      For more checks, see [Verify backend references](/mesh/meshopentelemetrybackend/#verify-backend-references).
   - q: How do I run the collector as a Deployment instead?
     a: |
-      Use a Deployment for small and medium clusters, or any cluster where collector throughput isn't a bottleneck. A Deployment has no node-local address, so the `MeshOpenTelemetryBackend` has to name the Service explicitly rather than rely on the node-local default.
+      A collector Deployment suits small and medium clusters, or any cluster where collector throughput isn't a bottleneck.
+      A Deployment has no node-local address, so the `MeshOpenTelemetryBackend` must name the collector `Service`.
 
       Replace the DaemonSet in [Deploy the collector](#deploy-the-collector) with a Deployment behind the same `ClusterIP` service, and drop the `hostPort` entries:
 
@@ -111,7 +114,7 @@ faqs:
       EOF
       ```
 
-      Then name the Service in the `MeshOpenTelemetryBackend` spec:
+      Then set the `Service` address in the `MeshOpenTelemetryBackend` spec:
 
       ```yaml
       spec:
@@ -121,24 +124,25 @@ faqs:
         protocol: grpc
       ```
 
-      The same `endpoint.address` works for a collector outside the cluster. `protocol` accepts `grpc` or `http` and defaults to `grpc`. `endpoint.path` is a base path prefix for HTTP endpoints only, and the control plane appends the signal suffixes (`/v1/traces`, `/v1/metrics`, `/v1/logs`) itself. Setting a non-empty `path` with `protocol: grpc` fails validation.
+      The same `endpoint.address` field works for a collector outside the cluster.
+      For `protocol`, `endpoint.path`, and their rules, see [Configure the collector connection](/mesh/meshopentelemetrybackend/#configure-the-collector-connection).
   - q: Can one collector serve several meshes?
     a: |
-      Yes. The collector is an ordinary workload outside the mesh, so nothing about it is mesh-scoped. `MeshOpenTelemetryBackend` is, though: it carries a `kuma.io/mesh` label and lives in `{{site.mesh_namespace}}`, so each mesh needs its own resource pointing at the same collector.
-
-      Give each one a distinct name. A `MeshOpenTelemetryBackend` is bound to the mesh it was first created in, and re-applying the same name with a different `kuma.io/mesh` label is rejected:
-
-      ```text
-      The MeshOpenTelemetryBackend "otel-collector" is invalid: metadata.ownerReferences[0].name: must be the same as the mesh of the resource "kong-air-mesh", got "default". A resource cannot be moved between meshes, delete it and apply it again in the new mesh
-      ```
-
-      Delete the old resource and apply it again under the new mesh, as the message says.
+      Yes, one OpenTelemetry collector can serve several meshes.
+      Each mesh needs its own `MeshOpenTelemetryBackend` that points at the same collector, because a backend belongs to one mesh.
+      Give each backend a distinct name.
+      The control plane rejects a backend that reuses an existing name with a different `kuma.io/mesh` label.
+      For more information, see [MeshOpenTelemetryBackend](/mesh/meshopentelemetrybackend/).
   - q: Can Envoy export telemetry to the collector directly, as it did before 3.0?
     a: |
-      No. `runtime.kubernetes.injector.otelPipeEnabled` and `KUMA_DATAPLANE_RUNTIME_OTEL_PIPE_ENABLED` used to make Envoy export directly. Both settings are removed in 3.0, and the control plane and `kuma-dp` ignore them.
+      No. In {{site.mesh_product_name}} 3.0, `kuma-dp` exports every signal to the collector.
+      3.0 removes the `runtime.kubernetes.injector.otelPipeEnabled` and `KUMA_DATAPLANE_RUNTIME_OTEL_PIPE_ENABLED` settings, and the control plane and `kuma-dp` ignore them.
+      For the export path, see [Collector placement](/mesh/meshopentelemetrybackend/#collector-placement).
   - q: Why is my `MeshAccessLog` rejected after I change its attributes?
     a: |
-      `MeshAccessLog` validates `openTelemetry.attributes[].key` against a strict grammar. A key must start with a lowercase letter, use only lowercase letters, digits, `_`, or `.`, avoid consecutive delimiters, end with a letter or digit, and must not use the reserved `otel.` prefix. Placeholders such as `%KUMA_MESH%` are allowed in values but not in keys.
+      The control plane rejects a `MeshAccessLog` attribute key that isn't a static, lowercase name.
+      Placeholders such as `%KUMA_MESH%` work in attribute values but not in keys, and keys can't start with `otel.`.
+      For the full key rules, see the [MeshAccessLog OpenTelemetry backend](/mesh/policies/meshaccesslog/#opentelemetry).
 
 prereqs:
   inline:
@@ -269,7 +273,7 @@ prereqs:
              -f values-prometheus.yaml
            ```
 
-        [Observe mesh traffic in practice](/mesh/observe-mesh-traffic-in-practice/#prometheus-scrape-jobs) covers the scrape jobs for proxy and control plane metrics.
+        For the scrape jobs for proxy and control plane metrics, see [Prometheus scrape jobs](/mesh/observe-mesh-traffic-in-practice/#prometheus-scrape-jobs).
       icon_url: /assets/icons/prometheus.svg
 
 cleanup:
@@ -278,13 +282,15 @@ cleanup:
       include_content: md/mesh/v3/cleanup/otel-collector
 ---
 
-This guide deploys an OpenTelemetry collector as a per-node Kubernetes `DaemonSet` that receives all three telemetry signals from {{site.mesh_product_name}}: metrics from [MeshMetric](/mesh/policies/meshmetric/), traces from [MeshTrace](/mesh/policies/meshtrace/), and access logs from [MeshAccessLog](/mesh/policies/meshaccesslog/).
+Kong Air sends three telemetry signals from its sidecars to one OpenTelemetry collector: metrics from [MeshMetric](/mesh/policies/meshmetric/), traces from [MeshTrace](/mesh/policies/meshtrace/), and access logs from [MeshAccessLog](/mesh/policies/meshaccesslog/).
+The collector runs as a per-node Kubernetes `DaemonSet` and forwards each signal to its backend.
 
 ## How telemetry reaches the collector
 
-In {{site.mesh_product_name}} 3.0, the proxy does not export to the collector itself. Envoy writes each signal to a Unix socket in the pod, and `kuma-dp` reads from that socket and forwards to the collector over OTLP.
-
-That export bypasses the transparent proxy. `kuma-dp` runs as its own user, and the transparent proxy rules return traffic owned by that user rather than redirecting it. Telemetry never enters an Envoy outbound listener, so passthrough mode, `MeshPassthrough`, `MeshExternalService`, and `reachableBackends` have no bearing on whether the collector is reachable. A collector outside the mesh needs no mesh configuration at all.
+Kong Air telemetry leaves each pod through `kuma-dp`.
+Envoy writes each signal to a Unix socket in the pod, and `kuma-dp` exports it to the collector over OTLP.
+The transparent proxy doesn't intercept this export, so `reachableBackends` and `MeshPassthrough` don't affect it, and the collector can run outside the mesh.
+For where a collector can run, see [Collector placement](/mesh/meshopentelemetrybackend/#collector-placement).
 
 {% mermaid %}
 flowchart LR
@@ -303,15 +309,16 @@ flowchart LR
    kubectl create namespace mesh-observability --dry-run=client -o yaml | kubectl apply -f -
    ```
 
-1. Keep the namespace out of the mesh:
+1. Disable sidecar injection in the `mesh-observability` namespace, so the collector runs outside the mesh:
 
    ```sh
    kubectl label namespace mesh-observability kuma.io/sidecar-injection=disabled --overwrite
    ```
 
-   The collector must run without a sidecar. A collector with a sidecar pushes its own telemetry into itself, which is a circular dependency.
+   The collector must run without a sidecar.
+   `kuma-dp` exports telemetry as plaintext, and a collector with a sidecar rejects these connections under the default `Strict` mTLS mode.
 
-1. Apply the collector configuration:
+1. Create a `ConfigMap` with the collector configuration:
 
    ```sh
    kubectl apply -f - <<'EOF'
@@ -369,17 +376,17 @@ flowchart LR
    EOF
    ```
 
-   The configuration defines three pipelines: traces, metrics, and logs. Each runs a memory limiter, a tuned batch processor, and a debug exporter so you can see telemetry flowing during testing.
+   The collector configuration defines three pipelines: traces, metrics, and logs.
+   Each pipeline runs a memory limiter, a batch processor, and a debug exporter that shows telemetry flowing during testing.
+   The configuration works as follows:
 
-   Notes on this configuration:
+   - `memory_limiter` runs first, as the OpenTelemetry project recommends. The limiter sheds load before later processors allocate memory.
+   - `batch` reduces export overhead. `send_batch_size: 4096` is a starting point. Raise it if your backend reports too many requests, and lower it if your backend reports batches that are too large.
+   - The `debug` exporter runs in every pipeline at `verbosity: basic`, so it logs one line per batch. Remove it from the pipelines after you verify the setup, or set `verbosity: detailed` to see individual records.
+   - `otlp/tempo`, `otlphttp/loki`, and `prometheus` are example exporters. The trace and log exporters send OTLP to a backend. The `prometheus` exporter exposes a `/metrics` endpoint on port 8889 for Prometheus to scrape. Change the addresses to match your backends.
+   - `tls.insecure: true` on the Tempo exporter turns off TLS, so the exporter sends plaintext gRPC to the in-cluster Tempo. In production, point the exporter at a TLS endpoint with a trusted CA, and remove the `insecure` flag.
 
-   - `memory_limiter` runs first. The OpenTelemetry project recommends this order so the collector can shed load before later processors allocate memory. If batching ran first, a burst could exhaust the Pod's memory before the limiter ever saw it.
-   - `batch` reduces export overhead. `send_batch_size: 4096` is a reasonable starting point. Tune up if your backend complains about request rate, down if it complains about batch size.
-   - The `debug` exporter runs in every pipeline at `verbosity: basic`, so each batch shows up as one log line. Drop it from the pipelines once you have verified the setup, or raise it to `verbosity: detailed` when you need to see individual records.
-   - `otlp/tempo`, `otlphttp/loki`, and `prometheus` are examples. The trace and log exporters send OTLP to a backend, and the `prometheus` exporter exposes a `/metrics` endpoint on port 8889 for Prometheus to scrape. Swap the addresses to match your own backends.
-   - `tls.insecure: true` on the Tempo exporter disables certificate verification for the in-cluster example. In production, point the exporter at a TLS endpoint with a trusted CA and remove the `insecure` flag.
-
-1. Apply the DaemonSet and its service:
+1. Create the collector `DaemonSet` and its `Service`:
 
    ```sh
    kubectl apply -f - <<'EOF'
@@ -447,24 +454,33 @@ flowchart LR
    EOF
    ```
 
-   `hostPort: 4317` publishes the collector on each node's own IP, which is what makes the node-local default in [Name the collector with MeshOpenTelemetryBackend](#name-the-collector-with-meshopentelemetrybackend) work. The Service is what Prometheus scrapes on port 8889, and it also gives you a cluster-wide address if you decide to name the collector explicitly instead.
+   `hostPort: 4317` publishes the collector on each node's IP.
+   The node-local default in [Name the collector with MeshOpenTelemetryBackend](#name-the-collector-with-meshopentelemetrybackend) depends on it.
+   Prometheus scrapes the `Service` on port 8889.
+   The `Service` also gives the collector a cluster-wide address, if you later name the collector explicitly.
 
    {:.warning}
-   > A `hostPort` binds the port on every node that runs a collector Pod, so nothing else on those nodes can use 4317 or 4318. The hop is node-local and does not fail over: while a node's collector Pod is restarting, that node's telemetry is dropped rather than sent elsewhere.
+   > A `hostPort` binds the port on every node that runs a collector Pod, so no other workload on those nodes can use port 4317 or 4318.
+   > The hop to the collector stays on the node and does not fail over.
+   > While a node's collector Pod restarts, the proxies on that node lose their telemetry.
 
-1. Wait for the collector to be ready:
+1. Wait for the collector `DaemonSet` to finish rolling out:
 
    ```sh
    kubectl rollout status daemonset/otel-collector -n mesh-observability --timeout=180s
    ```
 
-   Use `rollout status` rather than `kubectl wait` on the Pods. The DaemonSet controller creates the Pods a moment after the apply returns, and `kubectl wait` run immediately fails with `no matching resources found` before they exist.
+   Use `rollout status` instead of `kubectl wait` on the Pods.
+   The DaemonSet controller creates the Pods a moment after `kubectl apply` returns.
+   If you run `kubectl wait` before the Pods exist, it fails with `no matching resources found`.
 
 ## Name the collector with MeshOpenTelemetryBackend
 
-`MeshMetric`, `MeshTrace`, and `MeshAccessLog` do not carry a collector address of their own. Each one reaches the collector through a `backendRef` to a `MeshOpenTelemetryBackend`, so the address lives in one resource and moving the collector is a one-resource change.
+`MeshMetric`, `MeshTrace`, and `MeshAccessLog` don't carry a collector address.
+Each policy reaches the collector through a `backendRef` to a [`MeshOpenTelemetryBackend`](/mesh/meshopentelemetrybackend/).
+The address lives in that one resource, so you change one resource when you move the collector.
 
-Create the backend with an empty spec:
+Create a `MeshOpenTelemetryBackend` named `otel-collector` with an empty spec:
 
 ```sh
 kubectl apply -f - <<'EOF'
@@ -475,18 +491,19 @@ metadata:
   namespace: {{site.mesh_namespace}}
   labels:
     kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: zone
 spec: {}
 EOF
 ```
 
-An empty spec is the node-local default. The control plane defaults the port to 4317 and leaves the address unset, and `kuma-dp` resolves it at runtime from the `HOST_IP` environment variable the injector sets from the Pod's node IP, falling back to `127.0.0.1`. Combined with the `hostPort` on the DaemonSet, every proxy reaches the collector on its own node without a cluster-wide hop.
+With an empty spec, each sidecar sends to port 4317 on its own node's IP, where the `DaemonSet`'s `hostPort` publishes the collector.
+For the fields and their defaults, see [Configure the collector connection](/mesh/meshopentelemetrybackend/#configure-the-collector-connection).
 
-To run the collector somewhere other than on each node, see the FAQ on running it as a Deployment.
+To run the collector as a Deployment instead, see the FAQ about running the collector as a Deployment.
 
 ## Point the policies at the backend
 
-All three policies reference the same backend. Apply them at the `Mesh` level to cover every proxy in the mesh:
+Create a `MeshMetric`, a `MeshTrace`, and a `MeshAccessLog` that all reference the `otel-collector` backend.
+Each policy has a top-level `targetRef` of kind `Mesh` and lives in the system namespace, so it covers every proxy in the zone:
 
 ```sh
 kubectl apply -f - <<'EOF'
@@ -497,7 +514,6 @@ metadata:
   namespace: {{site.mesh_namespace}}
   labels:
     kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: zone
 spec:
   targetRef:
     kind: Mesh
@@ -518,7 +534,6 @@ metadata:
   namespace: {{site.mesh_namespace}}
   labels:
     kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: zone
 spec:
   targetRef:
     kind: Mesh
@@ -540,7 +555,6 @@ metadata:
   namespace: {{site.mesh_namespace}}
   labels:
     kuma.io/mesh: kong-air-mesh
-    kuma.io/origin: zone
 spec:
   targetRef:
     kind: Mesh
@@ -566,11 +580,14 @@ EOF
 ```
 
 {:.info}
-> The `MeshTrace` policy samples 100% of traces so you see something during testing. Drop the rate to single digits in production.
+> The `MeshTrace` policy samples 100% of traces, so you see traces during testing.
+> In production, lower the rate to single digits.
 
 ### Confirm every backendRef resolved
 
-A `backendRef` that matches no `MeshOpenTelemetryBackend` leaves the policy accepted and exports nothing, without reporting an error on the policy itself. Check the status condition on each one:
+When a `backendRef` matches no `MeshOpenTelemetryBackend`, the control plane still accepts the policy, but the policy exports nothing.
+The `BackendRefsResolved` status condition shows whether a policy's references resolved.
+Check the condition on each policy:
 
 ```sh
 for p in meshmetric/all-metrics meshtrace/all-traces meshaccesslog/all-access-logs; do
@@ -578,7 +595,7 @@ for p in meshmetric/all-metrics meshtrace/all-traces meshaccesslog/all-access-lo
 done
 ```
 
-Expected output:
+The output shows `AllBackendRefsResolved` for each policy:
 
 ```text
 all-metrics	AllBackendRefsResolved
@@ -589,13 +606,13 @@ all-access-logs	AllBackendRefsResolved
 
 ## Validate
 
-1. List the collector Pods with their node assignments, and confirm there is one per node:
+1. List the collector Pods with their nodes, and check that each node runs one collector Pod:
 
    ```sh
    kubectl get pod -n mesh-observability -o wide -l app=otel-collector
    ```
 
-1. Send a request that the Kong Air `MeshTrafficPermission` allows:
+1. Send a request from `flight-control` to `check-in-api`, which the Kong Air `MeshTrafficPermission` allows:
 
    ```sh
    kubectl exec -n kong-air-production deploy/flight-control -- \
@@ -609,12 +626,16 @@ all-access-logs	AllBackendRefsResolved
    ```
    {:.no-copy-code}
 
-1. Confirm all three signals reach the collector:
+1. Check that all three signals reach the collector:
 
    ```sh
    kubectl logs -n mesh-observability -l app=otel-collector --tail=40 | grep -E 'Traces|Metrics|Logs'
    ```
 
-   With the `debug` exporter at `verbosity: basic`, each batch shows up as one line per signal. `Traces` and `Logs` lines appear alongside `Metrics`, which flow continuously from Envoy stats. If `Metrics` appears but one of the others is missing, the corresponding `MeshTrace` or `MeshAccessLog` policy is not matching, so check its `targetRef` and its `BackendRefsResolved` condition.
+   With the `debug` exporter at `verbosity: basic`, the collector logs one line per batch for each signal.
+   `Metrics` lines flow continuously from Envoy stats.
+   `Traces` and `Logs` lines appear alongside them after the request.
+   If `Metrics` appears but another signal is missing, the matching `MeshTrace` or `MeshAccessLog` policy doesn't select the proxy.
+   Check the policy's `targetRef` and its `BackendRefsResolved` condition.
 
-With telemetry arriving, [Observe mesh traffic in practice](/mesh/observe-mesh-traffic-in-practice/) covers the Prometheus scrape jobs, the Grafana dashboards, and the policy configuration for reading it back.
+To scrape proxy and control plane metrics and read the telemetry in Grafana, continue with [Observe mesh traffic in practice](/mesh/observe-mesh-traffic-in-practice/).

@@ -1,5 +1,7 @@
 {:.warning}
-> Run this only when you're finished with the whole scenario collection. The other guides in this series build on the same `kong-air-mesh` and Kong Air demo applications, so tearing them down means running the prerequisites again.
+> Run these steps only when you are finished with the whole scenario collection.
+> The other guides in this series build on the same `kong-air-mesh` and Kong Air demo applications.
+> If you delete them, you must run the prerequisites again.
 
 1. Delete the base policies and the demo applications:
 
@@ -10,25 +12,25 @@
    kubectl delete namespace kong-air-production --ignore-not-found
    ```
 
-   Deleting the namespace removes the three deployments, their services, their service accounts, and the nginx `ConfigMap`.
+   Deleting the `kong-air-production` namespace removes the three deployments, their services, their service accounts, and the nginx `ConfigMap`.
 
-1. Delete the mesh. Where you run this depends on where your global control plane lives.
+1. Delete the mesh. The command depends on where your global control plane runs.
 
-   On a {{site.konnect_short_name}}-hosted global control plane, a zone can't delete a global resource, so use kongctl:
+   A zone control plane can't delete a resource that the global control plane owns. On a {{site.konnect_short_name}}-hosted global control plane, delete the mesh with kongctl:
 
    ```sh
    kongctl delete mesh meshes kong-air-mesh --control-plane-name "$MESH_CP"
    ```
 
-   On a self-managed global control plane, point kongctl at its API instead:
+   On a self-managed global control plane, point kongctl at the global control plane API instead:
 
    ```sh
    kongctl delete mesh meshes kong-air-mesh --control-plane-url http://localhost:5681
    ```
 
-   On a standalone control plane, where there is no global and zone split, `kubectl delete mesh kong-air-mesh` works.
+   On a zone control plane that isn't connected to a global control plane, delete the mesh with `kubectl delete mesh kong-air-mesh`.
 
-1. If you installed {{site.mesh_product_name}} only to follow this collection, remove the control plane too. Skip this if the cluster runs other meshes:
+1. If you installed {{site.mesh_product_name}} only for this collection, remove the control plane too. Skip this step if the cluster runs other meshes:
 
    ```sh
    helm uninstall kong-mesh -n {{site.mesh_namespace}}

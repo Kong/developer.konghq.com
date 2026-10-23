@@ -1,7 +1,7 @@
 metadata:
   title: "{{site.mesh_product_name}} scenarios"
   content_type: landing_page
-  description: A curriculum-style set of scenarios for mastering {{site.mesh_product_name}}, from basic concepts to advanced multi-zone operations.
+  description: Scenarios that teach {{site.mesh_product_name}} through the Kong Air story, from basic concepts to multi-zone operations and production readiness.
   products:
     - mesh
   works_on:
@@ -16,7 +16,7 @@ rows:
   - header:
       type: h1
       text: "{{site.mesh_product_name}} scenarios"
-      sub_text: Explore {{site.mesh_product_name}} capabilities by following the Kong Air modernization journey, from securing a first check-in API to operating a global, multi-cloud mesh with zero-trust security.
+      sub_text: Follow Kong Air as it adopts {{site.mesh_product_name}}. The scenarios start with securing a first check-in API and end with a zero-trust, multi-zone mesh ready for production.
 
   - columns:
       - blocks:
@@ -25,12 +25,13 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Work through the scenarios in order, or jump to the phase that matches your goal. If you prefer a role-based view, see [Explore by role](#explore-by-role).
+                    Work through the scenarios in order, or start at the phase that matches your goal.
+                    For a view by role, see [Explore by role](#explore-by-role).
 
   - header:
       type: h2
       text: "Phase 1: Fundamentals"
-      sub_text: "Build the foundation: understand the architecture, secure your first services, and master policy targeting."
+      sub_text: "Build the foundation: learn the architecture, secure your first services, and learn how policies select their targets."
     column_count: 3
     columns:
       - blocks:
@@ -38,7 +39,7 @@ rows:
             config:
               title: Introduction
               description: |
-                High-level overview, and how these scenarios are organized.
+                Meet Kong Air, and see how the scenarios are organized.
               cta:
                 text: Read
                 url: /mesh/introduction/
@@ -47,7 +48,7 @@ rows:
             config:
               title: Architecture overview
               description: |
-                The control plane and data plane, the Envoy proxy, and how they fit together.
+                Learn how the control plane, the data plane, and the Envoy proxy fit together.
               cta:
                 text: Read
                 url: /mesh/architecture-overview/
@@ -65,7 +66,7 @@ rows:
             config:
               title: Create a security policy
               description: |
-                Workload identity with `MeshIdentity`, strict mTLS, and your first default-deny authorization.
+                Issue workload identities with `MeshIdentity` to turn on mTLS and default-deny, then allow the first call with `MeshTrafficPermission`.
               cta:
                 text: Read
                 url: /mesh/create-a-security-policy/
@@ -74,7 +75,7 @@ rows:
             config:
               title: Policy targeting and precedence
               description: |
-                The `targetRef` system, `to`, `rules`, `default`, and policy precedence.
+                Learn how Kong Air policies use `targetRef`, `to`, and `rules`, and which policy wins when several apply.
               cta:
                 text: Read
                 url: /mesh/policy-targeting-and-precedence/
@@ -83,7 +84,7 @@ rows:
             config:
               title: Resource scoping
               description: |
-                Global CP and Zone CP ownership, and the Kubernetes system-namespace rule.
+                Learn which control plane owns each resource, and which Kubernetes namespace each resource lives in.
               cta:
                 text: Read
                 url: /mesh/resource-scoping/
@@ -92,7 +93,7 @@ rows:
             config:
               title: Split traffic with MeshService resources
               description: |
-                Weighted v1/v2 rollouts using explicit `MeshService` resources.
+                Shift traffic between v1 and v2 by weight with explicit `MeshService` resources.
               cta:
                 text: Read
                 url: /mesh/split-traffic-with-meshservice-resources/
@@ -101,7 +102,7 @@ rows:
             config:
               title: Target workloads and services
               description: |
-                `Dataplane` label selectors and explicit `MeshService` targeting.
+                Select proxies with `Dataplane` labels, and select destinations with explicit `MeshService` references.
               cta:
                 text: Read
                 url: /mesh/target-workloads-and-services/
@@ -109,7 +110,7 @@ rows:
   - header:
       type: h2
       text: "Phase 2: Observability and security"
-      sub_text: See how Kong Air gains visibility into every flight-critical request and protects passenger data.
+      sub_text: Give Kong Air visibility into every flight-critical request, and protect passenger data.
     column_count: 3
     columns:
       - blocks:
@@ -126,7 +127,7 @@ rows:
             config:
               title: Observe mesh traffic in practice
               description: |
-                Metrics, traces, logs, and the Grafana dashboards.
+                Collect metrics, traces, and logs, and read them in the Grafana dashboards.
               cta:
                 text: Read
                 url: /mesh/observe-mesh-traffic-in-practice/
@@ -135,7 +136,7 @@ rows:
             config:
               title: Manage workload identity and mTLS
               description: |
-                SPIFFE-based identity with `MeshIdentity` and `MeshTrust`.
+                Issue SPIFFE workload identities with `MeshIdentity`, and publish trust with `MeshTrust`.
               cta:
                 text: Read
                 url: /mesh/manage-workload-identity-and-mtls/
@@ -144,7 +145,7 @@ rows:
             config:
               title: Integrate an external CA
               description: |
-                Root trust in Vault, cert-manager, or ACM Private CA.
+                Root workload identities in your own CA, cert-manager, HashiCorp Vault, or AWS Private CA.
               cta:
                 text: Read
                 url: /mesh/integrate-an-external-ca/
@@ -152,7 +153,7 @@ rows:
   - header:
       type: h2
       text: "Phase 3: Global mesh operations"
-      sub_text: Connect Kong Air's cloud regions and legacy data centers into a single mesh.
+      sub_text: Connect Kong Air's cloud regions and legacy data centers into one mesh.
     column_count: 3
     columns:
       - blocks:
@@ -160,7 +161,7 @@ rows:
             config:
               title: Multi-zone architecture
               description: |
-                ZoneIngress, ZoneEgress, service federation, and Global/Zone CP sync.
+                Learn which control planes, zone proxies, and service resources carry traffic between zones.
               cta:
                 text: Read
                 url: /mesh/multi-zone-architecture/
@@ -169,7 +170,7 @@ rows:
             config:
               title: Configure mesh-scoped zone proxies
               description: |
-                Per-mesh zone proxies deployed through the Helm `meshes:` list.
+                Deploy zone proxies for each mesh through the Helm `meshes:` list.
               cta:
                 text: Read
                 url: /mesh/configure-mesh-scoped-zone-proxies/
@@ -177,7 +178,7 @@ rows:
   - header:
       type: h2
       text: "Phase 4: Expert operations"
-      sub_text: Advanced patterns for controlling the perimeter and integrating external dependencies.
+      sub_text: Control the mesh perimeter, and manage the dependencies that live outside the mesh.
     column_count: 3
     columns:
       - blocks:
@@ -185,7 +186,7 @@ rows:
             config:
               title: Secure the perimeter with MeshPassthrough
               description: |
-                Move to a default-deny posture for outbound traffic.
+                Block outbound traffic to unknown destinations, then allow only the destinations you list.
               cta:
                 text: Read
                 url: /mesh/secure-the-perimeter-with-meshpassthrough/
@@ -194,7 +195,7 @@ rows:
             config:
               title: Manage external services with MeshExternalService
               description: |
-                Manage external APIs and databases as mesh citizens.
+                Give external APIs and databases mesh hostnames, access control, and retries.
               cta:
                 text: Read
                 url: /mesh/manage-external-services-with-meshexternalservice/
@@ -203,7 +204,7 @@ rows:
             config:
               title: Validate resilience with fault injection
               description: |
-                Proactively test mesh resilience with `MeshFaultInjection`.
+                Inject failures with `MeshFaultInjection` to test how Kong Air handles them.
               cta:
                 text: Read
                 url: /mesh/validate-resilience-with-fault-injection/
@@ -211,7 +212,7 @@ rows:
   - header:
       type: h2
       text: "Phase 5: Production readiness"
-      sub_text: Harden the mesh and bound the configuration each proxy receives before it carries real traffic.
+      sub_text: Harden the mesh, and limit the configuration each proxy receives before the mesh carries production traffic.
     column_count: 3
     columns:
       - blocks:
@@ -228,7 +229,7 @@ rows:
             config:
               title: Production readiness checklist
               description: |
-                The 3.0 defaults to set deliberately, and the control plane settings that shape configuration at scale.
+                Review the 3.0 defaults, and the control plane settings that shape configuration at scale.
               cta:
                 text: Read
                 url: /mesh/production-readiness-checklist/
@@ -236,7 +237,7 @@ rows:
   - header:
       type: h2
       text: Explore by role
-      sub_text: Each persona guide maps the scenarios to what that team owns.
+      sub_text: Each role guide maps the scenarios to the work that team owns.
     column_count: 3
     columns:
       - blocks:
@@ -253,7 +254,7 @@ rows:
             config:
               title: Operator
               description: |
-                Control plane, zone proxies, gateways, and observability-as-a-service.
+                Control plane, zone proxies, gateways, and shared observability for platform teams.
               cta:
                 text: View guide
                 url: /mesh/persona/operator/
@@ -262,7 +263,7 @@ rows:
             config:
               title: Security architect
               description: |
-                Zero-trust, workload identity, and egress control.
+                Zero-trust, workload identity, and egress control for security teams.
               cta:
                 text: View guide
                 url: /mesh/persona/security/

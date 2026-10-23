@@ -1,7 +1,7 @@
-This guide requires a running Kubernetes cluster. If you already have a Kubernetes cluster running, you can skip this step. 
-It can be a cluster running locally, like Docker, or in a public cloud, like AWS EKS or GCP GKE.
+This guide requires a running Kubernetes cluster. If you already have one, skip this step.
+The cluster can run locally, like Docker, or in a public cloud, like AWS EKS or GCP GKE.
 
-For example, if you're using [minikube](https://minikube.sigs.k8s.io/docs/):
+For example, if you use [minikube](https://minikube.sigs.k8s.io/docs/), start a cluster:
 
 ```sh
 minikube start -p mesh-zone

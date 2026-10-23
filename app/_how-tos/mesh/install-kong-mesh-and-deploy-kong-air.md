@@ -1,6 +1,6 @@
 ---
 title: Install {{site.mesh_product_name}} and deploy Kong Air
-description: Create the Kong Air mesh in {{site.konnect_short_name}}, connect a Kubernetes zone, and deploy the Kong Air demo applications that the rest of the scenarios build on.
+description: Create the Kong Air mesh in {{site.konnect_short_name}}, connect a Kubernetes zone, and deploy the Kong Air demo applications. The other Kong Air scenarios build on this setup.
 content_type: how_to
 permalink: /mesh/install-kong-mesh-and-deploy-kong-air/
 breadcrumbs:
@@ -30,13 +30,17 @@ tldr:
 faqs:
   - q: How do I authenticate kongctl in CI or another non-interactive environment?
     a: |
-      Use a [personal access token](https://cloud.konghq.com/global/account/tokens) instead of `kongctl login`. kongctl reads it from the `KONGCTL_DEFAULT_KONNECT_PAT` environment variable. See [Authentication with kongctl](/kongctl/authentication/).
+      Use a [personal access token](https://cloud.konghq.com/global/account/tokens) instead of `kongctl login`.
+      kongctl reads the token from the `KONGCTL_DEFAULT_KONNECT_PAT` environment variable.
+      See [Authentication with kongctl](/kongctl/authentication/).
   - q: What if two of my control planes share a name?
     a: |
-      Pass `--control-plane-id` instead of `--control-plane-name` to every `kongctl` mesh command. `kongctl get mesh control-planes --text-id-format full` prints the full identifiers.
+      Pass `--control-plane-id` instead of `--control-plane-name` to every `kongctl` mesh command.
+      See [Choosing a control plane and a mesh](/mesh/cli/#choosing-a-control-plane-and-a-mesh).
   - q: Can I use kongctl with a self-managed global control plane?
     a: |
-      Yes. Skip the {{site.konnect_short_name}} steps and pass `--control-plane-url` with the control plane's API address instead of `--control-plane-name`, adding `--control-plane-token` if the API requires authentication.
+      Yes. Pass `--control-plane-url` instead of `--control-plane-name`.
+      See [Choosing a control plane and a mesh](/mesh/cli/#choosing-a-control-plane-and-a-mesh).
 prereqs:
   inline:
     - title: A running Kubernetes cluster
@@ -59,11 +63,17 @@ next_steps:
     url: "/mesh/create-a-security-policy/"
 ---
 
-Every Kong Air scenario runs against the same foundation: a `kong-air-mesh` mesh on a {{site.konnect_short_name}}-hosted global control plane, one connected Kubernetes zone named `zone1`, and three demo applications. This guide builds that foundation.
+Every Kong Air scenario runs on the same foundation:
+* A `kong-air-mesh` mesh on a {{site.konnect_short_name}}-hosted global control plane
+* One Kubernetes zone named `zone1`, connected to the global control plane
+* Three demo applications
+
+In this guide, you build that foundation.
 
 ## Create the mesh and connect a Kubernetes zone
 
-Create the `Mesh` resource on the {{site.konnect_short_name}} global control plane with [kongctl](/kongctl/):
+The Kong Air zone control plane runs on Kubernetes and connects to the {{site.konnect_short_name}} global control plane.
+You create the mesh on the global control plane with [kongctl](/kongctl/), then install the zone control plane with Helm.
 
 1. Create the `kong-air-mesh` mesh on the global control plane:
 
@@ -74,20 +84,22 @@ Create the `Mesh` resource on the {{site.konnect_short_name}} global control pla
    EOF
    ```
 
-1. Export your {{site.konnect_short_name}} geographic region and the KDS address your zone connects to:
+1. Export your {{site.konnect_short_name}} geographic region and the Kuma Discovery Service (KDS) address that the zone connects to:
 
    ```sh
    export KONNECT_REGION='us'
    export CONTROL_PLANE_URL="grpcs://$KONNECT_REGION.mesh.sync.konghq.com:443"
    ```
 
-1. Export the identifier of your control plane. To print identifiers in full, run `kongctl get mesh control-planes --text-id-format full`:
+1. Export the ID of your control plane.
+   To print the full IDs, run `kongctl get mesh control-planes --text-id-format full`:
 
    ```sh
    export CONTROL_PLANE_ID='YOUR CONTROL PLANE ID'
    ```
 
-1. Issue a zone token, which is how the zone control plane proves its identity when it joins the global control plane:
+1. Issue a zone token.
+   The zone control plane uses this token to prove its identity when it joins the global control plane:
 
    ```sh
    kongctl create mesh zone-token \
@@ -102,7 +114,7 @@ Create the `Mesh` resource on the {{site.konnect_short_name}} global control pla
    kubectl create namespace kong-mesh-system
    ```
 
-1. Store the token in a Kubernetes secret:
+1. Store the zone token in a Kubernetes secret, so the zone control plane can read it at startup:
 
    ```sh
    kubectl create secret generic cp-token \
@@ -110,7 +122,9 @@ Create the `Mesh` resource on the {{site.konnect_short_name}} global control pla
      --from-file=token=zone-token
    ```
 
-1. Create the Helm values file. The `meshes` list tells the zone control plane which meshes to deploy zone ingress and egress listeners for:
+1. Create the Helm values file.
+   The `meshes` entry deploys a zone ingress and a zone egress for `kong-air-mesh`.
+   For details, see [Deploy proxies for a mesh on Kubernetes](/mesh/mesh-scoped-zone-proxies/#kubernetes):
 
    ```sh
    cat <<EOF > values.yaml
@@ -136,7 +150,9 @@ Create the `Mesh` resource on the {{site.konnect_short_name}} global control pla
    EOF
    ```
 
-   `KUMA_DEFAULTS_RESTRICT_OUTBOUND` is set to `false` so that the mesh starts open for testing purposes. [Prepare the mesh for production](/mesh/prepare-the-mesh-for-production/) turns the setting back on, which is the state a production mesh should run in.
+   The values file sets `KUMA_DEFAULTS_RESTRICT_OUTBOUND` to `false`, so the Kong Air mesh starts open on purpose.
+   With this setting, sidecars can reach destinations that you haven't declared yet.
+   [Prepare the mesh for production](/mesh/prepare-the-mesh-for-production/) turns `restrictOutbound` on, which is how a production mesh must run.
 
 1. Add the {{site.mesh_product_name}} Helm repository:
 
@@ -145,7 +161,7 @@ Create the `Mesh` resource on the {{site.konnect_short_name}} global control pla
    helm repo update
    ```
 
-1. Install {{site.mesh_product_name}}:
+1. Install the {{site.mesh_product_name}} zone control plane with your values file:
 
    ```sh
    helm upgrade --install \
@@ -160,17 +176,20 @@ Create the `Mesh` resource on the {{site.konnect_short_name}} global control pla
      --selector=app=kong-mesh-control-plane --timeout=90s
    ```
 
-1. Confirm that the zone joined the global control plane and that the mesh synced down:
+1. Confirm that the zone joined the global control plane and received the mesh:
 
    ```sh
    kubectl get meshes
    ```
 
-   `kong-air-mesh` appears in the output once KDS has delivered it, which proves the zone is connected.
+   The output lists `kong-air-mesh` after the global control plane sends the mesh to the zone over KDS.
+   This confirms that the zone is connected.
 
 ## Deploy Kong Air
 
-1. Deploy the Kong Air demo applications. The `passenger-portal`, `check-in-api`, and `flight-control` services each run in the `kong-air-production` namespace with their own service account, so every workload receives a distinct SPIFFE identity:
+1. Deploy the Kong Air demo applications: `passenger-portal`, `check-in-api`, and `flight-control`.
+   Each application runs in the `kong-air-production` namespace with its own service account.
+   When you add a workload identity in [Create a security policy](/mesh/create-a-security-policy/), each workload gets its own Secure Production Identity Framework for Everyone (SPIFFE) ID:
 
    ```sh
    kubectl apply -f - <<'EOF'
@@ -375,7 +394,7 @@ Create the `Mesh` resource on the {{site.konnect_short_name}} global control pla
    ```
    {:.collapsible}
 
-1. Wait for the resources to be ready:
+1. Wait for the Kong Air deployments to be available:
 
    ```sh
    kubectl wait -n kong-air-production --for=condition=available --timeout=120s deployment --all
@@ -389,4 +408,5 @@ Confirm that each Kong Air pod is running with a {{site.mesh_product_name}} side
 kubectl get pods -n kong-air-production
 ```
 
-Every pod reports `2/2` in the `READY` column: one container for the application and one for the sidecar proxy.
+Every pod reports `2/2` in the `READY` column.
+One container runs the application, and the other runs the sidecar proxy.
