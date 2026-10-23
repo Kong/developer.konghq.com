@@ -145,10 +145,10 @@ features:
   - title: "[Skip records](/event-gateway/policies/skip-record/)"
     parsed: Yes
     nonparsed: Yes
-  - title: "[Record Transcode](/event-gateway/policies/record-transcode-produce/)"
+  - title: "[Record Transcode Produce](/event-gateway/policies/record-transcode-produce/) and [Record Transcode Consume](/event-gateway/policies/record-transcode-consume/)"
     nonparsed: No
     parsed: Yes
-  - title: "[Mask Fields](/event-gateway/policies/mask-fields-produce/)"
+  - title: "[Mask Fields Produce](/event-gateway/policies/mask-fields-produce/) and [Mask Fields Consume](/event-gateway/policies/mask-fields-consume/)"
     nonparsed: No
     parsed: Yes
 {% endfeature_table %}
