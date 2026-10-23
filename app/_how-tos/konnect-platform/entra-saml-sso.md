@@ -30,9 +30,10 @@ prereqs:
         You need a Microsoft Entra account with the Cloud Application Administrator or Application Administrator role.
 
         You also need an Entra ID group containing the users you want to map to a {{site.konnect_short_name}} team. If you don't have one yet, [create a group](https://learn.microsoft.com/en-us/entra/fundamentals/how-to-manage-groups) before continuing. 
-        Export the name of the Entra ID group you want to map to the team in {{site.konnect_short_name}}:
+        Open the Entra ID group you want to map to a team in {{site.konnect_short_name}} and copy its **Object ID**.
+        Export the Object ID:
         ```sh
-        export ENTRA_GROUP_NAME='YOUR-ENTRA-GROUP-NAME'
+        export ENTRA_GROUP_ID='YOUR-ENTRA-GROUP-OBJECT-ID'
         ```
 
         Create an enterprise application in Microsoft Entra ID:
@@ -105,7 +106,14 @@ Configure [SAML authentication](https://learn.microsoft.com/entra/identity/enter
 1. In the **Attributes & Claims** section, click **Edit**.
 1. Configure the following claims. For each claim, clear the namespace URI before saving:
    1. Set **Unique user identifier** to `user.userprincipalname`.
-   1. Click **Add a group claim**, select **Groups assigned to the application**, and set the **Source attribute** to **Cloud-only group display names** so the SAML assertion sends the group's name rather than its object ID. Then click **Advanced options**, select **Customize the name of the group claim**, and enter `user.groups` in the **Name** field.
+   1. Click **Add a group claim**.
+   1. Select **Groups assigned to the application**.
+   1. From the **Source attribute** dropdown menu, select **Group ID** so the SAML assertion sends the group's Object ID.
+   1. Click **Advanced options**.
+   1. Select **Customize the name of the group claim**.
+   1. In the **Name** field, enter `groups`.
+   1. Clear the **Namespace** field.
+   1. Click **Save**.
    1. Click **Add new claim** and add a claim named `firstname` with source attribute `user.givenname`. Click **Save**.
    1. Click **Add new claim** and add a claim named `lastname` with source attribute `user.surname`. Click **Save**.
    1. Click **Add new claim** and add a claim named `email` with source attribute `user.mail`. Click **Save**.
@@ -172,12 +180,12 @@ status_code: 201
 region: global
 body:
   team_id: $TEAM_ID
-  group: $ENTRA_GROUP_NAME
+  group: $ENTRA_GROUP_ID
 {% endkonnect_api_request %}
 <!--vale on-->
 {% endcapture %}
 {{ create-team-mapping | indent: 3}}
-   The `$ENTRA_GROUP_NAME` is the name of the group in Entra that you exported in the [prerequisites](/konnect-platform/entra-saml-sso/#microsoft-entra-id). 
+   The `$ENTRA_GROUP_ID` is the Object ID of the group in Entra that you exported in the [prerequisites](/konnect-platform/entra-saml-sso/#microsoft-entra-id). It must match a group value in the SAML `groups` claim. 
    Repeat this request for each additional team you want to map.
 
 ## Enable SAML and team mappings in {{site.konnect_short_name}}
