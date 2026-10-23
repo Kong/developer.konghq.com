@@ -88,6 +88,25 @@ rows:
 
   - header:
       type: h2
+      text: "Broker third-party credentials"
+      description: |
+        Store users' credentials for third-party services and release them to {{site.ai_gateway_name}} so agents can call those services on a user's behalf.
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Token Vault
+            description: |
+              A built-in credential broker for third-party services such as GitHub, Slack, or Workday.
+            icon: /assets/icons/security.svg
+            ctas:
+              - text: Get started with the Token Vault
+                url: /how-to/get-started-with-token-vault/
+              - text: Learn about the Token Vault
+                url: /identity/token-vault/
+
+  - header:
+      type: h2
       text: "Core concepts"
   - column_count: 3
     columns:
