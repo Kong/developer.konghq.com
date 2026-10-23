@@ -31,8 +31,6 @@ config:
     type: inline
     inline: |
       {"type":"record","name":"User","fields":[{"name":"name","type":"string"},{"name":"age","type":"long"}]}
-  schema_ref_destination:
-    type: confluent_format
 
 tools:
   - konnect-api

@@ -30,13 +30,12 @@ config:
   output_format: avro
   schema_source:
     type: reference
-    reference:
-      schema_registry:
-        name: my-schema-registry
-      subject: ${context.topic.name + '-value'}
-      version: ${'latest'}
-  schema_ref_destination:
-    type: record_header
+    schema_registry:
+      name: my-schema-registry
+    subject: ${context.topic.name + '-value'}
+    version: ${'latest'}
+    schema_ref_destination:
+      type: record_header
 
 tools:
   - konnect-api
