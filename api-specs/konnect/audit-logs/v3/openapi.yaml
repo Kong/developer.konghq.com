@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect Audit Log Settings
-  version: 3.1.0
+  version: 4.0.0
   description: The API for configuring Kong Konnect Audit Logs.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@c490b3e79979400ce6f13039add29f45cfdb0b34
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c490b3e79979400ce6f13039add29f45cfdb0b34'
+  x-oas-source: kong/platform-api@39929c660346041151b0aeca642acac2b0e10268
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/39929c660346041151b0aeca642acac2b0e10268'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -524,8 +524,8 @@ components:
         principal_id: user_1234567890abcdef
         signature: MEQCIFpL3mN8sR2vT5wO1kJ7fE9xY4cU6bV3dP8qM2nK9sA1AiB5cR7eT3pW9sN1fK4mO2vL8xY6qU5bP3zR1aM4nF7gJ
         org_id: 6945c4c4-3e06-4c5c-87e0-726d0cda4e05
-        outcome: success
-        authentication_type: sso
+        outcome: AUTHENTICATION_OUTCOME_SUCCESS
+        authentication_type: AUTHENTICATION_TYPE_SSO
         ts: '2023-03-21T09:28:45.78Z'
         client_ip: 127.0.0.1
         uri: /v2/auth/login
@@ -546,27 +546,27 @@ components:
       description: The outcome of an authentication attempt.
       type: string
       enum:
-        - invalid
-        - success
-        - not_found
-        - invalid_password
-        - locked
-        - disabled
-        - token_expired
+        - AUTHENTICATION_OUTCOME_INVALID
+        - AUTHENTICATION_OUTCOME_SUCCESS
+        - AUTHENTICATION_OUTCOME_NOT_FOUND
+        - AUTHENTICATION_OUTCOME_INVALID_PASSWORD
+        - AUTHENTICATION_OUTCOME_LOCKED
+        - AUTHENTICATION_OUTCOME_DISABLED
+        - AUTHENTICATION_OUTCOME_TOKEN_EXPIRED
       title: Authentication Outcome
     AuthenticationType:
       description: The type of authentication used.
       type: string
       enum:
-        - invalid
-        - basic
-        - sso
-        - pat
-        - spat
-        - google
-        - github
-        - windowslive
-        - federated
+        - AUTHENTICATION_TYPE_INVALID
+        - AUTHENTICATION_TYPE_BASIC
+        - AUTHENTICATION_TYPE_SSO
+        - AUTHENTICATION_TYPE_PAT
+        - AUTHENTICATION_TYPE_SPAT
+        - AUTHENTICATION_TYPE_GOOGLE
+        - AUTHENTICATION_TYPE_GITHUB
+        - AUTHENTICATION_TYPE_WINDOWSLIVE
+        - AUTHENTICATION_TYPE_FEDERATED
       title: Authentication Type
     AuditLog:
       description: An individual audit log entry.
@@ -1282,8 +1282,8 @@ components:
             principal_id: user_1234567890abcdef
             signature: MEQCIFpL3mN8sR2vT5wO1kJ7fE9xY4cU6bV3dP8qM2nK9sA1AiB5cR7eT3pW9sN1fK4mO2vL8xY6qU5bP3zR1aM4nF7gJ
             org_id: 6945c4c4-3e06-4c5c-87e0-726d0cda4e05
-            outcome: success
-            authentication_type: sso
+            outcome: AUTHENTICATION_OUTCOME_SUCCESS
+            authentication_type: AUTHENTICATION_TYPE_SSO
             ts: '2023-03-21T09:28:45.78Z'
             client_ip: 127.0.0.1
             uri: /v2/auth/login
