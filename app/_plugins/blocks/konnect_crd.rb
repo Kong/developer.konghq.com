@@ -28,10 +28,19 @@ module Jekyll
 
       drop = Drops::KonnectCrd.new(yaml: config, format: @page['output_format'])
 
-      context.stack do
+      output = context.stack do
         context['config'] = drop
         ComponentTemplates.fetch('konnect_crd', @page['output_format'], base: 'app/_includes').render(context)
       end
+
+      if config['indent']
+        # If the config has an indent key, we need to indent the output
+        # by that many spaces.
+        indent = ' ' * config['indent'].to_i
+        output = output.lines.map { |line| "#{indent}#{line}" }.join
+      end
+
+      output
     rescue Psych::SyntaxError => e
       message = <<~STRING
         On `#{@page['path']}`, the following {% konnect_crd %} block contains a malformed yaml:
