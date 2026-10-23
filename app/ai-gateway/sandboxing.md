@@ -279,19 +279,22 @@ If you already use sandboxed Lua in {{site.base_gateway}}, the following differe
 
 ### Differences in the allowlists
 
-The {{site.base_gateway}} sandboxing reference lists the following as available in strict mode, but they aren't available in {{site.ai_gateway}} 2.2:
+The {{site.base_gateway}} sandboxing reference lists entries that {{site.ai_gateway}} doesn't allow.
 
-* `kong.router.get_route` and `kong.router.get_service`:
-  In {{site.ai_gateway}}, `kong.router` is `nil` in strict mode and available only in lax mode.
-* `kong.configuration`:
-  It is `nil` in strict mode and available in lax mode.
-* `kong.client.get_principal`, `kong.client.get_identity_realm_source`, and `kong.client.set_identity_realm_source`:
-  All three are `nil` in strict mode.
-* `kong.request.get_id` and `kong.request.get_raw_forwarded_path`:
-  Both are `nil` in strict mode.
-* `kong.table.new`:
-  It is `nil` in strict mode.
-  The standard `table.new` function is available.
+The following functions are `nil` in strict mode:
+
+* `kong.client.get_identity_realm_source`, `kong.client.set_identity_realm_source`, and `kong.client.get_principal`
+* `kong.request.get_id`, `kong.request.get_raw_forwarded_path`, and `kong.request.get_raw_headers`
+* `kong.table.new`
+
+The standard `table.new` function is available in place of `kong.table.new`.
+
+`kong.router.get_route` and `kong.router.get_service` are also `nil` in strict mode. In {{site.ai_gateway}}, they are available only in lax mode.
+
+{{site.ai_gateway}} doesn't allow the following modules in strict mode or lax mode:
+
+* Listed under strict mode in the {{site.base_gateway}} reference: `MessagePack`, `binaryheap`, `ffi-zlib`, `kong.tools.glob`, `kong.tools.header`, `kong.tools.header-mapping`, `kong.tools.hostname`, `kong.tools.stack`, `lua_pack`, `luaxxhash`, `lxp`, `multipart`, `pl.url`, `resty.snappy`, and `xml2lua`
+* Listed under lax mode in the {{site.base_gateway}} reference: `kong.enterprise_edition.tools.redis.v2.config_utils`, `kong.tools.oauth-client`, `kong.tools.redis.config_utils`, and `kong.tools.solace`
 
 {{site.ai_gateway}} saves an AI Policy that calls one of these functions in strict mode without an error, and the call fails when a request runs it.
 
