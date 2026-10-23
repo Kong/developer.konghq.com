@@ -1,97 +1,118 @@
 ---
-title: Kong Air
+title: KongAirlines
 content_type: reference
 layout: reference
-
 products:
   - konnect-reference-platform
-
 works_on:
   - konnect
-
-description: "Provides example usage of the {{site.konnect_short_name}} Reference Platform"
-  
-
+description: A public implementation of the {{site.konnect_short_name}} Reference Platform.
 breadcrumbs:
   - /konnect-reference-platform/
-
 related_resources:
   - text: Reference Platform
     url: /konnect-reference-platform/
-  - text: Orchestrator
-    url: /konnect-reference-platform/orchestrator/
-  - text: How to deploy the Reference Platform
-    url: /konnect-reference-platform/how-to/
-  - text: Frequently Asked Questions
+  - text: Follow an API change
+    url: /konnect-reference-platform/apiops/
+  - text: General APIOps example with decK
+    url: /deck/apiops/
+  - text: Adapt patterns from KongAirlines
+    url: /konnect-reference-platform/patterns/
+  - text: Frequently asked questions
     url: /konnect-reference-platform/faq/
 ---
 
-The [{{site.konnect_short_name}} Reference Platform](/konnect-reference-platform/) is a technical
-guide for building an API delivery system and integrating with 
-[{{site.konnect_saas}}](https://konghq.com/products/kong-konnect/). There are
-different ways to use the tools and materials provided. If you want to deploy the full 
-platform you can follow the [how-to guide](/konnect-reference-platform/how-to/) 
-which provides step-by-step instructions to set up an entire API delivery pipeline. 
+[KongAirlines](https://github.com/KongAirlines) is the example implementation of
+the Reference Platform. Its public repositories show how service teams can
+deliver independently while a platform team governs shared infrastructure and
+production Gateway changes.
 
-Alternatively, you can evaluate an example usage of the platform, pulling relevant technical 
-solutions from it and applying them to your own use case as needed. 
-The [_Kong Air_](https://github.com/KongAirlines) project is one of these examples.
+The useful starting points are the OpenAPI contracts, [kongctl](/kongctl/)
+manifests, generated [decK](/deck/) configuration, and delivery workflows.
+You can read them without deploying the example. Use the
+[pattern guide](/konnect-reference-platform/patterns/) to choose practices
+to adapt rather than reproducing every repository and resource.
 
-## What is Kong Air?
+## Meet the repositories
 
-Kong Air is a fictional airline used to demonstrate how engineering organizations can use 
-{{site.konnect_short_name}} to build an API Management solution. The organization is made up of multiple 
-teams responsible for a different parts of the airline's software infrastructure and APIs. 
-Teams own repositories that contain the code and configuration for their services, 
-while the platform team is responsible for managing {{site.konnect_short_name}} and other shared services.
+The [platform repository](https://github.com/KongAirlines/platform) represents
+the platform team. It owns shared Konnect infrastructure, access governance,
+Developer Portals, and production Gateway configuration.
 
-## How do I use Kong Air?
+Two service teams own the API repositories:
 
-Kong Air is a public [GitHub organization](https://github.com/KongAirlines) owned by Kong. 
-All the repositories in the organization are public, allowing you to view the various solutions to determine 
-how it could be applied to your own use case. Specifically, the [platform team repository](https://github.com/KongAirlines/platform)
-contains [GitHub Action workflows](https://github.com/KongAirlines/platform/tree/main/.github/workflows) that 
-enable APIOps delivery for the organization.
+{% table %}
+columns:
+  - title: Team
+    key: team
+  - title: Repository
+    key: repository
+  - title: Example API access
+    key: access
+rows:
+  - team: customer-data
+    repository: "[bookings](https://github.com/KongAirlines/bookings)"
+    access: Approved Portal application API key
+  - team: customer-data
+    repository: "[customer](https://github.com/KongAirlines/customer)"
+    access: Approved Portal application API key
+  - team: flight-data
+    repository: "[destinations](https://github.com/KongAirlines/destinations)"
+    access: Public
+  - team: flight-data
+    repository: "[flights](https://github.com/KongAirlines/flights)"
+    access: Public
+{% endtable %}
 
-You can also evaluate the {{site.konnect_short_name}} [declarative configuration](https://github.com/KongAirlines/platform/tree/main/konnect) 
-used by the [{{site.konnect_short_name}} Orchestrator](/konnect-reference-platform/orchestrator/) to 
-apply changes to the {{site.konnect_short_name}} organization.
+Service teams own their development and production Catalog APIs, specifications,
+versions, and publications. They write Gateway configuration directly to their
+team's development control plane. They propose production Gateway changes
+through platform PRs instead of writing to the production control plane.
 
-## How does Kong Air work?
+## Start with one service
 
-The organization is made up of a set of service application repositories that mimic airline company systems. The organization
-is also comprised of a set of fictional teams who own the repositories and are responsible for the development and 
-delivery of the services.
+Read [Bookings](https://github.com/KongAirlines/bookings) as a representative
+service repository. The other services follow the same delivery structure;
+Flights provides a public-API contrast.
 
-Kong Air uses the {{site.konnect_short_name}} Reference platform and the 
-[Konnect Orchestrator](/konnect-reference-platform/orchestrator/) to manage the state of the 
-{{site.konnect_short_name}} Organization. The solution centers around the 
-[platform team repository](https://github.com/KongAirlines/platform) 
-which the orchestrator uses to stage API specifications for delivery to {{site.konnect_short_name}}.
+- [OpenAPI contract](https://github.com/KongAirlines/bookings/blob/main/openapi.yaml):
+  the current development design.
+- [Konnect manifests](https://github.com/KongAirlines/bookings/tree/main/konnect):
+  service-owned Catalog state and references to shared infrastructure.
+- [Gateway artifacts](https://github.com/KongAirlines/bookings/tree/main/gateway):
+  generated development and production configuration, alongside policy inputs.
+- [Workflows](https://github.com/KongAirlines/bookings/tree/main/.github/workflows):
+  validation, development delivery, release preparation, and production promotion.
 
-Currently there are the following application teams and service repositories:
+For the sequence connecting these files, [follow an API change](/konnect-reference-platform/apiops/).
 
-* `customer-data`, which owns the [bookings](https://github.com/KongAirlines/bookings) and 
-  [customers](https://github.com/KongAirlines/customer) services.
-* `flight-data` which owns the [flights](https://github.com/KongAirlines/flights) and
-  [destinations](https://github.com/KongAirlines/destinations) services.
+## Then inspect the platform boundary
 
-Each service repository holds an OpenAPI specification that describes the API contract for the service. For example, 
-the `flights` service OpenAPI specification is found in the 
-[`openapi.yaml`](https://github.com/KongAirlines/flights/blob/main/openapi.yaml) file located in the root of the `flights` repository. 
+In the platform repository, compare the
+[shared foundations](https://github.com/KongAirlines/platform/blob/main/konnect/foundations.yaml)
+with the service's references to those resources. Then inspect
+[production Gateway configuration](https://github.com/KongAirlines/platform/tree/main/gateway/prod)
+to see the reviewed service artifacts and their provenance.
 
-The orchestrator is configured to monitor this service application repositories and detect changes 
-that are copied to the platform repository. Once the specifications are staged in the platform repository, 
-the [APIOps workflow](/konnect-reference-platform/apiops/) process kicks in and guides the platform team in 
-delivering changes to {{site.konnect_short_name}}. 
+The [production delivery workflow](https://github.com/KongAirlines/platform/blob/main/.github/workflows/apply-production-gateway.yaml)
+shows how platform approval leads to Gateway synchronization and then dispatches
+production Catalog delivery back to the owning service.
 
-![Kong Air decK sync](/assets/images/reference-platform/kong-air-sync.png)
+## Explore the consumer experience
 
-Feel free to explore the Kong Air organization repositories using what's available to build
-your own API delivery system. 
+The platform also owns [Portal pages and navigation](https://github.com/KongAirlines/platform/tree/main/konnect/portal).
+Service-owned publications connect API delivery to discovery and application
+access. The protected service source demonstrates fictional accounts scoped to
+an application, not passenger login.
 
-## What's next?
+The Gateway delivery workflows do not deploy the application source. Read that
+source as an illustration of the identity contract, not proof that an existing
+upstream deployment implements it.
 
-* See the [FAQ page](/konnect-reference-platform/faq) for more Q&A on the reference platform.
-* Follow the [How-To guide](/konnect-reference-platform/how-to) for step-by-step instructions on setting up the reference platform for your organization
-* Check out the [APIOps workflows page](/konnect-reference-platform/apiops/) to learn about the API Delivery automations built into the reference platform
+## Choose what to adapt
+
+The repository topology, version conventions, and authentication strategy are
+example decisions. You can adopt API-first PR review without also adopting the
+same Portal or control-plane topology. Start with a
+[pattern that addresses your needs](/konnect-reference-platform/patterns/),
+and consult the [FAQ](/konnect-reference-platform/faq/) for design tradeoffs.

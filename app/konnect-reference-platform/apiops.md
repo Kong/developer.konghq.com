@@ -1,150 +1,153 @@
 ---
-title: APIOps
+title: Follow an API change through KongAirlines
 content_type: reference
 layout: reference
-
 products:
   - konnect-reference-platform
-
-description: Provides details on how the {{site.konnect_short_name}} Reference Platform uses APIOps
-
+description: Follow an API contract through PR validation, development delivery, release preparation, and governed production promotion.
 breadcrumbs:
   - /konnect-reference-platform/
-
 related_resources:
-- text: About {{site.konnect_short_name}} Reference Platform
-  url: /konnect-reference-platform/
-- text: How to deploy
-  url: /konnect-reference-platform/how-to/
-- text: Reference Platform FAQ
-  url: /konnect-reference-platform/faq/
+  - text: Reference Platform
+    url: /konnect-reference-platform/
+  - text: Explore KongAirlines
+    url: /konnect-reference-platform/kong-air/
+  - text: Adapt patterns from KongAirlines
+    url: /konnect-reference-platform/patterns/
+  - text: Frequently asked questions
+    url: /konnect-reference-platform/faq/
 ---
 
-[APIOps](/deck/apiops/) is the practice of applying DevOps and GitOps principles to the API lifecycle. It is the application
-of process automation and tools that enable teams to manage APIs in a more efficient and repeatable way. 
-The [{{site.konnect_short_name}} Reference Platform](/konnect-reference-platform) uses APIOps to automate the 
-delivery of APIs to {{site.konnect_short_name}} in an verifiable, consistent, and repeatable manner.
+Follow a Bookings API change through the example's repositories. This is a
+reading guide to the implemented delivery flow, not a deployment checklist.
+[kongctl](/kongctl/) manages Konnect resources, [decK](/deck/) manages Gateway
+configuration, and GitHub Actions connects the reviewed artifacts to delivery.
 
-Currently the {{site.konnect_short_name}} Reference Platform supports GitHub Actions for APIOps workflows. In future versions
-we will explore support for other popular CI/CD tools.
+If you are looking for a practice to bring into your own system, use
+[Adapt patterns from KongAirlines](/konnect-reference-platform/patterns/).
 
-### How are the APIOps workflows deployed?
+## Start with the API contract
 
-The GitHub Actions workflow files are can be installed by the 
-[{{site.konnect_short_name}} Orchestrator](/konnect-reference-platform/orchestrator/) 
-to a central platform repository. The process of initializing the platform repository is covered in the 
-[how-to guide](/konnect-reference-platform/how-to/).
+A service developer changes the root
+[OpenAPI document](https://github.com/KongAirlines/bookings/blob/main/openapi.yaml)
+on a feature branch. The example treats this as the next development contract
+and advances its beta version when the contract changes.
 
-### How do API specifications flow through the Reference Platform?
+The [Gateway generator](https://github.com/KongAirlines/bookings/blob/main/scripts/generate-gateway.sh)
+combines the contract with explicit transformation inputs. It generates
+development configuration from the root contract and production configuration
+from the retained release selected by the production Catalog manifest.
+A development-only design change need not change the production candidate.
 
-Currently, API Specifications are copied from service repositories to the platform repository
-by the {{site.konnect_short_name}} Orchestrator. This is by design to allow onboarding new services to 
-the platform easily and without disruption to service application teams. In future versions of the reference platform, 
-we will explore extended federated approaches to API specification management.
+**Observe:** the service PR contains the API design and its resulting
+Gateway configuration, not only a script that will generate unknown output later.
 
-During the orchestrators reconciliation loop, it will check for changes to API specifications
-in the configured service repositories and stage changed specifications to the platform repository as a PR. 
-When these PRs are reviewed and approved by platform administrators, the APIOps workflows are triggered.
+## Validate and materialize the PR
 
-### What are the workflows in the {{site.konnect_short_name}} Reference Platform?
+The [validation workflow](https://github.com/KongAirlines/bookings/blob/main/.github/workflows/validate-konnect.yaml)
+generates both Gateway artifacts without Konnect credentials. It validates the
+output and uploads the artifacts.
 
-There are 3 main workflows used to deliver APIs to {{site.base_gateway}}. These workflows are completed in
-sequence, with administrator approval between each step. Completion of final workflow results in a deployed
-API to {{site.konnect_saas}}.
+A separate [materialization workflow](https://github.com/KongAirlines/bookings/blob/main/.github/workflows/materialize-gateway.yaml)
+verifies the source PR and artifact boundaries, then commits generated files to
+the same-repository branch. Validation runs again; matching output requires no
+further commit.
 
-* [OpenAPI to Kong](https://github.com/KongAirlines/platform/blob/main/.github/workflows/konnect-spec-to-deck.yaml): 
-  This workflow takes an OpenAPI specification and converts it to 
-  a [decK](/deck/) file that can be used by {{site.base_gateway}}. Additionally, service specific patches are
-  applied to the decK file allowing administrators to set overrides for specific APIs.
-* [Stage decK changes](https://github.com/KongAirlines/platform/blob/main/.github/workflows/konnect-stage-deck-change.yaml): 
-  This workflow takes the decK file generated by the OpenAPI to Kong workflow
-  and compares it to the current state of the {{site.base_gateway}}. It generates a diff and stages the changes
-  as a PR. 
-* [decK sync](https://github.com/KongAirlines/platform/blob/main/.github/workflows/konnect-deck-sync.yaml): 
-  This workflow is triggered by the merging of deck configuration files to the main branch (by the previous workflow PR approval).
-  The workflow triggers a `deck gateway sync` command on the configuration files and applies the changes to {{site.base_gateway}}.
+The workflow updates a PR comment with changed input files and generated Gateway
+differences. That comment is an offline comparison, not a live Konnect plan.
+A Catalog-only change can correctly show no generated Gateway differences.
 
-Additionally, the reference platform supports API conformance checks to ensure that specifications are 
-following governance controls and best practices. This is done using the 
-[decK conformance workflow](https://github.com/KongAirlines/platform/blob/main/.github/workflows/konnect-lint-deck.yaml). 
-These conformance workflows are run on PRs that contain changes to API specifications and deck configuration files. 
+**Observe:** reviewers can inspect intent and output together. Additional
+Gateway behavior is expressed through transformation inputs, not hand edits to
+generated files. The credentialed workflow does not execute PR-controlled
+scripts, and fork validation does not receive deployment or write credentials.
 
-You can see examples of these workflows in action in the [Kong Airlines example project](https://github.com/KongAirlines/platform/actions).
+## Merge to development
 
-### How do the workflows work and interact with each other?
+After merge, [development synchronization](https://github.com/KongAirlines/bookings/blob/main/.github/workflows/apply-dev.yaml)
+checks that the committed Gateway artifacts still match generation. It adds the
+development Catalog version and synchronizes the service's Catalog state and
+tagged Gateway configuration with its Konnect identity.
 
-The workflows are triggered by changes to files in the platform repository. The workflows are coded to 
-only run when specific files have changed. When the orchestrator updates an API Specification file, the initial
-workflow is ran, staging changes back to the platform repository. The administrators only need to review and approve the
-PRs created by the sequenced workflows to ensure a correct and successful deployment to {{site.base_gateway}}.
+The [development manifest](https://github.com/KongAirlines/bookings/blob/main/konnect/dev.yaml)
+references the platform-owned Portal and team control plane. The service does
+not provision competing shared resources.
 
-The following diagram shows details and sequencing on the APIOps workflows.
+**Observe:** the service updates its development API and its Gateway
+configuration directly. It has not deployed a production Gateway change.
 
-<!--vale off -->
-{% mermaid %}
-flowchart LR
+## Prepare a production release
 
-subgraph PlatformRepo[Platform Repo Workflows]
-    direction LR
-    manual[Manual trigger] --> Apply
+When the service is ready to release, its
+[release workflow](https://github.com/KongAirlines/bookings/blob/main/.github/workflows/release-api.yaml)
+opens another service PR. The team supplies a stable release version and the
+next development version; it does not edit a deployment script.
 
-subgraph Apply[koctl Apply]
-    a-o[koctl]
-    a-s@{ shape: lin-cyl, label: "Service Repository"} 
-    a-o -- "reads<br>openapi.yaml" --> a-s
-    a-o -- "creates PR" --> a-f@{ shape: lin-doc, label: "openapi.yaml"}
-    a-l@{ shape: rect, label: "OAS conformance" } -.-> a-f -.-> a-l 
-end
+[Release preparation](https://github.com/KongAirlines/bookings/blob/main/scripts/prepare-release.sh):
 
-subgraph SpecToDeck["OpenAPI to Kong"]
-    direction TB
-    std-f@{ shape: doc, label: "openapi.yaml"} 
-    std-f --> std-w@{ shape: rect, label: "deck file patch"}
-    std-w --> std-w2@{ shape: rect, label: "deck file openapi2kong"}
-    std-w2 -- "creates PR" --> std-pr@{ shape: lin-doc, label: "kong-from-oas.yaml"}
-    lint@{ shape: rect, label: "decK Conformance" } -.-> std-pr -.-> lint
-end
+1. Retains the stable contract as a versioned specification.
+2. Selects that release in the production Catalog manifest.
+3. Advances the root contract to the next development beta.
+4. Generates the Gateway artifacts for review.
 
-subgraph StageDeckChange["Stage decK changes"]
-    direction TB
-    sdc-f@{shape: docs, label: "kong-from-oas.yaml"}
-    sdc-f --> sdc-w@{ shape: rect, label: "deck file merge"}
-    sdc-w --> sdc-f2@{ shape: doc, label: "kong.yaml"}
-    sdc-f2 --> sdc-w2@{ shape: rect, label: "deck gateway diff"}
-    sdc-w2 -- "creates PR" --> sdc-pr@{ shape: lin-doc, label: "calculated diff"}
-end
+Validation protects retained releases against modification and deletion. Merging
+this PR sends the next beta to development and proposes the reviewed production
+candidate through the promotion workflow.
 
-subgraph ApplyDeckChange["decK sync"]
-    direction TB
-    adc-f@{ shape: doc, label: "kong.yaml"}
-    adc-f --> adc-w@{ shape: rect, label: "deck gateway sync"}
-end
+**Observe:** the selected production specification and generated Gateway
+candidate are reviewed together. Releasing a contract is an explicit choice,
+not an automatic consequence of every development merge.
 
-end
+## Promote through platform review
 
-Apply -- "PR approved" --> SpecToDeck
-SpecToDeck -- "PR approved" --> StageDeckChange
-StageDeckChange -- "PR approved" --> ApplyDeckChange
+The [promotion workflow](https://github.com/KongAirlines/bookings/blob/main/.github/workflows/promote-prod.yaml)
+copies the committed production candidate into a platform PR. It records the
+source repository, commit, checksum, and tool versions. It does not regenerate
+the candidate or deploy it to production.
 
-{% endmermaid %}
-<!--vale on -->
+The platform team reviews the candidate alongside the aggregate production
+configuration. After merge and production-environment approval, the
+[platform delivery workflow](https://github.com/KongAirlines/platform/blob/main/.github/workflows/apply-production-gateway.yaml)
+synchronizes the reviewed Gateway state.
 
-### What about organizations and environments 
+**Observe:** production Gateway changes cross a review boundary. Service teams
+retain API ownership without receiving production Gateway write permissions.
+A provenance-only promotion can identify a new reviewed source commit even
+when the Gateway configuration is unchanged.
 
-The {{site.konnect_short_name}} Reference Platform supports multiple organizations and environments.
-When the orchestrator copies API specifications from service repositories to the platform repository, it will
-place them into a directory structure that follows this pattern:
+## Publish the production Catalog state
 
-`/konnect/<organization>/envs/<environment>/teams/<team>/services/<service-path>/openapi.yaml`
+After successful Gateway synchronization, platform automation reads changed
+provenance and dispatches the owning service's
+[production Catalog workflow](https://github.com/KongAirlines/bookings/blob/main/.github/workflows/apply-prod-catalog.yaml).
 
-APIOps workflows are configured with an API Key that grants them access to 
-individual {{site.konnect_short_name}} organizations. Every environment gets it's own set of
-Control Planes (one per team). The APIOps workflows use this well known file structure to 
-target the proper organization, environment, and team's Control Plane for configuration. 
+That workflow checks out the exact promoted commit. After its own production
+approval, the service identity synchronizes the production API, retained
+specifications, implementation link, and Portal publication.
 
-### What's next?
+**Observe:** the platform governs the production traffic path, while the
+service still writes its own production Catalog resources. The two approvals
+protect different ownership boundaries. These operations are not one atomic
+transaction; failures are visible in the owning workflow.
 
-You can follow a step-by-step [how-to guide](/konnect-reference-platform/how-to) to 
-implement your own usage of the reference platform. The [FAQ](/konnect-reference-platform/faq/)
-also has answers to many questions you have before proceeding with a full installation. 
+## Connect publication to API consumption
 
+The Portal presents the published contract and the application registration
+process. Flights and Destinations illustrate public operations. Bookings and
+Customer illustrate protected application-key access after registration approval.
+
+Documentation visibility, application registration, and runtime access are
+different controls. Read the
+[authentication decisions](/konnect-reference-platform/faq/#how-do-public-and-protected-apis-coexist)
+before adapting the protected-API example.
+
+The workflow sequence above deploys Konnect and Gateway configuration, not the
+upstream application services. A successful configuration run does not by itself
+prove end-to-end runtime behavior; that requires requests through a running
+Gateway and compatible upstream services.
+
+## Take a practice into your own platform
+
+You can adopt reviewable generation, release PRs, or governed promotion
+independently. The [pattern guide](/konnect-reference-platform/patterns/)
+links each practice to its implementation and the boundaries worth preserving.
