@@ -26,22 +26,17 @@ module Jekyll
       config = YAML.load(contents)
       config = add_defaults(config)
 
-      should_create_namespace = config.delete('create_namespace')
-      indent_width = config.delete('indent')
-
-      # Process YAML for the code block
-      config = config.to_yaml.delete_prefix("---\n").chomp.gsub(/version: '(.*)'/, 'version: "\1"')
+      drop = Drops::OnPremCrd.new(yaml: config, format: @page['output_format'])
 
       output = context.stack do
-        context['config'] = config
-        context['should_create_namespace'] = should_create_namespace
+        context['config'] = drop
         ComponentTemplates.fetch('on_prem_crd', 'html', base: 'app/_includes').render(context)
       end
 
-      if indent_width
+      if config['indent']
         # If the config has an indent key, we need to indent the output
         # by that many spaces.
-        indent = ' ' * indent_width.to_i
+        indent = ' ' * config['indent'].to_i
         output = output.lines.map { |line| "#{indent}#{line}" }.join
       end
 
