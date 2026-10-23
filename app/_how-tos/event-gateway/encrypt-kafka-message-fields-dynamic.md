@@ -42,6 +42,8 @@ cleanup:
     - title: Clean up {{site.event_gateway}} resources
       include_content: cleanup/products/event-gateway
       icon_url: /assets/icons/gateway.svg
+    - title: Clean up the auth server
+      include_content: md/identity/delete_auth_server
 
 related_resources:
   - text: "{{site.event_gateway_short}} Control Plane API"
@@ -362,7 +364,7 @@ body:
     key_sources:
       - type: static
     decrypt_fields:
-      paths: "context.auth.principal.name == \"$CLIENT_ID\" ? [\"personal.ssn\"] : []"
+      paths: '{% raw %}{{context.auth.principal.name == "$CLIENT_ID" ? ["personal.ssn"] : []}}{% endraw %}'
 {% endkonnect_api_request %}
 <!--vale on-->
 

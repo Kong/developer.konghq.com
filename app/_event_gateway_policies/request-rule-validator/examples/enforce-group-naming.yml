@@ -1,0 +1,56 @@
+title: Enforce a consumer group naming convention
+
+description: Require consumer group IDs to start with a team prefix, for every Kafka request type that carries a group ID.
+
+extended_description: |
+  This Request Rule Validator policy requires every consumer group ID to start with `team-a.`.
+
+  Kafka clients use a group ID in more than one request type, so the policy applies the same rule to all of them:
+  * `join_group`: A consumer joins a group with the classic consumer group protocol.
+  * `consumer_group_heartbeat`: A consumer joins a group and stays in it with the modern consumer group protocol.
+  * `offset_commit`: A client commits offsets for a group. Clients can commit offsets without joining the group first.
+  * `offset_fetch`: A client reads the committed offsets of a group.
+  * `txn_offset_commit`: A transactional producer commits offsets for a group as part of a transaction.
+
+  When a group ID doesn't match the rule, {{site.event_gateway_short}} rejects the request with the Kafka `POLICY_VIOLATION` error code.
+  If a single `offset_fetch` request carries more than one group, {{site.event_gateway_short}} rejects only the groups that don't match.
+
+weight: 890
+
+name: group_naming_policy
+type: request_rule_validator
+config:
+  requests:
+    - type: join_group
+      rules:
+        - description: "Consumer group ID must start with \"team-a.\""
+          rule: '{{context.group.id.startsWith("team-a.")}}'
+          action: reject
+    - type: consumer_group_heartbeat
+      rules:
+        - description: "Consumer group ID must start with \"team-a.\""
+          rule: '{{context.group.id.startsWith("team-a.")}}'
+          action: reject
+    - type: offset_commit
+      rules:
+        - description: "Consumer group ID must start with \"team-a.\""
+          rule: '{{context.group.id.startsWith("team-a.")}}'
+          action: reject
+    - type: offset_fetch
+      rules:
+        - description: "Consumer group ID must start with \"team-a.\""
+          rule: '{{context.group.id.startsWith("team-a.")}}'
+          action: reject
+    - type: txn_offset_commit
+      rules:
+        - description: "Consumer group ID must start with \"team-a.\""
+          rule: '{{context.group.id.startsWith("team-a.")}}'
+          action: reject
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
+
+min_version:
+  event-gateway: '1.3'

@@ -2,11 +2,18 @@ name: Event Gateway Automated Tests
 on:
   workflow_dispatch:
     inputs:
+      event_gateway_image:
+        description: 'Docker Image for Tests'
+        required: true
+        default: 'kong-event-gateway:latest'
       konnect_domain:
         description: "Set to konghq.tech to run against .tech"
         required: false
+      konnect_event_gateway_min_version:
+        description: 'Minimum Konnect Event Gateway version for the get.konghq.com/event-gateway quickstart (e.g. 1.3)'
+        required: false
   schedule:
-  - cron: '0 0 1 * *'
+  - cron: '0 0 * * WED'
 
 concurrency:
   cancel-in-progress: true
@@ -55,6 +62,18 @@ jobs:
         with:
           op-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
 
+      - name: Set Event Gateway Image and Tag
+        run: |
+          INPUT_IMAGE="${{ inputs.event_gateway_image }}"
+          echo "KONG_IMAGE_NAME=${INPUT_IMAGE%:*}" >> $GITHUB_ENV
+          echo "KONG_IMAGE_TAG=${INPUT_IMAGE##*:}" >> $GITHUB_ENV
+
+      - name: Set Event Gateway min version
+        if: ${{ inputs.konnect_event_gateway_min_version != '' }}
+        env:
+          MIN_VERSION: ${{ inputs.konnect_event_gateway_min_version }}
+        run: echo "KONNECT_EVENT_GATEWAY_MIN_VERSION=$MIN_VERSION" >> $GITHUB_ENV
+
       - name: Run tests
         working-directory: tools/automated-tests
         shell: bash
@@ -62,6 +81,8 @@ jobs:
           KONG_LICENSE_DATA: ${{ steps.getLicense.outputs.license }}
           DEPLOYMENT_MODEL: konnect
           PRODUCTS: event-gateway
+          KONG_IMAGE_TAG: ${{ env.KONG_IMAGE_TAG }}
+          KONG_IMAGE_NAME: ${{ env.KONG_IMAGE_NAME }}
           KONNECT_DOMAIN: ${{ env.KONNECT_DOMAIN }}
           TESTS_KONNECT_TOKEN: ${{ inputs.konnect_domain != '' && secrets.KONNECT_TOKEN_TECH || secrets.KONNECT_TOKEN }}
         run: |

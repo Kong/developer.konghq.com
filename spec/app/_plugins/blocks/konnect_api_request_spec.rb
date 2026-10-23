@@ -25,23 +25,7 @@ RSpec.describe Jekyll::KonnectApiRequest do
 
   describe 'html output' do
     include_examples 'a konnect-only content div'
-
-    context 'when section is cleanup' do
-      let(:template) do
-        <<~LIQUID
-          {% konnect_api_request %}
-          url: /v2/control-planes
-          method: DELETE
-          section: cleanup
-          {% endkonnect_api_request %}
-        LIQUID
-      end
-
-      it 'renders a data-test-cleanup attribute instead of data-test-step' do
-        expect(html).to have_css('div.content[data-deployment-topology="konnect"][data-test-cleanup]')
-        expect(html).not_to have_css('div.content[data-deployment-topology="konnect"][data-test-step]')
-      end
-    end
+    include_examples 'a section-aware konnect-only content div'
 
     context 'with indent set' do
       let(:template) do

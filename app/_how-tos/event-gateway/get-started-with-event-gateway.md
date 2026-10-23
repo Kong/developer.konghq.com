@@ -72,21 +72,8 @@ next_steps:
 
 ## Create an {{site.event_gateway_short}} in {{site.konnect_short_name}}
 
-Run the [quickstart script](https://get.konghq.com/event-gateway) to automatically provision a demo {{site.base_gateway}} control plane and data plane, and configure your environment:
-
-```bash
-curl -Ls https://get.konghq.com/event-gateway | bash -s -- -k $KONNECT_TOKEN -N kafka_event_gateway
-```
-
-This sets up an {{site.base_gateway}} control plane named `event-gateway-quickstart`, provisions a local data plane, and prints out the following environment variable export:
-
-```bash
-export EVENT_GATEWAY_ID=your-gateway-id
-```
-
-Copy and paste this into your terminal to configure your session.
-
-{% include_cached /knep/quickstart-note.md %}
+{% event_gateway_quickstart %}
+{% endevent_gateway_quickstart %}
 
 ## Add a backend cluster
 
