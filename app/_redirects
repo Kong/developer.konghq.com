@@ -174,7 +174,6 @@
 /mesh/policies/introduction    /mesh/policies-introduction/
 /mesh/quickstart/kubernetes-demo    /mesh/kubernetes/
 /mesh/quickstart/universal-demo    /mesh/get-started/universal/install/
-/mesh/universal/    /mesh/get-started/universal/install/
 /mesh/quickstart/kubernetes     /mesh/kubernetes/
 /mesh/introduction/concepts     /mesh/concepts/
 /mesh/guides/gateway-builtin    /how-to/set-up-a-built-in-mesh-gateway/
@@ -542,7 +541,6 @@
 /mesh/built-in-gateway/                                                    /mesh/v2/built-in-gateway/  301
 /mesh/ca-rotation/                                                         /mesh/v2/ca-rotation/  301
 /mesh/cert-manager/                                                        /mesh/v2/cert-manager/  301
-/mesh/cli/                                                                 /mesh/v2/cli/  301
 /mesh/cni/                                                                 /mesh/v2/cni/  301
 /mesh/concepts/                                                            /mesh/v2/concepts/  301
 /mesh/configure-data-plane-proxy-membership/                               /mesh/v2/configure-data-plane-proxy-membership/  301
@@ -574,11 +572,6 @@
 /mesh/federate-zone-control-plane-to-konnect/                              /mesh/v2/federate-zone-control-plane-to-konnect/  301
 /mesh/federate/                                                            /mesh/v2/federate/  301
 /mesh/gateway-routes/                                                      /mesh/v2/gateway-routes/  301
-/mesh/get-started/universal/control-plane/                                 /mesh/v2/get-started/universal/control-plane/  301
-/mesh/get-started/universal/demo-app/                                      /mesh/v2/get-started/universal/demo-app/  301
-/mesh/get-started/universal/install/                                       /mesh/v2/get-started/universal/install/  301
-/mesh/get-started/universal/kv/                                            /mesh/v2/get-started/universal/kv/  301
-/mesh/get-started/universal/zero-trust-security/                           /mesh/v2/get-started/universal/zero-trust-security/  301
 /mesh/guides/                                                              /mesh/v2/guides/  301
 /mesh/hostnamegenerator/                                                   /mesh/v2/hostnamegenerator/  301
 /mesh/import-konnect-deployment-to-terraform/                              /mesh/v2/import-konnect-deployment-to-terraform/  301
@@ -587,7 +580,6 @@
 /mesh/ipv6-support/                                                        /mesh/v2/ipv6-support/  301
 /mesh/issue-identity-with-meshidentity-spire/                              /mesh/v2/issue-identity-with-meshidentity-spire/  301
 /mesh/issue-identity-with-meshidentity/                                    /mesh/v2/issue-identity-with-meshidentity/  301
-/mesh/konnect/                                                             /mesh/v2/konnect/  301
 /mesh/kubernetes-gateway-api/                                              /mesh/v2/kubernetes-gateway-api/  301
 /mesh/kubernetes/                                                          /mesh/v2/kubernetes/  301
 /mesh/manage-control-plane-permissions-on-kubernetes/                      /mesh/v2/manage-control-plane-permissions-on-kubernetes/  301
@@ -595,12 +587,8 @@
 /mesh/mesh-multi-tenancy/                                                  /mesh/v2/mesh-multi-tenancy/  301
 /mesh/mesh-multizone-service-deployment/                                   /mesh/v2/mesh-multizone-service-deployment/  301
 /mesh/mesh/                                                                /mesh/v2/mesh/  301
-/mesh/meshexternalservice/                                                 /mesh/v2/meshexternalservice/  301
 /mesh/meshgateway/                                                         /mesh/v2/meshgateway/  301
 /mesh/meshgatewayinstance/                                                 /mesh/v2/meshgatewayinstance/  301
-/mesh/meshmultizoneservice/                                                /mesh/v2/meshmultizoneservice/  301
-/mesh/meshopentelemetrybackend/                                            /mesh/v2/meshopentelemetrybackend/  301
-/mesh/meshservice/                                                         /mesh/v2/meshservice/  301
 /mesh/migrate-self-managed-zone-to-konnect/                                /mesh/v2/migrate-self-managed-zone-to-konnect/  301
 /mesh/migration-to-the-new-policies/                                       /mesh/v2/migration-to-the-new-policies/  301
 /mesh/multi-zone-authentication/                                           /mesh/v2/multi-zone-authentication/  301

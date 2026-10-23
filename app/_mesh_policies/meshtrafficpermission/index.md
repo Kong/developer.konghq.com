@@ -269,7 +269,7 @@ rows:
 > `MeshTrafficPermission` has no `to` array, so a policy created in an application namespace
 > is always `workload-owner` scoped: `kind: Mesh` reaches every proxy in that namespace,
 > not the whole mesh. To authorize across namespaces in one zone, create the policy in
-> `{{site.mesh_namespace}}` with the label `kuma.io/origin: zone`. To authorize across zones,
+> `{{site.mesh_namespace}}` of that zone's control plane. To authorize across zones,
 > create it on the global control plane. For more information, see
 > [Policy scope](/mesh/policy-targeting/#policy-scope).
 

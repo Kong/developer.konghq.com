@@ -70,7 +70,7 @@ still on 2.14; the upgrade is more than a control plane and data plane rollout.
 
    {:.warning}
    > Cross-zone traffic from an upgraded zone to a 2.14 zone fails. Once a zone runs 3.x,
-   > its proxies address other zones' proxies with a new SNI that 2.14 zone proxies can't
+   > its proxies address other zones' proxies with a new SNI that 2.14 zone proxies cannot
    > match. `MeshService`, `MeshExternalService`, and `MeshMultiZoneService` traffic from an
    > upgraded zone to a zone still on 2.14 fails until that zone is upgraded too. Keep the time
    > between zone upgrades short, and check which zones depend on each other before you start.
