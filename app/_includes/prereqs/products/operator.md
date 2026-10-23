@@ -40,6 +40,27 @@ rawLicenseString: '$(cat ./license.json)'
    ```
 {%- endcapture -%}
 
+{%- capture operator_flags_konnect -%}
+\{% if chart_version %}
+       --version {{ chart_version }}{% if include.devel %} \
+       --devel{% endif %} \{% else %}
+       --set image.tag={{ site.data.operator_latest.release }} \{% endif %}
+       --set env.ENABLE_CONTROLLER_KONNECT=true{% if keg_install %} \
+       --set env.ENABLE_CONTROLLER_KEGDATAPLANE=true{% endif %}{% if page.prereqs.operator.controllers %} \{% for controller in page.prereqs.operator.controllers %}
+       --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}{% if extra_set %} \{% for param in extra_set %}
+       --set {{ param }}{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
+{%- endcapture -%}
+
+{%- capture operator_flags_on_prem -%}
+\{% if chart_version %}
+       --version {{ chart_version }}{% if include.devel %} \
+       --devel{% endif %} \{% else %}
+       --set image.tag={{ site.data.operator_latest.release }} \{% endif %}{% if keg_install %} \
+       --set env.ENABLE_CONTROLLER_KEGDATAPLANE=true{% endif %}{% if page.prereqs.operator.controllers %} \{% for controller in page.prereqs.operator.controllers %}
+       --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}{% if extra_set %} \{% for param in extra_set %}
+       --set {{ param }}{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
+{%- endcapture -%}
+
 {% if include.v_maj == 1 %}
 {{ operator_helm_repo }}
 
@@ -85,14 +106,7 @@ rawLicenseString: '$(cat ./license.json)'
    content: |
      ```bash
      helm upgrade --install kong-operator kong/kong-operator -n kong-system \
-       --create-namespace \{% if chart_version %}
-       --version {{ chart_version }}{% if include.devel %} \
-       --devel{% endif %} \{% else %}
-       --set image.tag={{ site.data.operator_latest.release }} \{% endif %}
-       --set env.ENABLE_CONTROLLER_KONNECT=true{% if keg_install %} \
-       --set env.ENABLE_CONTROLLER_KEGDATAPLANE=true{% endif %}{% if page.prereqs.operator.controllers %} \{% for controller in page.prereqs.operator.controllers %}
-       --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}{% if extra_set %} \{% for param in extra_set %}
-       --set {{ param }}{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
+       --create-namespace {{ operator_flags_konnect }}
      ```
    indent: 3
    {% endkonnect %}
@@ -103,13 +117,7 @@ rawLicenseString: '$(cat ./license.json)'
    content: |
      ```bash
      helm upgrade --install kong-operator kong/kong-operator -n kong-system \
-       --create-namespace \{% if chart_version %}
-       --version {{ chart_version }}{% if include.devel %} \
-       --devel{% endif %} \{% else %}
-       --set image.tag={{ site.data.operator_latest.release }} \{% endif %}{% if keg_install %} \
-       --set env.ENABLE_CONTROLLER_KEGDATAPLANE=true{% endif %}{% if page.prereqs.operator.controllers %} \{% for controller in page.prereqs.operator.controllers %}
-       --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}{% if extra_set %} \{% for param in extra_set %}
-       --set {{ param }}{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
+       --create-namespace {{ operator_flags_on_prem }}
      ```
    indent: 3
    {% endon_prem %}
@@ -125,14 +133,7 @@ rawLicenseString: '$(cat ./license.json)'
      ```bash
      helm upgrade --install kong-operator oci://registry-1.docker.io/kong/kong-operator-chart -n kong-system \
        --create-namespace \
-       --set nameOverride=kong-operator \{% if chart_version %}
-       --version {{ chart_version }}{% if include.devel %} \
-       --devel{% endif %} \{% else %}
-       --set image.tag={{ site.data.operator_latest.release }} \{% endif %}
-       --set env.ENABLE_CONTROLLER_KONNECT=true{% if keg_install %} \
-       --set env.ENABLE_CONTROLLER_KEGDATAPLANE=true{% endif %}{% if page.prereqs.operator.controllers %} \{% for controller in page.prereqs.operator.controllers %}
-       --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}{% if extra_set %} \{% for param in extra_set %}
-       --set {{ param }}{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
+       --set nameOverride=kong-operator {{ operator_flags_konnect }}
      ```
    indent: 3
    {% endkonnect %}
@@ -144,13 +145,7 @@ rawLicenseString: '$(cat ./license.json)'
      ```bash
      helm upgrade --install kong-operator oci://registry-1.docker.io/kong/kong-operator-chart -n kong-system \
        --create-namespace \
-       --set nameOverride=kong-operator \{% if chart_version %}
-       --version {{ chart_version }}{% if include.devel %} \
-       --devel{% endif %} \{% else %}
-       --set image.tag={{ site.data.operator_latest.release }} \{% endif %}{% if keg_install %} \
-       --set env.ENABLE_CONTROLLER_KEGDATAPLANE=true{% endif %}{% if page.prereqs.operator.controllers %} \{% for controller in page.prereqs.operator.controllers %}
-       --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}{% if extra_set %} \{% for param in extra_set %}
-       --set {{ param }}{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
+       --set nameOverride=kong-operator {{ operator_flags_on_prem }}
      ```
    indent: 3
    {% endon_prem %}
