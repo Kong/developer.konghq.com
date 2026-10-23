@@ -27,7 +27,7 @@ entities: []
 
 tldr:
   q: How do I manage a {{ site.base_gateway }} through the {{ site.operator_product_name }}?
-  a: Update the Helm repository and use Helm to install {{ site.operator_product_name }}.
+  a: Install {{ site.operator_product_name }} with Helm, from the Kong Helm repository or from the OCI registry.
 
 prereqs:
   skip_product: true
