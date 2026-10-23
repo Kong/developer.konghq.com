@@ -20,6 +20,7 @@ import {
   captureDescription,
   captureInputText,
 } from "./capture.js";
+import { bodyFromCommand } from "./body-command.js";
 import {
   buildCurlCommand,
   isNetworkLevelError,
@@ -189,6 +190,12 @@ async function executeRequest(
         config.body_file,
         config.file_dir,
       );
+      headers["Content-Type"] = headers["Content-Type"] || "application/json";
+    } else if (config.body_cmd !== undefined) {
+      // The body is produced by a shell command (e.g. `$(cat secret.json)`),
+      // matching the curl the page renders. It is not POST-gated like `body`:
+      // the snippet emits `--json "$(cmd)"` for whatever method the page sets.
+      options.body = await bodyFromCommand(container, config.body_cmd);
       headers["Content-Type"] = headers["Content-Type"] || "application/json";
     } else if (config.form_url_encoded_data !== undefined) {
       const params = new URLSearchParams();
