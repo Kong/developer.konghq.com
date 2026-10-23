@@ -87,7 +87,7 @@ faqs:
       Server's [`access.auth_strategies`](#schema-aigateway-mcpserver-access) array, the same
       way you would for an [AI Model](/ai-gateway/entities/ai-model/#access-control) or
       [AI Agent](/ai-gateway/entities/ai-agent/#access-control). This is supported for `conversion-listener`,
-      `listener`, and `passthrough-listener` modes. An AI MCP Server currently accepts up to one AI Identity
+      `listener`, and `passthrough-listener` modes. An AI MCP Server accepts up to one AI Identity
       Provider reference. The AI MCP Server has its own top-level authentication mechanism, so attaching an
       authentication AI Policy directly to its `policies` field isn't supported.
 
@@ -463,7 +463,7 @@ An MCP client such as [Claude Desktop](https://claude.ai/download), Cursor, or [
 
 ## Access control
 
-Once you expose tools through an AI MCP Server, anyone who can reach the endpoint can attempt to call them unless you gate access to known AI Consumers. To authenticate AI Consumers calling a `conversion-listener`, `listener`, or `passthrough-listener` AI MCP Server, reference an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) by name or ID in the [`access.auth_strategies`](#schema-aigateway-mcpserver-access) array. This is the same mechanism used by [AI Models](/ai-gateway/entities/ai-model/#access-control) and [AI Agents](/ai-gateway/entities/ai-agent/#access-control). An AI MCP Server currently accepts up to one AI Auth Strategy reference. The AI MCP Server has its own top-level authentication mechanism, so attaching an authentication AI Policy directly to its [`policies`](#schema-aigateway-mcpserver-policies) field isn't supported; authentication is configured exclusively through AI Auth Strategies. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes) for details.
+Once you expose tools through an AI MCP Server, anyone who can reach the endpoint can attempt to call them unless you gate access to known AI Consumers. To authenticate AI Consumers calling a `conversion-listener`, `listener`, or `passthrough-listener` AI MCP Server, reference an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) by name or ID in the [`access.auth_strategies`](#schema-aigateway-mcpserver-access) array. This is the same mechanism used by [AI Models](/ai-gateway/entities/ai-model/#access-control) and [AI Agents](/ai-gateway/entities/ai-agent/#access-control). An AI MCP Server accepts up to one AI Auth Strategy reference. The AI MCP Server has its own top-level authentication mechanism, so attaching an authentication AI Policy directly to its [`policies`](#schema-aigateway-mcpserver-policies) field isn't supported; authentication is configured exclusively through AI Auth Strategies. See [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes) for details.
 
 `upstream-server` AI MCP Servers don't accept an `access.auth_strategies` reference. Configure [`config.server.tools_list_auth`](#schema-aigateway-mcpserver-config-server-tools-list-auth) instead to authenticate to the upstream when fetching its tool list; see [Tool-list authentication](#tool-list-authentication). `conversion-only` AI MCP Servers have no `access` field at all, since they never accept incoming MCP traffic directly.
 
@@ -510,12 +510,12 @@ If you omit `access.metadata`, `access.auth_strategies` still authenticates requ
 {{site.ai_gateway}} provides two authentication levels:
 
 * **Access control and AI Auth Strategies:** Govern who can reach the AI MCP Server.
-* **Upstream authentication:**: Set with [`config.upstream.auth`](#schema-aigateway-mcpserver-config-upstream), controls how {{site.ai_gateway}} authenticates itself to external services. By default, {{site.ai_gateway}} proxies these requests without adding credentials.
+* **Upstream authentication:** Set with [`config.upstream.auth`](#schema-aigateway-mcpserver-config-upstream). This controls how {{site.ai_gateway}} authenticates itself to external services. By default, {{site.ai_gateway}} proxies these requests without adding credentials.
 
 This applies to the mode that connects directly to an external service (`passthrough-listener`). A `listener` AI MCP Server has no upstream of its own, since it only aggregates tools from other AI MCP Servers. AI MCP servers differentiate both settings:
 
 * `config.upstream.auth` to authenticate to external services.
-* [`config.server.tools_list_auth`](#tool-list-authentication)which only covers the request that fetches an upstream-server's list of tools. It doesn't cover the tool calls that follow.
+* [`config.server.tools_list_auth`](#tool-list-authentication) which only covers the request that fetches an upstream-server's list of tools. It doesn't cover the tool calls that follow.
 
 ### AWS IAM (SigV4)
 
@@ -544,17 +544,17 @@ config:
       role_session_name: kong-ai-gateway
 ```
 
-### Token Vault
+### Token Vault {% new_in 2.2 %}
 
-Some upstream services need to know which person is calling, so a single shared API key won't work. [Token Vault](/identity/token-vault/) gives each caller their own short-lived credential.
+Some upstream services need to know who is calling, so a shared API key isn't enough. [Token Vault](/identity/token-vault/) gives each caller, whether a user or an agent, its own short-lived credential.
 
-To use the Token Vault, you need to enable it and add external services [providers](/identity/token-vault/#providers/), like GitHub or Slack. After that, the AI MCP server **Upstream authentication** section displays the available providers you can use in your setup.
+To use the Token Vault, you need to enable it and add external services [providers](/identity/token-vault/#providers/), like GitHub or Slack. After that, the AI MCP Server **Upstream authentication** section displays the available providers you can use in your setup.
 
 This configuration example shows how to set up upstream authentication using the Token Vault:
 
 ```yaml
 config:
-  url: https://mcp.example.comg
+  url: https://mcp.example.com
   upstream:
     auth:
       type: token_vault
