@@ -9,16 +9,12 @@ Generates the data files in `app/_data/sandbox_allowlist/` from the Lua sandbox 
 
 ## Usage
 
-1. In your `kong-ee` clone, check out the release or branch you want to document. For Kong Gateway, use a release tag. For AI Gateway, use an AI Gateway branch such as `aigw-master`. For example:
+1. In your `kong-ee` clone, check out the release or branch you want to document. For Kong Gateway, use a release tag such as `3.16.0.0`. For AI Gateway, use an AI Gateway branch such as `aigw-master`.
+
+2. From the root of this repository, run the script with the path to `kong-ee`, the product, and optionally a version (not required for AI Gateway):
 
    ```sh
-   git -C /path/to/kong-ee checkout 3.16.0.0
-   ```
-
-2. From the root of this repository, run the script with the path to `kong-ee` and the product:
-
-   ```sh
-   node tools/sandbox-allowlist/extract.js --path /path/to/kong-ee --product gateway [--version 3.16]
+   node tools/sandbox-allowlist/extract.js --path /path/to/kong-ee --product [gateway|ai-gateway] [--version 3.16]
    ```
 
 3. Review the diff of the data file and commit it.
@@ -26,7 +22,7 @@ Generates the data files in `app/_data/sandbox_allowlist/` from the Lua sandbox 
 | Argument | Required | Description |
 |----------|----------|-------------|
 | `--path` | Yes | Path to your local `kong-ee` clone. |
-| `--product` | No | `gateway` (default) or `ai-gateway`. |
+| `--product` | Yes | `gateway` or `ai-gateway`. |
 | `--version` | No | The release to record, for example `3.16`. Kong Gateway only. |
 
 ### Kong Gateway
@@ -68,8 +64,8 @@ The `gateway` data file doesn't hold a copy of the lists for every release. Each
 
 | Field | Meaning |
 |-------|---------|
-| `min_version` | The first release the name was available in. The page shows a "new in" badge. |
-| `max_version` | The last release the name was available in (inclusive). The page hides the name unless this is the latest release. |
+| `min_version` | The first release the name was available in. The page shows a `v3.15+` badge. |
+| `max_version` | The last release the name was available in (inclusive). The page keeps the name and shows an `up to v3.14` badge. With both fields, the badge reads `v3.14 to v3.16`. |
 
 A name with neither field has been available since tracking began, and the page shows no version for it.
 

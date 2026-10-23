@@ -1,7 +1,6 @@
 {%- assign allowlist_product = include.product | default: "gateway" -%}
 {%- assign allowlist = site.data.sandbox_allowlist[allowlist_product] -%}
 {%- assign allowlist_block = allowlist | where: "kind", include.kind | where: "mode", include.mode | first -%}
-{%- assign latest_release = site.data.products.gateway.releases | where: "latest", true | first -%}
 {% table %}
 columns:
   - title: Group
@@ -13,10 +12,17 @@ rows:
   - group: "`{{ group.id }}`"
     names: |-
 {%- for item in group.names -%}
-  {%- if item.max_version and item.max_version != latest_release.release -%}{%- continue -%}{%- endif %}
+  {%- assign badge_text = "" -%}
+  {%- if item.min_version and item.max_version -%}
+    {%- assign badge_text = "v" | append: item.min_version | append: " to v" | append: item.max_version -%}
+  {%- elsif item.max_version -%}
+    {%- assign badge_text = "up to v" | append: item.max_version -%}
+  {%- elsif item.min_version -%}
+    {%- assign badge_text = "v" | append: item.min_version | append: "+" -%}
+  {%- endif %}
       * `{{ item.name }}`
-      {%- if item.min_version -%}
-        {%- capture min_version_badge %}{% new_in item.min_version %}{% endcapture %} {{ min_version_badge | strip_newlines | strip }}
+      {%- if badge_text != "" -%}
+        {%- capture badge_html %}{% include badge.html text=badge_text css_class="new-in" %}{% endcapture %} {{ badge_html | strip_newlines | strip }}
       {%- endif -%}
 {%- endfor -%}
 {%- endfor %}
