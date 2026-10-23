@@ -7,7 +7,7 @@ RSpec.describe Jekyll::KonnectCrd do
   let(:works_on) { %w[konnect] }
 
   let(:template) do
-    <<~'LIQUID'
+    <<~LIQUID
       {% konnect_crd %}
       kind: KonnectAPIAuthConfiguration
       metadata:
@@ -41,7 +41,7 @@ RSpec.describe Jekyll::KonnectCrd do
 
   describe 'html output with section: prereqs' do
     let(:template) do
-      <<~'LIQUID'
+      <<~LIQUID
         {% konnect_crd %}
         kind: KonnectAPIAuthConfiguration
         metadata:
@@ -67,7 +67,7 @@ RSpec.describe Jekyll::KonnectCrd do
 
     context 'with create_namespace and section combined' do
       let(:template) do
-        <<~'LIQUID'
+        <<~LIQUID
           {% konnect_crd %}
           create_namespace: kong
           section: prereqs
@@ -131,7 +131,7 @@ RSpec.describe Jekyll::KonnectCrd do
     end
 
     let(:with_section) do
-      <<~'LIQUID'
+      <<~LIQUID
         {% konnect_crd %}
         kind: KonnectAPIAuthConfiguration
         metadata:
@@ -157,7 +157,7 @@ RSpec.describe Jekyll::KonnectCrd do
 
   describe 'indent option' do
     let(:template) do
-      <<~'LIQUID'
+      <<~LIQUID
         {% konnect_crd %}
         indent: 3
         kind: KonnectAPIAuthConfiguration
@@ -172,8 +172,22 @@ RSpec.describe Jekyll::KonnectCrd do
       { 'output_format' => 'markdown', 'path' => 'test.md', 'works_on' => works_on }
     end
 
-    it 'prefixes every non-empty rendered line with the requested indentation' do
-      expect(rendered.lines.reject { |line| line.strip.empty? }).to all(start_with('   '))
+    it 'renders the whole block with every line indented' do
+      expect(rendered).to eq(<<-OUTPUT)
+   <div data-deployment-topology="konnect" markdown="1" data-test-step="block">
+   ```bash
+   echo '
+   kind: KonnectAPIAuthConfiguration
+   apiVersion: konnect.konghq.com/v1alpha1
+   metadata:
+     name: konnect-api-auth
+     namespace: kong
+   spec: {}
+   ' | kubectl apply -f -
+   ```
+   </div>
+
+      OUTPUT
     end
 
     it 'keeps the indent key out of the emitted YAML' do
@@ -181,11 +195,23 @@ RSpec.describe Jekyll::KonnectCrd do
     end
 
     it 'indents the emitted YAML the same way in the html and markdown formats' do
-      html_yaml = emitted_yaml(rendered)
-      markdown_yaml = emitted_yaml(render_liquid(template, page: markdown_page))
+      expected_yaml = <<-YAML
+   kind: KonnectAPIAuthConfiguration
+   apiVersion: konnect.konghq.com/v1alpha1
+   metadata:
+     name: konnect-api-auth
+     namespace: kong
+   spec: {}
+      YAML
 
-      expect(markdown_yaml).to eq(html_yaml)
-      expect(html_yaml.lines).to all(start_with('   '))
+      expect(emitted_yaml(rendered)).to eq(expected_yaml)
+      expect(emitted_yaml(render_liquid(template, page: markdown_page))).to eq(expected_yaml)
+    end
+
+    it 'emits a manifest that parses cleanly with no unexpected top-level keys' do
+      parsed = YAML.safe_load(emitted_yaml(rendered))
+
+      expect(parsed.keys).to contain_exactly('kind', 'apiVersion', 'metadata', 'spec')
     end
 
     def emitted_yaml(output)
