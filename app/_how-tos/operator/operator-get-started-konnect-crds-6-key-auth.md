@@ -77,6 +77,7 @@ apiVersion: configuration.konghq.com/v1
 metadata:
   name: key-auth
 plugin: key-auth
+indent: 3
 {% endkonnect_crd %}
    <!-- vale on -->
 
@@ -157,6 +158,7 @@ spec:
     type: konnectNamespacedRef
     konnectNamespacedRef:
       name: gateway-control-plane
+indent: 3
 {% endkonnect_crd %}
    <!-- vale on -->
 
