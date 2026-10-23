@@ -1,159 +1,171 @@
 ---
-title: Frequently asked questions
+title: Design decisions and FAQ
 content_type: reference
 layout: reference
 products:
   - konnect-reference-platform
 works_on:
   - konnect
-description: Answers about ownership, environments, authorization, and delivery.
+description: Understand the example's ownership boundaries, reconciliation policies, and authentication choices.
 breadcrumbs:
   - /konnect-reference-platform/
 related_resources:
   - text: Reference Platform
     url: /konnect-reference-platform/
-  - text: KongAirlines implementation
+  - text: Explore KongAirlines
     url: /konnect-reference-platform/kong-air/
-  - text: APIOps workflows
+  - text: Follow an API change
     url: /konnect-reference-platform/apiops/
-  - text: Adopt the architecture
-    url: /konnect-reference-platform/how-to/
+  - text: Adapt patterns from KongAirlines
+    url: /konnect-reference-platform/patterns/
 ---
 
-## Is the Reference Platform a tool I install?
+## Must I adopt the whole example?
 
-No. It is a maintained reference architecture plus the public
-[KongAirlines](https://github.com/KongAirlines) implementation. Copy and adapt
-the manifests and workflows that fit your organization. There is no Reference
-Platform CLI, operator, installer, or generated registry.
+No. KongAirlines demonstrates one approach, not a required architecture.
+Choose a [pattern](/konnect-reference-platform/patterns/) that addresses your
+needs and adapt it to your existing engineering platform. You do not need
+deployment credentials to read the public implementation.
 
 ## What is the source of truth?
 
-The owning repository's OpenAPI documents, kongctl manifests, and committed
-CI-generated decK state. OpenAPI plus explicit transformation inputs are the
-human-authored source; the materialized decK files record the exact Gateway
-configuration reviewed and applied. The reviewed production copy is retained
-in the platform repository. No additional declarative format sits above
-kongctl and decK.
+The owning repository's OpenAPI contracts, transformation inputs,
+[kongctl](/kongctl/) manifests, and committed generated decK configuration.
+The platform repository retains the reviewed production Gateway copy.
+Live Konnect state helps verify deployment; it does not replace the reviewed
+desired state.
 
 ## Why do service repositories manage Konnect directly?
 
-Federation keeps API lifecycle state with the Service Team that understands it.
-Each repository uses its own automation identity and resolves shared resources
-managed by the Platform Team. This avoids a central process polling service
-repositories or copying their specifications.
+Service teams understand their APIs and retain their lifecycle ownership.
+They manage Catalog APIs, versions, specifications, and publications directly,
+including in production. The platform team owns shared infrastructure and
+production Gateway changes. A promotion PR governs the production traffic path
+without transferring Catalog ownership.
 
-## What does the Platform Team own?
+## Are namespaces and tags security boundaries?
 
-Organization teams and access, Developer Portals, application auth strategies,
-control-plane provisioning and lifecycle, and the aggregate production Gateway
-configuration. Service Teams own Catalog APIs, versions, specs,
-implementations, publications, and development Gateway state.
+No. Konnect RBAC determines what an identity is authorized to change.
+kongctl namespaces and decK select tags constrain which desired-state resources
+a synchronization manages. Use authorization and reconciliation scoping together.
 
-## Are kongctl namespaces an RBAC boundary?
+The example uses separate development and production Catalog namespaces because
+the stages synchronize independently. Development Gateway state uses service-specific
+tags; the platform synchronizes production as one reviewed aggregate.
 
-No. A namespace records which declarative owner participates in planning and
-helps constrain reconciliation. Konnect roles determine whether an identity is
-authorized to read or mutate a resource. Use both. Service repositories use a
-service namespace for development and `<service>-prod` for production because
-those Catalog stages are synchronized independently.
+## Does the example enforce least privilege everywhere?
 
-## How are development and production represented?
+The example gives service identities development Gateway write access and
+production control-plane read access, not production Gateway write access.
+It uses broad Catalog API roles for initial simplicity. Those roles are not
+a demonstration of strict isolation between every service team's Catalog APIs.
+Review and refine permissions for your own resource boundaries.
 
-Use one default branch with distinct files and resources. Under the current
-Catalog model, each service declares separate development and production API
-entities because one API can link to only one control plane. Development APIs
-publish privately to the development Portal; production APIs publish publicly
-to the production Portal.
+## Why keep both environments on the default branch?
 
-Do not base a current architecture on unreleased environment-aware Catalog or
-Workspace behavior. Re-evaluate the duplication after those capabilities are
-generally available and supported declaratively.
+Separate files and named resources make stage differences explicit without
+using branches as environments. The example also uses separate Catalog API
+entities, Portals, and application authentication strategies for development
+and production. This is the implemented topology, not a requirement for every
+organization. Reassess it as your needs and supported Konnect capabilities evolve.
 
-## How does an OpenAPI document become a production release?
+## Why retain versions instead of updating specifications in place?
 
-The root `openapi.yaml` represents the next beta. A manually dispatched release
-workflow opens a service PR that creates an immutable stable file under
-`openapi/versions/`, selects it as the production API's current version in
-`konnect/prod.yaml`, and advances the root to the next beta. CI materializes
-and validates Gateway state in that PR, so releasing never requires a script
-edit or a developer-generated decK commit.
+The example treats released contracts as immutable and development versions
+as append-only. Reviewers can identify the contract selected for production
+and inspect its generated configuration.
 
-## Who owns development Gateway configuration?
+Development adds the new child version through a separate apply manifest and
+omits the versions collection from the sync manifest. Production explicitly
+retains released versions in its manifest. This avoids treating retained
+development history as stale state and deleting it. Retention is a deliberate
+example policy, not the only possible version lifecycle.
 
-The Platform Team provisions one development control plane per service team and
-grants that team's repository identities access. Each service repository owns
-its Gateway Service, Routes, and service-scoped plugins. The Platform Team owns
-shared control-plane policy such as global [ACE](/plugins/ace/). Unique names
-and tags let
-sibling repositories share a control plane without conflicting with each
-other or with platform-owned state.
+## How are ACE operation removals authorized?
 
-## Who owns production Gateway configuration?
+With kongctl 1.21 or newer, a managed API can declare
+`force_delete: true` to authorize updates that remove ACE-mapped operations
+from its current specification. The example enables it on development and
+production APIs, including public APIs linked to ACE-enabled control planes.
 
-The Platform Team. A Service Team generates the candidate, but a promotion PR
-moves an exact copy into the platform repository for governance. Only the
-platform automation identity writes production Gateway state. Catalog state
-remains service-owned and is synchronized after the Gateway change.
+It does not request deletion of the API or disable runtime authorization.
+The authorization persists while the field remains enabled. It belongs on the
+managed parent API, not on versions, external APIs, or file defaults. It is an
+execution policy and is not inferred by a dump of live Konnect state.
 
-## Why are Bookings and Customer Information protected differently?
+Declarative reconciliation now selects the target version without a custom
+transition script. This authorization does not change the example's version
+retention policy.
 
-Bookings and Customer select a platform-owned Key Auth strategy in their
-Portal publications. A developer creates an application, registers for API
-access, obtains approval, and generates an API key through Dev Portal.
+## How are credentials and approvals separated?
 
-Global ACE handles application authorization and allows anonymous fallback.
-A post-function on protected Services rejects anonymous requests and forwards
-the authenticated application ID to the upstream in `X-KongAir-Account-ID`.
-Flights and Destinations do not install that protected-Service guard and
-remain anonymous. For a single Service with mixed access, apply the guard to
-the protected Routes.
+Each service repository uses its own Konnect system account. Platform desired
+state assigns existing accounts to teams; issuing tokens and placing them in
+GitHub Environment secrets are operator setup tasks. A separate GitHub App
+credential opens cross-repository promotion PRs and dispatches service workflows.
 
-The application ID selects an isolated synthetic customer and bookings
-account. It is not a passenger login or the developer's Portal login.
-Application credentials stay outside Git; the account survives key rotation.
+Production Gateway and Catalog jobs have separate environment approvals because
+they use different owners and identities. Credential-free validation is kept
+separate from write-capable automation. Do not expose deployment or write
+credentials to untrusted PR code.
 
-## Why not link protected APIs directly to a Gateway Service?
+## How do public and protected APIs coexist?
 
-A service implementation makes Gateway routing relationships define the access
-boundary. A control-plane implementation lets ACE use the API specification's
-operations for access decisions while routing remains independently managed in
-decK. This also supports API composition and packaging scenarios.
+The platform owns stage-specific Dev Portal Key Auth strategies and global
+[Access Control Enforcement](/plugins/ace/) with an anonymous fallback.
+Public Flights and Destinations operations can proceed without application
+credentials. Bookings and Customer publications select a Key Auth strategy.
 
-## What happens when a resource is removed from a manifest?
+Protected Gateway Services also have a service-owned access guard that runs
+after ACE and rejects anonymous access. For a Service containing both public
+and protected operations, scope the guard to protected Routes. OpenAPI
+security declarations alone do not configure these runtime policies.
 
-The next `kongctl sync` reconciles the removal. Konnect resources are scoped by
-the owning namespace. Gateway resources are scoped by decK select tags: each
-development service has a unique tag, while the Platform Team synchronizes the
-complete `env-prod` aggregate. Review deletions through the same pull-request
-and protected-environment controls as creates and updates. Catalog API versions
-are the exception: service workflows add them with a separate `kongctl apply`
-manifest and omit the collection from sync, preserving append-only version
-history.
+Developers register applications, request API access, obtain approval, and
+generate keys through Dev Portal. Public documentation visibility does not
+grant access to protected operations.
 
-## How are credentials bootstrapped?
+## Is the API key a passenger identity?
 
-Create the Platform automation identity and its token manually. Also create one
-Konnect system account per service repository manually; platform desired state
-assigns each existing account to its service team. The Platform Team owns the
-shared roles that repository accounts inherit. Issuing each service account
-token and storing it in the repository's development and protected production
-environments are human bootstrap steps. Production promotion uses a separate
-GitHub App credential that can open a PR in the platform repository and
-dispatch the owning service's protected production Catalog workflow after the
-Gateway synchronization succeeds. It is never exposed to fork jobs and does
-not receive a service's Konnect token.
+No. The key identifies the registered application, not a passenger or the
+developer signed into the Portal.
 
-## What if a synchronization fails immediately after an RBAC change?
+The example's protected-Service guard uses Gateway 3.16's
+`kong.ctx.shared.ace.application_id` to overwrite the upstream
+`X-KongAir-Account-ID` header. It removes the legacy passenger header and API
+key before proxying. The service source illustrates fictional accounts scoped
+to that application ID; key rotation does not select another application.
 
-Konnect role propagation can be eventually consistent. For the initial model,
-rerun the failed synchronization after propagation completes. Do not compensate by adding
-a second orchestration layer.
+Inspect the [guard input](https://github.com/KongAirlines/bookings/blob/main/gateway/application-auth.yaml)
+before adapting it. Its ACE context integration must be verified when upgrading
+Gateway, and services relying on an internal identity header need a trusted
+Gateway-to-service boundary. The delivery workflows do not deploy or change
+the existing upstream service at api.kong-air.com. Source tests and successful
+configuration runs do not establish hosted end-to-end compatibility.
 
-## Is an AI assistant skill available?
+## Why link Catalog APIs to a control plane?
+
+Control-plane implementations let ACE use specification operations for access
+decisions independently of Gateway routing. Service-level implementations
+instead use Gateway Service and Route relationships as the access boundary.
+Choose the relationship that matches your authorization model.
+
+## What happens when synchronization fails?
+
+Inspect the failed workflow and its plan before retrying. A completed Gateway
+deployment and a pending or failed Catalog deployment are separate outcomes,
+not a single rolled-back transaction. Keep the source commit and reviewed
+artifact aligned when recovering. RBAC propagation can also delay access after
+a role change.
+
+Do not treat a successful no-op run as proof that an operation-removing version
+transition or runtime authentication has been tested.
+
+## Can a coding agent help me adapt the patterns?
 
 Yes. The optional
-[`konnect-reference-platform` skill](https://github.com/Kong/ai-marketplace/tree/main/plugins/kong-konnect/skills/konnect-reference-platform)
-in the Kong AI Marketplace helps agents apply and review this ownership model.
-It composes the supported kongctl and decK workflows; it is not a prerequisite,
-configuration source, or replacement for the public example.
+[Reference Platform skill](https://github.com/Kong/ai-marketplace/tree/main/plugins/kong-konnect/skills/konnect-reference-platform)
+provides guidance for agents. Give the agent the outcome you want, relevant
+example files, and your own repository constraints. Ask it to identify the
+ownership and security boundaries before making changes. The skill is not
+a prerequisite or a separate configuration source.

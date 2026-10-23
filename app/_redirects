@@ -1,3 +1,6 @@
+# Konnect Reference Platform
+/konnect-reference-platform/how-to/ /konnect-reference-platform/patterns/
+
 # kongctl
 /kongctl/create/   /kongctl/
 /kongctl/create/*  /kongctl/

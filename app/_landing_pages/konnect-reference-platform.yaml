@@ -17,7 +17,6 @@ rows:
   - header:
       type: h1
       text: "{{site.konnect_short_name}} Reference Platform"
-      sub_text: Learn federated API platform management from a working example
     columns:
       - blocks:
           - type: structured_text
@@ -25,31 +24,38 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    The {{site.konnect_short_name}} Reference Platform is an
-                    educational project with public example repositories that
+                    ## Learn federated API platform management by example
+
+                    The {{site.konnect_short_name}} Reference Platform is a
+                    resource project with public example repositories that
                     demonstrate an opinionated approach to federated API
-                    platform management. Read the configuration, follow the
+                    platform management with {{site.konnect_product_name}}.
+                    Read the docs, follow the
                     workflows, and adapt the patterns to your own organization.
 
-                    The example follows **KongAirlines**, a fictional airline
+                    The example follows [KongAirlines](https://github.com/KongAirlines), a fictional airline
                     whose service teams deliver APIs independently while a
                     platform team manages shared infrastructure and production
                     governance. It connects API design, automated delivery,
                     developer discovery, and application access in one
                     implementation you can explore.
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    <a href="/assets/images/reference-platform/kongairlines-overview.png" aria-label="View the KongAirlines overview screenshot">
+                      <img src="/assets/images/reference-platform/kongairlines-overview.png" alt="KongAirlines README explaining platform and service team ownership" style="width: 100%; height: auto; border-radius: 8px;" />
+                    </a>
           - type: button
             config:
               text: Explore the KongAirlines repositories
               url: https://github.com/KongAirlines
-      - blocks:
-          - type: image
-            config:
-              url: /assets/images/reference-platform/kongairlines-repositories.png
-              alt_text: KongAirlines GitHub overview showing the platform and service repositories
 
   - header:
       type: h2
-      text: Learn how platform and service teams work together
+      text: Self-service API delivery with governance
     columns:
       - blocks:
           - type: structured_text
@@ -57,18 +63,21 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    **Shared foundations, clear governance**
+                    **Self-service for service teams**
 
-                    The platform team manages shared infrastructure, Developer
-                    Portals, teams, and access policies. It reviews production
-                    Gateway changes before they reach the shared environment.
+                    Give service teams the access and automation to manage
+                    their API contracts, catalog entries, documentation, and
+                    development Gateway configuration. Teams can build, test,
+                    and publish independently without making the platform team
+                    a dependency for every change.
 
-                    **Independent API delivery**
+                    **Governance where it matters**
 
-                    Service teams own their API contracts, catalog entries,
-                    documentation, and development Gateway configuration.
-                    They can iterate without handing every change to a central
-                    team, while following a shared path to production.
+                    The platform team defines access boundaries and manages
+                    shared infrastructure. Changes to critical production
+                    systems, such as the shared API Gateway, pass through
+                    platform review and approval. Service teams retain ownership
+                    of their APIs while production traffic remains governed.
       - blocks:
           - type: structured_text
             config:
@@ -77,21 +86,22 @@ rows:
                   text: |
                     **Supported tools, readable examples**
 
-                    The repositories use kongctl for {{site.konnect_short_name}}
+                    The project uses [kongctl](/kongctl/) for {{site.konnect_short_name}}
                     configuration, decK for Gateway configuration, and GitHub
                     Actions for automation. Explore how these tools support
                     team ownership without introducing another platform tool.
 
                     **Patterns you can adapt**
 
-                    Follow the example's approach to development and production,
-                    API releases, and shared governance. Use the documentation
-                    to understand the decisions, then inspect the repositories
-                    to see how they are implemented.
+                    This is one solution, not the only way to build an API
+                    platform. Explore its approach to development and production,
+                    API releases, and shared governance. Understand the decisions
+                    behind the example, then take the concepts that fit your
+                    organization and adapt them to your own needs.
 
   - header:
       type: h2
-      text: Review the Gateway changes behind an API change
+      text: Put API design first, with reviewable delivery
     columns:
       - blocks:
           - type: structured_text
@@ -99,8 +109,9 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Start with an OpenAPI contract in a service repository.
-                    Automation validates the contract, generates Gateway
+                    Follow an API-first workflow: start with an OpenAPI contract
+                    in a service repository, then let automation turn the design
+                    into deployable configuration. It validates the contract, generates Gateway
                     configuration, and commits the result to the same pull
                     request. Reviewers can inspect both the API change and
                     the configuration that will be deployed.
@@ -110,12 +121,16 @@ rows:
                     then move to a platform pull request, making the handoff
                     between service ownership and platform governance visible.
 
-                    Learn more about the [APIOps workflow](/konnect-reference-platform/apiops/).
+                    [Follow an API change](/konnect-reference-platform/apiops/) through the example.
       - blocks:
-          - type: image
+          - type: structured_text
             config:
-              url: /assets/images/reference-platform/desired-state-review.png
-              alt_text: Automated GitHub pull request comment summarizing inputs and generated Gateway configuration changes
+              blocks:
+                - type: text
+                  text: |
+                    <a href="/assets/images/reference-platform/production-gateway-diff.png" aria-label="View the production Gateway diff screenshot">
+                      <img src="/assets/images/reference-platform/production-gateway-diff.png" alt="GitHub pull request showing a reviewable production Gateway configuration diff" style="width: 100%; height: auto; border-radius: 8px;" />
+                    </a>
 
   - header:
       type: h2
@@ -141,8 +156,8 @@ rows:
       - blocks:
           - type: image
             config:
-              url: /assets/images/reference-platform/platform-workflows.png
-              alt_text: GitHub Actions workflow list for shared Konnect foundations, production Gateway delivery, validation, and authentication verification
+              url: /assets/images/reference-platform/development-delivery.png
+              alt_text: kongctl execution summary showing a successful development Gateway synchronization through decK
 
   - header:
       type: h2
@@ -166,6 +181,11 @@ rows:
 
                     Explore the [KongAirlines example](/konnect-reference-platform/kong-air/)
                     for the implementation and its ownership model.
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/reference-platform/portal-api-catalog.png
+              alt_text: KongAir Developer Portal catalog showing Bookings, Customer Information, Destinations, and Flights with published API versions
 
   - header:
       type: h2
@@ -184,21 +204,21 @@ rows:
       - blocks:
           - type: card
             config:
-              title: APIOps workflows
+              title: Follow an API change
               description: Follow an API change through review, development, and production.
               icon: /assets/icons/load-balance.svg
               cta:
-                text: Understand the flow
+                text: Follow the delivery flow
                 url: /konnect-reference-platform/apiops/
       - blocks:
           - type: card
             config:
-              title: Adapt the patterns
-              description: Apply the example's ownership and delivery model to your repositories.
+              title: Adapt patterns from KongAirlines
+              description: Choose a practice, inspect its implementation, and adapt it to your platform.
               icon: /assets/icons/graduation.svg
               cta:
-                text: Follow the guide
-                url: /konnect-reference-platform/how-to/
+                text: Find a useful pattern
+                url: /konnect-reference-platform/patterns/
 
   - header:
       type: h2

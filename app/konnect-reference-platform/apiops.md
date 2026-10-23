@@ -1,206 +1,153 @@
 ---
-title: Federated APIOps
+title: Follow an API change through KongAirlines
 content_type: reference
 layout: reference
 products:
   - konnect-reference-platform
-description: How service and platform teams deliver APIs with kongctl and decK.
+description: Follow an API contract through PR validation, development delivery, release preparation, and governed production promotion.
 breadcrumbs:
   - /konnect-reference-platform/
 related_resources:
   - text: Reference Platform
     url: /konnect-reference-platform/
-  - text: KongAirlines implementation
+  - text: Explore KongAirlines
     url: /konnect-reference-platform/kong-air/
-  - text: Adopt the architecture
-    url: /konnect-reference-platform/how-to/
+  - text: Adapt patterns from KongAirlines
+    url: /konnect-reference-platform/patterns/
   - text: Frequently asked questions
     url: /konnect-reference-platform/faq/
 ---
 
-[APIOps](/deck/apiops/) applies version control, review, automation, and
-declarative configuration to the API lifecycle. The Reference Platform uses a
-federated model: desired state remains with the team that owns the resource,
-and each repository invokes supported tooling directly.
+Follow a Bookings API change through the example's repositories. This is a
+reading guide to the implemented delivery flow, not a deployment checklist.
+[kongctl](/kongctl/) manages Konnect resources, [decK](/deck/) manages Gateway
+configuration, and GitHub Actions connects the reviewed artifacts to delivery.
 
-## Sources of truth
+If you are looking for a practice to bring into your own system, use
+[Adapt patterns from KongAirlines](/konnect-reference-platform/patterns/).
 
-There are no environment branches and no separate service registry.
+## Start with the API contract
 
-- OpenAPI documents describe API contracts.
-- kongctl manifests describe Konnect Catalog and shared platform resources.
-- Committed, CI-generated decK manifests describe {{site.base_gateway}}
-  runtime entities and record the exact reviewed deployment state.
-- `main` contains separate development and production resources and files.
+A service developer changes the root
+[OpenAPI document](https://github.com/KongAirlines/bookings/blob/main/openapi.yaml)
+on a feature branch. The example treats this as the next development contract
+and advances its beta version when the contract changes.
 
-In a service repository, the root `openapi.yaml` is always a beta development
-contract. `openapi/versions/` retains immutable stable contracts, and the
-API-level `version` in `konnect/prod.yaml` selects the current production
-contract. The generator derives its production input from that selector.
+The [Gateway generator](https://github.com/KongAirlines/bookings/blob/main/scripts/generate-gateway.sh)
+combines the contract with explicit transformation inputs. It generates
+development configuration from the root contract and production configuration
+from the retained release selected by the production Catalog manifest.
+A development-only design change need not change the production candidate.
 
-Service repositories own their development and production Catalog APIs,
-versions, specifications, publications, and control-plane implementations.
-They also own development Gateway configuration. The platform repository owns
-shared foundations and the production Gateway aggregate. Development uses the
-service namespace, while the separately approved production Catalog workflow
-uses `<service>-prod`; this prevents either synchronization from pruning the
-other stage's API.
+**Observe:** the service PR contains the API design and its resulting
+Gateway configuration, not only a script that will generate unknown output later.
 
-## Generate Gateway state
+## Validate and materialize the PR
 
-Each service repository has a deterministic generation script. It performs the
-following operations with a pinned decK version:
+The [validation workflow](https://github.com/KongAirlines/bookings/blob/main/.github/workflows/validate-konnect.yaml)
+generates both Gateway artifacts without Konnect credentials. It validates the
+output and uploads the artifacts.
 
-1. `deck file openapi2kong` converts the selected OpenAPI document.
-2. `deck file patch` adds `_info.select_tags` for ownership-safe synchronization.
-3. `deck file add-tags` ensures Services, Routes, and service-scoped plugins
-   carry environment, team, owner, and service-stage tags.
-4. `deck file validate` checks each materialized result before delivery.
+A separate [materialization workflow](https://github.com/KongAirlines/bookings/blob/main/.github/workflows/materialize-gateway.yaml)
+verifies the source PR and artifact boundaries, then commits generated files to
+the same-repository branch. Validation runs again; matching output requires no
+further commit.
 
-Development files select a unique service-stage tag so sibling repositories can
-synchronize safely against a shared team control plane. Production files select
-the common `env-prod` tag and are synchronized together by the Platform Team.
-Public OpenAPI contracts exclude internal operational endpoints such as health,
-readiness, and liveness checks.
+The workflow updates a PR comment with changed input files and generated Gateway
+differences. That comment is an offline comparison, not a live Konnect plan.
+A Catalog-only change can correctly show no generated Gateway differences.
 
-Advance the development contract's `info.version` whenever its contents
-change. Konnect treats the version as the Catalog API version identity, and
-[ACE](/plugins/ace/) prevents removing operations by modifying the current
-version in place.
-Treat development API versions as append-only: put the current version in a
-separate `konnect/dev-versions.yaml` manifest and deliver it with `kongctl
-apply`. Omit the `versions` collection from the synchronized `dev.yaml` so
-older versions are not interpreted as stale and deleted.
+**Observe:** reviewers can inspect intent and output together. Additional
+Gateway behavior is expressed through transformation inputs, not hand edits to
+generated files. The credentialed workflow does not execute PR-controlled
+scripts, and fork validation does not receive deployment or write credentials.
 
-Pull-request validation generates and validates both files without Konnect
-credentials and uploads them as an artifact. A trusted workflow that never
-executes PR-controlled code verifies the current PR head and artifact
-boundaries, then uses the repository GitHub App to commit the files to a
-same-repository branch. The App commit triggers validation again; when the
-files match, no further commit is made. Fork code never receives a Konnect or
-repository-write credential. The workflow maintains one PR comment with the
-changed inputs and generated Gateway diff summaries, updating it after every
-validated change rather than replacing the PR author's description.
+## Merge to development
 
-Generated files are automation-owned. Teams represent additional Gateway
-behavior as reviewed generator or patch inputs, allowing reviewers to inspect
-both the intent and resulting Gateway diff. Validation also verifies the
-development beta, production selector, retained version declarations, spec
-filenames, and release immutability.
+After merge, [development synchronization](https://github.com/KongAirlines/bookings/blob/main/.github/workflows/apply-dev.yaml)
+checks that the committed Gateway artifacts still match generation. It adds the
+development Catalog version and synchronizes the service's Catalog state and
+tagged Gateway configuration with its Konnect identity.
 
-## Prepare a release
+The [development manifest](https://github.com/KongAirlines/bookings/blob/main/konnect/dev.yaml)
+references the platform-owned Portal and team control plane. The service does
+not provision competing shared resources.
 
-A manually dispatched service workflow accepts two stable versions: the
-version to release and the next version to develop. If `openapi.yaml` is
-`0.2.0-beta.N`, inputs `0.2.0` and `0.3.0` open a service PR that:
+**Observe:** the service updates its development API and its Gateway
+configuration directly. It has not deployed a production Gateway change.
 
-1. creates the immutable `openapi/versions/0.2.0.yaml` snapshot;
-2. retains all prior versions and sets the production API's current version to
-   `0.2.0` in `konnect/prod.yaml`;
-3. advances the root document to `0.3.0-beta.1`; and
-4. materializes and validates both Gateway stages in the release PR.
+## Prepare a production release
 
-The workflow refuses to overwrite an existing release. Humans review and merge
-its PR; automation does not write release state directly to `main`.
+When the service is ready to release, its
+[release workflow](https://github.com/KongAirlines/bookings/blob/main/.github/workflows/release-api.yaml)
+opens another service PR. The team supplies a stable release version and the
+next development version; it does not edit a deployment script.
 
-## Development delivery
+[Release preparation](https://github.com/KongAirlines/bookings/blob/main/scripts/prepare-release.sh):
 
-After a service change reaches `main`, the repository runs:
+1. Retains the stable contract as a versioned specification.
+2. Selects that release in the production Catalog manifest.
+3. Advances the root contract to the next development beta.
+4. Generates the Gateway artifacts for review.
 
-```sh
-./scripts/generate-gateway.sh
-git diff --exit-code -- gateway/dev/kong.yaml gateway/prod/kong.yaml
-kongctl apply -f konnect/dev-versions.yaml --base-dir . \
-  --auto-approve
-# APIs linked to an ACE-enabled control plane, until kongctl #2510 is resolved:
-./scripts/transition-ace-api-version.sh "<development-api-name>"
-kongctl sync -f konnect/dev.yaml --base-dir . \
-  --require-namespace <service>
-```
+Validation protects retained releases against modification and deletion. Merging
+this PR sends the next beta to development and proposes the reviewed production
+candidate through the promotion workflow.
 
-For APIs linked to an ACE-enabled control plane, the transition helper verifies
-that the additive apply created the child version, then selects it using the
-Konnect API's explicit `force=true` behavior. This includes public APIs that do
-not select an application-auth strategy because their control-plane
-implementations remain governed by ACE. This is a temporary workaround for
-[kongctl #2510](https://github.com/Kong/kongctl/issues/2510); remove it when
-kongctl can declaratively order and authorize ACE-governed transitions.
-The additive apply temporarily omits `--require-namespace` because kongctl
-1.20.2 loses namespace defaults for external-only sources. Restore the guard
-after [kongctl #2503](https://github.com/Kong/kongctl/pull/2503) is released;
-the manifest continues to declare its service namespace.
+**Observe:** the selected production specification and generated Gateway
+candidate are reviewed together. Releasing a contract is an explicit choice,
+not an automatic consequence of every development merge.
 
-The manifest uses `_external` and `!lookup` to resolve the Platform Team-owned
-development control plane and Portal. `_deck` makes kongctl run one decK synchronization
-for that service's tagged Gateway state. The final sync manages the
-service-owned private Catalog API, its publication, its control-plane
-implementation, and tagged Gateway state without deleting API version history.
+## Promote through platform review
 
-Each repository uses a dedicated Konnect system account token. kongctl
-namespaces define declarative ownership; Konnect RBAC defines what that identity
-can actually change. Sibling repositories can run at the same time in v1. Their
-unique names and decK select tags ensure each synchronization can delete only
-the Gateway entities owned by that service.
+The [promotion workflow](https://github.com/KongAirlines/bookings/blob/main/.github/workflows/promote-prod.yaml)
+copies the committed production candidate into a platform PR. It records the
+source repository, commit, checksum, and tool versions. It does not regenerate
+the candidate or deploy it to production.
 
-## Production promotion
+The platform team reviews the candidate alongside the aggregate production
+configuration. After merge and production-environment approval, the
+[platform delivery workflow](https://github.com/KongAirlines/platform/blob/main/.github/workflows/apply-production-gateway.yaml)
+synchronizes the reviewed Gateway state.
 
-Production uses an explicit ownership boundary:
+**Observe:** production Gateway changes cross a review boundary. Service teams
+retain API ownership without receiving production Gateway write permissions.
+A provenance-only promotion can identify a new reviewed source commit even
+when the Gateway configuration is unchanged.
 
-1. The release workflow opens a service PR containing the stable contract,
-   next development beta, and updated production selector.
-2. After that PR merges, a trusted workflow copies the exact reviewed candidate
-   into `KongAirlines/platform` and opens a PR.
-3. The platform PR records the source repository, commit, SHA-256 checksum,
-   decK version, and kongctl version.
-4. The Platform Team reviews and merges the Gateway change.
-5. The platform workflow synchronizes all four production files in one kongctl
-   `_deck` operation against `kongairlines-prod`.
-6. After the Gateway synchronization succeeds, the platform workflow reads
-   the changed provenance and dispatches the owning service's production
-   Catalog workflow with the exact promoted commit.
-7. The Service Team approves its protected GitHub Environment, and the
-   service-owned identity synchronizes the Catalog state.
+## Publish the production Catalog state
 
-<!--vale off -->
-{% mermaid %}
-sequenceDiagram
-  participant S as Service repository
-  participant P as Platform repository
-  participant G as Production Gateway
-  participant C as Konnect Catalog
-  S->>S: Review release PR and retain stable contract
-  S->>P: Open promotion PR with provenance
-  P->>P: Platform review
-  P->>G: Aggregate kongctl sync with _deck
-  P->>S: Dispatch Catalog sync from provenance
-  S->>C: Approved kongctl sync from promoted commit
-{% endmermaid %}
-<!--vale on -->
+After successful Gateway synchronization, platform automation reads changed
+provenance and dispatches the owning service's
+[production Catalog workflow](https://github.com/KongAirlines/bookings/blob/main/.github/workflows/apply-prod-catalog.yaml).
 
-The platform copy is the production Gateway source of truth. Do not hand-edit
-it. Make corrections in the service repository and promote a new exact copy.
-Rollback follows the same reviewed PR process using retained release inputs.
-Namespaces and decK select tags scope synchronization, including deletions, to
-the declarative owner.
+That workflow checks out the exact promoted commit. After its own production
+approval, the service identity synchronizes the production API, retained
+specifications, implementation link, and Portal publication.
 
-## Authentication flow
+**Observe:** the platform governs the production traffic path, while the
+service still writes its own production Catalog resources. The two approvals
+protect different ownership boundaries. These operations are not one atomic
+transaction; failures are visible in the owning workflow.
 
-Bookings and Customer Information declare an API key in `X-API-Key` in their
-OpenAPI contracts. Their publications select the stage's platform-owned Key
-Auth application strategy. Developers register applications through Dev
-Portal and obtain keys after approval.
+## Connect publication to API consumption
 
-The Platform repository installs global ACE with `match_policy: required`
-and an anonymous Consumer. Service-owned post-functions run after ACE and
-reject anonymous access to protected Services. They forward ACE's application
-ID as `X-KongAir-Account-ID`, replacing supplied identity headers and removing
-the API key upstream. Flights and Destinations remain anonymous.
+The Portal presents the published contract and the application registration
+process. Flights and Destinations illustrate public operations. Bookings and
+Customer illustrate protected application-key access after registration approval.
 
-Each registered application receives its own synthetic demo account. Customer
-data is deterministic, and every booking read or mutation is scoped to the
-same application ID. This avoids a manual application-to-passenger mapping.
-For mixed access within one Service, scope the guard to protected Routes.
+Documentation visibility, application registration, and runtime access are
+different controls. Read the
+[authentication decisions](/konnect-reference-platform/faq/#how-do-public-and-protected-apis-coexist)
+before adapting the protected-API example.
 
-Test public access, invalid credentials, unapproved application registrations,
-header replacement, account isolation, and key rotation through a running
-Gateway before merging the documentation.
+The workflow sequence above deploys Konnect and Gateway configuration, not the
+upstream application services. A successful configuration run does not by itself
+prove end-to-end runtime behavior; that requires requests through a running
+Gateway and compatible upstream services.
+
+## Take a practice into your own platform
+
+You can adopt reviewable generation, release PRs, or governed promotion
+independently. The [pattern guide](/konnect-reference-platform/patterns/)
+links each practice to its implementation and the boundaries worth preserving.

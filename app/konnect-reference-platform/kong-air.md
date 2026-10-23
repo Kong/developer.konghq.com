@@ -12,29 +12,34 @@ breadcrumbs:
 related_resources:
   - text: Reference Platform
     url: /konnect-reference-platform/
-  - text: APIOps workflows
+  - text: Follow an API change
     url: /konnect-reference-platform/apiops/
-  - text: Adopt the architecture
-    url: /konnect-reference-platform/how-to/
+  - text: General APIOps example with decK
+    url: /deck/apiops/
+  - text: Adapt patterns from KongAirlines
+    url: /konnect-reference-platform/patterns/
   - text: Frequently asked questions
     url: /konnect-reference-platform/faq/
 ---
 
-[KongAirlines](https://github.com/KongAirlines) is the public Reference
-Implementation for this architecture. The repositories contain application
-code so the example feels realistic, but the important artifacts are the
-OpenAPI documents, kongctl manifests, CI-generated decK state, and GitHub Actions
-workflows. You can read them, copy the relevant pieces, and adapt the names and
-topology to your organization.
+[KongAirlines](https://github.com/KongAirlines) is the example implementation of
+the Reference Platform. Its public repositories show how service teams can
+deliver independently while a platform team governs shared infrastructure and
+production Gateway changes.
 
-## Repository ownership
+The useful starting points are the OpenAPI contracts, [kongctl](/kongctl/)
+manifests, generated [decK](/deck/) configuration, and delivery workflows.
+You can read them without deploying the example. Use the
+[pattern guide](/konnect-reference-platform/patterns/) to choose practices
+to adapt rather than reproducing every repository and resource.
 
-The [platform repository](https://github.com/KongAirlines/platform) owns shared
-foundations: organization teams, RBAC assignments, Developer Portals,
-application auth strategies, control planes, and the reviewed production
-Gateway aggregate.
+## Meet the repositories
 
-Two service teams own four active repositories:
+The [platform repository](https://github.com/KongAirlines/platform) represents
+the platform team. It owns shared Konnect infrastructure, access governance,
+Developer Portals, and production Gateway configuration.
+
+Two service teams own the API repositories:
 
 {% table %}
 columns:
@@ -42,98 +47,72 @@ columns:
     key: team
   - title: Repository
     key: repository
-  - title: Authorization
-    key: authorization
-  - title: Development control plane
-    key: control_plane
+  - title: Example API access
+    key: access
 rows:
-  - team: "`customer-data`"
+  - team: customer-data
     repository: "[bookings](https://github.com/KongAirlines/bookings)"
-    authorization: Dev Portal Key Auth and [ACE](/plugins/ace/)
-    control_plane: "`customer-data-dev`"
-  - team: "`customer-data`"
+    access: Approved Portal application API key
+  - team: customer-data
     repository: "[customer](https://github.com/KongAirlines/customer)"
-    authorization: Dev Portal Key Auth and [ACE](/plugins/ace/)
-    control_plane: "`customer-data-dev`"
-  - team: "`flight-data`"
+    access: Approved Portal application API key
+  - team: flight-data
     repository: "[destinations](https://github.com/KongAirlines/destinations)"
-    authorization: Anonymous
-    control_plane: "`flight-data-dev`"
-  - team: "`flight-data`"
+    access: Public
+  - team: flight-data
     repository: "[flights](https://github.com/KongAirlines/flights)"
-    authorization: Anonymous
-    control_plane: "`flight-data-dev`"
+    access: Public
 {% endtable %}
 
-## What a service repository owns
+Service teams own their development and production Catalog APIs, specifications,
+versions, and publications. They write Gateway configuration directly to their
+team's development control plane. They propose production Gateway changes
+through platform PRs instead of writing to the production control plane.
 
-Each active repository uses the same readable layout:
+## Start with one service
 
-```text
-openapi.yaml
-openapi/versions/0.1.0.yaml
-konnect/dev.yaml
-konnect/prod.yaml
-gateway/dev/kong.yaml
-gateway/prod/kong.yaml
-scripts/generate-gateway.sh
-scripts/prepare-release.sh
-scripts/validate-api-releases.sh
-.github/workflows/
-```
+Read [Bookings](https://github.com/KongAirlines/bookings) as a representative
+service repository. The other services follow the same delivery structure;
+Flights provides a public-API contrast.
 
-The root OpenAPI document is the mutable next-beta contract. Versioned files
-are immutable stable releases. The API-level `version` in `konnect/prod.yaml`
-selects the current production release, so generation does not contain a
-hard-coded release path. `konnect/dev.yaml` declares a private development
-Catalog API, resolves the platform-owned Portal and control plane, and attaches
-the repository's decK file through `_deck`. `konnect/prod.yaml` declares a
-distinct public production Catalog API and a control-plane implementation, but
-cannot synchronize production Gateway state.
+- [OpenAPI contract](https://github.com/KongAirlines/bookings/blob/main/openapi.yaml):
+  the current development design.
+- [Konnect manifests](https://github.com/KongAirlines/bookings/tree/main/konnect):
+  service-owned Catalog state and references to shared infrastructure.
+- [Gateway artifacts](https://github.com/KongAirlines/bookings/tree/main/gateway):
+  generated development and production configuration, alongside policy inputs.
+- [Workflows](https://github.com/KongAirlines/bookings/tree/main/.github/workflows):
+  validation, development delivery, release preparation, and production promotion.
 
-The manually dispatched release workflow takes a stable release version and
-the next development version. It opens a service PR that snapshots the current
-beta, advances the root contract to the next `-beta.1`, updates the production
-selector, and materializes both Gateway stages in the PR. CI prevents released
-specifications from being changed or removed and verifies that committed
-Gateway state matches deterministic generation.
+For the sequence connecting these files, [follow an API change](/konnect-reference-platform/apiops/).
 
-The platform repository owns stage-specific Key Auth application strategies,
-the anonymous Consumer, and global [ACE](/plugins/ace/). Developers register
-applications through Dev Portal, request API access, and generate API keys
-after approval. Bookings and Customer require an approved application key;
-Flights and Destinations remain anonymous.
+## Then inspect the platform boundary
 
-ACE uses `match_policy: required` with an anonymous fallback. Protected
-Services add a post-function that rejects anonymous access and forwards
-ACE's authenticated application ID as `X-KongAir-Account-ID`, overwriting
-client identity headers. Bookings and Customer use this immutable ID for
-separate synthetic demo accounts. Key rotation preserves the account.
-This example models application access rather than passenger login.
+In the platform repository, compare the
+[shared foundations](https://github.com/KongAirlines/platform/blob/main/konnect/foundations.yaml)
+with the service's references to those resources. Then inspect
+[production Gateway configuration](https://github.com/KongAirlines/platform/tree/main/gateway/prod)
+to see the reviewed service artifacts and their provenance.
 
-## What the platform repository owns
+The [production delivery workflow](https://github.com/KongAirlines/platform/blob/main/.github/workflows/apply-production-gateway.yaml)
+shows how platform approval leads to Gateway synchronization and then dispatches
+production Catalog delivery back to the owning service.
 
-The platform repository contains direct kongctl manifests, not a registry or a
-format that generates another desired-state format:
+## Explore the consumer experience
 
-- `konnect/foundations.yaml` declares teams, control planes, and Portals.
-- `konnect/access.yaml` assigns roles to existing repository automation
-  identities.
-- `konnect/development-gateway.yaml` installs shared control-plane policy,
-  including global ACE and the anonymous Consumer, on the development
-  control planes.
-- `konnect/production-gateway.yaml` resolves one production control plane and
-  synchronizes platform policy and four promoted decK files in one `_deck`
-  operation.
-- `gateway/prod/` contains exact reviewed service artifacts. Platform changes
-  go back to the service repository and are promoted again.
+The platform also owns [Portal pages and navigation](https://github.com/KongAirlines/platform/tree/main/konnect/portal).
+Service-owned publications connect API delivery to discovery and application
+access. The protected service source demonstrates fictional accounts scoped to
+an application, not passenger login.
 
-## Tooling dependencies
+The Gateway delivery workflows do not deploy the application source. Read that
+source as an illustration of the identity contract, not proof that an existing
+upstream deployment implements it.
 
-The manifests intentionally exercise federated external lookup and
-control-plane API implementations. The workflows install the latest stable
-kongctl release so the example provides a practical test bed for current
-declarative support and surfaces compatibility regressions.
+## Choose what to adapt
 
-See [APIOps workflows](/konnect-reference-platform/apiops/) for the complete
-development and production sequence.
+The repository topology, version conventions, and authentication strategy are
+example decisions. You can adopt API-first PR review without also adopting the
+same Portal or control-plane topology. Start with a
+[pattern that addresses your needs](/konnect-reference-platform/patterns/),
+and consult the [FAQ](/konnect-reference-platform/faq/) for design tradeoffs.
