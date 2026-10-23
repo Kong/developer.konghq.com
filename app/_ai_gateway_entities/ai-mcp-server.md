@@ -561,7 +561,7 @@ The AI MCP Server [`rate_limiting`](#schema-aigateway-mcpserver-rate-limiting) f
 
 Use `rate_limiting` in the following cases:
 
-- **Protect an expensive tool**: limit a single tool, such as `search_flights`, to a small number of calls per second, without slowing down the rest of the server.
+- **Limit expensive tool usage**: limit the use of a single too to a small number of calls per second, without slowing down the rest of the server.
 - **Cap overall tool usage**: limit all `tools/call` requests per minute, regardless of which tool the client calls.
 - **Layer short and long windows**: combine a per-second limit to absorb bursts with a per-day limit to control total usage for the same tool.
 
