@@ -170,7 +170,7 @@ The Rate Limiting Advanced plugin supports [cloning](/gateway/entities/plugin/#c
 ### Counter rollback when a request is denied
 
 When a request matches more than one Rate Limiting Advanced instance, the instances run in order and each one increments its own counters.
-This also applies across other rate limiting plugin instances in the same request that share this mechanism, such as [Service Protection](/plugins/service-protection/) or ACE.
+This also applies across other rate limiting plugin instances in the same request that share this mechanism, such as [Service Protection](/plugins/service-protection/) or [ACE](/plugins/ace/).
 
 If one of the instances rejects the request with a `429`, the counters that the earlier instances have already incremented for this request are handled independently by each instance, based on that instance's own [`disable_penalty`](./reference/#schema--config-disable-penalty) setting:
 
