@@ -88,6 +88,7 @@ rows:
     description: Cluster policies execute on all Kafka API commands from clients.
     policies: |
         - [ACL](/event-gateway/policies/acl/)
+        - [Request Rule Validator](/event-gateway/policies/request-rule-validator/)
   - phase: "`Produce`"
     description: "Produce policies execute on Kafka `Produce` commands."
     policies: |
@@ -126,6 +127,9 @@ features:
   - title: "[Kafka ACL](/event-gateway/policies/acl/)"
     nonparsed: No
     parsed: No
+  - title: "[Request Rule Validator](/event-gateway/policies/request-rule-validator/)"
+    nonparsed: No
+    parsed: No
   - title: "[Encrypt](/event-gateway/policies/encrypt/)"
     nonparsed: Yes
     parsed: No
@@ -141,6 +145,12 @@ features:
   - title: "[Skip records](/event-gateway/policies/skip-record/)"
     parsed: Yes
     nonparsed: Yes
+  - title: "[Record Transcode](/event-gateway/policies/record-transcode-produce/)"
+    nonparsed: No
+    parsed: Yes
+  - title: "[Mask Fields](/event-gateway/policies/mask-fields-produce/)"
+    nonparsed: No
+    parsed: Yes
 {% endfeature_table %}
 <!-- vale on -->
 
@@ -160,11 +170,15 @@ rows:
     nested: |
       * [Modify Headers](/event-gateway/policies/modify-headers/)
       * [Encrypt Fields](/event-gateway/policies/encrypt-fields/)
+      * [Record Transcode Produce](/event-gateway/policies/record-transcode-produce/)
+      * [Mask Fields Produce](/event-gateway/policies/mask-fields-produce/)
   - parent: "[Schema Validation consume](/event-gateway/policies/schema-validation-consume/)"
     nested: |
       * [Modify Headers](/event-gateway/policies/modify-headers/)
       * [Skip Records](/event-gateway/policies/skip-record/)
       * [Decrypt Fields](/event-gateway/policies/decrypt-fields/)
+      * [Record Transcode Consume](/event-gateway/policies/record-transcode-consume/)
+      * [Mask Fields Consume](/event-gateway/policies/mask-fields-consume/)
     
 {% endtable %}
 <!--vale on-->
