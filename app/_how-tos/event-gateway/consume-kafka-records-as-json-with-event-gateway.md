@@ -248,13 +248,10 @@ body:
   config:
     failure_mode: skip
     output_format: json
-    schema_ref_destination:
-      type: none
 {% endkonnect_api_request %}
 <!--vale on-->
 
 Converting to JSON doesn't require a `schema_source`, because JSON doesn't need a schema to serialize the record value.
-`schema_ref_destination: none` means the converted record carries no reference to a schema, since a plain JSON consumer has no use for one.
 
 Both policies use `failure_mode: skip`, so a record either policy can't process is never delivered.
 The alternatives are `error`, `passthrough`, and `mark`.
