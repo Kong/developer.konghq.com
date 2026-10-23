@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect Audit Log Settings
-  version: 4.0.0
+  version: 3.1.1
   description: The API for configuring Kong Konnect Audit Logs.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@39929c660346041151b0aeca642acac2b0e10268
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/39929c660346041151b0aeca642acac2b0e10268'
+  x-oas-source: kong/platform-api@1ccc27a27a42b4120e1eb640ba2eb243b96c4c4a
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1ccc27a27a42b4120e1eb640ba2eb243b96c4c4a'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
