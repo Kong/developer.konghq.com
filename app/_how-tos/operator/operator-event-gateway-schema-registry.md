@@ -255,6 +255,31 @@ prereqs:
              {: data-test-prereq="block" }
       icon_url: /assets/icons/event.svg
 
+cleanup:
+  inline:
+    - title: Delete the {{ site.event_gateway }} resources
+      content: |
+        Deleting the `KonnectEventGateway` also deletes the {{ site.event_gateway }} control plane the {{ site.operator_product_name }} created in {{ site.konnect_short_name }}:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          eventgatewayvirtualclusterconsumepolicy/example-schema-validation-confluent \
+          eventgatewayschemaregistry/example-schema-registry \
+          eventgatewayvirtualcluster/example-virtual-cluster \
+          eventgatewaybackendcluster/default-backend-cluster \
+          konnecteventgateway/cp-event-1
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/event.svg
+
+    - title: Delete the Kafka cluster and the namespaces
+      content: |
+        ```bash
+        helm uninstall kafka-cluster -n kafka
+        kubectl delete namespace kafka kong
+        ```
+      icon_url: /assets/icons/kubernetes.svg
+
 faqs:
   - q: How do I validate plain JSON records?
     a: |
