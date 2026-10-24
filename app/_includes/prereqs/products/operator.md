@@ -31,16 +31,41 @@ rawLicenseString: '$(cat ./license.json)'
 {% include operator/rapid-release.md %}
 {% endif %}
 
+{%- capture operator_helm_repo -%}
 1. Add the Kong Helm charts:
 
    ```bash
    helm repo add kong https://charts.konghq.com
    helm repo update
    ```
+{%- endcapture -%}
+
+{%- capture operator_flags_konnect -%}
+\{% if chart_version %}
+       --version {{ chart_version }}{% if include.devel %} \
+       --devel{% endif %} \{% else %}
+       --set image.tag={{ site.data.operator_latest.release }} \{% endif %}
+       --set env.ENABLE_CONTROLLER_KONNECT=true{% if keg_install %} \
+       --set env.ENABLE_CONTROLLER_KEGDATAPLANE=true{% endif %}{% if page.prereqs.operator.controllers %} \{% for controller in page.prereqs.operator.controllers %}
+       --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}{% if extra_set %} \{% for param in extra_set %}
+       --set {{ param }}{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
+{%- endcapture -%}
+
+{%- capture operator_flags_on_prem -%}
+\{% if chart_version %}
+       --version {{ chart_version }}{% if include.devel %} \
+       --devel{% endif %} \{% else %}
+       --set image.tag={{ site.data.operator_latest.release }} \{% endif %}{% if keg_install %} \
+       --set env.ENABLE_CONTROLLER_KEGDATAPLANE=true{% endif %}{% if page.prereqs.operator.controllers %} \{% for controller in page.prereqs.operator.controllers %}
+       --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}{% if extra_set %} \{% for param in extra_set %}
+       --set {{ param }}{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
+{%- endcapture -%}
+
+{% if include.v_maj == 1 %}
+{{ operator_helm_repo }}
 
 1. Install {{ site.operator_product_name }} using Helm:
 
-{% if include.v_maj == 1 %}
    {% if page.works_on contains 'konnect' %}
    {% konnect %}
    content: |
@@ -70,19 +95,18 @@ rawLicenseString: '$(cat ./license.json)'
    {% endon_prem %}
    {% endif %}
 {% else %}
+{% navtabs "operator-install-method" %}
+{% navtab "Helm repository" %}
+{{ operator_helm_repo }}
+
+1. Install {{ site.operator_product_name }} using Helm:
+
    {% if page.works_on contains 'konnect' %}
    {% konnect %}
    content: |
      ```bash
      helm upgrade --install kong-operator kong/kong-operator -n kong-system \
-       --create-namespace \{% if chart_version %}
-       --version {{ chart_version }}{% if include.devel %} \
-       --devel{% endif %} \{% else %}
-       --set image.tag={{ site.data.operator_latest.release }} \{% endif %}
-       --set env.ENABLE_CONTROLLER_KONNECT=true{% if keg_install %} \
-       --set env.ENABLE_CONTROLLER_KEGDATAPLANE=true{% endif %}{% if page.prereqs.operator.controllers %} \{% for controller in page.prereqs.operator.controllers %}
-       --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}{% if extra_set %} \{% for param in extra_set %}
-       --set {{ param }}{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
+       --create-namespace {{ operator_flags_konnect }}
      ```
    indent: 3
    {% endkonnect %}
@@ -93,17 +117,41 @@ rawLicenseString: '$(cat ./license.json)'
    content: |
      ```bash
      helm upgrade --install kong-operator kong/kong-operator -n kong-system \
-       --create-namespace \{% if chart_version %}
-       --version {{ chart_version }}{% if include.devel %} \
-       --devel{% endif %} \{% else %}
-       --set image.tag={{ site.data.operator_latest.release }} \{% endif %}{% if keg_install %} \
-       --set env.ENABLE_CONTROLLER_KEGDATAPLANE=true{% endif %}{% if page.prereqs.operator.controllers %} \{% for controller in page.prereqs.operator.controllers %}
-       --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}{% if extra_set %} \{% for param in extra_set %}
-       --set {{ param }}{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
+       --create-namespace {{ operator_flags_on_prem }}
      ```
    indent: 3
    {% endon_prem %}
    {% endif %}
+{% endnavtab %}
+
+{% navtab "OCI registry" %}
+1. Install {{ site.operator_product_name }} using Helm from the [OCI registry on Docker Hub](https://hub.docker.com/r/kong/kong-operator-chart). Set `nameOverride` so that the resources get the same names as with the chart from the Helm repository:
+
+   {% if page.works_on contains 'konnect' %}
+   {% konnect %}
+   content: |
+     ```bash
+     helm upgrade --install kong-operator oci://registry-1.docker.io/kong/kong-operator-chart -n kong-system \
+       --create-namespace \
+       --set nameOverride=kong-operator {{ operator_flags_konnect }}
+     ```
+   indent: 3
+   {% endkonnect %}
+   {% endif %}
+
+   {% if page.works_on contains 'on-prem' %}
+   {% on_prem %}
+   content: |
+     ```bash
+     helm upgrade --install kong-operator oci://registry-1.docker.io/kong/kong-operator-chart -n kong-system \
+       --create-namespace \
+       --set nameOverride=kong-operator {{ operator_flags_on_prem }}
+     ```
+   indent: 3
+   {% endon_prem %}
+   {% endif %}
+{% endnavtab %}
+{% endnavtabs %}
 
 {% endif %}
 {% unless skip_cert_manager %}{{cert-manager | indent: 3}}{% endunless %}
