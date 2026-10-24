@@ -81,6 +81,10 @@ See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose 
 
 {% include_cached /plugins/rate-limiting/strategies.md name=page.name %}
 
+### Short limit periods and sync_rate
+
+When using the `redis` policy, if [`config.sync_rate`](/plugins/rate-limiting/reference/#schema--config-sync-rate) is greater than or equal to the length of a limited period (for example, `sync_rate: 1` with a `second` limit), counters for that period can't be synced before the window closes. Starting in {{site.base_gateway}} 3.X, such periods are synced to Redis on every request, as if `sync_rate` were `-1`, and {{site.base_gateway}} logs a warning. Longer periods continue to sync at `sync_rate`. To keep batched syncing for every period, set `sync_rate` lower than your shortest limited period.
+
 ### Using cloud authentication with Redis {% new_in 3.13 %}
 
 {% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
