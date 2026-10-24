@@ -75,9 +75,16 @@ releases:
     lts: true
   - version: 2.14.6
     release: "2.14"
-    latest: true
+    releaseDate: "2026-06-12"
+    eol: "2027-06-12"
     branch: release-2.14
-  - version: preview
+  - version: 3.0.0
     release: "3.0"
+    latest: true
+    releaseDate: "2026-10-15"
+    eol: "2027-10-15"
+    branch: release-3.0
+  - version: preview
+    release: "3.1"
     branch: master
     label: dev
