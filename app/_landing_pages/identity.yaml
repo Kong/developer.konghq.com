@@ -155,7 +155,7 @@ rows:
             icon: /assets/icons/document.svg
             cta:
               text: Learn about directories
-              url: /identity/principals/
+              url: /identity/directories/
               align: end
 
   - header:

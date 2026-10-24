@@ -1,7 +1,7 @@
 {{site.identity}} uses principals and directories to unify how Kong products represent the entities they authenticate. 
 
-* **Principal:** Represents an external client, workload, or human authenticating to a {{site.base_gateway}} (not a {{site.konnect_short_name}} user or {{site.dev_portal}} developer).
-* **Directory:** Regional collection of principals. 
+* **[Principal](/identity/principals/):** Represents an external client, workload, or human authenticating to a {{site.base_gateway}} (not a {{site.konnect_short_name}} user or {{site.dev_portal}} developer).
+* **[Directory](/identity/directories/):** Regional collection of principals. 
   Each {{site.konnect_short_name}} organization can provision up to one directory per region by default.
 
 Principals work with:

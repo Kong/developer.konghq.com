@@ -377,6 +377,7 @@ rows:
     permissions: |
       * Read and list auth servers.
 {% endtable %}
+<!--vale on-->
 
 #### APIs
 
