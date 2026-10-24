@@ -32,7 +32,8 @@ related_resources:
 
 This guide walks you through migrating an existing configuration using the `kongctl` {{site.ai_gateway}} conversion extension.
 
-This guide is intended for teams running {{site.ai_gateway}} on {{site.base_gateway}} 3.x who want to move to the {{site.ai_gateway}} 2.x control plane. If you are starting fresh, see [Set up a fresh install with the {{site.konnect_short_name}} MCP Server](#set-up-a-fresh-install-with-the-konnect-mcp-server).
+This guide is intended for teams running {{site.ai_gateway}} on {{site.base_gateway}} 3.x in {{site.konnect_short_name}} who want to move to the {{site.ai_gateway}} 2.x control plane. If you are starting fresh, see [Set up a fresh install with the {{site.konnect_short_name}} MCP Server](#set-up-a-fresh-install-with-the-konnect-mcp-server). 
+If you're migrating a self-managed, on-prem deployment instead, see [Migrate to {{site.ai_gateway}} 2.x on-prem](/ai-gateway/on-prem-migration/).
 
 ## Prerequisites 
 
