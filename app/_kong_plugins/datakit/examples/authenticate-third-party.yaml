@@ -30,10 +30,7 @@ config:
     inputs:
       headers: STATIC_INPUTS.headers
       query: request.query
-    jq: |
-      .headers * {
-        "X-Api-Key": (.query.api_key // "none")
-      }
+    jq: ".headers * { \"X-Api-Key\": (.query.api_key // \"none\") }"
 
   - name: AUTH_REQUEST
     type: call
@@ -47,10 +44,7 @@ config:
     type: jq
     input: AUTH_REQUEST.body
     output: service_request.headers
-    jq: |
-      {
-        Authorization: (.token_type + " " + .access_token)
-      }
+    jq: "{ Authorization: (.token_type + \" \" + .access_token) }"
 
 tools:
   - deck
