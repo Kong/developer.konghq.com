@@ -24,6 +24,8 @@ related_resources:
     url: /mesh/data-plane-proxy/
   - text: "Data plane on Universal"
     url: /mesh/data-plane-universal/
+  - text: Platform responsibilities in Universal mode
+    url: /mesh/universal-mode-responsibilities/
   - text: Configure data plane proxy membership
     url: /mesh/configure-data-plane-proxy-membership/
 ---
