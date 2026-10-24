@@ -23,6 +23,7 @@ sections:
       - path: /kubernetes-ingress-controller/install/
       - path: /kubernetes-ingress-controller/license/
       - path: /kubernetes-ingress-controller/kic-high-availability/
+      - path: /kubernetes-ingress-controller/disaster-recovery/
       - path: /kubernetes-ingress-controller/service-health-checks/
       - path: /kubernetes-ingress-controller/last-known-good-config/
       - path: /kubernetes-ingress-controller/fallback-configuration/

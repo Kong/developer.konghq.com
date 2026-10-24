@@ -14,6 +14,10 @@ works_on:
   - on-prem
   - konnect
 
+related_resources:
+  - text: Disaster recovery for KIC-managed Gateways
+    url: /kubernetes-ingress-controller/disaster-recovery/
+
 ---
 
 {{ site.kic_product_name }} reads state from the Kubernetes API server and generates a {{ site.base_gateway }} configuration. If {{ site.kic_product_name }} isn't running, new {{ site.base_gateway }} instances won't receive a configuration. Existing {{ site.base_gateway }} instances will continue to process traffic using their existing configuration.

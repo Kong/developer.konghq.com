@@ -12,6 +12,10 @@ sections:
       - path: /gateway/topology-hosting-options/
       - path: /konnect-platform/kai/
   
+  - title: Disaster Recovery
+    items:
+      - path: /gateway/disaster-recovery/kubernetes/konnect/
+
   - title: Konnect Applications
     items:
       - path: /dev-portal/

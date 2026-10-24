@@ -18,6 +18,8 @@ tags:
     - restore
 
 related_resources:
+  - text: Disaster recovery on Kubernetes
+    url: /gateway/disaster-recovery/kubernetes/
   - text: "Upgrade and migrate {{site.base_gateway}}"
     url: /gateway/upgrade/
   - text: "Migrate from {{site.base_gateway}} OSS to {{site.ee_product_name}}"
