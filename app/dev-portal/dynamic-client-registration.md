@@ -177,6 +177,8 @@ Each method is available when using the following DCR identity providers:
 {:.info}
 > **Note:** When using DCR, each application automatically receives a client ID and secret. These credentials can be used to authenticate directly with services using the client credentials grant, or to obtain an access token from the identity provider when using the bearer token authentication method.
 
+Because DCR creates clients automatically, you configure how long their access tokens stay valid on the identity provider rather than on each client. If you're using {{site.identity}}, see [Access token duration](/identity/auth-servers/#access-token-duration).
+
 ### Authentication with bearer tokens
 
 You can obtain a bearer access token by requesting it from the IdP's `/token` endpoint:
