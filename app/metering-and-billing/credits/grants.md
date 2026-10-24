@@ -16,6 +16,8 @@ tags:
 related_resources:
   - text: "Prepaid credits overview"
     url: /metering-and-billing/credits/
+  - text: "Currencies"
+    url: /metering-and-billing/currencies/
   - text: "Credit balance model"
     url: /metering-and-billing/credits/balance-model/
   - text: "Credit consumption and expiration"
@@ -40,7 +42,8 @@ next_steps:
 A credit grant adds credits to a customer balance.
 Grants are the main way to create prepaid or promotional credit.
 
-Every grant has an amount and a currency.
+Every grant has an amount and a [currency](/metering-and-billing/currencies/).
+The currency can be a fiat currency or a [custom currency](/metering-and-billing/currencies/#custom-currencies), such as credits or tokens you define for your organization.
 A grant can also define how it's funded, when unused credits expire, and how {{site.metering_and_billing}} prioritizes it against other grants during consumption.
 
 ## Funding methods
@@ -147,6 +150,40 @@ For details on how feature restrictions affect balance and transaction queries, 
 
 Purchase terms describe how the credits are funded.
 They define the purchase currency and the per-unit cost used to calculate the purchase amount.
+
+The purchase currency must be a fiat currency, and it has to match the customer's currency.
+When the granted credits are in a custom currency, the purchase converts the custom-currency amount into the fiat purchase amount through a cost basis:
+
+```text
+grant currency:     100 credits (custom currency)
+cost basis rate:    1 credit = 0.50 USD
+purchase amount:   50.00 USD
+```
+{:.no-copy-code}
+
+A purchase that funds a custom-currency grant needs an explicit cost basis.
+You can define the cost basis in one of the following ways:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Cost basis type
+    key: type
+  - title: Description
+    key: description
+rows:
+  - type: "Dynamic"
+    description: "The rate is resolved from the custom currency's active cost basis when the purchase is charged. Use this when you want the purchase to follow the currency's current rate."
+  - type: "Pinned"
+    description: "The rate is pinned to a specific cost basis of the custom currency, so later rate changes don't affect the purchase."
+  - type: "Manual"
+    description: "You provide an explicit rate for this purchase, independent of the currency's cost bases."
+{% endtable %}
+<!--vale on-->
+
+{:.info}
+> The `perUnitCostBasis` field only applies to fiat-currency grants.
+> For a custom-currency grant, use `purchase.costBasis` instead.
 
 Tax configuration is relevant for revenue recognition on usage charges that consume credits.
 Set [tax configuration](/metering-and-billing/tax-codes/) on all usage charges that need to be classified correctly for revenue recognition.

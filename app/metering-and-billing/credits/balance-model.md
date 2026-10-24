@@ -114,6 +114,10 @@ Pending grants describes credits that have been granted but are not yet written 
 
 Credit balances are currency-specific. 
 For example, a USD grant increases the customer's USD credit balance, while a EUR charge consumes from the customer's EUR credit balance.
+Balances can be held in fiat currencies or in [custom currencies](/metering-and-billing/currencies/).
+
+A balance is tied to the currency itself, not just its code.
+If you create a custom currency with the same code as a deleted one, the new currency gets its own separate balance.
 
 **Do not** merge currencies in user-facing balance displays unless your product explicitly converts them.
 Treat each currency as a separate balance.

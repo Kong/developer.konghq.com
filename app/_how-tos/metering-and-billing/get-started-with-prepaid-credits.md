@@ -70,6 +70,9 @@ If a customer runs out of credits, uncovered usage creates a negative credit bal
 1. Click **Product Catalog**.
 1. Click the **Plans** tab and create a new plan.
 1. In the **Billing** section, configure the **Currency** (for example, `USD`) and set the **Settlement mode** to **Credits only**.
+
+   {:.info}
+   > Besides fiat currencies, you can select a [custom currency](/metering-and-billing/currencies/) that you defined for your organization.
 1. Click **Add Rate Card** and select the feature you want to price.
 1. Configure a **Usage based** pricing model and set your price per unit.
 1. Save the rate card and click **Publish Plan**.
