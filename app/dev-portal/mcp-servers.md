@@ -42,6 +42,10 @@ faqs:
       * If {{site.dev_portal}} login is enabled, the developer must log in and authorize the connection before the agent can access **any** content through the MCP server, including content that would otherwise be public. There's no combination of settings that allows an agent to skip this step while {{site.dev_portal}} login is on.
 
       Authorizing the connection only authenticates the agent's MCP session, it doesn't hand over API credentials. If the agent needs to actually call the APIs it discovers (not just read their documentation), the developer must still separately generate the application's credentials and share them with the agent.
+  - q: |
+      {% include faqs/dev-portal-search.md section='question' %}
+    a: |
+      {% include faqs/dev-portal-search.md section='answer' %}
 --- 
 
 {{site.dev_portal}} can expose the APIs, pages, and documentation published to it as an MCP server, so AI agents can browse and use them on behalf of a developer. 
