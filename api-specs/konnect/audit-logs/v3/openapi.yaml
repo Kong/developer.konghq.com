@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@1ccc27a27a42b4120e1eb640ba2eb243b96c4c4a
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1ccc27a27a42b4120e1eb640ba2eb243b96c4c4a'
+  x-oas-source: kong/platform-api@cc05198ee340cb2ed64d23affaa0fcad450b68ec
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/cc05198ee340cb2ed64d23affaa0fcad450b68ec'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -259,12 +259,7 @@ paths:
                     type: string
                     format: date-time
               type:
-                description: Filters audit logs by type. Omit this parameter to return all audit log types.
-                type: string
-                enum:
-                  - authorization
-                  - authentication
-                  - gateway_access
+                $ref: '#/components/schemas/AuditLogType'
           style: deepObject
       responses:
         '200':
@@ -568,6 +563,14 @@ components:
         - AUTHENTICATION_TYPE_WINDOWSLIVE
         - AUTHENTICATION_TYPE_FEDERATED
       title: Authentication Type
+    AuditLogType:
+      description: Filters audit logs by type. Omit this parameter to return all audit log types.
+      type: string
+      enum:
+        - authorization
+        - authentication
+        - gateway_access
+      title: Audit Log Type
     AuditLog:
       description: An individual audit log entry.
       discriminator:
