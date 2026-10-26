@@ -130,6 +130,7 @@ You can verify that metrics are being collected by port-forwarding to the data p
 
 1. Access the metrics:
 
+   <!-- vale off -->
 {% validation custom-command %}
 command: |
   curl -s http://localhost:8100/metrics | grep -m1 kong_
@@ -139,3 +140,4 @@ expected:
 render_output: false
 indent: 3
 {% endvalidation %}
+<!-- vale on -->
