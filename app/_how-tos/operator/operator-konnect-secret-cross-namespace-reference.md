@@ -26,6 +26,28 @@ related_resources:
 
 min_version:
   operator: '2.1'
+
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Delete the `Gateway`, the resources it serves, and the `Secret` it references, along with the grants that allow the reference:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          httproute/echo-route \
+          service/echo \
+          gateway/kong-gateway \
+          gatewayconfiguration/gateway-configuration
+        kubectl delete --ignore-not-found gatewayclass/gateway-class
+        kubectl delete -n secret-ns --ignore-not-found \
+          kongreferencegrant/allow-kong-to-secret \
+          referencegrant/allow-gateway-to-secret \
+          secret/example-tls-secret
+        kubectl delete namespace --ignore-not-found kong secret-ns
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 {% include /operator/cross-namespace-ref.md %}
