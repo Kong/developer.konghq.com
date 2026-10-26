@@ -5,7 +5,6 @@ sections:
     items:
       - path: /mesh/
       - path: /mesh/konnect/
-      - path: /mesh/introduction/
       - path: /mesh/service-mesh/
       - path: /mesh/concepts/
       - path: /mesh/architecture-overview/
