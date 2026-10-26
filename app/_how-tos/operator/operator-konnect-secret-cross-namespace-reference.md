@@ -27,6 +27,11 @@ related_resources:
 min_version:
   operator: '2.1'
 
+prereqs:
+  operator:
+    konnect:
+      auth: true
+
 cleanup:
   inline:
     - title: Delete the resources created in this guide
@@ -134,60 +139,127 @@ Create the following resources:
 * A `GatewayConfiguration` and a `GatewayClass` to configure your gateway with the latest {{site.base_gateway}} version and {{site.operator_product_name}} as the controller.
 * A `Gateway` that references the `Secret` in the `secret-ns` namespace.
 
-```sh
-echo '
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: kong
----
-apiVersion: gateway-operator.konghq.com/v2beta1
-kind: GatewayConfiguration
-metadata:
-  name: gateway-configuration
-  namespace: kong
-spec:
-  dataPlaneOptions:
-    deployment:
-      podTemplateSpec:
-        spec:
-          containers:
-            - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
-              name: proxy
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: GatewayClass
-metadata:
-  name: gateway-class
-spec:
-  controllerName: konghq.com/gateway-operator
-  parametersRef:
-    group: gateway-operator.konghq.com
-    kind: GatewayConfiguration
+{% konnect %}
+content: |
+  Setting `spec.konnect.authRef` attaches the data plane to {{site.konnect_short_name}}, which manages its configuration and license:
+
+  ```sh
+  echo '
+  apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: kong
+  ---
+  apiVersion: gateway-operator.konghq.com/v2beta1
+  kind: GatewayConfiguration
+  metadata:
     name: gateway-configuration
     namespace: kong
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: Gateway
-metadata:
-  name: kong-gateway
-  namespace: kong
-spec:
-  gatewayClassName: gateway-class
-  listeners:
-    - name: https
-      port: 443
-      protocol: HTTPS
-      hostname: example.localdomain.dev
-      tls:
-        mode: Terminate
-        certificateRefs:
-          - group: ""
-            kind: Secret
-            name: example-tls-secret
-            namespace: secret-ns' | kubectl apply -f -
-```
-{: data-test-step="block" }
+  spec:
+    konnect:
+      authRef:
+        name: konnect-api-auth
+        namespace: kong
+    dataPlaneOptions:
+      deployment:
+        podTemplateSpec:
+          spec:
+            containers:
+              - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
+                name: proxy
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: GatewayClass
+  metadata:
+    name: gateway-class
+  spec:
+    controllerName: konghq.com/gateway-operator
+    parametersRef:
+      group: gateway-operator.konghq.com
+      kind: GatewayConfiguration
+      name: gateway-configuration
+      namespace: kong
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: Gateway
+  metadata:
+    name: kong-gateway
+    namespace: kong
+  spec:
+    gatewayClassName: gateway-class
+    listeners:
+      - name: https
+        port: 443
+        protocol: HTTPS
+        hostname: example.localdomain.dev
+        tls:
+          mode: Terminate
+          certificateRefs:
+            - group: ""
+              kind: Secret
+              name: example-tls-secret
+              namespace: secret-ns' | kubectl apply -f -
+  ```
+  {: data-test-step="block" }
+{% endkonnect %}
+
+{% on_prem %}
+content: |
+  ```sh
+  echo '
+  apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: kong
+  ---
+  apiVersion: gateway-operator.konghq.com/v2beta1
+  kind: GatewayConfiguration
+  metadata:
+    name: gateway-configuration
+    namespace: kong
+  spec:
+    dataPlaneOptions:
+      deployment:
+        podTemplateSpec:
+          spec:
+            containers:
+              - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
+                name: proxy
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: GatewayClass
+  metadata:
+    name: gateway-class
+  spec:
+    controllerName: konghq.com/gateway-operator
+    parametersRef:
+      group: gateway-operator.konghq.com
+      kind: GatewayConfiguration
+      name: gateway-configuration
+      namespace: kong
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: Gateway
+  metadata:
+    name: kong-gateway
+    namespace: kong
+  spec:
+    gatewayClassName: gateway-class
+    listeners:
+      - name: https
+        port: 443
+        protocol: HTTPS
+        hostname: example.localdomain.dev
+        tls:
+          mode: Terminate
+          certificateRefs:
+            - group: ""
+              kind: Secret
+              name: example-tls-secret
+              namespace: secret-ns' | kubectl apply -f -
+  ```
+  {: data-test-step="block" }
+{% endon_prem %}
 
 ## Create a Service and a Route
 
