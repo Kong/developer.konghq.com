@@ -357,6 +357,12 @@
 /catalog/integrations/mesh-manager/ /catalog/integrations/service-mesh/
 /how-to/map-mesh-manager-resources/ /how-to/map-service-mesh-resources/
 
+# Self-managed GitLab and Dynatrace Catalog Classic integrations removed
+/how-to/install-and-map-gitlab-resources/ /catalog/integrations/gitlab/
+/catalog/integrations/dynatrace/ /catalog-classic/
+/how-to/monitor-dynatrace-slos-with-konnect-api/ /catalog-classic/
+/how-to/monitor-dynatrace-slos-with-konnect-ui/ /catalog-classic/
+
 # Cloud Gateways
 
 /dedicated-cloud-gateways/breaking-changes/ /dedicated-cloud-gateways/  301

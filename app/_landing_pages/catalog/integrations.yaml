@@ -87,9 +87,7 @@ rows:
             ctas:
               - text: Reference
                 url: "/catalog/integrations/gitlab/"
-              - text: Self-managed tutorial
-                url: "/how-to/install-and-map-gitlab-resources/"
-              - text: SaaS tutorial
+              - text: Tutorial
                 url: "/how-to/install-and-map-gitlab-saas-resources/"
       - blocks:
         - type: card
@@ -137,20 +135,6 @@ rows:
                 url: "/how-to/discover-aws-gateway-apis-using-konnect-api/"
               - text: Tutorial ({{site.konnect_short_name}} UI)
                 url: "/how-to/discover-aws-gateway-apis-using-konnect-ui/"
-      - blocks:
-        - type: card
-          config:
-            title: Dynatrace
-            description: Connect Dynatrace classic service-level objects directly to your {{site.konnect_catalog}} services.
-            icon: /assets/icons/third-party/dynatrace.png
-            ctas:
-              - text: Reference
-                url: "/catalog/integrations/dynatrace/"
-              - text: Tutorial ({{site.konnect_short_name}} API)
-                url: "/how-to/monitor-dynatrace-slos-with-konnect-api/"
-              - text: Tutorial ({{site.konnect_short_name}} UI)
-                url: "/how-to/monitor-dynatrace-slos-with-konnect-ui/"
-      
       - blocks:
         - type: card
           config:

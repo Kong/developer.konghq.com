@@ -21,8 +21,6 @@ related_resources:
     url: /catalog/integrations/
   - text: GitLab reference
     url: /catalog/integrations/gitlab/
-  - text: Install and map self-hosted GitLab resources in {{site.konnect_catalog}}
-    url: /how-to/install-and-map-gitlab-resources/
 automated_tests: false
 tldr:
   q: How do I view a SaaS GitLab project in {{site.konnect_catalog}} Classic?

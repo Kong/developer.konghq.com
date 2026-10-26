@@ -148,3 +148,9 @@ rows:
                 a: "Check integration settings, verify connected tools, and ensure data synchronization is working correctly."
               - q: "Can I control access to specific {{site.konnect_catalog}} data?"
                 a: "Yes, access can be managed through [teams and roles](/konnect-platform/teams-and-roles/)."
+              - q: |
+                  {% include faqs/gitlab-self-managed-removed.md section='question' %}
+                a: |
+                  {% include faqs/gitlab-self-managed-removed.md section='answer' %}
+              - q: "Is there a Dynatrace integration in {{site.konnect_catalog}} Classic?"
+                a: "No. The Dynatrace integration was removed from {{site.konnect_catalog}} Classic on October 26, 2026. If you had a Dynatrace integration instance, it will remain visible but can't be authorized or ingest resources."
