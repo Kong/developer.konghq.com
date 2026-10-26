@@ -231,11 +231,13 @@ rows:
               a: |
                 That depends on your account type.
 
-                * **Plus and trial accounts:** KAi is enabled by default for {{site.konnect_short_name}} Plus and trial accounts. 
+                * **Plus and trial accounts:** KAi is _enabled_ by default for {{site.konnect_short_name}} Plus and trial accounts. 
                 Only organization owners can enable or disable KAi for an organization. 
                 
-                * **Enterprise accounts:** KAi is always disabled by default for Enterprise accounts. 
+                * **Enterprise accounts:** KAi is _disabled_ by default for Enterprise accounts created prior to October 2026. 
                 Enterprise accounts can enable it by [enabling it in {{site.konnect_short_name}} AI Settings](https://cloud.konghq.com/global/organization/settings/ai-settings).
+
+                For all Enterprise accounts created since October 2026, KAi is _enabled_ by default. 
             - q: Does KAi automatically modify {{site.konnect_short_name}} configuration when it finds an issue?
               a: |
                 No. KAi can make changes to your {{site.konnect_short_name}} configuration but will always ask for your confirmation before applying any changes.
@@ -257,6 +259,11 @@ rows:
                 Review the terms for models on the [AWS Third-Party Models page](https://aws.amazon.com/legal/bedrock/third-party-models/).
             - q: What regions is KAi available in?
               a: KAi is currently available in US, EU, AU, and IN. Other regions will be added over time.
+            - q: Does my data leave the region I am in?
+              a: |
+                No. KAi uses in-region inference for all workloads. 
+                KAi may use different models (from the providers listed above) for different workloads in different regions.
+                This is to ensure in-region inference rules are maintained. For this reason, experience and answer quality may vary depending on region.
             - q: Where can I find my limits and quotas?
               a: |
                 Individual chat context information can be found in the bottom right of the chat window, below the submit button.
