@@ -26,7 +26,6 @@ prereqs:
   operator:
     konnect:
       auth: true
-      control_plane: true
   inline:
     - title: Create Gateway resources
       include_content: /prereqs/operator/gateway
@@ -115,12 +114,25 @@ kubectl annotate service echo -n kong \
    ```
    {: data-test-step="block" }
 
-1. Wait for the `HTTPRoute` to be programmed:
+1. Wait for the `HTTPRoute` to be ready:
 
-   ```bash
-   kubectl wait --for=jsonpath='{.status.parents[0].conditions[?(@.type=="Programmed")].status}'=True httproute/echo-route -n kong --timeout=300s
-   ```
-   {: data-test-step="block" }
+   {% on_prem %}
+   content: |
+     ```bash
+     kubectl wait --for=jsonpath='{.status.parents[0].conditions[?(@.type=="Programmed")].status}'=True httproute/echo-route -n kong --timeout=300s
+     ```
+     {: data-test-step="block" }
+   indent: 3
+   {% endon_prem %}
+
+   {% konnect %}
+   content: |
+     ```bash
+     kubectl wait --for=jsonpath='{.status.parents[0].conditions[?(@.type=="Accepted")].status}'=True httproute/echo-route -n kong --timeout=300s
+     ```
+     {: data-test-step="block" }
+   indent: 3
+   {% endkonnect %}
 
 1. Send several requests with the same `x-session-id` header value and observe that all responses come from the same Pod:
 
