@@ -434,7 +434,8 @@ A blocked request or response also populates the shared `ai.proxy.guardrail_trig
 * `block_source`: The Policy that produced the block.
 * `block_direction`: `AI_GUARDRAIL_BLOCK_INPUT` or `AI_GUARDRAIL_BLOCK_OUTPUT`.
 
-This object is populated even when the Policy has `config.continue_on_detection` set to `true`, in which case the request or response isn't blocked. The [AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/) and [AI Semantic Prompt Guard](/ai-gateway/policies/ai-semantic-prompt-guard/) Policies are the exception: they don't populate this object.
+This object is populated even when the Policy has `config.continue_on_detection` set to `true`, in which case the request or response isn't blocked.
+The [AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/) and [AI Semantic Prompt Guard](/ai-gateway/policies/ai-semantic-prompt-guard/) Policies also populate this object starting from {{site.ai_gateway}} 2.3.
 
 ### AI PII Sanitizer logs
 
