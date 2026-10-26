@@ -184,6 +184,20 @@ rows:
       - blocks:
           - type: card
             config:
+              title: Service meshes
+              description: A service mesh moves retries, encryption, and observability out of each application and into a proxy that runs next to it.
+              ctas:
+                - {text: Learn what a service mesh is, url: /mesh/service-mesh/}
+      - blocks:
+          - type: card
+            config:
+              title: Concepts
+              description: Find definitions for the terms used across the {{site.mesh_product_name}} documentation, from zones and data plane proxies to SPIFFE IDs and KRIs.
+              ctas:
+                - {text: "Browse {{site.mesh_product_name}} concepts", url: /mesh/concepts/}
+      - blocks:
+          - type: card
+            config:
               title: Workload identity and trust
               description: An identity tells a proxy who is calling. Trust determines which issuers it accepts.
               ctas:

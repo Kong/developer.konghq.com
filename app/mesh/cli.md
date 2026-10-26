@@ -19,6 +19,8 @@ related_resources:
     url: /mesh/migrate-policies-to-3/
   - text: MeshIdentity
     url: /mesh/policies/meshidentity/
+  - text: Concepts
+    url: /mesh/concepts/
 faqs:
   - q: How do `kumactl` commands map to `kongctl`?
     a: |

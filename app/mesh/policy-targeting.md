@@ -18,6 +18,8 @@ related_resources:
     url: /mesh/policies/meshidentity/
   - text: Mesh-scoped zone proxies
     url: /mesh/mesh-scoped-zone-proxies/
+  - text: "Concepts: Policy"
+    url: /mesh/concepts/#policy
 min_version:
   mesh: '3.0'
 ---

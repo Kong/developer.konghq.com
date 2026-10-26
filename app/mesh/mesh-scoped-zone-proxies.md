@@ -25,6 +25,8 @@ related_resources:
     url: /mesh/policies/meshidentity/
   - text: MeshMultiZoneService
     url: /mesh/meshmultizoneservice/
+  - text: "Concepts: Zone ingress and zone egress"
+    url: /mesh/concepts/#zone-ingress-and-zone-egress
 min_version:
   mesh: '3.0'
 ---

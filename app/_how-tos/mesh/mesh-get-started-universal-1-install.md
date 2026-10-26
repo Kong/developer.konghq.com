@@ -24,6 +24,10 @@ related_resources:
     url: /mesh/universal/
   - text: "{{site.mesh_product_name}} CLI"
     url: /mesh/cli/
+  - text: Service meshes
+    url: /mesh/service-mesh/
+  - text: Concepts
+    url: /mesh/concepts/
 tools:
   - kongctl
 min_version:

@@ -19,6 +19,8 @@ related_resources:
     url: /mesh/policies/meshpassthrough/
   - text: Migrate policies to {{site.mesh_product_name}} 3.x
     url: /mesh/migrate-policies-to-3/
+  - text: "Concepts: Service model"
+    url: /mesh/concepts/#service-model
 faqs:
   - q: Should I use `MeshExternalService` or `MeshPassthrough`?
     a: |
