@@ -66,10 +66,10 @@ related_resources:
 
 In this guide, you'll learn how to let producers send records as plain JSON or as Avro while {{site.event_gateway_short}} stores them as Avro in the backend cluster.
 
-Not every producer wants to run a Schema Registry client or serialize Avro directly, and during a migration from JSON to Avro both formats can be in flight at once.
-The {{site.event_gateway_short}} [Record Transcode Produce policy](/event-gateway/policies/record-transcode-produce/) converts an already schema-validated record to a different format on its way to the backend cluster, so the cluster and every consumer of the topic only ever see one format, no matter what the producers send.
+Not every producer wants to run a Schema Registry client or serialize Avro directly, and during a migration from JSON to Avro, both formats can be in use at once.
+The {{site.event_gateway_short}} [Record Transcode Produce policy](/event-gateway/policies/record-transcode-produce/) converts an already schema-validated record to a different format on its way to the backend cluster. The cluster and every consumer of the topic only ever see a single format, regardless of what the producers send.
 
-We'll use an `orders` topic that holds order records. One producer connects through the virtual cluster and sends plain JSON, another sends Avro serialized with a Schema Registry client, and {{site.event_gateway_short}} accepts both and stores every record as Avro.
+We'll use an `orders` topic that holds order records. One producer connects through the virtual cluster and sends plain JSON, and another sends Avro serialized with a Schema Registry client. {{site.event_gateway_short}} accepts both and stores every record as Avro.
 
 Here's how the data flows through the system:
 
@@ -186,7 +186,8 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-The `schema_type: any` setting lets this one registry accept records in more than one format: values that carry a schema reference, in the [Confluent wire format](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/index.html#wire-format) or in a record header, are decoded using the registry, and any other value is parsed as JSON without a schema.
+The `schema_type: any` setting lets this one registry accept records in more than one format. Values that carry a schema reference, in the [Confluent wire format](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/index.html#wire-format) or in a record header, are decoded using the registry. 
+Any other value is parsed as JSON without a schema.
 Both the Schema Validation policy and the Record Transcode Produce policy reference this same registry.
 
 ## Register the target Avro schema
@@ -343,7 +344,7 @@ render_output: false
 
 ## Produce an Avro record
 
-A second producer sends the same kind of record as Avro, using a client that serializes with the Schema Registry.
+A second producer sends the same kind of record as Avro, using a client that serializes values with the Schema Registry.
 Switch to the `vc-avro` context, which serializes values as Avro and prefixes them with a schema reference in the Confluent wire format:
 
 <!--vale off-->
@@ -388,5 +389,5 @@ All three records come back deserialized from Avro, alongside the schema used to
 ```
 {:.no-copy-code}
 
-The records from the JSON producer were converted to Avro by the Record Transcode Produce policy, and the record from the Avro producer passed through unchanged.
+The Record Transcode Produce policy converted the records from the JSON producer to Avro, and the record from the Avro producer passed through unchanged.
 In both cases, the backend cluster and every consumer of the topic only ever see Avro.

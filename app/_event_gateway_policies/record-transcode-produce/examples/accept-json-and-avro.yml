@@ -3,6 +3,8 @@ title: Accept JSON and Avro records and store them as Avro
 description: Use a schema registry with schema_type any so clients can produce either JSON or Avro, and store only Avro in the backend cluster.
 
 extended_description: |
+  Use a schema registry with `schema_type` any so clients can produce either JSON or Avro, and store only Avro in the backend cluster.
+
   The parent Schema Validation policy validates the record value against a [schema registry](/event-gateway/entities/schema-registry/)
   whose `schema_type` is `any`, so a client can produce records in either JSON or Avro.
 
