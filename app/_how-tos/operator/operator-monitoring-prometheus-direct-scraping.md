@@ -57,51 +57,51 @@ config:
 
 ## Apply the plugin globally
 
-{% navtabs "Deployment" %}
-{% navtab "Konnect" %}
+{% konnect %}
+content: |
+  Create a `KongPluginBinding` resource and set `spec.scope` to `GlobalInControlPlane`:
 
-Create a `KongPluginBinding` resource and set `spec.scope` to `GlobalInControlPlane`:
-```sh
-echo '
-apiVersion: configuration.konghq.com/v1alpha1
-kind: KongPluginBinding
-metadata:
-  name: global-prometheus
-  namespace: kong
-spec:
-  pluginRef:
-    name: prometheus-global
-  scope: GlobalInControlPlane
-  controlPlaneRef:
-    type: konnectNamespacedRef
-    konnectNamespacedRef:
-      name: gateway-control-plane' | kubectl apply -f -
-```
-{% endnavtab %}
+  ```sh
+  echo '
+  apiVersion: configuration.konghq.com/v1alpha1
+  kind: KongPluginBinding
+  metadata:
+    name: global-prometheus
+    namespace: kong
+  spec:
+    pluginRef:
+      name: prometheus-global
+    scope: GlobalInControlPlane
+    controlPlaneRef:
+      type: konnectNamespacedRef
+      konnectNamespacedRef:
+        name: kong' | kubectl apply -f -
+  ```
+  {: data-test-step="block" }
+{% endkonnect %}
 
-{% navtab "Self-managed" %}
+{% on_prem %}
+content: |
+  Enable the plugin by annotating the `Gateway` resource with `konghq.com/plugins: prometheus-global`:
 
-Enable the plugin by annotating the `Gateway` resource with `konghq.com/plugins: prometheus-global`:
-
-```sh
-echo '
-apiVersion: gateway.networking.k8s.io/v1
-kind: Gateway
-metadata:
-  name: kong
-  namespace: kong
-  annotations:
-    konghq.com/plugins: prometheus-global
-spec:
-  gatewayClassName: gateway-class
-  listeners:
-  - name: proxy
-    port: 80
-    protocol: HTTP' | kubectl apply -f -
-```
-{: data-test-step="block" }
-{% endnavtab %}
-{% endnavtabs %}
+  ```sh
+  echo '
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: Gateway
+  metadata:
+    name: kong
+    namespace: kong
+    annotations:
+      konghq.com/plugins: prometheus-global
+  spec:
+    gatewayClassName: gateway-class
+    listeners:
+    - name: proxy
+      port: 80
+      protocol: HTTP' | kubectl apply -f -
+  ```
+  {: data-test-step="block" }
+{% endon_prem %}
 
 ## Validate
 
