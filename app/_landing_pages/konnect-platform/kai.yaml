@@ -26,7 +26,7 @@ rows:
                   text: |
                     Kong's AI assistant, KAi, can detect issues, suggest fixes, and accelerate your workflows all without leaving the {{site.konnect_short_name}} UI.
                     KAi is enabled by default for {{site.konnect_short_name}} Plus and trial accounts.
-                    KAi is always disabled by default for Enterprise accounts.
+                    KAi is disabled by default for Enterprise accounts created before October 2026, and enabled by default for accounts created since.
                     Enterprise accounts can enable KAi by contacting their Kong account manager or [enabling it in {{site.konnect_short_name}} AI Settings](https://cloud.konghq.com/global/organization/settings/ai-settings).
 
                     KAi can help you do the following:
@@ -262,7 +262,7 @@ rows:
             - q: Does my data leave the region I am in?
               a: |
                 No. KAi uses in-region inference for all workloads. 
-                KAi may use different models (from the providers listed above) for different workloads in different regions.
+                KAi may use different models (from Anthropic Claude, Z.ai GLM, and Alibaba Qwen) for different workloads in different regions.
                 This is to ensure in-region inference rules are maintained. For this reason, experience and answer quality may vary depending on region.
             - q: Where can I find my limits and quotas?
               a: |
