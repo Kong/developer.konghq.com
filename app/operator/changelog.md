@@ -14,6 +14,37 @@ breadcrumbs:
 
 Changelog for supported {{ site.operator_product_name }} versions.
 
+## 2.4.0-rapid.2.1
+
+**Release date**: 2026-10-26
+
+### Fixes
+
+- Konnect: when the certificate in a `KonnectExtension` certificate `Secret`
+  changes, the operator registers the new certificate in Konnect again. When
+  the `Secret` is deleted and regenerated, this happens. Before,
+  the `KongDataPlaneClientCertificate` kept the previous certificate (its
+  `spec.cert` is immutable) while the `KonnectExtension` stayed ready. New
+  `DataPlane` Pods then got `401` from Konnect. The operator registers the new
+  certificate next to the previous one. It deletes the previous one only after
+  managed consumers finish migrating and no running or terminating Pod still
+  mounts it. Automatically provisioned certificates are renewed using
+  `--cert-ttl` and `--cert-expiration-margin`. Manually provisioned
+  certificates use immutable owned Secret snapshots. In-place issuer renewal
+  then cannot reach Pods before Konnect accepts the new certificate. The source
+  Secret remains externally managed, and status references the snapshot.
+  Deleting a current Manual snapshot creates a replacement and preserves the
+  original mount until consumers migrate. The unchanged Konnect registration
+  stays. The extension remains unready until its current certificate is
+  programmed.
+  [#5982](https://github.com/Kong/kong-operator/pull/5982)
+  [#6095](https://github.com/Kong/kong-operator/pull/6095)
+
+### Changed
+
+- Bump Golang to 1.27.3.
+  [#6264](https://github.com/Kong/kong-operator/pull/6264)
+
 ## 2.3.4
 
 **Release date**: 2026-10-23
@@ -1063,6 +1094,33 @@ by the operator's semver:
   desired replicas to be updated and available.
   [#5425](https://github.com/Kong/kong-operator/pull/5425)
 
+## 2.2.7
+
+**Release date**: 2026-10-23
+
+### Fixes
+
+- Konnect: when the certificate in a `KonnectExtension` certificate `Secret`
+  changes, the operator registers the new certificate in Konnect again. When
+  the `Secret` is deleted and regenerated, this happens. Before,
+  the `KongDataPlaneClientCertificate` kept the previous certificate (its
+  `spec.cert` is immutable) while the `KonnectExtension` stayed ready. New
+  `DataPlane` Pods then got `401` from Konnect. The operator registers the new
+  certificate next to the previous one. It deletes the previous one only after
+  managed consumers finish migrating and no running or terminating Pod still
+  mounts it. Automatically provisioned certificates are renewed using
+  `--cert-ttl` and `--cert-expiration-margin`. Manually provisioned
+  certificates use immutable owned Secret snapshots. In-place issuer renewal
+  then cannot reach Pods before Konnect accepts the new certificate. The source
+  Secret remains externally managed, and status references the snapshot.
+  Deleting a current Manual snapshot creates a replacement and preserves the
+  original mount until consumers migrate. The unchanged Konnect registration
+  stays. The extension remains unready until its current certificate is
+  programmed.
+  [#5982](https://github.com/Kong/kong-operator/pull/5982)
+  [#6045](https://github.com/Kong/kong-operator/pull/6045)
+- Bump dependencies and Golang to 1.26.10.
+
 ## 2.2.6
 
 **Release date**: 2026-09-28
@@ -1537,6 +1595,14 @@ by the operator's semver:
   the transition, both old and new entries may be present in Konnect
   simultaneously as creation and orphan cleanup are not synchronized.
   [#4509](https://github.com/Kong/kong-operator/pull/4509)
+
+## 2.1.13
+
+**Release date**: 2026-10-23
+
+### Fixes
+
+- Bump dependencies and Golang to 1.26.10.
 
 ## 2.1.12
 
