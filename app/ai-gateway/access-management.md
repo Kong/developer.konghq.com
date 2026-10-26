@@ -162,7 +162,9 @@ You can create a virtual key for a project. Each project key is used by one memb
 
 ## Identity providers
 
-An identity provider is an external service like Okta or Auth0, that signs the tokens people and agents present. Kong trusts the providers you list and uses them to verify that those tokens are genuine.
+An identity provider is an external service, like Okta or Auth0, that signs the tokens users present when they sign in. Kong trusts the providers you list and uses them to verify that those tokens are genuine.
+
+Only users sign in through an identity provider. Agents can hold credentials and use [Token Vault](#token-vault), but they can't sign in.
 
 When you add an identity provider, you give it a display name and an issuer URL. You can also:
 
@@ -175,7 +177,9 @@ To learn more, see [Token Vault's providers](/identity/token-vault/#providers).
 
 ## Token Vault
 
-Token Vault stores credentials so that {{site.ai_gateway}} can call external services on behalf of a caller. To set it up:
+Token Vault stores credentials so that {{site.ai_gateway}} can call external services on behalf of a caller. When an agent calls on behalf of a user, Token Vault checks that user against a trusted identity provider before releasing credentials.
+
+To set it up:
 
 1. Add at least one trusted [identity provider](#identity-providers).
 1. Configure how Token Vault authenticates with this provider.
