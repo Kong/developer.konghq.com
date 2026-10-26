@@ -48,10 +48,11 @@ You can give permissions to users individually, or in bulk using groups.
 
 ## Users
 
-A user is a person who an admin adds to the system in one of two ways:
+A user is a person who an admin adds to the system in one of three ways:
 
 * An admin creates them manually, one at a time.
 * An admin uploads a CSV file containing the org structure.
+* On user sign-in.
 
 To create a user, you must provide the following:
 
@@ -71,7 +72,7 @@ To stop a user from signing in while keeping their history, deactivate the user 
 {:.warning}
 > You can't deactivate a user imported from a CSV file. To update the users, import an updated org chart.
 
-An admin can view all users in one searchable table. Search matches on name only. You can filter the table by team, source, and status, and show or hide columns such as metadata and labels.
+An admin can view all users in one searchable table. You can filter the table by team, source, and status, and show or hide columns like metadata and labels.
 
 ### Teams
 
@@ -194,6 +195,6 @@ You can create a key in two ways:
 * Have {{site.ai_gateway}} generate the key.
 * Set your own key value.
 
-In both cases, you set an expiry. When you create a key for someone else, you pick the holder. You can filter the holder list by users or agents, and add a new user or agent inline.
+In both cases, you have the option to set an expiry. When you create a key for someone else, you pick the holder. You can filter the holder list by users or agents, and add a new user or agent inline.
 
-The key list shows each key's holder, status, expiry, and creation date. You can revoke or delete a key. Rotating a key isn't supported. To rotate a key, create a new one and revoke the old one.
+The key list shows each key's holder, status, expiry, and creation date. You can delete a keyn but can't rotate it. To rotate a key, create a new one and delete the old one.
