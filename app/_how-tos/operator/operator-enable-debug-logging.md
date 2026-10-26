@@ -52,6 +52,20 @@ faqs:
       ```
       
       The `env` and `args` sections are mutually exclusive. When both are provided, `args` takes precedence.
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Delete the resources created in this guide. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        rm -f values.yaml
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 ## Enable debug logging 

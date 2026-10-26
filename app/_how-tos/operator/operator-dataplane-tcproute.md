@@ -35,6 +35,24 @@ prereqs:
       include_content: prereqs/telnet
       icon_url: /assets/icons/code.svg
 
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `Gateway` also deletes the control plane and data plane resources {{ site.operator_product_name }} created for it. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          tcproute/echo-plaintext \
+          gateway/kong-tcp-gateway \
+          gatewayconfiguration/kong-gateway-configuration
+        kubectl delete --ignore-not-found gatewayclass/kong-tcp
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 `TCPRoute` is a Kubernetes Gateway API resource for routing raw TCP traffic by port, without any TLS or L7 awareness. This guide shows how to configure {{ site.operator_product_name }} to proxy TCP traffic to a backend Service.

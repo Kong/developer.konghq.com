@@ -26,10 +26,28 @@ prereqs:
   operator:
     konnect:
       auth: true
-      control_plane: true
   inline:
     - title: Create Gateway resources
       include_content: /prereqs/operator/gateway
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `Gateway` also deletes the control plane and data plane resources {{ site.operator_product_name }} created for it. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          kongpluginbinding/global-prometheus \
+          kongplugin/prometheus-global \
+          gateway/kong \
+          gatewayconfiguration/gateway-configuration
+        kubectl delete --ignore-not-found gatewayclass/gateway-class
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 {% include /operator/prometheus.md %}

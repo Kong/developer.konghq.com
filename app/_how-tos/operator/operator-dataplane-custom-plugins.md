@@ -50,6 +50,24 @@ tldr:
     make it available in Data Planes and configure its behavior using a `KongPlugin` resource.
 
 automated_tests: false
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Delete the resources created in this guide. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          kongplugininstallation/custom-plugin-myheader \
+          gateway/kong
+        kubectl delete -n default --ignore-not-found gatewayconfiguration/kong
+        kubectl delete --ignore-not-found gatewayclass/kong
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 ## Plugin distribution using an OCI registry

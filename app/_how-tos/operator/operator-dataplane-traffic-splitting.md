@@ -32,6 +32,28 @@ tldr:
   a: |
     Configure your `HTTPRoute` with one entry in `backendRefs` for each Service version, and assign a weight to each version to define how to split the traffic.
 
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `Gateway` also deletes the control plane and data plane resources {{ site.operator_product_name }} created for it. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          httproute/canary-route \
+          service/echo-v1 \
+          service/echo-v2 \
+          deployment/echo-v1 \
+          deployment/echo-v2 \
+          gateway/kong \
+          gatewayconfiguration/gateway-configuration
+        kubectl delete --ignore-not-found gatewayclass/gateway-class
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 Traffic splitting, also known as canary releases or blue/green deployments, allows you to shift traffic between multiple versions of your service. 

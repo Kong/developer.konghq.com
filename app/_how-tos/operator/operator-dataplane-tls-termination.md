@@ -27,8 +27,27 @@ prereqs:
   operator:
     konnect:
       auth: true
-      control_plane: true
 
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `Gateway` also deletes the control plane and data plane resources {{ site.operator_product_name }} created for it. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          httproute/echo-route \
+          service/echo \
+          secret/my-certificate \
+          gateway/kong-tls-gateway \
+          gatewayconfiguration/kong-gateway-configuration
+        kubectl delete --ignore-not-found gatewayclass/kong-tls
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 Configuring TLS termination at the Gateway level allows {{ site.operator_product_name }} to manage SSL/TLS certificates and decrypt incoming traffic before it reaches your services. This guide shows how to set up an HTTPS listener using the standard Kubernetes Gateway API.

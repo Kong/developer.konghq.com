@@ -42,6 +42,26 @@ related_resources:
     url: /operator/dataplanes/reference/service-annotations/
   - text: KongUpstreamPolicy reference
     url: /kubernetes-ingress-controller/reference/custom-resources/#kongupstreampolicy
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `Gateway` also deletes the control plane and data plane resources {{ site.operator_product_name }} created for it. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          kongupstreampolicy/session-affinity \
+          httproute/httpbin-route \
+          service/httpbin \
+          gateway/kong \
+          gatewayconfiguration/gateway-configuration
+        kubectl delete --ignore-not-found gatewayclass/gateway-class
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 By default, {{site.base_gateway}} distributes requests across the Pods of a Kubernetes Service using round-robin load balancing. For production workloads, you may need sticky sessions, consistent routing based on request attributes, or health check integration.

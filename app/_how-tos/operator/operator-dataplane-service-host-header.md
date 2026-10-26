@@ -40,6 +40,25 @@ tldr:
 related_resources:
   - text: Service annotations reference
     url: /operator/dataplanes/reference/service-annotations/
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `Gateway` also deletes the control plane and data plane resources {{ site.operator_product_name }} created for it. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          httproute/httpbin-route \
+          service/httpbin \
+          gateway/kong \
+          gatewayconfiguration/gateway-configuration
+        kubectl delete --ignore-not-found gatewayclass/gateway-class
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 By default, {{site.base_gateway}} sets the `Host` header to the IP address of the individual Pod it forwards the request to. Some upstream services perform host-based virtual hosting or access control and require a specific `Host` header value. You can override this behavior using the `konghq.com/host-header` annotation.
