@@ -30,7 +30,6 @@ prereqs:
   operator:
     konnect:
       auth: true
-      control_plane: true
   inline:
     - title: telnet installed
       include_content: prereqs/telnet
@@ -44,49 +43,103 @@ prereqs:
 
 ## Configure the Gateway
 
-Create a `GatewayConfiguration`, `GatewayClass`, and `Gateway` with an `HTTP` listener:
+{% konnect %}
+content: |
+  Create a `GatewayConfiguration`, `GatewayClass`, and `Gateway` with an `HTTP` listener. Setting `spec.konnect.authRef` hands the data plane to {{site.konnect_short_name}}, which manages its configuration:
 
-```bash
-echo '
-apiVersion: gateway-operator.konghq.com/v2beta1
-kind: GatewayConfiguration
-metadata:
-  name: kong-gateway-configuration
-  namespace: kong
-spec:
-  dataPlaneOptions:
-    deployment:
-      podTemplateSpec:
-        spec:
-          containers:
-            - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
-              name: proxy
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: GatewayClass
-metadata:
-  name: kong-tcp
-spec:
-  controllerName: konghq.com/gateway-operator
-  parametersRef:
-    group: gateway-operator.konghq.com
-    kind: GatewayConfiguration
+  ```bash
+  echo '
+  apiVersion: gateway-operator.konghq.com/v2beta1
+  kind: GatewayConfiguration
+  metadata:
     name: kong-gateway-configuration
     namespace: kong
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: Gateway
-metadata:
-  name: kong-tcp-gateway
-  namespace: kong
-spec:
-  gatewayClassName: kong-tcp
-  listeners:
-    - name: http
-      port: 80
-      protocol: HTTP' | kubectl apply -f -
-```
-{: data-test-step="block" }
+  spec:
+    konnect:
+      authRef:
+        name: konnect-api-auth
+        namespace: kong
+    dataPlaneOptions:
+      deployment:
+        podTemplateSpec:
+          spec:
+            containers:
+              - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
+                name: proxy
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: GatewayClass
+  metadata:
+    name: kong-tcp
+  spec:
+    controllerName: konghq.com/gateway-operator
+    parametersRef:
+      group: gateway-operator.konghq.com
+      kind: GatewayConfiguration
+      name: kong-gateway-configuration
+      namespace: kong
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: Gateway
+  metadata:
+    name: kong-tcp-gateway
+    namespace: kong
+  spec:
+    gatewayClassName: kong-tcp
+    listeners:
+      - name: http
+        port: 80
+        protocol: HTTP' | kubectl apply -f -
+  ```
+  {: data-test-step="block" }
+{% endkonnect %}
+
+{% on_prem %}
+content: |
+  Create a `GatewayConfiguration`, `GatewayClass`, and `Gateway` with an `HTTP` listener:
+
+  ```bash
+  echo '
+  apiVersion: gateway-operator.konghq.com/v2beta1
+  kind: GatewayConfiguration
+  metadata:
+    name: kong-gateway-configuration
+    namespace: kong
+  spec:
+    dataPlaneOptions:
+      deployment:
+        podTemplateSpec:
+          spec:
+            containers:
+              - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
+                name: proxy
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: GatewayClass
+  metadata:
+    name: kong-tcp
+  spec:
+    controllerName: konghq.com/gateway-operator
+    parametersRef:
+      group: gateway-operator.konghq.com
+      kind: GatewayConfiguration
+      name: kong-gateway-configuration
+      namespace: kong
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: Gateway
+  metadata:
+    name: kong-tcp-gateway
+    namespace: kong
+  spec:
+    gatewayClassName: kong-tcp
+    listeners:
+      - name: http
+        port: 80
+        protocol: HTTP' | kubectl apply -f -
+  ```
+  {: data-test-step="block" }
+{% endon_prem %}
 
 ## Deploy a TCP backend
 
