@@ -20,6 +20,9 @@ works_on:
   - konnect
 
 prereqs:
+  operator:
+    konnect:
+      auth: true
   inline:
     - title: Create Gateway resources
       include_content: /prereqs/operator/gateway
@@ -145,13 +148,32 @@ spec:
 
 ## Validate
 
-1. Wait for the `Gateway` and the route to be programmed:
+1. Wait for the `Gateway` to be programmed:
 
    ```bash
    kubectl wait --for=condition=Programmed gateway/kong -n kong --timeout=5m
-   kubectl wait --for=jsonpath='{.status.parents[0].conditions[?(@.type=="Programmed")].status}'=True httproute/canary-route -n kong --timeout=5m
    ```
    {: data-test-step="block" }
+
+1. Wait for the `HTTPRoute` to be ready:
+
+   {% on_prem %}
+   content: |
+     ```bash
+     kubectl wait --for=jsonpath='{.status.parents[0].conditions[?(@.type=="Programmed")].status}'=True httproute/canary-route -n kong --timeout=5m
+     ```
+     {: data-test-step="block" }
+   indent: 3
+   {% endon_prem %}
+
+   {% konnect %}
+   content: |
+     ```bash
+     kubectl wait --for=jsonpath='{.status.parents[0].conditions[?(@.type=="Accepted")].status}'=True httproute/canary-route -n kong --timeout=5m
+     ```
+     {: data-test-step="block" }
+   indent: 3
+   {% endkonnect %}
 
 1. Get the Gateway's external IP:
    
