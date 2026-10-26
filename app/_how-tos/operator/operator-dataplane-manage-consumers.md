@@ -23,7 +23,6 @@ prereqs:
   operator:
     konnect:
       auth: true
-      control_plane: true
   inline:
     - title: Create Gateway resources
       include_content: /prereqs/operator/gateway
@@ -154,7 +153,7 @@ content: |
     controlPlaneRef:
       type: konnectNamespacedRef
       konnectNamespacedRef:
-        name: gateway-control-plane
+        name: kong
   credentials:
   - test-user-apikey
   ' | kubectl apply -f -
@@ -162,7 +161,7 @@ content: |
   {: data-test-step="block" }
 
   {:.info}
-  > To guarantee a consistent name for the `konnectNamespacedRef`, use [static naming](/operator/konnect/how-to/static-naming/)
+  > The `Gateway` you created in the prerequisites uses the `gateway-operator.konghq.com/static-naming` annotation, so the `KonnectGatewayControlPlane` {{ site.operator_product_name }} creates for it is named after the `Gateway`, `kong`. See [static naming](/operator/konnect/how-to/static-naming/).
 {% endkonnect %}
 
 
