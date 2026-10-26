@@ -150,19 +150,9 @@ rows:
 
 ## Groups
 
-A group is a list of users and agents that share the same rules. Instead of setting rules on each member, you set them once on the group.
+A group is a list of users and agents that share the same rules. Instead of setting rules on each member, you set them once on the group. For example, you can select a group when setting up a spend limit in the cost center.
 
-Admins create groups manually. A group can't contain another group. Groups don't have a cost center.
-
-In the {{site.konnect_short_name}} UI, you can:
-
-* View groups in a list.
-* Create a group with a name and description.
-* Add labels and metadata to a group.
-* Add users to a group, either from the groups screen or from a user.
-* Edit a group and view its details.
-* Delete a group.
-* Export groups as a CSV.
+Admins create groups manually. A group has a name, a description, labels, and metadata. A group can't contain another group, and doesn't have a cost center.
 
 ### Projects
 
@@ -242,7 +232,7 @@ rows:
     manager: Request an agent. The request is sent to the platform team.
     individual: Request an agent. The request is sent to the platform team.
   - area: Groups and projects
-    admin: View all groups and projects.
+    admin: View all groups and projects. Create, edit, and delete groups and projects. Add or remove members. Export groups as a CSV.
     manager: View the groups and projects they belong to or manage.
     individual: View the groups and projects they belong to.
   - area: Identity providers
