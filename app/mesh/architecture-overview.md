@@ -14,6 +14,12 @@ related_resources:
     url: /mesh/multi-zone-architecture/
   - text: Resource scoping
     url: /mesh/resource-scoping/
+  - text: Service meshes
+    url: /mesh/service-mesh/
+  - text: Concepts
+    url: /mesh/concepts/
+  - text: Mesh-scoped zone proxies
+    url: /mesh/mesh-scoped-zone-proxies/
 ---
 {{site.mesh_product_name}} separates the control plane, which manages configuration, from the data plane, which carries traffic.
 A zone represents one environment where workloads run, such as a Kubernetes cluster or a group of VMs.
@@ -21,22 +27,17 @@ Each zone runs a zone control plane close to its workloads, and the zone control
 
 ## Core architecture
 
-{{site.mesh_product_name}} has the following parts:
+{{site.mesh_product_name}} uses the following components:
 
-* **Global control plane**: It stores the central view of the meshes and resources.
-* **Zone control planes**: Each one finds the local workloads, exchanges resources with the global control plane over the Kuma Discovery Service (KDS), and sends configuration to the local proxies over xDS.
-* **Data plane**: Envoy proxies that intercept application traffic and apply policies.
-* **Mesh-scoped zone proxies**: `Dataplane` resources with a zone ingress or zone egress listener. They carry traffic into and out of a zone.
-* **Service model**: `MeshService`, `MeshMultiZoneService`, and `MeshExternalService` resources that describe the destinations.
-* **Identity and trust**: `MeshIdentity` and `MeshTrust` resources that give workloads their identity and decide which certificate authorities they trust.
+* Global control plane: It stores the central view of the meshes and resources.
+* Zone control planes: Each one finds the local workloads, exchanges resources with the global control plane over the [Kuma Discovery Service (KDS)](/mesh/concepts/#kds), and sends configuration to the local proxies over [xDS](/mesh/concepts/#xds).
+* Data plane: [Envoy proxies](/mesh/concepts/#data-plane-proxy-or-sidecar) that intercept application traffic and apply policies.
+* [Mesh-scoped zone proxies](/mesh/mesh-scoped-zone-proxies/): `Dataplane` resources with a zone ingress or zone egress listener. They carry traffic into and out of a zone.
+* Service model: [`MeshService`](/mesh/meshservice/), [`MeshMultiZoneService`](/mesh/meshmultizoneservice/), and [`MeshExternalService`](/mesh/meshexternalservice/) resources that describe the destinations.
+* Identity and trust: [`MeshIdentity`](/mesh/policies/meshidentity/) and [`MeshTrust`](/mesh/policies/meshtrust/) resources that give workloads their identity and decide which certificate authorities they trust.
 
 For what changes when a second zone joins, see [Multi-zone architecture](/mesh/multi-zone-architecture/).
 For which control plane owns each resource, see [Resource scoping](/mesh/resource-scoping/).
-
-{:.info}
-> The zone control plane creates a `MeshService` from each Kubernetes `Service`.
-> A `MeshMultiZoneService` groups services from several zones.
-> A `MeshExternalService` describes a destination outside the mesh.
 
 ## Day-2 operations compared with other meshes
 
@@ -57,13 +58,13 @@ columns:
 rows:
   - concern: Policy structure
     istio: "One behavior can span several resources: routing in `VirtualService`, load balancing and outlier detection in `DestinationRule`, and external hosts in `ServiceEntry`. Newer versions use the Kubernetes Gateway API for routing."
-    mesh: "One policy for each concern, and every policy uses the same `targetRef` structure. When you troubleshoot a production issue, you have fewer resource types that interact."
+    mesh: "One [policy](/mesh/policies/) for each concern, and every policy uses the same [`targetRef` structure](/mesh/policy-targeting/). When you troubleshoot a production issue, you have fewer resource types that interact."
   - concern: Running across regions
     istio: "You choose and maintain a multi-cluster topology, such as multi-primary or primary-remote."
     mesh: "A built-in global and zone model that syncs over KDS. To add a region, you add a zone control plane. If the global control plane goes offline, each zone control plane keeps the global resources that it last received and keeps configuring its proxies, so data plane traffic continues."
   - concern: Kubernetes and VMs together
     istio: "Designed for Kubernetes. VMs join through `WorkloadEntry` and `WorkloadGroup`."
-    mesh: "Kubernetes and Universal (VMs and bare metal) use the same resources, so one team runs one mesh across both."
+    mesh: "Kubernetes and [Universal](/mesh/universal/) (VMs and bare metal) use the same resources, so one team runs one mesh across both."
 {% endtable %}
 <!-- vale on -->
 
@@ -101,64 +102,66 @@ If the global control plane goes offline, each zone control plane keeps the glob
 ### How a request travels between zones
 
 Inside a zone, each workload runs next to an Envoy sidecar.
-The sidecar applies mTLS, retries, timeouts, and access policies.
+The sidecar applies [mTLS](/mesh/policies/meshtls/), [retries](/mesh/policies/meshretry/), [timeouts](/mesh/policies/meshtimeout/), and [access policies](/mesh/policies/meshtrafficpermission/).
+Requests from outside the mesh enter through an API gateway, such as {{site.base_gateway}}.
+For more information, see [Application ingress](/mesh/application-ingress/).
 For cross-zone service discovery and routing, see [Multi-zone architecture](/mesh/multi-zone-architecture/).
 
 {% mermaid %}
 flowchart LR
-    subgraph ZoneEast["zone1 (Kubernetes)"]
-        ZECP["Zone control plane"]
-        KG["{{site.base_gateway}}<br/>(booking-gateway)"]
-        subgraph PPSvc["passenger-portal pod"]
-            PP_App["passenger-portal"]
-            PP_Envoy["Envoy sidecar"]
+    subgraph Zone1["zone1 (Kubernetes)"]
+        Z1CP["Zone control plane"]
+        KG["{{site.base_gateway}}"]
+        subgraph FESvc["frontend pod"]
+            FE_App["frontend"]
+            FE_Envoy["Envoy sidecar"]
         end
-        subgraph CISvc["check-in-api pod"]
-            CI_App["check-in-api"]
-            CI_Envoy["Envoy sidecar"]
+        subgraph ORSvc["orders pod"]
+            OR_App["orders"]
+            OR_Envoy["Envoy sidecar"]
         end
-        ZE_East["Zone egress<br/>(Dataplane)"]
+        ZE_Z1["Zone egress<br/>(Dataplane)"]
     end
-    subgraph ZoneWest["zone2 (Kubernetes)"]
-        ZI_West["Zone ingress<br/>(Dataplane)"]
-        subgraph FCSvc["flight-control pod"]
-            FC_App["flight-control"]
-            FC_Envoy["Envoy sidecar"]
+    subgraph Zone2["zone2 (Kubernetes)"]
+        ZI_Z2["Zone ingress<br/>(Dataplane)"]
+        subgraph PASvc["payments pod"]
+            PA_App["payments"]
+            PA_Envoy["Envoy sidecar"]
         end
     end
-    EXT["weather-api (SaaS)"]
+    EXT["external-api (SaaS)"]
 
-    ZECP -.->|xDS| PP_Envoy
-    ZECP -.->|xDS| CI_Envoy
-    ZECP -.->|xDS| ZE_East
+    Z1CP -.->|xDS| FE_Envoy
+    Z1CP -.->|xDS| OR_Envoy
+    Z1CP -.->|xDS| ZE_Z1
 
-    KG --> PP_Envoy
-    PP_Envoy --> PP_App
-    PP_App --> PP_Envoy
-    PP_Envoy --> CI_Envoy
-    CI_Envoy --> CI_App
-    CI_App --> CI_Envoy
-    CI_Envoy --> ZI_West
-    ZI_West --> FC_Envoy
-    FC_Envoy --> FC_App
-    CI_Envoy --> ZE_East
-    ZE_East --> EXT
+    KG --> FE_Envoy
+    FE_Envoy --> FE_App
+    FE_App --> FE_Envoy
+    FE_Envoy --> OR_Envoy
+    OR_Envoy --> OR_App
+    OR_App --> OR_Envoy
+    OR_Envoy --> ZI_Z2
+    ZI_Z2 --> PA_Envoy
+    PA_Envoy --> PA_App
+    OR_Envoy --> ZE_Z1
+    ZE_Z1 --> EXT
 {% endmermaid %}
 
-When `check-in-api` in `zone1` calls `flight-control` in `zone2`, the request takes five steps:
+In this example, when `orders` in `zone1` calls `payments` in `zone2`, the request takes five steps:
 
-1. `check-in-api` sends the request to its own Envoy sidecar over localhost.
-2. The sidecar finds `flight-control` in the configuration that the `zone1` control plane sent it. `flight-control` runs in another zone, so the sidecar sends the request to the zone ingress of `zone2`, at the address that `zone2` published as a `MeshZoneAddress`.
-3. The zone ingress uses its configuration from the `zone2` control plane to choose a healthy `flight-control` instance.
+1. `orders` sends the request to its own Envoy sidecar over localhost.
+2. The sidecar finds `payments` in the configuration that the `zone1` control plane sent. `payments` runs in another zone, so the sidecar sends the request to the zone ingress of `zone2`, at the address that `zone2` published as a [`MeshZoneAddress`](/mesh/mesh-scoped-zone-proxies/#make-ingress-reachable-from-other-zones).
+3. The zone ingress uses its configuration from the `zone2` control plane to choose a healthy `payments` instance.
    It forwards the encrypted connection without decrypting it.
-4. The Envoy sidecar of `flight-control` receives the request.
-5. That sidecar forwards the request to the `flight-control` application over localhost.
+4. The Envoy sidecar of `payments` receives the request.
+5. That sidecar forwards the request to the `payments` application over localhost.
 
-Between the two sidecars, the connection uses mTLS with the Secure Production Identity Framework for Everyone (SPIFFE) identities that `MeshIdentity` issues.
+Between the two sidecars, the connection uses mTLS with the [Secure Production Identity Framework for Everyone (SPIFFE) identities](/mesh/policies/meshidentity/#spiffe-id) that `MeshIdentity` issues.
 Only the first and last steps, between an application and its own sidecar, use plaintext, because that traffic never leaves the Pod or VM.
 
-The call to the external `weather-api` service takes a different path.
-`weather-api` is a `MeshExternalService`, so the sidecar sends the request to the zone egress of `zone1`, which forwards it to the SaaS endpoint.
+The call to `external-api`, a service outside the mesh, takes a different path.
+`external-api` is a `MeshExternalService`, so the sidecar sends the request to the zone egress of `zone1`, which forwards it to the SaaS endpoint.
 For both paths, see [Traffic paths](/mesh/mesh-scoped-zone-proxies/#traffic-paths).
 
 ## Scalability and fault tolerance

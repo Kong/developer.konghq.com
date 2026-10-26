@@ -34,6 +34,8 @@ related_resources:
   url: "/mesh/konnect/"
 - text: Terraform control plane resource
   url: https://registry.terraform.io/providers/kong/konnect-beta/0.22.0/docs/resources/mesh_control_plane
+- text: Architecture overview
+  url: "/mesh/architecture-overview/"
 cleanup:
   inline:
     - title: Delete the test applications
