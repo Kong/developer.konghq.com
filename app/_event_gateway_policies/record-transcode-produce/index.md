@@ -72,9 +72,12 @@ rows:
   - use_case: "[Example: Convert records for a specific topic to Avro](/event-gateway/policies/record-transcode-produce/examples/convert-topic-to-avro-on-condition/)"
     description: |
       Use a `condition` to convert records produced to a single topic to Avro, and leave records on other topics unchanged.
+  - use_case: "[Example: Accept JSON and Avro records and store them as Avro](/event-gateway/policies/record-transcode-produce/examples/accept-json-and-avro/)"
+    description: |
+      Use a schema registry with `schema_type: any` so clients can produce either JSON or Avro, and convert everything to Avro so the backend cluster stores a single format.
   - use_case: "[Tutorial: Produce Kafka records as Avro](/event-gateway/produce-kafka-records-as-avro-with-event-gateway/)"
     description: |
-      Let a producer send plain JSON, and store records as Avro in the backend cluster using a Confluent Schema Registry.
+      Let producers send plain JSON or Avro, and store records as Avro in the backend cluster using a Confluent Schema Registry.
 {% endtable %}
 <!--vale on-->
 
@@ -104,6 +107,22 @@ sequenceDiagram
   egw->>broker: send record with converted value
 {% endmermaid %}
 <!--vale on-->
+
+## Accepting records in more than one format
+
+The parent Schema Validation policy determines which formats a client can produce.
+A [schema registry](/event-gateway/entities/schema-registry/) with a fixed `schema_type` only accepts records in that one format.
+
+To accept records in any supported format, set `schema_type` to `any` {% new_in 1.3 %} on the schema registry that the parent policy uses.
+This is useful while producers migrate from JSON to Avro, or when different producers send different formats to the same topics.
+
+With `any`, {{site.event_gateway_short}} resolves the format of each record individually:
+
+* Values that carry a schema reference, in the [Confluent wire format](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/index.html#wire-format) or in a record header, are decoded using the registry.
+* Any other value is parsed as JSON without a schema, so {{site.event_gateway_short}} doesn't validate it.
+
+For example, with `output_format: avro`, clients can produce both JSON and Avro records to the same topic.
+The policy transcodes the JSON records to Avro, so the backend cluster only ever stores Avro.
 
 ## Configuring the target schema
 
