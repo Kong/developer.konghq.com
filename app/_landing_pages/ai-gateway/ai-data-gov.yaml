@@ -135,18 +135,14 @@ rows:
       type: h2
       text: "Data loss prevention"
       description: "You can use {{site.ai_gateway}} features to protect personally identifiable information and prevent data loss."
-    column_count: 2
+    column_count: 1
     columns:
       - blocks:
         - type: aigw_policy
           config:
             slug: ai-sanitizer
             icon: ai-sanitizer.png
-      - blocks:
-        - type: aigw_policy
-          config:
-            slug: ai-mcp-sanitizer
-
+ 
   - header:
       type: h2
       text: "RAG security"
