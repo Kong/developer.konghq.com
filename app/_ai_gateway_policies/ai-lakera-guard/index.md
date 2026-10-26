@@ -23,6 +23,8 @@ related_resources:
     url: /ai-gateway/policies/ai-aws-guardrails/
   - text: Use the AI AWS Guardrails Policy
     url: /ai-gateway/how-to/use-ai-aws-guardrails-policy/
+  - text: Use the AI Custom Guardrail Policy with the Mistral AI Moderation API
+    url: /ai-gateway/use-ai-custom-guardrail-with-mistral-ai/
   - text: "{{site.ai_gateway}} audit log reference"
     url: /ai-gateway/ai-audit-log-reference/#ai-lakera-guard-logs
 ---
