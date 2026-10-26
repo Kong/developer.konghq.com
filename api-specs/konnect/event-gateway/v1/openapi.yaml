@@ -23,8 +23,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@b250e460fb5e0b09230d44d463b217d80f43c78b
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b250e460fb5e0b09230d44d463b217d80f43c78b'
+  x-oas-source: kong/platform-api@5e365727f64f322e300bca8191100286e074738b
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/5e365727f64f322e300bca8191100286e074738b'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -6029,10 +6029,14 @@ components:
         prefix:
           description: |
             The namespace is differentiated by this chosen prefix.
+            The prefix is prepended to Kafka topic names, so it can only contain the characters Kafka allows in them: ASCII letters, digits, `.`, `_` and `-`.
+            It must contain at least one character other than `.` and be at most 100 characters long to leave room for the rest of the topic name (Kafka limits topic names to 249 characters).
             For example, if the prefix is set to "analytics_" the topic named "analytics_user_clicks" is available to the clients
             of the virtual cluster. Topics without the prefix will be ignored unless added via `additional.topics`.
           type: string
+          maxLength: 100
           minLength: 1
+          pattern: '^[A-Za-z0-9._-]*[A-Za-z0-9_-][A-Za-z0-9._-]*$'
         additional:
           $ref: '#/components/schemas/VirtualClusterNamespaceAdditionalProperties'
       required:
