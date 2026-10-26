@@ -20,7 +20,6 @@ prereqs:
   operator:
     konnect:
       auth: true
-      control_plane: true
   inline:
     - title: Create Gateway resources
       include_content: /prereqs/operator/gateway
@@ -113,7 +112,6 @@ spec:
         - name: echo
           port: 1027' | kubectl apply -f -
 ```
-{: data-test-step="block" }
 
 This method is consistent with the [{{site.kic_product_name}}](/kubernetes-ingress-controller/) behavior.
 
