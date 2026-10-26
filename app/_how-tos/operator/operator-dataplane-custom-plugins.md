@@ -39,7 +39,6 @@ prereqs:
   operator:
     konnect:
       auth: true
-      control_plane: true
     controllers:
       - kongplugininstallation
 
@@ -96,22 +95,12 @@ step: true
 content: |
   To see your custom plugin in {{site.konnect_product_name}}, you need to register the schema with your control plane.
 
-  First, get your control plane ID:
+  First, get your control plane ID from the `KonnectGatewayControlPlane` resource {{ site.operator_product_name }} created for your `Gateway`:
 
-  <!--vale off-->
-  {% konnect_api_request %}
-  url: /v2/control-planes?filter%5Bname%5D%5Beq%5D=gateway-control-plane
-  status_code: 200
-  method: GET
-  extract_body:
-    - name: data[0].id
-      variable: CONTROL_PLANE_ID
-  capture:
-    - variable: CONTROL_PLANE_ID
-      jq: ".data[0].id"
-  indent: 2
-  {% endkonnect_api_request %}
-  <!--vale on-->
+  ```sh
+  CONTROL_PLANE_ID=$(kubectl -n kong get konnectgatewaycontrolplane kong -o jsonpath='{.status.id}')
+  ```
+  {: data-test-step="block" }
 
   Run the following command to upload your schema file to your {{site.konnect_short_name}} control plane:
 
