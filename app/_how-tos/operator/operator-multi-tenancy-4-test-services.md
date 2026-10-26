@@ -46,6 +46,41 @@ tldr:
 
 prereqs:
   skip_product: true
+
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Delete the routes, services, gateways, and gateway configurations from both tenant namespaces, then the cluster-scoped resources:
+
+        ```bash
+        kubectl delete -n kong-gw-public --ignore-not-found \
+          httproute/echo \
+          service/echo \
+          gateway/gw-public \
+          gatewayconfiguration/gw-public
+
+        kubectl delete -n kong-gw-private --ignore-not-found \
+          httproute/private-only \
+          service/echo \
+          gateway/gw-private \
+          gatewayconfiguration/gw-private
+
+        kubectl delete --ignore-not-found \
+          gatewayclass/gw-public \
+          gatewayclass/gw-private \
+          konglicense/kong-license
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
+
+    - title: Delete the namespaces
+      content: |
+        ```bash
+        helm uninstall kong-operator -n kong-system
+        kubectl delete namespace kong-gw-private kong-gw-public kong-system
+        ```
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 ## Deploy test services
@@ -216,4 +251,4 @@ render_output: false
    {{check_3 | indent}}
    {{check_4 | indent}}
 
-The public gateway returns 404 because its in-memory {{ site.kic_product_name_short }} only watches `kong-gw-public`. The `private-only` HTTPRoute lives in `kong-gw-private`, so the public {{ site.kic_product_name_short }} never processes it and never programs it into the public data plane. No matter what routes are deployed in `kong-gw-private`, they are completely invisible to `gw-public` — and vice versa. This is namespace isolation working as intended.
+The public gateway returns 404 because its in-memory {{ site.kic_product_name_short }} only watches `kong-gw-public`. The `private-only` HTTPRoute lives in `kong-gw-private`, so the public {{ site.kic_product_name_short }} never processes it and never programs it into the public data plane. No matter what routes are deployed in `kong-gw-private`, they are completely invisible to `gw-public`, and vice versa. This is namespace isolation working as intended.
