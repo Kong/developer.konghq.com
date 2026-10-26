@@ -247,7 +247,7 @@ deck ai sync ./out/ai-gateway.yaml
 {:.danger}
 > `deck ai sync` replaces any configuration in {{site.ai_gateway}} that isn't present in the file you apply. 
 
-After the apply succeeds, send a representative request to each migrated AI Model, MCP server, and Agent to confirm behavior matches {{site.ai_gateway}} running on {{site.base_gateway}} before you transfer traffic over.
+After the apply succeeds, send a representative request to each migrated AI Model, AI MCP Server, and AI Agent to confirm behavior matches {{site.ai_gateway}} running on {{site.base_gateway}} before you transfer traffic over.
 
 After you've successfully migrated and tested the configuration, you can uninstall the `kongctl-ext-aigw-converter` extension with `kongctl uninstall extension kong/ai-gateway-converter`.
 
