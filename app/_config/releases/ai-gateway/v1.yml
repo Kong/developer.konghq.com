@@ -212,8 +212,7 @@ app/_how-tos/ai-gateway/v1/use-agno-with-ai-proxy.md:
 app/_how-tos/ai-gateway/v1/use-ai-aws-guardrails-plugin.md:
   canonical_url: /ai-gateway/how-to/use-ai-aws-guardrails-policy/
 app/_how-tos/ai-gateway/v1/use-ai-custom-guardrail-with-mistral-ai.md:
-  status: pending
-  canonical_url: /ai-gateway/policies/ai-custom-guardrail/
+  canonical_url: /ai-gateway/use-ai-custom-guardrail-with-mistral-ai/
 app/_how-tos/ai-gateway/v1/use-ai-gcp-model-armor-plugin.md:
   status: pending
   canonical_url: /ai-gateway/policies/ai-gcp-model-armor/
