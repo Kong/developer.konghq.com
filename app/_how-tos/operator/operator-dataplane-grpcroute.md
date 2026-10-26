@@ -30,6 +30,25 @@ prereqs:
       include_content: prereqs/grpcurl
       icon_url: /assets/icons/code.svg
 
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `Gateway` also deletes the control plane and data plane resources {{ site.operator_product_name }} created for it. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          grpcroute/grpcbin \
+          secret/example.com \
+          gateway/kong-grpc-gateway \
+          gatewayconfiguration/kong-gateway-configuration
+        kubectl delete --ignore-not-found gatewayclass/kong-grpc
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 `GRPCRoute` is a Kubernetes Gateway API resource for routing gRPC traffic. This guide shows how to configure {{ site.operator_product_name }} to proxy gRPC traffic secured with TLS to a backend Service.

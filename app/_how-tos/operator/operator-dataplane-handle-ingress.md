@@ -22,6 +22,24 @@ tldr:
   q: How do I configure {{ site.operator_product_name }} to handle Kubernetes Ingress resources?
   a: Set the `spec.ingressClass` field in the `ControlPlane` resource to match your `Ingress` resource's `spec.ingressClassName`.
 
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `ControlPlane` and `DataPlane` also deletes the resources {{ site.operator_product_name }} created for them. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          ingress/echo-ingress \
+          dataplane/kong-ingress-dp \
+          controlplane/kong-ingress-cp \
+          gatewayconfiguration/kong-ingress-config
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 While the [Kubernetes Gateway API](https://gateway-api.sigs.k8s.io/) is the preferred mechanism for configuring inbound routing, {{ site.operator_product_name }} also supports the [Kubernetes Ingress resource](https://kubernetes.io/docs/concepts/services-networking/ingress/).

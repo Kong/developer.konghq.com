@@ -41,6 +41,27 @@ tldr:
     expose those metrics on the `/metrics` endpoint, and configure the operator to reference this
     data for scaling decisions.
 
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Uninstall the Datadog agent, delete the resources this guide created, then remove the operator. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        helm uninstall datadog -n default
+        kubectl delete -n kong --ignore-not-found \
+          horizontalpodautoscaler/command \
+          datadogmetric/command-kong-upstream-latency-ms-avg \
+          httproute/command \
+          gateway/kong \
+          gatewayconfiguration/kong
+        kubectl delete --ignore-not-found gatewayclass/kong
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 {% assign gatewayApiVersion = "v1" %}

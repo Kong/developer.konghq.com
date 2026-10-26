@@ -25,6 +25,24 @@ tldr:
   q: How do I route UDP traffic with {{ site.operator_product_name }}?
   a: Add a `UDP` listener to your `Gateway`, then create a `UDPRoute` resource. {{ site.operator_product_name }} converts the `UDPRoute` into a {{ site.base_gateway }} [Service](/gateway/entities/service/) and [Route](/gateway/entities/route/).
 
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `Gateway` also deletes the control plane and data plane resources {{ site.operator_product_name }} created for it. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          udproute/tftp \
+          gateway/kong-udp-gateway \
+          gatewayconfiguration/kong-gateway-configuration
+        kubectl delete --ignore-not-found gatewayclass/kong-udp
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 `UDPRoute` is a Kubernetes Gateway API resource for routing UDP traffic by port. This guide shows how to configure {{ site.operator_product_name }} to proxy UDP traffic to a backend Service.
