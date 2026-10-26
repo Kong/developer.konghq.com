@@ -80,6 +80,12 @@ Get {{site.konnect_short_name}} user information.
 
 {% include_cached /kongctl/help/get/konnect/me.md %}
 
+### kongctl get konnect mesh
+
+The `mesh` command works with resources on a {{site.mesh_product_name}} control plane.
+
+{% include_cached /kongctl/help/get/konnect/mesh.md %}
+
 ### kongctl get konnect organization
 
 Get {{site.konnect_short_name}} organization details.

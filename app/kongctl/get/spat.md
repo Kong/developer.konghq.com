@@ -17,6 +17,10 @@ breadcrumbs:
 related_resources:
   - text: kongctl get commands
     url: /kongctl/get/
+  - text: kongctl create spat
+    url: /kongctl/create/spat/
+  - text: kongctl delete spat
+    url: /kongctl/delete/spat/
 ---
 
 Get {{site.konnect_short_name}} [system account access tokens](/konnect-api/#konnect-api-authentication).

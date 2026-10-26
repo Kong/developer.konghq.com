@@ -71,6 +71,9 @@ rows:
       [kongctl get me](/kongctl/get/me/)
     description: "Get current user information."
   - command: |
+      [kongctl get mesh](/kongctl/get/mesh/)
+    description: "Work with resources on a {{site.mesh_product_name}} control plane."
+  - command: |
       [kongctl get organization](/kongctl/get/organization/)
     description: "Get organization details."
   - command: |

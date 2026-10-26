@@ -9,7 +9,12 @@ When the `config.ai_metrics` parameter is set to `true` in the Prometheus Policy
 - **AI cache fetch latency**: Time taken to return a response from the cache.
 - **AI cache embeddings latency**: Time taken to generate embedding during the cache.
 
-These metrics are available per provider, model, cache, database name (if cached), embeddings provider (if cached), embeddings model (if cached), and Workspace. The AI Tokens metrics are also available per token type.
+These metrics are available per provider, model, cache, database name (if cached), embeddings provider (if cached), embeddings model (if cached), and Workspace. The AI Tokens metrics are also available per token type. The `kong_ai_llm_tokens_total` metric uses the following `token_type` values:
+
+- `prompt_tokens`, `completion_tokens`, and `total_tokens`: Input, output, and combined token counts.
+- `cached_tokens`: Tokens read from the provider's prompt cache. Cache reads only.
+- `cache_write_tokens`: Total tokens written to the provider's prompt cache.
+- `cache_write_5m_tokens` and `cache_write_1h_tokens`: Cache-write tokens split by a 5-minute or 1-hour cache TTL.
 
 {:.info}
 > **Note:** AI metrics include the `consumer` label. This enables you to attribute AI usage and token counts to individual Consumers, helping you measure cost, performance, and client-specific behavior.
