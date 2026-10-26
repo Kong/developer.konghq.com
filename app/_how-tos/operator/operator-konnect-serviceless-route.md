@@ -33,13 +33,36 @@ prereqs:
       auth: true
       control_plane: true
 
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `KonnectGatewayControlPlane` also deletes the control plane the {{site.operator_product_name}} created in {{ site.konnect_short_name }}:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          kongroute/route-without-service \
+          konnectgatewaycontrolplane/gateway-control-plane \
+          konnectapiauthconfiguration/konnect-api-auth
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
+
+    - title: Delete the namespaces
+      content: |
+        ```bash
+        helm uninstall kong-operator -n kong-system
+        kubectl delete namespace kong kong-system
+        ```
+      icon_url: /assets/icons/kubernetes.svg
+
 ---
 
-## Create a `KongRoute`
+## Create a KongRoute
 
 Create a `KongRoute` object and reference the Control Plane with `controlPlaneRef` to make the Route work without a Service.
 
-<!-- vale on -->
+<!-- vale off -->
 {% konnect_crd %}
 kind: KongRoute
 apiVersion: configuration.konghq.com/v1alpha1
