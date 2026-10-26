@@ -686,12 +686,6 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-### AI MCP Sanitizer logs
-
-If you use the [AI MCP Sanitizer Policy](/ai-gateway/policies/ai-mcp-sanitizer/), {{site.ai_gateway}} logs include sanitization details under the `ai.mcp` object.
-
-{% include md/ai-gateway/v2/mcp-sanitizer-logs.md %}
-
 ### AI A2A Proxy logs 
 
 If you create an [AI Agent](/ai-gateway/entities/ai-agent/), {{site.ai_gateway}} logs include additional fields under the `ai.a2a` object when `log_statistics` is enabled. These fields provide observability into Agent-to-Agent (A2A) protocol traffic, including operation names, task lifecycle state, latency, streaming metrics, and optional request/response payloads.
