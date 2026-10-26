@@ -26,10 +26,7 @@ related_resources:
   - text: Policy targeting and precedence
     url: /mesh/policy-targeting-and-precedence/
 ---
-This page defines the terms that the {{site.mesh_product_name}} documentation and the Kong Air scenarios use.
-Each definition is short and links to the page that covers the subject in depth.
-
-For what a service mesh is and the problems it solves, see [Service meshes](/mesh/service-mesh/).
+This page defines terms related to {{site.mesh_product_name}}.
 
 ## Mesh
 
@@ -38,7 +35,7 @@ Every policy, service, and data plane proxy belongs to one mesh, so each mesh ha
 A workload in one mesh can reach a workload in another mesh only through an external destination that you configure.
 
 On Kubernetes, a resource joins a mesh through the `kuma.io/mesh` label.
-For more information, see [Resource scoping](/mesh/resource-scoping/).
+For more information, see [Service meshes](/mesh/service-mesh/) and [Resource scoping](/mesh/resource-scoping/).
 
 ## Zone
 
@@ -134,7 +131,6 @@ As a result, callers in the mesh keep using ordinary Kubernetes DNS names, such 
 On Kubernetes, you set it with the `kuma.io/reachable-backends` Pod annotation.
 The control plane generates outbound configuration only for these destinations.
 With the default `restrictOutbound` setting, a proxy without `reachableBackends` reaches no destination.
-The Kong Air control plane sets `restrictOutbound` to false, so its proxies reach every destination until the production scenario turns it on.
 
 Each entry selects destinations by `kind` and `labels`.
 `kind` accepts `MeshService`, `MeshMultiZoneService`, and `MeshExternalService`, so one list covers services in the zone, services in several zones, and external dependencies.
@@ -189,7 +185,7 @@ A service is a destination that callers reach by hostname.
 
 A `MeshService` describes a service inside the mesh.
 On Kubernetes, the zone control plane generates one from each `Service`.
-The `appProtocol` of each port becomes the protocol of that port, which lets HTTP features such as `MeshHTTPRoute` apply.
+The `appProtocol` of each port becomes the protocol of that port, which lets HTTP features such as [`MeshHTTPRoute`](/mesh/policies/meshhttproute/) apply.
 For more information, see [MeshService](/mesh/meshservice/).
 
 ### MeshMultiZoneService
@@ -203,7 +199,7 @@ For more information, see [MeshMultiZoneService](/mesh/meshmultizoneservice/).
 
 A `MeshExternalService` describes a destination outside the mesh, such as a SaaS API or a managed database.
 Callers reach it with a hostname of the form `NAME.extsvc.mesh.local`, and the traffic leaves through the zone egress.
-The zone egress denies this traffic until a `MeshTrafficPermission` allows it.
+The zone egress denies this traffic until a [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/#authorize-zone-proxy-traffic) allows it.
 For more information, see [MeshExternalService](/mesh/meshexternalservice/).
 
 ### HostnameGenerator
@@ -211,6 +207,8 @@ For more information, see [MeshExternalService](/mesh/meshexternalservice/).
 A `HostnameGenerator` decides the hostname of each service resource.
 The control plane creates default generators.
 For example, `synced-kube-mesh-service` gives a Kubernetes service from another zone the hostname `{% raw %}{{ .DisplayName }}.{{ .Namespace }}.svc.{{ .Zone }}.mesh.local{% endraw %}`.
+The status of each service resource lists its hostnames and the generator that produced each one.
+For more information, see [Reading the status](/mesh/meshservice/#reading-the-status).
 
 ## Identity and trust
 
@@ -233,7 +231,7 @@ spiffe://kong-air-mesh.zone1.mesh.local/ns/kong-air-production/sa/flight-control
 ```
 {:.no-copy-code}
 
-`MeshTrafficPermission` allows or denies callers by their SPIFFE ID.
+[`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/#match-caller-identities) allows or denies callers by their SPIFFE ID.
 For more information, see [SPIFFE ID](/mesh/policies/meshidentity/#spiffe-id).
 
 ### Trust domain
@@ -241,25 +239,27 @@ For more information, see [SPIFFE ID](/mesh/policies/meshidentity/#spiffe-id).
 A trust domain is the part of a SPIFFE ID after `spiffe://`.
 By default, the trust domain is `{% raw %}{{ .Mesh }}.{{ .Zone }}.mesh.local{% endraw %}`, so each zone has its own trust domain.
 You then configure each zone to trust the other zones.
+For more information, see [Multi-zone meshes](/mesh/policies/meshidentity/#multi-zone-meshes).
 
 ### Trust
 
 A trust defines which identities a proxy accepts.
 The CAs that issue those identities establish the trust.
 Each trust belongs to one trust domain, and a mesh can have several trusts.
+For how a proxy matches a certificate to a trust, see [Trust domain matching](/mesh/policies/meshtrust/#trust-domain-matching).
 
 ### MeshIdentity and MeshTrust
 
 A `MeshIdentity` configures how workloads get their certificates, with the `Bundled`, `Spire`, or `Extension` provider.
 A `MeshTrust` holds the public CA certificate of one trust domain.
-To let one zone verify the workloads of another zone, you copy the other zone's `MeshTrust`.
+To let one zone verify the workloads of another zone, you [copy the other zone's `MeshTrust`](/mesh/zone-proxies/#propagate-trust-between-zones).
 For more information, see [MeshIdentity](/mesh/policies/meshidentity/) and [MeshTrust](/mesh/policies/meshtrust/).
 
 ### SNI
 
 The server name indication (SNI) is the server name that a proxy sends when it opens a TLS connection.
 {{site.mesh_product_name}} uses it to carry the destination of the request.
-A `MeshTrafficPermission` on a zone egress matches the destination by its `sni`.
+A [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/#authorize-zone-proxy-traffic) on a zone egress matches the destination by its `sni`.
 For a `MeshExternalService` that you create on a Kubernetes zone, the SNI has the form `sni.extsvc.MESH.ZONE.NAMESPACE.NAME.PORT`.
 On a Universal zone, the SNI has no namespace, and for a resource from the global control plane, it has neither zone nor namespace.
 
@@ -271,8 +271,8 @@ Each resource type is an API object with one purpose.
 
 You usually write a resource in YAML, in one of two formats:
 
-- **Kubernetes**: The resource is a Kubernetes custom resource, which you apply on a Kubernetes zone.
-- **Universal**: You apply the resource through the {{site.mesh_product_name}} API or `kongctl`, on a Universal zone or the global control plane.
+- Kubernetes: The resource is a Kubernetes custom resource, which you apply on a Kubernetes zone.
+- Universal: You apply the resource through the {{site.mesh_product_name}} API or `kongctl`, on a Universal zone or the global control plane.
 
 For which control plane owns a resource, and which namespaces accept it on Kubernetes, see [Resource scoping](/mesh/resource-scoping/).
 
@@ -304,7 +304,7 @@ rows:
 ### KRI
 
 A Kuma Resource Identifier (KRI) is a stable string that names one resource across the whole deployment.
-It has the following form:
+It has the following format:
 
 ```text
 kri_TYPE_MESH_ZONE_NAMESPACE_NAME_SECTION
@@ -320,7 +320,7 @@ kri_mid_kong-air-mesh_zone1_kong-mesh-system_kong-air-identity_
 
 The trailing underscore is the empty `sectionName`.
 `TYPE` is a short name for the resource type, for example `dp` for `Dataplane`, `mid` for `MeshIdentity`, `mtrust` for `MeshTrust`, and `mza` for `MeshZoneAddress`.
-KRIs appear in the inspection output of the control plane, so you can use them to confirm that a proxy uses the resource that you created.
+KRIs appear in the [inspection output](/mesh/cli/#inspecting-what-the-control-plane-computed) of the control plane, so you can use them to confirm that a proxy uses the resource that you created.
 
 ## Policy
 
@@ -337,7 +337,7 @@ For the full list, see [Mesh policies](/mesh/policies/).
 
 A policy that configures received traffic uses `spec.rules[]` instead, and each rule matches the callers.
 When several policies of the same type apply to the same proxy, the control plane merges them by priority.
-For more information, see [Policy targeting](/mesh/policy-targeting/) and [Policy targeting and precedence](/mesh/policy-targeting-and-precedence/).
+For more information, see [Policy targeting](/mesh/policy-targeting/).
 
 ### sectionName
 
