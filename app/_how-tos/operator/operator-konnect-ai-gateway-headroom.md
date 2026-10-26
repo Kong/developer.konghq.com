@@ -74,9 +74,6 @@ faqs:
 
 [Headroom](https://github.com/headroomlabs-ai/headroom) compresses agent traffic: tool results, large JSON payloads, search output, and logs. With the [AI Prompt Compressor Policy](/ai-gateway/policies/ai-prompt-compressor/) set to `provider: headroom`, the {{ site.ai_gateway }} data plane sends each request's messages to Headroom and forwards the compressed messages to the LLM. Headroom decides how much to compress.
 
-This guide deploys Headroom in its default compression mode, where compressed content can't be recovered. 
-If you need Headroom to keep compressed content retrievable instead, see [reversible compression](/ai-gateway/policies/ai-prompt-compressor/#headroom-prompt-flow) in the AI Prompt Compressor Policy reference.
-
 This guide uses the following recommended layout:
 
 - One Headroom `Deployment` with exactly one replica in the same namespace as the data plane. Headroom keeps its sessions in memory in a single process, so the data plane must always reach the same instance.

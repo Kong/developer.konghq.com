@@ -244,14 +244,13 @@ The AI Prompt Compressor Policy uses Headroom in a stateful mode and derives a s
 
 If a session identifier isn't present, then every client that opens with the same prompt shares one session state on the Headroom side. If sessions collide, then only one will hit the upstream cache.
 
+{% comment %}
 Headroom compresses in one of two modes, set with `config.headroom.mode`. 
 The default, `lossy`, drops what Headroom deems redundant, without a way to recover it. 
 `ccr` ensures the original content is retrievable.
 If the model needs to retrieve it, {{site.ai_gateway}} resolves that retrieval against the provider on the model's behalf. 
 Use `lossy` unless something downstream of the model depends on exact tool output or conversation history that was compressed away, since `ccr` adds a round trip and has narrower provider support.
-
-{% navtabs "headroom-prompt-flow" %}
-{% navtab "Lossy" %}
+{% endcomment %}
 
 1. {{site.ai_gateway}} sends the user or agent's request to the AI Prompt Compressor.
 2. The AI Prompt Compressor builds a messages array from the whole conversation.
@@ -261,7 +260,7 @@ Use `lossy` unless something downstream of the model depends on exact tool outpu
 
 If the call to Headroom fails, the AI Prompt Compressor rejects the request by default. For details, see [Failure behavior](#failure-handling).
 
-The following diagram illustrates how the AI Prompt Compressor Policy processes and compresses incoming prompts using Headroom in `lossy` mode:
+The following diagram illustrates how the AI Prompt Compressor Policy processes and compresses incoming prompts using Headroom:
 
 <!-- vale off -->
 {% mermaid %}
@@ -294,8 +293,7 @@ sequenceDiagram
 {% endmermaid %}
 <!-- vale on -->
 
-{% endnavtab %}
-{% navtab "Reversible (`ccr`)" %}
+{% comment %}
 
 Set `config.headroom.mode` to `ccr` when something downstream of the model needs to retrieve the content Headroom compressed away.
 In this mode, Headroom marks the content it compressed and adds a `headroom_retrieve` tool to the request instead of dropping that content. 
@@ -332,9 +330,7 @@ sequenceDiagram
 <!-- vale on -->
 
 Headroom's `HEADROOM_GATEWAY_TURN_TTL_SECONDS` setting (120 seconds by default) must be longer than the slowest provider response the route serves. If a retrieval takes longer than that, Headroom drops the turn, and the model's request for the original content fails with an error instead of returning it.
-
-{% endnavtab %}
-{% endnavtabs %}
+{% endcomment %}
 
 ### Failure handling
 
@@ -350,10 +346,13 @@ A call to Headroom that reuses a pooled connection Headroom has already closed i
 - Headroom sessions are held in memory on a single Headroom process. You must point every data plane node at its own sidecar, or all of them at one shared instance. Never point an {{site.ai_gateway}} data plane at a load-balanced set of Headroom instances, since a session's turns must all reach the same process.
 - No MCP tool-response compression: only the LLM request path is supported.
 - Only requests with a `messages` or `input` conversation array are sent to Headroom. Other formats are forwarded uncompressed.
-- A native Bedrock Converse request is skipped, with a warning, regardless of mode. Headroom can't read Converse's content blocks.
+- A native Bedrock Converse request is skipped, with a warning. Headroom can't read Converse's content blocks.
+
+{% comment %}
 - `ccr` mode doesn't support the OpenAI Responses API. A request in that format on a `ccr` route is compressed as `lossy` instead.
 - For a streaming client in `ccr` mode, the AI Prompt Compressor Policy returns HTTP `200` and sends ping events once the request is 5 seconds old, before the provider has answered. If the provider then returns an error, the client receives it as an SSE `error` event rather than an HTTP error status, which changes how the client should retry.
 - `ccr` only works where the AI Prompt Compressor Policy can read the provider's answer in the format Headroom compressed: Anthropic Messages requests to Claude (direct, or through Bedrock, Vertex, Azure, or Databricks), and OpenAI chat requests to OpenAI or Azure OpenAI. A request on a `ccr` route that doesn't match one of these is compressed `lossy` instead, with no extra configuration needed.
+{% endcomment %}
 
 ## Prompt compression metrics
 
