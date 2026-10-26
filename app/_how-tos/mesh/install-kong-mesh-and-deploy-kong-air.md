@@ -47,8 +47,6 @@ prereqs:
       include_content: md/mesh/v3/prereqs/kubernetes-cluster
     - title: Helm
       include_content: prereqs/helm
-    - title: Connect kongctl to your control plane
-      include_content: md/mesh/v3/prereqs/kongctl
 cleanup:
   inline:
     - title: Remove the Kong Air foundation

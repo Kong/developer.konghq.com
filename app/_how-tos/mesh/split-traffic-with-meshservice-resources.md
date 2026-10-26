@@ -29,10 +29,6 @@ tldr:
     1. Target the shared entry point from a `MeshHTTPRoute` `to[].targetRef`.
     2. Assign a `weight` to each `backendRef`, one per versioned `MeshService`.
     3. Verify the split by tallying which pod served each response.
-prereqs:
-  inline:
-    - title: Set up the scenario
-      include_content: md/mesh/v3/prereqs/split-traffic-quickstart
 cleanup:
   inline:
     - title: Remove the traffic split
