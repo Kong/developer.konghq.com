@@ -159,6 +159,7 @@ content: |
   - test-user-apikey
   ' | kubectl apply -f -
   ```
+  {: data-test-step="block" }
 
   {:.info}
   > To guarantee a consistent name for the `konnectNamespacedRef`, use [static naming](/operator/konnect/how-to/static-naming/)
