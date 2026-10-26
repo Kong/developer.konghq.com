@@ -26,7 +26,6 @@ prereqs:
   operator:
     konnect:
       auth: true
-      control_plane: true
   inline:
     - title: Create Gateway resources
       include_content: /prereqs/operator/gateway
