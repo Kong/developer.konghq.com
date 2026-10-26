@@ -15,9 +15,8 @@ tags:
   - access-control
   - authentication
 
-# TODO: confirm min_version with the Access Management team
 min_version:
-  ai-gateway: '2.2'
+  ai-gateway: '2.3'
 
 description: "Learn what users, agents, groups, identity providers, Token Vault, and virtual keys are in {{site.ai_gateway}} access management, and how they relate to each other."
 
@@ -40,7 +39,7 @@ Access management allows you to define who can use your organization's resources
 
 ## How access management works
 
-Access management uses Kong Identity features, such as [principals](/identity/principals/) and [auth servers](/identity/auth-servers/), to answer two questions:
+Access management features answer two questions:
 
 * Who is making the request?
 * What are they allowed to do?
@@ -56,7 +55,7 @@ A user is a person who an admin adds to the system in one of two ways:
 
 To create a user, you must provide the following:
 
-* A name
+* A name for the user
 * An email
 
 Once a user exists, an admin can:
@@ -143,7 +142,7 @@ rows:
 
 ## Groups
 
-A group is a list of users that share the same rules. Instead of setting rules on each member, you set them once on the group.
+A group is a list of users and agents that share the same rules. Instead of setting rules on each member, you set them once on the group.
 
 Admins create groups manually. A group can't contain another group.
 
@@ -155,7 +154,7 @@ In the {{site.konnect_short_name}} UI, you can:
 * Add users to a group, either from the groups screen or from a user.
 * Edit a group and view its details.
 * Delete a group.
-
+* Export groups as a CSV
 Groups don't have a cost center.
 
 ## Identity providers
@@ -171,7 +170,7 @@ To learn more, see [Token Vault's providers](/identity/token-vault/#providers).
 Token Vault stores credentials so that {{site.ai_gateway}} can call external services on behalf of a caller. To set it up:
 
 1. Add at least one trusted [identity provider](#identity-providers).
-1. Generate a public encryption key for the vault and set the private key reference on a gateway.
+1. Configure how Token Vault authenticates with this provider
 1. Create credential providers. A credential provider uses either OAuth or a static API key.
 
 When you set up an [MCP server](/ai-gateway/entities/ai-mcp-server/), you can choose a credential provider for outbound authentication as an alternative to pass-through. You can view the credentials stored in the vault from the provider and identity provider detail pages.
@@ -184,7 +183,7 @@ A virtual key is an API key that lets a caller use {{site.ai_gateway}}. For exam
 
 Use virtual keys to:
 
-* **Reinforce API key security:** Virtual keys can be generated and revoked cleanly.
+* **Reinforce API key security:** Virtual keys can be generated and deleted.
 * **Enforce and monitor costs:** You can link each virtual key to a cost center and set a spend limit.
 * **Gain visibility:** The key list shows when each key was last used, so you can delete stale ones.
 
