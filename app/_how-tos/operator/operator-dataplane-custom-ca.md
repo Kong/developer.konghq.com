@@ -27,6 +27,24 @@ prereqs:
 tldr:
   q: How do I use a custom CA certificate to sign new `DataPlane` certificates?
   a: Provide the `spec.clientAuth.certificateSecret` field when defining your `KonnectExtension` resource
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Delete the resources created in this guide. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          secret/konnect-client-tls \
+          konnectextension/my-konnect-config \
+          konnectgatewaycontrolplane/gateway-control-plane \
+          konnectapiauthconfiguration/konnect-api-auth
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 ## Use a custom CA certificate

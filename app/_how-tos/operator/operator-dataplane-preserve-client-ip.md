@@ -20,11 +20,27 @@ prereqs:
   operator:
     konnect:
       auth: true
-      control_plane: true
 
 tldr:
   q: How do I see the real client IP in Kong logs?
   a: "Configure `externalTrafficPolicy: Local` in your `GatewayConfiguration`."
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `Gateway` also deletes the control plane and data plane resources {{ site.operator_product_name }} created for it. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          gateway/kong-external-traffic \
+          gatewayconfiguration/preserve-client-ip
+        kubectl delete --ignore-not-found gatewayclass/kong-external-traffic
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 By default, when traffic enters a Kubernetes cluster through a Service of type `LoadBalancer`, the source IP is often replaced with the IP of the node (SNAT). This means your applications and access logs see the node's IP instead of the client's IP.

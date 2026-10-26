@@ -23,6 +23,20 @@ tldr:
   q: How do I customize the image used for {{ site.base_gateway }} with {{ site.operator_product_name }}?
   a: Use PodTemplateSpec to customize the container spec and specify an `image` name for the `proxy` container.
 
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Delete the resources created in this guide. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found dataplane/dataplane-example
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 {% include k8s/kong-namespace.md %}

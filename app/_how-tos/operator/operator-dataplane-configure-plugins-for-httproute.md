@@ -30,6 +30,26 @@ tldr:
   q: How do I attach a plugin to an HTTPRoute with {{ site.operator_product_name }}?
   a: |
     Use an `ExtensionRef` or the legacy `konghq.com/plugins` annotation.
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `Gateway` also deletes the control plane and data plane resources {{ site.operator_product_name }} created for it. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          kongplugin/rate-limit-example \
+          httproute/echo-route \
+          service/echo \
+          gateway/kong \
+          gatewayconfiguration/gateway-configuration
+        kubectl delete --ignore-not-found gatewayclass/gateway-class
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 ## Create a KongPlugin
