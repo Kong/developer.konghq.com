@@ -40,9 +40,55 @@ prereqs:
       auth: true
       control_plane: true
 
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Deleting the `KonnectGatewayControlPlane` also deletes the control plane the {{site.operator_product_name}} created in {{ site.konnect_short_name }}:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          kongvault/env-vault \
+          kongreferencegrant/allow-kongvault-to-konnect-resources \
+          konnectgatewaycontrolplane/gateway-control-plane \
+          konnectapiauthconfiguration/konnect-api-auth
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
+
+    - title: Delete the namespaces
+      content: |
+        ```bash
+        helm uninstall kong-operator -n kong-system
+        kubectl delete namespace kong kong-system
+        ```
+      icon_url: /assets/icons/kubernetes.svg
+
 ---
 
-## Create a `KongVault`
+## Create a KongReferenceGrant
+
+A `KongVault` is cluster-scoped, so it has no namespace of its own. Referencing the `KonnectGatewayControlPlane` in the `kong` namespace therefore crosses a namespace boundary, which a `KongReferenceGrant` must allow. Because the source has no namespace, the grant lists an empty namespace in its `from` entry:
+
+```sh
+echo '
+apiVersion: configuration.konghq.com/{{ site.operator_kongreferencegrant_api_version }}
+kind: KongReferenceGrant
+metadata:
+  name: allow-kongvault-to-konnect-resources
+  namespace: kong
+spec:
+  from:
+    - group: configuration.konghq.com
+      kind: KongVault
+      namespace: ""
+  to:
+    - group: konnect.konghq.com
+      kind: KonnectGatewayControlPlane' | kubectl apply -f -
+```
+{: data-test-step="block" }
+
+## Create a KongVault
 
 Use the `KongVault` resource to provision a Vault in {{site.konnect_short_name}}. The Vault defines a secure configuration backend. Your `KongVault` must be associated with a `KonnectGatewayControlPlane` object that you’ve created in your cluster.
 
