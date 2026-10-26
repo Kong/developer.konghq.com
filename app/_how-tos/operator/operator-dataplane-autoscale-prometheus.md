@@ -37,6 +37,29 @@ tldr:
     Deploy a `DataPlaneMetricsExtension` to expose latency metrics from a Service,
     then configure the {{site.operator_product_name}} to associate those metrics with the Data Plane.
     This enables external tools like Prometheus and KEDA to trigger scaling decisions.
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Uninstall the metrics stack this guide installs, delete the resources it created, then remove the operator. Deleting the `kong-system` namespace removes the operator:
+
+        ```bash
+        helm uninstall prometheus-adapter -n prometheus
+        helm uninstall prometheus -n prometheus
+        kubectl delete --ignore-not-found namespace prometheus
+        kubectl delete -n kong --ignore-not-found \
+          horizontalpodautoscaler/command \
+          servicemonitor/gateway-operator \
+          httproute/command \
+          gateway/kong \
+          gatewayconfiguration/kong
+        kubectl delete --ignore-not-found gatewayclass/kong
+        kubectl delete --ignore-not-found namespace kong
+        helm uninstall kong-operator -n kong-system
+        kubectl delete --ignore-not-found namespace kong-system
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 {% assign gatewayApiVersion = "v1" %}

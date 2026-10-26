@@ -70,9 +70,11 @@ cleanup:
       icon_url: /assets/icons/kubernetes.svg
       content: |
         ```bash
+        kubectl delete --ignore-not-found namespace kong
         helm uninstall kong-operator -n kong-system
-        kubectl delete namespace kong kong-system
+        kubectl delete --ignore-not-found namespace kong-system
         ```
+        {: data-test-cleanup="block" }
 
 related_resources:
   - text: Proxy HTTPS traffic with TLS termination
