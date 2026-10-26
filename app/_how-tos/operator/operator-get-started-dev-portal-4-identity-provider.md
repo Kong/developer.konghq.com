@@ -32,6 +32,34 @@ prereqs:
       include_content: prereqs/auth/oidc/okta-dev-portal
       icon_url: /assets/icons/okta.svg
 
+cleanup:
+  inline:
+    - title: Delete the resources created in this guide
+      content: |
+        Delete the `Portal` resources and the {{ site.konnect_short_name }} authentication configuration:
+
+        ```bash
+        kubectl delete -n kong --ignore-not-found \
+          portalidentityproviderrequest/operator-dev-portal-oidc \
+          portalemailconfig/operator-dev-portal-email \
+          portalcustomdomain/operator-dev-portal-domain \
+          portalteam/operator-dev-portal-team \
+          portalcustomization/operator-dev-portal-customization \
+          portalpage/operator-dev-portal-getting-started \
+          portal/operator-dev-portal \
+          konnectapiauthconfiguration/konnect-api-auth
+        ```
+        {: data-test-cleanup="block" }
+      icon_url: /assets/icons/kubernetes.svg
+
+    - title: Delete the namespaces
+      content: |
+        ```bash
+        helm uninstall kong-operator -n kong-system
+        kubectl delete namespace kong kong-system
+        ```
+      icon_url: /assets/icons/kubernetes.svg
+
 tldr:
   q: How do I configure Dev Portal sign-in with {{site.operator_product_name}}?
   a: Create a `PortalIdentityProviderRequest` that references your `Portal` and supplies your OIDC issuer, client ID, and client secret.
@@ -45,7 +73,7 @@ related_resources:
     url: /how-to/enable-oidc-auth-for-dev-portal/
 ---
 
-## Create the `PortalIdentityProviderRequest`
+## Create the PortalIdentityProviderRequest
 
 The `PortalIdentityProviderRequest` configures the OIDC sign-in provider for the portal. Once applied, developers who visit the portal can sign in using your identity provider instead of a local account.
 
