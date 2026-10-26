@@ -152,5 +152,5 @@ rows:
                   {% include faqs/gitlab-self-managed-removed.md section='question' %}
                 a: |
                   {% include faqs/gitlab-self-managed-removed.md section='answer' %}
-              - q: "Is the Dynatrace integration supported in {{site.konnect_catalog}} Classic?"
+              - q: "Is there a Dynatrace integration in {{site.konnect_catalog}} Classic?"
                 a: "No. The Dynatrace integration was removed from {{site.konnect_catalog}} Classic on October 26, 2026."
