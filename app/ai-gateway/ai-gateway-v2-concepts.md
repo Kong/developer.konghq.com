@@ -20,8 +20,10 @@ min_version:
 description: This page describes the differences between the {{site.ai_gateway}} running on {{site.base_gateway}} plugin model (V1) and the new {{site.ai_gateway}} 2.x Policies model.
 
 related_resources:
-  - text: "Migrate to {{site.ai_gateway}} 2.x"
+  - text: "Migrate to {{site.ai_gateway}} 2.x on {{site.konnect_short_name}}"
     url: /ai-gateway/v2-migration-guide/
+  - text: "Migrate to {{site.ai_gateway}} 2.x on-prem"
+    url: /ai-gateway/on-prem-migration/
   - text: "{{site.ai_gateway}} Policies"
     url: /ai-gateway/entities/ai-policy/
   - text: "{{site.ai_gateway}} entities"

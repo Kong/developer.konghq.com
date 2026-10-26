@@ -16,10 +16,8 @@ tools:
   - deck
   - kongctl
 
-# TODO: confirm the minimum kongctl-ext-aigw-converter extension version
-# (the one that supports `--format deck`) and on-prem AI Gateway version
-# (install guide uses ai-gateway: '2.2') this flow requires, once that's
-# settled.
+min_version:
+  ai-gateway: '2.0'
 
 tags:
   - ai
@@ -55,10 +53,10 @@ If you want to migrate to {{site.konnect_short_name}} instead, see [Migrate to {
 
 Before migrating, make sure you have:
 
-- An existing, self-managed {{site.base_gateway}} 3.x deployment (`<!-- TODO: confirm minimum version this flow supports -->`) running the AI plugins you want to migrate, such as [AI Proxy Advanced](/plugins/ai-proxy-advanced/), [AI MCP Proxy](/plugins/ai-mcp-proxy/), and [AI A2A Proxy](/plugins/ai-a2a-proxy/).
+- An existing, self-managed {{site.base_gateway}} 3.x deployment running the AI plugins you want to migrate, such as [AI Proxy Advanced](/plugins/ai-proxy-advanced/), [AI MCP Proxy](/plugins/ai-mcp-proxy/), and [AI A2A Proxy](/plugins/ai-a2a-proxy/).
 - Admin API access (address and token) for the source {{site.base_gateway}} deployment.
 - The [`deck` CLI](/deck/#install-deck), for exporting your current configuration and applying the converted one.
-- The [`kongctl` CLI](/kongctl/), for the conversion extension.
+- The [`kongctl` CLI](/kongctl/) 1.6.0 or later, for the conversion extension.
 - Read the [{{site.ai_gateway}} 2.x concepts](/ai-gateway/ai-gateway-v2-concepts/) guide.
 - A target on-prem {{site.ai_gateway_name}} 2.x deployment to migrate into. Follow the steps in [Install {{site.ai_gateway}} 2.x on-prem using Docker Compose](/ai-gateway/install/docker/) if you haven't set one up yet.
 
@@ -74,15 +72,16 @@ Migration uses the `kongctl convert ai-gateway` extension to translate your exis
 1. Validate that the output includes all of your AI Models, AI MCP Servers, and AI Agents.
 1. Apply the configuration to your on-prem {{site.ai_gateway}} deployment with `deck ai sync`.
 
-### Step 1: Install the `kongctl-ext-aigw-converter` extension
+### Step 1: Install the kongctl-ext-aigw-converter extension
 
 The `kongctl-ext-aigw-converter` extension is used to translate your existing declarative configuration into the {{site.ai_gateway}} 2.x entity model.
 
 Install it with `kongctl install extension Kong/kongctl-ext-aigw-converter` and type `yes` when prompted by the terminal.
+You need v0.6.0 or later. 
 
 ### Step 2: Export your current configuration
 
-Use `deck` to dump the declarative configuration from the {{site.base_gateway}} 3.x deployment that currently runs your AI plugins.
+Use `deck` to dump the declarative configuration from the {{site.base_gateway}} 3.x deployment that runs your AI plugins.
 
 ```sh
 deck gateway dump -o kong.yaml
@@ -218,7 +217,7 @@ A `warn` finding is something the converter corrected automatically that's still
 Read through both files and resolve anything that needs a manual fix before moving on.
 
 {:.warning}
-> Write-only values (like a plain-text `client_secret`) are converted to `{vault://env/...}` references resolved by Kong's env vault. The migration report's **Secrets to supply** section names the environment variable each reference needs (see also `secrets.env`) — export them in the data plane's environment before applying. This is a different mechanism from decK's own `{% raw %}{{ env "..." }}{% endraw %}` templating, which does **not** resolve when a file is applied with `deck ai sync` — don't use that syntax here.
+> Write-only values (like a plain-text `client_secret`) are converted to `{vault://env/...}` references resolved by Kong's env vault. The migration report's **Secrets to supply** section names the environment variable each reference needs (see also `secrets.env`). Export these in the data plane's environment before applying. This is a different mechanism from decK's own `{% raw %}{{ env "..." }}{% endraw %}` templating, which does **not** resolve when a file is applied with `deck ai sync` — don't use that syntax here.
 
 ### Step 6: Validate the converted configuration
 
@@ -235,7 +234,7 @@ Open the `yaml` files in `./out` and confirm they capture everything you expect.
 
 Pay particular attention to anything the converter can't infer from the config of {{site.ai_gateway}} running on {{site.base_gateway}}, such as an AI Model Provider `display_name` or an AI Model `display_name`. These are required in {{site.ai_gateway}} 2.x and may be generated from the source data, so rename them to something meaningful before you apply.
 
-For a detailed, per-entity breakdown of what the conversion produces (with example input and output files for AI Models, AI MCP Servers, AI Agents, and AI Policies), see [Validate the converted configuration](/ai-gateway/v2-migration-guide/#step-5-validate-the-converted-configuration) in the {{site.konnect_short_name}} migration guide — the entity shapes are the same, since `--format deck` follows the same {{site.ai_gateway}} 2.x schema as the default output.
+For a detailed, per-entity breakdown of what the conversion produces (with example input and output files for AI Models, AI MCP Servers, AI Agents, and AI Policies), see [Validate the converted configuration](/ai-gateway/v2-migration-guide/#step-5-validate-the-converted-configuration) in the {{site.konnect_short_name}} migration guide. The entity shapes are the same, since `--format deck` follows the same {{site.ai_gateway}} 2.x schema as the default output.
 
 ### Step 7: Apply the configuration
 
@@ -250,7 +249,7 @@ deck ai sync ./out/ai-gateway.yaml
 
 After the apply succeeds, send a representative request to each migrated AI Model, MCP server, and Agent to confirm behavior matches {{site.ai_gateway}} running on {{site.base_gateway}} before you transfer traffic over.
 
-Once you've successfully migrated and tested the configuration, you can uninstall the `kongctl-ext-aigw-converter` extension with `kongctl uninstall extension kong/ai-gateway-converter`.
+After you've successfully migrated and tested the configuration, you can uninstall the `kongctl-ext-aigw-converter` extension with `kongctl uninstall extension kong/ai-gateway-converter`.
 
 ## Verify your migration
 
@@ -281,7 +280,7 @@ You can adapt any {{site.ai_gateway}} 2.x documentation, including the entities 
 
 * Drop each entity's `ref` field. decK entities don't use `ref` for cross-references the way `kongctl` does.
 * Drop each entity's `ai_gateway: !lookup {id: ...}` field. On-prem, there's only one {{site.ai_gateway}}, so entities don't need to reference one by ID.
-* Rename the top-level entity collections from their `kongctl` names to their decK names, for example `ai_gateway_models` becomes `models`, and `ai_gateway_model_providers` becomes `model_providers`. See [Configure {{site.ai_gateway}} on-prem](/ai-gateway/configure-on-prem/) for the full set of entity names decK expects.
+* Rename the top-level entity collections from their `kongctl` names to their decK names, for example `ai_gateway_models` becomes `models`, and `ai_gateway_model_providers` becomes `model_providers`.
 
 {:.info}
 > Secret handling also differs on-prem. The {{site.konnect_short_name}} flow wraps write-only credential fields in a deferred `!secret {source: !env ...}` value for `kongctl`. On-prem, reference a secret with [AI Vault](/ai-gateway/entities/ai-vault/) `{vault://vault-name/secret-key}` syntax instead, or substitute the real value with your shell before piping the file into `deck ai sync`. decK's own `${% raw %}{{ env "..." }}{% endraw %}` templating does **not** resolve through `deck ai sync`, so a literal, unresolved template string would otherwise end up in the generated plugin config.

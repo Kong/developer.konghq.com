@@ -1,5 +1,5 @@
 ---
-title: "Migrate to {{site.ai_gateway}} 2.x"
+title: "Migrate to {{site.ai_gateway}} 2.x on {{site.konnect_short_name}}"
 content_type: reference
 layout: reference
 
@@ -22,6 +22,8 @@ description: This guide walks you through moving your configuration from the {{s
 related_resources:
   - text: "{{site.ai_gateway}} 2.x concepts"
     url: /ai-gateway/ai-gateway-v2-concepts/
+  - text: "Migrate to {{site.ai_gateway}} 2.x on-prem"
+    url: /ai-gateway/on-prem-migration/
   - text: "{{site.ai_gateway}} Policies"
     url: /ai-gateway/entities/ai-policy/
   - text: "{{site.ai_gateway}} entities"

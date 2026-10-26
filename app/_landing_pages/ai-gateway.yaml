@@ -72,6 +72,8 @@ rows:
             - title: On-Prem
               content: |
                 See [Install {{site.ai_gateway}} 2.x on-prem using Docker Compose](/ai-gateway/install/docker/).
+
+                If you're migrating from an existing on-prem deployment, follow the [migration guide](/ai-gateway/on-prem-migration/).
   - columns:
       - blocks:
         - type: card
@@ -576,7 +578,7 @@ rows:
               a: |
                 {{site.ai_gateway}} 2.x replaces {{site.base_gateway}}'s plugin-centric model (V1) with an entity model (V2).
                 Instead of configuring the AI Proxy/AI Proxy Advanced plugin directly, you now create AI Model Provider and AI Model entities to manage upstream connectivity and routing.
-                See [{{site.ai_gateway}} 2.x concepts](/ai-gateway/ai-gateway-v2-concepts/) for a mapping of V1 concepts to V2 entities, and [Migrate to {{site.ai_gateway}} 2.x](/ai-gateway/v2-migration-guide/) for step-by-step instructions.
+                See [{{site.ai_gateway}} 2.x concepts](/ai-gateway/ai-gateway-v2-concepts/) for a mapping of V1 concepts to V2 entities, and [Migrate to {{site.ai_gateway}} 2.x on {{site.konnect_short_name}}](/ai-gateway/v2-migration-guide/) for step-by-step instructions.
             - q: I was using AI Proxy or AI Proxy Advanced. Where did those plugins go?
               a: |
                 In {{site.ai_gateway}} 2.x, the proxy is configured through the [AI Model entity](/ai-gateway/entities/ai-model/) rather than the AI Proxy plugin.

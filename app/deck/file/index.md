@@ -43,9 +43,6 @@ rows:
       [ai2kong](/deck/file/ai2kong/)
     description: Convert an {{site.ai_gateway}} 2.0 file to {{ site.base_gateway }} Services and Routes.
   - command: |
-      [kong2ai](/deck/file/kong2ai/)
-    description: Convert a {{ site.base_gateway }} declarative configuration file using AI plugins to an {{site.ai_gateway}} 2.0 entity model file.
-  - command: |
       [openapi2kong](/deck/file/openapi2kong/)
     description: Convert an OpenAPI specification to {{ site.base_gateway }} Services and Routes.
   - command: |

@@ -21,8 +21,10 @@ related_resources:
     url: /ai-gateway/entities/
   - text: "{{site.ai_gateway}} Policies"
     url: /ai-gateway/policies/
-  - text: "Migrate to {{site.ai_gateway}} 2.x"
+  - text: "Migrate to {{site.ai_gateway}} 2.x on {{site.konnect_short_name}}"
     url: /ai-gateway/v2-migration-guide/
+  - text: "Migrate to {{site.ai_gateway}} 2.x on-prem"
+    url: /ai-gateway/on-prem-migration/
   - text: deck file ai2kong
     url: /deck/file/ai2kong/
   - text: deck ai sync
@@ -41,7 +43,13 @@ related_resources:
 > **Setting up a new {{site.ai_gateway}} 2.x on-prem?**<br>
 > See [Install {{site.ai_gateway}} 2.x on-prem using Docker Compose](/ai-gateway/install/docker/) to get {{site.ai_gateway}} 2.x installed first, then use this guide to configure it.
 
-The existing {{site.ai_gateway}} documentation follows the {{site.konnect_short_name}} model: AI Models, AI Model Providers, AI MCP Servers, AI Agents, and more, that you configure in {{site.konnect_short_name}}. See [{{site.ai_gateway}} entities](/ai-gateway/entities/) for the full list. Self-hosted {{site.base_gateway}} doesn't have these objects. This page shows you how to configure the same capabilities with AI plugins on [Services](/gateway/entities/service/) and [Routes](/gateway/entities/route/).
+This page is for self-managed {{site.base_gateway}} 3.x deployments that run {{site.ai_gateway}} through AI plugins on Services and Routes, and that will keep that model. 
+{{site.ai_gateway}} documentation describes [{{site.ai_gateway}} entities](/ai-gateway/entities/) like AI Models, AI Model Providers, AI MCP Servers, and AI Agents. 
+Self-hosted {{site.base_gateway}} doesn't have these objects. 
+This page shows you how to configure the same capabilities with AI plugins on [Services](/gateway/entities/service/) and [Routes](/gateway/entities/route/).
+
+{:.success}
+> If you want to move from a 3.x on-prem deployment to an on-prem {{site.ai_gateway}} 2.x deployment, see [Migrate to {{site.ai_gateway}} 2.x on-prem](/ai-gateway/on-prem-migration/). This guide allows you to specify your configuration in the {{site.ai_gateway}} 2.x entity and policy format and it applies that configuration as supported {{site.base_gateway}} 3.x primitives.
 
 There are two ways to bridge that gap:
 
@@ -188,7 +196,7 @@ rows:
     usecase: "Export configuration previously created with `deck ai sync` (tagged `managed_by:deck-ai`) back into the entity model, for backup or review."
   - command: "[`kongctl convert ai-gateway`](/ai-gateway/v2-migration-guide/)"
     direction: "Pre-2.0 {{site.ai_gateway}} plugin config → {{site.ai_gateway}} 2.x entity file, for {{site.konnect_short_name}}"
-    usecase: "One-time version upgrade: move an existing {{site.ai_gateway}} running on {{site.base_gateway}} configuration to a {{site.konnect_short_name}} {{site.ai_gateway}} 2.x control plane. See [Migrate to {{site.ai_gateway}} 2.x](/ai-gateway/v2-migration-guide/)."
+    usecase: "One-time version upgrade: move an existing {{site.ai_gateway}} running on {{site.base_gateway}} configuration to a {{site.konnect_short_name}} {{site.ai_gateway}} 2.x control plane. See [Migrate to {{site.ai_gateway}} 2.x on {{site.konnect_short_name}}](/ai-gateway/v2-migration-guide/)."
 {% endtable %}
 <!--vale on-->
 

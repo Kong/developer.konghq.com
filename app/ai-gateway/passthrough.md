@@ -31,7 +31,7 @@ related_resources:
     url: /ai-gateway/entities/ai-model-provider/
   - text: "{{site.ai_gateway}} Policies"
     url: /ai-gateway/policies/
-  - text: "Migrate to {{site.ai_gateway}} 2.x"
+  - text: "Migrate to {{site.ai_gateway}} 2.x on {{site.konnect_short_name}}"
     url: /ai-gateway/v2-migration-guide/
   - text: "{{site.ai_gateway}} providers"
     url: /ai-gateway/ai-providers/

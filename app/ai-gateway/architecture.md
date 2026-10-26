@@ -16,8 +16,10 @@ related_resources:
     url: /ai-gateway/
   - text: "{{site.ai_gateway}} 2.x concepts"
     url: /ai-gateway/ai-gateway-v2-concepts/
-  - text: "Migrate to {{site.ai_gateway}} 2.x"
+  - text: "Migrate to {{site.ai_gateway}} 2.x on {{site.konnect_short_name}}"
     url: /ai-gateway/v2-migration-guide/
+  - text: "Migrate to {{site.ai_gateway}} 2.x on-prem"
+    url: /ai-gateway/on-prem-migration/
 works_on:
   - konnect
 ---
