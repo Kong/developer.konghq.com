@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect Control Planes Configuration for Event Gateways
-  version: 1.3.8
+  version: 1.3.13
   description: |
     The API for configuring Event Gateways in Konnect.
   x-extensions-note: |
@@ -23,8 +23,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@6740ca4a544db970f788cc1d67eb6bb7d8ba63a0
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6740ca4a544db970f788cc1d67eb6bb7d8ba63a0'
+  x-oas-source: kong/platform-api@5e365727f64f322e300bca8191100286e074738b
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/5e365727f64f322e300bca8191100286e074738b'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -1898,6 +1898,7 @@ components:
             $ref: '#/components/schemas/StringFieldContainsFilter'
           labels:
             $ref: '#/components/schemas/LabelsFieldFilter'
+        x-go-type: 'map[string]any'
       in: query
       name: filter
       description: |
@@ -6028,10 +6029,14 @@ components:
         prefix:
           description: |
             The namespace is differentiated by this chosen prefix.
+            The prefix is prepended to Kafka topic names, so it can only contain the characters Kafka allows in them: ASCII letters, digits, `.`, `_` and `-`.
+            It must contain at least one character other than `.` and be at most 100 characters long to leave room for the rest of the topic name (Kafka limits topic names to 249 characters).
             For example, if the prefix is set to "analytics_" the topic named "analytics_user_clicks" is available to the clients
             of the virtual cluster. Topics without the prefix will be ignored unless added via `additional.topics`.
           type: string
+          maxLength: 100
           minLength: 1
+          pattern: '^[A-Za-z0-9._-]*[A-Za-z0-9_-][A-Za-z0-9._-]*$'
         additional:
           $ref: '#/components/schemas/VirtualClusterNamespaceAdditionalProperties'
       required:

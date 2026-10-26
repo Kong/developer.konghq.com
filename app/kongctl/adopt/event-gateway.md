@@ -18,6 +18,8 @@ breadcrumbs:
 related_resources:
   - text: kongctl adopt commands
     url: /kongctl/adopt/
+  - text: kongctl get event-gateway
+    url: /kongctl/get/event-gateway/
 ---
 
 Apply the KONGCTL-namespace label to an existing {{site.konnect_short_name}} {{site.event_gateway_short}} Control Plane that is not currently managed by kongctl.

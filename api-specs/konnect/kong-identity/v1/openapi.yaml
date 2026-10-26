@@ -1,9 +1,9 @@
 openapi: 3.0.3
 info:
   title: Konnect Sliver
-  version: 1.9.0
-  x-oas-source: kong/platform-api@c490b3e79979400ce6f13039add29f45cfdb0b34
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c490b3e79979400ce6f13039add29f45cfdb0b34'
+  version: 1.9.1
+  x-oas-source: kong/platform-api@6baf65bf2db08c3c3f274b4beed22868523e48e5
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6baf65bf2db08c3c3f274b4beed22868523e48e5'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -1050,7 +1050,7 @@ components:
       description: The OAuth 2.0 client ID
       type: string
       example: kYa9iQFU5xPDSIUH9z1z
-      maxLength: 36
+      maxLength: 48
       minLength: 1
       pattern: '[-_\w]+'
       readOnly: true

@@ -33,6 +33,9 @@ rows:
       [kongctl create konnect](/kongctl/create/konnect/)
     description: "Create {{site.konnect_short_name}} resources."
   - command: |
+      [kongctl create mesh](/kongctl/create/mesh/)
+    description: "Work with resources on a {{site.mesh_product_name}} control plane."
+  - command: |
       [kongctl create organization](/kongctl/create/organization/)
     description: "Create {{site.konnect_short_name}} system accounts."
   - command: |

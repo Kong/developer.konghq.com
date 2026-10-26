@@ -24,8 +24,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@c490b3e79979400ce6f13039add29f45cfdb0b34
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c490b3e79979400ce6f13039add29f45cfdb0b34'
+  x-oas-source: kong/platform-api@1ab9dfd52422be8a5626eda1d6829f18ee8af7e3
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1ab9dfd52422be8a5626eda1d6829f18ee8af7e3'
 servers:
   - url: 'https://global.api.konghq.com/v2'
     description: Base URL for the global region
@@ -1323,6 +1323,7 @@ components:
         - `me` — Middle East
         - `in` — India
         - `sg` — Singapore
+        - `uk` — United Kingdom
       type: string
       enum:
         - us
@@ -1331,6 +1332,7 @@ components:
         - me
         - in
         - sg
+        - uk
       title: Control-Plane Geo
     GatewayVersion:
       description: |
@@ -5587,7 +5589,7 @@ components:
         invalid_parameters:
           - field: 'filter[owner.control_plane_geo][neq]'
             rule: enum
-            reason: '"filter[owner.control_plane_geo][neq]" must be one of [us, eu, au, me, in, sg]'
+            reason: '"filter[owner.control_plane_geo][neq]" must be one of [us, eu, au, me, in, sg, uk]'
             source: query
             choices:
               - us
@@ -5596,6 +5598,7 @@ components:
               - me
               - in
               - sg
+              - uk
     ListAddOnsInvalidControlPlaneGroupGeoBadRequestExample:
       value:
         status: 400
@@ -5605,7 +5608,7 @@ components:
         invalid_parameters:
           - field: 'filter[owner.control_plane_group_geo][neq]'
             rule: enum
-            reason: '"filter[owner.control_plane_group_geo][neq]" must be one of [us, eu, au, me, in, sg]'
+            reason: '"filter[owner.control_plane_group_geo][neq]" must be one of [us, eu, au, me, in, sg, uk]'
             source: query
             choices:
               - us
@@ -5614,6 +5617,7 @@ components:
               - me
               - in
               - sg
+              - uk
     DeleteAddOnLinkedPluginsBadRequestExample:
       value:
         status: 400

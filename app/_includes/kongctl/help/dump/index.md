@@ -39,6 +39,7 @@ Examples:
 
 Available Commands:
   declarative Export resources as kongctl declarative configuration
+  mesh        Export Kong Mesh resources as YAML
   tf-import   Export resources as Terraform import blocks
 
 

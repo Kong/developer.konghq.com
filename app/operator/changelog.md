@@ -14,6 +14,21 @@ breadcrumbs:
 
 Changelog for supported {{ site.operator_product_name }} versions.
 
+## 2.3.4
+
+**Release date**: 2026-10-23
+
+### Fixed
+
+- HybridGateway root-object controllers (e.g. HTTPRoute) no longer spend several
+  seconds per reconcile scanning every managed Kong resource during orphan
+  cleanup and status computation. Ownership of child resources is now resolved
+  through a cached field index over the hybrid-routes annotations instead of
+  broad managed-by label listing with per-item live API reads, so configuration
+  changes are reconciled promptly at large entity counts.
+  [#6141](https://github.com/Kong/kong-operator/pull/6141)
+- Bumping dependencies and Golang to 1.27.3
+
 ## 2.4.0-rapid.2.0
 
 **Release date**: 2026-09-30
