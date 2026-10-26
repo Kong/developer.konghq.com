@@ -141,7 +141,7 @@ Create the following resources:
 
 {% konnect %}
 content: |
-  Setting `spec.konnect.authRef` attaches the data plane to {{site.konnect_short_name}}, which manages its configuration and license:
+  Setting `spec.konnect.authRef` attaches the data plane to {{site.konnect_short_name}}, which manages its configuration:
 
   ```sh
   echo '
