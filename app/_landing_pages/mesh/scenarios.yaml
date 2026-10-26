@@ -37,12 +37,12 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Introduction
+              title: Introduction to Kong Air
               description: |
                 Meet Kong Air, and see how the scenarios are organized.
               cta:
                 text: Read
-                url: /mesh/introduction/
+                url: /mesh/introduction-kong-air/
       - blocks:
           - type: card
             config:

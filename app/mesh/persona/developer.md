@@ -46,7 +46,7 @@ flowchart LR
 
 The dashed arrow points to `weather-api`, an external SaaS service.
 The developer reaches it through a `MeshExternalService` that the operator configured.
-For the full picture, see [Kong Air](/mesh/introduction/#kong-air).
+For the full picture, see [Kong Air](/mesh/introduction-kong-air/#kong-air).
 
 ## How the developer finds the services of other teams
 
