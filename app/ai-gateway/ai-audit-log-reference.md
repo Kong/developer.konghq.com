@@ -444,7 +444,33 @@ A blocked request or response also populates the shared `ai.proxy.guardrail_trig
 * `block_source`: The Policy that produced the block.
 * `block_direction`: `AI_GUARDRAIL_BLOCK_INPUT` or `AI_GUARDRAIL_BLOCK_OUTPUT`.
 
-This object is populated even when the Policy has `config.continue_on_detection` set to `true`, in which case the request or response isn't blocked. The [AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/) and [AI Semantic Prompt Guard](/ai-gateway/policies/ai-semantic-prompt-guard/) Policies are the exception: they don't populate this object.
+This object is populated even when the Policy has `config.continue_on_detection` set to `true`, in which case the request or response isn't blocked.
+The [AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/) and [AI Semantic Prompt Guard](/ai-gateway/policies/ai-semantic-prompt-guard/) Policies also populate this object starting from {{site.ai_gateway}} 2.3.
+
+### AI Prompt Guard, AI Semantic Prompt Guard, and AI Semantic Response Guard logs
+
+If you use the [AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/), [AI Semantic Prompt Guard](/ai-gateway/policies/ai-semantic-prompt-guard/), or [AI Semantic Response Guard](/ai-gateway/policies/ai-semantic-response-guard/) Policy, {{site.ai_gateway}} 2.3 and later can log the content that the Policy blocked.
+Set `config.log_blocked_content` to `true` to enable it.
+
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: "`ai.proxy[\"prompt-guard\"].input_faulty_prompt`"
+    description: |
+       The raw request prompt that the AI Prompt Guard Policy blocked. Only present when `config.log_blocked_content` is `true`.
+  - property: "`ai.proxy[\"semantic-prompt-guard\"].input_faulty_prompt`"
+    description: |
+       The raw request prompt that the AI Semantic Prompt Guard Policy blocked. Only present when `config.log_blocked_content` is `true`.
+  - property: "`ai.proxy[\"semantic-response-guard\"].output_faulty_response`"
+    description: |
+       The raw response that the AI Semantic Response Guard Policy blocked. For streaming responses, this is the blocked chunk. Only present when `config.log_blocked_content` is `true`.
+{% endtable %}
+
+The AI Prompt Guard, AI Semantic Prompt Guard, and AI Semantic Response Guard Policies populate the shared `ai.proxy.guardrail_triggered` object starting from {{site.ai_gateway}} 2.3, including when `config.continue_on_detection` is `true`.
 
 ### AI PII Sanitizer logs
 
