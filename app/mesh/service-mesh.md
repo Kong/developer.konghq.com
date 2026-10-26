@@ -35,8 +35,8 @@ Without help, these calls are hard to run safely: the network can be slow or fai
 
 You can solve these problems in two ways:
 
-* **In each application**: Each team adds retries, encryption, and logging to its own code. Over time, this adds code to maintain beside the business logic. Teams also solve the same problems differently on different technology stacks, which creates gaps in security.
-* **In a proxy next to each application**: A separate process on the same host handles the network for the application. This process is a [data plane proxy](/mesh/concepts/#data-plane-proxy-or-sidecar), also called a sidecar.
+* In each application: Each team adds retries, encryption, and logging to its own code. Over time, this adds code to maintain beside the business logic. Teams also solve the same problems differently on different technology stacks, which creates gaps in security.
+* In a proxy next to each application: A separate process on the same host handles the network for the application. This process is a [data plane proxy](/mesh/concepts/#data-plane-proxy-or-sidecar), also called a sidecar.
 
 With the second approach, every replica of every service gets its own data plane proxy.
 When one proxy fails, the other replicas keep working.
@@ -85,8 +85,8 @@ When a namespace or Pod has the `kuma.io/sidecar-injection: enabled` label, the 
 
 {{site.mesh_product_name}} runs a zone control plane in each environment. For multi-zone deployments, the zones connect to a global control plane:
 
-* **Global control plane**: It stores the central view of your meshes and resources.
-* **Zone control plane**: Each environment where workloads run, such as a Kubernetes cluster, a VPC, or a data center, runs one. It finds the local workloads and sends them Envoy configuration over xDS. It exchanges resources with the global control plane over the Kuma Discovery Service (KDS).
+* Global control plane: It stores the central view of your meshes and resources.
+* Zone control plane: Each environment where workloads run, such as a Kubernetes cluster, a VPC, or a data center, runs one. It finds the local workloads and sends them Envoy configuration over xDS. It exchanges resources with the global control plane over the Kuma Discovery Service (KDS).
 
 For more information, see [Architecture overview](/mesh/architecture-overview/).
 

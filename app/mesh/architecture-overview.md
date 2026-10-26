@@ -5,14 +5,10 @@ layout: reference
 description: Learn how the {{site.mesh_product_name}} global control plane, zone control planes, and Envoy-based data plane work together, and how a request travels between zones.
 breadcrumbs:
   - /mesh/
-  - /mesh/scenarios/
 products:
   - mesh
 works_on:
   - konnect
-next_steps:
-  - text: "How-to: Install {{site.mesh_product_name}} and deploy Kong Air"
-    url: "/mesh/install-kong-mesh-and-deploy-kong-air/"
 related_resources:
   - text: Multi-zone architecture
     url: /mesh/multi-zone-architecture/
