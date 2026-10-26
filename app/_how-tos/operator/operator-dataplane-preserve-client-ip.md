@@ -37,54 +37,117 @@ To preserve the client IP, you can configure the underlying Service to use `exte
 
 Create a `GatewayConfiguration` that sets the `externalTrafficPolicy` to `Local` in the `dataPlaneOptions`:
 
-```yaml
-echo '
-apiVersion: gateway-operator.konghq.com/v2beta1
-kind: GatewayConfiguration
-metadata:
-  name: preserve-client-ip
-  namespace: kong
-spec:
-  dataPlaneOptions:
-    network:
-      services:
-        ingress:
-          externalTrafficPolicy: Local
-          type: LoadBalancer' | kubectl apply -f -
-```
-{: data-test-step="block" }
+{% konnect %}
+content: |
+  ```yaml
+  echo '
+  apiVersion: gateway-operator.konghq.com/v2beta1
+  kind: GatewayConfiguration
+  metadata:
+    name: preserve-client-ip
+    namespace: kong
+  spec:
+    konnect:
+      authRef:
+        name: konnect-api-auth
+        namespace: kong
+    dataPlaneOptions:
+      network:
+        services:
+          ingress:
+            externalTrafficPolicy: Local
+            type: LoadBalancer' | kubectl apply -f -
+  ```
+  {: data-test-step="block" }
+{% endkonnect %}
+
+{% on_prem %}
+content: |
+  ```yaml
+  echo '
+  apiVersion: gateway-operator.konghq.com/v2beta1
+  kind: GatewayConfiguration
+  metadata:
+    name: preserve-client-ip
+    namespace: kong
+  spec:
+    dataPlaneOptions:
+      network:
+        services:
+          ingress:
+            externalTrafficPolicy: Local
+            type: LoadBalancer' | kubectl apply -f -
+  ```
+  {: data-test-step="block" }
+{% endon_prem %}
 
 ### Configure the Gateway
 
 Create a `GatewayClass` resource that references the `GatewayConfiguration`, and a `Gateway` that references the `GatewayClass`:
 
-```yaml
-echo '
-apiVersion: gateway.networking.k8s.io/v1
-kind: GatewayClass
-metadata:
-  name: kong-external-traffic
-spec:
-  controllerName: konghq.com/gateway-operator
-  parametersRef:
-    group: gateway-operator.konghq.com
-    kind: GatewayConfiguration
-    name: preserve-client-ip
+{% konnect %}
+content: |
+  ```yaml
+  echo '
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: GatewayClass
+  metadata:
+    name: kong-external-traffic
+  spec:
+    controllerName: konghq.com/gateway-operator
+    parametersRef:
+      group: gateway-operator.konghq.com
+      kind: GatewayConfiguration
+      name: preserve-client-ip
+      namespace: kong
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: Gateway
+  metadata:
+    name: kong-external-traffic
     namespace: kong
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: Gateway
-metadata:
-  name: kong-external-traffic
-  namespace: kong
-spec:
-  gatewayClassName: kong-external-traffic
-  listeners:
-  - name: http
-    protocol: HTTP
-    port: 80' | kubectl apply -f -
-```
-{: data-test-step="block" }
+    annotations:
+      gateway-operator.konghq.com/static-naming: "true"
+  spec:
+    gatewayClassName: kong-external-traffic
+    listeners:
+    - name: http
+      protocol: HTTP
+      port: 80' | kubectl apply -f -
+  ```
+  {: data-test-step="block" }
+{% endkonnect %}
+
+{% on_prem %}
+content: |
+  ```yaml
+  echo '
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: GatewayClass
+  metadata:
+    name: kong-external-traffic
+  spec:
+    controllerName: konghq.com/gateway-operator
+    parametersRef:
+      group: gateway-operator.konghq.com
+      kind: GatewayConfiguration
+      name: preserve-client-ip
+      namespace: kong
+  ---
+  apiVersion: gateway.networking.k8s.io/v1
+  kind: Gateway
+  metadata:
+    name: kong-external-traffic
+    namespace: kong
+  spec:
+    gatewayClassName: kong-external-traffic
+    listeners:
+    - name: http
+      protocol: HTTP
+      port: 80' | kubectl apply -f -
+  ```
+  {: data-test-step="block" }
+{% endon_prem %}
 
 ## Validate
 
