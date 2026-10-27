@@ -183,44 +183,9 @@ formats:
   - konnect-api
 {% endentity_example %}
 
-`principal` requires an AI Auth Strategy that populates the Principal, for example, the `openid-connect` AI Auth Strategy configured with [Kong Identity Principal mapping](/ai-gateway/entities/ai-auth-strategy/#principal-mapping).
+`principal` requires an AI Auth Strategy that populates the Principal, for example, an `openid-connect` or `key-auth` AI Auth Strategy configured with [Kong Identity Principal mapping](/ai-gateway/entities/ai-auth-strategy/#principal-mapping).
 
-[`config.custom_key`](./reference/#schema--config-custom-key) overrides the computed rate limiting key with a literal string, regardless of `identifier` or `compound_identifier`. This is most useful in combination with [expressible config fields](#dynamic-configuration-with-cel), where `custom_key`'s value comes from a CEL expression instead of a fixed string.
-
-### Dynamic configuration with CEL
-
-`limit` and `custom_key` accept a CEL expression. If an expression is set, {{site.ai_gateway}} evaluates it on each request and uses the result as the field’s value, for example an attribute of the authenticated AI Consumer or Principal. If the expression fails to evaluate, {{site.ai_gateway}} uses the static value in `config`.
-
-Because `limit` is an array field (one value per configured window), its expression is also an array, with one expression per element, in the same order:
-
-{% entity_example %}
-type: policy
-data:
-  display_name: Rate Limiting Advanced - Principal Metadata
-  name: rate-limiting-advanced-principal-metadata
-  type: rate-limiting-advanced
-  enabled: true
-  global: true
-  config:
-    identifier: principal
-    custom_key: unknown-partner
-    limit:
-      - 10
-    window_size:
-      - 60
-    expressions:
-      custom_key: principal.metadata.partner_id
-      limit:
-        - principal.metadata.rate_limit
-formats:
-  - kongctl
-  - konnect-api
-{% endentity_example %}
-
-In this example, `custom_key` and `limit` are static fallback values used only if the corresponding CEL expression is unset, invalid, or fails to evaluate.
-
-{:.info}
-> **Note**: `window_size` is **not** expressible because it's unreliable. For the `cluster` and `redis` strategies, window sizes are registered for cross-node counter synchronization once, from the static config, when the Policy is configured. A per-request expression-driven window size would never be picked up by that registration.
+[`config.custom_key`](./reference/#schema--config-custom-key) overrides the computed rate limiting key with a literal string, regardless of `identifier` or `compound_identifier`.
 
 ## Headers sent to the client
 

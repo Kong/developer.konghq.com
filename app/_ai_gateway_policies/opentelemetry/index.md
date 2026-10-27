@@ -112,7 +112,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-If the request has no authenticated AI Consumer or Principal, the corresponding attribute is left empty on the exported metrics.
+If the request has no authenticated AI Consumer or Principal, the corresponding attribute isn't added to the exported metrics.
 
 
 ## Tracing
