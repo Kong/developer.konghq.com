@@ -358,7 +358,7 @@ A call to Headroom that reuses a pooled connection Headroom has already closed i
 
 When the AI Prompt Compressor Policy compresses a request, {{site.ai_gateway}} reports the compression result to [{{site.konnect_short_name}} Analytics](/observability/explorer/). Requests that don't pass through the Policy don't change any compression metric. You can use these metrics to measure how many tokens compression saves and how long it takes.
 
-Compression metrics are reported with the existing {{site.ai_gateway}} dimensions, so you can scope them by {{site.ai_gateway}}, control plane, data plane node, route, and Consumer. The Policy configuration doesn't change, and the compression log entry (`compress_items`) keeps its fields and values.
+Compression metrics are reported with the existing {{site.ai_gateway}} dimensions, so you can scope them by {{site.ai_gateway}}, control plane, data plane node, route, and AI Consumer. The Policy configuration doesn't change, and the compression log entry (`compress_items`) keeps its fields and values.
 
 Compression metrics contain token and message counts only. They never include the original or compressed text.
 
