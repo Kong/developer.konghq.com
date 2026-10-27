@@ -568,7 +568,6 @@ If a limit breaks any of these rules, the {{site.konnect_short_name}} API reject
 
 A request counts against every limit it matches.
 For example, a `tools/call` request for a tool counts against both a `tools/call` limit and a limit on that tool.
-In a JSON-RPC batch request, each message counts separately.
 
 Each {{site.ai_gateway}} data plane node keeps its own counters and enforces the limits independently.
 
