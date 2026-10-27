@@ -50,7 +50,7 @@ related_resources:
   - text: Resource scoping
     url: /mesh/resource-scoping/
   - text: Introduction to Kong Air
-    url: /mesh/introduction-kong-air/
+    url: /mesh/scenarios/introduction-kong-air/
   - text: Concepts
     url: /mesh/concepts/
 ---
@@ -64,7 +64,7 @@ In this guide, you build that foundation.
 
 To learn more about what this guide does, read the following reference pages:
 
-* [Introduction to Kong Air](/mesh/introduction-kong-air/): the context for this scenario
+* [Introduction to Kong Air](/mesh/scenarios/introduction-kong-air/): the context for this scenario
 * [Architecture overview](/mesh/architecture-overview/): how the global and zone control planes connect
 * [Resource scoping](/mesh/resource-scoping/): which control plane owns each resource
 

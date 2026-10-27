@@ -42,7 +42,7 @@ rows:
                 Meet Kong Air, and see how the scenarios are organized.
               cta:
                 text: Read
-                url: /mesh/introduction-kong-air/
+                url: /mesh/scenarios/introduction-kong-air/
       - blocks:
           - type: card
             config:
@@ -162,7 +162,7 @@ rows:
   - header:
       type: h2
       text: "Phase 3: Global mesh operations"
-      sub_text: Connect Kong Air's cloud regions and legacy data centers into one mesh.
+      sub_text: Send traffic between Kong Air's two zones through the mesh-scoped zone ingress.
     column_count: 3
     columns:
       - blocks:
@@ -257,7 +257,7 @@ rows:
                 Routing, resilience, and observability for application teams.
               cta:
                 text: View guide
-                url: /mesh/persona/developer/
+                url: /mesh/scenarios/persona/developer/
       - blocks:
           - type: card
             config:
@@ -266,7 +266,7 @@ rows:
                 Control plane, zone proxies, gateways, and shared observability for platform teams.
               cta:
                 text: View guide
-                url: /mesh/persona/operator/
+                url: /mesh/scenarios/persona/operator/
       - blocks:
           - type: card
             config:
@@ -275,4 +275,4 @@ rows:
                 Zero-trust, workload identity, and egress control for security teams.
               cta:
                 text: View guide
-                url: /mesh/persona/security/
+                url: /mesh/scenarios/persona/security/

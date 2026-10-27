@@ -2,7 +2,7 @@
 title: Introduction to the Kong Air scenarios
 content_type: reference
 layout: reference
-description: A beginner-friendly introduction to {{site.mesh_product_name}}, detailing its value for developers, operators, and security teams through Mesh policies.
+description: Meet Kong Air, the fictional airline that the {{site.mesh_product_name}} scenarios follow, and the roles that use the mesh.
 breadcrumbs:
   - /mesh/
   - /mesh/scenarios/
@@ -31,14 +31,12 @@ For more information, see [Architecture overview](/mesh/architecture-overview/).
 
 ## Kong Air
 
-The [{{site.mesh_product_name}} scenarios](/mesh/scenarios/) follow Kong Air, a fictional global airline that modernizes its flight systems.
-Kong Air's applications run in three places:
+The [{{site.mesh_product_name}} scenarios](/mesh/scenarios/) follow Kong Air, a fictional global airline that moves its flight systems into one multi-zone {{site.mesh_product_name}} deployment.
+Kong Air runs its services on Kubernetes, in two zones, and depends on two services outside the mesh:
 
-* Kubernetes, for the services that passengers use
-* VMs, for the older booking systems
-* SaaS providers, for the weather feed and the external certificate authority
-
-The Kong Air platform team moves these applications into one multi-zone {{site.mesh_product_name}} deployment.
+* `zone1` runs `passenger-portal`, `check-in-api`, and `flight-control` in the `kong-air-production` namespace.
+* `zone2` runs `baggage-api` in the same namespace.
+* AeroPay, Kong Air's payment provider, and `flight-db`, a managed PostgreSQL database, run outside the mesh.
 
 The Kong Air mesh is named `kong-air-mesh`.
 A self-managed control plane creates a mesh named `default`, but production deployments usually run one named mesh for each environment or business unit.
@@ -48,37 +46,27 @@ Every YAML example in the scenarios names `kong-air-mesh`, as you do in a produc
 
 {% mermaid %}
 graph LR
-  BG["booking-gateway<br/>({{site.base_gateway}})"]
-  subgraph ZE["zone1"]
-    PP_E["passenger-portal"]
-    CI_E["check-in-api"]
-    FC_E["flight-control"]
+  subgraph Z1["zone1"]
+    PP["passenger-portal"]
+    CI["check-in-api"]
+    FC["flight-control"]
   end
-  subgraph ZW["zone2"]
-    PP_W["passenger-portal"]
-    CI_W["check-in-api"]
-    FC_W["flight-control"]
+  subgraph Z2["zone2"]
+    BAG["baggage-api"]
   end
   subgraph EXT["External dependencies"]
-    DB[("flight-db<br/>RDS Postgres")]
-    WX["weather-api<br/>(SaaS)"]
-    VAULT["HashiCorp Vault<br/>(External CA)"]
+    AP["aeropay-api<br/>(AeroPay)"]
+    DB[("flight-db<br/>PostgreSQL")]
   end
-  BG --> PP_E
-  BG --> PP_W
-  PP_E --> CI_E
-  PP_W --> CI_W
-  CI_E --> FC_E
-  CI_W --> FC_W
-  CI_E -.-> WX
-  CI_W -.-> WX
-  FC_E -.-> DB
-  FC_W -.-> DB
+  FC --> CI
+  CI --> PP
+  PP --> BAG
+  PP -.-> AP
+  FC -.-> DB
 {% endmermaid %}
 
-Solid arrows show traffic inside the mesh.
-Dashed arrows show traffic to external dependencies, which the scenarios describe as `MeshExternalService` resources.
-HashiCorp Vault works with the control plane to sign workload certificates, so it carries no application traffic.
+Solid arrows show the calls inside the mesh that the scenarios allow with a `MeshTrafficPermission`.
+Dashed arrows show the calls to external dependencies, which the scenarios describe as `MeshExternalService` resources and send through the zone egress.
 
 ### Personas
 
@@ -95,37 +83,37 @@ columns:
   - title: Consumes
     key: consumes
 rows:
-  - persona: "[Developer](/mesh/persona/developer/)"
+  - persona: "[Developer](/mesh/scenarios/persona/developer/)"
     owns: |
-      Passenger experience services: 
+      Passenger experience services:
       * `passenger-portal`
       * `check-in-api`
     consumes: |
-      * `flight-control`
+      * `baggage-api`
+      * AeroPay
+  - persona: "[Operator](/mesh/scenarios/persona/operator/)"
+    owns: |
+      * The zone control planes and the `kong-air-mesh` resource
+      * The mesh-scoped zone ingress and zone egress
+      * The `MeshExternalService` resources
+      * The observability stack
+      * The operational core service, `flight-control`
+    consumes: |
+      * `check-in-api`
       * `flight-db`
-      * `weather-api`
-  - persona: "[Operator](/mesh/persona/operator/)"
+  - persona: "[Security architect](/mesh/scenarios/persona/security/)"
     owns: |
-      * Mesh control plane
-      * Zone ingress and egress
-      * Mesh-scoped zone proxies 
-      * Observability stack 
-      * `booking-gateway`
-      * The operational core service `flight-control`
-      * The `kong-air-mesh` resource
-    consumes: |
-      N/A
-  - persona: "[Security architect](/mesh/persona/security/)"
-    owns: |
-      * Zero-trust posture (`MeshTLS`, `MeshTrafficPermission`)
       * Workload identity (`MeshIdentity`, `MeshTrust`)
-      * Vault integration
+      * The zero-trust posture (`MeshTLS`, `MeshTrafficPermission`)
+      * The mesh perimeter (`MeshPassthrough`)
+      * The external CA integration
     consumes: |
       N/A
-  - persona: "Infrastructure team (out of scope)"
+  - persona: "Other teams and providers (out of scope)"
     owns: |
-      * `flight-db` (RDS)
-      * `weather-api` SaaS subscription
+      * `baggage-api`
+      * The `flight-db` database
+      * The AeroPay API
     consumes: |
       N/A
 {% endtable %}
@@ -145,22 +133,23 @@ columns:
   - title: Key features
     key: capabilities
 rows:
-  - role: "[Developer](/mesh/persona/developer/)"
-    focus: Resilience and routing
+  - role: "[Developer](/mesh/scenarios/persona/developer/)"
+    focus: Releases and resilience
     capabilities: |
-      * Traffic routing: `MeshHTTPRoute` sends traffic to canary releases or A/B tests without code changes.
-      * Resilience: `MeshRetry`, `MeshTimeout`, and `MeshFaultInjection` protect applications from cascading failures.
-  - role: "[Operator](/mesh/persona/operator/)"
+      * Traffic routing: `MeshHTTPRoute` sends a share of the traffic to a new version without code changes.
+      * Resilience: `MeshRetry` retries failed requests, and `MeshFaultInjection` tests how callers handle failures.
+  - role: "[Operator](/mesh/scenarios/persona/operator/)"
     focus: Scale and stability
     capabilities: |
-      * Health checks: `MeshHealthCheck` and `MeshCircuitBreaker` find unhealthy instances and stop sending them traffic.
-      * Observability: `MeshMetric` provides the same telemetry in every cluster.
-      * Load balancing: `MeshLoadBalancingStrategy` spreads traffic and prefers instances in the same zone.
-  - role: "[Security architect](/mesh/persona/security/)"
+      * Multi-zone: mesh-scoped zone proxies carry traffic between zones and to external services.
+      * Observability: `MeshMetric`, `MeshTrace`, and `MeshAccessLog` send the telemetry of every sidecar to one collector.
+      * Configuration size: `reachableBackends` and `restrictOutbound` limit the configuration that each proxy receives.
+  - role: "[Security architect](/mesh/scenarios/persona/security/)"
     focus: Zero trust
     capabilities: |
       * Encryption: `MeshIdentity` gives each workload that it selects a certificate and turns on mutual TLS (mTLS), and the certificates rotate automatically.
       * Access control: `MeshTrafficPermission` allows each call explicitly, and the proxies deny everything else.
+      * Perimeter: `MeshPassthrough` limits the external destinations that workloads reach.
 {% endtable %}
 <!-- vale on -->
 
@@ -170,8 +159,8 @@ The Kong Air scenarios have five phases.
 We recommend that you follow them in order, because each phase builds on the resources of the previous one:
 
 1. [Fundamentals](/mesh/scenarios/#phase-1-fundamentals): Learn the architecture, secure your first services, and select proxies with policies.
-2. [Observability and security](/mesh/scenarios/#phase-2-observability-and-security): See every flight-critical request and protect passenger data.
-3. [Global mesh operations](/mesh/scenarios/#phase-3-global-mesh-operations): Connect cloud regions and data centers into one mesh.
+2. [Observability and security](/mesh/scenarios/#phase-2-observability-and-security): Collect the telemetry of every sidecar, add a second zone, and extend workload identity to it.
+3. [Global mesh operations](/mesh/scenarios/#phase-3-global-mesh-operations): Send traffic between the two Kong Air zones.
 4. [Expert operations](/mesh/scenarios/#phase-4-expert-operations): Control outbound traffic, manage external services, and test resilience with fault injection.
 5. [Production readiness](/mesh/scenarios/#phase-5-production-readiness): Harden the mesh and limit the configuration that each proxy receives before it carries production traffic.
 

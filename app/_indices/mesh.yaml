@@ -60,13 +60,6 @@ sections:
       - path: /mesh/prepare-the-mesh-for-production/
       - path: /mesh/production-readiness-checklist/
 
-  - title: Explore by role
-    items:
-      - path: /mesh/persona/
-      - path: /mesh/persona/developer/
-      - path: /mesh/persona/operator/
-      - path: /mesh/persona/security/
-
   - title: Upgrade
     items:
       - path: /mesh/upgrade/
