@@ -32,6 +32,8 @@ related_resources:
     url: /insomnia/collections/
   - text: Storage options in Insomnia
     url: /insomnia/storage/
+  - text: Confidential variables
+    url: /insomnia/environments/#confidential-variables
   - text: Import content from Postman to multiple Insomnia projects
     url: /how-to/import-content-from-postman-to-multiple-insomnia-projects/
   - text: Migrate collections and environments from Postman to Insomnia
@@ -220,6 +222,33 @@ You can use the schema to:
 ```sh
 curl -O https://raw.githubusercontent.com/Kong/insomnia/develop/schemas/insomnia.schema.5.1.json && npx ajv-cli validate --spec=draft2020 -s insomnia.schema.5.1.json -d "**/*.yaml"
 ```
+
+**Confidential variables**
+
+{% new_in 13.4 %} When an environment contains [confidential variables](/insomnia/environments/#confidential-variables), the v5 file records them in a `confidentialKeys` list. This keeps the confidential marking when you export and import the environment, duplicate or move it, or sync it with Git Sync. The key appears next to `data` in the base environment and in each sub-environment. For folder environments, it appears next to `environment`.
+
+The list contains variable names only. The values stay in `data`:
+
+```yaml
+environments:
+  name: Base Environment
+  data:
+    base_url: https://api.example.com
+    api_token: my-token-value            # Exported in plain text
+  confidentialKeys:                      # Names of the confidential variables
+    - api_token
+  subEnvironments:
+    - name: Staging
+      data:
+        api_token: staging-token-value
+      confidentialKeys:
+        - api_token
+```
+
+Files that don't include `confidentialKeys` import as before.
+
+{:.warning}
+> {{ site.insomnia }} exports confidential values in plain text. Anyone with access to the exported file or the Git repository can read them. To store a value in encrypted form, use [secret variables](/insomnia/environments/#secret-environment-variables) instead.
 
 {% endnavtab %}
 {% navtab "v4 (JSON)" %}
