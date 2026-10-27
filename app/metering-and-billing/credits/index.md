@@ -184,14 +184,18 @@ When a charge is raised against a customer, {{site.metering_and_billing}} uses t
 columns:
   - title: Settlement mode
     key: mode
+  - title: "{{site.konnect_short_name}} UI label"
+    key: label
   - title: Behavior
     key: behavior
 rows:
   - mode: "`credit_then_invoice`"
+    label: "**Invoice overage**"
     behavior: |
       Use available credits first.
       Any charge amount that exceeds the available credit balance is invoiced as a standard charge. This is the prepaid-plus-overage model.
   - mode: "`credit_only`"
+    label: "**Credits only**"
     behavior: |
       Settle the full charge against credits. No invoice overage is generated.
       If the credit balance is insufficient, the uncovered amount still settles and the customer's credit balance goes negative.
