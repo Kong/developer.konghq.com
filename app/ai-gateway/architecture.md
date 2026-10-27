@@ -96,7 +96,7 @@ rows:
 
   - entity: "[AI Model](/ai-gateway/entities/ai-model/)"
     description: |
-      The primary entry point for AI traffic. Declares which upstream AI providers to route to and which capabilities to expose (such as chat completions, embeddings, and image, audio, video, and realtime generation). Handles load balancing, retries, and format conversion, and emits the usage and cost telemetry that attached logging policies record.
+      The primary entry point for AI traffic. Declares which upstream AI providers to route to and which capabilities to expose (for example, chat completions, embeddings, and image, audio, video, and realtime generation). Handles load balancing, retries, and format conversion, and emits the usage and cost telemetry that attached logging policies record.
     references: |
       [Schema](/ai-gateway/entities/ai-model/#schema)
   - entity: "[AI Agent](/ai-gateway/entities/ai-agent/)"

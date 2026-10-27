@@ -164,7 +164,7 @@ Cost calculation and token-based rate limiting only work when token counts are a
 
 If none of these match, {{site.ai_gateway}} buffers the response instead of streaming it. The client still gets the full, unmodified response, but all at once instead of incrementally. If your upstream signals streaming some other way, send `"stream": true` in the request body or set the `Accept` header yourself.
 
-## Migrate from the `preserve` route type
+## Migrate from the preserve route type
 
 [`kongctl convert ai-gateway`](/ai-gateway/v2-migration-guide/) doesn't have any special handling for `route_type: preserve`. To migrate, recreate the AI Model manually using [Configure a passthrough AI Model](#configure-a-passthrough-ai-model) as a starting point, and use the following sections as a manual field-by-field reference for what `preserve` used to do.
 
