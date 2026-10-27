@@ -30,7 +30,7 @@ instructions to the LLM for the returning upstream response body.
 
 1. The client makes an HTTP(S) call.
 2. The {{site.ai_gateway}} sends the transformed request to the upstream LLM provider or uses the [AI Request Transformer Policy](/ai-gateway/policies/ai-request-transformer/).
-3. The the upstream LLM provider returns a response to {{site.ai_gateway}}.
+3. The upstream LLM provider returns a response to {{site.ai_gateway}}.
 4. The AI Response Transformer policy sets the entire response body as the  `user` message in an LLM chat request, then sends it to the configured LLM service.
 5. The LLM service returns a response `assistant` message, which is subsequently set as the upstream response body.
 6. The Policy returns early (`kong.response.exit`) and can handle gzip or chunked requests, similar to the [Forward Proxy](/ai-gateway/policies/forward-proxy/) policy.

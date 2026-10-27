@@ -16,6 +16,7 @@ Examples:
 
 Available Commands:
   konnect      Manage Konnect resources
+  mesh         Manage Kong Mesh control plane resources
   organization Get current organization information
   pat          Create a Konnect personal access token
   spat         Create a Konnect system account access token

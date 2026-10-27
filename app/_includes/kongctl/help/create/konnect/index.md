@@ -11,6 +11,7 @@ Examples:
   kongctl get konnect gateway control-planes
 
 Available Commands:
+  mesh         Manage Kong Mesh control plane resources
   organization Get current organization information
   pat          Create a Konnect personal access token
   spat         Create a Konnect system account access token

@@ -19,6 +19,10 @@ related_resources:
     url: /kongctl/listen/
   - text: Manage audit logs with kongctl
     url: /kongctl/audit-logs/
+  - text: kongctl get audit-logs
+    url: /kongctl/get/audit-logs/
+  - text: kongctl tail audit-logs
+    url: /kongctl/tail/audit-logs/
 ---
 
 Listen to the audit log stream.
