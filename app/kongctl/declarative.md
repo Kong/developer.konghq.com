@@ -900,17 +900,17 @@ A runnable example is available in
 
 ### Storing typed environment values in plans
 
-Use `store: true` when a saved plan should retain the environment value
-approved during planning. Values are read during configuration loading,
-before decoding resource fields. Execution uses the stored values even when
-the environment has changed or the variables are absent.
+Use `store: true` when a saved plan should retain the environment value approved during planning.
+Values are read during configuration loading, before decoding resource fields.
+Execution uses the stored values even when the environment has changed or the variables are absent.
 
-**Stored values are plaintext in plan artifacts and may appear in plan and
-diff output.** Use this for non-sensitive configuration. No separate secret
-store is involved.
+{:.warning}
+> Stored values are plaintext in plan artifacts and can appear in plan and diff output.
+> Use this for non-sensitive configuration.
+> No separate secret store is involved.
 
-`store` is a boolean and defaults to `false`. These are alternative
-declarations of the same field:
+`store` is a boolean and defaults to `false`.
+These are alternative declarations of the same field:
 
 ```yaml
 description: !env {var: DESCRIPTION, store: true}
@@ -932,12 +932,11 @@ description: !env
   type: string
 ```
 
-The loader infers the type from an unambiguous resource/SDK field, including
-typed map values and array elements. Unknown destinations such as arbitrary
-policy configuration, and conflicting union branches, require an explicit
-`type`. Errors identify the field and variable. Custom decoding layouts
-that cannot be inferred also require `type`; inference does not duplicate
-policy schemas or select an arbitrary union branch.
+The loader infers the type from an unambiguous resource/SDK field, including typed map values and array elements.
+Unknown destinations such as arbitrary policy configuration, and conflicting union branches, require an explicit `type`.
+Error messages name the field and the variable.
+Custom decoding layouts that cannot be inferred also require `type`.
+Inference does not duplicate policy schemas or select an arbitrary union branch.
 
 {% table %}
 columns:
@@ -952,7 +951,7 @@ rows:
     conversion: |
       Parse a YAML boolean (`true` or `false`, also title/upper case)
   - type: "`integer`"
-    conversion: Parse a whole number; fractional values are errors
+    conversion: Parse a whole number. Fractional values are errors
   - type: "`number`"
     conversion: Parse a finite decimal number, including exponent notation
   - type: "`null`"
@@ -963,18 +962,17 @@ rows:
     conversion: Parse a YAML/JSON mapping with string keys and typed values
 {% endtable %}
 
-Quote the enum name in `type: "null"`; an unquoted YAML null is not a
-string option. An explicit type must match a known destination; `integer`
-is also accepted for a numeric destination, and `null` for nullable
-destinations. The normal SDK and resource validation still applies.
+Quote the `null` type name in `type: "null"`.
+An unquoted YAML null is not a string option.
+An explicit type must match a known destination.
+The type `integer` is also accepted for a numeric destination, and `null` for nullable destinations.
+The normal SDK and resource validation still applies.
 
-For a string destination, an environment value of `42`, `true`, or
-`null` remains text. For an unknown destination, specify `type: string`
-to preserve that text. Inside parsed objects and arrays, quote strings that
-resemble numbers, booleans, or null.
+For a string destination, an environment value of `42`, `true`, or `null` remains text.
+For an unknown destination, specify `type: string` to preserve that text.
+Inside parsed objects and arrays, quote strings that resemble numbers, booleans, or null.
 
-For example, an {{site.ai_gateway}} rate-limiting policy's dynamic `config`
-can use:
+For example, an {{site.ai_gateway}} rate-limiting policy's dynamic `config` can use:
 
 ```yaml
 config:
@@ -985,54 +983,50 @@ config:
 ```
 
 Set `REDIS_SSL=true`, `REDIS_SSL_VERIFY=false`, and `SYNC_RATE=0.5`.
-A known boolean field, such as a portal's `auto_approve_developers`, can
-instead use `!env {var: AUTO_APPROVE, store: true}` without a type option.
+A known boolean field, such as a portal's `auto_approve_developers`, can instead use `!env {var: AUTO_APPROVE, store: true}` without a type option.
 
-Extraction parses the source as YAML/JSON before selecting an existing
-dot-separated mapping path. The selected value may be any supported type
-and must match the inferred or explicit type; extraction does not convert
-booleans, numbers, null, arrays, or objects to strings. Array-index
-extraction is not supported. Missing paths and traversal through scalar/null
-values fail.
+Extraction parses the source as YAML/JSON before selecting an existing dot-separated mapping path.
+The selected value may be any supported type and must match the inferred or explicit type.
+Extraction does not convert booleans, numbers, null, arrays, or objects to strings.
+Array-index extraction is not supported.
+Missing paths and traversal through scalar/null values fail.
 
 #### Parsing and serialization boundaries
 
-- Unset variables always fail. Empty text is valid only for a direct
-  `string`; structured parsing and extraction reject empty/whitespace-only
-  input. YAML null spellings include `null`, `Null`, `NULL`, and `~`.
-- Structured input must be one YAML/JSON document. YAML 1.2 boolean semantics
-  apply: `yes`, `no`, `on`, and `off` are strings.
-- Numbers use JSON decimal syntax. Hexadecimal, octal spellings with leading
-  zeros, underscores, leading plus signs, NaN, and infinity are rejected.
-- Numbers are limited to ±9,007,199,254,740,991 (±(2^53−1)). Integers within
-  this range survive JSON plan round trips exactly. Fractional numbers use
-  binary64 rounding; underflow to zero or loss of an entire fractional part
-  is rejected. Normal SDK decoding enforces narrower integer destinations.
-- Objects require unique string keys. Anchors, aliases, merge keys, custom
-  tags, timestamps, binary values, and other non-JSON YAML types are rejected.
+- Unset variables always fail.
+  Empty text is valid only for a direct `string`.
+  Structured parsing and extraction reject empty/whitespace-only input.
+  YAML null spellings include `null`, `Null`, `NULL`, and `~`.
+- Structured input must be one YAML/JSON document.
+  YAML 1.2 boolean semantics apply: `yes`, `no`, `on`, and `off` are strings.
+- Numbers use JSON decimal syntax.
+  Hexadecimal, octal spellings with leading zeros, underscores, leading plus signs, NaN, and infinity are rejected.
+- Numbers are limited to ±9,007,199,254,740,991 (±(2^53−1)).
+  Integers within this range remain exact after JSON plan round trips.
+  Fractional numbers use binary64 rounding.
+  Underflow to zero or loss of an entire fractional part is rejected.
+  Normal SDK decoding enforces narrower integer destinations.
+- Objects require unique string keys.
+  Anchors, aliases, merge keys, custom tags, timestamps, binary values, and other non-JSON YAML types are rejected.
   Quote dates to represent them as strings.
-- Nested arrays, objects, and null retain their JSON meanings. Resource
-  rules still determine whether a field accepts null or an empty collection.
-- Strings beginning with reserved internal prefixes `__ENV__:`,
-  `__SECRET__:`, `__REF__:`, or `__EXTERNAL__:` are rejected, including
-  inside structured values, so execution cannot reinterpret stored data as
-  deferred references.
+- Nested arrays, objects, and null retain their JSON meanings.
+  Resource rules still determine whether a field accepts null or an empty collection.
+- Strings beginning with reserved internal prefixes `__ENV__:`, `__SECRET__:`, `__REF__:`, or `__EXTERNAL__:` are rejected, including inside structured values, so execution cannot reinterpret stored data as deferred references.
 
 #### Compatibility and saved plans
 
-Ordinary `!env VAR` and `!env {var: VAR, store: false}` retain their
-string-only, deferred behavior: read during planning and again at execution.
+Ordinary `!env VAR` and `!env {var: VAR, store: false}` retain their string-only, deferred behavior: read during planning and again at execution.
 Existing saved plans and deferred-value redaction are unchanged.
-`type` is only valid with stored values; unknown options are errors.
+`type` is only valid with stored values.
+Unknown options are errors.
 
-Stored tags cannot be nested inside `!secret`, `!lookup`, or `!external`,
-and cannot contain other custom tags. Existing deferred nesting remains
-supported. Stored tags cannot supply resource `ref` or
-`kongctl.namespace`. Write-only fields continue to require their existing
-deferred secret sources or supported vault references; `!secret` is
-unchanged.
+Stored tags cannot be nested inside `!secret`, `!lookup`, or `!external`, and cannot contain other custom tags.
+Existing deferred nesting remains supported.
+Stored tags cannot supply resource `ref` or `kongctl.namespace`.
+Write-only fields continue to require their existing deferred secret sources or supported vault references.
+The `!secret` tag is unchanged.
 
-For a manifest containing the stored description declaration above:
+For a manifest that contains `description: !env {var: DESCRIPTION, store: true}`:
 
 ```bash
 DESCRIPTION="Approved description" kongctl plan -f config.yaml > plan.json
@@ -1050,8 +1044,9 @@ Alternatively, apply the saved plan without the original variable:
 env -u DESCRIPTION kongctl apply --plan plan.json --auto-approve
 ```
 
-The two apply commands are alternatives. Both use `Approved description`
-from the plan. Re-plan from the manifest to approve a different value.
+The two apply commands are alternatives.
+Both use `Approved description` from the plan.
+Re-plan from the manifest to approve a different value.
 
 ## Write-only secret fields
 
