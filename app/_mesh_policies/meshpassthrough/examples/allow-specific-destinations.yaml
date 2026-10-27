@@ -1,0 +1,38 @@
+title: 'Allow a set of external destinations'
+
+description: 'Permit a named domain, an IP, a CIDR range and a wildcard domain, and nothing else.'
+
+weight: 900
+
+config:
+  type: MeshPassthrough
+  name: allow-some-passthrough
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: demo-app
+    default:
+      passthroughMode: Matched
+      appendMatch:
+        - type: Domain
+          value: httpbin.org
+          protocol: tls
+          port: 443
+        - type: Domain
+          value: httpbin.dev
+          protocol: http
+          port: 80
+        - type: Domain
+          value: "*.wikipedia.org"
+          protocol: tls
+          port: 443
+        - type: IP
+          value: 10.240.15.39
+          protocol: tcp
+          port: 8888
+        - type: CIDR
+          value: 10.250.0.0/16
+          protocol: tcp
+          port: 10000

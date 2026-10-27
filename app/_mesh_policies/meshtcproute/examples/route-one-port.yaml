@@ -1,0 +1,30 @@
+title: 'Route one port of a destination'
+
+description: 'Use sectionName to route a single named port of a MeshService, leaving its other ports alone.'
+
+weight: 700
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshTCPRoute
+  name: frontend-to-backend-db
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: frontend
+    to:
+      - targetRef:
+          kind: MeshService
+          labels:
+            kuma.io/display-name: backend
+          sectionName: postgres
+        rules:
+          - default:
+              backendRefs:
+                - kind: MeshService
+                  labels:
+                    kuma.io/display-name: backend-replica
+                  port: 5432

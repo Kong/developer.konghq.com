@@ -42,6 +42,10 @@ const collectionPermalinks = (function () {
   return permalinks;
 })();
 
+function stripIndex(url) {
+  return url.replace(/index\/$/, "");
+}
+
 function readFileAtRef(file) {
   try {
     return execSync(`git show origin/${baseBranch}:${file}`, {
@@ -92,24 +96,36 @@ function fileToUrl(file) {
     if (frontmatter.data.permalink) {
       return frontmatter.data.permalink;
     } else {
-      return file.replace("app/_landing_pages", "").replace(ext, "/");
+      return stripIndex(
+        file.replace("app/_landing_pages", "").replace(ext, "/")
+      );
     }
   } else if (file.startsWith("app/_kong_plugins")) {
-    return file.replace("app/_kong_plugins/", "/plugins/").replace(ext, "/");
+    return stripIndex(
+      file.replace("app/_kong_plugins/", "/plugins/").replace(ext, "/")
+    );
+  } else if (file.startsWith("app/_ai_gateway_policies")) {
+    return stripIndex(
+      file
+        .replace("app/_ai_gateway_policies/", "/ai-gateway/policies/")
+        .replace(ext, "/")
+    );
   } else if (file.startsWith("app/_mesh_policies")) {
     const relative = file.replace("app/_mesh_policies/", "");
     const versionMatch = relative.match(/^(v\d+)\/(.+)$/);
     if (versionMatch) {
       const [, version, rest] = versionMatch;
-      return `/mesh/${version}/policies/${rest}`.replace(ext, "/");
+      return stripIndex(`/mesh/${version}/policies/${rest}`.replace(ext, "/"));
     }
-    return file
-      .replace("app/_mesh_policies/", "/mesh/policies/")
-      .replace(ext, "/");
+    return stripIndex(
+      file.replace("app/_mesh_policies/", "/mesh/policies/").replace(ext, "/")
+    );
   } else if (file.startsWith("app/_event_gateway_policies")) {
-    return file
-      .replace("app/_event_gateway_policies/", "/event-gateway/policies/")
-      .replace(ext, "/");
+    return stripIndex(
+      file
+        .replace("app/_event_gateway_policies/", "/event-gateway/policies/")
+        .replace(ext, "/")
+    );
   } else if (file.startsWith("app/_api")) {
     return file.replace("app/_api/", "/api/").replace(`_index${ext}`, "");
   }

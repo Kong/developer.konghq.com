@@ -1,0 +1,43 @@
+title: 'Route paths to different destinations'
+
+description: 'Send /orders to the orders service and everything else to backend, using a catch-all rule so unmatched paths are not answered with a 404.'
+
+weight: 900
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshHTTPRoute
+  name: frontend-to-backend
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: frontend
+    to:
+      - targetRef:
+          kind: MeshService
+          labels:
+            kuma.io/display-name: backend
+        rules:
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /orders
+            default:
+              backendRefs:
+                - kind: MeshService
+                  labels:
+                    kuma.io/display-name: orders
+                  port: 8080
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /
+            default:
+              backendRefs:
+                - kind: MeshService
+                  labels:
+                    kuma.io/display-name: backend
+                  port: 8080
