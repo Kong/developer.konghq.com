@@ -246,7 +246,7 @@ rows:
   - attribute: "Compression Saved Tokens"
     unit: "Count"
     description: |
-      Number of tokens saved by the [AI Prompt Compressor Policy](/ai-gateway/policies/ai-prompt-compressor/#prompt-compression-metrics), summed over the compressed messages.
+      Number of tokens saved by the [AI Prompt Compressor Policy](/ai-gateway/policies/ai-prompt-compressor/#prompt-compression-metrics), summed over the compressed messages. Reported per compression provider, with no model dimension.
   - attribute: "Compression Original Tokens"
     unit: "Count"
     description: |
@@ -272,7 +272,6 @@ rows:
     description: |
       Compression method used. Possible values: `rate` or `target_token`. Available for the `kong` provider only.
 {% endtable %}
-<!-- TODO: Verify compression attribute labels in Konnect Explorer. -->
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Platform usage" %}
