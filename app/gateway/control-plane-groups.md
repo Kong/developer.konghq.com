@@ -124,6 +124,12 @@ In this diagram:
 * The control plane group also contains control plane Purple, which is managed by a central platform team.
 * The central platform team manages global plugin configuration in control plane Purple, which is added to any configuration that teams Blue and Green provide.
 
+{:.info}
+> **{{site.konnect_short_name}} Workspaces:** If you want to isolate configuration for separate teams on one data plane without a control plane per team, consider using {{site.konnect_short_name}} [Workspaces](/gateway/entities/workspace/) instead.
+> A control plane group combines configuration from multiple standard control planes.
+> Workspaces isolate teams within a single control plane instead.
+> A control plane can't be both Workspace-enabled and a member of a control plane group.
+
 ## How do I create a control plane group?
 
 In {{site.konnect_short_name}}, control plane groups can be created using the [Control Planes API](/api/konnect/control-planes/).
@@ -144,7 +150,7 @@ body:
 
 ## How do I attach control planes to a control plane group?
 
-Once you have a control plane group, you can add control planes to the group using the {{site.konnect_short_name}} UI or [API](/api/konnect/control-planes/#/operations/post-control-planes-id-group-memberships-add).
+After you have a control plane group, you can add control planes to the group using the {{site.konnect_short_name}} UI or [API](/api/konnect/control-planes/#/operations/post-control-planes-id-group-memberships-add).
 <!--vale off-->
 
 {% control_plane_request %}
@@ -238,7 +244,7 @@ columns:
 rows:
   - entity: Consumers
     behavior: >-
-      A Consumer from a standard control plane becomes a Consumer of the control plane group once the control plane joins the group.<br><br>
+      A Consumer from a standard control plane becomes a Consumer of the control plane group after the control plane joins the group.<br><br>
       The Consumer's authentication credentials also become valid for the control plane group.<br><br>
       However, a Consumer ID from one member cannot be used for authorization in another member.
   - entity: Consumer Groups
@@ -267,7 +273,7 @@ In this case, the Consumer displays as `(deleted)` in Requests, Explorer, and Da
 This happens because {{site.observability}} assumes all the data for a request comes from a single control plane.
 
 To avoid this, use [centrally-managed Consumers](/gateway/entities/consumer/#centrally-managed-consumers) instead of concentrating shared Consumers in one member control plane. 
-Currently, centrally-managed Consumers only support Key Auth.
+Centrally-managed Consumers only support Key Auth.
 
 ## Control plane conflicts
 
