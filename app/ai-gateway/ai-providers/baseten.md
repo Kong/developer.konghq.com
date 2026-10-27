@@ -40,22 +40,6 @@ related_resources:
     url: https://docs.baseten.co/inference/model-apis/overview
 ---
 
-<!--
-TODO(reviewer), AI-192 open questions to resolve before GA:
-1. Non-streaming usage: Baseten documents `usage` as present only when streaming with `include_usage`.
-   Confirm non-streaming responses return usage so token statistics and cost tracking work. If they
-   don't, add a statistics_logging limitation to providers.yaml and a line under Limitations.
-2. Streaming usage: Baseten defaults `stream_options.include_usage` and `continuous_usage_stats` to true.
-   Confirm the 2.3 streaming parser handles per-chunk usage without double-counting.
-3. Embeddings at GA: dedicated BEI deployments expose `/sync/v1/embeddings`. If embeddings ship at GA,
-   flip `embeddings` to supported in providers.yaml and add a dedicated-deployment embeddings example.
-4. Request validation: Baseten rejects unknown request fields (`additionalProperties: false`).
-   Confirm Kong doesn't inject fields Baseten rejects.
-5. Icon: app/assets/icons/baseten.svg is a placeholder. Replace with the approved Baseten logo.
-6. The AI Gateway 2.3 release isn't in app/_data/products/ai-gateway.yml yet. Confirm min_version
-   resolves correctly once the release entry lands.
--->
-
 {% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="Baseten" %}
 
 ## Configure a {{ provider.name }} provider
@@ -161,9 +145,6 @@ Set `formats[].type` to `passthrough` on the AI Model.
 - **Cached tokens:**
   When {{ provider.name }} reports `usage.prompt_tokens_details.cached_tokens`, {{site.ai_gateway}} includes it in the response, the streaming usage event, and the logs.
 
-{{ provider.name }} can return the model name in lowercase and without the organization prefix.
-For example, a request for `deepseek-ai/DeepSeek-V4-Flash-0731` returns `deepseek-v4-flash-0731`.
+The `model` field in responses contains the target `name`, for example `deepseek-ai/DeepSeek-V4-Pro-0813`.
 
-<!-- TODO(reviewer): confirm the default model selector matches the AI Model name (`deepseek-v4-pro`) rather than the slash-containing target name. -->
-
-<!-- TODO(reviewer): confirm whether clients can pass Baseten-specific body fields and the `x-session-affinity` header through unchanged (AI-192 OQ6), and document it here if so. -->
+To call the AI Model, send its `name` in the `model` field of the request. For more information, see [Request routing rules](/ai-gateway/entities/ai-model/#request-routing-rules).
