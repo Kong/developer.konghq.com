@@ -45,7 +45,7 @@ related_resources:
 
 This guide explains how to migrate from a self-managed, on-prem deployment of {{site.ai_gateway}} on {{site.base_gateway}} 3.x to an on-prem deployment of {{site.ai_gateway}} 2.x.
 With an on-prem {{site.ai_gateway}} 2.x deployment, you apply configuration in the {{site.ai_gateway}} 2.x model of AI entities and Policies, which will run on-prem using supported {{site.base_gateway}} 3.x primitives (like Routes, Services, and plugins).
-This guide is intended for teams running {{site.ai_gateway}} on {{site.base_gateway}} 3.x on-prem who want to move to the on-prem {{site.ai_gateway_name}} 2.x [entity and policy model](/ai-gateway/ai-gateway-v2-concepts/), not just upgrade the runtime version.
+This guide is intended for teams running {{site.ai_gateway}} on {{site.base_gateway}} 3.x on-prem who want to move to the on-prem {{site.ai_gateway_name}} 2.x [entity and Policy model](/ai-gateway/ai-gateway-v2-concepts/), not just upgrade the runtime version.
 
 If you want to migrate to {{site.konnect_short_name}} instead, see [Migrate to {{site.ai_gateway}} 2.x in {{site.konnect_short_name}}](/ai-gateway/v2-migration-guide/), which covers this migration using `kongctl` end-to-end.
 
@@ -217,7 +217,7 @@ A `warn` finding is something the converter corrected automatically that's still
 Read through both files and resolve anything that needs a manual fix before moving on.
 
 {:.warning}
-> Write-only values (like a plain-text `client_secret`) are converted to `{vault://env/...}` references resolved by Kong's env vault. The migration report's **Secrets to supply** section names the environment variable each reference needs (see also `secrets.env`). Export these in the data plane's environment before applying. This is a different mechanism from decK's own `{% raw %}{{ env "..." }}{% endraw %}` templating, which does **not** resolve when a file is applied with `deck ai sync` — don't use that syntax here.
+> Write-only values (like a plain-text `client_secret`) are converted to `{vault://env/...}` references resolved by Kong's env vault. The migration report's **Secrets to supply** section names the environment variable each reference needs (see also `secrets.env`). Export these in the data plane's environment before applying. This is a different mechanism from decK's own `{% raw %}{{ env "..." }}{% endraw %}` templating, which does **not** resolve when a file is applied with `deck ai sync`.
 
 ### Step 6: Validate the converted configuration
 
@@ -258,8 +258,8 @@ After you apply the converted configuration, verify the new deployment before mo
 - Confirm each AI Model responds. Send a chat or embeddings request to the migrated AI Model route and compare the response and the `X-Kong-LLM-Model` header against its plugin equivalent.
 - Confirm AI MCP tool discovery and invocation. Connect an MCP client and list tools, then invoke one. If you migrated ACLs, test with both an allowed and a denied Consumer.
 - Confirm AI Agent traffic. Send an A2A request and check that the agent card URL is rewritten to the gateway address.
-- Confirm AI Policies took effect. Exercise rate limiting, authentication, and any AI policies such as `ai-sanitizer` to confirm they behave as they did before.
-- Compare entity counts. The number of AI Models, MCP Servers, and Agents in the new deployment should match the number of corresponding plugins in your {{site.base_gateway}} 3.x export.
+- Confirm AI Policies took effect. Exercise rate limiting, authentication, and any AI Policies such as `ai-sanitizer` to confirm they behave as they did before.
+- Compare entity counts. The number of AI Models, AI MCP Servers, and AI Agents in the new deployment should match the number of corresponding plugins in your {{site.base_gateway}} 3.x export.
 
 Run the old and new deployments in parallel during cutover so you can roll back by routing traffic to the original deployment if needed.
 
