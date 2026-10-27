@@ -387,7 +387,7 @@ rows:
     description: Number of tokens after compression.
   - metric: "`compressed_message_count`"
     type: Count
-    description: Number of compressed messages per request.
+    description: Number of messages sent to the compressor per request, including messages it leaves unchanged.
   - metric: "`duration`"
     type: Latency
     description: Average time the compressor took, in milliseconds.
