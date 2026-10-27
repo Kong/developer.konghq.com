@@ -1,2 +1,7 @@
 name: AI Cost Management
 icon: /_assets/icons/products/ai-cost-management.svg
+
+releases:
+  - release: "1.0"
+    latest: true
+    name: "v1"
