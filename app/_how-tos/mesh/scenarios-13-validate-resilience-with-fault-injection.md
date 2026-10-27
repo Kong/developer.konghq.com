@@ -82,9 +82,6 @@ faqs:
       ```
 
       For how to find the SNI, see [Manage external services with MeshExternalService](/mesh/manage-external-services-with-meshexternalservice/).
-next_steps:
-  - text: "How-to: Prepare the mesh for production"
-    url: "/mesh/prepare-the-mesh-for-production/"
 related_resources:
   - text: MeshFaultInjection
     url: /mesh/policies/meshfaultinjection/
@@ -92,10 +89,18 @@ related_resources:
     url: /mesh/policies/meshretry/
   - text: MeshCircuitBreaker
     url: /mesh/policies/meshcircuitbreaker/
+  - text: Policy targeting
+    url: /mesh/policy-targeting/
 ---
 
 Fault injection tests how callers behave when a destination fails or slows down.
-In this guide, make the `check-in-api` sidecar fail the requests from `flight-control` in three ways, one at a time, and check the effect of each one.
+In this guide, the `check-in-api` sidecar fails the requests from `flight-control` on purpose, so you can see how `flight-control` handles each failure.
+
+To learn more about what this guide does, read the following reference pages:
+
+* [MeshFaultInjection](/mesh/policies/meshfaultinjection/): how a sidecar injects errors and delays
+* [MeshRetry](/mesh/policies/meshretry/): how callers retry failed requests
+* [MeshCircuitBreaker](/mesh/policies/meshcircuitbreaker/): how callers stop sending traffic to failing instances
 
 ## Record the baseline
 

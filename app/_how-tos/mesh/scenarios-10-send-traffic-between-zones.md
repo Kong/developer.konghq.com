@@ -23,23 +23,29 @@ tldr:
     1. Deploy the service in the second zone. The global control plane syncs its `MeshService` to the other zones.
     2. In the destination zone, allow the caller's SPIFFE ID with a `MeshTrafficPermission`.
     3. Call the service with its cross-zone hostname, `NAME.NAMESPACE.svc.ZONE.mesh.local`. The caller's sidecar sends the request to the zone ingress of the destination zone.
-next_steps:
-  - text: "How-to: Secure the perimeter with MeshPassthrough"
-    url: "/mesh/secure-the-perimeter-with-meshpassthrough/"
 related_resources:
   - text: Multi-zone architecture
     url: /mesh/multi-zone-architecture/
   - text: Mesh-scoped zone proxies
     url: /mesh/mesh-scoped-zone-proxies/
+  - text: Match caller identities
+    url: /mesh/policies/meshtrafficpermission/#match-caller-identities
   - text: Deploy mesh-scoped zone proxies
     url: /mesh/zone-proxies/
+  - text: MeshService
+    url: /mesh/meshservice/
 ---
 
 Kong Air runs its baggage service, `baggage-api`, in its second region, `zone2`.
 `passenger-portal` in `zone1` shows the baggage status of each booking, so it calls `baggage-api` across zones.
 
-A cross-zone request goes from the caller's sidecar straight to the zone ingress of the destination zone, at the address that zone published in a `MeshZoneAddress`.
-The zone ingress forwards the encrypted connection without decrypting it, so the destination sidecar sees the caller's own SPIFFE ID and applies its `MeshTrafficPermission` rules to it.
+The zone ingress of `zone2` forwards the encrypted connection without decrypting it, so the `baggage-api` sidecar sees the SPIFFE ID of `passenger-portal` itself, not the zone ingress.
+
+To learn more about what this guide does, read the following reference pages:
+
+* [Multi-zone architecture](/mesh/multi-zone-architecture/): how a request reaches a service in another zone
+* [Mesh-scoped zone proxies](/mesh/mesh-scoped-zone-proxies/): what the zone ingress does with the connection
+* [Match caller identities](/mesh/policies/meshtrafficpermission/#match-caller-identities): how a traffic permission allows a caller from another zone
 
 ## Check the zone ingress addresses
 

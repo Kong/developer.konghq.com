@@ -68,22 +68,26 @@ faqs:
       No. `MeshPassthrough` applies only to sidecars that run with transparent proxying.
       The Kubernetes sidecar injector turns it on by default.
       For a proxy without it, the control plane skips the policy and records a warning.
-next_steps:
-  - text: "How-to: Manage external services with MeshExternalService"
-    url: "/mesh/manage-external-services-with-meshexternalservice/"
 related_resources:
   - text: MeshPassthrough
     url: /mesh/policies/meshpassthrough/
-  - text: MeshTrafficPermission
-    url: /mesh/policies/meshtrafficpermission/
   - text: Policy targeting
     url: /mesh/policy-targeting/
+  - text: MeshTrafficPermission
+    url: /mesh/policies/meshtrafficpermission/
   - text: Prepare the mesh for production
     url: /mesh/prepare-the-mesh-for-production/
+  - text: Production readiness checklist
+    url: /mesh/production-readiness-checklist/
 ---
 
 The Kong Air mesh starts open: its control plane sets `restrictOutbound` to `false`, so a sidecar forwards traffic to any external destination.
 In this guide, close the perimeter with a `MeshPassthrough` policy, then update the same policy to allow only the external destinations that Kong Air needs.
+
+To learn more about what this guide does, read the following reference pages:
+
+* [MeshPassthrough](/mesh/policies/meshpassthrough/): how sidecars reach destinations outside the mesh
+* [Policy targeting](/mesh/policy-targeting/): where a policy applies and which policy wins
 
 ## Record the baseline
 

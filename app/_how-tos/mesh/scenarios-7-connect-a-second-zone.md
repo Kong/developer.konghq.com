@@ -32,15 +32,24 @@ tldr:
 related_resources:
   - text: Multi-zone architecture
     url: /mesh/multi-zone-architecture/
+  - text: Resource scoping
+    url: /mesh/resource-scoping/
   - text: Mesh-scoped zone proxies
     url: /mesh/mesh-scoped-zone-proxies/
-next_steps:
-  - text: "How-to: Manage workload identity and mTLS"
-    url: "/mesh/manage-workload-identity-and-mtls/"
+  - text: Architecture overview
+    url: /mesh/architecture-overview/
+  - text: Deploy mesh-scoped zone proxies
+    url: /mesh/zone-proxies/
 ---
 
 Kong Air runs its services in more than one region.
 In this guide, you connect a second Kubernetes zone, `zone2`, to the same global control plane as `zone1`.
+
+To learn more about what this guide does, read the following reference pages:
+
+* [Multi-zone architecture](/mesh/multi-zone-architecture/): what a second zone adds to the deployment
+* [Resource scoping](/mesh/resource-scoping/): which control plane owns each resource
+* [Mesh-scoped zone proxies](/mesh/mesh-scoped-zone-proxies/): how traffic enters and leaves a zone
 
 ## Start the zone2 cluster
 

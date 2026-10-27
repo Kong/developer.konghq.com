@@ -29,22 +29,27 @@ tldr:
     1. Target the shared entry point from a `MeshHTTPRoute` `to[].targetRef`.
     2. Assign a `weight` to each `backendRef`, one per versioned `MeshService`.
     3. Verify the split by tallying which pod served each response.
-next_steps:
-  - text: "How-to: Target workloads and services"
-    url: "/mesh/target-workloads-and-services/"
 related_resources:
+  - text: MeshService
+    url: /mesh/meshservice/
   - text: MeshHTTPRoute
     url: /mesh/policies/meshhttproute/
+  - text: Policy targeting
+    url: /mesh/policy-targeting/
   - text: Resource scoping
     url: /mesh/resource-scoping/
-  - text: Policy targeting and precedence
-    url: /mesh/policy-targeting-and-precedence/
+  - text: MeshTrafficPermission
+    url: /mesh/policies/meshtrafficpermission/
 ---
 
 The Kong Air engineering team is launching Passenger Portal v2.
 To keep the rollout safe, the team sends 90% of traffic to the stable `v1` and 10% to the new `v2`.
 
-In this guide, you create one `MeshService` for each version and split traffic between them with a `MeshHTTPRoute`.
+To learn more about what this guide does, read the following reference pages:
+
+* [MeshService](/mesh/meshservice/): how a service resource selects the proxies behind it
+* [MeshHTTPRoute](/mesh/policies/meshhttproute/): how a route splits traffic between destinations
+* [Policy targeting](/mesh/policy-targeting/): how `targetRef` selects proxies and destinations
 
 ## Deploy the v2 workload
 

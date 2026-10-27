@@ -22,21 +22,24 @@ tldr:
     Use two selectors:
     1. A top-level `targetRef` of kind `Dataplane` with `labels`, to scope a policy to a group of proxies, such as a zone or a team.
     2. A `MeshService` in `spec.to[].targetRef` or a route's `backendRefs`, to address one named destination, such as a canary variant.
-next_steps:
-  - text: "How-to: Deploy an OpenTelemetry collector"
-    url: "/mesh/deploy-an-opentelemetry-collector/"
 related_resources:
-  - text: MeshService
-    url: /mesh/meshservice/
   - text: Policy targeting
     url: /mesh/policy-targeting/
+  - text: MeshService
+    url: /mesh/meshservice/
+  - text: MeshTimeout
+    url: /mesh/policies/meshtimeout/
+  - text: MeshRetry
+    url: /mesh/policies/meshretry/
 ---
 
-Kong Air scopes policies in two ways.
-Some settings apply to a group of proxies, such as every sidecar in one zone.
-Other settings apply to one named destination, such as the canary version of a service.
-A `Dataplane` label selector covers the first case, and a `MeshService` covers the second.
-For the full targeting model, see [Policy targeting](/mesh/policy-targeting/).
+A policy that targets the whole mesh changes every Kong Air proxy.
+Most settings only make sense for part of the mesh, such as the sidecars of one zone, or the calls to the canary version of a service.
+
+To learn more about what this guide does, read the following reference pages:
+
+* [Policy targeting](/mesh/policy-targeting/): how `targetRef` selects proxies and destinations
+* [MeshService](/mesh/meshservice/): how a service resource names a destination
 
 ## Select a group of proxies with Dataplane labels
 

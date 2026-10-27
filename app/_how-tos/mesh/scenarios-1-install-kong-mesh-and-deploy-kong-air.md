@@ -49,9 +49,10 @@ related_resources:
     url: /mesh/architecture-overview/
   - text: Resource scoping
     url: /mesh/resource-scoping/
-next_steps:
-  - text: "How-to: Create a security policy"
-    url: "/mesh/create-a-security-policy/"
+  - text: Introduction to Kong Air
+    url: /mesh/introduction-kong-air/
+  - text: Concepts
+    url: /mesh/concepts/
 ---
 
 Every Kong Air scenario runs on the same foundation:
@@ -60,6 +61,12 @@ Every Kong Air scenario runs on the same foundation:
 * Three demo applications
 
 In this guide, you build that foundation.
+
+To learn more about what this guide does, read the following reference pages:
+
+* [Introduction to Kong Air](/mesh/introduction-kong-air/): the context for this scenario
+* [Architecture overview](/mesh/architecture-overview/): how the global and zone control planes connect
+* [Resource scoping](/mesh/resource-scoping/): which control plane owns each resource
 
 ## Create a working directory
 

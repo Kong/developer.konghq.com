@@ -77,12 +77,13 @@ faqs:
     a: |
       Pair `MeshRetry` with `MeshCircuitBreaker`, so the mesh stops sending requests to an external service that's already failing.
       Add `MeshTimeout` to limit the total time spent on retries.
-next_steps:
-  - text: "How-to: Validate resilience with fault injection"
-    url: "/mesh/validate-resilience-with-fault-injection/"
 related_resources:
   - text: MeshExternalService
     url: /mesh/meshexternalservice/
+  - text: Mesh-scoped zone proxies
+    url: /mesh/mesh-scoped-zone-proxies/
+  - text: Authorize zone proxy traffic
+    url: /mesh/policies/meshtrafficpermission/#authorize-zone-proxy-traffic
   - text: MeshRetry
     url: /mesh/policies/meshretry/
   - text: MeshTrafficPermission
@@ -90,7 +91,13 @@ related_resources:
 ---
 
 Kong Air's critical dependencies are AeroPay, its payment provider, and a managed PostgreSQL database for flight data.
-In this guide, model each one as a [`MeshExternalService`](/mesh/meshexternalservice/), so workloads call it through a mesh-generated hostname, the zone egress controls who reaches it, and mesh policies apply to it.
+Both run outside the mesh, so the mesh can't name them, control who calls them, or apply policies to the calls.
+
+To learn more about what this guide does, read the following reference pages:
+
+* [MeshExternalService](/mesh/meshexternalservice/): how the mesh describes a destination outside it
+* [Mesh-scoped zone proxies](/mesh/mesh-scoped-zone-proxies/): how traffic leaves the zone through the zone egress
+* [Authorize zone proxy traffic](/mesh/policies/meshtrafficpermission/#authorize-zone-proxy-traffic): how the zone egress allows each caller
 
 ## Define the flight database
 

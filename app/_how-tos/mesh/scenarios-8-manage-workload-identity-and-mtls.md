@@ -22,16 +22,19 @@ tldr:
     1. Check that the `MeshIdentity` initialized, and inspect the `MeshTrust` that its `Bundled` provider generated.
     2. Create the same `MeshIdentity` on the second zone, which generates its own CA and trust domain.
     3. Copy each zone's generated `MeshTrust` into the other zone, then confirm that each proxy's trust bundle includes both trust domains.
-next_steps:
-  - text: "How-to: Integrate an external CA"
-    url: "/mesh/integrate-an-external-ca/"
 related_resources:
+  - text: Multi-zone meshes
+    url: /mesh/policies/meshidentity/#multi-zone-meshes
+  - text: MeshTrust
+    url: /mesh/policies/meshtrust/
+  - text: Identity and trust across zones
+    url: /mesh/multi-zone-architecture/#identity-and-trust-across-zones
   - text: MeshIdentity reference
     url: /mesh/policies/meshidentity/
-  - text: MeshTrust reference
-    url: /mesh/policies/meshtrust/
   - text: MeshIdentity providers
     url: /mesh/policies/meshidentity/#providers
+  - text: MeshTrafficPermission
+    url: /mesh/policies/meshtrafficpermission/
 ---
 
 A request between two Kong Air services succeeds only when all of the following are true:
@@ -40,6 +43,12 @@ A request between two Kong Air services succeeds only when all of the following 
 * A [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) allows the caller.
 
 Kong Air now runs a second zone, `zone2`, so all three must also hold across zones.
+
+To learn more about what this guide does, read the following reference pages:
+
+* [Multi-zone meshes](/mesh/policies/meshidentity/#multi-zone-meshes): why each zone has its own CA by default
+* [MeshTrust](/mesh/policies/meshtrust/): how a zone trusts the CA of another zone
+* [Identity and trust across zones](/mesh/multi-zone-architecture/#identity-and-trust-across-zones): what a cross-zone request needs
 
 ## Inspect the identity created in zone1
 

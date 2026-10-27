@@ -30,19 +30,7 @@ tags:
   - logging
   - kubernetes
 
-related_resources:
-  - text: Observe mesh traffic in practice
-    url: /mesh/observe-mesh-traffic-in-practice/
-  - text: MeshMetric policy
-    url: /mesh/policies/meshmetric/
-  - text: MeshTrace policy
-    url: /mesh/policies/meshtrace/
-  - text: MeshAccessLog policy
-    url: /mesh/policies/meshaccesslog/
 
-next_steps:
-  - text: "How-to: Observe mesh traffic in practice"
-    url: "/mesh/observe-mesh-traffic-in-practice/"
 
 tldr:
   q: How do I deploy an OpenTelemetry collector for {{site.mesh_product_name}}?
@@ -273,10 +261,22 @@ prereqs:
         For the scrape jobs for proxy and control plane metrics, see [Prometheus scrape jobs](/mesh/observe-mesh-traffic-in-practice/#prometheus-scrape-jobs).
       icon_url: /assets/icons/prometheus.svg
 
+related_resources:
+  - text: MeshOpenTelemetryBackend
+    url: /mesh/meshopentelemetrybackend/
+  - text: Observe mesh traffic in practice
+    url: /mesh/observe-mesh-traffic-in-practice/
+  - text: MeshMetric policy
+    url: /mesh/policies/meshmetric/
+  - text: MeshTrace policy
+    url: /mesh/policies/meshtrace/
+  - text: MeshAccessLog policy
+    url: /mesh/policies/meshaccesslog/
 ---
 
-Kong Air sends three telemetry signals from its sidecars to one OpenTelemetry collector: metrics from [MeshMetric](/mesh/policies/meshmetric/), traces from [MeshTrace](/mesh/policies/meshtrace/), and access logs from [MeshAccessLog](/mesh/policies/meshaccesslog/).
-The collector runs as a per-node Kubernetes `DaemonSet` and forwards each signal to its backend.
+Kong Air wants the telemetry of every sidecar to go through one pipeline, so application teams don't each decide where their metrics, traces, and logs go.
+
+To learn more about how observability policies share one collector, read [MeshOpenTelemetryBackend](/mesh/meshopentelemetrybackend/).
 
 ## Deploy the collector
 

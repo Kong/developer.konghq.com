@@ -157,24 +157,28 @@ faqs:
       If your CA certificate is self-signed, also set `insecureAllowSelfSigned: true` under `bundled`.
       When the CA rotates, update the two Secrets, for example with the External Secrets Operator.
       For more information, see [Use your own CA](/mesh/policies/meshidentity/#use-your-own-ca).
-next_steps:
-  - text: "Reference: Multi-zone architecture"
-    url: "/mesh/multi-zone-architecture/"
-  - text: "How-to: Send traffic between zones"
-    url: "/mesh/send-traffic-between-zones/"
 related_resources:
+  - text: Use your own CA
+    url: /mesh/policies/meshidentity/#use-your-own-ca
+  - text: Trust an external CA
+    url: /mesh/policies/meshtrust/#trust-an-external-ca
   - text: Manage workload identity and mTLS
     url: /mesh/manage-workload-identity-and-mtls/
   - text: Resource scoping
     url: /mesh/resource-scoping/
-  - text: Use your own CA with MeshIdentity
-    url: /mesh/policies/meshidentity/#use-your-own-ca
+  - text: Multi-zone architecture
+    url: /mesh/multi-zone-architecture/
 ---
 
 Kong Air already runs a corporate public key infrastructure (PKI) for compliance, hardware-backed key storage, and issuance audits.
 An external certificate authority (CA) lets Kong Air root the Secure Production Identity Framework for Everyone (SPIFFE) identities of its workloads in that PKI.
 
 This guide uses the `certmanager` extension provider of `MeshIdentity`. For all the providers, see [Providers](/mesh/policies/meshidentity/#providers).
+
+To learn more about what this guide does, read the following reference pages:
+
+* [Use your own CA](/mesh/policies/meshidentity/#use-your-own-ca): how `MeshIdentity` gets certificates from an external CA
+* [Trust an external CA](/mesh/policies/meshtrust/#trust-an-external-ca): how proxies trust the external CA
 
 ## Create the CA issuer
 

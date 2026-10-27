@@ -50,17 +50,23 @@ faqs:
       Don't create a second `MeshMetric` that targets the zone proxies with its own `backends` list.
       A `Dataplane` `targetRef` outranks `Mesh`, so its `backends` list replaces the one from `all-metrics`, and the collector stops receiving metrics from those proxies.
       For the labels that select zone proxies, see [Proxy and traffic selection](/mesh/mesh-scoped-zone-proxies/#proxy-and-traffic-selection).
-next_steps:
-  - text: "How-to: Connect a second zone"
-    url: "/mesh/connect-a-second-zone/"
 related_resources:
+  - text: MeshMetric
+    url: /mesh/policies/meshmetric/
+  - text: MeshAccessLog
+    url: /mesh/policies/meshaccesslog/
   - text: Deploy an OpenTelemetry collector
     url: /mesh/deploy-an-opentelemetry-collector/
-  - text: MeshMetric policy
-    url: /mesh/policies/meshmetric/
-  - text: MeshAccessLog policy
-    url: /mesh/policies/meshaccesslog/
+  - text: MeshOpenTelemetryBackend
+    url: /mesh/meshopentelemetrybackend/
 ---
+
+Kong Air's teams need dashboards that show the traffic between services, and a record of each request to investigate a failed call.
+
+To learn more about what this guide does, read the following reference pages:
+
+* [MeshMetric](/mesh/policies/meshmetric/): how proxies expose and export metrics
+* [MeshAccessLog](/mesh/policies/meshaccesslog/): how proxies write access logs
 
 ## Update `MeshMetric`
 

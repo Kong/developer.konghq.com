@@ -97,10 +97,9 @@ cleanup:
         rm -rf kong-air-scenarios
         ```
       icon_url: /assets/icons/code.svg
-next_steps:
-  - text: "Reference: Production readiness checklist"
-    url: "/mesh/production-readiness-checklist/"
 related_resources:
+  - text: reachableBackends
+    url: /mesh/concepts/#reachablebackends
   - text: Production readiness checklist
     url: /mesh/production-readiness-checklist/
   - text: Secure the perimeter with MeshPassthrough
@@ -115,8 +114,12 @@ related_resources:
 
 Every earlier scenario added a capability to the Kong Air mesh, on a control plane that sets `restrictOutbound` to `false`.
 With that setting, every proxy receives the configuration for every destination in the mesh, which costs control plane CPU and xDS bandwidth as the mesh grows.
-In this guide, profile what each workload calls, declare those destinations in `reachableBackends`, then turn on `restrictOutbound`.
-Declare first and restrict second, so that traffic keeps flowing during the change.
+Declare the destinations of each workload before you restrict outbound traffic, so that traffic keeps flowing during the change.
+
+To learn more about what this guide does, read the following reference pages:
+
+* [reachableBackends](/mesh/concepts/#reachablebackends): how a proxy declares the destinations it calls
+* [Production readiness checklist](/mesh/production-readiness-checklist/): the settings to review before production
 
 ## Discover what each workload calls
 

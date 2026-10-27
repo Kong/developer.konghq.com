@@ -28,16 +28,26 @@ tldr:
 related_resources:
   - text: MeshIdentity
     url: /mesh/policies/meshidentity/
+  - text: MeshTLS modes
+    url: /mesh/policies/meshtls/#modes
+  - text: Match caller identities
+    url: /mesh/policies/meshtrafficpermission/#match-caller-identities
   - text: Resource scoping
     url: /mesh/resource-scoping/
   - text: Manage workload identity and mTLS
     url: /mesh/manage-workload-identity-and-mtls/
-next_steps:
-  - text: "Reference: Policy targeting and precedence"
-    url: "/mesh/policy-targeting-and-precedence/"
-  - text: "How-to: Split traffic with MeshService resources"
-    url: "/mesh/split-traffic-with-meshservice-resources/"
+  - text: Policy targeting
+    url: /mesh/policy-targeting/
 ---
+
+Out of the box, the Kong Air services call each other in plaintext, and any workload can reach `check-in-api`.
+In this guide, `flight-control` becomes the only workload that `check-in-api` accepts.
+
+To learn more about what this guide does, read the following reference pages:
+
+* [MeshIdentity](/mesh/policies/meshidentity/): how a workload gets its identity and certificate
+* [MeshTLS modes](/mesh/policies/meshtls/#modes): what strict and permissive mTLS accept
+* [Match caller identities](/mesh/policies/meshtrafficpermission/#match-caller-identities): how a traffic permission allows a caller by its SPIFFE ID
 
 ## Confirm the unsecured baseline
 
