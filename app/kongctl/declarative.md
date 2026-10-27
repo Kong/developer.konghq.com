@@ -1029,7 +1029,7 @@ The `!secret` tag is unchanged.
 For a manifest that contains `description: !env {var: DESCRIPTION, store: true}`:
 
 ```bash
-DESCRIPTION="Approved description" kongctl plan -f config.yaml > plan.json
+DESCRIPTION="Approved description" kongctl plan --mode apply -f config.yaml --output-file plan.json
 ```
 
 Apply the saved plan after changing the environment value:
