@@ -169,7 +169,7 @@ body:
 
 ## Use decK
 
-To use decK with {{site.konnect_short_name}} Workspaces, you need 1.43 or later, but 1.60 or later is recommended.
+To use decK with {{site.konnect_short_name}} Workspaces, you need decK 1.69 or later.
 
 {:.warning}
 > **Set your decK environment variables:**
