@@ -6,6 +6,9 @@ description: Use Docker Compose to install {{site.ai_gateway}} 2.x on self-manag
 products:
   - ai-gateway
 
+tools:
+  - deck
+
 works_on:
   - on-prem
 
@@ -184,7 +187,7 @@ export DECK_OPENAI_API_KEY='Bearer YOUR OPENAI API KEY'
 ```
 
 {:.info}
-> This example substitutes `$DECK_OPENAI_API_KEY` directly into the YAML using the shell, instead of decK's own `{% raw %}${{ env "..." }}{% endraw %}` templating. That templating is the documented way to avoid hardcoding secrets (see [Managing sensitive data](/deck/gateway/sensitive-data/)), but it doesn't resolve when a {{site.ai_gateway}} 2.x entity file is applied with `deck ai sync`/`deck file ai2kong`: the literal, unresolved string ends up in the generated plugin config instead of the real key.
+> This example substitutes `$DECK_OPENAI_API_KEY` directly into the YAML using the shell, instead of decK's own `{% raw %}${{ env "..." }}{% endraw %}` templating. That templating is the documented way to avoid hardcoding secrets (see [Managing sensitive data](/deck/gateway/sensitive-data/)), but it doesn't resolve when an {{site.ai_gateway}} 2.x entity file is applied with `deck ai sync`/`deck file ai2kong`: the literal, unresolved string ends up in the generated plugin config instead of the real key.
 
 <!-- vale off -->
 ```sh
