@@ -74,6 +74,18 @@ rows:
                   - **Plan a production deployment:** Use the [Universal control plane reference](/mesh/universal-control-plane/) to choose the mode, persistent store, and zone configuration.
                   - **Connect applications:** Follow the [Universal data plane reference](/mesh/universal-data-plane/) to register and authenticate application proxies.
 
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: Learn {{site.mesh_product_name}} with the Kong Air scenarios
+              description: |
+                Follow a fictional airline as it secures, connects, and observes its services, from a first security policy to a multi-zone mesh ready for production.
+              featured: true
+              cta:
+                text: Start the scenarios
+                url: /mesh/scenarios/
+
   - header:
     columns:
       - header:
@@ -169,6 +181,20 @@ rows:
       description: Control planes distribute configuration. Proxies handle application traffic and enforce the policies that apply to their part of the connection.
     column_count: 2
     columns:
+      - blocks:
+          - type: card
+            config:
+              title: Service meshes
+              description: A service mesh moves retries, encryption, and observability out of each application and into a proxy that runs next to it.
+              ctas:
+                - {text: Learn what a service mesh is, url: /mesh/service-mesh/}
+      - blocks:
+          - type: card
+            config:
+              title: Concepts
+              description: Find definitions for the terms used across the {{site.mesh_product_name}} documentation, from zones and data plane proxies to SPIFFE IDs and KRIs.
+              ctas:
+                - {text: "Browse {{site.mesh_product_name}} concepts", url: /mesh/concepts/}
       - blocks:
           - type: card
             config:

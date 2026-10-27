@@ -15,7 +15,7 @@
    headers:
      - 'Content-Type: application/json'
    body:
-     name: example-cp
+     name: {{ include.name | default: 'example-cp' }}
      version: v3
    extract_body:
      - name: id

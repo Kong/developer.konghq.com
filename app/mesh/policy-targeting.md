@@ -18,6 +18,8 @@ related_resources:
     url: /mesh/policies/meshidentity/
   - text: Mesh-scoped zone proxies
     url: /mesh/mesh-scoped-zone-proxies/
+  - text: "Concepts: Policy"
+    url: /mesh/concepts/#policy
 min_version:
   mesh: '3.0'
 ---
@@ -131,7 +133,7 @@ forge.
 ### `spec.targetRef`
 
 * `Mesh`: applies a policy across the mesh
-* `Dataplane`: with `labels`, narrows the policy to a set of proxies. `targetRef.sectionName` narrows further, to one named listener or inbound of the selected proxy.
+* `Dataplane`: with `labels`, narrows the policy to a set of proxies. `targetRef.sectionName` narrows further, to one named listener or inbound of the selected proxy. Without `labels`, it selects the same proxies as `Mesh`, but with a higher [priority](#policy-precedence).
 
 ### `spec.to[].targetRef`
 

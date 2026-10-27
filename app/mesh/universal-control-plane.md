@@ -19,6 +19,10 @@ related_resources:
     url: /mesh/cli/
   - text: MeshIdentity
     url: /mesh/policies/meshidentity/
+  - text: "Concepts: Control plane"
+    url: /mesh/concepts/#control-plane
+  - text: Architecture overview
+    url: /mesh/architecture-overview/
 min_version:
   mesh: '3.0'
 ---

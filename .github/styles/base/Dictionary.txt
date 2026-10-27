@@ -277,6 +277,7 @@ firewalled
 firstTimestamp
 flamegraph
 Flatpak
+Fluentd
 foogineer
 FQDNs
 full_name
@@ -668,12 +669,14 @@ qwen
 ratelimit
 rbac
 reachability
+reachableBackends
 reactively
 readme
 readonly
 real_ip_header
 real_ip_recursive
 rebalance
+restrictOutbound
 render_output
 realtime
 reconverge
@@ -723,6 +726,7 @@ routable
 route_type
 route_types
 ruleset
+runbooks
 rulesets
 runloop
 runtime
@@ -800,6 +804,7 @@ subnets
 subprocess
 subprocesses
 subresource
+subsetting
 substring
 subtable
 subtables
@@ -817,6 +822,7 @@ syslog
 systemd
 Tal
 targetRef
+targetable
 tbl
 ingresses
 ingressclass
