@@ -343,7 +343,8 @@ A call to Headroom that reuses a pooled connection Headroom has already closed i
 ### Limitations
 
 - Deterministic compression requires sessions which is only available in **Headroom v0.37.0 or newer**. Older images silently ignore the session id and run stateless.
-- Headroom sessions are held in memory on a single Headroom process. You must point every data plane node at its own sidecar, or all of them at one shared instance. Never point an {{site.ai_gateway}} data plane at a load-balanced set of Headroom instances, since a session's turns must all reach the same process.
+- By default, Headroom keeps sessions in memory in one Headroom process, and all turns of a session must reach that process. Point each data plane node at its own sidecar, or point all data plane nodes at one shared instance. Do not put a load balancer in front of Headroom instances that keep sessions in memory.
+- To run several Headroom instances behind a load balancer, set `HEADROOM_COMPRESS_SESSION_STORE` to a Redis URL (`redis://...`) on every instance. The instances then share the session state. This requires Headroom v0.42.0 or later, installed with the `redis` extra. If your Headroom image does not include the `redis` extra, build an image that installs `headroom-ai[proxy,redis]`. The lock that keeps the turns of one session in order works only inside one instance. If a client sends turns of one session in parallel, route each session to one instance. For more information, see the [Headroom repository](https://github.com/headroomlabs-ai/headroom).
 - No MCP tool-response compression: only the LLM request path is supported.
 - Only requests with a `messages` or `input` conversation array are sent to Headroom. Other formats are forwarded uncompressed.
 - A native Bedrock Converse request is skipped, with a warning. Headroom can't read Converse's content blocks.

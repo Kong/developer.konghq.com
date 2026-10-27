@@ -76,7 +76,7 @@ faqs:
 
 This guide uses the following recommended layout:
 
-- One Headroom `Deployment` with exactly one replica in the same namespace as the data plane. Headroom keeps its sessions in memory in a single process, so the data plane must always reach the same instance.
+- One Headroom `Deployment` with exactly one replica in the same namespace as the data plane. Headroom keeps its sessions in memory in a single process, so the data plane must always reach the same instance. This guide uses one replica. To run more than one replica, all replicas must share a Redis session store, which requires Headroom v0.42.0 or later with the `redis` extra. The published image that this guide uses can lack that extra. For more information, see the [AI Prompt Compressor limitations](/ai-gateway/policies/ai-prompt-compressor/#limitations).
 - Headroom's `/v1/compress` endpoint opened to in-cluster callers and protected by a proxy token.
 - The AI Prompt Compressor Policy configuration, including the token, stored in a Kubernetes Secret and referenced from the `AIGatewayPolicy`.
 
