@@ -67,8 +67,8 @@ faqs:
 
   - q: Can a client override the model name from the request body?
     a: |
-      By default, no. The request `model` field must match the upstream model on one of the AI Model's targets, otherwise the runtime returns a `400` error.
-      To accept a client-side alias, configure [`config.route.model`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-route-model) with a routing rule. Clients can then send the alias value in the request body, a header, or the path instead of the upstream AI Provider model name. See [Request routing rules](#request-routing-rules) for details and examples.
+      By default, no. Clients must send the `name` of the AI Model in the `model` field, not the upstream model name. A request with any other value fails.
+      To accept a client-side alias, configure [`config.route.model`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-route-model) with a routing rule. Clients can then send the alias value in the request body, a header, or the path instead of the AI Model name. See [Request routing rules](#request-routing-rules) for details and examples.
 
   - q: Can a client override `temperature`, `top_p`, or `top_k` from the request?
     a: |
@@ -388,7 +388,7 @@ For examples of using templating, consult the {{site.ai_gateway}} documentation 
 
 ## Request routing rules
 
-By default, applications or services making requests to the AI Model endpoint must specify the actual upstream model name (like `gpt-4o`) in the `model` field. If you want to allow them to use a different name, for abstraction, stability, or to hide implementation details, configure [`config.route.model`](#schema-aigateway-model-config-route-model) with a routing rule.
+By default, applications or services making requests to the AI Model endpoint must specify the `name` of the AI Model in the `model` field. If you want to allow them to use a different name, for abstraction, stability, or to hide implementation details, configure [`config.route.model`](#schema-aigateway-model-config-route-model) with a routing rule.
 
 `config.route.model` accepts one of the following match strategies:
 
