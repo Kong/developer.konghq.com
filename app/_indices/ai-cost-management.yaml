@@ -4,4 +4,11 @@ sections:
   - title: Overview
     items:
       - path: /ai-cost-management/
-      - path: /ai-cost-management/getting-started/
+  - title: Get started
+    items:
+      - path: /ai-cost-management/set-up-a-budget-with-email-alerts/
+      - path: /ai-cost-management/set-up-a-budget-with-slack-alerts/
+  - title: Budgets and alerts
+    items:
+      - path: /ai-cost-management/budgets/
+      - path: /ai-cost-management/notification-channels/
