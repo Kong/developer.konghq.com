@@ -164,3 +164,4 @@ By default, it will run all the instruction files, but it also supports running 
 | `CONTINUE_ON_ERROR` | Whether to continue running tests after a test fails. | false | null |
 | `KONNECT_DOMAIN` | Selects the Konnect target for the run (e.g. `konghq.tech` to run against the internal environment). Also builds the site if you pass it to `exe/build`, so the rendered commands and the test run agree. | false | `konghq.com` |
 | `KONNECT_EVENT_GATEWAY_MIN_VERSION` | Sets the minimum Konnect Event Gateway version that the `get.konghq.com/ai` quickstart script deploys. Passed through to the test container only when set. | false | null |
+| `KONNECT_AI_GATEWAY_MIN_VERSION` | Sets the minimum Konnect AI Gateway version that the `get.konghq.com/ai` quickstart script deploys. Passed through to the test container only when set. | false | null |

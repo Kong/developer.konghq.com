@@ -64,8 +64,6 @@ related_resources:
     url: /ai-gateway/policies/rate-limiting-advanced/
   - text: AI Auth Strategy entity
     url: /ai-gateway/entities/ai-auth-strategy/
-
-automated_tests: false
 ---
 
 ## Create a Principal
@@ -103,6 +101,9 @@ status_code: 201
 method: POST
 body:
   type: v1
+extract_body:
+  - name: 'secret'
+    variable: KEY_SECRET
 capture:
   - variable: KEY_SECRET
     jq: ".secret"
@@ -116,6 +117,7 @@ capture:
 ## Create an AI Auth Strategy, AI Model Provider, Policy, and AI Model
 
 Create a `key-auth` [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) with [Kong Identity Principal mapping](/ai-gateway/entities/ai-auth-strategy/#principal-mapping) enabled, so clients authenticate with the API key but {{site.ai_gateway}} resolves them to the Principal created earlier. 
+Principal mapping is mutually exclusive with `identity_realms`, so the strategy sets `identity_realms` to an empty list.
 Also create an [AI Model Provider](/ai-gateway/entities/ai-model-provider/) for OpenAI and a [Rate Limiting Advanced Policy](/ai-gateway/policies/rate-limiting-advanced/) with CEL expressions.
 Then create an [AI Model](/ai-gateway/entities/ai-model/) that references both the AI Auth Strategy and the Policy.
 
@@ -134,9 +136,10 @@ ai_gateway_auth_strategies:
     name: identity-principal
     type: key-auth
     config:
+      identity_realms: []
       principals:
         enabled: true
-        directory: $DIRECTORY_NAME
+        directory: $DECK_DIRECTORY_NAME
 ai_gateway_model_providers:
   - ref: generic-openai
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
