@@ -43,7 +43,7 @@ The developer owns the services that passengers interact with:
 * `passenger-portal`: the booking and check-in UI
 * `check-in-api`: the back end that assigns seats and issues boarding passes
 
-Other teams own the operational core (`flight-control`) and the baggage service (`baggage-api`), and the operator registers the external dependencies.
+Other teams own the operational core (`flight-control`) and the baggage service (`baggage-api`), and the [operator](/mesh/scenarios/persona/operator/) registers the external dependencies.
 The developer's job is to release their own services safely, make them resilient, and call the services of other teams.
 
 ### What the developer owns at Kong Air

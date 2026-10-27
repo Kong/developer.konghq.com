@@ -102,7 +102,7 @@ See [Secure the perimeter with MeshPassthrough](/mesh/secure-the-perimeter-with-
 
 Audits require Kong Air to prove which service called which other service, and when:
 
-* Access logs: The operator's `MeshAccessLog` policies record every request, including the requests that a `MeshTrafficPermission` denied. See [Observe mesh traffic in practice](/mesh/observe-mesh-traffic-in-practice/).
+* Access logs: The [operator](/mesh/scenarios/persona/operator/)'s `MeshAccessLog` policies record every request, including the requests that a `MeshTrafficPermission` denied. See [Observe mesh traffic in practice](/mesh/observe-mesh-traffic-in-practice/).
 * Policy ownership: The security architect creates mesh-wide security policies, such as `MeshIdentity` and `MeshTLS`, in the system namespace. Kubernetes RBAC on the system namespace makes sure that only the security team can change them. A policy in an application namespace reaches only the proxies in that namespace. See [Policy scope](/mesh/policy-targeting/#policy-scope).
 
 With {{site.mesh_product_name}}, the security architect has a cryptographic identity for every service, controls every data flow, and keeps an audit trail for all of Kong Air.

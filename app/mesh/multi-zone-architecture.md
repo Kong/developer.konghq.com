@@ -40,7 +40,8 @@ A zone egress in `zone1` doesn't change this path, because it carries only traff
 Each zone runs a zone ingress for every mesh that receives traffic from other zones, and optionally a zone egress.
 Other zones find the zone ingress through a `MeshZoneAddress`.
 The zone ingress forwards the encrypted connection without decrypting it, so it doesn't need a workload identity, but the zone egress does.
-Policies select the zone proxies by their listener labels, and not every policy supports them.
+The zone control plane adds the `kuma.io/listener-zoneingress: enabled` or `kuma.io/listener-zoneegress: enabled` label to each zone proxy, and a policy selects the zone proxies with that label in its top-level `targetRef`.
+Not every policy supports zone proxies, so check the policy reference first.
 
 For deployment, addressing, and policy details, see [Mesh-scoped zone proxies](/mesh/mesh-scoped-zone-proxies/).
 
