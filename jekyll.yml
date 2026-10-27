@@ -94,6 +94,14 @@ defaults:
       breadcrumbs:
         - "/support/"
   - scope:
+      path: "_support/security/"
+      type: "support"
+    values:
+      layout: "security_advisory"
+      breadcrumbs:
+        - "/support/"
+        - "/support/security/"
+  - scope:
       path: "_cookbooks"
       type: "cookbooks"
     values:

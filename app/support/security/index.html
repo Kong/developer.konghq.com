@@ -1,0 +1,36 @@
+---
+title: Security Advisories
+layout: support/security
+edit_and_issue_links: false
+description: Security advisories for Kong products, including affected and fixed versions.
+breadcrumbs:
+  - "/support/"
+---
+{% assign advisories = site.support | where_exp: "item", "item.advisory" | sort: "advisory.published" | reverse %}
+{% if advisories.size > 0 %}
+{% table %}
+columns:
+  - title: Advisory
+    key: advisory
+  - title: Severity
+    key: severity
+  - title: Published
+    key: published
+  - title: Fixed versions
+    key: fixed
+rows:
+{%- for item in advisories %}
+{%- assign adv = item.advisory %}
+{%- include support/advisory_severity.html advisory=adv %}
+{%- assign fixed = adv.fixed_versions %}
+{%- unless fixed.size > 0 %}{%- assign fixed = "" | split: "" %}{%- for entry in adv.products %}{%- assign fixed = fixed | concat: entry.fixed_versions %}{%- endfor %}{%- endunless %}
+{%- capture link %}[{{ item.title }}]({{ item.url }}){% endcapture %}
+  - advisory: {{ link | jsonify }}
+    severity: {{ advisory_severity | capitalize | jsonify }}
+    published: {{ adv.published | default: "" | jsonify }}
+    fixed: {{ fixed | join: ", " | jsonify }}
+{%- endfor %}
+{% endtable %}
+{% else %}
+No advisories have been published yet.
+{% endif %}

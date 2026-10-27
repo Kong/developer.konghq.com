@@ -1,0 +1,11 @@
+{%- comment -%}Sets `advisory_severity` to the highest severity across advisory.cves (ignoring CVEs marked not_affected) for the given `advisory`. Falls back to `advisory.severity` when no CVE states one. Empty when neither does.{%- endcomment -%}
+{%- assign advisory_severity = "" -%}
+{%- assign severity_rank = "low,medium,high,critical" | split: "," -%}
+{%- assign best = 0 -%}
+{%- for cve in include.advisory.cves -%}
+  {%- if cve.status == "not_affected" -%}{%- continue -%}{%- endif -%}
+  {%- for level in severity_rank -%}
+    {%- if level == cve.severity and forloop.index > best -%}{%- assign best = forloop.index -%}{%- assign advisory_severity = level -%}{%- endif -%}
+  {%- endfor -%}
+{%- endfor -%}
+{%- if advisory_severity == "" and include.advisory.severity -%}{%- assign advisory_severity = include.advisory.severity -%}{%- endif -%}

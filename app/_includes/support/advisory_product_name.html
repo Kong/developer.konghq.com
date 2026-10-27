@@ -1,0 +1,9 @@
+{%- comment -%}Sets `advisory_product_name` to the display name for the given `product` slug.{%- endcomment -%}
+{%- case include.product -%}
+  {%- when "gateway" -%}{%- assign advisory_product_name = site.ee_product_name -%}
+  {%- when "ai-gateway" -%}{%- assign advisory_product_name = site.ai_gateway_name -%}
+  {%- when "mesh" -%}{%- assign advisory_product_name = site.mesh_product_name -%}
+  {%- when "kic" -%}{%- assign advisory_product_name = site.kic_product_name -%}
+  {%- when "operator" -%}{%- assign advisory_product_name = site.operator_product_name -%}
+  {%- else -%}{%- assign advisory_product_name = include.product -%}
+{%- endcase -%}
