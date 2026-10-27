@@ -93,6 +93,7 @@ Create the provider to store your GCP credentials:
 {% entity_examples %}
 formats:
   - kongctl
+  - konnect-api
 ai_gateway_model_providers:
   - ref: my-gemini-enterprise-account
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
@@ -111,6 +112,7 @@ Then attach an AI Model to it, setting `config.gcp_environment` on the target to
 {% entity_examples %}
 formats:
   - kongctl
+  - konnect-api
 ai_gateway_models:
   - ref: my-gemini-enterprise-model
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
@@ -242,6 +244,7 @@ To use the Interactions API, create an AI Model with the `passthrough` format an
 {% entity_examples %}
 formats:
   - kongctl
+  - konnect-api
 ai_gateway_models:
   - ref: my-gemini-interactions
     ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
