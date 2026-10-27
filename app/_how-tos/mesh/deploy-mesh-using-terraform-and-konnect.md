@@ -23,7 +23,7 @@ tldr:
   q: How do I start a {{site.mesh_product_name}} 3.x deployment with Terraform and {{site.konnect_short_name}}?
   a: Use the konnect-beta provider with version = "v3" to create the global control
     plane, the mesh, and its MeshIdentity. Use the konnect provider for the zone's system
-    account, the helm and kubernetes providers to install the zone, and a `kubernetes_manifes`t
+    account, the helm and kubernetes providers to install the zone, and a `kubernetes_manifest`
     to apply the traffic permission to the zone.
 prereqs:
   inline:

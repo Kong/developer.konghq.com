@@ -128,7 +128,7 @@ To learn more about what this guide does, read the following reference pages:
      --selector=app=kong-mesh-control-plane --timeout=90s
    ```
 
-1. o switch back to the `zone1` context:
+1. Switch back to the `zone1` context:
 
    ```sh
    kubectl config use-context "$ZONE1_CONTEXT"
