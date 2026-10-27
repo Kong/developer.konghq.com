@@ -18,4 +18,4 @@ config:
           allow:
             - spiffeID:
                 type: Prefix
-                value: spiffe://default.default.mesh.local/ns/observability/sa
+                value: spiffe://default.zone-1.mesh.local/ns/observability/sa

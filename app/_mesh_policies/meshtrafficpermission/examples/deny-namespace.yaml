@@ -18,8 +18,8 @@ config:
           deny:
             - spiffeID:
                 type: Prefix
-                value: spiffe://default.default.mesh.local/ns/malicious/sa
+                value: spiffe://default.zone-1.mesh.local/ns/malicious/sa
           allow:
             - spiffeID:
                 type: Prefix
-                value: spiffe://default.default.mesh.local
+                value: spiffe://default.zone-1.mesh.local

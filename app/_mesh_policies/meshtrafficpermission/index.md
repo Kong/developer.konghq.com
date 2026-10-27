@@ -47,7 +47,7 @@ only authenticated, authorized traffic.
 
 ## Allow a namespace to reach one workload
 
-Replace `default.default.mesh.local` in the examples on this page with the trust domain in the
+Replace `default.zone-1.mesh.local` in the examples on this page with the trust domain in the
 caller's issued certificate. The trust domain is the part between `spiffe://` and the next
 `/`. For a Bundled issuer with automatic trust creation, `MeshTrust.spec.trustDomain` publishes
 that value. For example, with `payments.eu.mesh.local`, set
@@ -71,7 +71,7 @@ spec:
         allow:
           - spiffeID:
               type: Prefix
-              value: spiffe://default.default.mesh.local/ns/storefront/sa
+              value: spiffe://default.zone-1.mesh.local/ns/storefront/sa
 ```
 {% endpolicy_yaml %}
 
@@ -105,21 +105,21 @@ columns:
     key: callers
 rows:
   - match: "Exact service account"
-    example: "`spiffe://default.default.mesh.local/ns/storefront/sa/frontend`"
+    example: "`spiffe://default.zone-1.mesh.local/ns/storefront/sa/frontend`"
     callers: "Every workload using this identity, not one replica."
   - match: "Namespace prefix"
-    example: "`spiffe://default.default.mesh.local/ns/storefront/sa`"
+    example: "`spiffe://default.zone-1.mesh.local/ns/storefront/sa`"
     callers: "Every service account in the namespace, with the default Kubernetes path. A prefix ending at `/ns/storefront` would also match `storefront-test`."
   - match: "Trust-domain prefix"
-    example: "`spiffe://default.default.mesh.local`"
-    callers: "Every identity in the trust domain, and in any trust domain whose name starts with the same string, such as `default.default.mesh.local-test`. A trailing `/` isn't a valid SPIFFE ID."
+    example: "`spiffe://default.zone-1.mesh.local`"
+    callers: "Every identity in the trust domain, and in any trust domain whose name starts with the same string, such as `default.zone-1.mesh.local-test`. A trailing `/` isn't a valid SPIFFE ID."
 {% endtable %}
 
 By default, identity paths use the following formats:
 
 * `/ns/<namespace>/sa/<service-account>` on Kubernetes
 * `/workload/<workload>` on Universal, for example
-  `spiffe://default.default.mesh.local/workload/frontend`
+  `spiffe://default.zone-1.mesh.local/workload/frontend`
 
 If `MeshIdentity.spec.spiffeID.path` customizes the path, match the path the caller actually
 receives. Read the trust domain from the caller's certificate.
@@ -179,14 +179,14 @@ spec:
         deny:
           - spiffeID:
               type: Prefix
-              value: spiffe://default.default.mesh.local/ns/legacy/sa
+              value: spiffe://default.zone-1.mesh.local/ns/legacy/sa
           - spiffeID:
               type: Exact
-              value: spiffe://default.default.mesh.local/ns/storefront/sa/retired-client
+              value: spiffe://default.zone-1.mesh.local/ns/storefront/sa/retired-client
         allow:
           - spiffeID:
               type: Prefix
-              value: spiffe://default.default.mesh.local
+              value: spiffe://default.zone-1.mesh.local
 ```
 {% endpolicy_yaml %}
 
@@ -216,11 +216,11 @@ spec:
         allowWithShadowDeny:
           - spiffeID:
               type: Prefix
-              value: spiffe://default.default.mesh.local/ns/legacy/sa
+              value: spiffe://default.zone-1.mesh.local/ns/legacy/sa
         allow:
           - spiffeID:
               type: Prefix
-              value: spiffe://default.default.mesh.local
+              value: spiffe://default.zone-1.mesh.local
 ```
 {% endpolicy_yaml %}
 
@@ -289,7 +289,7 @@ port that the Service `targetPort` resolves to, not the Service port name, and t
 container port. On Universal, read the inbounds with
 `kumactl get dataplane DESTINATION_DATAPLANE -m MESH -o yaml`.
 
-The following example denies `observability` on the `backend-admin-api` inbound, even when
+The following example denies `observability` on the `admin` inbound, even when
 another policy allows that namespace:
 
 {% policy_yaml namespace=kong-mesh-demo %}
@@ -302,13 +302,13 @@ spec:
     kind: Dataplane
     labels:
       app: backend
-    sectionName: backend-admin-api
+    sectionName: admin
   rules:
     - default:
         deny:
           - spiffeID:
               type: Prefix
-              value: spiffe://default.default.mesh.local/ns/observability/sa
+              value: spiffe://default.zone-1.mesh.local/ns/observability/sa
 ```
 {% endpolicy_yaml %}
 
@@ -328,9 +328,15 @@ Read the listener names instead of assuming the defaults:
 kubectl get dataplanes.kuma.io ZONE_PROXY_DATAPLANE -n kong-mesh-system -o jsonpath='{.spec.networking.listeners}'
 ```
 
+The examples in this section use `"10002"`, the listener name of a Helm install with default
+values. On Universal, replace it with the listener name from your zone proxy's `Dataplane`.
+
 Zone egress is default-deny. When the zone proxy has a workload identity and no
 `MeshTrafficPermission` selects its egress listener, every connection through zone egress is
-denied. Zone egress terminates the caller's mTLS connection, so `spiffeID` matchers identify the
+denied. A policy with `kind: Mesh`, or no `targetRef`, in the system namespace or on the global
+control plane also selects the egress listeners. An existing mesh-wide `allow` already opens
+zone egress to the callers it matches, and a mesh-wide `deny` blocks those callers on zone
+egress too. Zone egress terminates the caller's mTLS connection, so `spiffeID` matchers identify the
 caller there, as they do on an inbound. The following example lets every workload in the trust
 domain use zone egress:
 
@@ -351,7 +357,7 @@ spec:
         allow:
           - spiffeID:
               type: Prefix
-              value: spiffe://default.default.mesh.local
+              value: spiffe://default.zone-1.mesh.local
 ```
 {% endpolicy_yaml %}
 
@@ -387,6 +393,38 @@ spec:
 
 This `deny` is an exception to applicable `allow` entries, such as the one in
 `allow-mesh-through-zone-egress`. It doesn't allow anything by itself.
+
+To restrict which callers reach an external service, set `spiffeID` and `sni` in the same
+`allow` entry. A connection matches the entry only when both match. The following example lets
+only the service accounts in `storefront` reach `external-service-kube` through zone egress:
+
+{% policy_yaml namespace=kong-mesh-system %}
+```yaml
+type: MeshTrafficPermission
+name: allow-storefront-to-external-service-kube
+mesh: default
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      kuma.io/listener-zoneegress: enabled
+      kuma.io/zone: zone-1
+    sectionName: "10002"
+  rules:
+    - default:
+        allow:
+          - spiffeID:
+              type: Prefix
+              value: spiffe://default.zone-1.mesh.local/ns/storefront/sa
+            sni:
+              type: Exact
+              value: sni.extsvc.default.zone-1.kong-mesh-system.external-service-kube.80
+```
+{% endpolicy_yaml %}
+
+Without a broader `allow` on the egress listener, such as `allow-mesh-through-zone-egress` or a
+mesh-wide `allow`, only `storefront` reaches `external-service-kube`, and zone egress denies
+every other external service.
 
 ## Validating authorization
 
