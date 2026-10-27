@@ -86,7 +86,7 @@ targetRef:
 
 Not every policy supports zone proxies.
 Before you target one, check the policy's reference page.
-For an example, see [Configure mesh-scoped zone proxies](/mesh/configure-mesh-scoped-zone-proxies/).
+For an example, see [Proxy and traffic selection](/mesh/mesh-scoped-zone-proxies/#proxy-and-traffic-selection).
 
 ## How Kong Air chooses traffic with `to` and `rules`
 

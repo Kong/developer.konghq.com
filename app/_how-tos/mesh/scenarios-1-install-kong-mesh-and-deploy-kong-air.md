@@ -7,6 +7,7 @@ breadcrumbs:
   - /mesh/
   - /mesh/scenarios/
 tools:
+  - konnect-api
   - kongctl
 products:
   - mesh
@@ -24,33 +25,25 @@ series:
 tldr:
   q: How do I set up {{site.mesh_product_name}} for the Kong Air scenarios?
   a: |
-    1. Create the `kong-air-mesh` mesh on your {{site.konnect_short_name}}-hosted global control plane with kongctl.
-    2. Install a zone control plane on Kubernetes with Helm and connect it to the global control plane as `zone1`.
-    3. Deploy the Kong Air demo applications into a namespace with sidecar injection enabled.
+    1. Create a global control plane in {{site.konnect_short_name}}.
+    2. Create the `kong-air-mesh` mesh on the global control plane with kongctl.
+    3. Install a zone control plane on Kubernetes with Helm and connect it to the global control plane as `zone1`.
+    4. Deploy the Kong Air demo applications into a namespace with sidecar injection enabled.
 faqs:
-  - q: How do I authenticate kongctl in CI or another non-interactive environment?
+  - q: How do I avoid passing `--pat` to every kongctl command?
     a: |
-      Use a [personal access token](https://cloud.konghq.com/global/account/tokens) instead of `kongctl login`.
-      kongctl reads the token from the `KONGCTL_DEFAULT_KONNECT_PAT` environment variable.
+      Run `kongctl login` once, or export your token in the `KONGCTL_DEFAULT_KONNECT_PAT` environment variable.
       See [Authentication with kongctl](/kongctl/authentication/).
-  - q: What if two of my control planes share a name?
-    a: |
-      Pass `--control-plane-id` instead of `--control-plane-name` to every `kongctl` mesh command.
-      See [Choosing a control plane and a mesh](/mesh/cli/#choosing-a-control-plane-and-a-mesh).
   - q: Can I use kongctl with a self-managed global control plane?
     a: |
-      Yes. Pass `--control-plane-url` instead of `--control-plane-name`.
+      Yes. Pass `--control-plane-url` instead of `--control-plane-id`, `--region`, `--base-url`, and `--pat`.
       See [Choosing a control plane and a mesh](/mesh/cli/#choosing-a-control-plane-and-a-mesh).
 prereqs:
   inline:
-    - title: A running Kubernetes cluster
+    - title: A minikube cluster
       include_content: md/mesh/v3/prereqs/kubernetes-cluster
     - title: Helm
       include_content: prereqs/helm
-cleanup:
-  inline:
-    - title: Remove the Kong Air foundation
-      include_content: md/mesh/v3/cleanup/kong-air-foundation
 related_resources:
   - text: Architecture overview
     url: /mesh/architecture-overview/
@@ -68,6 +61,23 @@ Every Kong Air scenario runs on the same foundation:
 
 In this guide, you build that foundation.
 
+## Create a working directory
+
+Create a directory for the files that the series creates, such as Helm values files, and change to it.
+Run the commands of every guide in the series from this directory:
+
+```sh
+mkdir kong-air-scenarios && cd kong-air-scenarios
+```
+
+## Create a global control plane in {{site.konnect_short_name}}
+
+{% include md/mesh/v3/how-tos/create-global-control-plane.md name='kong-air-cp' %}
+
+## Give the zone credentials to connect
+
+{% include md/mesh/v3/how-tos/give-zone-credentials.md zone='zone1' %}
+
 ## Create the mesh and connect a Kubernetes zone
 
 The Kong Air zone control plane runs on Kubernetes and connects to the {{site.konnect_short_name}} global control plane.
@@ -76,35 +86,17 @@ You create the mesh on the global control plane with [kongctl](/kongctl/), then 
 1. Create the `kong-air-mesh` mesh on the global control plane:
 
    ```sh
-   kongctl apply mesh --control-plane-name "$MESH_CP" -f - <<'EOF'
+   kongctl apply mesh -f - --control-plane-id "$CONTROL_PLANE_ID" \
+     --base-url "https://$KONNECT_REGION.api.konghq.com" --pat "$KONNECT_TOKEN" <<'EOF'
    type: Mesh
    name: kong-air-mesh
    EOF
    ```
 
-1. Export your {{site.konnect_short_name}} geographic region and the Kuma Discovery Service (KDS) address that the zone connects to.
-   The address uses `grpcs://`, because a zone control plane with a token refuses to start on a plaintext `grpc://` address:
+1. Export the Kuma Discovery Service (KDS) address that the zone connects to:
 
    ```sh
-   export KONNECT_REGION='us'
    export CONTROL_PLANE_URL="grpcs://$KONNECT_REGION.mesh.sync.konghq.com:443"
-   ```
-
-1. Export the ID of your control plane.
-   To print the full IDs, run `kongctl get mesh control-planes --text-id-format full`:
-
-   ```sh
-   export CONTROL_PLANE_ID='YOUR CONTROL PLANE ID'
-   ```
-
-1. Issue a zone token.
-   The zone control plane uses this token to prove its identity when it joins the global control plane:
-
-   ```sh
-   kongctl create mesh zone-token \
-     --control-plane-name "$MESH_CP" \
-     --zone zone1 \
-     --valid-for 720h > zone-token
    ```
 
 1. Create the namespace for the zone control plane:
@@ -113,17 +105,17 @@ You create the mesh on the global control plane with [kongctl](/kongctl/), then 
    kubectl create namespace kong-mesh-system
    ```
 
-1. Store the zone token in the `token` key of a Kubernetes secret named `cp-token`:
+1. Store the system account token in the `token` key of a Kubernetes secret named `cp-token`.
+   The zone control plane uses this token to prove its identity when it joins the global control plane:
 
    ```sh
    kubectl create secret generic cp-token \
      -n kong-mesh-system \
-     --from-file=token=zone-token
+     --from-literal=token="$CONTROL_PLANE_TOKEN"
    ```
 
 1. Create the Helm values file.
-   The `meshes` entry deploys a zone ingress and a zone egress for `kong-air-mesh`.
-   For details, see [Deploy proxies for a mesh on Kubernetes](/mesh/mesh-scoped-zone-proxies/#kubernetes):
+   The `meshes` entry deploys a zone ingress and a zone egress for `kong-air-mesh`:
 
    ```sh
    cat <<EOF > values.yaml
@@ -143,10 +135,16 @@ You create the mesh on the global control plane with [kongctl](/kongctl/), then 
        - name: kong-air-mesh
          ingress:
            enabled: true
+           service:
+             type: NodePort
          egress:
            enabled: true
    EOF
    ```
+
+   The ingress Service uses the `NodePort` type, because a local cluster such as minikube doesn't assign an address to a `LoadBalancer` Service.
+   The zone control plane publishes the node IP and port in a `MeshZoneAddress`, so other zones can reach the ingress.
+   On a cloud cluster, you can use a `LoadBalancer` Service instead.
 
    The `zoneToken` entry mounts the `cp-token` secret into the zone control plane as a file.
    The zone control plane reads the token on every KDS connection, so it picks up a rotated token without a restart.
@@ -162,17 +160,12 @@ You create the mesh on the global control plane with [kongctl](/kongctl/), then 
    helm repo update
    ```
 
-1. Install the {{site.mesh_product_name}} zone control plane with your values file:
+1. Install the {{site.mesh_product_name}} zone control plane with your values file and wait for it to be ready:
 
    ```sh
    helm upgrade --install \
      --namespace kong-mesh-system \
      kong-mesh kong-mesh/kong-mesh -f values.yaml
-   ```
-
-1. Wait for the zone control plane to be ready:
-
-   ```sh
    kubectl wait -n kong-mesh-system --for=condition=ready pod \
      --selector=app=kong-mesh-control-plane --timeout=90s
    ```
@@ -188,11 +181,7 @@ You create the mesh on the global control plane with [kongctl](/kongctl/), then 
 
 ## Deploy Kong Air
 
-1. Deploy the Kong Air demo applications: `passenger-portal`, `check-in-api`, and `flight-control`.
-   Each application is an nginx server that returns its Pod name on `/` and `ok` on `/health`.
-   The `/manifest.bin` location serves a file that [Validate resilience with fault injection](/mesh/validate-resilience-with-fault-injection/) creates to show a bandwidth limit.
-   Each application runs in the `kong-air-production` namespace with its own service account.
-   When you add a workload identity in [Create a security policy](/mesh/create-a-security-policy/), each workload gets its own Secure Production Identity Framework for Everyone (SPIFFE) ID:
+1. Deploy the Kong Air demo applications: `passenger-portal`, `check-in-api`, and `flight-control`:
 
    ```sh
    kubectl apply -f - <<'EOF'
@@ -399,6 +388,10 @@ You create the mesh on the global control plane with [kongctl](/kongctl/), then 
    EOF
    ```
    {:.collapsible}
+
+   Each application is an nginx server that returns its Pod name on `/` and `ok` on `/health`.
+   The `/manifest.bin` location serves a file that [Validate resilience with fault injection](/mesh/validate-resilience-with-fault-injection/) creates to show a bandwidth limit.
+   Each application runs in the `kong-air-production` namespace with its own service account.
 
 1. Wait for the Kong Air deployments to be available:
 

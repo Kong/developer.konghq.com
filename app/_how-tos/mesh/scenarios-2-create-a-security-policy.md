@@ -58,10 +58,6 @@ With this setting, the zone control plane generates its own certificate authorit
 For other providers, see [Providers](/mesh/policies/meshidentity/#providers).
 For trust across zones, see [Multi-zone meshes](/mesh/policies/meshidentity/#multi-zone-meshes).
 
-{:.warning}
-> On Kubernetes, you can only create a `MeshIdentity` in the system namespace (`{{site.mesh_namespace}}`).
-> See [Resource scoping](/mesh/resource-scoping/).
-
 1. Create a `MeshIdentity` that issues certificates to every workload in `kong-air-mesh`:
 
    ```sh
@@ -88,8 +84,14 @@ For trust across zones, see [Multi-zone meshes](/mesh/policies/meshidentity/#mul
        path: /ns/{% raw %}{{ .Namespace }}{% endraw %}/sa/{% raw %}{{ .ServiceAccount }}{% endraw %}' | kubectl apply -f -
    ```
 
-1. Wait up to 10 seconds.
-   The zone control plane sends each sidecar its certificate over xDS, so you don't need to restart the workloads.
+1. Wait for the `MeshIdentity` resource to be ready:
+
+   ```sh
+   kubectl wait meshidentity kong-air-identity -n {{site.mesh_namespace}} \
+     --for=condition=Ready --timeout=60s
+   ```
+
+   The zone control plane then sends each sidecar its certificate over xDS, so you don't need to restart the workloads.
 
 1. Check that each data plane proxy received its certificate from `kong-air-identity`:
 
@@ -98,8 +100,6 @@ For trust across zones, see [Multi-zone meshes](/mesh/policies/meshidentity/#mul
    ```
 
    The output shows one entry for each data plane proxy.
-   The generated KRI changes from zone to zone, but every `issuedBackend` contains `kong-air-identity`.
-   A data plane proxy with no `issuedBackend` has no workload identity, for example because the `MeshIdentity` selector doesn't match the workload.
 
 The `kong-air-identity` resource gives every workload a Secure Production Identity Framework for Everyone (SPIFFE) ID.
 The ID path contains the workload's namespace and Kubernetes service account:
@@ -111,17 +111,12 @@ spiffe://kong-air-mesh.zone1.mesh.local/ns/kong-air-production/sa/passenger-port
 ```
 {:.no-copy-code}
 
-{:.info}
-> The `kong-air-identity` resource doesn't set `spiffeID.trustDomain`, so the control plane uses the default template, `{% raw %}{{ .Mesh }}.{{ .Zone }}.mesh.local{% endraw %}`.
-> For `kong-air-mesh` in `zone1`, the trust domain is `kong-air-mesh.zone1.mesh.local`.
-> See [SPIFFE ID](/mesh/policies/meshidentity/#spiffe-id).
-
 Now that every proxy has a workload identity, the Kong Air proxies change behavior in two ways:
 * Every inbound runs in `Strict` mode, so it accepts only mTLS connections.
 * Every inbound denies callers that no `MeshTrafficPermission` allows.
 
 No `MeshTrafficPermission` exists yet, so `check-in-api` now rejects `flight-control` with `403 Forbidden`.
-For details, see [Identity requirements](/mesh/policies/meshtrafficpermission/#identity-requirements).
+For more information, see [Identity requirements](/mesh/policies/meshtrafficpermission/#identity-requirements).
 
 ## Make strict mTLS explicit with `MeshTLS`
 
@@ -199,12 +194,7 @@ spec:
               value: spiffe://kong-air-mesh.zone1.mesh.local/ns/kong-air-production/sa/flight-control' | kubectl apply -f -
 ```
 
-{:.info}
-> * The control plane takes up to 10 seconds to send a `MeshTrafficPermission` change to the data plane proxies.
->   If a request returns an unexpected result right after you apply a policy, wait and try again.
-> * The receiving proxy enforces `MeshTrafficPermission`, so `check-in-api` makes the decision.
-> * When permissions overlap, any matching `deny` wins over every `allow`.
->   See [Overlapping permissions](/mesh/policies/meshtrafficpermission/#overlapping-permissions).
+The control plane takes up to 10 seconds to send a `MeshTrafficPermission` change to the data plane proxies. If a request returns an unexpected result right after you apply a policy, wait and try again.
 
 ## Validate
 
@@ -227,13 +217,3 @@ spec:
    ```sh
    kubectl exec -n kong-air-production deploy/passenger-portal -- wget -q -T 5 -O- http://check-in-api.kong-air-production.svc.cluster.local:8080/
    ```
-
-   The request fails with the same error as before:
-
-   ```text
-   wget: server returned error: HTTP/1.1 403 Forbidden
-   ```
-   {:.no-copy-code}
-
-These two results confirm that the policy has the right scope.
-The policy allows `flight-control`, and `check-in-api` still denies every other workload by default.

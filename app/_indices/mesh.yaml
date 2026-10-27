@@ -51,9 +51,10 @@ sections:
       - path: /mesh/target-workloads-and-services/
       - path: /mesh/deploy-an-opentelemetry-collector/
       - path: /mesh/observe-mesh-traffic-in-practice/
+      - path: /mesh/connect-a-second-zone/
       - path: /mesh/manage-workload-identity-and-mtls/
       - path: /mesh/integrate-an-external-ca/
-      - path: /mesh/configure-mesh-scoped-zone-proxies/
+      - path: /mesh/send-traffic-between-zones/
       - path: /mesh/secure-the-perimeter-with-meshpassthrough/
       - path: /mesh/manage-external-services-with-meshexternalservice/
       - path: /mesh/validate-resilience-with-fault-injection/

@@ -134,6 +134,15 @@ rows:
       - blocks:
           - type: card
             config:
+              title: Connect a second zone
+              description: |
+                Start a second Kubernetes cluster and connect it to the Kong Air global control plane as `zone2`.
+              cta:
+                text: Read
+                url: /mesh/connect-a-second-zone/
+      - blocks:
+          - type: card
+            config:
               title: Manage workload identity and mTLS
               description: |
                 Issue SPIFFE workload identities with `MeshIdentity`, and publish trust with `MeshTrust`.
@@ -168,12 +177,12 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Configure mesh-scoped zone proxies
+              title: Send traffic between zones
               description: |
-                Deploy zone proxies for each mesh through the Helm `meshes:` list.
+                Call a service in another zone through its zone ingress, and allow the caller across zones.
               cta:
                 text: Read
-                url: /mesh/configure-mesh-scoped-zone-proxies/
+                url: /mesh/send-traffic-between-zones/
 
   - header:
       type: h2

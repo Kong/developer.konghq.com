@@ -1,38 +1,31 @@
-{:.warning}
-> Run these steps only when you are finished with the whole scenario collection.
-> The other guides in this series build on the same `kong-air-mesh` and Kong Air demo applications.
-> If you delete them, you must run the prerequisites again.
-
-1. Delete the base policies and the demo applications:
+1. Delete the `zone2` cluster:
 
    ```sh
-   kubectl delete meshtrafficpermission allow-flight-control-to-check-in -n {{site.mesh_namespace}} --ignore-not-found
-   kubectl delete meshtls strict-mtls -n {{site.mesh_namespace}} --ignore-not-found
-   kubectl delete meshidentity kong-air-identity -n {{site.mesh_namespace}} --ignore-not-found
-   kubectl delete namespace kong-air-production --ignore-not-found
+   minikube delete -p mesh-zone-2
    ```
 
-   Deleting the `kong-air-production` namespace removes the three deployments, their services, their service accounts, and the nginx `ConfigMap`.
-
-1. Delete the mesh. The command depends on where your global control plane runs.
-
-   A zone control plane can't delete a resource that the global control plane owns. On a {{site.konnect_short_name}}-hosted global control plane, delete the mesh with kongctl:
+1. Delete `zone1` cluster:
 
    ```sh
-   kongctl delete mesh meshes kong-air-mesh --control-plane-name "$MESH_CP"
+   minikube delete -p mesh-zone
    ```
 
-   On a self-managed global control plane, point kongctl at the global control plane API instead:
+1. Delete the `kong-air-cp` global control plane.
+   This also deletes `kong-air-mesh` and every resource on the global control plane:
 
    ```sh
-   kongctl delete mesh meshes kong-air-mesh --control-plane-url http://localhost:5681
+   curl --fail-with-body -sS -X DELETE \
+     "https://$KONNECT_REGION.api.konghq.com/v1/mesh/control-planes/$CONTROL_PLANE_ID" \
+     -H "Authorization: Bearer $KONNECT_TOKEN"
    ```
 
-   On a zone control plane that isn't connected to a global control plane, delete the mesh with `kubectl delete mesh kong-air-mesh`.
-
-1. If you installed {{site.mesh_product_name}} only for this collection, remove the control plane too. Skip this step if the cluster runs other meshes:
+1. Delete the `mesh-zone1` and `mesh-zone2` system accounts that the zones used to connect:
 
    ```sh
-   helm uninstall kong-mesh -n {{site.mesh_namespace}}
-   kubectl delete namespace {{site.mesh_namespace}}
+   curl --fail-with-body -sS -X DELETE \
+     "https://global.api.konghq.com/v3/system-accounts/$ACCOUNT_ID" \
+     -H "Authorization: Bearer $KONNECT_TOKEN"
+   curl --fail-with-body -sS -X DELETE \
+     "https://global.api.konghq.com/v3/system-accounts/$ZONE2_ACCOUNT_ID" \
+     -H "Authorization: Bearer $KONNECT_TOKEN"
    ```

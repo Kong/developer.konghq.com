@@ -14,8 +14,8 @@ works_on:
 min_version:
   mesh: '3.0'
 next_steps:
-  - text: "How-to: Configure mesh-scoped zone proxies"
-    url: "/mesh/configure-mesh-scoped-zone-proxies/"
+  - text: "How-to: Send traffic between zones"
+    url: "/mesh/send-traffic-between-zones/"
 related_resources:
   - text: Mesh-scoped zone proxies
     url: /mesh/mesh-scoped-zone-proxies/

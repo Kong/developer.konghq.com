@@ -21,20 +21,14 @@ faqs:
     a: |
       The control plane copies `appProtocol` from each Kubernetes `Service` port to the `MeshService` that it generates.
       Without `appProtocol`, the port defaults to `tcp`, and `MeshHTTPRoute` doesn't apply to it.
-      See [Ports](/mesh/meshservice/#ports).
+      For more information, see [Ports](/mesh/meshservice/#ports).
 tldr:
   q: How do I split traffic between different versions of my service?
   a: |
-    Give each version its own Kubernetes `Service`, so the control plane generates a `MeshService` for each version. Then:
+    Deploy a new version and give each version its own Kubernetes `Service`, so the control plane generates a `MeshService` for each version. Then:
     1. Target the shared entry point from a `MeshHTTPRoute` `to[].targetRef`.
     2. Assign a `weight` to each `backendRef`, one per versioned `MeshService`.
     3. Verify the split by tallying which pod served each response.
-cleanup:
-  inline:
-    - title: Remove the traffic split
-      include_content: md/mesh/v3/cleanup/split-traffic
-    - title: Remove the Kong Air foundation
-      include_content: md/mesh/v3/cleanup/kong-air-foundation
 next_steps:
   - text: "How-to: Target workloads and services"
     url: "/mesh/target-workloads-and-services/"
@@ -51,26 +45,6 @@ The Kong Air engineering team is launching Passenger Portal v2.
 To keep the rollout safe, the team sends 90% of traffic to the stable `v1` and 10% to the new `v2`.
 
 In this guide, you create one `MeshService` for each version and split traffic between them with a `MeshHTTPRoute`.
-
-For the `MeshService` kinds that `to[].targetRef` accepts, see [Accepted values by field](/mesh/policy-targeting/#accepted-values-by-field).
-The next guide, [Target workloads and services](/mesh/target-workloads-and-services/), covers label-based targeting.
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Scenario requirement
-    key: goal
-  - title: Outcome
-    key: outcome
-rows:
-  - goal: Version isolation
-    outcome: Kong Air manages `v1` and `v2` as independent resources, each with its own metrics.
-  - goal: Weighted distribution
-    outcome: The route splits traffic 90/10, whatever the pod count of each version.
-  - goal: Resource stability
-    outcome: You can add or remove replicas in either version without changing the route.
-{% endtable %}
-<!-- vale on -->
 
 ## Deploy the v2 workload
 
@@ -121,65 +95,62 @@ kubectl wait -n kong-air-production --for=condition=available --timeout=120s dep
 ## Define explicit MeshServices
 
 A canary or blue-green rollout needs one destination for each version, so the route can name each version directly.
-Create the `passenger-portal-v1` and `passenger-portal-v2` Kubernetes Services.
-The control plane generates a matching `MeshService` from each Service:
 
-```bash
-echo 'apiVersion: v1
-kind: Service
-metadata:
-  name: passenger-portal-v1
-  namespace: kong-air-production
-spec:
-  selector:
-    app: passenger-portal
-    version: v1
-  ports:
-    - port: 8080
-      targetPort: 8080
-      appProtocol: http
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: passenger-portal-v2
-  namespace: kong-air-production
-spec:
-  selector:
-    app: passenger-portal
-    version: v2
-  ports:
-    - port: 8080
-      targetPort: 8080
-      appProtocol: http' | kubectl apply -f -
-```
+1. Create the `passenger-portal-v1` and `passenger-portal-v2` Kubernetes Services.
+   The control plane generates a matching `MeshService` from each Service:
 
-Confirm that the control plane generated a `MeshService` for each versioned `Service`:
+   ```bash
+   echo 'apiVersion: v1
+   kind: Service
+   metadata:
+     name: passenger-portal-v1
+     namespace: kong-air-production
+   spec:
+     selector:
+       app: passenger-portal
+       version: v1
+     ports:
+       - port: 8080
+         targetPort: 8080
+         appProtocol: http
+   ---
+   apiVersion: v1
+   kind: Service
+   metadata:
+     name: passenger-portal-v2
+     namespace: kong-air-production
+   spec:
+     selector:
+       app: passenger-portal
+       version: v2
+     ports:
+       - port: 8080
+         targetPort: 8080
+         appProtocol: http' | kubectl apply -f -
+   ```
 
-```bash
-kubectl get meshservices -n kong-air-production -o name
-```
+1. Confirm that the control plane generated a `MeshService` for each versioned `Service`:
 
-```text
-meshservice.kuma.io/check-in-api
-meshservice.kuma.io/flight-control
-meshservice.kuma.io/passenger-portal
-meshservice.kuma.io/passenger-portal-v1
-meshservice.kuma.io/passenger-portal-v2
-```
-{:.no-copy-code}
+   ```bash
+   kubectl get meshservices -n kong-air-production -o name
+   ```
 
-{:.info}
-> On Kubernetes, `kuma.io/display-name` is an annotation, so `kubectl get meshservice --show-labels` doesn't list it.
-> When the control plane evaluates a policy, it computes `kuma.io/display-name` from the object name.
-> For this reason, `kuma.io/display-name: passenger-portal-v1` selects the `passenger-portal-v1` `MeshService`.
+   You should get the following result:
+
+   ```text
+   meshservice.kuma.io/check-in-api
+   meshservice.kuma.io/flight-control
+   meshservice.kuma.io/passenger-portal
+   meshservice.kuma.io/passenger-portal-v1
+   meshservice.kuma.io/passenger-portal-v2
+   ```
+   {:.no-copy-code}
 
 ## Configure the weighted route
 
 Create a `MeshHTTPRoute` that splits traffic between `passenger-portal-v1` and `passenger-portal-v2`.
-The route lives in `kong-air-production` and selects `passenger-portal` by `kuma.io/display-name` alone, so it's a consumer policy.
-A consumer policy with a `Mesh` top-level `targetRef` applies to every client in its own namespace, which includes `check-in-api`.
-For details, see [Policy scope](/mesh/policy-targeting/#policy-scope):
+The route lives in `kong-air-production` and selects `passenger-portal` by `kuma.io/display-name` alone, which makes it a consumer policy.
+A consumer policy with a `Mesh` top-level `targetRef` applies to every client in its own namespace, which includes `check-in-api`:
 
 ```bash
 echo 'apiVersion: kuma.io/v1alpha1
@@ -218,8 +189,6 @@ spec:
 
 In [Create a security policy](/mesh/create-a-security-policy/), you gave every Kong Air workload an identity with `MeshIdentity`.
 Because of that identity, every workload, including `passenger-portal`, requires mTLS and denies callers that no permission allows.
-The mesh-wide `MeshTLS` from that guide only makes the `Strict` mode explicit.
-That guide only allowed `flight-control` to call `check-in-api`.
 
 Create a `MeshTrafficPermission` that allows `check-in-api` to call `passenger-portal`:
 
