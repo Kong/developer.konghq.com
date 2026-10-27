@@ -25,6 +25,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
+<!-- vale off -->
 {% mermaid %}
 flowchart LR
     K["Global control plane"]
@@ -48,6 +49,7 @@ flowchart LR
     A1 --> I2
     I2 --> A2
 {% endmermaid %}
+<!-- vale on -->
 
 KDS and xDS carry configuration only.
 The solid arrows show the application request, which never passes through a control plane.

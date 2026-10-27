@@ -44,6 +44,7 @@ Every YAML example in the scenarios names `kong-air-mesh`, as you do in a produc
 
 ### Service landscape
 
+<!-- vale off -->
 {% mermaid %}
 graph LR
   subgraph Z1["zone1"]
@@ -64,6 +65,7 @@ graph LR
   PP -.-> AP
   FC -.-> DB
 {% endmermaid %}
+<!-- vale on -->
 
 Solid arrows show the calls inside the mesh that the scenarios allow with a `MeshTrafficPermission`.
 Dashed arrows show the calls to external dependencies, which the scenarios describe as `MeshExternalService` resources and send through the zone egress.

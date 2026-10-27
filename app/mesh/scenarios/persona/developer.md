@@ -48,6 +48,7 @@ The developer's job is to release their own services safely, make them resilient
 
 ### What the developer owns at Kong Air
 
+<!-- vale off -->
 {% mermaid %}
 flowchart LR
   subgraph DEV["The developer's scope"]
@@ -65,6 +66,7 @@ flowchart LR
   PP --> BAG
   PP -.-> AP
 {% endmermaid %}
+<!-- vale on -->
 
 The dashed arrow points to AeroPay, Kong Air's payment provider, which runs outside the mesh.
 For the full picture, see [Kong Air](/mesh/scenarios/introduction-kong-air/#kong-air).

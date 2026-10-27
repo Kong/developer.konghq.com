@@ -90,6 +90,7 @@ Requests from outside the mesh enter through an API gateway, such as {{site.base
 For more information, see [Application ingress](/mesh/application-ingress/).
 For cross-zone service discovery and routing, see [Multi-zone architecture](/mesh/multi-zone-architecture/).
 
+<!-- vale off -->
 {% mermaid %}
 flowchart LR
     subgraph Zone1["zone1 (Kubernetes)"]
@@ -130,6 +131,7 @@ flowchart LR
     OR_Envoy --> ZE_Z1
     ZE_Z1 --> EXT
 {% endmermaid %}
+<!-- vale on -->
 
 In this example, when `orders` in `zone1` calls `payments` in `zone2`, the request takes five steps:
 
