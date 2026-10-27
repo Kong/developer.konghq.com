@@ -28,6 +28,10 @@
     "advisory": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^KONGSA-\\d{8}$"
+        },
         "published": {
           "type": "string",
           "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
@@ -35,6 +39,15 @@
         "updated": {
           "type": "string",
           "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "critical",
+            "high",
+            "medium",
+            "low"
+          ]
         },
         "cves": {
           "type": "array",
@@ -65,12 +78,17 @@
               },
               "summary": {
                 "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "affected",
+                  "not_affected"
+                ]
               }
             },
             "required": [
-              "id",
-              "severity",
-              "summary"
+              "id"
             ],
             "additionalProperties": false
           }
@@ -86,14 +104,42 @@
           "items": {
             "type": "string"
           }
+        },
+        "products": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "product": {
+                "type": "string",
+                "enum": [
+                  "gateway",
+                  "ai-gateway",
+                  "mesh",
+                  "kic",
+                  "operator"
+                ]
+              },
+              "affected_versions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "fixed_versions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "product"
+            ],
+            "additionalProperties": false
+          }
         }
       },
-      "required": [
-        "published",
-        "cves",
-        "affected_versions",
-        "fixed_versions"
-      ],
       "additionalProperties": false
     }
   },

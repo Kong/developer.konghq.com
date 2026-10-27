@@ -1,3 +1,5 @@
+{%- assign has_status = false -%}
+{%- for cve in include.advisory.cves -%}{%- if cve.status -%}{%- assign has_status = true -%}{%- endif -%}{%- endfor -%}
 {% table %}
 columns:
   - title: CVE
@@ -6,11 +8,18 @@ columns:
     key: description
   - title: Severity
     key: severity
+{%- if has_status %}
+  - title: Affects Kong
+    key: status
+{%- endif %}
 rows:
 {%- for cve in include.advisory.cves %}
-{%- capture severity %}{{ cve.severity | capitalize }}{% if cve.cvss_score %} (CVSS{% if cve.cvss_version %} {{ cve.cvss_version }}{% endif %}: {{ cve.cvss_score }}){% endif %}{% endcapture %}
+{%- capture severity %}{{ cve.severity | capitalize }}{% if cve.cvss_score %}{% if cve.severity %} {% endif %}(CVSS{% if cve.cvss_version %} {{ cve.cvss_version }}{% endif %}: {{ cve.cvss_score }}){% endif %}{% endcapture %}
   - cve: {{ cve.id | jsonify }}
     description: {{ cve.summary | jsonify }}
     severity: {{ severity | jsonify }}
+{%- if has_status %}
+    status: {% if cve.status == "affected" %}"Yes"{% elsif cve.status == "not_affected" %}"No"{% else %}""{% endif %}
+{%- endif %}
 {%- endfor %}
 {% endtable %}
