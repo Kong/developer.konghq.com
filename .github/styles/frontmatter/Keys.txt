@@ -54,3 +54,4 @@ how_to_list
 toc_depth
 event-gateway
 schema_name
+reference_with_schema
